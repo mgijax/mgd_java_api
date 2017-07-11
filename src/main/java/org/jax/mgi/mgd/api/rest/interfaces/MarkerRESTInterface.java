@@ -29,40 +29,40 @@ public interface MarkerRESTInterface {
 	@POST
 	@ApiOperation(value = "Value: Create Marker", notes="Notes: Creates a new Marker")
 	public Marker createMarker(
-			@ApiParam(name = "Name: API Access Token", value = "Value: API Access Token used for Authentication to this API")
+			@ApiParam(value = "Value: API Access Token used for Authentication to this API")
 			@HeaderParam("api_access_token") String api_access_token,
 			
-			@ApiParam(name = "Name: Marker Object", value = "Value: This is the passed in marker object")
+			@ApiParam(value = "Value: This is the passed in marker object")
 			Marker marker
 	);
 	
 	@PUT
 	@ApiOperation(value = "Value: Update Marker", notes="Notes: Updates a Marker")
 	public Marker updateMarker(
-			@ApiParam(name = "API Access Token", value = "Value: API Access Token used for Authentication to this API")
+			@ApiParam(value = "Value: API Access Token used for Authentication to this API")
 			@HeaderParam("api_access_token") String api_access_token,
 			
-			@ApiParam(name = "Name: Marker Object", value = "Value: This is the passed in marker object")
+			@ApiParam(value = "Value: This is the passed in marker object")
 			Marker marker
 	);
 
 	@GET
 	@ApiOperation(value = "Value: Searches Marker by Fields", notes="Notes: Searches Marker Fields")
 	public List<Marker> getMarker(
-			@ApiParam(name = "Name: primaryId", value = "Value: This is for searching by primary Id")
+			@ApiParam(value = "Value: This is for searching by primary Id")
 			@QueryParam("primaryId") String primaryId,
 			
-			@ApiParam(name = "Name: symbol", value = "Value: This is for searching by symbol")
+			@ApiParam(value = "Value: This is for searching by symbol")
 			@QueryParam("symbol") String symbol);
 
 	@DELETE
 	@ApiOperation(value = "Value: Deletes Marker", notes="Notes: Deletes a Marker")
 	@Path("/{id}")
 	public Marker deleteMarker(
-			@ApiParam(name = "API Access Token", value = "Value: API Access Token used for Authentication to this API")
+			@ApiParam(value = "Value: API Access Token used for Authentication to this API")
 			@HeaderParam("api_access_token") String api_access_token,
 			
-			@ApiParam(name = "Name: Marker ID", value = "Value: This Accession ID will lookup a Marker and then delete it")
+			@ApiParam(value = "Value: This Accession ID will lookup a Marker and then delete it")
 			@PathParam("id") String id
 	);
 

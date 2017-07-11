@@ -8,6 +8,6 @@ import org.jax.mgi.mgd.api.entities.Reference;
 public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 
 	public ReferenceDAO() {
-		clazz = Reference.class;
+		myClass = Reference.class;
 	}
 }

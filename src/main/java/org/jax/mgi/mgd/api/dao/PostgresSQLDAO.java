@@ -17,15 +17,15 @@ import org.jboss.logging.Logger;
 
 public class PostgresSQLDAO<T extends Base> {
 
-	protected Class<T> clazz;
+	protected Class<T> myClass;
 
 	@PersistenceContext(unitName="primary")
 	private EntityManager entityManager;
 	
 	private Logger log = Logger.getLogger(PostgresSQLDAO.class);
 
-	protected void setClazz(Class<T> clazz){
-		this.clazz = clazz;
+	protected void setClazz(Class<T> myClass){
+		this.myClass = myClass;
 	}
 
 	public T add(T model) {
@@ -41,8 +41,8 @@ public class PostgresSQLDAO<T extends Base> {
 	public List<T> get(HashMap<String, Object> params) {
 		log.info("Lookup: " + params);
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<T> query = builder.createQuery(clazz);
-		Root<T> root = query.from(clazz);
+		CriteriaQuery<T> query = builder.createQuery(myClass);
+		Root<T> root = query.from(myClass);
 
 		List<Predicate> restrictions = new ArrayList<Predicate>();
 		

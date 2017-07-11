@@ -58,7 +58,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	public Reference getReferenceByKey (String refsKey) {
 		if (refsKey != null) {
 			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put("refsKey", Long.parseLong(refsKey));
+			map.put("_refs_key", Long.parseLong(refsKey));
 			return referenceService.getReference(map).get(0);
 		}
 		return null;

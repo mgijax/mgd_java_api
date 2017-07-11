@@ -14,7 +14,7 @@ public class Reference extends Base {
 
 	@Id
 	@Column(name="_Refs_key")
-	public Long refsKey;
+	public Long _refs_key;
 	
 	@Column(name="authors")
 	public String authors;

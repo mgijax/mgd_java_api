@@ -15,13 +15,14 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.entities.Reference;
+import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @Path("/reference")
-@Api(value = "Reference Endpoints", description="This is the description")
+@Api(value = "Reference Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface ReferenceRESTInterface {
@@ -47,8 +48,15 @@ public interface ReferenceRESTInterface {
 	);
 
 	@GET
+	@Path("/valid")
+	@ApiOperation(value = "Value: Look up a single Reference by reference key")
+	public Reference getReferenceByKey(
+			@ApiParam(value = "Value: This is for searching by reference key")
+			@QueryParam("refsKey") String refsKey);
+
+	@GET
 	@ApiOperation(value = "Value: Searches Reference by Fields", notes="Notes: Searches Reference Fields")
-	public List<Reference> getReference(
+	public SearchResults<Reference> getReference(
 			@ApiParam(value = "Value: This is for searching by primary Id")
 			@QueryParam("primaryId") String primaryId,
 			

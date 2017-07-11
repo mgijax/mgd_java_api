@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.rest.interfaces.ReferenceRESTInterface;
 import org.jax.mgi.mgd.api.service.ReferenceService;
+import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
 public class ReferenceController extends BaseController implements ReferenceRESTInterface {
@@ -36,12 +37,12 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	}
 
 	@Override
-	public List<Reference> getReference(String primaryId, String authors) {
+	public SearchResults<Reference> getReference(String primaryId, String authors) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		if(primaryId != null) { map.put("primaryId", primaryId); }
 		if(authors != null) { map.put("authors", authors); }
 		log.info("Search Params: " + map);
-		return referenceService.getReference(map);
+		return new SearchResults<Reference>(referenceService.getReference(map));
 	}
 
 	@Override
@@ -53,5 +54,14 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		}
 	}
 
+	@Override
+	public Reference getReferenceByKey (String refsKey) {
+		if (refsKey != null) {
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("refsKey", Long.parseLong(refsKey));
+			return referenceService.getReference(map).get(0);
+		}
+		return null;
+	}
 
 }

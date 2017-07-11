@@ -44,7 +44,7 @@ public class Reference extends Base {
 	public String pages;
 	
 	@Column(name="abstract")
-	public String refAbstract;		// just "abstract" is a Java reserved word
+	public String refAbstract;		// just "abstract" is a Java reserved word, so need a prefix
 	
 	@Column(name="isReviewArticle")
 	public int isReviewArticle;

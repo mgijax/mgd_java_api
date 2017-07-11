@@ -42,6 +42,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		if(primaryId != null) { map.put("primaryId", primaryId); }
 		if(authors != null) { map.put("authors", authors); }
 		log.info("Search Params: " + map);
+		SearchResults.resetTimer();
 		return new SearchResults<Reference>(referenceService.getReference(map));
 	}
 

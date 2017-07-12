@@ -48,8 +48,8 @@ public class PostgresSQLDAO<T> {
 		for(String key: params.keySet()) {
 			Object desiredValue = params.get(key);
 			if ((desiredValue instanceof String) && (((String) desiredValue).indexOf("%") >= 0)) {
-				// has at least one wildcard, so do 'like' search
-				restrictions.add(builder.like(root.get(key), (String) desiredValue));
+				// has at least one wildcard, so do case-insensitive 'like' search
+				restrictions.add(builder.like(builder.lower(root.get(key)), ((String) desiredValue).toLowerCase()));
 			} else {
 				// no wildcards, so do 'equals' search
 				restrictions.add(builder.equal(root.get(key), params.get(key)));

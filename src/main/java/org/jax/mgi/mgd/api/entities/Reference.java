@@ -10,6 +10,7 @@ import javax.persistence.JoinColumns;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.FetchType;
 
 import org.hibernate.annotations.Where;
@@ -70,5 +71,15 @@ public class Reference extends Base {
 
 	public void setAccessionIDs(List<AccessionID> accessionIDs) {
 		this.accessionIDs = accessionIDs;
+	}
+	
+	@Transient
+	public String getJnum() {
+		for (AccessionID accID : this.getAccessionIDs()) {
+			if ((accID._logicaldb_key == 1) && "J:".equals(accID.prefixPart) && (accID.preferred == 1)) {
+				return accID.accID;
+			}
+		}
+		return null;
 	}
 }

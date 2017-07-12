@@ -36,9 +36,9 @@ public class MarkerController extends BaseController implements MarkerRESTInterf
 	}
 
 	@Override
-	public List<Marker> getMarker(String primaryId, String symbol) {
+	public List<Marker> getMarker(String accid, String symbol) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		if(primaryId != null) { map.put("primaryId", primaryId); }
+		if(accid != null) { map.put("accid", accid); }
 		if(symbol != null) { map.put("symbol", symbol); }
 		log.info("Search Params: " + map);
 		return markerService.getMarker(map);

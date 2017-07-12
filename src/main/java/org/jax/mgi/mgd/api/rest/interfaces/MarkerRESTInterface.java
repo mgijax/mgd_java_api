@@ -50,7 +50,7 @@ public interface MarkerRESTInterface {
 	@ApiOperation(value = "Value: Searches Marker by Fields", notes="Notes: Searches Marker Fields")
 	public List<Marker> getMarker(
 			@ApiParam(value = "Value: This is for searching by primary Id")
-			@QueryParam("primaryId") String primaryId,
+			@QueryParam("accid") String accid,
 			
 			@ApiParam(value = "Value: This is for searching by symbol")
 			@QueryParam("symbol") String symbol);

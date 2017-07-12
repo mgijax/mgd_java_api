@@ -11,11 +11,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.jax.mgi.mgd.api.entities.Base;
 import org.jboss.logging.Logger;
 
 
-public class PostgresSQLDAO<T extends Base> {
+public class PostgresSQLDAO<T> {
 
 	protected Class<T> clazz;
 

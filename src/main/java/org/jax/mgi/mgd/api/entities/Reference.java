@@ -65,17 +65,9 @@ public class Reference extends Base {
 	@OrderBy("_logicaldb_key, preferred desc")
 	public List<AccessionID> accessionIDs;
 
-	public List<AccessionID> getAccessionIDs() {
-		return this.accessionIDs;
-	}
-
-	public void setAccessionIDs(List<AccessionID> accessionIDs) {
-		this.accessionIDs = accessionIDs;
-	}
-	
 	@Transient
 	public String getJnum() {
-		for (AccessionID accID : this.getAccessionIDs()) {
+		for (AccessionID accID : accessionIDs) {
 			if ((accID._logicaldb_key == 1) && "J:".equals(accID.prefixPart) && (accID.preferred == 1)) {
 				return accID.accID;
 			}

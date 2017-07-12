@@ -7,7 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -64,6 +66,12 @@ public class Reference extends Base {
 	@OrderBy("_logicaldb_key, preferred desc")
 	public List<AccessionID> accessionIDs;
 
+	@OneToOne (targetEntity=Term.class, fetch=FetchType.EAGER)
+	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")
+	public Term referenceTypeTerm;
+	
+	/***--- transient methods ---***/
+	
 	@Transient
 	public String getJnum() {
 		for (AccessionID accID : accessionIDs) {
@@ -72,5 +80,11 @@ public class Reference extends Base {
 			}
 		}
 		return null;
+	}
+	
+	@Transient
+	public String getReferenceType() {
+		if (referenceTypeTerm == null) { return null; }
+		return referenceTypeTerm.term;
 	}
 }

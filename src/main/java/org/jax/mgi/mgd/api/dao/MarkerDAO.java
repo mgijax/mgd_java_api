@@ -8,7 +8,7 @@ import org.jax.mgi.mgd.api.entities.Marker;
 public class MarkerDAO extends PostgresSQLDAO<Marker> {
 
 	public MarkerDAO() {
-		clazz = Marker.class;
+		myClass = Marker.class;
 	}
 
 

@@ -16,15 +16,15 @@ import org.jboss.logging.Logger;
 
 public class PostgresSQLDAO<T> {
 
-	protected Class<T> clazz;
+	protected Class<T> myClass;
 
 	@PersistenceContext(unitName="primary")
 	private EntityManager entityManager;
 	
 	private Logger log = Logger.getLogger(PostgresSQLDAO.class);
 
-	protected void setClazz(Class<T> clazz){
-		this.clazz = clazz;
+	protected void setClazz(Class<T> myClass){
+		this.myClass = myClass;
 	}
 
 	public T add(T model) {
@@ -40,13 +40,20 @@ public class PostgresSQLDAO<T> {
 	public List<T> get(HashMap<String, Object> params) {
 		log.info("Lookup: " + params);
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<T> query = builder.createQuery(clazz);
-		Root<T> root = query.from(clazz);
+		CriteriaQuery<T> query = builder.createQuery(myClass);
+		Root<T> root = query.from(myClass);
 
 		List<Predicate> restrictions = new ArrayList<Predicate>();
 		
 		for(String key: params.keySet()) {
-			restrictions.add(builder.equal(root.get(key), params.get(key)));
+			Object desiredValue = params.get(key);
+			if ((desiredValue instanceof String) && (((String) desiredValue).indexOf("%") >= 0)) {
+				// has at least one wildcard, so do 'like' search
+				restrictions.add(builder.like(root.get(key), (String) desiredValue));
+			} else {
+				// no wildcards, so do 'equals' search
+				restrictions.add(builder.equal(root.get(key), params.get(key)));
+			}
 		}
 
 		query.where(builder.and(restrictions.toArray(new Predicate[0])));

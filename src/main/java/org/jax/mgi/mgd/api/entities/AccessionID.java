@@ -26,4 +26,7 @@ public class AccessionID {
 	
 	@Column(name="_mgitype_key")
 	public Integer _mgitype_key;
+	
+	@Column(name="prefixPart")
+	public String prefixPart;
 }

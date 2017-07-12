@@ -1,9 +1,18 @@
 package org.jax.mgi.mgd.api.entities;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.FetchType;
+
+import org.hibernate.annotations.Where;
 
 import io.swagger.annotations.ApiModel;
 
@@ -48,4 +57,18 @@ public class Reference extends Base {
 	
 	@Column(name="isReviewArticle")
 	public int isReviewArticle;
+
+	@OneToMany (targetEntity=AccessionID.class, fetch=FetchType.EAGER)
+	@JoinColumn(name="_object_key", referencedColumnName="_refs_key")
+	@Where(clause="_mgitype_key = 1")
+	@OrderBy("_logicaldb_key, preferred desc")
+	public List<AccessionID> accessionIDs;
+
+	public List<AccessionID> getAccessionIDs() {
+		return this.accessionIDs;
+	}
+
+	public void setAccessionIDs(List<AccessionID> accessionIDs) {
+		this.accessionIDs = accessionIDs;
+	}
 }

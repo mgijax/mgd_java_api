@@ -248,4 +248,24 @@ public class Reference extends Base {
 	
 	@Transient
 	public int getStatus_Tumor_Routed() { return checkStatus(getTumor_status(), Constants.WS_ROUTED); }
+	
+	/* compute the short citation, so it's up-to-the-minute and doesn't rely on a cache table that could
+	 * be out of date.
+	 */
+	@Transient
+	public String getShort_citation() {
+		StringBuffer sb = new StringBuffer();
+		if (this.primaryAuthor != null) { sb.append(this.primaryAuthor); }
+		sb.append(", ");
+		if (this.journal != null) { sb.append(this.journal); }
+		sb.append(" ");
+		if (this.date != null) { sb.append(this.date); }
+		sb.append(";");
+		if (this.volume != null) { sb.append(this.volume); }
+		sb.append("(");
+		if (this.issue != null) { sb.append(this.issue); }
+		sb.append("):");
+		if (this.pages != null) { sb.append(this.pages); }
+		return sb.toString();
+	}
 }

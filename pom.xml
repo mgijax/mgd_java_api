@@ -56,55 +56,12 @@
 			<groupId>org.wildfly.swarm</groupId>
 			<artifactId>logging</artifactId>
 		</dependency>
-
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-core</artifactId>
-                <version>3.6.8.Final</version>
-
-                <!-- Some transitive dependencies of Hibernate 3 are available 
-                                         in WildFly 8 as modules, so we don't include them in WEB-INF/lib, but instead
-                    depend on the modules -->
-                <exclusions>
-                    <exclusion>
-                        <groupId>antlr</groupId>
-                        <artifactId>antlr</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>commons-collections</groupId>
-                        <artifactId>commons-collections</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>slf4j-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>dom4j</groupId>
-                        <artifactId>dom4j</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>javax.transaction</groupId>
-                        <artifactId>jta</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <!-- Define dependency version of hibernate-commons-annotations -->
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-commons-annotations</artifactId>
-                <version>3.2.0.Final</version>
-                <!-- Some transitive dependencies of Hibernate 3 are available 
-                                         in WildFly 8 as modules, so we don't include them in WEB-INF/lib, but instead
-                    depend on the modules -->
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>slf4j-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>5.2.10.Final</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>mgd_java_api</finalName>

@@ -39,7 +39,17 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	@Override
 	public SearchResults<Reference> getReference(String authors, String date, Integer is_review, String issue,
 			String pages, String primary_author, String ref_abstract, String title, String volume, Integer year,
-			Integer status_QTL_Chosen) {
+			Integer status_AP_Chosen, Integer status_AP_Fully_curated, Integer status_AP_Indexed,
+			Integer status_AP_Not_Routed, Integer status_AP_Rejected, Integer status_AP_Routed,
+			Integer status_GO_Chosen, Integer status_GO_Fully_curated, Integer status_GO_Indexed,
+			Integer status_GO_Not_Routed, Integer status_GO_Rejected, Integer status_GO_Routed,
+			Integer status_GXD_Chosen, Integer status_GXD_Fully_curated, Integer status_GXD_Indexed,
+			Integer status_GXD_Not_Routed, Integer status_GXD_Rejected, Integer status_GXD_Routed,
+			Integer status_QTL_Chosen, Integer status_QTL_Fully_curated, Integer status_QTL_Indexed,
+			Integer status_QTL_Not_Routed, Integer status_QTL_Rejected, Integer status_QTL_Routed,
+			Integer status_Tumor_Chosen, Integer status_Tumor_Fully_curated, Integer status_Tumor_Indexed,
+			Integer status_Tumor_Not_Routed, Integer status_Tumor_Rejected, Integer status_Tumor_Routed
+			) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		if (authors != null) { map.put("authors", authors); }
 		if (date != null) { map.put("date", date); }
@@ -51,7 +61,42 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		if (title != null) { map.put("title", title); }
 		if (volume != null) { map.put("volume", volume); }
 		if (year != null) { map.put("year", year); }
-		if ((status_QTL_Chosen != null) && (status_QTL_Chosen == 1)) { map.put("status_QTL_Chosen", status_QTL_Chosen); }
+
+		if ((status_AP_Chosen != null) && (status_AP_Chosen == 1)) { map.put("status_AP_Chosen", 1); }
+		if ((status_AP_Fully_curated != null) && (status_AP_Fully_curated == 1)) { map.put("status_AP_Fully_curated", 1); }
+		if ((status_AP_Indexed != null) && (status_AP_Indexed == 1)) { map.put("status_AP_Indexed", 1); }
+		if ((status_AP_Not_Routed != null) && (status_AP_Not_Routed == 1)) { map.put("status_AP_Not_Routed", 1); }
+		if ((status_AP_Rejected != null) && (status_AP_Rejected == 1)) { map.put("status_AP_Rejected", 1); }
+		if ((status_AP_Routed != null) && (status_AP_Routed == 1)) { map.put("status_AP_Routed", 1); }
+
+		if ((status_GO_Chosen != null) && (status_GO_Chosen == 1)) { map.put("status_GO_Chosen", 1); }
+		if ((status_GO_Fully_curated != null) && (status_GO_Fully_curated == 1)) { map.put("status_GO_Fully_curated", 1); }
+		if ((status_GO_Indexed != null) && (status_GO_Indexed == 1)) { map.put("status_GO_Indexed", 1); }
+		if ((status_GO_Not_Routed != null) && (status_GO_Not_Routed == 1)) { map.put("status_GO_Not_Routed", 1); }
+		if ((status_GO_Rejected != null) && (status_GO_Rejected == 1)) { map.put("status_GO_Rejected", 1); }
+		if ((status_GO_Routed != null) && (status_GO_Routed == 1)) { map.put("status_GO_Routed", 1); }
+
+		if ((status_GXD_Chosen != null) && (status_GXD_Chosen == 1)) { map.put("status_GXD_Chosen", 1); }
+		if ((status_GXD_Fully_curated != null) && (status_GXD_Fully_curated == 1)) { map.put("status_GXD_Fully_curated", 1); }
+		if ((status_GXD_Indexed != null) && (status_GXD_Indexed == 1)) { map.put("status_GXD_Indexed", 1); }
+		if ((status_GXD_Not_Routed != null) && (status_GXD_Not_Routed == 1)) { map.put("status_GXD_Not_Routed", 1); }
+		if ((status_GXD_Rejected != null) && (status_GXD_Rejected == 1)) { map.put("status_GXD_Rejected", 1); }
+		if ((status_GXD_Routed != null) && (status_GXD_Routed == 1)) { map.put("status_GXD_Routed", 1); }
+
+		if ((status_QTL_Chosen != null) && (status_QTL_Chosen == 1)) { map.put("status_QTL_Chosen", 1); }
+		if ((status_QTL_Fully_curated != null) && (status_QTL_Fully_curated == 1)) { map.put("status_QTL_Fully_curated", 1); }
+		if ((status_QTL_Indexed != null) && (status_QTL_Indexed == 1)) { map.put("status_QTL_Indexed", 1); }
+		if ((status_QTL_Not_Routed != null) && (status_QTL_Not_Routed == 1)) { map.put("status_QTL_Not_Routed", 1); }
+		if ((status_QTL_Rejected != null) && (status_QTL_Rejected == 1)) { map.put("status_QTL_Rejected", 1); }
+		if ((status_QTL_Routed != null) && (status_QTL_Routed == 1)) { map.put("status_QTL_Routed", 1); }
+
+		if ((status_Tumor_Chosen != null) && (status_Tumor_Chosen == 1)) { map.put("status_Tumor_Chosen", 1); }
+		if ((status_Tumor_Fully_curated != null) && (status_Tumor_Fully_curated == 1)) { map.put("status_Tumor_Fully_curated", 1); }
+		if ((status_Tumor_Indexed != null) && (status_Tumor_Indexed == 1)) { map.put("status_Tumor_Indexed", 1); }
+		if ((status_Tumor_Not_Routed != null) && (status_Tumor_Not_Routed == 1)) { map.put("status_Tumor_Not_Routed", 1); }
+		if ((status_Tumor_Rejected != null) && (status_Tumor_Rejected == 1)) { map.put("status_Tumor_Rejected", 1); }
+		if ((status_Tumor_Routed != null) && (status_Tumor_Routed == 1)) { map.put("status_Tumor_Routed", 1); }
+
 		log.info("Search Params: " + map);
 		SearchResults.resetTimer();
 		return new SearchResults<Reference>(referenceService.getReference(map));

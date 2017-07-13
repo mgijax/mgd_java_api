@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -20,6 +21,12 @@ import org.jax.mgi.mgd.api.entities.Term;
 @RequestScoped
 public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 
+	// maps from search field name to workflow group abbreviation
+	private static Map<String,String> groups = null;
+
+	// maps from search field name to workflow group status
+	private static Map<String,String> statuses = null;
+	
 	public ReferenceDAO() {
 		myClass = Reference.class;
 	}
@@ -39,9 +46,24 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		
 		// status query parameters (residing outside main reference table)
 		List<String> statusParameters = new ArrayList<String>();
+
+		// if caches are not yet built, fill the mappings as we check status parameters
+		boolean populateCaches = false;
+		if ((groups == null) || (statuses == null)) {
+			populateCaches = true;
+			groups = new HashMap<String,String>();
+			statuses = new HashMap<String,String>();
+		}
+
 		for (String group : new String[] { "AP", "GO", "GXD", "QTL", "Tumor" }) {
 			for (String status : new String[] { "Not_Routed", "Routed", "Indexed", "Chosen", "Fully_curated", "Rejected"}) {
-				statusParameters.add("status_" + group + "_" + status);
+				String fieldname = "status_" + group + "_" + status;
+				statusParameters.add(fieldname);
+				
+				if (populateCaches) {
+					groups.put(fieldname, group);
+					statuses.put(fieldname, status.replace("_", " "));
+				}
 			}
 		}
 
@@ -58,7 +80,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 
 		List<Predicate> restrictions = new ArrayList<Predicate>();
 		
-		// first handle the list of internal parameters (those that are in the table underlying Reference objects
+		// first, handle the list of internal parameters (those that are in the table underlying Reference objects
 		for (String key: internalParameters) {
 			if (params.containsKey(key)) {
 				Object desiredValue = params.get(key);
@@ -87,12 +109,17 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			}
 		}
 
-		// second handle list of status parameters
+		// second, handle list of status parameters
 		
 		boolean hasStatusParameter = false;
+		List<Predicate> wfsRestrictions = new ArrayList<Predicate>();
+
 		for (String key: statusParameters) {
 			if (params.containsKey(key)) {
 				hasStatusParameter = true;
+				
+				String groupAbbrev = groups.get(key);
+				String status = statuses.get(key);
 				
 				Subquery<ReferenceWorkflowStatus> wfsSubquery = query.subquery(ReferenceWorkflowStatus.class);
 				Root<ReferenceWorkflowStatus> wfsRoot = wfsSubquery.from(ReferenceWorkflowStatus.class);
@@ -100,12 +127,15 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 
 				List<Predicate> wfsPredicates = new ArrayList<Predicate>();
 				wfsPredicates.add(builder.equal(root.get("_refs_key"), wfsRoot.get("_refs_key")));
-				wfsPredicates.add(builder.equal(wfsRoot.get("groupTerm").get("abbreviation"), "QTL"));
-				wfsPredicates.add(builder.equal(wfsRoot.get("statusTerm").get("term"), "Chosen"));
+				wfsPredicates.add(builder.equal(wfsRoot.get("groupTerm").get("abbreviation"), groupAbbrev));
+				wfsPredicates.add(builder.equal(wfsRoot.get("statusTerm").get("term"), status));
 
 				wfsSubquery.where(wfsPredicates.toArray(new Predicate[]{}));
-				restrictions.add(builder.exists(wfsSubquery));
+				wfsRestrictions.add(builder.exists(wfsSubquery));
 			}
+		}
+		if (wfsRestrictions.size() > 0) {
+			restrictions.add(builder.or(wfsRestrictions.toArray(new Predicate[0])));
 		}
 		
 		// third handle list of external parameters, including:

@@ -88,8 +88,95 @@ public interface ReferenceRESTInterface {
 			@ApiParam(value = "Value: This is for searching by year")
 			@QueryParam("year") Integer year,
 			
+			@ApiParam(value = "1 = AP workflow group has Chosen status")
+			@QueryParam("status_AP_Chosen") Integer status_AP_Chosen,
+			
+			@ApiParam(value = "1 = AP workflow group has Fully curated status")
+			@QueryParam("status_AP_Fully_curated") Integer status_AP_Fully_curated,
+			
+			@ApiParam(value = "1 = AP workflow group has Indexed status")
+			@QueryParam("status_AP_Indexed") Integer status_AP_Indexed,
+			
+			@ApiParam(value = "1 = AP workflow group has Not Routed status")
+			@QueryParam("status_AP_Not_Routed") Integer status_AP_Not_Routed,
+			
+			@ApiParam(value = "1 = AP workflow group has Rejected status")
+			@QueryParam("status_AP_Rejected") Integer status_AP_Rejected,
+			
+			@ApiParam(value = "1 = AP workflow group has Routed status")
+			@QueryParam("status_AP_Routed") Integer status_AP_Routed,
+			
+			@ApiParam(value = "1 = GO workflow group has Chosen status")
+			@QueryParam("status_GO_Chosen") Integer status_GO_Chosen,
+			
+			@ApiParam(value = "1 = GO workflow group has Fully curated status")
+			@QueryParam("status_GO_Fully_curated") Integer status_GO_Fully_curated,
+			
+			@ApiParam(value = "1 = GO workflow group has Indexed status")
+			@QueryParam("status_GO_Indexed") Integer status_GO_Indexed,
+			
+			@ApiParam(value = "1 = GO workflow group has Not Routed status")
+			@QueryParam("status_GO_Not_Routed") Integer status_GO_Not_Routed,
+			
+			@ApiParam(value = "1 = GO workflow group has Rejected status")
+			@QueryParam("status_GO_Rejected") Integer status_GO_Rejected,
+			
+			@ApiParam(value = "1 = GO workflow group has Routed status")
+			@QueryParam("status_GO_Routed") Integer status_GO_Routed,
+			
+			@ApiParam(value = "1 = GXD workflow group has Chosen status")
+			@QueryParam("status_GXD_Chosen") Integer status_GXD_Chosen,
+			
+			@ApiParam(value = "1 = GXD workflow group has Fully curated status")
+			@QueryParam("status_GXD_Fully_curated") Integer status_GXD_Fully_curated,
+			
+			@ApiParam(value = "1 = GXD workflow group has Indexed status")
+			@QueryParam("status_GXD_Indexed") Integer status_GXD_Indexed,
+			
+			@ApiParam(value = "1 = GXD workflow group has Not Routed status")
+			@QueryParam("status_GXD_Not_Routed") Integer status_GXD_Not_Routed,
+			
+			@ApiParam(value = "1 = GXD workflow group has Rejected status")
+			@QueryParam("status_GXD_Rejected") Integer status_GXD_Rejected,
+			
+			@ApiParam(value = "1 = GXD workflow group has Routed status")
+			@QueryParam("status_GXD_Routed") Integer status_GXD_Routed,
+			
 			@ApiParam(value = "1 = QTL workflow group has Chosen status")
-			@QueryParam("status_QTL_Chosen") Integer status_QTL_Chosen
+			@QueryParam("status_QTL_Chosen") Integer status_QTL_Chosen,
+			
+			@ApiParam(value = "1 = QTL workflow group has Fully curated status")
+			@QueryParam("status_QTL_Fully_curated") Integer status_QTL_Fully_curated,
+			
+			@ApiParam(value = "1 = QTL workflow group has Indexed status")
+			@QueryParam("status_QTL_Indexed") Integer status_QTL_Indexed,
+			
+			@ApiParam(value = "1 = QTL workflow group has Not Routed status")
+			@QueryParam("status_QTL_Not_Routed") Integer status_QTL_Not_Routed,
+			
+			@ApiParam(value = "1 = QTL workflow group has Rejected status")
+			@QueryParam("status_QTL_Rejected") Integer status_QTL_Rejected,
+			
+			@ApiParam(value = "1 = QTL workflow group has Routed status")
+			@QueryParam("status_QTL_Routed") Integer status_QTL_Routed,
+			
+			@ApiParam(value = "1 = Tumor workflow group has Chosen status")
+			@QueryParam("status_Tumor_Chosen") Integer status_Tumor_Chosen,
+			
+			@ApiParam(value = "1 = Tumor workflow group has Fully curated status")
+			@QueryParam("status_Tumor_Fully_curated") Integer status_Tumor_Fully_curated,
+			
+			@ApiParam(value = "1 = Tumor workflow group has Indexed status")
+			@QueryParam("status_Tumor_Indexed") Integer status_Tumor_Indexed,
+			
+			@ApiParam(value = "1 = Tumor workflow group has Not Routed status")
+			@QueryParam("status_Tumor_Not_Routed") Integer status_Tumor_Not_Routed,
+			
+			@ApiParam(value = "1 = Tumor workflow group has Rejected status")
+			@QueryParam("status_Tumor_Rejected") Integer status_Tumor_Rejected,
+			
+			@ApiParam(value = "1 = Tumor workflow group has Routed status")
+			@QueryParam("status_Tumor_Routed") Integer status_Tumor_Routed
 			);
 
 	@DELETE

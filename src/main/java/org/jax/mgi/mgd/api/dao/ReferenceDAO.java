@@ -15,6 +15,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
 import org.jax.mgi.mgd.api.entities.Reference;
+import org.jax.mgi.mgd.api.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.entities.Term;
 
@@ -140,6 +141,19 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		
 		// third handle list of external parameters, including:
 		//		"notes", "reference_type", "marker_id", "allele_id", "accids", "mgi_discard"
+		
+		if (params.containsKey("notes")) {
+				Subquery<ReferenceNote> noteSubquery = query.subquery(ReferenceNote.class);
+				Root<ReferenceNote> noteRoot = noteSubquery.from(ReferenceNote.class);
+				noteSubquery.select(noteRoot);
+
+				List<Predicate> notePredicates = new ArrayList<Predicate>();
+				notePredicates.add(builder.equal(root.get("_refs_key"), noteRoot.get("_refs_key")));
+				notePredicates.add(builder.like(builder.lower(noteRoot.get("note")), ((String) params.get("notes")).toLowerCase()));
+
+				noteSubquery.where(notePredicates.toArray(new Predicate[]{}));
+				restrictions.add(builder.exists(noteSubquery));
+		}
 		
 		// finally execute the query and return the list of results
 		

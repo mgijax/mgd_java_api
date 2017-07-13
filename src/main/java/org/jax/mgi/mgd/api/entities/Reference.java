@@ -81,6 +81,10 @@ public class Reference extends Base {
 	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")
 	private Term referenceTypeTerm;
 	
+	@OneToOne (targetEntity=ReferenceNote.class, fetch=FetchType.EAGER)
+	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	private ReferenceNote note;
+	
 	/***--- transient methods ---***/
 	
 	/* Find and return the first accession ID mathcing any specified logical database, prefix,

@@ -19,11 +19,11 @@ public class PostgresSQLDAO<T> {
 	protected Class<T> myClass;
 
 	@PersistenceContext(unitName="primary")
-	private EntityManager entityManager;
+	protected EntityManager entityManager;
 	
-	private Logger log = Logger.getLogger(PostgresSQLDAO.class);
+	protected Logger log = Logger.getLogger(PostgresSQLDAO.class);
 
-	protected void setClazz(Class<T> myClass){
+	protected void setClass(Class<T> myClass){
 		this.myClass = myClass;
 	}
 
@@ -37,6 +37,8 @@ public class PostgresSQLDAO<T> {
 		return model;
 	}
 
+	/* default query handling; good for fields directly in the table backing model class T
+	 */
 	public List<T> get(HashMap<String, Object> params) {
 		log.info("Lookup: " + params);
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();

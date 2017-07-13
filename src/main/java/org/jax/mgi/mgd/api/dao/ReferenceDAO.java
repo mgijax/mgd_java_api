@@ -1,6 +1,16 @@
 package org.jax.mgi.mgd.api.dao;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+
 import javax.enterprise.context.RequestScoped;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.jax.mgi.mgd.api.entities.Reference;
 
@@ -9,5 +19,87 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 
 	public ReferenceDAO() {
 		myClass = Reference.class;
+	}
+
+	/* query handling specific for references.  Some fields are within the table backing Reference,
+	 * while others are coming from related tables.
+	 */
+	public List<Reference> get(HashMap<String, Object> params) {
+		// query parameters existing in main reference table
+		List<String> internalParameters = new ArrayList<String>(Arrays.asList(
+			new String[] { "issue", "pages", "date", "abstract", "is_review", "title",
+				"authors", "primary_author", "journal", "volume", "year" }));
+		
+		// non-status query parameters residing outside main reference table
+		//List<String> externalParameters = new ArrayList<String>(Arrays.asList(
+		//	new String[] { "notes", "reference_type", "marker_id", "allele_id", "accids", "mgi_discard" }));
+		
+		// status query parameters (residing outside main reference table)
+		List<String> statusParameters = new ArrayList<String>();
+		for (String group : new String[] { "AP", "GO", "GXD", "QTL", "Tumor" }) {
+			for (String status : new String[] { "Not_Routed", "Routed", "Indexed", "Chosen", "Fully_curated", "Rejected"}) {
+				statusParameters.add("status_" + group + "_" + status);
+			}
+		}
+
+		/* if we handle status parameters before non-status parameters, we can keep a flag indicating whether
+		 * some status search has been chosen.  If not, we need to look for the mgi_discard flag to find either:
+		 * 1. (flag not set) references with at least one setting other than "Not Routed", or
+		 * 2. (flag set) references with no settings other than "Not Routed"
+		 */
+		
+		log.info("Reference Lookup: " + params);
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Reference> query = builder.createQuery(myClass);
+		Root<Reference> root = query.from(myClass);
+
+		List<Predicate> restrictions = new ArrayList<Predicate>();
+		
+		// first handle the list of internal parameters (those that are in the table underlying Reference objects
+		for (String key: internalParameters) {
+			if (params.containsKey(key)) {
+				Object desiredValue = params.get(key);
+
+				// special handling for strings, depending on whether string contains a wildcard or any letters
+				if (desiredValue instanceof String) {
+					String valueString = (String) desiredValue;
+					// has at least one wildcard, so do case-insensitive 'like' search
+					if (valueString.indexOf("%") >= 0) {
+						restrictions.add(builder.like(builder.lower(root.get(key)), valueString.toLowerCase()));
+
+					} else if (valueString.matches(".*[A-Za-z].*")) {
+						// no wildcards, but has at least one letter, so we know this needs to be a
+						// case-insensitive equals search
+						restrictions.add(builder.equal(builder.lower(root.get(key)), valueString.toLowerCase()));
+
+					} else {
+						// no wildcards, no letters -- do a simple equals search
+						restrictions.add(builder.equal(root.get(key), desiredValue));
+					}
+				}
+				else {
+					// not a string, so just do an equals search
+					restrictions.add(builder.equal(root.get(key), desiredValue)); 
+				}
+			}
+		}
+
+		// second handle list of status parameters
+		
+		boolean hasStatusParameter = false;
+		for (String key: statusParameters) {
+			if (params.containsKey(key)) {
+				hasStatusParameter = true;
+			}
+		}
+		
+		// third handle list of external parameters, including:
+		//		"notes", "reference_type", "marker_id", "allele_id", "accids", "mgi_discard"
+		
+		// finally execute the query and return the list of results
+		
+		query.where(builder.and(restrictions.toArray(new Predicate[0])));
+
+		return entityManager.createQuery(query).getResultList();
 	}
 }

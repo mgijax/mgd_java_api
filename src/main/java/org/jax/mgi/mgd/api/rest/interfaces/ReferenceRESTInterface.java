@@ -55,13 +55,39 @@ public interface ReferenceRESTInterface {
 			@QueryParam("refsKey") String refsKey);
 
 	@GET
+	@Path("/search")
 	@ApiOperation(value = "Value: Searches Reference by Fields", notes="Notes: Searches Reference Fields")
 	public SearchResults<Reference> getReference(
-			@ApiParam(value = "Value: This is for searching by primary Id")
-			@QueryParam("primaryId") String primaryId,
-			
 			@ApiParam(value = "Value: This is for searching by authors")
-			@QueryParam("authors") String authors);
+			@QueryParam("authors") String authors,
+			
+			@ApiParam(value = "Value: This is for searching by date")
+			@QueryParam("date") String date,
+			
+			@ApiParam(value = "Value: This is for searching by is_review (0/1)")
+			@QueryParam("is_review") Integer is_review,
+			
+			@ApiParam(value = "Value: This is for searching by issue")
+			@QueryParam("issue") String issue,
+			
+			@ApiParam(value = "Value: This is for searching by pages")
+			@QueryParam("pages") String pages,
+			
+			@ApiParam(value = "Value: This is for searching by primary_author")
+			@QueryParam("primary_author") String primary_author,
+			
+			@ApiParam(value = "Value: This is for searching by abstract")
+			@QueryParam("ref_abstract") String ref_abstract,
+			
+			@ApiParam(value = "Value: This is for searching by title")
+			@QueryParam("title") String title,
+			
+			@ApiParam(value = "Value: This is for searching by volume")
+			@QueryParam("volume") String volume,
+			
+			@ApiParam(value = "Value: This is for searching by year")
+			@QueryParam("year") Integer year
+			);
 
 	@DELETE
 	@ApiOperation(value = "Value: Deletes Reference", notes="Notes: Deletes a Reference")

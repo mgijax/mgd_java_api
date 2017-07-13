@@ -11,8 +11,11 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.jax.mgi.mgd.api.entities.Reference;
+import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
+import org.jax.mgi.mgd.api.entities.Term;
 
 @RequestScoped
 public class ReferenceDAO extends PostgresSQLDAO<Reference> {
@@ -90,6 +93,18 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		for (String key: statusParameters) {
 			if (params.containsKey(key)) {
 				hasStatusParameter = true;
+				
+				Subquery<ReferenceWorkflowStatus> wfsSubquery = query.subquery(ReferenceWorkflowStatus.class);
+				Root<ReferenceWorkflowStatus> wfsRoot = wfsSubquery.from(ReferenceWorkflowStatus.class);
+				wfsSubquery.select(wfsRoot);
+
+				List<Predicate> wfsPredicates = new ArrayList<Predicate>();
+				wfsPredicates.add(builder.equal(root.get("_refs_key"), wfsRoot.get("_refs_key")));
+				wfsPredicates.add(builder.equal(wfsRoot.get("groupTerm").get("abbreviation"), "QTL"));
+				wfsPredicates.add(builder.equal(wfsRoot.get("statusTerm").get("term"), "Chosen"));
+
+				wfsSubquery.where(wfsPredicates.toArray(new Predicate[]{}));
+				restrictions.add(builder.exists(wfsSubquery));
 			}
 		}
 		
@@ -99,7 +114,8 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		// finally execute the query and return the list of results
 		
 		query.where(builder.and(restrictions.toArray(new Predicate[0])));
-
+		log.debug(query.toString());
+		log.debug(entityManager.createQuery(query).toString());
 		return entityManager.createQuery(query).getResultList();
 	}
 }

@@ -86,7 +86,10 @@ public interface ReferenceRESTInterface {
 			@QueryParam("volume") String volume,
 			
 			@ApiParam(value = "Value: This is for searching by year")
-			@QueryParam("year") Integer year
+			@QueryParam("year") Integer year,
+			
+			@ApiParam(value = "1 = QTL workflow group has Chosen status")
+			@QueryParam("status_QTL_Chosen") Integer status_QTL_Chosen
 			);
 
 	@DELETE

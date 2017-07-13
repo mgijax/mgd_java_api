@@ -38,7 +38,8 @@ public class ReferenceController extends BaseController implements ReferenceREST
 
 	@Override
 	public SearchResults<Reference> getReference(String authors, String date, Integer is_review, String issue,
-			String pages, String primary_author, String ref_abstract, String title, String volume, Integer year) {
+			String pages, String primary_author, String ref_abstract, String title, String volume, Integer year,
+			Integer status_QTL_Chosen) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		if (authors != null) { map.put("authors", authors); }
 		if (date != null) { map.put("date", date); }
@@ -50,6 +51,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		if (title != null) { map.put("title", title); }
 		if (volume != null) { map.put("volume", volume); }
 		if (year != null) { map.put("year", year); }
+		if ((status_QTL_Chosen != null) && (status_QTL_Chosen == 1)) { map.put("status_QTL_Chosen", status_QTL_Chosen); }
 		log.info("Search Params: " + map);
 		SearchResults.resetTimer();
 		return new SearchResults<Reference>(referenceService.getReference(map));

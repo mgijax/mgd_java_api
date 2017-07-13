@@ -143,16 +143,20 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		//		"notes", "reference_type", "marker_id", "allele_id", "accids", "mgi_discard"
 		
 		if (params.containsKey("notes")) {
-				Subquery<ReferenceNote> noteSubquery = query.subquery(ReferenceNote.class);
-				Root<ReferenceNote> noteRoot = noteSubquery.from(ReferenceNote.class);
-				noteSubquery.select(noteRoot);
+			Subquery<ReferenceNote> noteSubquery = query.subquery(ReferenceNote.class);
+			Root<ReferenceNote> noteRoot = noteSubquery.from(ReferenceNote.class);
+			noteSubquery.select(noteRoot);
 
-				List<Predicate> notePredicates = new ArrayList<Predicate>();
-				notePredicates.add(builder.equal(root.get("_refs_key"), noteRoot.get("_refs_key")));
-				notePredicates.add(builder.like(builder.lower(noteRoot.get("note")), ((String) params.get("notes")).toLowerCase()));
+			List<Predicate> notePredicates = new ArrayList<Predicate>();
+			notePredicates.add(builder.equal(root.get("_refs_key"), noteRoot.get("_refs_key")));
+			notePredicates.add(builder.like(builder.lower(noteRoot.get("note")), ((String) params.get("notes")).toLowerCase()));
 
-				noteSubquery.where(notePredicates.toArray(new Predicate[]{}));
-				restrictions.add(builder.exists(noteSubquery));
+			noteSubquery.where(notePredicates.toArray(new Predicate[]{}));
+			restrictions.add(builder.exists(noteSubquery));
+		}
+		
+		if (params.containsKey("reference_type")) {
+			restrictions.add(builder.equal(root.get("referenceTypeTerm").get("term"), params.get("reference_type")));
 		}
 		
 		// finally execute the query and return the list of results

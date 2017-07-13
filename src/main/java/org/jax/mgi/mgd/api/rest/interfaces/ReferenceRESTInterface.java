@@ -70,6 +70,9 @@ public interface ReferenceRESTInterface {
 			@ApiParam(value = "Value: This is for searching by issue")
 			@QueryParam("issue") String issue,
 			
+			@ApiParam(value = "Value: This is for searching by notes")
+			@QueryParam("notes") String notes,
+			
 			@ApiParam(value = "Value: This is for searching by pages")
 			@QueryParam("pages") String pages,
 			
@@ -79,6 +82,9 @@ public interface ReferenceRESTInterface {
 			@ApiParam(value = "Value: This is for searching by abstract")
 			@QueryParam("ref_abstract") String ref_abstract,
 			
+			@ApiParam(value = "Value: This is for searching by reference type")
+			@QueryParam("reference_type") String reference_type,
+			
 			@ApiParam(value = "Value: This is for searching by title")
 			@QueryParam("title") String title,
 			
@@ -87,9 +93,6 @@ public interface ReferenceRESTInterface {
 			
 			@ApiParam(value = "Value: This is for searching by year")
 			@QueryParam("year") Integer year,
-			
-			@ApiParam(value = "Value: This is for searching by notes")
-			@QueryParam("notes") String notes,
 			
 			@ApiParam(value = "1 = AP workflow group has Chosen status")
 			@QueryParam("status_AP_Chosen") Integer status_AP_Chosen,

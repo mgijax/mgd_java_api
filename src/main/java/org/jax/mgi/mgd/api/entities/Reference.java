@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
@@ -81,7 +82,8 @@ public class Reference extends Base {
 	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")
 	private Term referenceTypeTerm;
 	
-	@OneToOne (targetEntity=ReferenceNote.class, fetch=FetchType.EAGER)
+	// cannot eager-load an attribute that might not be there
+	@OneToOne (targetEntity=ReferenceNote.class, fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
 	private ReferenceNote note;
 	

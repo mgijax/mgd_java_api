@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.entities;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -7,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="acc_accession")
-public class AccessionID {
+public class AccessionID extends Base implements Serializable {
 	@Id
 	@Column(name="_accession_key")
 	public int _accession_key;

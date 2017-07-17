@@ -58,6 +58,9 @@ public interface ReferenceRESTInterface {
 	@Path("/search")
 	@ApiOperation(value = "Value: Searches Reference by Fields", notes="Notes: Searches Reference Fields")
 	public SearchResults<Reference> getReference(
+			@ApiParam(value = "Value: This is for searching by reference IDs")
+			@QueryParam("accids") String accids,
+			
 			@ApiParam(value = "Value: This is for searching by authors")
 			@QueryParam("authors") String authors,
 			
@@ -69,6 +72,9 @@ public interface ReferenceRESTInterface {
 			
 			@ApiParam(value = "Value: This is for searching by issue")
 			@QueryParam("issue") String issue,
+			
+			@ApiParam(value = "Value: This is for searching by marker ID")
+			@QueryParam("marker_id") String marker_id,
 			
 			@ApiParam(value = "Value: This is for searching by notes")
 			@QueryParam("notes") String notes,
@@ -93,9 +99,6 @@ public interface ReferenceRESTInterface {
 			
 			@ApiParam(value = "Value: This is for searching by year")
 			@QueryParam("year") Integer year,
-			
-			@ApiParam(value = "Value: This is for searching by by reference IDs")
-			@QueryParam("accids") String accids,
 			
 			@ApiParam(value = "1 = AP workflow group has Chosen status")
 			@QueryParam("status_AP_Chosen") Integer status_AP_Chosen,

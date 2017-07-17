@@ -37,9 +37,10 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	}
 
 	@Override
-	public SearchResults<Reference> getReference(String authors, String date, Integer is_review, String issue,
+	public SearchResults<Reference> getReference(String accids, String authors, String date, Integer is_review,
+			String issue, String marker_id,
 			String notes, String pages, String primary_author, String ref_abstract, String reference_type,
-			String title, String volume, Integer year, String accids,
+			String title, String volume, Integer year, 
 			Integer status_AP_Chosen, Integer status_AP_Fully_curated, Integer status_AP_Indexed,
 			Integer status_AP_Not_Routed, Integer status_AP_Rejected, Integer status_AP_Routed,
 			Integer status_GO_Chosen, Integer status_GO_Fully_curated, Integer status_GO_Indexed,
@@ -52,10 +53,12 @@ public class ReferenceController extends BaseController implements ReferenceREST
 			Integer status_Tumor_Not_Routed, Integer status_Tumor_Rejected, Integer status_Tumor_Routed
 			) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		if (accids != null) { map.put("accids", accids); }
 		if (authors != null) { map.put("authors", authors); }
 		if (date != null) { map.put("date", date); }
 		if (is_review != null) { map.put("is_review", is_review); }
 		if (issue != null) { map.put("issue", issue); }
+		if (marker_id != null) { map.put("marker_id", marker_id); }
 		if (pages != null) { map.put("pages", pages); }
 		if (primary_author != null) { map.put("primary_author", primary_author); }
 		if (ref_abstract != null) { map.put("ref_abstract", ref_abstract); }
@@ -64,7 +67,6 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		if (year != null) { map.put("year", year); }
 		if (notes != null) { map.put("notes", notes); }
 		if (reference_type != null) { map.put("reference_type", reference_type); }
-		if (accids != null) { map.put("accids", accids); }
 
 		if ((status_AP_Chosen != null) && (status_AP_Chosen == 1)) { map.put("status_AP_Chosen", 1); }
 		if ((status_AP_Fully_curated != null) && (status_AP_Fully_curated == 1)) { map.put("status_AP_Fully_curated", 1); }

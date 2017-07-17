@@ -16,6 +16,7 @@ import javax.persistence.criteria.Subquery;
 
 import org.jax.mgi.mgd.api.entities.AccessionID;
 import org.jax.mgi.mgd.api.entities.Reference;
+import org.jax.mgi.mgd.api.entities.ReferenceMarkerAssociation;
 import org.jax.mgi.mgd.api.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.entities.Term;
@@ -186,6 +187,22 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			}
 		}
 		
+		if (params.containsKey("marker_id")) {
+			String idString = (String) params.get("marker_id");
+
+			Subquery<ReferenceMarkerAssociation> idSubquery = query.subquery(ReferenceMarkerAssociation.class);
+			Root<ReferenceMarkerAssociation> idRoot = idSubquery.from(ReferenceMarkerAssociation.class);
+			idSubquery.select(idRoot);
+			
+			List<Predicate> idPredicates = new ArrayList<Predicate>();
+				
+			idPredicates.add(builder.equal(root.get("_refs_key"), idRoot.get("keys").get("_refs_key")));
+			idPredicates.add(builder.equal(idRoot.get("markerID").get("accID"), idString));
+
+			idSubquery.where(idPredicates.toArray(new Predicate[]{}));
+			restrictions.add(builder.exists(idSubquery));
+		}
+
 		// finally execute the query and return the list of results
 		
 		query.where(builder.and(restrictions.toArray(new Predicate[0])));

@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -14,6 +15,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
@@ -77,6 +79,12 @@ public class Reference extends Base {
 	@Where(clause="_mgitype_key = 1")
 	@OrderBy("_logicaldb_key, preferred desc")
 	private List<AccessionID> accessionIDs;
+
+	@OneToMany (targetEntity=ReferenceMarkerAssociation.class, fetch=FetchType.LAZY)
+	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	@BatchSize(size=200)
+	@Fetch(value=FetchMode.SUBSELECT)
+	private List<ReferenceMarkerAssociation> markerAssociations;
 
 	@OneToOne (targetEntity=Term.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")

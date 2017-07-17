@@ -39,7 +39,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	@Override
 	public SearchResults<Reference> getReference(String authors, String date, Integer is_review, String issue,
 			String notes, String pages, String primary_author, String ref_abstract, String reference_type,
-			String title, String volume, Integer year,
+			String title, String volume, Integer year, String accids,
 			Integer status_AP_Chosen, Integer status_AP_Fully_curated, Integer status_AP_Indexed,
 			Integer status_AP_Not_Routed, Integer status_AP_Rejected, Integer status_AP_Routed,
 			Integer status_GO_Chosen, Integer status_GO_Fully_curated, Integer status_GO_Indexed,
@@ -64,6 +64,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		if (year != null) { map.put("year", year); }
 		if (notes != null) { map.put("notes", notes); }
 		if (reference_type != null) { map.put("reference_type", reference_type); }
+		if (accids != null) { map.put("accids", accids); }
 
 		if ((status_AP_Chosen != null) && (status_AP_Chosen == 1)) { map.put("status_AP_Chosen", 1); }
 		if ((status_AP_Fully_curated != null) && (status_AP_Fully_curated == 1)) { map.put("status_AP_Fully_curated", 1); }

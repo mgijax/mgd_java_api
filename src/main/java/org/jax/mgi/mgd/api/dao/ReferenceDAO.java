@@ -14,6 +14,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
+import org.jax.mgi.mgd.api.entities.AccessionID;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
@@ -157,6 +158,32 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		
 		if (params.containsKey("reference_type")) {
 			restrictions.add(builder.equal(root.get("referenceTypeTerm").get("term"), params.get("reference_type")));
+		}
+		
+		if (params.containsKey("accids")) {
+			String idString = (String) params.get("accids");
+			String[] accids = idString.replaceAll(",", " ").replaceAll(" +", " ").split(" ");
+			
+			List<Predicate> idRestrictions = new ArrayList<Predicate>();
+
+			for (String accid : accids) {
+				Subquery<AccessionID> idSubquery = query.subquery(AccessionID.class);
+				Root<AccessionID> idRoot = idSubquery.from(AccessionID.class);
+				idSubquery.select(idRoot);
+			
+				List<Predicate> idPredicates = new ArrayList<Predicate>();
+				
+				idPredicates.add(builder.equal(root.get("_refs_key"), idRoot.get("_object_key")));
+				idPredicates.add(builder.equal(idRoot.get("accID"), accid));
+				idPredicates.add(builder.equal(idRoot.get("_mgitype_key"), 1));
+
+				idSubquery.where(idPredicates.toArray(new Predicate[]{}));
+				idRestrictions.add(builder.exists(idSubquery));
+			}
+
+			if (idRestrictions.size() > 0) {
+				restrictions.add(builder.or(idRestrictions.toArray(new Predicate[0])));
+			}
 		}
 		
 		// finally execute the query and return the list of results

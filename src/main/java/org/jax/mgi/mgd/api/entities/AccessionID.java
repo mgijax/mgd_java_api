@@ -24,6 +24,9 @@ public class AccessionID {
 	@Column(name="_logicaldb_key")
 	public Integer _logicaldb_key;
 	
+	@Column(name="_object_key")
+	public Integer _object_key;
+	
 	@Column(name="_mgitype_key")
 	public Integer _mgitype_key;
 	

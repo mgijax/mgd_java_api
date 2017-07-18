@@ -168,20 +168,18 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			
 			List<Predicate> idRestrictions = new ArrayList<Predicate>();
 
-			for (String accid : accids) {
-				Subquery<AccessionID> idSubquery = query.subquery(AccessionID.class);
-				Root<AccessionID> idRoot = idSubquery.from(AccessionID.class);
-				idSubquery.select(idRoot);
+			Subquery<AccessionID> idSubquery = query.subquery(AccessionID.class);
+			Root<AccessionID> idRoot = idSubquery.from(AccessionID.class);
+			idSubquery.select(idRoot);
 			
-				List<Predicate> idPredicates = new ArrayList<Predicate>();
+			List<Predicate> idPredicates = new ArrayList<Predicate>();
 				
-				idPredicates.add(builder.equal(root.get("_refs_key"), idRoot.get("_object_key")));
-				idPredicates.add(builder.equal(idRoot.get("accID"), accid));
-				idPredicates.add(builder.equal(idRoot.get("_mgitype_key"), 1));
+			idPredicates.add(builder.equal(root.get("_refs_key"), idRoot.get("_object_key")));
+			idPredicates.add(idRoot.get("accID").in((Object[]) accids));
+			idPredicates.add(builder.equal(idRoot.get("_mgitype_key"), 1));
 
-				idSubquery.where(idPredicates.toArray(new Predicate[]{}));
-				idRestrictions.add(builder.exists(idSubquery));
-			}
+			idSubquery.where(idPredicates.toArray(new Predicate[]{}));
+			idRestrictions.add(builder.exists(idSubquery));
 
 			if (idRestrictions.size() > 0) {
 				restrictions.add(builder.or(idRestrictions.toArray(new Predicate[0])));

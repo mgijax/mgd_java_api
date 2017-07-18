@@ -37,7 +37,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	}
 
 	@Override
-	public SearchResults<Reference> getReference(String accids, String authors, String date, Integer is_review,
+	public SearchResults<Reference> getReference(String accids, String allele_id, String authors, String date, Integer is_review,
 			String issue, String marker_id,
 			String notes, String pages, String primary_author, String ref_abstract, String reference_type,
 			String title, String volume, Integer year, 
@@ -54,6 +54,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 			) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		if (accids != null) { map.put("accids", accids); }
+		if (allele_id != null) { map.put("allele_id", allele_id); }
 		if (authors != null) { map.put("authors", authors); }
 		if (date != null) { map.put("date", date); }
 		if (is_review != null) { map.put("is_review", is_review); }

@@ -80,6 +80,13 @@ public class Reference extends Base {
 	@OrderBy("_logicaldb_key, preferred desc")
 	private List<AccessionID> accessionIDs;
 
+	@OneToMany (targetEntity=ReferenceAlleleAssociation.class, fetch=FetchType.LAZY)
+	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	@BatchSize(size=200)
+	@Where(clause="_mgitype_key = 11")
+	@Fetch(value=FetchMode.SUBSELECT)
+	private List<ReferenceAlleleAssociation> alleleAssociations;
+
 	@OneToMany (targetEntity=ReferenceMarkerAssociation.class, fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
 	@BatchSize(size=200)

@@ -61,6 +61,9 @@ public interface ReferenceRESTInterface {
 			@ApiParam(value = "Value: This is for searching by reference IDs")
 			@QueryParam("accids") String accids,
 			
+			@ApiParam(value = "Value: This is for searching by allele ID")
+			@QueryParam("allele_id") String allele_id,
+			
 			@ApiParam(value = "Value: This is for searching by authors")
 			@QueryParam("authors") String authors,
 			

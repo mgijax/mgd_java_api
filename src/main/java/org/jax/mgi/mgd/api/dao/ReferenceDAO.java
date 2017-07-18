@@ -16,6 +16,7 @@ import javax.persistence.criteria.Subquery;
 
 import org.jax.mgi.mgd.api.entities.AccessionID;
 import org.jax.mgi.mgd.api.entities.Reference;
+import org.jax.mgi.mgd.api.entities.ReferenceAlleleAssociation;
 import org.jax.mgi.mgd.api.entities.ReferenceMarkerAssociation;
 import org.jax.mgi.mgd.api.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
@@ -198,6 +199,24 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 				
 			idPredicates.add(builder.equal(root.get("_refs_key"), idRoot.get("keys").get("_refs_key")));
 			idPredicates.add(builder.equal(idRoot.get("markerID").get("accID"), idString));
+
+			idSubquery.where(idPredicates.toArray(new Predicate[]{}));
+			restrictions.add(builder.exists(idSubquery));
+		}
+
+		if (params.containsKey("allele_id")) {
+			String idString = (String) params.get("allele_id");
+
+			Subquery<ReferenceAlleleAssociation> idSubquery = query.subquery(ReferenceAlleleAssociation.class);
+			Root<ReferenceAlleleAssociation> idRoot = idSubquery.from(ReferenceAlleleAssociation.class);
+			idSubquery.select(idRoot);
+			
+			List<Predicate> idPredicates = new ArrayList<Predicate>();
+				
+			idPredicates.add(builder.equal(root.get("_refs_key"), idRoot.get("_refs_key")));
+			idPredicates.add(builder.equal(idRoot.get("_mgitype_key"), 11));
+			idPredicates.add(builder.equal(idRoot.get("alleleID").get("accID"), idString));
+			idPredicates.add(builder.equal(idRoot.get("alleleID").get("_mgitype_key"), 11));
 
 			idSubquery.where(idPredicates.toArray(new Predicate[]{}));
 			restrictions.add(builder.exists(idSubquery));

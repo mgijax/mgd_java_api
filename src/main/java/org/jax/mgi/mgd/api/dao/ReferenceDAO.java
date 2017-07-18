@@ -41,7 +41,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	public List<Reference> get(HashMap<String, Object> params) {
 		// query parameters existing in main reference table
 		List<String> internalParameters = new ArrayList<String>(Arrays.asList(
-			new String[] { "issue", "pages", "date", "ref_abstract", "is_review", "title",
+			new String[] { "issue", "pages", "date", "ref_abstract", "isReviewArticle", "title",
 				"authors", "primary_author", "journal", "volume", "year" }));
 		
 		// non-status query parameters residing outside main reference table

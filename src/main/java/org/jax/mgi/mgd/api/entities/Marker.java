@@ -24,7 +24,7 @@ public class Marker extends Base {
 	
 	@OneToMany(mappedBy="_object_key", fetch=FetchType.EAGER)
 	@Where(clause="_mgitype_key = 2 AND preferred = 1")
-	public List<Accession> accessions;
+	public List<AccessionID> accessionIDs;
 
 	public String symbol;
 	public String name;

@@ -1,7 +1,5 @@
 package org.jax.mgi.mgd.api.rest.interfaces;
 
-import java.util.List;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -49,10 +47,11 @@ public interface ReferenceRESTInterface {
 
 	@GET
 	@Path("/valid")
-	@ApiOperation(value = "Value: Look up a single Reference by reference key")
-	public Reference getReferenceByKey(
+	@ApiOperation(value = "Value: Check to see if a reference is valid by doing a key-based lookup")
+	public SearchResults<Reference> getValidReferenceCheck(
 			@ApiParam(value = "Value: This is for searching by reference key")
-			@QueryParam("refsKey") String refsKey);
+			@QueryParam("refsKey") String refsKey
+	);
 
 	@GET
 	@Path("/search")
@@ -196,6 +195,13 @@ public interface ReferenceRESTInterface {
 			@ApiParam(value = "1 = Tumor workflow group has Routed status")
 			@QueryParam("status_Tumor_Routed") Integer status_Tumor_Routed
 			);
+
+	@GET
+	@Path("/{refsKey}")
+	@ApiOperation(value = "Value: Retrieve a single Reference by reference key")
+	public SearchResults<Reference> getReferenceByKey (
+			@ApiParam(value = "Value: This is for searching by reference key")
+			@PathParam("refsKey") String refsKey);
 
 	@DELETE
 	@ApiOperation(value = "Value: Deletes Reference", notes="Notes: Deletes a Reference")

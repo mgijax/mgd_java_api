@@ -42,7 +42,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		// query parameters existing in main reference table
 		List<String> internalParameters = new ArrayList<String>(Arrays.asList(
 			new String[] { "issue", "pages", "date", "ref_abstract", "isReviewArticle", "title",
-				"authors", "primary_author", "journal", "volume", "year" }));
+				"authors", "primary_author", "journal", "volume", "year", "_refs_key" }));
 		
 		// non-status query parameters residing outside main reference table
 		//List<String> externalParameters = new ArrayList<String>(Arrays.asList(

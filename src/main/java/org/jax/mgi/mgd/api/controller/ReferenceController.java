@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.rest.interfaces.ReferenceRESTInterface;
 import org.jax.mgi.mgd.api.service.ReferenceService;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -110,6 +111,31 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		return new SearchResults<Reference>(referenceService.getReference(map));
 	}
 
+
+	@Override
+	public SearchResults<Reference> getValidReferenceCheck (String refsKey) {
+		return this.getReferenceByKey(refsKey);
+	}
+
+	@Override
+	public SearchResults<Reference> getReferenceByKey (String refsKey) {
+		SearchResults<Reference> results = new SearchResults<Reference>();
+		SearchResults.resetTimer();
+		if (refsKey != null) {
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("_refs_key", Long.parseLong(refsKey));
+			List<Reference> references = referenceService.getReference(map);
+			if ((references != null) && (references.size() > 0)) {
+				results.setItem(references.get(0));
+			} else {
+				results.setError("NotFound", "No reference with key " + refsKey, Constants.HTTP_NOT_FOUND);
+			}
+		} else {
+			results.setError("InvalidParameter", "No reference key was specified", Constants.HTTP_BAD_REQUEST);
+		}
+		return results;
+	}
+
 	@Override
 	public Reference deleteReference(String api_access_token, String id) {
 		if(authenticate(api_access_token)) {
@@ -118,15 +144,4 @@ public class ReferenceController extends BaseController implements ReferenceREST
 			return null;
 		}
 	}
-
-	@Override
-	public Reference getReferenceByKey (String refsKey) {
-		if (refsKey != null) {
-			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put("_refs_key", Long.parseLong(refsKey));
-			return referenceService.getReference(map).get(0);
-		}
-		return null;
-	}
-
 }

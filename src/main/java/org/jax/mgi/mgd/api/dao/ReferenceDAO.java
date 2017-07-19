@@ -164,7 +164,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		
 		if (params.containsKey("accids")) {
 			String idString = (String) params.get("accids");
-			String[] accids = idString.replaceAll(",", " ").replaceAll(" +", " ").split(" ");
+			String[] accids = idString.toLowerCase().replaceAll(",", " ").replaceAll(" +", " ").split(" ");
 			
 			List<Predicate> idRestrictions = new ArrayList<Predicate>();
 
@@ -175,7 +175,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			List<Predicate> idPredicates = new ArrayList<Predicate>();
 				
 			idPredicates.add(builder.equal(root.get("_refs_key"), idRoot.get("_object_key")));
-			idPredicates.add(idRoot.get("accID").in((Object[]) accids));
+			idPredicates.add(builder.lower(idRoot.get("accID")).in((Object[]) accids));
 			idPredicates.add(builder.equal(idRoot.get("_mgitype_key"), 1));
 
 			idSubquery.where(idPredicates.toArray(new Predicate[]{}));

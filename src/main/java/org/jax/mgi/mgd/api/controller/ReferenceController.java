@@ -38,7 +38,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 
 	@Override
 	public SearchResults<Reference> getReference(String accids, String allele_id, String authors, String date,
-			Integer isReviewArticle, String issue, String marker_id,
+			Integer isReviewArticle, String issue, String journal, String marker_id,
 			String notes, String pages, String primary_author, String ref_abstract, String reference_type,
 			String title, String volume, Integer year, 
 			Integer status_AP_Chosen, Integer status_AP_Fully_curated, Integer status_AP_Indexed,
@@ -59,6 +59,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		if (date != null) { map.put("date", date); }
 		if (isReviewArticle != null) { map.put("isReviewArticle", isReviewArticle); }
 		if (issue != null) { map.put("issue", issue); }
+		if (journal != null) { map.put("journal", journal); }
 		if (marker_id != null) { map.put("marker_id", marker_id); }
 		if (pages != null) { map.put("pages", pages); }
 		if (primary_author != null) { map.put("primary_author", primary_author); }

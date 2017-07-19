@@ -76,6 +76,9 @@ public interface ReferenceRESTInterface {
 			@ApiParam(value = "Value: This is for searching by issue")
 			@QueryParam("issue") String issue,
 			
+			@ApiParam(value = "Value: This is for searching by journal")
+			@QueryParam("journal") String journal,
+			
 			@ApiParam(value = "Value: This is for searching by marker ID")
 			@QueryParam("marker_id") String marker_id,
 			

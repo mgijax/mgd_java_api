@@ -104,11 +104,11 @@ public class Reference extends Base {
 	
 	/***--- transient methods ---***/
 	
-	/* Find and return the first accession ID mathcing any specified logical database, prefix,
+	/* Find and return the first accession ID matching any specified logical database, prefix,
 	 * is-preferred, and is-private settings.
 	 */
 	@Transient
-	public String findFirstID(Integer ldb, String prefix, Integer preferred, Integer isPrivate) {
+	private String findFirstID(Integer ldb, String prefix, Integer preferred, Integer isPrivate) {
 		for (AccessionID accID : accessionIDs) {
 			if ((ldb == null) || (ldb == accID._logicaldb_key))
 				if ((prefix == null) || prefix.equals(accID.prefixPart))

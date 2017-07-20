@@ -18,20 +18,26 @@ public class SearchResults<T> {
 	public SearchResults(List<T> items) {
 		this.items = items;
 		this.total_count = items.size();
-		this.elapsed_ms = System.currentTimeMillis() - startTime;
+		this.measureTime();
 	}
 	
 	public SearchResults(List<T> items, long total_count) {
 		this.items = items;
 		this.total_count = total_count;
-		this.elapsed_ms = System.currentTimeMillis() - startTime;
+		this.measureTime();
+	}
+	
+	public void setItems(List<T> items) {
+		this.items = items;
+		this.total_count = this.items.size();
+		this.measureTime();
 	}
 	
 	public void setItem(T item) {
 		this.items = new ArrayList<T>();
 		this.items.add(item);
 		this.total_count = this.items.size();
-		this.elapsed_ms = System.currentTimeMillis() - startTime;
+		this.measureTime();
 	}
 	
 	public static void resetTimer() {
@@ -42,5 +48,10 @@ public class SearchResults<T> {
 		this.error = error;
 		this.message = message;
 		this.status_code = status_code;
+		this.measureTime();
+	}
+	
+	private void measureTime() {
+		this.elapsed_ms = System.currentTimeMillis() - startTime;
 	}
 }

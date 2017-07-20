@@ -6,6 +6,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.entities.Reference;
+import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.rest.interfaces.ReferenceRESTInterface;
 import org.jax.mgi.mgd.api.service.ReferenceService;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -149,5 +150,21 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		} else {
 			return null;
 		}
+	}
+	
+	@Override
+	public SearchResults<ReferenceWorkflowStatus> getStatusHistoryByKey (String refsKey) {
+		SearchResults.resetTimer();
+		SearchResults<ReferenceWorkflowStatus> results = new SearchResults<ReferenceWorkflowStatus>();
+
+		// use lookup of reference to weed out and report parameter errors
+		SearchResults<Reference> referenceResult = this.getReferenceByKey(refsKey);
+		if (referenceResult.error != null) {
+			results.setError(referenceResult.error, referenceResult.message, referenceResult.status_code);
+			return results;
+		}
+
+		results.setItems(referenceService.getStatusHistory(refsKey));
+		return results;
 	}
 }

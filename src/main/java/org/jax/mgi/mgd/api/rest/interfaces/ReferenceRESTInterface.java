@@ -13,6 +13,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.entities.Reference;
+import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
@@ -201,6 +202,13 @@ public interface ReferenceRESTInterface {
 	@ApiOperation(value = "Value: Retrieve a single Reference by reference key")
 	public SearchResults<Reference> getReferenceByKey (
 			@ApiParam(value = "Value: This is for searching by reference key")
+			@PathParam("refsKey") String refsKey);
+
+	@GET
+	@Path("/statusHistory/{refsKey}")
+	@ApiOperation(value = "Value: Retrieve the status history for a Reference by reference key")
+	public SearchResults<ReferenceWorkflowStatus> getStatusHistoryByKey (
+			@ApiParam(value = "Value: This identifies the desired reference key")
 			@PathParam("refsKey") String refsKey);
 
 	@DELETE

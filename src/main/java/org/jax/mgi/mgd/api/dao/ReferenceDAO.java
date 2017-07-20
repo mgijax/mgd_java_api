@@ -227,4 +227,19 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		log.debug(entityManager.createQuery(query).toString());
 		return entityManager.createQuery(query).getResultList();
 	}
+	
+	/* get a list of the workflow status records for a reference
+	 */
+	public List<ReferenceWorkflowStatus> getStatusHistory (String refsKey) {
+		log.info("Reference workflow status Lookup: refsKey = " + refsKey);
+
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<ReferenceWorkflowStatus> query = builder.createQuery(ReferenceWorkflowStatus.class);
+		Root<ReferenceWorkflowStatus> root = query.from(ReferenceWorkflowStatus.class);
+
+		query.where(builder.equal(root.get("_refs_key"), refsKey));
+		query.orderBy(builder.desc(root.get("modification_date"))); 
+
+		return entityManager.createQuery(query).getResultList();
+	}
 }

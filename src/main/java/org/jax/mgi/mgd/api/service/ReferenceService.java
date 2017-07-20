@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.entities.Reference;
+import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 
 @RequestScoped
 public class ReferenceService {
@@ -34,4 +35,7 @@ public class ReferenceService {
 		return referenceDAO.delete(reference);
 	}
 
+	public List<ReferenceWorkflowStatus> getStatusHistory(String refsKey) {
+		return referenceDAO.getStatusHistory(refsKey);
+	}
 }

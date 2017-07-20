@@ -123,7 +123,13 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		SearchResults.resetTimer();
 		if (refsKey != null) {
 			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put("_refs_key", Long.parseLong(refsKey));
+			try {
+				map.put("_refs_key", Long.parseLong(refsKey));
+			} catch (Throwable e) {
+				results.setError("NotInteger", "Parameter value not an integer: " + refsKey, Constants.HTTP_BAD_REQUEST);
+				return results;
+			}
+
 			List<Reference> references = referenceService.getReference(map);
 			if ((references != null) && (references.size() > 0)) {
 				results.setItem(references.get(0));

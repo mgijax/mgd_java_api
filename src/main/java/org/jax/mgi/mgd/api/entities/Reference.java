@@ -1,6 +1,8 @@
 package org.jax.mgi.mgd.api.entities;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -64,14 +66,17 @@ public class Reference extends Base {
 	@Column(name="isReviewArticle")
 	public int isReviewArticle;
 
+	// maps workflow group abbrev to current status for that group, cached in memory for efficiency - not persisted
+	@Transient
+	private Map<String,String> workflowStatusCache;
+	
 	/* The @Fetch annotation (below) allows us to specify multiple EAGER-loaded collections, which would
 	 * otherwise throw an error.
 	 */
 	@OneToMany (targetEntity=ReferenceWorkflowStatus.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
-	@Where(clause="iscurrent = 1")
 	@Fetch(value=FetchMode.SUBSELECT)
-	private List<ReferenceWorkflowStatus> currentWorkflowStatuses;
+	private List<ReferenceWorkflowStatus> workflowStatuses;
 
 	@OneToMany (targetEntity=AccessionID.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_object_key", referencedColumnName="_refs_key")
@@ -150,11 +155,20 @@ public class Reference extends Base {
 	}
 	
 	@Transient
-	private String getStatus(String groupAbbrev) {
-		for (ReferenceWorkflowStatus rws : this.currentWorkflowStatuses) {
-			if (rws.isForGroup(groupAbbrev)) {
-				return rws.getStatus();
+	private void buildWorkflowStatusCache() {
+		workflowStatusCache = new HashMap<String,String>();
+		for (ReferenceWorkflowStatus rws : this.workflowStatuses) {
+			if (rws.isCurrent == 1) {
+				workflowStatusCache.put(rws.getGroupAbbreviation(), rws.getStatus());
 			}
+		}
+	}
+	
+	@Transient
+	private String getStatus(String groupAbbrev) {
+		if (workflowStatusCache == null) { this.buildWorkflowStatusCache(); }
+		if (workflowStatusCache.containsKey(groupAbbrev)) {
+			return workflowStatusCache.get(groupAbbrev);
 		}
 		return null;
 	}
@@ -294,6 +308,13 @@ public class Reference extends Base {
 	 */
 	@Transient
 	public void applyDomainChanges(ReferenceDomain rd) {
-		
+		/* At the moment, the only thing we're saving are status changes for workflow groups.
+		 * 	1. Any status values that are the same as what's in the object don't need to be updated.
+		 * 	2. A workflow group with a different status value than what's in this object will need:
+		 * 		a. the old status to be changed so isCurrent = 0, and
+		 * 		b. a new ReferenceWorkflowStatus object created and set to be current
+		 * 			i. How to deal with assigning a key on this object to avoid concurrency issues?
+		 * 				- keep highest in memory as static variable?  (synchronize access)
+		 */
 	}
 }

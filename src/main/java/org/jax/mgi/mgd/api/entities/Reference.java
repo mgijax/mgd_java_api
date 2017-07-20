@@ -17,6 +17,7 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
+import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.util.Constants;
 
 import io.swagger.annotations.ApiModel;
@@ -286,5 +287,13 @@ public class Reference extends Base {
 		sb.append("):");
 		if (this.pages != null) { sb.append(this.pages); }
 		return sb.toString();
+	}
+	
+	/* take the data from the domain object and overwrite any changed data into this object
+	 * (does not automatically persist it into the database -- just applies it to the object in memory)
+	 */
+	@Transient
+	public void applyDomainChanges(ReferenceDomain rd) {
+		
 	}
 }

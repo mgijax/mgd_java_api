@@ -1,10 +1,12 @@
 package org.jax.mgi.mgd.api.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.rest.interfaces.ReferenceRESTInterface;
@@ -39,7 +41,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	}
 
 	@Override
-	public SearchResults<Reference> getReference(String accids, String allele_id, String authors, String date,
+	public SearchResults<ReferenceDomain> getReference(String accids, String allele_id, String authors, String date,
 			Integer isReviewArticle, String issue, String journal, String marker_id,
 			String notes, String pages, String primary_author, String ref_abstract, String reference_type,
 			String title, String volume, Integer year, 
@@ -109,18 +111,23 @@ public class ReferenceController extends BaseController implements ReferenceREST
 
 		log.info("Search Params: " + map);
 		SearchResults.resetTimer();
-		return new SearchResults<Reference>(referenceService.getReference(map));
+		
+		List<ReferenceDomain> domainObjects = new ArrayList<ReferenceDomain>();
+		for (Reference ref : referenceService.getReference(map)) {
+			domainObjects.add(new ReferenceDomain(ref));
+		}
+		return new SearchResults<ReferenceDomain>(domainObjects);
 	}
 
 
 	@Override
-	public SearchResults<Reference> getValidReferenceCheck (String refsKey) {
+	public SearchResults<ReferenceDomain> getValidReferenceCheck (String refsKey) {
 		return this.getReferenceByKey(refsKey);
 	}
 
 	@Override
-	public SearchResults<Reference> getReferenceByKey (String refsKey) {
-		SearchResults<Reference> results = new SearchResults<Reference>();
+	public SearchResults<ReferenceDomain> getReferenceByKey (String refsKey) {
+		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
 		SearchResults.resetTimer();
 		if (refsKey != null) {
 			HashMap<String, Object> map = new HashMap<String, Object>();
@@ -133,7 +140,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 
 			List<Reference> references = referenceService.getReference(map);
 			if ((references != null) && (references.size() > 0)) {
-				results.setItem(references.get(0));
+				results.setItem(new ReferenceDomain(references.get(0)));
 			} else {
 				results.setError("NotFound", "No reference with key " + refsKey, Constants.HTTP_NOT_FOUND);
 			}
@@ -158,7 +165,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		SearchResults<ReferenceWorkflowStatus> results = new SearchResults<ReferenceWorkflowStatus>();
 
 		// use lookup of reference to weed out and report parameter errors
-		SearchResults<Reference> referenceResult = this.getReferenceByKey(refsKey);
+		SearchResults<ReferenceDomain> referenceResult = this.getReferenceByKey(refsKey);
 		if (referenceResult.error != null) {
 			results.setError(referenceResult.error, referenceResult.message, referenceResult.status_code);
 			return results;

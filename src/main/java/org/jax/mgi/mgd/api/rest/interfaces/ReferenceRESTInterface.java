@@ -12,6 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -49,7 +50,7 @@ public interface ReferenceRESTInterface {
 	@GET
 	@Path("/valid")
 	@ApiOperation(value = "Value: Check to see if a reference is valid by doing a key-based lookup")
-	public SearchResults<Reference> getValidReferenceCheck(
+	public SearchResults<ReferenceDomain> getValidReferenceCheck(
 			@ApiParam(value = "Value: This is for searching by reference key")
 			@QueryParam("refsKey") String refsKey
 	);
@@ -57,7 +58,7 @@ public interface ReferenceRESTInterface {
 	@GET
 	@Path("/search")
 	@ApiOperation(value = "Value: Searches Reference by Fields", notes="Notes: Searches Reference Fields")
-	public SearchResults<Reference> getReference(
+	public SearchResults<ReferenceDomain> getReference(
 			@ApiParam(value = "Value: This is for searching by reference IDs")
 			@QueryParam("accids") String accids,
 			
@@ -200,7 +201,7 @@ public interface ReferenceRESTInterface {
 	@GET
 	@Path("/{refsKey}")
 	@ApiOperation(value = "Value: Retrieve a single Reference by reference key")
-	public SearchResults<Reference> getReferenceByKey (
+	public SearchResults<ReferenceDomain> getReferenceByKey (
 			@ApiParam(value = "Value: This is for searching by reference key")
 			@PathParam("refsKey") String refsKey);
 

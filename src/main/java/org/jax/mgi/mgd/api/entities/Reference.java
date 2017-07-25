@@ -119,12 +119,17 @@ public class Reference extends Base {
 	 */
 	@Transient
 	private String findFirstID(Integer ldb, String prefix, Integer preferred, Integer isPrivate) {
-		for (AccessionID accID : accessionIDs) {
-			if ((ldb == null) || (ldb == accID._logicaldb_key))
-				if ((prefix == null) || prefix.equals(accID.prefixPart))
-					if ((preferred == null) || (preferred == accID.preferred))
-						if ((isPrivate == null) || (isPrivate == accID.is_private))
+		for (int i = 0; i < this.accessionIDs.size(); i++) {
+			AccessionID accID = this.accessionIDs.get(i);
+			if ((ldb == null) || (ldb.equals(accID._logicaldb_key))) {
+				if ((prefix == null) || prefix.equals(accID.prefixPart)) {
+					if ((preferred == null) || (preferred.equals(accID.preferred))) {
+						if ((isPrivate == null) || (isPrivate.equals(accID.is_private))) {
 							return accID.accID;
+						}
+					}
+				}
+			}
 		}
 		return null;
 	}
@@ -160,7 +165,7 @@ public class Reference extends Base {
 
 	@Transient
 	public String getGorefid() {
-		return this.findFirstID(Constants.LDB_GOREF, null, Constants.SECONDARY, Constants.PRIVATE);
+		return this.findFirstID(Constants.LDB_GOREF, null, null, null);
 	}
 
 	@Transient

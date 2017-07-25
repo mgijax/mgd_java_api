@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.domain;
 
 import org.jax.mgi.mgd.api.entities.Reference;
+import org.jboss.logging.Logger;
 
 /* Is: a domain object that represents a single reference in mgd.
  * Has: fields needed to display/edit in the PWI, where those values for those fields are carried
@@ -10,6 +11,8 @@ import org.jax.mgi.mgd.api.entities.Reference;
  *	as possible
  */
 public class ReferenceDomain {
+	private Logger log = Logger.getLogger(getClass());
+
 	public Long _refs_key;
 	public String authors;
 	public String primaryAuthor;
@@ -27,6 +30,8 @@ public class ReferenceDomain {
 	public String mgiid;
 	public String gorefid;
 	public String referenceType;
+	public String ref_abstract;
+	public String referencenote;
 	public String short_citation;
 	public String ap_status;
 	public String go_status;
@@ -72,6 +77,7 @@ public class ReferenceDomain {
 	/* pull data from the Reference passed in, using it to populate this domain object for transfer to client
 	 */
 	public ReferenceDomain(Reference r) {
+		log.info("in ReferenceDomain constructor");
 		this._refs_key = r._refs_key;
 		this.authors = r.authors;
 		this.primaryAuthor = r.primaryAuthor;
@@ -83,6 +89,8 @@ public class ReferenceDomain {
 		this.year = r.year;
 		this.pages = r.pages;
 		this.isReviewArticle = r.isReviewArticle;
+		this.ref_abstract = r.ref_abstract;
+		this.referencenote = r.getReferencenote();
 		this.jnumid = r.getJnumid();
 		this.doiid = r.getDoiid();
 		this.pubmedid = r.getPubmedid();

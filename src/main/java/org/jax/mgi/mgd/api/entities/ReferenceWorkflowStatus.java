@@ -20,10 +20,10 @@ import io.swagger.annotations.ApiModel;
 public class ReferenceWorkflowStatus extends Base {
 	@Id
 	@Column(name="_assoc_key")
-	public int _assoc_key;
+	public long _assoc_key;
 
 	@Column(name="_refs_key")
-	public int _refs_key;
+	public long _refs_key;
 
 	@Column(name="isCurrent")
 	public int isCurrent;
@@ -44,11 +44,11 @@ public class ReferenceWorkflowStatus extends Base {
 	
 	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
-	private User createdByTerm;
+	private User createdByUser;
 	
 	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
-	private User modifiedByTerm;
+	private User modifiedByUser;
 	
 	/***--- transient methods ---***/
 	
@@ -76,12 +76,12 @@ public class ReferenceWorkflowStatus extends Base {
 	
 	@Transient
 	public String getCreatedBy() {
-		return this.createdByTerm.login;
+		return this.createdByUser.login;
 	}
 	
 	@Transient
 	public String getModifidBy() {
-		return this.modifiedByTerm.login;
+		return this.modifiedByUser.login;
 	}
 	
 	@Transient

@@ -21,6 +21,8 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.PrimaryKeyGenerator;
+import org.jboss.logging.Logger;
 
 import io.swagger.annotations.ApiModel;
 
@@ -28,6 +30,9 @@ import io.swagger.annotations.ApiModel;
 @ApiModel(value = "Reference Model Object")
 @Table(name="bib_refs")
 public class Reference extends Base {
+	
+	@Transient
+	private Logger log = Logger.getLogger(getClass());
 
 	@Id
 	@Column(name="_Refs_key")
@@ -61,7 +66,7 @@ public class Reference extends Base {
 	public String pages;
 	
 	@Column(name="abstract")
-	private String ref_abstract;		// just "abstract" is a Java reserved word, so need a prefix
+	public String ref_abstract;		// just "abstract" is a Java reserved word, so need a prefix
 	
 	@Column(name="isReviewArticle")
 	public int isReviewArticle;
@@ -102,10 +107,11 @@ public class Reference extends Base {
 	private Term referenceTypeTerm;
 	
 	// cannot eager-load an attribute that might not be there
-	@OneToOne (targetEntity=ReferenceNote.class, fetch=FetchType.LAZY)
+	@OneToMany (targetEntity=ReferenceNote.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
-	private ReferenceNote note;
-	
+	@Fetch(value=FetchMode.SUBSELECT)
+	private List<ReferenceNote> notes;
+
 	/***--- transient methods ---***/
 	
 	/* Find and return the first accession ID matching any specified logical database, prefix,
@@ -119,6 +125,15 @@ public class Reference extends Base {
 					if ((preferred == null) || (preferred == accID.preferred))
 						if ((isPrivate == null) || (isPrivate == accID.is_private))
 							return accID.accID;
+		}
+		return null;
+	}
+	
+	@Transient
+	public String getReferencenote() {
+		List<ReferenceNote> rn = this.notes;
+		if ((rn != null) && (rn.size() > 0)) {
+			return rn.get(0).note;
 		}
 		return null;
 	}
@@ -303,6 +318,41 @@ public class Reference extends Base {
 		return sb.toString();
 	}
 	
+	/* convenience method, used by applyDomainChanges() to reduce redundant code in setting workflow
+	 * group statuses
+	 */
+	private void updateStatus(String groupAbbrev, String currentStatus, String newStatus) {
+		// no update if new status matches old status (or if no group is specified)
+		if ( ((currentStatus != null) && currentStatus.equals(newStatus)) || (groupAbbrev == null)) {
+			return;
+		}
+		
+		// At this point, we know we have a status update.  If there was an existing record, we need
+		// to flag it as not current.
+		if (currentStatus != null) {
+			for (ReferenceWorkflowStatus rws : this.workflowStatuses) {
+				if ( (rws.isCurrent == 1) && groupAbbrev.equals(rws.getGroupAbbreviation()) ) {
+					rws.isCurrent = 0;
+					break;				// no more can match, so exit the loop
+				}
+			}
+		}
+		
+		// Now we need to add a new status record for this change.
+		
+		PrimaryKeyGenerator pkGenerator = PrimaryKeyGenerator.getPrimaryKeyGenerator("bib_workflow_status", "_assoc_key");
+		ReferenceWorkflowStatus newRws = new ReferenceWorkflowStatus();
+		newRws._assoc_key = pkGenerator.getNextKey();
+		newRws._refs_key = this._refs_key;
+		newRws.isCurrent = 1;
+//		newRws.groupTerm.abbreviation
+//		newRws.statusTerm.newStatus
+//		newRws.createdByUser
+//		newRws.modifiedByUser
+
+		this.workflowStatuses.add(newRws);
+	}
+	
 	/* take the data from the domain object and overwrite any changed data into this object
 	 * (does not automatically persist it into the database -- just applies it to the object in memory)
 	 */
@@ -316,5 +366,12 @@ public class Reference extends Base {
 		 * 			i. How to deal with assigning a key on this object to avoid concurrency issues?
 		 * 				- keep highest in memory as static variable?  (synchronize access)
 		 */
+		updateStatus("AP", this.getAp_status(), rd.ap_status);
+		updateStatus("GO", this.getGo_status(), rd.go_status);
+		updateStatus("GXD", this.getGxd_status(), rd.gxd_status);
+		updateStatus("QTL", this.getQtl_status(), rd.qtl_status);
+		updateStatus("Tumor", this.getTumor_status(), rd.tumor_status);
+		
+		this.workflowStatusCache = null;		// clear cache of old workflow statuses
 	}
 }

@@ -13,7 +13,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
+//import javax.transaction.SystemException;
+//import javax.transaction.UserTransaction;
 
+//import org.hibernate.Hibernate;
 import org.jax.mgi.mgd.api.entities.AccessionID;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceAlleleAssociation;
@@ -225,7 +228,27 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		query.where(builder.and(restrictions.toArray(new Predicate[0])));
 		log.debug(query.toString());
 		log.debug(entityManager.createQuery(query).toString());
+
 		return entityManager.createQuery(query).getResultList();
+		/*
+		List<Reference> results = null;
+		UserTransaction tx = sessionContext.getUserTransaction();
+		try {
+		tx.begin();
+		
+		results = entityManager.createQuery(query).getResultList();
+		for (Reference ref : results) {
+			Hibernate.initialize(ref.note);
+		}
+		
+		tx.commit();
+		} catch (Throwable e) {
+			try {
+			tx.rollback();
+			} catch (SystemException se) {}
+		}
+		return results;
+		*/
 	}
 	
 	/* get a list of the workflow status records for a reference

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+//import javax.annotation.Resource;
+//import javax.ejb.SessionContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -18,6 +20,9 @@ public class PostgresSQLDAO<T> {
 
 	protected Class<T> myClass;
 
+//	@Resource
+//	protected SessionContext sessionContext;
+	
 	@PersistenceContext(unitName="primary")
 	protected EntityManager entityManager;
 	

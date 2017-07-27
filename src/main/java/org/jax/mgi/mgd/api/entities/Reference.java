@@ -21,7 +21,6 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.PrimaryKeyGenerator;
 import org.jboss.logging.Logger;
 
 import io.swagger.annotations.ApiModel;
@@ -345,9 +344,8 @@ public class Reference extends Base {
 		
 		// Now we need to add a new status record for this change.
 		
-		PrimaryKeyGenerator pkGenerator = PrimaryKeyGenerator.getPrimaryKeyGenerator("bib_workflow_status", "_assoc_key");
 		ReferenceWorkflowStatus newRws = new ReferenceWorkflowStatus();
-		newRws._assoc_key = pkGenerator.getNextKey();
+//		newRws._assoc_key = ??
 		newRws._refs_key = this._refs_key;
 		newRws.isCurrent = 1;
 //		newRws.groupTerm.abbreviation

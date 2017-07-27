@@ -23,7 +23,7 @@ public class ReferenceDomain {
 	public String date;
 	public String year;
 	public String pages;
-	public Integer isReviewArticle;
+	public String isReviewArticle;
 	public String jnumid;
 	public String doiid;
 	public String pubmedid;
@@ -88,7 +88,11 @@ public class ReferenceDomain {
 		this.date = r.date;
 		this.year = r.year;
 		this.pages = r.pages;
-		this.isReviewArticle = r.isReviewArticle;
+		if (r.isReviewArticle == 0) {
+			this.isReviewArticle = "No";
+		} else {
+			this.isReviewArticle = "Yes";
+		}
 		this.ref_abstract = r.ref_abstract;
 		this.referencenote = r.getReferencenote();
 		this.jnumid = r.getJnumid();

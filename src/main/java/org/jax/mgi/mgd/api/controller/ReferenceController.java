@@ -17,11 +17,17 @@ import org.jboss.logging.Logger;
 
 public class ReferenceController extends BaseController implements ReferenceRESTInterface {
 
+	/***--- instance variables ---***/
+	
 	@Inject
 	private ReferenceService referenceService;
 	
 	private Logger log = Logger.getLogger(getClass());
 
+	/***--- methods ---***/
+	
+	/* create a database record for the given reference
+	 */
 	@Override
 	public Reference createReference(String api_access_token, Reference reference) {
 		if(authenticate(api_access_token)) {
@@ -31,6 +37,8 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		}
 	}
 
+	/* update the given reference in the database
+	 */
 	@Override
 	public Reference updateReference(String api_access_token, Reference reference) {
 		if(authenticate(api_access_token)) {
@@ -40,6 +48,8 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		}
 	}
 
+	/* search method - retrieves references based on query form parameters
+	 */
 	@Override
 	public SearchResults<ReferenceDomain> getReference(String accids, String allele_id, String authors, String date,
 			Integer isReviewArticle, String issue, String journal, String marker_id,
@@ -112,6 +122,8 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		log.info("Search Params: " + map);
 		SearchResults.resetTimer();
 		
+		/* need to convert Reference entity objects to ReferenceDomain objects to meet PWI's needs
+		 */
 		List<ReferenceDomain> domainObjects = new ArrayList<ReferenceDomain>();
 		for (Reference ref : referenceService.getReference(map)) {
 			domainObjects.add(new ReferenceDomain(ref));
@@ -120,11 +132,15 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	}
 
 
+	/* return domain object for single reference with given key
+	 */
 	@Override
 	public SearchResults<ReferenceDomain> getValidReferenceCheck (String refsKey) {
 		return this.getReferenceByKey(refsKey);
 	}
 
+	/* return domain object for single reference with given key
+	 */
 	@Override
 	public SearchResults<ReferenceDomain> getReferenceByKey (String refsKey) {
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
@@ -150,6 +166,8 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		return results;
 	}
 
+	/* delete the reference with the given accession ID
+	 */
 	@Override
 	public Reference deleteReference(String api_access_token, String id) {
 		if(authenticate(api_access_token)) {
@@ -159,6 +177,8 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		}
 	}
 	
+	/* get list of workflow status objects (current and historical) for the reference with the given key
+	 */
 	@Override
 	public SearchResults<ReferenceWorkflowStatus> getStatusHistoryByKey (String refsKey) {
 		SearchResults.resetTimer();

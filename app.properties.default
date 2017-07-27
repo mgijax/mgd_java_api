@@ -1,0 +1,5 @@
+swarm.logging=INFO
+swarm.http.port=8090
+swarm.ds.username=mgd_public
+swarm.ds.password=mgdpubb
+swarm.ds.connection.url=jdbc:postgresql://mgi-testdb4.jax.org:5432/scrumdog

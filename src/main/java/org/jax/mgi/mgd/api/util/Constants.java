@@ -38,6 +38,8 @@ public class Constants {
 	public static Integer HTTP_OK = 200;
 	public static Integer HTTP_BAD_REQUEST = 400;
 	public static Integer HTTP_NOT_FOUND = 404;
+	public static Integer HTTP_SERVER_ERROR = 500;
+	public static Integer HTTP_PERMISSION_DENIED = 550;
 	
 	// vocabulary keys
 	public static Integer VOC_WORKFLOW_GROUP = 127;

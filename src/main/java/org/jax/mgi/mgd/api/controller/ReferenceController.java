@@ -37,15 +37,23 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		}
 	}
 
-	/* update the given reference in the database
+	/* update the given reference in the database, then return a revised version of it in the SearchResults
 	 */
 	@Override
-	public ReferenceDomain updateReference(String api_access_token, ReferenceDomain reference) {
+	public SearchResults<ReferenceDomain> updateReference(String api_access_token, ReferenceDomain reference) {
+		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
+		SearchResults.resetTimer();
+
 		if(authenticate(api_access_token)) {
-			return new ReferenceDomain(referenceService.updateReference(reference));
+			try {
+				results.setItem(new ReferenceDomain(referenceService.updateReference(reference)) );
+			} catch (Throwable t) {
+				results.setError("Failed", "Failed to save changes", Constants.HTTP_SERVER_ERROR);
+			}
 		} else {
-			return null;
+			results.setError("FailedAuthentication", "Failed - no authentication", Constants.HTTP_PERMISSION_DENIED);
 		}
+		return results;
 	}
 
 	/* search method - retrieves references based on query form parameters

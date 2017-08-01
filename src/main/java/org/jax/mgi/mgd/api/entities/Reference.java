@@ -354,8 +354,8 @@ public class Reference extends Base {
 		newRws.isCurrent = 1;
 		newRws.groupTerm = refDAO.getTermByAbbreviation(Constants.VOC_WORKFLOW_GROUP, groupAbbrev);
 		newRws.statusTerm = refDAO.getTermByTerm(Constants.VOC_WORKFLOW_STATUS, newStatus);
-//		newRws.createdByUser
-//		newRws.modifiedByUser
+		newRws.createdByUser = refDAO.getUser("mgd_dbo");
+		newRws.modifiedByUser = newRws.createdByUser;
 
 		this.workflowStatuses.add(newRws);
 		return true;

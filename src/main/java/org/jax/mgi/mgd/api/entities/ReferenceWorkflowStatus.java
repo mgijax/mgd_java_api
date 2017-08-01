@@ -46,11 +46,11 @@ public class ReferenceWorkflowStatus extends Base {
 	
 	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
-	private User createdByUser;
+	public User createdByUser;
 	
 	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
-	private User modifiedByUser;
+	public User modifiedByUser;
 	
 	/***--- transient methods ---***/
 	

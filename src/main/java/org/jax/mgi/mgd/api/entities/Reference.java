@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Singleton;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,12 +20,14 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
+import org.jax.mgi.mgd.api.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jboss.logging.Logger;
 
 import io.swagger.annotations.ApiModel;
 
+@Singleton
 @Entity
 @ApiModel(value = "Reference Model Object")
 @Table(name="bib_refs")
@@ -323,12 +326,13 @@ public class Reference extends Base {
 	}
 	
 	/* convenience method, used by applyDomainChanges() to reduce redundant code in setting workflow
-	 * group statuses
+	 * group statuses.  returns true if an update was made, false if no change.
 	 */
-	private void updateStatus(String groupAbbrev, String currentStatus, String newStatus) {
+	private boolean updateStatus(String groupAbbrev, String currentStatus, String newStatus, ReferenceDAO refDAO) {
 		// no update if new status matches old status (or if no group is specified)
-		if ( ((currentStatus != null) && currentStatus.equals(newStatus)) || (groupAbbrev == null)) {
-			return;
+		if ( ((currentStatus != null) && currentStatus.equals(newStatus)) || (groupAbbrev == null) ||
+				((currentStatus == null) && (newStatus == null)) ) {
+			return false;
 		}
 		
 		// At this point, we know we have a status update.  If there was an existing record, we need
@@ -345,22 +349,23 @@ public class Reference extends Base {
 		// Now we need to add a new status record for this change.
 		
 		ReferenceWorkflowStatus newRws = new ReferenceWorkflowStatus();
-//		newRws._assoc_key = ??
+		newRws._assoc_key = refDAO.getNextWorkflowStatusKey();
 		newRws._refs_key = this._refs_key;
 		newRws.isCurrent = 1;
-//		newRws.groupTerm.abbreviation
-//		newRws.statusTerm.newStatus
+		newRws.groupTerm = refDAO.getTermByAbbreviation(Constants.VOC_WORKFLOW_GROUP, groupAbbrev);
+		newRws.statusTerm = refDAO.getTermByTerm(Constants.VOC_WORKFLOW_STATUS, newStatus);
 //		newRws.createdByUser
 //		newRws.modifiedByUser
 
 		this.workflowStatuses.add(newRws);
+		return true;
 	}
 	
 	/* take the data from the domain object and overwrite any changed data into this object
 	 * (does not automatically persist it into the database -- just applies it to the object in memory)
 	 */
 	@Transient
-	public void applyDomainChanges(ReferenceDomain rd) {
+	public void applyDomainChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
 		/* At the moment, the only thing we're saving are status changes for workflow groups.
 		 * 	1. Any status values that are the same as what's in the object don't need to be updated.
 		 * 	2. A workflow group with a different status value than what's in this object will need:
@@ -369,12 +374,14 @@ public class Reference extends Base {
 		 * 			i. How to deal with assigning a key on this object to avoid concurrency issues?
 		 * 				- keep highest in memory as static variable?  (synchronize access)
 		 */
-		updateStatus("AP", this.getAp_status(), rd.ap_status);
-		updateStatus("GO", this.getGo_status(), rd.go_status);
-		updateStatus("GXD", this.getGxd_status(), rd.gxd_status);
-		updateStatus("QTL", this.getQtl_status(), rd.qtl_status);
-		updateStatus("Tumor", this.getTumor_status(), rd.tumor_status);
+		boolean anyChanges = updateStatus("AP", this.getAp_status(), rd.ap_status, refDAO);
+		anyChanges = anyChanges || updateStatus("GO", this.getGo_status(), rd.go_status, refDAO);
+		anyChanges = anyChanges || updateStatus("GXD", this.getGxd_status(), rd.gxd_status, refDAO);
+		anyChanges = anyChanges || updateStatus("QTL", this.getQtl_status(), rd.qtl_status, refDAO);
+		anyChanges = anyChanges || updateStatus("Tumor", this.getTumor_status(), rd.tumor_status, refDAO);
 		
-		this.workflowStatusCache = null;		// clear cache of old workflow statuses
+		if (anyChanges) {
+			this.workflowStatusCache = null;		// clear cache of old workflow statuses
+		}
 	}
 }

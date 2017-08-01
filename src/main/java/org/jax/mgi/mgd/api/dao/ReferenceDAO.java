@@ -7,24 +7,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Singleton;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
-//import javax.transaction.SystemException;
-//import javax.transaction.UserTransaction;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
-//import org.hibernate.Hibernate;
+import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.entities.AccessionID;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceAlleleAssociation;
 import org.jax.mgi.mgd.api.entities.ReferenceMarkerAssociation;
 import org.jax.mgi.mgd.api.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
-import org.jax.mgi.mgd.api.entities.Term;
 
+@Singleton
 @RequestScoped
 public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 
@@ -230,25 +231,6 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		log.debug(entityManager.createQuery(query).toString());
 
 		return entityManager.createQuery(query).getResultList();
-		/*
-		List<Reference> results = null;
-		UserTransaction tx = sessionContext.getUserTransaction();
-		try {
-		tx.begin();
-		
-		results = entityManager.createQuery(query).getResultList();
-		for (Reference ref : results) {
-			Hibernate.initialize(ref.note);
-		}
-		
-		tx.commit();
-		} catch (Throwable e) {
-			try {
-			tx.rollback();
-			} catch (SystemException se) {}
-		}
-		return results;
-		*/
 	}
 	
 	/* get a list of the workflow status records for a reference
@@ -264,5 +246,51 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		query.orderBy(builder.desc(root.get("modification_date"))); 
 
 		return entityManager.createQuery(query).getResultList();
+	}
+	
+	public Reference update(ReferenceDomain referenceDomain) {
+		// Should the code to merge domain changes into the reference entity object be done here, where we
+		// have access to the db through the entityManager?  Or should we pass the entityManager into the
+		// reference object?  Seems like it needs to be done here...  Maybe provide individual merge methods
+		// on a reference (basic fields, status, notes, etc.), including an updateStatus method that takes a
+		// new workflow status key as one parameter.
+
+		/*
+		 * 1. retrieve the corresponding Reference object
+		 * 2. update it with data from the ReferenceDomain object
+		 * 3. persist the Reference object
+		 * 4. return the Reference object
+		 */
+		Reference reference = entityManager.find(Reference.class, referenceDomain._refs_key);
+		reference.applyDomainChanges(referenceDomain, this);
+//		UserTransaction transaction = this.getTransaction();
+//		try {
+//			transaction.begin();
+			entityManager.persist(reference);
+//			transaction.commit();
+//		} catch (Throwable e) {
+//			try {
+//				transaction.rollback();
+//			} catch (IllegalStateException e1) {
+//				e1.printStackTrace();
+//			} catch (SecurityException e1) {
+//				e1.printStackTrace();
+//			} catch (SystemException e1) {
+//				e1.printStackTrace();
+//			}
+//		}
+		return reference;
+	}
+	
+	/* get the next available primary key for a new reference
+	 */
+	public synchronized long getNextRefsKey() {
+		return this.getNextKey("Reference", "_refs_key");
+	}
+	
+	/* get the next available primary key for a workflow status record
+	 */
+	public synchronized long getNextWorkflowStatusKey() {
+		return this.getNextKey("ReferenceWorkflowStatus", "_assoc_key");
 	}
 }

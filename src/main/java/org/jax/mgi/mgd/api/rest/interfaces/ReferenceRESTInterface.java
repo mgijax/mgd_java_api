@@ -39,12 +39,12 @@ public interface ReferenceRESTInterface {
 	
 	@PUT
 	@ApiOperation(value = "Value: Update Reference", notes="Notes: Updates a Reference")
-	public Reference updateReference(
+	public ReferenceDomain updateReference(
 			@ApiParam(value = "API Access Token")
 			@HeaderParam("api_access_token") String api_access_token,
 			
-			@ApiParam(value = "Value: This is the passed-in reference object")
-			Reference reference
+			@ApiParam(value = "Value: This is the passed-in reference domain object")
+			ReferenceDomain reference
 	);
 
 	@GET

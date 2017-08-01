@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.entities;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.ejb.Singleton;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +15,7 @@ import javax.persistence.Transient;
 
 import io.swagger.annotations.ApiModel;
 
+@Singleton
 @Entity
 @ApiModel(value = "Reference Workflow Status Model Object")
 @Table(name="bib_workflow_status")
@@ -36,11 +38,11 @@ public class ReferenceWorkflowStatus extends Base {
 	
 	@OneToOne (targetEntity=Term.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_group_key", referencedColumnName="_term_key")
-	private Term groupTerm;
+	public Term groupTerm;
 	
 	@OneToOne (targetEntity=Term.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_status_key", referencedColumnName="_term_key")
-	private Term statusTerm;
+	public Term statusTerm;
 	
 	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
@@ -54,33 +56,37 @@ public class ReferenceWorkflowStatus extends Base {
 	
 	@Transient
 	public String getGroup() {
+		if (this.groupTerm == null) { return null; }
 		return this.groupTerm.term;
 	}
 	
 	@Transient
 	public String getGroupAbbreviation() {
+		if (this.groupTerm == null) { return null; }
 		return this.groupTerm.abbreviation;
 	}
 	
 	@Transient
 	public String getStatus() {
+		if (this.statusTerm == null) { return null; }
 		return this.statusTerm.term;
 	}
 	
 	@Transient
 	public boolean isForGroup(String groupAbbrev) {
-		if (groupAbbrev == null) { return false; }
-		
+		if ((groupAbbrev == null) || (this.groupTerm == null)) { return false; }
 		return groupAbbrev.equals(this.groupTerm.abbreviation);
 	}
 	
 	@Transient
 	public String getCreatedBy() {
+		if (this.createdByUser == null) { return null; }
 		return this.createdByUser.login;
 	}
 	
 	@Transient
 	public String getModifidBy() {
+		if (this.modifiedByUser == null) { return null; }
 		return this.modifiedByUser.login;
 	}
 	

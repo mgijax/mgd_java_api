@@ -7,6 +7,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 
@@ -20,7 +21,7 @@ public class ReferenceService {
 		return referenceDAO.add(reference);
 	}
 
-	public Reference updateReference(Reference reference) {
+	public Reference updateReference(ReferenceDomain reference) {
 		return referenceDAO.update(reference);
 	}
 

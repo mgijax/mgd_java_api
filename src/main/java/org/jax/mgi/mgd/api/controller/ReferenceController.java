@@ -40,9 +40,9 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	/* update the given reference in the database
 	 */
 	@Override
-	public Reference updateReference(String api_access_token, Reference reference) {
+	public ReferenceDomain updateReference(String api_access_token, ReferenceDomain reference) {
 		if(authenticate(api_access_token)) {
-			return referenceService.updateReference(reference);
+			return new ReferenceDomain(referenceService.updateReference(reference));
 		} else {
 			return null;
 		}

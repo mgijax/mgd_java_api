@@ -27,8 +27,8 @@ public class PostgresSQLDAO<T> {
 
 	protected Class<T> myClass;
 
-//	@Resource
-//	protected SessionContext sessionContext;
+	@Resource
+	protected SessionContext sessionContext;
 	
 	@PersistenceContext(unitName="primary")
 	protected EntityManager entityManager;
@@ -153,7 +153,7 @@ public class PostgresSQLDAO<T> {
 		return nextKey;
 	}
 	
-//	public UserTransaction getTransaction() {
-//		return this.sessionContext.getUserTransaction();
-//	}
+	public UserTransaction getTransaction() {
+		return this.sessionContext.getUserTransaction();
+	}
 }

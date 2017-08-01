@@ -15,6 +15,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 import javax.transaction.SystemException;
+import javax.transaction.Transactional;
 import javax.transaction.UserTransaction;
 
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
@@ -248,6 +249,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		return entityManager.createQuery(query).getResultList();
 	}
 	
+	@Transactional
 	public Reference update(ReferenceDomain referenceDomain) {
 		// Should the code to merge domain changes into the reference entity object be done here, where we
 		// have access to the db through the entityManager?  Or should we pass the entityManager into the
@@ -263,22 +265,22 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		 */
 		Reference reference = entityManager.find(Reference.class, referenceDomain._refs_key);
 		reference.applyDomainChanges(referenceDomain, this);
-//		UserTransaction transaction = this.getTransaction();
-//		try {
-//			transaction.begin();
+		UserTransaction transaction = this.getTransaction();
+		try {
+			transaction.begin();
 			entityManager.persist(reference);
-//			transaction.commit();
-//		} catch (Throwable e) {
-//			try {
-//				transaction.rollback();
-//			} catch (IllegalStateException e1) {
-//				e1.printStackTrace();
-//			} catch (SecurityException e1) {
-//				e1.printStackTrace();
-//			} catch (SystemException e1) {
-//				e1.printStackTrace();
-//			}
-//		}
+			transaction.commit();
+		} catch (Throwable e) {
+			try {
+				transaction.rollback();
+			} catch (IllegalStateException e1) {
+				e1.printStackTrace();
+			} catch (SecurityException e1) {
+				e1.printStackTrace();
+			} catch (SystemException e1) {
+				e1.printStackTrace();
+			}
+		}
 		return reference;
 	}
 	

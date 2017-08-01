@@ -2,7 +2,6 @@ package org.jax.mgi.mgd.api.dao;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,9 +13,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
-import javax.transaction.SystemException;
 import javax.transaction.Transactional;
-import javax.transaction.UserTransaction;
 
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.entities.AccessionID;
@@ -265,22 +262,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		 */
 		Reference reference = entityManager.find(Reference.class, referenceDomain._refs_key);
 		reference.applyDomainChanges(referenceDomain, this);
-		UserTransaction transaction = this.getTransaction();
-		try {
-			transaction.begin();
-			entityManager.persist(reference);
-			transaction.commit();
-		} catch (Throwable e) {
-			try {
-				transaction.rollback();
-			} catch (IllegalStateException e1) {
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				e1.printStackTrace();
-			} catch (SystemException e1) {
-				e1.printStackTrace();
-			}
-		}
+		entityManager.persist(reference);
 		return reference;
 	}
 	

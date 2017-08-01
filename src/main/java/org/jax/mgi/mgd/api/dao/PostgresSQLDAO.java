@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-import javax.ejb.SessionContext;
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,7 +12,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.transaction.UserTransaction;
 import javax.persistence.TypedQuery;
 
 import org.jax.mgi.mgd.api.entities.Term;
@@ -27,9 +24,6 @@ public class PostgresSQLDAO<T> {
 
 	protected Class<T> myClass;
 
-	@Resource
-	protected SessionContext sessionContext;
-	
 	@PersistenceContext(unitName="primary")
 	protected EntityManager entityManager;
 	
@@ -151,9 +145,5 @@ public class PostgresSQLDAO<T> {
 		nextKeyValue.put(tableName, nextKey + 1);
 		keyExpiration.put(tableName, currentTime + expirationTime);
 		return nextKey;
-	}
-	
-	public UserTransaction getTransaction() {
-		return this.sessionContext.getUserTransaction();
 	}
 }

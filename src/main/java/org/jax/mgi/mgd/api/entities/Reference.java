@@ -45,7 +45,7 @@ public class Reference extends Base {
 	public String authors;
 
 	@Column(name="_primary")
-	public String primaryAuthor;
+	public String primary_author;
 
 	@Column(name="title")
 	public String title;
@@ -312,7 +312,7 @@ public class Reference extends Base {
 	@Transient
 	public String getShort_citation() {
 		StringBuffer sb = new StringBuffer();
-		if (this.primaryAuthor != null) { sb.append(this.primaryAuthor); }
+		if (this.primary_author != null) { sb.append(this.primary_author); }
 		sb.append(", ");
 		if (this.journal != null) { sb.append(this.journal); }
 		sb.append(" ");

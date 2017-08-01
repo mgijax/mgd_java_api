@@ -15,7 +15,7 @@ public class ReferenceDomain {
 
 	public Long _refs_key;
 	public String authors;
-	public String primaryAuthor;
+	public String primary_author;
 	public String title;
 	public String journal;
 	public String volume;
@@ -50,7 +50,7 @@ public class ReferenceDomain {
 		log.info("in ReferenceDomain constructor");
 		this._refs_key = r._refs_key;
 		this.authors = r.authors;
-		this.primaryAuthor = r.primaryAuthor;
+		this.primary_author = r.primary_author;
 		this.title = r.title;
 		this.journal = r.journal;
 		this.volume = r.volume;

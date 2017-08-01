@@ -357,7 +357,7 @@ public class Reference extends Base {
 		newRws.createdByUser = refDAO.getUser("mgd_dbo");
 		newRws.modifiedByUser = newRws.createdByUser;
 
-		this.workflowStatuses.add(newRws);
+//		this.workflowStatuses.add(newRws);
 		return true;
 	}
 	

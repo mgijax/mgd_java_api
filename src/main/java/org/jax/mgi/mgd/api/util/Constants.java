@@ -24,6 +24,8 @@ public class Constants {
 	public static String WG_TUMOR = "Tumor";
 	public static String WG_QTL = "QTL";
 	
+	public static String[] WG_ALL = { WG_AP, WG_GO, WG_GXD, WG_TUMOR, WG_QTL };
+	
 	// reference workflow statuses
 	public static String WS_CHOSEN = "Chosen";
 	public static String WS_CURATED = "Fully curated";
@@ -40,4 +42,7 @@ public class Constants {
 	// vocabulary keys
 	public static Integer VOC_WORKFLOW_GROUP = 127;
 	public static Integer VOC_WORKFLOW_STATUS = 128;
+	
+	// accession ID prefixes
+	public static String PREFIX_JNUM = "J:";
 }

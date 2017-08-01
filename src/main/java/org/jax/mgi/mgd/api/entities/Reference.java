@@ -347,7 +347,8 @@ public class Reference extends Base {
 			}
 		}
 		
-		// Now we need to add a new status record for this change.
+		// Now we need to add a new status record for this change -- and need to persist this new object to the
+		// database explicitly, before the whole reference gets persisted later on.
 		
 		ReferenceWorkflowStatus newRws = new ReferenceWorkflowStatus();
 		newRws._assoc_key = refDAO.getNextWorkflowStatusKey();
@@ -378,14 +379,47 @@ public class Reference extends Base {
 		 * 			i. How to deal with assigning a key on this object to avoid concurrency issues?
 		 * 				- keep highest in memory as static variable?  (synchronize access)
 		 */
-		boolean anyChanges = updateStatus("AP", this.getAp_status(), rd.ap_status, refDAO);
-		anyChanges = anyChanges || updateStatus("GO", this.getGo_status(), rd.go_status, refDAO);
-		anyChanges = anyChanges || updateStatus("GXD", this.getGxd_status(), rd.gxd_status, refDAO);
-		anyChanges = anyChanges || updateStatus("QTL", this.getQtl_status(), rd.qtl_status, refDAO);
-		anyChanges = anyChanges || updateStatus("Tumor", this.getTumor_status(), rd.tumor_status, refDAO);
+		boolean anyChanges = updateStatus(Constants.WG_AP, this.getAp_status(), rd.ap_status, refDAO);
+		anyChanges = anyChanges || updateStatus(Constants.WG_GO, this.getGo_status(), rd.go_status, refDAO);
+		anyChanges = anyChanges || updateStatus(Constants.WG_GXD, this.getGxd_status(), rd.gxd_status, refDAO);
+		anyChanges = anyChanges || updateStatus(Constants.WG_QTL, this.getQtl_status(), rd.qtl_status, refDAO);
+		anyChanges = anyChanges || updateStatus(Constants.WG_TUMOR, this.getTumor_status(), rd.tumor_status, refDAO);
 		
 		if (anyChanges) {
 			this.workflowStatusCache = null;		// clear cache of old workflow statuses
+			
+			// if we had a status change, if at least one status is not "Not Routed", and if the reference
+			// doesn't already have a J#, we need to create one
+			
+			if (this.getJnumid() == null) {
+				boolean anyNotRouted = false;
+				for (String workgroup : Constants.WG_ALL) {
+					String wgStatus = this.getStatus(workgroup);
+					if ((wgStatus != null) && !wgStatus.equals(Constants.WS_NOT_ROUTED)) {
+						anyNotRouted = true;
+						break;
+					}
+				}
+				
+				if (anyNotRouted) {
+					AccessionID accID = new AccessionID();
+					accID._accession_key = refDAO.getNextAccessionKey();
+					accID._logicaldb_key = Constants.LDB_MGI;
+					accID._mgitype_key = Constants.TYPE_REFERENCE;
+					accID._object_key = this._refs_key;
+					accID.is_private = Constants.PUBLIC;
+					accID.preferred = Constants.PREFERRED;
+					accID.prefixPart = Constants.PREFIX_JNUM;
+					accID.accID = refDAO.getNextJnum();
+					accID.createdByUser = refDAO.getUser("mgd_dbo");
+					accID.modifiedByUser = accID.createdByUser;
+					accID.creation_date = new Date();
+					accID.modification_date = accID.creation_date;
+					refDAO.persist(accID);
+
+					this.accessionIDs.add(accID);
+				}
+			} // if no J#
 		}
 	}
 }

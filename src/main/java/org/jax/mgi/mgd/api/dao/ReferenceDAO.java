@@ -2,12 +2,14 @@ package org.jax.mgi.mgd.api.dao;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Singleton;
 import javax.enterprise.context.RequestScoped;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -17,11 +19,13 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.entities.AccessionID;
+import org.jax.mgi.mgd.api.entities.AccessionMax;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceAlleleAssociation;
 import org.jax.mgi.mgd.api.entities.ReferenceMarkerAssociation;
 import org.jax.mgi.mgd.api.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
+import org.jax.mgi.mgd.api.util.Constants;
 
 @Singleton
 @RequestScoped
@@ -276,5 +280,24 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	 */
 	public synchronized long getNextWorkflowStatusKey() {
 		return this.getNextKey("ReferenceWorkflowStatus", "_assoc_key");
+	}
+	
+	/* get the next available J#
+	 */
+	public synchronized String getNextJnum() {
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<AccessionMax> query = builder.createQuery(AccessionMax.class);
+		Root<AccessionMax> root = query.from(AccessionMax.class);
+		query.where(builder.equal(root.get("prefixPart"), Constants.PREFIX_JNUM));
+		AccessionMax accMax = entityManager.createQuery(query).getSingleResult();
+		if (accMax == null) {
+			return null;
+		}
+		
+		accMax.maxNumericPart = accMax.maxNumericPart + 1;
+		accMax.modification_date = new Date();
+		this.persist(accMax);
+		
+		return "J:" + accMax.maxNumericPart;
 	}
 }

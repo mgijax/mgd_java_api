@@ -31,13 +31,13 @@ public class PostgresSQLDAO<T> {
 	protected Logger log = Logger.getLogger(PostgresSQLDAO.class);
 
 	/* how long can we cache keys without refreshing from database? (in milliseconds) */
-	private static long expirationTime = 2 * 60 * 1000;
+	protected static long expirationTime = 2 * 60 * 1000;
 	
 	/* maps from table name to time (in milliseconds) when we should search for a new key */
-	private static Map<String, Long> keyExpiration = new HashMap<String, Long>();
+	protected static Map<String, Long> keyExpiration = new HashMap<String, Long>();
 	
 	/* maps from table name to the next value that should be assigned as primary key for the table */
-	private static Map<String, Long> nextKeyValue = new HashMap<String, Long>();
+	protected static Map<String, Long> nextKeyValue = new HashMap<String, Long>();
 	
 	/***--- methods ---***/
 	
@@ -92,7 +92,6 @@ public class PostgresSQLDAO<T> {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<User> query = builder.createQuery(User.class);
 		Root<User> root = query.from(User.class);
-		List<Predicate> restrictions = new ArrayList<Predicate>();
 		query.where(builder.equal(root.get("login"), login));
 		List<User> results = entityManager.createQuery(query).getResultList();
 		if ((results == null) || (results.size() == 0)) {
@@ -135,6 +134,13 @@ public class PostgresSQLDAO<T> {
 		return results.get(0);
 	}
 
+
+	/* get the next available _Accession_key in the ACC_Accession table
+	 */
+	public synchronized long getNextAccessionKey() {
+		return this.getNextKey("AccessionID", "_accession_key");
+	}
+	
 	/* method to get the next available key for the specified 'fieldName' in the given 'tableName'.  Any methods
 	 * that wrap this method should be synchronized to ensure thread-safety.  (We do not synchronize this method
 	 * itself, as we want key requests for different tables to be able to proceed in parallel.)

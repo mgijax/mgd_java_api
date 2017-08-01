@@ -29,7 +29,7 @@ public class ReferenceDomain {
 	public String pubmedid;
 	public String mgiid;
 	public String gorefid;
-	public String referenceType;
+	public String reference_type;
 	public String ref_abstract;
 	public String referencenote;
 	public String short_citation;
@@ -100,7 +100,7 @@ public class ReferenceDomain {
 		this.pubmedid = r.getPubmedid();
 		this.mgiid = r.getMgiid();
 		this.gorefid = r.getGorefid();
-		this.referenceType = r.getReferenceType();
+		this.reference_type = r.getReferenceType();
 		this.short_citation = r.getShort_citation();
 		this.ap_status = r.getAp_status();
 		this.go_status = r.getGo_status();

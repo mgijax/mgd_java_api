@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.entities;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -356,8 +357,11 @@ public class Reference extends Base {
 		newRws.statusTerm = refDAO.getTermByTerm(Constants.VOC_WORKFLOW_STATUS, newStatus);
 		newRws.createdByUser = refDAO.getUser("mgd_dbo");
 		newRws.modifiedByUser = newRws.createdByUser;
+		newRws.creation_date = new Date();
+		newRws.modification_date = newRws.creation_date;
+		refDAO.persist(newRws);
 
-//		this.workflowStatuses.add(newRws);
+		this.workflowStatuses.add(newRws);
 		return true;
 	}
 	

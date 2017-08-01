@@ -31,10 +31,10 @@ public class ReferenceWorkflowStatus extends Base {
 	public int isCurrent;
 
 	@Column(name="creation_date")
-	private Date creation_date;
+	public Date creation_date;
 	
 	@Column(name="modification_date")
-	private Date modification_date;
+	public Date modification_date;
 	
 	@OneToOne (targetEntity=Term.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_group_key", referencedColumnName="_term_key")

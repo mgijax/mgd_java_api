@@ -162,4 +162,11 @@ public class PostgresSQLDAO<T> {
 		keyExpiration.put(tableName, currentTime + expirationTime);
 		return nextKey;
 	}
+	
+	/* Sometimes we need to persist a sub-object before it can be added to a collection in a parent object;
+	 * this method facilitates that initial save of the sub-object.
+	 */
+	public void persist(Object o) {
+		this.entityManager.persist(o);
+	}
 }

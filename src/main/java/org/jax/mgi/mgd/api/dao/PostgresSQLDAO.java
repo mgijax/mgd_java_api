@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.TypedQuery;
@@ -69,7 +70,8 @@ public class PostgresSQLDAO<T> {
 			Object desiredValue = params.get(key);
 			if ((desiredValue instanceof String) && (((String) desiredValue).indexOf("%") >= 0)) {
 				// has at least one wildcard, so do case-insensitive 'like' search
-				restrictions.add(builder.like(builder.lower(root.get(key)), ((String) desiredValue).toLowerCase()));
+				Path<String> column = root.get(key);
+				restrictions.add(builder.like(builder.lower(column), ((String) desiredValue).toLowerCase()));
 			} else {
 				// no wildcards, so do 'equals' search
 				restrictions.add(builder.equal(root.get(key), params.get(key)));

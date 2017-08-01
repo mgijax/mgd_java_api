@@ -12,6 +12,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
@@ -92,6 +93,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		
 		// first, handle the list of internal parameters (those that are in the table underlying Reference objects
 		for (String key: internalParameters) {
+			Path<String> column = root.get(key);
 			if (params.containsKey(key)) {
 				Object desiredValue = params.get(key);
 
@@ -100,12 +102,12 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 					String valueString = (String) desiredValue;
 					// has at least one wildcard, so do case-insensitive 'like' search
 					if (valueString.indexOf("%") >= 0) {
-						restrictions.add(builder.like(builder.lower(root.get(key)), valueString.toLowerCase()));
+						restrictions.add(builder.like(builder.lower(column), valueString.toLowerCase()));
 
 					} else if (valueString.matches(".*[A-Za-z].*")) {
 						// no wildcards, but has at least one letter, so we know this needs to be a
 						// case-insensitive equals search
-						restrictions.add(builder.equal(builder.lower(root.get(key)), valueString.toLowerCase()));
+						restrictions.add(builder.equal(builder.lower(column), valueString.toLowerCase()));
 
 					} else {
 						// no wildcards, no letters -- do a simple equals search
@@ -158,7 +160,8 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 
 			List<Predicate> notePredicates = new ArrayList<Predicate>();
 			notePredicates.add(builder.equal(root.get("_refs_key"), noteRoot.get("_refs_key")));
-			notePredicates.add(builder.like(builder.lower(noteRoot.get("note")), ((String) params.get("notes")).toLowerCase()));
+			Path<String> column = noteRoot.get("note");
+			notePredicates.add(builder.like(builder.lower(column), ((String) params.get("notes")).toLowerCase()));
 
 			noteSubquery.where(notePredicates.toArray(new Predicate[]{}));
 			restrictions.add(builder.exists(noteSubquery));
@@ -179,9 +182,10 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			idSubquery.select(idRoot);
 			
 			List<Predicate> idPredicates = new ArrayList<Predicate>();
-				
+			
 			idPredicates.add(builder.equal(root.get("_refs_key"), idRoot.get("_object_key")));
-			idPredicates.add(builder.lower(idRoot.get("accID")).in((Object[]) accids));
+			Path<String> column = idRoot.get("accID");
+			idPredicates.add(builder.lower(column).in((Object[]) accids));
 			idPredicates.add(builder.equal(idRoot.get("_mgitype_key"), 1));
 
 			idSubquery.where(idPredicates.toArray(new Predicate[]{}));

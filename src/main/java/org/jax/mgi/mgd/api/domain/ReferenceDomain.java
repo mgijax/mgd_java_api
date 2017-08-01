@@ -38,36 +38,6 @@ public class ReferenceDomain {
 	public String gxd_status;
 	public String qtl_status;
 	public String tumor_status;
-	public Integer status_AP_Chosen = 0;
-	public Integer status_AP_Fully_curated = 0;
-	public Integer status_AP_Indexed = 0;
-	public Integer status_AP_Not_Routed = 0;
-	public Integer status_AP_Rejected = 0;
-	public Integer status_AP_Routed = 0;
-	public Integer status_GO_Chosen = 0;
-	public Integer status_GO_Fully_curated = 0;
-	public Integer status_GO_Indexed = 0;
-	public Integer status_GO_Not_Routed = 0;
-	public Integer status_GO_Rejected = 0;
-	public Integer status_GO_Routed = 0;
-	public Integer status_GXD_Chosen = 0;
-	public Integer status_GXD_Fully_curated = 0;
-	public Integer status_GXD_Indexed = 0;
-	public Integer status_GXD_Not_Routed = 0;
-	public Integer status_GXD_Rejected = 0;
-	public Integer status_GXD_Routed = 0;
-	public Integer status_QTL_Chosen = 0;
-	public Integer status_QTL_Fully_curated = 0;
-	public Integer status_QTL_Indexed = 0;
-	public Integer status_QTL_Not_Routed = 0;
-	public Integer status_QTL_Rejected = 0;
-	public Integer status_QTL_Routed = 0;
-	public Integer status_Tumor_Chosen = 0;
-	public Integer status_Tumor_Fully_curated = 0;
-	public Integer status_Tumor_Indexed = 0;
-	public Integer status_Tumor_Not_Routed = 0;
-	public Integer status_Tumor_Rejected = 0;
-	public Integer status_Tumor_Routed = 0;
 	
 	/***--- constructors ---***/
 	
@@ -107,35 +77,5 @@ public class ReferenceDomain {
 		this.gxd_status = r.getGxd_status();
 		this.qtl_status = r.getQtl_status();
 		this.tumor_status = r.getTumor_status();
-		this.status_AP_Chosen = r.getStatus_AP_Chosen();
-		this.status_AP_Fully_curated = r.getStatus_AP_Fully_curated();
-		this.status_AP_Indexed = r.getStatus_AP_Indexed();
-		this.status_AP_Not_Routed = r.getStatus_AP_Not_Routed();
-		this.status_AP_Rejected = r.getStatus_AP_Rejected();
-		this.status_AP_Routed = r.getStatus_AP_Routed();
-		this.status_GO_Chosen = r.getStatus_GO_Chosen();
-		this.status_GO_Fully_curated = r.getStatus_GO_Fully_curated();
-		this.status_GO_Indexed = r.getStatus_GO_Indexed();
-		this.status_GO_Not_Routed = r.getStatus_GO_Not_Routed();
-		this.status_GO_Rejected = r.getStatus_GO_Rejected();
-		this.status_GO_Routed = r.getStatus_GO_Routed();
-		this.status_GXD_Chosen = r.getStatus_GXD_Chosen();
-		this.status_GXD_Fully_curated = r.getStatus_GXD_Fully_curated();
-		this.status_GXD_Indexed = r.getStatus_GXD_Indexed();
-		this.status_GXD_Not_Routed = r.getStatus_GXD_Not_Routed();
-		this.status_GXD_Rejected = r.getStatus_GXD_Rejected();
-		this.status_GXD_Routed = r.getStatus_GXD_Routed();
-		this.status_QTL_Chosen = r.getStatus_QTL_Chosen();
-		this.status_QTL_Fully_curated = r.getStatus_QTL_Fully_curated();
-		this.status_QTL_Indexed = r.getStatus_QTL_Indexed();
-		this.status_QTL_Not_Routed = r.getStatus_QTL_Not_Routed();
-		this.status_QTL_Rejected = r.getStatus_QTL_Rejected();
-		this.status_QTL_Routed = r.getStatus_QTL_Routed();
-		this.status_Tumor_Chosen = r.getStatus_Tumor_Chosen();
-		this.status_Tumor_Fully_curated = r.getStatus_Tumor_Fully_curated();
-		this.status_Tumor_Indexed = r.getStatus_Tumor_Indexed();
-		this.status_Tumor_Not_Routed = r.getStatus_Tumor_Not_Routed();
-		this.status_Tumor_Rejected = r.getStatus_Tumor_Rejected();
-		this.status_Tumor_Routed = r.getStatus_Tumor_Routed();
 	}
 }

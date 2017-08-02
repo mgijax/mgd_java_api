@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.entities;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -85,6 +87,11 @@ public class Reference extends Base {
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
 	@Fetch(value=FetchMode.SUBSELECT)
 	private List<ReferenceWorkflowStatus> workflowStatuses;
+
+	@OneToMany (targetEntity=ReferenceWorkflowTag.class, fetch=FetchType.EAGER)
+	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	@Fetch(value=FetchMode.SUBSELECT)
+	private List<ReferenceWorkflowTag> workflowTags;
 
 	@OneToMany (targetEntity=AccessionID.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_object_key", referencedColumnName="_refs_key")
@@ -175,6 +182,16 @@ public class Reference extends Base {
 	public String getReferenceType() {
 		if (referenceTypeTerm == null) { return null; }
 		return referenceTypeTerm.term;
+	}
+	
+	@Transient
+	public List<String> getWorkflowTags() {
+		List<String> tags = new ArrayList<String>();
+		for (ReferenceWorkflowTag rwTag : this.workflowTags) {
+			tags.add(rwTag.tag.term);
+		}
+		Collections.sort(tags);
+		return tags;
 	}
 	
 	@Transient

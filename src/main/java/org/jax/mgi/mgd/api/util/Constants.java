@@ -44,6 +44,7 @@ public class Constants {
 	// vocabulary keys
 	public static Integer VOC_WORKFLOW_GROUP = 127;
 	public static Integer VOC_WORKFLOW_STATUS = 128;
+	public static Integer VOC_WORKFLOW_TAGS = 129;
 	
 	// accession ID prefixes
 	public static String PREFIX_JNUM = "J:";

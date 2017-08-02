@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.domain;
 
+import java.util.List;
+
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jboss.logging.Logger;
 
@@ -38,10 +40,11 @@ public class ReferenceDomain {
 	public String gxd_status;
 	public String qtl_status;
 	public String tumor_status;
+	public List<String> workflow_tags;
 	
 	/***--- constructors ---***/
 	
-	/* empty construtor - ready for population from JSON */
+	/* empty constructor - ready for population from JSON */
 	public ReferenceDomain() {}
 	
 	/* pull data from the Reference passed in, using it to populate this domain object for transfer to client
@@ -77,5 +80,6 @@ public class ReferenceDomain {
 		this.gxd_status = r.getGxd_status();
 		this.qtl_status = r.getQtl_status();
 		this.tumor_status = r.getTumor_status();
+		this.workflow_tags = r.getWorkflowTags();
 	}
 }

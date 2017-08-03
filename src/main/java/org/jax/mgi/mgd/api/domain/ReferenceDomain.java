@@ -81,7 +81,7 @@ public class ReferenceDomain {
 		this.qtl_status = r.getQtl_status();
 		this.tumor_status = r.getTumor_status();
 		this.workflow_tags = r.getWorkflowTags();
-		if (r.isDiscard == 0) {
+		if (r.is_discard == 0) {
 			this.is_discard = "No";
 		} else {
 			this.is_discard = "Yes";

@@ -65,9 +65,9 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	 */
 	@Override
 	public SearchResults<ReferenceDomain> getReference(String accids, String allele_id, String authors, String date,
-			Integer isReviewArticle, String issue, String journal, String marker_id,
+			String isReviewArticle, String is_discard, String issue, String journal, String marker_id,
 			String notes, String pages, String primary_author, String ref_abstract, String reference_type,
-			String title, String volume, Integer year, 
+			String title, String volume, String workflow_tag, Integer year, 
 			Integer status_AP_Chosen, Integer status_AP_Fully_curated, Integer status_AP_Indexed,
 			Integer status_AP_Not_Routed, Integer status_AP_Rejected, Integer status_AP_Routed,
 			Integer status_GO_Chosen, Integer status_GO_Fully_curated, Integer status_GO_Indexed,
@@ -84,7 +84,6 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		if (allele_id != null) { map.put("allele_id", allele_id); }
 		if (authors != null) { map.put("authors", authors); }
 		if (date != null) { map.put("date", date); }
-		if (isReviewArticle != null) { map.put("isReviewArticle", isReviewArticle); }
 		if (issue != null) { map.put("issue", issue); }
 		if (journal != null) { map.put("journal", journal); }
 		if (marker_id != null) { map.put("marker_id", marker_id); }
@@ -93,9 +92,26 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		if (ref_abstract != null) { map.put("ref_abstract", ref_abstract); }
 		if (title != null) { map.put("title", title); }
 		if (volume != null) { map.put("volume", volume); }
+		if (workflow_tag != null) { map.put("workflow_tag", workflow_tag); }
 		if (year != null) { map.put("year", year); }
 		if (notes != null) { map.put("notes", notes); }
 		if (reference_type != null) { map.put("reference_type", reference_type); }
+
+		if (isReviewArticle != null) {
+			if ("0".equals(isReviewArticle) || "No".equalsIgnoreCase(isReviewArticle)) {
+				map.put("isReviewArticle", 0);
+			} else if ("1".equals(isReviewArticle) || "Yes".equalsIgnoreCase(isReviewArticle)) {
+				map.put("isReviewArticle", 1);
+			}
+		}
+
+		if (is_discard != null) {
+			if ("0".equals(is_discard) || "No".equalsIgnoreCase(is_discard)) {
+				map.put("is_discard", 0);
+			} else if ("1".equals(is_discard) || "Yes".equalsIgnoreCase(is_discard)) {
+				map.put("is_discard", 1);
+			}
+		}
 
 		if ((status_AP_Chosen != null) && (status_AP_Chosen == 1)) { map.put("status_AP_Chosen", 1); }
 		if ((status_AP_Fully_curated != null) && (status_AP_Fully_curated == 1)) { map.put("status_AP_Fully_curated", 1); }

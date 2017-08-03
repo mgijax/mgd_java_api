@@ -71,8 +71,11 @@ public interface ReferenceRESTInterface {
 			@ApiParam(value = "Value: This is for searching by date")
 			@QueryParam("date") String date,
 			
-			@ApiParam(value = "Value: This is for searching by isReviewArticle (0/1)")
-			@QueryParam("isReviewArticle") Integer isReviewArticle,
+			@ApiParam(value = "Value: This is for searching by isReviewArticle (0/1) or (No/Yes)")
+			@QueryParam("isReviewArticle") String isReviewArticle,
+			
+			@ApiParam(value = "Value: This is for searching by is_discard (0/1) or (No/Yes)")
+			@QueryParam("is_discard") String is_discard,
 			
 			@ApiParam(value = "Value: This is for searching by issue")
 			@QueryParam("issue") String issue,
@@ -103,6 +106,9 @@ public interface ReferenceRESTInterface {
 			
 			@ApiParam(value = "Value: This is for searching by volume")
 			@QueryParam("volume") String volume,
+			
+			@ApiParam(value = "Value: This is for searching by workflow tag")
+			@QueryParam("workflow_tag") String workflow_tag,
 			
 			@ApiParam(value = "Value: This is for searching by year")
 			@QueryParam("year") Integer year,

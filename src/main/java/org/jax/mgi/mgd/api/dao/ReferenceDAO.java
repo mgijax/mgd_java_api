@@ -25,6 +25,7 @@ import org.jax.mgi.mgd.api.entities.ReferenceAlleleAssociation;
 import org.jax.mgi.mgd.api.entities.ReferenceMarkerAssociation;
 import org.jax.mgi.mgd.api.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
+import org.jax.mgi.mgd.api.entities.ReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.util.Constants;
 
 @Singleton
@@ -48,11 +49,11 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		// query parameters existing in main reference table
 		List<String> internalParameters = new ArrayList<String>(Arrays.asList(
 			new String[] { "issue", "pages", "date", "ref_abstract", "isReviewArticle", "title",
-				"authors", "primary_author", "journal", "volume", "year", "_refs_key" }));
+				"authors", "primary_author", "journal", "volume", "year", "_refs_key", "is_discard" }));
 		
 		// non-status query parameters residing outside main reference table
 		//List<String> externalParameters = new ArrayList<String>(Arrays.asList(
-		//	new String[] { "notes", "reference_type", "marker_id", "allele_id", "accids", "mgi_discard" }));
+		//	new String[] { "notes", "reference_type", "marker_id", "allele_id", "accids", "workflow_tag" }));
 		
 		// status query parameters (residing outside main reference table)
 		List<String> statusParameters = new ArrayList<String>();
@@ -122,13 +123,10 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 
 		// second, handle list of status parameters
 		
-		boolean hasStatusParameter = false;
 		List<Predicate> wfsRestrictions = new ArrayList<Predicate>();
 
 		for (String key: statusParameters) {
 			if (params.containsKey(key)) {
-				hasStatusParameter = true;
-				
 				String groupAbbrev = groups.get(key);
 				String status = statuses.get(key);
 				
@@ -150,7 +148,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		}
 		
 		// third handle list of external parameters, including:
-		//		"notes", "reference_type", "marker_id", "allele_id", "accids", "mgi_discard"
+		//		"notes", "reference_type", "marker_id", "allele_id", "accids", "workflow_tag"
 		
 		if (params.containsKey("notes")) {
 			Subquery<ReferenceNote> noteSubquery = query.subquery(ReferenceNote.class);
@@ -229,6 +227,23 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			restrictions.add(builder.exists(idSubquery));
 		}
 
+		if (params.containsKey("workflow_tag")) {
+			String workflowTag = (String) params.get("workflow_tag");
+			
+			Subquery<ReferenceWorkflowTag> tagSubquery = query.subquery(ReferenceWorkflowTag.class);
+			Root<ReferenceWorkflowTag> tagRoot = tagSubquery.from(ReferenceWorkflowTag.class);
+			tagSubquery.select(tagRoot);
+			
+			List<Predicate> tagPredicates = new ArrayList<Predicate>();
+				
+			tagPredicates.add(builder.equal(root.get("_refs_key"), tagRoot.get("_refs_key")));
+			Path<String> column = tagRoot.get("tag").get("term");
+			tagPredicates.add(builder.equal(builder.lower(column), workflowTag.toLowerCase()));
+
+			tagSubquery.where(tagPredicates.toArray(new Predicate[]{}));
+			restrictions.add(builder.exists(tagSubquery));
+		}
+		
 		// finally execute the query and return the list of results
 		
 		query.where(builder.and(restrictions.toArray(new Predicate[0])));

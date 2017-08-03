@@ -80,7 +80,7 @@ public class Reference extends Base {
 	public int isReviewArticle;
 
 	@Column(name="isDiscard")
-	public int isDiscard;
+	public int is_discard;
 
 	// maps workflow group abbrev to current status for that group, cached in memory for efficiency - not persisted
 	@Transient

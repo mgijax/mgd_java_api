@@ -68,7 +68,7 @@ public class Reference extends Base {
 	public String date;
 	
 	@Column(name="year")
-	public String year;
+	public Integer year;
 
 	@Column(name="pgs")
 	public String pages;
@@ -481,15 +481,14 @@ public class Reference extends Base {
 		// remove defunct tags
 		
 		for (ReferenceWorkflowTag rwTag : toDelete) {
-			log.info("removing: " + rwTag.tag.term);
-//			this.workflowTags.remove(rwTag);
+			// would like to do this here, but it fails due to a null _refs_key in the table:
+			//		this.workflowTags.remove(rwTag);
 			refDAO.remove(rwTag);
 		}
 		
 		// add new tags (use shared method, as this will be useful when adding tags to batches of references)
 
 		for (String rdTag : toAdd) {
-			log.info("adding: " + rdTag);
 			this.addTag(rdTag, refDAO);
 		}
 		
@@ -506,7 +505,6 @@ public class Reference extends Base {
 		String lowerTag = rdTag.toLowerCase().trim();
 		for (ReferenceWorkflowTag refTag : this.workflowTags) {
 			if (lowerTag.equals(refTag.tag.term.toLowerCase()) ) {
-				log.info("already has: " + lowerTag);
 				return;
 			}
 		}
@@ -525,14 +523,29 @@ public class Reference extends Base {
 				rwTag.modifiedByUser = rwTag.createdByUser;
 				rwTag.creation_date = new Date();
 				rwTag.modification_date = rwTag.creation_date;
-				
-				log.info("rwTag._assoc_key = " + rwTag._assoc_key);
-				log.info("rwTag._refs_key = " + rwTag._refs_key);
 				refDAO.persist(rwTag);
 				
 				this.workflowTags.add(rwTag);
 			}
 		}
+	}
+	
+	/* handle the basic fields that have changed between this Reference and the given ReferenceDomain
+	 */
+	private boolean applyBasicFieldChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
+		boolean anyChanges = false;
+		
+		int rdDiscard = 0;
+		if ("1".equals(rd.is_discard) || ("Yes".equalsIgnoreCase(rd.is_discard))) {
+			rdDiscard = 1;
+		}
+		
+		if (rdDiscard != this.is_discard) {
+			anyChanges = true;
+			this.is_discard = rdDiscard;
+		}
+
+		return anyChanges;
 	}
 	
 	/* take the data from the domain object and overwrite any changed data into this object
@@ -543,5 +556,6 @@ public class Reference extends Base {
 	public void applyDomainChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
 		boolean anyChanges = applyStatusChanges(rd, refDAO);
 		anyChanges = anyChanges || applyTagChanges(rd, refDAO);
+		anyChanges = anyChanges || applyBasicFieldChanges(rd, refDAO);
 	}
 }

@@ -23,7 +23,7 @@ public class ReferenceDomain {
 	public String volume;
 	public String issue;
 	public String date;
-	public String year;
+	public Integer year;
 	public String pages;
 	public String isReviewArticle;
 	public String jnumid;

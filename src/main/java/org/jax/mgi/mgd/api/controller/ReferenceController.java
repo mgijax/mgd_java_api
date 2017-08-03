@@ -46,7 +46,12 @@ public class ReferenceController extends BaseController implements ReferenceREST
 
 		if(authenticate(api_access_token)) {
 			try {
-				results.setItem(new ReferenceDomain(referenceService.updateReference(reference)) );
+				// The updateReference method does not return the updated reference, as the method must finish
+				// before the updates are persisted to the database.  So, we issue the update, then we use the
+				// getReferenceByKey() method to re-fetch and return the updated object.
+				
+				referenceService.updateReference(reference);
+				return this.getReferenceByKey(reference._refs_key.toString());
 			} catch (Throwable t) {
 				results.setError("Failed", "Failed to save changes", Constants.HTTP_SERVER_ERROR);
 			}

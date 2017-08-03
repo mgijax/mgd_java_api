@@ -9,7 +9,6 @@ import java.util.Map;
 
 import javax.ejb.Singleton;
 import javax.enterprise.context.RequestScoped;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
@@ -284,6 +283,12 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	 */
 	public synchronized long getNextWorkflowStatusKey() {
 		return this.getNextKey("ReferenceWorkflowStatus", "_assoc_key");
+	}
+	
+	/* get the next available primary key for a workflow tag record
+	 */
+	public synchronized long getNextWorkflowTagKey() {
+		return this.getNextKey("ReferenceWorkflowTag", "_assoc_key");
 	}
 	
 	/* get the next available J#

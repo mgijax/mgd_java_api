@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.ejb.Singleton;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -343,8 +346,9 @@ public class Reference extends Base {
 		return sb.toString();
 	}
 	
-	/* convenience method, used by applyDomainChanges() to reduce redundant code in setting workflow
-	 * group statuses.  returns true if an update was made, false if no change.
+	/* convenience method, used by applyStatusChanges() to reduce redundant code in setting workflow
+	 * group statuses.  returns true if an update was made, false if no change.  persists any changes
+	 * to the database.
 	 */
 	private boolean updateStatus(String groupAbbrev, String currentStatus, String newStatus, ReferenceDAO refDAO) {
 		// no update if new status matches old status (or if no group is specified)
@@ -383,19 +387,14 @@ public class Reference extends Base {
 		return true;
 	}
 	
-	/* take the data from the domain object and overwrite any changed data into this object
-	 * (does not automatically persist it into the database -- just applies it to the object in memory)
+	/* handle applying any status changes for workflow groups.  If a group in 'rd' has a different status
+	 * from what's in this Reference, we need:
+	 * 		a. the old status to be changed so isCurrent = 0, and
+	 * 		b. a new ReferenceWorkflowStatus object created and set to be current
+	 * As well, if this Reference has no J: number and we just assigned a status other than "Not Routed", 
+	 * then we assign the next available J: number to this reference.
 	 */
-	@Transient
-	public void applyDomainChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
-		/* At the moment, the only thing we're saving are status changes for workflow groups.
-		 * 	1. Any status values that are the same as what's in the object don't need to be updated.
-		 * 	2. A workflow group with a different status value than what's in this object will need:
-		 * 		a. the old status to be changed so isCurrent = 0, and
-		 * 		b. a new ReferenceWorkflowStatus object created and set to be current
-		 * 			i. How to deal with assigning a key on this object to avoid concurrency issues?
-		 * 				- keep highest in memory as static variable?  (synchronize access)
-		 */
+	private boolean applyStatusChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
 		boolean anyChanges = updateStatus(Constants.WG_AP, this.getAp_status(), rd.ap_status, refDAO);
 		anyChanges = anyChanges || updateStatus(Constants.WG_GO, this.getGo_status(), rd.go_status, refDAO);
 		anyChanges = anyChanges || updateStatus(Constants.WG_GXD, this.getGxd_status(), rd.gxd_status, refDAO);
@@ -438,5 +437,108 @@ public class Reference extends Base {
 				}
 			} // if no J#
 		}
+		return anyChanges;
+	}
+	
+	/* handle removing/adding any workflow tags that have changed between this Reference and the passed-in
+	 * ReferenceDomain.  Persists any tag changes to the database.  Returns true if any changes were made,
+	 * false otherwise.
+	 */
+	private boolean applyTagChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
+		// short-circuit method if no tags in Reference or in ReferenceDomain
+		if ((this.workflowTags.size() == 0) && (rd.workflow_tags.size() == 0)) {
+			return false;
+		}
+		
+		// set of tags specified in domain object (lowercased) -- potentially to add to object
+		Set<String> toAdd = new HashSet<String>();
+		for (String rdTag : rd.workflow_tags) {
+			toAdd.add(rdTag.toLowerCase().trim());
+		}
+
+		// list of tags that need to be removed from this object
+		List<ReferenceWorkflowTag> toDelete = new ArrayList<ReferenceWorkflowTag>();
+		
+		// Now we need to diff the set of tags we already have and the set of tags to potentially add. Anything
+		// left in toAdd will need to be added as a new tag, and anything in toDelete will need to be removed.
+		
+		for (ReferenceWorkflowTag refTag : this.workflowTags) {
+			String lowerTag = refTag.tag.term.toLowerCase();
+
+			// matching tags
+			if (toAdd.contains(lowerTag)) {
+				// already have this one, don't need to add it
+				toAdd.remove(lowerTag);
+			} else {
+				// current one isn't in the new list from domain object, so need to remove it
+				toDelete.add(refTag);
+			}
+		}
+		
+		// remove defunct tags
+		
+		for (ReferenceWorkflowTag rwTag : toDelete) {
+			log.info("removing: " + rwTag.tag.term);
+//			this.workflowTags.remove(rwTag);
+			refDAO.remove(rwTag);
+		}
+		
+		// add new tags (use shared method, as this will be useful when adding tags to batches of references)
+
+		for (String rdTag : toAdd) {
+			log.info("adding: " + rdTag);
+			this.addTag(rdTag, refDAO);
+		}
+		
+		return (toDelete.size() > 0) || (toAdd.size() > 0);
+	}
+	
+	/* shared method for adding a workflow tag to this Reference
+	 */
+	@Transient
+	public void addTag(String rdTag, ReferenceDAO refDAO) {
+		// if we already have this tag applied, skip it (extra check needed for batch additions to avoid
+		// adding duplicates)
+
+		String lowerTag = rdTag.toLowerCase().trim();
+		for (ReferenceWorkflowTag refTag : this.workflowTags) {
+			if (lowerTag.equals(refTag.tag.term.toLowerCase()) ) {
+				log.info("already has: " + lowerTag);
+				return;
+			}
+		}
+		 
+		// need to find the term of the tag, wrap it in an association, perist the association, and
+		// add it to the workflow tags for this Reference
+		
+		Term tagTerm = refDAO.getTermByTerm(Constants.VOC_WORKFLOW_TAGS, rdTag);
+		if (tagTerm != null) {
+			if (!this.workflowTags.contains(tagTerm)) {
+				ReferenceWorkflowTag rwTag = new ReferenceWorkflowTag();
+				rwTag._assoc_key = refDAO.getNextWorkflowTagKey();
+				rwTag._refs_key = this._refs_key;
+				rwTag.tag = tagTerm;
+				rwTag.createdByUser = refDAO.getUser("mgd_dbo");
+				rwTag.modifiedByUser = rwTag.createdByUser;
+				rwTag.creation_date = new Date();
+				rwTag.modification_date = rwTag.creation_date;
+				
+				log.info("rwTag._assoc_key = " + rwTag._assoc_key);
+				log.info("rwTag._refs_key = " + rwTag._refs_key);
+				refDAO.persist(rwTag);
+				
+				this.workflowTags.add(rwTag);
+			}
+		}
+	}
+	
+	/* take the data from the domain object and overwrite any changed data into this object
+	 * (assumes we are working in a transaction and persists any sub-objects into the database, but does
+	 * not persist this Reference object itself, as other changes could be coming)
+	 */
+	@Transient
+	public void applyDomainChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
+		boolean anyChanges = applyStatusChanges(rd, refDAO);
+		anyChanges = anyChanges || applyTagChanges(rd, refDAO);
 	}
 }

@@ -21,8 +21,11 @@ public class ReferenceService {
 		return referenceDAO.add(reference);
 	}
 
-	public Reference updateReference(ReferenceDomain reference) {
-		return referenceDAO.update(reference);
+	/* returns true if reference was updated, false if not
+	 */
+	public boolean updateReference(ReferenceDomain reference) {
+		referenceDAO.update(reference);
+		return true;
 	}
 
 	public List<Reference> getReference(HashMap<String, Object> searchFields) {

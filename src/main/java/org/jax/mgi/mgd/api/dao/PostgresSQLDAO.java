@@ -127,7 +127,8 @@ public class PostgresSQLDAO<T> {
 		Root<Term> root = query.from(Term.class);
 		List<Predicate> restrictions = new ArrayList<Predicate>();
 		restrictions.add(builder.equal(root.get("_vocab_key"), vocabKey));
-		restrictions.add(builder.equal(root.get("term"), term));
+		Path<String> termColumn = root.get("term");
+		restrictions.add(builder.equal(builder.lower(termColumn), term.toLowerCase()));
 		query.where(builder.and(restrictions.toArray(new Predicate[0])));
 		List<Term> results = entityManager.createQuery(query).getResultList();
 		if ((results == null) || (results.size() == 0)) {
@@ -176,5 +177,17 @@ public class PostgresSQLDAO<T> {
 	 */
 	public void persist(Object o) {
 		this.entityManager.persist(o);
+	}
+	
+	/* Remove object o from the database.  Make sure it has already been removed from any relationships.
+	 */
+	public void remove(Object o) {
+		this.entityManager.remove(o);
+	}
+	
+	/* Refresh object o from the database.
+	 */
+	public void refresh(Object o) {
+		this.entityManager.refresh(o);
 	}
 }

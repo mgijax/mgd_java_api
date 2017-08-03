@@ -549,16 +549,30 @@ public class Reference extends Base {
 		}
 	}
 	
+	private boolean applyBookChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
+		return false;
+	}
+	
+	private boolean applyNoteChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
+		return false;
+	}
+	
+	private boolean applyAccessionIDChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
+		return false;
+	}
+	
 	/* handle the basic fields that have changed between this Reference and the given ReferenceDomain
 	 */
 	private boolean applyBasicFieldChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
 		boolean anyChanges = false;
 		
+		// determine if the is_discard flag is set in the ReferenceDomain object
 		int rdDiscard = 0;
 		if ("1".equals(rd.is_discard) || ("Yes".equalsIgnoreCase(rd.is_discard))) {
 			rdDiscard = 1;
 		}
 		
+		// update this object's is_discard flag to match the one passed in
 		if (rdDiscard != this.is_discard) {
 			anyChanges = true;
 			this.is_discard = rdDiscard;
@@ -576,6 +590,10 @@ public class Reference extends Base {
 		boolean anyChanges = applyStatusChanges(rd, refDAO);
 		anyChanges = anyChanges || applyTagChanges(rd, refDAO);
 		anyChanges = anyChanges || applyBasicFieldChanges(rd, refDAO);
+		anyChanges = anyChanges || applyBookChanges(rd, refDAO);
+		anyChanges = anyChanges || applyNoteChanges(rd, refDAO);
+		anyChanges = anyChanges || applyAccessionIDChanges(rd, refDAO);
+		// still need to do allele and marker associations
 	}
 	
 	/* If this reference is of type Book, return an object with the extra book-related data (if one exists);

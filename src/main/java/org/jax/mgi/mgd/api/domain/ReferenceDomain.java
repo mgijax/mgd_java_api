@@ -40,6 +40,7 @@ public class ReferenceDomain {
 	public String gxd_status;
 	public String qtl_status;
 	public String tumor_status;
+	public String is_discard;
 	public List<String> workflow_tags;
 	
 	/***--- constructors ---***/
@@ -50,7 +51,6 @@ public class ReferenceDomain {
 	/* pull data from the Reference passed in, using it to populate this domain object for transfer to client
 	 */
 	public ReferenceDomain(Reference r) {
-		log.info("in ReferenceDomain constructor");
 		this._refs_key = r._refs_key;
 		this.authors = r.authors;
 		this.primary_author = r.primary_author;
@@ -81,5 +81,10 @@ public class ReferenceDomain {
 		this.qtl_status = r.getQtl_status();
 		this.tumor_status = r.getTumor_status();
 		this.workflow_tags = r.getWorkflowTags();
+		if (r.isDiscard == 0) {
+			this.is_discard = "No";
+		} else {
+			this.is_discard = "Yes";
+		}
 	}
 }

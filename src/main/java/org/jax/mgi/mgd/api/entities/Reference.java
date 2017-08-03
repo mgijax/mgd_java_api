@@ -79,6 +79,9 @@ public class Reference extends Base {
 	@Column(name="isReviewArticle")
 	public int isReviewArticle;
 
+	@Column(name="isDiscard")
+	public int isDiscard;
+
 	// maps workflow group abbrev to current status for that group, cached in memory for efficiency - not persisted
 	@Transient
 	private Map<String,String> workflowStatusCache;

@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.domain;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.entities.Reference;
+import org.jax.mgi.mgd.api.entities.ReferenceBook;
 import org.jboss.logging.Logger;
 
 /* Is: a domain object that represents a single reference in mgd.
@@ -42,6 +43,11 @@ public class ReferenceDomain {
 	public String tumor_status;
 	public String is_discard;
 	public List<String> workflow_tags;
+	public String book_author;
+	public String book_title;
+	public String place;
+	public String publisher;
+	public String series_edition;
 	
 	/***--- constructors ---***/
 	
@@ -85,6 +91,15 @@ public class ReferenceDomain {
 			this.is_discard = "No";
 		} else {
 			this.is_discard = "Yes";
+		}
+		
+		ReferenceBook bookData = r.getBookData();
+		if (bookData != null) {
+			this.book_author = bookData.book_author;
+			this.book_title = bookData.book_title;
+			this.place = bookData.place;
+			this.publisher = bookData.publisher;
+			this.series_edition = bookData.series_edition;
 		}
 	}
 }

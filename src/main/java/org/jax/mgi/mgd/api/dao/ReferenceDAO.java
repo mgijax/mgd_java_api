@@ -22,6 +22,7 @@ import org.jax.mgi.mgd.api.entities.AccessionID;
 import org.jax.mgi.mgd.api.entities.AccessionMax;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceAlleleAssociation;
+import org.jax.mgi.mgd.api.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.entities.ReferenceMarkerAssociation;
 import org.jax.mgi.mgd.api.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;

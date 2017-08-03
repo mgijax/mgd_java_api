@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.ejb.Singleton;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -82,6 +81,20 @@ public class Reference extends Base {
 	@Column(name="isDiscard")
 	public int is_discard;
 
+	@Column(name="creation_date")
+	public Date creation_date;
+	
+	@Column(name="modification_date")
+	public Date modification_date;
+
+	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
+	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
+	public User createdByUser;
+	
+	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
+	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
+	public User modifiedByUser;
+
 	// maps workflow group abbrev to current status for that group, cached in memory for efficiency - not persisted
 	@Transient
 	private Map<String,String> workflowStatusCache;
@@ -122,11 +135,17 @@ public class Reference extends Base {
 	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")
 	private Term referenceTypeTerm;
 	
-	// cannot eager-load an attribute that might not be there
+	// one to many, because notes might not exist (leaving it 1-0)
 	@OneToMany (targetEntity=ReferenceNote.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
 	@Fetch(value=FetchMode.SUBSELECT)
 	private List<ReferenceNote> notes;
+
+	// one to many, because book data most often doesn not exist (leaving it 1-0)
+	@OneToMany (targetEntity=ReferenceBook.class, fetch=FetchType.EAGER)
+	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	@Fetch(value=FetchMode.SUBSELECT)
+	private List<ReferenceBook> bookList;
 
 	/***--- transient methods ---***/
 	
@@ -557,5 +576,16 @@ public class Reference extends Base {
 		boolean anyChanges = applyStatusChanges(rd, refDAO);
 		anyChanges = anyChanges || applyTagChanges(rd, refDAO);
 		anyChanges = anyChanges || applyBasicFieldChanges(rd, refDAO);
+	}
+	
+	/* If this reference is of type Book, return an object with the extra book-related data (if one exists);
+	 * otherwise return null.
+	 */
+	@Transient
+	public ReferenceBook getBookData() {
+		if ("Book".equals(this.referenceTypeTerm.term) && (this.bookList.size() > 0)) {
+			return this.bookList.get(0);
+		}
+		return null;
 	}
 }

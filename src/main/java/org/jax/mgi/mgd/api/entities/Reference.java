@@ -417,11 +417,14 @@ public class Reference extends Base {
 	 * then we assign the next available J: number to this reference.
 	 */
 	private boolean applyStatusChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
+		// note that we need to put 'anyChanges' last for each OR pair, otherwise short-circuit evaluation
+		// will only let the first change go through and the rest will not execute.
+		
 		boolean anyChanges = updateStatus(Constants.WG_AP, this.getAp_status(), rd.ap_status, refDAO);
-		anyChanges = anyChanges || updateStatus(Constants.WG_GO, this.getGo_status(), rd.go_status, refDAO);
-		anyChanges = anyChanges || updateStatus(Constants.WG_GXD, this.getGxd_status(), rd.gxd_status, refDAO);
-		anyChanges = anyChanges || updateStatus(Constants.WG_QTL, this.getQtl_status(), rd.qtl_status, refDAO);
-		anyChanges = anyChanges || updateStatus(Constants.WG_TUMOR, this.getTumor_status(), rd.tumor_status, refDAO);
+		anyChanges = updateStatus(Constants.WG_GO, this.getGo_status(), rd.go_status, refDAO) || anyChanges;
+		anyChanges = updateStatus(Constants.WG_GXD, this.getGxd_status(), rd.gxd_status, refDAO) || anyChanges;
+		anyChanges = updateStatus(Constants.WG_QTL, this.getQtl_status(), rd.qtl_status, refDAO) || anyChanges;
+		anyChanges = updateStatus(Constants.WG_TUMOR, this.getTumor_status(), rd.tumor_status, refDAO) || anyChanges;
 		
 		if (anyChanges) {
 			this.workflowStatusCache = null;		// clear cache of old workflow statuses

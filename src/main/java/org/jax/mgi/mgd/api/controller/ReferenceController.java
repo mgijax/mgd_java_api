@@ -148,7 +148,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		if ((status_Tumor_Rejected != null) && (status_Tumor_Rejected == 1)) { map.put("status_Tumor_Rejected", 1); }
 		if ((status_Tumor_Routed != null) && (status_Tumor_Routed == 1)) { map.put("status_Tumor_Routed", 1); }
 
-		this.removeEmptyParameters(map);
+		map = this.filterEmptyParameters(map);
 
 		log.info("Search Params: " + map);
 		SearchResults.resetTimer();

@@ -10,14 +10,20 @@ public class BaseController {
 	
 	/* convenience method to remove any String parameters that have an empty string as the value
 	 */
-	protected void removeEmptyParameters(HashMap<String, Object> params) {
+	protected HashMap<String, Object> filterEmptyParameters(HashMap<String, Object> params) {
+		HashMap<String, Object> filtered = new HashMap<String, Object>();
 		for (String key : params.keySet()) {
+			boolean skipIt = false;
 			Object value = params.get(key);
 			if (value instanceof String) {
 				if (((String) value).length() == 0) {
-					params.remove(key);
+					skipIt = true;
 				}
 			}
+			if (!skipIt) {
+				filtered.put(key, value);
+			}
 		}
+		return filtered;
 	}
 }

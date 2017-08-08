@@ -137,6 +137,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 
 				List<Predicate> wfsPredicates = new ArrayList<Predicate>();
 				wfsPredicates.add(builder.equal(root.get("_refs_key"), wfsRoot.get("_refs_key")));
+				wfsPredicates.add(builder.equal(wfsRoot.get("isCurrent"), 1));
 				wfsPredicates.add(builder.equal(wfsRoot.get("groupTerm").get("abbreviation"), groupAbbrev));
 				wfsPredicates.add(builder.equal(wfsRoot.get("statusTerm").get("term"), status));
 

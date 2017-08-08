@@ -50,7 +50,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		// query parameters existing in main reference table
 		List<String> internalParameters = new ArrayList<String>(Arrays.asList(
 			new String[] { "issue", "pages", "date", "ref_abstract", "isReviewArticle", "title",
-				"authors", "primary_author", "journal", "volume", "year", "_refs_key", "is_discard" }));
+				"authors", "primary_author", "journal", "volume", "year", "_refs_key" }));
 		
 		// non-status query parameters residing outside main reference table
 		//List<String> externalParameters = new ArrayList<String>(Arrays.asList(
@@ -115,6 +115,27 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			}
 		}
 
+		// special internal parameter -- is_discard.  QF specifies three values, which need to be translated
+		// for the actual data in the bib_refs table.
+		
+		if (params.containsKey("is_discard")) {
+			String desiredValue = ((String) params.get("is_discard")).toLowerCase();
+
+			if (desiredValue.equals("no discard")) {
+				restrictions.add(builder.equal(root.get("is_discard"), 0)); 
+				
+			} else if (desiredValue.equals("only discard")) {
+				restrictions.add(builder.equal(root.get("is_discard"), 1)); 
+				
+			} else if (desiredValue.equals("search all")) {
+				// disregard the is_discard flag when searching 
+			}
+
+		} else {
+			// default setting is to only return non-discarded references
+			restrictions.add(builder.equal(root.get("is_discard"), 0)); 
+		}
+		
 		// second, handle list of status parameters
 		
 		List<Predicate> wfsRestrictions = new ArrayList<Predicate>();
@@ -245,7 +266,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		log.debug(query.toString());
 		log.debug(entityManager.createQuery(query).toString());
 
-		return entityManager.createQuery(query).getResultList();
+		return entityManager.createQuery(query).setMaxResults(1001).getResultList();
 	}
 	
 	/* get a list of the workflow status records for a reference

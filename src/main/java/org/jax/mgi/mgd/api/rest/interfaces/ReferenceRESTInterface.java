@@ -74,7 +74,7 @@ public interface ReferenceRESTInterface {
 			@ApiParam(value = "Value: This is for searching by isReviewArticle (0/1) or (No/Yes)")
 			@QueryParam("isReviewArticle") String isReviewArticle,
 			
-			@ApiParam(value = "Value: This is for searching by is_discard (0/1) or (No/Yes)")
+			@ApiParam(value = "Value: This is for searching by discard flag (no discard, only discard, search all)")
 			@QueryParam("is_discard") String is_discard,
 			
 			@ApiParam(value = "Value: This is for searching by issue")

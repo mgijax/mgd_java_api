@@ -96,20 +96,13 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		if (year != null) { map.put("year", year); }
 		if (notes != null) { map.put("notes", notes); }
 		if (reference_type != null) { map.put("reference_type", reference_type); }
+		if (is_discard != null) { map.put("is_discard", is_discard); }
 
 		if (isReviewArticle != null) {
 			if ("0".equals(isReviewArticle) || "No".equalsIgnoreCase(isReviewArticle)) {
 				map.put("isReviewArticle", 0);
 			} else if ("1".equals(isReviewArticle) || "Yes".equalsIgnoreCase(isReviewArticle)) {
 				map.put("isReviewArticle", 1);
-			}
-		}
-
-		if (is_discard != null) {
-			if ("0".equals(is_discard) || "No".equalsIgnoreCase(is_discard)) {
-				map.put("is_discard", 0);
-			} else if ("1".equals(is_discard) || "Yes".equalsIgnoreCase(is_discard)) {
-				map.put("is_discard", 1);
 			}
 		}
 

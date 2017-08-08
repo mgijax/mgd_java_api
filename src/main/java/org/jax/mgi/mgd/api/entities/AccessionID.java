@@ -39,6 +39,9 @@ public class AccessionID extends Base implements Serializable {
 	@Column(name="prefixPart")
 	public String prefixPart;
 
+	@Column(name="numericPart")
+	public Long numericPart;
+
 	@Column(name="creation_date")
 	public Date creation_date;
 	

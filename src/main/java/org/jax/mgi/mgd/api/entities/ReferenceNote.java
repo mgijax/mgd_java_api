@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.entities;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,11 +19,17 @@ import io.swagger.annotations.ApiModel;
 public class ReferenceNote extends Base {
 	@Id
 	@Column(name="_refs_key")
-	public int _refs_key;
+	public long _refs_key;
 
 	@Column(name="sequenceNum")
 	public int sequenceNum;
 
 	@Column(name="note")
 	public String note;
+
+	@Column(name="creation_date")
+	public Date creation_date;
+	
+	@Column(name="modification_date")
+	public Date modification_date;
 }

@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiModel;
 public class ReferenceBook extends Base {
 	@Id
 	@Column(name="_refs_key")
-	public int _refs_key;
+	public long _refs_key;
 
 	@Column(name="book_au")
 	public String book_author;

@@ -79,20 +79,13 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			}
 		}
 
-		/* if we handle status parameters before non-status parameters, we can keep a flag indicating whether
-		 * some status search has been chosen.  If not, we need to look for the mgi_discard flag to find either:
-		 * 1. (flag not set) references with at least one setting other than "Not Routed", or
-		 * 2. (flag set) references with no settings other than "Not Routed"
-		 */
-		
-		log.info("Reference Lookup: " + params);
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Reference> query = builder.createQuery(myClass);
 		Root<Reference> root = query.from(myClass);
 
 		List<Predicate> restrictions = new ArrayList<Predicate>();
 		
-		// first, handle the list of internal parameters (those that are in the table underlying Reference objects
+		// first, handle the list of internal parameters (those that are in the table underlying Reference objects)
 		for (String key: internalParameters) {
 			Path<String> column = root.get(key);
 			if (params.containsKey(key)) {

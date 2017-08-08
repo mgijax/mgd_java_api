@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.ejb.Singleton;
 import javax.persistence.Column;
@@ -552,21 +554,223 @@ public class Reference extends Base {
 		}
 	}
 	
+	/* comparison function that handles null values well
+	 */
+	private boolean smartEqual(Object a, Object b) {
+		if (a == null) {
+			if (b == null) { return true; }
+			else { return false; }
+		}
+		return a.equals(b);
+	}
+	
 	private boolean applyBookChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
-		return false;
+		// at most one set of book data per reference
+		// need to handle:  deleted book data, updated book data, new book data
+
+		boolean anyChanges = false;
+		boolean wasBook = "Book".equalsIgnoreCase(this.getReferenceType());
+		boolean willBeBook = "Book".equalsIgnoreCase(rd.reference_type);
+		
+		// If this reference is already a book and will continue to be a book, need to apply
+		// any changes to the fields of the existing book data.
+		if (wasBook && willBeBook && (this.bookList.size() > 0)) {
+			ReferenceBook book = this.bookList.get(0);
+
+			if (!smartEqual(book.book_author, rd.book_author) || !smartEqual(book.book_title, rd.book_title) || 
+				!smartEqual(book.place, rd.place) || !smartEqual(book.publisher, rd.publisher) ) {
+
+				book.book_author = book.book_author;
+				book.book_title = book.book_title;
+				book.place = book.place;
+				book.publisher = book.publisher;
+				book.modification_date = new Date();
+				anyChanges = true;
+			}
+			
+		} else if (wasBook && (this.bookList.size() > 0)) {
+			// This reference was a book previously, but its type has changed, so need to delete book-specific data.
+
+			refDAO.remove(this.bookList.get(0));
+			anyChanges = true;
+			
+		} else if (willBeBook) {
+			// This reference was not a book previously, but now will be, so we need to add book-specific data.
+			
+			ReferenceBook book = new ReferenceBook();
+			book._refs_key = this._refs_key;
+			book.book_author = rd.book_author;
+			book.book_title = rd.book_title;
+			book.place = rd.place;
+			book.publisher = rd.publisher;
+			book.creation_date = new Date();
+			book.modification_date = book.creation_date; 
+			
+			refDAO.persist(book);
+			this.bookList.add(book);
+			anyChanges = true;
+		}
+		return anyChanges;
 	}
 	
 	private boolean applyNoteChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
-		return false;
+		// at most one note per reference
+		// need to handle:  new note, updated note, deleted note
+		
+		boolean anyChanges = false;
+		boolean hadNote = this.notes.size() > 0;
+		boolean willHaveNote = (rd.referencenote != null) && (rd.referencenote.length() > 0);
+		
+		if (hadNote && willHaveNote) {
+			// already have a note and will continue to have a note; just need to apply any difference
+			
+			ReferenceNote note = this.notes.get(0);
+			if (!smartEqual(note.note, rd.referencenote)) {
+				note.note = rd.referencenote;
+				anyChanges = true;
+			}
+			
+		} else if (hadNote) {
+			// had a note previously, but it needs to be deleted, because reference now has no note
+			
+			refDAO.remove(this.notes.get(0));
+			anyChanges = true;
+			
+		} else if (willHaveNote) {
+			// did not have a note previously, but now need to create one
+			
+			ReferenceNote note = new ReferenceNote();
+			note._refs_key = this._refs_key;
+			note.note = rd.referencenote;
+			note.sequenceNum = 1;
+			note.creation_date = new Date();
+			note.modification_date = note.creation_date; 
+			
+			refDAO.persist(note);
+			this.notes.add(note);
+			anyChanges = true;
+		}
+		return anyChanges;
+	}
+	
+	/* Apply a single ID change to this reference.  If there already is an ID for this logical database, replace it.  If there wasn't
+	 * one, add one.  And, if there was one previously, but there's not now, then delete it.
+	 */
+	private boolean applyOneIDChange(Integer ldb, String accID, String prefixPart, Long numericPart, Integer preferred, Integer isPrivate, ReferenceDAO refDAO) {
+		// first parameter is required; bail out if it is null
+		if (ldb == null) { return false; }
+		
+		// First, need to find any existing AccessionID object for this logical database.
+
+		int idPos = -1;			// position of correct ID in list of IDs
+		for (int i = 0; i < this.accessionIDs.size(); i++) {
+			AccessionID myID = this.accessionIDs.get(i);
+			if (ldb.equals(myID._logicaldb_key)) {
+				idPos = i;
+				break;
+			}
+		}
+		
+		// If we had a previous ID for this logical database, we either need to modify it or delete it.
+		if (idPos >= 0) {
+			// Passing in a null ID indicates that any existing ID should be removed.
+			if (accID == null) {
+				refDAO.remove(this.accessionIDs.get(idPos));
+			} else {
+				// Otherwise, we can update the ID and other data for this logical database.
+				AccessionID myID = this.accessionIDs.get(idPos);
+				myID.accID = accID;
+				myID.is_private = isPrivate;
+				myID.preferred = preferred;
+				myID.prefixPart = prefixPart;
+				myID.numericPart = numericPart;
+				myID.modification_date = new Date();
+				myID.modifiedByUser = refDAO.getUser("mgd_dbo");
+			}
+		} else {
+			// We didn't find an existing ID for this logical database, so we need to add one.
+			
+			AccessionID myID = new AccessionID();
+			myID._accession_key = refDAO.getNextAccessionKey();
+			myID._logicaldb_key = ldb;
+			myID.accID = accID;
+			myID._mgitype_key = Constants.TYPE_REFERENCE;
+			myID._object_key = this._refs_key;
+			myID.is_private = isPrivate;
+			myID.preferred = preferred;
+			myID.prefixPart = prefixPart;
+			myID.numericPart = numericPart;
+			myID.creation_date = new Date();
+			myID.createdByUser = refDAO.getUser("mgd_dbo");
+			myID.modification_date = myID.creation_date;
+			myID.modifiedByUser = myID.createdByUser;
+			refDAO.persist(myID);
+		}
+		return true;
 	}
 	
 	private boolean applyAccessionIDChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
-		return false;
+		// consider IDs for three logical databases:  PubMed, DOI, GO REF
+		// assumes only one ID per reference for each logical database (valid assumption, August 2017)
+		// need to handle:  new ID for logical db, updated ID for logical db, deleted ID for logical db
+
+		boolean anyChanges = false;
+		Pattern pattern = Pattern.compile("(.*?)([0-9]+)");		// any characters as a prefix (reluctant group), followed by one or more digits
+		
+		if (!smartEqual(this.getDoiid(), rd.doiid)) {
+			String prefixPart = rd.doiid;					// defaults
+			Long numericPart = null;
+
+			if (rd.doiid != null) {
+				Matcher m = pattern.matcher(rd.doiid);
+				if (m.find()) {
+					prefixPart = m.group(1);					// ID fit pattern, so use more accurate prefix / numeric parts
+					numericPart = Long.parseLong(m.group(2));
+				}
+			}
+			
+			anyChanges = applyOneIDChange(Constants.LDB_DOI, rd.doiid, prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, refDAO) || anyChanges;
+		}
+		
+		if (!smartEqual(this.getPubmedid(), rd.pubmedid)) {
+			String prefixPart = rd.pubmedid;				// defaults
+			Long numericPart = null;
+
+			if (rd.pubmedid != null) {
+				Matcher m = pattern.matcher(rd.pubmedid);
+				if (m.find()) {
+					prefixPart = m.group(1);					// ID fit pattern, so use more accurate prefix / numeric parts
+					numericPart = Long.parseLong(m.group(2));
+				}
+			}
+			
+			anyChanges = applyOneIDChange(Constants.LDB_PUBMED, rd.pubmedid, prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, refDAO) || anyChanges;
+		}
+		
+		if (!smartEqual(this.getGorefid(), rd.gorefid)) {
+			String prefixPart = rd.gorefid;					// defaults
+			Long numericPart = null;
+
+			if (rd.gorefid != null) {
+				Matcher m = pattern.matcher(rd.gorefid);
+				if (m.find()) {
+					prefixPart = m.group(1);					// ID fit pattern, so use more accurate prefix / numeric parts
+					numericPart = Long.parseLong(m.group(2));
+				}
+			}
+			
+			anyChanges = applyOneIDChange(Constants.LDB_GOREF, rd.gorefid, prefixPart, numericPart, Constants.SECONDARY, Constants.PRIVATE, refDAO) || anyChanges;
+		}
+		return anyChanges;
 	}
 	
 	/* handle the basic fields that have changed between this Reference and the given ReferenceDomain
 	 */
 	private boolean applyBasicFieldChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
+		// exactly one set of basic data per reference, including:  is_discard flag, reference type,
+		// author, primary author (derived), journal, title, volume, issue, date, year, pages, 
+		// abstract, and isReviewArticle flag
+
 		boolean anyChanges = false;
 		
 		// determine if the is_discard flag is set in the ReferenceDomain object
@@ -575,10 +779,51 @@ public class Reference extends Base {
 			rdDiscard = 1;
 		}
 		
-		// update this object's is_discard flag to match the one passed in
-		if (rdDiscard != this.is_discard) {
-			anyChanges = true;
+		// determine if the isReviewArticle flag is set in the ReferenceDomain object
+		int rdReview = 0;
+		if ("1".equals(rd.isReviewArticle) || ("Yes".equalsIgnoreCase(rd.isReviewArticle))) {
+			rdReview = 1;
+		}
+		
+		String refType = this.referenceTypeTerm.term;
+		
+		// update this object's data to match what was passed in
+		if ((rdDiscard != this.is_discard) || (rdReview != this.isReviewArticle)
+				|| !smartEqual(this.authors, rd.authors)
+				|| !smartEqual(this.journal, rd.journal)
+				|| !smartEqual(this.title, rd.title)
+				|| !smartEqual(this.volume, rd.volume)
+				|| !smartEqual(this.issue, rd.issue)
+				|| !smartEqual(this.date, rd.date)
+				|| !smartEqual(this.year, rd.year)
+				|| !smartEqual(refType, rd.reference_type)
+				|| !smartEqual(this.pages, rd.pages)
+				|| !smartEqual(this.ref_abstract, rd.ref_abstract)
+			) {
+			
+			if (rd.authors != null) {
+				Pattern pattern = Pattern.compile("([^;]+).*");		// any characters up to the first semicolon are the primary author
+				Matcher matcher = pattern.matcher(rd.authors);
+				if (matcher.find()) {
+					this.primary_author = matcher.group(1);
+				}
+			}
+
 			this.is_discard = rdDiscard;
+			this.isReviewArticle = rdReview;
+			this.authors = rd.authors;
+			this.journal = rd.journal;
+			this.title = rd.title;
+			this.volume = rd.volume;
+			this.issue = rd.issue;
+			this.date = rd.date;
+			this.year = rd.year;
+			this.pages = rd.pages;
+			this.ref_abstract = rd.ref_abstract;
+			this.referenceTypeTerm = refDAO.getTermByTerm(Constants.VOC_REFERENCE_TYPE, rd.reference_type);
+			this.modification_date = new Date();
+			this.modifiedByUser = refDAO.getUser("mgd_dbo");
+			anyChanges = true;
 		}
 
 		return anyChanges;
@@ -590,13 +835,15 @@ public class Reference extends Base {
 	 */
 	@Transient
 	public void applyDomainChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
+		// note that we must have 'anyChanges' after the OR, otherwise short-circuit evaluation will only save
+		// the first section changed
+		
 		boolean anyChanges = applyStatusChanges(rd, refDAO);
-		anyChanges = anyChanges || applyTagChanges(rd, refDAO);
-		anyChanges = anyChanges || applyBasicFieldChanges(rd, refDAO);
-		anyChanges = anyChanges || applyBookChanges(rd, refDAO);
-		anyChanges = anyChanges || applyNoteChanges(rd, refDAO);
-		anyChanges = anyChanges || applyAccessionIDChanges(rd, refDAO);
-		// still need to do allele and marker associations
+		anyChanges = applyTagChanges(rd, refDAO) || anyChanges;
+		anyChanges = applyBasicFieldChanges(rd, refDAO) || anyChanges;
+		anyChanges = applyBookChanges(rd, refDAO) || anyChanges;
+		anyChanges = applyNoteChanges(rd, refDAO) | anyChanges;
+		anyChanges = applyAccessionIDChanges(rd, refDAO) || anyChanges;
 	}
 	
 	/* If this reference is of type Book, return an object with the extra book-related data (if one exists);

@@ -28,7 +28,7 @@ public class Constants {
 	
 	// reference workflow statuses
 	public static String WS_CHOSEN = "Chosen";
-	public static String WS_CURATED = "Fully curated";
+	public static String WS_CURATED = "Full-coded";
 	public static String WS_INDEXED = "Indexed";
 	public static String WS_NOT_ROUTED = "Not Routed";
 	public static String WS_REJECTED = "Rejected";

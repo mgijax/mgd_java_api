@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.rest.interfaces;
 
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -12,6 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.jax.mgi.mgd.api.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
@@ -45,6 +48,17 @@ public interface ReferenceRESTInterface {
 			
 			@ApiParam(value = "Value: This is the passed-in reference domain object")
 			ReferenceDomain reference
+	);
+
+	@PUT
+	@Path("/bulkUpdate")
+	@ApiOperation(value = "Value: Update list of References en masse", notes="Notes: Updates a list of References")
+	public SearchResults<String> updateReferencesInBulk(
+			@ApiParam(value = "API Access Token")
+			@HeaderParam("api_access_token") String api_access_token,
+			
+			@ApiParam(value = "Value: reference keys and data to be updated")
+			ReferenceBulkDomain input
 	);
 
 	@GET

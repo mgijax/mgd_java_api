@@ -24,8 +24,24 @@ public class ReferenceService {
 	/* returns true if reference was updated, false if not
 	 */
 	public boolean updateReference(ReferenceDomain reference) {
-		referenceDAO.update(reference);
-		return true;
+		try {
+			referenceDAO.update(reference);
+			return true;
+		} catch (Throwable t) {
+			return false;
+		}
+
+	}
+
+	/* returns true if references were updated, false if not
+	 */
+	public boolean updateReferencesInBulk(List<Long> refsKeys, String workflow_tag) {
+		try {
+			referenceDAO.updateInBulk(refsKeys, workflow_tag);
+			return true;
+		} catch (Throwable t) {
+			return false;
+		}
 	}
 
 	public List<Reference> getReference(HashMap<String, Object> searchFields) {

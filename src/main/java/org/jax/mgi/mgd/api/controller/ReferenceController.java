@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.jax.mgi.mgd.api.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
@@ -61,6 +62,33 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		return results;
 	}
 
+	/* add the specified tag to each of the references specified by key
+	 */
+	@Override
+	public SearchResults<String> updateReferencesInBulk (String api_access_token, ReferenceBulkDomain input) {
+		SearchResults<String> results = new SearchResults<String>();
+		SearchResults.resetTimer();
+
+		if(authenticate(api_access_token)) {
+			try {
+				// The updateReference method does not return the updated reference, as the method must finish
+				// before the updates are persisted to the database.  So, we issue the update, then we use the
+				// getReferenceByKey() method to re-fetch and return the updated object.
+				
+				if (referenceService.updateReferencesInBulk(input._refs_keys, input.workflow_tag)) {
+					results.items = null;	// okay result
+				} else {
+					results.setError("Failed", "Failed to save changes", Constants.HTTP_SERVER_ERROR);
+				}
+			} catch (Throwable t) {
+				results.setError("Failed", "Failed to save changes", Constants.HTTP_SERVER_ERROR);
+			}
+		} else {
+			results.setError("FailedAuthentication", "Failed - no authentication", Constants.HTTP_PERMISSION_DENIED);
+		}
+		return results;
+	}
+	
 	/* search method - retrieves references based on query form parameters
 	 */
 	@Override

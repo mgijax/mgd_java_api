@@ -471,7 +471,7 @@ public class Reference extends Base {
 	 * ReferenceDomain.  Persists any tag changes to the database.  Returns true if any changes were made,
 	 * false otherwise.
 	 */
-	private boolean applyTagChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
+	private boolean applyTagChanges(ReferenceDomain rd, ReferenceDAO refDAO) throws Exception {
 		// short-circuit method if no tags in Reference or in ReferenceDomain
 		if ((this.workflowTags.size() == 0) && (rd.workflow_tags.size() == 0)) {
 			return false;
@@ -522,7 +522,7 @@ public class Reference extends Base {
 	/* shared method for adding a workflow tag to this Reference
 	 */
 	@Transient
-	public void addTag(String rdTag, ReferenceDAO refDAO) {
+	public void addTag(String rdTag, ReferenceDAO refDAO) throws Exception {
 		// if we already have this tag applied, skip it (extra check needed for batch additions to avoid
 		// adding duplicates)
 
@@ -551,6 +551,8 @@ public class Reference extends Base {
 				
 				this.workflowTags.add(rwTag);
 			}
+		} else {
+			throw new Exception("Unknown status term: " + rdTag);
 		}
 	}
 	
@@ -834,7 +836,7 @@ public class Reference extends Base {
 	 * not persist this Reference object itself, as other changes could be coming)
 	 */
 	@Transient
-	public void applyDomainChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
+	public void applyDomainChanges(ReferenceDomain rd, ReferenceDAO refDAO) throws Exception {
 		// note that we must have 'anyChanges' after the OR, otherwise short-circuit evaluation will only save
 		// the first section changed
 		

@@ -388,14 +388,26 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		return entityManager.createQuery(query).getResultList();
 	}
 	
+	/* set the given workflow_tag for all references identified in the list of keys
+	 */
 	@Transactional
-	public Reference update(ReferenceDomain referenceDomain) {
-		// Should the code to merge domain changes into the reference entity object be done here, where we
-		// have access to the db through the entityManager?  Or should we pass the entityManager into the
-		// reference object?  Seems like it needs to be done here...  Maybe provide individual merge methods
-		// on a reference (basic fields, status, notes, etc.), including an updateStatus method that takes a
-		// new workflow status key as one parameter.
-
+	public void updateInBulk(List<Long> refsKeys, String workflow_tag) throws Exception {
+		if ((refsKeys == null) || (refsKeys.size() == 0) || (workflow_tag == null) || (workflow_tag.length() == 0)) {
+			return; 
+		}
+		
+		for (Long refsKey : refsKeys) {
+			Reference reference = entityManager.find(Reference.class, refsKey);
+			if (reference != null) {
+				reference.addTag(workflow_tag, this);
+			} else {
+				throw new Exception("Unknown reference key: " + refsKey);
+			}
+		}
+	}
+	
+	@Transactional
+	public Reference update(ReferenceDomain referenceDomain) throws Exception {
 		/*
 		 * 1. retrieve the corresponding Reference object
 		 * 2. update it with data from the ReferenceDomain object

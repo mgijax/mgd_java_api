@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceBook;
-import org.jboss.logging.Logger;
 
 /* Is: a domain object that represents a single reference in mgd.
  * Has: fields needed to display/edit in the PWI, where those values for those fields are carried
@@ -14,8 +13,6 @@ import org.jboss.logging.Logger;
  *	as possible
  */
 public class ReferenceDomain {
-	private Logger log = Logger.getLogger(getClass());
-
 	public Long _refs_key;
 	public String authors;
 	public String primary_author;

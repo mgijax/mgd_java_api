@@ -156,7 +156,7 @@ public interface ReferenceRESTInterface {
 			@QueryParam("workflow_tag5") String workflow_tag5,
 			
 			@ApiParam(value = "Value: This is for searching by year")
-			@QueryParam("year") Integer year,
+			@QueryParam("year") String year,
 			
 			@ApiParam(value = "1 = AP workflow group has Chosen status")
 			@QueryParam("status_AP_Chosen") Integer status_AP_Chosen,

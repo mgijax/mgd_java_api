@@ -11,6 +11,7 @@ import javax.ejb.Singleton;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -243,37 +244,140 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			restrictions.add(builder.exists(idSubquery));
 		}
 
-		if (params.containsKey("workflow_tag")) {
-			String workflowTag = (String) params.get("workflow_tag");
+		// Deal with workflow tag searching.  This involves five tag fields paired with five NOT operator
+		// fields, plus an operator field that specifies how they should all be combined together.  Coded
+		// to not matter if user fills in tags in order starting with field #1.  And, we ignore a "NOT"
+		// checkbox if the corresponding tag field is not filled in.
+		
+		List<String> tags = new ArrayList<String>();	// tags specified by user as positive searches (up to 5)
+		List<String> notTags = new ArrayList<String>();	// tags specified by user as NOT searches (up to 5)
+		
+		for (int i = 1; i <= 5; i++) {
+			String tagField = "workflow_tag" + i;
+			String notField = "not_" + tagField;
 			
-			Subquery<ReferenceWorkflowTag> tagSubquery = query.subquery(ReferenceWorkflowTag.class);
-			Root<ReferenceWorkflowTag> tagRoot = tagSubquery.from(ReferenceWorkflowTag.class);
-			tagSubquery.select(tagRoot);
-			
-			List<Predicate> tagPredicates = new ArrayList<Predicate>();
-				
-			tagPredicates.add(builder.equal(root.get("_refs_key"), tagRoot.get("_refs_key")));
-			Path<String> column = tagRoot.get("tag").get("term");
-			tagPredicates.add(builder.equal(builder.lower(column), workflowTag.toLowerCase()));
-
-			tagSubquery.where(tagPredicates.toArray(new Predicate[]{}));
-			restrictions.add(builder.exists(tagSubquery));
+			if (params.containsKey(tagField)) {
+				if (params.containsKey(notField)) {
+					if (((String) params.get(notField)).trim().equalsIgnoreCase("not")) {
+						notTags.add(((String) params.get(tagField)).toLowerCase());
+					} else {
+						tags.add(((String) params.get(tagField)).toLowerCase());
+					}
+				} else {
+					tags.add(((String) params.get(tagField)).toLowerCase());
+				}
+			}
 		}
 		
+		if ((tags.size() > 0) || (notTags.size() > 0)) {
+			// Default state is to join multiple tags in a search with AND, but if the user specified OR
+			// then we can do that instead.
+
+			boolean useAnd = true;
+			if (params.containsKey("workflow_tag_operator")) {
+				if (((String) params.get("workflow_tag_operator")).trim().equalsIgnoreCase("or")) {
+					useAnd = false;
+				}
+			}
+		
+			List<Predicate> tagPredicates = new ArrayList<Predicate>();
+			
+			if (useAnd) {
+				/* For AND searches, we need to AND together:
+				 *   1. a separate subquery with EXISTS for each term in 'tags'
+				 *   2. a separate subquery with NOT EXISTS for each term in 'notTags'
+				 */
+				for (String tag : tags) {
+					Subquery<ReferenceWorkflowTag> tagSubquery = query.subquery(ReferenceWorkflowTag.class);
+					Root<ReferenceWorkflowTag> tagRoot = tagSubquery.from(ReferenceWorkflowTag.class);
+					tagSubquery.select(tagRoot);
+			
+					List<Predicate> inTags = new ArrayList<Predicate>();
+					inTags.add(builder.equal(root.get("_refs_key"), tagRoot.get("_refs_key")));
+					Path<String> column = tagRoot.get("tag").get("term");
+					inTags.add(builder.equal(builder.lower(column), tag));
+
+					tagSubquery.where(inTags.toArray(new Predicate[]{}));
+					tagPredicates.add(builder.exists(tagSubquery));
+				}
+
+				for (String tag : notTags) {
+					Subquery<ReferenceWorkflowTag> tagSubquery = query.subquery(ReferenceWorkflowTag.class);
+					Root<ReferenceWorkflowTag> tagRoot = tagSubquery.from(ReferenceWorkflowTag.class);
+					tagSubquery.select(tagRoot);
+			
+					List<Predicate> inTags = new ArrayList<Predicate>();
+					inTags.add(builder.equal(root.get("_refs_key"), tagRoot.get("_refs_key")));
+					Path<String> column = tagRoot.get("tag").get("term");
+					inTags.add(builder.equal(builder.lower(column), tag));
+
+					tagSubquery.where(inTags.toArray(new Predicate[]{}));
+					tagPredicates.add(builder.not(builder.exists(tagSubquery)));
+				}
+				
+				if (tagPredicates.size() > 0) {
+					restrictions.add(builder.and(tagPredicates.toArray(new Predicate[0])));
+				}
+			} else {
+				/* For OR searches, we need to OR together:
+				 *   1. a single EXISTS subquery with all terms in 'tags' included in an IN
+				 *   2. a single NOT EXISTS subquery with all terms in 'notTags' included in an IN
+				 */
+				if (tags.size() > 0) {
+					Subquery<ReferenceWorkflowTag> tagSubquery = query.subquery(ReferenceWorkflowTag.class);
+					Root<ReferenceWorkflowTag> tagRoot = tagSubquery.from(ReferenceWorkflowTag.class);
+					tagSubquery.select(tagRoot);
+			
+					List<Predicate> inTags = new ArrayList<Predicate>();
+					inTags.add(builder.equal(root.get("_refs_key"), tagRoot.get("_refs_key")));
+					Path<String> column = tagRoot.get("tag").get("term");
+					Expression<String> lowerColumn = builder.lower(column);
+					inTags.add(lowerColumn.in(tags));
+
+					tagSubquery.where(inTags.toArray(new Predicate[]{}));
+					tagPredicates.add(builder.exists(tagSubquery));
+				}
+
+				if (notTags.size() > 0) {
+					Subquery<ReferenceWorkflowTag> tagSubquery = query.subquery(ReferenceWorkflowTag.class);
+					Root<ReferenceWorkflowTag> tagRoot = tagSubquery.from(ReferenceWorkflowTag.class);
+					tagSubquery.select(tagRoot);
+			
+					List<Predicate> notInTags = new ArrayList<Predicate>();
+					notInTags.add(builder.equal(root.get("_refs_key"), tagRoot.get("_refs_key")));
+					Path<String> column = tagRoot.get("tag").get("term");
+					Expression<String> lowerColumn = builder.lower(column);
+					notInTags.add(lowerColumn.in(tags));
+
+					tagSubquery.where(notInTags.toArray(new Predicate[]{}));
+					tagPredicates.add(builder.not(builder.exists(tagSubquery)));
+				}
+				
+				if (tagPredicates.size() > 0) {
+					restrictions.add(builder.or(tagPredicates.toArray(new Predicate[0])));
+				}
+			}
+		}
+		
+		// pick up the row limit, if there is one specified.  If none specified, set default.
+		
+		int rowLimit = 1001;
+		if (params.containsKey("row_limit")) {
+			rowLimit = (Integer) params.get("row_limit");
+		}
+
 		// finally execute the query and return the list of results
 		
 		query.where(builder.and(restrictions.toArray(new Predicate[0])));
 		log.debug(query.toString());
 		log.debug(entityManager.createQuery(query).toString());
 
-		return entityManager.createQuery(query).setMaxResults(1001).getResultList();
+		return entityManager.createQuery(query).setMaxResults(rowLimit).getResultList();
 	}
 	
 	/* get a list of the workflow status records for a reference
 	 */
 	public List<ReferenceWorkflowStatus> getStatusHistory (String refsKey) {
-		log.info("Reference workflow status Lookup: refsKey = " + refsKey);
-
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<ReferenceWorkflowStatus> query = builder.createQuery(ReferenceWorkflowStatus.class);
 		Root<ReferenceWorkflowStatus> root = query.from(ReferenceWorkflowStatus.class);

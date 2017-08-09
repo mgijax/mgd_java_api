@@ -67,8 +67,11 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	public SearchResults<ReferenceDomain> getReference(String accids, String allele_id, String authors, String date,
 			String isReviewArticle, String is_discard, String issue, String journal, String marker_id,
 			String notes, String pages, String primary_author, String ref_abstract, String reference_type,
-			String title, String volume, String workflow_tag, Integer year, 
-			Integer status_AP_Chosen, Integer status_AP_Fully_curated, Integer status_AP_Indexed,
+			Integer row_limit, String title, String volume, String workflow_tag_operator,
+			String not_workflow_tag1, String workflow_tag1, String not_workflow_tag2, String workflow_tag2,
+			String not_workflow_tag3, String workflow_tag3, String not_workflow_tag4, String workflow_tag4,
+			String not_workflow_tag5, String workflow_tag5,
+			Integer year, Integer status_AP_Chosen, Integer status_AP_Fully_curated, Integer status_AP_Indexed,
 			Integer status_AP_Not_Routed, Integer status_AP_Rejected, Integer status_AP_Routed,
 			Integer status_GO_Chosen, Integer status_GO_Fully_curated, Integer status_GO_Indexed,
 			Integer status_GO_Not_Routed, Integer status_GO_Rejected, Integer status_GO_Routed,
@@ -90,9 +93,20 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		if (pages != null) { map.put("pages", pages); }
 		if (primary_author != null) { map.put("primary_author", primary_author); }
 		if (ref_abstract != null) { map.put("ref_abstract", ref_abstract); }
+		if (row_limit != null) { map.put("row_limit", row_limit); }
 		if (title != null) { map.put("title", title); }
 		if (volume != null) { map.put("volume", volume); }
-		if (workflow_tag != null) { map.put("workflow_tag", workflow_tag); }
+		if (workflow_tag_operator != null) { map.put("workflow_tag_operator", workflow_tag_operator); }
+		if (not_workflow_tag1 != null) { map.put("not_workflow_tag1", not_workflow_tag1); }
+		if (workflow_tag1 != null) { map.put("workflow_tag1", workflow_tag1); }
+		if (not_workflow_tag2 != null) { map.put("not_workflow_tag2", not_workflow_tag2); }
+		if (workflow_tag2 != null) { map.put("workflow_tag2", workflow_tag2); }
+		if (not_workflow_tag3 != null) { map.put("not_workflow_tag3", not_workflow_tag3); }
+		if (workflow_tag3 != null) { map.put("workflow_tag3", workflow_tag3); }
+		if (not_workflow_tag4 != null) { map.put("not_workflow_tag4", not_workflow_tag4); }
+		if (workflow_tag4 != null) { map.put("workflow_tag4", workflow_tag4); }
+		if (not_workflow_tag5 != null) { map.put("not_workflow_tag5", not_workflow_tag5); }
+		if (workflow_tag5 != null) { map.put("workflow_tag5", workflow_tag5); }
 		if (year != null) { map.put("year", year); }
 		if (notes != null) { map.put("notes", notes); }
 		if (reference_type != null) { map.put("reference_type", reference_type); }

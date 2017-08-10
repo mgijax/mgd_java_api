@@ -49,6 +49,7 @@ public class ReferenceDomain {
 	public String has_pdf;
 	public String has_supplemental;
 	public String link_to_supplemental;
+	public String has_extracted_text;
 	
 	/***--- constructors ---***/
 	
@@ -112,7 +113,11 @@ public class ReferenceDomain {
 			} else {
 				this.has_pdf = "Yes";
 			}
-			// Extracted_text is large (average 56kb) and we don't need to display it, so we skip it.
+			if ((workflowData.extracted_text != null) && (workflowData.extracted_text.length() > 0)) {
+				this.has_extracted_text = "Yes";
+			} else {
+				this.has_extracted_text = "No";
+			}
 		}
 	}
 }

@@ -25,6 +25,7 @@ import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceAlleleAssociation;
 import org.jax.mgi.mgd.api.entities.ReferenceMarkerAssociation;
 import org.jax.mgi.mgd.api.entities.ReferenceNote;
+import org.jax.mgi.mgd.api.entities.ReferenceWorkflowData;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -355,6 +356,27 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 				if (tagPredicates.size() > 0) {
 					restrictions.add(builder.or(tagPredicates.toArray(new Predicate[0])));
 				}
+			}
+		}
+		
+		// search by extracted text (currently a case-insensitive 'contains' search on the string entered)
+		
+		if (params.containsKey("extracted_text") && (params.get("extracted_text") != null)) {
+			String textString = ((String) params.get("extracted_text")).toLowerCase().trim();
+			if (textString.trim() != "") {
+				Subquery<ReferenceWorkflowData> textSubquery = query.subquery(ReferenceWorkflowData.class);
+				Root<ReferenceWorkflowData> textRoot = textSubquery.from(ReferenceWorkflowData.class);
+				textSubquery.select(textRoot);
+			
+				List<Predicate> textPredicates = new ArrayList<Predicate>();
+				
+				textPredicates.add(builder.equal(root.get("_refs_key"), textRoot.get("_refs_key")));
+				Path<String> column = textRoot.get("extracted_text");
+				Expression<String> lowerColumn = builder.lower(column);
+				textPredicates.add(builder.like(lowerColumn, "%" + textString + "%"));
+
+				textSubquery.where(textPredicates.toArray(new Predicate[]{}));
+				restrictions.add(builder.exists(textSubquery));
 			}
 		}
 		

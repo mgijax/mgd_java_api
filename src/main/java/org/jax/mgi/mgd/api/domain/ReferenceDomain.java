@@ -49,7 +49,6 @@ public class ReferenceDomain {
 	public String has_pdf;
 	public String has_supplemental;
 	public String link_to_supplemental;
-	public String extracted_text;
 	
 	/***--- constructors ---***/
 	
@@ -108,12 +107,12 @@ public class ReferenceDomain {
 		if (workflowData != null) {
 			this.has_supplemental = workflowData.getSupplemental();
 			this.link_to_supplemental = workflowData.link_supplemental;
-			this.extracted_text = workflowData.extracted_text;
 			if (workflowData.has_pdf == 0) {
 				this.has_pdf = "No";
 			} else {
 				this.has_pdf = "Yes";
 			}
+			// Extracted_text is large (average 56kb) and we don't need to display it, so we skip it.
 		}
 	}
 }

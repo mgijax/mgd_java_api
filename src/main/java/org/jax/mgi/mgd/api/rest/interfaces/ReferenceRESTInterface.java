@@ -83,6 +83,9 @@ public interface ReferenceRESTInterface {
 			@ApiParam(value = "Value: This is for searching by date")
 			@QueryParam("date") String date,
 			
+			@ApiParam(value = "Value: This is for searching by extracted text")
+			@QueryParam("extracted_text") String extracted_text,
+			
 			@ApiParam(value = "Value: This is for searching by isReviewArticle (0/1) or (No/Yes)")
 			@QueryParam("isReviewArticle") String isReviewArticle,
 			

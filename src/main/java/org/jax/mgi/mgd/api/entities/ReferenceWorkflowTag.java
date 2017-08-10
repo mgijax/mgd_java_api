@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.entities;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.ejb.Singleton;
@@ -63,12 +62,6 @@ public class ReferenceWorkflowTag extends Base {
 	public String getModifidBy() {
 		if (this.modifiedByUser == null) { return null; }
 		return this.modifiedByUser.login;
-	}
-	
-	@Transient
-	private String formatDate(Date d) {
-		SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss");
-		return formatter.format(d); 
 	}
 	
 	@Transient

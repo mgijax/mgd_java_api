@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceBook;
+import org.jax.mgi.mgd.api.entities.ReferenceWorkflowData;
 
 /* Is: a domain object that represents a single reference in mgd.
  * Has: fields needed to display/edit in the PWI, where those values for those fields are carried
@@ -45,6 +46,10 @@ public class ReferenceDomain {
 	public String place;
 	public String publisher;
 	public String series_edition;
+	public String has_pdf;
+	public String has_supplemental;
+	public String link_to_supplemental;
+	public String extracted_text;
 	
 	/***--- constructors ---***/
 	
@@ -97,6 +102,18 @@ public class ReferenceDomain {
 			this.place = bookData.place;
 			this.publisher = bookData.publisher;
 			this.series_edition = bookData.series_edition;
+		}
+		
+		ReferenceWorkflowData workflowData = r.getWorkflowData();
+		if (workflowData != null) {
+			this.has_supplemental = workflowData.getSupplemental();
+			this.link_to_supplemental = workflowData.link_supplemental;
+			this.extracted_text = workflowData.extracted_text;
+			if (workflowData.has_pdf == 0) {
+				this.has_pdf = "No";
+			} else {
+				this.has_pdf = "Yes";
+			}
 		}
 	}
 }

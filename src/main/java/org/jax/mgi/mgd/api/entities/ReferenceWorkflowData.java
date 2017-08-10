@@ -16,18 +16,21 @@ import io.swagger.annotations.ApiModel;
 
 @Singleton
 @Entity
-@ApiModel(value = "Reference Workflow Status Model Object")
-@Table(name="bib_workflow_status")
-public class ReferenceWorkflowStatus extends Base {
+@ApiModel(value = "Reference Workflow Data Model Object")
+@Table(name="bib_workflow_data")
+public class ReferenceWorkflowData extends Base {
 	@Id
-	@Column(name="_assoc_key")
-	public long _assoc_key;
-
 	@Column(name="_refs_key")
 	public long _refs_key;
 
-	@Column(name="isCurrent")
-	public int isCurrent;
+	@Column(name="hasPDF")
+	public int has_pdf;
+
+	@Column(name="linkSupplemental")
+	public String link_supplemental;
+
+	@Column(name="extractedText")
+	public String extracted_text;
 
 	@Column(name="creation_date")
 	public Date creation_date;
@@ -36,12 +39,8 @@ public class ReferenceWorkflowStatus extends Base {
 	public Date modification_date;
 	
 	@OneToOne (targetEntity=Term.class, fetch=FetchType.EAGER)
-	@JoinColumn(name="_group_key", referencedColumnName="_term_key")
-	public Term groupTerm;
-	
-	@OneToOne (targetEntity=Term.class, fetch=FetchType.EAGER)
-	@JoinColumn(name="_status_key", referencedColumnName="_term_key")
-	public Term statusTerm;
+	@JoinColumn(name="_supplemental_key", referencedColumnName="_term_key")
+	public Term supplementalTerm;
 	
 	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
@@ -54,27 +53,9 @@ public class ReferenceWorkflowStatus extends Base {
 	/***--- transient methods ---***/
 	
 	@Transient
-	public String getGroup() {
-		if (this.groupTerm == null) { return null; }
-		return this.groupTerm.term;
-	}
-	
-	@Transient
-	public String getGroupAbbreviation() {
-		if (this.groupTerm == null) { return null; }
-		return this.groupTerm.abbreviation;
-	}
-	
-	@Transient
-	public String getStatus() {
-		if (this.statusTerm == null) { return null; }
-		return this.statusTerm.term;
-	}
-	
-	@Transient
-	public boolean isForGroup(String groupAbbrev) {
-		if ((groupAbbrev == null) || (this.groupTerm == null)) { return false; }
-		return groupAbbrev.equals(this.groupTerm.abbreviation);
+	public String getSupplemental() {
+		if (this.supplementalTerm == null) { return null; }
+		return this.supplementalTerm.term;
 	}
 	
 	@Transient

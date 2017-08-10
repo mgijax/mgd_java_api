@@ -143,11 +143,17 @@ public class Reference extends Base {
 	@Fetch(value=FetchMode.SUBSELECT)
 	private List<ReferenceNote> notes;
 
-	// one to many, because book data most often doesn not exist (leaving it 1-0)
+	// one to many, because book data most often does not exist (leaving it 1-0)
 	@OneToMany (targetEntity=ReferenceBook.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
 	@Fetch(value=FetchMode.SUBSELECT)
 	private List<ReferenceBook> bookList;
+
+	// one to many, in case record is missing (leaving it 1-0)
+	@OneToMany (targetEntity=ReferenceWorkflowData.class, fetch=FetchType.EAGER)
+	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	@Fetch(value=FetchMode.SUBSELECT)
+	private List<ReferenceWorkflowData> workflowData;
 
 	/***--- transient methods ---***/
 	
@@ -566,6 +572,49 @@ public class Reference extends Base {
 		return a.equals(b);
 	}
 	
+	private boolean applyWorkflowDataChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
+		// at most one set of workflow data per reference
+		// need to handle:  updated workflow data, new workflow data -- (no deletions)
+		
+		boolean anyChanges = false;
+		ReferenceWorkflowData myWD = this.getWorkflowData();
+		
+		if (myWD != null) {
+			// Compare fields and update if needed.  We do not update the extracted text and the
+			// has-PDF flag, as those are updated by other processes.
+			
+			if (!smartEqual(myWD.getSupplemental(), rd.has_supplemental)
+				|| !smartEqual(myWD.link_supplemental, rd.link_to_supplemental)) {
+				
+				myWD.supplementalTerm = refDAO.getTermByTerm(Constants.VOC_SUPPLEMENTAL, rd.has_supplemental);
+				myWD.link_supplemental = rd.link_to_supplemental;
+				myWD.modifiedByUser = refDAO.getUser("mgd_dbo");
+				myWD.modification_date = new Date();
+				anyChanges = true;
+			}
+			
+		} else {
+			// For some reason, no workflow data record exists.  So, create one.
+
+			myWD = new ReferenceWorkflowData();
+			myWD._refs_key = this._refs_key;
+			myWD.has_pdf = 0;
+			myWD.supplementalTerm = refDAO.getTermByTerm(Constants.VOC_SUPPLEMENTAL, rd.has_supplemental);
+			myWD.link_supplemental = rd.link_to_supplemental;
+			myWD.extracted_text = null;
+			myWD.createdByUser = refDAO.getUser("mgd_dbo");
+			myWD.modifiedByUser = this.createdByUser;
+			myWD.creation_date = new Date();
+			myWD.modification_date = myWD.creation_date; 
+			
+			refDAO.persist(myWD);
+			this.workflowData.add(myWD);
+			anyChanges = true;
+		}
+
+		return anyChanges;
+	}
+	
 	private boolean applyBookChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
 		// at most one set of book data per reference
 		// need to handle:  deleted book data, updated book data, new book data
@@ -846,6 +895,7 @@ public class Reference extends Base {
 		anyChanges = applyBookChanges(rd, refDAO) || anyChanges;
 		anyChanges = applyNoteChanges(rd, refDAO) | anyChanges;
 		anyChanges = applyAccessionIDChanges(rd, refDAO) || anyChanges;
+		anyChanges = applyWorkflowDataChanges(rd, refDAO) || anyChanges;
 	}
 	
 	/* If this reference is of type Book, return an object with the extra book-related data (if one exists);
@@ -855,6 +905,17 @@ public class Reference extends Base {
 	public ReferenceBook getBookData() {
 		if ("Book".equals(this.referenceTypeTerm.term) && (this.bookList.size() > 0)) {
 			return this.bookList.get(0);
+		}
+		return null;
+	}
+
+	/* If this reference has workflow data, return an object with the extra workflow data;
+	 * otherwise return null.
+	 */
+	@Transient
+	public ReferenceWorkflowData getWorkflowData() {
+		if (this.workflowData.size() > 0) {
+			return this.workflowData.get(0);
 		}
 		return null;
 	}

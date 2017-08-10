@@ -135,7 +135,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		if (workflow_tag4 != null) { map.put("workflow_tag4", workflow_tag4); }
 		if (not_workflow_tag5 != null) { map.put("not_workflow_tag5", not_workflow_tag5); }
 		if (workflow_tag5 != null) { map.put("workflow_tag5", workflow_tag5); }
-		if (year != null) { map.put("year", year); }
+		if ((year != null) && (year.trim().length() != 0)) { map.put("year", year); }
 		if (notes != null) { map.put("notes", notes); }
 		if (reference_type != null) { map.put("reference_type", reference_type); }
 		if (is_discard != null) { map.put("is_discard", is_discard); }
@@ -190,9 +190,9 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		
 		// brief error checking
 
-		if (year != null) {
+		if (map.containsKey("year")) {
 			try {
-				long longYear = Long.parseLong(year);
+				long longYear = Long.parseLong((String) map.get("year"));
 			} catch (Throwable t) {
 				SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
 				results.setError("InvalidParameter", "Year is not an integer: " + year, Constants.HTTP_BAD_REQUEST);

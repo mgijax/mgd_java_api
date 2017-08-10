@@ -16,7 +16,7 @@ public class BaseController {
 			boolean skipIt = false;
 			Object value = params.get(key);
 			if (value instanceof String) {
-				if (((String) value).length() == 0) {
+				if (((String) value).trim().length() == 0) {
 					skipIt = true;
 				}
 			}

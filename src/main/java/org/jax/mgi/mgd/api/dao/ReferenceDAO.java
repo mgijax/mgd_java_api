@@ -53,10 +53,6 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			new String[] { "issue", "pages", "date", "ref_abstract", "isReviewArticle", "title",
 				"authors", "primary_author", "journal", "volume", "year", "_refs_key" }));
 		
-		// non-status query parameters residing outside main reference table
-		//List<String> externalParameters = new ArrayList<String>(Arrays.asList(
-		//	new String[] { "notes", "reference_type", "marker_id", "allele_id", "accids", "workflow_tag" }));
-		
 		// status query parameters (residing outside main reference table)
 		List<String> statusParameters = new ArrayList<String>();
 
@@ -132,8 +128,9 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 				// disregard the is_discard flag when searching 
 			}
 
-		} else {
-			// default setting is to only return non-discarded references
+		} else if (!params.containsKey("_refs_key")){
+			// default setting is to only return non-discarded references -- only apply if we're not
+			// doing a key-based lookup, though.
 			restrictions.add(builder.equal(root.get("is_discard"), 0)); 
 		}
 		

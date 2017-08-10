@@ -362,19 +362,24 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		if (params.containsKey("extracted_text") && (params.get("extracted_text") != null)) {
 			String textString = ((String) params.get("extracted_text")).toLowerCase().trim();
 			if (textString.trim() != "") {
-				Subquery<ReferenceWorkflowData> textSubquery = query.subquery(ReferenceWorkflowData.class);
-				Root<ReferenceWorkflowData> textRoot = textSubquery.from(ReferenceWorkflowData.class);
-				textSubquery.select(textRoot);
-			
-				List<Predicate> textPredicates = new ArrayList<Predicate>();
+				List<Predicate> wordPredicates = new ArrayList<Predicate>();
 				
-				textPredicates.add(builder.equal(root.get("_refs_key"), textRoot.get("_refs_key")));
-				Path<String> column = textRoot.get("extracted_text");
-				Expression<String> lowerColumn = builder.lower(column);
-				textPredicates.add(builder.like(lowerColumn, "%" + textString + "%"));
+				for (String token : textString.split("\\s")) {
+					Subquery<ReferenceWorkflowData> textSubquery = query.subquery(ReferenceWorkflowData.class);
+					Root<ReferenceWorkflowData> textRoot = textSubquery.from(ReferenceWorkflowData.class);
+					textSubquery.select(textRoot);
+			
+					List<Predicate> textPredicates = new ArrayList<Predicate>();
+				
+					textPredicates.add(builder.equal(root.get("_refs_key"), textRoot.get("_refs_key")));
+					Path<String> column = textRoot.get("extracted_text");
+					Expression<String> lowerColumn = builder.lower(column);
+					textPredicates.add(builder.like(lowerColumn, "%" + token + "%"));
 
-				textSubquery.where(textPredicates.toArray(new Predicate[]{}));
-				restrictions.add(builder.exists(textSubquery));
+					textSubquery.where(textPredicates.toArray(new Predicate[]{}));
+					wordPredicates.add(builder.exists(textSubquery));
+				}
+				restrictions.add(builder.and(wordPredicates.toArray(new Predicate[0])));
 			}
 		}
 		

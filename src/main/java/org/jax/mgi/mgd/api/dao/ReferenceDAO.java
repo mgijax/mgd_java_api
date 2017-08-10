@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.ejb.Singleton;
 import javax.enterprise.context.RequestScoped;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
@@ -473,5 +474,13 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		this.persist(accMax);
 		
 		return "J:" + accMax.maxNumericPart;
+	}
+
+	/* update the bib_citation_cache table for the given reference key
+	 */
+	public void updateCitationCache(long refsKey) {
+		Query query = entityManager.createNativeQuery("select * from BIB_reloadCache(" + refsKey + ")");
+		query.getResultList();
+		return;
 	}
 }

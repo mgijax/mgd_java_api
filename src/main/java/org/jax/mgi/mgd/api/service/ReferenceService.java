@@ -21,11 +21,12 @@ public class ReferenceService {
 		return referenceDAO.add(reference);
 	}
 
-	/* returns true if reference was updated, false if not
+	/* returns true if reference was updated, false if not; updates citation cache
 	 */
 	public boolean updateReference(ReferenceDomain reference) {
 		try {
 			referenceDAO.update(reference);
+			referenceDAO.updateCitationCache(reference._refs_key);
 			return true;
 		} catch (Throwable t) {
 			return false;
@@ -33,7 +34,8 @@ public class ReferenceService {
 
 	}
 
-	/* returns true if references were updated, false if not
+	/* returns true if references were updated, false if not; does not update citation cache, as
+	 * only workflow tags are processed currently
 	 */
 	public boolean updateReferencesInBulk(List<Long> refsKeys, String workflow_tag) {
 		try {

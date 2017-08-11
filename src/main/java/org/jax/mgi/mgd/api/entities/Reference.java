@@ -629,12 +629,14 @@ public class Reference extends Base {
 			ReferenceBook book = this.bookList.get(0);
 
 			if (!smartEqual(book.book_author, rd.book_author) || !smartEqual(book.book_title, rd.book_title) || 
-				!smartEqual(book.place, rd.place) || !smartEqual(book.publisher, rd.publisher) ) {
+				!smartEqual(book.place, rd.place) || !smartEqual(book.publisher, rd.publisher) ||
+				!smartEqual(book.series_edition, rd.series_edition)) {
 
 				book.book_author = rd.book_author;
 				book.book_title = rd.book_title;
 				book.place = rd.place;
 				book.publisher = rd.publisher;
+				book.series_edition = rd.series_edition;
 				book.modification_date = new Date();
 				anyChanges = true;
 			}

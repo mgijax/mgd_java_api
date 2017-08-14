@@ -424,7 +424,7 @@ public class Reference extends Base {
 	 * As well, if this Reference has no J: number and we just assigned a status other than "Not Routed", 
 	 * then we assign the next available J: number to this reference.
 	 */
-	private boolean applyStatusChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
+	private boolean applyStatusChanges(ReferenceDomain rd, ReferenceDAO refDAO) throws Exception {
 		// note that we need to put 'anyChanges' last for each OR pair, otherwise short-circuit evaluation
 		// will only let the first change go through and the rest will not execute.
 		
@@ -459,7 +459,11 @@ public class Reference extends Base {
 					accID.is_private = Constants.PUBLIC;
 					accID.preferred = Constants.PREFERRED;
 					accID.prefixPart = Constants.PREFIX_JNUM;
-					accID.accID = refDAO.getNextJnum();
+					accID.numericPart = refDAO.getNextJnum();
+					if (accID.numericPart == null) {
+						throw new Exception("Bad J: number assigned (null)");
+					}
+					accID.accID = "J:" + accID.numericPart;
 					accID.createdByUser = refDAO.getUser("mgd_dbo");
 					accID.modifiedByUser = accID.createdByUser;
 					accID.creation_date = new Date();

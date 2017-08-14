@@ -464,7 +464,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	
 	/* get the next available J#
 	 */
-	public synchronized String getNextJnum() {
+	public synchronized Long getNextJnum() {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<AccessionMax> query = builder.createQuery(AccessionMax.class);
 		Root<AccessionMax> root = query.from(AccessionMax.class);
@@ -478,7 +478,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		accMax.modification_date = new Date();
 		this.persist(accMax);
 		
-		return "J:" + accMax.maxNumericPart;
+		return accMax.maxNumericPart;
 	}
 
 	/* update the bib_citation_cache table for the given reference key

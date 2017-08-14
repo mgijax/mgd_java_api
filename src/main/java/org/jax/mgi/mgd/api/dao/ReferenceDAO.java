@@ -336,7 +336,10 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 					tagPredicates.add(builder.exists(tagSubquery));
 				}
 
-				if (notTags.size() > 0) {
+				/* For NOT tags, we can't lump them into a single Exists clause, or we'd end up treating
+				 * them like an AND.  Instead we need to have separate Exists queries, to be later OR-ed together.
+				 */
+				for (String notTag : notTags) {
 					Subquery<ReferenceWorkflowTag> tagSubquery = query.subquery(ReferenceWorkflowTag.class);
 					Root<ReferenceWorkflowTag> tagRoot = tagSubquery.from(ReferenceWorkflowTag.class);
 					tagSubquery.select(tagRoot);
@@ -345,7 +348,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 					notInTags.add(builder.equal(root.get("_refs_key"), tagRoot.get("_refs_key")));
 					Path<String> column = tagRoot.get("tag").get("term");
 					Expression<String> lowerColumn = builder.lower(column);
-					notInTags.add(lowerColumn.in(tags));
+					notInTags.add(builder.equal(lowerColumn, notTag));
 
 					tagSubquery.where(notInTags.toArray(new Predicate[]{}));
 					tagPredicates.add(builder.not(builder.exists(tagSubquery)));

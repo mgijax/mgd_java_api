@@ -1,8 +1,10 @@
 package org.jax.mgi.mgd.api.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.entities.Reference;
+import org.jax.mgi.mgd.api.entities.ReferenceAssociatedData;
 import org.jax.mgi.mgd.api.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowData;
 
@@ -50,6 +52,7 @@ public class ReferenceDomain {
 	public String has_supplemental;
 	public String link_to_supplemental;
 	public String has_extracted_text;
+	public List<String> associated_data;
 	
 	/***--- constructors ---***/
 	
@@ -93,6 +96,20 @@ public class ReferenceDomain {
 			this.is_discard = "No";
 		} else {
 			this.is_discard = "Yes";
+		}
+		
+		this.associated_data = new ArrayList<String>();
+		ReferenceAssociatedData flags = r.associatedData;
+		if (flags != null) {
+			if (flags.has_gxdindex != 0) { this.associated_data.add("GXD Index"); }
+			if (flags.has_gxdimages != 0) { this.associated_data.add("GXD Images"); }
+			if (flags.has_gxdspecimens != 0) { this.associated_data.add("GXD Specimens"); }
+			if (flags.has_probes != 0) { this.associated_data.add("Probes"); }
+			if (flags.has_antibodies != 0) { this.associated_data.add("Antibodies"); }
+			if (flags.has_gxdresults != 0) { this.associated_data.add("GXD Results"); }
+			if (flags.has_gxdresults != 0) { this.associated_data.add("GXD Assays"); }
+			if (flags.has_alleles != 0) { this.associated_data.add("Alleles"); }
+			if (flags.has_markers != 0) { this.associated_data.add("Markers"); }
 		}
 		
 		ReferenceBook bookData = r.getBookData();

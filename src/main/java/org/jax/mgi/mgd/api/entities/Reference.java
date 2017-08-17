@@ -149,6 +149,11 @@ public class Reference extends Base {
 	@Fetch(value=FetchMode.SUBSELECT)
 	private List<ReferenceBook> bookList;
 
+	// one to one, because counts will always exist
+	@OneToOne (targetEntity=ReferenceAssociatedData.class, fetch=FetchType.EAGER)
+	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	public ReferenceAssociatedData associatedData;
+
 	// one to many, in case record is missing (leaving it 1-0)
 	@OneToMany (targetEntity=ReferenceWorkflowData.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")

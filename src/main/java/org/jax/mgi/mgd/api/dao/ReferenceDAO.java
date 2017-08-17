@@ -66,13 +66,17 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		}
 
 		for (String group : new String[] { "AP", "GO", "GXD", "QTL", "Tumor" }) {
-			for (String status : new String[] { "Not_Routed", "Routed", "Indexed", "Chosen", "Fully_curated", "Rejected"}) {
+			for (String status : new String[] { "Not_Routed", "Routed", "Indexed", "Chosen", "Full_coded", "Rejected"}) {
 				String fieldname = "status_" + group + "_" + status;
 				statusParameters.add(fieldname);
 				
 				if (populateCaches) {
 					groups.put(fieldname, group);
-					statuses.put(fieldname, status.replace("_", " "));
+					if ("Full_coded".equals(status)) {
+						statuses.put(fieldname, status.replace("_", "-"));
+					} else {
+						statuses.put(fieldname, status.replace("_", " "));
+					}
 				}
 			}
 		}

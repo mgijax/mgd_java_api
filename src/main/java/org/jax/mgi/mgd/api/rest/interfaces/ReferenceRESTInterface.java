@@ -165,7 +165,7 @@ public interface ReferenceRESTInterface {
 			@QueryParam("status_AP_Chosen") Integer status_AP_Chosen,
 			
 			@ApiParam(value = "1 = AP workflow group has Fully curated status")
-			@QueryParam("status_AP_Fully_curated") Integer status_AP_Fully_curated,
+			@QueryParam("status_AP_Full_coded") Integer status_AP_Full_coded,
 			
 			@ApiParam(value = "1 = AP workflow group has Indexed status")
 			@QueryParam("status_AP_Indexed") Integer status_AP_Indexed,
@@ -183,7 +183,7 @@ public interface ReferenceRESTInterface {
 			@QueryParam("status_GO_Chosen") Integer status_GO_Chosen,
 			
 			@ApiParam(value = "1 = GO workflow group has Fully curated status")
-			@QueryParam("status_GO_Fully_curated") Integer status_GO_Fully_curated,
+			@QueryParam("status_GO_Full_coded") Integer status_GO_Full_coded,
 			
 			@ApiParam(value = "1 = GO workflow group has Indexed status")
 			@QueryParam("status_GO_Indexed") Integer status_GO_Indexed,
@@ -201,7 +201,7 @@ public interface ReferenceRESTInterface {
 			@QueryParam("status_GXD_Chosen") Integer status_GXD_Chosen,
 			
 			@ApiParam(value = "1 = GXD workflow group has Fully curated status")
-			@QueryParam("status_GXD_Fully_curated") Integer status_GXD_Fully_curated,
+			@QueryParam("status_GXD_Full_coded") Integer status_GXD_Full_coded,
 			
 			@ApiParam(value = "1 = GXD workflow group has Indexed status")
 			@QueryParam("status_GXD_Indexed") Integer status_GXD_Indexed,
@@ -219,7 +219,7 @@ public interface ReferenceRESTInterface {
 			@QueryParam("status_QTL_Chosen") Integer status_QTL_Chosen,
 			
 			@ApiParam(value = "1 = QTL workflow group has Fully curated status")
-			@QueryParam("status_QTL_Fully_curated") Integer status_QTL_Fully_curated,
+			@QueryParam("status_QTL_Full_coded") Integer status_QTL_Full_coded,
 			
 			@ApiParam(value = "1 = QTL workflow group has Indexed status")
 			@QueryParam("status_QTL_Indexed") Integer status_QTL_Indexed,
@@ -237,7 +237,7 @@ public interface ReferenceRESTInterface {
 			@QueryParam("status_Tumor_Chosen") Integer status_Tumor_Chosen,
 			
 			@ApiParam(value = "1 = Tumor workflow group has Fully curated status")
-			@QueryParam("status_Tumor_Fully_curated") Integer status_Tumor_Fully_curated,
+			@QueryParam("status_Tumor_Full_coded") Integer status_Tumor_Full_coded,
 			
 			@ApiParam(value = "1 = Tumor workflow group has Indexed status")
 			@QueryParam("status_Tumor_Indexed") Integer status_Tumor_Indexed,

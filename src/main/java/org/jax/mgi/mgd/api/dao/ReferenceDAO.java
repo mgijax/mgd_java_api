@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ejb.Singleton;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -31,7 +30,6 @@ import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.util.Constants;
 
-@Singleton
 @RequestScoped
 public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 

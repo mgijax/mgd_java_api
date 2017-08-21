@@ -7,7 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import io.swagger.annotations.ApiModel;
 
-@Singleton
 @Entity
 @ApiModel(value = "Vocabulary Term Model Object")
 @Table(name="voc_term")

@@ -34,7 +34,6 @@ import org.jboss.logging.Logger;
 
 import io.swagger.annotations.ApiModel;
 
-@Singleton
 @Entity
 @ApiModel(value = "Reference Model Object")
 @Table(name="bib_refs")

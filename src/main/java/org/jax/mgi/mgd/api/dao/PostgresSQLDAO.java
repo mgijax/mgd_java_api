@@ -88,20 +88,6 @@ public class PostgresSQLDAO<T> {
 		return model;
 	}
 	
-	/* get a User object for the given login
-	 */
-	public User getUser(String login) {
-		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<User> query = builder.createQuery(User.class);
-		Root<User> root = query.from(User.class);
-		query.where(builder.equal(root.get("login"), login));
-		List<User> results = entityManager.createQuery(query).getResultList();
-		if ((results == null) || (results.size() == 0)) {
-			return null;
-		}
-		return results.get(0);
-	}
-
 	/* get a Term object for the given vocabulary key and the term's abbreviation
 	 */
 	public Term getTermByAbbreviation(Integer vocabKey, String abbreviation) {

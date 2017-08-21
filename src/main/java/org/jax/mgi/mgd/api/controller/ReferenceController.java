@@ -10,6 +10,7 @@ import org.jax.mgi.mgd.api.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
+import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.rest.interfaces.ReferenceRESTInterface;
 import org.jax.mgi.mgd.api.service.ReferenceService;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -27,37 +28,38 @@ public class ReferenceController extends BaseController implements ReferenceREST
 
 	/***--- methods ---***/
 	
-	/* create a database record for the given reference
+	/* create a database record for the given reference...  TODO: need to flesh this out
 	 */
 	@Override
-	public Reference createReference(String api_access_token, Reference reference) {
-		if(authenticate(api_access_token)) {
+	public Reference createReference(String username, Reference reference) {
+		User currentUser = this.getUser(username);
+		if (currentUser != null) {
 			return referenceService.createReference(reference);
-		} else {
-			return null;
 		}
+		return null;
 	}
 
 	/* update the given reference in the database, then return a revised version of it in the SearchResults
 	 */
 	@Override
-	public SearchResults<ReferenceDomain> updateReference(String api_access_token, ReferenceDomain reference) {
+	public SearchResults<ReferenceDomain> updateReference(String username, ReferenceDomain reference) {
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
 		SearchResults.resetTimer();
 
-		if(authenticate(api_access_token)) {
+		User currentUser = this.getUser(username);
+		if (currentUser != null) {
 			try {
 				// The updateReference method does not return the updated reference, as the method must finish
 				// before the updates are persisted to the database.  So, we issue the update, then we use the
 				// getReferenceByKey() method to re-fetch and return the updated object.
 				
-				referenceService.updateReference(reference);
+				referenceService.updateReference(reference, currentUser);
 				return this.getReferenceByKey(reference._refs_key.toString());
 			} catch (Throwable t) {
 				results.setError("Failed", "Failed to save changes", Constants.HTTP_SERVER_ERROR);
 			}
 		} else {
-			results.setError("FailedAuthentication", "Failed - no authentication", Constants.HTTP_PERMISSION_DENIED);
+			results.setError("FailedAuthentication", "Failed - invalid username", Constants.HTTP_PERMISSION_DENIED);
 		}
 		return results;
 	}
@@ -65,17 +67,19 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	/* add the specified tag to each of the references specified by key
 	 */
 	@Override
-	public SearchResults<String> updateReferencesInBulk (String api_access_token, ReferenceBulkDomain input) {
+	public SearchResults<String> updateReferencesInBulk (String username, ReferenceBulkDomain input) {
 		SearchResults<String> results = new SearchResults<String>();
 		SearchResults.resetTimer();
 
-		if(authenticate(api_access_token)) {
+		User currentUser = this.getUser(username);
+		if (currentUser != null) {
 			try {
 				// The updateReference method does not return the updated reference, as the method must finish
 				// before the updates are persisted to the database.  So, we issue the update, then we use the
 				// getReferenceByKey() method to re-fetch and return the updated object.
 				
-				if (referenceService.updateReferencesInBulk(input._refs_keys, input.workflow_tag, input.workflow_tag_operation)) {
+				if (referenceService.updateReferencesInBulk(input._refs_keys, input.workflow_tag, input.workflow_tag_operation,
+						currentUser)) {
 					results.items = null;	// okay result
 				} else {
 					results.setError("Failed", "Failed to save changes", Constants.HTTP_SERVER_ERROR);
@@ -84,7 +88,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 				results.setError("Failed", "Failed to save changes", Constants.HTTP_SERVER_ERROR);
 			}
 		} else {
-			results.setError("FailedAuthentication", "Failed - no authentication", Constants.HTTP_PERMISSION_DENIED);
+			results.setError("FailedAuthentication", "Failed - invalid username", Constants.HTTP_PERMISSION_DENIED);
 		}
 		return results;
 	}
@@ -246,15 +250,15 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		return results;
 	}
 
-	/* delete the reference with the given accession ID
+	/* delete the reference with the given accession ID...  TODO: need to flesh this out
 	 */
 	@Override
-	public Reference deleteReference(String api_access_token, String id) {
-		if(authenticate(api_access_token)) {
+	public Reference deleteReference(String username, String id) {
+		User currentUser = this.getUser(username);
+		if (currentUser != null) {
 			return referenceService.deleteReference(id);
-		} else {
-			return null;
 		}
+		return null;
 	}
 	
 	/* get list of workflow status objects (current and historical) for the reference with the given key

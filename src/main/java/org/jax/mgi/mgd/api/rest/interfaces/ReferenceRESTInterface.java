@@ -31,8 +31,8 @@ public interface ReferenceRESTInterface {
 	@POST
 	@ApiOperation(value = "Value: Create Reference", notes="Notes: Creates a new Reference")
 	public Reference createReference(
-			@ApiParam(value = "Name: API Access Token")
-			@HeaderParam("api_access_token") String api_access_token,
+			@ApiParam(value = "Name: Logged-in User")
+			@HeaderParam("username") String username,
 			
 			@ApiParam(value = "Value: This is the passed-in reference object")
 			Reference reference
@@ -41,8 +41,8 @@ public interface ReferenceRESTInterface {
 	@PUT
 	@ApiOperation(value = "Value: Update Reference", notes="Notes: Updates a Reference")
 	public SearchResults<ReferenceDomain> updateReference(
-			@ApiParam(value = "API Access Token")
-			@HeaderParam("api_access_token") String api_access_token,
+			@ApiParam(value = "Name: Logged-in User")
+			@HeaderParam("username") String username,
 			
 			@ApiParam(value = "Value: This is the passed-in reference domain object")
 			ReferenceDomain reference
@@ -52,8 +52,8 @@ public interface ReferenceRESTInterface {
 	@Path("/bulkUpdate")
 	@ApiOperation(value = "Value: Update list of References en masse", notes="Notes: Updates a list of References")
 	public SearchResults<String> updateReferencesInBulk(
-			@ApiParam(value = "API Access Token")
-			@HeaderParam("api_access_token") String api_access_token,
+			@ApiParam(value = "Name: Logged-in User")
+			@HeaderParam("username") String username,
 			
 			@ApiParam(value = "Value: reference keys and data to be updated")
 			ReferenceBulkDomain input
@@ -270,8 +270,8 @@ public interface ReferenceRESTInterface {
 	@ApiOperation(value = "Value: Deletes Reference", notes="Notes: Deletes a Reference")
 	@Path("/{id}")
 	public Reference deleteReference(
-			@ApiParam(value = "API Access Token")
-			@HeaderParam("api_access_token") String api_access_token,
+			@ApiParam(value = "Name: Logged-in User")
+			@HeaderParam("username") String username,
 			
 			@ApiParam(value = "Value: This Accession ID will lookup a Reference and then delete it")
 			@PathParam("id") String id

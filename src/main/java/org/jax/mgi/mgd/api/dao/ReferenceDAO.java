@@ -28,6 +28,7 @@ import org.jax.mgi.mgd.api.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowData;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowTag;
+import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
 
 @RequestScoped
@@ -420,7 +421,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	/* set the given workflow_tag for all references identified in the list of keys
 	 */
 	@Transactional
-	public void updateInBulk(List<Long> refsKeys, String workflow_tag, String workflow_tag_operation) throws Exception {
+	public void updateInBulk(List<Long> refsKeys, String workflow_tag, String workflow_tag_operation, User currentUser) throws Exception {
 		if ((refsKeys == null) || (refsKeys.size() == 0) || (workflow_tag == null) || (workflow_tag.length() == 0)) {
 			return; 
 		}
@@ -437,9 +438,9 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			Reference reference = entityManager.find(Reference.class, refsKey);
 			if (reference != null) {
 				if (workflow_tag_operation.equals(Constants.OP_ADD_WORKFLOW)) {
-					reference.addTag(workflow_tag, this);
+					reference.addTag(workflow_tag, this, currentUser);
 				} else {
-					reference.removeTag(workflow_tag, this);
+					reference.removeTag(workflow_tag, this, currentUser);
 				}
 			} else {
 				throw new Exception("Unknown reference key: " + refsKey);
@@ -448,7 +449,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	}
 	
 	@Transactional
-	public Reference update(ReferenceDomain referenceDomain) throws Exception {
+	public Reference update(ReferenceDomain referenceDomain, User currentUser) throws Exception {
 		/*
 		 * 1. retrieve the corresponding Reference object
 		 * 2. update it with data from the ReferenceDomain object
@@ -456,7 +457,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		 * 4. return the Reference object
 		 */
 		Reference reference = entityManager.find(Reference.class, referenceDomain._refs_key);
-		reference.applyDomainChanges(referenceDomain, this);
+		reference.applyDomainChanges(referenceDomain, this, currentUser);
 		entityManager.persist(reference);
 		return reference;
 	}

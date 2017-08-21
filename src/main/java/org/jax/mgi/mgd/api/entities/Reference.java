@@ -11,7 +11,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.ejb.Singleton;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -384,7 +383,7 @@ public class Reference extends Base {
 	 * group statuses.  returns true if an update was made, false if no change.  persists any changes
 	 * to the database.
 	 */
-	private boolean updateStatus(String groupAbbrev, String currentStatus, String newStatus, ReferenceDAO refDAO) {
+	private boolean updateStatus(String groupAbbrev, String currentStatus, String newStatus, ReferenceDAO refDAO, User currentUser) {
 		// no update if new status matches old status (or if no group is specified)
 		if ( ((currentStatus != null) && currentStatus.equals(newStatus)) || (groupAbbrev == null) ||
 				((currentStatus == null) && (newStatus == null)) ) {
@@ -411,7 +410,7 @@ public class Reference extends Base {
 		newRws.isCurrent = 1;
 		newRws.groupTerm = refDAO.getTermByAbbreviation(Constants.VOC_WORKFLOW_GROUP, groupAbbrev);
 		newRws.statusTerm = refDAO.getTermByTerm(Constants.VOC_WORKFLOW_STATUS, newStatus);
-		newRws.createdByUser = refDAO.getUser("mgd_dbo");
+		newRws.createdByUser = currentUser;
 		newRws.modifiedByUser = newRws.createdByUser;
 		newRws.creation_date = new Date();
 		newRws.modification_date = newRws.creation_date;
@@ -428,15 +427,15 @@ public class Reference extends Base {
 	 * As well, if this Reference has no J: number and we just assigned a status other than "Not Routed", 
 	 * then we assign the next available J: number to this reference.
 	 */
-	private boolean applyStatusChanges(ReferenceDomain rd, ReferenceDAO refDAO) throws Exception {
+	private boolean applyStatusChanges(ReferenceDomain rd, ReferenceDAO refDAO, User currentUser) throws Exception {
 		// note that we need to put 'anyChanges' last for each OR pair, otherwise short-circuit evaluation
 		// will only let the first change go through and the rest will not execute.
 		
-		boolean anyChanges = updateStatus(Constants.WG_AP, this.getAp_status(), rd.ap_status, refDAO);
-		anyChanges = updateStatus(Constants.WG_GO, this.getGo_status(), rd.go_status, refDAO) || anyChanges;
-		anyChanges = updateStatus(Constants.WG_GXD, this.getGxd_status(), rd.gxd_status, refDAO) || anyChanges;
-		anyChanges = updateStatus(Constants.WG_QTL, this.getQtl_status(), rd.qtl_status, refDAO) || anyChanges;
-		anyChanges = updateStatus(Constants.WG_TUMOR, this.getTumor_status(), rd.tumor_status, refDAO) || anyChanges;
+		boolean anyChanges = updateStatus(Constants.WG_AP, this.getAp_status(), rd.ap_status, refDAO, currentUser);
+		anyChanges = updateStatus(Constants.WG_GO, this.getGo_status(), rd.go_status, refDAO, currentUser) || anyChanges;
+		anyChanges = updateStatus(Constants.WG_GXD, this.getGxd_status(), rd.gxd_status, refDAO, currentUser) || anyChanges;
+		anyChanges = updateStatus(Constants.WG_QTL, this.getQtl_status(), rd.qtl_status, refDAO, currentUser) || anyChanges;
+		anyChanges = updateStatus(Constants.WG_TUMOR, this.getTumor_status(), rd.tumor_status, refDAO, currentUser) || anyChanges;
 		
 		if (anyChanges) {
 			this.workflowStatusCache = null;		// clear cache of old workflow statuses
@@ -468,7 +467,7 @@ public class Reference extends Base {
 						throw new Exception("Bad J: number assigned (null)");
 					}
 					accID.accID = "J:" + accID.numericPart;
-					accID.createdByUser = refDAO.getUser("mgd_dbo");
+					accID.createdByUser = currentUser;
 					accID.modifiedByUser = accID.createdByUser;
 					accID.creation_date = new Date();
 					accID.modification_date = accID.creation_date;
@@ -485,7 +484,7 @@ public class Reference extends Base {
 	 * ReferenceDomain.  Persists any tag changes to the database.  Returns true if any changes were made,
 	 * false otherwise.
 	 */
-	private boolean applyTagChanges(ReferenceDomain rd, ReferenceDAO refDAO) throws Exception {
+	private boolean applyTagChanges(ReferenceDomain rd, ReferenceDAO refDAO, User currentUser) throws Exception {
 		// short-circuit method if no tags in Reference or in ReferenceDomain
 		if ((this.workflowTags.size() == 0) && (rd.workflow_tags.size() == 0)) {
 			return false;
@@ -527,7 +526,7 @@ public class Reference extends Base {
 		// add new tags (use shared method, as this will be useful when adding tags to batches of references)
 
 		for (String rdTag : toAdd) {
-			this.addTag(rdTag, refDAO);
+			this.addTag(rdTag, refDAO, currentUser);
 		}
 		
 		return (toDelete.size() > 0) || (toAdd.size() > 0);
@@ -536,7 +535,7 @@ public class Reference extends Base {
 	/* method for removing a workflow tag for this Reference (no-op if this ref doesn't have the tag)
 	 */
 	@Transient
-	public void removeTag(String rdTag, ReferenceDAO refDAO) throws Exception {
+	public void removeTag(String rdTag, ReferenceDAO refDAO, User currentUser) throws Exception {
 		if (this.workflowTags == null) { return; }
 		
 		String lowerTag = rdTag.toLowerCase().trim();
@@ -551,7 +550,7 @@ public class Reference extends Base {
 	/* shared method for adding a workflow tag to this Reference
 	 */
 	@Transient
-	public void addTag(String rdTag, ReferenceDAO refDAO) throws Exception {
+	public void addTag(String rdTag, ReferenceDAO refDAO, User currentUser) throws Exception {
 		// if we already have this tag applied, skip it (extra check needed for batch additions to avoid
 		// adding duplicates)
 
@@ -572,7 +571,7 @@ public class Reference extends Base {
 				rwTag._assoc_key = refDAO.getNextWorkflowTagKey();
 				rwTag._refs_key = this._refs_key;
 				rwTag.tag = tagTerm;
-				rwTag.createdByUser = refDAO.getUser("mgd_dbo");
+				rwTag.createdByUser = currentUser;
 				rwTag.modifiedByUser = rwTag.createdByUser;
 				rwTag.creation_date = new Date();
 				rwTag.modification_date = rwTag.creation_date;
@@ -595,7 +594,7 @@ public class Reference extends Base {
 		return a.equals(b);
 	}
 	
-	private boolean applyWorkflowDataChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
+	private boolean applyWorkflowDataChanges(ReferenceDomain rd, ReferenceDAO refDAO, User currentUser) {
 		// at most one set of workflow data per reference
 		// need to handle:  updated workflow data, new workflow data -- (no deletions)
 		
@@ -611,7 +610,7 @@ public class Reference extends Base {
 				
 				myWD.supplementalTerm = refDAO.getTermByTerm(Constants.VOC_SUPPLEMENTAL, rd.has_supplemental);
 				myWD.link_supplemental = rd.link_to_supplemental;
-				myWD.modifiedByUser = refDAO.getUser("mgd_dbo");
+				myWD.modifiedByUser = currentUser;
 				myWD.modification_date = new Date();
 				anyChanges = true;
 			}
@@ -625,7 +624,7 @@ public class Reference extends Base {
 			myWD.supplementalTerm = refDAO.getTermByTerm(Constants.VOC_SUPPLEMENTAL, rd.has_supplemental);
 			myWD.link_supplemental = rd.link_to_supplemental;
 			myWD.extracted_text = null;
-			myWD.createdByUser = refDAO.getUser("mgd_dbo");
+			myWD.createdByUser = currentUser;
 			myWD.modifiedByUser = this.createdByUser;
 			myWD.creation_date = new Date();
 			myWD.modification_date = myWD.creation_date; 
@@ -638,7 +637,7 @@ public class Reference extends Base {
 		return anyChanges;
 	}
 	
-	private boolean applyBookChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
+	private boolean applyBookChanges(ReferenceDomain rd, ReferenceDAO refDAO, User currentUser) {
 		// at most one set of book data per reference
 		// need to handle:  deleted book data, updated book data, new book data
 
@@ -689,7 +688,7 @@ public class Reference extends Base {
 		return anyChanges;
 	}
 	
-	private boolean applyNoteChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
+	private boolean applyNoteChanges(ReferenceDomain rd, ReferenceDAO refDAO, User currentUser) {
 		// at most one note per reference
 		// need to handle:  new note, updated note, deleted note
 		
@@ -732,7 +731,7 @@ public class Reference extends Base {
 	/* Apply a single ID change to this reference.  If there already is an ID for this logical database, replace it.  If there wasn't
 	 * one, add one.  And, if there was one previously, but there's not now, then delete it.
 	 */
-	private boolean applyOneIDChange(Integer ldb, String accID, String prefixPart, Long numericPart, Integer preferred, Integer isPrivate, ReferenceDAO refDAO) {
+	private boolean applyOneIDChange(Integer ldb, String accID, String prefixPart, Long numericPart, Integer preferred, Integer isPrivate, ReferenceDAO refDAO, User currentUser) {
 		// first parameter is required; bail out if it is null
 		if (ldb == null) { return false; }
 		
@@ -761,7 +760,7 @@ public class Reference extends Base {
 				myID.prefixPart = prefixPart;
 				myID.numericPart = numericPart;
 				myID.modification_date = new Date();
-				myID.modifiedByUser = refDAO.getUser("mgd_dbo");
+				myID.modifiedByUser = currentUser;
 			}
 		} else {
 			// We didn't find an existing ID for this logical database, so we need to add one.
@@ -777,7 +776,7 @@ public class Reference extends Base {
 			myID.prefixPart = prefixPart;
 			myID.numericPart = numericPart;
 			myID.creation_date = new Date();
-			myID.createdByUser = refDAO.getUser("mgd_dbo");
+			myID.createdByUser = currentUser;
 			myID.modification_date = myID.creation_date;
 			myID.modifiedByUser = myID.createdByUser;
 			refDAO.persist(myID);
@@ -785,7 +784,7 @@ public class Reference extends Base {
 		return true;
 	}
 	
-	private boolean applyAccessionIDChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
+	private boolean applyAccessionIDChanges(ReferenceDomain rd, ReferenceDAO refDAO, User currentUser) {
 		// consider IDs for three logical databases:  PubMed, DOI, GO REF
 		// assumes only one ID per reference for each logical database (valid assumption, August 2017)
 		// need to handle:  new ID for logical db, updated ID for logical db, deleted ID for logical db
@@ -805,7 +804,7 @@ public class Reference extends Base {
 				}
 			}
 			
-			anyChanges = applyOneIDChange(Constants.LDB_DOI, rd.doiid, prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, refDAO) || anyChanges;
+			anyChanges = applyOneIDChange(Constants.LDB_DOI, rd.doiid, prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, refDAO, currentUser) || anyChanges;
 		}
 		
 		if (!smartEqual(this.getPubmedid(), rd.pubmedid)) {
@@ -820,7 +819,7 @@ public class Reference extends Base {
 				}
 			}
 			
-			anyChanges = applyOneIDChange(Constants.LDB_PUBMED, rd.pubmedid, prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, refDAO) || anyChanges;
+			anyChanges = applyOneIDChange(Constants.LDB_PUBMED, rd.pubmedid, prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, refDAO, currentUser) || anyChanges;
 		}
 		
 		if (!smartEqual(this.getGorefid(), rd.gorefid)) {
@@ -835,14 +834,14 @@ public class Reference extends Base {
 				}
 			}
 			
-			anyChanges = applyOneIDChange(Constants.LDB_GOREF, rd.gorefid, prefixPart, numericPart, Constants.SECONDARY, Constants.PRIVATE, refDAO) || anyChanges;
+			anyChanges = applyOneIDChange(Constants.LDB_GOREF, rd.gorefid, prefixPart, numericPart, Constants.SECONDARY, Constants.PRIVATE, refDAO, currentUser) || anyChanges;
 		}
 		return anyChanges;
 	}
 	
 	/* handle the basic fields that have changed between this Reference and the given ReferenceDomain
 	 */
-	private boolean applyBasicFieldChanges(ReferenceDomain rd, ReferenceDAO refDAO) {
+	private boolean applyBasicFieldChanges(ReferenceDomain rd, ReferenceDAO refDAO, User currentUser) {
 		// exactly one set of basic data per reference, including:  is_discard flag, reference type,
 		// author, primary author (derived), journal, title, volume, issue, date, year, pages, 
 		// abstract, and isReviewArticle flag
@@ -898,7 +897,7 @@ public class Reference extends Base {
 			this.ref_abstract = rd.ref_abstract;
 			this.referenceTypeTerm = refDAO.getTermByTerm(Constants.VOC_REFERENCE_TYPE, rd.reference_type);
 			this.modification_date = new Date();
-			this.modifiedByUser = refDAO.getUser("mgd_dbo");
+			this.modifiedByUser = currentUser;
 			anyChanges = true;
 		}
 
@@ -910,17 +909,17 @@ public class Reference extends Base {
 	 * not persist this Reference object itself, as other changes could be coming)
 	 */
 	@Transient
-	public void applyDomainChanges(ReferenceDomain rd, ReferenceDAO refDAO) throws Exception {
+	public void applyDomainChanges(ReferenceDomain rd, ReferenceDAO refDAO, User currentUser) throws Exception {
 		// note that we must have 'anyChanges' after the OR, otherwise short-circuit evaluation will only save
 		// the first section changed
 		
-		boolean anyChanges = applyStatusChanges(rd, refDAO);
-		anyChanges = applyTagChanges(rd, refDAO) || anyChanges;
-		anyChanges = applyBasicFieldChanges(rd, refDAO) || anyChanges;
-		anyChanges = applyBookChanges(rd, refDAO) || anyChanges;
-		anyChanges = applyNoteChanges(rd, refDAO) | anyChanges;
-		anyChanges = applyAccessionIDChanges(rd, refDAO) || anyChanges;
-		anyChanges = applyWorkflowDataChanges(rd, refDAO) || anyChanges;
+		boolean anyChanges = applyStatusChanges(rd, refDAO, currentUser);
+		anyChanges = applyTagChanges(rd, refDAO, currentUser) || anyChanges;
+		anyChanges = applyBasicFieldChanges(rd, refDAO, currentUser) || anyChanges;
+		anyChanges = applyBookChanges(rd, refDAO, currentUser) || anyChanges;
+		anyChanges = applyNoteChanges(rd, refDAO, currentUser) | anyChanges;
+		anyChanges = applyAccessionIDChanges(rd, refDAO, currentUser) || anyChanges;
+		anyChanges = applyWorkflowDataChanges(rd, refDAO, currentUser) || anyChanges;
 	}
 	
 	/* If this reference is of type Book, return an object with the extra book-related data (if one exists);

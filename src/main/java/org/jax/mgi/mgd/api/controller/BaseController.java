@@ -1,11 +1,22 @@
 package org.jax.mgi.mgd.api.controller;
 
 import java.util.HashMap;
+import javax.inject.Inject;
+
+import org.jax.mgi.mgd.api.entities.User;
+import org.jax.mgi.mgd.api.service.UserService;
 
 public class BaseController {
 
+	@Inject
+	private UserService userService;
+	
 	protected boolean authenticate(String api_access_token) {
 		return true;
+	}
+
+	protected User getUser(String username) {
+		return userService.getUser(username);
 	}
 	
 	/* convenience method to remove any String parameters that have an empty string as the value

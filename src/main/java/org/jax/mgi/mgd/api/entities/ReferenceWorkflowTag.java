@@ -14,7 +14,6 @@ import javax.persistence.Transient;
 
 import io.swagger.annotations.ApiModel;
 
-@Singleton
 @Entity
 @ApiModel(value = "Reference Workflow Tag Model Object")
 @Table(name="bib_workflow_tag")

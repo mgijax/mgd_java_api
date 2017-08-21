@@ -102,12 +102,12 @@ public class ReferenceDomain {
 		ReferenceAssociatedData flags = r.associatedData;
 		if (flags != null) {
 			if (flags.has_gxdindex != 0) { this.associated_data.add("GXD Index"); }
-			if (flags.has_gxdimages != 0) { this.associated_data.add("GXD Images"); }
-			if (flags.has_gxdspecimens != 0) { this.associated_data.add("GXD Specimens"); }
+			if (flags.has_gxdimages != 0) { this.associated_data.add("GXD/CRE Images"); }
+			if (flags.has_gxdspecimens != 0) { this.associated_data.add("GXD/CRE Specimens"); }
 			if (flags.has_probes != 0) { this.associated_data.add("Probes"); }
 			if (flags.has_antibodies != 0) { this.associated_data.add("Antibodies"); }
-			if (flags.has_gxdresults != 0) { this.associated_data.add("GXD Results"); }
-			if (flags.has_gxdresults != 0) { this.associated_data.add("GXD Assays"); }
+			if (flags.has_gxdresults != 0) { this.associated_data.add("GXD/CRE Results"); }
+			if (flags.has_gxdresults != 0) { this.associated_data.add("GXD/CRE Assays"); }
 			if (flags.has_alleles != 0) { this.associated_data.add("Alleles"); }
 			if (flags.has_markers != 0) { this.associated_data.add("Markers"); }
 		}

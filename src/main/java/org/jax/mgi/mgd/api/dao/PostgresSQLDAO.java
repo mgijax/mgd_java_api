@@ -15,6 +15,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.TypedQuery;
 
+import org.jax.mgi.mgd.api.entities.DatabaseInfo;
 import org.jax.mgi.mgd.api.entities.Term;
 import org.jax.mgi.mgd.api.entities.User;
 import org.jboss.logging.Logger;
@@ -176,4 +177,16 @@ public class PostgresSQLDAO<T> {
 	public void refresh(Object o) {
 		this.entityManager.refresh(o);
 	}
+
+	/* method to get the database dump date from the mgi_dbinfo table
+	 */
+	public String getDumpDate() {
+		TypedQuery<String> q1 = (TypedQuery<String>) entityManager.createQuery("select lastdump_date from DatabaseInfo", String.class);
+		String dumpDate = q1.getSingleResult();
+		if (dumpDate == null) {
+			dumpDate = "unknown";
+		}
+		return dumpDate;
+	}
+	
 }

@@ -50,4 +50,8 @@ public class Constants {
 	
 	// accession ID prefixes
 	public static String PREFIX_JNUM = "J:";
+	
+	// operations for bulk reference operations
+	public static String OP_ADD_WORKFLOW = "add";
+	public static String OP_REMOVE_WORKFLOW = "remove";
 }

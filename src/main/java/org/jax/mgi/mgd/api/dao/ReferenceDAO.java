@@ -422,15 +422,27 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	/* set the given workflow_tag for all references identified in the list of keys
 	 */
 	@Transactional
-	public void updateInBulk(List<Long> refsKeys, String workflow_tag) throws Exception {
+	public void updateInBulk(List<Long> refsKeys, String workflow_tag, String workflow_tag_operation) throws Exception {
 		if ((refsKeys == null) || (refsKeys.size() == 0) || (workflow_tag == null) || (workflow_tag.length() == 0)) {
 			return; 
 		}
 		
+		if ((workflow_tag_operation == null) || workflow_tag_operation.equals("")) {
+			workflow_tag_operation = Constants.OP_ADD_WORKFLOW;
+		} else if (!workflow_tag_operation.equals(Constants.OP_ADD_WORKFLOW)
+				&& !workflow_tag_operation.equals(Constants.OP_REMOVE_WORKFLOW)) {
+			throw new Exception("Invalid workflow_tag_operation: " + workflow_tag_operation);
+		}
+		
+		
 		for (Long refsKey : refsKeys) {
 			Reference reference = entityManager.find(Reference.class, refsKey);
 			if (reference != null) {
-				reference.addTag(workflow_tag, this);
+				if (workflow_tag_operation.equals(Constants.OP_ADD_WORKFLOW)) {
+					reference.addTag(workflow_tag, this);
+				} else {
+					reference.removeTag(workflow_tag, this);
+				}
 			} else {
 				throw new Exception("Unknown reference key: " + refsKey);
 			}

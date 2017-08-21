@@ -534,6 +534,21 @@ public class Reference extends Base {
 		return (toDelete.size() > 0) || (toAdd.size() > 0);
 	}
 	
+	/* method for removing a workflow tag for this Reference (no-op if this ref doesn't have the tag)
+	 */
+	@Transient
+	public void removeTag(String rdTag, ReferenceDAO refDAO) throws Exception {
+		if (this.workflowTags == null) { return; }
+		
+		String lowerTag = rdTag.toLowerCase().trim();
+		for (ReferenceWorkflowTag refTag : this.workflowTags) {
+			if (lowerTag.equals(refTag.tag.term.toLowerCase()) ) {
+				refDAO.remove(refTag);
+				return;
+			}
+		}
+	}
+	
 	/* shared method for adding a workflow tag to this Reference
 	 */
 	@Transient

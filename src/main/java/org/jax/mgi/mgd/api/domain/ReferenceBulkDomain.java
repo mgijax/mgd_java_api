@@ -11,4 +11,5 @@ import java.util.List;
 public class ReferenceBulkDomain {
 	public List<Long> _refs_keys;
 	public String workflow_tag;
+	public String workflow_tag_operation;	// "add" or "remove"; "add" is the default
 }

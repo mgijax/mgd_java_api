@@ -75,7 +75,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 				// before the updates are persisted to the database.  So, we issue the update, then we use the
 				// getReferenceByKey() method to re-fetch and return the updated object.
 				
-				if (referenceService.updateReferencesInBulk(input._refs_keys, input.workflow_tag)) {
+				if (referenceService.updateReferencesInBulk(input._refs_keys, input.workflow_tag, input.workflow_tag_operation)) {
 					results.items = null;	// okay result
 				} else {
 					results.setError("Failed", "Failed to save changes", Constants.HTTP_SERVER_ERROR);

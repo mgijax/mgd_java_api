@@ -31,6 +31,9 @@ public interface ReferenceRESTInterface {
 	@POST
 	@ApiOperation(value = "Value: Create Reference", notes="Notes: Creates a new Reference")
 	public Reference createReference(
+			@ApiParam(value = "Name: Token for accessing this API")
+			@HeaderParam("api_access_token") String api_access_token,
+			
 			@ApiParam(value = "Name: Logged-in User")
 			@HeaderParam("username") String username,
 			
@@ -41,6 +44,9 @@ public interface ReferenceRESTInterface {
 	@PUT
 	@ApiOperation(value = "Value: Update Reference", notes="Notes: Updates a Reference")
 	public SearchResults<ReferenceDomain> updateReference(
+			@ApiParam(value = "Name: Token for accessing this API")
+			@HeaderParam("api_access_token") String api_access_token,
+			
 			@ApiParam(value = "Name: Logged-in User")
 			@HeaderParam("username") String username,
 			
@@ -52,6 +58,9 @@ public interface ReferenceRESTInterface {
 	@Path("/bulkUpdate")
 	@ApiOperation(value = "Value: Update list of References en masse", notes="Notes: Updates a list of References")
 	public SearchResults<String> updateReferencesInBulk(
+			@ApiParam(value = "Name: Token for accessing this API")
+			@HeaderParam("api_access_token") String api_access_token,
+			
 			@ApiParam(value = "Name: Logged-in User")
 			@HeaderParam("username") String username,
 			
@@ -270,6 +279,9 @@ public interface ReferenceRESTInterface {
 	@ApiOperation(value = "Value: Deletes Reference", notes="Notes: Deletes a Reference")
 	@Path("/{id}")
 	public Reference deleteReference(
+			@ApiParam(value = "Name: Token for accessing this API")
+			@HeaderParam("api_access_token") String api_access_token,
+			
 			@ApiParam(value = "Name: Logged-in User")
 			@HeaderParam("username") String username,
 			

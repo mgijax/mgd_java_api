@@ -28,10 +28,10 @@ public class ReferenceController extends BaseController implements ReferenceREST
 
 	/***--- methods ---***/
 	
-	/* create a database record for the given reference...  TODO: need to flesh this out
+	/* create a database record for the given reference...  TODO: need to flesh this out, use SearchResults object, etc.
 	 */
 	@Override
-	public Reference createReference(String username, Reference reference) {
+	public Reference createReference(String api_access_token, String username, Reference reference) {
 		User currentUser = this.getUser(username);
 		if (currentUser != null) {
 			return referenceService.createReference(reference);
@@ -42,9 +42,14 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	/* update the given reference in the database, then return a revised version of it in the SearchResults
 	 */
 	@Override
-	public SearchResults<ReferenceDomain> updateReference(String username, ReferenceDomain reference) {
+	public SearchResults<ReferenceDomain> updateReference(String api_access_token, String username, ReferenceDomain reference) {
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
 		SearchResults.resetTimer();
+
+		if (!authenticate(api_access_token)) {
+			results.setError("FailedAuthentication", "Failed - invalid api_access_token", Constants.HTTP_PERMISSION_DENIED);
+			return results;
+		}
 
 		User currentUser = this.getUser(username);
 		if (currentUser != null) {
@@ -67,9 +72,14 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	/* add the specified tag to each of the references specified by key
 	 */
 	@Override
-	public SearchResults<String> updateReferencesInBulk (String username, ReferenceBulkDomain input) {
+	public SearchResults<String> updateReferencesInBulk (String api_access_token, String username, ReferenceBulkDomain input) {
 		SearchResults<String> results = new SearchResults<String>();
 		SearchResults.resetTimer();
+
+		if (!authenticate(api_access_token)) {
+			results.setError("FailedAuthentication", "Failed - invalid api_access_token", Constants.HTTP_PERMISSION_DENIED);
+			return results;
+		}
 
 		User currentUser = this.getUser(username);
 		if (currentUser != null) {
@@ -250,10 +260,10 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		return results;
 	}
 
-	/* delete the reference with the given accession ID...  TODO: need to flesh this out
+	/* delete the reference with the given accession ID...  TODO: need to flesh this out, return SearchResults object, etc.
 	 */
 	@Override
-	public Reference deleteReference(String username, String id) {
+	public Reference deleteReference(String api_access_token, String username, String id) {
 		User currentUser = this.getUser(username);
 		if (currentUser != null) {
 			return referenceService.deleteReference(id);

@@ -28,6 +28,7 @@ import org.jax.mgi.mgd.api.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowData;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowTag;
+import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
 
 @RequestScoped
@@ -137,31 +138,58 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			restrictions.add(builder.equal(root.get("is_discard"), 0)); 
 		}
 		
-		// second, handle list of status parameters
+		// second, handle list of status parameters.  The status fields are always OR-ed within a group.
+		// The status_operator field tells us whether to OR or AND them across groups (and defaults to OR).
 		
 		List<Predicate> wfsRestrictions = new ArrayList<Predicate>();
 
+		boolean statusOperatorOR = true;			// false if operator across groups should be AND
+		if (params.containsKey("status_operator") && (((String) params.get("status_operator")).trim().equalsIgnoreCase("AND"))) {
+			statusOperatorOR = false;
+		}
+
+		// collect the desired statuses for each group
+		
+		Map<String,List<String>> statusByGroup = new HashMap<String,List<String>>();
+		
 		for (String key: statusParameters) {
 			if (params.containsKey(key)) {
 				String groupAbbrev = groups.get(key);
 				String status = statuses.get(key);
 				
-				Subquery<ReferenceWorkflowStatus> wfsSubquery = query.subquery(ReferenceWorkflowStatus.class);
-				Root<ReferenceWorkflowStatus> wfsRoot = wfsSubquery.from(ReferenceWorkflowStatus.class);
-				wfsSubquery.select(wfsRoot);
-
-				List<Predicate> wfsPredicates = new ArrayList<Predicate>();
-				wfsPredicates.add(builder.equal(root.get("_refs_key"), wfsRoot.get("_refs_key")));
-				wfsPredicates.add(builder.equal(wfsRoot.get("isCurrent"), 1));
-				wfsPredicates.add(builder.equal(wfsRoot.get("groupTerm").get("abbreviation"), groupAbbrev));
-				wfsPredicates.add(builder.equal(wfsRoot.get("statusTerm").get("term"), status));
-
-				wfsSubquery.where(wfsPredicates.toArray(new Predicate[]{}));
-				wfsRestrictions.add(builder.exists(wfsSubquery));
+				if (!statusByGroup.containsKey(groupAbbrev)) {
+					statusByGroup.put(groupAbbrev, new ArrayList<String>());
+				}
+				statusByGroup.get(groupAbbrev).add(status);
 			}
 		}
+		
+		// compose one Exists subquery for each group
+		
+		for (String groupAbbrev : statusByGroup.keySet()) {
+			Subquery<ReferenceWorkflowStatus> wfsSubquery = query.subquery(ReferenceWorkflowStatus.class);
+			Root<ReferenceWorkflowStatus> wfsRoot = wfsSubquery.from(ReferenceWorkflowStatus.class);
+			wfsSubquery.select(wfsRoot);
+
+			List<Predicate> wfsPredicates = new ArrayList<Predicate>();
+			wfsPredicates.add(builder.equal(root.get("_refs_key"), wfsRoot.get("_refs_key")));
+			wfsPredicates.add(builder.equal(wfsRoot.get("isCurrent"), 1));
+			wfsPredicates.add(builder.equal(wfsRoot.get("groupTerm").get("abbreviation"), groupAbbrev));
+			Path<String> column = wfsRoot.get("statusTerm").get("term");
+			wfsPredicates.add(column.in(statusByGroup.get(groupAbbrev)));
+
+			wfsSubquery.where(wfsPredicates.toArray(new Predicate[]{}));
+			wfsRestrictions.add(builder.exists(wfsSubquery));
+		}
+
+		// then either AND or OR the subqueries for the separate groups together
+		
 		if (wfsRestrictions.size() > 0) {
-			restrictions.add(builder.or(wfsRestrictions.toArray(new Predicate[0])));
+			if (statusOperatorOR) {
+				restrictions.add(builder.or(wfsRestrictions.toArray(new Predicate[0])));
+			} else {
+				restrictions.add(builder.and(wfsRestrictions.toArray(new Predicate[0])));
+			}
 		}
 		
 		// third handle list of external parameters, including:
@@ -420,15 +448,27 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	/* set the given workflow_tag for all references identified in the list of keys
 	 */
 	@Transactional
-	public void updateInBulk(List<Long> refsKeys, String workflow_tag) throws Exception {
+	public void updateInBulk(List<Long> refsKeys, String workflow_tag, String workflow_tag_operation, User currentUser) throws Exception {
 		if ((refsKeys == null) || (refsKeys.size() == 0) || (workflow_tag == null) || (workflow_tag.length() == 0)) {
 			return; 
 		}
 		
+		if ((workflow_tag_operation == null) || workflow_tag_operation.equals("")) {
+			workflow_tag_operation = Constants.OP_ADD_WORKFLOW;
+		} else if (!workflow_tag_operation.equals(Constants.OP_ADD_WORKFLOW)
+				&& !workflow_tag_operation.equals(Constants.OP_REMOVE_WORKFLOW)) {
+			throw new Exception("Invalid workflow_tag_operation: " + workflow_tag_operation);
+		}
+		
+		
 		for (Long refsKey : refsKeys) {
 			Reference reference = entityManager.find(Reference.class, refsKey);
 			if (reference != null) {
-				reference.addTag(workflow_tag, this);
+				if (workflow_tag_operation.equals(Constants.OP_ADD_WORKFLOW)) {
+					reference.addTag(workflow_tag, this, currentUser);
+				} else {
+					reference.removeTag(workflow_tag, this, currentUser);
+				}
 			} else {
 				throw new Exception("Unknown reference key: " + refsKey);
 			}
@@ -436,7 +476,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	}
 	
 	@Transactional
-	public Reference update(ReferenceDomain referenceDomain) throws Exception {
+	public Reference update(ReferenceDomain referenceDomain, User currentUser) throws Exception {
 		/*
 		 * 1. retrieve the corresponding Reference object
 		 * 2. update it with data from the ReferenceDomain object
@@ -444,7 +484,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		 * 4. return the Reference object
 		 */
 		Reference reference = entityManager.find(Reference.class, referenceDomain._refs_key);
-		reference.applyDomainChanges(referenceDomain, this);
+		reference.applyDomainChanges(referenceDomain, this, currentUser);
 		entityManager.persist(reference);
 		return reference;
 	}

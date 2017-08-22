@@ -10,6 +10,7 @@ import org.jax.mgi.mgd.api.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
+import org.jax.mgi.mgd.api.entities.User;
 
 @RequestScoped
 public class ReferenceService {
@@ -23,9 +24,9 @@ public class ReferenceService {
 
 	/* returns true if reference was updated, false if not; updates citation cache
 	 */
-	public boolean updateReference(ReferenceDomain reference) {
+	public boolean updateReference(ReferenceDomain reference, User currentUser) {
 		try {
-			referenceDAO.update(reference);
+			referenceDAO.update(reference, currentUser);
 			referenceDAO.updateCitationCache(reference._refs_key);
 			return true;
 		} catch (Throwable t) {
@@ -37,9 +38,9 @@ public class ReferenceService {
 	/* returns true if references were updated, false if not; does not update citation cache, as
 	 * only workflow tags are processed currently
 	 */
-	public boolean updateReferencesInBulk(List<Long> refsKeys, String workflow_tag) {
+	public boolean updateReferencesInBulk(List<Long> refsKeys, String workflow_tag, String workflow_tag_operation, User currentUser) {
 		try {
-			referenceDAO.updateInBulk(refsKeys, workflow_tag);
+			referenceDAO.updateInBulk(refsKeys, workflow_tag, workflow_tag_operation, currentUser);
 			return true;
 		} catch (Throwable t) {
 			return false;

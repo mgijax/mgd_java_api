@@ -138,31 +138,58 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			restrictions.add(builder.equal(root.get("is_discard"), 0)); 
 		}
 		
-		// second, handle list of status parameters
+		// second, handle list of status parameters.  The status fields are always OR-ed within a group.
+		// The status_operator field tells us whether to OR or AND them across groups (and defaults to OR).
 		
 		List<Predicate> wfsRestrictions = new ArrayList<Predicate>();
 
+		boolean statusOperatorOR = true;			// false if operator across groups should be AND
+		if (params.containsKey("status_operator") && (((String) params.get("status_operator")).trim().equalsIgnoreCase("AND"))) {
+			statusOperatorOR = false;
+		}
+
+		// collect the desired statuses for each group
+		
+		Map<String,List<String>> statusByGroup = new HashMap<String,List<String>>();
+		
 		for (String key: statusParameters) {
 			if (params.containsKey(key)) {
 				String groupAbbrev = groups.get(key);
 				String status = statuses.get(key);
 				
-				Subquery<ReferenceWorkflowStatus> wfsSubquery = query.subquery(ReferenceWorkflowStatus.class);
-				Root<ReferenceWorkflowStatus> wfsRoot = wfsSubquery.from(ReferenceWorkflowStatus.class);
-				wfsSubquery.select(wfsRoot);
-
-				List<Predicate> wfsPredicates = new ArrayList<Predicate>();
-				wfsPredicates.add(builder.equal(root.get("_refs_key"), wfsRoot.get("_refs_key")));
-				wfsPredicates.add(builder.equal(wfsRoot.get("isCurrent"), 1));
-				wfsPredicates.add(builder.equal(wfsRoot.get("groupTerm").get("abbreviation"), groupAbbrev));
-				wfsPredicates.add(builder.equal(wfsRoot.get("statusTerm").get("term"), status));
-
-				wfsSubquery.where(wfsPredicates.toArray(new Predicate[]{}));
-				wfsRestrictions.add(builder.exists(wfsSubquery));
+				if (!statusByGroup.containsKey(groupAbbrev)) {
+					statusByGroup.put(groupAbbrev, new ArrayList<String>());
+				}
+				statusByGroup.get(groupAbbrev).add(status);
 			}
 		}
+		
+		// compose one Exists subquery for each group
+		
+		for (String groupAbbrev : statusByGroup.keySet()) {
+			Subquery<ReferenceWorkflowStatus> wfsSubquery = query.subquery(ReferenceWorkflowStatus.class);
+			Root<ReferenceWorkflowStatus> wfsRoot = wfsSubquery.from(ReferenceWorkflowStatus.class);
+			wfsSubquery.select(wfsRoot);
+
+			List<Predicate> wfsPredicates = new ArrayList<Predicate>();
+			wfsPredicates.add(builder.equal(root.get("_refs_key"), wfsRoot.get("_refs_key")));
+			wfsPredicates.add(builder.equal(wfsRoot.get("isCurrent"), 1));
+			wfsPredicates.add(builder.equal(wfsRoot.get("groupTerm").get("abbreviation"), groupAbbrev));
+			Path<String> column = wfsRoot.get("statusTerm").get("term");
+			wfsPredicates.add(column.in(statusByGroup.get(groupAbbrev)));
+
+			wfsSubquery.where(wfsPredicates.toArray(new Predicate[]{}));
+			wfsRestrictions.add(builder.exists(wfsSubquery));
+		}
+
+		// then either AND or OR the subqueries for the separate groups together
+		
 		if (wfsRestrictions.size() > 0) {
-			restrictions.add(builder.or(wfsRestrictions.toArray(new Predicate[0])));
+			if (statusOperatorOR) {
+				restrictions.add(builder.or(wfsRestrictions.toArray(new Predicate[0])));
+			} else {
+				restrictions.add(builder.and(wfsRestrictions.toArray(new Predicate[0])));
+			}
 		}
 		
 		// third handle list of external parameters, including:

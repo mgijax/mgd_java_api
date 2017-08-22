@@ -113,7 +113,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 			Integer row_limit, String title, String volume, String workflow_tag_operator,
 			String not_workflow_tag1, String workflow_tag1, String not_workflow_tag2, String workflow_tag2,
 			String not_workflow_tag3, String workflow_tag3, String not_workflow_tag4, String workflow_tag4,
-			String not_workflow_tag5, String workflow_tag5, String year,
+			String not_workflow_tag5, String workflow_tag5, String year, String status_operator,
 			Integer status_AP_Chosen, Integer status_AP_Full_coded, Integer status_AP_Indexed,
 			Integer status_AP_Not_Routed, Integer status_AP_Rejected, Integer status_AP_Routed,
 			Integer status_GO_Chosen, Integer status_GO_Full_coded, Integer status_GO_Indexed,
@@ -164,6 +164,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 			}
 		}
 
+		if (status_operator != null) { map.put("status_operator", status_operator); }
 		if ((status_AP_Chosen != null) && (status_AP_Chosen == 1)) { map.put("status_AP_Chosen", 1); }
 		if ((status_AP_Full_coded != null) && (status_AP_Full_coded == 1)) { map.put("status_AP_Full_coded", 1); }
 		if ((status_AP_Indexed != null) && (status_AP_Indexed == 1)) { map.put("status_AP_Indexed", 1); }

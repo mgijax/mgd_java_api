@@ -170,6 +170,9 @@ public interface ReferenceRESTInterface {
 			@ApiParam(value = "Value: This is for searching by year")
 			@QueryParam("year") String year,
 			
+			@ApiParam(value = "Value: Use 'AND' or 'OR' to search by status across groups?")
+			@QueryParam("status_operator") String status_operator,
+			
 			@ApiParam(value = "1 = AP workflow group has Chosen status")
 			@QueryParam("status_AP_Chosen") Integer status_AP_Chosen,
 			

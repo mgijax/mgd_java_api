@@ -2,7 +2,6 @@ package org.jax.mgi.mgd.api.entities;
 
 import java.util.Date;
 
-import javax.ejb.Singleton;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

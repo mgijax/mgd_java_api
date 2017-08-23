@@ -1,10 +1,13 @@
 package org.jax.mgi.mgd.api.entities;
 
-import javax.ejb.Singleton;
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import io.swagger.annotations.ApiModel;
 
 @Entity
@@ -30,4 +33,8 @@ public class Term extends Base {
 	
 	@Column(name="_vocab_key")
 	public Long _vocab_key;
+	
+	@Column(name="creation_date")
+	public Date creation_date;
+	
 }

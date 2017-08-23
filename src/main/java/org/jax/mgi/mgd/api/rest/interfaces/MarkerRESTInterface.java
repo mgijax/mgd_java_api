@@ -1,7 +1,5 @@
 package org.jax.mgi.mgd.api.rest.interfaces;
 
-import java.util.List;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -15,6 +13,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.entities.Marker;
+import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -48,7 +47,7 @@ public interface MarkerRESTInterface {
 
 	@GET
 	@ApiOperation(value = "Value: Searches Marker by Fields", notes="Notes: Searches Marker Fields")
-	public List<Marker> getMarker(
+	public SearchResults<Marker> getMarker(
 			@ApiParam(value = "Value: This is for searching by primary Id")
 			@QueryParam("accid") String accid,
 			
@@ -58,7 +57,7 @@ public interface MarkerRESTInterface {
 	@DELETE
 	@ApiOperation(value = "Value: Deletes Marker", notes="Notes: Deletes a Marker")
 	@Path("/{id}")
-	public Marker deleteMarker(
+	public SearchResults<Marker> deleteMarker(
 			@ApiParam(value = "Value: API Access Token used for Authentication to this API")
 			@HeaderParam("api_access_token") String api_access_token,
 			

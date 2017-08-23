@@ -11,6 +11,8 @@ import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.entities.User;
+import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
 public class ReferenceService {
@@ -47,15 +49,18 @@ public class ReferenceService {
 		}
 	}
 
-	public List<Reference> getReference(HashMap<String, Object> searchFields) {
+	public SearchResults<Reference> getReference(HashMap<String, Object> searchFields) {
 		return referenceDAO.get(searchFields);
 	}
 
-	public Reference deleteReference(String id) {
+	public SearchResults<Reference> deleteReference(String id) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		if(id != null) { map.put("primaryId", id); }
-		Reference reference = referenceDAO.get(map).get(0);
-		return referenceDAO.delete(reference);
+		SearchResults<Reference> results = referenceDAO.get(map);
+		if (results.status_code != Constants.HTTP_OK) {
+			return results;
+		}
+		return referenceDAO.delete(results.items.get(0));
 	}
 
 	public List<ReferenceWorkflowStatus> getStatusHistory(String refsKey) {

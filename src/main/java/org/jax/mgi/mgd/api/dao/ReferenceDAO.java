@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.dao;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -30,6 +32,8 @@ import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.DateParser;
+import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
 public class ReferenceDAO extends PostgresSQLDAO<Reference> {
@@ -44,10 +48,19 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		myClass = Reference.class;
 	}
 
+	/* convenience method for instantiating a new search results object, populating its error fields, 
+	 * and returning it.
+	 */
+	private static SearchResults<Reference> errorSR(String error, String message, int status_code) {
+		SearchResults<Reference> results = new SearchResults<Reference>();
+		results.setError(error, message, status_code);
+		return results;
+	}
+	
 	/* query handling specific for references.  Some fields are within the table backing Reference,
 	 * while others are coming from related tables.
 	 */
-	public List<Reference> get(HashMap<String, Object> params) {
+	public SearchResults<Reference> get(HashMap<String, Object> params) {
 		// query parameters existing in main reference table
 		List<String> internalParameters = new ArrayList<String>(Arrays.asList(
 			new String[] { "issue", "pages", "date", "ref_abstract", "isReviewArticle", "title",
@@ -192,6 +205,60 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			}
 		}
 		
+		// status history parameters (must find a single record that matches any of the specified history criteria)
+		
+		if ((params.containsKey("sh_group") || params.containsKey("sh_username") || params.containsKey("sh_status") || params.containsKey("sh_date"))) {
+			String shGroup = (String) params.get("sh_group");
+			String shUsername = (String) params.get("sh_username");
+			String shStatus = (String) params.get("sh_status");
+			String shDate = (String) params.get("sh_date");
+			
+			Subquery<ReferenceWorkflowStatus> shSubquery = query.subquery(ReferenceWorkflowStatus.class);
+			Root<ReferenceWorkflowStatus> shRoot = shSubquery.from(ReferenceWorkflowStatus.class);
+			shSubquery.select(shRoot);
+
+			List<Predicate> shPredicates = new ArrayList<Predicate>();
+			shPredicates.add(builder.equal(root.get("_refs_key"), shRoot.get("_refs_key")));
+			if (shGroup != null) {
+				Path<String> column = shRoot.get("groupTerm").get("abbreviation");
+				Expression<String> lowerColumn = builder.lower(column);
+				shPredicates.add(builder.equal(lowerColumn, shGroup.toLowerCase()));
+			}
+			if (shStatus != null) {
+				Path<String> column = shRoot.get("statusTerm").get("term");
+				Expression<String> lowerColumn = builder.lower(column);
+				shPredicates.add(builder.equal(lowerColumn, shStatus.toLowerCase()));
+			}
+			if (shUsername != null) {
+				Path<String> column = shRoot.get("modifiedByUser").get("login");
+				Expression<String> lowerColumn = builder.lower(column);
+				shPredicates.add(builder.equal(lowerColumn, shUsername.toLowerCase()));
+			}
+			if (shDate != null) {
+				DateParser parser = new DateParser();
+				try {
+					// datePieces will either have [ start operator, start date ]
+					// or [ start operator, start date, end operator, end date ]
+					List<String> datePieces = parser.parse(shDate);
+					if (datePieces.size() >= 2) {
+						Path<Date> path = shRoot.get("creation_date");
+						shPredicates.add(datePredicate(builder, path, datePieces.get(0), datePieces.get(1)));
+					}
+					if (datePieces.size() == 4) {
+						Path<Date> path = shRoot.get("creation_date");
+						shPredicates.add(datePredicate(builder, path, datePieces.get(2), datePieces.get(3)));
+					}
+				} catch (Exception e) {
+					return errorSR("InvalidDateFormat", "Status History Date is invalid", Constants.HTTP_BAD_REQUEST);
+				}
+			}
+
+			if (shPredicates.size() > 0) {
+				shSubquery.where(shPredicates.toArray(new Predicate[]{}));
+				restrictions.add(builder.exists(shSubquery));
+			}
+		}
+
 		// third handle list of external parameters, including:
 		//		"notes", "reference_type", "marker_id", "allele_id", "accids", "workflow_tag"
 		
@@ -429,7 +496,9 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		log.debug(query.toString());
 		log.debug(entityManager.createQuery(query).toString());
 
-		return entityManager.createQuery(query).setMaxResults(rowLimit).getResultList();
+		SearchResults<Reference> results = new SearchResults<Reference>();
+		results.setItems(entityManager.createQuery(query).setMaxResults(rowLimit).getResultList());
+		return results;
 	}
 	
 	/* get a list of the workflow status records for a reference
@@ -532,5 +601,32 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		Query query = entityManager.createNativeQuery("select * from BIB_reloadCache(" + refsKey + ")");
 		query.getResultList();
 		return;
+	}
+
+	/* compose a Predicate for searching for the given 'date' in the field in 'path' using the given 'operator'.
+	 * Assumes date is in mm/dd/yyyy format.
+	 */
+	public Predicate datePredicate(CriteriaBuilder builder, Path<Date> path, String operator, String date) throws ParseException {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
+		Date dayStart = dateFormat.parse(date + " 00:00:00");
+		Date dayEnd = dateFormat.parse(date + " 23:59:59");
+
+		if (DateParser.AFTER.equals(operator)) {
+			return builder.greaterThan(path, dayEnd);
+
+		} else if (DateParser.STARTING_WITH.equals(operator)) {
+			return builder.greaterThanOrEqualTo(path, dayStart);
+
+		} else if (DateParser.UP_THROUGH.equals(operator)) {
+			return builder.lessThanOrEqualTo(path, dayEnd);
+			
+		} else if (DateParser.UP_TO.equals(operator)) {
+			return builder.lessThan(path, dayStart);
+			
+		} else if (DateParser.ON.equals(operator)) {
+			// use a 'between' to get the full day, not just a single point in time
+			return builder.between(path, dayStart, dayEnd);
+		}
+		return null; 
 	}
 }

@@ -261,7 +261,19 @@ public interface ReferenceRESTInterface {
 			@QueryParam("status_Tumor_Rejected") Integer status_Tumor_Rejected,
 			
 			@ApiParam(value = "1 = Tumor workflow group has Routed status")
-			@QueryParam("status_Tumor_Routed") Integer status_Tumor_Routed
+			@QueryParam("status_Tumor_Routed") Integer status_Tumor_Routed,
+
+			@ApiParam(value = "Value: (status history) group abbreviation")
+			@QueryParam("sh_group") String sh_group,
+			
+			@ApiParam(value = "Value: (status history) username")
+			@QueryParam("sh_username") String sh_username,
+			
+			@ApiParam(value = "Value: (status history) status term")
+			@QueryParam("sh_status") String sh_status,
+			
+			@ApiParam(value = "Value: (status history) date when status was set")
+			@QueryParam("sh_date") String sh_date
 			);
 
 	@GET
@@ -281,7 +293,7 @@ public interface ReferenceRESTInterface {
 	@DELETE
 	@ApiOperation(value = "Value: Deletes Reference", notes="Notes: Deletes a Reference")
 	@Path("/{id}")
-	public Reference deleteReference(
+	public SearchResults<Reference> deleteReference(
 			@ApiParam(value = "Name: Token for accessing this API")
 			@HeaderParam("api_access_token") String api_access_token,
 			

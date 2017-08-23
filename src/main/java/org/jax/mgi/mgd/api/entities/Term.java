@@ -6,7 +6,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import io.swagger.annotations.ApiModel;
 
@@ -16,9 +15,9 @@ import io.swagger.annotations.ApiModel;
 public class Term extends Base {
 
 	@Id
-	@Column(name="_Term_key")
+	@Column(name="_term_key")
 	public Long _term_key;
-	
+
 	@Column(name="term")
 	public String term;
 
@@ -36,5 +35,5 @@ public class Term extends Base {
 	
 	@Column(name="creation_date")
 	public Date creation_date;
-	
+
 }

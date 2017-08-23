@@ -39,7 +39,7 @@ public interface TermRESTInterface {
 	
 	@PUT
 	@ApiOperation(value = "Value: Update Term", notes="Notes: Updates a Term")
-	public Marker updateTerm(
+	public Term updateTerm(
 			@ApiParam(value = "Value: API Access Token used for Authentication to this API")
 			@HeaderParam("api_access_token") String api_access_token,
 			
@@ -51,20 +51,23 @@ public interface TermRESTInterface {
 	@ApiOperation(value = "Value: Searches Terms by Fields", notes="Notes: Searches Term Fields")
 	public List<Term> getTerm(
 			@ApiParam(value = "Value: This is for searching by primary Id")
-			@QueryParam("term_key") Integer term_key,
+			@QueryParam("term_key") String term_key,
 			
 			@ApiParam(value = "Value: This is for searching by Vocab Key")
-			@QueryParam("vocab_key") Integer vocab_key
+			@QueryParam("vocab_key") String vocab_key,
+			
+			@ApiParam(value = "Value: This is for searching by Vocab Name")
+			@QueryParam("vocab_name") String vocab_name
 	);
 	
 	@DELETE
 	@ApiOperation(value = "Value: Deletes Term", notes="Notes: Deletes a Term")
 	@Path("/{term_key}")
-	public Marker deleteTerm(
+	public Term deleteTerm(
 			@ApiParam(value = "Value: API Access Token used for Authentication to this API")
 			@HeaderParam("api_access_token") String api_access_token,
 			
 			@ApiParam(value = "Value: This Term Key will lookup a Term and then delete it")
-			@PathParam("term_key") Integer term_key
+			@PathParam("term_key") String term_key
 	);
 }

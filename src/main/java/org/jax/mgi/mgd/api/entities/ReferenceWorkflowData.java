@@ -54,28 +54,28 @@ public class ReferenceWorkflowData extends Base {
 	@Transient
 	public String getSupplemental() {
 		if (this.supplementalTerm == null) { return null; }
-		return this.supplementalTerm.term;
+		return this.supplementalTerm.getTerm();
 	}
 	
 	@Transient
 	public String getCreatedBy() {
 		if (this.createdByUser == null) { return null; }
-		return this.createdByUser.login;
+		return this.createdByUser.getLogin();
 	}
 	
 	@Transient
 	public String getModifidBy() {
 		if (this.modifiedByUser == null) { return null; }
-		return this.modifiedByUser.login;
+		return this.modifiedByUser.getLogin();
 	}
 	
 	@Transient
 	public String getCreationDate() {
-		return this.formatDate(this.creation_date);
+		return formatter.format(this.creation_date);
 	}
 	
 	@Transient
 	public String getModificationDate() {
-		return this.formatDate(this.modification_date);
+		return formatter.format(this.modification_date);
 	}
 }

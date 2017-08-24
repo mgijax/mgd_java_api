@@ -167,11 +167,11 @@ public class Reference extends Base {
 	private String findFirstID(Integer ldb, String prefix, Integer preferred, Integer isPrivate) {
 		for (int i = 0; i < this.accessionIDs.size(); i++) {
 			AccessionID accID = this.accessionIDs.get(i);
-			if ((ldb == null) || (ldb.equals(accID._logicaldb_key))) {
-				if ((prefix == null) || prefix.equals(accID.prefixPart)) {
-					if ((preferred == null) || (preferred.equals(accID.preferred))) {
-						if ((isPrivate == null) || (isPrivate.equals(accID.is_private))) {
-							return accID.accID;
+			if ((ldb == null) || (ldb.equals(accID.get_logicaldb_key()))) {
+				if ((prefix == null) || prefix.equals(accID.getPrefixPart())) {
+					if ((preferred == null) || (preferred.equals(accID.getPreferred()))) {
+						if ((isPrivate == null) || (isPrivate.equals(accID.getIs_private()))) {
+							return accID.getAccID();
 						}
 					}
 				}
@@ -217,14 +217,14 @@ public class Reference extends Base {
 	@Transient
 	public String getReferenceType() {
 		if (referenceTypeTerm == null) { return null; }
-		return referenceTypeTerm.term;
+		return referenceTypeTerm.getTerm();
 	}
 	
 	@Transient
 	public List<String> getWorkflowTags() {
 		List<String> tags = new ArrayList<String>();
 		for (ReferenceWorkflowTag rwTag : this.workflowTags) {
-			tags.add(rwTag.tag.term);
+			tags.add(rwTag.tag.getTerm());
 		}
 		Collections.sort(tags);
 		return tags;
@@ -455,7 +455,7 @@ public class Reference extends Base {
 				
 				if (anyNotRouted) {
 					try {
-						refDAO.assignNewJnumID(this._refs_key, currentUser._user_key);
+						refDAO.assignNewJnumID(this._refs_key, currentUser.get_user_key());
 					} catch (Exception e) {
 						throw new Exception("Failed to assign J: number");
 					}
@@ -488,7 +488,7 @@ public class Reference extends Base {
 		// left in toAdd will need to be added as a new tag, and anything in toDelete will need to be removed.
 		
 		for (ReferenceWorkflowTag refTag : this.workflowTags) {
-			String lowerTag = refTag.tag.term.toLowerCase();
+			String lowerTag = refTag.tag.getTerm().toLowerCase();
 
 			// matching tags
 			if (toAdd.contains(lowerTag)) {
@@ -525,7 +525,7 @@ public class Reference extends Base {
 		
 		String lowerTag = rdTag.toLowerCase().trim();
 		for (ReferenceWorkflowTag refTag : this.workflowTags) {
-			if (lowerTag.equals(refTag.tag.term.toLowerCase()) ) {
+			if (lowerTag.equals(refTag.tag.getTerm().toLowerCase()) ) {
 				refDAO.remove(refTag);
 				return;
 			}
@@ -541,7 +541,7 @@ public class Reference extends Base {
 
 		String lowerTag = rdTag.toLowerCase().trim();
 		for (ReferenceWorkflowTag refTag : this.workflowTags) {
-			if (lowerTag.equals(refTag.tag.term.toLowerCase()) ) {
+			if (lowerTag.equals(refTag.tag.getTerm().toLowerCase()) ) {
 				return;
 			}
 		}
@@ -723,9 +723,9 @@ public class Reference extends Base {
 		// First, need to find any existing AccessionID object for this logical database.
 
 		int idPos = -1;			// position of correct ID in list of IDs
-		for (int i = 0; i < this.accessionIDs.size(); i++) {
-			AccessionID myID = this.accessionIDs.get(i);
-			if (ldb.equals(myID._logicaldb_key)) {
+		for (int i = 0; i < accessionIDs.size(); i++) {
+			AccessionID myID = accessionIDs.get(i);
+			if (ldb.equals(myID.get_logicaldb_key())) {
 				idPos = i;
 				break;
 			}
@@ -735,35 +735,39 @@ public class Reference extends Base {
 		if (idPos >= 0) {
 			// Passing in a null ID indicates that any existing ID should be removed.
 			if (accID == null) {
-				refDAO.remove(this.accessionIDs.get(idPos));
+				refDAO.remove(accessionIDs.get(idPos));
 			} else {
 				// Otherwise, we can update the ID and other data for this logical database.
-				AccessionID myID = this.accessionIDs.get(idPos);
-				myID.accID = accID;
-				myID.is_private = isPrivate;
-				myID.preferred = preferred;
-				myID.prefixPart = prefixPart;
-				myID.numericPart = numericPart;
-				myID.modification_date = new Date();
-				myID.modifiedByUser = currentUser;
+				AccessionID myID = accessionIDs.get(idPos);
+				myID.setAccID(accID);
+				myID.setIs_private(isPrivate);
+				myID.setPreferred(preferred);
+				myID.setPrefixPart(prefixPart);
+				myID.setNumericPart(numericPart);
+				myID.setModification_date(new Date());
+				myID.setModifiedByUser(currentUser);
 			}
 		} else {
 			// We didn't find an existing ID for this logical database, so we need to add one.
 			
-			AccessionID myID = new AccessionID();
-			myID._accession_key = refDAO.getNextAccessionKey();
-			myID._logicaldb_key = ldb;
-			myID.accID = accID;
-			myID._mgitype_key = Constants.TYPE_REFERENCE;
-			myID._object_key = this._refs_key;
-			myID.is_private = isPrivate;
-			myID.preferred = preferred;
-			myID.prefixPart = prefixPart;
-			myID.numericPart = numericPart;
-			myID.creation_date = new Date();
-			myID.createdByUser = currentUser;
-			myID.modification_date = myID.creation_date;
-			myID.modifiedByUser = myID.createdByUser;
+			Date creation = new Date();
+			
+			AccessionID myID = new AccessionID(
+					refDAO.getNextAccessionKey(),
+					accID,
+					preferred,
+					isPrivate,
+					ldb,
+					_refs_key,
+					Constants.TYPE_REFERENCE,
+					prefixPart,
+					numericPart,
+					creation,
+					creation,
+					currentUser,
+					currentUser
+			);
+			
 			refDAO.persist(myID);
 		}
 		return true;
@@ -777,7 +781,7 @@ public class Reference extends Base {
 		boolean anyChanges = false;
 		Pattern pattern = Pattern.compile("(.*?)([0-9]+)");		// any characters as a prefix (reluctant group), followed by one or more digits
 		
-		if (!smartEqual(this.getDoiid(), rd.doiid)) {
+		if (!smartEqual(getDoiid(), rd.doiid)) {
 			String prefixPart = rd.doiid;					// defaults
 			Long numericPart = null;
 
@@ -792,7 +796,7 @@ public class Reference extends Base {
 			anyChanges = applyOneIDChange(Constants.LDB_DOI, rd.doiid, prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, refDAO, currentUser) || anyChanges;
 		}
 		
-		if (!smartEqual(this.getPubmedid(), rd.pubmedid)) {
+		if (!smartEqual(getPubmedid(), rd.pubmedid)) {
 			String prefixPart = rd.pubmedid;				// defaults
 			Long numericPart = null;
 
@@ -807,7 +811,7 @@ public class Reference extends Base {
 			anyChanges = applyOneIDChange(Constants.LDB_PUBMED, rd.pubmedid, prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, refDAO, currentUser) || anyChanges;
 		}
 		
-		if (!smartEqual(this.getGorefid(), rd.gorefid)) {
+		if (!smartEqual(getGorefid(), rd.gorefid)) {
 			String prefixPart = rd.gorefid;					// defaults
 			Long numericPart = null;
 
@@ -845,7 +849,7 @@ public class Reference extends Base {
 			rdReview = 1;
 		}
 		
-		String refType = this.referenceTypeTerm.term;
+		String refType = this.referenceTypeTerm.getTerm();
 		
 		// update this object's data to match what was passed in
 		if ((rdDiscard != this.is_discard) || (rdReview != this.isReviewArticle)
@@ -912,7 +916,7 @@ public class Reference extends Base {
 	 */
 	@Transient
 	public ReferenceBook getBookData() {
-		if ("Book".equals(this.referenceTypeTerm.term) && (this.bookList.size() > 0)) {
+		if ("Book".equals(this.referenceTypeTerm.getTerm()) && (this.bookList.size() > 0)) {
 			return this.bookList.get(0);
 		}
 		return null;

@@ -19,7 +19,7 @@ public class User extends Base {
 	private int _user_key;
 
 	@Column(name="login")
-	public String login;
+	private String login;
 
 	@Column(name="name")
 	private String name;

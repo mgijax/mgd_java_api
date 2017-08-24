@@ -11,48 +11,53 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter @Setter @AllArgsConstructor
 @Entity
 @Table(name="acc_accession")
 public class AccessionID extends Base implements Serializable {
 	@Id
 	@Column(name="_accession_key")
-	public long _accession_key;
+	private long _accession_key;
 
 	@Column(name="accID")
-	public String accID;
+	private String accID;
 	
 	@Column(name="preferred")
-	public Integer preferred;
+	private Integer preferred;
 	
 	@Column(name="private")		// just "private" is a Java reserved word
-	public Integer is_private;
+	private Integer is_private;
 	
 	@Column(name="_logicaldb_key")
-	public Integer _logicaldb_key;
+	private Integer _logicaldb_key;
 	
 	@Column(name="_object_key")
-	public Long _object_key;
+	private Long _object_key;
 	
 	@Column(name="_mgitype_key")
-	public Integer _mgitype_key;
+	private Integer _mgitype_key;
 	
 	@Column(name="prefixPart")
-	public String prefixPart;
+	private String prefixPart;
 
 	@Column(name="numericPart")
-	public Long numericPart;
+	private Long numericPart;
 
 	@Column(name="creation_date")
-	public Date creation_date;
+	private Date creation_date;
 	
 	@Column(name="modification_date")
-	public Date modification_date;
+	private Date modification_date;
 
 	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
-	public User createdByUser;
+	private User createdByUser;
 	
 	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
-	public User modifiedByUser;
+	private User modifiedByUser;
 }

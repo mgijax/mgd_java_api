@@ -8,9 +8,6 @@ import javax.persistence.Transient;
 
 public class Base implements Serializable {
 	
-	@Transient
-	protected String formatDate(Date d) {
-		SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss");
-		return formatter.format(d); 
-	}
+	SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss");
+	
 }

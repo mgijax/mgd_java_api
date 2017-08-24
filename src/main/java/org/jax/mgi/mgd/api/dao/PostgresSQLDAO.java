@@ -18,6 +18,7 @@ import javax.persistence.TypedQuery;
 import org.jax.mgi.mgd.api.entities.DatabaseInfo;
 import org.jax.mgi.mgd.api.entities.Term;
 import org.jax.mgi.mgd.api.entities.User;
+import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
 
@@ -59,7 +60,7 @@ public class PostgresSQLDAO<T> {
 
 	/* default query handling; good for fields directly in the table backing model class T
 	 */
-	public List<T> get(HashMap<String, Object> params) {
+	public SearchResults<T> get(HashMap<String, Object> params) {
 		log.info("Lookup: " + params);
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<T> query = builder.createQuery(myClass);
@@ -81,12 +82,16 @@ public class PostgresSQLDAO<T> {
 
 		query.where(builder.and(restrictions.toArray(new Predicate[0])));
 
-		return entityManager.createQuery(query).getResultList();
+		SearchResults<T> results = new SearchResults<T>();
+		results.setItems(entityManager.createQuery(query).getResultList());
+		return results;
 	}
 
-	public T delete(T model) {
+	public SearchResults<T> delete(T model) {
+		SearchResults<T> results = new SearchResults<T>();
 		entityManager.remove(model);
-		return model;
+		results.setItem(model);
+		return results;
 	}
 	
 	/* get a Term object for the given vocabulary key and the term's abbreviation

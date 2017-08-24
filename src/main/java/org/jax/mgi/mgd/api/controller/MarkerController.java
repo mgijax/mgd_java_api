@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import org.jax.mgi.mgd.api.entities.Marker;
 import org.jax.mgi.mgd.api.rest.interfaces.MarkerRESTInterface;
 import org.jax.mgi.mgd.api.service.MarkerService;
+import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
 public class MarkerController extends BaseController implements MarkerRESTInterface {
@@ -36,7 +37,7 @@ public class MarkerController extends BaseController implements MarkerRESTInterf
 	}
 
 	@Override
-	public List<Marker> getMarker(String accid, String symbol) {
+	public SearchResults<Marker> getMarker(String accid, String symbol) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		if(accid != null) { map.put("accid", accid); }
 		if(symbol != null) { map.put("symbol", symbol); }
@@ -45,7 +46,7 @@ public class MarkerController extends BaseController implements MarkerRESTInterf
 	}
 
 	@Override
-	public Marker deleteMarker(String api_access_token, String id) {
+	public SearchResults<Marker> deleteMarker(String api_access_token, String id) {
 		if(authenticate(api_access_token)) {
 			return markerService.deleteMarker(id);
 		} else {

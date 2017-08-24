@@ -44,7 +44,6 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	@Override
 	public SearchResults<ReferenceDomain> updateReference(String api_access_token, String username, ReferenceDomain reference) {
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
-		SearchResults.resetTimer();
 
 		if (!authenticate(api_access_token)) {
 			results.setError("FailedAuthentication", "Failed - invalid api_access_token", Constants.HTTP_PERMISSION_DENIED);
@@ -74,7 +73,6 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	@Override
 	public SearchResults<String> updateReferencesInBulk (String api_access_token, String username, ReferenceBulkDomain input) {
 		SearchResults<String> results = new SearchResults<String>();
-		SearchResults.resetTimer();
 
 		if (!authenticate(api_access_token)) {
 			results.setError("FailedAuthentication", "Failed - invalid api_access_token", Constants.HTTP_PERMISSION_DENIED);
@@ -123,7 +121,8 @@ public class ReferenceController extends BaseController implements ReferenceREST
 			Integer status_QTL_Chosen, Integer status_QTL_Full_coded, Integer status_QTL_Indexed,
 			Integer status_QTL_Not_Routed, Integer status_QTL_Rejected, Integer status_QTL_Routed,
 			Integer status_Tumor_Chosen, Integer status_Tumor_Full_coded, Integer status_Tumor_Indexed,
-			Integer status_Tumor_Not_Routed, Integer status_Tumor_Rejected, Integer status_Tumor_Routed
+			Integer status_Tumor_Not_Routed, Integer status_Tumor_Rejected, Integer status_Tumor_Routed,
+			String sh_group, String sh_username, String sh_status, String sh_date
 			) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		if (accids != null) { map.put("accids", accids); }
@@ -200,10 +199,15 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		if ((status_Tumor_Rejected != null) && (status_Tumor_Rejected == 1)) { map.put("status_Tumor_Rejected", 1); }
 		if ((status_Tumor_Routed != null) && (status_Tumor_Routed == 1)) { map.put("status_Tumor_Routed", 1); }
 
+		// status history fields
+		if (sh_group != null) { map.put("sh_group", sh_group); }
+		if (sh_username != null) { map.put("sh_username", sh_username); }
+		if (sh_status != null) { map.put("sh_status", sh_status); }
+		if (sh_date != null) { map.put("sh_date", sh_date); }
+		
 		map = this.filterEmptyParameters(map);
 
 		log.info("Search Params: " + map);
-		SearchResults.resetTimer();
 		
 		// brief error checking
 
@@ -217,13 +221,21 @@ public class ReferenceController extends BaseController implements ReferenceREST
 			}
 		}
 		
-		/* need to convert Reference entity objects to ReferenceDomain objects to meet PWI's needs
-		 */
-		List<ReferenceDomain> domainObjects = new ArrayList<ReferenceDomain>();
-		for (Reference ref : referenceService.getReference(map)) {
-			domainObjects.add(new ReferenceDomain(ref));
+		SearchResults<ReferenceDomain> domains = new SearchResults<ReferenceDomain>();
+
+		SearchResults<Reference> results = referenceService.getReference(map);
+		if (results.status_code != 200) {
+			domains.setError(results.error, results.message, results.status_code);
+		} else {
+			// need to convert Reference entity objects to ReferenceDomain objects to meet PWI's needs
+			
+			List<ReferenceDomain> domainObjects = new ArrayList<ReferenceDomain>();
+			for (Reference ref : results.items) {
+				domainObjects.add(new ReferenceDomain(ref));
+			}
+			domains.setItems(domainObjects);
 		}
-		return new SearchResults<ReferenceDomain>(domainObjects);
+		return domains;
 	}
 
 
@@ -239,7 +251,6 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	@Override
 	public SearchResults<ReferenceDomain> getReferenceByKey (String refsKey) {
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
-		SearchResults.resetTimer();
 		if (refsKey != null) {
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			try {
@@ -249,9 +260,14 @@ public class ReferenceController extends BaseController implements ReferenceREST
 				return results;
 			}
 
-			List<Reference> references = referenceService.getReference(map);
-			if ((references != null) && (references.size() > 0)) {
-				results.setItem(new ReferenceDomain(references.get(0)));
+			SearchResults<Reference> refs = referenceService.getReference(map);
+			if (refs.status_code != 200) {
+				results.setError(refs.error, refs.message, refs.status_code);
+				return results;
+			}
+
+			if (refs.total_count > 0) {
+				results.setItem(new ReferenceDomain(refs.items.get(0)));
 			} else {
 				results.setError("NotFound", "No reference with key " + refsKey, Constants.HTTP_NOT_FOUND);
 			}
@@ -264,7 +280,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	/* delete the reference with the given accession ID...  TODO: need to flesh this out, return SearchResults object, etc.
 	 */
 	@Override
-	public Reference deleteReference(String api_access_token, String username, String id) {
+	public SearchResults<Reference> deleteReference(String api_access_token, String username, String id) {
 		User currentUser = this.getUser(username);
 		if (currentUser != null) {
 			return referenceService.deleteReference(id);
@@ -276,7 +292,6 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	 */
 	@Override
 	public SearchResults<ReferenceWorkflowStatus> getStatusHistoryByKey (String refsKey) {
-		SearchResults.resetTimer();
 		SearchResults<ReferenceWorkflowStatus> results = new SearchResults<ReferenceWorkflowStatus>();
 
 		// use lookup of reference to weed out and report parameter errors

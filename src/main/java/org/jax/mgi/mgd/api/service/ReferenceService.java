@@ -50,13 +50,13 @@ public class ReferenceService {
 	}
 
 	public SearchResults<Reference> getReference(HashMap<String, Object> searchFields) {
-		return referenceDAO.get(searchFields);
+		return referenceDAO.search(searchFields);
 	}
 
 	public SearchResults<Reference> deleteReference(String id) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		if(id != null) { map.put("primaryId", id); }
-		SearchResults<Reference> results = referenceDAO.get(map);
+		SearchResults<Reference> results = referenceDAO.search(map);
 		if (results.status_code != Constants.HTTP_OK) {
 			return results;
 		}

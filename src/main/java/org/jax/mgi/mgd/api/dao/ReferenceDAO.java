@@ -60,7 +60,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	/* query handling specific for references.  Some fields are within the table backing Reference,
 	 * while others are coming from related tables.
 	 */
-	public SearchResults<Reference> get(HashMap<String, Object> params) {
+	public SearchResults<Reference> search(HashMap<String, Object> params) {
 		// query parameters existing in main reference table
 		List<String> internalParameters = new ArrayList<String>(Arrays.asList(
 			new String[] { "issue", "pages", "date", "ref_abstract", "isReviewArticle", "title",

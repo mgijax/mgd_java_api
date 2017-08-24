@@ -1,7 +1,9 @@
 package org.jax.mgi.mgd.api.rest.interfaces;
 
 import java.util.List;
+import java.util.Map;
 
+import javax.naming.directory.SearchResult;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -13,9 +15,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 
 import org.jax.mgi.mgd.api.entities.Marker;
 import org.jax.mgi.mgd.api.entities.Term;
+import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -47,23 +51,25 @@ public interface TermRESTInterface {
 			Term term
 	);
 	
+	@POST
+	@ApiOperation(value = "Search for Terms by Fields")
+	@Path("/search")
+	public SearchResults<Term> search(
+			@ApiParam(value = "This is a map of the form parameters")
+			Map<String, String> postParams
+			);
+	
 	@GET
 	@ApiOperation(value = "Value: Searches Terms by Fields", notes="Notes: Searches Term Fields")
-	public List<Term> getTerm(
+	public SearchResults<Term> getTerm(
 			@ApiParam(value = "Value: This is for searching by primary Id")
-			@QueryParam("term_key") String term_key,
-			
-			@ApiParam(value = "Value: This is for searching by Vocab Key")
-			@QueryParam("vocab_key") String vocab_key,
-			
-			@ApiParam(value = "Value: This is for searching by Vocab Name")
-			@QueryParam("vocab_name") String vocab_name
+			@QueryParam("term_key") String term_key
 	);
 	
 	@DELETE
 	@ApiOperation(value = "Value: Deletes Term", notes="Notes: Deletes a Term")
 	@Path("/{term_key}")
-	public Term deleteTerm(
+	public SearchResults<Term> deleteTerm(
 			@ApiParam(value = "Value: API Access Token used for Authentication to this API")
 			@HeaderParam("api_access_token") String api_access_token,
 			

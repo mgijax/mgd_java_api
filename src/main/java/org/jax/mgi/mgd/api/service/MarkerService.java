@@ -26,13 +26,13 @@ public class MarkerService {
 	}
 
 	public SearchResults<Marker> getMarker(HashMap<String, Object> searchFields) {
-		return markerDAO.get(searchFields);
+		return markerDAO.search(searchFields);
 	}
 
 	public SearchResults<Marker> deleteMarker(String id) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		if(id != null) { map.put("primaryId", id); }
-		SearchResults<Marker> results = markerDAO.get(map);
+		SearchResults<Marker> results = markerDAO.search(map);
 		if (results.status_code != Constants.HTTP_OK) {
 			return results;
 		}

@@ -58,9 +58,14 @@ public class PostgresSQLDAO<T> {
 		return model;
 	}
 
+	public T get(T model) {
+		entityManager.merge(model);
+		return model;
+	}
+	
 	/* default query handling; good for fields directly in the table backing model class T
 	 */
-	public SearchResults<T> get(HashMap<String, Object> params) {
+	public SearchResults<T> search(HashMap<String, Object> params) {
 		log.info("Lookup: " + params);
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<T> query = builder.createQuery(myClass);
@@ -85,6 +90,10 @@ public class PostgresSQLDAO<T> {
 		SearchResults<T> results = new SearchResults<T>();
 		results.setItems(entityManager.createQuery(query).getResultList());
 		return results;
+	}
+	
+	public T get(HashMap<String, Object> params) {
+		return search(params).items.get(0);
 	}
 
 	public SearchResults<T> delete(T model) {

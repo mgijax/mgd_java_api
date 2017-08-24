@@ -454,26 +454,11 @@ public class Reference extends Base {
 				}
 				
 				if (anyNotRouted) {
-					AccessionID accID = new AccessionID();
-					accID._accession_key = refDAO.getNextAccessionKey();
-					accID._logicaldb_key = Constants.LDB_MGI;
-					accID._mgitype_key = Constants.TYPE_REFERENCE;
-					accID._object_key = this._refs_key;
-					accID.is_private = Constants.PUBLIC;
-					accID.preferred = Constants.PREFERRED;
-					accID.prefixPart = Constants.PREFIX_JNUM;
-					accID.numericPart = refDAO.getNextJnum();
-					if (accID.numericPart == null) {
-						throw new Exception("Bad J: number assigned (null)");
+					try {
+						refDAO.assignNewJnumID(this._refs_key, currentUser._user_key);
+					} catch (Exception e) {
+						throw new Exception("Failed to assign J: number");
 					}
-					accID.accID = "J:" + accID.numericPart;
-					accID.createdByUser = currentUser;
-					accID.modifiedByUser = accID.createdByUser;
-					accID.creation_date = new Date();
-					accID.modification_date = accID.creation_date;
-					refDAO.persist(accID);
-
-					this.accessionIDs.add(accID);
 				}
 			} // if no J#
 		}

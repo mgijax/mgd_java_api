@@ -22,7 +22,6 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.entities.AccessionID;
-import org.jax.mgi.mgd.api.entities.AccessionMax;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceAlleleAssociation;
 import org.jax.mgi.mgd.api.entities.ReferenceMarkerAssociation;
@@ -576,29 +575,21 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		return this.getNextKey("ReferenceWorkflowTag", "_assoc_key");
 	}
 	
-	/* get the next available J#
-	 */
-	public synchronized Long getNextJnum() {
-		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<AccessionMax> query = builder.createQuery(AccessionMax.class);
-		Root<AccessionMax> root = query.from(AccessionMax.class);
-		query.where(builder.equal(root.get("prefixPart"), Constants.PREFIX_JNUM));
-		AccessionMax accMax = entityManager.createQuery(query).getSingleResult();
-		if (accMax == null) {
-			return null;
-		}
-		
-		accMax.maxNumericPart = accMax.maxNumericPart + 1;
-		accMax.modification_date = new Date();
-		this.persist(accMax);
-		
-		return accMax.maxNumericPart;
-	}
-
 	/* update the bib_citation_cache table for the given reference key
 	 */
 	public void updateCitationCache(long refsKey) {
-		Query query = entityManager.createNativeQuery("select * from BIB_reloadCache(" + refsKey + ")");
+		// returns an integer rather than *, as the void return was causing a mapping exception
+		Query query = entityManager.createNativeQuery("select count(1) from BIB_reloadCache(" + refsKey + ")");
+		query.getResultList();
+		return;
+	}
+
+	/* add a new J: number for the given reference key and user key
+	 */
+	public void assignNewJnumID(long refsKey, int userKey) throws Exception {
+		int intRefsKey = Integer.parseInt(refsKey + "");
+		// returns an integer rather than *, as the void return was causing a mapping exception
+		Query query = entityManager.createNativeQuery("select count(1) from ACC_assignJ(" + userKey + "," + intRefsKey + ")");
 		query.getResultList();
 		return;
 	}

@@ -60,7 +60,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 				referenceService.updateReference(reference, currentUser);
 				return this.getReferenceByKey(reference._refs_key.toString());
 			} catch (Throwable t) {
-				results.setError("Failed", "Failed to save changes", Constants.HTTP_SERVER_ERROR);
+				results.setError("Failed", "Failed to save changes (" + t.getMessage() + ")", Constants.HTTP_SERVER_ERROR);
 			}
 		} else {
 			results.setError("FailedAuthentication", "Failed - invalid username", Constants.HTTP_PERMISSION_DENIED);

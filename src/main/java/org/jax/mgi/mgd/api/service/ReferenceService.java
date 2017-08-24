@@ -26,15 +26,9 @@ public class ReferenceService {
 
 	/* returns true if reference was updated, false if not; updates citation cache
 	 */
-	public boolean updateReference(ReferenceDomain reference, User currentUser) {
-		try {
-			referenceDAO.update(reference, currentUser);
-			referenceDAO.updateCitationCache(reference._refs_key);
-			return true;
-		} catch (Throwable t) {
-			return false;
-		}
-
+	public void updateReference(ReferenceDomain reference, User currentUser) throws Exception {
+		referenceDAO.update(reference, currentUser);
+		referenceDAO.updateCitationCache(reference._refs_key);
 	}
 
 	/* returns true if references were updated, false if not; does not update citation cache, as

@@ -564,8 +564,6 @@ public class Reference extends Base {
 				
 				this.workflowTags.add(rwTag);
 			}
-		} else {
-			throw new Exception("Unknown status term: " + rdTag);
 		}
 	}
 	

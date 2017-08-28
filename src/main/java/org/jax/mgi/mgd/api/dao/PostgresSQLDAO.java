@@ -110,7 +110,7 @@ public class PostgresSQLDAO<T> {
 		CriteriaQuery<Term> query = builder.createQuery(Term.class);
 		Root<Term> root = query.from(Term.class);
 		List<Predicate> restrictions = new ArrayList<Predicate>();
-		restrictions.add(builder.equal(root.get("_vocab_key"), vocabKey));
+		restrictions.add(builder.equal(root.get("vocab").get("_vocab_key"), vocabKey));
 		restrictions.add(builder.equal(root.get("abbreviation"), abbreviation));
 		query.where(builder.and(restrictions.toArray(new Predicate[0])));
 		List<Term> results = entityManager.createQuery(query).getResultList();
@@ -127,7 +127,7 @@ public class PostgresSQLDAO<T> {
 		CriteriaQuery<Term> query = builder.createQuery(Term.class);
 		Root<Term> root = query.from(Term.class);
 		List<Predicate> restrictions = new ArrayList<Predicate>();
-		restrictions.add(builder.equal(root.get("_vocab_key"), vocabKey));
+		restrictions.add(builder.equal(root.get("vocab").get("_vocab_key"), vocabKey));
 		Path<String> termColumn = root.get("term");
 		restrictions.add(builder.equal(builder.lower(termColumn), term.toLowerCase()));
 		query.where(builder.and(restrictions.toArray(new Predicate[0])));

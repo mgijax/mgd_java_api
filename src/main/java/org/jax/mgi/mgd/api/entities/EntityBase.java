@@ -6,7 +6,7 @@ import java.util.Date;
 
 import javax.persistence.Transient;
 
-public class Base implements Serializable {
+public class EntityBase implements Serializable {
 	
 	SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss");
 	

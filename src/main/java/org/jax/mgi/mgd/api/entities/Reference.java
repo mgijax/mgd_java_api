@@ -36,7 +36,7 @@ import io.swagger.annotations.ApiModel;
 @Entity
 @ApiModel(value = "Reference Model Object")
 @Table(name="bib_refs")
-public class Reference extends Base {
+public class Reference extends EntityBase {
 	
 	@Transient
 	private Logger log = Logger.getLogger(getClass());

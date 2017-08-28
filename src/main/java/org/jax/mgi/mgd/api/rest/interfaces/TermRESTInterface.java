@@ -17,6 +17,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
+import org.jax.mgi.mgd.api.domain.TermDomain;
 import org.jax.mgi.mgd.api.entities.Marker;
 import org.jax.mgi.mgd.api.entities.Term;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -61,7 +62,7 @@ public interface TermRESTInterface {
 	
 	@GET
 	@ApiOperation(value = "Value: Searches Terms by Fields", notes="Notes: Searches Term Fields")
-	public SearchResults<Term> getTerm(
+	public TermDomain getTerm(
 			@ApiParam(value = "Value: This is for searching by primary Id")
 			@QueryParam("term_key") String term_key
 	);

@@ -1,13 +1,13 @@
 package org.jax.mgi.mgd.api.controller;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.ws.rs.core.MultivaluedMap;
 
-import org.jax.mgi.mgd.api.entities.Marker;
+import org.jax.mgi.mgd.api.domain.TermDomain;
 import org.jax.mgi.mgd.api.entities.Term;
 import org.jax.mgi.mgd.api.rest.interfaces.TermRESTInterface;
 import org.jax.mgi.mgd.api.service.TermService;
@@ -38,11 +38,8 @@ public class TermController extends BaseController implements TermRESTInterface 
 	}
 
 	@Override
-	public SearchResults<Term> getTerm(String term_key) {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		if(term_key != null) { map.put("_term_key", term_key); }
-		log.info("Search Params: " + map);
-		return termService.searchTerm(map);
+	public TermDomain getTerm(String term_key) {
+		return termService.getTerm(Integer.parseInt(term_key));
 	}
 
 	@Override
@@ -56,24 +53,23 @@ public class TermController extends BaseController implements TermRESTInterface 
 	@Override
 	public SearchResults search(Map<String, String> postParams) {
 		
+		List<String> list = Arrays.asList(
+				"_term_key", 
+				"vocab._vocab_key",
+				"vocab.name", 
+				"createdBy.login"
+		);
+		
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		log.info("Map Params: " + postParams);
-
-		if(postParams.containsKey("vocab_name") || postParams.containsKey("_vocab_key")) {
-			if(postParams.containsKey("_vocab_key")) map.put("_vocab_key", postParams.get("_vocab_key"));
-			if(postParams.containsKey("vocab_name")) map.put("name", postParams.get("vocab_name"));
-			return termService.searchVocab(map);
-		} else {
-			if(postParams.containsKey("_term_key")) map.put("_term_key", postParams.get("_term_key"));
-			return termService.searchTerm(map);
+		
+		for(String s: list) {
+			if(postParams.containsKey(s)) {
+				map.put(s, postParams.get(s));
+			}
 		}
 
-
-//		if(postParams.containsKey("id")) map.put("id", postParams.get("id"));
-//		if(postParams.containsKey("creation_date")) map.put("creation_date", postParams.get("creation_date"));
-//		if(postParams.containsKey("modification_date")) map.put("modification_date", postParams.get("modification_date"));
-
-		
+		return termService.searchTerm(map);
 
 	}
 

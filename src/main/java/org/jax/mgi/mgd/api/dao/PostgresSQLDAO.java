@@ -74,15 +74,21 @@ public class PostgresSQLDAO<T> {
 		List<Predicate> restrictions = new ArrayList<Predicate>();
 		
 		for(String key: params.keySet()) {
-			Object desiredValue = params.get(key);
-			if ((desiredValue instanceof String) && (((String) desiredValue).indexOf("%") >= 0)) {
-				// has at least one wildcard, so do case-insensitive 'like' search
-				Path<String> column = root.get(key);
-				restrictions.add(builder.like(builder.lower(column), ((String) desiredValue).toLowerCase()));
+			Path<Object> column = null;
+			if(key.contains(".")) {
+				String[] objects = key.split("\\.");
+				for(String s: objects) {
+					if(column != null) {
+						column = column.get(s);
+					} else {
+						column = root.get(s);
+					}
+				}
 			} else {
-				// no wildcards, so do 'equals' search
-				restrictions.add(builder.equal(root.get(key), params.get(key)));
+				column = root.get(key);
 			}
+			String desiredValue = (String)params.get(key);
+			restrictions.add(builder.equal(column, desiredValue));
 		}
 
 		query.where(builder.and(restrictions.toArray(new Predicate[0])));

@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiModel;
 @Entity
 @ApiModel(value = "Reference/Allele Association Model Object")
 @Table(name="mgi_reference_assoc")
-public class ReferenceAlleleAssociation extends Base {
+public class ReferenceAlleleAssociation extends EntityBase {
 	@Id
 	@Column(name="_assoc_key")
 	public int _assoc_key;

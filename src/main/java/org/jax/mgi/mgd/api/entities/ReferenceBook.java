@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiModel;
 @Entity
 @ApiModel(value = "Reference Book Model Object")
 @Table(name="bib_books")
-public class ReferenceBook extends Base {
+public class ReferenceBook extends EntityBase {
 	@Id
 	@Column(name="_refs_key")
 	public long _refs_key;

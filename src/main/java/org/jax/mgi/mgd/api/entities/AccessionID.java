@@ -19,7 +19,7 @@ import lombok.Setter;
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor 
 @Entity
 @Table(name="acc_accession")
-public class AccessionID extends Base implements Serializable {
+public class AccessionID extends EntityBase implements Serializable {
 	@Id
 	@Column(name="_accession_key")
 	private long _accession_key;

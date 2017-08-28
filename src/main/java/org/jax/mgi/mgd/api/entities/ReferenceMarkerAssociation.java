@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiModel;
 @Entity
 @ApiModel(value = "Reference/Marker Association Model Object")
 @Table(name="mrk_reference")
-public class ReferenceMarkerAssociation extends Base {
+public class ReferenceMarkerAssociation extends EntityBase {
 
 	// need to define composite primary key class
 	@Embeddable

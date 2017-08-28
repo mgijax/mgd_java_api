@@ -15,7 +15,7 @@ import org.jax.mgi.mgd.api.entities.ReferenceWorkflowData;
  * 	the entities package) to be closer to the database and keeping the PWI's interactions as simple
  *	as possible
  */
-public class ReferenceDomain {
+public class ReferenceDomain extends DomainBase {
 	public Long _refs_key;
 	public String authors;
 	public String primary_author;

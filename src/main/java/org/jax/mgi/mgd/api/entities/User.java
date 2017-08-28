@@ -13,7 +13,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "User Model Object")
 @Table(name="mgi_user")
-public class User extends Base {
+public class User extends EntityBase {
 	@Id
 	@Column(name="_user_key")
 	private int _user_key;

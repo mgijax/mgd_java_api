@@ -8,7 +8,10 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -18,7 +21,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Vocabulary Term Model Object")
 @Table(name="voc_vocab")
-public class Vocabulary extends Base {
+public class Vocabulary extends EntityBase {
 
 	@Id
 	@Column(name="_vocab_key")
@@ -27,6 +30,7 @@ public class Vocabulary extends Base {
 	@Column(name="name")
 	public String name;
 	
+	@JsonIgnore
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
     public List<Term> terms;

@@ -12,7 +12,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Database Info Model Object")
 @Table(name="mgi_dbinfo")
-public class DatabaseInfo extends Base {
+public class DatabaseInfo extends EntityBase {
 
 	@Id
 	private String public_version;

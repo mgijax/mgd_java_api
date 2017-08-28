@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +21,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Term Model Object")
 @Table(name="voc_term")
-public class Term extends Base {
+public class Term extends EntityBase {
 
 	@Id
 	@Column(name="_term_key")
@@ -50,6 +52,7 @@ public class Term extends Base {
 	@OneToOne(targetEntity=User.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
+	
 	
 	@ManyToOne(targetEntity=Vocabulary.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")

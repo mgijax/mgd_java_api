@@ -8,7 +8,7 @@ import java.util.List;
  * 	the entities package) to be closer to the database and keeping the PWI's interactions as simple
  *	as possible
  */
-public class ReferenceBulkDomain {
+public class ReferenceBulkDomain extends DomainBase {
 	public List<Long> _refs_keys;
 	public String workflow_tag;
 	public String workflow_tag_operation;	// "add" or "remove"; "add" is the default

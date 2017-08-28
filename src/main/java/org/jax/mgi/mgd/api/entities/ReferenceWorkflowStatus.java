@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiModel;
 @Entity
 @ApiModel(value = "Reference Workflow Status Model Object")
 @Table(name="bib_workflow_status")
-public class ReferenceWorkflowStatus extends Base {
+public class ReferenceWorkflowStatus extends EntityBase {
 	@Id
 	@Column(name="_assoc_key")
 	public long _assoc_key;

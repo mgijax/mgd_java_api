@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
+import org.jax.mgi.mgd.api.domain.ReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.entities.User;
@@ -291,8 +292,8 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	/* get list of workflow status objects (current and historical) for the reference with the given key
 	 */
 	@Override
-	public SearchResults<ReferenceWorkflowStatus> getStatusHistoryByKey (String refsKey) {
-		SearchResults<ReferenceWorkflowStatus> results = new SearchResults<ReferenceWorkflowStatus>();
+	public SearchResults<ReferenceWorkflowStatusDomain> getStatusHistoryByKey (String refsKey) {
+		SearchResults<ReferenceWorkflowStatusDomain> results = new SearchResults<ReferenceWorkflowStatusDomain>();
 
 		// use lookup of reference to weed out and report parameter errors
 		SearchResults<ReferenceDomain> referenceResult = this.getReferenceByKey(refsKey);

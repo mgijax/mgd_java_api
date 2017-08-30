@@ -22,7 +22,7 @@ public class ReferenceService {
 	private ReferenceDAO referenceDAO;
 	
 	public Reference createReference(Reference reference) {
-		return referenceDAO.add(reference);
+		return referenceDAO.create(reference);
 	}
 
 	/* returns true if reference was updated, false if not; updates citation cache
@@ -55,7 +55,10 @@ public class ReferenceService {
 		if (results.status_code != Constants.HTTP_OK) {
 			return results;
 		}
-		return referenceDAO.delete(results.items.get(0));
+		SearchResults<Reference> ret = new SearchResults<Reference>();
+		ret.setItem(results.items.get(0));
+		referenceDAO.delete(results.items.get(0));
+		return ret;
 	}
 
 	public List<ReferenceWorkflowStatus> getStatusHistory(String refsKey) {

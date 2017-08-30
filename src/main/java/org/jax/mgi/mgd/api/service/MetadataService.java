@@ -1,23 +1,19 @@
 package org.jax.mgi.mgd.api.service;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
-import org.jax.mgi.mgd.api.dao.MarkerDAO;
-import org.jax.mgi.mgd.api.dao.PostgresSQLDAO;
+import org.jax.mgi.mgd.api.dao.MetadataDAO;
 import org.jax.mgi.mgd.api.domain.MetadataDomain;
-import org.jax.mgi.mgd.api.entities.Marker;
 
 @RequestScoped
 public class MetadataService {
 
 	@Inject
-	private PostgresSQLDAO postgresDAO;
+	private MetadataDAO postgresDAO;
 	
 	public MetadataDomain get() {
 		MetadataDomain md = new MetadataDomain();

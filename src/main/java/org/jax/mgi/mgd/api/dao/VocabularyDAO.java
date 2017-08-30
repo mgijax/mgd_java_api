@@ -7,8 +7,8 @@ import org.jax.mgi.mgd.api.entities.Vocabulary;
 @RequestScoped
 public class VocabularyDAO extends PostgresSQLDAO<Vocabulary> {
 
-	public VocabularyDAO() {
-		myClass = Vocabulary.class;
+	protected VocabularyDAO() {
+		super(Vocabulary.class);
 	}
 
 }

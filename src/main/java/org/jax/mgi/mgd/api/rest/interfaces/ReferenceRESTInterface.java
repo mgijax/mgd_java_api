@@ -274,6 +274,7 @@ public interface ReferenceRESTInterface {
 			
 			@ApiParam(value = "Value: (status history) date when status was set")
 			@QueryParam("sh_date") String sh_date
+			
 			);
 
 	@GET

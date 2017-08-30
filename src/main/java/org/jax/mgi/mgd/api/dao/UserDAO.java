@@ -17,7 +17,7 @@ import org.jax.mgi.mgd.api.entities.User;
 public class UserDAO extends PostgresSQLDAO<User> {
 
 	public UserDAO() {
-		myClass = User.class;
+		super(User.class);
 	}
 
 	/* get the User object for the given login, or null if unknown user

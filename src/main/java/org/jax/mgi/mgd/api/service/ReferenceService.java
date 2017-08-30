@@ -1,6 +1,7 @@
 
 package org.jax.mgi.mgd.api.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
+import org.jax.mgi.mgd.api.domain.ReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.entities.User;
@@ -61,7 +63,11 @@ public class ReferenceService {
 		return ret;
 	}
 
-	public List<ReferenceWorkflowStatus> getStatusHistory(String refsKey) {
-		return referenceDAO.getStatusHistory(refsKey);
+	public List<ReferenceWorkflowStatusDomain> getStatusHistory(String refsKey) {
+		List<ReferenceWorkflowStatusDomain> domainObjects = new ArrayList<ReferenceWorkflowStatusDomain>();
+		for (ReferenceWorkflowStatus rws : referenceDAO.getStatusHistory(refsKey)) {
+			domainObjects.add(new ReferenceWorkflowStatusDomain(rws));
+		}
+		return domainObjects;
 	}
 }

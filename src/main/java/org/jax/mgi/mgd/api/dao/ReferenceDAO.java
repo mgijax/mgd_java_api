@@ -37,15 +37,16 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 @RequestScoped
 public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 
+	protected ReferenceDAO() {
+		super(Reference.class);
+		// TODO Auto-generated constructor stub
+	}
+
 	// maps from search field name to workflow group abbreviation
 	private static Map<String,String> groups = null;
 
 	// maps from search field name to workflow group status
 	private static Map<String,String> statuses = null;
-	
-	public ReferenceDAO() {
-		myClass = Reference.class;
-	}
 
 	/* convenience method for instantiating a new search results object, populating its error fields, 
 	 * and returning it.

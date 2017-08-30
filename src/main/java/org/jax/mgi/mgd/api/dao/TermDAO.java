@@ -7,7 +7,8 @@ import org.jax.mgi.mgd.api.entities.Term;
 @RequestScoped
 public class TermDAO extends PostgresSQLDAO<Term> {
 
-	public TermDAO() {
-		myClass = Term.class;
+	protected TermDAO() {
+		super(Term.class);
 	}
+
 }

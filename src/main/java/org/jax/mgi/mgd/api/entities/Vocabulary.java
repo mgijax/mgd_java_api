@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,7 +32,7 @@ public class Vocabulary extends EntityBase {
 	public String name;
 	
 	@JsonIgnore
-	@OneToMany(fetch=FetchType.EAGER)
+	@OneToMany
 	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
     public List<Term> terms;
 }

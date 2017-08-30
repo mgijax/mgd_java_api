@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -45,16 +46,18 @@ public class Term extends EntityBase {
 	@Column(name="modification_date")
 	private Date modification_date;
 
-	@OneToOne(targetEntity=User.class, fetch=FetchType.EAGER)
+	@JsonIgnore
+	@OneToOne
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
-	
-	@OneToOne(targetEntity=User.class, fetch=FetchType.EAGER)
+
+	@JsonIgnore
+	@OneToOne
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	
-	@ManyToOne(targetEntity=Vocabulary.class, fetch=FetchType.EAGER)
+	@JsonIgnore
+	@ManyToOne
 	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
 	private Vocabulary vocab;
 }

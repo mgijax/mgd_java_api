@@ -25,25 +25,12 @@ import lombok.Setter;
 public class Term extends EntityBase {
 
 	@Id
-	@Column(name="_term_key")
 	private Integer _term_key;
-
-	@Column(name="term")
 	private String term;
-
-	@Column(name="abbreviation")
 	private String abbreviation;
-
-	@Column(name="sequenceNum")
 	private Integer sequenceNum;
-
-	@Column(name="isObsolete")
 	private Integer isObsolete;
-	
-	@Column(name="creation_date")
 	private Date creation_date;
-	
-	@Column(name="modification_date")
 	private Date modification_date;
 
 	@JsonIgnore

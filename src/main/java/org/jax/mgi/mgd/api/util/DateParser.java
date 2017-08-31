@@ -20,9 +20,9 @@ public class DateParser {
 
 	/***--- instance variables ---***/
 	
-	Pattern datePattern1 = Pattern.compile("[0-9]{2}\\/[0-9]{2}\\/[0-9]{4}");
-	Pattern datePattern2 = Pattern.compile("[0-9]{2}\\/[0-9]{2}\\/[0-9]{2}");
-	Pattern datePattern3 = Pattern.compile("[0-9]{4}\\/[0-9]{2}\\/[0-9]{2}");
+	Pattern datePattern1 = Pattern.compile("[0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4}");
+	Pattern datePattern2 = Pattern.compile("[0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{2}");
+	Pattern datePattern3 = Pattern.compile("[0-9]{4}\\/[0-9]{1,2}\\/[0-9]{1,2}");
 
 	private SimpleDateFormat dateFormat1 = new SimpleDateFormat("MM/dd/yyyy");
 	private SimpleDateFormat dateFormat2 = new SimpleDateFormat("MM/dd/yy");

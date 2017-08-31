@@ -47,17 +47,17 @@ public class Term extends EntityBase {
 	private Date modification_date;
 
 	@JsonIgnore
-	@OneToOne
+	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
 	@JsonIgnore
-	@OneToOne
+	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
 	@JsonIgnore
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
 	private Vocabulary vocab;
 }

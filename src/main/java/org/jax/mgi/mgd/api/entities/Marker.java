@@ -10,6 +10,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,14 +24,16 @@ public class Marker extends EntityBase {
 
 	@Id
 	private Long _marker_key;
-	
-	@OneToMany(mappedBy="_object_key", fetch=FetchType.EAGER)
-	@Where(clause="_mgitype_key = 2 AND preferred = 1")
-	private List<AccessionID> accessionIDs;
-
 	private String symbol;
 	private String name;
 	private String chromosome;
+	
+	
+	@JsonIgnore
+	@OneToMany(mappedBy="_object_key")
+	@Where(clause="_mgitype_key = 2 AND preferred = 1")
+	private List<AccessionID> accessionIDs;
+
 	
 	
 }

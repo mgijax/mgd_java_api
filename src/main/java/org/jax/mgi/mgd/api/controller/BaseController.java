@@ -21,17 +21,6 @@ public class BaseController {
 		}
 		return true;
 	}
-
-	/* get the User object corresponding to the given username (Linux login);
-	 * if not specified, fall back on mgd_dbo for now
-	 * TODO: remove this fallback once we get farther along in development
-	 */
-	protected User getUser(String username) {
-		if (username == null) {
-			username = "mgd_dbo";
-		}
-		return userService.getUser(username);
-	}
 	
 	/* convenience method to remove any String parameters that have an empty string as the value
 	 */

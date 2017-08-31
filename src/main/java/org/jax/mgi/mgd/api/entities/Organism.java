@@ -7,41 +7,32 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "User Model Object")
-@Table(name="mgi_user")
-public class User extends EntityBase {
+@ApiModel(value = "Organism Model Object")
+@Table(name="mgi_organism")
+public class Organism extends EntityBase {
+
 	@Id
-	@Column(name="_user_key")
-	private Integer _user_key;
+	@Column(name="_organism_key")
+	private Integer _organism_key;
+	
+	@Column(name="commonname")
+	private String commonname;
 
-	@Column(name="_usertype_key")
-	private Integer _usertype_key;
-
-	@Column(name="_userstatus_key")
-	private Integer _userstatus_key;
-	
-	@Column(name="login")
-	private String login;
-	
-	@Column(name="orcid")
-	private String orcid;
-	
-	@Column(name="name")
-	private String name;
-	
-	@Column(name="_group_key")
-	private Integer _group_key;
+	@Column(name="latinname")
+	private String latinname;
 	
 	@Column(name="creation_date")
 	private Date creation_date;
@@ -58,4 +49,5 @@ public class User extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
+	
 }

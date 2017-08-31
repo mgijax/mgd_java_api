@@ -34,8 +34,7 @@ public class ActualDB extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
-	//@JsonIgnore
-	@ManyToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_logicaldb_key", referencedColumnName="_logicaldb_key")
 	private LogicalDB logicaldb;
 	

@@ -24,14 +24,14 @@ public class Vocabulary extends EntityBase {
 
 	@Id
 	@Column(name="_vocab_key")
-	public Integer _vocab_key;
+	private Integer _vocab_key;
 
 	@Column(name="name")
-	public String name;
-	
+	private String name;
+
 	@JsonIgnore
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
-    public List<Term> terms;
+	private List<Term> terms;
 }
 

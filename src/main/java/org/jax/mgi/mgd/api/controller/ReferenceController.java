@@ -14,6 +14,7 @@ import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.rest.interfaces.ReferenceRESTInterface;
 import org.jax.mgi.mgd.api.service.ReferenceService;
+import org.jax.mgi.mgd.api.service.UserService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -25,6 +26,9 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	@Inject
 	private ReferenceService referenceService;
 	
+	@Inject
+	private UserService userService;
+	
 	private Logger log = Logger.getLogger(getClass());
 
 	/***--- methods ---***/
@@ -33,7 +37,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	 */
 	@Override
 	public Reference createReference(String api_access_token, String username, Reference reference) {
-		User currentUser = this.getUser(username);
+		User currentUser = userService.getUser(username);
 		if (currentUser != null) {
 			return referenceService.createReference(reference);
 		}
@@ -51,7 +55,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 			return results;
 		}
 
-		User currentUser = this.getUser(username);
+		User currentUser = userService.getUser(username);
 		if (currentUser != null) {
 			try {
 				// The updateReference method does not return the updated reference, as the method must finish
@@ -80,7 +84,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 			return results;
 		}
 
-		User currentUser = this.getUser(username);
+		User currentUser = userService.getUser(username);
 		if (currentUser != null) {
 			try {
 				// The updateReference method does not return the updated reference, as the method must finish
@@ -282,7 +286,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	 */
 	@Override
 	public SearchResults<Reference> deleteReference(String api_access_token, String username, String id) {
-		User currentUser = this.getUser(username);
+		User currentUser = userService.getUser(username);
 		if (currentUser != null) {
 			return referenceService.deleteReference(id);
 		}

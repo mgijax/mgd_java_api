@@ -25,19 +25,10 @@ import lombok.Setter;
 public class Organism extends EntityBase {
 
 	@Id
-	@Column(name="_organism_key")
 	private Integer _organism_key;
-	
-	@Column(name="commonname")
 	private String commonname;
-
-	@Column(name="latinname")
 	private String latinname;
-	
-	@Column(name="creation_date")
 	private Date creation_date;
-	
-	@Column(name="modification_date")
 	private Date modification_date;
 
 	@JsonIgnore

@@ -25,35 +25,20 @@ import lombok.Setter;
 public class ActualDB extends EntityBase {
 
 	@Id
-	@Column(name="_actualdb_key")
 	private Integer _actualdb_key;
-	
-	@Column(name="name")
 	private String name;
-
-	@Column(name="active")
 	private Integer active;
-
-	@Column(name="url")
 	private String url;
-
-	@Column(name="allowsmultiple")
 	private Integer allowsmultiple;
-	
-	@Column(name="delimiter")
 	private String delimiter;
+	private Date creation_date;
+	private Date modification_date;
 	
-	@JsonIgnore
+	//@JsonIgnore
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_logicaldb_key", referencedColumnName="_logicaldb_key")
 	private LogicalDB logicaldb;
 	
-	@Column(name="creation_date")
-	private Date creation_date;
-	
-	@Column(name="modification_date")
-	private Date modification_date;
-
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

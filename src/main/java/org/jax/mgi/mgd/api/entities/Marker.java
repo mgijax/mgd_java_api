@@ -23,17 +23,13 @@ import lombok.Setter;
 public class Marker extends EntityBase {
 
 	@Id
-	private Long _marker_key;
+	private Integer _marker_key;
 	private String symbol;
 	private String name;
 	private String chromosome;
-	
 	
 	@JsonIgnore
 	@OneToMany(mappedBy="_object_key")
 	@Where(clause="_mgitype_key = 2 AND preferred = 1")
 	private List<AccessionID> accessionIDs;
-
-	
-	
 }

@@ -22,33 +22,25 @@ import lombok.Setter;
 @Table(name="mgi_user")
 public class User extends EntityBase {
 	@Id
-	@Column(name="_user_key")
 	private Integer _user_key;
-
-	@Column(name="_usertype_key")
-	private Integer _usertype_key;
-
-	@Column(name="_userstatus_key")
-	private Integer _userstatus_key;
-	
-	@Column(name="login")
 	private String login;
-	
-	@Column(name="orcid")
 	private String orcid;
-	
-	@Column(name="name")
 	private String name;
-	
-	@Column(name="_group_key")
-	private Integer _group_key;
-	
-	@Column(name="creation_date")
 	private Date creation_date;
-	
-	@Column(name="modification_date")
 	private Date modification_date;
 
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_usertype_key", referencedColumnName="_term_key")
+	private Term userType;
+	
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_userstatus_key", referencedColumnName="_term_key")
+	private Term userStatus;
+	
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_group_key", referencedColumnName="_term_key")
+	private Term group;
+	
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

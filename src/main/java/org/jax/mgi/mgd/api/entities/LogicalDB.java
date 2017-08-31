@@ -25,25 +25,16 @@ import lombok.Setter;
 public class LogicalDB extends EntityBase {
 
 	@Id
-	@Column(name="_logicaldb_key")
 	private Integer _logicaldb_key;
-	
-	@Column(name="name")
 	private String name;
-
-	@Column(name="description")
 	private String description;
+	private Date creation_date;
+	private Date modification_date;
 	
-	@JsonIgnore
+	//@JsonIgnore
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_organism_key", referencedColumnName="_organism_key")
 	private Organism organism;
-	
-	@Column(name="creation_date")
-	private Date creation_date;
-	
-	@Column(name="modification_date")
-	private Date modification_date;
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)

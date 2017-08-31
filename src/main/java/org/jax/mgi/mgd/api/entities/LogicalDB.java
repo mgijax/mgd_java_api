@@ -34,8 +34,10 @@ public class LogicalDB extends EntityBase {
 	@Column(name="description")
 	private String description;
 	
-	@Column(name="_organism_key")
-	private Integer _organism_key;
+	@JsonIgnore
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_organism_key", referencedColumnName="_organism_key")
+	private Organism organism;
 	
 	@Column(name="creation_date")
 	private Date creation_date;
@@ -52,5 +54,4 @@ public class LogicalDB extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
-	
 }

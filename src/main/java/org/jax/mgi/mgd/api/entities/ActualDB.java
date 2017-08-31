@@ -27,9 +27,6 @@ public class ActualDB extends EntityBase {
 	@Id
 	@Column(name="_actualdb_key")
 	private Integer _actualdb_key;
-
-	@Column(name="_logicaldb_key")
-	private String _logicaldb_key;
 	
 	@Column(name="name")
 	private String name;
@@ -46,6 +43,11 @@ public class ActualDB extends EntityBase {
 	@Column(name="delimiter")
 	private String delimiter;
 	
+	@JsonIgnore
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_logicaldb_key", referencedColumnName="_logicaldb_key")
+	private LogicalDB logicaldb;
+	
 	@Column(name="creation_date")
 	private Date creation_date;
 	
@@ -61,9 +63,4 @@ public class ActualDB extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
-	
-	//@JsonIgnore
-	//@ManyToOne(fetch=FetchType.EAGER)
-	//@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
-	//private Vocabulary vocab;
 }

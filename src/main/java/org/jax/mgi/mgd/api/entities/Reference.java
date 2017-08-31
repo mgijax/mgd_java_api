@@ -517,6 +517,13 @@ public class Reference extends EntityBase {
 		return (toDelete.size() > 0) || (toAdd.size() > 0);
 	}
 	
+	/* set the reference's modification date to be 'now' and modified-by user to be 'currentUser'
+	 */
+	public void setModificationInfo(User currentUser) {
+		this.modification_date = new Date();
+		this.modifiedByUser = currentUser; 
+	}
+	
 	/* method for removing a workflow tag for this Reference (no-op if this ref doesn't have the tag)
 	 */
 	@Transient
@@ -527,6 +534,7 @@ public class Reference extends EntityBase {
 		for (ReferenceWorkflowTag refTag : this.workflowTags) {
 			if (lowerTag.equals(refTag.tag.getTerm().toLowerCase()) ) {
 				refDAO.remove(refTag);
+				this.setModificationInfo(currentUser);
 				return;
 			}
 		}
@@ -563,6 +571,7 @@ public class Reference extends EntityBase {
 				refDAO.persist(rwTag);
 				
 				this.workflowTags.add(rwTag);
+				this.setModificationInfo(currentUser);
 			}
 		}
 	}
@@ -883,8 +892,7 @@ public class Reference extends EntityBase {
 			this.pages = rd.pages;
 			this.ref_abstract = rd.ref_abstract;
 			this.referenceTypeTerm = refDAO.getTermByTerm(Constants.VOC_REFERENCE_TYPE, rd.reference_type);
-			this.modification_date = new Date();
-			this.modifiedByUser = currentUser;
+			this.setModificationInfo(currentUser);
 			anyChanges = true;
 		}
 
@@ -907,6 +915,9 @@ public class Reference extends EntityBase {
 		anyChanges = applyNoteChanges(rd, refDAO, currentUser) | anyChanges;
 		anyChanges = applyAccessionIDChanges(rd, refDAO, currentUser) || anyChanges;
 		anyChanges = applyWorkflowDataChanges(rd, refDAO, currentUser) || anyChanges;
+		if (anyChanges) {
+			this.setModificationInfo(currentUser);
+		}
 	}
 	
 	/* If this reference is of type Book, return an object with the extra book-related data (if one exists);

@@ -907,6 +907,10 @@ public class Reference extends EntityBase {
 		anyChanges = applyNoteChanges(rd, refDAO, currentUser) | anyChanges;
 		anyChanges = applyAccessionIDChanges(rd, refDAO, currentUser) || anyChanges;
 		anyChanges = applyWorkflowDataChanges(rd, refDAO, currentUser) || anyChanges;
+		if (anyChanges) {
+			this.modification_date = new Date();
+			this.modifiedByUser = currentUser;
+		}
 	}
 	
 	/* If this reference is of type Book, return an object with the extra book-related data (if one exists);

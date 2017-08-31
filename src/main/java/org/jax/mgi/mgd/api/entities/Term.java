@@ -26,7 +26,7 @@ public class Term extends EntityBase {
 
 	@Id
 	@Column(name="_term_key")
-	private Long _term_key;
+	private Integer _term_key;
 
 	@Column(name="term")
 	private String term;

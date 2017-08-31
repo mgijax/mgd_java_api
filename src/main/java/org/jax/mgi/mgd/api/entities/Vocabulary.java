@@ -24,7 +24,7 @@ public class Vocabulary extends EntityBase {
 
 	@Id
 	@Column(name="_vocab_key")
-	public Long _vocab_key;
+	public Integer _vocab_key;
 
 	@Column(name="name")
 	public String name;

@@ -12,7 +12,7 @@ import lombok.Setter;
 @ApiModel
 public class TermDomain extends DomainBase {
 
-	private Long _term_key;
+	private Integer _term_key;
 	private String term;
 	private String abbreviation;
 	private Integer sequenceNum;

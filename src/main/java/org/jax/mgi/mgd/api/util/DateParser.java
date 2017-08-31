@@ -1,9 +1,7 @@
 package org.jax.mgi.mgd.api.util;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -22,6 +20,10 @@ public class DateParser {
 
 	/***--- instance variables ---***/
 	
+	Pattern datePattern1 = Pattern.compile("[0-9]{2}\\/[0-9]{2}\\/[0-9]{4}");
+	Pattern datePattern2 = Pattern.compile("[0-9]{2}\\/[0-9]{2}\\/[0-9]{2}");
+	Pattern datePattern3 = Pattern.compile("[0-9]{4}\\/[0-9]{2}\\/[0-9]{2}");
+
 	private SimpleDateFormat dateFormat1 = new SimpleDateFormat("MM/dd/yyyy");
 	private SimpleDateFormat dateFormat2 = new SimpleDateFormat("MM/dd/yy");
 	private SimpleDateFormat dateFormat3 = new SimpleDateFormat("yyyy/MM/dd");
@@ -36,7 +38,7 @@ public class DateParser {
 	 * Recognized date formats include: mm-dd-yyyy, mm/dd/yyyy, mm-dd-yy, mm/dd/yy, yyyy-mm-dd, yyyy/mm/dd.
 	 * Output dates will always be in mm/dd/yyyy format.
 	 */
-	public List<String> parse(String date) throws ParseException {
+	public List<String> parse(String date) throws Exception {
 		// eliminate any spaces in the date, and convert hyphens to slashes for the sake of uniformity
 		String cleanDate = date.replaceAll(" ", "").replaceAll("-", "/");
 		List<String> output = new ArrayList<String>();
@@ -71,15 +73,18 @@ public class DateParser {
 	
 	/* convert the given date in mm/dd/yyyy, mm/dd/yy, or yyyy/mm/dd to a standard mm/dd/yyyy format
 	 */
-	private String standardizeFormat(String datePart) throws ParseException{
-		try {
+	private String standardizeFormat(String datePart) throws Exception{
+		if (datePattern1.matcher(datePart).matches()) {
 			return dateFormat1.format(dateFormat1.parse(datePart));
-		} catch (Throwable t) {}
+		}
 
-		try {
+		if (datePattern2.matcher(datePart).matches()) {
 			return dateFormat1.format(dateFormat2.parse(datePart));
-		} catch (Throwable t) {}
+		}
 
-		return dateFormat1.format(dateFormat3.parse(datePart));
+		if (datePattern3.matcher(datePart).matches()) {
+			return dateFormat1.format(dateFormat3.parse(datePart));
+		}
+		throw new Exception("Cannot parse date: " + datePart);
 	}
 }

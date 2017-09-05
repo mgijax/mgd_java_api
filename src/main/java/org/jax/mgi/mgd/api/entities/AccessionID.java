@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.entities;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -19,7 +18,7 @@ import lombok.Setter;
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor 
 @Entity
 @Table(name="acc_accession")
-public class AccessionID extends EntityBase implements Serializable {
+public class AccessionID extends EntityBase {
 	@Id
 	@Column(name="_accession_key")
 	private long _accession_key;

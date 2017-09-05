@@ -34,4 +34,3 @@ public class Vocabulary extends EntityBase {
 	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
 	private List<Term> terms;
 }
-

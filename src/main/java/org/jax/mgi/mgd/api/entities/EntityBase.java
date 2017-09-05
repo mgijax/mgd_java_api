@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 
 public class EntityBase implements Serializable {
-	
+
 	protected SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss");
 
 }

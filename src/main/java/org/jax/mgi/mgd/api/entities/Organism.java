@@ -47,7 +47,6 @@ public class Organism extends EntityBase {
 		joinColumns = @JoinColumn(name = "_organism_key"),
 		inverseJoinColumns = @JoinColumn(name = "_mgitype_key")
 	)
-	//@OrderColumn(name="sequencenum")
 	private List<MGIType> mgiTypes;
 
 }

@@ -47,4 +47,6 @@ public class Term extends EntityBase {
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
 	private Vocabulary vocab;
+	
+	
 }

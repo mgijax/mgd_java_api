@@ -1,20 +1,22 @@
 package org.jax.mgi.mgd.api.entities;
 
 import java.util.Date;
+import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,5 +42,14 @@ public class Organism extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
+	
+	@JsonIgnore
+	@ManyToMany(fetch=FetchType.EAGER)
+	@JoinTable(name = "mgi_organism_mgitype",
+		joinColumns = @JoinColumn(name = "_organism_key"),
+		inverseJoinColumns = @JoinColumn(name = "_mgitype_key")
+	)
+	//@OrderColumn(name="sequencenum")
+	private List<MGIType> mgiTypes;
 
 }

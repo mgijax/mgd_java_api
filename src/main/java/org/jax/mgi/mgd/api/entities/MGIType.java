@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -49,7 +50,7 @@ public class MGIType extends EntityBase {
 		joinColumns = @JoinColumn(name = "_mgitype_key"),
 		inverseJoinColumns = @JoinColumn(name = "_organism_key")
 	)
-	//@OrderBy(value="sequencenum")
+	@OrderColumn(name="sequencenum")
 	private List<Organism> organisms;
 
 }

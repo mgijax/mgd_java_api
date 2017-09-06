@@ -16,5 +16,6 @@ echo "swarm.http.port=8099" >> ${PROP_FILE}
 echo "swarm.ds.username=${MGD_DBUSER}" >> ${PROP_FILE}
 echo "swarm.ds.password=`cat ${PG_1LINE_PASSFILE}`" >> ${PROP_FILE}
 echo "swarm.ds.connection.url=${MGD_JDBC_URL}" >> ${PROP_FILE}
+echo "swarm.access_token=myDefaultToken" >> ${PROP_FILE}
 
 make all

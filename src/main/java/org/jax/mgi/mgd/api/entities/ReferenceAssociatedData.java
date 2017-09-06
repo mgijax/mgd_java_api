@@ -10,7 +10,7 @@ import io.swagger.annotations.ApiModel;
 @Entity
 @ApiModel(value = "Reference Associated Data Model Object")
 @Table(name="bib_associateddata_view")
-public class ReferenceAssociatedData extends Base {
+public class ReferenceAssociatedData extends EntityBase {
 	@Id
 	@Column(name="_refs_key")
 	public long _refs_key;

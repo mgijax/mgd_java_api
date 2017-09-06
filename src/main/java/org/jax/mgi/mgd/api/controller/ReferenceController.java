@@ -8,11 +8,13 @@ import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
+import org.jax.mgi.mgd.api.domain.ReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.rest.interfaces.ReferenceRESTInterface;
 import org.jax.mgi.mgd.api.service.ReferenceService;
+import org.jax.mgi.mgd.api.service.UserService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -24,6 +26,9 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	@Inject
 	private ReferenceService referenceService;
 	
+	@Inject
+	private UserService userService;
+	
 	private Logger log = Logger.getLogger(getClass());
 
 	/***--- methods ---***/
@@ -32,7 +37,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	 */
 	@Override
 	public Reference createReference(String api_access_token, String username, Reference reference) {
-		User currentUser = this.getUser(username);
+		User currentUser = userService.getUser(username);
 		if (currentUser != null) {
 			return referenceService.createReference(reference);
 		}
@@ -50,7 +55,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 			return results;
 		}
 
-		User currentUser = this.getUser(username);
+		User currentUser = userService.getUser(username);
 		if (currentUser != null) {
 			try {
 				// The updateReference method does not return the updated reference, as the method must finish
@@ -60,7 +65,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 				referenceService.updateReference(reference, currentUser);
 				return this.getReferenceByKey(reference._refs_key.toString());
 			} catch (Throwable t) {
-				results.setError("Failed", "Failed to save changes", Constants.HTTP_SERVER_ERROR);
+				results.setError("Failed", "Failed to save changes (" + t.getMessage() + ")", Constants.HTTP_SERVER_ERROR);
 			}
 		} else {
 			results.setError("FailedAuthentication", "Failed - invalid username", Constants.HTTP_PERMISSION_DENIED);
@@ -79,7 +84,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 			return results;
 		}
 
-		User currentUser = this.getUser(username);
+		User currentUser = userService.getUser(username);
 		if (currentUser != null) {
 			try {
 				// The updateReference method does not return the updated reference, as the method must finish
@@ -281,7 +286,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	 */
 	@Override
 	public SearchResults<Reference> deleteReference(String api_access_token, String username, String id) {
-		User currentUser = this.getUser(username);
+		User currentUser = userService.getUser(username);
 		if (currentUser != null) {
 			return referenceService.deleteReference(id);
 		}
@@ -291,8 +296,8 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	/* get list of workflow status objects (current and historical) for the reference with the given key
 	 */
 	@Override
-	public SearchResults<ReferenceWorkflowStatus> getStatusHistoryByKey (String refsKey) {
-		SearchResults<ReferenceWorkflowStatus> results = new SearchResults<ReferenceWorkflowStatus>();
+	public SearchResults<ReferenceWorkflowStatusDomain> getStatusHistoryByKey (String refsKey) {
+		SearchResults<ReferenceWorkflowStatusDomain> results = new SearchResults<ReferenceWorkflowStatusDomain>();
 
 		// use lookup of reference to weed out and report parameter errors
 		SearchResults<ReferenceDomain> referenceResult = this.getReferenceByKey(refsKey);

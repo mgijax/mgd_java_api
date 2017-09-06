@@ -1,23 +1,53 @@
 package org.jax.mgi.mgd.api.entities;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import io.swagger.annotations.ApiModel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.swagger.annotations.ApiModel;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter @Setter
 @Entity
 @ApiModel(value = "User Model Object")
 @Table(name="mgi_user")
-public class User extends Base {
+public class User extends EntityBase {
 	@Id
-	@Column(name="_user_key")
-	public int _user_key;
+	private Integer _user_key;
+	private String login;
+	private String orcid;
+	private String name;
+	private Date creation_date;
+	private Date modification_date;
 
-	@Column(name="login")
-	public String login;
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_usertype_key", referencedColumnName="_term_key")
+	private Term userType;
+	
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_userstatus_key", referencedColumnName="_term_key")
+	private Term userStatus;
+	
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_group_key", referencedColumnName="_term_key")
+	private Term group;
+	
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
+	private User createdBy;
 
-	@Column(name="name")
-	public String name;
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
+	private User modifiedBy;
 }

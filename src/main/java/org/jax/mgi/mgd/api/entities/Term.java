@@ -4,37 +4,49 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter @Setter
 @Entity
-@ApiModel(value = "Vocabulary Term Model Object")
+@ApiModel(value = "Term Model Object")
 @Table(name="voc_term")
-public class Term extends Base {
+public class Term extends EntityBase {
 
 	@Id
-	@Column(name="_Term_key")
-	public Long _term_key;
-	
-	@Column(name="term")
-	public String term;
+	private Integer _term_key;
+	private String term;
+	private String abbreviation;
+	private Integer sequenceNum;
+	private Integer isObsolete;
+	private Date creation_date;
+	private Date modification_date;
 
-	@Column(name="abbreviation")
-	public String abbreviation;
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
+	private User createdBy;
 
-	@Column(name="sequenceNum")
-	public Integer sequenceNum;
-
-	@Column(name="isObsolete")
-	public Integer isObsolete;
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
+	private User modifiedBy;
 	
-	@Column(name="_vocab_key")
-	public Long _vocab_key;
+	@JsonIgnore
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
+	private Vocabulary vocab;
 	
-	@Column(name="creation_date")
-	public Date creation_date;
 	
 }

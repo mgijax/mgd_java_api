@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
+import org.jax.mgi.mgd.api.domain.ReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -274,6 +275,7 @@ public interface ReferenceRESTInterface {
 			
 			@ApiParam(value = "Value: (status history) date when status was set")
 			@QueryParam("sh_date") String sh_date
+			
 			);
 
 	@GET
@@ -286,7 +288,7 @@ public interface ReferenceRESTInterface {
 	@GET
 	@Path("/statusHistory/{refsKey}")
 	@ApiOperation(value = "Value: Retrieve the status history for a Reference by reference key")
-	public SearchResults<ReferenceWorkflowStatus> getStatusHistoryByKey (
+	public SearchResults<ReferenceWorkflowStatusDomain> getStatusHistoryByKey (
 			@ApiParam(value = "Value: This identifies the desired reference key")
 			@PathParam("refsKey") String refsKey);
 

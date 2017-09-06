@@ -22,7 +22,6 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.entities.AccessionID;
-import org.jax.mgi.mgd.api.entities.AccessionMax;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceAlleleAssociation;
 import org.jax.mgi.mgd.api.entities.ReferenceMarkerAssociation;
@@ -38,15 +37,16 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 @RequestScoped
 public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 
+	protected ReferenceDAO() {
+		super(Reference.class);
+		// TODO Auto-generated constructor stub
+	}
+
 	// maps from search field name to workflow group abbreviation
 	private static Map<String,String> groups = null;
 
 	// maps from search field name to workflow group status
 	private static Map<String,String> statuses = null;
-	
-	public ReferenceDAO() {
-		myClass = Reference.class;
-	}
 
 	/* convenience method for instantiating a new search results object, populating its error fields, 
 	 * and returning it.
@@ -60,7 +60,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	/* query handling specific for references.  Some fields are within the table backing Reference,
 	 * while others are coming from related tables.
 	 */
-	public SearchResults<Reference> get(HashMap<String, Object> params) {
+	public SearchResults<Reference> search(HashMap<String, Object> params) {
 		// query parameters existing in main reference table
 		List<String> internalParameters = new ArrayList<String>(Arrays.asList(
 			new String[] { "issue", "pages", "date", "ref_abstract", "isReviewArticle", "title",
@@ -576,29 +576,21 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		return this.getNextKey("ReferenceWorkflowTag", "_assoc_key");
 	}
 	
-	/* get the next available J#
-	 */
-	public synchronized Long getNextJnum() {
-		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<AccessionMax> query = builder.createQuery(AccessionMax.class);
-		Root<AccessionMax> root = query.from(AccessionMax.class);
-		query.where(builder.equal(root.get("prefixPart"), Constants.PREFIX_JNUM));
-		AccessionMax accMax = entityManager.createQuery(query).getSingleResult();
-		if (accMax == null) {
-			return null;
-		}
-		
-		accMax.maxNumericPart = accMax.maxNumericPart + 1;
-		accMax.modification_date = new Date();
-		this.persist(accMax);
-		
-		return accMax.maxNumericPart;
-	}
-
 	/* update the bib_citation_cache table for the given reference key
 	 */
 	public void updateCitationCache(long refsKey) {
-		Query query = entityManager.createNativeQuery("select * from BIB_reloadCache(" + refsKey + ")");
+		// returns an integer rather than *, as the void return was causing a mapping exception
+		Query query = entityManager.createNativeQuery("select count(1) from BIB_reloadCache(" + refsKey + ")");
+		query.getResultList();
+		return;
+	}
+
+	/* add a new J: number for the given reference key and user key
+	 */
+	public void assignNewJnumID(long refsKey, int userKey) throws Exception {
+		int intRefsKey = Integer.parseInt(refsKey + "");
+		// returns an integer rather than *, as the void return was causing a mapping exception
+		Query query = entityManager.createNativeQuery("select count(1) from ACC_assignJ(" + userKey + "," + intRefsKey + ")");
 		query.getResultList();
 		return;
 	}

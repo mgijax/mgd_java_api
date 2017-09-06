@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,6 +29,7 @@ public class Term extends EntityBase {
 	private Integer _term_key;
 	private String term;
 	private String abbreviation;
+	@OrderBy
 	private Integer sequenceNum;
 	private Integer isObsolete;
 	private Date creation_date;

@@ -31,8 +31,11 @@ import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jboss.logging.Logger;
 
+import lombok.Getter;
+import lombok.Setter;
 import io.swagger.annotations.ApiModel;
 
+@Getter @Setter
 @Entity
 @ApiModel(value = "Reference Model Object")
 @Table(name="bib_refs")
@@ -43,57 +46,57 @@ public class Reference extends EntityBase {
 
 	@Id
 	@Column(name="_Refs_key")
-	public Long _refs_key;
+	private Long _refs_key;
 	
 	@Column(name="authors")
-	public String authors;
+	private String authors;
 
 	@Column(name="_primary")
-	public String primary_author;
+	private String primary_author;
 
 	@Column(name="title")
-	public String title;
+	private String title;
 
 	@Column(name="journal")
-	public String journal;
+	private String journal;
 	
 	@Column(name="vol")
-	public String volume;
+	private String volume;
 
 	@Column(name="issue")
-	public String issue;
+	private String issue;
 	
 	@Column(name="date")
-	public String date;
+	private String date;
 	
 	@Column(name="year")
-	public Integer year;
+	private Integer year;
 
 	@Column(name="pgs")
-	public String pages;
+	private String pages;
 	
 	@Column(name="abstract")
-	public String ref_abstract;		// just "abstract" is a Java reserved word, so need a prefix
+	private String ref_abstract;		// just "abstract" is a Java reserved word, so need a prefix
 	
 	@Column(name="isReviewArticle")
-	public int isReviewArticle;
+	private int isReviewArticle;
 
 	@Column(name="isDiscard")
-	public int is_discard;
+	private int is_discard;
 
 	@Column(name="creation_date")
-	public Date creation_date;
+	private Date creation_date;
 	
 	@Column(name="modification_date")
-	public Date modification_date;
+	private Date modification_date;
 
 	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
-	public User createdByUser;
+	private User createdByUser;
 	
 	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
-	public User modifiedByUser;
+	private User modifiedByUser;
 
 	// maps workflow group abbrev to current status for that group, cached in memory for efficiency - not persisted
 	@Transient
@@ -150,7 +153,7 @@ public class Reference extends EntityBase {
 	// one to one, because counts will always exist
 	@OneToOne (targetEntity=ReferenceAssociatedData.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
-	public ReferenceAssociatedData associatedData;
+	private ReferenceAssociatedData associatedData;
 
 	// one to many, in case record is missing (leaving it 1-0)
 	@OneToMany (targetEntity=ReferenceWorkflowData.class, fetch=FetchType.EAGER)
@@ -184,7 +187,7 @@ public class Reference extends EntityBase {
 	public String getReferencenote() {
 		List<ReferenceNote> rn = this.notes;
 		if ((rn != null) && (rn.size() > 0)) {
-			return rn.get(0).note;
+			return rn.get(0).getNote();
 		}
 		return null;
 	}
@@ -224,7 +227,7 @@ public class Reference extends EntityBase {
 	public List<String> getWorkflowTags() {
 		List<String> tags = new ArrayList<String>();
 		for (ReferenceWorkflowTag rwTag : this.workflowTags) {
-			tags.add(rwTag.tag.getTerm());
+			tags.add(rwTag.getTag().getTerm());
 		}
 		Collections.sort(tags);
 		return tags;
@@ -234,7 +237,7 @@ public class Reference extends EntityBase {
 	private void buildWorkflowStatusCache() {
 		workflowStatusCache = new HashMap<String,String>();
 		for (ReferenceWorkflowStatus rws : this.workflowStatuses) {
-			if (rws.isCurrent == 1) {
+			if (rws.getIsCurrent() == 1) {
 				workflowStatusCache.put(rws.getGroupAbbreviation(), rws.getStatus());
 			}
 		}
@@ -394,8 +397,8 @@ public class Reference extends EntityBase {
 		// to flag it as not current.
 		if (currentStatus != null) {
 			for (ReferenceWorkflowStatus rws : this.workflowStatuses) {
-				if ( (rws.isCurrent == 1) && groupAbbrev.equals(rws.getGroupAbbreviation()) ) {
-					rws.isCurrent = 0;
+				if ( (rws.getIsCurrent() == 1) && groupAbbrev.equals(rws.getGroupAbbreviation()) ) {
+					rws.setIsCurrent(0);
 					break;				// no more can match, so exit the loop
 				}
 			}
@@ -405,15 +408,15 @@ public class Reference extends EntityBase {
 		// database explicitly, before the whole reference gets persisted later on.
 		
 		ReferenceWorkflowStatus newRws = new ReferenceWorkflowStatus();
-		newRws._assoc_key = refDAO.getNextWorkflowStatusKey();
-		newRws._refs_key = this._refs_key;
-		newRws.isCurrent = 1;
-		newRws.groupTerm = refDAO.getTermByAbbreviation(Constants.VOC_WORKFLOW_GROUP, groupAbbrev);
-		newRws.statusTerm = refDAO.getTermByTerm(Constants.VOC_WORKFLOW_STATUS, newStatus);
-		newRws.createdByUser = currentUser;
-		newRws.modifiedByUser = newRws.createdByUser;
-		newRws.creation_date = new Date();
-		newRws.modification_date = newRws.creation_date;
+		newRws.set_assoc_key(refDAO.getNextWorkflowStatusKey());
+		newRws.set_refs_key(this._refs_key);
+		newRws.setIsCurrent(1);
+		newRws.setGroupTerm(refDAO.getTermByAbbreviation(Constants.VOC_WORKFLOW_GROUP, groupAbbrev));
+		newRws.setStatusTerm(refDAO.getTermByTerm(Constants.VOC_WORKFLOW_STATUS, newStatus));
+		newRws.setCreatedByUser(currentUser);
+		newRws.setModifiedByUser(newRws.getCreatedByUser());
+		newRws.setCreation_date(new Date());
+		newRws.setModification_date(newRws.getCreation_date());
 		refDAO.persist(newRws);
 
 		this.workflowStatuses.add(newRws);
@@ -488,7 +491,7 @@ public class Reference extends EntityBase {
 		// left in toAdd will need to be added as a new tag, and anything in toDelete will need to be removed.
 		
 		for (ReferenceWorkflowTag refTag : this.workflowTags) {
-			String lowerTag = refTag.tag.getTerm().toLowerCase();
+			String lowerTag = refTag.getTag().getTerm().toLowerCase();
 
 			// matching tags
 			if (toAdd.contains(lowerTag)) {
@@ -532,7 +535,7 @@ public class Reference extends EntityBase {
 		
 		String lowerTag = rdTag.toLowerCase().trim();
 		for (ReferenceWorkflowTag refTag : this.workflowTags) {
-			if (lowerTag.equals(refTag.tag.getTerm().toLowerCase()) ) {
+			if (lowerTag.equals(refTag.getTag().getTerm().toLowerCase()) ) {
 				refDAO.remove(refTag);
 				this.setModificationInfo(currentUser);
 				return;
@@ -549,7 +552,7 @@ public class Reference extends EntityBase {
 
 		String lowerTag = rdTag.toLowerCase().trim();
 		for (ReferenceWorkflowTag refTag : this.workflowTags) {
-			if (lowerTag.equals(refTag.tag.getTerm().toLowerCase()) ) {
+			if (lowerTag.equals(refTag.getTag().getTerm().toLowerCase()) ) {
 				return;
 			}
 		}
@@ -561,13 +564,13 @@ public class Reference extends EntityBase {
 		if (tagTerm != null) {
 			if (!this.workflowTags.contains(tagTerm)) {
 				ReferenceWorkflowTag rwTag = new ReferenceWorkflowTag();
-				rwTag._assoc_key = refDAO.getNextWorkflowTagKey();
-				rwTag._refs_key = this._refs_key;
-				rwTag.tag = tagTerm;
-				rwTag.createdByUser = currentUser;
-				rwTag.modifiedByUser = rwTag.createdByUser;
-				rwTag.creation_date = new Date();
-				rwTag.modification_date = rwTag.creation_date;
+				rwTag.set_assoc_key(refDAO.getNextWorkflowTagKey());
+				rwTag.set_refs_key(this._refs_key);
+				rwTag.setTag(tagTerm);
+				rwTag.setCreatedByUser(currentUser);
+				rwTag.setModifiedByUser(rwTag.getCreatedByUser());
+				rwTag.setCreation_date(new Date());
+				rwTag.setModification_date(rwTag.getCreation_date());
 				refDAO.persist(rwTag);
 				
 				this.workflowTags.add(rwTag);
@@ -598,12 +601,12 @@ public class Reference extends EntityBase {
 			// has-PDF flag, as those are updated by other processes.
 			
 			if (!smartEqual(myWD.getSupplemental(), rd.has_supplemental)
-				|| !smartEqual(myWD.link_supplemental, rd.link_to_supplemental)) {
+				|| !smartEqual(myWD.getLink_supplemental(), rd.link_to_supplemental)) {
 				
-				myWD.supplementalTerm = refDAO.getTermByTerm(Constants.VOC_SUPPLEMENTAL, rd.has_supplemental);
-				myWD.link_supplemental = rd.link_to_supplemental;
-				myWD.modifiedByUser = currentUser;
-				myWD.modification_date = new Date();
+				myWD.setSupplementalTerm(refDAO.getTermByTerm(Constants.VOC_SUPPLEMENTAL, rd.has_supplemental));
+				myWD.setLink_supplemental(rd.link_to_supplemental);
+				myWD.setModifiedByUser(currentUser);
+				myWD.setModification_date(new Date());
 				anyChanges = true;
 			}
 			
@@ -611,15 +614,15 @@ public class Reference extends EntityBase {
 			// For some reason, no workflow data record exists.  So, create one.
 
 			myWD = new ReferenceWorkflowData();
-			myWD._refs_key = this._refs_key;
-			myWD.has_pdf = 0;
-			myWD.supplementalTerm = refDAO.getTermByTerm(Constants.VOC_SUPPLEMENTAL, rd.has_supplemental);
-			myWD.link_supplemental = rd.link_to_supplemental;
-			myWD.extracted_text = null;
-			myWD.createdByUser = currentUser;
-			myWD.modifiedByUser = this.createdByUser;
-			myWD.creation_date = new Date();
-			myWD.modification_date = myWD.creation_date; 
+			myWD.set_refs_key(this._refs_key);
+			myWD.setHas_pdf(0);
+			myWD.setSupplementalTerm(refDAO.getTermByTerm(Constants.VOC_SUPPLEMENTAL, rd.has_supplemental));
+			myWD.setLink_supplemental(rd.link_to_supplemental);
+			myWD.setExtracted_text(null);
+			myWD.setCreatedByUser(currentUser);
+			myWD.setModifiedByUser(this.createdByUser);
+			myWD.setCreation_date(new Date());
+			myWD.setModification_date(myWD.getCreation_date()); 
 			
 			refDAO.persist(myWD);
 			this.workflowData.add(myWD);
@@ -642,16 +645,16 @@ public class Reference extends EntityBase {
 		if (wasBook && willBeBook && (this.bookList.size() > 0)) {
 			ReferenceBook book = this.bookList.get(0);
 
-			if (!smartEqual(book.book_author, rd.book_author) || !smartEqual(book.book_title, rd.book_title) || 
-				!smartEqual(book.place, rd.place) || !smartEqual(book.publisher, rd.publisher) ||
-				!smartEqual(book.series_edition, rd.series_edition)) {
+			if (!smartEqual(book.getBook_author(), rd.book_author) || !smartEqual(book.getBook_title(), rd.book_title) || 
+				!smartEqual(book.getPlace(), rd.place) || !smartEqual(book.getPublisher(), rd.publisher) ||
+				!smartEqual(book.getSeries_edition(), rd.series_edition)) {
 
-				book.book_author = rd.book_author;
-				book.book_title = rd.book_title;
-				book.place = rd.place;
-				book.publisher = rd.publisher;
-				book.series_edition = rd.series_edition;
-				book.modification_date = new Date();
+				book.setBook_author(rd.book_author);
+				book.setBook_title(rd.book_title);
+				book.setPlace(rd.place);
+				book.setPublisher(rd.publisher);
+				book.setSeries_edition(rd.series_edition);
+				book.setModification_date(new Date());
 				anyChanges = true;
 			}
 			
@@ -665,13 +668,13 @@ public class Reference extends EntityBase {
 			// This reference was not a book previously, but now will be, so we need to add book-specific data.
 			
 			ReferenceBook book = new ReferenceBook();
-			book._refs_key = this._refs_key;
-			book.book_author = rd.book_author;
-			book.book_title = rd.book_title;
-			book.place = rd.place;
-			book.publisher = rd.publisher;
-			book.creation_date = new Date();
-			book.modification_date = book.creation_date; 
+			book.set_refs_key(this._refs_key);
+			book.setBook_author(rd.book_author);
+			book.setBook_title(rd.book_title);
+			book.setPlace(rd.place);
+			book.setPublisher(rd.publisher);
+			book.setCreation_date(new Date());
+			book.setModification_date(book.getCreation_date()); 
 			
 			refDAO.persist(book);
 			this.bookList.add(book);
@@ -692,8 +695,8 @@ public class Reference extends EntityBase {
 			// already have a note and will continue to have a note; just need to apply any difference
 			
 			ReferenceNote note = this.notes.get(0);
-			if (!smartEqual(note.note, rd.referencenote)) {
-				note.note = rd.referencenote;
+			if (!smartEqual(note.getNote(), rd.referencenote)) {
+				note.setNote(rd.referencenote);
 				anyChanges = true;
 			}
 			
@@ -707,11 +710,11 @@ public class Reference extends EntityBase {
 			// did not have a note previously, but now need to create one
 			
 			ReferenceNote note = new ReferenceNote();
-			note._refs_key = this._refs_key;
-			note.note = rd.referencenote;
-			note.sequenceNum = 1;
-			note.creation_date = new Date();
-			note.modification_date = note.creation_date; 
+			note.set_refs_key(this._refs_key);
+			note.setNote(rd.referencenote);
+			note.setSequenceNum(1);
+			note.setCreation_date(new Date());
+			note.setModification_date(note.getCreation_date()); 
 			
 			refDAO.persist(note);
 			this.notes.add(note);

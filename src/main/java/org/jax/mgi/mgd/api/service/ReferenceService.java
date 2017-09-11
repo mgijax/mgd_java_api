@@ -23,8 +23,10 @@ public class ReferenceService {
 	@Inject
 	private ReferenceDAO referenceDAO;
 	
-	public Reference createReference(Reference reference) {
-		return referenceDAO.create(reference);
+	// no-op currently
+	public ReferenceDomain createReference(ReferenceDomain referenceDomain) {
+//		return referenceDAO.create(reference);
+		return referenceDomain;
 	}
 
 	/* returns true if reference was updated, false if not; updates citation cache
@@ -50,17 +52,20 @@ public class ReferenceService {
 		return referenceDAO.search(searchFields);
 	}
 
-	public SearchResults<Reference> deleteReference(String id) {
+	public SearchResults<ReferenceDomain> deleteReference(String id) {
+		SearchResults<ReferenceDomain> out = new SearchResults<ReferenceDomain>();
+		
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		if(id != null) { map.put("primaryId", id); }
 		SearchResults<Reference> results = referenceDAO.search(map);
 		if (results.status_code != Constants.HTTP_OK) {
-			return results;
+			out.setError(results.error, results.message, results.status_code);
+			return out;
 		}
-		SearchResults<Reference> ret = new SearchResults<Reference>();
-		ret.setItem(results.items.get(0));
+
+		out.setItem(new ReferenceDomain(results.items.get(0)));
 		referenceDAO.delete(results.items.get(0));
-		return ret;
+		return out;
 	}
 
 	public List<ReferenceWorkflowStatusDomain> getStatusHistory(String refsKey) {

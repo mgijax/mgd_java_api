@@ -8,33 +8,36 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import io.swagger.annotations.ApiModel;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter @Setter
 @Entity
 @ApiModel(value = "Reference Book Model Object")
 @Table(name="bib_books")
 public class ReferenceBook extends EntityBase {
 	@Id
 	@Column(name="_refs_key")
-	public long _refs_key;
+	private long _refs_key;
 
 	@Column(name="book_au")
-	public String book_author;
+	private String book_author;
 
 	@Column(name="book_title")
-	public String book_title;
+	private String book_title;
 
 	@Column(name="place")
-	public String place;
+	private String place;
 
 	@Column(name="publisher")
-	public String publisher;
+	private String publisher;
 
 	@Column(name="series_ed")
-	public String series_edition;
+	private String series_edition;
 
 	@Column(name="creation_date")
-	public Date creation_date;
+	private Date creation_date;
 	
 	@Column(name="modification_date")
-	public Date modification_date;
+	private Date modification_date;
 }

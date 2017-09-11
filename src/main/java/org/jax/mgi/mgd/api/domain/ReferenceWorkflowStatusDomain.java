@@ -20,16 +20,16 @@ public class ReferenceWorkflowStatusDomain extends DomainBase {
 	public String modifiedby_user;
 	
 	public ReferenceWorkflowStatusDomain(ReferenceWorkflowStatus rws) {
-		this._refs_key = rws._refs_key;
+		this._refs_key = rws.get_refs_key();
 		this.creation_date = rws.getCreationDate();
 		this.modification_date = rws.getModificationDate();
-		this.createdby_user = rws.createdByUser.getLogin();
-		this.modifiedby_user = rws.createdByUser.getLogin();
+		this.createdby_user = rws.getCreatedByUser().getLogin();
+		this.modifiedby_user = this.createdby_user;
 		this.group = rws.getGroup();
 		this.group_abbreviation = rws.getGroupAbbreviation();
 		this.status = rws.getStatus();
 		this.is_current = true;
-		if (rws.isCurrent == 0) {
+		if (rws.getIsCurrent() == 0) {
 			this.is_current = false;
 		}
 	}

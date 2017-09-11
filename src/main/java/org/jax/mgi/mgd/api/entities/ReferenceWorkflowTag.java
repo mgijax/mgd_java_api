@@ -2,7 +2,6 @@ package org.jax.mgi.mgd.api.entities;
 
 import java.util.Date;
 
-import javax.ejb.Singleton;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,40 +12,43 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import io.swagger.annotations.ApiModel;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter @Setter
 @Entity
 @ApiModel(value = "Reference Workflow Tag Model Object")
 @Table(name="bib_workflow_tag")
 public class ReferenceWorkflowTag extends EntityBase {
 	@Id
 	@Column(name="_assoc_key")
-	public long _assoc_key;
+	private long _assoc_key;
 
 	@Column(name="_refs_key")
-	public long _refs_key;
+	private long _refs_key;
 
 	@Column(name="creation_date")
-	public Date creation_date;
+	private Date creation_date;
 	
 	@Column(name="modification_date")
-	public Date modification_date;
+	private Date modification_date;
 	
 	@OneToOne (targetEntity=Term.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_tag_key", referencedColumnName="_term_key")
-	public Term tag;
+	private Term tag;
 	
 	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
-	public User createdByUser;
+	private User createdByUser;
 	
 	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
-	public User modifiedByUser;
+	private User modifiedByUser;
 	
 	/***--- transient methods ---***/
 	
 	@Transient
-	public String getTag() {
+	public String getTagTerm() {
 		if (this.tag == null) { return null; }
 		return this.tag.getTerm();
 	}

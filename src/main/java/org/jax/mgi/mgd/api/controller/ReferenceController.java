@@ -36,7 +36,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	/* create a database record for the given reference...  TODO: need to flesh this out, use SearchResults object, etc.
 	 */
 	@Override
-	public Reference createReference(String api_access_token, String username, Reference reference) {
+	public ReferenceDomain createReference(String api_access_token, String username, ReferenceDomain reference) {
 		User currentUser = userService.getUser(username);
 		if (currentUser != null) {
 			return referenceService.createReference(reference);
@@ -285,7 +285,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	/* delete the reference with the given accession ID...  TODO: need to flesh this out, return SearchResults object, etc.
 	 */
 	@Override
-	public SearchResults<Reference> deleteReference(String api_access_token, String username, String id) {
+	public SearchResults<ReferenceDomain> deleteReference(String api_access_token, String username, String id) {
 		User currentUser = userService.getUser(username);
 		if (currentUser != null) {
 			return referenceService.deleteReference(id);

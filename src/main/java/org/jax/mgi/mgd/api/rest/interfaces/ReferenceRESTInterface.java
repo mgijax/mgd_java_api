@@ -31,7 +31,7 @@ public interface ReferenceRESTInterface {
 
 	@POST
 	@ApiOperation(value = "Value: Create Reference", notes="Notes: Creates a new Reference")
-	public Reference createReference(
+	public ReferenceDomain createReference(
 			@ApiParam(value = "Name: Token for accessing this API")
 			@HeaderParam("api_access_token") String api_access_token,
 			
@@ -39,7 +39,7 @@ public interface ReferenceRESTInterface {
 			@HeaderParam("username") String username,
 			
 			@ApiParam(value = "Value: This is the passed-in reference object")
-			Reference reference
+			ReferenceDomain reference
 	);
 	
 	@PUT
@@ -295,7 +295,7 @@ public interface ReferenceRESTInterface {
 	@DELETE
 	@ApiOperation(value = "Value: Deletes Reference", notes="Notes: Deletes a Reference")
 	@Path("/{id}")
-	public SearchResults<Reference> deleteReference(
+	public SearchResults<ReferenceDomain> deleteReference(
 			@ApiParam(value = "Name: Token for accessing this API")
 			@HeaderParam("api_access_token") String api_access_token,
 			

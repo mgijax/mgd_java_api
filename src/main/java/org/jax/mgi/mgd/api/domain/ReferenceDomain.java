@@ -62,22 +62,22 @@ public class ReferenceDomain extends DomainBase {
 	/* pull data from the Reference passed in, using it to populate this domain object for transfer to client
 	 */
 	public ReferenceDomain(Reference r) {
-		this._refs_key = r._refs_key;
-		this.authors = r.authors;
-		this.primary_author = r.primary_author;
-		this.title = r.title;
-		this.journal = r.journal;
-		this.volume = r.volume;
-		this.issue = r.issue;
-		this.date = r.date;
-		this.year = r.year;
-		this.pages = r.pages;
-		if (r.isReviewArticle == 0) {
+		this._refs_key = r.get_refs_key();
+		this.authors = r.getAuthors();
+		this.primary_author = r.getPrimary_author();
+		this.title = r.getTitle();
+		this.journal = r.getJournal();
+		this.volume = r.getVolume();
+		this.issue = r.getIssue();
+		this.date = r.getDate();
+		this.year = r.getYear();
+		this.pages = r.getPages();
+		if (r.getIsReviewArticle() == 0) {
 			this.isReviewArticle = "No";
 		} else {
 			this.isReviewArticle = "Yes";
 		}
-		this.ref_abstract = r.ref_abstract;
+		this.ref_abstract = r.getRef_abstract();
 		this.referencenote = r.getReferencenote();
 		this.jnumid = r.getJnumid();
 		this.doiid = r.getDoiid();
@@ -92,45 +92,45 @@ public class ReferenceDomain extends DomainBase {
 		this.qtl_status = r.getQtl_status();
 		this.tumor_status = r.getTumor_status();
 		this.workflow_tags = r.getWorkflowTags();
-		if (r.is_discard == 0) {
+		if (r.getIs_discard() == 0) {
 			this.is_discard = "No";
 		} else {
 			this.is_discard = "Yes";
 		}
 		
 		this.associated_data = new ArrayList<String>();
-		ReferenceAssociatedData flags = r.associatedData;
+		ReferenceAssociatedData flags = r.getAssociatedData();
 		if (flags != null) {
-			if (flags.has_gxdindex != 0) { this.associated_data.add("GXD Index"); }
-			if (flags.has_gxdimages != 0) { this.associated_data.add("GXD/CRE Images"); }
-			if (flags.has_gxdspecimens != 0) { this.associated_data.add("GXD/CRE Specimens"); }
-			if (flags.has_probes != 0) { this.associated_data.add("Probes"); }
-			if (flags.has_antibodies != 0) { this.associated_data.add("Antibodies"); }
-			if (flags.has_gxdresults != 0) { this.associated_data.add("GXD/CRE Results"); }
-			if (flags.has_gxdresults != 0) { this.associated_data.add("GXD/CRE Assays"); }
-			if (flags.has_alleles != 0) { this.associated_data.add("Alleles"); }
-			if (flags.has_markers != 0) { this.associated_data.add("Markers"); }
+			if (flags.getHas_gxdindex() != 0) { this.associated_data.add("GXD Index"); }
+			if (flags.getHas_gxdimages() != 0) { this.associated_data.add("GXD/CRE Images"); }
+			if (flags.getHas_gxdspecimens() != 0) { this.associated_data.add("GXD/CRE Specimens"); }
+			if (flags.getHas_probes() != 0) { this.associated_data.add("Probes"); }
+			if (flags.getHas_antibodies() != 0) { this.associated_data.add("Antibodies"); }
+			if (flags.getHas_gxdresults() != 0) { this.associated_data.add("GXD/CRE Results"); }
+			if (flags.getHas_gxdresults() != 0) { this.associated_data.add("GXD/CRE Assays"); }
+			if (flags.getHas_alleles() != 0) { this.associated_data.add("Alleles"); }
+			if (flags.getHas_markers() != 0) { this.associated_data.add("Markers"); }
 		}
 		
 		ReferenceBook bookData = r.getBookData();
 		if (bookData != null) {
-			this.book_author = bookData.book_author;
-			this.book_title = bookData.book_title;
-			this.place = bookData.place;
-			this.publisher = bookData.publisher;
-			this.series_edition = bookData.series_edition;
+			this.book_author = bookData.getBook_author();
+			this.book_title = bookData.getBook_title();
+			this.place = bookData.getPlace();
+			this.publisher = bookData.getPublisher();
+			this.series_edition = bookData.getSeries_edition();
 		}
 		
 		ReferenceWorkflowData workflowData = r.getWorkflowData();
 		if (workflowData != null) {
 			this.has_supplemental = workflowData.getSupplemental();
-			this.link_to_supplemental = workflowData.link_supplemental;
-			if (workflowData.has_pdf == 0) {
+			this.link_to_supplemental = workflowData.getLink_supplemental();
+			if (workflowData.getHas_pdf() == 0) {
 				this.has_pdf = "No";
 			} else {
 				this.has_pdf = "Yes";
 			}
-			if ((workflowData.extracted_text != null) && (workflowData.extracted_text.length() > 0)) {
+			if ((workflowData.getExtracted_text() != null) && (workflowData.getExtracted_text().length() > 0)) {
 				this.has_extracted_text = "Yes";
 			} else {
 				this.has_extracted_text = "No";

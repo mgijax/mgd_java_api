@@ -12,42 +12,45 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import io.swagger.annotations.ApiModel;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter @Setter
 @Entity
 @ApiModel(value = "Reference Workflow Status Model Object")
 @Table(name="bib_workflow_status")
 public class ReferenceWorkflowStatus extends EntityBase {
 	@Id
 	@Column(name="_assoc_key")
-	public long _assoc_key;
+	private long _assoc_key;
 
 	@Column(name="_refs_key")
-	public long _refs_key;
+	private long _refs_key;
 
 	@Column(name="isCurrent")
-	public int isCurrent;
+	private int isCurrent;
 
 	@Column(name="creation_date")
-	public Date creation_date;
+	private Date creation_date;
 	
 	@Column(name="modification_date")
-	public Date modification_date;
+	private Date modification_date;
 	
 	@OneToOne (targetEntity=Term.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_group_key", referencedColumnName="_term_key")
-	public Term groupTerm;
+	private Term groupTerm;
 	
 	@OneToOne (targetEntity=Term.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_status_key", referencedColumnName="_term_key")
-	public Term statusTerm;
+	private Term statusTerm;
 	
 	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
-	public User createdByUser;
+	private User createdByUser;
 	
 	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
-	public User modifiedByUser;
+	private User modifiedByUser;
 	
 	/***--- transient methods ---***/
 	

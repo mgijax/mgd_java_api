@@ -2,7 +2,6 @@ package org.jax.mgi.mgd.api.entities;
 
 import java.util.Date;
 
-import javax.ejb.Singleton;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,41 +12,44 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import io.swagger.annotations.ApiModel;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter @Setter
 @Entity
 @ApiModel(value = "Reference Workflow Data Model Object")
 @Table(name="bib_workflow_data")
 public class ReferenceWorkflowData extends EntityBase {
 	@Id
 	@Column(name="_refs_key")
-	public long _refs_key;
+	private long _refs_key;
 
 	@Column(name="hasPDF")
-	public int has_pdf;
+	private int has_pdf;
 
 	@Column(name="linkSupplemental")
-	public String link_supplemental;
+	private String link_supplemental;
 
 	@Column(name="extractedText")
-	public String extracted_text;
+	private String extracted_text;
 
 	@Column(name="creation_date")
-	public Date creation_date;
+	private Date creation_date;
 	
 	@Column(name="modification_date")
-	public Date modification_date;
+	private Date modification_date;
 	
 	@OneToOne (targetEntity=Term.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_supplemental_key", referencedColumnName="_term_key")
-	public Term supplementalTerm;
+	private Term supplementalTerm;
 	
 	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
-	public User createdByUser;
+	private User createdByUser;
 	
 	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
-	public User modifiedByUser;
+	private User modifiedByUser;
 	
 	/***--- transient methods ---***/
 	

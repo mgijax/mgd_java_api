@@ -11,9 +11,11 @@ import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
+import org.jax.mgi.mgd.api.entities.Term;
 import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.rest.interfaces.ReferenceRESTInterface;
 import org.jax.mgi.mgd.api.service.ReferenceService;
+import org.jax.mgi.mgd.api.service.TermService;
 import org.jax.mgi.mgd.api.service.UserService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -25,6 +27,9 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	
 	@Inject
 	private ReferenceService referenceService;
+	
+	@Inject
+	private TermService termService;
 	
 	@Inject
 	private UserService userService;
@@ -73,6 +78,77 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		return results;
 	}
 
+	/* update the workflow group to be the given status for the given reference, taking care to keep the status history
+	 * updated and to generate a J: number, if needed
+	 */
+	@Override
+	public SearchResults<String> updateReferenceStatus (String api_access_token, String username, String accid, String group, String status) {
+		SearchResults<String> results = new SearchResults<String>();
+
+		if (!authenticate(api_access_token)) {
+			results.setError("FailedAuthentication", "Failed - invalid api_access_token", Constants.HTTP_PERMISSION_DENIED);
+			return results;
+		}
+
+		// check that we have a legitimate status value
+
+		if (status == null) {
+			results.setError("Failed", "Unknown status value: null", Constants.HTTP_BAD_REQUEST);
+			return results;
+		} else {
+			HashMap<String,Object> params = new HashMap<String,Object>();
+			params.put("vocab.name", "Workflow Status");
+			params.put("term", status);
+			
+			SearchResults<Term> terms = termService.search(params);
+			if (terms.total_count == 0) {
+				results.setError("Failed", "Unknown status term: " + status, Constants.HTTP_NOT_FOUND);
+				return results;
+			} else if (terms.total_count > 1) {
+				results.setError("Failed", "Duplicate status terms: " + status, Constants.HTTP_BAD_REQUEST);
+				return results;
+			}
+		}
+		
+		User currentUser = userService.getUser(username);
+		if (currentUser != null) {
+			// check that we found an actual user and didn't fall back to a default
+			// (be extra careful here because of outside use)
+			if (!currentUser.getLogin().equalsIgnoreCase(username)) {
+				results.setError("Failed", "Unknown user: " + username, Constants.HTTP_BAD_REQUEST);
+				return results;
+			}
+			
+			try {
+				// The updateReference method does not return the updated reference, as the method must finish
+				// before the updates are persisted to the database.  So, we issue the update, then we use the
+				// getReferenceByKey() method to re-fetch and return the updated object.
+				
+				HashMap<String,Object> searchFields = new HashMap<String,Object>();
+				searchFields.put("accids", accid);
+				SearchResults<Reference> refs = referenceService.getReference(searchFields);
+
+				if (refs.total_count == 0) {
+					results.setError("Failed", "No reference for ID " + accid, Constants.HTTP_BAD_REQUEST);
+
+				} else if (refs.total_count > 1) {
+					results.setError("Failed", "Multiple references for ID " + accid, Constants.HTTP_BAD_REQUEST);
+					
+				} else {
+					ReferenceDomain ref = new ReferenceDomain(refs.items.get(0));
+					ref.setStatus(group, status);
+					referenceService.updateReference(ref, currentUser);
+					results.items = null;	// okay result
+				}
+			} catch (Throwable t) {
+				results.setError("Failed", "Failed to save changes: " + t.toString(), Constants.HTTP_SERVER_ERROR);
+			}
+		} else {
+			results.setError("FailedAuthentication", "Failed - invalid username", Constants.HTTP_PERMISSION_DENIED);
+		}
+		return results;
+	}
+	
 	/* add the specified tag to each of the references specified by key
 	 */
 	@Override

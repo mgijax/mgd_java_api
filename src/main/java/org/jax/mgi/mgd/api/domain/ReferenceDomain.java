@@ -137,4 +137,22 @@ public class ReferenceDomain extends DomainBase {
 			}
 		}
 	}
+	
+	/* update the status for the given workflow group within this domain object (does not persist to database)
+	 */
+	public void setStatus (String group, String status) throws Exception {
+		if (group.equalsIgnoreCase("AP")) {
+			this.ap_status = status;
+		} else if (group.equalsIgnoreCase("GO")) {
+			this.go_status = status;
+		} else if (group.equalsIgnoreCase("GXD")) {
+			this.gxd_status = status;
+		} else if (group.equalsIgnoreCase("QTL")) {
+			this.qtl_status = status;
+		} else if (group.equalsIgnoreCase("Tumor")) {
+			this.tumor_status = status;
+		} else {
+			throw new Exception("Unknown workflow group: " + group);
+		}
+	}
 }

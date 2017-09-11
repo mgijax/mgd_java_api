@@ -16,14 +16,9 @@ public class UserService extends ServiceInterface<User> {
 	@Inject
 	private UserDAO userDAO;
 	
-	/* get the User object corresponding to the given username (Linux login);
-	 * if not specified, fall back on mgd_dbo for now
-	 * TODO: remove this fallback once we get farther along in development
+	/* get the User object corresponding to the given username (Linux login)
 	 */
 	public User getUser(String username) {
-		if (username == null) {
-			username = "mgd_dbo";
-		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("login", username);
 		if(userDAO.search(map).total_count > 0) {

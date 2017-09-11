@@ -69,6 +69,26 @@ public interface ReferenceRESTInterface {
 			ReferenceBulkDomain input
 	);
 
+	@PUT
+	@Path("/statusUpdate")
+	@ApiOperation(value = "Value: Update the status of a reference/workflow group pair", notes="Notes: Updates the status of a reference/workflow group pair")
+	public SearchResults<String> updateReferenceStatus(
+			@ApiParam(value = "Name: Token for accessing this API")
+			@HeaderParam("api_access_token") String api_access_token,
+			
+			@ApiParam(value = "Name: Logged-in User")
+			@HeaderParam("username") String username,
+			
+			@ApiParam(value = "Value: accession ID of reference for which to set the status")
+			@QueryParam("accid") String accid,
+			
+			@ApiParam(value = "Value: abbreviation of workflow group for which to set the status")
+			@QueryParam("group") String group,
+			
+			@ApiParam(value = "Value: status term to set for the given reference/workflow group pair")
+			@QueryParam("status") String status
+	);
+
 	@GET
 	@Path("/valid")
 	@ApiOperation(value = "Value: Check to see if a reference is valid by doing a key-based lookup")

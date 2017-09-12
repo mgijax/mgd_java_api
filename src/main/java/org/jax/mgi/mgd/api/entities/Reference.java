@@ -46,7 +46,7 @@ public class Reference extends EntityBase {
 
 	@Id
 	@Column(name="_Refs_key")
-	private Long _refs_key;
+	private Integer _refs_key;
 	
 	@Column(name="authors")
 	private String authors;
@@ -625,7 +625,7 @@ public class Reference extends EntityBase {
 	/* Apply a single ID change to this reference.  If there already is an ID for this logical database, replace it.  If there wasn't
 	 * one, add one.  And, if there was one previously, but there's not now, then delete it.
 	 */
-	private boolean applyOneIDChange(Integer ldb, String accID, String prefixPart, Long numericPart, Integer preferred, Integer isPrivate, ReferenceDAO refDAO, User currentUser) {
+	private boolean applyOneIDChange(Integer ldb, String accID, String prefixPart, Integer numericPart, Integer preferred, Integer isPrivate, ReferenceDAO refDAO, User currentUser) {
 		// first parameter is required; bail out if it is null
 		if (ldb == null) { return false; }
 		
@@ -692,13 +692,13 @@ public class Reference extends EntityBase {
 		
 		if (!smartEqual(getDoiid(), rd.doiid)) {
 			String prefixPart = rd.doiid;					// defaults
-			Long numericPart = null;
+			Integer numericPart = null;
 
 			if (rd.doiid != null) {
 				Matcher m = pattern.matcher(rd.doiid);
 				if (m.find()) {
 					prefixPart = m.group(1);					// ID fit pattern, so use more accurate prefix / numeric parts
-					numericPart = Long.parseLong(m.group(2));
+					numericPart = Integer.parseInt(m.group(2));
 				}
 			}
 			
@@ -707,13 +707,13 @@ public class Reference extends EntityBase {
 		
 		if (!smartEqual(getPubmedid(), rd.pubmedid)) {
 			String prefixPart = rd.pubmedid;				// defaults
-			Long numericPart = null;
+			Integer numericPart = null;
 
 			if (rd.pubmedid != null) {
 				Matcher m = pattern.matcher(rd.pubmedid);
 				if (m.find()) {
 					prefixPart = m.group(1);					// ID fit pattern, so use more accurate prefix / numeric parts
-					numericPart = Long.parseLong(m.group(2));
+					numericPart = Integer.parseInt(m.group(2));
 				}
 			}
 			
@@ -722,13 +722,13 @@ public class Reference extends EntityBase {
 		
 		if (!smartEqual(getGorefid(), rd.gorefid)) {
 			String prefixPart = rd.gorefid;					// defaults
-			Long numericPart = null;
+			Integer numericPart = null;
 
 			if (rd.gorefid != null) {
 				Matcher m = pattern.matcher(rd.gorefid);
 				if (m.find()) {
 					prefixPart = m.group(1);					// ID fit pattern, so use more accurate prefix / numeric parts
-					numericPart = Long.parseLong(m.group(2));
+					numericPart = Integer.parseInt(m.group(2));
 				}
 			}
 			

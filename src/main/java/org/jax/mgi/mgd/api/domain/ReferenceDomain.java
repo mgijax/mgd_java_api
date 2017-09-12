@@ -10,7 +10,7 @@ import java.util.List;
  *	as possible
  */
 public class ReferenceDomain extends DomainBase {
-	public Long _refs_key;
+	public Integer _refs_key;
 	public String authors;
 	public String primary_author;
 	public String title;

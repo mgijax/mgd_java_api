@@ -9,7 +9,7 @@ import java.util.List;
  *	as possible
  */
 public class ReferenceBulkDomain extends DomainBase {
-	public List<Long> _refs_keys;
+	public List<Integer> _refs_keys;
 	public String workflow_tag;
 	public String workflow_tag_operation;	// "add" or "remove"; "add" is the default
 }

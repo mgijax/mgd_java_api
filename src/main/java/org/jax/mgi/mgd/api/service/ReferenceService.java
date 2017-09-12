@@ -40,7 +40,7 @@ public class ReferenceService {
 	/* returns true if references were updated, false if not; does not update citation cache, as
 	 * only workflow tags are processed currently
 	 */
-	public boolean updateReferencesInBulk(List<Long> refsKeys, String workflow_tag, String workflow_tag_operation, User currentUser) {
+	public boolean updateReferencesInBulk(List<Integer> refsKeys, String workflow_tag, String workflow_tag_operation, User currentUser) {
 		try {
 			referenceDAO.updateInBulk(refsKeys, workflow_tag, workflow_tag_operation, currentUser);
 			return true;

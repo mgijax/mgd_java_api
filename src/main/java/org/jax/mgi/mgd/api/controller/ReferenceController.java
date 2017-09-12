@@ -296,7 +296,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 
 		if (map.containsKey("year")) {
 			try {
-				long longYear = Long.parseLong((String) map.get("year"));
+				int intYear = Integer.parseInt((String) map.get("year"));
 			} catch (Throwable t) {
 				SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
 				results.setError("InvalidParameter", "Year is not an integer: " + year, Constants.HTTP_BAD_REQUEST);
@@ -338,7 +338,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		if (refsKey != null) {
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			try {
-				map.put("_refs_key", Long.parseLong(refsKey));
+				map.put("_refs_key", Integer.parseInt(refsKey));
 			} catch (Throwable e) {
 				results.setError("NotInteger", "Parameter value not an integer: " + refsKey, Constants.HTTP_BAD_REQUEST);
 				return results;

@@ -37,7 +37,7 @@ public abstract class PostgresSQLDAO<T> {
 	protected static Map<String, Long> keyExpiration = new HashMap<String, Long>();
 
 	/* maps from table name to the next value that should be assigned as primary key for the table */
-	protected static Map<String, Long> nextKeyValue = new HashMap<String, Long>();
+	protected static Map<String, Integer> nextKeyValue = new HashMap<String, Integer>();
 
 	/***--- methods ---***/
 
@@ -157,7 +157,7 @@ public abstract class PostgresSQLDAO<T> {
 
 	/* get the next available _Accession_key in the ACC_Accession table
 	 */
-	public synchronized long getNextAccessionKey() {
+	public synchronized int getNextAccessionKey() {
 		return this.getNextKey("AccessionID", "_accession_key");
 	}
 
@@ -165,7 +165,7 @@ public abstract class PostgresSQLDAO<T> {
 	 * that wrap this method should be synchronized to ensure thread-safety.  (We do not synchronize this method
 	 * itself, as we want key requests for different tables to be able to proceed in parallel.)
 	 */
-	public long getNextKey(String tableName, String fieldName) {
+	public int getNextKey(String tableName, String fieldName) {
 		Long currentTime = System.currentTimeMillis();
 
 		/* To save hitting the database for every request (and to avoid the same key being given to two users
@@ -176,14 +176,14 @@ public abstract class PostgresSQLDAO<T> {
 		 */
 
 		if (!keyExpiration.containsKey(tableName) || (currentTime > keyExpiration.get(tableName))) {
-			TypedQuery<Long> q1 = (TypedQuery<Long>) entityManager.createQuery("select max(" + fieldName + ") from " + tableName, Long.class);
-			Long maxKey = q1.getSingleResult();
+			TypedQuery<Integer> q1 = (TypedQuery<Integer>) entityManager.createQuery("select max(" + fieldName + ") from " + tableName, Integer.class);
+			Integer maxKey = q1.getSingleResult();
 			if (maxKey == null) {
-				maxKey = 0L;
+				maxKey = 0;
 			}
 			nextKeyValue.put(tableName, ++maxKey);
 		}
-		Long nextKey = nextKeyValue.get(tableName);
+		Integer nextKey = nextKeyValue.get(tableName);
 		nextKeyValue.put(tableName, nextKey + 1);
 		keyExpiration.put(tableName, currentTime + expirationTime);
 		return nextKey;

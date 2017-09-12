@@ -27,5 +27,9 @@ public abstract class ServiceInterface<T> {
 		return getDAO().search(searchFields);
 	}
 	
+	public SearchResults<T> search(Map<String, Object> searchFields, String orderByField) {
+		return getDAO().search(searchFields, orderByField);
+	}
+	
 	public abstract PostgresSQLDAO<T> getDAO();
 }

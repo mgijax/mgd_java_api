@@ -80,6 +80,10 @@ public abstract class PostgresSQLDAO<T> {
 	/* default query handling; good for fields directly in the table backing model class T
 	 */
 	public SearchResults<T> search(Map<String, Object> params) {
+		return search(params, null);
+	}
+	
+	public SearchResults<T> search(Map<String, Object> params, String orderByField) {
 		log.info("Lookup: " + params);
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<T> query = builder.createQuery(myClass);
@@ -103,6 +107,9 @@ public abstract class PostgresSQLDAO<T> {
 			}
 			String desiredValue = (String)params.get(key);
 			restrictions.add(builder.equal(column, desiredValue));
+		}
+		if(orderByField != null) {
+			query.orderBy(builder.asc(root.get(orderByField)));
 		}
 
 		query.where(builder.and(restrictions.toArray(new Predicate[0])));

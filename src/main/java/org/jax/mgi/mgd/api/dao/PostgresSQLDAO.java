@@ -19,7 +19,6 @@ import org.jax.mgi.mgd.api.entities.Term;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
-
 @Singleton
 public abstract class PostgresSQLDAO<T> {
 	/***--- instance variables ---***/

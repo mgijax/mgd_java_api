@@ -14,6 +14,7 @@ import org.jax.mgi.mgd.api.domain.ReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.entities.User;
+import org.jax.mgi.mgd.api.translators.ReferenceTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -63,7 +64,8 @@ public class ReferenceService {
 			return out;
 		}
 
-		out.setItem(new ReferenceDomain(results.items.get(0)));
+		ReferenceTranslator translator = new ReferenceTranslator();
+		out.setItem(translator.translate(results.items.get(0)));
 		referenceDAO.delete(results.items.get(0));
 		return out;
 	}

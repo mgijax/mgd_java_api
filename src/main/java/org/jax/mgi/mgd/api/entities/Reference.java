@@ -144,6 +144,12 @@ public class Reference extends EntityBase {
 	@Fetch(value=FetchMode.SUBSELECT)
 	private List<ReferenceNote> notes;
 
+	// one to many, because row in citation cache might not exist (leaving it 1-0)
+	@OneToMany (targetEntity=ReferenceCitationData.class, fetch=FetchType.EAGER)
+	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	@Fetch(value=FetchMode.SUBSELECT)
+	private List<ReferenceCitationData> citationData;
+
 	// one to many, because book data most often does not exist (leaving it 1-0)
 	@OneToMany (targetEntity=ReferenceBook.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
@@ -362,24 +368,12 @@ public class Reference extends EntityBase {
 	@Transient
 	public int getStatus_Tumor_Routed() { return checkStatus(getTumor_status(), Constants.WS_ROUTED); }
 	
-	/* compute the short citation, so it's up-to-the-minute and doesn't rely on a cache table that could
-	 * be out of date.
-	 */
 	@Transient
 	public String getShort_citation() {
-		StringBuffer sb = new StringBuffer();
-		if (this.primary_author != null) { sb.append(this.primary_author); }
-		sb.append(", ");
-		if (this.journal != null) { sb.append(this.journal); }
-		sb.append(" ");
-		if (this.date != null) { sb.append(this.date); }
-		sb.append(";");
-		if (this.volume != null) { sb.append(this.volume); }
-		sb.append("(");
-		if (this.issue != null) { sb.append(this.issue); }
-		sb.append("):");
-		if (this.pages != null) { sb.append(this.pages); }
-		return sb.toString();
+		if ((this.citationData != null) && (this.citationData.size() > 0)) {
+			return this.citationData.get(0).getShort_citation();
+		}
+		return null;
 	}
 	
 	/* convenience method, used by applyStatusChanges() to reduce redundant code in setting workflow

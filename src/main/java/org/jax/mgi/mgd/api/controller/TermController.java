@@ -48,10 +48,7 @@ public class TermController extends BaseController implements TermRESTInterface 
 
 	@Override
 	public SearchResults<Term> search(Map<String, Object> postParams) {
-		return termService.search(postParams);
-
+		return termService.search(postParams, "sequenceNum");
 	}
-
-
 	
 }

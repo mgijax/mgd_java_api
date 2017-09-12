@@ -29,7 +29,6 @@ public class Term extends EntityBase {
 	private Integer _term_key;
 	private String term;
 	private String abbreviation;
-	@OrderBy
 	private Integer sequenceNum;
 	private Integer isObsolete;
 	private Date creation_date;

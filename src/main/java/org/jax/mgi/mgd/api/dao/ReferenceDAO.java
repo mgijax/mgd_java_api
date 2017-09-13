@@ -517,7 +517,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	/* set the given workflow_tag for all references identified in the list of keys
 	 */
 	@Transactional
-	public void updateInBulk(List<Long> refsKeys, String workflow_tag, String workflow_tag_operation, User currentUser) throws Exception {
+	public void updateInBulk(List<Integer> refsKeys, String workflow_tag, String workflow_tag_operation, User currentUser) throws Exception {
 		if ((refsKeys == null) || (refsKeys.size() == 0) || (workflow_tag == null) || (workflow_tag.length() == 0)) {
 			return; 
 		}
@@ -530,7 +530,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		}
 		
 		
-		for (Long refsKey : refsKeys) {
+		for (Integer refsKey : refsKeys) {
 			Reference reference = entityManager.find(Reference.class, refsKey);
 			if (reference != null) {
 				if (workflow_tag_operation.equals(Constants.OP_ADD_WORKFLOW)) {
@@ -560,25 +560,25 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	
 	/* get the next available primary key for a new reference
 	 */
-	public synchronized long getNextRefsKey() {
+	public synchronized int getNextRefsKey() {
 		return this.getNextKey("Reference", "_refs_key");
 	}
 	
 	/* get the next available primary key for a workflow status record
 	 */
-	public synchronized long getNextWorkflowStatusKey() {
+	public synchronized int getNextWorkflowStatusKey() {
 		return this.getNextKey("ReferenceWorkflowStatus", "_assoc_key");
 	}
 	
 	/* get the next available primary key for a workflow tag record
 	 */
-	public synchronized long getNextWorkflowTagKey() {
+	public synchronized int getNextWorkflowTagKey() {
 		return this.getNextKey("ReferenceWorkflowTag", "_assoc_key");
 	}
 	
 	/* update the bib_citation_cache table for the given reference key
 	 */
-	public void updateCitationCache(long refsKey) {
+	public void updateCitationCache(int refsKey) {
 		// returns an integer rather than *, as the void return was causing a mapping exception
 		Query query = entityManager.createNativeQuery("select count(1) from BIB_reloadCache(" + refsKey + ")");
 		query.getResultList();
@@ -587,7 +587,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 
 	/* add a new J: number for the given reference key and user key
 	 */
-	public void assignNewJnumID(long refsKey, int userKey) throws Exception {
+	public void assignNewJnumID(int refsKey, int userKey) throws Exception {
 		int intRefsKey = Integer.parseInt(refsKey + "");
 		// returns an integer rather than *, as the void return was causing a mapping exception
 		Query query = entityManager.createNativeQuery("select count(1) from ACC_assignJ(" + userKey + "," + intRefsKey + ")");

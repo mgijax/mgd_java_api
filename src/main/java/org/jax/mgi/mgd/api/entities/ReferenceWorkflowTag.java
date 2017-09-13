@@ -22,10 +22,10 @@ import lombok.Setter;
 public class ReferenceWorkflowTag extends EntityBase {
 	@Id
 	@Column(name="_assoc_key")
-	private long _assoc_key;
+	private int _assoc_key;
 
 	@Column(name="_refs_key")
-	private long _refs_key;
+	private int _refs_key;
 
 	@Column(name="creation_date")
 	private Date creation_date;

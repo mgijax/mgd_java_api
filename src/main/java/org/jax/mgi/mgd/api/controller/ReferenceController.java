@@ -17,6 +17,7 @@ import org.jax.mgi.mgd.api.rest.interfaces.ReferenceRESTInterface;
 import org.jax.mgi.mgd.api.service.ReferenceService;
 import org.jax.mgi.mgd.api.service.TermService;
 import org.jax.mgi.mgd.api.service.UserService;
+import org.jax.mgi.mgd.api.translators.ReferenceTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -137,7 +138,8 @@ public class ReferenceController extends BaseController implements ReferenceREST
 					results.setError("Failed", "Multiple references for ID " + accid, Constants.HTTP_BAD_REQUEST);
 					
 				} else {
-					ReferenceDomain ref = new ReferenceDomain(refs.items.get(0));
+					ReferenceTranslator translator = new ReferenceTranslator(); 
+					ReferenceDomain ref = translator.translate(refs.items.get(0));
 					ref.setStatus(group, status);
 					referenceService.updateReference(ref, currentUser);
 					results.items = null;	// okay result
@@ -296,7 +298,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 
 		if (map.containsKey("year")) {
 			try {
-				long longYear = Long.parseLong((String) map.get("year"));
+				int intYear = Integer.parseInt((String) map.get("year"));
 			} catch (Throwable t) {
 				SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
 				results.setError("InvalidParameter", "Year is not an integer: " + year, Constants.HTTP_BAD_REQUEST);
@@ -312,9 +314,10 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		} else {
 			// need to convert Reference entity objects to ReferenceDomain objects to meet PWI's needs
 			
+			ReferenceTranslator translator = new ReferenceTranslator(); 
 			List<ReferenceDomain> domainObjects = new ArrayList<ReferenceDomain>();
 			for (Reference ref : results.items) {
-				domainObjects.add(new ReferenceDomain(ref));
+				domainObjects.add(translator.translate(ref));
 			}
 			domains.setItems(domainObjects);
 		}
@@ -337,7 +340,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		if (refsKey != null) {
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			try {
-				map.put("_refs_key", Long.parseLong(refsKey));
+				map.put("_refs_key", Integer.parseInt(refsKey));
 			} catch (Throwable e) {
 				results.setError("NotInteger", "Parameter value not an integer: " + refsKey, Constants.HTTP_BAD_REQUEST);
 				return results;
@@ -350,7 +353,8 @@ public class ReferenceController extends BaseController implements ReferenceREST
 			}
 
 			if (refs.total_count > 0) {
-				results.setItem(new ReferenceDomain(refs.items.get(0)));
+				ReferenceTranslator translator = new ReferenceTranslator(); 
+				results.setItem(translator.translate(refs.items.get(0)));
 			} else {
 				results.setError("NotFound", "No reference with key " + refsKey, Constants.HTTP_NOT_FOUND);
 			}

@@ -21,7 +21,7 @@ import lombok.Setter;
 public class AccessionID extends EntityBase {
 	@Id
 	@Column(name="_accession_key")
-	private long _accession_key;
+	private int _accession_key;
 
 	@Column(name="accID")
 	private String accID;
@@ -36,7 +36,7 @@ public class AccessionID extends EntityBase {
 	private Integer _logicaldb_key;
 	
 	@Column(name="_object_key")
-	private Long _object_key;
+	private Integer _object_key;
 	
 	@Column(name="_mgitype_key")
 	private Integer _mgitype_key;
@@ -45,7 +45,7 @@ public class AccessionID extends EntityBase {
 	private String prefixPart;
 
 	@Column(name="numericPart")
-	private Long numericPart;
+	private Integer numericPart;
 
 	@Column(name="creation_date")
 	private Date creation_date;

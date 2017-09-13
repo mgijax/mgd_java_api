@@ -46,7 +46,7 @@ public class Reference extends EntityBase {
 
 	@Id
 	@Column(name="_Refs_key")
-	private Long _refs_key;
+	private Integer _refs_key;
 	
 	@Column(name="authors")
 	private String authors;
@@ -143,6 +143,12 @@ public class Reference extends EntityBase {
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
 	@Fetch(value=FetchMode.SUBSELECT)
 	private List<ReferenceNote> notes;
+
+	// one to many, because row in citation cache might not exist (leaving it 1-0)
+	@OneToMany (targetEntity=ReferenceCitationData.class, fetch=FetchType.EAGER)
+	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	@Fetch(value=FetchMode.SUBSELECT)
+	private List<ReferenceCitationData> citationData;
 
 	// one to many, because book data most often does not exist (leaving it 1-0)
 	@OneToMany (targetEntity=ReferenceBook.class, fetch=FetchType.EAGER)
@@ -268,118 +274,11 @@ public class Reference extends EntityBase {
 	public String getTumor_status() { return this.getStatus(Constants.WG_TUMOR); }
 	
 	@Transient
-	private int checkStatus(String statusFound, String statusDesired) {
-		if (statusDesired.equals(statusFound)) { return 1; } else { return 0; }
-	}
-	
-	@Transient
-	public int getStatus_AP_Chosen() { return checkStatus(getAp_status(), Constants.WS_CHOSEN); }
-	
-	@Transient
-	public int getStatus_AP_Fully_curated() { return checkStatus(getAp_status(), Constants.WS_CURATED); }
-	
-	@Transient
-	public int getStatus_AP_Indexed() { return checkStatus(getAp_status(), Constants.WS_INDEXED); }
-	
-	@Transient
-	public int getStatus_AP_Not_Routed() { return checkStatus(getAp_status(), Constants.WS_NOT_ROUTED); }
-	
-	@Transient
-	public int getStatus_AP_Rejected() { return checkStatus(getAp_status(), Constants.WS_REJECTED); }
-	
-	@Transient
-	public int getStatus_AP_Routed() { return checkStatus(getAp_status(), Constants.WS_ROUTED); }
-	
-	@Transient
-	public int getStatus_GO_Chosen() { return checkStatus(getGo_status(), Constants.WS_CHOSEN); }
-	
-	@Transient
-	public int getStatus_GO_Fully_curated() { return checkStatus(getGo_status(), Constants.WS_CURATED); }
-	
-	@Transient
-	public int getStatus_GO_Indexed() { return checkStatus(getGo_status(), Constants.WS_INDEXED); }
-	
-	@Transient
-	public int getStatus_GO_Not_Routed() { return checkStatus(getGo_status(), Constants.WS_NOT_ROUTED); }
-	
-	@Transient
-	public int getStatus_GO_Rejected() { return checkStatus(getGo_status(), Constants.WS_REJECTED); }
-	
-	@Transient
-	public int getStatus_GO_Routed() { return checkStatus(getGo_status(), Constants.WS_ROUTED); }
-	
-	@Transient
-	public int getStatus_GXD_Chosen() { return checkStatus(getGxd_status(), Constants.WS_CHOSEN); }
-	
-	@Transient
-	public int getStatus_GXD_Fully_curated() { return checkStatus(getGxd_status(), Constants.WS_CURATED); }
-	
-	@Transient
-	public int getStatus_GXD_Indexed() { return checkStatus(getGxd_status(), Constants.WS_INDEXED); }
-	
-	@Transient
-	public int getStatus_GXD_Not_Routed() { return checkStatus(getGxd_status(), Constants.WS_NOT_ROUTED); }
-	
-	@Transient
-	public int getStatus_GXD_Rejected() { return checkStatus(getGxd_status(), Constants.WS_REJECTED); }
-	
-	@Transient
-	public int getStatus_GXD_Routed() { return checkStatus(getGxd_status(), Constants.WS_ROUTED); }
-	
-	@Transient
-	public int getStatus_QTL_Chosen() { return checkStatus(getQtl_status(), Constants.WS_CHOSEN); }
-	
-	@Transient
-	public int getStatus_QTL_Fully_curated() { return checkStatus(getQtl_status(), Constants.WS_CURATED); }
-	
-	@Transient
-	public int getStatus_QTL_Indexed() { return checkStatus(getQtl_status(), Constants.WS_INDEXED); }
-	
-	@Transient
-	public int getStatus_QTL_Not_Routed() { return checkStatus(getQtl_status(), Constants.WS_NOT_ROUTED); }
-	
-	@Transient
-	public int getStatus_QTL_Rejected() { return checkStatus(getQtl_status(), Constants.WS_REJECTED); }
-	
-	@Transient
-	public int getStatus_QTL_Routed() { return checkStatus(getQtl_status(), Constants.WS_ROUTED); }
-	
-	@Transient
-	public int getStatus_Tumor_Chosen() { return checkStatus(getTumor_status(), Constants.WS_CHOSEN); }
-	
-	@Transient
-	public int getStatus_Tumor_Fully_curated() { return checkStatus(getTumor_status(), Constants.WS_CURATED); }
-	
-	@Transient
-	public int getStatus_Tumor_Indexed() { return checkStatus(getTumor_status(), Constants.WS_INDEXED); }
-	
-	@Transient
-	public int getStatus_Tumor_Not_Routed() { return checkStatus(getTumor_status(), Constants.WS_NOT_ROUTED); }
-	
-	@Transient
-	public int getStatus_Tumor_Rejected() { return checkStatus(getTumor_status(), Constants.WS_REJECTED); }
-	
-	@Transient
-	public int getStatus_Tumor_Routed() { return checkStatus(getTumor_status(), Constants.WS_ROUTED); }
-	
-	/* compute the short citation, so it's up-to-the-minute and doesn't rely on a cache table that could
-	 * be out of date.
-	 */
-	@Transient
 	public String getShort_citation() {
-		StringBuffer sb = new StringBuffer();
-		if (this.primary_author != null) { sb.append(this.primary_author); }
-		sb.append(", ");
-		if (this.journal != null) { sb.append(this.journal); }
-		sb.append(" ");
-		if (this.date != null) { sb.append(this.date); }
-		sb.append(";");
-		if (this.volume != null) { sb.append(this.volume); }
-		sb.append("(");
-		if (this.issue != null) { sb.append(this.issue); }
-		sb.append("):");
-		if (this.pages != null) { sb.append(this.pages); }
-		return sb.toString();
+		if ((this.citationData != null) && (this.citationData.size() > 0)) {
+			return this.citationData.get(0).getShort_citation();
+		}
+		return null;
 	}
 	
 	/* convenience method, used by applyStatusChanges() to reduce redundant code in setting workflow
@@ -726,7 +625,7 @@ public class Reference extends EntityBase {
 	/* Apply a single ID change to this reference.  If there already is an ID for this logical database, replace it.  If there wasn't
 	 * one, add one.  And, if there was one previously, but there's not now, then delete it.
 	 */
-	private boolean applyOneIDChange(Integer ldb, String accID, String prefixPart, Long numericPart, Integer preferred, Integer isPrivate, ReferenceDAO refDAO, User currentUser) {
+	private boolean applyOneIDChange(Integer ldb, String accID, String prefixPart, Integer numericPart, Integer preferred, Integer isPrivate, ReferenceDAO refDAO, User currentUser) {
 		// first parameter is required; bail out if it is null
 		if (ldb == null) { return false; }
 		
@@ -793,13 +692,13 @@ public class Reference extends EntityBase {
 		
 		if (!smartEqual(getDoiid(), rd.doiid)) {
 			String prefixPart = rd.doiid;					// defaults
-			Long numericPart = null;
+			Integer numericPart = null;
 
 			if (rd.doiid != null) {
 				Matcher m = pattern.matcher(rd.doiid);
 				if (m.find()) {
 					prefixPart = m.group(1);					// ID fit pattern, so use more accurate prefix / numeric parts
-					numericPart = Long.parseLong(m.group(2));
+					numericPart = Integer.parseInt(m.group(2));
 				}
 			}
 			
@@ -808,13 +707,13 @@ public class Reference extends EntityBase {
 		
 		if (!smartEqual(getPubmedid(), rd.pubmedid)) {
 			String prefixPart = rd.pubmedid;				// defaults
-			Long numericPart = null;
+			Integer numericPart = null;
 
 			if (rd.pubmedid != null) {
 				Matcher m = pattern.matcher(rd.pubmedid);
 				if (m.find()) {
 					prefixPart = m.group(1);					// ID fit pattern, so use more accurate prefix / numeric parts
-					numericPart = Long.parseLong(m.group(2));
+					numericPart = Integer.parseInt(m.group(2));
 				}
 			}
 			
@@ -823,13 +722,13 @@ public class Reference extends EntityBase {
 		
 		if (!smartEqual(getGorefid(), rd.gorefid)) {
 			String prefixPart = rd.gorefid;					// defaults
-			Long numericPart = null;
+			Integer numericPart = null;
 
 			if (rd.gorefid != null) {
 				Matcher m = pattern.matcher(rd.gorefid);
 				if (m.find()) {
 					prefixPart = m.group(1);					// ID fit pattern, so use more accurate prefix / numeric parts
-					numericPart = Long.parseLong(m.group(2));
+					numericPart = Integer.parseInt(m.group(2));
 				}
 			}
 			

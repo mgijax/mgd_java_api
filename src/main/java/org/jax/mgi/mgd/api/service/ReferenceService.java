@@ -14,6 +14,7 @@ import org.jax.mgi.mgd.api.domain.ReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.entities.User;
+import org.jax.mgi.mgd.api.translators.ReferenceTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -39,7 +40,7 @@ public class ReferenceService {
 	/* returns true if references were updated, false if not; does not update citation cache, as
 	 * only workflow tags are processed currently
 	 */
-	public boolean updateReferencesInBulk(List<Long> refsKeys, String workflow_tag, String workflow_tag_operation, User currentUser) {
+	public boolean updateReferencesInBulk(List<Integer> refsKeys, String workflow_tag, String workflow_tag_operation, User currentUser) {
 		try {
 			referenceDAO.updateInBulk(refsKeys, workflow_tag, workflow_tag_operation, currentUser);
 			return true;
@@ -63,7 +64,8 @@ public class ReferenceService {
 			return out;
 		}
 
-		out.setItem(new ReferenceDomain(results.items.get(0)));
+		ReferenceTranslator translator = new ReferenceTranslator();
+		out.setItem(translator.translate(results.items.get(0)));
 		referenceDAO.delete(results.items.get(0));
 		return out;
 	}

@@ -16,7 +16,7 @@ import lombok.Setter;
 public class ReferenceAssociatedData extends EntityBase {
 	@Id
 	@Column(name="_refs_key")
-	private long _refs_key;
+	private int _refs_key;
 
 	@Column(name="has_gxdindex")
 	private int has_gxdindex;

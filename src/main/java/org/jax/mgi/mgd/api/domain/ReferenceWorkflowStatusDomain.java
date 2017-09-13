@@ -9,7 +9,7 @@ import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
  *	as possible
  */
 public class ReferenceWorkflowStatusDomain extends DomainBase {
-	public Long _refs_key;
+	public Integer _refs_key;
 	public boolean is_current;
 	public String creation_date;
 	public String modification_date;

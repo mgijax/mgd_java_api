@@ -176,7 +176,7 @@ public abstract class PostgresSQLDAO<T> {
 		 */
 
 		if (!keyExpiration.containsKey(tableName) || (currentTime > keyExpiration.get(tableName))) {
-			TypedQuery<Integer> q1 = (TypedQuery<Integer>) entityManager.createQuery("select max(" + fieldName + ") from " + tableName, Integer.class);
+			TypedQuery<Integer> q1 = (TypedQuery<Integer>) entityManager.createQuery("select max(" + fieldName + ")::int from " + tableName, Integer.class);
 			Integer maxKey = q1.getSingleResult();
 			if (maxKey == null) {
 				maxKey = 0;

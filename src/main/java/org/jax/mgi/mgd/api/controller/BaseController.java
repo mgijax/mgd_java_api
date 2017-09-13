@@ -3,13 +3,19 @@ package org.jax.mgi.mgd.api.controller;
 import java.util.HashMap;
 import javax.inject.Inject;
 
+import org.jax.mgi.mgd.api.domain.DomainBase;
+import org.jax.mgi.mgd.api.domain.ReferenceDomain;
+import org.jax.mgi.mgd.api.entities.ApiTableLog;
 import org.jax.mgi.mgd.api.entities.User;
+import org.jax.mgi.mgd.api.service.ApiEventLogService;
 import org.jax.mgi.mgd.api.service.UserService;
 
 public class BaseController {
 
 	@Inject
 	private UserService userService;
+	
+	@Inject ApiEventLogService apiLogService;
 	
 	/* if token is not defined in properties file, then do not require one.  Otherwise, must
 	 * be an exact match (case sensitive).
@@ -39,5 +45,9 @@ public class BaseController {
 			}
 		}
 		return filtered;
+	}
+	
+	protected void logRequest(String endpoint, DomainBase domain) {
+		apiLogService.create(endpoint, domain);
 	}
 }

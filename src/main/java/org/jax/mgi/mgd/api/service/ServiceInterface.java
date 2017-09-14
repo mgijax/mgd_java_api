@@ -5,7 +5,11 @@ import java.util.Map;
 import org.jax.mgi.mgd.api.dao.PostgresSQLDAO;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public abstract class ServiceInterface<T> {
+	
+	protected ObjectMapper mapper = new ObjectMapper();
 	
 	public T create(T object) {
 		return getDAO().create(object);

@@ -43,6 +43,8 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	 */
 	@Override
 	public ReferenceDomain createReference(String api_access_token, String username, ReferenceDomain reference) {
+		// Example request logging
+		//logRequest("Reference API: createReference:", reference);
 		User currentUser = userService.getUser(username);
 		if (currentUser != null) {
 			return referenceService.createReference(reference);

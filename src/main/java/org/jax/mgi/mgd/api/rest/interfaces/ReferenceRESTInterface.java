@@ -158,31 +158,31 @@ public interface ReferenceRESTInterface {
 			@ApiParam(value = "Value: Specify 'AND' or 'OR' to specify operator for searching multiple workflow_tags")
 			@QueryParam("workflow_tag_operator") String workflow_tag_operator,
 			
-			@ApiParam(value = "Value: Specify 'NOT' to use NOT opeator for workflow_tag1")
+			@ApiParam(value = "Value: Specify '1' to use NOT opeator for workflow_tag1")
 			@QueryParam("not_workflow_tag1") String not_workflow_tag1,
 			
 			@ApiParam(value = "Value: This is for searching by workflow tag1")
 			@QueryParam("workflow_tag1") String workflow_tag1,
 			
-			@ApiParam(value = "Value: Specify 'NOT' to use NOT opeator for workflow_tag2")
+			@ApiParam(value = "Value: Specify '1' to use NOT opeator for workflow_tag2")
 			@QueryParam("not_workflow_tag2") String not_workflow_tag2,
 			
 			@ApiParam(value = "Value: This is for searching by workflow tag2")
 			@QueryParam("workflow_tag2") String workflow_tag2,
 			
-			@ApiParam(value = "Value: Specify 'NOT' to use NOT opeator for workflow_tag3")
+			@ApiParam(value = "Value: Specify '1' to use NOT opeator for workflow_tag3")
 			@QueryParam("not_workflow_tag3") String not_workflow_tag3,
 			
 			@ApiParam(value = "Value: This is for searching by workflow tag3")
 			@QueryParam("workflow_tag3") String workflow_tag3,
 			
-			@ApiParam(value = "Value: Specify 'NOT' to use NOT opeator for workflow_tag4")
+			@ApiParam(value = "Value: Specify '1' to use NOT opeator for workflow_tag4")
 			@QueryParam("not_workflow_tag4") String not_workflow_tag4,
 			
 			@ApiParam(value = "Value: This is for searching by workflow tag4")
 			@QueryParam("workflow_tag4") String workflow_tag4,
 			
-			@ApiParam(value = "Value: Specify 'NOT' to use NOT opeator for workflow_tag5")
+			@ApiParam(value = "Value: Specify '1' to use NOT opeator for workflow_tag5")
 			@QueryParam("not_workflow_tag5") String not_workflow_tag5,
 			
 			@ApiParam(value = "Value: This is for searching by workflow tag5")

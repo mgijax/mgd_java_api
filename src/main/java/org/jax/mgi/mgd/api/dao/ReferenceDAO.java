@@ -353,7 +353,8 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			
 			if (params.containsKey(tagField)) {
 				if (params.containsKey(notField)) {
-					if (((String) params.get(notField)).trim().equalsIgnoreCase("not")) {
+					String notParam = ((String) params.get(notField)).trim();
+					if ("true".equalsIgnoreCase(notParam) || "1".equals(notParam)) {
 						notTags.add(((String) params.get(tagField)).toLowerCase());
 					} else {
 						tags.add(((String) params.get(tagField)).toLowerCase());

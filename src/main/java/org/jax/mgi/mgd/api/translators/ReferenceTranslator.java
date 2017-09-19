@@ -1,15 +1,14 @@
 package org.jax.mgi.mgd.api.translators;
 
 import java.util.ArrayList;
-
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceAssociatedData;
 import org.jax.mgi.mgd.api.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowData;
+import org.jax.mgi.mgd.api.util.Constants;
 
 public class ReferenceTranslator extends EntityDomainTranslator<Reference, ReferenceDomain>{
-
 	@Override
 	protected ReferenceDomain entityToDomain(Reference entity) {
 		ReferenceDomain domain = new ReferenceDomain();
@@ -34,12 +33,12 @@ public class ReferenceTranslator extends EntityDomainTranslator<Reference, Refer
 		domain.gorefid = entity.getGorefid();
 		domain.reference_type = entity.getReferenceType();
 		domain.short_citation = entity.getShort_citation();
-		domain.ap_status = entity.getAp_status();
-		domain.go_status = entity.getGo_status();
-		domain.gxd_status = entity.getGxd_status();
-		domain.qtl_status = entity.getQtl_status();
-		domain.tumor_status = entity.getTumor_status();
-		domain.workflow_tags = entity.getWorkflowTags();
+		domain.ap_status = entity.getStatus(Constants.WG_AP);
+		domain.go_status = entity.getStatus(Constants.WG_GO);
+		domain.gxd_status = entity.getStatus(Constants.WG_GXD);
+		domain.qtl_status = entity.getStatus(Constants.WG_QTL);
+		domain.tumor_status = entity.getStatus(Constants.WG_TUMOR);
+		domain.workflow_tags = entity.getWorkflowTagsAsStrings();
 
 		// is this a review article?
 		if (entity.getIsReviewArticle() == 0) {
@@ -101,8 +100,9 @@ public class ReferenceTranslator extends EntityDomainTranslator<Reference, Refer
 
 	@Override
 	protected Reference domainToEntity(ReferenceDomain domain) {
-		// Needs to be implemented once we choose to save references
+		// Cannot do translation here, as it requires lookup of actual entity from database.  Must
+		// instead work with ReferenceRepository.
+		
 		return null;
 	}
-
 }

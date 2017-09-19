@@ -2,6 +2,8 @@ package org.jax.mgi.mgd.api.domain;
 
 import java.util.List;
 
+import org.jax.mgi.mgd.api.exception.APIException;
+
 /* Is: a domain object that represents a single reference in mgd.
  * Has: fields needed to display/edit in the PWI, where those values for those fields are carried
  * 	back to the GXDI to be put into entity objects and persisted to the database
@@ -47,16 +49,23 @@ public class ReferenceDomain extends DomainBase {
 	public String link_to_supplemental;
 	public String has_extracted_text;
 	public List<String> associated_data;
+	public List<ReferenceWorkflowStatusDomain> statusHistory;
 	
 	/***--- constructors ---***/
 	
 	/* empty constructor - ready for population from JSON */
 	public ReferenceDomain() {}
 	
+	/* add the given status history to this domain object (not here by default, but added for detail pages)
+	 */
+	public void setStatusHistory (List<ReferenceWorkflowStatusDomain> history) {
+		this.statusHistory = history;
+	}
+	
 	/* update the status for the given workflow group within this domain object (This method does not persist the
 	 * change to the database.)
 	 */
-	public void setStatus (String group, String status) throws Exception {
+	public void setStatus (String group, String status) throws APIException {
 		if (group.equalsIgnoreCase("AP")) {
 			this.ap_status = status;
 		} else if (group.equalsIgnoreCase("GO")) {
@@ -68,7 +77,7 @@ public class ReferenceDomain extends DomainBase {
 		} else if (group.equalsIgnoreCase("Tumor")) {
 			this.tumor_status = status;
 		} else {
-			throw new Exception("Unknown workflow group: " + group);
+			throw new APIException("Unknown workflow group: " + group);
 		}
 	}
 }

@@ -31,7 +31,7 @@ public interface ReferenceRESTInterface {
 
 	@POST
 	@ApiOperation(value = "Value: Create Reference", notes="Notes: Creates a new Reference")
-	public ReferenceDomain createReference(
+	public SearchResults<ReferenceDomain> createReference(
 			@ApiParam(value = "Name: Token for accessing this API")
 			@HeaderParam("api_access_token") String api_access_token,
 			
@@ -303,13 +303,6 @@ public interface ReferenceRESTInterface {
 	@ApiOperation(value = "Value: Retrieve a single Reference by reference key")
 	public SearchResults<ReferenceDomain> getReferenceByKey (
 			@ApiParam(value = "Value: This is for searching by reference key")
-			@PathParam("refsKey") String refsKey);
-
-	@GET
-	@Path("/statusHistory/{refsKey}")
-	@ApiOperation(value = "Value: Retrieve the status history for a Reference by reference key")
-	public SearchResults<ReferenceWorkflowStatusDomain> getStatusHistoryByKey (
-			@ApiParam(value = "Value: This identifies the desired reference key")
 			@PathParam("refsKey") String refsKey);
 
 	@DELETE

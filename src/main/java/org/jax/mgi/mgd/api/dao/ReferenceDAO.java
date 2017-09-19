@@ -18,9 +18,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
-import javax.transaction.Transactional;
 
-import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.entities.AccessionID;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceAlleleAssociation;
@@ -29,7 +27,7 @@ import org.jax.mgi.mgd.api.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowData;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowTag;
-import org.jax.mgi.mgd.api.entities.User;
+import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateParser;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -39,7 +37,6 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 
 	protected ReferenceDAO() {
 		super(Reference.class);
-		// TODO Auto-generated constructor stub
 	}
 
 	// maps from search field name to workflow group abbreviation
@@ -60,7 +57,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	/* query handling specific for references.  Some fields are within the table backing Reference,
 	 * while others are coming from related tables.
 	 */
-	public SearchResults<Reference> search(HashMap<String, Object> params) {
+	public SearchResults<Reference> search(Map<String, Object> params) {
 		// query parameters existing in main reference table
 		List<String> internalParameters = new ArrayList<String>(Arrays.asList(
 			new String[] { "issue", "pages", "date", "ref_abstract", "isReviewArticle", "title",
@@ -248,7 +245,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 						Path<Date> path = shRoot.get("creation_date");
 						shPredicates.add(datePredicate(builder, path, datePieces.get(2), datePieces.get(3)));
 					}
-				} catch (Exception e) {
+				} catch (APIException e) {
 					return errorSR("InvalidDateFormat", "Status History Date is invalid", Constants.HTTP_BAD_REQUEST);
 				}
 			}
@@ -515,48 +512,10 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		return entityManager.createQuery(query).getResultList();
 	}
 	
-	/* set the given workflow_tag for all references identified in the list of keys
+	/* return a single reference for the given reference key
 	 */
-	@Transactional
-	public void updateInBulk(List<Integer> refsKeys, String workflow_tag, String workflow_tag_operation, User currentUser) throws Exception {
-		if ((refsKeys == null) || (refsKeys.size() == 0) || (workflow_tag == null) || (workflow_tag.length() == 0)) {
-			return; 
-		}
-		
-		if ((workflow_tag_operation == null) || workflow_tag_operation.equals("")) {
-			workflow_tag_operation = Constants.OP_ADD_WORKFLOW;
-		} else if (!workflow_tag_operation.equals(Constants.OP_ADD_WORKFLOW)
-				&& !workflow_tag_operation.equals(Constants.OP_REMOVE_WORKFLOW)) {
-			throw new Exception("Invalid workflow_tag_operation: " + workflow_tag_operation);
-		}
-		
-		
-		for (Integer refsKey : refsKeys) {
-			Reference reference = entityManager.find(Reference.class, refsKey);
-			if (reference != null) {
-				if (workflow_tag_operation.equals(Constants.OP_ADD_WORKFLOW)) {
-					reference.addTag(workflow_tag, this, currentUser);
-				} else {
-					reference.removeTag(workflow_tag, this, currentUser);
-				}
-			} else {
-				throw new Exception("Unknown reference key: " + refsKey);
-			}
-		}
-	}
-	
-	@Transactional
-	public Reference update(ReferenceDomain referenceDomain, User currentUser) throws Exception {
-		/*
-		 * 1. retrieve the corresponding Reference object
-		 * 2. update it with data from the ReferenceDomain object
-		 * 3. persist the Reference object
-		 * 4. return the Reference object
-		 */
-		Reference reference = entityManager.find(Reference.class, referenceDomain._refs_key);
-		reference.applyDomainChanges(referenceDomain, this, currentUser);
-		entityManager.persist(reference);
-		return reference;
+	public Reference getReference(int _refs_key) throws APIException {
+		return entityManager.find(Reference.class, _refs_key);
 	}
 	
 	/* get the next available primary key for a new reference
@@ -599,26 +558,30 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	/* compose a Predicate for searching for the given 'date' in the field in 'path' using the given 'operator'.
 	 * Assumes date is in mm/dd/yyyy format.
 	 */
-	public Predicate datePredicate(CriteriaBuilder builder, Path<Date> path, String operator, String date) throws ParseException {
+	public Predicate datePredicate(CriteriaBuilder builder, Path<Date> path, String operator, String date) throws APIException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
-		Date dayStart = dateFormat.parse(date + " 00:00:00");
-		Date dayEnd = dateFormat.parse(date + " 23:59:59");
+		try {
+			Date dayStart = dateFormat.parse(date + " 00:00:00");
+			Date dayEnd = dateFormat.parse(date + " 23:59:59");
 
-		if (DateParser.AFTER.equals(operator)) {
-			return builder.greaterThan(path, dayEnd);
+			if (DateParser.AFTER.equals(operator)) {
+				return builder.greaterThan(path, dayEnd);
 
-		} else if (DateParser.STARTING_WITH.equals(operator)) {
-			return builder.greaterThanOrEqualTo(path, dayStart);
+			} else if (DateParser.STARTING_WITH.equals(operator)) {
+				return builder.greaterThanOrEqualTo(path, dayStart);
 
-		} else if (DateParser.UP_THROUGH.equals(operator)) {
-			return builder.lessThanOrEqualTo(path, dayEnd);
+			} else if (DateParser.UP_THROUGH.equals(operator)) {
+				return builder.lessThanOrEqualTo(path, dayEnd);
 			
-		} else if (DateParser.UP_TO.equals(operator)) {
-			return builder.lessThan(path, dayStart);
+			} else if (DateParser.UP_TO.equals(operator)) {
+				return builder.lessThan(path, dayStart);
 			
-		} else if (DateParser.ON.equals(operator)) {
-			// use a 'between' to get the full day, not just a single point in time
-			return builder.between(path, dayStart, dayEnd);
+			} else if (DateParser.ON.equals(operator)) {
+				// use a 'between' to get the full day, not just a single point in time
+				return builder.between(path, dayStart, dayEnd);
+			}
+		} catch (ParseException p) {
+			throw new APIException("ReferenceDAO.datePredicate(): Cannot parse date: " + date);
 		}
 		return null; 
 	}

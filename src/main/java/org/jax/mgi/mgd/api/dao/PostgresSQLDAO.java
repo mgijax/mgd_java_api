@@ -54,6 +54,10 @@ public abstract class PostgresSQLDAO<T> {
 		//myClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 
+	public T find(int primaryKey) {
+		T myT = entityManager.find(this.myClass, primaryKey);
+		return myT;
+	}
 	public T create(T model) {
 		//log(model);
 		entityManager.persist(model);

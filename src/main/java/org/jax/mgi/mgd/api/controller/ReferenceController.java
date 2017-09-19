@@ -1,23 +1,18 @@
 package org.jax.mgi.mgd.api.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
-import org.jax.mgi.mgd.api.domain.ReferenceWorkflowStatusDomain;
-import org.jax.mgi.mgd.api.entities.Reference;
-import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.entities.Term;
 import org.jax.mgi.mgd.api.entities.User;
+import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.rest.interfaces.ReferenceRESTInterface;
 import org.jax.mgi.mgd.api.service.ReferenceService;
 import org.jax.mgi.mgd.api.service.TermService;
 import org.jax.mgi.mgd.api.service.UserService;
-import org.jax.mgi.mgd.api.translators.ReferenceTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -42,14 +37,20 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	/* create a database record for the given reference...  TODO: need to flesh this out, use SearchResults object, etc.
 	 */
 	@Override
-	public ReferenceDomain createReference(String api_access_token, String username, ReferenceDomain reference) {
+	public SearchResults<ReferenceDomain> createReference(String api_access_token, String username, ReferenceDomain reference) {
 		// Example request logging
 		//logRequest("Reference API: createReference:", reference);
-		User currentUser = userService.getUser(username);
-		if (currentUser != null) {
-			return referenceService.createReference(reference);
+		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
+		try {
+			User currentUser = userService.getUser(username);
+			if (currentUser != null) {
+				results.setItem(referenceService.createReference(reference, currentUser));
+			} 
+		} catch (APIException e) {
+			results.setError("ReferenceController.createReference", "Failed to create reference: " + e.toString(),
+				Constants.HTTP_SERVER_ERROR);
 		}
-		return null;
+		return results;
 	}
 
 	/* update the given reference in the database, then return a revised version of it in the SearchResults
@@ -129,7 +130,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 				
 				HashMap<String,Object> searchFields = new HashMap<String,Object>();
 				searchFields.put("accids", accid);
-				SearchResults<Reference> refs = referenceService.getReference(searchFields);
+				SearchResults<ReferenceDomain> refs = referenceService.getReference(searchFields);
 
 				if (refs.total_count == 0) {
 					results.setError("Failed", "No reference for ID " + accid, Constants.HTTP_BAD_REQUEST);
@@ -138,13 +139,12 @@ public class ReferenceController extends BaseController implements ReferenceREST
 					results.setError("Failed", "Multiple references for ID " + accid, Constants.HTTP_BAD_REQUEST);
 					
 				} else {
-					ReferenceTranslator translator = new ReferenceTranslator(); 
-					ReferenceDomain ref = translator.translate(refs.items.get(0));
+					ReferenceDomain ref = refs.items.get(0);
 					ref.setStatus(group, status);
 					referenceService.updateReference(ref, currentUser);
 					results.items = null;	// okay result
 				}
-			} catch (Throwable t) {
+			} catch (APIException t) {
 				results.setError("Failed", "Failed to save changes: " + t.toString(), Constants.HTTP_SERVER_ERROR);
 			}
 		} else {
@@ -167,17 +167,9 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		User currentUser = userService.getUser(username);
 		if (currentUser != null) {
 			try {
-				// The updateReference method does not return the updated reference, as the method must finish
-				// before the updates are persisted to the database.  So, we issue the update, then we use the
-				// getReferenceByKey() method to re-fetch and return the updated object.
-				
-				if (referenceService.updateReferencesInBulk(input._refs_keys, input.workflow_tag, input.workflow_tag_operation,
-						currentUser)) {
-					results.items = null;	// okay result
-				} else {
-					results.setError("Failed", "Failed to save changes", Constants.HTTP_SERVER_ERROR);
-				}
-			} catch (Throwable t) {
+				referenceService.updateReferencesInBulk(input._refs_keys, input.workflow_tag, input.workflow_tag_operation, currentUser);
+				results.items = null;	// okay result
+			} catch (APIException t) {
 				results.setError("Failed", "Failed to save changes", Constants.HTTP_SERVER_ERROR);
 			}
 		} else {
@@ -298,7 +290,8 @@ public class ReferenceController extends BaseController implements ReferenceREST
 
 		if (map.containsKey("year")) {
 			try {
-				int intYear = Integer.parseInt((String) map.get("year"));
+				// We don't need this value; we just need to ensure it's an integer.
+				Integer.parseInt((String) map.get("year"));
 			} catch (Throwable t) {
 				SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
 				results.setError("InvalidParameter", "Year is not an integer: " + year, Constants.HTTP_BAD_REQUEST);
@@ -306,22 +299,13 @@ public class ReferenceController extends BaseController implements ReferenceREST
 			}
 		}
 		
-		SearchResults<ReferenceDomain> domains = new SearchResults<ReferenceDomain>();
-
-		SearchResults<Reference> results = referenceService.getReference(map);
-		if (results.status_code != 200) {
-			domains.setError(results.error, results.message, results.status_code);
-		} else {
-			// need to convert Reference entity objects to ReferenceDomain objects to meet PWI's needs
-			
-			ReferenceTranslator translator = new ReferenceTranslator(); 
-			List<ReferenceDomain> domainObjects = new ArrayList<ReferenceDomain>();
-			for (Reference ref : results.items) {
-				domainObjects.add(translator.translate(ref));
-			}
-			domains.setItems(domainObjects);
+		try {
+			return referenceService.getReference(map);
+		} catch (APIException e) {
+			SearchResults<ReferenceDomain> out = new SearchResults<ReferenceDomain>();
+			out.setError("Failed", "search failed: " + e.toString(), Constants.HTTP_SERVER_ERROR);
+			return out;
 		}
-		return domains;
 	}
 
 
@@ -346,17 +330,21 @@ public class ReferenceController extends BaseController implements ReferenceREST
 				return results;
 			}
 
-			SearchResults<Reference> refs = referenceService.getReference(map);
-			if (refs.status_code != 200) {
-				results.setError(refs.error, refs.message, refs.status_code);
-				return results;
-			}
+			try {
+				SearchResults<ReferenceDomain> refs = referenceService.getReference(map);
+				if (refs.status_code != 200) {
+					results.setError(refs.error, refs.message, refs.status_code);
+					return results;
+				}
 
-			if (refs.total_count > 0) {
-				ReferenceTranslator translator = new ReferenceTranslator(); 
-				results.setItem(translator.translate(refs.items.get(0)));
-			} else {
-				results.setError("NotFound", "No reference with key " + refsKey, Constants.HTTP_NOT_FOUND);
+				if (refs.total_count > 0) {
+					results.setItem(refs.items.get(0));
+				} else {
+					results.setError("NotFound", "No reference with key " + refsKey, Constants.HTTP_NOT_FOUND);
+				}
+			} catch (APIException e) {
+					results.setError("Failed", "Failed to get reference by key " + refsKey + ", exception: " + e.toString(),
+						Constants.HTTP_NOT_FOUND);
 			}
 		} else {
 			results.setError("InvalidParameter", "No reference key was specified", Constants.HTTP_BAD_REQUEST);
@@ -370,25 +358,8 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	public SearchResults<ReferenceDomain> deleteReference(String api_access_token, String username, String id) {
 		User currentUser = userService.getUser(username);
 		if (currentUser != null) {
-			return referenceService.deleteReference(id);
+			return referenceService.deleteReference(id, currentUser);
 		}
 		return null;
-	}
-	
-	/* get list of workflow status objects (current and historical) for the reference with the given key
-	 */
-	@Override
-	public SearchResults<ReferenceWorkflowStatusDomain> getStatusHistoryByKey (String refsKey) {
-		SearchResults<ReferenceWorkflowStatusDomain> results = new SearchResults<ReferenceWorkflowStatusDomain>();
-
-		// use lookup of reference to weed out and report parameter errors
-		SearchResults<ReferenceDomain> referenceResult = this.getReferenceByKey(refsKey);
-		if (referenceResult.error != null) {
-			results.setError(referenceResult.error, referenceResult.message, referenceResult.status_code);
-			return results;
-		}
-
-		results.setItems(referenceService.getStatusHistory(refsKey));
-		return results;
 	}
 }

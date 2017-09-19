@@ -19,6 +19,8 @@ public class ReferenceWorkflowStatusDomain extends DomainBase {
 	public String createdby_user;
 	public String modifiedby_user;
 	
+	public ReferenceWorkflowStatusDomain() {}
+
 	public ReferenceWorkflowStatusDomain(ReferenceWorkflowStatus rws) {
 		this._refs_key = rws.get_refs_key();
 		this.creation_date = rws.getCreationDate();

@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.dao.TermDAO;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.entities.AccessionID;
@@ -26,6 +27,7 @@ import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.translators.ReferenceTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.MapMaker;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 /* Is: a repository that deals with ReferenceDomain objects and handles their translation to
@@ -40,6 +42,9 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 
 	@Inject
 	private ReferenceDAO referenceDAO;
+
+	@Inject
+	private TermDAO termDAO;
 
 	ReferenceTranslator translator = new ReferenceTranslator();
 
@@ -134,6 +139,37 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 
 	/***--- (private) instance methods ---***/
 	
+	/* return a single Term matching the parameters encoded as a Map in the given JSON string
+	 */
+	private Term getTerm (String json) throws APIException {
+		MapMaker mapMaker = new MapMaker();
+		try {
+			SearchResults<Term> terms = termDAO.search(mapMaker.toMap(json));
+
+			if ((terms.items == null) || (terms.items.size() == 0)) {
+				throw new APIException("ReferenceRepository: Could not find term for JSON: " + json);
+			} else if (terms.items.size() > 1) {
+				throw new APIException("ReferenceRepository: Found too many terms for JSON: " + json);
+			}
+
+			return terms.items.get(0);
+		} catch (Exception e) {
+			throw new APIException("ReferenceRepository: Term search failed: " + e.toString());
+		}
+	}
+	
+	/* return a single Term matching the given vocabulary / term pair
+	 */
+	private Term getTermByTerm (Integer vocabKey, String term) throws APIException {
+		return getTerm("{\"vocab._vocab_key\" : \"" + vocabKey + "\", \"term\" : \"" + term + "\"}");
+	}
+	
+	/* return a single Term matching the given vocabulary / abbreviation pair
+	 */
+	private Term getTermByAbbreviation (Integer vocabKey, String abbreviation) throws APIException {
+		return getTerm("{\"vocab._vocab_key\" : \"" + vocabKey + "\", \"abbreviation\" : \"" + abbreviation + "\"}");
+	}
+	
 	/* retrieve the Reference object with the given primaryKey
 	 */
 	private Reference getReference(Integer primaryKey) throws APIException {
@@ -169,7 +205,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 
 	/* handle the basic fields that have changed between this Reference and the given ReferenceDomain
 	 */
-	private boolean applyBasicFieldChanges(Reference entity, ReferenceDomain domain, User currentUser) {
+	private boolean applyBasicFieldChanges(Reference entity, ReferenceDomain domain, User currentUser) throws APIException {
 		// exactly one set of basic data per reference, including:  is_discard flag, reference type,
 		// author, primary author (derived), journal, title, volume, issue, date, year, pages, 
 		// abstract, and isReviewArticle flag
@@ -223,7 +259,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 			entity.setYear(domain.year);
 			entity.setPages(domain.pages);
 			entity.setRef_abstract(domain.ref_abstract);
-			entity.setReferenceTypeTerm(referenceDAO.getTermByTerm(Constants.VOC_REFERENCE_TYPE, domain.reference_type));
+			entity.setReferenceTypeTerm(getTermByTerm(Constants.VOC_REFERENCE_TYPE, domain.reference_type));
 			entity.setModificationInfo(currentUser);
 			anyChanges = true;
 		}
@@ -243,7 +279,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 	
 	/* apply ID changes from domain to entity for PubMed, DOI, and GO REF IDs
 	 */
-	private boolean applyAccessionIDChanges(Reference entity, ReferenceDomain domain, User currentUser) {
+	private boolean applyAccessionIDChanges(Reference entity, ReferenceDomain domain, User currentUser) throws APIException {
 		// assumes only one ID per reference for each logical database (valid assumption, August 2017)
 		// need to handle:  new ID for logical db, updated ID for logical db, deleted ID for logical db
 
@@ -300,7 +336,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 	/* Apply a single ID change to this reference.  If there already is an ID for this logical database, replace it.  If there wasn't
 	 * one, add one.  And, if there was one previously, but there's not now, then delete it.
 	 */
-	private boolean applyOneIDChange(Reference entity, Integer ldb, String accID, String prefixPart, Integer numericPart, Integer preferred, Integer isPrivate, User currentUser) {
+	private boolean applyOneIDChange(Reference entity, Integer ldb, String accID, String prefixPart, Integer numericPart, Integer preferred, Integer isPrivate, User currentUser) throws APIException {
 		// first parameter is required; bail out if it is null
 		if (ldb == null) { return false; }
 		
@@ -455,7 +491,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 
 	/* apply changes in workflow data fields (not status, though) from domain to entity
 	 */
-	private boolean applyWorkflowDataChanges(Reference entity, ReferenceDomain domain, User currentUser) {
+	private boolean applyWorkflowDataChanges(Reference entity, ReferenceDomain domain, User currentUser) throws APIException {
 		// at most one set of workflow data per reference
 		// need to handle:  updated workflow data, new workflow data -- (no deletions)
 		
@@ -469,7 +505,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 			if (!smartEqual(myWD.getSupplemental(), domain.has_supplemental)
 				|| !smartEqual(myWD.getLink_supplemental(), domain.link_to_supplemental)) {
 				
-				myWD.setSupplementalTerm(referenceDAO.getTermByTerm(Constants.VOC_SUPPLEMENTAL, domain.has_supplemental));
+				myWD.setSupplementalTerm(getTermByTerm(Constants.VOC_SUPPLEMENTAL, domain.has_supplemental));
 				myWD.setLink_supplemental(domain.link_to_supplemental);
 				myWD.setModifiedByUser(currentUser);
 				myWD.setModification_date(new Date());
@@ -482,7 +518,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 			myWD = new ReferenceWorkflowData();
 			myWD.set_refs_key(domain._refs_key);
 			myWD.setHas_pdf(0);
-			myWD.setSupplementalTerm(referenceDAO.getTermByTerm(Constants.VOC_SUPPLEMENTAL, domain.has_supplemental));
+			myWD.setSupplementalTerm(getTermByTerm(Constants.VOC_SUPPLEMENTAL, domain.has_supplemental));
 			myWD.setLink_supplemental(domain.link_to_supplemental);
 			myWD.setExtracted_text(null);
 			myWD.setCreatedByUser(currentUser);
@@ -566,7 +602,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		// need to find the term of the tag, wrap it in an association, perist the association, and
 		// add it to the workflow tags for this Reference
 		
-		Term tagTerm = referenceDAO.getTermByTerm(Constants.VOC_WORKFLOW_TAGS, rdTag);
+		Term tagTerm = getTermByTerm(Constants.VOC_WORKFLOW_TAGS, rdTag);
 		if (tagTerm != null) {
 			if (!entity.getWorkflowTags().contains(tagTerm)) {
 				ReferenceWorkflowTag rwTag = new ReferenceWorkflowTag();
@@ -604,7 +640,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 	 * group statuses.  returns true if an update was made, false if no change.  persists any changes
 	 * to the database.
 	 */
-	private boolean updateStatus(Reference entity, String groupAbbrev, String currentStatus, String newStatus, User currentUser) {
+	private boolean updateStatus(Reference entity, String groupAbbrev, String currentStatus, String newStatus, User currentUser) throws APIException {
 		// no update if new status matches old status (or if no group is specified)
 		if ( ((currentStatus != null) && currentStatus.equals(newStatus)) || (groupAbbrev == null) ||
 				((currentStatus == null) && (newStatus == null)) ) {
@@ -629,8 +665,8 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		newRws.set_assoc_key(referenceDAO.getNextWorkflowStatusKey());
 		newRws.set_refs_key(entity.get_refs_key());
 		newRws.setIsCurrent(1);
-		newRws.setGroupTerm(referenceDAO.getTermByAbbreviation(Constants.VOC_WORKFLOW_GROUP, groupAbbrev));
-		newRws.setStatusTerm(referenceDAO.getTermByTerm(Constants.VOC_WORKFLOW_STATUS, newStatus));
+		newRws.setGroupTerm(getTermByAbbreviation(Constants.VOC_WORKFLOW_GROUP, groupAbbrev));
+		newRws.setStatusTerm(getTermByTerm(Constants.VOC_WORKFLOW_STATUS, newStatus));
 		newRws.setCreatedByUser(currentUser);
 		newRws.setModifiedByUser(newRws.getCreatedByUser());
 		newRws.setCreation_date(new Date());

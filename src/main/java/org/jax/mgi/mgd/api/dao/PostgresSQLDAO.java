@@ -142,42 +142,6 @@ public abstract class PostgresSQLDAO<T> {
 	}
 
 
-	/* get a Term object for the given vocabulary key and the term's abbreviation
-	 */
-	public Term getTermByAbbreviation(Integer vocabKey, String abbreviation) {
-		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<Term> query = builder.createQuery(Term.class);
-		Root<Term> root = query.from(Term.class);
-		List<Predicate> restrictions = new ArrayList<Predicate>();
-		restrictions.add(builder.equal(root.get("vocab").get("_vocab_key"), vocabKey));
-		restrictions.add(builder.equal(root.get("abbreviation"), abbreviation));
-		query.where(builder.and(restrictions.toArray(new Predicate[0])));
-		List<Term> results = entityManager.createQuery(query).getResultList();
-		if ((results == null) || (results.size() == 0)) {
-			return null;
-		}
-		return results.get(0);
-	}
-
-	/* get a Term object for the given vocabulary key and the term's text
-	 */
-	public Term getTermByTerm(Integer vocabKey, String term) {
-		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<Term> query = builder.createQuery(Term.class);
-		Root<Term> root = query.from(Term.class);
-		List<Predicate> restrictions = new ArrayList<Predicate>();
-		restrictions.add(builder.equal(root.get("vocab").get("_vocab_key"), vocabKey));
-		Path<String> termColumn = root.get("term");
-		restrictions.add(builder.equal(builder.lower(termColumn), term.toLowerCase()));
-		query.where(builder.and(restrictions.toArray(new Predicate[0])));
-		List<Term> results = entityManager.createQuery(query).getResultList();
-		if ((results == null) || (results.size() == 0)) {
-			return null;
-		}
-		return results.get(0);
-	}
-
-
 	/* get the next available _Accession_key in the ACC_Accession table
 	 */
 	public synchronized int getNextAccessionKey() {

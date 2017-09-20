@@ -4,6 +4,7 @@ package org.jax.mgi.mgd.api.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -55,7 +56,7 @@ public class ReferenceService {
 		repo.updateInBulk(refsKeys, workflow_tag, workflow_tag_operation, currentUser);
 	}
 
-	public SearchResults<ReferenceDomain> getReference(HashMap<String, Object> searchFields) throws APIException {
+	public SearchResults<ReferenceDomain> getReference(Map<String, Object> searchFields) throws APIException {
 		SearchResults<ReferenceDomain> domains = repo.search(searchFields);
 
 		// if we have only a single matching reference, add in the status history data (for a detail page)

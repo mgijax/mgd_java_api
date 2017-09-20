@@ -14,6 +14,7 @@ import org.jax.mgi.mgd.api.service.ReferenceService;
 import org.jax.mgi.mgd.api.service.TermService;
 import org.jax.mgi.mgd.api.service.UserService;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.MapMaker;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -115,22 +116,20 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		}
 		
 		User currentUser = userService.getUser(username);
-		if (currentUser != null) {
-			// check that we found an actual user and didn't fall back to a default
-			// (be extra careful here because of outside use)
-			if (!currentUser.getLogin().equalsIgnoreCase(username)) {
+		if (currentUser == null) {
+			results.setError("FailedAuthentication", "Failed - invalid username", Constants.HTTP_PERMISSION_DENIED); 
+			return results;
+
+		} else if (!currentUser.getLogin().equalsIgnoreCase(username)) {
+				// We don't want to just fall back on a default user here, so this is an error case.
 				results.setError("Failed", "Unknown user: " + username, Constants.HTTP_BAD_REQUEST);
 				return results;
-			}
-			
+		}
+
+		MapMaker mapMaker = new MapMaker();
+		for (String myID : accid.split(",")) {
 			try {
-				// The updateReference method does not return the updated reference, as the method must finish
-				// before the updates are persisted to the database.  So, we issue the update, then we use the
-				// getReferenceByKey() method to re-fetch and return the updated object.
-				
-				HashMap<String,Object> searchFields = new HashMap<String,Object>();
-				searchFields.put("accids", accid);
-				SearchResults<ReferenceDomain> refs = referenceService.getReference(searchFields);
+				SearchResults<ReferenceDomain> refs = referenceService.getReference(mapMaker.toMap("{\"accids\" : \"" + myID + "\"}"));
 
 				if (refs.total_count == 0) {
 					results.setError("Failed", "No reference for ID " + accid, Constants.HTTP_BAD_REQUEST);
@@ -147,9 +146,8 @@ public class ReferenceController extends BaseController implements ReferenceREST
 			} catch (APIException t) {
 				results.setError("Failed", "Failed to save changes: " + t.toString(), Constants.HTTP_SERVER_ERROR);
 			}
-		} else {
-			results.setError("FailedAuthentication", "Failed - invalid username", Constants.HTTP_PERMISSION_DENIED);
 		}
+
 		return results;
 	}
 	

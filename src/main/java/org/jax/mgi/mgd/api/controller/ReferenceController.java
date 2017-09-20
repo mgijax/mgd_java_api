@@ -1,6 +1,8 @@
 package org.jax.mgi.mgd.api.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -14,6 +16,7 @@ import org.jax.mgi.mgd.api.rest.interfaces.ReferenceRESTInterface;
 import org.jax.mgi.mgd.api.service.ReferenceService;
 import org.jax.mgi.mgd.api.service.TermService;
 import org.jax.mgi.mgd.api.service.UserService;
+import org.jax.mgi.mgd.api.util.CommaSplitter;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.MapMaker;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -128,25 +131,30 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		}
 
 		MapMaker mapMaker = new MapMaker();
-		for (String myID : accid.split(",")) {
+		CommaSplitter splitter = new CommaSplitter();
+		List<String> failures = new ArrayList<String>();
+		String currentID = null;
+		
+		for (String myIDs : splitter.split(accid, 100)) {
 			try {
-				SearchResults<ReferenceDomain> refs = referenceService.getReference(mapMaker.toMap("{\"accids\" : \"" + myID + "\"}"));
+				SearchResults<ReferenceDomain> refs = referenceService.getReference(mapMaker.toMap("{\"accids\" : \"" + myIDs + "\"}"));
 
-				if (refs.total_count == 0) {
-					results.setError("Failed", "No reference for ID " + accid, Constants.HTTP_BAD_REQUEST);
-
-				} else if (refs.total_count > 1) {
-					results.setError("Failed", "Multiple references for ID " + accid, Constants.HTTP_BAD_REQUEST);
-					
-				} else {
-					ReferenceDomain ref = refs.items.get(0);
-					ref.setStatus(group, status);
-					referenceService.updateReference(ref, currentUser);
-					results.items = null;	// okay result
+				if (refs.total_count > 0) {
+					for (ReferenceDomain ref : refs.items) {
+						currentID = ref.jnumid;
+						ref.setStatus(group, status);
+						referenceService.updateReference(ref, currentUser);
+					}
 				}
 			} catch (APIException t) {
-				results.setError("Failed", "Failed to save changes: " + t.toString(), Constants.HTTP_SERVER_ERROR);
+				failures.add(currentID);
 			}
+		}
+
+		if (failures.size() > 0) {
+			results.setError("Partial Failure", "Status changes failed to save for: " + String.join(",", failures), Constants.HTTP_SERVER_ERROR);
+		} else {
+			results.items = null;
 		}
 
 		return results;

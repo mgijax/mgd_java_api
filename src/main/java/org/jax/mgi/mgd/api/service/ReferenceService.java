@@ -1,7 +1,6 @@
 
 package org.jax.mgi.mgd.api.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,15 +9,10 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
-import org.jax.mgi.mgd.api.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
-import org.jax.mgi.mgd.api.domain.ReferenceWorkflowStatusDomain;
-import org.jax.mgi.mgd.api.entities.Reference;
-import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.repository.ReferenceRepository;
-import org.jax.mgi.mgd.api.translators.ReferenceTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 

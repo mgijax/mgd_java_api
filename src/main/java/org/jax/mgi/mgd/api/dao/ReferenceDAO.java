@@ -455,7 +455,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			}
 		}
 		
-		// search by extracted text (currently a case-insensitive 'contains' search on the string entered)
+		// search by extracted text (AND for all words included in the search string)
 		
 		if (params.containsKey("extracted_text") && (params.get("extracted_text") != null)) {
 			String textString = ((String) params.get("extracted_text")).toLowerCase().trim();

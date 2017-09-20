@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.controller;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -179,126 +180,36 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	/* search method - retrieves references based on query form parameters
 	 */
 	@Override
-	public SearchResults<ReferenceDomain> getReference(String accids, String allele_id, String authors, String date,
-			String extracted_text,
-			String isReviewArticle, String is_discard, String issue, String journal, String marker_id,
-			String notes, String pages, String primary_author, String ref_abstract, String reference_type,
-			Integer row_limit, String title, String volume, String workflow_tag_operator,
-			String not_workflow_tag1, String workflow_tag1, String not_workflow_tag2, String workflow_tag2,
-			String not_workflow_tag3, String workflow_tag3, String not_workflow_tag4, String workflow_tag4,
-			String not_workflow_tag5, String workflow_tag5, String year, String status_operator,
-			Integer status_AP_Chosen, Integer status_AP_Full_coded, Integer status_AP_Indexed,
-			Integer status_AP_Not_Routed, Integer status_AP_Rejected, Integer status_AP_Routed,
-			Integer status_GO_Chosen, Integer status_GO_Full_coded, Integer status_GO_Indexed,
-			Integer status_GO_Not_Routed, Integer status_GO_Rejected, Integer status_GO_Routed,
-			Integer status_GXD_Chosen, Integer status_GXD_Full_coded, Integer status_GXD_Indexed,
-			Integer status_GXD_Not_Routed, Integer status_GXD_Rejected, Integer status_GXD_Routed,
-			Integer status_QTL_Chosen, Integer status_QTL_Full_coded, Integer status_QTL_Indexed,
-			Integer status_QTL_Not_Routed, Integer status_QTL_Rejected, Integer status_QTL_Routed,
-			Integer status_Tumor_Chosen, Integer status_Tumor_Full_coded, Integer status_Tumor_Indexed,
-			Integer status_Tumor_Not_Routed, Integer status_Tumor_Rejected, Integer status_Tumor_Routed,
-			String sh_group, String sh_username, String sh_status, String sh_date
-			) {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		if (accids != null) { map.put("accids", accids); }
-		if (allele_id != null) { map.put("allele_id", allele_id); }
-		if (authors != null) { map.put("authors", authors); }
-		if (date != null) { map.put("date", date); }
-		if (extracted_text != null) { map.put("extracted_text", extracted_text); }
-		if (issue != null) { map.put("issue", issue); }
-		if (journal != null) { map.put("journal", journal); }
-		if (marker_id != null) { map.put("marker_id", marker_id); }
-		if (pages != null) { map.put("pages", pages); }
-		if (primary_author != null) { map.put("primary_author", primary_author); }
-		if (ref_abstract != null) { map.put("ref_abstract", ref_abstract); }
-		if (row_limit != null) { map.put("row_limit", row_limit); }
-		if (title != null) { map.put("title", title); }
-		if (volume != null) { map.put("volume", volume); }
-		if (workflow_tag_operator != null) { map.put("workflow_tag_operator", workflow_tag_operator); }
-		if (not_workflow_tag1 != null) { map.put("not_workflow_tag1", not_workflow_tag1); }
-		if (workflow_tag1 != null) { map.put("workflow_tag1", workflow_tag1); }
-		if (not_workflow_tag2 != null) { map.put("not_workflow_tag2", not_workflow_tag2); }
-		if (workflow_tag2 != null) { map.put("workflow_tag2", workflow_tag2); }
-		if (not_workflow_tag3 != null) { map.put("not_workflow_tag3", not_workflow_tag3); }
-		if (workflow_tag3 != null) { map.put("workflow_tag3", workflow_tag3); }
-		if (not_workflow_tag4 != null) { map.put("not_workflow_tag4", not_workflow_tag4); }
-		if (workflow_tag4 != null) { map.put("workflow_tag4", workflow_tag4); }
-		if (not_workflow_tag5 != null) { map.put("not_workflow_tag5", not_workflow_tag5); }
-		if (workflow_tag5 != null) { map.put("workflow_tag5", workflow_tag5); }
-		if ((year != null) && (year.trim().length() != 0)) { map.put("year", year); }
-		if (notes != null) { map.put("notes", notes); }
-		if (reference_type != null) { map.put("reference_type", reference_type); }
-		if (is_discard != null) { map.put("is_discard", is_discard); }
-
-		if (isReviewArticle != null) {
-			if ("0".equals(isReviewArticle) || "No".equalsIgnoreCase(isReviewArticle)) {
-				map.put("isReviewArticle", 0);
-			} else if ("1".equals(isReviewArticle) || "Yes".equalsIgnoreCase(isReviewArticle)) {
-				map.put("isReviewArticle", 1);
+	public SearchResults<ReferenceDomain> search(Map<String,Object> params) {
+		if (params.containsKey("isReviewArticle")) {
+			String isReviewArticle = (String) params.get("isReviewArticle");
+			if ("No".equalsIgnoreCase(isReviewArticle) || "0".equals(isReviewArticle)) {
+				params.put("isReviewArticle", 0);
+			} else if ("Yes".equalsIgnoreCase(isReviewArticle) || "1".equals(isReviewArticle)) {
+				params.put("isReviewArticle", 1);
 			}
 		}
 
-		if (status_operator != null) { map.put("status_operator", status_operator); }
-		if ((status_AP_Chosen != null) && (status_AP_Chosen == 1)) { map.put("status_AP_Chosen", 1); }
-		if ((status_AP_Full_coded != null) && (status_AP_Full_coded == 1)) { map.put("status_AP_Full_coded", 1); }
-		if ((status_AP_Indexed != null) && (status_AP_Indexed == 1)) { map.put("status_AP_Indexed", 1); }
-		if ((status_AP_Not_Routed != null) && (status_AP_Not_Routed == 1)) { map.put("status_AP_Not_Routed", 1); }
-		if ((status_AP_Rejected != null) && (status_AP_Rejected == 1)) { map.put("status_AP_Rejected", 1); }
-		if ((status_AP_Routed != null) && (status_AP_Routed == 1)) { map.put("status_AP_Routed", 1); }
-
-		if ((status_GO_Chosen != null) && (status_GO_Chosen == 1)) { map.put("status_GO_Chosen", 1); }
-		if ((status_GO_Full_coded != null) && (status_GO_Full_coded == 1)) { map.put("status_GO_Full_coded", 1); }
-		if ((status_GO_Indexed != null) && (status_GO_Indexed == 1)) { map.put("status_GO_Indexed", 1); }
-		if ((status_GO_Not_Routed != null) && (status_GO_Not_Routed == 1)) { map.put("status_GO_Not_Routed", 1); }
-		if ((status_GO_Rejected != null) && (status_GO_Rejected == 1)) { map.put("status_GO_Rejected", 1); }
-		if ((status_GO_Routed != null) && (status_GO_Routed == 1)) { map.put("status_GO_Routed", 1); }
-
-		if ((status_GXD_Chosen != null) && (status_GXD_Chosen == 1)) { map.put("status_GXD_Chosen", 1); }
-		if ((status_GXD_Full_coded != null) && (status_GXD_Full_coded == 1)) { map.put("status_GXD_Full_coded", 1); }
-		if ((status_GXD_Indexed != null) && (status_GXD_Indexed == 1)) { map.put("status_GXD_Indexed", 1); }
-		if ((status_GXD_Not_Routed != null) && (status_GXD_Not_Routed == 1)) { map.put("status_GXD_Not_Routed", 1); }
-		if ((status_GXD_Rejected != null) && (status_GXD_Rejected == 1)) { map.put("status_GXD_Rejected", 1); }
-		if ((status_GXD_Routed != null) && (status_GXD_Routed == 1)) { map.put("status_GXD_Routed", 1); }
-
-		if ((status_QTL_Chosen != null) && (status_QTL_Chosen == 1)) { map.put("status_QTL_Chosen", 1); }
-		if ((status_QTL_Full_coded != null) && (status_QTL_Full_coded == 1)) { map.put("status_QTL_Full_coded", 1); }
-		if ((status_QTL_Indexed != null) && (status_QTL_Indexed == 1)) { map.put("status_QTL_Indexed", 1); }
-		if ((status_QTL_Not_Routed != null) && (status_QTL_Not_Routed == 1)) { map.put("status_QTL_Not_Routed", 1); }
-		if ((status_QTL_Rejected != null) && (status_QTL_Rejected == 1)) { map.put("status_QTL_Rejected", 1); }
-		if ((status_QTL_Routed != null) && (status_QTL_Routed == 1)) { map.put("status_QTL_Routed", 1); }
-
-		if ((status_Tumor_Chosen != null) && (status_Tumor_Chosen == 1)) { map.put("status_Tumor_Chosen", 1); }
-		if ((status_Tumor_Full_coded != null) && (status_Tumor_Full_coded == 1)) { map.put("status_Tumor_Full_coded", 1); }
-		if ((status_Tumor_Indexed != null) && (status_Tumor_Indexed == 1)) { map.put("status_Tumor_Indexed", 1); }
-		if ((status_Tumor_Not_Routed != null) && (status_Tumor_Not_Routed == 1)) { map.put("status_Tumor_Not_Routed", 1); }
-		if ((status_Tumor_Rejected != null) && (status_Tumor_Rejected == 1)) { map.put("status_Tumor_Rejected", 1); }
-		if ((status_Tumor_Routed != null) && (status_Tumor_Routed == 1)) { map.put("status_Tumor_Routed", 1); }
-
-		// status history fields
-		if (sh_group != null) { map.put("sh_group", sh_group); }
-		if (sh_username != null) { map.put("sh_username", sh_username); }
-		if (sh_status != null) { map.put("sh_status", sh_status); }
-		if (sh_date != null) { map.put("sh_date", sh_date); }
-		
-		map = this.filterEmptyParameters(map);
-
-		log.info("Search Params: " + map);
+		params = filterEmptyParameters(params);
+		log.info("Search Params: " + params);
 		
 		// brief error checking
 
-		if (map.containsKey("year")) {
+		if (params.containsKey("year")) {
 			try {
 				// We don't need this value; we just need to ensure it's an integer.
-				Integer.parseInt((String) map.get("year"));
+				Integer.parseInt((String) params.get("year"));
 			} catch (Throwable t) {
 				SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
-				results.setError("InvalidParameter", "Year is not an integer: " + year, Constants.HTTP_BAD_REQUEST);
+				results.setError("InvalidParameter", "Year parameter is not an integer", Constants.HTTP_BAD_REQUEST);
 				return results;
 			}
 		}
 		
 		try {
-			return referenceService.getReference(map);
+			log.info("executing search");
+			log.info("out: " + referenceService.getReference(params).toString());
+			return referenceService.getReference(params);
 		} catch (APIException e) {
 			SearchResults<ReferenceDomain> out = new SearchResults<ReferenceDomain>();
 			out.setError("Failed", "search failed: " + e.toString(), Constants.HTTP_SERVER_ERROR);

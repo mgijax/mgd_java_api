@@ -1,6 +1,8 @@
 package org.jax.mgi.mgd.api.controller;
 
 import java.util.HashMap;
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.domain.DomainBase;
@@ -30,7 +32,7 @@ public class BaseController {
 	
 	/* convenience method to remove any String parameters that have an empty string as the value
 	 */
-	protected HashMap<String, Object> filterEmptyParameters(HashMap<String, Object> params) {
+	protected Map<String, Object> filterEmptyParameters(Map<String, Object> params) {
 		HashMap<String, Object> filtered = new HashMap<String, Object>();
 		for (String key : params.keySet()) {
 			boolean skipIt = false;

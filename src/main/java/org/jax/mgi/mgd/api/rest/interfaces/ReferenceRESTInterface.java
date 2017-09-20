@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.rest.interfaces;
 
+import java.util.Map;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -97,206 +99,86 @@ public interface ReferenceRESTInterface {
 			@QueryParam("refsKey") String refsKey
 	);
 
-	@GET
+	@POST
 	@Path("/search")
 	@ApiOperation(value = "Value: Searches Reference by Fields", notes="Notes: Searches Reference Fields")
-	public SearchResults<ReferenceDomain> getReference(
-			@ApiParam(value = "Value: This is for searching by reference IDs")
-			@QueryParam("accids") String accids,
-			
-			@ApiParam(value = "Value: This is for searching by allele ID")
-			@QueryParam("allele_id") String allele_id,
-			
-			@ApiParam(value = "Value: This is for searching by authors")
-			@QueryParam("authors") String authors,
-			
-			@ApiParam(value = "Value: This is for searching by date")
-			@QueryParam("date") String date,
-			
-			@ApiParam(value = "Value: This is for searching by extracted text")
-			@QueryParam("extracted_text") String extracted_text,
-			
-			@ApiParam(value = "Value: This is for searching by isReviewArticle (0/1) or (No/Yes)")
-			@QueryParam("isReviewArticle") String isReviewArticle,
-			
-			@ApiParam(value = "Value: This is for searching by discard flag (no discard, only discard, search all)")
-			@QueryParam("is_discard") String is_discard,
-			
-			@ApiParam(value = "Value: This is for searching by issue")
-			@QueryParam("issue") String issue,
-			
-			@ApiParam(value = "Value: This is for searching by journal")
-			@QueryParam("journal") String journal,
-			
-			@ApiParam(value = "Value: This is for searching by marker ID")
-			@QueryParam("marker_id") String marker_id,
-			
-			@ApiParam(value = "Value: This is for searching by notes")
-			@QueryParam("notes") String notes,
-			
-			@ApiParam(value = "Value: This is for searching by pages")
-			@QueryParam("pages") String pages,
-			
-			@ApiParam(value = "Value: This is for searching by primary_author")
-			@QueryParam("primary_author") String primary_author,
-			
-			@ApiParam(value = "Value: This is for searching by abstract")
-			@QueryParam("ref_abstract") String ref_abstract,
-			
-			@ApiParam(value = "Value: This is for searching by reference type")
-			@QueryParam("reference_type") String reference_type,
-			
-			@ApiParam(value = "Value: Max rows to return (default is 1001)")
-			@QueryParam("row_limit") Integer row_limit,
-			
-			@ApiParam(value = "Value: This is for searching by title")
-			@QueryParam("title") String title,
-			
-			@ApiParam(value = "Value: This is for searching by volume")
-			@QueryParam("volume") String volume,
-			
-			@ApiParam(value = "Value: Specify 'AND' or 'OR' to specify operator for searching multiple workflow_tags")
-			@QueryParam("workflow_tag_operator") String workflow_tag_operator,
-			
-			@ApiParam(value = "Value: Specify '1' to use NOT opeator for workflow_tag1")
-			@QueryParam("not_workflow_tag1") String not_workflow_tag1,
-			
-			@ApiParam(value = "Value: This is for searching by workflow tag1")
-			@QueryParam("workflow_tag1") String workflow_tag1,
-			
-			@ApiParam(value = "Value: Specify '1' to use NOT opeator for workflow_tag2")
-			@QueryParam("not_workflow_tag2") String not_workflow_tag2,
-			
-			@ApiParam(value = "Value: This is for searching by workflow tag2")
-			@QueryParam("workflow_tag2") String workflow_tag2,
-			
-			@ApiParam(value = "Value: Specify '1' to use NOT opeator for workflow_tag3")
-			@QueryParam("not_workflow_tag3") String not_workflow_tag3,
-			
-			@ApiParam(value = "Value: This is for searching by workflow tag3")
-			@QueryParam("workflow_tag3") String workflow_tag3,
-			
-			@ApiParam(value = "Value: Specify '1' to use NOT opeator for workflow_tag4")
-			@QueryParam("not_workflow_tag4") String not_workflow_tag4,
-			
-			@ApiParam(value = "Value: This is for searching by workflow tag4")
-			@QueryParam("workflow_tag4") String workflow_tag4,
-			
-			@ApiParam(value = "Value: Specify '1' to use NOT opeator for workflow_tag5")
-			@QueryParam("not_workflow_tag5") String not_workflow_tag5,
-			
-			@ApiParam(value = "Value: This is for searching by workflow tag5")
-			@QueryParam("workflow_tag5") String workflow_tag5,
-			
-			@ApiParam(value = "Value: This is for searching by year")
-			@QueryParam("year") String year,
-			
-			@ApiParam(value = "Value: Use 'AND' or 'OR' to search by status across groups?")
-			@QueryParam("status_operator") String status_operator,
-			
-			@ApiParam(value = "1 = AP workflow group has Chosen status")
-			@QueryParam("status_AP_Chosen") Integer status_AP_Chosen,
-			
-			@ApiParam(value = "1 = AP workflow group has Fully curated status")
-			@QueryParam("status_AP_Full_coded") Integer status_AP_Full_coded,
-			
-			@ApiParam(value = "1 = AP workflow group has Indexed status")
-			@QueryParam("status_AP_Indexed") Integer status_AP_Indexed,
-			
-			@ApiParam(value = "1 = AP workflow group has Not Routed status")
-			@QueryParam("status_AP_Not_Routed") Integer status_AP_Not_Routed,
-			
-			@ApiParam(value = "1 = AP workflow group has Rejected status")
-			@QueryParam("status_AP_Rejected") Integer status_AP_Rejected,
-			
-			@ApiParam(value = "1 = AP workflow group has Routed status")
-			@QueryParam("status_AP_Routed") Integer status_AP_Routed,
-			
-			@ApiParam(value = "1 = GO workflow group has Chosen status")
-			@QueryParam("status_GO_Chosen") Integer status_GO_Chosen,
-			
-			@ApiParam(value = "1 = GO workflow group has Fully curated status")
-			@QueryParam("status_GO_Full_coded") Integer status_GO_Full_coded,
-			
-			@ApiParam(value = "1 = GO workflow group has Indexed status")
-			@QueryParam("status_GO_Indexed") Integer status_GO_Indexed,
-			
-			@ApiParam(value = "1 = GO workflow group has Not Routed status")
-			@QueryParam("status_GO_Not_Routed") Integer status_GO_Not_Routed,
-			
-			@ApiParam(value = "1 = GO workflow group has Rejected status")
-			@QueryParam("status_GO_Rejected") Integer status_GO_Rejected,
-			
-			@ApiParam(value = "1 = GO workflow group has Routed status")
-			@QueryParam("status_GO_Routed") Integer status_GO_Routed,
-			
-			@ApiParam(value = "1 = GXD workflow group has Chosen status")
-			@QueryParam("status_GXD_Chosen") Integer status_GXD_Chosen,
-			
-			@ApiParam(value = "1 = GXD workflow group has Fully curated status")
-			@QueryParam("status_GXD_Full_coded") Integer status_GXD_Full_coded,
-			
-			@ApiParam(value = "1 = GXD workflow group has Indexed status")
-			@QueryParam("status_GXD_Indexed") Integer status_GXD_Indexed,
-			
-			@ApiParam(value = "1 = GXD workflow group has Not Routed status")
-			@QueryParam("status_GXD_Not_Routed") Integer status_GXD_Not_Routed,
-			
-			@ApiParam(value = "1 = GXD workflow group has Rejected status")
-			@QueryParam("status_GXD_Rejected") Integer status_GXD_Rejected,
-			
-			@ApiParam(value = "1 = GXD workflow group has Routed status")
-			@QueryParam("status_GXD_Routed") Integer status_GXD_Routed,
-			
-			@ApiParam(value = "1 = QTL workflow group has Chosen status")
-			@QueryParam("status_QTL_Chosen") Integer status_QTL_Chosen,
-			
-			@ApiParam(value = "1 = QTL workflow group has Fully curated status")
-			@QueryParam("status_QTL_Full_coded") Integer status_QTL_Full_coded,
-			
-			@ApiParam(value = "1 = QTL workflow group has Indexed status")
-			@QueryParam("status_QTL_Indexed") Integer status_QTL_Indexed,
-			
-			@ApiParam(value = "1 = QTL workflow group has Not Routed status")
-			@QueryParam("status_QTL_Not_Routed") Integer status_QTL_Not_Routed,
-			
-			@ApiParam(value = "1 = QTL workflow group has Rejected status")
-			@QueryParam("status_QTL_Rejected") Integer status_QTL_Rejected,
-			
-			@ApiParam(value = "1 = QTL workflow group has Routed status")
-			@QueryParam("status_QTL_Routed") Integer status_QTL_Routed,
-			
-			@ApiParam(value = "1 = Tumor workflow group has Chosen status")
-			@QueryParam("status_Tumor_Chosen") Integer status_Tumor_Chosen,
-			
-			@ApiParam(value = "1 = Tumor workflow group has Fully curated status")
-			@QueryParam("status_Tumor_Full_coded") Integer status_Tumor_Full_coded,
-			
-			@ApiParam(value = "1 = Tumor workflow group has Indexed status")
-			@QueryParam("status_Tumor_Indexed") Integer status_Tumor_Indexed,
-			
-			@ApiParam(value = "1 = Tumor workflow group has Not Routed status")
-			@QueryParam("status_Tumor_Not_Routed") Integer status_Tumor_Not_Routed,
-			
-			@ApiParam(value = "1 = Tumor workflow group has Rejected status")
-			@QueryParam("status_Tumor_Rejected") Integer status_Tumor_Rejected,
-			
-			@ApiParam(value = "1 = Tumor workflow group has Routed status")
-			@QueryParam("status_Tumor_Routed") Integer status_Tumor_Routed,
-
-			@ApiParam(value = "Value: (status history) group abbreviation")
-			@QueryParam("sh_group") String sh_group,
-			
-			@ApiParam(value = "Value: (status history) username")
-			@QueryParam("sh_username") String sh_username,
-			
-			@ApiParam(value = "Value: (status history) status term")
-			@QueryParam("sh_status") String sh_status,
-			
-			@ApiParam(value = "Value: (status history) date when status was set")
-			@QueryParam("sh_date") String sh_date
-			
-			);
+	public SearchResults<ReferenceDomain> search(
+		@ApiParam(value = "This is a map of the form parameters")
+		Map<String, Object> params								// see below for valid parameters
+	);
+	
+	/* Acceptable reference search parameters:
+	 *	accids : searches by any reference ID, case-insensitive, no wildcards
+	 *	allele_id : searches by associated allele ID, case-insensitive, no wildcards
+	 *	authors : search by authors, case-insensitive, wildcards allowed
+	 *	date : search by date (free text), case-insensitive, wildcards allowed
+	 *	extracted_text : search by extracted text, case-insensitive, AND search for all words in string
+	 *	isReviewArticle : search for whether this is a review article (Yes/1) or not (No/0)
+	 *	is_discard : search by value of is_discard flag (no discard, only discard, search all)
+	 *	issue : search by issue field, case-insensitive, wildcards allowed
+	 *	journal : search by journal field, case-insensitive, wildcards allowed
+	 *	marker_id : searches by associated marker ID, case-insensitive, no wildcards
+	 *	notes : search by reference notes field, case-insensitive, wildcards allowed
+	 *	pages : search by pages field, case-insensitive, wildcards allowed
+	 *	primary_author : search by primary author field, case-insensitive, wildcards allowed
+	 *	ref_abstract : search by abstract field, case-insensitive, wildcards allowed
+	 *	reference_type : search by reference type field, case-sensitive, no wildcards
+	 *	row_limit : (integer) maximum number of rows to return (default is 1,001)
+	 *	title : search by title field, case-insensitive, wildcards allowed
+	 *	volume : search by volume field, case-insensitive, wildcards allowed
+	 *	year : (integer) search by year field
+	 *
+	 *	workflow_tag_operator : operator to use when searching for multiple workflow tags (AND/OR)
+	 *	not_workflow_tag1 : flag to indicate whether to apply a NOT operator (1/true) to the search for tag 1 or not (0/false)
+	 *	workflow_tag1 : search by workflow tag 1, case-insensitive, no wildcards
+	 *	not_workflow_tag2 : flag to indicate whether to apply a NOT operator (1/true) to the search for tag 2 or not (0/false)
+	 *	workflow_tag2 : search by workflow tag 2, case-insensitive, no wildcards
+	 *	not_workflow_tag3 : flag to indicate whether to apply a NOT operator (1/true) to the search for tag 3 or not (0/false)
+	 *	workflow_tag3 : search by workflow tag 3, case-insensitive, no wildcards
+	 *	not_workflow_tag4 : flag to indicate whether to apply a NOT operator (1/true) to the search for tag 4 or not (0/false)
+	 *	workflow_tag4 : search by workflow tag 4, case-insensitive, no wildcards
+	 *	not_workflow_tag5 : flag to indicate whether to apply a NOT operator (1/true) to the search for tag 5 or not (0/false)
+	 *	workflow_tag5 : search by workflow tag 5, case-insensitive, no wildcards
+	 *
+	 *	status_operator : operator to use when searching across status field for multiple workflow groups (AND/OR)
+	 *	status_AP_Chosen : flag to search for current status of Chosen for AP group (if field present = yes)
+	 *	status_AP_Full_coded : flag to search for current status of Full-coded for AP group (if field present = yes)
+	 *	status_AP_Indexed : flag to search for current status of Indexed for AP group (if field present = yes)
+	 *	status_AP_Not_Routed : flag to search for current status of Not Routed for AP group (if field present = yes)
+	 *	status_AP_Rejected : flag to search for current status of Rejected for AP group (if field present = yes)
+	 *	status_AP_Routed : flag to search for current status of Routed for AP group (if field present = yes)
+	 *	status_GO_Chosen : flag to search for current status of Chosen for GO group (if field present = yes)
+	 *	status_GO_Full_coded : flag to search for current status of Full-coded for GO group (if field present = yes)
+	 *	status_GO_Indexed : flag to search for current status of Indexed for GO group (if field present = yes)
+	 *	status_GO_Not_Routed : flag to search for current status of Not Routed for GO group (if field present = yes)
+	 *	status_GO_Rejected : flag to search for current status of Rejected for GO group (if field present = yes)
+	 *	status_GO_Routed : flag to search for current status of Routed for GO group (if field present = yes)
+	 *	status_GXD_Chosen : flag to search for current status of Chosen for GXD group (if field present = yes)
+	 *	status_GXD_Full_coded : flag to search for current status of Full-coded for GXD group (if field present = yes)
+	 *	status_GXD_Indexed : flag to search for current status of Indexed for GXD group (if field present = yes)
+	 *	status_GXD_Not_Routed : flag to search for current status of Not Routed for GXD group (if field present = yes)
+	 *	status_GXD_Rejected : flag to search for current status of Rejected for GXD group (if field present = yes)
+	 *	status_GXD_Routed : flag to search for current status of Routed for GXD group (if field present = yes)
+	 *	status_QTL_Chosen : flag to search for current status of Chosen for QTL group (if field present = yes)
+	 *	status_QTL_Full_coded : flag to search for current status of Full-coded for QTL group (if field present = yes)
+	 *	status_QTL_Indexed : flag to search for current status of Indexed for QTL group (if field present = yes)
+	 *	status_QTL_Not_Routed : flag to search for current status of Not Routed for QTL group (if field present = yes)
+	 *	status_QTL_Rejected : flag to search for current status of Rejected for QTL group (if field present = yes)
+	 *	status_QTL_Routed : flag to search for current status of Routed for QTL group (if field present = yes)
+	 *	status_Tumor_Chosen : flag to search for current status of Chosen for Tumor group (if field present = yes)
+	 *	status_Tumor_Full_coded : flag to search for current status of Full-coded for Tumor group (if field present = yes)
+	 *	status_Tumor_Indexed : flag to search for current status of Indexed for Tumor group (if field present = yes)
+	 *	status_Tumor_Not_Routed : flag to search for current status of Not Routed for Tumor group (if field present = yes)
+	 *	status_Tumor_Rejected : flag to search for current status of Rejected for Tumor group (if field present = yes)
+	 *	status_Tumor_Routed : flag to search for current status of Routed for Tumor group (if field present = yes)
+	 *
+	 *  sh_group : search status history for status change in given workflow group, case-insensitive, no wildcards
+	 *  sh_username : search status history for status change by given user, case-insensitive, no wildcards
+	 *  sh_status : search status history for status change to the given status, case-insensitive, no wildcards
+	 *  sh_date : search status history for status change with the given date criteria;
+	 *  	date formats may be: mm/dd/yyyy, mm/dd/yy, or yyyy/mm/dd
+	 *  	operators may be: =, <, >, <=, >=, or ..
+	 */
 
 	@GET
 	@Path("/{refsKey}")

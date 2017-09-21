@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
+import org.jax.mgi.mgd.api.domain.ReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.entities.Term;
 import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.exception.APIException;
@@ -137,7 +138,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		
 		for (String myIDs : splitter.split(accid, 100)) {
 			try {
-				SearchResults<ReferenceDomain> refs = referenceService.getReference(mapMaker.toMap("{\"accids\" : \"" + myIDs + "\"}"));
+				SearchResults<ReferenceDomain> refs = referenceService.getReferences(mapMaker.toMap("{\"accids\" : \"" + myIDs + "\"}"));
 
 				if (refs.total_count > 0) {
 					for (ReferenceDomain ref : refs.items) {
@@ -188,7 +189,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	/* search method - retrieves references based on query form parameters
 	 */
 	@Override
-	public SearchResults<ReferenceDomain> search(Map<String,Object> params) {
+	public SearchResults<ReferenceSummaryDomain> search(Map<String,Object> params) {
 		if (params.containsKey("isReviewArticle")) {
 			String isReviewArticle = (String) params.get("isReviewArticle");
 			if ("No".equalsIgnoreCase(isReviewArticle) || "0".equals(isReviewArticle)) {
@@ -208,18 +209,16 @@ public class ReferenceController extends BaseController implements ReferenceREST
 				// We don't need this value; we just need to ensure it's an integer.
 				Integer.parseInt((String) params.get("year"));
 			} catch (Throwable t) {
-				SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
+				SearchResults<ReferenceSummaryDomain> results = new SearchResults<ReferenceSummaryDomain>();
 				results.setError("InvalidParameter", "Year parameter is not an integer", Constants.HTTP_BAD_REQUEST);
 				return results;
 			}
 		}
 		
 		try {
-			log.info("executing search");
-			log.info("out: " + referenceService.getReference(params).toString());
-			return referenceService.getReference(params);
+			return referenceService.getReferenceSummaries(params);
 		} catch (APIException e) {
-			SearchResults<ReferenceDomain> out = new SearchResults<ReferenceDomain>();
+			SearchResults<ReferenceSummaryDomain> out = new SearchResults<ReferenceSummaryDomain>();
 			out.setError("Failed", "search failed: " + e.toString(), Constants.HTTP_SERVER_ERROR);
 			return out;
 		}
@@ -239,26 +238,16 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	public SearchResults<ReferenceDomain> getReferenceByKey (String refsKey) {
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
 		if (refsKey != null) {
-			HashMap<String, Object> map = new HashMap<String, Object>();
+			Integer intRefsKey = null;
 			try {
-				map.put("_refs_key", Integer.parseInt(refsKey));
+				intRefsKey = Integer.parseInt(refsKey);
 			} catch (Throwable e) {
-				results.setError("NotInteger", "Parameter value not an integer: " + refsKey, Constants.HTTP_BAD_REQUEST);
+				results.setError("NotInteger", "Reference key not an integer: " + refsKey, Constants.HTTP_BAD_REQUEST);
 				return results;
 			}
 
 			try {
-				SearchResults<ReferenceDomain> refs = referenceService.getReference(map);
-				if (refs.status_code != 200) {
-					results.setError(refs.error, refs.message, refs.status_code);
-					return results;
-				}
-
-				if (refs.total_count > 0) {
-					results.setItem(refs.items.get(0));
-				} else {
-					results.setError("NotFound", "No reference with key " + refsKey, Constants.HTTP_NOT_FOUND);
-				}
+				return referenceService.getReference(intRefsKey);
 			} catch (APIException e) {
 					results.setError("Failed", "Failed to get reference by key " + refsKey + ", exception: " + e.toString(),
 						Constants.HTTP_NOT_FOUND);

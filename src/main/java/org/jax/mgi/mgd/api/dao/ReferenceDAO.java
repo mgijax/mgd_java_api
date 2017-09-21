@@ -18,7 +18,9 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
+import javax.transaction.Transactional;
 
+import org.hibernate.Hibernate;
 import org.jax.mgi.mgd.api.entities.AccessionID;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceAlleleAssociation;
@@ -512,10 +514,17 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		return entityManager.createQuery(query).getResultList();
 	}
 	
-	/* return a single reference for the given reference key
+	/* return a single reference for the given reference key with all needed lazy-loaded fields already loaded
 	 */
+	@Transactional
 	public Reference getReference(int _refs_key) throws APIException {
-		return entityManager.find(Reference.class, _refs_key);
+		Reference ref =  entityManager.find(Reference.class, _refs_key);
+		Hibernate.initialize(ref.getWorkflowTags().size());
+		Hibernate.initialize(ref.getReferenceTypeTerm());
+		Hibernate.initialize(ref.getReferencenote());
+		Hibernate.initialize(ref.getBookList());
+		Hibernate.initialize(ref.getAssociatedData());
+		return ref; 
 	}
 	
 	/* get the next available primary key for a new reference

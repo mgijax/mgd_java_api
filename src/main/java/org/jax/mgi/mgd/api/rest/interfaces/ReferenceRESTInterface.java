@@ -16,9 +16,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
-import org.jax.mgi.mgd.api.domain.ReferenceWorkflowStatusDomain;
-import org.jax.mgi.mgd.api.entities.Reference;
-import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
+import org.jax.mgi.mgd.api.domain.ReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
@@ -102,7 +100,7 @@ public interface ReferenceRESTInterface {
 	@POST
 	@Path("/search")
 	@ApiOperation(value = "Value: Searches Reference by Fields", notes="Notes: Searches Reference Fields")
-	public SearchResults<ReferenceDomain> search(
+	public SearchResults<ReferenceSummaryDomain> search(
 		@ApiParam(value = "This is a map of the form parameters")
 		Map<String, Object> params								// see below for valid parameters
 	);

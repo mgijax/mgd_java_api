@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
+import org.hibernate.Hibernate;
 import org.jax.mgi.mgd.api.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.dao.TermDAO;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
@@ -50,9 +51,14 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 
 	/***--- (public) instance methods ---***/
 
+	/* gets a ReferenceDomain object that is fully fleshed out from a Reference
+	 */
 	@Override
 	public ReferenceDomain get(int primaryKey) throws APIException {
-		return translator.translate(getReference(primaryKey));
+		Reference ref = getReference(primaryKey);
+		ReferenceDomain domain = translator.translate(ref);
+		domain.setStatusHistory(getStatusHistory(domain));
+		return domain;
 	}
 
 	@Override
@@ -176,7 +182,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		if (primaryKey == null) {
 			throw new APIException("ReferenceRepository.getReference() : reference key is null");
 		}
-		Reference reference = referenceDAO.find(primaryKey);
+		Reference reference = referenceDAO.getReference(primaryKey);
 		if (reference == null) {
 			throw new APIException("ReferenceRepository.getReference(): Unknown reference key: " + primaryKey);
 		}

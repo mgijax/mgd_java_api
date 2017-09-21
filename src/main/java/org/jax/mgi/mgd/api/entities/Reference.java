@@ -84,11 +84,11 @@ public class Reference extends EntityBase {
 	@Column(name="modification_date")
 	private Date modification_date;
 
-	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
+	@OneToOne (targetEntity=User.class, fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdByUser;
 	
-	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
+	@OneToOne (targetEntity=User.class, fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedByUser;
 
@@ -104,7 +104,7 @@ public class Reference extends EntityBase {
 	@Fetch(value=FetchMode.SUBSELECT)
 	private List<ReferenceWorkflowStatus> workflowStatuses;
 
-	@OneToMany (targetEntity=ReferenceWorkflowTag.class, fetch=FetchType.EAGER)
+	@OneToMany (targetEntity=ReferenceWorkflowTag.class, fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
 	@Fetch(value=FetchMode.SUBSELECT)
 	private List<ReferenceWorkflowTag> workflowTags;
@@ -128,12 +128,12 @@ public class Reference extends EntityBase {
 	@Fetch(value=FetchMode.SUBSELECT)
 	private List<ReferenceMarkerAssociation> markerAssociations;
 
-	@OneToOne (targetEntity=Term.class, fetch=FetchType.EAGER)
+	@OneToOne (targetEntity=Term.class, fetch=FetchType.LAZY)
 	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")
 	private Term referenceTypeTerm;
 	
 	// one to many, because notes might not exist (leaving it 1-0)
-	@OneToMany (targetEntity=ReferenceNote.class, fetch=FetchType.EAGER)
+	@OneToMany (targetEntity=ReferenceNote.class, fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
 	@Fetch(value=FetchMode.SUBSELECT)
 	private List<ReferenceNote> notes;
@@ -145,13 +145,13 @@ public class Reference extends EntityBase {
 	private List<ReferenceCitationData> citationData;
 
 	// one to many, because book data most often does not exist (leaving it 1-0)
-	@OneToMany (targetEntity=ReferenceBook.class, fetch=FetchType.EAGER)
+	@OneToMany (targetEntity=ReferenceBook.class, fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
 	@Fetch(value=FetchMode.SUBSELECT)
 	private List<ReferenceBook> bookList;
 
 	// one to one, because counts will always exist
-	@OneToOne (targetEntity=ReferenceAssociatedData.class, fetch=FetchType.EAGER)
+	@OneToOne (targetEntity=ReferenceAssociatedData.class, fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
 	private ReferenceAssociatedData associatedData;
 

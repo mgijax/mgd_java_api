@@ -1,6 +1,7 @@
 
 package org.jax.mgi.mgd.api.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,9 +11,11 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
+import org.jax.mgi.mgd.api.domain.ReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.repository.ReferenceRepository;
+import org.jax.mgi.mgd.api.repository.ReferenceSummaryRepository;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -24,6 +27,9 @@ public class ReferenceService {
 	 */
 	@Inject
 	private ReferenceRepository repo;
+
+	@Inject
+	private ReferenceSummaryRepository summaryRepo;
 	
 	/* Create a reference entity that corresponds to the given domain object.  Returns domain object if
 	 * successful or throws APIException if not.
@@ -50,15 +56,25 @@ public class ReferenceService {
 		repo.updateInBulk(refsKeys, workflow_tag, workflow_tag_operation, currentUser);
 	}
 
-	public SearchResults<ReferenceDomain> getReference(Map<String, Object> searchFields) throws APIException {
-		SearchResults<ReferenceDomain> domains = repo.search(searchFields);
-
-		// if we have only a single matching reference, add in the status history data (for a detail page)
-		if ((domains.items != null) && (domains.items.size() == 1)) {
-			ReferenceDomain domain = domains.items.get(0);
-			domain.setStatusHistory(repo.getStatusHistory(domain));
+	public SearchResults<ReferenceDomain> getReference(int refsKey) throws APIException {
+		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
+		try {
+			ReferenceDomain domain = repo.get(refsKey);
+			results.total_count = 1;
+			results.items = new ArrayList<ReferenceDomain>();
+			results.items.add(domain); 
+		} catch (APIException e) {
+			results.setError("Failure", "Failed to retrieve reference with key " + refsKey + ": " + e.toString(), Constants.HTTP_SERVER_ERROR);
 		}
-		return domains;
+		return results;
+	}
+	
+	public SearchResults<ReferenceSummaryDomain> getReferenceSummaries(Map<String, Object> searchFields) throws APIException {
+		return summaryRepo.search(searchFields);
+	}
+
+	public SearchResults<ReferenceDomain> getReferences(Map<String, Object> searchFields) throws APIException {
+		return repo.search(searchFields);
 	}
 
 	@Transactional

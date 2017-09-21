@@ -129,6 +129,7 @@ public abstract class PostgresSQLDAO<T> {
 				}
 			} else {
 				column = root.get(key);
+				columnString = root.get(key);
 			}
 			
 			Object value = params.get(key);

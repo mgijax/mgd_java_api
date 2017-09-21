@@ -115,21 +115,17 @@ public abstract class PostgresSQLDAO<T> {
 
 		for(String key: params.keySet()) {
 			Path<Object> column = null;
-			Path<String> columnString = null;
 			if(key.contains(".")) {
 				String[] objects = key.split("\\.");
 				for(String s: objects) {
 					if(column != null) {
 						column = column.get(s);
-						columnString = column.get(s);
 					} else {
 						column = root.get(s);
-						columnString = root.get(s);
 					}
 				}
 			} else {
 				column = root.get(key);
-				columnString = root.get(key);
 			}
 			
 			Object value = params.get(key);
@@ -137,14 +133,8 @@ public abstract class PostgresSQLDAO<T> {
 				Integer desiredValue = (Integer) value;
 				restrictions.add(builder.equal(column, desiredValue));
 			} else {
-				String desiredValue = value.toString();
-				// If value has a wildcard, use 'like' operator.  Either way, search case insensitive.
-				if (desiredValue.indexOf("%") >= 0) {
-					restrictions.add(builder.like(builder.lower(columnString), desiredValue.toLowerCase()));
-				} else {
-					restrictions.add(builder.equal(builder.lower(columnString), desiredValue.toLowerCase()));
-				}
-//				restrictions.add(builder.equal(column, desiredValue));
+				String desiredValue = (String) value;
+				restrictions.add(builder.equal(column, desiredValue));
 			} 
 		}
 		if(orderByField != null) {

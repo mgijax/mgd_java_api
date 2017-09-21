@@ -20,7 +20,7 @@ public class ReferenceDomain extends DomainBase {
 	public String volume;
 	public String issue;
 	public String date;
-	public Integer year;
+	public String year;
 	public String pages;
 	public String isReviewArticle;
 	public String jnumid;

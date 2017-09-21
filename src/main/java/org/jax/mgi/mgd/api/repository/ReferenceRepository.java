@@ -226,6 +226,13 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		
 		String refType = entity.getReferenceTypeTerm().getTerm();
 		
+		Integer year = null;
+		try {
+			year = Integer.parseInt(domain.year);
+		} catch (NumberFormatException p) {
+			throw new APIException("Year is not an integer: " + domain.year);
+		}
+		
 		// update this object's data to match what was passed in
 		if ((rdDiscard != entity.getIs_discard()) || (rdReview != entity.getIsReviewArticle())
 				|| !smartEqual(entity.getAuthors(), domain.authors)
@@ -234,7 +241,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 				|| !smartEqual(entity.getVolume(), domain.volume)
 				|| !smartEqual(entity.getIssue(), domain.issue)
 				|| !smartEqual(entity.getDate(), domain.date)
-				|| !smartEqual(entity.getYear(), domain.year)
+				|| !smartEqual(entity.getYear(), year)
 				|| !smartEqual(refType, domain.reference_type)
 				|| !smartEqual(entity.getPages(), domain.pages)
 				|| !smartEqual(entity.getRef_abstract(), domain.ref_abstract)
@@ -256,7 +263,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 			entity.setVolume(domain.volume);
 			entity.setIssue(domain.issue);
 			entity.setDate(domain.date);
-			entity.setYear(domain.year);
+			entity.setYear(year);
 			entity.setPages(domain.pages);
 			entity.setRef_abstract(domain.ref_abstract);
 			entity.setReferenceTypeTerm(getTermByTerm(Constants.VOC_REFERENCE_TYPE, domain.reference_type));

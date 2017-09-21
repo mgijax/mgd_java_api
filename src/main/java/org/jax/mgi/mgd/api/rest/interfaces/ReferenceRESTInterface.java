@@ -81,7 +81,7 @@ public interface ReferenceRESTInterface {
 			@ApiParam(value = "Name: Logged-in User")
 			@HeaderParam("username") String username,
 			
-			@ApiParam(value = "Value: accession ID of reference for which to set the status")
+			@ApiParam(value = "Value: comma-delimited list of accession IDs of references for which to set the status")
 			@QueryParam("accid") String accid,
 			
 			@ApiParam(value = "Value: abbreviation of workflow group for which to set the status")

@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.entities;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -14,9 +13,10 @@ import lombok.Setter;
 @Table(name="bib_citation_cache")
 public class ReferenceCitationData extends EntityBase {
 	@Id
-	@Column(name="_refs_key")
 	private int _refs_key;
-
-	@Column(name="short_citation")
 	private String short_citation;
+	private String jnumid;
+	private String mgiid;
+	private String doiid;
+	private String pubmedid;
 }

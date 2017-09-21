@@ -37,6 +37,7 @@ public class Reference extends EntityBase {
 	
 	@Transient
 	private Logger log = Logger.getLogger(getClass());
+	
 
 	@Id
 	@Column(name="_Refs_key")
@@ -84,10 +85,14 @@ public class Reference extends EntityBase {
 	@Column(name="modification_date")
 	private Date modification_date;
 
+	@OneToOne (targetEntity=ReferenceStatusView.class, fetch=FetchType.EAGER)
+	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
+	private ReferenceStatusView statusView;
+	
 	@OneToOne (targetEntity=User.class, fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdByUser;
-	
+
 	@OneToOne (targetEntity=User.class, fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedByUser;
@@ -99,7 +104,7 @@ public class Reference extends EntityBase {
 	/* The @Fetch annotation (below) allows us to specify multiple EAGER-loaded collections, which would
 	 * otherwise throw an error.
 	 */
-	@OneToMany (targetEntity=ReferenceWorkflowStatus.class, fetch=FetchType.EAGER)
+	@OneToMany (targetEntity=ReferenceWorkflowStatus.class, fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
 	@Fetch(value=FetchMode.SUBSELECT)
 	private List<ReferenceWorkflowStatus> workflowStatuses;
@@ -109,7 +114,7 @@ public class Reference extends EntityBase {
 	@Fetch(value=FetchMode.SUBSELECT)
 	private List<ReferenceWorkflowTag> workflowTags;
 
-	@OneToMany (targetEntity=AccessionID.class, fetch=FetchType.EAGER)
+	@OneToMany (targetEntity=AccessionID.class, fetch=FetchType.LAZY)
 	@JoinColumn(name="_object_key", referencedColumnName="_refs_key")
 	@Where(clause="_mgitype_key = 1")
 	@OrderBy("_logicaldb_key, preferred desc")
@@ -158,7 +163,7 @@ public class Reference extends EntityBase {
 	// one to many, in case record is missing (leaving it 1-0)
 	@OneToMany (targetEntity=ReferenceWorkflowData.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
-	@Fetch(value=FetchMode.SUBSELECT)
+//	@Fetch(value=FetchMode.SUBSELECT)
 	private List<ReferenceWorkflowData> workflowData;
 
 	/***--- transient methods ---***/
@@ -263,6 +268,20 @@ public class Reference extends EntityBase {
 			return this.citationData.get(0).getShort_citation();
 		}
 		return null;
+	}
+
+	@Transient
+	public String getCachedID(String provider) {
+		if ((this.citationData == null) || (this.citationData.size() == 0)) { return null; }
+		if ("MGI".equals(provider)) {
+			return this.citationData.get(0).getMgiid();
+		} else if ("J:".equals(provider)) {
+			return this.citationData.get(0).getJnumid();
+		} else if ("DOI".equals(provider)) {
+			return this.citationData.get(0).getDoiid();
+		} else {
+			return this.citationData.get(0).getPubmedid();
+		}
 	}
 	
 	/* set the reference's modification date to be 'now' and modified-by user to be 'currentUser'

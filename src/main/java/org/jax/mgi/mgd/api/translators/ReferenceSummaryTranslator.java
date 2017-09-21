@@ -12,16 +12,16 @@ public class ReferenceSummaryTranslator extends EntityDomainTranslator<Reference
 
 		domain._refs_key = entity.get_refs_key();
 		domain.title = entity.getTitle();
-		domain.jnumid = entity.getJnumid();
-		domain.doiid = entity.getDoiid();
-		domain.pubmedid = entity.getPubmedid();
-		domain.mgiid = entity.getMgiid();
+		domain.jnumid = entity.getCachedID("J:");
+		domain.doiid = entity.getCachedID("DOI");
+		domain.pubmedid = entity.getCachedID("PubMed");
+		domain.mgiid = entity.getCachedID("MGI");
 		domain.short_citation = entity.getShort_citation();
-		domain.ap_status = entity.getStatus(Constants.WG_AP);
-		domain.go_status = entity.getStatus(Constants.WG_GO);
-		domain.gxd_status = entity.getStatus(Constants.WG_GXD);
-		domain.qtl_status = entity.getStatus(Constants.WG_QTL);
-		domain.tumor_status = entity.getStatus(Constants.WG_TUMOR);
+		domain.ap_status = entity.getStatusView().getAp_status();
+		domain.go_status = entity.getStatusView().getGo_status();
+		domain.gxd_status = entity.getStatusView().getGxd_status();
+		domain.qtl_status = entity.getStatusView().getQtl_status();
+		domain.tumor_status = entity.getStatusView().getTumor_status();
 		
 		ReferenceWorkflowData workflowData = entity.getWorkflowData();
 		if (workflowData != null) {

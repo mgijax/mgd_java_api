@@ -59,6 +59,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	/* query handling specific for references.  Some fields are within the table backing Reference,
 	 * while others are coming from related tables.
 	 */
+	@Transactional
 	public SearchResults<Reference> search(Map<String, Object> params) {
 		// query parameters existing in main reference table
 		List<String> internalParameters = new ArrayList<String>(Arrays.asList(
@@ -490,14 +491,22 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			rowLimit = (Integer) params.get("row_limit");
 		}
 
-		// finally execute the query and return the list of results
-		
 		query.where(builder.and(restrictions.toArray(new Predicate[0])));
 		log.debug(query.toString());
 		log.debug(entityManager.createQuery(query).toString());
 
+		// finally execute the query and return the list of results
+		
 		SearchResults<Reference> results = new SearchResults<Reference>();
-		results.setItems(entityManager.createQuery(query).setMaxResults(rowLimit).getResultList());
+		List<Reference> refs = entityManager.createQuery(query).setMaxResults(rowLimit).getResultList();
+		log.info("got " + refs.size() + " basic references");
+//		for (Reference ref : refs) {
+			//Hibernate.initialize(ref.getAccessionIDs());
+			//Hibernate.initialize(ref.getWorkflowData());
+			//Hibernate.initialize(ref.getWorkflowStatuses());
+//		}
+		log.info("fleshed out " + refs.size() + " references");
+		results.setItems(refs);
 		return results;
 	}
 	

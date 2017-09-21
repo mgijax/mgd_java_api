@@ -143,7 +143,7 @@ public abstract class PostgresSQLDAO<T> {
 				} else {
 					restrictions.add(builder.equal(builder.lower(columnString), desiredValue.toLowerCase()));
 				}
-				restrictions.add(builder.equal(column, desiredValue));
+//				restrictions.add(builder.equal(column, desiredValue));
 			} 
 		}
 		if(orderByField != null) {

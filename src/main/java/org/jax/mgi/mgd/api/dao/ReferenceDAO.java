@@ -533,6 +533,9 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		Hibernate.initialize(ref.getReferencenote());
 		Hibernate.initialize(ref.getBookList());
 		Hibernate.initialize(ref.getAssociatedData());
+		Hibernate.initialize(ref.getAccessionIDs());
+		Hibernate.initialize(ref.getWorkflowData());
+		Hibernate.initialize(ref.getWorkflowStatuses());
 		return ref; 
 	}
 	

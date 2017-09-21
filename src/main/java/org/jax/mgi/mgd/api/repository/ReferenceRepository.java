@@ -161,13 +161,13 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 	/* return a single Term matching the given vocabulary / term pair
 	 */
 	private Term getTermByTerm (Integer vocabKey, String term) throws APIException {
-		return getTerm("{\"vocab._vocab_key\" : \"" + vocabKey + "\", \"term\" : \"" + term + "\"}");
+		return getTerm("{\"vocab._vocab_key\" : " + vocabKey + ", \"term\" : \"" + term + "\"}");
 	}
 	
 	/* return a single Term matching the given vocabulary / abbreviation pair
 	 */
 	private Term getTermByAbbreviation (Integer vocabKey, String abbreviation) throws APIException {
-		return getTerm("{\"vocab._vocab_key\" : \"" + vocabKey + "\", \"abbreviation\" : \"" + abbreviation + "\"}");
+		return getTerm("{\"vocab._vocab_key\" : " + vocabKey + ", \"abbreviation\" : \"" + abbreviation + "\"}");
 	}
 	
 	/* retrieve the Reference object with the given primaryKey

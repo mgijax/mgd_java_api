@@ -551,10 +551,10 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 			return false;
 		}
 		
-		// set of tags specified in domain object (lowercased) -- potentially to add to object
+		// set of tags specified in domain object -- potentially to add to object
 		Set<String> toAdd = new HashSet<String>();
 		for (String rdTag : domain.workflow_tags) {
-			toAdd.add(rdTag.toLowerCase().trim());
+			toAdd.add(rdTag.trim());
 		}
 
 		// list of tags that need to be removed from this object
@@ -564,12 +564,12 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		// left in toAdd will need to be added as a new tag, and anything in toDelete will need to be removed.
 		
 		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
-			String lowerTag = refTag.getTag().getTerm().toLowerCase();
+			String myTag = refTag.getTag().getTerm();
 
 			// matching tags
-			if (toAdd.contains(lowerTag)) {
+			if (toAdd.contains(myTag)) {
 				// already have this one, don't need to add it
-				toAdd.remove(lowerTag);
+				toAdd.remove(myTag);
 			} else {
 				// current one isn't in the new list from domain object, so need to remove it
 				toDelete.add(refTag);
@@ -599,9 +599,9 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		// if we already have this tag applied, skip it (extra check needed for batch additions to avoid
 		// adding duplicates)
 
-		String lowerTag = rdTag.toLowerCase().trim();
+		String trimTag = rdTag.trim();
 		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
-			if (lowerTag.equals(refTag.getTag().getTerm().toLowerCase()) ) {
+			if (trimTag.equals(refTag.getTag().getTerm()) ) {
 				return;
 			}
 		}

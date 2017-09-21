@@ -127,8 +127,15 @@ public abstract class PostgresSQLDAO<T> {
 			} else {
 				column = root.get(key);
 			}
-			String desiredValue = (String)params.get(key);
-			restrictions.add(builder.equal(column, desiredValue));
+			
+			Object value = params.get(key);
+			if (value instanceof Integer) {
+				Integer desiredValue = (Integer) value;
+				restrictions.add(builder.equal(column, desiredValue));
+			} else {
+				String desiredValue = (String) value;
+				restrictions.add(builder.equal(column, desiredValue));
+			} 
 		}
 		if(orderByField != null) {
 			query.orderBy(builder.asc(root.get(orderByField)));

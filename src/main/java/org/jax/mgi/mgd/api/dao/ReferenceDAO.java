@@ -353,7 +353,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			
 			if (params.containsKey(tagField)) {
 				if (params.containsKey(notField)) {
-					String notParam = ((String) params.get(notField)).trim();
+					String notParam = params.get(notField).toString().trim();
 					if ("true".equalsIgnoreCase(notParam) || "1".equals(notParam)) {
 						notTags.add(((String) params.get(tagField)).toLowerCase());
 					} else {
@@ -417,7 +417,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			} else {
 				/* For OR searches, we need to OR together:
 				 *   1. a single EXISTS subquery with all terms in 'tags' included in an IN
-				 *   2. a single NOT EXISTS subquery with all terms in 'notTags' included in an IN
+				 *   2. a NOT EXISTS subquery for each term in 'notTags' (see below when constructed)
 				 */
 				if (tags.size() > 0) {
 					Subquery<ReferenceWorkflowTag> tagSubquery = query.subquery(ReferenceWorkflowTag.class);

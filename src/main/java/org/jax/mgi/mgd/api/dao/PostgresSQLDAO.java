@@ -106,7 +106,6 @@ public abstract class PostgresSQLDAO<T> {
 	}
 	
 	public SearchResults<T> search(Map<String, Object> params, String orderByField) {
-		log.info("Lookup: " + params);
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<T> query = builder.createQuery(myClass);
 		Root<T> root = query.from(myClass);

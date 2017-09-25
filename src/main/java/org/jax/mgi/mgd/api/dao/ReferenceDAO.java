@@ -500,12 +500,6 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		SearchResults<Reference> results = new SearchResults<Reference>();
 		List<Reference> refs = entityManager.createQuery(query).setMaxResults(rowLimit).getResultList();
 		log.info("got " + refs.size() + " basic references");
-//		for (Reference ref : refs) {
-			//Hibernate.initialize(ref.getAccessionIDs());
-			//Hibernate.initialize(ref.getWorkflowData());
-			//Hibernate.initialize(ref.getWorkflowStatuses());
-//		}
-		log.info("fleshed out " + refs.size() + " references");
 		results.setItems(refs);
 		return results;
 	}

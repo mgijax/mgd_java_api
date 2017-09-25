@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
@@ -91,6 +92,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	/* update the workflow group to be the given status for the given reference, taking care to keep the status history
 	 * updated and to generate a J: number, if needed
 	 */
+	@Transactional
 	@Override
 	public SearchResults<String> updateReferenceStatus (String api_access_token, String username, String accid, String group, String status) {
 		SearchResults<String> results = new SearchResults<String>();

@@ -492,7 +492,8 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		List<Order> orderList = new ArrayList<Order>();
 		Join<Reference,ReferenceCitationData> citationData = root.join("citationData");
 		
-		orderList.add(builder.desc(citationData.get("numericPart")));
+		// using coalesce to push nulls to bottom
+		orderList.add(builder.desc(builder.coalesce(citationData.get("numericPart"), Integer.MIN_VALUE)));
 		orderList.add(builder.asc(root.get("journal")));
 		orderList.add(builder.asc(root.get("authors")));
 		query.orderBy(orderList);

@@ -14,6 +14,8 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -24,6 +26,7 @@ import org.hibernate.Hibernate;
 import org.jax.mgi.mgd.api.entities.AccessionID;
 import org.jax.mgi.mgd.api.entities.Reference;
 import org.jax.mgi.mgd.api.entities.ReferenceAlleleAssociation;
+import org.jax.mgi.mgd.api.entities.ReferenceCitationData;
 import org.jax.mgi.mgd.api.entities.ReferenceMarkerAssociation;
 import org.jax.mgi.mgd.api.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowData;
@@ -484,6 +487,16 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			}
 		}
 		
+		// enforce sorting: 1. J: number (descending), 2. journal (ascending), 3. author (ascending)
+		
+		List<Order> orderList = new ArrayList<Order>();
+		Join<Reference,ReferenceCitationData> citationData = root.join("citationData");
+		
+		orderList.add(builder.desc(citationData.get("numericPart")));
+		orderList.add(builder.asc(root.get("journal")));
+		orderList.add(builder.asc(root.get("authors")));
+		query.orderBy(orderList);
+
 		// pick up the row limit, if there is one specified.  If none specified, set default.
 		
 		int rowLimit = 1001;

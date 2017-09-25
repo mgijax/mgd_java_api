@@ -16,6 +16,7 @@ public class ReferenceCitationData extends EntityBase {
 	private int _refs_key;
 	private String short_citation;
 	private String jnumid;
+	private Integer numericPart;
 	private String mgiid;
 	private String doiid;
 	private String pubmedid;

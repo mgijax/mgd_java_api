@@ -122,6 +122,7 @@ public interface ReferenceRESTInterface {
 	 *	ref_abstract : search by abstract field, case-insensitive, wildcards allowed
 	 *	reference_type : search by reference type field, case-sensitive, no wildcards
 	 *	row_limit : (integer) maximum number of rows to return (default is 1,001)
+	 *	supplementalTerm : search by supplementalTerm field, case-sensitive, no wildcards
 	 *	title : search by title field, case-insensitive, wildcards allowed
 	 *	volume : search by volume field, case-insensitive, wildcards allowed
 	 *	year : (integer) search by year field

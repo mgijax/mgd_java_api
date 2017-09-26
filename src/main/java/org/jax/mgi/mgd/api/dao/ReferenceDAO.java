@@ -32,6 +32,7 @@ import org.jax.mgi.mgd.api.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowData;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowTag;
+import org.jax.mgi.mgd.api.entities.Term;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateParser;
@@ -263,7 +264,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		}
 
 		// third handle list of external parameters, including:
-		//		"notes", "reference_type", "marker_id", "allele_id", "accids", "workflow_tag"
+		//		"notes", "reference_type", "marker_id", "allele_id", "accids", "workflow_tag", "supplementalTerm"
 		
 		if (params.containsKey("notes")) {
 			Subquery<ReferenceNote> noteSubquery = query.subquery(ReferenceNote.class);
@@ -459,6 +460,23 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 					restrictions.add(builder.or(tagPredicates.toArray(new Predicate[0])));
 				}
 			}
+		}
+		
+		// search by term indicating whether reference has supplemental data or not
+		
+		if (params.containsKey("supplementalTerm") && (params.get("supplementalTerm") != null)) {
+			Subquery<ReferenceWorkflowData> rwdSubquery = query.subquery(ReferenceWorkflowData.class);
+			Root<ReferenceWorkflowData> rwdRoot = rwdSubquery.from(ReferenceWorkflowData.class);
+			rwdSubquery.select(rwdRoot);
+
+			List<Predicate> rwdPredicates = new ArrayList<Predicate>();
+				
+			rwdPredicates.add(builder.equal(root.get("_refs_key"), rwdRoot.get("_refs_key")));
+			Join<ReferenceWorkflowData,Term> supplementalTerm = rwdRoot.join("supplementalTerm");
+			rwdPredicates.add(builder.equal(supplementalTerm.get("term"), params.get("supplementalTerm")));
+
+			rwdSubquery.where(rwdPredicates.toArray(new Predicate[]{}));
+			restrictions.add(builder.exists(rwdSubquery));
 		}
 		
 		// search by extracted text (AND for all words included in the search string)

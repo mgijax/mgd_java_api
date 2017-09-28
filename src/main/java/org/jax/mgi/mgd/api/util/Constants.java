@@ -11,6 +11,8 @@ public class Constants {
 	public static int TYPE_REFERENCE = 1;	// reference
 	public static int TYPE_MARKER = 2;		// marker
 	
+	public static String MGITYPE_REFERENCE = "Reference";
+	
 	// flags
 	public static int PREFERRED = 1;
 	public static int SECONDARY = 0;

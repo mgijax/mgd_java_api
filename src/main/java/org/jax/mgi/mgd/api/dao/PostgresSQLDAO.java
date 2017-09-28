@@ -15,20 +15,13 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.jax.mgi.mgd.api.entities.ApiTableLog;
-import org.jax.mgi.mgd.api.entities.Term;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Singleton
 public abstract class PostgresSQLDAO<T> {
 	/***--- instance variables ---***/
 
-	private ObjectMapper mapper = new ObjectMapper();
-	
 	protected Class<T> myClass;
 
 	@PersistenceContext(unitName="primary")
@@ -64,23 +57,25 @@ public abstract class PostgresSQLDAO<T> {
 		return model;
 	}
 
-	private void log(T model) {
+/* commented out, as we're not currently doing data-level logging
+  	private void log(T model) {
 		Integer id = (Integer)entityManager.getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(model);
 		try {
-			ApiTableLog log = new ApiTableLog(id, model.getClass().toString(), mapper.writeValueAsString(get(id)), mapper.writeValueAsString(model));
+			ApiLogObject log = new ApiLogObject(id, model.getClass().toString(), mapper.writeValueAsString(get(id)), mapper.writeValueAsString(model));
 			entityManager.persist(log);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
 	}
-
+*/
+	
 	public T update(T model) {
 		//log(model);
 		entityManager.merge(model);
 		return model;
 	}
 
-	public T get(HashMap<String, Object> params) {
+	public T get(Map<String, Object> params) {
 		return search(params).items.get(0);
 	}
 

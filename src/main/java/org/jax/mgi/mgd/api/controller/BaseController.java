@@ -1,15 +1,17 @@
 package org.jax.mgi.mgd.api.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.domain.DomainBase;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
-import org.jax.mgi.mgd.api.entities.ApiTableLog;
+import org.jax.mgi.mgd.api.entities.ApiLogObject;
 import org.jax.mgi.mgd.api.entities.User;
-import org.jax.mgi.mgd.api.service.ApiEventLogService;
+import org.jax.mgi.mgd.api.exception.APIException;
+import org.jax.mgi.mgd.api.service.ApiLogService;
 import org.jax.mgi.mgd.api.service.UserService;
 
 public class BaseController {
@@ -17,7 +19,7 @@ public class BaseController {
 	@Inject
 	private UserService userService;
 	
-	@Inject ApiEventLogService apiLogService;
+	@Inject ApiLogService apiLogService;
 	
 	/* if token is not defined in properties file, then do not require one.  Otherwise, must
 	 * be an exact match (case sensitive).
@@ -49,7 +51,9 @@ public class BaseController {
 		return filtered;
 	}
 	
-	protected void logRequest(String endpoint, DomainBase domain) {
-		apiLogService.create(endpoint, domain);
+
+	protected void logRequest(String endpoint, String parameters, String mgitype, List<Integer> objectKeys, User user) throws APIException {
+		apiLogService.create(endpoint, parameters, mgitype, objectKeys, user);
 	}
+
 }

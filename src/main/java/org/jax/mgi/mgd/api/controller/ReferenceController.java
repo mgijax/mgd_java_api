@@ -20,9 +20,13 @@ import org.jax.mgi.mgd.api.service.TermService;
 import org.jax.mgi.mgd.api.service.UserService;
 import org.jax.mgi.mgd.api.util.CommaSplitter;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.ListMaker;
 import org.jax.mgi.mgd.api.util.MapMaker;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ReferenceController extends BaseController implements ReferenceRESTInterface {
 
@@ -38,23 +42,28 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	private UserService userService;
 	
 	private Logger log = Logger.getLogger(getClass());
-
+	private ObjectMapper mapper = new ObjectMapper();
+	private ListMaker<Integer> listMaker = new ListMaker<Integer>();
+	
 	/***--- methods ---***/
 	
 	/* create a database record for the given reference...  TODO: need to flesh this out, use SearchResults object, etc.
 	 */
 	@Override
 	public SearchResults<ReferenceDomain> createReference(String api_access_token, String username, ReferenceDomain reference) {
-		// Example request logging
-		//logRequest("Reference API: createReference:", reference);
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
 		try {
 			User currentUser = userService.getUser(username);
 			if (currentUser != null) {
 				results.setItem(referenceService.createReference(reference, currentUser));
+				logRequest("POST /reference", mapper.writeValueAsString(reference), Constants.MGITYPE_REFERENCE,
+					listMaker.toList(reference._refs_key), currentUser);
 			} 
 		} catch (APIException e) {
 			results.setError("ReferenceController.createReference", "Failed to create reference: " + e.toString(),
+				Constants.HTTP_SERVER_ERROR);
+		} catch (JsonProcessingException e) {
+			results.setError("ReferenceController.createReference", "Failed to log creation of reference: " + e.toString(),
 				Constants.HTTP_SERVER_ERROR);
 		}
 		return results;
@@ -79,9 +88,11 @@ public class ReferenceController extends BaseController implements ReferenceREST
 				// getReferenceByKey() method to re-fetch and return the updated object.
 				
 				referenceService.updateReference(reference, currentUser);
+				logRequest("PUT /reference", mapper.writeValueAsString(reference), Constants.MGITYPE_REFERENCE,
+					listMaker.toList(reference._refs_key), currentUser);
 				return this.getReferenceByKey(reference._refs_key.toString());
 			} catch (Throwable t) {
-				results.setError("Failed", "Failed to save changes (" + t.getMessage() + ")", Constants.HTTP_SERVER_ERROR);
+				results.setError("Failed", "Failed to save changes (" + t.toString() + ")", Constants.HTTP_SERVER_ERROR);
 			}
 		} else {
 			results.setError("FailedAuthentication", "Failed - invalid username", Constants.HTTP_PERMISSION_DENIED);
@@ -137,6 +148,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		CommaSplitter splitter = new CommaSplitter();
 		List<String> failures = new ArrayList<String>();
 		String currentID = null;
+		List<Integer> referenceKeys = new ArrayList<Integer>();
 		
 		for (String myIDs : splitter.split(accid, 100)) {
 			try {
@@ -147,6 +159,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 						currentID = ref.jnumid;
 						ref.setStatus(group, status);
 						referenceService.updateReference(ref, currentUser);
+						referenceKeys.add(ref._refs_key);
 					}
 				}
 			} catch (APIException t) {
@@ -157,6 +170,12 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		if (failures.size() > 0) {
 			results.setError("Partial Failure", "Status changes failed to save for: " + String.join(",", failures), Constants.HTTP_SERVER_ERROR);
 		} else {
+			String json = "{\"group\":\"" + group + "\", \"status\":\"" + status + "\"}";
+			try {
+				logRequest("PUT /reference/statusUpdate", json, Constants.MGITYPE_REFERENCE, referenceKeys, currentUser);
+			} catch (APIException e) {
+				results.setError("Log Failure", "Changes saved, but failed to log them in API log: " + e.toString(), Constants.HTTP_SERVER_ERROR);
+			}
 			results.items = null;
 		}
 
@@ -179,8 +198,11 @@ public class ReferenceController extends BaseController implements ReferenceREST
 			try {
 				referenceService.updateReferencesInBulk(input._refs_keys, input.workflow_tag, input.workflow_tag_operation, currentUser);
 				results.items = null;	// okay result
+				logRequest("PUT /reference/bulkUpdate", mapper.writeValueAsString(input), Constants.MGITYPE_REFERENCE, input._refs_keys, currentUser);
 			} catch (APIException t) {
-				results.setError("Failed", "Failed to save changes", Constants.HTTP_SERVER_ERROR);
+				results.setError("Failed", "Failed to save changes: " + t.toString(), Constants.HTTP_SERVER_ERROR);
+			} catch (JsonProcessingException t) {
+				results.setError("Log Failure", "Changes saved, but failed to log them in API log: " + t.toString(), Constants.HTTP_SERVER_ERROR);
 			}
 		} else {
 			results.setError("FailedAuthentication", "Failed - invalid username", Constants.HTTP_PERMISSION_DENIED);
@@ -266,7 +288,17 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	public SearchResults<ReferenceDomain> deleteReference(String api_access_token, String username, String id) {
 		User currentUser = userService.getUser(username);
 		if (currentUser != null) {
-			return referenceService.deleteReference(id, currentUser);
+			SearchResults<ReferenceDomain> results = referenceService.deleteReference(id, currentUser);
+			if (results.items.size() > 0) {
+				ReferenceDomain domain = results.items.get(0);
+				String json = "{\"id\":" + id + "\"}";
+				try {
+					logRequest("DELETE /reference", json, Constants.MGITYPE_REFERENCE, listMaker.toList(domain._refs_key), currentUser);
+				} catch (APIException e) {
+					results.setError("Log Failure", "Changes saved, but could not write to API log: " + e.toString(), Constants.HTTP_SERVER_ERROR);
+				}
+			}
+			return results;
 		}
 		return null;
 	}

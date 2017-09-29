@@ -14,6 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.jax.mgi.mgd.api.domain.ApiLogDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceSummaryDomain;
@@ -178,6 +179,13 @@ public interface ReferenceRESTInterface {
 	 *  	date formats may be: mm/dd/yyyy, mm/dd/yy, or yyyy/mm/dd
 	 *  	operators may be: =, <, >, <=, >=, or ..
 	 */
+
+	@GET
+	@Path("/log/{id}")
+	@ApiOperation(value = "Value: Retrieve logged API events for reference with given ID")
+	public SearchResults<ApiLogDomain> getReferenceLog (
+			@ApiParam(value = "Value: Accession ID for desired reference")
+			@PathParam("id") String id);
 
 	@GET
 	@Path("/{refsKey}")

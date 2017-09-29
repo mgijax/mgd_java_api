@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
+import org.jax.mgi.mgd.api.domain.ApiLogDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceSummaryDomain;
@@ -15,6 +16,7 @@ import org.jax.mgi.mgd.api.entities.Term;
 import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.rest.interfaces.ReferenceRESTInterface;
+import org.jax.mgi.mgd.api.service.ApiLogService;
 import org.jax.mgi.mgd.api.service.ReferenceService;
 import org.jax.mgi.mgd.api.service.TermService;
 import org.jax.mgi.mgd.api.service.UserService;
@@ -40,6 +42,9 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	
 	@Inject
 	private UserService userService;
+	
+	@Inject
+	private ApiLogService apiLogService;
 	
 	private Logger log = Logger.getLogger(getClass());
 	private ObjectMapper mapper = new ObjectMapper();
@@ -280,6 +285,27 @@ public class ReferenceController extends BaseController implements ReferenceREST
 			results.setError("InvalidParameter", "No reference key was specified", Constants.HTTP_BAD_REQUEST);
 		}
 		return results;
+	}
+
+	@Override
+	public SearchResults<ApiLogDomain> getReferenceLog (String id) {
+		SearchResults<ApiLogDomain> results = new SearchResults<ApiLogDomain>();
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put("accids", id);
+		SearchResults<ReferenceSummaryDomain> refs = search(params);
+
+		if (refs.status_code != Constants.HTTP_OK) {
+			results.setError(refs.error, refs.message, refs.status_code);
+			return results;
+		}
+		if (refs.total_count == 0) {
+			results.setError("UnknownID", "No reference for ID: " + id, Constants.HTTP_NOT_FOUND);
+			return results;
+		}
+		
+		Map<String,Object> searchFields = new HashMap<String,Object>();
+		searchFields.put("_object_key", refs.items.get(0)._refs_key);
+		return apiLogService.search(searchFields);
 	}
 
 	/* delete the reference with the given accession ID...  TODO: need to flesh this out, return SearchResults object, etc.

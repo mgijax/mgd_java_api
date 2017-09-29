@@ -1,6 +1,9 @@
 package org.jax.mgi.mgd.api.dao;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +18,8 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.jax.mgi.mgd.api.exception.APIException;
+import org.jax.mgi.mgd.api.util.DateParser;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -205,6 +210,34 @@ public abstract class PostgresSQLDAO<T> {
 			dumpDate = "unknown";
 		}
 		return dumpDate;
+	}
+
+	public Predicate datePredicate(CriteriaBuilder builder, Path<Date> path, String operator, String date) throws APIException {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
+		try {
+			Date dayStart = dateFormat.parse(date + " 00:00:00");
+			Date dayEnd = dateFormat.parse(date + " 23:59:59");
+	
+			if (DateParser.AFTER.equals(operator)) {
+				return builder.greaterThan(path, dayEnd);
+	
+			} else if (DateParser.STARTING_WITH.equals(operator)) {
+				return builder.greaterThanOrEqualTo(path, dayStart);
+	
+			} else if (DateParser.UP_THROUGH.equals(operator)) {
+				return builder.lessThanOrEqualTo(path, dayEnd);
+			
+			} else if (DateParser.UP_TO.equals(operator)) {
+				return builder.lessThan(path, dayStart);
+			
+			} else if (DateParser.ON.equals(operator)) {
+				// use a 'between' to get the full day, not just a single point in time
+				return builder.between(path, dayStart, dayEnd);
+			}
+		} catch (ParseException p) {
+			throw new APIException("ReferenceDAO.datePredicate(): Cannot parse date: " + date);
+		}
+		return null; 
 	}
 
 }

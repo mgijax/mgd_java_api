@@ -38,6 +38,6 @@ public class ApiLogEvent extends EntityBase {
 	@OneToMany (targetEntity=ApiLogObject.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_event_key", referencedColumnName="_event_key")
 	@BatchSize(size=200)
-	@Fetch(value=FetchMode.SUBSELECT)
+//	@Fetch(value=FetchMode.SUBSELECT)
 	private List<ApiLogObject> objects;
 }

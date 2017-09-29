@@ -25,7 +25,7 @@ public class ApiLogObject {
 	@JoinColumn(name="_mgitype_key", referencedColumnName="_mgitype_key")
 	private MGIType mgiType;
 
-	@OneToOne (targetEntity=ApiLogEvent.class, fetch=FetchType.EAGER)
+	@OneToOne (targetEntity=ApiLogEvent.class, fetch=FetchType.LAZY)
 	@JoinColumn(name="_event_key", referencedColumnName="_event_key")
 	private ApiLogEvent event;
 }

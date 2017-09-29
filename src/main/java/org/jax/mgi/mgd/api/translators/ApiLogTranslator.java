@@ -19,6 +19,7 @@ public class ApiLogTranslator extends EntityDomainTranslator<ApiLogEvent, ApiLog
 		domain.parameters = entity.getParameters();
 		domain.objectKeys = new ArrayList<Integer>();
 		domain.mgitype = null;
+		domain.username = entity.getCreatedBy().getLogin();
 		
 		if (entity.getObjects() != null) {
 			for (ApiLogObject object : entity.getObjects()) {

@@ -12,6 +12,7 @@ public class SearchResults<T> {
 	private long startTime;				// time of object creation (used to measure timings)
 	public List<T> items;				// list of items returned from a query
 	public long total_count = 0;		// total count of items returned by the query (ignoring pagination)
+	public long all_match_count = 0;	// total count of items that could be returned by the query
 	public long elapsed_ms = 0;			// number of elapsed milliseconds for query results
 	public String error;				// error code
 	public String message;				// more explanatory error message
@@ -25,6 +26,7 @@ public class SearchResults<T> {
 		startTime = System.currentTimeMillis();
 		this.items = items;
 		this.total_count = items.size();
+		this.all_match_count = this.total_count;
 		this.measureTime();
 	}
 	
@@ -32,12 +34,16 @@ public class SearchResults<T> {
 		startTime = System.currentTimeMillis();
 		this.items = items;
 		this.total_count = total_count;
+		this.all_match_count = this.total_count;
 		this.measureTime();
 	}
 	
 	public void setItems(List<T> items) {
 		this.items = items;
 		this.total_count = this.items.size();
+		if (this.all_match_count < this.total_count) {
+			this.all_match_count = this.total_count;
+		}
 		this.measureTime();
 	}
 	
@@ -45,7 +51,14 @@ public class SearchResults<T> {
 		this.items = new ArrayList<T>();
 		this.items.add(item);
 		this.total_count = this.items.size();
+		if (this.all_match_count < this.total_count) {
+			this.all_match_count = this.total_count;
+		}
 		this.measureTime();
+	}
+	
+	public void setAllMatchCount(long allMatches) {
+		this.all_match_count = allMatches;
 	}
 	
 	public void setError(String error, String message, int status_code) {

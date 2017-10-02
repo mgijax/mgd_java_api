@@ -531,6 +531,19 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		List<Reference> refs = entityManager.createQuery(query).setMaxResults(rowLimit).getResultList();
 		log.info("got " + refs.size() + " basic references");
 		results.setItems(refs);
+
+		// If we hit the row limit, then we should also compose and execute a query to get the total count
+		// that could be returned by the query if there was a larger limit.
+
+		if (refs.size() >= rowLimit) {
+			CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
+			countQuery.select(builder.count(countQuery.from(myClass)));
+			countQuery.where(builder.and(restrictions.toArray(new Predicate[0])));
+			long allMatchCount = entityManager.createQuery(countQuery).getSingleResult();
+			log.info(" - of " + allMatchCount + " total matches");
+			results.setAllMatchCount(allMatchCount);
+		}
+
 		return results;
 	}
 	

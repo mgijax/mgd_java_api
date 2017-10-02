@@ -53,6 +53,9 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	// maps from search field name to database key name (for created-by / modified-by fields)
 	private static Map<String,String> users = null;
 
+	// maps from search field name to creatition/modification date database field name
+	private static Map<String,String> dates = null;
+
 	/* convenience method for instantiating a new search results object, populating its error fields, 
 	 * and returning it.
 	 */
@@ -103,6 +106,12 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			users = new HashMap<String,String>();
 			users.put("created_by", "createdByUser");
 			users.put("modified_by", "modifiedByUser");
+		}
+
+		if (dates == null) {
+			dates = new HashMap<String,String>();
+			dates.put("creation_date", "Creation Date");
+			dates.put("modification_date", "Modification Date");
 		}
 
 		// begin building the query
@@ -227,6 +236,27 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 				Path<String> column = user.get("login");
 				Expression<String> lowerColumn = builder.lower(column);
 				restrictions.add(builder.equal(lowerColumn, params.get(fieldname).toString().toLowerCase()));
+			}
+		}
+		
+		// creation_date and modification_date parameters
+		
+		for (String fieldname : dates.keySet()) {
+			if (params.containsKey(fieldname)) {
+				try {
+					DateParser parser = new DateParser();
+					List<String> datePieces = parser.parse((String) params.get(fieldname));
+					if (datePieces.size() >= 2) {
+						Path<Date> path = root.get(fieldname);
+						restrictions.add(datePredicate(builder, path, datePieces.get(0), datePieces.get(1)));
+					}
+					if (datePieces.size() >= 4) {
+						Path<Date> path = root.get(fieldname);
+						restrictions.add(datePredicate(builder, path, datePieces.get(2), datePieces.get(3)));
+					}
+				} catch (APIException e) {
+					return errorSR("InvalidDateFormat", dates.get(fieldname) + " is invalid", Constants.HTTP_BAD_REQUEST);
+				}
 			}
 		}
 		

@@ -31,6 +31,7 @@ import org.jax.mgi.mgd.api.entities.ReferenceWorkflowData;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.entities.Term;
+import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateParser;
@@ -48,6 +49,9 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 
 	// maps from search field name to workflow group status
 	private static Map<String,String> statuses = null;
+
+	// maps from search field name to database key name (for created-by / modified-by fields)
+	private static Map<String,String> users = null;
 
 	/* convenience method for instantiating a new search results object, populating its error fields, 
 	 * and returning it.
@@ -94,6 +98,14 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 				}
 			}
 		}
+		
+		if (users == null) {
+			users = new HashMap<String,String>();
+			users.put("created_by", "createdByUser");
+			users.put("modified_by", "modifiedByUser");
+		}
+
+		// begin building the query
 
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Reference> query = builder.createQuery(myClass);
@@ -204,6 +216,17 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 				restrictions.add(builder.or(wfsRestrictions.toArray(new Predicate[0])));
 			} else {
 				restrictions.add(builder.and(wfsRestrictions.toArray(new Predicate[0])));
+			}
+		}
+		
+		// created_by and modified_by parameters
+		
+		for (String fieldname : users.keySet()) {
+			if (params.containsKey(fieldname)) {
+				Join<Reference,User> user = root.join(users.get(fieldname));
+				Path<String> column = user.get("login");
+				Expression<String> lowerColumn = builder.lower(column);
+				restrictions.add(builder.equal(lowerColumn, params.get(fieldname).toString().toLowerCase()));
 			}
 		}
 		

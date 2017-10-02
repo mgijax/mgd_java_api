@@ -128,6 +128,13 @@ public interface ReferenceRESTInterface {
 	 *	volume : search by volume field, case-insensitive, wildcards allowed
 	 *	year : (integer) search by year field
 	 *
+	 *	created_by : user who created the reference record (case-insensitive, no wildcards)
+	 *	modified_by : user who most recently modified the reference record (case-insensitive, no wildcards)
+	 *  creation_date : date on which reference was created, using the given date criteria:
+	 *  	date formats may be: mm/dd/yyyy, mm/dd/yy, or yyyy/mm/dd
+	 *  	operators may be: =, <, >, <=, >=, or ..
+	 *  modification_date : date on which reference was most recently modified, using the criteria shown above
+	 *
 	 *	workflow_tag_operator : operator to use when searching for multiple workflow tags (AND/OR)
 	 *	not_workflow_tag1 : flag to indicate whether to apply a NOT operator (1/true) to the search for tag 1 or not (0/false)
 	 *	workflow_tag1 : search by workflow tag 1, case-insensitive, no wildcards
@@ -175,7 +182,7 @@ public interface ReferenceRESTInterface {
 	 *  sh_group : search status history for status change in given workflow group, case-insensitive, no wildcards
 	 *  sh_username : search status history for status change by given user, case-insensitive, no wildcards
 	 *  sh_status : search status history for status change to the given status, case-insensitive, no wildcards
-	 *  sh_date : search status history for status change with the given date criteria;
+	 *  sh_date : search status history for status change with the given date criteria:
 	 *  	date formats may be: mm/dd/yyyy, mm/dd/yy, or yyyy/mm/dd
 	 *  	operators may be: =, <, >, <=, >=, or ..
 	 */

@@ -291,12 +291,46 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		return a.equals(b);
 	}
 	
+	// remove any (optional) prefix from DOI ID
+	private String cleanDoiID(String doiID) throws APIException {
+		// all DOI IDs must begin with "10."
+		if ((doiID != null) && (!doiID.startsWith("10."))) {
+			int tenPosition = doiID.indexOf("10.");
+			if (tenPosition < 0) {
+				throw new APIException("Invalid DOI ID: " + doiID);
+			}
+			doiID = doiID.substring(tenPosition);
+		}
+		return doiID;
+	}
+
+	// remove any (optional) prefix from PubMed ID
+	private String cleanPubMedID(String pubmedID) throws APIException {
+		// all PubMed IDs are purely numeric, so strip off anything to the left of the first non-numeric character
+		if ((pubmedID != null) && (pubmedID.trim().length() > 0) && (!pubmedID.matches("^[0-9]+$"))) {
+			// anything up to the final non-digit, followed by the digits that are the PubMed ID
+			Pattern p = Pattern.compile("^.*[^0-9]+([0-9]+)$");
+			Matcher m = p.matcher(pubmedID.trim());
+			if (m.find()) {
+				pubmedID = m.group(1);
+			} else {
+				throw new APIException("Invalid PubMed ID: " + pubmedID);
+			}
+		}
+		return pubmedID;
+	}
+	
 	/* apply ID changes from domain to entity for PubMed, DOI, and GO REF IDs
 	 */
 	private boolean applyAccessionIDChanges(Reference entity, ReferenceDomain domain, User currentUser) throws APIException {
 		// assumes only one ID per reference for each logical database (valid assumption, August 2017)
 		// need to handle:  new ID for logical db, updated ID for logical db, deleted ID for logical db
 
+		// do any cleanup of DOI ID and PubMed ID first
+		
+		domain.doiid = cleanDoiID(domain.doiid);
+		domain.pubmedid = cleanPubMedID(domain.pubmedid);
+		
 		boolean anyChanges = false;
 		Pattern pattern = Pattern.compile("(.*?)([0-9]+)");		// any characters as a prefix (reluctant group), followed by one or more digits
 		

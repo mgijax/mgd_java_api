@@ -33,6 +33,7 @@ import org.jax.mgi.mgd.api.entities.ReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.entities.Term;
 import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.exception.APIException;
+import org.jax.mgi.mgd.api.util.Checks;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateParser;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -73,7 +74,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		// query parameters existing in main reference table
 		List<String> internalParameters = new ArrayList<String>(Arrays.asList(
 			new String[] { "issue", "pages", "date", "ref_abstract", "isReviewArticle", "title",
-				"authors", "primary_author", "journal", "volume", "year", "_refs_key" }));
+				"authors", "primary_author", "journal", "volume", "_refs_key" }));
 		
 		// status query parameters (residing outside main reference table)
 		List<String> statusParameters = new ArrayList<String>();
@@ -225,6 +226,17 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 				restrictions.add(builder.or(wfsRestrictions.toArray(new Predicate[0])));
 			} else {
 				restrictions.add(builder.and(wfsRestrictions.toArray(new Predicate[0])));
+			}
+		}
+		
+		// special handling for 'year' allowing for fairly sophistaicated queries
+		
+		if (params.containsKey("year")) {
+			Expression<Integer> yearField = root.get("year");
+			try {
+				restrictions.add(yearPredicate(builder, yearField, params.get("year").toString()));
+			} catch (APIException e) {
+				return errorSR("InvalidYearFormat", "Value for year field is invalid: " + e.toString(), Constants.HTTP_BAD_REQUEST);
 			}
 		}
 		
@@ -664,5 +676,63 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		Query query = entityManager.createNativeQuery("select count(1) from ACC_assignJ(" + userKey + "," + intRefsKey + ")");
 		query.getResultList();
 		return;
+	}
+	
+	// get an integer version of the given (String) year
+	private Integer getInteger(String year) throws APIException {
+		try {
+			return Integer.parseInt(year.trim());
+		} catch (Exception e) {
+			throw new APIException ("Non-integer year: " + year);
+		}
+	}
+
+	// produce and return a JPA predicate that provides searching of 'year' field as either:
+	//	1. a single integer
+	//	2. a comma-delimited list of integers
+	//	3. a range of two integers delimited by '..' (inclusive of the boundary years)
+	//	4. an integer preceded by a relational operator:  >, <, >=, <=, =
+	private Predicate yearPredicate(CriteriaBuilder builder, Expression<Integer> field, String year) throws APIException {
+		if (year.startsWith("=")) {
+			return builder.equal(field, year.substring(1));
+		}
+		
+		if (year.startsWith(">=")) {
+			return builder.greaterThanOrEqualTo(field, getInteger(year.substring(2)));
+		}
+		
+		if (year.startsWith(">")) {
+			return builder.greaterThan(field, getInteger(year.substring(1)));
+		}
+		
+		if (year.startsWith("<=")) {
+			return builder.lessThanOrEqualTo(field, getInteger(year.substring(2)));
+		}
+		
+		if (year.startsWith("<")) {
+			return builder.lessThan(field, getInteger(year.substring(1)));
+		}
+		
+		// range of two years
+		if (year.indexOf("..") >= 0) {
+			String[] years = year.split("\\.\\.");
+			if (years.length != 2) {
+				throw new APIException("Expected format startYear..endYear");
+			}
+			return builder.between(field, getInteger(years[0]), getInteger(years[1]));
+		}
+		
+		// comma-delimited list of integers
+		
+		if (year.indexOf(",") >= 0) {
+			List<Integer> years = new ArrayList<Integer>();
+			for (String yearStr : year.split(",")) {
+				years.add(getInteger(yearStr));
+			}
+			return field.in(years);
+		}
+		
+		// equals (implicit)
+		return builder.equal(field, getInteger(year));
 	}
 }

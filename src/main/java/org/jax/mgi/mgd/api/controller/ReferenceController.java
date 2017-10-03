@@ -231,19 +231,6 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		params = filterEmptyParameters(params);
 		log.info("Search Params: " + params);
 		
-		// brief error checking
-
-		if (params.containsKey("year")) {
-			try {
-				// We don't need this value; we just need to ensure it's an integer.
-				Integer.parseInt((String) params.get("year"));
-			} catch (Throwable t) {
-				SearchResults<ReferenceSummaryDomain> results = new SearchResults<ReferenceSummaryDomain>();
-				results.setError("InvalidParameter", "Year parameter is not an integer", Constants.HTTP_BAD_REQUEST);
-				return results;
-			}
-		}
-		
 		try {
 			return referenceService.getReferenceSummaries(params);
 		} catch (APIException e) {

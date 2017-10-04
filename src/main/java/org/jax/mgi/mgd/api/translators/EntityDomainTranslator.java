@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.translators;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import org.jax.mgi.mgd.api.domain.DomainBase;
@@ -9,6 +10,7 @@ import org.jboss.logging.Logger;
 public abstract class EntityDomainTranslator<E extends EntityBase, D extends DomainBase> {
 
 	private Logger log = Logger.getLogger(getClass());
+	protected SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
 
 	public E translate(D domain) {
 		return domainToEntity(domain);

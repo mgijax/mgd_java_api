@@ -43,6 +43,11 @@ public class ReferenceTranslator extends EntityDomainTranslator<Reference, Refer
 		domain.tumor_status = entity.getStatus(Constants.WG_TUMOR);
 		domain.workflow_tags = entity.getWorkflowTagsAsStrings();
 
+		domain.creation_date = dateFormatter.format(entity.getCreation_date());
+		domain.modification_date = dateFormatter.format(entity.getModification_date());
+		domain.created_by = entity.getCreatedByUser().getLogin();
+		domain.modified_by = entity.getModifiedByUser().getLogin();
+		
 		// is this a review article?
 		if (entity.getIsReviewArticle() == 0) {
 			domain.isReviewArticle = "No";

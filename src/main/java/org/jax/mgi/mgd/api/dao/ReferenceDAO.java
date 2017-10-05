@@ -244,10 +244,18 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		
 		for (String fieldname : users.keySet()) {
 			if (params.containsKey(fieldname)) {
-				Join<Reference,User> user = root.join(users.get(fieldname));
-				Path<String> column = user.get("login");
+				Subquery<User> userSubquery = query.subquery(User.class);
+				Root<User> userRoot = userSubquery.from(User.class);
+				userSubquery.select(userRoot);
+				
+				List<Predicate> userPredicates = new ArrayList<Predicate>();
+				userPredicates.add(builder.equal(root.get(users.get(fieldname)), userRoot.get("_user_key")));
+				Path<String> column = userRoot.get("login");
 				Expression<String> lowerColumn = builder.lower(column);
-				restrictions.add(builder.equal(lowerColumn, params.get(fieldname).toString().toLowerCase()));
+				userPredicates.add(builder.equal(lowerColumn, params.get(fieldname).toString().toLowerCase()));
+				userSubquery.where(userPredicates.toArray(new Predicate[]{}));
+
+				restrictions.add(builder.exists(userSubquery));
 			}
 		}
 		

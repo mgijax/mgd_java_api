@@ -356,27 +356,27 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			if (bookAuthor != null) {
 				Path<String> column = bookRoot.get("book_author");
 				Expression<String> lowerColumn = builder.lower(column);
-				bookPredicates.add(builder.equal(lowerColumn, bookAuthor.toLowerCase()));
+				bookPredicates.add(builder.like(lowerColumn, bookAuthor.toLowerCase()));
 			}
 			if (booktitle != null) {
 				Path<String> column = bookRoot.get("book_title");
 				Expression<String> lowerColumn = builder.lower(column);
-				bookPredicates.add(builder.equal(lowerColumn, booktitle.toLowerCase()));
+				bookPredicates.add(builder.like(lowerColumn, booktitle.toLowerCase()));
 			}
 			if (place != null) {
 				Path<String> column = bookRoot.get("place");
 				Expression<String> lowerColumn = builder.lower(column);
-				bookPredicates.add(builder.equal(lowerColumn, place.toLowerCase()));
+				bookPredicates.add(builder.like(lowerColumn, place.toLowerCase()));
 			}
 			if (publisher != null) {
 				Path<String> column = bookRoot.get("publisher");
 				Expression<String> lowerColumn = builder.lower(column);
-				bookPredicates.add(builder.equal(lowerColumn, publisher.toLowerCase()));
+				bookPredicates.add(builder.like(lowerColumn, publisher.toLowerCase()));
 			}
 			if (seriesEd != null) {
 				Path<String> column = bookRoot.get("series_edition");
 				Expression<String> lowerColumn = builder.lower(column);
-				bookPredicates.add(builder.equal(lowerColumn, seriesEd.toLowerCase()));
+				bookPredicates.add(builder.like(lowerColumn, seriesEd.toLowerCase()));
 			}
 			
 			if (bookPredicates.size() > 0) {

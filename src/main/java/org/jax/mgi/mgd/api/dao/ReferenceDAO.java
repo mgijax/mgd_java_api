@@ -30,6 +30,7 @@ import org.jax.mgi.mgd.api.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowData;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowTag;
+import org.jax.mgi.mgd.api.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.entities.Term;
 import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.exception.APIException;
@@ -334,6 +335,57 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			}
 		}
 
+		// book fields
+		
+		if ( (params.containsKey("book_author")) || (params.containsKey("book_title")) || (params.containsKey("place")) || (params.containsKey("publisher")) || (params.containsKey("series_ed"))) {
+			
+			String bookAuthor  = (String) params.get("book_author");
+			String booktitle   = (String) params.get("book_title");
+			String place       = (String) params.get("place");
+			String publisher   = (String) params.get("publisher");
+			String seriesEd    = (String) params.get("series_ed");
+
+			Subquery<ReferenceBook> bookSubquery = query.subquery(ReferenceBook.class);
+			Root<ReferenceBook> bookRoot = bookSubquery.from(ReferenceBook.class);
+			bookSubquery.select(bookRoot);
+
+			List<Predicate> bookPredicates = new ArrayList<Predicate>();
+			bookPredicates.add(builder.equal(root.get("_refs_key"), bookRoot.get("_refs_key")));
+			
+			
+			if (bookAuthor != null) {
+				Path<String> column = bookRoot.get("book_author");
+				Expression<String> lowerColumn = builder.lower(column);
+				bookPredicates.add(builder.equal(lowerColumn, bookAuthor.toLowerCase()));
+			}
+			if (booktitle != null) {
+				Path<String> column = bookRoot.get("book_title");
+				Expression<String> lowerColumn = builder.lower(column);
+				bookPredicates.add(builder.equal(lowerColumn, booktitle.toLowerCase()));
+			}
+			if (place != null) {
+				Path<String> column = bookRoot.get("place");
+				Expression<String> lowerColumn = builder.lower(column);
+				bookPredicates.add(builder.equal(lowerColumn, place.toLowerCase()));
+			}
+			if (publisher != null) {
+				Path<String> column = bookRoot.get("publisher");
+				Expression<String> lowerColumn = builder.lower(column);
+				bookPredicates.add(builder.equal(lowerColumn, publisher.toLowerCase()));
+			}
+			if (seriesEd != null) {
+				Path<String> column = bookRoot.get("series_edition");
+				Expression<String> lowerColumn = builder.lower(column);
+				bookPredicates.add(builder.equal(lowerColumn, seriesEd.toLowerCase()));
+			}
+			
+			if (bookPredicates.size() > 0) {
+				bookSubquery.where(bookPredicates.toArray(new Predicate[]{}));
+				restrictions.add(builder.exists(bookSubquery));
+			}
+		}
+		
+		
 		// third handle list of external parameters, including:
 		//		"notes", "reference_type", "marker_id", "allele_id", "accids", "workflow_tag", "supplementalTerm"
 		

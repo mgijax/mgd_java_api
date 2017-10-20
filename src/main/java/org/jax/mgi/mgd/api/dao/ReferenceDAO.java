@@ -253,7 +253,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 				userPredicates.add(builder.equal(root.get(users.get(fieldname)), userRoot.get("_user_key")));
 				Path<String> column = userRoot.get("login");
 				Expression<String> lowerColumn = builder.lower(column);
-				userPredicates.add(builder.equal(lowerColumn, params.get(fieldname).toString().toLowerCase()));
+				userPredicates.add(builder.like(lowerColumn, params.get(fieldname).toString().toLowerCase()));
 				userSubquery.where(userPredicates.toArray(new Predicate[]{}));
 
 				restrictions.add(builder.exists(userSubquery));
@@ -308,7 +308,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			if (shUsername != null) {
 				Path<String> column = shRoot.get("modifiedByUser").get("login");
 				Expression<String> lowerColumn = builder.lower(column);
-				shPredicates.add(builder.equal(lowerColumn, shUsername.toLowerCase()));
+				shPredicates.add(builder.like(lowerColumn, shUsername.toLowerCase()));
 			}
 			if (shDate != null) {
 				DateParser parser = new DateParser();

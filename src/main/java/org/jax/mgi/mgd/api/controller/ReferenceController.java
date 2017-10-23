@@ -161,14 +161,21 @@ public class ReferenceController extends BaseController implements ReferenceREST
 
 				if (refs.total_count > 0) {
 					for (ReferenceDomain ref : refs.items) {
-						currentID = ref.jnumid;
-						ref.setStatus(group, status);
-						referenceService.updateReference(ref, currentUser);
-						referenceKeys.add(ref._refs_key);
+						try {
+							currentID = ref.jnumid;
+							ref.setStatus(group, status);
+							referenceService.updateReference(ref, currentUser);
+							referenceKeys.add(ref._refs_key);
+						} catch (APIException e) {
+							log.error("Could not save status for " + currentID + " (" + e.toString() + ")");
+							e.printStackTrace();
+							failures.add(currentID);
+						}
 					}
 				}
 			} catch (APIException t) {
-				failures.add(currentID);
+				log.error("Failed to search for set of IDs" + t.toString());
+				t.printStackTrace();
 			}
 		}
 

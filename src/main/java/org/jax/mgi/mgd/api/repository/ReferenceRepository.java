@@ -293,11 +293,11 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 	
 	// remove any (optional) prefix from DOI ID
 	private String cleanDoiID(String doiID) throws APIException {
-		// all DOI IDs must begin with "10."
+		// all DOI IDs must begin with "10.", but if not, just trust the user
 		if ((doiID != null) && (!doiID.startsWith("10."))) {
 			int tenPosition = doiID.indexOf("10.");
 			if (tenPosition < 0) {
-				throw new APIException("Invalid DOI ID: " + doiID);
+				return doiID;
 			}
 			doiID = doiID.substring(tenPosition);
 		}
@@ -314,7 +314,8 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 			if (m.find()) {
 				pubmedID = m.group(1);
 			} else {
-				throw new APIException("Invalid PubMed ID: " + pubmedID);
+				// if there are letters after the digits, just keep the original ID (don't throw an exception)
+				return pubmedID;
 			}
 		}
 		return pubmedID;

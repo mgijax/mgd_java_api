@@ -1,12 +1,9 @@
 #!/bin/sh
 
-if [ "${MGICONFIG}" = "" ]
-then
-    MGICONFIG=/usr/local/mgi/live/mgiconfig
-    export MGICONFIG
-fi
+cd `dirname $0`
+. Configuration
 
-. ${MGICONFIG}/master.config.sh
+mkdir -p ${LOG_DIR}
 
 PROP_FILE=app.properties
 rm -f ${PROP_FILE}

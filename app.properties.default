@@ -4,3 +4,4 @@ swarm.ds.username=mgd_public
 swarm.ds.password=mgdpub
 swarm.ds.connection.url=jdbc:postgresql://mgi-testdb4.jax.org:5432/scrumdog
 swarm.access_token=myDefaultToken
+hibernate.dialect=org.jax.mgi.mgd.api.util.PostgresFTSDialect

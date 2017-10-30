@@ -27,6 +27,7 @@ import org.jax.mgi.mgd.api.entities.ReferenceAlleleAssociation;
 import org.jax.mgi.mgd.api.entities.ReferenceCitationData;
 import org.jax.mgi.mgd.api.entities.ReferenceMarkerAssociation;
 import org.jax.mgi.mgd.api.entities.ReferenceNote;
+import org.jax.mgi.mgd.api.entities.ReferenceTextSearch;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowData;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.entities.ReferenceWorkflowTag;
@@ -607,6 +608,17 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		if (params.containsKey("extracted_text") && (params.get("extracted_text") != null)) {
 			String textString = ((String) params.get("extracted_text")).toLowerCase().trim();
 			if (textString.trim() != "") {
+				Subquery<ReferenceTextSearch> textSubquery = query.subquery(ReferenceTextSearch.class);
+				Root<ReferenceTextSearch> textRoot = textSubquery.from(ReferenceTextSearch.class);
+				textSubquery.select(textRoot);
+
+				List<Predicate> textPredicates = new ArrayList<Predicate>();
+				textPredicates.add(builder.equal(root.get("_refs_key"), textRoot.get("_refs_key")));
+				textPredicates.add(this.fts(textRoot, builder, "refText", textString));
+				textSubquery.where(textPredicates.toArray(new Predicate[]{}));
+				restrictions.add(builder.exists(textSubquery));
+
+				/*
 				List<Predicate> wordPredicates = new ArrayList<Predicate>();
 				
 				for (String token : textString.split("\\s")) {
@@ -615,7 +627,6 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 					textSubquery.select(textRoot);
 			
 					List<Predicate> textPredicates = new ArrayList<Predicate>();
-				
 					textPredicates.add(builder.equal(root.get("_refs_key"), textRoot.get("_refs_key")));
 					Path<String> column = textRoot.get("extracted_text");
 					Expression<String> lowerColumn = builder.lower(column);
@@ -625,6 +636,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 					wordPredicates.add(builder.exists(textSubquery));
 				}
 				restrictions.add(builder.and(wordPredicates.toArray(new Predicate[0])));
+			    */
 			}
 		}
 		

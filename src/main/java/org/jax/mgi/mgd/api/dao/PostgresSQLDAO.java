@@ -14,6 +14,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -240,4 +241,39 @@ public abstract class PostgresSQLDAO<T> {
 		return null; 
 	}
 
+	/* convert 'searchString' to be one compliant for Postgres FTS, including:
+	 * 1. Wildcards are removed.
+	 * 2. Colons are also removed, aiding search by IDs.
+	 * 3. Search strings that contain a boolean operator (&, |, or parentheses) are assumed to be user-entered
+	 *		using booleans and are also passed through (aside from rules 1 and 2).
+	 * 4. Single words pass through unaltered.
+	 * 5. Multiple word searches are converted to use an AND (&) operator between words.
+	 */
+	private String toFTS(String searchString) {
+		if (searchString.indexOf('%') >= 0) {
+			searchString = searchString.replaceAll("%", "");
+		}
+
+		if (searchString.indexOf(':') >= 0) {
+			searchString = searchString.replaceAll(":", "");
+		}
+
+		if ( (searchString.indexOf('&') >= 0) || (searchString.indexOf('|') >= 0)||
+			(searchString.indexOf('(') >= 0) || (searchString.indexOf(')') >= 0) ) {
+			return searchString;
+		}
+		
+		String[] tokens = searchString.split("[ \t\n]+");
+		if (tokens.length == 1) {
+			return searchString;
+		}
+		return String.join(" & ", tokens);
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public Predicate fts(Root root, CriteriaBuilder builder, String fieldname, String searchString) {
+		Expression fieldnameExpression = root.get(fieldname);
+		Expression<String> searchStringExpression = builder.literal(toFTS(searchString));
+		return builder.isTrue(builder.function("fts", Boolean.class, fieldnameExpression, searchStringExpression));
+	}
 }

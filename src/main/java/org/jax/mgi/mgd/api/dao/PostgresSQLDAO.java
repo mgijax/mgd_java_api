@@ -19,6 +19,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.jax.mgi.mgd.api.exception.APIException;
+import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.util.DateParser;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -212,7 +213,7 @@ public abstract class PostgresSQLDAO<T> {
 		return dumpDate;
 	}
 
-	public Predicate datePredicate(CriteriaBuilder builder, Path<Date> path, String operator, String date) throws APIException {
+	public Predicate datePredicate(CriteriaBuilder builder, Path<Date> path, String operator, String date) throws FatalAPIException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
 		try {
 			Date dayStart = dateFormat.parse(date + " 00:00:00");
@@ -235,7 +236,7 @@ public abstract class PostgresSQLDAO<T> {
 				return builder.between(path, dayStart, dayEnd);
 			}
 		} catch (ParseException p) {
-			throw new APIException("ReferenceDAO.datePredicate(): Cannot parse date: " + date);
+			throw new FatalAPIException("ReferenceDAO.datePredicate(): Cannot parse date: " + date);
 		}
 		return null; 
 	}

@@ -14,6 +14,8 @@ import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.exception.APIException;
+import org.jax.mgi.mgd.api.exception.FatalAPIException;
+import org.jax.mgi.mgd.api.exception.NonFatalAPIException;
 import org.jax.mgi.mgd.api.repository.ReferenceRepository;
 import org.jax.mgi.mgd.api.repository.ReferenceSummaryRepository;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -43,7 +45,7 @@ public class ReferenceService {
 	 * domain object if successful or throws APIException if not.
 	 */
 	@Transactional
-	public ReferenceDomain updateReference(ReferenceDomain domain, User currentUser) throws APIException {
+	public ReferenceDomain updateReference(ReferenceDomain domain, User currentUser) throws FatalAPIException, NonFatalAPIException, APIException {
 		repo.update(domain, currentUser);
 		return domain;
 	}

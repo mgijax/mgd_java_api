@@ -11,7 +11,6 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import org.hibernate.Hibernate;
 import org.jax.mgi.mgd.api.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.dao.TermDAO;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
@@ -26,6 +25,8 @@ import org.jax.mgi.mgd.api.entities.ReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.entities.Term;
 import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.exception.APIException;
+import org.jax.mgi.mgd.api.exception.FatalAPIException;
+import org.jax.mgi.mgd.api.exception.NonFatalAPIException;
 import org.jax.mgi.mgd.api.translators.ReferenceTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.MapMaker;
@@ -49,12 +50,16 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 
 	ReferenceTranslator translator = new ReferenceTranslator();
 
+	/* These work together to allow for a maximum delay of two seconds for retries: */
+	private static int maxRetries = 10;		// maximum number of retries for non-fatal exceptions on update operations
+	private static int retryDelay = 200;	// number of ms to wait before retrying update operation after non-fatal exception
+
 	/***--- (public) instance methods ---***/
 
 	/* gets a ReferenceDomain object that is fully fleshed out from a Reference
 	 */
 	@Override
-	public ReferenceDomain get(int primaryKey) throws APIException {
+	public ReferenceDomain get(int primaryKey) throws FatalAPIException, APIException {
 		Reference ref = getReference(primaryKey);
 		ReferenceDomain domain = translator.translate(ref);
 		domain.setStatusHistory(getStatusHistory(domain));
@@ -86,7 +91,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 	}
 
 	@Override
-	public ReferenceDomain update(ReferenceDomain domain, User user) throws APIException {
+	public ReferenceDomain update(ReferenceDomain domain, User user) throws FatalAPIException, NonFatalAPIException, APIException {
 		Reference entity = getReference(domain._refs_key);
 		applyDomainChanges(entity, domain, user);
 		referenceDAO.persist(entity);
@@ -95,13 +100,13 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 	}
 
 	@Override
-	public ReferenceDomain delete(ReferenceDomain domain, User user) throws APIException {
-		throw new APIException("Need to implement ReferenceRepository.delete() method");
+	public ReferenceDomain delete(ReferenceDomain domain, User user) throws FatalAPIException {
+		throw new FatalAPIException("Need to implement ReferenceRepository.delete() method");
 	}
 
 	@Override
-	public ReferenceDomain create(ReferenceDomain domain, User username) throws APIException {
-		throw new APIException("Need to implement ReferenceRepository.create() method");
+	public ReferenceDomain create(ReferenceDomain domain, User username) throws FatalAPIException {
+		throw new FatalAPIException("Need to implement ReferenceRepository.create() method");
 	}
 
 	/* get a list of events in the status history of the reference with the specified key
@@ -116,7 +121,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 	
 	/* set the given workflow_tag for all references identified in the list of keys
 	 */
-	public void updateInBulk(List<Integer> refsKeys, String workflow_tag, String workflow_tag_operation, User currentUser) throws APIException {
+	public void updateInBulk(List<Integer> refsKeys, String workflow_tag, String workflow_tag_operation, User currentUser) throws FatalAPIException, APIException {
 		// if no references or no tags, just bail out as a no-op
 		if ((refsKeys == null) || (refsKeys.size() == 0) || (workflow_tag == null) || (workflow_tag.length() == 0)) {
 			return; 
@@ -126,19 +131,44 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		if ((workflow_tag_operation == null) || workflow_tag_operation.equals("")) {
 			workflow_tag_operation = Constants.OP_ADD_WORKFLOW;
 		} else if (!workflow_tag_operation.equals(Constants.OP_ADD_WORKFLOW) && !workflow_tag_operation.equals(Constants.OP_REMOVE_WORKFLOW)) {
-			throw new APIException("Invalid workflow_tag_operation: " + workflow_tag_operation);
+			throw new FatalAPIException("Invalid workflow_tag_operation: " + workflow_tag_operation);
 		}
 		
+		/* for each reference:
+		 * 1. if the operation fails in a fatal manner, rethrow that exception immediately.
+		 * 2. if the operation fails in a non-fatal manner, wait briefly and try again up to maxRetries times.
+		 */
 		for (Integer refsKey : refsKeys) {
 			Reference reference = referenceDAO.getReference(refsKey);
 			if (reference != null) {
-				if (workflow_tag_operation.equals(Constants.OP_ADD_WORKFLOW)) {
-					addTag(reference, workflow_tag, currentUser);
-				} else {
-					removeTag(reference, workflow_tag, currentUser);
+				int retries = 0;
+				boolean succeeded = false;
+				
+				while (!succeeded) {
+					try {
+						if (workflow_tag_operation.equals(Constants.OP_ADD_WORKFLOW)) {
+							addTag(reference, workflow_tag, currentUser);
+						} else {
+							removeTag(reference, workflow_tag, currentUser);
+						}
+						succeeded = true;
+					} catch (FatalAPIException fe) {
+						throw fe;
+					} catch (APIException ae) {
+						retries++;
+						if (retries > maxRetries) {
+							throw ae;
+						}
+						try {
+							Thread.sleep(retryDelay);
+							log.info("UpdateBulk: Retry #" + retries + " for " + reference.getMgiid());
+						} catch (InterruptedException ie) {
+							throw new FatalAPIException("Operation cancelled - system interrupted");
+						}
+					}
 				}
 			} else {
-				throw new APIException("Unknown reference key: " + refsKey);
+				throw new FatalAPIException("Unknown reference key: " + refsKey);
 			}
 		}
 	}
@@ -148,44 +178,44 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 	
 	/* return a single Term matching the parameters encoded as a Map in the given JSON string
 	 */
-	private Term getTerm (String json) throws APIException {
+	private Term getTerm (String json) throws FatalAPIException {
 		MapMaker mapMaker = new MapMaker();
 		try {
 			SearchResults<Term> terms = termDAO.search(mapMaker.toMap(json));
 
 			if ((terms.items == null) || (terms.items.size() == 0)) {
-				throw new APIException("ReferenceRepository: Could not find term for JSON: " + json);
+				throw new FatalAPIException("ReferenceRepository: Could not find term for JSON: " + json);
 			} else if (terms.items.size() > 1) {
-				throw new APIException("ReferenceRepository: Found too many terms for JSON: " + json);
+				throw new FatalAPIException("ReferenceRepository: Found too many terms for JSON: " + json);
 			}
 
 			return terms.items.get(0);
 		} catch (Exception e) {
-			throw new APIException("ReferenceRepository: Term search failed: " + e.toString());
+			throw new FatalAPIException("ReferenceRepository: Term search failed: " + e.toString());
 		}
 	}
 	
 	/* return a single Term matching the given vocabulary / term pair
 	 */
-	private Term getTermByTerm (Integer vocabKey, String term) throws APIException {
+	private Term getTermByTerm (Integer vocabKey, String term) throws FatalAPIException {
 		return getTerm("{\"vocab._vocab_key\" : " + vocabKey + ", \"term\" : \"" + term + "\"}");
 	}
 	
 	/* return a single Term matching the given vocabulary / abbreviation pair
 	 */
-	private Term getTermByAbbreviation (Integer vocabKey, String abbreviation) throws APIException {
+	private Term getTermByAbbreviation (Integer vocabKey, String abbreviation) throws FatalAPIException {
 		return getTerm("{\"vocab._vocab_key\" : " + vocabKey + ", \"abbreviation\" : \"" + abbreviation + "\"}");
 	}
 	
 	/* retrieve the Reference object with the given primaryKey
 	 */
-	private Reference getReference(Integer primaryKey) throws APIException {
+	private Reference getReference(Integer primaryKey) throws FatalAPIException, APIException {
 		if (primaryKey == null) {
-			throw new APIException("ReferenceRepository.getReference() : reference key is null");
+			throw new FatalAPIException("ReferenceRepository.getReference() : reference key is null");
 		}
 		Reference reference = referenceDAO.getReference(primaryKey);
 		if (reference == null) {
-			throw new APIException("ReferenceRepository.getReference(): Unknown reference key: " + primaryKey);
+			throw new FatalAPIException("ReferenceRepository.getReference(): Unknown reference key: " + primaryKey);
 		}
 		return reference;
 	}
@@ -212,7 +242,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 
 	/* handle the basic fields that have changed between this Reference and the given ReferenceDomain
 	 */
-	private boolean applyBasicFieldChanges(Reference entity, ReferenceDomain domain, User currentUser) throws APIException {
+	private boolean applyBasicFieldChanges(Reference entity, ReferenceDomain domain, User currentUser) throws FatalAPIException {
 		// exactly one set of basic data per reference, including:  is_discard flag, reference type,
 		// author, primary author (derived), journal, title, volume, issue, date, year, pages, 
 		// abstract, and isReviewArticle flag
@@ -237,7 +267,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		try {
 			year = Integer.parseInt(domain.year);
 		} catch (NumberFormatException p) {
-			throw new APIException("Year is not an integer: " + domain.year);
+			throw new FatalAPIException("Year is not an integer: " + domain.year);
 		}
 		
 		// update this object's data to match what was passed in
@@ -292,7 +322,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 	}
 	
 	// remove any (optional) prefix from DOI ID
-	private String cleanDoiID(String doiID) throws APIException {
+	private String cleanDoiID(String doiID) {
 		// all DOI IDs must begin with "10.", but if not, just trust the user
 		if ((doiID != null) && (!doiID.startsWith("10."))) {
 			int tenPosition = doiID.indexOf("10.");
@@ -305,7 +335,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 	}
 
 	// remove any (optional) prefix from PubMed ID
-	private String cleanPubMedID(String pubmedID) throws APIException {
+	private String cleanPubMedID(String pubmedID) {
 		// all PubMed IDs are purely numeric, so strip off anything to the left of the first non-numeric character
 		if ((pubmedID != null) && (pubmedID.trim().length() > 0) && (!pubmedID.matches("^[0-9]+$"))) {
 			// anything up to the final non-digit, followed by the digits that are the PubMed ID
@@ -323,7 +353,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 	
 	/* apply ID changes from domain to entity for PubMed, DOI, and GO REF IDs
 	 */
-	private boolean applyAccessionIDChanges(Reference entity, ReferenceDomain domain, User currentUser) throws APIException {
+	private boolean applyAccessionIDChanges(Reference entity, ReferenceDomain domain, User currentUser) {
 		// assumes only one ID per reference for each logical database (valid assumption, August 2017)
 		// need to handle:  new ID for logical db, updated ID for logical db, deleted ID for logical db
 
@@ -385,7 +415,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 	/* Apply a single ID change to this reference.  If there already is an ID for this logical database, replace it.  If there wasn't
 	 * one, add one.  And, if there was one previously, but there's not now, then delete it.
 	 */
-	private boolean applyOneIDChange(Reference entity, Integer ldb, String accID, String prefixPart, Integer numericPart, Integer preferred, Integer isPrivate, User currentUser) throws APIException {
+	private boolean applyOneIDChange(Reference entity, Integer ldb, String accID, String prefixPart, Integer numericPart, Integer preferred, Integer isPrivate, User currentUser) {
 		// first parameter is required; bail out if it is null
 		if (ldb == null) { return false; }
 		
@@ -648,7 +678,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 			}
 		}
 		 
-		// need to find the term of the tag, wrap it in an association, perist the association, and
+		// need to find the term of the tag, wrap it in an association, persist the association, and
 		// add it to the workflow tags for this Reference
 		
 		Term tagTerm = getTermByTerm(Constants.VOC_WORKFLOW_TAGS, rdTag);
@@ -733,7 +763,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 	 * As well, if this Reference has no J: number and we just assigned a status other than "Not Routed", 
 	 * then we assign the next available J: number to this reference.
 	 */
-	private boolean applyStatusChanges(Reference entity, ReferenceDomain domain, User currentUser) throws APIException {
+	private boolean applyStatusChanges(Reference entity, ReferenceDomain domain, User currentUser) throws NonFatalAPIException, APIException {
 		// note that we need to put 'anyChanges' last for each OR pair, otherwise short-circuit evaluation
 		// will only let the first change go through and the rest will not execute.
 		
@@ -763,7 +793,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 					try {
 						referenceDAO.assignNewJnumID(entity.get_refs_key(), currentUser.get_user_key());
 					} catch (Exception e) {
-						throw new APIException("Failed to assign J: number");
+						throw new NonFatalAPIException("Failed to assign J: number");
 					}
 				}
 			} // if no J#

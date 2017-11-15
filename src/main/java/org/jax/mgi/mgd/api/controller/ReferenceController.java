@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.domain.ReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.entities.Term;
 import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.exception.APIException;
+import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.rest.interfaces.ReferenceRESTInterface;
 import org.jax.mgi.mgd.api.service.ApiLogService;
 import org.jax.mgi.mgd.api.service.ReferenceService;
@@ -49,6 +50,10 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	private Logger log = Logger.getLogger(getClass());
 	private ObjectMapper mapper = new ObjectMapper();
 	private ListMaker<Integer> listMaker = new ListMaker<Integer>();
+
+	/* These work together to allow for a maximum delay of two seconds for retries: */
+	private static int maxRetries = 10;		// maximum number of retries for non-fatal exceptions on update operations
+	private static int retryDelay = 200;	// number of ms to wait before retrying update operation after non-fatal exception
 	
 	/***--- methods ---***/
 	
@@ -92,7 +97,25 @@ public class ReferenceController extends BaseController implements ReferenceREST
 				// before the updates are persisted to the database.  So, we issue the update, then we use the
 				// getReferenceByKey() method to re-fetch and return the updated object.
 				
-				referenceService.updateReference(reference, currentUser);
+				boolean succeeded = false;
+				int retries = 0;
+
+				while (!succeeded) {
+					try {
+						referenceService.updateReference(reference, currentUser);
+						succeeded = true;
+					} catch (FatalAPIException f) {	// if it's definitely a fatal exception, just propagate it
+						throw f;					
+					} catch (APIException nf) {		// otherwise, try again (up to maxRetries times)
+						retries++;
+						if (retries > maxRetries) {
+							throw nf;				// already tried all our allowed retries, so give up
+						}
+						Thread.sleep(retryDelay);
+						log.info("Update: Retry #" + retries + " for " + reference.mgiid);
+					}
+				}
+
 				logRequest("PUT /reference", mapper.writeValueAsString(reference), Constants.MGITYPE_REFERENCE,
 					listMaker.toList(reference._refs_key), currentUser);
 				return this.getReferenceByKey(reference._refs_key.toString());
@@ -161,15 +184,40 @@ public class ReferenceController extends BaseController implements ReferenceREST
 
 				if (refs.total_count > 0) {
 					for (ReferenceDomain ref : refs.items) {
-						try {
-							currentID = ref.jnumid;
-							ref.setStatus(group, status);
-							referenceService.updateReference(ref, currentUser);
-							referenceKeys.add(ref._refs_key);
-						} catch (APIException e) {
-							log.error("Could not save status for " + currentID + " (" + e.toString() + ")");
-							e.printStackTrace();
-							failures.add(currentID);
+						int retries = 0;
+						boolean moveOn = false;
+						
+						while (!moveOn) {
+							try {
+								currentID = ref.jnumid;
+								ref.setStatus(group, status);
+								referenceService.updateReference(ref, currentUser);
+								referenceKeys.add(ref._refs_key);
+								moveOn = true;
+							} catch (FatalAPIException fe) {
+								log.error("Could not save status for " + currentID + " (" + fe.toString() + ")");
+								fe.printStackTrace();
+								failures.add(currentID);
+								moveOn = true;
+							} catch (APIException e) {
+								retries++;
+								if (retries > maxRetries) {
+									log.error("Could not save status for " + currentID + " (" + e.toString() + ")");
+									e.printStackTrace();
+									failures.add(currentID);
+									moveOn = true;
+								} else {
+									try {
+										Thread.sleep(retryDelay);
+										log.info("UpdateStatus: Retry #" + retries + " for " + currentID);
+									} catch (InterruptedException e1) {
+										log.error("Could not save status for " + currentID + " (" + e1.toString() + ")");
+										e1.printStackTrace();
+										failures.add(currentID);
+										moveOn = true;
+									}
+								}
+							}
 						}
 					}
 				}

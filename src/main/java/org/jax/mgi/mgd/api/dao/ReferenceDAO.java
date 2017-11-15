@@ -34,6 +34,7 @@ import org.jax.mgi.mgd.api.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.entities.Term;
 import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.exception.APIException;
+import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.util.Checks;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateParser;
@@ -236,7 +237,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			Expression<Integer> yearField = root.get("year");
 			try {
 				restrictions.add(yearPredicate(builder, yearField, params.get("year").toString()));
-			} catch (APIException e) {
+			} catch (FatalAPIException e) {
 				return errorSR("InvalidYearFormat", "Value for year field is invalid: " + e.toString(), Constants.HTTP_BAD_REQUEST);
 			}
 		}
@@ -275,7 +276,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 						Path<Date> path = root.get(fieldname);
 						restrictions.add(datePredicate(builder, path, datePieces.get(2), datePieces.get(3)));
 					}
-				} catch (APIException e) {
+				} catch (FatalAPIException e) {
 					return errorSR("InvalidDateFormat", dates.get(fieldname) + " is invalid", Constants.HTTP_BAD_REQUEST);
 				}
 			}
@@ -741,11 +742,11 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	}
 	
 	// get an integer version of the given (String) year
-	private Integer getInteger(String year) throws APIException {
+	private Integer getInteger(String year) throws FatalAPIException {
 		try {
 			return Integer.parseInt(year.trim());
 		} catch (Exception e) {
-			throw new APIException ("Non-integer year: " + year);
+			throw new FatalAPIException ("Non-integer year: " + year);
 		}
 	}
 
@@ -754,7 +755,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	//	2. a comma-delimited list of integers
 	//	3. a range of two integers delimited by '..' (inclusive of the boundary years)
 	//	4. an integer preceded by a relational operator:  >, <, >=, <=, =
-	private Predicate yearPredicate(CriteriaBuilder builder, Expression<Integer> field, String year) throws APIException {
+	private Predicate yearPredicate(CriteriaBuilder builder, Expression<Integer> field, String year) throws FatalAPIException {
 		if (year.startsWith("=")) {
 			return builder.equal(field, year.substring(1));
 		}
@@ -779,7 +780,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		if (year.indexOf("..") >= 0) {
 			String[] years = year.split("\\.\\.");
 			if (years.length != 2) {
-				throw new APIException("Expected format startYear..endYear");
+				throw new FatalAPIException("Expected format startYear..endYear");
 			}
 			return builder.between(field, getInteger(years[0]), getInteger(years[1]));
 		}

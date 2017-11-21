@@ -745,7 +745,8 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		// database explicitly, before the whole reference gets persisted later on.
 		
 		ReferenceWorkflowStatus newRws = new ReferenceWorkflowStatus();
-		newRws.set_assoc_key(referenceDAO.getNextWorkflowStatusKey());
+		// commented out to try to use a Sequence in the database for this feature
+		// newRws.set_assoc_key(referenceDAO.getNextWorkflowStatusKey());
 		newRws.set_refs_key(entity.get_refs_key());
 		newRws.setIsCurrent(1);
 		newRws.setGroupTerm(getTermByAbbreviation(Constants.VOC_WORKFLOW_GROUP, groupAbbrev));

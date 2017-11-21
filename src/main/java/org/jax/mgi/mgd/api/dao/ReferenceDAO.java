@@ -712,9 +712,9 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	
 	/* get the next available primary key for a workflow status record
 	 */
-	public synchronized int getNextWorkflowStatusKey() {
-		return this.getNextKey("ReferenceWorkflowStatus", "_assoc_key");
-	}
+//	public synchronized int getNextWorkflowStatusKey() {
+//		return this.getNextKey("ReferenceWorkflowStatus", "_assoc_key");
+//	}
 	
 	/* get the next available primary key for a workflow tag record
 	 */

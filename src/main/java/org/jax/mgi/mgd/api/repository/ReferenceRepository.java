@@ -224,7 +224,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 	 * (assumes we are working in a transaction and persists any sub-objects into the database, but does
 	 * not persist this Reference object itself, as other changes could be coming)
 	 */
-	private void applyDomainChanges(Reference entity, ReferenceDomain domain, User currentUser) throws APIException {
+	private void applyDomainChanges(Reference entity, ReferenceDomain domain, User currentUser) throws NonFatalAPIException, APIException {
 		// Note that we must have 'anyChanges' after the OR, otherwise short-circuit evaluation will only save
 		// the first section changed.
 		
@@ -617,7 +617,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 	 * ReferenceDomain.  Persists any tag changes to the database.  Returns true if any changes were made,
 	 * false otherwise.
 	 */
-	private boolean applyTagChanges(Reference entity, ReferenceDomain domain, User currentUser) throws APIException {
+	private boolean applyTagChanges(Reference entity, ReferenceDomain domain, User currentUser) throws NonFatalAPIException, APIException {
 		// short-circuit method if no tags in Reference or in ReferenceDomain
 		if ((entity.getWorkflowTagsAsStrings().size() == 0) && (domain.workflow_tags.size() == 0)) {
 			return false;
@@ -667,7 +667,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 
 	/* shared method for adding a workflow tag to a Reference
 	 */
-	public void addTag(Reference entity, String rdTag, User currentUser) throws APIException {
+	public void addTag(Reference entity, String rdTag, User currentUser) throws NonFatalAPIException, APIException {
 		// if we already have this tag applied, skip it (extra check needed for batch additions to avoid
 		// adding duplicates)
 
@@ -692,7 +692,11 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 				rwTag.setModifiedByUser(rwTag.getCreatedByUser());
 				rwTag.setCreation_date(new Date());
 				rwTag.setModification_date(rwTag.getCreation_date());
-				referenceDAO.persist(rwTag);
+				try {
+					referenceDAO.persist(rwTag);
+				} catch (Exception e) {
+					throw new NonFatalAPIException("Cannot add tag: " + e.toString());
+				}
 				
 				entity.getWorkflowTags().add(rwTag);
 				entity.setModificationInfo(currentUser);
@@ -719,7 +723,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 	 * group statuses.  returns true if an update was made, false if no change.  persists any changes
 	 * to the database.
 	 */
-	private boolean updateStatus(Reference entity, String groupAbbrev, String currentStatus, String newStatus, User currentUser) throws APIException {
+	private boolean updateStatus(Reference entity, String groupAbbrev, String currentStatus, String newStatus, User currentUser) throws NonFatalAPIException, APIException {
 		// no update if new status matches old status (or if no group is specified)
 		if ( ((currentStatus != null) && currentStatus.equals(newStatus)) || (groupAbbrev == null) ||
 				((currentStatus == null) && (newStatus == null)) ) {
@@ -750,7 +754,12 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		newRws.setModifiedByUser(newRws.getCreatedByUser());
 		newRws.setCreation_date(new Date());
 		newRws.setModification_date(newRws.getCreation_date());
-		referenceDAO.persist(newRws);
+
+		try {
+			referenceDAO.persist(newRws);
+		} catch (Exception e) {
+			throw new NonFatalAPIException("Could not save status change: " + e.toString());
+		}
 
 		entity.getWorkflowStatuses().add(newRws);
 		return true;

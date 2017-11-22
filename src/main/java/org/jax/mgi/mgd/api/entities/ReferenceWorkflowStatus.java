@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -20,6 +21,7 @@ import lombok.Setter;
 @Getter @Setter
 @Entity
 @ApiModel(value = "Reference Workflow Status Model Object")
+@SequenceGenerator(name = "bib_workflow_status_serial", sequenceName = "assoc_key_sequence")
 @Table(name="bib_workflow_status")
 public class ReferenceWorkflowStatus extends EntityBase {
 	@Id

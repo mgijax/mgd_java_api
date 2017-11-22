@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -21,6 +23,7 @@ import lombok.Setter;
 @Table(name="bib_workflow_status")
 public class ReferenceWorkflowStatus extends EntityBase {
 	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bib_workflow_status_serial")
 	@Column(name="_assoc_key")
 	private int _assoc_key;
 

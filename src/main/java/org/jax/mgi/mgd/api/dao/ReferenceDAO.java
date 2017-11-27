@@ -714,7 +714,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	 */
 	public synchronized int getNextWorkflowStatusKey() throws FatalAPIException {
 		// returns an integer rather than *, as the void return was causing a mapping exception
-		Query query = entityManager.createNativeQuery("select nextval('bib_workflow_status_serial')");
+		Query query = entityManager.createNativeQuery("select nextval('bib_workflow_status_serial')::int");
 		List<Object[]> results = (List<Object[]>) query.getResultList();
 		if (results.size() != 1) {
 			throw new FatalAPIException("Cannot get _Assoc_key for BIB_Workflow_Status table from Serial (" + results.size() + " results)");

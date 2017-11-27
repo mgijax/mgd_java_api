@@ -736,6 +736,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	public void assignNewJnumID(int refsKey, int userKey) throws Exception {
 		int intRefsKey = Integer.parseInt(refsKey + "");
 		// returns an integer rather than *, as the void return was causing a mapping exception
+		log.info("select count(1) from ACC_assignJ(" + userKey + "," + intRefsKey + ")");
 		Query query = entityManager.createNativeQuery("select count(1) from ACC_assignJ(" + userKey + "," + intRefsKey + ")");
 		query.getResultList();
 		return;

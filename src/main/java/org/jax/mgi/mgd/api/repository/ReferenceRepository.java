@@ -801,8 +801,11 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 				
 				if (anyNotRouted) {
 					try {
+						log.info("Assigning new J: number");
 						referenceDAO.assignNewJnumID(entity.get_refs_key(), currentUser.get_user_key());
+						log.info(" - finished");
 					} catch (Exception e) {
+						log.info("Caught exception: " + e.toString());
 						throw new NonFatalAPIException("Failed to assign J: number");
 					}
 				}

@@ -712,9 +712,15 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	
 	/* get the next available primary key for a workflow status record
 	 */
-//	public synchronized int getNextWorkflowStatusKey() {
-//		return this.getNextKey("ReferenceWorkflowStatus", "_assoc_key");
-//	}
+	public synchronized int getNextWorkflowStatusKey() throws FatalAPIException {
+		// returns an integer rather than *, as the void return was causing a mapping exception
+		Query query = entityManager.createNativeQuery("select nextval('bib_workflow_status_serial')");
+		List<Object[]> results = (List<Object[]>) query.getResultList();
+		if (results.size() != 0) {
+			throw new FatalAPIException("Cannot get _Assoc_key for BIB_Workflow_Status table from Serial");
+		}
+		return (Integer) (results.get(0)[0]);
+	}
 	
 	/* get the next available primary key for a workflow tag record
 	 */

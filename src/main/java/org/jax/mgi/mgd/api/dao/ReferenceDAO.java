@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.dao;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -714,12 +715,9 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	 */
 	public synchronized int getNextWorkflowStatusKey() throws FatalAPIException {
 		// returns an integer rather than *, as the void return was causing a mapping exception
-		Query query = entityManager.createNativeQuery("select nextval('bib_workflow_status_serial')::int");
-		List<Object[]> results = (List<Object[]>) query.getResultList();
-		if (results.size() != 1) {
-			throw new FatalAPIException("Cannot get _Assoc_key for BIB_Workflow_Status table from Serial (" + results.size() + " results)");
-		}
-		return (Integer) (results.get(0)[0]);
+		Query query = entityManager.createNativeQuery("select nextval('bib_workflow_status_serial')");
+		BigInteger results = (BigInteger) query.getSingleResult();
+		return results.intValue();
 	}
 	
 	/* get the next available primary key for a workflow tag record

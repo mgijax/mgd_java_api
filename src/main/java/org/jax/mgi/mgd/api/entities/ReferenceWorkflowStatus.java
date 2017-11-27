@@ -5,12 +5,9 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -21,11 +18,9 @@ import lombok.Setter;
 @Getter @Setter
 @Entity
 @ApiModel(value = "Reference Workflow Status Model Object")
-//@SequenceGenerator(name = "bib_workflow_status_serial", sequenceName = "bib_workflow_status_serial")
 @Table(name="bib_workflow_status")
 public class ReferenceWorkflowStatus extends EntityBase {
 	@Id
-	//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bib_workflow_status_serial")
 	@Column(name="_assoc_key")
 	private int _assoc_key;
 

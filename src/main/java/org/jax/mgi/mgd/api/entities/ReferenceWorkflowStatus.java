@@ -21,11 +21,11 @@ import lombok.Setter;
 @Getter @Setter
 @Entity
 @ApiModel(value = "Reference Workflow Status Model Object")
-@SequenceGenerator(name = "bib_workflow_status_serial", sequenceName = "bib_workflow_status_serial")
+//@SequenceGenerator(name = "bib_workflow_status_serial", sequenceName = "bib_workflow_status_serial")
 @Table(name="bib_workflow_status")
 public class ReferenceWorkflowStatus extends EntityBase {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bib_workflow_status_serial")
+	//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bib_workflow_status_serial")
 	@Column(name="_assoc_key")
 	private int _assoc_key;
 

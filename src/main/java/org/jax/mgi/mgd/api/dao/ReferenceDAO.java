@@ -716,8 +716,8 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		// returns an integer rather than *, as the void return was causing a mapping exception
 		Query query = entityManager.createNativeQuery("select nextval('bib_workflow_status_serial')");
 		List<Object[]> results = (List<Object[]>) query.getResultList();
-		if (results.size() != 0) {
-			throw new FatalAPIException("Cannot get _Assoc_key for BIB_Workflow_Status table from Serial");
+		if (results.size() != 1) {
+			throw new FatalAPIException("Cannot get _Assoc_key for BIB_Workflow_Status table from Serial (" + results.size() + " results)");
 		}
 		return (Integer) (results.get(0)[0]);
 	}

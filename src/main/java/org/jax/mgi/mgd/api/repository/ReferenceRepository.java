@@ -756,11 +756,12 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		newRws.setModification_date(newRws.getCreation_date());
 		entity.getWorkflowStatuses().add(newRws);
 
-		try {
+/*		try {
 			referenceDAO.persist(newRws);
 		} catch (Exception e) {
 			throw new NonFatalAPIException("Could not save status change: " + e.toString());
 		}
+*/
 		return true;
 	}
 	

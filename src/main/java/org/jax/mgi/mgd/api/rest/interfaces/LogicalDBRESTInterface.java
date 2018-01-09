@@ -5,7 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.entities.LogicalDB;
+import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 
 import io.swagger.annotations.Api;
 

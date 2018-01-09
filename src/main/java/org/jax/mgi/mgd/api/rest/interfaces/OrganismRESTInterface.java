@@ -5,7 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.entities.Organism;
+import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 
 import io.swagger.annotations.Api;
 

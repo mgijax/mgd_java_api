@@ -3,9 +3,9 @@ package org.jax.mgi.mgd.api.service;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
-import org.jax.mgi.mgd.api.dao.PostgresSQLDAO;
-import org.jax.mgi.mgd.api.dao.ActualDBDAO;
-import org.jax.mgi.mgd.api.entities.ActualDB;
+import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
+import org.jax.mgi.mgd.api.model.acc.dao.ActualDBDAO;
+import org.jax.mgi.mgd.api.model.acc.entities.ActualDB;
 
 @RequestScoped
 public class ActualDBService extends ServiceInterface<ActualDB> {

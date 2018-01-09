@@ -5,7 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.entities.Marker;
+import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 
 import io.swagger.annotations.Api;
 

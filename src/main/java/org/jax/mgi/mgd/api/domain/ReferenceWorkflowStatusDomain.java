@@ -1,6 +1,6 @@
 package org.jax.mgi.mgd.api.domain;
 
-import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
 
 /* Is: a domain object that represents data for a single workflow group status change via the API
  * Has: data relating to a single workflow group status change for a single reference

@@ -4,7 +4,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.jax.mgi.mgd.api.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.rest.interfaces.UserRESTInterface;
 import org.jax.mgi.mgd.api.service.UserService;
 import org.jax.mgi.mgd.api.util.SearchResults;

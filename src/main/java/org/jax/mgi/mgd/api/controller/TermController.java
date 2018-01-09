@@ -4,7 +4,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.jax.mgi.mgd.api.entities.Term;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.rest.interfaces.TermRESTInterface;
 import org.jax.mgi.mgd.api.service.TermService;
 import org.jax.mgi.mgd.api.util.SearchResults;

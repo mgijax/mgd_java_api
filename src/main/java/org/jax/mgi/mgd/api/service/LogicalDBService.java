@@ -3,9 +3,9 @@ package org.jax.mgi.mgd.api.service;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
-import org.jax.mgi.mgd.api.dao.PostgresSQLDAO;
-import org.jax.mgi.mgd.api.dao.LogicalDBDAO;
-import org.jax.mgi.mgd.api.entities.LogicalDB;
+import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
+import org.jax.mgi.mgd.api.model.acc.dao.LogicalDBDAO;
+import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 
 @RequestScoped
 public class LogicalDBService extends ServiceInterface<LogicalDB> {

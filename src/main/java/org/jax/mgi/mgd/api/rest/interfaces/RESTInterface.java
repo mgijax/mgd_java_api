@@ -10,7 +10,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
-import org.jax.mgi.mgd.api.entities.EntityBase;
+import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.ApiOperation;

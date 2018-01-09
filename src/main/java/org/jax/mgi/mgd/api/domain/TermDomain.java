@@ -2,7 +2,7 @@ package org.jax.mgi.mgd.api.domain;
 
 import java.util.Date;
 
-import org.jax.mgi.mgd.api.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;

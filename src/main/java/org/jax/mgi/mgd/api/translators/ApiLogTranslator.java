@@ -4,8 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import org.jax.mgi.mgd.api.domain.ApiLogDomain;
-import org.jax.mgi.mgd.api.entities.ApiLogEvent;
-import org.jax.mgi.mgd.api.entities.ApiLogObject;
+import org.jax.mgi.mgd.api.model.mgi.entities.ApiLogEvent;
+import org.jax.mgi.mgd.api.model.mgi.entities.ApiLogObject;
 
 public class ApiLogTranslator extends EntityDomainTranslator<ApiLogEvent, ApiLogDomain>{
 	private SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");

@@ -12,10 +12,10 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceSummaryDomain;
-import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.exception.NonFatalAPIException;
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.repository.ReferenceRepository;
 import org.jax.mgi.mgd.api.repository.ReferenceSummaryRepository;
 import org.jax.mgi.mgd.api.util.Constants;

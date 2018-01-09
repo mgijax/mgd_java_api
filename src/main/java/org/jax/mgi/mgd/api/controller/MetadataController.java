@@ -6,7 +6,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.domain.MetadataDomain;
-import org.jax.mgi.mgd.api.entities.Marker;
+import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.rest.interfaces.MarkerRESTInterface;
 import org.jax.mgi.mgd.api.rest.interfaces.MetadataRESTInterface;
 import org.jax.mgi.mgd.api.service.MarkerService;

@@ -1,7 +1,7 @@
 package org.jax.mgi.mgd.api.translators;
 
 import org.jax.mgi.mgd.api.domain.TermDomain;
-import org.jax.mgi.mgd.api.entities.Term;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 public class TermTranslator extends EntityDomainTranslator<Term, TermDomain>{
 

@@ -6,8 +6,8 @@ import java.util.regex.Pattern;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
-import org.jax.mgi.mgd.api.dao.MetadataDAO;
 import org.jax.mgi.mgd.api.domain.MetadataDomain;
+import org.jax.mgi.mgd.api.model.voc.dao.MetadataDAO;
 
 @RequestScoped
 public class MetadataService {

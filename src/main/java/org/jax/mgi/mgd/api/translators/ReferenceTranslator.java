@@ -2,10 +2,10 @@ package org.jax.mgi.mgd.api.translators;
 
 import java.util.ArrayList;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
-import org.jax.mgi.mgd.api.entities.Reference;
-import org.jax.mgi.mgd.api.entities.ReferenceAssociatedData;
-import org.jax.mgi.mgd.api.entities.ReferenceBook;
-import org.jax.mgi.mgd.api.entities.ReferenceWorkflowData;
+import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceAssociatedData;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowData;
 import org.jax.mgi.mgd.api.util.Constants;
 
 public class ReferenceTranslator extends EntityDomainTranslator<Reference, ReferenceDomain>{

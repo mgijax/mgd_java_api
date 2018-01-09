@@ -5,11 +5,11 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.jax.mgi.mgd.api.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.domain.ReferenceSummaryDomain;
-import org.jax.mgi.mgd.api.entities.Reference;
-import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.exception.APIException;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.translators.ReferenceSummaryTranslator;
 import org.jax.mgi.mgd.api.util.SearchResults;
 

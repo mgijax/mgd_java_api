@@ -4,7 +4,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.jax.mgi.mgd.api.entities.Marker;
+import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.rest.interfaces.MarkerRESTInterface;
 import org.jax.mgi.mgd.api.service.MarkerService;
 import org.jax.mgi.mgd.api.util.SearchResults;

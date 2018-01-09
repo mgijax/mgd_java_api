@@ -4,7 +4,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.jax.mgi.mgd.api.entities.ActualDB;
+import org.jax.mgi.mgd.api.model.acc.entities.ActualDB;
 import org.jax.mgi.mgd.api.rest.interfaces.ActualDBRESTInterface;
 import org.jax.mgi.mgd.api.service.ActualDBService;
 import org.jax.mgi.mgd.api.util.SearchResults;

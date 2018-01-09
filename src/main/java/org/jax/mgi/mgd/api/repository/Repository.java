@@ -5,8 +5,8 @@ import java.util.Map;
 import javax.enterprise.context.RequestScoped;
 
 import org.jax.mgi.mgd.api.domain.DomainBase;
-import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.exception.APIException;
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 

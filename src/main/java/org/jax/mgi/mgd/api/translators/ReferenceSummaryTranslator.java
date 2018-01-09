@@ -1,8 +1,8 @@
 package org.jax.mgi.mgd.api.translators;
 
 import org.jax.mgi.mgd.api.domain.ReferenceSummaryDomain;
-import org.jax.mgi.mgd.api.entities.Reference;
-import org.jax.mgi.mgd.api.entities.ReferenceWorkflowData;
+import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowData;
 import org.jax.mgi.mgd.api.util.Constants;
 
 public class ReferenceSummaryTranslator extends EntityDomainTranslator<Reference, ReferenceSummaryDomain>{

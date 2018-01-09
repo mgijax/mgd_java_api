@@ -4,7 +4,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.jax.mgi.mgd.api.entities.Vocabulary;
+import org.jax.mgi.mgd.api.model.voc.entities.Vocabulary;
 import org.jax.mgi.mgd.api.rest.interfaces.VocabRESTInterface;
 import org.jax.mgi.mgd.api.service.VocabService;
 import org.jax.mgi.mgd.api.util.SearchResults;

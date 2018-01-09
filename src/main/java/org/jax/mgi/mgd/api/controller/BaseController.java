@@ -8,9 +8,9 @@ import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.domain.DomainBase;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
-import org.jax.mgi.mgd.api.entities.ApiLogObject;
-import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.exception.APIException;
+import org.jax.mgi.mgd.api.model.mgi.entities.ApiLogObject;
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.service.ApiLogService;
 import org.jax.mgi.mgd.api.service.UserService;
 

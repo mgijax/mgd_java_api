@@ -4,7 +4,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.jax.mgi.mgd.api.entities.LogicalDB;
+import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.rest.interfaces.LogicalDBRESTInterface;
 import org.jax.mgi.mgd.api.service.LogicalDBService;
 import org.jax.mgi.mgd.api.util.SearchResults;

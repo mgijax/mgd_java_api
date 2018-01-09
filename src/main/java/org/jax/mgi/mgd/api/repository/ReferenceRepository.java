@@ -11,22 +11,22 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import org.jax.mgi.mgd.api.dao.ReferenceDAO;
-import org.jax.mgi.mgd.api.dao.TermDAO;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceWorkflowStatusDomain;
-import org.jax.mgi.mgd.api.entities.AccessionID;
-import org.jax.mgi.mgd.api.entities.Reference;
-import org.jax.mgi.mgd.api.entities.ReferenceBook;
-import org.jax.mgi.mgd.api.entities.ReferenceNote;
-import org.jax.mgi.mgd.api.entities.ReferenceWorkflowData;
-import org.jax.mgi.mgd.api.entities.ReferenceWorkflowStatus;
-import org.jax.mgi.mgd.api.entities.ReferenceWorkflowTag;
-import org.jax.mgi.mgd.api.entities.Term;
-import org.jax.mgi.mgd.api.entities.User;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.exception.NonFatalAPIException;
+import org.jax.mgi.mgd.api.model.acc.entities.Accession;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowData;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowTag;
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.translators.ReferenceTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.MapMaker;
@@ -421,10 +421,10 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		
 		// First, need to find any existing AccessionID object for this logical database.
 
-		List<AccessionID> ids = entity.getAccessionIDs();
+		List<Accession> ids = entity.getAccessionIDs();
 		int idPos = -1;			// position of correct ID in list of IDs
 		for (int i = 0; i < ids.size(); i++) {
-			AccessionID myID = ids.get(i);
+			Accession myID = ids.get(i);
 			if (ldb.equals(myID.get_logicaldb_key())) {
 				idPos = i;
 				break;
@@ -438,7 +438,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 				referenceDAO.remove(ids.get(idPos));
 			} else {
 				// Otherwise, we can update the ID and other data for this logical database.
-				AccessionID myID = ids.get(idPos);
+				Accession myID = ids.get(idPos);
 				myID.setAccID(accID);
 				myID.setIs_private(isPrivate);
 				myID.setPreferred(preferred);
@@ -452,7 +452,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 			
 			Date creation = new Date();
 			
-			AccessionID myID = new AccessionID(
+			Accession myID = new Accession(
 					referenceDAO.getNextAccessionKey(),
 					accID,
 					preferred,

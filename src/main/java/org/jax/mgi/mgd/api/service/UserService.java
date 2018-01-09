@@ -6,9 +6,9 @@ import java.util.Map;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
-import org.jax.mgi.mgd.api.dao.PostgresSQLDAO;
-import org.jax.mgi.mgd.api.dao.UserDAO;
-import org.jax.mgi.mgd.api.entities.User;
+import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
+import org.jax.mgi.mgd.api.model.mgi.dao.UserDAO;
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
 @RequestScoped
 public class UserService extends ServiceInterface<User> {

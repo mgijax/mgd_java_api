@@ -4,7 +4,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.jax.mgi.mgd.api.entities.MGIType;
+import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 import org.jax.mgi.mgd.api.rest.interfaces.MGITypeRESTInterface;
 import org.jax.mgi.mgd.api.service.MGITypeService;
 import org.jax.mgi.mgd.api.util.SearchResults;

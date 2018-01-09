@@ -2,7 +2,7 @@ package org.jax.mgi.mgd.api.service;
 
 import java.util.Map;
 
-import org.jax.mgi.mgd.api.dao.PostgresSQLDAO;
+import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import com.fasterxml.jackson.databind.ObjectMapper;

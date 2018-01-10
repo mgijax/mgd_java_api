@@ -10,8 +10,8 @@ import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
 
-@Path("/user")
-@Api(value = "User Endpoints")
+@Path("/databaseinfo")
+@Api(value = "DatabaseInfo Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface DatabaseInfoRESTInterface extends RESTInterface<DatabaseInfo> {

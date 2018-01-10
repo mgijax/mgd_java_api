@@ -30,27 +30,36 @@ import lombok.Setter;
 public class Marker extends EntityBase {
 
 	@Id
+	@ApiModelProperty(value="primary key")
 	private Integer _marker_key;
+	
+	@ApiModelProperty(value="official symbol of marker")
 	private String symbol;
 	
-	@ApiModelProperty(notes="the name of this marker")
+	@ApiModelProperty(value="official name of marker")
 	private String name;
 	
+	@ApiModelProperty(value="chromosome")
 	private String chromosome;
+	
+	@ApiModelProperty(value="cytogenetic band")
 	private String cytogeneticoffset;
 	
+	@ApiModelProperty(value="organism of this marker")
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_organism_key", referencedColumnName="_organism_key")
 	private Organism organism;
 	
 	//need MRK_Status entity
+	//@ApiModelProperty(value="Controlled vocabulary table for all Marker Statuses (approved, withdrawn)")
 	//@JsonIgnore
 	//@OneToOne(fetch=FetchType.EAGER)
 	//@JoinColumn(name="_marker_status_key", referencedColumnName="_term_key")
 	//private Term markerStatus;
 	
 	//need MRK_Types entity
+	//@ApiModelProperty(value="Controlled vocabulary table for all Marker Types")
 	//@JsonIgnore
 	//@OneToOne(fetch=FetchType.EAGER)
 	//@JoinColumn(name="_marker_type_key", referencedColumnName="_term_key")

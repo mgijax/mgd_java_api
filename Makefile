@@ -1,3 +1,7 @@
+#
+# default Makefile params
+#
+
 all:
 	mvn clean package
 

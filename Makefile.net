@@ -1,3 +1,10 @@
+#
+# for bheidevapp01 : must use additional network parameters
+#
+# -Djava.net.preferIPv4Stack=true 
+# -Djava.net.preferIPv4Addresses=true
+#
+
 all:
 	mvn clean package
 

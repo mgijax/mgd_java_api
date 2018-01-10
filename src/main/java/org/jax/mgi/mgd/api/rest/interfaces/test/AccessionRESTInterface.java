@@ -1,4 +1,4 @@
-package org.jax.mgi.mgd.api.rest.interfaces;
+package org.jax.mgi.mgd.api.rest.interfaces.test;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
@@ -6,6 +6,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
+import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
 

@@ -45,7 +45,6 @@ public class Marker extends EntityBase {
 	@ApiModelProperty(value="cytogenetic band")
 	private String cytogeneticoffset;
 	
-	@ApiModelProperty(value="organism of this marker")
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_organism_key", referencedColumnName="_organism_key")

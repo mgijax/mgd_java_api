@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ import lombok.Setter;
 
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor 
 @Entity
+@ApiModel(value = "Accession Model Object")
 @Table(name="acc_accession")
 public class Accession extends EntityBase {
 	@Id

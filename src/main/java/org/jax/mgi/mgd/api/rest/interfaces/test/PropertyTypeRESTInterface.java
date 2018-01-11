@@ -11,7 +11,7 @@ import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 import io.swagger.annotations.Api;
 
 @Path("/propertytype")
-@Api(value = "Property Type Endpoints")
+@Api(value = "PropertyType Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface PropertyTypeRESTInterface extends RESTInterface<PropertyType> {

@@ -14,14 +14,14 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Allele Cellline Model Object")
-@Table(name="all_cellline")
-public class AlleleCellline extends EntityBase {
+@ApiModel(value = "Allele CellLine Derivation Model Object")
+@Table(name="all_cellline_derivation")
+public class AlleleCellLineDerivation extends EntityBase {
 
 	@Id
-	private Integer _cellline_key;
-	private String cellLine;
-	private Integer isMutant;
+	private Integer _derivation_key;
+	private String name;
+	private String description;
 	private Date creation_date;
 	private Date modification_date;
 }

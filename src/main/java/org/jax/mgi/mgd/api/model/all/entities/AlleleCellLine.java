@@ -1,0 +1,27 @@
+package org.jax.mgi.mgd.api.model.all.entities;
+
+import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.jax.mgi.mgd.api.model.EntityBase;
+
+import io.swagger.annotations.ApiModel;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter @Setter
+@Entity
+@ApiModel(value = "Allele CellLine Model Object")
+@Table(name="all_cellline")
+public class AlleleCellLine extends EntityBase {
+
+	@Id
+	private Integer _cellline_key;
+	private String cellLine;
+	private Integer isMutant;
+	private Date creation_date;
+	private Date modification_date;
+}

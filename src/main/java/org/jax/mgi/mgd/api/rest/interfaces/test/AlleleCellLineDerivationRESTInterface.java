@@ -5,16 +5,16 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.all.entities.AlleleCellline;
+import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLineDerivation;
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
 
-@Path("/allelecellline")
-@Api(value = "Allele Cellline Endpoints")
+@Path("/allelecelllinederivation")
+@Api(value = "Allele CellLine Derivation Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface AlleleCelllineRESTInterface extends RESTInterface<AlleleCellline> {
+public interface AlleleCellLineDerivationRESTInterface extends RESTInterface<AlleleCellLineDerivation> {
 
 
 }

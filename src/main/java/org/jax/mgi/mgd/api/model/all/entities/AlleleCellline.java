@@ -1,4 +1,4 @@
-package org.jax.mgi.mgd.api.model.acc.entities;
+package org.jax.mgi.mgd.api.model.all.entities;
 
 import java.util.Date;
 
@@ -12,14 +12,16 @@ import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter 
+@Getter @Setter
 @Entity
-@ApiModel(value = "AccessionMax Model Object")
-@Table(name="acc_accessionmax")
-public class AccessionMax extends EntityBase {
+@ApiModel(value = "Allele Cellline Model Object")
+@Table(name="all_cellline")
+public class AlleleCellline extends EntityBase {
+
 	@Id
-	private String prefixPart;
-	private Integer maxNumericPart;
+	private Integer _cellline_key;
+	private String cellLine;
+	private Integer isMutant;
 	private Date creation_date;
 	private Date modification_date;
 }

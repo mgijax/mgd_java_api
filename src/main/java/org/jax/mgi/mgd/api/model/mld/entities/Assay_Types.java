@@ -15,8 +15,8 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Assay Types Object")
-@Table(name="mgi_assay_types")
+@ApiModel(value = "MLD Assay Types Object")
+@Table(name="mld_assay_types")
 public class Assay_Types extends EntityBase {
 	@Id
 	private Integer _assay_Type_key;

@@ -16,7 +16,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Allele CellLine Model Object")
 @Table(name="all_cellline")
-public class AlleleCellLine extends EntityBase {
+public class CellLine extends EntityBase {
 
 	@Id
 	private Integer _cellline_key;

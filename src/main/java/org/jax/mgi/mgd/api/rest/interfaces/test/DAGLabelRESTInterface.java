@@ -5,16 +5,16 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.all.entities.CellLineDerivation;
+import org.jax.mgi.mgd.api.model.dag.entities.Label;
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
 
-@Path("/celllinederivation")
-@Api(value = "Allele CellLine Derivation Endpoints")
+@Path("/daglabel")
+@Api(value = "DAG Label Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface CellLineDerivationRESTInterface extends RESTInterface<CellLineDerivation> {
+public interface DAGLabelRESTInterface extends RESTInterface<Label> {
 
 
 }

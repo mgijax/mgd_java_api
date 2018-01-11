@@ -32,10 +32,10 @@ public class MGIType extends EntityBase {
 	@Id
 	private Integer _mgitype_key;
 	private String name;
-	private String tablename;
-	private String primarykeyname;
-	private String identitycolumnname;
-	private String dbview;
+	private String tableName;
+	private String primaryKeyName;
+	private String identifyColumnName;
+	private String dbView;
 	private Date creation_date;
 	private Date modification_date;
 

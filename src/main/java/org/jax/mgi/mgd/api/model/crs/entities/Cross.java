@@ -21,16 +21,16 @@ public class Cross extends EntityBase {
 	@Id
 	private Integer _cross_key;
 	private String type;
-	private String femaleallele1;
-	private String femaleallele2;
-	private String maleallele1;
-	private String maleallele2;
-	private String abbrevho;
-	private String abrevht;
-	private String whosecross;
-	private Integer allelefromsegparent;
-	private Integer f1directionknown;
-	private Integer nprogeny;
+	private String femaleAllele1;
+	private String femaleAllele2;
+	private String maleAllele1;
+	private String maleAllele2;
+	private String abbrevHO;
+	private String abrevHT;
+	private String whoseCross;
+	private Integer alleleFromSegParent;
+	private Integer F1DirectionKnown;
+	private Integer nProgeny;
 	private Integer displayed;
 	private Date creation_date;
 	private Date modification_date;

@@ -20,7 +20,7 @@ public class Progeny extends EntityBase {
 
 	@Id
 	private Integer _cross_key;
-	private Integer sequencenum;
+	private Integer sequenceNum;
 	private String name;
 	private String sex;
 	private String notes;

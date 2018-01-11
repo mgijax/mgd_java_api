@@ -20,8 +20,8 @@ public class Typings extends EntityBase {
 
 	@Id
 	private Integer _cross_key;
-	private Integer rownumber;
-	private Integer colnumber;
+	private Integer rowNumber;
+	private Integer colNumber;
 	private String data;
 	private Date creation_date;
 	private Date modification_date;

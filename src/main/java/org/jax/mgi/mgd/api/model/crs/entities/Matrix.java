@@ -20,9 +20,9 @@ public class Matrix extends EntityBase {
 
 	@Id
 	private Integer _cross_key;
-	private String othersymbol;
+	private String otherSymbol;
 	private String chromosome;
-	private Integer rownumber;
+	private Integer rowNumber;
 	private String notes;
 	private Date creation_date;
 	private Date modification_date;

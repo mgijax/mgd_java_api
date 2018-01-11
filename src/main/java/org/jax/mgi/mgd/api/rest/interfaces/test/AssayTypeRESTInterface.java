@@ -10,8 +10,8 @@ import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
 
-@Path("/assaytype")
-@Api(value = "Assay Type Endpoints")
+@Path("/mldassaytype")
+@Api(value = "MLD Assay Type Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface AssayTypeRESTInterface extends RESTInterface<AssayType> {

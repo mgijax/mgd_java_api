@@ -43,7 +43,7 @@ public class Marker extends EntityBase {
 	private String chromosome;
 	
 	@ApiModelProperty(value="cytogenetic band")
-	private String cytogeneticoffset;
+	private String cytogeneticOffset;
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)

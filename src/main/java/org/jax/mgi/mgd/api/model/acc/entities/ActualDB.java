@@ -32,7 +32,7 @@ public class ActualDB extends EntityBase {
 	private String name;
 	private Integer active;
 	private String url;
-	private Integer allowsmultiple;
+	private Integer allowsMultiple;
 	private String delimiter;
 	private Date creation_date;
 	private Date modification_date;

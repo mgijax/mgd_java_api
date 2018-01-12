@@ -25,7 +25,7 @@ public class FISH extends EntityBase {
 	private String karyotype;
 	private String robertsonians;
 	private String label;
-	private Integer numMethaphase;
+	private Integer numMetaphase;
 	private Integer totalSingle;
 	private Integer totalDouble;
 	private Date creation_date;

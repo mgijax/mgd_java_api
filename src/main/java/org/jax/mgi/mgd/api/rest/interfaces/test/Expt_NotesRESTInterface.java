@@ -11,7 +11,7 @@ import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 import io.swagger.annotations.Api;
 
 @Path("/exptnotes")
-@Api(value = "Expt_Notse Endpoints")
+@Api(value = "Expt_Notes Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface Expt_NotesRESTInterface extends RESTInterface<Expt_Notes> {

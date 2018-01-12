@@ -5,15 +5,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.gxd.entities.AssayType;
+import org.jax.mgi.mgd.api.model.gxd.entities.VisualizationMethod;
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
 
-@Path("/assaytype")
-@Api(value = "Assay Type Endpoints")
+@Path("/visualizationmethod")
+@Api(value = "VisualizationMethod Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface AssayTypeRESTInterface extends RESTInterface<AssayType> {
+public interface VisualizationMethodRESTInterface extends RESTInterface<VisualizationMethod> {
 
 }

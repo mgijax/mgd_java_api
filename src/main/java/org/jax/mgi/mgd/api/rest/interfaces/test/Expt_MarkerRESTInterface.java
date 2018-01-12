@@ -5,15 +5,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.mld.entities.Matrix;
+import org.jax.mgi.mgd.api.model.mld.entities.Expt_Marker;
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
 
-@Path("/matrix")
-@Api(value = "Matrix Endpoints")
+@Path("/exptmarker")
+@Api(value = "Expt_Marker Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface MatrixRESTInterface extends RESTInterface<Matrix> {
+public interface Expt_MarkerRESTInterface extends RESTInterface<Expt_Marker> {
 
 }

@@ -1,4 +1,4 @@
-package org.jax.mgi.mgd.api.model.gxd.entities;
+package org.jax.mgi.mgd.api.model.mld.entities;
 
 import java.util.Date;
 
@@ -14,13 +14,16 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Visualization Model Object")
-@Table(name="gxd_visucalization")
-public class Visualization extends EntityBase {
+@ApiModel(value = "RI2Point Model Object")
+@Table(name="mld_ri2point")
+public class RI2Point extends EntityBase {
 
 	@Id
-	private Integer _visualization_key;
-	private String visualization;
+	private Integer _expt_key;
+	private Integer sequenceNum;
+	private Integer numRecombinants;
+	private Integer numTotal;
+	private String RI_Lines;
 	private Date creation_date;
 	private Date modification_date;
 }

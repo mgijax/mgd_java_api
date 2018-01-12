@@ -14,6 +14,6 @@ import io.swagger.annotations.Api;
 @Api(value = "MLDNotes Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface MLDNotesRESTInterface3 extends RESTInterface<Notes> {
+public interface MLDNotesRESTInterface extends RESTInterface<Notes> {
 
 }

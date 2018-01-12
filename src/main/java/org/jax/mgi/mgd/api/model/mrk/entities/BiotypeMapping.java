@@ -14,14 +14,13 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "GOTracking Model Object")
-@Table(name="go_tracking")
-public class GOTracking extends EntityBase {
+@ApiModel(value = "BiotypeMapping Model Object")
+@Table(name="mrk_biotypemapping")
+public class BiotypeMapping extends EntityBase {
 
 	@Id
-	private Integer _marker_key;
-	private String isReferenceGene;
-	private Date completion_date;
+	private Integer _biotypemapping_key;
+	private Integer useMCVchildren;
 	private Date creation_date;
 	private Date modification_date;
 }

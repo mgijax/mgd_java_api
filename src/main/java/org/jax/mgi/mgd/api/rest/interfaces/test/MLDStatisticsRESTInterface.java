@@ -10,10 +10,10 @@ import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
 
-@Path("/statistics")
-@Api(value = "Statistics Endpoints")
+@Path("/mldstatistics")
+@Api(value = "MLDStatistics Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface StatisticsRESTInterface extends RESTInterface<Statistics> {
+public interface MLDStatisticsRESTInterface extends RESTInterface<Statistics> {
 
 }

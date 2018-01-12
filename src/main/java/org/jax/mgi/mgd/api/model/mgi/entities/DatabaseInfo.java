@@ -18,10 +18,10 @@ public class DatabaseInfo extends EntityBase {
 
 	@Id
 	private String public_version;
-	private String lastdump_date;
 	private String product_name;
 	private String schema_version;
 	private String snp_schema_version;
 	private String snp_data_version;
-	
+	private String lastdump_date;
+
 }

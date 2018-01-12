@@ -18,11 +18,9 @@ import lombok.Setter;
 @Table(name="mrk_history")
 public class History extends EntityBase {
 
-	// complex primary key
 	@Id
 	private Integer _marker_key;
 	private Integer sequenceNum;
-
 	private String name;
 	private Date event_date;
 	private Date creation_date;

@@ -5,15 +5,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.gxd.entities.AssayType;
+import org.jax.mgi.mgd.api.model.mld.entities.Assay_Types;
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
 
-@Path("/gxdassaytype")
-@Api(value = "GXDAssayType Endpoints")
+@Path("/mldassaytypes")
+@Api(value = "MLDAssayTypes Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface GXDAssayTypeRESTInterface extends RESTInterface<AssayType> {
+public interface MLDAssay_TypesRESTInterface extends RESTInterface<Assay_Types> {
 
 }

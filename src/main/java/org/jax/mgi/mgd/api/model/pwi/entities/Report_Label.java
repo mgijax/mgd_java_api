@@ -20,6 +20,6 @@ public class Report_Label extends EntityBase {
 
 	@Id
 	private Integer id;
-	private Integer reort_id;
+	private Integer report_id;
 	private String label;
 }

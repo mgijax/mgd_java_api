@@ -14,20 +14,18 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Sequence_Raw Model Object")
-@Table(name="seq_sequence_raw")
-public class Sequence_Raw extends EntityBase {
+@ApiModel(value = "Sequence Model Object")
+@Table(name="seq_sequence")
+public class Sequence extends EntityBase {
 
 	@Id
 	private Integer _sequence_key;
-	private String rawType;
-	private String rawLibrary;
-	private String rawOrganism;
-	private String rawStrain;
-	private String rawTissue;
-	private String rawAge;
-	private String rawSex;
-	private String rawCellLine;
+	private Integer length;
+	private String description;
+	private String version;
+	private String division;
+	private Integer virtual;
+	private Integer numberOfOrganisms;
 	private Date creation_date;
 	private Date modification_date;
 }

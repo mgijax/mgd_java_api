@@ -14,14 +14,15 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Vocabular Term EMAPA Model Object")
-@Table(name="voc_annottype")
-public class Term_EMAPA extends EntityBase {
+@ApiModel(value = "Annotation Header Model Object")
+@Table(name="voc_annotheader")
+public class AnnotHeader extends EntityBase {
 
 	@Id
-	private Integer _Term_key;
-	private Integer startStage;
-	private Integer endStage;
+	private Integer _annotHeader_key;
+	private Integer sequenceNum;
+	private Integer isNormal;
+	private Date approval_date;
 	private Date creation_date;
 	private Date modification_date;
 	

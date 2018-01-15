@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.voc.entities;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -25,11 +26,12 @@ import lombok.Setter;
 public class Vocabulary extends EntityBase {
 
 	@Id
-	@Column(name="_vocab_key")
 	private Integer _vocab_key;
-
-	@Column(name="name")
+	Integer isSimple;
+	Integer isPrivate;
 	private String name;
+	private Date creation_date;
+	private Date modification_date;
 
 	@JsonIgnore
 	@OneToMany(fetch=FetchType.EAGER)

@@ -19,7 +19,6 @@ import lombok.Setter;
 public class Rosetta extends EntityBase {
 	@Id
 	private Integer _rosetta_key;
-	private Integer sequenceNum;
 	private String wks_markerSymbol;
 	private String wks_markerURL;
 	private Date creation_date;

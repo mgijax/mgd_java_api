@@ -10,7 +10,7 @@ import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
 
-@Path("/contig")
+@Path("/contigprobe")
 @Api(value = "ContigProbe Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

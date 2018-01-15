@@ -15,7 +15,7 @@ import lombok.Setter;
 @Getter @Setter
 @Entity
 @ApiModel(value = "RI Model Object")
-@Table(name="gxd_genotype")
+@Table(name="mld_ri")
 public class RI extends EntityBase {
 
 	@Id

@@ -14,7 +14,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Vocabulary Text Model Object")
+@ApiModel(value = "Text Model Object")
 @Table(name="voc_text")
 public class Text extends EntityBase {
 

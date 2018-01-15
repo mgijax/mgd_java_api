@@ -14,7 +14,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Vocabular Term EMAPA Model Object")
+@ApiModel(value = "Term EMAPA Model Object")
 @Table(name="voc_annottype")
 public class Term_EMAPA extends EntityBase {
 

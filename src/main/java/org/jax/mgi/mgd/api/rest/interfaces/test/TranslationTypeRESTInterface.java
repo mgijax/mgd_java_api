@@ -10,7 +10,7 @@ import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
 
-@Path("/translation")
+@Path("/translationtype")
 @Api(value = "Translation Type Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

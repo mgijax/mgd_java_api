@@ -11,7 +11,7 @@ import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 import io.swagger.annotations.Api;
 
 @Path("/rosetta")
-@Api(value = "WKS Rosetta Endpoints")
+@Api(value = "Rosetta Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface RosettaRESTInterface extends RESTInterface<Rosetta> {

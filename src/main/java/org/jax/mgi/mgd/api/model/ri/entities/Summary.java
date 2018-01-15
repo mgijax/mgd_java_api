@@ -14,16 +14,13 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "RI_RISet Model Object")
-@Table(name="ri_riset")
-public class RI_RISet extends EntityBase {
+@ApiModel(value = "RI_Summary Model Object")
+@Table(name="ri_summary")
+public class Summary extends EntityBase {
 
 	@Id
-	private Integer _riset_key;
-	private String designation;
-	private String abbrev1;
-	private String abbrev2;
-	private String RI_IdList;
+	private Integer _risummary_key;
+	private String summary;
 	private Date creation_date;
 	private Date modification_date;
 }

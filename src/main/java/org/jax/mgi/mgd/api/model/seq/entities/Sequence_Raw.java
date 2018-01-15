@@ -1,4 +1,4 @@
-package org.jax.mgi.mgd.api.model.ri.entities;
+package org.jax.mgi.mgd.api.model.seq.entities;
 
 import java.util.Date;
 
@@ -14,13 +14,14 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "RI_Summary Model Object")
-@Table(name="ri_summary")
-public class RI_Summary extends EntityBase {
+@ApiModel(value = "GeneTrap Model Object")
+@Table(name="seq_genetrap")
+public class Sequence_Raw extends EntityBase {
 
 	@Id
-	private Integer _risummary_key;
-	private String summary;
+	private Integer _sequence_key;
+	private Integer goodHitCount;
+	private Integer pointCoordinate;
 	private Date creation_date;
 	private Date modification_date;
 }

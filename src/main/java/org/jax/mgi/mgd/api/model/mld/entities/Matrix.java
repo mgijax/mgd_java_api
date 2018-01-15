@@ -14,7 +14,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Matrix Model Object")
+@ApiModel(value = "MLD Matrix Model Object")
 @Table(name="mld_matrix")
 public class Matrix extends EntityBase {
 

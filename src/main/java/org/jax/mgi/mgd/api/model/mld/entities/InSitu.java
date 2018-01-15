@@ -26,8 +26,8 @@ public class InSitu extends EntityBase {
 	private String robertsonians;
 	private Integer numMetaphase;
 	private Integer totalGrains;
-	private Integer grainOnChrom;
-	private Integer grainOtherChrom;
+	private Integer grainsOnChrom;
+	private Integer grainsOtherChrom;
 	private Date creation_date;
 	private Date modification_date;
 }

@@ -19,7 +19,7 @@ import lombok.Setter;
 public class Notes extends EntityBase {
 
 	@Id
-	private Integer _expt_key;
+	private Integer _refs_key;
 	private Integer sequenceNum;
 	private String note;
 	private Date creation_date;

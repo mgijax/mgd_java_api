@@ -19,7 +19,7 @@ import lombok.Setter;
 public class Pattern extends EntityBase {
 
 	@Id
-	private Integer _patter_key;
+	private Integer _pattern_key;
 	private String pattern;
 	private Date creation_date;
 	private Date modification_date;

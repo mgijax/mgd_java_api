@@ -26,6 +26,8 @@ public class Sequence extends EntityBase {
 	private String division;
 	private Integer virtual;
 	private Integer numberOfOrganisms;
+	private Date seqrecord_date;
+	private Date sequence_date;
 	private Date creation_date;
 	private Date modification_date;
 }

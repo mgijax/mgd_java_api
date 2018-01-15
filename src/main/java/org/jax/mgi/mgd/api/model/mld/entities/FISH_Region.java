@@ -15,7 +15,7 @@ import lombok.Setter;
 @Getter @Setter
 @Entity
 @ApiModel(value = "FISH_Region Model Object")
-@Table(name="gxd_genotype")
+@Table(name="mld_fish_region")
 public class FISH_Region extends EntityBase {
 
 	@Id

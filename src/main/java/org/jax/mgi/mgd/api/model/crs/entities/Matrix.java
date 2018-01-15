@@ -14,7 +14,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Cross Matrix Model Object")
+@ApiModel(value = "CRS Matrix Model Object")
 @Table(name="crs_matrix")
 public class Matrix extends EntityBase {
 

@@ -20,7 +20,7 @@ public class Probe extends EntityBase {
 
 	@Id
 	private Integer _probe_key;
-	private String alias;
+	private String name;
 	private Integer derivedFrom;
 	private String primer1sequence;
 	private String primer2sequence;

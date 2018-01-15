@@ -23,7 +23,7 @@ public class Report extends EntityBase {
 	private String name;
 	private String description;
 	private String sql_text;
-	private String report_autor;
+	private String report_author;
 	private String requested_by;
 	private Date created;
 	private Date last_run;

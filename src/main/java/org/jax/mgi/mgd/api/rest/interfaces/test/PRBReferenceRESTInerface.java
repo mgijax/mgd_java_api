@@ -5,15 +5,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.mrk.entities.Alias;
+import org.jax.mgi.mgd.api.model.prb.entities.Reference;
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
 
-@Path("/alias")
-@Api(value = "Alias Endpoints")
+@Path("/prbreference")
+@Api(value = "PRBReference Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface AliasRESTInterface extends RESTInterface<Alias> {
+public interface PRBReferenceRESTInterface extends RESTInterface<Reference> {
 
 }

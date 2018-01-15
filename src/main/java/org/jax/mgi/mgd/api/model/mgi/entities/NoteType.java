@@ -24,6 +24,7 @@ public class NoteType extends EntityBase {
 	
 	@Column(name="private") // just "private" is a Java reserved word
 	private Integer is_private;
+
 	private Date creation_date;
 	private Date modification_date;
 

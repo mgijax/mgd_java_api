@@ -14,7 +14,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Alias Model Object")
+@ApiModel(value = "MRKAlias Model Object")
 @Table(name="mrk_alias")
 public class Alias extends EntityBase {
 

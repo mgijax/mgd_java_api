@@ -32,7 +32,6 @@ public class ProbeMarker extends EntityBase {
 	@Getter @Setter
 	@Embeddable
 	public class ProbeMarkerKey implements Serializable {
-
 		private Integer _probe_key;
 		private Integer _marker_key;
 	}

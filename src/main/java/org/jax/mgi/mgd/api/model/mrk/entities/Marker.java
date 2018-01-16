@@ -1,22 +1,19 @@
 package org.jax.mgi.mgd.api.model.mrk.entities;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeMarker;
@@ -85,15 +82,16 @@ public class Marker extends EntityBase {
 	private List<Accession> accessionIDs;
 
 	// Simple Many to Many
-	@ManyToMany(fetch=FetchType.EAGER)
-	@JoinTable(name = "mrk_alias",
-		joinColumns = @JoinColumn(name = "_alias_key", referencedColumnName="_marker_key"),
-		inverseJoinColumns = @JoinColumn(name = "_marker_key", referencedColumnName="_marker_key")
-	)
-	private List<Marker> aliases;
+//	@ManyToMany(fetch=FetchType.EAGER)
+//	@JoinTable(name = "mrk_alias",
+//		joinColumns = @JoinColumn(name = "_alias_key", referencedColumnName="_marker_key"),
+//		inverseJoinColumns = @JoinColumn(name = "_marker_key", referencedColumnName="_marker_key")
+//	)
+//	private List<Marker> aliases;
 
 	// Complex Many to Many
-	@OneToMany(targetEntity=ProbeMarker.class, fetch=FetchType.EAGER)
-	private List<ProbeMarker> probeMarkers;
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
+	private Set<ProbeMarker> probeMarkers;
 
 }

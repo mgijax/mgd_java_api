@@ -3,13 +3,13 @@ package org.jax.mgi.mgd.api.model.dag.dao;
 import javax.enterprise.context.RequestScoped;
 
 import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
-import org.jax.mgi.mgd.api.model.dag.entities.DAG;
+import org.jax.mgi.mgd.api.model.dag.entities.Dag;
 
 @RequestScoped
-public class DAGDAO extends PostgresSQLDAO<DAG> {
+public class DagDAO extends PostgresSQLDAO<Dag> {
 
-	protected DAGDAO() {
-		super(DAG.class);
+	protected DagDAO() {
+		super(Dag.class);
 	}
 
 

@@ -1,7 +1,7 @@
 package org.jax.mgi.mgd.api.model.mgi.entities;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -43,13 +43,13 @@ public class Organism extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
-	
+
 	@JsonIgnore
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "mgi_organism_mgitype",
 		joinColumns = @JoinColumn(name = "_organism_key"),
 		inverseJoinColumns = @JoinColumn(name = "_mgitype_key")
 	)
-	private List<MGIType> mgiTypes;
+	private Set<MGIType> mgiTypes;
 
 }

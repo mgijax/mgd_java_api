@@ -5,16 +5,16 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.dag.entities.Label;
+import org.jax.mgi.mgd.api.model.dag.entities.Dag;
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
 
-@Path("/daglabel")
-@Api(value = "DAG Label Endpoints")
+@Path("/dag")
+@Api(value = "DAG Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface DAGLabelRESTInterface extends RESTInterface<Label> {
+public interface DagRESTInterface extends RESTInterface<Dag> {
 
 
 }

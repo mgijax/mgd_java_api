@@ -31,7 +31,7 @@ public class Edge extends EntityBase {
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_dag_key", referencedColumnName="_dag_key")
-	private DAG dag;
+	private Dag dag;
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)

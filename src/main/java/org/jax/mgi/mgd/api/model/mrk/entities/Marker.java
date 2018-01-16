@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeMarker;
@@ -65,8 +66,8 @@ public class Marker extends EntityBase {
 	//@ApiModelProperty(value="Controlled vocabulary table for all Marker Types")
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_marker_type_key", referencedColumnName="_term_key")
-	private Types markerType;
+	@JoinColumn(name="_marker_type_key", referencedColumnName="_marker_type_key")
+	private Type markerType;
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
@@ -92,7 +93,7 @@ public class Marker extends EntityBase {
 	private List<Marker> aliases;
 
 	// Complex Many to Many
-	@OneToMany(mappedBy="_marker_key", fetch=FetchType.EAGER)
+	@OneToMany(targetEntity=ProbeMarker.class, fetch=FetchType.EAGER)
 	private List<ProbeMarker> probeMarkers;
 
 }

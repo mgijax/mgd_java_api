@@ -36,6 +36,6 @@ public class Probe extends EntityBase {
 
 
 	// Complex Many to Many
-	@OneToMany(mappedBy="_probe_key", fetch=FetchType.EAGER)
+	@OneToMany(targetEntity=ProbeMarker.class, fetch=FetchType.EAGER)
 	private List<ProbeMarker> probeMarkers;
 }

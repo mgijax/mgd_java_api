@@ -2,7 +2,6 @@ package org.jax.mgi.mgd.api.model.mgi.entities;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -35,15 +34,15 @@ public class User extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_usertype_key", referencedColumnName="_term_key")
 	private Term userType;
-	
+
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_userstatus_key", referencedColumnName="_term_key")
 	private Term userStatus;
-	
+
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_group_key", referencedColumnName="_term_key")
 	private Term group;
-	
+
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

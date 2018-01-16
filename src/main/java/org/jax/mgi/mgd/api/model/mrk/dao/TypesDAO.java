@@ -3,13 +3,13 @@ package org.jax.mgi.mgd.api.model.mrk.dao;
 import javax.enterprise.context.RequestScoped;
 
 import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
-import org.jax.mgi.mgd.api.model.mrk.entities.Types;
+import org.jax.mgi.mgd.api.model.mrk.entities.Type;
 
 @RequestScoped
-public class TypesDAO extends PostgresSQLDAO<Types> {
+public class TypesDAO extends PostgresSQLDAO<Type> {
 
 	protected TypesDAO() {
-		super(Types.class);
+		super(Type.class);
 	}
 
 

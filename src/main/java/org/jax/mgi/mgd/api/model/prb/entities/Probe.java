@@ -1,9 +1,12 @@
 package org.jax.mgi.mgd.api.model.prb.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
@@ -30,4 +33,9 @@ public class Probe extends EntityBase {
 	private String productSize;
 	private Date creation_date;
 	private Date modification_date;
+
+
+	// Complex Many to Many
+	@OneToMany(targetEntity=ProbeMarker.class, fetch=FetchType.EAGER)
+	private List<ProbeMarker> probeMarkers;
 }

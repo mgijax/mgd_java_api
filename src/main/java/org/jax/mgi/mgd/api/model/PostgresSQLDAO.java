@@ -18,7 +18,6 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.util.DateParser;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -74,7 +73,7 @@ public abstract class PostgresSQLDAO<T> {
 		}
 	}
 */
-	
+
 	public T update(T model) {
 		//log(model);
 		entityManager.merge(model);
@@ -105,7 +104,7 @@ public abstract class PostgresSQLDAO<T> {
 	public SearchResults<T> search(Map<String, Object> params) {
 		return search(params, null);
 	}
-	
+
 	public SearchResults<T> search(Map<String, Object> params, String orderByField) {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<T> query = builder.createQuery(myClass);
@@ -127,7 +126,7 @@ public abstract class PostgresSQLDAO<T> {
 			} else {
 				column = root.get(key);
 			}
-			
+
 			Object value = params.get(key);
 			if (value instanceof Integer) {
 				Integer desiredValue = (Integer) value;
@@ -135,7 +134,7 @@ public abstract class PostgresSQLDAO<T> {
 			} else {
 				String desiredValue = (String) value;
 				restrictions.add(builder.equal(column, desiredValue));
-			} 
+			}
 		}
 		if(orderByField != null) {
 			query.orderBy(builder.asc(root.get(orderByField)));
@@ -170,7 +169,7 @@ public abstract class PostgresSQLDAO<T> {
 		 */
 
 		if (!keyExpiration.containsKey(tableName) || (currentTime > keyExpiration.get(tableName))) {
-			TypedQuery<Integer> q1 = (TypedQuery<Integer>) entityManager.createQuery("select max(" + fieldName + ") from " + tableName, Integer.class);
+			TypedQuery<Integer> q1 = entityManager.createQuery("select max(" + fieldName + ") from " + tableName, Integer.class);
 			Integer maxKey = q1.getSingleResult();
 			if (maxKey == null) {
 				maxKey = 0;
@@ -205,7 +204,7 @@ public abstract class PostgresSQLDAO<T> {
 	/* method to get the database dump date from the mgi_dbinfo table
 	 */
 	public String getDumpDate() {
-		TypedQuery<String> q1 = (TypedQuery<String>) entityManager.createQuery("select lastdump_date from DatabaseInfo", String.class);
+		TypedQuery<String> q1 = entityManager.createQuery("select lastdump_date from DatabaseInfo", String.class);
 		String dumpDate = q1.getSingleResult();
 		if (dumpDate == null) {
 			dumpDate = "unknown";
@@ -218,19 +217,19 @@ public abstract class PostgresSQLDAO<T> {
 		try {
 			Date dayStart = dateFormat.parse(date + " 00:00:00");
 			Date dayEnd = dateFormat.parse(date + " 23:59:59");
-	
+
 			if (DateParser.AFTER.equals(operator)) {
 				return builder.greaterThan(path, dayEnd);
-	
+
 			} else if (DateParser.STARTING_WITH.equals(operator)) {
 				return builder.greaterThanOrEqualTo(path, dayStart);
-	
+
 			} else if (DateParser.UP_THROUGH.equals(operator)) {
 				return builder.lessThanOrEqualTo(path, dayEnd);
-			
+
 			} else if (DateParser.UP_TO.equals(operator)) {
 				return builder.lessThan(path, dayStart);
-			
+
 			} else if (DateParser.ON.equals(operator)) {
 				// use a 'between' to get the full day, not just a single point in time
 				return builder.between(path, dayStart, dayEnd);
@@ -238,7 +237,7 @@ public abstract class PostgresSQLDAO<T> {
 		} catch (ParseException p) {
 			throw new FatalAPIException("ReferenceDAO.datePredicate(): Cannot parse date: " + date);
 		}
-		return null; 
+		return null;
 	}
 
 }

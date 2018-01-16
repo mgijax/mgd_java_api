@@ -6,21 +6,17 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.jax.mgi.mgd.api.domain.DomainBase;
-import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.mgd.api.model.mgi.entities.ApiLogObject;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.service.ApiLogService;
-import org.jax.mgi.mgd.api.service.UserService;
 
 public class BaseController {
 
-	@Inject
-	private UserService userService;
-	
+	//@Inject
+	//private UserService userService;
+
 	@Inject ApiLogService apiLogService;
-	
+
 	/* if token is not defined in properties file, then do not require one.  Otherwise, must
 	 * be an exact match (case sensitive).
 	 */
@@ -31,7 +27,7 @@ public class BaseController {
 		}
 		return true;
 	}
-	
+
 	/* convenience method to remove any String parameters that have an empty string as the value
 	 */
 	protected Map<String, Object> filterEmptyParameters(Map<String, Object> params) {
@@ -50,7 +46,7 @@ public class BaseController {
 		}
 		return filtered;
 	}
-	
+
 
 	protected void logRequest(String endpoint, String parameters, String mgitype, List<Integer> objectKeys, User user) throws APIException {
 		apiLogService.create(endpoint, parameters, mgitype, objectKeys, user);

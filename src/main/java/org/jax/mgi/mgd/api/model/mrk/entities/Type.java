@@ -16,7 +16,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Types Model Object")
 @Table(name="mrk_types")
-public class Types extends EntityBase {
+public class Type extends EntityBase {
 
 	@Id
 	private Integer _marker_type_key;

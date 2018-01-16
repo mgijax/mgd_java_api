@@ -3,7 +3,6 @@ package org.jax.mgi.mgd.api.translators;
 import org.jax.mgi.mgd.api.domain.ReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowData;
-import org.jax.mgi.mgd.api.util.Constants;
 
 public class ReferenceSummaryTranslator extends EntityDomainTranslator<Reference, ReferenceSummaryDomain>{
 	@Override
@@ -22,7 +21,7 @@ public class ReferenceSummaryTranslator extends EntityDomainTranslator<Reference
 		domain.gxd_status = entity.getStatusView().getGxd_status();
 		domain.qtl_status = entity.getStatusView().getQtl_status();
 		domain.tumor_status = entity.getStatusView().getTumor_status();
-		
+
 		ReferenceWorkflowData workflowData = entity.getWorkflowData();
 		if (workflowData != null) {
 			if (workflowData.getHas_pdf() == 0) {
@@ -38,7 +37,7 @@ public class ReferenceSummaryTranslator extends EntityDomainTranslator<Reference
 	protected Reference domainToEntity(ReferenceSummaryDomain domain) {
 		// Cannot do translation here, as it requires lookup of actual entity from database.  Must
 		// instead work with ReferenceRepository.
-		
+
 		return null;
 	}
 }

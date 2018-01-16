@@ -18,6 +18,7 @@ import lombok.Setter;
 @Table(name="prb_marker")
 public class ProbeMarker extends EntityBase {
 
+	// This only needs to be done if there is no other primary key for the table
 	@EmbeddedId
 	private ProbeMarkerKey key;
 

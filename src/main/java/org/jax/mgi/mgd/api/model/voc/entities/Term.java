@@ -2,14 +2,12 @@ package org.jax.mgi.mgd.api.model.voc.entities;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
@@ -18,7 +16,6 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -46,11 +43,11 @@ public class Term extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
-	
+
 	@JsonIgnore
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
 	private Vocabulary vocab;
-	
-	
+
+
 }

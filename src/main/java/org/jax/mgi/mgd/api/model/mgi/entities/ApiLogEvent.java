@@ -12,8 +12,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.jax.mgi.mgd.api.model.EntityBase;
 
 import lombok.AllArgsConstructor;
@@ -25,7 +23,7 @@ import lombok.Setter;
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 @Table(name="mgi_apilog_event")
 public class ApiLogEvent extends EntityBase {
-	
+
 	@Id
 	private Integer _event_key;
 	private String endpoint;
@@ -35,7 +33,7 @@ public class ApiLogEvent extends EntityBase {
 	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_user_key", referencedColumnName="_user_key")
 	private User createdBy;
-	
+
 	@OneToMany (targetEntity=ApiLogObject.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_event_key", referencedColumnName="_event_key")
 	@BatchSize(size=200)

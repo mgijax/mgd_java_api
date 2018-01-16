@@ -1,8 +1,5 @@
 package org.jax.mgi.mgd.api.model.bib.entities;
 
-import java.util.Date;
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;

@@ -2,8 +2,8 @@ package org.jax.mgi.mgd.api.model.prb.entities;
 
 import java.util.Date;
 
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
@@ -16,10 +16,11 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "PRBMarker Model Object")
 @Table(name="prb_marker")
-public class Marker extends EntityBase {
+public class ProbeMarker extends EntityBase {
 
-	@Id
-	private Integer _probe_key;
+	@EmbeddedId
+	private ProbeMarkerKey key;
+
 	private String relationship;
 	private Date creation_date;
 	private Date modification_date;

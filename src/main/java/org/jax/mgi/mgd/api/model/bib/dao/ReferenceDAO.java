@@ -37,7 +37,6 @@ import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
-import org.jax.mgi.mgd.api.util.Checks;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateParser;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -61,7 +60,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	// maps from search field name to creatition/modification date database field name
 	private static Map<String,String> dates = null;
 
-	/* convenience method for instantiating a new search results object, populating its error fields, 
+	/* convenience method for instantiating a new search results object, populating its error fields,
 	 * and returning it.
 	 */
 	private static SearchResults<Reference> errorSR(String error, String message, int status_code) {
@@ -69,17 +68,18 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		results.setError(error, message, status_code);
 		return results;
 	}
-	
+
 	/* query handling specific for references.  Some fields are within the table backing Reference,
 	 * while others are coming from related tables.
 	 */
+	@Override
 	@Transactional
 	public SearchResults<Reference> search(Map<String, Object> params) {
 		// query parameters existing in main reference table
 		List<String> internalParameters = new ArrayList<String>(Arrays.asList(
 			new String[] { "issue", "pages", "date", "ref_abstract", "isReviewArticle", "title",
 				"authors", "primary_author", "journal", "volume", "_refs_key" }));
-		
+
 		// status query parameters (residing outside main reference table)
 		List<String> statusParameters = new ArrayList<String>();
 
@@ -95,7 +95,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			for (String status : new String[] { "Not_Routed", "Routed", "Indexed", "Chosen", "Full_coded", "Rejected"}) {
 				String fieldname = "status_" + group + "_" + status;
 				statusParameters.add(fieldname);
-				
+
 				if (populateCaches) {
 					groups.put(fieldname, group);
 					if ("Full_coded".equals(status)) {
@@ -106,7 +106,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 				}
 			}
 		}
-		
+
 		if (users == null) {
 			users = new HashMap<String,String>();
 			users.put("created_by", "createdByUser");
@@ -126,7 +126,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		Root<Reference> root = query.from(myClass);
 
 		List<Predicate> restrictions = new ArrayList<Predicate>();
-		
+
 		// first, handle the list of internal parameters (those that are in the table underlying Reference objects)
 		for (String key: internalParameters) {
 			Path<String> column = root.get(key);
@@ -152,36 +152,36 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 				}
 				else {
 					// not a string, so just do an equals search
-					restrictions.add(builder.equal(root.get(key), desiredValue)); 
+					restrictions.add(builder.equal(root.get(key), desiredValue));
 				}
 			}
 		}
 
 		// special internal parameter -- is_discard.  QF specifies three values, which need to be translated
 		// for the actual data in the bib_refs table.
-		
+
 		if (params.containsKey("is_discard")) {
 			String desiredValue = ((String) params.get("is_discard")).toLowerCase();
 
 			if (desiredValue.equals("no discard")) {
-				restrictions.add(builder.equal(root.get("is_discard"), 0)); 
-				
+				restrictions.add(builder.equal(root.get("is_discard"), 0));
+
 			} else if (desiredValue.equals("only discard")) {
-				restrictions.add(builder.equal(root.get("is_discard"), 1)); 
-				
+				restrictions.add(builder.equal(root.get("is_discard"), 1));
+
 			} else if (desiredValue.equals("search all")) {
-				// disregard the is_discard flag when searching 
+				// disregard the is_discard flag when searching
 			}
 
 		} else if (!params.containsKey("_refs_key")){
 			// default setting is to only return non-discarded references -- only apply if we're not
 			// doing a key-based lookup, though.
-			restrictions.add(builder.equal(root.get("is_discard"), 0)); 
+			restrictions.add(builder.equal(root.get("is_discard"), 0));
 		}
-		
+
 		// second, handle list of status parameters.  The status fields are always OR-ed within a group.
 		// The status_operator field tells us whether to OR or AND them across groups (and defaults to OR).
-		
+
 		List<Predicate> wfsRestrictions = new ArrayList<Predicate>();
 
 		boolean statusOperatorOR = true;			// false if operator across groups should be AND
@@ -190,23 +190,23 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		}
 
 		// collect the desired statuses for each group
-		
+
 		Map<String,List<String>> statusByGroup = new HashMap<String,List<String>>();
-		
+
 		for (String key: statusParameters) {
 			if (params.containsKey(key)) {
 				String groupAbbrev = groups.get(key);
 				String status = statuses.get(key);
-				
+
 				if (!statusByGroup.containsKey(groupAbbrev)) {
 					statusByGroup.put(groupAbbrev, new ArrayList<String>());
 				}
 				statusByGroup.get(groupAbbrev).add(status);
 			}
 		}
-		
+
 		// compose one Exists subquery for each group
-		
+
 		for (String groupAbbrev : statusByGroup.keySet()) {
 			Subquery<ReferenceWorkflowStatus> wfsSubquery = query.subquery(ReferenceWorkflowStatus.class);
 			Root<ReferenceWorkflowStatus> wfsRoot = wfsSubquery.from(ReferenceWorkflowStatus.class);
@@ -224,7 +224,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		}
 
 		// then either AND or OR the subqueries for the separate groups together
-		
+
 		if (wfsRestrictions.size() > 0) {
 			if (statusOperatorOR) {
 				restrictions.add(builder.or(wfsRestrictions.toArray(new Predicate[0])));
@@ -232,9 +232,9 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 				restrictions.add(builder.and(wfsRestrictions.toArray(new Predicate[0])));
 			}
 		}
-		
+
 		// special handling for 'year' allowing for fairly sophistaicated queries
-		
+
 		if (params.containsKey("year")) {
 			Expression<Integer> yearField = root.get("year");
 			try {
@@ -243,15 +243,15 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 				return errorSR("InvalidYearFormat", "Value for year field is invalid: " + e.toString(), Constants.HTTP_BAD_REQUEST);
 			}
 		}
-		
+
 		// created_by and modified_by parameters
-		
+
 		for (String fieldname : users.keySet()) {
 			if (params.containsKey(fieldname)) {
 				Subquery<User> userSubquery = query.subquery(User.class);
 				Root<User> userRoot = userSubquery.from(User.class);
 				userSubquery.select(userRoot);
-				
+
 				List<Predicate> userPredicates = new ArrayList<Predicate>();
 				userPredicates.add(builder.equal(root.get(users.get(fieldname)), userRoot.get("_user_key")));
 				Path<String> column = userRoot.get("login");
@@ -262,9 +262,9 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 				restrictions.add(builder.exists(userSubquery));
 			}
 		}
-		
+
 		// creation_date and modification_date parameters
-		
+
 		for (String fieldname : dates.keySet()) {
 			if (params.containsKey(fieldname)) {
 				try {
@@ -283,15 +283,15 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 				}
 			}
 		}
-		
+
 		// status history parameters (must find a single record that matches any of the specified history criteria)
-		
+
 		if ((params.containsKey("sh_group") || params.containsKey("sh_username") || params.containsKey("sh_status") || params.containsKey("sh_date"))) {
 			String shGroup = (String) params.get("sh_group");
 			String shUsername = (String) params.get("sh_username");
 			String shStatus = (String) params.get("sh_status");
 			String shDate = (String) params.get("sh_date");
-			
+
 			Subquery<ReferenceWorkflowStatus> shSubquery = query.subquery(ReferenceWorkflowStatus.class);
 			Root<ReferenceWorkflowStatus> shRoot = shSubquery.from(ReferenceWorkflowStatus.class);
 			shSubquery.select(shRoot);
@@ -339,9 +339,9 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		}
 
 		// book fields
-		
+
 		if ( (params.containsKey("book_author")) || (params.containsKey("book_title")) || (params.containsKey("place")) || (params.containsKey("publisher")) || (params.containsKey("series_ed"))) {
-			
+
 			String bookAuthor  = (String) params.get("book_author");
 			String booktitle   = (String) params.get("book_title");
 			String place       = (String) params.get("place");
@@ -354,8 +354,8 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 
 			List<Predicate> bookPredicates = new ArrayList<Predicate>();
 			bookPredicates.add(builder.equal(root.get("_refs_key"), bookRoot.get("_refs_key")));
-			
-			
+
+
 			if (bookAuthor != null) {
 				Path<String> column = bookRoot.get("book_author");
 				Expression<String> lowerColumn = builder.lower(column);
@@ -381,17 +381,17 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 				Expression<String> lowerColumn = builder.lower(column);
 				bookPredicates.add(builder.like(lowerColumn, seriesEd.toLowerCase()));
 			}
-			
+
 			if (bookPredicates.size() > 0) {
 				bookSubquery.where(bookPredicates.toArray(new Predicate[]{}));
 				restrictions.add(builder.exists(bookSubquery));
 			}
 		}
-		
-		
+
+
 		// third handle list of external parameters, including:
 		//		"notes", "reference_type", "marker_id", "allele_id", "accids", "workflow_tag", "supplementalTerm"
-		
+
 		if (params.containsKey("notes")) {
 			Subquery<ReferenceNote> noteSubquery = query.subquery(ReferenceNote.class);
 			Root<ReferenceNote> noteRoot = noteSubquery.from(ReferenceNote.class);
@@ -405,23 +405,23 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			noteSubquery.where(notePredicates.toArray(new Predicate[]{}));
 			restrictions.add(builder.exists(noteSubquery));
 		}
-		
+
 		if (params.containsKey("reference_type")) {
 			restrictions.add(builder.equal(root.get("referenceTypeTerm").get("term"), params.get("reference_type")));
 		}
-		
+
 		if (params.containsKey("accids")) {
 			String idString = (String) params.get("accids");
 			String[] accids = idString.toLowerCase().replaceAll(",", " ").replaceAll(" +", " ").split(" ");
-			
+
 			List<Predicate> idRestrictions = new ArrayList<Predicate>();
 
 			Subquery<Accession> idSubquery = query.subquery(Accession.class);
 			Root<Accession> idRoot = idSubquery.from(Accession.class);
 			idSubquery.select(idRoot);
-			
+
 			List<Predicate> idPredicates = new ArrayList<Predicate>();
-			
+
 			idPredicates.add(builder.equal(root.get("_refs_key"), idRoot.get("_object_key")));
 			Path<String> column = idRoot.get("accID");
 			idPredicates.add(builder.lower(column).in((Object[]) accids));
@@ -434,16 +434,16 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 				restrictions.add(builder.or(idRestrictions.toArray(new Predicate[0])));
 			}
 		}
-		
+
 		if (params.containsKey("marker_id")) {
 			String idString = (String) params.get("marker_id");
 
 			Subquery<ReferenceMarkerAssociation> idSubquery = query.subquery(ReferenceMarkerAssociation.class);
 			Root<ReferenceMarkerAssociation> idRoot = idSubquery.from(ReferenceMarkerAssociation.class);
 			idSubquery.select(idRoot);
-			
+
 			List<Predicate> idPredicates = new ArrayList<Predicate>();
-				
+
 			idPredicates.add(builder.equal(root.get("_refs_key"), idRoot.get("keys").get("_refs_key")));
 			idPredicates.add(builder.equal(idRoot.get("markerID").get("accID"), idString));
 
@@ -457,9 +457,9 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			Subquery<ReferenceAlleleAssociation> idSubquery = query.subquery(ReferenceAlleleAssociation.class);
 			Root<ReferenceAlleleAssociation> idRoot = idSubquery.from(ReferenceAlleleAssociation.class);
 			idSubquery.select(idRoot);
-			
+
 			List<Predicate> idPredicates = new ArrayList<Predicate>();
-				
+
 			idPredicates.add(builder.equal(root.get("_refs_key"), idRoot.get("_refs_key")));
 			idPredicates.add(builder.equal(idRoot.get("_mgitype_key"), 11));
 			idPredicates.add(builder.equal(idRoot.get("alleleID").get("accID"), idString));
@@ -473,14 +473,14 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		// fields, plus an operator field that specifies how they should all be combined together.  Coded
 		// to not matter if user fills in tags in order starting with field #1.  And, we ignore a "NOT"
 		// checkbox if the corresponding tag field is not filled in.
-		
+
 		List<String> tags = new ArrayList<String>();	// tags specified by user as positive searches (up to 5)
 		List<String> notTags = new ArrayList<String>();	// tags specified by user as NOT searches (up to 5)
-		
+
 		for (int i = 1; i <= 5; i++) {
 			String tagField = "workflow_tag" + i;
 			String notField = "not_" + tagField;
-			
+
 			if (params.containsKey(tagField)) {
 				if (params.containsKey(notField)) {
 					String notParam = params.get(notField).toString().trim();
@@ -494,7 +494,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 				}
 			}
 		}
-		
+
 		if ((tags.size() > 0) || (notTags.size() > 0)) {
 			// Default state is to join multiple tags in a search with AND, but if the user specified OR
 			// then we can do that instead.
@@ -505,9 +505,9 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 					useAnd = false;
 				}
 			}
-		
+
 			List<Predicate> tagPredicates = new ArrayList<Predicate>();
-			
+
 			if (useAnd) {
 				/* For AND searches, we need to AND together:
 				 *   1. a separate subquery with EXISTS for each term in 'tags'
@@ -517,7 +517,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 					Subquery<ReferenceWorkflowTag> tagSubquery = query.subquery(ReferenceWorkflowTag.class);
 					Root<ReferenceWorkflowTag> tagRoot = tagSubquery.from(ReferenceWorkflowTag.class);
 					tagSubquery.select(tagRoot);
-			
+
 					List<Predicate> inTags = new ArrayList<Predicate>();
 					inTags.add(builder.equal(root.get("_refs_key"), tagRoot.get("_refs_key")));
 					Path<String> column = tagRoot.get("tag").get("term");
@@ -531,7 +531,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 					Subquery<ReferenceWorkflowTag> tagSubquery = query.subquery(ReferenceWorkflowTag.class);
 					Root<ReferenceWorkflowTag> tagRoot = tagSubquery.from(ReferenceWorkflowTag.class);
 					tagSubquery.select(tagRoot);
-			
+
 					List<Predicate> inTags = new ArrayList<Predicate>();
 					inTags.add(builder.equal(root.get("_refs_key"), tagRoot.get("_refs_key")));
 					Path<String> column = tagRoot.get("tag").get("term");
@@ -540,7 +540,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 					tagSubquery.where(inTags.toArray(new Predicate[]{}));
 					tagPredicates.add(builder.not(builder.exists(tagSubquery)));
 				}
-				
+
 				if (tagPredicates.size() > 0) {
 					restrictions.add(builder.and(tagPredicates.toArray(new Predicate[0])));
 				}
@@ -553,7 +553,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 					Subquery<ReferenceWorkflowTag> tagSubquery = query.subquery(ReferenceWorkflowTag.class);
 					Root<ReferenceWorkflowTag> tagRoot = tagSubquery.from(ReferenceWorkflowTag.class);
 					tagSubquery.select(tagRoot);
-			
+
 					List<Predicate> inTags = new ArrayList<Predicate>();
 					inTags.add(builder.equal(root.get("_refs_key"), tagRoot.get("_refs_key")));
 					Path<String> column = tagRoot.get("tag").get("term");
@@ -571,7 +571,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 					Subquery<ReferenceWorkflowTag> tagSubquery = query.subquery(ReferenceWorkflowTag.class);
 					Root<ReferenceWorkflowTag> tagRoot = tagSubquery.from(ReferenceWorkflowTag.class);
 					tagSubquery.select(tagRoot);
-			
+
 					List<Predicate> notInTags = new ArrayList<Predicate>();
 					notInTags.add(builder.equal(root.get("_refs_key"), tagRoot.get("_refs_key")));
 					Path<String> column = tagRoot.get("tag").get("term");
@@ -581,22 +581,22 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 					tagSubquery.where(notInTags.toArray(new Predicate[]{}));
 					tagPredicates.add(builder.not(builder.exists(tagSubquery)));
 				}
-				
+
 				if (tagPredicates.size() > 0) {
 					restrictions.add(builder.or(tagPredicates.toArray(new Predicate[0])));
 				}
 			}
 		}
-		
+
 		// search by term indicating whether reference has supplemental data or not
-		
+
 		if (params.containsKey("supplementalTerm") && (params.get("supplementalTerm") != null)) {
 			Subquery<ReferenceWorkflowData> rwdSubquery = query.subquery(ReferenceWorkflowData.class);
 			Root<ReferenceWorkflowData> rwdRoot = rwdSubquery.from(ReferenceWorkflowData.class);
 			rwdSubquery.select(rwdRoot);
 
 			List<Predicate> rwdPredicates = new ArrayList<Predicate>();
-				
+
 			rwdPredicates.add(builder.equal(root.get("_refs_key"), rwdRoot.get("_refs_key")));
 			Join<ReferenceWorkflowData,Term> supplementalTerm = rwdRoot.join("supplementalTerm");
 			rwdPredicates.add(builder.equal(supplementalTerm.get("term"), params.get("supplementalTerm")));
@@ -604,21 +604,21 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			rwdSubquery.where(rwdPredicates.toArray(new Predicate[]{}));
 			restrictions.add(builder.exists(rwdSubquery));
 		}
-		
+
 		// search by extracted text (AND for all words included in the search string)
-		
+
 		if (params.containsKey("extracted_text") && (params.get("extracted_text") != null)) {
 			String textString = ((String) params.get("extracted_text")).toLowerCase().trim();
 			if (textString.trim() != "") {
 				List<Predicate> wordPredicates = new ArrayList<Predicate>();
-				
+
 				for (String token : textString.split("\\s")) {
 					Subquery<ReferenceWorkflowData> textSubquery = query.subquery(ReferenceWorkflowData.class);
 					Root<ReferenceWorkflowData> textRoot = textSubquery.from(ReferenceWorkflowData.class);
 					textSubquery.select(textRoot);
-			
+
 					List<Predicate> textPredicates = new ArrayList<Predicate>();
-				
+
 					textPredicates.add(builder.equal(root.get("_refs_key"), textRoot.get("_refs_key")));
 					Path<String> column = textRoot.get("extracted_text");
 					Expression<String> lowerColumn = builder.lower(column);
@@ -630,12 +630,12 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 				restrictions.add(builder.and(wordPredicates.toArray(new Predicate[0])));
 			}
 		}
-		
+
 		// enforce sorting: 1. J: number (descending), 2. journal (ascending), 3. author (ascending)
-		
+
 		List<Order> orderList = new ArrayList<Order>();
 		Join<Reference,ReferenceCitationData> citationData = root.join("citationData");
-		
+
 		// using coalesce to push nulls to bottom
 		orderList.add(builder.desc(builder.coalesce(citationData.get("numericPart"), Integer.MIN_VALUE)));
 		orderList.add(builder.asc(root.get("journal")));
@@ -643,7 +643,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		query.orderBy(orderList);
 
 		// pick up the row limit, if there is one specified.  If none specified, set default.
-		
+
 		int rowLimit = 1001;
 		if (params.containsKey("row_limit")) {
 			rowLimit = (Integer) params.get("row_limit");
@@ -654,7 +654,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		log.debug(entityManager.createQuery(query).toString());
 
 		// finally execute the query and return the list of results
-		
+
 		SearchResults<Reference> results = new SearchResults<Reference>();
 		List<Reference> refs = entityManager.createQuery(query).setMaxResults(rowLimit).getResultList();
 		log.info("got " + refs.size() + " basic references");
@@ -674,7 +674,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 
 		return results;
 	}
-	
+
 	/* get a list of the workflow status records for a reference
 	 */
 	public List<ReferenceWorkflowStatus> getStatusHistory (String refsKey) {
@@ -683,11 +683,11 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		Root<ReferenceWorkflowStatus> root = query.from(ReferenceWorkflowStatus.class);
 
 		query.where(builder.equal(root.get("_refs_key"), refsKey));
-		query.orderBy(builder.desc(root.get("modification_date"))); 
+		query.orderBy(builder.desc(root.get("modification_date")));
 
 		return entityManager.createQuery(query).getResultList();
 	}
-	
+
 	/* return a single reference for the given reference key with all needed lazy-loaded fields already loaded
 	 */
 	@Transactional
@@ -703,15 +703,15 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		Hibernate.initialize(ref.getAccessionIDs());
 		Hibernate.initialize(ref.getWorkflowData());
 		Hibernate.initialize(ref.getWorkflowStatuses());
-		return ref; 
+		return ref;
 	}
-	
+
 	/* get the next available primary key for a new reference
 	 */
 	public synchronized int getNextRefsKey() {
 		return this.getNextKey("Reference", "_refs_key");
 	}
-	
+
 	/* get the next available primary key for a workflow status record
 	 */
 	public synchronized int getNextWorkflowStatusKey() throws FatalAPIException {
@@ -720,13 +720,13 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		BigInteger results = (BigInteger) query.getSingleResult();
 		return results.intValue();
 	}
-	
+
 	/* get the next available primary key for a workflow tag record
 	 */
 	public synchronized int getNextWorkflowTagKey() {
 		return this.getNextKey("ReferenceWorkflowTag", "_assoc_key");
 	}
-	
+
 	/* update the bib_citation_cache table for the given reference key
 	 */
 	public void updateCitationCache(int refsKey) {
@@ -746,7 +746,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		query.getResultList();
 		return;
 	}
-	
+
 	// get an integer version of the given (String) year
 	private Integer getInteger(String year) throws FatalAPIException {
 		try {
@@ -765,23 +765,23 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		if (year.startsWith("=")) {
 			return builder.equal(field, year.substring(1));
 		}
-		
+
 		if (year.startsWith(">=")) {
 			return builder.greaterThanOrEqualTo(field, getInteger(year.substring(2)));
 		}
-		
+
 		if (year.startsWith(">")) {
 			return builder.greaterThan(field, getInteger(year.substring(1)));
 		}
-		
+
 		if (year.startsWith("<=")) {
 			return builder.lessThanOrEqualTo(field, getInteger(year.substring(2)));
 		}
-		
+
 		if (year.startsWith("<")) {
 			return builder.lessThan(field, getInteger(year.substring(1)));
 		}
-		
+
 		// range of two years
 		if (year.indexOf("..") >= 0) {
 			String[] years = year.split("\\.\\.");
@@ -790,9 +790,9 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			}
 			return builder.between(field, getInteger(years[0]), getInteger(years[1]));
 		}
-		
+
 		// comma-delimited list of integers
-		
+
 		if (year.indexOf(",") >= 0) {
 			List<Integer> years = new ArrayList<Integer>();
 			for (String yearStr : year.split(",")) {
@@ -800,7 +800,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 			}
 			return field.in(years);
 		}
-		
+
 		// equals (implicit)
 		return builder.equal(field, getInteger(year));
 	}

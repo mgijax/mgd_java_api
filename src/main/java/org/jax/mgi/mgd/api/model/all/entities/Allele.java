@@ -10,6 +10,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.prb.entities.Strain;
@@ -70,6 +71,11 @@ public class Allele extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_collection_key", referencedColumnName="_term_key")
 	private Term collection;
+	
+	//@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	private Reference reference;
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)

@@ -43,7 +43,7 @@ public class CellLine extends EntityBase {
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_derivation_key", referencedColumnName="_deriviation_key")
+	@JoinColumn(name="_derivation_key", referencedColumnName="_derivation_key")
 	private CellLineDerivation derivation;
 	
 	//@JsonIgnore

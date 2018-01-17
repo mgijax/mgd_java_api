@@ -10,7 +10,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
-import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -27,25 +26,25 @@ public class Edge extends EntityBase {
 	private Integer sequenceNum;
 	private Date creation_date;
 	private Date modification_date;
-	
+
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_dag_key", referencedColumnName="_dag_key")
 	private Dag dag;
-	
+
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_parent_key", referencedColumnName="_node_key")
 	private Node parentNode;
-	
+
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_child_key", referencedColumnName="_node_key")
 	private Node childNode;
-	
+
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_label_key", referencedColumnName="_label_key")
 	private Label label;
-	
+
 }

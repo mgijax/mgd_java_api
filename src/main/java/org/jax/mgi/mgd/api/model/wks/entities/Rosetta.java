@@ -11,7 +11,6 @@ import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
-import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -28,7 +27,7 @@ public class Rosetta extends EntityBase {
 	private String wks_markerURL;
 	private Date creation_date;
 	private Date modification_date;
-	
+
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")

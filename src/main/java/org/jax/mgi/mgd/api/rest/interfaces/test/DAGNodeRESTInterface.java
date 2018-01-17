@@ -5,7 +5,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.dag.entities.Edge;
 import org.jax.mgi.mgd.api.model.dag.entities.Node;
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 

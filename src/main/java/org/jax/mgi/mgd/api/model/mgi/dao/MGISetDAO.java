@@ -6,9 +6,9 @@ import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISet;
 
 @RequestScoped
-public class SetDAO extends PostgresSQLDAO<MGISet> {
+public class MGISetDAO extends PostgresSQLDAO<MGISet> {
 
-	public SetDAO() {
+	public MGISetDAO() {
 		super(MGISet.class);
 	}
 

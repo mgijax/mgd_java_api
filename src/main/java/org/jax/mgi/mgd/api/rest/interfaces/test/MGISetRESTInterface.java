@@ -14,7 +14,7 @@ import io.swagger.annotations.Api;
 @Api(value = "Set Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface SetRESTInterface extends RESTInterface<MGISet> {
+public interface MGISetRESTInterface extends RESTInterface<MGISet> {
 
 
 }

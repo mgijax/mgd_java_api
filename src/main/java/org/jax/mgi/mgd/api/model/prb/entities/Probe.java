@@ -13,6 +13,7 @@ import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -38,6 +39,21 @@ public class Probe extends EntityBase {
 	private String productSize;
 	private Date creation_date;
 	private Date modification_date;
+
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_source_key", referencedColumnName="_source_key")
+	private Source source;
+
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_vector_key", referencedColumnName="_term_key")
+	private Term vector;
+
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_segmenttype_key", referencedColumnName="_term_key")
+	private Term segmentType;
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)

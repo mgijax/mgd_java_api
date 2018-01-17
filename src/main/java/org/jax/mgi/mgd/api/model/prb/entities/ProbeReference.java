@@ -1,4 +1,4 @@
-package org.jax.mgi.mgd.api.model.mrk.entities;
+package org.jax.mgi.mgd.api.model.prb.entities;
 
 import java.util.Date;
 
@@ -10,6 +10,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -20,21 +21,26 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "GOTracking Model Object")
-@Table(name="go_tracking")
-public class GOTracking extends EntityBase {
+@ApiModel(value = "PRBReference Model Object")
+@Table(name="prb_reference")
+public class ProbeReference extends EntityBase {
 
 	@Id
-	private Integer _marker_key;
-	private String isReferenceGene;
-	private Date completion_date;
+	private Integer _reference_key;
+	private Integer hasRmap;
+	private Integer hasSequence;
 	private Date creation_date;
 	private Date modification_date;
 	
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_completedby_key", referencedColumnName="_user_key")
-	private User completedBy;
+	@JoinColumn(name="_probe_key", referencedColumnName="_probe_key")
+	private Probe probe;
+
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	private Reference reference;
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
@@ -45,5 +51,4 @@ public class GOTracking extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
-
 }

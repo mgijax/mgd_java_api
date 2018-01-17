@@ -1,4 +1,4 @@
-package org.jax.mgi.mgd.api.model.prb.entities;
+package org.jax.mgi.mgd.api.model.mrk.entities;
 
 import java.util.Date;
 
@@ -20,17 +20,22 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "PRBReference Model Object")
-@Table(name="prb_reference")
-public class Reference extends EntityBase {
+@ApiModel(value = "GO_Tracking Model Object")
+@Table(name="go_tracking")
+public class GO_Tracking extends EntityBase {
 
 	@Id
-	private Integer _reference_key;
-	private Integer hasRmap;
-	private Integer hasSequence;
+	private Integer _marker_key;
+	private String isReferenceGene;
+	private Date completion_date;
 	private Date creation_date;
 	private Date modification_date;
 	
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_completedby_key", referencedColumnName="_user_key")
+	private User completedBy;
+
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
@@ -40,4 +45,5 @@ public class Reference extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
+
 }

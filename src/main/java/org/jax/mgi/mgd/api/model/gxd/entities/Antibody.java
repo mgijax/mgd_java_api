@@ -44,4 +44,13 @@ public class Antibody extends EntityBase {
 	@JoinColumn(name="_organism_key", referencedColumnName="_organism_key")
 	private Organism organism;
 	
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
+	private User createdBy;
+	
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
+	private User modifiedBy;
 }

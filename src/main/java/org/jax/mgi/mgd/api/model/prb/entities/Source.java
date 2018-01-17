@@ -10,7 +10,11 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.all.entities.CellLine;
+import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -35,6 +39,46 @@ public class Source extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_segmenttype_key", referencedColumnName="_term_key")
+	private Term segmentType;
+
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_vector_key", referencedColumnName="_term_key")
+	private Term vector;
+
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_organism_key", referencedColumnName="_organism_key")
+	private Organism organism;
+
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_strain_key", referencedColumnName="_strain_key")
+	private Strain strain;
+
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_tissue_key", referencedColumnName="_tissue_key")
+	private Tissue tissue;
+
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_gender_key", referencedColumnName="_term_key")
+	private Term gender;
+
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_cellline_key", referencedColumnName="_cellline_key")
+	private CellLine cellLine;
+
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	private Reference reference;
+
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

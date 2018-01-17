@@ -5,15 +5,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.mrk.entities.GOTracking;
+import org.jax.mgi.mgd.api.model.mrk.entities.GO_Tracking;
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
 
-@Path("/gotracking")
-@Api(value = "GOTracking Endpoints")
+@Path("/go_tracking")
+@Api(value = "GO_Tracking Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface GOTrackingRESTInterface extends RESTInterface<GOTracking> {
+public interface GO_TrackingRESTInterface extends RESTInterface<GO_Tracking> {
 
 }

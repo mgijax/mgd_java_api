@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -30,6 +31,16 @@ public class RFLV extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_reference_key", referencedColumnName="_reference_key")
+	private ProbeReference reference;
+
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
+	private Marker marker;
+
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

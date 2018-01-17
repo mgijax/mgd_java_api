@@ -55,7 +55,7 @@ public class Marker extends EntityBase {
 	//@ApiModelProperty(value="Controlled vocabulary table for all Marker Statuses (approved, withdrawn)")
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_marker_status_key", referencedColumnName="_term_key")
+	@JoinColumn(name="_marker_status_key", referencedColumnName="_marker_status_key")
 	private Status markerStatus;
 
 	//need MRK_Types entity

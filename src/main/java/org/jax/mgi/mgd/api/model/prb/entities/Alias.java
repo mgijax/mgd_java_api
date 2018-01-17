@@ -32,6 +32,11 @@ public class Alias extends EntityBase {
 	
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_reference_key", referencedColumnName="_reference_key")
+	private ProbeReference reference;
+	
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 

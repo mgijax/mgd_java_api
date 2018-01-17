@@ -48,6 +48,10 @@ public class BiotypeMapping extends EntityBase {
 	@JoinColumn(name="_marker_type_key", referencedColumnName="_marker_type_key")
 	private Type markerType;
 
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
+	private Marker marker;
+	
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

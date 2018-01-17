@@ -33,6 +33,11 @@ public class Allele extends EntityBase {
 	
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_rflv_key", referencedColumnName="_rflv_key")
+	private RFLV rflv;
+
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 

@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -37,6 +38,16 @@ public class Strain extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_species_key", referencedColumnName="_term_key")
+	private Term species;
+
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_straintype_key", referencedColumnName="_term_key")
+	private Term strainType;
+
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

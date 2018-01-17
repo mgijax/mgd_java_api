@@ -1,7 +1,7 @@
 package org.jax.mgi.mgd.api.model.mgi.entities;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -38,5 +38,5 @@ public class ApiLogEvent extends EntityBase {
 	@JoinColumn(name="_event_key", referencedColumnName="_event_key")
 	@BatchSize(size=200)
 //	@Fetch(value=FetchMode.SUBSELECT)
-	private List<ApiLogObject> objects;
+	private Set<ApiLogObject> objects;
 }

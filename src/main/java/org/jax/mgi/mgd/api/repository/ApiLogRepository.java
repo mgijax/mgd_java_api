@@ -67,7 +67,7 @@ public class ApiLogRepository extends Repository<ApiLogDomain> {
 		if (events.items != null) {
 			// walking the log entries to do the translations individually, because I want a List,
 			// not an Iterable
-			
+
 			domains.items = new ArrayList<ApiLogDomain>();
 			for (ApiLogEvent event : events.items) {
 				domains.items.add(translator.translate(event));
@@ -96,7 +96,7 @@ public class ApiLogRepository extends Repository<ApiLogDomain> {
 	}
 
 	/***--- (private) instance methods ---***/
-	
+
 	/* retrieve the ApiLogEvent object with the given primaryKey
 	 */
 	private ApiLogEvent getApiLogEvent(Integer primaryKey) throws APIException {
@@ -117,7 +117,7 @@ public class ApiLogRepository extends Repository<ApiLogDomain> {
 	private void applyDomainChanges(ApiLogEvent entity, ApiLogDomain domain, User user) throws APIException {
 		// Note that we must have 'anyChanges' after the OR, otherwise short-circuit evaluation will only save
 		// the first section changed.
-		
+
 		if (domain._event_key == null) {
 			domain._event_key = apiLogDAO.getNextKey("ApiLogEvent", "_event_key");
 			entity.set_event_key(domain._event_key);
@@ -130,26 +130,26 @@ public class ApiLogRepository extends Repository<ApiLogDomain> {
 		entity.setEndpoint(domain.endpoint);
 		entity.setParameters(domain.parameters);
 		entity.setCreatedBy(user);
-		
+
 		// must save the main log entry first, then can do the associated objects
 		apiLogDAO.persist(entity);
 		applyObjectChanges(entity, domain);
 	}
-	
+
 	/* apply any changes in associated objects from domain to entity
 	 */
 	private void applyObjectChanges(ApiLogEvent entity, ApiLogDomain domain) throws APIException {
-		List<ApiLogObject> entityObjects = entity.getObjects();
+		Set<ApiLogObject> entityObjects = entity.getObjects();
 		List<Integer> domainObjectKeys = domain.objectKeys;
-		
-		if (entityObjects == null) { entityObjects = new ArrayList<ApiLogObject>(); }
+
+		if (entityObjects == null) { entityObjects = new HashSet<ApiLogObject>(); }
 		if (domainObjectKeys == null) { domainObjectKeys = new ArrayList<Integer>(); }
-		
+
 		Set<Integer> toAdd = new HashSet<Integer>();
 		for (Integer objectKey : domainObjectKeys) {
 			toAdd.add(objectKey);
 		}
-		
+
 		List<ApiLogObject> toDelete = new ArrayList<ApiLogObject>();
 		for (ApiLogObject obj : entityObjects) {
 			if (toAdd.contains(obj.get_object_key())) {
@@ -160,12 +160,12 @@ public class ApiLogRepository extends Repository<ApiLogDomain> {
 				toDelete.add(obj);
 			}
 		}
-		
+
 		// remove from the database those objects that are no longer associated with the event
 		for (ApiLogObject obj : toDelete) {
 			apiLogDAO.remove(obj);
 		}
-		
+
 		MGIType mgiType = getMgitype(domain.mgitype);
 
 		// add any new objects that need to be associated with the event
@@ -178,9 +178,9 @@ public class ApiLogRepository extends Repository<ApiLogDomain> {
 			apiLogDAO.persist(loggedObject);
 		}
 	}
-	
 
-	/* return a single MGIType matching the given name 
+
+	/* return a single MGIType matching the given name
 	 */
 	private MGIType getMgitype (String name) throws APIException {
 		MapMaker mapMaker = new MapMaker();

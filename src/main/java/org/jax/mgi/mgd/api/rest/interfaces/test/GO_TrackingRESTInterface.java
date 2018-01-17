@@ -10,8 +10,8 @@ import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
 
-@Path("/gotracking")
-@Api(value = "GOTracking Endpoints")
+@Path("/go_tracking")
+@Api(value = "GO_Tracking Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface GO_TrackingRESTInterface extends RESTInterface<GO_Tracking> {

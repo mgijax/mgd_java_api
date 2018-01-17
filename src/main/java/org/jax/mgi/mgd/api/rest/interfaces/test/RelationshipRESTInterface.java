@@ -5,16 +5,16 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.mgi.entities.MGISet;
+import org.jax.mgi.mgd.api.model.mgi.entities.Relationship;
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
 
-@Path("/set")
-@Api(value = "Set Endpoints")
+@Path("/relationship")
+@Api(value = "Relationship Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface SetRESTInterface extends RESTInterface<MGISet> {
+public interface RelationshipRESTInterface extends RESTInterface<Relationship> {
 
 
 }

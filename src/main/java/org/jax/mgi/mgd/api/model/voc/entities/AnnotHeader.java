@@ -3,10 +3,15 @@ package org.jax.mgi.mgd.api.model.voc.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -26,4 +31,28 @@ public class AnnotHeader extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
+	//@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_annottype_key", referencedColumnName="_annottype_key")
+	private AnnotType annotType;
+	
+	//@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_object_key", referencedColumnName="_mgitype_key")
+	private MGIType mgiType;
+	
+	//@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
+	private User createdBy;
+
+	//@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
+	private User modifiedBy;
+	
+	//@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_approvedby_key", referencedColumnName="_user_key")
+	private User approvedBy;
 }

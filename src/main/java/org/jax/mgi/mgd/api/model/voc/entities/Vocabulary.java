@@ -8,9 +8,12 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
+import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -32,6 +35,17 @@ public class Vocabulary extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 
+	
+	//@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	private Reference reference;
+	
+	//@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_logicaldb_key", referencedColumnName="_logicaldb_key")
+	private LogicalDB logicalDB;
+	
 	@JsonIgnore
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")

@@ -53,10 +53,10 @@ public class Assay extends EntityBase {
 	@JoinColumn(name="_probeprep_key", referencedColumnName="_probeprep_key")
 	private ProbePrep probePrep;
 
-	//@JsonIgnore
-	//@OneToOne(fetch=FetchType.EAGER)
-	//@JoinColumn(name="_antibodyprep_key", referencedColumnName="_antibodyprep_key")
-	//private AntibodyPrep antibodyPrep;
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_antibodyprep_key", referencedColumnName="_antibodyprep_key")
+	private AntibodyPrep antibodyPrep;
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
@@ -68,6 +68,11 @@ public class Assay extends EntityBase {
 	@JoinColumn(name="_reportergene_key", referencedColumnName="_term_key")
 	private Term reporterGene;
 
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
+	private User createdBy;
+	
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")

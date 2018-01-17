@@ -3,7 +3,10 @@ package org.jax.mgi.mgd.api.model.mld.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
@@ -26,4 +29,9 @@ public class Contig extends EntityBase {
 	private Integer minLink;
 	private Date creation_date;
 	private Date modification_date;
+	
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_expt_key", referencedColumnName="_expt_key")
+	private Expts experiment;
+	
 }

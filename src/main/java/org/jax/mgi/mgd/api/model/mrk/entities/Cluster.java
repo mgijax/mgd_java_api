@@ -3,10 +3,17 @@ package org.jax.mgi.mgd.api.model.mrk.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -25,4 +32,23 @@ public class Cluster extends EntityBase {
 	private Date cluster_date;
 	private Date creation_date;
 	private Date modification_date;
+	
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_clustertype_key", referencedColumnName="_term_key")
+	private Term clusterType;
+	
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_clustersource_key", referencedColumnName="_term_key")
+	private Term clusterSource;
+	
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
+	private User createdBy;
+
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
+	private User modifiedBy;
+
 }

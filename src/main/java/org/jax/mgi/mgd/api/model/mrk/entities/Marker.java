@@ -52,12 +52,11 @@ public class Marker extends EntityBase {
 	@JoinColumn(name="_organism_key", referencedColumnName="_organism_key")
 	private Organism organism;
 
-	//need MRK_Status entity
 	//@ApiModelProperty(value="Controlled vocabulary table for all Marker Statuses (approved, withdrawn)")
 	//@JsonIgnore
-	//@OneToOne(fetch=FetchType.EAGER)
-	//@JoinColumn(name="_marker_status_key", referencedColumnName="_term_key")
-	//private Term markerStatus;
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_marker_status_key", referencedColumnName="_term_key")
+	private Status markerStatus;
 
 	//need MRK_Types entity
 	//@ApiModelProperty(value="Controlled vocabulary table for all Marker Types")

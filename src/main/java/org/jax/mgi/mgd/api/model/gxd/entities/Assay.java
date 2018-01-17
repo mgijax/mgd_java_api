@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.img.entities.ImagePane;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
@@ -23,36 +24,49 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Index Model Object")
-@Table(name="gxd_index")
-public class Index extends EntityBase {
+@ApiModel(value = "Assay Model Object")
+@Table(name="gxd_assay")
+public class Assay extends EntityBase {
 
 	@Id
-	private Integer _index_key;
-	private String comments;
+	private Integer _assay_key;
 	private Date creation_date;
 	private Date modification_date;
 	
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_assaytype_key", referencedColumnName="_assaytype_key")
+	private AssayType assayType;
+
+	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
 	private Reference reference;
-	
+
+	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
 	private Marker marker;
-	
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_priority_key", referencedColumnName="_term_key")
-	private Term priority;
-	
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_conditionalmutants_key", referencedColumnName="_term_key")
-	private Term conditionalMutants;
-	
+
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
-	private User createdBy;
+	@JoinColumn(name="_probeprep_key", referencedColumnName="_probeprep_key")
+	private ProbePrep probePrep;
+
+	//@JsonIgnore
+	//@OneToOne(fetch=FetchType.EAGER)
+	//@JoinColumn(name="_antibodyprep_key", referencedColumnName="_antibodyprep_key")
+	//private AntibodyPrep antibodyPrep;
+
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_imagepane_key", referencedColumnName="_imagepane_key")
+	private ImagePane imagePane;
+
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_reportergene_key", referencedColumnName="_term_key")
+	private Term reporterGene;
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)

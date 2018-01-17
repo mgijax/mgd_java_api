@@ -17,27 +17,25 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "InSituResult Model Object")
-@Table(name="gxd_insituresult")
-public class InSituResult extends EntityBase {
+@ApiModel(value = "AntibodyPrep Model Object")
+@Table(name="gxd_antibodyprep")
+public class AntibodyPrep extends EntityBase {
 
 	@Id
-	private Integer _result_key;
-	private Integer sequenceNum;
-	private String resultNote;
+	private Integer _antibodyprep_key;
 	private Date creation_date;
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_specimen_key", referencedColumnName="_specimen_key")
-	private Specimen specimen;
+	@JoinColumn(name="_antibody_key", referencedColumnName="_antibody_key")
+	private Antibody antibody;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_strength_key", referencedColumnName="_strength_key")
-	private Strength strength;
+	@JoinColumn(name="_secondary_key", referencedColumnName="_secondary_key")
+	private Secondary secondary;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_pattern_key", referencedColumnName="_pattern_key")
-	private Pattern pattern;
+	@JoinColumn(name="_label_key", referencedColumnName="_label_key")
+	private Label label;
 	
 }

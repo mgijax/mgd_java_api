@@ -19,7 +19,7 @@ import lombok.Setter;
 public class GelUnits extends EntityBase {
 
 	@Id
-	private Integer _gelband_key;
+	private Integer _gelunits_key;
 	private String units;
 	private Date creation_date;
 	private Date modification_date;

@@ -20,7 +20,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Reference/Marker Association Model Object")
+@ApiModel(value = "Marker Association Model Object")
 @Table(name="mrk_reference")
 public class ReferenceMarkerAssociation extends EntityBase {
 

@@ -18,7 +18,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Set Object")
+@ApiModel(value = "MGISet Object")
 @Table(name="mgi_set")
 public class MGISet extends EntityBase {
 	@Id

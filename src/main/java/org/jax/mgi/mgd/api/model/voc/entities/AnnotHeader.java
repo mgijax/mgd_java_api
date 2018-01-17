@@ -36,10 +36,12 @@ public class AnnotHeader extends EntityBase {
 	@JoinColumn(name="_annottype_key", referencedColumnName="_annottype_key")
 	private AnnotType annotType;
 	
+	//need to add _Object_key relationships
+	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_object_key", referencedColumnName="_mgitype_key")
-	private MGIType mgiType;
+	@JoinColumn(name="_term_key", referencedColumnName="_term_key")
+	private Term headerTerm;
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)

@@ -14,6 +14,6 @@ import io.swagger.annotations.Api;
 @Api(value = "GOTracking Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface GOTrackingRESTInterface extends RESTInterface<GO_Tracking> {
+public interface GO_TrackingRESTInterface extends RESTInterface<GO_Tracking> {
 
 }

@@ -6,9 +6,9 @@ import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
 import org.jax.mgi.mgd.api.model.mrk.entities.GO_Tracking;
 
 @RequestScoped
-public class GOTrackingDAO extends PostgresSQLDAO<GO_Tracking> {
+public class GO_TrackingDAO extends PostgresSQLDAO<GO_Tracking> {
 
-	protected GOTrackingDAO() {
+	protected GO_TrackingDAO() {
 		super(GO_Tracking.class);
 	}
 

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,15 +39,15 @@ import io.swagger.annotations.ApiModel;
 @ApiModel(value = "Reference Model Object")
 @Table(name="bib_refs")
 public class Reference extends EntityBase {
-	
+
 	@Transient
 	private Logger log = Logger.getLogger(getClass());
-	
+
 
 	@Id
 	@Column(name="_Refs_key")
 	private Integer _refs_key;
-	
+
 	@Column(name="authors")
 	private String authors;
 
@@ -58,25 +59,25 @@ public class Reference extends EntityBase {
 
 	@Column(name="journal")
 	private String journal;
-	
+
 	@Column(name="vol")
 	private String volume;
 
 	@Column(name="issue")
 	private String issue;
-	
+
 	@Column(name="date")
 	private String date;
-	
+
 	@Column(name="year")
 	private Integer year;
 
 	@Column(name="pgs")
 	private String pages;
-	
+
 	@Column(name="abstract")
 	private String ref_abstract;		// just "abstract" is a Java reserved word, so need a prefix
-	
+
 	@Column(name="isReviewArticle")
 	private int isReviewArticle;
 
@@ -85,14 +86,14 @@ public class Reference extends EntityBase {
 
 	@Column(name="creation_date")
 	private Date creation_date;
-	
+
 	@Column(name="modification_date")
 	private Date modification_date;
 
 	@OneToOne (targetEntity=ReferenceStatusView.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
 	private ReferenceStatusView statusView;
-	
+
 	@OneToOne (targetEntity=User.class, fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdByUser;
@@ -104,7 +105,7 @@ public class Reference extends EntityBase {
 	// maps workflow group abbrev to current status for that group, cached in memory for efficiency - not persisted
 	@Transient
 	private Map<String,String> workflowStatusCache;
-	
+
 	/* The @Fetch annotation (below) allows us to specify multiple EAGER-loaded collections, which would
 	 * otherwise throw an error.
 	 */
@@ -140,7 +141,7 @@ public class Reference extends EntityBase {
 	@OneToOne (targetEntity=Term.class, fetch=FetchType.LAZY)
 	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")
 	private Term referenceTypeTerm;
-	
+
 	// one to many, because notes might not exist (leaving it 1-0)
 	@OneToMany (targetEntity=ReferenceNote.class, fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
@@ -168,10 +169,10 @@ public class Reference extends EntityBase {
 	@OneToMany (targetEntity=ReferenceWorkflowData.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
 //	@Fetch(value=FetchMode.SUBSELECT)
-	private List<ReferenceWorkflowData> workflowData;
+	private Set<ReferenceWorkflowData> workflowData;
 
 	/***--- transient methods ---***/
-	
+
 	/* Find and return the first accession ID matching any specified logical database, prefix,
 	 * is-preferred, and is-private settings.
 	 */
@@ -191,7 +192,7 @@ public class Reference extends EntityBase {
 		}
 		return null;
 	}
-	
+
 	@Transient
 	public String getReferencenote() {
 		List<ReferenceNote> rn = this.notes;
@@ -200,12 +201,12 @@ public class Reference extends EntityBase {
 		}
 		return null;
 	}
-	
+
 	@Transient
 	public String getJnumid() {
 		return this.findFirstID(Constants.LDB_MGI, "J:", Constants.PREFERRED, Constants.PUBLIC);
 	}
-	
+
 	@Transient
 	public String getDoiid() {
 		return this.findFirstID(Constants.LDB_DOI, null, null, null);
@@ -231,7 +232,7 @@ public class Reference extends EntityBase {
 		if (referenceTypeTerm == null) { return null; }
 		return referenceTypeTerm.getTerm();
 	}
-	
+
 	@Transient
 	public List<String> getWorkflowTagsAsStrings() {
 		List<String> tags = new ArrayList<String>();
@@ -241,12 +242,12 @@ public class Reference extends EntityBase {
 		Collections.sort(tags);
 		return tags;
 	}
-	
+
 	@Transient
 	public void clearWorkflowStatusCache() {
 		workflowStatusCache = null;
 	}
-	
+
 	@Transient
 	private void buildWorkflowStatusCache() {
 		workflowStatusCache = new HashMap<String,String>();
@@ -256,7 +257,7 @@ public class Reference extends EntityBase {
 			}
 		}
 	}
-	
+
 	@Transient
 	public String getStatus(String groupAbbrev) {
 		if (workflowStatusCache == null) { this.buildWorkflowStatusCache(); }
@@ -265,7 +266,7 @@ public class Reference extends EntityBase {
 		}
 		return null;
 	}
-	
+
 	@Transient
 	public String getShort_citation() {
 		if ((this.citationData != null) && (this.citationData.size() > 0)) {
@@ -287,14 +288,14 @@ public class Reference extends EntityBase {
 			return this.citationData.get(0).getPubmedid();
 		}
 	}
-	
+
 	/* set the reference's modification date to be 'now' and modified-by user to be 'currentUser'
 	 */
 	public void setModificationInfo(User currentUser) {
 		this.modification_date = new Date();
-		this.modifiedByUser = currentUser; 
+		this.modifiedByUser = currentUser;
 	}
-	
+
 	/* If this reference is of type Book, return an object with the extra book-related data (if one exists);
 	 * otherwise return null.
 	 */
@@ -321,8 +322,8 @@ public class Reference extends EntityBase {
 	 */
 	@Transient
 	public ReferenceWorkflowData getWorkflowData() {
-		if (this.workflowData.size() > 0) {
-			return this.workflowData.get(0);
+		for(ReferenceWorkflowData data: workflowData) {
+			return data;
 		}
 		return null;
 	}

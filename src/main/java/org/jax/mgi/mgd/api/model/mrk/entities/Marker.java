@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -81,12 +83,12 @@ public class Marker extends EntityBase {
 	private List<Accession> accessionIDs;
 
 	// Simple Many to Many
-//	@ManyToMany(fetch=FetchType.EAGER)
-//	@JoinTable(name = "mrk_alias",
-//		joinColumns = @JoinColumn(name = "_alias_key", referencedColumnName="_marker_key"),
-//		inverseJoinColumns = @JoinColumn(name = "_marker_key", referencedColumnName="_marker_key")
-//	)
-//	private List<Marker> aliases;
+	@ManyToMany(fetch=FetchType.EAGER)
+	@JoinTable(name = "mrk_alias",
+		joinColumns = @JoinColumn(name = "_alias_key", referencedColumnName="_marker_key"),
+		inverseJoinColumns = @JoinColumn(name = "_marker_key", referencedColumnName="_marker_key")
+	)
+	private Set<Marker> aliases;
 
 	// Complex Many to Many
 	@OneToMany(fetch=FetchType.EAGER)

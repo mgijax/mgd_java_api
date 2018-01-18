@@ -1,11 +1,14 @@
 package org.jax.mgi.mgd.api.model.all.entities;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -96,4 +99,11 @@ public class Allele extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_approvedby_key", referencedColumnName="_user_key")
 	private User approvedBy;
+	
+	@ManyToMany(fetch=FetchType.EAGER)
+	@JoinTable(name = "all_allele_mutation",
+		joinColumns = @JoinColumn(name = "_allele_key"),
+		inverseJoinColumns = @JoinColumn(name = "_mutation_key", referencedColumnName="_term_key")
+	)
+	private Set<Term> mutations;
 }

@@ -1,7 +1,7 @@
 package org.jax.mgi.mgd.api.model.acc.entities;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -38,7 +38,7 @@ public class MGIType extends EntityBase {
 	private String dbView;
 	private Date creation_date;
 	private Date modification_date;
-
+	
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
@@ -55,6 +55,6 @@ public class MGIType extends EntityBase {
 		inverseJoinColumns = @JoinColumn(name = "_organism_key")
 	)
 	@OrderColumn(name="sequencenum")
-	private List<Organism> organisms;
+	private Set<Organism> organisms;
 
 }

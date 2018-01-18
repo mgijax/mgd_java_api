@@ -6,15 +6,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;	
-import org.jax.mgi.mgd.api.model.voc.entities.Term_EMAPA;
+import org.jax.mgi.mgd.api.model.voc.entities.Term_EMAPS;
 
 import io.swagger.annotations.Api;
 
-@Path("/term_emapa")
-@Api(value = "Vocabulary Term EMAPA Endpoints")
+@Path("/term_emaps")
+@Api(value = "Vocabulary Term EMAPS Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface Term_EMAPARESTInterface extends RESTInterface<Term_EMAPA> {
+public interface Term_EMAPSRESTInterface extends RESTInterface<Term_EMAPS> {
 
 
 }

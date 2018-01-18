@@ -67,6 +67,6 @@ public class Probe extends EntityBase {
 	
 	// Complex Many to Many
 	@OneToMany(fetch=FetchType.EAGER)
-	@JoinColumn(name="_probe_key", referencedColumnName="_probe_key")
+	@JoinColumn(name="_probe_key")
 	private Set<ProbeMarker> probeMarkers;
 }

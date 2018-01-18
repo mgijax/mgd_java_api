@@ -434,7 +434,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		// If we had a previous ID for this logical database, we either need to modify it or delete it.
 		if (idPos >= 0) {
 			// Passing in a null ID indicates that any existing ID should be removed.
-			if (accID == null) {
+			if ( (accID == null) || (accID.trim().length() == 0))  {
 				referenceDAO.remove(ids.get(idPos));
 			} else {
 				// Otherwise, we can update the ID and other data for this logical database.

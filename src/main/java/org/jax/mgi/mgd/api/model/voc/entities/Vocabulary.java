@@ -23,7 +23,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Term Model Object")
+@ApiModel(value = "Vocabulary Model Object")
 @Table(name="voc_vocab")
 public class Vocabulary extends EntityBase {
 
@@ -35,7 +35,6 @@ public class Vocabulary extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 
-	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")

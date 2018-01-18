@@ -12,6 +12,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -33,6 +34,11 @@ public class ProbeMarker extends EntityBase {
 	private String relationship;
 	private Date creation_date;
 	private Date modification_date;
+
+	@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	private Reference reference;
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)

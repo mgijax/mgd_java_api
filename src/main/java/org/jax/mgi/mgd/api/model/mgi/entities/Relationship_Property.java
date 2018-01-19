@@ -18,8 +18,8 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Relationship Object")
-@Table(name="mgi_relationship")
+@ApiModel(value = "Relationship Property Object")
+@Table(name="mgi_relationship_property")
 public class Relationship_Property extends EntityBase {
 	@Id
 	private Integer _relationship_Property_key;

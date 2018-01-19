@@ -1,16 +1,20 @@
 package org.jax.mgi.mgd.api.model.acc.entities;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
 import io.swagger.annotations.ApiModel;
@@ -65,4 +69,11 @@ public class Accession extends EntityBase {
 	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedByUser;
+//	
+//	@ManyToMany(fetch=FetchType.EAGER)
+//	@JoinTable(name = "acc_accessionreference",
+//		joinColumns = @JoinColumn(name = "_accession_key"),
+//		inverseJoinColumns = @JoinColumn(name = "_refs _key")
+//	)
+//	private Set<Reference> references;
 }

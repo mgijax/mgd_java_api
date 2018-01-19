@@ -1,12 +1,15 @@
 package org.jax.mgi.mgd.api.model.prb.entities;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -57,4 +60,11 @@ public class Strain extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
+	
+	@ManyToMany(fetch=FetchType.EAGER)
+	@JoinTable(name = "prb_allele_strain",
+		joinColumns = @JoinColumn(name = "_strain_key"),
+		inverseJoinColumns = @JoinColumn(name = "_allele _key")
+	)
+	private Set<Allele> alleles;
 }

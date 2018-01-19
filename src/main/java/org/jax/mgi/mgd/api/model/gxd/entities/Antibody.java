@@ -58,7 +58,6 @@ public class Antibody extends EntityBase {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	// Simple Many to Many
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "gxd_antibody_marker",
 		joinColumns = @JoinColumn(name = "_antibody_key"),

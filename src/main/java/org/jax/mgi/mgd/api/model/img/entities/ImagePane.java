@@ -1,15 +1,19 @@
 package org.jax.mgi.mgd.api.model.img.entities;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.gxd.entities.InSituResult;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -35,4 +39,11 @@ public class ImagePane extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_image_key", referencedColumnName="_image_key")
 	private Image image;
+	
+	@ManyToMany(fetch=FetchType.EAGER)
+	@JoinTable(name = "gxd_insituresultimage",
+		joinColumns = @JoinColumn(name = "_imagepane_key"),
+		inverseJoinColumns = @JoinColumn(name = "_result _key")
+	)
+	private Set<InSituResult> inSituResults;
 }

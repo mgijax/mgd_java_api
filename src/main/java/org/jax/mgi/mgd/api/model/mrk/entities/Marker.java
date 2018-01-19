@@ -90,6 +90,14 @@ public class Marker extends EntityBase {
 	)
 	private Set<Marker> aliases;
 
+	// Simple Many to Many
+	@ManyToMany(fetch=FetchType.EAGER)
+	@JoinTable(name = "mrk_current",
+		joinColumns = @JoinColumn(name = "_current_key", referencedColumnName="_marker_key"),
+		inverseJoinColumns = @JoinColumn(name = "_marker_key", referencedColumnName="_marker_key")
+	)
+	private Set<Marker> current;
+
 	// Complex Many to Many
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")

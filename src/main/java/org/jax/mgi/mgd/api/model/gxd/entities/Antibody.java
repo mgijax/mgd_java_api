@@ -1,17 +1,21 @@
 package org.jax.mgi.mgd.api.model.gxd.entities;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -53,4 +57,11 @@ public class Antibody extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
+	
+	@ManyToMany(fetch=FetchType.EAGER)
+	@JoinTable(name = "gxd_antibody_marker",
+		joinColumns = @JoinColumn(name = "_antibody_key"),
+		inverseJoinColumns = @JoinColumn(name = "_marker_key")
+	)
+	private Set<Marker> markers;
 }

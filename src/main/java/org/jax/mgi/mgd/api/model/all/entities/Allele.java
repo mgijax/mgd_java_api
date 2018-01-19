@@ -14,6 +14,7 @@ import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.img.entities.ImagePane;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.prb.entities.Strain;
@@ -106,4 +107,11 @@ public class Allele extends EntityBase {
 		inverseJoinColumns = @JoinColumn(name = "_mutation_key", referencedColumnName="_term_key")
 	)
 	private Set<Term> mutations;
+	
+	@ManyToMany(fetch=FetchType.EAGER)
+	@JoinTable(name = "prb_allele_strain",
+		joinColumns = @JoinColumn(name = "_allele_key"),
+		inverseJoinColumns = @JoinColumn(name = "_strain _key")
+	)
+	private Set<Strain> strains;
 }

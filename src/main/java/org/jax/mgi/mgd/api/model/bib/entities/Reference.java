@@ -13,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
@@ -327,4 +329,11 @@ public class Reference extends EntityBase {
 		}
 		return null;
 	}
+	
+	@ManyToMany(fetch=FetchType.EAGER)
+	@JoinTable(name = "acc_accessionreference",
+		joinColumns = @JoinColumn(name = "_refs_key"),
+		inverseJoinColumns = @JoinColumn(name = "_accession _key")
+	)
+	private Set<Accession> accessions;
 }

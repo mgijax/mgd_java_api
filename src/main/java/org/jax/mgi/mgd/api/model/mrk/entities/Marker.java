@@ -97,7 +97,7 @@ public class Marker extends EntityBase {
 		joinColumns = @JoinColumn(name = "_current_key", referencedColumnName="_marker_key"),
 		inverseJoinColumns = @JoinColumn(name = "_marker_key", referencedColumnName="_marker_key")
 	)
-	private Set<Marker> current;
+	private Set<Marker> currentMarkers;
 
 	
 	// Complex Many to Many

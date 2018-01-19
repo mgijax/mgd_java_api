@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
+import org.jax.mgi.mgd.api.model.gxd.entities.Antibody;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeMarker;
@@ -98,9 +99,18 @@ public class Marker extends EntityBase {
 	)
 	private Set<Marker> current;
 
+	
 	// Complex Many to Many
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
 	private Set<ProbeMarker> probeMarkers;
+	
+	// Simple Many to Many
+	@ManyToMany(fetch=FetchType.EAGER)
+	@JoinTable(name = "gxd_antibody_marker",
+		joinColumns = @JoinColumn(name = "_marker_key"),
+		inverseJoinColumns = @JoinColumn(name = "_antibody_key")
+	)
+	private Set<Antibody> antibodies;
 
 }

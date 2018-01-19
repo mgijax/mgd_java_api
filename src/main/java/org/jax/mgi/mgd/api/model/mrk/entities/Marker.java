@@ -99,8 +99,6 @@ public class Marker extends EntityBase {
 	)
 	private Set<Marker> currentMarkers;
 
-	
-	// Complex Many to Many
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
 	private Set<ProbeMarker> probeMarkers;

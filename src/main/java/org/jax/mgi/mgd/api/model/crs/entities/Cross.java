@@ -1,15 +1,19 @@
 package org.jax.mgi.mgd.api.model.crs.entities;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeMarker;
 import org.jax.mgi.mgd.api.model.prb.entities.Strain;
 
 import io.swagger.annotations.ApiModel;
@@ -59,5 +63,22 @@ public class Cross extends EntityBase {
 	@JoinColumn(name="_strainht_key", referencedColumnName="_strain_key")
 	private Strain heterozygousStrain;
 	
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_cross_key")
+	@OrderColumn(name="rowNumber")
+	private Set<Matrix> matrices;
 	
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_cross_key")
+	private Set<CrossReference> crossReferences;
+	
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_cross_key")
+	//@OrderColumn(name="rowNumber,colNumber")
+	private Set<CrossTyping> crossTypings;
+	
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_cross_key")
+	@OrderColumn(name="rowNumber")
+	private Set<Progeny> properties;
 }

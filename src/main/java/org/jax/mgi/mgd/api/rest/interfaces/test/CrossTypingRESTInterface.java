@@ -5,16 +5,16 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.crs.entities.Typings;
+import org.jax.mgi.mgd.api.model.crs.entities.CrossTyping;
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
 
-@Path("/typings")
-@Api(value = "Cross Typings Endpoints")
+@Path("/crosstyping")
+@Api(value = "Cross Typing Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface TypingsRESTInterface extends RESTInterface<Typings> {
+public interface CrossTypingRESTInterface extends RESTInterface<CrossTyping> {
 
 
 }

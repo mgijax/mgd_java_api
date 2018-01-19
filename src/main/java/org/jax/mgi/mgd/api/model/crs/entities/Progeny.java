@@ -1,7 +1,10 @@
 package org.jax.mgi.mgd.api.model.crs.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Embeddable;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -18,13 +21,18 @@ import lombok.Setter;
 @Table(name="crs_progeny")
 public class Progeny extends EntityBase {
 
-	@Id
-	private Integer _cross_key;
-	private Integer sequenceNum;
+	@EmbeddedId
+	private ProgenyKey key;
 	private String name;
 	private String sex;
 	private String notes;
 	private Date creation_date;
 	private Date modification_date;
 	
+	@Getter @Setter
+	@Embeddable
+	public class ProgenyKey implements Serializable {
+		private Integer _cross_key;
+		private Integer sequenceNum;
+	}
 }

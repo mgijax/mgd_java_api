@@ -13,6 +13,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 
 import io.swagger.annotations.ApiModel;
@@ -21,26 +22,28 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "CRS Matrix Model Object")
-@Table(name="crs_matrix")
-public class Matrix extends EntityBase {
+@ApiModel(value = "Cross Reference Model Object")
+@Table(name="crs_references")
+public class CrossReference extends EntityBase {
 
 	@EmbeddedId
-	private MatrixKey key;
-	private String otherSymbol;
-	private String chromosome;
-	private String notes;
+	private CrossReferenceKey key;
 	private Date creation_date;
 	private Date modification_date;
+
+	//@OneToOne(fetch=FetchType.EAGER)
+	//@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
+	//private Marker marker;
 	
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
-	private Marker marker;
+	//@OneToOne(fetch=FetchType.EAGER)
+	//@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	//private Reference reference;
 	
 	@Getter @Setter
 	@Embeddable
-	public class MatrixKey implements Serializable {
+	public class CrossReferenceKey implements Serializable {
 		private Integer _cross_key;
-		private Integer rowNumber;
+		private Integer _marker_key;
+		private Integer _refs_key;
 	}
 }

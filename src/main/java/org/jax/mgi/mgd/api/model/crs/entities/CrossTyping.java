@@ -1,12 +1,16 @@
 package org.jax.mgi.mgd.api.model.crs.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Embeddable;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.crs.entities.CrossReference.CrossReferenceKey;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -16,14 +20,19 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Cross Typings Model Object")
 @Table(name="crs_typings")
-public class Typings extends EntityBase {
+public class CrossTyping extends EntityBase {
 
-	@Id
-	private Integer _cross_key;
-	private Integer rowNumber;
-	private Integer colNumber;
+	@EmbeddedId
+	private CrossTypingKey key;
 	private String data;
 	private Date creation_date;
 	private Date modification_date;
 	
+	@Getter @Setter
+	@Embeddable
+	public class CrossTypingKey implements Serializable {
+		private Integer _cross_key;
+		private Integer rowNumber;
+		private Integer colNumber;
+	}
 }

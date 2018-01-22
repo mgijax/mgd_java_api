@@ -14,13 +14,12 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "MLDNotes Model Object")
+@ApiModel(value = "MLD Notes Model Object")
 @Table(name="mld_notes")
 public class Notes extends EntityBase {
 
 	@Id
 	private Integer _refs_key;
-	private Integer sequenceNum;
 	private String note;
 	private Date creation_date;
 	private Date modification_date;

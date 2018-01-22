@@ -504,7 +504,6 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 			ReferenceNote note = new ReferenceNote();
 			note.set_refs_key(entity.get_refs_key());
 			note.setNote(domain.referencenote);
-			note.setSequenceNum(1);
 			note.setCreation_date(new Date());
 			note.setModification_date(note.getCreation_date()); 
 			

@@ -22,9 +22,6 @@ public class ReferenceNote extends EntityBase {
 	@Column(name="_refs_key")
 	private int _refs_key;
 
-	@Column(name="sequenceNum")
-	private int sequenceNum;
-
 	@Column(name="note")
 	private String note;
 

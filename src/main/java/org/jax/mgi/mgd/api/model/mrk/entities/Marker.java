@@ -83,7 +83,14 @@ public class Marker extends EntityBase {
 	@Where(clause="_mgitype_key = 2 AND preferred = 1")
 	private List<Accession> accessionIDs;
 
-	// Simple Many to Many
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
+	private Set<Offset> offsets;
+	
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
+	private Set<ProbeMarker> probeMarkers;
+	
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "mrk_alias",
 		joinColumns = @JoinColumn(name = "_alias_key", referencedColumnName="_marker_key"),
@@ -91,7 +98,6 @@ public class Marker extends EntityBase {
 	)
 	private Set<Marker> aliases;
 
-	// Simple Many to Many
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "mrk_current",
 		joinColumns = @JoinColumn(name = "_current_key", referencedColumnName="_marker_key"),
@@ -99,11 +105,6 @@ public class Marker extends EntityBase {
 	)
 	private Set<Marker> currentMarkers;
 
-	@OneToMany(fetch=FetchType.EAGER)
-	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
-	private Set<ProbeMarker> probeMarkers;
-	
-	// Simple Many to Many
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "gxd_antibody_marker",
 		joinColumns = @JoinColumn(name = "_marker_key"),

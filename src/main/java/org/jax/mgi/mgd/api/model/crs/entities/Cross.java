@@ -13,7 +13,6 @@ import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
-import org.jax.mgi.mgd.api.model.prb.entities.ProbeMarker;
 import org.jax.mgi.mgd.api.model.prb.entities.Strain;
 
 import io.swagger.annotations.ApiModel;

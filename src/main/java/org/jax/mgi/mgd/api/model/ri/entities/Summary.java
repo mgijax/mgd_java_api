@@ -1,11 +1,13 @@
 package org.jax.mgi.mgd.api.model.ri.entities;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -28,13 +30,15 @@ public class Summary extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
-	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_riset_key", referencedColumnName="_riset_key")
 	private RISet riSet;
 	
-	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
 	private Marker marker;
+	
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_risummary_key", referencedColumnName="_risummary_key")
+	private Set<Summary_Expt_Ref> riSummaryExperiments;
 }

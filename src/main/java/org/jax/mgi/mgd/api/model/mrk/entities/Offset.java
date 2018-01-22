@@ -1,9 +1,11 @@
 package org.jax.mgi.mgd.api.model.mrk.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Embeddable;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
@@ -18,10 +20,16 @@ import lombok.Setter;
 @Table(name="mrk_offset")
 public class Offset extends EntityBase {
 
-	@Id
-	private Integer _marker_key;
-	private Integer source;
+	@EmbeddedId
+	private OffsetKey key;
 	private Integer cmOffset;
 	private Date creation_date;
 	private Date modification_date;
+	
+	@Getter @Setter
+	@Embeddable
+	public class OffsetKey implements Serializable {
+		private Integer _marker_key;
+		private Integer source;
+	}
 }

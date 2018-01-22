@@ -6,7 +6,6 @@ import java.util.Date;
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;

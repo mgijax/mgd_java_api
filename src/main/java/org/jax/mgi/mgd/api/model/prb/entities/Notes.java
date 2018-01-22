@@ -20,7 +20,6 @@ public class Notes extends EntityBase {
 
 	@Id
 	private Integer _probe_key;
-	private Integer sequenceNum;
 	private String note;
 	private Date creation_date;
 	private Date modification_date;

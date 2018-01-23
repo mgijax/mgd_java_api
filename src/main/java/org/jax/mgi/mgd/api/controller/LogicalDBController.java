@@ -8,14 +8,11 @@ import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.rest.interfaces.LogicalDBRESTInterface;
 import org.jax.mgi.mgd.api.service.LogicalDBService;
 import org.jax.mgi.mgd.api.util.SearchResults;
-import org.jboss.logging.Logger;
 
 public class LogicalDBController extends BaseController implements LogicalDBRESTInterface {
 
 	@Inject
 	private LogicalDBService logicaldbService;
-	
-	private Logger log = Logger.getLogger(getClass());
 
 	@Override
 	public LogicalDB create(String api_access_token, LogicalDB logicaldb) {

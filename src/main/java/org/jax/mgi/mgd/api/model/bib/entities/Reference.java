@@ -313,10 +313,11 @@ public class Reference extends EntityBase {
 	 */
 	@Transient
 	public void setWorkflowData(ReferenceWorkflowData rwd) {
-		if (this.workflowData.size() > 0) {
-			this.workflowData.remove(0);
+		for(ReferenceWorkflowData r: workflowData) {
+			workflowData.remove(r);
+			break;
 		}
-		this.workflowData.add(rwd);
+		workflowData.add(rwd);
 	}
 
 	/* If this reference has workflow data, return an object with the extra workflow data;

@@ -8,15 +8,12 @@ import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.rest.interfaces.MarkerRESTInterface;
 import org.jax.mgi.mgd.api.service.MarkerService;
 import org.jax.mgi.mgd.api.util.SearchResults;
-import org.jboss.logging.Logger;
 
 public class MarkerController extends BaseController implements MarkerRESTInterface {
 
 	@Inject
 	private MarkerService markerService;
 	
-	private Logger log = Logger.getLogger(getClass());
-
 	@Override
 	public Marker create(String api_access_token, Marker marker) {
 		if(authenticate(api_access_token)) {

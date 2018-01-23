@@ -20,7 +20,6 @@ public class AssayNote extends EntityBase {
 
 	@Id
 	private Integer _assay_key;
-	private Integer sequenceNum;
 	private String assayNote;
 	private Date creation_date;
 	private Date modification_date;

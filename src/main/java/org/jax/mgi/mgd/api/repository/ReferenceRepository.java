@@ -465,7 +465,8 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 					creation,
 					creation,
 					currentUser,
-					currentUser
+					currentUser,
+					new HashSet<Reference>()
 			);
 			
 			referenceDAO.persist(myID);

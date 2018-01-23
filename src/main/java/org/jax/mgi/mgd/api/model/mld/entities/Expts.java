@@ -13,8 +13,6 @@ import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
-import org.jax.mgi.mgd.api.model.gxd.entities.TheilerStage;
-import org.jax.mgi.mgd.api.model.prb.entities.Probe;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;

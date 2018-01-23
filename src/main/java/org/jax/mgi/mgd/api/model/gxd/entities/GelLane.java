@@ -12,7 +12,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
-import org.jax.mgi.mgd.api.model.mrk.entities.Offset;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;

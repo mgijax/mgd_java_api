@@ -20,7 +20,6 @@ public class Text extends EntityBase {
 
 	@Id
 	private Integer _Term_key;
-	private Integer sequenceNum;
 	private String note;
 	private Date creation_date;
 	private Date modification_date;

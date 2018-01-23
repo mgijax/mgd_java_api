@@ -34,16 +34,16 @@ public class ImagePane extends EntityBase {
 	private Integer height;
 	private Date creation_date;
 	private Date modification_date;
-	
+
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_image_key", referencedColumnName="_image_key")
 	private Image image;
-	
+
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "gxd_insituresultimage",
 		joinColumns = @JoinColumn(name = "_imagepane_key"),
-		inverseJoinColumns = @JoinColumn(name = "_result _key")
+		inverseJoinColumns = @JoinColumn(name = "_result_key")
 	)
 	private Set<InSituResult> inSituResults;
 }

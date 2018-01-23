@@ -31,25 +31,24 @@ public class InSituResult extends EntityBase {
 	private String resultNote;
 	private Date creation_date;
 	private Date modification_date;
-	
+
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_specimen_key", referencedColumnName="_specimen_key")
 	private Specimen specimen;
-	
+
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_strength_key", referencedColumnName="_strength_key")
 	private Strength strength;
-	
+
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_pattern_key", referencedColumnName="_pattern_key")
 	private Pattern pattern;
-	
+
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "gxd_insituresultimage",
 		joinColumns = @JoinColumn(name = "_result_key"),
 		inverseJoinColumns = @JoinColumn(name = "_imagepane_key")
 	)
 	private Set<ImagePane> imagePanes;
-	
-                                     
+
 }

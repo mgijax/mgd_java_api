@@ -69,11 +69,11 @@ public class Accession extends EntityBase {
 	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedByUser;
-//	
-//	@ManyToMany(fetch=FetchType.EAGER)
-//	@JoinTable(name = "acc_accessionreference",
-//		joinColumns = @JoinColumn(name = "_accession_key"),
-//		inverseJoinColumns = @JoinColumn(name = "_refs _key")
-//	)
-//	private Set<Reference> references;
+	
+	@ManyToMany(fetch=FetchType.EAGER)
+	@JoinTable(name = "acc_accessionreference",
+		joinColumns = @JoinColumn(name = "_accession_key"),
+		inverseJoinColumns = @JoinColumn(name = "_refs _key")
+	)
+	private Set<Reference> references;
 }

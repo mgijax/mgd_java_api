@@ -1,9 +1,7 @@
 package org.jax.mgi.mgd.api.model.gxd.entities;
 
-import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,7 +11,6 @@ import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -58,11 +55,5 @@ public class IndexStage extends EntityBase {
 //	@JoinColumn(name="_stageid_key", referencedColumnName="_term_key")
 //	private Term indexStage;
 	
-	@Getter @Setter
-	@Embeddable
-	public class IndexStageKey implements Serializable {
-		private Integer _index_key;
-		private Integer _indexassay_key;
-		private Integer _stageid_key;
-	}
+
 }

@@ -1,4 +1,4 @@
-package org.jax.mgi.mgd.api.model.mrk.entities;
+package org.jax.mgi.mgd.api.model.dag.entities;
 
 import java.util.Date;
 
@@ -14,13 +14,13 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "MRKNotes Model Object")
-@Table(name="mrk_notes")
-public class Notes extends EntityBase {
+@ApiModel(value = "DAG Label Model Object")
+@Table(name="dag_label")
+public class DagLabel extends EntityBase {
 
 	@Id
-	private Integer _marker_key;
-	private String note;
+	private Integer _label_key;
+	private String label;
 	private Date creation_date;
 	private Date modification_date;
 }

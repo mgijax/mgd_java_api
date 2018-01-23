@@ -1,9 +1,7 @@
 package org.jax.mgi.mgd.api.model.prb.entities;
 
-import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -50,10 +48,4 @@ public class ProbeMarker extends EntityBase {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@Getter @Setter
-	@Embeddable
-	public class ProbeMarkerKey implements Serializable {
-		private Integer _probe_key;
-		private Integer _marker_key;
-	}
 }

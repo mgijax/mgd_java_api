@@ -22,7 +22,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "PRBAllele Model Object")
 @Table(name="prb_allele")
-public class Allele extends EntityBase {
+public class ProbeAllele extends EntityBase {
 
 	@Id
 	private Integer _allele_key;

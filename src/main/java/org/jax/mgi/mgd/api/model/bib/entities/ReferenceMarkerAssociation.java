@@ -1,8 +1,5 @@
 package org.jax.mgi.mgd.api.model.bib.entities;
 
-import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -24,37 +21,8 @@ import lombok.Setter;
 @Table(name="mrk_reference")
 public class ReferenceMarkerAssociation extends EntityBase {
 
-	// need to define composite primary key class
-	@Embeddable
-	public static class ReferenceMarkerCompositeKey implements Serializable {
-		private static final long serialVersionUID = 1L;
-
-		protected int _refs_key;
-		protected int _marker_key;
-		
-		public ReferenceMarkerCompositeKey() {
-			this._refs_key = 0;
-			this._marker_key = 0;
-		}
-		
-		public void set_marker_key(int _marker_key) {
-			this._marker_key = _marker_key;
-		}
-		
-		public void set_refs_key(int _refs_key) {
-			this._refs_key = _refs_key;
-		}
-		
-		public ReferenceMarkerCompositeKey(int _refs_key, int _marker_key) {
-			this._refs_key = _refs_key;
-			this._marker_key = _marker_key;
-		}
-	}
-	
 	@EmbeddedId
-	private ReferenceMarkerCompositeKey keys;
-
-	@Column(name="jnumid")
+	private ReferenceMarkerAssociationKey keys;
 	private String jnumID;
 
 	@OneToOne (targetEntity=Accession.class, fetch=FetchType.LAZY)

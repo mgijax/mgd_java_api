@@ -1,18 +1,12 @@
 package org.jax.mgi.mgd.api.model.gxd.entities;
 
-import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
-import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -47,12 +41,6 @@ public class InSituResultStructure extends EntityBase {
 //	@JoinColumn(name="_stage_key")
 //	private TheilerStage stage;
 //	
-	@Getter @Setter
-	@Embeddable
-	public class ISResultStructureKey implements Serializable {
-		private Integer _result_key;
-		private Integer _emapa_term_key;
-		private Integer _stage_key;
-	}
+
 
 }

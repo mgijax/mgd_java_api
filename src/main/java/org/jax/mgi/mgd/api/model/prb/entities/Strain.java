@@ -66,5 +66,5 @@ public class Strain extends EntityBase {
 		joinColumns = @JoinColumn(name = "_strain_key"),
 		inverseJoinColumns = @JoinColumn(name = "_allele _key")
 	)
-	private Set<Allele> alleles;
+	private Set<ProbeAllele> alleles;
 }

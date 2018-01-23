@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -33,15 +34,15 @@ public class InSituResult extends EntityBase {
 	private Date modification_date;
 
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_specimen_key", referencedColumnName="_specimen_key")
+	@JoinColumn(name="_specimen_key")
 	private Specimen specimen;
 
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_strength_key", referencedColumnName="_strength_key")
+	@JoinColumn(name="_strength_key")
 	private Strength strength;
 
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_pattern_key", referencedColumnName="_pattern_key")
+	@JoinColumn(name="_pattern_key")
 	private Pattern pattern;
 
 	@ManyToMany(fetch=FetchType.EAGER)
@@ -50,5 +51,9 @@ public class InSituResult extends EntityBase {
 		inverseJoinColumns = @JoinColumn(name = "_imagepane_key")
 	)
 	private Set<ImagePane> imagePanes;
+	
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_result_key")
+	private Set<InSituResultStructure> structures;
 
 }

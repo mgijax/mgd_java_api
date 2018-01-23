@@ -20,7 +20,6 @@ public class Ref_Notes extends EntityBase {
 
 	@Id
 	private Integer _reference_key;
-	private Integer sequenceNum;
 	private String note;
 	private Date creation_date;
 	private Date modification_date;

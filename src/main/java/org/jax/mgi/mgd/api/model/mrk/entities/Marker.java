@@ -19,6 +19,7 @@ import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.model.gxd.entities.Antibody;
+import org.jax.mgi.mgd.api.model.map.entities.CoordFeature;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeMarker;
@@ -134,5 +135,9 @@ public class Marker extends EntityBase {
 		}
 		return set;
 	}
+	@OneToMany(fetch=FetchType.EAGER)	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
+	@Where(clause="_mgitype_key = 2")
+	private Set<CoordFeature> features;
+
 
 }

@@ -20,7 +20,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "MAP Coordinate Collection Model Object")
 @Table(name="map_coord_collection")
-public class Coord_Collection extends EntityBase {
+public class CoordCollection extends EntityBase {
 
 	@Id
 	private Integer _collection_key;

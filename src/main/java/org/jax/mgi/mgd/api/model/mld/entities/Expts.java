@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.mld.entities;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -10,8 +11,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.acc.entities.Accession;
+import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 
 import io.swagger.annotations.ApiModel;
@@ -40,4 +45,9 @@ public class Expts extends EntityBase {
 	@JoinColumn(name="_expt_key")
 	private Set<Hit> hits;
 	
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_expts_key", referencedColumnName="_object_key")
+	@Where(clause="_mgitype_key = 4 AND preferred = 1 AND _logicaldb_key = 1")
+	private Accession mgiAccessionId;
+
 }

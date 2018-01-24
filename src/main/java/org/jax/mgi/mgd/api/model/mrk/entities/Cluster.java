@@ -55,9 +55,9 @@ public class Cluster extends EntityBase {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	//@OneToMany(fetch=FetchType.EAGER)
-	//@JoinColumn(name="_cluster_key", referencedColumnName="_object_key")
-	//@Where(clause="_mgitype_key = 39")
-	//private Set<MGIProperty> properties;
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_object_key", referencedColumnName="_cluster_key")
+	@Where(clause="_mgitype_key = 39")
+	private Set<MGIProperty> properties;
 	
 }

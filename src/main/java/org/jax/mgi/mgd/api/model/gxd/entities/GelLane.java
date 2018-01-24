@@ -38,23 +38,23 @@ public class GelLane extends EntityBase {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_assay_key", referencedColumnName="_assay_key")
+	@JoinColumn(name="_assay_key")
 	private Assay assay;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_genotype_key", referencedColumnName="_genotype_key")
+	@JoinColumn(name="_genotype_key")
 	private Genotype genotype;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_gelrnatype_key", referencedColumnName="_gelrnatype_key")
+	@JoinColumn(name="_gelrnatype_key")
 	private GelRNAType gelRNAType;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_gelcontrol_key", referencedColumnName="_gelcontrol_key")
+	@JoinColumn(name="_gelcontrol_key")
 	private GelControl gelControl;
 	
 	@OneToMany(fetch=FetchType.EAGER)
-	@JoinColumn(name="_gellane_key", referencedColumnName="_gellane_key")
+	@JoinColumn(name="_gellane_key")
 	private Set<GelLaneStructure> structures;
 	
 }

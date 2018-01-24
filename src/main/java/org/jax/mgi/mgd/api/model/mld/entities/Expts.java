@@ -33,11 +33,11 @@ public class Expts extends EntityBase {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	@JoinColumn(name="_refs_key")
 	private Reference reference;
 	
 	@OneToMany(fetch=FetchType.EAGER)
-	@JoinColumn(name="_expt_key", referencedColumnName="_expt_key")
+	@JoinColumn(name="_expt_key")
 	private Set<Hit> hits;
 	
 }

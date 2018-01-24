@@ -85,8 +85,8 @@ public class HTExperiment extends EntityBase {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@OneToMany(fetch=FetchType.EAGER)	@JoinColumn(name="_experiment_key", referencedColumnName="_object_key")
-	@Where(clause="_mgitype_key = 42")
-	private Set<MGIProperty> properties;
+	//@OneToMany(fetch=FetchType.EAGER)	@JoinColumn(name="_experiment_key", referencedColumnName="_object_key")
+	//@Where(clause="_mgitype_key = 42")
+	//private Set<MGIProperty> properties;
 	
 }

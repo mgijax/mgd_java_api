@@ -85,10 +85,10 @@ public class Marker extends EntityBase {
 	@Where(clause="_mgitype_key = 2 AND preferred = 1 and _logicaldb_key = 1")
 	private Accession accessionID;
 
-	@OneToMany(fetch=FetchType.EAGER)
-	@JoinColumn(name="_marker_key", referencedColumnName="_object_key")
-	@Where(clause="_mgitype_key = 2 AND preferred = 1")
-	private Set<Accession> allAccessionIds;
+	//@OneToMany(fetch=FetchType.EAGER)
+	//@JoinColumn(name="_marker_key", referencedColumnName="_object_key")
+	//@Where(clause="_mgitype_key = 2 AND preferred = 1")
+	//private Set<Accession> allAccessionIds;
 	
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
@@ -119,20 +119,20 @@ public class Marker extends EntityBase {
 	)
 	private Set<Antibody> antibodies;
 
-	@Transient
-	public Set<Accession> getAccessionIdsByLogicalDb(LogicalDB db) {
-		return getAccessionIdsByLogicalDb(db.get_logicaldb_key());
-	}
+	//@Transient
+	//public Set<Accession> getAccessionIdsByLogicalDb(LogicalDB db) {
+	//	return getAccessionIdsByLogicalDb(db.get_logicaldb_key());
+	//}
 	
-	@Transient
-	public Set<Accession> getAccessionIdsByLogicalDb(Integer db_key) {
-		HashSet<Accession> set = new HashSet<Accession>();
-		for(Accession a: allAccessionIds) {
-			if(a.get_logicaldb_key() == db_key) {
-				set.add(a);
-			}
-		}
-		return set;
-	}
+	//@Transient
+	//public Set<Accession> getAccessionIdsByLogicalDb(Integer db_key) {
+	//	HashSet<Accession> set = new HashSet<Accession>();
+	//	for(Accession a: allAccessionIds) {
+	//		if(a.get_logicaldb_key() == db_key) {
+	//			set.add(a);
+	//		}
+	//	}
+	//	return set;
+	//}
 
 }

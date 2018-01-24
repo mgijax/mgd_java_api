@@ -36,11 +36,11 @@ public class Index extends EntityBase {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	@JoinColumn(name="_refs_key")
 	private Reference reference;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
+	@JoinColumn(name="_marker_key")
 	private Marker marker;
 	
 	@OneToOne(fetch=FetchType.EAGER)
@@ -62,6 +62,6 @@ public class Index extends EntityBase {
 	private User modifiedBy;
 	
 	@OneToMany(fetch=FetchType.EAGER)
-	@JoinColumn(name="_index_key", referencedColumnName="_index_key")
+	@JoinColumn(name="_index_key")
 	private Set<TheilerStage> stages;
 }

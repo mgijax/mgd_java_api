@@ -1,11 +1,13 @@
 package org.jax.mgi.mgd.api.model.gxd.entities;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -58,4 +60,8 @@ public class Index extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
+	
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_index_key", referencedColumnName="_index_key")
+	private Set<TheilerStage> stages;
 }

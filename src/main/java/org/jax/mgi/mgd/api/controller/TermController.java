@@ -8,14 +8,11 @@ import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.rest.interfaces.TermRESTInterface;
 import org.jax.mgi.mgd.api.service.TermService;
 import org.jax.mgi.mgd.api.util.SearchResults;
-import org.jboss.logging.Logger;
 
 public class TermController extends BaseController implements TermRESTInterface {
 
 	@Inject
 	private TermService termService;
-	
-	private Logger log = Logger.getLogger(getClass());
 
 	@Override
 	public Term create(String api_access_token, Term term) {

@@ -65,7 +65,7 @@ public class Cross extends EntityBase {
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_cross_key")
 	@OrderColumn(name="rowNumber")
-	private Set<Matrix> matrices;
+	private Set<CrossMatrix> matrices;
 	
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_cross_key")

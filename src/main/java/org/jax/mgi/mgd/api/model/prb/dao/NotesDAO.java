@@ -3,13 +3,13 @@ package org.jax.mgi.mgd.api.model.prb.dao;
 import javax.enterprise.context.RequestScoped;
 
 import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
-import org.jax.mgi.mgd.api.model.prb.entities.Notes;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeNote;
 
 @RequestScoped
-public class NotesDAO extends PostgresSQLDAO<Notes> {
+public class NotesDAO extends PostgresSQLDAO<ProbeNote> {
 
 	protected NotesDAO() {
-		super(Notes.class);
+		super(ProbeNote.class);
 	}
 
 

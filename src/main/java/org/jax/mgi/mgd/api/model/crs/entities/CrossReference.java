@@ -1,9 +1,7 @@
 package org.jax.mgi.mgd.api.model.crs.entities;
 
-import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -34,11 +32,4 @@ public class CrossReference extends EntityBase {
 	//@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
 	//private Reference reference;
 
-	@Getter @Setter
-	@Embeddable
-	public class CrossReferenceKey implements Serializable {
-		private Integer _cross_key;
-		private Integer _marker_key;
-		private Integer _refs_key;
-	}
 }

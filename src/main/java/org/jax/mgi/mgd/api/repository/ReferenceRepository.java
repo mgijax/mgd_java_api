@@ -81,7 +81,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		if (refs.items != null) {
 			// walking the references to do the translations individually, because I want a List,
 			// not an Iterable
-			
+
 			domains.items = new ArrayList<ReferenceDomain>();
 			for (Reference ref : refs.items) {
 				domains.items.add(translator.translate(ref));
@@ -118,7 +118,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		}
 		return history;
 	}
-	
+
 	/* set the given workflow_tag for all references identified in the list of keys
 	 */
 	public void updateInBulk(List<Integer> refsKeys, String workflow_tag, String workflow_tag_operation, User currentUser) throws FatalAPIException, APIException {
@@ -126,14 +126,14 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		if ((refsKeys == null) || (refsKeys.size() == 0) || (workflow_tag == null) || (workflow_tag.length() == 0)) {
 			return; 
 		}
-		
+
 		// if no workflow tag operation is specified, default to 'add'
 		if ((workflow_tag_operation == null) || workflow_tag_operation.equals("")) {
 			workflow_tag_operation = Constants.OP_ADD_WORKFLOW;
 		} else if (!workflow_tag_operation.equals(Constants.OP_ADD_WORKFLOW) && !workflow_tag_operation.equals(Constants.OP_REMOVE_WORKFLOW)) {
 			throw new FatalAPIException("Invalid workflow_tag_operation: " + workflow_tag_operation);
 		}
-		
+
 		/* for each reference:
 		 * 1. if the operation fails in a fatal manner, rethrow that exception immediately.
 		 * 2. if the operation fails in a non-fatal manner, wait briefly and try again up to maxRetries times.
@@ -143,7 +143,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 			if (reference != null) {
 				int retries = 0;
 				boolean succeeded = false;
-				
+
 				while (!succeeded) {
 					try {
 						if (workflow_tag_operation.equals(Constants.OP_ADD_WORKFLOW)) {
@@ -172,10 +172,10 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 			}
 		}
 	}
-	
+
 
 	/***--- (private) instance methods ---***/
-	
+
 	/* return a single Term matching the parameters encoded as a Map in the given JSON string
 	 */
 	private Term getTerm (String json) throws FatalAPIException {
@@ -194,19 +194,19 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 			throw new FatalAPIException("ReferenceRepository: Term search failed: " + e.toString());
 		}
 	}
-	
+
 	/* return a single Term matching the given vocabulary / term pair
 	 */
 	private Term getTermByTerm (Integer vocabKey, String term) throws FatalAPIException {
 		return getTerm("{\"vocab._vocab_key\" : " + vocabKey + ", \"term\" : \"" + term + "\"}");
 	}
-	
+
 	/* return a single Term matching the given vocabulary / abbreviation pair
 	 */
 	private Term getTermByAbbreviation (Integer vocabKey, String abbreviation) throws FatalAPIException {
 		return getTerm("{\"vocab._vocab_key\" : " + vocabKey + ", \"abbreviation\" : \"" + abbreviation + "\"}");
 	}
-	
+
 	/* retrieve the Reference object with the given primaryKey
 	 */
 	private Reference getReference(Integer primaryKey) throws FatalAPIException, APIException {
@@ -227,7 +227,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 	private void applyDomainChanges(Reference entity, ReferenceDomain domain, User currentUser) throws NonFatalAPIException, APIException {
 		// Note that we must have 'anyChanges' after the OR, otherwise short-circuit evaluation will only save
 		// the first section changed.
-		
+
 		boolean anyChanges = applyStatusChanges(entity, domain, currentUser);
 		anyChanges = applyTagChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyBasicFieldChanges(entity, domain, currentUser) || anyChanges;
@@ -248,28 +248,28 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		// abstract, and isReviewArticle flag
 
 		boolean anyChanges = false;
-		
+
 		// determine if the is_discard flag is set in the ReferenceDomain object
 		int rdDiscard = 0;
 		if ("1".equals(domain.is_discard) || ("Yes".equalsIgnoreCase(domain.is_discard))) {
 			rdDiscard = 1;
 		}
-		
+
 		// determine if the isReviewArticle flag is set in the ReferenceDomain object
 		int rdReview = 0;
 		if ("1".equals(domain.isReviewArticle) || ("Yes".equalsIgnoreCase(domain.isReviewArticle))) {
 			rdReview = 1;
 		}
-		
+
 		String refType = entity.getReferenceTypeTerm().getTerm();
-		
+
 		Integer year = null;
 		try {
 			year = Integer.parseInt(domain.year);
 		} catch (NumberFormatException p) {
 			throw new FatalAPIException("Year is not an integer: " + domain.year);
 		}
-		
+
 		// update this object's data to match what was passed in
 		if ((rdDiscard != entity.getIs_discard()) || (rdReview != entity.getIsReviewArticle())
 				|| !smartEqual(entity.getAuthors(), domain.authors)
@@ -282,8 +282,8 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 				|| !smartEqual(refType, domain.reference_type)
 				|| !smartEqual(entity.getPages(), domain.pages)
 				|| !smartEqual(entity.getRef_abstract(), domain.ref_abstract)
-			) {
-			
+				) {
+
 			if (domain.authors != null) {
 				Pattern pattern = Pattern.compile("([^;]+).*");		// any characters up to the first semicolon are the primary author
 				Matcher matcher = pattern.matcher(domain.authors);
@@ -320,7 +320,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		}
 		return a.equals(b);
 	}
-	
+
 	// remove any (optional) prefix from DOI ID
 	private String cleanDoiID(String doiID) {
 		// all DOI IDs must begin with "10.", but if not, just trust the user
@@ -350,7 +350,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		}
 		return pubmedID;
 	}
-	
+
 	/* apply ID changes from domain to entity for PubMed, DOI, and GO REF IDs
 	 */
 	private boolean applyAccessionIDChanges(Reference entity, ReferenceDomain domain, User currentUser) {
@@ -358,13 +358,13 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		// need to handle:  new ID for logical db, updated ID for logical db, deleted ID for logical db
 
 		// do any cleanup of DOI ID and PubMed ID first
-		
+
 		domain.doiid = cleanDoiID(domain.doiid);
 		domain.pubmedid = cleanPubMedID(domain.pubmedid);
-		
+
 		boolean anyChanges = false;
 		Pattern pattern = Pattern.compile("(.*?)([0-9]+)");		// any characters as a prefix (reluctant group), followed by one or more digits
-		
+
 		if (!smartEqual(entity.getDoiid(), domain.doiid)) {
 			String prefixPart = domain.doiid;					// defaults
 			Integer numericPart = null;
@@ -376,10 +376,10 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 					numericPart = Integer.parseInt(m.group(2));
 				}
 			}
-			
+
 			anyChanges = applyOneIDChange(entity, Constants.LDB_DOI, domain.doiid, prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, currentUser) || anyChanges;
 		}
-		
+
 		if (!smartEqual(entity.getPubmedid(), domain.pubmedid)) {
 			String prefixPart = domain.pubmedid;				// defaults
 			Integer numericPart = null;
@@ -391,10 +391,10 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 					numericPart = Integer.parseInt(m.group(2));
 				}
 			}
-			
+
 			anyChanges = applyOneIDChange(entity, Constants.LDB_PUBMED, domain.pubmedid, prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, currentUser) || anyChanges;
 		}
-		
+
 		if (!smartEqual(entity.getGorefid(), domain.gorefid)) {
 			String prefixPart = domain.gorefid;					// defaults
 			Integer numericPart = null;
@@ -406,7 +406,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 					numericPart = Integer.parseInt(m.group(2));
 				}
 			}
-			
+
 			anyChanges = applyOneIDChange(entity, Constants.LDB_GOREF, domain.gorefid, prefixPart, numericPart, Constants.SECONDARY, Constants.PRIVATE, currentUser) || anyChanges;
 		}
 		return anyChanges;
@@ -418,7 +418,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 	private boolean applyOneIDChange(Reference entity, Integer ldb, String accID, String prefixPart, Integer numericPart, Integer preferred, Integer isPrivate, User currentUser) {
 		// first parameter is required; bail out if it is null
 		if (ldb == null) { return false; }
-		
+
 		// First, need to find any existing AccessionID object for this logical database.
 
 		List<Accession> ids = entity.getAccessionIDs();
@@ -430,7 +430,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 				break;
 			}
 		}
-		
+
 		// If we had a previous ID for this logical database, we either need to modify it or delete it.
 		if (idPos >= 0) {
 			// Passing in a null ID indicates that any existing ID should be removed.
@@ -449,9 +449,9 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 			}
 		} else {
 			// We didn't find an existing ID for this logical database, so we need to add one.
-			
+
 			Date creation = new Date();
-			
+
 			Accession myID = new Accession(
 					referenceDAO.getNextAccessionKey(),
 					accID,
@@ -467,8 +467,8 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 					currentUser,
 					currentUser,
 					new HashSet<Reference>()
-			);
-			
+					);
+
 			referenceDAO.persist(myID);
 		}
 		return true;
@@ -479,35 +479,35 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 	private boolean applyNoteChanges(Reference entity, ReferenceDomain domain, User currentUser) {
 		// at most one note per reference
 		// need to handle:  new note, updated note, deleted note
-		
+
 		boolean anyChanges = false;
 		boolean hadNote = entity.getNotes().size() > 0;
 		boolean willHaveNote = (domain.referencenote != null) && (domain.referencenote.length() > 0);
-		
+
 		if (hadNote && willHaveNote) {
 			// already have a note and will continue to have a note; just need to apply any difference
-			
+
 			ReferenceNote note = entity.getNotes().get(0);
 			if (!smartEqual(note.getNote(), domain.referencenote)) {
 				note.setNote(domain.referencenote);
 				anyChanges = true;
 			}
-			
+
 		} else if (hadNote) {
 			// had a note previously, but it needs to be deleted, because reference now has no note
-			
+
 			referenceDAO.remove(entity.getNotes().get(0));
 			anyChanges = true;
-			
+
 		} else if (willHaveNote) {
 			// did not have a note previously, but now need to create one
-			
+
 			ReferenceNote note = new ReferenceNote();
 			note.set_refs_key(entity.get_refs_key());
 			note.setNote(domain.referencenote);
 			note.setCreation_date(new Date());
 			note.setModification_date(note.getCreation_date()); 
-			
+
 			referenceDAO.persist(note);
 			entity.getNotes().add(note);
 			anyChanges = true;
@@ -524,15 +524,15 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		boolean anyChanges = false;
 		boolean wasBook = "Book".equalsIgnoreCase(entity.getReferenceType());
 		boolean willBeBook = "Book".equalsIgnoreCase(domain.reference_type);
-		
+
 		// If this reference is already a book and will continue to be a book, need to apply
 		// any changes to the fields of the existing book data.
 		if (wasBook && willBeBook && (entity.getBookList().size() > 0)) {
 			ReferenceBook book = entity.getBookList().get(0);
 
 			if (!smartEqual(book.getBook_author(), domain.book_author) || !smartEqual(book.getBook_title(), domain.book_title) || 
-				!smartEqual(book.getPlace(), domain.place) || !smartEqual(book.getPublisher(), domain.publisher) ||
-				!smartEqual(book.getSeries_edition(), domain.series_edition)) {
+					!smartEqual(book.getPlace(), domain.place) || !smartEqual(book.getPublisher(), domain.publisher) ||
+					!smartEqual(book.getSeries_edition(), domain.series_edition)) {
 
 				book.setBook_author(domain.book_author);
 				book.setBook_title(domain.book_title);
@@ -542,16 +542,16 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 				book.setModification_date(new Date());
 				anyChanges = true;
 			}
-			
+
 		} else if (wasBook && (entity.getBookList().size() > 0)) {
 			// This reference was a book previously, but its type has changed, so need to delete book-specific data.
 
 			referenceDAO.remove(entity.getBookList().get(0));
 			anyChanges = true;
-			
+
 		} else if (willBeBook) {
 			// This reference was not a book previously, but now will be, so we need to add book-specific data.
-			
+
 			ReferenceBook book = new ReferenceBook();
 			book.set_refs_key(entity.get_refs_key());
 			book.setBook_author(domain.book_author);
@@ -560,7 +560,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 			book.setPublisher(domain.publisher);
 			book.setCreation_date(new Date());
 			book.setModification_date(book.getCreation_date()); 
-			
+
 			referenceDAO.persist(book);
 			entity.getBookList().add(book);
 			anyChanges = true;
@@ -573,24 +573,24 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 	private boolean applyWorkflowDataChanges(Reference entity, ReferenceDomain domain, User currentUser) throws APIException {
 		// at most one set of workflow data per reference
 		// need to handle:  updated workflow data, new workflow data -- (no deletions)
-		
+
 		boolean anyChanges = false;
 		ReferenceWorkflowData myWD = entity.getWorkflowData();
-		
+
 		if (myWD != null) {
 			// Compare fields and update if needed.  We do not update the extracted text and the
 			// has-PDF flag, as those are updated by other processes.
-			
+
 			if (!smartEqual(myWD.getSupplemental(), domain.has_supplemental)
-				|| !smartEqual(myWD.getLink_supplemental(), domain.link_to_supplemental)) {
-				
+					|| !smartEqual(myWD.getLink_supplemental(), domain.link_to_supplemental)) {
+
 				myWD.setSupplementalTerm(getTermByTerm(Constants.VOC_SUPPLEMENTAL, domain.has_supplemental));
 				myWD.setLink_supplemental(domain.link_to_supplemental);
 				myWD.setModifiedByUser(currentUser);
 				myWD.setModification_date(new Date());
 				anyChanges = true;
 			}
-			
+
 		} else {
 			// For some reason, no workflow data record exists.  So, create one.
 
@@ -604,7 +604,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 			myWD.setModifiedByUser(currentUser);
 			myWD.setCreation_date(new Date());
 			myWD.setModification_date(myWD.getCreation_date()); 
-			
+
 			referenceDAO.persist(myWD);
 			entity.setWorkflowData(myWD);
 			anyChanges = true;
@@ -622,7 +622,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 		if ((entity.getWorkflowTagsAsStrings().size() == 0) && (domain.workflow_tags.size() == 0)) {
 			return false;
 		}
-		
+
 		// set of tags specified in domain object -- potentially to add to object
 		Set<String> toAdd = new HashSet<String>();
 		for (String rdTag : domain.workflow_tags) {
@@ -631,10 +631,10 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 
 		// list of tags that need to be removed from this object
 		List<ReferenceWorkflowTag> toDelete = new ArrayList<ReferenceWorkflowTag>();
-		
+
 		// Now we need to diff the set of tags we already have and the set of tags to potentially add. Anything
 		// left in toAdd will need to be added as a new tag, and anything in toDelete will need to be removed.
-		
+
 		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
 			String myTag = refTag.getTag().getTerm();
 
@@ -647,21 +647,21 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 				toDelete.add(refTag);
 			}
 		}
-		
+
 		// remove defunct tags
-		
+
 		for (ReferenceWorkflowTag rwTag : toDelete) {
 			// would like to do this here, but it fails due to a null _refs_key in the table:
 			//		this.workflowTags.remove(rwTag);
 			referenceDAO.remove(rwTag);
 		}
-		
+
 		// add new tags (use shared method, as this will be useful when adding tags to batches of references)
 
 		for (String rdTag : toAdd) {
 			addTag(entity, rdTag, currentUser);
 		}
-		
+
 		return (toDelete.size() > 0) || (toAdd.size() > 0);
 	}
 
@@ -677,12 +677,15 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 				return;
 			}
 		}
-		 
+
 		// need to find the term of the tag, wrap it in an association, persist the association, and
 		// add it to the workflow tags for this Reference
-		
+
 		Term tagTerm = getTermByTerm(Constants.VOC_WORKFLOW_TAGS, rdTag);
 		if (tagTerm != null) {
+			// This if statement always evaluates to true?
+			// getWorkflowTags contains ReferenceWorkflowData's however the lookup is for a Term?
+			// was this the intention?
 			if (!entity.getWorkflowTags().contains(tagTerm)) {
 				ReferenceWorkflowTag rwTag = new ReferenceWorkflowTag();
 				rwTag.set_assoc_key(referenceDAO.getNextWorkflowTagKey());
@@ -697,18 +700,18 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 				} catch (Exception e) {
 					throw new NonFatalAPIException("Cannot add tag: " + e.toString());
 				}
-				
+
 				entity.getWorkflowTags().add(rwTag);
 				entity.setModificationInfo(currentUser);
 			}
 		}
 	}
-	
+
 	/* shared method for removing a workflow tag from a Reference (no-op if this ref doesn't have the tag)
 	 */
 	public void removeTag(Reference entity, String rdTag, User currentUser) throws APIException {
 		if (entity.getWorkflowTags() == null) { return; }
-		
+
 		String lowerTag = rdTag.toLowerCase().trim();
 		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
 			if (lowerTag.equals(refTag.getTag().getTerm().toLowerCase()) ) {
@@ -718,7 +721,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 			}
 		}
 	}
-	
+
 	/* convenience method, used by applyStatusChanges() to reduce redundant code in setting workflow
 	 * group statuses.  returns true if an update was made, false if no change.  persists any changes
 	 * to the database.
@@ -729,7 +732,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 				((currentStatus == null) && (newStatus == null)) ) {
 			return false;
 		}
-		
+
 		// At this point, we know we have a status update.  If there was an existing record, we need
 		// to flag it as not current.
 		if (currentStatus != null) {
@@ -740,10 +743,10 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 				}
 			}
 		}
-		
+
 		// Now we need to add a new status record for this change -- and need to persist this new object to the
 		// database explicitly, before the whole reference gets persisted later on.
-		
+
 		ReferenceWorkflowStatus newRws = new ReferenceWorkflowStatus();
 		newRws.set_assoc_key(referenceDAO.getNextWorkflowStatusKey());
 		newRws.set_refs_key(entity.get_refs_key());
@@ -764,7 +767,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 
 		return true;
 	}
-	
+
 	/* handle applying any status changes for workflow groups.  If a group in 'domain' has a different status
 	 * from what's in the entity, we need:
 	 * 		a. the old status to be changed so isCurrent = 0, and
@@ -775,19 +778,19 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 	private boolean applyStatusChanges(Reference entity, ReferenceDomain domain, User currentUser) throws NonFatalAPIException, APIException {
 		// note that we need to put 'anyChanges' last for each OR pair, otherwise short-circuit evaluation
 		// will only let the first change go through and the rest will not execute.
-		
+
 		boolean anyChanges = updateStatus(entity, Constants.WG_AP, entity.getStatus(Constants.WG_AP), domain.ap_status, currentUser);
 		anyChanges = updateStatus(entity, Constants.WG_GO, entity.getStatus(Constants.WG_GO), domain.go_status, currentUser) || anyChanges;
 		anyChanges = updateStatus(entity, Constants.WG_GXD, entity.getStatus(Constants.WG_GXD), domain.gxd_status, currentUser) || anyChanges;
 		anyChanges = updateStatus(entity, Constants.WG_QTL, entity.getStatus(Constants.WG_QTL), domain.qtl_status, currentUser) || anyChanges;
 		anyChanges = updateStatus(entity, Constants.WG_TUMOR, entity.getStatus(Constants.WG_TUMOR), domain.tumor_status, currentUser) || anyChanges;
-		
+
 		if (anyChanges) {
 			entity.clearWorkflowStatusCache();
-			
+
 			// if we had a status change, if at least one status is not "Not Routed", and if the reference
 			// doesn't already have a J#, we need to create one
-			
+
 			if (entity.getJnumid() == null) {
 				boolean anyNotRouted = false;
 				for (String workgroup : Constants.WG_ALL) {
@@ -797,7 +800,7 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 						break;
 					}
 				}
-				
+
 				if (anyNotRouted) {
 					try {
 						log.info("Assigning new J: number");

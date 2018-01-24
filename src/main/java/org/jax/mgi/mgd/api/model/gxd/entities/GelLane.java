@@ -1,11 +1,13 @@
 package org.jax.mgi.mgd.api.model.gxd.entities;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -50,5 +52,9 @@ public class GelLane extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_gelcontrol_key", referencedColumnName="_gelcontrol_key")
 	private GelControl gelControl;
+	
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_gellane_key", referencedColumnName="_gellane_key")
+	private Set<GelLaneStructure> structures;
 	
 }

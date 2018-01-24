@@ -1,9 +1,7 @@
 package org.jax.mgi.mgd.api.model.mrk.entities;
 
-import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -25,11 +23,5 @@ public class Offset extends EntityBase {
 	private Integer cmOffset;
 	private Date creation_date;
 	private Date modification_date;
-	
-	@Getter @Setter
-	@Embeddable
-	public class OffsetKey implements Serializable {
-		private Integer _marker_key;
-		private Integer source;
-	}
+
 }

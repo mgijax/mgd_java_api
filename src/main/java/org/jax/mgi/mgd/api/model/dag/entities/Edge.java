@@ -45,6 +45,6 @@ public class Edge extends EntityBase {
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_label_key", referencedColumnName="_label_key")
-	private Label label;
+	private DagLabel label;
 
 }

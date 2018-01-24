@@ -1,4 +1,4 @@
-package org.jax.mgi.mgd.api.model.prb.entities;
+package org.jax.mgi.mgd.api.model.mrk.entities;
 
 import java.util.Date;
 
@@ -14,12 +14,12 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "PRBNotes Model Object")
-@Table(name="prb_notes")
-public class Notes extends EntityBase {
+@ApiModel(value = "MRKNotes Model Object")
+@Table(name="mrk_notes")
+public class MarkerNote extends EntityBase {
 
 	@Id
-	private Integer _probe_key;
+	private Integer _marker_key;
 	private String note;
 	private Date creation_date;
 	private Date modification_date;

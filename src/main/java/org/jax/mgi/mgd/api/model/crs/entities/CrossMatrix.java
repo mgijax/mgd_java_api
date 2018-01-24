@@ -1,9 +1,7 @@
 package org.jax.mgi.mgd.api.model.crs.entities;
 
-import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,10 +20,10 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Cross Matrix Model Object")
 @Table(name="crs_matrix")
-public class Matrix extends EntityBase {
+public class CrossMatrix extends EntityBase {
 
 	@EmbeddedId
-	private MatrixKey key;
+	private CrossMatrixKey key;
 	private String otherSymbol;
 	private String chromosome;
 	private String notes;
@@ -36,10 +34,4 @@ public class Matrix extends EntityBase {
 	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
 	private Marker marker;
 	
-	@Getter @Setter
-	@Embeddable
-	public class MatrixKey implements Serializable {
-		private Integer _cross_key;
-		private Integer rowNumber;
-	}
 }

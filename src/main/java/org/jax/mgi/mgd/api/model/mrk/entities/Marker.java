@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model.mrk.entities;
 
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -78,10 +77,10 @@ public class Marker extends EntityBase {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
-	@JsonIgnore
-	@OneToMany(mappedBy="_object_key")
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_marker_key", referencedColumnName="_object_key")
 	@Where(clause="_mgitype_key = 2 AND preferred = 1")
-	private List<Accession> accessionIDs;
+	private Accession accessionID;
 
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")

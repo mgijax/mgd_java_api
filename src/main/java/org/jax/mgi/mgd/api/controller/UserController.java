@@ -8,14 +8,11 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.rest.interfaces.UserRESTInterface;
 import org.jax.mgi.mgd.api.service.UserService;
 import org.jax.mgi.mgd.api.util.SearchResults;
-import org.jboss.logging.Logger;
 
 public class UserController extends BaseController implements UserRESTInterface {
 
 	@Inject
 	private UserService userService;
-	
-	private Logger log = Logger.getLogger(getClass());
 
 	@Override
 	public User create(String api_access_token, User user) {

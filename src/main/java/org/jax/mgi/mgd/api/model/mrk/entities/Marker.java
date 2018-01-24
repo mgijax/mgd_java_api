@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.mrk.entities;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -11,10 +12,12 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
+import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.model.gxd.entities.Antibody;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -79,9 +82,14 @@ public class Marker extends EntityBase {
 
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_marker_key", referencedColumnName="_object_key")
-	@Where(clause="_mgitype_key = 2 AND preferred = 1")
+	@Where(clause="_mgitype_key = 2 AND preferred = 1 and _logicaldb_key = 1")
 	private Accession accessionID;
 
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_marker_key", referencedColumnName="_object_key")
+	@Where(clause="_mgitype_key = 2 AND preferred = 1")
+	private Set<Accession> allAccessionIds;
+	
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
 	private Set<Offset> offsets;
@@ -110,5 +118,21 @@ public class Marker extends EntityBase {
 		inverseJoinColumns = @JoinColumn(name = "_antibody_key")
 	)
 	private Set<Antibody> antibodies;
+
+	@Transient
+	public Set<Accession> getAccessionIdsByLogicalDb(LogicalDB db) {
+		return getAccessionIdsByLogicalDb(db.get_logicaldb_key());
+	}
+	
+	@Transient
+	public Set<Accession> getAccessionIdsByLogicalDb(Integer db_key) {
+		HashSet<Accession> set = new HashSet<Accession>();
+		for(Accession a: allAccessionIds) {
+			if(a.get_logicaldb_key() == db_key) {
+				set.add(a);
+			}
+		}
+		return set;
+	}
 
 }

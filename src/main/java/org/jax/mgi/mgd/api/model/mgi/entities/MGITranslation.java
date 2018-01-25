@@ -10,7 +10,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
-import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 import org.jax.mgi.mgd.api.model.voc.entities.Vocabulary;
 
 import io.swagger.annotations.ApiModel;
@@ -19,28 +18,22 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Translation Type Object")
-@Table(name="mgi_translationtype")
-public class TranslationType extends EntityBase {
+@ApiModel(value = "MGI Translation  Object")
+@Table(name="mgi_translation")
+public class MGITranslation extends EntityBase {
 	@Id
-	private Integer _translationType_key;
-	private String translationType;
-	private String compressionChars;
-	private Integer regularExpression;
+	private Integer _translation_key;
+	private String badName;
+	private Integer sequenceNum;
 	private Date creation_date;
 	private Date modification_date;
 
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_mgitype_key", referencedColumnName="_mgitype_key")
-	private MGIType mgiType;
+	@JoinColumn(name="_translationtype_key")
+	private MGITranslationType translationType;
 	
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
-	private Vocabulary vocab;
-	
-	//@JsonIgnore
+		//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;

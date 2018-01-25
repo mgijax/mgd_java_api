@@ -24,6 +24,7 @@ public class AnnotHeader extends EntityBase {
 
 	@Id
 	private Integer _annotHeader_key;
+	private Integer _object_key;
 	private Integer sequenceNum;
 	private Integer isNormal;
 	private Date approval_date;

@@ -27,6 +27,7 @@ public class MGISetMember extends EntityBase {
 	@Id
 	private Integer _setmember_key;
 	
+	private Integer _object_key;
 	private String label;
 	private Integer sequenceNum;
 	private Date creation_date;
@@ -58,7 +59,7 @@ public class MGISetMember extends EntityBase {
 	
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_object_key", referencedColumnName="_actualdb_key", insertable=false, updatable=false)
-	@Where(clause="mgiSet._mgitype_key = 15")
+	@Where(clause="mgiSet._mgitype_key = 16")
 	private ActualDB actualDb;
 	
 //	@OneToOne(fetch=FetchType.EAGER)

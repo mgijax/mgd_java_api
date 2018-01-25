@@ -17,22 +17,18 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "MGI Translation  Object")
-@Table(name="mgi_translation")
-public class MGITranslation extends EntityBase {
+@ApiModel(value = "MGISet Member Object")
+@Table(name="mgi_setmember")
+public class MGISetMember extends EntityBase {
 	@Id
-	private Integer _translation_key;
-	private String badName;
+	private Integer _setmember_key;
+	
+	private String label;
 	private Integer sequenceNum;
 	private Date creation_date;
 	private Date modification_date;
-
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_translationtype_key")
-	private MGITranslationType translationType;
 	
-		//@JsonIgnore
+	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
@@ -41,4 +37,9 @@ public class MGITranslation extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
+	
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_set_key")
+	private MGISet mgiSet;
+
 }

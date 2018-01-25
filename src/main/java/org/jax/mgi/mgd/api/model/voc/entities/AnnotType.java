@@ -1,11 +1,13 @@
 package org.jax.mgi.mgd.api.model.voc.entities;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -47,4 +49,8 @@ public class AnnotType extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_qualifiervocab_key", referencedColumnName="_vocab_key")
 	private Vocabulary qualifierVocab;
+	
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_anottype_key", referencedColumnName="_annottype_key")
+	private Set<Annotation> annotations;
 }

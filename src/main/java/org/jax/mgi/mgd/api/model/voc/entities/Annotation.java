@@ -1,4 +1,4 @@
-package org.jax.mgi.mgd.api.model.mgi.entities;
+package org.jax.mgi.mgd.api.model.voc.entities;
 
 import java.util.Date;
 
@@ -17,28 +17,28 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "MGI Translation  Object")
-@Table(name="mgi_translation")
-public class MGITranslation extends EntityBase {
+@ApiModel(value = "Annotation Model Object")
+@Table(name="voc_annot")
+public class Annotation extends EntityBase {
+
 	@Id
-	private Integer _translation_key;
-	private String badName;
-	private Integer sequenceNum;
+	private Integer _annot_key;
 	private Date creation_date;
 	private Date modification_date;
-
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_translationtype_key")
-	private MGITranslationType translationType;
 	
-		//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
-	private User createdBy;
-
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
-	private User modifiedBy;
+	@JoinColumn(name="_annottype_key", referencedColumnName="_annottype_key")
+	private AnnotType annotType;
+	
+	//@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_term_key", referencedColumnName="_term_key")
+	private Term term;
+	
+	//@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_qualifier_key", referencedColumnName="_term_key")
+	private Term qualifier;
+	
 }

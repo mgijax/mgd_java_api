@@ -18,6 +18,7 @@ import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
+import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -81,5 +82,8 @@ public class Term extends EntityBase {
 		}
 		return set;
 	}
-
+	
+	@OneToMany(fetch=FetchType.EAGER)	@JoinColumn(name="_object_key", referencedColumnName="_term_key")
+	@Where(clause="_mgitype_key = 13")
+	private Set<MGISynonym> synonyms;
 }

@@ -22,7 +22,7 @@ import lombok.Setter;
 @Getter @Setter
 @Entity
 @ApiModel(value = "MGI Translation Type Object")
-@Table(name="mgitranslationtype")
+@Table(name="mgi_translationtype")
 public class MGITranslationType extends EntityBase {
 	@Id
 	private Integer _translationType_key;

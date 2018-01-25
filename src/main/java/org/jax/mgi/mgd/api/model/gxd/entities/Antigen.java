@@ -9,7 +9,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.prb.entities.Source;
 
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -47,4 +49,10 @@ public class Antigen extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
+	
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_antigen_key", referencedColumnName="_object_key")
+	@Where(clause="_mgitype_key = 7 AND preferred = 1 AND _logicaldb_key = 1")
+	private Accession mgiAccessionId;
+
 }

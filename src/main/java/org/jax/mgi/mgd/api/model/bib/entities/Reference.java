@@ -45,7 +45,6 @@ public class Reference extends EntityBase {
 	@Transient
 	private Logger log = Logger.getLogger(getClass());
 
-
 	@Id
 	@Column(name="_Refs_key")
 	private Integer _refs_key;

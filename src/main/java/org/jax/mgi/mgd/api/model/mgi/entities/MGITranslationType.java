@@ -13,10 +13,7 @@ import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
-import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.voc.entities.Vocabulary;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -25,7 +22,7 @@ import lombok.Setter;
 @Getter @Setter
 @Entity
 @ApiModel(value = "MGI Translation Type Object")
-@Table(name="mgitranslationtype")
+@Table(name="mgi_translationtype")
 public class MGITranslationType extends EntityBase {
 	@Id
 	private Integer _translationType_key;

@@ -137,11 +137,13 @@ public class Marker extends EntityBase {
 		return set;
 	}
 	
-	@OneToMany(fetch=FetchType.EAGER)	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	@Where(clause="_mgitype_key = 2")
 	private Set<CoordFeature> features;
 
-	@OneToMany(fetch=FetchType.EAGER)	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	@Where(clause="_mgitype_key = 2")
 	private Set<MGISynonym> synonyms;
 }

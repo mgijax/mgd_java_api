@@ -9,7 +9,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.acc.entities.ActualDB;
+import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -42,4 +46,24 @@ public class MGISetMember extends EntityBase {
 	@JoinColumn(name="_set_key")
 	private MGISet mgiSet;
 
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
+	@Where(clause="mgiSet._mgitype_key = 13")
+	private Term term;
+	
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_object_key", referencedColumnName="_logicaldb_key", insertable=false, updatable=false)
+	@Where(clause="mgiSet._mgitype_key = 15")
+	private LogicalDB logicalDb;
+	
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_object_key", referencedColumnName="_actualdb_key", insertable=false, updatable=false)
+	@Where(clause="mgiSet._mgitype_key = 15")
+	private ActualDB actualDb;
+	
+//	@OneToOne(fetch=FetchType.EAGER)
+//	@JoinColumn(name="_object_key", referencedColumnName="_term_key")
+//	@Where(clause="mgiSet._mgitype_key = 34")
+//	private MGIStatistic stat;
+	
 }

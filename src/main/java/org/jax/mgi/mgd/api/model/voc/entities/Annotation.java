@@ -28,12 +28,12 @@ public class Annotation extends EntityBase {
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_annottype_key", referencedColumnName="_annottype_key")
+	@JoinColumn(name="_annottype_key")
 	private AnnotType annotType;
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_term_key", referencedColumnName="_term_key")
+	@JoinColumn(name="_term_key")
 	private Term term;
 	
 	//@JsonIgnore

@@ -1,4 +1,4 @@
-package org.jax.mgi.mgd.api.model.voc.entities;
+package org.jax.mgi.mgd.api.model.mrk.entities;
 
 import java.util.Date;
 
@@ -10,8 +10,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
-import org.jax.mgi.mgd.api.model.gxd.entities.TheilerStage;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -19,37 +20,30 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Term EMAPS Model Object")
-@Table(name="voc_term_emaps")
-public class Term_EMAPS extends EntityBase {
+@ApiModel(value = "GO_Tracking Model Object")
+@Table(name="go_tracking")
+public class GOTracking extends EntityBase {
 
 	@Id
-	private Integer _Term_key;
+	private Integer _marker_key;
+	private String isReferenceGene;
+	private Date completion_date;
 	private Date creation_date;
 	private Date modification_date;
 	
-	//@JsonIgnore
+	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_stage_key", referencedColumnName="_stage_key")
-	private TheilerStage stage;
-	
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_defaultparent_key", referencedColumnName="_term_key")
-	private Term defaultParent;
-	
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_EMAPA_Term_key", referencedColumnName="_term_key")
-	private Term emapaTerm;
-	
-	//@JsonIgnore
+	@JoinColumn(name="_completedby_key", referencedColumnName="_user_key")
+	private User completedBy;
+
+	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
-	//@JsonIgnore
+	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
+
 }

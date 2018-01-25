@@ -40,5 +40,5 @@ public class Summary extends EntityBase {
 	
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_risummary_key", referencedColumnName="_risummary_key")
-	private Set<SummaryExperimentReference> riSummaryExperiments;
+	private Set<SummaryExptRef> riSummaryExperiments;
 }

@@ -14,13 +14,16 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "MLD Assay Types Object")
-@Table(name="mld_assay_types")
-public class Assay_Types extends EntityBase {
-	@Id
-	private Integer _assay_Type_key;
-	private String description;
-		private Date creation_date;
-	private Date modification_date;
+@ApiModel(value = "FISH_Region Model Object")
+@Table(name="mld_fish_region")
+public class FISHRegion extends EntityBase {
 
+	@Id
+        private Integer _expt_key;
+        private Integer sequenceNum;
+        private String region;
+        private Integer totalSingle;
+        private Integer totalDouble;
+	private Date creation_date;
+	private Date modification_date;
 }

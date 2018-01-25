@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @Embeddable
-public class SummaryExperimentReferenceKey implements Serializable {
+public class SummaryExptRefKey implements Serializable {
 	private Integer _risummary_key;
 	private Integer _expt_key;
 }

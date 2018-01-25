@@ -6,7 +6,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;	
-import org.jax.mgi.mgd.api.model.voc.entities.Term_EMAPS;
+import org.jax.mgi.mgd.api.model.voc.entities.TermEMAPS;
 
 import io.swagger.annotations.Api;
 
@@ -14,7 +14,7 @@ import io.swagger.annotations.Api;
 @Api(value = "Vocabulary Term EMAPS Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface Term_EMAPSRESTInterface extends RESTInterface<Term_EMAPS> {
+public interface TermEMAPSRESTInterface extends RESTInterface<TermEMAPS> {
 
 
 }

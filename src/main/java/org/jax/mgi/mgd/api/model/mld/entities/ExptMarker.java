@@ -22,7 +22,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Expt_Marker Model Object")
 @Table(name="mld_expt_marker")
-public class Expt_Marker extends EntityBase {
+public class ExptMarker extends EntityBase {
 
 	@Id
 	private Integer _expt_key;

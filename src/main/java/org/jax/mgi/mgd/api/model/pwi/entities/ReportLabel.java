@@ -14,7 +14,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Report_Label Model Object")
 @Table(name="pwi_report_label")
-public class Report_Label extends EntityBase {
+public class ReportLabel extends EntityBase {
 
 	@Id
 	private Integer id;

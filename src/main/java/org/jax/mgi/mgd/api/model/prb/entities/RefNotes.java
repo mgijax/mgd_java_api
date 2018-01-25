@@ -16,7 +16,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "PRBRef_Notes Model Object")
 @Table(name="prb_ref_notes")
-public class Ref_Notes extends EntityBase {
+public class RefNotes extends EntityBase {
 
 	@Id
 	private Integer _reference_key;

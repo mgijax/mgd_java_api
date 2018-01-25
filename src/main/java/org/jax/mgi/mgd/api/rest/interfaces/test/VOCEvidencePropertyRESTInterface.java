@@ -6,7 +6,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;	
-import org.jax.mgi.mgd.api.model.voc.entities.Evidence_Property;
+import org.jax.mgi.mgd.api.model.voc.entities.EvidenceProperty;
 
 import io.swagger.annotations.Api;
 
@@ -14,7 +14,7 @@ import io.swagger.annotations.Api;
 @Api(value = "Evidence Property Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface Evidence_PropertyRESTInterface extends RESTInterface<Evidence_Property> {
+public interface VOCEvidencePropertyRESTInterface extends RESTInterface<EvidenceProperty> {
 
 
 }

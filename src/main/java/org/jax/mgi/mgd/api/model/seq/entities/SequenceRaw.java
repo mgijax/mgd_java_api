@@ -20,7 +20,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Sequence_Raw Model Object")
 @Table(name="seq_sequence_raw")
-public class Sequence_Raw extends EntityBase {
+public class SequenceRaw extends EntityBase {
 
 	@Id
 	private Integer _sequence_key;

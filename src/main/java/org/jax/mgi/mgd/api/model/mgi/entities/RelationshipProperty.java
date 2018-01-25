@@ -1,4 +1,4 @@
-package org.jax.mgi.mgd.api.model.voc.entities;
+package org.jax.mgi.mgd.api.model.mgi.entities;
 
 import java.util.Date;
 
@@ -10,7 +10,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
-import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -18,27 +18,25 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Evidence Property Model Object")
-@Table(name="voc_evidence_property")
-public class Evidence_Property extends EntityBase {
-
+@ApiModel(value = "Relationship Property Object")
+@Table(name="mgi_relationship_property")
+public class RelationshipProperty extends EntityBase {
 	@Id
-	private Integer _evidenceProperty_key;
-	private Integer stanza;
-	private Integer sequenceNum;
+	private Integer _relationship_Property_key;
 	private String value;
+	private Integer sequenceNum;
 	private Date creation_date;
 	private Date modification_date;
+
+	//@JsonIgnore
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_relationship_key", referencedColumnName="_relationship_key")
+	private Relationship relationship;
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_annotevidence_key", referencedColumnName="_annotevidence_key")
-	private Evidence evidence;
-	
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_propertyterm_key", referencedColumnName="_term_key")
-	private Term propertyTerm;
+	@JoinColumn(name="_propertyname_key", referencedColumnName="_term_key")
+	private Term propertyName;
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)

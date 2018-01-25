@@ -5,16 +5,16 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.mgi.entities.Relationship_Property;
+import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipCategory;
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
 
-@Path("/relationship_property")
-@Api(value = "Relationship Property Endpoints")
+@Path("/relationship_category")
+@Api(value = "Relationship Category Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface Relationship_PropertyRESTInterface extends RESTInterface<Relationship_Property> {
+public interface RelationshipCategoryRESTInterface extends RESTInterface<RelationshipCategory> {
 
 
 }

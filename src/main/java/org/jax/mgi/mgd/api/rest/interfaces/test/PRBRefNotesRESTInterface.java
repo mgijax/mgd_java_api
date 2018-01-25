@@ -5,16 +5,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.mgi.entities.Relationship_Category;
+import org.jax.mgi.mgd.api.model.prb.entities.RefNotes;
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
 
-@Path("/relationship_category")
-@Api(value = "Relationship Category Endpoints")
+@Path("/prbref_notes")
+@Api(value = "PRBRef_Notes Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface Relationship_CategoryRESTInterface extends RESTInterface<Relationship_Category> {
-
+public interface PRBRefNotesRESTInterface extends RESTInterface<RefNotes> {
 
 }

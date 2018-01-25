@@ -22,7 +22,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Relationship Category Object")
 @Table(name="mgi_relationship_category")
-public class Relationship_Category extends EntityBase {
+public class RelationshipCategory extends EntityBase {
 	@Id
 	private Integer _category_key;
 	private String name;

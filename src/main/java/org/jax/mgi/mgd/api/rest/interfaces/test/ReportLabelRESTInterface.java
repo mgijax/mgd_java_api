@@ -5,15 +5,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.prb.entities.Ref_Notes;
+import org.jax.mgi.mgd.api.model.pwi.entities.ReportLabel;
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
 
-@Path("/prbref_notes")
-@Api(value = "PRBRef_Notes Endpoints")
+@Path("/report_label")
+@Api(value = "Report_Label Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface PRBRef_NotesRESTInterface extends RESTInterface<Ref_Notes> {
+public interface ReportLabelRESTInterface extends RESTInterface<ReportLabel> {
 
 }

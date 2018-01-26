@@ -16,7 +16,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "GelUnits Model Object")
 @Table(name="gxd_gelunits")
-public class GelUnits extends EntityBase {
+public class GelUnit extends EntityBase {
 
 	@Id
 	private Integer _gelunits_key;

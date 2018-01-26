@@ -5,7 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.dag.entities.Node;
+import org.jax.mgi.mgd.api.model.dag.entities.DagNode;
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
@@ -14,7 +14,7 @@ import io.swagger.annotations.Api;
 @Api(value = "DAG Node Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface DAGNodeRESTInterface extends RESTInterface<Node> {
+public interface DagNodeRESTInterface extends RESTInterface<DagNode> {
 
 
 }

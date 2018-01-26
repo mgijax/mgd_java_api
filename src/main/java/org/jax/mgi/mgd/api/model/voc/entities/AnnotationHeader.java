@@ -22,7 +22,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Annotation Header Model Object")
 @Table(name="voc_annotheader")
-public class AnnotHeader extends EntityBase {
+public class AnnotationHeader extends EntityBase {
 
 	@Id
 	private Integer _annotHeader_key;
@@ -36,7 +36,7 @@ public class AnnotHeader extends EntityBase {
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_annottype_key")
-	private AnnotType annotType;
+	private AnnotationType annotType;
 	
 	//need to add _Object_key relationships
 	

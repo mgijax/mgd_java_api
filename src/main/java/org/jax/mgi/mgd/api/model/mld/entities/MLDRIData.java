@@ -16,7 +16,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "RIData Model Object")
 @Table(name="mld_ridata")
-public class RIData extends EntityBase {
+public class MLDRIData extends EntityBase {
 
 	@Id
 	private Integer _expt_key;

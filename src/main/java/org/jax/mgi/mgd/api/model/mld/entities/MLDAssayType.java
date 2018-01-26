@@ -16,11 +16,12 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "MLD Assay Types Object")
 @Table(name="mld_assay_types")
-public class AssayTypes extends EntityBase {
+public class MLDAssayType extends EntityBase {
+	
 	@Id
 	private Integer _assay_Type_key;
 	private String description;
-		private Date creation_date;
+	private Date creation_date;
 	private Date modification_date;
 
 }

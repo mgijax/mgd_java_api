@@ -3,13 +3,13 @@ package org.jax.mgi.mgd.api.model.mld.dao;
 import javax.enterprise.context.RequestScoped;
 
 import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
-import org.jax.mgi.mgd.api.model.mld.entities.RIData;
+import org.jax.mgi.mgd.api.model.mld.entities.MLDRIData;
 
 @RequestScoped
-public class RIDataDAO extends PostgresSQLDAO<RIData> {
+public class MLDRIDataDAO extends PostgresSQLDAO<MLDRIData> {
 
-	protected RIDataDAO() {
-		super(RIData.class);
+	protected MLDRIDataDAO() {
+		super(MLDRIData.class);
 	}
 
 

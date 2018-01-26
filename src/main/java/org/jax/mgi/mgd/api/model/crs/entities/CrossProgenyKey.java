@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @Embeddable
-public class ProgenyKey implements Serializable {
+public class CrossProgenyKey implements Serializable {
 	private Integer _cross_key;
 	private Integer sequenceNum;
 }

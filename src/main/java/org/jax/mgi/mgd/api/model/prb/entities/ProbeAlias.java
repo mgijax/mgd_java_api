@@ -22,7 +22,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "PRBAlias Model Object")
 @Table(name="prb_alias")
-public class Alias extends EntityBase {
+public class ProbeAlias extends EntityBase {
 
 	@Id
 	private Integer _alias_key;

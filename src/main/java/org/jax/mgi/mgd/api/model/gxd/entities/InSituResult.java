@@ -45,6 +45,10 @@ public class InSituResult extends EntityBase {
 	@JoinColumn(name="_pattern_key")
 	private Pattern pattern;
 
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_result_key")
+	private Set<InSituResultStructure> structures;
+	
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "gxd_insituresultimage",
 		joinColumns = @JoinColumn(name = "_result_key"),
@@ -52,8 +56,4 @@ public class InSituResult extends EntityBase {
 	)
 	private Set<ImagePane> imagePanes;
 	
-	@OneToMany(fetch=FetchType.EAGER)
-	@JoinColumn(name="_result_key")
-	private Set<InSituResultStructure> structures;
-
-}
+	}

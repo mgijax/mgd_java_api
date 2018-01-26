@@ -3,13 +3,13 @@ package org.jax.mgi.mgd.api.model.mld.dao;
 import javax.enterprise.context.RequestScoped;
 
 import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
-import org.jax.mgi.mgd.api.model.mld.entities.ISRegion;
+import org.jax.mgi.mgd.api.model.mld.entities.InSituRegion;
 
 @RequestScoped
-public class ISRegionDAO extends PostgresSQLDAO<ISRegion> {
+public class InSituRegionDAO extends PostgresSQLDAO<InSituRegion> {
 
-	protected ISRegionDAO() {
-		super(ISRegion.class);
+	protected InSituRegionDAO() {
+		super(InSituRegion.class);
 	}
 
 

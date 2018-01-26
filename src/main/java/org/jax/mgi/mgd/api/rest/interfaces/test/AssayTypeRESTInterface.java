@@ -14,6 +14,6 @@ import io.swagger.annotations.Api;
 @Api(value = "GXDAssayType Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface GXDAssayTypeRESTInterface extends RESTInterface<AssayType> {
+public interface AssayTypeRESTInterface extends RESTInterface<AssayType> {
 
 }

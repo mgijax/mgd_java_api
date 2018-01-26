@@ -10,7 +10,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
-import org.jax.mgi.mgd.api.model.prb.entities.Strain;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -37,6 +37,6 @@ public class InSitu extends EntityBase {
 	
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_strain_key", referencedColumnName="_strain_key")
-	private Strain strain;
+	private ProbeStrain strain;
 	
 }

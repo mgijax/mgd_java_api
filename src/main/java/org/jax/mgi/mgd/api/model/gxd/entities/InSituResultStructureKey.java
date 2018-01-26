@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @Embeddable
-public class ISResultStructureKey implements Serializable {
+public class InSituResultStructureKey implements Serializable {
 	private Integer _result_key;
 	private Integer _emapa_term_key;
 	private Integer _stage_key;

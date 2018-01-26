@@ -6,7 +6,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;	
-import org.jax.mgi.mgd.api.model.voc.entities.AnnotHeader;
+import org.jax.mgi.mgd.api.model.voc.entities.AnnotationHeader;
 
 import io.swagger.annotations.Api;
 
@@ -14,7 +14,7 @@ import io.swagger.annotations.Api;
 @Api(value = "Annotation Header Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface AnnotHeaderRESTInterface extends RESTInterface<AnnotHeader> {
+public interface AnnotationHeaderRESTInterface extends RESTInterface<AnnotationHeader> {
 
 
 }

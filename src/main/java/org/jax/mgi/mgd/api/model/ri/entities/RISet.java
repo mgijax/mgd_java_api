@@ -10,7 +10,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
-import org.jax.mgi.mgd.api.model.prb.entities.Strain;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -34,10 +34,10 @@ public class RISet extends EntityBase {
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_strain_key_1", referencedColumnName="_strain_key")
-	private Strain strain1;
+	private ProbeStrain strain1;
 
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_strain_key_2", referencedColumnName="_strain_key")
-	private Strain strain2;
+	private ProbeStrain strain2;
 }

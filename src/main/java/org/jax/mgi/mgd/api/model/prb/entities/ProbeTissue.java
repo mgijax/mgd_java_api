@@ -16,7 +16,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Tissue Model Object")
 @Table(name="prb_tissue")
-public class Tissue extends EntityBase {
+public class ProbeTissue extends EntityBase {
 
 	@Id
 	private Integer _tissue_key;

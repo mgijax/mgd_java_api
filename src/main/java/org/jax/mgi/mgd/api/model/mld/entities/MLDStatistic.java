@@ -20,7 +20,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Statistics Model Object")
 @Table(name="mld_statistics")
-public class Statistics extends EntityBase {
+public class MLDStatistic extends EntityBase {
 
 	@Id
 	private Integer _expt_key;

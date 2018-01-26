@@ -35,6 +35,6 @@ public class GelRow extends EntityBase {
 	
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_gelunits_key", referencedColumnName="_gelunits_key")
-	private GelUnits gelUnits;
+	private GelUnit gelUnits;
 	
 }

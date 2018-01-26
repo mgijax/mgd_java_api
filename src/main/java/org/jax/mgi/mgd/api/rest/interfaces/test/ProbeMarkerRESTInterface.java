@@ -14,6 +14,6 @@ import io.swagger.annotations.Api;
 @Api(value = "PRBMarker Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface PRBMarkerRESTInterface extends RESTInterface<ProbeMarker> {
+public interface ProbeMarkerRESTInterface extends RESTInterface<ProbeMarker> {
 
 }

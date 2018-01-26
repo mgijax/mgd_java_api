@@ -13,7 +13,7 @@ import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
-import org.jax.mgi.mgd.api.model.prb.entities.Strain;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -45,22 +45,22 @@ public class Cross extends EntityBase {
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_femalestrain_key", referencedColumnName="_strain_key")
-	private Strain femaleStrain;
+	private ProbeStrain femaleStrain;
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_malestrain_key", referencedColumnName="_strain_key")
-	private Strain maleStrain;
+	private ProbeStrain maleStrain;
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_strainho_key", referencedColumnName="_strain_key")
-	private Strain homozygousStrain;
+	private ProbeStrain homozygousStrain;
 	 
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_strainht_key", referencedColumnName="_strain_key")
-	private Strain heterozygousStrain;
+	private ProbeStrain heterozygousStrain;
 	
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_cross_key")
@@ -79,5 +79,5 @@ public class Cross extends EntityBase {
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_cross_key")
 	@OrderColumn(name="rowNumber")
-	private Set<Progeny> properties;
+	private Set<CrossProgeny> properties;
 }

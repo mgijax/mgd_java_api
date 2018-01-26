@@ -50,14 +50,6 @@ public class Organism extends EntityBase {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
-	@JsonIgnore
-	@ManyToMany(fetch=FetchType.EAGER)
-	@JoinTable(name = "mgi_organism_mgitype",
-		joinColumns = @JoinColumn(name = "_organism_key"),
-		inverseJoinColumns = @JoinColumn(name = "_mgitype_key")
-	)
-	private Set<MGIType> mgiTypes;
-
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_organism_key", referencedColumnName="_object_key")
 	@Where(clause="_mgitype_key = 20 AND preferred = 1 AND _logicaldb_key = 1")
@@ -67,6 +59,14 @@ public class Organism extends EntityBase {
 	@JoinColumn(name="_object_key", referencedColumnName="_organism_key")
 	@Where(clause="_mgitype_key = 20 AND preferred = 1")
 	private Set<Accession> allAccessionIds;
+
+	@JsonIgnore
+	@ManyToMany(fetch=FetchType.EAGER)
+	@JoinTable(name = "mgi_organism_mgitype",
+		joinColumns = @JoinColumn(name = "_organism_key"),
+		inverseJoinColumns = @JoinColumn(name = "_mgitype_key")
+	)
+	private Set<MGIType> mgiTypes;
 	
 	@Transient
 	public Set<Accession> getAccessionIdsByLogicalDb(LogicalDB db) {

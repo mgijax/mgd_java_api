@@ -14,6 +14,6 @@ import io.swagger.annotations.Api;
 @Api(value = "PRBAllele Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface PRBAlleleRESTInterface extends RESTInterface<ProbeAllele> {
+public interface ProbeAlleleRESTInterface extends RESTInterface<ProbeAllele> {
 
 }

@@ -3,13 +3,13 @@ package org.jax.mgi.mgd.api.model.mrk.dao;
 import javax.enterprise.context.RequestScoped;
 
 import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
-import org.jax.mgi.mgd.api.model.mrk.entities.Status;
+import org.jax.mgi.mgd.api.model.mrk.entities.MarkerStatus;
 
 @RequestScoped
-public class StatusDAO extends PostgresSQLDAO<Status> {
+public class MarkerStatusDAO extends PostgresSQLDAO<MarkerStatus> {
 
-	protected StatusDAO() {
-		super(Status.class);
+	protected MarkerStatusDAO() {
+		super(MarkerStatus.class);
 	}
 
 

@@ -16,7 +16,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Status Model Object")
 @Table(name="mrk_status")
-public class Status extends EntityBase {
+public class MarkerStatus extends EntityBase {
 
 	@Id
 	private Integer _marker_status_key;

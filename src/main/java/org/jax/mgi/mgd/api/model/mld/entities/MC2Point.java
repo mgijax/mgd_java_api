@@ -20,7 +20,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "MC2point Model Object")
 @Table(name="mld_mc2point")
-public class MC2point extends EntityBase {
+public class MC2Point extends EntityBase {
 
 	@Id
 	private Integer _expt_key;

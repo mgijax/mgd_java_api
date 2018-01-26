@@ -14,6 +14,6 @@ import io.swagger.annotations.Api;
 @Api(value = "PRBReference Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface PRBReferenceRESTInterface extends RESTInterface<ProbeReference> {
+public interface ProbeReferenceRESTInterface extends RESTInterface<ProbeReference> {
 
 }

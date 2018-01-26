@@ -16,7 +16,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "MLD Notes Model Object")
 @Table(name="mld_notes")
-public class Notes extends EntityBase {
+public class MLDNote extends EntityBase {
 
 	@Id
 	private Integer _refs_key;

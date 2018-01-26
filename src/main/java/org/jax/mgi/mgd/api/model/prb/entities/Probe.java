@@ -48,7 +48,7 @@ public class Probe extends EntityBase {
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_source_key", referencedColumnName="_source_key")
-	private Source source;
+	private ProbeSource source;
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)

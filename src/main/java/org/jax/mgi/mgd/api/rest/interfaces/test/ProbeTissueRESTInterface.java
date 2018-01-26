@@ -5,7 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.prb.entities.Tissue;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeTissue;
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
@@ -14,6 +14,6 @@ import io.swagger.annotations.Api;
 @Api(value = "Tissue Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface TissueRESTInterface extends RESTInterface<Tissue> {
+public interface ProbeTissueRESTInterface extends RESTInterface<ProbeTissue> {
 
 }

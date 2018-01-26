@@ -16,10 +16,10 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Cross Progeny Model Object")
 @Table(name="crs_progeny")
-public class Progeny extends EntityBase {
+public class CrossProgeny extends EntityBase {
 
 	@EmbeddedId
-	private ProgenyKey key;
+	private CrossProgenyKey key;
 	private String name;
 	private String sex;
 	private String notes;

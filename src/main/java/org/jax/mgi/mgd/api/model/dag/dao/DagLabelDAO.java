@@ -6,9 +6,9 @@ import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
 import org.jax.mgi.mgd.api.model.dag.entities.DagLabel;
 
 @RequestScoped
-public class LabelDAO extends PostgresSQLDAO<DagLabel> {
+public class DagLabelDAO extends PostgresSQLDAO<DagLabel> {
 
-	protected LabelDAO() {
+	protected DagLabelDAO() {
 		super(DagLabel.class);
 	}
 

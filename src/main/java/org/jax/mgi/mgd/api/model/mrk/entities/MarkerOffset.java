@@ -16,10 +16,10 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Offset Model Object")
 @Table(name="mrk_offset")
-public class Offset extends EntityBase {
+public class MarkerOffset extends EntityBase {
 
 	@EmbeddedId
-	private OffsetKey key;
+	private MarkerOffsetKey key;
 	private Integer cmOffset;
 	private Date creation_date;
 	private Date modification_date;

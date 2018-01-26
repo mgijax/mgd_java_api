@@ -19,7 +19,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "DAG Edge Model Object")
 @Table(name="dag_edge")
-public class Edge extends EntityBase {
+public class DagEdge extends EntityBase {
 
 	@Id
 	private Integer _edge_key;
@@ -35,12 +35,12 @@ public class Edge extends EntityBase {
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_parent_key", referencedColumnName="_node_key")
-	private Node parentNode;
+	private DagNode parentNode;
 
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_child_key", referencedColumnName="_node_key")
-	private Node childNode;
+	private DagNode childNode;
 
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)

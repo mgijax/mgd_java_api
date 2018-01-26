@@ -6,9 +6,9 @@ import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
 import org.jax.mgi.mgd.api.model.crs.entities.CrossMatrix;
 
 @RequestScoped
-public class MatrixDAO extends PostgresSQLDAO<CrossMatrix> {
+public class CrossMatrixDAO extends PostgresSQLDAO<CrossMatrix> {
 
-	public MatrixDAO() {
+	public CrossMatrixDAO() {
 		super(CrossMatrix.class);
 	}
 

@@ -20,10 +20,10 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "RI_Summary_Expt_Ref Model Object")
 @Table(name="ri_summary_expt_ref")
-public class SummaryExptRef extends EntityBase {
+public class RISummaryExptRef extends EntityBase {
 
 	@EmbeddedId
-	private SummaryExptRefKey key;
+	private RISummaryExptRefKey key;
 	private Date creation_date;
 	private Date modification_date;
 	

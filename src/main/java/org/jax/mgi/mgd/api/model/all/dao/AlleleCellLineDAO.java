@@ -3,13 +3,13 @@ package org.jax.mgi.mgd.api.model.all.dao;
 import javax.enterprise.context.RequestScoped;
 
 import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
-import org.jax.mgi.mgd.api.model.all.entities.CellLine;
+import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLine;
 
 @RequestScoped
-public class CellLineDAO extends PostgresSQLDAO<CellLine> {
+public class AlleleCellLineDAO extends PostgresSQLDAO<AlleleCellLine> {
 
-	protected CellLineDAO() {
-		super(CellLine.class);
+	protected AlleleCellLineDAO() {
+		super(AlleleCellLine.class);
 	}
 
 

@@ -15,7 +15,7 @@ import lombok.Setter;
 @Getter @Setter
 @Entity
 @ApiModel(value = "Hybrid Model Object")
-@Table(name="mld_hybird")
+@Table(name="mld_hybrid")
 public class Hybrid extends EntityBase {
 
 	@Id

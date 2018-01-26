@@ -3,13 +3,13 @@ package org.jax.mgi.mgd.api.model.map.dao;
 import javax.enterprise.context.RequestScoped;
 
 import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
-import org.jax.mgi.mgd.api.model.map.entities.CoordCollection;
+import org.jax.mgi.mgd.api.model.map.entities.CoordinateCollection;
 
 @RequestScoped
-public class CoordCollectionDAO extends PostgresSQLDAO<CoordCollection> {
+public class CoordinateCollectionDAO extends PostgresSQLDAO<CoordinateCollection> {
 
-	public CoordCollectionDAO() {
-		super(CoordCollection.class);
+	public CoordinateCollectionDAO() {
+		super(CoordinateCollection.class);
 	}
 
 }

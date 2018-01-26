@@ -16,7 +16,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "GXD Label Model Object")
 @Table(name="gxd_label")
-public class Label extends EntityBase {
+public class GXDLabel extends EntityBase {
 
 	@Id
 	private Integer _label_key;

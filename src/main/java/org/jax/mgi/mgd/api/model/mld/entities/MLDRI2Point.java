@@ -20,7 +20,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "RI2Point Model Object")
 @Table(name="mld_ri2point")
-public class RI2Point extends EntityBase {
+public class MLDRI2Point extends EntityBase {
 
 	@Id
 	private Integer _expt_key;

@@ -14,7 +14,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "DAG Node Model Object")
 @Table(name="dag_node")
-public class Node extends EntityBase {
+public class DagNode extends EntityBase {
 
 	@Id
 	private Integer _node_key;

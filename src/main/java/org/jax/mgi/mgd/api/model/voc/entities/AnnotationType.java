@@ -22,7 +22,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Annotation Type Model Object")
 @Table(name="voc_annottype")
-public class AnnotType extends EntityBase {
+public class AnnotationType extends EntityBase {
 
 	@Id
 	private Integer _annotType_key;

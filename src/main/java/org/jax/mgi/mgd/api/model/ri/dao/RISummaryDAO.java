@@ -5,10 +5,10 @@ import javax.enterprise.context.RequestScoped;
 import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
 
 @RequestScoped
-public class SummaryDAO extends PostgresSQLDAO<SummaryDAO> {
+public class RISummaryDAO extends PostgresSQLDAO<RISummaryDAO> {
 
-	protected SummaryDAO() {
-		super(SummaryDAO.class);
+	protected RISummaryDAO() {
+		super(RISummaryDAO.class);
 	}
 
 

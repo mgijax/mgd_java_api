@@ -19,7 +19,7 @@ import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.model.gxd.entities.Antibody;
-import org.jax.mgi.mgd.api.model.map.entities.CoordFeature;
+import org.jax.mgi.mgd.api.model.map.entities.CoordinateFeature;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -63,14 +63,14 @@ public class Marker extends EntityBase {
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_marker_status_key", referencedColumnName="_marker_status_key")
-	private Status markerStatus;
+	private MarkerStatus markerStatus;
 
 	//need MRK_Types entity
 	//@ApiModelProperty(value="Controlled vocabulary table for all Marker Types")
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_marker_type_key", referencedColumnName="_marker_type_key")
-	private Type markerType;
+	private MarkerType markerType;
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
@@ -94,11 +94,21 @@ public class Marker extends EntityBase {
 	
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
-	private Set<Offset> offsets;
+	private Set<MarkerOffset> offsets;
 	
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
 	private Set<ProbeMarker> probeMarkers;
+
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
+	@Where(clause="_mgitype_key = 2")
+	private Set<CoordinateFeature> features;
+
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
+	@Where(clause="_mgitype_key = 2")
+	private Set<MGISynonym> synonyms;
 	
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "mrk_alias",
@@ -137,13 +147,5 @@ public class Marker extends EntityBase {
 		return set;
 	}
 	
-	@OneToMany(fetch=FetchType.EAGER)
-	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
-	@Where(clause="_mgitype_key = 2")
-	private Set<CoordFeature> features;
 
-	@OneToMany(fetch=FetchType.EAGER)
-	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
-	@Where(clause="_mgitype_key = 2")
-	private Set<MGISynonym> synonyms;
 }

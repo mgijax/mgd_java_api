@@ -14,6 +14,6 @@ import io.swagger.annotations.Api;
 @Api(value = "PRBNotes Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface PRBNotesRESTInterface extends RESTInterface<ProbeNote> {
+public interface ProbeNoteRESTInterface extends RESTInterface<ProbeNote> {
 
 }

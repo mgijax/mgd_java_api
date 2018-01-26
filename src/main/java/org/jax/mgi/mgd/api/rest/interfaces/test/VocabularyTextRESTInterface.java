@@ -6,7 +6,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;	
-import org.jax.mgi.mgd.api.model.voc.entities.Text;
+import org.jax.mgi.mgd.api.model.voc.entities.VocabularyText;
 
 import io.swagger.annotations.Api;
 
@@ -14,7 +14,7 @@ import io.swagger.annotations.Api;
 @Api(value = "Vocabulary Text Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface VOCTextRESTInterface extends RESTInterface<Text> {
+public interface VocabularyTextRESTInterface extends RESTInterface<VocabularyText> {
 
 
 }

@@ -6,9 +6,9 @@ import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeNote;
 
 @RequestScoped
-public class NotesDAO extends PostgresSQLDAO<ProbeNote> {
+public class ProbeNoteDAO extends PostgresSQLDAO<ProbeNote> {
 
-	protected NotesDAO() {
+	protected ProbeNoteDAO() {
 		super(ProbeNote.class);
 	}
 

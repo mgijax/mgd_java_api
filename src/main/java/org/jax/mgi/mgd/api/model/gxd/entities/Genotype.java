@@ -17,7 +17,7 @@ import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
-import org.jax.mgi.mgd.api.model.prb.entities.Strain;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
@@ -42,7 +42,7 @@ public class Genotype extends EntityBase {
 	
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_strain_key", referencedColumnName="_strain_key")
-	private Strain strain;
+	private ProbeStrain strain;
 	
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_existsas_key", referencedColumnName="_term_key")

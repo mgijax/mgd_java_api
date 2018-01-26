@@ -21,7 +21,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "MAP Coordinate Feature Model Object")
 @Table(name="map_coord_feature")
-public class CoordFeature extends EntityBase {
+public class CoordinateFeature extends EntityBase {
 
 	@Id
 	private Integer _feature_key;

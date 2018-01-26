@@ -3,13 +3,13 @@ package org.jax.mgi.mgd.api.model.mld.dao;
 import javax.enterprise.context.RequestScoped;
 
 import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
-import org.jax.mgi.mgd.api.model.mld.entities.AssayTypes;
+import org.jax.mgi.mgd.api.model.mld.entities.MLDAssayType;
 
 @RequestScoped
-public class AssayTypesDAO extends PostgresSQLDAO<AssayTypes> {
+public class MLDAssayTypeDAO extends PostgresSQLDAO<MLDAssayType> {
 
-	public AssayTypesDAO() {
-		super(AssayTypes.class);
+	public MLDAssayTypeDAO() {
+		super(MLDAssayType.class);
 	}
 
 }

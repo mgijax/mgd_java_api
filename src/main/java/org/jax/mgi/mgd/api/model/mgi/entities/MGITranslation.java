@@ -11,12 +11,12 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.EntityBase;
-import org.jax.mgi.mgd.api.model.all.entities.CellLine;
-import org.jax.mgi.mgd.api.model.all.entities.CellLineDerivation;
+import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLine;
+import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLineDerivation;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTSample;
-import org.jax.mgi.mgd.api.model.prb.entities.Source;
-import org.jax.mgi.mgd.api.model.prb.entities.Strain;
-import org.jax.mgi.mgd.api.model.prb.entities.Tissue;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeTissue;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
@@ -55,12 +55,12 @@ public class MGITranslation extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_object_key", referencedColumnName="_cellline_key", insertable=false, updatable=false)
 	@Where(clause="translationType._mgitype_key = 28")
-	private CellLine cellLine;
+	private AlleleCellLine cellLine;
 	
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_object_key", referencedColumnName="_derivation_key", insertable=false, updatable=false)
 	@Where(clause="translationType._mgitype_key = 36")
-	private CellLineDerivation derivation;
+	private AlleleCellLineDerivation derivation;
 	
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_object_key", referencedColumnName="_sample_key", insertable=false, updatable=false)
@@ -75,17 +75,17 @@ public class MGITranslation extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_object_key", referencedColumnName="_source_key", insertable=false, updatable=false)
 	@Where(clause="translationType._mgitype_key = 5")
-	private Source source;
+	private ProbeSource source;
 	
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
 	@Where(clause="translationType._mgitype_key = 10")
-	private Strain strain;
+	private ProbeStrain strain;
 	
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_object_key", referencedColumnName="_tissue_key", insertable=false, updatable=false)
 	@Where(clause="translationType._mgitype_key = 24")
-	private Tissue tissue;
+	private ProbeTissue tissue;
 	
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)

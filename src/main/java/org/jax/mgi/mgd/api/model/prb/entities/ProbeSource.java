@@ -10,7 +10,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
-import org.jax.mgi.mgd.api.model.all.entities.CellLine;
+import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLine;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -26,7 +26,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "PRBSource Model Object")
 @Table(name="prb_source")
-public class Source extends EntityBase {
+public class ProbeSource extends EntityBase {
 
 	@Id
 	private Integer _source_key;
@@ -57,12 +57,12 @@ public class Source extends EntityBase {
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_strain_key", referencedColumnName="_strain_key")
-	private Strain strain;
+	private ProbeStrain strain;
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_tissue_key", referencedColumnName="_tissue_key")
-	private Tissue tissue;
+	private ProbeTissue tissue;
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
@@ -72,7 +72,7 @@ public class Source extends EntityBase {
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_cellline_key", referencedColumnName="_cellline_key")
-	private CellLine cellLine;
+	private AlleleCellLine cellLine;
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)

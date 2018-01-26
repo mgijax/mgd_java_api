@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @Embeddable 
-public class OffsetKey implements Serializable {
+public class MarkerOffsetKey implements Serializable {
 	private Integer _marker_key;
 	private Integer source;
 }

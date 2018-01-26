@@ -14,7 +14,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.EntityBase;
-import org.jax.mgi.mgd.api.model.prb.entities.Source;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIProperty;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -45,7 +45,7 @@ public class HTExperiment extends EntityBase {
 	
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_source_key", referencedColumnName="_source_key")
-	private Source source;
+	private ProbeSource source;
 	
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_evaluationstate_key", referencedColumnName="_term_key")

@@ -34,7 +34,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Strain Model Object")
 @Table(name="prb_strain")
-public class Strain extends EntityBase {
+public class ProbeStrain extends EntityBase {
 
 	@Id
 	private Integer _strain_key;
@@ -67,14 +67,7 @@ public class Strain extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
-	
-	@ManyToMany(fetch=FetchType.EAGER)
-	@JoinTable(name = "prb_allele_strain",
-		joinColumns = @JoinColumn(name = "_strain_key"),
-		inverseJoinColumns = @JoinColumn(name = "_allele _key")
-	)
-	private Set<ProbeAllele> alleles;
-	
+
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_strain_key", referencedColumnName="_object_key")
 	@Where(clause="_mgitype_key = 10 AND preferred = 1 AND _logicaldb_key = 1")
@@ -85,6 +78,13 @@ public class Strain extends EntityBase {
 	@Where(clause="_mgitype_key = 10 AND preferred = 1")
 	private Set<Accession> allAccessionIds;
 	
+	@ManyToMany(fetch=FetchType.EAGER)
+	@JoinTable(name = "prb_allele_strain",
+		joinColumns = @JoinColumn(name = "_strain_key"),
+		inverseJoinColumns = @JoinColumn(name = "_allele _key")
+	)
+	private Set<ProbeAllele> alleles;
+
 	@Transient
 	public Set<Accession> getAccessionIdsByLogicalDb(LogicalDB db) {
 		return getAccessionIdsByLogicalDb(db.get_logicaldb_key());

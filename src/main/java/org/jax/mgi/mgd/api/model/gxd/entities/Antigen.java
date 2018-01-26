@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
-import org.jax.mgi.mgd.api.model.prb.entities.Source;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
 
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
@@ -38,7 +38,7 @@ public class Antigen extends EntityBase {
 	
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_source_key", referencedColumnName="_source_key")
-	private Source source;
+	private ProbeSource source;
 	
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)

@@ -22,7 +22,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "CellLine Derivation Model Object")
 @Table(name="all_cellline_derivation")
-public class CellLineDerivation extends EntityBase {
+public class AlleleCellLineDerivation extends EntityBase {
 
 	@Id
 	private Integer _derivation_key;
@@ -39,7 +39,7 @@ public class CellLineDerivation extends EntityBase {
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_parentcellline_key", referencedColumnName="_cellline_key")
-	private CellLine parentCellLine;
+	private AlleleCellLine parentCellLine;
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)

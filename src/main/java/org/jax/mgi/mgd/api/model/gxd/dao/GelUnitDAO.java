@@ -3,13 +3,13 @@ package org.jax.mgi.mgd.api.model.gxd.dao;
 import javax.enterprise.context.RequestScoped;
 
 import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
-import org.jax.mgi.mgd.api.model.gxd.entities.GelUnits;
+import org.jax.mgi.mgd.api.model.gxd.entities.GelUnit;
 
 @RequestScoped
-public class GelUnitsDAO extends PostgresSQLDAO<GelUnits> {
+public class GelUnitDAO extends PostgresSQLDAO<GelUnit> {
 
-	protected GelUnitsDAO() {
-		super(GelUnits.class);
+	protected GelUnitDAO() {
+		super(GelUnit.class);
 	}
 
 

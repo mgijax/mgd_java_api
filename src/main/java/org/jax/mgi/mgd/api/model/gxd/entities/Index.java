@@ -25,7 +25,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Index Model Object")
+@ApiModel(value = "GXD Index Model Object")
 @Table(name="gxd_index")
 public class Index extends EntityBase {
 

@@ -14,6 +14,6 @@ import io.swagger.annotations.Api;
 @Api(value = "MRKNotes Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface MRKNotesRESTInterface extends RESTInterface<MarkerNote> {
+public interface MarkerNoteRESTInterface extends RESTInterface<MarkerNote> {
 
 }

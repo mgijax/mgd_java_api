@@ -5,7 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.mrk.entities.Status;
+import org.jax.mgi.mgd.api.model.mrk.entities.MarkerStatus;
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 
 import io.swagger.annotations.Api;
@@ -14,6 +14,6 @@ import io.swagger.annotations.Api;
 @Api(value = "MRKStatus Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface MRKStatusRESTInterface extends RESTInterface<Status> {
+public interface MarkerStatusRESTInterface extends RESTInterface<MarkerStatus> {
 
 }

@@ -24,7 +24,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Expts Model Object")
 @Table(name="mld_expts")
-public class Expts extends EntityBase {
+public class Experiment extends EntityBase {
 
 	@Id
 	private Integer _expt_key;
@@ -37,14 +37,13 @@ public class Expts extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key")
 	private Reference reference;
-	
-	@OneToMany(fetch=FetchType.EAGER)
-	@JoinColumn(name="_expt_key")
-	private Set<Hit> hits;
-	
+
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_expts_key", referencedColumnName="_object_key")
 	@Where(clause="_mgitype_key = 4 AND preferred = 1 AND _logicaldb_key = 1")
 	private Accession mgiAccessionId;
 
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_expt_key")
+	private Set<Hit> hits;
 }

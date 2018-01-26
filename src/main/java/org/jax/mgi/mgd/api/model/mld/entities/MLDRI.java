@@ -21,7 +21,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "RI Model Object")
 @Table(name="mld_ri")
-public class RI extends EntityBase {
+public class MLDRI extends EntityBase {
 
 	@Id
 	private Integer _expt_key;

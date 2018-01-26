@@ -6,9 +6,9 @@ import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeAllele;
 
 @RequestScoped
-public class AlleleDAO extends PostgresSQLDAO<ProbeAllele> {
+public class ProbeAlleleDAO extends PostgresSQLDAO<ProbeAllele> {
 
-	protected AlleleDAO() {
+	protected ProbeAlleleDAO() {
 		super(ProbeAllele.class);
 	}
 

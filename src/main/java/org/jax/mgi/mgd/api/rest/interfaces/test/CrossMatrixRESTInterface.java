@@ -14,6 +14,6 @@ import io.swagger.annotations.Api;
 @Api(value = "Matrix Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface MatrixRESTInterface extends RESTInterface<Matrix> {
+public interface CrossMatrixRESTInterface extends RESTInterface<Matrix> {
 
 }

@@ -19,7 +19,7 @@ import lombok.Setter;
 public class InSituResultStructure extends EntityBase {
 
 	@EmbeddedId
-	private ISResultStructureKey key;
+	private InSituResultStructureKey key;
 	private Date creation_date;
 	private Date modification_date;
 

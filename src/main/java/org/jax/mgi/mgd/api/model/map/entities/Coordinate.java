@@ -36,7 +36,7 @@ public class Coordinate extends EntityBase {
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_collection_key")
-	private CoordCollection collection;
+	private CoordinateCollection collection;
 
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)

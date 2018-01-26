@@ -6,9 +6,9 @@ import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
 import org.jax.mgi.mgd.api.model.mrk.entities.MarkerNote;
 
 @RequestScoped
-public class NotesDAO extends PostgresSQLDAO<MarkerNote> {
+public class MarkerNoteDAO extends PostgresSQLDAO<MarkerNote> {
 
-	protected NotesDAO() {
+	protected MarkerNoteDAO() {
 		super(MarkerNote.class);
 	}
 

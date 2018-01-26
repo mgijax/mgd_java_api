@@ -32,6 +32,6 @@ public class Contig extends EntityBase {
 	
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_expt_key", referencedColumnName="_expt_key")
-	private Expts experiment;
+	private Experiment experiment;
 	
 }

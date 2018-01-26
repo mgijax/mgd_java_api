@@ -23,7 +23,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
-import org.jax.mgi.mgd.api.model.prb.entities.Strain;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
@@ -55,7 +55,7 @@ public class Allele extends EntityBase {
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_strain_key", referencedColumnName="_strain_key")
-	private Strain strain;
+	private ProbeStrain strain;
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
@@ -107,6 +107,20 @@ public class Allele extends EntityBase {
 	@JoinColumn(name="_approvedby_key", referencedColumnName="_user_key")
 	private User approvedBy;
 	
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_allele_key", referencedColumnName="_object_key")
+	@Where(clause="_mgitype_key = 11 AND preferred = 1 AND _logicaldb_key = 1")
+	private Accession mgiAccessionId;
+
+	@OneToMany(fetch=FetchType.EAGER)	@JoinColumn(name="_object_key", referencedColumnName="_allele_key")
+	@Where(clause="_mgitype_key = 11")
+	private Set<MGISynonym> synonyms;
+	
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_object_key", referencedColumnName="_allele_key")
+	@Where(clause="_mgitype_key = 11 AND preferred = 1")
+	private Set<Accession> allAccessionIds;
+	
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "all_allele_mutation",
 		joinColumns = @JoinColumn(name = "_allele_key"),
@@ -119,22 +133,9 @@ public class Allele extends EntityBase {
 		joinColumns = @JoinColumn(name = "_allele_key"),
 		inverseJoinColumns = @JoinColumn(name = "_strain _key")
 	)
-	private Set<Strain> strains;
+	private Set<ProbeStrain> strains;
 	
-	@OneToMany(fetch=FetchType.EAGER)	@JoinColumn(name="_object_key", referencedColumnName="_allele_key")
-	@Where(clause="_mgitype_key = 11")
-	private Set<MGISynonym> synonyms;
-	
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_allele_key", referencedColumnName="_object_key")
-	@Where(clause="_mgitype_key = 11 AND preferred = 1 AND _logicaldb_key = 1")
-	private Accession mgiAccessionId;
 
-	@OneToMany(fetch=FetchType.EAGER)
-	@JoinColumn(name="_object_key", referencedColumnName="_allele_key")
-	@Where(clause="_mgitype_key = 11 AND preferred = 1")
-	private Set<Accession> allAccessionIds;
-	
 	@Transient
 	public Set<Accession> getAccessionIdsByLogicalDb(LogicalDB db) {
 		return getAccessionIdsByLogicalDb(db.get_logicaldb_key());

@@ -16,7 +16,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "ISRegion Model Object")
 @Table(name="mld_isregion")
-public class ISRegion extends EntityBase {
+public class InSituRegion extends EntityBase {
 
 	@Id
 	private Integer _expt_key;

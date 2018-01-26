@@ -19,11 +19,11 @@ import lombok.Setter;
 public class FISHRegion extends EntityBase {
 
 	@Id
-        private Integer _expt_key;
-        private Integer sequenceNum;
-        private String region;
-        private Integer totalSingle;
-        private Integer totalDouble;
+    private Integer _expt_key;
+    private Integer sequenceNum;
+    private String region;
+    private Integer totalSingle;
+    private Integer totalDouble;
 	private Date creation_date;
 	private Date modification_date;
 }

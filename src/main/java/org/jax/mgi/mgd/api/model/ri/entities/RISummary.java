@@ -22,7 +22,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "RI_Summary Model Object")
 @Table(name="ri_summary")
-public class Summary extends EntityBase {
+public class RISummary extends EntityBase {
 
 	@Id
 	private Integer _risummary_key;
@@ -40,5 +40,5 @@ public class Summary extends EntityBase {
 	
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_risummary_key", referencedColumnName="_risummary_key")
-	private Set<SummaryExptRef> riSummaryExperiments;
+	private Set<RISummaryExptRef> riSummaryExperiments;
 }

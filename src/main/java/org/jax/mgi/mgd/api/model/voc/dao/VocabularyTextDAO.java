@@ -3,13 +3,13 @@ package org.jax.mgi.mgd.api.model.voc.dao;
 import javax.enterprise.context.RequestScoped;
 
 import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
-import org.jax.mgi.mgd.api.model.voc.entities.Text;
+import org.jax.mgi.mgd.api.model.voc.entities.VocabularyText;
 
 @RequestScoped
-public class TextDAO extends PostgresSQLDAO<Text> {
+public class VocabularyTextDAO extends PostgresSQLDAO<VocabularyText> {
 
-	public TextDAO() {
-		super(Text.class);
+	public VocabularyTextDAO() {
+		super(VocabularyText.class);
 	}
 
 }

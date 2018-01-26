@@ -3,13 +3,13 @@ package org.jax.mgi.mgd.api.model.prb.dao;
 import javax.enterprise.context.RequestScoped;
 
 import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
-import org.jax.mgi.mgd.api.model.prb.entities.Tissue;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeTissue;
 
 @RequestScoped
-public class TissueDAO extends PostgresSQLDAO<Tissue> {
+public class ProbeTissueDAO extends PostgresSQLDAO<ProbeTissue> {
 
-	protected TissueDAO() {
-		super(Tissue.class);
+	protected ProbeTissueDAO() {
+		super(ProbeTissue.class);
 	}
 
 

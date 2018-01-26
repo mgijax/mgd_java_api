@@ -6,9 +6,9 @@ import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeMarker;
 
 @RequestScoped
-public class MarkerDAO extends PostgresSQLDAO<ProbeMarker> {
+public class ProbeMarkerDAO extends PostgresSQLDAO<ProbeMarker> {
 
-	protected MarkerDAO() {
+	protected ProbeMarkerDAO() {
 		super(ProbeMarker.class);
 	}
 

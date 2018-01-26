@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mrk.entities.Type;
+import org.jax.mgi.mgd.api.model.mrk.entities.MarkerType;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -34,7 +34,7 @@ public class GeneModel extends EntityBase {
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_gmmarker_type_key", referencedColumnName="_marker_type_key")
-	private Type markerType;
+	private MarkerType markerType;
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)

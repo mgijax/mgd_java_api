@@ -13,7 +13,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.EntityBase;
-import org.jax.mgi.mgd.api.model.map.entities.CoordFeature;
+import org.jax.mgi.mgd.api.model.map.entities.CoordinateFeature;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
@@ -52,5 +52,5 @@ public class Chromosome extends EntityBase {
 
 	@OneToMany(fetch=FetchType.EAGER)	@JoinColumn(name="_object_key", referencedColumnName="_chromosome_key")
 	@Where(clause="_mgitype_key = 27")
-	private Set<CoordFeature> features;
+	private Set<CoordinateFeature> features;
 }

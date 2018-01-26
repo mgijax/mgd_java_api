@@ -3,13 +3,13 @@ package org.jax.mgi.mgd.api.model.voc.dao;
 import javax.enterprise.context.RequestScoped;
 
 import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
-import org.jax.mgi.mgd.api.model.voc.entities.AnnotHeader;
+import org.jax.mgi.mgd.api.model.voc.entities.AnnotationHeader;
 
 @RequestScoped
-public class AnnotHeaderDAO extends PostgresSQLDAO<AnnotHeader> {
+public class AnnotationHeaderDAO extends PostgresSQLDAO<AnnotationHeader> {
 
-	public AnnotHeaderDAO() {
-		super(AnnotHeader.class);
+	public AnnotationHeaderDAO() {
+		super(AnnotationHeader.class);
 	}
 
 }

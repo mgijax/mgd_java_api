@@ -14,7 +14,7 @@ import io.swagger.annotations.Api;
 @Api(value = "Vocabulary Text Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface VOCEvidenceRESTInterface extends RESTInterface<Evidence> {
+public interface EvidenceRESTInterface extends RESTInterface<Evidence> {
 
 
 }

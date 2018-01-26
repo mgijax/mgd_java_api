@@ -14,7 +14,7 @@ import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
-import org.jax.mgi.mgd.api.model.prb.entities.Strain;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -35,7 +35,7 @@ public class Annotation extends EntityBase {
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_annottype_key")
-	private AnnotType annotType;
+	private AnnotationType annotType;
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
@@ -65,7 +65,7 @@ public class Annotation extends EntityBase {
     @OneToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
     @Where(clause="annotType._mgitype_key = 10")
-    private Strain strain;
+    private ProbeStrain strain;
     
     @OneToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)

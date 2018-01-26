@@ -3,13 +3,13 @@ package org.jax.mgi.mgd.api.model.prb.dao;
 import javax.enterprise.context.RequestScoped;
 
 import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
-import org.jax.mgi.mgd.api.model.prb.entities.Strain;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
 
 @RequestScoped
-public class StrainDAO extends PostgresSQLDAO<Strain> {
+public class ProbeStrainDAO extends PostgresSQLDAO<ProbeStrain> {
 
-	protected StrainDAO() {
-		super(Strain.class);
+	protected ProbeStrainDAO() {
+		super(ProbeStrain.class);
 	}
 
 

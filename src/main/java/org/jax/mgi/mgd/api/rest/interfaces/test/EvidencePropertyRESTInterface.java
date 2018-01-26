@@ -14,7 +14,7 @@ import io.swagger.annotations.Api;
 @Api(value = "Evidence Property Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface VOCEvidencePropertyRESTInterface extends RESTInterface<EvidenceProperty> {
+public interface EvidencePropertyRESTInterface extends RESTInterface<EvidenceProperty> {
 
 
 }

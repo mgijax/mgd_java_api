@@ -54,7 +54,6 @@ public class Vocabulary extends EntityBase {
 	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
 	private List<Term> terms;
 	
-	// Simple Many to Many
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "voc_vocabdag",
 		joinColumns = @JoinColumn(name = "_vocab_key", referencedColumnName="_vocab_key"),

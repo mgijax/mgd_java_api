@@ -38,7 +38,7 @@ public class ProbePrep extends EntityBase {
 	
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_label_key", referencedColumnName="_label_key")
-	private Label label;
+	private GXDLabel label;
 	
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_visualization_key", referencedColumnName="_visualization_key")

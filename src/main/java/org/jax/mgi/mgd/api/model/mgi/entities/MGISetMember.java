@@ -62,9 +62,9 @@ public class MGISetMember extends EntityBase {
 	@Where(clause="mgiSet._mgitype_key = 16")
 	private ActualDB actualDb;
 	
-//	@OneToOne(fetch=FetchType.EAGER)
-//	@JoinColumn(name="_object_key", referencedColumnName="_term_key")
-//	@Where(clause="mgiSet._mgitype_key = 34")
-//	private MGIStatistic stat;
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_object_key", referencedColumnName="_term_key")
+	@Where(clause="mgiSet._mgitype_key = 34")
+	private MGIStatistic stat;
 	
 }

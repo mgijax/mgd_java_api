@@ -9,7 +9,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
 import io.swagger.annotations.ApiModel;
@@ -57,4 +59,9 @@ public class AnnotHeader extends EntityBase {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_approvedby_key", referencedColumnName="_user_key")
 	private User approvedBy;
+	
+    @OneToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name="_object_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
+    @Where(clause="annotType._mgitype_key = 12")
+    private Genotype genotype;
 }

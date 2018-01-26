@@ -63,7 +63,7 @@ public class MGISetMember extends EntityBase {
 	private ActualDB actualDb;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_object_key", referencedColumnName="_term_key")
+	@JoinColumn(name="_object_key", referencedColumnName="_statistic_key", insertable=false, updatable=false)
 	@Where(clause="mgiSet._mgitype_key = 34")
 	private MGIStatistic stat;
 	

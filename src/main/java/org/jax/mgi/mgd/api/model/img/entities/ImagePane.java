@@ -37,7 +37,7 @@ public class ImagePane extends EntityBase {
 
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_image_key", referencedColumnName="_image_key")
+	@JoinColumn(name="_image_key")
 	private Image image;
 
 	@ManyToMany(fetch=FetchType.EAGER)

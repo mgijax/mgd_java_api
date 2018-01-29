@@ -34,11 +34,11 @@ public class MarkerHistory extends EntityBase {
 	private Date modification_date;
 
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_marker_event_key", referencedColumnName="_marker_event_key")
+	@JoinColumn(name="_marker_event_key")
 	private Event markerEvent;
 
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_marker_eventreason_key", referencedColumnName="_marker_eventreason_key")
+	@JoinColumn(name="_marker_eventreason_key")
 	private EventReason eventReason;
 
 	@OneToOne(fetch=FetchType.EAGER)
@@ -46,7 +46,7 @@ public class MarkerHistory extends EntityBase {
 	private Marker markerHistory;
 
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	@JoinColumn(name="_refs_key")
 	private Reference reference;
 
 	@JsonIgnore

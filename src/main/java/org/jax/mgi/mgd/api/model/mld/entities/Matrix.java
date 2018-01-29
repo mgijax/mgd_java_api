@@ -32,7 +32,7 @@ public class Matrix extends EntityBase {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_cross_key", referencedColumnName="_cross_key")
+	@JoinColumn(name="_cross_key")
 	private Cross cross;
 	
 }

@@ -34,11 +34,11 @@ public class HTSample extends EntityBase {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_experiment_key", referencedColumnName="_experiment_key")
+	@JoinColumn(name="_experiment_key")
 	private HTExperiment experiment;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_organism_key", referencedColumnName="_organism_key")
+	@JoinColumn(name="_organism_key")
 	private Organism organism;
 	
 	@OneToOne(fetch=FetchType.EAGER)
@@ -58,7 +58,7 @@ public class HTSample extends EntityBase {
 	private TheilerStage stage;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_genotype_key", referencedColumnName="_genotype_key")
+	@JoinColumn(name="_genotype_key")
 	private Genotype genotype;
 	
 	@JsonIgnore

@@ -31,7 +31,7 @@ public class MGIProperty extends EntityBase {
 
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_propertytype_key", referencedColumnName="_propertytype_key")
+	@JoinColumn(name="_propertytype_key")
 	private PropertyType propertyType;
 	
 	//@JsonIgnore
@@ -41,7 +41,7 @@ public class MGIProperty extends EntityBase {
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_mgitype_key", referencedColumnName="_mgitype_key")
+	@JoinColumn(name="_mgitype_key")
 	private MGIType mgitype;
 	
 	//@JsonIgnore

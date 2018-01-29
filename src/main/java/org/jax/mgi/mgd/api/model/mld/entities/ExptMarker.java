@@ -34,15 +34,15 @@ public class ExptMarker extends EntityBase {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
+	@JoinColumn(name="_marker_key")
 	private Marker marker;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_allele_key", referencedColumnName="_allele_key")
+	@JoinColumn(name="_allele_key")
 	private Allele allele;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_assay_key", referencedColumnName="_assay_key")
+	@JoinColumn(name="_assay_key")
 	private Assay assay;
 	
 }

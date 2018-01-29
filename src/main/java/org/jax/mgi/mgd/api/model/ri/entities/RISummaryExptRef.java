@@ -28,7 +28,7 @@ public class RISummaryExptRef extends EntityBase {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	@JoinColumn(name="_refs_key")
 	private Reference reference;
 
 }

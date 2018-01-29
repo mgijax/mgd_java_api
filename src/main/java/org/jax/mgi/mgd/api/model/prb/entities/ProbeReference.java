@@ -34,12 +34,12 @@ public class ProbeReference extends EntityBase {
 	
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_probe_key", referencedColumnName="_probe_key")
+	@JoinColumn(name="_probe_key")
 	private Probe probe;
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	@JoinColumn(name="_refs_key")
 	private Reference reference;
 
 	@JsonIgnore

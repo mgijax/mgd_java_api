@@ -44,7 +44,7 @@ public class HTExperiment extends EntityBase {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_source_key", referencedColumnName="_source_key")
+	@JoinColumn(name="_source_key")
 	private ProbeSource source;
 	
 	@OneToOne(fetch=FetchType.EAGER)

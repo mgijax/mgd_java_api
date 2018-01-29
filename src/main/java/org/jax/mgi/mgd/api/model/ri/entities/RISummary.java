@@ -31,14 +31,14 @@ public class RISummary extends EntityBase {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_riset_key", referencedColumnName="_riset_key")
+	@JoinColumn(name="_riset_key")
 	private RISet riSet;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
+	@JoinColumn(name="_marker_key")
 	private Marker marker;
 	
 	@OneToMany(fetch=FetchType.EAGER)
-	@JoinColumn(name="_risummary_key", referencedColumnName="_risummary_key")
+	@JoinColumn(name="_risummary_key")
 	private Set<RISummaryExptRef> riSummaryExperiments;
 }

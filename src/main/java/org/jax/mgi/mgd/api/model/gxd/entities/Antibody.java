@@ -43,15 +43,15 @@ public class Antibody extends EntityBase {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_antibodyclass_key", referencedColumnName="_antibodyclass_key")
+	@JoinColumn(name="_antibodyclass_key")
 	private AntibodyClass antibodyClass;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_antibodytype_key", referencedColumnName="_antibodytype_key")
+	@JoinColumn(name="_antibodytype_key")
 	private AntibodyType antibodyType;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_organism_key", referencedColumnName="_organism_key")
+	@JoinColumn(name="_organism_key")
 	private Organism organism;
 	
 	@JsonIgnore

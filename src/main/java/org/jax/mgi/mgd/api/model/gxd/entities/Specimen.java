@@ -36,19 +36,19 @@ public class Specimen extends EntityBase {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_assay_key", referencedColumnName="_assay_key")
+	@JoinColumn(name="_assay_key")
 	private Assay assay;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_embedding_key", referencedColumnName="_embedding_key")
+	@JoinColumn(name="_embedding_key")
 	private EmbeddingMethod embeddingMethod;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_fixation_key", referencedColumnName="_fixation_key")
+	@JoinColumn(name="_fixation_key")
 	private FixationMethod fixationMethod;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_genotype_key", referencedColumnName="_genotype_key")
+	@JoinColumn(name="_genotype_key")
 	private Genotype genotype;
 	
 }

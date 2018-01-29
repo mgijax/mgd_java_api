@@ -31,7 +31,7 @@ public class CrossMatrix extends EntityBase {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
+	@JoinColumn(name="_marker_key")
 	private Marker marker;
 	
 }

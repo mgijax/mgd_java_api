@@ -33,7 +33,7 @@ public class ProbeAllele extends EntityBase {
 	
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_rflv_key", referencedColumnName="_rflv_key")
+	@JoinColumn(name="_rflv_key")
 	private RFLV rflv;
 
 	@JsonIgnore

@@ -30,7 +30,7 @@ public class RelationshipProperty extends EntityBase {
 
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_relationship_key", referencedColumnName="_relationship_key")
+	@JoinColumn(name="_relationship_key")
 	private Relationship relationship;
 	
 	//@JsonIgnore

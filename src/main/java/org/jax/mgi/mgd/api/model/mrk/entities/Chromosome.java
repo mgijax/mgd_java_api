@@ -37,7 +37,7 @@ public class Chromosome extends EntityBase {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_organism_key", referencedColumnName="_organism_key")
+	@JoinColumn(name="_organism_key")
 	private Organism organism;
 
 	@JsonIgnore

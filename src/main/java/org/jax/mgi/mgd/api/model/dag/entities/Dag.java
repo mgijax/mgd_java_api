@@ -36,20 +36,20 @@ public class Dag extends EntityBase {
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	@JoinColumn(name="_refs_key")
 	private Reference reference;
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_mgitype_key", referencedColumnName="_mgitype_key")
+	@JoinColumn(name="_mgitype_key")
 	private MGIType mgiType;
 	
 	// as of 01/19/2018 each dag only exists in one vocabulary
 	// vocabularies should only have one entry
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "voc_vocabdag",
-		inverseJoinColumns = @JoinColumn(name = "_vocab_key", referencedColumnName="_vocab_key"),
-		joinColumns = @JoinColumn(name = "_dag_key", referencedColumnName="_dag_key")
+		inverseJoinColumns = @JoinColumn(name = "_vocab_key"),
+		joinColumns = @JoinColumn(name = "_dag_key")
 	)
 	private Set<Vocabulary> vocabularies;
 	

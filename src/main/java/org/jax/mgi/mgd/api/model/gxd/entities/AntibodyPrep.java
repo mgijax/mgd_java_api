@@ -27,15 +27,15 @@ public class AntibodyPrep extends EntityBase {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_antibody_key", referencedColumnName="_antibody_key")
+	@JoinColumn(name="_antibody_key")
 	private Antibody antibody;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_secondary_key", referencedColumnName="_secondary_key")
+	@JoinColumn(name="_secondary_key")
 	private Secondary secondary;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_label_key", referencedColumnName="_label_key")
+	@JoinColumn(name="_label_key")
 	private GXDLabel label;
 	
 }

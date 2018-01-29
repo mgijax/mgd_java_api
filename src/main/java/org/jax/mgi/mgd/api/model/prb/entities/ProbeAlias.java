@@ -32,7 +32,7 @@ public class ProbeAlias extends EntityBase {
 	
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_reference_key", referencedColumnName="_reference_key")
+	@JoinColumn(name="_reference_key")
 	private ProbeReference reference;
 	
 	@JsonIgnore

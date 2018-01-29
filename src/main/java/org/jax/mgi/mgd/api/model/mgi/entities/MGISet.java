@@ -32,7 +32,7 @@ public class MGISet extends EntityBase {
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_mgitype_key", referencedColumnName="_mgitype_key")
+	@JoinColumn(name="_mgitype_key")
 	private MGIType mgiType;
 	
 	//@JsonIgnore

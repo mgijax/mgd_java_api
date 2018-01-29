@@ -49,12 +49,12 @@ public class Allele extends EntityBase {
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
+	@JoinColumn(name="_marker_key")
 	private Marker marker;
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_strain_key", referencedColumnName="_strain_key")
+	@JoinColumn(name="_strain_key")
 	private ProbeStrain strain;
 	
 	//@JsonIgnore
@@ -84,7 +84,7 @@ public class Allele extends EntityBase {
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	@JoinColumn(name="_refs_key")
 	private Reference reference;
 	
 	//@JsonIgnore

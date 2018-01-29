@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.mld.entities;
 
 import java.util.Date;
 
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -24,9 +25,8 @@ import lombok.Setter;
 @Table(name="mld_expt_marker")
 public class ExptMarker extends EntityBase {
 
-	@Id
-	private Integer _expt_key;
-	private Integer sequenceNum;
+	@EmbeddedId
+	private ExptMarkerKey key;
 	private String gene;
 	private String description;
 	private Integer matrixData;

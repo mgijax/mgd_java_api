@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.mrk.entities;
 
 import java.util.Date;
 
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -25,9 +26,8 @@ import lombok.Setter;
 @Table(name="mrk_history")
 public class MarkerHistory extends EntityBase {
 
-	@Id
-	private Integer _marker_key;
-	private Integer sequenceNum;
+	@EmbeddedId
+	private MarkerHistoryKey key;
 	private String name;
 	private Date event_date;
 	private Date creation_date;

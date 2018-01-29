@@ -46,4 +46,8 @@ public class Experiment extends EntityBase {
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_expt_key")
 	private Set<Hit> hits;
+	
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_expt_key")
+	private Set<ExptMarker> markers;
 }

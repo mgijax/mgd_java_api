@@ -93,11 +93,15 @@ public class Marker extends EntityBase {
 	private Set<Accession> allAccessionIds;
 	
 	@OneToMany(fetch=FetchType.EAGER)
-	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
+	@JoinColumn(name="_marker_key")
 	private Set<MarkerOffset> offsets;
 	
 	@OneToMany(fetch=FetchType.EAGER)
-	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
+	@JoinColumn(name="_marker_key")
+	private Set<MarkerHistory> history;
+	
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_marker_key")
 	private Set<ProbeMarker> probeMarkers;
 
 	@OneToMany(fetch=FetchType.EAGER)

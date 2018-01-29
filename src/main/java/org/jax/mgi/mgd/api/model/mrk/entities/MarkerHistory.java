@@ -23,7 +23,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "History Model Object")
 @Table(name="mrk_history")
-public class History extends EntityBase {
+public class MarkerHistory extends EntityBase {
 
 	@Id
 	private Integer _marker_key;

@@ -38,12 +38,12 @@ public class AlleleCellLine extends EntityBase {
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_strain_key", referencedColumnName="_strain_key")
+	@JoinColumn(name="_strain_key")
 	private ProbeStrain strain;
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_derivation_key", referencedColumnName="_derivation_key")
+	@JoinColumn(name="_derivation_key")
 	private AlleleCellLineDerivation derivation;
 	
 	//@JsonIgnore

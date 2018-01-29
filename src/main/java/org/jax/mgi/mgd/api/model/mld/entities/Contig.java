@@ -31,7 +31,7 @@ public class Contig extends EntityBase {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_expt_key", referencedColumnName="_expt_key")
+	@JoinColumn(name="_expt_key")
 	private Experiment experiment;
 	
 }

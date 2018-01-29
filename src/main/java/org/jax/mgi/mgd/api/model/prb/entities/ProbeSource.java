@@ -51,17 +51,17 @@ public class ProbeSource extends EntityBase {
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_organism_key", referencedColumnName="_organism_key")
+	@JoinColumn(name="_organism_key")
 	private Organism organism;
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_strain_key", referencedColumnName="_strain_key")
+	@JoinColumn(name="_strain_key")
 	private ProbeStrain strain;
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_tissue_key", referencedColumnName="_tissue_key")
+	@JoinColumn(name="_tissue_key")
 	private ProbeTissue tissue;
 
 	@JsonIgnore
@@ -71,12 +71,12 @@ public class ProbeSource extends EntityBase {
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_cellline_key", referencedColumnName="_cellline_key")
+	@JoinColumn(name="_cellline_key")
 	private AlleleCellLine cellLine;
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	@JoinColumn(name="_refs_key")
 	private Reference reference;
 
 	@JsonIgnore

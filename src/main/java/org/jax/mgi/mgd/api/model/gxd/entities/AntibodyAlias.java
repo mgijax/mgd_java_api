@@ -29,11 +29,11 @@ public class AntibodyAlias extends EntityBase {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_antibody_key", referencedColumnName="_antibody_key")
+	@JoinColumn(name="_antibody_key")
 	private Antibody antibody;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	@JoinColumn(name="_refs_key")
 	private Reference reference;
 	
 }

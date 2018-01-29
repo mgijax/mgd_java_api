@@ -37,32 +37,32 @@ public class Assay extends EntityBase {
 	
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_assaytype_key", referencedColumnName="_assaytype_key")
+	@JoinColumn(name="_assaytype_key")
 	private AssayType assayType;
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	@JoinColumn(name="_refs_key")
 	private Reference reference;
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
+	@JoinColumn(name="_marker_key")
 	private Marker marker;
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_probeprep_key", referencedColumnName="_probeprep_key")
+	@JoinColumn(name="_probeprep_key")
 	private ProbePrep probePrep;
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_antibodyprep_key", referencedColumnName="_antibodyprep_key")
+	@JoinColumn(name="_antibodyprep_key")
 	private AntibodyPrep antibodyPrep;
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_imagepane_key", referencedColumnName="_imagepane_key")
+	@JoinColumn(name="_imagepane_key")
 	private ImagePane imagePane;
 
 	@JsonIgnore

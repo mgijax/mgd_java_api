@@ -30,11 +30,11 @@ public class GelRow extends EntityBase {
 	private Date modification_date;
 
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_assay_key", referencedColumnName="_assay_key")
+	@JoinColumn(name="_assay_key")
 	private Assay assay;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_gelunits_key", referencedColumnName="_gelunits_key")
+	@JoinColumn(name="_gelunits_key")
 	private GelUnit gelUnits;
 	
 }

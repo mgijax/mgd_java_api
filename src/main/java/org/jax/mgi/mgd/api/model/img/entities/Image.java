@@ -42,7 +42,7 @@ public class Image extends EntityBase {
 
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_mgitype_key", referencedColumnName="_mgitype_key")
+	@JoinColumn(name="_mgitype_key")
 	private MGIType mgitype;
 	
 	//@JsonIgnore
@@ -57,7 +57,7 @@ public class Image extends EntityBase {
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	@JoinColumn(name="_refs_key")
 	private Reference reference;
 	
 	//@JsonIgnore

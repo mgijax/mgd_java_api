@@ -28,14 +28,14 @@ public class GelBand extends EntityBase {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_gellane_key", referencedColumnName="_gellane_key")
+	@JoinColumn(name="_gellane_key")
 	private GelLane gelLane;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_gelrow_key", referencedColumnName="_gelrow_key")
+	@JoinColumn(name="_gelrow_key")
 	private GelRow gelRow;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_strength_key", referencedColumnName="_strength_key")
+	@JoinColumn(name="_strength_key")
 	private Strength strength;
 }

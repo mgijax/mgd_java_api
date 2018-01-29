@@ -64,7 +64,7 @@ public class Term extends EntityBase {
 
 	@JsonIgnore
 	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
+	@JoinColumn(name="_vocab_key")
 	private Vocabulary vocab;
 
 	@Transient

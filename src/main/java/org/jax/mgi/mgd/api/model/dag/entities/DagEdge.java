@@ -29,7 +29,7 @@ public class DagEdge extends EntityBase {
 
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_dag_key", referencedColumnName="_dag_key")
+	@JoinColumn(name="_dag_key")
 	private Dag dag;
 
 	//@JsonIgnore
@@ -44,7 +44,7 @@ public class DagEdge extends EntityBase {
 
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_label_key", referencedColumnName="_label_key")
+	@JoinColumn(name="_label_key")
 	private DagLabel label;
 
 }

@@ -36,7 +36,7 @@ public class AllelePair extends EntityBase {
 	
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_genotype_key", referencedColumnName="_genotype_key")
+	@JoinColumn(name="_genotype_key")
 	private Genotype genotype;
 
 	@JsonIgnore
@@ -51,7 +51,7 @@ public class AllelePair extends EntityBase {
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
+	@JoinColumn(name="_marker_key")
 	private Marker marker;
 
 	@JsonIgnore

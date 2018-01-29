@@ -24,10 +24,10 @@ public class ApiLogObject {
 	private Integer _object_key;
 
 	@OneToOne (targetEntity=MGIType.class, fetch=FetchType.EAGER)
-	@JoinColumn(name="_mgitype_key", referencedColumnName="_mgitype_key")
+	@JoinColumn(name="_mgitype_key")
 	private MGIType mgiType;
 
 	@OneToOne (targetEntity=ApiLogEvent.class, fetch=FetchType.LAZY)
-	@JoinColumn(name="_event_key", referencedColumnName="_event_key")
+	@JoinColumn(name="_event_key")
 	private ApiLogEvent event;
 }

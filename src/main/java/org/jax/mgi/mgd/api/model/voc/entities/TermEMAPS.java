@@ -30,7 +30,7 @@ public class TermEMAPS extends EntityBase {
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_stage_key", referencedColumnName="_stage_key")
+	@JoinColumn(name="_stage_key")
 	private TheilerStage stage;
 	
 	//@JsonIgnore

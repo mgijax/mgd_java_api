@@ -31,11 +31,11 @@ public class ApiLogEvent extends EntityBase {
 	private Date creation_date;
 
 	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
-	@JoinColumn(name="_user_key", referencedColumnName="_user_key")
+	@JoinColumn(name="_user_key")
 	private User createdBy;
 
 	@OneToMany (targetEntity=ApiLogObject.class, fetch=FetchType.EAGER)
-	@JoinColumn(name="_event_key", referencedColumnName="_event_key")
+	@JoinColumn(name="_event_key")
 	@BatchSize(size=200)
 //	@Fetch(value=FetchMode.SUBSELECT)
 	private Set<ApiLogObject> objects;

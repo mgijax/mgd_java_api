@@ -32,7 +32,7 @@ public class EvidenceProperty extends EntityBase {
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_annotevidence_key", referencedColumnName="_annotevidence_key")
+	@JoinColumn(name="_annotevidence_key")
 	private Evidence evidence;
 	
 	//@JsonIgnore

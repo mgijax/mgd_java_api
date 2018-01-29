@@ -33,12 +33,12 @@ public class RFLV extends EntityBase {
 	
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_reference_key", referencedColumnName="_reference_key")
+	@JoinColumn(name="_reference_key")
 	private ProbeReference reference;
 
 	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
+	@JoinColumn(name="_marker_key")
 	private Marker marker;
 
 	@JsonIgnore

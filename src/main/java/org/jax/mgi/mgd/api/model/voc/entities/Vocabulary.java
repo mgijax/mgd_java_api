@@ -41,12 +41,12 @@ public class Vocabulary extends EntityBase {
 
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
+	@JoinColumn(name="_refs_key")
 	private Reference reference;
 	
 	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_logicaldb_key", referencedColumnName="_logicaldb_key")
+	@JoinColumn(name="_logicaldb_key")
 	private LogicalDB logicalDB;
 	
 	@JsonIgnore

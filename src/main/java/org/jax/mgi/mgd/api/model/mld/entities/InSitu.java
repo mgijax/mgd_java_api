@@ -36,7 +36,7 @@ public class InSitu extends EntityBase {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_strain_key", referencedColumnName="_strain_key")
+	@JoinColumn(name="_strain_key")
 	private ProbeStrain strain;
 	
 }

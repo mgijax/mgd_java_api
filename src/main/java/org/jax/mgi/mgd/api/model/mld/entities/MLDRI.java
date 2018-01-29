@@ -30,7 +30,7 @@ public class MLDRI extends EntityBase {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="_riset_key", referencedColumnName="_riset_key")
+	@JoinColumn(name="_riset_key")
 	private RISet RISet;
 	
 }

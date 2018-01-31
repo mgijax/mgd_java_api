@@ -34,7 +34,7 @@ public class MGIType extends EntityBase {
 	private String name;
 	private String tableName;
 	private String primaryKeyName;
-	private String identifyColumnName;
+	private String identityColumnName;
 	private String dbView;
 	private Date creation_date;
 	private Date modification_date;

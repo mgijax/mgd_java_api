@@ -14,6 +14,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
@@ -60,6 +62,7 @@ public class Term extends EntityBase {
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key")
 	@Where(clause="_mgitype_key = 13 AND preferred = 1")
+	@Fetch(value=FetchMode.SUBSELECT)
 	private Set<Accession> allAccessionIds;
 
 	@JsonIgnore
@@ -83,7 +86,9 @@ public class Term extends EntityBase {
 		return set;
 	}
 	
-	@OneToMany(fetch=FetchType.EAGER)	@JoinColumn(name="_object_key", referencedColumnName="_term_key")
-	@Where(clause="mgiType._mgitype_key = 13")
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_object_key", referencedColumnName="_term_key")
+	@Where(clause="_mgitype_key = 13")
+	@Fetch(value=FetchMode.SUBSELECT)
 	private Set<MGISynonym> synonyms;
 }

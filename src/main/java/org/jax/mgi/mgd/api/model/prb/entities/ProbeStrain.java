@@ -81,7 +81,7 @@ public class ProbeStrain extends EntityBase {
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "prb_allele_strain",
 		joinColumns = @JoinColumn(name = "_strain_key"),
-		inverseJoinColumns = @JoinColumn(name = "_allele _key")
+		inverseJoinColumns = @JoinColumn(name = "_allele_key")
 	)
 	private Set<ProbeAllele> alleles;
 

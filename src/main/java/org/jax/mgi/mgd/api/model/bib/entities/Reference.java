@@ -333,7 +333,7 @@ public class Reference extends EntityBase {
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "acc_accessionreference",
 		joinColumns = @JoinColumn(name = "_refs_key"),
-		inverseJoinColumns = @JoinColumn(name = "_accession _key")
+		inverseJoinColumns = @JoinColumn(name = "_accession_key")
 	)
 	private Set<Accession> accessions;
 }

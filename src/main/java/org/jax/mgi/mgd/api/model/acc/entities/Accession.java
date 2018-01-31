@@ -55,7 +55,7 @@ public class Accession extends EntityBase {
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "acc_accessionreference",
 		joinColumns = @JoinColumn(name = "_accession_key"),
-		inverseJoinColumns = @JoinColumn(name = "_refs _key")
+		inverseJoinColumns = @JoinColumn(name = "_refs_key")
 	)
 	private Set<Reference> references;
 }

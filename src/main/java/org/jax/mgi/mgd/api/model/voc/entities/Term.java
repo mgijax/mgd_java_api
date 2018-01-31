@@ -84,6 +84,6 @@ public class Term extends EntityBase {
 	}
 	
 	@OneToMany(fetch=FetchType.EAGER)	@JoinColumn(name="_object_key", referencedColumnName="_term_key")
-	@Where(clause="_mgitype_key = 13")
+	@Where(clause="mgiType._mgitype_key = 13")
 	private Set<MGISynonym> synonyms;
 }

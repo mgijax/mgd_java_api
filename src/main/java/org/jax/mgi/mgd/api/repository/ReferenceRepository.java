@@ -452,22 +452,20 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 
 			Date creation = new Date();
 
-			Accession myID = new Accession(
-					referenceDAO.getNextAccessionKey(),
-					accID,
-					preferred,
-					isPrivate,
-					ldb,
-					entity.get_refs_key(),
-					Constants.TYPE_REFERENCE,
-					prefixPart,
-					numericPart,
-					creation,
-					creation,
-					currentUser,
-					currentUser,
-					new HashSet<Reference>()
-					);
+			Accession myID = new Accession();
+			myID.set_accession_key(referenceDAO.getNextAccessionKey());
+			myID.setAccID(accID);
+			myID.setPreferred(preferred);
+			myID.setIs_private(isPrivate);
+			myID.set_logicaldb_key(ldb);
+			myID.set_object_key(entity.get_refs_key());
+			myID.set_mgitype_key(Constants.TYPE_REFERENCE);
+			myID.setPrefixPart(prefixPart);
+			myID.setNumericPart(numericPart);
+			myID.setCreation_date(creation);
+			myID.setModification_date(creation);
+			myID.setCreatedByUser(currentUser);
+			myID.setModifiedByUser(currentUser);
 
 			referenceDAO.persist(myID);
 		}

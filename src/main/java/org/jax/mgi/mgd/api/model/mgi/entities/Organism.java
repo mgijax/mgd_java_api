@@ -52,12 +52,12 @@ public class Organism extends EntityBase {
 
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_organism_key", referencedColumnName="_object_key")
-	@Where(clause="_mgitype_key = 20 AND preferred = 1 AND _logicaldb_key = 1")
+	@Where(clause="`_mgitype_key` = 20 AND preferred = 1 AND `_logicaldb_key` = 1")
 	private Accession mgiAccessionId;
 
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_object_key", referencedColumnName="_organism_key")
-	@Where(clause="_mgitype_key = 20 AND preferred = 1")
+	@Where(clause="`_mgitype_key` = 20 AND preferred = 1")
 	private Set<Accession> allAccessionIds;
 
 	@JsonIgnore

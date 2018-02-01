@@ -18,12 +18,11 @@ import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
 import io.swagger.annotations.ApiModel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @AllArgsConstructor @NoArgsConstructor
+@Getter @Setter @NoArgsConstructor
 @Entity
 @ApiModel(value = "Accession Model Object")
 @Table(name="acc_accession")
@@ -44,11 +43,11 @@ public class Accession extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 
-	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdByUser;
 
-	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedByUser;
 	
@@ -58,4 +57,5 @@ public class Accession extends EntityBase {
 		inverseJoinColumns = @JoinColumn(name = "_refs_key")
 	)
 	private Set<Reference> references;
+
 }

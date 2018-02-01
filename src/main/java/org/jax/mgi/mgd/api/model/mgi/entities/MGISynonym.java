@@ -28,27 +28,22 @@ public class MGISynonym extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 
-	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_mgitype_key")
 	private MGIType mgiType;
-	
-	//@JsonIgnore
+
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_synonymtype_key")
 	private MGISynonymType synonymType;
-	
-	//@JsonIgnore
+
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key")
 	private Reference reference;
-	
-	//@JsonIgnore
+
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
-	//@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;

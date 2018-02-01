@@ -32,9 +32,9 @@ import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jboss.logging.Logger;
 
+import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
-import io.swagger.annotations.ApiModel;
 
 @Getter @Setter
 @Entity

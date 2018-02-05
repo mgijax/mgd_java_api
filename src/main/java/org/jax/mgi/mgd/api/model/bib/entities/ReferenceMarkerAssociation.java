@@ -27,6 +27,6 @@ public class ReferenceMarkerAssociation extends EntityBase {
 
 	@OneToOne (targetEntity=Accession.class, fetch=FetchType.LAZY)
 	@JoinColumn(name="_marker_key", referencedColumnName="_object_key", insertable=false, updatable=false)
-	@Where(clause="_mgitype_key = 2 and _logicaldb_key = 1 and preferred = 1")
+	@Where(clause="`_mgitype_key = 2` and _logicaldb_key = 1 and preferred = 1")
 	private Accession markerID;
 }

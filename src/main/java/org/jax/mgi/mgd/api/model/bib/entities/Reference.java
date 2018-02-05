@@ -122,14 +122,14 @@ public class Reference extends EntityBase {
 
 	@OneToMany (targetEntity=Accession.class, fetch=FetchType.LAZY)
 	@JoinColumn(name="_object_key", referencedColumnName="_refs_key")
-	@Where(clause="_mgitype_key = 1")
+	@Where(clause="`_mgitype_key = 1`")
 	@OrderBy("_logicaldb_key, preferred desc")
 	private List<Accession> accessionIDs;
 
 	@OneToMany (targetEntity=ReferenceAlleleAssociation.class, fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key")
 	@BatchSize(size=200)
-	@Where(clause="_mgitype_key = 11")
+	@Where(clause="`_mgitype_key = 11`")
 	@Fetch(value=FetchMode.SUBSELECT)
 	private List<ReferenceAlleleAssociation> alleleAssociations;
 

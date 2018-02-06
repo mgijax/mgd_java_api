@@ -63,7 +63,7 @@ public class Term extends EntityBase {
 	//@Where(clause="`_mgitype_key` = 13")
 	//private Set<MGISynonym> synonyms;
 
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_vocab_key")
 	private Vocabulary vocab;
 	

@@ -36,15 +36,15 @@ public class Vocabulary extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_refs_key")
-	private Reference reference;
+	//@OneToOne(fetch=FetchType.LAZY)
+	//@JoinColumn(name="_refs_key")
+	//private Reference reference;
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_logicaldb_key")
 	private LogicalDB logicalDB;
 
-	@OneToMany(fetch=FetchType.LAZY)
+	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
 	private Set<Term> terms;
 	

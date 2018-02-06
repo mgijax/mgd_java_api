@@ -31,27 +31,27 @@ public class IndexStage extends EntityBase {
 	
 	
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
 
 //	 Repeated column in mapping for entity: org.jax.mgi.mgd.api.model.gxd.entities.IndexStage column: _index_key 
 //	 (should be mapped with insert=\"false\" update=\"false\
-//	@OneToOne(fetch=FetchType.EAGER)
+//	@OneToOne(fetch=FetchType.LAZY)
 //	@JoinColumn(name="_index_key")
 //	private Index index;
 //
-//	@OneToOne(fetch=FetchType.EAGER)
+//	@OneToOne(fetch=FetchType.LAZY)
 //	@JoinColumn(name="_indexassay_key", referencedColumnName="_term_key")
 //	private Term indexAssay;
 //	
-//	@OneToOne(fetch=FetchType.EAGER)
+//	@OneToOne(fetch=FetchType.LAZY)
 //	@JoinColumn(name="_stageid_key", referencedColumnName="_term_key")
 //	private Term indexStage;
 	

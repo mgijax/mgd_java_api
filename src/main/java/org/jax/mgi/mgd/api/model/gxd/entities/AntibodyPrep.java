@@ -26,15 +26,15 @@ public class AntibodyPrep extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_antibody_key")
 	private Antibody antibody;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_secondary_key")
 	private Secondary secondary;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_label_key")
 	private GXDLabel label;
 	

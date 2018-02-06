@@ -33,23 +33,23 @@ public class InSituResult extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_specimen_key")
 	private Specimen specimen;
 
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_strength_key")
 	private Strength strength;
 
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_pattern_key")
 	private Pattern pattern;
 
-	@OneToMany(fetch=FetchType.EAGER)
+	@OneToMany(fetch=FetchType.LAZY)
 	@JoinColumn(name="_result_key")
 	private Set<InSituResultStructure> structures;
 	
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name = "gxd_insituresultimage",
 		joinColumns = @JoinColumn(name = "_result_key"),
 		inverseJoinColumns = @JoinColumn(name = "_imagepane_key")

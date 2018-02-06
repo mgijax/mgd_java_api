@@ -23,7 +23,7 @@ public class ApiLogObject {
 	private Integer _LogObject_key;
 	private Integer _object_key;
 
-	@OneToOne (targetEntity=MGIType.class, fetch=FetchType.EAGER)
+	@OneToOne (targetEntity=MGIType.class, fetch=FetchType.LAZY)
 	@JoinColumn(name="_mgitype_key")
 	private MGIType mgiType;
 

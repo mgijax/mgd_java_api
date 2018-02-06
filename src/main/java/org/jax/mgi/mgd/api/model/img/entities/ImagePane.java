@@ -36,11 +36,11 @@ public class ImagePane extends EntityBase {
 	private Date modification_date;
 
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_image_key")
 	private Image image;
 
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name = "gxd_insituresultimage",
 		joinColumns = @JoinColumn(name = "_imagepane_key"),
 		inverseJoinColumns = @JoinColumn(name = "_result_key")

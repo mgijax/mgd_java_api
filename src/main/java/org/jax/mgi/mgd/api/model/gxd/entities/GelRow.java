@@ -29,11 +29,11 @@ public class GelRow extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_assay_key")
 	private Assay assay;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_gelunits_key")
 	private GelUnit gelUnits;
 	

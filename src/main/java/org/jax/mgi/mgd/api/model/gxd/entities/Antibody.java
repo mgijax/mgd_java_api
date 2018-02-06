@@ -42,34 +42,34 @@ public class Antibody extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_antibodyclass_key")
 	private AntibodyClass antibodyClass;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_antibodytype_key")
 	private AntibodyType antibodyType;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_organism_key")
 	private Organism organism;
 	
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 	
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_antibody_key", referencedColumnName="_object_key")
-	@Where(clause="_mgitype_key = 6 AND preferred = 1 AND _logicaldb_key = 1")
+	@Where(clause="`_mgitype_key` = 6 AND preferred = 1 AND `_logicaldb_key` = 1")
 	private Accession mgiAccessionId;
 
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name = "gxd_antibody_marker",
 		joinColumns = @JoinColumn(name = "_antibody_key"),
 		inverseJoinColumns = @JoinColumn(name = "_marker_key")

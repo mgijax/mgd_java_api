@@ -28,19 +28,19 @@ public class ProbePrep extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_probe_key")
 	private Probe probe;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_sense_key")
 	private ProbeSense probeSense;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_label_key")
 	private GXDLabel label;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_visualization_key")
 	private VisualizationMethod visualizationMethod;
 	

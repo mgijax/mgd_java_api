@@ -43,50 +43,50 @@ public class HTExperiment extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_source_key")
 	private ProbeSource source;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_evaluationstate_key", referencedColumnName="_term_key")
 	private Term evaluationState;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_curationstate_key", referencedColumnName="_term_key")
 	private Term curationState;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_studytype_key", referencedColumnName="_term_key")
 	private Term studyType;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_experimenttype_key", referencedColumnName="_term_key")
 	private Term experimentType;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_evaluatedby_key", referencedColumnName="_term_key")
 	private Term evaluatedBy;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_initialcuratedby_key", referencedColumnName="_term_key")
 	private Term initialCuratedBy;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_lastcuratedby_key", referencedColumnName="_term_key")
 	private Term lastCuratedBy;
 	
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@OneToMany(fetch=FetchType.EAGER)	@JoinColumn(name="_object_key", referencedColumnName="_experiment_key")
-	@Where(clause="_mgitype_key = 42")
+	@OneToMany(fetch=FetchType.LAZY)	@JoinColumn(name="_object_key", referencedColumnName="_experiment_key")
+	@Where(clause="`_mgitype_key` = 42")
 	private Set<MGIProperty> properties;
 	
 }

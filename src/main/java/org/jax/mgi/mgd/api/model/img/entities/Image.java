@@ -41,48 +41,48 @@ public class Image extends EntityBase {
 	private Date modification_date;
 
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_mgitype_key")
 	private MGIType mgitype;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_imageclass_key", referencedColumnName="_term_key")
 	private Term imageClass;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_imagetype_key", referencedColumnName="_term_key")
 	private Term imageType;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key")
 	private Reference reference;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_thumbnailimage_key", referencedColumnName="_image_key")
 	private Image thumbnailImage;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_image_key", referencedColumnName="_object_key")
-	@Where(clause="_mgitype_key = 9 AND preferred = 1 AND _logicaldb_key = 1")
+	@Where(clause="`_mgitype_key` = 9 AND preferred = 1 AND `_logicaldb_key` = 1")
 	private Accession mgiAccessionId;
 
-	@OneToMany(fetch=FetchType.EAGER)
+	@OneToMany(fetch=FetchType.LAZY)
 	@JoinColumn(name="_object_key", referencedColumnName="_image_key")
-	@Where(clause="_mgitype_key = 9 AND preferred = 1")
+	@Where(clause="`_mgitype_key` = 9 AND preferred = 1")
 	private Set<Accession> allAccessionIds;
 	
 	@Transient

@@ -48,87 +48,87 @@ public class Allele extends EntityBase {
 	private Date modification_date;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_marker_key")
 	private Marker marker;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_strain_key")
 	private ProbeStrain strain;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_mode_key", referencedColumnName="_term_key")
 	private Term inheritanceMode;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_allele_type_key", referencedColumnName="_term_key")
 	private Term alleleType;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_allele_status_key", referencedColumnName="_term_key")
 	private Term alleleStatus;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_transmission_key", referencedColumnName="_term_key")
 	private Term transmission;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_collection_key", referencedColumnName="_term_key")
 	private Term collection;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key")
 	private Reference reference;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_markerallele_status_key", referencedColumnName="_term_key")
 	private Term markerAlleleStatus;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_approvedby_key", referencedColumnName="_user_key")
 	private User approvedBy;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_allele_key", referencedColumnName="_object_key")
 	@Where(clause="`_mgitype_key` = 11 AND preferred = 1 AND `_logicaldb_key` = 1")
 	private Accession mgiAccessionId;
 
-	@OneToMany(fetch=FetchType.EAGER)	@JoinColumn(name="_object_key", referencedColumnName="_allele_key")
+	@OneToMany(fetch=FetchType.LAZY)	@JoinColumn(name="_object_key", referencedColumnName="_allele_key")
 	@Where(clause="`_mgitype_key` = 11")
 	private Set<MGISynonym> synonyms;
 	
-	@OneToMany(fetch=FetchType.EAGER)
+	@OneToMany(fetch=FetchType.LAZY)
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key")
 	@Where(clause="`_mgitype_key` = 11 AND preferred = 1")
 	private Set<Accession> allAccessionIds;
 	
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name = "all_allele_mutation",
 		joinColumns = @JoinColumn(name = "_allele_key"),
 		inverseJoinColumns = @JoinColumn(name = "_mutation_key", referencedColumnName="_term_key")
 	)
 	private Set<Term> mutations;
 	
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name = "prb_allele_strain",
 		joinColumns = @JoinColumn(name = "_allele_key"),
 		inverseJoinColumns = @JoinColumn(name = "_strain_key")

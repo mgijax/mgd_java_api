@@ -35,52 +35,52 @@ public class AllelePair extends EntityBase {
 	private Date modification_date;
 	
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_genotype_key")
 	private Genotype genotype;
 
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_allele_key_1", referencedColumnName="_allele_key")
 	private Allele allele1;
 
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_allele_key_2", referencedColumnName="_allele_key")
 	private Allele allele2;
 
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_marker_key")
 	private Marker marker;
 
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_mutantcellline_key_1", referencedColumnName="_cellline_key")
 	private AlleleCellLine cellLine1;
 
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_mutantcellline_key_2", referencedColumnName="_cellline_key")
 	private AlleleCellLine cellLine2;
 
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_pairstate_key", referencedColumnName="_term_key")
 	private Term pairState;
 
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_compound_key", referencedColumnName="_term_key")
 	private Term compound;
 
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 	
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 }

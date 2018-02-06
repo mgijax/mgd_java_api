@@ -27,17 +27,17 @@ public class GelLaneStructure extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
-//	@OneToOne(fetch=FetchType.EAGER)
+//	@OneToOne(fetch=FetchType.LAZY)
 //	@JoinColumn(name="_gellane_key")
 //	private GelLane gelLane;
 //	
 //	Repeated column in mapping for entity: org.jax.mgi.mgd.api.model.gxd.entities.GelLaneStructure column: _emapa_term_key 
 //	(should be mapped with insert=\"false\" update=\"false\")
-//	@OneToOne(fetch=FetchType.EAGER)
+//	@OneToOne(fetch=FetchType.LAZY)
 //	@JoinColumn(name="_emapa_term_key", referencedColumnName="_term_key", insertable=false, updatable=false)
 //	private Term emapaTerm;
 //	
-//	@OneToOne(fetch=FetchType.EAGER)
+//	@OneToOne(fetch=FetchType.LAZY)
 //	@JoinColumn(name="_stage_key")
 //	private TheilerStage stage;
 

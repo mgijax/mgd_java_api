@@ -43,40 +43,40 @@ public class Cross extends EntityBase {
 	private Date modification_date;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_femalestrain_key", referencedColumnName="_strain_key")
 	private ProbeStrain femaleStrain;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_malestrain_key", referencedColumnName="_strain_key")
 	private ProbeStrain maleStrain;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_strainho_key", referencedColumnName="_strain_key")
 	private ProbeStrain homozygousStrain;
 	 
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_strainht_key", referencedColumnName="_strain_key")
 	private ProbeStrain heterozygousStrain;
 	
-	@OneToMany(fetch=FetchType.EAGER)
+	@OneToMany(fetch=FetchType.LAZY)
 	@JoinColumn(name="_cross_key")
 	@OrderColumn(name="rowNumber")
 	private Set<CrossMatrix> matrices;
 	
-	@OneToMany(fetch=FetchType.EAGER)
+	@OneToMany(fetch=FetchType.LAZY)
 	@JoinColumn(name="_cross_key")
 	private Set<CrossReference> crossReferences;
 	
-	@OneToMany(fetch=FetchType.EAGER)
+	@OneToMany(fetch=FetchType.LAZY)
 	@JoinColumn(name="_cross_key")
 	//@OrderColumn(name="rowNumber,colNumber")
 	private Set<CrossTyping> crossTypings;
 	
-	@OneToMany(fetch=FetchType.EAGER)
+	@OneToMany(fetch=FetchType.LAZY)
 	@JoinColumn(name="_cross_key")
 	@OrderColumn(name="rowNumber")
 	private Set<CrossProgeny> properties;

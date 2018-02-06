@@ -724,7 +724,10 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 	/* get the next available primary key for a workflow tag record
 	 */
 	public synchronized int getNextWorkflowTagKey() {
-		return this.getNextKey("ReferenceWorkflowTag", "_assoc_key");
+		// returns an integer rather than *, as the void return was causing a mapping exception
+		Query query = entityManager.createNativeQuery("select nextval('bib_workflow_tag_seq')");
+		BigInteger results = (BigInteger) query.getSingleResult();
+		return results.intValue();
 	}
 
 	/* update the bib_citation_cache table for the given reference key

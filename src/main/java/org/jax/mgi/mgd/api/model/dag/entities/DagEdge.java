@@ -28,22 +28,22 @@ public class DagEdge extends EntityBase {
 	private Date modification_date;
 
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_dag_key")
 	private Dag dag;
 
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_parent_key", referencedColumnName="_node_key")
 	private DagNode parentNode;
 
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_child_key", referencedColumnName="_node_key")
 	private DagNode childNode;
 
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_label_key")
 	private DagLabel label;
 

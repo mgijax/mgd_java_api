@@ -24,11 +24,11 @@ public class CrossReference extends EntityBase {
 	private Date modification_date;
 
 	// runtime error: column : _marker_key (should be mapped with insert="false" update = "false"
-	//@OneToOne(fetch=FetchType.EAGER)
+	//@OneToOne(fetch=FetchType.LAZY)
 	//@JoinColumn(name="_marker_key")
 	//private Marker marker;
 
-	//@OneToOne(fetch=FetchType.EAGER)
+	//@OneToOne(fetch=FetchType.LAZY)
 	//@JoinColumn(name="_refs_key")
 	//private Reference reference;
 

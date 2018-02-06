@@ -40,32 +40,32 @@ public class Genotype extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_strain_key")
 	private ProbeStrain strain;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_existsas_key", referencedColumnName="_term_key")
 	private Term existsAs;
 	
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_genotype_key", referencedColumnName="_object_key")
-	@Where(clause="_mgitype_key = 12 AND preferred = 1 AND _logicaldb_key = 1")
+	@Where(clause="`_mgitype_key` = 12 AND preferred = 1 AND `_logicaldb_key` = 1")
 	private Accession mgiAccessionId;
 
-	@OneToMany(fetch=FetchType.EAGER)
+	@OneToMany(fetch=FetchType.LAZY)
 	@JoinColumn(name="_object_key", referencedColumnName="_genotype_key")
-	@Where(clause="_mgitype_key = 12 AND preferred = 1")
+	@Where(clause="`_mgitype_key` = 12 AND preferred = 1")
 	private Set<Accession> allAccessionIds;
 	
 	@Transient

@@ -41,27 +41,27 @@ public class Organism extends EntityBase {
 	private Date modification_date;
 
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_organism_key", referencedColumnName="_object_key")
 	@Where(clause="`_mgitype_key` = 20 AND preferred = 1 AND `_logicaldb_key` = 1")
 	private Accession mgiAccessionId;
 
-	@OneToMany(fetch=FetchType.EAGER)
+	@OneToMany(fetch=FetchType.LAZY)
 	@JoinColumn(name="_object_key", referencedColumnName="_organism_key")
 	@Where(clause="`_mgitype_key` = 20 AND preferred = 1")
 	private Set<Accession> allAccessionIds;
 
 	@JsonIgnore
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name = "mgi_organism_mgitype",
 		joinColumns = @JoinColumn(name = "_organism_key"),
 		inverseJoinColumns = @JoinColumn(name = "_mgitype_key")

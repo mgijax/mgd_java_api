@@ -84,12 +84,12 @@ public class Marker extends EntityBase {
 
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_marker_key", referencedColumnName="_object_key")
-	@Where(clause="_mgitype_key = 2 AND preferred = 1 and _logicaldb_key = 1")
+	@Where(clause="`_mgitype_key` = 2 AND preferred = 1 and `_logicaldb_key` = 1")
 	private Accession mgiAccessionId;
 
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
-	@Where(clause="_mgitype_key = 2 AND preferred = 1")
+	@Where(clause="`_mgitype_key` = 2 AND preferred = 1")
 	private Set<Accession> allAccessionIds;
 	
 	@OneToMany(fetch=FetchType.EAGER)
@@ -106,12 +106,12 @@ public class Marker extends EntityBase {
 
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
-	@Where(clause="_mgitype_key = 2")
+	@Where(clause="`_mgitype_key` = 2")
 	private Set<CoordinateFeature> features;
 
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
-	@Where(clause="_mgitype_key = 2")
+	@Where(clause="`_mgitype_key` = 2")
 	private Set<MGISynonym> synonyms;
 	
 	@ManyToMany(fetch=FetchType.EAGER)

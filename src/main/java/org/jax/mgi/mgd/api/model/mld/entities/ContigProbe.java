@@ -28,7 +28,7 @@ public class ContigProbe extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_probe_key")
 	private Probe probe;
 	

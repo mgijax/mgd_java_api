@@ -34,37 +34,37 @@ public class MGISetMember extends EntityBase {
 	private Date modification_date;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_set_key")
 	private MGISet mgiSet;
 
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
-	@Where(clause="mgiSet._mgitype_key = 13")
+	@Where(clause="mgiSet.`_mgitype_key` = 13")
 	private Term term;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_object_key", referencedColumnName="_logicaldb_key", insertable=false, updatable=false)
-	@Where(clause="mgiSet._mgitype_key = 15")
+	@Where(clause="mgiSet.`_mgitype_key` = 15")
 	private LogicalDB logicalDb;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_object_key", referencedColumnName="_actualdb_key", insertable=false, updatable=false)
-	@Where(clause="mgiSet._mgitype_key = 16")
+	@Where(clause="mgiSet._`mgitype_key` = 16")
 	private ActualDB actualDb;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_object_key", referencedColumnName="_statistic_key", insertable=false, updatable=false)
-	@Where(clause="mgiSet._mgitype_key = 34")
+	@Where(clause="mgiSet.`_mgitype_key` = 34")
 	private MGIStatistic stat;
 	
 }

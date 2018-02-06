@@ -31,7 +31,7 @@ public class Matrix extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_cross_key")
 	private Cross cross;
 	

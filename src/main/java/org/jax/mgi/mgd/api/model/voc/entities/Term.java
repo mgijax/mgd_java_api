@@ -40,47 +40,47 @@ public class Term extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
-	//@OneToOne(fetch=FetchType.LAZY)
-	//@JoinColumn(name="_term_key", referencedColumnName="_object_key")
-	//@Where(clause="`_mgitype_key` = 13 AND preferred = 1 AND `_logicaldb_key` = 1")
-	//private Accession mgiTermAccessionId;
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_term_key", referencedColumnName="_object_key")
+	@Where(clause="`_mgitype_key` = 13 AND preferred = 1 AND `_logicaldb_key` = 1")
+	private Accession mgiTermAccessionId;
 
-	//@OneToMany(fetch=FetchType.LAZY)
-	//@JoinColumn(name="_object_key", referencedColumnName="_term_key")
-	//@Where(clause="`_mgitype_key` = 13 AND preferred = 1")
-	//private Set<Accession> allAccessionIds;
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_object_key", referencedColumnName="_term_key")
+	@Where(clause="`_mgitype_key` = 13 AND preferred = 1")
+	private Set<Accession> allAccessionIds;
 
-	//@OneToMany(fetch=FetchType.LAZY)
-	//@JoinColumn(name="_object_key", referencedColumnName="_term_key")
-	//@Where(clause="`_mgitype_key` = 13")
-	//private Set<MGISynonym> synonyms;
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_object_key", referencedColumnName="_term_key")
+	@Where(clause="`_mgitype_key` = 13")
+	private Set<MGISynonym> synonyms;
 
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_vocab_key")
 	private Vocabulary vocab;
 	
-	//@Transient
-	//public Set<Accession> getAccessionIdsByLogicalDb(LogicalDB db) {
-		//return getAccessionIdsByLogicalDb(db.get_logicaldb_key());
-	//}
+	@Transient
+	public Set<Accession> getAccessionIdsByLogicalDb(LogicalDB db) {
+		return getAccessionIdsByLogicalDb(db.get_logicaldb_key());
+	}
 	
-	//@Transient
-	//public Set<Accession> getAccessionIdsByLogicalDb(Integer db_key) {
-		//HashSet<Accession> set = new HashSet<Accession>();
-		//for(Accession a: allAccessionIds) {
-			//if(a.get_logicaldb_key() == db_key) {
-				//set.add(a);
-			//}
-		//}
-		//return set;
-	//}
+	@Transient
+	public Set<Accession> getAccessionIdsByLogicalDb(Integer db_key) {
+		HashSet<Accession> set = new HashSet<Accession>();
+		for(Accession a: allAccessionIds) {
+			if(a.get_logicaldb_key() == db_key) {
+				set.add(a);
+			}
+		}
+		return set;
+	}
 
 }

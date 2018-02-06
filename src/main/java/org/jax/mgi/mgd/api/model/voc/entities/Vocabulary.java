@@ -36,11 +36,11 @@ public class Vocabulary extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 
-	//@OneToOne(fetch=FetchType.LAZY)
-	//@JoinColumn(name="_refs_key")
-	//private Reference reference;
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="_refs_key")
+	private Reference reference;
 
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="_logicaldb_key")
 	private LogicalDB logicalDB;
 
@@ -48,10 +48,10 @@ public class Vocabulary extends EntityBase {
 	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
 	private Set<Term> terms;
 	
-	//@ManyToMany(fetch=FetchType.LAZY)
-	//@JoinTable(name = "voc_vocabdag",
-	//	joinColumns = @JoinColumn(name = "_vocab_key", referencedColumnName="_vocab_key"),
-	//	inverseJoinColumns = @JoinColumn(name = "_dag_key", referencedColumnName="_dag_key")
-	//)
-	//private Set<Dag> dags;
+	@ManyToMany(fetch=FetchType.LAZY)
+	@JoinTable(name = "voc_vocabdag",
+		joinColumns = @JoinColumn(name = "_vocab_key", referencedColumnName="_vocab_key"),
+		inverseJoinColumns = @JoinColumn(name = "_dag_key", referencedColumnName="_dag_key")
+	)
+	private Set<Dag> dags;
 }

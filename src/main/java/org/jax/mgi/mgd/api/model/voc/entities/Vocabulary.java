@@ -48,10 +48,10 @@ public class Vocabulary extends EntityBase {
 	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
 	private Set<Term> terms;
 	
-	@ManyToMany(fetch=FetchType.LAZY)
-	@JoinTable(name = "voc_vocabdag",
-		joinColumns = @JoinColumn(name = "_vocab_key", referencedColumnName="_vocab_key"),
-		inverseJoinColumns = @JoinColumn(name = "_dag_key", referencedColumnName="_dag_key")
-	)
-	private Set<Dag> dags;
+	//@ManyToMany(fetch=FetchType.LAZY)
+	//@JoinTable(name = "voc_vocabdag",
+	//	joinColumns = @JoinColumn(name = "_vocab_key", referencedColumnName="_vocab_key"),
+	//	inverseJoinColumns = @JoinColumn(name = "_dag_key", referencedColumnName="_dag_key")
+	//)
+	//private Set<Dag> dags;
 }

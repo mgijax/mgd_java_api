@@ -49,36 +49,36 @@ public class ProbeStrain extends EntityBase {
 	private Date modification_date;
 	
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_species_key", referencedColumnName="_term_key")
 	private Term species;
 
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_straintype_key", referencedColumnName="_term_key")
 	private Term strainType;
 
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_strain_key", referencedColumnName="_object_key")
-	@Where(clause="_mgitype_key = 10 AND preferred = 1 AND _logicaldb_key = 1")
+	@Where(clause="`_mgitype_key` = 10 AND preferred = 1 AND `_logicaldb_key` = 1")
 	private Accession mgiAccessionId;
 
-	@OneToMany(fetch=FetchType.EAGER)
+	@OneToMany(fetch=FetchType.LAZY)
 	@JoinColumn(name="_object_key", referencedColumnName="_strain_key")
-	@Where(clause="_mgitype_key = 10 AND preferred = 1")
+	@Where(clause="`_mgitype_key` = 10 AND preferred = 1")
 	private Set<Accession> allAccessionIds;
 	
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name = "prb_allele_strain",
 		joinColumns = @JoinColumn(name = "_strain_key"),
 		inverseJoinColumns = @JoinColumn(name = "_allele_key")
@@ -100,7 +100,7 @@ public class ProbeStrain extends EntityBase {
 		}
 		return set;
 	}
-	@OneToMany(fetch=FetchType.EAGER)	@JoinColumn(name="_object_key", referencedColumnName="_strain_key")
-	@Where(clause="_mgitype_key = 10")
+	@OneToMany(fetch=FetchType.LAZY)	@JoinColumn(name="_object_key", referencedColumnName="_strain_key")
+	@Where(clause="`_mgitype_key` = 10")
 	private Set<MGISynonym> synonyms;
 }

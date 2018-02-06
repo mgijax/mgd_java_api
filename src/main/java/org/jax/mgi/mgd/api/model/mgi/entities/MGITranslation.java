@@ -59,7 +59,7 @@ public class MGITranslation extends EntityBase {
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_object_key", referencedColumnName="_derivation_key", insertable=false, updatable=false)
-	@Where(clause="translationType._mgitype_key = 36")
+	@Where(clause="translationType.`_mgitype_key` = 36")
 	private AlleleCellLineDerivation derivation;
 	
 	@OneToOne(fetch=FetchType.LAZY)

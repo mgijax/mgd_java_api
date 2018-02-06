@@ -32,12 +32,12 @@ public class RISet extends EntityBase {
 	private Date modification_date;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_strain_key_1", referencedColumnName="_strain_key")
 	private ProbeStrain strain1;
 
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_strain_key_2", referencedColumnName="_strain_key")
 	private ProbeStrain strain2;
 }

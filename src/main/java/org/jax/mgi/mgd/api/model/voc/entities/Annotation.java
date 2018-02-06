@@ -33,42 +33,42 @@ public class Annotation extends EntityBase {
 	private Date modification_date;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_annottype_key")
 	private AnnotationType annotType;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_term_key")
 	private Term term;
 	
 	//@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_qualifier_key", referencedColumnName="_term_key")
 	private Term qualifier;
 	
-    @OneToOne(fetch=FetchType.EAGER)
+    @OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
-    @Where(clause="annotType._mgitype_key = 11")
+    @Where(clause="annotType.`_mgitype_key` = 11")
     private Allele allele;
 
-    @OneToOne(fetch=FetchType.EAGER)
+    @OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="_object_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
-    @Where(clause="annotType._mgitype_key = 12")
+    @Where(clause="annotType.`_mgitype_key` = 12")
     private Genotype genotype;
     
-    @OneToOne(fetch=FetchType.EAGER)
+    @OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-    @Where(clause="annotType._mgitype_key = 2")
+    @Where(clause="annotType.`_mgitype_key` = 2")
     private Marker marker;
     
-    @OneToOne(fetch=FetchType.EAGER)
+    @OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
-    @Where(clause="annotType._mgitype_key = 10")
+    @Where(clause="annotType.`_mgitype_key` = 10")
     private ProbeStrain strain;
     
-    @OneToOne(fetch=FetchType.EAGER)
+    @OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
-    @Where(clause="annotType._mgitype_key = 13")
+    @Where(clause="annotType.`_mgitype_key` = 13")
     private Term annotatedTerm;
 }

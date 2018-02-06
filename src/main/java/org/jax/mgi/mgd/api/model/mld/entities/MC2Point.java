@@ -30,11 +30,11 @@ public class MC2Point extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_marker_key_1", referencedColumnName="_marker_key")
 	private Marker marker1;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_marker_key_2", referencedColumnName="_marker_key")
 	private Marker marker2;
 	

@@ -25,17 +25,17 @@ public class Hit extends EntityBase {
 	
 	//Repeated column in mapping for entity: org.jax.mgi.mgd.api.model.mld.entities.Hit column: _expt_key 
 	//(should be mapped with insert=\"false\" update=\"false\")
-	//@OneToOne(fetch=FetchType.EAGER)
+	//@OneToOne(fetch=FetchType.LAZY)
 	//@JoinColumn(name="_expt_key")
 	//private Expts expt;
 	
 	//Repeated column in mapping for entity: org.jax.mgi.mgd.api.model.mld.entities.Hit column: _probe_key
 	//(should be mapped with insert=\"false\" update=\"false\")
-	//@OneToOne(fetch=FetchType.EAGER)
+	//@OneToOne(fetch=FetchType.LAZY)
 	//@JoinColumn(name="_probe_key")
 	//private Probe probe;
 	
-	//@OneToOne(fetch=FetchType.EAGER)
+	//@OneToOne(fetch=FetchType.LAZY)
 	//@JoinColumn(name="_target_key", referencedColumnName="_probe_key")
 	//private Probe target;
 

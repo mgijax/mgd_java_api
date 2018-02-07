@@ -681,27 +681,24 @@ public class ReferenceRepository extends Repository<ReferenceDomain> {
 
 		Term tagTerm = getTermByTerm(Constants.VOC_WORKFLOW_TAGS, rdTag);
 		if (tagTerm != null) {
-			// This if statement always evaluates to true?
-			// getWorkflowTags contains ReferenceWorkflowData's however the lookup is for a Term?
-			// was this the intention?
-			if (!entity.getWorkflowTags().contains(tagTerm)) {
-				ReferenceWorkflowTag rwTag = new ReferenceWorkflowTag();
-				rwTag.set_assoc_key(referenceDAO.getNextWorkflowTagKey());
-				rwTag.set_refs_key(entity.get_refs_key());
-				rwTag.setTag(tagTerm);
-				rwTag.setCreatedByUser(currentUser);
-				rwTag.setModifiedByUser(rwTag.getCreatedByUser());
-				rwTag.setCreation_date(new Date());
-				rwTag.setModification_date(rwTag.getCreation_date());
-				try {
-					referenceDAO.persist(rwTag);
-				} catch (Exception e) {
-					throw new NonFatalAPIException("Cannot add tag: " + e.toString());
-				}
 
-				entity.getWorkflowTags().add(rwTag);
-				entity.setModificationInfo(currentUser);
+			ReferenceWorkflowTag rwTag = new ReferenceWorkflowTag();
+			rwTag.set_assoc_key(referenceDAO.getNextWorkflowTagKey());
+			rwTag.set_refs_key(entity.get_refs_key());
+			rwTag.setTag(tagTerm);
+			rwTag.setCreatedByUser(currentUser);
+			rwTag.setModifiedByUser(rwTag.getCreatedByUser());
+			rwTag.setCreation_date(new Date());
+			rwTag.setModification_date(rwTag.getCreation_date());
+			try {
+				referenceDAO.persist(rwTag);
+			} catch (Exception e) {
+				throw new NonFatalAPIException("Cannot add tag: " + e.toString());
 			}
+
+			entity.getWorkflowTags().add(rwTag);
+			entity.setModificationInfo(currentUser);
+
 		}
 	}
 

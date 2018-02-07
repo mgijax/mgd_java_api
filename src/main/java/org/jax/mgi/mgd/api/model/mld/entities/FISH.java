@@ -3,7 +3,6 @@ package org.jax.mgi.mgd.api.model.mld.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -35,7 +34,7 @@ public class FISH extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_strain_key")
 	private ProbeStrain strain;
 	

@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -41,42 +40,36 @@ public class Sequence extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_sequencetype_key", referencedColumnName="_term_key")
 	private Term sequenceType;
 	
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_sequencequality_key", referencedColumnName="_term_key")
 	private Term sequenceQuality;
 	
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_sequencestatus_key", referencedColumnName="_term_key")
 	private Term sequenceStatus;
 	
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_sequenceprovider_key", referencedColumnName="_term_key")
 	private Term sequenceProvider;
 	
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_organism_key")
 	private Organism organism;
 	
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@OneToMany(fetch=FetchType.LAZY)	@JoinColumn(name="_object_key", referencedColumnName="_sequence_key")
+	@OneToMany
+	@JoinColumn(name="_object_key", referencedColumnName="_sequence_key")
 	@Where(clause="`_mgitype_key` = 19")
 	private Set<CoordinateFeature> features;
 }

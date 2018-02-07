@@ -3,7 +3,6 @@ package org.jax.mgi.mgd.api.model.dag.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -27,23 +26,19 @@ public class DagEdge extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_dag_key")
 	private Dag dag;
 
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_parent_key", referencedColumnName="_node_key")
 	private DagNode parentNode;
 
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_child_key", referencedColumnName="_node_key")
 	private DagNode childNode;
 
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_label_key")
 	private DagLabel label;
 

@@ -2,7 +2,6 @@ package org.jax.mgi.mgd.api.model.bib.entities;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -25,7 +24,7 @@ public class ReferenceMarkerAssociation extends EntityBase {
 	private ReferenceMarkerAssociationKey keys;
 	private String jnumID;
 
-	@OneToOne (targetEntity=Accession.class, fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_marker_key", referencedColumnName="_object_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` = 1 and preferred = 1")
 	private Accession markerID;

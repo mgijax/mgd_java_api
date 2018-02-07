@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -37,23 +36,23 @@ public class GelLane extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_assay_key")
 	private Assay assay;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_genotype_key")
 	private Genotype genotype;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_gelrnatype_key")
 	private GelRNAType gelRNAType;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_gelcontrol_key")
 	private GelControl gelControl;
 	
-	@OneToMany(fetch=FetchType.LAZY)
+	@OneToMany
 	@JoinColumn(name="_gellane_key")
 	private Set<GelLaneStructure> structures;
 	

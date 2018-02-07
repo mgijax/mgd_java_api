@@ -5,7 +5,6 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -43,15 +42,15 @@ public class Accession extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdByUser;
 
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedByUser;
 	
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(name = "acc_accessionreference",
 		joinColumns = @JoinColumn(name = "_accession_key"),
 		inverseJoinColumns = @JoinColumn(name = "_refs_key")

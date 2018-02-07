@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -34,19 +33,17 @@ public class Dag extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_refs_key")
 	private Reference reference;
 	
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_mgitype_key")
 	private MGIType mgiType;
 	
 	// as of 01/19/2018 each dag only exists in one vocabulary
 	// vocabularies should only have one entry
-	@ManyToMany(fetch=FetchType.LAZY)
+	@ManyToMany
 	@JoinTable(name = "voc_vocabdag",
 		inverseJoinColumns = @JoinColumn(name = "_vocab_key"),
 		joinColumns = @JoinColumn(name = "_dag_key")

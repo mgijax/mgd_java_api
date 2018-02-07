@@ -3,7 +3,6 @@ package org.jax.mgi.mgd.api.model.mgi.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -33,36 +32,34 @@ public class MGISetMember extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_set_key")
 	private MGISet mgiSet;
 
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
 	@Where(clause="mgiSet.`_mgitype_key` = 13")
 	private Term term;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_object_key", referencedColumnName="_logicaldb_key", insertable=false, updatable=false)
 	@Where(clause="mgiSet.`_mgitype_key` = 15")
 	private LogicalDB logicalDb;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_object_key", referencedColumnName="_actualdb_key", insertable=false, updatable=false)
 	@Where(clause="mgiSet.`_mgitype_key` = 16")
 	private ActualDB actualDb;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_object_key", referencedColumnName="_statistic_key", insertable=false, updatable=false)
 	@Where(clause="mgiSet.`_mgitype_key` = 34")
 	private MGIStatistic stat;

@@ -2,7 +2,6 @@ package org.jax.mgi.mgd.api.model.bib.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -34,7 +33,7 @@ public class ReferenceAlleleAssociation extends EntityBase {
 	@Column(name="_object_key")
 	private int _allele_key;
 
-	@OneToOne (targetEntity=Accession.class, fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_object_key", referencedColumnName="_object_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 11 and `_logicaldb_key` = 1 and preferred = 1")
 	private Accession alleleID;

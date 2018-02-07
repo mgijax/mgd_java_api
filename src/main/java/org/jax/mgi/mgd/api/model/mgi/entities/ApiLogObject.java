@@ -1,7 +1,6 @@
 package org.jax.mgi.mgd.api.model.mgi.entities;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -23,11 +22,11 @@ public class ApiLogObject {
 	private Integer _LogObject_key;
 	private Integer _object_key;
 
-	@OneToOne (targetEntity=MGIType.class, fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_mgitype_key")
 	private MGIType mgiType;
 
-	@OneToOne (targetEntity=ApiLogEvent.class, fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_event_key")
 	private ApiLogEvent event;
 }

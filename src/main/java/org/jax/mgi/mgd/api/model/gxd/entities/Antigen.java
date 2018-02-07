@@ -3,7 +3,6 @@ package org.jax.mgi.mgd.api.model.gxd.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -12,11 +11,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
-import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
-
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -36,21 +32,19 @@ public class Antigen extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_source_key")
 	private ProbeSource source;
-	
-	@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+
+	@OneToOne
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
-	@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_antigen_key", referencedColumnName="_object_key")
 	@Where(clause="`_mgitype_key` = 7 AND preferred = 1 AND `_logicaldb_key` = 1")
 	private Accession mgiAccessionId;

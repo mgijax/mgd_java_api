@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -30,13 +29,12 @@ public class ApiLogEvent extends EntityBase {
 	private String parameters;
 	private Date creation_date;
 
-	@OneToOne (targetEntity=User.class, fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_user_key")
 	private User createdBy;
 
-	@OneToMany (targetEntity=ApiLogObject.class, fetch=FetchType.LAZY)
+	@OneToMany
 	@JoinColumn(name="_event_key")
 	@BatchSize(size=200)
-//	@Fetch(value=FetchMode.SUBSELECT)
 	private Set<ApiLogObject> objects;
 }

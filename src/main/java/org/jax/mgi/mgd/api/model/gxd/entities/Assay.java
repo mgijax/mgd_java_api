@@ -3,7 +3,6 @@ package org.jax.mgi.mgd.api.model.gxd.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -17,8 +16,6 @@ import org.jax.mgi.mgd.api.model.img.entities.ImagePane;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -35,52 +32,43 @@ public class Assay extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
-	@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_assaytype_key")
 	private AssayType assayType;
 
-	@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_refs_key")
 	private Reference reference;
 
-	@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_marker_key")
 	private Marker marker;
 
-	@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_probeprep_key")
 	private ProbePrep probePrep;
 
-	@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_antibodyprep_key")
 	private AntibodyPrep antibodyPrep;
 
-	@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_imagepane_key")
 	private ImagePane imagePane;
 
-	@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_reportergene_key", referencedColumnName="_term_key")
 	private Term reporterGene;
 
-	@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 	
-	@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_assay_key", referencedColumnName="_object_key")
 	@Where(clause="`_mgitype_key` = 8 AND preferred = 1 AND `_logicaldb_key` = 1")
 	private Accession mgiAccessionId;

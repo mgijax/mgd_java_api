@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -30,27 +29,23 @@ public class AnnotationType extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_mgitype_key")
 	private MGIType mgiType;
 	
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_vocab_key")
 	private Vocabulary vocab;
 	
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_evidencevocab_key", referencedColumnName="_vocab_key")
 	private Vocabulary evidenceVocab;
 	
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_qualifiervocab_key", referencedColumnName="_vocab_key")
 	private Vocabulary qualifierVocab;
 	
-	@OneToMany(fetch=FetchType.LAZY)
+	@OneToMany
 	@JoinColumn(name="_anottype_key")
 	private Set<Annotation> annotations;
 }

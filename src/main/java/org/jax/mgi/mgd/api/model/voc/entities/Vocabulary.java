@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -36,19 +35,19 @@ public class Vocabulary extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne
 	@JoinColumn(name="_refs_key")
 	private Reference reference;
 
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne
 	@JoinColumn(name="_logicaldb_key")
 	private LogicalDB logicalDB;
 
-	@OneToMany(fetch=FetchType.EAGER)
+	@OneToMany
 	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
 	private Set<Term> terms;
 	
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(name = "voc_vocabdag",
 		joinColumns = @JoinColumn(name = "_vocab_key", referencedColumnName="_vocab_key"),
 		inverseJoinColumns = @JoinColumn(name = "_dag_key", referencedColumnName="_dag_key")

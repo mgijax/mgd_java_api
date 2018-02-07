@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -20,8 +19,6 @@ import org.jax.mgi.mgd.api.model.EntityBase;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -40,28 +37,25 @@ public class Organism extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 
-	@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
-	@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_organism_key", referencedColumnName="_object_key")
 	@Where(clause="`_mgitype_key` = 20 AND preferred = 1 AND `_logicaldb_key` = 1")
 	private Accession mgiAccessionId;
 
-	@OneToMany(fetch=FetchType.LAZY)
+	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_organism_key")
 	@Where(clause="`_mgitype_key` = 20 AND preferred = 1")
 	private Set<Accession> allAccessionIds;
 
-	@JsonIgnore
-	@ManyToMany(fetch=FetchType.LAZY)
+	@ManyToMany
 	@JoinTable(name = "mgi_organism_mgitype",
 		joinColumns = @JoinColumn(name = "_organism_key"),
 		inverseJoinColumns = @JoinColumn(name = "_mgitype_key")

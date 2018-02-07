@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -42,41 +41,37 @@ public class Cross extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 	
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_femalestrain_key", referencedColumnName="_strain_key")
 	private ProbeStrain femaleStrain;
 	
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_malestrain_key", referencedColumnName="_strain_key")
 	private ProbeStrain maleStrain;
 	
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_strainho_key", referencedColumnName="_strain_key")
 	private ProbeStrain homozygousStrain;
 	 
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_strainht_key", referencedColumnName="_strain_key")
 	private ProbeStrain heterozygousStrain;
 	
-	@OneToMany(fetch=FetchType.LAZY)
+	@OneToMany
 	@JoinColumn(name="_cross_key")
 	@OrderColumn(name="rowNumber")
 	private Set<CrossMatrix> matrices;
 	
-	@OneToMany(fetch=FetchType.LAZY)
+	@OneToMany
 	@JoinColumn(name="_cross_key")
 	private Set<CrossReference> crossReferences;
 	
-	@OneToMany(fetch=FetchType.LAZY)
+	@OneToMany
 	@JoinColumn(name="_cross_key")
 	//@OrderColumn(name="rowNumber,colNumber")
 	private Set<CrossTyping> crossTypings;
 	
-	@OneToMany(fetch=FetchType.LAZY)
+	@OneToMany
 	@JoinColumn(name="_cross_key")
 	@OrderColumn(name="rowNumber")
 	private Set<CrossProgeny> properties;

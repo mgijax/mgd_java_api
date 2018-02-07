@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -35,12 +34,11 @@ public class ImagePane extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_image_key")
 	private Image image;
 
-	@ManyToMany(fetch=FetchType.LAZY)
+	@ManyToMany
 	@JoinTable(name = "gxd_insituresultimage",
 		joinColumns = @JoinColumn(name = "_imagepane_key"),
 		inverseJoinColumns = @JoinColumn(name = "_result_key")

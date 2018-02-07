@@ -3,7 +3,6 @@ package org.jax.mgi.mgd.api.model.mgi.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -29,43 +28,35 @@ public class RelationshipCategory extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_relationshipvocab_key", referencedColumnName="_vocab_key")
 	private Vocabulary relationshipVocab;
 
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_relationshipdag_key", referencedColumnName="_dag_key")
 	private Dag relationshipDag ;
 
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_mgitype_key_1", referencedColumnName="_mgitype_key")
 	private MGIType mgitype1;
 
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_mgitype_key_2", referencedColumnName="_mgitype_key")
 	private MGIType mgitype2;
 
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_qualifiervocab_key", referencedColumnName="_vocab_key")
 	private Vocabulary qualifierVocab;
 
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_evidencevocab_key", referencedColumnName="_vocab_key")
 	private Vocabulary evidenceVocab;
 
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
-	//@JsonIgnore
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 

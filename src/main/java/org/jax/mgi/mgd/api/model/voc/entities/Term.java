@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -40,30 +39,30 @@ public class Term extends EntityBase {
 	private Date creation_date;
 	private Date modification_date;
 
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne
 	@JoinColumn(name="_term_key", referencedColumnName="_object_key")
 	@Where(clause="`_mgitype_key` = 13 AND preferred = 1 AND `_logicaldb_key` = 1")
 	private Accession mgiTermAccessionId;
 
-	@OneToMany(fetch=FetchType.EAGER)
+	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key")
 	@Where(clause="`_mgitype_key` = 13 AND preferred = 1")
 	private Set<Accession> allAccessionIds;
 
-	@OneToMany(fetch=FetchType.EAGER)
+	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key")
 	@Where(clause="`_mgitype_key` = 13")
 	private Set<MGISynonym> synonyms;
 
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne
 	@JoinColumn(name="_vocab_key")
 	private Vocabulary vocab;
 	

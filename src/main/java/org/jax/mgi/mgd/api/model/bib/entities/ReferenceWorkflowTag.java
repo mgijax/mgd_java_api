@@ -4,7 +4,6 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -37,15 +36,15 @@ public class ReferenceWorkflowTag extends EntityBase {
 	@Column(name="modification_date")
 	private Date modification_date;
 	
-	@OneToOne (targetEntity=Term.class, fetch=FetchType.EAGER)
+	@OneToOne
 	@JoinColumn(name="_tag_key", referencedColumnName="_term_key")
 	private Term tag;
 	
-	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
+	@OneToOne
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdByUser;
 	
-	@OneToOne (targetEntity=User.class, fetch=FetchType.EAGER)
+	@OneToOne
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedByUser;
 	

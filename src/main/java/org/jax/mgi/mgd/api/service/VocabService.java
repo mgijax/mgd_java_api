@@ -19,7 +19,7 @@ public class VocabService extends ServiceInterface<VocabularyDomain> {
 	private VocabularyDAO vocabularyDAO;
 	private VocabularyTranslator translator = new VocabularyTranslator();
 	
-	
+	@Transactional
 	public VocabularyDomain create(VocabularyDomain object) {
 		Vocabulary vocab = translator.translate(object);
 		Vocabulary returnVocab = vocabularyDAO.create(vocab);
@@ -27,6 +27,7 @@ public class VocabService extends ServiceInterface<VocabularyDomain> {
 		return vocabDomain;
 	}
 
+	@Transactional
 	public VocabularyDomain update(VocabularyDomain object) {
 		Vocabulary vocab = translator.translate(object);
 		Vocabulary returnVocab = vocabularyDAO.update(vocab);

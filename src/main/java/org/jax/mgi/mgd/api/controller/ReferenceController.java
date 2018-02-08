@@ -16,7 +16,6 @@ import org.jax.mgi.mgd.api.domain.TermDomain;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.rest.interfaces.ReferenceRESTInterface;
 import org.jax.mgi.mgd.api.service.ApiLogService;
 import org.jax.mgi.mgd.api.service.ReferenceService;

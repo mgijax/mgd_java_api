@@ -19,8 +19,10 @@ public class VocabularyTranslator extends EntityDomainTranslator<Vocabulary, Voc
 		domain.setName(entity.getName());
 		domain.setCreation_date(entity.getCreation_date());
 		domain.setModification_date(entity.getModification_date());
+		
 		Iterable<TermDomain> terms = termTranslator.translateEntities(entity.getTerms());
 		domain.setTerms(IteratorUtils.toList(terms.iterator()));
+		
 		return domain;
 	}
 

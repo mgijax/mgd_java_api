@@ -8,6 +8,9 @@ all:
 run:
 	java -jar target/mgd_java_api-swarm.jar -Papp.properties
 
+debug:
+	java -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -jar target/mgd_java_api-swarm.jar -Papp.properties 
+
 #
 # bheidev01.jax.org : older server
 # need to specifically call java 8 and run targets

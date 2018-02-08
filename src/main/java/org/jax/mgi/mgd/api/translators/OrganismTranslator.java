@@ -8,7 +8,7 @@ public class OrganismTranslator extends EntityDomainTranslator<Organism, Organis
 	@Override
 	protected OrganismDomain entityToDomain(Organism entity) {
 		OrganismDomain domain = new OrganismDomain();
-	
+
 		domain.set_organism_key(entity.get_organism_key());
 		domain.setCommonname(entity.getCommonname());
 		domain.setLatinname(entity.getLatinname());

@@ -19,5 +19,4 @@ public class VocabularyDomain extends DomainBase {
 	private Date modification_date;
 	private List<TermDomain> terms;
 
-	
 }

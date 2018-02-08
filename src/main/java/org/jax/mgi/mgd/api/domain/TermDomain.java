@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@ApiModel
+@ApiModel(value = "Term Model Object")
 public class TermDomain extends DomainBase {
 
 	private Integer _term_key;

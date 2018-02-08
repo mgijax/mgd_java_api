@@ -35,10 +35,12 @@ public class VocabService extends ServiceInterface<VocabularyDomain> {
 		return vocabDomain;
 	}
 
+	@Transactional
 	public VocabularyDomain get(Integer key) {
 		return translator.translate(vocabularyDAO.get(key));
 	}
 	
+	@Transactional
 	public VocabularyDomain delete(Integer key) {
 		return translator.translate(vocabularyDAO.delete(vocabularyDAO.get(key)));
 	}

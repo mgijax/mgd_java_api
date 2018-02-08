@@ -29,7 +29,9 @@ public abstract class EntityDomainTranslator<E extends EntityBase, D extends Dom
 	public Iterable<D> translateEntities(Iterable<E> entities) {
 		ArrayList<D> domains = new ArrayList<D>();
 		for(E entity: entities) {
-			domains.add(entityToDomain(entity));
+			if(entity != null) {
+				domains.add(entityToDomain(entity));
+			}
 		}
 		return domains;
 	}

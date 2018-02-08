@@ -5,7 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.domain.UserDomain;
 
 import io.swagger.annotations.Api;
 
@@ -13,7 +13,7 @@ import io.swagger.annotations.Api;
 @Api(value = "User Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface UserRESTInterface extends RESTInterface<User> {
+public interface UserRESTInterface extends RESTInterface<UserDomain> {
 
 
 }

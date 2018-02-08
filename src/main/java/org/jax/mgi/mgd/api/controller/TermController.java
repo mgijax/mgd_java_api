@@ -4,7 +4,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.jax.mgi.mgd.api.model.voc.entities.Term;
+import org.jax.mgi.mgd.api.domain.TermDomain;
 import org.jax.mgi.mgd.api.rest.interfaces.TermRESTInterface;
 import org.jax.mgi.mgd.api.service.TermService;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -15,7 +15,7 @@ public class TermController extends BaseController implements TermRESTInterface 
 	private TermService termService;
 
 	@Override
-	public Term create(String api_access_token, Term term) {
+	public TermDomain create(String api_access_token, TermDomain term) {
 		if(authenticate(api_access_token)) {
 			return termService.create(term);
 		}
@@ -23,7 +23,7 @@ public class TermController extends BaseController implements TermRESTInterface 
 	}
 
 	@Override
-	public Term update(String api_access_token, Term term) {
+	public TermDomain update(String api_access_token, TermDomain term) {
 		if(authenticate(api_access_token)) {
 			return termService.update(term);
 		}
@@ -31,12 +31,12 @@ public class TermController extends BaseController implements TermRESTInterface 
 	}
 
 	@Override
-	public Term get(Integer key) {
+	public TermDomain get(Integer key) {
 		return termService.get(key);
 	}
 
 	@Override
-	public Term delete(String api_access_token, Integer term_key) {
+	public TermDomain delete(String api_access_token, Integer term_key) {
 		if(authenticate(api_access_token)) {
 			return termService.delete(term_key);
 		}
@@ -44,7 +44,7 @@ public class TermController extends BaseController implements TermRESTInterface 
 	}
 
 	@Override
-	public SearchResults<Term> search(Map<String, Object> postParams) {
+	public SearchResults<TermDomain> search(Map<String, Object> postParams) {
 		return termService.search(postParams, "sequenceNum");
 	}
 	

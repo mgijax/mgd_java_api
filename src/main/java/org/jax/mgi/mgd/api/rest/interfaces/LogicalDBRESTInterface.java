@@ -5,7 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
+import org.jax.mgi.mgd.api.domain.LogicalDBDomain;
 
 import io.swagger.annotations.Api;
 
@@ -13,7 +13,7 @@ import io.swagger.annotations.Api;
 @Api(value = "LogicalDB Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface LogicalDBRESTInterface extends RESTInterface<LogicalDB> {
+public interface LogicalDBRESTInterface extends RESTInterface<LogicalDBDomain> {
 
 
 }

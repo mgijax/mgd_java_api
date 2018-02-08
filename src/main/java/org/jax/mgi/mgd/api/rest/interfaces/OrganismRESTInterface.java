@@ -5,7 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
+import org.jax.mgi.mgd.api.domain.OrganismDomain;
 
 import io.swagger.annotations.Api;
 
@@ -13,7 +13,7 @@ import io.swagger.annotations.Api;
 @Api(value = "Organism Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface OrganismRESTInterface extends RESTInterface<Organism> {
+public interface OrganismRESTInterface extends RESTInterface<OrganismDomain> {
 
 
 }

@@ -6,15 +6,52 @@ import java.util.Map;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
-import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
+import org.jax.mgi.mgd.api.domain.UserDomain;
 import org.jax.mgi.mgd.api.model.mgi.dao.UserDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
-public class UserService extends ServiceInterface<User> {
+public class UserService extends ServiceInterface<UserDomain> {
 
 	@Inject
 	private UserDAO userDAO;
+
+	@Override
+	public UserDomain create(UserDomain object) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UserDomain update(UserDomain object) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UserDomain get(Integer key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UserDomain delete(Integer key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SearchResults<UserDomain> search(Map<String, Object> searchFields) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SearchResults<UserDomain> search(Map<String, Object> searchFields, String orderByField) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	/* get the User object corresponding to the given username (Linux login)
 	 */
@@ -29,8 +66,4 @@ public class UserService extends ServiceInterface<User> {
 		}
 	}
 
-	@Override
-	public PostgresSQLDAO<User> getDAO() {
-		return userDAO;
-	}
 }

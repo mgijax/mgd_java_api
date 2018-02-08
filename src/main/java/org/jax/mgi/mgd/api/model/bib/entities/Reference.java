@@ -27,7 +27,6 @@ import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jboss.logging.Logger;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -38,9 +37,6 @@ import lombok.Setter;
 @ApiModel(value = "Reference Model Object")
 @Table(name="bib_refs")
 public class Reference extends EntityBase {
-
-	@Transient
-	private Logger log = Logger.getLogger(getClass());
 
 	@Id
 	@Column(name="_Refs_key")

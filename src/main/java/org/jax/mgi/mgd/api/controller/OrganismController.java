@@ -4,7 +4,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
+import org.jax.mgi.mgd.api.domain.OrganismDomain;
 import org.jax.mgi.mgd.api.rest.interfaces.OrganismRESTInterface;
 import org.jax.mgi.mgd.api.service.OrganismService;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -15,7 +15,7 @@ public class OrganismController extends BaseController implements OrganismRESTIn
 	private OrganismService organismService;
 
 	@Override
-	public Organism create(String api_access_token, Organism organism) {
+	public OrganismDomain create(String api_access_token, OrganismDomain organism) {
 		if(authenticate(api_access_token)) {
 			return organismService.create(organism);
 		}
@@ -23,7 +23,7 @@ public class OrganismController extends BaseController implements OrganismRESTIn
 	}
 
 	@Override
-	public Organism update(String api_access_token, Organism organism) {
+	public OrganismDomain update(String api_access_token, OrganismDomain organism) {
 		if(authenticate(api_access_token)) {
 			return organismService.update(organism);
 		}
@@ -31,12 +31,12 @@ public class OrganismController extends BaseController implements OrganismRESTIn
 	}
 
 	@Override
-	public Organism get(Integer key) {
+	public OrganismDomain get(Integer key) {
 		return organismService.get(key);
 	}
 
 	@Override
-	public Organism delete(String api_access_token, Integer organism_key) {
+	public OrganismDomain delete(String api_access_token, Integer organism_key) {
 		if(authenticate(api_access_token)) {
 			return organismService.delete(organism_key);
 		}
@@ -44,7 +44,7 @@ public class OrganismController extends BaseController implements OrganismRESTIn
 	}
 
 	@Override
-	public SearchResults<Organism> search(Map<String, Object> postParams) {
+	public SearchResults<OrganismDomain> search(Map<String, Object> postParams) {
 		return organismService.search(postParams);
 
 	}

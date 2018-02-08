@@ -5,7 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.voc.entities.Term;
+import org.jax.mgi.mgd.api.domain.TermDomain;
 
 import io.swagger.annotations.Api;
 
@@ -13,7 +13,7 @@ import io.swagger.annotations.Api;
 @Api(value = "Term Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface TermRESTInterface extends RESTInterface<Term> {
+public interface TermRESTInterface extends RESTInterface<TermDomain> {
 
 
 }

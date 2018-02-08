@@ -5,7 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.voc.entities.Vocabulary;
+import org.jax.mgi.mgd.api.domain.VocabularyDomain;
 
 import io.swagger.annotations.Api;
 
@@ -13,7 +13,7 @@ import io.swagger.annotations.Api;
 @Api(value = "Vocab Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface VocabRESTInterface extends RESTInterface<Vocabulary> {
+public interface VocabRESTInterface extends RESTInterface<VocabularyDomain> {
 
 
 }

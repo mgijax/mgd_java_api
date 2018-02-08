@@ -25,7 +25,6 @@ import org.jboss.logging.Logger;
 
 @Singleton
 public abstract class PostgresSQLDAO<T> {
-	/***--- instance variables ---***/
 
 	protected Class<T> myClass;
 
@@ -43,11 +42,8 @@ public abstract class PostgresSQLDAO<T> {
 	/* maps from table name to the next value that should be assigned as primary key for the table */
 	protected static Map<String, Integer> nextKeyValue = new HashMap<String, Integer>();
 
-	/***--- methods ---***/
-
 	protected PostgresSQLDAO(Class<T> myClass) {
 		this.myClass = myClass;
-
 		//myClass = (Class<T>) DAOUtil.getTypeArguments(Foo.class, this.getClass()).get(0);
 		//myClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 	}
@@ -75,7 +71,6 @@ public abstract class PostgresSQLDAO<T> {
 */
 
 	public T update(T model) {
-		//log(model);
 		entityManager.merge(model);
 		return model;
 	}
@@ -151,7 +146,7 @@ public abstract class PostgresSQLDAO<T> {
 	/* get the next available _Accession_key in the ACC_Accession table
 	 */
 	public synchronized int getNextAccessionKey() {
-		return this.getNextKey("AccessionID", "_accession_key");
+		return getNextKey("AccessionID", "_accession_key");
 	}
 
 	/* method to get the next available key for the specified 'fieldName' in the given 'tableName'.  Any methods
@@ -186,19 +181,19 @@ public abstract class PostgresSQLDAO<T> {
 	 * this method facilitates that initial save of the sub-object.
 	 */
 	public void persist(Object o) {
-		this.entityManager.persist(o);
+		entityManager.persist(o);
 	}
 
 	/* Remove object o from the database.  Make sure it has already been removed from any relationships.
 	 */
 	public void remove(Object o) {
-		this.entityManager.remove(o);
+		entityManager.remove(o);
 	}
 
 	/* Refresh object o from the database.
 	 */
 	public void refresh(Object o) {
-		this.entityManager.refresh(o);
+		entityManager.refresh(o);
 	}
 
 	/* method to get the database dump date from the mgi_dbinfo table

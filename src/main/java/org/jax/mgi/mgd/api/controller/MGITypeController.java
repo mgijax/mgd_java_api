@@ -4,7 +4,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
+import org.jax.mgi.mgd.api.domain.MGITypeDomain;
 import org.jax.mgi.mgd.api.rest.interfaces.MGITypeRESTInterface;
 import org.jax.mgi.mgd.api.service.MGITypeService;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -15,7 +15,7 @@ public class MGITypeController extends BaseController implements MGITypeRESTInte
 	private MGITypeService mgitypeService;
 
 	@Override
-	public MGIType create(String api_access_token, MGIType mgitype) {
+	public MGITypeDomain create(String api_access_token, MGITypeDomain mgitype) {
 		if(authenticate(api_access_token)) {
 			return mgitypeService.create(mgitype);
 		}
@@ -23,12 +23,12 @@ public class MGITypeController extends BaseController implements MGITypeRESTInte
 	}
 
 	@Override
-	public MGIType get(Integer key) {
+	public MGITypeDomain get(Integer key) {
 		return mgitypeService.get(key);
 	}
 
 	@Override
-	public MGIType update(String api_access_token, MGIType mgitype) {
+	public MGITypeDomain update(String api_access_token, MGITypeDomain mgitype) {
 		if(authenticate(api_access_token)) {
 			return mgitypeService.update(mgitype);
 		}
@@ -36,7 +36,7 @@ public class MGITypeController extends BaseController implements MGITypeRESTInte
 	}
 
 	@Override
-	public MGIType delete(String api_access_token, Integer mgitype_key) {
+	public MGITypeDomain delete(String api_access_token, Integer mgitype_key) {
 		if(authenticate(api_access_token)) {
 			return mgitypeService.delete(mgitype_key);
 		}
@@ -44,7 +44,7 @@ public class MGITypeController extends BaseController implements MGITypeRESTInte
 	}
 
 	@Override
-	public SearchResults<MGIType> search(Map<String, Object> postParams) {
+	public SearchResults<MGITypeDomain> search(Map<String, Object> postParams) {
 		return mgitypeService.search(postParams);
 	}
 

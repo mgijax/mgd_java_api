@@ -4,7 +4,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.jax.mgi.mgd.api.model.acc.entities.ActualDB;
+import org.jax.mgi.mgd.api.domain.ActualDBDomain;
 import org.jax.mgi.mgd.api.rest.interfaces.ActualDBRESTInterface;
 import org.jax.mgi.mgd.api.service.ActualDBService;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -15,7 +15,7 @@ public class ActualDBController extends BaseController implements ActualDBRESTIn
 	private ActualDBService actualdbService;
 
 	@Override
-	public ActualDB create(String api_access_token, ActualDB actualdb) {
+	public ActualDBDomain create(String api_access_token, ActualDBDomain actualdb) {
 		if(authenticate(api_access_token)) {
 			return actualdbService.create(actualdb);
 		}
@@ -23,7 +23,7 @@ public class ActualDBController extends BaseController implements ActualDBRESTIn
 	}
 
 	@Override
-	public ActualDB update(String api_access_token, ActualDB actualdb) {
+	public ActualDBDomain update(String api_access_token, ActualDBDomain actualdb) {
 		if(authenticate(api_access_token)) {
 			return actualdbService.update(actualdb);
 		}
@@ -31,12 +31,12 @@ public class ActualDBController extends BaseController implements ActualDBRESTIn
 	}
 
 	@Override
-	public ActualDB get(Integer key) {
+	public ActualDBDomain get(Integer key) {
 		return actualdbService.get(key);
 	}
 
 	@Override
-	public ActualDB delete(String api_access_token, Integer actualdb_key) {
+	public ActualDBDomain delete(String api_access_token, Integer actualdb_key) {
 		if(authenticate(api_access_token)) {
 			return actualdbService.delete(actualdb_key);
 		}
@@ -44,7 +44,7 @@ public class ActualDBController extends BaseController implements ActualDBRESTIn
 	}
 
 	@Override
-	public SearchResults<ActualDB> search(Map<String, Object> postParams) {
+	public SearchResults<ActualDBDomain> search(Map<String, Object> postParams) {
 		return actualdbService.search(postParams);
 
 	}

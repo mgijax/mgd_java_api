@@ -5,7 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
+import org.jax.mgi.mgd.api.domain.MGITypeDomain;
 
 import io.swagger.annotations.Api;
 
@@ -13,6 +13,6 @@ import io.swagger.annotations.Api;
 @Api(value = "MGI Type Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface MGITypeRESTInterface extends RESTInterface<MGIType> {
+public interface MGITypeRESTInterface extends RESTInterface<MGITypeDomain> {
 
 }

@@ -1,7 +1,11 @@
 package org.jax.mgi.mgd.api.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import org.apache.commons.collections4.IteratorUtils;
+import org.jax.mgi.mgd.api.domain.TermDomain;
 
 /* Note that the most accurate way to measure timings is to use the default constructor before
  * doing your query, then use setItems() to tell the SearchResults about your result set.  Otherwise,
@@ -25,50 +29,58 @@ public class SearchResults<T> {
 	public SearchResults(List<T> items) {
 		startTime = System.currentTimeMillis();
 		this.items = items;
-		this.total_count = items.size();
-		this.all_match_count = this.total_count;
-		this.measureTime();
+		total_count = items.size();
+		all_match_count = total_count;
+		measureTime();
 	}
 	
 	public SearchResults(List<T> items, long total_count) {
 		startTime = System.currentTimeMillis();
 		this.items = items;
 		this.total_count = total_count;
-		this.all_match_count = this.total_count;
-		this.measureTime();
+		all_match_count = total_count;
+		measureTime();
 	}
 	
+	public SearchResults(Iterable<T> items) {
+		startTime = System.currentTimeMillis();
+		this.items = IteratorUtils.toList(items.iterator());
+		total_count = this.items.size();
+		all_match_count = total_count;
+		measureTime();
+	}
+
 	public void setItems(List<T> items) {
 		this.items = items;
-		this.total_count = this.items.size();
-		if (this.all_match_count < this.total_count) {
-			this.all_match_count = this.total_count;
+		total_count = items.size();
+		if (all_match_count < total_count) {
+			all_match_count = total_count;
 		}
-		this.measureTime();
+		measureTime();
 	}
 	
 	public void setItem(T item) {
-		this.items = new ArrayList<T>();
-		this.items.add(item);
-		this.total_count = this.items.size();
-		if (this.all_match_count < this.total_count) {
-			this.all_match_count = this.total_count;
+		items = new ArrayList<T>();
+		items.add(item);
+		total_count = items.size();
+		if (all_match_count < total_count) {
+			all_match_count = total_count;
 		}
-		this.measureTime();
+		measureTime();
 	}
 	
 	public void setAllMatchCount(long allMatches) {
-		this.all_match_count = allMatches;
+		all_match_count = allMatches;
 	}
 	
 	public void setError(String error, String message, int status_code) {
 		this.error = error;
 		this.message = message;
 		this.status_code = status_code;
-		this.measureTime();
+		measureTime();
 	}
 	
 	private void measureTime() {
-		this.elapsed_ms = System.currentTimeMillis() - startTime;
+		elapsed_ms = System.currentTimeMillis() - startTime;
 	}
 }

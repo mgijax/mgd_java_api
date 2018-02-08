@@ -12,6 +12,7 @@ import org.jax.mgi.mgd.api.domain.ApiLogDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceSummaryDomain;
+import org.jax.mgi.mgd.api.domain.TermDomain;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -151,7 +152,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 			params.put("vocab.name", "Workflow Status");
 			params.put("term", status);
 			
-			SearchResults<Term> terms = termService.search(params);
+			SearchResults<TermDomain> terms = termService.search(params);
 			if (terms.total_count == 0) {
 				results.setError("Failed", "Unknown status term: " + status, Constants.HTTP_NOT_FOUND);
 				return results;

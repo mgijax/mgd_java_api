@@ -1,7 +1,7 @@
 package org.jax.mgi.mgd.api.model.acc.entities;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -55,6 +55,6 @@ public class Accession extends EntityBase {
 		joinColumns = @JoinColumn(name = "_accession_key"),
 		inverseJoinColumns = @JoinColumn(name = "_refs_key")
 	)
-	private Set<Reference> references;
+	private List<Reference> references;
 
 }

@@ -1,7 +1,7 @@
 package org.jax.mgi.mgd.api.model.acc.entities;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -50,6 +50,6 @@ public class MGIType extends EntityBase {
 		inverseJoinColumns = @JoinColumn(name = "_organism_key")
 	)
 	@OrderColumn(name="sequencenum")
-	private Set<Organism> organisms;
+	private List<Organism> organisms;
 
 }

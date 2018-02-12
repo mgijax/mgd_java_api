@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.voc.entities;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -46,7 +47,7 @@ public class Vocabulary extends EntityBase {
 
 	@OneToMany
 	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
-	private Set<Term> terms;
+	private List<Term> terms;
 	
 	@ManyToMany
 	@JoinTable(name = "voc_vocabdag",

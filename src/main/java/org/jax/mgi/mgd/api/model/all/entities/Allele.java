@@ -23,6 +23,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrainMarker;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
@@ -107,6 +108,10 @@ public class Allele extends EntityBase {
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key")
 	@Where(clause="`_mgitype_key` = 11 AND preferred = 1")
 	private Set<Accession> allAccessionIds;
+	
+	@OneToMany
+	@JoinColumn(name="_allele_key")
+	private Set<ProbeStrainMarker> probeStrainMarkers;
 	
 	@ManyToMany
 	@JoinTable(name = "all_allele_mutation",

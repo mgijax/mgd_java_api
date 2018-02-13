@@ -67,6 +67,14 @@ public class ProbeStrain extends EntityBase {
 	private Accession mgiAccessionId;
 
 	@OneToMany
+	@JoinColumn(name="_strain_key")
+	private Set<ProbeStrainMarker> probeStrainMarkers;
+	
+	@OneToMany
+	@JoinColumn(name="_strain_key")
+	private Set<ProbeStrainGenotype> probeStrainGenotypes;
+	
+	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_strain_key")
 	@Where(clause="`_mgitype_key` = 10 AND preferred = 1")
 	private Set<Accession> allAccessionIds;

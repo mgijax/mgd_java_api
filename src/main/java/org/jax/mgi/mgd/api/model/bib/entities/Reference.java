@@ -153,7 +153,7 @@ public class Reference extends EntityBase {
 	@JoinColumn(name="_refs_key")
 	private ReferenceAssociatedData associatedData;
 
-	@OneToMany
+	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key")
 	private Set<ReferenceWorkflowData> workflowData;
 

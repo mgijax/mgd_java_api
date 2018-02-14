@@ -9,9 +9,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.EntityBase;
-import org.jax.mgi.mgd.api.model.all.entities.Allele;
+import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
@@ -20,12 +19,12 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Probe Strain Marker Model Object")
-@Table(name="prb_strain_marker")
+@ApiModel(value = "Probe Strain Genotype Model Object")
+@Table(name="prb_strain_genotype")
 
 public class ProbeStrainGenotype extends EntityBase{
 	@Id
-	private Integer _strainmarker_key;
+	private Integer _straingenotype_key;
 	private Date creation_date;
 	private Date modification_date;
 	
@@ -34,12 +33,8 @@ public class ProbeStrainGenotype extends EntityBase{
 	private ProbeStrain strain;
 	
 	@OneToOne
-	@JoinColumn(name="_marke_key")
-	private Marker marker;
-	
-	@OneToOne
-	@JoinColumn(name="_allele_key")
-	private Allele allele;
+	@JoinColumn(name="_genotype_key")
+	private Genotype genotype;
 	
 	@OneToOne
 	@JoinColumn(name="_qualifer_key", referencedColumnName="_term_key")

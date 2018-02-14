@@ -34,7 +34,7 @@ public class ProbeStrainMarker extends EntityBase{
 	private ProbeStrain strain;
 	
 	@OneToOne
-	@JoinColumn(name="_marke_key")
+	@JoinColumn(name="_marker_key")
 	private Marker marker;
 	
 	@OneToOne
@@ -42,7 +42,7 @@ public class ProbeStrainMarker extends EntityBase{
 	private Allele allele;
 	
 	@OneToOne
-	@JoinColumn(name="_qualifer_key", referencedColumnName="_term_key")
+	@JoinColumn(name="_qualifier_key", referencedColumnName="_term_key")
 	private Term qualifier;
 	
 	@OneToOne

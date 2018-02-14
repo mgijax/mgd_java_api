@@ -37,7 +37,7 @@ public class ProbeStrainGenotype extends EntityBase{
 	private Genotype genotype;
 	
 	@OneToOne
-	@JoinColumn(name="_qualifer_key", referencedColumnName="_term_key")
+	@JoinColumn(name="_qualifier_key", referencedColumnName="_term_key")
 	private Term qualifier;
 	
 	@OneToOne

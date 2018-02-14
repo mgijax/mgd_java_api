@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.translators;
 
 import java.util.ArrayList;
+
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceAssociatedData;

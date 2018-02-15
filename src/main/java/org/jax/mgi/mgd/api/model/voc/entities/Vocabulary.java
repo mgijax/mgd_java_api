@@ -34,7 +34,6 @@ public class Vocabulary extends EntityBase {
 	Integer isSimple;
 	Integer isPrivate;
 	private String name;
-	private String note;
 	private Date creation_date;
 	private Date modification_date;
 

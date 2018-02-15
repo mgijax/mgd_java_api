@@ -15,6 +15,7 @@ public class VocabularyDomain extends DomainBase {
 	private Integer isSimple;
 	private Integer isPrivate;
 	private String name;
+	private String note;
 	private Date creation_date;
 	private Date modification_date;
 	private List<TermDomain> terms;

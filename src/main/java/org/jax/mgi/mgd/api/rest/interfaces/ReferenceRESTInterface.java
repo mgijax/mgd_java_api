@@ -98,13 +98,13 @@ public interface ReferenceRESTInterface {
 			@QueryParam("refsKey") String refsKey
 	);
 
-	@POST
-	@Path("/search")
-	@ApiOperation(value = "Value: Searches Reference by Fields", notes="Notes: Searches Reference Fields")
-	public SearchResults<ReferenceSummaryDomain> search(
-		@ApiParam(value = "This is a map of the form parameters")
-		Map<String, Object> params								// see below for valid parameters
-	);
+//	@POST
+//	@Path("/search")
+//	@ApiOperation(value = "Value: Searches Reference by Fields", notes="Notes: Searches Reference Fields")
+//	public SearchResults<ReferenceSummaryDomain> search(
+//		@ApiParam(value = "This is a map of the form parameters")
+//		Map<String, Object> params								// see below for valid parameters
+//	);
 	
 	/* Acceptable reference search parameters:
 	 *	accids : searches by any reference ID, case-insensitive, no wildcards

@@ -24,6 +24,9 @@ public interface RESTInterface<T extends DomainBase> {
 		@ApiParam(value = "API Access Token used for Authentication to this API")
 		@HeaderParam("api_access_token") String api_access_token,
 		
+		@ApiParam(value = "Name: Logged-in User")
+		@HeaderParam("username") String username,
+		
 		@ApiParam(value = "This is the passed in object")
 		T object
 	);
@@ -42,6 +45,9 @@ public interface RESTInterface<T extends DomainBase> {
 			@ApiParam(value = "API Access Token used for Authentication to this API")
 			@HeaderParam("api_access_token") String api_access_token,
 			
+			@ApiParam(value = "Name: Logged-in User")
+			@HeaderParam("username") String username,
+			
 			@ApiParam(value = "This is the passed in term object")
 			T object
 	);
@@ -52,6 +58,9 @@ public interface RESTInterface<T extends DomainBase> {
 	public T delete(
 			@ApiParam(value = "API Access Token used for Authentication to this API")
 			@HeaderParam("api_access_token") String api_access_token,
+			
+			@ApiParam(value = "Name: Logged-in User")
+			@HeaderParam("username") String username,
 			
 			@ApiParam(value = "This Key will lookup and then delete it")
 			@PathParam("key") Integer key

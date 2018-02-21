@@ -5,21 +5,17 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.domain.UserDomain;
-import org.jax.mgi.mgd.api.rest.interfaces.UserRESTInterface;
 import org.jax.mgi.mgd.api.service.UserService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-public class UserController extends BaseController implements UserRESTInterface {
+public class UserController extends BaseController<UserDomain> {
 
 	@Inject
 	private UserService userService;
 
 	@Override
-	public UserDomain create(String api_access_token, UserDomain user) {
-		if(authenticate(api_access_token)) {
-			return userService.create(user);
-		}
-		return null;
+	public UserDomain create(UserDomain user) {
+		return userService.create(user);
 	}
 
 	@Override
@@ -28,19 +24,13 @@ public class UserController extends BaseController implements UserRESTInterface 
 	}
 	
 	@Override
-	public UserDomain update(String api_access_token, UserDomain user) {
-		if(authenticate(api_access_token)) {
-			return userService.update(user);
-		}
-		return null;
+	public UserDomain update(UserDomain user) {
+		return userService.update(user);
 	}
 
 	@Override
-	public UserDomain delete(String api_access_token, Integer user_key) {
-		if(authenticate(api_access_token)) {
-			return userService.delete(user_key);
-		}
-		return null;
+	public UserDomain delete(Integer user_key) {
+		return userService.delete(user_key);
 	}
 
 	@Override

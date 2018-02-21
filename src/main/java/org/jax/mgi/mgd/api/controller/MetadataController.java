@@ -6,7 +6,7 @@ import org.jax.mgi.mgd.api.domain.MetadataDomain;
 import org.jax.mgi.mgd.api.rest.interfaces.MetadataRESTInterface;
 import org.jax.mgi.mgd.api.service.MetadataService;
 
-public class MetadataController extends BaseController implements MetadataRESTInterface {
+public class MetadataController implements MetadataRESTInterface {
 
 	@Inject
 	private MetadataService metadataService;

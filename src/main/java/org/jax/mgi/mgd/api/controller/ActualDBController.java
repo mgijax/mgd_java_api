@@ -5,29 +5,22 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.domain.ActualDBDomain;
-import org.jax.mgi.mgd.api.rest.interfaces.ActualDBRESTInterface;
 import org.jax.mgi.mgd.api.service.ActualDBService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-public class ActualDBController extends BaseController implements ActualDBRESTInterface {
+public class ActualDBController extends BaseController<ActualDBDomain> {
 
 	@Inject
 	private ActualDBService actualdbService;
 
 	@Override
-	public ActualDBDomain create(String api_access_token, ActualDBDomain actualdb) {
-		if(authenticate(api_access_token)) {
-			return actualdbService.create(actualdb);
-		}
-		return null;
+	public ActualDBDomain create(ActualDBDomain actualdb) {
+		return actualdbService.create(actualdb);
 	}
 
 	@Override
-	public ActualDBDomain update(String api_access_token, ActualDBDomain actualdb) {
-		if(authenticate(api_access_token)) {
-			return actualdbService.update(actualdb);
-		}
-		return null;
+	public ActualDBDomain update(ActualDBDomain actualdb) {
+		return actualdbService.update(actualdb);
 	}
 
 	@Override
@@ -36,11 +29,8 @@ public class ActualDBController extends BaseController implements ActualDBRESTIn
 	}
 
 	@Override
-	public ActualDBDomain delete(String api_access_token, Integer actualdb_key) {
-		if(authenticate(api_access_token)) {
-			return actualdbService.delete(actualdb_key);
-		}
-		return null;
+	public ActualDBDomain delete(Integer actualdb_key) {
+		return actualdbService.delete(actualdb_key);
 	}
 
 	@Override

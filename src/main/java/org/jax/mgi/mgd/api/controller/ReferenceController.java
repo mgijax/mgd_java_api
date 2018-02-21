@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.domain.ApiLogDomain;
+import org.jax.mgi.mgd.api.domain.DomainBase;
 import org.jax.mgi.mgd.api.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.domain.ReferenceSummaryDomain;
@@ -31,7 +32,7 @@ import org.jboss.logging.Logger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class ReferenceController extends BaseController implements ReferenceRESTInterface {
+public class ReferenceController extends BaseController<ReferenceDomain> implements ReferenceRESTInterface {
 
 	/***--- instance variables ---***/
 	
@@ -85,7 +86,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	public SearchResults<ReferenceDomain> updateReference(String api_access_token, String username, ReferenceDomain reference) {
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
 
-		if (!authenticate(api_access_token)) {
+		if (!authenticate(api_access_token, username)) {
 			results.setError("FailedAuthentication", "Failed - invalid api_access_token", Constants.HTTP_PERMISSION_DENIED);
 			return results;
 		}
@@ -136,7 +137,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	public SearchResults<String> updateReferenceStatus (String api_access_token, String username, String accid, String group, String status) {
 		SearchResults<String> results = new SearchResults<String>();
 
-		if (!authenticate(api_access_token)) {
+		if (!authenticate(api_access_token, username)) {
 			results.setError("FailedAuthentication", "Failed - invalid api_access_token", Constants.HTTP_PERMISSION_DENIED);
 			return results;
 		}
@@ -248,7 +249,7 @@ public class ReferenceController extends BaseController implements ReferenceREST
 	public SearchResults<String> updateReferencesInBulk (String api_access_token, String username, ReferenceBulkDomain input) {
 		SearchResults<String> results = new SearchResults<String>();
 
-		if (!authenticate(api_access_token)) {
+		if (!authenticate(api_access_token, username)) {
 			results.setError("FailedAuthentication", "Failed - invalid api_access_token", Constants.HTTP_PERMISSION_DENIED);
 			return results;
 		}
@@ -370,4 +371,5 @@ public class ReferenceController extends BaseController implements ReferenceREST
 		}
 		return null;
 	}
+
 }

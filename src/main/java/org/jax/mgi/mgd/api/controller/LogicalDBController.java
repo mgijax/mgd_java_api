@@ -5,29 +5,22 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.domain.LogicalDBDomain;
-import org.jax.mgi.mgd.api.rest.interfaces.LogicalDBRESTInterface;
 import org.jax.mgi.mgd.api.service.LogicalDBService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-public class LogicalDBController extends BaseController implements LogicalDBRESTInterface {
+public class LogicalDBController extends BaseController<LogicalDBDomain> {
 
 	@Inject
 	private LogicalDBService logicaldbService;
 
 	@Override
-	public LogicalDBDomain create(String api_access_token, LogicalDBDomain logicaldb) {
-		if(authenticate(api_access_token)) {
-			return logicaldbService.create(logicaldb);
-		}
-		return null;
+	public LogicalDBDomain create(LogicalDBDomain logicaldb) {
+		return logicaldbService.create(logicaldb);
 	}
 
 	@Override
-	public LogicalDBDomain update(String api_access_token, LogicalDBDomain logicaldb) {
-		if(authenticate(api_access_token)) {
-			return logicaldbService.update(logicaldb);
-		}
-		return null;
+	public LogicalDBDomain update(LogicalDBDomain logicaldb) {
+		return logicaldbService.update(logicaldb);
 	}
 
 	@Override
@@ -36,11 +29,8 @@ public class LogicalDBController extends BaseController implements LogicalDBREST
 	}
 
 	@Override
-	public LogicalDBDomain delete(String api_access_token, Integer logicaldb_key) {
-		if(authenticate(api_access_token)) {
-			return logicaldbService.delete(logicaldb_key);
-		}
-		return null;
+	public LogicalDBDomain delete(Integer logicaldb_key) {
+		return logicaldbService.delete(logicaldb_key);
 	}
 
 	@Override

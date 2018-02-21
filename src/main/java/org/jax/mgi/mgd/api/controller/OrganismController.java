@@ -5,29 +5,22 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.domain.OrganismDomain;
-import org.jax.mgi.mgd.api.rest.interfaces.OrganismRESTInterface;
 import org.jax.mgi.mgd.api.service.OrganismService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-public class OrganismController extends BaseController implements OrganismRESTInterface {
+public class OrganismController extends BaseController<OrganismDomain> {
 
 	@Inject
 	private OrganismService organismService;
 
 	@Override
-	public OrganismDomain create(String api_access_token, OrganismDomain organism) {
-		if(authenticate(api_access_token)) {
-			return organismService.create(organism);
-		}
-		return null;
+	public OrganismDomain create(OrganismDomain organism) {
+		return organismService.create(organism);
 	}
 
 	@Override
-	public OrganismDomain update(String api_access_token, OrganismDomain organism) {
-		if(authenticate(api_access_token)) {
-			return organismService.update(organism);
-		}
-		return null;
+	public OrganismDomain update(OrganismDomain organism) {
+		return organismService.update(organism);
 	}
 
 	@Override
@@ -36,11 +29,8 @@ public class OrganismController extends BaseController implements OrganismRESTIn
 	}
 
 	@Override
-	public OrganismDomain delete(String api_access_token, Integer organism_key) {
-		if(authenticate(api_access_token)) {
-			return organismService.delete(organism_key);
-		}
-		return null;
+	public OrganismDomain delete(Integer organism_key) {
+		return organismService.delete(organism_key);
 	}
 
 	@Override

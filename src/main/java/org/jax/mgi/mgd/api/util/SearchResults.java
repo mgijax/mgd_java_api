@@ -1,11 +1,9 @@
 package org.jax.mgi.mgd.api.util;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.collections4.IteratorUtils;
-import org.jax.mgi.mgd.api.domain.TermDomain;
 
 /* Note that the most accurate way to measure timings is to use the default constructor before
  * doing your query, then use setItems() to tell the SearchResults about your result set.  Otherwise,

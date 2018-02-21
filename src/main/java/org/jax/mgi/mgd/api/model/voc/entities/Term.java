@@ -32,6 +32,7 @@ public class Term extends EntityBase {
 	private Integer _term_key;
 	private String term;
 	private String abbreviation;
+	private String note;
 	private Integer sequenceNum;
 	private Integer isObsolete;
 	private Date creation_date;

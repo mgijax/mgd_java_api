@@ -23,6 +23,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeMarker;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrainMarker;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -105,6 +106,10 @@ public class Marker extends EntityBase {
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	@Where(clause="`_mgitype_key` = 2")
 	private Set<MGISynonym> synonyms;
+	
+	@OneToMany
+	@JoinColumn(name="_marker_key")
+	private Set<ProbeStrainMarker> probeStrainMarkers;
 	
 	@ManyToMany
 	@JoinTable(name = "mrk_alias",

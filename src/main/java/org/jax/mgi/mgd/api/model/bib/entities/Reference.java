@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -138,7 +139,7 @@ public class Reference extends EntityBase {
 	private List<ReferenceNote> notes;
 
 	// one to many, because row in citation cache might not exist (leaving it 1-0)
-	@OneToMany
+	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key")
 	private List<ReferenceCitationData> citationData;
 
@@ -152,7 +153,7 @@ public class Reference extends EntityBase {
 	@JoinColumn(name="_refs_key")
 	private ReferenceAssociatedData associatedData;
 
-	@OneToMany
+	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key")
 	private Set<ReferenceWorkflowData> workflowData;
 

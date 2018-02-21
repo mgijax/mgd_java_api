@@ -18,6 +18,7 @@ import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrainGenotype;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
@@ -62,6 +63,10 @@ public class Genotype extends EntityBase {
 	@JoinColumn(name="_object_key", referencedColumnName="_genotype_key")
 	@Where(clause="`_mgitype_key` = 12 AND preferred = 1")
 	private Set<Accession> allAccessionIds;
+	
+	@OneToMany
+	@JoinColumn(name="_genotype_key")
+	private Set<ProbeStrainGenotype> probeStrainGenotypes;
 	
 	@Transient
 	public Set<Accession> getAccessionIdsByLogicalDb(LogicalDB db) {

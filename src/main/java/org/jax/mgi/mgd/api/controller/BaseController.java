@@ -50,34 +50,24 @@ public abstract class BaseController<T extends DomainBase> implements RESTInterf
 		return filtered;
 	}
 
-
 	protected void logRequest(String endpoint, String parameters, String mgitype, List<Integer> objectKeys, User user) throws APIException {
 		apiLogService.create(endpoint, parameters, mgitype, objectKeys, user);
 	}
 
-	@Override
 	public T create(String api_access_token, String username, T object) {
 		if(authenticate(api_access_token, username)) {
 			return create(object);
 		}
 		return null;
 	}
-	
-	public abstract T create(T object);
-	
-	public abstract T get(Integer key);
 
-	@Override
 	public T update(String api_access_token, String username, T object) {
 		if(authenticate(api_access_token, username)) {
 			return update(object);
 		}
 		return null;
 	}
-	
-	public abstract T update(T object);
 
-	@Override
 	public T delete(String api_access_token, String username, Integer key) {
 		if(authenticate(api_access_token, username)) {
 			return delete(key);
@@ -85,10 +75,10 @@ public abstract class BaseController<T extends DomainBase> implements RESTInterf
 		return null;
 	}
 	
+	public abstract T create(T object);
+	public abstract T get(Integer key);
+	public abstract T update(T object);
 	public abstract T delete(Integer key);
-
 	public abstract SearchResults<T> search(Map<String, Object> postParams);
-
-
 
 }

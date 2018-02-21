@@ -3,38 +3,74 @@ package org.jax.mgi.mgd.api.controller;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.domain.MGITypeDomain;
 import org.jax.mgi.mgd.api.service.MGITypeService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
+@Path("/mgitype")
+@Api(value = "MGI Type Endpoints")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class MGITypeController extends BaseController<MGITypeDomain> {
 
 	@Inject
 	private MGITypeService mgitypeService;
 
-	@Override
-	public MGITypeDomain create(MGITypeDomain mgitype) {
+	@POST
+	@ApiOperation(value = "Create", notes = "Create")
+	public MGITypeDomain create(
+		@ApiParam(value = "This is the passed in object")
+		MGITypeDomain mgitype) {
 		return mgitypeService.create(mgitype);
 	}
-
-	@Override
-	public MGITypeDomain get(Integer key) {
+	
+	@GET
+	@ApiOperation(value = "Read", notes="Read")
+	@Path("/{key}")
+	public MGITypeDomain get(
+			@ApiParam(value = "This is for retrieving by key")
+			@PathParam("key")
+			Integer key) {
 		return mgitypeService.get(key);
 	}
 
-	@Override
-	public MGITypeDomain update(MGITypeDomain mgitype) {
+	@PUT
+	@ApiOperation(value = "Update", notes="Update")
+	public MGITypeDomain update(
+			@ApiParam(value = "This is the passed in term object")
+			MGITypeDomain mgitype) {
 		return mgitypeService.update(mgitype);
 	}
 
-	@Override
-	public MGITypeDomain delete(Integer mgitype_key) {
+	@DELETE
+	@ApiOperation(value = "Delete", notes="Delete")
+	@Path("/{key}")
+	public MGITypeDomain delete(
+			@ApiParam(value = "This Key will lookup and then delete it")
+			Integer mgitype_key) {
 		return mgitypeService.delete(mgitype_key);
 	}
-
-	@Override
-	public SearchResults<MGITypeDomain> search(Map<String, Object> postParams) {
+	
+	@POST
+	@ApiOperation(value = "Search by Fields")
+	@Path("/search")
+	public SearchResults<MGITypeDomain> search(
+			@ApiParam(value = "This is a map of the form parameters")
+			Map<String, Object> postParams) {
 		return mgitypeService.search(postParams);
 	}
 	

@@ -11,7 +11,6 @@ public class MetadataController implements MetadataRESTInterface {
 	@Inject
 	private MetadataService metadataService;
 
-	@Override
 	public MetadataDomain get() {
 		return metadataService.get();
 	}

@@ -10,7 +10,7 @@ import org.jax.mgi.mgd.api.rest.interfaces.ApiLogRESTInterface;
 import org.jax.mgi.mgd.api.service.ApiLogService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-public class ApiLogController extends BaseController<ApiLogDomain> {
+public class ApiLogController extends BaseController<ApiLogDomain> implements ApiLogRESTInterface {
 
 	@Inject
 	private ApiLogService apiLogService;
@@ -24,23 +24,19 @@ public class ApiLogController extends BaseController<ApiLogDomain> {
 		}
 	}
 
-	@Override
 	public SearchResults<ApiLogDomain> search(Map<String, Object> postParams) {
 		return apiLogService.search(postParams);
 	}
 
-	@Override
 	public ApiLogDomain create(ApiLogDomain object) {
 		//return apiLogService.create(endpoint, parameters, mgitype, objectKeys, user);
 		return null;
 	}
 
-	@Override
 	public ApiLogDomain update(ApiLogDomain object) {
 		return null;
 	}
 
-	@Override
 	public ApiLogDomain delete(Integer key) {
 		return null;
 	}

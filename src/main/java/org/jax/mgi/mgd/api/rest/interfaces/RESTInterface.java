@@ -9,6 +9,6 @@ public interface RESTInterface<T extends DomainBase> {
 	public T create(String api_access_token, String username, T object );
 	public T update(String api_access_token, String username, T object);
 	public T delete(String api_access_token, String username, Integer key);
-	public T get(Integer key);
-	public SearchResults<T> search(Map<String, Object> postParams);
+	public T getByKey(Integer key);
+	public SearchResults<T> searchByFields(Map<String, Object> postParams);
 }

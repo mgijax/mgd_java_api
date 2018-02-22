@@ -31,7 +31,7 @@ public class LogicalDBController extends BaseController<LogicalDBDomain> {
 		return logicaldbService.update(logicaldb);
 	}
 
-	public LogicalDBDomain getByKey(Integer key) {
+	public LogicalDBDomain get(Integer key) {
 		return logicaldbService.get(key);
 	}
 
@@ -39,7 +39,7 @@ public class LogicalDBController extends BaseController<LogicalDBDomain> {
 		return logicaldbService.delete(logicaldb_key);
 	}
 
-	public SearchResults<LogicalDBDomain> searchByFields(Map<String, Object> postParams) {
+	public SearchResults<LogicalDBDomain> search(Map<String, Object> postParams) {
 		return logicaldbService.search(postParams);
 	}
 

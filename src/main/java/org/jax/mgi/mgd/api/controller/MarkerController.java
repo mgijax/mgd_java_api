@@ -31,7 +31,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		return markerService.update(marker);
 	}
 
-	public MarkerDomain getByKey(Integer markerKey) {
+	public MarkerDomain get(Integer markerKey) {
 		return markerService.get(markerKey);
 	}
 
@@ -39,7 +39,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		return markerService.delete(key);
 	}
 
-	public SearchResults<MarkerDomain> searchByFields(Map<String, Object> postParams) {
+	public SearchResults<MarkerDomain> search(Map<String, Object> postParams) {
 		return markerService.search(postParams);
 	}
 

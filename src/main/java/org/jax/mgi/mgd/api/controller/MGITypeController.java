@@ -27,7 +27,7 @@ public class MGITypeController extends BaseController<MGITypeDomain> {
 		return mgitypeService.create(mgitype);
 	}
 
-	public MGITypeDomain getByKey(Integer key) {
+	public MGITypeDomain get(Integer key) {
 		return mgitypeService.get(key);
 	}
 
@@ -39,7 +39,7 @@ public class MGITypeController extends BaseController<MGITypeDomain> {
 		return mgitypeService.delete(mgitype_key);
 	}
 
-	public SearchResults<MGITypeDomain> searchByFields(Map<String, Object> postParams) {
+	public SearchResults<MGITypeDomain> search(Map<String, Object> postParams) {
 		return mgitypeService.search(postParams);
 	}
 	

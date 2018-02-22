@@ -27,7 +27,7 @@ public class VocabController extends BaseController<VocabularyDomain> {
 		return vocabService.create(object);
 	}
 
-	public VocabularyDomain getByKey(Integer key) {
+	public VocabularyDomain get(Integer key) {
 		return vocabService.get(key);
 	}
 
@@ -39,7 +39,7 @@ public class VocabController extends BaseController<VocabularyDomain> {
 		return vocabService.delete(key);
 	}
 
-	public SearchResults<VocabularyDomain> searchByFields(Map<String, Object> postParams) {
+	public SearchResults<VocabularyDomain> search(Map<String, Object> postParams) {
 		return vocabService.search(postParams);
 	}
 

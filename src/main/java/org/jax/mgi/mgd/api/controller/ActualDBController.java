@@ -31,7 +31,7 @@ public class ActualDBController extends BaseController<ActualDBDomain> {
 		return actualdbService.update(actualdb);
 	}
 
-	public ActualDBDomain getByKey(Integer key) {
+	public ActualDBDomain get(Integer key) {
 		return actualdbService.get(key);
 	}
 
@@ -39,7 +39,7 @@ public class ActualDBController extends BaseController<ActualDBDomain> {
 		return actualdbService.delete(actualdb_key);
 	}
 
-	public SearchResults<ActualDBDomain> searchByFields(Map<String, Object> postParams) {
+	public SearchResults<ActualDBDomain> search(Map<String, Object> postParams) {
 		return actualdbService.search(postParams);
 
 	}

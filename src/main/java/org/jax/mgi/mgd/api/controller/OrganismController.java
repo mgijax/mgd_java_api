@@ -31,7 +31,7 @@ public class OrganismController extends BaseController<OrganismDomain> {
 		return organismService.update(organism);
 	}
 
-	public OrganismDomain getByKey(Integer key) {
+	public OrganismDomain get(Integer key) {
 		return organismService.get(key);
 	}
 
@@ -39,7 +39,7 @@ public class OrganismController extends BaseController<OrganismDomain> {
 		return organismService.delete(organism_key);
 	}
 
-	public SearchResults<OrganismDomain> searchByFields(Map<String, Object> postParams) {
+	public SearchResults<OrganismDomain> search(Map<String, Object> postParams) {
 		return organismService.search(postParams);
 	}
 

@@ -27,7 +27,7 @@ public class UserController extends BaseController<UserDomain> {
 		return userService.create(user);
 	}
 
-	public UserDomain getByKey(Integer key) {
+	public UserDomain get(Integer key) {
 		return userService.get(key);
 	}
 
@@ -39,7 +39,7 @@ public class UserController extends BaseController<UserDomain> {
 		return userService.delete(user_key);
 	}
 	
-	public SearchResults<UserDomain> searchByFields(Map<String, Object> postParams) {
+	public SearchResults<UserDomain> search(Map<String, Object> postParams) {
 		return userService.search(postParams);
 	}
 

@@ -373,7 +373,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> impleme
 	}
 
 	@Override
-	public ReferenceDomain getByKey(Integer key) {
+	public ReferenceDomain get(Integer key) {
 		return null;
 	}
 
@@ -388,7 +388,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> impleme
 	}
 
 	@Override
-	public SearchResults<ReferenceDomain> searchByFields(Map<String, Object> postParams) {
+	public SearchResults<ReferenceDomain> search(Map<String, Object> postParams) {
 		return null;
 	}
 

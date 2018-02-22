@@ -31,7 +31,7 @@ public class TermController extends BaseController<TermDomain> {
 		return termService.update(term);
 	}
 
-	public TermDomain getByKey(Integer key) {
+	public TermDomain get(Integer key) {
 		return termService.get(key);
 	}
 
@@ -39,7 +39,7 @@ public class TermController extends BaseController<TermDomain> {
 		return termService.delete(term_key);
 	}
 
-	public SearchResults<TermDomain> searchByFields(Map<String, Object> postParams) {
+	public SearchResults<TermDomain> search(Map<String, Object> postParams) {
 		return termService.search(postParams, "sequenceNum");
 	}
 	

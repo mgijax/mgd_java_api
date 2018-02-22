@@ -21,10 +21,8 @@ import org.jax.mgi.mgd.api.service.ApiLogService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.Example;
 
 public abstract class BaseController<T extends DomainBase> implements RESTInterface<T> {
 
@@ -110,26 +108,26 @@ public abstract class BaseController<T extends DomainBase> implements RESTInterf
 	@GET
 	@ApiOperation(value = "Read", notes="Read")
 	@Path("/{key}")
-	public T get(
+	public T getByKey(
 			@PathParam("key")
 			@ApiParam(value = "This is for retrieving by key")
 			Integer key) {
-		return getByKey(key);
+		return get(key);
 	}
 	
 	@POST
 	@ApiOperation(value = "Search by Fields")
 	@Path("/search")
-	public SearchResults<T> search(
+	public SearchResults<T> searchByFields(
 			@ApiParam(value = "Key Value pairs for the search fields of this object")
 			Map<String, Object> postParams) {
-		return searchByFields(postParams);
+		return search(postParams);
 	}
 
 	public abstract T create(T object);
-	public abstract T getByKey(Integer key);
+	public abstract T get(Integer key);
 	public abstract T update(T object);
 	public abstract T delete(Integer key);
-	public abstract SearchResults<T> searchByFields(Map<String, Object> postParams);
+	public abstract SearchResults<T> search(Map<String, Object> postParams);
 
 }

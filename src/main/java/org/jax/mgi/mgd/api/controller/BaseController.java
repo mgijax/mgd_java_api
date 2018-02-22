@@ -5,6 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
 import org.jax.mgi.mgd.api.domain.DomainBase;
 import org.jax.mgi.mgd.api.exception.APIException;
@@ -12,6 +19,12 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.rest.interfaces.RESTInterface;
 import org.jax.mgi.mgd.api.service.ApiLogService;
 import org.jax.mgi.mgd.api.util.SearchResults;
+import org.jboss.logging.Logger;
+
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.Example;
 
 public abstract class BaseController<T extends DomainBase> implements RESTInterface<T> {
 
@@ -19,11 +32,14 @@ public abstract class BaseController<T extends DomainBase> implements RESTInterf
 	//private UserService userService;
 
 	@Inject ApiLogService apiLogService;
-
+	
+	private Logger log = Logger.getLogger(getClass());
+	
 	/* if token is not defined in properties file, then do not require one.  Otherwise, must
 	 * be an exact match (case sensitive).
 	 */
 	protected boolean authenticate(String api_access_token, String username) {
+		log.info("Does this run? " + api_access_token + " " + username);
 		String expectedToken = System.getProperty("swarm.access_token");
 		if (expectedToken != null) {
 			return expectedToken.equals(api_access_token);
@@ -54,31 +70,66 @@ public abstract class BaseController<T extends DomainBase> implements RESTInterf
 		apiLogService.create(endpoint, parameters, mgitype, objectKeys, user);
 	}
 
-	public T create(String api_access_token, String username, T object) {
+	@POST
+	@ApiOperation(value = "Create", notes = "Create")
+	public T create(
+			@HeaderParam(value="api_access_token") String api_access_token,
+			@HeaderParam(value="username") String username,
+			@ApiParam(value = "This is the passed in object") T object) {
 		if(authenticate(api_access_token, username)) {
 			return create(object);
 		}
 		return null;
 	}
-
-	public T update(String api_access_token, String username, T object) {
+	
+	@PUT
+	@ApiOperation(value = "Update", notes="Update")
+	public T update(
+			@HeaderParam(value="api_access_token for accessing the API") String api_access_token,
+			@HeaderParam(value="Username of the logged in user") String username,
+			@ApiParam(value = "This is the passed in object") T object) {
 		if(authenticate(api_access_token, username)) {
 			return update(object);
 		}
 		return null;
 	}
-
-	public T delete(String api_access_token, String username, Integer key) {
+	
+	@DELETE
+	@ApiOperation(value = "Delete", notes="Delete")
+	@Path("/{key}")
+	public T delete(
+			@HeaderParam(value="api_access_token for accessing the API") String api_access_token,
+			@HeaderParam(value="Username of the logged in user") String username,
+			@ApiParam(value = "This is for deleting by key") Integer key) {
 		if(authenticate(api_access_token, username)) {
 			return delete(key);
 		}
 		return null;
 	}
 	
+	@GET
+	@ApiOperation(value = "Read", notes="Read")
+	@Path("/{key}")
+	public T get(
+			@PathParam("key")
+			@ApiParam(value = "This is for retrieving by key")
+			Integer key) {
+		return getByKey(key);
+	}
+	
+	@POST
+	@ApiOperation(value = "Search by Fields")
+	@Path("/search")
+	public SearchResults<T> search(
+			@ApiParam(value = "Key Value pairs for the search fields of this object")
+			Map<String, Object> postParams) {
+		return searchByFields(postParams);
+	}
+
 	public abstract T create(T object);
-	public abstract T get(Integer key);
+	public abstract T getByKey(Integer key);
 	public abstract T update(T object);
 	public abstract T delete(Integer key);
-	public abstract SearchResults<T> search(Map<String, Object> postParams);
+	public abstract SearchResults<T> searchByFields(Map<String, Object> postParams);
 
 }

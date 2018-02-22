@@ -16,7 +16,7 @@ public class ApiLogController extends BaseController<ApiLogDomain> implements Ap
 	private ApiLogService apiLogService;
 	
 	@Override
-	public ApiLogDomain get(Integer key) {
+	public ApiLogDomain getByKey(Integer key) {
 		try {
 			return apiLogService.get(key);
 		} catch (APIException e) {
@@ -24,7 +24,7 @@ public class ApiLogController extends BaseController<ApiLogDomain> implements Ap
 		}
 	}
 
-	public SearchResults<ApiLogDomain> search(Map<String, Object> postParams) {
+	public SearchResults<ApiLogDomain> searchByFields(Map<String, Object> postParams) {
 		return apiLogService.search(postParams);
 	}
 
@@ -40,4 +40,5 @@ public class ApiLogController extends BaseController<ApiLogDomain> implements Ap
 	public ApiLogDomain delete(Integer key) {
 		return null;
 	}
+
 }

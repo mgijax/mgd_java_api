@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
@@ -20,7 +20,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "MGI_Property Object")
 @Table(name="mgi_property")
-public class MGIProperty extends EntityBase {
+public class MGIProperty extends BaseEntity {
 	@Id
 	private Integer _propertyType_key;
 	private String value;

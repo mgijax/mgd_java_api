@@ -12,7 +12,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
@@ -24,7 +24,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "MGIType Model Object")
 @Table(name="acc_mgitype")
-public class MGIType extends EntityBase {
+public class MGIType extends BaseEntity {
 
 	@Id
 	private Integer _mgitype_key;

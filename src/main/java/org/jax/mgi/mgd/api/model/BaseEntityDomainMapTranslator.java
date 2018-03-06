@@ -1,11 +1,8 @@
-package org.jax.mgi.mgd.api.translators;
+package org.jax.mgi.mgd.api.model;
 
 import java.util.ArrayList;
 
-import org.jax.mgi.mgd.api.model.DomainBase;
-import org.jax.mgi.mgd.api.model.EntityBase;
-
-public abstract class DomainMapTranslator<E extends EntityBase, D extends DomainBase> {
+public abstract class BaseEntityDomainMapTranslator<E extends BaseEntity, D extends BaseDomain> {
 
 	public E translate(D domain) {
 		return domainToEntity(domain);

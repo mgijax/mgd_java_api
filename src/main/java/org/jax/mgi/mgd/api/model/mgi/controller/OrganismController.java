@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.SearchInterface;
+import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.mgi.domain.OrganismDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.search.OrganismSearchForm;
@@ -21,7 +21,7 @@ import io.swagger.annotations.Api;
 @Api(value = "Organism Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class OrganismController extends BaseController<OrganismDomain> implements SearchInterface<OrganismDomain, OrganismSearchForm> {
+public class OrganismController extends BaseController<OrganismDomain> implements BaseSearchInterface<OrganismDomain, OrganismSearchForm> {
 
 	@Inject
 	private OrganismService organismService;

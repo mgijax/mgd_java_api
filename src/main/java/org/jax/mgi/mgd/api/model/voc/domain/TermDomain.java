@@ -2,7 +2,7 @@ package org.jax.mgi.mgd.api.model.voc.domain;
 
 import java.util.Date;
 
-import org.jax.mgi.mgd.api.model.DomainBase;
+import org.jax.mgi.mgd.api.model.BaseDomain;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @ApiModel(value = "Term Model Object")
-public class TermDomain extends DomainBase {
+public class TermDomain extends BaseDomain {
 
 	private Integer _term_key;
 	private String term;

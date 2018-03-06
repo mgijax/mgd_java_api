@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
@@ -20,7 +20,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "GeneTrap Model Object")
 @Table(name="seq_genetrap")
-public class GeneTrap extends EntityBase {
+public class GeneTrap extends BaseEntity {
 
 	@Id
 	private Integer _sequence_key;

@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.SearchInterface;
+import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.mgi.domain.UserDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.search.UserSearchForm;
@@ -21,7 +21,7 @@ import io.swagger.annotations.Api;
 @Api(value = "User Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class UserController extends BaseController<UserDomain> implements SearchInterface<UserDomain, UserSearchForm> {
+public class UserController extends BaseController<UserDomain> implements BaseSearchInterface<UserDomain, UserSearchForm> {
 
 	@Inject
 	private UserService userService;

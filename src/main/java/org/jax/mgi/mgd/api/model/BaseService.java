@@ -1,14 +1,11 @@
-package org.jax.mgi.mgd.api.service;
+package org.jax.mgi.mgd.api.model;
 
 import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.mgd.api.model.DomainBase;
-import org.jax.mgi.mgd.api.model.SearchForm;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.util.SearchResults;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public abstract class ServiceInterface<D extends DomainBase, S extends SearchForm> {
+public abstract class BaseService<D extends BaseDomain> {
 	
 	protected ObjectMapper mapper = new ObjectMapper();
 	
@@ -16,6 +13,5 @@ public abstract class ServiceInterface<D extends DomainBase, S extends SearchFor
 	public abstract D update(D object, User user);
 	public abstract D get(Integer key);
 	public abstract D delete(Integer key, User user);
-	public abstract SearchResults<D> search(S searchForm);
 
 }

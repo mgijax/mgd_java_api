@@ -3,13 +3,13 @@ package org.jax.mgi.mgd.api.model.voc.search;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jax.mgi.mgd.api.model.SearchForm;
+import org.jax.mgi.mgd.api.model.BaseSearchForm;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class TermSearchForm extends SearchForm {
+public class TermSearchForm extends BaseSearchForm {
 
 	private String vocabName;
 	private String term;

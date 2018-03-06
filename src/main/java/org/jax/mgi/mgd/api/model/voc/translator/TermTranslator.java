@@ -1,10 +1,10 @@
 package org.jax.mgi.mgd.api.model.voc.translator;
 
+import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
-import org.jax.mgi.mgd.api.translators.EntityDomainTranslator;
 
-public class TermTranslator extends EntityDomainTranslator<Term, TermDomain> {
+public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain> {
 
 	@Override
 	protected TermDomain entityToDomain(Term entity) {

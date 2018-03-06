@@ -16,7 +16,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Where;
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym	;
@@ -31,7 +31,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Strain Model Object")
 @Table(name="prb_strain")
-public class ProbeStrain extends EntityBase {
+public class ProbeStrain extends BaseEntity {
 
 	@Id
 	private Integer _strain_key;

@@ -11,7 +11,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Where;
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 
@@ -23,7 +23,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Expts Model Object")
 @Table(name="mld_expts")
-public class Experiment extends EntityBase {
+public class Experiment extends BaseEntity {
 
 	@Id
 	private Integer _expt_key;

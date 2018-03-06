@@ -9,7 +9,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Where;
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
@@ -22,7 +22,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Antigen Model Object")
 @Table(name="gxd_antigen")
-public class Antigen extends EntityBase {
+public class Antigen extends BaseEntity {
 
 	@Id
 	private Integer _antigen_key;

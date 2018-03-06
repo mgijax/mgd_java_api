@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.SearchInterface;
+import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.acc.domain.ActualDBDomain;
 import org.jax.mgi.mgd.api.model.acc.search.ActualDBSearchForm;
 import org.jax.mgi.mgd.api.model.acc.service.ActualDBService;
@@ -21,7 +21,7 @@ import io.swagger.annotations.Api;
 @Api(value = "ActualDB Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class ActualDBController extends BaseController<ActualDBDomain> implements SearchInterface<ActualDBDomain, ActualDBSearchForm> {
+public class ActualDBController extends BaseController<ActualDBDomain> implements BaseSearchInterface<ActualDBDomain, ActualDBSearchForm> {
 
 	@Inject
 	private ActualDBService actualdbService;

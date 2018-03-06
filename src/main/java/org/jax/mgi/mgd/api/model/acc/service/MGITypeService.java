@@ -5,17 +5,18 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.exception.APIException;
+import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.acc.dao.MGITypeDAO;
 import org.jax.mgi.mgd.api.model.acc.domain.MGITypeDomain;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 import org.jax.mgi.mgd.api.model.acc.search.MGITypeSearchForm;
+import org.jax.mgi.mgd.api.model.acc.translator.MGITypeTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.service.ServiceInterface;
-import org.jax.mgi.mgd.api.translators.MGITypeTranslator;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
-public class MGITypeService extends ServiceInterface<MGITypeDomain, MGITypeSearchForm> {
+public class MGITypeService extends BaseService<MGITypeDomain> implements BaseSearchInterface<MGITypeDomain, MGITypeSearchForm> {
 	
 	private MGITypeTranslator translator = new MGITypeTranslator();
 	

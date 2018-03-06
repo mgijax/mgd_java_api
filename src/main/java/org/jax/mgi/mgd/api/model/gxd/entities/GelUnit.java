@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -16,7 +16,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "GelUnits Model Object")
 @Table(name="gxd_gelunits")
-public class GelUnit extends EntityBase {
+public class GelUnit extends BaseEntity {
 
 	@Id
 	private Integer _gelunits_key;

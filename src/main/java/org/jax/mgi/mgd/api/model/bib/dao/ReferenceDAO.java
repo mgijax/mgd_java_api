@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.enterprise.context.RequestScoped;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -41,7 +40,6 @@ import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateParser;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-@RequestScoped
 public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 
 	protected ReferenceDAO() {

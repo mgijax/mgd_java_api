@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
@@ -21,7 +21,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "CellLine Derivation Model Object")
 @Table(name="all_cellline_derivation")
-public class AlleleCellLineDerivation extends EntityBase {
+public class AlleleCellLineDerivation extends BaseEntity {
 
 	@Id
 	private Integer _derivation_key;

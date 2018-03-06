@@ -1,7 +1,8 @@
-package org.jax.mgi.mgd.api.translators;
+package org.jax.mgi.mgd.api.model.bib.translator;
 
 import java.util.ArrayList;
 
+import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceAssociatedData;
@@ -9,7 +10,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowData;
 import org.jax.mgi.mgd.api.util.Constants;
 
-public class ReferenceTranslator extends EntityDomainTranslator<Reference, ReferenceDomain>{
+public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, ReferenceDomain>{
 	@Override
 	protected ReferenceDomain entityToDomain(Reference entity) {
 		ReferenceDomain domain = new ReferenceDomain();

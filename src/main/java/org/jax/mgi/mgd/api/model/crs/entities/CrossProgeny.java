@@ -6,7 +6,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -16,7 +16,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Cross Progeny Model Object")
 @Table(name="crs_progeny")
-public class CrossProgeny extends EntityBase {
+public class CrossProgeny extends BaseEntity {
 
 	@EmbeddedId
 	private CrossProgenyKey key;

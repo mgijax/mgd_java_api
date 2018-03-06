@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Where;
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
@@ -28,7 +28,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Organism Model Object")
 @Table(name="mgi_organism")
-public class Organism extends EntityBase {
+public class Organism extends BaseEntity {
 
 	@Id
 	private Integer _organism_key;

@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
@@ -22,7 +22,7 @@ import lombok.Setter;
 @ApiModel(value = "Probe Strain Genotype Model Object")
 @Table(name="prb_strain_genotype")
 
-public class ProbeStrainGenotype extends EntityBase{
+public class ProbeStrainGenotype extends BaseEntity{
 	@Id
 	private Integer _straingenotype_key;
 	private Date creation_date;

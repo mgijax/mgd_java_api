@@ -1,9 +1,10 @@
-package org.jax.mgi.mgd.api.translators;
+package org.jax.mgi.mgd.api.model.mgi.translator;
 
+import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.OrganismDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 
-public class OrganismTranslator extends EntityDomainTranslator<Organism, OrganismDomain> {
+public class OrganismTranslator extends BaseEntityDomainTranslator<Organism, OrganismDomain> {
 
 	@Override
 	protected OrganismDomain entityToDomain(Organism entity) {

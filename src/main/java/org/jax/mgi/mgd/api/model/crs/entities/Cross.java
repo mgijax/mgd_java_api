@@ -11,7 +11,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
 
 import io.swagger.annotations.ApiModel;
@@ -22,7 +22,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Cross Model Object")
 @Table(name="crs_cross")
-public class Cross extends EntityBase {
+public class Cross extends BaseEntity {
 
 	@Id
 	private Integer _cross_key;

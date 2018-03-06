@@ -3,7 +3,7 @@ package org.jax.mgi.mgd.api.model.voc.domain;
 import java.util.Date;
 import java.util.List;
 
-import org.jax.mgi.mgd.api.model.DomainBase;
+import org.jax.mgi.mgd.api.model.BaseDomain;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @ApiModel
-public class VocabularyDomain extends DomainBase {
+public class VocabularyDomain extends BaseDomain {
 
 	private Integer _vocab_key;
 	private Integer isSimple;

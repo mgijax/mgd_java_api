@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -18,7 +18,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "AntibodyPrep Model Object")
 @Table(name="gxd_antibodyprep")
-public class AntibodyPrep extends EntityBase {
+public class AntibodyPrep extends BaseEntity {
 
 	@Id
 	private Integer _antibodyprep_key;

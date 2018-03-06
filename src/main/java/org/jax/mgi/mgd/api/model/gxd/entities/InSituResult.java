@@ -12,7 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.img.entities.ImagePane;
 
 import io.swagger.annotations.ApiModel;
@@ -23,7 +23,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "InSituResult Model Object")
 @Table(name="gxd_insituresult")
-public class InSituResult extends EntityBase {
+public class InSituResult extends BaseEntity {
 
 	@Id
 	private Integer _result_key;

@@ -13,7 +13,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Where;
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.map.entities.CoordinateFeature;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -28,7 +28,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Sequence Model Object")
 @Table(name="seq_sequence")
-public class Sequence extends EntityBase {
+public class Sequence extends BaseEntity {
 
 	@Id
 	private Integer _sequence_key;

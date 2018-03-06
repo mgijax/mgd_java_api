@@ -9,7 +9,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Where;
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLine;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLineDerivation;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTSample;
@@ -26,7 +26,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "MGI Translation  Object")
 @Table(name="mgi_translation")
-public class MGITranslation extends EntityBase {
+public class MGITranslation extends BaseEntity {
 	@Id
 	private Integer _translation_key;
 	

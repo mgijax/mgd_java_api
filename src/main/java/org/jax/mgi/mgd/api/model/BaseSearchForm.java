@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public abstract class SearchForm {
+public abstract class BaseSearchForm {
 
 	protected String orderBy;
 	protected Integer pageNum;

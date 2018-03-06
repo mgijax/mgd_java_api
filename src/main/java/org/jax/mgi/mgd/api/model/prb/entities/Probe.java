@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Where;
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -27,7 +27,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Probe Model Object")
 @Table(name="prb_probe")
-public class Probe extends EntityBase {
+public class Probe extends BaseEntity {
 
 	@Id
 	private Integer _probe_key;

@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 
 import io.swagger.annotations.ApiModel;
@@ -19,7 +19,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Synonym Type Object")
 @Table(name="mgi_synonymtype")
-public class MGISynonymType extends EntityBase {
+public class MGISynonymType extends BaseEntity {
 	@Id
 	private Integer _synonymType_key;
 	private String synonymType;

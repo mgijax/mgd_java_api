@@ -11,7 +11,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Where;
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.map.entities.CoordinateFeature;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -24,7 +24,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Chromosome Model Object")
 @Table(name="mrk_chromosome")
-public class Chromosome extends EntityBase {
+public class Chromosome extends BaseEntity {
 
 	@Id
 	private Integer _chromosome_key;

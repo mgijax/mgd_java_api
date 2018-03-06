@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.SearchInterface;
+import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.acc.domain.MGITypeDomain;
 import org.jax.mgi.mgd.api.model.acc.search.MGITypeSearchForm;
 import org.jax.mgi.mgd.api.model.acc.service.MGITypeService;
@@ -21,7 +21,7 @@ import io.swagger.annotations.Api;
 @Api(value = "MGI Type Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class MGITypeController extends BaseController<MGITypeDomain> implements SearchInterface<MGITypeDomain, MGITypeSearchForm> {
+public class MGITypeController extends BaseController<MGITypeDomain> implements BaseSearchInterface<MGITypeDomain, MGITypeSearchForm> {
 
 	@Inject
 	private MGITypeService mgitypeService;

@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Where;
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
@@ -26,7 +26,7 @@ import lombok.Setter;
 @Getter @Setter
 @Entity
 @Table(name="voc_term")
-public class Term extends EntityBase {
+public class Term extends BaseEntity {
 
 	@Id
 	private Integer _term_key;

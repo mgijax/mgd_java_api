@@ -1,12 +1,12 @@
 package org.jax.mgi.mgd.api.model.voc.translator;
 
 import org.apache.commons.collections4.IteratorUtils;
+import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.VocabularyDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Vocabulary;
-import org.jax.mgi.mgd.api.translators.EntityDomainTranslator;
 
-public class VocabularyTranslator extends EntityDomainTranslator<Vocabulary, VocabularyDomain> {
+public class VocabularyTranslator extends BaseEntityDomainTranslator<Vocabulary, VocabularyDomain> {
 
 	private TermTranslator termTranslator = new TermTranslator();
 	

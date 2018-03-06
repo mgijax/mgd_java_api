@@ -10,7 +10,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.mgd.api.model.Repository;
+import org.jax.mgi.mgd.api.model.BaseRepository;
 import org.jax.mgi.mgd.api.model.acc.dao.MGITypeDAO;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 import org.jax.mgi.mgd.api.model.mgi.dao.ApiLogDAO;
@@ -18,7 +18,7 @@ import org.jax.mgi.mgd.api.model.mgi.domain.ApiLogDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.ApiLogEvent;
 import org.jax.mgi.mgd.api.model.mgi.entities.ApiLogObject;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.translators.ApiLogTranslator;
+import org.jax.mgi.mgd.api.model.mgi.translator.ApiLogTranslator;
 import org.jax.mgi.mgd.api.util.MapMaker;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -28,7 +28,7 @@ import org.jax.mgi.mgd.api.util.SearchResults;
  *    ApiLogDomain object has its data drawn
  * Does: (from the outside, this appears to) retrieve domain objects, store them, search for them
  */
-public class ApiLogRepository extends Repository<ApiLogDomain> {
+public class ApiLogRepository extends BaseRepository<ApiLogDomain> {
 
 	/***--- instance variables ---***/
 

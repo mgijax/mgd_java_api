@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.voc.entities.Vocabulary;
@@ -21,7 +21,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "BiotypeMapping Model Object")
 @Table(name="mrk_biotypemapping")
-public class BiotypeMapping extends EntityBase {
+public class BiotypeMapping extends BaseEntity {
 
 	@Id
 	private Integer _biotypemapping_key;

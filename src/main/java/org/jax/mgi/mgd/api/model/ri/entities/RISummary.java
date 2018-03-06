@@ -10,7 +10,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 
 import io.swagger.annotations.ApiModel;
@@ -21,7 +21,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "RI_Summary Model Object")
 @Table(name="ri_summary")
-public class RISummary extends EntityBase {
+public class RISummary extends BaseEntity {
 
 	@Id
 	private Integer _risummary_key;

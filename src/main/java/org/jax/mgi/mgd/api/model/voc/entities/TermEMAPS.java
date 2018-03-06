@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.gxd.entities.TheilerStage;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
@@ -20,7 +20,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Term EMAPS Model Object")
 @Table(name="voc_term_emaps")
-public class TermEMAPS extends EntityBase {
+public class TermEMAPS extends BaseEntity {
 
 	@Id
 	private Integer _Term_key;

@@ -1,13 +1,14 @@
-package org.jax.mgi.mgd.api.translators;
+package org.jax.mgi.mgd.api.model.mgi.translator;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.ApiLogDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.ApiLogEvent;
 import org.jax.mgi.mgd.api.model.mgi.entities.ApiLogObject;
 
-public class ApiLogTranslator extends EntityDomainTranslator<ApiLogEvent, ApiLogDomain>{
+public class ApiLogTranslator extends BaseEntityDomainTranslator<ApiLogEvent, ApiLogDomain>{
 	private SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
 	
 	@Override

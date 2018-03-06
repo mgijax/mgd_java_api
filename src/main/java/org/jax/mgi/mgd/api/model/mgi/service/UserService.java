@@ -7,15 +7,16 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.exception.APIException;
+import org.jax.mgi.mgd.api.model.BaseSearchInterface;
+import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.dao.UserDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.UserDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.search.UserSearchForm;
-import org.jax.mgi.mgd.api.service.ServiceInterface;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
-public class UserService extends ServiceInterface<UserDomain, UserSearchForm> {
+public class UserService extends BaseService<UserDomain> implements BaseSearchInterface<UserDomain, UserSearchForm> {
 
 	@Inject
 	private UserDAO userDAO;

@@ -1,11 +1,13 @@
-package org.jax.mgi.mgd.api.translators;
+package org.jax.mgi.mgd.api.model.acc.translator;
 
 import org.apache.commons.collections4.IteratorUtils;
+import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.MGITypeDomain;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 import org.jax.mgi.mgd.api.model.mgi.domain.OrganismDomain;
+import org.jax.mgi.mgd.api.model.mgi.translator.OrganismTranslator;
 
-public class MGITypeTranslator extends EntityDomainTranslator<MGIType, MGITypeDomain> {
+public class MGITypeTranslator extends BaseEntityDomainTranslator<MGIType, MGITypeDomain> {
 
 	private OrganismTranslator organismTranslator = new OrganismTranslator();
 	

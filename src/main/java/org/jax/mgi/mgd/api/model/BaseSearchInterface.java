@@ -8,7 +8,7 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
-public interface SearchInterface<D, F> {
+public interface BaseSearchInterface<D, F> {
 
 	@POST
 	@ApiOperation(value = "Search by Fields")

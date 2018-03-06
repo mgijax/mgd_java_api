@@ -1,21 +1,20 @@
 package org.jax.mgi.mgd.api.model.mrk.service;
 
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.exception.APIException;
+import org.jax.mgi.mgd.api.model.BaseSearchInterface;
+import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
-import org.jax.mgi.mgd.api.service.ServiceInterface;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
-public class MarkerService extends ServiceInterface<MarkerDomain, MarkerSearchForm> {
+public class MarkerService extends BaseService<MarkerDomain> implements BaseSearchInterface<MarkerDomain, MarkerSearchForm> {
 
-	@Inject
-	private MarkerDAO markerDAO;
+//	@Inject
+//	private MarkerDAO markerDAO;
 
 	@Override
 	public MarkerDomain create(MarkerDomain object, User user) throws APIException {

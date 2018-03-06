@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 import org.jax.mgi.mgd.api.model.dag.entities.Dag;
 import org.jax.mgi.mgd.api.model.voc.entities.Vocabulary;
@@ -21,7 +21,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Relationship Category Object")
 @Table(name="mgi_relationship_category")
-public class RelationshipCategory extends EntityBase {
+public class RelationshipCategory extends BaseEntity {
 	@Id
 	private Integer _category_key;
 	private String name;

@@ -3,7 +3,7 @@ package org.jax.mgi.mgd.api.model.bib.domain;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.mgd.api.model.DomainBase;
+import org.jax.mgi.mgd.api.model.BaseDomain;
 
 /* Is: a domain object that represents a single reference in mgd.
  * Has: fields needed to display/edit in the PWI, where those values for those fields are carried
@@ -12,7 +12,7 @@ import org.jax.mgi.mgd.api.model.DomainBase;
  * 	the entities package) to be closer to the database and keeping the PWI's interactions as simple
  *	as possible
  */
-public class ReferenceDomain extends DomainBase {
+public class ReferenceDomain extends BaseDomain {
 	public Integer _refs_key;
 	public String authors;
 	public String primary_author;

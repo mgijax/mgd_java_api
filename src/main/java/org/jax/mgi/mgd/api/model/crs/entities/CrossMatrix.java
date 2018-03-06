@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 
 import io.swagger.annotations.ApiModel;
@@ -19,7 +19,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Cross Matrix Model Object")
 @Table(name="crs_matrix")
-public class CrossMatrix extends EntityBase {
+public class CrossMatrix extends BaseEntity {
 
 	@EmbeddedId
 	private CrossMatrixKey key;

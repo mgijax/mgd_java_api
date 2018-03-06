@@ -5,17 +5,18 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.exception.APIException;
+import org.jax.mgi.mgd.api.model.BaseSearchInterface;
+import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.VocabularyDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.VocabularyDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Vocabulary;
 import org.jax.mgi.mgd.api.model.voc.search.VocabularySearchForm;
 import org.jax.mgi.mgd.api.model.voc.translator.VocabularyTranslator;
-import org.jax.mgi.mgd.api.service.ServiceInterface;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
-public class VocabService extends ServiceInterface<VocabularyDomain, VocabularySearchForm> {
+public class VocabService extends BaseService<VocabularyDomain> implements BaseSearchInterface<VocabularyDomain, VocabularySearchForm> {
 
 	@Inject
 	private VocabularyDAO vocabularyDAO;

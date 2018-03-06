@@ -10,7 +10,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 
 import io.swagger.annotations.ApiModel;
@@ -21,7 +21,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Annotation Type Model Object")
 @Table(name="voc_annottype")
-public class AnnotationType extends EntityBase {
+public class AnnotationType extends BaseEntity {
 
 	@Id
 	private Integer _annotType_key;

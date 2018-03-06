@@ -1,6 +1,6 @@
 package org.jax.mgi.mgd.api.model.bib.domain;
 
-import org.jax.mgi.mgd.api.model.DomainBase;
+import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
 
 /* Is: a domain object that represents data for a single workflow group status change via the API
@@ -9,7 +9,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
  * 	the entities package) to be closer to the database and keeping the PWI's interactions as simple
  *	as possible
  */
-public class ReferenceWorkflowStatusDomain extends DomainBase {
+public class ReferenceWorkflowStatusDomain extends BaseDomain {
 	public Integer _refs_key;
 	public boolean is_current;
 	public String creation_date;

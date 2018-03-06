@@ -11,7 +11,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.voc.entities.Vocabulary;
@@ -24,7 +24,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "DAG Model Object")
 @Table(name="dag_dag")
-public class Dag extends EntityBase {
+public class Dag extends BaseEntity {
 
 	@Id
 	private Integer _dag_key;

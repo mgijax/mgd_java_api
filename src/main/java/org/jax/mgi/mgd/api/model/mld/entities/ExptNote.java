@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -16,7 +16,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "MLD Expt_Notes Model Object")
 @Table(name="mld_expt_notes")
-public class ExptNote extends EntityBase {
+public class ExptNote extends BaseEntity {
 
 	@Id
 	private Integer _expt_key;

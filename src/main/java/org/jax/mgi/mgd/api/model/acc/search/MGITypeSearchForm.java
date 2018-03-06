@@ -2,9 +2,9 @@ package org.jax.mgi.mgd.api.model.acc.search;
 
 import java.util.Map;
 
-import org.jax.mgi.mgd.api.model.SearchForm;
+import org.jax.mgi.mgd.api.model.BaseSearchForm;
 
-public class MGITypeSearchForm extends SearchForm {
+public class MGITypeSearchForm extends BaseSearchForm {
 
 	@Override
 	public Map<String, Object> getSearchFields() {

@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Where;
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
@@ -29,7 +29,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Image Model Object")
 @Table(name="img_image")
-public class Image extends EntityBase {
+public class Image extends BaseEntity {
 
 	@Id
 	private Integer _image_key;

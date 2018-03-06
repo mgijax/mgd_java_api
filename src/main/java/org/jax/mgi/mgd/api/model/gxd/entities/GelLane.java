@@ -10,7 +10,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -20,7 +20,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "GelLane Model Object")
 @Table(name="gxd_gellane")
-public class GelLane extends EntityBase {
+public class GelLane extends BaseEntity {
 
 	@Id
 	private Integer _gellane_key;

@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -18,7 +18,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "DAG Edge Model Object")
 @Table(name="dag_edge")
-public class DagEdge extends EntityBase {
+public class DagEdge extends BaseEntity {
 
 	@Id
 	private Integer _edge_key;

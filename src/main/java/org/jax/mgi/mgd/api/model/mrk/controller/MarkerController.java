@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.SearchInterface;
+import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
@@ -21,7 +21,7 @@ import io.swagger.annotations.Api;
 @Api(value = "Marker Endpoints", description="This is the description")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class MarkerController extends BaseController<MarkerDomain> implements SearchInterface<MarkerDomain, MarkerSearchForm> {
+public class MarkerController extends BaseController<MarkerDomain> implements BaseSearchInterface<MarkerDomain, MarkerSearchForm> {
 
 	@Inject
 	private MarkerService markerService;

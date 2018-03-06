@@ -9,7 +9,7 @@ import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.domain.ApiLogDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.interfaces.ApiLogRESTInterface;
-import org.jax.mgi.mgd.api.service.ApiLogService;
+import org.jax.mgi.mgd.api.model.mgi.service.ApiLogService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 public class ApiLogController extends BaseController<ApiLogDomain> implements ApiLogRESTInterface {

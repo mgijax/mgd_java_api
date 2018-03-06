@@ -9,7 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
@@ -20,7 +20,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "User Model Object")
 @Table(name="mgi_user")
-public class User extends EntityBase {
+public class User extends BaseEntity {
 	@Id
 	private Integer _user_key;
 	private String login;

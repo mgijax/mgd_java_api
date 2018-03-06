@@ -1,10 +1,11 @@
-package org.jax.mgi.mgd.api.translators;
+package org.jax.mgi.mgd.api.model.bib.translator;
 
+import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowData;
 
-public class ReferenceSummaryTranslator extends EntityDomainTranslator<Reference, ReferenceSummaryDomain>{
+public class ReferenceSummaryTranslator extends BaseEntityDomainTranslator<Reference, ReferenceSummaryDomain>{
 	@Override
 	protected ReferenceSummaryDomain entityToDomain(Reference entity) {
 		ReferenceSummaryDomain domain = new ReferenceSummaryDomain();

@@ -11,7 +11,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Where;
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIProperty;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
@@ -24,7 +24,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Cluster Model Object")
 @Table(name="mrk_cluster")
-public class Cluster extends EntityBase {
+public class Cluster extends BaseEntity {
 
 	@Id
 	private Integer _cluster_key;

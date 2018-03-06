@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.SearchInterface;
+import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.domain.VocabularyDomain;
 import org.jax.mgi.mgd.api.model.voc.search.VocabularySearchForm;
@@ -21,7 +21,7 @@ import io.swagger.annotations.Api;
 @Api(value = "Vocab Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class VocabController extends BaseController<VocabularyDomain> implements SearchInterface<VocabularyDomain, VocabularySearchForm> {
+public class VocabController extends BaseController<VocabularyDomain> implements BaseSearchInterface<VocabularyDomain, VocabularySearchForm> {
 
 	@Inject
 	private VocabService vocabService;

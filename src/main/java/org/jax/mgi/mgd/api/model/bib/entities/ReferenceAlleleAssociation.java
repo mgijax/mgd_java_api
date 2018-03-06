@@ -8,7 +8,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Where;
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 
 import io.swagger.annotations.ApiModel;
@@ -19,7 +19,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Allele Association Model Object")
 @Table(name="mgi_reference_assoc")
-public class ReferenceAlleleAssociation extends EntityBase {
+public class ReferenceAlleleAssociation extends BaseEntity {
 	@Id
 	@Column(name="_assoc_key")
 	private int _assoc_key;

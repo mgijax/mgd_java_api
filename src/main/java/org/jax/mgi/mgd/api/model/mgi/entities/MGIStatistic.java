@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "MGI Statistic Object")
 @Table(name="mgi_statistic")
-public class MGIStatistic extends EntityBase {
+public class MGIStatistic extends BaseEntity {
 	@Id
 	private Integer _statistic_key;
 	private String name;

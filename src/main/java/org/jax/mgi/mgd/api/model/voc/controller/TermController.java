@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.SearchInterface;
+import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.search.TermSearchForm;
@@ -21,7 +21,7 @@ import io.swagger.annotations.Api;
 @Api(value = "Term Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class TermController extends BaseController<TermDomain> implements SearchInterface<TermDomain, TermSearchForm> {
+public class TermController extends BaseController<TermDomain> implements BaseSearchInterface<TermDomain, TermSearchForm> {
 
 	@Inject
 	private TermService termService;

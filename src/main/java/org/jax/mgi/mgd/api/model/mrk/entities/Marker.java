@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Where;
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.model.gxd.entities.Antibody;
@@ -34,7 +34,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Marker Model Object")
 @Table(name="mrk_marker")
-public class Marker extends EntityBase {
+public class Marker extends BaseEntity {
 
 	@Id
 	@ApiModelProperty(value="primary key")

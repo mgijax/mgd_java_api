@@ -23,7 +23,7 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Where;
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
@@ -37,7 +37,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Reference Model Object")
 @Table(name="bib_refs")
-public class Reference extends EntityBase {
+public class Reference extends BaseEntity {
 
 	@Id
 	@Column(name="_Refs_key")

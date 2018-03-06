@@ -6,7 +6,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
 import io.swagger.annotations.ApiModel;
@@ -17,7 +17,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Evidence Model Object")
 @Table(name="voc_evidence")
-public class Evidence extends EntityBase {
+public class Evidence extends BaseEntity {
 
 	@Id
 	private Integer _annotevidence_key;

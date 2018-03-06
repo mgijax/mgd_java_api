@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.prb.entities.Probe;
 
 import io.swagger.annotations.ApiModel;
@@ -19,7 +19,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "ProbePrep Model Object")
 @Table(name="gxd_probeprep")
-public class ProbePrep extends EntityBase {
+public class ProbePrep extends BaseEntity {
 
 	@Id
 	private Integer _probeprep_key;

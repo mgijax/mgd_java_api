@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
@@ -21,7 +21,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Expt_Marker Model Object")
 @Table(name="mld_expt_marker")
-public class ExptMarker extends EntityBase {
+public class ExptMarker extends BaseEntity {
 
 	@EmbeddedId
 	private ExptMarkerKey key;

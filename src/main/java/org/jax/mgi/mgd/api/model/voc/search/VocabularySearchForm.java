@@ -3,7 +3,7 @@ package org.jax.mgi.mgd.api.model.voc.search;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jax.mgi.mgd.api.model.SearchForm;
+import org.jax.mgi.mgd.api.model.BaseSearchForm;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -13,7 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter @ApiModel("Vocabulary Search Form")
-public class VocabularySearchForm extends SearchForm {
+public class VocabularySearchForm extends BaseSearchForm {
 
 	@ApiParam(value="Vocab Name to Search for")
 	private String vocabName;

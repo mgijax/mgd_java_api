@@ -1,12 +1,9 @@
-package org.jax.mgi.mgd.api.translators;
+package org.jax.mgi.mgd.api.model;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import org.jax.mgi.mgd.api.model.DomainBase;
-import org.jax.mgi.mgd.api.model.EntityBase;
-
-public abstract class EntityDomainTranslator<E extends EntityBase, D extends DomainBase> {
+public abstract class BaseEntityDomainTranslator<E extends BaseEntity, D extends BaseDomain> {
 
 	protected SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
 

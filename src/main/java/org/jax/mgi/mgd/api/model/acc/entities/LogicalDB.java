@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
@@ -20,7 +20,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "LogicalDB Model Object")
 @Table(name="acc_logicaldb")
-public class LogicalDB extends EntityBase {
+public class LogicalDB extends BaseEntity {
 
 	@Id
 	private Integer _logicaldb_key;

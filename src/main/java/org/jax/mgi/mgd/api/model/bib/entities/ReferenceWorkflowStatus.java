@@ -10,7 +10,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
@@ -22,7 +22,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Reference Workflow Status Model Object")
 @Table(name="bib_workflow_status")
-public class ReferenceWorkflowStatus extends EntityBase {
+public class ReferenceWorkflowStatus extends BaseEntity {
 	@Id
 	@Column(name="_assoc_key")
 	private int _assoc_key;

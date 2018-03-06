@@ -1,23 +1,20 @@
 package org.jax.mgi.mgd.api.model.acc.service;
 
-import java.util.Map;
-
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.mgd.api.model.acc.dao.LogicalDBDAO;
+import org.jax.mgi.mgd.api.model.BaseSearchInterface;
+import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.domain.LogicalDBDomain;
 import org.jax.mgi.mgd.api.model.acc.search.LogicalDBSearchForm;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.service.ServiceInterface;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
-public class LogicalDBService extends ServiceInterface<LogicalDBDomain, LogicalDBSearchForm> {
+public class LogicalDBService extends BaseService<LogicalDBDomain> implements BaseSearchInterface<LogicalDBDomain, LogicalDBSearchForm> {
 
-	@Inject
-	private LogicalDBDAO logicaldbDAO;
+//	@Inject
+//	private LogicalDBDAO logicaldbDAO;
 
 	@Override
 	public LogicalDBDomain create(LogicalDBDomain object, User user) throws APIException {

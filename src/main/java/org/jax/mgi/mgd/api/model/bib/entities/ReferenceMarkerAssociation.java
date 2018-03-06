@@ -7,7 +7,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Where;
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 
 import io.swagger.annotations.ApiModel;
@@ -18,7 +18,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Marker Association Model Object")
 @Table(name="mrk_reference")
-public class ReferenceMarkerAssociation extends EntityBase {
+public class ReferenceMarkerAssociation extends BaseEntity {
 
 	@EmbeddedId
 	private ReferenceMarkerAssociationKey keys;

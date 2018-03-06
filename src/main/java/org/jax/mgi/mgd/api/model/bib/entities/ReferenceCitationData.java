@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Reference Citation Model Object")
 @Table(name="bib_citation_cache")
-public class ReferenceCitationData extends EntityBase {
+public class ReferenceCitationData extends BaseEntity {
 	@Id
 	private int _refs_key;
 	private String short_citation;

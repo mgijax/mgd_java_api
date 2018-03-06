@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.SearchInterface;
+import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.acc.domain.LogicalDBDomain;
 import org.jax.mgi.mgd.api.model.acc.search.LogicalDBSearchForm;
 import org.jax.mgi.mgd.api.model.acc.service.LogicalDBService;
@@ -21,7 +21,7 @@ import io.swagger.annotations.Api;
 @Api(value = "LogicalDB Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class LogicalDBController extends BaseController<LogicalDBDomain> implements SearchInterface<LogicalDBDomain, LogicalDBSearchForm> {
+public class LogicalDBController extends BaseController<LogicalDBDomain> implements BaseSearchInterface<LogicalDBDomain, LogicalDBSearchForm> {
 
 	@Inject
 	private LogicalDBService logicaldbService;

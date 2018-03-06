@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 
 import io.swagger.annotations.ApiModel;
@@ -19,7 +19,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Reference Association Type Object")
 @Table(name="mgi_refassoctype")
-public class RefAssocType extends EntityBase {
+public class RefAssocType extends BaseEntity {
 	@Id
 	private Integer _refAssocType_key;
 	private String assocType;

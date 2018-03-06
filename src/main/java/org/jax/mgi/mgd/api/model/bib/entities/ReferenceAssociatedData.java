@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -15,7 +15,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Reference Associated Data Model Object")
 @Table(name="bib_associateddata_view")
-public class ReferenceAssociatedData extends EntityBase {
+public class ReferenceAssociatedData extends BaseEntity {
 	@Id
 	@Column(name="_refs_key")
 	private int _refs_key;

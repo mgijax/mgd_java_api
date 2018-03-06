@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
@@ -19,7 +19,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Relationship Property Object")
 @Table(name="mgi_relationship_property")
-public class RelationshipProperty extends EntityBase {
+public class RelationshipProperty extends BaseEntity {
 	@Id
 	private Integer _relationship_Property_key;
 	private String value;

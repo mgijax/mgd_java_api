@@ -14,7 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.dag.entities.Dag;
@@ -27,7 +27,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Vocabulary Model Object")
 @Table(name="voc_vocab")
-public class Vocabulary extends EntityBase {
+public class Vocabulary extends BaseEntity {
 
 	@Id
 	private Integer _vocab_key;

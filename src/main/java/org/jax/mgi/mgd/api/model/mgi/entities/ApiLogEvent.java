@@ -11,7 +11,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.BatchSize;
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +21,7 @@ import lombok.Setter;
 @Entity
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 @Table(name="mgi_apilog_event")
-public class ApiLogEvent extends EntityBase {
+public class ApiLogEvent extends BaseEntity {
 
 	@Id
 	private Integer _event_key;

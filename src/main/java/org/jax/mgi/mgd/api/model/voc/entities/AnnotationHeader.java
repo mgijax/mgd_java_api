@@ -9,7 +9,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Where;
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
@@ -21,7 +21,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Annotation Header Model Object")
 @Table(name="voc_annotheader")
-public class AnnotationHeader extends EntityBase {
+public class AnnotationHeader extends BaseEntity {
 
 	@Id
 	private Integer _annotHeader_key;

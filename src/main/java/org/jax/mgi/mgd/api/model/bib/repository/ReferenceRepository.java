@@ -14,7 +14,7 @@ import javax.inject.Inject;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.exception.NonFatalAPIException;
-import org.jax.mgi.mgd.api.model.Repository;
+import org.jax.mgi.mgd.api.model.BaseRepository;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
@@ -25,10 +25,10 @@ import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowTag;
+import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
-import org.jax.mgi.mgd.api.translators.ReferenceTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.MapMaker;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -39,7 +39,7 @@ import org.jax.mgi.mgd.api.util.SearchResults;
  *    ReferenceDomain object has its data drawn
  * Does: (from the outside, this appears to) retrieve domain objects, store them, search for them
  */
-public class ReferenceRepository extends Repository<ReferenceDomain> {
+public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 
 	/***--- instance variables ---***/
 

@@ -16,7 +16,7 @@ import org.jboss.logging.Logger;
  *    2. The modification methods (create, update, delete) persist changes to the database.
  */
 
-public abstract class Repository<D extends DomainBase> {
+public abstract class BaseRepository<D extends BaseDomain> {
 	
 	/***--- instance variables ---***/
 	

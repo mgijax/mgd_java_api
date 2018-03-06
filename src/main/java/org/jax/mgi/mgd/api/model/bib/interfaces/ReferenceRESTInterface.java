@@ -1,7 +1,5 @@
 package org.jax.mgi.mgd.api.model.bib.interfaces;
 
-import java.util.Map;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -16,7 +14,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.ReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.ApiLogDomain;
 import org.jax.mgi.mgd.api.util.SearchResults;
 

@@ -12,7 +12,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
@@ -25,7 +25,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Accession Model Object")
 @Table(name="acc_accession")
-public class Accession extends EntityBase {
+public class Accession extends BaseEntity {
 	@Id
 	private int _accession_key;
 	private String accID;

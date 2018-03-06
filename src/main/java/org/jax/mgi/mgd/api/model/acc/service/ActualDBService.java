@@ -1,21 +1,20 @@
 package org.jax.mgi.mgd.api.model.acc.service;
 
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.mgd.api.model.acc.dao.ActualDBDAO;
+import org.jax.mgi.mgd.api.model.BaseSearchInterface;
+import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.domain.ActualDBDomain;
 import org.jax.mgi.mgd.api.model.acc.search.ActualDBSearchForm;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.service.ServiceInterface;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
-public class ActualDBService extends ServiceInterface<ActualDBDomain, ActualDBSearchForm> {
+public class ActualDBService extends BaseService<ActualDBDomain> implements BaseSearchInterface<ActualDBDomain, ActualDBSearchForm>{
 
-	@Inject
-	private ActualDBDAO actualdbDAO;
+//	@Inject
+//	private ActualDBDAO actualdbDAO;
 
 	@Override
 	public ActualDBDomain create(ActualDBDomain object, User user) throws APIException {

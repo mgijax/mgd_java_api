@@ -1,21 +1,20 @@
 package org.jax.mgi.mgd.api.model.mgi.service;
 
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
+import org.jax.mgi.mgd.api.model.BaseSearchInterface;
+import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.domain.OrganismDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.search.OrganismSearchForm;
-import org.jax.mgi.mgd.api.service.ServiceInterface;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
-public class OrganismService extends ServiceInterface<OrganismDomain, OrganismSearchForm> {
+public class OrganismService extends BaseService<OrganismDomain> implements BaseSearchInterface<OrganismDomain, OrganismSearchForm> {
 
-	@Inject
-	private OrganismDAO organismDAO;
+//	@Inject
+//	private OrganismDAO organismDAO;
 
 	@Override
 	public OrganismDomain create(OrganismDomain object, User user) throws APIException {

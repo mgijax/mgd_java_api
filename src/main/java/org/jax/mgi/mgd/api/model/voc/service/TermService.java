@@ -7,7 +7,8 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.exception.DuplicateEntryException;
 import org.jax.mgi.mgd.api.exception.NotFoundException;
-import org.jax.mgi.mgd.api.model.mgi.dao.UserDAO;
+import org.jax.mgi.mgd.api.model.BaseSearchInterface;
+import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.UserService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
@@ -17,11 +18,10 @@ import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.voc.entities.Vocabulary;
 import org.jax.mgi.mgd.api.model.voc.search.TermSearchForm;
 import org.jax.mgi.mgd.api.model.voc.translator.TermTranslator;
-import org.jax.mgi.mgd.api.service.ServiceInterface;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
-public class TermService extends ServiceInterface<TermDomain, TermSearchForm> {
+public class TermService extends BaseService<TermDomain> implements BaseSearchInterface<TermDomain, TermSearchForm> {
 
 	@Inject
 	private TermDAO termDAO;

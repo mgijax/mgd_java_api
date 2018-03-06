@@ -9,7 +9,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Where;
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.ActualDB;
 import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
@@ -22,7 +22,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "MGISet Member Object")
 @Table(name="mgi_setmember")
-public class MGISetMember extends EntityBase {
+public class MGISetMember extends BaseEntity {
 	@Id
 	private Integer _setmember_key;
 	

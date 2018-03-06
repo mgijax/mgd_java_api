@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Where;
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
@@ -34,7 +34,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Allele Model Object")
 @Table(name="all_allele")
-public class Allele extends EntityBase {
+public class Allele extends BaseEntity {
 
 	@Id
 	private Integer _allele_key;

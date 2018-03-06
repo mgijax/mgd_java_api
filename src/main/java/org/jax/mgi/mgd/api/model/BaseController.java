@@ -14,23 +14,21 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
 import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.mgd.api.exception.AuthenticationRequiredException;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.ApiLogService;
 import org.jax.mgi.mgd.api.model.mgi.service.UserService;
-import org.jax.mgi.mgd.api.service.ApiLogService;
-import org.jboss.logging.Logger;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
-public abstract class BaseController<T extends DomainBase> implements RESTInterface<T> {
+public abstract class BaseController<T extends BaseDomain> implements BaseRESTInterface<T> {
 
 	@Inject
 	private UserService userService;
 
 	@Inject ApiLogService apiLogService;
 	
-	private Logger log = Logger.getLogger(getClass());
+	//private Logger log = Logger.getLogger(getClass());
 	
 	/* if token is not defined in properties file, then do not require one.  Otherwise, must
 	 * be an exact match (case sensitive).

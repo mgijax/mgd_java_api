@@ -6,12 +6,12 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.mgd.api.model.Repository;
+import org.jax.mgi.mgd.api.model.BaseRepository;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.bib.translator.ReferenceSummaryTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.translators.ReferenceSummaryTranslator;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 /* Is: a repository that deals with searching for ReferenceSummaryDomain objects
@@ -19,7 +19,7 @@ import org.jax.mgi.mgd.api.util.SearchResults;
  *    ReferenceSummaryDomain object has its data drawn
  * Does: (from the outside, this appears to) retrieve domain objects, store them, search for them
  */
-public class ReferenceSummaryRepository extends Repository<ReferenceSummaryDomain> {
+public class ReferenceSummaryRepository extends BaseRepository<ReferenceSummaryDomain> {
 
 	/***--- instance variables ---***/
 

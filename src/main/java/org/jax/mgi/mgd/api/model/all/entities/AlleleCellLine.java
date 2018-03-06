@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
@@ -21,7 +21,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "CellLine Model Object")
 @Table(name="all_cellline")
-public class AlleleCellLine extends EntityBase {
+public class AlleleCellLine extends BaseEntity {
 
 	@Id
 	private Integer _cellline_key;

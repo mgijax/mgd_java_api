@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.jax.mgi.mgd.api.model.EntityBase;
+import org.jax.mgi.mgd.api.model.BaseEntity;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -16,7 +16,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Tissue Model Object")
 @Table(name="prb_tissue")
-public class ProbeTissue extends EntityBase {
+public class ProbeTissue extends BaseEntity {
 
 	@Id
 	private Integer _tissue_key;

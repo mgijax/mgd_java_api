@@ -1,4 +1,4 @@
-package org.jax.mgi.mgd.api.service;
+package org.jax.mgi.mgd.api.model.mgi.service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -1,5 +1,5 @@
 package org.jax.mgi.mgd.api.model;
 
-public class DomainBase {
+public class BaseDomain {
 
 }

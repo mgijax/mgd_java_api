@@ -34,7 +34,7 @@ public class Term extends EntityBase {
 	private String abbreviation;
 	private String note;
 	private Integer sequenceNum;
-	private Integer isObsolete;
+	private Integer isObsolete = 0; // Default for creating new terms (Don't change)
 	private Date creation_date;
 	private Date modification_date;
 

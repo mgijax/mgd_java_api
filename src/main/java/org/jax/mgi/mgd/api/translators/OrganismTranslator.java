@@ -1,6 +1,6 @@
 package org.jax.mgi.mgd.api.translators;
 
-import org.jax.mgi.mgd.api.domain.OrganismDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.OrganismDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 
 public class OrganismTranslator extends EntityDomainTranslator<Organism, OrganismDomain> {

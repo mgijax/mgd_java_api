@@ -1,6 +1,6 @@
 package org.jax.mgi.mgd.api.translators;
 
-import org.jax.mgi.mgd.api.domain.ReferenceSummaryDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowData;
 

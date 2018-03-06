@@ -1,0 +1,55 @@
+package org.jax.mgi.mgd.api.model.voc.controller;
+
+import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+import org.jax.mgi.mgd.api.exception.APIException;
+import org.jax.mgi.mgd.api.model.BaseController;
+import org.jax.mgi.mgd.api.model.SearchInterface;
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
+import org.jax.mgi.mgd.api.model.voc.search.TermSearchForm;
+import org.jax.mgi.mgd.api.model.voc.service.TermService;
+import org.jax.mgi.mgd.api.util.SearchResults;
+
+import io.swagger.annotations.Api;
+
+@Path("/term")
+@Api(value = "Term Endpoints")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public class TermController extends BaseController<TermDomain> implements SearchInterface<TermDomain, TermSearchForm> {
+
+	@Inject
+	private TermService termService;
+
+	public TermDomain create(TermDomain term, User user) {
+		try {
+			return termService.create(term, user);
+		} catch (APIException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public TermDomain update(TermDomain term, User user) {
+		return termService.update(term, user);
+	}
+
+	public TermDomain get(Integer key) {
+		return termService.get(key);
+	}
+
+	public TermDomain delete(Integer term_key, User user) {
+		return termService.delete(term_key, user);
+	}
+
+	@Override
+	public SearchResults<TermDomain> search(TermSearchForm searchForm) {
+		return termService.search(searchForm);
+	}
+	
+}

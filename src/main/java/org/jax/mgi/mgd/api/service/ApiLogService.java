@@ -8,10 +8,10 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
-import org.jax.mgi.mgd.api.domain.ApiLogDomain;
 import org.jax.mgi.mgd.api.exception.APIException;
+import org.jax.mgi.mgd.api.model.mgi.domain.ApiLogDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.repository.ApiLogRepository;
+import org.jax.mgi.mgd.api.model.mgi.repository.ApiLogRepository;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 public class ApiLogService {

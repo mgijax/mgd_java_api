@@ -1,9 +1,9 @@
 package org.jax.mgi.mgd.api.translators;
 
 import org.apache.commons.collections4.IteratorUtils;
-import org.jax.mgi.mgd.api.domain.MGITypeDomain;
-import org.jax.mgi.mgd.api.domain.OrganismDomain;
+import org.jax.mgi.mgd.api.model.acc.domain.MGITypeDomain;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
+import org.jax.mgi.mgd.api.model.mgi.domain.OrganismDomain;
 
 public class MGITypeTranslator extends EntityDomainTranslator<MGIType, MGITypeDomain> {
 

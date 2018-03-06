@@ -3,7 +3,7 @@ package org.jax.mgi.mgd.api.translators;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import org.jax.mgi.mgd.api.domain.ApiLogDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.ApiLogDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.ApiLogEvent;
 import org.jax.mgi.mgd.api.model.mgi.entities.ApiLogObject;
 

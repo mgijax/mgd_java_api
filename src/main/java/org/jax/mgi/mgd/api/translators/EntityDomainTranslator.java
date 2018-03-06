@@ -3,7 +3,7 @@ package org.jax.mgi.mgd.api.translators;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import org.jax.mgi.mgd.api.domain.DomainBase;
+import org.jax.mgi.mgd.api.model.DomainBase;
 import org.jax.mgi.mgd.api.model.EntityBase;
 
 public abstract class EntityDomainTranslator<E extends EntityBase, D extends DomainBase> {

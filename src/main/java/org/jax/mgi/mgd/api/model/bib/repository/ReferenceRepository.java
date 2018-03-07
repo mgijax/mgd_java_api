@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.exception.NonFatalAPIException;
 import org.jax.mgi.mgd.api.model.BaseRepository;
+import org.jax.mgi.mgd.api.model.acc.dao.AccessionDAO;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
@@ -48,6 +49,9 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 
 	@Inject
 	private TermDAO termDAO;
+	
+	@Inject
+	private AccessionDAO accessionDAO;
 
 	ReferenceTranslator translator = new ReferenceTranslator();
 
@@ -454,7 +458,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 			Date creation = new Date();
 
 			Accession myID = new Accession();
-			myID.set_accession_key(referenceDAO.getNextAccessionKey());
+			myID.set_accession_key(accessionDAO.getNextKey());
 			myID.setAccID(accID);
 			myID.setPreferred(preferred);
 			myID.setIs_private(isPrivate);

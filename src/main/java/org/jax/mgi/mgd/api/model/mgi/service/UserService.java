@@ -14,12 +14,15 @@ import org.jax.mgi.mgd.api.model.mgi.domain.UserDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.search.UserSearchForm;
 import org.jax.mgi.mgd.api.util.SearchResults;
+import org.jboss.logging.Logger;
 
 @RequestScoped
 public class UserService extends BaseService<UserDomain> implements BaseSearchInterface<UserDomain, UserSearchForm> {
 
 	@Inject
 	private UserDAO userDAO;
+	
+	private Logger log = Logger.getLogger(getClass());
 
 	@Override
 	public UserDomain create(UserDomain object, User user) throws APIException {
@@ -50,14 +53,15 @@ public class UserService extends BaseService<UserDomain> implements BaseSearchIn
 		return null;
 	}
 	
-	/* get the User object corresponding to the given username (Linux login)
-	 */
-	public User getUser(String username) {
+	/* get the User object corresponding to the given username (Linux login) */
+	public User getUserByUsername(String username) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("login", username);
 		if(userDAO.search(map).total_count > 0) {
+			log.info("User found: " + username);
 			return userDAO.search(map).items.get(0);
 		} else {
+			log.info("User NOT found: " + username + " sending back mgd_dbo user");
 			map.put("login", "mgd_dbo");
 			return userDAO.search(map).items.get(0);
 		}

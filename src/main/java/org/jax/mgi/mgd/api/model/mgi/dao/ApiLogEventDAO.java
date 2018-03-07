@@ -24,9 +24,9 @@ import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateParser;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-public class ApiLogDAO extends PostgresSQLDAO<ApiLogEvent> {
+public class ApiLogEventDAO extends PostgresSQLDAO<ApiLogEvent> {
 
-	protected ApiLogDAO() {
+	protected ApiLogEventDAO() {
 		super(ApiLogEvent.class);
 	}
 

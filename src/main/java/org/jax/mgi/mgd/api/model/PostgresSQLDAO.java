@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model;
 
+import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -7,9 +8,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
+import javax.persistence.Id;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -22,6 +25,8 @@ import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.util.DateParser;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
+import org.reflections.Reflections;
+import org.reflections.scanners.FieldAnnotationsScanner;
 
 @Singleton
 public abstract class PostgresSQLDAO<T> {
@@ -41,9 +46,19 @@ public abstract class PostgresSQLDAO<T> {
 
 	/* maps from table name to the next value that should be assigned as primary key for the table */
 	protected static Map<String, Integer> nextKeyValue = new HashMap<String, Integer>();
+	
+	protected String idFieldName = null;
 
 	protected PostgresSQLDAO(Class<T> myClass) {
 		this.myClass = myClass;
+		Reflections r = new Reflections(myClass.getPackage().getName(), new FieldAnnotationsScanner());
+		Set<Field> fields = r.getFieldsAnnotatedWith(Id.class);
+		for(Field f: fields) {
+			if(f.getDeclaringClass().getName().equals(myClass.getName())) {
+				idFieldName = f.getName();
+				break;
+			}
+		}
 		//myClass = (Class<T>) DAOUtil.getTypeArguments(Foo.class, this.getClass()).get(0);
 		//myClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 	}
@@ -53,7 +68,7 @@ public abstract class PostgresSQLDAO<T> {
 		return myT;
 	}
 	public T create(T model) {
-		//log(model);
+		log.info(model);
 		entityManager.persist(model);
 		return model;
 	}
@@ -71,6 +86,7 @@ public abstract class PostgresSQLDAO<T> {
 */
 
 	public T update(T model) {
+		log.info(model);
 		entityManager.merge(model);
 		return model;
 	}
@@ -142,20 +158,17 @@ public abstract class PostgresSQLDAO<T> {
 		return results;
 	}
 
-
-	/* get the next available _Accession_key in the ACC_Accession table
-	 */
-	public synchronized int getNextAccessionKey() {
-		return getNextKey("AccessionID", "_accession_key");
-	}
-
 	/* method to get the next available key for the specified 'fieldName' in the given 'tableName'.  Any methods
 	 * that wrap this method should be synchronized to ensure thread-safety.  (We do not synchronize this method
 	 * itself, as we want key requests for different tables to be able to proceed in parallel.)
 	 */
-	public int getNextKey(String tableName, String fieldName) {
+	public int getNextKey() {
 		Long currentTime = System.currentTimeMillis();
 
+		if(idFieldName == null) {
+			log.error("idField was not found or multiple fields exist please use another method for getting max key");
+			return 0;
+		}
 		/* To save hitting the database for every request (and to avoid the same key being given to two users
 		 * who are curating at the same time), we cache the latest key assigned for a given table for a certain
 		 * period of time.  If we pass that period of time without requesting another key for that table, then
@@ -163,17 +176,17 @@ public abstract class PostgresSQLDAO<T> {
 		 * assignments overnight and on weekends, without getting out of sync with an in-memory cached value here.)
 		 */
 
-		if (!keyExpiration.containsKey(tableName) || (currentTime > keyExpiration.get(tableName))) {
-			TypedQuery<Integer> q1 = entityManager.createQuery("select max(" + fieldName + ") from " + tableName, Integer.class);
+		if (!keyExpiration.containsKey(idFieldName) || (currentTime > keyExpiration.get(idFieldName))) {
+			TypedQuery<Integer> q1 = entityManager.createQuery("select max(" + idFieldName + ") from " + myClass.getSimpleName(), Integer.class);
 			Integer maxKey = q1.getSingleResult();
 			if (maxKey == null) {
 				maxKey = 0;
 			}
-			nextKeyValue.put(tableName, ++maxKey);
+			nextKeyValue.put(idFieldName, ++maxKey);
 		}
-		Integer nextKey = nextKeyValue.get(tableName);
-		nextKeyValue.put(tableName, nextKey + 1);
-		keyExpiration.put(tableName, currentTime + expirationTime);
+		Integer nextKey = nextKeyValue.get(idFieldName);
+		nextKeyValue.put(idFieldName, nextKey + 1);
+		keyExpiration.put(idFieldName, currentTime + expirationTime);
 		return nextKey;
 	}
 

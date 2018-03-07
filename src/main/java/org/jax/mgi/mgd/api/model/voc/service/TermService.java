@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.voc.service;
 
+import java.util.Date;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -19,6 +21,7 @@ import org.jax.mgi.mgd.api.model.voc.entities.Vocabulary;
 import org.jax.mgi.mgd.api.model.voc.search.TermSearchForm;
 import org.jax.mgi.mgd.api.model.voc.translator.TermTranslator;
 import org.jax.mgi.mgd.api.util.SearchResults;
+import org.jboss.logging.Logger;
 
 @RequestScoped
 public class TermService extends BaseService<TermDomain> implements BaseSearchInterface<TermDomain, TermSearchForm> {
@@ -32,8 +35,8 @@ public class TermService extends BaseService<TermDomain> implements BaseSearchIn
 	@Inject
 	private UserService userService;
 	
-	
 	private TermTranslator translator = new TermTranslator();
+	private Logger log = Logger.getLogger(getClass());
 	
 	@Transactional
 	public TermDomain create(TermDomain termDomain, User user) throws APIException {
@@ -59,13 +62,23 @@ public class TermService extends BaseService<TermDomain> implements BaseSearchIn
 		
 		Term term = translator.translate(termDomain);
 		
-		term.setModifiedBy(user);
-		term.setCreatedBy(user);
-		term.set_term_key(termDAO.getNextKey("voc_term", "_term_key"));
+		log.debug("Creating Term: " + term);
 		
+		Date now = new Date();
+		term.setCreation_date(now);
+		term.setCreatedBy(user);
+		term.setModification_date(now);
+		term.setModifiedBy(user);
+		term.set_term_key(termDAO.getNextKey());
+		term.setVocab(vocab);
+
 		Term returnTerm = termDAO.create(term);
+		log.info("Create finished: " + returnTerm);
 		
 		TermDomain returnTermDomain = translator.translate(returnTerm);
+		
+		log.info("Return Domain: " + returnTermDomain);
+		
 		return returnTermDomain;
 	}
 
@@ -73,7 +86,7 @@ public class TermService extends BaseService<TermDomain> implements BaseSearchIn
 	public TermDomain update(TermDomain object, User user) {
 		Term term = translator.translate(object);
 		
-		term.setCreatedBy(userService.getUser(object.getCreatedBy()));
+		term.setCreatedBy(userService.getUserByUsername(object.getCreatedBy()));
 		term.setModifiedBy(user);
 		
 		Term returnTerm = termDAO.update(term);

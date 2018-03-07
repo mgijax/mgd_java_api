@@ -11,13 +11,13 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.mgi.domain.ApiLogDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mgi.repository.ApiLogRepository;
+import org.jax.mgi.mgd.api.model.mgi.repository.ApiLogEventRepository;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 public class ApiLogService {
 	
 	@Inject
-	private ApiLogRepository repo;
+	private ApiLogEventRepository repo;
 	
 	private SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
 	

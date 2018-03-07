@@ -704,12 +704,6 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		return ref;
 	}
 
-	/* get the next available primary key for a new reference
-	 */
-	public synchronized int getNextRefsKey() {
-		return this.getNextKey("Reference", "_refs_key");
-	}
-
 	/* get the next available primary key for a workflow status record
 	 */
 	public synchronized int getNextWorkflowStatusKey() throws FatalAPIException {

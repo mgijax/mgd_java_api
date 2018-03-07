@@ -13,7 +13,8 @@ import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseRepository;
 import org.jax.mgi.mgd.api.model.acc.dao.MGITypeDAO;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
-import org.jax.mgi.mgd.api.model.mgi.dao.ApiLogDAO;
+import org.jax.mgi.mgd.api.model.mgi.dao.ApiLogEventDAO;
+import org.jax.mgi.mgd.api.model.mgi.dao.ApiLogObjectDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.ApiLogDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.ApiLogEvent;
 import org.jax.mgi.mgd.api.model.mgi.entities.ApiLogObject;
@@ -28,14 +29,17 @@ import org.jax.mgi.mgd.api.util.SearchResults;
  *    ApiLogDomain object has its data drawn
  * Does: (from the outside, this appears to) retrieve domain objects, store them, search for them
  */
-public class ApiLogRepository extends BaseRepository<ApiLogDomain> {
+public class ApiLogEventRepository extends BaseRepository<ApiLogDomain> {
 
 	/***--- instance variables ---***/
 
 	private SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
 
 	@Inject
-	private ApiLogDAO apiLogDAO;
+	private ApiLogEventDAO apiLogEventDAO;
+	
+	@Inject
+	private ApiLogObjectDAO apiLogObjectDAO;
 
 	@Inject
 	private MGITypeDAO mgitypeDAO;
@@ -56,7 +60,7 @@ public class ApiLogRepository extends BaseRepository<ApiLogDomain> {
 
 	@Override
 	public SearchResults<ApiLogDomain> search(Map<String,Object> params) {
-		SearchResults<ApiLogEvent> events = apiLogDAO.search(params);
+		SearchResults<ApiLogEvent> events = apiLogEventDAO.search(params);
 		SearchResults<ApiLogDomain> domains = new SearchResults<ApiLogDomain>();
 
 		domains.elapsed_ms = events.elapsed_ms;
@@ -104,7 +108,7 @@ public class ApiLogRepository extends BaseRepository<ApiLogDomain> {
 		if (primaryKey == null) {
 			throw new APIException("ApiLogRepository.getApiLogEvent() : primary key is null");
 		}
-		ApiLogEvent entity = apiLogDAO.get(primaryKey);
+		ApiLogEvent entity = apiLogEventDAO.get(primaryKey);
 		if (entity == null) {
 			throw new APIException("ApiLogRepository.getApiLogEvent(): Unknown event key: " + primaryKey);
 		}
@@ -120,7 +124,7 @@ public class ApiLogRepository extends BaseRepository<ApiLogDomain> {
 		// the first section changed.
 
 		if (domain._event_key == null) {
-			domain._event_key = apiLogDAO.getNextKey("ApiLogEvent", "_event_key");
+			domain._event_key = apiLogEventDAO.getNextKey();
 			entity.set_event_key(domain._event_key);
 		}
 		try {
@@ -133,7 +137,7 @@ public class ApiLogRepository extends BaseRepository<ApiLogDomain> {
 		entity.setCreatedBy(user);
 
 		// must save the main log entry first, then can do the associated objects
-		apiLogDAO.persist(entity);
+		apiLogEventDAO.persist(entity);
 		applyObjectChanges(entity, domain);
 	}
 
@@ -164,7 +168,7 @@ public class ApiLogRepository extends BaseRepository<ApiLogDomain> {
 
 		// remove from the database those objects that are no longer associated with the event
 		for (ApiLogObject obj : toDelete) {
-			apiLogDAO.remove(obj);
+			apiLogEventDAO.remove(obj);
 		}
 
 		MGIType mgiType = getMgitype(domain.mgitype);
@@ -172,11 +176,11 @@ public class ApiLogRepository extends BaseRepository<ApiLogDomain> {
 		// add any new objects that need to be associated with the event
 		for (Integer objectKey : toAdd) {
 			ApiLogObject loggedObject = new ApiLogObject();
-			loggedObject.set_LogObject_key(apiLogDAO.getNextKey("ApiLogObject", "_LogObject_key"));
+			loggedObject.set_LogObject_key(apiLogObjectDAO.getNextKey());
 			loggedObject.setEvent(entity);
 			loggedObject.setMgiType(mgiType);
 			loggedObject.set_object_key(objectKey);
-			apiLogDAO.persist(loggedObject);
+			apiLogEventDAO.persist(loggedObject);
 		}
 	}
 

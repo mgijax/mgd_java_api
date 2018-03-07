@@ -65,7 +65,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> impleme
 	public SearchResults<ReferenceDomain> createReference(String api_access_token, String username, ReferenceDomain reference) {
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
 		try {
-			User currentUser = userService.getUser(username);
+			User currentUser = userService.getUserByUsername(username);
 			if (currentUser != null) {
 				results.setItem(referenceService.createReference(reference, currentUser));
 				logRequest("POST /reference", mapper.writeValueAsString(reference), Constants.MGITYPE_REFERENCE,
@@ -163,7 +163,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> impleme
 			}
 		}
 		
-		User currentUser = userService.getUser(username);
+		User currentUser = userService.getUserByUsername(username);
 		if (currentUser == null) {
 			results.setError("FailedAuthentication", "Failed - invalid username", Constants.HTTP_PERMISSION_DENIED); 
 			return results;
@@ -255,7 +255,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> impleme
 			return results;
 		}
 
-		User currentUser = userService.getUser(username);
+		User currentUser = userService.getUserByUsername(username);
 		if (currentUser != null) {
 			try {
 				referenceService.updateReferencesInBulk(input._refs_keys, input.workflow_tag, input.workflow_tag_operation, currentUser);
@@ -350,7 +350,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> impleme
 	 */
 	@Override
 	public SearchResults<ReferenceDomain> deleteReference(String api_access_token, String username, String id) {
-		User currentUser = userService.getUser(username);
+		User currentUser = userService.getUserByUsername(username);
 		if (currentUser != null) {
 			SearchResults<ReferenceDomain> results = referenceService.deleteReference(id, currentUser);
 			if (results.items.size() > 0) {
@@ -366,8 +366,6 @@ public class ReferenceController extends BaseController<ReferenceDomain> impleme
 		}
 		return null;
 	}
-
-	
 	
 	@Override
 	public ReferenceDomain create(ReferenceDomain object, User user) {

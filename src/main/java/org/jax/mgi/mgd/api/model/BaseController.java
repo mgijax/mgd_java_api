@@ -26,7 +26,8 @@ public abstract class BaseController<T extends BaseDomain> implements BaseRESTIn
 	@Inject
 	private UserService userService;
 
-	@Inject ApiLogService apiLogService;
+	@Inject
+	private ApiLogService apiLogService;
 	
 	//private Logger log = Logger.getLogger(getClass());
 	
@@ -42,7 +43,7 @@ public abstract class BaseController<T extends BaseDomain> implements BaseRESTIn
 	}
 	
 	protected User authenticateUser(String username) {
-		User user = userService.getUser(username);
+		User user = userService.getUserByUsername(username);
 		if(user == null) {
 			return user;
 		}

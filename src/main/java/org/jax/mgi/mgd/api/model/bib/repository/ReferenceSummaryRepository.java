@@ -31,7 +31,7 @@ public class ReferenceSummaryRepository extends BaseRepository<ReferenceSummaryD
 	/***--- (public) instance methods ---***/
 
 	@Override
-	public ReferenceSummaryDomain get(int primaryKey) throws APIException {
+	public ReferenceSummaryDomain get(Integer primaryKey) throws APIException {
 		return translator.translate(getReference(primaryKey));
 	}
 
@@ -58,6 +58,11 @@ public class ReferenceSummaryRepository extends BaseRepository<ReferenceSummaryD
 		}
 		return domains;
 	}
+	
+	@Override
+	public SearchResults<ReferenceSummaryDomain> search(Map<String, Object> params, String orderBy) throws APIException {
+		return null;
+	}
 
 	@Override
 	public ReferenceSummaryDomain update(ReferenceSummaryDomain domain, User user) throws APIException {
@@ -65,7 +70,7 @@ public class ReferenceSummaryRepository extends BaseRepository<ReferenceSummaryD
 	}
 
 	@Override
-	public ReferenceSummaryDomain delete(ReferenceSummaryDomain domain, User user) throws APIException {
+	public ReferenceSummaryDomain delete(Integer key, User user) throws APIException {
 		throw new APIException("Cannot delete using a ReferenceSummaryDomain");
 	}
 
@@ -88,4 +93,5 @@ public class ReferenceSummaryRepository extends BaseRepository<ReferenceSummaryD
 		}
 		return reference;
 	}
+
 }

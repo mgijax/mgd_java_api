@@ -16,8 +16,8 @@ public class TermDomain extends BaseDomain {
 	private String term;
 	private String abbreviation;
 	private String note;
-	private Integer sequenceNum;
-	private Integer isObsolete = 0;
+	private Integer sequenceNum; // This is set automatically via the UI
+	private Integer isObsolete = 0; // Don't allow the user through UI to set this
 	private Date creation_date;
 	private Date modification_date;
 

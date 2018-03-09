@@ -28,8 +28,14 @@ public class VocabularyTranslator extends BaseEntityDomainTranslator<Vocabulary,
 	}
 
 	@Override
-	protected Vocabulary domainToEntity(VocabularyDomain domain) {
-		// Needs to be implemented once we choose to save terms
+	protected Vocabulary createEntityFromDomain(VocabularyDomain domain) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected Vocabulary updateEntityFromDomain(VocabularyDomain domain, Vocabulary entity) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

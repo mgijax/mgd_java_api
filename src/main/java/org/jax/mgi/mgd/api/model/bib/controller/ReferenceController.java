@@ -346,27 +346,6 @@ public class ReferenceController extends BaseController<ReferenceDomain> impleme
 		return apiLogService.search(searchFields);
 	}
 
-	/* delete the reference with the given accession ID...  TODO: need to flesh this out, return SearchResults object, etc.
-	 */
-	@Override
-	public SearchResults<ReferenceDomain> deleteReference(String api_access_token, String username, String id) {
-		User currentUser = userService.getUserByUsername(username);
-		if (currentUser != null) {
-			SearchResults<ReferenceDomain> results = referenceService.deleteReference(id, currentUser);
-			if (results.items.size() > 0) {
-				ReferenceDomain domain = results.items.get(0);
-				String json = "{\"id\":" + id + "\"}";
-				try {
-					logRequest("DELETE /reference", json, Constants.MGITYPE_REFERENCE, listMaker.toList(domain._refs_key), currentUser);
-				} catch (APIException e) {
-					results.setError("Log Failure", "Changes saved, but could not write to API log: " + e.toString(), Constants.HTTP_SERVER_ERROR);
-				}
-			}
-			return results;
-		}
-		return null;
-	}
-	
 	@Override
 	public ReferenceDomain create(ReferenceDomain object, User user) {
 		return null;

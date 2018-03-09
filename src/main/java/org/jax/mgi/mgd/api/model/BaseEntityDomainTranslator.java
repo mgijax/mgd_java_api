@@ -8,7 +8,7 @@ public abstract class BaseEntityDomainTranslator<E extends BaseEntity, D extends
 	protected SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
 
 	public E translate(D domain) {
-		return domainToEntity(domain);
+		return createEntityFromDomain(domain);
 	}
 
 	public D translate(E entity) {
@@ -18,7 +18,7 @@ public abstract class BaseEntityDomainTranslator<E extends BaseEntity, D extends
 	public Iterable<E> translateDomains(Iterable<D> domains) {
 		ArrayList<E> entities = new ArrayList<E>();
 		for(D domain: domains) {
-			entities.add(domainToEntity(domain));
+			entities.add(createEntityFromDomain(domain));
 		}
 		return entities;
 	}
@@ -34,5 +34,6 @@ public abstract class BaseEntityDomainTranslator<E extends BaseEntity, D extends
 	}
 
 	protected abstract D entityToDomain(E entity);
-	protected abstract E domainToEntity(D domain);
+	protected abstract E createEntityFromDomain(D domain);
+	protected abstract E updateEntityFromDomain(D domain, E entity);
 }

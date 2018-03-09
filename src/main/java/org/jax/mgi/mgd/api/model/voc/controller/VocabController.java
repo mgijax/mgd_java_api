@@ -31,20 +31,35 @@ public class VocabController extends BaseController<VocabularyDomain> implements
 			return vocabService.create(object, user);
 		} catch (APIException e) {
 			e.printStackTrace();
-			return null;
 		}
+		return null;
 	}
 
 	public VocabularyDomain get(Integer key) {
-		return vocabService.get(key);
+		try {
+			return vocabService.get(key);
+		} catch (APIException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public VocabularyDomain update(VocabularyDomain object, User user) {
-		return vocabService.update(object, user);
+		try {
+			return vocabService.update(object, user);
+		} catch (APIException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public VocabularyDomain delete(Integer key, User user) {
-		return vocabService.delete(key, user);
+		try {
+			return vocabService.delete(key, user);
+		} catch (APIException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public SearchResults<VocabularyDomain> search(VocabularySearchForm form) {

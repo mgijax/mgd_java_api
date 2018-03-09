@@ -52,7 +52,7 @@ public class ApiLogEventRepository extends BaseRepository<ApiLogDomain> {
 	/* gets an ApiLogDomain object that is fully fleshed out from an ApiLogEvent specified by key
 	 */
 	@Override
-	public ApiLogDomain get(int primaryKey) throws APIException {
+	public ApiLogDomain get(Integer primaryKey) throws APIException {
 		ApiLogEvent event = getApiLogEvent(primaryKey);
 		ApiLogDomain domain = translator.translate(event);
 		return domain;
@@ -89,7 +89,7 @@ public class ApiLogEventRepository extends BaseRepository<ApiLogDomain> {
 	}
 
 	@Override
-	public ApiLogDomain delete(ApiLogDomain domain, User user) throws APIException {
+	public ApiLogDomain delete(Integer key, User user) throws APIException {
 		throw new APIException("Need to implement ApiLogRepository.delete() method");
 	}
 
@@ -202,5 +202,11 @@ public class ApiLogEventRepository extends BaseRepository<ApiLogDomain> {
 		} catch (Exception e) {
 			throw new APIException("ApiLogRepository: MGIType search failed: " + e.toString());
 		}
+	}
+
+	@Override
+	public SearchResults<ApiLogDomain> search(Map<String, Object> params, String orderBy) throws APIException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

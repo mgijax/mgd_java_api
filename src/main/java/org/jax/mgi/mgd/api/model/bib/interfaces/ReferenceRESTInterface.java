@@ -1,7 +1,6 @@
 package org.jax.mgi.mgd.api.model.bib.interfaces;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -198,17 +197,4 @@ public interface ReferenceRESTInterface {
 			@ApiParam(value = "Value: This is for searching by reference key")
 			@PathParam("refsKey") String refsKey);
 
-	@DELETE
-	@ApiOperation(value = "Value: Deletes Reference", notes="Notes: Deletes a Reference")
-	@Path("/{id}")
-	public SearchResults<ReferenceDomain> deleteReference(
-			@ApiParam(value = "Name: Token for accessing this API")
-			@HeaderParam("api_access_token") String api_access_token,
-			
-			@ApiParam(value = "Name: Logged-in User")
-			@HeaderParam("username") String username,
-			
-			@ApiParam(value = "Value: This Accession ID will lookup a Reference and then delete it")
-			@PathParam("id") String id
-	);
 }

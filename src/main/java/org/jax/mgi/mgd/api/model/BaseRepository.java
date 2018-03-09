@@ -23,14 +23,17 @@ public abstract class BaseRepository<D extends BaseDomain> {
 	protected Logger log = Logger.getLogger(getClass());
 	
 	/***--- (public) instance methods ---***/
-	
-	public abstract D get(int primaryKey) throws APIException;
 
 	public abstract D create(D domain, User username) throws APIException;
 
+	public abstract D get(Integer primaryKey) throws APIException;
+
 	public abstract D update(D domain, User user) throws APIException;
 
-	public abstract D delete(D domain, User user) throws APIException;
+	public abstract D delete(Integer key, User user) throws APIException;
 
 	public abstract SearchResults<D> search(Map<String,Object> params) throws APIException;
+	
+	public abstract SearchResults<D> search(Map<String,Object> params, String orderBy) throws APIException;
+
 }

@@ -20,7 +20,13 @@ public class OrganismTranslator extends BaseEntityDomainTranslator<Organism, Org
 	}
 
 	@Override
-	protected Organism domainToEntity(OrganismDomain domain) {
+	protected Organism createEntityFromDomain(OrganismDomain domain) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected Organism updateEntityFromDomain(OrganismDomain domain, Organism entity) {
 		// TODO Auto-generated method stub
 		return null;
 	}

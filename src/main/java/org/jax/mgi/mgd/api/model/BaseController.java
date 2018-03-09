@@ -82,12 +82,17 @@ public abstract class BaseController<T extends BaseDomain> implements BaseRESTIn
 		if(authenticateToken(api_access_token)) {
 			User user = authenticateUser(username);
 			if(user != null) {
-				return create(object, user);
+				try {
+					return create(object, user);
+				} catch (APIException e) {
+					// TODO Craft HTTP Response Code Error Message
+					e.printStackTrace();
+				}
 			} else {
-				// Craft HTTP Response Code Error Message
+				// TODO Craft HTTP Response Code Error Message
 			}
 		} else {
-			// Craft HTTP Response Code Error Message
+			// TODO Craft HTTP Response Code Error Message
 		}
 		return null;
 	}
@@ -101,12 +106,17 @@ public abstract class BaseController<T extends BaseDomain> implements BaseRESTIn
 		if(authenticateToken(api_access_token)) {
 			User user = authenticateUser(username);
 			if(user != null) {
-				return update(object, user);
+				try {
+					return update(object, user);
+				} catch (APIException e) {
+					// TODO Craft HTTP Response Code Error Message
+					e.printStackTrace();
+				}
 			} else {
-				// Craft HTTP Response Code Error Message
+				// TODO Craft HTTP Response Code Error Message
 			}
 		} else {
-			// Craft HTTP Response Code Error Message
+			// TODO Craft HTTP Response Code Error Message
 		}
 		return null;
 	}
@@ -121,12 +131,17 @@ public abstract class BaseController<T extends BaseDomain> implements BaseRESTIn
 		if(authenticateToken(api_access_token)) {
 			User user = authenticateUser(username);
 			if(user != null) {
-				return delete(key, user);
+				try {
+					return delete(key, user);
+				} catch (APIException e) {
+					// TODO Craft HTTP Response Code Error Message
+					e.printStackTrace();
+				}
 			} else {
-				// Craft HTTP Response Code Error Message
+				// TODO Craft HTTP Response Code Error Message
 			}
 		} else {
-			// Craft HTTP Response Code Error Message
+			// TODO Craft HTTP Response Code Error Message
 		}
 		return null;
 	}
@@ -141,10 +156,10 @@ public abstract class BaseController<T extends BaseDomain> implements BaseRESTIn
 		return get(key);
 	}
 
-	public abstract T create(T object, User user);
+	public abstract T create(T object, User user) throws APIException;
 	public abstract T get(Integer key);
-	public abstract T update(T object, User user);
-	public abstract T delete(Integer key, User user);
+	public abstract T update(T object, User user) throws APIException;
+	public abstract T delete(Integer key, User user) throws APIException;
 
 
 }

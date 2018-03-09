@@ -109,10 +109,15 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 	}
 
 	@Override
-	protected Reference domainToEntity(ReferenceDomain domain) {
-		// Cannot do translation here, as it requires lookup of actual entity from database.  Must
-		// instead work with ReferenceRepository.
-		
+	protected Reference createEntityFromDomain(ReferenceDomain domain) {
+		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	protected Reference updateEntityFromDomain(ReferenceDomain domain, Reference entity) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

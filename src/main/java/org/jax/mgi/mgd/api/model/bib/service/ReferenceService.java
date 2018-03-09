@@ -2,7 +2,6 @@
 package org.jax.mgi.mgd.api.model.bib.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -80,23 +79,14 @@ public class ReferenceService {
 	}
 
 	@Transactional
-	public SearchResults<ReferenceDomain> deleteReference(String id, User currentUser) {
-		SearchResults<ReferenceDomain> out = new SearchResults<ReferenceDomain>();
-		
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		if(id != null) { map.put("primaryId", id); }
-		SearchResults<ReferenceDomain> results = repo.search(map);
-		if (results.status_code != Constants.HTTP_OK) {
-			out.setError(results.error, results.message, results.status_code);
-			return out;
-		}
-
-		out.setItem(results.items.get(0));
+	public ReferenceDomain deleteReference(String id, User currentUser) {
 		try {
-			repo.delete(results.items.get(0), currentUser);
+			return repo.delete(Integer.parseInt(id), currentUser);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
 		} catch (APIException e) {
-			out.setError("Failed", "Failed to delete reference with ID " + id + ", exception: " + e.toString(), Constants.HTTP_SERVER_ERROR);
+			e.printStackTrace();
 		}
-		return out;
+		return null;
 	}
 }

@@ -23,7 +23,7 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 	}
 
 	@Override
-	protected Term domainToEntity(TermDomain domain) {
+	protected Term createEntityFromDomain(TermDomain domain) {
 		Term entity = new Term();
 		entity.set_term_key(domain.get_term_key());
 		entity.setTerm(domain.getTerm());
@@ -33,6 +33,12 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		entity.setCreation_date(domain.getCreation_date());
 		entity.setModification_date(domain.getModification_date());
 		return entity;
+	}
+
+	@Override
+	protected Term updateEntityFromDomain(TermDomain domain, Term entity) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

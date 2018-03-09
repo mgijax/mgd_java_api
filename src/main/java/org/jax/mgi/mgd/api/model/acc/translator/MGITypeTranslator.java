@@ -31,9 +31,16 @@ public class MGITypeTranslator extends BaseEntityDomainTranslator<MGIType, MGITy
 	}
 
 	@Override
-	protected MGIType domainToEntity(MGITypeDomain domain) {
-		// Needs to be implemented once we choose to save terms
+	protected MGIType createEntityFromDomain(MGITypeDomain domain) {
+		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	protected MGIType updateEntityFromDomain(MGITypeDomain domain, MGIType entity) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

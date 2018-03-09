@@ -22,7 +22,6 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter @Setter
 @Entity

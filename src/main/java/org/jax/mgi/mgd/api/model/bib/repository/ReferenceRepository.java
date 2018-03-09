@@ -64,7 +64,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 	/* gets a ReferenceDomain object that is fully fleshed out from a Reference
 	 */
 	@Override
-	public ReferenceDomain get(int primaryKey) throws FatalAPIException, APIException {
+	public ReferenceDomain get(Integer primaryKey) throws APIException {
 		Reference ref = getReference(primaryKey);
 		ReferenceDomain domain = translator.translate(ref);
 		domain.setStatusHistory(getStatusHistory(domain));
@@ -105,7 +105,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 	}
 
 	@Override
-	public ReferenceDomain delete(ReferenceDomain domain, User user) throws FatalAPIException {
+	public ReferenceDomain delete(Integer key, User user) throws APIException {
 		throw new FatalAPIException("Need to implement ReferenceRepository.delete() method");
 	}
 
@@ -814,5 +814,11 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 			} // if no J#
 		}
 		return anyChanges;
+	}
+
+	@Override
+	public SearchResults<ReferenceDomain> search(Map<String, Object> params, String orderBy) throws APIException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

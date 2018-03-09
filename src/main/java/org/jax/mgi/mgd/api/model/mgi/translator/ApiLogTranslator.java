@@ -34,10 +34,16 @@ public class ApiLogTranslator extends BaseEntityDomainTranslator<ApiLogEvent, Ap
 	}
 
 	@Override
-	protected ApiLogEvent domainToEntity(ApiLogDomain domain) {
-		// Cannot do translation here, as it requires lookup of actual entity from database.  Must
-		// instead work with ApiLogRepository.
-		
+	protected ApiLogEvent createEntityFromDomain(ApiLogDomain domain) {
+		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	protected ApiLogEvent updateEntityFromDomain(ApiLogDomain domain, ApiLogEvent entity) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 }

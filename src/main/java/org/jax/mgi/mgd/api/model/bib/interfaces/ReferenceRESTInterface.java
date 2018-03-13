@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.bib.interfaces;
 
+import java.util.Map;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -13,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.ApiLogDomain;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -94,13 +97,13 @@ public interface ReferenceRESTInterface {
 			@QueryParam("refsKey") String refsKey
 	);
 
-//	@POST
-//	@Path("/search")
-//	@ApiOperation(value = "Value: Searches Reference by Fields", notes="Notes: Searches Reference Fields")
-//	public SearchResults<ReferenceSummaryDomain> search(
-//		@ApiParam(value = "This is a map of the form parameters")
-//		Map<String, Object> params								// see below for valid parameters
-//	);
+	@POST
+	@Path("/search")
+	@ApiOperation(value = "Value: Searches Reference by Fields", notes="Notes: Searches Reference Fields")
+	public SearchResults<ReferenceSummaryDomain> search(
+		@ApiParam(value = "This is a map of the form parameters")
+		Map<String, Object> params								// see below for valid parameters
+	);
 	
 	/* Acceptable reference search parameters:
 	 *	accids : searches by any reference ID, case-insensitive, no wildcards

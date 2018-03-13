@@ -271,6 +271,32 @@ public class ReferenceController extends BaseController<ReferenceDomain> impleme
 		}
 		return results;
 	}
+	
+	/* search method - retrieves references based on query form parameters
+	 */
+	@Override
+	public SearchResults<ReferenceSummaryDomain> search(Map<String,Object> params) {
+		if (params.containsKey("isReviewArticle")) {
+			String isReviewArticle = (String) params.get("isReviewArticle");
+			if ("No".equalsIgnoreCase(isReviewArticle) || "0".equals(isReviewArticle)) {
+				params.put("isReviewArticle", 0);
+			} else if ("Yes".equalsIgnoreCase(isReviewArticle) || "1".equals(isReviewArticle)) {
+				params.put("isReviewArticle", 1);
+			}
+		}
+
+		params = filterEmptyParameters(params);
+		log.info("Search Params: " + params);
+		
+		try {
+			return referenceService.getReferenceSummaries(params);
+		} catch (APIException e) {
+			SearchResults<ReferenceSummaryDomain> out = new SearchResults<ReferenceSummaryDomain>();
+			out.setError("Failed", "search failed: " + e.toString(), Constants.HTTP_SERVER_ERROR);
+			return out;
+		}
+	}
+
 
 	/* return domain object for single reference with given key
 	 */
@@ -310,27 +336,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> impleme
 		SearchResults<ApiLogDomain> results = new SearchResults<ApiLogDomain>();
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("accids", id);
-		
-		if (params.containsKey("isReviewArticle")) {
-			String isReviewArticle = (String) params.get("isReviewArticle");
-			if ("No".equalsIgnoreCase(isReviewArticle) || "0".equals(isReviewArticle)) {
-				params.put("isReviewArticle", 0);
-			} else if ("Yes".equalsIgnoreCase(isReviewArticle) || "1".equals(isReviewArticle)) {
-				params.put("isReviewArticle", 1);
-			}
-		}
-
-		params = filterEmptyParameters(params);
-		log.info("Search Params: " + params);
-		
-		SearchResults<ReferenceSummaryDomain> refs;
-		try {
-			refs = referenceService.getReferenceSummaries(params);
-		} catch (APIException e) {
-			refs = new SearchResults<ReferenceSummaryDomain>();
-			refs.setError("Failed", "search failed: " + e.toString(), Constants.HTTP_SERVER_ERROR);
-			return results;
-		}
+		SearchResults<ReferenceSummaryDomain> refs = search(params);
 
 		if (refs.status_code != Constants.HTTP_OK) {
 			results.setError(refs.error, refs.message, refs.status_code);
@@ -386,5 +392,4 @@ public class ReferenceController extends BaseController<ReferenceDomain> impleme
 	public ReferenceDomain delete(Integer key, User user) {
 		return null;
 	}
-
 }

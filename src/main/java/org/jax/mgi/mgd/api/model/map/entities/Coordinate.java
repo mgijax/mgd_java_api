@@ -1,0 +1,54 @@
+package org.jax.mgi.mgd.api.model.map.entities;
+
+import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.jax.mgi.mgd.api.model.BaseEntity;
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
+
+import io.swagger.annotations.ApiModel;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter @Setter
+@Entity
+@ApiModel(value = "MAP Coordinate Model Object")
+@Table(name="map_coordinate")
+public class Coordinate extends BaseEntity {
+
+	@Id
+	private Integer _map_key;
+	private Integer length;
+	private Integer sequenceNum;
+	private String name;
+	private String abbreviation;
+	private String version;
+	private Date creation_date;
+	private Date modification_date;
+	
+	@OneToOne
+	@JoinColumn(name="_collection_key")
+	private CoordinateCollection collection;
+
+	@OneToOne
+	@JoinColumn(name="_mapType_key", referencedColumnName="_term_key")
+	private Term mapType;
+	
+	@OneToOne
+	@JoinColumn(name="_units_key", referencedColumnName="_term_key")
+	private Term mapUnit;
+	
+	@OneToOne
+	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
+	private User createdBy;
+
+	@OneToOne
+	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
+	private User modifiedBy;
+}

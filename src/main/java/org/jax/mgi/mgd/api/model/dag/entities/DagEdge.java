@@ -1,0 +1,45 @@
+package org.jax.mgi.mgd.api.model.dag.entities;
+
+import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.jax.mgi.mgd.api.model.BaseEntity;
+
+import io.swagger.annotations.ApiModel;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter @Setter
+@Entity
+@ApiModel(value = "DAG Edge Model Object")
+@Table(name="dag_edge")
+public class DagEdge extends BaseEntity {
+
+	@Id
+	private Integer _edge_key;
+	private Integer sequenceNum;
+	private Date creation_date;
+	private Date modification_date;
+
+	@OneToOne
+	@JoinColumn(name="_dag_key")
+	private Dag dag;
+
+	@OneToOne
+	@JoinColumn(name="_parent_key", referencedColumnName="_node_key")
+	private DagNode parentNode;
+
+	@OneToOne
+	@JoinColumn(name="_child_key", referencedColumnName="_node_key")
+	private DagNode childNode;
+
+	@OneToOne
+	@JoinColumn(name="_label_key")
+	private DagLabel label;
+
+}

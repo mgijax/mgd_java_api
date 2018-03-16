@@ -1,0 +1,53 @@
+package org.jax.mgi.mgd.api.model.gxd.entities;
+
+import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.jax.mgi.mgd.api.model.BaseEntity;
+
+import io.swagger.annotations.ApiModel;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter @Setter
+@Entity
+@ApiModel(value = "Specimen Model Object")
+@Table(name="gxd_specimen")
+public class Specimen extends BaseEntity {
+
+	@Id
+	private Integer _specimen_key;
+	private Integer sequenceNum;
+	private String specimenLabel;
+	private String sex;
+	private String age;
+	private Integer ageMin;
+	private Integer ageMax;
+	private String ageNote;
+	private String hybridization;
+	private String specimenNote;
+	private Date creation_date;
+	private Date modification_date;
+	
+	@OneToOne
+	@JoinColumn(name="_assay_key")
+	private Assay assay;
+	
+	@OneToOne
+	@JoinColumn(name="_embedding_key")
+	private EmbeddingMethod embeddingMethod;
+	
+	@OneToOne
+	@JoinColumn(name="_fixation_key")
+	private FixationMethod fixationMethod;
+	
+	@OneToOne
+	@JoinColumn(name="_genotype_key")
+	private Genotype genotype;
+	
+}

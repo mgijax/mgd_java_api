@@ -1,0 +1,40 @@
+package org.jax.mgi.mgd.api.model.mgi.entities;
+
+import java.util.Date;
+import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.BatchSize;
+import org.jax.mgi.mgd.api.model.BaseEntity;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Getter @Setter @AllArgsConstructor @NoArgsConstructor
+@Table(name="mgi_apilog_event")
+public class ApiLogEvent extends BaseEntity {
+
+	@Id
+	private Integer _event_key;
+	private String endpoint;
+	private String parameters;
+	private Date creation_date;
+
+	@OneToOne
+	@JoinColumn(name="_user_key")
+	private User createdBy;
+
+	@OneToMany
+	@JoinColumn(name="_event_key")
+	@BatchSize(size=200)
+	private Set<ApiLogObject> objects;
+}

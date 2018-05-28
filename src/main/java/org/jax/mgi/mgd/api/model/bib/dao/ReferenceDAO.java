@@ -637,7 +637,7 @@ public class ReferenceDAO extends PostgresSQLDAO<Reference> {
 		// using coalesce to push nulls (no J#) to bottom
 		orderList.add(builder.desc(builder.coalesce(citationData.get("numericPart"), Integer.MIN_VALUE)));
 		// then sort those at the bottom by ascending MGI ID (any without MGI ID go to bottom)
-		orderList.add(builder.asc(builder.coalesce(citationData.get("mgiID"), "ZZZ")));
+		orderList.add(builder.asc(builder.coalesce(citationData.get("mgiid"), "ZZZ")));
 		query.orderBy(orderList);
 
 		// pick up the row limit, if there is one specified.  If none specified, set default.

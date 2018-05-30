@@ -95,6 +95,10 @@ public class Marker extends BaseEntity {
 	
 	@OneToMany
 	@JoinColumn(name="_marker_key")
+	private Set<MarkerStrain> markerStrain;
+	
+	@OneToMany
+	@JoinColumn(name="_marker_key")
 	private Set<ProbeMarker> probeMarkers;
 
 	@OneToMany
@@ -110,7 +114,7 @@ public class Marker extends BaseEntity {
 	@OneToMany
 	@JoinColumn(name="_marker_key")
 	private Set<ProbeStrainMarker> probeStrainMarkers;
-	
+
 	@ManyToMany
 	@JoinTable(name = "mrk_alias",
 		joinColumns = @JoinColumn(name = "_alias_key", referencedColumnName="_marker_key"),

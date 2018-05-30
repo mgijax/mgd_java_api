@@ -32,7 +32,6 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Marker Model Object")
 @Table(name="mrk_marker")
 public class Marker extends BaseEntity {
 

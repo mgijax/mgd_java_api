@@ -9,7 +9,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	@Override
 	protected MarkerDomain entityToDomain(Marker entity) {
 		MarkerDomain domain = new MarkerDomain();
-		domain.set_marker_key(entity.get_marker_key());
+		domain.setMarkerKey(entity.get_marker_key());
 		domain.setSymbol(entity.getSymbol());
 		domain.setName(entity.getName());
 		domain.setChromosome(entity.getChromosome());

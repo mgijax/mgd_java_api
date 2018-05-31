@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -17,6 +18,7 @@ import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
+import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.gxd.entities.Antibody;
 import org.jax.mgi.mgd.api.model.map.entities.CoordinateFeature;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
@@ -51,30 +53,30 @@ public class Marker extends BaseEntity {
 	@ApiModelProperty(value="cytogenetic band")
 	private String cytogeneticOffset;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_organism_key")
 	private Organism organism;
 
 	//@ApiModelProperty(value="Controlled vocabulary table for all Marker Statuses (approved, withdrawn)")
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_marker_status_key")
 	private MarkerStatus markerStatus;
 
 	//need MRK_Types entity
 	//@ApiModelProperty(value="Controlled vocabulary table for all Marker Types")
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_marker_type_key")
 	private MarkerType markerType;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_marker_key", referencedColumnName="_object_key")
 	@Where(clause="`_mgitype_key` = 2 AND preferred = 1 and `_logicaldb_key` = 1")
 	private Accession mgiAccessionId;
@@ -87,6 +89,10 @@ public class Marker extends BaseEntity {
 	@OneToMany
 	@JoinColumn(name="_marker_key")
 	private Set<MarkerHistory> history;
+	
+	@OneToMany
+	@JoinColumn(name="_marker_key")
+	private Set<Allele> alleles;
 	
 	@OneToMany
 	@JoinColumn(name="_marker_key")

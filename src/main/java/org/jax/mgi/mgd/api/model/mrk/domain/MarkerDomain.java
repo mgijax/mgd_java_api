@@ -1,6 +1,9 @@
 package org.jax.mgi.mgd.api.model.mrk.domain;
 
+import java.util.List;
+
 import org.jax.mgi.mgd.api.model.BaseDomain;
+import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -24,5 +27,9 @@ public class MarkerDomain extends BaseDomain {
 	private String createdBy;
 	private String modifiedBy;
 	private String mgiAccessionId;
+
+	private List<AlleleDomain> alleles;
+	//private List<String> synonyms;
+	//private int allele_count;
 
 }

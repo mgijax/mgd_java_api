@@ -19,7 +19,7 @@ public class MarkerSearchForm extends BaseSearchForm {
 	@Override
 	public Map<String, Object> getSearchFields() {
 		Map<String, Object> ret = new HashMap<>();
-		if(accid != null) { ret.put("mgiAccessionId.accid", accid); }
+		if(accid != null) { ret.put("mgiAccessionId.accID", accid); }
 		return ret;
 	}
 	

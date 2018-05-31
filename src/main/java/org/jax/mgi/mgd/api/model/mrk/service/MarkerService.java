@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.mrk.service;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseSearchInterface;
@@ -22,30 +23,30 @@ public class MarkerService extends BaseService<MarkerDomain> implements BaseSear
 
 	private MarkerTranslator translator = new MarkerTranslator();
 	
-	@Override
+	@Transactional
 	public MarkerDomain create(MarkerDomain object, User user) throws APIException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	@Transactional
 	public MarkerDomain update(MarkerDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	@Transactional
 	public MarkerDomain get(Integer key) {
 		return translator.translate(markerDAO.get(key));
 	}
 
-	@Override
+	@Transactional
 	public MarkerDomain delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	@Transactional
 	public SearchResults<MarkerDomain> search(MarkerSearchForm searchForm) {
 		SearchResults<Marker> markers;
 		if(searchForm.getOrderBy() != null) {

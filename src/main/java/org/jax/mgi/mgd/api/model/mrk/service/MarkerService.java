@@ -54,7 +54,7 @@ public class MarkerService extends BaseService<MarkerDomain> implements BaseSear
 		} else {
 			markers = markerDAO.search(searchForm.getSearchFields());
 		}
-		Iterable<MarkerDomain> newItems = translator.translateEntities(markers.items);
+		Iterable<MarkerDomain> newItems = translator.translateEntities(markers.items, searchForm.getSearchDepth());
 		return new SearchResults<MarkerDomain>(newItems);
 	}
 

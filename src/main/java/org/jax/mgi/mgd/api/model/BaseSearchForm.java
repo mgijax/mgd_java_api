@@ -18,6 +18,8 @@ public abstract class BaseSearchForm {
 	protected Integer pageNum;
 	@ApiModelProperty(hidden=true)
 	protected Integer pageSize;
+	@ApiModelProperty(hidden=true)
+	protected Integer searchDepth = 0;
 	
 	// <Database Field, Value to Search for>
 	@ApiModelProperty(hidden=true)

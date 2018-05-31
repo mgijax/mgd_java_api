@@ -56,7 +56,9 @@ public class VocabService extends BaseService<VocabularyDomain> implements BaseS
 		} else {
 			vocabs = vocabularyDAO.search(form.getSearchFields());
 		}
-		Iterable<VocabularyDomain> newItems = translator.translateEntities(vocabs.items);
+
+		Iterable<VocabularyDomain> newItems = translator.translateEntities(vocabs.items, form.getSearchDepth());
+
 		return new SearchResults<VocabularyDomain>(newItems);
 	}
 	

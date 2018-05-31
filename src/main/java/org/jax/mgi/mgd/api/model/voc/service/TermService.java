@@ -114,7 +114,7 @@ public class TermService extends BaseService<TermDomain> implements BaseSearchIn
 		} else {
 			terms = termDAO.search(searchForm.getSearchFields());
 		}
-		Iterable<TermDomain> newItems = translator.translateEntities(terms.items);
+		Iterable<TermDomain> newItems = translator.translateEntities(terms.items, searchForm.getSearchDepth());
 		return new SearchResults<TermDomain>(newItems);
 	}
 	

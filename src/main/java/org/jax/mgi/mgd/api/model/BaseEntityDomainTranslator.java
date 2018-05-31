@@ -28,7 +28,7 @@ public abstract class BaseEntityDomainTranslator<E extends BaseEntity, D extends
 	public Iterable<E> translateDomains(Iterable<D> domains, int translationDepth) {
 		ArrayList<E> entities = new ArrayList<E>();
 		for(D domain: domains) {
-			entities.add(domainToEntity(domain, 1));
+			entities.add(domainToEntity(domain, translationDepth));
 		}
 		return entities;
 	}
@@ -41,7 +41,7 @@ public abstract class BaseEntityDomainTranslator<E extends BaseEntity, D extends
 		ArrayList<D> domains = new ArrayList<D>();
 		for(E entity: entities) {
 			if(entity != null) {
-				domains.add(entityToDomain(entity, 1));
+				domains.add(entityToDomain(entity, translationDepth));
 			}
 		}
 		return domains;

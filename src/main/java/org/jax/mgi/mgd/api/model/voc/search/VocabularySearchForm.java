@@ -20,6 +20,7 @@ public class VocabularySearchForm extends BaseSearchForm {
 	@ApiModelProperty(value="Search for Vocabularies by a term")
 	private String term;
 	
+	
 	@Override
 	public Map<String, Object> getSearchFields() {
 		Map<String, Object> ret = new HashMap<>();

@@ -11,6 +11,11 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		
 		AlleleDomain domain = new AlleleDomain();
 		domain.set_allele_key(entity.get_allele_key());
+		domain.setSymbol(entity.getSymbol());
+		domain.setName(entity.getName());
+		domain.setIsWildType(entity.getIsWildType());
+		domain.setIsExtinct(entity.getIsExtinct());
+		domain.setIsMixed(entity.getIsMixed());
 
 		if(translationDepth > 0) {
 			// load relationships

@@ -12,7 +12,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private AlleleTranslator alleleTranslator = new AlleleTranslator();
 	
 	@Override
-	protected MarkerDomain entityToDomain(Marker entity) {
+	protected MarkerDomain entityToDomain(Marker entity, int translationDepth) {
 		MarkerDomain domain = new MarkerDomain();
 		domain.setMarkerKey(entity.get_marker_key());
 		domain.setSymbol(entity.getSymbol());
@@ -26,14 +26,16 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		domain.setModifiedBy(entity.getModifiedBy().getName());
 		domain.setMgiAccessionId(entity.getMgiAccessionId().getAccID());
 
-		Iterable<AlleleDomain> alleles = alleleTranslator.translateEntities(entity.getAlleles());
-		domain.setAlleles(IteratorUtils.toList(alleles.iterator()));
+		if(translationDepth > 0) {
+			Iterable<AlleleDomain> alleles = alleleTranslator.translateEntities(entity.getAlleles(), translationDepth - 1);
+			domain.setAlleles(IteratorUtils.toList(alleles.iterator()));
+		}
 		
 		return domain;
 	}
 
 	@Override
-	protected Marker domainToEntity(MarkerDomain domain) {
+	protected Marker domainToEntity(MarkerDomain domain, int translationDepth) {
 		// TODO Auto-generated method stub
 		return null;
 	}

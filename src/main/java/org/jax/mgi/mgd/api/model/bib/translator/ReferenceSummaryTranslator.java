@@ -7,7 +7,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowData;
 
 public class ReferenceSummaryTranslator extends BaseEntityDomainTranslator<Reference, ReferenceSummaryDomain>{
 	@Override
-	protected ReferenceSummaryDomain entityToDomain(Reference entity) {
+	protected ReferenceSummaryDomain entityToDomain(Reference entity, int translationDepth) {
 		ReferenceSummaryDomain domain = new ReferenceSummaryDomain();
 
 		domain._refs_key = entity.get_refs_key();
@@ -35,7 +35,7 @@ public class ReferenceSummaryTranslator extends BaseEntityDomainTranslator<Refer
 	}
 
 	@Override
-	protected Reference domainToEntity(ReferenceSummaryDomain domain) {
+	protected Reference domainToEntity(ReferenceSummaryDomain domain, int translationDepth) {
 		// Cannot do translation here, as it requires lookup of actual entity from database.  Must
 		// instead work with ReferenceRepository.
 

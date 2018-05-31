@@ -12,7 +12,7 @@ public class ApiLogTranslator extends BaseEntityDomainTranslator<ApiLogEvent, Ap
 	private SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
 	
 	@Override
-	protected ApiLogDomain entityToDomain(ApiLogEvent entity) {
+	protected ApiLogDomain entityToDomain(ApiLogEvent entity, int translationDepth) {
 		ApiLogDomain domain = new ApiLogDomain();
 		domain._event_key = entity.get_event_key();
 		domain.creation_date = dateFormatter.format(entity.getCreation_date());
@@ -34,7 +34,7 @@ public class ApiLogTranslator extends BaseEntityDomainTranslator<ApiLogEvent, Ap
 	}
 
 	@Override
-	protected ApiLogEvent domainToEntity(ApiLogDomain domain) {
+	protected ApiLogEvent domainToEntity(ApiLogDomain domain, int translationDepth) {
 		// Cannot do translation here, as it requires lookup of actual entity from database.  Must
 		// instead work with ApiLogRepository.
 		

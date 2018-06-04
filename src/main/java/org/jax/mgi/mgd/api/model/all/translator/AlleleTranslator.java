@@ -16,6 +16,8 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		domain.setIsWildType(entity.getIsWildType());
 		domain.setIsExtinct(entity.getIsExtinct());
 		domain.setIsMixed(entity.getIsMixed());
+		domain.setCreatedBy(entity.getCreatedBy().getLogin());
+		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(entity.getCreation_date());
 		domain.setModification_date(entity.getModification_date());
 		

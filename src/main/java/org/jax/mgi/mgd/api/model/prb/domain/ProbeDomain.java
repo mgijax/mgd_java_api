@@ -21,6 +21,8 @@ public class ProbeDomain extends BaseDomain {
 	private String insertSite;
 	private String insertSize;
 	private String productSize;
+	private String createdBy;
+	private String modifiedBy;
 	private Date creation_date;
 	private Date modification_date;
 }

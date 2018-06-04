@@ -19,6 +19,8 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 		domain.setInsertSite(entity.getInsertSite());
 		domain.setInsertSize(entity.getInsertSize());
 		domain.setProductSize(entity.getProductSize());
+		domain.setCreatedBy(entity.getCreatedBy().getLogin());
+		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(entity.getCreation_date());
 		domain.setModification_date(entity.getModification_date());
 		

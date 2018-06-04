@@ -16,6 +16,8 @@ public class AlleleDomain extends BaseDomain {
 	private Integer isWildType;
 	private Integer isExtinct;
 	private Integer isMixed;
+	private String createdBy;
+	private String modifiedBy;
 	private Date approval_date;
 	private Date creation_date;
 	private Date modification_date;

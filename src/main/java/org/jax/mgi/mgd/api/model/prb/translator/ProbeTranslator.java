@@ -1,7 +1,5 @@
 package org.jax.mgi.mgd.api.model.prb.translator;
 
-import java.util.Date;
-
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.Probe;

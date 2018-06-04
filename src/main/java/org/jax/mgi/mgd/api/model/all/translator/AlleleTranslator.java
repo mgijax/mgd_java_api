@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.all.translator;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
@@ -16,7 +17,9 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		domain.setIsWildType(entity.getIsWildType());
 		domain.setIsExtinct(entity.getIsExtinct());
 		domain.setIsMixed(entity.getIsMixed());
-
+		domain.setCreation_date(entity.getCreation_date());
+		domain.setModification_date(entity.getModification_date());
+		
 		if(translationDepth > 0) {
 			// load relationships
 		}

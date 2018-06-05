@@ -17,6 +17,8 @@ public class TermSearchForm extends BaseSearchForm {
 	private String vocabName;
 	@ApiModelProperty(value="Search for Term by term")
 	private String term;
+	@ApiModelProperty(value="Accession Id to Search for")
+	private String accid;
 	
 	@Override
 	public Map<String, Object> getSearchFields() {
@@ -24,6 +26,7 @@ public class TermSearchForm extends BaseSearchForm {
 
 		if(vocabName != null) { ret.put("vocab.name", vocabName); }
 		if(term != null) { ret.put("term", term); }
+		if(accid != null) { ret.put("mgiTermAccessionId.accID", accid); }
 		
 		return ret;
 	}

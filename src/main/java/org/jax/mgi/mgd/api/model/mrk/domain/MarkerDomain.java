@@ -5,7 +5,7 @@ import java.util.List;
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
-import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.ProbeMarkerDomain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -32,7 +32,7 @@ public class MarkerDomain extends BaseDomain {
 
 	private List<AlleleDomain> alleles;
 	private List<AssayDomain> assays;
-	private List<ProbeDomain> probes;
+	private List<ProbeMarkerDomain> probeMarkers;
 
 	//private List<String> synonyms;
 	//private int allele_count;

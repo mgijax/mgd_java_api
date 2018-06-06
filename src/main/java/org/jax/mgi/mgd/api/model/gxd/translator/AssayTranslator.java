@@ -11,6 +11,8 @@ public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDoma
 		
 		AssayDomain domain = new AssayDomain();
 		domain.set_assay_key(entity.get_assay_key());
+		domain.setCreatedBy(entity.getCreatedBy().getLogin());
+		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(entity.getCreation_date());
 		domain.setModification_date(entity.getModification_date());
 		

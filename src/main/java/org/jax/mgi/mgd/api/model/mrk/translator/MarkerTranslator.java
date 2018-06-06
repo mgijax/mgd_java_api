@@ -7,6 +7,8 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
+import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
+import org.jax.mgi.mgd.api.model.gxd.translator.AssayTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
@@ -16,6 +18,7 @@ import org.jax.mgi.mgd.api.model.prb.translator.ProbeTranslator;
 public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerDomain> {
 
 	private AlleleTranslator alleleTranslator = new AlleleTranslator();
+	private AssayTranslator assayTranslator = new AssayTranslator();
 	private ProbeTranslator probeTranslator = new ProbeTranslator();
 
 	@Override
@@ -31,11 +34,14 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		domain.setMarkerType(entity.getMarkerType().getName());
 		domain.setCreatedBy(entity.getCreatedBy().getName());
 		domain.setModifiedBy(entity.getModifiedBy().getName());
-		domain.setMgiAccessionId(entity.getMgiAccessionId().getAccID());
+		//domain.setMgiAccessionId(entity.getMgiAccessionId().getAccID());
 
 		if(translationDepth > 0) {
 			Iterable<AlleleDomain> alleles = alleleTranslator.translateEntities(entity.getAlleles(), translationDepth - 1);
 			domain.setAlleles(IteratorUtils.toList(alleles.iterator()));
+			
+			Iterable<AssayDomain> assays = assayTranslator.translateEntities(entity.getAssays(), translationDepth - 1);
+			domain.setAssays(IteratorUtils.toList(assays.iterator()));
 			
 			List<ProbeDomain> probes = new ArrayList<ProbeDomain>();
 			for (ProbeMarker pm : entity.getProbeMarkers()) {

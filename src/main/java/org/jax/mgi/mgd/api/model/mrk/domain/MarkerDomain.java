@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 
 import io.swagger.annotations.ApiModel;
@@ -30,7 +31,7 @@ public class MarkerDomain extends BaseDomain {
 	private String mgiAccessionId;
 
 	private List<AlleleDomain> alleles;
-	//private List<AssayDomain> assays;
+	private List<AssayDomain> assays;
 	private List<ProbeDomain> probes;
 
 }

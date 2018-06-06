@@ -7,7 +7,9 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
+import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
+import org.jax.mgi.mgd.api.model.gxd.translator.AntibodyTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.AssayTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
@@ -20,6 +22,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private AlleleTranslator alleleTranslator = new AlleleTranslator();
 	private AssayTranslator assayTranslator = new AssayTranslator();
 	private ProbeTranslator probeTranslator = new ProbeTranslator();
+	private AntibodyTranslator antibodyTranslator = new AntibodyTranslator();
 
 	@Override
 	protected MarkerDomain entityToDomain(Marker entity, int translationDepth) {
@@ -48,6 +51,9 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 				probes.add(probeTranslator.translate(pm.getProbe()));
 			}
 			domain.setProbes(probes);
+			
+			Iterable<AntibodyDomain> antibodies = antibodyTranslator.translateEntities(entity.getAntibodies(), translationDepth - 1);
+			domain.setAntibodies(IteratorUtils.toList(antibodies.iterator()));
 		}
 		
 		return domain;

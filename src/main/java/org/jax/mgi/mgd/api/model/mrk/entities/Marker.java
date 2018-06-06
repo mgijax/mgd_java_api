@@ -140,7 +140,7 @@ public class Marker extends BaseEntity {
 	private Set<Marker> currentMarkers;
 
 	@ManyToMany
-	@JoinTable(name = "gxd_antibody_marker",
+	@JoinTable(name = "gxd_antibodymarker",
 		joinColumns = @JoinColumn(name = "_marker_key"),
 		inverseJoinColumns = @JoinColumn(name = "_antibody_key")
 	)

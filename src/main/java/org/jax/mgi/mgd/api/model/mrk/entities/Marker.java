@@ -28,7 +28,6 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeMarker;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrainMarker;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -77,10 +76,14 @@ public class Marker extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_marker_key", referencedColumnName="_object_key")
-	@Where(clause="`_mgitype_key` = 2 AND preferred = 1 and `_logicaldb_key` = 1")
-	private Accession mgiAccessionId;
+	public Accession getMgiAccessionId() {
+		for(Accession a: allAccessionIds) {
+			if(a.get_mgitype_key() == 2 && a.getPreferred() == 1 && a.get_logicaldb_key() == 1) {
+				return a;
+			}
+		}
+		return null;
+	}
 
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")

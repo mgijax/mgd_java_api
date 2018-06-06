@@ -34,7 +34,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		domain.setMarkerType(entity.getMarkerType().getName());
 		domain.setCreatedBy(entity.getCreatedBy().getName());
 		domain.setModifiedBy(entity.getModifiedBy().getName());
-		//domain.setMgiAccessionId(entity.getMgiAccessionId().getAccID());
+		domain.setMgiAccessionId(entity.getMgiAccessionId().getAccID());
 
 		if(translationDepth > 0) {
 			Iterable<AlleleDomain> alleles = alleleTranslator.translateEntities(entity.getAlleles(), translationDepth - 1);

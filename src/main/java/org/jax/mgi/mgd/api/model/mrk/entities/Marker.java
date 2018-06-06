@@ -92,7 +92,7 @@ public class Marker extends BaseEntity {
 	
 	@OneToMany
 	@JoinColumn(name="_marker_key")
-	private Set<Allele> alleles;
+	private Set<Allele> alleles = new HashSet<Allele>();
 	
 	@OneToMany
 	@JoinColumn(name="_marker_key")

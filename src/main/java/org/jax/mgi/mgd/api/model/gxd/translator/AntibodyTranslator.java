@@ -11,10 +11,12 @@ public class AntibodyTranslator extends BaseEntityDomainTranslator<Antibody, Ant
 		
 		AntibodyDomain domain = new AntibodyDomain();
 		domain.set_antibody_key(entity.get_antibody_key());
-		//domain.setCreatedBy(entity.getCreatedBy().getLogin());
-		//domain.setModifiedBy(entity.getModifiedBy().getLogin());
-		//domain.setCreation_date(entity.getCreation_date());
-		//domain.setModification_date(entity.getModification_date());
+		domain.setAntibodyName(entity.getAntibodyName());
+		domain.setAntibodyNote(entity.getAntibodyNote());
+		domain.setCreatedBy(entity.getCreatedBy().getLogin());
+		domain.setModifiedBy(entity.getModifiedBy().getLogin());
+		domain.setCreation_date(entity.getCreation_date());
+		domain.setModification_date(entity.getModification_date());
 		
 		if(translationDepth > 0) {
 			// load relationships

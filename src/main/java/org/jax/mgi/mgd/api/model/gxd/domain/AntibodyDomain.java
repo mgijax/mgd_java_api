@@ -11,10 +11,10 @@ import lombok.Setter;
 public class AntibodyDomain extends BaseDomain {
 
 	private Integer _antibody_key;
-	//private String antibodyName;
-	//private String antibodyNote;
-	//private String createdBy;
-	//private String modifiedBy;
-	//private Date creation_date;
-	//private Date modification_date;
+	private String antibodyName;
+	private String antibodyNote;
+	private String createdBy;
+	private String modifiedBy;
+	private Date creation_date;
+	private Date modification_date;
 }

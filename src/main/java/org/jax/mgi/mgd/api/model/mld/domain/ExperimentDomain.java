@@ -14,8 +14,6 @@ public class ExperimentDomain extends BaseDomain {
 	private String exptType;
 	private Integer tag;
 	private String chromosome;
-	private String createdBy;
-	private String modifiedBy;
 	private Date creation_date;
 	private Date modification_date;
 }

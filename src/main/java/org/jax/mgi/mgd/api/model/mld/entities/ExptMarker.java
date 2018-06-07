@@ -4,13 +4,14 @@ import java.util.Date;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
-import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 
 import io.swagger.annotations.ApiModel;
@@ -31,16 +32,19 @@ public class ExptMarker extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 	
-	@OneToOne
-	@JoinColumn(name="_marker_key")
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_assay_type_key")
+	private MLDAssayType assayType;
+	
+    @ManyToOne
+    @JoinColumn(name = "_marker_key", insertable = false, updatable = false)
 	private Marker marker;
 	
-	@OneToOne
-	@JoinColumn(name="_allele_key")
+	@ManyToOne
+	@JoinColumn(name="_allele_key", insertable = false, updatable = false)
 	private Allele allele;
 	
-	@OneToOne
-	@JoinColumn(name="_assay_key")
-	private Assay assay;
-	
+    @ManyToOne
+    @JoinColumn(name = "_expt_key", insertable = false, updatable = false)
+    private Experiment expt;
 }

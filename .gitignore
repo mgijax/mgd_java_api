@@ -6,3 +6,4 @@ target
 app.properties
 .project
 .classpath
+audit.log

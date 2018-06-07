@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -33,12 +34,12 @@ public class Experiment extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key")
 	private Reference reference;
 
-	@OneToOne
-	@JoinColumn(name="_expts_key", referencedColumnName="_object_key")
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_expt_key", referencedColumnName="_object_key")
 	@Where(clause="`_mgitype_key` = 4 AND preferred = 1 AND `_logicaldb_key` = 1")
 	private Accession mgiAccessionId;
 
@@ -48,5 +49,9 @@ public class Experiment extends BaseEntity {
 	
 	@OneToMany
 	@JoinColumn(name="_expt_key")
-	private Set<ExptMarker> markers;
+	private Set<ExptMarker> exptMarkers;
+	
+	@OneToMany
+	@JoinColumn(name="_marker_key")
+	private Set<ExptMarker> expt;
 }

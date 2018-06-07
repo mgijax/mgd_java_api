@@ -6,6 +6,7 @@ import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
+import org.jax.mgi.mgd.api.model.mld.domain.ExperimentDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 
 import io.swagger.annotations.ApiModel;
@@ -35,6 +36,6 @@ public class MarkerDomain extends BaseDomain {
 	private List<AssayDomain> assays;
 	private List<ProbeDomain> probes;
 	private List<AntibodyDomain> antibodies;
-
+	private List<ExperimentDomain> expts;
 
 }

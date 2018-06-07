@@ -25,6 +25,7 @@ import org.jax.mgi.mgd.api.model.map.entities.CoordinateFeature;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mld.entities.ExptMarker;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeMarker;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrainMarker;
 
@@ -112,7 +113,15 @@ public class Marker extends BaseEntity {
 
 	@OneToMany
 	@JoinColumn(name="_marker_key")
+	private Set<ProbeStrainMarker> probeStrainMarkers;
+	
+	@OneToMany
+	@JoinColumn(name="_marker_key")
 	private Set<Assay> assays;
+	
+	@OneToMany
+	@JoinColumn(name="_marker_key")
+	private Set<ExptMarker> exptMarkers;
 	
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
@@ -123,10 +132,6 @@ public class Marker extends BaseEntity {
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	@Where(clause="`_mgitype_key` = 2")
 	private Set<MGISynonym> synonyms;
-	
-	@OneToMany
-	@JoinColumn(name="_marker_key")
-	private Set<ProbeStrainMarker> probeStrainMarkers;
 
 	@ManyToMany
 	@JoinTable(name = "mrk_alias",

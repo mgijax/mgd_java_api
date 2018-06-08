@@ -63,7 +63,6 @@ public class Probe extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	// Complex Many to Many
 	@OneToMany
 	@JoinColumn(name="_probe_key")
 	private Set<ProbeMarker> probeMarkers;

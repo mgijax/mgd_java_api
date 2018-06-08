@@ -33,9 +33,10 @@ public class MarkerDomain extends BaseDomain {
 	private String mgiAccessionId;
 
 	private List<AlleleDomain> alleles;
-	private List<AssayDomain> assays;
-	private List<ProbeDomain> probes;
 	private List<AntibodyDomain> antibodies;
+	private List<AssayDomain> assays;
+	private List<AssayDomain> assaySpecimens;
 	private List<ExperimentDomain> expts;
+	private List<ProbeDomain> probes;
 
 }

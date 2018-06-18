@@ -3,6 +3,7 @@
 #
 
 all:
+	find /tmp/wildfly* -type f -exec rm -rf {} \;
 	mvn clean package
 
 run:

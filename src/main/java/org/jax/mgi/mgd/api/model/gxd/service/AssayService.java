@@ -28,7 +28,7 @@ public class AssayService extends BaseService<AssayDomain> implements BaseSearch
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	@Transactional
 	public AssayDomain update(AssayDomain object, User user) {
 		// TODO Auto-generated method stub
@@ -57,6 +57,7 @@ public class AssayService extends BaseService<AssayDomain> implements BaseSearch
 		Iterable<AssayDomain> newItems = translator.translateEntities(assays.items, searchForm.getSearchDepth());
 		return new SearchResults<AssayDomain>(newItems);
 	}
+
 
 
 

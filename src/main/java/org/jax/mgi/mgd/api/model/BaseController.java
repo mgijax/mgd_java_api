@@ -21,7 +21,7 @@ import org.jax.mgi.mgd.api.model.mgi.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
-public abstract class BaseController<T extends BaseDomain> implements BaseRESTInterface<T> {
+public abstract class BaseController<T extends BaseDomain> {
 
 	@Inject
 	private UserService userService;
@@ -92,6 +92,13 @@ public abstract class BaseController<T extends BaseDomain> implements BaseRESTIn
 		return null;
 	}
 	
+	@GET
+	@ApiOperation(value = "Read")
+	@Path("/{key}")
+	public T getByKey(@PathParam("key") @ApiParam(value = "This is for retrieving by key") Integer key) {
+		return get(key);
+	}
+	
 	@PUT
 	@ApiOperation(value = "Update", notes="Update")
 	public T update(
@@ -112,10 +119,9 @@ public abstract class BaseController<T extends BaseDomain> implements BaseRESTIn
 	}
 	
 	@DELETE
-	@ApiOperation(value = "Delete", notes="Delete")
+	@ApiOperation(value = "Delete")
 	@Path("/{key}")
-	public T delete(
-			@HeaderParam(value="api_access_token for accessing the API") String api_access_token,
+	public T delete(@HeaderParam(value="api_access_token for accessing the API") String api_access_token,
 			@HeaderParam(value="Username of the logged in user") String username,
 			@ApiParam(value = "This is for deleting by key") Integer key) {
 		if(authenticateToken(api_access_token)) {
@@ -129,16 +135,6 @@ public abstract class BaseController<T extends BaseDomain> implements BaseRESTIn
 			// Craft HTTP Response Code Error Message
 		}
 		return null;
-	}
-	
-	@GET
-	@ApiOperation(value = "Read", notes="Read")
-	@Path("/{key}")
-	public T getByKey(
-			@PathParam("key")
-			@ApiParam(value = "This is for retrieving by key")
-			Integer key) {
-		return get(key);
 	}
 
 	public abstract T create(T object, User user);

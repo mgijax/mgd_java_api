@@ -58,12 +58,11 @@ public class Marker extends BaseEntity {
 	@JoinColumn(name="_organism_key")
 	private Organism organism;
 
-	//@ApiModelProperty(value="Controlled vocabulary table for all Marker Statuses (approved, withdrawn)")
+	//@ApiModelProperty(value="Controlled vocabulary table for all Marker Statuses (official, withdrawn, reserved)")
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_marker_status_key")
 	private MarkerStatus markerStatus;
 
-	//need MRK_Types entity
 	//@ApiModelProperty(value="Controlled vocabulary table for all Marker Types")
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_marker_type_key")

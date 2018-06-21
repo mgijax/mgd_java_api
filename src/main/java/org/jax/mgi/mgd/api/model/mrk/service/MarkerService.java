@@ -37,7 +37,7 @@ public class MarkerService extends BaseService<MarkerDomain> implements BaseSear
 
 	@Transactional
 	public MarkerDomain get(Integer key) {
-		return translator.translate(markerDAO.get(key));
+		return translator.translate(markerDAO.get(key),3);
 	}
 
 	@Transactional

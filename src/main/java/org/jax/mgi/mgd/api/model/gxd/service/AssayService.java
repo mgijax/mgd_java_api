@@ -37,7 +37,7 @@ public class AssayService extends BaseService<AssayDomain> implements BaseSearch
 
 	@Transactional
 	public AssayDomain get(Integer key) {
-		return translator.translate(assayDAO.get(key));
+		return translator.translate(assayDAO.get(key),2);
 	}
 
 	@Transactional

@@ -1,7 +1,6 @@
 package org.jax.mgi.mgd.api.model.gxd.domain;
 
 import java.util.Date;
-import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
@@ -9,14 +8,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class AssayDomain extends BaseDomain {
+public class InSituResultDomain extends BaseDomain {
 
-	private Integer _assay_key;
-	private String createdBy;
-	private String modifiedBy;
+	private Integer _result_key;
+	private Integer sequenceNum;
+	private String resultNote;
 	private Date creation_date;
 	private Date modification_date;
-	
-	private List<SpecimenDomain> specimens;
-
 }

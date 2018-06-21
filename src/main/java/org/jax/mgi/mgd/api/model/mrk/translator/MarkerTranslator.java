@@ -53,12 +53,6 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			Iterable<AssayDomain> assays = assayTranslator.translateEntities(entity.getAssays(), translationDepth - 1);
 			domain.setAssays(IteratorUtils.toList(assays.iterator()));
 			
-			//List<AssayDomain> assaysps = new ArrayList<AssayDomain>();
-			//for (Assay asp : entity.getAssays()) {
-				//assaysps.add(assayTranslator.translate(asp.getSpecimens()));
-			//}
-			//domain.setAssaySpecimens(assaysps);
-			
 			List<ExperimentDomain> expts = new ArrayList<ExperimentDomain>();
 			for (ExptMarker em : entity.getExptMarkers()) {
 				expts.add(exptTranslator.translate(em.getExpt()));

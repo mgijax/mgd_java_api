@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -34,10 +35,6 @@ public class InSituResult extends BaseEntity {
 	private Date modification_date;
 
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_specimen_key")
-	private Specimen specimen;
-
-	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_strength_key")
 	private Strength strength;
 
@@ -45,6 +42,10 @@ public class InSituResult extends BaseEntity {
 	@JoinColumn(name="_pattern_key")
 	private Pattern pattern;
 
+	@ManyToOne
+	@JoinColumn(name="_specimen_key")
+	private Specimen specimen;
+	
 	@OneToMany
 	@JoinColumn(name="_result_key")
 	private Set<InSituResultStructure> structures;

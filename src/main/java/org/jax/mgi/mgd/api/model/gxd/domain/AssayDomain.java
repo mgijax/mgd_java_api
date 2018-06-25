@@ -18,5 +18,6 @@ public class AssayDomain extends BaseDomain {
 	private Date modification_date;
 	
 	private List<SpecimenDomain> specimens;
+	private List<GelLaneDomain> gellanes;
 
 }

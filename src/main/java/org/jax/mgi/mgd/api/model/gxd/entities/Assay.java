@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Where;
@@ -78,9 +79,11 @@ public class Assay extends BaseEntity {
 
 	@OneToMany
 	@JoinColumn(name="_assay_key")
+	@OrderBy("sequenceNum")
 	private Set<GelLane> gelLanes;
 	
 	@OneToMany
 	@JoinColumn(name="_assay_key")
+	@OrderBy("sequenceNum")
 	private Set<Specimen> specimens;
 }

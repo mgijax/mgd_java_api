@@ -4,8 +4,10 @@ import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -25,7 +27,7 @@ public class GelLane extends BaseEntity {
 	@Id
 	private Integer _gellane_key;
 	private Integer sequenceNum;
-	private String lanelLabel;
+	private String laneLabel;
 	private String sampleAmount;
 	private String sex;
 	private String age;
@@ -36,19 +38,15 @@ public class GelLane extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 	
-	@OneToOne
-	@JoinColumn(name="_assay_key")
-	private Assay assay;
-	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_genotype_key")
 	private Genotype genotype;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_gelrnatype_key")
 	private GelRNAType gelRNAType;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_gelcontrol_key")
 	private GelControl gelControl;
 	
@@ -56,4 +54,7 @@ public class GelLane extends BaseEntity {
 	@JoinColumn(name="_gellane_key")
 	private Set<GelLaneStructure> structures;
 	
+	@ManyToOne
+	@JoinColumn(name="_assay_key")
+	private Assay assay;
 }

@@ -7,6 +7,8 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.IndexDomain;
@@ -18,6 +20,7 @@ import org.jax.mgi.mgd.api.model.mld.entities.ExptMarker;
 import org.jax.mgi.mgd.api.model.mld.translator.ExperimentTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
+import org.jax.mgi.mgd.api.model.mrk.entities.MarkerReferenceCache;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeMarker;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeTranslator;
@@ -31,8 +34,9 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private AntibodyTranslator antibodyTranslator = new AntibodyTranslator();
 	private AssayTranslator assayTranslator = new AssayTranslator();
 	private ExperimentTranslator exptTranslator = new ExperimentTranslator();
-	private ProbeTranslator probeTranslator = new ProbeTranslator();
 	private IndexTranslator indexTranslator = new IndexTranslator();
+	private ProbeTranslator probeTranslator = new ProbeTranslator();
+	private ReferenceTranslator referenceTranslator = new ReferenceTranslator();
 	private SequenceTranslator sequenceTranslator = new SequenceTranslator();
 
 	@Override
@@ -51,6 +55,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		domain.setMgiAccessionId(entity.getMgiAccessionId().getAccID());
 
 		if(translationDepth > 0) {
+			
 			Iterable<AlleleDomain> alleles = alleleTranslator.translateEntities(entity.getAlleles(), translationDepth - 1);
 			domain.setAlleles(IteratorUtils.toList(alleles.iterator()));
 			
@@ -75,12 +80,19 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			}
 			domain.setProbes(probes);
 			
+			List<ReferenceDomain> references = new ArrayList<ReferenceDomain>();
+			for (MarkerReferenceCache mrc : entity.getReferenceMarkers()) {
+				references.add(referenceTranslator.translate(mrc.getReference(), translationDepth -1));
+			}
+			domain.setReferences(references);
+			
 			List<SequenceDomain> sequences = new ArrayList<SequenceDomain>();
 			for (SequenceMarkerCache sm : entity.getSequenceMarkers()) {
 				sequences.add(sequenceTranslator.translate(sm.getSequence()));
 			}
 			domain.setSequences(sequences);
-			
+
+
 		}
 		
 		return domain;

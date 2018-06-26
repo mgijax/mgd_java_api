@@ -133,6 +133,10 @@ public class Marker extends BaseEntity {
 	private Set<SequenceMarkerCache> sequenceMarkers;
 	
 	@OneToMany
+	@JoinColumn(name="_marker_key")
+	private Set<MarkerReferenceCache> referenceMarkers;
+	
+	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	@Where(clause="`_mgitype_key` = 2")
 	private Set<CoordinateFeature> features;

@@ -4,7 +4,6 @@ import java.util.Date;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
-import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +21,11 @@ public class IndexDomain extends BaseDomain {
 	private String modifiedBy;
 	private Date creation_date;
 	private Date modification_date;
+	public void setReference(ReferenceDomain reference) {
+		// TODO Auto-generated method stub
+		this.reference = reference;
+		
+	}
 	
 	
 

@@ -77,10 +77,6 @@ public class Sequence extends BaseEntity {
 	private Set<SequenceMarkerCache> sequenceMarkers;
 	
 	@OneToMany
-	@JoinColumn(name="_marker_key")
-	private Set<SequenceMarkerCache> sequences;
-	
-	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_sequence_key")
 	@Where(clause="`_mgitype_key` = 19")
 	private Set<CoordinateFeature> features;

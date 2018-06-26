@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -16,6 +17,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.entities.MarkerType;
+import org.jax.mgi.mgd.api.model.prb.entities.Probe;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
@@ -35,14 +37,6 @@ public class SequenceMarkerCache extends BaseEntity {
 	private Date annotation_date;
 	private Date creation_date;
 	private Date modification_date;
-	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_sequence_key")
-	private Sequence sequence;
-	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_marker_key")
-	private Marker marker;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_organism_key")
@@ -84,4 +78,12 @@ public class SequenceMarkerCache extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
+    @ManyToOne
+    @JoinColumn(name = "_marker_key")
+    private Marker marker;
+    
+    @ManyToOne
+    @JoinColumn(name = "_sequence_key")
+	private Sequence sequence;
+
 }

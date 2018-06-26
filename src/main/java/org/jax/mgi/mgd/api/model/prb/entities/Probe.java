@@ -67,10 +67,6 @@ public class Probe extends BaseEntity {
 	@JoinColumn(name="_probe_key")
 	private Set<ProbeMarker> probeMarkers;
 	
-	@OneToMany
-	@JoinColumn(name="_marker_key")
-	private Set<ProbeMarker> probe;
-	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_probe_key", referencedColumnName="_object_key")
 	@Where(clause="`_mgitype_key` = 3 AND preferred = 1 AND `_logicaldb_key` = 1")

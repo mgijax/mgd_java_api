@@ -21,6 +21,7 @@ import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.gxd.entities.Antibody;
 import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
+import org.jax.mgi.mgd.api.model.gxd.entities.Index;
 import org.jax.mgi.mgd.api.model.map.entities.CoordinateFeature;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
@@ -117,6 +118,10 @@ public class Marker extends BaseEntity {
 	@OneToMany
 	@JoinColumn(name="_marker_key")
 	private Set<Assay> assays;
+	
+	@OneToMany
+	@JoinColumn(name="_marker_key")
+	private Set<Index> indexes;
 	
 	@OneToMany
 	@JoinColumn(name="_marker_key")

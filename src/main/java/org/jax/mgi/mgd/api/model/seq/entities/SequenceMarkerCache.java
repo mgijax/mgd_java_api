@@ -24,9 +24,9 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "SeqMarkerCache Model Object")
+@ApiModel(value = "SequenceMarkerCache Model Object")
 @Table(name="seq_marker_cache")
-public class SeqMarkerCache extends BaseEntity {
+public class SequenceMarkerCache extends BaseEntity {
 
 	@Id
 	private Integer _cache_key;

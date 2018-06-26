@@ -8,8 +8,8 @@ import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter @ApiModel("SeqMarkerCache Search Form")
-public class SeqMarkerCacheSearchForm extends BaseSearchForm {
+@Getter @Setter @ApiModel("Sequence Search Form")
+public class SequenceSearchForm extends BaseSearchForm {
 
 	@Override
 	public Map<String, Object> getSearchFields() {

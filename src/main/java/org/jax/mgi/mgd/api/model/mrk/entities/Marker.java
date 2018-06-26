@@ -29,6 +29,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mld.entities.ExptMarker;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeMarker;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrainMarker;
+import org.jax.mgi.mgd.api.model.seq.entities.SeqMarkerCache;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -128,10 +129,15 @@ public class Marker extends BaseEntity {
 	private Set<ExptMarker> exptMarkers;
 	
 	@OneToMany
+	@JoinColumn(name="_marker_key")
+	private Set<SeqMarkerCache> seqMarkers;
+	
+	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	@Where(clause="`_mgitype_key` = 2")
 	private Set<CoordinateFeature> features;
 
+	
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	@Where(clause="`_mgitype_key` = 2")

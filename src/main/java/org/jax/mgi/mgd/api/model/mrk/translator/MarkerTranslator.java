@@ -21,6 +21,8 @@ import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeMarker;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeTranslator;
+import org.jax.mgi.mgd.api.model.seq.domain.SeqMarkerCacheDomain;
+import org.jax.mgi.mgd.api.model.seq.translator.SeqMarkerCacheTranslator;
 
 public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerDomain> {
 
@@ -30,6 +32,8 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private ExperimentTranslator exptTranslator = new ExperimentTranslator();
 	private ProbeTranslator probeTranslator = new ProbeTranslator();
 	private IndexTranslator indexTranslator = new IndexTranslator();
+	private SeqMarkerCacheTranslator seqmarkercacheTranslator = new SeqMarkerCacheTranslator();
+
 
 	@Override
 	protected MarkerDomain entityToDomain(Marker entity, int translationDepth) {
@@ -58,6 +62,9 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			
 			Iterable<IndexDomain> indexes = indexTranslator.translateEntities(entity.getIndexes(), translationDepth - 1);
 			domain.setIndexes(IteratorUtils.toList(indexes.iterator()));
+			
+			Iterable<SeqMarkerCacheDomain> seqmarkers = seqmarkercacheTranslator.translateEntities(entity.getSeqMarkers(), translationDepth - 1);
+			domain.setSeqMarkers(IteratorUtils.toList(seqmarkers.iterator()));
 			
 			List<ExperimentDomain> expts = new ArrayList<ExperimentDomain>();
 			for (ExptMarker em : entity.getExptMarkers()) {

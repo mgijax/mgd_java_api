@@ -1,4 +1,4 @@
-package org.jax.mgi.mgd.api.model.prb.search;
+package org.jax.mgi.mgd.api.model.seq.search;
 
 import java.util.Map;
 
@@ -8,8 +8,8 @@ import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter @ApiModel("Probe Search Form")
-public class ProbeSearchForm extends BaseSearchForm {
+@Getter @Setter @ApiModel("SeqMarkerCache Search Form")
+public class SeqMarkerCacheSearchForm extends BaseSearchForm {
 
 	@Override
 	public Map<String, Object> getSearchFields() {

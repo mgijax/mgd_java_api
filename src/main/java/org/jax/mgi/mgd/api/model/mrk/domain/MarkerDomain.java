@@ -31,6 +31,8 @@ public class MarkerDomain extends BaseDomain {
 	private String organism;
 	private String markerStatus;
 	private String markerType;
+	private String markerNote;
+	private String markerLocation;
 	private String createdBy;
 	private String modifiedBy;
 	private String mgiAccessionId;

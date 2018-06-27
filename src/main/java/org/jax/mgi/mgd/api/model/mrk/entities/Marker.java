@@ -61,7 +61,7 @@ public class Marker extends BaseEntity {
 	private Organism organism;
 
 	//@ApiModelProperty(value="Controlled vocabulary table for all Marker Statuses (official, withdrawn, reserved)")
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="_marker_status_key")
 	private MarkerStatus markerStatus;
 
@@ -70,6 +70,14 @@ public class Marker extends BaseEntity {
 	@JoinColumn(name="_marker_type_key")
 	private MarkerType markerType;
 
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_marker_key")
+	private MarkerNote markerNote;
+	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_marker_key")
+	private MarkerLocationCache markerLocation;
+	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;

@@ -88,10 +88,9 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			
 			List<SequenceDomain> sequences = new ArrayList<SequenceDomain>();
 			for (SequenceMarkerCache sm : entity.getSequenceMarkers()) {
-				sequences.add(sequenceTranslator.translate(sm.getSequence()));
+				sequences.add(sequenceTranslator.translate(sm.getSequence(), translationDepth -1));
 			}
 			domain.setSequences(sequences);
-
 
 		}
 		

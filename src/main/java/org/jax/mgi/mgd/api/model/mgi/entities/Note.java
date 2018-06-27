@@ -2,7 +2,6 @@ package org.jax.mgi.mgd.api.model.mgi.entities;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -19,22 +18,26 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Note Type Object")
-@Table(name="mgi_notetype")
-public class NoteType extends BaseEntity {
+@ApiModel(value = "Note  Object")
+@Table(name="mgi_note")
+public class Note extends BaseEntity {
 	@Id
-	private Integer _noteType_key;
-	private String noteType;
-	
-	@Column(name="private") // just "private" is a Java reserved word
-	private Integer is_private;
-
+	private Integer _note_key;
+	private Integer _object_key;
 	private Date creation_date;
 	private Date modification_date;
-	
+
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_mgitype_key", referencedColumnName="_mgitype_key")
-	private MGIType mgitype;
+	@JoinColumn(name="_mgitype_key")
+	private MGIType mgiType;
+
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_notetype_key")
+	private NoteType noteType;
+
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_note_key")
+	private NoteChunk noteChunk;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
@@ -43,5 +46,4 @@ public class NoteType extends BaseEntity {
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
-
 }

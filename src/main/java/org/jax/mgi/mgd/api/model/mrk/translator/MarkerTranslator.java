@@ -8,6 +8,7 @@ import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
@@ -91,9 +92,13 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			}
 			domain.setProbes(probes);
 			
-			List<ReferenceDomain> references = new ArrayList<ReferenceDomain>();
+			List<String> references = new ArrayList<String>();
+			//domain.setJnumID(refTranslator.translate(entity.getReference()).jnumid)
 			for (MarkerReferenceCache mrc : entity.getReferenceMarkers()) {
-				references.add(referenceTranslator.translate(mrc.getReference(), translationDepth -1));
+				Reference r = mrc.getReference();
+				ReferenceDomain rd = referenceTranslator.translate(r);
+				references.add(rd.getJnumid());
+				//references.add(referenceTranslator.translate(mrc.getReference()).jnumid, translationDepth -1);
 			}
 			domain.setReferences(references);
 			

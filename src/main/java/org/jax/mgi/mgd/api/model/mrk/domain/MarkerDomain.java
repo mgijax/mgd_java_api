@@ -50,7 +50,7 @@ public class MarkerDomain extends BaseDomain {
 	private List<ExperimentDomain> expts;
     private List<IndexDomain> indexes;
 	private List<ProbeDomain> probes;
-    private List<ReferenceDomain> references;
+    private List<String> references;
     private List<SequenceDomain> sequences;
     private List<TermDomain> mcvTerms;
 

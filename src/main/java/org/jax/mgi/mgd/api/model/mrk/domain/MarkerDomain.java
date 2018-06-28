@@ -32,7 +32,13 @@ public class MarkerDomain extends BaseDomain {
 	private String markerStatus;
 	private String markerType;
 	private String markerNote;
-	private String markerLocation;
+	private String locationChromosome;
+	private Integer locationStartCoordinate;
+	private Integer locationEndCoordinate;
+	private String locationStrand;
+	private String locationMapUnits;
+	private String locationProvider;
+	private String locationVersion;
 	private String createdBy;
 	private String modifiedBy;
 	private String mgiAccessionId;

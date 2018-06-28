@@ -25,7 +25,7 @@ import lombok.Setter;
 public class MarkerLocationCache extends BaseEntity {
 
 	@Id
-	private Integer _cache_key;
+	private Integer _marker_key;
 	private String chromosome;
 	private Integer sequenceNum;
 	private String cytogeneticOffset;
@@ -57,6 +57,6 @@ public class MarkerLocationCache extends BaseEntity {
 	private User modifiedBy;
 	
     @ManyToOne
-    @JoinColumn(name = "_marker_key")
+    @JoinColumn(name = "_marker_key", insertable = false, updatable = false)
     private Marker marker;
 }

@@ -11,6 +11,7 @@ import org.jax.mgi.mgd.api.model.gxd.domain.IndexDomain;
 import org.jax.mgi.mgd.api.model.mld.domain.ExperimentDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.seq.domain.SequenceDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -51,5 +52,6 @@ public class MarkerDomain extends BaseDomain {
 	private List<ProbeDomain> probes;
     private List<ReferenceDomain> references;
     private List<SequenceDomain> sequences;
+    private List<TermDomain> mcvTerms;
 
 }

@@ -22,11 +22,11 @@ public class IndexTranslator extends BaseEntityDomainTranslator<Index, IndexDoma
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(entity.getCreation_date());
 		domain.setModification_date(entity.getModification_date());
+	
 		
-		
-		// if we need theiler stages implement this (copied from Assay)
 		if(translationDepth > 0) {
-			domain.setReference(refTranslator.translate(entity.getReference(), translationDepth - 1));
+			domain.setJnumID(refTranslator.translate(entity.getReference()).jnumid);
+			//domain.setReference(refTranslator.translate(entity.getReference(), translationDepth - 1));
 			//domain.setMarker(translator.translate(entity.getMarker(), translationDepth - 1));
 
 				

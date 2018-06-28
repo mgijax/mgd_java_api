@@ -12,7 +12,8 @@ import lombok.Setter;
 public class IndexDomain extends BaseDomain {
 
 	private Integer _index_key;
-	private ReferenceDomain reference;
+	private String jnumID;
+	//private ReferenceDomain reference;
 	//private MarkerDomain marker;
 	private String priority;
 	private String conditionalMutants;
@@ -21,11 +22,11 @@ public class IndexDomain extends BaseDomain {
 	private String modifiedBy;
 	private Date creation_date;
 	private Date modification_date;
-	public void setReference(ReferenceDomain reference) {
+	//public void setReference(ReferenceDomain reference) {
 		// TODO Auto-generated method stub
-		this.reference = reference;
+	//	this.reference = reference;
 		
-	}
+	//}
 	
 	
 

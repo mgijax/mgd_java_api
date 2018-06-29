@@ -93,12 +93,12 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			domain.setProbes(probes);
 			
 			List<String> references = new ArrayList<String>();
-			//domain.setJnumID(refTranslator.translate(entity.getReference()).jnumid)
+			
 			for (MarkerReferenceCache mrc : entity.getReferenceMarkers()) {
 				Reference r = mrc.getReference();
 				ReferenceDomain rd = referenceTranslator.translate(r);
 				references.add(rd.getJnumid());
-				//references.add(referenceTranslator.translate(mrc.getReference()).jnumid, translationDepth -1);
+				
 			}
 			domain.setReferences(references);
 			

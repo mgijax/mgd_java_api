@@ -1,10 +1,10 @@
 package org.jax.mgi.mgd.api.model.mrk.domain;
 
+import java.util.Date;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.IndexDomain;
@@ -42,6 +42,8 @@ public class MarkerDomain extends BaseDomain {
 	private String locationVersion;
 	private String createdBy;
 	private String modifiedBy;
+	private Date creation_date;
+	private Date modification_date;
 	private String mgiAccessionId;
 
 	private List<AlleleDomain> alleles;

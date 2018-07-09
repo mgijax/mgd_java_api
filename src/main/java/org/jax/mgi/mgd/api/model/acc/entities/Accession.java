@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -29,24 +30,22 @@ public class Accession extends BaseEntity {
 	@Id
 	private int _accession_key;
 	private String accID;
-	private Integer preferred;
-
-	@Column(name="private")		// just "private" is a Java reserved word
-	private Integer is_private;
-
+	private String prefixPart;
+	private Integer numericPart;
 	private Integer _logicaldb_key;
 	private Integer _object_key;
 	private Integer _mgitype_key;
-	private String prefixPart;
-	private Integer numericPart;
+	@Column(name="private")		// just "private" is a Java reserved word
+	private Integer is_private;
+	private Integer preferred;
 	private Date creation_date;
 	private Date modification_date;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdByUser;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedByUser;
 	

@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.mrk.entities;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -56,6 +57,9 @@ public class Marker extends BaseEntity {
 	@ApiModelProperty(value="cytogenetic band")
 	private String cytogeneticOffset;
 
+	private Date creation_date;
+	private Date modification_date;
+	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_organism_key")
 	private Organism organism;

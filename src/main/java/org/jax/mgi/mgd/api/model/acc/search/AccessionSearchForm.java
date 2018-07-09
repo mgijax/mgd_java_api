@@ -13,7 +13,6 @@ import lombok.Setter;
 @Getter @Setter @ApiModel("Accession Search Form")
 public class AccessionSearchForm extends BaseSearchForm {
 
-	@ApiModelProperty(value="Accession Id to Search for")
 	private String accid;
 	private Integer _logicaldb_key;
 	private Integer _mgitype_key;

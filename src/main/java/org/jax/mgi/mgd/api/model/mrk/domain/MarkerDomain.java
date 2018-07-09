@@ -45,7 +45,8 @@ public class MarkerDomain extends BaseDomain {
 	private Date creation_date;
 	private Date modification_date;
 	private String mgiAccessionId;
-
+    
+	private List<String> secondaryMgiIds;
 	private List<AlleleDomain> alleles;
 	private List<AntibodyDomain> antibodies;
 	private List<AssayDomain> assays;
@@ -55,5 +56,4 @@ public class MarkerDomain extends BaseDomain {
     private List<String> references;
     private List<SequenceDomain> sequences;
     private List<TermDomain> mcvTerms;
-
 }

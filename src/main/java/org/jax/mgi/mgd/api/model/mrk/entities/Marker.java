@@ -90,18 +90,9 @@ public class Marker extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
-	public Accession getMgiAccessionId() {
-		for(Accession a: allAccessionIds) {
-			if(a.get_mgitype_key() == 2 && a.getPreferred() == 1 && a.get_logicaldb_key() == 1) {
-				return a;
-			}
-		}
-		return null;
-	}
-
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
-	@Where(clause="`_mgitype_key` = 2 AND preferred = 1")
+	@Where(clause="`_mgitype_key` = 2")
 	private Set<Accession> allAccessionIds;
 	
 	@OneToMany
@@ -184,6 +175,26 @@ public class Marker extends BaseEntity {
 	)
 	private Set<Antibody> antibodies;
 
+	public Accession getMgiAccessionId() {
+		for(Accession a: allAccessionIds) {
+			if(a.get_mgitype_key() == 2 && a.get_logicaldb_key() == 1 && a.getPreferred() == 1) {
+				return a;
+			}
+		}
+		return null;
+	}
+
+	@Transient
+	public Set<Accession> getSecondaryMgiAccessionIds() {
+		HashSet<Accession> set = new HashSet<Accession>();
+		for(Accession a: allAccessionIds) {
+			if(a.get_mgitype_key() == 2 && a.get_logicaldb_key() == 1 && a.getPreferred() == 0) {
+				set.add(a);
+			}
+		}
+		return set;
+	}
+
 	@Transient
 	public Set<Accession> getAccessionIdsByLogicalDb(LogicalDB db) {
 		return getAccessionIdsByLogicalDb(db.get_logicaldb_key());
@@ -200,5 +211,4 @@ public class Marker extends BaseEntity {
 		return set;
 	}
 	
-
 }

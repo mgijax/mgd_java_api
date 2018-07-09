@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
@@ -42,7 +43,8 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private ProbeTranslator probeTranslator = new ProbeTranslator();
 	private ReferenceTranslator referenceTranslator = new ReferenceTranslator();
 	private SequenceTranslator sequenceTranslator = new SequenceTranslator();
-    private TermTranslator termTranslator = new TermTranslator();
+	private TermTranslator termTranslator = new TermTranslator();
+    
 	@Override
 	protected MarkerDomain entityToDomain(Marker entity, int translationDepth) {
 		MarkerDomain domain = new MarkerDomain();
@@ -82,6 +84,12 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			Iterable<IndexDomain> indexes = indexTranslator.translateEntities(entity.getIndexes(), translationDepth - 1);
 			domain.setIndexes(IteratorUtils.toList(indexes.iterator()));
 			
+			List<String> secondaryMgiIds = new ArrayList<String>();
+			for (Accession sa : entity.getSecondaryMgiAccessionIds()) {
+				secondaryMgiIds.add(sa.getAccID());
+			}
+			domain.setSecondaryMgiIds(secondaryMgiIds);
+			
 			List<ExperimentDomain> expts = new ArrayList<ExperimentDomain>();
 			for (ExptMarker em : entity.getExptMarkers()) {
 				expts.add(exptTranslator.translate(em.getExpt()));
@@ -95,12 +103,10 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			domain.setProbes(probes);
 			
 			List<String> references = new ArrayList<String>();
-			
 			for (MarkerReferenceCache mrc : entity.getReferenceMarkers()) {
 				Reference r = mrc.getReference();
 				ReferenceDomain rd = referenceTranslator.translate(r);
 				references.add(rd.getJnumid());
-				
 			}
 			domain.setReferences(references);
 			
@@ -115,6 +121,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 				mcvTerms.add(termTranslator.translate(mm.getMcvTerm(), translationDepth - 1));
 			}
 			domain.setMcvTerms(mcvTerms);
+		
 		}
 		
 		return domain;

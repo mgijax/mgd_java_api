@@ -6,7 +6,6 @@ import java.util.Map;
 import org.jax.mgi.mgd.api.model.BaseSearchForm;
 
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 

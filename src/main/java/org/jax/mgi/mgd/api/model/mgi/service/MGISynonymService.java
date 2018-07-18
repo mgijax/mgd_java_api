@@ -1,0 +1,57 @@
+package org.jax.mgi.mgd.api.model.mgi.service;
+
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.transaction.Transactional;
+
+import org.jax.mgi.mgd.api.exception.APIException;
+import org.jax.mgi.mgd.api.model.BaseSearchInterface;
+import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.mgi.dao.MGISynonymDAO;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.search.MGISynonymSearchForm;
+import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTranslator;
+import org.jax.mgi.mgd.api.util.SearchResults;
+
+@RequestScoped
+public class MGISynonymService extends BaseService<MGISynonymDomain> implements BaseSearchInterface<MGISynonymDomain, MGISynonymSearchForm> {
+
+	@Inject
+	private MGISynonymDAO synonymDAO;
+
+	private MGISynonymTranslator translator = new MGISynonymTranslator();
+	
+	@Transactional
+	public MGISynonymDomain create(MGISynonymDomain object, User user) throws APIException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Transactional
+	public MGISynonymDomain update(MGISynonymDomain object, User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Transactional
+	public MGISynonymDomain get(Integer key) {
+		//return translator.translate(synonymDAO.get(key));
+		return translator.translate(synonymDAO.get(key));
+	}
+
+	@Transactional
+	public MGISynonymDomain delete(Integer key, User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Transactional
+	public SearchResults<MGISynonymDomain> search(MGISynonymSearchForm searchForm) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+}

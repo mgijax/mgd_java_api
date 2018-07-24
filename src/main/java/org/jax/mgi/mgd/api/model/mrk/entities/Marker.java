@@ -177,18 +177,23 @@ public class Marker extends BaseEntity {
 
 	public Accession getMgiAccessionId() {
 		for(Accession a: allAccessionIds) {
-			if(a.get_mgitype_key() == 2 && a.get_logicaldb_key() == 1 && a.getPreferred() == 1) {
+			if(a.get_mgitype_key() == 2 
+					&& a.get_logicaldb_key() == 1 
+					&& a.getPreferred() == 1) {
 				return a;
 			}
 		}
-		return null;
+		return new Accession();
 	}
 
 	@Transient
 	public Set<Accession> getSecondaryMgiAccessionIds() {
 		HashSet<Accession> set = new HashSet<Accession>();
 		for(Accession a: allAccessionIds) {
-			if(a.get_mgitype_key() == 2 && a.get_logicaldb_key() == 1 && a.getPreferred() == 0) {
+			if(a.get_mgitype_key() == 2 
+					&& a.get_logicaldb_key() == 1 
+					&& a.getPreferred() == 0
+					&& a.getPrefixPart().equals("MGI:")) {
 				set.add(a);
 			}
 		}

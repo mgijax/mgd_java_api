@@ -56,18 +56,25 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		domain.setOrganism(entity.getOrganism().getCommonname());
 		domain.setMarkerStatus(entity.getMarkerStatus().getStatus());
 		domain.setMarkerType(entity.getMarkerType().getName());
-		domain.setMarkerNote(entity.getMarkerNote().getNote());
-		domain.setLocationChromosome(entity.getMarkerLocation().getGenomicChromosome());
-		domain.setLocationStartCoordinate(entity.getMarkerLocation().getStartCoordinate());
-		domain.setLocationEndCoordinate(entity.getMarkerLocation().getEndCoordinate());
-		domain.setLocationStrand(entity.getMarkerLocation().getStrand());
-		domain.setLocationMapUnits(entity.getMarkerLocation().getMapUnits());
-		domain.setLocationProvider(entity.getMarkerLocation().getProvider());
-		domain.setLocationVersion(entity.getMarkerLocation().getVersion());
 		domain.setCreatedBy(entity.getCreatedBy().getName());
 		domain.setModifiedBy(entity.getModifiedBy().getName());
 		domain.setCreation_date(entity.getCreation_date());
 		domain.setModification_date(entity.getModification_date());
+		
+		if(entity.getMarkerNote() != null) {
+			domain.setMarkerNote(entity.getMarkerNote().getNote());
+		}
+		
+		if(entity.getMarkerLocation() != null) {
+			domain.setLocationChromosome(entity.getMarkerLocation().getGenomicChromosome());
+			domain.setLocationStartCoordinate(entity.getMarkerLocation().getStartCoordinate());
+			domain.setLocationEndCoordinate(entity.getMarkerLocation().getEndCoordinate());
+			domain.setLocationStrand(entity.getMarkerLocation().getStrand());
+			domain.setLocationMapUnits(entity.getMarkerLocation().getMapUnits());
+			domain.setLocationProvider(entity.getMarkerLocation().getProvider());
+			domain.setLocationVersion(entity.getMarkerLocation().getVersion());
+		}
+		
 		domain.setMgiAccessionId(entity.getMgiAccessionId().getAccID());
 
 		if(translationDepth > 0) {
@@ -102,13 +109,14 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			}
 			domain.setProbes(probes);
 			
-			List<String> references = new ArrayList<String>();
-			for (MarkerReferenceCache mrc : entity.getReferenceMarkers()) {
-				Reference r = mrc.getReference();
-				ReferenceDomain rd = referenceTranslator.translate(r);
-				references.add(rd.getJnumid());
-			}
-			domain.setReferences(references);
+			//very slow/sql is reading too much (bib_workflow)
+			//List<String> references = new ArrayList<String>();
+			//for (MarkerReferenceCache mrc : entity.getReferenceMarkers()) {
+				//Reference r = mrc.getReference();
+				//ReferenceDomain rd = referenceTranslator.translate(r);
+				//references.add(rd.getJnumid());
+			//}
+			//domain.setReferences(references);
 			
 			List<SequenceDomain> sequences = new ArrayList<SequenceDomain>();
 			for (SequenceMarkerCache sm : entity.getSequenceMarkers()) {

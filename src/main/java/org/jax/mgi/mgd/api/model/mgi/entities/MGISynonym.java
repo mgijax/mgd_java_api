@@ -34,7 +34,6 @@ public class MGISynonym extends BaseEntity {
 	@JoinColumn(name="_mgitype_key")
 	private MGIType mgiType;
 
-	
 	@OneToOne
 	@JoinColumn(name="_synonymtype_key")
 	private MGISynonymType synonymType;

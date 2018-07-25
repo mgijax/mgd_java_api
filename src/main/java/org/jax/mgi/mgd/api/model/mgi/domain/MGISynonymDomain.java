@@ -21,13 +21,12 @@ public class MGISynonymDomain extends BaseDomain {
 	private String synonym;
 	private Date creation_date;
 	private Date modification_date;
-
 	private String mgiType;
-	
 	private String synonymType;
 
 	// the synonym reference can be null, so this isn't working
 	//private String JNum = "";
+	
 	private String createdBy;
 	private String modifiedBy;
 }   	

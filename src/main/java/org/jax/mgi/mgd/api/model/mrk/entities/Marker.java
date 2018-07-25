@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.mrk.entities;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -25,6 +27,7 @@ import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
 import org.jax.mgi.mgd.api.model.gxd.entities.Index;
 import org.jax.mgi.mgd.api.model.map.entities.CoordinateFeature;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
+import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mld.entities.ExptMarker;
@@ -75,24 +78,25 @@ public class Marker extends BaseEntity {
 	private MarkerType markerType;
 
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_marker_key")
-	private MarkerNote markerNote;
-	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_marker_key")
-	private MarkerLocationCache markerLocation;
-	
-	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
+	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_marker_key")
+	private MarkerNote markerNote;
+	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_marker_key")
+	private MarkerLocationCache markerLocation;
 
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	@Where(clause="`_mgitype_key` = 2")
+	@OrderColumn(name="accID")
 	private Set<Accession> allAccessionIds;
 	
 	@OneToMany
@@ -152,8 +156,13 @@ public class Marker extends BaseEntity {
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	@Where(clause="`_mgitype_key` = 2")
-	private Set<MGISynonym> synonyms;
+	private Set<MGISynonym> synonymMarkers;
 
+	@OneToMany
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
+	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1049")
+	private Set<Note> MarkerLocationNotes;
+	
 	@ManyToMany
 	@JoinTable(name = "mrk_alias",
 		joinColumns = @JoinColumn(name = "_alias_key", referencedColumnName="_marker_key"),

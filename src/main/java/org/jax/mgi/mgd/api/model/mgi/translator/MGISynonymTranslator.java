@@ -16,10 +16,9 @@ public class MGISynonymTranslator extends BaseEntityDomainTranslator<MGISynonym,
 		domain.setSynonymKey(entity.get_synonym_key());
 		domain.set_object_key(entity.get_object_key());
 		domain.setSynonym(entity.getSynonym());
-	    
-	    
 	    domain.setMgiType(entity.getMgiType().getName());
 	    domain.setSynonymType(entity.getSynonymType().getSynonymType());
+	    
 		//if ( entity.getReference().getJnumid() != null ) {
 		//	domain.setJNum(entity.getReference().getJnumid());
 		//}

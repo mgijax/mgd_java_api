@@ -95,7 +95,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			Iterable<IndexDomain> indexes = indexTranslator.translateEntities(entity.getIndexes(), translationDepth - 1);
 			domain.setIndexes(IteratorUtils.toList(indexes.iterator()));
 			
-			Iterable<MGISynonymDomain> synonyms = synonymTranslator.translateEntities(entity.getSynonymMarkers(), translationDepth - 1);
+			Iterable<MGISynonymDomain> synonyms = synonymTranslator.translateEntities(entity.getSynonyms(), translationDepth - 1);
 			domain.setSynonyms(IteratorUtils.toList(synonyms.iterator()));
 			
 			List<String> secondaryMgiIds = new ArrayList<String>();

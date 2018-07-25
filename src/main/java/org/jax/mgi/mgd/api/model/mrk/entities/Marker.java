@@ -156,12 +156,12 @@ public class Marker extends BaseEntity {
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	@Where(clause="`_mgitype_key` = 2")
-	private Set<MGISynonym> synonymMarkers;
+	private Set<MGISynonym> synonyms;
 
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1049")
-	private Set<Note> MarkerLocationNotes;
+	private Set<Note> locationNotes;
 	
 	@ManyToMany
 	@JoinTable(name = "mrk_alias",

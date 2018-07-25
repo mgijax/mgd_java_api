@@ -9,6 +9,7 @@ import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.IndexDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mld.domain.ExperimentDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.seq.domain.SequenceDomain;
@@ -54,7 +55,7 @@ public class MarkerDomain extends BaseDomain {
 	private List<ExperimentDomain> expts;
     private List<IndexDomain> indexes;
     private List<MGISynonymDomain> synonyms;
-    //private List<NoteDomain> locationNotes;
+    private List<NoteDomain> locationNotes;
 	private List<ProbeDomain> probes;
     private List<String> references;
     private List<SequenceDomain> sequences;

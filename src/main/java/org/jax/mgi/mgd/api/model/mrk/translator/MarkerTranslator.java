@@ -18,8 +18,10 @@ import org.jax.mgi.mgd.api.model.gxd.translator.AntibodyTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.AssayTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.IndexTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTranslator;
+import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.mld.domain.ExperimentDomain;
 import org.jax.mgi.mgd.api.model.mld.entities.ExptMarker;
 import org.jax.mgi.mgd.api.model.mld.translator.ExperimentTranslator;
@@ -44,6 +46,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private ExperimentTranslator exptTranslator = new ExperimentTranslator();
 	private IndexTranslator indexTranslator = new IndexTranslator();
 	private MGISynonymTranslator synonymTranslator = new MGISynonymTranslator();
+	private NoteTranslator noteTranslator = new NoteTranslator();
 	private ProbeTranslator probeTranslator = new ProbeTranslator();
 	private ReferenceTranslator referenceTranslator = new ReferenceTranslator();
 	private SequenceTranslator sequenceTranslator = new SequenceTranslator();
@@ -98,6 +101,9 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			Iterable<MGISynonymDomain> synonyms = synonymTranslator.translateEntities(entity.getSynonyms(), translationDepth - 1);
 			domain.setSynonyms(IteratorUtils.toList(synonyms.iterator()));
 			
+			Iterable<NoteDomain> locationNotes = noteTranslator.translateEntities(entity.getLocationNotes(), translationDepth - 1);
+			domain.setLocationNotes(IteratorUtils.toList(locationNotes.iterator()));
+
 			List<String> secondaryMgiIds = new ArrayList<String>();
 			for (Accession sa : entity.getSecondaryMgiAccessionIds()) {
 				secondaryMgiIds.add(sa.getAccID());

@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.mrk.translator;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.collections4.IteratorUtils;
@@ -68,43 +69,79 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		domain.setModifiedBy(entity.getModifiedBy().getName());
 		domain.setCreation_date(entity.getCreation_date());
 		domain.setModification_date(entity.getModification_date());
-		
-		if(entity.getMarkerNote() != null) {
-			domain.setMarkerNote(entity.getMarkerNote().getNote());
-		}
-		
-		if(entity.getMarkerLocation() != null) {
-			String addProvider = "";
+		domain.setMgiAccessionId(entity.getMgiAccessionId().getAccID());
+
+		if(translationDepth > 0) {
+
+			// more Marker details
 			
-			domain.setLocationChromosome(entity.getMarkerLocation().getGenomicChromosome());
-			domain.setLocationStartCoordinate(entity.getMarkerLocation().getStartCoordinate());
-			domain.setLocationEndCoordinate(entity.getMarkerLocation().getEndCoordinate());
-			domain.setLocationStrand(entity.getMarkerLocation().getStrand());
-			domain.setLocationMapUnits(entity.getMarkerLocation().getMapUnits());
-			domain.setLocationProvider(entity.getMarkerLocation().getProvider());
-			domain.setLocationVersion(entity.getMarkerLocation().getVersion());
+			// at most one marker note
+			if(entity.getMarkerNote() != null) {
+				domain.setMarkerNote(entity.getMarkerNote().getNote());
+			}
+		
+			// at most one set of location info
+			if(entity.getMarkerLocation() != null) {
+				String addProvider = "";
 			
-			if(domain.getLocationProvider() != null) {
-				addProvider = " From " + domain.getLocationProvider() 
-					+ " annotation of " + domain.getLocationVersion();
-			}
-			if(domain.getLocationStartCoordinate() == null | domain.getLocationEndCoordinate() == null ) {
-				domain.setLocationText("Chr" + domain.getChromosome() 
-					+ addProvider);
-			}
-			else {
-				domain.setLocationText("Chr" + domain.getLocationChromosome() + ":"
+				domain.setLocationChromosome(entity.getMarkerLocation().getGenomicChromosome());
+				domain.setLocationStartCoordinate(entity.getMarkerLocation().getStartCoordinate());
+				domain.setLocationEndCoordinate(entity.getMarkerLocation().getEndCoordinate());
+				domain.setLocationStrand(entity.getMarkerLocation().getStrand());
+				domain.setLocationMapUnits(entity.getMarkerLocation().getMapUnits());
+				domain.setLocationProvider(entity.getMarkerLocation().getProvider());
+				domain.setLocationVersion(entity.getMarkerLocation().getVersion());
+			
+				if(domain.getLocationProvider() != null) {
+					addProvider = " From " + domain.getLocationProvider() 
+						+ " annotation of " + domain.getLocationVersion();
+				}
+				if(domain.getLocationStartCoordinate() == null | domain.getLocationEndCoordinate() == null ) {
+					domain.setLocationText("Chr" + domain.getChromosome() 
+						+ addProvider);
+				}
+				else {
+					domain.setLocationText("Chr" + domain.getLocationChromosome() + ":"
 						+ domain.getLocationStartCoordinate() + "-"
 						+ domain.getLocationEndCoordinate() + " bp, "
 						+ domain.getLocationStrand() + " strand"
 						+ addProvider
 						);
+				}
 			}
-		}
-		
-		domain.setMgiAccessionId(entity.getMgiAccessionId().getAccID());
+								
+			// all synonym objects
+			List<String> synonyms = new ArrayList<String>();
+			for (MGISynonym ms : entity.getSynonyms()) {
+				synonyms.add(ms.getSynonym());
+			}
+			Collections.sort(synonyms);
+			domain.setSynonyms(synonyms);
 
-		if(translationDepth > 0) {
+			// at most one locationNote
+			Iterable<NoteDomain> locationNotes = noteTranslator.translateEntities(entity.getLocationNotes(), translationDepth - 1);
+			if(locationNotes.iterator().hasNext() == true) {
+				domain.setLocationNote(locationNotes.iterator().next().getNoteChunk());
+			}
+			
+			// secondary ids
+			List<String> secondaryMgiIds = new ArrayList<String>();
+			for (Accession sa : entity.getSecondaryMgiAccessionIds()) {
+				secondaryMgiIds.add(sa.getAccID());
+			}
+			Collections.sort(secondaryMgiIds);
+			domain.setSecondaryMgiIds(secondaryMgiIds);
+			
+			// at most one mcvTerm
+			List<TermDomain> mcvTerms = new ArrayList<TermDomain>();
+			for (MarkerMCVCache mm : entity.getMcvTerms()) {
+				mcvTerms.add(termTranslator.translate(mm.getMcvTerm(), translationDepth - 1));
+			}
+			if(mcvTerms.size() > 0) {
+				domain.setMcvTerm(mcvTerms.get(0).getTerm());
+			}
+			
+			// Summary links
 			
 			Iterable<AlleleDomain> alleles = alleleTranslator.translateEntities(entity.getAlleles(), translationDepth - 1);
 			domain.setAlleles(IteratorUtils.toList(alleles.iterator()));
@@ -117,21 +154,6 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			
 			Iterable<IndexDomain> indexes = indexTranslator.translateEntities(entity.getIndexes(), translationDepth - 1);
 			domain.setIndexes(IteratorUtils.toList(indexes.iterator()));
-			
-			Iterable<MGISynonymDomain> synonyms = synonymTranslator.translateEntities(entity.getSynonyms(), translationDepth - 1);
-			domain.setSynonyms(IteratorUtils.toList(synonyms.iterator()));
-			
-			Iterable<NoteDomain> locationNotes = noteTranslator.translateEntities(entity.getLocationNotes(), translationDepth - 1);
-			if(locationNotes.iterator().hasNext() == true) {
-				domain.setLocationNote(locationNotes.iterator().next().getNoteChunk());
-			}
-			
-			List<String> secondaryMgiIds = new ArrayList<String>();
-			for (Accession sa : entity.getSecondaryMgiAccessionIds()) {
-				secondaryMgiIds.add(sa.getAccID());
-			}
-			Collections.sort(secondaryMgiIds);
-			domain.setSecondaryMgiIds(secondaryMgiIds);
 			
 			List<ExperimentDomain> expts = new ArrayList<ExperimentDomain>();
 			for (ExptMarker em : entity.getExptMarkers()) {
@@ -159,14 +181,6 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 				sequences.add(sequenceTranslator.translate(sm.getSequence(), translationDepth -1));
 			}
 			domain.setSequences(sequences);
-			
-			List<TermDomain> mcvTerms = new ArrayList<TermDomain>();
-			for (MarkerMCVCache mm : entity.getMcvTerms()) {
-				mcvTerms.add(termTranslator.translate(mm.getMcvTerm(), translationDepth - 1));
-			}
-			if(mcvTerms.size() > 0) {
-				domain.setMcvTerm(mcvTerms.get(0).getTerm());
-			}
 			
 		}
 		

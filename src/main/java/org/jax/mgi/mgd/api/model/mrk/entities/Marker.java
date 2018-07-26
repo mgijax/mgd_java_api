@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.mrk.entities;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;

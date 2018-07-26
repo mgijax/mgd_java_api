@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.mrk.translator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.collections4.IteratorUtils;
@@ -129,6 +130,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			for (Accession sa : entity.getSecondaryMgiAccessionIds()) {
 				secondaryMgiIds.add(sa.getAccID());
 			}
+			Collections.sort(secondaryMgiIds);
 			domain.setSecondaryMgiIds(secondaryMgiIds);
 			
 			List<ExperimentDomain> expts = new ArrayList<ExperimentDomain>();

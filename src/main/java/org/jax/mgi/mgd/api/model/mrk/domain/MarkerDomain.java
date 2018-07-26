@@ -42,6 +42,8 @@ public class MarkerDomain extends BaseDomain {
 	private String locationMapUnits;
 	private String locationProvider;
 	private String locationVersion;
+	private String locationNote;
+	private String mcvTerm;
 	private String createdBy;
 	private String modifiedBy;
 	private Date creation_date;
@@ -55,9 +57,8 @@ public class MarkerDomain extends BaseDomain {
 	private List<ExperimentDomain> expts;
     private List<IndexDomain> indexes;
     private List<MGISynonymDomain> synonyms;
-    private List<NoteDomain> locationNotes;
 	private List<ProbeDomain> probes;
     private List<String> references;
     private List<SequenceDomain> sequences;
-    private List<TermDomain> mcvTerms;
+    
 }

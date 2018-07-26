@@ -102,7 +102,9 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			domain.setSynonyms(IteratorUtils.toList(synonyms.iterator()));
 			
 			Iterable<NoteDomain> locationNotes = noteTranslator.translateEntities(entity.getLocationNotes(), translationDepth - 1);
-			domain.setLocationNote(locationNotes.iterator().next().getNoteChunk());
+			if(locationNotes.iterator().next() != null) {
+				domain.setLocationNote(locationNotes.iterator().next().getNoteChunk());
+			}
 			
 			List<String> secondaryMgiIds = new ArrayList<String>();
 			for (Accession sa : entity.getSecondaryMgiAccessionIds()) {

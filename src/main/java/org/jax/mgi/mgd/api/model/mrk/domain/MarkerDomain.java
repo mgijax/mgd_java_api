@@ -42,6 +42,7 @@ public class MarkerDomain extends BaseDomain {
 	private String locationMapUnits;
 	private String locationProvider;
 	private String locationVersion;
+	private String locationText;
 	private String locationNote;
 	private String mcvTerm;
 	private String createdBy;

@@ -73,6 +73,8 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		}
 		
 		if(entity.getMarkerLocation() != null) {
+			String addProvider = "";
+			
 			domain.setLocationChromosome(entity.getMarkerLocation().getGenomicChromosome());
 			domain.setLocationStartCoordinate(entity.getMarkerLocation().getStartCoordinate());
 			domain.setLocationEndCoordinate(entity.getMarkerLocation().getEndCoordinate());
@@ -80,6 +82,23 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			domain.setLocationMapUnits(entity.getMarkerLocation().getMapUnits());
 			domain.setLocationProvider(entity.getMarkerLocation().getProvider());
 			domain.setLocationVersion(entity.getMarkerLocation().getVersion());
+			
+			if(domain.getLocationProvider() != null) {
+				addProvider = " From " + domain.getLocationProvider() 
+					+ " annotation of " + domain.getLocationVersion();
+			}
+			if(domain.getLocationStartCoordinate() == null | domain.getLocationEndCoordinate() == null ) {
+				domain.setLocationText("Chr" + domain.getChromosome() 
+					+ addProvider);
+			}
+			else {
+				domain.setLocationText("Chr" + domain.getLocationChromosome() + ":"
+						+ domain.getLocationStartCoordinate() + "-"
+						+ domain.getLocationEndCoordinate() + " bp, "
+						+ domain.getLocationStrand() + " strand"
+						+ addProvider
+						);
+			}
 		}
 		
 		domain.setMgiAccessionId(entity.getMgiAccessionId().getAccID());

@@ -128,6 +128,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 				domain.setMcvTerm(mcvTerms.get(0).getTerm());
 			}
 			
+			// biotypes
 			Iterable<SequenceMarkerCacheDomain> biotypes = biotypesTranslator.translateEntities(entity.getBiotypes(), translationDepth - 1);
 			domain.setBiotypes(IteratorUtils.toList(biotypes.iterator()));
 			
@@ -145,6 +146,10 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 				domain.setHasAssays(true);
 			}
 			
+			if(entity.getAssayResults().isEmpty() == false) {
+				domain.setHasAssayResults(true);
+			}
+			
 			if(entity.getIndexes().isEmpty() == false) {
 				domain.setHasIndexes(true);
 			}
@@ -157,9 +162,9 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 				domain.setHasProbes(true);
 			}
 			
-			//if(entity.getMarkerReferenceCache().isEmpty() == false) {
-				//domain.setHasReferences(true);
-			//}
+			if(entity.getReferenceMarkers().isEmpty() == false) {
+				domain.setHasReferences(true);
+			}
 			
 			if(entity.getSequenceMarkers().isEmpty() == false) {
 				domain.setHasSequences(true);

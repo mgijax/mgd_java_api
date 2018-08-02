@@ -2,16 +2,12 @@ package org.jax.mgi.mgd.api.model.mrk.translator;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
-import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
-import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
@@ -19,23 +15,15 @@ import org.jax.mgi.mgd.api.model.gxd.domain.IndexDomain;
 import org.jax.mgi.mgd.api.model.gxd.translator.AntibodyTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.AssayTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.IndexTranslator;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
-import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTranslator;
+import org.jax.mgi.mgd.api.model.mgi.entities.Relationship;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
-import org.jax.mgi.mgd.api.model.mld.domain.ExperimentDomain;
-import org.jax.mgi.mgd.api.model.mld.entities.ExptMarker;
 import org.jax.mgi.mgd.api.model.mld.translator.ExperimentTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.entities.MarkerMCVCache;
-import org.jax.mgi.mgd.api.model.mrk.entities.MarkerReferenceCache;
-import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
-import org.jax.mgi.mgd.api.model.prb.entities.ProbeMarker;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeTranslator;
-import org.jax.mgi.mgd.api.model.seq.domain.SequenceDomain;
-import org.jax.mgi.mgd.api.model.seq.entities.SequenceMarkerCache;
 import org.jax.mgi.mgd.api.model.seq.translator.SequenceTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.translator.TermTranslator;
@@ -47,13 +35,12 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private AssayTranslator assayTranslator = new AssayTranslator();
 	private ExperimentTranslator exptTranslator = new ExperimentTranslator();
 	private IndexTranslator indexTranslator = new IndexTranslator();
-	private MGISynonymTranslator synonymTranslator = new MGISynonymTranslator();
 	private NoteTranslator noteTranslator = new NoteTranslator();
 	private ProbeTranslator probeTranslator = new ProbeTranslator();
 	private ReferenceTranslator referenceTranslator = new ReferenceTranslator();
 	private SequenceTranslator sequenceTranslator = new SequenceTranslator();
 	private TermTranslator termTranslator = new TermTranslator();
-    
+
 	@Override
 	protected MarkerDomain entityToDomain(Marker entity, int translationDepth) {
 		MarkerDomain domain = new MarkerDomain();
@@ -109,7 +96,13 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 						);
 				}
 			}
-								
+				
+			// at most one locationNote
+			Iterable<NoteDomain> locationNotes = noteTranslator.translateEntities(entity.getLocationNotes(), translationDepth - 1);
+			if(locationNotes.iterator().hasNext() == true) {
+				domain.setLocationNote(locationNotes.iterator().next().getNoteChunk());
+			}
+			
 			// all synonym objects
 			List<String> synonyms = new ArrayList<String>();
 			for (MGISynonym ms : entity.getSynonyms()) {
@@ -118,11 +111,21 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			Collections.sort(synonyms);
 			domain.setSynonyms(synonyms);
 
-			// at most one locationNote
-			Iterable<NoteDomain> locationNotes = noteTranslator.translateEntities(entity.getLocationNotes(), translationDepth - 1);
-			if(locationNotes.iterator().hasNext() == true) {
-				domain.setLocationNote(locationNotes.iterator().next().getNoteChunk());
+			// all gene-to-tss relationships
+			List<String> geneToTssRelationships = new ArrayList<String>();
+			for (Relationship ms : entity.getGeneToTssRelationships()) {
+				geneToTssRelationships.add(ms.getTssSymbol().getSymbol());
 			}
+			Collections.sort(geneToTssRelationships);
+			domain.setGeneToTssRelationships(geneToTssRelationships);
+			
+			// all tss-to-gene relationships
+			List<String> tssToGeneRelationships = new ArrayList<String>();
+			for (Relationship ms : entity.getTssToGeneRelationships()) {
+				tssToGeneRelationships.add(ms.getGeneSymbol().getSymbol());
+			}
+			Collections.sort(tssToGeneRelationships);
+			domain.setTssToGeneRelationships(tssToGeneRelationships);
 			
 			// secondary ids
 			List<String> secondaryMgiIds = new ArrayList<String>();
@@ -141,47 +144,39 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 				domain.setMcvTerm(mcvTerms.get(0).getTerm());
 			}
 			
-			// Summary links
+			// Summary links : by using counts
 			
-			Iterable<AlleleDomain> alleles = alleleTranslator.translateEntities(entity.getAlleles(), translationDepth - 1);
-			domain.setAlleles(IteratorUtils.toList(alleles.iterator()));
-			
-			Iterable<AntibodyDomain> antibodies = antibodyTranslator.translateEntities(entity.getAntibodies(), translationDepth - 1);
-			domain.setAntibodies(IteratorUtils.toList(antibodies.iterator()));
-			
-			Iterable<AssayDomain> assays = assayTranslator.translateEntities(entity.getAssays(), translationDepth - 1);
-			domain.setAssays(IteratorUtils.toList(assays.iterator()));
-			
-			Iterable<IndexDomain> indexes = indexTranslator.translateEntities(entity.getIndexes(), translationDepth - 1);
-			domain.setIndexes(IteratorUtils.toList(indexes.iterator()));
-			
-			List<ExperimentDomain> expts = new ArrayList<ExperimentDomain>();
-			for (ExptMarker em : entity.getExptMarkers()) {
-				expts.add(exptTranslator.translate(em.getExpt()));
+			if(entity.getAlleles().isEmpty() == false) {
+				domain.setHasAlleles(true);
 			}
-			domain.setExpts(expts);
 			
-			List<ProbeDomain> probes = new ArrayList<ProbeDomain>();
-			for (ProbeMarker pm : entity.getProbeMarkers()) {
-				probes.add(probeTranslator.translate(pm.getProbe()));
+			if(entity.getAntibodies().isEmpty() == false) {
+				domain.setHasAntibodies(true);
 			}
-			domain.setProbes(probes);
 			
-			//very slow/sql is reading too much (bib_workflow)
-			//List<String> references = new ArrayList<String>();
-			//for (MarkerReferenceCache mrc : entity.getReferenceMarkers()) {
-				//Reference r = mrc.getReference();
-				//ReferenceDomain rd = referenceTranslator.translate(r);
-				//references.add(rd.getJnumid());
+			if(entity.getAssays().isEmpty() == false) {
+				domain.setHasAssays(true);
+			}
+			
+			if(entity.getIndexes().isEmpty() == false) {
+				domain.setHasIndexes(true);
+			}
+			
+			if(entity.getExptMarkers().isEmpty() == false) {
+				domain.setHasExperiments(true);
+			}
+			
+			if(entity.getProbeMarkers().isEmpty() == false) {
+				domain.setHasProbes(true);
+			}
+			
+			//if(entity.getMarkerReferenceCache().isEmpty() == false) {
+				//domain.setHasReferences(true);
 			//}
-			//domain.setReferences(references);
 			
-			List<SequenceDomain> sequences = new ArrayList<SequenceDomain>();
-			for (SequenceMarkerCache sm : entity.getSequenceMarkers()) {
-				sequences.add(sequenceTranslator.translate(sm.getSequence(), translationDepth -1));
+			if(entity.getSequenceMarkers().isEmpty() == false) {
+				domain.setHasSequences(true);
 			}
-			domain.setSequences(sequences);
-			
 		}
 		
 		return domain;

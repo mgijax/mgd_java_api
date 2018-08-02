@@ -51,7 +51,7 @@ public class Allele extends BaseEntity {
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_marker_key")
 	private Marker marker;
-	
+		 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_strain_key")
 	private ProbeStrain strain;

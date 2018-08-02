@@ -8,12 +8,9 @@ import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.IndexDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mld.domain.ExperimentDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.seq.domain.SequenceDomain;
-import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -52,14 +49,19 @@ public class MarkerDomain extends BaseDomain {
 	private String mgiAccessionId;
     
 	private List<String> synonyms;
+	private List<String> geneToTssRelationships;
+	private List<String> tssToGeneRelationships;
 	private List<String> secondaryMgiIds;
-	private List<AlleleDomain> alleles;
-	private List<AntibodyDomain> antibodies;
-	private List<AssayDomain> assays;
-	private List<ExperimentDomain> expts;
-    private List<IndexDomain> indexes;
-	private List<ProbeDomain> probes;
     private List<String> references;
-    private List<SequenceDomain> sequences;
     
+    private Boolean hasAlleles = false;
+    private Boolean hasAntibodies = false;
+    private Boolean hasAssays = false;
+    private Boolean hasAssayResults = false;
+    private Boolean hasExperiments = false;
+    private Boolean hasIndexes = false;
+    private Boolean hasProbes = false;
+    private Boolean hasReferences = false;
+    private Boolean hasSequences = false;
+	
 }

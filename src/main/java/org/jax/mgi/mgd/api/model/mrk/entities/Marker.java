@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model.mrk.entities;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,6 +16,7 @@ import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
@@ -29,6 +29,7 @@ import org.jax.mgi.mgd.api.model.map.entities.CoordinateFeature;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
+import org.jax.mgi.mgd.api.model.mgi.entities.Relationship;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mld.entities.ExptMarker;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeMarker;
@@ -155,13 +156,23 @@ public class Marker extends BaseEntity {
 
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
-	@Where(clause="`_mgitype_key` = 2")
-	private Set<MGISynonym> synonyms;
-
-	@OneToMany
-	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1049")
 	private Set<Note> locationNotes;
+	
+	@OneToMany
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
+	@Where(clause="`_mgitype_key` = 2")
+	private Set<MGISynonym> synonyms;
+	
+	@OneToMany
+	@JoinColumn(name="_object_key_1", referencedColumnName="_marker_key")
+	@Where(clause="`_category_key` = 1008")
+	private Set<Relationship> tssToGeneRelationships;
+	
+	@OneToMany
+	@JoinColumn(name="_object_key_2", referencedColumnName="_marker_key")
+	@Where(clause="`_category_key` = 1008")
+	private Set<Relationship> geneToTssRelationships;
 	
 	@ManyToMany
 	@JoinTable(name = "mrk_alias",

@@ -4,13 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
-import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.IndexDomain;
-import org.jax.mgi.mgd.api.model.mld.domain.ExperimentDomain;
-import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
-import org.jax.mgi.mgd.api.model.seq.domain.SequenceDomain;
+import org.jax.mgi.mgd.api.model.seq.domain.SequenceMarkerCacheDomain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -53,7 +47,8 @@ public class MarkerDomain extends BaseDomain {
 	private List<String> tssToGeneRelationships;
 	private List<String> secondaryMgiIds;
     private List<String> references;
-    
+    private List<SequenceMarkerCacheDomain> biotypes;
+
     private Boolean hasAlleles = false;
     private Boolean hasAntibodies = false;
     private Boolean hasAssays = false;

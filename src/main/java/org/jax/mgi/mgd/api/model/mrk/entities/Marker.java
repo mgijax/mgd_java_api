@@ -16,7 +16,6 @@ import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
@@ -142,11 +141,16 @@ public class Marker extends BaseEntity {
 	
 	@OneToMany
 	@JoinColumn(name="_marker_key")
+	@Where(clause="`_logicaldb_key` in (59, 60)")
+	private Set<SequenceMarkerCache> biotypes;
+	
+	@OneToMany
+	@JoinColumn(name="_marker_key")
 	private Set<MarkerReferenceCache> referenceMarkers;
 	
 	@OneToMany
 	@JoinColumn(name="_marker_key")
-	@Where (clause="`qualifier` = 'D' ")
+	@Where(clause="`qualifier` = 'D' ")
 	private Set<MarkerMCVCache> mcvTerms;
 	
 	@OneToMany

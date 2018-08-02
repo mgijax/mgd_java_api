@@ -4,42 +4,26 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
-import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
-import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
-import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
-import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.IndexDomain;
-import org.jax.mgi.mgd.api.model.gxd.translator.AntibodyTranslator;
-import org.jax.mgi.mgd.api.model.gxd.translator.AssayTranslator;
-import org.jax.mgi.mgd.api.model.gxd.translator.IndexTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.Relationship;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
-import org.jax.mgi.mgd.api.model.mld.translator.ExperimentTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.entities.MarkerMCVCache;
-import org.jax.mgi.mgd.api.model.prb.translator.ProbeTranslator;
-import org.jax.mgi.mgd.api.model.seq.translator.SequenceTranslator;
+import org.jax.mgi.mgd.api.model.seq.domain.SequenceMarkerCacheDomain;
+import org.jax.mgi.mgd.api.model.seq.translator.SequenceMarkerCacheTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.translator.TermTranslator;
 
 public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerDomain> {
 
-	private AlleleTranslator alleleTranslator = new AlleleTranslator();
-	private AntibodyTranslator antibodyTranslator = new AntibodyTranslator();
-	private AssayTranslator assayTranslator = new AssayTranslator();
-	private ExperimentTranslator exptTranslator = new ExperimentTranslator();
-	private IndexTranslator indexTranslator = new IndexTranslator();
 	private NoteTranslator noteTranslator = new NoteTranslator();
-	private ProbeTranslator probeTranslator = new ProbeTranslator();
-	private ReferenceTranslator referenceTranslator = new ReferenceTranslator();
-	private SequenceTranslator sequenceTranslator = new SequenceTranslator();
 	private TermTranslator termTranslator = new TermTranslator();
+	private SequenceMarkerCacheTranslator biotypesTranslator = new SequenceMarkerCacheTranslator();
 
 	@Override
 	protected MarkerDomain entityToDomain(Marker entity, int translationDepth) {
@@ -143,6 +127,9 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			if(mcvTerms.size() > 0) {
 				domain.setMcvTerm(mcvTerms.get(0).getTerm());
 			}
+			
+			Iterable<SequenceMarkerCacheDomain> biotypes = biotypesTranslator.translateEntities(entity.getBiotypes(), translationDepth - 1);
+			domain.setBiotypes(IteratorUtils.toList(biotypes.iterator()));
 			
 			// Summary links : by using counts
 			

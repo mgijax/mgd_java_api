@@ -1,11 +1,15 @@
 package org.jax.mgi.mgd.api.model.seq.translator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.acc.entities.ActualDB;
 import org.jax.mgi.mgd.api.model.seq.domain.SequenceMarkerCacheDomain;
 import org.jax.mgi.mgd.api.model.seq.entities.SequenceMarkerCache;
 
 public class SequenceMarkerCacheTranslator extends BaseEntityDomainTranslator<SequenceMarkerCache, SequenceMarkerCacheDomain> {
-
+	
 	@Override
 	protected SequenceMarkerCacheDomain entityToDomain(SequenceMarkerCache entity, int translationDepth) {
 		
@@ -18,14 +22,17 @@ public class SequenceMarkerCacheTranslator extends BaseEntityDomainTranslator<Se
 		domain.setModification_date(entity.getModification_date());
 		
 		if(translationDepth > 0) {
-			// load relationships
+			List<String> actualurls = new ArrayList<String>();
+			for (ActualDB adb : entity.getLogicalDB().getActualDBs()) {
+				actualurls.add(adb.getUrl());
+			}
+			domain.setActualURLs(actualurls);
 		}
 		return domain;
 	}
 
 	@Override
-	protected SequenceMarkerCache domainToEntity(SequenceMarkerCacheDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
+	protected SequenceMarkerCache domainToEntity(SequenceMarkerCacheDomain domain, int translationDepth) {		
 		return null;
 	}
 

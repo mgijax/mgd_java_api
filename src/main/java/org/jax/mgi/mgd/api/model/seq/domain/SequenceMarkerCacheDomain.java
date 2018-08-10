@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.seq.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
@@ -31,5 +32,6 @@ public class SequenceMarkerCacheDomain extends BaseDomain {
 	private Date modification_date;
 	
 	private String logicalDB;
+	private List<String> actualURLs;
 
 }

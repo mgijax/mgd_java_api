@@ -41,7 +41,7 @@ public class MarkerDomain extends BaseDomain {
 	private Date creation_date;
 	private Date modification_date;
 	private String mgiAccessionId;
-    
+	
 	private List<String> synonyms;
 	private List<String> geneToTssRelationships;
 	private List<String> tssToGeneRelationships;
@@ -58,5 +58,5 @@ public class MarkerDomain extends BaseDomain {
     private Boolean hasProbes = false;
     private Boolean hasReferences = false;
     private Boolean hasSequences = false;
-	
+        
 }

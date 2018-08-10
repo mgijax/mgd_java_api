@@ -137,7 +137,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			if(entity.getAlleles().isEmpty() == false) {
 				domain.setHasAlleles(true);
 			}
-			
+						
 			if(entity.getAntibodies().isEmpty() == false) {
 				domain.setHasAntibodies(true);
 			}

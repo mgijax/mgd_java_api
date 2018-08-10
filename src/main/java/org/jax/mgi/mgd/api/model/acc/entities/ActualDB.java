@@ -32,9 +32,9 @@ public class ActualDB extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_logicaldb_key", referencedColumnName="_logicaldb_key")
-	private LogicalDB logicaldb;
+	//@OneToOne(fetch=FetchType.LAZY)
+	//@JoinColumn(name="_logicaldb_key", referencedColumnName="_logicaldb_key")
+	//private LogicalDB logicaldb;
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

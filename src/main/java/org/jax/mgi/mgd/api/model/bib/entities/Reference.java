@@ -85,27 +85,18 @@ public class Reference extends BaseEntity {
 	@Column(name="modification_date")
 	private Date modification_date;
 
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
 	private ReferenceStatusView statusView;
 
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdByUser;
 
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedByUser;
 
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")
-	private Term referenceTypeTerm;
-	
-	// one to one, because counts will always exist
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_refs_key")
-	private ReferenceAssociatedData associatedData;
-	
 	// maps workflow group abbrev to current status for that group, cached in memory for efficiency - not persisted
 	@Transient
 	private Map<String,String> workflowStatusCache;
@@ -138,14 +129,17 @@ public class Reference extends BaseEntity {
 	@BatchSize(size=200)
 	private List<ReferenceMarkerAssociation> markerAssociations;
 
+	@OneToOne
+	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")
+	private Term referenceTypeTerm;
+
 	// one to many, because notes might not exist (leaving it 1-0)
 	@OneToMany
 	@JoinColumn(name="_refs_key")
 	private List<ReferenceNote> notes;
 
 	// one to many, because row in citation cache might not exist (leaving it 1-0)
-	//@OneToMany(fetch=FetchType.EAGER)
-	@OneToMany
+	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key")
 	private List<ReferenceCitationData> citationData;
 
@@ -154,8 +148,12 @@ public class Reference extends BaseEntity {
 	@JoinColumn(name="_refs_key")
 	private List<ReferenceBook> bookList;
 
-	//@OneToMany(fetch=FetchType.EAGER)
-	@OneToMany
+	// one to one, because counts will always exist
+	@OneToOne
+	@JoinColumn(name="_refs_key")
+	private ReferenceAssociatedData associatedData;
+
+	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key")
 	private Set<ReferenceWorkflowData> workflowData;
 

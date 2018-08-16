@@ -130,6 +130,9 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			
 			// biotypes
 			Iterable<SequenceMarkerCacheDomain> biotypes = biotypesTranslator.translateEntities(entity.getBiotypes(), translationDepth - 1);
+			if(biotypes.iterator().hasNext() == true) {
+				domain.setHasBiotypes(true);
+			}
 			domain.setBiotypes(IteratorUtils.toList(biotypes.iterator()));
 			
 			// Summary links : by using counts

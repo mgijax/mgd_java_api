@@ -58,5 +58,6 @@ public class MarkerDomain extends BaseDomain {
     private Boolean hasProbes = false;
     private Boolean hasReferences = false;
     private Boolean hasSequences = false;
+    private Boolean hasBiotypes = false;
         
 }

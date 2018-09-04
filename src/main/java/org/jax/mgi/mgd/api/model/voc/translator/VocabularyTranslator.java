@@ -11,7 +11,7 @@ public class VocabularyTranslator extends BaseEntityDomainTranslator<Vocabulary,
 	private TermTranslator termTranslator = new TermTranslator();
 	
 	@Override
-	protected VocabularyDomain entityToDomain(Vocabulary entity) {
+	protected VocabularyDomain entityToDomain(Vocabulary entity, int translationDepth) {
 		VocabularyDomain domain = new VocabularyDomain();
 		
 		domain.set_vocab_key(entity.get_vocab_key());
@@ -21,14 +21,16 @@ public class VocabularyTranslator extends BaseEntityDomainTranslator<Vocabulary,
 		domain.setCreation_date(entity.getCreation_date());
 		domain.setModification_date(entity.getModification_date());
 		
-		Iterable<TermDomain> terms = termTranslator.translateEntities(entity.getTerms());
-		domain.setTerms(IteratorUtils.toList(terms.iterator()));
+		if(translationDepth > 0) {
+			Iterable<TermDomain> terms = termTranslator.translateEntities(entity.getTerms(), translationDepth - 1);
+			domain.setTerms(IteratorUtils.toList(terms.iterator()));
+		}
 		
 		return domain;
 	}
 
 	@Override
-	protected Vocabulary domainToEntity(VocabularyDomain domain) {
+	protected Vocabulary domainToEntity(VocabularyDomain domain, int translationDepth) {
 		// Needs to be implemented once we choose to save terms
 		return null;
 	}

@@ -1,15 +1,18 @@
 package org.jax.mgi.mgd.api.model.mrk.entities;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -17,22 +20,28 @@ import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
+import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.gxd.entities.Antibody;
+import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
+import org.jax.mgi.mgd.api.model.gxd.entities.ExpressionCache;
+import org.jax.mgi.mgd.api.model.gxd.entities.Index;
 import org.jax.mgi.mgd.api.model.map.entities.CoordinateFeature;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
+import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
+import org.jax.mgi.mgd.api.model.mgi.entities.Relationship;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mld.entities.ExptMarker;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeMarker;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrainMarker;
+import org.jax.mgi.mgd.api.model.seq.entities.SequenceMarkerCache;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Marker Model Object")
 @Table(name="mrk_marker")
 public class Marker extends BaseEntity {
 
@@ -52,37 +61,43 @@ public class Marker extends BaseEntity {
 	@ApiModelProperty(value="cytogenetic band")
 	private String cytogeneticOffset;
 
-	@OneToOne
+	private Date creation_date;
+	private Date modification_date;
+	
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_organism_key")
 	private Organism organism;
 
-	//@ApiModelProperty(value="Controlled vocabulary table for all Marker Statuses (approved, withdrawn)")
-	@OneToOne
+	//@ApiModelProperty(value="Controlled vocabulary table for all Marker Statuses (official, withdrawn, reserved)")
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="_marker_status_key")
 	private MarkerStatus markerStatus;
 
-	//need MRK_Types entity
 	//@ApiModelProperty(value="Controlled vocabulary table for all Marker Types")
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_marker_type_key")
 	private MarkerType markerType;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
-
-	@OneToOne
-	@JoinColumn(name="_marker_key", referencedColumnName="_object_key")
-	@Where(clause="`_mgitype_key` = 2 AND preferred = 1 and `_logicaldb_key` = 1")
-	private Accession mgiAccessionId;
+	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_marker_key")
+	private MarkerNote markerNote;
+	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_marker_key")
+	private MarkerLocationCache markerLocation;
 
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
-	@Where(clause="`_mgitype_key` = 2 AND preferred = 1")
+	@Where(clause="`_mgitype_key` = 2")
+	@OrderColumn(name="accID")
 	private Set<Accession> allAccessionIds;
 	
 	@OneToMany
@@ -91,12 +106,58 @@ public class Marker extends BaseEntity {
 	
 	@OneToMany
 	@JoinColumn(name="_marker_key")
+	private Set<Allele> alleles = new HashSet<Allele>();
+	
+	@OneToMany
+	@JoinColumn(name="_marker_key")
 	private Set<MarkerOffset> offsets;
+	
+	@OneToMany
+	@JoinColumn(name="_marker_key")
+	private Set<MarkerStrain> markerStrain;
 	
 	@OneToMany
 	@JoinColumn(name="_marker_key")
 	private Set<ProbeMarker> probeMarkers;
 
+	@OneToMany
+	@JoinColumn(name="_marker_key")
+	private Set<ProbeStrainMarker> probeStrainMarkers;
+	
+	@OneToMany
+	@JoinColumn(name="_marker_key")
+	private Set<Assay> assays;
+	
+	@OneToMany
+	@JoinColumn(name="_marker_key")
+	private Set<ExpressionCache> assayResults;
+	
+	@OneToMany
+	@JoinColumn(name="_marker_key")
+	private Set<Index> indexes;
+	
+	@OneToMany
+	@JoinColumn(name="_marker_key")
+	private Set<ExptMarker> exptMarkers;
+	
+	@OneToMany
+	@JoinColumn(name="_marker_key")
+	private Set<SequenceMarkerCache> sequenceMarkers;
+	
+	@OneToMany
+	@JoinColumn(name="_marker_key")
+	@Where(clause="`_logicaldb_key` in (59, 60)")
+	private Set<SequenceMarkerCache> biotypes;
+	
+	@OneToMany
+	@JoinColumn(name="_marker_key")
+	private Set<MarkerReferenceCache> referenceMarkers;
+	
+	@OneToMany
+	@JoinColumn(name="_marker_key")
+	@Where(clause="`qualifier` = 'D' ")
+	private Set<MarkerMCVCache> mcvTerms;
+	
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	@Where(clause="`_mgitype_key` = 2")
@@ -104,12 +165,23 @@ public class Marker extends BaseEntity {
 
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
+	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1049")
+	private Set<Note> locationNotes;
+	
+	@OneToMany
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	@Where(clause="`_mgitype_key` = 2")
 	private Set<MGISynonym> synonyms;
 	
 	@OneToMany
-	@JoinColumn(name="_marker_key")
-	private Set<ProbeStrainMarker> probeStrainMarkers;
+	@JoinColumn(name="_object_key_1", referencedColumnName="_marker_key")
+	@Where(clause="`_category_key` = 1008")
+	private Set<Relationship> tssToGeneRelationships;
+	
+	@OneToMany
+	@JoinColumn(name="_object_key_2", referencedColumnName="_marker_key")
+	@Where(clause="`_category_key` = 1008")
+	private Set<Relationship> geneToTssRelationships;
 	
 	@ManyToMany
 	@JoinTable(name = "mrk_alias",
@@ -126,11 +198,36 @@ public class Marker extends BaseEntity {
 	private Set<Marker> currentMarkers;
 
 	@ManyToMany
-	@JoinTable(name = "gxd_antibody_marker",
+	@JoinTable(name = "gxd_antibodymarker",
 		joinColumns = @JoinColumn(name = "_marker_key"),
 		inverseJoinColumns = @JoinColumn(name = "_antibody_key")
 	)
 	private Set<Antibody> antibodies;
+
+	public Accession getMgiAccessionId() {
+		for(Accession a: allAccessionIds) {
+			if(a.get_mgitype_key() == 2 
+					&& a.get_logicaldb_key() == 1 
+					&& a.getPreferred() == 1) {
+				return a;
+			}
+		}
+		return new Accession();
+	}
+
+	@Transient
+	public Set<Accession> getSecondaryMgiAccessionIds() {
+		HashSet<Accession> set = new HashSet<Accession>();
+		for(Accession a: allAccessionIds) {
+			if(a.get_mgitype_key() == 2 
+					&& a.get_logicaldb_key() == 1 
+					&& a.getPreferred() == 0
+					&& a.getPrefixPart().equals("MGI:")) {
+				set.add(a);
+			}
+		}
+		return set;
+	}
 
 	@Transient
 	public Set<Accession> getAccessionIdsByLogicalDb(LogicalDB db) {
@@ -148,5 +245,4 @@ public class Marker extends BaseEntity {
 		return set;
 	}
 	
-
 }

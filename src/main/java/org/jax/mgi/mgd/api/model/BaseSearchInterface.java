@@ -1,6 +1,8 @@
 package org.jax.mgi.mgd.api.model;
 
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -8,7 +10,7 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
-public interface BaseSearchInterface<D, F> {
+public interface BaseSearchInterface<D extends BaseDomain, F extends BaseSearchForm> {
 
 	@POST
 	@ApiOperation(value = "Search by Fields")

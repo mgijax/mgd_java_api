@@ -12,7 +12,7 @@ import org.jax.mgi.mgd.api.util.Constants;
 
 public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, ReferenceDomain>{
 	@Override
-	protected ReferenceDomain entityToDomain(Reference entity) {
+	protected ReferenceDomain entityToDomain(Reference entity, int translationDepth) {
 		ReferenceDomain domain = new ReferenceDomain();
 
 		// basic 1-for-1 fields
@@ -109,7 +109,7 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 	}
 
 	@Override
-	protected Reference domainToEntity(ReferenceDomain domain) {
+	protected Reference domainToEntity(ReferenceDomain domain, int translationDepth) {
 		// Cannot do translation here, as it requires lookup of actual entity from database.  Must
 		// instead work with ReferenceRepository.
 		

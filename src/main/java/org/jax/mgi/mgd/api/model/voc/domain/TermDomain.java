@@ -18,10 +18,10 @@ public class TermDomain extends BaseDomain {
 	private String note;
 	private Integer sequenceNum;
 	private Integer isObsolete = 0;
-	private Date creation_date;
-	private Date modification_date;
-
 	private String createdBy;
 	private String modifiedBy;
+	private Date creation_date;
+	private Date modification_date;
+	
 	private String vocabName;
 }

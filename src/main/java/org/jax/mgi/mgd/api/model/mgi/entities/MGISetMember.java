@@ -59,9 +59,4 @@ public class MGISetMember extends BaseEntity {
 	@Where(clause="mgiSet.`_mgitype_key` = 16")
 	private ActualDB actualDb;
 	
-	@OneToOne
-	@JoinColumn(name="_object_key", referencedColumnName="_statistic_key", insertable=false, updatable=false)
-	@Where(clause="mgiSet.`_mgitype_key` = 34")
-	private MGIStatistic stat;
-	
 }

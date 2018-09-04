@@ -47,6 +47,4 @@ public class ActualDBService extends BaseService<ActualDBDomain> implements Base
 	}
 
 
-
-
 }

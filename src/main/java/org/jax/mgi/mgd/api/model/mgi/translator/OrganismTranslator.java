@@ -7,7 +7,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 public class OrganismTranslator extends BaseEntityDomainTranslator<Organism, OrganismDomain> {
 
 	@Override
-	protected OrganismDomain entityToDomain(Organism entity) {
+	protected OrganismDomain entityToDomain(Organism entity, int translationDepth) {
 		OrganismDomain domain = new OrganismDomain();
 
 		domain.set_organism_key(entity.get_organism_key());
@@ -20,7 +20,7 @@ public class OrganismTranslator extends BaseEntityDomainTranslator<Organism, Org
 	}
 
 	@Override
-	protected Organism domainToEntity(OrganismDomain domain) {
+	protected Organism domainToEntity(OrganismDomain domain, int translationDepth) {
 		// TODO Auto-generated method stub
 		return null;
 	}

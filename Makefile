@@ -5,6 +5,9 @@
 all:
 	mvn clean package
 
+clean:
+	find /tmp/wildfly* -type f -exec rm -rf {} \;
+
 run:
 	java -jar target/mgd_java_api-swarm.jar -Papp.properties
 

@@ -7,7 +7,7 @@ import org.jax.mgi.mgd.api.model.voc.entities.Term;
 public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain> {
 
 	@Override
-	protected TermDomain entityToDomain(Term entity) {
+	protected TermDomain entityToDomain(Term entity, int translationDepth) {
 		TermDomain domain = new TermDomain();
 		domain.set_term_key(entity.get_term_key());
 		domain.setTerm(entity.getTerm());
@@ -23,7 +23,7 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 	}
 
 	@Override
-	protected Term domainToEntity(TermDomain domain) {
+	protected Term domainToEntity(TermDomain domain, int translationDepth) {
 		Term entity = new Term();
 		entity.set_term_key(domain.get_term_key());
 		entity.setTerm(domain.getTerm());

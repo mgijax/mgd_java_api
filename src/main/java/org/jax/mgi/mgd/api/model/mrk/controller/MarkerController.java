@@ -18,7 +18,7 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 import io.swagger.annotations.Api;
 
 @Path("/marker")
-@Api(value = "Marker Endpoints", description="This is the description")
+@Api(value = "Marker Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class MarkerController extends BaseController<MarkerDomain> implements BaseSearchInterface<MarkerDomain, MarkerSearchForm> {
@@ -26,6 +26,7 @@ public class MarkerController extends BaseController<MarkerDomain> implements Ba
 	@Inject
 	private MarkerService markerService;
 
+	@Override
 	public MarkerDomain create(MarkerDomain marker, User user) {
 		try {
 			return markerService.create(marker, user);
@@ -35,14 +36,17 @@ public class MarkerController extends BaseController<MarkerDomain> implements Ba
 		}
 	}
 
+	@Override
 	public MarkerDomain update(MarkerDomain marker, User user) {
 		return markerService.update(marker, user);
 	}
 
+	@Override
 	public MarkerDomain get(Integer markerKey) {
 		return markerService.get(markerKey);
 	}
 
+	@Override
 	public MarkerDomain delete(Integer key, User user) {
 		return markerService.delete(key, user);
 	}

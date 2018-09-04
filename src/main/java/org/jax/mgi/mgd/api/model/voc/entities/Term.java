@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -22,7 +23,6 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter @Setter
 @Entity
@@ -39,15 +39,15 @@ public class Term extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_term_key", referencedColumnName="_object_key")
 	@Where(clause="`_mgitype_key` = 13 AND preferred = 1 AND `_logicaldb_key` = 1")
 	private Accession mgiTermAccessionId;
@@ -62,7 +62,7 @@ public class Term extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 13")
 	private Set<MGISynonym> synonyms;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_vocab_key")
 	private Vocabulary vocab;
 	

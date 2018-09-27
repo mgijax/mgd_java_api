@@ -59,4 +59,9 @@ public class Constants {
 	
 	// default database user, if no other is specified
 	public static String DEFAULT_USER = "mgd_dbo";
+	
+	// markerWithdrawal scripts
+	public static String MARKER_WITHDRAWAL_CSH = "/usr/local/mgi/live/dbutils/pgdbutilities/bin/ei/markerWithdrawal.csh";
+	public static String TEST_MARKER_WITHDRAWAL_CSH = "/home/lec/mgi/dbutils/pgdbutilities/bin/ei/testmarkerWithdrawal.csh";
+
 }

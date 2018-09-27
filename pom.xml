@@ -101,6 +101,13 @@
 			<artifactId>reflections</artifactId>
 			<version>0.9.10</version>
 		</dependency>
+		<dependency>
+			<groupId>core.jar</groupId>
+			<artifactId>core</artifactId>
+			<scope>system</scope>
+			<version>1.0</version>
+			<systemPath>${basedir}/src/lib/core.jar</systemPath>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>mgd_java_api</finalName>
@@ -123,7 +130,7 @@
 		</plugins>
 	</build>
 	<organization>
-		<name>Jackson Lab</name>
-		<url>http://www.infromatics.jax.org</url>
+		<name>The Jackson Laboratory</name>
+		<url>http://www.informatics.jax.org</url>
 	</organization>
 </project>

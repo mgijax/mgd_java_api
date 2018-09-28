@@ -3,14 +3,20 @@ package org.jax.mgi.mgd.api.model.mrk.controller;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
+import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEiSummaryDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -56,4 +62,14 @@ public class MarkerController extends BaseController<MarkerDomain> implements Ba
 		return markerService.search(searchForm);
 	}
 
+	
+	
+	@POST
+	@ApiOperation(value = "EI Marker Summary Search")
+	@Path("/eiSummarySearch")
+	public MarkerEiSummaryDomain eiSummarySearch(MarkerSearchForm searchForm) {
+		return markerService.eiSummarySearch(searchForm);
+	}
+
+	
 }

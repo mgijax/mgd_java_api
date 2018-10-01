@@ -32,7 +32,6 @@ public class MarkerWithdrawal extends Configurator {
     	
     	SQLDataManager sqlMgr = new SQLDataManager();
 
-    	//this.markerWithdrawal = System.getProperty("swarm.markerWithdrawal");
     	this.markerWithdrawal = getConfigString("PG_DBUTILS") + "/bin/ei/markerWithdrawal.csh";
         this.server = sqlMgr.getServer();
         this.db = sqlMgr.getDatabase();

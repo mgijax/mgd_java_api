@@ -12,6 +12,7 @@ import org.jax.mgi.shr.dbutils.SQLDataManager;
 /* Is: a class that runs the pgdbutilities/bin/ei/markerWithdrawal.csh
  * with the appropriate parameters
  * 
+ * markerWithdrawal = shell script in $PG_DBUTILS/bin/ei that will get executed
  * server = server name (ex. bhmgidevdb01)
  * db = database name (ex. prod)
  * user = user name (ex. mgd_dbo)

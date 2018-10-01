@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.shr.unix.RunCommand;
 import org.jax.mgi.shr.config.ConfigException;
+import org.jax.mgi.shr.config.Configurator;
 import org.jax.mgi.shr.dbutils.DBException;
 import org.jax.mgi.shr.dbutils.SQLDataManager;
 
@@ -17,7 +18,7 @@ import org.jax.mgi.shr.dbutils.SQLDataManager;
  * pwd = password file; (ex. /usr/local/mgi/live/dbutils/pgdbutilities/.pgpass_1)
  *
  */
-public class MarkerWithdrawal {
+public class MarkerWithdrawal extends Configurator {
    			
 	/***--- instance variables ---***/
 	private String markerWithdrawal = null;
@@ -31,10 +32,8 @@ public class MarkerWithdrawal {
     	
     	SQLDataManager sqlMgr = new SQLDataManager();
 
-    	this.markerWithdrawal = System.getProperty("swarm.markerWithdrawal");
-    	if ( this.markerWithdrawal == null) {
-    		this.markerWithdrawal = "/usr/local/mgi/live/dbutils/pgdbutilities/bin/ei/markerWithdrawal.csh";
-    	}
+    	//this.markerWithdrawal = System.getProperty("swarm.markerWithdrawal");
+    	this.markerWithdrawal = getConfigString("PG_DBUTILS") + "/bin/ei/markerWithdrawal.csh";
         this.server = sqlMgr.getServer();
         this.db = sqlMgr.getDatabase();
         this.user = sqlMgr.getUser();

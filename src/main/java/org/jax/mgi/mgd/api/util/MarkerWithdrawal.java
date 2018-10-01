@@ -40,7 +40,7 @@ public class MarkerWithdrawal {
 	public void doWithdrawal(String eventKey,String eventReasonKey,String oldKey,String refKey,String addAsSynonym,String newName, String newSymbols, String newKey) throws APIException, IOException, InterruptedException {
 
         //String command = System.getProperty("swarm.markerWithdrawal");
-        String command = "/home/lec/mgi/dbutils/pgdbutilities/bin/ei/testmarkerWithdrawal.csh";
+        String command = "/home/lec/mgi/dbutils/pgdbutilities/bin/ei/markerWithdrawal.csh";
 
         command = command + " -S" + this.server;
         command = command + " -D" + this.db;
@@ -66,9 +66,15 @@ public class MarkerWithdrawal {
 		System.out.println(command);
 		RunCommand runner = RunCommand.runCommand(command);
 		int ec = runner.getExitCode();
-		if(ec != 0)
+		if(ec != 0) {
+			 System.err.println("doWithdrawal: returned ec != 0");
 			 System.err.println(runner.getStdErr());
-		else
-			 System.out.println(runner.getStdOut());
+			 System.err.println("doWithdrawal: failed");
+		}
+		else {
+			 System.out.println("doWithdrawal: returns ec == 0");
+			 System.out.println(runner.getStdOut() + "\n");
+			 System.out.println("doWithdrawal: successful");
+		}
 	}
 }

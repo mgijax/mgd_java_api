@@ -38,16 +38,16 @@ public class TestMarkerWithdrawal
     	System.out.println("********************");
     	
     	MarkerWithdrawal mwRename = new MarkerWithdrawal();
-        mwRename.doWithdrawal("2", "1", "27555", "22864", "1", "Zan new name", "Zan-new", "");
+        mwRename.doWithdrawal("2", "1", "27555", "22864", "1", "Zan new3 name", "Zan-new-3", "");
         
-        MarkerWithdrawal mwMerge = new MarkerWithdrawal();
-        mwMerge.doWithdrawal("3", "2", "55661", "22864", "1", "", "", "52348");
+        //MarkerWithdrawal mwMerge = new MarkerWithdrawal();
+        //mwMerge.doWithdrawal("3", "2", "55661", "22864", "1", "", "", "52348");
         
-        MarkerWithdrawal mwDelete = new MarkerWithdrawal();
-        mwDelete.doWithdrawal("6", "-1", "55675", "22864", "1", "", "", "");
+        //MarkerWithdrawal mwDelete = new MarkerWithdrawal();
+        //mwDelete.doWithdrawal("6", "-1", "55675", "22864", "1", "", "", "");
         
-        MarkerWithdrawal mwAlleleOf = new MarkerWithdrawal();
-        mwAlleleOf.doWithdrawal("4", "-1", "14881", "22864", "1", "", "", "27555");
+        //MarkerWithdrawal mwAlleleOf = new MarkerWithdrawal();
+        //mwAlleleOf.doWithdrawal("4", "-1", "14881", "22864", "1", "", "", "27555");
         
     }
 }

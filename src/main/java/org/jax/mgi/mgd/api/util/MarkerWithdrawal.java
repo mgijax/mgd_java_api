@@ -30,6 +30,7 @@ public class MarkerWithdrawal {
     	
     	SQLDataManager sqlMgr = new SQLDataManager();
 
+    	//System.getProperty("swarm.ds.username");
         this.server = sqlMgr.getServer();
         this.db = sqlMgr.getDatabase();
         this.user = sqlMgr.getUser();
@@ -38,7 +39,9 @@ public class MarkerWithdrawal {
 
 	public void doWithdrawal(String eventKey,String eventReasonKey,String oldKey,String refKey,String addAsSynonym,String newName, String newSymbols, String newKey) throws APIException, IOException, InterruptedException {
 
-        String command = Constants.TEST_MARKER_WITHDRAWAL_CSH;
+        //String command = System.getProperty("swarm.markerWithdrawal");
+        String command = "/home/lec/mgi/dbutils/pgdbutilities/bin/ei/testmarkerWithdrawal.csh";
+
         command = command + " -S" + this.server;
         command = command + " -D" + this.db;
         command = command + " -U" + this.user;
@@ -51,15 +54,16 @@ public class MarkerWithdrawal {
 		
 		// mrk_event = rename
 		if (eventKey == "2") {
-			command = command + " --newName=" + newName;
-			command = command + " --newSymbols=" + newSymbols;
+			command = command + " --newName='" + newName + "'";
+			command = command + " --newSymbols='" + newSymbols + "'";
 		}
 		
 		// mrk_event = merge
-		if (eventKey == "3") {
+		if (eventKey == "3" || eventKey == "4") {
 		command = command + " --newKey=" + newKey;
 		}
 		
+		System.out.println(command);
 		RunCommand runner = RunCommand.runCommand(command);
 		int ec = runner.getExitCode();
 		if(ec != 0)

@@ -11,6 +11,7 @@ import org.jax.mgi.shr.dbutils.DBException;
 //			addAsSynonym=1,
 //          newName="Zan new name", newSymbos = "Zan-new",
 //			newKey=""
+//
 // merge :  eventKey=3, eventReasonKey=2, oldKey=55661 (0610009K14Rik), refKey=22864, 
 //			addAsSynonym=1,
 //			newName="", newSymbos = "",
@@ -31,9 +32,12 @@ public class TestMarkerWithdrawal
 {
     public static void main( String[] args ) throws APIException, IOException, InterruptedException, ConfigException, DBException { 
 
-	System.out.println("in class TestMarkerWithdrawal");
-
-        MarkerWithdrawal mwRename = new MarkerWithdrawal();
+    	System.out.println("********************");
+    	System.out.println("in class TestMarkerWithdarwal");
+    	System.out.println(System.getProperty("swarm.markerWithdrawal"));
+    	System.out.println("********************");
+    	
+    	MarkerWithdrawal mwRename = new MarkerWithdrawal();
         mwRename.doWithdrawal("2", "1", "27555", "22864", "1", "Zan new name", "Zan-new", "");
         
         MarkerWithdrawal mwMerge = new MarkerWithdrawal();

@@ -73,7 +73,7 @@ public class MarkerWithdrawal {
 		}
 		else {
 			 System.out.println("doWithdrawal: returns ec == 0");
-			 System.out.println(runner.getStdOut() + "\n");
+			 //System.out.println(runner.getStdOut());
 			 System.out.println("doWithdrawal: successful");
 		}
 	}

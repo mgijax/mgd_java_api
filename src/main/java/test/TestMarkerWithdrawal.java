@@ -38,7 +38,7 @@ public class TestMarkerWithdrawal
     	System.out.println("********************");
     	
     	MarkerWithdrawal mwRename = new MarkerWithdrawal();
-        mwRename.doWithdrawal("2", "1", "27555", "22864", "1", "Zan new3 name", "Zan-new-3", "");
+        mwRename.doWithdrawal("2", "1", "27555", "22864", "1", "Zan new5 name", "Zan-new-5", "");
         
         //MarkerWithdrawal mwMerge = new MarkerWithdrawal();
         //mwMerge.doWithdrawal("3", "2", "55661", "22864", "1", "", "", "52348");

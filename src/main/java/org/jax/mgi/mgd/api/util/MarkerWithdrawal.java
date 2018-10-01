@@ -20,6 +20,7 @@ import org.jax.mgi.shr.dbutils.SQLDataManager;
 public class MarkerWithdrawal {
    			
 	/***--- instance variables ---***/
+	private String markerWithdrawal = null;
     private String server = null;
     private String db = null;
     private String user = null;
@@ -30,7 +31,10 @@ public class MarkerWithdrawal {
     	
     	SQLDataManager sqlMgr = new SQLDataManager();
 
-    	//System.getProperty("swarm.ds.username");
+    	this.markerWithdrawal = System.getProperty("swarm.markerWithdrawal");
+    	if ( this.markerWithdrawal == null) {
+    		this.markerWithdrawal = "/usr/local/mgi/live/dbutils/pgdbutilities/bin/ei/markerWithdrawal.csh";
+    	}
         this.server = sqlMgr.getServer();
         this.db = sqlMgr.getDatabase();
         this.user = sqlMgr.getUser();
@@ -39,9 +43,7 @@ public class MarkerWithdrawal {
 
 	public void doWithdrawal(String eventKey,String eventReasonKey,String oldKey,String refKey,String addAsSynonym,String newName, String newSymbols, String newKey) throws APIException, IOException, InterruptedException {
 
-        //String command = System.getProperty("swarm.markerWithdrawal");
-        String command = "/home/lec/mgi/dbutils/pgdbutilities/bin/ei/markerWithdrawal.csh";
-
+		String command = this.markerWithdrawal;
         command = command + " -S" + this.server;
         command = command + " -D" + this.db;
         command = command + " -U" + this.user;

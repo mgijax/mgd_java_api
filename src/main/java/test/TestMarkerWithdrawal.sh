@@ -6,6 +6,9 @@ then
     export MGICONFIG
 fi
 
+echo $MGICONFIG
+echo $DLA_DB_PREFIX
+
 CONFIG_MASTER=${MGICONFIG}/master.config.sh
 export CONFIG_MASTER
 . ${CONFIG_MASTER}

@@ -7,16 +7,14 @@ then
 fi
 
 echo $MGICONFIG
-echo $DLA_DB_PREFIX
 
 CONFIG_MASTER=${MGICONFIG}/master.config.sh
 export CONFIG_MASTER
 . ${CONFIG_MASTER}
-echo $MGICONFIG
 
-CLASSPATH=${MGD_JAVA_API}/target/classes:${MGD_JAVA_API}/src/lib/core.jar:${COMMON_CLASSPATH}
+CLASSPATH=${MGD_JAVA_API}/target/classes:${MGD_JAVA_API}/target/test-classes:${MGD_JAVA_API}/src/lib/core.jar:${COMMON_CLASSPATH}
 export CLASSPATH
 echo $CLASSPATH
 
-${JAVA} -classpath ${CLASSPATH} -DCONFIG=${CONFIG_MASTER} test.TestMarkerWithdrawal
+${JAVA} -classpath ${CLASSPATH} -DCONFIG=${CONFIG_MASTER} org.jax.mgi.TestMarkerWithdrawal
 

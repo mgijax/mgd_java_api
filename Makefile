@@ -2,6 +2,7 @@
 # default Makefile params
 #
 
+# any changes to 'all' also need to be made to Jenkins/mgd_java_api-dev configuration
 all:
 	mvn clean package -DskipTests
 

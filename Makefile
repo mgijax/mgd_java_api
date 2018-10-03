@@ -12,7 +12,7 @@ run:
 	java -jar target/mgd_java_api-swarm.jar -Papp.properties -DCONFIG=${MGICONFIG}/master.config.sh
 
 debug:
-	java -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -jar target/mgd_java_api-swarm.jar -Papp.properties 
+	java -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -jar target/mgd_java_api-swarm.jar -Papp.properties -DCONFIG=${MGICONFIG}/master.config.sh
 
 test:
 	mvn test -DCONFIG=${MGICONFIG}/master.config.sh

@@ -14,10 +14,8 @@ run:
 debug:
 	java -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -jar target/mgd_java_api-swarm.jar -Papp.properties 
 
-#using src/test/TestMarkerWithdrawal.sh for now
-#test:
-#	mvn test
-# mvn test -Dswarm.ds.server=mgi-testdb4 -Dswarm.ds.database=lec -Dswarm.ds.username=mgd_dbo -Dswarm.ds.passwordfile=/home/lec/mgi/dbutils/pgdbutilities/.pgpass_1 -Dswarm.markerWithdrawal=/home/lec/mgi/dbutils/pgdbutilities/bin/ei/markerWithdrawal.csh
+test:
+	mvn test -DCONFIG=${MGICONFIG}/master.config.sh
 
 #
 # bheidev01.jax.org : older server

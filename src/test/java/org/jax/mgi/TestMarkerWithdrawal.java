@@ -31,16 +31,15 @@ import org.junit.Test;
 
 public class TestMarkerWithdrawal
 {
-    //@Test
-	//public void runMarkerWithdrawal() throws APIException, IOException, InterruptedException, ConfigException, DBException { 
-    public static void main(String[] args) throws APIException, IOException, InterruptedException, ConfigException, DBException { 
+    @Test
+	public void runMarkerWithdrawal() throws APIException, IOException, InterruptedException, ConfigException, DBException { 
 
     	System.out.println("********************");
     	System.out.println("in class TestMarkerWithdarwal");
     	System.out.println("********************");
     	
     	MarkerWithdrawal mwRename = new MarkerWithdrawal();
-        mwRename.doWithdrawal("2", "1", "27555", "22864", "1", "Zan new5 name", "Zan-new-5", "");
+        mwRename.doWithdrawal("2", "1", "27555", "22864", "1", "Zan new6 name", "Zan-new-6", "");
         
         //MarkerWithdrawal mwMerge = new MarkerWithdrawal();
         //mwMerge.doWithdrawal("3", "2", "55661", "22864", "1", "", "", "52348");

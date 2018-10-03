@@ -106,7 +106,8 @@ public class MarkerService extends BaseService<MarkerDomain> implements BaseSear
 				String markerKey = rs.getString("_marker_key");
 				String symbol    = rs.getString("symbol");
 				eiSummaryMarkers.put(markerKey , symbol);
-			}		
+			}
+			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {e.printStackTrace();}
 		

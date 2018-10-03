@@ -37,8 +37,8 @@ public class TestMarkerWithdrawal
 
     	System.out.println("********************");
     	System.out.println("in class TestMarkerWithdarwal");
-
     	System.out.println("********************");
+    	
     	MarkerWithdrawal mwRename = new MarkerWithdrawal();
         mwRename.doWithdrawal("2", "1", "27555", "22864", "1", "Zan new5 name", "Zan-new-5", "");
         

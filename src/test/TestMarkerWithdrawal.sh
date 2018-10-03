@@ -1,5 +1,10 @@
 #!/bin/sh
 
+#
+# if we can get Makefile/mvn to work and ready properties correctly,
+# then we can delete this shell script
+#
+
 if [ "${MGICONFIG}" = "" ]
 then
     MGICONFIG=/usr/local/mgi/live/mgiconfig

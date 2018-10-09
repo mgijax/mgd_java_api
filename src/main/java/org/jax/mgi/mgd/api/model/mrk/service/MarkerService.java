@@ -1,15 +1,13 @@
 package org.jax.mgi.mgd.api.model.mrk.service;
 
-import java.util.Map;
-import java.util.LinkedHashMap;
-import java.io.IOException;
 import java.sql.ResultSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
-import org.jboss.logging.Logger;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.BaseService;
@@ -22,11 +20,9 @@ import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesRenameForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
-import org.jax.mgi.mgd.api.util.SearchResults;
-import org.jax.mgi.shr.config.ConfigException;
-import org.jax.mgi.shr.dbutils.DBException;
-import org.jax.mgi.mgd.api.util.MarkerWithdrawal;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
+import org.jax.mgi.mgd.api.util.SearchResults;
+import org.jboss.logging.Logger;
 
 @RequestScoped
 public class MarkerService extends BaseService<MarkerDomain> implements BaseSearchInterface<MarkerDomain, MarkerSearchForm> {
@@ -121,25 +117,26 @@ public class MarkerService extends BaseService<MarkerDomain> implements BaseSear
 		return markerEiSummaryDomain;
 	}	
 	
-	public MarkerEIUtilitiesRenameDomain eiUtilitiesRename(MarkerUtilitiesRenameForm searchForm) throws ConfigException, DBException, APIException, IOException, InterruptedException {
-		
+	//public MarkerEIUtilitiesRenameDomain eiUtilitiesRename(MarkerUtilitiesRenameForm searchForm) throws ConfigException, DBException, APIException, IOException, InterruptedException {
+	public MarkerEIUtilitiesRenameDomain eiUtilitiesRename(MarkerUtilitiesRenameForm searchForm) {
+	
 		// domain object to be JSON-ed
 		MarkerEIUtilitiesRenameDomain markerEIUtilitiesRenameDomain = new MarkerEIUtilitiesRenameDomain();
 	
 		Map<String, Object> params = searchForm.getSearchFields();
 		log.info(params);
 		
-		MarkerWithdrawal markerWithdrawal = new MarkerWithdrawal();
+		//MarkerWithdrawal markerWithdrawal = new MarkerWithdrawal();
 		
-		markerWithdrawal.doWithdrawal(
-				(String) params.get("eventKey"),
-				(String) params.get("eventReasonKey"),
-				(String) params.get("oldKey"),
-				(String) params.get("refKey"),
-				(String) params.get("addAsSynonym"),
-				(String) params.get("newName"),
-				(String) params.get("newSymbols"),
-				(String) params.get("newKey"));	
+		//markerWithdrawal.doWithdrawal(
+				//(String) params.get("eventKey"),
+				//(String) params.get("eventReasonKey"),
+				//(String) params.get("oldKey"),
+				//(String) params.get("refKey"),
+				//(String) params.get("addAsSynonym"),
+				//(String) params.get("newName"),
+				//(String) params.get("newSymbols"),
+				//(String) params.get("newKey"));	
 		
 		return markerEIUtilitiesRenameDomain;
 	}

@@ -76,7 +76,7 @@ public class MarkerController extends BaseController<MarkerDomain> implements Ba
 	@GET
 	@ApiOperation(value = "EI Utilities Rename")
 	@Path("/eiUtilitiesRename")
-	public MarkerEIUtilitiesRenameDomain eiUtilitiesRename(MarkerUtilitiesRenameForm searchForm) throws ConfigException, DBException, APIException, IOException, InterruptedException {
+	public MarkerEIUtilitiesRenameDomain eiUtilitiesRename(MarkerUtilitiesRenameForm searchForm) {
 		return markerService.eiUtilitiesRename(searchForm);
 	}
 	

@@ -61,7 +61,7 @@ public class MarkerWithdrawal extends Configurator {
 		
 		// mrk_event = merge
 		if (eventKey == "3" || eventKey == "4") {
-		command = command + " --newKey=" + newKey;
+			command = command + " --newKey=" + newKey;
 		}
 		
 		System.out.println(command);
@@ -77,5 +77,7 @@ public class MarkerWithdrawal extends Configurator {
 			 //System.out.println(runner.getStdOut());
 			 System.out.println("doWithdrawal: successful");
 		}
+		
+		return;
 	}
 }

@@ -1,27 +1,31 @@
 package org.jax.mgi.mgd.api.model.mrk.controller;
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.Path;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesRenameDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEiSummaryDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
+import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesRenameForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
 import org.jax.mgi.mgd.api.util.SearchResults;
+import org.jax.mgi.shr.config.ConfigException;
+import org.jax.mgi.shr.dbutils.DBException;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Path("/marker")
 @Api(value = "Marker Endpoints")
@@ -62,8 +66,6 @@ public class MarkerController extends BaseController<MarkerDomain> implements Ba
 		return markerService.search(searchForm);
 	}
 
-	
-	
 	@POST
 	@ApiOperation(value = "EI Marker Summary Search")
 	@Path("/eiSummarySearch")
@@ -71,5 +73,11 @@ public class MarkerController extends BaseController<MarkerDomain> implements Ba
 		return markerService.eiSummarySearch(searchForm);
 	}
 
+	@GET
+	@ApiOperation(value = "EI Utilities Rename")
+	@Path("/eiUtilitiesRename")
+	public MarkerEIUtilitiesRenameDomain eiUtilitiesRename(MarkerUtilitiesRenameForm searchForm) throws ConfigException, DBException, APIException, IOException, InterruptedException {
+		return markerService.eiUtilitiesRename(searchForm);
+	}
 	
 }

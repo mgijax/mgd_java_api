@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -21,8 +20,6 @@ import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesRenameForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
 import org.jax.mgi.mgd.api.util.SearchResults;
-import org.jax.mgi.shr.config.ConfigException;
-import org.jax.mgi.shr.dbutils.DBException;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -73,10 +70,10 @@ public class MarkerController extends BaseController<MarkerDomain> implements Ba
 		return markerService.eiSummarySearch(searchForm);
 	}
 
-	@GET
+	@POST
 	@ApiOperation(value = "EI Utilities Rename")
 	@Path("/eiUtilitiesRename")
-	public MarkerEIUtilitiesRenameDomain eiUtilitiesRename(MarkerUtilitiesRenameForm searchForm) {
+	public MarkerEIUtilitiesRenameDomain eiUtilitiesRename(MarkerUtilitiesRenameForm searchForm) throws IOException, InterruptedException {
 		return markerService.eiUtilitiesRename(searchForm);
 	}
 	

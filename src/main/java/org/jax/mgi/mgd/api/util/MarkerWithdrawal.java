@@ -2,12 +2,7 @@ package org.jax.mgi.mgd.api.util;
 
 import java.io.IOException;
 
-import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.shr.unix.RunCommand;
-import org.jax.mgi.shr.config.ConfigException;
-import org.jax.mgi.shr.config.Configurator;
-import org.jax.mgi.shr.dbutils.DBException;
-import org.jax.mgi.shr.dbutils.SQLDataManager;
 
 /* Is: a class that runs the pgdbutilities/bin/ei/markerWithdrawal.csh
  * with the appropriate parameters
@@ -19,7 +14,7 @@ import org.jax.mgi.shr.dbutils.SQLDataManager;
  * pwd = password file; (ex. /usr/local/mgi/live/dbutils/pgdbutilities/.pgpass_1)
  *
  */
-public class MarkerWithdrawal extends Configurator {
+public class MarkerWithdrawal {
    			
 	/***--- instance variables ---***/
 	private String markerWithdrawal = null;
@@ -29,18 +24,16 @@ public class MarkerWithdrawal extends Configurator {
     private String pwd = null; 
     
     // Constructor
-    public MarkerWithdrawal() throws ConfigException, DBException {
+    public MarkerWithdrawal() {
     	
-    	SQLDataManager sqlMgr = new SQLDataManager();
-
-    	this.markerWithdrawal = getConfigString("PG_DBUTILS") + "/bin/ei/markerWithdrawal.csh";
-        this.server = sqlMgr.getServer();
-        this.db = sqlMgr.getDatabase();
-        this.user = sqlMgr.getUser();
-        this.pwd = sqlMgr.getPasswordFile();
+    	this.markerWithdrawal = System.getProperty("swarm.ds.markerwithdrawal");
+    	this.server = System.getProperty("swarm.ds.dbserver");
+        this.db = System.getProperty("swarm.ds.dbname");
+        this.user = System.getProperty("swarm.ds.username");
+        this.pwd = System.getProperty("swarm.ds.dbpasswordfile");
     }
 
-	public void doWithdrawal(String eventKey,String eventReasonKey,String oldKey,String refKey,String addAsSynonym,String newName, String newSymbols, String newKey) throws APIException, IOException, InterruptedException {
+	public void doWithdrawal(String eventKey,String eventReasonKey,String oldKey,String refKey,String addAsSynonym,String newName, String newSymbols, String newKey) throws IOException, InterruptedException {
 
 		String command = this.markerWithdrawal;
         command = command + " -S" + this.server;
@@ -54,17 +47,17 @@ public class MarkerWithdrawal extends Configurator {
 		command = command + " --addAsSynonym=" + addAsSynonym;
 		
 		// mrk_event = rename
-		if (eventKey == "2") {
+		if (eventKey.equals("2")) {
 			command = command + " --newName='" + newName + "'";
 			command = command + " --newSymbols='" + newSymbols + "'";
 		}
 		
 		// mrk_event = merge
-		if (eventKey == "3" || eventKey == "4") {
+		if (eventKey.equals("3") || eventKey.equals("4")) {
 			command = command + " --newKey=" + newKey;
 		}
 		
-		System.out.println(command);
+		System.out.println("COMMAND: " + command);
 		RunCommand runner = RunCommand.runCommand(command);
 		int ec = runner.getExitCode();
 		if(ec != 0) {

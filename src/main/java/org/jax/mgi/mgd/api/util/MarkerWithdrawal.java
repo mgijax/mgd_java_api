@@ -2,7 +2,6 @@ package org.jax.mgi.mgd.api.util;
 
 import java.io.IOException;
 
-import org.jax.mgi.shr.unix.RunCommand;
 
 /* Is: a class that runs the pgdbutilities/bin/ei/markerWithdrawal.csh
  * with the appropriate parameters

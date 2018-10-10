@@ -2,8 +2,6 @@ package org.jax.mgi.mgd.api.util;
 
 import java.io.IOException;
 
-import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.shr.unix.RunCommand;
 
 /* Is: a class that runs the pgdbutilities/bin/ei/markerWithdrawal.csh
  * with the appropriate parameters
@@ -27,14 +25,14 @@ public class MarkerWithdrawal {
     // Constructor
     public MarkerWithdrawal() {
     	
-    	this.markerWithdrawal = System.getProperty("swarm.markerWithdrawal");
-        this.server = System.getProperty("swarm.ds.server");
-        this.db = System.getProperty("swarm.ds.database");
+    	this.markerWithdrawal = System.getProperty("swarm.ds.markerwithdrawal");
+    	this.server = System.getProperty("swarm.ds.dbserver");
+        this.db = System.getProperty("swarm.ds.dbname");
         this.user = System.getProperty("swarm.ds.username");
-        this.pwd = System.getProperty("swarm.ds.passwordfile");
+        this.pwd = System.getProperty("swarm.ds.dbpasswordfile");
     }
 
-	public void doWithdrawal(String eventKey,String eventReasonKey,String oldKey,String refKey,String addAsSynonym,String newName, String newSymbols, String newKey) throws APIException, IOException, InterruptedException {
+	public void doWithdrawal(String eventKey,String eventReasonKey,String oldKey,String refKey,String addAsSynonym,String newName, String newSymbol, String newKey) throws IOException, InterruptedException {
 
 		String command = this.markerWithdrawal;
         command = command + " -S" + this.server;
@@ -48,17 +46,17 @@ public class MarkerWithdrawal {
 		command = command + " --addAsSynonym=" + addAsSynonym;
 		
 		// mrk_event = rename
-		if (eventKey == "2") {
+		if (eventKey.equals("2")) {
 			command = command + " --newName='" + newName + "'";
-			command = command + " --newSymbols='" + newSymbols + "'";
+			command = command + " --newSymbols='" + newSymbol + "'";
 		}
 		
 		// mrk_event = merge
-		if (eventKey == "3" || eventKey == "4") {
-		command = command + " --newKey=" + newKey;
+		if (eventKey.equals("3") || eventKey.equals("4")) {
+			command = command + " --newKey=" + newKey;
 		}
 		
-		System.out.println(command);
+		System.out.println("COMMAND: " + command);
 		RunCommand runner = RunCommand.runCommand(command);
 		int ec = runner.getExitCode();
 		if(ec != 0) {
@@ -71,5 +69,7 @@ public class MarkerWithdrawal {
 			 //System.out.println(runner.getStdOut());
 			 System.out.println("doWithdrawal: successful");
 		}
+		
+		return;
 	}
 }

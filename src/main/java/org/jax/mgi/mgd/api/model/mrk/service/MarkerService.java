@@ -136,7 +136,7 @@ public class MarkerService extends BaseService<MarkerDomain> implements BaseSear
 				(String) params.get("refKey"),
 				(String) params.get("addAsSynonym"),
 				(String) params.get("newName"),
-				(String) params.get("newSymbols"),
+				(String) params.get("newSymbol"),
 				(String) params.get("newKey"));	
 		
 		return markerEIUtilitiesRenameDomain;

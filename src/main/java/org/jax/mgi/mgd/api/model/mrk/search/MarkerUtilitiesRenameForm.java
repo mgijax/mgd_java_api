@@ -32,7 +32,7 @@ public class MarkerUtilitiesRenameForm extends BaseSearchForm {
 	private String newName;
 	
 	@ApiModelProperty(value="New Symbol")
-	private String newSymbols;
+	private String newSymbol;
 	
 	@ApiModelProperty(value="New Key")
 	private String newKey;
@@ -47,7 +47,7 @@ public class MarkerUtilitiesRenameForm extends BaseSearchForm {
 		ret.put("refKey", refKey);
 		ret.put("addAsSynonym", addAsSynonym);
 		ret.put("newName", newName);
-		ret.put("newSymbols", newSymbols);
+		ret.put("newSymbol", newSymbol);
 		ret.put("newKey", newKey);
 
 		return ret;

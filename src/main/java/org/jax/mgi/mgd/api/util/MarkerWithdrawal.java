@@ -32,7 +32,7 @@ public class MarkerWithdrawal {
         this.pwd = System.getProperty("swarm.ds.dbpasswordfile");
     }
 
-	public void doWithdrawal(String eventKey,String eventReasonKey,String oldKey,String refKey,String addAsSynonym,String newName, String newSymbols, String newKey) throws IOException, InterruptedException {
+	public void doWithdrawal(String eventKey,String eventReasonKey,String oldKey,String refKey,String addAsSynonym,String newName, String newSymbol, String newKey) throws IOException, InterruptedException {
 
 		String command = this.markerWithdrawal;
         command = command + " -S" + this.server;
@@ -48,7 +48,7 @@ public class MarkerWithdrawal {
 		// mrk_event = rename
 		if (eventKey.equals("2")) {
 			command = command + " --newName='" + newName + "'";
-			command = command + " --newSymbols='" + newSymbols + "'";
+			command = command + " --newSymbols='" + newSymbol + "'";
 		}
 		
 		// mrk_event = merge

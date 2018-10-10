@@ -9,22 +9,22 @@ import org.junit.Test;
 
 // rename : eventKey=2, eventReasonKey=1, oldKey=27555 (Zan), refKey=22864, 
 //			addAsSynonym=1,
-//          newName="Zan new name", newSymbos = "Zan-new",
+//          newName="Zan new name", newSymbol = "Zan-new",
 //			newKey=""
 //
 // merge :  eventKey=3, eventReasonKey=2, oldKey=55661 (0610009K14Rik), refKey=22864, 
 //			addAsSynonym=1,
-//			newName="", newSymbos = "",
+//			newName="", newSymbol = "",
 //			newKey="52348" (0610025J13Rik)
 //
 // delete : eventKey=6, eventReasonKey=-1, oldKey=55675 (0910001E24Rik), refKey=22864, 
 //			addAsSynonym=1,
-//			newName="", newSymbos = "",
+//			newName="", newSymbol = "",
 //			newKey=""
 //
 // allele of: eventKey=4, eventReasonKey=-1, oldKey=14881 (z), refKey=22864,
 //		addAsSynonym=1,
-//		newName="", newSymbos = "",
+//		newName="", newSymbol = "",
 //		newKey="27555" (Zan-new)
 //
 

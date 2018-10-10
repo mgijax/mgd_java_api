@@ -10,7 +10,7 @@ clean:
 	find /tmp/wildfly* -type f -exec rm -rf {} \;
 
 run:
-	java -jar target/mgd_java_api-swarm.jar -Papp.properties
+	java -jar target/mgd_java_api-swarm.jar -jar src/lib/core.jar -Papp.properties
 
 debug:
 	java -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -jar target/mgd_java_api-swarm.jar -Papp.properties
@@ -23,5 +23,5 @@ debug:
 # need to specifically call java 8 and run targets
 #
 runnet:
-	/usr/java/jdk1.8.0_131/bin/java -jar target/mgd_java_api-swarm.jar -Papp.properties -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+	/usr/java/jdk1.8.0_131/bin/java -jar target/mgd_java_api-swarm.jar -jar src/lib/core.jar -Papp.properties -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
 

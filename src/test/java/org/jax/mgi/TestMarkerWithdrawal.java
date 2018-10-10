@@ -4,8 +4,7 @@ import java.io.IOException;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.util.MarkerWithdrawal;
-import org.jax.mgi.shr.config.ConfigException;
-import org.jax.mgi.shr.dbutils.DBException;
+
 import org.junit.Test;
 
 // rename : eventKey=2, eventReasonKey=1, oldKey=27555 (Zan), refKey=22864, 
@@ -32,7 +31,7 @@ import org.junit.Test;
 public class TestMarkerWithdrawal
 {
     @Test
-	public void runMarkerWithdrawal() throws APIException, IOException, InterruptedException, ConfigException, DBException { 
+	public void runMarkerWithdrawal() throws APIException, IOException, InterruptedException { 
 
     	System.out.println("********************");
     	System.out.println("in class TestMarkerWithdarwal");

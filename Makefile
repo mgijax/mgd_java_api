@@ -15,8 +15,8 @@ run:
 debug:
 	java -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -jar target/mgd_java_api-swarm.jar -Papp.properties
 
-#test:
-#	mvn test -DCONFIG=${MGICONFIG}/master.config.sh
+test:
+	mvn test
 
 #
 # bheidev01.jax.org : older server

@@ -46,18 +46,6 @@ public class MarkerDomain extends BaseDomain {
 	private List<String> geneToTssRelationships;
 	private List<String> tssToGeneRelationships;
 	private List<String> secondaryMgiIds;
-    private List<String> references;
     private List<SequenceMarkerCacheDomain> biotypes;
-
-    private Boolean hasAlleles = false;
-    private Boolean hasAntibodies = false;
-    private Boolean hasAssays = false;
-    private Boolean hasAssayResults = false;
-    private Boolean hasExperiments = false;
-    private Boolean hasIndexes = false;
-    private Boolean hasProbes = false;
-    private Boolean hasReferences = false;
-    private Boolean hasSequences = false;
-    private Boolean hasBiotypes = false;
         
 }

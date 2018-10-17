@@ -18,7 +18,6 @@ import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEiSummaryDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
-import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesRenameForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 

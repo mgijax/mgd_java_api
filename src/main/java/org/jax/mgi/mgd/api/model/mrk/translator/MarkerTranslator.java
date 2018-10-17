@@ -33,6 +33,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		domain.setName(entity.getName());
 		domain.setChromosome(entity.getChromosome());
 		domain.setCytogeneticOffset(entity.getCytogeneticOffset());
+		domain.setCmOffset(entity.getCmOffset());
 		domain.setOrganism(entity.getOrganism().getCommonname());
 		domain.setMarkerStatus(entity.getMarkerStatus().getStatus());
 		domain.setMarkerType(entity.getMarkerType().getName());
@@ -40,49 +41,49 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		domain.setModifiedBy(entity.getModifiedBy().getName());
 		domain.setCreation_date(entity.getCreation_date());
 		domain.setModification_date(entity.getModification_date());
-		domain.setMgiAccessionId(entity.getMgiAccessionId().getAccID());
+		//domain.setMgiAccessionId(entity.getMgiAccessionId().getAccID());
 
 			
 		// at most one marker note
-		if(entity.getMarkerNote() != null) {
-			domain.setMarkerNote(entity.getMarkerNote().getNote());
-		}
+		//if(entity.getMarkerNote() != null) {
+			//domain.setMarkerNote(entity.getMarkerNote().getNote());
+		//}
 	
 		// at most one set of location info
-		if(entity.getMarkerLocation() != null) {
-			String addProvider = "";
+		//if(entity.getMarkerLocation() != null) {
+			//String addProvider = "";
 			
-			domain.setLocationChromosome(entity.getMarkerLocation().getGenomicChromosome());
-			domain.setLocationStartCoordinate(entity.getMarkerLocation().getStartCoordinate());
-			domain.setLocationEndCoordinate(entity.getMarkerLocation().getEndCoordinate());
-			domain.setLocationStrand(entity.getMarkerLocation().getStrand());
-			domain.setLocationMapUnits(entity.getMarkerLocation().getMapUnits());
-			domain.setLocationProvider(entity.getMarkerLocation().getProvider());
-			domain.setLocationVersion(entity.getMarkerLocation().getVersion());
+			//domain.setLocationChromosome(entity.getMarkerLocation().getGenomicChromosome());
+			//domain.setLocationStartCoordinate(entity.getMarkerLocation().getStartCoordinate());
+			//domain.setLocationEndCoordinate(entity.getMarkerLocation().getEndCoordinate());
+			//domain.setLocationStrand(entity.getMarkerLocation().getStrand());
+			//domain.setLocationMapUnits(entity.getMarkerLocation().getMapUnits());
+			//domain.setLocationProvider(entity.getMarkerLocation().getProvider());
+			//domain.setLocationVersion(entity.getMarkerLocation().getVersion());
 			
-			if(domain.getLocationProvider() != null) {
-				addProvider = " From " + domain.getLocationProvider() 
-					+ " annotation of " + domain.getLocationVersion();
-			}
-			if(domain.getLocationStartCoordinate() == null | domain.getLocationEndCoordinate() == null ) {
-				domain.setLocationText("Chr" + domain.getChromosome() 
-					+ addProvider);
-			}
-			else {
-				domain.setLocationText("Chr" + domain.getLocationChromosome() + ":"
-					+ domain.getLocationStartCoordinate() + "-"
-					+ domain.getLocationEndCoordinate() + " bp, "
-					+ domain.getLocationStrand() + " strand"
-					+ addProvider
-					);
-			}
-		}
+			//if(domain.getLocationProvider() != null) {
+				//addProvider = " From " + domain.getLocationProvider() 
+					//+ " annotation of " + domain.getLocationVersion();
+			//}
+			//if(domain.getLocationStartCoordinate() == null | domain.getLocationEndCoordinate() == null ) {
+				//domain.setLocationText("Chr" + domain.getChromosome() 
+					//+ addProvider);
+			//}
+			//else {
+			//	domain.setLocationText("Chr" + domain.getLocationChromosome() + ":"
+			//		+ domain.getLocationStartCoordinate() + "-"
+			//		+ domain.getLocationEndCoordinate() + " bp, "
+			//		+ domain.getLocationStrand() + " strand"
+			//		+ addProvider
+			//		);
+			//}
+		//}
 
 		// at most one locationNote
-		Iterable<NoteDomain> locationNotes = noteTranslator.translateEntities(entity.getLocationNotes(), translationDepth - 1);
-		if(locationNotes.iterator().hasNext() == true) {
-			domain.setLocationNote(locationNotes.iterator().next().getNoteChunk());
-		}
+		//Iterable<NoteDomain> locationNotes = noteTranslator.translateEntities(entity.getLocationNotes(), translationDepth - 1);
+		//if(locationNotes.iterator().hasNext() == true) {
+		//	domain.setLocationNote(locationNotes.iterator().next().getNoteChunk());
+		//}
 			
 		// all synonym objects
 //		List<String> synonyms = new ArrayList<String>();
@@ -94,43 +95,43 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 
 
 		// all gene-to-tss relationships
-		List<String> geneToTssRelationships = new ArrayList<String>();
-		for (Relationship ms : entity.getGeneToTssRelationships()) {
-			geneToTssRelationships.add(ms.getTssSymbol().getSymbol());
-		}
-		Collections.sort(geneToTssRelationships);
-		domain.setGeneToTssRelationships(geneToTssRelationships);
+		//List<String> geneToTssRelationships = new ArrayList<String>();
+		//for (Relationship ms : entity.getGeneToTssRelationships()) {
+		//	geneToTssRelationships.add(ms.getTssSymbol().getSymbol());
+		//}
+		//Collections.sort(geneToTssRelationships);
+		//domain.setGeneToTssRelationships(geneToTssRelationships);
 			
 		// all tss-to-gene relationships
-		List<String> tssToGeneRelationships = new ArrayList<String>();
-		for (Relationship ms : entity.getTssToGeneRelationships()) {
-			tssToGeneRelationships.add(ms.getGeneSymbol().getSymbol());
-		}
-		Collections.sort(tssToGeneRelationships);
-		domain.setTssToGeneRelationships(tssToGeneRelationships);
+		//List<String> tssToGeneRelationships = new ArrayList<String>();
+		//for (Relationship ms : entity.getTssToGeneRelationships()) {
+		//	tssToGeneRelationships.add(ms.getGeneSymbol().getSymbol());
+		//}
+		//Collections.sort(tssToGeneRelationships);
+		//domain.setTssToGeneRelationships(tssToGeneRelationships);
 			
 		// secondary ids
-		List<String> secondaryMgiIds = new ArrayList<String>();
-		for (Accession sa : entity.getSecondaryMgiAccessionIds()) {
-			secondaryMgiIds.add(sa.getAccID());
-		}
-		Collections.sort(secondaryMgiIds);
-		domain.setSecondaryMgiIds(secondaryMgiIds);
+		//List<String> secondaryMgiIds = new ArrayList<String>();
+		//for (Accession sa : entity.getSecondaryMgiAccessionIds()) {
+		//	secondaryMgiIds.add(sa.getAccID());
+		//}
+		//Collections.sort(secondaryMgiIds);
+		//domain.setSecondaryMgiIds(secondaryMgiIds);
 			
 		// at most one mcvTerm
-		List<TermDomain> mcvTerms = new ArrayList<TermDomain>();
-		for (MarkerMCVCache mm : entity.getMcvTerms()) {
-			mcvTerms.add(termTranslator.translate(mm.getMcvTerm(), translationDepth - 1));
-		}
-		if(mcvTerms.size() > 0) {
-			domain.setMcvTerm(mcvTerms.get(0).getTerm());
-		}
+		//List<TermDomain> mcvTerms = new ArrayList<TermDomain>();
+		//for (MarkerMCVCache mm : entity.getMcvTerms()) {
+		//	mcvTerms.add(termTranslator.translate(mm.getMcvTerm(), translationDepth - 1));
+		//}
+		//if(mcvTerms.size() > 0) {
+		//	domain.setMcvTerm(mcvTerms.get(0).getTerm());
+		//}
 			
 		// biotypes
-		Iterable<SequenceMarkerCacheDomain> biotypes = biotypesTranslator.translateEntities(entity.getBiotypes(), translationDepth - 1);
-		if(biotypes.iterator().hasNext() == true) {
-			domain.setBiotypes(IteratorUtils.toList(biotypes.iterator()));
-		}
+		//Iterable<SequenceMarkerCacheDomain> biotypes = biotypesTranslator.translateEntities(entity.getBiotypes(), translationDepth - 1);
+		//if(biotypes.iterator().hasNext() == true) {
+		//	domain.setBiotypes(IteratorUtils.toList(biotypes.iterator()));
+		//}
 		
 		return domain;
 	}

@@ -22,30 +22,32 @@ public class MarkerDomain extends BaseDomain {
 	private String name;
 	private String chromosome;
 	private String cytogeneticOffset;
+	private String cmOffset;
 	private String organism;
 	private String markerStatus;
 	private String markerType;
-	private String markerNote;
-	private String locationChromosome;
-	private Integer locationStartCoordinate;
-	private Integer locationEndCoordinate;
-	private String locationStrand;
-	private String locationMapUnits;
-	private String locationProvider;
-	private String locationVersion;
-	private String locationText;
-	private String locationNote;
-	private String mcvTerm;
 	private String createdBy;
 	private String modifiedBy;
 	private Date creation_date;
 	private Date modification_date;
-	private String mgiAccessionId;
 	
-	private List<String> synonyms;
-	private List<String> geneToTssRelationships;
-	private List<String> tssToGeneRelationships;
-	private List<String> secondaryMgiIds;
-    private List<SequenceMarkerCacheDomain> biotypes;
+	//private String markerNote;
+	//private String locationChromosome;
+	//private Integer locationStartCoordinate;
+	//private Integer locationEndCoordinate;
+	//private String locationStrand;
+	//private String locationMapUnits;
+	//private String locationProvider;
+	//private String locationVersion;
+	//private String locationText;
+	//private String locationNote;
+	//private String mcvTerm;
+	//private String mgiAccessionId;
+	
+	//private List<String> synonyms;
+	//private List<String> geneToTssRelationships;
+	//private List<String> tssToGeneRelationships;
+	//private List<String> secondaryMgiIds;
+    //private List<SequenceMarkerCacheDomain> biotypes;
         
 }

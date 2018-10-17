@@ -9,8 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@ApiModel(value = "Marker EI Utilities Rename Model Object")
-public class MarkerEIUtilitiesRenameDomain extends BaseDomain {
+@ApiModel(value = "Marker EI Utilities  Model Object")
+public class MarkerEIUtilitiesDomain extends BaseDomain {
 
-	private Map<String, String> eiUtilitiesRename;        
+	private Map<String, String> eiUtilities;        
 }

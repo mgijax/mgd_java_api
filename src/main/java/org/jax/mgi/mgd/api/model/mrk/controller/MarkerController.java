@@ -14,9 +14,10 @@ import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
-import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesRenameDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEiSummaryDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
+import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesRenameForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -71,10 +72,10 @@ public class MarkerController extends BaseController<MarkerDomain> implements Ba
 	}
 
 	@POST
-	@ApiOperation(value = "EI Utilities Rename")
-	@Path("/eiUtilitiesRename")
-	public MarkerEIUtilitiesRenameDomain eiUtilitiesRename(MarkerUtilitiesRenameForm searchForm) throws IOException, InterruptedException {
-		return markerService.eiUtilitiesRename(searchForm);
+	@ApiOperation(value = "EI Utilities ")
+	@Path("/eiUtilities")
+	public MarkerEIUtilitiesDomain eiUtilities(MarkerUtilitiesForm searchForm) throws IOException, InterruptedException {
+		return markerService.eiUtilities(searchForm);
 	}
 	
 }

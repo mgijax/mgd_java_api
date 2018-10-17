@@ -21,9 +21,9 @@ import org.jax.mgi.mgd.api.model.voc.translator.TermTranslator;
 
 public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerDomain> {
 
-	private NoteTranslator noteTranslator = new NoteTranslator();
-	private TermTranslator termTranslator = new TermTranslator();
-	private SequenceMarkerCacheTranslator biotypesTranslator = new SequenceMarkerCacheTranslator();
+	//private NoteTranslator noteTranslator = new NoteTranslator();
+	//private TermTranslator termTranslator = new TermTranslator();
+	//private SequenceMarkerCacheTranslator biotypesTranslator = new SequenceMarkerCacheTranslator();
 
 	@Override
 	protected MarkerDomain entityToDomain(Marker entity, int translationDepth) {
@@ -43,7 +43,6 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		domain.setModification_date(entity.getModification_date());
 		//domain.setMgiAccessionId(entity.getMgiAccessionId().getAccID());
 
-			
 		// at most one marker note
 		//if(entity.getMarkerNote() != null) {
 			//domain.setMarkerNote(entity.getMarkerNote().getNote());

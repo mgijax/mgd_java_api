@@ -10,8 +10,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter @ApiModel("Marker Utilities Rename Form")
-public class MarkerUtilitiesRenameForm extends BaseSearchForm {
+@Getter @Setter @ApiModel("Marker Utilities Form")
+public class MarkerUtilitiesForm extends BaseSearchForm {
 
 	@ApiModelProperty(value="Event key")
 	private String eventKey;

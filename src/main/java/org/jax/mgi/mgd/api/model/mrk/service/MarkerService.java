@@ -90,8 +90,12 @@ public class MarkerService extends BaseService<MarkerDomain> implements BaseSear
 		String from = "from mrk_marker m";
 		String where = "where m._organism_key = 1";
 		String orderBy = "order by m._marker_type_key, m.symbol";
-		Boolean from_editornote = false;
-		
+		Boolean from_editorNote = false;
+		Boolean from_sequenceNote = false;
+		Boolean from_revisionNote = false;
+		Boolean from_strainNote = false;
+		Boolean from_locationNote = false;
+
 		if (params.containsKey("symbol")) {
 			where = where + "\nand m.symbol ilike '" + params.get("symbol") + "'" ;
 		}
@@ -114,13 +118,45 @@ public class MarkerService extends BaseService<MarkerDomain> implements BaseSear
 			where = where + "\nand m._marker_type_key = " + params.get("markerTypeKey");
 		}
 		if (params.containsKey("editorNote")) {
-			where = where + "\nand enote._notetype_key = 1004 and enote.note ilike '" + params.get("editorNote") + "'" ;
-			from_editornote = true;
+			where = where + "\nand note1._notetype_key = 1004 and note1.note ilike '" + params.get("editorNote") + "'" ;
+			from_editorNote = true;
+		}
+		if (params.containsKey("sequenceNote")) {
+			where = where + "\nand note2._notetype_key = 1009 and note2.note ilike '" + params.get("sequenceNote") + "'" ;
+			from_sequenceNote = true;
+		}
+		if (params.containsKey("revisionNote")) {
+			where = where + "\nand note3._notetype_key = 1030 and note3.note ilike '" + params.get("revisionNote") + "'" ;
+			from_revisionNote = true;
+		}
+		if (params.containsKey("strainNote")) {
+			where = where + "\nand note4._notetype_key = 1035 and note4.note ilike '" + params.get("strainNote") + "'" ;
+			from_strainNote = true;
+		}
+		if (params.containsKey("locationNote")) {
+			where = where + "\nand note5._notetype_key = 1049 and note5.note ilike '" + params.get("locationNote") + "'" ;
+			from_locationNote = true;
 		}
 		
-		if (from_editornote == true) {
-			from = from + ", mgi_note_marker_view enote";
-			where = where + "\nand m._marker_key = enote._object_key";
+		if (from_editorNote == true) {
+			from = from + ", mgi_note_marker_view note1";
+			where = where + "\nand m._marker_key = note1._object_key";
+		}
+		if (from_sequenceNote == true) {
+			from = from + ", mgi_note_marker_view note2";
+			where = where + "\nand m._marker_key = note2._object_key";
+		}
+		if (from_revisionNote == true) {
+			from = from + ", mgi_note_marker_view note3";
+			where = where + "\nand m._marker_key = note3._object_key";
+		}
+		if (from_strainNote == true) {
+			from = from + ", mgi_note_marker_view note4";
+			where = where + "\nand m._marker_key = note4._object_key";
+		}
+		if (from_locationNote == true) {
+			from = from + ", mgi_note_marker_view note5";
+			where = where + "\nand m._marker_key = note5._object_key";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

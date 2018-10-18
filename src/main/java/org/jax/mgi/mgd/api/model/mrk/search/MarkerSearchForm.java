@@ -20,6 +20,10 @@ public class MarkerSearchForm extends BaseSearchForm {
 	private Integer markerStatusKey;
 	private Integer markerTypeKey;
 	private String editorNote;
+	private String sequenceNote;
+	private String revisionNote;
+	private String strainNote;
+	private String locationNote;
 	
 	@Override
 	public Map<String, Object> getSearchFields() {
@@ -33,6 +37,10 @@ public class MarkerSearchForm extends BaseSearchForm {
 		if(markerStatusKey != null) { ret.put("markerStatusKey", markerStatusKey); }
 		if(markerTypeKey != null) { ret.put("markerTypeKey", markerTypeKey); }
 		if(editorNote != null) { ret.put("editorNote", editorNote); }
+		if(sequenceNote != null) { ret.put("sequenceNote", sequenceNote); }
+		if(revisionNote != null) { ret.put("revisionNote", revisionNote); }
+		if(strainNote != null) { ret.put("strainNote", strainNote); }
+		if(locationNote != null) { ret.put("locationNote", locationNote); }
 
 		return ret;
 	}

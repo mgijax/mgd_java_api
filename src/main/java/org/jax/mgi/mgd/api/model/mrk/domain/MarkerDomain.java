@@ -1,10 +1,8 @@
 package org.jax.mgi.mgd.api.model.mrk.domain;
 
 import java.util.Date;
-import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
-import org.jax.mgi.mgd.api.model.seq.domain.SequenceMarkerCacheDomain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -15,7 +13,7 @@ import lombok.Setter;
 @ApiModel(value = "Marker Model Object")
 public class MarkerDomain extends BaseDomain {
 
-	@ApiModelProperty("Marker Database Key")
+	@ApiModelProperty("Marker primary key")
 	private Integer markerKey;
 	@ApiModelProperty("Marker Symbol")
 	private String symbol;
@@ -23,10 +21,15 @@ public class MarkerDomain extends BaseDomain {
 	private String chromosome;
 	private String cytogeneticOffset;
 	private String cmOffset;
+	private Integer organismKey;
 	private String organism;
+	private Integer markerStatusKey;
 	private String markerStatus;
+	private Integer markerTypeKey;
 	private String markerType;
+	private Integer createdByKey;
 	private String createdBy;
+	private Integer modifiedByKey;
 	private String modifiedBy;
 	private Date creation_date;
 	private Date modification_date;

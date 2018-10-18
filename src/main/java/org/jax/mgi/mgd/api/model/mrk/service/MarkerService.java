@@ -15,8 +15,8 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIResultDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
-import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEiSummaryDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
@@ -74,32 +74,57 @@ public class MarkerService extends BaseService<MarkerDomain> implements BaseSear
 	}
 
 
-	public MarkerEiSummaryDomain eiSummarySearch(MarkerSearchForm searchForm) {
+	public MarkerEIResultDomain eiSearch(MarkerSearchForm searchForm) {
 
 		// domain object to be JSON-ed
-		MarkerEiSummaryDomain markerEiSummaryDomain = new MarkerEiSummaryDomain();
+		MarkerEIResultDomain markerEIResultDomain = new MarkerEIResultDomain();
 		
 		// markerKey-markerSymbol ordered (linked) mapping for summary
-		Map<String, String> eiSummaryMarkers = new LinkedHashMap<String, String>();
+		Map<String, String> results = new LinkedHashMap<String, String>();
 
 		Map<String, Object> params = searchForm.getSearchFields();
 		log.info(params);
 		
-		// formulate sql query
 		String cmd = "";
-		cmd = cmd + "select _marker_key, symbol "
-				+ "from mrk_marker "
-				+ "where _organism_key=1 ";
+		String select = "select m._marker_key, m._marker_type_key, m.symbol";
+		String from = "from mrk_marker m";
+		String where = "where m._organism_key = 1";
+		String orderBy = "order by m._marker_type_key, m.symbol";
+		Boolean from_editornote = false;
+		
 		if (params.containsKey("symbol")) {
-			cmd = cmd + "and symbol ilike '" + params.get("symbol")  +"' " ;
+			where = where + "\nand m.symbol ilike '" + params.get("symbol") + "'" ;
 		}
 		if (params.containsKey("name")) {
-			cmd = cmd + "and name ilike '" + params.get("name")  +"' " ;
+			where = where + "\nand m.name ilike '" + params.get("name") + "'" ;
 		}
 		if (params.containsKey("chromosome")) {
-			cmd = cmd + "and chromosome = '" + params.get("chromosome")  +"' " ;
+			where = where + "\nand m.chromosome = '" + params.get("chromosome") + "'" ;
 		}
-		cmd = cmd + "order by symbol";
+		if (params.containsKey("cytogeneticOffset")) {
+			where = where + "\nand m.cytogeneticOffset = '" + params.get("cytogeneticOffset") + "'" ;
+		}
+		if (params.containsKey("cmOffset")) {
+			where = where + "\nand m.cmoffset = " + params.get("cmOffset");
+		}
+		if (params.containsKey("markerStatusKey")) {
+			where = where + "\nand m._marker_status_key = " + params.get("markerStatusKey");
+		}
+		if (params.containsKey("markerTypeKey")) {
+			where = where + "\nand m._marker_type_key = " + params.get("markerTypeKey");
+		}
+		if (params.containsKey("editorNote")) {
+			where = where + "\nand enote._notetype_key = 1004 and enote.note ilike '" + params.get("editorNote") + "'" ;
+			from_editornote = true;
+		}
+		
+		if (from_editornote == true) {
+			from = from + ", mgi_note_marker_view enote";
+			where = where + "\nand m._marker_key = enote._object_key";
+		}
+		
+		// make this easy to copy/paste for troubleshooting
+		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info(cmd);
 
 		// request data, and parse results
@@ -108,15 +133,15 @@ public class MarkerService extends BaseService<MarkerDomain> implements BaseSear
 			while (rs.next()) {
 				String markerKey = rs.getString("_marker_key");
 				String symbol    = rs.getString("symbol");
-				eiSummaryMarkers.put(markerKey , symbol);
+				results.put(markerKey, symbol);
 			}
 			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {e.printStackTrace();}
 		
 		// ...off to be turned into JSON
-		markerEiSummaryDomain.setSummaryMarkers(eiSummaryMarkers);
-		return markerEiSummaryDomain;
+		markerEIResultDomain.setResults(results);
+		return markerEIResultDomain;
 	}	
 	
 	public MarkerEIUtilitiesDomain eiUtilities(MarkerUtilitiesForm searchForm) throws IOException, InterruptedException {

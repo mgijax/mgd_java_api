@@ -10,8 +10,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@ApiModel(value = "Allele EI Summary Model Object")
-public class AlleleEiSummaryDomain extends BaseDomain {
+@ApiModel(value = "Allele EI Result Domain Object")
+public class AlleleEIResultDomain extends BaseDomain {
 
-	private Map<String, HashMap> summaryAlleles;        
+	private Map<String, HashMap> results;        
 }

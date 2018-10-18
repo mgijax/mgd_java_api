@@ -6,22 +6,21 @@ import java.util.Map;
 import org.jax.mgi.mgd.api.model.BaseSearchForm;
 
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter @ApiModel("Marker Search Form")
 public class MarkerSearchForm extends BaseSearchForm {
 
-	@ApiModelProperty(value="Marker symbol to search for")
 	private String symbol;
-
-	@ApiModelProperty(value="Marker name to search for")
 	private String name;
-
-	@ApiModelProperty(value="Chromosome to search for")
 	private String chromosome;
-
+	private String cytogeneticOffset;
+	private String cmOffset;
+	private Integer markerStatusKey;
+	private Integer markerTypeKey;
+	private String editorNote;
+	
 	@Override
 	public Map<String, Object> getSearchFields() {
 		Map<String, Object> ret = new HashMap<>();
@@ -29,6 +28,12 @@ public class MarkerSearchForm extends BaseSearchForm {
 		if(symbol != null) { ret.put("symbol", symbol); }
 		if(name != null) { ret.put("name", name); }
 		if(chromosome != null) { ret.put("chromosome", chromosome); }
+		if(cytogeneticOffset != null) { ret.put("cytogeneticOffset", cytogeneticOffset); }
+		if(cmOffset != null) { ret.put("cmOffset", cmOffset); }
+		if(markerStatusKey != null) { ret.put("markerStatusKey", markerStatusKey); }
+		if(markerTypeKey != null) { ret.put("markerTypeKey", markerTypeKey); }
+		if(editorNote != null) { ret.put("editorNote", editorNote); }
+
 		return ret;
 	}
 	

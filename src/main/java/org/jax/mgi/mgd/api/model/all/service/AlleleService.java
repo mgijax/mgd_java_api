@@ -12,15 +12,13 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEiSummaryDomain;
-import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
-import org.jax.mgi.mgd.api.model.all.domain.AlleleEiSummaryDomain;
+import org.jax.mgi.mgd.api.model.all.domain.AlleleEIResultDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.all.search.AlleleSearchForm;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -72,12 +70,12 @@ public class AlleleService extends BaseService<AlleleDomain> implements BaseSear
 		return new SearchResults<AlleleDomain>(newItems);
 	}
 
-	public AlleleEiSummaryDomain eiSummarySearch(AlleleSearchForm searchForm) {
+	public AlleleEIResultDomain eiSearch(AlleleSearchForm searchForm) {
 		// domain object to be JSON-ed
-		AlleleEiSummaryDomain alleleEiSummaryDomain = new AlleleEiSummaryDomain();
+		AlleleEIResultDomain alleleEIResultDomain = new AlleleEIResultDomain();
 		
 		// markerKey-map of attributes ordered (linked) mapping for summary
-		Map<String, HashMap> eiSummaryAlleles = new LinkedHashMap<String, HashMap>();
+		Map<String, HashMap> results = new LinkedHashMap<String, HashMap>();
 
 		Map<String, Object> params = searchForm.getSearchFields();
 		log.info(params);
@@ -120,15 +118,15 @@ public class AlleleService extends BaseService<AlleleDomain> implements BaseSear
 						attr.put("symbol", rs.getString("symbol"));
 						attr.put("alleletype", rs.getString("alleletype"));
 						attr.put("allelestatus", rs.getString("allelestatus"));
-						eiSummaryAlleles.put(alleleKey , attr);
+						results.put(alleleKey , attr);
 					}
 					sqlExecutor.cleanup();
 				}
 				catch (Exception e) {e.printStackTrace();}
 				
 				// ...off to be turned into JSON
-				alleleEiSummaryDomain.setSummaryAlleles(eiSummaryAlleles);
-				return alleleEiSummaryDomain;
+				alleleEIResultDomain.setResults(results);
+				return alleleEIResultDomain;
 	}
 
 

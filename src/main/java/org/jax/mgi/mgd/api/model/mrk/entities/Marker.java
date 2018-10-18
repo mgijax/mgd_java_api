@@ -1,15 +1,19 @@
 package org.jax.mgi.mgd.api.model.mrk.entities;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
+import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
@@ -25,53 +29,65 @@ public class Marker extends BaseEntity {
 	@Id
 	@ApiModelProperty(value="primary key")
 	private Integer _marker_key;
-
-	@ApiModelProperty(value="official symbol of marker")
 	private String symbol;
-
-	@ApiModelProperty(value="official name of marker")
 	private String name;
-
-	@ApiModelProperty(value="chromosome")
 	private String chromosome;
-
-	@ApiModelProperty(value="cytogenetic band")
 	private String cytogeneticOffset;
-
-	@ApiModelProperty(value="cmOffset")
 	private String cmOffset;
+	private Date creation_date;
+	private Date modification_date;
 	
-	@ApiModelProperty(value="Controlled vocabulary table for all Organisms")
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_organism_key")
 	private Organism organism;
 
-	@ApiModelProperty(value="Controlled vocabulary table for all Marker Statuses (official, withdrawn, reserved)")
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="_marker_status_key")
 	private MarkerStatus markerStatus;
 
-	@ApiModelProperty(value="Controlled vocabulary table for all Marker Types")
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_marker_type_key")
 	private MarkerType markerType;
 	
-	@ApiModelProperty(value="creation date")
-	private Date creation_date;
-	@ApiModelProperty(value="modification date")
-	private Date modification_date;
-	
-	@ApiModelProperty(value="creation user")
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
-	@ApiModelProperty(value="modification user")
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@ApiModelProperty(value="marker note aka marker detail clip (see Allele module)")
+	//1004	Editor/Coordinator
+	@OneToMany
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
+	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1004")
+	private Set<Note> editorNote;
+	
+	//1009	Sequence
+	@OneToMany
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
+	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1009")
+	private Set<Note> sequenceNote;
+	
+	//1030	Marker Revision
+	@OneToMany
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
+	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1030")
+	private Set<Note> revisionNote;
+	
+	//1035	Strain-Specific Marker
+	@OneToMany
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
+	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1035")
+	private Set<Note> strainNote;
+	
+	//1049	Location
+	@OneToMany
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
+	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1049")
+	private Set<Note> locationNote;
+	
+	// marker note aka marker detail clip (see Allele module)")
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_marker_key")
 	private MarkerNote markerNote;

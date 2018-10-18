@@ -34,6 +34,12 @@ public class MarkerDomain extends BaseDomain {
 	private Date creation_date;
 	private Date modification_date;
 	
+	private String editorNote;
+	private String sequenceNote;
+	private String revisionNote;
+	private String strainNote;
+	private String locationNote;
+
 	//private String markerNote;
 	//private String locationChromosome;
 	//private Integer locationStartCoordinate;
@@ -43,7 +49,6 @@ public class MarkerDomain extends BaseDomain {
 	//private String locationProvider;
 	//private String locationVersion;
 	//private String locationText;
-	//private String locationNote;
 	//private String mcvTerm;
 	//private String mgiAccessionId;
 	

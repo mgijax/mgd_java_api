@@ -1,27 +1,14 @@
 package org.jax.mgi.mgd.api.model.mrk.translator;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
-import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
-import org.jax.mgi.mgd.api.model.mgi.entities.Relationship;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
-import org.jax.mgi.mgd.api.model.mrk.entities.MarkerMCVCache;
-import org.jax.mgi.mgd.api.model.seq.domain.SequenceMarkerCacheDomain;
-import org.jax.mgi.mgd.api.model.seq.translator.SequenceMarkerCacheTranslator;
-import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
-import org.jax.mgi.mgd.api.model.voc.translator.TermTranslator;
 
 public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerDomain> {
 
-	//private NoteTranslator noteTranslator = new NoteTranslator();
+	private NoteTranslator noteTranslator = new NoteTranslator();
 	//private TermTranslator termTranslator = new TermTranslator();
 	//private SequenceMarkerCacheTranslator biotypesTranslator = new SequenceMarkerCacheTranslator();
 
@@ -46,6 +33,34 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		domain.setModifiedBy(entity.getModifiedBy().getName());
 		domain.setCreation_date(entity.getCreation_date());
 		domain.setModification_date(entity.getModification_date());
+		
+		// at most one editorNote
+		Iterable<NoteDomain> editorNote = noteTranslator.translateEntities(entity.getEditorNote(), translationDepth - 1);
+		if(editorNote.iterator().hasNext() == true) {
+			domain.setEditorNote(editorNote.iterator().next().getNoteChunk());
+		}
+		
+		// at most one sequenceNote
+		Iterable<NoteDomain> sequenceNote = noteTranslator.translateEntities(entity.getSequenceNote(), translationDepth - 1);
+		if(sequenceNote.iterator().hasNext() == true) {
+			domain.setSequenceNote(sequenceNote.iterator().next().getNoteChunk());
+		}
+		// at most one revisionNote
+		Iterable<NoteDomain> revisionNote = noteTranslator.translateEntities(entity.getRevisionNote(), translationDepth - 1);
+		if(revisionNote.iterator().hasNext() == true) {
+			domain.setRevisionNote(revisionNote.iterator().next().getNoteChunk());
+		}
+		// at most one strainNote
+		Iterable<NoteDomain> strainNote = noteTranslator.translateEntities(entity.getStrainNote(), translationDepth - 1);
+		if(strainNote.iterator().hasNext() == true) {
+			domain.setStrainNote(strainNote.iterator().next().getNoteChunk());
+		}
+		
+		// at most one locationNote
+		Iterable<NoteDomain> locationNote = noteTranslator.translateEntities(entity.getLocationNote(), translationDepth - 1);
+		if(locationNote.iterator().hasNext() == true) {
+			domain.setLocationNote(locationNote.iterator().next().getNoteChunk());
+		}
 		
 		//domain.setMgiAccessionId(entity.getMgiAccessionId().getAccID());
 
@@ -83,13 +98,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			//		);
 			//}
 		//}
-
-		// at most one locationNote
-		//Iterable<NoteDomain> locationNotes = noteTranslator.translateEntities(entity.getLocationNotes(), translationDepth - 1);
-		//if(locationNotes.iterator().hasNext() == true) {
-		//	domain.setLocationNote(locationNotes.iterator().next().getNoteChunk());
-		//}
-			
+		
 		// all synonym objects
 //		List<String> synonyms = new ArrayList<String>();
 //		for (MGISynonym ms : entity.getSynonyms()) {

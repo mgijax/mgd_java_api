@@ -57,40 +57,44 @@ public class Marker extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	//1004	Editor/Coordinator
+	// Editor/Coordinator
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1004")
 	private Set<Note> editorNote;
 	
-	//1009	Sequence
+	// Sequence
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1009")
 	private Set<Note> sequenceNote;
 	
-	//1030	Marker Revision
+	//Marker Revision
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1030")
 	private Set<Note> revisionNote;
 	
-	//1035	Strain-Specific Marker
+	// Strain-Specific Marker
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1035")
 	private Set<Note> strainNote;
 	
-	//1049	Location
+	// Location
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1049")
 	private Set<Note> locationNote;
 	
-	// marker note aka marker detail clip (see Allele module)")
+	// marker note aka marker detail clip (see Allele module)
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_marker_key")
 	private MarkerNote markerNote;
+	
+	//@OneToMany
+	//@JoinColumn(name="_marker_key")
+	//private ArrayList<MarkerHistory> history;
 	
 	//@OneToOne(fetch=FetchType.LAZY)
 	//@JoinColumn(name="_marker_key")
@@ -101,11 +105,7 @@ public class Marker extends BaseEntity {
 	//@Where(clause="`_mgitype_key` = 2")
 	//@OrderColumn(name="accID")
 	//private Set<Accession> allAccessionIds;
-	
-	//@OneToMany
-	//@JoinColumn(name="_marker_key")
-	//private Set<MarkerHistory> history;
-	
+
 	//@OneToMany
 	//@JoinColumn(name="_marker_key")
 	//private Set<Allele> alleles = new HashSet<Allele>();

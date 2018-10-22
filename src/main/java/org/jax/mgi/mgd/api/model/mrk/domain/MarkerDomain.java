@@ -5,7 +5,6 @@ import java.util.Date;
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,9 +12,8 @@ import lombok.Setter;
 @ApiModel(value = "Marker Model Object")
 public class MarkerDomain extends BaseDomain {
 
-	@ApiModelProperty("Marker primary key")
+	//@ApiModelProperty("Marker primary key")
 	private Integer markerKey;
-	@ApiModelProperty("Marker Symbol")
 	private String symbol;
 	private String name;
 	private String chromosome;
@@ -39,8 +37,8 @@ public class MarkerDomain extends BaseDomain {
 	private String revisionNote;
 	private String strainNote;
 	private String locationNote;
-
-	//private String markerNote;
+	
+	//private String markerNote; 
 	//private String locationChromosome;
 	//private Integer locationStartCoordinate;
 	//private Integer locationEndCoordinate;

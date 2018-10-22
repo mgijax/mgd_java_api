@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "Marker Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class MarkerController extends BaseController<MarkerDomain> implements BaseSearchInterface<MarkerDomain, MarkerSearchForm> {
+public class MarkerController extends BaseController<MarkerDomain> {
 
 	@Inject
 	private MarkerService markerService;
@@ -58,11 +58,6 @@ public class MarkerController extends BaseController<MarkerDomain> implements Ba
 		return markerService.delete(key, user);
 	}
 	
-	@Override
-	public SearchResults<MarkerDomain> search(MarkerSearchForm searchForm) {
-		return markerService.search(searchForm);
-	}
-
 	@POST
 	@ApiOperation(value = "EI Marker Search")
 	@Path("/eiSearch")

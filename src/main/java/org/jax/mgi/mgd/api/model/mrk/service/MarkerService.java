@@ -27,7 +27,7 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
 @RequestScoped
-public class MarkerService extends BaseService<MarkerDomain> implements BaseSearchInterface<MarkerDomain, MarkerSearchForm> {
+public class MarkerService extends BaseService<MarkerDomain> {
 
 	protected Logger log = Logger.getLogger(MarkerService.class);
 
@@ -60,19 +60,6 @@ public class MarkerService extends BaseService<MarkerDomain> implements BaseSear
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Transactional
-	public SearchResults<MarkerDomain> search(MarkerSearchForm searchForm) {
-		SearchResults<Marker> markers;
-		if(searchForm.getOrderBy() != null) {
-			markers = markerDAO.search(searchForm.getSearchFields(), searchForm.getOrderBy());
-		} else {
-			markers = markerDAO.search(searchForm.getSearchFields());
-		}
-		Iterable<MarkerDomain> newItems = translator.translateEntities(markers.items, searchForm.getSearchDepth());
-		return new SearchResults<MarkerDomain>(newItems);
-	}
-
 
 	public MarkerEIResultDomain eiSearch(MarkerSearchForm searchForm) {
 

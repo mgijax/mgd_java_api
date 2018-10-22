@@ -1,8 +1,15 @@
 package org.jax.mgi.mgd.api.model.mrk.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.entities.Accession;
+import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
+import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -32,11 +39,13 @@ public class MarkerDomain extends BaseDomain {
 	private Date creation_date;
 	private Date modification_date;
 	
-	private String editorNote;
-	private String sequenceNote;
-	private String revisionNote;
-	private String strainNote;
-	private String locationNote;
+	private NoteDomain editorNote;
+	private NoteDomain sequenceNote;
+	private NoteDomain revisionNote;
+	private NoteDomain strainNote;
+	private NoteDomain locationNote;
+	
+	private List<AccessionDomain> mgiAccessionIds;
 	
 	//private String markerNote; 
 	//private String locationChromosome;

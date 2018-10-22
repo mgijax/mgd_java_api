@@ -98,7 +98,7 @@ public class Marker extends BaseEntity {
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` = 1")
-	@OrderBy(clause = "preferred, accID")
+	@OrderBy(clause = "preferred desc, accID")
 	private Set<Accession> mgiAccessionIds;
 	
 	//@OneToMany

@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.mrk.search;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +25,11 @@ public class MarkerSearchForm extends BaseSearchForm {
 	private String revisionNote;
 	private String strainNote;
 	private String locationNote;
+	private String createdBy;
+	private String modifiedBy;
+	private Date creation_date;
+	private Date modification_date;
+	private String accID;
 	
 	@Override
 	public Map<String, Object> getSearchFields() {
@@ -41,6 +47,11 @@ public class MarkerSearchForm extends BaseSearchForm {
 		if(revisionNote != null) { ret.put("revisionNote", revisionNote); }
 		if(strainNote != null) { ret.put("strainNote", strainNote); }
 		if(locationNote != null) { ret.put("locationNote", locationNote); }
+		if(createdBy != null) { ret.put("createdBy",  createdBy); }
+		if(modifiedBy != null) { ret.put("modifiedBy",  modifiedBy); }
+		if(creation_date != null) { ret.put("creation_date",  creation_date); }
+		if(modification_date != null) { ret.put("modification_date",  modification_date); }
+		if(accID != null) { ret.put("accID",  accID); }
 
 		return ret;
 	}

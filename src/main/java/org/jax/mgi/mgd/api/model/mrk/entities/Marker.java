@@ -95,6 +95,7 @@ public class Marker extends BaseEntity {
 	@JoinColumn(name="_marker_key")
 	private MarkerNote markerNote;
 	
+	// mgi accession ids only
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` = 1")

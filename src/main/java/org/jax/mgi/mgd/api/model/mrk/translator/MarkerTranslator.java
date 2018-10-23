@@ -66,7 +66,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			domain.setLocationNote(locationNote.iterator().next());
 		}
 		
-		// mgiAccessionIds
+		// mgi accession ids only
 		Iterable<AccessionDomain> mgiAccessionIds = accessionTranslator.translateEntities(entity.getMgiAccessionIds(), translationDepth - 1);
 		if(mgiAccessionIds.iterator().hasNext() == true) {
 			domain.setMgiAccessionIds(IteratorUtils.toList(mgiAccessionIds.iterator()));

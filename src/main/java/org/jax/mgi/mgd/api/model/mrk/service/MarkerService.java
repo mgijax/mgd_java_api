@@ -72,7 +72,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		log.info(params);
 		
 		String cmd = "";
-		String select = "select m._marker_key, m._marker_type_key, m.symbol";
+		String select = "select distinct m._marker_key, m._marker_type_key, m.symbol";
 		String from = "from mrk_marker m";
 		String where = "where m._organism_key = 1";
 		String orderBy = "order by m._marker_type_key, m.symbol";
@@ -81,6 +81,9 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Boolean from_revisionNote = false;
 		Boolean from_strainNote = false;
 		Boolean from_locationNote = false;
+		Boolean from_user1 = false;
+		Boolean from_user2 = false;
+		Boolean from_accession = false;
 
 		if (params.containsKey("symbol")) {
 			where = where + "\nand m.symbol ilike '" + params.get("symbol") + "'" ;
@@ -103,6 +106,21 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		if (params.containsKey("markerTypeKey")) {
 			where = where + "\nand m._marker_type_key = " + params.get("markerTypeKey");
 		}
+		// look at LitTriage
+		//if (params.containsKey("creation_date")) {
+		//	where = where + "\nand (m.creation_date betweeen '" 
+		//		+ params.get("creation_date") 
+		//		+ "' and ('" + params.get("creation_date")
+		//		+ "'::date + '1 day'::interval))";
+		//}
+		if (params.containsKey("createdBy")) {
+			where = where + "\nand u1.login ilike '" + params.get("createdBy") + "'";
+			from_user1 = true;
+		}
+		if (params.containsKey("modifiedBy")) {
+			where = where + "\nand u2.login ilike '" + params.get("modifiedBy") + "'";
+			from_user2 = true;
+		}
 		if (params.containsKey("editorNote")) {
 			where = where + "\nand note1._notetype_key = 1004 and note1.note ilike '" + params.get("editorNote") + "'" ;
 			from_editorNote = true;
@@ -123,7 +141,24 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			where = where + "\nand note5._notetype_key = 1049 and note5.note ilike '" + params.get("locationNote") + "'" ;
 			from_locationNote = true;
 		}
+		if (params.containsKey("accID")) {
+			where = where + "\nand a.accID ilike '" + params.get("accID") + "'";
+			from_accession = true;
+		}
 		
+		if (from_user1 == true) {
+			from = from + ", mgi_user u1";
+			where = where + "\nand m._createdBy_key = u1._user_key";
+		}
+		if (from_user2 == true) {
+			from = from + ", mgi_user u2";
+			where = where + "\nand m._modifiedBy_key = u2._user_key";
+		}
+		if (from_accession == true) {
+			from = from + ", acc_accession a";
+			where = where + "\nand m._marker_key = a._object_key" 
+					+ "\nand a._mgitype_key = 2";
+		}
 		if (from_editorNote == true) {
 			from = from + ", mgi_note_marker_view note1";
 			where = where + "\nand m._marker_key = note1._object_key";

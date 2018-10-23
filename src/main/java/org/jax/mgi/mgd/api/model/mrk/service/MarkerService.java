@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -61,13 +63,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		return null;
 	}
 
-	public MarkerEIResultDomain eiSearch(MarkerSearchForm searchForm) {
+	public List<MarkerEIResultDomain> eiSearch(MarkerSearchForm searchForm) {
 
-		// domain object to be JSON-ed
-		MarkerEIResultDomain markerEIResultDomain = new MarkerEIResultDomain();
-		
-		// markerKey-markerSymbol ordered (linked) mapping for summary
-		Map<String, String> results = new LinkedHashMap<String, String>();
+		// list of results to be returned
+		List<MarkerEIResultDomain> results = new ArrayList<MarkerEIResultDomain>();
 
 		Map<String, Object> params = searchForm.getSearchFields();
 		log.info(params);
@@ -154,17 +153,17 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				String markerKey = rs.getString("_marker_key");
-				String symbol    = rs.getString("symbol");
-				results.put(markerKey, symbol);
+				MarkerEIResultDomain markerEIResultDomain = new MarkerEIResultDomain();
+				markerEIResultDomain.setKey(rs.getString("_marker_key"));
+				markerEIResultDomain.setSymbol(rs.getString("symbol"));
+				results.add(markerEIResultDomain);
 			}
 			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {e.printStackTrace();}
 		
 		// ...off to be turned into JSON
-		markerEIResultDomain.setResults(results);
-		return markerEIResultDomain;
+		return results;
 	}	
 	
 	public MarkerEIUtilitiesDomain eiUtilities(MarkerUtilitiesForm searchForm) throws IOException, InterruptedException {

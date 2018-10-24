@@ -7,12 +7,10 @@ import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 
-import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@ApiModel(value = "Marker Domain Object")
 public class MarkerDomain extends BaseDomain {
 
 	//@ApiModelProperty("primary key")

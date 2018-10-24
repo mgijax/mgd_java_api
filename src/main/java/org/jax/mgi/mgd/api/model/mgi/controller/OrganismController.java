@@ -1,27 +1,29 @@
 package org.jax.mgi.mgd.api.model.mgi.controller;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.mgi.domain.OrganismDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.search.OrganismSearchForm;
 import org.jax.mgi.mgd.api.model.mgi.service.OrganismService;
-import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Path("/organism")
 @Api(value = "Organism Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class OrganismController extends BaseController<OrganismDomain> implements BaseSearchInterface<OrganismDomain, OrganismSearchForm> {
+public class OrganismController extends BaseController<OrganismDomain> {
 
 	@Inject
 	private OrganismService organismService;
@@ -47,9 +49,11 @@ public class OrganismController extends BaseController<OrganismDomain> implement
 		return organismService.delete(organism_key, user);
 	}
 
-	@Override
-	public SearchResults<OrganismDomain> search(OrganismSearchForm searchForm) {
+	@POST
+	@ApiOperation(value = "Search")
+	@Path("/search")
+	public List<OrganismDomain> search(OrganismSearchForm searchForm) {
 		return organismService.search(searchForm);
 	}
-
+	
 }

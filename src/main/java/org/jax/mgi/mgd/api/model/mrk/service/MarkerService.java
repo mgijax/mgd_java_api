@@ -82,25 +82,25 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Boolean from_user2 = false;
 		Boolean from_accession = false;
 
-		if (params.containsKey("symbol") && params.get("symbol") != "") {
+		if (params.containsKey("symbol")) {
 			where = where + "\nand m.symbol ilike '" + params.get("symbol") + "'" ;
 		}
-		if (params.containsKey("name") && params.get("name") != "") {
+		if (params.containsKey("name")) {
 			where = where + "\nand m.name ilike '" + params.get("name") + "'" ;
 		}
-		if (params.containsKey("chromosome") && params.get("chromosome") != "") {
+		if (params.containsKey("chromosome")) {
 			where = where + "\nand m.chromosome = '" + params.get("chromosome") + "'" ;
 		}
-		if (params.containsKey("cytogeneticOffset") && params.get("cytogeneticOffset") != "") {
+		if (params.containsKey("cytogeneticOffset")) {
 			where = where + "\nand m.cytogeneticOffset = '" + params.get("cytogeneticOffset") + "'" ;
 		}
-		if (params.containsKey("cmOffset") && params.get("cmOffset") != "") {
+		if (params.containsKey("cmOffset")) {
 			where = where + "\nand m.cmoffset = " + params.get("cmOffset");
 		}
-		if (params.containsKey("markerStatusKey") && params.get("markerStatusKey") != "") {
+		if (params.containsKey("markerStatusKey")) {
 			where = where + "\nand m._marker_status_key = " + params.get("markerStatusKey");
 		}
-		if (params.containsKey("markerTypeKey") && params.get("markerTypeKey") != "") {
+		if (params.containsKey("markerTypeKey")) {
 			where = where + "\nand m._marker_type_key = " + params.get("markerTypeKey");
 		}
 		// look at LitTriage
@@ -110,35 +110,35 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		//		+ "' and ('" + params.get("creation_date")
 		//		+ "'::date + '1 day'::interval))";
 		//}
-		if (params.containsKey("createdBy") && params.get("createdBy") != "") {
+		if (params.containsKey("createdBy")) {
 			where = where + "\nand u1.login ilike '" + params.get("createdBy") + "'";
 			from_user1 = true;
 		}
-		if (params.containsKey("modifiedBy") && params.get("modifiedBy") != "") {
+		if (params.containsKey("modifiedBy")) {
 			where = where + "\nand u2.login ilike '" + params.get("modifiedBy") + "'";
 			from_user2 = true;
 		}
-		if (params.containsKey("editorNote") && params.get("editorNote") != "") {
+		if (params.containsKey("editorNote")) {
 			where = where + "\nand note1._notetype_key = 1004 and note1.note ilike '" + params.get("editorNote") + "'" ;
 			from_editorNote = true;
 		}
-		if (params.containsKey("sequenceNote") && params.get("sequenceNote") != "") {
+		if (params.containsKey("sequenceNote")) {
 			where = where + "\nand note2._notetype_key = 1009 and note2.note ilike '" + params.get("sequenceNote") + "'" ;
 			from_sequenceNote = true;
 		}
-		if (params.containsKey("revisionNote") && params.get("revisionNote") != "") {
+		if (params.containsKey("revisionNote")) {
 			where = where + "\nand note3._notetype_key = 1030 and note3.note ilike '" + params.get("revisionNote") + "'" ;
 			from_revisionNote = true;
 		}
-		if (params.containsKey("strainNote") && params.get("strainNote") != "") {
+		if (params.containsKey("strainNote")) {
 			where = where + "\nand note4._notetype_key = 1035 and note4.note ilike '" + params.get("strainNote") + "'" ;
 			from_strainNote = true;
 		}
-		if (params.containsKey("locationNote") && params.get("locationNote") != "") {
+		if (params.containsKey("locationNote")) {
 			where = where + "\nand note5._notetype_key = 1049 and note5.note ilike '" + params.get("locationNote") + "'" ;
 			from_locationNote = true;
 		}
-		if (params.containsKey("accID") && params.get("accID") != "") {
+		if (params.containsKey("accID")) {
 			where = where + "\nand a.accID ilike '" + params.get("accID") + "'";
 			from_accession = true;
 		}

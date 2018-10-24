@@ -35,23 +35,23 @@ public class MarkerSearchForm extends BaseSearchForm {
 	public Map<String, Object> getSearchFields() {
 		Map<String, Object> ret = new HashMap<>();
 
-		if(symbol != null) { ret.put("symbol", symbol); }
-		if(name != null) { ret.put("name", name); }
-		if(chromosome != null) { ret.put("chromosome", chromosome); }
-		if(cytogeneticOffset != null) { ret.put("cytogeneticOffset", cytogeneticOffset); }
-		if(cmOffset != null) { ret.put("cmOffset", cmOffset); }
+		if(symbol != null && symbol != "") { ret.put("symbol", symbol); }
+		if(name != null && name != "") { ret.put("name", name); }
+		if(chromosome != null && chromosome != "") { ret.put("chromosome", chromosome); }
+		if(cytogeneticOffset != null && cytogeneticOffset != "") { ret.put("cytogeneticOffset", cytogeneticOffset); }
+		if(cmOffset != null && cmOffset != "") { ret.put("cmOffset", cmOffset); }
 		if(markerStatusKey != null) { ret.put("markerStatusKey", markerStatusKey); }
 		if(markerTypeKey != null) { ret.put("markerTypeKey", markerTypeKey); }
-		if(editorNote != null) { ret.put("editorNote", editorNote); }
-		if(sequenceNote != null) { ret.put("sequenceNote", sequenceNote); }
-		if(revisionNote != null) { ret.put("revisionNote", revisionNote); }
-		if(strainNote != null) { ret.put("strainNote", strainNote); }
-		if(locationNote != null) { ret.put("locationNote", locationNote); }
-		if(createdBy != null) { ret.put("createdBy",  createdBy); }
-		if(modifiedBy != null) { ret.put("modifiedBy",  modifiedBy); }
+		if(editorNote != null && editorNote != "") { ret.put("editorNote", editorNote); }
+		if(sequenceNote != null && sequenceNote != "") { ret.put("sequenceNote", sequenceNote); }
+		if(revisionNote != null && revisionNote != "") { ret.put("revisionNote", revisionNote); }
+		if(strainNote != null && strainNote != "") { ret.put("strainNote", strainNote); }
+		if(locationNote != null && locationNote != "") { ret.put("locationNote", locationNote); }
+		if(createdBy != null && createdBy != "") { ret.put("createdBy",  createdBy); }
+		if(modifiedBy != null && modifiedBy != "") { ret.put("modifiedBy",  modifiedBy); }
 		if(creation_date != null) { ret.put("creation_date",  creation_date); }
 		if(modification_date != null) { ret.put("modification_date",  modification_date); }
-		if(accID != null) { ret.put("accID",  accID); }
+		if(accID != null && accID != "") { ret.put("accID",  accID); }
 
 		return ret;
 	}

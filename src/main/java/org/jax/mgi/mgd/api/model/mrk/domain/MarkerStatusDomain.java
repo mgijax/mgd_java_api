@@ -9,10 +9,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@ApiModel(value = "Marker Status Model Object")
+@ApiModel(value = "Marker Status Domain Object")
 public class MarkerStatusDomain extends BaseDomain {
-
-	//@ApiModelProperty("Marker primary key")
+	
 	private Integer markerStatusKey;
 	private String markerStatus;
 	private Date creation_date;

@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@ApiModel(value = "Marker EI Utilities  Model Object")
+@ApiModel(value = "Marker EI Utilities Domain Object")
 public class MarkerEIUtilitiesDomain extends BaseDomain {
 
 	private Map<String, String> eiUtilities;        

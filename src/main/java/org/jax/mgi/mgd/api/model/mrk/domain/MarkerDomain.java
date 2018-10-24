@@ -1,25 +1,21 @@
 package org.jax.mgi.mgd.api.model.mrk.domain;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
-import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
-import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@ApiModel(value = "Marker Model Object")
+@ApiModel(value = "Marker Domain Object")
 public class MarkerDomain extends BaseDomain {
 
-	//@ApiModelProperty("Marker primary key")
+	//@ApiModelProperty("primary key")
 	private Integer markerKey;
 	private String symbol;
 	private String name;

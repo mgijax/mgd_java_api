@@ -2,30 +2,26 @@ package org.jax.mgi.mgd.api.model.mrk.service;
 
 import java.io.IOException;
 import java.sql.ResultSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIResultDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
-import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
 import org.jax.mgi.mgd.api.util.MarkerWithdrawal;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
-import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
 @RequestScoped
@@ -71,6 +67,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Map<String, Object> params = searchForm.getSearchFields();
 		log.info(params);
 		
+		// building SQL command
 		String cmd = "";
 		String select = "select distinct m._marker_key, m._marker_type_key, m.symbol";
 		String from = "from mrk_marker m";
@@ -85,25 +82,25 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Boolean from_user2 = false;
 		Boolean from_accession = false;
 
-		if (params.containsKey("symbol")) {
+		if (params.containsKey("symbol") && params.get("symbol") != "") {
 			where = where + "\nand m.symbol ilike '" + params.get("symbol") + "'" ;
 		}
-		if (params.containsKey("name")) {
+		if (params.containsKey("name") && params.get("name") != "") {
 			where = where + "\nand m.name ilike '" + params.get("name") + "'" ;
 		}
-		if (params.containsKey("chromosome")) {
+		if (params.containsKey("chromosome") && params.get("chromosome") != "") {
 			where = where + "\nand m.chromosome = '" + params.get("chromosome") + "'" ;
 		}
-		if (params.containsKey("cytogeneticOffset")) {
+		if (params.containsKey("cytogeneticOffset") && params.get("cytogeneticOffset") != "") {
 			where = where + "\nand m.cytogeneticOffset = '" + params.get("cytogeneticOffset") + "'" ;
 		}
-		if (params.containsKey("cmOffset")) {
+		if (params.containsKey("cmOffset") && params.get("cmOffset") != "") {
 			where = where + "\nand m.cmoffset = " + params.get("cmOffset");
 		}
-		if (params.containsKey("markerStatusKey")) {
+		if (params.containsKey("markerStatusKey") && params.get("markerStatusKey") != "") {
 			where = where + "\nand m._marker_status_key = " + params.get("markerStatusKey");
 		}
-		if (params.containsKey("markerTypeKey")) {
+		if (params.containsKey("markerTypeKey") && params.get("markerTypeKey") != "") {
 			where = where + "\nand m._marker_type_key = " + params.get("markerTypeKey");
 		}
 		// look at LitTriage
@@ -113,35 +110,35 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		//		+ "' and ('" + params.get("creation_date")
 		//		+ "'::date + '1 day'::interval))";
 		//}
-		if (params.containsKey("createdBy")) {
+		if (params.containsKey("createdBy") && params.get("createdBy") != "") {
 			where = where + "\nand u1.login ilike '" + params.get("createdBy") + "'";
 			from_user1 = true;
 		}
-		if (params.containsKey("modifiedBy")) {
+		if (params.containsKey("modifiedBy") && params.get("modifiedBy") != "") {
 			where = where + "\nand u2.login ilike '" + params.get("modifiedBy") + "'";
 			from_user2 = true;
 		}
-		if (params.containsKey("editorNote")) {
+		if (params.containsKey("editorNote") && params.get("editorNote") != "") {
 			where = where + "\nand note1._notetype_key = 1004 and note1.note ilike '" + params.get("editorNote") + "'" ;
 			from_editorNote = true;
 		}
-		if (params.containsKey("sequenceNote")) {
+		if (params.containsKey("sequenceNote") && params.get("sequenceNote") != "") {
 			where = where + "\nand note2._notetype_key = 1009 and note2.note ilike '" + params.get("sequenceNote") + "'" ;
 			from_sequenceNote = true;
 		}
-		if (params.containsKey("revisionNote")) {
+		if (params.containsKey("revisionNote") && params.get("revisionNote") != "") {
 			where = where + "\nand note3._notetype_key = 1030 and note3.note ilike '" + params.get("revisionNote") + "'" ;
 			from_revisionNote = true;
 		}
-		if (params.containsKey("strainNote")) {
+		if (params.containsKey("strainNote") && params.get("strainNote") != "") {
 			where = where + "\nand note4._notetype_key = 1035 and note4.note ilike '" + params.get("strainNote") + "'" ;
 			from_strainNote = true;
 		}
-		if (params.containsKey("locationNote")) {
+		if (params.containsKey("locationNote") && params.get("locationNote") != "") {
 			where = where + "\nand note5._notetype_key = 1049 and note5.note ilike '" + params.get("locationNote") + "'" ;
 			from_locationNote = true;
 		}
-		if (params.containsKey("accID")) {
+		if (params.containsKey("accID") && params.get("accID") != "") {
 			where = where + "\nand a.accID ilike '" + params.get("accID") + "'";
 			from_accession = true;
 		}
@@ -189,7 +186,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				MarkerEIResultDomain markerEIResultDomain = new MarkerEIResultDomain();
-				markerEIResultDomain.setKey(rs.getString("_marker_key"));
+				markerEIResultDomain.setMarkerKey(rs.getInt("_marker_key"));
 				markerEIResultDomain.setSymbol(rs.getString("symbol"));
 				results.add(markerEIResultDomain);
 			}

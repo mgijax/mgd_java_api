@@ -14,7 +14,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Status Model Object")
+@ApiModel(value = "Marker Status Entity Object")
 @Table(name="mrk_status")
 public class MarkerStatus extends BaseEntity {
 

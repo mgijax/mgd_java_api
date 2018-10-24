@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model.mrk.entities;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 
@@ -20,12 +19,14 @@ import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 @Entity
+@ApiModel(value = "Marker Entity Object")
 @Table(name="mrk_marker")
 public class Marker extends BaseEntity {
 

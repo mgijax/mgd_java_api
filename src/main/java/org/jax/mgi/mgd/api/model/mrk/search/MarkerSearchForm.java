@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model.mrk.search;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,8 +26,8 @@ public class MarkerSearchForm extends BaseSearchForm {
 	private String locationNote;
 	private String createdBy;
 	private String modifiedBy;
-	private Date creation_date;
-	private Date modification_date;
+	private String creation_date;
+	private String modification_date;
 	private String accID;
 	
 	@Override

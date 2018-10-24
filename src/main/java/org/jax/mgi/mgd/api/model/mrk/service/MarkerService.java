@@ -103,12 +103,29 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		if (params.containsKey("markerTypeKey")) {
 			where = where + "\nand m._marker_type_key = " + params.get("markerTypeKey");
 		}
-		// look at LitTriage
 		//if (params.containsKey("creation_date")) {
-		//	where = where + "\nand (m.creation_date betweeen '" 
-		//		+ params.get("creation_date") 
-		//		+ "' and ('" + params.get("creation_date")
-		//		+ "'::date + '1 day'::interval))";
+		//	if (params.get("creation_date").toString().startsWith("<=") == true) {
+		//		where = where + "\nand m.creation_date <= '" 
+		//				+ params.get("creation_date").toString().replace("<=","") + "'";
+		//	}
+		//	else if (params.get("creation_date").toString().startsWith("<") == true) {
+		//		where = where + "\nand m.creation_date < '" 
+		//				+ params.get("creation_date").toString().replace("<",  "") + "'";
+		//	}
+		//	else if (params.get("creation_date").toString().startsWith(">=") == true) {
+		//		where = where + "\nand m.creation_date >= '" 
+		//				+ params.get("creation_date").toString().replace(">=","") + "'";
+		//	}
+		//	else if (params.get("creation_date").toString().startsWith(">") == true) {
+		//		where = where + "\nand m.creation_date > '" 
+		//				+ params.get("creation_date").toString().replace(">",  "") + "'";
+		//	}
+		//	else {
+		//		where = where + "\nand (m.creation_date between '" 
+		//				+ params.get("creation_date") 
+		//				+ "' and ('" + params.get("creation_date")
+		//				+ "'::date + '1 day'::interval))";
+		//	}
 		//}
 		if (params.containsKey("createdBy")) {
 			where = where + "\nand u1.login ilike '" + params.get("createdBy") + "'";

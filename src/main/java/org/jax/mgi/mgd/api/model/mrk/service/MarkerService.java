@@ -55,7 +55,18 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 	@Transactional
 	public MarkerDomain delete(Integer key, User user) {
-		// TODO Auto-generated method stub
+		// send delete markerDAO.get(key)
+		
+		String cmd = "delete from mrk_marker where _marker_key = " + key;
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			//while (rs.next()) {
+			//	results.add(markerEIResultDomain);
+			//}
+			sqlExecutor.cleanup();	
+		}
+		catch (Exception e) {e.printStackTrace();}
+		
 		return null;
 	}
 

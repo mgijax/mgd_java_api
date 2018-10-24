@@ -14,7 +14,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Types Model Object")
+@ApiModel(value = "Marker Type Entity Object")
 @Table(name="mrk_types")
 public class MarkerType extends BaseEntity {
 

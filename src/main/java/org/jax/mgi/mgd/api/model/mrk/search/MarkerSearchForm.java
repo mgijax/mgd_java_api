@@ -26,8 +26,8 @@ public class MarkerSearchForm extends BaseSearchForm {
 	private String locationNote;
 	private String createdBy;
 	private String modifiedBy;
-	private String creation_date;
-	private String modification_date;
+	//private String creation_date;
+	//private String modification_date;
 	private String accID;
 	
 	@Override
@@ -48,8 +48,8 @@ public class MarkerSearchForm extends BaseSearchForm {
 		if(locationNote != null && locationNote != "") { ret.put("locationNote", locationNote); }
 		if(createdBy != null && createdBy != "") { ret.put("createdBy",  createdBy); }
 		if(modifiedBy != null && modifiedBy != "") { ret.put("modifiedBy",  modifiedBy); }
-		if(creation_date != null) { ret.put("creation_date",  creation_date); }
-		if(modification_date != null) { ret.put("modification_date",  modification_date); }
+		//if(creation_date != null) { ret.put("creation_date",  creation_date); }
+		//if(modification_date != null) { ret.put("modification_date",  modification_date); }
 		if(accID != null && accID != "") { ret.put("accID",  accID); }
 
 		return ret;

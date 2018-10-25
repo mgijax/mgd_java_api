@@ -1,4 +1,4 @@
-package org.jax.mgi.mgd.api.model.mgi.search;
+package org.jax.mgi.mgd.api.model.mrk.search;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,8 +9,8 @@ import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter @ApiModel("Organism Search Form")
-public class OrganismSearchForm extends BaseSearchForm {
+@Getter @Setter @ApiModel("Marker Event Search Form")
+public class EventSearchForm extends BaseSearchForm {
 
 	@Override
 	public Map<String, Object> getSearchFields() {

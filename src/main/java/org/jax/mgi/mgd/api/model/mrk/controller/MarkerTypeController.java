@@ -54,7 +54,7 @@ public class MarkerTypeController extends BaseController<MarkerTypeDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Marker Type Search")
+	@ApiOperation(value = "Search")
 	@Path("/search")
 	public List<MarkerTypeDomain> search(MarkerTypeSearchForm searchForm) {
 		return markerTypeService.search(searchForm);

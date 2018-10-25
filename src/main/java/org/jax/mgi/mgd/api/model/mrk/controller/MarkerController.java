@@ -59,7 +59,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "EI Marker Search")
+	@ApiOperation(value = "EI Search")
 	@Path("/eiSearch")
 	public List<MarkerEIResultDomain> eiSearch(MarkerSearchForm searchForm) {
 		return markerService.eiSearch(searchForm);

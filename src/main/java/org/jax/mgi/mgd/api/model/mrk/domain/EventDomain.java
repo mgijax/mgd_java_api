@@ -8,10 +8,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class MarkerTypeDomain extends BaseDomain {
+public class EventDomain extends BaseDomain {
 	
-	private Integer markerTypeKey;
-	private String markerType;
+	private Integer markerEventKey;
+	private String event;
 	private Date creation_date;
 	private Date modification_date;     
 }

@@ -12,13 +12,13 @@ public class NoteTranslator extends BaseEntityDomainTranslator<Note, NoteDomain>
 
 		domain.setNoteKey(entity.get_note_key());
 		domain.set_object_key(entity.get_object_key());
+		domain.setMgiType(entity.getMgiType().getName());
+		domain.setNoteType(entity.getNoteType().getNoteType());
+		domain.setNoteChunk(entity.getNoteChunk().getNote());
 		domain.setCreatedBy(entity.getCreatedBy().getName());
 		domain.setModifiedBy(entity.getModifiedBy().getName());
 		domain.setCreation_date(entity.getCreation_date());
 		domain.setModification_date(entity.getModification_date());
-		domain.setMgiType(entity.getMgiType().getName());
-		domain.setNoteType(entity.getNoteType().getNoteType());
-		domain.setNoteChunk(entity.getNoteChunk().getNote());
 		
 		return domain;
 	}

@@ -54,7 +54,7 @@ public class MarkerStatusController extends BaseController<MarkerStatusDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Marker Status Search")
+	@ApiOperation(value = "Search")
 	@Path("/search")
 	public List<MarkerStatusDomain> search(MarkerStatusSearchForm searchForm) {
 		return markerStatusService.search(searchForm);

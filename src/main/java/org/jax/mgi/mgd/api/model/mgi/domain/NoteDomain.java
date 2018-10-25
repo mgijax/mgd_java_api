@@ -14,11 +14,12 @@ public class NoteDomain extends BaseDomain {
 
 	private Integer noteKey;
 	private Integer _object_key;
+	private Integer _mgitype_key;
+	private String mgiType;
+	private String noteType;
+	private String noteChunk;
 	private String createdBy;
 	private String modifiedBy;
 	private Date creation_date;
 	private Date modification_date;
-	private String mgiType;
-	private String noteType;
-	private String noteChunk;
 }   	

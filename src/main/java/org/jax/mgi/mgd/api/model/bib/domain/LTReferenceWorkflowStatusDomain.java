@@ -1,7 +1,7 @@
 package org.jax.mgi.mgd.api.model.bib.domain;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
+import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
 
 /* Is: a domain object that represents data for a single workflow group status change via the API
  * Has: data relating to a single workflow group status change for a single reference
@@ -9,7 +9,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
  * 	the entities package) to be closer to the database and keeping the PWI's interactions as simple
  *	as possible
  */
-public class ReferenceWorkflowStatusDomain extends BaseDomain {
+public class LTReferenceWorkflowStatusDomain extends BaseDomain {
 	public Integer _refs_key;
 	public boolean is_current;
 	public String creation_date;
@@ -20,9 +20,9 @@ public class ReferenceWorkflowStatusDomain extends BaseDomain {
 	public String createdby_user;
 	public String modifiedby_user;
 	
-	public ReferenceWorkflowStatusDomain() {}
+	public LTReferenceWorkflowStatusDomain() {}
 
-	public ReferenceWorkflowStatusDomain(ReferenceWorkflowStatus rws) {
+	public LTReferenceWorkflowStatusDomain(LTReferenceWorkflowStatus rws) {
 		this._refs_key = rws.get_refs_key();
 		this.creation_date = rws.getCreationDate();
 		this.modification_date = rws.getModificationDate();

@@ -17,16 +17,16 @@ import org.jax.mgi.mgd.api.exception.NonFatalAPIException;
 import org.jax.mgi.mgd.api.model.BaseRepository;
 import org.jax.mgi.mgd.api.model.acc.dao.AccessionDAO;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
-import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowStatusDomain;
-import org.jax.mgi.mgd.api.model.bib.entities.Reference;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowData;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowTag;
-import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
+import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceDAO;
+import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowStatusDomain;
+import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
+import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceBook;
+import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceNote;
+import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
+import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
+import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
+import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
@@ -40,12 +40,12 @@ import org.jax.mgi.mgd.api.util.SearchResults;
  *    ReferenceDomain object has its data drawn
  * Does: (from the outside, this appears to) retrieve domain objects, store them, search for them
  */
-public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
+public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	/***--- instance variables ---***/
 
 	@Inject
-	private ReferenceDAO referenceDAO;
+	private LTReferenceDAO referenceDAO;
 
 	@Inject
 	private TermDAO termDAO;
@@ -53,7 +53,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 	@Inject
 	private AccessionDAO accessionDAO;
 
-	ReferenceTranslator translator = new ReferenceTranslator();
+	LTReferenceTranslator translator = new LTReferenceTranslator();
 
 	/* These work together to allow for a maximum delay of two seconds for retries: */
 	private static int maxRetries = 10;		// maximum number of retries for non-fatal exceptions on update operations
@@ -64,17 +64,17 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 	/* gets a ReferenceDomain object that is fully fleshed out from a Reference
 	 */
 	@Override
-	public ReferenceDomain get(int primaryKey) throws FatalAPIException, APIException {
-		Reference ref = getReference(primaryKey);
-		ReferenceDomain domain = translator.translate(ref);
+	public LTReferenceDomain get(int primaryKey) throws FatalAPIException, APIException {
+		LTReference ref = getReference(primaryKey);
+		LTReferenceDomain domain = translator.translate(ref);
 		domain.setStatusHistory(getStatusHistory(domain));
 		return domain;
 	}
 
 	@Override
-	public SearchResults<ReferenceDomain> search(Map<String,Object> params) {
-		SearchResults<Reference> refs = referenceDAO.search(params);
-		SearchResults<ReferenceDomain> domains = new SearchResults<ReferenceDomain>();
+	public SearchResults<LTReferenceDomain> search(Map<String,Object> params) {
+		SearchResults<LTReference> refs = referenceDAO.search(params);
+		SearchResults<LTReferenceDomain> domains = new SearchResults<LTReferenceDomain>();
 
 		domains.elapsed_ms = refs.elapsed_ms;
 		domains.error = refs.error;
@@ -87,8 +87,8 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 			// walking the references to do the translations individually, because I want a List,
 			// not an Iterable
 
-			domains.items = new ArrayList<ReferenceDomain>();
-			for (Reference ref : refs.items) {
+			domains.items = new ArrayList<LTReferenceDomain>();
+			for (LTReference ref : refs.items) {
 				domains.items.add(translator.translate(ref));
 			}
 		}
@@ -96,8 +96,8 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 	}
 
 	@Override
-	public ReferenceDomain update(ReferenceDomain domain, User user) throws FatalAPIException, NonFatalAPIException, APIException {
-		Reference entity = getReference(domain._refs_key);
+	public LTReferenceDomain update(LTReferenceDomain domain, User user) throws FatalAPIException, NonFatalAPIException, APIException {
+		LTReference entity = getReference(domain._refs_key);
 		applyDomainChanges(entity, domain, user);
 		referenceDAO.persist(entity);
 		referenceDAO.updateCitationCache(domain._refs_key);
@@ -105,21 +105,21 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 	}
 
 	@Override
-	public ReferenceDomain delete(ReferenceDomain domain, User user) throws FatalAPIException {
+	public LTReferenceDomain delete(LTReferenceDomain domain, User user) throws FatalAPIException {
 		throw new FatalAPIException("Need to implement ReferenceRepository.delete() method");
 	}
 
 	@Override
-	public ReferenceDomain create(ReferenceDomain domain, User username) throws FatalAPIException {
+	public LTReferenceDomain create(LTReferenceDomain domain, User username) throws FatalAPIException {
 		throw new FatalAPIException("Need to implement ReferenceRepository.create() method");
 	}
 
 	/* get a list of events in the status history of the reference with the specified key
 	 */
-	public List<ReferenceWorkflowStatusDomain> getStatusHistory(ReferenceDomain domain) throws APIException {
-		List<ReferenceWorkflowStatusDomain> history = new ArrayList<ReferenceWorkflowStatusDomain>();
-		for (ReferenceWorkflowStatus event : referenceDAO.getStatusHistory(domain._refs_key.toString())) {
-			history.add(new ReferenceWorkflowStatusDomain(event));
+	public List<LTReferenceWorkflowStatusDomain> getStatusHistory(LTReferenceDomain domain) throws APIException {
+		List<LTReferenceWorkflowStatusDomain> history = new ArrayList<LTReferenceWorkflowStatusDomain>();
+		for (LTReferenceWorkflowStatus event : referenceDAO.getStatusHistory(domain._refs_key.toString())) {
+			history.add(new LTReferenceWorkflowStatusDomain(event));
 		}
 		return history;
 	}
@@ -144,7 +144,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 		 * 2. if the operation fails in a non-fatal manner, wait briefly and try again up to maxRetries times.
 		 */
 		for (Integer refsKey : refsKeys) {
-			Reference reference = referenceDAO.getReference(refsKey);
+			LTReference reference = referenceDAO.getReference(refsKey);
 			if (reference != null) {
 				int retries = 0;
 				boolean succeeded = false;
@@ -214,11 +214,11 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 
 	/* retrieve the Reference object with the given primaryKey
 	 */
-	private Reference getReference(Integer primaryKey) throws FatalAPIException, APIException {
+	private LTReference getReference(Integer primaryKey) throws FatalAPIException, APIException {
 		if (primaryKey == null) {
 			throw new FatalAPIException("ReferenceRepository.getReference() : reference key is null");
 		}
-		Reference reference = referenceDAO.getReference(primaryKey);
+		LTReference reference = referenceDAO.getReference(primaryKey);
 		if (reference == null) {
 			throw new FatalAPIException("ReferenceRepository.getReference(): Unknown reference key: " + primaryKey);
 		}
@@ -229,7 +229,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 	 * (assumes we are working in a transaction and persists any sub-objects into the database, but does
 	 * not persist this Reference object itself, as other changes could be coming)
 	 */
-	private void applyDomainChanges(Reference entity, ReferenceDomain domain, User currentUser) throws NonFatalAPIException, APIException {
+	private void applyDomainChanges(LTReference entity, LTReferenceDomain domain, User currentUser) throws NonFatalAPIException, APIException {
 		// Note that we must have 'anyChanges' after the OR, otherwise short-circuit evaluation will only save
 		// the first section changed.
 
@@ -247,7 +247,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 
 	/* handle the basic fields that have changed between this Reference and the given ReferenceDomain
 	 */
-	private boolean applyBasicFieldChanges(Reference entity, ReferenceDomain domain, User currentUser) throws FatalAPIException {
+	private boolean applyBasicFieldChanges(LTReference entity, LTReferenceDomain domain, User currentUser) throws FatalAPIException {
 		// exactly one set of basic data per reference, including:  is_discard flag, reference type,
 		// author, primary author (derived), journal, title, volume, issue, date, year, pages, 
 		// abstract, and isReviewArticle flag
@@ -358,7 +358,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 
 	/* apply ID changes from domain to entity for PubMed, DOI, and GO REF IDs
 	 */
-	private boolean applyAccessionIDChanges(Reference entity, ReferenceDomain domain, User currentUser) {
+	private boolean applyAccessionIDChanges(LTReference entity, LTReferenceDomain domain, User currentUser) {
 		// assumes only one ID per reference for each logical database (valid assumption, August 2017)
 		// need to handle:  new ID for logical db, updated ID for logical db, deleted ID for logical db
 
@@ -420,7 +420,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 	/* Apply a single ID change to this reference.  If there already is an ID for this logical database, replace it.  If there wasn't
 	 * one, add one.  And, if there was one previously, but there's not now, then delete it.
 	 */
-	private boolean applyOneIDChange(Reference entity, Integer ldb, String accID, String prefixPart, Integer numericPart, Integer preferred, Integer isPrivate, User currentUser) {
+	private boolean applyOneIDChange(LTReference entity, Integer ldb, String accID, String prefixPart, Integer numericPart, Integer preferred, Integer isPrivate, User currentUser) {
 		// first parameter is required; bail out if it is null
 		if (ldb == null) { return false; }
 
@@ -479,7 +479,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 
 	/* apply any changes from domain to entity for the reference notes field
 	 */
-	private boolean applyNoteChanges(Reference entity, ReferenceDomain domain, User currentUser) {
+	private boolean applyNoteChanges(LTReference entity, LTReferenceDomain domain, User currentUser) {
 		// at most one note per reference
 		// need to handle:  new note, updated note, deleted note
 
@@ -490,7 +490,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 		if (hadNote && willHaveNote) {
 			// already have a note and will continue to have a note; just need to apply any difference
 
-			ReferenceNote note = entity.getNotes().get(0);
+			LTReferenceNote note = entity.getNotes().get(0);
 			if (!smartEqual(note.getNote(), domain.referencenote)) {
 				note.setNote(domain.referencenote);
 				anyChanges = true;
@@ -505,7 +505,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 		} else if (willHaveNote) {
 			// did not have a note previously, but now need to create one
 
-			ReferenceNote note = new ReferenceNote();
+			LTReferenceNote note = new LTReferenceNote();
 			note.set_refs_key(entity.get_refs_key());
 			note.setNote(domain.referencenote);
 			note.setCreation_date(new Date());
@@ -520,7 +520,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 
 	/* apply changes to book data fields from domain to entity
 	 */
-	private boolean applyBookChanges(Reference entity, ReferenceDomain domain, User currentUser) {
+	private boolean applyBookChanges(LTReference entity, LTReferenceDomain domain, User currentUser) {
 		// at most one set of book data per reference
 		// need to handle:  deleted book data, updated book data, new book data
 
@@ -531,7 +531,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 		// If this reference is already a book and will continue to be a book, need to apply
 		// any changes to the fields of the existing book data.
 		if (wasBook && willBeBook && (entity.getBookList().size() > 0)) {
-			ReferenceBook book = entity.getBookList().get(0);
+			LTReferenceBook book = entity.getBookList().get(0);
 
 			if (!smartEqual(book.getBook_author(), domain.book_author) || !smartEqual(book.getBook_title(), domain.book_title) || 
 					!smartEqual(book.getPlace(), domain.place) || !smartEqual(book.getPublisher(), domain.publisher) ||
@@ -555,7 +555,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 		} else if (willBeBook) {
 			// This reference was not a book previously, but now will be, so we need to add book-specific data.
 
-			ReferenceBook book = new ReferenceBook();
+			LTReferenceBook book = new LTReferenceBook();
 			book.set_refs_key(entity.get_refs_key());
 			book.setBook_author(domain.book_author);
 			book.setBook_title(domain.book_title);
@@ -573,12 +573,12 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 
 	/* apply changes in workflow data fields (not status, though) from domain to entity
 	 */
-	private boolean applyWorkflowDataChanges(Reference entity, ReferenceDomain domain, User currentUser) throws APIException {
+	private boolean applyWorkflowDataChanges(LTReference entity, LTReferenceDomain domain, User currentUser) throws APIException {
 		// at most one set of workflow data per reference
 		// need to handle:  updated workflow data, new workflow data -- (no deletions)
 
 		boolean anyChanges = false;
-		ReferenceWorkflowData myWD = entity.getWorkflowData();
+		LTReferenceWorkflowData myWD = entity.getWorkflowData();
 
 		if (myWD != null) {
 			// Compare fields and update if needed.  We do not update the extracted text and the
@@ -597,7 +597,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 		} else {
 			// For some reason, no workflow data record exists.  So, create one.
 
-			myWD = new ReferenceWorkflowData();
+			myWD = new LTReferenceWorkflowData();
 			myWD.set_refs_key(domain._refs_key);
 			myWD.setHas_pdf(0);
 			myWD.setSupplementalTerm(getTermByTerm(Constants.VOC_SUPPLEMENTAL, domain.has_supplemental));
@@ -620,7 +620,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 	 * ReferenceDomain.  Persists any tag changes to the database.  Returns true if any changes were made,
 	 * false otherwise.
 	 */
-	private boolean applyTagChanges(Reference entity, ReferenceDomain domain, User currentUser) throws NonFatalAPIException, APIException {
+	private boolean applyTagChanges(LTReference entity, LTReferenceDomain domain, User currentUser) throws NonFatalAPIException, APIException {
 		// short-circuit method if no tags in Reference or in ReferenceDomain
 		if ((entity.getWorkflowTagsAsStrings().size() == 0) && (domain.workflow_tags.size() == 0)) {
 			return false;
@@ -633,12 +633,12 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 		}
 
 		// list of tags that need to be removed from this object
-		List<ReferenceWorkflowTag> toDelete = new ArrayList<ReferenceWorkflowTag>();
+		List<LTReferenceWorkflowTag> toDelete = new ArrayList<LTReferenceWorkflowTag>();
 
 		// Now we need to diff the set of tags we already have and the set of tags to potentially add. Anything
 		// left in toAdd will need to be added as a new tag, and anything in toDelete will need to be removed.
 
-		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
+		for (LTReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
 			String myTag = refTag.getTag().getTerm();
 
 			// matching tags
@@ -653,7 +653,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 
 		// remove defunct tags
 
-		for (ReferenceWorkflowTag rwTag : toDelete) {
+		for (LTReferenceWorkflowTag rwTag : toDelete) {
 			// would like to do this here, but it fails due to a null _refs_key in the table:
 			//		this.workflowTags.remove(rwTag);
 			referenceDAO.remove(rwTag);
@@ -670,12 +670,12 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 
 	/* shared method for adding a workflow tag to a Reference
 	 */
-	public void addTag(Reference entity, String rdTag, User currentUser) throws NonFatalAPIException, APIException {
+	public void addTag(LTReference entity, String rdTag, User currentUser) throws NonFatalAPIException, APIException {
 		// if we already have this tag applied, skip it (extra check needed for batch additions to avoid
 		// adding duplicates)
 
 		String trimTag = rdTag.trim();
-		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
+		for (LTReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
 			if (trimTag.equals(refTag.getTag().getTerm()) ) {
 				return;
 			}
@@ -687,7 +687,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 		Term tagTerm = getTermByTerm(Constants.VOC_WORKFLOW_TAGS, rdTag);
 		if (tagTerm != null) {
 
-			ReferenceWorkflowTag rwTag = new ReferenceWorkflowTag();
+			LTReferenceWorkflowTag rwTag = new LTReferenceWorkflowTag();
 			rwTag.set_assoc_key(referenceDAO.getNextWorkflowTagKey());
 			rwTag.set_refs_key(entity.get_refs_key());
 			rwTag.setTag(tagTerm);
@@ -709,11 +709,11 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 
 	/* shared method for removing a workflow tag from a Reference (no-op if this ref doesn't have the tag)
 	 */
-	public void removeTag(Reference entity, String rdTag, User currentUser) throws APIException {
+	public void removeTag(LTReference entity, String rdTag, User currentUser) throws APIException {
 		if (entity.getWorkflowTags() == null) { return; }
 
 		String lowerTag = rdTag.toLowerCase().trim();
-		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
+		for (LTReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
 			if (lowerTag.equals(refTag.getTag().getTerm().toLowerCase()) ) {
 				referenceDAO.remove(refTag);
 				entity.setModificationInfo(currentUser);
@@ -726,7 +726,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 	 * group statuses.  returns true if an update was made, false if no change.  persists any changes
 	 * to the database.
 	 */
-	private boolean updateStatus(Reference entity, String groupAbbrev, String currentStatus, String newStatus, User currentUser) throws NonFatalAPIException, APIException {
+	private boolean updateStatus(LTReference entity, String groupAbbrev, String currentStatus, String newStatus, User currentUser) throws NonFatalAPIException, APIException {
 		// no update if new status matches old status (or if no group is specified)
 		if ( ((currentStatus != null) && currentStatus.equals(newStatus)) || (groupAbbrev == null) ||
 				((currentStatus == null) && (newStatus == null)) ) {
@@ -736,7 +736,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 		// At this point, we know we have a status update.  If there was an existing record, we need
 		// to flag it as not current.
 		if (currentStatus != null) {
-			for (ReferenceWorkflowStatus rws : entity.getWorkflowStatuses()) {
+			for (LTReferenceWorkflowStatus rws : entity.getWorkflowStatuses()) {
 				if ( (rws.getIsCurrent() == 1) && groupAbbrev.equals(rws.getGroupAbbreviation()) ) {
 					rws.setIsCurrent(0);
 					break;				// no more can match, so exit the loop
@@ -747,7 +747,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 		// Now we need to add a new status record for this change -- and need to persist this new object to the
 		// database explicitly, before the whole reference gets persisted later on.
 
-		ReferenceWorkflowStatus newRws = new ReferenceWorkflowStatus();
+		LTReferenceWorkflowStatus newRws = new LTReferenceWorkflowStatus();
 		newRws.set_assoc_key(referenceDAO.getNextWorkflowStatusKey());
 		newRws.set_refs_key(entity.get_refs_key());
 		newRws.setIsCurrent(1);
@@ -775,7 +775,7 @@ public class ReferenceRepository extends BaseRepository<ReferenceDomain> {
 	 * As well, if this Reference has no J: number and we just assigned a status other than "Not Routed", 
 	 * then we assign the next available J: number to this reference.
 	 */
-	private boolean applyStatusChanges(Reference entity, ReferenceDomain domain, User currentUser) throws NonFatalAPIException, APIException {
+	private boolean applyStatusChanges(LTReference entity, LTReferenceDomain domain, User currentUser) throws NonFatalAPIException, APIException {
 		// note that we need to put 'anyChanges' last for each OR pair, otherwise short-circuit evaluation
 		// will only let the first change go through and the rest will not execute.
 

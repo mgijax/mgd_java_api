@@ -18,10 +18,10 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 import io.swagger.annotations.Api;
 
 @Path("/probe")
-@Api(value = "Probe Endpoints", description="This is the description")
+@Api(value = "Probe Endpoints", description="CRUD operations for probes")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class ProbeController extends BaseController<ProbeDomain> implements BaseSearchInterface<ProbeDomain, ProbeSearchForm> {
+public class ProbeController extends BaseController<ProbeDomain> implements BaseSearchInterface<ProbeDomain, ReferenceSearchForm> {
 
 	@Inject
 	private ProbeService probeService;
@@ -48,7 +48,7 @@ public class ProbeController extends BaseController<ProbeDomain> implements Base
 	}
 	
 	@Override
-	public SearchResults<ProbeDomain> search(ProbeSearchForm searchForm) {
+	public SearchResults<ProbeDomain> search(ReferenceSearchForm searchForm) {
 		return probeService.search(searchForm);
 	}
 

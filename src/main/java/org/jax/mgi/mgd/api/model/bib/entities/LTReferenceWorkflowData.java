@@ -20,15 +20,21 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Reference Workflow Tag Model Object")
-@Table(name="bib_workflow_tag")
-public class ReferenceWorkflowTag extends BaseEntity {
+@ApiModel(value = "Reference Workflow Data Model Object")
+@Table(name="bib_workflow_data")
+public class LTReferenceWorkflowData extends BaseEntity {
 	@Id
-	@Column(name="_assoc_key")
-	private int _assoc_key;
-
 	@Column(name="_refs_key")
 	private int _refs_key;
+
+	@Column(name="hasPDF")
+	private int has_pdf;
+
+	@Column(name="linkSupplemental")
+	private String link_supplemental;
+
+	@Column(name="extractedText")
+	private String extracted_text;
 
 	@Column(name="creation_date")
 	private Date creation_date;
@@ -37,8 +43,8 @@ public class ReferenceWorkflowTag extends BaseEntity {
 	private Date modification_date;
 	
 	@OneToOne
-	@JoinColumn(name="_tag_key", referencedColumnName="_term_key")
-	private Term tag;
+	@JoinColumn(name="_supplemental_key", referencedColumnName="_term_key")
+	private Term supplementalTerm;
 	
 	@OneToOne
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
@@ -51,9 +57,9 @@ public class ReferenceWorkflowTag extends BaseEntity {
 	/***--- transient methods ---***/
 	
 	@Transient
-	public String getTagTerm() {
-		if (this.tag == null) { return null; }
-		return this.tag.getTerm();
+	public String getSupplemental() {
+		if (this.supplementalTerm == null) { return null; }
+		return this.supplementalTerm.getTerm();
 	}
 	
 	@Transient

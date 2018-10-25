@@ -7,10 +7,10 @@ import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseRepository;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
-import org.jax.mgi.mgd.api.model.bib.domain.ReferenceSummaryDomain;
-import org.jax.mgi.mgd.api.model.bib.entities.Reference;
-import org.jax.mgi.mgd.api.model.bib.translator.ReferenceSummaryTranslator;
+import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceDAO;
+import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceSummaryDomain;
+import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
+import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceSummaryTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -19,26 +19,26 @@ import org.jax.mgi.mgd.api.util.SearchResults;
  *    ReferenceSummaryDomain object has its data drawn
  * Does: (from the outside, this appears to) retrieve domain objects, store them, search for them
  */
-public class ReferenceSummaryRepository extends BaseRepository<ReferenceSummaryDomain> {
+public class LTReferenceSummaryRepository extends BaseRepository<LTReferenceSummaryDomain> {
 
 	/***--- instance variables ---***/
 
 	@Inject
-	private ReferenceDAO referenceDAO;
+	private LTReferenceDAO referenceDAO;
 
-	ReferenceSummaryTranslator translator = new ReferenceSummaryTranslator();
+	LTReferenceSummaryTranslator translator = new LTReferenceSummaryTranslator();
 
 	/***--- (public) instance methods ---***/
 
 	@Override
-	public ReferenceSummaryDomain get(int primaryKey) throws APIException {
+	public LTReferenceSummaryDomain get(int primaryKey) throws APIException {
 		return translator.translate(getReference(primaryKey));
 	}
 
 	@Override
-	public SearchResults<ReferenceSummaryDomain> search(Map<String,Object> params) {
-		SearchResults<Reference> refs = referenceDAO.search(params);
-		SearchResults<ReferenceSummaryDomain> domains = new SearchResults<ReferenceSummaryDomain>();
+	public SearchResults<LTReferenceSummaryDomain> search(Map<String,Object> params) {
+		SearchResults<LTReference> refs = referenceDAO.search(params);
+		SearchResults<LTReferenceSummaryDomain> domains = new SearchResults<LTReferenceSummaryDomain>();
 
 		domains.elapsed_ms = refs.elapsed_ms;
 		domains.error = refs.error;
@@ -51,8 +51,8 @@ public class ReferenceSummaryRepository extends BaseRepository<ReferenceSummaryD
 			// walking the references to do the translations individually, because I want a List,
 			// not an Iterable
 			
-			domains.items = new ArrayList<ReferenceSummaryDomain>();
-			for (Reference ref : refs.items) {
+			domains.items = new ArrayList<LTReferenceSummaryDomain>();
+			for (LTReference ref : refs.items) {
 				domains.items.add(translator.translate(ref));
 			}
 		}
@@ -60,17 +60,17 @@ public class ReferenceSummaryRepository extends BaseRepository<ReferenceSummaryD
 	}
 
 	@Override
-	public ReferenceSummaryDomain update(ReferenceSummaryDomain domain, User user) throws APIException {
+	public LTReferenceSummaryDomain update(LTReferenceSummaryDomain domain, User user) throws APIException {
 		throw new APIException("Cannot update using a ReferenceSummaryDomain");
 	}
 
 	@Override
-	public ReferenceSummaryDomain delete(ReferenceSummaryDomain domain, User user) throws APIException {
+	public LTReferenceSummaryDomain delete(LTReferenceSummaryDomain domain, User user) throws APIException {
 		throw new APIException("Cannot delete using a ReferenceSummaryDomain");
 	}
 
 	@Override
-	public ReferenceSummaryDomain create(ReferenceSummaryDomain domain, User username) throws APIException {
+	public LTReferenceSummaryDomain create(LTReferenceSummaryDomain domain, User username) throws APIException {
 		throw new APIException("Cannot create using a ReferenceSummaryDomain");
 	}
 
@@ -78,11 +78,11 @@ public class ReferenceSummaryRepository extends BaseRepository<ReferenceSummaryD
 	
 	/* retrieve the Reference object with the given primaryKey
 	 */
-	private Reference getReference(Integer primaryKey) throws APIException {
+	private LTReference getReference(Integer primaryKey) throws APIException {
 		if (primaryKey == null) {
 			throw new APIException("ReferenceRepository.getReference() : reference key is null");
 		}
-		Reference reference = referenceDAO.find(primaryKey);
+		LTReference reference = referenceDAO.find(primaryKey);
 		if (reference == null) {
 			throw new APIException("ReferenceRepository.getReference(): Unknown reference key: " + primaryKey);
 		}

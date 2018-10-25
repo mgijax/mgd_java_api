@@ -22,7 +22,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Reference Workflow Status Model Object")
 @Table(name="bib_workflow_status")
-public class ReferenceWorkflowStatus extends BaseEntity {
+public class LTReferenceWorkflowStatus extends BaseEntity {
 	@Id
 	@Column(name="_assoc_key")
 	private int _assoc_key;

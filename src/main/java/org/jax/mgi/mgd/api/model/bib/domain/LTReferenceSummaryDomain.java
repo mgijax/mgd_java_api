@@ -8,7 +8,7 @@ import org.jax.mgi.mgd.api.model.BaseDomain;
  * Does: serves as a data-transfer object between the API and the PWI
  */
 // has-pdf flag, status for each of five groups
-public class ReferenceSummaryDomain extends BaseDomain {
+public class LTReferenceSummaryDomain extends BaseDomain {
 	public Integer _refs_key;
 	public String title;
 	public String jnumid;
@@ -26,5 +26,5 @@ public class ReferenceSummaryDomain extends BaseDomain {
 	/***--- constructors ---***/
 
 	/* empty constructor - ready for population from JSON */
-	public ReferenceSummaryDomain() {}
+	public LTReferenceSummaryDomain() {}
 }

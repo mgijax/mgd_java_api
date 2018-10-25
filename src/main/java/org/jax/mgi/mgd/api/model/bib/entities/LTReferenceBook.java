@@ -17,7 +17,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Reference Book Model Object")
 @Table(name="bib_books")
-public class ReferenceBook extends BaseEntity {
+public class LTReferenceBook extends BaseEntity {
 	@Id
 	@Column(name="_refs_key")
 	private int _refs_key;

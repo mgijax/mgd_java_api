@@ -25,7 +25,7 @@ public class IndexTranslator extends BaseEntityDomainTranslator<Index, IndexDoma
 	
 		
 		if(translationDepth > 0) {
-			domain.setJnumID(refTranslator.translate(entity.getReference()).jnumid);
+			domain.setJnumID(refTranslator.translate(entity.getReference()).getJnumID());
 			//domain.setReference(refTranslator.translate(entity.getReference(), translationDepth - 1));
 			//domain.setMarker(translator.translate(entity.getMarker(), translationDepth - 1));
 

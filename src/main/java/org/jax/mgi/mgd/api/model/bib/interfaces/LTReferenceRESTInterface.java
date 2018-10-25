@@ -14,9 +14,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBulkDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.ReferenceSummaryDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceBulkDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.ApiLogDomain;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -24,15 +24,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
-@Path("/reference")
-@Api(value = "Reference Endpoints")
+@Path("/littriage")
+@Api(value = "Lit Triage Endpoints for References")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface ReferenceRESTInterface {
+public interface LTReferenceRESTInterface {
 
 	@POST
 	@ApiOperation(value = "Value: Create Reference", notes="Notes: Creates a new Reference")
-	public SearchResults<ReferenceDomain> createReference(
+	public SearchResults<LTReferenceDomain> createReference(
 			@ApiParam(value = "Name: Token for accessing this API")
 			@HeaderParam("api_access_token") String api_access_token,
 			
@@ -40,12 +40,12 @@ public interface ReferenceRESTInterface {
 			@HeaderParam("username") String username,
 			
 			@ApiParam(value = "Value: This is the passed-in reference object")
-			ReferenceDomain reference
+			LTReferenceDomain reference
 	);
 	
 	@PUT
 	@ApiOperation(value = "Value: Update Reference", notes="Notes: Updates a Reference")
-	public SearchResults<ReferenceDomain> updateReference(
+	public SearchResults<LTReferenceDomain> updateReference(
 			@ApiParam(value = "Name: Token for accessing this API")
 			@HeaderParam("api_access_token") String api_access_token,
 			
@@ -53,7 +53,7 @@ public interface ReferenceRESTInterface {
 			@HeaderParam("username") String username,
 			
 			@ApiParam(value = "Value: This is the passed-in reference domain object")
-			ReferenceDomain reference
+			LTReferenceDomain reference
 	);
 
 	@PUT
@@ -67,7 +67,7 @@ public interface ReferenceRESTInterface {
 			@HeaderParam("username") String username,
 			
 			@ApiParam(value = "Value: reference keys and data to be updated")
-			ReferenceBulkDomain input
+			LTReferenceBulkDomain input
 	);
 
 	@PUT
@@ -93,7 +93,7 @@ public interface ReferenceRESTInterface {
 	@GET
 	@Path("/valid")
 	@ApiOperation(value = "Value: Check to see if a reference is valid by doing a key-based lookup")
-	public SearchResults<ReferenceDomain> getValidReferenceCheck(
+	public SearchResults<LTReferenceDomain> getValidReferenceCheck(
 			@ApiParam(value = "Value: This is for searching by reference key")
 			@QueryParam("refsKey") String refsKey
 	);
@@ -101,7 +101,7 @@ public interface ReferenceRESTInterface {
 	@POST
 	@Path("/search")
 	@ApiOperation(value = "Value: Searches Reference by Fields", notes="Notes: Searches Reference Fields")
-	public SearchResults<ReferenceSummaryDomain> search(
+	public SearchResults<LTReferenceSummaryDomain> search(
 		@ApiParam(value = "This is a map of the form parameters")
 		Map<String, Object> params								// see below for valid parameters
 	);
@@ -197,14 +197,14 @@ public interface ReferenceRESTInterface {
 	@GET
 	@Path("/{refsKey}")
 	@ApiOperation(value = "Value: Retrieve a single Reference by reference key")
-	public SearchResults<ReferenceDomain> getReferenceByKey (
+	public SearchResults<LTReferenceDomain> getReferenceByKey (
 			@ApiParam(value = "Value: This is for searching by reference key")
 			@PathParam("refsKey") String refsKey);
 
 	@DELETE
 	@ApiOperation(value = "Value: Deletes Reference", notes="Notes: Deletes a Reference")
 	@Path("/{id}")
-	public SearchResults<ReferenceDomain> deleteReference(
+	public SearchResults<LTReferenceDomain> deleteReference(
 			@ApiParam(value = "Name: Token for accessing this API")
 			@HeaderParam("api_access_token") String api_access_token,
 			

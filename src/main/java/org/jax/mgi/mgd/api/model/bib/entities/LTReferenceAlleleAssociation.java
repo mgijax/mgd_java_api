@@ -19,7 +19,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Allele Association Model Object")
 @Table(name="mgi_reference_assoc")
-public class ReferenceAlleleAssociation extends BaseEntity {
+public class LTReferenceAlleleAssociation extends BaseEntity {
 	@Id
 	@Column(name="_assoc_key")
 	private int _assoc_key;

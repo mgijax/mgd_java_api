@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @Embeddable
-public class ReferenceMarkerAssociationKey implements Serializable {
+public class LTReferenceMarkerAssociationKey implements Serializable {
 	protected int _refs_key;
 	protected int _marker_key;
 }

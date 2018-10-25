@@ -15,7 +15,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Reference Associated Data Model Object")
 @Table(name="bib_associateddata_view")
-public class ReferenceAssociatedData extends BaseEntity {
+public class LTReferenceAssociatedData extends BaseEntity {
 	@Id
 	@Column(name="_refs_key")
 	private int _refs_key;

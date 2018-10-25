@@ -1,14 +1,14 @@
 package org.jax.mgi.mgd.api.model.bib.translator;
 
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.bib.domain.ReferenceSummaryDomain;
-import org.jax.mgi.mgd.api.model.bib.entities.Reference;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowData;
+import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceSummaryDomain;
+import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
+import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 
-public class ReferenceSummaryTranslator extends BaseEntityDomainTranslator<Reference, ReferenceSummaryDomain>{
+public class LTReferenceSummaryTranslator extends BaseEntityDomainTranslator<LTReference, LTReferenceSummaryDomain>{
 	@Override
-	protected ReferenceSummaryDomain entityToDomain(Reference entity, int translationDepth) {
-		ReferenceSummaryDomain domain = new ReferenceSummaryDomain();
+	protected LTReferenceSummaryDomain entityToDomain(LTReference entity, int translationDepth) {
+		LTReferenceSummaryDomain domain = new LTReferenceSummaryDomain();
 
 		domain._refs_key = entity.get_refs_key();
 		domain.title = entity.getTitle();
@@ -23,7 +23,7 @@ public class ReferenceSummaryTranslator extends BaseEntityDomainTranslator<Refer
 		domain.qtl_status = entity.getStatusView().getQtl_status();
 		domain.tumor_status = entity.getStatusView().getTumor_status();
 
-		ReferenceWorkflowData workflowData = entity.getWorkflowData();
+		LTReferenceWorkflowData workflowData = entity.getWorkflowData();
 		if (workflowData != null) {
 			if (workflowData.getHas_pdf() == 0) {
 				domain.has_pdf = "No";
@@ -35,7 +35,7 @@ public class ReferenceSummaryTranslator extends BaseEntityDomainTranslator<Refer
 	}
 
 	@Override
-	protected Reference domainToEntity(ReferenceSummaryDomain domain, int translationDepth) {
+	protected LTReference domainToEntity(LTReferenceSummaryDomain domain, int translationDepth) {
 		// Cannot do translation here, as it requires lookup of actual entity from database.  Must
 		// instead work with ReferenceRepository.
 

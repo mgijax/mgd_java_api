@@ -18,10 +18,10 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Marker Association Model Object")
 @Table(name="mrk_reference")
-public class ReferenceMarkerAssociation extends BaseEntity {
+public class LTReferenceMarkerAssociation extends BaseEntity {
 
 	@EmbeddedId
-	private ReferenceMarkerAssociationKey keys;
+	private LTReferenceMarkerAssociationKey keys;
 	private String jnumID;
 
 	@OneToOne

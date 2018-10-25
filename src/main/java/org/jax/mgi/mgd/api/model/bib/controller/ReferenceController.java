@@ -5,6 +5,11 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.GET;
+import javax.ws.rs.QueryParam;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiOperation;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
@@ -14,8 +19,7 @@ import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.search.ReferenceSearchForm;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceService;
 import org.jax.mgi.mgd.api.util.SearchResults;
-
-import io.swagger.annotations.Api;
+import org.jax.mgi.mgd.api.util.Constants;
 
 @Path("/reference")
 @Api(value = "Reference Endpoints", description="This is the description")
@@ -50,5 +54,22 @@ public class ReferenceController extends BaseController<ReferenceDomain> impleme
 	@Override
 	public SearchResults<ReferenceDomain> search(ReferenceSearchForm searchForm) {
 		return referenceService.search(searchForm);
+	}
+
+	@GET
+	@ApiOperation(value = "Confirm reference is valid")
+	@Path("/valid")
+	public SearchResults<ReferenceDomain> isValid(
+		@ApiParam(value = "Value: This is for searching by reference key")
+		@QueryParam("refsKey") String refsKey
+		) {
+		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
+		ReferenceDomain ref = this.get(Integer.parseInt(refsKey));
+		if (ref != null) {
+			results.setItem(ref);
+		} else {
+			results.setError("InvalidReference", "No reference with key " + refsKey + " exists.", Constants.HTTP_NOT_FOUND);
+		}
+		return results;
 	}
 }

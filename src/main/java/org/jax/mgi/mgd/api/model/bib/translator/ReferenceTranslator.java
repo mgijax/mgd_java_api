@@ -8,6 +8,7 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 
 	@Override
 	protected ReferenceDomain entityToDomain(Reference entity, int translationDepth) {
+		if (entity == null) { return null; }
 		ReferenceDomain domain = new ReferenceDomain();
 		domain.set_refs_key(entity.get_refs_key());
 		domain.setAuthors(entity.getAuthors());

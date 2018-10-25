@@ -691,6 +691,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 	@Transactional
 	public LTReference getReference(int _refs_key) throws APIException {
 		LTReference ref =  entityManager.find(LTReference.class, _refs_key);
+		if (ref == null) { return null; }
 		Hibernate.initialize(ref.getWorkflowTags().size());
 		Hibernate.initialize(ref.getReferenceTypeTerm());
 		Hibernate.initialize(ref.getReferencenote());

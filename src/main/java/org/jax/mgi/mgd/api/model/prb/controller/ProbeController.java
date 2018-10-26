@@ -21,7 +21,7 @@ import io.swagger.annotations.Api;
 @Api(value = "Probe Endpoints", description="CRUD operations for probes")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class ProbeController extends BaseController<ProbeDomain> implements BaseSearchInterface<ProbeDomain, ReferenceSearchForm> {
+public class ProbeController extends BaseController<ProbeDomain> implements BaseSearchInterface<ProbeDomain, ProbeSearchForm> {
 
 	@Inject
 	private ProbeService probeService;
@@ -48,7 +48,7 @@ public class ProbeController extends BaseController<ProbeDomain> implements Base
 	}
 	
 	@Override
-	public SearchResults<ProbeDomain> search(ReferenceSearchForm searchForm) {
+	public SearchResults<ProbeDomain> search(ProbeSearchForm searchForm) {
 		return probeService.search(searchForm);
 	}
 

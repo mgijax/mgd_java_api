@@ -16,7 +16,7 @@ import org.jax.mgi.mgd.api.model.prb.translator.ProbeTranslator;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
-public class ProbeService extends BaseService<ProbeDomain> implements BaseSearchInterface<ProbeDomain, ReferenceSearchForm> {
+public class ProbeService extends BaseService<ProbeDomain> implements BaseSearchInterface<ProbeDomain, ProbeSearchForm> {
 
 	@Inject
 	private ProbeDAO probeDAO;
@@ -47,7 +47,7 @@ public class ProbeService extends BaseService<ProbeDomain> implements BaseSearch
 	}
 
 	@Transactional
-	public SearchResults<ProbeDomain> search(ReferenceSearchForm searchForm) {
+	public SearchResults<ProbeDomain> search(ProbeSearchForm searchForm) {
 		SearchResults<Probe> probes;
 		if(searchForm.getOrderBy() != null) {
 			probes = probeDAO.search(searchForm.getSearchFields(), searchForm.getOrderBy());

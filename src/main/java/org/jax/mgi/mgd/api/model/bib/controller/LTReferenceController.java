@@ -308,21 +308,21 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	/* return domain object for single reference with given key
 	 */
 	@Override
-	public SearchResults<LTReferenceDomain> getReferenceByKey (String refsKey) {
+	public SearchResults<LTReferenceDomain> getReferenceByKey (String key) {
 		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
-		if (refsKey != null) {
+		if (key != null) {
 			Integer intRefsKey = null;
 			try {
-				intRefsKey = Integer.parseInt(refsKey);
+				intRefsKey = Integer.parseInt(key);
 			} catch (Throwable e) {
-				results.setError("NotInteger", "Reference key not an integer: " + refsKey, Constants.HTTP_BAD_REQUEST);
+				results.setError("NotInteger", "Reference key not an integer: " + key, Constants.HTTP_BAD_REQUEST);
 				return results;
 			}
 
 			try {
 				return referenceService.getReference(intRefsKey);
 			} catch (APIException e) {
-					results.setError("Failed", "Failed to get reference by key " + refsKey + ", exception: " + e.toString(),
+					results.setError("Failed", "Failed to get reference by key " + key + ", exception: " + e.toString(),
 						Constants.HTTP_NOT_FOUND);
 			}
 		} else {
@@ -355,13 +355,13 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	/* delete the reference with the given accession ID...  TODO: need to flesh this out, return SearchResults object, etc.
 	 */
 	@Override
-	public SearchResults<LTReferenceDomain> deleteReference(String api_access_token, String username, String id) {
+	public SearchResults<LTReferenceDomain> deleteReference(String api_access_token, String username, Integer key) {
 		User currentUser = userService.getUserByUsername(username);
 		if (currentUser != null) {
-			SearchResults<LTReferenceDomain> results = referenceService.deleteReference(id, currentUser);
+			SearchResults<LTReferenceDomain> results = referenceService.deleteReference(key, currentUser);
 			if (results.items.size() > 0) {
 				LTReferenceDomain domain = results.items.get(0);
-				String json = "{\"id\":" + id + "\"}";
+				String json = "{\"key\":" + key + "\"}";
 				try {
 					logRequest("DELETE /littriage", json, Constants.MGITYPE_REFERENCE, listMaker.toList(domain._refs_key), currentUser);
 				} catch (APIException e) {

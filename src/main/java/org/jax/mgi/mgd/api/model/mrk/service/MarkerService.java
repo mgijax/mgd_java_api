@@ -2,14 +2,17 @@ package org.jax.mgi.mgd.api.model.mrk.service;
 
 import java.io.IOException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 
+import org.hibernate.HibernateException;
 import org.hibernate.JDBCException;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseService;
@@ -53,7 +56,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 	@Transactional
 	public MarkerDomain get(Integer key) {
-		return translator.translate(markerDAO.get(key),3);
+		return translator.translate(markerDAO.get(key),1);
 	}
 
 	@Transactional
@@ -61,15 +64,9 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		
-		try {
-			Marker entity = markerDAO.get(key);
-			markerDAO.remove(entity);
-		} catch (JDBCException e) {
-			results.setError("Failed", e.getMessage(), Constants.HTTP_SERVER_ERROR);
-		} catch (Exception e) {
-			results.setError("Failed", e.getMessage(), Constants.HTTP_SERVER_ERROR);
-		}
-	
+		Marker entity = markerDAO.get(key);
+		markerDAO.remove(entity);
+		
 		return results;
 	}
 

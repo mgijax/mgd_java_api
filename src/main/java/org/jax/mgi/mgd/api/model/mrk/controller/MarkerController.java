@@ -5,6 +5,7 @@ import java.util.List;
 import java.io.IOException;
 
 import javax.inject.Inject;
+import javax.persistence.PersistenceException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -17,9 +18,11 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIResultDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
+import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
@@ -56,7 +59,16 @@ public class MarkerController extends BaseController<MarkerDomain> {
 
 	@Override
 	public SearchResults<MarkerDomain> delete(Integer key, User user) {
-		return markerService.delete(key, user);
+		
+		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
+
+		try {
+			results = markerService.delete(key,  user);
+		} catch (Exception e) {
+			results.setError("Failed", e.getMessage(), Constants.HTTP_OK);
+		}
+		
+		return results;
 	}
 	
 	@POST

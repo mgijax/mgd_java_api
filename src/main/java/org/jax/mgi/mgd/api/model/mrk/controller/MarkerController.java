@@ -65,7 +65,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		try {
 			results = markerService.delete(key,  user);
 		} catch (Exception e) {
-			results.setError("Failed", e.getMessage(), Constants.HTTP_OK);
+			results.setError("Failed", e.getMessage(), Constants.HTTP_SERVER_ERROR);
 		}
 		
 		return results;

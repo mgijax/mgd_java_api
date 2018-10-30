@@ -195,15 +195,15 @@ public interface LTReferenceRESTInterface {
 			@PathParam("id") String id);
 
 	@GET
-	@Path("/{refsKey}")
+	@Path("/{key}")
 	@ApiOperation(value = "Value: Retrieve a single Reference by reference key")
 	public SearchResults<LTReferenceDomain> getReferenceByKey (
 			@ApiParam(value = "Value: This is for searching by reference key")
-			@PathParam("refsKey") String refsKey);
+			@PathParam("key") String key);
 
 	@DELETE
 	@ApiOperation(value = "Value: Deletes Reference", notes="Notes: Deletes a Reference")
-	@Path("/{id}")
+	@Path("/{key}")
 	public SearchResults<LTReferenceDomain> deleteReference(
 			@ApiParam(value = "Name: Token for accessing this API")
 			@HeaderParam("api_access_token") String api_access_token,
@@ -211,7 +211,7 @@ public interface LTReferenceRESTInterface {
 			@ApiParam(value = "Name: Logged-in User")
 			@HeaderParam("username") String username,
 			
-			@ApiParam(value = "Value: This Accession ID will lookup a Reference and then delete it")
-			@PathParam("id") String id
+			@ApiParam(value = "Value: Use this key to look up a Reference and then delete it")
+			@PathParam("key") Integer key
 	);
 }

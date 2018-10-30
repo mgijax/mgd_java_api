@@ -79,11 +79,11 @@ public class LTReferenceService {
 	}
 
 	@Transactional
-	public SearchResults<LTReferenceDomain> deleteReference(String id, User currentUser) {
+	public SearchResults<LTReferenceDomain> deleteReference(Integer key, User currentUser) {
 		SearchResults<LTReferenceDomain> out = new SearchResults<LTReferenceDomain>();
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		if(id != null) { map.put("primaryId", id); }
+		if(key != null) { map.put("_refs_key", key); }
 		SearchResults<LTReferenceDomain> results = repo.search(map);
 		if (results.status_code != Constants.HTTP_OK) {
 			out.setError(results.error, results.message, results.status_code);
@@ -94,7 +94,7 @@ public class LTReferenceService {
 		try {
 			repo.delete(results.items.get(0), currentUser);
 		} catch (APIException e) {
-			out.setError("Failed", "Failed to delete reference with ID " + id + ", exception: " + e.toString(), Constants.HTTP_SERVER_ERROR);
+			out.setError("Failed", "Failed to delete reference with key " + key + ", exception: " + e.toString(), Constants.HTTP_SERVER_ERROR);
 		}
 		return out;
 	}

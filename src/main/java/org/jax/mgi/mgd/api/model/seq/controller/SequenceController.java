@@ -42,12 +42,12 @@ public class SequenceController extends BaseController<SequenceDomain> implement
 	}
 
 	@Override
-	public SequenceDomain get(Integer sequenceKey) {
-		return sequenceService.get(sequenceKey);
+	public SequenceDomain get(Integer key) {
+		return sequenceService.get(key);
 	}
 
 	@Override
-	public SequenceDomain delete(Integer key, User user) {
+	public SearchResults<SequenceDomain> delete(Integer key, User user) {
 		return sequenceService.delete(key, user);
 	}
 	

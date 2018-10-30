@@ -41,7 +41,7 @@ public class GelLaneService extends BaseService<GelLaneDomain> implements BaseSe
 	}
 
 	@Transactional
-	public GelLaneDomain delete(Integer key, User user) {
+	public SearchResults<GelLaneDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

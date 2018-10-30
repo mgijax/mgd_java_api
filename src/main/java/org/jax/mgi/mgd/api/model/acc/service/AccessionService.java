@@ -41,7 +41,7 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 	}
 
 	@Transactional
-	public AccessionDomain delete(Integer key, User user) {
+	public SearchResults<AccessionDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

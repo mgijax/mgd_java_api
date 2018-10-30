@@ -43,8 +43,8 @@ public class LogicalDBController extends BaseController<LogicalDBDomain> impleme
 		return logicaldbService.get(key);
 	}
 
-	public LogicalDBDomain delete(Integer logicaldb_key, User user) {
-		return logicaldbService.delete(logicaldb_key, user);
+	public SearchResults<LogicalDBDomain> delete(Integer key, User user) {
+		return logicaldbService.delete(key, user);
 	}
 
 	@Override

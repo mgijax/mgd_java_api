@@ -41,7 +41,7 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> implements 
 	}
 
 	@Transactional
-	public MGISynonymDomain delete(Integer key, User user) {
+	public SearchResults<MGISynonymDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

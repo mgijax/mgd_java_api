@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.mgi.domain.OrganismDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.search.OrganismSearchForm;
 import org.jax.mgi.mgd.api.model.mgi.service.OrganismService;
+import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -45,8 +46,8 @@ public class OrganismController extends BaseController<OrganismDomain> {
 		return organismService.get(key);
 	}
 
-	public OrganismDomain delete(Integer organism_key, User user) {
-		return organismService.delete(organism_key, user);
+	public SearchResults<OrganismDomain> delete(Integer key, User user) {
+		return organismService.delete(key, user);
 	}
 
 	@POST

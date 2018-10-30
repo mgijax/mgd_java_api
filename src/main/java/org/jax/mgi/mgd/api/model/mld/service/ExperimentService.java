@@ -41,7 +41,7 @@ public class ExperimentService extends BaseService<ExperimentDomain> implements 
 	}
 
 	@Transactional
-	public ExperimentDomain delete(Integer key, User user) {
+	public SearchResults<ExperimentDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

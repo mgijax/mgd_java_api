@@ -41,7 +41,7 @@ public class ProbeService extends BaseService<ProbeDomain> implements BaseSearch
 	}
 
 	@Transactional
-	public ProbeDomain delete(Integer key, User user) {
+	public SearchResults<ProbeDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

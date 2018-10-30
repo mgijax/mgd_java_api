@@ -44,13 +44,12 @@ public class UserController extends BaseController<UserDomain> implements BaseSe
 		return userService.update(userD, user);
 	}
 
-	public UserDomain delete(Integer user_key, User user) {
-		return userService.delete(user_key, user);
+	public SearchResults<UserDomain> delete(Integer key, User user) {
+		return userService.delete(key, user);
 	}
 
 	@Override
 	public SearchResults<UserDomain> search(UserSearchForm form) {
-		// TODO Auto-generated method stub
 		return userService.search(form);
 	}
 

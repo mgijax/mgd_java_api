@@ -53,7 +53,7 @@ public class NoteService extends BaseService<NoteDomain> {
 	}
 
 	@Override
-	public NoteDomain delete(Integer key, User user) {
+	public SearchResults<NoteDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

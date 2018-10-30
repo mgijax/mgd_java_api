@@ -41,7 +41,7 @@ public class AssayService extends BaseService<AssayDomain> implements BaseSearch
 	}
 
 	@Transactional
-	public AssayDomain delete(Integer key, User user) {
+	public SearchResults<AssayDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

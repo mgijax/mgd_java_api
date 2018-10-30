@@ -43,7 +43,7 @@ public class VocabController extends BaseController<VocabularyDomain> implements
 		return vocabService.update(object, user);
 	}
 
-	public VocabularyDomain delete(Integer key, User user) {
+	public SearchResults<VocabularyDomain> delete(Integer key, User user) {
 		return vocabService.delete(key, user);
 	}
 

@@ -43,7 +43,7 @@ public class ApiLogController extends BaseController<ApiLogDomain> implements Ap
 	}
 
 	@Override
-	public ApiLogDomain delete(Integer key, User user) {
+	public SearchResults<ApiLogDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

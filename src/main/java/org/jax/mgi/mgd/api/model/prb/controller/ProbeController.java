@@ -39,11 +39,11 @@ public class ProbeController extends BaseController<ProbeDomain> implements Base
 		return probeService.update(probe, user);
 	}
 
-	public ProbeDomain get(Integer probeKey) {
-		return probeService.get(probeKey);
+	public ProbeDomain get(Integer key) {
+		return probeService.get(key);
 	}
 
-	public ProbeDomain delete(Integer key, User user) {
+	public SearchResults<ProbeDomain> delete(Integer key, User user) {
 		return probeService.delete(key, user);
 	}
 	

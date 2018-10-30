@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.mrk.entities;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -61,44 +62,47 @@ public class Marker extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
+	// insertable/updatable=false will ignore dereferencing these objects
+	// postgres trigger will delete the child object if the parent is deleted
+	
 	// Editor/Coordinator
 	@OneToMany()
-	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1004")
 	private Set<Note> editorNote;
 	
 	// Sequence
 	@OneToMany
-	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1009")
 	private Set<Note> sequenceNote;
 	
 	//Marker Revision
 	@OneToMany
-	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1030")
 	private Set<Note> revisionNote;
 	
 	// Strain-Specific Marker
 	@OneToMany
-	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1035")
 	private Set<Note> strainNote;
 	
 	// Location
 	@OneToMany
-	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1049")
 	private Set<Note> locationNote;
 	
 	// marker note aka marker detail clip (see Allele module)
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_marker_key")
+	@JoinColumn(name="_marker_key", insertable=false, updatable=false)
 	private MarkerNote markerNote;
 	
 	// mgi accession ids only
 	@OneToMany
-	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` = 1")
 	@OrderBy(clause = "preferred desc, accID")
 	private Set<Accession> mgiAccessionIds;

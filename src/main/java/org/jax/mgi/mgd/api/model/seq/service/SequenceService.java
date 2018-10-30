@@ -41,7 +41,7 @@ public class SequenceService extends BaseService<SequenceDomain> implements Base
 	}
 
 	@Transactional
-	public SequenceDomain delete(Integer key, User user) {
+	public SearchResults<SequenceDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

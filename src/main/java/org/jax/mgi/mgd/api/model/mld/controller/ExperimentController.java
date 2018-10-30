@@ -39,11 +39,11 @@ public class ExperimentController extends BaseController<ExperimentDomain> imple
 		return exptService.update(expt, user);
 	}
 
-	public ExperimentDomain get(Integer exptKey) {
-		return exptService.get(exptKey);
+	public ExperimentDomain get(Integer key) {
+		return exptService.get(key);
 	}
 
-	public ExperimentDomain delete(Integer key, User user) {
+	public SearchResults<ExperimentDomain> delete(Integer key, User user) {
 		return exptService.delete(key, user);
 	}
 	

@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerStatusDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerStatusSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerStatusService;
+import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,12 +45,12 @@ public class MarkerStatusController extends BaseController<MarkerStatusDomain> {
 	}
 
 	@Override
-	public MarkerStatusDomain get(Integer markerStatusKey) {
-		return markerStatusService.get(markerStatusKey);
+	public MarkerStatusDomain get(Integer key) {
+		return markerStatusService.get(key);
 	}
 
 	@Override
-	public MarkerStatusDomain delete(Integer key, User user) {
+	public SearchResults<MarkerStatusDomain> delete(Integer key, User user) {
 		return markerStatusService.delete(key, user);
 	}
 	

@@ -46,7 +46,7 @@ public class AlleleController extends BaseController<AlleleDomain> implements Ba
 		return alleleService.get(alleleKey);
 	}
 
-	public AlleleDomain delete(Integer key, User user) {
+	public SearchResults<AlleleDomain> delete(Integer key, User user) {
 		return alleleService.delete(key, user);
 	}
 	

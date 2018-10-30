@@ -41,7 +41,7 @@ public class IndexService extends BaseService<IndexDomain> implements BaseSearch
 	}
 
 	@Transactional
-	public IndexDomain delete(Integer key, User user) {
+	public SearchResults<IndexDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

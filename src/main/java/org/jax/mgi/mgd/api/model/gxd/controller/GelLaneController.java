@@ -43,7 +43,7 @@ public class GelLaneController extends BaseController<GelLaneDomain> implements 
 		return gellaneService.get(gellaneKey);
 	}
 
-	public GelLaneDomain delete(Integer key, User user) {
+	public SearchResults<GelLaneDomain> delete(Integer key, User user) {
 		return gellaneService.delete(key, user);
 	}
 	

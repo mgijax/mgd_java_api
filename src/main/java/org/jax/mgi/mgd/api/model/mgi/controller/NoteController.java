@@ -49,8 +49,8 @@ public class NoteController extends BaseController<NoteDomain> {
 		return noteService.get(key);
 	}
 
-	public NoteDomain delete(Integer note_key, User user) {
-		return noteService.delete(note_key, user);
+	public SearchResults<NoteDomain> delete(Integer key, User user) {
+		return noteService.delete(key, user);
 	}
 
 	@POST

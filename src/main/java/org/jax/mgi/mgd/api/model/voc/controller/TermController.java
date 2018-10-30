@@ -43,8 +43,8 @@ public class TermController extends BaseController<TermDomain> implements BaseSe
 		return termService.get(key);
 	}
 
-	public TermDomain delete(Integer term_key, User user) {
-		return termService.delete(term_key, user);
+	public SearchResults<TermDomain> delete(Integer key, User user) {
+		return termService.delete(key, user);
 	}
 
 	@Override

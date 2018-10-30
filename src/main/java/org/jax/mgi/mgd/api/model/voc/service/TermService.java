@@ -102,8 +102,9 @@ public class TermService extends BaseService<TermDomain> implements BaseSearchIn
 	}
 	
 	@Transactional
-	public TermDomain delete(Integer key, User user) {
-		return translator.translate(termDAO.delete(termDAO.get(key)));
+	public SearchResults<TermDomain> delete(Integer key, User user) {
+                // TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override

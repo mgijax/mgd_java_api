@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerTypeDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerTypeSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerTypeService;
+import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,12 +45,12 @@ public class MarkerTypeController extends BaseController<MarkerTypeDomain> {
 	}
 
 	@Override
-	public MarkerTypeDomain get(Integer markerTypeKey) {
-		return markerTypeService.get(markerTypeKey);
+	public MarkerTypeDomain get(Integer key) {
+		return markerTypeService.get(key);
 	}
 
 	@Override
-	public MarkerTypeDomain delete(Integer key, User user) {
+	public SearchResults<MarkerTypeDomain> delete(Integer key, User user) {
 		return markerTypeService.delete(key, user);
 	}
 	

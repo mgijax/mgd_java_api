@@ -53,7 +53,7 @@ public class AlleleService extends BaseService<AlleleDomain> implements BaseSear
 	}
 
 	@Transactional
-	public AlleleDomain delete(Integer key, User user) {
+	public SearchResults<AlleleDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

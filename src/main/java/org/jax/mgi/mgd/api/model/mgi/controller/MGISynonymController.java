@@ -44,8 +44,8 @@ public class MGISynonymController extends BaseController<MGISynonymDomain> imple
 		return synonymService.get(key);
 	}
 
-	public MGISynonymDomain delete(Integer synonym_key, User user) {
-		return synonymService.delete(synonym_key, user);
+	public SearchResults<MGISynonymDomain> delete(Integer key, User user) {
+		return synonymService.delete(key, user);
 	}
 	
     @Override

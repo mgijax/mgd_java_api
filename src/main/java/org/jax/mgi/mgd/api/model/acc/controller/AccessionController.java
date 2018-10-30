@@ -47,7 +47,7 @@ public class AccessionController extends BaseController<AccessionDomain> impleme
 	}
 
 	@Override
-	public AccessionDomain delete(Integer key, User user) {
+	public SearchResults<AccessionDomain> delete(Integer key, User user) {
 		return accessionService.delete(key, user);
 	}
 	

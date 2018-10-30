@@ -43,7 +43,7 @@ public class AntibodyController extends BaseController<AntibodyDomain> implement
 		return antibodyService.get(antibodyKey);
 	}
 
-	public AntibodyDomain delete(Integer key, User user) {
+	public SearchResults<AntibodyDomain> delete(Integer key, User user) {
 		return antibodyService.delete(key, user);
 	}
 	

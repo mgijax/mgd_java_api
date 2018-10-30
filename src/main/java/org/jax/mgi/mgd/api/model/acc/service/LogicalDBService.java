@@ -35,7 +35,7 @@ public class LogicalDBService extends BaseService<LogicalDBDomain> implements Ba
 	}
 
 	@Override
-	public LogicalDBDomain delete(Integer key, User user) {
+	public SearchResults<LogicalDBDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

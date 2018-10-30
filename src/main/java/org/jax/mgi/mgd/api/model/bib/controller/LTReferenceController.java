@@ -389,7 +389,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	}
 
 	@Override
-	public LTReferenceDomain delete(Integer key, User user) {
+	public SearchResults<LTReferenceDomain> delete(Integer key, User user) {
 		return null;
 	}
 }

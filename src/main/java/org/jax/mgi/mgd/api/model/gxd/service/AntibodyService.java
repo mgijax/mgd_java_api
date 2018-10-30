@@ -41,7 +41,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> implements Base
 	}
 
 	@Transactional
-	public AntibodyDomain delete(Integer key, User user) {
+	public SearchResults<AntibodyDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

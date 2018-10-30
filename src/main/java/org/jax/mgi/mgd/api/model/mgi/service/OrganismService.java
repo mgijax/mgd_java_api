@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.search.OrganismSearchForm;
 import org.jax.mgi.mgd.api.model.mgi.translator.OrganismTranslator;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
+import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
 @RequestScoped
@@ -47,7 +48,7 @@ public class OrganismService extends BaseService<OrganismDomain> {
 	}
 
 	@Override
-	public OrganismDomain delete(Integer key, User user) {
+	public SearchResults<OrganismDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

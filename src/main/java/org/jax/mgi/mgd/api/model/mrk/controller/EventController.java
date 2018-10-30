@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.EventDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.EventSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.service.EventService;
+import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,12 +45,12 @@ public class EventController extends BaseController<EventDomain> {
 	}
 
 	@Override
-	public EventDomain get(Integer eventKey) {
-		return eventService.get(eventKey);
+	public EventDomain get(Integer key) {
+		return eventService.get(key);
 	}
 
 	@Override
-	public EventDomain delete(Integer key, User user) {
+	public SearchResults<EventDomain> delete(Integer key, User user) {
 		return eventService.delete(key, user);
 	}
 	

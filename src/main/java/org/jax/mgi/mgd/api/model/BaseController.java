@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.naming.directory.SearchResult;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -17,6 +18,7 @@ import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.ApiLogService;
 import org.jax.mgi.mgd.api.model.mgi.service.UserService;
+import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -102,8 +104,8 @@ public abstract class BaseController<T extends BaseDomain> {
 	@PUT
 	@ApiOperation(value = "Update", notes="Update")
 	public T update(
-			@HeaderParam(value="api_access_token for accessing the API") String api_access_token,
-			@HeaderParam(value="Username of the logged in user") String username,
+			@HeaderParam(value="api_access_token") String api_access_token,
+			@HeaderParam(value="username") String username,
 			@ApiParam(value = "This is the passed in object") T object) {
 		if(authenticateToken(api_access_token)) {
 			User user = authenticateUser(username);
@@ -121,9 +123,9 @@ public abstract class BaseController<T extends BaseDomain> {
 	@DELETE
 	@ApiOperation(value = "Delete")
 	@Path("/{key}")
-	public T delete(@HeaderParam(value="api_access_token for accessing the API") String api_access_token,
-			@HeaderParam(value="Username of the logged in user") String username,
-			@ApiParam(value = "This is for deleting by key") Integer key) {
+	public SearchResults<T> delete(@HeaderParam(value="api_access_token") String api_access_token,
+			@HeaderParam(value="username") String username,
+			@PathParam("key") @ApiParam(value = "This is for deleting by key") Integer key) {
 		if(authenticateToken(api_access_token)) {
 			User user = authenticateUser(username);
 			if(user != null) {
@@ -140,7 +142,6 @@ public abstract class BaseController<T extends BaseDomain> {
 	public abstract T create(T object, User user);
 	public abstract T get(Integer key);
 	public abstract T update(T object, User user);
-	public abstract T delete(Integer key, User user);
-
+	public abstract SearchResults<T> delete(Integer key, User user);
 
 }

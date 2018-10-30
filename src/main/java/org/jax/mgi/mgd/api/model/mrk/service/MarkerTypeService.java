@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.mrk.dao.MarkerTypeDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerTypeDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerTypeSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTypeTranslator;
+import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jboss.logging.Logger;
 
@@ -48,7 +49,7 @@ public class MarkerTypeService extends BaseService<MarkerTypeDomain> {
 	}
 
 	@Transactional
-	public MarkerTypeDomain delete(Integer key, User user) {
+	public SearchResults<MarkerTypeDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

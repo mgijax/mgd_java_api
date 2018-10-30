@@ -46,8 +46,9 @@ public class MGITypeService extends BaseService<MGITypeDomain> implements BaseSe
 	}
 
 	@Transactional
-	public MGITypeDomain delete(Integer key, User user) {
-		return translator.translate(mgitypeDAO.delete(mgitypeDAO.get(key)));
+	public SearchResults<MGITypeDomain> delete(Integer key, User user) {
+	        // TODO Auto-generated method stub
+	        return null;
 	}
 
 	@Transactional

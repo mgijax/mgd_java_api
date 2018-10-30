@@ -41,7 +41,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> implements Ba
 	}
 
 	@Transactional
-	public ReferenceDomain delete(Integer key, User user) {
+	public SearchResults<ReferenceDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

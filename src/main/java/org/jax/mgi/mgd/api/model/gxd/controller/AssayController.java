@@ -43,7 +43,7 @@ public class AssayController extends BaseController<AssayDomain> implements Base
 		return assayService.get(assayKey);
 	}
 
-	public AssayDomain delete(Integer key, User user) {
+	public SearchResults<AssayDomain> delete(Integer key, User user) {
 		return assayService.delete(key, user);
 	}
 	

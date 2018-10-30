@@ -43,7 +43,7 @@ public class SpecimenController extends BaseController<SpecimenDomain> implement
 		return specimenService.get(specimenKey);
 	}
 
-	public SpecimenDomain delete(Integer key, User user) {
+	public SearchResults<SpecimenDomain> delete(Integer key, User user) {
 		return specimenService.delete(key, user);
 	}
 	

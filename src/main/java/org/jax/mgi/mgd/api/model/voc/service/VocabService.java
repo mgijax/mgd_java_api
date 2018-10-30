@@ -44,8 +44,9 @@ public class VocabService extends BaseService<VocabularyDomain> implements BaseS
 	}
 	
 	@Transactional
-	public VocabularyDomain delete(Integer key, User user) {
-		return translator.translate(vocabularyDAO.delete(vocabularyDAO.get(key)));
+	public SearchResults<VocabularyDomain> delete(Integer key, User user) {
+                // TODO Auto-generated method stub
+		return null;
 	}
 
 	@Transactional

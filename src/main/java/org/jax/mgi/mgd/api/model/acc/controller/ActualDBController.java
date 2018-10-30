@@ -43,8 +43,8 @@ public class ActualDBController extends BaseController<ActualDBDomain> implement
 		return actualdbService.get(key);
 	}
 
-	public ActualDBDomain delete(Integer actualdb_key, User user) {
-		return actualdbService.delete(actualdb_key, user);
+	public SearchResults<ActualDBDomain> delete(Integer key, User user) {
+		return actualdbService.delete(key, user);
 	}
 
 	@Override

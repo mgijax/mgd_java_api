@@ -20,6 +20,7 @@ import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
+import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -54,7 +55,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	}
 
 	@Override
-	public MarkerDomain delete(Integer key, User user) {
+	public SearchResults<MarkerDomain> delete(Integer key, User user) {
 		return markerService.delete(key, user);
 	}
 	

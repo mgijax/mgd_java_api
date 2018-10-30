@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.mrk.dao.EventReasonDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.EventReasonDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.EventReasonSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.EventReasonTranslator;
+import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jboss.logging.Logger;
 
@@ -48,7 +49,7 @@ public class EventReasonService extends BaseService<EventReasonDomain> {
 	}
 
 	@Transactional
-	public EventReasonDomain delete(Integer key, User user) {
+	public SearchResults<EventReasonDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -10,6 +10,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
+import org.hibernate.JDBCException;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -17,11 +18,14 @@ import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIResultDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
+import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.MarkerWithdrawal;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
+import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
 @RequestScoped
@@ -33,7 +37,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private MarkerDAO markerDAO;
 
 	private MarkerTranslator translator = new MarkerTranslator();
-	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -54,20 +57,20 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}
 
 	@Transactional
-	public MarkerDomain delete(Integer key, User user) {
-		// send delete markerDAO.get(key)
+	public SearchResults<MarkerDomain> delete(Integer key, User user) {
 		
-		String cmd = "delete from mrk_marker where _marker_key = " + key;
+		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
+		
 		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			//while (rs.next()) {
-			//	results.add(markerEIResultDomain);
-			//}
-			sqlExecutor.cleanup();	
+			Marker entity = markerDAO.get(key);
+			markerDAO.remove(entity);
+		} catch (JDBCException e) {
+			results.setError("Failed", e.getMessage(), Constants.HTTP_SERVER_ERROR);
+		} catch (Exception e) {
+			results.setError("Failed", e.getMessage(), Constants.HTTP_SERVER_ERROR);
 		}
-		catch (Exception e) {e.printStackTrace();}
-		
-		return null;
+	
+		return results;
 	}
 
 	public List<MarkerEIResultDomain> eiSearch(MarkerSearchForm searchForm) {
@@ -75,10 +78,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// list of results to be returned
 		List<MarkerEIResultDomain> results = new ArrayList<MarkerEIResultDomain>();
 
+		// parameters defined in MarkerSearchForm
 		Map<String, Object> params = searchForm.getSearchFields();
 		log.info(params);
 		
-		// building SQL command
+		// building SQL command : select + from + where + orderBy
 		String cmd = "";
 		String select = "select distinct m._marker_key, m._marker_type_key, m.symbol";
 		String from = "from mrk_marker m";
@@ -93,6 +97,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Boolean from_user2 = false;
 		Boolean from_accession = false;
 
+		// if parameter exists, then add to where-clause
+		
 		if (params.containsKey("symbol")) {
 			where = where + "\nand m.symbol ilike '" + params.get("symbol") + "'" ;
 		}
@@ -170,6 +176,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			where = where + "\nand a.accID ilike '" + params.get("accID") + "'";
 			from_accession = true;
 		}
+		
+		// if parameter was added to where-clause, then add table (only once) to from-clause
+		// tables and views are allowed
+		// this could also be done as a series of "exists" clauses
 		
 		if (from_user1 == true) {
 			from = from + ", mgi_user u1";

@@ -47,7 +47,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> impleme
 		return referenceService.get(referenceKey);
 	}
 
-	public ReferenceDomain delete(Integer key, User user) {
+	public SearchResults<ReferenceDomain> delete(Integer key, User user) {
 		return referenceService.delete(key, user);
 	}
 	

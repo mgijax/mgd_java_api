@@ -43,8 +43,8 @@ public class MGITypeController extends BaseController<MGITypeDomain> implements 
 		return mgitypeService.update(mgitype, user);
 	}
 
-	public MGITypeDomain delete(Integer mgitype_key, User user) {
-		return mgitypeService.delete(mgitype_key, user);
+	public SearchResults<MGITypeDomain> delete(Integer key, User user) {
+		return mgitypeService.delete(key, user);
 	}
 
 	@Override

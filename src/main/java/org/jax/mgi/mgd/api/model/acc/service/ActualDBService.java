@@ -35,7 +35,7 @@ public class ActualDBService extends BaseService<ActualDBDomain> implements Base
 	}
 
 	@Override
-	public ActualDBDomain delete(Integer key, User user) {
+	public SearchResults<ActualDBDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

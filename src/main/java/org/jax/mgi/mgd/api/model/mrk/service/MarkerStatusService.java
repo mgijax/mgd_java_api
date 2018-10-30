@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.mrk.dao.MarkerStatusDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerStatusDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerStatusSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerStatusTranslator;
+import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jboss.logging.Logger;
 
@@ -48,7 +49,7 @@ public class MarkerStatusService extends BaseService<MarkerStatusDomain> {
 	}
 
 	@Transactional
-	public MarkerStatusDomain delete(Integer key, User user) {
+	public SearchResults<MarkerStatusDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

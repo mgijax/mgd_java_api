@@ -42,7 +42,7 @@ public class UserService extends BaseService<UserDomain> implements BaseSearchIn
 	}
 
 	@Override
-	public UserDomain delete(Integer key, User user) {
+	public SearchResults<UserDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -43,7 +43,7 @@ public class IndexController extends BaseController<IndexDomain> implements Base
 		return indexService.get(indexKey);
 	}
 
-	public IndexDomain delete(Integer key, User user) {
+	public SearchResults<IndexDomain> delete(Integer key, User user) {
 		return indexService.delete(key, user);
 	}
 	

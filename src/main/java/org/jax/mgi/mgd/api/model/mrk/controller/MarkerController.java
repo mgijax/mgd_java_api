@@ -62,6 +62,11 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 
+		// the try/except method is here 
+		// because the service does not seem to be picking up the exceptions
+		// if results.error is null, then API assumes delete = success
+		// if results.error is not null, then API assumes delete = fail
+		
 		try {
 			results = markerService.delete(key, user);
 		} catch (Exception e) {

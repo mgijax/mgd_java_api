@@ -26,9 +26,9 @@ public class MarkerDomain extends BaseDomain {
 	private String markerStatus;
 	private String markerTypeKey;
 	private String markerType;
-	private Integer createdByKey;
+	private String createdByKey;
 	private String createdBy;
-	private Integer modifiedByKey;
+	private String modifiedByKey;
 	private String modifiedBy;
 	private Date creation_date;
 	private Date modification_date;

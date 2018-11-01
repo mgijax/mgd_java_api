@@ -32,9 +32,9 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		domain.setMarkerStatus(entity.getMarkerStatus().getStatus());
 		domain.setMarkerTypeKey(entity.getMarkerType().get_marker_type_key().toString());
 		domain.setMarkerType(entity.getMarkerType().getName());
-		domain.setCreatedByKey(entity.getCreatedBy().get_user_key());
+		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getName());
-		domain.setModifiedByKey(entity.getModifiedBy().get_user_key());
+		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
 		domain.setModifiedBy(entity.getModifiedBy().getName());
 		domain.setCreation_date(entity.getCreation_date());
 		domain.setModification_date(entity.getModification_date());

@@ -108,7 +108,7 @@ public class TermService extends BaseService<TermDomain> implements BaseSearchIn
 		return null;
 	}
 
-	@Override
+	@Transactional
 	public SearchResults<TermDomain> search(TermSearchForm searchForm) {
 		SearchResults<Term> terms;
 		if(searchForm.getOrderBy() != null) {

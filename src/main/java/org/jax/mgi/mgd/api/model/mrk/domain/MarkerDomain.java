@@ -20,11 +20,11 @@ public class MarkerDomain extends BaseDomain {
 	private String chromosome;
 	private String cytogeneticOffset;
 	private String cmOffset;
-	private Integer organismKey;
+	private String organismKey;
 	private String organism;
-	private Integer markerStatusKey;
+	private String markerStatusKey;
 	private String markerStatus;
-	private Integer markerTypeKey;
+	private String markerTypeKey;
 	private String markerType;
 	private Integer createdByKey;
 	private String createdBy;

@@ -26,18 +26,22 @@ public class MGITypeController extends BaseController<MGITypeDomain> implements 
 	@Inject
 	private MGITypeService mgitypeService;
 
+	@Override
 	public SearchResults<MGITypeDomain> create(MGITypeDomain mgitype, User user) {
 		return mgitypeService.create(mgitype, user);
 	}
 
+	@Override
 	public SearchResults<MGITypeDomain> update(MGITypeDomain mgitype, User user) {
 		return mgitypeService.update(mgitype, user);
 	}
 	
+	@Override
 	public MGITypeDomain get(Integer key) {
 		return mgitypeService.get(key);
 	}
 
+	@Override
 	public SearchResults<MGITypeDomain> delete(Integer key, User user) {
 		return mgitypeService.delete(key, user);
 	}

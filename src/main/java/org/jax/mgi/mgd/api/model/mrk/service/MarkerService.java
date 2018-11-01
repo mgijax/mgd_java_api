@@ -75,7 +75,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// list of results to be returned
 		List<MarkerEIResultDomain> results = new ArrayList<MarkerEIResultDomain>();
 
-		// parameters defined in MarkerSearchForm
+		// parameters defined in SearchForm
 		Map<String, Object> params = searchForm.getSearchFields();
 		log.info(params);
 		

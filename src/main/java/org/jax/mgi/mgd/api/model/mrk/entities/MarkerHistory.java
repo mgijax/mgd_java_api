@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -35,7 +36,7 @@ public class MarkerHistory extends BaseEntity {
 
 	@OneToOne
 	@JoinColumn(name="_marker_eventreason_key")
-	private EventReason eventReason;
+	private EventReason markerEventReason;
 
 	@OneToOne
 	@JoinColumn(name="_history_key", referencedColumnName="_marker_key")

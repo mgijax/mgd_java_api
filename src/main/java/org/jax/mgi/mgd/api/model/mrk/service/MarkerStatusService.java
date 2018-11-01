@@ -45,7 +45,7 @@ public class MarkerStatusService extends BaseService<MarkerStatusDomain> {
 
 	@Transactional
 	public MarkerStatusDomain get(Integer key) {
-		return translator.translate(markerStatusDAO.get(key),3);
+		return translator.translate(markerStatusDAO.get(key),1);
 	}
 
 	@Transactional

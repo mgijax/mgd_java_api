@@ -45,7 +45,7 @@ public class EventReasonService extends BaseService<EventReasonDomain> {
 
 	@Transactional
 	public EventReasonDomain get(Integer key) {
-		return translator.translate(eventReasonDAO.get(key),3);
+		return translator.translate(eventReasonDAO.get(key),1);
 	}
 
 	@Transactional

@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.ejb.Singleton;
+import javax.persistence.EmbeddedId;
 import javax.persistence.EntityManager;
 import javax.persistence.Id;
 import javax.persistence.PersistenceContext;
@@ -52,7 +53,10 @@ public abstract class PostgresSQLDAO<T> {
 	protected PostgresSQLDAO(Class<T> myClass) {
 		this.myClass = myClass;
 		Reflections r = new Reflections(myClass.getPackage().getName(), new FieldAnnotationsScanner());
+		
 		Set<Field> fields = r.getFieldsAnnotatedWith(Id.class);
+		//Set<Field> fields = r.getFieldsAnnotatedWith(EmbeddedId.class);
+
 		for(Field f: fields) {
 			if(f.getDeclaringClass().getName().equals(myClass.getName())) {
 				idFieldName = f.getName();

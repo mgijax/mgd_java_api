@@ -29,18 +29,22 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	@Inject
 	private AlleleService alleleService;
 
+	@Override
 	public SearchResults<AlleleDomain> create(AlleleDomain allele, User user) {
 		return alleleService.create(allele, user);
 	}
 
+	@Override
 	public SearchResults<AlleleDomain> update(AlleleDomain allele, User user) {
 		return alleleService.update(allele, user);
 	}
 
+	@Override
 	public AlleleDomain get(Integer alleleKey) {
 		return alleleService.get(alleleKey);
 	}
 
+	@Override
 	public SearchResults<AlleleDomain> delete(Integer key, User user) {
 		return alleleService.delete(key, user);
 	}

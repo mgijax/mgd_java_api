@@ -29,22 +29,22 @@ public class NoteController extends BaseController<NoteDomain> {
 	@Inject
 	private NoteService noteService;
 
-	@Transactional
+	@Override
 	public SearchResults<NoteDomain> create(NoteDomain note, User user) {
 		return noteService.create(note, user);
 	}
 
-	@Transactional
+	@Override
 	public SearchResults<NoteDomain> update(NoteDomain note, User user) {
 		return noteService.update(note, user);
 	}
 
-	@Transactional
+	@Override
 	public NoteDomain get(Integer key) {
 		return noteService.get(key);
 	}
 
-	@Transactional
+	@Override
 	public SearchResults<NoteDomain> delete(Integer key, User user) {
 		return noteService.delete(key, user);
 	}

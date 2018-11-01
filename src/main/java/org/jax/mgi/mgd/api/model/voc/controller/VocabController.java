@@ -26,22 +26,27 @@ public class VocabController extends BaseController<VocabularyDomain> implements
 	@Inject
 	private VocabService vocabService;
 
+	@Override
 	public SearchResults<VocabularyDomain> create(VocabularyDomain object, User user) {
 		return vocabService.create(object, user);
 	}
 
+	@Override
 	public SearchResults<VocabularyDomain> update(VocabularyDomain object, User user) {
 		return vocabService.update(object, user);
 	}
 
+	@Override
 	public VocabularyDomain get(Integer key) {
 		return vocabService.get(key);
 	}
 
+	@Override
 	public SearchResults<VocabularyDomain> delete(Integer key, User user) {
 		return vocabService.delete(key, user);
 	}
 
+	@Override
 	public SearchResults<VocabularyDomain> search(VocabularySearchForm form) {
 		return vocabService.search(form);
 	}

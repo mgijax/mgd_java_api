@@ -26,18 +26,22 @@ public class ActualDBController extends BaseController<ActualDBDomain> {
 	@Inject
 	private ActualDBService actualdbService;
 
+	@Override
 	public SearchResults<ActualDBDomain> create(ActualDBDomain actualdb, User user) {
 		return actualdbService.create(actualdb, user);
 	}
 
+	@Override
 	public SearchResults<ActualDBDomain> update(ActualDBDomain actualdb, User user) {
 		return actualdbService.update(actualdb, user);
 	}
 
+	@Override
 	public ActualDBDomain get(Integer key) {
 		return actualdbService.get(key);
 	}
 
+	@Override
 	public SearchResults<ActualDBDomain> delete(Integer key, User user) {
 		return actualdbService.delete(key, user);
 	}

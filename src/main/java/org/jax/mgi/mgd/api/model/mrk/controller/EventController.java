@@ -29,18 +29,22 @@ public class EventController extends BaseController<EventDomain> {
 	@Inject
 	private EventService eventService;
 
+	@Override
 	public SearchResults<EventDomain> create(EventDomain event, User user) {
 		return eventService.create(event, user);
 	}
 
+	@Override
 	public SearchResults<EventDomain> update(EventDomain event, User user) {
 		return eventService.update(event, user);
 	}
 
+	@Override
 	public EventDomain get(Integer key) {
 		return eventService.get(key);
 	}
 
+	@Override
 	public SearchResults<EventDomain> delete(Integer key, User user) {
 		return eventService.delete(key, user);
 	}

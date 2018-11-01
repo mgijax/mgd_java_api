@@ -26,18 +26,22 @@ public class SpecimenController extends BaseController<SpecimenDomain> {
 	@Inject
 	private SpecimenService specimenService;
 
+	@Override
 	public SearchResults<SpecimenDomain> create(SpecimenDomain specimen, User user) {
 		return specimenService.create(specimen, user);
 	}
 
+	@Override
 	public SearchResults<SpecimenDomain> update(SpecimenDomain specimen, User user) {
 		return specimenService.update(specimen, user);
 	}
 
+	@Override
 	public SpecimenDomain get(Integer specimenKey) {
 		return specimenService.get(specimenKey);
 	}
 
+	@Override
 	public SearchResults<SpecimenDomain> delete(Integer key, User user) {
 		return specimenService.delete(key, user);
 	}

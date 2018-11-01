@@ -26,18 +26,22 @@ public class ExperimentController extends BaseController<ExperimentDomain> {
 	@Inject
 	private ExperimentService exptService;
 
+	@Override
 	public SearchResults<ExperimentDomain> create(ExperimentDomain expt, User user) {
 		return exptService.create(expt, user);
 	}
 
+	@Override
 	public SearchResults<ExperimentDomain> update(ExperimentDomain expt, User user) {
 		return exptService.update(expt, user);
 	}
 
+	@Override
 	public ExperimentDomain get(Integer key) {
 		return exptService.get(key);
 	}
 
+	@Override
 	public SearchResults<ExperimentDomain> delete(Integer key, User user) {
 		return exptService.delete(key, user);
 	}

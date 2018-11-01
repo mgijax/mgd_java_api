@@ -26,18 +26,22 @@ public class AssayController extends BaseController<AssayDomain> {
 	@Inject
 	private AssayService assayService;
 
+	@Override
 	public SearchResults<AssayDomain> create(AssayDomain assay, User user) {
 		return assayService.create(assay, user);
 	}
 
+	@Override
 	public SearchResults<AssayDomain> update(AssayDomain assay, User user) {
 		return assayService.update(assay, user);
 	}
 
+	@Override
 	public AssayDomain get(Integer assayKey) {
 		return assayService.get(assayKey);
 	}
 
+	@Override
 	public SearchResults<AssayDomain> delete(Integer key, User user) {
 		return assayService.delete(key, user);
 	}

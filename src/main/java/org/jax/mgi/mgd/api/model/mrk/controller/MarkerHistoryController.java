@@ -29,18 +29,22 @@ public class MarkerHistoryController extends BaseController<MarkerHistoryDomain>
 	@Inject
 	private MarkerHistoryService markerHistoryService;
 
+	@Override
 	public SearchResults<MarkerHistoryDomain> create(MarkerHistoryDomain markerHistory, User user) {
 		return markerHistoryService.create(markerHistory, user);
 	}
 
+	@Override
 	public SearchResults<MarkerHistoryDomain> update(MarkerHistoryDomain markerHistory, User user) {
 		return markerHistoryService.update(markerHistory, user);
 	}
 
+	@Override
 	public MarkerHistoryDomain get(Integer key) {
 		return markerHistoryService.get(key);
 	}
 
+	@Override
 	public SearchResults<MarkerHistoryDomain> delete(Integer key, User user) {
 		return markerHistoryService.delete(key, user);
 	}

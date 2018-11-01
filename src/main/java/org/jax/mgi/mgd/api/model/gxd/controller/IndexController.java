@@ -26,18 +26,22 @@ public class IndexController extends BaseController<IndexDomain> {
 	@Inject
 	private IndexService indexService;
 
+	@Override
 	public SearchResults<IndexDomain> create(IndexDomain index, User user) {
 		return indexService.create(index, user);
 	}
 
+	@Override
 	public SearchResults<IndexDomain> update(IndexDomain index, User user) {
 		return indexService.update(index, user);
 	}
 
+	@Override
 	public IndexDomain get(Integer indexKey) {
 		return indexService.get(indexKey);
 	}
 
+	@Override
 	public SearchResults<IndexDomain> delete(Integer key, User user) {
 		return indexService.delete(key, user);
 	}

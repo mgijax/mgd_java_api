@@ -26,18 +26,22 @@ public class TermController extends BaseController<TermDomain> implements BaseSe
 	@Inject
 	private TermService termService;
 
+	@Override
 	public SearchResults<TermDomain> create(TermDomain term, User user) {
 		return null;
 	}
 
+	@Override
 	public SearchResults<TermDomain> update(TermDomain term, User user) {
 		return termService.update(term, user);
 	}
 
+	@Override
 	public TermDomain get(Integer key) {
 		return termService.get(key);
 	}
 
+	@Override
 	public SearchResults<TermDomain> delete(Integer key, User user) {
 		return termService.delete(key, user);
 	}

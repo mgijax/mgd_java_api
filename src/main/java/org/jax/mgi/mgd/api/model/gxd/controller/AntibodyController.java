@@ -26,18 +26,22 @@ public class AntibodyController extends BaseController<AntibodyDomain> {
 	@Inject
 	private AntibodyService antibodyService;
 
+	@Override
 	public SearchResults<AntibodyDomain> create(AntibodyDomain antibody, User user) {
 		return antibodyService.create(antibody, user);
 	}
 
+	@Override
 	public SearchResults<AntibodyDomain> update(AntibodyDomain antibody, User user) {
 		return antibodyService.update(antibody, user);
 	}
 
+	@Override
 	public AntibodyDomain get(Integer antibodyKey) {
 		return antibodyService.get(antibodyKey);
 	}
 
+	@Override
 	public SearchResults<AntibodyDomain> delete(Integer key, User user) {
 		return antibodyService.delete(key, user);
 	}

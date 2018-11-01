@@ -29,18 +29,22 @@ public class OrganismController extends BaseController<OrganismDomain> {
 	@Inject
 	private OrganismService organismService;
 
+	@Override
 	public SearchResults<OrganismDomain> create(OrganismDomain organism, User user) {
 		return organismService.create(organism, user);
 	}
 
+	@Override
 	public SearchResults<OrganismDomain> update(OrganismDomain organism, User user) {
 		return organismService.update(organism, user);
 	}
 
+	@Override
 	public OrganismDomain get(Integer key) {
 		return organismService.get(key);
 	}
 
+	@Override
 	public SearchResults<OrganismDomain> delete(Integer key, User user) {
 		return organismService.delete(key, user);
 	}

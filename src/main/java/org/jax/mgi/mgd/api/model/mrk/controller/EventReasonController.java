@@ -29,18 +29,22 @@ public class EventReasonController extends BaseController<EventReasonDomain> {
 	@Inject
 	private EventReasonService eventReasonService;
 
+	@Override
 	public SearchResults<EventReasonDomain> create(EventReasonDomain eventReason, User user) {
 		return eventReasonService.create(eventReason, user);
 	}
 
+	@Override
 	public SearchResults<EventReasonDomain> update(EventReasonDomain eventReason, User user) {
 		return eventReasonService.update(eventReason, user);
 	}
 
+	@Override
 	public EventReasonDomain get(Integer key) {
 		return eventReasonService.get(key);
 	}
 
+	@Override
 	public SearchResults<EventReasonDomain> delete(Integer key, User user) {
 		return eventReasonService.delete(key, user);
 	}

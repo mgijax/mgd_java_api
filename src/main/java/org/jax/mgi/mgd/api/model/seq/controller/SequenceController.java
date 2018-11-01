@@ -26,18 +26,22 @@ public class SequenceController extends BaseController<SequenceDomain> {
 	@Inject
 	private SequenceService sequenceService;
 
+	@Override
 	public SearchResults<SequenceDomain> create(SequenceDomain sequence, User user) {
 		return sequenceService.create(sequence, user);
 	}
 
+	@Override
 	public SearchResults<SequenceDomain> update(SequenceDomain sequence, User user) {
 		return sequenceService.update(sequence, user);
 	}
 
+	@Override
 	public SequenceDomain get(Integer key) {
 		return sequenceService.get(key);
 	}
 
+	@Override
 	public SearchResults<SequenceDomain> delete(Integer key, User user) {
 		return sequenceService.delete(key, user);
 	}

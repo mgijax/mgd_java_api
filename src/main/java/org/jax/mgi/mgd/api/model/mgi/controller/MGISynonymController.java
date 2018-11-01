@@ -27,18 +27,22 @@ public class MGISynonymController extends BaseController<MGISynonymDomain> {
 	@Inject
 	private MGISynonymService synonymService;
 
+	@Override
 	public SearchResults<MGISynonymDomain> create(MGISynonymDomain synonym, User user) {
 		return synonymService.create(synonym, user);
 	}
 
+	@Override
 	public SearchResults<MGISynonymDomain> update(MGISynonymDomain synonym, User user) {
 		return synonymService.update(synonym, user);
 	}
 
+	@Override
 	public MGISynonymDomain get(Integer key) {
 		return synonymService.get(key);
 	}
 
+	@Override
 	public SearchResults<MGISynonymDomain> delete(Integer key, User user) {
 		return synonymService.delete(key, user);
 	}

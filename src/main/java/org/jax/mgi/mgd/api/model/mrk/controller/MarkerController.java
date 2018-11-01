@@ -33,6 +33,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	@Inject
 	private MarkerService markerService;
 
+	@Override
 	public SearchResults<MarkerDomain> create(MarkerDomain marker, User user) {
 		
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
@@ -51,14 +52,17 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		return results;
 	}
 
+	@Override
 	public SearchResults<MarkerDomain> update(MarkerDomain marker, User user) {
 		return markerService.update(marker, user);
 	}
 
+	@Override
 	public MarkerDomain get(Integer markerKey) {
 		return markerService.get(markerKey);
 	}
 
+	@Override
 	public SearchResults<MarkerDomain> delete(Integer key, User user) {
 		
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();

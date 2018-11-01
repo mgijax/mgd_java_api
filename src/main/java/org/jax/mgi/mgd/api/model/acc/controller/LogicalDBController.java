@@ -26,18 +26,22 @@ public class LogicalDBController extends BaseController<LogicalDBDomain> {
 	@Inject
 	private LogicalDBService logicaldbService;
 
+	@Override
 	public SearchResults<LogicalDBDomain> create(LogicalDBDomain logicaldb, User user) {
 		return logicaldbService.create(logicaldb, user);
 	}
 
+	@Override
 	public SearchResults<LogicalDBDomain> update(LogicalDBDomain logicaldb, User user) {
 		return logicaldbService.update(logicaldb, user);
 	}
 
+	@Override
 	public LogicalDBDomain get(Integer key) {
 		return logicaldbService.get(key);
 	}
 
+	@Override
 	public SearchResults<LogicalDBDomain> delete(Integer key, User user) {
 		return logicaldbService.delete(key, user);
 	}

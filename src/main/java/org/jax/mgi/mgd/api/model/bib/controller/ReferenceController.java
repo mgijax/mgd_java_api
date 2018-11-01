@@ -30,18 +30,22 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	@Inject
 	private ReferenceService referenceService;
 
+	@Override
 	public SearchResults<ReferenceDomain> create(ReferenceDomain reference, User user) {
 		return referenceService.create(reference, user);
 	}
 
+	@Override
 	public SearchResults<ReferenceDomain> update(ReferenceDomain reference, User user) {
 		return referenceService.update(reference, user);
 	}
 
+	@Override
 	public ReferenceDomain get(Integer referenceKey) {
 		return referenceService.get(referenceKey);
 	}
 
+	@Override
 	public SearchResults<ReferenceDomain> delete(Integer key, User user) {
 		return referenceService.delete(key, user);
 	}

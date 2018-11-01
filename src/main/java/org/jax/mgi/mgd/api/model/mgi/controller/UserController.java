@@ -26,18 +26,22 @@ public class UserController extends BaseController<UserDomain> {
 	@Inject
 	private UserService userService;
 
+	@Override
 	public SearchResults<UserDomain> create(UserDomain userD, User user) {
 		return userService.create(userD, user);
 	}
 
+	@Override
 	public SearchResults<UserDomain> update(UserDomain userD, User user) {
 		return userService.update(userD, user);
 	}
 
+	@Override
 	public UserDomain get(Integer key) {
 		return userService.get(key);
 	}
 
+	@Override
 	public SearchResults<UserDomain> delete(Integer key, User user) {
 		return userService.delete(key, user);
 	}

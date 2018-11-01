@@ -26,18 +26,22 @@ public class ProbeController extends BaseController<ProbeDomain> {
 	@Inject
 	private ProbeService probeService;
 
+	@Override
 	public SearchResults<ProbeDomain> create(ProbeDomain probe, User user) {
 		return probeService.create(probe, user);
 	}
 
+	@Override
 	public SearchResults<ProbeDomain> update(ProbeDomain probe, User user) {
 		return probeService.update(probe, user);
 	}
 
+	@Override
 	public ProbeDomain get(Integer key) {
 		return probeService.get(key);
 	}
 
+	@Override
 	public SearchResults<ProbeDomain> delete(Integer key, User user) {
 		return probeService.delete(key, user);
 	}

@@ -26,18 +26,22 @@ public class GelLaneController extends BaseController<GelLaneDomain> {
 	@Inject
 	private GelLaneService gellaneService;
 
+	@Override
 	public SearchResults<GelLaneDomain> create(GelLaneDomain gellane, User user) {
 		return gellaneService.create(gellane, user);
 	}
 
+	@Override
 	public SearchResults<GelLaneDomain> update(GelLaneDomain gellane, User user) {
 		return gellaneService.update(gellane, user);
 	}
 
+	@Override
 	public GelLaneDomain get(Integer gellaneKey) {
 		return gellaneService.get(gellaneKey);
 	}
 
+	@Override
 	public SearchResults<GelLaneDomain> delete(Integer key, User user) {
 		return gellaneService.delete(key, user);
 	}

@@ -29,27 +29,18 @@ public class MarkerStatusController extends BaseController<MarkerStatusDomain> {
 	@Inject
 	private MarkerStatusService markerStatusService;
 
-	@Override
-	public MarkerStatusDomain create(MarkerStatusDomain markerStatus, User user) {
-		try {
-			return markerStatusService.create(markerStatus, user);
-		} catch (APIException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public SearchResults<MarkerStatusDomain> create(MarkerStatusDomain markerStatus, User user) {
+		return markerStatusService.create(markerStatus, user);
 	}
 
-	@Override
-	public MarkerStatusDomain update(MarkerStatusDomain markerStatus, User user) {
+	public SearchResults<MarkerStatusDomain> update(MarkerStatusDomain markerStatus, User user) {
 		return markerStatusService.update(markerStatus, user);
 	}
 
-	@Override
 	public MarkerStatusDomain get(Integer key) {
 		return markerStatusService.get(key);
 	}
 
-	@Override
 	public SearchResults<MarkerStatusDomain> delete(Integer key, User user) {
 		return markerStatusService.delete(key, user);
 	}

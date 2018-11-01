@@ -21,39 +21,25 @@ import io.swagger.annotations.Api;
 @Api(value = "Sequence Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class SequenceController extends BaseController<SequenceDomain> implements BaseSearchInterface<SequenceDomain, SequenceSearchForm> {
+public class SequenceController extends BaseController<SequenceDomain> {
 
 	@Inject
 	private SequenceService sequenceService;
 
-	@Override
-	public SequenceDomain create(SequenceDomain sequence, User user) {
-		try {
-			return sequenceService.create(sequence, user);
-		} catch (APIException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public SearchResults<SequenceDomain> create(SequenceDomain sequence, User user) {
+		return sequenceService.create(sequence, user);
 	}
 
-	@Override
-	public SequenceDomain update(SequenceDomain sequence, User user) {
+	public SearchResults<SequenceDomain> update(SequenceDomain sequence, User user) {
 		return sequenceService.update(sequence, user);
 	}
 
-	@Override
 	public SequenceDomain get(Integer key) {
 		return sequenceService.get(key);
 	}
 
-	@Override
 	public SearchResults<SequenceDomain> delete(Integer key, User user) {
 		return sequenceService.delete(key, user);
 	}
 	
-	@Override
-	public SearchResults<SequenceDomain> search(SequenceSearchForm searchForm) {
-		return sequenceService.search(searchForm);
-	}
-
 }

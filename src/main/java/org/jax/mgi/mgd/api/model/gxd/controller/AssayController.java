@@ -21,21 +21,16 @@ import io.swagger.annotations.Api;
 @Api(value = "Assay Endpoints", description="This is the description")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class AssayController extends BaseController<AssayDomain> implements BaseSearchInterface<AssayDomain, AssaySearchForm> {
+public class AssayController extends BaseController<AssayDomain> {
 
 	@Inject
 	private AssayService assayService;
 
-	public AssayDomain create(AssayDomain assay, User user) {
-		try {
-			return assayService.create(assay, user);
-		} catch (APIException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public SearchResults<AssayDomain> create(AssayDomain assay, User user) {
+		return assayService.create(assay, user);
 	}
 
-	public AssayDomain update(AssayDomain assay, User user) {
+	public SearchResults<AssayDomain> update(AssayDomain assay, User user) {
 		return assayService.update(assay, user);
 	}
 
@@ -47,9 +42,4 @@ public class AssayController extends BaseController<AssayDomain> implements Base
 		return assayService.delete(key, user);
 	}
 	
-	@Override
-	public SearchResults<AssayDomain> search(AssaySearchForm searchForm) {
-		return assayService.search(searchForm);
-	}
-
 }

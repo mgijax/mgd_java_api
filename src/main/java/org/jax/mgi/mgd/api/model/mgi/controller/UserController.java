@@ -21,36 +21,25 @@ import io.swagger.annotations.Api;
 @Api(value = "User Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class UserController extends BaseController<UserDomain> implements BaseSearchInterface<UserDomain, UserSearchForm> {
+public class UserController extends BaseController<UserDomain> {
 
 	@Inject
 	private UserService userService;
 
-	public UserDomain create(UserDomain userD, User user) {
-		try {
-			return userService.create(userD, user);
-		} catch (APIException e) {
-			e.printStackTrace();
-			// Create HTTP error response
-			return null;
-		}
+	public SearchResults<UserDomain> create(UserDomain userD, User user) {
+		return userService.create(userD, user);
+	}
+
+	public SearchResults<UserDomain> update(UserDomain userD, User user) {
+		return userService.update(userD, user);
 	}
 
 	public UserDomain get(Integer key) {
 		return userService.get(key);
 	}
 
-	public UserDomain update(UserDomain userD, User user) {
-		return userService.update(userD, user);
-	}
-
 	public SearchResults<UserDomain> delete(Integer key, User user) {
 		return userService.delete(key, user);
-	}
-
-	@Override
-	public SearchResults<UserDomain> search(UserSearchForm form) {
-		return userService.search(form);
 	}
 
 }

@@ -16,7 +16,7 @@ import org.jax.mgi.mgd.api.model.gxd.translator.SpecimenTranslator;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
-public class SpecimenService extends BaseService<SpecimenDomain> implements BaseSearchInterface<SpecimenDomain, SpecimenSearchForm> {
+public class SpecimenService extends BaseService<SpecimenDomain> {
 
 	@Inject
 	private SpecimenDAO specimenDAO;
@@ -24,13 +24,13 @@ public class SpecimenService extends BaseService<SpecimenDomain> implements Base
 	private SpecimenTranslator translator = new SpecimenTranslator();
 	
 	@Transactional
-	public SpecimenDomain create(SpecimenDomain object, User user) throws APIException {
+	public SearchResults<SpecimenDomain> create(SpecimenDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Transactional
-	public SpecimenDomain update(SpecimenDomain object, User user) {
+	public SearchResults<SpecimenDomain> update(SpecimenDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -45,20 +45,5 @@ public class SpecimenService extends BaseService<SpecimenDomain> implements Base
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Transactional
-	public SearchResults<SpecimenDomain> search(SpecimenSearchForm searchForm) {
-		SearchResults<Specimen> specimens;
-		if(searchForm.getOrderBy() != null) {
-			specimens = specimenDAO.search(searchForm.getSearchFields(), searchForm.getOrderBy());
-		} else {
-			specimens = specimenDAO.search(searchForm.getSearchFields());
-		}
-		Iterable<SpecimenDomain> newItems = translator.translateEntities(specimens.items, searchForm.getSearchDepth());
-		return new SearchResults<SpecimenDomain>(newItems);
-	}
-
-
-
 
 }

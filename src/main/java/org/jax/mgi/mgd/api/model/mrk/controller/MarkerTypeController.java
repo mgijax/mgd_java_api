@@ -29,27 +29,18 @@ public class MarkerTypeController extends BaseController<MarkerTypeDomain> {
 	@Inject
 	private MarkerTypeService markerTypeService;
 
-	@Override
-	public MarkerTypeDomain create(MarkerTypeDomain markerType, User user) {
-		try {
-			return markerTypeService.create(markerType, user);
-		} catch (APIException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public SearchResults<MarkerTypeDomain> create(MarkerTypeDomain markerType, User user) {
+		return markerTypeService.create(markerType, user);
 	}
 
-	@Override
-	public MarkerTypeDomain update(MarkerTypeDomain markerType, User user) {
+	public SearchResults<MarkerTypeDomain> update(MarkerTypeDomain markerType, User user) {
 		return markerTypeService.update(markerType, user);
 	}
 
-	@Override
 	public MarkerTypeDomain get(Integer key) {
 		return markerTypeService.get(key);
 	}
 
-	@Override
 	public SearchResults<MarkerTypeDomain> delete(Integer key, User user) {
 		return markerTypeService.delete(key, user);
 	}

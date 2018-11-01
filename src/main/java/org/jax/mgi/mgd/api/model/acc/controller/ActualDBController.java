@@ -21,21 +21,16 @@ import io.swagger.annotations.Api;
 @Api(value = "ActualDB Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class ActualDBController extends BaseController<ActualDBDomain> implements BaseSearchInterface<ActualDBDomain, ActualDBSearchForm> {
+public class ActualDBController extends BaseController<ActualDBDomain> {
 
 	@Inject
 	private ActualDBService actualdbService;
 
-	public ActualDBDomain create(ActualDBDomain actualdb, User user) {
-		try {
-			return actualdbService.create(actualdb, user);
-		} catch (APIException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public SearchResults<ActualDBDomain> create(ActualDBDomain actualdb, User user) {
+		return actualdbService.create(actualdb, user);
 	}
 
-	public ActualDBDomain update(ActualDBDomain actualdb, User user) {
+	public SearchResults<ActualDBDomain> update(ActualDBDomain actualdb, User user) {
 		return actualdbService.update(actualdb, user);
 	}
 
@@ -45,11 +40,6 @@ public class ActualDBController extends BaseController<ActualDBDomain> implement
 
 	public SearchResults<ActualDBDomain> delete(Integer key, User user) {
 		return actualdbService.delete(key, user);
-	}
-
-	@Override
-	public SearchResults<ActualDBDomain> search(ActualDBSearchForm form) {
-		return actualdbService.search(form);
 	}
 
 }

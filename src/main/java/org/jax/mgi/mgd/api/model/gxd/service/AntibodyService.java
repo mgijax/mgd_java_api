@@ -16,7 +16,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
-public class AntibodyService extends BaseService<AntibodyDomain> implements BaseSearchInterface<AntibodyDomain, AntibodySearchForm> {
+public class AntibodyService extends BaseService<AntibodyDomain> {
 
 	@Inject
 	private AntibodyDAO antibodyDAO;
@@ -24,13 +24,13 @@ public class AntibodyService extends BaseService<AntibodyDomain> implements Base
 	private AntibodyTranslator translator = new AntibodyTranslator();
 	
 	@Transactional
-	public AntibodyDomain create(AntibodyDomain object, User user) throws APIException {
+	public SearchResults<AntibodyDomain> create(AntibodyDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Transactional
-	public AntibodyDomain update(AntibodyDomain object, User user) {
+	public SearchResults<AntibodyDomain> update(AntibodyDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -46,18 +46,4 @@ public class AntibodyService extends BaseService<AntibodyDomain> implements Base
 		return null;
 	}
 
-	@Transactional
-	public SearchResults<AntibodyDomain> search(AntibodySearchForm searchForm) {
-		SearchResults<Antibody> antibodies;
-		if(searchForm.getOrderBy() != null) {
-			antibodies = antibodyDAO.search(searchForm.getSearchFields(), searchForm.getOrderBy());
-		} else {
-			antibodies = antibodyDAO.search(searchForm.getSearchFields());
-		}
-		Iterable<AntibodyDomain> newItems = translator.translateEntities(antibodies.items, searchForm.getSearchDepth());
-		return new SearchResults<AntibodyDomain>(newItems);
-	}
-
-	
-	
 }

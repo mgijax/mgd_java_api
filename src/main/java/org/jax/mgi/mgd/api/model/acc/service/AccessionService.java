@@ -24,13 +24,13 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 	private AccessionTranslator translator = new AccessionTranslator();
 	
 	@Transactional
-	public AccessionDomain create(AccessionDomain object, User user) throws APIException {
+	public SearchResults<AccessionDomain> create(AccessionDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Transactional
-	public AccessionDomain update(AccessionDomain object, User user) {
+	public SearchResults<AccessionDomain> update(AccessionDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

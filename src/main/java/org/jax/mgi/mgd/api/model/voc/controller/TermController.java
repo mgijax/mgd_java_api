@@ -26,16 +26,11 @@ public class TermController extends BaseController<TermDomain> implements BaseSe
 	@Inject
 	private TermService termService;
 
-	public TermDomain create(TermDomain term, User user) {
-		try {
-			return termService.create(term, user);
-		} catch (APIException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public SearchResults<TermDomain> create(TermDomain term, User user) {
+		return null;
 	}
 
-	public TermDomain update(TermDomain term, User user) {
+	public SearchResults<TermDomain> update(TermDomain term, User user) {
 		return termService.update(term, user);
 	}
 

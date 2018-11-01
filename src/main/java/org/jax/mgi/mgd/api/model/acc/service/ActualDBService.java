@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.acc.service;
 
 import javax.enterprise.context.RequestScoped;
+import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseSearchInterface;
@@ -11,40 +12,34 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
-public class ActualDBService extends BaseService<ActualDBDomain> implements BaseSearchInterface<ActualDBDomain, ActualDBSearchForm>{
+public class ActualDBService extends BaseService<ActualDBDomain> {
 
-//	@Inject
-//	private ActualDBDAO actualdbDAO;
+        //@Inject
+	//private ActualDBDAO actualdbDAO;
+	//private AcutalDBTranslator translator = new ActualDBTranslator();
 
-	@Override
-	public ActualDBDomain create(ActualDBDomain object, User user) throws APIException {
+	@Transactional
+	public SearchResults<ActualDBDomain> create(ActualDBDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
-	public ActualDBDomain update(ActualDBDomain object, User user) {
+	@Transactional
+	public SearchResults<ActualDBDomain> update(ActualDBDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	@Transactional
 	public ActualDBDomain get(Integer key) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	@Transactional
 	public SearchResults<ActualDBDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public SearchResults<ActualDBDomain> search(ActualDBSearchForm searchForm) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 
 }

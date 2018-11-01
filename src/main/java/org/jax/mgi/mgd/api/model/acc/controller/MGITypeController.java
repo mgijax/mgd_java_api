@@ -26,21 +26,16 @@ public class MGITypeController extends BaseController<MGITypeDomain> implements 
 	@Inject
 	private MGITypeService mgitypeService;
 
-	public MGITypeDomain create(MGITypeDomain mgitype, User user) {
-		try {
-			return mgitypeService.create(mgitype, user);
-		} catch (APIException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public SearchResults<MGITypeDomain> create(MGITypeDomain mgitype, User user) {
+		return mgitypeService.create(mgitype, user);
 	}
 
+	public SearchResults<MGITypeDomain> update(MGITypeDomain mgitype, User user) {
+		return mgitypeService.update(mgitype, user);
+	}
+	
 	public MGITypeDomain get(Integer key) {
 		return mgitypeService.get(key);
-	}
-
-	public MGITypeDomain update(MGITypeDomain mgitype, User user) {
-		return mgitypeService.update(mgitype, user);
 	}
 
 	public SearchResults<MGITypeDomain> delete(Integer key, User user) {

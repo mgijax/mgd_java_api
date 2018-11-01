@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseService;
@@ -30,24 +31,24 @@ public class OrganismService extends BaseService<OrganismDomain> {
 	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
-	@Override
-	public OrganismDomain create(OrganismDomain object, User user) throws APIException {
+	@Transactional
+	public SearchResults<OrganismDomain> create(OrganismDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
-	public OrganismDomain update(OrganismDomain object, User user) {
+	@Transactional
+	public SearchResults<OrganismDomain> update(OrganismDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	@Transactional
 	public OrganismDomain get(Integer key) {
 		return translator.translate(organismDAO.get(key),3);
 	}
 
-	@Override
+	@Transactional
 	public SearchResults<OrganismDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;

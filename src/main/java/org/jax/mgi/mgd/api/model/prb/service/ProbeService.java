@@ -16,7 +16,7 @@ import org.jax.mgi.mgd.api.model.prb.translator.ProbeTranslator;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
-public class ProbeService extends BaseService<ProbeDomain> implements BaseSearchInterface<ProbeDomain, ProbeSearchForm> {
+public class ProbeService extends BaseService<ProbeDomain> {
 
 	@Inject
 	private ProbeDAO probeDAO;
@@ -24,13 +24,13 @@ public class ProbeService extends BaseService<ProbeDomain> implements BaseSearch
 	private ProbeTranslator translator = new ProbeTranslator();
 	
 	@Transactional
-	public ProbeDomain create(ProbeDomain object, User user) throws APIException {
+	public SearchResults<ProbeDomain> create(ProbeDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Transactional
-	public ProbeDomain update(ProbeDomain object, User user) {
+	public SearchResults<ProbeDomain> update(ProbeDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -45,19 +45,5 @@ public class ProbeService extends BaseService<ProbeDomain> implements BaseSearch
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Transactional
-	public SearchResults<ProbeDomain> search(ProbeSearchForm searchForm) {
-		SearchResults<Probe> probes;
-		if(searchForm.getOrderBy() != null) {
-			probes = probeDAO.search(searchForm.getSearchFields(), searchForm.getOrderBy());
-		} else {
-			probes = probeDAO.search(searchForm.getSearchFields());
-		}
-		Iterable<ProbeDomain> newItems = translator.translateEntities(probes.items, searchForm.getSearchDepth());
-		return new SearchResults<ProbeDomain>(newItems);
-	}
-
-
 
 }

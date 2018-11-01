@@ -16,7 +16,7 @@ import org.jax.mgi.mgd.api.model.gxd.translator.IndexTranslator;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
-public class IndexService extends BaseService<IndexDomain> implements BaseSearchInterface<IndexDomain, IndexSearchForm> {
+public class IndexService extends BaseService<IndexDomain> {
 
 	@Inject
 	private IndexDAO indexDAO;
@@ -24,13 +24,13 @@ public class IndexService extends BaseService<IndexDomain> implements BaseSearch
 	private IndexTranslator translator = new IndexTranslator();
 	
 	@Transactional
-	public IndexDomain create(IndexDomain object, User user) throws APIException {
+	public SearchResults<IndexDomain> create(IndexDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Transactional
-	public IndexDomain update(IndexDomain object, User user) {
+	public SearchResults<IndexDomain> update(IndexDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -45,20 +45,5 @@ public class IndexService extends BaseService<IndexDomain> implements BaseSearch
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Transactional
-	public SearchResults<IndexDomain> search(IndexSearchForm searchForm) {
-		SearchResults<Index> indexs;
-		if(searchForm.getOrderBy() != null) {
-			indexs = indexDAO.search(searchForm.getSearchFields(), searchForm.getOrderBy());
-		} else {
-			indexs = indexDAO.search(searchForm.getSearchFields());
-		}
-		Iterable<IndexDomain> newItems = translator.translateEntities(indexs.items, searchForm.getSearchDepth());
-		return new SearchResults<IndexDomain>(newItems);
-	}
-
-
-
 
 }

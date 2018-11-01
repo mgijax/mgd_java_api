@@ -39,7 +39,7 @@ public class TermService extends BaseService<TermDomain> implements BaseSearchIn
 	private Logger log = Logger.getLogger(getClass());
 	
 	@Transactional
-	public TermDomain create(TermDomain termDomain, User user) throws APIException {
+	public SearchResults<TermDomain> create(TermDomain termDomain, User user) {
 		/*
 		The VOC_Term primary key is not auto-sequenced - we will need a way to get the next primary key available.
 
@@ -48,52 +48,53 @@ public class TermService extends BaseService<TermDomain> implements BaseSearchIn
 		Optional *single* synonym for 'GO properties' vocabulary only. Single synonym is convention in the Teleuse/EI Simple Vocab Module. MGI_SynonymType._SynonymType_key = 1034 (MGI_GORel), MGI_SynonymType._MGIType_key = 13 (VOC_Term), VOC_Vocab._Vocab_key = 82 (GO Property)
 		*/
 		
-		Vocabulary vocab = vocabDAO.getByName(termDomain.getVocabName());
+		//Vocabulary vocab = vocabDAO.getByName(termDomain.getVocabName());
 
-		if(vocab == null) {
-			throw new NotFoundException("Vocabulary not found for: " + termDomain.getVocabName());
-		}
+		//if(vocab == null) {
+		//	throw new NotFoundException("Vocabulary not found for: " + termDomain.getVocabName());
+		//}
 		
-		for(Term t: vocab.getTerms()) {
-			if(termDomain.getTerm().equals(t.getTerm())) {
-				throw new DuplicateEntryException("Duplicate Term found for: " + termDomain.getTerm() + " in " + vocab.getName());
-			}
-		}
+		//for(Term t: vocab.getTerms()) {
+		//	if(termDomain.getTerm().equals(t.getTerm())) {
+		//		throw new DuplicateEntryException("Duplicate Term found for: " + termDomain.getTerm() + " in " + vocab.getName());
+		//	}
+		//}
 		
-		Term term = translator.translate(termDomain);
+		//Term term = translator.translate(termDomain);
 		
-		log.debug("Creating Term: " + term);
+		//log.debug("Creating Term: " + term);
 		
-		Date now = new Date();
-		term.setCreation_date(now);
-		term.setCreatedBy(user);
-		term.setModification_date(now);
-		term.setModifiedBy(user);
-		term.set_term_key(termDAO.getNextKey());
-		term.setVocab(vocab);
+		//Date now = new Date();
+		//term.setCreation_date(now);
+		//term.setCreatedBy(user);
+		//term.setModification_date(now);
+		//term.setModifiedBy(user);
+		//term.set_term_key(termDAO.getNextKey());
+		//term.setVocab(vocab);
 
-		Term returnTerm = termDAO.create(term);
-		log.info("Create finished: " + returnTerm);
+		//Term returnTerm = termDAO.create(term);
+		//log.info("Create finished: " + returnTerm);
 		
-		TermDomain returnTermDomain = translator.translate(returnTerm);
+		//TermDomain returnTermDomain = translator.translate(returnTerm);
 		
-		log.info("Return Domain: " + returnTermDomain);
+		//log.info("Return Domain: " + returnTermDomain);
 		
-		return returnTermDomain;
+		//return returnTermDomain;
+		return null;
 	}
 
 	@Transactional
-	public TermDomain update(TermDomain object, User user) {
-		Term term = translator.translate(object);
+	public SearchResults<TermDomain> update(TermDomain object, User user) {
+		//Term term = translator.translate(object);
 		
-		term.setCreatedBy(userService.getUserByUsername(object.getCreatedBy()));
-		term.setModifiedBy(user);
+		//term.setCreatedBy(userService.getUserByUsername(object.getCreatedBy()));
+		//term.setModifiedBy(user);
 		
-		Term returnTerm = termDAO.update(term);
+		//Term returnTerm = termDAO.update(term);
 
-		
-		TermDomain termDomain = translator.translate(returnTerm);
-		return termDomain;
+		//TermDomain termDomain = translator.translate(returnTerm);
+		//return termDomain;
+		return null;
 	}
 	
 	@Transactional

@@ -374,7 +374,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	}
 	
 	@Override
-	public LTReferenceDomain create(LTReferenceDomain object, User user) {
+	public SearchResults<LTReferenceDomain> create(LTReferenceDomain object, User user) {
 		return null;
 	}
 
@@ -384,7 +384,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	}
 
 	@Override
-	public LTReferenceDomain update(LTReferenceDomain object, User user) {
+	public SearchResults<LTReferenceDomain> update(LTReferenceDomain object, User user) {
 		return null;
 	}
 

@@ -21,21 +21,16 @@ import io.swagger.annotations.Api;
 @Api(value = "Index Endpoints", description="This is the description")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class IndexController extends BaseController<IndexDomain> implements BaseSearchInterface<IndexDomain, IndexSearchForm> {
+public class IndexController extends BaseController<IndexDomain> {
 
 	@Inject
 	private IndexService indexService;
 
-	public IndexDomain create(IndexDomain index, User user) {
-		try {
-			return indexService.create(index, user);
-		} catch (APIException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public SearchResults<IndexDomain> create(IndexDomain index, User user) {
+		return indexService.create(index, user);
 	}
 
-	public IndexDomain update(IndexDomain index, User user) {
+	public SearchResults<IndexDomain> update(IndexDomain index, User user) {
 		return indexService.update(index, user);
 	}
 
@@ -47,9 +42,4 @@ public class IndexController extends BaseController<IndexDomain> implements Base
 		return indexService.delete(key, user);
 	}
 	
-	@Override
-	public SearchResults<IndexDomain> search(IndexSearchForm searchForm) {
-		return indexService.search(searchForm);
-	}
-
 }

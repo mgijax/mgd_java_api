@@ -32,13 +32,13 @@ public class MarkerTypeService extends BaseService<MarkerTypeDomain> {
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
-	public MarkerTypeDomain create(MarkerTypeDomain object, User user) throws APIException {
+	public SearchResults<MarkerTypeDomain> create(MarkerTypeDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Transactional
-	public MarkerTypeDomain update(MarkerTypeDomain object, User user) {
+	public SearchResults<MarkerTypeDomain> update(MarkerTypeDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

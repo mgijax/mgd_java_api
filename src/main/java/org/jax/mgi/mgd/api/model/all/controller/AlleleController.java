@@ -24,21 +24,16 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "Allele Endpoints", description="This is the description")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class AlleleController extends BaseController<AlleleDomain> implements BaseSearchInterface<AlleleDomain, AlleleSearchForm> {
+public class AlleleController extends BaseController<AlleleDomain> {
 
 	@Inject
 	private AlleleService alleleService;
 
-	public AlleleDomain create(AlleleDomain allele, User user) {
-		try {
-			return alleleService.create(allele, user);
-		} catch (APIException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public SearchResults<AlleleDomain> create(AlleleDomain allele, User user) {
+		return alleleService.create(allele, user);
 	}
 
-	public AlleleDomain update(AlleleDomain allele, User user) {
+	public SearchResults<AlleleDomain> update(AlleleDomain allele, User user) {
 		return alleleService.update(allele, user);
 	}
 
@@ -50,17 +45,11 @@ public class AlleleController extends BaseController<AlleleDomain> implements Ba
 		return alleleService.delete(key, user);
 	}
 	
-	@Override
-	public SearchResults<AlleleDomain> search(AlleleSearchForm searchForm) {
-		return alleleService.search(searchForm);
-	}
-	
-	@POST
-	@ApiOperation(value = "EI Allele Search")
-	@Path("/eiSearch")
-	public AlleleEIResultDomain eiSearch(AlleleSearchForm searchForm) {
-		return alleleService.eiSearch(searchForm);
-	}
-
+	//@POST
+	//@ApiOperation(value = "EI Allele Search")
+	//@Path("/eiSearch")
+	//public AlleleEIResultDomain eiSearch(AlleleSearchForm searchForm) {
+		//return alleleService.eiSearch(searchForm);
+	//}
 
 }

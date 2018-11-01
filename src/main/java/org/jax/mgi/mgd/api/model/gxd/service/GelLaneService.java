@@ -16,7 +16,7 @@ import org.jax.mgi.mgd.api.model.gxd.translator.GelLaneTranslator;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
-public class GelLaneService extends BaseService<GelLaneDomain> implements BaseSearchInterface<GelLaneDomain, GelLaneSearchForm> {
+public class GelLaneService extends BaseService<GelLaneDomain> {
 
 	@Inject
 	private GelLaneDAO gelaneDAO;
@@ -24,13 +24,13 @@ public class GelLaneService extends BaseService<GelLaneDomain> implements BaseSe
 	private GelLaneTranslator translator = new GelLaneTranslator();
 	
 	@Transactional
-	public GelLaneDomain create(GelLaneDomain object, User user) throws APIException {
+	public SearchResults<GelLaneDomain> create(GelLaneDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Transactional
-	public GelLaneDomain update(GelLaneDomain object, User user) {
+	public SearchResults<GelLaneDomain> update(GelLaneDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -45,20 +45,5 @@ public class GelLaneService extends BaseService<GelLaneDomain> implements BaseSe
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Transactional
-	public SearchResults<GelLaneDomain> search(GelLaneSearchForm searchForm) {
-		SearchResults<GelLane> gelanes;
-		if(searchForm.getOrderBy() != null) {
-			gelanes = gelaneDAO.search(searchForm.getSearchFields(), searchForm.getOrderBy());
-		} else {
-			gelanes = gelaneDAO.search(searchForm.getSearchFields());
-		}
-		Iterable<GelLaneDomain> newItems = translator.translateEntities(gelanes.items, searchForm.getSearchDepth());
-		return new SearchResults<GelLaneDomain>(newItems);
-	}
-
-
-
 
 }

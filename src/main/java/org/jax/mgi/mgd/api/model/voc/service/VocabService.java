@@ -23,19 +23,21 @@ public class VocabService extends BaseService<VocabularyDomain> implements BaseS
 	private VocabularyTranslator translator = new VocabularyTranslator();
 	
 	@Transactional
-	public VocabularyDomain create(VocabularyDomain object, User user) throws APIException {
-		Vocabulary vocab = translator.translate(object);
-		Vocabulary returnVocab = vocabularyDAO.create(vocab);
-		VocabularyDomain vocabDomain = translator.translate(returnVocab);
-		return vocabDomain;
+	public SearchResults<VocabularyDomain> create(VocabularyDomain object, User user) {
+		//Vocabulary vocab = translator.translate(object);
+		//Vocabulary returnVocab = vocabularyDAO.create(vocab);
+		//VocabularyDomain vocabDomain = translator.translate(returnVocab);
+		//return vocabDomain;
+		return null;
 	}
 
 	@Transactional
-	public VocabularyDomain update(VocabularyDomain object, User user) {
-		Vocabulary vocab = translator.translate(object);
-		Vocabulary returnVocab = vocabularyDAO.update(vocab);
-		VocabularyDomain vocabDomain = translator.translate(returnVocab);
-		return vocabDomain;
+	public SearchResults<VocabularyDomain> update(VocabularyDomain object, User user) {
+		//Vocabulary vocab = translator.translate(object);
+		//Vocabulary returnVocab = vocabularyDAO.update(vocab);
+		//VocabularyDomain vocabDomain = translator.translate(returnVocab);
+		//return vocabDomain;
+		return null;
 	}
 
 	@Transactional

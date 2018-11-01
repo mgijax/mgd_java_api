@@ -21,21 +21,16 @@ import io.swagger.annotations.Api;
 @Api(value = "Experiment Endpoints", description="This is the description")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class ExperimentController extends BaseController<ExperimentDomain> implements BaseSearchInterface<ExperimentDomain, ExperimentSearchForm> {
+public class ExperimentController extends BaseController<ExperimentDomain> {
 
 	@Inject
 	private ExperimentService exptService;
 
-	public ExperimentDomain create(ExperimentDomain expt, User user) {
-		try {
-			return exptService.create(expt, user);
-		} catch (APIException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public SearchResults<ExperimentDomain> create(ExperimentDomain expt, User user) {
+		return exptService.create(expt, user);
 	}
 
-	public ExperimentDomain update(ExperimentDomain expt, User user) {
+	public SearchResults<ExperimentDomain> update(ExperimentDomain expt, User user) {
 		return exptService.update(expt, user);
 	}
 
@@ -47,9 +42,4 @@ public class ExperimentController extends BaseController<ExperimentDomain> imple
 		return exptService.delete(key, user);
 	}
 	
-	@Override
-	public SearchResults<ExperimentDomain> search(ExperimentSearchForm searchForm) {
-		return exptService.search(searchForm);
-	}
-
 }

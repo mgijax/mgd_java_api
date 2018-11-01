@@ -1,24 +1,17 @@
 package org.jax.mgi.mgd.api.model.mgi.service;
 
-import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
-import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.dao.NoteDAO;
-import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.OrganismDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.search.NoteSearchForm;
-import org.jax.mgi.mgd.api.model.mgi.search.OrganismSearchForm;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
-import org.jax.mgi.mgd.api.model.mgi.translator.OrganismTranslator;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -35,24 +28,24 @@ public class NoteService extends BaseService<NoteDomain> {
 	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
-	@Override
-	public NoteDomain create(NoteDomain object, User user) throws APIException {
+	@Transactional
+	public SearchResults<NoteDomain> create(NoteDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
-	public NoteDomain update(NoteDomain object, User user) {
+	@Transactional
+	public SearchResults<NoteDomain> update(NoteDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	@Transactional
 	public NoteDomain get(Integer key) {
 		return translator.translate(noteDAO.get(key),3);
 	}
 
-	@Override
+	@Transactional
 	public SearchResults<NoteDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;

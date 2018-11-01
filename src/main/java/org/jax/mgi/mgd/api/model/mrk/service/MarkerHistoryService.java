@@ -33,13 +33,13 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
-	public MarkerHistoryDomain create(MarkerHistoryDomain object, User user) throws APIException {
+	public SearchResults<MarkerHistoryDomain> create(MarkerHistoryDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Transactional
-	public MarkerHistoryDomain update(MarkerHistoryDomain object, User user) {
+	public SearchResults<MarkerHistoryDomain> update(MarkerHistoryDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

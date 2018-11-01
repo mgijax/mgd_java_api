@@ -21,21 +21,16 @@ import io.swagger.annotations.Api;
 @Api(value = "Specimen Endpoints", description="This is the description")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class SpecimenController extends BaseController<SpecimenDomain> implements BaseSearchInterface<SpecimenDomain, SpecimenSearchForm> {
+public class SpecimenController extends BaseController<SpecimenDomain> {
 
 	@Inject
 	private SpecimenService specimenService;
 
-	public SpecimenDomain create(SpecimenDomain specimen, User user) {
-		try {
-			return specimenService.create(specimen, user);
-		} catch (APIException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public SearchResults<SpecimenDomain> create(SpecimenDomain specimen, User user) {
+		return specimenService.create(specimen, user);
 	}
 
-	public SpecimenDomain update(SpecimenDomain specimen, User user) {
+	public SearchResults<SpecimenDomain> update(SpecimenDomain specimen, User user) {
 		return specimenService.update(specimen, user);
 	}
 
@@ -47,9 +42,4 @@ public class SpecimenController extends BaseController<SpecimenDomain> implement
 		return specimenService.delete(key, user);
 	}
 	
-	@Override
-	public SearchResults<SpecimenDomain> search(SpecimenSearchForm searchForm) {
-		return specimenService.search(searchForm);
-	}
-
 }

@@ -22,21 +22,16 @@ import io.swagger.annotations.Api;
 @Api(value = "MGI Synonym Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class MGISynonymController extends BaseController<MGISynonymDomain> implements BaseSearchInterface<MGISynonymDomain, MGISynonymSearchForm> {
+public class MGISynonymController extends BaseController<MGISynonymDomain> {
 
 	@Inject
 	private MGISynonymService synonymService;
 
-	public MGISynonymDomain create(MGISynonymDomain synonym, User user) {
-		try {
-			return synonymService.create(synonym, user);
-		} catch (APIException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public SearchResults<MGISynonymDomain> create(MGISynonymDomain synonym, User user) {
+		return synonymService.create(synonym, user);
 	}
 
-	public MGISynonymDomain update(MGISynonymDomain synonym, User user) {
+	public SearchResults<MGISynonymDomain> update(MGISynonymDomain synonym, User user) {
 		return synonymService.update(synonym, user);
 	}
 
@@ -48,9 +43,4 @@ public class MGISynonymController extends BaseController<MGISynonymDomain> imple
 		return synonymService.delete(key, user);
 	}
 	
-    @Override
-	public SearchResults<MGISynonymDomain> search(MGISynonymSearchForm searchForm) {
-		return synonymService.search(searchForm);
-	}
-
 }

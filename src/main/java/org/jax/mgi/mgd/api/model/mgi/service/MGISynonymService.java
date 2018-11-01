@@ -15,7 +15,7 @@ import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTranslator;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
-public class MGISynonymService extends BaseService<MGISynonymDomain> implements BaseSearchInterface<MGISynonymDomain, MGISynonymSearchForm> {
+public class MGISynonymService extends BaseService<MGISynonymDomain> {
 
 	@Inject
 	private MGISynonymDAO synonymDAO;
@@ -23,13 +23,13 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> implements 
 	private MGISynonymTranslator translator = new MGISynonymTranslator();
 	
 	@Transactional
-	public MGISynonymDomain create(MGISynonymDomain object, User user) throws APIException {
+	public SearchResults<MGISynonymDomain> create(MGISynonymDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Transactional
-	public MGISynonymDomain update(MGISynonymDomain object, User user) {
+	public SearchResults<MGISynonymDomain> update(MGISynonymDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -45,13 +45,5 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> implements 
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Transactional
-	public SearchResults<MGISynonymDomain> search(MGISynonymSearchForm searchForm) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
 
 }

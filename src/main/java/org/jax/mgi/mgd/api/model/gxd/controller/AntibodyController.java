@@ -21,21 +21,16 @@ import io.swagger.annotations.Api;
 @Api(value = "Antibody Endpoints", description="This is the description")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class AntibodyController extends BaseController<AntibodyDomain> implements BaseSearchInterface<AntibodyDomain, AntibodySearchForm> {
+public class AntibodyController extends BaseController<AntibodyDomain> {
 
 	@Inject
 	private AntibodyService antibodyService;
 
-	public AntibodyDomain create(AntibodyDomain antibody, User user) {
-		try {
-			return antibodyService.create(antibody, user);
-		} catch (APIException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public SearchResults<AntibodyDomain> create(AntibodyDomain antibody, User user) {
+		return antibodyService.create(antibody, user);
 	}
 
-	public AntibodyDomain update(AntibodyDomain antibody, User user) {
+	public SearchResults<AntibodyDomain> update(AntibodyDomain antibody, User user) {
 		return antibodyService.update(antibody, user);
 	}
 
@@ -47,9 +42,4 @@ public class AntibodyController extends BaseController<AntibodyDomain> implement
 		return antibodyService.delete(key, user);
 	}
 	
-	@Override
-	public SearchResults<AntibodyDomain> search(AntibodySearchForm searchForm) {
-		return antibodyService.search(searchForm);
-	}
-
 }

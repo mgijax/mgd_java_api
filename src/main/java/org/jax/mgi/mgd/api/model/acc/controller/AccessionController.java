@@ -27,17 +27,12 @@ public class AccessionController extends BaseController<AccessionDomain> impleme
 	private AccessionService accessionService;
 
 	@Override
-	public AccessionDomain create(AccessionDomain accession, User user) {
-		try {
-			return accessionService.create(accession, user);
-		} catch (APIException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public SearchResults<AccessionDomain> create(AccessionDomain accession, User user) {
+		return accessionService.create(accession, user);
 	}
 
 	@Override
-	public AccessionDomain update(AccessionDomain accession, User user) {
+	public SearchResults<AccessionDomain> update(AccessionDomain accession, User user) {
 		return accessionService.update(accession, user);
 	}
 

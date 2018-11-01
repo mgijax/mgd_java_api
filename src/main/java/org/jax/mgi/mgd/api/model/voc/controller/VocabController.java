@@ -26,21 +26,16 @@ public class VocabController extends BaseController<VocabularyDomain> implements
 	@Inject
 	private VocabService vocabService;
 
-	public VocabularyDomain create(VocabularyDomain object, User user) {
-		try {
-			return vocabService.create(object, user);
-		} catch (APIException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public SearchResults<VocabularyDomain> create(VocabularyDomain object, User user) {
+		return vocabService.create(object, user);
+	}
+
+	public SearchResults<VocabularyDomain> update(VocabularyDomain object, User user) {
+		return vocabService.update(object, user);
 	}
 
 	public VocabularyDomain get(Integer key) {
 		return vocabService.get(key);
-	}
-
-	public VocabularyDomain update(VocabularyDomain object, User user) {
-		return vocabService.update(object, user);
 	}
 
 	public SearchResults<VocabularyDomain> delete(Integer key, User user) {

@@ -16,7 +16,7 @@ import org.jax.mgi.mgd.api.model.seq.translator.SequenceTranslator;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
-public class SequenceService extends BaseService<SequenceDomain> implements BaseSearchInterface<SequenceDomain, SequenceSearchForm> {
+public class SequenceService extends BaseService<SequenceDomain> {
 
 	@Inject
 	private SequenceDAO sequenceDAO;
@@ -24,13 +24,13 @@ public class SequenceService extends BaseService<SequenceDomain> implements Base
 	private SequenceTranslator translator = new SequenceTranslator();
 	
 	@Transactional
-	public SequenceDomain create(SequenceDomain object, User user) throws APIException {
+	public SearchResults<SequenceDomain> create(SequenceDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Transactional
-	public SequenceDomain update(SequenceDomain object, User user) {
+	public SearchResults<SequenceDomain> update(SequenceDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -45,19 +45,5 @@ public class SequenceService extends BaseService<SequenceDomain> implements Base
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Transactional
-	public SearchResults<SequenceDomain> search(SequenceSearchForm searchForm) {
-		SearchResults<Sequence> sequences;
-		if(searchForm.getOrderBy() != null) {
-			sequences = sequenceDAO.search(searchForm.getSearchFields(), searchForm.getOrderBy());
-		} else {
-			sequences = sequenceDAO.search(searchForm.getSearchFields());
-		}
-		Iterable<SequenceDomain> newItems = translator.translateEntities(sequences.items, searchForm.getSearchDepth());
-		return new SearchResults<SequenceDomain>(newItems);
-	}
-
-
 
 }

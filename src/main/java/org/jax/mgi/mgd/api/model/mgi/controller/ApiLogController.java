@@ -17,7 +17,16 @@ public class ApiLogController extends BaseController<ApiLogDomain> implements Ap
 	@Inject
 	private ApiLogService apiLogService;
 	
-	@Override
+	public SearchResults<ApiLogDomain> create(ApiLogDomain object, User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public SearchResults<ApiLogDomain> update(ApiLogDomain object, User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public ApiLogDomain get(Integer key) {
 		try {
 			return apiLogService.get(key);
@@ -30,19 +39,6 @@ public class ApiLogController extends BaseController<ApiLogDomain> implements Ap
 		return apiLogService.search(postParams);
 	}
 
-	@Override
-	public ApiLogDomain create(ApiLogDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ApiLogDomain update(ApiLogDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public SearchResults<ApiLogDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;

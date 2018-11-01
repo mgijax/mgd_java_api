@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.naming.directory.SearchResult;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -77,7 +76,7 @@ public abstract class BaseController<T extends BaseDomain> {
 
 	@POST
 	@ApiOperation(value = "Create", notes = "Create")
-	public T create(
+	public SearchResults<T> create(
 			@HeaderParam(value="api_access_token") String api_access_token,
 			@HeaderParam(value="username") String username,
 			@ApiParam(value = "This is the passed in object") T object) {
@@ -103,7 +102,7 @@ public abstract class BaseController<T extends BaseDomain> {
 	
 	@PUT
 	@ApiOperation(value = "Update", notes="Update")
-	public T update(
+	public SearchResults<T> update(
 			@HeaderParam(value="api_access_token") String api_access_token,
 			@HeaderParam(value="username") String username,
 			@ApiParam(value = "This is the passed in object") T object) {
@@ -123,7 +122,8 @@ public abstract class BaseController<T extends BaseDomain> {
 	@DELETE
 	@ApiOperation(value = "Delete")
 	@Path("/{key}")
-	public SearchResults<T> delete(@HeaderParam(value="api_access_token") String api_access_token,
+	public SearchResults<T> delete(
+			@HeaderParam(value="api_access_token") String api_access_token,
 			@HeaderParam(value="username") String username,
 			@PathParam("key") @ApiParam(value = "This is for deleting by key") Integer key) {
 		if(authenticateToken(api_access_token)) {
@@ -139,9 +139,9 @@ public abstract class BaseController<T extends BaseDomain> {
 		return null;
 	}
 
-	public abstract T create(T object, User user);
+	public abstract SearchResults<T> create(T object, User user);
 	public abstract T get(Integer key);
-	public abstract T update(T object, User user);
+	public abstract SearchResults<T> update(T object, User user);
 	public abstract SearchResults<T> delete(Integer key, User user);
 
 }

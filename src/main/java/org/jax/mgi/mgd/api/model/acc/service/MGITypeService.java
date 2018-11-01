@@ -25,19 +25,21 @@ public class MGITypeService extends BaseService<MGITypeDomain> implements BaseSe
 	
 
 	@Transactional
-	public MGITypeDomain create(MGITypeDomain object, User user) throws APIException {
-		MGIType type = translator.translate(object);
-		MGIType returnType = mgitypeDAO.create(type);
-		MGITypeDomain typeDomain = translator.translate(returnType);
-		return typeDomain;
+	public SearchResults<MGITypeDomain> create(MGITypeDomain object, User user) {
+		//MGIType type = translator.translate(object);
+		//MGIType returnType = mgitypeDAO.create(type);
+		//MGITypeDomain typeDomain = translator.translate(returnType);
+		//return typeDomain;
+		return null;
 	}
 
 	@Transactional
-	public MGITypeDomain update(MGITypeDomain object, User user) {
-		MGIType type = translator.translate(object);
-		MGIType returnType = mgitypeDAO.update(type);
-		MGITypeDomain typeDomain = translator.translate(returnType);
-		return typeDomain;
+	public SearchResults<MGITypeDomain> update(MGITypeDomain object, User user) {
+		//MGIType type = translator.translate(object);
+		//MGIType returnType = mgitypeDAO.update(type);
+		//MGITypeDomain typeDomain = translator.translate(returnType);
+		//return typeDomain;
+		return null;
 	}
 
 	@Transactional

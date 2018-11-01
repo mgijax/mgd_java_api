@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseSearchInterface;
@@ -17,37 +18,38 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
 @RequestScoped
-public class UserService extends BaseService<UserDomain> implements BaseSearchInterface<UserDomain, UserSearchForm> {
+public class UserService extends BaseService<UserDomain> {
 
 	@Inject
 	private UserDAO userDAO;
 	
 	private Logger log = Logger.getLogger(getClass());
 
-	@Override
-	public UserDomain create(UserDomain object, User user) throws APIException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public UserDomain update(UserDomain object, User user) {
+	@Transactional
+	public SearchResults<UserDomain> create(UserDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	@Transactional
+	public SearchResults<UserDomain> update(UserDomain object, User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Transactional
 	public UserDomain get(Integer key) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	@Transactional
 	public SearchResults<UserDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	@Transactional
 	public SearchResults<UserDomain> search(UserSearchForm searchForm) {
 		// TODO Auto-generated method stub
 		return null;

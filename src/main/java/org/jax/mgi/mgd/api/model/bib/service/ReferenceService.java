@@ -16,7 +16,7 @@ import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
-public class ReferenceService extends BaseService<ReferenceDomain> implements BaseSearchInterface<ReferenceDomain, ReferenceSearchForm> {
+public class ReferenceService extends BaseService<ReferenceDomain> {
 
 	@Inject
 	private ReferenceDAO referenceDAO;
@@ -24,13 +24,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> implements Ba
 	private ReferenceTranslator translator = new ReferenceTranslator();
 	
 	@Transactional
-	public ReferenceDomain create(ReferenceDomain object, User user) throws APIException {
+	public SearchResults<ReferenceDomain> create(ReferenceDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Transactional
-	public ReferenceDomain update(ReferenceDomain object, User user) {
+	public SearchResults<ReferenceDomain> update(ReferenceDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -46,15 +46,4 @@ public class ReferenceService extends BaseService<ReferenceDomain> implements Ba
 		return null;
 	}
 
-	@Transactional
-	public SearchResults<ReferenceDomain> search(ReferenceSearchForm searchForm) {
-		SearchResults<Reference> references;
-		if(searchForm.getOrderBy() != null) {
-			references = referenceDAO.search(searchForm.getSearchFields(), searchForm.getOrderBy());
-		} else {
-			references = referenceDAO.search(searchForm.getSearchFields());
-		}
-		Iterable<ReferenceDomain> newItems = translator.translateEntities(references.items, searchForm.getSearchDepth());
-		return new SearchResults<ReferenceDomain>(newItems);
-	}
 }

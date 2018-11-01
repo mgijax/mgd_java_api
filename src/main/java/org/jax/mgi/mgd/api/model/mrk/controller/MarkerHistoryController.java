@@ -29,27 +29,18 @@ public class MarkerHistoryController extends BaseController<MarkerHistoryDomain>
 	@Inject
 	private MarkerHistoryService markerHistoryService;
 
-	@Override
-	public MarkerHistoryDomain create(MarkerHistoryDomain markerHistory, User user) {
-		try {
-			return markerHistoryService.create(markerHistory, user);
-		} catch (APIException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public SearchResults<MarkerHistoryDomain> create(MarkerHistoryDomain markerHistory, User user) {
+		return markerHistoryService.create(markerHistory, user);
 	}
 
-	@Override
-	public MarkerHistoryDomain update(MarkerHistoryDomain markerHistory, User user) {
+	public SearchResults<MarkerHistoryDomain> update(MarkerHistoryDomain markerHistory, User user) {
 		return markerHistoryService.update(markerHistory, user);
 	}
 
-	@Override
 	public MarkerHistoryDomain get(Integer key) {
 		return markerHistoryService.get(key);
 	}
 
-	@Override
 	public SearchResults<MarkerHistoryDomain> delete(Integer key, User user) {
 		return markerHistoryService.delete(key, user);
 	}

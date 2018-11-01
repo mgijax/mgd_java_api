@@ -21,21 +21,16 @@ import io.swagger.annotations.Api;
 @Api(value = "GelLane Endpoints", description="This is the description")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class GelLaneController extends BaseController<GelLaneDomain> implements BaseSearchInterface<GelLaneDomain, GelLaneSearchForm> {
+public class GelLaneController extends BaseController<GelLaneDomain> {
 
 	@Inject
 	private GelLaneService gellaneService;
 
-	public GelLaneDomain create(GelLaneDomain gellane, User user) {
-		try {
-			return gellaneService.create(gellane, user);
-		} catch (APIException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public SearchResults<GelLaneDomain> create(GelLaneDomain gellane, User user) {
+		return gellaneService.create(gellane, user);
 	}
 
-	public GelLaneDomain update(GelLaneDomain gellane, User user) {
+	public SearchResults<GelLaneDomain> update(GelLaneDomain gellane, User user) {
 		return gellaneService.update(gellane, user);
 	}
 
@@ -47,9 +42,4 @@ public class GelLaneController extends BaseController<GelLaneDomain> implements 
 		return gellaneService.delete(key, user);
 	}
 	
-	@Override
-	public SearchResults<GelLaneDomain> search(GelLaneSearchForm searchForm) {
-		return gellaneService.search(searchForm);
-	}
-
 }

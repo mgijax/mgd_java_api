@@ -21,21 +21,16 @@ import io.swagger.annotations.Api;
 @Api(value = "LogicalDB Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class LogicalDBController extends BaseController<LogicalDBDomain> implements BaseSearchInterface<LogicalDBDomain, LogicalDBSearchForm> {
+public class LogicalDBController extends BaseController<LogicalDBDomain> {
 
 	@Inject
 	private LogicalDBService logicaldbService;
 
-	public LogicalDBDomain create(LogicalDBDomain logicaldb, User user) {
-		try {
-			return logicaldbService.create(logicaldb, user);
-		} catch (APIException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public SearchResults<LogicalDBDomain> create(LogicalDBDomain logicaldb, User user) {
+		return logicaldbService.create(logicaldb, user);
 	}
 
-	public LogicalDBDomain update(LogicalDBDomain logicaldb, User user) {
+	public SearchResults<LogicalDBDomain> update(LogicalDBDomain logicaldb, User user) {
 		return logicaldbService.update(logicaldb, user);
 	}
 
@@ -45,11 +40,6 @@ public class LogicalDBController extends BaseController<LogicalDBDomain> impleme
 
 	public SearchResults<LogicalDBDomain> delete(Integer key, User user) {
 		return logicaldbService.delete(key, user);
-	}
-
-	@Override
-	public SearchResults<LogicalDBDomain> search(LogicalDBSearchForm searchForm) {
-		return logicaldbService.search(searchForm);
 	}
 
 }

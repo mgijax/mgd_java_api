@@ -16,7 +16,7 @@ import org.jax.mgi.mgd.api.model.mld.translator.ExperimentTranslator;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
-public class ExperimentService extends BaseService<ExperimentDomain> implements BaseSearchInterface<ExperimentDomain, ExperimentSearchForm> {
+public class ExperimentService extends BaseService<ExperimentDomain> {
 
 	@Inject
 	private ExperimentDAO exptDAO;
@@ -24,13 +24,13 @@ public class ExperimentService extends BaseService<ExperimentDomain> implements 
 	private ExperimentTranslator translator = new ExperimentTranslator();
 	
 	@Transactional
-	public ExperimentDomain create(ExperimentDomain object, User user) throws APIException {
+	public SearchResults<ExperimentDomain> create(ExperimentDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Transactional
-	public ExperimentDomain update(ExperimentDomain object, User user) {
+	public SearchResults<ExperimentDomain> update(ExperimentDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -45,19 +45,5 @@ public class ExperimentService extends BaseService<ExperimentDomain> implements 
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Transactional
-	public SearchResults<ExperimentDomain> search(ExperimentSearchForm searchForm) {
-		SearchResults<Experiment> expts;
-		if(searchForm.getOrderBy() != null) {
-			expts = exptDAO.search(searchForm.getSearchFields(), searchForm.getOrderBy());
-		} else {
-			expts = exptDAO.search(searchForm.getSearchFields());
-		}
-		Iterable<ExperimentDomain> newItems = translator.translateEntities(expts.items, searchForm.getSearchDepth());
-		return new SearchResults<ExperimentDomain>(newItems);
-	}
-
-
 
 }

@@ -29,16 +29,11 @@ public class OrganismController extends BaseController<OrganismDomain> {
 	@Inject
 	private OrganismService organismService;
 
-	public OrganismDomain create(OrganismDomain organism, User user) {
-		try {
-			return organismService.create(organism, user);
-		} catch (APIException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public SearchResults<OrganismDomain> create(OrganismDomain organism, User user) {
+		return organismService.create(organism, user);
 	}
 
-	public OrganismDomain update(OrganismDomain organism, User user) {
+	public SearchResults<OrganismDomain> update(OrganismDomain organism, User user) {
 		return organismService.update(organism, user);
 	}
 

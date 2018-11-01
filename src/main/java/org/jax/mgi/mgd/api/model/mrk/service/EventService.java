@@ -32,13 +32,13 @@ public class EventService extends BaseService<EventDomain> {
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
-	public EventDomain create(EventDomain object, User user) throws APIException {
+	public SearchResults<EventDomain> create(EventDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Transactional
-	public EventDomain update(EventDomain object, User user) {
+	public SearchResults<EventDomain> update(EventDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

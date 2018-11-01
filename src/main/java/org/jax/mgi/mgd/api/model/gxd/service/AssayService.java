@@ -16,7 +16,7 @@ import org.jax.mgi.mgd.api.model.gxd.translator.AssayTranslator;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
-public class AssayService extends BaseService<AssayDomain> implements BaseSearchInterface<AssayDomain, AssaySearchForm> {
+public class AssayService extends BaseService<AssayDomain> {
 
 	@Inject
 	private AssayDAO assayDAO;
@@ -24,13 +24,13 @@ public class AssayService extends BaseService<AssayDomain> implements BaseSearch
 	private AssayTranslator translator = new AssayTranslator();
 	
 	@Transactional
-	public AssayDomain create(AssayDomain object, User user) throws APIException {
+	public SearchResults<AssayDomain> create(AssayDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Transactional
-	public AssayDomain update(AssayDomain object, User user) {
+	public SearchResults<AssayDomain> update(AssayDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -45,20 +45,5 @@ public class AssayService extends BaseService<AssayDomain> implements BaseSearch
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Transactional
-	public SearchResults<AssayDomain> search(AssaySearchForm searchForm) {
-		SearchResults<Assay> assays;
-		if(searchForm.getOrderBy() != null) {
-			assays = assayDAO.search(searchForm.getSearchFields(), searchForm.getOrderBy());
-		} else {
-			assays = assayDAO.search(searchForm.getSearchFields());
-		}
-		Iterable<AssayDomain> newItems = translator.translateEntities(assays.items, searchForm.getSearchDepth());
-		return new SearchResults<AssayDomain>(newItems);
-	}
-
-
-
 
 }

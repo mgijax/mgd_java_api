@@ -25,21 +25,16 @@ import org.jax.mgi.mgd.api.util.Constants;
 @Api(value = "Reference Endpoints", description="This is the description")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class ReferenceController extends BaseController<ReferenceDomain> implements BaseSearchInterface<ReferenceDomain, ReferenceSearchForm> {
+public class ReferenceController extends BaseController<ReferenceDomain> {
 
 	@Inject
 	private ReferenceService referenceService;
 
-	public ReferenceDomain create(ReferenceDomain reference, User user) {
-		try {
-			return referenceService.create(reference, user);
-		} catch (APIException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public SearchResults<ReferenceDomain> create(ReferenceDomain reference, User user) {
+		return referenceService.create(reference, user);
 	}
 
-	public ReferenceDomain update(ReferenceDomain reference, User user) {
+	public SearchResults<ReferenceDomain> update(ReferenceDomain reference, User user) {
 		return referenceService.update(reference, user);
 	}
 
@@ -51,11 +46,6 @@ public class ReferenceController extends BaseController<ReferenceDomain> impleme
 		return referenceService.delete(key, user);
 	}
 	
-	@Override
-	public SearchResults<ReferenceDomain> search(ReferenceSearchForm searchForm) {
-		return referenceService.search(searchForm);
-	}
-
 	@GET
 	@ApiOperation(value = "Confirm reference is valid")
 	@Path("/valid")
@@ -72,4 +62,5 @@ public class ReferenceController extends BaseController<ReferenceDomain> impleme
 		}
 		return results;
 	}
+
 }

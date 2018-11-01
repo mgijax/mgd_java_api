@@ -1,24 +1,20 @@
 package org.jax.mgi.mgd.api.model.mrk.controller;
 
+import java.io.IOException;
 import java.util.List;
 
-import java.io.IOException;
-
 import javax.inject.Inject;
-import javax.persistence.PersistenceException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIResultDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
-import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
@@ -37,27 +33,32 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	@Inject
 	private MarkerService markerService;
 
-	@Override
-	public MarkerDomain create(MarkerDomain marker, User user) {
+	public SearchResults<MarkerDomain> create(MarkerDomain marker, User user) {
+		
+		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
+
+		// the try/except method is here 
+		// because the service does not seem to be picking up the exceptions
+		// if results.error is null, then API assumes delete = success
+		// if results.error is not null, then API assumes delete = fail
+		
 		try {
-			return markerService.create(marker, user);
-		} catch (APIException e) {
-			e.printStackTrace();
-			return null;
+			results = markerService.create(marker, user);
+		} catch (Exception e) {
+			results.setError("Failed", e.getMessage(), Constants.HTTP_SERVER_ERROR);
 		}
+		
+		return results;
 	}
 
-	@Override
-	public MarkerDomain update(MarkerDomain marker, User user) {
+	public SearchResults<MarkerDomain> update(MarkerDomain marker, User user) {
 		return markerService.update(marker, user);
 	}
 
-	@Override
 	public MarkerDomain get(Integer markerKey) {
 		return markerService.get(markerKey);
 	}
 
-	@Override
 	public SearchResults<MarkerDomain> delete(Integer key, User user) {
 		
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();

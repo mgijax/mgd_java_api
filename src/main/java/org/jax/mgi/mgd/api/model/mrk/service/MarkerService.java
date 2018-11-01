@@ -2,18 +2,14 @@ package org.jax.mgi.mgd.api.model.mrk.service;
 
 import java.io.IOException;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 
-import org.hibernate.HibernateException;
-import org.hibernate.JDBCException;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -25,7 +21,6 @@ import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
-import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.MarkerWithdrawal;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -43,13 +38,13 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
-	public MarkerDomain create(MarkerDomain object, User user) throws APIException {
+	public SearchResults<MarkerDomain> create(MarkerDomain object, User user) throws APIException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Transactional
-	public MarkerDomain update(MarkerDomain object, User user) {
+	public SearchResults<MarkerDomain> update(MarkerDomain object, User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

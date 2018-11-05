@@ -5,10 +5,13 @@ import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.OrderBy;
@@ -31,13 +34,15 @@ import lombok.Setter;
 public class Marker extends BaseEntity {
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="mrk_marker_generator")
+	@SequenceGenerator(name="mrk_marker_generator", sequenceName = "mrk_marker_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")
-	private Integer _marker_key;
+	private int _marker_key;
 	private String symbol;
 	private String name;
 	private String chromosome;
 	private String cytogeneticOffset;
-	private String cmOffset;
+	private Double cmOffset;
 	private Date creation_date;
 	private Date modification_date;
 	

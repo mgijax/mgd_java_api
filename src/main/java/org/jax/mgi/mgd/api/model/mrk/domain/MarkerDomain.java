@@ -14,7 +14,7 @@ import lombok.Setter;
 public class MarkerDomain extends BaseDomain {
 
 	//@ApiModelProperty("primary key")
-	private Integer markerKey;
+	private int markerKey;
 	private String symbol;
 	private String name;
 	private String chromosome;

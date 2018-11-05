@@ -10,6 +10,8 @@ import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
@@ -59,32 +61,32 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		Marker newMarker = new Marker();
-		Organism thisOrganism = new Organism();
-		int nextKey = 0;
+		//int nextKey = 0;
 		
 		log.info("in service");
 
 		// get next primary key value
-		try {
-			ResultSet rs = sqlExecutor.executeProto("select nextval('mrk_marker_seq')");
-			while (rs.next()) {
-				nextKey = (int) rs.getLong("nextval");
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {e.printStackTrace();}
+		//try {
+		//	ResultSet rs = sqlExecutor.executeProto("select nextval('mrk_marker_seq')");
+		//	while (rs.next()) {
+		//		nextKey = (int) rs.getLong("nextval");
+		//	}
+		//	sqlExecutor.cleanup();
+		//}
+		//catch (Exception e) {e.printStackTrace();}
 		
 		// create new entity from object
 		// dates can be empty due to defaults	
+		// make sure entity @Id contains @GeneratedValue(strategy=GenerationType.SEQUENCE)
 
 		markerDAO.get(newMarker);
 		
-		newMarker.set_marker_key(nextKey);
+		//newMarker.set_marker_key(nextKey);
 		newMarker.setSymbol(object.getSymbol());
 		newMarker.setName(object.getName());
 		newMarker.setChromosome(object.getChromosome());
 		newMarker.setCytogeneticOffset(object.getCytogeneticOffset());
-		newMarker.setCmOffset(object.getCmOffset());
+		newMarker.setCmOffset(Double.valueOf(object.getCmOffset()));
 		newMarker.setCreatedBy(user);
 		newMarker.setModifiedBy(user);
 		

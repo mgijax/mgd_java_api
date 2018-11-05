@@ -10,6 +10,6 @@ import lombok.Setter;
 @ApiModel(value = "Marker EI Result Domain Object")
 public class MarkerEIResultDomain extends BaseDomain {
 
-	private Integer markerKey;
+	private int markerKey;
 	private String symbol;
 }

@@ -1,17 +1,24 @@
 package org.jax.mgi.mgd.api.model.mrk.service;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.exception.APIException;
+import org.jax.mgi.mgd.api.exception.FatalAPIException;
+import org.jax.mgi.mgd.api.exception.NonFatalAPIException;
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
@@ -38,9 +45,42 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
-	public SearchResults<MarkerDomain> create(MarkerDomain object, User user) throws APIException {
-		// TODO Auto-generated method stub
-		return null;
+	public SearchResults<MarkerDomain> create(MarkerDomain object, User user) {
+		
+		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
+		Marker newMarker = new Marker();
+		int nextKey = 0;
+		
+		log.info("in service");
+
+		// get next primary key value
+		try {
+			ResultSet rs = sqlExecutor.executeProto("select nextval('mrk_marker_seq')");
+			while (rs.next()) {
+				nextKey = (int) rs.getLong("nextval");
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {e.printStackTrace();}
+		
+		// create new entity from object
+		// dates can be empty due to defaults	
+
+		markerDAO.get(newMarker);
+		newMarker.set_marker_key(nextKey);
+		newMarker.setOrganism(object.getOrganismObj());
+		newMarker.setMarkerStatus(object.getMarkerStatusObj());
+		newMarker.setMarkerType(object.getMarkerTypeObj());
+		newMarker.setSymbol(object.getSymbol());
+		newMarker.setName(object.getName());
+		newMarker.setChromosome(object.getChromosome());
+		newMarker.setCytogeneticOffset(object.getCytogeneticOffset());
+		newMarker.setCmOffset(object.getCmOffset());
+		newMarker.setCreatedBy(user);
+		newMarker.setModifiedBy(user);
+		markerDAO.persist(newMarker);
+
+		return results;
 	}
 
 	@Transactional
@@ -183,7 +223,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			where = where + "\nand m._modifiedBy_key = u2._user_key";
 		}
 		if (from_accession == true) {
-			from = from + ", acc_accession a";
+			// using this view matches the teleuse implementation (
+			from = from + ", mrk_accnoref_view a";
 			where = where + "\nand m._marker_key = a._object_key" 
 					+ "\nand a._mgitype_key = 2";
 		}

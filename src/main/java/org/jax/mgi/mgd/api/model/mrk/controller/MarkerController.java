@@ -20,6 +20,7 @@ import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
+import org.jboss.logging.Logger;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,6 +30,8 @@ import io.swagger.annotations.ApiOperation;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class MarkerController extends BaseController<MarkerDomain> {
+
+	protected Logger log = Logger.getLogger(MarkerService.class);
 
 	@Inject
 	private MarkerService markerService;
@@ -42,7 +45,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		// because the service does not seem to be picking up the exceptions
 		// if results.error is null, then API assumes delete = success
 		// if results.error is not null, then API assumes delete = fail
-		
+				
 		try {
 			results = markerService.create(marker, user);
 		} catch (Exception e) {

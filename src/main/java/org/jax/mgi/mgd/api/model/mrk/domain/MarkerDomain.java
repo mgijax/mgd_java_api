@@ -6,9 +6,6 @@ import java.util.List;
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
-import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
-import org.jax.mgi.mgd.api.model.mrk.entities.MarkerStatus;
-import org.jax.mgi.mgd.api.model.mrk.entities.MarkerType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -25,13 +22,10 @@ public class MarkerDomain extends BaseDomain {
 	private String cmOffset;
 	private String organismKey;
 	private String organism;
-	private Organism organismObj;
 	private String markerStatusKey;
 	private String markerStatus;
-	private MarkerStatus markerStatusObj;
 	private String markerTypeKey;
 	private String markerType;
-	private MarkerType markerTypeObj;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

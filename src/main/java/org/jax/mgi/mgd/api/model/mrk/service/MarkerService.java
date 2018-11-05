@@ -19,8 +19,12 @@ import org.jax.mgi.mgd.api.exception.NonFatalAPIException;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
+import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
+import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
+import org.jax.mgi.mgd.api.model.mrk.dao.MarkerStatusDAO;
+import org.jax.mgi.mgd.api.model.mrk.dao.MarkerTypeDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIResultDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
@@ -40,6 +44,12 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 	@Inject
 	private MarkerDAO markerDAO;
+	@Inject
+	private OrganismDAO organismDAO;
+	@Inject
+	private MarkerStatusDAO markerStatusDAO;
+	@Inject
+	private MarkerTypeDAO markerTypeDAO;
 
 	private MarkerTranslator translator = new MarkerTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
@@ -49,6 +59,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		Marker newMarker = new Marker();
+		Organism thisOrganism = new Organism();
 		int nextKey = 0;
 		
 		log.info("in service");
@@ -67,10 +78,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// dates can be empty due to defaults	
 
 		markerDAO.get(newMarker);
+		
 		newMarker.set_marker_key(nextKey);
-		newMarker.setOrganism(object.getOrganismObj());
-		newMarker.setMarkerStatus(object.getMarkerStatusObj());
-		newMarker.setMarkerType(object.getMarkerTypeObj());
 		newMarker.setSymbol(object.getSymbol());
 		newMarker.setName(object.getName());
 		newMarker.setChromosome(object.getChromosome());
@@ -78,6 +87,12 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		newMarker.setCmOffset(object.getCmOffset());
 		newMarker.setCreatedBy(user);
 		newMarker.setModifiedBy(user);
+		
+		// must convert keys to Integer
+		newMarker.setOrganism(organismDAO.get(Integer.valueOf(object.getOrganismKey())));
+		newMarker.setMarkerStatus(markerStatusDAO.get(Integer.valueOf(object.getMarkerStatusKey())));
+		newMarker.setMarkerType(markerTypeDAO.get(Integer.valueOf(object.getMarkerTypeKey())));
+
 		markerDAO.persist(newMarker);
 
 		return results;
@@ -223,7 +238,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			where = where + "\nand m._modifiedBy_key = u2._user_key";
 		}
 		if (from_accession == true) {
-			// using this view matches the teleuse implementation (
+			// using this view to match the teleuse implementation
 			from = from + ", mrk_accnoref_view a";
 			where = where + "\nand m._marker_key = a._object_key" 
 					+ "\nand a._mgitype_key = 2";

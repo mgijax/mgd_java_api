@@ -8,9 +8,13 @@ import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
+import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
+import org.jboss.logging.Logger;
 
 public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerDomain> {
 
+	protected Logger log = Logger.getLogger(MarkerService.class);
+	
 	private NoteTranslator noteTranslator = new NoteTranslator();
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	
@@ -19,7 +23,9 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 
 	@Override
 	protected MarkerDomain entityToDomain(Marker entity, int translationDepth) {
+			
 		MarkerDomain domain = new MarkerDomain();
+		
 		domain.setMarkerKey(entity.get_marker_key());
 		domain.setSymbol(entity.getSymbol());
 		domain.setName(entity.getName());
@@ -40,43 +46,53 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		domain.setModification_date(entity.getModification_date());
 		
 		// at most one editorNote
-		Iterable<NoteDomain> editorNote = noteTranslator.translateEntities(entity.getEditorNote(), translationDepth - 1);
-		if(editorNote.iterator().hasNext() == true) {
-			domain.setEditorNote(editorNote.iterator().next());
+		if (entity.getEditorNote() != null) {
+			Iterable<NoteDomain> editorNote = noteTranslator.translateEntities(entity.getEditorNote(), translationDepth - 1);
+			if(editorNote.iterator().hasNext() == true) {
+				domain.setEditorNote(editorNote.iterator().next());
+			}
 		}
+		
 		// at most one sequenceNote
-		Iterable<NoteDomain> sequenceNote = noteTranslator.translateEntities(entity.getSequenceNote(), translationDepth - 1);
-		if(sequenceNote.iterator().hasNext() == true) {
-			domain.setSequenceNote(sequenceNote.iterator().next());
+		if (entity.getSequenceNote() != null) {
+			Iterable<NoteDomain> sequenceNote = noteTranslator.translateEntities(entity.getSequenceNote(), translationDepth - 1);
+			if(sequenceNote.iterator().hasNext() == true) {
+				domain.setSequenceNote(sequenceNote.iterator().next());
+			}
 		}
+		
 		// at most one revisionNote
-		Iterable<NoteDomain> revisionNote = noteTranslator.translateEntities(entity.getRevisionNote(), translationDepth - 1);
-		if(revisionNote.iterator().hasNext() == true) {
-			domain.setRevisionNote(revisionNote.iterator().next());
+		if (entity.getRevisionNote() != null) {
+			Iterable<NoteDomain> revisionNote = noteTranslator.translateEntities(entity.getRevisionNote(), translationDepth - 1);
+			if(revisionNote.iterator().hasNext() == true) {
+				domain.setRevisionNote(revisionNote.iterator().next());
+			}
 		}
+		
 		// at most one strainNote
-		Iterable<NoteDomain> strainNote = noteTranslator.translateEntities(entity.getStrainNote(), translationDepth - 1);
-		if(strainNote.iterator().hasNext() == true) {
-			domain.setStrainNote(strainNote.iterator().next());
+		if (entity.getStrainNote() != null) {
+			Iterable<NoteDomain> strainNote = noteTranslator.translateEntities(entity.getStrainNote(), translationDepth - 1);
+			if(strainNote.iterator().hasNext() == true) {
+				domain.setStrainNote(strainNote.iterator().next());
+			}
 		}
 		
 		// at most one locationNote
-		Iterable<NoteDomain> locationNote = noteTranslator.translateEntities(entity.getLocationNote(), translationDepth - 1);
-		if(locationNote.iterator().hasNext() == true) {
+		if (entity.getLocationNote() != null) {
+			Iterable<NoteDomain> locationNote = noteTranslator.translateEntities(entity.getLocationNote(), translationDepth - 1);
+			if(locationNote.iterator().hasNext() == true) {
 			domain.setLocationNote(locationNote.iterator().next());
+			}
 		}
 		
 		// mgi accession ids only
-		Iterable<AccessionDomain> mgiAccessionIds = accessionTranslator.translateEntities(entity.getMgiAccessionIds(), translationDepth - 1);
-		if(mgiAccessionIds.iterator().hasNext() == true) {
-			domain.setMgiAccessionIds(IteratorUtils.toList(mgiAccessionIds.iterator()));
+		if (entity.getMgiAccessionIds() != null) {
+			Iterable<AccessionDomain> mgiAccessionIds = accessionTranslator.translateEntities(entity.getMgiAccessionIds(), translationDepth - 1);
+			if(mgiAccessionIds.iterator().hasNext() == true) {
+				domain.setMgiAccessionIds(IteratorUtils.toList(mgiAccessionIds.iterator()));
+			}
 		}
-
-		// at most one marker note
-		//if(entity.getMarkerNote() != null) {
-			//domain.setMarkerNote(entity.getMarkerNote().getNote());
-		//}
-	
+		
 		// at most one set of location info
 		//if(entity.getMarkerLocation() != null) {
 			//String addProvider = "";

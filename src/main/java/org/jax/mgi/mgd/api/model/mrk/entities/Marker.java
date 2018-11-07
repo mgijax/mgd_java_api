@@ -38,6 +38,7 @@ public class Marker extends BaseEntity {
 	@SequenceGenerator(name="mrk_marker_generator", sequenceName = "mrk_marker_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")
 	private int _marker_key;
+	
 	private String symbol;
 	private String name;
 	private String chromosome;

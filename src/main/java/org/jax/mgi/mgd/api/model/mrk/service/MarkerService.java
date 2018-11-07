@@ -1,7 +1,6 @@
 package org.jax.mgi.mgd.api.model.mrk.service;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,19 +9,10 @@ import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Query;
 import javax.transaction.Transactional;
 
-import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.mgd.api.exception.FatalAPIException;
-import org.jax.mgi.mgd.api.exception.NonFatalAPIException;
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
-import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerStatusDAO;
@@ -57,45 +47,43 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
-	public SearchResults<MarkerDomain> create(MarkerDomain object, User user) {
+	public SearchResults<MarkerDomain> create(MarkerDomain domain, User user) {
 		
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
-		Marker newMarker = new Marker();
-		//int nextKey = 0;
+		Marker entity = new Marker();
+			
+		// create new entity from in-coming domain object
+		// see Entities class for primary key implementation
 		
-		log.info("in service");
+		entity.setSymbol(domain.getSymbol());
+		entity.setName(domain.getName());
+		entity.setChromosome(domain.getChromosome());
+		entity.setCytogeneticOffset(domain.getCytogeneticOffset());
+		
+		// business logic for cmOffset
+		if (domain.getChromosome().equals("UN")) {
+			entity.setCmOffset(-999.0);
+		}
+		else {
+			entity.setCmOffset(-1.0);
+		}
+		
+		// add creation/modification 
+		entity.setCreatedBy(user);
+		entity.setModifiedBy(user);
+		entity.setCreation_date(new Date());
+		entity.setModification_date(new Date());
+		
+		// convert String keys to Integer
+		entity.setOrganism(organismDAO.get(Integer.valueOf(domain.getOrganismKey())));
+		entity.setMarkerStatus(markerStatusDAO.get(Integer.valueOf(domain.getMarkerStatusKey())));
+		entity.setMarkerType(markerTypeDAO.get(Integer.valueOf(domain.getMarkerTypeKey())));
 
-		// get next primary key value
-		//try {
-		//	ResultSet rs = sqlExecutor.executeProto("select nextval('mrk_marker_seq')");
-		//	while (rs.next()) {
-		//		nextKey = (int) rs.getLong("nextval");
-		//	}
-		//	sqlExecutor.cleanup();
-		//}
-		//catch (Exception e) {e.printStackTrace();}
+		// execute persist/insert into database
+		markerDAO.persist(entity);
 		
-		// create new entity from object
-		// dates can be empty due to defaults	
-		// make sure entity @Id contains @GeneratedValue(strategy=GenerationType.SEQUENCE)
-
-		markerDAO.get(newMarker);
-		
-		//newMarker.set_marker_key(nextKey);
-		newMarker.setSymbol(object.getSymbol());
-		newMarker.setName(object.getName());
-		newMarker.setChromosome(object.getChromosome());
-		newMarker.setCytogeneticOffset(object.getCytogeneticOffset());
-		newMarker.setCmOffset(Double.valueOf(object.getCmOffset()));
-		newMarker.setCreatedBy(user);
-		newMarker.setModifiedBy(user);
-		
-		// must convert keys to Integer
-		newMarker.setOrganism(organismDAO.get(Integer.valueOf(object.getOrganismKey())));
-		newMarker.setMarkerStatus(markerStatusDAO.get(Integer.valueOf(object.getMarkerStatusKey())));
-		newMarker.setMarkerType(markerTypeDAO.get(Integer.valueOf(object.getMarkerTypeKey())));
-
-		markerDAO.persist(newMarker);
+		// return entity translated to domain
+		results.setItem(translator.translate(entity,1));
 
 		return results;
 	}

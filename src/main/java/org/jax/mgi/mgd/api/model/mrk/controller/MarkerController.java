@@ -37,7 +37,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	private MarkerService markerService;
 
 	@Override
-	public SearchResults<MarkerDomain> create(MarkerDomain marker, User user) {
+	public SearchResults<MarkerDomain> create(MarkerDomain domain, User user) {
 		
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 
@@ -45,9 +45,9 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		// because the service does not seem to be picking up the exceptions
 		// if results.error is null, then API assumes delete = success
 		// if results.error is not null, then API assumes delete = fail
-				
+					
 		try {
-			results = markerService.create(marker, user);
+			results = markerService.create(domain, user);
 		} catch (Exception e) {
 			results.setError("Failed", e.getMessage(), Constants.HTTP_SERVER_ERROR);
 		}

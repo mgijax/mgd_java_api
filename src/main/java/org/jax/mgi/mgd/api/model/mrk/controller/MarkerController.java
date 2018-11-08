@@ -42,8 +42,6 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	@Override
 	public SearchResults<MarkerDomain> create(MarkerDomain domain, User user) {
 		
-		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
-
 		// the try/except method is here 
 		// because the service does not seem to be picking up the exceptions
 		// if results.error is null, then API assumes delete = success
@@ -52,11 +50,13 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		// "refresh" the results due to database triggers
 		// for example, the mgi accession id is created by a database trigger
 		
+		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
+
 		try {
 			results = markerService.create(domain, user);
 			results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
 		} catch (Exception e) {
-			results.setError("Failed", e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			results.setError("Failed : create", e.getMessage(), Constants.HTTP_SERVER_ERROR);
 			return results;
 		}
 		
@@ -64,8 +64,27 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	}
 
 	@Override
-	public SearchResults<MarkerDomain> update(MarkerDomain marker, User user) {
-		return markerService.update(marker, user);
+	public SearchResults<MarkerDomain> update(MarkerDomain domain, User user) {
+		
+		// the try/except method is here 
+		// because the service does not seem to be picking up the exceptions
+		// if results.error is null, then API assumes delete = success
+		// if results.error is not null, then API assumes delete = fail
+		
+		// "refresh" the results due to database triggers
+		// for example, the mgi accession id is created by a database trigger
+		
+		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
+
+		try {
+			results = markerService.update(domain, user);
+			results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
+		} catch (Exception e) {
+			results.setError("Failed : update", e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			return results;
+		}
+		
+		return results;	
 	}
 
 	@Override
@@ -76,17 +95,17 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	@Override
 	public SearchResults<MarkerDomain> delete(Integer key, User user) {
 		
-		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
-
 		// the try/except method is here 
 		// because the service does not seem to be picking up the exceptions
 		// if results.error is null, then API assumes delete = success
 		// if results.error is not null, then API assumes delete = fail
 		
+		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
+		
 		try {
 			results = markerService.delete(key, user);
 		} catch (Exception e) {
-			results.setError("Failed", e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			results.setError("Failed : delete", e.getMessage(), Constants.HTTP_SERVER_ERROR);
 		}
 		
 		return results;

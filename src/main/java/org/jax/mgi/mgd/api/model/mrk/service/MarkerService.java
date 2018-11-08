@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
@@ -49,17 +50,21 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	@Transactional
 	public SearchResults<MarkerDomain> create(MarkerDomain domain, User user) {
 		
+		// create new entity object from in-coming domain
+		// see Entities class for primary key implementation
+
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		Marker entity = new Marker();
-			
-		// create new entity from in-coming domain object
-		// see Entities class for primary key implementation
 		
+		// set entity fields
 		entity.setSymbol(domain.getSymbol());
 		entity.setName(domain.getName());
 		entity.setChromosome(domain.getChromosome());
+		// end set entity fields
 		
-		// business logic for cmOffset
+		// business logic
+		
+		// for cmOffset
 		if (domain.getChromosome().equals("UN")) {
 			entity.setCmOffset(-999.0);
 		}
@@ -67,30 +72,79 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			entity.setCmOffset(-1.0);
 		}
 		
-		// add creation/modification 
-		entity.setCreatedBy(user);
-		entity.setModifiedBy(user);
-		entity.setCreation_date(new Date());
-		entity.setModification_date(new Date());
+		// end business logic
 		
-		// convert String keys to Integer
+		// convert String-to-Integer
 		entity.setOrganism(organismDAO.get(Integer.valueOf(domain.getOrganismKey())));
 		entity.setMarkerStatus(markerStatusDAO.get(Integer.valueOf(domain.getMarkerStatusKey())));
 		entity.setMarkerType(markerTypeDAO.get(Integer.valueOf(domain.getMarkerTypeKey())));
-
+		// end String-to-Integer conversion
+		
+		// add creation/modification 
+		entity.setCreatedBy(user);
+		entity.setCreation_date(new Date());
+		entity.setModifiedBy(user);
+		entity.setModification_date(new Date());
+		// end creation/modification
+		
 		// execute persist/insert into database
 		markerDAO.persist(entity);
 
 		// return entity translated to domain
 		results.setItem(translator.translate(entity));
-
 		return results;
 	}
 	
 	@Transactional
 	public SearchResults<MarkerDomain> update(MarkerDomain domain, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
+		Marker entity = markerDAO.get(domain.getMarkerKey());
+		
+		// set entity fields
+		entity.setSymbol(domain.getSymbol());
+		entity.setName(domain.getName());
+		entity.setChromosome(domain.getChromosome());
+		entity.setCytogeneticOffset(domain.getCytogeneticOffset());
+		// end set entity fields
+		
+		// business logic
+		
+		// cannot change the status to "withdrawn"/2
+		//if (entity.getMarkerStatus().equals(domain.getMarkerStatus()) == false) {
+		//	if (domain.getMarkerStatusKey().equals("2")) {
+		//		
+		//	}
+		//}
+		
+		// for cmOffset
+		if (domain.getChromosome().equals("UN")) {
+			entity.setCmOffset(-999.0);
+		}
+		
+		// end business logic
+		
+		// convert String-to-Integer
+		// fields that cannot be changed by UI are commented out
+		//entity.setOrganism(organismDAO.get(Integer.valueOf(domain.getOrganismKey())));
+		entity.setMarkerStatus(markerStatusDAO.get(Integer.valueOf(domain.getMarkerStatusKey())));
+		entity.setMarkerType(markerTypeDAO.get(Integer.valueOf(domain.getMarkerTypeKey())));
+		// end String-to-Integer conversion
+		
+		// add creation/modification 
+		// fields that cannot be changed by UI are commented out
+		//entity.setCreatedBy(user);
+		//entity.setCreation_date(new Date());
+		entity.setModification_date(new Date());
+		entity.setModifiedBy(user);
+		// end creation/modification
+		
+		// execute update into database
+		markerDAO.update(entity);
+		
+		// return entity translated to domain
+		results.setItem(translator.translate(entity));
+		return results;
 	}
 
 	@Transactional
@@ -107,6 +161,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	
 	@Transactional
 	public SearchResults<MarkerDomain> delete(Integer key, User user) {
+		// get the entity object and delete
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		Marker entity = markerDAO.get(key);
 		markerDAO.remove(entity);

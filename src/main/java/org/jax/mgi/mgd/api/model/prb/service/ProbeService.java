@@ -40,6 +40,13 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		return translator.translate(probeDAO.get(key));
 	}
 
+        @Transactional
+        public SearchResults<ProbeDomain> getResults(Integer key) {
+                SearchResults<ProbeDomain> results = new SearchResults<ProbeDomain>();
+                results.setItem(translator.translate(probeDAO.get(key)));
+                return results;
+        }
+    
 	@Transactional
 	public SearchResults<ProbeDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub

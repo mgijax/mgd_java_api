@@ -36,6 +36,12 @@ public class LogicalDBService extends BaseService<LogicalDBDomain> {
 		return null;
 	}
 
+        @Transactional
+        public SearchResults<LogicalDBDomain> getResults(Integer key) {
+		// TODO Auto-generated method stub
+		return null;
+        }
+    
 	@Transactional
 	public SearchResults<LogicalDBDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub

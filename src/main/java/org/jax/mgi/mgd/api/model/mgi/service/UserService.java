@@ -43,6 +43,12 @@ public class UserService extends BaseService<UserDomain> {
 		return null;
 	}
 
+        @Transactional
+        public SearchResults<UserDomain> getResults(Integer key) {
+		// TODO Auto-generated method stub
+		return null;
+        }
+    
 	@Transactional
 	public SearchResults<UserDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub

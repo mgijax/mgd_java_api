@@ -45,9 +45,16 @@ public class MarkerTypeService extends BaseService<MarkerTypeDomain> {
 
 	@Transactional
 	public MarkerTypeDomain get(Integer key) {
-		return translator.translate(markerTypeDAO.get(key),1);
+		return translator.translate(markerTypeDAO.get(key));
 	}
 
+        @Transactional
+        public SearchResults<MarkerTypeDomain> getResults(Integer key) {
+                SearchResults<MarkerTypeDomain> results = new SearchResults<MarkerTypeDomain>();
+                results.setItem(translator.translate(markerTypeDAO.get(key)));
+                return results;
+        }
+    
 	@Transactional
 	public SearchResults<MarkerTypeDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub

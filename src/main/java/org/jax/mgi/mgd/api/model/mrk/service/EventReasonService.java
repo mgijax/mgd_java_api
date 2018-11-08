@@ -48,6 +48,13 @@ public class EventReasonService extends BaseService<EventReasonDomain> {
 		return translator.translate(eventReasonDAO.get(key),1);
 	}
 
+        @Transactional
+        public SearchResults<EventReasonDomain> getResults(Integer key) {
+                SearchResults<EventReasonDomain> results = new SearchResults<EventReasonDomain>();
+                results.setItem(translator.translate(eventReasonDAO.get(key)));
+                return results;
+        }
+
 	@Transactional
 	public SearchResults<EventReasonDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub

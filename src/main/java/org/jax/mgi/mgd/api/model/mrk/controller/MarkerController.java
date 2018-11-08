@@ -54,7 +54,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		
 		try {
 			results = markerService.create(domain, user);
-			results = markerService.getSearchResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
+			results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
 		} catch (Exception e) {
 			results.setError("Failed", e.getMessage(), Constants.HTTP_SERVER_ERROR);
 			return results;

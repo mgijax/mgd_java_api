@@ -40,6 +40,13 @@ public class ExperimentService extends BaseService<ExperimentDomain> {
 		return translator.translate(exptDAO.get(key));
 	}
 
+        @Transactional
+        public SearchResults<ExperimentDomain> getResults(Integer key) {
+                SearchResults<ExperimentDomain> results = new SearchResults<ExperimentDomain>();
+                results.setItem(translator.translate(exptDAO.get(key)));
+                return results;
+        }
+
 	@Transactional
 	public SearchResults<ExperimentDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub

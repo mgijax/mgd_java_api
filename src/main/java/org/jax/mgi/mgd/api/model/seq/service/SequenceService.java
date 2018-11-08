@@ -37,9 +37,16 @@ public class SequenceService extends BaseService<SequenceDomain> {
 
 	@Transactional
 	public SequenceDomain get(Integer key) {
-		return translator.translate(sequenceDAO.get(key),3);
+		return translator.translate(sequenceDAO.get(key));
 	}
 
+        @Transactional
+        public SearchResults<SequenceDomain> getResults(Integer key) {
+                SearchResults<SequenceDomain> results = new SearchResults<SequenceDomain>();
+                results.setItem(translator.translate(sequenceDAO.get(key)));
+                return results;
+        }
+    
 	@Transactional
 	public SearchResults<SequenceDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub

@@ -37,9 +37,16 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 
 	@Transactional
 	public AccessionDomain get(Integer key) {
-		return translator.translate(accessionDAO.get(key),3);
+		return translator.translate(accessionDAO.get(key));
 	}
 
+        @Transactional
+        public SearchResults<AccessionDomain> getResults(Integer key) {
+                SearchResults<AccessionDomain> results = new SearchResults<AccessionDomain>();
+                results.setItem(translator.translate(accessionDAO.get(key)));
+                return results;
+        }
+    
 	@Transactional
 	public SearchResults<AccessionDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub

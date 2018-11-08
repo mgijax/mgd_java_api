@@ -40,6 +40,13 @@ public class AssayService extends BaseService<AssayDomain> {
 		return translator.translate(assayDAO.get(key),2);
 	}
 
+        @Transactional
+        public SearchResults<AssayDomain> getResults(Integer key) {
+                SearchResults<AssayDomain> results = new SearchResults<AssayDomain>();
+                results.setItem(translator.translate(assayDAO.get(key),2));
+                return results;
+        }
+
 	@Transactional
 	public SearchResults<AssayDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub

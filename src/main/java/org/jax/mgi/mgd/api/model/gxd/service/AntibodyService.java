@@ -40,6 +40,13 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		return translator.translate(antibodyDAO.get(key));
 	}
 
+        @Transactional
+        public SearchResults<AntibodyDomain> getResults(Integer key) {
+                SearchResults<AntibodyDomain> results = new SearchResults<AntibodyDomain>();
+                results.setItem(translator.translate(antibodyDAO.get(key)));
+                return results;
+        }
+
 	@Transactional
 	public SearchResults<AntibodyDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub

@@ -19,7 +19,7 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 public class GelLaneService extends BaseService<GelLaneDomain> {
 
 	@Inject
-	private GelLaneDAO gelaneDAO;
+	private GelLaneDAO gelLaneDAO;
 
 	private GelLaneTranslator translator = new GelLaneTranslator();
 	
@@ -37,9 +37,16 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 
 	@Transactional
 	public GelLaneDomain get(Integer key) {
-		return translator.translate(gelaneDAO.get(key));
+		return translator.translate(gelLaneDAO.get(key));
 	}
 
+        @Transactional
+        public SearchResults<GelLaneDomain> getResults(Integer key) {
+                SearchResults<GelLaneDomain> results = new SearchResults<GelLaneDomain>();
+                results.setItem(translator.translate(gelLaneDAO.get(key)));
+                return results;
+        }
+    
 	@Transactional
 	public SearchResults<GelLaneDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub

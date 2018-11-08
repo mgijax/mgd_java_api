@@ -32,7 +32,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	private AlleleDAO alleleDAO;
 
 	private AlleleTranslator translator = new AlleleTranslator();
-	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -51,6 +50,13 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	public AlleleDomain get(Integer key) {
 		return translator.translate(alleleDAO.get(key));
 	}
+
+        @Transactional
+        public SearchResults<AlleleDomain> getResults(Integer key) {
+                SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
+                results.setItem(translator.translate(alleleDAO.get(key)));
+                return results;
+        }
 
 	@Transactional
 	public SearchResults<AlleleDomain> delete(Integer key, User user) {

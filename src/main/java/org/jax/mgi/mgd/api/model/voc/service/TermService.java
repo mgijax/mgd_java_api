@@ -102,6 +102,13 @@ public class TermService extends BaseService<TermDomain> implements BaseSearchIn
 		return translator.translate(termDAO.get(key));
 	}
 	
+        @Transactional
+        public SearchResults<TermDomain> getResults(Integer key) {
+                SearchResults<TermDomain> results = new SearchResults<TermDomain>();
+                results.setItem(translator.translate(termDAO.get(key)));
+                return results;
+        }
+    
 	@Transactional
 	public SearchResults<TermDomain> delete(Integer key, User user) {
                 // TODO Auto-generated method stub

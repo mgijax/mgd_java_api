@@ -40,6 +40,13 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 		return translator.translate(synonymDAO.get(key));
 	}
 
+        @Transactional
+        public SearchResults<MGISynonymDomain> getResults(Integer key) {
+                SearchResults<MGISynonymDomain> results = new SearchResults<MGISynonymDomain>();
+                results.setItem(translator.translate(synonymDAO.get(key)));
+                return results;
+        }
+    
 	@Transactional
 	public SearchResults<MGISynonymDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub

@@ -45,8 +45,15 @@ public class OrganismService extends BaseService<OrganismDomain> {
 
 	@Transactional
 	public OrganismDomain get(Integer key) {
-		return translator.translate(organismDAO.get(key),3);
+		return translator.translate(organismDAO.get(key));
 	}
+
+        @Transactional
+        public SearchResults<OrganismDomain> getResults(Integer key) {
+                SearchResults<OrganismDomain> results = new SearchResults<OrganismDomain>();
+                results.setItem(translator.translate(organismDAO.get(key)));
+                return results;
+        }
 
 	@Transactional
 	public SearchResults<OrganismDomain> delete(Integer key, User user) {

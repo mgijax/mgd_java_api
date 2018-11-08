@@ -82,7 +82,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		markerDAO.persist(entity);
 
 		// return entity translated to domain
-		results.setItem(translator.translate(entity,1));
+		results.setItem(translator.translate(entity));
 
 		return results;
 	}
@@ -95,13 +95,13 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 	@Transactional
 	public MarkerDomain get(Integer key) {
-		return translator.translate(markerDAO.get(key),1);
+		return translator.translate(markerDAO.get(key));
 	}
 
 	@Transactional
-	public SearchResults<MarkerDomain> getSearchResults(Integer key) {
+	public SearchResults<MarkerDomain> getResults(Integer key) {
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
-		results.setItem(translator.translate(markerDAO.get(key),1));
+		results.setItem(translator.translate(markerDAO.get(key)));
 		return results;
 	}
 	

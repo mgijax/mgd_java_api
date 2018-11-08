@@ -47,10 +47,17 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 	@Transactional
 	public MarkerHistoryDomain get(Integer key) {
 		// TODO : has Embedded primary key
-		//return translator.translate(markerHistoryDAO.get(key),1);
+		//return translator.translate(markerHistoryDAO.get(key));
 		return null;
 	}
 	
+        @Transactional
+        public SearchResults<MarkerHistoryDomain> getResults(Integer key) {
+                SearchResults<MarkerHistoryDomain> results = new SearchResults<MarkerHistoryDomain>();
+                results.setItem(translator.translate(markerHistoryDAO.get(key)));
+                return results;
+        }
+    
 	@Transactional
 	public SearchResults<MarkerHistoryDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub

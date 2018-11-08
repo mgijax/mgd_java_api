@@ -40,6 +40,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return translator.translate(referenceDAO.get(key));
 	}
 
+        @Transactional
+        public SearchResults<ReferenceDomain> getResults(Integer key) {
+                SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
+                results.setItem(translator.translate(referenceDAO.get(key)));
+                return results;
+        }
+
 	@Transactional
 	public SearchResults<ReferenceDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub

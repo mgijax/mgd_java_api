@@ -40,6 +40,13 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 		return translator.translate(specimenDAO.get(key));
 	}
 
+        @Transactional
+        public SearchResults<SpecimenDomain> getResults(Integer key) {
+                SearchResults<SpecimenDomain> results = new SearchResults<SpecimenDomain>();
+                results.setItem(translator.translate(specimenDAO.get(key)));
+                return results;
+        }
+    
 	@Transactional
 	public SearchResults<SpecimenDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub

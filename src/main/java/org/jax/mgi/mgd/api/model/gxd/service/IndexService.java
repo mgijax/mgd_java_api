@@ -40,6 +40,13 @@ public class IndexService extends BaseService<IndexDomain> {
 		return translator.translate(indexDAO.get(key));
 	}
 
+        @Transactional
+        public SearchResults<IndexDomain> getResults(Integer key) {
+                SearchResults<IndexDomain> results = new SearchResults<IndexDomain>();
+                results.setItem(translator.translate(indexDAO.get(key)));
+                return results;
+        }
+    
 	@Transactional
 	public SearchResults<IndexDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub

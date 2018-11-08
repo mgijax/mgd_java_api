@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
@@ -25,6 +24,7 @@ import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.MarkerWithdrawal;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -51,7 +51,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	public SearchResults<MarkerDomain> create(MarkerDomain domain, User user) {
 		
 		// create new entity object from in-coming domain
-		// see Entities class for primary key implementation
+		// the Entities class handles the generation of the primary key
+		// database trigger will assign the MGI id/see pgmgddbschema/trigger for details
 
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		Marker entity = new Marker();
@@ -62,7 +63,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		entity.setChromosome(domain.getChromosome());
 		// end set entity fields
 		
-		// business logic
+		// business rules
 		
 		// for cmOffset
 		if (domain.getChromosome().equals("UN")) {
@@ -87,7 +88,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		entity.setModification_date(new Date());
 		// end creation/modification
 		
-		// execute persist/insert into database
+		// execute persist/insert/send to database
 		markerDAO.persist(entity);
 
 		// return entity translated to domain
@@ -98,6 +99,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	@Transactional
 	public SearchResults<MarkerDomain> update(MarkerDomain domain, User user) {
 		
+		// the set of fields in "update" is similar to set of fields in "create"
+		// fields that are not be updated by UI are commented out below
+		// creation user/date are only set in "create"
+
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		Marker entity = markerDAO.get(domain.getMarkerKey());
 		
@@ -108,14 +113,15 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		entity.setCytogeneticOffset(domain.getCytogeneticOffset());
 		// end set entity fields
 		
-		// business logic
+		// business rules
 		
 		// cannot change the status to "withdrawn"/2
-		//if (entity.getMarkerStatus().equals(domain.getMarkerStatus()) == false) {
-		//	if (domain.getMarkerStatusKey().equals("2")) {
-		//		
-		//	}
-		//}
+		if (entity.getMarkerStatus().getStatus().equals(domain.getMarkerStatus()) == false) {
+			if (domain.getMarkerStatusKey().equals("2")) {
+				results.setError("Failed : Marker Status error",  "Cannot change Marker Status to 'withdrawn'", Constants.HTTP_SERVER_ERROR);
+				return results;
+			}
+		}
 		
 		// for cmOffset
 		if (domain.getChromosome().equals("UN")) {
@@ -125,21 +131,19 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// end business logic
 		
 		// convert String-to-Integer
-		// fields that cannot be changed by UI are commented out
 		//entity.setOrganism(organismDAO.get(Integer.valueOf(domain.getOrganismKey())));
 		entity.setMarkerStatus(markerStatusDAO.get(Integer.valueOf(domain.getMarkerStatusKey())));
 		entity.setMarkerType(markerTypeDAO.get(Integer.valueOf(domain.getMarkerTypeKey())));
 		// end String-to-Integer conversion
 		
 		// add creation/modification 
-		// fields that cannot be changed by UI are commented out
 		//entity.setCreatedBy(user);
 		//entity.setCreation_date(new Date());
 		entity.setModification_date(new Date());
 		entity.setModifiedBy(user);
 		// end creation/modification
 		
-		// execute update into database
+		// execute update/send to database
 		markerDAO.update(entity);
 		
 		// return entity translated to domain

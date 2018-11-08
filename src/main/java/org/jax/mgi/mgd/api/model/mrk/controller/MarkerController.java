@@ -48,21 +48,13 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		// because the service does not seem to be picking up the exceptions
 		// if results.error is null, then API assumes delete = success
 		// if results.error is not null, then API assumes delete = fail
-					
+		
+		// "refresh" the results due to database triggers
+		// for example, the mgi accession id is created by a database trigger
+		
 		try {
 			results = markerService.create(domain, user);
-		} catch (Exception e) {
-			results.setError("Failed", e.getMessage(), Constants.HTTP_SERVER_ERROR);
-			return results;
-		}
-		
-		// due to database triggers, we need to "refresh" the results
-		// by executing a new "get" to pick up any database rows that
-		// were added as part of a trigger.
-		// for example, the mgi accession id
-		
-		try {
-			results = markerService.refresh(Integer.valueOf(results.items.get(0).getMarkerKey()));
+			results = markerService.getSearchResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
 		} catch (Exception e) {
 			results.setError("Failed", e.getMessage(), Constants.HTTP_SERVER_ERROR);
 			return results;

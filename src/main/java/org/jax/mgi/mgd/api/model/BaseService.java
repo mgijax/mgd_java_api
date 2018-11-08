@@ -13,6 +13,7 @@ public abstract class BaseService<D extends BaseDomain> {
 	public abstract SearchResults<D> create(D object, User user) throws APIException;
 	public abstract SearchResults<D> update(D object, User user);
 	public abstract D get(Integer key);
+	//public abstract SearchResults<D> getSearchResults(Integer key);
 	public abstract SearchResults<D> delete(Integer key, User user);
 
 }

@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
@@ -59,7 +58,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		entity.setSymbol(domain.getSymbol());
 		entity.setName(domain.getName());
 		entity.setChromosome(domain.getChromosome());
-		entity.setCytogeneticOffset(domain.getCytogeneticOffset());
 		
 		// business logic for cmOffset
 		if (domain.getChromosome().equals("UN")) {
@@ -88,15 +86,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		return results;
 	}
-
-	@Transactional
-	public SearchResults<MarkerDomain> refresh(Integer key) {
-		// refresh the results by performing a "get" using the new "key" from the "create"
-		// see controller/create
-		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
-		results.setItem(translator.translate(markerDAO.get(key),1));
-		return results;
-	}
 	
 	@Transactional
 	public SearchResults<MarkerDomain> update(MarkerDomain domain, User user) {
@@ -110,12 +99,17 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}
 
 	@Transactional
+	public SearchResults<MarkerDomain> getSearchResults(Integer key) {
+		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
+		results.setItem(translator.translate(markerDAO.get(key),1));
+		return results;
+	}
+	
+	@Transactional
 	public SearchResults<MarkerDomain> delete(Integer key, User user) {
-		
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		Marker entity = markerDAO.get(key);
 		markerDAO.remove(entity);
-		
 		return results;
 	}
 

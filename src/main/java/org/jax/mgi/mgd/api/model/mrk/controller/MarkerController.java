@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.mrk.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -11,7 +12,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
+import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIResultDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
@@ -50,6 +53,19 @@ public class MarkerController extends BaseController<MarkerDomain> {
 			results = markerService.create(domain, user);
 		} catch (Exception e) {
 			results.setError("Failed", e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			return results;
+		}
+		
+		// due to database triggers, we need to "refresh" the results
+		// by executing a new "get" to pick up any database rows that
+		// were added as part of a trigger.
+		// for example, the mgi accession id
+		
+		try {
+			results = markerService.refresh(Integer.valueOf(results.items.get(0).getMarkerKey()));
+		} catch (Exception e) {
+			results.setError("Failed", e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			return results;
 		}
 		
 		return results;

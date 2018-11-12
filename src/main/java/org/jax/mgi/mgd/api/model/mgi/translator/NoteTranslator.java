@@ -11,7 +11,7 @@ public class NoteTranslator extends BaseEntityDomainTranslator<Note, NoteDomain>
 		NoteDomain domain = new NoteDomain();
 
 		domain.setNoteKey(entity.get_note_key());
-		domain.setObjectKey(entity.get_object_key().toString());
+		domain.set_object_key(entity.get_object_key().toString());
 		domain.setMgiTypeKey(entity.getMgiType().get_mgitype_key().toString());
 		domain.setMgiType(entity.getMgiType().getName());
 		domain.setNoteTypeKey(entity.getNoteType().get_noteType_key().toString());

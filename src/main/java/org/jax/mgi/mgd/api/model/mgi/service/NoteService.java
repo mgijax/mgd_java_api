@@ -45,12 +45,12 @@ public class NoteService extends BaseService<NoteDomain> {
 		return translator.translate(noteDAO.get(key));
 	}
 
-        @Transactional
-        public SearchResults<NoteDomain> getResults(Integer key) {
-                SearchResults<NoteDomain> results = new SearchResults<NoteDomain>();
-                results.setItem(translator.translate(noteDAO.get(key)));
-                return results;
-        }
+    @Transactional
+    public SearchResults<NoteDomain> getResults(Integer key) {
+        SearchResults<NoteDomain> results = new SearchResults<NoteDomain>();
+        results.setItem(translator.translate(noteDAO.get(key)));
+        return results;
+    }
     
 	@Transactional
 	public SearchResults<NoteDomain> delete(Integer key, User user) {

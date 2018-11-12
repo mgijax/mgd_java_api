@@ -12,15 +12,22 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Reference Citation Model Object")
+@ApiModel(value = "Reference Citation Cache Model Object")
 @Table(name="bib_citation_cache")
-public class LTReferenceCitationData extends BaseEntity {
+public class ReferenceCitationCache extends BaseEntity {
 	@Id
 	private int _refs_key;
-	private String short_citation;
-	private String jnumid;
 	private Integer numericPart;
+	private String jnumid;
 	private String mgiid;
-	private String doiid;
 	private String pubmedid;
+	private String doiid;
+	private String journal;
+	private String citation;
+	private String short_citation;
+	private String referenceType;
+	private Integer isReviewArticle;
+	private String isReviewArticleString;
+	private Integer isDiscard;
+	
 }

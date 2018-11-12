@@ -28,7 +28,7 @@ import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceAlleleAssociation;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceBook;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceCitationData;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceMarkerAssociation;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceNote;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
@@ -632,7 +632,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		// enforce sorting: 1. J: number (descending), 2. journal (ascending), 3. author (ascending)
 
 		List<Order> orderList = new ArrayList<Order>();
-		Join<LTReference,LTReferenceCitationData> citationData = root.join("citationData");
+		Join<LTReference,ReferenceCitationCache> citationData = root.join("citationData");
 
 		// using coalesce to push nulls (no J#) to bottom
 		orderList.add(builder.desc(builder.coalesce(citationData.get("numericPart"), Integer.MIN_VALUE)));

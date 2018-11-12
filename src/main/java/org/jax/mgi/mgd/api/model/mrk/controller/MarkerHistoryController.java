@@ -43,9 +43,10 @@ public class MarkerHistoryController extends BaseController<MarkerHistoryDomain>
 		return markerHistoryService.get(key);
 	}
 
-	@Override
 	public SearchResults<MarkerHistoryDomain> delete(Integer key, User user) {
-		return markerHistoryService.delete(key, user);
+		// this table contains a compound primary key
+		// deletes to this table are implemented in the parent's "update" method
+		return null;
 	}
 	
 	@POST

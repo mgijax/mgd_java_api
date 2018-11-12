@@ -12,15 +12,21 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mrk.dao.EventDAO;
+import org.jax.mgi.mgd.api.model.mrk.dao.EventReasonDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
+import org.jax.mgi.mgd.api.model.mrk.dao.MarkerHistoryDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerStatusDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerTypeDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIResultDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
+import org.jax.mgi.mgd.api.model.mrk.entities.MarkerHistory;
+import org.jax.mgi.mgd.api.model.mrk.entities.MarkerHistoryKey;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
@@ -38,11 +44,21 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	@Inject
 	private MarkerDAO markerDAO;
 	@Inject
+	private MarkerHistoryDAO historyDAO;
+	
+	@Inject
 	private OrganismDAO organismDAO;
 	@Inject
 	private MarkerStatusDAO markerStatusDAO;
 	@Inject
 	private MarkerTypeDAO markerTypeDAO;
+
+	@Inject
+	private EventDAO eventDAO;
+	@Inject
+	private EventReasonDAO eventReasonDAO;
+	@Inject
+	private ReferenceDAO referenceDAO;
 
 	private MarkerTranslator translator = new MarkerTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
@@ -57,7 +73,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		Marker entity = new Marker();
 		
-		// set entity fields
+		// set entity attributes
 		entity.setSymbol(domain.getSymbol());
 		entity.setName(domain.getName());
 		entity.setChromosome(domain.getChromosome());
@@ -91,6 +107,37 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// execute persist/insert/send to database
 		markerDAO.persist(entity);
 
+		// create marker history assignment
+		// create 1 marker history row to track the initial marker assignment
+		MarkerHistory historyEntity = new MarkerHistory();
+		
+		// set primary key = compound/embedded id (new marker key, sequenceNum = 1)
+		// default marker event = 1 (assigned)
+		// default marker event reason = -1 (Not Specified)
+		// default reference = 22864 (J:23000)
+		// default history symbol key = new marker key (same as primary)
+		// default history name = marker name
+		
+		MarkerHistoryKey markerHistoryKey = new MarkerHistoryKey();
+		markerHistoryKey.set_marker_key(entity.get_marker_key());
+		markerHistoryKey.setSequenceNum(1);
+		historyEntity.setKey(markerHistoryKey);
+		// rest of marker attributes
+		historyEntity.setMarkerEvent(eventDAO.get(Integer.valueOf(1)));
+		historyEntity.setMarkerEventReason(eventReasonDAO.get(Integer.valueOf(-1)));
+		historyEntity.setMarkerHistory(entity);
+		historyEntity.setReference(referenceDAO.get(Integer.valueOf(22864)));
+		historyEntity.setName(entity.getName());
+		historyEntity.setEvent_date(new Date());
+		historyEntity.setCreatedBy(user);
+		historyEntity.setCreation_date(new Date());
+		historyEntity.setModifiedBy(user);
+		historyEntity.setModification_date(new Date());
+		historyDAO.persist(historyEntity);
+		// end marker history 
+		
+		// create marker synonyms, if provided
+		
 		// return entity translated to domain
 		results.setItem(translator.translate(entity));
 		return results;
@@ -146,6 +193,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// execute update/send to database
 		markerDAO.update(entity);
 		
+		// add markerHistoryDAO
+		// add markerSynonymDAO
+		// add markerAccessionDAO
+		
 		// return entity translated to domain
 		results.setItem(translator.translate(entity));
 		return results;
@@ -182,6 +233,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		log.info(params);
 		
 		// building SQL command : select + from + where + orderBy
+		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
 		String select = "select distinct m._marker_key, m._marker_type_key, m.symbol";
 		String from = "from mrk_marker m";

@@ -11,6 +11,7 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		if (entity == null) { return null; }
 		ReferenceDomain domain = new ReferenceDomain();
 		domain.set_refs_key(entity.get_refs_key());
+		domain.setPrimaryAuthor(entity.getPrimaryAuthor());
 		domain.setAuthors(entity.getAuthors());
 		domain.setTitle(entity.getTitle());
 		domain.setJournal(entity.getJournal());
@@ -22,10 +23,15 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		domain.setDate(entity.getDate());
 		domain.setIsReviewArticle(entity.getIsReviewArticle());
 		domain.setIsDiscard(entity.getIsDiscard());
-		domain.setCreation_date(entity.getCreation_date());
-		domain.setPrimaryAuthor(entity.getPrimaryAuthor());
+		domain.setReferenceTypeKey(entity.getReferenceType().get_term_key().toString());
 		domain.setReferenceType(entity.getReferenceType().getTerm());
-		domain.setJnumID(entity.getJnumAccessionId().getAccID());
+		domain.setJnumID(entity.getReferenceCitationCache().getJnumid());
+		domain.setShort_citation(entity.getReferenceCitationCache().getShort_citation());
+		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
+		domain.setCreatedBy(entity.getCreatedBy().getName());
+		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
+		domain.setModifiedBy(entity.getModifiedBy().getName());
+		domain.setCreation_date(entity.getCreation_date());
 		domain.setModification_date(entity.getModification_date());
 		
 		if(translationDepth > 0) {

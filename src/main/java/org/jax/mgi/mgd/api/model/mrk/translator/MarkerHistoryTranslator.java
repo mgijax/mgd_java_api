@@ -9,17 +9,25 @@ public class MarkerHistoryTranslator extends BaseEntityDomainTranslator<MarkerHi
 	@Override
 	protected MarkerHistoryDomain entityToDomain(MarkerHistory entity, int translationDepth) {
 		MarkerHistoryDomain domain = new MarkerHistoryDomain();
-		domain.setMarkerKey(entity.getKey().get_marker_key());
-		domain.setSequenceNum(entity.getKey().getSequenceNum());
+		
+		domain.setMarkerHistoryKey(entity.getKey());
+		//domain.setMarkerKey(entity.getKey().get_marker_key());
+		//domain.setSequenceNum(entity.getKey().getSequenceNum());
+		
 		domain.setMarkerEventKey(entity.getMarkerEvent().get_marker_event_key());
 		domain.setMarkerEvent(entity.getMarkerEvent().getEvent());
 		domain.setMarkerEventReasonKey(entity.getMarkerEventReason().get_marker_eventreason_key());
 		domain.setMarkerEventReason(entity.getMarkerEventReason().getEventReason());
-		domain.setMarkerHistoryKey(entity.getMarkerHistory().get_marker_key());
+		
+		// int -> Integer -> String
+		domain.setMarkerHistorySymbolKey(Integer.valueOf(entity.getMarkerHistory().get_marker_key()).toString());
 		domain.setMarkerHistorySymbol(entity.getMarkerHistory().getSymbol());
 		domain.setMarkerHistoryName(entity.getName());
+		
 		domain.setRefKey(entity.getReference().get_refs_key());
-		//domain.setJnumid(entity.getReference().getJnumAccessionId());
+		domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());
+		domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());
+		
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key());
 		domain.setCreatedBy(entity.getCreatedBy().getName());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key());

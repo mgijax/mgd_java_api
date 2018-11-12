@@ -141,7 +141,7 @@ public class LTReference extends BaseEntity {
 	// one to many, because row in citation cache might not exist (leaving it 1-0)
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key")
-	private List<LTReferenceCitationData> citationData;
+	private List<ReferenceCitationCache> citationData;
 
 	// one to many, because book data most often does not exist (leaving it 1-0)
 	@OneToMany

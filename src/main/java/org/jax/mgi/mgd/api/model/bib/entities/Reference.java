@@ -69,11 +69,15 @@ public class Reference extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 1 AND preferred = 1 AND prefixPart = 'MGI:' AND `_logicaldb_key` = 1")
 	private Accession mgiAccessionId;
 
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_refs_key", referencedColumnName="_object_key")
-	@Where(clause="`_mgitype_key` = 1 AND preferred = 1 AND prefixPart = 'J:' AND `_logicaldb_key` = 1")
-	private Accession jnumAccessionId;
+	//@OneToOne(fetch=FetchType.LAZY)
+	//@JoinColumn(name="_refs_key", referencedColumnName="_object_key")
+	//@Where(clause="`_mgitype_key` = 1 AND preferred = 1 AND prefixPart = 'J:' AND `_logicaldb_key` = 1")
+	//private Accession jnumAccessionId;
 
+	@OneToOne
+	@JoinColumn(name="_refs_key")
+	private ReferenceCitationCache referenceCitationCache;
+	
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_refs_key")
 	@Where(clause="`_mgitype_key` = 1 AND preferred = 1")

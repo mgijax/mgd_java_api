@@ -83,7 +83,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 			results.setError("Failed : update", e.getMessage(), Constants.HTTP_SERVER_ERROR);
 			return results;
 		}
-		
+
 		return results;	
 	}
 

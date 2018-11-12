@@ -9,6 +9,6 @@ import lombok.Data;
 @Data
 @Embeddable 
 public class MarkerHistoryKey implements Serializable {
-	private Integer _marker_key;
-	private Integer sequenceNum;
+	private int _marker_key;
+	private int sequenceNum;
 }

@@ -4,7 +4,6 @@ import java.util.Date;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -25,6 +24,8 @@ public class MarkerHistory extends BaseEntity {
 
 	@EmbeddedId
 	private MarkerHistoryKey key;
+	//private int _marker_key;
+	//private int sequenceNum;
 	private String name;
 	private Date event_date;
 	private Date creation_date;

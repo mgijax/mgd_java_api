@@ -40,8 +40,8 @@ public class MarkerDomain extends BaseDomain {
 	private NoteDomain locationNote;
 	
 	private List<AccessionDomain> mgiAccessionIds;
+	//private List<MarkerHistoryDomain> history;
 	
-	//private String markerNote; 
 	//private String locationChromosome;
 	//private Integer locationStartCoordinate;
 	//private Integer locationEndCoordinate;

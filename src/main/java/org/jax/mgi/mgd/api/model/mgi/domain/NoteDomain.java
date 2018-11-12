@@ -13,12 +13,15 @@ import lombok.Setter;
 public class NoteDomain extends BaseDomain {
 
 	private Integer noteKey;
-	private Integer _object_key;
-	private Integer _mgitype_key;
+	private String objectKey;
+	private String mgiTypeKey;
 	private String mgiType;
+	private String noteTypeKey;
 	private String noteType;
 	private String noteChunk;
+	private String createdByKey;
 	private String createdBy;
+	private String modifiedByKey;
 	private String modifiedBy;
 	private Date creation_date;
 	private Date modification_date;

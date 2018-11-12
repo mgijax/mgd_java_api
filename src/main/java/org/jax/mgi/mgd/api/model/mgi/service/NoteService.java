@@ -71,8 +71,10 @@ public class NoteService extends BaseService<NoteDomain> {
 		//	ResultSet rs = sqlExecutor.executeProto(cmd);
 		//	while (rs.next()) {
 		//		NoteDomain noteDomain = new NoteDomain();
-		//		noteDomain.set_object_key(rs.getInt("_object_key"));
-		//		noteDomain.set_mgitype_key(rs.getInt("_mgitype_key"));
+		//		noteDomain.setNoteKey(rs.getInt("_note_key"));
+		//		noteDomain.setObjectKey(rs.getInt("_object_key"));
+		//		noteDomain.setMgiTypeKey(rs.getInt("_mgitype_key"));
+		//		noteDomain.setNoteTypeKey(rs.getInt("_notetype_key"));
 				//noteDomain.setCreation_date(rs.getDate("creation_date"));
 				//noteDomain.setModification_date(rs.getDate("modification_date"));
 		//		results.add(noteDomain);

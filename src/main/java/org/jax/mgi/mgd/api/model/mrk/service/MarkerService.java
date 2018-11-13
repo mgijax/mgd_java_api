@@ -239,9 +239,9 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		String noteKey;
 		String note;
 
-//		if (noteDomain == null) {
-//			return;
-//		}
+		if (noteDomain == null) {
+			return;
+		}
 		
 		if (noteDomain.getNoteKey() != null) {
 			noteKey = noteDomain.getNoteKey().toString();

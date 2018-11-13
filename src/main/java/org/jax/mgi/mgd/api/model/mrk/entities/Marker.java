@@ -109,10 +109,10 @@ public class Marker extends BaseEntity {
 	@OrderBy(clause = "preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 	
-	//@OneToMany
-	//@JoinColumn(name="_marker_key")
-	//@OrderColumn(name="sequenceNum")
-	//private List<MarkerHistory> history;
+	@OneToMany
+	@JoinColumn(name="_marker_key", insertable=false, updatable=false)
+	@OrderColumn(name="sequenceNum")
+	private List<MarkerHistory> history;
 	
 	// marker note aka marker detail clip (see Allele module)
 	//@OneToOne(fetch=FetchType.LAZY)

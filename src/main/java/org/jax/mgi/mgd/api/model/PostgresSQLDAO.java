@@ -15,6 +15,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.EntityManager;
 import javax.persistence.Id;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -112,6 +113,11 @@ public abstract class PostgresSQLDAO<T> {
 		//log(model);
 		entityManager.remove(model);
 		return model;
+	}
+	
+	public Query createNativeQuery(String cmd) {
+		Query query = entityManager.createNativeQuery(cmd);
+		return query;
 	}
 
 	/* default query handling; good for fields directly in the table backing model class T

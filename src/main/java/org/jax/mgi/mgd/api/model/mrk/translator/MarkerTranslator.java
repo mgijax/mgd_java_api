@@ -52,7 +52,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 				domain.setEditorNote(editorNote.iterator().next());
 			}
 		}
-		
+
 		// at most one sequenceNote
 		if (entity.getSequenceNote() != null) {
 			Iterable<NoteDomain> sequenceNote = noteTranslator.translateEntities(entity.getSequenceNote(), translationDepth - 1);

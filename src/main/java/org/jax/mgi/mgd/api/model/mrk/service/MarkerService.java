@@ -9,11 +9,13 @@ import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
+import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.EventDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.EventReasonDAO;
@@ -193,6 +195,13 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// execute update/send to database
 		markerDAO.update(entity);
 		
+		// process all marker notes
+		processNote(domain, domain.getEditorNote(), "2", "1004", user);
+		processNote(domain, domain.getSequenceNote(), "2", "1009", user);
+		processNote(domain, domain.getRevisionNote(), "2", "1030", user);
+		processNote(domain, domain.getStrainNote(), "2", "1035", user);
+		processNote(domain, domain.getLocationNote(), "2", "1049", user);
+
 		// add markerHistoryDAO
 		// add markerSynonymDAO
 		// add markerAccessionDAO
@@ -223,6 +232,52 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		return results;
 	}
 
+	@Transactional
+	public void processNote(MarkerDomain domain, NoteDomain noteDomain, String mgiTypeKey, String noteTypeKey, User user) {
+		// process note by calling stored procedure
+		
+		String noteKey;
+		String note;
+
+//		if (noteDomain == null) {
+//			return;
+//		}
+		
+		if (noteDomain.getNoteKey() != null) {
+			noteKey = noteDomain.getNoteKey().toString();
+		}
+		else {
+			noteKey = "null";
+		}
+	
+		if (noteDomain.getNoteChunk() != null) {
+			note = "'" + noteDomain.getNoteChunk().toString() + "'";
+		}
+		else {
+			note = "null";
+		}
+		
+		// stored procedure
+		// if noteKey is null, then insert new note
+		// if noteKey is not null and note is null, then delete note
+		// else, update note
+		// returns void
+		String cmd = "select count(*) from MGI_processNote ("
+				+ user.get_user_key().intValue()
+				+ "," + noteKey
+				+ "," + domain.getMarkerKey()
+				+ "," + mgiTypeKey
+				+ "," + noteTypeKey
+				+ "," + note
+				+ ")";
+
+		log.info("cmd: " + cmd);
+		Query query = markerDAO.createNativeQuery(cmd);
+		query.getResultList();
+		
+		return;
+	}
+	
 	public List<MarkerEIResultDomain> eiSearch(MarkerSearchForm searchForm) {
 
 		// list of results to be returned

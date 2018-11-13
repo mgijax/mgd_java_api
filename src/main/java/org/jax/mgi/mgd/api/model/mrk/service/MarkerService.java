@@ -250,7 +250,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			noteKey = "null";
 		}
 	
-		if (noteDomain.getNoteChunk() != null) {
+		if (noteDomain.getNoteChunk() != null || noteDomain.getNoteChunk() != "") {
 			note = "'" + noteDomain.getNoteChunk().toString() + "'";
 		}
 		else {

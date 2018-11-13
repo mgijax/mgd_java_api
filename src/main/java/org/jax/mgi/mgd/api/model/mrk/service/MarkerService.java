@@ -111,21 +111,21 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		// create marker history assignment
 		// create 1 marker history row to track the initial marker assignment
-		String cmd = "select count(*) from MRK_insertHistory ("
-				+ user.get_user_key().intValue()
-				+ "," + entity.get_marker_key()
-				+ "," + entity.get_marker_key()
-				+ ",22864,1,-1"
-				+ ",'" + entity.getName() + "'"
-				+ ",now()"
-				+ "," + user.get_user_key().intValue()
-				+ "," + user.get_user_key().intValue()
-				+ ",now(),now()"
-				+ ")";
+		//String cmd = "select count(*) from MRK_insertHistory ("
+		//		+ user.get_user_key().intValue()
+		//		+ "," + entity.get_marker_key()
+		//		+ "," + entity.get_marker_key()
+		//		+ ",22864,1,-1"
+		//		+ ",'" + entity.getName() + "'"
+		//		+ ",now()"
+		//		+ "," + user.get_user_key().intValue()
+		//		+ "," + user.get_user_key().intValue()
+		//		+ ",now(),now()"
+		//		+ ")";
 
-		log.info("cmd: " + cmd);
-		Query query = markerDAO.createNativeQuery(cmd);
-		query.getResultList();
+		//log.info("cmd: " + cmd);
+		//Query query = markerDAO.createNativeQuery(cmd);
+		//query.getResultList();
 		
 		//MarkerHistory historyEntity = new MarkerHistory();
 		

@@ -111,7 +111,23 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		// create marker history assignment
 		// create 1 marker history row to track the initial marker assignment
-		MarkerHistory historyEntity = new MarkerHistory();
+		String cmd = "select count(*) from MRK_insertHistory ("
+				+ user.get_user_key().intValue()
+				+ "," + entity.get_marker_key()
+				+ "," + entity.get_marker_key()
+				+ ",22864,1,-1"
+				+ ",'" + entity.getName() + "'"
+				+ ",now()"
+				+ "," + user.get_user_key().intValue()
+				+ "," + user.get_user_key().intValue()
+				+ ",now(),now()"
+				+ ")";
+
+		log.info("cmd: " + cmd);
+		Query query = markerDAO.createNativeQuery(cmd);
+		query.getResultList();
+		
+		//MarkerHistory historyEntity = new MarkerHistory();
 		
 		// set primary key = compound/embedded id (new marker key, sequenceNum = 1)
 		// default marker event = 1 (assigned)
@@ -120,22 +136,22 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// default history symbol key = new marker key (same as primary)
 		// default history name = marker name
 		
-		MarkerHistoryKey markerHistoryKey = new MarkerHistoryKey();
-		markerHistoryKey.set_marker_key(entity.get_marker_key());
-		markerHistoryKey.setSequenceNum(1);
-		historyEntity.setKey(markerHistoryKey);
+		//MarkerHistoryKey markerHistoryKey = new MarkerHistoryKey();
+		//markerHistoryKey.set_marker_key(entity.get_marker_key());
+		//markerHistoryKey.setSequenceNum(1);
+		//historyEntity.setKey(markerHistoryKey);
 		// rest of marker attributes
-		historyEntity.setMarkerEvent(eventDAO.get(Integer.valueOf(1)));
-		historyEntity.setMarkerEventReason(eventReasonDAO.get(Integer.valueOf(-1)));
-		historyEntity.setMarkerHistory(entity);
-		historyEntity.setReference(referenceDAO.get(Integer.valueOf(22864)));
-		historyEntity.setName(entity.getName());
-		historyEntity.setEvent_date(new Date());
-		historyEntity.setCreatedBy(user);
-		historyEntity.setCreation_date(new Date());
-		historyEntity.setModifiedBy(user);
-		historyEntity.setModification_date(new Date());
-		historyDAO.persist(historyEntity);
+		//historyEntity.setMarkerEvent(eventDAO.get(Integer.valueOf(1)));
+		//historyEntity.setMarkerEventReason(eventReasonDAO.get(Integer.valueOf(-1)));
+		//historyEntity.setMarkerHistory(entity);
+		//historyEntity.setReference(referenceDAO.get(Integer.valueOf(22864)));
+		//historyEntity.setName(entity.getName());
+		//historyEntity.setEvent_date(new Date());
+		//historyEntity.setCreatedBy(user);
+		//historyEntity.setCreation_date(new Date());
+		//historyEntity.setModifiedBy(user);
+		//historyEntity.setModification_date(new Date());
+		//historyDAO.persist(historyEntity);
 		// end marker history 
 		
 		// create marker synonyms, if provided
@@ -230,6 +246,28 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Marker entity = markerDAO.get(key);
 		markerDAO.remove(entity);
 		return results;
+	}
+	
+	@Transactional
+	public void processHistory(MarkerDomain domain, User user) {
+		// create marker history assignment
+		// create 1 marker history row to track the initial marker assignment
+		//String cmd = "select count(*) from MGI_insertHistory ("
+		//		+ user.get_user_key().intValue()
+		//		+ "," + entity.get_marker_key()
+		//		+ "," + domain.getMarkerKey()
+		//		+ ",22864,1,-1"
+		//		+ "," + entity.getName()
+		//		+ ",now()"
+		//		+ "," + user.get_user_key().intValue()
+		//		+ "," + user.get_user_key().intValue()
+		//		+ ",now(),now()"
+		//		+ ")";
+
+		//log.info("cmd: " + cmd);
+		//Query query = markerDAO.createNativeQuery(cmd);
+		//query.getResultList();
+		return;
 	}
 
 	@Transactional

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -124,6 +125,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			refKey = domain.getHistory().get(0).getRefKey().toString();
 		}
 		
+		// event = assigned (1)
+		// event reason = Not Specified (-1)
 		String cmd = "select count(*) from MRK_insertHistory ("
 				+ user.get_user_key().intValue()
 				+ "," + entity.get_marker_key()
@@ -201,7 +204,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		processNote(domain, domain.getStrainNote(), "2", "1035", user);
 		processNote(domain, domain.getLocationNote(), "2", "1049", user);
 
-		// add markerHistoryDAO
+		//processHistory(domain, user);
+		
 		// add markerSynonymDAO
 		// add markerAccessionDAO
 		
@@ -244,33 +248,52 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		for (int i = 0; i < domain.getHistory().size(); i++) {
 			
-			log.info(domain.getHistory().get(i));
+			String historySymbolKey = domain.getHistory().get(i).getMarkerHistorySymbolKey();
+			String historyName = domain.getHistory().get(i).getMarkerHistoryName();
 			
-			if (domain.getHistory().get(i).getMarkerHistoryKey().get_marker_key() == 0) {
+			log.info("processHistory: " + domain.getHistory().get(i));
+			log.info("get_marker_key: " + domain.getHistory().get(i).getMarkerHistoryKey().get_marker_key());
+			log.info("history symbol key: " + historySymbolKey);
+			log.info("history name: " + historyName);
 
+			if (domain.getHistory().get(i).getMarkerHistoryKey().getSequenceNum() == 0) {
+				log.info("process history insert");
 				cmd = "select count(*) from MRK_insertHistory ("
 							+ user.get_user_key().intValue()
 							+ "," + domain.getMarkerKey()
-							+ "," + domain.getMarkerKey()
+							+ "," + historySymbolKey
 							+ "," + domain.getHistory().get(i).getRefKey()
 							+ "," + domain.getHistory().get(i).getMarkerEventKey()
 							+ "," + domain.getHistory().get(i).getMarkerEventReasonKey()
-							+ ",'" + domain.getHistory().get(i).getMarkerHistoryName() + "'"
+							+ ",'" + historyName + "'"
 							+ ")";
-			
 				log.info("cmd: " + cmd);
 				Query query = markerDAO.createNativeQuery(cmd);
 				query.getResultList();
 			}
-			//else if (domain.getHistory().get(i).getMarkerHistorySymbol() == null 
-			//		&& domain.getHistory().get(i).getMarkerHistoryName() == null) {
+			else if (historySymbolKey == "" && historyName == "") {
 				// process delete
-				//MarkerHistory entity = historyDAO.get(domain.getHistory().get(i).getMarkerHistoryKey());
-				//historyDAO.remove(entity);
-			//}
+				log.info("process history delete");
+				log.info("print marker key: " + domain.getHistory().get(i).getMarkerHistoryKey().get_marker_key());
+				log.info("print sequence: " + domain.getHistory().get(i).getMarkerHistoryKey().getSequenceNum());
+				Map<String, Object> historyPK = new HashMap<>();
+				historyPK.put("_marker_key", domain.getHistory().get(i).getMarkerHistoryKey().get_marker_key());
+				historyPK.put("sequenceNum", domain.getHistory().get(i).getMarkerHistoryKey().getSequenceNum());
+				MarkerHistory entity = historyDAO.get(historyPK);
+				log.info("history entity: " + entity.getMarkerHistory());
+				historyDAO.remove(entity);
+			}
 			//else {
 				// process update
-				//historyDAO.update(entity);
+			//	log.info("process history update");
+			//	Map<String, Object> historyPK = new HashMap<>();
+			//	historyPK.put("_marker_key", domain.getHistory().get(i).getMarkerHistoryKey().get_marker_key());
+			//	historyPK.put("sequenceNum", domain.getHistory().get(i).getMarkerHistoryKey().getSequenceNum());
+			//	MarkerHistory entity = historyDAO.get(historyPK);
+			//	entity.setName(entity.getName());
+			//	entity.setModifiedBy(user);
+			//	entity.setModification_date(new Date());
+			//	historyDAO.update(entity);
 			//}
 			
 			// save this example of creating MarkerHistory without using SP
@@ -278,18 +301,13 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			//MarkerHistoryKey markerHistoryKey = new MarkerHistoryKey();
 			//markerHistoryKey.set_marker_key(entity.get_marker_key());
 			//markerHistoryKey.setSequenceNum(1);
-			//historyEntity.setKey(markerHistoryKey);
-			//historyEntity.setMarkerEvent(eventDAO.get(Integer.valueOf(1)));
-			//historyEntity.setMarkerEventReason(eventReasonDAO.get(Integer.valueOf(-1)));
-			//historyEntity.setMarkerHistory(entity);
-			//historyEntity.setReference(referenceDAO.get(Integer.valueOf(22864)));
-			//historyEntity.setName(entity.getName());
-			//historyEntity.setEvent_date(new Date());
-			//historyEntity.setCreatedBy(user);
-			//historyEntity.setCreation_date(new Date());
-			//historyEntity.setModifiedBy(user);
-			//historyEntity.setModification_date(new Date());
-			//historyDAO.persist(historyEntity);
+			//entity.setKey(markerHistoryKey);
+			//entity.setMarkerEvent(eventDAO.get(Integer.valueOf(1)));
+			//entity.setMarkerEventReason(eventReasonDAO.get(Integer.valueOf(-1)));
+			//entity.setMarkerHistory(entity);
+			//entity.setReference(referenceDAO.get(Integer.valueOf(22864)));
+			//entity.setEvent_date(new Date());
+
 		}
 		
 		return;
@@ -313,7 +331,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			noteKey = "null";
 		}
 	
-		if (noteDomain.getNoteChunk() != null || noteDomain.getNoteChunk() != "") {
+		if (noteDomain.getNoteChunk() != null && noteDomain.getNoteChunk() != "") {
 			note = "'" + noteDomain.getNoteChunk().toString() + "'";
 		}
 		else {

@@ -7,6 +7,7 @@ import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
 import org.jboss.logging.Logger;
@@ -17,6 +18,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	
 	private NoteTranslator noteTranslator = new NoteTranslator();
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
+	private MarkerHistoryTranslator historyTranslator = new MarkerHistoryTranslator();
 	
 	//private TermTranslator termTranslator = new TermTranslator();
 	//private SequenceMarkerCacheTranslator biotypesTranslator = new SequenceMarkerCacheTranslator();
@@ -90,6 +92,14 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			Iterable<AccessionDomain> mgiAccessionIds = accessionTranslator.translateEntities(entity.getMgiAccessionIds(), translationDepth - 1);
 			if(mgiAccessionIds.iterator().hasNext() == true) {
 				domain.setMgiAccessionIds(IteratorUtils.toList(mgiAccessionIds.iterator()));
+			}
+		}
+		
+		// one-to-many marker history
+		if (entity.getHistory() != null) {
+			Iterable<MarkerHistoryDomain> h = historyTranslator.translateEntities(entity.getHistory(), translationDepth - 1);
+			if(h.iterator().hasNext() == true) {
+				domain.setHistory(IteratorUtils.toList(h.iterator()));
 			}
 		}
 		

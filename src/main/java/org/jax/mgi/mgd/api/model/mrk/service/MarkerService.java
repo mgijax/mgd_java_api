@@ -12,8 +12,10 @@ import javax.inject.Inject;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -26,6 +28,7 @@ import org.jax.mgi.mgd.api.model.mrk.dao.MarkerTypeDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIResultDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.entities.MarkerHistory;
 import org.jax.mgi.mgd.api.model.mrk.entities.MarkerHistoryKey;
@@ -55,12 +58,12 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	@Inject
 	private MarkerTypeDAO markerTypeDAO;
 
-	@Inject
-	private EventDAO eventDAO;
-	@Inject
-	private EventReasonDAO eventReasonDAO;
-	@Inject
-	private ReferenceDAO referenceDAO;
+	//@Inject
+	//private EventDAO eventDAO;
+	//@Inject
+	//private EventReasonDAO eventReasonDAO;
+	//@Inject
+	//private ReferenceDAO referenceDAO;
 
 	private MarkerTranslator translator = new MarkerTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
@@ -111,44 +114,28 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		// create marker history assignment
 		// create 1 marker history row to track the initial marker assignment
+		
+		// default reference is J:23000 (22864)
+		String refKey;
+		if (domain.getHistory() == null) {
+			refKey = "22864";
+		}
+		else {
+			refKey = domain.getHistory().get(0).getRefKey().toString();
+		}
+		
 		String cmd = "select count(*) from MRK_insertHistory ("
 				+ user.get_user_key().intValue()
 				+ "," + entity.get_marker_key()
 				+ "," + entity.get_marker_key()
-				+ ",22864,1,-1"
+				+ "," + refKey
+				+ ",1,-1"
 				+ ",'" + entity.getName() + "'"
 				+ ")";
 
 		log.info("cmd: " + cmd);
 		Query query = markerDAO.createNativeQuery(cmd);
 		query.getResultList();
-		
-		//MarkerHistory historyEntity = new MarkerHistory();
-		
-		// set primary key = compound/embedded id (new marker key, sequenceNum = 1)
-		// default marker event = 1 (assigned)
-		// default marker event reason = -1 (Not Specified)
-		// default reference = 22864 (J:23000)
-		// default history symbol key = new marker key (same as primary)
-		// default history name = marker name
-		
-		//MarkerHistoryKey markerHistoryKey = new MarkerHistoryKey();
-		//markerHistoryKey.set_marker_key(entity.get_marker_key());
-		//markerHistoryKey.setSequenceNum(1);
-		//historyEntity.setKey(markerHistoryKey);
-		// rest of marker attributes
-		//historyEntity.setMarkerEvent(eventDAO.get(Integer.valueOf(1)));
-		//historyEntity.setMarkerEventReason(eventReasonDAO.get(Integer.valueOf(-1)));
-		//historyEntity.setMarkerHistory(entity);
-		//historyEntity.setReference(referenceDAO.get(Integer.valueOf(22864)));
-		//historyEntity.setName(entity.getName());
-		//historyEntity.setEvent_date(new Date());
-		//historyEntity.setCreatedBy(user);
-		//historyEntity.setCreation_date(new Date());
-		//historyEntity.setModifiedBy(user);
-		//historyEntity.setModification_date(new Date());
-		//historyDAO.persist(historyEntity);
-		// end marker history 
 		
 		// create marker synonyms, if provided
 		
@@ -247,22 +234,64 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	@Transactional
 	public void processHistory(MarkerDomain domain, User user) {
 		// create marker history assignment
-		// create 1 marker history row to track the initial marker assignment
-		//String cmd = "select count(*) from MGI_insertHistory ("
-		//		+ user.get_user_key().intValue()
-		//		+ "," + entity.get_marker_key()
-		//		+ "," + domain.getMarkerKey()
-		//		+ ",22864,1,-1"
-		//		+ "," + entity.getName()
-		//		+ ",now()"
-		//		+ "," + user.get_user_key().intValue()
-		//		+ "," + user.get_user_key().intValue()
-		//		+ ",now(),now()"
-		//		+ ")";
+		// iterate thru each history row
+		
+		if (domain.getHistory().isEmpty()) {
+			return;
+		}
+		
+		String cmd = "";
+		
+		for (int i = 0; i < domain.getHistory().size(); i++) {
+			
+			log.info(domain.getHistory().get(i));
+			
+			if (domain.getHistory().get(i).getMarkerHistoryKey().get_marker_key() == 0) {
 
-		//log.info("cmd: " + cmd);
-		//Query query = markerDAO.createNativeQuery(cmd);
-		//query.getResultList();
+				cmd = "select count(*) from MRK_insertHistory ("
+							+ user.get_user_key().intValue()
+							+ "," + domain.getMarkerKey()
+							+ "," + domain.getMarkerKey()
+							+ "," + domain.getHistory().get(i).getRefKey()
+							+ "," + domain.getHistory().get(i).getMarkerEventKey()
+							+ "," + domain.getHistory().get(i).getMarkerEventReasonKey()
+							+ ",'" + domain.getHistory().get(i).getMarkerHistoryName() + "'"
+							+ ")";
+			
+				log.info("cmd: " + cmd);
+				Query query = markerDAO.createNativeQuery(cmd);
+				query.getResultList();
+			}
+			//else if (domain.getHistory().get(i).getMarkerHistorySymbol() == null 
+			//		&& domain.getHistory().get(i).getMarkerHistoryName() == null) {
+				// process delete
+				//MarkerHistory entity = historyDAO.get(domain.getHistory().get(i).getMarkerHistoryKey());
+				//historyDAO.remove(entity);
+			//}
+			//else {
+				// process update
+				//historyDAO.update(entity);
+			//}
+			
+			// save this example of creating MarkerHistory without using SP
+			//MarkerHistory historyEntity = new MarkerHistory();
+			//MarkerHistoryKey markerHistoryKey = new MarkerHistoryKey();
+			//markerHistoryKey.set_marker_key(entity.get_marker_key());
+			//markerHistoryKey.setSequenceNum(1);
+			//historyEntity.setKey(markerHistoryKey);
+			//historyEntity.setMarkerEvent(eventDAO.get(Integer.valueOf(1)));
+			//historyEntity.setMarkerEventReason(eventReasonDAO.get(Integer.valueOf(-1)));
+			//historyEntity.setMarkerHistory(entity);
+			//historyEntity.setReference(referenceDAO.get(Integer.valueOf(22864)));
+			//historyEntity.setName(entity.getName());
+			//historyEntity.setEvent_date(new Date());
+			//historyEntity.setCreatedBy(user);
+			//historyEntity.setCreation_date(new Date());
+			//historyEntity.setModifiedBy(user);
+			//historyEntity.setModification_date(new Date());
+			//historyDAO.persist(historyEntity);
+		}
+		
 		return;
 	}
 

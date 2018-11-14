@@ -6,16 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mrk.dao.MarkerHistoryDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.MarkerHistoryKey;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerHistorySearchForm;
-import org.jax.mgi.mgd.api.model.mrk.translator.MarkerHistoryTranslator;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -109,7 +106,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				markerHistoryDomain.setMarkerEventReason(rs.getString("eventreason"));
 				markerHistoryDomain.setMarkerHistorySymbolKey(rs.getString("_history_key"));
 				markerHistoryDomain.setMarkerHistorySymbol(rs.getString("history"));
-				markerHistoryDomain.setMarkerHistoryName(rs.getString("historyName"));
+				markerHistoryDomain.setMarkerHistoryName(rs.getString("name"));
 				markerHistoryDomain.setRefKey(rs.getInt("_refs_key"));
 				markerHistoryDomain.setJnumid(rs.getString("jnumid"));
 				markerHistoryDomain.setShort_citation(rs.getString("short_citation"));

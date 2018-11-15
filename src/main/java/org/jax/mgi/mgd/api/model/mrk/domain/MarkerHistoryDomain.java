@@ -10,23 +10,23 @@ import lombok.Setter;
 @Getter @Setter
 public class MarkerHistoryDomain extends BaseDomain {
 	
-	private int assocKey;
-	private int markerKey;
-	private int sequenceNum;
-	private Integer markerEventKey;
+	private String assocKey;
+	private String markerKey;
+	private String sequenceNum;
+	private String markerEventKey;
 	private String markerEvent;
-	private Integer markerEventReasonKey;
+	private String markerEventReasonKey;
 	private String markerEventReason;
 	private String markerHistorySymbolKey;
 	private String markerHistorySymbol;
 	private String markerHistoryName;
-	private Integer refKey;
+	private String refKey;
 	private String jnumid;
 	private String short_citation;
 	private Date event_date;
-	private Integer createdByKey;
+	private String createdByKey;
 	private String createdBy;
-	private Integer modifiedByKey;
+	private String modifiedByKey;
 	private String modifiedBy;
 	private Date creation_date;
 	private Date modification_date;    

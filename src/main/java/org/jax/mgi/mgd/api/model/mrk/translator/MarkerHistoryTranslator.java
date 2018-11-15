@@ -10,13 +10,13 @@ public class MarkerHistoryTranslator extends BaseEntityDomainTranslator<MarkerHi
 	protected MarkerHistoryDomain entityToDomain(MarkerHistory entity, int translationDepth) {
 		MarkerHistoryDomain domain = new MarkerHistoryDomain();
 		
-		domain.setAssocKey(entity.get_assoc_key());
-		domain.setMarkerKey(entity.get_marker_key());
-		domain.setSequenceNum(entity.getSequenceNum());
+		domain.setAssocKey(String.valueOf(entity.get_assoc_key()));
+		domain.setMarkerKey(String.valueOf(entity.get_marker_key()));
+		domain.setSequenceNum(String.valueOf(entity.getSequenceNum()));
 		
-		domain.setMarkerEventKey(entity.getMarkerEvent().get_marker_event_key());
-		domain.setMarkerEvent(entity.getMarkerEvent().getEvent());
-		domain.setMarkerEventReasonKey(entity.getMarkerEventReason().get_marker_eventreason_key());
+		domain.setMarkerEventKey(String.valueOf(entity.getMarkerEvent().get_marker_event_key()));
+		domain.setMarkerEvent(String.valueOf(entity.getMarkerEvent().getEvent()));
+		domain.setMarkerEventReasonKey(String.valueOf(entity.getMarkerEventReason().get_marker_eventreason_key()));
 		domain.setMarkerEventReason(entity.getMarkerEventReason().getEventReason());
 		
 		// int -> Integer -> String
@@ -24,17 +24,18 @@ public class MarkerHistoryTranslator extends BaseEntityDomainTranslator<MarkerHi
 		domain.setMarkerHistorySymbol(entity.getMarkerHistory().getSymbol());
 		domain.setMarkerHistoryName(entity.getName());
 		
+		// reference can be null
 		if (entity.getReference() != null) {
-			domain.setRefKey(entity.getReference().get_refs_key());
+			domain.setRefKey(String.valueOf(entity.getReference().get_refs_key()));
 			domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());
 			domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());
 		}
 		
-		domain.setCreatedByKey(entity.getCreatedBy().get_user_key());
-		domain.setCreatedBy(entity.getCreatedBy().getName());
-		domain.setModifiedByKey(entity.getModifiedBy().get_user_key());
-		domain.setModifiedBy(entity.getModifiedBy().getName());
 		domain.setEvent_date(entity.getEvent_date());
+		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
+		domain.setCreatedBy(entity.getCreatedBy().getName());
+		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
+		domain.setModifiedBy(entity.getModifiedBy().getName());
 		domain.setCreation_date(entity.getCreation_date());
 		domain.setModification_date(entity.getModification_date());
 		

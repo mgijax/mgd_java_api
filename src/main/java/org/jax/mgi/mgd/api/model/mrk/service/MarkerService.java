@@ -13,9 +13,12 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mrk.dao.EventDAO;
+import org.jax.mgi.mgd.api.model.mrk.dao.EventReasonDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerHistoryDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerStatusDAO;
@@ -52,12 +55,12 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	@Inject
 	private MarkerTypeDAO markerTypeDAO;
 
-	//@Inject
-	//private EventDAO eventDAO;
-	//@Inject
-	//private EventReasonDAO eventReasonDAO;
-	//@Inject
-	//private ReferenceDAO referenceDAO;
+	@Inject
+	private EventDAO eventDAO;
+	@Inject
+	private EventReasonDAO eventReasonDAO;
+	@Inject
+	private ReferenceDAO referenceDAO;
 
 	private MarkerTranslator translator = new MarkerTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
@@ -148,7 +151,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// creation user/date are only set in "create"
 
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
-		Marker entity = markerDAO.get(domain.getMarkerKey());
+		Marker entity = markerDAO.get(Integer.valueOf(domain.getMarkerKey()));
 		
 		// set entity fields
 		entity.setSymbol(domain.getSymbol());
@@ -198,7 +201,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		processNote(domain, domain.getStrainNote(), "2", "1035", user);
 		processNote(domain, domain.getLocationNote(), "2", "1049", user);
 
-		processHistory(domain.getHistory(), user);
+		processHistory(domain.getMarkerKey(), domain.getHistory(), user);
 		
 		// add markerSynonymDAO
 		// add markerAccessionDAO
@@ -230,63 +233,139 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}
 	
 	@Transactional
-	public void processHistory(List<MarkerHistoryDomain> history, User user) {
-		// create marker history assignment
-		// iterate thru each history row
+	public void processHistory(String parentKey, List<MarkerHistoryDomain> domain, User user) {
+		// create marker history associations
 				
-		if (history.isEmpty()) {
+		if (domain.isEmpty()) {
 			return;
 		}
 		
 		String cmd = "";
 		
-		for (int i = 0; i < history.size(); i++) {
-				
-			log.info("processHistory: " + history.get(i));
-			log.info("assoc key: " + history.get(i).getAssocKey());
-			log.info("get_marker_key: " + history.get(i).getMarkerKey());
-			log.info("history symbol key: " + history.get(i).getMarkerHistorySymbolKey());
-			log.info("history name: " + history.get(i).getMarkerHistoryName());
+		log.info("processHistory for marker key: " + parentKey);
 
-			if (history.get(i).getAssocKey() == 0) {
+		// iterate thru the list of history rows in the history domain
+		// for each row, determine whether to perform an insert, delete or update
+		
+		for (int i = 0; i < domain.size(); i++) {
+				
+			log.info("assoc key: " + domain.get(i).getAssocKey());
+			log.info("history symbol key: " + domain.get(i).getMarkerHistorySymbolKey());
+			log.info("history name: " + domain.get(i).getMarkerHistoryName());
+
+			if (domain.get(i).getAssocKey() == null 
+					|| domain.get(i).getAssocKey().isEmpty()
+					|| domain.get(i).getAssocKey() == "null") {
 				log.info("process history insert");
 				cmd = "select count(*) from MRK_insertHistory ("
 							+ user.get_user_key().intValue()
-							+ "," + history.get(i).getMarkerKey()
-							+ "," + history.get(i).getMarkerHistorySymbolKey()
-							+ "," + history.get(i).getRefKey()
-							+ "," + history.get(i).getMarkerEventKey()
-							+ "," + history.get(i).getMarkerEventReasonKey()
-							+ ",'" + history.get(i).getMarkerHistoryName() + "'"
+							+ "," + parentKey
+							+ "," + domain.get(i).getMarkerHistorySymbolKey()
+							+ "," + domain.get(i).getRefKey()
+							+ "," + domain.get(i).getMarkerEventKey()
+							+ "," + domain.get(i).getMarkerEventReasonKey()
+							+ ",'" + domain.get(i).getMarkerHistoryName() + "'"
 							+ ")";
 				log.info("cmd: " + cmd);
 				Query query = markerDAO.createNativeQuery(cmd);
 				query.getResultList();
 			}
-			else if (history.get(i).getMarkerHistorySymbolKey().isEmpty()
-					&& history.get(i).getMarkerHistoryName().isEmpty()) {
+			else if (domain.get(i).getMarkerHistorySymbolKey().isEmpty()
+					&& domain.get(i).getMarkerHistoryName().isEmpty()) {
 				// process delete
-				log.info("processHistory delete");
-				log.info("marker key: " + history.get(i).getMarkerKey());
-				log.info("sequence: " + history.get(i).getSequenceNum());
-				MarkerHistory entity = historyDAO.get(history.get(i).getAssocKey());
+				log.info("processHistory delete by key: " + domain.get(i).getAssocKey());
+				
+				MarkerHistory entity = historyDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
 				historyDAO.remove(entity);
-				cmd = "select count(*) from MGI_resetSequenceNum('MRK_History'," 
-						+ history.get(i).getMarkerKey()
-						+ user.get_user_key().intValue()
+				
+				// reset the sequence numbers
+				cmd = "select count(*) from MGI_resetSequenceNum('MRK_History'" 
+						+ "," + parentKey
+						+ "," + user.get_user_key().intValue()
 						+ ")";
 				Query query = markerDAO.createNativeQuery(cmd);
 				query.getResultList();
-				log.info("processHistory delete done");
+				
+				log.info("processHistory delete successful");
 			}
 			else {
 				// process update
-				log.info("processHistory update");
-				//historyDAO.update(history.get(i));
+				log.info("processHistory update by key: " + domain.get(i).getAssocKey());
+				
+				Boolean modified = false;
+				
+				MarkerHistory entity = historyDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
+				
+				log.info("checking marker key");
+				if (!String.valueOf(entity.get_marker_key()).equals(domain.get(i).getMarkerKey())) {
+					entity.set_marker_key(Integer.valueOf(domain.get(i).getMarkerKey()));
+					modified = true;
+				}
+				
+				log.info("checking event");
+				if (!entity.getMarkerEvent().equals(eventDAO.get(Integer.valueOf(domain.get(i).getMarkerEventKey())))) {
+					entity.setMarkerEvent(eventDAO.get((Integer.valueOf(domain.get(i).getMarkerEventKey()))));
+					modified = true;
+				}
+				
+				log.info("checking event reason");
+				if (!entity.getMarkerEventReason().equals(eventReasonDAO.get(Integer.valueOf(domain.get(i).getMarkerEventReasonKey())))) {
+					entity.setMarkerEventReason(eventReasonDAO.get(Integer.valueOf(domain.get(i).getMarkerEventReasonKey())));
+					modified = true;
+				}
+				
+				log.info("checking reference");
+				// reference can be null
+				if (!(entity.getReference() == null && domain.get(i).getRefKey() == null)) {
+					if (!entity.getReference().get_refs_key().equals(Integer.valueOf(domain.get(i).getRefKey()))) {
+						entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefKey())));
+						modified = true;
+					}
+				}
+				else if (domain.get(i).getRefKey() == null) {
+					entity.setReference(null);
+					modified = true;
+				}
+				else {
+					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefKey())));
+					modified = true;
+				}
+				
+				log.info("checking name");
+				// name can be null
+				if (!entity.getName().equals(domain.get(i).getMarkerHistoryName())) {
+					if (domain.get(i).getMarkerHistoryName() == null 
+						&& domain.get(i).getMarkerHistoryName().isEmpty()) {
+						entity.setName(null);
+					}
+					else {
+						entity.setName(domain.get(i).getMarkerHistoryName());
+					}
+					modified = true;
+				}
+				
+				log.info("checking event date");
+				log.info("entity date: " + entity.getEvent_date());
+				log.info("domain date: " + domain.get(i).getEvent_date());
+				//if (!entity.getEvent_date().equals(domain.get(i).getEvent_date())) {
+				//	entity.setEvent_date(domain.get(i).getEvent_date());
+				//	modified = true;
+				//}
+				
+				log.info("checking if modified");
+				if (modified == true) {
+					entity.setModification_date(new Date());
+					entity.setModifiedBy(user);
+					historyDAO.update(entity);
+					log.info("processHistory/changes processed: " + domain.get(i).getAssocKey());
+				}
+				else {
+					log.info("processHistory/no changes processed: " + domain.get(i).getAssocKey());
+				}
 			}
-			
 		}
 		
+		log.info("processHistory/ran successfully");
 		return;
 	}
 

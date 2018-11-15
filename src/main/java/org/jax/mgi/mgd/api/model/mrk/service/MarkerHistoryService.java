@@ -91,23 +91,23 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				
 				MarkerHistoryDomain markerHistoryDomain = new MarkerHistoryDomain();
 				
-				markerHistoryDomain.setAssocKey(rs.getInt("_assoc_key"));
-				markerHistoryDomain.setMarkerKey(rs.getInt("_marker_key"));
-				markerHistoryDomain.setSequenceNum(rs.getInt("sequencenum"));
-				markerHistoryDomain.setMarkerEventKey(rs.getInt("_marker_event_key"));
+				markerHistoryDomain.setAssocKey(rs.getString("_assoc_key"));
+				markerHistoryDomain.setMarkerKey(rs.getString("_marker_key"));
+				markerHistoryDomain.setSequenceNum(rs.getString("sequencenum"));
+				markerHistoryDomain.setMarkerEventKey(rs.getString("_marker_event_key"));
 				markerHistoryDomain.setMarkerEvent(rs.getString("event"));
-				markerHistoryDomain.setMarkerEventReasonKey(rs.getInt("_marker_eventreason_key"));
+				markerHistoryDomain.setMarkerEventReasonKey(rs.getString("_marker_eventreason_key"));
 				markerHistoryDomain.setMarkerEventReason(rs.getString("eventreason"));
 				markerHistoryDomain.setMarkerHistorySymbolKey(rs.getString("_history_key"));
 				markerHistoryDomain.setMarkerHistorySymbol(rs.getString("history"));
 				markerHistoryDomain.setMarkerHistoryName(rs.getString("name"));
-				markerHistoryDomain.setRefKey(rs.getInt("_refs_key"));
+				markerHistoryDomain.setRefKey(rs.getString("_refs_key"));
 				markerHistoryDomain.setJnumid(rs.getString("jnumid"));
 				markerHistoryDomain.setShort_citation(rs.getString("short_citation"));
 				markerHistoryDomain.setEvent_date(rs.getDate("event_date"));
-				markerHistoryDomain.setCreatedByKey(rs.getInt("_createdby_key"));
+				markerHistoryDomain.setCreatedByKey(rs.getString("_createdby_key"));
 				markerHistoryDomain.setCreatedBy(rs.getString("createdBy"));
-				markerHistoryDomain.setModifiedByKey(rs.getInt("_modifiedby_key"));
+				markerHistoryDomain.setModifiedByKey(rs.getString("_modifiedby_key"));
 				markerHistoryDomain.setModifiedBy(rs.getString("modifiedBy"));
 				markerHistoryDomain.setCreation_date(rs.getDate("creation_date"));
 				markerHistoryDomain.setModification_date(rs.getDate("modification_date"));

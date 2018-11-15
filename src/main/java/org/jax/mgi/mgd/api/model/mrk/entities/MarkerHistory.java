@@ -24,6 +24,7 @@ public class MarkerHistory extends BaseEntity {
 
 	@Id
 	private int _assoc_key;
+	
 	private int _marker_key;
 	private int sequenceNum;
 	private String name;

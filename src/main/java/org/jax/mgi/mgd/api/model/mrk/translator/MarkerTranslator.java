@@ -96,12 +96,12 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		}
 		
 		// one-to-many marker history
-		//if (entity.getHistory() != null) {
-		//	Iterable<MarkerHistoryDomain> h = historyTranslator.translateEntities(entity.getHistory(), translationDepth - 1);
-		//	if(h.iterator().hasNext() == true) {
-		//		domain.setHistory(IteratorUtils.toList(h.iterator()));
-		//	}
-		//}
+		if (entity.getHistory() != null) {
+			Iterable<MarkerHistoryDomain> h = historyTranslator.translateEntities(entity.getHistory(), translationDepth - 1);
+			if(h.iterator().hasNext() == true) {
+				domain.setHistory(IteratorUtils.toList(h.iterator()));
+			}
+		}
 		
 		// at most one set of location info
 		//if(entity.getMarkerLocation() != null) {

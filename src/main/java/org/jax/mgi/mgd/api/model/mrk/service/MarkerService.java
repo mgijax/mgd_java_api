@@ -25,6 +25,7 @@ import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIResultDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
+import org.jax.mgi.mgd.api.model.mrk.entities.MarkerHistory;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
@@ -197,7 +198,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		processNote(domain, domain.getStrainNote(), "2", "1035", user);
 		processNote(domain, domain.getLocationNote(), "2", "1049", user);
 
-		processHistory(markerDAO, domain.getHistory(), user);
+		processHistory(domain.getHistory(), user);
 		
 		// add markerSynonymDAO
 		// add markerAccessionDAO
@@ -229,7 +230,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}
 	
 	@Transactional
-	public void processHistory(MarkerDAO markerDAO, List<MarkerHistoryDomain> history, User user) {
+	public void processHistory(List<MarkerHistoryDomain> history, User user) {
 		// create marker history assignment
 		// iterate thru each history row
 				
@@ -242,11 +243,12 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		for (int i = 0; i < history.size(); i++) {
 				
 			log.info("processHistory: " + history.get(i));
-			//log.info("get_marker_key: " + history.get(i).getMarkerHistoryKey().get_marker_key());
+			log.info("assoc key: " + history.get(i).getAssocKey());
+			log.info("get_marker_key: " + history.get(i).getMarkerKey());
 			log.info("history symbol key: " + history.get(i).getMarkerHistorySymbolKey());
 			log.info("history name: " + history.get(i).getMarkerHistoryName());
 
-			if (history.get(i).getSequenceNum() == 0) {
+			if (history.get(i).getAssocKey() == 0) {
 				log.info("process history insert");
 				cmd = "select count(*) from MRK_insertHistory ("
 							+ user.get_user_key().intValue()
@@ -267,7 +269,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				log.info("processHistory delete");
 				log.info("marker key: " + history.get(i).getMarkerKey());
 				log.info("sequence: " + history.get(i).getSequenceNum());
-				markerDAO.remove(history.get(i));
+				MarkerHistory entity = historyDAO.get(history.get(i).getAssocKey());
+				historyDAO.remove(entity);
 				cmd = "select count(*) from MGI_resetSequenceNum('MRK_History'," 
 						+ history.get(i).getMarkerKey()
 						+ user.get_user_key().intValue()

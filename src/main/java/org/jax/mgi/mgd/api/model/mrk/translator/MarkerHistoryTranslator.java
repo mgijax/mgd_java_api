@@ -10,9 +10,9 @@ public class MarkerHistoryTranslator extends BaseEntityDomainTranslator<MarkerHi
 	protected MarkerHistoryDomain entityToDomain(MarkerHistory entity, int translationDepth) {
 		MarkerHistoryDomain domain = new MarkerHistoryDomain();
 		
-		domain.setMarkerHistoryKey(entity.getKey());
-		//domain.setMarkerKey(entity.getKey().get_marker_key());
-		//domain.setSequenceNum(entity.getKey().getSequenceNum());
+		domain.setAssocKey(entity.get_assoc_key());
+		domain.setMarkerKey(entity.get_marker_key());
+		domain.setSequenceNum(entity.getSequenceNum());
 		
 		domain.setMarkerEventKey(entity.getMarkerEvent().get_marker_event_key());
 		domain.setMarkerEvent(entity.getMarkerEvent().getEvent());

@@ -3,7 +3,6 @@ package org.jax.mgi.mgd.api.model.mrk.domain;
 import java.util.Date;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
-import org.jax.mgi.mgd.api.model.mrk.entities.MarkerHistoryKey;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,9 +10,9 @@ import lombok.Setter;
 @Getter @Setter
 public class MarkerHistoryDomain extends BaseDomain {
 	
-	private MarkerHistoryKey markerHistoryKey;
-	//private int markerKey;
-	//private int sequenceNum;
+	private int assocKey;
+	private int markerKey;
+	private int sequenceNum;
 	private Integer markerEventKey;
 	private String markerEvent;
 	private Integer markerEventReasonKey;

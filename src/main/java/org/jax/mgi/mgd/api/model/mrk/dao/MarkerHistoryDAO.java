@@ -7,4 +7,5 @@ public class MarkerHistoryDAO extends PostgresSQLDAO<MarkerHistory> {
 	protected MarkerHistoryDAO() {
 		super(MarkerHistory.class);
 	}
+	
 }

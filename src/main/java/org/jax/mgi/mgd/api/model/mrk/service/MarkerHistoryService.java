@@ -11,7 +11,6 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
-import org.jax.mgi.mgd.api.model.mrk.entities.MarkerHistoryKey;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerHistorySearchForm;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -92,14 +91,9 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				
 				MarkerHistoryDomain markerHistoryDomain = new MarkerHistoryDomain();
 				
-				// store embedded/compound primary key values
-				MarkerHistoryKey markerHistoryKey = new MarkerHistoryKey();
-				markerHistoryKey.set_marker_key(rs.getInt("_marker_key"));
-				markerHistoryKey.setSequenceNum(rs.getInt("sequencenum"));
-				markerHistoryDomain.setMarkerHistoryKey(markerHistoryKey);
-				//markerHistoryDomain.setMarkerKey(rs.getInt("_marker_key"));
-				//markerHistoryDomain.setSequenceNum(rs.getInt("sequencenum"));
-				
+				markerHistoryDomain.setAssocKey(rs.getInt("_assoc_key"));
+				markerHistoryDomain.setMarkerKey(rs.getInt("_marker_key"));
+				markerHistoryDomain.setSequenceNum(rs.getInt("sequencenum"));
 				markerHistoryDomain.setMarkerEventKey(rs.getInt("_marker_event_key"));
 				markerHistoryDomain.setMarkerEvent(rs.getString("event"));
 				markerHistoryDomain.setMarkerEventReasonKey(rs.getInt("_marker_eventreason_key"));

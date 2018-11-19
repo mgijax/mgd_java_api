@@ -2,6 +2,8 @@ package org.jax.mgi.mgd.api.model.mrk.service;
 
 import java.io.IOException;
 import java.sql.ResultSet;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +35,7 @@ import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.DateParser;
 import org.jax.mgi.mgd.api.util.MarkerWithdrawal;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -249,14 +252,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		for (int i = 0; i < domain.size(); i++) {
 				
-			log.info("assoc key: " + domain.get(i).getAssocKey());
-			log.info("history symbol key: " + domain.get(i).getMarkerHistorySymbolKey());
-			log.info("history name: " + domain.get(i).getMarkerHistoryName());
-
 			if (domain.get(i).getAssocKey() == null 
 					|| domain.get(i).getAssocKey().isEmpty()
 					|| domain.get(i).getAssocKey() == "null") {
-				log.info("process history insert");
+				log.info("process history insert/no primary key");
 				cmd = "select count(*) from MRK_insertHistory ("
 							+ user.get_user_key().intValue()
 							+ "," + parentKey
@@ -273,7 +272,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			else if (domain.get(i).getMarkerHistorySymbolKey().isEmpty()
 					&& domain.get(i).getMarkerHistoryName().isEmpty()) {
 				// process delete
-				log.info("processHistory delete by key: " + domain.get(i).getAssocKey());
+				log.info("processHistory delete/symbol/name are null; key =: " + domain.get(i).getAssocKey());
 				
 				MarkerHistory entity = historyDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
 				historyDAO.remove(entity);
@@ -291,30 +290,25 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			else {
 				// process update
 				log.info("processHistory update by key: " + domain.get(i).getAssocKey());
-				
+
 				Boolean modified = false;
-				
 				MarkerHistory entity = historyDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
-				
-				log.info("checking marker key");
+
 				if (!String.valueOf(entity.get_marker_key()).equals(domain.get(i).getMarkerKey())) {
 					entity.set_marker_key(Integer.valueOf(domain.get(i).getMarkerKey()));
 					modified = true;
 				}
 				
-				log.info("checking event");
 				if (!entity.getMarkerEvent().equals(eventDAO.get(Integer.valueOf(domain.get(i).getMarkerEventKey())))) {
 					entity.setMarkerEvent(eventDAO.get((Integer.valueOf(domain.get(i).getMarkerEventKey()))));
 					modified = true;
 				}
 				
-				log.info("checking event reason");
 				if (!entity.getMarkerEventReason().equals(eventReasonDAO.get(Integer.valueOf(domain.get(i).getMarkerEventReasonKey())))) {
 					entity.setMarkerEventReason(eventReasonDAO.get(Integer.valueOf(domain.get(i).getMarkerEventReasonKey())));
 					modified = true;
 				}
 				
-				log.info("checking reference");
 				// reference can be null
 				if (!(entity.getReference() == null && domain.get(i).getRefKey() == null)) {
 					if (!entity.getReference().get_refs_key().equals(Integer.valueOf(domain.get(i).getRefKey()))) {
@@ -331,7 +325,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 					modified = true;
 				}
 				
-				log.info("checking name");
 				// name can be null
 				if (!entity.getName().equals(domain.get(i).getMarkerHistoryName())) {
 					if (domain.get(i).getMarkerHistoryName() == null 
@@ -343,16 +336,17 @@ public class MarkerService extends BaseService<MarkerDomain> {
 					}
 					modified = true;
 				}
+					
+				if (!entity.getEvent_date().toString().equals(domain.get(i).getEvent_date())) {
+					try {
+						entity.setEvent_date(new SimpleDateFormat("yyyy-MM-dd").parse(domain.get(i).getEvent_date()));
+						modified = true;
+					}
+					catch (ParseException  e) {
+						return;
+					}
+				}
 				
-				log.info("checking event date");
-				log.info("entity date: " + entity.getEvent_date());
-				log.info("domain date: " + domain.get(i).getEvent_date());
-				//if (!entity.getEvent_date().equals(domain.get(i).getEvent_date())) {
-				//	entity.setEvent_date(domain.get(i).getEvent_date());
-				//	modified = true;
-				//}
-				
-				log.info("checking if modified");
 				if (modified == true) {
 					entity.setModification_date(new Date());
 					entity.setModifiedBy(user);

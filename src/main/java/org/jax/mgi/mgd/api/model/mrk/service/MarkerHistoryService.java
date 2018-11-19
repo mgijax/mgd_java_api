@@ -104,7 +104,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				markerHistoryDomain.setRefKey(rs.getString("_refs_key"));
 				markerHistoryDomain.setJnumid(rs.getString("jnumid"));
 				markerHistoryDomain.setShort_citation(rs.getString("short_citation"));
-				markerHistoryDomain.setEvent_date(rs.getDate("event_date"));
+				markerHistoryDomain.setEvent_date(rs.getString("event_date"));
 				markerHistoryDomain.setCreatedByKey(rs.getString("_createdby_key"));
 				markerHistoryDomain.setCreatedBy(rs.getString("createdBy"));
 				markerHistoryDomain.setModifiedByKey(rs.getString("_modifiedby_key"));

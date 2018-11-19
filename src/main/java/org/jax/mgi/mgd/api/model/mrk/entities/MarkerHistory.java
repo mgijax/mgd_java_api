@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
@@ -35,7 +37,11 @@ public class MarkerHistory extends BaseEntity {
 	private int _marker_key;
 	private int sequenceNum;
 	private String name;
+	
+	// don't care about the timestamp for this date
+	@Temporal(TemporalType.DATE)
 	private Date event_date;
+	
 	private Date creation_date;
 	private Date modification_date;
 

@@ -31,7 +31,10 @@ public class MarkerHistoryTranslator extends BaseEntityDomainTranslator<MarkerHi
 			domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());
 		}
 		
-		domain.setEvent_date(entity.getEvent_date());
+		if (entity.getEvent_date() != null) {
+			domain.setEvent_date(dateFormatNoTime.format(entity.getEvent_date()));
+		}
+		
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getName());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());

@@ -23,7 +23,7 @@ public class MarkerHistoryDomain extends BaseDomain {
 	private String refKey;
 	private String jnumid;
 	private String short_citation;
-	private Date event_date;
+	private String event_date;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

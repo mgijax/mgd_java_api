@@ -109,8 +109,8 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				markerHistoryDomain.setCreatedBy(rs.getString("createdBy"));
 				markerHistoryDomain.setModifiedByKey(rs.getString("_modifiedby_key"));
 				markerHistoryDomain.setModifiedBy(rs.getString("modifiedBy"));
-				markerHistoryDomain.setCreation_date(rs.getDate("creation_date"));
-				markerHistoryDomain.setModification_date(rs.getDate("modification_date"));
+				markerHistoryDomain.setCreation_date(rs.getString("creation_date"));
+				markerHistoryDomain.setModification_date(rs.getString("modification_date"));
 				
 				results.add(markerHistoryDomain);
 			}

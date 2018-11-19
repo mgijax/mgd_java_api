@@ -35,7 +35,6 @@ import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.DateParser;
 import org.jax.mgi.mgd.api.util.MarkerWithdrawal;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;

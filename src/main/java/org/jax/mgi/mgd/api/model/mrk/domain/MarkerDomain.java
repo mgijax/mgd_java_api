@@ -30,8 +30,8 @@ public class MarkerDomain extends BaseDomain {
 	private String createdBy;
 	private String modifiedByKey;
 	private String modifiedBy;
-	private Date creation_date;
-	private Date modification_date;
+	private String creation_date;
+	private String modification_date;
 	
 	private NoteDomain editorNote;
 	private NoteDomain sequenceNote;

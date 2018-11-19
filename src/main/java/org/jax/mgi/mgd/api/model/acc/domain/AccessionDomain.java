@@ -26,6 +26,6 @@ public class AccessionDomain extends BaseDomain {
 	private Integer preferred;
 	private String createdByUser;
 	private String modifiedByUser;
-	private Date creation_date;
-	private Date modification_date;
+	private String creation_date;
+	private String modification_date;
 }

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 public abstract class BaseEntityDomainTranslator<E extends BaseEntity, D extends BaseDomain> {
 
 	protected SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
+	
+	// to copy what teleuse/ei does
     protected SimpleDateFormat dateFormatNoTime = new SimpleDateFormat("yyyy-MM-dd");
     
 	public E translate(D domain) {

@@ -21,8 +21,8 @@ public class AccessionTranslator extends BaseEntityDomainTranslator<Accession, A
 		domain.setPreferred(entity.getPreferred());
 		domain.setCreatedByUser(entity.getCreatedByUser().getName());
 		domain.setModifiedByUser(entity.getModifiedByUser().getName());
-		domain.setCreation_date(entity.getCreation_date());
-		domain.setModification_date(entity.getModification_date());
+		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
+		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
 		if(translationDepth > 0) {
 		}

@@ -42,6 +42,10 @@ public class MarkerSearchForm extends BaseSearchForm {
 	private String historyEventReason;
 	private String historyModifiedBy;
 	
+	// synonym
+	private String synonymName;
+	private String synonymRefKey;
+	
 	@Override
 	public Map<String, Object> getSearchFields() {
 		Map<String, Object> ret = new HashMap<>();
@@ -75,6 +79,10 @@ public class MarkerSearchForm extends BaseSearchForm {
 		if(historyEvent != null && historyEvent != "") { ret.put("historyEvent",  historyEvent); }
 		if(historyEventReason != null && historyEventReason != "") { ret.put("historyEventReason",  historyEventReason); }
 		if(historyModifiedBy != null && historyModifiedBy != "") { ret.put("historyModifiedBy",  historyModifiedBy); }
+
+		// synonym
+		if(synonymName != null && synonymName != "") { ret.put("synonymName",  synonymName); }
+		if(synonymRefKey != null && synonymRefKey != "") { ret.put("synonymRefKey",  synonymRefKey); }
 
 		return ret;
 	}

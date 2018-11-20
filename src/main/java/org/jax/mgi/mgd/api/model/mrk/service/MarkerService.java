@@ -549,6 +549,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Boolean from_locationNote = false;
 		Boolean from_accession = false;
 		Boolean from_history = false;
+		Boolean from_synonym = false;
 
 		// if parameter exists, then add to where-clause
 		
@@ -642,6 +643,16 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			from_history = true;
 		}
 
+		// synonym
+		if (params.containsKey("synonymName")) {
+			where = where + "\nand ms.synonym ilike '" + params.get("synonymName") + "'";
+			from_synonym = true;
+		}
+		if (params.containsKey("synonymRef")) {
+			where = where + "\nand ms._Ref_key = " + params.get("synonymRef");
+			from_synonym = true;
+		}
+		
 		if (from_accession == true) {
 			// using this view to match the teleuse implementation
 			from = from + ", mrk_accnoref_view a";
@@ -671,6 +682,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		if (from_history == true) {
 			from = from + ", mrk_history_view mh";
 			where = where + "\nand m._marker_key = mh._marker_key";
+		}
+		if (from_synonym == true) {
+			from = from + ", mgi_synonym_musmarker_view ms";
+			where = where + "\nand m._marker_key = ms._object_key";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

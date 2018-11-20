@@ -35,6 +35,7 @@ import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.MarkerWithdrawal;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -252,8 +253,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		for (int i = 0; i < domain.size(); i++) {
 				
 			if (domain.get(i).getAssocKey() == null 
-					|| domain.get(i).getAssocKey().isEmpty()
-					|| domain.get(i).getAssocKey() == "null") {
+					|| domain.get(i).getAssocKey().isEmpty()) {
 				log.info("process history insert/no primary key");
 				cmd = "select count(*) from MRK_insertHistory ("
 							+ user.get_user_key().intValue()
@@ -338,6 +338,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 					
 				if (!entity.getEvent_date().toString().equals(domain.get(i).getEvent_date())) {
 					try {
+						// convert String to Date
 						entity.setEvent_date(new SimpleDateFormat("yyyy-MM-dd").parse(domain.get(i).getEvent_date()));
 						modified = true;
 					}
@@ -430,11 +431,15 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Boolean from_revisionNote = false;
 		Boolean from_strainNote = false;
 		Boolean from_locationNote = false;
-		Boolean from_user1 = false;
-		Boolean from_user2 = false;
 		Boolean from_accession = false;
 
 		// if parameter exists, then add to where-clause
+		
+		String cmResults[] = DateSQLQuery.queryByCreationModification(params, "m");
+		if (cmResults.length > 0) {
+			from = from + cmResults[0];
+			where = where + cmResults[1];
+		}
 		
 		if (params.containsKey("symbol")) {
 			where = where + "\nand m.symbol ilike '" + params.get("symbol") + "'" ;
@@ -456,38 +461,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 		if (params.containsKey("markerTypeKey")) {
 			where = where + "\nand m._marker_type_key = " + params.get("markerTypeKey");
-		}
-		//if (params.containsKey("creation_date")) {
-		//	if (params.get("creation_date").toString().startsWith("<=") == true) {
-		//		where = where + "\nand m.creation_date <= '" 
-		//				+ params.get("creation_date").toString().replace("<=","") + "'";
-		//	}
-		//	else if (params.get("creation_date").toString().startsWith("<") == true) {
-		//		where = where + "\nand m.creation_date < '" 
-		//				+ params.get("creation_date").toString().replace("<",  "") + "'";
-		//	}
-		//	else if (params.get("creation_date").toString().startsWith(">=") == true) {
-		//		where = where + "\nand m.creation_date >= '" 
-		//				+ params.get("creation_date").toString().replace(">=","") + "'";
-		//	}
-		//	else if (params.get("creation_date").toString().startsWith(">") == true) {
-		//		where = where + "\nand m.creation_date > '" 
-		//				+ params.get("creation_date").toString().replace(">",  "") + "'";
-		//	}
-		//	else {
-		//		where = where + "\nand (m.creation_date between '" 
-		//				+ params.get("creation_date") 
-		//				+ "' and ('" + params.get("creation_date")
-		//				+ "'::date + '1 day'::interval))";
-		//	}
-		//}
-		if (params.containsKey("createdBy")) {
-			where = where + "\nand u1.login ilike '" + params.get("createdBy") + "'";
-			from_user1 = true;
-		}
-		if (params.containsKey("modifiedBy")) {
-			where = where + "\nand u2.login ilike '" + params.get("modifiedBy") + "'";
-			from_user2 = true;
 		}
 		if (params.containsKey("editorNote")) {
 			where = where + "\nand note1._notetype_key = 1004 and note1.note ilike '" + params.get("editorNote") + "'" ;
@@ -514,18 +487,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			from_accession = true;
 		}
 		
-		// if parameter was added to where-clause, then add table (only once) to from-clause
-		// tables and views are allowed
-		// this could also be done as a series of "exists" clauses
-		
-		if (from_user1 == true) {
-			from = from + ", mgi_user u1";
-			where = where + "\nand m._createdBy_key = u1._user_key";
-		}
-		if (from_user2 == true) {
-			from = from + ", mgi_user u2";
-			where = where + "\nand m._modifiedBy_key = u2._user_key";
-		}
 		if (from_accession == true) {
 			// using this view to match the teleuse implementation
 			from = from + ", mrk_accnoref_view a";

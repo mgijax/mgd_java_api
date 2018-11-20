@@ -155,46 +155,71 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		Marker entity = markerDAO.get(Integer.valueOf(domain.getMarkerKey()));
+		Boolean modified = false;
+				
+		if (!entity.getSymbol().equals(domain.getSymbol())) {
+			entity.setSymbol(domain.getSymbol());
+			modified = true;
+		}
 		
-		// set entity fields
-		entity.setSymbol(domain.getSymbol());
-		entity.setName(domain.getName());
-		entity.setChromosome(domain.getChromosome());
-		entity.setCytogeneticOffset(domain.getCytogeneticOffset());
-		// end set entity fields
+		if (!entity.getName().equals(domain.getName())) {
+			entity.setName(domain.getName());
+			modified = true;
+		}
 		
-		// business rules
+		if (!entity.getChromosome().equals(domain.getChromosome())) {
+			
+			entity.setChromosome(domain.getChromosome());
+			
+			if (domain.getChromosome().equals("UN")) {
+				entity.setCmOffset(-999.0);
+			}
+			
+			modified = true;
+		}
 		
+		if (entity.getCytogeneticOffset() == null || entity.getCytogeneticOffset().isEmpty()) {
+			if (!(domain.getCytogeneticOffset() == null || domain.getCytogeneticOffset().isEmpty())) {
+				entity.setCytogeneticOffset(domain.getCytogeneticOffset());
+				modified = true;	
+			}
+		}
+		else if (domain.getCytogeneticOffset() == null || domain.getCytogeneticOffset().isEmpty()) {
+			entity.setCytogeneticOffset(domain.getCytogeneticOffset());
+			modified = true;
+		}
+		else if (!entity.getCytogeneticOffset().equals(domain.getCytogeneticOffset())) {
+			entity.setCytogeneticOffset(domain.getCytogeneticOffset());
+			modified = true;
+		}
+	
 		// cannot change the status to "withdrawn"/2
-		if (entity.getMarkerStatus().getStatus().equals(domain.getMarkerStatus()) == false) {
+		if (!entity.getMarkerStatus().getStatus().equals(domain.getMarkerStatus())) {
 			if (domain.getMarkerStatusKey().equals("2")) {
 				results.setError("Failed : Marker Status error",  "Cannot change Marker Status to 'withdrawn'", Constants.HTTP_SERVER_ERROR);
 				return results;
 			}
+			else {
+				entity.setMarkerStatus(markerStatusDAO.get(Integer.valueOf(domain.getMarkerStatusKey())));
+				modified = true;
+			}
 		}
 		
-		// for cmOffset
-		if (domain.getChromosome().equals("UN")) {
-			entity.setCmOffset(-999.0);
+		if (!entity.getMarkerType().getName().equals(domain.getMarkerType())) {
+			entity.setMarkerType(markerTypeDAO.get(Integer.valueOf(domain.getMarkerTypeKey())));
+			modified = true;
 		}
 		
-		// end business logic
-		
-		// convert String-to-Integer
-		//entity.setOrganism(organismDAO.get(Integer.valueOf(domain.getOrganismKey())));
-		entity.setMarkerStatus(markerStatusDAO.get(Integer.valueOf(domain.getMarkerStatusKey())));
-		entity.setMarkerType(markerTypeDAO.get(Integer.valueOf(domain.getMarkerTypeKey())));
-		// end String-to-Integer conversion
-		
-		// add creation/modification 
-		//entity.setCreatedBy(user);
-		//entity.setCreation_date(new Date());
-		entity.setModification_date(new Date());
-		entity.setModifiedBy(user);
-		// end creation/modification
-		
-		// execute update/send to database
-		markerDAO.update(entity);
+		// only if modifications were actually made
+		if (modified == true) {
+			entity.setModification_date(new Date());
+			entity.setModifiedBy(user);
+			markerDAO.update(entity);
+			log.info("processMarker/changes processed: " + domain.getMarkerKey());
+		}
+		else {
+			log.info("processMarker/no changes processed: " + domain.getMarkerKey());
+		}
 		
 		// process all marker notes
 		// using domain because processNote() is using stored procedure
@@ -204,6 +229,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		processNote(domain, domain.getStrainNote(), "2", "1035", user);
 		processNote(domain, domain.getLocationNote(), "2", "1049", user);
 
+		// process marker history
 		processHistory(domain.getMarkerKey(), domain.getHistory(), user);
 		
 		// add markerSynonymDAO
@@ -238,15 +264,13 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	@Transactional
 	public void processHistory(String parentKey, List<MarkerHistoryDomain> domain, User user) {
 		// create marker history associations
-				
-		if (domain.isEmpty()) {
+		
+		if (domain == null || domain.isEmpty()) {
 			return;
 		}
-		
+				
 		String cmd = "";
 		
-		log.info("processHistory for marker key: " + parentKey);
-
 		// iterate thru the list of history rows in the history domain
 		// for each row, determine whether to perform an insert, delete or update
 		
@@ -254,7 +278,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				
 			if (domain.get(i).getAssocKey() == null 
 					|| domain.get(i).getAssocKey().isEmpty()) {
-				log.info("process history insert/no primary key");
 				cmd = "select count(*) from MRK_insertHistory ("
 							+ user.get_user_key().intValue()
 							+ "," + parentKey
@@ -271,7 +294,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			else if (domain.get(i).getMarkerHistorySymbolKey().isEmpty()
 					&& domain.get(i).getMarkerHistoryName().isEmpty()) {
 				// process delete
-				log.info("processHistory delete/symbol/name are null; key =: " + domain.get(i).getAssocKey());
 				
 				MarkerHistory entity = historyDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
 				historyDAO.remove(entity);
@@ -288,7 +310,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			}
 			else {
 				// process update
-				log.info("processHistory update by key: " + domain.get(i).getAssocKey());
 
 				Boolean modified = false;
 				MarkerHistory entity = historyDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));

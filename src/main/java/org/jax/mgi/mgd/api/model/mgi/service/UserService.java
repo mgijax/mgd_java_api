@@ -69,9 +69,10 @@ public class UserService extends BaseService<UserDomain> {
 			log.info("User found: " + username);
 			return userDAO.search(map).items.get(0);
 		} else {
-			log.info("User NOT found: " + username + " sending back mgd_dbo user");
-			map.put("login", "mgd_dbo");
-			return userDAO.search(map).items.get(0);
+			log.info("User NOT found: " + username);
+			//map.put("login", "mgd_dbo");
+			//return userDAO.search(map).items.get(0);
+			return null;
 		}
 	}
 

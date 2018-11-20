@@ -579,6 +579,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		if (params.containsKey("markerTypeKey")) {
 			where = where + "\nand m._marker_type_key = " + params.get("markerTypeKey");
 		}
+		
+		// notes
 		if (params.containsKey("editorNote")) {
 			where = where + "\nand note1._notetype_key = 1004 and note1.note ilike '" + params.get("editorNote") + "'" ;
 			from_editorNote = true;
@@ -600,6 +602,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			from_locationNote = true;
 		}
 		
+		// marker accession id
 		if (params.containsKey("accID")) {
 			where = where + "\nand a.accID ilike '" + params.get("accID") + "'";
 			from_accession = true;
@@ -614,7 +617,31 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			where = where + "\nand mh.name ilike '" + params.get("historyName") + "'";
 			from_history = true;
 		}
-		
+		if (params.containsKey("historyEventDate")) {
+			where = where + "\nand mh.event_display = '" + params.get("historyEventDate") + "'";
+			from_history = true;
+		}
+		if (params.containsKey("historyRef")) {
+			where = where + "\nand mh._Ref_key = " + params.get("historyRef");
+			from_history = true;
+		}
+		if (params.containsKey("historyShortCitation")) {
+			where = where + "\nand mh.short_citation ilike '" + params.get("historyShortCitation") + "'";
+			from_history = true;
+		}
+		if (params.containsKey("historyEvent")) {
+			where = where + "\nand mh.event ilike '" + params.get("historyEvent") + "'";
+			from_history = true;
+		}
+		if (params.containsKey("historyEventReason")) {
+			where = where + "\nand mh.eventReason ilike '" + params.get("historyEventReason") + "'";
+			from_history = true;
+		}
+		if (params.containsKey("historyModifiedBy")) {
+			where = where + "\nand mh.modifiedBy ilike '" + params.get("historyModifiedBy") + "'";
+			from_history = true;
+		}
+
 		if (from_accession == true) {
 			// using this view to match the teleuse implementation
 			from = from + ", mrk_accnoref_view a";

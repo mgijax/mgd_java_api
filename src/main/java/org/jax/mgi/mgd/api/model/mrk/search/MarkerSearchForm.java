@@ -35,6 +35,12 @@ public class MarkerSearchForm extends BaseSearchForm {
 	// history
 	private String historySymbol;
 	private String historyName;
+	private String historyEventDate;
+	private String historyRefKey;
+	private String historyShortCitation;
+	private String historyEvent;
+	private String historyEventReason;
+	private String historyModifiedBy;
 	
 	@Override
 	public Map<String, Object> getSearchFields() {
@@ -63,6 +69,12 @@ public class MarkerSearchForm extends BaseSearchForm {
 		// history
 		if(historySymbol != null && historySymbol != "") { ret.put("historySymbol",  historySymbol); }
 		if(historyName != null && historyName != "") { ret.put("historyName",  historyName); }
+		if(historyEventDate != null && historyEventDate != "") { ret.put("historyEventDate",  historyEventDate); }
+		if(historyRefKey != null && historyRefKey != "") { ret.put("historyRefKey",  historyRefKey); }
+		if(historyShortCitation != null && historyShortCitation != "") { ret.put("historyShortCitation",  historyShortCitation); }
+		if(historyEvent != null && historyEvent != "") { ret.put("historyEvent",  historyEvent); }
+		if(historyEventReason != null && historyEventReason != "") { ret.put("historyEventReason",  historyEventReason); }
+		if(historyModifiedBy != null && historyModifiedBy != "") { ret.put("historyModifiedBy",  historyModifiedBy); }
 
 		return ret;
 	}

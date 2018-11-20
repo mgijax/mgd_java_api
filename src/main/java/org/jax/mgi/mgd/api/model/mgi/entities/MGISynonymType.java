@@ -20,11 +20,12 @@ import lombok.Setter;
 @ApiModel(value = "Synonym Type Object")
 @Table(name="mgi_synonymtype")
 public class MGISynonymType extends BaseEntity {
+	
 	@Id
-	private Integer _synonymType_key;
+	private int _synonymType_key;
 	private String synonymType;
 	private String definition;
-	private Integer allowOnlyOne;
+	private int allowOnlyOne;
 	private Date creation_date;
 	private Date modification_date;
 

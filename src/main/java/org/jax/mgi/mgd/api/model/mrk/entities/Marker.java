@@ -19,6 +19,7 @@ import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
+import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -113,6 +114,11 @@ public class Marker extends BaseEntity {
 	@OrderColumn(name="sequenceNum")
 	private List<MarkerHistory> history;
 	
+	@OneToMany
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 2")
+	private List<MGISynonym> synonyms;
+	
 	// marker note aka marker detail clip (see Allele module)
 	//@OneToOne(fetch=FetchType.LAZY)
 	//@JoinColumn(name="_marker_key", insertable=false, updatable=false)
@@ -187,11 +193,6 @@ public class Marker extends BaseEntity {
 	//@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	//@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1049")
 	//private Set<Note> locationNotes;
-	
-	//@OneToMany
-	//@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
-	//@Where(clause="`_mgitype_key` = 2")
-	//private Set<MGISynonym> synonyms;
 	
 	//@OneToMany
 	//@JoinColumn(name="_object_key_1", referencedColumnName="_marker_key")

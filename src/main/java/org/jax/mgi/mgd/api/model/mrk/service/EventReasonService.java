@@ -8,15 +8,14 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
-import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.EventReasonDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.EventReasonDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.EventReasonSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.EventReasonTranslator;
-import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
+import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
 @RequestScoped
@@ -76,8 +75,8 @@ public class EventReasonService extends BaseService<EventReasonDomain> {
 				EventReasonDomain eventReasonDomain = new EventReasonDomain();
 				eventReasonDomain.setMarkerEventReasonKey(rs.getInt("_marker_eventreason_key"));
 				eventReasonDomain.setEventReason(rs.getString("eventreason"));
-				eventReasonDomain.setCreation_date(rs.getDate("creation_date"));
-				eventReasonDomain.setModification_date(rs.getDate("modification_date"));
+				eventReasonDomain.setCreation_date(rs.getString("creation_date"));
+				eventReasonDomain.setModification_date(rs.getString("modification_date"));
 				results.add(eventReasonDomain);
 			}
 			sqlExecutor.cleanup();

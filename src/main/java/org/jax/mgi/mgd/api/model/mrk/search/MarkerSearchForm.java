@@ -28,7 +28,13 @@ public class MarkerSearchForm extends BaseSearchForm {
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;
+	
+	// marker accession ids
 	private String accID;
+	
+	// history
+	private String historySymbol;
+	private String historyName;
 	
 	@Override
 	public Map<String, Object> getSearchFields() {
@@ -50,7 +56,13 @@ public class MarkerSearchForm extends BaseSearchForm {
 		if(modifiedBy != null && modifiedBy != "") { ret.put("modifiedBy",  modifiedBy); }
 		if(creation_date != null) { ret.put("creation_date",  creation_date); }
 		if(modification_date != null) { ret.put("modification_date",  modification_date); }
+		
+		// marker accession ids
 		if(accID != null && accID != "") { ret.put("accID",  accID); }
+
+		// history
+		if(historySymbol != null && historySymbol != "") { ret.put("historySymbol",  historySymbol); }
+		if(historyName != null && historyName != "") { ret.put("historyName",  historyName); }
 
 		return ret;
 	}

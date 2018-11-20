@@ -75,8 +75,8 @@ public class EventService extends BaseService<EventDomain> {
 				EventDomain eventDomain = new EventDomain();
 				eventDomain.setMarkerEventKey(rs.getInt("_marker_event_key"));
 				eventDomain.setEvent(rs.getString("event"));
-				eventDomain.setCreation_date(rs.getDate("creation_date"));
-				eventDomain.setModification_date(rs.getDate("modification_date"));
+				eventDomain.setCreation_date(rs.getString("creation_date"));
+				eventDomain.setModification_date(rs.getString("modification_date"));
 				results.add(eventDomain);
 			}
 			sqlExecutor.cleanup();

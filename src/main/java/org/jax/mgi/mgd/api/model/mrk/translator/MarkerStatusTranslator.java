@@ -11,8 +11,8 @@ public class MarkerStatusTranslator extends BaseEntityDomainTranslator<MarkerSta
 		MarkerStatusDomain domain = new MarkerStatusDomain();
 		domain.setMarkerStatusKey(entity.get_marker_status_key());
 		domain.setMarkerStatus(entity.getStatus());
-		domain.setCreation_date(entity.getCreation_date());
-		domain.setModification_date(entity.getModification_date());
+		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
+		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
 		return domain;
 	}

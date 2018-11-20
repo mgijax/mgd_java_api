@@ -1,10 +1,10 @@
 package org.jax.mgi.mgd.api.model.mrk.domain;
 
-import java.util.Date;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 
 import lombok.Getter;
@@ -41,6 +41,7 @@ public class MarkerDomain extends BaseDomain {
 	
 	private List<AccessionDomain> mgiAccessionIds;
 	private List<MarkerHistoryDomain> history;
+	private List<MGISynonymDomain> synonyms;
 	
 	//private String locationChromosome;
 	//private Integer locationStartCoordinate;

@@ -16,8 +16,11 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.mgi.dao.MGISynonymDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
+import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.EventDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.EventReasonDAO;
@@ -50,6 +53,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private MarkerDAO markerDAO;
 	@Inject
 	private MarkerHistoryDAO historyDAO;
+	@Inject
+	private MGISynonymDAO synonymDAO;
 	
 	@Inject
 	private OrganismDAO organismDAO;
@@ -150,7 +155,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	public SearchResults<MarkerDomain> update(MarkerDomain domain, User user) {
 		
 		// the set of fields in "update" is similar to set of fields in "create"
-		// fields that are not be updated by UI are commented out below
 		// creation user/date are only set in "create"
 
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
@@ -271,7 +275,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				
 		String cmd = "";
 		
-		// iterate thru the list of history rows in the history domain
+		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
 		
 		for (int i = 0; i < domain.size(); i++) {
@@ -385,6 +389,97 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}
 
 	@Transactional
+	public void processSynonym(String parentKey, List<MGISynonymDomain> domain, User user) {
+		// create marker synonym associations
+		
+		if (domain == null || domain.isEmpty()) {
+			return;
+		}
+				
+		String cmd = "";
+		
+		// iterate thru the list of rows in the domain
+		// for each row, determine whether to perform an insert, delete or update
+		
+		for (int i = 0; i < domain.size(); i++) {
+				
+			if (domain.get(i).getSynonymKey() == null 
+					|| domain.get(i).getSynonymKey().isEmpty()) {
+				//cmd = "select count(*) from MRK_insertHistory ("
+				//			+ user.get_user_key().intValue()
+				//			+ "," + parentKey
+				//			+ "," + domain.get(i).getMarkerHistorySymbolKey()
+				//			+ "," + domain.get(i).getRefKey()
+				//			+ "," + domain.get(i).getMarkerEventKey()
+				//			+ "," + domain.get(i).getMarkerEventReasonKey()
+				//			+ ",'" + domain.get(i).getMarkerHistoryName() + "'"
+				//			+ ")";
+				log.info("cmd: " + cmd);
+				Query query = markerDAO.createNativeQuery(cmd);
+				query.getResultList();
+			}
+			else if (domain.get(i).getSynonym().isEmpty()) {
+				// process delete
+				
+				MGISynonym entity = synonymDAO.get(Integer.valueOf(domain.get(i).getSynonymKey()));
+				synonymDAO.remove(entity);
+				log.info("processSynonym delete successful");
+			}
+			else {
+				// process update
+
+				Boolean modified = false;
+				MGISynonym entity = synonymDAO.get(Integer.valueOf(domain.get(i).getSynonymKey()));
+
+				//if (!String.valueOf(entity.get_marker_key()).equals(domain.get(i).getMarkerKey())) {
+				//	entity.set_marker_key(Integer.valueOf(domain.get(i).getMarkerKey()));
+				//	modified = true;
+				//}
+				
+				//if (!entity.getMarkerEvent().equals(eventDAO.get(Integer.valueOf(domain.get(i).getMarkerEventKey())))) {
+				//	entity.setMarkerEvent(eventDAO.get((Integer.valueOf(domain.get(i).getMarkerEventKey()))));
+				//	modified = true;
+				//}
+				
+				//if (!entity.getMarkerEventReason().equals(eventReasonDAO.get(Integer.valueOf(domain.get(i).getMarkerEventReasonKey())))) {
+				//	entity.setMarkerEventReason(eventReasonDAO.get(Integer.valueOf(domain.get(i).getMarkerEventReasonKey())));
+				//	modified = true;
+				//}
+				
+				// reference can be null
+				if (!(entity.getReference() == null && domain.get(i).getRefKey() == null)) {
+					if (!entity.getReference().get_refs_key().equals(Integer.valueOf(domain.get(i).getRefKey()))) {
+						entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefKey())));
+						modified = true;
+					}
+				}
+				else if (domain.get(i).getRefKey() == null) {
+					entity.setReference(null);
+					modified = true;
+				}
+				else {
+					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefKey())));
+					modified = true;
+				}
+				
+
+				if (modified == true) {
+					entity.setModification_date(new Date());
+					entity.setModifiedBy(user);
+					synonymDAO.update(entity);
+					log.info("processSynonym/changes processed: " + domain.get(i).getSynonymKey());
+				}
+				else {
+					log.info("processSynonym/no changes processed: " + domain.get(i).getSynonymKey());
+				}
+			}
+		}
+		
+		log.info("processSynonym/ran successfully");
+		return;
+	}
+	
+	@Transactional
 	public void processNote(MarkerDomain domain, NoteDomain noteDomain, String mgiTypeKey, String noteTypeKey, User user) {
 		// process note by calling stored procedure
 		
@@ -453,6 +548,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Boolean from_strainNote = false;
 		Boolean from_locationNote = false;
 		Boolean from_accession = false;
+		Boolean from_history = false;
 
 		// if parameter exists, then add to where-clause
 		
@@ -503,9 +599,20 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			where = where + "\nand note5._notetype_key = 1049 and note5.note ilike '" + params.get("locationNote") + "'" ;
 			from_locationNote = true;
 		}
+		
 		if (params.containsKey("accID")) {
 			where = where + "\nand a.accID ilike '" + params.get("accID") + "'";
 			from_accession = true;
+		}
+		
+		// history
+		if (params.containsKey("historySymbol")) {
+			where = where + "\nand mh.history ilike '" + params.get("historySymbol") + "'";
+			from_history = true;
+		}
+		if (params.containsKey("historyName")) {
+			where = where + "\nand mh.name ilike '" + params.get("historyName") + "'";
+			from_history = true;
 		}
 		
 		if (from_accession == true) {
@@ -533,6 +640,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		if (from_locationNote == true) {
 			from = from + ", mgi_note_marker_view note5";
 			where = where + "\nand m._marker_key = note5._object_key";
+		}
+		if (from_history == true) {
+			from = from + ", mrk_history_view mh";
+			where = where + "\nand m._marker_key = mh._marker_key";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

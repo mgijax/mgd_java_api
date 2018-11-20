@@ -8,15 +8,14 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
-import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerStatusDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerStatusDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerStatusSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerStatusTranslator;
-import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
+import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
 @RequestScoped
@@ -76,8 +75,8 @@ public class MarkerStatusService extends BaseService<MarkerStatusDomain> {
 				MarkerStatusDomain markerStatusDomain = new MarkerStatusDomain();
 				markerStatusDomain.setMarkerStatusKey(rs.getInt("_marker_status_key"));
 				markerStatusDomain.setMarkerStatus(rs.getString("status"));
-				markerStatusDomain.setCreation_date(rs.getDate("creation_date"));
-				markerStatusDomain.setModification_date(rs.getDate("modification_date"));
+				markerStatusDomain.setCreation_date(rs.getString("creation_date"));
+				markerStatusDomain.setModification_date(rs.getString("modification_date"));
 				results.add(markerStatusDomain);
 			}
 			sqlExecutor.cleanup();

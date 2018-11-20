@@ -7,18 +7,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@ApiModel(value = "Synonym Model Object")
-public class MGISynonymDomain extends BaseDomain {
+@ApiModel(value = "Synonym Type Model Object")
+public class MGISynonymTypeDomain extends BaseDomain {
 
-	private String synonymKey;
-	private String objectKey;
-	private String mgiTypeKey;
 	private String synonymTypeKey;
 	private String synonymType;
-	private String refKey;
-	private String jnumid;
-	private String short_citation;
-	private String synonym;
+	private String definition;
+	private String allowOnlyOne;
+	private String mgiTypeKey;
+	private String organismKey;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

@@ -8,15 +8,14 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
-import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerTypeDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerTypeDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerTypeSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTypeTranslator;
-import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
+import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
 @RequestScoped
@@ -76,8 +75,8 @@ public class MarkerTypeService extends BaseService<MarkerTypeDomain> {
 				MarkerTypeDomain markerTypeDomain = new MarkerTypeDomain();
 				markerTypeDomain.setMarkerTypeKey(rs.getInt("_marker_type_key"));
 				markerTypeDomain.setMarkerType(rs.getString("name"));
-				markerTypeDomain.setCreation_date(rs.getDate("creation_date"));
-				markerTypeDomain.setModification_date(rs.getDate("modification_date"));
+				markerTypeDomain.setCreation_date(rs.getString("creation_date"));
+				markerTypeDomain.setModification_date(rs.getString("modification_date"));
 				results.add(markerTypeDomain);
 			}
 			sqlExecutor.cleanup();

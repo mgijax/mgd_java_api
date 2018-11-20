@@ -11,8 +11,8 @@ public class EventTranslator extends BaseEntityDomainTranslator<Event, EventDoma
 		EventDomain domain = new EventDomain();
 		domain.setMarkerEventKey(entity.get_marker_event_key());
 		domain.setEvent(entity.getEvent());
-		domain.setCreation_date(entity.getCreation_date());
-		domain.setModification_date(entity.getModification_date());
+		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
+		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
 		return domain;
 	}

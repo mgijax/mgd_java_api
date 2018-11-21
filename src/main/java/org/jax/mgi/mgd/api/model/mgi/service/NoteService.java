@@ -14,7 +14,6 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.search.NoteSearchForm;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -96,10 +95,11 @@ public class NoteService extends BaseService<NoteDomain> {
 		String note;
 
 		if (noteDomain == null) {
+			log.info("processNote/nothing to process");
 			return;
 		}
 		
-		if (noteDomain.getNoteKey() != null) {
+		if (noteDomain.getNoteKey() != null || !noteDomain.getNoteKey().isEmpty()) {
 			noteKey = noteDomain.getNoteKey().toString();
 		}
 		else {
@@ -131,6 +131,7 @@ public class NoteService extends BaseService<NoteDomain> {
 		Query query = noteDAO.createNativeQuery(cmd);
 		query.getResultList();
 		
+		log.info("processNote/processing successful");
 		return;
 	}
 }

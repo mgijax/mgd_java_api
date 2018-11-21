@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
@@ -21,10 +20,7 @@ import org.jboss.logging.Logger;
 public class MGISynonymService extends BaseService<MGISynonymDomain> {
 
 	protected static Logger log = Logger.getLogger(MGISynonymService.class);
-
-	@Inject
-	private static ReferenceDAO referenceDAO;
-		
+	
 	@Transactional
 	public SearchResults<MGISynonymDomain> create(MGISynonymDomain object, User user) {
 		// TODO Auto-generated method stub
@@ -56,10 +52,11 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 	}
 
 	@Transactional
-	public void processSynonym(String parentKey, List<MGISynonymDomain> domain, MGISynonymDAO synonymDAO, ReferenceDAO referenceDAO, User user) {
-		// create marker synonym associations
+	public static void processSynonym(String parentKey, List<MGISynonymDomain> domain, MGISynonymDAO synonymDAO, ReferenceDAO referenceDAO, String mgiTypeKey, User user) {
+		// process synonym associations (create, delete, update)
 		
 		if (domain == null || domain.isEmpty()) {
+			log.info("processSynonym/nothing to process");
 			return;
 		}
 				
@@ -72,46 +69,37 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 				
 			if (domain.get(i).getSynonymKey() == null 
 					|| domain.get(i).getSynonymKey().isEmpty()) {
-				//cmd = "select count(*) from MRK_insertHistory ("
-				//			+ user.get_user_key().intValue()
-				//			+ "," + parentKey
-				//			+ "," + domain.get(i).getMarkerHistorySymbolKey()
-				//			+ "," + domain.get(i).getRefKey()
-				//			+ "," + domain.get(i).getMarkerEventKey()
-				//			+ "," + domain.get(i).getMarkerEventReasonKey()
-				//			+ ",'" + domain.get(i).getMarkerHistoryName() + "'"
-				//			+ ")";
+				
+				log.info("processSynonym create");
+
+				cmd = "select count(*) from MGI_insertSynonym ("
+							+ user.get_user_key().intValue()
+							+ "," + parentKey
+							+ "," + mgiTypeKey
+							+ "," + domain.get(i).getSynonymTypeKey()
+							+ "," + domain.get(i).getSynonym()
+							+ ",'" + domain.get(i).getRefKey() + "'"
+							+ ")";
 				log.info("cmd: " + cmd);
 				Query query = synonymDAO.createNativeQuery(cmd);
 				query.getResultList();
 			}
 			else if (domain.get(i).getSynonym().isEmpty()) {
-				// process delete
-				
+				log.info("processSynonym delete");
 				MGISynonym entity = synonymDAO.get(Integer.valueOf(domain.get(i).getSynonymKey()));
 				synonymDAO.remove(entity);
 				log.info("processSynonym delete successful");
 			}
 			else {
-				// process update
+				log.info("processSynonym update");
 
 				Boolean modified = false;
 				MGISynonym entity = synonymDAO.get(Integer.valueOf(domain.get(i).getSynonymKey()));
-
-				//if (!String.valueOf(entity.get_marker_key()).equals(domain.get(i).getMarkerKey())) {
-				//	entity.set_marker_key(Integer.valueOf(domain.get(i).getMarkerKey()));
-				//	modified = true;
-				//}
-				
-				//if (!entity.getMarkerEvent().equals(eventDAO.get(Integer.valueOf(domain.get(i).getMarkerEventKey())))) {
-				//	entity.setMarkerEvent(eventDAO.get((Integer.valueOf(domain.get(i).getMarkerEventKey()))));
-				//	modified = true;
-				//}
-				
-				//if (!entity.getMarkerEventReason().equals(eventReasonDAO.get(Integer.valueOf(domain.get(i).getMarkerEventReasonKey())))) {
-				//	entity.setMarkerEventReason(eventReasonDAO.get(Integer.valueOf(domain.get(i).getMarkerEventReasonKey())));
-				//	modified = true;
-				//}
+		
+				if (!entity.getSynonym().equals(domain.get(i).getSynonym())) {
+					entity.setSynonym(domain.get(i).getSynonym());
+					modified = true;
+				}
 				
 				// reference can be null
 				if (!(entity.getReference() == null && domain.get(i).getRefKey() == null)) {
@@ -129,7 +117,6 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 					modified = true;
 				}
 				
-
 				if (modified == true) {
 					entity.setModification_date(new Date());
 					entity.setModifiedBy(user);
@@ -142,7 +129,7 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 			}
 		}
 		
-		log.info("processSynonym/ran successfully");
+		log.info("processSynonym/processing successful");
 		return;
 	}
 	

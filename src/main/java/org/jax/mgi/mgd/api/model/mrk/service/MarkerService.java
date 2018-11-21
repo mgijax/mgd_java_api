@@ -14,10 +14,12 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.mgi.dao.MGISynonymDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.NoteDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.mrk.dao.EventDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.EventReasonDAO;
@@ -50,6 +52,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private NoteDAO noteDAO;
 	@Inject
 	private MarkerHistoryDAO historyDAO;
+	@Inject
+	private MGISynonymDAO synonymDAO;
+	@Inject
+	private ReferenceDAO referenceDAO;
 	
 	@Inject
 	private OrganismDAO organismDAO;
@@ -62,8 +68,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private EventDAO eventDAO;
 	@Inject
 	private EventReasonDAO eventReasonDAO;
-	@Inject
-	private ReferenceDAO referenceDAO;
 	
 	private MarkerTranslator translator = new MarkerTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
@@ -78,36 +82,48 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		Marker entity = new Marker();
 		
-		// set entity attributes
-		entity.setSymbol(domain.getSymbol());
-		entity.setName(domain.getName());
-		entity.setChromosome(domain.getChromosome());
-		// end set entity fields
+		if (domain.getSymbol().isEmpty()) {
+			entity.setSymbol(null);
+		}
+		else {
+			entity.setSymbol(domain.getSymbol());
+		}
 		
-		// business rules
+		if (domain.getName().isEmpty()) {
+			entity.setName(null);
+		}
+		else {
+			entity.setName(domain.getName());
+		}
 		
-		// for cmOffset
+		if (domain.getChromosome().isEmpty()) {
+			entity.setChromosome(null);
+		}
+		else {
+			entity.setChromosome(domain.getChromosome());
+		}
+		
+		// cytoGeneticOffset always defaults to null
+		// no special processing required
+
+		// if chr = "UN", then cmOffset = -999, else cmOffset = -1
 		if (domain.getChromosome().equals("UN")) {
 			entity.setCmOffset(-999.0);
 		}
 		else {
 			entity.setCmOffset(-1.0);
 		}
-		
-		// end business logic
-		
+			
 		// convert String-to-Integer
 		entity.setOrganism(organismDAO.get(Integer.valueOf(domain.getOrganismKey())));
 		entity.setMarkerStatus(markerStatusDAO.get(Integer.valueOf(domain.getMarkerStatusKey())));
 		entity.setMarkerType(markerTypeDAO.get(Integer.valueOf(domain.getMarkerTypeKey())));
-		// end String-to-Integer conversion
 		
 		// add creation/modification 
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
 		entity.setModifiedBy(user);
 		entity.setModification_date(new Date());
-		// end creation/modification
 		
 		// execute persist/insert/send to database
 		markerDAO.persist(entity);
@@ -139,9 +155,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Query query = markerDAO.createNativeQuery(cmd);
 		query.getResultList();
 		
-		// create marker synonyms, if provided
+		// to-add/create marker synonyms, if provided
 		
 		// return entity translated to domain
+		log.info("processMarker/create/returning results");
 		results.setItem(translator.translate(entity));
 		return results;
 	}
@@ -155,17 +172,23 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		Marker entity = markerDAO.get(Integer.valueOf(domain.getMarkerKey()));
 		Boolean modified = false;
-				
-		if (!entity.getSymbol().equals(domain.getSymbol())) {
+		String mgiTypeKey = "2";
+		
+		log.info("processMarker/update");
+
+		//log.info("process symbol");
+		if (!domain.getSymbol().isEmpty() && !entity.getSymbol().equals(domain.getSymbol())) {
 			entity.setSymbol(domain.getSymbol());
 			modified = true;
 		}
 		
-		if (!entity.getName().equals(domain.getName())) {
+		//log.info("process name");
+		if (!domain.getName().isEmpty() && !entity.getName().equals(domain.getName())) {
 			entity.setName(domain.getName());
 			modified = true;
 		}
 		
+		//log.info("process chromosome");
 		if (!entity.getChromosome().equals(domain.getChromosome())) {
 			
 			entity.setChromosome(domain.getChromosome());
@@ -177,22 +200,27 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			modified = true;
 		}
 		
-		if (entity.getCytogeneticOffset() == null || entity.getCytogeneticOffset().isEmpty()) {
+		// may be null coming from entity
+		//log.info("process cytogenetic offset");
+		if (entity.getCytogeneticOffset() == null) {
 			if (!(domain.getCytogeneticOffset() == null || domain.getCytogeneticOffset().isEmpty())) {
 				entity.setCytogeneticOffset(domain.getCytogeneticOffset());
 				modified = true;	
 			}
 		}
-		else if (domain.getCytogeneticOffset() == null || domain.getCytogeneticOffset().isEmpty()) {
+		// may be empty coming from domain
+		else if (domain.getCytogeneticOffset().isEmpty()) {
 			entity.setCytogeneticOffset(domain.getCytogeneticOffset());
 			modified = true;
 		}
+		// if not entity/null and not domain/empty, then check for equivalency
 		else if (!entity.getCytogeneticOffset().equals(domain.getCytogeneticOffset())) {
 			entity.setCytogeneticOffset(domain.getCytogeneticOffset());
 			modified = true;
 		}
 	
 		// cannot change the status to "withdrawn"/2
+		//log.info("process marker status");
 		if (!entity.getMarkerStatus().getStatus().equals(domain.getMarkerStatus())) {
 			if (domain.getMarkerStatusKey().equals("2")) {
 				results.setError("Failed : Marker Status error",  "Cannot change Marker Status to 'withdrawn'", Constants.HTTP_SERVER_ERROR);
@@ -204,6 +232,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			}
 		}
 		
+		//log.info("process marker type");
 		if (!entity.getMarkerType().getName().equals(domain.getMarkerType())) {
 			entity.setMarkerType(markerTypeDAO.get(Integer.valueOf(domain.getMarkerTypeKey())));
 			modified = true;
@@ -221,20 +250,22 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 		
 		// process all marker notes
-		// using domain because processNote() is using stored procedure
-		NoteService.processNote(domain, domain.getEditorNote(), noteDAO, "2", "1004", user);
-		NoteService.processNote(domain, domain.getSequenceNote(), noteDAO, "2", "1009", user);
-		NoteService.processNote(domain, domain.getRevisionNote(), noteDAO, "2", "1030", user);
-		NoteService.processNote(domain, domain.getStrainNote(), noteDAO, "2", "1035", user);
-		NoteService.processNote(domain, domain.getLocationNote(), noteDAO, "2", "1049", user);
+		NoteService.processNote(domain, domain.getEditorNote(), noteDAO, mgiTypeKey, "1004", user);
+		NoteService.processNote(domain, domain.getSequenceNote(), noteDAO, mgiTypeKey, "1009", user);
+		NoteService.processNote(domain, domain.getRevisionNote(), noteDAO, mgiTypeKey, "1030", user);
+		NoteService.processNote(domain, domain.getStrainNote(), noteDAO, mgiTypeKey, "1035", user);
+		NoteService.processNote(domain, domain.getLocationNote(), noteDAO, mgiTypeKey, "1049", user);
 
 		// process marker history
 		MarkerHistoryService.processHistory(domain.getMarkerKey(), domain.getHistory(), historyDAO, eventDAO, eventReasonDAO, referenceDAO, user);
 		
-		// add markerSynonymDAO
+		// process marker synonym
+		MGISynonymService.processSynonym(domain.getMarkerKey(), domain.getSynonyms(), synonymDAO, referenceDAO, mgiTypeKey, user);
+		
 		// add markerAccessionDAO
 		
 		// return entity translated to domain
+		log.info("processMarker/update/returning results");
 		results.setItem(translator.translate(entity));
 		return results;
 	}

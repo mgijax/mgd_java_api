@@ -10,7 +10,7 @@ import lombok.Setter;
 @ApiModel(value = "Note Model Object")
 public class NoteDomain extends BaseDomain {
 
-	private Integer noteKey;
+	private String noteKey;
 	private String objectKey;
 	private String mgiTypeKey;
 	private String mgiType;

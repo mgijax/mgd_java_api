@@ -130,6 +130,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 		log.info("processHistory");
 		
 		if (domain == null || domain.isEmpty()) {
+			log.info("processHistory/nothing to process");
 			return;
 		}
 				
@@ -257,7 +258,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 			}
 		}
 		
-		log.info("processHistory/ran successfully");
+		log.info("processHistory/processing successful");
 		return;
 	}
 	

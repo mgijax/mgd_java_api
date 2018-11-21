@@ -106,17 +106,18 @@ public class Marker extends BaseEntity {
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` = 1")
-	@OrderBy(clause = "preferred desc, accID")
+	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 	
 	@OneToMany
 	@JoinColumn(name="_marker_key", insertable=false, updatable=false)
-	@OrderColumn(name="sequenceNum")
+	@OrderBy(clause="sequenceNum")
 	private List<MarkerHistory> history;
 	
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2")
+	@OrderBy(clause ="_synonymtype_key, synonym")
 	private List<MGISynonym> synonyms;
 	
 	// marker note aka marker detail clip (see Allele module)

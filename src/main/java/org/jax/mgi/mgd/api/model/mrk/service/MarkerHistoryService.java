@@ -159,8 +159,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				Query query = historyDAO.createNativeQuery(cmd);
 				query.getResultList();
 			}
-			else if (domain.get(i).getMarkerHistorySymbolKey().isEmpty()
-					&& domain.get(i).getMarkerHistoryName().isEmpty()) {
+			else if (domain.get(i).getMarkerHistorySymbol().isEmpty()) {
 				
 				log.info("processHistory delete");
 				

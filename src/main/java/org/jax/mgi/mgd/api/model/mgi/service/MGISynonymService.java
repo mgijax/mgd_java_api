@@ -77,8 +77,8 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 							+ "," + parentKey
 							+ "," + mgiTypeKey
 							+ "," + domain.get(i).getSynonymTypeKey()
-							+ "," + domain.get(i).getSynonym()
-							+ ",'" + domain.get(i).getRefKey() + "'"
+							+ ",'" + domain.get(i).getSynonym() + "'"
+							+ "," + domain.get(i).getRefKey()
 							+ ")";
 				log.info("cmd: " + cmd);
 				Query query = synonymDAO.createNativeQuery(cmd);

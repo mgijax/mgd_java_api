@@ -182,29 +182,29 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 
 				Boolean modified = false;
 				
-				log.info("historyDAO");
+				//log.info("historyDAO");
 				MarkerHistory entity = historyDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
 
-				log.info("marker key");
+				//log.info("marker key");
 				if (!String.valueOf(entity.get_marker_key()).equals(domain.get(i).getMarkerKey())) {
 					entity.set_marker_key(Integer.valueOf(domain.get(i).getMarkerKey()));
 					modified = true;
 				}
 				
-				log.info("event");
+				//log.info("event");
 				if (!entity.getMarkerEvent().equals(eventDAO.get(Integer.valueOf(domain.get(i).getMarkerEventKey())))) {
 					entity.setMarkerEvent(eventDAO.get((Integer.valueOf(domain.get(i).getMarkerEventKey()))));
 					modified = true;
 				}
 				
-				log.info("event reason");
+				//log.info("event reason");
 				if (!entity.getMarkerEventReason().equals(eventReasonDAO.get(Integer.valueOf(domain.get(i).getMarkerEventReasonKey())))) {
 					entity.setMarkerEventReason(eventReasonDAO.get(Integer.valueOf(domain.get(i).getMarkerEventReasonKey())));
 					modified = true;
 				}
 				
 				// reference can be null
-				log.info("reference");
+				//log.info("reference");
 				if (!(entity.getReference() == null && domain.get(i).getRefKey() == null)) {
 					if (!entity.getReference().get_refs_key().equals(Integer.valueOf(domain.get(i).getRefKey()))) {
 						entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefKey())));
@@ -221,19 +221,26 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				}
 				
 				// name can be null
-				log.info("history name");
-				if (!entity.getName().equals(domain.get(i).getMarkerHistoryName())) {
-					if (domain.get(i).getMarkerHistoryName() == null 
-						&& domain.get(i).getMarkerHistoryName().isEmpty()) {
-						entity.setName(null);
-					}
-					else {
+				//log.info("history name");
+				// may be null coming from entity
+				if (entity.getName() == null) {
+					if (!domain.get(i).getMarkerHistoryName().isEmpty()) {
 						entity.setName(domain.get(i).getMarkerHistoryName());
+						modified = true;
 					}
+				}
+				// may be empty coming from domain
+				else if (domain.get(i).getMarkerHistoryName().isEmpty()) {
+					entity.setName(null);
+					modified = true;
+				}
+				// if not entity/null and not domain/empty, then check if equivalent
+				else if (!entity.getName().equals(domain.get(i).getMarkerHistoryName())) {
+					entity.setName(domain.get(i).getMarkerHistoryName());
 					modified = true;
 				}
 					
-				log.info("event date");
+				//log.info("event date");
 				if (!entity.getEvent_date().toString().equals(domain.get(i).getEvent_date())) {
 					try {
 						// convert String to Date

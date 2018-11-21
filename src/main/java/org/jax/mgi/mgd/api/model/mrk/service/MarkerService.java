@@ -200,20 +200,20 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			modified = true;
 		}
 		
+		log.info("process cytogenetic offset");
 		// may be null coming from entity
-		//log.info("process cytogenetic offset");
 		if (entity.getCytogeneticOffset() == null) {
-			if (!(domain.getCytogeneticOffset() == null || domain.getCytogeneticOffset().isEmpty())) {
+			if (!domain.getCytogeneticOffset().isEmpty()) {
 				entity.setCytogeneticOffset(domain.getCytogeneticOffset());
 				modified = true;	
 			}
 		}
 		// may be empty coming from domain
 		else if (domain.getCytogeneticOffset().isEmpty()) {
-			entity.setCytogeneticOffset(domain.getCytogeneticOffset());
+			entity.setCytogeneticOffset(null);
 			modified = true;
 		}
-		// if not entity/null and not domain/empty, then check for equivalency
+		// if not entity/null and not domain/empty, then check if equivalent
 		else if (!entity.getCytogeneticOffset().equals(domain.getCytogeneticOffset())) {
 			entity.setCytogeneticOffset(domain.getCytogeneticOffset());
 			modified = true;

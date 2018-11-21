@@ -2,8 +2,6 @@ package org.jax.mgi.mgd.api.model.mrk.service;
 
 import java.io.IOException;
 import java.sql.ResultSet;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,12 +14,11 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
-import org.jax.mgi.mgd.api.model.mgi.dao.MGISynonymDAO;
+import org.jax.mgi.mgd.api.model.mgi.dao.NoteDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
-import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.mrk.dao.EventDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.EventReasonDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
@@ -31,9 +28,7 @@ import org.jax.mgi.mgd.api.model.mrk.dao.MarkerTypeDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIResultDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
-import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
-import org.jax.mgi.mgd.api.model.mrk.entities.MarkerHistory;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
@@ -52,9 +47,9 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	@Inject
 	private MarkerDAO markerDAO;
 	@Inject
-	private MarkerHistoryDAO historyDAO;
+	private NoteDAO noteDAO;
 	@Inject
-	private MGISynonymDAO synonymDAO;
+	private MarkerHistoryDAO historyDAO;
 	
 	@Inject
 	private OrganismDAO organismDAO;
@@ -69,7 +64,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private EventReasonDAO eventReasonDAO;
 	@Inject
 	private ReferenceDAO referenceDAO;
-
+	
 	private MarkerTranslator translator = new MarkerTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
@@ -227,14 +222,14 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		// process all marker notes
 		// using domain because processNote() is using stored procedure
-		processNote(domain, domain.getEditorNote(), "2", "1004", user);
-		processNote(domain, domain.getSequenceNote(), "2", "1009", user);
-		processNote(domain, domain.getRevisionNote(), "2", "1030", user);
-		processNote(domain, domain.getStrainNote(), "2", "1035", user);
-		processNote(domain, domain.getLocationNote(), "2", "1049", user);
+		NoteService.processNote(domain, domain.getEditorNote(), noteDAO, "2", "1004", user);
+		NoteService.processNote(domain, domain.getSequenceNote(), noteDAO, "2", "1009", user);
+		NoteService.processNote(domain, domain.getRevisionNote(), noteDAO, "2", "1030", user);
+		NoteService.processNote(domain, domain.getStrainNote(), noteDAO, "2", "1035", user);
+		NoteService.processNote(domain, domain.getLocationNote(), noteDAO, "2", "1049", user);
 
 		// process marker history
-		processHistory(domain.getMarkerKey(), domain.getHistory(), user);
+		MarkerHistoryService.processHistory(domain.getMarkerKey(), domain.getHistory(), historyDAO, eventDAO, eventReasonDAO, referenceDAO, user);
 		
 		// add markerSynonymDAO
 		// add markerAccessionDAO
@@ -263,266 +258,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Marker entity = markerDAO.get(key);
 		markerDAO.remove(entity);
 		return results;
-	}
-	
-	@Transactional
-	public void processHistory(String parentKey, List<MarkerHistoryDomain> domain, User user) {
-		// create marker history associations
-		
-		if (domain == null || domain.isEmpty()) {
-			return;
-		}
-				
-		String cmd = "";
-		
-		// iterate thru the list of rows in the domain
-		// for each row, determine whether to perform an insert, delete or update
-		
-		for (int i = 0; i < domain.size(); i++) {
-				
-			if (domain.get(i).getAssocKey() == null 
-					|| domain.get(i).getAssocKey().isEmpty()) {
-				cmd = "select count(*) from MRK_insertHistory ("
-							+ user.get_user_key().intValue()
-							+ "," + parentKey
-							+ "," + domain.get(i).getMarkerHistorySymbolKey()
-							+ "," + domain.get(i).getRefKey()
-							+ "," + domain.get(i).getMarkerEventKey()
-							+ "," + domain.get(i).getMarkerEventReasonKey()
-							+ ",'" + domain.get(i).getMarkerHistoryName() + "'"
-							+ ")";
-				log.info("cmd: " + cmd);
-				Query query = markerDAO.createNativeQuery(cmd);
-				query.getResultList();
-			}
-			else if (domain.get(i).getMarkerHistorySymbolKey().isEmpty()
-					&& domain.get(i).getMarkerHistoryName().isEmpty()) {
-				// process delete
-				
-				MarkerHistory entity = historyDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
-				historyDAO.remove(entity);
-				
-				// reset the sequence numbers
-				cmd = "select count(*) from MGI_resetSequenceNum('MRK_History'" 
-						+ "," + parentKey
-						+ "," + user.get_user_key().intValue()
-						+ ")";
-				Query query = markerDAO.createNativeQuery(cmd);
-				query.getResultList();
-				
-				log.info("processHistory delete successful");
-			}
-			else {
-				// process update
-
-				Boolean modified = false;
-				MarkerHistory entity = historyDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
-
-				if (!String.valueOf(entity.get_marker_key()).equals(domain.get(i).getMarkerKey())) {
-					entity.set_marker_key(Integer.valueOf(domain.get(i).getMarkerKey()));
-					modified = true;
-				}
-				
-				if (!entity.getMarkerEvent().equals(eventDAO.get(Integer.valueOf(domain.get(i).getMarkerEventKey())))) {
-					entity.setMarkerEvent(eventDAO.get((Integer.valueOf(domain.get(i).getMarkerEventKey()))));
-					modified = true;
-				}
-				
-				if (!entity.getMarkerEventReason().equals(eventReasonDAO.get(Integer.valueOf(domain.get(i).getMarkerEventReasonKey())))) {
-					entity.setMarkerEventReason(eventReasonDAO.get(Integer.valueOf(domain.get(i).getMarkerEventReasonKey())));
-					modified = true;
-				}
-				
-				// reference can be null
-				if (!(entity.getReference() == null && domain.get(i).getRefKey() == null)) {
-					if (!entity.getReference().get_refs_key().equals(Integer.valueOf(domain.get(i).getRefKey()))) {
-						entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefKey())));
-						modified = true;
-					}
-				}
-				else if (domain.get(i).getRefKey() == null) {
-					entity.setReference(null);
-					modified = true;
-				}
-				else {
-					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefKey())));
-					modified = true;
-				}
-				
-				// name can be null
-				if (!entity.getName().equals(domain.get(i).getMarkerHistoryName())) {
-					if (domain.get(i).getMarkerHistoryName() == null 
-						&& domain.get(i).getMarkerHistoryName().isEmpty()) {
-						entity.setName(null);
-					}
-					else {
-						entity.setName(domain.get(i).getMarkerHistoryName());
-					}
-					modified = true;
-				}
-					
-				if (!entity.getEvent_date().toString().equals(domain.get(i).getEvent_date())) {
-					try {
-						// convert String to Date
-						entity.setEvent_date(new SimpleDateFormat("yyyy-MM-dd").parse(domain.get(i).getEvent_date()));
-						modified = true;
-					}
-					catch (ParseException  e) {
-						return;
-					}
-				}
-				
-				if (modified == true) {
-					entity.setModification_date(new Date());
-					entity.setModifiedBy(user);
-					historyDAO.update(entity);
-					log.info("processHistory/changes processed: " + domain.get(i).getAssocKey());
-				}
-				else {
-					log.info("processHistory/no changes processed: " + domain.get(i).getAssocKey());
-				}
-			}
-		}
-		
-		log.info("processHistory/ran successfully");
-		return;
-	}
-
-	@Transactional
-	public void processSynonym(String parentKey, List<MGISynonymDomain> domain, User user) {
-		// create marker synonym associations
-		
-		if (domain == null || domain.isEmpty()) {
-			return;
-		}
-				
-		String cmd = "";
-		
-		// iterate thru the list of rows in the domain
-		// for each row, determine whether to perform an insert, delete or update
-		
-		for (int i = 0; i < domain.size(); i++) {
-				
-			if (domain.get(i).getSynonymKey() == null 
-					|| domain.get(i).getSynonymKey().isEmpty()) {
-				//cmd = "select count(*) from MRK_insertHistory ("
-				//			+ user.get_user_key().intValue()
-				//			+ "," + parentKey
-				//			+ "," + domain.get(i).getMarkerHistorySymbolKey()
-				//			+ "," + domain.get(i).getRefKey()
-				//			+ "," + domain.get(i).getMarkerEventKey()
-				//			+ "," + domain.get(i).getMarkerEventReasonKey()
-				//			+ ",'" + domain.get(i).getMarkerHistoryName() + "'"
-				//			+ ")";
-				log.info("cmd: " + cmd);
-				Query query = markerDAO.createNativeQuery(cmd);
-				query.getResultList();
-			}
-			else if (domain.get(i).getSynonym().isEmpty()) {
-				// process delete
-				
-				MGISynonym entity = synonymDAO.get(Integer.valueOf(domain.get(i).getSynonymKey()));
-				synonymDAO.remove(entity);
-				log.info("processSynonym delete successful");
-			}
-			else {
-				// process update
-
-				Boolean modified = false;
-				MGISynonym entity = synonymDAO.get(Integer.valueOf(domain.get(i).getSynonymKey()));
-
-				//if (!String.valueOf(entity.get_marker_key()).equals(domain.get(i).getMarkerKey())) {
-				//	entity.set_marker_key(Integer.valueOf(domain.get(i).getMarkerKey()));
-				//	modified = true;
-				//}
-				
-				//if (!entity.getMarkerEvent().equals(eventDAO.get(Integer.valueOf(domain.get(i).getMarkerEventKey())))) {
-				//	entity.setMarkerEvent(eventDAO.get((Integer.valueOf(domain.get(i).getMarkerEventKey()))));
-				//	modified = true;
-				//}
-				
-				//if (!entity.getMarkerEventReason().equals(eventReasonDAO.get(Integer.valueOf(domain.get(i).getMarkerEventReasonKey())))) {
-				//	entity.setMarkerEventReason(eventReasonDAO.get(Integer.valueOf(domain.get(i).getMarkerEventReasonKey())));
-				//	modified = true;
-				//}
-				
-				// reference can be null
-				if (!(entity.getReference() == null && domain.get(i).getRefKey() == null)) {
-					if (!entity.getReference().get_refs_key().equals(Integer.valueOf(domain.get(i).getRefKey()))) {
-						entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefKey())));
-						modified = true;
-					}
-				}
-				else if (domain.get(i).getRefKey() == null) {
-					entity.setReference(null);
-					modified = true;
-				}
-				else {
-					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefKey())));
-					modified = true;
-				}
-				
-
-				if (modified == true) {
-					entity.setModification_date(new Date());
-					entity.setModifiedBy(user);
-					synonymDAO.update(entity);
-					log.info("processSynonym/changes processed: " + domain.get(i).getSynonymKey());
-				}
-				else {
-					log.info("processSynonym/no changes processed: " + domain.get(i).getSynonymKey());
-				}
-			}
-		}
-		
-		log.info("processSynonym/ran successfully");
-		return;
-	}
-	
-	@Transactional
-	public void processNote(MarkerDomain domain, NoteDomain noteDomain, String mgiTypeKey, String noteTypeKey, User user) {
-		// process note by calling stored procedure
-		
-		String noteKey;
-		String note;
-
-		if (noteDomain == null) {
-			return;
-		}
-		
-		if (noteDomain.getNoteKey() != null) {
-			noteKey = noteDomain.getNoteKey().toString();
-		}
-		else {
-			noteKey = "null";
-		}
-	
-		if (!noteDomain.getNoteChunk().isEmpty()) {
-			note = "'" + noteDomain.getNoteChunk().toString() + "'";
-		}
-		else {
-			note = "null";
-		}
-		
-		// stored procedure
-		// if noteKey is null, then insert new note
-		// if noteKey is not null and note is null, then delete note
-		// else, update note
-		// returns void
-		String cmd = "select count(*) from MGI_processNote ("
-				+ user.get_user_key().intValue()
-				+ "," + noteKey
-				+ "," + domain.getMarkerKey()
-				+ "," + mgiTypeKey
-				+ "," + noteTypeKey
-				+ "," + note
-				+ ")";
-
-		log.info("cmd: " + cmd);
-		Query query = markerDAO.createNativeQuery(cmd);
-		query.getResultList();
-		
-		return;
 	}
 	
 	public List<MarkerEIResultDomain> eiSearch(MarkerSearchForm searchForm) {

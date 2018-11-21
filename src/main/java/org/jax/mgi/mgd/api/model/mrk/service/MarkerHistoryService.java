@@ -205,21 +205,24 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				
 				// reference can be null
 				//log.info("reference");
-				if (!(entity.getReference() == null && domain.get(i).getRefKey() == null)) {
-					if (!entity.getReference().get_refs_key().equals(Integer.valueOf(domain.get(i).getRefKey()))) {
+				// may be null coming from entity
+				if (entity.getReference() == null) {
+					if (!domain.get(i).getRefKey().isEmpty()) {
 						entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefKey())));
 						modified = true;
 					}
 				}
-				else if (domain.get(i).getRefKey() == null) {
+				// may be empty coming from domain
+				else if (domain.get(i).getRefKey().isEmpty()) {
 					entity.setReference(null);
 					modified = true;
 				}
-				else {
+				// if not entity/null and not domain/empty, then check if equivalent
+				else if (!entity.getReference().get_refs_key().equals(Integer.valueOf(domain.get(i).getRefKey()))) {
 					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefKey())));
 					modified = true;
 				}
-				
+						
 				// name can be null
 				//log.info("history name");
 				// may be null coming from entity

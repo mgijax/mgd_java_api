@@ -205,13 +205,13 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				//log.info("reference");
 				// may be null coming from entity
 				if (entity.getReference() == null) {
-					if (!domain.get(i).getRefKey().isEmpty()) {
+					if (domain.get(i).getRefKey() != null) {
 						entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefKey())));
 						modified = true;
 					}
 				}
-				// may be empty coming from domain
-				else if (domain.get(i).getRefKey().isEmpty()) {
+				// may be null coming from domain
+				else if (domain.get(i).getRefKey() == null) {
 					entity.setReference(null);
 					modified = true;
 				}
@@ -225,13 +225,13 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				//log.info("history name");
 				// may be null coming from entity
 				if (entity.getName() == null) {
-					if (!domain.get(i).getMarkerHistoryName().isEmpty()) {
+					if (domain.get(i).getMarkerHistoryName() != null) {
 						entity.setName(domain.get(i).getMarkerHistoryName());
 						modified = true;
 					}
 				}
 				// may be empty coming from domain
-				else if (domain.get(i).getMarkerHistoryName().isEmpty()) {
+				else if (domain.get(i).getMarkerHistoryName() == null) {
 					entity.setName(null);
 					modified = true;
 				}

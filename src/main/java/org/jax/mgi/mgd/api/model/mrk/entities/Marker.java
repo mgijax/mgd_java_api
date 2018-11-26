@@ -120,10 +120,10 @@ public class Marker extends BaseEntity {
 	@OrderBy(clause ="_synonymtype_key, synonym")
 	private List<MGISynonym> synonyms;
 	
-	//@OneToMany
-	//@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	//@Where(clause="`_mgitype_key` = 2")
-	//private List<MGIReferenceAssoc> refAssociations;
+	@OneToMany
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 2")
+	private List<MGIReferenceAssoc> refAssociations;
 	
 	//@OneToOne(fetch=FetchType.LAZY)
 	//@JoinColumn(name="_marker_key")

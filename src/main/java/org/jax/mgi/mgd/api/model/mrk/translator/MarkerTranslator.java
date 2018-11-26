@@ -118,12 +118,12 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		}
 		
 		// one-to-many marker reference associations
-		//if (entity.getRefAssociations() != null) {
-		//	Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssociations(), translationDepth - 1);
-		//	if(i.iterator().hasNext() == true) {
-		//		domain.setRefAssociations(IteratorUtils.toList(i.iterator()));
-		//	}
-		//}
+		if (entity.getRefAssociations() != null) {
+			Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssociations(), translationDepth - 1);
+			if(i.iterator().hasNext() == true) {
+				domain.setRefAssociations(IteratorUtils.toList(i.iterator()));
+			}
+		}
 		
 		// at most one set of location info
 		//if(entity.getMarkerLocation() != null) {

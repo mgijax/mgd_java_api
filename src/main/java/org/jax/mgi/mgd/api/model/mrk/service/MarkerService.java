@@ -180,20 +180,20 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		log.info("processMarker/update");
 
-		log.info("process symbol");
+		//log.info("process symbol");
 		if (!entity.getSymbol().equals(domain.getSymbol())) {
 			log.info("process entity");
 			entity.setSymbol(domain.getSymbol());
 			modified = true;
 		}
 		
-		log.info("process name");
+		//log.info("process name");
 		if (!entity.getName().equals(domain.getName())) {
 			entity.setName(domain.getName());
 			modified = true;
 		}
 		
-		log.info("process chromosome");
+		//log.info("process chromosome");
 		if (!entity.getChromosome().equals(domain.getChromosome())) {
 			
 			entity.setChromosome(domain.getChromosome());
@@ -205,16 +205,16 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			modified = true;
 		}
 		
-		log.info("process cytogenetic offset");
+		//log.info("process cytogenetic offset");
 		// may be null coming from entity
 		if (entity.getCytogeneticOffset() == null) {
-			if (!domain.getCytogeneticOffset().isEmpty()) {
+			if (domain.getCytogeneticOffset() != null) {
 				entity.setCytogeneticOffset(domain.getCytogeneticOffset());
 				modified = true;	
 			}
 		}
-		// may be empty coming from domain
-		else if (domain.getCytogeneticOffset().isEmpty()) {
+		// may be null coming from domain
+		else if (domain.getCytogeneticOffset() == null) {
 			entity.setCytogeneticOffset(null);
 			modified = true;
 		}

@@ -1,7 +1,5 @@
 package org.jax.mgi.mgd.api.model.bib.domain;
 
-import java.util.Date;
-
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
 import lombok.Getter;
@@ -9,7 +7,8 @@ import lombok.Setter;
 
 @Getter @Setter
 public class ReferenceDomain extends BaseDomain {
-	private Integer _refs_key;
+	
+	private String refKey;
 	private String primaryAuthor;
 	private String authors;
 	private String title;
@@ -17,10 +16,10 @@ public class ReferenceDomain extends BaseDomain {
 	private String volume;
 	private String issue;
 	private String date;
-	private Integer year;
+	private String year;
 	private String pages;
-	private Integer isReviewArticle;
-	private Integer isDiscard;
+	private String isReviewArticle;
+	private String isDiscard;
 	private String referenceTypeKey;
 	private String referenceType;
 	private String jnumID;
@@ -29,6 +28,7 @@ public class ReferenceDomain extends BaseDomain {
 	private String createdBy;
 	private String modifiedByKey;
 	private String modifiedBy;
-	private Date creation_date;
-	private Date modification_date;
+	private String creation_date;
+	private String modification_date;
+	
 }

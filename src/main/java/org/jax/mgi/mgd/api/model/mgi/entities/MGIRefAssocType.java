@@ -17,19 +17,20 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Reference Association Type Object")
+@ApiModel(value = "MGI Reference Association Type Object")
 @Table(name="mgi_refassoctype")
-public class RefAssocType extends BaseEntity {
+public class MGIRefAssocType extends BaseEntity {
+	
 	@Id
-	private Integer _refAssocType_key;
+	private int _refAssocType_key;
 	private String assocType;
-	private Integer allowOnlyOne;
+	private int allowOnlyOne;
 	private Date creation_date;
 	private Date modification_date;
 
 	@OneToOne
 	@JoinColumn(name="_mgitype_key")
-	private MGIType mgitype;
+	private MGIType mgiType;
 	
 	@OneToOne
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

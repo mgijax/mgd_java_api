@@ -1,27 +1,19 @@
 package org.jax.mgi.mgd.api.model.bib.service;
 
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
 import javax.transaction.Transactional;
 
-import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
-import org.jax.mgi.mgd.api.model.bib.entities.Reference;
-import org.jax.mgi.mgd.api.model.bib.search.ReferenceSearchForm;
-import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
 import org.jax.mgi.mgd.api.util.SearchResults;
+import org.jboss.logging.Logger;
 
 @RequestScoped
 public class ReferenceService extends BaseService<ReferenceDomain> {
 
-	@Inject
-	private ReferenceDAO referenceDAO;
-
-	private ReferenceTranslator translator = new ReferenceTranslator();
+	protected static Logger log = Logger.getLogger(MGISynonymService.class);
 	
 	@Transactional
 	public SearchResults<ReferenceDomain> create(ReferenceDomain object, User user) {
@@ -37,15 +29,15 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 	@Transactional
 	public ReferenceDomain get(Integer key) {
-		return translator.translate(referenceDAO.get(key));
+		// TODO Auto-generated method stub
+		return null;	
 	}
 
-        @Transactional
-        public SearchResults<ReferenceDomain> getResults(Integer key) {
-                SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
-                results.setItem(translator.translate(referenceDAO.get(key)));
-                return results;
-        }
+    @Transactional
+    public SearchResults<ReferenceDomain> getResults(Integer key) {
+		// TODO Auto-generated method stub
+		return null;
+    }
 
 	@Transactional
 	public SearchResults<ReferenceDomain> delete(Integer key, User user) {

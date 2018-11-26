@@ -8,9 +8,10 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 
 	@Override
 	protected ReferenceDomain entityToDomain(Reference entity, int translationDepth) {
-		if (entity == null) { return null; }
+
 		ReferenceDomain domain = new ReferenceDomain();
-		domain.set_refs_key(entity.get_refs_key());
+		
+		domain.setRefKey(String.valueOf(entity.get_refs_key()));
 		domain.setPrimaryAuthor(entity.getPrimaryAuthor());
 		domain.setAuthors(entity.getAuthors());
 		domain.setTitle(entity.getTitle());
@@ -18,11 +19,11 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		domain.setVolume(entity.getVol());
 		domain.setIssue(entity.getIssue());
 		domain.setDate(entity.getDate());
-		domain.setYear(entity.getYear());
+		domain.setYear(String.valueOf(entity.getYear()));
 		domain.setPages(entity.getPgs());
 		domain.setDate(entity.getDate());
-		domain.setIsReviewArticle(entity.getIsReviewArticle());
-		domain.setIsDiscard(entity.getIsDiscard());
+		domain.setIsReviewArticle(String.valueOf(entity.getIsReviewArticle()));
+		domain.setIsDiscard(String.valueOf(entity.getIsDiscard()));
 		domain.setReferenceTypeKey(entity.getReferenceType().get_term_key().toString());
 		domain.setReferenceType(entity.getReferenceType().getTerm());
 		domain.setJnumID(entity.getReferenceCitationCache().getJnumid());
@@ -31,12 +32,9 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		domain.setCreatedBy(entity.getCreatedBy().getName());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
 		domain.setModifiedBy(entity.getModifiedBy().getName());
-		domain.setCreation_date(entity.getCreation_date());
-		domain.setModification_date(entity.getModification_date());
+		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
+		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
-		if(translationDepth > 0) {
-			// load relationships
-		}
 		return domain;
 	}
 

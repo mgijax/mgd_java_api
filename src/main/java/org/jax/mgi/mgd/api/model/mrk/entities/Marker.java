@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderColumn;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -19,6 +18,7 @@ import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
+import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
@@ -120,11 +120,11 @@ public class Marker extends BaseEntity {
 	@OrderBy(clause ="_synonymtype_key, synonym")
 	private List<MGISynonym> synonyms;
 	
-	// marker note aka marker detail clip (see Allele module)
-	//@OneToOne(fetch=FetchType.LAZY)
-	//@JoinColumn(name="_marker_key", insertable=false, updatable=false)
-	//private MarkerNote markerNote;
-		
+	//@OneToMany
+	//@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	//@Where(clause="`_mgitype_key` = 2")
+	//private List<MGIReferenceAssoc> refAssociations;
+	
 	//@OneToOne(fetch=FetchType.LAZY)
 	//@JoinColumn(name="_marker_key")
 	//private MarkerLocationCache markerLocation;
@@ -135,38 +135,6 @@ public class Marker extends BaseEntity {
 	//@OrderColumn(name="accID")
 	//private Set<Accession> allAccessionIds;
 
-	//@OneToMany
-	//@JoinColumn(name="_marker_key")
-	//private Set<Allele> alleles = new HashSet<Allele>();
-	
-	//@OneToMany
-	//@JoinColumn(name="_marker_key")
-	//private Set<MarkerStrain> markerStrain;
-	
-	//@OneToMany
-	//@JoinColumn(name="_marker_key")
-	//private Set<ProbeMarker> probeMarkers;
-
-	//@OneToMany
-	//@JoinColumn(name="_marker_key")
-	//private Set<ProbeStrainMarker> probeStrainMarkers;
-	
-	//@OneToMany
-	//@JoinColumn(name="_marker_key")
-	//private Set<Assay> assays;
-	
-	//@OneToMany
-	//@JoinColumn(name="_marker_key")
-	//private Set<ExpressionCache> assayResults;
-	
-	//@OneToMany
-	//@JoinColumn(name="_marker_key")
-	//private Set<Index> indexes;
-	
-	//@OneToMany
-	//@JoinColumn(name="_marker_key")
-	//private Set<ExptMarker> exptMarkers;
-	
 	//@OneToMany
 	//@JoinColumn(name="_marker_key")
 	//private Set<SequenceMarkerCache> sequenceMarkers;
@@ -191,11 +159,6 @@ public class Marker extends BaseEntity {
 	//private Set<CoordinateFeature> features;
 
 	//@OneToMany
-	//@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
-	//@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1049")
-	//private Set<Note> locationNotes;
-	
-	//@OneToMany
 	//@JoinColumn(name="_object_key_1", referencedColumnName="_marker_key")
 	//@Where(clause="`_category_key` = 1008")
 	//private Set<Relationship> tssToGeneRelationships;
@@ -218,13 +181,6 @@ public class Marker extends BaseEntity {
 	//	inverseJoinColumns = @JoinColumn(name = "_marker_key", referencedColumnName="_marker_key")
 	//)
 	//private Set<Marker> currentMarkers;
-
-	//@ManyToMany
-	//@JoinTable(name = "gxd_antibodymarker",
-	//	joinColumns = @JoinColumn(name = "_marker_key"),
-	//	inverseJoinColumns = @JoinColumn(name = "_antibody_key")
-	//)
-	//private Set<Antibody> antibodies;
 
 	//public Accession getMgiAccessionId() {
 	//	for(Accession a: allAccessionIds) {

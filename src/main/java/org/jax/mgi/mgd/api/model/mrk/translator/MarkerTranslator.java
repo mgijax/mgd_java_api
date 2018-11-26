@@ -4,8 +4,10 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
+import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
@@ -22,6 +24,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	private MarkerHistoryTranslator historyTranslator = new MarkerHistoryTranslator();
 	private MGISynonymTranslator synonymTranslator = new MGISynonymTranslator();
+	private MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
 	
 	//private TermTranslator termTranslator = new TermTranslator();
 	//private SequenceMarkerCacheTranslator biotypesTranslator = new SequenceMarkerCacheTranslator();
@@ -100,19 +103,27 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		
 		// one-to-many marker history
 		if (entity.getHistory() != null) {
-			Iterable<MarkerHistoryDomain> h = historyTranslator.translateEntities(entity.getHistory(), translationDepth - 1);
-			if(h.iterator().hasNext() == true) {
-				domain.setHistory(IteratorUtils.toList(h.iterator()));
+			Iterable<MarkerHistoryDomain> i = historyTranslator.translateEntities(entity.getHistory(), translationDepth - 1);
+			if(i.iterator().hasNext() == true) {
+				domain.setHistory(IteratorUtils.toList(i.iterator()));
 			}
 		}
 		
 		// one-to-many marker synonyms
 		if (entity.getSynonyms() != null) {
-			Iterable<MGISynonymDomain> s = synonymTranslator.translateEntities(entity.getSynonyms(), translationDepth - 1);
-			if(s.iterator().hasNext() == true) {
-				domain.setSynonyms(IteratorUtils.toList(s.iterator()));
+			Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getSynonyms(), translationDepth - 1);
+			if(i.iterator().hasNext() == true) {
+				domain.setSynonyms(IteratorUtils.toList(i.iterator()));
 			}
 		}
+		
+		// one-to-many marker reference associations
+		//if (entity.getRefAssociations() != null) {
+		//	Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssociations(), translationDepth - 1);
+		//	if(i.iterator().hasNext() == true) {
+		//		domain.setRefAssociations(IteratorUtils.toList(i.iterator()));
+		//	}
+		//}
 		
 		// at most one set of location info
 		//if(entity.getMarkerLocation() != null) {

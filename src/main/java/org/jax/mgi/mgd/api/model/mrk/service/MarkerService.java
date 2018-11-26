@@ -14,11 +14,13 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.mgi.dao.MGIReferenceAssocDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGISynonymDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.NoteDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
-import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.mrk.dao.EventDAO;
@@ -56,6 +58,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private MGISynonymDAO synonymDAO;
 	@Inject
 	private ReferenceDAO referenceDAO;
+	@Inject
+	private MGIReferenceAssocDAO refAssocDAO;
 	
 	@Inject
 	private OrganismDAO organismDAO;
@@ -176,19 +180,20 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		log.info("processMarker/update");
 
-		//log.info("process symbol");
-		if (!domain.getSymbol().isEmpty() && !entity.getSymbol().equals(domain.getSymbol())) {
+		log.info("process symbol");
+		if (!entity.getSymbol().equals(domain.getSymbol())) {
+			log.info("process entity");
 			entity.setSymbol(domain.getSymbol());
 			modified = true;
 		}
 		
-		//log.info("process name");
-		if (!domain.getName().isEmpty() && !entity.getName().equals(domain.getName())) {
+		log.info("process name");
+		if (!entity.getName().equals(domain.getName())) {
 			entity.setName(domain.getName());
 			modified = true;
 		}
 		
-		//log.info("process chromosome");
+		log.info("process chromosome");
 		if (!entity.getChromosome().equals(domain.getChromosome())) {
 			
 			entity.setChromosome(domain.getChromosome());
@@ -262,8 +267,9 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// process marker synonym
 		MGISynonymService.processSynonym(domain.getMarkerKey(), domain.getSynonyms(), synonymDAO, referenceDAO, mgiTypeKey, user);
 		
-		// add markerAccessionDAO
-		
+		// process marker reference
+		//MGIReferenceAssocService.processReferenceAssoc(domain.getMarkerKey(), domain.getRefAssociations(), refAssocDAO, referenceDAO, mgiTypeKey, user);
+
 		// return entity translated to domain
 		log.info("processMarker/update/returning results");
 		results.setItem(translator.translate(entity));

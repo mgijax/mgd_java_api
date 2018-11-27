@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.mrk.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -112,7 +113,17 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	@ApiOperation(value = "EI Search")
 	@Path("/eiSearch")
 	public List<MarkerEIResultDomain> eiSearch(MarkerSearchForm searchForm) {
-		return markerService.eiSearch(searchForm);
+			
+		List<MarkerEIResultDomain> results = new ArrayList<MarkerEIResultDomain>();
+		
+		try {
+			results = markerService.eiSearch(searchForm);
+		} catch (Exception e) {
+			log.info("controller/eiSearch/Exception");
+			e.printStackTrace();
+		}
+		
+		return results;
 	}
 
 	@POST

@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.mrk.service;
 
 import java.io.IOException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -474,7 +475,9 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			}
 			sqlExecutor.cleanup();
 		}
-		catch (Exception e) {e.printStackTrace();}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		// ...off to be turned into JSON
 		return results;

@@ -136,7 +136,7 @@ public class SQLExecutor {
 			return set;
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.exit(1);
+			//System.exit(1);
 			return null;
 		}
 	}

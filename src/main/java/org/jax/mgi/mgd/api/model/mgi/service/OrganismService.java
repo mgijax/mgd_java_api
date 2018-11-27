@@ -48,12 +48,12 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		return translator.translate(organismDAO.get(key));
 	}
 
-        @Transactional
-        public SearchResults<OrganismDomain> getResults(Integer key) {
-                SearchResults<OrganismDomain> results = new SearchResults<OrganismDomain>();
-                results.setItem(translator.translate(organismDAO.get(key)));
-                return results;
-        }
+    @Transactional
+    public SearchResults<OrganismDomain> getResults(Integer key) {
+        SearchResults<OrganismDomain> results = new SearchResults<OrganismDomain>();
+        results.setItem(translator.translate(organismDAO.get(key)));
+        return results;
+    }
 
 	@Transactional
 	public SearchResults<OrganismDomain> delete(Integer key, User user) {
@@ -73,13 +73,13 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				OrganismDomain organismDomain = new OrganismDomain();
-				organismDomain.set_organism_key(rs.getInt("_organism_key"));
-				organismDomain.setCommonname(rs.getString("commonname"));
-				organismDomain.setLatinname(rs.getString("latinname"));
-				organismDomain.setCreation_date(rs.getDate("creation_date"));
-				organismDomain.setModification_date(rs.getDate("modification_date"));
-				results.add(organismDomain);
+				OrganismDomain domain = new OrganismDomain();
+				domain.set_organism_key(rs.getInt("_organism_key"));
+				domain.setCommonname(rs.getString("commonname"));
+				domain.setLatinname(rs.getString("latinname"));
+				domain.setCreation_date(rs.getDate("creation_date"));
+				domain.setModification_date(rs.getDate("modification_date"));
+				results.add(domain);
 			}
 			sqlExecutor.cleanup();
 		}

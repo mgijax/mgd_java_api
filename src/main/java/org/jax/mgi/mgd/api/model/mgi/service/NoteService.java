@@ -1,7 +1,5 @@
 package org.jax.mgi.mgd.api.model.mgi.service;
 
-import java.util.List;
-
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.Query;
@@ -11,7 +9,6 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.dao.NoteDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mgi.search.NoteSearchForm;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -57,36 +54,6 @@ public class NoteService extends BaseService<NoteDomain> {
 		return null;
 	}
 
-	public List<NoteDomain> search(NoteSearchForm searchForm) {
-
-		// list of results to be returned
-		//List<NoteDomain> results = new ArrayList<NoteDomain>();
-
-		//String cmd = "select * from mgi_note";
-		//log.info(cmd);
-
-		// request data, and parse results
-		//try {
-		//	ResultSet rs = sqlExecutor.executeProto(cmd);
-		//	while (rs.next()) {
-		//		NoteDomain noteDomain = new NoteDomain();
-		//		noteDomain.setNoteKey(rs.getInt("_note_key"));
-		//		noteDomain.setObjectKey(rs.getInt("_object_key"));
-		//		noteDomain.setMgiTypeKey(rs.getInt("_mgitype_key"));
-		//		noteDomain.setNoteTypeKey(rs.getInt("_notetype_key"));
-				//noteDomain.setCreation_date(rs.getDate("creation_date"));
-				//noteDomain.setModification_date(rs.getDate("modification_date"));
-		//		results.add(noteDomain);
-		//	}
-		//	sqlExecutor.cleanup();
-		//}
-		//catch (Exception e) {e.printStackTrace();}
-		
-		// ...off to be turned into JSON
-		//return results;
-		return null;
-	}
-	
 	@Transactional
 	public static void processNote(MarkerDomain domain, NoteDomain noteDomain, NoteDAO noteDAO, String mgiTypeKey, String noteTypeKey, User user) {
 		// process note by calling stored procedure (create, delete, update)
@@ -95,7 +62,7 @@ public class NoteService extends BaseService<NoteDomain> {
 		String note;
 
 		if (noteDomain == null) {
-			log.info("processNote/nothing to process");
+			log.info("processNote/no changes processed: " + domain.getMarkerKey());
 			return;
 		}
 		
@@ -131,7 +98,7 @@ public class NoteService extends BaseService<NoteDomain> {
 		Query query = noteDAO.createNativeQuery(cmd);
 		query.getResultList();
 		
-		log.info("processNote/processing successful");
+		log.info("processNote/changes processed: " + domain.getMarkerKey());
 		return;
 	}
 }

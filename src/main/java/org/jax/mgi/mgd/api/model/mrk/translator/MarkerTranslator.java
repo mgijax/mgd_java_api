@@ -125,45 +125,6 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			}
 		}
 		
-		// at most one set of location info
-		//if(entity.getMarkerLocation() != null) {
-			//String addProvider = "";
-			
-			//domain.setLocationChromosome(entity.getMarkerLocation().getGenomicChromosome());
-			//domain.setLocationStartCoordinate(entity.getMarkerLocation().getStartCoordinate());
-			//domain.setLocationEndCoordinate(entity.getMarkerLocation().getEndCoordinate());
-			//domain.setLocationStrand(entity.getMarkerLocation().getStrand());
-			//domain.setLocationMapUnits(entity.getMarkerLocation().getMapUnits());
-			//domain.setLocationProvider(entity.getMarkerLocation().getProvider());
-			//domain.setLocationVersion(entity.getMarkerLocation().getVersion());
-			
-			//if(domain.getLocationProvider() != null) {
-				//addProvider = " From " + domain.getLocationProvider() 
-					//+ " annotation of " + domain.getLocationVersion();
-			//}
-			//if(domain.getLocationStartCoordinate() == null | domain.getLocationEndCoordinate() == null ) {
-				//domain.setLocationText("Chr" + domain.getChromosome() 
-					//+ addProvider);
-			//}
-			//else {
-			//	domain.setLocationText("Chr" + domain.getLocationChromosome() + ":"
-			//		+ domain.getLocationStartCoordinate() + "-"
-			//		+ domain.getLocationEndCoordinate() + " bp, "
-			//		+ domain.getLocationStrand() + " strand"
-			//		+ addProvider
-			//		);
-			//}
-		//}
-		
-		// all synonym objects
-//		List<String> synonyms = new ArrayList<String>();
-//		for (MGISynonym ms : entity.getSynonyms()) {
-//			synonyms.add(ms.getSynonym());
-//		}
-//		Collections.sort(synonyms);
-//		domain.setSynonyms(synonyms);
-
-
 		// all gene-to-tss relationships
 		//List<String> geneToTssRelationships = new ArrayList<String>();
 		//for (Relationship ms : entity.getGeneToTssRelationships()) {

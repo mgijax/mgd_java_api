@@ -45,21 +45,8 @@ public class MarkerDomain extends BaseDomain {
 	private List<MGISynonymDomain> synonyms;
 	private List<MGIReferenceAssocDomain> refAssociations;
 	
-	//private String locationChromosome;
-	//private Integer locationStartCoordinate;
-	//private Integer locationEndCoordinate;
-	//private String locationStrand;
-	//private String locationMapUnits;
-	//private String locationProvider;
-	//private String locationVersion;
-	//private String locationText;
 	//private String mcvTerm;
-	//private String mgiAccessionId;
-	
-	//private List<String> synonyms;
 	//private List<String> geneToTssRelationships;
 	//private List<String> tssToGeneRelationships;
-	//private List<String> secondaryMgiIds;
-    //private List<SequenceMarkerCacheDomain> biotypes;
         
 }

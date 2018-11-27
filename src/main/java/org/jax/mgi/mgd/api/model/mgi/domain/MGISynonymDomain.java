@@ -2,12 +2,10 @@ package org.jax.mgi.mgd.api.model.mgi.domain;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
-import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@ApiModel(value = "Synonym Model Object")
 public class MGISynonymDomain extends BaseDomain {
 
 	private String synonymKey;

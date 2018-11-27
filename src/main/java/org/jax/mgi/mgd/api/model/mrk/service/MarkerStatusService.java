@@ -72,12 +72,12 @@ public class MarkerStatusService extends BaseService<MarkerStatusDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				MarkerStatusDomain markerStatusDomain = new MarkerStatusDomain();
-				markerStatusDomain.setMarkerStatusKey(rs.getInt("_marker_status_key"));
-				markerStatusDomain.setMarkerStatus(rs.getString("status"));
-				markerStatusDomain.setCreation_date(rs.getString("creation_date"));
-				markerStatusDomain.setModification_date(rs.getString("modification_date"));
-				results.add(markerStatusDomain);
+				MarkerStatusDomain domain = new MarkerStatusDomain();
+				domain.setMarkerStatusKey(rs.getInt("_marker_status_key"));
+				domain.setMarkerStatus(rs.getString("status"));
+				domain.setCreation_date(rs.getString("creation_date"));
+				domain.setModification_date(rs.getString("modification_date"));
+				results.add(domain);
 			}
 			sqlExecutor.cleanup();
 		}

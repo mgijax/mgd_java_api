@@ -77,13 +77,13 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 							+ "," + mgiTypeKey
 							+ "," + parentKey
 							+ "," + domain.get(i).getRefKey()
-							+ "," + domain.get(i).getRefAssocTypeKey()
+							+ ",'" + domain.get(i).getRefAssocType() + "'"
 							+ ")";
 				log.info("cmd: " + cmd);
 				Query query = refAssocDAO.createNativeQuery(cmd);
 				query.getResultList();
 			}
-			else if (domain.get(i).getRefKey().isEmpty()) {
+			else if (domain.get(i).getRefKey() == null || domain.get(i).getRefKey().isEmpty()) {
 				log.info("processReferenceAssoc delete");
 				MGIReferenceAssoc entity = refAssocDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
 				refAssocDAO.remove(entity);

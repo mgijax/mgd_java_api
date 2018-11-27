@@ -89,30 +89,30 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				
-				MarkerHistoryDomain markerHistoryDomain = new MarkerHistoryDomain();
+				MarkerHistoryDomain domain = new MarkerHistoryDomain();
 				
-				markerHistoryDomain.setAssocKey(rs.getString("_assoc_key"));
-				markerHistoryDomain.setMarkerKey(rs.getString("_marker_key"));
-				markerHistoryDomain.setSequenceNum(rs.getString("sequencenum"));
-				markerHistoryDomain.setMarkerEventKey(rs.getString("_marker_event_key"));
-				markerHistoryDomain.setMarkerEvent(rs.getString("event"));
-				markerHistoryDomain.setMarkerEventReasonKey(rs.getString("_marker_eventreason_key"));
-				markerHistoryDomain.setMarkerEventReason(rs.getString("eventreason"));
-				markerHistoryDomain.setMarkerHistorySymbolKey(rs.getString("_history_key"));
-				markerHistoryDomain.setMarkerHistorySymbol(rs.getString("history"));
-				markerHistoryDomain.setMarkerHistoryName(rs.getString("name"));
-				markerHistoryDomain.setRefKey(rs.getString("_refs_key"));
-				markerHistoryDomain.setJnumid(rs.getString("jnumid"));
-				markerHistoryDomain.setShort_citation(rs.getString("short_citation"));
-				markerHistoryDomain.setEvent_date(rs.getString("event_date"));
-				markerHistoryDomain.setCreatedByKey(rs.getString("_createdby_key"));
-				markerHistoryDomain.setCreatedBy(rs.getString("createdBy"));
-				markerHistoryDomain.setModifiedByKey(rs.getString("_modifiedby_key"));
-				markerHistoryDomain.setModifiedBy(rs.getString("modifiedBy"));
-				markerHistoryDomain.setCreation_date(rs.getString("creation_date"));
-				markerHistoryDomain.setModification_date(rs.getString("modification_date"));
+				domain.setAssocKey(rs.getString("_assoc_key"));
+				domain.setMarkerKey(rs.getString("_marker_key"));
+				domain.setSequenceNum(rs.getString("sequencenum"));
+				domain.setMarkerEventKey(rs.getString("_marker_event_key"));
+				domain.setMarkerEvent(rs.getString("event"));
+				domain.setMarkerEventReasonKey(rs.getString("_marker_eventreason_key"));
+				domain.setMarkerEventReason(rs.getString("eventreason"));
+				domain.setMarkerHistorySymbolKey(rs.getString("_history_key"));
+				domain.setMarkerHistorySymbol(rs.getString("history"));
+				domain.setMarkerHistoryName(rs.getString("name"));
+				domain.setRefKey(rs.getString("_refs_key"));
+				domain.setJnumid(rs.getString("jnumid"));
+				domain.setShort_citation(rs.getString("short_citation"));
+				domain.setEvent_date(rs.getString("event_date"));
+				domain.setCreatedByKey(rs.getString("_createdby_key"));
+				domain.setCreatedBy(rs.getString("createdBy"));
+				domain.setModifiedByKey(rs.getString("_modifiedby_key"));
+				domain.setModifiedBy(rs.getString("modifiedBy"));
+				domain.setCreation_date(rs.getString("creation_date"));
+				domain.setModification_date(rs.getString("modification_date"));
 				
-				results.add(markerHistoryDomain);
+				results.add(domain);
 			}
 			sqlExecutor.cleanup();
 		}
@@ -158,7 +158,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				Query query = historyDAO.createNativeQuery(cmd);
 				query.getResultList();
 			}
-			else if (domain.get(i).getMarkerHistorySymbol().isEmpty()) {
+			else if (domain.get(i).getMarkerHistorySymbol() == null || domain.get(i).getMarkerHistorySymbol().isEmpty()) {
 				
 				log.info("processHistory delete");
 				

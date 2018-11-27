@@ -84,7 +84,7 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 				Query query = synonymDAO.createNativeQuery(cmd);
 				query.getResultList();
 			}
-			else if (domain.get(i).getSynonym().isEmpty()) {
+			else if (domain.get(i).getSynonym() == null || domain.get(i).getSynonym().isEmpty()) {
 				log.info("processSynonym delete");
 				MGISynonym entity = synonymDAO.get(Integer.valueOf(domain.get(i).getSynonymKey()));
 				synonymDAO.remove(entity);

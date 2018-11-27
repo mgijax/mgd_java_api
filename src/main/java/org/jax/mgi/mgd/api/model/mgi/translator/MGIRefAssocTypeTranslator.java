@@ -19,9 +19,7 @@ public class MGIRefAssocTypeTranslator extends BaseEntityDomainTranslator<MGIRef
 		domain.setAssocType(entity.getAssocType());
 		domain.setAllowOnlyOne(String.valueOf(entity.getAllowOnlyOne()));
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
-		domain.setCreatedBy(entity.getCreatedBy().getName());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
-		domain.setModifiedBy(entity.getModifiedBy().getName());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		

@@ -18,7 +18,6 @@ import org.jax.mgi.mgd.api.model.mgi.dao.MGIReferenceAssocDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGISynonymDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.NoteDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
@@ -268,7 +267,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		MGISynonymService.processSynonym(domain.getMarkerKey(), domain.getSynonyms(), synonymDAO, referenceDAO, mgiTypeKey, user);
 		
 		// process marker reference
-		//MGIReferenceAssocService.processReferenceAssoc(domain.getMarkerKey(), domain.getRefAssociations(), refAssocDAO, referenceDAO, mgiTypeKey, user);
+		MGIReferenceAssocService.processReferenceAssoc(domain.getMarkerKey(), domain.getRefAssociations(), refAssocDAO, referenceDAO, mgiTypeKey, user);
 
 		// return entity translated to domain
 		log.info("processMarker/update/returning results");

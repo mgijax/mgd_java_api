@@ -21,9 +21,7 @@ public class MGISynonymTypeTranslator extends BaseEntityDomainTranslator<MGISyno
 		domain.setMgiTypeKey(String.valueOf(entity.getMgiType().get_mgitype_key()));
 		domain.setOrganismKey(String.valueOf(entity.getOrganism().get_organism_key()));
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
-		domain.setCreatedBy(entity.getCreatedBy().getName());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
-		domain.setModifiedBy(entity.getModifiedBy().getName());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		

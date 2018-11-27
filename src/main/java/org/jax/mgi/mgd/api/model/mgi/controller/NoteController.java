@@ -1,11 +1,7 @@
 package org.jax.mgi.mgd.api.model.mgi.controller;
 
-import java.util.List;
-
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -13,12 +9,10 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mgi.search.NoteSearchForm;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 
 @Path("/note")
 @Api(value = "Note Endpoints")
@@ -49,11 +43,4 @@ public class NoteController extends BaseController<NoteDomain> {
 		return noteService.delete(key, user);
 	}
 
-	@POST
-	@ApiOperation(value = "Search")
-	@Path("/search")
-	public List<NoteDomain> search(NoteSearchForm searchForm) {
-		return noteService.search(searchForm);
-	}
-	
 }

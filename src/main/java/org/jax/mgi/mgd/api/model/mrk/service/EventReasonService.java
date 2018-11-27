@@ -47,12 +47,12 @@ public class EventReasonService extends BaseService<EventReasonDomain> {
 		return translator.translate(eventReasonDAO.get(key),1);
 	}
 
-        @Transactional
-        public SearchResults<EventReasonDomain> getResults(Integer key) {
-                SearchResults<EventReasonDomain> results = new SearchResults<EventReasonDomain>();
-                results.setItem(translator.translate(eventReasonDAO.get(key)));
-                return results;
-        }
+    @Transactional
+    public SearchResults<EventReasonDomain> getResults(Integer key) {
+        SearchResults<EventReasonDomain> results = new SearchResults<EventReasonDomain>();
+        results.setItem(translator.translate(eventReasonDAO.get(key)));
+        return results;
+    }
 
 	@Transactional
 	public SearchResults<EventReasonDomain> delete(Integer key, User user) {
@@ -72,12 +72,12 @@ public class EventReasonService extends BaseService<EventReasonDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				EventReasonDomain eventReasonDomain = new EventReasonDomain();
-				eventReasonDomain.setMarkerEventReasonKey(rs.getInt("_marker_eventreason_key"));
-				eventReasonDomain.setEventReason(rs.getString("eventreason"));
-				eventReasonDomain.setCreation_date(rs.getString("creation_date"));
-				eventReasonDomain.setModification_date(rs.getString("modification_date"));
-				results.add(eventReasonDomain);
+				EventReasonDomain domain = new EventReasonDomain();
+				domain.setMarkerEventReasonKey(rs.getInt("_marker_eventreason_key"));
+				domain.setEventReason(rs.getString("eventreason"));
+				domain.setCreation_date(rs.getString("creation_date"));
+				domain.setModification_date(rs.getString("modification_date"));
+				results.add(domain);
 			}
 			sqlExecutor.cleanup();
 		}

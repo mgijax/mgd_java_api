@@ -267,7 +267,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		MGISynonymService.processSynonym(domain.getMarkerKey(), domain.getSynonyms(), synonymDAO, referenceDAO, mgiTypeKey, user);
 		
 		// process marker reference
-		MGIReferenceAssocService.processReferenceAssoc(domain.getMarkerKey(), domain.getRefAssociations(), refAssocDAO, referenceDAO, mgiTypeKey, user);
+		MGIReferenceAssocService.processReferenceAssoc(domain.getMarkerKey(), domain.getRefAssocs(), refAssocDAO, referenceDAO, mgiTypeKey, user);
 
 		// return entity translated to domain
 		log.info("processMarker/update/returning results");

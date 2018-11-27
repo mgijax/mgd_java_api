@@ -43,7 +43,7 @@ public class MarkerDomain extends BaseDomain {
 	private List<AccessionDomain> mgiAccessionIds;
 	private List<MarkerHistoryDomain> history;
 	private List<MGISynonymDomain> synonyms;
-	private List<MGIReferenceAssocDomain> refAssociations;
+	private List<MGIReferenceAssocDomain> refAssocs;
 	
 	//private String mcvTerm;
 	//private List<String> geneToTssRelationships;

@@ -123,7 +123,7 @@ public class Marker extends BaseEntity {
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2")
-	private List<MGIReferenceAssoc> refAssociations;
+	private List<MGIReferenceAssoc> refAssocs;
 	
 	//@OneToOne(fetch=FetchType.LAZY)
 	//@JoinColumn(name="_marker_key")

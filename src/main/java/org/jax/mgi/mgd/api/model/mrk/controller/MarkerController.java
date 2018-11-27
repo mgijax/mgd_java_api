@@ -119,7 +119,6 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		try {
 			results = markerService.eiSearch(searchForm);
 		} catch (Exception e) {
-			log.info("controller/eiSearch/Exception");
 			e.printStackTrace();
 		}
 		

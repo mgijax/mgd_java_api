@@ -44,7 +44,7 @@ public class MarkerDomain extends BaseDomain {
 	//private List<AccessionDomain> nucleotideAccessionIds;
 	private List<MarkerHistoryDomain> history;
 	private List<MGISynonymDomain> synonyms;
-	private List<MGIReferenceAssocDomain> refAssocs;
+	//private List<MGIReferenceAssocDomain> refAssocs;
 	
 	//private String mcvTerm;
 	//private List<String> geneToTssRelationships;

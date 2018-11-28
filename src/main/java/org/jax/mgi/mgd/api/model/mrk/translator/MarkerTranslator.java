@@ -126,12 +126,12 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		}
 		
 		// one-to-many marker reference associations
-		if (entity.getRefAssocs() != null) {
-			Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs(), translationDepth - 1);
-			if(i.iterator().hasNext() == true) {
-				domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
-			}
-		}
+		//if (entity.getRefAssocs() != null) {
+		//	Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs(), translationDepth - 1);
+		//	if(i.iterator().hasNext() == true) {
+		//		domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
+		//	}
+		//}
 		
 		// all gene-to-tss relationships
 		//List<String> geneToTssRelationships = new ArrayList<String>();

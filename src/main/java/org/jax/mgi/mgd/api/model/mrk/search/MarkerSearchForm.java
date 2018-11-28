@@ -46,6 +46,9 @@ public class MarkerSearchForm extends BaseSearchForm {
 	private String synonymName;
 	private String synonymRefKey;
 	
+	// reference
+	private String refAssocRefKey;
+	
 	@Override
 	public Map<String, Object> getSearchFields() {
 		Map<String, Object> ret = new HashMap<>();
@@ -83,6 +86,9 @@ public class MarkerSearchForm extends BaseSearchForm {
 		// synonym
 		if(synonymName != null && synonymName != "") { ret.put("synonymName",  synonymName); }
 		if(synonymRefKey != null && synonymRefKey != "") { ret.put("synonymRefKey",  synonymRefKey); }
+
+		// reference
+		if(refAssocRefKey != null && refAssocRefKey != "") { ret.put("refAssocRefKey",  refAssocRefKey); }
 
 		return ret;
 	}

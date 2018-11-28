@@ -13,13 +13,13 @@ public class DateSQLQuery {
 		if (params.containsKey("createdBy")) {
 			where = where + "\nand u1.login ilike '" + params.get("createdBy") + "'";
 			where = where + "\nand " + tag + "._CreatedBy_key = u1._User_key";
-			from = from + ",MGI_User u1";
+			from = from + ",mgi_user u1";
 		}
 		
 		if (params.containsKey("modifiedBy")) {
 			where = where + "\nand u2.login ilike '" + params.get("modifiedBy") + "'";
 			where = where + "\nand " + tag + "._ModifiedBy_key = u2._User_key";
-			from = from + ",MGI_User u2";
+			from = from + ",mgi_user u2";
 		}
 
 		// construct where for creation/modification dates

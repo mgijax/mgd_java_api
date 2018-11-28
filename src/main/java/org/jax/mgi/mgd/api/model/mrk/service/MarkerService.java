@@ -2,7 +2,6 @@ package org.jax.mgi.mgd.api.model.mrk.service;
 
 import java.io.IOException;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -322,6 +321,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Boolean from_accession = false;
 		Boolean from_history = false;
 		Boolean from_synonym = false;
+		Boolean from_reference = false;
 
 		// if parameter exists, then add to where-clause
 		
@@ -420,9 +420,19 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			where = where + "\nand ms.synonym ilike '" + params.get("synonymName") + "'";
 			from_synonym = true;
 		}
-		if (params.containsKey("synonymRef")) {
-			where = where + "\nand ms._Ref_key = " + params.get("synonymRef");
+		if (params.containsKey("synonymRefKey")) {
+			where = where + "\nand ms._Ref_key = " + params.get("synonymRefKey");
 			from_synonym = true;
+		}
+		
+		// reference
+		if (params.containsKey("refAssocRefKey")) {
+			where = where + "\nand mr._Ref_key = " + params.get("refAssocRefKey");
+			from_reference = true;
+		}
+		if (params.containsKey("refAssocShortCitation")) {
+			where = where + "\nand mr.short_citation ilike '" + params.get("refAssocShortCitation") + "'";
+			from_reference = true;
 		}
 		
 		if (from_accession == true) {
@@ -458,6 +468,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		if (from_synonym == true) {
 			from = from + ", mgi_synonym_musmarker_view ms";
 			where = where + "\nand m._marker_key = ms._object_key";
+		}
+		if (from_reference == true) {
+			from = from + ", mrk_reference_marker_view mr";
+			where = where + "\nand m._marker_key = mr._object_key";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

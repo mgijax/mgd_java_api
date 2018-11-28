@@ -116,7 +116,9 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 			}
 			sqlExecutor.cleanup();
 		}
-		catch (Exception e) {e.printStackTrace();}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		// ...off to be turned into JSON
 		return results;

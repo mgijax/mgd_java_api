@@ -171,7 +171,7 @@ public class LTReference extends BaseEntity {
 	private String findFirstID(Integer ldb, String prefix, Integer preferred, Integer isPrivate) {
 		for (int i = 0; i < accessionIDs.size(); i++) {
 			Accession accID = accessionIDs.get(i);
-			if ((ldb == null) || (ldb.equals(accID.get_logicaldb_key()))) {
+			if ((ldb == null) || (ldb.equals(accID.getLogicaldb().get_logicaldb_key()))) {
 				if ((prefix == null) || prefix.equals(accID.getPrefixPart())) {
 					if ((preferred == null) || (preferred.equals(accID.getPreferred()))) {
 						if ((isPrivate == null) || (isPrivate.equals(accID.getIs_private()))) {

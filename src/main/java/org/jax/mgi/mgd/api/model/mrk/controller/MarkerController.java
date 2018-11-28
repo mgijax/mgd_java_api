@@ -32,6 +32,14 @@ import io.swagger.annotations.ApiOperation;
 @Consumes(MediaType.APPLICATION_JSON)
 public class MarkerController extends BaseController<MarkerDomain> {
 
+	// the try/except methods are in the Controller 
+	// because the Service does not seem to be picking up the exceptions
+	// if results.error is null, then API assumes success
+	// if results.error is not null, then API assumes fail
+	
+	// refresh/resync the results due to database triggers
+	// for example, the mgi accession id is created by a database trigger
+	
 	protected Logger log = Logger.getLogger(MarkerService.class);
 
 	@Inject
@@ -39,14 +47,6 @@ public class MarkerController extends BaseController<MarkerDomain> {
 
 	@Override
 	public SearchResults<MarkerDomain> create(MarkerDomain domain, User user) {
-		
-		// the try/except method is here 
-		// because the service does not seem to be picking up the exceptions
-		// if results.error is null, then API assumes delete = success
-		// if results.error is not null, then API assumes delete = fail
-		
-		// "refresh" the results due to database triggers
-		// for example, the mgi accession id is created by a database trigger
 		
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 
@@ -63,14 +63,6 @@ public class MarkerController extends BaseController<MarkerDomain> {
 
 	@Override
 	public SearchResults<MarkerDomain> update(MarkerDomain domain, User user) {
-		
-		// the try/except method is here 
-		// because the service does not seem to be picking up the exceptions
-		// if results.error is null, then API assumes delete = success
-		// if results.error is not null, then API assumes delete = fail
-		
-		// "refresh" the results due to database triggers
-		// for example, the mgi accession id is created by a database trigger
 		
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 
@@ -92,11 +84,6 @@ public class MarkerController extends BaseController<MarkerDomain> {
 
 	@Override
 	public SearchResults<MarkerDomain> delete(Integer key, User user) {
-		
-		// the try/except method is here 
-		// because the service does not seem to be picking up the exceptions
-		// if results.error is null, then API assumes delete = success
-		// if results.error is not null, then API assumes delete = fail
 		
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		

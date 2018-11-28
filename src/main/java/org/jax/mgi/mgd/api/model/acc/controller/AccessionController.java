@@ -6,13 +6,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.BaseSearchInterface;
-import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.search.AccessionSearchForm;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;

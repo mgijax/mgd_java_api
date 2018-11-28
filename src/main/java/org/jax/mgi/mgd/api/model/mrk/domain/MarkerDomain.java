@@ -41,6 +41,7 @@ public class MarkerDomain extends BaseDomain {
 	private NoteDomain locationNote;
 	
 	private List<AccessionDomain> mgiAccessionIds;
+	//private List<AccessionDomain> nucleotideAccessionIds;
 	private List<MarkerHistoryDomain> history;
 	private List<MGISynonymDomain> synonyms;
 	private List<MGIReferenceAssocDomain> refAssocs;

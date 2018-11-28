@@ -55,7 +55,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		
 		// at most one editorNote
 		if (entity.getEditorNote() != null) {
-			Iterable<NoteDomain> editorNote = noteTranslator.translateEntities(entity.getEditorNote(), translationDepth - 1);
+			Iterable<NoteDomain> editorNote = noteTranslator.translateEntities(entity.getEditorNote());
 			if(editorNote.iterator().hasNext() == true) {
 				domain.setEditorNote(editorNote.iterator().next());
 			}
@@ -63,7 +63,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 
 		// at most one sequenceNote
 		if (entity.getSequenceNote() != null) {
-			Iterable<NoteDomain> sequenceNote = noteTranslator.translateEntities(entity.getSequenceNote(), translationDepth - 1);
+			Iterable<NoteDomain> sequenceNote = noteTranslator.translateEntities(entity.getSequenceNote());
 			if(sequenceNote.iterator().hasNext() == true) {
 				domain.setSequenceNote(sequenceNote.iterator().next());
 			}
@@ -71,7 +71,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		
 		// at most one revisionNote
 		if (entity.getRevisionNote() != null) {
-			Iterable<NoteDomain> revisionNote = noteTranslator.translateEntities(entity.getRevisionNote(), translationDepth - 1);
+			Iterable<NoteDomain> revisionNote = noteTranslator.translateEntities(entity.getRevisionNote());
 			if(revisionNote.iterator().hasNext() == true) {
 				domain.setRevisionNote(revisionNote.iterator().next());
 			}
@@ -79,7 +79,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		
 		// at most one strainNote
 		if (entity.getStrainNote() != null) {
-			Iterable<NoteDomain> strainNote = noteTranslator.translateEntities(entity.getStrainNote(), translationDepth - 1);
+			Iterable<NoteDomain> strainNote = noteTranslator.translateEntities(entity.getStrainNote());
 			if(strainNote.iterator().hasNext() == true) {
 				domain.setStrainNote(strainNote.iterator().next());
 			}
@@ -87,7 +87,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		
 		// at most one locationNote
 		if (entity.getLocationNote() != null) {
-			Iterable<NoteDomain> locationNote = noteTranslator.translateEntities(entity.getLocationNote(), translationDepth - 1);
+			Iterable<NoteDomain> locationNote = noteTranslator.translateEntities(entity.getLocationNote());
 			if(locationNote.iterator().hasNext() == true) {
 			domain.setLocationNote(locationNote.iterator().next());
 			}
@@ -95,15 +95,23 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		
 		// mgi accession ids only
 		if (entity.getMgiAccessionIds() != null) {
-			Iterable<AccessionDomain> mgiAccessionIds = accessionTranslator.translateEntities(entity.getMgiAccessionIds(), translationDepth - 1);
-			if(mgiAccessionIds.iterator().hasNext() == true) {
-				domain.setMgiAccessionIds(IteratorUtils.toList(mgiAccessionIds.iterator()));
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
+			if(acc.iterator().hasNext() == true) {
+				domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
 			}
 		}
 		
+		// accession ids for nucleotide sequences (ldb = 9)
+		//if (entity.getNucleotideAccessionIds() != null) {
+		//	Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getNucleotideAccessionIds());
+		//	if(acc.iterator().hasNext() == true) {
+		//		domain.setNucleotideAccessionIds(IteratorUtils.toList(acc.iterator()));
+		//	}
+		//}
+		
 		// one-to-many marker history
 		if (entity.getHistory() != null) {
-			Iterable<MarkerHistoryDomain> i = historyTranslator.translateEntities(entity.getHistory(), translationDepth - 1);
+			Iterable<MarkerHistoryDomain> i = historyTranslator.translateEntities(entity.getHistory());
 			if(i.iterator().hasNext() == true) {
 				domain.setHistory(IteratorUtils.toList(i.iterator()));
 			}
@@ -111,7 +119,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		
 		// one-to-many marker synonyms
 		if (entity.getSynonyms() != null) {
-			Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getSynonyms(), translationDepth - 1);
+			Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getSynonyms());
 			if(i.iterator().hasNext() == true) {
 				domain.setSynonyms(IteratorUtils.toList(i.iterator()));
 			}

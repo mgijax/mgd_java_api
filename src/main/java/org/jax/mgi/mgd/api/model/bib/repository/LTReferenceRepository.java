@@ -16,6 +16,8 @@ import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.exception.NonFatalAPIException;
 import org.jax.mgi.mgd.api.model.BaseRepository;
 import org.jax.mgi.mgd.api.model.acc.dao.AccessionDAO;
+import org.jax.mgi.mgd.api.model.acc.dao.LogicalDBDAO;
+import org.jax.mgi.mgd.api.model.acc.dao.MGITypeDAO;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
@@ -28,6 +30,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mrk.dao.MarkerStatusDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -53,6 +56,12 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	@Inject
 	private AccessionDAO accessionDAO;
 
+	@Inject
+	private LogicalDBDAO logicaldbDAO;
+	
+	@Inject
+	private MGITypeDAO mgiTypeDAO;
+	
 	LTReferenceTranslator translator = new LTReferenceTranslator();
 
 	/* These work together to allow for a maximum delay of two seconds for retries: */
@@ -430,7 +439,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		int idPos = -1;			// position of correct ID in list of IDs
 		for (int i = 0; i < ids.size(); i++) {
 			Accession myID = ids.get(i);
-			if (ldb.equals(myID.get_logicaldb_key())) {
+			if (ldb.equals(myID.getLogicaldb().get_logicaldb_key())) {
 				idPos = i;
 				break;
 			}
@@ -450,7 +459,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				myID.setPrefixPart(prefixPart);
 				myID.setNumericPart(numericPart);
 				myID.setModification_date(new Date());
-				myID.setModifiedByUser(currentUser);
+				myID.setModifiedBy(currentUser);
 			}
 		} else {
 			// We didn't find an existing ID for this logical database, so we need to add one.
@@ -462,15 +471,15 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			myID.setAccID(accID);
 			myID.setPreferred(preferred);
 			myID.setIs_private(isPrivate);
-			myID.set_logicaldb_key(ldb);
+			myID.setLogicaldb(logicaldbDAO.get(ldb));
 			myID.set_object_key(entity.get_refs_key());
-			myID.set_mgitype_key(Constants.TYPE_REFERENCE);
+			myID.setMgiType(mgiTypeDAO.get(Constants.TYPE_REFERENCE));
 			myID.setPrefixPart(prefixPart);
 			myID.setNumericPart(numericPart);
 			myID.setCreation_date(creation);
 			myID.setModification_date(creation);
-			myID.setCreatedByUser(currentUser);
-			myID.setModifiedByUser(currentUser);
+			myID.setCreatedBy(currentUser);
+			myID.setModifiedBy(currentUser);
 
 			referenceDAO.persist(myID);
 		}

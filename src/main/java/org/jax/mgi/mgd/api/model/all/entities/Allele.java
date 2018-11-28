@@ -139,7 +139,7 @@ public class Allele extends BaseEntity {
 	public Set<Accession> getAccessionIdsByLogicalDb(Integer db_key) {
 		HashSet<Accession> set = new HashSet<Accession>();
 		for(Accession a: allAccessionIds) {
-			if(a.get_logicaldb_key() == db_key) {
+			if(a.getLogicaldb().get_logicaldb_key() == db_key) {
 				set.add(a);
 			}
 		}

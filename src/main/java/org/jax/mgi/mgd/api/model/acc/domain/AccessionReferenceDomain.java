@@ -13,6 +13,7 @@ public class AccessionReferenceDomain extends BaseDomain {
 	private String accessionKey;
 	private String refKey;
 	private String jnumid;
+	private String jnum;
 	private String short_citation;	
 	private String createdByKey;
 	private String createdBy;

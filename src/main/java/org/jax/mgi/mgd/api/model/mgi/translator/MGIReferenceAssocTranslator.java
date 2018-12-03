@@ -27,9 +27,9 @@ public class MGIReferenceAssocTranslator extends BaseEntityDomainTranslator<MGIR
 		domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());
 		
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
-		domain.setCreatedBy(entity.getCreatedBy().getName());
+		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
-		domain.setModifiedBy(entity.getModifiedBy().getName());
+		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		

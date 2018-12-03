@@ -49,9 +49,9 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		domain.setMarkerTypeKey(entity.getMarkerType().get_marker_type_key().toString());
 		domain.setMarkerType(entity.getMarkerType().getName());
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
-		domain.setCreatedBy(entity.getCreatedBy().getName());
+		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
-		domain.setModifiedBy(entity.getModifiedBy().getName());
+		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
@@ -103,14 +103,6 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			}
 		}
 		
-		// accession ids for nucleotide sequences (ldb = 9)
-		//if (entity.getNucleotideAccessionIds() != null) {
-		//	Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getNucleotideAccessionIds());
-		//	if(acc.iterator().hasNext() == true) {
-		//		domain.setNucleotideAccessionIds(IteratorUtils.toList(acc.iterator()));
-		//	}
-		//}
-		
 		// one-to-many marker history
 		if (entity.getHistory() != null) {
 			Iterable<MarkerHistoryDomain> i = historyTranslator.translateEntities(entity.getHistory());
@@ -126,6 +118,17 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 				domain.setSynonyms(IteratorUtils.toList(i.iterator()));
 			}
 		}
+		
+		// "List<AccessoinDomain> nucleotideAccessionIds;" exists in the domain,
+		// but will not be populated by the translator.
+		// instead, the List will be populated by the AccessionService/nucleotideAccessionIds method.
+		// accession ids for nucleotide sequences (ldb = 9)
+		//if (entity.getNucleotideAccessionIds() != null) {
+		//	Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getNucleotideAccessionIds());
+		//	if(acc.iterator().hasNext() == true) {
+		//		domain.setNucleotideAccessionIds(IteratorUtils.toList(acc.iterator()));
+		//	}
+		//}
 		
 		// "List<MGIReferenceAssocDomain> refAssocs;" exists in the domain,
 		// but will not be populated by the translator.

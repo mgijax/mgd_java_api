@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.acc.service;
 
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,15 +14,13 @@ import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.dao.AccessionDAO;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionReferenceDomain;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.search.AccessionSearchForm;
 import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
-import org.jax.mgi.mgd.api.model.mgi.dao.MGISynonymDAO;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
-import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
+import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -33,7 +33,8 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 	private AccessionDAO accessionDAO;
 
 	private AccessionTranslator translator = new AccessionTranslator();
-	
+	private SQLExecutor sqlExecutor = new SQLExecutor();
+
 	@Transactional
 	public SearchResults<AccessionDomain> create(AccessionDomain object, User user) {
 		// TODO Auto-generated method stub
@@ -77,7 +78,68 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 		Iterable<AccessionDomain> newItems = translator.translateEntities(accessions.items, searchForm.getSearchDepth());
 		return new SearchResults<AccessionDomain>(newItems);
 	}
+	
+	public List<AccessionDomain> markerNucleotideAccessionIds(Integer key) {
 
+		// list of results to be returned
+		List<AccessionDomain> results = new ArrayList<AccessionDomain>();
+		List<AccessionReferenceDomain> references = new ArrayList<AccessionReferenceDomain>();
+
+		String cmd = "select * from mrk_accref1_view where _logicaldb_key = 9 and _object_key = " + key;
+		log.info(cmd);
+
+		// request data, and parse results
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				AccessionDomain domain = new AccessionDomain();
+				AccessionReferenceDomain refDomain = new AccessionReferenceDomain();
+				
+				domain.setAccessionKey(rs.getString("_accession_key"));
+				domain.setLogicaldbKey(rs.getString("_logicaldb_key"));
+				domain.setLogicaldb(rs.getString("logicaldb"));
+				domain.setObjectKey(rs.getString("_object_key"));
+				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
+				domain.setAccID(rs.getString("accid"));
+				domain.setPrefixPart(rs.getString("prefixpart"));
+				domain.setNumericPart(rs.getString("numericpart"));
+				domain.setIsPrivate(rs.getString("private"));
+				domain.setPreferred(rs.getString("preferred"));
+				domain.setCreatedByKey(rs.getString("_createdby_key"));
+				domain.setCreatedBy(rs.getString("createdby"));
+				domain.setModifiedByKey(rs.getString("_modifiedby_key"));
+				domain.setModifiedBy(rs.getString("modifiedby"));
+				domain.setCreation_date(rs.getString("creation_date"));
+				domain.setModification_date(rs.getString("modification_date"));
+				
+				// list of 1 reference
+				refDomain.setAccessionKey(rs.getString("_accession_key"));
+				refDomain.setRefKey(rs.getString("_refs_key"));
+				refDomain.setJnumid(rs.getString("jnumid"));
+				refDomain.setJnum(rs.getString("jnum"));
+				refDomain.setShort_citation(rs.getString("short_citation"));
+				// using acc_accession create/modify information
+				refDomain.setCreatedByKey(rs.getString("_createdby_key"));
+				refDomain.setCreatedBy(rs.getString("createdby"));
+				refDomain.setModifiedByKey(rs.getString("_modifiedby_key"));
+				refDomain.setModifiedBy(rs.getString("modifiedby"));
+				refDomain.setCreation_date(rs.getString("creation_date"));
+				refDomain.setModification_date(rs.getString("modification_date"));				
+				references.add(refDomain);
+				domain.setReferences(references);
+				
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		// ...off to be turned into JSON
+		return results;
+	}
+	
 	@Transactional
 	public static void processAccession(String parentKey, List<AccessionDomain> domain, AccessionDAO accessionDAO, ReferenceDAO referenceDAO, String mgiTypeKey, String logicaldbKey, User user) {
 		// process synonym associations (create, delete, update)

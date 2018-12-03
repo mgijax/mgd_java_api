@@ -1,7 +1,11 @@
 package org.jax.mgi.mgd.api.model.acc.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -11,10 +15,12 @@ import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.search.AccessionSearchForm;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Path("/accession")
 @Api(value = "Accession Endpoints")
@@ -50,4 +56,20 @@ public class AccessionController extends BaseController<AccessionDomain> impleme
 		return accessionService.search(searchForm);
 	}
 
+	@POST
+	@ApiOperation(value = "Nucleotide Accession Ids")
+	@Path("/markerNucleotideAccessionIds")
+	public List<AccessionDomain> nucleotideAccessionIds(Integer key) {
+			
+		List<AccessionDomain> results = new ArrayList<AccessionDomain>();
+		
+		try {
+			results = accessionService.markerNucleotideAccessionIds(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

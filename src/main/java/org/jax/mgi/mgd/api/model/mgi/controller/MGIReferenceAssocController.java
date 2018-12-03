@@ -1,7 +1,11 @@
 package org.jax.mgi.mgd.api.model.mgi.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -10,9 +14,12 @@ import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
+import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIResultDomain;
+import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Path("/mgireferenceassoc")
 @Api(value = "MGI Reference Assoc Endpoints")
@@ -43,4 +50,19 @@ public class MGIReferenceAssocController extends BaseController<MGIReferenceAsso
 		return referenceAssocService.delete(key, user);
 	}
 	
+	@POST
+	@ApiOperation(value = "Marker")
+	@Path("/marker")
+	public List<MGIReferenceAssocDomain> marker(Integer key) {
+			
+		List<MGIReferenceAssocDomain> results = new ArrayList<MGIReferenceAssocDomain>();
+		
+		try {
+			results = referenceAssocService.marker(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 }

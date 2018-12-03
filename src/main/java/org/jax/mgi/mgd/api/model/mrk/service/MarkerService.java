@@ -14,12 +14,10 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
-import org.jax.mgi.mgd.api.model.mgi.dao.MGIReferenceAssocDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGISynonymDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.NoteDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.mrk.dao.EventDAO;
@@ -57,8 +55,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private MGISynonymDAO synonymDAO;
 	@Inject
 	private ReferenceDAO referenceDAO;
-	@Inject
-	private MGIReferenceAssocDAO refAssocDAO;
+	//@Inject
+	//private MGIReferenceAssocDAO refAssocDAO;
 	
 	@Inject
 	private OrganismDAO organismDAO;

@@ -14,10 +14,12 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.mgi.dao.MGIReferenceAssocDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGISynonymDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.NoteDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.mrk.dao.EventDAO;
@@ -55,8 +57,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private MGISynonymDAO synonymDAO;
 	@Inject
 	private ReferenceDAO referenceDAO;
-	//@Inject
-	//private MGIReferenceAssocDAO refAssocDAO;
+	@Inject
+	private MGIReferenceAssocDAO refAssocDAO;
 	
 	@Inject
 	private OrganismDAO organismDAO;
@@ -160,7 +162,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		// return entity translated to domain
 		log.info("processMarker/create/returning results");
-		results.setItem(translator.translate(entity));
+		results.setItem(translator.translate(entity,0));
 		return results;
 	}
 	
@@ -265,23 +267,25 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		MGISynonymService.processSynonym(domain.getMarkerKey(), domain.getSynonyms(), synonymDAO, referenceDAO, mgiTypeKey, user);
 		
 		// process marker reference
-		//MGIReferenceAssocService.processReferenceAssoc(domain.getMarkerKey(), domain.getRefAssocs(), refAssocDAO, referenceDAO, mgiTypeKey, user);
-
+		if (domain.getRefAssocs() != null) {
+			MGIReferenceAssocService.processReferenceAssoc(domain.getMarkerKey(), domain.getRefAssocs(), refAssocDAO, referenceDAO, mgiTypeKey, user);
+		}
+		
 		// return entity translated to domain
 		log.info("processMarker/update/returning results");
-		results.setItem(translator.translate(entity));
+		results.setItem(translator.translate(entity, 1));
 		return results;
 	}
 
 	@Transactional
 	public MarkerDomain get(Integer key) {
-		return translator.translate(markerDAO.get(key));
+		return translator.translate(markerDAO.get(key),0);
 	}
 
 	@Transactional
 	public SearchResults<MarkerDomain> getResults(Integer key) {
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
-		results.setItem(translator.translate(markerDAO.get(key)));
+		results.setItem(translator.translate(markerDAO.get(key),0));
 		return results;
 	}
 	

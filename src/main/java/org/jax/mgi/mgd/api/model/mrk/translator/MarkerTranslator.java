@@ -1,7 +1,5 @@
 package org.jax.mgi.mgd.api.model.mrk.translator;
 
-import java.util.List;
-
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
@@ -26,8 +24,8 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	private MarkerHistoryTranslator historyTranslator = new MarkerHistoryTranslator();
 	private MGISynonymTranslator synonymTranslator = new MGISynonymTranslator();
+	private MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
 	
-	//private MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
 	//private TermTranslator termTranslator = new TermTranslator();
 	//private SequenceMarkerCacheTranslator biotypesTranslator = new SequenceMarkerCacheTranslator();
 
@@ -130,16 +128,21 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		//	}
 		//}
 		
-		// "List<MGIReferenceAssocDomain> refAssocs;" exists in the domain,
-		// but will not be populated by the translator.
-		// instead, the List will be populated by the MGIReferenceAssocService/marker method.
-		// one-to-many marker reference associations
-		//if (entity.getRefAssocs() != null) {
-		//	Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs(), translationDepth - 1);
-		//	if(i.iterator().hasNext() == true) {
-		//		domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
-		//	}
-		//}
+		// only perform translation depth as part of entity refresh
+		if (translationDepth > 0) {
+
+			log.info("translationDepth > 0");
+			
+			if (entity.getRefAssocs() != null) {
+				log.info("translatinDepth > 0/entity.getRefAssocs()");
+				Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
+				if(i.iterator().hasNext() == true) {
+					log.info("translationDepth > 0/domain.setRefAssocs()");
+					domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
+				}
+			}
+			
+		}
 		
 		// all gene-to-tss relationships
 		//List<String> geneToTssRelationships = new ArrayList<String>();

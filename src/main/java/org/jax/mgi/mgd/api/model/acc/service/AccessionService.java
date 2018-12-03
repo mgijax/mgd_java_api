@@ -83,18 +83,25 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 
 		// list of results to be returned
 		List<AccessionDomain> results = new ArrayList<AccessionDomain>();
-		List<AccessionReferenceDomain> references = new ArrayList<AccessionReferenceDomain>();
 
-		String cmd = "select * from mrk_accref1_view where _logicaldb_key = 9 and _object_key = " + key;
+		String cmd = "select * from mrk_accref1_view "
+				+ "\nwhere _logicaldb_key = 9 and _object_key = " + key
+				+ "\norder by _accession_key";
 		log.info(cmd);
 
 		// request data, and parse results
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				AccessionDomain domain = new AccessionDomain();
-				AccessionReferenceDomain refDomain = new AccessionReferenceDomain();
 				
+				// if accession key already exists in results, then > 1 reference
+				
+				//String accessionKey = rs.getString("_accession_key");
+				//if (results.contains(accessionKey) == accessionKey)) {
+				//	
+				//}
+						
+				AccessionDomain domain = new AccessionDomain();
 				domain.setAccessionKey(rs.getString("_accession_key"));
 				domain.setLogicaldbKey(rs.getString("_logicaldb_key"));
 				domain.setLogicaldb(rs.getString("logicaldb"));
@@ -112,7 +119,8 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 				domain.setCreation_date(rs.getString("creation_date"));
 				domain.setModification_date(rs.getString("modification_date"));
 				
-				// list of 1 reference
+				List<AccessionReferenceDomain> references = new ArrayList<AccessionReferenceDomain>();
+				AccessionReferenceDomain refDomain = new AccessionReferenceDomain();
 				refDomain.setAccessionKey(rs.getString("_accession_key"));
 				refDomain.setRefKey(rs.getString("_refs_key"));
 				refDomain.setJnumid(rs.getString("jnumid"));

@@ -109,11 +109,11 @@ public class Marker extends BaseEntity {
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 	
-	//@OneToMany
-	//@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
-	//@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` = 9")
-	//@OrderBy(clause ="accid")
-	//private List<Accession> nucleotideAccessionIds;
+	@OneToMany
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
+	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` = 9")
+	@OrderBy(clause ="accid")
+	private List<Accession> nucleotideAccessionIds;
 	
 	@OneToMany
 	@JoinColumn(name="_marker_key", insertable=false, updatable=false)

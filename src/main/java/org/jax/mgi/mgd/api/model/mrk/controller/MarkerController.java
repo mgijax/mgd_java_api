@@ -16,7 +16,6 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIResultDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
-import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -99,12 +98,12 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	@POST
 	@ApiOperation(value = "EI Search")
 	@Path("/eiSearch")
-	public List<MarkerEIResultDomain> eiSearch(MarkerSearchForm searchForm) {
+	public List<MarkerEIResultDomain> eiSearch(MarkerDomain searchDomain) {
 			
 		List<MarkerEIResultDomain> results = new ArrayList<MarkerEIResultDomain>();
 		
 		try {
-			results = markerService.eiSearch(searchForm);
+			results = markerService.eiSearch(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

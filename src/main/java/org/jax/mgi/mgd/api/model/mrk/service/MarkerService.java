@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGIReferenceAssocDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGISynonymDAO;
@@ -298,15 +300,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		return results;
 	}
 	
-	public List<MarkerEIResultDomain> eiSearch(MarkerSearchForm searchForm) {
+	public List<MarkerEIResultDomain> eiSearch(MarkerDomain searchDomain) {
 
 		// list of results to be returned
 		List<MarkerEIResultDomain> results = new ArrayList<MarkerEIResultDomain>();
 
-		// parameters defined in SearchForm
-		Map<String, Object> params = searchForm.getSearchFields();
-		log.info(params);
-		
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
@@ -327,116 +325,141 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		// if parameter exists, then add to where-clause
 		
+		Map<String, Object> params = new HashMap<>();
+		if (searchDomain.getCreatedBy() != null && !searchDomain.getCreatedBy().isEmpty()) {
+			params.put("createdBy", searchDomain.getCreatedBy());
+		}
+		if (searchDomain.getModifiedBy() != null && !searchDomain.getModifiedBy().isEmpty()) {
+			params.put("modifiedBy", searchDomain.getModifiedBy());
+		}
+		if (searchDomain.getCreation_date() != null && !searchDomain.getCreation_date().isEmpty()) {
+			params.put("creation_date", searchDomain.getCreation_date());
+		}
+		if (searchDomain.getModification_date() != null && !searchDomain.getModification_date().isEmpty()) {
+			params.put("modification_date", searchDomain.getModification_date());
+		}
 		String cmResults[] = DateSQLQuery.queryByCreationModification(params, "m");
 		if (cmResults.length > 0) {
 			from = from + cmResults[0];
 			where = where + cmResults[1];
 		}
 		
-		if (params.containsKey("symbol")) {
-			where = where + "\nand m.symbol ilike '" + params.get("symbol") + "'" ;
+		if (searchDomain.getSymbol() != null && !searchDomain.getSymbol().isEmpty()) {
+			where = where + "\nand m.symbol ilike '" + searchDomain.getSymbol() + "'" ;
 		}
-		if (params.containsKey("name")) {
-			where = where + "\nand m.name ilike '" + params.get("name") + "'" ;
+		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
+			where = where + "\nand m.name ilike '" + searchDomain.getName() + "'" ;
 		}
-		if (params.containsKey("chromosome")) {
-			where = where + "\nand m.chromosome = '" + params.get("chromosome") + "'" ;
+		if (searchDomain.getChromosome() != null && !searchDomain.getChromosome().isEmpty()) {
+			where = where + "\nand m.chromosome = '" + searchDomain.getChromosome() + "'" ;
 		}
-		if (params.containsKey("cytogeneticOffset")) {
-			where = where + "\nand m.cytogeneticOffset = '" + params.get("cytogeneticOffset") + "'" ;
+		if (searchDomain.getCytogeneticOffset() != null && !searchDomain.getCytogeneticOffset().isEmpty()) {
+			where = where + "\nand m.cytogeneticOffset = '" + searchDomain.getCytogeneticOffset() + "'" ;
 		}
-		if (params.containsKey("cmOffset")) {
-			where = where + "\nand m.cmoffset = " + params.get("cmOffset");
+		if (searchDomain.getCmOffset() != null && !searchDomain.getCmOffset().isEmpty()) {
+			where = where + "\nand m.cmoffset = " + searchDomain.getCmOffset();
 		}
-		if (params.containsKey("markerStatusKey")) {
-			where = where + "\nand m._marker_status_key = " + params.get("markerStatusKey");
+		if (searchDomain.getMarkerStatusKey() != null && !searchDomain.getMarkerStatusKey().isEmpty()) {
+			where = where + "\nand m._marker_status_key = " + searchDomain.getMarkerStatusKey();
 		}
-		if (params.containsKey("markerTypeKey")) {
-			where = where + "\nand m._marker_type_key = " + params.get("markerTypeKey");
+		if (searchDomain.getMarkerTypeKey() != null && !searchDomain.getMarkerTypeKey().isEmpty()) {
+			where = where + "\nand m._marker_type_key = " + searchDomain.getMarkerTypeKey();
 		}
 		
 		// notes
-		if (params.containsKey("editorNote")) {
-			where = where + "\nand note1._notetype_key = 1004 and note1.note ilike '" + params.get("editorNote") + "'" ;
+		if (searchDomain.getEditorNote() != null) {
+			String note = searchDomain.getEditorNote().getNoteChunk().replaceAll("'",  "''");
+			where = where + "\nand note1._notetype_key = 1004 and note1.note ilike '" + note + "'" ;
 			from_editorNote = true;
 		}
-		if (params.containsKey("sequenceNote")) {
-			where = where + "\nand note2._notetype_key = 1009 and note2.note ilike '" + params.get("sequenceNote") + "'" ;
+		if (searchDomain.getSequenceNote() != null) {
+			String note = searchDomain.getSequenceNote().getNoteChunk().replaceAll("'",  "''");
+			where = where + "\nand note2._notetype_key = 1009 and note2.note ilike '" + note + "'" ;
 			from_sequenceNote = true;
 		}
-		if (params.containsKey("revisionNote")) {
-			where = where + "\nand note3._notetype_key = 1030 and note3.note ilike '" + params.get("revisionNote") + "'" ;
+		if (searchDomain.getRevisionNote() != null) {
+			String note = searchDomain.getRevisionNote().getNoteChunk().replaceAll("'",  "''");
+			where = where + "\nand note3._notetype_key = 1030 and note3.note ilike '" + note + "'" ;
 			from_revisionNote = true;
 		}
-		if (params.containsKey("strainNote")) {
-			where = where + "\nand note4._notetype_key = 1035 and note4.note ilike '" + params.get("strainNote") + "'" ;
+		if (searchDomain.getStrainNote() != null) {
+			String note = searchDomain.getStrainNote().getNoteChunk().replaceAll("'",  "''");
+			where = where + "\nand note4._notetype_key = 1035 and note4.note ilike '" + note + "'" ;
 			from_strainNote = true;
 		}
-		if (params.containsKey("locationNote")) {
-			where = where + "\nand note5._notetype_key = 1049 and note5.note ilike '" + params.get("locationNote") + "'" ;
+		if (searchDomain.getLocationNote() != null) {
+			String note = searchDomain.getLocationNote().getNoteChunk().replaceAll("'",  "''");
+			where = where + "\nand note5._notetype_key = 1049 and note5.note ilike '" + note + "'" ;
 			from_locationNote = true;
 		}
-		
+	
 		// marker accession id
-		if (params.containsKey("accID")) {
-			where = where + "\nand a.accID ilike '" + params.get("accID") + "'";
+		if (searchDomain.getMgiAccessionIds() != null) {
+			where = where + "\nand a.accID ilike '" + searchDomain.getMgiAccessionIds().get(0).getAccID() + "'";
 			from_accession = true;
 		}
 		
 		// history
-		if (params.containsKey("historySymbol")) {
-			where = where + "\nand mh.history ilike '" + params.get("historySymbol") + "'";
-			from_history = true;
-		}
-		if (params.containsKey("historyName")) {
-			where = where + "\nand mh.name ilike '" + params.get("historyName") + "'";
-			from_history = true;
-		}
-		if (params.containsKey("historyEventDate")) {
-			where = where + "\nand mh.event_display = '" + params.get("historyEventDate") + "'";
-			from_history = true;
-		}
-		if (params.containsKey("historyRef")) {
-			where = where + "\nand mh._Ref_key = " + params.get("historyRef");
-			from_history = true;
-		}
-		if (params.containsKey("historyShortCitation")) {
-			where = where + "\nand mh.short_citation ilike '" + params.get("historyShortCitation") + "'";
-			from_history = true;
-		}
-		if (params.containsKey("historyEvent")) {
-			where = where + "\nand mh.event ilike '" + params.get("historyEvent") + "'";
-			from_history = true;
-		}
-		if (params.containsKey("historyEventReason")) {
-			where = where + "\nand mh.eventReason ilike '" + params.get("historyEventReason") + "'";
-			from_history = true;
-		}
-		if (params.containsKey("historyModifiedBy")) {
-			where = where + "\nand mh.modifiedBy ilike '" + params.get("historyModifiedBy") + "'";
-			from_history = true;
+		if (searchDomain.getHistory() != null) {
+			if (searchDomain.getHistory().get(0).getMarkerHistorySymbol() != null && !searchDomain.getHistory().get(0).getMarkerHistorySymbol().isEmpty()) {
+				where = where + "\nand mh.history ilike '" + searchDomain.getHistory().get(0).getMarkerHistorySymbol() + "'";
+				from_history = true;
+			}
+			if (searchDomain.getHistory().get(0).getMarkerHistoryName() != null && !searchDomain.getHistory().get(0).getMarkerHistoryName().isEmpty()) {
+				where = where + "\nand mh.name ilike '" + searchDomain.getHistory().get(0).getMarkerHistoryName() + "'";
+				from_history = true;
+			}
+			if (searchDomain.getHistory().get(0).getEvent_date() != null && !searchDomain.getHistory().get(0).getEvent_date().isEmpty()) {
+				where = where + "\nand mh.event_display = '" + searchDomain.getHistory().get(0).getEvent_date() + "'";
+				from_history = true;
+			}
+			if (searchDomain.getHistory().get(0).getRefKey() != null && !searchDomain.getHistory().get(0).getRefKey().isEmpty()) {
+				where = where + "\nand mh._Ref_key = " + searchDomain.getHistory().get(0).getRefKey();
+				from_history = true;
+			}
+			if (searchDomain.getHistory().get(0).getShort_citation() != null && !searchDomain.getHistory().get(0).getShort_citation().isEmpty()) {
+				where = where + "\nand mh.short_citation ilike '" + searchDomain.getHistory().get(0).getShort_citation() + "'";
+				from_history = true;
+			}
+			if (searchDomain.getHistory().get(0).getMarkerEvent() != null && !searchDomain.getHistory().get(0).getMarkerEvent().isEmpty()) {
+				where = where + "\nand mh.event ilike '" + searchDomain.getHistory().get(0).getMarkerEvent() + "'";
+				from_history = true;
+			}
+			if (searchDomain.getHistory().get(0).getMarkerEventReason() != null && !searchDomain.getHistory().get(0).getMarkerEventReason().isEmpty()) {
+				where = where + "\nand mh.eventReason ilike '" + searchDomain.getHistory().get(0).getMarkerEventReason() + "'";
+				from_history = true;
+			}
+			if (searchDomain.getHistory().get(0).getModifiedBy() != null && !searchDomain.getHistory().get(0).getModifiedBy().isEmpty()) {
+				where = where + "\nand mh.modifiedBy ilike '" + searchDomain.getHistory().get(0).getModifiedBy() + "'";
+				from_history = true;
+			}
 		}
 
 		// synonym
-		if (params.containsKey("synonymName")) {
-			where = where + "\nand ms.synonym ilike '" + params.get("synonymName") + "'";
-			from_synonym = true;
-		}
-		if (params.containsKey("synonymRefKey")) {
-			where = where + "\nand ms._Ref_key = " + params.get("synonymRefKey");
-			from_synonym = true;
+		if (searchDomain.getSynonyms() != null) {
+			if (searchDomain.getSynonyms().get(0).getSynonym() != null && !searchDomain.getSynonyms().get(0).getSynonym().isEmpty()) {
+				where = where + "\nand ms.synonym ilike '" + searchDomain.getSynonyms().get(0).getSynonym() + "'";
+				from_synonym = true;
+			}
+			if (searchDomain.getSynonyms().get(0).getRefKey() != null && !searchDomain.getSynonyms().get(0).getRefKey().isEmpty()) {
+				where = where + "\nand ms._Ref_key = " + searchDomain.getSynonyms().get(0).getRefKey();
+				from_synonym = true;
+			}
 		}
 		
 		// reference
-		if (params.containsKey("refAssocRefKey")) {
-			where = where + "\nand mr._Ref_key = " + params.get("refAssocRefKey");
-			from_reference = true;
+		if (searchDomain.getRefAssocs() != null) {
+			if (searchDomain.getRefAssocs().get(0).getRefKey() != null && !searchDomain.getRefAssocs().get(0).getRefKey().isEmpty()) {
+				where = where + "\nand mr._Ref_key = " + searchDomain.getRefAssocs().get(0).getRefKey();
+				from_reference = true;
+			}
+			if (searchDomain.getRefAssocs().get(0).getShort_citation() != null && !searchDomain.getRefAssocs().get(0).getShort_citation().isEmpty()) {
+				String value = searchDomain.getRefAssocs().get(0).getShort_citation().replaceAll("'",  "''");
+				where = where + "\nand mr.short_citation ilike '" + value + "'";
+				from_reference = true;
+			}
 		}
-		if (params.containsKey("refAssocShortCitation")) {
-			where = where + "\nand mr.short_citation ilike '" + params.get("refAssocShortCitation") + "'";
-			from_reference = true;
-		}
-		
+
 		if (from_accession == true) {
 			// using this view to match the teleuse implementation
 			from = from + ", mrk_accnoref_view a";
@@ -472,7 +495,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			where = where + "\nand m._marker_key = ms._object_key";
 		}
 		if (from_reference == true) {
-			from = from + ", mrk_reference_marker_view mr";
+			from = from + ", mgi_reference_marker_view mr";
 			where = where + "\nand m._marker_key = mr._object_key";
 		}
 		
@@ -484,10 +507,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				MarkerEIResultDomain markerEIResultDomain = new MarkerEIResultDomain();
-				markerEIResultDomain.setMarkerKey(rs.getInt("_marker_key"));
-				markerEIResultDomain.setSymbol(rs.getString("symbol"));
-				results.add(markerEIResultDomain);
+				MarkerEIResultDomain domain = new MarkerEIResultDomain();
+				domain.setMarkerKey(rs.getInt("_marker_key"));
+				domain.setSymbol(rs.getString("symbol"));
+				results.add(domain);
 			}
 			sqlExecutor.cleanup();
 		}

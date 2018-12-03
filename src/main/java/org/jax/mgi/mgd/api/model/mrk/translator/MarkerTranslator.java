@@ -117,27 +117,22 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			}
 		}
 		
-		// "List<AccessoinDomain> nucleotideAccessionIds;" exists in the domain,
-		// but will not be populated by the translator.
-		// instead, the List will be populated by the AccessionService/nucleotideAccessionIds method.
-		// accession ids for nucleotide sequences (ldb = 9)
-		//if (entity.getNucleotideAccessionIds() != null) {
-		//	Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getNucleotideAccessionIds());
-		//	if(acc.iterator().hasNext() == true) {
-		//		domain.setNucleotideAccessionIds(IteratorUtils.toList(acc.iterator()));
-		//	}
-		//}
-		
 		// only perform translation depth as part of entity refresh
 		if (translationDepth > 0) {
 
 			log.info("translationDepth > 0");
 			
+			// accession ids for nucleotide sequences (ldb = 9)
+			if (entity.getNucleotideAccessionIds() != null) {
+				Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getNucleotideAccessionIds());
+				if(acc.iterator().hasNext() == true) {
+					domain.setNucleotideAccessionIds(IteratorUtils.toList(acc.iterator()));
+				}
+			}
+			
 			if (entity.getRefAssocs() != null) {
-				log.info("translatinDepth > 0/entity.getRefAssocs()");
 				Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
 				if(i.iterator().hasNext() == true) {
-					log.info("translationDepth > 0/domain.setRefAssocs()");
 					domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
 				}
 			}

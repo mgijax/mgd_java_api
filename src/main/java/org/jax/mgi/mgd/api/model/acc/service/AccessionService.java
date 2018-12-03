@@ -88,36 +88,51 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 				+ "\nwhere _logicaldb_key = 9 and _object_key = " + key
 				+ "\norder by _accession_key";
 		log.info(cmd);
+		
+		String previousAccessionKey = "";
+		AccessionDomain saveDomain = new AccessionDomain();
 
 		// request data, and parse results
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				
-				// if accession key already exists in results, then > 1 reference
-				
-				//String accessionKey = rs.getString("_accession_key");
-				//if (results.contains(accessionKey) == accessionKey)) {
-				//	
-				//}
-						
 				AccessionDomain domain = new AccessionDomain();
-				domain.setAccessionKey(rs.getString("_accession_key"));
-				domain.setLogicaldbKey(rs.getString("_logicaldb_key"));
-				domain.setLogicaldb(rs.getString("logicaldb"));
-				domain.setObjectKey(rs.getString("_object_key"));
-				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
-				domain.setAccID(rs.getString("accid"));
-				domain.setPrefixPart(rs.getString("prefixpart"));
-				domain.setNumericPart(rs.getString("numericpart"));
-				domain.setIsPrivate(rs.getString("private"));
-				domain.setPreferred(rs.getString("preferred"));
-				domain.setCreatedByKey(rs.getString("_createdby_key"));
-				domain.setCreatedBy(rs.getString("createdby"));
-				domain.setModifiedByKey(rs.getString("_modifiedby_key"));
-				domain.setModifiedBy(rs.getString("modifiedby"));
-				domain.setCreation_date(rs.getString("creation_date"));
-				domain.setModification_date(rs.getString("modification_date"));
+
+				String accessionKey = rs.getString("_accession_key");
+				
+				log.info("previous key : " + previousAccessionKey);
+				log.info("new key : " + accessionKey);
+				
+				// if accession key already exists in results, then > 1 reference
+				if (!accessionKey.equals(previousAccessionKey)) {
+					domain.setAccessionKey(accessionKey);
+					domain.setLogicaldbKey(rs.getString("_logicaldb_key"));
+					domain.setLogicaldb(rs.getString("logicaldb"));
+					domain.setObjectKey(rs.getString("_object_key"));
+					domain.setMgiTypeKey(rs.getString("_mgitype_key"));
+					domain.setAccID(rs.getString("accid"));
+					domain.setPrefixPart(rs.getString("prefixpart"));
+					domain.setNumericPart(rs.getString("numericpart"));
+					domain.setIsPrivate(rs.getString("private"));
+					domain.setPreferred(rs.getString("preferred"));
+					domain.setCreatedByKey(rs.getString("_createdby_key"));
+					domain.setCreatedBy(rs.getString("createdby"));
+					domain.setModifiedByKey(rs.getString("_modifiedby_key"));
+					domain.setModifiedBy(rs.getString("modifiedby"));
+					domain.setCreation_date(rs.getString("creation_date"));
+					domain.setModification_date(rs.getString("modification_date"));
+					saveDomain = domain;
+				}
+				else {
+					// use saved domain
+					domain = saveDomain;
+				}
+				
+				previousAccessionKey = accessionKey;
+
+				// attach reference to domain
+				// either new domain or saved domain using previousAccessionKey
 				
 				List<AccessionReferenceDomain> references = new ArrayList<AccessionReferenceDomain>();
 				AccessionReferenceDomain refDomain = new AccessionReferenceDomain();
@@ -200,7 +215,7 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 				
 				// reference can be null
 				// may be null coming from entity
-				//if (entity.getReference() == null) {
+				//if (entity.getReferences() == null) {
 				//	if (!domain.get(i).getRefKey().isEmpty()) {
 				//		entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefKey())));
 				//		modified = true;
@@ -208,7 +223,7 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 				//}
 				// may be empty coming from domain
 				//else if (domain.get(i).getRefKey().isEmpty()) {
-				//	entity.setReference(null);
+				//	entity.setReferences(null);
 				//	modified = true;
 				//}
 				// if not entity/null and not domain/empty, then check if equivalent

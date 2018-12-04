@@ -419,12 +419,12 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				where = where + "\nand mh.short_citation ilike '" + searchDomain.getHistory().get(0).getShort_citation() + "'";
 				from_history = true;
 			}
-			if (searchDomain.getHistory().get(0).getMarkerEvent() != null && !searchDomain.getHistory().get(0).getMarkerEvent().isEmpty()) {
-				where = where + "\nand mh.event ilike '" + searchDomain.getHistory().get(0).getMarkerEvent() + "'";
+			if (searchDomain.getHistory().get(0).getMarkerEventKey() != null && !searchDomain.getHistory().get(0).getMarkerEventKey().isEmpty()) {
+				where = where + "\nand mh._Marker_Event_key = " + searchDomain.getHistory().get(0).getMarkerEventKey();
 				from_history = true;
 			}
-			if (searchDomain.getHistory().get(0).getMarkerEventReason() != null && !searchDomain.getHistory().get(0).getMarkerEventReason().isEmpty()) {
-				where = where + "\nand mh.eventReason ilike '" + searchDomain.getHistory().get(0).getMarkerEventReason() + "'";
+			if (searchDomain.getHistory().get(0).getMarkerEventReasonKey() != null && !searchDomain.getHistory().get(0).getMarkerEventReasonKey().isEmpty()) {
+				where = where + "\nand mh._Marker_EventReason_key = " + searchDomain.getHistory().get(0).getMarkerEventReasonKey();
 				from_history = true;
 			}
 			if (searchDomain.getHistory().get(0).getModifiedBy() != null && !searchDomain.getHistory().get(0).getModifiedBy().isEmpty()) {

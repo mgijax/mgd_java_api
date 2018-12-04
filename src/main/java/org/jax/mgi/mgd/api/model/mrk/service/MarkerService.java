@@ -311,6 +311,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		String where = "where m._organism_key = 1";
 		String orderBy = "order by m._marker_type_key, m.symbol";
 		String limit = "LIMIT 1000";
+		String value;
 		Boolean from_editorNote = false;
 		Boolean from_sequenceNote = false;
 		Boolean from_revisionNote = false;
@@ -323,20 +324,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		// if parameter exists, then add to where-clause
 		
-		Map<String, Object> params = new HashMap<>();
-		if (searchDomain.getCreatedBy() != null && !searchDomain.getCreatedBy().isEmpty()) {
-			params.put("createdBy", searchDomain.getCreatedBy());
-		}
-		if (searchDomain.getModifiedBy() != null && !searchDomain.getModifiedBy().isEmpty()) {
-			params.put("modifiedBy", searchDomain.getModifiedBy());
-		}
-		if (searchDomain.getCreation_date() != null && !searchDomain.getCreation_date().isEmpty()) {
-			params.put("creation_date", searchDomain.getCreation_date());
-		}
-		if (searchDomain.getModification_date() != null && !searchDomain.getModification_date().isEmpty()) {
-			params.put("modification_date", searchDomain.getModification_date());
-		}
-		String cmResults[] = DateSQLQuery.queryByCreationModification(params, "m");
+		String cmResults[] = DateSQLQuery.queryByCreationModification("m", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {
 			from = from + cmResults[0];
 			where = where + cmResults[1];
@@ -366,28 +354,28 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		// notes
 		if (searchDomain.getEditorNote() != null) {
-			String note = searchDomain.getEditorNote().getNoteChunk().replaceAll("'",  "''");
-			where = where + "\nand note1._notetype_key = 1004 and note1.note ilike '" + note + "'" ;
+			value = searchDomain.getEditorNote().getNoteChunk().replaceAll("'",  "''");
+			where = where + "\nand note1._notetype_key = 1004 and note1.note ilike '" + value + "'" ;
 			from_editorNote = true;
 		}
 		if (searchDomain.getSequenceNote() != null) {
-			String note = searchDomain.getSequenceNote().getNoteChunk().replaceAll("'",  "''");
-			where = where + "\nand note2._notetype_key = 1009 and note2.note ilike '" + note + "'" ;
+			value = searchDomain.getSequenceNote().getNoteChunk().replaceAll("'",  "''");
+			where = where + "\nand note2._notetype_key = 1009 and note2.note ilike '" + value + "'" ;
 			from_sequenceNote = true;
 		}
 		if (searchDomain.getRevisionNote() != null) {
-			String note = searchDomain.getRevisionNote().getNoteChunk().replaceAll("'",  "''");
-			where = where + "\nand note3._notetype_key = 1030 and note3.note ilike '" + note + "'" ;
+			value = searchDomain.getRevisionNote().getNoteChunk().replaceAll("'",  "''");
+			where = where + "\nand note3._notetype_key = 1030 and note3.note ilike '" + value + "'" ;
 			from_revisionNote = true;
 		}
 		if (searchDomain.getStrainNote() != null) {
-			String note = searchDomain.getStrainNote().getNoteChunk().replaceAll("'",  "''");
-			where = where + "\nand note4._notetype_key = 1035 and note4.note ilike '" + note + "'" ;
+			value = searchDomain.getStrainNote().getNoteChunk().replaceAll("'",  "''");
+			where = where + "\nand note4._notetype_key = 1035 and note4.note ilike '" + value + "'" ;
 			from_strainNote = true;
 		}
 		if (searchDomain.getLocationNote() != null) {
-			String note = searchDomain.getLocationNote().getNoteChunk().replaceAll("'",  "''");
-			where = where + "\nand note5._notetype_key = 1049 and note5.note ilike '" + note + "'" ;
+			value = searchDomain.getLocationNote().getNoteChunk().replaceAll("'",  "''");
+			where = where + "\nand note5._notetype_key = 1049 and note5.note ilike '" + value + "'" ;
 			from_locationNote = true;
 		}
 	
@@ -416,7 +404,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				from_history = true;
 			}
 			if (searchDomain.getHistory().get(0).getShort_citation() != null && !searchDomain.getHistory().get(0).getShort_citation().isEmpty()) {
-				where = where + "\nand mh.short_citation ilike '" + searchDomain.getHistory().get(0).getShort_citation() + "'";
+				value = searchDomain.getHistory().get(0).getShort_citation().replaceAll("'",  "''");
+				where = where + "\nand mh.short_citation ilike '" + value + "'";
 				from_history = true;
 			}
 			if (searchDomain.getHistory().get(0).getMarkerEventKey() != null && !searchDomain.getHistory().get(0).getMarkerEventKey().isEmpty()) {
@@ -452,7 +441,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				from_reference = true;
 			}
 			if (searchDomain.getRefAssocs().get(0).getShort_citation() != null && !searchDomain.getRefAssocs().get(0).getShort_citation().isEmpty()) {
-				String value = searchDomain.getRefAssocs().get(0).getShort_citation().replaceAll("'",  "''");
+				value = searchDomain.getRefAssocs().get(0).getShort_citation().replaceAll("'",  "''");
 				where = where + "\nand mr.short_citation ilike '" + value + "'";
 				from_reference = true;
 			}

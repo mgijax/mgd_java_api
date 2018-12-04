@@ -1,14 +1,30 @@
 package org.jax.mgi.mgd.api.util;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class DateSQLQuery {
 			
-	public static String[] queryByCreationModification(Map<String, Object> params, String tag) {
+	public static String[] queryByCreationModification(String tag, String createdBy, String modifiedBy, String creation_date, String modification_date) {
 
 		String from = "";
 		String where = "";
-				
+		
+		Map<String, Object> params = new HashMap<>();
+		
+		if (createdBy != null && !createdBy.isEmpty()) {
+			params.put("createdBy", createdBy);
+		}
+		if (modifiedBy != null && !modifiedBy.isEmpty()) {
+			params.put("modifiedBy", modifiedBy);
+		}
+		if (creation_date != null && !creation_date.isEmpty()) {
+			params.put("creation_date", creation_date);
+		}
+		if (modification_date != null && !modification_date.isEmpty()) {
+			params.put("modification_date", modification_date);
+		}
+		
 		// construct where for created by/modified by
 		if (params.containsKey("createdBy")) {
 			where = where + "\nand u1.login ilike '" + params.get("createdBy") + "'";

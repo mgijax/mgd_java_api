@@ -14,7 +14,6 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGIReferenceAssocDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGISynonymDAO;
@@ -34,7 +33,6 @@ import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIResultDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
-import org.jax.mgi.mgd.api.model.mrk.search.MarkerSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
 import org.jax.mgi.mgd.api.util.Constants;

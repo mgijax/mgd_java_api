@@ -45,7 +45,7 @@ public class MarkerDomain extends BaseDomain {
 	private List<MGISynonymDomain> synonyms;
 	
 	// exists in domain, but not populated by marker translator
-	// instead will be populated by call to Accession/MGIReferenceAssoc service call
+	// instead will be populated by call to specific domain service
 	//
 	private List<AccessionDomain> nucleotideAccessionIds;
 	private List<MGIReferenceAssocDomain> refAssocs;

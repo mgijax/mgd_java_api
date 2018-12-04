@@ -85,57 +85,36 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 		List<AccessionDomain> results = new ArrayList<AccessionDomain>();
 
 		String cmd = "select * from mrk_accref1_view "
-				+ "\nwhere _logicaldb_key = 9 and _object_key = " + key
+				+ "\nwhere _logicaldb_key in (9) and _object_key = " + key
 				+ "\norder by _accession_key";
 		log.info(cmd);
 		
-		String previousAccessionKey = "";
-		AccessionDomain saveDomain = new AccessionDomain();
-
 		// request data, and parse results
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				
 				AccessionDomain domain = new AccessionDomain();
-
-				String accessionKey = rs.getString("_accession_key");
+				domain.setAccessionKey(rs.getString("_accession_key"));
+				domain.setLogicaldbKey(rs.getString("_logicaldb_key"));
+				domain.setLogicaldb(rs.getString("logicaldb"));
+				domain.setObjectKey(rs.getString("_object_key"));
+				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
+				domain.setAccID(rs.getString("accid"));
+				domain.setPrefixPart(rs.getString("prefixpart"));
+				domain.setNumericPart(rs.getString("numericpart"));
+				domain.setIsPrivate(rs.getString("private"));
+				domain.setPreferred(rs.getString("preferred"));
+				domain.setCreatedByKey(rs.getString("_createdby_key"));
+				domain.setCreatedBy(rs.getString("createdby"));
+				domain.setModifiedByKey(rs.getString("_modifiedby_key"));
+				domain.setModifiedBy(rs.getString("modifiedby"));
+				domain.setCreation_date(rs.getString("creation_date"));
+				domain.setModification_date(rs.getString("modification_date"));
 				
-				log.info("previous key : " + previousAccessionKey);
-				log.info("new key : " + accessionKey);
-				
-				// if accession key already exists in results, then > 1 reference
-				if (!accessionKey.equals(previousAccessionKey)) {
-					domain.setAccessionKey(accessionKey);
-					domain.setLogicaldbKey(rs.getString("_logicaldb_key"));
-					domain.setLogicaldb(rs.getString("logicaldb"));
-					domain.setObjectKey(rs.getString("_object_key"));
-					domain.setMgiTypeKey(rs.getString("_mgitype_key"));
-					domain.setAccID(rs.getString("accid"));
-					domain.setPrefixPart(rs.getString("prefixpart"));
-					domain.setNumericPart(rs.getString("numericpart"));
-					domain.setIsPrivate(rs.getString("private"));
-					domain.setPreferred(rs.getString("preferred"));
-					domain.setCreatedByKey(rs.getString("_createdby_key"));
-					domain.setCreatedBy(rs.getString("createdby"));
-					domain.setModifiedByKey(rs.getString("_modifiedby_key"));
-					domain.setModifiedBy(rs.getString("modifiedby"));
-					domain.setCreation_date(rs.getString("creation_date"));
-					domain.setModification_date(rs.getString("modification_date"));
-					saveDomain = domain;
-				}
-				else {
-					// use saved domain
-					domain = saveDomain;
-				}
-				
-				previousAccessionKey = accessionKey;
-
 				// attach reference to domain
-				// either new domain or saved domain using previousAccessionKey
-				
-				List<AccessionReferenceDomain> references = new ArrayList<AccessionReferenceDomain>();
 				AccessionReferenceDomain refDomain = new AccessionReferenceDomain();
+				List<AccessionReferenceDomain> references = new ArrayList<AccessionReferenceDomain>();
 				refDomain.setAccessionKey(rs.getString("_accession_key"));
 				refDomain.setRefKey(rs.getString("_refs_key"));
 				refDomain.setJnumid(rs.getString("jnumid"));
@@ -165,7 +144,10 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 	
 	@Transactional
 	public static void processAccession(String parentKey, List<AccessionDomain> domain, AccessionDAO accessionDAO, ReferenceDAO referenceDAO, String mgiTypeKey, String logicaldbKey, User user) {
-		// process synonym associations (create, delete, update)
+		// process accession associations (create, delete, update)
+		// using stored procedure methods (ACC_insertNoChecks(), ACC_delete_byAccKey(), ACC_update())
+		// using entity to compare domain vs entity
+		// but not using entity to handle actual create/delete/update processing
 		
 		if (domain == null || domain.isEmpty()) {
 			log.info("processAccession/nothing to process");
@@ -190,7 +172,7 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 							+ ",'" + domain.get(i).getAccID() + "'"
 							+ "," + logicaldbKey
 							+ "," + mgiTypeKey
-							//+ "," + domain.get(i).getRefKey()
+							+ "," + domain.get(i).getReferences().get(0).getRefKey()
 							+ ")";
 				log.info("cmd: " + cmd);
 				Query query = accessionDAO.createNativeQuery(cmd);
@@ -198,9 +180,13 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 			}
 			else if (domain.get(i).getAccessionKey() == null || domain.get(i).getAccessionKey().isEmpty()) {
 				log.info("processAccession delete");
-				Accession entity = accessionDAO.get(Integer.valueOf(domain.get(i).getAccessionKey()));
-				accessionDAO.remove(entity);
-				log.info("processSynonym delete successful");
+				cmd = "select count(*) from ACC_delete_byAccKey ("
+						+ domain.get(i).getAccessionKey()
+						+ ")";
+				log.info("cmd: " + cmd);
+				Query query = accessionDAO.createNativeQuery(cmd);
+				query.getResultList();
+				log.info("processAccession delete successful");
 			}
 			else {
 				log.info("processAccession update");
@@ -209,33 +195,37 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 				Accession entity = accessionDAO.get(Integer.valueOf(domain.get(i).getAccessionKey()));
 		
 				if (!entity.getAccID().equals(domain.get(i).getAccID())) {
-					entity.setAccID(domain.get(i).getAccID());
 					modified = true;
 				}
 				
 				// reference can be null
 				// may be null coming from entity
-				//if (entity.getReferences() == null) {
-				//	if (!domain.get(i).getRefKey().isEmpty()) {
-				//		entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefKey())));
-				//		modified = true;
-				//	}
-				//}
+				if (entity.getReferences() == null) {
+					if (!domain.get(i).getReferences().get(0).getRefKey().isEmpty()) {
+						modified = true;
+					}
+				}
 				// may be empty coming from domain
-				//else if (domain.get(i).getRefKey().isEmpty()) {
-				//	entity.setReferences(null);
-				//	modified = true;
-				//}
+				else if (domain.get(i).getReferences().get(0).getRefKey().isEmpty()) {
+					modified = true;
+				}
 				// if not entity/null and not domain/empty, then check if equivalent
-				//else if (!entity.getReference().get_refs_key().equals(Integer.valueOf(domain.get(i).getRefKey()))) {
-				//	entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefKey())));
-				//	modified = true;
-				//}
+				else if (!entity.getReferences().get(0).getReference().get_refs_key().equals(Integer.valueOf(domain.get(i).getReferences().get(0).getRefKey()))) {
+					modified = true;
+				}
 				
 				if (modified == true) {
-					entity.setModification_date(new Date());
-					entity.setModifiedBy(user);
-					accessionDAO.update(entity);
+					cmd = "select count(*) from ACC_update ("
+							+ user.get_user_key().intValue()
+							+ "," + domain.get(i).getAccessionKey()
+							+ ",'" + domain.get(i).getAccID() + "'"
+							+ "," + domain.get(i).getObjectKey()
+							+ "," + entity.getReferences().get(0).getReference().get_refs_key()
+							+ "," + domain.get(i).getReferences().get(0).getRefKey()
+							+ ")";
+					log.info("cmd: " + cmd);
+					Query query = accessionDAO.createNativeQuery(cmd);
+					query.getResultList();
 					log.info("processAccession/changes processed: " + domain.get(i).getAccessionKey());
 				}
 				else {

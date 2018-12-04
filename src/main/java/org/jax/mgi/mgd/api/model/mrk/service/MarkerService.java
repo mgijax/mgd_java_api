@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -321,6 +320,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Boolean from_history = false;
 		Boolean from_synonym = false;
 		Boolean from_reference = false;
+		Boolean from_nucleotideAccession = false;
 
 		// if parameter exists, then add to where-clause
 		
@@ -447,8 +447,31 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			}
 		}
 
+		// nucleotideAccession
+		if (searchDomain.getNucleotideAccessionIds() != null) {
+			if (searchDomain.getNucleotideAccessionIds().get(0).getAccID() != null 
+					&& !searchDomain.getNucleotideAccessionIds().get(0).getAccID().isEmpty()) {
+				where = where + "\nand acc1.accID ilike '" +  searchDomain.getNucleotideAccessionIds().get(0).getAccID() + "'";
+				from_nucleotideAccession = true;
+			}
+			if (searchDomain.getNucleotideAccessionIds().get(0).getReferences() != null) {
+				if (searchDomain.getNucleotideAccessionIds().get(0).getReferences().get(0).getRefKey() != null 
+						&& !searchDomain.getNucleotideAccessionIds().get(0).getReferences().get(0).getRefKey().isEmpty()) {
+					where = where + "\nand acc1._refs_key = " + searchDomain.getNucleotideAccessionIds().get(0).getReferences().get(0).getRefKey();
+					from_nucleotideAccession = true;
+				}	
+				if (searchDomain.getNucleotideAccessionIds().get(0).getReferences().get(0).getShort_citation() != null 
+						&& !searchDomain.getNucleotideAccessionIds().get(0).getReferences().get(0).getShort_citation().isEmpty()) {
+					value = searchDomain.getNucleotideAccessionIds().get(0).getReferences().get(0).getShort_citation().replaceAll("'",  "''");
+					where = where + "\nand acc1.short_citation ilike '" + value + "'";
+					from_nucleotideAccession = true;
+				}
+			}
+		}
+		
+		// use views to match the teleuse implementation
+
 		if (from_accession == true) {
-			// using this view to match the teleuse implementation
 			from = from + ", mrk_accnoref_view a";
 			where = where + "\nand m._marker_key = a._object_key" 
 					+ "\nand a._mgitype_key = 2";
@@ -485,12 +508,16 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			from = from + ", mgi_reference_marker_view mr";
 			where = where + "\nand m._marker_key = mr._object_key";
 		}
+		if (from_nucleotideAccession == true) {
+			from = from + ", mrk_accref1_view acc1";
+			where = where + "\nand m._marker_key = acc1._object_key and acc1._logicaldb_key in (9)";
+		}
 		
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
 		log.info(cmd);
 
-		// request data, and parse results
+		// execute sql, returns results to MarkerEIResultDomain
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {

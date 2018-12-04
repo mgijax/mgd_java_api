@@ -51,16 +51,16 @@ public class DateSQLQuery {
 				field = tag + "." + dateFields[x];
 
 				if (value.startsWith("<=") == true) {
-					where = where + "\nand " + field + " <= '" + value.replace("<=","") + "'";
+					where = where + "\nand " + field + "::date <= '" + value.replace("<=","") + "'";
 				}
 				else if (value.startsWith("<") == true) {
-					where = where + "\nand " + field + " < '" + value.replace("<",  "") + "'";
+					where = where + "\nand " + field + "::date < '" + value.replace("<",  "") + "'";
 				}
 				else if (value.startsWith(">=") == true) {
-					where = where + "\nand " + field + " >= '" + value.replace(">=","") + "'";
+					where = where + "\nand " + field + "::date >= '" + value.replace(">=","") + "'";
 				}
 				else if (value.startsWith(">") == true) {
-					where = where + "\nand " + field + " > '" + value.replace(">",  "") + "'";
+					where = where + "\nand " + field + "::date > '" + value.replace(">",  "") + "'";
 				}
 				else if (value.contains("..") == true) {
 					String[] tokens = value.split("\\.\\.");

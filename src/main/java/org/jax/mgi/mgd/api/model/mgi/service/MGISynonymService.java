@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
@@ -21,6 +22,11 @@ import org.jboss.logging.Logger;
 public class MGISynonymService extends BaseService<MGISynonymDomain> {
 
 	protected static Logger log = Logger.getLogger(MGISynonymService.class);
+	
+	@Inject
+	private MGISynonymDAO synonymDAO;
+	@Inject
+	private ReferenceDAO referenceDAO;
 	
 	@Transactional
 	public SearchResults<MGISynonymDomain> create(MGISynonymDomain object, User user) {
@@ -53,7 +59,7 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 	}
 
 	@Transactional
-	public static void processSynonym(String parentKey, List<MGISynonymDomain> domain, MGISynonymDAO synonymDAO, ReferenceDAO referenceDAO, String mgiTypeKey, User user) {
+	public void processSynonym(String parentKey, List<MGISynonymDomain> domain, String mgiTypeKey, User user) {
 		// process synonym associations (create, delete, update)
 		
 		if (domain == null || domain.isEmpty()) {

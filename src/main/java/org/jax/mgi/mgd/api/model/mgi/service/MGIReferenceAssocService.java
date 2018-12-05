@@ -29,6 +29,8 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 	
 	@Inject
 	private MGIReferenceAssocDAO referenceAssocDAO;
+	@Inject
+	private ReferenceDAO referenceDAO;
 	
 	private MGIReferenceAssocTranslator translator = new MGIReferenceAssocTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
@@ -105,7 +107,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 	}
 	
 	@Transactional
-	public static void processReferenceAssoc(String parentKey, List<MGIReferenceAssocDomain> domain, MGIReferenceAssocDAO refAssocDAO, ReferenceDAO referenceDAO, String mgiTypeKey, User user) {
+	public void processReferenceAssoc(String parentKey, List<MGIReferenceAssocDomain> domain, String mgiTypeKey, User user) {
 		// process reference associations (create, delete, update)
 		
 		if (domain == null || domain.isEmpty()) {
@@ -132,20 +134,20 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 							+ ",'" + domain.get(i).getRefAssocType() + "'"
 							+ ")";
 				log.info("cmd: " + cmd);
-				Query query = refAssocDAO.createNativeQuery(cmd);
+				Query query = referenceAssocDAO.createNativeQuery(cmd);
 				query.getResultList();
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processReferenceAssoc delete");
-				MGIReferenceAssoc entity = refAssocDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
-				refAssocDAO.remove(entity);
+				MGIReferenceAssoc entity = referenceAssocDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
+				referenceAssocDAO.remove(entity);
 				log.info("processReferenceAssoc delete successful");
 			}
 			else {
 				log.info("processReferenceAssoc update");
 
 				Boolean modified = false;
-				MGIReferenceAssoc entity = refAssocDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
+				MGIReferenceAssoc entity = referenceAssocDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
 		
 				if (!entity.getReference().get_refs_key().equals(Integer.valueOf(domain.get(i).getRefKey()))) {
 					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefKey())));
@@ -155,7 +157,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				if (modified == true) {
 					entity.setModification_date(new Date());
 					entity.setModifiedBy(user);
-					refAssocDAO.update(entity);
+					referenceAssocDAO.update(entity);
 					log.info("processReferenceAssoc/changes processed: " + domain.get(i).getAssocKey());
 				}
 				else {

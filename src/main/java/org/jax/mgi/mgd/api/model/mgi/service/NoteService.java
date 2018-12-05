@@ -10,7 +10,7 @@ import org.jax.mgi.mgd.api.model.mgi.dao.NoteDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
-import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -55,29 +55,31 @@ public class NoteService extends BaseService<NoteDomain> {
 	}
 
 	@Transactional
-	public static void processNote(MarkerDomain domain, NoteDomain noteDomain, NoteDAO noteDAO, String mgiTypeKey, String noteTypeKey, User user) {
+	public void processNote(String parentKey, NoteDomain noteDomain, String mgiTypeKey, String noteTypeKey, User user) {
 		// process note by calling stored procedure (create, delete, update)
 		
 		String noteKey;
 		String note;
 
 		if (noteDomain == null) {
-			log.info("processNote/no changes processed: " + domain.getMarkerKey());
+			log.info("processNote/no changes processed: " + parentKey);
 			return;
 		}
 		
-		if (noteDomain.getNoteKey() != null || !noteDomain.getNoteKey().isEmpty()) {
-			noteKey = noteDomain.getNoteKey().toString();
-		}
-		else {
+		if (noteDomain.getProcessStatus().equals(Constants.PROCESS_CREATE))
+		{
 			noteKey = "null";
+			note = "'" + noteDomain.getNoteChunk().toString() + "'"; 
 		}
-	
-		if (!noteDomain.getNoteChunk().isEmpty()) {
-			note = "'" + noteDomain.getNoteChunk().toString() + "'";
+		else if (noteDomain.getProcessStatus().equals(Constants.PROCESS_DELETE))
+		{
+			noteKey = noteDomain.getNoteKey().toString();
+			note = null;
 		}
-		else {
-			note = "null";
+		else
+		{
+			noteKey = noteDomain.getNoteKey().toString();
+			note = "'" + noteDomain.getNoteChunk().toString() + "'"; 
 		}
 		
 		// stored procedure
@@ -88,7 +90,7 @@ public class NoteService extends BaseService<NoteDomain> {
 		String cmd = "select count(*) from MGI_processNote ("
 				+ user.get_user_key().intValue()
 				+ "," + noteKey
-				+ "," + domain.getMarkerKey()
+				+ "," + parentKey
 				+ "," + mgiTypeKey
 				+ "," + noteTypeKey
 				+ "," + note
@@ -98,7 +100,8 @@ public class NoteService extends BaseService<NoteDomain> {
 		Query query = noteDAO.createNativeQuery(cmd);
 		query.getResultList();
 		
-		log.info("processNote/changes processed: " + domain.getMarkerKey());
+		log.info("processNote/changes processed: " + parentKey);
 		return;
 	}
+	
 }

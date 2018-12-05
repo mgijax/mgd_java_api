@@ -10,11 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mrk.dao.EventDAO;
-import org.jax.mgi.mgd.api.model.mrk.dao.EventReasonDAO;
-import org.jax.mgi.mgd.api.model.mrk.dao.MarkerHistoryDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerHistorySearchForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerHistoryService;
@@ -58,6 +54,14 @@ public class MarkerHistoryController extends BaseController<MarkerHistoryDomain>
 	@Path("/search")
 	public List<MarkerHistoryDomain> search(MarkerHistorySearchForm searchForm) {
 		return markerHistoryService.search(searchForm);
+	}
+	
+	@POST
+	@ApiOperation(value = "Process")
+	@Path("/process")
+	public void processHistory(String parentKey, List<MarkerHistoryDomain> domain, User user) {
+		markerHistoryService.processHistory(parentKey, domain, user);
+		return;
 	}
 	
 }

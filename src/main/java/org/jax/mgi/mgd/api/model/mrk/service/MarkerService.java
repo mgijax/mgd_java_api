@@ -13,21 +13,13 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.acc.dao.AccessionDAO;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
-import org.jax.mgi.mgd.api.model.mgi.dao.MGIReferenceAssocDAO;
-import org.jax.mgi.mgd.api.model.mgi.dao.MGISynonymDAO;
-import org.jax.mgi.mgd.api.model.mgi.dao.NoteDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
-import org.jax.mgi.mgd.api.model.mrk.dao.EventDAO;
-import org.jax.mgi.mgd.api.model.mrk.dao.EventReasonDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
-import org.jax.mgi.mgd.api.model.mrk.dao.MarkerHistoryDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerStatusDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerTypeDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
@@ -50,18 +42,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 	@Inject
 	private MarkerDAO markerDAO;
-	@Inject
-	private NoteDAO noteDAO;
-	@Inject
-	private MarkerHistoryDAO historyDAO;
-	@Inject
-	private MGISynonymDAO synonymDAO;
-	@Inject
-	private ReferenceDAO referenceDAO;
-	@Inject
-	private MGIReferenceAssocDAO refAssocDAO;
-	@Inject
-	private AccessionDAO accessionDAO;
 	
 	@Inject
 	private OrganismDAO organismDAO;
@@ -69,11 +49,17 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private MarkerStatusDAO markerStatusDAO;
 	@Inject
 	private MarkerTypeDAO markerTypeDAO;
-
+	
 	@Inject
-	private EventDAO eventDAO;
+	private NoteService noteService;
 	@Inject
-	private EventReasonDAO eventReasonDAO;
+	private MarkerHistoryService markerHistoryService;
+	@Inject
+	private MGISynonymService synonymService;
+	@Inject
+	private MGIReferenceAssocService referenceAssocService;
+	@Inject
+	private AccessionService accessionService;
 	
 	private MarkerTranslator translator = new MarkerTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
@@ -258,26 +244,26 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 		
 		// process all marker notes
-		NoteService.processNote(domain, domain.getEditorNote(), noteDAO, mgiTypeKey, "1004", user);
-		NoteService.processNote(domain, domain.getSequenceNote(), noteDAO, mgiTypeKey, "1009", user);
-		NoteService.processNote(domain, domain.getRevisionNote(), noteDAO, mgiTypeKey, "1030", user);
-		NoteService.processNote(domain, domain.getStrainNote(), noteDAO, mgiTypeKey, "1035", user);
-		NoteService.processNote(domain, domain.getLocationNote(), noteDAO, mgiTypeKey, "1049", user);
+		noteService.processNote(domain.getMarkerKey(), domain.getEditorNote(), mgiTypeKey, "1004", user);
+		noteService.processNote(domain.getMarkerKey(), domain.getSequenceNote(), mgiTypeKey, "1009", user);
+		noteService.processNote(domain.getMarkerKey(), domain.getRevisionNote(), mgiTypeKey, "1030", user);
+		noteService.processNote(domain.getMarkerKey(), domain.getStrainNote(), mgiTypeKey, "1035", user);
+		noteService.processNote(domain.getMarkerKey(), domain.getLocationNote(), mgiTypeKey, "1049", user);
 
 		// process marker history
-		MarkerHistoryService.processHistory(domain.getMarkerKey(), domain.getHistory(), historyDAO, eventDAO, eventReasonDAO, referenceDAO, user);
+		markerHistoryService.processHistory(domain.getMarkerKey(), domain.getHistory(), user);
 		
 		// process marker synonym
-		MGISynonymService.processSynonym(domain.getMarkerKey(), domain.getSynonyms(), synonymDAO, referenceDAO, mgiTypeKey, user);
+		synonymService.processSynonym(domain.getMarkerKey(), domain.getSynonyms(), mgiTypeKey, user);
 		
 		// process marker reference
 		if (domain.getRefAssocs() != null) {
-			MGIReferenceAssocService.processReferenceAssoc(domain.getMarkerKey(), domain.getRefAssocs(), refAssocDAO, referenceDAO, mgiTypeKey, user);
+			referenceAssocService.processReferenceAssoc(domain.getMarkerKey(), domain.getRefAssocs(), mgiTypeKey, user);
 		}
 		
 		// process marker nucleotide accession ids
 		if (domain.getNucleotideAccessionIds() != null) {
-			AccessionService.processNucleotideAccession(domain.getMarkerKey(), domain.getNucleotideAccessionIds(), accessionDAO, referenceDAO, mgiTypeName, user);
+			accessionService.processNucleotideAccession(domain.getMarkerKey(), domain.getNucleotideAccessionIds(), mgiTypeName, user);
 		}
 		
 		// return entity translated to domain

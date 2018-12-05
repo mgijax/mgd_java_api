@@ -16,6 +16,7 @@ import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.search.AccessionSearchForm;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -86,6 +87,14 @@ public class AccessionController extends BaseController<AccessionDomain> impleme
 		}
 		
 		return results;
+	}
+	
+	@POST
+	@ApiOperation(value = "Process Nucleotide")
+	@Path("/processNucleotide")
+	public void processNucleotideAccession(String parentKey, List<AccessionDomain> domain, String mgiTypeKey, User user) {
+		accessionService.processNucleotideAccession(parentKey, domain, mgiTypeKey, user);
+		return;
 	}
 	
 }

@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.mgi.controller;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -13,6 +14,7 @@ import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Path("/note")
 @Api(value = "Note Endpoints")
@@ -43,4 +45,12 @@ public class NoteController extends BaseController<NoteDomain> {
 		return noteService.delete(key, user);
 	}
 
+	@POST
+	@ApiOperation(value = "Process")
+	@Path("/process")
+	public void processNote(String parentKey, NoteDomain noteDomain, String mgiTypeKey, String noteTypeKey, User user) {
+		noteService.processNote(parentKey, noteDomain, mgiTypeKey, noteTypeKey, user);
+		return;
+	}
+	
 }

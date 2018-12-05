@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 public class NoteDomain extends BaseDomain {
 
+	private String processStatus;
 	private String noteKey;
 	private String objectKey;
 	private String mgiTypeKey;

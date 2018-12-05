@@ -17,7 +17,6 @@ import org.jax.mgi.mgd.api.model.acc.domain.AccessionReferenceDomain;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.search.AccessionSearchForm;
 import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -191,7 +190,7 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 	//
 	
 	@Transactional
-	private static void processAccession(String parentKey, List<AccessionDomain> domain, AccessionDAO accessionDAO, ReferenceDAO referenceDAO, String mgiTypeName, String logicaldbKey, User user) {
+	private void processAccession(String parentKey, List<AccessionDomain> domain, String mgiTypeName, String logicaldbKey, User user) {
 		// process accession associations (create, delete, update)
 		// using stored procedure methods (ACC_insert(), ACC_delete_byAccKey(), ACC_update())
 		// using entity to compare domain vs entity
@@ -286,10 +285,10 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 	}
 	
 	@Transactional
-	public static void processNucleotideAccession(String parentKey, List<AccessionDomain> domain, AccessionDAO accessionDAO, ReferenceDAO referenceDAO, String mgiTypeKey, User user)
+	public void processNucleotideAccession(String parentKey, List<AccessionDomain> domain, String mgiTypeKey, User user)
 	{
 		try {
-			processAccession(parentKey, domain, accessionDAO, referenceDAO, mgiTypeKey, "9", user);
+			processAccession(parentKey, domain, mgiTypeKey, "9", user);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
@@ -31,6 +32,15 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 
 	protected static Logger log = Logger.getLogger(MarkerHistoryService.class);
 
+	@Inject
+	private MarkerHistoryDAO historyDAO;
+	@Inject
+	private EventDAO eventDAO;
+	@Inject
+	private EventReasonDAO eventReasonDAO;
+	@Inject
+	private ReferenceDAO referenceDAO;
+	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -126,7 +136,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 	}	
 	
 	@Transactional
-	public static void processHistory(String parentKey, List<MarkerHistoryDomain> domain, MarkerHistoryDAO historyDAO, EventDAO eventDAO, EventReasonDAO eventReasonDAO, ReferenceDAO referenceDAO, User user) {
+	public void processHistory(String parentKey, List<MarkerHistoryDomain> domain, User user) {
 		// process marker history associations (create, delete, update)
 		
 		log.info("processHistory");

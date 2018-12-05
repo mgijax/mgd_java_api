@@ -15,6 +15,7 @@ import lombok.Setter;
 public class MarkerDomain extends BaseDomain {
 
 	//@ApiModelProperty("primary key")
+	private String processStatus;
 	private String markerKey;
 	private String symbol;
 	private String name;

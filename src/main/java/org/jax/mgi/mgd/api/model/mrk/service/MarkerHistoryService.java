@@ -102,6 +102,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				
 				MarkerHistoryDomain domain = new MarkerHistoryDomain();
 				
+				domain.setProcessStatus(Constants.PROCESS_DONOTHING);
 				domain.setAssocKey(rs.getString("_assoc_key"));
 				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setSequenceNum(rs.getString("sequencenum"));
@@ -186,7 +187,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				
 				log.info("processHistory delete successful");
 			}
-			else {
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processHistory update");
 
 				Boolean modified = false;
@@ -274,6 +275,9 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				else {
 					log.info("processHistory/no changes processed: " + domain.get(i).getAssocKey());
 				}
+			}
+			else {
+				log.info("processHistory/no changes processed: " + domain.get(i).getAssocKey());
 			}
 		}
 		

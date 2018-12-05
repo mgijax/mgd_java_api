@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DateSQLQuery {
-			
+	
 	public static String[] queryByCreationModification(String tag, String createdBy, String modifiedBy, String creation_date, String modification_date) {
 
 		String from = "";

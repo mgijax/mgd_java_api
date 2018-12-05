@@ -143,7 +143,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				referenceAssocDAO.remove(entity);
 				log.info("processReferenceAssoc delete successful");
 			}
-			else {
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processReferenceAssoc update");
 
 				Boolean modified = false;
@@ -163,6 +163,9 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				else {
 					log.info("processReferenceAssoc/no changes processed: " + domain.get(i).getAssocKey());
 				}
+			}
+			else {
+				log.info("processReferenceAssoc/no changes processed: " + domain.get(i).getAssocKey());
 			}
 		}
 		

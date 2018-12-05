@@ -96,7 +96,7 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 				synonymDAO.remove(entity);
 				log.info("processSynonym delete successful");
 			}
-			else {
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processSynonym update");
 
 				Boolean modified = false;
@@ -135,6 +135,9 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 				else {
 					log.info("processSynonym/no changes processed: " + domain.get(i).getSynonymKey());
 				}
+			}
+			else {
+				log.info("processSynonym/no changes processed: " + domain.get(i).getSynonymKey());
 			}
 		}
 		

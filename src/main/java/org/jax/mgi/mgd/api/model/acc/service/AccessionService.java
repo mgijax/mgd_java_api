@@ -235,7 +235,7 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 				query.getResultList();
 				log.info("processAccession delete successful");
 			}
-			else {
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processAccession update");
 
 				Boolean modified = false;
@@ -278,6 +278,9 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 				else {
 					log.info("processAccession/no changes processed: " + domain.get(i).getAccessionKey());
 				}
+			}
+			else {
+				log.info("processAccession/no changes processed: " + domain.get(i).getAccessionKey());
 			}
 		}
 		

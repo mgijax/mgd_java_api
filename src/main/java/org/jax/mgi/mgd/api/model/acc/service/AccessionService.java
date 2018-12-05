@@ -93,6 +93,7 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 			while (rs.next()) {
 				
 				AccessionDomain domain = new AccessionDomain();
+				domain.setProcessStatus(Constants.PROCESS_DONOTHING);
 				domain.setAccessionKey(rs.getString("_accession_key"));
 				domain.setLogicaldbKey(rs.getString("_logicaldb_key"));
 				domain.setLogicaldb(rs.getString("logicaldb"));

@@ -10,7 +10,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mrk.dao.EventDAO;
+import org.jax.mgi.mgd.api.model.mrk.dao.EventReasonDAO;
+import org.jax.mgi.mgd.api.model.mrk.dao.MarkerHistoryDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerHistorySearchForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerHistoryService;

@@ -13,6 +13,7 @@ import org.jax.mgi.mgd.api.model.mgi.dao.MGISynonymDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -67,9 +68,8 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 		
 		for (int i = 0; i < domain.size(); i++) {
 				
-			if (domain.get(i).getSynonymKey() == null 
-					|| domain.get(i).getSynonymKey().isEmpty()) {
-				
+			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
+	
 				log.info("processSynonym create");
 
 				cmd = "select count(*) from MGI_insertSynonym ("
@@ -84,7 +84,7 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 				Query query = synonymDAO.createNativeQuery(cmd);
 				query.getResultList();
 			}
-			else if (domain.get(i).getSynonym() == null || domain.get(i).getSynonym().isEmpty()) {
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processSynonym delete");
 				MGISynonym entity = synonymDAO.get(Integer.valueOf(domain.get(i).getSynonymKey()));
 				synonymDAO.remove(entity);

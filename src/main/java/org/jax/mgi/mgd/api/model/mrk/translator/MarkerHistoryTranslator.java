@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.mrk.translator;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.MarkerHistory;
+import org.jax.mgi.mgd.api.util.Constants;
 
 public class MarkerHistoryTranslator extends BaseEntityDomainTranslator<MarkerHistory, MarkerHistoryDomain> {
 
@@ -10,6 +11,7 @@ public class MarkerHistoryTranslator extends BaseEntityDomainTranslator<MarkerHi
 	protected MarkerHistoryDomain entityToDomain(MarkerHistory entity, int translationDepth) {
 		MarkerHistoryDomain domain = new MarkerHistoryDomain();
 		
+		domain.setProcessStatus(Constants.PROCESS_DONOTHING);
 		domain.setAssocKey(String.valueOf(entity.get_assoc_key()));
 		domain.setMarkerKey(String.valueOf(entity.get_marker_key()));
 		domain.setSequenceNum(String.valueOf(entity.getSequenceNum()));

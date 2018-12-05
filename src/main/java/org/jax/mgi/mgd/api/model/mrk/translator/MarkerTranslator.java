@@ -130,6 +130,14 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 				}
 			}
 			
+			// accession ids other than nucleotide sequences 
+			if (entity.getOtherAccessionIds() != null) {
+				Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getOtherAccessionIds());
+				if(acc.iterator().hasNext() == true) {
+					domain.setOtherAccessionIds(IteratorUtils.toList(acc.iterator()));
+				}
+			}
+			
 			if (entity.getRefAssocs() != null) {
 				Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
 				if(i.iterator().hasNext() == true) {

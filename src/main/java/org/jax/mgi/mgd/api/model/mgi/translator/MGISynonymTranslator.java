@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.mgi.translator;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
+import org.jax.mgi.mgd.api.util.Constants;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,7 @@ public class MGISynonymTranslator extends BaseEntityDomainTranslator<MGISynonym,
 	protected MGISynonymDomain entityToDomain(MGISynonym entity, int translationDepth) {
 		MGISynonymDomain domain = new MGISynonymDomain();
 		
+		domain.setProcessStatus(Constants.PROCESS_DONOTHING);
 		domain.setSynonymKey(String.valueOf(entity.get_synonym_key()));
 		
 		domain.setObjectKey(String.valueOf(entity.get_object_key()));

@@ -21,6 +21,7 @@ import org.jax.mgi.mgd.api.model.mrk.dao.MarkerHistoryDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.MarkerHistory;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerHistorySearchForm;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -142,9 +143,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 		
 		for (int i = 0; i < domain.size(); i++) {
 				
-			if (domain.get(i).getAssocKey() == null 
-					|| domain.get(i).getAssocKey().isEmpty()) {
-				
+			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 				log.info("processHistory create");
 				
 				cmd = "select count(*) from MRK_insertHistory ("
@@ -160,8 +159,8 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				Query query = historyDAO.createNativeQuery(cmd);
 				query.getResultList();
 			}
-			else if (domain.get(i).getMarkerHistorySymbol() == null || domain.get(i).getMarkerHistorySymbol().isEmpty()) {
-				
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+	
 				log.info("processHistory delete");
 				
 				MarkerHistory entity = historyDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));

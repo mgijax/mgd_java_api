@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 public class MarkerHistoryDomain extends BaseDomain {
 	
+	private String processStatus;
 	private String assocKey;
 	private String markerKey;
 	private String sequenceNum;

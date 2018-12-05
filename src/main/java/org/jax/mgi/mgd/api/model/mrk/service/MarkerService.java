@@ -13,6 +13,8 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.acc.dao.AccessionDAO;
+import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGIReferenceAssocDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGISynonymDAO;
@@ -58,6 +60,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private ReferenceDAO referenceDAO;
 	@Inject
 	private MGIReferenceAssocDAO refAssocDAO;
+	@Inject
+	private AccessionDAO accessionDAO;
 	
 	@Inject
 	private OrganismDAO organismDAO;
@@ -175,6 +179,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Marker entity = markerDAO.get(Integer.valueOf(domain.getMarkerKey()));
 		Boolean modified = false;
 		String mgiTypeKey = "2";
+		String mgiTypeName = "Marker";
 		
 		log.info("processMarker/update");
 
@@ -268,6 +273,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// process marker reference
 		if (domain.getRefAssocs() != null) {
 			MGIReferenceAssocService.processReferenceAssoc(domain.getMarkerKey(), domain.getRefAssocs(), refAssocDAO, referenceDAO, mgiTypeKey, user);
+		}
+		
+		// process marker nucleotide accession ids
+		if (domain.getNucleotideAccessionIds() != null) {
+			AccessionService.processNucleotideAccession(domain.getMarkerKey(), domain.getNucleotideAccessionIds(), accessionDAO, referenceDAO, mgiTypeName, user);
 		}
 		
 		// return entity translated to domain

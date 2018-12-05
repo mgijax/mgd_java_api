@@ -72,4 +72,20 @@ public class AccessionController extends BaseController<AccessionDomain> impleme
 		return results;
 	}
 	
+	@POST
+	@ApiOperation(value = "Other Accession Ids")
+	@Path("/markerOtherAccessionIds")
+	public List<AccessionDomain> otherAccessionIds(Integer key) {
+			
+		List<AccessionDomain> results = new ArrayList<AccessionDomain>();
+		
+		try {
+			results = accessionService.markerOtherAccessionIds(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

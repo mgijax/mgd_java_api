@@ -12,6 +12,7 @@ import lombok.Setter;
 @ApiModel(value = "Accession Domain")
 public class AccessionDomain extends BaseDomain {
 
+	private String ProcessStatus;
 	private String accessionKey;
 	private String logicaldbKey;
 	private String logicaldb;

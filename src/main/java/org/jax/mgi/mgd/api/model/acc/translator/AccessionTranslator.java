@@ -5,6 +5,7 @@ import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionReferenceDomain;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
+import org.jax.mgi.mgd.api.util.Constants;
 
 public class AccessionTranslator extends BaseEntityDomainTranslator<Accession, AccessionDomain> {
 	
@@ -14,6 +15,7 @@ public class AccessionTranslator extends BaseEntityDomainTranslator<Accession, A
 	protected AccessionDomain entityToDomain(Accession entity, int translationDepth) {
 		AccessionDomain domain = new AccessionDomain();
 
+		domain.setProcessStatus(Constants.PROCESS_DONOTHING);
 		domain.setAccessionKey(String.valueOf(entity.get_accession_key()));
 		domain.setLogicaldbKey(String.valueOf(entity.getLogicaldb().get_logicaldb_key()));
 		domain.setLogicaldb(entity.getLogicaldb().getName());

@@ -48,6 +48,7 @@ public class MarkerDomain extends BaseDomain {
 	// instead will be populated by call to specific domain service
 	//
 	private List<AccessionDomain> nucleotideAccessionIds;
+	private List<AccessionDomain> otherAccessionIds;
 	private List<MGIReferenceAssocDomain> refAssocs;
 	
 	//private String mcvTerm;

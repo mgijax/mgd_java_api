@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.mgi.translator;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
+import org.jax.mgi.mgd.api.util.Constants;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,7 @@ public class MGIReferenceAssocTranslator extends BaseEntityDomainTranslator<MGIR
 	protected MGIReferenceAssocDomain entityToDomain(MGIReferenceAssoc entity, int translationDepth) {
 		MGIReferenceAssocDomain domain = new MGIReferenceAssocDomain();
 		
+		domain.setProcessStatus(Constants.PROCESS_DONOTHING);
 		domain.setAssocKey(String.valueOf(entity.get_assoc_key()));
 		
 		domain.setObjectKey(String.valueOf(entity.get_object_key()));

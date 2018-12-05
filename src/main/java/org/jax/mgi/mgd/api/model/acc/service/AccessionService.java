@@ -2,7 +2,6 @@ package org.jax.mgi.mgd.api.model.acc.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -20,6 +19,7 @@ import org.jax.mgi.mgd.api.model.acc.search.AccessionSearchForm;
 import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -79,17 +79,16 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 		return new SearchResults<AccessionDomain>(newItems);
 	}
 	
-	public List<AccessionDomain> markerNucleotideAccessionIds(Integer key) {
-
-		// list of results to be returned
+	//
+	// get list of accession id domains by using sqlExecutor
+	//
+	
+	private List<AccessionDomain> getAccessionDomainList(String cmd) {
+		// execute accession cmd and return list of accession domains
+		// assumes the certain parameters are returned from cmd are return
+		
 		List<AccessionDomain> results = new ArrayList<AccessionDomain>();
 
-		String cmd = "select * from mrk_accref1_view "
-				+ "\nwhere _logicaldb_key in (9) and _object_key = " + key
-				+ "\norder by _accession_key";
-		log.info(cmd);
-		
-		// request data, and parse results
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
@@ -138,14 +137,63 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 			e.printStackTrace();
 		}
 		
-		// ...off to be turned into JSON
 		return results;
 	}
 	
+	public List<AccessionDomain> markerNucleotideAccessionIds(Integer key) {
+		// gets marker accession ids : nucleotide ids
+		// see mrk_accref1_view for details
+		// returns list of accession domain
+
+		// list of results to be returned
+		List<AccessionDomain> results = new ArrayList<AccessionDomain>();
+
+		String cmd = "select * from mrk_accref1_view "
+				+ "\nwhere _object_key = " + key
+				+ "\norder by _accession_key";
+		log.info(cmd);
+		
+		try {
+			results = getAccessionDomainList(cmd);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	public List<AccessionDomain> markerOtherAccessionIds(Integer key) {
+		// gets marker accession ids : other (does not include nucleotides)
+		// see mrk_accref2_view for details
+		// returns list of accession domain
+		
+		// list of results to be returned
+		List<AccessionDomain> results = new ArrayList<AccessionDomain>();
+
+		String cmd = "select * from mrk_accref2_view "
+				+ "\nwhere _object_key = " + key
+				+ "\norder by _accession_key";
+		log.info(cmd);
+		
+		try {
+			results = getAccessionDomainList(cmd);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	//
+	// process accession ids : create, delete, update
+	//
+	
 	@Transactional
-	public static void processAccession(String parentKey, List<AccessionDomain> domain, AccessionDAO accessionDAO, ReferenceDAO referenceDAO, String mgiTypeKey, String logicaldbKey, User user) {
+	private static void processAccession(String parentKey, List<AccessionDomain> domain, AccessionDAO accessionDAO, ReferenceDAO referenceDAO, String mgiTypeName, String logicaldbKey, User user) {
 		// process accession associations (create, delete, update)
-		// using stored procedure methods (ACC_insertNoChecks(), ACC_delete_byAccKey(), ACC_update())
+		// using stored procedure methods (ACC_insert(), ACC_delete_byAccKey(), ACC_update())
 		// using entity to compare domain vs entity
 		// but not using entity to handle actual create/delete/update processing
 		
@@ -161,24 +209,23 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 		
 		for (int i = 0; i < domain.size(); i++) {
 				
-			if (domain.get(i).getAccessionKey() == null 
-					|| domain.get(i).getAccessionKey().isEmpty()) {
-				
+			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
+
 				log.info("processAccession create");
 
-				cmd = "select count(*) from ACC_insertNoChecks ("
+				cmd = "select count(*) from ACC_insert ("
 							+ user.get_user_key().intValue()
 							+ "," + domain.get(i).getObjectKey()
 							+ ",'" + domain.get(i).getAccID() + "'"
 							+ "," + logicaldbKey
-							+ "," + mgiTypeKey
+							+ ",'" + mgiTypeName + "'"
 							+ "," + domain.get(i).getReferences().get(0).getRefKey()
-							+ ")";
+							+ "1,0,1)";
 				log.info("cmd: " + cmd);
 				Query query = accessionDAO.createNativeQuery(cmd);
 				query.getResultList();
 			}
-			else if (domain.get(i).getAccessionKey() == null || domain.get(i).getAccessionKey().isEmpty()) {
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processAccession delete");
 				cmd = "select count(*) from ACC_delete_byAccKey ("
 						+ domain.get(i).getAccessionKey()
@@ -235,6 +282,19 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 		}
 		
 		log.info("processAccession/processing successful");
+		return;
+	}
+	
+	@Transactional
+	public static void processNucleotideAccession(String parentKey, List<AccessionDomain> domain, AccessionDAO accessionDAO, ReferenceDAO referenceDAO, String mgiTypeKey, User user)
+	{
+		try {
+			processAccession(parentKey, domain, accessionDAO, referenceDAO, mgiTypeKey, "9", user);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return;
 	}
 	

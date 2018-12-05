@@ -17,6 +17,7 @@ import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -119,9 +120,8 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		
 		for (int i = 0; i < domain.size(); i++) {
 				
-			if (domain.get(i).getAssocKey() == null 
-					|| domain.get(i).getAssocKey().isEmpty()) {
-				
+			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
+
 				log.info("processReferenceAssoc create");
 
 				cmd = "select count(*) from MGI_insertReferenceAssoc ("
@@ -135,7 +135,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				Query query = refAssocDAO.createNativeQuery(cmd);
 				query.getResultList();
 			}
-			else if (domain.get(i).getRefKey() == null || domain.get(i).getRefKey().isEmpty()) {
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processReferenceAssoc delete");
 				MGIReferenceAssoc entity = refAssocDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
 				refAssocDAO.remove(entity);

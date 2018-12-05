@@ -60,4 +60,10 @@ public class Constants {
 	// default database user, if no other is specified
 	public static String DEFAULT_USER = "mgd_dbo";
 	
+	// process status
+	public static String PROCESS_CREATE = "c";
+	public static String PROCESS_UPDATE = "u";
+	public static String PROCESS_DELETE = "d";
+	public static String PROCESS_DONOTHING = "x";
+	
 }

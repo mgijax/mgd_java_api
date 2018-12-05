@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 public class MGISynonymDomain extends BaseDomain {
 
+	private String processStatus;
 	private String synonymKey;
 	private String objectKey;
 	private String mgiTypeKey;

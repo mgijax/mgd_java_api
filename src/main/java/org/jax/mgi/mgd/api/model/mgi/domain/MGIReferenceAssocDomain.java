@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 public class MGIReferenceAssocDomain extends BaseDomain {
 
+	private String processStatus;
 	private String assocKey;
 	private String objectKey;
 	private String mgiTypeKey;

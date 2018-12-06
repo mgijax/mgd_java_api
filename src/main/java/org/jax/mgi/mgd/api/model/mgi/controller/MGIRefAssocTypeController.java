@@ -12,7 +12,6 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIRefAssocTypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mgi.search.MGIRefAssocTypeSearchForm;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIRefAssocTypeService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -51,8 +50,8 @@ public class MGIRefAssocTypeController extends BaseController<MGIRefAssocTypeDom
 	@POST
 	@ApiOperation(value = "Search")
 	@Path("/search")
-	public List<MGIRefAssocTypeDomain> search(MGIRefAssocTypeSearchForm searchForm) {
-		return refAssocTypeService.search(searchForm);
+	public List<MGIRefAssocTypeDomain> search() {
+		return refAssocTypeService.search();
 	}
 	
 }

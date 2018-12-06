@@ -12,7 +12,6 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymTypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mgi.search.MGISynonymTypeSearchForm;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymTypeService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -51,8 +50,8 @@ public class MGISynonymTypeController extends BaseController<MGISynonymTypeDomai
 	@POST
 	@ApiOperation(value = "Search")
 	@Path("/search")
-	public List<MGISynonymTypeDomain> search(MGISynonymTypeSearchForm searchForm) {
-		return synonymTypeService.search(searchForm);
+	public List<MGISynonymTypeDomain> search() {
+		return synonymTypeService.search();
 	}
 	
 }

@@ -12,7 +12,6 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.EventDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.EventDomain;
-import org.jax.mgi.mgd.api.model.mrk.search.EventSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.EventTranslator;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -60,7 +59,7 @@ public class EventService extends BaseService<EventDomain> {
 		return null;
 	}
 
-	public List<EventDomain> search(EventSearchForm searchForm) {
+	public List<EventDomain> search() {
 
 		// list of results to be returned
 		List<EventDomain> results = new ArrayList<EventDomain>();

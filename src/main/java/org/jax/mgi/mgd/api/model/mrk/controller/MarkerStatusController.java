@@ -9,11 +9,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerStatusDomain;
-import org.jax.mgi.mgd.api.model.mrk.search.MarkerStatusSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerStatusService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -52,8 +50,8 @@ public class MarkerStatusController extends BaseController<MarkerStatusDomain> {
 	@POST
 	@ApiOperation(value = "Search")
 	@Path("/search")
-	public List<MarkerStatusDomain> search(MarkerStatusSearchForm searchForm) {
-		return markerStatusService.search(searchForm);
+	public List<MarkerStatusDomain> search() {
+		return markerStatusService.search();
 	}
 	
 }

@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -21,7 +20,6 @@ import org.jax.mgi.mgd.api.model.mrk.dao.EventReasonDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerHistoryDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.MarkerHistory;
-import org.jax.mgi.mgd.api.model.mrk.search.MarkerHistorySearchForm;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -73,26 +71,15 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 		return null;
 	}
 
-	public List<MarkerHistoryDomain> search(MarkerHistorySearchForm searchForm) {
+	public List<MarkerHistoryDomain> search(Integer key) {
 
 		// list of results to be returned
 		List<MarkerHistoryDomain> results = new ArrayList<MarkerHistoryDomain>();
 
-		// parameters defined in SearchForm
-		Map<String, Object> params = searchForm.getSearchFields();
-		log.info(params);
+		String cmd = "\nselect * from mrk_history_view"
+				+ "\nwhere _marker_key = " + key
+				+ "\norder by sequencenum";
 		
-		String cmd = "";
-		String select = "select h.*";
-		String from = "from mrk_history_view h";
-		String where = "where ";
-		String orderBy = "\norder by h._marker_key, h.sequencenum";
-		
-		if (params.containsKey("markerKey")) {
-			where = where + "h._marker_key = " + params.get("markerKey");
-		}
-
-		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info(cmd);
 
 		// request data, and parse results

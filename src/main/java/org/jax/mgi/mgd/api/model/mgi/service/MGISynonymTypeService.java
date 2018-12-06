@@ -13,7 +13,6 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGISynonymTypeDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymTypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mgi.search.MGISynonymTypeSearchForm;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTypeTranslator;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -61,22 +60,14 @@ public class MGISynonymTypeService extends BaseService<MGISynonymTypeDomain> {
 		return null;
 	}
 
-	public List<MGISynonymTypeDomain> search(MGISynonymTypeSearchForm searchForm) {
+	public List<MGISynonymTypeDomain> search() {
 
 		// list of results to be returned
 		List<MGISynonymTypeDomain> results = new ArrayList<MGISynonymTypeDomain>();
-
-		// parameters defined in SearchForm
-		Map<String, Object> params = searchForm.getSearchFields();
-		log.info(params);
 		
-		String cmd = "select * from mgi_synonymtype";
-		String where = "where _organism_key = 1";
-		
-		if (params.containsKey("mgiTypeKey")) {
-			where = where + "\nand _mgitype_key = " + params.get("mgiTypeKey");
-		}
-		cmd = cmd + "\n" + where + "\norder by _mgitype_key, synonymtype";
+		String cmd = "select * from mgi_synonymtype"
+			+ "\nwhere _organism_key = 1"
+			+ "\norder by _mgitype_key, synonymtype";
 		log.info(cmd);
 
 		// request data, and parse results

@@ -12,7 +12,6 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerTypeDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerTypeDomain;
-import org.jax.mgi.mgd.api.model.mrk.search.MarkerTypeSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTypeTranslator;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -60,7 +59,7 @@ public class MarkerTypeService extends BaseService<MarkerTypeDomain> {
 		return null;
 	}
 
-	public List<MarkerTypeDomain> search(MarkerTypeSearchForm searchForm) {
+	public List<MarkerTypeDomain> search() {
 
 		// list of results to be returned
 		List<MarkerTypeDomain> results = new ArrayList<MarkerTypeDomain>();

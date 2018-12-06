@@ -12,7 +12,6 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.EventDomain;
-import org.jax.mgi.mgd.api.model.mrk.search.EventSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.service.EventService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -51,8 +50,8 @@ public class EventController extends BaseController<EventDomain> {
 	@POST
 	@ApiOperation(value = "Search")
 	@Path("/search")
-	public List<EventDomain> search(EventSearchForm searchForm) {
-		return eventService.search(searchForm);
+	public List<EventDomain> search() {
+		return eventService.search();
 	}
 	
 }

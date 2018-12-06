@@ -3,7 +3,6 @@ package org.jax.mgi.mgd.api.model.mgi.service;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -13,7 +12,6 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGIRefAssocTypeDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIRefAssocTypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mgi.search.MGIRefAssocTypeSearchForm;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGIRefAssocTypeTranslator;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -61,22 +59,13 @@ public class MGIRefAssocTypeService extends BaseService<MGIRefAssocTypeDomain> {
 		return null;
 	}
 
-	public List<MGIRefAssocTypeDomain> search(MGIRefAssocTypeSearchForm searchForm) {
+	public List<MGIRefAssocTypeDomain> search() {
 
 		// list of results to be returned
 		List<MGIRefAssocTypeDomain> results = new ArrayList<MGIRefAssocTypeDomain>();
 
-		// parameters defined in SearchForm
-		Map<String, Object> params = searchForm.getSearchFields();
-		log.info(params);
-		
-		String cmd = "select * from mgi_refassoctype";
-		String where = "";
-		
-		if (params.containsKey("mgiTypeKey")) {
-			where = where + "\nwhere _mgitype_key = " + params.get("mgiTypeKey");
-		}
-		cmd = cmd + "\n" + where + "\norder by _mgitype_key, assoctype";
+		String cmd = "select * from mgi_refassoctype order by _mgitype_key, assoctype";
+
 		log.info(cmd);
 
 		// request data, and parse results

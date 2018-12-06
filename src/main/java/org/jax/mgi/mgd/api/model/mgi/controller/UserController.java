@@ -1,21 +1,22 @@
 package org.jax.mgi.mgd.api.model.mgi.controller;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.mgi.domain.UserDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mgi.search.UserSearchForm;
 import org.jax.mgi.mgd.api.model.mgi.service.UserService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Path("/user")
 @Api(value = "User Endpoints")
@@ -46,4 +47,11 @@ public class UserController extends BaseController<UserDomain> {
 		return userService.delete(key, user);
 	}
 
+	@POST
+	@ApiOperation(value = "Search")
+	@Path("/search")
+	public List<UserDomain> search() {
+		return userService.search();
+	}
+		
 }

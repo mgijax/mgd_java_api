@@ -12,7 +12,6 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerStatusDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerStatusDomain;
-import org.jax.mgi.mgd.api.model.mrk.search.MarkerStatusSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerStatusTranslator;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -60,7 +59,7 @@ public class MarkerStatusService extends BaseService<MarkerStatusDomain> {
 		return null;
 	}
 
-	public List<MarkerStatusDomain> search(MarkerStatusSearchForm searchForm) {
+	public List<MarkerStatusDomain> search() {
 
 		// list of results to be returned
 		List<MarkerStatusDomain> results = new ArrayList<MarkerStatusDomain>();

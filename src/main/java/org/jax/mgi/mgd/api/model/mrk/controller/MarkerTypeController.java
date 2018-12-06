@@ -12,7 +12,6 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerTypeDomain;
-import org.jax.mgi.mgd.api.model.mrk.search.MarkerTypeSearchForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerTypeService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -51,8 +50,8 @@ public class MarkerTypeController extends BaseController<MarkerTypeDomain> {
 	@POST
 	@ApiOperation(value = "Search")
 	@Path("/search")
-	public List<MarkerTypeDomain> search(MarkerTypeSearchForm searchForm) {
-		return markerTypeService.search(searchForm);
+	public List<MarkerTypeDomain> search() {
+		return markerTypeService.search();
 	}
 	
 }

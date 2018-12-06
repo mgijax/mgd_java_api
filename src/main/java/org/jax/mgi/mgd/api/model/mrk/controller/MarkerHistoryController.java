@@ -12,7 +12,6 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
-import org.jax.mgi.mgd.api.model.mrk.search.MarkerHistorySearchForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerHistoryService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -52,8 +51,8 @@ public class MarkerHistoryController extends BaseController<MarkerHistoryDomain>
 	@POST
 	@ApiOperation(value = "Search")
 	@Path("/search")
-	public List<MarkerHistoryDomain> search(MarkerHistorySearchForm searchForm) {
-		return markerHistoryService.search(searchForm);
+	public List<MarkerHistoryDomain> search(Integer key) {
+		return markerHistoryService.search(key);
 	}
 	
 	@POST

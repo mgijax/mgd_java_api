@@ -8,12 +8,10 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
-import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.OrganismDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mgi.search.OrganismSearchForm;
 import org.jax.mgi.mgd.api.model.mgi.translator.OrganismTranslator;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -61,12 +59,12 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		return null;
 	}
 
-	public List<OrganismDomain> search(OrganismSearchForm searchForm) {
+	public List<OrganismDomain> search() {
 
 		// list of results to be returned
 		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
 
-		String cmd = "select * from mgi_organism";
+		String cmd = "select * from mgi_organism order by _organism_key";
 		log.info(cmd);
 
 		// request data, and parse results

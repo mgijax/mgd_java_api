@@ -244,21 +244,21 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 		
 		// process all marker notes
-		noteService.processNote(domain.getMarkerKey(), domain.getEditorNote(), mgiTypeKey, "1004", user);
-		noteService.processNote(domain.getMarkerKey(), domain.getSequenceNote(), mgiTypeKey, "1009", user);
-		noteService.processNote(domain.getMarkerKey(), domain.getRevisionNote(), mgiTypeKey, "1030", user);
-		noteService.processNote(domain.getMarkerKey(), domain.getStrainNote(), mgiTypeKey, "1035", user);
-		noteService.processNote(domain.getMarkerKey(), domain.getLocationNote(), mgiTypeKey, "1049", user);
+		noteService.process(domain.getMarkerKey(), domain.getEditorNote(), mgiTypeKey, "1004", user);
+		noteService.process(domain.getMarkerKey(), domain.getSequenceNote(), mgiTypeKey, "1009", user);
+		noteService.process(domain.getMarkerKey(), domain.getRevisionNote(), mgiTypeKey, "1030", user);
+		noteService.process(domain.getMarkerKey(), domain.getStrainNote(), mgiTypeKey, "1035", user);
+		noteService.process(domain.getMarkerKey(), domain.getLocationNote(), mgiTypeKey, "1049", user);
 
 		// process marker history
-		markerHistoryService.processHistory(domain.getMarkerKey(), domain.getHistory(), user);
+		markerHistoryService.process(domain.getMarkerKey(), domain.getHistory(), user);
 		
 		// process marker synonym
-		synonymService.processSynonym(domain.getMarkerKey(), domain.getSynonyms(), mgiTypeKey, user);
+		synonymService.process(domain.getMarkerKey(), domain.getSynonyms(), mgiTypeKey, user);
 		
 		// process marker reference
 		if (domain.getRefAssocs() != null) {
-			referenceAssocService.processReferenceAssoc(domain.getMarkerKey(), domain.getRefAssocs(), mgiTypeKey, user);
+			referenceAssocService.process(domain.getMarkerKey(), domain.getRefAssocs(), mgiTypeKey, user);
 		}
 		
 		// process marker nucleotide accession ids
@@ -377,7 +377,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	
 		// marker accession id
 		if (searchDomain.getMgiAccessionIds() != null) {
-			where = where + "\nand a.accID ilike '" + searchDomain.getMgiAccessionIds().get(0).getAccID() + "'";
+			where = where + "\nand a.accID = '" + searchDomain.getMgiAccessionIds().get(0).getAccID() + "'";
 			from_accession = true;
 		}
 		

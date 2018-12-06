@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.mgi.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -28,13 +29,13 @@ public class MGISynonymController extends BaseController<MGISynonymDomain> {
 	private MGISynonymService synonymService;
 
 	@Override
-	public SearchResults<MGISynonymDomain> create(MGISynonymDomain synonym, User user) {
-		return synonymService.create(synonym, user);
+	public SearchResults<MGISynonymDomain> create(MGISynonymDomain domain, User user) {
+		return synonymService.create(domain, user);
 	}
 
 	@Override
-	public SearchResults<MGISynonymDomain> update(MGISynonymDomain synonym, User user) {
-		return synonymService.update(synonym, user);
+	public SearchResults<MGISynonymDomain> update(MGISynonymDomain domain, User user) {
+		return synonymService.update(domain, user);
 	}
 
 	@Override
@@ -48,10 +49,26 @@ public class MGISynonymController extends BaseController<MGISynonymDomain> {
 	}
 	
 	@POST
+	@ApiOperation(value = "Marker")
+	@Path("/marker")
+	public List<MGISynonymDomain> marker(Integer key) {
+			
+		List<MGISynonymDomain> results = new ArrayList<MGISynonymDomain>();
+		
+		try {
+			results = synonymService.marker(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@POST
 	@ApiOperation(value = "Process")
 	@Path("/process")
-	public void processSynonym(String parentKey, List<MGISynonymDomain> domain, String mgiTypeKey, User user) {
-		synonymService.processSynonym(parentKey, domain, mgiTypeKey, user);
+	public void process(String parentKey, List<MGISynonymDomain> domain, String mgiTypeKey, User user) {
+		synonymService.process(parentKey, domain, mgiTypeKey, user);
 		return;
 	}
 		

@@ -10,6 +10,7 @@ import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
+import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
@@ -26,6 +27,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private MarkerHistoryTranslator historyTranslator = new MarkerHistoryTranslator();
 	private MGISynonymTranslator synonymTranslator = new MGISynonymTranslator();
 	private MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
+	//private RelationshipTranslator relationshipTranslator = new RelationshipTranslator();
 	
 	//private TermTranslator termTranslator = new TermTranslator();
 	//private SequenceMarkerCacheTranslator biotypesTranslator = new SequenceMarkerCacheTranslator();
@@ -35,7 +37,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			
 		MarkerDomain domain = new MarkerDomain();
 		
-		domain.setProcessStatus(Constants.PROCESS_DONOTHING);
+		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setMarkerKey(String.valueOf(entity.get_marker_key()));
 		domain.setSymbol(entity.getSymbol());
 		domain.setName(entity.getName());
@@ -140,6 +142,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 				}
 			}
 			
+			// reference associations
 			if (entity.getRefAssocs() != null) {
 				Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
 				if(i.iterator().hasNext() == true) {
@@ -147,24 +150,24 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 				}
 			}
 			
+			// gene-to-tss relationships
+			//if (entity.getGeneToTssRelationships() != null) {
+			//	Iterable<RelationshipDomain> geneToTss = relationshipTranslator.translateEntities(entity.getGeneToTssRelationships());
+			//	if(geneToTss.iterator().hasNext() == true) {
+			//		domain.setGeneToTssRelationships(IteratorUtils.toList(geneToTss.iterator()));
+			//	}
+			//}
+			
+			// tss-to-gene relationships
+			//if (entity.getTssToGeneRelationships() != null) {
+			//	Iterable<RelationshipDomain> tssToGene = relationshipTranslator.translateEntities(entity.getTssToGeneRelationships());
+			//	if(tssToGene.iterator().hasNext() == true) {
+			//		domain.setTssToGeneRelationships(IteratorUtils.toList(tssToGene.iterator()));
+			//	}
+			//}
+				
 		}
-		
-		// all gene-to-tss relationships
-		//List<String> geneToTssRelationships = new ArrayList<String>();
-		//for (Relationship ms : entity.getGeneToTssRelationships()) {
-		//	geneToTssRelationships.add(ms.getTssSymbol().getSymbol());
-		//}
-		//Collections.sort(geneToTssRelationships);
-		//domain.setGeneToTssRelationships(geneToTssRelationships);
-			
-		// all tss-to-gene relationships
-		//List<String> tssToGeneRelationships = new ArrayList<String>();
-		//for (Relationship ms : entity.getTssToGeneRelationships()) {
-		//	tssToGeneRelationships.add(ms.getGeneSymbol().getSymbol());
-		//}
-		//Collections.sort(tssToGeneRelationships);
-		//domain.setTssToGeneRelationships(tssToGeneRelationships);
-			
+						
 		// secondary ids
 		//List<String> secondaryMgiIds = new ArrayList<String>();
 		//for (Accession sa : entity.getSecondaryMgiAccessionIds()) {

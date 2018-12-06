@@ -11,7 +11,7 @@ public class MarkerHistoryTranslator extends BaseEntityDomainTranslator<MarkerHi
 	protected MarkerHistoryDomain entityToDomain(MarkerHistory entity, int translationDepth) {
 		MarkerHistoryDomain domain = new MarkerHistoryDomain();
 		
-		domain.setProcessStatus(Constants.PROCESS_DONOTHING);
+		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setAssocKey(String.valueOf(entity.get_assoc_key()));
 		domain.setMarkerKey(String.valueOf(entity.get_marker_key()));
 		domain.setSequenceNum(String.valueOf(entity.getSequenceNum()));

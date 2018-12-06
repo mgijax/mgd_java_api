@@ -102,7 +102,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				
 				MarkerHistoryDomain domain = new MarkerHistoryDomain();
 				
-				domain.setProcessStatus(Constants.PROCESS_DONOTHING);
+				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 				domain.setAssocKey(rs.getString("_assoc_key"));
 				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setSequenceNum(rs.getString("sequencenum"));
@@ -137,7 +137,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 	}	
 	
 	@Transactional
-	public void processHistory(String parentKey, List<MarkerHistoryDomain> domain, User user) {
+	public void process(String parentKey, List<MarkerHistoryDomain> domain, User user) {
 		// process marker history associations (create, delete, update)
 		
 		log.info("processHistory");

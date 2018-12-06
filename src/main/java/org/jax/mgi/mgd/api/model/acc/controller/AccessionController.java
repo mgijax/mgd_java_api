@@ -15,8 +15,6 @@ import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.search.AccessionSearchForm;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -58,7 +56,7 @@ public class AccessionController extends BaseController<AccessionDomain> impleme
 	}
 
 	@POST
-	@ApiOperation(value = "Nucleotide Accession Ids")
+	@ApiOperation(value = "Marker Nucleotide Accession Ids")
 	@Path("/markerNucleotideAccessionIds")
 	public List<AccessionDomain> nucleotideAccessionIds(Integer key) {
 			
@@ -74,7 +72,7 @@ public class AccessionController extends BaseController<AccessionDomain> impleme
 	}
 	
 	@POST
-	@ApiOperation(value = "Other Accession Ids")
+	@ApiOperation(value = "Marker Other Accession Ids")
 	@Path("/markerOtherAccessionIds")
 	public List<AccessionDomain> otherAccessionIds(Integer key) {
 			

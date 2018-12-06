@@ -15,7 +15,7 @@ public class MGIReferenceAssocTranslator extends BaseEntityDomainTranslator<MGIR
 	protected MGIReferenceAssocDomain entityToDomain(MGIReferenceAssoc entity, int translationDepth) {
 		MGIReferenceAssocDomain domain = new MGIReferenceAssocDomain();
 		
-		domain.setProcessStatus(Constants.PROCESS_DONOTHING);
+		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setAssocKey(String.valueOf(entity.get_assoc_key()));
 		
 		domain.setObjectKey(String.valueOf(entity.get_object_key()));

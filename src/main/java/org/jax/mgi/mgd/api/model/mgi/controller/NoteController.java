@@ -1,5 +1,8 @@
 package org.jax.mgi.mgd.api.model.mgi.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -46,10 +49,26 @@ public class NoteController extends BaseController<NoteDomain> {
 	}
 
 	@POST
+	@ApiOperation(value = "Marker")
+	@Path("/marker")
+	public List<NoteDomain> marker(Integer key) {
+			
+		List<NoteDomain> results = new ArrayList<NoteDomain>();
+		
+		try {
+			results = noteService.marker(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@POST
 	@ApiOperation(value = "Process")
 	@Path("/process")
-	public void processNote(String parentKey, NoteDomain noteDomain, String mgiTypeKey, String noteTypeKey, User user) {
-		noteService.processNote(parentKey, noteDomain, mgiTypeKey, noteTypeKey, user);
+	public void process(String parentKey, NoteDomain noteDomain, String mgiTypeKey, String noteTypeKey, User user) {
+		noteService.process(parentKey, noteDomain, mgiTypeKey, noteTypeKey, user);
 		return;
 	}
 	

@@ -71,7 +71,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		// list of results to be returned
 		List<MGIReferenceAssocDomain> results = new ArrayList<MGIReferenceAssocDomain>();
 
-		String cmd = "select * from mgi_reference_marker_view where _object_key = " + key;
+		String cmd = "\nselect * from mgi_reference_marker_view where _object_key = " + key;
 		log.info(cmd);
 
 		// request data, and parse results
@@ -79,6 +79,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				MGIReferenceAssocDomain domain = new MGIReferenceAssocDomain();
+				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 				domain.setAssocKey(rs.getString("_assoc_key"));
 				domain.setObjectKey(rs.getString("_object_key"));
 				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
@@ -107,7 +108,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 	}
 	
 	@Transactional
-	public void processReferenceAssoc(String parentKey, List<MGIReferenceAssocDomain> domain, String mgiTypeKey, User user) {
+	public void process(String parentKey, List<MGIReferenceAssocDomain> domain, String mgiTypeKey, User user) {
 		// process reference associations (create, delete, update)
 		
 		if (domain == null || domain.isEmpty()) {

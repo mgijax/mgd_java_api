@@ -29,13 +29,13 @@ public class MGIReferenceAssocController extends BaseController<MGIReferenceAsso
 	private MGIReferenceAssocService referenceAssocService;
 
 	@Override
-	public SearchResults<MGIReferenceAssocDomain> create(MGIReferenceAssocDomain refAssoc, User user) {
-		return referenceAssocService.create(refAssoc, user);
+	public SearchResults<MGIReferenceAssocDomain> create(MGIReferenceAssocDomain domain, User user) {
+		return referenceAssocService.create(domain, user);
 	}
 
 	@Override
-	public SearchResults<MGIReferenceAssocDomain> update(MGIReferenceAssocDomain refAssoc, User user) {
-		return referenceAssocService.update(refAssoc, user);
+	public SearchResults<MGIReferenceAssocDomain> update(MGIReferenceAssocDomain domain, User user) {
+		return referenceAssocService.update(domain, user);
 	}
 
 	@Override
@@ -67,8 +67,8 @@ public class MGIReferenceAssocController extends BaseController<MGIReferenceAsso
 	@POST
 	@ApiOperation(value = "Process")
 	@Path("/process")
-	public void processReferenceAssoc(String parentKey, List<MGIReferenceAssocDomain> domain, String mgiTypeKey, User user) {
-		referenceAssocService.processReferenceAssoc(parentKey, domain, mgiTypeKey, user);
+	public void process(String parentKey, List<MGIReferenceAssocDomain> domain, String mgiTypeKey, User user) {
+		referenceAssocService.process(parentKey, domain, mgiTypeKey, user);
 		return;
 	}
 	

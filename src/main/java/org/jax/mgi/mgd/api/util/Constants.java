@@ -64,6 +64,6 @@ public class Constants {
 	public static String PROCESS_CREATE = "c";
 	public static String PROCESS_UPDATE = "u";
 	public static String PROCESS_DELETE = "d";
-	public static String PROCESS_DONOTHING = "x";
+	public static String PROCESS_NOTDIRTY = "x";
 	
 }

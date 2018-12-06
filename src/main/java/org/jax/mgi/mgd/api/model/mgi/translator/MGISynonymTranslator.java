@@ -15,7 +15,7 @@ public class MGISynonymTranslator extends BaseEntityDomainTranslator<MGISynonym,
 	protected MGISynonymDomain entityToDomain(MGISynonym entity, int translationDepth) {
 		MGISynonymDomain domain = new MGISynonymDomain();
 		
-		domain.setProcessStatus(Constants.PROCESS_DONOTHING);
+		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setSynonymKey(String.valueOf(entity.get_synonym_key()));
 		
 		domain.setObjectKey(String.valueOf(entity.get_object_key()));
@@ -29,6 +29,7 @@ public class MGISynonymTranslator extends BaseEntityDomainTranslator<MGISynonym,
 		if (entity.getReference() != null) {
 			domain.setRefKey(String.valueOf(entity.getReference().get_refs_key()));
 			domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());
+			domain.setJnum(String.valueOf(entity.getReference().getReferenceCitationCache().getNumericPart()));
 			domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());
 		}
 		

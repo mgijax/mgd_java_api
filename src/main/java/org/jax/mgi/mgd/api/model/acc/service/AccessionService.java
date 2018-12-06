@@ -191,7 +191,7 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 	//
 	
 	@Transactional
-	private void processAccession(String parentKey, List<AccessionDomain> domain, String mgiTypeName, String logicaldbKey, User user) {
+	private void process(String parentKey, List<AccessionDomain> domain, String mgiTypeName, String logicaldbKey, User user) {
 		// process accession associations (create, delete, update)
 		// using stored procedure methods (ACC_insert(), ACC_delete_byAccKey(), ACC_update())
 		// using entity to compare domain vs entity
@@ -291,8 +291,10 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 	@Transactional
 	public void processNucleotideAccession(String parentKey, List<AccessionDomain> domain, String mgiTypeKey, User user)
 	{
+		// process the nucleotide accession ids (ldb = 9)
+		
 		try {
-			processAccession(parentKey, domain, mgiTypeKey, "9", user);
+			process(parentKey, domain, mgiTypeKey, "9", user);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

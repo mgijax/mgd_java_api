@@ -6,12 +6,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
-import org.jax.mgi.mgd.api.model.prb.search.ProbeSearchForm;
 import org.jax.mgi.mgd.api.model.prb.service.ProbeService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 

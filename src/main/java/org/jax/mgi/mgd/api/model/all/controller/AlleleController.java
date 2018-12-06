@@ -1,5 +1,8 @@
 package org.jax.mgi.mgd.api.model.all.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -7,12 +10,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleEIResultDomain;
-import org.jax.mgi.mgd.api.model.all.search.AlleleSearchForm;
 import org.jax.mgi.mgd.api.model.all.service.AlleleService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -49,11 +49,20 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		return alleleService.delete(key, user);
 	}
 	
-	//@POST
-	//@ApiOperation(value = "EI Allele Search")
-	//@Path("/eiSearch")
-	//public AlleleEIResultDomain eiSearch(AlleleSearchForm searchForm) {
-		//return alleleService.eiSearch(searchForm);
-	//}
+	@POST
+	@ApiOperation(value = "EI Search")
+	@Path("/eiSearch")
+	public List<AlleleEIResultDomain> eiSearch(AlleleDomain searchDomain) {
+			
+		List<AlleleEIResultDomain> results = new ArrayList<AlleleEIResultDomain>();
+		
+		try {
+			results = alleleService.eiSearch(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 
 }

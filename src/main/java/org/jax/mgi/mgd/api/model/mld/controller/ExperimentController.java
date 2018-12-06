@@ -6,19 +6,16 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mld.domain.ExperimentDomain;
-import org.jax.mgi.mgd.api.model.mld.search.ExperimentSearchForm;
 import org.jax.mgi.mgd.api.model.mld.service.ExperimentService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
 
 @Path("/experiment")
-@Api(value = "Experiment Endpoints", description="This is the description")
+@Api(value = "Experiment Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ExperimentController extends BaseController<ExperimentDomain> {

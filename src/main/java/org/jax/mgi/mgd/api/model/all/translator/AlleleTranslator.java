@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.all.translator;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
+import org.jax.mgi.mgd.api.util.Constants;
 
 public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleDomain> {
 
@@ -10,16 +11,19 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 	protected AlleleDomain entityToDomain(Allele entity, int translationDepth) {
 		
 		AlleleDomain domain = new AlleleDomain();
-		domain.set_allele_key(entity.get_allele_key());
+		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
+		domain.setAlleleKey(String.valueOf(entity.get_allele_key()));
 		domain.setSymbol(entity.getSymbol());
 		domain.setName(entity.getName());
 		domain.setIsWildType(entity.getIsWildType());
 		domain.setIsExtinct(entity.getIsExtinct());
 		domain.setIsMixed(entity.getIsMixed());
+		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
+		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
-		domain.setCreation_date(entity.getCreation_date());
-		domain.setModification_date(entity.getModification_date());
+		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
+		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
 		if(translationDepth > 0) {
 			// load relationships

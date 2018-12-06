@@ -6,19 +6,16 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.BaseSearchInterface;
-import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneDomain;
-import org.jax.mgi.mgd.api.model.gxd.search.GelLaneSearchForm;
 import org.jax.mgi.mgd.api.model.gxd.service.GelLaneService;
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
 
 @Path("/gellane")
-@Api(value = "GelLane Endpoints", description="This is the description")
+@Api(value = "GelLane Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class GelLaneController extends BaseController<GelLaneDomain> {

@@ -4,13 +4,9 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
-import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
-import org.jax.mgi.mgd.api.model.gxd.entities.Antibody;
-import org.jax.mgi.mgd.api.model.gxd.search.AntibodySearchForm;
 import org.jax.mgi.mgd.api.model.gxd.translator.AntibodyTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -40,12 +36,12 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		return translator.translate(antibodyDAO.get(key));
 	}
 
-        @Transactional
-        public SearchResults<AntibodyDomain> getResults(Integer key) {
-                SearchResults<AntibodyDomain> results = new SearchResults<AntibodyDomain>();
-                results.setItem(translator.translate(antibodyDAO.get(key)));
-                return results;
-        }
+    @Transactional
+    public SearchResults<AntibodyDomain> getResults(Integer key) {
+        SearchResults<AntibodyDomain> results = new SearchResults<AntibodyDomain>();
+        results.setItem(translator.translate(antibodyDAO.get(key)));
+        return results;
+    }
 
 	@Transactional
 	public SearchResults<AntibodyDomain> delete(Integer key, User user) {

@@ -88,7 +88,7 @@ public class AccessionController extends BaseController<AccessionDomain> impleme
 	}
 	
 	@POST
-	@ApiOperation(value = "Process Nucleotide")
+	@ApiOperation(value = "Process Nucleotide Accession Ids")
 	@Path("/processNucleotide")
 	public void processNucleotideAccession(String parentKey, List<AccessionDomain> domain, String mgiTypeKey, User user) {
 		accessionService.processNucleotideAccession(parentKey, domain, mgiTypeKey, user);

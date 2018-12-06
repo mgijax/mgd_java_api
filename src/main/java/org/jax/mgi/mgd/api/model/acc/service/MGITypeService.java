@@ -4,9 +4,8 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
-import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.BaseSearchInterface;
+import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.dao.MGITypeDAO;
 import org.jax.mgi.mgd.api.model.acc.domain.MGITypeDomain;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
@@ -26,19 +25,11 @@ public class MGITypeService extends BaseService<MGITypeDomain> implements BaseSe
 
 	@Transactional
 	public SearchResults<MGITypeDomain> create(MGITypeDomain object, User user) {
-		//MGIType type = translator.translate(object);
-		//MGIType returnType = mgitypeDAO.create(type);
-		//MGITypeDomain typeDomain = translator.translate(returnType);
-		//return typeDomain;
 		return null;
 	}
 
 	@Transactional
 	public SearchResults<MGITypeDomain> update(MGITypeDomain object, User user) {
-		//MGIType type = translator.translate(object);
-		//MGIType returnType = mgitypeDAO.update(type);
-		//MGITypeDomain typeDomain = translator.translate(returnType);
-		//return typeDomain;
 		return null;
 	}
 
@@ -47,17 +38,17 @@ public class MGITypeService extends BaseService<MGITypeDomain> implements BaseSe
 		return translator.translate(mgitypeDAO.get(key));
 	}
 
-        @Transactional
-        public SearchResults<MGITypeDomain> getResults(Integer key) {
-                SearchResults<MGITypeDomain> results = new SearchResults<MGITypeDomain>();
-                results.setItem(translator.translate(mgitypeDAO.get(key)));
-                return results;
-        }
+    @Transactional
+    public SearchResults<MGITypeDomain> getResults(Integer key) {
+        SearchResults<MGITypeDomain> results = new SearchResults<MGITypeDomain>();
+        results.setItem(translator.translate(mgitypeDAO.get(key)));
+        return results;
+    }
     
 	@Transactional
 	public SearchResults<MGITypeDomain> delete(Integer key, User user) {
-	        // TODO Auto-generated method stub
-	        return null;
+	    // TODO Auto-generated method stub
+	    return null;
 	}
 
 	@Transactional

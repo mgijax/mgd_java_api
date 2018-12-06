@@ -3,11 +3,8 @@ package org.jax.mgi.mgd.api.model.acc.service;
 import javax.enterprise.context.RequestScoped;
 import javax.transaction.Transactional;
 
-import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.domain.LogicalDBDomain;
-import org.jax.mgi.mgd.api.model.acc.search.LogicalDBSearchForm;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -36,11 +33,11 @@ public class LogicalDBService extends BaseService<LogicalDBDomain> {
 		return null;
 	}
 
-        @Transactional
+    @Transactional
         public SearchResults<LogicalDBDomain> getResults(Integer key) {
 		// TODO Auto-generated method stub
 		return null;
-        }
+    }
     
 	@Transactional
 	public SearchResults<LogicalDBDomain> delete(Integer key, User user) {

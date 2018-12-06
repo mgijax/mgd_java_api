@@ -4,15 +4,11 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
-import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.gxd.dao.GelLaneDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneDomain;
-import org.jax.mgi.mgd.api.model.gxd.entities.GelLane;
-import org.jax.mgi.mgd.api.model.gxd.search.GelLaneSearchForm;
 import org.jax.mgi.mgd.api.model.gxd.translator.GelLaneTranslator;
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
@@ -40,12 +36,12 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 		return translator.translate(gelLaneDAO.get(key));
 	}
 
-        @Transactional
-        public SearchResults<GelLaneDomain> getResults(Integer key) {
-                SearchResults<GelLaneDomain> results = new SearchResults<GelLaneDomain>();
-                results.setItem(translator.translate(gelLaneDAO.get(key)));
-                return results;
-        }
+    @Transactional
+    public SearchResults<GelLaneDomain> getResults(Integer key) {
+         SearchResults<GelLaneDomain> results = new SearchResults<GelLaneDomain>();
+         results.setItem(translator.translate(gelLaneDAO.get(key)));
+         return results;
+    }
     
 	@Transactional
 	public SearchResults<GelLaneDomain> delete(Integer key, User user) {

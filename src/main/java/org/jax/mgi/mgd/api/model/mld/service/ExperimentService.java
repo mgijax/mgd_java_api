@@ -4,14 +4,10 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
-import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mld.dao.ExperimentDAO;
 import org.jax.mgi.mgd.api.model.mld.domain.ExperimentDomain;
-import org.jax.mgi.mgd.api.model.mld.entities.Experiment;
-import org.jax.mgi.mgd.api.model.mld.search.ExperimentSearchForm;
 import org.jax.mgi.mgd.api.model.mld.translator.ExperimentTranslator;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -40,12 +36,12 @@ public class ExperimentService extends BaseService<ExperimentDomain> {
 		return translator.translate(exptDAO.get(key));
 	}
 
-        @Transactional
-        public SearchResults<ExperimentDomain> getResults(Integer key) {
-                SearchResults<ExperimentDomain> results = new SearchResults<ExperimentDomain>();
-                results.setItem(translator.translate(exptDAO.get(key)));
-                return results;
-        }
+    @Transactional
+    public SearchResults<ExperimentDomain> getResults(Integer key) {
+        SearchResults<ExperimentDomain> results = new SearchResults<ExperimentDomain>();
+        results.setItem(translator.translate(exptDAO.get(key)));
+        return results;
+    }
 
 	@Transactional
 	public SearchResults<ExperimentDomain> delete(Integer key, User user) {

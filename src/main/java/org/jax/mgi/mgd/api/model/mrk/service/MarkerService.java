@@ -376,7 +376,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 	
 		// marker accession id
-		if (searchDomain.getMgiAccessionIds() != null) {
+		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {
 			where = where + "\nand a.accID = '" + searchDomain.getMgiAccessionIds().get(0).getAccID() + "'";
 			from_accession = true;
 		}

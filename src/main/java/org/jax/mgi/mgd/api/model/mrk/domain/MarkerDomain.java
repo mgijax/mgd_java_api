@@ -7,6 +7,7 @@ import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -51,7 +52,7 @@ public class MarkerDomain extends BaseDomain {
 	private List<AccessionDomain> nucleotideAccessionIds;
 	private List<AccessionDomain> otherAccessionIds;
 	private List<MGIReferenceAssocDomain> refAssocs;
-	//private List<RelationshipDomain> geneToTssRelationships;
+	private List<RelationshipDomain> geneToTssRelationships;
 	//private List<RelationshipDomain> tssToGeneRelationships;
 	
 	//private String mcvTerm;

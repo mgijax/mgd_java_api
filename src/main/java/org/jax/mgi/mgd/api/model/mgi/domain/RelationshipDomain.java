@@ -16,7 +16,9 @@ public class RelationshipDomain extends BaseDomain {
 	private String categoryKey;
 	private String categoryTerm;
 	private String objectKey1;
+	private String object1;
 	private String objectKey2;
+	private String object2;
 	private String relationshipTermKey;
 	private String relationshipTerm;
 	private String qualifierKey;

@@ -83,9 +83,8 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				domain.setRelationshipKey(rs.getString("_relationship_key"));
 				domain.setObjectKey1(rs.getString("_object_key_1"));
 				domain.setObjectKey2(rs.getString("_object_key_2"));
-				
-				// need to add the symbol name of _object_key_1/_object_key_2
-				
+				domain.setObject1(rs.getString("marker1"));	
+				domain.setObject2(rs.getString("marker2"));				
 				domain.setCategoryKey(rs.getString("_category_key"));
 				domain.setCategoryTerm(rs.getString("categoryTerm"));
 				domain.setRelationshipTermKey(rs.getString("_relationshipterm_key"));
@@ -94,7 +93,6 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				domain.setQualifierTerm(rs.getString("qualifierTerm"));
 				domain.setEvidenceKey(rs.getString("_evidence_key"));
 				domain.setEvidenceTerm(rs.getString("evidenceTerm"));
-				
 				domain.setRefKey(rs.getString("_refs_key"));
 				domain.setJnumid(rs.getString("jnumid"));
 				domain.setJnum(rs.getString("jnum"));

@@ -215,7 +215,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	
 		// cannot change the status to "withdrawn"/2
 		//log.info("process marker status");
-		if (!entity.getMarkerStatus().getStatus().equals(domain.getMarkerStatus())) {
+		if (!String.valueOf(entity.getMarkerStatus().get_marker_status_key()).equals(domain.getMarkerStatusKey())) {
 			if (domain.getMarkerStatusKey().equals("2")) {
 				results.setError("Failed : Marker Status error",  "Cannot change Marker Status to 'withdrawn'", Constants.HTTP_SERVER_ERROR);
 				return results;
@@ -227,7 +227,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 		
 		//log.info("process marker type");
-		if (!entity.getMarkerType().getName().equals(domain.getMarkerType())) {
+		if (!String.valueOf(entity.getMarkerType().get_marker_type_key()).equals(domain.getMarkerTypeKey())) {
 			entity.setMarkerType(markerTypeDAO.get(Integer.valueOf(domain.getMarkerTypeKey())));
 			modified = true;
 		}

@@ -25,6 +25,7 @@ import org.jax.mgi.mgd.api.model.mrk.dao.MarkerTypeDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIResultDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
@@ -516,7 +517,45 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// ...off to be turned into JSON
 		return results;
 	}	
-	
+
+	public List<MarkerDomain> aliasSearch(Integer key) {
+
+		// list of results to be returned
+		List<MarkerDomain> results = new ArrayList<MarkerDomain>();
+
+		String cmd = "\nselect * from mrk_alias_view"
+				+ "\nwhere _alias_key = " + key
+				+ "\norder by symbol";
+		
+		log.info(cmd);
+
+		// request data, and parse results
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				
+				MarkerDomain domain = new MarkerDomain();
+				
+				// only setting MarkerDomain fields that are needed by this search
+				// all other domain fields will be null
+				
+				domain.setMarkerKey(rs.getString("_marker_key"));
+				domain.setSymbol(rs.getString("symbol"));
+				domain.setCreation_date(rs.getString("creation_date"));
+				domain.setModification_date(rs.getString("modification_date"));
+				
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		// ...off to be turned into JSON
+		return results;
+	}	
+		
 	public MarkerEIUtilitiesDomain eiUtilities(MarkerUtilitiesForm searchForm) throws IOException, InterruptedException {
 	
 		// domain object to be JSON-ed

@@ -16,6 +16,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIResultDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -111,6 +112,13 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		return results;
 	}
 
+	@POST
+	@ApiOperation(value = "Alias Search")
+	@Path("/aliasSearch")
+	public List<MarkerDomain> aliasSearch(Integer key) {
+		return markerService.aliasSearch(key);
+	}
+	
 	@POST
 	@ApiOperation(value = "EI Utilities ")
 	@Path("/eiUtilities")

@@ -56,6 +56,7 @@ public class MarkerDomain extends BaseDomain {
 	// display only, see individual object/service to methods that set these values
 	private List<RelationshipDomain> geneToTssRelationships;
 	private List<RelationshipDomain> tssToGeneRelationships;
+	private List<MarkerDomain> aliases;
 	
 	//private String mcvTerm;
     

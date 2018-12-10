@@ -164,6 +164,8 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			//	}
 			//}
 				
+			// alias are set via service/aliasSearch
+		
 		//}
 		
 		return domain;

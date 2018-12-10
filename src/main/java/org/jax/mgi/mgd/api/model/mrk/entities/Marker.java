@@ -138,15 +138,15 @@ public class Marker extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 2")
 	private List<MGIReferenceAssoc> refAssocs;
 
-	//@OneToMany
-	//@JoinColumn(name="_object_key_1", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	//@Where(clause="`_category_key` = 1008")
-	//private List<Relationship> tssToGeneRelationships;
+	@OneToMany
+	@JoinColumn(name="_object_key_2", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	@Where(clause="`_category_key` = 1008")
+	private List<Relationship> geneToTssRelationships;
 	
-	//@OneToMany
-	//@JoinColumn(name="_object_key_2", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	//@Where(clause="`_category_key` = 1008")
-	//private List<Relationship> geneToTssRelationships;
+	@OneToMany
+	@JoinColumn(name="_object_key_1", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	@Where(clause="`_category_key` = 1008")
+	private List<Relationship> tssToGeneRelationships;
 	
 	//@OneToOne(fetch=FetchType.LAZY)
 	//@JoinColumn(name="_marker_key")

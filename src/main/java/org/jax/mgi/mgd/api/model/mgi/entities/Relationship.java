@@ -24,9 +24,9 @@ import lombok.Setter;
 public class Relationship extends BaseEntity {
 	
 	@Id
-	private Integer _relationship_key;
-	private Integer _object_key_1;
-	private Integer _object_key_2;
+	private int _relationship_key;
+	private int _object_key_1;
+	private int _object_key_2;
 	private Date creation_date;
 	private Date modification_date;
 	

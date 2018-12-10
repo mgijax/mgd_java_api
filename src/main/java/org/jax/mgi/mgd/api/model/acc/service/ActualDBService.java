@@ -11,7 +11,7 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 @RequestScoped
 public class ActualDBService extends BaseService<ActualDBDomain> {
 
-        //@Inject
+    //@Inject
 	//private ActualDBDAO actualdbDAO;
 	//private AcutalDBTranslator translator = new ActualDBTranslator();
 

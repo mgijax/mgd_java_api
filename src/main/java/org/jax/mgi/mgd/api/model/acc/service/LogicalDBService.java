@@ -11,9 +11,9 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 @RequestScoped
 public class LogicalDBService extends BaseService<LogicalDBDomain> {
 
-        //@Inject
-        //private LogicallDBDAO logicalDAO;
-        //private LogicallDBTranslator translator = new LogicallDBTranslator();
+   //@Inject
+   //private LogicallDBDAO logicalDAO;
+   //private LogicallDBTranslator translator = new LogicallDBTranslator();
 
 	@Transactional
 	public SearchResults<LogicalDBDomain> create(LogicalDBDomain object, User user) {

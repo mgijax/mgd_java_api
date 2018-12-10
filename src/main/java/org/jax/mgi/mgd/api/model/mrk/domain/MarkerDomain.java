@@ -52,8 +52,10 @@ public class MarkerDomain extends BaseDomain {
 	private List<AccessionDomain> nucleotideAccessionIds;
 	private List<AccessionDomain> otherAccessionIds;
 	private List<MGIReferenceAssocDomain> refAssocs;
+	
+	// display only, see individual object/service to methods that set these values
 	private List<RelationshipDomain> geneToTssRelationships;
-	//private List<RelationshipDomain> tssToGeneRelationships;
+	private List<RelationshipDomain> tssToGeneRelationships;
 	
 	//private String mcvTerm;
     

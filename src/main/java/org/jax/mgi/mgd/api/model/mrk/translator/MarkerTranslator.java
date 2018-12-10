@@ -4,10 +4,8 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
-import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
@@ -25,9 +23,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	private MarkerHistoryTranslator historyTranslator = new MarkerHistoryTranslator();
 	private MGISynonymTranslator synonymTranslator = new MGISynonymTranslator();
-	private MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
-	//private RelationshipTranslator relationshipTranslator = new RelationshipTranslator();
-	
+
 	//private TermTranslator termTranslator = new TermTranslator();
 	//private SequenceMarkerCacheTranslator biotypesTranslator = new SequenceMarkerCacheTranslator();
 
@@ -120,37 +116,40 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			}
 		}
 		
-		// only perform translation depth as part of entity refresh
-		if (translationDepth > 0) {
-
-			log.info("translationDepth > 0");
+		// these domains are only set by individual object endpoints
+		// that is, see acc/service/AccessionService:markerNucleotideAccessionIds
+		// or mgi/service/RelationshipService/markerTSS
+		
+		//if (translationDepth > 0) {
 			
 			// accession ids for nucleotide sequences (ldb = 9)
-			if (entity.getNucleotideAccessionIds() != null) {
-				Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getNucleotideAccessionIds());
-				if(acc.iterator().hasNext() == true) {
-					domain.setNucleotideAccessionIds(IteratorUtils.toList(acc.iterator()));
-				}
-			}
+			//if (entity.getNucleotideAccessionIds() != null) {
+			//	Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getNucleotideAccessionIds());
+			//	if(acc.iterator().hasNext() == true) {
+			//		domain.setNucleotideAccessionIds(IteratorUtils.toList(acc.iterator()));
+			//	}
+			//}
 			
 			// accession ids other than nucleotide sequences 
-			if (entity.getOtherAccessionIds() != null) {
-				Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getOtherAccessionIds());
-				if(acc.iterator().hasNext() == true) {
-					domain.setOtherAccessionIds(IteratorUtils.toList(acc.iterator()));
-				}
-			}
+			//if (entity.getOtherAccessionIds() != null) {
+			//	Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getOtherAccessionIds());
+			//	if(acc.iterator().hasNext() == true) {
+			//		domain.setOtherAccessionIds(IteratorUtils.toList(acc.iterator()));
+			//	}
+			//}
 			
 			// reference associations
-			if (entity.getRefAssocs() != null) {
-				Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
-				if(i.iterator().hasNext() == true) {
-					domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
-				}
-			}
+			//if (entity.getRefAssocs() != null) {
+			//	MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
+			//	Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
+			//	if(i.iterator().hasNext() == true) {
+			//		domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
+			//	}
+			//}
 			
 			// gene-to-tss relationships
 			//if (entity.getGeneToTssRelationships() != null) {
+			//	RelationshipTranslator relationshipTranslator = new RelationshipTranslator();				
 			//	Iterable<RelationshipDomain> geneToTss = relationshipTranslator.translateEntities(entity.getGeneToTssRelationships());
 			//	if(geneToTss.iterator().hasNext() == true) {
 			//		domain.setGeneToTssRelationships(IteratorUtils.toList(geneToTss.iterator()));
@@ -159,35 +158,13 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			
 			// tss-to-gene relationships
 			//if (entity.getTssToGeneRelationships() != null) {
+			//	RelationshipTranslator relationshipTranslator = new RelationshipTranslator();				
 			//	Iterable<RelationshipDomain> tssToGene = relationshipTranslator.translateEntities(entity.getTssToGeneRelationships());
 			//	if(tssToGene.iterator().hasNext() == true) {
 			//		domain.setTssToGeneRelationships(IteratorUtils.toList(tssToGene.iterator()));
 			//	}
 			//}
 				
-		}
-						
-		// secondary ids
-		//List<String> secondaryMgiIds = new ArrayList<String>();
-		//for (Accession sa : entity.getSecondaryMgiAccessionIds()) {
-		//	secondaryMgiIds.add(sa.getAccID());
-		//}
-		//Collections.sort(secondaryMgiIds);
-		//domain.setSecondaryMgiIds(secondaryMgiIds);
-			
-		// at most one mcvTerm
-		//List<TermDomain> mcvTerms = new ArrayList<TermDomain>();
-		//for (MarkerMCVCache mm : entity.getMcvTerms()) {
-		//	mcvTerms.add(termTranslator.translate(mm.getMcvTerm(), translationDepth - 1));
-		//}
-		//if(mcvTerms.size() > 0) {
-		//	domain.setMcvTerm(mcvTerms.get(0).getTerm());
-		//}
-			
-		// biotypes
-		//Iterable<SequenceMarkerCacheDomain> biotypes = biotypesTranslator.translateEntities(entity.getBiotypes(), translationDepth - 1);
-		//if(biotypes.iterator().hasNext() == true) {
-		//	domain.setBiotypes(IteratorUtils.toList(biotypes.iterator()));
 		//}
 		
 		return domain;

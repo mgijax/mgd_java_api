@@ -147,6 +147,13 @@ public class Marker extends BaseEntity {
 	@JoinColumn(name="_object_key_1", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_category_key` = 1008")
 	private List<Relationship> tssToGeneRelationships;
+
+	//@ManyToMany
+	//@JoinTable(name = "mrk_alias",
+	//	joinColumns = @JoinColumn(name = "_alias_key", referencedColumnName="_marker_key"),
+	//	inverseJoinColumns = @JoinColumn(name = "_marker_key", referencedColumnName="_marker_key")
+	//)
+	//private Set<Marker> aliases;
 	
 	//@OneToOne(fetch=FetchType.LAZY)
 	//@JoinColumn(name="_marker_key")
@@ -174,13 +181,6 @@ public class Marker extends BaseEntity {
 	//@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
 	//@Where(clause="`_mgitype_key` = 2")
 	//private Set<CoordinateFeature> features;
-	
-	//@ManyToMany
-	//@JoinTable(name = "mrk_alias",
-	//	joinColumns = @JoinColumn(name = "_alias_key", referencedColumnName="_marker_key"),
-	//	inverseJoinColumns = @JoinColumn(name = "_marker_key", referencedColumnName="_marker_key")
-	//)
-	//private Set<Marker> aliases;
 
 	//@ManyToMany
 	//@JoinTable(name = "mrk_current",

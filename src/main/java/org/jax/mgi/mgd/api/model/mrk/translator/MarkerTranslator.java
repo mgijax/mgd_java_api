@@ -12,7 +12,6 @@ import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
-import org.jax.mgi.mgd.api.util.Constants;
 import org.jboss.logging.Logger;
 
 public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerDomain> {
@@ -32,7 +31,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			
 		MarkerDomain domain = new MarkerDomain();
 		
-		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
+		//domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setMarkerKey(String.valueOf(entity.get_marker_key()));
 		domain.setSymbol(entity.getSymbol());
 		domain.setName(entity.getName());

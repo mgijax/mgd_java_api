@@ -14,7 +14,6 @@ import org.jax.mgi.mgd.api.model.mgi.dao.NoteDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
-import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -79,7 +78,7 @@ public class NoteService extends BaseService<NoteDomain> {
 							
 				NoteDomain domain = new NoteDomain();
 
-				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
+				//domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 				domain.setNoteKey(rs.getString("_note_key"));
 				domain.setObjectKey(rs.getString("_object_key"));
 				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
@@ -116,13 +115,15 @@ public class NoteService extends BaseService<NoteDomain> {
 			log.info("processNote/no changes processed: " + parentKey);
 			return;
 		}
-		
-		if (noteDomain.getProcessStatus().equals(Constants.PROCESS_CREATE))
+				
+		//if (noteDomain.getProcessStatus().equals(Constants.PROCESS_CREATE))
+		if (noteDomain.getNoteKey() == null || noteDomain.getNoteKey().isEmpty())
 		{
 			noteKey = "null";
-			note = "'" + noteDomain.getNoteChunk().toString() + "'"; 
+			note = "'" + noteDomain.getNoteChunk() + "'"; 
 		}
-		else if (noteDomain.getProcessStatus().equals(Constants.PROCESS_DELETE))
+		//else if (noteDomain.getProcessStatus().equals(Constants.PROCESS_DELETE))
+		else if (noteDomain.getNoteChunk() == null || noteDomain.getNoteChunk().isEmpty())
 		{
 			noteKey = noteDomain.getNoteKey().toString();
 			note = null;
@@ -130,7 +131,7 @@ public class NoteService extends BaseService<NoteDomain> {
 		else
 		{
 			noteKey = noteDomain.getNoteKey().toString();
-			note = "'" + noteDomain.getNoteChunk().toString() + "'"; 
+			note = "'" + noteDomain.getNoteChunk() + "'"; 
 		}
 		
 		// stored procedure

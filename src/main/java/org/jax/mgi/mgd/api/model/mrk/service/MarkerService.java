@@ -74,26 +74,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		Marker entity = new Marker();
 		
-		if (domain.getSymbol().isEmpty()) {
-			entity.setSymbol(null);
-		}
-		else {
-			entity.setSymbol(domain.getSymbol());
-		}
-		
-		if (domain.getName().isEmpty()) {
-			entity.setName(null);
-		}
-		else {
-			entity.setName(domain.getName());
-		}
-		
-		if (domain.getChromosome().isEmpty()) {
-			entity.setChromosome(null);
-		}
-		else {
-			entity.setChromosome(domain.getChromosome());
-		}
+		// assumes that required fields exist
+		entity.setSymbol(domain.getSymbol());
+		entity.setName(domain.getName());
+		entity.setChromosome(domain.getChromosome());
 		
 		// cytoGeneticOffset always defaults to null
 		// no special processing required

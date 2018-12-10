@@ -59,12 +59,6 @@ public class EventReasonService extends BaseService<EventReasonDomain> {
 		return null;
 	}
 
-	@Transactional
-	public SearchResults<EventReasonDomain> delete(String key, User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public List<EventReasonDomain> search() {
 
 		// list of results to be returned

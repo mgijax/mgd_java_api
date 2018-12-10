@@ -289,15 +289,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// get the entity object and delete
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		Marker entity = markerDAO.get(key);
-		markerDAO.remove(entity);
-		return results;
-	}
-	
-	@Transactional
-	public SearchResults<MarkerDomain> delete(String key, User user) {
-		// get the entity object and delete
-		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
-		Marker entity = markerDAO.get(Integer.valueOf(key));
+		results.setItem(translator.translate(markerDAO.get(key),0));
 		markerDAO.remove(entity);
 		return results;
 	}

@@ -33,12 +33,12 @@ public class ActualDBService extends BaseService<ActualDBDomain> {
 		return null;
 	}
 
-    @Transactional
-    public SearchResults<ActualDBDomain> getResults(Integer key) {
+	@Transactional
+	public SearchResults<ActualDBDomain> getResults(Integer key) {
 		// TODO Auto-generated method stub
 		return null;
-    }
-    
+	}
+
 	@Transactional
 	public SearchResults<ActualDBDomain> delete(Integer key, User user) {
 		// TODO Auto-generated method stub

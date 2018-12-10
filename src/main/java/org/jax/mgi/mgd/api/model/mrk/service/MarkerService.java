@@ -293,6 +293,15 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		return results;
 	}
 	
+	@Transactional
+	public SearchResults<MarkerDomain> delete(String key, User user) {
+		// get the entity object and delete
+		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
+		Marker entity = markerDAO.get(Integer.valueOf(key));
+		markerDAO.remove(entity);
+		return results;
+	}
+	
 	public List<MarkerEIResultDomain> eiSearch(MarkerDomain searchDomain) {
 
 		// list of results to be returned

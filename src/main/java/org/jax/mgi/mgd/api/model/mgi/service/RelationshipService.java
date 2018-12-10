@@ -64,7 +64,9 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 		// list of results to be returned
 		List<RelationshipDomain> results = new ArrayList<RelationshipDomain>();
 
-		String cmd = "select * from mgi_relationship_markertss_view where _object_key = " + key;
+		String cmd = "select * from mgi_relationship_markertss_view "
+				+ "\nwhere _object_key_1 = " + key
+				+ "\nor _object_key_2 = " + key;
 		log.info(cmd);
 
 		// request data, and parse results
@@ -81,6 +83,8 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				domain.setRelationshipKey(rs.getString("_relationship_key"));
 				domain.setObjectKey1(rs.getString("_object_key_1"));
 				domain.setObjectKey2(rs.getString("_object_key_2"));
+				
+				// need to add the symbol name of _object_key_1/_object_key_2
 				
 				domain.setCategoryKey(rs.getString("_category_key"));
 				domain.setCategoryTerm(rs.getString("categoryTerm"));

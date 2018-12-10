@@ -60,6 +60,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		return null;
 	}
 
+
 	public List<AlleleEIResultDomain> eiSearch(AlleleDomain searchDomain) {
 
 		// list of results to be returned

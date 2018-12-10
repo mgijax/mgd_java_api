@@ -25,7 +25,6 @@ import org.jax.mgi.mgd.api.model.mrk.dao.MarkerTypeDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIResultDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
-import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;

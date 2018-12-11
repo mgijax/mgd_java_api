@@ -22,9 +22,9 @@ import lombok.Setter;
 public class EvidenceProperty extends BaseEntity {
 
 	@Id
-	private Integer _evidenceProperty_key;
-	private Integer stanza;
-	private Integer sequenceNum;
+	private int _evidenceProperty_key;
+	private int stanza;
+	private int sequenceNum;
 	private String value;
 	private Date creation_date;
 	private Date modification_date;

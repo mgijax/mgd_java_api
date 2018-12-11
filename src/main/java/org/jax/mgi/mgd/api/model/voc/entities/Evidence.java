@@ -20,7 +20,7 @@ import lombok.Setter;
 public class Evidence extends BaseEntity {
 
 	@Id
-	private Integer _annotevidence_key;
+	private int _annotevidence_key;
 	
 	@OneToOne
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

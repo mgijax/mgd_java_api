@@ -4,7 +4,6 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
-import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -45,16 +44,16 @@ public class VocabService extends BaseService<VocabularyDomain> implements BaseS
 		return translator.translate(vocabularyDAO.get(key));
 	}
 	
-        @Transactional
-        public SearchResults<VocabularyDomain> getResults(Integer key) {
-                SearchResults<VocabularyDomain> results = new SearchResults<VocabularyDomain>();
-                results.setItem(translator.translate(vocabularyDAO.get(key)));
-                return results;
-        }
+    @Transactional
+    public SearchResults<VocabularyDomain> getResults(Integer key) {
+        SearchResults<VocabularyDomain> results = new SearchResults<VocabularyDomain>();
+        results.setItem(translator.translate(vocabularyDAO.get(key)));
+        return results;
+    }
     
 	@Transactional
 	public SearchResults<VocabularyDomain> delete(Integer key, User user) {
-                // TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 		return null;
 	}
 

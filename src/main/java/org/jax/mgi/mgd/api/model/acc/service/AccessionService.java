@@ -145,7 +145,6 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 		// see mrk_accref1_view for details
 		// returns list of accession domain
 
-		// list of results to be returned
 		List<AccessionDomain> results = new ArrayList<AccessionDomain>();
 
 		String cmd = "select * from mrk_accref1_view "

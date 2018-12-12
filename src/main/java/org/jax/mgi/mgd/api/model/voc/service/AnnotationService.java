@@ -77,7 +77,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				domain.setTermKey(rs.getString("_term_key"));
 				domain.setTerm(rs.getString("term"));
 				domain.setQualifierKey(rs.getString("_qualifier_key"));
-				domain.setQulalifier(rs.getString("qualifier"));
+				domain.setQualifier(rs.getString("qualifier"));
 				domain.setObjectKey(rs.getString("_object_key"));
 				domain.setCreation_date(rs.getString("creation_date"));
 				domain.setModification_date(rs.getString("modification_date"));
@@ -93,7 +93,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 		return results;
 	}
 	
-	public List<AnnotationDomain> markerMCV(Integer key) {
+	public List<AnnotationDomain> markerFeatureTypes(Integer key) {
 
 		List<AnnotationDomain> results = new ArrayList<AnnotationDomain>();
 

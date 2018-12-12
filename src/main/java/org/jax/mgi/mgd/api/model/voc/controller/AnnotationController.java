@@ -49,14 +49,14 @@ public class AnnotationController extends BaseController<AnnotationDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Marker/MCV")
-	@Path("/markerMCV")
+	@ApiOperation(value = "Marker/Feature Types")
+	@Path("/markerFeatureTypes")
 	public List<AnnotationDomain> markerMCV(Integer key) {
 			
 		List<AnnotationDomain> results = new ArrayList<AnnotationDomain>();
 		
 		try {
-			results = annotationService.markerMCV(key);
+			results = annotationService.markerFeatureTypes(key);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

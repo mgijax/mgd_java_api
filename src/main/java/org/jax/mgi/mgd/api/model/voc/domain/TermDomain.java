@@ -1,8 +1,10 @@
 package org.jax.mgi.mgd.api.model.voc.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -14,6 +16,8 @@ public class TermDomain extends BaseDomain {
 
 	private Integer _term_key;
 	private String term;
+	private String vocabKey;
+	private String vocabName;	
 	private String abbreviation;
 	private String note;
 	private Integer sequenceNum;
@@ -23,5 +27,6 @@ public class TermDomain extends BaseDomain {
 	private Date creation_date;
 	private Date modification_date;
 	
-	private String vocabName;
+	List<AccessionDomain> vocabAccessionIds;
+	
 }

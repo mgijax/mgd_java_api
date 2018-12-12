@@ -25,6 +25,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.Relationship;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -111,12 +112,14 @@ public class Marker extends BaseEntity {
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 	
+	// nucleotide only accession ids
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` = 9")
 	@OrderBy(clause ="accid")
 	private List<Accession> nucleotideAccessionIds;
 	
+	// all other non-MGI, non-nucleotide sequence ids
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` not in (1,9,15)")
@@ -155,80 +158,10 @@ public class Marker extends BaseEntity {
 		inverseJoinColumns = @JoinColumn(name = "_marker_key", referencedColumnName="_marker_key")
 	)
 	private List<Marker> aliases;
-	
-	//@OneToOne(fetch=FetchType.LAZY)
-	//@JoinColumn(name="_marker_key")
-	//private MarkerLocationCache markerLocation;
 
-	//@OneToMany
-	//@JoinColumn(name="_marker_key")
-	//private Set<SequenceMarkerCache> sequenceMarkers;
-	
-	//@OneToMany
-	//@JoinColumn(name="_marker_key")
-	//@Where(clause="`_logicaldb_key` in (59, 60)")
-	//private Set<SequenceMarkerCache> biotypes;
-	
-	//@OneToMany
-	//@JoinColumn(name="_marker_key")
-	//private Set<MarkerReferenceCache> referenceMarkers;
-	
-	//@OneToMany
-	//@JoinColumn(name="_marker_key")
-	//@Where(clause="`qualifier` = 'D' ")
-	//private Set<MarkerMCVCache> mcvTerms;
-	
-	//@OneToMany
-	//@JoinColumn(name="_object_key", referencedColumnName="_marker_key")
-	//@Where(clause="`_mgitype_key` = 2")
-	//private Set<CoordinateFeature> features;
-
-	//@ManyToMany
-	//@JoinTable(name = "mrk_current",
-	//	joinColumns = @JoinColumn(name = "_current_key", referencedColumnName="_marker_key"),
-	//	inverseJoinColumns = @JoinColumn(name = "_marker_key", referencedColumnName="_marker_key")
-	//)
-	//private Set<Marker> currentMarkers;
-
-	//public Accession getMgiAccessionId() {
-	//	for(Accession a: allAccessionIds) {
-	//		if(a.get_mgitype_key() == 2 
-	//				&& a.get_logicaldb_key() == 1 
-	//				&& a.getPreferred() == 1) {
-	//			return a;
-	//		}
-	//	}
-	//	return new Accession();
-	//}
-
-	//@Transient
-	//public Set<Accession> getSecondaryMgiAccessionIds() {
-	//	HashSet<Accession> set = new HashSet<Accession>();
-	//	for(Accession a: allAccessionIds) {
-	//		if(a.get_mgitype_key() == 2 
-	//				&& a.get_logicaldb_key() == 1 
-	//				&& a.getPreferred() == 0
-	//				&& a.getPrefixPart().equals("MGI:")) {
-	//			set.add(a);
-	//		}
-	//	}
-	//	return set;
-	//}
-
-	//@Transient
-	//public Set<Accession> getAccessionIdsByLogicalDb(LogicalDB db) {
-	//	return getAccessionIdsByLogicalDb(db.get_logicaldb_key());
-	//}
-	
-	//@Transient
-	//public Set<Accession> getAccessionIdsByLogicalDb(Integer db_key) {
-	//	HashSet<Accession> set = new HashSet<Accession>();
-	//	for(Accession a: allAccessionIds) {
-	//		if(a.get_logicaldb_key() == db_key) {
-	//			set.add(a);
-	//		}
-	//	}
-	//	return set;
-	//}
+	@OneToMany
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	@Where(clause="`_annottype_key` = 1011")	
+	private List<Annotation> featureTypes;
 	
 }

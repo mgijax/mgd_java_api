@@ -90,9 +90,17 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			entity.setCmOffset(-1.0);
 		}
 			
-		// convert String-to-Integer
 		entity.setOrganism(organismDAO.get(Integer.valueOf(domain.getOrganismKey())));
-		entity.setMarkerStatus(markerStatusDAO.get(Integer.valueOf(domain.getMarkerStatusKey())));
+		
+		// marker status cannot be "withdrawn"
+		if (domain.getMarkerStatusKey().equals("2")) {
+			results.setError("Failed : Marker Status error",  "Cannot change Marker Status to 'withdrawn'", Constants.HTTP_SERVER_ERROR);
+			return results;
+		}
+		else {
+			entity.setMarkerStatus(markerStatusDAO.get(Integer.valueOf(domain.getMarkerStatusKey())));
+		}
+		
 		entity.setMarkerType(markerTypeDAO.get(Integer.valueOf(domain.getMarkerTypeKey())));
 		
 		// add creation/modification 

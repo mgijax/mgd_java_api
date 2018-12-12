@@ -12,6 +12,8 @@ import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
+import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
+import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
 import org.jboss.logging.Logger;
 
 public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerDomain> {
@@ -22,7 +24,8 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	private MarkerHistoryTranslator historyTranslator = new MarkerHistoryTranslator();
 	private MGISynonymTranslator synonymTranslator = new MGISynonymTranslator();
-
+	private AnnotationTranslator annotationTranslator = new AnnotationTranslator();
+	
 	//private TermTranslator termTranslator = new TermTranslator();
 	//private SequenceMarkerCacheTranslator biotypesTranslator = new SequenceMarkerCacheTranslator();
 
@@ -114,6 +117,15 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 				domain.setSynonyms(IteratorUtils.toList(i.iterator()));
 			}
 		}
+
+		// one-to-many marker feature types
+		// featureTypes can also be set via voc/service/Annotation.service/markerFeatureTypes
+		if (entity.getFeatureTypes() != null) {
+			Iterable<AnnotationDomain> i = annotationTranslator.translateEntities(entity.getFeatureTypes());
+			if(i.iterator().hasNext() == true) {
+				domain.setFeatureTypes(IteratorUtils.toList(i.iterator()));
+			}
+		}
 		
 		// these domains are only set by individual object endpoints
 		// that is, see acc/service/AccessionService:markerNucleotideAccessionIds
@@ -165,7 +177,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			//}
 				
 			// alias are set via service/aliasSearch
-		
+				
 		//}
 		
 		return domain;

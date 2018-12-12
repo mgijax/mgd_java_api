@@ -1,6 +1,9 @@
 package org.jax.mgi.mgd.api.model.voc.translator;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -19,17 +22,19 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
 		domain.setTermKey(String.valueOf(entity.getTerm().get_term_key()));
 		domain.setTerm(entity.getTerm().getTerm());
 		domain.setQualifierKey(String.valueOf(entity.getQualifier().get_term_key()));
-		domain.setQualifierKey(entity.getQualifier().getTerm());
-		
-		// qualifier term may = null
-		//if (entity.getQualifier().getTerm() != null 
-		//		&& !entity.getQualifier().getTerm().isEmpty()) {
-		//	domain.setQualifierKey(entity.getQualifier().getTerm());
-		//}
-		
+		domain.setQualifier(entity.getQualifier().getTerm());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
+		// one-to-many primary accession ids
+		if (entity.getFeatureTypeIds() != null) {
+			AccessionTranslator accessionTranslator = new AccessionTranslator();
+			Iterable<AccessionDomain> i = accessionTranslator.translateEntities(entity.getFeatureTypeIds());
+			if(i.iterator().hasNext() == true) {
+				domain.setFeatureTypeIds(IteratorUtils.toList(i.iterator()));
+			}
+		}
+				
 		return domain;
 	}
 

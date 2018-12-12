@@ -8,6 +8,7 @@ import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -57,6 +58,7 @@ public class MarkerDomain extends BaseDomain {
 	private List<RelationshipDomain> geneToTssRelationships;
 	private List<RelationshipDomain> tssToGeneRelationships;
 	private List<MarkerDomain> aliases;
+	private List<AnnotationDomain> featureTypes;
 	
 	//private String mcvTerm;
     

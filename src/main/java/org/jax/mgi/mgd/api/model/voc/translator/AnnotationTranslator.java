@@ -27,11 +27,11 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
 		// one-to-many primary accession ids
-		if (entity.getFeatureTypeIds() != null) {
+		if (entity.getMarkerFeatureTypeIds() != null) {
 			AccessionTranslator accessionTranslator = new AccessionTranslator();
-			Iterable<AccessionDomain> i = accessionTranslator.translateEntities(entity.getFeatureTypeIds());
+			Iterable<AccessionDomain> i = accessionTranslator.translateEntities(entity.getMarkerFeatureTypeIds());
 			if(i.iterator().hasNext() == true) {
-				domain.setFeatureTypeIds(IteratorUtils.toList(i.iterator()));
+				domain.setMarkerFeatureTypeIds(IteratorUtils.toList(i.iterator()));
 			}
 		}
 				

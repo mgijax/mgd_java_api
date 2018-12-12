@@ -94,7 +94,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		// marker status cannot be "withdrawn"
 		if (domain.getMarkerStatusKey().equals("2")) {
-			results.setError("Failed : Marker Status error",  "Cannot change Marker Status to 'withdrawn'", Constants.HTTP_SERVER_ERROR);
+			results.setError("Failed : Marker Status error",  "Cannot use 'withdrawn'", Constants.HTTP_SERVER_ERROR);
 			return results;
 		}
 		else {

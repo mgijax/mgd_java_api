@@ -45,6 +45,6 @@ public class Annotation extends BaseEntity {
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 13 and `_logicaldb_key` = 146 and preferred = 1")
-	private List<Accession> featureTypeIds;
+	private List<Accession> markerFeatureTypeIds;
 	
 }

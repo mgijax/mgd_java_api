@@ -9,9 +9,11 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -93,20 +95,43 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 		return results;
 	}
 	
-	public List<AnnotationDomain> markerFeatureTypes(Integer key) {
+	public List<MarkerFeatureTypeDomain> markerFeatureTypes(Integer key) {
 
-		List<AnnotationDomain> results = new ArrayList<AnnotationDomain>();
-
-		String cmd = "\nselect * from VOC_Annot_View "
-				+ "\nwhere _annottype_key = 1011"
-				+ "\nand _logicaldb_key = 146"
-				+ "\nand _object_key = " + key;
+		List<MarkerFeatureTypeDomain> results = new ArrayList<MarkerFeatureTypeDomain>();
+		
+		String cmd = "\nselect t._term_key, t.term, a.*"
+				+ "\nfrom VOC_Annot v, VOC_Term t, ACC_Accession a"
+				+ "\nwhere v._annottype_key = 1011"
+				+ "\nand v._term_key = t._term_key"
+				+ "\nand v._object_key = a._object_key"
+				+ "\nand a._logicaldb_key = 146"
+				+ "\nand v._object_key = " + key;		
 		log.info(cmd);
 
 		// request data, and parse results
 		try {
-			results = getAnnotationDomainList(cmd);
-		}
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				MarkerFeatureTypeDomain domain = new MarkerFeatureTypeDomain();
+				domain.setTermKey(rs.getString("_term_key"));
+				domain.setTerm(rs.getString("term"));
+				
+				SlimAccessionDomain accDomain = new SlimAccessionDomain();
+				List<SlimAccessionDomain> accession = new ArrayList<SlimAccessionDomain>();				
+				accDomain.setAccID(rs.getString("accid"));
+				accDomain.setLogicaldbKey(rs.getString("_logicaldb_key"));
+				accDomain.setAccessionKey(rs.getString("accessionKey"));
+				accDomain.setObjectKey(rs.getString("_object_key"));
+				accDomain.setMgiTypeKey(rs.getString("_mgitype_key"));
+				accDomain.setPrefixPart(rs.getString("prefixPart"));
+				accDomain.setNumericPart(rs.getString("numericPart"));
+				accDomain.setIsPrivate(rs.getString("isPrivate"));
+				accDomain.setPreferred(rs.getString("preferred"));		
+				domain.setMarkerFeatureTypeIds(accession);
+
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}

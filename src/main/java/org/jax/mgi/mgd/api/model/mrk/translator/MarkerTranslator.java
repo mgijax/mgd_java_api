@@ -12,8 +12,8 @@ import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
-import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
-import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
+import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
+import org.jax.mgi.mgd.api.model.voc.translator.MarkerFeatureTypeTranslator;
 import org.jboss.logging.Logger;
 
 public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerDomain> {
@@ -24,7 +24,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	private MarkerHistoryTranslator historyTranslator = new MarkerHistoryTranslator();
 	private MGISynonymTranslator synonymTranslator = new MGISynonymTranslator();
-	private AnnotationTranslator annotationTranslator = new AnnotationTranslator();
+	private MarkerFeatureTypeTranslator featureTypeTranslator = new MarkerFeatureTypeTranslator();
 	
 	//private TermTranslator termTranslator = new TermTranslator();
 	//private SequenceMarkerCacheTranslator biotypesTranslator = new SequenceMarkerCacheTranslator();
@@ -121,7 +121,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		// one-to-many marker feature types
 		// featureTypes can also be set via voc/service/Annotation.service/markerFeatureTypes
 		if (entity.getFeatureTypes() != null) {
-			Iterable<AnnotationDomain> i = annotationTranslator.translateEntities(entity.getFeatureTypes());
+			Iterable<MarkerFeatureTypeDomain> i = featureTypeTranslator.translateEntities(entity.getFeatureTypes());
 			if(i.iterator().hasNext() == true) {
 				domain.setFeatureTypes(IteratorUtils.toList(i.iterator()));
 			}

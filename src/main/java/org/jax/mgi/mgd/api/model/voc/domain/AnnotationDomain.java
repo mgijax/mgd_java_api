@@ -1,9 +1,6 @@
 package org.jax.mgi.mgd.api.model.voc.domain;
 
-import java.util.List;
-
 import org.jax.mgi.mgd.api.model.BaseDomain;
-import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -24,7 +21,5 @@ public class AnnotationDomain extends BaseDomain {
 	private String qualifier;
 	private String creation_date;
 	private String modification_date;
-	
-	private List<AccessionDomain> markerFeatureTypeIds;
 	
 }

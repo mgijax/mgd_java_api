@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -51,9 +52,9 @@ public class AnnotationController extends BaseController<AnnotationDomain> {
 	@POST
 	@ApiOperation(value = "Marker/Feature Types")
 	@Path("/markerFeatureTypes")
-	public List<AnnotationDomain> markerMCV(Integer key) {
+	public List<MarkerFeatureTypeDomain> markerMCV(Integer key) {
 			
-		List<AnnotationDomain> results = new ArrayList<AnnotationDomain>();
+		List<MarkerFeatureTypeDomain> results = new ArrayList<MarkerFeatureTypeDomain>();
 		
 		try {
 			results = annotationService.markerFeatureTypes(key);

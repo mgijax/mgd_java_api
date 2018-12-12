@@ -1,9 +1,6 @@
 package org.jax.mgi.mgd.api.model.voc.translator;
 
-import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
-import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -25,15 +22,6 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
 		domain.setQualifier(entity.getQualifier().getTerm());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-
-		// one-to-many primary accession ids
-		if (entity.getMarkerFeatureTypeIds() != null) {
-			AccessionTranslator accessionTranslator = new AccessionTranslator();
-			Iterable<AccessionDomain> i = accessionTranslator.translateEntities(entity.getMarkerFeatureTypeIds());
-			if(i.iterator().hasNext() == true) {
-				domain.setMarkerFeatureTypeIds(IteratorUtils.toList(i.iterator()));
-			}
-		}
 				
 		return domain;
 	}

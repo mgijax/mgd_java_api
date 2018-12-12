@@ -1,0 +1,32 @@
+package org.jax.mgi.mgd.api.model.acc.translator;
+
+import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.entities.Accession;
+
+public class SlimAccessionTranslator extends BaseEntityDomainTranslator<Accession, SlimAccessionDomain> {
+	
+	@Override
+	protected SlimAccessionDomain entityToDomain(Accession entity, int translationDepth) {
+		SlimAccessionDomain domain = new SlimAccessionDomain();
+
+		domain.setAccessionKey(String.valueOf(entity.get_accession_key()));
+		domain.setLogicaldbKey(String.valueOf(entity.getLogicaldb().get_logicaldb_key()));
+		domain.setObjectKey(String.valueOf(entity.get_object_key()));
+		domain.setMgiTypeKey(String.valueOf(entity.getMgiType().get_mgitype_key()));
+		domain.setAccID(entity.getAccID());
+		domain.setPrefixPart(entity.getPrefixPart());
+		domain.setNumericPart(String.valueOf(entity.getNumericPart()));	
+		domain.setIsPrivate(String.valueOf(entity.getIs_private()));
+		domain.setPreferred(String.valueOf(entity.getPreferred()));
+		
+		return domain;
+	}
+
+	@Override
+	protected Accession domainToEntity(SlimAccessionDomain domain, int translationDepth) {
+		// Needs to be implemented once we choose to save terms
+		return null;
+	}
+
+}

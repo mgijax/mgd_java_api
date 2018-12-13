@@ -115,25 +115,25 @@ public class NoteService extends BaseService<NoteDomain> {
 			log.info("processNote/no changes processed: " + parentKey);
 			return;
 		}
-				
-		//if (noteDomain.getProcessStatus().equals(Constants.PROCESS_CREATE))
+		
+		// create
 		if (noteDomain.getNoteKey() == null || noteDomain.getNoteKey().isEmpty())
 		{
 			noteKey = "null";
-			note = "'" + noteDomain.getNoteChunk() + "'"; 
+			note = "'" + noteDomain.getNoteChunk().replaceAll("'",  "''") + "'"; 
 		}
-		//else if (noteDomain.getProcessStatus().equals(Constants.PROCESS_DELETE))
+		// delete
 		else if (noteDomain.getNoteChunk() == null || noteDomain.getNoteChunk().isEmpty())
 		{
-			noteKey = noteDomain.getNoteKey().toString();
-			note = null;
+			noteKey = noteDomain.getNoteKey().toString();		
+			note = null;	
 		}
-		else
-		{
+		// update
+		else {
 			noteKey = noteDomain.getNoteKey().toString();
-			note = "'" + noteDomain.getNoteChunk() + "'"; 
+			note = "'" + noteDomain.getNoteChunk().replaceAll("'",  "''") + "'"; 
 		}
-		
+				
 		// stored procedure
 		// if noteKey is null, then insert new note
 		// if noteKey is not null and note is null, then delete note

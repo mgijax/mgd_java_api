@@ -57,10 +57,10 @@ public class AccessionController extends BaseController<AccessionDomain> impleme
 	}
 
 	@POST
-	@ApiOperation(value = "is accession id a duplicate for given logicaldb & mgiType")
+	@ApiOperation(value = "is accession id a duplicate of object/logicaldb/mgitype")
 	@Path("/valid")
-	public List<SlimAccessionDomain> validIsDuplicate(String value, String logicaldbKey, String mgiTypeKey) {
-		return accessionService.validIsDuplicate(value, logicaldbKey, mgiTypeKey);
+	public List<SlimAccessionDomain> validIsDuplicate(String key, String value, String logicaldbKey, String mgiTypeKey) {
+		return accessionService.validIsDuplicate(key, value, logicaldbKey, mgiTypeKey);
 	}
 		
 	@POST

@@ -82,7 +82,7 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 	// validate
 	
 	@Transactional	
-	public List<SlimAccessionDomain> validIsDuplicate(String value, String logicaldbKey, String mgiTypeKey) {
+	public List<SlimAccessionDomain> validIsDuplicate(String key, String value, String logicaldbKey, String mgiTypeKey) {
 		// use SlimAccessionDomain to return list of validated accession id
 		// one value is expected
 		// expects full accID (prefixPart + numericPart)
@@ -96,10 +96,11 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 		}
 
 		String cmd = "\nselect * from acc_accession"
-				+ "\nwhere lower(accid) = '" + value.toLowerCase() + "'"
+				+ "\nwhere _object_key = " + key		
 				+ "\nand _logicaldb_key = " + logicaldbKey
-				+ "\nand _mgitype_key = " + mgiTypeKey;
-				
+				+ "\nand _mgitype_key = " + mgiTypeKey
+				+ "\nand lower(accid) = '" + value.toLowerCase() + "'";
+			
 		log.info(cmd);
 
 		try {

@@ -91,7 +91,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			where = where + "\nand a.symbol ilike '" + searchDomain.getSymbol() + "'" ;
 		}
 		
-		// execute sql, returns results to MarkerEIResultDomain
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {

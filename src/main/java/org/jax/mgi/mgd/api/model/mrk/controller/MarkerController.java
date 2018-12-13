@@ -16,6 +16,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIResultDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -98,9 +99,9 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	@POST
 	@ApiOperation(value = "EI Search")
 	@Path("/eiSearch")
-	public List<MarkerEIResultDomain> eiSearch(MarkerDomain searchDomain) {
+	public List<SlimMarkerDomain> eiSearch(MarkerDomain searchDomain) {
 			
-		List<MarkerEIResultDomain> results = new ArrayList<MarkerEIResultDomain>();
+		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
 		
 		try {
 			results = markerService.eiSearch(searchDomain);
@@ -114,10 +115,24 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	@POST
 	@ApiOperation(value = "Alias Search")
 	@Path("/aliasSearch")
-	public List<MarkerDomain> aliasSearch(Integer key) {
+	public List<SlimMarkerDomain> aliasSearch(Integer key) {
 		return markerService.aliasSearch(key);
 	}
+
+	@POST
+	@ApiOperation(value = "Verify Marker Any")
+	@Path("/verifyMarkerAny")
+	public List<SlimMarkerDomain> verifyMarkerAny(String value) {
+		return markerService.verifyMarker(value, true, true);
+	}
 	
+	//@POST
+	//@ApiOperation(value = "Verify Marker Official")
+	//@Path("/verifyMarkerOfficial")
+	//public List<SlimMarkerDomain> verifyMarkerOfficial(String value) {
+	//	return markerService.verifyMarker(value, false, false);
+	//}
+			
 	@POST
 	@ApiOperation(value = "EI Utilities ")
 	@Path("/eiUtilities")

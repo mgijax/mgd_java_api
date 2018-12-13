@@ -26,9 +26,6 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private MGISynonymTranslator synonymTranslator = new MGISynonymTranslator();
 	private MarkerFeatureTypeTranslator featureTypeTranslator = new MarkerFeatureTypeTranslator();
 	
-	//private TermTranslator termTranslator = new TermTranslator();
-	//private SequenceMarkerCacheTranslator biotypesTranslator = new SequenceMarkerCacheTranslator();
-
 	@Override
 	protected MarkerDomain entityToDomain(Marker entity, int translationDepth) {
 			

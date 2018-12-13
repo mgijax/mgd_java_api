@@ -25,6 +25,7 @@ import org.jax.mgi.mgd.api.model.mrk.dao.MarkerTypeDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIResultDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
@@ -266,11 +267,13 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 	@Transactional
 	public MarkerDomain get(Integer key) {
+		// get the DAO/entity and translate -> domain
 		return translator.translate(markerDAO.get(key),0);
 	}
 
 	@Transactional
 	public SearchResults<MarkerDomain> getResults(Integer key) {
+		// get the DAO/entity and translate -> domain -> results
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		results.setItem(translator.translate(markerDAO.get(key),0));
 		return results;
@@ -285,11 +288,12 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		markerDAO.remove(entity);
 		return results;
 	}
-	
-	public List<MarkerEIResultDomain> eiSearch(MarkerDomain searchDomain) {
 
-		// list of results to be returned
-		List<MarkerEIResultDomain> results = new ArrayList<MarkerEIResultDomain>();
+	@Transactional	
+	public List<SlimMarkerDomain> eiSearch(MarkerDomain searchDomain) {
+		// using searchDomain fields, generate SQL command
+		
+		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
 
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
@@ -506,12 +510,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
 		log.info(cmd);
 
-		// execute sql, returns results to MarkerEIResultDomain
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				MarkerEIResultDomain domain = new MarkerEIResultDomain();
-				domain.setMarkerKey(rs.getInt("_marker_key"));
+				SlimMarkerDomain domain = new SlimMarkerDomain();
+				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setSymbol(rs.getString("symbol"));
 				results.add(domain);
 			}
@@ -521,36 +524,26 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			e.printStackTrace();
 		}
 		
-		// ...off to be turned into JSON
 		return results;
 	}	
 
-	public List<MarkerDomain> aliasSearch(Integer key) {
-
-		// list of results to be returned
-		List<MarkerDomain> results = new ArrayList<MarkerDomain>();
+	@Transactional	
+	public List<SlimMarkerDomain> aliasSearch(Integer key) {
+		// use SlimMarkerDomain to return list of marker/alias associations
+		
+		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
 
 		String cmd = "\nselect * from mrk_alias_view"
 				+ "\nwhere _alias_key = " + key
-				+ "\norder by symbol";
-		
+				+ "\norder by symbol";	
 		log.info(cmd);
 
-		// request data, and parse results
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				
-				MarkerDomain domain = new MarkerDomain();
-				
-				// only setting MarkerDomain fields that are needed by this search
-				// all other domain fields will be null
-				
+			while (rs.next()) {				
+				SlimMarkerDomain domain = new SlimMarkerDomain();				
 				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setSymbol(rs.getString("symbol"));
-				domain.setCreation_date(rs.getString("creation_date"));
-				domain.setModification_date(rs.getString("modification_date"));
-				
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();
@@ -559,10 +552,48 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			e.printStackTrace();
 		}
 		
-		// ...off to be turned into JSON
+		return results;
+	}	
+
+	@Transactional	
+	public List<SlimMarkerDomain> verifyMarker(String value, Boolean allowWithdrawn, Boolean allowReserved) {
+		// use SlimMarkerDomain to return list of verified marker
+
+		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
+
+		String cmd = "\nselect _marker_key, symbol"
+				+ "\nfrom mrk_marker"
+				+ "\nwhere _organism_key = 1"
+				+ "\nand symbol ilike '" + value + "'";
+		
+		if (allowWithdrawn == false) {
+			cmd = cmd + "\nand _marker_status_key not in (2)";
+		}
+
+		if (allowReserved == false) {
+			cmd = cmd + "\nand _marker_status_key not in (3)";
+		}
+				
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {	
+				SlimMarkerDomain domain = new SlimMarkerDomain();						
+				domain.setMarkerKey(rs.getString("_marker_key"));
+				domain.setSymbol(rs.getString("symbol"));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return results;
 	}	
 		
+	@Transactional		
 	public MarkerEIUtilitiesDomain eiUtilities(MarkerUtilitiesForm searchForm) throws IOException, InterruptedException {
 	
 		// domain object to be JSON-ed

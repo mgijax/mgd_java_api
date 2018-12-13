@@ -59,7 +59,5 @@ public class MarkerDomain extends BaseDomain {
 	private List<RelationshipDomain> geneToTssRelationships;
 	private List<RelationshipDomain> tssToGeneRelationships;
 	private List<MarkerDomain> aliases;
-	
-	//private String mcvTerm;
-    
+	   
 }

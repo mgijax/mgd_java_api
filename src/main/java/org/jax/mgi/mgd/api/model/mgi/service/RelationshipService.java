@@ -93,7 +93,7 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				domain.setQualifierTerm(rs.getString("qualifierTerm"));
 				domain.setEvidenceKey(rs.getString("_evidence_key"));
 				domain.setEvidenceTerm(rs.getString("evidenceTerm"));
-				domain.setRefKey(rs.getString("_refs_key"));
+				domain.setRefsKey(rs.getString("_refs_key"));
 				domain.setJnumid(rs.getString("jnumid"));
 				domain.setJnum(rs.getString("jnum"));
 				domain.setShort_citation(rs.getString("short_citation"));
@@ -143,7 +143,7 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				//			+ "," + mgiTypeKey
 				//			//+ "," + domain.get(i).getSynonymTypeKey()
 				//			//+ ",'" + domain.get(i).getSynonym() + "'"
-				//			+ "," + domain.get(i).getRefKey()
+				//			+ "," + domain.get(i).getRefsKey()
 				//			+ ")";
 				log.info("cmd: " + cmd);
 				//Query query = relationshipDAO.createNativeQuery(cmd);

@@ -85,7 +85,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
 				domain.setRefAssocTypeKey(rs.getString("_refassoctype_key"));
 				domain.setRefAssocType(rs.getString("assoctype"));
-				domain.setRefKey(rs.getString("_refs_key"));
+				domain.setRefsKey(rs.getString("_refs_key"));
 				domain.setJnumid(rs.getString("jnumid"));
 				domain.setJnum(rs.getString("jnum"));
 				domain.setShort_citation(rs.getString("short_citation"));
@@ -131,7 +131,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 							+ user.get_user_key().intValue()
 							+ "," + mgiTypeKey
 							+ "," + parentKey
-							+ "," + domain.get(i).getRefKey()
+							+ "," + domain.get(i).getRefsKey()
 							+ ",'" + domain.get(i).getRefAssocType() + "'"
 							+ ")";
 				log.info("cmd: " + cmd);
@@ -150,8 +150,8 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				Boolean modified = false;
 				MGIReferenceAssoc entity = referenceAssocDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
 		
-				if (!entity.getReference().get_refs_key().equals(Integer.valueOf(domain.get(i).getRefKey()))) {
-					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefKey())));
+				if (!entity.getReference().get_refs_key().equals(Integer.valueOf(domain.get(i).getRefsKey()))) {
+					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
 					modified = true;
 				}
 				

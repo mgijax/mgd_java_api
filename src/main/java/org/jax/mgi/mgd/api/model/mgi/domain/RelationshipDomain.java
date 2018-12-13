@@ -22,7 +22,7 @@ public class RelationshipDomain extends BaseDomain {
 	private String qualifierTerm;
 	private String evidenceKey;
 	private String evidenceTerm;
-	private String refKey;
+	private String refsKey;
 	private String jnumid;
 	private String jnum;
 	private String short_citation;

@@ -14,7 +14,7 @@ public class MGISynonymDomain extends BaseDomain {
 	private String mgiTypeKey;
 	private String synonymTypeKey;
 	private String synonymType;
-	private String refKey;
+	private String refsKey;
 	private String jnumid;
 	private String jnum;
 	private String short_citation;

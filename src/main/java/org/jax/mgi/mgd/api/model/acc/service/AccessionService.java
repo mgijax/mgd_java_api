@@ -116,7 +116,7 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 				AccessionReferenceDomain refDomain = new AccessionReferenceDomain();
 				List<AccessionReferenceDomain> references = new ArrayList<AccessionReferenceDomain>();
 				refDomain.setAccessionKey(rs.getString("_accession_key"));
-				refDomain.setRefKey(rs.getString("_refs_key"));
+				refDomain.setRefsKey(rs.getString("_refs_key"));
 				refDomain.setJnumid(rs.getString("jnumid"));
 				refDomain.setJnum(rs.getString("jnum"));
 				refDomain.setShort_citation(rs.getString("short_citation"));
@@ -221,7 +221,7 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 							+ ",'" + domain.get(i).getAccID() + "'"
 							+ "," + logicaldbKey
 							+ ",'" + mgiTypeName + "'"
-							+ "," + domain.get(i).getReferences().get(0).getRefKey()
+							+ "," + domain.get(i).getReferences().get(0).getRefsKey()
 							+ "1,0,1)";
 				log.info("cmd: " + cmd);
 				Query query = accessionDAO.createNativeQuery(cmd);
@@ -250,16 +250,16 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 				// reference can be null
 				// may be null coming from entity
 				if (entity.getReferences() == null) {
-					if (!domain.get(i).getReferences().get(0).getRefKey().isEmpty()) {
+					if (!domain.get(i).getReferences().get(0).getRefsKey().isEmpty()) {
 						modified = true;
 					}
 				}
 				// may be empty coming from domain
-				else if (domain.get(i).getReferences().get(0).getRefKey().isEmpty()) {
+				else if (domain.get(i).getReferences().get(0).getRefsKey().isEmpty()) {
 					modified = true;
 				}
 				// if not entity/null and not domain/empty, then check if equivalent
-				else if (!entity.getReferences().get(0).getReference().get_refs_key().equals(Integer.valueOf(domain.get(i).getReferences().get(0).getRefKey()))) {
+				else if (!entity.getReferences().get(0).getReference().get_refs_key().equals(Integer.valueOf(domain.get(i).getReferences().get(0).getRefsKey()))) {
 					modified = true;
 				}
 				
@@ -270,7 +270,7 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 							+ ",'" + domain.get(i).getAccID() + "'"
 							+ "," + domain.get(i).getObjectKey()
 							+ "," + entity.getReferences().get(0).getReference().get_refs_key()
-							+ "," + domain.get(i).getReferences().get(0).getRefKey()
+							+ "," + domain.get(i).getReferences().get(0).getRefsKey()
 							+ ")";
 					log.info("cmd: " + cmd);
 					Query query = accessionDAO.createNativeQuery(cmd);

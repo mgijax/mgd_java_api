@@ -14,7 +14,7 @@ public class MGIReferenceAssocDomain extends BaseDomain {
 	private String mgiTypeKey;
 	private String refAssocTypeKey;
 	private String refAssocType;
-	private String refKey;
+	private String refsKey;
 	private String jnumid;
 	private String jnum;
 	private String short_citation;

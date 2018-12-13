@@ -23,7 +23,7 @@ public class MGIReferenceAssocTranslator extends BaseEntityDomainTranslator<MGIR
 		domain.setRefAssocTypeKey(String.valueOf(entity.getRefAssocType().get_refAssocType_key()));
 	    domain.setRefAssocType(entity.getRefAssocType().getAssocType());
 	    
-		domain.setRefKey(String.valueOf(entity.getReference().get_refs_key()));
+		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
 		domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());
 		domain.setJnum(String.valueOf(entity.getReference().getReferenceCitationCache().getNumericPart()));
 		domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());

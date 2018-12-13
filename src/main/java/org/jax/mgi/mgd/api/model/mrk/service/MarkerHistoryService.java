@@ -100,7 +100,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				domain.setMarkerHistorySymbolKey(rs.getString("_history_key"));
 				domain.setMarkerHistorySymbol(rs.getString("history"));
 				domain.setMarkerHistoryName(rs.getString("name"));
-				domain.setRefKey(rs.getString("_refs_key"));
+				domain.setRefsKey(rs.getString("_refs_key"));
 				domain.setJnumid(rs.getString("jnumid"));
 				domain.setShort_citation(rs.getString("short_citation"));
 				domain.setEvent_date(rs.getString("event_date"));
@@ -148,7 +148,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 							+ user.get_user_key().intValue()
 							+ "," + parentKey
 							+ "," + domain.get(i).getMarkerHistorySymbolKey()
-							+ "," + domain.get(i).getRefKey()
+							+ "," + domain.get(i).getRefsKey()
 							+ "," + domain.get(i).getMarkerEventKey()
 							+ "," + domain.get(i).getMarkerEventReasonKey()
 							+ ",'" + domain.get(i).getMarkerHistoryName() + "'"
@@ -204,19 +204,19 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				//log.info("reference");
 				// may be null coming from entity
 				if (entity.getReference() == null) {
-					if (domain.get(i).getRefKey() != null) {
-						entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefKey())));
+					if (domain.get(i).getRefsKey() != null) {
+						entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
 						modified = true;
 					}
 				}
 				// may be null coming from domain
-				else if (domain.get(i).getRefKey() == null) {
+				else if (domain.get(i).getRefsKey() == null) {
 					entity.setReference(null);
 					modified = true;
 				}
 				// if not entity/null and not domain/empty, then check if equivalent
-				else if (!entity.getReference().get_refs_key().equals(Integer.valueOf(domain.get(i).getRefKey()))) {
-					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefKey())));
+				else if (!entity.getReference().get_refs_key().equals(Integer.valueOf(domain.get(i).getRefsKey()))) {
+					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
 					modified = true;
 				}
 						

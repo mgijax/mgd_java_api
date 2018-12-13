@@ -80,7 +80,7 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 				domain.setSynonymKey(rs.getString("_synonym_key"));
 				domain.setObjectKey(rs.getString("_object_key"));
 				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
-				domain.setRefKey(rs.getString("_refs_key"));
+				domain.setRefsKey(rs.getString("_refs_key"));
 				domain.setJnumid(rs.getString("jnumid"));
 				domain.setJnum(rs.getString("jnum"));
 				domain.setShort_citation(rs.getString("short_citation"));
@@ -128,7 +128,7 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 							+ "," + mgiTypeKey
 							+ "," + domain.get(i).getSynonymTypeKey()
 							+ ",'" + domain.get(i).getSynonym() + "'"
-							+ "," + domain.get(i).getRefKey()
+							+ "," + domain.get(i).getRefsKey()
 							+ ")";
 				log.info("cmd: " + cmd);
 				Query query = synonymDAO.createNativeQuery(cmd);
@@ -154,19 +154,19 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 				// reference can be null
 				// may be null coming from entity
 				if (entity.getReference() == null) {
-					if (!domain.get(i).getRefKey().isEmpty()) {
-						entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefKey())));
+					if (!domain.get(i).getRefsKey().isEmpty()) {
+						entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
 						modified = true;
 					}
 				}
 				// may be empty coming from domain
-				else if (domain.get(i).getRefKey().isEmpty()) {
+				else if (domain.get(i).getRefsKey().isEmpty()) {
 					entity.setReference(null);
 					modified = true;
 				}
 				// if not entity/null and not domain/empty, then check if equivalent
-				else if (!entity.getReference().get_refs_key().equals(Integer.valueOf(domain.get(i).getRefKey()))) {
-					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefKey())));
+				else if (!entity.getReference().get_refs_key().equals(Integer.valueOf(domain.get(i).getRefsKey()))) {
+					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
 					modified = true;
 				}
 				

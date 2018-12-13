@@ -23,7 +23,6 @@ import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerStatusDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerTypeDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
-import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIResultDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
@@ -122,7 +121,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			refKey = "22864";
 		}
 		else {
-			refKey = domain.getHistory().get(0).getRefKey().toString();
+			refKey = domain.getHistory().get(0).getRefsKey().toString();
 		}
 		
 		// event = assigned (1)
@@ -392,8 +391,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				where = where + "\nand mh.event_display = '" + searchDomain.getHistory().get(0).getEvent_date() + "'";
 				from_history = true;
 			}
-			if (searchDomain.getHistory().get(0).getRefKey() != null && !searchDomain.getHistory().get(0).getRefKey().isEmpty()) {
-				where = where + "\nand mh._Ref_key = " + searchDomain.getHistory().get(0).getRefKey();
+			if (searchDomain.getHistory().get(0).getRefsKey() != null && !searchDomain.getHistory().get(0).getRefsKey().isEmpty()) {
+				where = where + "\nand mh._Ref_key = " + searchDomain.getHistory().get(0).getRefsKey();
 				from_history = true;
 			}
 			if (searchDomain.getHistory().get(0).getShort_citation() != null && !searchDomain.getHistory().get(0).getShort_citation().isEmpty()) {
@@ -421,16 +420,16 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				where = where + "\nand ms.synonym ilike '" + searchDomain.getSynonyms().get(0).getSynonym() + "'";
 				from_synonym = true;
 			}
-			if (searchDomain.getSynonyms().get(0).getRefKey() != null && !searchDomain.getSynonyms().get(0).getRefKey().isEmpty()) {
-				where = where + "\nand ms._Ref_key = " + searchDomain.getSynonyms().get(0).getRefKey();
+			if (searchDomain.getSynonyms().get(0).getRefsKey() != null && !searchDomain.getSynonyms().get(0).getRefsKey().isEmpty()) {
+				where = where + "\nand ms._Ref_key = " + searchDomain.getSynonyms().get(0).getRefsKey();
 				from_synonym = true;
 			}
 		}
 		
 		// reference
 		if (searchDomain.getRefAssocs() != null) {
-			if (searchDomain.getRefAssocs().get(0).getRefKey() != null && !searchDomain.getRefAssocs().get(0).getRefKey().isEmpty()) {
-				where = where + "\nand mr._Ref_key = " + searchDomain.getRefAssocs().get(0).getRefKey();
+			if (searchDomain.getRefAssocs().get(0).getRefsKey() != null && !searchDomain.getRefAssocs().get(0).getRefsKey().isEmpty()) {
+				where = where + "\nand mr._Ref_key = " + searchDomain.getRefAssocs().get(0).getRefsKey();
 				from_reference = true;
 			}
 			if (searchDomain.getRefAssocs().get(0).getShort_citation() != null && !searchDomain.getRefAssocs().get(0).getShort_citation().isEmpty()) {
@@ -448,9 +447,9 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				from_editAccession = true;
 			}
 			if (searchDomain.getEditAccessionIds().get(0).getReferences() != null) {
-				if (searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getRefKey() != null 
-						&& !searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getRefKey().isEmpty()) {
-					where = where + "\nand acc1._refs_key = " + searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getRefKey();
+				if (searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getRefsKey() != null 
+						&& !searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getRefsKey().isEmpty()) {
+					where = where + "\nand acc1._refs_key = " + searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getRefsKey();
 					from_editAccession = true;
 				}	
 				if (searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getShort_citation() != null 
@@ -556,15 +555,23 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}	
 
 	@Transactional	
-	public List<SlimMarkerDomain> verifyMarker(String value, Boolean allowWithdrawn, Boolean allowReserved) {
-		// use SlimMarkerDomain to return list of verified marker
+	public List<SlimMarkerDomain> validMarker(String value, Boolean allowWithdrawn, Boolean allowReserved) {
+		// use SlimMarkerDomain to return list of validated marker
+		// one value is expected
+		// organism = 1 (mouse) expected
+		// returns empty list if value contains "%"
+		// returns empty list if value does not exist
 
 		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
+		
+		if (value.contains("%")) {
+			return results;
+		}
 
 		String cmd = "\nselect _marker_key, symbol"
 				+ "\nfrom mrk_marker"
 				+ "\nwhere _organism_key = 1"
-				+ "\nand symbol ilike '" + value + "'";
+				+ "\nand lower(symbol) = '" + value.toLowerCase() + "'";
 		
 		if (allowWithdrawn == false) {
 			cmd = cmd + "\nand _marker_status_key not in (2)";

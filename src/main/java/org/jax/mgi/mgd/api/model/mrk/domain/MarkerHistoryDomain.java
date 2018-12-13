@@ -19,7 +19,7 @@ public class MarkerHistoryDomain extends BaseDomain {
 	private String markerHistorySymbolKey;
 	private String markerHistorySymbol;
 	private String markerHistoryName;
-	private String refKey;
+	private String refsKey;
 	private String jnumid;
 	private String short_citation;
 	private String event_date;

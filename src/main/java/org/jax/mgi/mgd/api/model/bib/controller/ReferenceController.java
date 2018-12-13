@@ -1,25 +1,27 @@
 package org.jax.mgi.mgd.api.model.bib.controller;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.GET;
 import javax.ws.rs.QueryParam;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiOperation;
+import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.BaseSearchInterface;
-import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
-import org.jax.mgi.mgd.api.model.bib.search.ReferenceSearchForm;
+import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceService;
-import org.jax.mgi.mgd.api.util.SearchResults;
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.SearchResults;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @Path("/reference")
 @Api(value = "Reference Endpoints", description="This is the description")
@@ -41,8 +43,8 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	}
 
 	@Override
-	public ReferenceDomain get(Integer referenceKey) {
-		return referenceService.get(referenceKey);
+	public ReferenceDomain get(Integer key) {
+		return referenceService.get(key);
 	}
 
 	@Override
@@ -67,4 +69,11 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		return results;
 	}
 
+	@POST
+	@ApiOperation(value = "Validate reference by J:/returns slim reference domain")
+	@Path("/validJnum")
+	public List<SlimReferenceDomain> validJnum(String value) {
+		return referenceService.validJnum(value);
+	}
+		
 }

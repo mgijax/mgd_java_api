@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 public class ReferenceDomain extends BaseDomain {
 	
-	private String refKey;
+	private String refsKey;
 	private String primaryAuthor;
 	private String authors;
 	private String title;
@@ -23,6 +23,7 @@ public class ReferenceDomain extends BaseDomain {
 	private String referenceTypeKey;
 	private String referenceType;
 	private String jnumID;
+	private String jnum;
 	private String short_citation;
 	private String createdByKey;
 	private String createdBy;

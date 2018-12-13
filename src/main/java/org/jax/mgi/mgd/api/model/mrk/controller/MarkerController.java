@@ -14,7 +14,6 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
-import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIResultDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
@@ -97,7 +96,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "EI Search")
+	@ApiOperation(value = "EI Search/returns slim marker domain")
 	@Path("/eiSearch")
 	public List<SlimMarkerDomain> eiSearch(MarkerDomain searchDomain) {
 			
@@ -113,25 +112,25 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Alias Search")
+	@ApiOperation(value = "Alias search by marker key/returns slim marker domain")
 	@Path("/aliasSearch")
 	public List<SlimMarkerDomain> aliasSearch(Integer key) {
 		return markerService.aliasSearch(key);
 	}
 
 	@POST
-	@ApiOperation(value = "Verify Marker Any")
-	@Path("/verifyMarkerAny")
-	public List<SlimMarkerDomain> verifyMarkerAny(String value) {
-		return markerService.verifyMarker(value, true, true);
+	@ApiOperation(value = "Validate marker symbol/any status is valid/returns slim marker domain")
+	@Path("/validMarkerAny")
+	public List<SlimMarkerDomain> validateMarkerAny(String value) {
+		return markerService.validMarker(value, true, true);
 	}
 	
-	//@POST
-	//@ApiOperation(value = "Verify Marker Official")
-	//@Path("/verifyMarkerOfficial")
-	//public List<SlimMarkerDomain> verifyMarkerOfficial(String value) {
-	//	return markerService.verifyMarker(value, false, false);
-	//}
+	@POST
+	@ApiOperation(value = "Validate marker symbol/official status is valid/returns slim marker domain")
+	@Path("/validMarkerOfficial")
+	public List<SlimMarkerDomain> validMarkerOfficial(String value) {
+		return markerService.validMarker(value, false, false);
+	}
 			
 	@POST
 	@ApiOperation(value = "EI Utilities ")

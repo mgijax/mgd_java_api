@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.search.AccessionSearchForm;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -56,6 +57,13 @@ public class AccessionController extends BaseController<AccessionDomain> impleme
 	}
 
 	@POST
+	@ApiOperation(value = "is accession id a duplicate for given logicaldb & mgiType")
+	@Path("/valid")
+	public List<SlimAccessionDomain> validIsDuplicate(String value, String logicaldbKey, String mgiTypeKey) {
+		return accessionService.validIsDuplicate(value, logicaldbKey, mgiTypeKey);
+	}
+		
+	@POST
 	@ApiOperation(value = "Marker Edit Accession Ids")
 	@Path("/markerEditAccessionIds")
 	public List<AccessionDomain> editAccessionIds(Integer key) {
@@ -94,5 +102,6 @@ public class AccessionController extends BaseController<AccessionDomain> impleme
 		accessionService.process(parentKey, logicaldbKey, domain, mgiTypeKey, user);
 		return;
 	}
+
 	
 }

@@ -555,7 +555,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}	
 
 	@Transactional	
-	public List<SlimMarkerDomain> validMarker(String value, Boolean allowWithdrawn, Boolean allowReserved) {
+	public List<SlimMarkerDomain> valid(String value, Boolean allowWithdrawn, Boolean allowReserved) {
 		// use SlimMarkerDomain to return list of validated marker
 		// one value is expected
 		// organism = 1 (mouse) expected

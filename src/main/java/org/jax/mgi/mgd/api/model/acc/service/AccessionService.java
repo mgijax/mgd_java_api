@@ -14,6 +14,7 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.dao.AccessionDAO;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionReferenceDomain;
+import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.search.AccessionSearchForm;
 import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
@@ -77,7 +78,52 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 		Iterable<AccessionDomain> newItems = translator.translateEntities(accessions.items, searchForm.getSearchDepth());
 		return new SearchResults<AccessionDomain>(newItems);
 	}
+
+	// validate
 	
+	@Transactional	
+	public List<SlimAccessionDomain> validIsDuplicate(String value, String logicaldbKey, String mgiTypeKey) {
+		// use SlimAccessionDomain to return list of validated accession id
+		// one value is expected
+		// expects full accID (prefixPart + numericPart)
+		// returns empty list if value contains "%"
+		// returns empty list if value does not exist
+
+		List<SlimAccessionDomain> results = new ArrayList<SlimAccessionDomain>();
+		
+		if (value.contains("%")) {
+			return results;
+		}
+
+		String cmd = "\nselect * from acc_accession"
+				+ "\nwhere lower(accid) = '" + value.toLowerCase() + "'"
+				+ "\nand _logicaldb_key = " + logicaldbKey
+				+ "\nand _mgitype_key = " + mgiTypeKey;
+				
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {	
+				SlimAccessionDomain domain = new SlimAccessionDomain();	
+				domain.setAccessionKey(rs.getString("_accession_key"));
+				domain.setLogicaldbKey(rs.getString("_logicaldb_key"));
+				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
+				domain.setObjectKey(rs.getString("_object_key_key"));
+				domain.setAccID(rs.getString("accid"));
+				domain.setPrefixPart(rs.getString("prefixpart"));
+				domain.setNumericPart(rs.getString("numericpart"));					
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
+		
 	//
 	// get list of accession id domains by using sqlExecutor
 	//

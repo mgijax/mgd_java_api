@@ -71,6 +71,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	public List<SlimReferenceDomain> validJnum(String value) {
 		// use SlimReferenceDomain to return list of validated reference
 		// one value is expected
+		// accepts value :  J:xxx or xxxx
 		// returns empty list if value contains "%"
 		// returns empty list if value does not exist
 
@@ -80,9 +81,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			return results;
 		}
 
-
 		String cmd = "\nselect * from bib_citation_cache";
-		
 		String where = "\nwhere ";
 		
 		value = value.toLowerCase();

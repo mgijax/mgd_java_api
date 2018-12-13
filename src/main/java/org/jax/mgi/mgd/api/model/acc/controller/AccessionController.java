@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -21,6 +22,7 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @Path("/accession")
 @Api(value = "Accession Endpoints")
@@ -59,8 +61,16 @@ public class AccessionController extends BaseController<AccessionDomain> impleme
 	@POST
 	@ApiOperation(value = "is accession id a duplicate of object/logicaldb/mgitype")
 	@Path("/valid")
-	public List<SlimAccessionDomain> validIsDuplicate(String key, String value, String logicaldbKey, String mgiTypeKey) {
-		return accessionService.validIsDuplicate(key, value, logicaldbKey, mgiTypeKey);
+	public List<SlimAccessionDomain> validIsDuplicate(
+			@ApiParam(value = "the primary key of the object")		
+			@HeaderParam("key") String key, 
+			@ApiParam(value = "accession id value")				
+			@HeaderParam("accid") String accid, 
+			@ApiParam(value = "see acc_logicaldb")					
+			@HeaderParam("logicalddbKey") String logicaldbKey, 
+			@ApiParam(value = "see acc_mgitype")						
+			@HeaderParam("mgiTypeKey") String mgiTypeKey) {
+		return accessionService.validIsDuplicate(key, accid, logicaldbKey, mgiTypeKey);
 	}
 		
 	@POST

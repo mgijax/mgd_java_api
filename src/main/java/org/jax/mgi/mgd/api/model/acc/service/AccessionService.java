@@ -82,7 +82,7 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 	// validate
 	
 	@Transactional	
-	public List<SlimAccessionDomain> validIsDuplicate(String key, String value, String logicaldbKey, String mgiTypeKey) {
+	public List<SlimAccessionDomain> validIsDuplicate(String key, String accid, String logicaldbKey, String mgiTypeKey) {
 		// use SlimAccessionDomain to return list of validated accession id
 		// one value is expected
 		// expects full accID (prefixPart + numericPart)
@@ -91,7 +91,7 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 
 		List<SlimAccessionDomain> results = new ArrayList<SlimAccessionDomain>();
 		
-		if (value.contains("%")) {
+		if (accid.contains("%")) {
 			return results;
 		}
 
@@ -99,7 +99,7 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 				+ "\nwhere _object_key = " + key		
 				+ "\nand _logicaldb_key = " + logicaldbKey
 				+ "\nand _mgitype_key = " + mgiTypeKey
-				+ "\nand lower(accid) = '" + value.toLowerCase() + "'";
+				+ "\nand lower(accid) = '" + accid.toLowerCase() + "'";
 			
 		log.info(cmd);
 
@@ -110,7 +110,7 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 				domain.setAccessionKey(rs.getString("_accession_key"));
 				domain.setLogicaldbKey(rs.getString("_logicaldb_key"));
 				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
-				domain.setObjectKey(rs.getString("_object_key_key"));
+				domain.setObjectKey(rs.getString("_object_key"));
 				domain.setAccID(rs.getString("accid"));
 				domain.setPrefixPart(rs.getString("prefixpart"));
 				domain.setNumericPart(rs.getString("numericpart"));					

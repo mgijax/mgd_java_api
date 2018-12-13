@@ -82,6 +82,7 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 	// get list of accession id domains by using sqlExecutor
 	//
 	
+	@Transactional
 	private List<AccessionDomain> getAccessionDomainList(String cmd) {
 		// execute accession cmd and return list of accession domains
 		// assumes the certain parameters are returned from cmd are return
@@ -140,8 +141,9 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 		return results;
 	}
 	
-	public List<AccessionDomain> markerNucleotideAccessionIds(Integer key) {
-		// gets marker accession ids : nucleotide ids
+	@Transactional
+	public List<AccessionDomain> markerEditAccessionIds(Integer key) {
+		// gets marker accession ids : edit list
 		// see mrk_accref1_view for details
 		// returns list of accession domain
 
@@ -162,8 +164,9 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 		return results;
 	}
 	
-	public List<AccessionDomain> markerOtherAccessionIds(Integer key) {
-		// gets marker accession ids : other (does not include nucleotides)
+	@Transactional
+	public List<AccessionDomain> markerNonEditAccessionIds(Integer key) {
+		// gets marker accession ids : non-edit list
 		// see mrk_accref2_view for details
 		// returns list of accession domain
 		
@@ -190,7 +193,7 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 	//
 	
 	@Transactional
-	private void process(String parentKey, List<AccessionDomain> domain, String mgiTypeName, String logicaldbKey, User user) {
+	public void process(String parentKey, String logicaldbKey, List<AccessionDomain> domain, String mgiTypeName, User user) {
 		// process accession associations (create, delete, update)
 		// using stored procedure methods (ACC_insert(), ACC_delete_byAccKey(), ACC_update())
 		// using entity to compare domain vs entity
@@ -286,20 +289,5 @@ public class AccessionService extends BaseService<AccessionDomain> implements Ba
 		log.info("processAccession/processing successful");
 		return;
 	}
-	
-	@Transactional
-	public void processNucleotideAccession(String parentKey, List<AccessionDomain> domain, String mgiTypeKey, User user)
-	{
-		// process the nucleotide accession ids (ldb = 9)
 		
-		try {
-			process(parentKey, domain, mgiTypeKey, "9", user);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return;
-	}
-	
 }

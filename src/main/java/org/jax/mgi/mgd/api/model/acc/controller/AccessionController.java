@@ -56,14 +56,14 @@ public class AccessionController extends BaseController<AccessionDomain> impleme
 	}
 
 	@POST
-	@ApiOperation(value = "Marker Nucleotide Accession Ids")
-	@Path("/markerNucleotideAccessionIds")
-	public List<AccessionDomain> nucleotideAccessionIds(Integer key) {
+	@ApiOperation(value = "Marker Edit Accession Ids")
+	@Path("/markerEditAccessionIds")
+	public List<AccessionDomain> editAccessionIds(Integer key) {
 			
 		List<AccessionDomain> results = new ArrayList<AccessionDomain>();
 		
 		try {
-			results = accessionService.markerNucleotideAccessionIds(key);
+			results = accessionService.markerEditAccessionIds(key);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -72,14 +72,14 @@ public class AccessionController extends BaseController<AccessionDomain> impleme
 	}
 	
 	@POST
-	@ApiOperation(value = "Marker Other Accession Ids")
-	@Path("/markerOtherAccessionIds")
+	@ApiOperation(value = "Marker Non-Edit Accession Ids")
+	@Path("/markerNonEditAccessionIds")
 	public List<AccessionDomain> otherAccessionIds(Integer key) {
 			
 		List<AccessionDomain> results = new ArrayList<AccessionDomain>();
 		
 		try {
-			results = accessionService.markerOtherAccessionIds(key);
+			results = accessionService.markerNonEditAccessionIds(key);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -88,10 +88,10 @@ public class AccessionController extends BaseController<AccessionDomain> impleme
 	}
 	
 	@POST
-	@ApiOperation(value = "Process Nucleotide Accession Ids")
-	@Path("/processNucleotide")
-	public void processNucleotideAccession(String parentKey, List<AccessionDomain> domain, String mgiTypeKey, User user) {
-		accessionService.processNucleotideAccession(parentKey, domain, mgiTypeKey, user);
+	@ApiOperation(value = "Process Accession Ids")
+	@Path("/process")
+	public void process(String parentKey, String logicaldbKey, List<AccessionDomain> domain, String mgiTypeKey, User user) {
+		accessionService.process(parentKey, logicaldbKey, domain, mgiTypeKey, user);
 		return;
 	}
 	

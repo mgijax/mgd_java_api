@@ -137,7 +137,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			//if (entity.getNucleotideAccessionIds() != null) {
 			//	Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getNucleotideAccessionIds());
 			//	if(acc.iterator().hasNext() == true) {
-			//		domain.setNucleotideAccessionIds(IteratorUtils.toList(acc.iterator()));
+			//		domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
 			//	}
 			//}
 			
@@ -145,7 +145,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			//if (entity.getOtherAccessionIds() != null) {
 			//	Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getOtherAccessionIds());
 			//	if(acc.iterator().hasNext() == true) {
-			//		domain.setOtherAccessionIds(IteratorUtils.toList(acc.iterator()));
+			//		domain.setNonEditAccessionIds(IteratorUtils.toList(acc.iterator()));
 			//	}
 			//}
 			

@@ -254,8 +254,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 		
 		// process marker nucleotide accession ids
-		if (domain.getNucleotideAccessionIds() != null) {
-			accessionService.processNucleotideAccession(domain.getMarkerKey(), domain.getNucleotideAccessionIds(), mgiTypeName, user);
+		if (domain.getEditAccessionIds() != null) {
+			accessionService.process(domain.getMarkerKey(), "9", domain.getEditAccessionIds(), mgiTypeName, user);
 		}
 		
 		// return entity translated to domain
@@ -309,7 +309,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Boolean from_history = false;
 		Boolean from_synonym = false;
 		Boolean from_reference = false;
-		Boolean from_nucleotideAccession = false;
+		Boolean from_editAccession = false;
 
 		// if parameter exists, then add to where-clause
 		
@@ -436,24 +436,24 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			}
 		}
 
-		// nucleotideAccession
-		if (searchDomain.getNucleotideAccessionIds() != null) {
-			if (searchDomain.getNucleotideAccessionIds().get(0).getAccID() != null 
-					&& !searchDomain.getNucleotideAccessionIds().get(0).getAccID().isEmpty()) {
-				where = where + "\nand acc1.accID ilike '" +  searchDomain.getNucleotideAccessionIds().get(0).getAccID() + "'";
-				from_nucleotideAccession = true;
+		// editable accession ids
+		if (searchDomain.getEditAccessionIds() != null) {
+			if (searchDomain.getEditAccessionIds().get(0).getAccID() != null 
+					&& !searchDomain.getEditAccessionIds().get(0).getAccID().isEmpty()) {
+				where = where + "\nand acc1.accID ilike '" +  searchDomain.getEditAccessionIds().get(0).getAccID() + "'";
+				from_editAccession = true;
 			}
-			if (searchDomain.getNucleotideAccessionIds().get(0).getReferences() != null) {
-				if (searchDomain.getNucleotideAccessionIds().get(0).getReferences().get(0).getRefKey() != null 
-						&& !searchDomain.getNucleotideAccessionIds().get(0).getReferences().get(0).getRefKey().isEmpty()) {
-					where = where + "\nand acc1._refs_key = " + searchDomain.getNucleotideAccessionIds().get(0).getReferences().get(0).getRefKey();
-					from_nucleotideAccession = true;
+			if (searchDomain.getEditAccessionIds().get(0).getReferences() != null) {
+				if (searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getRefKey() != null 
+						&& !searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getRefKey().isEmpty()) {
+					where = where + "\nand acc1._refs_key = " + searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getRefKey();
+					from_editAccession = true;
 				}	
-				if (searchDomain.getNucleotideAccessionIds().get(0).getReferences().get(0).getShort_citation() != null 
-						&& !searchDomain.getNucleotideAccessionIds().get(0).getReferences().get(0).getShort_citation().isEmpty()) {
-					value = searchDomain.getNucleotideAccessionIds().get(0).getReferences().get(0).getShort_citation().replaceAll("'",  "''");
+				if (searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getShort_citation() != null 
+						&& !searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getShort_citation().isEmpty()) {
+					value = searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getShort_citation().replaceAll("'",  "''");
 					where = where + "\nand acc1.short_citation ilike '" + value + "'";
-					from_nucleotideAccession = true;
+					from_editAccession = true;
 				}
 			}
 		}
@@ -497,9 +497,9 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			from = from + ", mgi_reference_marker_view mr";
 			where = where + "\nand m._marker_key = mr._object_key";
 		}
-		if (from_nucleotideAccession == true) {
+		if (from_editAccession == true) {
 			from = from + ", mrk_accref1_view acc1";
-			where = where + "\nand m._marker_key = acc1._object_key and acc1._logicaldb_key in (9)";
+			where = where + "\nand m._marker_key = acc1._object_key and acc1._logicaldb_key in (8, 9)";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

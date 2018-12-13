@@ -50,8 +50,8 @@ public class MarkerDomain extends BaseDomain {
 	// exists in domain, but not populated by marker translator
 	// instead will be populated by call to specific domain service
 	//
-	private List<AccessionDomain> nucleotideAccessionIds;
-	private List<AccessionDomain> otherAccessionIds;
+	private List<AccessionDomain> editAccessionIds;
+	private List<AccessionDomain> noneditAccessionIds;
 	private List<MGIReferenceAssocDomain> refAssocs;
 	
 	// display only, see individual object/service to methods that set these values

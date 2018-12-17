@@ -15,7 +15,6 @@ import org.jax.mgi.mgd.api.model.mgi.dao.UserDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.SlimUserDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.UserDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mgi.translator.SlimUserTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -138,7 +137,6 @@ public class UserService extends BaseService<UserDomain> {
 				SlimUserDomain domain = new SlimUserDomain();
 				domain.setUserKey(rs.getString(1));
 				domain.setUserLogin(user.getLogin());
-				log.info("login:" + user.getName());
 				results.add(domain);
 			}
 		}

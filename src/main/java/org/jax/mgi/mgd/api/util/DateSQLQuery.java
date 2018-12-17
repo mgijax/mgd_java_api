@@ -3,6 +3,11 @@ package org.jax.mgi.mgd.api.util;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+ * Is a class that contains a method that returns a String[] 
+ * of proper from/where clauses for createdBy/modifiedBy/creation_date/modification_date
+ * fields.  
+ */
 public class DateSQLQuery {
 	
 	public static String[] queryByCreationModification(String tag, String createdBy, String modifiedBy, String creation_date, String modification_date) {

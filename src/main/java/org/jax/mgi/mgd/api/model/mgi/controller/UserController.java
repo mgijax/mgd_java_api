@@ -4,12 +4,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
+import org.jax.mgi.mgd.api.model.mgi.domain.SlimUserDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.UserDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.UserService;
@@ -17,6 +19,7 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @Path("/user")
 @Api(value = "User Endpoints")
@@ -53,5 +56,14 @@ public class UserController extends BaseController<UserDomain> {
 	public List<UserDomain> search() {
 		return userService.search();
 	}
-		
+	
+	@POST
+	@ApiOperation(value = "Valid EI Permissions")
+	@Path("/validEIPermissions")
+	public  List<SlimUserDomain> checkUserPermissions(
+			@ApiParam(value = "the module name (see stored procedure MGI_checkUserRole")
+			@HeaderParam("eiModule") String eiModule, 	
+			User user) {
+		return userService.validEIPermissions(eiModule, user);
+	}
 }

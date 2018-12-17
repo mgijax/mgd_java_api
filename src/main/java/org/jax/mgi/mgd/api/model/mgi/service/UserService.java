@@ -12,8 +12,10 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.dao.UserDAO;
+import org.jax.mgi.mgd.api.model.mgi.domain.SlimUserDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.UserDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.translator.SlimUserTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -59,20 +61,18 @@ public class UserService extends BaseService<UserDomain> {
 		return null;
 	}
 
+	@Transactional
 	public List<UserDomain> search() {
 
-		// list of results to be returned
 		List<UserDomain> results = new ArrayList<UserDomain>();
 
 		String cmd = "select * from mgi_user_active_view order by login";
 		log.info(cmd);
 
-		// request data, and parse results
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				UserDomain domain = new UserDomain();
-
 				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 				domain.setUserKey(rs.getString("_user_key"));
 				domain.setUserTypeKey(rs.getString("_usertype_key"));
@@ -91,9 +91,10 @@ public class UserService extends BaseService<UserDomain> {
 			}
 			sqlExecutor.cleanup();
 		}
-		catch (Exception e) {e.printStackTrace();}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		
-		// ...off to be turned into JSON
 		return results;
 	}
 	
@@ -112,4 +113,40 @@ public class UserService extends BaseService<UserDomain> {
 		}
 	}
 
+	/* check EI module permissions
+	 * if permissions valid, then user key returned from SP = user key
+	 * else, user key returned from SP = 0
+	 * 
+	 * select login, userrole from mgi_userrole_view order by login
+	 * 
+	 * PWI and TeleUSE/EI use this stored procedure
+	 */
+	@Transactional
+	public List<SlimUserDomain> validEIPermissions(String eiModule, User user) {
+
+		List<SlimUserDomain> results = new ArrayList<SlimUserDomain>();
+		
+		String cmd = "select * from MGI_checkUserRole("
+				+ "'" + eiModule + "'"
+				+ ",'" + user.getLogin() + "'"
+				+ ")";		log.info(cmd);
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {	
+				SlimUserDomain domain = new SlimUserDomain();
+				domain.setUserKey(rs.getString(1));
+				domain.setUserLogin(user.getLogin());
+				log.info("login:" + user.getName());
+				results.add(domain);
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		return results;		
+	}
+	
 }

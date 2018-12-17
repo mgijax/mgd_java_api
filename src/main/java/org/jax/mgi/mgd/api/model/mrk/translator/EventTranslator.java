@@ -9,7 +9,7 @@ public class EventTranslator extends BaseEntityDomainTranslator<Event, EventDoma
 	@Override
 	protected EventDomain entityToDomain(Event entity, int translationDepth) {
 		EventDomain domain = new EventDomain();
-		domain.setMarkerEventKey(entity.get_marker_event_key());
+		domain.setMarkerEventKey(String.valueOf(entity.get_marker_event_key()));
 		domain.setEvent(entity.getEvent());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));

@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 public class MarkerStatusDomain extends BaseDomain {
 	
-	private Integer markerStatusKey;
+	private String markerStatusKey;
 	private String markerStatus;
 	private String creation_date;
 	private String modification_date;     

@@ -72,7 +72,7 @@ public class EventReasonService extends BaseService<EventReasonDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				EventReasonDomain domain = new EventReasonDomain();
-				domain.setMarkerEventReasonKey(rs.getInt("_marker_eventreason_key"));
+				domain.setMarkerEventReasonKey(rs.getString("_marker_eventreason_key"));
 				domain.setEventReason(rs.getString("eventreason"));
 				domain.setCreation_date(rs.getString("creation_date"));
 				domain.setModification_date(rs.getString("modification_date"));

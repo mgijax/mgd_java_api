@@ -72,7 +72,7 @@ public class MarkerTypeService extends BaseService<MarkerTypeDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				MarkerTypeDomain domain = new MarkerTypeDomain();
-				domain.setMarkerTypeKey(rs.getInt("_marker_type_key"));
+				domain.setMarkerTypeKey(rs.getString("_marker_type_key"));
 				domain.setMarkerType(rs.getString("name"));
 				domain.setCreation_date(rs.getString("creation_date"));
 				domain.setModification_date(rs.getString("modification_date"));

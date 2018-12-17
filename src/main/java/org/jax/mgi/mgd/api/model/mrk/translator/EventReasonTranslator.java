@@ -9,7 +9,7 @@ public class EventReasonTranslator extends BaseEntityDomainTranslator<EventReaso
 	@Override
 	protected EventReasonDomain entityToDomain(EventReason entity, int translationDepth) {
 		EventReasonDomain domain = new EventReasonDomain();
-		domain.setMarkerEventReasonKey(entity.get_marker_eventreason_key());
+		domain.setMarkerEventReasonKey(String.valueOf(entity.get_marker_eventreason_key()));
 		domain.setEventReason(entity.getEventReason());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));

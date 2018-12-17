@@ -9,7 +9,7 @@ public class MarkerTypeTranslator extends BaseEntityDomainTranslator<MarkerType,
 	@Override
 	protected MarkerTypeDomain entityToDomain(MarkerType entity, int translationDepth) {
 		MarkerTypeDomain domain = new MarkerTypeDomain();
-		domain.setMarkerTypeKey(entity.get_marker_type_key());
+		domain.setMarkerTypeKey(String.valueOf(entity.get_marker_type_key()));
 		domain.setMarkerType(entity.getName());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));

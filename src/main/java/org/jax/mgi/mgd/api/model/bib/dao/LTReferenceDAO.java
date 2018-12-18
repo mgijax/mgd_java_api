@@ -423,7 +423,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 			idPredicates.add(builder.equal(root.get("_refs_key"), idRoot.get("_object_key")));
 			Path<String> column = idRoot.get("accID");
 			idPredicates.add(builder.lower(column).in((Object[]) accids));
-			idPredicates.add(builder.equal(idRoot.get("_mgitype_key"), 1));
+			idPredicates.add(builder.equal(idRoot.get("mgiType").get("_mgitype_key"), 1));
 
 			idSubquery.where(idPredicates.toArray(new Predicate[]{}));
 			idRestrictions.add(builder.exists(idSubquery));

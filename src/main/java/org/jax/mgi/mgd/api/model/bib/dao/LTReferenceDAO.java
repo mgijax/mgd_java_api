@@ -459,7 +459,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 			List<Predicate> idPredicates = new ArrayList<Predicate>();
 
 			idPredicates.add(builder.equal(root.get("_refs_key"), idRoot.get("_refs_key")));
-			idPredicates.add(builder.equal(idRoot.get("_mgitype_key"), 11));
+			idPredicates.add(builder.equal(idRoot.get("mgiType").get("_mgitype_key"), 11));
 			idPredicates.add(builder.equal(idRoot.get("alleleID").get("accID"), idString));
 			idPredicates.add(builder.equal(idRoot.get("alleleID").get("_mgitype_key"), 11));
 

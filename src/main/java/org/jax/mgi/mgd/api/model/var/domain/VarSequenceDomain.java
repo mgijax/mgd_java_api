@@ -6,13 +6,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class VarEffectDomain extends BaseDomain {
+public class VarSequenceDomain extends BaseDomain {
 	
-	private String varEffectKey;
+	private String varSequenceKey;
 	private String variantKey;
 	private String variantTerm;
-	private String effectKey;
-	private String effectTerm;
+	private String sequenceTypeKey;
+	private String sequenceTypeTerm;
+	private String referenceSequence;
+	private String variantSequence;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

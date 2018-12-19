@@ -38,7 +38,7 @@ public class Accession extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_logicaldb_key")
 	private LogicalDB logicaldb;
 	

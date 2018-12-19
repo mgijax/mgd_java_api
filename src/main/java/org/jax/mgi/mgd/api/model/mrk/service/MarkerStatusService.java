@@ -61,13 +61,11 @@ public class MarkerStatusService extends BaseService<MarkerStatusDomain> {
 
 	public List<MarkerStatusDomain> search() {
 
-		// list of results to be returned
 		List<MarkerStatusDomain> results = new ArrayList<MarkerStatusDomain>();
 
 		String cmd = "select * from mrk_status";
 		log.info(cmd);
 
-		// request data, and parse results
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
@@ -82,7 +80,6 @@ public class MarkerStatusService extends BaseService<MarkerStatusDomain> {
 		}
 		catch (Exception e) {e.printStackTrace();}
 		
-		// ...off to be turned into JSON
 		return results;
 	}	
 	

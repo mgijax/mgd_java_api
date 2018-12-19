@@ -61,13 +61,11 @@ public class MarkerTypeService extends BaseService<MarkerTypeDomain> {
 
 	public List<MarkerTypeDomain> search() {
 
-		// list of results to be returned
 		List<MarkerTypeDomain> results = new ArrayList<MarkerTypeDomain>();
 
 		String cmd = "select * from mrk_types";
 		log.info(cmd);
 
-		// request data, and parse results
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
@@ -82,7 +80,6 @@ public class MarkerTypeService extends BaseService<MarkerTypeDomain> {
 		}
 		catch (Exception e) {e.printStackTrace();}
 		
-		// ...off to be turned into JSON
 		return results;
 	}	
 	

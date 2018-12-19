@@ -62,7 +62,6 @@ public class NoteService extends BaseService<NoteDomain> {
 
 	public List<NoteDomain> marker(Integer key) {
 
-		// list of results to be returned
 		List<NoteDomain> results = new ArrayList<NoteDomain>();
 
 		String cmd = "\nselect * from mgi_note_marker_view "
@@ -71,7 +70,6 @@ public class NoteService extends BaseService<NoteDomain> {
 		
 		log.info(cmd);
 
-		// request data, and parse results
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
@@ -100,7 +98,6 @@ public class NoteService extends BaseService<NoteDomain> {
 			e.printStackTrace();
 		}
 		
-		// ...off to be turned into JSON
 		return results;
 	}
 	

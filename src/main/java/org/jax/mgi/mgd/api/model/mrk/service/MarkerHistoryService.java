@@ -73,7 +73,6 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 
 	public List<MarkerHistoryDomain> search(Integer key) {
 
-		// list of results to be returned
 		List<MarkerHistoryDomain> results = new ArrayList<MarkerHistoryDomain>();
 
 		String cmd = "\nselect * from mrk_history_view"
@@ -82,7 +81,6 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 		
 		log.info(cmd);
 
-		// request data, and parse results
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
@@ -119,7 +117,6 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 			e.printStackTrace();
 		}
 		
-		// ...off to be turned into JSON
 		return results;
 	}	
 	

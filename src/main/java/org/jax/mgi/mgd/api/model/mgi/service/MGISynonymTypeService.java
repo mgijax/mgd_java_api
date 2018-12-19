@@ -3,7 +3,6 @@ package org.jax.mgi.mgd.api.model.mgi.service;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -62,7 +61,6 @@ public class MGISynonymTypeService extends BaseService<MGISynonymTypeDomain> {
 
 	public List<MGISynonymTypeDomain> search() {
 
-		// list of results to be returned
 		List<MGISynonymTypeDomain> results = new ArrayList<MGISynonymTypeDomain>();
 		
 		String cmd = "select * from mgi_synonymtype"
@@ -70,7 +68,6 @@ public class MGISynonymTypeService extends BaseService<MGISynonymTypeDomain> {
 			+ "\norder by _mgitype_key, synonymtype";
 		log.info(cmd);
 
-		// request data, and parse results
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
@@ -91,7 +88,6 @@ public class MGISynonymTypeService extends BaseService<MGISynonymTypeDomain> {
 		}
 		catch (Exception e) {e.printStackTrace();}
 		
-		// ...off to be turned into JSON
 		return results;
 	}	
 	

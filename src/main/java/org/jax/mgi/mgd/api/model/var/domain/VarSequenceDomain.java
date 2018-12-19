@@ -10,7 +10,6 @@ public class VarSequenceDomain extends BaseDomain {
 	
 	private String varSequenceKey;
 	private String variantKey;
-	private String variantTerm;
 	private String sequenceTypeKey;
 	private String sequenceTypeTerm;
 	private String referenceSequence;
@@ -20,5 +19,6 @@ public class VarSequenceDomain extends BaseDomain {
 	private String modifiedByKey;
 	private String modifiedBy;
 	private String creation_date;
-	private String modification_date;    
+	private String modification_date; 
+		
 }

@@ -68,13 +68,11 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 
 	public List<MGIReferenceAssocDomain> marker(Integer key) {
 
-		// list of results to be returned
 		List<MGIReferenceAssocDomain> results = new ArrayList<MGIReferenceAssocDomain>();
 
 		String cmd = "\nselect * from mgi_reference_marker_view where _object_key = " + key;
 		log.info(cmd);
 
-		// request data, and parse results
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
@@ -103,7 +101,6 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 			e.printStackTrace();
 		}
 		
-		// ...off to be turned into JSON
 		return results;
 	}
 	

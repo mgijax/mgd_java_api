@@ -61,13 +61,11 @@ public class OrganismService extends BaseService<OrganismDomain> {
 
 	public List<OrganismDomain> search() {
 
-		// list of results to be returned
 		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
 
 		String cmd = "select * from mgi_organism order by _organism_key";
 		log.info(cmd);
 
-		// request data, and parse results
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
@@ -83,7 +81,6 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		}
 		catch (Exception e) {e.printStackTrace();}
 		
-		// ...off to be turned into JSON
 		return results;
 	}	
 }

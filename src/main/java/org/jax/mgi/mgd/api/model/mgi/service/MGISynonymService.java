@@ -65,13 +65,11 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 
 	public List<MGISynonymDomain> marker(Integer key) {
 
-		// list of results to be returned
 		List<MGISynonymDomain> results = new ArrayList<MGISynonymDomain>();
 
 		String cmd = "\nselect * from mgi_synonym_musmarker_view where _object_key = " + key;
 		log.info(cmd);
 
-		// request data, and parse results
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
@@ -98,7 +96,6 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 			e.printStackTrace();
 		}
 		
-		// ...off to be turned into JSON
 		return results;
 	}
 	

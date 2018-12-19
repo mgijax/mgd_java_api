@@ -38,7 +38,7 @@ public class VarVariant extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_allele_key")
 	private Allele allele;
 

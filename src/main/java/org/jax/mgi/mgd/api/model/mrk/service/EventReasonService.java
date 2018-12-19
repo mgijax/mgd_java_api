@@ -61,13 +61,11 @@ public class EventReasonService extends BaseService<EventReasonDomain> {
 
 	public List<EventReasonDomain> search() {
 
-		// list of results to be returned
 		List<EventReasonDomain> results = new ArrayList<EventReasonDomain>();
 
 		String cmd = "select * from mrk_eventreason";
 		log.info(cmd);
 
-		// request data, and parse results
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
@@ -82,7 +80,6 @@ public class EventReasonService extends BaseService<EventReasonDomain> {
 		}
 		catch (Exception e) {e.printStackTrace();}
 		
-		// ...off to be turned into JSON
 		return results;
 	}	
 	

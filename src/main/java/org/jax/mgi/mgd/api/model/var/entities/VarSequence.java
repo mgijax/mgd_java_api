@@ -38,10 +38,10 @@ public class VarSequence extends BaseEntity {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_variant_key")
+	@JoinColumn(name="_variant_key", insertable=false, updatable=false)
 	private VarVariant variant;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_sequence_type_key", referencedColumnName="_term_key")
 	private Term sequenceType;
 		

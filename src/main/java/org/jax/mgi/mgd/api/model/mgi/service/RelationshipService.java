@@ -61,7 +61,6 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 
 	public List<RelationshipDomain> markerTSS(Integer key) {
 
-		// list of results to be returned
 		List<RelationshipDomain> results = new ArrayList<RelationshipDomain>();
 
 		String cmd = "select * from mgi_relationship_markertss_view "
@@ -69,7 +68,6 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				+ "\nor _object_key_2 = " + key;
 		log.info(cmd);
 
-		// request data, and parse results
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
@@ -111,7 +109,6 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 			e.printStackTrace();
 		}
 		
-		// ...off to be turned into JSON
 		return results;
 	}
 	

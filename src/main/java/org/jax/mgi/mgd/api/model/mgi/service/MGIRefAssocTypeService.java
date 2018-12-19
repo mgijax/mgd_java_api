@@ -61,14 +61,12 @@ public class MGIRefAssocTypeService extends BaseService<MGIRefAssocTypeDomain> {
 
 	public List<MGIRefAssocTypeDomain> search() {
 
-		// list of results to be returned
 		List<MGIRefAssocTypeDomain> results = new ArrayList<MGIRefAssocTypeDomain>();
 
 		String cmd = "select * from mgi_refassoctype order by _mgitype_key, assoctype";
 
 		log.info(cmd);
 
-		// request data, and parse results
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
@@ -87,7 +85,6 @@ public class MGIRefAssocTypeService extends BaseService<MGIRefAssocTypeDomain> {
 		}
 		catch (Exception e) {e.printStackTrace();}
 		
-		// ...off to be turned into JSON
 		return results;
 	}	
 	

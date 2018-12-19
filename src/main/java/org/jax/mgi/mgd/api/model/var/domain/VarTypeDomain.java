@@ -10,7 +10,6 @@ public class VarTypeDomain extends BaseDomain {
 	
 	private String varTypeKey;
 	private String variantKey;
-	private String variantTerm;
 	private String typeKey;
 	private String typeTerm;
 	private String createdByKey;

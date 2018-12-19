@@ -38,6 +38,7 @@ public class Accession extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 
+	// due to LTReferenceDomain, this must not be lazy
 	@OneToOne
 	@JoinColumn(name="_logicaldb_key")
 	private LogicalDB logicaldb;

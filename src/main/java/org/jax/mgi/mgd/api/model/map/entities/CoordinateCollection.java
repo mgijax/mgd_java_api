@@ -22,7 +22,7 @@ import lombok.Setter;
 public class CoordinateCollection extends BaseEntity {
 
 	@Id
-	private Integer _collection_key;
+	private int _collection_key;
 	private String name;
 	private String abbreviation;
 	private Date creation_date;

@@ -23,9 +23,9 @@ import lombok.Setter;
 public class CoordinateFeature extends BaseEntity {
 
 	@Id
-	private Integer _feature_key;
-	private Integer startCoordinate;
-	private Integer endCoordinate;
+	private int _feature_key;
+	private int startCoordinate;
+	private int endCoordinate;
 	private String strand;
 	private Date creation_date;
 	private Date modification_date;

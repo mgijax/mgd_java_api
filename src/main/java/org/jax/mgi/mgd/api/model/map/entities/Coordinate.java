@@ -23,9 +23,9 @@ import lombok.Setter;
 public class Coordinate extends BaseEntity {
 
 	@Id
-	private Integer _map_key;
-	private Integer length;
-	private Integer sequenceNum;
+	private int _map_key;
+	private int length;
+	private int sequenceNum;
 	private String name;
 	private String abbreviation;
 	private String version;

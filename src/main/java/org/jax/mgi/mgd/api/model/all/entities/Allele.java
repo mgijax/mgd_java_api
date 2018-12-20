@@ -100,48 +100,4 @@ public class Allele extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 11")
 	private List<MGIReferenceAssoc> references;
 	
-	//@OneToMany
-	//@JoinColumn(name="_object_key", referencedColumnName="_allele_key")
-	//@Where(clause="`_mgitype_key` = 11")
-	//private List<MGISynonym> synonyms;
-	
-	//@OneToMany
-	//@JoinColumn(name="_object_key", referencedColumnName="_allele_key")
-	//@Where(clause="`_mgitype_key` = 11 AND preferred = 1")
-	//private List<Accession> allAccessionIds;
-	
-	//@OneToMany
-	//@JoinColumn(name="_allele_key")
-	//private List<ProbeStrainMarker> probeStrainMarkers;
-	
-	//@ManyToMany
-	//@JoinTable(name = "all_allele_mutation",
-	//	joinColumns = @JoinColumn(name = "_allele_key"),
-	//	inverseJoinColumns = @JoinColumn(name = "_mutation_key", referencedColumnName="_term_key")
-	//)
-	//private List<Term> mutations;
-	
-	//@ManyToMany
-	//@JoinTable(name = "prb_allele_strain",
-	//	joinColumns = @JoinColumn(name = "_allele_key"),
-	//	inverseJoinColumns = @JoinColumn(name = "_strain_key")
-	//)
-	//private List<ProbeStrain> strains;
-
-	//@Transient
-	//public List<Accession> getAccessionIdsByLogicalDb(LogicalDB db) {
-	//	return getAccessionIdsByLogicalDb(db.get_logicaldb_key());
-	//}
-	
-	//@Transient
-	//public List<Accession> getAccessionIdsByLogicalDb(Integer db_key) {
-	//	HashSet<Accession> set = new HashSet<Accession>();
-	//	for(Accession a: allAccessionIds) {
-	//		if(a.getLogicaldb().get_logicaldb_key() == db_key) {
-	//			set.add(a);
-	//		}
-	//	}
-	//	return set;
-	//}
-
 }

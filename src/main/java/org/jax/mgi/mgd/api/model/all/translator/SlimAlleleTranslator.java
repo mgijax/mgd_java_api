@@ -12,6 +12,9 @@ public class SlimAlleleTranslator extends BaseEntityDomainTranslator<Allele, Sli
 		SlimAlleleDomain domain = new SlimAlleleDomain();
 		domain.setAlleleKey(String.valueOf(entity.get_allele_key()));
 		domain.setSymbol(entity.getSymbol());
+		domain.setMgiAccessionId(entity.getMgiAccessionId().getAccID());
+		domain.setChromosome(entity.getMarker().getChromosome());
+		
 		return domain;
 	}
 

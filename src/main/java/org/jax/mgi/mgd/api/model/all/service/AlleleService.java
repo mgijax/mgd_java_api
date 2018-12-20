@@ -60,10 +60,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		return null;
 	}
 
-
 	public List<AlleleEIResultDomain> eiSearch(AlleleDomain searchDomain) {
 
-		// list of results to be returned
 		List<AlleleEIResultDomain> results = new ArrayList<AlleleEIResultDomain>();
 		
 		// building SQL command : select + from + where + orderBy
@@ -105,7 +103,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			e.printStackTrace();
 		}
 		
-		// ...off to be turned into JSON
 		return results;
 	}
 }

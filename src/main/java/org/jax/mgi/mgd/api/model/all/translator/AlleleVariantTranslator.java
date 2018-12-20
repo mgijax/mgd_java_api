@@ -1,19 +1,19 @@
-package org.jax.mgi.mgd.api.model.var.translator;
+package org.jax.mgi.mgd.api.model.all.translator;
 
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
 import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeStrainTranslator;
-import org.jax.mgi.mgd.api.model.var.domain.VarVariantDomain;
-import org.jax.mgi.mgd.api.model.var.entities.VarVariant;
+import org.jax.mgi.mgd.api.model.all.domain.AlleleVariantDomain;
+import org.jax.mgi.mgd.api.model.all.entities.AlleleVariant;
 
-public class VarVariantTranslator extends BaseEntityDomainTranslator<VarVariant, VarVariantDomain> {
+public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVariant, AlleleVariantDomain> {
 	
 	private SlimAlleleTranslator alleleTranslator = new SlimAlleleTranslator();
 	private SlimProbeStrainTranslator strainTranslator = new SlimProbeStrainTranslator();
 	
 	@Override
-	protected VarVariantDomain entityToDomain(VarVariant entity, int translationDepth) {
-		VarVariantDomain domain = new VarVariantDomain();
+	protected AlleleVariantDomain entityToDomain(AlleleVariant entity, int translationDepth) {
+		AlleleVariantDomain domain = new AlleleVariantDomain();
 		domain.setVariantKey(String.valueOf(entity.get_variant_key()));
 		domain.setIsReviewed(String.valueOf(entity.getIsReviewed()));
 		domain.setDescription(entity.getDescription());
@@ -36,7 +36,7 @@ public class VarVariantTranslator extends BaseEntityDomainTranslator<VarVariant,
 	}
 
 	@Override
-	protected VarVariant domainToEntity(VarVariantDomain domain, int translationDepth) {
+	protected AlleleVariant domainToEntity(AlleleVariantDomain domain, int translationDepth) {
 		// TODO Auto-generated method stub
 		return null;
 	}

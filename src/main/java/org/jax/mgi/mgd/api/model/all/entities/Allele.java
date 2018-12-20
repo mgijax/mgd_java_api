@@ -1,30 +1,24 @@
 package org.jax.mgi.mgd.api.model.all.entities;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
-import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
-import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
+import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
-import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrainMarker;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
@@ -78,7 +72,7 @@ public class Allele extends BaseEntity {
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key")
-	private Reference reference;
+	private Reference markerReference;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_markerallele_status_key", referencedColumnName="_term_key")
@@ -104,46 +98,50 @@ public class Allele extends BaseEntity {
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key")
 	@Where(clause="`_mgitype_key` = 11")
-	private Set<MGISynonym> synonyms;
+	private List<MGIReferenceAssoc> references;
 	
-	@OneToMany
-	@JoinColumn(name="_object_key", referencedColumnName="_allele_key")
-	@Where(clause="`_mgitype_key` = 11 AND preferred = 1")
-	private Set<Accession> allAccessionIds;
+	//@OneToMany
+	//@JoinColumn(name="_object_key", referencedColumnName="_allele_key")
+	//@Where(clause="`_mgitype_key` = 11")
+	//private List<MGISynonym> synonyms;
 	
-	@OneToMany
-	@JoinColumn(name="_allele_key")
-	private Set<ProbeStrainMarker> probeStrainMarkers;
+	//@OneToMany
+	//@JoinColumn(name="_object_key", referencedColumnName="_allele_key")
+	//@Where(clause="`_mgitype_key` = 11 AND preferred = 1")
+	//private List<Accession> allAccessionIds;
 	
-	@ManyToMany
-	@JoinTable(name = "all_allele_mutation",
-		joinColumns = @JoinColumn(name = "_allele_key"),
-		inverseJoinColumns = @JoinColumn(name = "_mutation_key", referencedColumnName="_term_key")
-	)
-	private Set<Term> mutations;
+	//@OneToMany
+	//@JoinColumn(name="_allele_key")
+	//private List<ProbeStrainMarker> probeStrainMarkers;
 	
-	@ManyToMany
-	@JoinTable(name = "prb_allele_strain",
-		joinColumns = @JoinColumn(name = "_allele_key"),
-		inverseJoinColumns = @JoinColumn(name = "_strain_key")
-	)
-	private Set<ProbeStrain> strains;
+	//@ManyToMany
+	//@JoinTable(name = "all_allele_mutation",
+	//	joinColumns = @JoinColumn(name = "_allele_key"),
+	//	inverseJoinColumns = @JoinColumn(name = "_mutation_key", referencedColumnName="_term_key")
+	//)
+	//private List<Term> mutations;
 	
+	//@ManyToMany
+	//@JoinTable(name = "prb_allele_strain",
+	//	joinColumns = @JoinColumn(name = "_allele_key"),
+	//	inverseJoinColumns = @JoinColumn(name = "_strain_key")
+	//)
+	//private List<ProbeStrain> strains;
 
-	@Transient
-	public Set<Accession> getAccessionIdsByLogicalDb(LogicalDB db) {
-		return getAccessionIdsByLogicalDb(db.get_logicaldb_key());
-	}
+	//@Transient
+	//public List<Accession> getAccessionIdsByLogicalDb(LogicalDB db) {
+	//	return getAccessionIdsByLogicalDb(db.get_logicaldb_key());
+	//}
 	
-	@Transient
-	public Set<Accession> getAccessionIdsByLogicalDb(Integer db_key) {
-		HashSet<Accession> set = new HashSet<Accession>();
-		for(Accession a: allAccessionIds) {
-			if(a.getLogicaldb().get_logicaldb_key() == db_key) {
-				set.add(a);
-			}
-		}
-		return set;
-	}
+	//@Transient
+	//public List<Accession> getAccessionIdsByLogicalDb(Integer db_key) {
+	//	HashSet<Accession> set = new HashSet<Accession>();
+	//	for(Accession a: allAccessionIds) {
+	//		if(a.getLogicaldb().get_logicaldb_key() == db_key) {
+	//			set.add(a);
+	//		}
+	//	}
+	//	return set;
+	//}
 
 }

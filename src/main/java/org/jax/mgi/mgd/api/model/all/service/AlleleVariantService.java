@@ -63,7 +63,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 
 		List<AlleleVariantDomain> results = new ArrayList<AlleleVariantDomain>();
 
-		String cmd = "select * from.all variant";
+		String cmd = "select * from all_variant";
 		log.info(cmd);
 
 		try {

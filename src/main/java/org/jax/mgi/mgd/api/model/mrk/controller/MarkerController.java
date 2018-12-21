@@ -127,8 +127,8 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	
 	@POST
 	@ApiOperation(value = "Validate marker symbol/official status is valid/returns slim marker domain")
-	@Path("/validOfficial")
-	public List<SlimMarkerDomain> validMarker(String value) {
+	@Path("/validOfficialStatus")
+	public List<SlimMarkerDomain> validOfficialStatus(String value) {
 		return markerService.valid(value, false, false);
 	}
 			

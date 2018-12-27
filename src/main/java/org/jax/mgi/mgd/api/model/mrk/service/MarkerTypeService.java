@@ -59,6 +59,7 @@ public class MarkerTypeService extends BaseService<MarkerTypeDomain> {
 		return null;
 	}
 
+	@Transactional	
 	public List<MarkerTypeDomain> search() {
 
 		List<MarkerTypeDomain> results = new ArrayList<MarkerTypeDomain>();

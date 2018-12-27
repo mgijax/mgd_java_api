@@ -71,6 +71,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 		return null;
 	}
 
+	@Transactional	
 	public List<MarkerHistoryDomain> search(Integer key) {
 
 		List<MarkerHistoryDomain> results = new ArrayList<MarkerHistoryDomain>();

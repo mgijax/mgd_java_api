@@ -59,6 +59,7 @@ public class EventReasonService extends BaseService<EventReasonDomain> {
 		return null;
 	}
 
+	@Transactional	
 	public List<EventReasonDomain> search() {
 
 		List<EventReasonDomain> results = new ArrayList<EventReasonDomain>();

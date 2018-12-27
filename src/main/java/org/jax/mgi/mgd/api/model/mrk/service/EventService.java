@@ -59,6 +59,7 @@ public class EventService extends BaseService<EventDomain> {
 		return null;
 	}
 
+	@Transactional	
 	public List<EventDomain> search() {
 
 		List<EventDomain> results = new ArrayList<EventDomain>();

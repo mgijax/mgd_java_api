@@ -13,6 +13,7 @@ import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleVariantDomain;
 import org.jax.mgi.mgd.api.model.all.service.AlleleVariantService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
@@ -28,8 +29,17 @@ public class AlleleVariantController extends BaseController<AlleleVariantDomain>
 	private AlleleVariantService variantService;
 
 	@Override
-	public SearchResults<AlleleVariantDomain> create(AlleleVariantDomain event, User user) {
-		return variantService.create(event, user);
+	public SearchResults<AlleleVariantDomain> create(AlleleVariantDomain domain, User user) {
+		SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
+		try {
+			results = variantService.create(domain, user);
+			results = variantService.getResults(Integer.valueOf(results.items.get(0).getVariantKey()));
+		} catch (Exception e) {
+			results.setError("Failed : create", e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			return results;
+		}
+		
+		return results;
 	}
 
 	@Override

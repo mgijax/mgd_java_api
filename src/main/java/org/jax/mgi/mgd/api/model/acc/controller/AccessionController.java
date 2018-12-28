@@ -12,10 +12,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
-import org.jax.mgi.mgd.api.model.acc.search.AccessionSearchForm;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -28,7 +26,7 @@ import io.swagger.annotations.ApiParam;
 @Api(value = "Accession Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class AccessionController extends BaseController<AccessionDomain> implements BaseSearchInterface<AccessionDomain, AccessionSearchForm> {
+public class AccessionController extends BaseController<AccessionDomain> {
 
 	@Inject
 	private AccessionService accessionService;
@@ -53,14 +51,16 @@ public class AccessionController extends BaseController<AccessionDomain> impleme
 		return accessionService.delete(key, user);
 	}
 	
-	@Override
-	public SearchResults<AccessionDomain> search(AccessionSearchForm searchForm) {
-		return accessionService.search(searchForm);
+	@POST
+	@ApiOperation(value = "Search by accID only")
+	@Path("/search")
+	public List<AccessionDomain> search(AccessionDomain searchDomain) {
+		return accessionService.search(searchDomain);
 	}
 
 	@POST
 	@ApiOperation(value = "is accession id a duplicate of object/logicaldb/mgitype")
-	@Path("/valid")
+	@Path("/validIsDuplicate")
 	public List<SlimAccessionDomain> validIsDuplicate(
 			@ApiParam(value = "the primary key of the object")		
 			@HeaderParam("key") String key, 

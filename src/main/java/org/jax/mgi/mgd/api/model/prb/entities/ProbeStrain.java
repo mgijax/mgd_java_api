@@ -55,11 +55,12 @@ public class ProbeStrain extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
+	/* change to OneToMany List when we need this
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_strain_key", referencedColumnName="_object_key")
 	@Where(clause="`_mgitype_key` = 10 AND preferred = 1 AND `_logicaldb_key` = 1")
 	private Accession mgiAccessionId;
-
+    */
 	@OneToMany
 	@JoinColumn(name="_strain_key")
 	private Set<ProbeStrainMarker> probeStrainMarkers;

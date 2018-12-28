@@ -1,12 +1,17 @@
 package org.jax.mgi.mgd.api.model.all.translator;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.util.Constants;
 
 public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleDomain> {
 
+	private AccessionTranslator accessionTranslator = new AccessionTranslator();
+	
 	@Override
 	protected AlleleDomain entityToDomain(Allele entity, int translationDepth) {
 		
@@ -24,12 +29,22 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
+
+		// mgi accession ids only
+		if (entity.getMgiAccessionIds() != null) {
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
+			if(acc.iterator().hasNext() == true) {
+				domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
+
+			}
+		}
 		
 		if(translationDepth > 0) {
 			// load relationships
 		}
 		return domain;
 	}
+	
 
 	@Override
 	protected Allele domainToEntity(AlleleDomain domain, int translationDepth) {

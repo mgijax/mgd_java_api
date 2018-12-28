@@ -29,8 +29,8 @@ import lombok.Setter;
 public class AlleleVariant extends BaseEntity {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="all_varianteffect_seq_generator")
-	@SequenceGenerator(name="all_varianteffect_seq_generator", sequenceName="all_varianteffect_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="all_variant_seq_generator")
+	@SequenceGenerator(name="all_variant_seq_generator", sequenceName="all_variant_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")
 	private int _variant_key;
 	private int isReviewed;

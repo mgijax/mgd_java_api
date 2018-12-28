@@ -80,6 +80,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		// results has other info too
 		log.info("AlleleVariant/create/returning results");
 		results.setItem(translator.translate(entity,0));
+		log.info("Translator returned");
 		return results;
 	}
 

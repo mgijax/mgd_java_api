@@ -31,13 +31,13 @@ public class AlleleVariantController extends BaseController<AlleleVariantDomain>
 	@Override
 	public SearchResults<AlleleVariantDomain> create(AlleleVariantDomain domain, User user) {
 		SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
-		//try {
+		try {
 			results = variantService.create(domain, user);
-			//results = variantService.getResults(Integer.valueOf(results.items.get(0).getVariantKey()));
-	//	} catch (Exception e) {
-		//	results.setError("Failed : create", e.getMessage(), Constants.HTTP_SERVER_ERROR);
-	//		return results;
-	//	}
+			results = variantService.getResults(Integer.valueOf(results.items.get(0).getVariantKey()));
+		} catch (Exception e) {
+			results.setError("Failed : create", e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			return results;
+		}
 		
 		return results;
 	}

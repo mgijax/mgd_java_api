@@ -2,26 +2,26 @@ package org.jax.mgi.mgd.api.model.acc.controller;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.acc.domain.MGITypeDomain;
-import org.jax.mgi.mgd.api.model.acc.search.MGITypeSearchForm;
+import org.jax.mgi.mgd.api.model.acc.domain.SlimMGITypeDomain;
 import org.jax.mgi.mgd.api.model.acc.service.MGITypeService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Path("/mgitype")
 @Api(value = "MGI Type Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class MGITypeController extends BaseController<MGITypeDomain> implements BaseSearchInterface<MGITypeDomain, MGITypeSearchForm> {
+public class MGITypeController extends BaseController<MGITypeDomain> {
 
 	@Inject
 	private MGITypeService mgitypeService;
@@ -46,9 +46,11 @@ public class MGITypeController extends BaseController<MGITypeDomain> implements 
 		return mgitypeService.delete(key, user);
 	}
 
-	@Override
-	public SearchResults<MGITypeDomain> search(MGITypeSearchForm searchForm) {
-		return mgitypeService.search(searchForm);
+	@POST
+	@ApiOperation(value = "Search")
+	@Path("/search")	
+	public SearchResults<SlimMGITypeDomain> search(SlimMGITypeDomain searchDomain) {
+		return mgitypeService.search(searchDomain);
 	}
-	
+		
 }

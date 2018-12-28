@@ -4,10 +4,11 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -36,15 +37,15 @@ public class MGIType extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
-	@ManyToMany
+	@OneToMany
 	@JoinTable(name = "mgi_organism_mgitype",
 		joinColumns = @JoinColumn(name = "_mgitype_key"),
 		inverseJoinColumns = @JoinColumn(name = "_organism_key")

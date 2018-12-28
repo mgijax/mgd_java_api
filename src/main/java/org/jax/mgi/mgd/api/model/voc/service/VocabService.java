@@ -68,12 +68,11 @@ public class VocabService extends BaseService<VocabularyDomain> {
 
 	@Transactional
 	public SearchResults<SlimVocabularyDomain> search(SlimVocabularyDomain searchDomain) {	
-		// verify that the vocabulary is valid
+		// search for 1 vocabulary
+		// assumes that either key or  name is being searched
 		// returns empty result items if vocabulary does not exist
 		// returns SlimVocabularyDomain results if vocabulary does exist
-	
-		// this is assuming that you are returning 1 vocabulary
-		
+			
 		SearchResults<SlimVocabularyDomain> results = new SearchResults<SlimVocabularyDomain>();
 
 		// building SQL command : select + from + where + orderBy

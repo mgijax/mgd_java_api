@@ -98,10 +98,6 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
 			where = where + "\nand v.name ilike '" + searchDomain.getName() + "'";
 		}
-		// for backward compatibility with gxd/littriage 	
-		if (searchDomain.getVocabName() != null && !searchDomain.getVocabName().isEmpty()) {
-			where = where + "\nand v.name ilike '" + searchDomain.getVocabName() + "'";
-		}
 		
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
@@ -117,7 +113,6 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		
 				domain.setVocabKey(rs.getString("_vocab_key"));
 				domain.setName(rs.getString("name"));
-				domain.setVocabName(rs.getString("name"));
 				termDomain.setTermKey(rs.getString("_term_key"));
 				termDomain.set_term_key(rs.getInt("_term_key"));
 				termDomain.setTerm(rs.getString("term"));
@@ -136,49 +131,4 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		return results;
 	}
 
-	@Transactional
-	public SearchResults<SlimVocabularyDomain> validVocabName(String value) {
-		// verify that the vocabulary is valid
-		// returns empty result items if vocabulary does not exist
-		// returns SlimVocabularyDomain results if vocabulary does exist
-	
-		SearchResults<SlimVocabularyDomain> results = new SearchResults<SlimVocabularyDomain>();
-
-		String cmd = "select v.*, t._term_key, t.term, t.abbreviation"
-				+ "\nfrom voc_term t, voc_vocab v"
-				+ "\nwhere t._vocab_key = v._vocab_key"
-				+ "\nand v.name ilike '" + value + "'";
-		log.info(cmd);
-
-		try {
-			SlimVocabularyDomain domain = new SlimVocabularyDomain();						
-			List<SlimTermDomain> termList = new ArrayList<SlimTermDomain>();
-			
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {	
-				SlimTermDomain termDomain = new SlimTermDomain();				
-		
-				// always the same
-				domain.setVocabKey(rs.getString("_vocab_key"));
-				domain.setName(rs.getString("name"));
-				domain.setVocabName(rs.getString("name"));
-
-				// > 1 term per vocabulary
-				termDomain.setTermKey(rs.getString("_term_key"));
-				termDomain.setTerm(rs.getString("term"));
-				termDomain.setAbbreviation(rs.getString("abbreviation"));
-				termList.add(termDomain);		
-			}
-			
-			domain.setTerms(termList);
-			results.setItem(domain);			
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
-			
 }

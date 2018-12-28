@@ -52,12 +52,5 @@ public class VocabController extends BaseController<VocabularyDomain> {
 	public SearchResults<SlimVocabularyDomain> search(SlimVocabularyDomain searchDomain) {
 		return vocabService.search(searchDomain);
 	}
-
-	@POST
-	@ApiOperation(value = "Valid Vocab by Name")
-	@Path("/validVocabName")
-	public SearchResults<SlimVocabularyDomain> validVocabName(String value) {
-		return vocabService.validVocabName(value);
-	}
-		
+	
 }

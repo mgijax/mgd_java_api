@@ -16,8 +16,6 @@ public class SlimVocabularyTranslator extends BaseEntityDomainTranslator<Vocabul
 		
 		domain.setVocabKey(String.valueOf(entity.get_vocab_key()));
 		domain.setName(entity.getName());
-		// for backward compatibility with gxd/littriage 
-		domain.setVocabName(entity.getName());
 		Iterable<SlimTermDomain> terms = termTranslator.translateEntities(entity.getTerms(), translationDepth - 1);
 		domain.setTerms(IteratorUtils.toList(terms.iterator()));
 		

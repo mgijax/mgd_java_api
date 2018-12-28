@@ -14,8 +14,6 @@ public class SlimVocabularyDomain extends BaseDomain {
 
 	private String vocabKey;
 	private String name;
-	// for backward compatibility with gxd/littriage 	
-	private String vocabName;
 	private List<SlimTermDomain> terms;
 
 }

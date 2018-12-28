@@ -20,8 +20,7 @@ import org.jax.mgi.mgd.api.model.mgi.domain.ApiLogDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.ApiLogService;
 import org.jax.mgi.mgd.api.model.mgi.service.UserService;
-import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
-import org.jax.mgi.mgd.api.model.voc.search.TermSearchForm;
+import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.CommaSplitter;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -149,11 +148,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 			results.setError("Failed", "Unknown status value: null", Constants.HTTP_BAD_REQUEST);
 			return results;
 		} else {
-			TermSearchForm form = new TermSearchForm();
-			form.setVocabName("Workflow Status");
-			form.setTerm(status);
-			
-			SearchResults<TermDomain> terms = termService.search(form);
+			SearchResults<SlimTermDomain> terms = termService.validWorkflowStatus(status);
 			if (terms.total_count == 0) {
 				results.setError("Failed", "Unknown status term: " + status, Constants.HTTP_NOT_FOUND);
 				return results;

@@ -59,6 +59,7 @@ public class MGISynonymTypeService extends BaseService<MGISynonymTypeDomain> {
 		return null;
 	}
 
+	@Transactional	
 	public List<MGISynonymTypeDomain> search() {
 
 		List<MGISynonymTypeDomain> results = new ArrayList<MGISynonymTypeDomain>();

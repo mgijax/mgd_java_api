@@ -2,25 +2,26 @@ package org.jax.mgi.mgd.api.model.voc.controller;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.domain.SlimVocabularyDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.VocabularyDomain;
-import org.jax.mgi.mgd.api.model.voc.search.VocabularySearchForm;
 import org.jax.mgi.mgd.api.model.voc.service.VocabService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Path("/vocab")
 @Api(value = "Vocab Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class VocabController extends BaseController<VocabularyDomain> implements BaseSearchInterface<VocabularyDomain, VocabularySearchForm> {
+public class VocabController extends BaseController<VocabularyDomain> {
 
 	@Inject
 	private VocabService vocabService;
@@ -45,9 +46,18 @@ public class VocabController extends BaseController<VocabularyDomain> implements
 		return vocabService.delete(key, user);
 	}
 
-	@Override
-	public SearchResults<VocabularyDomain> search(VocabularySearchForm form) {
-		return vocabService.search(form);
+	@POST
+	@ApiOperation(value = "Search")
+	@Path("/search")	
+	public SearchResults<SlimVocabularyDomain> search(SlimVocabularyDomain searchDomain) {
+		return vocabService.search(searchDomain);
 	}
 
+	@POST
+	@ApiOperation(value = "Valid Vocab by Name")
+	@Path("/validVocabName")
+	public SearchResults<SlimVocabularyDomain> validVocabName(String value) {
+		return vocabService.validVocabName(value);
+	}
+		
 }

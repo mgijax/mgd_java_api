@@ -59,6 +59,7 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 		return null;
 	}
 
+	@Transactional	
 	public List<RelationshipDomain> markerTSS(Integer key) {
 
 		List<RelationshipDomain> results = new ArrayList<RelationshipDomain>();

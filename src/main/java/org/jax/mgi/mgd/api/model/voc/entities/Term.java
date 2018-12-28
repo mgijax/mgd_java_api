@@ -9,7 +9,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
+import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
 import lombok.Getter;
@@ -42,10 +44,10 @@ public class Term extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	//@OneToOne(fetch=FetchType.LAZY)
-	//@JoinColumn(name="_term_key", referencedColumnName="_object_key")
-	//@Where(clause="`_mgitype_key` = 13 AND preferred = 1 AND `_logicaldb_key` = 1")
-	//private Accession mgiTermAccessionId;
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_term_key", referencedColumnName="_object_key")
+	@Where(clause="`_mgitype_key` = 13 and preferred = 1")
+	private Accession accessionId;
 	
 	//@OneToMany
 	//@JoinColumn(name="_object_key", referencedColumnName="_term_key")

@@ -59,6 +59,7 @@ public class MGIRefAssocTypeService extends BaseService<MGIRefAssocTypeDomain> {
 		return null;
 	}
 
+	@Transactional	
 	public List<MGIRefAssocTypeDomain> search() {
 
 		List<MGIRefAssocTypeDomain> results = new ArrayList<MGIRefAssocTypeDomain>();

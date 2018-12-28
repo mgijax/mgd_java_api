@@ -63,6 +63,7 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 		return null;
 	}
 
+	@Transactional	
 	public List<MGISynonymDomain> marker(Integer key) {
 
 		List<MGISynonymDomain> results = new ArrayList<MGISynonymDomain>();

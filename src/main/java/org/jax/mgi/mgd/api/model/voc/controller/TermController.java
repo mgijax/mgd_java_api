@@ -1,27 +1,30 @@
 package org.jax.mgi.mgd.api.model.voc.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.BaseSearchInterface;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
-import org.jax.mgi.mgd.api.model.voc.search.TermSearchForm;
 import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Path("/term")
 @Api(value = "Term Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class TermController extends BaseController<TermDomain> implements BaseSearchInterface<TermDomain, TermSearchForm> {
+public class TermController extends BaseController<TermDomain> {
 
 	@Inject
 	private TermService termService;
@@ -46,9 +49,27 @@ public class TermController extends BaseController<TermDomain> implements BaseSe
 		return termService.delete(key, user);
 	}
 
-	@Override
-	public SearchResults<TermDomain> search(TermSearchForm searchForm) {
-		return termService.search(searchForm);
+	@POST
+	@ApiOperation(value = "Search")
+	@Path("/search")
+	public List<TermDomain> search(TermDomain searchDomain) {
+			
+		List<TermDomain> results = new ArrayList<TermDomain>();
+		
+		try {
+			results = termService.search(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
 	}
-	
+
+	@POST
+	@ApiOperation(value = "Valid Workflow Status")
+	@Path("/validWorkflowStatus")
+	public SearchResults<SlimTermDomain> validWorkflowStatus(String status) {
+		return termService.validWorkflowStatus(status);
+	}
+		
 }

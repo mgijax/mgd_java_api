@@ -59,6 +59,7 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		return null;
 	}
 
+	@Transactional	
 	public List<OrganismDomain> search() {
 
 		List<OrganismDomain> results = new ArrayList<OrganismDomain>();

@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.mgi.dao.UserDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.SlimUserDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.UserDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -23,11 +24,11 @@ import org.jboss.logging.Logger;
 @RequestScoped
 public class UserService extends BaseService<UserDomain> {
 
+	protected Logger log = Logger.getLogger(UserService.class);
+	
 	@Inject
 	private UserDAO userDAO;
 	
-	private Logger log = Logger.getLogger(getClass());
-
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional

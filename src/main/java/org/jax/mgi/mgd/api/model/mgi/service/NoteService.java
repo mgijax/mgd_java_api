@@ -60,6 +60,7 @@ public class NoteService extends BaseService<NoteDomain> {
 		return null;
 	}
 
+	@Transactional	
 	public List<NoteDomain> marker(Integer key) {
 
 		List<NoteDomain> results = new ArrayList<NoteDomain>();

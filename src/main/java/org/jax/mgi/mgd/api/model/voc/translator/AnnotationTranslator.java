@@ -22,7 +22,7 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
 		domain.setQualifier(entity.getQualifier().getTerm());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-				
+	
 		return domain;
 	}
 

@@ -61,7 +61,8 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 	//
 	// get list of annotation domains by using sqlExecutor
 	//
-		
+	
+	@Transactional
 	private List<AnnotationDomain> getAnnotationDomainList(String cmd) {
 
 		// list of results to be returned
@@ -95,15 +96,17 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 		return results;
 	}
 	
+	@Transactional	
 	public List<MarkerFeatureTypeDomain> markerFeatureTypes(Integer key) {
-
+		// list of marker/feature type domains for given marker
+		
 		List<MarkerFeatureTypeDomain> results = new ArrayList<MarkerFeatureTypeDomain>();
 		
 		String cmd = "\nselect t._term_key, t.term, a.*"
 				+ "\nfrom VOC_Annot v, VOC_Term t, ACC_Accession a"
 				+ "\nwhere v._annottype_key = 1011"
 				+ "\nand v._term_key = t._term_key"
-				+ "\nand v._object_key = a._object_key"
+				+ "\nand v._term_key = a._object_key"
 				+ "\nand a._logicaldb_key = 146"
 				+ "\nand v._object_key = " + key;		
 		log.info(cmd);
@@ -116,9 +119,8 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				domain.setTermKey(rs.getString("_term_key"));
 				domain.setTerm(rs.getString("term"));
 				
-				SlimAccessionDomain accDomain = new SlimAccessionDomain();
-				List<SlimAccessionDomain> accession = new ArrayList<SlimAccessionDomain>();				
-				accDomain.setAccessionKey(rs.getString("accessionKey"));
+				SlimAccessionDomain accDomain = new SlimAccessionDomain();				
+				accDomain.setAccessionKey(rs.getString("_accession_key"));
 				accDomain.setLogicaldbKey(rs.getString("_logicaldb_key"));
 				accDomain.setObjectKey(rs.getString("_object_key"));
 				accDomain.setMgiTypeKey(rs.getString("_mgitype_key"));
@@ -126,8 +128,8 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				accDomain.setPrefixPart(rs.getString("prefixPart"));
 				accDomain.setNumericPart(rs.getString("numericPart"));
 				//accDomain.setIsPrivate(rs.getString("isPrivate"));
-				//accDomain.setPreferred(rs.getString("preferred"));		
-				domain.setMarkerFeatureTypeIds(accession);
+				//accDomain.setPreferred(rs.getString("preferred"));
+				domain.setMarkerFeatureTypeId(accDomain);
 
 				results.add(domain);
 			}

@@ -1,12 +1,11 @@
 package org.jax.mgi.mgd.api.model.voc.entities;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -30,21 +29,23 @@ public class Annotation extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_annottype_key")
 	private AnnotationType annotType;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_term_key")
 	private Term term;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_qualifier_key", referencedColumnName="_term_key")
 	private Term qualifier;
 
-	@OneToMany
-	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 13 and `_logicaldb_key` = 146 and preferred = 1")
-	private List<Accession> markerFeatureTypeIds;
+	// marker feature type:  from _annottype_key = 1011
+	// _term_key is the feature type, _object_key is the marker
+	@OneToOne()
+	@JoinColumn(name="_term_key", referencedColumnName="_object_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 13 and `_logicaldb_key` = 146")
+	private Accession markerFeatureTypeId;
 	
 }

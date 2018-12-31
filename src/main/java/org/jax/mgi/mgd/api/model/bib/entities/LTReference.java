@@ -174,7 +174,7 @@ public class LTReference extends BaseEntity {
 			if ((ldb == null) || (ldb.equals(accID.getLogicaldb().get_logicaldb_key()))) {
 				if ((prefix == null) || prefix.equals(accID.getPrefixPart())) {
 					if ((preferred == null) || (preferred.equals(accID.getPreferred()))) {
-						if ((isPrivate == null) || (isPrivate.equals(accID.getIs_private()))) {
+						if ((isPrivate == null) || (isPrivate.equals(accID.getIsPrivate()))) {
 							return accID.getAccID();
 						}
 					}

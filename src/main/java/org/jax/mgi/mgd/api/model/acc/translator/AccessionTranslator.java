@@ -25,7 +25,7 @@ public class AccessionTranslator extends BaseEntityDomainTranslator<Accession, A
 		domain.setAccID(entity.getAccID());
 		domain.setPrefixPart(entity.getPrefixPart());
 		domain.setNumericPart(String.valueOf(entity.getNumericPart()));	
-		domain.setIsPrivate(String.valueOf(entity.getIs_private()));
+		domain.setIsPrivate(String.valueOf(entity.getIsPrivate()));
 		domain.setPreferred(String.valueOf(entity.getPreferred()));
 		
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());

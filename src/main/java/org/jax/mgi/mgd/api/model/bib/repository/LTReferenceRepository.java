@@ -453,7 +453,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				// Otherwise, we can update the ID and other data for this logical database.
 				Accession myID = ids.get(idPos);
 				myID.setAccID(accID);
-				myID.setIs_private(isPrivate);
+				myID.setIsPrivate(isPrivate);
 				myID.setPreferred(preferred);
 				myID.setPrefixPart(prefixPart);
 				myID.setNumericPart(numericPart);
@@ -469,7 +469,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			myID.set_accession_key(accessionDAO.getNextKey());
 			myID.setAccID(accID);
 			myID.setPreferred(preferred);
-			myID.setIs_private(isPrivate);
+			myID.setIsPrivate(isPrivate);
 			myID.setLogicaldb(logicaldbDAO.get(ldb));
 			myID.set_object_key(entity.get_refs_key());
 			myID.setMgiType(mgiTypeDAO.get(Constants.TYPE_REFERENCE));

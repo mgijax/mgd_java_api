@@ -141,6 +141,8 @@ public abstract class BaseController<T extends BaseDomain> {
 
 	public abstract SearchResults<T> create(T object, User user);
 	public abstract T get(Integer key);
+	//this perhaps should be added to all controllers
+	//public abstract SearchResults<T> getResults(Integer key);
 	public abstract SearchResults<T> update(T object, User user);
 	public abstract SearchResults<T> delete(Integer key, User user);
 

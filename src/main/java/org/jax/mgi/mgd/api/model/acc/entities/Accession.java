@@ -33,7 +33,7 @@ public class Accession extends BaseEntity {
 	private Integer numericPart;
 	private Integer _object_key;
 	@Column(name="private")		// just "private" is a Java reserved word
-	private Integer is_private;
+	private Integer isPrivate;
 	private Integer preferred;
 	private Date creation_date;
 	private Date modification_date;

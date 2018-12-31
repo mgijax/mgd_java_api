@@ -58,13 +58,13 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 		return null;
 	}
 
-	//
-	// get list of annotation domains by using sqlExecutor
-	//
-	
+
 	@Transactional
 	private List<AnnotationDomain> getAnnotationDomainList(String cmd) {
-
+		//
+		// get list of annotation domains by using sqlExecutor
+		//
+		
 		// list of results to be returned
 		List<AnnotationDomain> results = new ArrayList<AnnotationDomain>();
 

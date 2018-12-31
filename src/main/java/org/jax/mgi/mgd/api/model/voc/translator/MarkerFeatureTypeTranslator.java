@@ -13,7 +13,6 @@ public class MarkerFeatureTypeTranslator extends BaseEntityDomainTranslator<Anno
 
 		domain.setTermKey(String.valueOf(entity.getTerm().get_term_key()));
 		domain.setTerm(entity.getTerm().getTerm());
-		
 		SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
 		domain.setMarkerFeatureTypeId(accessionTranslator.translate(entity.getMarkerFeatureTypeId()));
 				

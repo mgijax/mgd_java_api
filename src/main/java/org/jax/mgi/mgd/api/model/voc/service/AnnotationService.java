@@ -107,6 +107,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				+ "\nwhere v._annottype_key = 1011"
 				+ "\nand v._term_key = t._term_key"
 				+ "\nand v._term_key = a._object_key"
+				+ "\nand a._mgitype_key = 13"
 				+ "\nand a._logicaldb_key = 146"
 				+ "\nand v._object_key = " + key;		
 		log.info(cmd);

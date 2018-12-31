@@ -1,12 +1,11 @@
 package org.jax.mgi.mgd.api.model.voc.entities;
 
 import java.util.Date;
-import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -29,23 +28,23 @@ public class AnnotationType extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_mgitype_key")
 	private MGIType mgiType;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_vocab_key")
 	private Vocabulary vocab;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_evidencevocab_key", referencedColumnName="_vocab_key")
 	private Vocabulary evidenceVocab;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_qualifiervocab_key", referencedColumnName="_vocab_key")
 	private Vocabulary qualifierVocab;
 	
-	@OneToMany
-	@JoinColumn(name="_anottype_key")
-	private Set<Annotation> annotations;
+	//@OneToMany(fetch=FetchType.LAZY)
+	//@JoinColumn(name="_anottype_key")
+	//private Set<Annotation> annotations;
 }

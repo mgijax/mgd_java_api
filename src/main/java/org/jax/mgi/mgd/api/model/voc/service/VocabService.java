@@ -32,19 +32,11 @@ public class VocabService extends BaseService<VocabularyDomain> {
 	
 	@Transactional
 	public SearchResults<VocabularyDomain> create(VocabularyDomain object, User user) {
-		//Vocabulary vocab = translator.translate(object);
-		//Vocabulary returnVocab = vocabularyDAO.create(vocab);
-		//VocabularyDomain vocabDomain = translator.translate(returnVocab);
-		//return vocabDomain;
 		return null;
 	}
 
 	@Transactional
 	public SearchResults<VocabularyDomain> update(VocabularyDomain object, User user) {
-		//Vocabulary vocab = translator.translate(object);
-		//Vocabulary returnVocab = vocabularyDAO.update(vocab);
-		//VocabularyDomain vocabDomain = translator.translate(returnVocab);
-		//return vocabDomain;
 		return null;
 	}
 
@@ -62,7 +54,6 @@ public class VocabService extends BaseService<VocabularyDomain> {
     
 	@Transactional
 	public SearchResults<VocabularyDomain> delete(Integer key, User user) {
-        // TODO Auto-generated method stub
 		return null;
 	}
 

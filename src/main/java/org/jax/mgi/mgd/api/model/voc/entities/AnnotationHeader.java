@@ -3,14 +3,13 @@ package org.jax.mgi.mgd.api.model.voc.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
-import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
 import io.swagger.annotations.ApiModel;
@@ -32,28 +31,28 @@ public class AnnotationHeader extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_annottype_key")
 	private AnnotationType annotType;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_term_key")
 	private Term headerTerm;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_approvedby_key", referencedColumnName="_user_key")
 	private User approvedBy;
 	
-	@OneToOne
-	@JoinColumn(name="_object_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
-	@Where(clause="annotType.`_mgitype_key` = 12")
-	private Genotype genotype;
+	//@OneToOne(fetch=FetchType.LAZY)
+	//@JoinColumn(name="_object_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
+	//@Where(clause="annotType.`_mgitype_key` = 12")
+	//private Genotype genotype;
 }

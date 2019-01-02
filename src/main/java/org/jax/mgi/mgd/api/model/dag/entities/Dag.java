@@ -27,7 +27,7 @@ import lombok.Setter;
 public class Dag extends BaseEntity {
 
 	@Id
-	private Integer _dag_key;
+	private int _dag_key;
 	private String name;
 	private String abbreviation;
 	private Date creation_date;

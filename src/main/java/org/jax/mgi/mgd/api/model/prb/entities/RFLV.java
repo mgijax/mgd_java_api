@@ -23,7 +23,7 @@ import lombok.Setter;
 public class RFLV extends BaseEntity {
 
 	@Id
-	private Integer _rflv_key;
+	private int _rflv_key;
 	private String endonuclease;
 	private Date creation_date;
 	private Date modification_date;

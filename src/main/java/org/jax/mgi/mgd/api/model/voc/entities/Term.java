@@ -23,12 +23,12 @@ import lombok.Setter;
 public class Term extends BaseEntity {
 
 	@Id
-	private Integer _term_key;
+	private int _term_key;
 	private String term;
 	private String abbreviation;
 	private String note;
-	private Integer sequenceNum;
-	private Integer isObsolete = 0;
+	private int sequenceNum;
+	private int isObsolete = 0;
 	private Date creation_date;
 	private Date modification_date;
 

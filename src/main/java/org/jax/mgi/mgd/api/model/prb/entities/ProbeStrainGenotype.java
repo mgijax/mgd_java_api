@@ -24,7 +24,7 @@ import lombok.Setter;
 
 public class ProbeStrainGenotype extends BaseEntity{
 	@Id
-	private Integer _straingenotype_key;
+	private int _straingenotype_key;
 	private Date creation_date;
 	private Date modification_date;
 	

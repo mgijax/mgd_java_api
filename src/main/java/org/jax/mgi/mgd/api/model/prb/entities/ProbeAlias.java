@@ -22,7 +22,7 @@ import lombok.Setter;
 public class ProbeAlias extends BaseEntity {
 
 	@Id
-	private Integer _alias_key;
+	private int _alias_key;
 	private String alias;
 	private Date creation_date;
 	private Date modification_date;

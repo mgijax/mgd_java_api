@@ -23,9 +23,9 @@ import lombok.Setter;
 public class ProbeReference extends BaseEntity {
 
 	@Id
-	private Integer _reference_key;
-	private Integer hasRmap;
-	private Integer hasSequence;
+	private int _reference_key;
+	private int hasRmap;
+	private int hasSequence;
 	private Date creation_date;
 	private Date modification_date;
 	

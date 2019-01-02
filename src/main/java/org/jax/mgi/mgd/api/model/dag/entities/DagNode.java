@@ -17,7 +17,7 @@ import lombok.Setter;
 public class DagNode extends BaseEntity {
 
 	@Id
-	private Integer _node_key;
+	private int _node_key;
 
 
 }

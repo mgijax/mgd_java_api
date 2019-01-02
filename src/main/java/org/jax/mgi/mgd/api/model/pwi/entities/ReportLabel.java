@@ -17,7 +17,7 @@ import lombok.Setter;
 public class ReportLabel extends BaseEntity {
 
 	@Id
-	private Integer id;
-	private Integer report_id;
+	private int id;
+	private int report_id;
 	private String label;
 }

@@ -19,7 +19,7 @@ import lombok.Setter;
 public class DagLabel extends BaseEntity {
 
 	@Id
-	private Integer _label_key;
+	private int _label_key;
 	private String label;
 	private Date creation_date;
 	private Date modification_date;

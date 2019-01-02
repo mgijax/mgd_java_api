@@ -13,9 +13,11 @@ import lombok.Setter;
 @ApiModel
 public class VocabularyDomain extends BaseDomain {
 
-	private Integer _vocab_key;
-	private Integer isSimple;
-	private Integer isPrivate;
+	private String vocabKey;
+	// for backward compatibilty with gxd/ht
+	//private int _vocab_key;
+	private int isSimple;
+	private int isPrivate;
 	private String name;
 	private Date creation_date;
 	private Date modification_date;

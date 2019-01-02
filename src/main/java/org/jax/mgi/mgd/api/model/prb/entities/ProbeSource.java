@@ -26,13 +26,13 @@ import lombok.Setter;
 public class ProbeSource extends BaseEntity {
 
 	@Id
-	private Integer _source_key;
+	private int _source_key;
 	private String name;
 	private String description;
 	private String age;
-	private Integer ageMin;
-	private Integer ageMax;
-	private Integer isCuratorEdited;
+	private int ageMin;
+	private int ageMax;
+	private int isCuratorEdited;
 	private Date creation_date;
 	private Date modification_date;
 	

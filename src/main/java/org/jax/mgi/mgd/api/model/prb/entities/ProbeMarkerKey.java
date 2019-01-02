@@ -9,6 +9,6 @@ import lombok.Data;
 @Data
 @Embeddable
 public class ProbeMarkerKey implements Serializable {
-	private Integer _probe_key;
-	private Integer _marker_key;
+	private int _probe_key;
+	private int _marker_key;
 }

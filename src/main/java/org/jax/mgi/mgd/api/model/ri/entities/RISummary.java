@@ -24,7 +24,7 @@ import lombok.Setter;
 public class RISummary extends BaseEntity {
 
 	@Id
-	private Integer _risummary_key;
+	private int _risummary_key;
 	private String summary;
 	private Date creation_date;
 	private Date modification_date;

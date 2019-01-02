@@ -23,10 +23,10 @@ import lombok.Setter;
 public class AnnotationHeader extends BaseEntity {
 
 	@Id
-	private Integer _annotHeader_key;
-	private Integer _object_key;
-	private Integer sequenceNum;
-	private Integer isNormal;
+	private int _annotHeader_key;
+	private int _object_key;
+	private int sequenceNum;
+	private int isNormal;
 	private Date approval_date;
 	private Date creation_date;
 	private Date modification_date;

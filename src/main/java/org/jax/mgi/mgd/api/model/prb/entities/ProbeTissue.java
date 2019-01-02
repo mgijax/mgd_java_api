@@ -19,9 +19,9 @@ import lombok.Setter;
 public class ProbeTissue extends BaseEntity {
 
 	@Id
-	private Integer _tissue_key;
+	private int _tissue_key;
 	private String tissue;
-	private Integer standard;
+	private int standard;
 	private Date creation_date;
 	private Date modification_date;
 }

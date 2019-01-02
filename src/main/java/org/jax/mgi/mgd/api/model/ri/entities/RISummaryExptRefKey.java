@@ -9,6 +9,6 @@ import lombok.Data;
 @Data
 @Embeddable
 public class RISummaryExptRefKey implements Serializable {
-	private Integer _risummary_key;
-	private Integer _expt_key;
+	private int _risummary_key;
+	private int _expt_key;
 }

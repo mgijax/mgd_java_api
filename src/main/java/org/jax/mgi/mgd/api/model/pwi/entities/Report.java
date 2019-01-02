@@ -19,7 +19,7 @@ import lombok.Setter;
 public class Report extends BaseEntity {
 
 	@Id
-	private Integer id;
+	private int id;
 	private String name;
 	private String description;
 	private String sql_text;

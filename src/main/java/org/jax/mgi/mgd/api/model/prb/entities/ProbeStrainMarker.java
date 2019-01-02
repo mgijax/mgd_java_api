@@ -25,7 +25,7 @@ import lombok.Setter;
 
 public class ProbeStrainMarker extends BaseEntity{
 	@Id
-	private Integer _strainmarker_key;
+	private int _strainmarker_key;
 	private Date creation_date;
 	private Date modification_date;
 	

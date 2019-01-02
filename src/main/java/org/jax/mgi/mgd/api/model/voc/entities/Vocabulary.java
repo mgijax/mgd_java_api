@@ -26,7 +26,7 @@ import lombok.Setter;
 public class Vocabulary extends BaseEntity {
 
 	@Id
-	private Integer _vocab_key;
+	private int _vocab_key;
 	Integer isSimple;
 	Integer isPrivate;
 	private String name;

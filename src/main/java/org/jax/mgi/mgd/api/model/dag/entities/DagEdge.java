@@ -21,8 +21,8 @@ import lombok.Setter;
 public class DagEdge extends BaseEntity {
 
 	@Id
-	private Integer _edge_key;
-	private Integer sequenceNum;
+	private int _edge_key;
+	private int sequenceNum;
 	private Date creation_date;
 	private Date modification_date;
 

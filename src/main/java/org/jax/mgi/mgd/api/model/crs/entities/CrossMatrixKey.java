@@ -9,6 +9,6 @@ import lombok.Data;
 @Data
 @Embeddable
 public class CrossMatrixKey implements Serializable {
-	private Integer _cross_key;
-	private Integer rowNumber;
+	private int _cross_key;
+	private int rowNumber;
 }

@@ -14,7 +14,9 @@ public class VocabularyTranslator extends BaseEntityDomainTranslator<Vocabulary,
 	protected VocabularyDomain entityToDomain(Vocabulary entity, int translationDepth) {
 		VocabularyDomain domain = new VocabularyDomain();
 		
-		domain.set_vocab_key(entity.get_vocab_key());
+		domain.setVocabKey(String.valueOf(entity.get_vocab_key()));
+		// for backward compatibilty with gxd/ht
+		//domain.set_vocab_key(entity.get_vocab_key());
 		domain.setIsSimple(entity.getIsSimple());
 		domain.setIsPrivate(entity.getIsPrivate());
 		domain.setName(entity.getName());

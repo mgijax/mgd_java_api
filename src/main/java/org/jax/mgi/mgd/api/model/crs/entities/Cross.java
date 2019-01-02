@@ -25,7 +25,7 @@ import lombok.Setter;
 public class Cross extends BaseEntity {
 
 	@Id
-	private Integer _cross_key;
+	private int _cross_key;
 	private String type;
 	private String femaleAllele1;
 	private String femaleAllele2;
@@ -34,10 +34,10 @@ public class Cross extends BaseEntity {
 	private String abbrevHO;
 	private String abrevHT;
 	private String whoseCross;
-	private Integer alleleFromSegParent;
-	private Integer F1DirectionKnown;
-	private Integer nProgeny;
-	private Integer displayed;
+	private int alleleFromSegParent;
+	private int F1DirectionKnown;
+	private int nProgeny;
+	private int displayed;
 	private Date creation_date;
 	private Date modification_date;
 	

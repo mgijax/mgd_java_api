@@ -31,9 +31,9 @@ import lombok.Setter;
 public class Probe extends BaseEntity {
 
 	@Id
-	private Integer _probe_key;
+	private int _probe_key;
 	private String name;
-	private Integer derivedFrom;
+	private int derivedFrom;
 	private String primer1sequence;
 	private String primer2sequence;
 	private String regionCovered;

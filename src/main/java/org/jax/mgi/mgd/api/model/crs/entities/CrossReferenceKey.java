@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 @Embeddable
 public class CrossReferenceKey implements Serializable {
-	private Integer _cross_key;
-	private Integer _marker_key;
-	private Integer _refs_key;
+	private int _cross_key;
+	private int _marker_key;
+	private int _refs_key;
 }

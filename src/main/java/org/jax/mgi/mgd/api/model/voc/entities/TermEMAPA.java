@@ -23,9 +23,9 @@ import lombok.Setter;
 public class TermEMAPA extends BaseEntity {
 
 	@Id
-	private Integer _Term_key;
-	private Integer startStage;
-	private Integer endStage;
+	private int _Term_key;
+	private int startStage;
+	private int endStage;
 	private Date creation_date;
 	private Date modification_date;
 	

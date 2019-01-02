@@ -22,7 +22,7 @@ import lombok.Setter;
 public class ProbeAllele extends BaseEntity {
 
 	@Id
-	private Integer _allele_key;
+	private int _allele_key;
 	private String allele;
 	private String fragments;
 	private Date creation_date;

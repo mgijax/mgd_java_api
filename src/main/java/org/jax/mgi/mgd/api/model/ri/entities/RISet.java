@@ -22,7 +22,7 @@ import lombok.Setter;
 public class RISet extends BaseEntity {
 
 	@Id
-	private Integer _riset_key;
+	private int _riset_key;
 	private String designation;
 	private String abbrev1;
 	private String abbrev2;

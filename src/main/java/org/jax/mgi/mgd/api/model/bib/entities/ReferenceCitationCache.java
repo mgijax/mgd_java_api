@@ -17,7 +17,7 @@ import lombok.Setter;
 public class ReferenceCitationCache extends BaseEntity {
 	@Id
 	private int _refs_key;
-	private Integer numericPart;
+	private int numericPart;
 	private String jnumid;
 	private String mgiid;
 	private String pubmedid;

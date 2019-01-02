@@ -23,7 +23,7 @@ import lombok.Setter;
 public class TermEMAPS extends BaseEntity {
 
 	@Id
-	private Integer _Term_key;
+	private int _Term_key;
 	private Date creation_date;
 	private Date modification_date;
 

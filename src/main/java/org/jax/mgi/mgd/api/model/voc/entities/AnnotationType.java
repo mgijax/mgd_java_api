@@ -23,7 +23,7 @@ import lombok.Setter;
 public class AnnotationType extends BaseEntity {
 
 	@Id
-	private Integer _annotType_key;
+	private int _annotType_key;
 	private String name;
 	private Date creation_date;
 	private Date modification_date;

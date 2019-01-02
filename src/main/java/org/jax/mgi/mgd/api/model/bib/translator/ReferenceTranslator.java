@@ -24,7 +24,7 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		domain.setDate(entity.getDate());
 		domain.setIsReviewArticle(String.valueOf(entity.getIsReviewArticle()));
 		domain.setIsDiscard(String.valueOf(entity.getIsDiscard()));
-		domain.setReferenceTypeKey(entity.getReferenceType().get_term_key().toString());
+		domain.setReferenceTypeKey(String.valueOf(entity.getReferenceType().get_term_key()));
 		domain.setReferenceType(entity.getReferenceType().getTerm());
 		domain.setJnumID(entity.getReferenceCitationCache().getJnumid());
 		domain.setJnum(String.valueOf(entity.getReferenceCitationCache().getNumericPart()));		

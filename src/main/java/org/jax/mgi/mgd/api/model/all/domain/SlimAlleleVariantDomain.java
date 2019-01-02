@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class SlimAlleleDomain extends BaseDomain {
+public class SlimAlleleVariantDomain extends BaseDomain {
 
 	// a slim version of AlleleDomain 
 	// not to be used when editing purposes
@@ -18,7 +18,8 @@ public class SlimAlleleDomain extends BaseDomain {
 	
 	private String alleleKey;
 	private String symbol;
-	private String chromosome;
+	private String chromosome; // marker chromosome
+	private String strand; // marker strand
 	private List<AccessionDomain> mgiAccessionIds;
 	private SlimMGIReferenceAssocDomain references;
 	

@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.all.translator;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.VariantSequenceDomain;
 import org.jax.mgi.mgd.api.model.all.entities.VariantSequence;
+import org.jax.mgi.mgd.api.util.Constants;
 
 public class VariantSequenceTranslator extends BaseEntityDomainTranslator<VariantSequence, VariantSequenceDomain> {
 	
@@ -21,7 +22,7 @@ public class VariantSequenceTranslator extends BaseEntityDomainTranslator<Varian
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-		
+		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		return domain;
 	}
 

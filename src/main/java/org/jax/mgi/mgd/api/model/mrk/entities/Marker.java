@@ -72,6 +72,10 @@ public class Marker extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
+	private MarkerLocationCache locationCache;
+	
 	// insertable/updatable=false will ignore dereferencing these objects
 	// postgres trigger will delete the child object if the parent is deleted
 	

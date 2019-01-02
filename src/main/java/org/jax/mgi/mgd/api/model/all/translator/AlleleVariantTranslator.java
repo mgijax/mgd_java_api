@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.all.translator;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
 import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeStrainTranslator;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleVariantDomain;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleVariant;
 
@@ -23,7 +24,7 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-
+		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		// using slim domains
 		domain.setAllele(alleleTranslator.translate(entity.getAllele()));
 		domain.setStrain(strainTranslator.translate(entity.getStrain()));

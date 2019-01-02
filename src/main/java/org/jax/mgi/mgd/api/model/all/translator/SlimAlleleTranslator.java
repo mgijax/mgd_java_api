@@ -4,21 +4,22 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
-import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleVariantDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
 
-public class SlimAlleleTranslator extends BaseEntityDomainTranslator<Allele, SlimAlleleDomain> {
+public class SlimAlleleTranslator extends BaseEntityDomainTranslator<Allele, SlimAlleleVariantDomain> {
 
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	
 	@Override
-	protected SlimAlleleDomain entityToDomain(Allele entity, int translationDepth) {
+	protected SlimAlleleVariantDomain entityToDomain(Allele entity, int translationDepth) {
 		
-		SlimAlleleDomain domain = new SlimAlleleDomain();
+		SlimAlleleVariantDomain domain = new SlimAlleleVariantDomain();
 		domain.setAlleleKey(String.valueOf(entity.get_allele_key()));
 		domain.setSymbol(entity.getSymbol());
 		//domain.setMgiAccessionId(entity.getMgiAccessionId().getAccID());
 		domain.setChromosome(entity.getMarker().getChromosome());
+		domain.setStrand(entity.getMarker().getLocationCache().getStrand());
 		
 
 		// mgi accession ids only
@@ -33,7 +34,7 @@ public class SlimAlleleTranslator extends BaseEntityDomainTranslator<Allele, Sli
 	}
 
 	@Override
-	protected Allele domainToEntity(SlimAlleleDomain domain, int translationDepth) {
+	protected Allele domainToEntity(SlimAlleleVariantDomain domain, int translationDepth) {
 		// TODO Auto-generated method stub
 		return null;
 	}

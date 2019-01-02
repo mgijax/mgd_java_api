@@ -21,11 +21,10 @@ import lombok.Setter;
 @ApiModel(value = "MAP Coordinate Model Object")
 @Table(name="map_coordinate")
 public class Coordinate extends BaseEntity {
-
 	@Id
-	private int _map_key;
-	private int length;
-	private int sequenceNum;
+	private String mapKey;
+	private String length;
+	private String sequenceNum;
 	private String name;
 	private String abbreviation;
 	private String version;

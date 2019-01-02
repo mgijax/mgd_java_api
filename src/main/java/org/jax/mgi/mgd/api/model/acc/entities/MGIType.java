@@ -28,7 +28,7 @@ import lombok.Setter;
 public class MGIType extends BaseEntity {
 
 	@Id
-	private Integer _mgitype_key;
+	private int _mgitype_key;
 	private String name;
 	private String tableName;
 	private String primaryKeyName;

@@ -26,8 +26,8 @@ public class ReferenceCitationCache extends BaseEntity {
 	private String citation;
 	private String short_citation;
 	private String referenceType;
-	private Integer isReviewArticle;
+	private int isReviewArticle;
 	private String isReviewArticleString;
-	private Integer isDiscard;
+	private int isDiscard;
 	
 }

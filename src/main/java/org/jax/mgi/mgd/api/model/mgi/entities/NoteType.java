@@ -23,11 +23,11 @@ import lombok.Setter;
 @Table(name="mgi_notetype")
 public class NoteType extends BaseEntity {
 	@Id
-	private Integer _noteType_key;
+	private int _noteType_key;
 	private String noteType;
 	
 	@Column(name="private") // just "private" is a Java reserved word
-	private Integer isPrivate;
+	private int isPrivate;
 
 	private Date creation_date;
 	private Date modification_date;

@@ -10,6 +10,8 @@ public class SlimOrganismTranslator extends BaseEntityDomainTranslator<Organism,
 	protected SlimOrganismDomain entityToDomain(Organism entity, int translationDepth) {
 		SlimOrganismDomain domain = new SlimOrganismDomain();
 		
+		domain.setOrganismKey(String.valueOf(entity.get_organism_key()));
+		// for backward compatibility with gxd/ht
 		domain.set_organism_key(entity.get_organism_key());
 		domain.setCommonname(entity.getCommonname());
 

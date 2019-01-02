@@ -12,10 +12,10 @@ public class NoteTranslator extends BaseEntityDomainTranslator<Note, NoteDomain>
 
 		//domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setNoteKey(String.valueOf(entity.get_note_key()));
-		domain.setObjectKey(entity.get_object_key().toString());
-		domain.setMgiTypeKey(entity.getMgiType().get_mgitype_key().toString());
+		domain.setObjectKey(String.valueOf(entity.get_object_key()));
+		domain.setMgiTypeKey(String.valueOf(entity.getMgiType().get_mgitype_key()));
 		domain.setMgiType(entity.getMgiType().getName());
-		domain.setNoteTypeKey(entity.getNoteType().get_noteType_key().toString());
+		domain.setNoteTypeKey(String.valueOf(entity.getNoteType().get_noteType_key()));
 		domain.setNoteType(entity.getNoteType().getNoteType());
 		domain.setNoteChunk(entity.getNoteChunk().getNote());
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());

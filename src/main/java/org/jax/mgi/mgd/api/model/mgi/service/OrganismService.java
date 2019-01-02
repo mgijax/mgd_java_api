@@ -71,7 +71,7 @@ public class OrganismService extends BaseService<OrganismDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				OrganismDomain domain = new OrganismDomain();
-				domain.set_organism_key(rs.getInt("_organism_key"));
+				domain.set_organism_key(rs.getString("_organism_key"));
 				domain.setCommonname(rs.getString("commonname"));
 				domain.setLatinname(rs.getString("latinname"));
 				domain.setCreation_date(rs.getDate("creation_date"));

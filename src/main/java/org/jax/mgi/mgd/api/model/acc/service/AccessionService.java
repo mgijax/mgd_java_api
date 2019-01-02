@@ -345,7 +345,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 					modified = true;
 				}
 				// if not entity/null and not domain/empty, then check if equivalent
-				else if (!entity.getReferences().get(0).getReference().get_refs_key().equals(Integer.valueOf(domain.get(i).getReferences().get(0).getRefsKey()))) {
+				else if (entity.getReferences().get(0).getReference().get_refs_key() != Integer.parseInt(domain.get(i).getReferences().get(0).getRefsKey())) {
 					modified = true;
 				}
 				

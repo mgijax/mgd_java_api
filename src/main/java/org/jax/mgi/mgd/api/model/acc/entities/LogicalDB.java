@@ -26,7 +26,7 @@ import lombok.Setter;
 public class LogicalDB extends BaseEntity {
 
 	@Id
-	private Integer _logicaldb_key;
+	private int _logicaldb_key;
 	private String name;
 	private String description;
 	private Date creation_date;

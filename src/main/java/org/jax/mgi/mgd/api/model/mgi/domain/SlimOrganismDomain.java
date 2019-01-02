@@ -8,6 +8,8 @@ import lombok.Setter;
 @Getter @Setter
 public class SlimOrganismDomain extends BaseDomain {
 
+	private String OrganismKey;
+	// for backward compatibility with gxd/ht
 	private Integer _organism_key;
 	private String commonname;
 

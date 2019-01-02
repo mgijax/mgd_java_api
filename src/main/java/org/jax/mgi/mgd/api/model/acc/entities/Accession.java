@@ -30,11 +30,11 @@ public class Accession extends BaseEntity {
 	private int _accession_key;
 	private String accID;
 	private String prefixPart;
-	private Integer numericPart;
-	private Integer _object_key;
+	private int numericPart;
+	private int _object_key;
 	@Column(name="private")		// just "private" is a Java reserved word
-	private Integer isPrivate;
-	private Integer preferred;
+	private int isPrivate;
+	private int preferred;
 	private Date creation_date;
 	private Date modification_date;
 

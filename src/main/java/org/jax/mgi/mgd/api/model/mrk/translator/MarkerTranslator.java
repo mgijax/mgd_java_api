@@ -38,7 +38,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		domain.setChromosome(entity.getChromosome());
 		domain.setCytogeneticOffset(entity.getCytogeneticOffset());
 		domain.setCmOffset(entity.getCmOffset().toString());
-		domain.setOrganismKey(entity.getOrganism().get_organism_key().toString());
+		domain.setOrganismKey(String.valueOf(entity.getOrganism().get_organism_key()));
 		domain.setOrganism(entity.getOrganism().getCommonname());
 		domain.setMarkerStatusKey(entity.getMarkerStatus().get_marker_status_key().toString());
 		domain.setMarkerStatus(entity.getMarkerStatus().getStatus());

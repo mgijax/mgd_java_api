@@ -21,8 +21,8 @@ import lombok.Setter;
 @Table(name="mgi_notechunk")
 public class NoteChunk extends BaseEntity {
 	@Id
-	private Integer _note_key;
-	private Integer sequenceNum;
+	private int _note_key;
+	private int sequenceNum;
 	private String note;
 	private Date creation_date;
 	private Date modification_date;

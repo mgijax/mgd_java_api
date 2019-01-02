@@ -15,7 +15,7 @@ public class MGITypeTranslator extends BaseEntityDomainTranslator<MGIType, MGITy
 	protected MGITypeDomain entityToDomain(MGIType entity, int translationDepth) {
 		MGITypeDomain domain = new MGITypeDomain();
 
-		domain.set_mgitype_key(entity.get_mgitype_key());
+		domain.setMgiTypeKey(String.valueOf(entity.get_mgitype_key()));
 		domain.setName(entity.getName());
 		domain.setTableName(entity.getTableName());
 		domain.setPrimaryKeyName(entity.getPrimaryKeyName());

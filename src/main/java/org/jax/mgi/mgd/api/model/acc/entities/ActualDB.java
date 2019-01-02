@@ -23,11 +23,11 @@ import lombok.Setter;
 public class ActualDB extends BaseEntity {
 
 	@Id
-	private Integer _actualdb_key;
+	private int _actualdb_key;
 	private String name;
-	private Integer active;
+	private int active;
 	private String url;
-	private Integer allowsMultiple;
+	private int allowsMultiple;
 	private String delimiter;
 	private Date creation_date;
 	private Date modification_date;

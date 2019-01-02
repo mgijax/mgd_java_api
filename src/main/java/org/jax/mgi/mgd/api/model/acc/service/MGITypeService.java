@@ -81,8 +81,10 @@ public class MGITypeService extends BaseService<MGITypeDomain> {
 			while (rs.next()) {					
 				SlimOrganismDomain organismDomain = new SlimOrganismDomain();				
 		
-				domain.set_mgitype_key(rs.getInt("_mgitype_key"));
+				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
 				domain.setName(rs.getString("typename"));
+				organismDomain.setOrganismKey(rs.getString("_organism_key"));
+				// for backward compatibility with gxd/ht	
 				organismDomain.set_organism_key(rs.getInt("_organism_key"));
 				organismDomain.setCommonname(rs.getString("commonname"));
 				organismList.add(organismDomain);

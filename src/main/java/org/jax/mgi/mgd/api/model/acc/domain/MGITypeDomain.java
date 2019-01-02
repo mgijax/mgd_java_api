@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter @Setter
 public class MGITypeDomain extends BaseDomain {
 
-	private Integer _mgitype_key;
+	private String MgiTypeKey;
 	private String name;
 	private String tableName;
 	private String primaryKeyName;

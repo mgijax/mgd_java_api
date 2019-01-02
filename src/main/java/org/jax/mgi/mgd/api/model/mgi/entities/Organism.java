@@ -31,7 +31,7 @@ import lombok.Setter;
 public class Organism extends BaseEntity {
 
 	@Id
-	private Integer _organism_key;
+	private int _organism_key;
 	private String commonname;
 	private String latinname;
 	private Date creation_date;

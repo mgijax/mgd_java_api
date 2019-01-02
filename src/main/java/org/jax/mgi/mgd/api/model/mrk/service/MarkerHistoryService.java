@@ -213,7 +213,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 					modified = true;
 				}
 				// if not entity/null and not domain/empty, then check if equivalent
-				else if (!entity.getReference().get_refs_key().equals(Integer.valueOf(domain.get(i).getRefsKey()))) {
+				else if (entity.getReference().get_refs_key() != Integer.parseInt(domain.get(i).getRefsKey())) {
 					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
 					modified = true;
 				}

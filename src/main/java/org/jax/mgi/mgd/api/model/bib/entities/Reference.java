@@ -25,17 +25,17 @@ import lombok.Setter;
 public class Reference extends BaseEntity {
 
 	@Id
-	private Integer _refs_key;
+	private int _refs_key;
 	private String authors;
 	private String title;
 	private String journal;
 	private String vol;
 	private String issue;
 	private String date;
-	private Integer year;
+	private int year;
 	private String pgs;
-	private Integer isReviewArticle;
-	private Integer isDiscard;
+	private int isReviewArticle;
+	private int isDiscard;
 	private Date creation_date;
 	private Date modification_date;
 

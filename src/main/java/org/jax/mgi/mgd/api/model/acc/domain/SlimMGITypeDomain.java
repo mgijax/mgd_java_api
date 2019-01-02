@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter @Setter
 public class SlimMGITypeDomain extends BaseDomain {
 
-	private Integer _mgitype_key;
+	private String MgiTypeKey;	
 	private String name;
 	private List<SlimOrganismDomain> organisms;
 }

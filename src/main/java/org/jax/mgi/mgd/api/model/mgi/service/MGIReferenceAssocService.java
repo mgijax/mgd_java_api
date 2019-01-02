@@ -148,7 +148,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				Boolean modified = false;
 				MGIReferenceAssoc entity = referenceAssocDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
 		
-				if (!entity.getReference().get_refs_key().equals(Integer.valueOf(domain.get(i).getRefsKey()))) {
+				if (entity.getReference().get_refs_key() != Integer.parseInt(domain.get(i).getRefsKey())) {
 					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
 					modified = true;
 				}

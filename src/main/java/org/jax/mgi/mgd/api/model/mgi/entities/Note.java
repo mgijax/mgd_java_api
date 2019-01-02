@@ -22,8 +22,8 @@ import lombok.Setter;
 @Table(name="mgi_note")
 public class Note extends BaseEntity {
 	@Id
-	private Integer _note_key;
-	private Integer _object_key;
+	private int _note_key;
+	private int _object_key;
 	private Date creation_date;
 	private Date modification_date;
 

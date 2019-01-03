@@ -25,8 +25,8 @@ public class AnnotationHeader extends BaseEntity {
 	@Id
 	private int _annotHeader_key;
 	private int _object_key;
-	private int sequenceNum;
-	private int isNormal;
+	private Integer sequenceNum;
+	private Integer isNormal;
 	private Date approval_date;
 	private Date creation_date;
 	private Date modification_date;

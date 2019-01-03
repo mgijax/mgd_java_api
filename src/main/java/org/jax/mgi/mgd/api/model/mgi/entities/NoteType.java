@@ -27,7 +27,7 @@ public class NoteType extends BaseEntity {
 	private String noteType;
 	
 	@Column(name="private") // just "private" is a Java reserved word
-	private int isPrivate;
+	private Integer isPrivate;
 
 	private Date creation_date;
 	private Date modification_date;

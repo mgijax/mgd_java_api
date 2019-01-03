@@ -24,8 +24,8 @@ public class TermEMAPA extends BaseEntity {
 
 	@Id
 	private int _Term_key;
-	private int startStage;
-	private int endStage;
+	private Integer startStage;
+	private Integer endStage;
 	private Date creation_date;
 	private Date modification_date;
 	

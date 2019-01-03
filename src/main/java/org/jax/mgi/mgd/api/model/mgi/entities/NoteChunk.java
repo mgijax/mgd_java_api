@@ -22,7 +22,7 @@ import lombok.Setter;
 public class NoteChunk extends BaseEntity {
 	@Id
 	private int _note_key;
-	private int sequenceNum;
+	private Integer sequenceNum;
 	private String note;
 	private Date creation_date;
 	private Date modification_date;

@@ -25,7 +25,7 @@ public class MGISynonymType extends BaseEntity {
 	private int _synonymType_key;
 	private String synonymType;
 	private String definition;
-	private int allowOnlyOne;
+	private Integer allowOnlyOne;
 	private Date creation_date;
 	private Date modification_date;
 

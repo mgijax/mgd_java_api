@@ -19,7 +19,7 @@ import lombok.Setter;
 public class AccessionMax extends BaseEntity {
 	@Id
 	private String prefixPart;
-	private int maxNumericPart;
+	private Integer maxNumericPart;
 	private Date creation_date;
 	private Date modification_date;
 }

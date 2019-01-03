@@ -27,8 +27,8 @@ public class Vocabulary extends BaseEntity {
 
 	@Id
 	private int _vocab_key;
-	Integer isSimple;
-	Integer isPrivate;
+	private Integer isSimple;
+	private Integer isPrivate;
 	private String name;
 	private Date creation_date;
 	private Date modification_date;

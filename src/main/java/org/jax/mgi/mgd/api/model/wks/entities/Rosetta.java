@@ -21,7 +21,7 @@ import lombok.Setter;
 @Table(name="wks_rosetta")
 public class Rosetta extends BaseEntity {
 	@Id
-	private Integer _rosetta_key;
+	private int _rosetta_key;
 	private String wks_markerSymbol;
 	private String wks_markerURL;
 	private Date creation_date;

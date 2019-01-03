@@ -27,8 +27,8 @@ public class Term extends BaseEntity {
 	private String term;
 	private String abbreviation;
 	private String note;
-	private int sequenceNum;
-	private int isObsolete = 0;
+	private Integer sequenceNum;
+	private Integer isObsolete = 0;
 	private Date creation_date;
 	private Date modification_date;
 

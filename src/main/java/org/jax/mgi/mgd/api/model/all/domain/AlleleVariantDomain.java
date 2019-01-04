@@ -13,7 +13,9 @@ public class AlleleVariantDomain extends BaseDomain {
 	private String variantKey;
 	private String isReviewed;
 	private String description;
-	private String sourceVariantKey;	
+	private String sourceVariantKey;
+	private String chromosome;
+	private String strand;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

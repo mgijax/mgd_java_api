@@ -32,6 +32,8 @@ public class VariantSequence extends BaseEntity {
 	@SequenceGenerator(name="all_variantsequence_seq_generator", sequenceName = "all_variantsequence_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")
 	private int _variantsequence_key;
+    private String startCoordinate;
+    private String endCoordinate;
 	private String referenceSequence;
 	private String variantSequence;
 	private Date creation_date;

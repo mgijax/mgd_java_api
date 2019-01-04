@@ -18,8 +18,6 @@ public class SlimAlleleVariantDomain extends BaseDomain {
 	
 	private String alleleKey;
 	private String symbol;
-	private String chromosome; // marker chromosome
-	private String strand; // marker strand
 	private List<AccessionDomain> mgiAccessionIds;
 	private SlimMGIReferenceAssocDomain references;
 	

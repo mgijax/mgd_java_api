@@ -1,12 +1,14 @@
 package org.jax.mgi.mgd.api.model.voc.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Where;
@@ -48,4 +50,10 @@ public class Annotation extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 13 and `_logicaldb_key` = 146")
 	private Accession markerFeatureTypeId;
 	
+    @OneToMany
+    @JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
+    @Where(clause="`_mgitype_key` = 13 and `_logicaldb_key` = 145 and preferred = 1")
+    private List<Accession> alleleVariantSOIds;
+
+    
 }

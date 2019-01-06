@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.all.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,13 +10,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
+import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -58,4 +62,14 @@ public class AlleleVariant extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
+    @OneToMany
+    @JoinColumn(name="_object_key", referencedColumnName="_variant_key", insertable=false, updatable=false)
+    @Where(clause="`_annottype_key` = 1026")
+    private List<Annotation> variantTypes;
+
+    @OneToMany
+    @JoinColumn(name="_object_key", referencedColumnName="_variant_key", insertable=false, updatable=false)
+    @Where(clause="`_annottype_key` = 1027")
+    private List<Annotation> variantEffects;
+
 }

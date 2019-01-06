@@ -1,8 +1,12 @@
 package org.jax.mgi.mgd.api.model.all.domain;
 
+import java.util.List;
+
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleVariantDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeStrainDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantEffectDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantTypeDomain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +29,9 @@ public class AlleleVariantDomain extends BaseDomain {
 	
 	private SlimAlleleVariantDomain allele;
 	private SlimProbeStrainDomain strain;
+	
+    private List<AlleleVariantTypeDomain> types;
+    private List <AlleleVariantEffectDomain> effects;
 	
 	private String processStatus;
 } 

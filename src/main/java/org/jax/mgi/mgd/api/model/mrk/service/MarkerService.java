@@ -395,9 +395,21 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				where = where + "\nand mh._Ref_key = " + searchDomain.getHistory().get(0).getRefsKey();
 				from_history = true;
 			}
+			if (searchDomain.getHistory().get(0).getJnumid() != null && !searchDomain.getHistory().get(0).getJnumid().isEmpty()) {
+				where = where + "\nand mh.jnumid = '" + searchDomain.getHistory().get(0).getJnumid() + "'";
+				from_history = true;
+			}
 			if (searchDomain.getHistory().get(0).getShort_citation() != null && !searchDomain.getHistory().get(0).getShort_citation().isEmpty()) {
 				value = searchDomain.getHistory().get(0).getShort_citation().replaceAll("'",  "''");
 				where = where + "\nand mh.short_citation ilike '" + value + "'";
+				from_history = true;
+			}
+			if (searchDomain.getHistory().get(0).getMarkerEvent() != null && !searchDomain.getHistory().get(0).getMarkerEvent().isEmpty()) {
+				where = where + "\nand mh.event = '" + searchDomain.getHistory().get(0).getMarkerEvent() + "'";
+				from_history = true;
+			}
+			if (searchDomain.getHistory().get(0).getMarkerEventReason() != null && !searchDomain.getHistory().get(0).getMarkerEventReason().isEmpty()) {
+				where = where + "\nand mh.eventreason = '" + searchDomain.getHistory().get(0).getMarkerEventReason() + "'";
 				from_history = true;
 			}
 			if (searchDomain.getHistory().get(0).getMarkerEventKey() != null && !searchDomain.getHistory().get(0).getMarkerEventKey().isEmpty()) {

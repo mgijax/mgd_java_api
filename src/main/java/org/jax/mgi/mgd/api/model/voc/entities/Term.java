@@ -49,25 +49,4 @@ public class Term extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 13 and preferred = 1")
 	private Accession accessionId;
 	
-	//@OneToMany
-	//@JoinColumn(name="_object_key", referencedColumnName="_term_key")
-	//@Where(clause="`_mgitype_key` = 13")
-	//private List<MGISynonym> synonyms;
-
-	//@Transient
-	//public List<Accession> getAccessionIdsByLogicalDb(LogicalDB db) {
-	//	return getAccessionIdsByLogicalDb(db.get_logicaldb_key());
-	//}
-	
-	//@Transient
-	//public List<Accession> getAccessionIdsByLogicalDb(Integer db_key) {
-	//	HashSet<Accession> set = new HashSet<Accession>();
-	//	for(Accession a: allAccessionIds) {
-	//		if(a.getLogicaldb().get_logicaldb_key() == db_key) {
-	//			set.add(a);
-	//		}
-	//	}
-	//	return set;
-	//}
-
 }

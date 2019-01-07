@@ -11,10 +11,9 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
-import org.jax.mgi.mgd.api.model.all.domain.AlleleEIResultDomain;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -60,9 +59,9 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		return null;
 	}
 
-	public List<AlleleEIResultDomain> eiSearch(AlleleDomain searchDomain) {
+	public List<SlimAlleleDomain> search(AlleleDomain searchDomain) {
 
-		List<AlleleEIResultDomain> results = new ArrayList<AlleleEIResultDomain>();
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 		
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
@@ -71,29 +70,29 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		String from = "from all_allele a, voc_term v1";
 		String where = "where a._allele_type_key = v1._term_key";
 		String orderBy = "order by a.symbol";
-		String limit = "LIMIT 1000";
-		
-		// make this easy to copy/paste for troubleshooting
-		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
-		log.info(cmd);
+		String limit = "LIMIT 1000";	
 
 		// if parameter exists, then add to where-clause
 		
-		String cmResults[] = DateSQLQuery.queryByCreationModification("m", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
-		if (cmResults.length > 0) {
-			from = from + cmResults[0];
-			where = where + cmResults[1];
-		}
+//		String cmResults[] = DateSQLQuery.queryByCreationModification("m", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
+//		if (cmResults.length > 0) {
+//			from = from + cmResults[0];
+//			where = where + cmResults[1];
+//		}
 		
 		if (searchDomain.getSymbol() != null && !searchDomain.getSymbol().isEmpty()) {
 			where = where + "\nand a.symbol ilike '" + searchDomain.getSymbol() + "'" ;
 		}
+
+		// make this easy to copy/paste for troubleshooting
+		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
+		log.info(cmd);
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				AlleleEIResultDomain domain = new AlleleEIResultDomain();
-				domain.setAlleleKey(rs.getInt("_allele_key"));
+				SlimAlleleDomain domain = new SlimAlleleDomain();
+				domain.setAlleleKey(rs.getString("_allele_key"));
 				domain.setSymbol(rs.getString("symbol"));
 				results.add(domain);
 			}

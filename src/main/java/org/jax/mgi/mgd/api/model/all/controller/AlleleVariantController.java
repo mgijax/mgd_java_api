@@ -11,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleVariantDomain;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleVariantDomain;
 import org.jax.mgi.mgd.api.model.all.service.AlleleVariantService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -60,8 +61,8 @@ public class AlleleVariantController extends BaseController<AlleleVariantDomain>
 	@POST
 	@ApiOperation(value = "Search")
 	@Path("/search")
-	public List<AlleleVariantDomain> search() {
-		return variantService.search();
+	public List<SlimAlleleVariantDomain> search(AlleleVariantDomain searchDomain) {
+		return variantService.search(searchDomain);
 	}
 	
 }

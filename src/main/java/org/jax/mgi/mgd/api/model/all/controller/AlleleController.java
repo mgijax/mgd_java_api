@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
-import org.jax.mgi.mgd.api.model.all.domain.AlleleEIResultDomain;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
 import org.jax.mgi.mgd.api.model.all.service.AlleleService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -50,14 +50,14 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "EI Search")
-	@Path("/eiSearch")
-	public List<AlleleEIResultDomain> eiSearch(AlleleDomain searchDomain) {
+	@ApiOperation(value = "Search")
+	@Path("/search")
+	public List<SlimAlleleDomain> Search(AlleleDomain searchDomain) {
 			
-		List<AlleleEIResultDomain> results = new ArrayList<AlleleEIResultDomain>();
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 		
 		try {
-			results = alleleService.eiSearch(searchDomain);
+			results = alleleService.search(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

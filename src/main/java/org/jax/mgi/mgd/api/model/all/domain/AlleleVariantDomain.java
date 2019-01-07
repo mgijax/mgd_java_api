@@ -3,7 +3,6 @@ package org.jax.mgi.mgd.api.model.all.domain;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
-import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleVariantDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeStrainDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantEffectDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantTypeDomain;
@@ -14,6 +13,7 @@ import lombok.Setter;
 @Getter @Setter
 public class AlleleVariantDomain extends BaseDomain {
 	
+	private String processStatus;
 	private String variantKey;
 	private String isReviewed;
 	private String description;
@@ -27,11 +27,10 @@ public class AlleleVariantDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	
-	private SlimAlleleVariantDomain allele;
+	private SlimAlleleDomain allele;
 	private SlimProbeStrainDomain strain;
 	
-    private List<AlleleVariantTypeDomain> types;
-    private List <AlleleVariantEffectDomain> effects;
+    private List<AlleleVariantTypeDomain> variantTypes;
+    private List<AlleleVariantEffectDomain> variantEffects;
 	
-	private String processStatus;
 } 

@@ -7,13 +7,14 @@ import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 
 public class MarkerFeatureTypeTranslator extends BaseEntityDomainTranslator<Annotation, MarkerFeatureTypeDomain> {
 
+	SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
+	
 	@Override
 	protected MarkerFeatureTypeDomain entityToDomain(Annotation entity, int translationDepth) {
 		MarkerFeatureTypeDomain domain = new MarkerFeatureTypeDomain();
 
 		domain.setTermKey(String.valueOf(entity.getTerm().get_term_key()));
 		domain.setTerm(entity.getTerm().getTerm());
-		SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
 		domain.setMarkerFeatureTypeId(accessionTranslator.translate(entity.getMarkerFeatureTypeId()));
 				
 		return domain;

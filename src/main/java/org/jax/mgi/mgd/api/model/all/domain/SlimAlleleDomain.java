@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class AlleleEIResultDomain extends BaseDomain {
+public class SlimAlleleDomain extends BaseDomain {
 
-	private int alleleKey;
+	private String alleleKey;
 	private String symbol;       
 }

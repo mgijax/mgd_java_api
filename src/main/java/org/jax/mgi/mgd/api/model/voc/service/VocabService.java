@@ -72,7 +72,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		String select = "select v.*, t._term_key, t.term, t.abbreviation";
 		String from = "from voc_term t, voc_vocab v";
 		String where = "where t._vocab_key = v._vocab_key";
-		String orderBy = "order by t.term";		
+		String orderBy = "order by t.sequencenum";		
 		
 		// if parameter exists, then add to where-clause
 		

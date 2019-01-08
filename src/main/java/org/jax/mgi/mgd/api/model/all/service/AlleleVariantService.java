@@ -115,16 +115,19 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		List<SlimAlleleVariantDomain> results = new ArrayList<SlimAlleleVariantDomain>();
 
 		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";		
-		String select = "select distinct v._variant_key, a._allele_key, a.symbol, a._strain_key, p.strain";
-		String from = "from all_variant v, all_allele a, prb_strain p";
-		String where = "where v._allele_key = a._allele_key"
-				+ "\nand v._strain_key = p._strain_key";
+		String select = "select distinct v._variant_key, a._allele_key, a.symbol";
+		String from = "from all_variant v, all_allele a";
+		String where = "where v._allele_key = a._allele_key";
 		String orderBy = "order by a.symbol";
 		String limit = "LIMIT 1000";
-		Boolean from_note = false;
+		String value;	
+		Boolean from_strain = false;
+		Boolean from_marker = false;
 		Boolean from_sequence = false;
+		Boolean from_variantType = false;
+		Boolean from_variantTypeAcc = false;
+		Boolean from_note = false;		
 		Boolean from_reference = false;
 
 		// if parameter exists, then add to where-clause
@@ -134,73 +137,150 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			from = from + cmResults[0];
 			where = where + cmResults[1];
 		}
-		
-		if (searchDomain.getAllele().getSymbol() != null && !searchDomain.getAllele().getSymbol().isEmpty()) {
-			where = where + "\nand v.symbol ilike '" + searchDomain.getAllele().getSymbol() + "'" ;
+		if (searchDomain.getIsReviewed() != null && !searchDomain.getIsReviewed().isEmpty()) {
+			where = where + "\nand v.isReviewed = " + searchDomain.getIsReviewed();
 		}
-		if (searchDomain.getStrain().getStrain() != null && !searchDomain.getStrain().getStrain().isEmpty()) {
-			where = where + "\nand v.strain ilike '" + searchDomain.getStrain().getStrain() + "'" ;
+		if (searchDomain.getDescription() != null && !searchDomain.getDescription().isEmpty()) {
+			value = searchDomain.getDescription().replaceAll("'",  "''");
+			where = where + "\nand v.description ilike '" + value + "'";
+		}		
+		if (searchDomain.getAllele() != null) {
+			if (searchDomain.getAllele().getSymbol() != null && !searchDomain.getAllele().getSymbol().isEmpty()) {
+				where = where + "\nand a.symbol ilike '" + searchDomain.getAllele().getSymbol() + "'" ;
+			}	
+		}
+	
+		// strain
+		if (searchDomain.getStrain() != null) {
+			if (searchDomain.getStrain().getStrain() != null && !searchDomain.getStrain().getStrain().isEmpty()) {
+				where = where + "\nand p.strain ilike '" + searchDomain.getStrain().getStrain() + "'" ;
+				from_strain = true;
+			}
+		}
+		
+		// marker
+		if (searchDomain.getChromosome() != null && !searchDomain.getChromosome().isEmpty()) {
+			where = where + "\nand m.chromosome ilike '" + searchDomain.getChromosome() + "'";
+			from_marker = true;
+		}
+		if (searchDomain.getStrand() != null && !searchDomain.getStrand().isEmpty()) {
+			where = where + "\nand m.strand ilike '" + searchDomain.getStrand() + "'";
+			from_marker = true;
+		}
+		
+		// sequence
+		if (searchDomain.getVariantSequences() != null) {
+			if (searchDomain.getVariantSequences().get(0).getStartCoordinate() != null 
+					&& !searchDomain.getVariantSequences().get(0).getStartCoordinate().isEmpty()) {
+				where = where + "\nand vs.startCoordinate = " + searchDomain.getVariantSequences().get(0).getStartCoordinate();
+				from_sequence = true;
+			}
+			if (searchDomain.getVariantSequences().get(0).getEndCoordinate() != null 
+					&& !searchDomain.getVariantSequences().get(0).getEndCoordinate().isEmpty()) {
+				where = where + "\nand vs.endCoordinate = " + searchDomain.getVariantSequences().get(0).getEndCoordinate();
+				from_sequence = true;
+			}			
+			if (searchDomain.getVariantSequences().get(0).getReferenceSequence() != null 
+					&& !searchDomain.getVariantSequences().get(0).getReferenceSequence().isEmpty()) {
+				value = searchDomain.getVariantSequences().get(0).getReferenceSequence().replaceAll(",",  "''");
+				where = where + "\nand vs.referenceSequence ilike '" + value + "'";
+				from_sequence = true;
+			}		
+			if (searchDomain.getVariantSequences().get(0).getVariantSequence() != null 
+					&& !searchDomain.getVariantSequences().get(0).getVariantSequence().isEmpty()) {
+				value = searchDomain.getVariantSequences().get(0).getVariantSequence().replaceAll(",",  "''");
+				where = where + "\nand vs.referenceSequence ilike '" + value + "'";
+				from_sequence = true;
+			}		
+		}
+
+		// variant type
+		if (searchDomain.getVariantTypes() != null) {
+			if (searchDomain.getVariantTypes().get(0).getTerm() != null 
+					&& !searchDomain.getVariantTypes().get(0).getTerm().isEmpty()) {
+				value = searchDomain.getVariantTypes().get(0).getTerm().replaceAll(",",  "''");
+				where = where + "\nand t1.term ilike '" + value + "'";
+				from_variantType = true;
+			}		
+		}
+
+		// variant type accession
+		if (searchDomain.getVariantTypes() != null) {
+			if (searchDomain.getVariantTypes().get(0).getAlleleVariantSOIds() != null) {
+				if (searchDomain.getVariantTypes().get(0).getAlleleVariantSOIds().get(0).getAccID() != null 
+						&& !searchDomain.getVariantTypes().get(0).getAlleleVariantSOIds().get(0).getAccID().isEmpty()) {
+					where = where + "\nand va1.accID ilike '" + searchDomain.getVariantTypes().get(0).getAlleleVariantSOIds().get(0).getAccID() + "'";
+					from_variantType = true;
+					from_variantTypeAcc = true;
+				}		
+			}
 		}
 				
 		// notes
-//		if (searchDomain.getEditorNote() != null) {
-//			value = searchDomain.getEditorNote().getNoteChunk().replaceAll("'",  "''");
-//			where = where + "\nand note1._notetype_key = 1004 and note1.note ilike '" + value + "'" ;
-//			from_note = true;
-//		}
+		if (searchDomain.getGeneralNote() != null) {
+			value = searchDomain.getGeneralNote().getNoteChunk().replaceAll("'",  "''");
+			where = where + "\nand note1._notetype_key = 1050 and note1.note ilike '" + value + "'" ;
+			from_note = true;
+		}
 		
-		
-		// sequence
-//		if (searchDomain.getHistory() != null) {
-//			if (searchDomain.getHistory().get(0).getMarkerHistorySymbol() != null && !searchDomain.getHistory().get(0).getMarkerHistorySymbol().isEmpty()) {
-//				where = where + "\nand mh.history ilike '" + searchDomain.getHistory().get(0).getMarkerHistorySymbol() + "'";
-//				from_sequence = true;
-//			}
-//		}
-
 		// reference
-//		if (searchDomain.getRefAssocs() != null) {
-//			if (searchDomain.getRefAssocs().get(0).getRefsKey() != null && !searchDomain.getRefAssocs().get(0).getRefsKey().isEmpty()) {
-//				where = where + "\nand mr._Ref_key = " + searchDomain.getRefAssocs().get(0).getRefsKey();
-//				from_reference = true;
-//			}
-//			if (searchDomain.getRefAssocs().get(0).getShort_citation() != null && !searchDomain.getRefAssocs().get(0).getShort_citation().isEmpty()) {
-//				value = searchDomain.getRefAssocs().get(0).getShort_citation().replaceAll("'",  "''");
-//				where = where + "\nand mr.short_citation ilike '" + value + "'";
-//				from_reference = true;
-//			}
-//		}
+		if (searchDomain.getRefAssocs() != null) {
+			if (searchDomain.getRefAssocs().get(0).getRefsKey() != null && !searchDomain.getRefAssocs().get(0).getRefsKey().isEmpty()) {
+				where = where + "\nand vr._Ref_key = " + searchDomain.getRefAssocs().get(0).getRefsKey();
+				from_reference = true;
+			}
+			if (searchDomain.getRefAssocs().get(0).getShort_citation() != null && !searchDomain.getRefAssocs().get(0).getShort_citation().isEmpty()) {
+				value = searchDomain.getRefAssocs().get(0).getShort_citation().replaceAll("'",  "''");
+				where = where + "\nand vr.short_citation ilike '" + value + "'";
+				from_reference = true;
+			}
+		}
 
-		// use views to match the teleuse implementation
-
-		if (from_note == true) {
-			from = from + ", mgi_note_marker_view note";
-			where = where + "\nand v._variant_key = note._object_key";
+		if (from_strain == true) {
+			from = from + ", prb_strain p";
+			where = where + "\nand v._strain_key = p._strain_key";
+		}
+		if (from_marker == true) {
+			from = from + ", mrk_location_cache m";
+			where = where + "\nand a._marker_key = m._marker_key";
 		}
 		if (from_sequence == true) {
-			from = from + ", all_variant_sequence s";
-			where = where + "\nand v.variant_key = s._variant_key";
+			from = from + ", all_variant_sequence vs";
+			where = where + "\nand v.variant_key = vs._variant_key";
+		}
+		if (from_variantType == true) {
+			from = from + ", voc_annot v1, voc_term t1";
+			where = where + "\nand v._variant_key = v1._object_key"
+					+ "\nand v1._term_key = t1._term_key"
+					+ "\nand v1._annottype_key = 1026";
+		}
+		if (from_variantTypeAcc == true) {
+			from = from + ", acc_accession va1";
+			where = where + "\nand v1._term_key = va1._object_key"
+					+ "\nand va1._mgitype_key = 13"
+					+ "\nand va1._logicaldb_key = 145";
+		}
+		if (from_note == true) {
+			from = from + ", mgi_note_allelevariant_view note";
+			where = where + "\nand v._variant_key = note._object_key";
 		}
 		if (from_reference == true) {
-			from = from + ", mgi_reference_assoc mr";
-			where = where + "\nand v._variant_key = mr._object_key"
-					+ "\nand mr._refassoctype_key = 1030";
+			from = from + ", mgi_reference_allelevariant_view vr";
+			where = where + "\nand v._variant_key = vr._object_key"
+					+ "\nand vr._refassoctype_key = 1030";
 		}
 		
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
 		log.info(cmd);
 
-
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SlimAlleleVariantDomain domain = new SlimAlleleVariantDomain();
-//				domain.setVariantKey(rs.getString("_variant_key"));
+				domain.setVariantKey(rs.getString("_variant_key"));
 				domain.setAlleleKey(rs.getString("_allele_key"));
 				domain.setSymbol(rs.getString("symbol"));
-//				domain.setStrainKey(rs.getString("_strain_key"));
-//				domain.setStrain(rs.getString("strain");
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

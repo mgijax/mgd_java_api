@@ -17,6 +17,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
+import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
+import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
@@ -75,5 +77,16 @@ public class AlleleVariant extends BaseEntity {
     @OneToMany
     @JoinColumn(name="_variant_key", insertable=false, updatable=false)
     private List<VariantSequence> variantSequences;
-        
+
+	// General
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_variant_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 45 and `_notetype_key` = 1050")
+	private List<Note> generalNote;
+	
+	@OneToMany
+	@JoinColumn(name="_object_key", referencedColumnName="_variant_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 45")
+	private List<MGIReferenceAssoc> refAssocs;
+	
 }

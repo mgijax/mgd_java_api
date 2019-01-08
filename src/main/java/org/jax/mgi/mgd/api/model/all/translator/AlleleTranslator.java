@@ -16,6 +16,7 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 	protected AlleleDomain entityToDomain(Allele entity, int translationDepth) {
 		
 		AlleleDomain domain = new AlleleDomain();
+		
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setAlleleKey(String.valueOf(entity.get_allele_key()));
 		domain.setSymbol(entity.getSymbol());
@@ -42,6 +43,7 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		if(translationDepth > 0) {
 			// load relationships
 		}
+		
 		return domain;
 	}
 	

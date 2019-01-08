@@ -10,6 +10,8 @@ public class VariantSequenceTranslator extends BaseEntityDomainTranslator<Varian
 	@Override
 	protected VariantSequenceDomain entityToDomain(VariantSequence entity, int translationDepth) {
 		VariantSequenceDomain domain = new VariantSequenceDomain();
+		
+		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);		
 		domain.setVariantSequenceKey(String.valueOf(entity.get_variantsequence_key()));
 		domain.setVariantKey(String.valueOf(entity.getVariant().get_variant_key()));	
 		domain.setSequenceTypeKey(String.valueOf(entity.getSequenceType().get_term_key()));
@@ -24,7 +26,7 @@ public class VariantSequenceTranslator extends BaseEntityDomainTranslator<Varian
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
+		
 		return domain;
 	}
 

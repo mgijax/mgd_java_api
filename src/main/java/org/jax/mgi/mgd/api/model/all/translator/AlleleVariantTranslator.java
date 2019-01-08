@@ -5,6 +5,10 @@ import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleVariantDomain;
 import org.jax.mgi.mgd.api.model.all.domain.VariantSequenceDomain;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleVariant;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
+import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
+import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeStrainTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantEffectDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantTypeDomain;
@@ -19,6 +23,8 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
 	private AlleleVariantTypeTranslator variantTypeTranslator = new AlleleVariantTypeTranslator();
 	private AlleleVariantEffectTranslator variantEffectTranslator = new AlleleVariantEffectTranslator();
 	private VariantSequenceTranslator variantSequenceTranslator = new VariantSequenceTranslator();
+	private NoteTranslator noteTranslator = new NoteTranslator();
+	private MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
 	
 	@Override
 	protected AlleleVariantDomain entityToDomain(AlleleVariant entity, int translationDepth) {
@@ -65,7 +71,23 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
                 domain.setVariantSequences(IteratorUtils.toList(i.iterator()));
             }
         }
-        
+
+		// at most one generalNote
+		if (entity.getGeneralNote() != null) {
+			Iterable<NoteDomain> editorNote = noteTranslator.translateEntities(entity.getGeneralNote());
+			if(editorNote.iterator().hasNext() == true) {
+				domain.setGeneralNote(editorNote.iterator().next());
+			}
+		}
+
+		// reference associations
+		if (entity.getRefAssocs() != null) {
+			Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
+			if(i.iterator().hasNext() == true) {
+				domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
+			}
+		}
+		
 		return domain;
 	}
 

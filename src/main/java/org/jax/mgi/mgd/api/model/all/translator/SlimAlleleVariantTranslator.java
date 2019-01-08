@@ -14,9 +14,7 @@ public class SlimAlleleVariantTranslator extends BaseEntityDomainTranslator<Alle
 		domain.setVariantKey(String.valueOf(entity.get_variant_key()));
 		domain.setAlleleKey(String.valueOf(entity.getAllele().get_allele_key()));
 		domain.setSymbol(entity.getAllele().getSymbol());
-		domain.setStrainKey(String.valueOf(entity.getStrain().get_strain_key()));
-		domain.setStrain(entity.getStrain().getStrain());
-		
+	
 		return domain;
 	}
 

@@ -15,7 +15,5 @@ public class SlimAlleleVariantDomain extends BaseDomain {
 	private String variantKey;
 	private String alleleKey;
 	private String symbol;
-	private String strainKey;
-	private String strain;
 	
 }

@@ -7,7 +7,8 @@ import lombok.Setter;
 
 @Getter @Setter
 public class VariantSequenceDomain extends BaseDomain {
-	
+
+	private String processStatus;		
 	private String variantSequenceKey;
 	private String variantKey;
 	private String sequenceTypeKey;
@@ -22,5 +23,4 @@ public class VariantSequenceDomain extends BaseDomain {
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date; 
-	private String processStatus;	
 }

@@ -84,6 +84,7 @@ public class AlleleVariant extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 45 and `_notetype_key` = 1050")
 	private List<Note> generalNote;
 	
+	// References
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_variant_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 45")

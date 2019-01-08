@@ -62,8 +62,8 @@ public class VariantSequenceController extends BaseController<VariantSequenceDom
 	@POST
 	@ApiOperation(value = "Search")
 	@Path("/search")
-	public List<VariantSequenceDomain> search() {
-		return variantSequenceService.search();
+	public List<VariantSequenceDomain> search(VariantSequenceDomain searchDomain) {
+		return variantSequenceService.search(searchDomain);
 	}
 	
 }

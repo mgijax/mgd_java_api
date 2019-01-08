@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.all.translator;
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleVariantDomain;
+import org.jax.mgi.mgd.api.model.all.domain.VariantSequenceDomain;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleVariant;
 import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeStrainTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantEffectDomain;
@@ -17,6 +18,7 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
 	private SlimProbeStrainTranslator strainTranslator = new SlimProbeStrainTranslator();
 	private AlleleVariantTypeTranslator variantTypeTranslator = new AlleleVariantTypeTranslator();
 	private AlleleVariantEffectTranslator variantEffectTranslator = new AlleleVariantEffectTranslator();
+	private VariantSequenceTranslator variantSequenceTranslator = new VariantSequenceTranslator();
 	
 	@Override
 	protected AlleleVariantDomain entityToDomain(AlleleVariant entity, int translationDepth) {
@@ -39,9 +41,9 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
 		domain.setAllele(alleleTranslator.translate(entity.getAllele()));
 		domain.setStrain(strainTranslator.translate(entity.getStrain()));
 		
-//		if (entity.getSourceVariant() != null) {
-//			domain.setSourceVariantKey(String.valueOf(entity.getSourceVariant().get_variant_key()));
-//		}
+		if (entity.getSourceVariant() != null) {
+			domain.setSourceVariantKey(String.valueOf(entity.getSourceVariant().get_variant_key()));
+		}
 	
         if (entity.getVariantTypes() != null) {
         	Iterable<AlleleVariantTypeDomain> i = variantTypeTranslator.translateEntities(entity.getVariantTypes());
@@ -57,6 +59,13 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
             }
         }
 
+        if (entity.getVariantSequences() != null) {
+            Iterable<VariantSequenceDomain> i = variantSequenceTranslator.translateEntities(entity.getVariantSequences());
+          	if(i.iterator().hasNext() == true) {
+                domain.setVariantSequences(IteratorUtils.toList(i.iterator()));
+            }
+        }
+        
 		return domain;
 	}
 

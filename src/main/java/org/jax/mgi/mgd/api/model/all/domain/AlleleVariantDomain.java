@@ -32,5 +32,6 @@ public class AlleleVariantDomain extends BaseDomain {
 	
     private List<AlleleVariantTypeDomain> variantTypes;
     private List<AlleleVariantEffectDomain> variantEffects;
+	private List<VariantSequenceDomain> variantSequences;
 	
 } 

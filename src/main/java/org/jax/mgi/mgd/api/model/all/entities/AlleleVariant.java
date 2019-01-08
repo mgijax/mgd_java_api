@@ -71,5 +71,9 @@ public class AlleleVariant extends BaseEntity {
     @JoinColumn(name="_object_key", referencedColumnName="_variant_key", insertable=false, updatable=false)
     @Where(clause="`_annottype_key` = 1027")
     private List<Annotation> variantEffects;
-    
+
+    @OneToMany
+    @JoinColumn(name="_variant_key", insertable=false, updatable=false)
+    private List<VariantSequence> variantSequences;
+        
 }

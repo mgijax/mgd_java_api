@@ -11,8 +11,6 @@ import org.jax.mgi.mgd.api.model.voc.translator.AlleleVariantEffectTranslator;
 import org.jax.mgi.mgd.api.model.voc.translator.AlleleVariantTypeTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 
-import lombok.extern.java.Log;
-
 public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVariant, AlleleVariantDomain> {
 	
 	private SlimAlleleTranslator alleleTranslator = new SlimAlleleTranslator();
@@ -52,12 +50,12 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
         	}
         }
         
-        //if (entity.getVariantEffects() != null) {
-        //    Iterable<AlleleVariantEffectDomain> i = variantEffectTranslator.translateEntities(entity.getVariantEffects());
-        //  	if(i.iterator().hasNext() == true) {
-         //       domain.setVariantEffects(IteratorUtils.toList(i.iterator()));
-        //    }
-        //}
+        if (entity.getVariantEffects() != null) {
+            Iterable<AlleleVariantEffectDomain> i = variantEffectTranslator.translateEntities(entity.getVariantEffects());
+          	if(i.iterator().hasNext() == true) {
+                domain.setVariantEffects(IteratorUtils.toList(i.iterator()));
+            }
+        }
 
 		return domain;
 	}

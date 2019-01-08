@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.voc.domain;
 
+import java.util.List;
+
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 
@@ -11,8 +13,8 @@ import lombok.Setter;
 @ApiModel(value = "Allele Variant Type Domain")
 public class AlleleVariantEffectDomain extends BaseDomain {
 
-     private String termKey;
-     private String term;
-     //private SlimAccessionDomain alleleVariantEffectId;
+    private String termKey;
+    private String term;
+ 	private List<SlimAccessionDomain> alleleVariantSOIds;
 
 }

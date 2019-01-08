@@ -37,7 +37,7 @@ public class Vocabulary extends BaseEntity {
 	@JoinColumn(name="_refs_key")
 	private Reference reference;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_logicaldb_key")
 	private LogicalDB logicalDB;
 

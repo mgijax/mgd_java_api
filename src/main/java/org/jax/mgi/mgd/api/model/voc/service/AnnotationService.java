@@ -121,6 +121,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				domain.setTerm(rs.getString("term"));
 				
 				SlimAccessionDomain accDomain = new SlimAccessionDomain();				
+				List<SlimAccessionDomain> accessions = new ArrayList<SlimAccessionDomain>();
 				accDomain.setAccessionKey(rs.getString("_accession_key"));
 				accDomain.setLogicaldbKey(rs.getString("_logicaldb_key"));
 				accDomain.setObjectKey(rs.getString("_object_key"));
@@ -130,7 +131,8 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				accDomain.setNumericPart(rs.getString("numericPart"));
 				//accDomain.setIsPrivate(rs.getString("isPrivate"));
 				//accDomain.setPreferred(rs.getString("preferred"));
-				domain.setMarkerFeatureTypeId(accDomain);
+				accessions.add(accDomain);
+				domain.setMarkerFeatureTypeIds(accessions);
 
 				results.add(domain);
 			}

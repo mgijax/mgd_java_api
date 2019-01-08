@@ -1,7 +1,9 @@
 package org.jax.mgi.mgd.api.model.voc.domain;
 
+import java.util.List;
+
 import org.jax.mgi.mgd.api.model.BaseDomain;
-import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -25,6 +27,6 @@ public class TermDomain extends BaseDomain {
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;
-	private SlimAccessionDomain accessionId;
+	private List<AccessionDomain> accessionIds;
 		
 }

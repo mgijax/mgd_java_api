@@ -148,15 +148,15 @@ public class TermService extends BaseService<TermDomain> {
 		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty()) {
 			where = where + "\nand t._vocab_key = " + searchDomain.getVocabKey();
 		}
-		if (searchDomain.getVocabName() != null && !searchDomain.getVocabName().isEmpty()) {
-			where = where + "\nand v.name ilike '" + searchDomain.getVocabName() + "'";
-		}
+//		if (searchDomain.getVocabName() != null && !searchDomain.getVocabName().isEmpty()) {
+//			where = where + "\nand v.name ilike '" + searchDomain.getVocabName() + "'";
+//		}
 		
 		// accession id
-		if (searchDomain.getAccessionId() != null) {
-			where = where + "\nand a.accID ilike '" + searchDomain.getAccessionId().getAccID() + "'";
-			from_accession = true;
-		}
+//		if (searchDomain.getAccessionIds() != null) {
+//			where = where + "\nand a.accID ilike '" + searchDomain.getAccessionIds().getAccID() + "'";
+//			from_accession = true;
+//		}
 		
 		if (from_accession == true) {
 			select = select + ", a.*";
@@ -178,7 +178,7 @@ public class TermService extends BaseService<TermDomain> {
 				domain.setTermKey(rs.getString("_term_key"));
 				domain.setTerm(rs.getString("term"));
 				domain.setVocabKey(rs.getString("_vocab_key"));
-				domain.setVocabName(rs.getString("name"));
+				//domain.setVocabName(rs.getString("name"));
 				domain.setAbbreviation(rs.getString("abbreviation"));
 				domain.setNote(rs.getString("note"));
 				domain.setSequenceNum(rs.getString("sequenceNum"));
@@ -198,7 +198,7 @@ public class TermService extends BaseService<TermDomain> {
 					accDomain.setAccID(rs.getString("accID"));
 					accDomain.setPrefixPart(rs.getString("prefixPart"));
 					accDomain.setNumericPart(rs.getString("numericPart"));
-					domain.setAccessionId(accDomain);
+					//domain.setAccessionIds(accDomain);
 				}
 				
 				results.add(domain);

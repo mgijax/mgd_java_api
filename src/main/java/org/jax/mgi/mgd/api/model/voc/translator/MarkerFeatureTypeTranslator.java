@@ -1,6 +1,8 @@
 package org.jax.mgi.mgd.api.model.voc.translator;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.SlimAccessionTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
@@ -15,7 +17,11 @@ public class MarkerFeatureTypeTranslator extends BaseEntityDomainTranslator<Anno
 
 		domain.setTermKey(String.valueOf(entity.getTerm().get_term_key()));
 		domain.setTerm(entity.getTerm().getTerm());
-		domain.setMarkerFeatureTypeId(accessionTranslator.translate(entity.getMarkerFeatureTypeId()));
+		
+		Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getMarkerFeatureTypeIds());
+		if(acc.iterator().hasNext() == true) {
+			domain.setMarkerFeatureTypeIds(IteratorUtils.toList(acc.iterator()));
+		}
 				
 		return domain;
 	}

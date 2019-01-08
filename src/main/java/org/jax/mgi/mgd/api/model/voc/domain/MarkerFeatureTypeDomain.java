@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.voc.domain;
 
+import java.util.List;
+
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 
@@ -13,6 +15,6 @@ public class MarkerFeatureTypeDomain extends BaseDomain {
 
 	private String termKey;
 	private String term;
-	private SlimAccessionDomain markerFeatureTypeId;
+	private List<SlimAccessionDomain> markerFeatureTypeIds;
 	
 }

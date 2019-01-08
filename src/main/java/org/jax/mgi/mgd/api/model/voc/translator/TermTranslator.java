@@ -1,19 +1,24 @@
 package org.jax.mgi.mgd.api.model.voc.translator;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.acc.translator.SlimAccessionTranslator;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain> {
+	
+	AccessionTranslator accessionTranslator = new AccessionTranslator();
 	
 	@Override
 	protected TermDomain entityToDomain(Term entity, int translationDepth) {
 		TermDomain domain = new TermDomain();
 		
 		domain.setTermKey(String.valueOf(entity.get_term_key()));
-		domain.setVocabKey(String.valueOf(entity.getVocab().get_vocab_key()));
-		domain.setVocabName(entity.getVocab().getName());
+		domain.setVocabKey(String.valueOf(entity.get_vocab_key()));
+		//domain.setVocabKey(String.valueOf(entity.getVocab().get_vocab_key()));
+		//domain.setVocabName(entity.getVocab().getName());
 		domain.setTerm(entity.getTerm());
 		domain.setAbbreviation(entity.getAbbreviation());
 		domain.setNote(entity.getNote());
@@ -26,8 +31,10 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 	
-		SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
-		domain.setAccessionId(accessionTranslator.translate(entity.getAccessionId()));
+		Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getAccessionIds());
+		if(acc.iterator().hasNext() == true) {
+			domain.setAccessionIds(IteratorUtils.toList(acc.iterator()));
+		}
 		
 		return domain;
 	}

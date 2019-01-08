@@ -1,11 +1,13 @@
 package org.jax.mgi.mgd.api.model.voc.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -24,6 +26,7 @@ public class Term extends BaseEntity {
 
 	@Id
 	private int _term_key;
+	private Integer _vocab_key;
 	private String term;
 	private String abbreviation;
 	private String note;
@@ -32,21 +35,21 @@ public class Term extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_vocab_key")
-	private Vocabulary vocab;
+	//@OneToOne(fetch=FetchType.LAZY)
+	//@JoinColumn(name="_vocab_key", insertable=false, updatable=false)
+	//private Vocabulary vocab;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
+	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key", insertable=false, updatable=false)
 	private User createdBy;
 
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
+	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key", insertable=false, updatable=false)
 	private User modifiedBy;
 	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_term_key", referencedColumnName="_object_key")
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 13 and preferred = 1")
-	private Accession accessionId;
+	private List<Accession> accessionIds;
 	
 }

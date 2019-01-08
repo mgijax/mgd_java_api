@@ -32,9 +32,11 @@ public class AnnotationType extends BaseEntity {
 	@JoinColumn(name="_mgitype_key")
 	private MGIType mgiType;
 	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_vocab_key")
-	private Vocabulary vocab;
+	//turn this off 
+	// because it is causing the entity to return the same annotation more than once
+	//@OneToOne(fetch=FetchType.LAZY)
+	//@JoinColumn(name="_vocab_key")
+	//private Vocabulary vocab;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_evidencevocab_key", referencedColumnName="_vocab_key")
@@ -44,7 +46,4 @@ public class AnnotationType extends BaseEntity {
 	@JoinColumn(name="_qualifiervocab_key", referencedColumnName="_vocab_key")
 	private Vocabulary qualifierVocab;
 	
-	//@OneToMany(fetch=FetchType.LAZY)
-	//@JoinColumn(name="_anottype_key")
-	//private Set<Annotation> annotations;
 }

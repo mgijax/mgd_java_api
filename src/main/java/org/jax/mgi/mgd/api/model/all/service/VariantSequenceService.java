@@ -100,10 +100,10 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 			where = where + "\nand vs.endCoordinate = " + searchDomain.getEndCoordinate();
 		}
 		if (searchDomain.getReferenceSequence() != null && !searchDomain.getReferenceSequence().isEmpty()) {
-			where = where + "\nand vs.referenceSequence = '" + searchDomain.getReferenceSequence() + "'";
+			where = where + "\nand vs.referenceSequence ilike '" + searchDomain.getReferenceSequence() + "'";
 		}
 		if (searchDomain.getVariantSequence() != null && !searchDomain.getVariantSequence().isEmpty()) {
-			where = where + "\nand vs.variantSequence = '" + searchDomain.getVariantSequence() + "'";
+			where = where + "\nand vs.variantSequence ilike '" + searchDomain.getVariantSequence() + "'";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

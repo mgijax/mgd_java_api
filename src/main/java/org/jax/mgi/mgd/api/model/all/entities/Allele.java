@@ -106,6 +106,6 @@ public class Allele extends BaseEntity {
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key")
 	@Where(clause="`_mgitype_key` = 11")
-	private List<MGIReferenceAssoc> references;
+	private List<MGIReferenceAssoc> refAssocs;
 	
 }

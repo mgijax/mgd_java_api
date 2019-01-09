@@ -6,13 +6,13 @@ import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.SlimAccessionTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
-import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
+import org.jax.mgi.mgd.api.model.mgi.domain.SlimMGIReferenceAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.translator.SlimMGIReferenceAssocTranslator;
 
 public class SlimAlleleTranslator extends BaseEntityDomainTranslator<Allele, SlimAlleleDomain> {
 
 	private SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
-	private MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
+	private SlimMGIReferenceAssocTranslator refAssocTranslator = new SlimMGIReferenceAssocTranslator();
 	
 	@Override
 	protected SlimAlleleDomain entityToDomain(Allele entity, int translationDepth) {
@@ -32,7 +32,7 @@ public class SlimAlleleTranslator extends BaseEntityDomainTranslator<Allele, Sli
 
 		// reference associations
 		if (entity.getRefAssocs() != null) {
-			Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
+			Iterable<SlimMGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
 			if(i.iterator().hasNext() == true) {
 				domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
 			}

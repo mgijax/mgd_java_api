@@ -39,4 +39,5 @@ public class AlleleVariantDomain extends BaseDomain {
 	private NoteDomain generalNote;	
 	private List<MGIReferenceAssocDomain> refAssocs;
 	
+	private List<VariantSequenceDomain> sourceSequences;
 } 

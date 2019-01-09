@@ -118,7 +118,8 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		String cmd = "";		
 		String select = "select distinct v._variant_key, a._allele_key, a.symbol";
 		String from = "from all_variant v, all_allele a";
-		String where = "where v._allele_key = a._allele_key";
+		String where = "where v._sourcevariant_key is not null"
+				+ "\nand v._allele_key = a._allele_key";
 		String orderBy = "order by a.symbol";
 		String limit = "LIMIT 1000";
 		String value;	

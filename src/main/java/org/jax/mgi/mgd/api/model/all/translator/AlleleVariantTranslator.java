@@ -47,8 +47,15 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
 		domain.setAllele(alleleTranslator.translate(entity.getAllele()));
 		domain.setStrain(strainTranslator.translate(entity.getStrain()));
 		
+		// a curated variant has a source variant
+		// a source variant does *not* have a source variant (null)
 		if (entity.getSourceVariant() != null) {
 			domain.setSourceVariantKey(String.valueOf(entity.getSourceVariant().get_variant_key()));
+            /// variant sequences for the source variant
+			Iterable<VariantSequenceDomain> i = variantSequenceTranslator.translateEntities(entity.getSourceVariant().getVariantSequences());
+          	if(i.iterator().hasNext() == true) {
+                domain.setSourceSequences(IteratorUtils.toList(i.iterator()));
+            }		
 		}
 	
         if (entity.getVariantTypes() != null) {
@@ -72,11 +79,11 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
             }
         }
 
-		// at most one generalNote
+		// at most one generalNote; list of 1
 		if (entity.getGeneralNote() != null) {
-			Iterable<NoteDomain> editorNote = noteTranslator.translateEntities(entity.getGeneralNote());
-			if(editorNote.iterator().hasNext() == true) {
-				domain.setGeneralNote(editorNote.iterator().next());
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getGeneralNote());
+			if(note.iterator().hasNext() == true) {
+				domain.setGeneralNote(note.iterator().next());
 			}
 		}
 

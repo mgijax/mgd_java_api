@@ -137,6 +137,12 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			from = from + cmResults[0];
 			where = where + cmResults[1];
 		}
+		if (searchDomain.getVariantKey() != null && !searchDomain.getVariantKey().isEmpty()) {
+			where = where + "\nand v._variant_key = " + searchDomain.getVariantKey();
+		}	
+		if (searchDomain.getSourceVariantKey() != null && !searchDomain.getSourceVariantKey().isEmpty()) {
+			where = where + "\nand v._sourcevariant_key = " + searchDomain.getSourceVariantKey();
+		}		
 		if (searchDomain.getIsReviewed() != null && !searchDomain.getIsReviewed().isEmpty()) {
 			where = where + "\nand v.isReviewed = " + searchDomain.getIsReviewed();
 		}
@@ -145,6 +151,9 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			where = where + "\nand v.description ilike '" + value + "'";
 		}		
 		if (searchDomain.getAllele() != null) {
+			if (searchDomain.getAllele().getAlleleKey() != null && !searchDomain.getAllele().getAlleleKey().isEmpty()) {
+				where = where + "\nand v._allele_key = " + searchDomain.getAllele().getAlleleKey();
+			}	
 			if (searchDomain.getAllele().getSymbol() != null && !searchDomain.getAllele().getSymbol().isEmpty()) {
 				where = where + "\nand a.symbol ilike '" + searchDomain.getAllele().getSymbol() + "'" ;
 			}	
@@ -152,6 +161,10 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 	
 		// strain
 		if (searchDomain.getStrain() != null) {
+			if (searchDomain.getStrain().getStrainKey() != null && !searchDomain.getStrain().getStrainKey().isEmpty()) {
+				where = where + "\nand v._strain_key = " + searchDomain.getStrain().getStrainKey();
+				from_strain = true;
+			}
 			if (searchDomain.getStrain().getStrain() != null && !searchDomain.getStrain().getStrain().isEmpty()) {
 				where = where + "\nand p.strain ilike '" + searchDomain.getStrain().getStrain() + "'" ;
 				from_strain = true;

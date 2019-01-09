@@ -83,6 +83,13 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 			from = from + cmResults[0];
 			where = where + cmResults[1];
 		}
+
+		if (searchDomain.getVariantSequenceKey() != null && !searchDomain.getVariantSequenceKey().isEmpty()) {
+			where = where + "\nand vs._variantsequence_key = " + searchDomain.getVariantSequenceKey();
+		}
+		if (searchDomain.getVariantKey() != null && !searchDomain.getVariantKey().isEmpty()) {
+			where = where + "\nand vs._variant_key = " + searchDomain.getVariantKey();
+		}		
 		if (searchDomain.getSequenceTypeKey() != null && !searchDomain.getSequenceTypeKey().isEmpty()) {
 			where = where + "\nand vs._sequence_type_key = " + searchDomain.getSequenceTypeKey();
 		}

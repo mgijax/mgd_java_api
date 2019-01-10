@@ -128,6 +128,8 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		Boolean from_sequence = false;
 		Boolean from_variantType = false;
 		Boolean from_variantTypeAcc = false;
+		Boolean from_variantEffect = false;
+		Boolean from_variantEffectAcc = false;
 		Boolean from_note = false;		
 		Boolean from_reference = false;
 
@@ -229,7 +231,28 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 				}		
 			}
 		}
-				
+
+		// variant effect
+		if (searchDomain.getVariantEffects() != null) {
+			if (searchDomain.getVariantEffects().get(0).getTerm() != null 
+					&& !searchDomain.getVariantEffects().get(0).getTerm().isEmpty()) {
+				value = searchDomain.getVariantEffects().get(0).getTerm().replaceAll(",",  "''");
+				where = where + "\nand t2.term ilike '" + value + "'";
+				from_variantEffect = true;
+			}		
+		}
+
+		// variant effect accession
+		if (searchDomain.getVariantEffects() != null) {
+			if (searchDomain.getVariantEffects().get(0).getAlleleVariantSOIds() != null) {
+				if (searchDomain.getVariantEffects().get(0).getAlleleVariantSOIds().get(0).getAccID() != null 
+						&& !searchDomain.getVariantEffects().get(0).getAlleleVariantSOIds().get(0).getAccID().isEmpty()) {
+					where = where + "\nand va2.accID ilike '" + searchDomain.getVariantEffects().get(0).getAlleleVariantSOIds().get(0).getAccID() + "'";
+					from_variantEffect = true;
+					from_variantEffectAcc = true;
+				}		
+			}
+		}		
 		// notes
 		if (searchDomain.getGeneralNote() != null) {
 			value = searchDomain.getGeneralNote().getNoteChunk().replaceAll("'",  "''");
@@ -274,6 +297,18 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 					+ "\nand va1._mgitype_key = 13"
 					+ "\nand va1._logicaldb_key = 145";
 		}
+		if (from_variantEffect == true) {
+			from = from + ", voc_annot v2, voc_term t2";
+			where = where + "\nand v._variant_key = v2._object_key"
+					+ "\nand v2._term_key = t2._term_key"
+					+ "\nand v2._annottype_key = 1027";
+		}
+		if (from_variantEffectAcc == true) {
+			from = from + ", acc_accession va2";
+			where = where + "\nand v2._term_key = va2._object_key"
+					+ "\nand va2._mgitype_key = 13"
+					+ "\nand va2._logicaldb_key = 145";
+		}		
 		if (from_note == true) {
 			from = from + ", mgi_note_allelevariant_view note";
 			where = where + "\nand v._variant_key = note._object_key";

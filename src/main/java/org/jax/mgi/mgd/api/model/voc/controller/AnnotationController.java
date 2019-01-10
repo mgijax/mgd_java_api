@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantVocabDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
@@ -65,4 +66,36 @@ public class AnnotationController extends BaseController<AnnotationDomain> {
 		return results;
 	}
 
+	@POST
+	@ApiOperation(value = "Allele Variant Types")
+	@Path("/allelevariantTypes")
+	public List<AlleleVariantVocabDomain> alleleVariantTypes(Integer key) {
+			
+		List<AlleleVariantVocabDomain> results = new ArrayList<AlleleVariantVocabDomain>();
+		
+		try {
+			results = annotationService.alleleVariantAnnotations(key, "1026");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+
+	@POST
+	@ApiOperation(value = "Allele Variant Effects")
+	@Path("/allelevariantEffects")
+	public List<AlleleVariantVocabDomain> alleleVariantEffects(Integer key) {
+			
+		List<AlleleVariantVocabDomain> results = new ArrayList<AlleleVariantVocabDomain>();
+		
+		try {
+			results = annotationService.alleleVariantAnnotations(key, "1027");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+		
 }

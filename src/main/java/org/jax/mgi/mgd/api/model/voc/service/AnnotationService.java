@@ -12,6 +12,7 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationDAO;
+import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantVocabDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
@@ -57,7 +58,6 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 	public SearchResults<AnnotationDomain> delete(Integer key, User user) {
 		return null;
 	}
-
 
 	@Transactional
 	private List<AnnotationDomain> getAnnotationDomainList(String cmd) {
@@ -144,5 +144,60 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 		// ...off to be turned into JSON
 		return results;
 	}
+	
+	@Transactional	
+	public List<AlleleVariantVocabDomain> alleleVariantAnnotations(Integer key, String annotTypeKey) {
+		// list of allele variant type domains for given variant
 		
+		// if we need to include the voc_evidence info
+		// then add the voc_evidence info into the AlleleVariantVocDomain
+		// and then add the voc_evidence info into the SQL cmd string
+		// and add to ResultSet
+		
+		List<AlleleVariantVocabDomain> results = new ArrayList<AlleleVariantVocabDomain>();
+		
+		String cmd = "\nselect v._annot_key, t._term_key, t.term, a.*"
+				+ "\nfrom VOC_Annot v, VOC_Term t, ACC_Accession a"
+				+ "\nwhere v._annottype_key = " + annotTypeKey
+				+ "\nand v._term_key = t._term_key"
+				+ "\nand v._term_key = a._object_key"
+				+ "\nand a._mgitype_key = 13"
+				+ "\nand a._logicaldb_key = 145"
+				+ "\nand v._object_key = " + key;		
+		log.info(cmd);
+
+		// request data, and parse results
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				AlleleVariantVocabDomain domain = new AlleleVariantVocabDomain();
+				domain.setAnnotKey(rs.getString("_annot_key"));
+				domain.setTermKey(rs.getString("_term_key"));
+				domain.setTerm(rs.getString("term"));
+				
+				SlimAccessionDomain accDomain = new SlimAccessionDomain();				
+				List<SlimAccessionDomain> accessions = new ArrayList<SlimAccessionDomain>();
+				accDomain.setAccessionKey(rs.getString("_accession_key"));
+				accDomain.setLogicaldbKey(rs.getString("_logicaldb_key"));
+				accDomain.setObjectKey(rs.getString("_object_key"));
+				accDomain.setMgiTypeKey(rs.getString("_mgitype_key"));
+				accDomain.setAccID(rs.getString("accid"));
+				accDomain.setPrefixPart(rs.getString("prefixPart"));
+				accDomain.setNumericPart(rs.getString("numericPart"));
+				//accDomain.setIsPrivate(rs.getString("isPrivate"));
+				//accDomain.setPreferred(rs.getString("preferred"));
+				accessions.add(accDomain);
+				domain.setAlleleVariantSOIds(accessions);
+
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		// ...off to be turned into JSON
+		return results;
+	}
+	
 }

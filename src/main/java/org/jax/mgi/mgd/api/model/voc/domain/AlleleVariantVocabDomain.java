@@ -10,8 +10,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@ApiModel(value = "Allele Variant Type Domain")
-public class AlleleVariantTypeDomain extends BaseDomain {
+@ApiModel(value = "Allele Variant Vocab Domain")
+public class AlleleVariantVocabDomain extends BaseDomain {
 
 	private String annotKey;
     private String termKey;

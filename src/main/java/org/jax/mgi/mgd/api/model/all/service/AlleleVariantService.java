@@ -132,6 +132,8 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		Boolean from_variantEffectAcc = false;
 		Boolean from_note = false;		
 		Boolean from_reference = false;
+		Boolean from_referenceID = false;
+		Boolean from_alleleID = false;
 
 		// if parameter exists, then add to where-clause
 		
@@ -153,6 +155,8 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			value = searchDomain.getDescription().replaceAll("'",  "''");
 			where = where + "\nand v.description ilike '" + value + "'";
 		}		
+		
+		// allele
 		if (searchDomain.getAllele() != null) {
 			if (searchDomain.getAllele().getAlleleKey() != null && !searchDomain.getAllele().getAlleleKey().isEmpty()) {
 				where = where + "\nand v._allele_key = " + searchDomain.getAllele().getAlleleKey();
@@ -160,6 +164,19 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			if (searchDomain.getAllele().getSymbol() != null && !searchDomain.getAllele().getSymbol().isEmpty()) {
 				where = where + "\nand a.symbol ilike '" + searchDomain.getAllele().getSymbol() + "'" ;
 			}	
+			if ((searchDomain.getAllele().getMgiAccessionIds() != null) && (searchDomain.getAllele().getMgiAccessionIds().size() > 0)) {
+				if (searchDomain.getAllele().getMgiAccessionIds().get(0).getAccID().trim().length() > 0) {
+					from_alleleID = true;
+					StringBuffer alleleClauses = new StringBuffer("");
+					for (String alleleID : searchDomain.getAllele().getMgiAccessionIds().get(0).getAccID().split(" ")) {
+						if (alleleClauses.length() > 0) {
+							alleleClauses.append(" or ");
+						}
+						alleleClauses.append(" aid.accID ilike '" + alleleID + "' ");
+					}
+					where = where + "\nand (" + alleleClauses.toString() + ")";
+				}
+			}
 		}
 	
 		// strain
@@ -272,6 +289,19 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 				from_reference = true;
 			}
 		}
+		
+		// references for variant's allele
+		if ((searchDomain.getAllele().getRefAssocs() != null) && (searchDomain.getAllele().getRefAssocs().size() > 0)) {
+			from_referenceID = true;
+			StringBuffer jnumClauses = new StringBuffer("");
+			for (String jnumID : searchDomain.getAllele().getRefAssocs().get(0).getJnumid().split(" ")) {
+				if (jnumClauses.length() > 0) {
+					jnumClauses.append(" or ");
+				}
+				jnumClauses.append(" rid.accID ilike '" + jnumID + "' ");
+			}
+			where = where + "\nand (" + jnumClauses.toString() + ")";
+		}
 
 		if (from_strain == true) {
 			from = from + ", prb_strain p";
@@ -303,6 +333,11 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 					+ "\nand v2._term_key = t2._term_key"
 					+ "\nand v2._annottype_key = 1027";
 		}
+		if (from_alleleID == true) {
+			from = from + ", acc_accession aid";
+			where = where + "\nand a._allele_key = aid._object_key"
+					+ "\nand aid._mgitype_key = 11";
+		}		
 		if (from_variantEffectAcc == true) {
 			from = from + ", acc_accession va2";
 			where = where + "\nand v2._term_key = va2._object_key"
@@ -313,11 +348,16 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			from = from + ", mgi_note_allelevariant_view note";
 			where = where + "\nand v._variant_key = note._object_key";
 		}
-		if (from_reference == true) {
+		if (from_reference || from_referenceID) {
 			from = from + ", mgi_reference_allelevariant_view vr";
 			where = where + "\nand v._variant_key = vr._object_key"
 					+ "\nand vr._refassoctype_key = 1030";
 		}
+		if (from_referenceID == true) {
+			from = from + ", acc_accession rid";
+			where = where + "\nand vr._Refs_key = rid._object_key"
+					+ "\nand rid._mgitype_key = 1";
+		}		
 		
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;

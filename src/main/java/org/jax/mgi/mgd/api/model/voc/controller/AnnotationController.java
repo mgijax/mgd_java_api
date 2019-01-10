@@ -97,5 +97,13 @@ public class AnnotationController extends BaseController<AnnotationDomain> {
 		
 		return results;
 	}
-		
+
+	@POST
+	@ApiOperation(value = "Process")
+	@Path("/process")
+	public void process(String parentKey, List<AnnotationDomain> domain, String annotTypeKey, User user) {
+		annotationService.process(parentKey, domain, annotTypeKey, user);
+		return;
+	}
+	
 }

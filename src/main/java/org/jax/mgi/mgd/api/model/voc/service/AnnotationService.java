@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.voc.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -12,9 +13,12 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationDAO;
+import org.jax.mgi.mgd.api.model.voc.dao.AnnotationTypeDAO;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantVocabDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
+import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -28,6 +32,10 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 
 	@Inject
 	private AnnotationDAO annotationDAO;
+	@Inject
+	private AnnotationTypeDAO annotTypeDAO;
+	@Inject
+	private TermDAO termDAO;
 	
 	private AnnotationTranslator translator = new AnnotationTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
@@ -199,5 +207,81 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 		// ...off to be turned into JSON
 		return results;
 	}
+
+	@Transactional
+	public void process(String parentKey, List<AnnotationDomain> domain, String annotTypeKey, User user) {
+		// process annotation associations (create, delete, update)
+		
+		// first pass:  
+		// 1.  only works for voc_annot, voc_evidence
+		//      voc_evidence_property is not included in this pass
+		// 2.  implement create/delete only
 	
+		if (domain == null || domain.isEmpty()) {
+			log.info("processAnnotation/nothing to process");
+			return;
+		}
+						
+		// iterate thru the list of rows in the domain
+		// for each row, determine whether to perform an insert, delete or update
+		
+		for (int i = 0; i < domain.size(); i++) {
+				
+			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
+	
+				log.info("processAnnotation create");
+
+				// create new entity object from in-coming domain
+				// the Entities class handles the generation of the primary key
+				// database trigger will assign the MGI id/see pgmgddbschema/trigger for details
+
+				Annotation entity = new Annotation();
+				
+				// assumes that required fields exist
+				entity.setAnnotType(annotTypeDAO.get(Integer.valueOf(domain.get(0).getAnnotKey())));				
+				entity.set_object_key(Integer.valueOf(domain.get(i).getObjectKey()));
+				entity.setTerm(termDAO.get(Integer.valueOf(domain.get(0).getTermKey())));
+				entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(0).getQualifierKey())));
+				
+				// add creation/modification 
+				entity.setCreation_date(new Date());
+				entity.setModification_date(new Date());
+				
+				// execute persist/insert/send to database
+				annotationDAO.persist(entity);
+		
+				// add service for voc_evidence piece
+				
+				log.info("processAnnotation/create/returning results");				
+			}
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+				log.info("processAnnotation delete");
+				Annotation entity = annotationDAO.get(Integer.valueOf(domain.get(i).getAnnotKey()));
+				annotationDAO.remove(entity);
+				log.info("processAnnotation delete successful");
+			}
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+				log.info("processAnnotation update");
+
+				Boolean modified = false;
+				Annotation entity = annotationDAO.get(Integer.valueOf(domain.get(i).getAnnotKey()));
+				
+				if (modified == true) {
+					entity.setModification_date(new Date());
+					annotationDAO.update(entity);
+					log.info("processAnnotation/changes processed: " + domain.get(i).getAnnotKey());
+				}
+				else {
+					log.info("processAnnotation/no changes processed: " + domain.get(i).getAnnotKey());
+				}
+			}
+			else {
+				log.info("processAnnotation/no changes processed: " + domain.get(i).getAnnotKey());
+			}
+		}
+		
+		log.info("processAnnotation/processing successful");
+		return;
+	}
+		
 }

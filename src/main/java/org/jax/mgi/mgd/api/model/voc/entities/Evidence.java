@@ -4,9 +4,12 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
@@ -14,6 +17,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,6 +28,9 @@ import lombok.Setter;
 public class Evidence extends BaseEntity {
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="voc_evidence_generator")
+	@SequenceGenerator(name="voc_evidence_generator", sequenceName = "voc_evidence_seq", allocationSize=1)
+	@ApiModelProperty(value="primary key")
 	private int _annotevidence_key;
 	private String inferredFrom;
 	private Date creation_date;

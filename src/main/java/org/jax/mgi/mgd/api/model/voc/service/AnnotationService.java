@@ -11,14 +11,17 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationTypeDAO;
+import org.jax.mgi.mgd.api.model.voc.dao.EvidenceDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantVocabDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
+import org.jax.mgi.mgd.api.model.voc.entities.Evidence;
 import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -33,9 +36,13 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 	@Inject
 	private AnnotationDAO annotationDAO;
 	@Inject
+	private EvidenceDAO evidenceDAO;
+	@Inject
 	private AnnotationTypeDAO annotTypeDAO;
 	@Inject
 	private TermDAO termDAO;
+	@Inject
+	private ReferenceDAO referenceDAO;
 	
 	private AnnotationTranslator translator = new AnnotationTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
@@ -235,23 +242,28 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				// the Entities class handles the generation of the primary key
 				// database trigger will assign the MGI id/see pgmgddbschema/trigger for details
 
-				Annotation entity = new Annotation();
-				
-				// assumes that required fields exist
+				// voc_annot
+				Annotation entity = new Annotation();		
 				entity.setAnnotType(annotTypeDAO.get(Integer.valueOf(domain.get(0).getAnnotKey())));				
 				entity.set_object_key(Integer.valueOf(domain.get(i).getObjectKey()));
 				entity.setTerm(termDAO.get(Integer.valueOf(domain.get(0).getTermKey())));
 				entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(0).getQualifierKey())));
-				
-				// add creation/modification 
 				entity.setCreation_date(new Date());
 				entity.setModification_date(new Date());
-				
-				// execute persist/insert/send to database
 				annotationDAO.persist(entity);
 		
-				// add service for voc_evidence piece
-				
+				// voc_evidence
+				Evidence evidenceEntity = new Evidence();
+				evidenceEntity.set_annot_key(entity.get_annot_key());
+				evidenceEntity.setEvidenceTerm(termDAO.get(Integer.valueOf(domain.get(0).getEvidence().getEvidenceTermKey())));
+				evidenceEntity.setReference(referenceDAO.get(Integer.valueOf(domain.get(0).getEvidence().getRefsKey())));
+				evidenceEntity.setInferredFrom(domain.get(0).getEvidence().getInferredFrom());
+				evidenceEntity.setCreatedBy(user);
+				evidenceEntity.setCreation_date(new Date());
+				evidenceEntity.setModifiedBy(user);
+				evidenceEntity.setModification_date(new Date());
+				evidenceDAO.persist(evidenceEntity);
+								
 				log.info("processAnnotation/create/returning results");				
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
@@ -261,6 +273,10 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				log.info("processAnnotation delete successful");
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+				
+				// not implementing an update at this time
+				// instead, UI should implement as a delete/insert
+				
 				log.info("processAnnotation update");
 
 				Boolean modified = false;

@@ -50,6 +50,10 @@ public class Annotation extends BaseEntity {
 	@JoinColumn(name="_qualifier_key", referencedColumnName="_term_key")
 	private Term qualifier;
 
+	@OneToMany()
+	@JoinColumn(name="_annot_key")
+	private List<Evidence> evidences;
+	
 	// marker feature type:  from _annottype_key = 1011
 	// _term_key is the feature type, _object_key is the marker
 	@OneToMany()

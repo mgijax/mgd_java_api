@@ -32,6 +32,7 @@ public class Evidence extends BaseEntity {
 	@SequenceGenerator(name="voc_evidence_generator", sequenceName = "voc_evidence_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")
 	private int _annotevidence_key;
+	private int _annot_key;
 	private String inferredFrom;
 	private Date creation_date;
 	private Date modification_date;

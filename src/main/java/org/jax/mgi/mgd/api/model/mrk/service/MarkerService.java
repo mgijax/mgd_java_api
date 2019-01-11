@@ -60,6 +60,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private MGIReferenceAssocService referenceAssocService;
 	@Inject
 	private AccessionService accessionService;
+	//@Inject
+	//private AnnotationService annotationService;
 	
 	private MarkerTranslator translator = new MarkerTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
@@ -257,7 +259,13 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		if (domain.getEditAccessionIds() != null) {
 			accessionService.process(domain.getMarkerKey(), "9", domain.getEditAccessionIds(), mgiTypeName, user);
 		}
-		
+
+		// process feature types
+		// will have to use AnnotationDomain in MarkerDomain instead of MarkerFeatureTypeDomain
+		//if (domain.getFeatureTypes() != null) {
+		//	annotationService.process(domain.getMarkerKey(), domain.getFeatureTypes(), "1011", user);
+		//}
+				
 		// return entity translated to domain
 		log.info("processMarker/update/returning results");
 		results.setItem(translator.translate(entity, 0));

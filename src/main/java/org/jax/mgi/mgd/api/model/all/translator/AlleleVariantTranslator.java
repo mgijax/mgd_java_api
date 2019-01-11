@@ -10,15 +10,15 @@ import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeStrainTranslator;
-import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantVocabDomain;
-import org.jax.mgi.mgd.api.model.voc.translator.AlleleVariantVocabTranslator;
+import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantAnnotationDomain;
+import org.jax.mgi.mgd.api.model.voc.translator.AlleleVariantAnnotationTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 
 public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVariant, AlleleVariantDomain> {
 	
 	private SlimAlleleTranslator alleleTranslator = new SlimAlleleTranslator();
 	private SlimProbeStrainTranslator strainTranslator = new SlimProbeStrainTranslator();
-	private AlleleVariantVocabTranslator variantVocabTranslator = new AlleleVariantVocabTranslator();
+	private AlleleVariantAnnotationTranslator variantAnnotationTranslator = new AlleleVariantAnnotationTranslator();
 	private VariantSequenceTranslator variantSequenceTranslator = new VariantSequenceTranslator();
 	private NoteTranslator noteTranslator = new NoteTranslator();
 	private MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
@@ -56,14 +56,14 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
 		}
 	
         if (entity.getVariantTypes() != null) {
-        	Iterable<AlleleVariantVocabDomain> i = variantVocabTranslator.translateEntities(entity.getVariantTypes());
+        	Iterable<AlleleVariantAnnotationDomain> i = variantAnnotationTranslator.translateEntities(entity.getVariantTypes());
         	if(i.iterator().hasNext() == true) {
                 domain.setVariantTypes(IteratorUtils.toList(i.iterator()));
         	}
         }
         
         if (entity.getVariantEffects() != null) {
-            Iterable<AlleleVariantVocabDomain> i = variantVocabTranslator.translateEntities(entity.getVariantEffects());
+            Iterable<AlleleVariantAnnotationDomain> i = variantAnnotationTranslator.translateEntities(entity.getVariantEffects());
           	if(i.iterator().hasNext() == true) {
                 domain.setVariantEffects(IteratorUtils.toList(i.iterator()));
             }

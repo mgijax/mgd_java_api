@@ -4,16 +4,16 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.SlimAccessionTranslator;
-import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantVocabDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantAnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 
-public class AlleleVariantVocabTranslator extends BaseEntityDomainTranslator<Annotation, AlleleVariantVocabDomain> {
+public class AlleleVariantAnnotationTranslator extends BaseEntityDomainTranslator<Annotation, AlleleVariantAnnotationDomain> {
 
 	SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
 	
     @Override
-    protected AlleleVariantVocabDomain entityToDomain(Annotation entity, int translationDepth) {
-    	AlleleVariantVocabDomain domain = new AlleleVariantVocabDomain();
+    protected AlleleVariantAnnotationDomain entityToDomain(Annotation entity, int translationDepth) {
+    	AlleleVariantAnnotationDomain domain = new AlleleVariantAnnotationDomain();
 
      	domain.setAnnotKey(String.valueOf(entity.get_annot_key()));
  		domain.setTermKey(String.valueOf(entity.getTerm().get_term_key()));
@@ -28,7 +28,7 @@ public class AlleleVariantVocabTranslator extends BaseEntityDomainTranslator<Ann
     }
 
     @Override
-    protected Annotation domainToEntity(AlleleVariantVocabDomain domain, int translationDepth) {
+    protected Annotation domainToEntity(AlleleVariantAnnotationDomain domain, int translationDepth) {
         // Needs to be implemented once we choose to save terms
         return null;
     }

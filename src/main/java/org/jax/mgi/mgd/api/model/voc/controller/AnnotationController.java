@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantVocabDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantAnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
@@ -31,13 +31,13 @@ public class AnnotationController extends BaseController<AnnotationDomain> {
 	private AnnotationService annotationService;
 
 	@Override
-	public SearchResults<AnnotationDomain> create(AnnotationDomain object, User user) {
-		return annotationService.create(object, user);
+	public SearchResults<AnnotationDomain> create(AnnotationDomain domain, User user) {
+		return null;
 	}
 
 	@Override
-	public SearchResults<AnnotationDomain> update(AnnotationDomain object, User user) {
-		return annotationService.update(object, user);
+	public SearchResults<AnnotationDomain> update(AnnotationDomain domain, User user) {
+		return null;
 	}
 
 	@Override
@@ -69,9 +69,9 @@ public class AnnotationController extends BaseController<AnnotationDomain> {
 	@POST
 	@ApiOperation(value = "Allele Variant Types")
 	@Path("/allelevariantTypes")
-	public List<AlleleVariantVocabDomain> alleleVariantTypes(Integer key) {
+	public List<AlleleVariantAnnotationDomain> alleleVariantTypes(Integer key) {
 			
-		List<AlleleVariantVocabDomain> results = new ArrayList<AlleleVariantVocabDomain>();
+		List<AlleleVariantAnnotationDomain> results = new ArrayList<AlleleVariantAnnotationDomain>();
 		
 		try {
 			results = annotationService.alleleVariantAnnotations(key, "1026");
@@ -85,9 +85,9 @@ public class AnnotationController extends BaseController<AnnotationDomain> {
 	@POST
 	@ApiOperation(value = "Allele Variant Effects")
 	@Path("/allelevariantEffects")
-	public List<AlleleVariantVocabDomain> alleleVariantEffects(Integer key) {
+	public List<AlleleVariantAnnotationDomain> alleleVariantEffects(Integer key) {
 			
-		List<AlleleVariantVocabDomain> results = new ArrayList<AlleleVariantVocabDomain>();
+		List<AlleleVariantAnnotationDomain> results = new ArrayList<AlleleVariantAnnotationDomain>();
 		
 		try {
 			results = annotationService.alleleVariantAnnotations(key, "1027");

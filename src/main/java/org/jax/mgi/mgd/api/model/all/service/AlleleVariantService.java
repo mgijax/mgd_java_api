@@ -18,6 +18,7 @@ import org.jax.mgi.mgd.api.model.all.entities.AlleleVariant;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleVariantTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
+import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -30,16 +31,16 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 
 	@Inject
 	private AlleleVariantDAO variantDAO;
-
 	@Inject 
 	AlleleDAO alleleDAO;
-	
 	@Inject
 	private ProbeStrainDAO strainDAO;
+	@Inject
+	private AnnotationService annotationService;
 	
 	// translate an entity to a domain to return in the results
 	private AlleleVariantTranslator translator = new AlleleVariantTranslator();
-	
+
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -87,9 +88,27 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 	}
 
 	@Transactional
-	public SearchResults<AlleleVariantDomain> update(AlleleVariantDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+	public SearchResults<AlleleVariantDomain> update(AlleleVariantDomain domain, User user) {
+		// the set of fields in "update" is similar to set of fields in "create"
+		// creation user/date are only set in "create"
+
+		SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
+		AlleleVariant entity = variantDAO.get(Integer.valueOf(domain.getVariantKey()));
+		//Boolean modified = false;
+		//String mgiTypeKey = "45";
+		//String mgiTypeName = "Allele Variant";
+		
+		log.info("processAlleleVariant/update");
+
+		// process variant type annotations
+		//if (domain.getVariantTypes() != null) {
+		//	annotationService.process(domain.getVariantKey(), domain.getVariantTypes(), "1026", user);
+		//}
+		
+		// return entity translated to domain
+		log.info("processAlleleVariant/update/returning results");
+		results.setItem(translator.translate(entity, 0));
+		return results;		
 	}
 
 	@Transactional

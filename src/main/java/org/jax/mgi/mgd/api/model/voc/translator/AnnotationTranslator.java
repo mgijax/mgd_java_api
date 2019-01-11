@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.voc.translator;
 
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidenceDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
@@ -28,14 +29,14 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
 
 		// annotation has one evidence but is represented in OneToMany in entity
 		// some annotation types (_annottype_key in (1008, 1009, 1014)
-		// do not have evidence records
+		// do not have a evidence record
 		if (entity.getEvidences() != null) {
 			Iterable<EvidenceDomain> i = evidenceTranslator.translateEntities(entity.getEvidences());
 			if(i.iterator().hasNext() == true) {
 				domain.setEvidence(i.iterator().next());
 			}
 		}
-		
+	
 		return domain;
 	}
 

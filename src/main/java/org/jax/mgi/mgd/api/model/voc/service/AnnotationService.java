@@ -17,7 +17,7 @@ import org.jax.mgi.mgd.api.model.voc.dao.AnnotationDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationTypeDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.EvidenceDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
-import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantVocabDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantAnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
@@ -161,7 +161,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 	}
 	
 	@Transactional	
-	public List<AlleleVariantVocabDomain> alleleVariantAnnotations(Integer key, String annotTypeKey) {
+	public List<AlleleVariantAnnotationDomain> alleleVariantAnnotations(Integer key, String annotTypeKey) {
 		// list of allele variant type domains for given variant
 		
 		// if we need to include the voc_evidence info
@@ -169,7 +169,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 		// and then add the voc_evidence info into the SQL cmd string
 		// and add to ResultSet
 		
-		List<AlleleVariantVocabDomain> results = new ArrayList<AlleleVariantVocabDomain>();
+		List<AlleleVariantAnnotationDomain> results = new ArrayList<AlleleVariantAnnotationDomain>();
 		
 		String cmd = "\nselect v._annot_key, t._term_key, t.term, a.*"
 				+ "\nfrom VOC_Annot v, VOC_Term t, ACC_Accession a"
@@ -185,7 +185,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				AlleleVariantVocabDomain domain = new AlleleVariantVocabDomain();
+				AlleleVariantAnnotationDomain domain = new AlleleVariantAnnotationDomain();
 				domain.setAnnotKey(rs.getString("_annot_key"));
 				domain.setTermKey(rs.getString("_term_key"));
 				domain.setTerm(rs.getString("term"));

@@ -44,8 +44,8 @@ public class AlleleVariantController extends BaseController<AlleleVariantDomain>
 	}
 
 	@Override
-	public SearchResults<AlleleVariantDomain> update(AlleleVariantDomain event, User user) {
-		return variantService.update(event, user);
+	public SearchResults<AlleleVariantDomain> update(AlleleVariantDomain domain, User user) {
+		return variantService.update(domain, user);
 	}
 
 	@Override

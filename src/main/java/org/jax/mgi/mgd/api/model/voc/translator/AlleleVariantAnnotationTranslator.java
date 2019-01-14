@@ -6,6 +6,7 @@ import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.SlimAccessionTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantAnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
+import org.jax.mgi.mgd.api.util.Constants;
 
 public class AlleleVariantAnnotationTranslator extends BaseEntityDomainTranslator<Annotation, AlleleVariantAnnotationDomain> {
 
@@ -15,7 +16,8 @@ public class AlleleVariantAnnotationTranslator extends BaseEntityDomainTranslato
     protected AlleleVariantAnnotationDomain entityToDomain(Annotation entity, int translationDepth) {
     	AlleleVariantAnnotationDomain domain = new AlleleVariantAnnotationDomain();
 
-     	domain.setAnnotKey(String.valueOf(entity.get_annot_key()));
+		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
+		domain.setAnnotKey(String.valueOf(entity.get_annot_key()));		    	
  		domain.setTermKey(String.valueOf(entity.getTerm().get_term_key()));
  		domain.setTerm(entity.getTerm().getTerm());
 

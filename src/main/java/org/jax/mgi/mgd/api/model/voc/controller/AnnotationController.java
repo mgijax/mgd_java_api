@@ -99,10 +99,10 @@ public class AnnotationController extends BaseController<AnnotationDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Process")
-	@Path("/process")
-	public void process(String parentKey, List<AnnotationDomain> domain, String annotTypeKey, User user) {
-		annotationService.process(parentKey, domain, annotTypeKey, user);
+	@ApiOperation(value = "Process Marker Feature Type")
+	@Path("/processMarkerFeatureType")
+	public void process(String parentKey, List<MarkerFeatureTypeDomain> domain, String annotTypeKey, String qualifierKey, User user) {
+		annotationService.processMarkerFeatureType(parentKey, domain, annotTypeKey, qualifierKey, user);
 		return;
 	}
 	

@@ -60,8 +60,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private MGIReferenceAssocService referenceAssocService;
 	@Inject
 	private AccessionService accessionService;
-	//@Inject
-	//private AnnotationService annotationService;
+//	@Inject
+//	private AnnotationService annotationService;
 	
 	private MarkerTranslator translator = new MarkerTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
@@ -263,7 +263,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// process feature types
 		// will have to use AnnotationDomain in MarkerDomain instead of MarkerFeatureTypeDomain
 		//if (domain.getFeatureTypes() != null) {
-		//	annotationService.process(domain.getMarkerKey(), domain.getFeatureTypes(), "1011", user);
+		//	annotationService.processMarkerFeatureType(domain.getMarkerKey(), domain.getFeatureTypes(), "1011", "1614158", user);
 		//}
 				
 		// return entity translated to domain
@@ -321,6 +321,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Boolean from_synonym = false;
 		Boolean from_reference = false;
 		Boolean from_editAccession = false;
+		Boolean from_featureTypes = false;
 
 		// if parameter exists, then add to where-clause
 		
@@ -481,6 +482,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			}
 		}
 		
+		if (searchDomain.getFeatureTypes() != null) {
+			where = where + "\nand va.accid ilike '" + searchDomain.getFeatureTypes().get(0).getMarkerFeatureTypeIds().get(0).getAccID() + "'";
+			from_featureTypes = true;
+		}
+		
 		// use views to match the teleuse implementation
 
 		if (from_accession == true) {
@@ -523,6 +529,14 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		if (from_editAccession == true) {
 			from = from + ", mrk_accref1_view acc1";
 			where = where + "\nand m._marker_key = acc1._object_key and acc1._logicaldb_key in (8, 9)";
+		}
+		if (from_featureTypes == true) {
+			from = from + ", voc_annot v, acc_accession va";
+			where = where + "\nand m._marker_key = v._object_key" 
+					+ "\nand v._annottype_key = 1011"
+					+ "\nand v._term_key = va._object_key"
+					+ "\nand va._mgitype_key = 13"
+					+ "\nand va._logicaldb_key = 146";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

@@ -13,6 +13,8 @@ import lombok.Setter;
 @ApiModel(value = "Marker Feature Type Domain")
 public class MarkerFeatureTypeDomain extends BaseDomain {
 
+	private String processStatus;
+	private String annotKey;	
 	private String termKey;
 	private String term;
 	private List<SlimAccessionDomain> markerFeatureTypeIds;

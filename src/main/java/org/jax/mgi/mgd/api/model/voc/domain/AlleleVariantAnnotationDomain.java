@@ -13,6 +13,7 @@ import lombok.Setter;
 @ApiModel(value = "Allele Variant Annotation Domain")
 public class AlleleVariantAnnotationDomain extends BaseDomain {
 
+	private String processStatus;
 	private String annotKey;
     private String termKey;
     private String term;

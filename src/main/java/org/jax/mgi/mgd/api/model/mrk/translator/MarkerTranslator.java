@@ -123,7 +123,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 				domain.setFeatureTypes(IteratorUtils.toList(i.iterator()));
 			}
 		}
-		
+			
 		// these domains are only set by individual object endpoints
 		// that is, see acc/service/AccessionService:markerNucleotideAccessionIds
 		// or mgi/service/RelationshipService/markerTSS

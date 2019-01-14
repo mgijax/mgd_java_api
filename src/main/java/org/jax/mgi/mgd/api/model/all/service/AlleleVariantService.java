@@ -132,7 +132,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		Boolean from_variantEffectAcc = false;
 		Boolean from_note = false;		
 		Boolean from_reference = false;
-		Boolean from_referenceID = false;
+		Boolean from_alleleReferenceID = false;
 		Boolean from_alleleID = false;
 
 		// if parameter exists, then add to where-clause
@@ -291,8 +291,8 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		}
 		
 		// references for variant's allele
-		if ((searchDomain.getAllele().getRefAssocs() != null) && (searchDomain.getAllele().getRefAssocs().size() > 0)) {
-			from_referenceID = true;
+		if ((searchDomain.getAllele() != null) && (searchDomain.getAllele().getRefAssocs() != null) && (searchDomain.getAllele().getRefAssocs().size() > 0)) {
+			from_alleleReferenceID = true;
 			StringBuffer jnumClauses = new StringBuffer("");
 			for (String jnumID : searchDomain.getAllele().getRefAssocs().get(0).getJnumid().split(" ")) {
 				if (jnumClauses.length() > 0) {
@@ -348,14 +348,17 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			from = from + ", mgi_note_allelevariant_view note";
 			where = where + "\nand v._variant_key = note._object_key";
 		}
-		if (from_reference || from_referenceID) {
+		if (from_reference) {
 			from = from + ", mgi_reference_allelevariant_view vr";
 			where = where + "\nand v._variant_key = vr._object_key"
 					+ "\nand vr._refassoctype_key = 1030";
 		}
-		if (from_referenceID == true) {
-			from = from + ", acc_accession rid";
-			where = where + "\nand vr._Refs_key = rid._object_key"
+		if (from_alleleReferenceID == true) {
+			from = from + ", mgi_reference_assoc mra, mgi_refassoctype rat, acc_accession rid";
+			where = where + "\nand v._Allele_key = mra._Object_key"
+					+ "\nand mra._RefAssocType_key = rat._RefAssocType_key"
+					+ "\nand rat._MGIType_key = 11"
+					+ "\nand mra._Refs_key = rid._object_key"
 					+ "\nand rid._mgitype_key = 1";
 		}		
 		

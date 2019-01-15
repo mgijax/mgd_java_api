@@ -327,7 +327,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 			return;
 		}
 
-		List<AnnotationDomain> results = new ArrayList<AnnotationDomain>();
+		List<AnnotationDomain> annotDomains = new ArrayList<AnnotationDomain>();
 		
 		// iterate thru the list of rows in the MarkerFeatureTypeDomain
 		// to creating the AnnotationDomain
@@ -340,12 +340,12 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 			annotDomain.setObjectKey(parentKey);
 			annotDomain.setTermKey(domain.get(i).getTermKey());
 			annotDomain.setQualifierKey(qualifierKey);
-			results.add(annotDomain);
+			annotDomains.add(annotDomain);
 		}
 		
 		// process AnnotationDomain
 		log.info("processMarkerFeatureType/processing");
-		process(results, user);
+		process(annotDomains, user);
 		return;
 	}
 

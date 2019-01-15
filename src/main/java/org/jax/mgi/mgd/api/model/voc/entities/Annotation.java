@@ -47,11 +47,11 @@ public class Annotation extends BaseEntity {
 	private Term term;
 
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_qualifier_key", referencedColumnName="_term_key")
+	@JoinColumn(name="_qualifier_key")
 	private Term qualifier;
 
 	@OneToMany()
-	@JoinColumn(name="_annot_key")
+	@JoinColumn(name="_annot_key", insertable=false, updatable=false)
 	private List<Evidence> evidences;
 	
 	// marker feature type:  from _annottype_key = 1011

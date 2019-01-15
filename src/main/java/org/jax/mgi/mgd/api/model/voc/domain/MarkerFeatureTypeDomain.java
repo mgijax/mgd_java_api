@@ -18,5 +18,5 @@ public class MarkerFeatureTypeDomain extends BaseDomain {
 	private String termKey;
 	private String term;
 	private List<SlimAccessionDomain> markerFeatureTypeIds;
-	
+
 }

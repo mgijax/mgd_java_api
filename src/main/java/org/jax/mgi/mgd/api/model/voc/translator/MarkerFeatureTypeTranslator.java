@@ -9,7 +9,7 @@ import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 import org.jax.mgi.mgd.api.util.Constants;
 
 public class MarkerFeatureTypeTranslator extends BaseEntityDomainTranslator<Annotation, MarkerFeatureTypeDomain> {
-
+	
 	SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
 	
 	@Override
@@ -21,11 +21,13 @@ public class MarkerFeatureTypeTranslator extends BaseEntityDomainTranslator<Anno
 		domain.setTermKey(String.valueOf(entity.getTerm().get_term_key()));
 		domain.setTerm(entity.getTerm().getTerm());
 		
-		Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getMarkerFeatureTypeIds());
-		if(acc.iterator().hasNext() == true) {
-			domain.setMarkerFeatureTypeIds(IteratorUtils.toList(acc.iterator()));
+		if (entity.getMarkerFeatureTypeIds() != null) {
+			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getMarkerFeatureTypeIds());
+			if(acc.iterator().hasNext() == true) {
+				domain.setMarkerFeatureTypeIds(IteratorUtils.toList(acc.iterator()));
+			}
 		}
-				
+		
 		return domain;
 	}
 

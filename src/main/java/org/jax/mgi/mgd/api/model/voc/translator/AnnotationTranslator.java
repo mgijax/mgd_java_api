@@ -1,6 +1,9 @@
 package org.jax.mgi.mgd.api.model.voc.translator;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.translator.SlimAccessionTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidenceDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
@@ -9,6 +12,7 @@ import org.jax.mgi.mgd.api.util.Constants;
 public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation, AnnotationDomain> {
 	
 	private EvidenceTranslator evidenceTranslator = new EvidenceTranslator();
+	private SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
 	
 	@Override
 	protected AnnotationDomain entityToDomain(Annotation entity, int translationDepth) {
@@ -35,7 +39,14 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
 				domain.setEvidence(i.iterator().next());			
 			}
 		}
-	
+
+		if (entity.getMarkerFeatureTypeIds() != null) {
+			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getMarkerFeatureTypeIds());
+			if(acc.iterator().hasNext() == true) {
+				domain.setMarkerFeatureTypeIds(IteratorUtils.toList(acc.iterator()));
+			}
+		}	
+		
 		return domain;
 	}
 

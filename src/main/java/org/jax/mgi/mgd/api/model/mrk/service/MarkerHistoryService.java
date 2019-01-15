@@ -242,7 +242,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 					modified = true;
 				}
 					
-				log.info("event date");
+				//log.info("event date");
 				if (domain.get(i).getEvent_date() == null && entity.getEvent_date() == null) {
 					// do nothing; don't want nulls
 				} 
@@ -270,7 +270,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 					}
 				}
 				
-				log.info("reference: check if modified");
+				//log.info("reference: check if modified");
 				if (modified == true) {
 					log.info("processHistory modified == true");
 					entity.setModification_date(new Date());

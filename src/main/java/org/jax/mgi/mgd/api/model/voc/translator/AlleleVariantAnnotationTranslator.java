@@ -21,11 +21,13 @@ public class AlleleVariantAnnotationTranslator extends BaseEntityDomainTranslato
  		domain.setTermKey(String.valueOf(entity.getTerm().get_term_key()));
  		domain.setTerm(entity.getTerm().getTerm());
 
-		Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getAlleleVariantSOIds());
-		if(acc.iterator().hasNext() == true) {
-			domain.setAlleleVariantSOIds(IteratorUtils.toList(acc.iterator()));
-		}
-					
+ 		if (entity.getAlleleVariantSOIds() != null) {
+ 			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getAlleleVariantSOIds());
+ 			if(acc.iterator().hasNext() == true) {
+ 				domain.setAlleleVariantSOIds(IteratorUtils.toList(acc.iterator()));
+ 			}
+ 		}
+ 		
  		return domain;
     }
 

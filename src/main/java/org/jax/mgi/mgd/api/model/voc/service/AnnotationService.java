@@ -43,7 +43,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 	private TermDAO termDAO;
 	@Inject
 	private ReferenceDAO referenceDAO;
-	
+
 	private AnnotationTranslator translator = new AnnotationTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
@@ -216,7 +216,6 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 	}
 
 	@Transactional
-	//public void process(String parentKey, List<AnnotationDomain> domain, String annotTypeKey, User user) {
 	public void process(List<AnnotationDomain> domain, User user) {
 
 		// process annotation associations (create, delete, update)
@@ -224,7 +223,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 		// first pass:  
 		// 1.  only works for voc_annot, voc_evidence
 		//      voc_evidence_property is not included in this pass
-		// 2.  implement create/delete only
+		// 2.  update is modifying _term_key only
 	
 		if (domain == null || domain.isEmpty()) {
 			log.info("processAnnotation/nothing to process");
@@ -276,13 +275,24 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				
-				// not implementing an update at this time
-				// instead, UI should implement as a delete/insert
+				// implemented update for:  term only
 				
 				log.info("processAnnotation update");
 
 				Boolean modified = false;
 				Annotation entity = annotationDAO.get(Integer.valueOf(domain.get(i).getAnnotKey()));
+				
+				if (!String.valueOf(entity.getTerm().get_term_key()).equals(domain.get(i).getTermKey())) {
+					
+					entity.setTerm(termDAO.get(Integer.valueOf(domain.get(i).getTermKey())));
+					
+					// null any of the entity fields that are not updated
+					// that is, any read-only fields
+					entity.setMarkerFeatureTypeIds(null);	
+					entity.setAlleleVariantSOIds(null);
+					
+					modified = true;
+				}
 				
 				if (modified == true) {
 					entity.setModification_date(new Date());

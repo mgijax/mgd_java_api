@@ -5,9 +5,13 @@ import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionReferenceDomain;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
+import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jboss.logging.Logger;
 
 public class AccessionTranslator extends BaseEntityDomainTranslator<Accession, AccessionDomain> {
+
+	protected Logger log = Logger.getLogger(AccessionService.class);
 	
 	private AccessionReferenceTranslator accessionReferenceTranslator = new AccessionReferenceTranslator();
 
@@ -15,6 +19,7 @@ public class AccessionTranslator extends BaseEntityDomainTranslator<Accession, A
 	protected AccessionDomain entityToDomain(Accession entity, int translationDepth) {
 		AccessionDomain domain = new AccessionDomain();
 
+		log.info("AccessionTranslator");
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setAccessionKey(String.valueOf(entity.get_accession_key()));
 		domain.setLogicaldbKey(String.valueOf(entity.getLogicaldb().get_logicaldb_key()));

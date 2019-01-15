@@ -28,6 +28,7 @@ import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
+import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.MarkerWithdrawal;
@@ -60,8 +61,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private MGIReferenceAssocService referenceAssocService;
 	@Inject
 	private AccessionService accessionService;
-//	@Inject
-//	private AnnotationService annotationService;
+	@Inject
+	private AnnotationService annotationService;
 	
 	private MarkerTranslator translator = new MarkerTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
@@ -261,14 +262,14 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 
 		// process feature types
-		// will have to use AnnotationDomain in MarkerDomain instead of MarkerFeatureTypeDomain
-		//if (domain.getFeatureTypes() != null) {
-		//	annotationService.processMarkerFeatureType(domain.getMarkerKey(), domain.getFeatureTypes(), "1011", "1614158", user);
-		//}
+		if (domain.getFeatureTypes() != null) {
+			annotationService.processMarkerFeatureType(domain.getMarkerKey(), domain.getFeatureTypes(), "1011", "1614158", user);
+		}
 				
 		// return entity translated to domain
 		log.info("processMarker/update/returning results");
 		results.setItem(translator.translate(entity, 0));
+		log.info("processMarker/update/returned results succsssful");
 		return results;
 	}
 

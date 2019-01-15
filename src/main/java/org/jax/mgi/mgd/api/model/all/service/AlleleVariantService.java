@@ -100,10 +100,10 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		
 		log.info("processAlleleVariant/update");
 
-		// process variant type annotations
-		//if (domain.getVariantTypes() != null) {
-		//	annotationService.process(domain.getVariantKey(), domain.getVariantTypes(), "1026", user);
-		//}
+		// process variant type
+//		if (domain.getVariantTypes() != null) {
+//			annotationService.processMarkerFeatureType(domain.getVariantKey(), domain.getFeatureTypes(), "1011", "1614158", user);
+//		}
 		
 		// return entity translated to domain
 		log.info("processAlleleVariant/update/returning results");

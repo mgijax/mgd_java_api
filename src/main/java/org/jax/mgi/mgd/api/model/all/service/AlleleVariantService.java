@@ -102,9 +102,14 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 
 		// process variant type
 //		if (domain.getVariantTypes() != null) {
-//			annotationService.processAlleleVariantType(domain.getVariantKey(), domain.getVariantTypes(), "1026", "1614158", user);
+//			annotationService.processAlleleVariantAnnotation(domain.getVariantKey(), domain.getVariantTypes(), "1026", "1614158", user);
 //		}
-		
+
+		// process variant effects
+//		if (domain.getVariantEffects() != null) {
+//			annotationService.processAlleleVariantAnnotation(domain.getVariantKey(), domain.getVariantEffects(), "1027", "1614158", user);
+//		}
+				
 		// return entity translated to domain
 		log.info("processAlleleVariant/update/returning results");
 		results.setItem(translator.translate(entity, 0));

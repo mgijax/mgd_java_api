@@ -36,6 +36,7 @@ public class VariantSequence extends BaseEntity {
     private String endCoordinate;
 	private String referenceSequence;
 	private String variantSequence;
+	private String version;
 	private Date creation_date;
 	private Date modification_date;
 	

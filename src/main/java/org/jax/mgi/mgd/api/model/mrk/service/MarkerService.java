@@ -276,7 +276,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	@Transactional
 	public MarkerDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain
-		return translator.translate(markerDAO.get(key),0);
+		MarkerDomain domain = new MarkerDomain();
+		if (markerDAO.get(key) != null) {
+			domain = translator.translate(markerDAO.get(key),1);
+		}
+		return domain;
 	}
 
 	@Transactional

@@ -118,22 +118,32 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 
 	@Transactional
 	public AlleleVariantDomain get(Integer key) {
-		return translator.translate(variantDAO.get(key),1);
+		// get the DAO/entity and translate -> domain	
+		AlleleVariantDomain domain = new AlleleVariantDomain();
+		if (variantDAO.get(key) != null) {
+			domain = translator.translate(variantDAO.get(key),1);
+		}
+		return domain;
 	}
 
     @Transactional
     public SearchResults<AlleleVariantDomain> getResults(Integer key) {
-        SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
+		// get the DAO/entity and translate -> domain -> results
+    	SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
         results.setItem(translator.translate(variantDAO.get(key)));
         return results;
     }
 
 	@Transactional
 	public SearchResults<AlleleVariantDomain> delete(Integer key, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		// get the entity object and delete
+		SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
+		AlleleVariant entity = variantDAO.get(key);
+		results.setItem(translator.translate(variantDAO.get(key),0));
+		variantDAO.remove(entity);
+		return results;
 	}
-
+	
 	public List<SlimAlleleVariantDomain> search(AlleleVariantDomain searchDomain) {
 
 		List<SlimAlleleVariantDomain> results = new ArrayList<SlimAlleleVariantDomain>();
@@ -154,7 +164,8 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		Boolean from_variantTypeAcc = false;
 		Boolean from_variantEffect = false;
 		Boolean from_variantEffectAcc = false;
-		Boolean from_note = false;		
+		Boolean from_note1 = false;	
+		Boolean from_note2 = false;
 		Boolean from_reference = false;
 		Boolean from_alleleReferenceID = false;
 		Boolean from_alleleID = false;
@@ -294,11 +305,17 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 				}		
 			}
 		}		
-		// notes
-		if (searchDomain.getGeneralNote() != null) {
-			value = searchDomain.getGeneralNote().getNoteChunk().replaceAll("'",  "''");
+		// curator notes
+		if (searchDomain.getCuratorNote() != null) {
+			value = searchDomain.getCuratorNote().getNoteChunk().replaceAll("'",  "''");
 			where = where + "\nand note1._notetype_key = 1050 and note1.note ilike '" + value + "'" ;
-			from_note = true;
+			from_note1 = true;
+		}
+		// public notes
+		if (searchDomain.getPublicNote() != null) {
+			value = searchDomain.getPublicNote().getNoteChunk().replaceAll("'",  "''");
+			where = where + "\nand note2._notetype_key = 1051 and note2.note ilike '" + value + "'" ;
+			from_note2 = true;
 		}
 		
 		// reference
@@ -368,10 +385,14 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 					+ "\nand va2._mgitype_key = 13"
 					+ "\nand va2._logicaldb_key = 145";
 		}		
-		if (from_note == true) {
-			from = from + ", mgi_note_allelevariant_view note";
-			where = where + "\nand v._variant_key = note._object_key";
+		if (from_note1 == true) {
+			from = from + ", mgi_note_allelevariant_view note1";
+			where = where + "\nand v._variant_key = note1._object_key";
 		}
+		if (from_note2 == true) {
+			from = from + ", mgi_note_allelevariant_view note2";
+			where = where + "\nand v._variant_key = note2._object_key";
+		}		
 		if (from_reference) {
 			from = from + ", mgi_reference_allelevariant_view vr";
 			where = where + "\nand v._variant_key = vr._object_key"
@@ -401,7 +422,9 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			}
 			sqlExecutor.cleanup();
 		}
-		catch (Exception e) {e.printStackTrace();}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		return results;
 	}	

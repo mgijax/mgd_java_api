@@ -47,7 +47,12 @@ public class AccessionService extends BaseService<AccessionDomain> {
 
 	@Transactional
 	public AccessionDomain get(Integer key) {
-		return translator.translate(accessionDAO.get(key));
+		// get the DAO/entity and translate -> domain
+		AccessionDomain domain = new AccessionDomain();
+		if (accessionDAO.get(key) != null) {
+			domain = translator.translate(accessionDAO.get(key),1);
+		}
+		return domain;		
 	}
 
     @Transactional

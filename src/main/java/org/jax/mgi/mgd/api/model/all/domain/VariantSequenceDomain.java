@@ -17,6 +17,7 @@ public class VariantSequenceDomain extends BaseDomain {
     private String endCoordinate;
 	private String referenceSequence;
 	private String variantSequence;
+	private String version;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

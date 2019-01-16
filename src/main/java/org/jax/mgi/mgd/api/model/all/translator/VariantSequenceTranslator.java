@@ -20,6 +20,7 @@ public class VariantSequenceTranslator extends BaseEntityDomainTranslator<Varian
         domain.setEndCoordinate(entity.getEndCoordinate());
 		domain.setReferenceSequence(entity.getReferenceSequence());
 		domain.setVariantSequence(entity.getVariantSequence());
+		domain.setVersion(entity.getVersion());
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());

@@ -43,12 +43,18 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 	@Transactional
 	public AlleleDomain get(Integer key) {
-		return translator.translate(alleleDAO.get(key));
+		// get the DAO/entity and translate -> domain	
+		AlleleDomain domain = new AlleleDomain();
+		if (alleleDAO.get(key) != null) {
+			domain = translator.translate(alleleDAO.get(key),1);
+		}
+		return domain;	
 	}
 
     @Transactional
     public SearchResults<AlleleDomain> getResults(Integer key) {
-        SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
+		// get the DAO/entity and translate -> domain -> results 
+    	SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
         results.setItem(translator.translate(alleleDAO.get(key)));
         return results;
     }

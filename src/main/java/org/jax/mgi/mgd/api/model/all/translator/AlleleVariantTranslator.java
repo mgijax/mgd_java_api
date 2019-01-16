@@ -76,14 +76,22 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
             }
         }
 
-		// at most one generalNote; list of 1
-		if (entity.getGeneralNote() != null) {
-			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getGeneralNote());
+		// at most one curatorNote; list of 1
+		if (entity.getCuratorNote() != null) {
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getCuratorNote());
 			if(note.iterator().hasNext() == true) {
-				domain.setGeneralNote(note.iterator().next());
+				domain.setCuratorNote(note.iterator().next());
 			}
 		}
 
+		// at most one publicNote; list of 1
+		if (entity.getPublicNote() != null) {
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getPublicNote());
+			if(note.iterator().hasNext() == true) {
+				domain.setPublicNote(note.iterator().next());
+			}
+		}
+		
 		// reference associations
 		if (entity.getRefAssocs() != null) {
 			Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());

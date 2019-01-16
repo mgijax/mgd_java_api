@@ -42,7 +42,12 @@ public class MGITypeService extends BaseService<MGITypeDomain> {
 
 	@Transactional
 	public MGITypeDomain get(Integer key) {
-		return translator.translate(mgitypeDAO.get(key));
+		// get the DAO/entity and translate -> domain
+		MGITypeDomain domain = new MGITypeDomain();
+		if (mgitypeDAO.get(key) != null) {
+			domain = translator.translate(mgitypeDAO.get(key),1);
+		}
+		return domain;
 	}
 
     @Transactional

@@ -78,11 +78,17 @@ public class AlleleVariant extends BaseEntity {
     @JoinColumn(name="_variant_key", insertable=false, updatable=false)
     private List<VariantSequence> variantSequences;
 
-	// General
+	// Curator
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_variant_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 45 and `_notetype_key` = 1050")
-	private List<Note> generalNote;
+	private List<Note> curatorNote;
+
+	// Public
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_variant_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 45 and `_notetype_key` = 1051")
+	private List<Note> publicNote;
 	
 	// References
 	@OneToMany

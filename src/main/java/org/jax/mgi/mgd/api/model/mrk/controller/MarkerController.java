@@ -6,10 +6,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.PathParam;
+
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -24,6 +27,8 @@ import org.jboss.logging.Logger;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
 
 @Path("/marker")
 @Api(value = "Marker Endpoints")
@@ -118,18 +123,18 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		return markerService.aliasSearch(key);
 	}
 
-	@POST
+	@GET
 	@ApiOperation(value = "Validate marker symbol/any status is valid/returns slim marker domain")
-	@Path("/validAnyStatus")
-	public List<SlimMarkerDomain> validateAnyStatus(String value) {
-		return markerService.valid(value, true, true);
+	@Path("/validAnyStatus/{symbol}")
+	public List<SlimMarkerDomain> validateAnyStatus(@PathParam("symbol") @ApiParam(value = "Validating Marker Symbol") String symbol) {
+		return markerService.valid(symbol, true, true);
 	}
 	
-	@POST
+	@GET
 	@ApiOperation(value = "Validate marker symbol/official status is valid/returns slim marker domain")
-	@Path("/validOfficialStatus")
-	public List<SlimMarkerDomain> validOfficialStatus(String value) {
-		return markerService.valid(value, false, false);
+	@Path("/validOfficialStatus/{symbol}")
+	public List<SlimMarkerDomain> validOfficialStatus(@PathParam("symbol") @ApiParam(value = "Validating Marker Symbol") String symbol) {
+		return markerService.valid(symbol, false, false);
 	}
 			
 	@POST

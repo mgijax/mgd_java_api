@@ -350,4 +350,41 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 		return;
 	}
 
+	@Transactional
+	public void processAlleleVariant(String parentKey, 
+			List<AlleleVariantAnnotationDomain> domain, 
+			String annotTypeKey, 
+			String qualifierKey, 
+			User user) {
+		
+		// process allele variant annotations
+		// using AlleleVariantAnnotationDomain, create AnnotationDomain and send to "process"
+
+		if (domain == null || domain.isEmpty()) {
+			log.info("processAlleleVariant/nothing to process");
+			return;
+		}
+
+		List<AnnotationDomain> annotDomains = new ArrayList<AnnotationDomain>();
+		
+		// iterate thru the list of rows in the MarkerFeatureTypeDomain
+		// to creating the AnnotationDomain
+		
+		for (int i = 0; i < domain.size(); i++) {	
+			AnnotationDomain annotDomain = new AnnotationDomain();
+			annotDomain.setProcessStatus(domain.get(i).getProcessStatus());
+			annotDomain.setAnnotKey(domain.get(i).getAnnotKey());
+			annotDomain.setAnnotType(annotTypeKey);
+			annotDomain.setObjectKey(parentKey);
+			annotDomain.setTermKey(domain.get(i).getTermKey());
+			annotDomain.setQualifierKey(qualifierKey);
+			annotDomains.add(annotDomain);
+		}
+		
+		// process AnnotationDomain
+		log.info("processAlleleVariant/processing");
+		process(annotDomains, user);
+		return;
+	}
+	
 }

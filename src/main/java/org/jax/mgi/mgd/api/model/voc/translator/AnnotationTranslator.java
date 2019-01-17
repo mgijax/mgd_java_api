@@ -40,13 +40,20 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
 			}
 		}
 
-		if (entity.getMarkerFeatureTypeIds() != null) {
-			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getMarkerFeatureTypeIds());
-			if(acc.iterator().hasNext() == true) {
-				domain.setMarkerFeatureTypeIds(IteratorUtils.toList(acc.iterator()));
-			}
-		}	
-		
+ 		if (entity.getMarkerFeatureTypeIds() != null) {
+ 			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getMarkerFeatureTypeIds());
+ 			if(acc.iterator().hasNext() == true) {
+ 				domain.setMarkerFeatureTypes(IteratorUtils.toList(acc.iterator()));
+ 			}
+ 		}
+ 		
+ 		if (entity.getAlleleVariantSOIds() != null) {
+ 			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getAlleleVariantSOIds());
+ 			if(acc.iterator().hasNext() == true) {
+ 				domain.setAlleleVariantSOIds(IteratorUtils.toList(acc.iterator()));
+ 			}
+ 		}
+ 		
 		return domain;
 	}
 

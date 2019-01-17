@@ -45,7 +45,16 @@ public class AlleleVariantController extends BaseController<AlleleVariantDomain>
 
 	@Override
 	public SearchResults<AlleleVariantDomain> update(AlleleVariantDomain domain, User user) {
-		return variantService.update(domain, user);
+		SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
+		try {
+			results = variantService.update(domain, user);
+			results = variantService.getResults(Integer.valueOf(results.items.get(0).getVariantKey()));
+		} catch (Exception e) {
+			results.setError("Failed : update", e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			return results;
+		}
+		
+		return results;		
 	}
 
 	@Override

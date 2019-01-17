@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model.voc.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -51,59 +50,19 @@ public class AnnotationController extends BaseController<AnnotationDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Marker/Feature Types")
-	@Path("/markerFeatureTypes")
-	public List<MarkerFeatureTypeDomain> markerMCV(Integer key) {
-			
-		List<MarkerFeatureTypeDomain> results = new ArrayList<MarkerFeatureTypeDomain>();
-		
-		try {
-			results = annotationService.markerFeatureTypes(key);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
-
-	@POST
-	@ApiOperation(value = "Allele Variant Types")
-	@Path("/allelevariantTypes")
-	public List<AlleleVariantAnnotationDomain> alleleVariantTypes(Integer key) {
-			
-		List<AlleleVariantAnnotationDomain> results = new ArrayList<AlleleVariantAnnotationDomain>();
-		
-		try {
-			results = annotationService.alleleVariantAnnotations(key, "1026");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
-
-	@POST
-	@ApiOperation(value = "Allele Variant Effects")
-	@Path("/allelevariantEffects")
-	public List<AlleleVariantAnnotationDomain> alleleVariantEffects(Integer key) {
-			
-		List<AlleleVariantAnnotationDomain> results = new ArrayList<AlleleVariantAnnotationDomain>();
-		
-		try {
-			results = annotationService.alleleVariantAnnotations(key, "1027");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
-
-	@POST
 	@ApiOperation(value = "Process Marker Feature Type")
 	@Path("/processMarkerFeatureType")
-	public void process(String parentKey, List<MarkerFeatureTypeDomain> domain, String annotTypeKey, String qualifierKey, User user) {
+	public void processMarkerFeatureType(String parentKey, List<MarkerFeatureTypeDomain> domain, String annotTypeKey, String qualifierKey, User user) {
 		annotationService.processMarkerFeatureType(parentKey, domain, annotTypeKey, qualifierKey, user);
 		return;
 	}
-	
+
+	@POST
+	@ApiOperation(value = "Process Allele Variant")
+	@Path("/processAlleleVariant")
+	public void processAlleleVariant(String parentKey, List<AlleleVariantAnnotationDomain> domain, String annotTypeKey, String qualifierKey, User user) {
+		annotationService.processAlleleVariant(parentKey, domain, annotTypeKey, qualifierKey, user);
+		return;
+	}
+		
 }

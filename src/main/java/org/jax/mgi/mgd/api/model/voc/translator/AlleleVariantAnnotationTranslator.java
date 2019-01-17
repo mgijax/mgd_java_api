@@ -18,7 +18,8 @@ public class AlleleVariantAnnotationTranslator extends BaseEntityDomainTranslato
 
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setAnnotKey(String.valueOf(entity.get_annot_key()));		    	
- 		domain.setTermKey(String.valueOf(entity.getTerm().get_term_key()));
+		domain.setAnnotTypeKey(String.valueOf(entity.getAnnotType().get_annotType_key()));		
+		domain.setTermKey(String.valueOf(entity.getTerm().get_term_key()));
  		domain.setTerm(entity.getTerm().getTerm());
 
  		if (entity.getAlleleVariantSOIds() != null) {

@@ -14,7 +14,8 @@ import lombok.Setter;
 public class MarkerFeatureTypeDomain extends BaseDomain {
 
 	private String processStatus;
-	private String annotKey;	
+	private String annotKey;
+	private String annotTypeKey;
 	private String termKey;
 	private String term;
 	private List<SlimAccessionDomain> markerFeatureTypeIds;

@@ -26,7 +26,8 @@ public class AnnotationDomain extends BaseDomain {
 	private String modification_date;
 	
 	EvidenceDomain evidence;
-
-	List<SlimAccessionDomain> markerFeatureTypeIds;
+	
+	List<SlimAccessionDomain> markerFeatureTypes;
+	List<SlimAccessionDomain> alleleVariantSOIds;
 	
 }

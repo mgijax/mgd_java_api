@@ -17,6 +17,8 @@ import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleVariantDomain;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleVariant;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleVariantTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
+import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
@@ -35,6 +37,11 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 	AlleleDAO alleleDAO;
 	@Inject
 	private ProbeStrainDAO strainDAO;
+
+	@Inject
+	private NoteService noteService;
+	@Inject
+	private MGIReferenceAssocService referenceAssocService;	
 	@Inject
 	private AnnotationService annotationService;
 	
@@ -95,20 +102,39 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
 		AlleleVariant entity = variantDAO.get(Integer.valueOf(domain.getVariantKey()));
 		//Boolean modified = false;
-		//String mgiTypeKey = "45";
+		String mgiTypeKey = "43";
 		//String mgiTypeName = "Allele Variant";
 		
 		log.info("processAlleleVariant/update");
 
+		// add other fields that can be updated in the AlleleVariant
+		// isReviewed
+		// description
+		
+		// process all notes
+		noteService.process(domain.getVariantKey(), domain.getCuratorNote(), mgiTypeKey, "1050", user);
+		noteService.process(domain.getVariantKey(), domain.getPublicNote(), mgiTypeKey, "1051", user);
+
+		// process marker reference
+		if (domain.getRefAssocs() != null) {
+			referenceAssocService.process(domain.getVariantKey(), domain.getRefAssocs(), mgiTypeKey, user);
+		}
+		
 		// process variant type
-//		if (domain.getVariantTypes() != null) {
-//			annotationService.processAlleleVariantAnnotation(domain.getVariantKey(), domain.getVariantTypes(), "1026", "1614158", user);
-//		}
+		if (domain.getVariantTypes() != null) {
+			annotationService.processAlleleVariant(domain.getVariantKey(), 
+					domain.getVariantTypes(), 
+					domain.getVariantTypes().get(0).getAnnotTypeKey(), 
+					"1614158", user);
+		}
 
 		// process variant effects
-//		if (domain.getVariantEffects() != null) {
-//			annotationService.processAlleleVariantAnnotation(domain.getVariantKey(), domain.getVariantEffects(), "1027", "1614158", user);
-//		}
+		if (domain.getVariantEffects() != null) {
+			annotationService.processAlleleVariant(domain.getVariantKey(), 
+					domain.getVariantEffects(), 
+					domain.getVariantEffects().get(0).getAnnotTypeKey(), 
+					"1614158", user);
+		}
 				
 		// return entity translated to domain
 		log.info("processAlleleVariant/update/returning results");

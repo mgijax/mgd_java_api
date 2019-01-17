@@ -238,7 +238,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			log.info("processMarker/no changes processed: " + domain.getMarkerKey());
 		}
 		
-		// process all marker notes
+		// process all notes
 		noteService.process(domain.getMarkerKey(), domain.getEditorNote(), mgiTypeKey, "1004", user);
 		noteService.process(domain.getMarkerKey(), domain.getSequenceNote(), mgiTypeKey, "1009", user);
 		noteService.process(domain.getMarkerKey(), domain.getRevisionNote(), mgiTypeKey, "1030", user);
@@ -263,7 +263,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		// process feature types
 		if (domain.getFeatureTypes() != null) {
-			annotationService.processMarkerFeatureType(domain.getMarkerKey(), domain.getFeatureTypes(), "1011", "1614158", user);
+			annotationService.processMarkerFeatureType(domain.getMarkerKey(), 
+					domain.getFeatureTypes(), 
+					domain.getFeatureTypes().get(0).getAnnotTypeKey(),
+					"1614158", user);		
+					//"1011", "1614158", user);
 		}
 				
 		// return entity translated to domain

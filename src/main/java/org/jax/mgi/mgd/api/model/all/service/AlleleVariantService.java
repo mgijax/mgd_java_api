@@ -172,20 +172,20 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		}
 		
 		// process variant type : curated only
-		if (domain.getVariantTypes() != null) {
-			annotationService.processAlleleVariant(String.valueOf(curatedEntity.get_variant_key()), 
-					domain.getVariantTypes(), 
-					domain.getVariantTypes().get(0).getAnnotTypeKey(), 
-					"1614158", user);
-		}
+//		if (domain.getVariantTypes() != null) {
+//			annotationService.processAlleleVariant(String.valueOf(curatedEntity.get_variant_key()), 
+//					domain.getVariantTypes(), 
+//					domain.getVariantTypes().get(0).getAnnotTypeKey(), 
+//					"1614158", user);
+//		}
 
 		// process variant effects : curated only
-		if (domain.getVariantEffects() != null) {
-			annotationService.processAlleleVariant(String.valueOf(curatedEntity.get_variant_key()), 
-					domain.getVariantEffects(), 
-					domain.getVariantEffects().get(0).getAnnotTypeKey(), 
-					"1614158", user);
-		}
+//		if (domain.getVariantEffects() != null) {
+//			annotationService.processAlleleVariant(String.valueOf(curatedEntity.get_variant_key()), 
+//					domain.getVariantEffects(), 
+//					domain.getVariantEffects().get(0).getAnnotTypeKey(), 
+//					"1614158", user);
+//		}
 				
 		// return curated entity translated to domain, set in results
 		// results has domain info and other info too

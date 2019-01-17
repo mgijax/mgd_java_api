@@ -15,10 +15,9 @@ import lombok.Setter;
 public class AlleleVariantDomain extends BaseDomain {
 	
 	private String processStatus;
-	private String variantKey;
+	private String variantKey;	
 	private String isReviewed;
 	private String description;
-	private String sourceVariantKey;
 	private String chromosome;
 	private String strand;
 	private String createdByKey;
@@ -27,17 +26,16 @@ public class AlleleVariantDomain extends BaseDomain {
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;
-	
+		
 	private SlimAlleleDomain allele;
 	private SlimProbeStrainDomain strain;
-	
     private List<AlleleVariantAnnotationDomain> variantTypes;
     private List<AlleleVariantAnnotationDomain> variantEffects;
 	private List<VariantSequenceDomain> variantSequences;
-
 	private NoteDomain curatorNote;	
 	private NoteDomain publicNote;
 	private List<MGIReferenceAssocDomain> refAssocs;
+
+	private AlleleVariantDomain sourceVariant;
 	
-	private List<VariantSequenceDomain> sourceSequences;
 } 

@@ -32,6 +32,7 @@ public class VariantSequence extends BaseEntity {
 	@SequenceGenerator(name="all_variantsequence_seq_generator", sequenceName = "all_variantsequence_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")
 	private int _variantsequence_key;
+	private int _variant_key;
     private String startCoordinate;
     private String endCoordinate;
 	private String referenceSequence;
@@ -39,10 +40,6 @@ public class VariantSequence extends BaseEntity {
 	private String version;
 	private Date creation_date;
 	private Date modification_date;
-	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_variant_key", insertable=false, updatable=false)
-	private AlleleVariant variant;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_sequence_type_key", referencedColumnName="_term_key")

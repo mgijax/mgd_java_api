@@ -44,15 +44,17 @@ public class AlleleVariant extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 
+	// if _sourcevariant_key == null, then curated variant
+	// if _sourcevariant_key != null, then source variant
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_sourcevariant_key")	
+	private AlleleVariant sourceVariant;
+	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_allele_key")
 	private Allele allele;
-
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_sourcevariant_key")
-	private AlleleVariant sourceVariant;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_strain_key")
 	private ProbeStrain strain;
 

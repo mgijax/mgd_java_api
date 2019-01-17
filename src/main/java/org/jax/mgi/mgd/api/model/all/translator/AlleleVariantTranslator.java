@@ -5,6 +5,7 @@ import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleVariantDomain;
 import org.jax.mgi.mgd.api.model.all.domain.VariantSequenceDomain;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleVariant;
+import org.jax.mgi.mgd.api.model.all.service.AlleleVariantService;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
@@ -13,8 +14,11 @@ import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeStrainTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantAnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.translator.AlleleVariantAnnotationTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jboss.logging.Logger;
 
 public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVariant, AlleleVariantDomain> {
+
+	protected Logger log = Logger.getLogger(AlleleVariantService.class);
 	
 	private SlimAlleleTranslator alleleTranslator = new SlimAlleleTranslator();
 	private SlimProbeStrainTranslator strainTranslator = new SlimProbeStrainTranslator();
@@ -43,18 +47,14 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
 		
 		domain.setAllele(alleleTranslator.translate(entity.getAllele()));
 		domain.setStrain(strainTranslator.translate(entity.getStrain()));
-		
+
 		// a curated variant has a source variant
 		// a source variant does *not* have a source variant (null)
 		if (entity.getSourceVariant() != null) {
-			domain.setSourceVariantKey(String.valueOf(entity.getSourceVariant().get_variant_key()));
-            /// variant sequences for the source variant
-			Iterable<VariantSequenceDomain> i = variantSequenceTranslator.translateEntities(entity.getSourceVariant().getVariantSequences());
-          	if(i.iterator().hasNext() == true) {
-                domain.setSourceSequences(IteratorUtils.toList(i.iterator()));
-            }		
+			AlleleVariantTranslator sourceVariantTranslator = new AlleleVariantTranslator();		
+			domain.setSourceVariant(sourceVariantTranslator.translate(entity.getSourceVariant()));
 		}
-	
+			
         if (entity.getVariantTypes() != null) {
         	Iterable<AlleleVariantAnnotationDomain> i = variantAnnotationTranslator.translateEntities(entity.getVariantTypes());
         	if(i.iterator().hasNext() == true) {

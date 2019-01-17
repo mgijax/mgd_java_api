@@ -33,6 +33,10 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 
 	@Inject
 	private AlleleVariantDAO variantDAO;
+	@Inject
+	private AlleleVariantDAO sourceVariantDAO;
+	@Inject
+	private AlleleVariantDAO curatedVariantDAO;
 	@Inject 
 	AlleleDAO alleleDAO;
 	@Inject
@@ -55,42 +59,52 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		
 		// create new entity object from in-coming domain
 		// the Entities class handles the generation of the primary key
+		//
+		// create Source variant and Curated variant
+		// the Source variant _SourceVariant_key = null
+		// the Curated variant _SourceVariant_key = new Source variant key
+		// all other Source/Curated variant fields are the same
+		// all fields are should be sent in by UI/domain
+		// VariantSequence records are only created for Source variant
+		//
 		
 		SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
-		AlleleVariant entity = new AlleleVariant();
+		AlleleVariant sourceEntity = new AlleleVariant();
+		AlleleVariant curatedEntity = new AlleleVariant();
 		
 		// AlleleVariant key will be auto-sequence
 		
-		// set the Allele
-		entity.setAllele(alleleDAO.get(Integer.valueOf(domain.getAllele().getAlleleKey())));
+		// create Source entity
+		sourceEntity.setAllele(alleleDAO.get(Integer.valueOf(domain.getAllele().getAlleleKey())));
+		sourceEntity.setStrain(strainDAO.get(Integer.valueOf(domain.getStrain().getStrainKey())));
+		sourceEntity.setIsReviewed(Integer.valueOf(domain.getIsReviewed()).intValue());
+		sourceEntity.setDescription(domain.getDescription());
+		sourceEntity.setCreatedBy(user);
+		sourceEntity.setCreation_date(new Date());
+		sourceEntity.setModifiedBy(user);
+		sourceEntity.setModification_date(new Date());
+		sourceVariantDAO.persist(sourceEntity);
 		
-		// this is the source variant, so _sourceVariant_key will be null
+		// create Curated entity using same parameters
+		// except setSourceVariant of the Curated entity
+		curatedEntity.setSourceVariant(sourceEntity);
+		curatedEntity.setAllele(alleleDAO.get(Integer.valueOf(domain.getAllele().getAlleleKey())));
+		curatedEntity.setStrain(strainDAO.get(Integer.valueOf(domain.getStrain().getStrainKey())));
+		curatedEntity.setIsReviewed(Integer.valueOf(domain.getIsReviewed()).intValue());
+		curatedEntity.setDescription(domain.getDescription());
+		curatedEntity.setCreatedBy(user);
+		curatedEntity.setCreation_date(new Date());
+		curatedEntity.setModifiedBy(user);
+		curatedEntity.setModification_date(new Date());
+		curatedVariantDAO.persist(curatedEntity);
 		
-		// set the Strain
-		entity.setStrain(strainDAO.get(Integer.valueOf(domain.getStrain().getStrainKey())));
+		// create Source Variant Sequences
 		
-		// here I assume that either the default (false) or true is being
-		// sent in. Or should the create method always set this to false?
-		entity.setIsReviewed(Integer.valueOf(domain.getIsReviewed()).intValue());
-		
-		// description can be null - do we need to check that or can we just 
-		// do the following?
-		entity.setDescription(domain.getDescription());
-		
-		// creation/modification date/by
-		entity.setCreatedBy(user);
-		entity.setCreation_date(new Date());
-		entity.setModifiedBy(user);
-		entity.setModification_date(new Date());
-		
-		// insert into the database
-		variantDAO.persist(entity);
-
-		// return entity translated to domain, set in results
+		// return curated entity translated to domain, set in results
 		// results has other info too
-		log.info("AlleleVariant/create/returning results");
-		results.setItem(translator.translate(entity,0));
-		log.info("Translator returned");
+		log.info("processAlleleVariant/create/returning results");
+		results.setItem(translator.translate(curatedEntity,0));
+		log.info("processAlleleVariant/translator curated entity returned");
 		return results;
 	}
 

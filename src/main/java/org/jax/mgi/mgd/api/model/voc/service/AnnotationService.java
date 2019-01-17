@@ -297,7 +297,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				// if any modifications made, then update DAO
 				if (modified == true) {
 					entity.setModification_date(new Date());
-					annotationDAO.update(entity);
+					annotationDAO.persist(entity);
 					log.info("processAnnotation/changes processed: " + domain.get(i).getAnnotKey());
 				}
 				else {

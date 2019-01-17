@@ -31,7 +31,9 @@ public class AlleleVariantController extends BaseController<AlleleVariantDomain>
 
 	@Override
 	public SearchResults<AlleleVariantDomain> create(AlleleVariantDomain domain, User user) {
+		
 		SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
+		
 		try {
 			results = variantService.create(domain, user);
 			results = variantService.getResults(Integer.valueOf(results.items.get(0).getVariantKey()));
@@ -45,7 +47,9 @@ public class AlleleVariantController extends BaseController<AlleleVariantDomain>
 
 	@Override
 	public SearchResults<AlleleVariantDomain> update(AlleleVariantDomain domain, User user) {
+		
 		SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
+		
 		try {
 			results = variantService.update(domain, user);
 			results = variantService.getResults(Integer.valueOf(results.items.get(0).getVariantKey()));
@@ -64,7 +68,17 @@ public class AlleleVariantController extends BaseController<AlleleVariantDomain>
 
 	@Override
 	public SearchResults<AlleleVariantDomain> delete(Integer key, User user) {
-		return variantService.delete(key, user);
+		
+		SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
+		
+		try {
+			results = variantService.delete(key, user);
+		} catch (Exception e) {
+			results.setError("Failed : delete", e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			return results;
+		}
+		
+		return results;			
 	}
 	
 	@POST

@@ -65,13 +65,13 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 
-		//try {
+		try {
 			results = markerService.update(domain, user);
 			results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
-		//} catch (Exception e) {
-		//	results.setError("Failed : update", e.getMessage(), Constants.HTTP_SERVER_ERROR);
-		//	return results;
-		//}
+		} catch (Exception e) {
+			results.setError("Failed : update", e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			return results;
+		}
 
 		return results;	
 	}

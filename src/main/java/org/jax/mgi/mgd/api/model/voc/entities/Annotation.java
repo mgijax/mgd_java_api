@@ -30,8 +30,8 @@ import lombok.Setter;
 public class Annotation extends BaseEntity {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="voc_vocab_generator")
-	@SequenceGenerator(name="voc_vocab_generator", sequenceName = "voc_vocab_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="voc_annot_generator")
+	@SequenceGenerator(name="voc_annot_generator", sequenceName = "voc_annot_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")	
 	private int _annot_key;
 	private int _object_key;

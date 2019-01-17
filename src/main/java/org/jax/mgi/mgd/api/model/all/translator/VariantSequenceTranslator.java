@@ -1,11 +1,16 @@
 package org.jax.mgi.mgd.api.model.all.translator;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.VariantSequenceDomain;
 import org.jax.mgi.mgd.api.model.all.entities.VariantSequence;
 import org.jax.mgi.mgd.api.util.Constants;
 
 public class VariantSequenceTranslator extends BaseEntityDomainTranslator<VariantSequence, VariantSequenceDomain> {
+
+	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	
 	@Override
 	protected VariantSequenceDomain entityToDomain(VariantSequence entity, int translationDepth) {
@@ -16,8 +21,8 @@ public class VariantSequenceTranslator extends BaseEntityDomainTranslator<Varian
 		domain.setVariantKey(String.valueOf(entity.get_variant_key()));	
 		domain.setSequenceTypeKey(String.valueOf(entity.getSequenceType().get_term_key()));
 		domain.setSequenceTypeTerm(entity.getSequenceType().getTerm());
-        domain.setStartCoordinate(entity.getStartCoordinate());
-        domain.setEndCoordinate(entity.getEndCoordinate());
+        domain.setStartCoordinate(String.valueOf(entity.getStartCoordinate()));
+        domain.setEndCoordinate(String.valueOf(entity.getEndCoordinate()));
 		domain.setReferenceSequence(entity.getReferenceSequence());
 		domain.setVariantSequence(entity.getVariantSequence());
 		domain.setVersion(entity.getVersion());
@@ -27,7 +32,15 @@ public class VariantSequenceTranslator extends BaseEntityDomainTranslator<Varian
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-		
+
+		// variant sequence accession ids
+		if (entity.getAccessionIds() != null) {
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getAccessionIds());
+			if(acc.iterator().hasNext() == true) {
+				domain.setAccessionIds(IteratorUtils.toList(acc.iterator()));
+			}
+		}
+				
 		return domain;
 	}
 

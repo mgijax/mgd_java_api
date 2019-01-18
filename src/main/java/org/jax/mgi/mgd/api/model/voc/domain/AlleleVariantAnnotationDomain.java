@@ -13,11 +13,13 @@ import lombok.Setter;
 @ApiModel(value = "Allele Variant Annotation Domain")
 public class AlleleVariantAnnotationDomain extends BaseDomain {
 
+	// note:
+	// Allele Variant Annotations do not create Evidence records
+	
 	private String processStatus;
 	private String annotKey;
 	private String annotTypeKey;	
     private String termKey;
     private String term;
-	private List<SlimAccessionDomain> alleleVariantSOIds;
-	
+    private List<SlimAccessionDomain> alleleVariantSOIds;	
 }

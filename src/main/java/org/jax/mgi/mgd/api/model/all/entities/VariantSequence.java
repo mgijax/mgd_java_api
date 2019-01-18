@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model.all.entities;
 
-import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 

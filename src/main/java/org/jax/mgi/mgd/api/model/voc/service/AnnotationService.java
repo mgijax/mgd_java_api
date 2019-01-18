@@ -244,27 +244,30 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				// database trigger will assign the MGI id/see pgmgddbschema/trigger for details
 
 				// voc_annot
-				Annotation entity = new Annotation();		
-				entity.setAnnotType(annotTypeDAO.get(Integer.valueOf(domain.get(0).getAnnotKey())));				
+				Annotation entity = new Annotation();	
+				entity.setAnnotType(annotTypeDAO.get(Integer.valueOf(domain.get(i).getAnnotTypeKey())));				
 				entity.set_object_key(Integer.valueOf(domain.get(i).getObjectKey()));
-				entity.setTerm(termDAO.get(Integer.valueOf(domain.get(0).getTermKey())));
-				entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(0).getQualifierKey())));
+				entity.setTerm(termDAO.get(Integer.valueOf(domain.get(i).getTermKey())));
+				entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
 				entity.setCreation_date(new Date());
 				entity.setModification_date(new Date());
 				annotationDAO.persist(entity);
 		
+				// not all annotation types have evidence records
 				// voc_evidence
-				Evidence evidenceEntity = new Evidence();
-				evidenceEntity.set_annot_key(entity.get_annot_key());
-				evidenceEntity.setEvidenceTerm(termDAO.get(Integer.valueOf(domain.get(0).getEvidence().getEvidenceTermKey())));
-				evidenceEntity.setReference(referenceDAO.get(Integer.valueOf(domain.get(0).getEvidence().getRefsKey())));
-				evidenceEntity.setInferredFrom(domain.get(0).getEvidence().getInferredFrom());
-				evidenceEntity.setCreatedBy(user);
-				evidenceEntity.setCreation_date(new Date());
-				evidenceEntity.setModifiedBy(user);
-				evidenceEntity.setModification_date(new Date());
-				evidenceDAO.persist(evidenceEntity);
-								
+				if (domain.get(i).getEvidence() != null) {
+					Evidence evidenceEntity = new Evidence();
+					evidenceEntity.set_annot_key(entity.get_annot_key());
+					evidenceEntity.setEvidenceTerm(termDAO.get(Integer.valueOf(domain.get(i).getEvidence().getEvidenceTermKey())));
+					evidenceEntity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getEvidence().getRefsKey())));
+					evidenceEntity.setInferredFrom(domain.get(i).getEvidence().getInferredFrom());
+					evidenceEntity.setCreatedBy(user);
+					evidenceEntity.setCreation_date(new Date());
+					evidenceEntity.setModifiedBy(user);
+					evidenceEntity.setModification_date(new Date());
+					evidenceDAO.persist(evidenceEntity);
+				}
+				
 				log.info("processAnnotation/create/returning results");				
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
@@ -337,7 +340,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 			AnnotationDomain annotDomain = new AnnotationDomain();
 			annotDomain.setProcessStatus(domain.get(i).getProcessStatus());
 			annotDomain.setAnnotKey(domain.get(i).getAnnotKey());
-			annotDomain.setAnnotType(annotTypeKey);
+			annotDomain.setAnnotTypeKey(annotTypeKey);
 			annotDomain.setObjectKey(parentKey);
 			annotDomain.setTermKey(domain.get(i).getTermKey());
 			annotDomain.setQualifierKey(qualifierKey);
@@ -374,7 +377,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 			AnnotationDomain annotDomain = new AnnotationDomain();
 			annotDomain.setProcessStatus(domain.get(i).getProcessStatus());
 			annotDomain.setAnnotKey(domain.get(i).getAnnotKey());
-			annotDomain.setAnnotType(annotTypeKey);
+			annotDomain.setAnnotTypeKey(annotTypeKey);
 			annotDomain.setObjectKey(parentKey);
 			annotDomain.setTermKey(domain.get(i).getTermKey());
 			annotDomain.setQualifierKey(qualifierKey);

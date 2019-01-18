@@ -262,14 +262,15 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 
 		// process feature types
+		// use qualifier 'Generic Annotation Qualifier', value = null
+		// (_vocab_key = 53, _term_key = 1614158)		
 		if (domain.getFeatureTypes() != null) {
 			annotationService.processMarkerFeatureType(domain.getMarkerKey(), 
 					domain.getFeatureTypes(), 
 					domain.getFeatureTypes().get(0).getAnnotTypeKey(),
 					"1614158", user);		
-					//"1011", "1614158", user);
 		}
-				
+		
 		// return entity translated to domain
 		log.info("processMarker/update/returning results");
 		results.setItem(translator.translate(entity, 0));

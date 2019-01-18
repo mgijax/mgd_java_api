@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleVariantDAO;
 import org.jax.mgi.mgd.api.model.all.dao.VariantSequenceDAO;
@@ -58,9 +57,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 	private MGIReferenceAssocService referenceAssocService;	
 	@Inject
 	private AnnotationService annotationService;
-	@Inject
-	private AccessionService accessionService;
-	
+
 	// translate an entity to a domain to return in the results
 	private AlleleVariantTranslator translator = new AlleleVariantTranslator();
 
@@ -77,7 +74,6 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		// create Source variant and Curated variant
 		// the Source variant _SourceVariant_key = null
 		// the Curated variant _SourceVariant_key = new Source variant key
-		// all other Source/Curated variant fields are the same
 		// all fields are should be sent in by UI/domain
 		//
 		// AlleleVariant key will be auto-sequence
@@ -103,7 +99,6 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		sourceVariantDAO.persist(sourceEntity);
 		
 		// create Curated entity
-		// except setSourceVariant of the Curated entity
 		log.info("source key: " + sourceEntity.get_variant_key());
 		curatedEntity.setSourceVariant(sourceVariantDAO.get(sourceEntity.get_variant_key()));
 		curatedEntity.setAllele(alleleDAO.get(Integer.valueOf(domain.getAllele().getAlleleKey())));
@@ -132,12 +127,14 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 				sourceSequenceEntity.setModifiedBy(user);
 				sourceSequenceEntity.setModification_date(new Date());
 				sourceSequenceDAO.persist(sourceSequenceEntity);
-				
-//				if (domain.getSourceVariant().getVariantSequences().get(0).getAccessionIds() != null) {
+			
+				// create accession ids of source variant sequence
+				// assuming there is only 1 accession id per Variant Sequence				
+//				if (domain.getSourceVariant().getVariantSequences().get(i).getAccessionIds() != null) {
 //					accessionService.process(
-//							String.valueOf(curatedEntity.get_variant_key()), 
-//							"9",   // must be determined by UI or by prefixpart of accID 
-//							domain.getSourceVariant().getVariantSequences().get(0).getAccessionIds(),
+//							String.valueOf(sourceEntity.get_variant_key()), 
+//							domain.getSourceVariant().getVariantSequences().get(i).getAccessionIds().get(0).getLogicalddbKey(),  
+//							domain.getSourceVariant().getVariantSequences().get(i).getAccessionIds(),
 //							"Allele Variant Sequence", user);				
 //				}
 													
@@ -159,12 +156,22 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 				curatedSequenceEntity.setModifiedBy(user);
 				curatedSequenceEntity.setModification_date(new Date());
 				curatedSequenceDAO.persist(curatedSequenceEntity);
+
+				// create accession ids of curated variant sequence
+				// assuming there is only 1 accession id per Variant Sequence
+//				if (domain.getVariantSequences().get(i).getAccessionIds() != null) {
+//					accessionService.process(
+//							String.valueOf(curatedEntity.get_variant_key()), 
+//							domain.getVariantSequences().get(i).getAccessionIds().get(0).getLogicalddbKey(),  
+//							domain.getVariantSequences().get(i).getAccessionIds(),
+//							"Allele Variant Sequence", user);				
+//				}				
 			}
 		}
-			
+	
 		// process all notes : curated only
 		noteService.process(String.valueOf(curatedEntity.get_variant_key()), domain.getCuratorNote(), mgiTypeKey, domain.getCuratorNote().getNoteTypeKey(), user);
-		noteService.process(String.valueOf(curatedEntity.get_variant_key()), domain.getPublicNote(), mgiTypeKey, domain.getCuratorNote().getNoteTypeKey(), user);
+		noteService.process(String.valueOf(curatedEntity.get_variant_key()), domain.getPublicNote(), mgiTypeKey, domain.getPublicNote().getNoteTypeKey(), user);
 		
 		// process reference : curated only
 		if (domain.getRefAssocs() != null) {
@@ -172,20 +179,23 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		}
 		
 		// process variant type : curated only
-//		if (domain.getVariantTypes() != null) {
-//			annotationService.processAlleleVariant(String.valueOf(curatedEntity.get_variant_key()), 
-//					domain.getVariantTypes(), 
-//					domain.getVariantTypes().get(0).getAnnotTypeKey(), 
-//					"1614158", user);
-//		}
+		// use qualifier 'Generic Annotation Qualifier', value = null
+		// (_vocab_key = 53, _term_key = 1614158)
+		if (domain.getVariantTypes() != null) {
+			annotationService.processAlleleVariant(String.valueOf(curatedEntity.get_variant_key()), 
+					domain.getVariantTypes(), 
+					domain.getVariantTypes().get(0).getAnnotTypeKey(), 
+					"1614158", user);
+		}
 
 		// process variant effects : curated only
-//		if (domain.getVariantEffects() != null) {
-//			annotationService.processAlleleVariant(String.valueOf(curatedEntity.get_variant_key()), 
-//					domain.getVariantEffects(), 
-//					domain.getVariantEffects().get(0).getAnnotTypeKey(), 
-//					"1614158", user);
-//		}
+		// use qualifier 'Generic Annotation Qualifier', value = null
+		if (domain.getVariantEffects() != null) {
+			annotationService.processAlleleVariant(String.valueOf(curatedEntity.get_variant_key()), 
+					domain.getVariantEffects(), 
+					domain.getVariantEffects().get(0).getAnnotTypeKey(), 
+					"1614158", user);
+		}
 				
 		// return curated entity translated to domain, set in results
 		// results has domain info and other info too
@@ -214,7 +224,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		
 		// process all notes
 		noteService.process(domain.getVariantKey(), domain.getCuratorNote(), mgiTypeKey, domain.getCuratorNote().getNoteTypeKey(), user);
-		noteService.process(domain.getVariantKey(), domain.getPublicNote(), mgiTypeKey, domain.getCuratorNote().getNoteTypeKey(), user);
+		noteService.process(domain.getVariantKey(), domain.getPublicNote(), mgiTypeKey, domain.getPublicNote().getNoteTypeKey(), user);
 
 		// process reference
 		if (domain.getRefAssocs() != null) {

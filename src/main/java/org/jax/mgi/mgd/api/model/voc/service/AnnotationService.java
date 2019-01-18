@@ -59,7 +59,12 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 
 	@Transactional
 	public AnnotationDomain get(Integer key) {
-		return translator.translate(annotationDAO.get(key));
+		// get the DAO/entity and translate -> domain
+		AnnotationDomain domain = new AnnotationDomain();
+		if (annotationDAO.get(key) != null) {
+			domain = translator.translate(annotationDAO.get(key),1);
+		}
+		return domain;		
 	}
 	
     @Transactional
@@ -132,6 +137,8 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				MarkerFeatureTypeDomain domain = new MarkerFeatureTypeDomain();
+				domain.setAnnotKey(rs.getString("_annot_key"));
+				domain.setAnnotTypeKey(rs.getString("_annottype_key"));
 				domain.setTermKey(rs.getString("_term_key"));
 				domain.setTerm(rs.getString("term"));
 				
@@ -148,7 +155,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				//accDomain.setPreferred(rs.getString("preferred"));
 				accessions.add(accDomain);
 				domain.setMarkerFeatureTypeIds(accessions);
-
+				
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();		}

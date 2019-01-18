@@ -11,6 +11,7 @@ import org.jax.mgi.mgd.api.util.Constants;
 public class MarkerFeatureTypeTranslator extends BaseEntityDomainTranslator<Annotation, MarkerFeatureTypeDomain> {
 	
 	SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
+	EvidenceTranslator evidenceTranslator = new EvidenceTranslator();
 	
 	@Override
 	protected MarkerFeatureTypeDomain entityToDomain(Annotation entity, int translationDepth) {
@@ -28,7 +29,7 @@ public class MarkerFeatureTypeTranslator extends BaseEntityDomainTranslator<Anno
 				domain.setMarkerFeatureTypeIds(IteratorUtils.toList(acc.iterator()));
 			}
 		}
-		
+				
 		return domain;
 	}
 

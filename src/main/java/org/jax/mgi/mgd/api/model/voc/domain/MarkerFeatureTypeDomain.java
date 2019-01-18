@@ -13,11 +13,13 @@ import lombok.Setter;
 @ApiModel(value = "Marker Feature Type Domain")
 public class MarkerFeatureTypeDomain extends BaseDomain {
 
+	// note:
+	// Marker Feature Type Annotations do not create Evidence records
+	
 	private String processStatus;
 	private String annotKey;
 	private String annotTypeKey;
 	private String termKey;
 	private String term;
-	private List<SlimAccessionDomain> markerFeatureTypeIds;
-
+	private List<SlimAccessionDomain> markerFeatureTypeIds;		
 }

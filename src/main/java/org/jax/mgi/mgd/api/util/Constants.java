@@ -49,6 +49,10 @@ public class Constants {
 	public static Integer VOC_WORKFLOW_TAGS = 129;
 	public static Integer VOC_SUPPLEMENTAL = 130;
 	public static Integer VOC_REFERENCE_TYPE = 131;
+
+	// voc_term where _vocab_key = 53
+	// qualifier 'Generic Annotation Qualifier', value = null	
+	public static String VOC_GENERIC_ANNOTATION_QUALIFIER = "1614158";
 	
 	// accession ID prefixes
 	public static String PREFIX_JNUM = "J:";
@@ -65,5 +69,6 @@ public class Constants {
 	public static String PROCESS_UPDATE = "u";
 	public static String PROCESS_DELETE = "d";
 	public static String PROCESS_NOTDIRTY = "x";
-	
+
+
 }

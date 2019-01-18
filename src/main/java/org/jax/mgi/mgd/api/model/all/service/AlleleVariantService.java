@@ -24,6 +24,7 @@ import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -180,12 +181,11 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		
 		// process variant type : curated only
 		// use qualifier 'Generic Annotation Qualifier', value = null
-		// (_vocab_key = 53, _term_key = 1614158)
 		if (domain.getVariantTypes() != null) {
 			annotationService.processAlleleVariant(String.valueOf(curatedEntity.get_variant_key()), 
 					domain.getVariantTypes(), 
 					domain.getVariantTypes().get(0).getAnnotTypeKey(), 
-					"1614158", user);
+					Constants.VOC_GENERIC_ANNOTATION_QUALIFIER, user);
 		}
 
 		// process variant effects : curated only
@@ -194,7 +194,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			annotationService.processAlleleVariant(String.valueOf(curatedEntity.get_variant_key()), 
 					domain.getVariantEffects(), 
 					domain.getVariantEffects().get(0).getAnnotTypeKey(), 
-					"1614158", user);
+					Constants.VOC_GENERIC_ANNOTATION_QUALIFIER, user);
 		}
 				
 		// return curated entity translated to domain, set in results

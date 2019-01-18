@@ -17,6 +17,7 @@ import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.EventDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.EventReasonDAO;
+import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerHistoryDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.MarkerHistory;
@@ -38,6 +39,8 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 	private EventReasonDAO eventReasonDAO;
 	@Inject
 	private ReferenceDAO referenceDAO;
+	@Inject
+	private MarkerDAO markerDAO;
 	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
@@ -180,9 +183,9 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				//log.info("historyDAO");
 				MarkerHistory entity = historyDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
 
-				//log.info("marker key");
-				if (!String.valueOf(entity.get_marker_key()).equals(domain.get(i).getMarkerKey())) {
-					entity.set_marker_key(Integer.valueOf(domain.get(i).getMarkerKey()));
+				//log.info("marker history key");
+				if (!String.valueOf(entity.getMarkerHistory().get_marker_key()).equals(domain.get(i).getMarkerHistorySymbolKey())) {
+					entity.setMarkerHistory(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerHistorySymbolKey())));
 					modified = true;
 				}
 				

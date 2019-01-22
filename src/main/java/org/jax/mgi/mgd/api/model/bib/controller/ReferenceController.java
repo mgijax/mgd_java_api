@@ -10,6 +10,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.PathParam;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
@@ -69,11 +70,14 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		return results;
 	}
 
-	@POST
+	@GET
 	@ApiOperation(value = "Validate reference by J:/returns slim reference domain")
-	@Path("/validJnum")
-	public List<SlimReferenceDomain> validJnum(String value) {
-		return referenceService.validJnum(value);
+	@Path("/validJnum/{jnum}")
+	public List<SlimReferenceDomain> validJnum(
+			@PathParam("jnum") 
+			@ApiParam(value = "Validating jnum") 
+			String jnum) {
+		return referenceService.validJnum(jnum);
 	}
-		
+
 }

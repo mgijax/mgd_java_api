@@ -10,6 +10,8 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.acc.dao.AccessionDAO;
+import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleVariantDAO;
 import org.jax.mgi.mgd.api.model.all.dao.VariantSequenceDAO;
@@ -45,6 +47,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 	private VariantSequenceDAO sourceSequenceDAO;
 	@Inject
 	private VariantSequenceDAO curatedSequenceDAO;
+	
 	@Inject 
 	AlleleDAO alleleDAO;
 	@Inject
@@ -58,6 +61,8 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 	private MGIReferenceAssocService referenceAssocService;	
 	@Inject
 	private AnnotationService annotationService;
+	@Inject
+	private AccessionService accessionService;
 
 	// translate an entity to a domain to return in the results
 	private AlleleVariantTranslator translator = new AlleleVariantTranslator();
@@ -130,14 +135,15 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 				sourceSequenceDAO.persist(sourceSequenceEntity);
 			
 				// create accession ids of source variant sequence
-				// assuming there is only 1 accession id per Variant Sequence				
-//				if (domain.getSourceVariant().getVariantSequences().get(i).getAccessionIds() != null) {
-//					accessionService.process(
-//							String.valueOf(sourceEntity.get_variant_key()), 
-//							domain.getSourceVariant().getVariantSequences().get(i).getAccessionIds().get(0).getLogicalddbKey(),  
-//							domain.getSourceVariant().getVariantSequences().get(i).getAccessionIds(),
-//							"Allele Variant Sequence", user);				
-//				}
+				// assuming there is only 1 accession id per Variant Sequence			
+			    log.info("AlleleVariantService processing source variant sequences: " + domain.getSourceVariant().getVariantSequences().get(i).getAccessionIds());
+				if (domain.getSourceVariant().getVariantSequences().get(i).getAccessionIds() != null) {
+					accessionService.process(
+							String.valueOf(sourceSequenceEntity.get_variantsequence_key()), 
+							domain.getSourceVariant().getVariantSequences().get(i).getAccessionIds().get(0).getLogicaldbKey(),  
+							domain.getSourceVariant().getVariantSequences().get(i).getAccessionIds(),
+							"Allele Variant Sequence", user);				
+				}
 													
 			}
 		}
@@ -160,19 +166,24 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 
 				// create accession ids of curated variant sequence
 				// assuming there is only 1 accession id per Variant Sequence
-//				if (domain.getVariantSequences().get(i).getAccessionIds() != null) {
-//					accessionService.process(
-//							String.valueOf(curatedEntity.get_variant_key()), 
-//							domain.getVariantSequences().get(i).getAccessionIds().get(0).getLogicalddbKey(),  
-//							domain.getVariantSequences().get(i).getAccessionIds(),
-//							"Allele Variant Sequence", user);				
-//				}				
+				log.info("AlleleVariantService processing curated variant sequences: " + domain.getSourceVariant().getVariantSequences().get(i).getAccessionIds());
+				if (domain.getVariantSequences().get(i).getAccessionIds() != null) {
+					accessionService.process(
+							String.valueOf(curatedSequenceEntity.get_variantsequence_key()), 
+							domain.getVariantSequences().get(i).getAccessionIds().get(0).getLogicaldbKey(), 
+							domain.getVariantSequences().get(i).getAccessionIds(),
+							"Allele Variant Sequence", user);				
+				}				
 			}
 		}
 	
 		// process all notes : curated only
-		noteService.process(String.valueOf(curatedEntity.get_variant_key()), domain.getCuratorNote(), mgiTypeKey, domain.getCuratorNote().getNoteTypeKey(), user);
-		noteService.process(String.valueOf(curatedEntity.get_variant_key()), domain.getPublicNote(), mgiTypeKey, domain.getPublicNote().getNoteTypeKey(), user);
+		log.info("AlleleVariantService variant key " + curatedEntity.get_variant_key());
+		log.info("AlleleVariantService curator note: " + domain.getCuratorNote());
+		log.info("AlleleVariantService mgiTypeKey: " + mgiTypeKey);
+		log.info("AlleleVariantService user: " + user);
+		noteService.process(String.valueOf(curatedEntity.get_variant_key()), domain.getCuratorNote(), mgiTypeKey, "1050", user);
+		noteService.process(String.valueOf(curatedEntity.get_variant_key()), domain.getPublicNote(), mgiTypeKey, "1051", user);
 		
 		// process reference : curated only
 		if (domain.getRefAssocs() != null) {

@@ -14,6 +14,7 @@ import org.jax.mgi.mgd.api.model.mgi.dao.RelationshipDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.Relationship;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -27,6 +28,7 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 	@Inject
 	private RelationshipDAO relationshipDAO;
 
+	private RelationshipTranslator translator = new RelationshipTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
@@ -78,30 +80,7 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				// for now, we are just using the generic RelationshipDomain
 				
 				RelationshipDomain domain = new RelationshipDomain();
-				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
-				domain.setRelationshipKey(rs.getString("_relationship_key"));
-				domain.setObjectKey1(rs.getString("_object_key_1"));
-				domain.setObjectKey2(rs.getString("_object_key_2"));
-				domain.setObject1(rs.getString("marker1"));	
-				domain.setObject2(rs.getString("marker2"));				
-				domain.setCategoryKey(rs.getString("_category_key"));
-				domain.setCategoryTerm(rs.getString("categoryTerm"));
-				domain.setRelationshipTermKey(rs.getString("_relationshipterm_key"));
-				domain.setRelationshipTerm(rs.getString("relationshipTerm"));
-				domain.setQualifierKey(rs.getString("_qualifier_key"));
-				domain.setQualifierTerm(rs.getString("qualifierTerm"));
-				domain.setEvidenceKey(rs.getString("_evidence_key"));
-				domain.setEvidenceTerm(rs.getString("evidenceTerm"));
-				domain.setRefsKey(rs.getString("_refs_key"));
-				domain.setJnumid(rs.getString("jnumid"));
-				domain.setJnum(rs.getString("jnum"));
-				domain.setShort_citation(rs.getString("short_citation"));
-				domain.setCreatedByKey(rs.getString("_createdby_key"));
-				domain.setCreatedBy(rs.getString("createdby"));
-				domain.setModifiedByKey(rs.getString("_modifiedby_key"));
-				domain.setModifiedBy(rs.getString("modifiedby"));
-				domain.setCreation_date(rs.getString("creation_date"));
-				domain.setModification_date(rs.getString("modification_date"));
+				domain = translator.translate(relationshipDAO.get(rs.getInt("_relationship_key")),1);
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

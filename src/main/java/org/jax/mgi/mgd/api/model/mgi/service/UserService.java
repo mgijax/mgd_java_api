@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.mgi.dao.UserDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.SlimUserDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.UserDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.translator.UserTranslator;
 import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -29,6 +30,7 @@ public class UserService extends BaseService<UserDomain> {
 	@Inject
 	private UserDAO userDAO;
 	
+	private UserTranslator translator = new UserTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
@@ -73,6 +75,7 @@ public class UserService extends BaseService<UserDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				UserDomain domain = new UserDomain();
+				//domain = translator.translate(userDAO.get(rs.getInt("_user_key")),1);
 				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 				domain.setUserKey(rs.getString("_user_key"));
 				domain.setUserTypeKey(rs.getString("_usertype_key"));

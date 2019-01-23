@@ -26,7 +26,6 @@ public class MGIRefAssocTypeService extends BaseService<MGIRefAssocTypeDomain> {
 	private MGIRefAssocTypeDAO refAssocTypeDAO;
 
 	private MGIRefAssocTypeTranslator translator = new MGIRefAssocTypeTranslator();
-	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -43,7 +42,8 @@ public class MGIRefAssocTypeService extends BaseService<MGIRefAssocTypeDomain> {
 
 	@Transactional
 	public MGIRefAssocTypeDomain get(Integer key) {
-		return translator.translate(refAssocTypeDAO.get(key),1);
+		// TODO Auto-generated method stub
+		return null;
 	}
 
     @Transactional
@@ -65,26 +65,20 @@ public class MGIRefAssocTypeService extends BaseService<MGIRefAssocTypeDomain> {
 		List<MGIRefAssocTypeDomain> results = new ArrayList<MGIRefAssocTypeDomain>();
 
 		String cmd = "select * from mgi_refassoctype order by _mgitype_key, assoctype";
-
 		log.info(cmd);
 
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				MGIRefAssocTypeDomain domain = new MGIRefAssocTypeDomain();
-				domain.setRefAssocTypeKey(rs.getString("_refassoctype_key"));
-				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
-				domain.setAllowOnlyOne(rs.getString("allowonlyone"));
-				domain.setAssocType(rs.getString("assoctype"));
-				domain.setCreatedByKey(rs.getString("_createdby_key"));
-				domain.setModifiedByKey(rs.getString("_modifiedby_key"));
-				domain.setCreation_date(rs.getString("creation_date"));
-				domain.setModification_date(rs.getString("modification_date"));
+				domain = translator.translate(refAssocTypeDAO.get(rs.getInt("_refassoctype_key")),1);
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();
 		}
-		catch (Exception e) {e.printStackTrace();}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		return results;
 	}	

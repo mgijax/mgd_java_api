@@ -76,21 +76,7 @@ public class NoteService extends BaseService<NoteDomain> {
 			while (rs.next()) {
 							
 				NoteDomain domain = new NoteDomain();
-
-				//domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
-				domain.setNoteKey(rs.getString("_note_key"));
-				domain.setObjectKey(rs.getString("_object_key"));
-				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
-				domain.setMgiType(rs.getString("mgiType"));
-				domain.setNoteTypeKey(rs.getString("_notetype_key"));
-				domain.setNoteType(rs.getString("notetype"));
-				domain.setNoteChunk(rs.getString("note"));
-				domain.setCreatedByKey(rs.getString("_createdby_key"));
-				domain.setCreatedBy(rs.getString("createdby"));
-				domain.setModifiedByKey(rs.getString("_modifiedby_key"));
-				domain.setModifiedBy(rs.getString("modifiedby"));
-				domain.setCreation_date(rs.getString("creation_date"));
-				domain.setModification_date(rs.getString("modification_date"));
+				domain = translator.translate(noteDAO.get(rs.getInt("_note_key")),1);
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

@@ -13,6 +13,7 @@ import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
+import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -27,6 +28,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	private AlleleDAO alleleDAO;
 
 	private AlleleTranslator translator = new AlleleTranslator();
+	private SlimAlleleTranslator slimtranslator = new SlimAlleleTranslator();	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -65,6 +67,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		return null;
 	}
 
+	@Transactional
 	public List<SlimAlleleDomain> search(AlleleDomain searchDomain) {
 
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
@@ -110,5 +113,33 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		
 		return results;
 	}
-}
 
+	@Transactional
+	public List<SlimAlleleDomain> variant(Integer key) {
+		// return all alleles for give allele key that contain allele variants
+
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
+		
+		String cmd = "select a._allele_key, a.symbol"
+				+ "\nfrom all_allele a"
+				+ "\nwhere a._allele_key = " + key
+				+ "\nand exists (select 1 from all_variant v where a._allele_key = v._allele_key)"
+				+ "\norder by a.symbol";
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimAlleleDomain domain = new SlimAlleleDomain();
+				domain = slimtranslator.translate(alleleDAO.get(key),1);
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+}	

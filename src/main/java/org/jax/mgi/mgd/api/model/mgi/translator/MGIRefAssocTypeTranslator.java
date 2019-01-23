@@ -15,13 +15,16 @@ public class MGIRefAssocTypeTranslator extends BaseEntityDomainTranslator<MGIRef
 		MGIRefAssocTypeDomain domain = new MGIRefAssocTypeDomain();
 		
 		domain.setRefAssocTypeKey(String.valueOf(entity.get_refAssocType_key()));
-		domain.setMgiTypeKey(String.valueOf(entity.getMgiType().get_mgitype_key()));
 		domain.setAssocType(entity.getAssocType());
 		domain.setAllowOnlyOne(String.valueOf(entity.getAllowOnlyOne()));
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
+		
+		if (entity.getMgiType() != null) {
+			domain.setMgiTypeKey(String.valueOf(entity.getMgiType().get_mgitype_key()));
+		}
 		
 		return domain;
 	}

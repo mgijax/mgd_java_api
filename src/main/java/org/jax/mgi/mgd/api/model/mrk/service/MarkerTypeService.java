@@ -26,7 +26,6 @@ public class MarkerTypeService extends BaseService<MarkerTypeDomain> {
 	private MarkerTypeDAO markerTypeDAO;
 
 	private MarkerTypeTranslator translator = new MarkerTypeTranslator();
-	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -71,10 +70,7 @@ public class MarkerTypeService extends BaseService<MarkerTypeDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				MarkerTypeDomain domain = new MarkerTypeDomain();
-				domain.setMarkerTypeKey(rs.getString("_marker_type_key"));
-				domain.setMarkerType(rs.getString("name"));
-				domain.setCreation_date(rs.getString("creation_date"));
-				domain.setModification_date(rs.getString("modification_date"));
+				domain = translator.translate(markerTypeDAO.get(rs.getInt("_marker_type_key")),1);
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

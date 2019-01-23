@@ -26,7 +26,6 @@ public class MarkerStatusService extends BaseService<MarkerStatusDomain> {
 	private MarkerStatusDAO markerStatusDAO;
 
 	private MarkerStatusTranslator translator = new MarkerStatusTranslator();
-	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -71,10 +70,7 @@ public class MarkerStatusService extends BaseService<MarkerStatusDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				MarkerStatusDomain domain = new MarkerStatusDomain();
-				domain.setMarkerStatusKey(rs.getString("_marker_status_key"));
-				domain.setMarkerStatus(rs.getString("status"));
-				domain.setCreation_date(rs.getString("creation_date"));
-				domain.setModification_date(rs.getString("modification_date"));
+				domain = translator.translate(markerStatusDAO.get(rs.getInt("_marker_status_key")),1);
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

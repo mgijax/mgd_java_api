@@ -73,16 +73,7 @@ public class MGISynonymTypeService extends BaseService<MGISynonymTypeDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				MGISynonymTypeDomain domain = new MGISynonymTypeDomain();
-				domain.setSynonymTypeKey(rs.getString("_synonymtype_key"));
-				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
-				domain.setOrganismKey(rs.getString("_organism_key"));
-				domain.setDefinition(rs.getString("definition"));
-				domain.setAllowOnlyOne(rs.getString("allowonlyone"));
-				domain.setSynonymType(rs.getString("synonymtype"));
-				domain.setCreatedByKey(rs.getString("_createdby_key"));
-				domain.setModifiedByKey(rs.getString("_modifiedby_key"));
-				domain.setCreation_date(rs.getString("creation_date"));
-				domain.setModification_date(rs.getString("modification_date"));
+				domain = translator.translate(synonymTypeDAO.get(rs.getInt("_synonymtype_key")),1);
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

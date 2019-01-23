@@ -16,6 +16,7 @@ import org.jax.mgi.mgd.api.model.mgi.dao.MGISynonymDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -30,7 +31,8 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 	private MGISynonymDAO synonymDAO;
 	@Inject
 	private ReferenceDAO referenceDAO;
-	
+
+	private MGISynonymTranslator translator = new MGISynonymTranslator();				
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
@@ -65,30 +67,19 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 
 	@Transactional	
 	public List<MGISynonymDomain> marker(Integer key) {
-
+		// return all synonyms for given marker key
+		
 		List<MGISynonymDomain> results = new ArrayList<MGISynonymDomain>();
 
-		String cmd = "\nselect * from mgi_synonym_musmarker_view where _object_key = " + key;
+		String cmd = "\nselect _synonym_key from mgi_synonym_musmarker_view"
+				+ "\nwhere _object_key = " + key;
 		log.info(cmd);
 
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				MGISynonymDomain domain = new MGISynonymDomain();
-				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
-				domain.setSynonymKey(rs.getString("_synonym_key"));
-				domain.setObjectKey(rs.getString("_object_key"));
-				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
-				domain.setRefsKey(rs.getString("_refs_key"));
-				domain.setJnumid(rs.getString("jnumid"));
-				domain.setJnum(rs.getString("jnum"));
-				domain.setShort_citation(rs.getString("short_citation"));
-				domain.setCreatedByKey(rs.getString("_createdby_key"));
-				domain.setCreatedBy(rs.getString("createdby"));
-				domain.setModifiedByKey(rs.getString("_modifiedby_key"));
-				domain.setModifiedBy(rs.getString("modifiedby"));
-				domain.setCreation_date(rs.getString("creation_date"));
-				domain.setModification_date(rs.getString("modification_date"));
+				domain = translator.translate(synonymDAO.get(rs.getInt("_synonym_key")),1);
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

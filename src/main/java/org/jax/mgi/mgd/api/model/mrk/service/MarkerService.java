@@ -28,6 +28,7 @@ import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
+import org.jax.mgi.mgd.api.model.mrk.translator.SlimMarkerTranslator;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
@@ -65,6 +66,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private AnnotationService annotationService;
 	
 	private MarkerTranslator translator = new MarkerTranslator();
+	private SlimMarkerTranslator slimtranslator = new SlimMarkerTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -556,6 +558,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SlimMarkerDomain domain = new SlimMarkerDomain();
+				//domain = slimtranslator.translate(markerDAO.get(rs.getInt("_marker_key")),1);
 				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setSymbol(rs.getString("symbol"));
 				results.add(domain);
@@ -584,8 +587,9 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {				
 				SlimMarkerDomain domain = new SlimMarkerDomain();				
+				//domain = slimtranslator.translate(markerDAO.get(rs.getInt("_marker_key")),1);
 				domain.setMarkerKey(rs.getString("_marker_key"));
-				domain.setSymbol(rs.getString("symbol"));
+				domain.setSymbol(rs.getString("symbol"));				
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();
@@ -630,8 +634,9 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {	
 				SlimMarkerDomain domain = new SlimMarkerDomain();						
+				//domain = slimtranslator.translate(markerDAO.get(rs.getInt("_marker_key")),1);
 				domain.setMarkerKey(rs.getString("_marker_key"));
-				domain.setSymbol(rs.getString("symbol"));
+				domain.setSymbol(rs.getString("symbol"));			
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

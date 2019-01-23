@@ -14,6 +14,7 @@ import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
+import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -28,7 +29,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	@Inject
 	private ReferenceDAO referenceDAO;
 	
-	private ReferenceTranslator translator = new ReferenceTranslator();	
+	private ReferenceTranslator translator = new ReferenceTranslator();
+	private SlimReferenceTranslator slimtranslator = new SlimReferenceTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -81,7 +83,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			return results;
 		}
 
-		String cmd = "\nselect * from bib_citation_cache";
+		String cmd = "\nselect _refs_key from bib_citation_cache";
 		String where = "\nwhere ";
 		
 		value = value.toLowerCase();
@@ -99,10 +101,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {	
 				SlimReferenceDomain domain = new SlimReferenceDomain();						
-				domain.setRefsKey(rs.getString("_refs_key"));
-				domain.setJnumID(rs.getString("jnumid"));
-				domain.setJnum(rs.getString("numericpart"));
-				domain.setShort_citation(rs.getString("short_citation"));			
+				domain = slimtranslator.translate(referenceDAO.get(rs.getInt("_refs_key")),1);			
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

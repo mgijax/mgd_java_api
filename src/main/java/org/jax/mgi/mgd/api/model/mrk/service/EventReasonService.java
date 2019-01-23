@@ -26,7 +26,6 @@ public class EventReasonService extends BaseService<EventReasonDomain> {
 	private EventReasonDAO eventReasonDAO;
 
 	private EventReasonTranslator translator = new EventReasonTranslator();
-	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -71,10 +70,7 @@ public class EventReasonService extends BaseService<EventReasonDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				EventReasonDomain domain = new EventReasonDomain();
-				domain.setMarkerEventReasonKey(rs.getString("_marker_eventreason_key"));
-				domain.setEventReason(rs.getString("eventreason"));
-				domain.setCreation_date(rs.getString("creation_date"));
-				domain.setModification_date(rs.getString("modification_date"));
+				domain = translator.translate(eventReasonDAO.get(rs.getInt("_marker_eventreason_key")),1);
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

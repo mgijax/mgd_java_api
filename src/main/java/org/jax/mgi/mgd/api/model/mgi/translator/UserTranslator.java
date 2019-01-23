@@ -17,14 +17,20 @@ public class UserTranslator extends BaseEntityDomainTranslator<User, UserDomain>
 		domain.setUserStatusKey(String.valueOf(entity.getUserStatus().get_term_key()));
 		domain.setUserLogin(entity.getLogin());
 		domain.setUserName(entity.getName());
-		domain.setOrcid(entity.getOrcid());
-		domain.setGroupKey(String.valueOf(entity.getGroup().get_term_key()));
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
+		
+		if (entity.getOrcid() != null) {
+			domain.setOrcid(entity.getOrcid());			
+		}
+		 
+		if (entity.getGroup() != null) {
+			domain.setGroupKey(String.valueOf(entity.getGroup().get_term_key()));			
+		}
 		
 		return domain;
 	}

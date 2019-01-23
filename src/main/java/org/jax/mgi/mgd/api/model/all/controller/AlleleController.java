@@ -52,7 +52,7 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	@POST
 	@ApiOperation(value = "Search")
 	@Path("/search")
-	public List<SlimAlleleDomain> Search(AlleleDomain searchDomain) {
+	public List<SlimAlleleDomain> search(AlleleDomain searchDomain) {
 			
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 		
@@ -65,4 +65,20 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		return results;
 	}
 
+	@POST
+	@ApiOperation(value = "Variant")
+	@Path("/variant")
+	public List<SlimAlleleDomain> variant(Integer key) {
+			
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
+		
+		try {
+			results = alleleService.variant(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

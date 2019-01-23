@@ -20,6 +20,7 @@ import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleVariantDomain;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleVariant;
 import org.jax.mgi.mgd.api.model.all.entities.VariantSequence;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleVariantTranslator;
+import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleVariantTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
@@ -49,7 +50,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 	private VariantSequenceDAO curatedSequenceDAO;
 	
 	@Inject 
-	AlleleDAO alleleDAO;
+	private AlleleDAO alleleDAO;
 	@Inject
 	private ProbeStrainDAO strainDAO;
 	@Inject
@@ -66,7 +67,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 
 	// translate an entity to a domain to return in the results
 	private AlleleVariantTranslator translator = new AlleleVariantTranslator();
-
+	private SlimAlleleVariantTranslator slimTranslator = new SlimAlleleVariantTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	private String mgiTypeKey = "45";
@@ -218,36 +219,61 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 
 	@Transactional
 	public SearchResults<AlleleVariantDomain> update(AlleleVariantDomain domain, User user) {
-		// the set of fields in "update" is similar to set of fields in "create"
-		// creation user/date are only set in "create"
-		
+		// * the set of fields in "update" is similar to set of fields in "create"
+		// * creation user/date are only set in "create"
+		// * do not update source, allele, strain (strain is always B6; set by the UI)
+		// * The Allele Variant chromosome and strand come from the
+		//       Variant Allele's Marker - we will not update this 
 		// the domain is assumed to be a Curated Variant object
 
 		SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
 		AlleleVariant entity = variantDAO.get(Integer.valueOf(domain.getVariantKey()));
-		//Boolean modified = false;
+		Boolean modified = false;
 		
 		log.info("processAlleleVariant/update");
 
-		// add other fields that can be updated in the AlleleVariant
-		// isReviewed
-		// description
-		
-		// process all notes
-		noteService.process(domain.getVariantKey(), domain.getCuratorNote(), mgiTypeKey, domain.getCuratorNote().getNoteTypeKey(), user);
-		noteService.process(domain.getVariantKey(), domain.getPublicNote(), mgiTypeKey, domain.getPublicNote().getNoteTypeKey(), user);
 
-		// process reference
-		if (domain.getRefAssocs() != null) {
-			referenceAssocService.process(domain.getVariantKey(), domain.getRefAssocs(), mgiTypeKey, user);
+		// isReviewed
+		log.info("process isReviewed");
+		if(!String.valueOf(entity.getIsReviewed()).equals(domain.getIsReviewed())) {
+			entity.setIsReviewed(Integer.valueOf(domain.getIsReviewed()).intValue());
+		    modified = true;
+			
+		}
+		// description
+		log.info("process description");
+		if (!entity.getDescription().equals(domain.getDescription())) {
+			entity.setDescription(domain.getDescription());
+			modified = true;
+		}
+
+		// only if modifications were actually made
+		if (modified == true) {
+			entity.setModification_date(new Date());
+			entity.setModifiedBy(user);
+			variantDAO.update(entity);
+			log.info("processAlleleVariant/changes processed: " + domain.getVariantKey());
+		}
+		else {
+			log.info("processAlleleVariant/no changes processed: " + domain.getVariantKey());
 		}
 		
-		// process variant type
+		// process all notes DADT-180
+//		noteService.process(domain.getVariantKey(), domain.getCuratorNote(), mgiTypeKey, "1050", user);
+//		noteService.process(domain.getVariantKey(), domain.getPublicNote(), mgiTypeKey, "1051", user);
+
+		// process reference DADT-180
+//		if (domain.getRefAssocs() != null) {
+//			referenceAssocService.process(domain.getVariantKey(), domain.getRefAssocs(), mgiTypeKey, user);
+//		}
+		
+		// process variant type - 
 		if (domain.getVariantTypes() != null) {
+			// parentKey, List ofAlleleVariantAnnotationDomain, annotTypeKey, qualifierKey, user
 			annotationService.processAlleleVariant(domain.getVariantKey(), 
 					domain.getVariantTypes(), 
 					domain.getVariantTypes().get(0).getAnnotTypeKey(), 
-					"1614158", user);
+					Constants.VOC_GENERIC_ANNOTATION_QUALIFIER, user);
 		}
 
 		// process variant effects
@@ -255,8 +281,11 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			annotationService.processAlleleVariant(domain.getVariantKey(), 
 					domain.getVariantEffects(), 
 					domain.getVariantEffects().get(0).getAnnotTypeKey(), 
-					"1614158", user);
+					Constants.VOC_GENERIC_ANNOTATION_QUALIFIER, user);
 		}
+		
+		// process variant sequences DADT-178
+		
 				
 		// return entity translated to domain
 		log.info("processAlleleVariant/update/returning results");
@@ -555,11 +584,12 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
 		log.info(cmd);
-
+// per lori in the while loop below use translator:  domain = translator.translate(dao.get the variant key)
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SlimAlleleVariantDomain domain = new SlimAlleleVariantDomain();
+				//domain = slimTranslator.translate(variantDAO.get(rs.getInt("_variant_key")),1);
 				domain.setVariantKey(rs.getString("_variant_key"));
 				domain.setAlleleKey(rs.getString("_allele_key"));
 				domain.setSymbol(rs.getString("symbol"));

@@ -21,6 +21,7 @@ import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerHistoryDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.MarkerHistory;
+import org.jax.mgi.mgd.api.model.mrk.translator.MarkerHistoryTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -41,7 +42,8 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 	private ReferenceDAO referenceDAO;
 	@Inject
 	private MarkerDAO markerDAO;
-	
+
+	private MarkerHistoryTranslator translator = new MarkerHistoryTranslator();						
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -79,7 +81,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 
 		List<MarkerHistoryDomain> results = new ArrayList<MarkerHistoryDomain>();
 
-		String cmd = "\nselect * from mrk_history_view"
+		String cmd = "\nselect _assoc_key, sequencenum from mrk_history_view"
 				+ "\nwhere _marker_key = " + key
 				+ "\norder by sequencenum";
 		
@@ -88,31 +90,8 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				
-				MarkerHistoryDomain domain = new MarkerHistoryDomain();
-				
-				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
-				domain.setAssocKey(rs.getString("_assoc_key"));
-				domain.setMarkerKey(rs.getString("_marker_key"));
-				domain.setSequenceNum(rs.getString("sequencenum"));
-				domain.setMarkerEventKey(rs.getString("_marker_event_key"));
-				domain.setMarkerEvent(rs.getString("event"));
-				domain.setMarkerEventReasonKey(rs.getString("_marker_eventreason_key"));
-				domain.setMarkerEventReason(rs.getString("eventreason"));
-				domain.setMarkerHistorySymbolKey(rs.getString("_history_key"));
-				domain.setMarkerHistorySymbol(rs.getString("history"));
-				domain.setMarkerHistoryName(rs.getString("name"));
-				domain.setRefsKey(rs.getString("_refs_key"));
-				domain.setJnumid(rs.getString("jnumid"));
-				domain.setShort_citation(rs.getString("short_citation"));
-				domain.setEvent_date(rs.getString("event_date"));
-				domain.setCreatedByKey(rs.getString("_createdby_key"));
-				domain.setCreatedBy(rs.getString("createdBy"));
-				domain.setModifiedByKey(rs.getString("_modifiedby_key"));
-				domain.setModifiedBy(rs.getString("modifiedBy"));
-				domain.setCreation_date(rs.getString("creation_date"));
-				domain.setModification_date(rs.getString("modification_date"));
-				
+				MarkerHistoryDomain domain = new MarkerHistoryDomain();	
+				domain = translator.translate(historyDAO.get(rs.getInt("_assoc_key")),1);
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();
@@ -271,6 +250,11 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 					catch (ParseException  e) {
 						return;
 					}
+				}
+				
+				if (!String.valueOf(entity.getSequenceNum()).equals(domain.get(i).getSequenceNum())) {
+					entity.setSequenceNum(Integer.valueOf(domain.get(i).getSequenceNum()));
+					modified = true;						
 				}
 				
 				//log.info("reference: check if modified");

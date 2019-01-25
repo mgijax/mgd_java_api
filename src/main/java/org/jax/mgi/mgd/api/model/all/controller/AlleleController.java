@@ -57,23 +57,7 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 		
 		try {
-			results = alleleService.search(searchDomain);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
-
-	@POST
-	@ApiOperation(value = "Variant")
-	@Path("/variant")
-	public List<SlimAlleleDomain> getAlleleVariants(Integer key) {
-			
-		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
-		
-		try {
-			results = alleleService.getAlleleVariants(key);
+			results = alleleService.search(searchDomain, false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -81,4 +65,20 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		return results;
 	}
 	
+	@POST
+	@ApiOperation(value = "Search by Variants")
+	@Path("/searchVariant")
+	public List<SlimAlleleDomain> searchVariant(AlleleDomain searchDomain) {
+			
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
+		
+		try {
+			results = alleleService.search(searchDomain, true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+
 }

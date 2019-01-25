@@ -69,7 +69,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	}
 
 	@Transactional
-	public List<SlimAlleleDomain> search(AlleleDomain searchDomain) {
+	public List<SlimAlleleDomain> search(AlleleDomain searchDomain, Boolean hasVariant) {
 
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 		
@@ -85,6 +85,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		Boolean from_marker = false;
 		Boolean from_accession = false;
 		Boolean from_reference = false;
+		Boolean from_variant = false;
 		
 		// if parameter exists, then add to where-clause
 		
@@ -135,6 +136,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			}			
 		}
 
+		// if searching for allele variants
+		if (hasVariant == true) {
+			from_variant = true;
+		}
+		
 		if (from_marker == true) {
 			from = from + ", mrk_location_cache m";
 			where = where + "\nand a._marker_key = m._marker_key";
@@ -147,6 +153,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		if (from_reference == true) {
 			from = from + ", mgi_reference_allele_view ref";
 			where = where + "\nand a._allele_key = ref._object_key";
+		}
+		
+		if (from_variant == true) {
+			from = from + ", all_variant av";
+			where = where + "\nand a._allele_key = av._allele_key";
 		}
 		
 		// make this easy to copy/paste for troubleshooting
@@ -169,32 +180,4 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		return results;
 	}
 
-	@Transactional
-	public List<SlimAlleleDomain> getAlleleVariants(Integer key) {
-		// return all alleles for give allele key that contain allele variants
-
-		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
-		
-		String cmd = "select a._allele_key, a.symbol"
-				+ "\nfrom all_allele a"
-				+ "\nwhere a._allele_key = " + key
-				+ "\nand exists (select 1 from all_variant v where a._allele_key = v._allele_key)"
-				+ "\norder by a.symbol";
-		log.info(cmd);
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				SlimAlleleDomain domain = new SlimAlleleDomain();
-				domain = slimtranslator.translate(alleleDAO.get(key),1);
-				results.add(domain);
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
 }	

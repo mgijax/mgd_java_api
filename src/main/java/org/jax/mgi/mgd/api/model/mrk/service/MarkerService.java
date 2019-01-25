@@ -28,7 +28,6 @@ import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
-import org.jax.mgi.mgd.api.model.mrk.translator.SlimMarkerTranslator;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
@@ -40,7 +39,7 @@ import org.jboss.logging.Logger;
 @RequestScoped
 public class MarkerService extends BaseService<MarkerDomain> {
 
-	protected Logger log = Logger.getLogger(MarkerService.class);
+	protected Logger log = Logger.getLogger(getClass());
 
 	@Inject
 	private MarkerDAO markerDAO;
@@ -66,7 +65,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private AnnotationService annotationService;
 	
 	private MarkerTranslator translator = new MarkerTranslator();
-	private SlimMarkerTranslator slimtranslator = new SlimMarkerTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -469,6 +467,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				where = where + "\nand mr.short_citation ilike '" + value + "'";
 				from_reference = true;
 			}
+			if (searchDomain.getRefAssocs().get(0).getJnumid() != null && !searchDomain.getRefAssocs().get(0).getJnumid().isEmpty()) {
+				where = where + "\nand mr.jnumid ilike '" + searchDomain.getRefAssocs().get(0).getJnumid() + "'";
+				from_reference = true;
+			}			
 		}
 
 		// editable accession ids
@@ -558,7 +560,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SlimMarkerDomain domain = new SlimMarkerDomain();
-				//domain = slimtranslator.translate(markerDAO.get(rs.getInt("_marker_key")),1);
 				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setSymbol(rs.getString("symbol"));
 				results.add(domain);
@@ -587,7 +588,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {				
 				SlimMarkerDomain domain = new SlimMarkerDomain();				
-				//domain = slimtranslator.translate(markerDAO.get(rs.getInt("_marker_key")),1);
 				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setSymbol(rs.getString("symbol"));				
 				results.add(domain);
@@ -634,7 +634,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {	
 				SlimMarkerDomain domain = new SlimMarkerDomain();						
-				//domain = slimtranslator.translate(markerDAO.get(rs.getInt("_marker_key")),1);
 				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setSymbol(rs.getString("symbol"));			
 				results.add(domain);

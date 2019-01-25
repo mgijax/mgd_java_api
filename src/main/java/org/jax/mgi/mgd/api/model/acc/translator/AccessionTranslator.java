@@ -19,7 +19,8 @@ public class AccessionTranslator extends BaseEntityDomainTranslator<Accession, A
 	protected AccessionDomain entityToDomain(Accession entity, int translationDepth) {
 		AccessionDomain domain = new AccessionDomain();
 
-		log.info("AccessionTranslator");
+		//log.info("AccessionTranslator: " + entity.get_accession_key() + "," + entity.get_object_key());
+		
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setAccessionKey(String.valueOf(entity.get_accession_key()));
 		domain.setLogicaldbKey(String.valueOf(entity.getLogicaldb().get_logicaldb_key()));

@@ -8,8 +8,11 @@ import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidenceDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jboss.logging.Logger;
 
 public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation, AnnotationDomain> {
+	
+	protected Logger log = Logger.getLogger(getClass());
 	
 	private EvidenceTranslator evidenceTranslator = new EvidenceTranslator();
 	private SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
@@ -17,7 +20,9 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
 	@Override
 	protected AnnotationDomain entityToDomain(Annotation entity, int translationDepth) {
 		AnnotationDomain domain = new AnnotationDomain();
-
+		
+		//log.info("AnnotationDomain: " + entity.get_annot_key());
+		
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setAnnotKey(String.valueOf(entity.get_annot_key()));
 		domain.setAnnotTypeKey(String.valueOf(entity.getAnnotType().get_annotType_key()));

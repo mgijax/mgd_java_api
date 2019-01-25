@@ -10,7 +10,7 @@ import org.jax.mgi.mgd.api.util.Constants;
 
 public class AlleleVariantAnnotationTranslator extends BaseEntityDomainTranslator<Annotation, AlleleVariantAnnotationDomain> {
 
-	SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
+	private SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
 	
     @Override
     protected AlleleVariantAnnotationDomain entityToDomain(Annotation entity, int translationDepth) {

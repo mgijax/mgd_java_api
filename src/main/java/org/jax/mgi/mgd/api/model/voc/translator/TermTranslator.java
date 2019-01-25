@@ -9,7 +9,7 @@ import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain> {
 	
-	AccessionTranslator accessionTranslator = new AccessionTranslator();
+	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	
 	@Override
 	protected TermDomain entityToDomain(Term entity, int translationDepth) {

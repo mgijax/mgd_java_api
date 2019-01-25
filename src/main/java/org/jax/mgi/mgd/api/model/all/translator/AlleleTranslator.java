@@ -6,11 +6,11 @@ import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 
 public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleDomain> {
-
-	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	
 	@Override
 	protected AlleleDomain entityToDomain(Allele entity, int translationDepth) {
@@ -31,14 +31,28 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
+		domain.setChromosome(entity.getMarker().getChromosome());
+		// "strand" is not being translated; only used by 'allele/search'
+		// only used in SlimAlleleDomain
+		
 		// mgi accession ids only
 		if (entity.getMgiAccessionIds() != null) {
+			AccessionTranslator accessionTranslator = new AccessionTranslator();		
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
 			if(acc.iterator().hasNext() == true) {
 				domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
 
 			}
 		}
+		
+		// reference associations
+		if (entity.getRefAssocs() != null) {
+			MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
+			Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
+			if(i.iterator().hasNext() == true) {
+				domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
+			}
+		}	
 		
 		if(translationDepth > 0) {
 			// load relationships

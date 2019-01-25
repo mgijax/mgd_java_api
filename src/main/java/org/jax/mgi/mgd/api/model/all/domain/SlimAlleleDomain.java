@@ -13,7 +13,9 @@ import lombok.Setter;
 public class SlimAlleleDomain extends BaseDomain {
 
 	private String alleleKey;
-	private String symbol;       
+	private String symbol;
+	private String chromosome;
+	private String strand;
 	private List<SlimAccessionDomain> mgiAccessionIds;
 	private List<SlimMGIReferenceAssocDomain> refAssocs;	
 }

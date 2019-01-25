@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -22,7 +23,7 @@ import org.jboss.logging.Logger;
 @RequestScoped
 public class AlleleService extends BaseService<AlleleDomain> {
 
-	protected Logger log = Logger.getLogger(AlleleService.class);
+	protected Logger log = Logger.getLogger(getClass());
 	
 	@Inject
 	private AlleleDAO alleleDAO;
@@ -80,19 +81,74 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		String where = "where a._allele_type_key = v1._term_key";
 		String orderBy = "order by a.symbol";
 		String limit = "LIMIT 1000";	
-
+		String value;
+		Boolean from_marker = false;
+		Boolean from_accession = false;
+		Boolean from_reference = false;
+		
 		// if parameter exists, then add to where-clause
 		
-//		String cmResults[] = DateSQLQuery.queryByCreationModification("m", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
-//		if (cmResults.length > 0) {
-//			from = from + cmResults[0];
-//			where = where + cmResults[1];
-//		}
+		String cmResults[] = DateSQLQuery.queryByCreationModification("aa", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
+		if (cmResults.length > 0) {
+			from = from + cmResults[0];
+			where = where + cmResults[1];
+		}
 		
 		if (searchDomain.getSymbol() != null && !searchDomain.getSymbol().isEmpty()) {
 			where = where + "\nand a.symbol ilike '" + searchDomain.getSymbol() + "'" ;
 		}
 
+		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
+			where = where + "\nand a.name ilike '" + searchDomain.getName() + "'" ;
+		}
+
+		// marker location cache
+		if (searchDomain.getChromosome() != null && !searchDomain.getChromosome().isEmpty()) {
+			where = where + "\nand m.chromosome ilike '" + searchDomain.getChromosome() + "'" ;
+			from_marker = true;
+		}
+		if (searchDomain.getStrand() != null && !searchDomain.getStrand().isEmpty()) {
+			where = where + "\nand m.strand ilike '" + searchDomain.getStrand() + "'" ;
+			from_marker = true;
+		}
+				
+		// allele accession id
+		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {
+			where = where + "\nand acc.accID ilike '" + searchDomain.getMgiAccessionIds().get(0).getAccID() + "'";
+			from_accession = true;
+		}
+				
+		// reference
+		if (searchDomain.getRefAssocs() != null) {
+			if (searchDomain.getRefAssocs().get(0).getRefsKey() != null && !searchDomain.getRefAssocs().get(0).getRefsKey().isEmpty()) {
+				where = where + "\nand ref._Ref_key = " + searchDomain.getRefAssocs().get(0).getRefsKey();
+				from_reference = true;
+			}
+			if (searchDomain.getRefAssocs().get(0).getShort_citation() != null && !searchDomain.getRefAssocs().get(0).getShort_citation().isEmpty()) {
+				value = searchDomain.getRefAssocs().get(0).getShort_citation().replaceAll("'",  "''");
+				where = where + "\nand ref.short_citation ilike '" + value + "'";
+				from_reference = true;
+			}
+			if (searchDomain.getRefAssocs().get(0).getJnumid() != null && !searchDomain.getRefAssocs().get(0).getJnumid().isEmpty()) {
+				where = where + "\nand ref.jnumid ilike '" + searchDomain.getRefAssocs().get(0).getJnumid() + "'";
+				from_reference = true;
+			}			
+		}
+
+		if (from_marker == true) {
+			from = from + ", mrk_location_cache m";
+			where = where + "\nand a._marker_key = m._marker_key";
+		}
+		if (from_accession == true) {
+			from = from + ", all_acc_view acc";
+			where = where + "\nand a._allele_key = acc._object_key"; 
+		}
+		
+		if (from_reference == true) {
+			from = from + ", mgi_reference_allele_view ref";
+			where = where + "\nand a._allele_key = ref._object_key";
+		}
+		
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
 		log.info(cmd);
@@ -101,8 +157,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SlimAlleleDomain domain = new SlimAlleleDomain();
-				domain.setAlleleKey(rs.getString("_allele_key"));
-				domain.setSymbol(rs.getString("symbol"));
+				domain = slimtranslator.translate(alleleDAO.get(rs.getInt("_allele_key")),1);				
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();
@@ -115,7 +170,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	}
 
 	@Transactional
-	public List<SlimAlleleDomain> variant(Integer key) {
+	public List<SlimAlleleDomain> getAlleleVariants(Integer key) {
 		// return all alleles for give allele key that contain allele variants
 
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();

@@ -68,12 +68,12 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	@POST
 	@ApiOperation(value = "Variant")
 	@Path("/variant")
-	public List<SlimAlleleDomain> variant(Integer key) {
+	public List<SlimAlleleDomain> getAlleleVariants(Integer key) {
 			
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 		
 		try {
-			results = alleleService.variant(key);
+			results = alleleService.getAlleleVariants(key);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

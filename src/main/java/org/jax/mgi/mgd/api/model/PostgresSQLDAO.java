@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.ejb.Singleton;
-import javax.persistence.EmbeddedId;
 import javax.persistence.EntityManager;
 import javax.persistence.Id;
 import javax.persistence.PersistenceContext;
@@ -120,6 +119,10 @@ public abstract class PostgresSQLDAO<T> {
 		return query;
 	}
 
+	public Query createQuery(String cmd) {
+		return entityManager.createQuery(cmd);
+	}
+	
 	/* default query handling; good for fields directly in the table backing model class T
 	 */
 	public SearchResults<T> search(Map<String, Object> params) {

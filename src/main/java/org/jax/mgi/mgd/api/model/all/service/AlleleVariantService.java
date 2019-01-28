@@ -47,7 +47,9 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 	private VariantSequenceDAO sourceSequenceDAO;
 	@Inject
 	private VariantSequenceDAO curatedSequenceDAO;
-	
+    @Inject
+    private VariantSequenceService sequenceService;
+
 	@Inject 
 	private AlleleDAO alleleDAO;
 	@Inject
@@ -67,6 +69,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 	// translate an entity to a domain to return in the results
 	private AlleleVariantTranslator translator = new AlleleVariantTranslator();
 	private SlimAlleleVariantTranslator slimtranslator = new SlimAlleleVariantTranslator();
+	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	private String mgiTypeKey = "45";
@@ -118,7 +121,12 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		curatedVariantDAO.persist(curatedEntity);
 		
 		// create Source Variant Sequences
+		log.info("AlleleVariantDomain checking for sequences");
 		if (domain.getSourceVariant().getVariantSequences() != null) {
+//			log.info("AlleleVariantDomain processing source variant sequences");
+//			sequenceService.process(String.valueOf(sourceEntity.get_variant_key()), domain.getSourceVariant().getVariantSequences() , user);
+//			log.info("AlleleVariantDomain done source variantprocessing sequences");
+
 			for (int i = 0; i < domain.getSourceVariant().getVariantSequences().size(); i++) {
 				log.info("endcoordinate: " + domain.getSourceVariant().getVariantSequences().get(i).getEndCoordinate());
 				sourceSequenceEntity.set_variant_key(sourceEntity.get_variant_key());
@@ -150,6 +158,10 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		
 		// create Curated Variant Sequences
 		if (domain.getVariantSequences() != null) {
+//			log.info("AlleleVariantDomain processing curated variant sequences");
+//            sequenceService.process(String.valueOf(curatedEntity.get_variant_key()), domain.getVariantSequences() , user);
+//            log.info("AlleleVariantDomain done processing curated variant sequences");
+
 			for (int i = 0; i < domain.getVariantSequences().size(); i++) {
 				curatedSequenceEntity.set_variant_key(curatedEntity.get_variant_key());
 				curatedSequenceEntity.setSequenceType(termDAO.get(Integer.valueOf(domain.getVariantSequences().get(i).getSequenceTypeKey())));
@@ -258,13 +270,13 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		}
 		
 		// process all notes DADT-180
-//		noteService.process(domain.getVariantKey(), domain.getCuratorNote(), mgiTypeKey, "1050", user);
-//		noteService.process(domain.getVariantKey(), domain.getPublicNote(), mgiTypeKey, "1051", user);
+		noteService.process(domain.getVariantKey(), domain.getCuratorNote(), mgiTypeKey, "1050", user);
+		noteService.process(domain.getVariantKey(), domain.getPublicNote(), mgiTypeKey, "1051", user);
 
 		// process reference DADT-180
-//		if (domain.getRefAssocs() != null) {
-//			referenceAssocService.process(domain.getVariantKey(), domain.getRefAssocs(), mgiTypeKey, user);
-//		}
+		if (domain.getRefAssocs() != null) {
+			referenceAssocService.process(domain.getVariantKey(), domain.getRefAssocs(), mgiTypeKey, user);
+		}
 		
 		// process variant type - 
 		if (domain.getVariantTypes() != null) {
@@ -589,9 +601,8 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SlimAlleleVariantDomain domain = new SlimAlleleVariantDomain();
-				domain.setVariantKey(rs.getString("_variant_key"));
-				domain.setAlleleKey(rs.getString("_allele_key"));
-				domain.setSymbol(rs.getString("symbol"));
+				domain = slimtranslator.translate(variantDAO.get(rs.getInt("_variant_key")),1);
+				variantDAO.clear();
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();
@@ -618,6 +629,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			while (rs.next()) {
 				SlimAlleleVariantDomain domain = new SlimAlleleVariantDomain();				
 				domain = slimtranslator.translate(variantDAO.get(rs.getInt("_variant_key")),1);
+				variantDAO.clear();
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

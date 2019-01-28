@@ -332,6 +332,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		return results;
 	}
 	
+	@Transactional
 	public List<SlimAlleleVariantDomain> search(AlleleVariantDomain searchDomain) {
 		// return list of curated variants for specified query parameters
 

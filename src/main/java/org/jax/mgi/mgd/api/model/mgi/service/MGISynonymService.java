@@ -80,6 +80,7 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 			while (rs.next()) {
 				MGISynonymDomain domain = new MGISynonymDomain();
 				domain = translator.translate(synonymDAO.get(rs.getInt("_synonym_key")),1);
+				synonymDAO.clear();
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

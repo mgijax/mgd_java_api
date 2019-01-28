@@ -74,6 +74,7 @@ public class MGISynonymTypeService extends BaseService<MGISynonymTypeDomain> {
 			while (rs.next()) {
 				MGISynonymTypeDomain domain = new MGISynonymTypeDomain();
 				domain = translator.translate(synonymTypeDAO.get(rs.getInt("_synonymtype_key")),1);
+				synonymTypeDAO.clear();
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

@@ -71,6 +71,7 @@ public class EventReasonService extends BaseService<EventReasonDomain> {
 			while (rs.next()) {
 				EventReasonDomain domain = new EventReasonDomain();
 				domain = translator.translate(eventReasonDAO.get(rs.getInt("_marker_eventreason_key")),1);
+				eventReasonDAO.clear();
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

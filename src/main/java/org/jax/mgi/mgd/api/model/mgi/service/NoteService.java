@@ -61,7 +61,7 @@ public class NoteService extends BaseService<NoteDomain> {
 	}
 
 	@Transactional	
-	public List<NoteDomain> marker(Integer key) {
+	public List<NoteDomain> getByMarker(Integer key) {
 
 		List<NoteDomain> results = new ArrayList<NoteDomain>();
 

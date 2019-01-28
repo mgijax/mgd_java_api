@@ -169,6 +169,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			while (rs.next()) {
 				SlimAlleleDomain domain = new SlimAlleleDomain();
 				domain = slimtranslator.translate(alleleDAO.get(rs.getInt("_allele_key")),1);				
+				alleleDAO.clear();
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

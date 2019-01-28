@@ -51,12 +51,12 @@ public class NoteController extends BaseController<NoteDomain> {
 	@POST
 	@ApiOperation(value = "Marker")
 	@Path("/marker")
-	public List<NoteDomain> marker(Integer key) {
+	public List<NoteDomain> getByMarker(Integer key) {
 			
 		List<NoteDomain> results = new ArrayList<NoteDomain>();
 		
 		try {
-			results = noteService.marker(key);
+			results = noteService.getByMarker(key);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

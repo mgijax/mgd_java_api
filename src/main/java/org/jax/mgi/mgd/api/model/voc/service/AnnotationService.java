@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationDAO;
@@ -22,7 +21,9 @@ import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 import org.jax.mgi.mgd.api.model.voc.entities.Evidence;
+import org.jax.mgi.mgd.api.model.voc.translator.AlleleVariantAnnotationTranslator;
 import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
+import org.jax.mgi.mgd.api.model.voc.translator.MarkerFeatureTypeTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -45,6 +46,8 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 	private ReferenceDAO referenceDAO;
 
 	private AnnotationTranslator translator = new AnnotationTranslator();
+	private AlleleVariantAnnotationTranslator alleleVariantTranslator = new AlleleVariantAnnotationTranslator();	
+	private MarkerFeatureTypeTranslator markerFeatureTypeTranslator = new MarkerFeatureTypeTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
@@ -93,17 +96,8 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				AnnotationDomain domain = new AnnotationDomain();
-				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
-				domain.setAnnotKey(rs.getString("_annot_key"));
-				domain.setAnnotTypeKey(rs.getString("_annottype_key"));
-				domain.setAnnotType(rs.getString("annottype"));
-				domain.setTermKey(rs.getString("_term_key"));
-				domain.setTerm(rs.getString("term"));
-				domain.setQualifierKey(rs.getString("_qualifier_key"));
-				domain.setQualifier(rs.getString("qualifier"));
-				domain.setObjectKey(rs.getString("_object_key"));
-				domain.setCreation_date(rs.getString("creation_date"));
-				domain.setModification_date(rs.getString("modification_date"));
+				domain = translator.translate(annotationDAO.get(rs.getInt("_annot_key")),1);
+				annotationDAO.clear();				
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();
@@ -117,7 +111,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 	}
 	
 	@Transactional	
-	public List<MarkerFeatureTypeDomain> markerFeatureTypes(Integer key) {
+	public List<MarkerFeatureTypeDomain> getMarkerFeatureTypes(Integer key) {
 		// list of marker/feature type domains for given marker
 		
 		List<MarkerFeatureTypeDomain> results = new ArrayList<MarkerFeatureTypeDomain>();
@@ -137,25 +131,8 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				MarkerFeatureTypeDomain domain = new MarkerFeatureTypeDomain();
-				domain.setAnnotKey(rs.getString("_annot_key"));
-				domain.setAnnotTypeKey(rs.getString("_annottype_key"));
-				domain.setTermKey(rs.getString("_term_key"));
-				domain.setTerm(rs.getString("term"));
-				
-				SlimAccessionDomain accDomain = new SlimAccessionDomain();				
-				List<SlimAccessionDomain> accessions = new ArrayList<SlimAccessionDomain>();
-				accDomain.setAccessionKey(rs.getString("_accession_key"));
-				accDomain.setLogicaldbKey(rs.getString("_logicaldb_key"));
-				accDomain.setObjectKey(rs.getString("_object_key"));
-				accDomain.setMgiTypeKey(rs.getString("_mgitype_key"));
-				accDomain.setAccID(rs.getString("accid"));
-				accDomain.setPrefixPart(rs.getString("prefixPart"));
-				accDomain.setNumericPart(rs.getString("numericPart"));
-				//accDomain.setIsPrivate(rs.getString("isPrivate"));
-				//accDomain.setPreferred(rs.getString("preferred"));
-				accessions.add(accDomain);
-				domain.setMarkerFeatureTypeIds(accessions);
-				
+				domain = markerFeatureTypeTranslator.translate(annotationDAO.get(rs.getInt("_annot_key")),1);
+				annotationDAO.clear();				
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();		}
@@ -193,24 +170,8 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				AlleleVariantAnnotationDomain domain = new AlleleVariantAnnotationDomain();
-				domain.setAnnotKey(rs.getString("_annot_key"));
-				domain.setTermKey(rs.getString("_term_key"));
-				domain.setTerm(rs.getString("term"));
-				
-				SlimAccessionDomain accDomain = new SlimAccessionDomain();				
-				List<SlimAccessionDomain> accessions = new ArrayList<SlimAccessionDomain>();
-				accDomain.setAccessionKey(rs.getString("_accession_key"));
-				accDomain.setLogicaldbKey(rs.getString("_logicaldb_key"));
-				accDomain.setObjectKey(rs.getString("_object_key"));
-				accDomain.setMgiTypeKey(rs.getString("_mgitype_key"));
-				accDomain.setAccID(rs.getString("accid"));
-				accDomain.setPrefixPart(rs.getString("prefixPart"));
-				accDomain.setNumericPart(rs.getString("numericPart"));
-				//accDomain.setIsPrivate(rs.getString("isPrivate"));
-				//accDomain.setPreferred(rs.getString("preferred"));
-				accessions.add(accDomain);
-				domain.setAlleleVariantSOIds(accessions);
-
+				domain = alleleVariantTranslator.translate(annotationDAO.get(rs.getInt("_annot_key")),1);
+				annotationDAO.clear();				
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();		}

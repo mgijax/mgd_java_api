@@ -71,6 +71,7 @@ public class EventService extends BaseService<EventDomain> {
 			while (rs.next()) {
 				EventDomain domain = new EventDomain();
 				domain = translator.translate(eventDAO.get(rs.getInt("_marker_event_key")),1);
+				eventDAO.clear();
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

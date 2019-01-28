@@ -102,6 +102,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			while (rs.next()) {	
 				SlimReferenceDomain domain = new SlimReferenceDomain();						
 				domain = slimtranslator.translate(referenceDAO.get(rs.getInt("_refs_key")),1);			
+				referenceDAO.clear();
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

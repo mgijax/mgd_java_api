@@ -9,11 +9,11 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
+import org.jax.mgi.mgd.api.model.voc.translator.SlimTermTranslator;
 import org.jax.mgi.mgd.api.model.voc.translator.TermTranslator;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -35,6 +35,7 @@ public class TermService extends BaseService<TermDomain> {
 //	private UserService userService;
 	
 	private TermTranslator translator = new TermTranslator();
+	private SlimTermTranslator slimtranslator = new SlimTermTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -173,34 +174,8 @@ public class TermService extends BaseService<TermDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				TermDomain domain = new TermDomain();
-				SlimAccessionDomain accDomain = new SlimAccessionDomain();				
-			
-				domain.setTermKey(rs.getString("_term_key"));
-				domain.setTerm(rs.getString("term"));
-				domain.setVocabKey(rs.getString("_vocab_key"));
-				//domain.setVocabName(rs.getString("name"));
-				domain.setAbbreviation(rs.getString("abbreviation"));
-				domain.setNote(rs.getString("note"));
-				domain.setSequenceNum(rs.getString("sequenceNum"));
-				domain.setIsObsolete(rs.getString("isObsolete"));
-				domain.setCreatedByKey(rs.getString("_createdby_key"));
-				domain.setCreatedBy(rs.getString("createdby"));
-				domain.setModifiedByKey(rs.getString("_modifiedby_key"));
-				domain.setModifiedBy(rs.getString("modifiedby"));
-				domain.setCreation_date(rs.getString("creation_date"));
-				domain.setModification_date(rs.getString("modification_date"));	
-				
-				if (from_accession == true) {
-					accDomain.setAccessionKey(rs.getString("_accession_key"));
-					accDomain.setLogicaldbKey(rs.getString("_logicaldb_key"));
-					accDomain.setObjectKey(rs.getString("_object_key"));
-					accDomain.setMgiTypeKey(rs.getString("_mgitype_key"));
-					accDomain.setAccID(rs.getString("accID"));
-					accDomain.setPrefixPart(rs.getString("prefixPart"));
-					accDomain.setNumericPart(rs.getString("numericPart"));
-					//domain.setAccessionIds(accDomain);
-				}
-				
+				domain = translator.translate(termDAO.get(rs.getInt("_term_key")),1);
+				termDAO.clear();		
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();
@@ -229,9 +204,8 @@ public class TermService extends BaseService<TermDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {	
 				SlimTermDomain domain = new SlimTermDomain();						
-				domain.setTermKey(rs.getString("_term_key"));
-				domain.setTerm(rs.getString("term"));
-				domain.setAbbreviation(rs.getString("abbreviation"));
+				domain = slimtranslator.translate(termDAO.get(rs.getInt("_term_key")),1);
+				termDAO.clear();					
 				results.setItem(domain);
 			}
 			sqlExecutor.cleanup();

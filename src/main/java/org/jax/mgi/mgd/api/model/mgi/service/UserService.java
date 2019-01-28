@@ -16,8 +16,6 @@ import org.jax.mgi.mgd.api.model.mgi.domain.SlimUserDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.UserDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.UserTranslator;
-import org.jax.mgi.mgd.api.model.voc.service.TermService;
-import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -75,21 +73,8 @@ public class UserService extends BaseService<UserDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				UserDomain domain = new UserDomain();
-				//domain = translator.translate(userDAO.get(rs.getInt("_user_key")),1);
-				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
-				domain.setUserKey(rs.getString("_user_key"));
-				domain.setUserTypeKey(rs.getString("_usertype_key"));
-				domain.setUserStatusKey(rs.getString("_userstatus_key"));
-				domain.setUserLogin(rs.getString("login"));
-				domain.setUserName(rs.getString("name"));
-				domain.setOrcid(rs.getString("orcid"));
-				domain.setGroupKey(rs.getString("_group_key"));
-				domain.setCreatedByKey(rs.getString("_createdby_key"));
-				domain.setCreatedBy(rs.getString("createdby"));
-				domain.setModifiedByKey(rs.getString("_modifiedby_key"));
-				domain.setModifiedBy(rs.getString("modifiedby"));
-				domain.setCreation_date(rs.getString("creation_date"));
-				domain.setModification_date(rs.getString("modification_date"));
+				domain = translator.translate(userDAO.get(rs.getInt("_user_key")),1);
+				userDAO.clear();
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

@@ -71,6 +71,7 @@ public class MarkerTypeService extends BaseService<MarkerTypeDomain> {
 			while (rs.next()) {
 				MarkerTypeDomain domain = new MarkerTypeDomain();
 				domain = translator.translate(markerTypeDAO.get(rs.getInt("_marker_type_key")),1);
+				markerTypeDAO.clear();
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

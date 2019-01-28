@@ -2,17 +2,24 @@ package org.jax.mgi.mgd.api.model.all.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.all.dao.VariantSequenceDAO;
 import org.jax.mgi.mgd.api.model.all.domain.VariantSequenceDomain;
+import org.jax.mgi.mgd.api.model.all.entities.VariantSequence;
 import org.jax.mgi.mgd.api.model.all.translator.VariantSequenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
+import org.jax.mgi.mgd.api.model.mrk.entities.MarkerHistory;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -26,9 +33,15 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 
 	@Inject
 	private VariantSequenceDAO variantSequenceDAO;
+	@Inject
+	private TermDAO termDAO;
 	
 	// translate an entity to a domain to return in the results
 	private VariantSequenceTranslator translator = new VariantSequenceTranslator();
+	
+	// to process Sequence accession IDs
+	@Inject
+	AccessionService accessionService = new AccessionService();
 	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
@@ -142,5 +155,128 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 		
 		return results;
 	}	
-	
+	@Transactional
+	public void process(String parentKey, List<VariantSequenceDomain> domains, User user) {
+		// process variant sequence (create, delete, update)
+		
+		log.info("processVariantSequence");
+		
+		if (domains == null || domains.isEmpty()) {
+			log.info("processVariantSequence/nothing to process");
+			return;
+		}
+				
+		
+		// iterate thru the list of rows in the domain
+		// for each row, determine whether to perform an insert, delete or update
+		
+		for (int i = 0; i < domains.size(); i++) {
+				
+			if (domains.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
+				log.info("processVariantSequence create");
+				
+				VariantSequence sequenceEntity = new VariantSequence();
+				log.info("processVariantSequence getting next VariantSequenceDomain");
+				VariantSequenceDomain domain = domains.get(i);
+				//What is value of parentKey and domain.getVariantKey
+				log.info("processVariantSequence create parentKey" + parentKey);
+				log.info("processVariantSequence create domain.getVariantKey" + domain.getVariantKey());
+				log.info("processVariantSequence setting variant key in the VariantSequenceDomain");
+				sequenceEntity.set_variant_key(Integer.valueOf(parentKey));
+				log.info("processVariantSequence setting sequence type");
+				sequenceEntity.setSequenceType(termDAO.get(Integer.valueOf(domain.getSequenceTypeKey())));
+				log.info("processVariantSequence setting start coordinate");
+				sequenceEntity.setStartCoordinate(Integer.valueOf(domain.getStartCoordinate()));
+				log.info("processVariantSequence setting end coordinate");
+				sequenceEntity.setEndCoordinate(Integer.valueOf(domain.getEndCoordinate()));
+				log.info("processVariantSequence setting reference sequence");
+				sequenceEntity.setReferenceSequence(domain.getReferenceSequence());
+				log.info("processVariantSequence setting variant sequence");
+				sequenceEntity.setVariantSequence(domain.getVariantSequence());
+				log.info("processVariantSequence setting versioin");
+				sequenceEntity.setVersion(domain.getVersion());
+				log.info("processVariantSequence setting createdBy");
+				sequenceEntity.setCreatedBy(user);
+				log.info("processVariantSequence setting creation date");
+				sequenceEntity.setCreation_date(new Date());
+				log.info("processVariantSequence setting modifiedBy");
+				sequenceEntity.setModifiedBy(user);
+				log.info("processVariantSequence mod date");
+				sequenceEntity.setModification_date(new Date());
+				log.info("processSequenceVariant persisting the sequence entity");
+				variantSequenceDAO.persist(sequenceEntity);
+			
+				// create accession ids of source variant sequence
+				// assuming there is only 1 accession id per Variant Sequence			
+			    log.info("VariantSequenceService processing accIDs: ");
+				if (domain.getAccessionIds() != null) {
+					accessionService.process(
+							String.valueOf(sequenceEntity.get_variantsequence_key()), 
+							domain.getAccessionIds().get(0).getLogicaldbKey(),  
+							domain.getAccessionIds(),
+							"Allele Variant Sequence", user);				
+				}
+																
+			}
+			else if (domains.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+				
+				log.info("processVariantSequence delete");
+				
+				VariantSequence entity = variantSequenceDAO.get(Integer.valueOf(domains.get(i).getVariantSequenceKey()));
+				variantSequenceDAO.remove(entity);
+				
+								
+				log.info("processVariantSequence delete successful");
+			}
+			else if (domains.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+				log.info("processVariantSequence update");
+
+				Boolean modified = false;
+				
+				VariantSequence entity = variantSequenceDAO.get(Integer.valueOf(domains.get(i).getVariantSequenceKey()));
+
+				//log.info("StartCoordinate");
+			
+				if (!String.valueOf(entity.getStartCoordinate()).equals(domains.get(i).getStartCoordinate())) {
+					entity.setStartCoordinate(Integer.valueOf(domains.get(i).getStartCoordinate()));
+					modified = true;
+				}
+				//log.info("EndCoordinate");
+				
+				if (!String.valueOf(entity.getEndCoordinate()).equals(domains.get(i).getEndCoordinate())) {
+					entity.setEndCoordinate(Integer.valueOf(domains.get(i).getEndCoordinate()));
+					modified = true;
+				}
+				//log.info("ReferenceSequence");
+				if (!entity.getReferenceSequence().equals(domains.get(i).getReferenceSequence())) {
+					entity.setReferenceSequence(domains.get(i).getReferenceSequence());
+					modified = true;
+				}
+				//log.info("VariantSequence");
+				if (!entity.getVariantSequence().equals(domains.get(i).getVariantSequence())) {
+					entity.setVariantSequence(domains.get(i).getVariantSequence());
+					modified = true;
+				}
+				//log.info("Version");
+				if (!entity.getVersion().equals(domains.get(i).getVersion())) {
+					entity.setVersion(domains.get(i).getVersion());
+					modified = true;
+				}
+				//log.info("reference: check if modified");
+				if (modified == true) {
+					log.info("processVariantSequence modified == true");
+					entity.setModification_date(new Date());
+					entity.setModifiedBy(user);
+					variantSequenceDAO.update(entity);
+					log.info("processHistory/changes processed: " + domains.get(i).getVariantKey());
+				}
+				else {
+					log.info("processHistory/no changes processed: " + domains.get(i).getVariantKey());
+				}
+			}
+			else {
+				log.info("processVariantSeqeunce/no changes processed: " + domains.get(i).getVariantKey());
+			}
+		}
+	}
 }

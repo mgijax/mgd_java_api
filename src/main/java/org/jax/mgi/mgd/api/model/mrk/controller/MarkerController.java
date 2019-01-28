@@ -118,9 +118,9 @@ public class MarkerController extends BaseController<MarkerDomain> {
 
 	@POST
 	@ApiOperation(value = "Alias search by marker key/returns slim marker domain")
-	@Path("/searchAlias")
-	public List<SlimMarkerDomain> searchAlias(Integer key) {
-		return markerService.searchAlias(key);
+	@Path("/alias")
+	public List<SlimMarkerDomain> getAlias(Integer key) {
+		return markerService.getAlias(key);
 	}
 
 	@GET

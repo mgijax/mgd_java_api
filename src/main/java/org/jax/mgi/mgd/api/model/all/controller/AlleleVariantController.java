@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.all.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -16,6 +17,7 @@ import org.jax.mgi.mgd.api.model.all.service.AlleleVariantService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
+import org.jboss.logging.Logger;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +28,8 @@ import io.swagger.annotations.ApiOperation;
 @Consumes(MediaType.APPLICATION_JSON)
 public class AlleleVariantController extends BaseController<AlleleVariantDomain> {
 
+	protected Logger log = Logger.getLogger(getClass());
+	
 	@Inject
 	private AlleleVariantService variantService;
 
@@ -87,5 +91,37 @@ public class AlleleVariantController extends BaseController<AlleleVariantDomain>
 	public List<SlimAlleleVariantDomain> search(AlleleVariantDomain searchDomain) {
 		return variantService.search(searchDomain);
 	}
-	
+
+	@POST
+	@ApiOperation(value = "Get SlimAlleleVariant by Allele")
+	@Path("/getSlimByAllele")
+	public List<SlimAlleleVariantDomain> getSlimByAllele(Integer key) {
+			
+		List<SlimAlleleVariantDomain> results = new ArrayList<SlimAlleleVariantDomain>();
+		
+		try {
+			results = variantService.getSlimByAllele(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+
+	@POST
+	@ApiOperation(value = "Get All Variants per Allele")
+	@Path("/getByAllele")
+	public List<AlleleVariantDomain> getByAllele(Integer key) {
+			
+		List<AlleleVariantDomain> results = new ArrayList<AlleleVariantDomain>();
+		
+		try {
+			results = variantService.getByAllele(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+		
 }

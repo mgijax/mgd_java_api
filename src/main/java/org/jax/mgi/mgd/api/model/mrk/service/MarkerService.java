@@ -574,7 +574,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}	
 
 	@Transactional	
-	public List<SlimMarkerDomain> searchAlias(Integer key) {
+	public List<SlimMarkerDomain> getAlias(Integer key) {
 		// use SlimMarkerDomain to return list of marker/alias associations
 		
 		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();

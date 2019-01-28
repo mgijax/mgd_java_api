@@ -233,7 +233,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 	}
 	
 	@Transactional
-	public List<AccessionDomain> markerEditAccessionIds(Integer key) {
+	public List<AccessionDomain> getMarkerEditAccessionIds(Integer key) {
 		// gets marker accession ids : edit list
 		// see mrk_accref1_view for details
 		// returns list of accession domain
@@ -256,7 +256,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 	}
 	
 	@Transactional
-	public List<AccessionDomain> markerNonEditAccessionIds(Integer key) {
+	public List<AccessionDomain> getMarkerNonEditAccessionIds(Integer key) {
 		// gets marker accession ids : non-edit list
 		// see mrk_accref2_view for details
 		// returns list of accession domain

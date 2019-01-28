@@ -222,6 +222,12 @@ public abstract class PostgresSQLDAO<T> {
 		entityManager.refresh(o);
 	}
 
+	/* Remove all entities from the persistence context
+	 */
+	public void clear() {
+		entityManager.clear();
+	}
+	
 	/* method to get the database dump date from the mgi_dbinfo table
 	 */
 	public String getDumpDate() {

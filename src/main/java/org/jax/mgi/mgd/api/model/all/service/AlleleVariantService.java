@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.acc.dao.AccessionDAO;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleVariantDAO;
@@ -36,7 +35,7 @@ import org.jboss.logging.Logger;
 @RequestScoped
 public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 
-	protected Logger log = Logger.getLogger(AlleleVariantService.class);
+	protected Logger log = Logger.getLogger(getClass());
 
 	@Inject
 	private AlleleVariantDAO variantDAO;
@@ -67,7 +66,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 
 	// translate an entity to a domain to return in the results
 	private AlleleVariantTranslator translator = new AlleleVariantTranslator();
-	private SlimAlleleVariantTranslator slimTranslator = new SlimAlleleVariantTranslator();
+	private SlimAlleleVariantTranslator slimtranslator = new SlimAlleleVariantTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	private String mgiTypeKey = "45";
@@ -322,6 +321,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 	}
 	
 	public List<SlimAlleleVariantDomain> search(AlleleVariantDomain searchDomain) {
+		// return list of curated variants for specified query parameters
 
 		List<SlimAlleleVariantDomain> results = new ArrayList<SlimAlleleVariantDomain>();
 
@@ -584,12 +584,11 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
 		log.info(cmd);
-// per lori in the while loop below use translator:  domain = translator.translate(dao.get the variant key)
+		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SlimAlleleVariantDomain domain = new SlimAlleleVariantDomain();
-				//domain = slimTranslator.translate(variantDAO.get(rs.getInt("_variant_key")),1);
 				domain.setVariantKey(rs.getString("_variant_key"));
 				domain.setAlleleKey(rs.getString("_allele_key"));
 				domain.setSymbol(rs.getString("symbol"));
@@ -603,5 +602,58 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		
 		return results;
 	}	
-	
+
+	@Transactional
+	public List<SlimAlleleVariantDomain> getSlimByAllele(Integer key) {
+		// return SlimAlleleVariantDoman list of curated variants for specified allele key
+
+		List<SlimAlleleVariantDomain> results = new ArrayList<SlimAlleleVariantDomain>();
+		
+		String cmd = "select _variant_key from all_variant"
+				+ "\nwhere _sourcevariant_key is not null"
+				+ "\nand _allele_key = " + key;
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimAlleleVariantDomain domain = new SlimAlleleVariantDomain();				
+				domain = slimtranslator.translate(variantDAO.get(rs.getInt("_variant_key")),1);
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return results;
+	}
+
+	@Transactional
+	public List<AlleleVariantDomain> getByAllele(Integer key) {
+		// return AlleleVariantDomain list of curated variants for specified allele key
+
+		List<AlleleVariantDomain> results = new ArrayList<AlleleVariantDomain>();
+		
+		String cmd = "select _variant_key from all_variant"
+				+ "\nwhere _sourcevariant_key is not null"
+				+ "\nand _allele_key = " + key;
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				AlleleVariantDomain domain = new AlleleVariantDomain();				
+				domain = translator.translate(variantDAO.get(rs.getInt("_variant_key")),1);
+				variantDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+		
 }

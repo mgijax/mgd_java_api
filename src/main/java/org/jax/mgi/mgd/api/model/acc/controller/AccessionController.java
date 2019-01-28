@@ -74,14 +74,14 @@ public class AccessionController extends BaseController<AccessionDomain> {
 	}
 		
 	@POST
-	@ApiOperation(value = "Marker Edit Accession Ids")
+	@ApiOperation(value = "Get Marker Edit Accession Ids")
 	@Path("/markerEditAccessionIds")
-	public List<AccessionDomain> editAccessionIds(Integer key) {
+	public List<AccessionDomain> getMarkerEditAccessionIds(Integer key) {
 			
 		List<AccessionDomain> results = new ArrayList<AccessionDomain>();
 		
 		try {
-			results = accessionService.markerEditAccessionIds(key);
+			results = accessionService.getMarkerEditAccessionIds(key);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -90,14 +90,14 @@ public class AccessionController extends BaseController<AccessionDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Marker Non-Edit Accession Ids")
+	@ApiOperation(value = "Get Marker Non-Edit Accession Ids")
 	@Path("/markerNonEditAccessionIds")
-	public List<AccessionDomain> otherAccessionIds(Integer key) {
+	public List<AccessionDomain> getMarkerNonEditAccessionIds(Integer key) {
 			
 		List<AccessionDomain> results = new ArrayList<AccessionDomain>();
 		
 		try {
-			results = accessionService.markerNonEditAccessionIds(key);
+			results = accessionService.getMarkerNonEditAccessionIds(key);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

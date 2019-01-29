@@ -12,10 +12,10 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.dao.AccessionDAO;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
-import org.jax.mgi.mgd.api.model.acc.domain.AccessionReferenceDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
+import org.jax.mgi.mgd.api.model.acc.translator.SlimAccessionTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -25,12 +25,13 @@ import org.jboss.logging.Logger;
 @RequestScoped
 public class AccessionService extends BaseService<AccessionDomain> {
 
-	protected static Logger log = Logger.getLogger(AccessionService.class);
+	protected Logger log = Logger.getLogger(getClass());
 
 	@Inject
 	private AccessionDAO accessionDAO;
 
 	private AccessionTranslator translator = new AccessionTranslator();
+	private SlimAccessionTranslator slimtranslator = new SlimAccessionTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
@@ -71,7 +72,6 @@ public class AccessionService extends BaseService<AccessionDomain> {
 	@Transactional
 	public List<AccessionDomain> search(AccessionDomain searchDomain) {
 		// search for accession by id ; more can be added later
-		// assumes that either key or  name is being searched
 		// returns empty result items if vocabulary does not exist
 		// returns AccessionDomain results if vocabulary does exist
 			
@@ -79,12 +79,9 @@ public class AccessionService extends BaseService<AccessionDomain> {
 
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
-		String cmd = "select a.*, ldb.name as logicaldb, u1.login as createdby, u2.login as modifiedby"
-				+ "\nfrom acc_accession a, acc_logicaldb ldb, mgi_user u1, mgi_user u2"
-				+ "\nwhere a.accID = '" + searchDomain.getAccID() + "'"
-				+ "\nand a._logicaldb_key = ldb._logicaldb_key"
-				+ "\nand a._createdby_key = u1._user_key" 
-				+ "\nand a._modifiedby_key = u2._user_key"
+		String cmd = "select _accession_key, accID"
+				+ "\nfrom acc_accession"
+				+ "\nwhere accID = '" + searchDomain.getAccID() + "'"
 				+ "\norder by accID";	
 		log.info(cmd);		
 
@@ -93,24 +90,8 @@ public class AccessionService extends BaseService<AccessionDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {							
 				AccessionDomain domain = new AccessionDomain();						
-				
-				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
-				domain.setAccessionKey(rs.getString("_accession_key"));
-				domain.setLogicaldbKey(rs.getString("_logicaldb_key"));
-				domain.setLogicaldb(rs.getString("logicaldb"));
-				domain.setObjectKey(rs.getString("_object_key"));
-				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
-				domain.setAccID(rs.getString("accID"));
-				domain.setPrefixPart(rs.getString("prefixpart"));
-				domain.setNumericPart(rs.getString("numericpart"));
-				domain.setIsPrivate(rs.getString("private"));
-				domain.setPreferred(rs.getString("preferred"));			
-				domain.setCreatedByKey(rs.getString("_createdby_key"));
-				domain.setCreatedBy(rs.getString("createdby"));
-				domain.setModifiedByKey(rs.getString("_modifiedby_key"));
-				domain.setModifiedBy(rs.getString("modifiedby"));
-				domain.setCreation_date(rs.getString("creation_date"));
-				domain.setModification_date(rs.getString("modification_date"));
+				domain = translator.translate(accessionDAO.get(rs.getInt("_accession_key")),1);
+				accessionDAO.clear();	
 				results.add(domain);
 			}
 			
@@ -151,13 +132,8 @@ public class AccessionService extends BaseService<AccessionDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {	
 				SlimAccessionDomain domain = new SlimAccessionDomain();	
-				domain.setAccessionKey(rs.getString("_accession_key"));
-				domain.setLogicaldbKey(rs.getString("_logicaldb_key"));
-				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
-				domain.setObjectKey(rs.getString("_object_key"));
-				domain.setAccID(rs.getString("accid"));
-				domain.setPrefixPart(rs.getString("prefixpart"));
-				domain.setNumericPart(rs.getString("numericpart"));					
+				domain = slimtranslator.translate(accessionDAO.get(rs.getInt("_accession_key")),1);
+				accessionDAO.clear();									
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();
@@ -183,44 +159,9 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				
 				AccessionDomain domain = new AccessionDomain();
-				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
-				domain.setAccessionKey(rs.getString("_accession_key"));
-				domain.setLogicaldbKey(rs.getString("_logicaldb_key"));
-				domain.setLogicaldb(rs.getString("logicaldb"));
-				domain.setObjectKey(rs.getString("_object_key"));
-				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
-				domain.setAccID(rs.getString("accid"));
-				domain.setPrefixPart(rs.getString("prefixpart"));
-				domain.setNumericPart(rs.getString("numericpart"));
-				domain.setIsPrivate(rs.getString("private"));
-				domain.setPreferred(rs.getString("preferred"));
-				domain.setCreatedByKey(rs.getString("_createdby_key"));
-				domain.setCreatedBy(rs.getString("createdby"));
-				domain.setModifiedByKey(rs.getString("_modifiedby_key"));
-				domain.setModifiedBy(rs.getString("modifiedby"));
-				domain.setCreation_date(rs.getString("creation_date"));
-				domain.setModification_date(rs.getString("modification_date"));
-				
-				// attach reference to domain
-				AccessionReferenceDomain refDomain = new AccessionReferenceDomain();
-				List<AccessionReferenceDomain> references = new ArrayList<AccessionReferenceDomain>();
-				refDomain.setAccessionKey(rs.getString("_accession_key"));
-				refDomain.setRefsKey(rs.getString("_refs_key"));
-				refDomain.setJnumid(rs.getString("jnumid"));
-				refDomain.setJnum(rs.getString("jnum"));
-				refDomain.setShort_citation(rs.getString("short_citation"));
-				// using acc_accession create/modify information
-				refDomain.setCreatedByKey(rs.getString("_createdby_key"));
-				refDomain.setCreatedBy(rs.getString("createdby"));
-				refDomain.setModifiedByKey(rs.getString("_modifiedby_key"));
-				refDomain.setModifiedBy(rs.getString("modifiedby"));
-				refDomain.setCreation_date(rs.getString("creation_date"));
-				refDomain.setModification_date(rs.getString("modification_date"));				
-				references.add(refDomain);
-				domain.setReferences(references);
-				
+				domain = translator.translate(accessionDAO.get(rs.getInt("_accession_key")),1);
+				accessionDAO.clear();					
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

@@ -10,21 +10,17 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleVariantDAO;
-import org.jax.mgi.mgd.api.model.all.dao.VariantSequenceDAO;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleVariantDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleVariantDomain;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleVariant;
-import org.jax.mgi.mgd.api.model.all.entities.VariantSequence;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleVariantTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleVariantTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
-import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
@@ -43,20 +39,11 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 	private AlleleVariantDAO sourceVariantDAO;
 	@Inject
 	private AlleleVariantDAO curatedVariantDAO;
-	@Inject
-	private VariantSequenceDAO sourceSequenceDAO;
-	@Inject
-	private VariantSequenceDAO curatedSequenceDAO;
-    @Inject
-    private VariantSequenceService sequenceService;
-
+	   
 	@Inject 
 	private AlleleDAO alleleDAO;
 	@Inject
 	private ProbeStrainDAO strainDAO;
-	@Inject
-	private TermDAO termDAO;
-
 	@Inject
 	private NoteService noteService;
 	@Inject
@@ -64,7 +51,8 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 	@Inject
 	private AnnotationService annotationService;
 	@Inject
-	private AccessionService accessionService;
+	private VariantSequenceService sequenceService;
+
 
 	// translate an entity to a domain to return in the results
 	private AlleleVariantTranslator translator = new AlleleVariantTranslator();
@@ -93,9 +81,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		
 		AlleleVariant sourceEntity = new AlleleVariant();
 		AlleleVariant curatedEntity = new AlleleVariant();
-		VariantSequence sourceSequenceEntity = new VariantSequence();
-		VariantSequence curatedSequenceEntity = new VariantSequence();
-		
+	
 		// create Source entity
 		sourceEntity.setAllele(alleleDAO.get(Integer.valueOf(domain.getSourceVariant().getAllele().getAlleleKey())));
 		sourceEntity.setStrain(strainDAO.get(Integer.valueOf(domain.getSourceVariant().getStrain().getStrainKey())));
@@ -127,33 +113,6 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			sequenceService.process(String.valueOf(sourceEntity.get_variant_key()), domain.getSourceVariant().getVariantSequences() , user);
 			log.info("AlleleVariantDomain done source variantprocessing sequences");
 
-//			for (int i = 0; i < domain.getSourceVariant().getVariantSequences().size(); i++) {
-//				log.info("endcoordinate: " + domain.getSourceVariant().getVariantSequences().get(i).getEndCoordinate());
-//				sourceSequenceEntity.set_variant_key(sourceEntity.get_variant_key());
-//				sourceSequenceEntity.setSequenceType(termDAO.get(Integer.valueOf(domain.getSourceVariant().getVariantSequences().get(i).getSequenceTypeKey())));
-//				sourceSequenceEntity.setStartCoordinate(Integer.valueOf(domain.getSourceVariant().getVariantSequences().get(i).getStartCoordinate()));
-//				sourceSequenceEntity.setEndCoordinate(Integer.valueOf(domain.getSourceVariant().getVariantSequences().get(i).getEndCoordinate()));
-//				sourceSequenceEntity.setReferenceSequence(domain.getSourceVariant().getVariantSequences().get(i).getReferenceSequence());
-//				sourceSequenceEntity.setVariantSequence(domain.getSourceVariant().getVariantSequences().get(i).getVariantSequence());
-//				sourceSequenceEntity.setVersion(domain.getSourceVariant().getVariantSequences().get(i).getVersion());
-//				sourceSequenceEntity.setCreatedBy(user);
-//				sourceSequenceEntity.setCreation_date(new Date());
-//				sourceSequenceEntity.setModifiedBy(user);
-//				sourceSequenceEntity.setModification_date(new Date());
-//				sourceSequenceDAO.persist(sourceSequenceEntity);
-//			
-//				// create accession ids of source variant sequence
-//				// assuming there is only 1 accession id per Variant Sequence			
-//			    log.info("AlleleVariantService processing source variant sequences: " + domain.getSourceVariant().getVariantSequences().get(i).getAccessionIds());
-//				if (domain.getSourceVariant().getVariantSequences().get(i).getAccessionIds() != null) {
-//					accessionService.process(
-//							String.valueOf(sourceSequenceEntity.get_variantsequence_key()), 
-//							domain.getSourceVariant().getVariantSequences().get(i).getAccessionIds().get(0).getLogicaldbKey(),  
-//							domain.getSourceVariant().getVariantSequences().get(i).getAccessionIds(),
-//							"Allele Variant Sequence", user);				
-//				}
-//													
-//			}
 		}
 		
 		// create Curated Variant Sequences
@@ -162,38 +121,9 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
             sequenceService.process(String.valueOf(curatedEntity.get_variant_key()), domain.getVariantSequences() , user);
             log.info("AlleleVariantDomain done processing curated variant sequences");
 
-//			for (int i = 0; i < domain.getVariantSequences().size(); i++) {
-//				curatedSequenceEntity.set_variant_key(curatedEntity.get_variant_key());
-//				curatedSequenceEntity.setSequenceType(termDAO.get(Integer.valueOf(domain.getVariantSequences().get(i).getSequenceTypeKey())));
-//				curatedSequenceEntity.setStartCoordinate(Integer.valueOf(domain.getVariantSequences().get(i).getStartCoordinate()));
-//				curatedSequenceEntity.setEndCoordinate(Integer.valueOf(domain.getVariantSequences().get(i).getEndCoordinate()));
-//				curatedSequenceEntity.setReferenceSequence(domain.getVariantSequences().get(i).getReferenceSequence());
-//				curatedSequenceEntity.setVariantSequence(domain.getVariantSequences().get(i).getVariantSequence());
-//				curatedSequenceEntity.setVersion(domain.getVariantSequences().get(i).getVersion());
-//				curatedSequenceEntity.setCreatedBy(user);
-//				curatedSequenceEntity.setCreation_date(new Date());
-//				curatedSequenceEntity.setModifiedBy(user);
-//				curatedSequenceEntity.setModification_date(new Date());
-//				curatedSequenceDAO.persist(curatedSequenceEntity);
-//
-//				// create accession ids of curated variant sequence
-//				// assuming there is only 1 accession id per Variant Sequence
-//				log.info("AlleleVariantService processing curated variant sequences: " + domain.getSourceVariant().getVariantSequences().get(i).getAccessionIds());
-//				if (domain.getVariantSequences().get(i).getAccessionIds() != null) {
-//					accessionService.process(
-//							String.valueOf(curatedSequenceEntity.get_variantsequence_key()), 
-//							domain.getVariantSequences().get(i).getAccessionIds().get(0).getLogicaldbKey(), 
-//							domain.getVariantSequences().get(i).getAccessionIds(),
-//							"Allele Variant Sequence", user);				
-//				}				
-//			}
 		}
 	
 		// process all notes : curated only
-		log.info("AlleleVariantService variant key " + curatedEntity.get_variant_key());
-		log.info("AlleleVariantService curator note: " + domain.getCuratorNote());
-		log.info("AlleleVariantService mgiTypeKey: " + mgiTypeKey);
-		log.info("AlleleVariantService user: " + user);
 		noteService.process(String.valueOf(curatedEntity.get_variant_key()), domain.getCuratorNote(), mgiTypeKey, "1050", user);
 		noteService.process(String.valueOf(curatedEntity.get_variant_key()), domain.getPublicNote(), mgiTypeKey, "1051", user);
 		

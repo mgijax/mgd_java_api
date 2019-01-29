@@ -42,7 +42,6 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 	// to process Sequence accession IDs
 	@Inject
 	AccessionService accessionService = new AccessionService();
-	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional

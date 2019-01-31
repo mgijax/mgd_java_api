@@ -49,14 +49,14 @@ public class RelationshipController extends BaseController<RelationshipDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Marker-TSS")
+	@ApiOperation(value = "Get Marker-TSS by Marker")
 	@Path("/markertss")
-	public List<RelationshipDomain> markerTSS(Integer key) {
+	public List<RelationshipDomain> getMarkerTSS(Integer key) {
 			
 		List<RelationshipDomain> results = new ArrayList<RelationshipDomain>();
 		
 		try {
-			results = relationshipService.markerTSS(key);
+			results = relationshipService.getMarkerTSS(key);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

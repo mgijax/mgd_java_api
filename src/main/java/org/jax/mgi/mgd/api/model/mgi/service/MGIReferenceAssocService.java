@@ -67,7 +67,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 	}
 
 	@Transactional	
-	public List<MGIReferenceAssocDomain> marker(Integer key) {
+	public List<MGIReferenceAssocDomain> getByMarker(Integer key) {
 
 		List<MGIReferenceAssocDomain> results = new ArrayList<MGIReferenceAssocDomain>();
 

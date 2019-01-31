@@ -113,13 +113,13 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			from_marker = true;
 		}
 				
-		// allele accession id
-		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {
+		// allele accession id 
+		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {	
 			where = where + "\nand acc.accID ilike '" + searchDomain.getMgiAccessionIds().get(0).getAccID() + "'";
 			from_accession = true;
 		}
-				
-		// reference
+						
+		// reference; allow > 1 jnumid
 		if (searchDomain.getRefAssocs() != null) {
 			if (searchDomain.getRefAssocs().get(0).getRefsKey() != null && !searchDomain.getRefAssocs().get(0).getRefsKey().isEmpty()) {
 				where = where + "\nand ref._Ref_key = " + searchDomain.getRefAssocs().get(0).getRefsKey();
@@ -130,12 +130,19 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				where = where + "\nand ref.short_citation ilike '" + value + "'";
 				from_reference = true;
 			}
-			if (searchDomain.getRefAssocs().get(0).getJnumid() != null && !searchDomain.getRefAssocs().get(0).getJnumid().isEmpty()) {
-				where = where + "\nand ref.jnumid ilike '" + searchDomain.getRefAssocs().get(0).getJnumid() + "'";
+			
+			// accepts > 1 jnumid
+			StringBuffer jnumClauses = new StringBuffer("");
+			for (String jnumID : searchDomain.getRefAssocs().get(0).getJnumid().split(" ")) {
 				from_reference = true;
-			}			
+				if (jnumClauses.length() > 0) {
+					jnumClauses.append(" or ");
+				}
+				jnumClauses.append("ref.jnumid ilike '" + jnumID + "'");
+			}
+			where = where + "\nand (" + jnumClauses.toString() + ")";
 		}
-
+	
 		// if searching for allele variants
 		if (hasVariant == true) {
 			from_variant = true;

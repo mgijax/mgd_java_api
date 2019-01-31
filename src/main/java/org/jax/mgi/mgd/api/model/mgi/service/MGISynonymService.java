@@ -66,7 +66,7 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 	}
 
 	@Transactional	
-	public List<MGISynonymDomain> marker(Integer key) {
+	public List<MGISynonymDomain> getByMarker(Integer key) {
 		// return all synonyms for given marker key
 		
 		List<MGISynonymDomain> results = new ArrayList<MGISynonymDomain>();

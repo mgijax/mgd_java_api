@@ -49,14 +49,14 @@ public class MGISynonymController extends BaseController<MGISynonymDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Marker")
+	@ApiOperation(value = "Get All Synonyms by Marker")
 	@Path("/marker")
-	public List<MGISynonymDomain> marker(Integer key) {
+	public List<MGISynonymDomain> getByMarker(Integer key) {
 			
 		List<MGISynonymDomain> results = new ArrayList<MGISynonymDomain>();
 		
 		try {
-			results = synonymService.marker(key);
+			results = synonymService.getByMarker(key);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

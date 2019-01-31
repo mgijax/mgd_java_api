@@ -49,7 +49,7 @@ public class NoteController extends BaseController<NoteDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Marker")
+	@ApiOperation(value = "Get All Notes by Marker")
 	@Path("/marker")
 	public List<NoteDomain> getByMarker(Integer key) {
 			

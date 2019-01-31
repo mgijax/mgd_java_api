@@ -62,8 +62,9 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 	}
 
 	@Transactional	
-	public List<RelationshipDomain> markerTSS(Integer key) {
-
+	public List<RelationshipDomain> getMarkerTSS(Integer key) {
+		// return all tss-marker relationships by specified marker key
+		
 		List<RelationshipDomain> results = new ArrayList<RelationshipDomain>();
 
 		String cmd = "select * from mgi_relationship_markertss_view "

@@ -49,14 +49,14 @@ public class MGIReferenceAssocController extends BaseController<MGIReferenceAsso
 	}
 	
 	@POST
-	@ApiOperation(value = "Marker")
+	@ApiOperation(value = "Get All Reference Assocoations by Marker")
 	@Path("/marker")
-	public List<MGIReferenceAssocDomain> marker(Integer key) {
+	public List<MGIReferenceAssocDomain> getByMarker(Integer key) {
 			
 		List<MGIReferenceAssocDomain> results = new ArrayList<MGIReferenceAssocDomain>();
 		
 		try {
-			results = referenceAssocService.marker(key);
+			results = referenceAssocService.getByMarker(key);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

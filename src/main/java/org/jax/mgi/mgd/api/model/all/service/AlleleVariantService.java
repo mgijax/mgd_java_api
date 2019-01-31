@@ -227,9 +227,14 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 					Constants.VOC_GENERIC_ANNOTATION_QUALIFIER, user);
 		}
 		
-		// process variant sequences DADT-178
+		// process curated variant sequences DADT-178
 		if (domain.getVariantSequences() != null) {
 			sequenceService.process(String.valueOf(entity.get_variant_key()), domain.getVariantSequences(), user);
+		}
+		
+		// process source variant sequences DADT-178
+		if (domain.getSourceVariant().getVariantSequences() != null) {
+			sequenceService.process(String.valueOf(entity.get_variant_key()), domain.getSourceVariant().getVariantSequences(), user);
 		}
 				
 		// return entity translated to domain

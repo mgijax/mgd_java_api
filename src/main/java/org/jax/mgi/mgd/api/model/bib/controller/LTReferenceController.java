@@ -327,6 +327,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	}
 
 	@Override
+	@Transactional
 	public SearchResults<ApiLogDomain> getReferenceLog (String id) {
 		SearchResults<ApiLogDomain> results = new SearchResults<ApiLogDomain>();
 		Map<String,Object> params = new HashMap<String,Object>();

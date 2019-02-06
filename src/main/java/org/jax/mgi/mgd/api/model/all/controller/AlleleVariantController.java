@@ -19,6 +19,8 @@ import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -28,6 +30,7 @@ import io.swagger.annotations.ApiOperation;
 @Consumes(MediaType.APPLICATION_JSON)
 public class AlleleVariantController extends BaseController<AlleleVariantDomain> {
 
+	ObjectMapper mapper = new ObjectMapper();
 	protected Logger log = Logger.getLogger(getClass());
 	
 	@Inject
@@ -39,8 +42,18 @@ public class AlleleVariantController extends BaseController<AlleleVariantDomain>
 		SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
 		
 		try {
+			log.info("create/before/json");
+			log.info(mapper.writeValueAsString(domain));		
+		} catch (Exception e) {	
+			results.setError("Failed/create/before/json/incorrect format", e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			return results;	
+		}
+		
+		try {
 			results = variantService.create(domain, user);
 			results = variantService.getResults(Integer.valueOf(results.items.get(0).getVariantKey()));
+			log.info("create/after/results");
+			log.info(mapper.writeValueAsString(results.items.get(0)));
 		} catch (Exception e) {
 			results.setError("Failed : create", e.getMessage(), Constants.HTTP_SERVER_ERROR);
 			return results;
@@ -54,13 +67,22 @@ public class AlleleVariantController extends BaseController<AlleleVariantDomain>
 		
 		SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
 		
-		//try {
+		try {
+			log.info("update/before/json");
+			log.info(mapper.writeValueAsString(domain));		
+		} catch (Exception e) {	
+			results.setError("Failed/update/before/json/incorrect format", e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			return results;	
+		}
+		try {
 			results = variantService.update(domain, user);
 			results = variantService.getResults(Integer.valueOf(results.items.get(0).getVariantKey()));
-//		} catch (Exception e) {
-//			results.setError("Failed : update", e.getMessage(), Constants.HTTP_SERVER_ERROR);
-//			return results;
-//		}
+			log.info("update/after/results");
+			log.info(mapper.writeValueAsString(results.items.get(0)));
+		} catch (Exception e) {
+			results.setError("Failed : update", e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			return results;
+		}
 		
 		return results;		
 	}
@@ -76,7 +98,16 @@ public class AlleleVariantController extends BaseController<AlleleVariantDomain>
 		SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
 		
 		try {
+			log.info("delete/before/json");
+			log.info(mapper.writeValueAsString(key));		
+		} catch (Exception e) {	
+			results.setError("Failed/delete/before/json/incorrect format", e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			return results;	
+		}
+		try {
 			results = variantService.delete(key, user);
+			log.info("delete/after/results");
+			log.info(mapper.writeValueAsString(results.items.get(0)));
 		} catch (Exception e) {
 			results.setError("Failed : delete", e.getMessage(), Constants.HTTP_SERVER_ERROR);
 			return results;

@@ -20,7 +20,7 @@ import org.jboss.logging.Logger;
 @RequestScoped
 public class MGIRefAssocTypeService extends BaseService<MGIRefAssocTypeDomain> {
 
-	protected Logger log = Logger.getLogger(MGISynonymTypeService.class);
+	protected Logger log = Logger.getLogger(getClass());
 
 	@Inject
 	private MGIRefAssocTypeDAO refAssocTypeDAO;

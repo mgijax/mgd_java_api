@@ -3,7 +3,6 @@ package org.jax.mgi.mgd.api.model.acc.entities;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -40,7 +39,7 @@ public class Accession extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 
-	// due to LTReferenceDomain, this must not be lazy
+	// due to LTReferenceDomain, this must not be EAGER
 	@OneToOne
 	@JoinColumn(name="_logicaldb_key")
 	private LogicalDB logicaldb;

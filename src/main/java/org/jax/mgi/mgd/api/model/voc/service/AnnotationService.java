@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
 @RequestScoped
 public class AnnotationService extends BaseService<AnnotationDomain> {
 
-	protected Logger log = Logger.getLogger(AnnotationService.class);
+	protected Logger log = Logger.getLogger(getClass());
 
 	@Inject
 	private AnnotationDAO annotationDAO;

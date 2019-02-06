@@ -23,7 +23,7 @@ import org.jboss.logging.Logger;
 @RequestScoped
 public class TermService extends BaseService<TermDomain> {
 
-	protected Logger log = Logger.getLogger(TermService.class);
+	protected Logger log = Logger.getLogger(getClass());
 
 	@Inject
 	private TermDAO termDAO;

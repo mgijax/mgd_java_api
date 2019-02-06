@@ -26,7 +26,7 @@ import org.jboss.logging.Logger;
 @RequestScoped
 public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 
-	protected Logger log = Logger.getLogger(VariantSequenceService.class);
+	protected Logger log = Logger.getLogger(getClass());
 
 	@Inject
 	private VariantSequenceDAO variantSequenceDAO;

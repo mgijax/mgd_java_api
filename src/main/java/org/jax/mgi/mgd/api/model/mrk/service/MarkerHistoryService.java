@@ -30,7 +30,7 @@ import org.jboss.logging.Logger;
 @RequestScoped
 public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 
-	protected static Logger log = Logger.getLogger(MarkerHistoryService.class);
+	protected Logger log = Logger.getLogger(getClass());
 
 	@Inject
 	private MarkerHistoryDAO historyDAO;

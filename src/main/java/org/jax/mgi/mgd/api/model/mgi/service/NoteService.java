@@ -21,7 +21,7 @@ import org.jboss.logging.Logger;
 @RequestScoped
 public class NoteService extends BaseService<NoteDomain> {
 
-	protected static Logger log = Logger.getLogger(NoteService.class);
+	protected Logger log = Logger.getLogger(getClass());
 
 	@Inject
 	private NoteDAO noteDAO;

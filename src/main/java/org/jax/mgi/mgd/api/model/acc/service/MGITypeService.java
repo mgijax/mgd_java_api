@@ -20,7 +20,7 @@ import org.jboss.logging.Logger;
 @RequestScoped
 public class MGITypeService extends BaseService<MGITypeDomain> {
 	
-	protected Logger log = Logger.getLogger(MGITypeService.class);
+	protected Logger log = Logger.getLogger(getClass());
 		
 	@Inject
 	private MGITypeDAO mgitypeDAO;

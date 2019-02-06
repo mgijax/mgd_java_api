@@ -37,7 +37,7 @@ public abstract class PostgresSQLDAO<T> {
 	@PersistenceContext(unitName="primary")
 	protected EntityManager entityManager;
 
-	protected Logger log = Logger.getLogger(PostgresSQLDAO.class);
+	protected Logger log = Logger.getLogger(getClass());
 
 	/* how long can we cache keys without refreshing from database? (in milliseconds) */
 	protected static long expirationTime = 2 * 60 * 1000;

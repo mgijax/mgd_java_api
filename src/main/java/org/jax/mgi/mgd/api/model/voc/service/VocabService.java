@@ -22,7 +22,7 @@ import org.jboss.logging.Logger;
 @RequestScoped
 public class VocabService extends BaseService<VocabularyDomain> {
 
-	protected Logger log = Logger.getLogger(VocabService.class);
+	protected Logger log = Logger.getLogger(getClass());
 	
 	@Inject
 	private VocabularyDAO vocabularyDAO;

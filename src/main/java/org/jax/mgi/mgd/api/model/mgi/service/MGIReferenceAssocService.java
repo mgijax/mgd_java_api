@@ -25,7 +25,7 @@ import org.jboss.logging.Logger;
 @RequestScoped
 public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomain> {
 
-	protected static Logger log = Logger.getLogger(MGIReferenceAssocService.class);
+	protected Logger log = Logger.getLogger(getClass());
 	
 	@Inject
 	private MGIReferenceAssocDAO referenceAssocDAO;

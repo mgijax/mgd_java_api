@@ -16,7 +16,6 @@ import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
 import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -24,7 +23,7 @@ import org.jboss.logging.Logger;
 @RequestScoped
 public class ReferenceService extends BaseService<ReferenceDomain> {
 
-	protected static Logger log = Logger.getLogger(MGISynonymService.class);
+	protected Logger log = Logger.getLogger(getClass());
 
 	@Inject
 	private ReferenceDAO referenceDAO;

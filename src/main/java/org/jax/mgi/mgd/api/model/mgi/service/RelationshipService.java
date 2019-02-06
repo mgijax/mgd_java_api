@@ -23,7 +23,7 @@ import org.jboss.logging.Logger;
 @RequestScoped
 public class RelationshipService extends BaseService<RelationshipDomain> {
 
-	protected static Logger log = Logger.getLogger(MGISynonymService.class);
+	protected Logger log = Logger.getLogger(getClass());
 	
 	@Inject
 	private RelationshipDAO relationshipDAO;

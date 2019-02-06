@@ -9,10 +9,9 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.PathParam;
-
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -24,6 +23,8 @@ import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,7 +45,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	// refresh/resync the results due to database triggers
 	// for example, the mgi accession id is created by a database trigger
 	
-	protected Logger log = Logger.getLogger(MarkerService.class);
+	protected Logger log = Logger.getLogger(getClass());
 
 	@Inject
 	private MarkerService markerService;
@@ -53,7 +54,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	public SearchResults<MarkerDomain> create(MarkerDomain domain, User user) {
 		
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
-
+		
 		try {
 			results = markerService.create(domain, user);
 			results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
@@ -69,12 +70,23 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	public SearchResults<MarkerDomain> update(MarkerDomain domain, User user) {
 		
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
+		ObjectMapper mapper = new ObjectMapper();
 
+		try {
+			log.info("update/before/json");
+			log.info(mapper.writeValueAsString(domain));		
+		} catch (Exception e) {	
+			results.setError("Failed/update/before/json/incorrect format", e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			return results;
+		}
+		
 		try {
 			results = markerService.update(domain, user);
 			results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
-		} catch (Exception e) {
-			results.setError("Failed : update", e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			log.info("update/after/results");
+			log.info(mapper.writeValueAsString(results.items.get(0)));		
+		} catch (Exception e) {	
+			results.setError("Failed/update", e.getMessage(), Constants.HTTP_SERVER_ERROR);
 			return results;
 		}
 
@@ -117,7 +129,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Alias search by marker key/returns slim marker domain")
+	@ApiOperation(value = "Get Alias by marker key/returns slim marker domain")
 	@Path("/alias")
 	public List<SlimMarkerDomain> getAlias(Integer key) {
 		return markerService.getAlias(key);

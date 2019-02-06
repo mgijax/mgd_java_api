@@ -20,7 +20,7 @@ import org.jboss.logging.Logger;
 @RequestScoped
 public class OrganismService extends BaseService<OrganismDomain> {
 
-	protected Logger log = Logger.getLogger(OrganismService.class);
+	protected Logger log = Logger.getLogger(getClass());
 
 	@Inject
 	private OrganismDAO organismDAO;

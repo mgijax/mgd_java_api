@@ -25,7 +25,7 @@ import org.jboss.logging.Logger;
 @RequestScoped
 public class MGISynonymService extends BaseService<MGISynonymDomain> {
 
-	protected static Logger log = Logger.getLogger(MGISynonymService.class);
+	protected Logger log = Logger.getLogger(getClass());
 	
 	@Inject
 	private MGISynonymDAO synonymDAO;

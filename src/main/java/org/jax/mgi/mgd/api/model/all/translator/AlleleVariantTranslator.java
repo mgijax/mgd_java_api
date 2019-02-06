@@ -5,7 +5,6 @@ import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleVariantDomain;
 import org.jax.mgi.mgd.api.model.all.domain.VariantSequenceDomain;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleVariant;
-import org.jax.mgi.mgd.api.model.all.service.AlleleVariantService;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
@@ -18,7 +17,7 @@ import org.jboss.logging.Logger;
 
 public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVariant, AlleleVariantDomain> {
 
-	protected Logger log = Logger.getLogger(AlleleVariantService.class);
+	protected Logger log = Logger.getLogger(getClass());
 	
 	private SlimAlleleTranslator alleleTranslator = new SlimAlleleTranslator();
 	private SlimProbeStrainTranslator strainTranslator = new SlimProbeStrainTranslator();

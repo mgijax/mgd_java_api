@@ -20,7 +20,7 @@ import org.jboss.logging.Logger;
 @RequestScoped
 public class EventReasonService extends BaseService<EventReasonDomain> {
 
-	protected Logger log = Logger.getLogger(EventReasonService.class);
+	protected Logger log = Logger.getLogger(getClass());
 
 	@Inject
 	private EventReasonDAO eventReasonDAO;

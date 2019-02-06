@@ -3,12 +3,11 @@ package org.jax.mgi.mgd.api.model.acc.translator;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
-import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jboss.logging.Logger;
 
 public class SlimAccessionTranslator extends BaseEntityDomainTranslator<Accession, SlimAccessionDomain> {
 
-	protected Logger log = Logger.getLogger(AccessionService.class);
+	protected Logger log = Logger.getLogger(getClass());
 	
 	@Override
 	protected SlimAccessionDomain entityToDomain(Accession entity, int translationDepth) {

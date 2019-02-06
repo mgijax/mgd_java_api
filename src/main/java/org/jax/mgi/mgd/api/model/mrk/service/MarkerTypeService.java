@@ -20,7 +20,7 @@ import org.jboss.logging.Logger;
 @RequestScoped
 public class MarkerTypeService extends BaseService<MarkerTypeDomain> {
 
-	protected Logger log = Logger.getLogger(MarkerTypeService.class);
+	protected Logger log = Logger.getLogger(getClass());
 
 	@Inject
 	private MarkerTypeDAO markerTypeDAO;

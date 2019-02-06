@@ -23,7 +23,7 @@ import org.jboss.logging.Logger;
 @RequestScoped
 public class UserService extends BaseService<UserDomain> {
 
-	protected Logger log = Logger.getLogger(UserService.class);
+	protected Logger log = Logger.getLogger(getClass());
 	
 	@Inject
 	private UserDAO userDAO;

@@ -13,8 +13,7 @@ import lombok.Setter;
 
 @Getter @Setter
 public class AlleleVariantDomain extends BaseDomain {
-	
-	private String processStatus;
+	//processStatus not needed as this is a 'master' table
 	private String variantKey;	
 	private String isReviewed;
 	private String description;

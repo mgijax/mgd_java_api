@@ -30,7 +30,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
-
 @Path("/marker")
 @Api(value = "Marker Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
@@ -117,14 +116,14 @@ public class MarkerController extends BaseController<MarkerDomain> {
 			log.info(Constants.LOG_DELETE_BEFORE_PKEY);
 			log.info(mapper.writeValueAsString(key));		
 		} catch (Exception e) {	
-			results.setError(Constants.LOG_FAIL_JSON, e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			results.setError(Constants.LOG_FAIL_PKEY, e.getMessage(), Constants.HTTP_SERVER_ERROR);
 			return results;
 		}
 				
 		try {
 			results = markerService.delete(key, user);
 		} catch (Exception e) {
-			results.setError(Constants.LOG_FAIL_PKEY, e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			results.setError(Constants.LOG_FAIL_JSON, e.getMessage(), Constants.HTTP_SERVER_ERROR);
 		}
 		
 		return results;

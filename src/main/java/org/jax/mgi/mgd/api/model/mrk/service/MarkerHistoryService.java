@@ -124,7 +124,6 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 				log.info("processHistory create");
-				
 				cmd = "select count(*) from MRK_insertHistory ("
 							+ user.get_user_key().intValue()
 							+ "," + parentKey
@@ -139,7 +138,6 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				query.getResultList();
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-	
 				log.info("processHistory delete");
 				
 				MarkerHistory entity = historyDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
@@ -150,10 +148,9 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 						+ "," + parentKey
 						+ "," + user.get_user_key().intValue()
 						+ ")";
+				log.info("cmd: " + cmd);		
 				Query query = historyDAO.createNativeQuery(cmd);
 				query.getResultList();
-				
-				log.info("processHistory delete successful");
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processHistory update");

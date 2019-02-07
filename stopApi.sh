@@ -21,6 +21,6 @@ PID=`pgrep -f "target/mgd_java_api-swarm.jar"`
 printf "Killing process with pid=$PID\n"
 kill -HUP $PID
 
-echo "Save log file: ${LOG_FILE}.old"
-cp ${LOG_FILE} ${LOG_FILE}.old
+#echo "Save log file: ${LOG_FILE}.old"
+#cp -r ${LOG_FILE} ${LOG_FILE}.old
 

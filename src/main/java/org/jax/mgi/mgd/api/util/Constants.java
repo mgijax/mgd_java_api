@@ -72,12 +72,9 @@ public class Constants {
 
 	// API logging using Logger.info()
 	public static String LOG_MGI_API = "LOG_MGI_API|";
-	public static String LOG_CREATE_BEFORE_JSON = LOG_MGI_API + "CREATE|BEFORE|JSON FROM UI";
-	public static String LOG_CREATE_AFTER_RESULTS = LOG_MGI_API + "CREATE|AFTER|RESULTS FROM ENITY";
-	public static String LOG_UPDATE_BEFORE_JSON = LOG_MGI_API + "UPDATE|BEFORE|JSON FROM UI";
-	public static String LOG_UPDATE_AFTER_RESULTS = LOG_MGI_API + "UPDATE|AFTER|RESULTS FROM ENITY";
-	public static String LOG_DELETE_BEFORE_PKEY = LOG_MGI_API + "DELETE|BEFORE|PRIMARY KEY";
-	public static String LOG_DELETE_AFTER_RESULTS = LOG_MGI_API + "DELETE|AFTER|RESULTS FROM ENTITY";
+    public static String LOG_IN_JSON = LOG_MGI_API + "IN JSON FROM UI";
+    public static String LOG_OUT_RESULTS = LOG_MGI_API + "OUT RESULTS FROM ENTITY";
+    public static String LOG_IN_PKEY = LOG_MGI_API + "IN PRIMARY KEY";
 	public static String LOG_FAIL_JSON = LOG_MGI_API + "FAIL|JSON FROM UI|INCORRECT FORMAT";
 	public static String LOG_FAIL_ENTITY = LOG_MGI_API + "FAIL|RESULTS FROM ENTITY";
 	public static String LOG_FAIL_PKEY = LOG_MGI_API + "FAIL|PRIMARY KEY";

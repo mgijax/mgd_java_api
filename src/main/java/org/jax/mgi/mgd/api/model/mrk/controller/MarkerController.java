@@ -56,7 +56,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 
 		try {
-			log.info(Constants.LOG_CREATE_BEFORE_JSON);
+			log.info(Constants.LOG_IN_JSON);
 			log.info(mapper.writeValueAsString(domain));		
 		} catch (Exception e) {	
 			results.setError(Constants.LOG_FAIL_JSON, e.getMessage(), Constants.HTTP_SERVER_ERROR);
@@ -66,7 +66,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		try {
 			results = markerService.create(domain, user);
 			results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
-			log.info(Constants.LOG_CREATE_AFTER_RESULTS);
+			log.info(Constants.LOG_OUT_RESULTS);
 			log.info(mapper.writeValueAsString(results.items.get(0)));
 		} catch (Exception e) {
 			results.setError(Constants.LOG_FAIL_ENTITY, e.getMessage(), Constants.HTTP_SERVER_ERROR);
@@ -82,7 +82,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 
 		try {
-			log.info(Constants.LOG_UPDATE_BEFORE_JSON);
+			log.info(Constants.LOG_IN_JSON);
 			log.info(mapper.writeValueAsString(domain));		
 		} catch (Exception e) {	
 			results.setError(Constants.LOG_FAIL_JSON, e.getMessage(), Constants.HTTP_SERVER_ERROR);
@@ -92,7 +92,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		try {
 			results = markerService.update(domain, user);
 			results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
-			log.info(Constants.LOG_UPDATE_AFTER_RESULTS);
+			log.info(Constants.LOG_OUT_RESULTS);
 			log.info(mapper.writeValueAsString(results.items.get(0)));		
 		} catch (Exception e) {	
 			results.setError(Constants.LOG_FAIL_ENTITY, e.getMessage(), Constants.HTTP_SERVER_ERROR);
@@ -113,7 +113,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 
 		try {
-			log.info(Constants.LOG_DELETE_BEFORE_PKEY);
+			log.info(Constants.LOG_IN_PKEY);
 			log.info(mapper.writeValueAsString(key));		
 		} catch (Exception e) {	
 			results.setError(Constants.LOG_FAIL_PKEY, e.getMessage(), Constants.HTTP_SERVER_ERROR);

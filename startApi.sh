@@ -23,8 +23,6 @@ echo "Starting Java API"
 echo "log file: ", ${LOG_FILE}
 rm -f ${LOG_FILE}
 touch ${LOG_FILE}
-ls -l ${LOG_FILE}
-exit 0
 
 # redirect stdout and stderr to ${LOG_FILE}
 /usr/java/jdk1.8.0_131/bin/java -jar target/mgd_java_api-swarm.jar -Papp.properties -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true &> ${LOG_FILE} &

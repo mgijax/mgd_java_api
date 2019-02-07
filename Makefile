@@ -7,7 +7,7 @@ all:
 	mvn clean package -DskipTests
 
 clean:
-	find /tmp/wildfly* -type f -exec rm -rf {} \;
+	find /tmp -maxdepth 1 -name "*.jar" -exec rm -f {} \;
 
 run:
 	java -jar target/mgd_java_api-swarm.jar -Papp.properties

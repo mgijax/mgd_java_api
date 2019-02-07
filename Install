@@ -1,5 +1,11 @@
 #!/bin/sh
 
+#
+# make the log directory
+# remove the previous app.properties file
+# call:  make all
+#
+
 cd `dirname $0`
 . Configuration
 

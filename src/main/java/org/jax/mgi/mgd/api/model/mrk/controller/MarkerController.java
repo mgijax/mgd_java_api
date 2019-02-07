@@ -66,10 +66,10 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		try {
 			results = markerService.create(domain, user);
 			results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
-			log.info(Constants.LOG_OUT_RESULTS);
+			log.info(Constants.LOG_OUT_DOMAIN);
 			log.info(mapper.writeValueAsString(results.items.get(0)));
 		} catch (Exception e) {
-			results.setError(Constants.LOG_FAIL_ENTITY, e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			results.setError(Constants.LOG_FAIL_DOMAIN, e.getMessage(), Constants.HTTP_SERVER_ERROR);
 			return results;
 		}
 		
@@ -92,10 +92,10 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		try {
 			results = markerService.update(domain, user);
 			results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
-			log.info(Constants.LOG_OUT_RESULTS);
+			log.info(Constants.LOG_OUT_DOMAIN);
 			log.info(mapper.writeValueAsString(results.items.get(0)));		
 		} catch (Exception e) {	
-			results.setError(Constants.LOG_FAIL_ENTITY, e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			results.setError(Constants.LOG_FAIL_DOMAIN, e.getMessage(), Constants.HTTP_SERVER_ERROR);
 			return results;
 		}
 
@@ -123,7 +123,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		try {
 			results = markerService.delete(key, user);
 		} catch (Exception e) {
-			results.setError(Constants.LOG_FAIL_JSON, e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			results.setError(Constants.LOG_FAIL_DOMAIN, e.getMessage(), Constants.HTTP_SERVER_ERROR);
 		}
 		
 		return results;

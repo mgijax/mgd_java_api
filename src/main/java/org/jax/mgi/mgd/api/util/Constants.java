@@ -73,9 +73,9 @@ public class Constants {
 	// API logging using Logger.info()
 	public static String LOG_MGI_API = "LOG_MGI_API|";
     public static String LOG_IN_JSON = LOG_MGI_API + "IN JSON FROM UI";
-    public static String LOG_OUT_RESULTS = LOG_MGI_API + "OUT RESULTS FROM ENTITY";
+    public static String LOG_OUT_DOMAIN = LOG_MGI_API + "OUT RESULTS FROM ENTITY/DOMAIN";
     public static String LOG_IN_PKEY = LOG_MGI_API + "IN PRIMARY KEY";
 	public static String LOG_FAIL_JSON = LOG_MGI_API + "FAIL|JSON FROM UI|INCORRECT FORMAT";
-	public static String LOG_FAIL_ENTITY = LOG_MGI_API + "FAIL|RESULTS FROM ENTITY";
+	public static String LOG_FAIL_DOMAIN = LOG_MGI_API + "FAIL|RESULTS FROM ENTITY/DOMAIN";
 	public static String LOG_FAIL_PKEY = LOG_MGI_API + "FAIL|PRIMARY KEY";
 }

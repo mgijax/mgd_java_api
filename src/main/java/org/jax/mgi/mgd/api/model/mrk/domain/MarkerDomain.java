@@ -16,8 +16,9 @@ import lombok.Setter;
 @Getter @Setter
 public class MarkerDomain extends BaseDomain {
 
-	//@ApiModelProperty("primary key")
-	//private String processStatus;
+	// do not use 'processStatus' because this is a master domain
+	// and only 1 master domain record is processed by the create/update endpoint
+	
 	private String markerKey;
 	private String symbol;
 	private String name;

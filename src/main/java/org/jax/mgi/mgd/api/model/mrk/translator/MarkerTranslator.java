@@ -27,10 +27,12 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	
 	@Override
 	protected MarkerDomain entityToDomain(Marker entity, int translationDepth) {
-			
-		MarkerDomain domain = new MarkerDomain();
 		
-		//domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
+		MarkerDomain domain = new MarkerDomain();
+
+		// do not use 'processStatus' because this is a master domain
+		// and only 1 master domain record is processed by the create/update endpoint
+		
 		domain.setMarkerKey(String.valueOf(entity.get_marker_key()));
 		domain.setSymbol(entity.getSymbol());
 		domain.setName(entity.getName());

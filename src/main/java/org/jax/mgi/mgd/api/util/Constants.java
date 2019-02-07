@@ -70,5 +70,12 @@ public class Constants {
 	public static String PROCESS_DELETE = "d";
 	public static String PROCESS_NOTDIRTY = "x";
 
-
+	// API logging using Logger.info()
+	public static String LOG_MGI_API = "LOG_MGI_API|";
+	public static String LOG_CREATE_BEFORE_JSON = LOG_MGI_API + "CREATE|BEFORE|JSON FROM UI";
+	public static String LOG_CREATE_AFTER_RESULTS = LOG_MGI_API + "CREATE|AFTER|RESULTS FROM ENITY";
+	public static String LOG_UPDATE_BEFORE_JSON = LOG_MGI_API + "UPDATE|BEFORE|JSON FROM UI";
+	public static String LOG_UPDATE_AFTER_RESULTS = LOG_MGI_API + "UPDATE|AFTER|RESULTS FROM ENITY";
+	public static String LOG_FAIL_JSON = LOG_MGI_API + "FAIL|JSON FROM UI|INCORRECT FORMAT";
+	public static String LOG_FAIL_ENTITY = LOG_MGI_API + "FAIL|RESULTS FROM ENTITY";
 }

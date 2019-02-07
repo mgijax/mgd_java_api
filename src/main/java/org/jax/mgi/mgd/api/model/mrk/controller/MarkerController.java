@@ -54,12 +54,23 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	public SearchResults<MarkerDomain> create(MarkerDomain domain, User user) {
 		
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
-		
+		ObjectMapper mapper = new ObjectMapper();
+
+		try {
+			log.info(Constants.LOG_CREATE_BEFORE_JSON);
+			log.info(mapper.writeValueAsString(domain));		
+		} catch (Exception e) {	
+			results.setError(Constants.LOG_FAIL_JSON, e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			return results;
+		}
+				
 		try {
 			results = markerService.create(domain, user);
 			results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
+			log.info(Constants.LOG_CREATE_AFTER_RESULTS);
+			log.info(mapper.writeValueAsString(results.items.get(0)));
 		} catch (Exception e) {
-			results.setError("Failed : create", e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			results.setError(Constants.LOG_FAIL_ENTITY, e.getMessage(), Constants.HTTP_SERVER_ERROR);
 			return results;
 		}
 		
@@ -73,20 +84,20 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		ObjectMapper mapper = new ObjectMapper();
 
 		try {
-			log.info("update/before/json");
+			log.info(Constants.LOG_UPDATE_BEFORE_JSON);
 			log.info(mapper.writeValueAsString(domain));		
 		} catch (Exception e) {	
-			results.setError("Failed/update/before/json/incorrect format", e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			results.setError(Constants.LOG_FAIL_JSON, e.getMessage(), Constants.HTTP_SERVER_ERROR);
 			return results;
 		}
 		
 		try {
 			results = markerService.update(domain, user);
 			results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
-			log.info("update/after/results");
+			log.info(Constants.LOG_UPDATE_AFTER_RESULTS);
 			log.info(mapper.writeValueAsString(results.items.get(0)));		
 		} catch (Exception e) {	
-			results.setError("Failed/update", e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			results.setError(Constants.LOG_FAIL_ENTITY, e.getMessage(), Constants.HTTP_SERVER_ERROR);
 			return results;
 		}
 

@@ -17,7 +17,8 @@ source ${MGICONFIG}/master.config.sh
 
 echo "Stopping Java API"
 
-PID=`pgrep -f "target/mgd_java_api-swarm.jar"`
+# only kill process started by user running this command
+PID=`pgrep -u ${USER} -f "target/mgd_java_api-swarm.jar"`
 printf "Killing process with pid=$PID\n"
 kill -HUP $PID
 

@@ -46,6 +46,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	// for example, the mgi accession id is created by a database trigger
 	
 	protected Logger log = Logger.getLogger(getClass());
+	ObjectMapper mapper = new ObjectMapper();
 
 	@Inject
 	private MarkerService markerService;
@@ -54,7 +55,6 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	public SearchResults<MarkerDomain> create(MarkerDomain domain, User user) {
 		
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
-		ObjectMapper mapper = new ObjectMapper();
 
 		try {
 			log.info(Constants.LOG_CREATE_BEFORE_JSON);
@@ -81,7 +81,6 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	public SearchResults<MarkerDomain> update(MarkerDomain domain, User user) {
 		
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
-		ObjectMapper mapper = new ObjectMapper();
 
 		try {
 			log.info(Constants.LOG_UPDATE_BEFORE_JSON);
@@ -113,11 +112,19 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	public SearchResults<MarkerDomain> delete(Integer key, User user) {
 		
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
-		
+
+		try {
+			log.info(Constants.LOG_DELETE_BEFORE_PKEY);
+			log.info(mapper.writeValueAsString(key));		
+		} catch (Exception e) {	
+			results.setError(Constants.LOG_FAIL_JSON, e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			return results;
+		}
+				
 		try {
 			results = markerService.delete(key, user);
 		} catch (Exception e) {
-			results.setError(Constants.LOG_FAIL_ENTITY, e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			results.setError(Constants.LOG_FAIL_PKEY, e.getMessage(), Constants.HTTP_SERVER_ERROR);
 		}
 		
 		return results;

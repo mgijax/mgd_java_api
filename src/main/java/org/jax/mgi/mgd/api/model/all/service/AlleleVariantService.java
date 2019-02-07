@@ -563,6 +563,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		String cmd = "select _variant_key from all_variant"
 				+ "\nwhere _sourcevariant_key is not null"
 				+ "\nand _allele_key = " + key;
+		log.info(cmd);
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
@@ -590,7 +591,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		String cmd = "select _variant_key from all_variant"
 				+ "\nwhere _sourcevariant_key is not null"
 				+ "\nand _allele_key = " + key;
-		
+		log.info(cmd);
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {

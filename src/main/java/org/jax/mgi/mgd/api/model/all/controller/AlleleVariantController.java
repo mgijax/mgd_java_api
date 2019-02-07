@@ -52,10 +52,10 @@ public class AlleleVariantController extends BaseController<AlleleVariantDomain>
 		try {
 			results = variantService.create(domain, user);
 			results = variantService.getResults(Integer.valueOf(results.items.get(0).getVariantKey()));
-			log.info(Constants.LOG_OUT_RESULTS);
+			log.info(Constants.LOG_OUT_DOMAIN);
 			log.info(mapper.writeValueAsString(results.items.get(0)));
 		} catch (Exception e) {
-			results.setError(Constants.LOG_FAIL_ENTITY, e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			results.setError(Constants.LOG_FAIL_DOMAIN, e.getMessage(), Constants.HTTP_SERVER_ERROR);
 			return results;
 		}
 		
@@ -77,10 +77,10 @@ public class AlleleVariantController extends BaseController<AlleleVariantDomain>
 		try {
 			results = variantService.update(domain, user);
 			results = variantService.getResults(Integer.valueOf(results.items.get(0).getVariantKey()));
-			log.info(Constants.LOG_OUT_RESULTS);
+			log.info(Constants.LOG_OUT_DOMAIN);
 			log.info(mapper.writeValueAsString(results.items.get(0)));
 		} catch (Exception e) {
-			results.setError(Constants.LOG_FAIL_ENTITY, e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			results.setError(Constants.LOG_FAIL_DOMAIN, e.getMessage(), Constants.HTTP_SERVER_ERROR);
 			return results;
 		}
 		

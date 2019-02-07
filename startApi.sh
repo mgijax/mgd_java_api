@@ -6,14 +6,6 @@
 # the stop script will archive the log file
 #
 
-if [ "${MGICONFIG}" = "" ]
-then
-    MGICONFIG=/usr/local/mgi/live/mgiconfig
-    export MGICONFIG
-fi
-
-source ${MGICONFIG}/master.config.sh
-
 . ./Configuration
 
 echo "Clean up temp files"

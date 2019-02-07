@@ -5,14 +5,6 @@
 # archive the ${LOG_FILE}
 #
 
-if [ "${MGICONFIG}" = "" ]
-then
-    MGICONFIG=/usr/local/mgi/live/mgiconfig
-    export MGICONFIG
-fi
-
-source ${MGICONFIG}/master.config.sh
-
 . ./Configuration
 
 echo "Stopping Java API"

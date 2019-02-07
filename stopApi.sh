@@ -21,6 +21,12 @@ PID=`pgrep -f "target/mgd_java_api-swarm.jar"`
 printf "Killing process with pid=$PID\n"
 kill -HUP $PID
 
-echo "Save log file: ${LOG_FILE}.old"
-cp ${LOG_FILE} ${LOG_FILE}.old
+# some time for log to flush before archiving
+sleep 5
 
+echo "Timestamp and save log file"
+timestamp=`date '+%Y%m%d.%H%M'`
+cp -r ${LOG_FILE} ${LOG_FILE}.${timestamp}
+
+echo "Remove old archived log files : older than 360 days"
+find ${LOG_DIR}/* -type f -mtime +360 -exec rm -rf {} \;

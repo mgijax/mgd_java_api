@@ -24,13 +24,9 @@ import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.CommaSplitter;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.ListMaker;
 import org.jax.mgi.mgd.api.util.MapMaker;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class LTReferenceController extends BaseController<LTReferenceDomain> implements LTReferenceRESTInterface {
 
@@ -49,8 +45,8 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	private ApiLogService apiLogService;
 	
 	private Logger log = Logger.getLogger(getClass());
-	private ObjectMapper mapper = new ObjectMapper();
-	private ListMaker<Integer> listMaker = new ListMaker<Integer>();
+	//private ObjectMapper mapper = new ObjectMapper();
+	//private ListMaker<Integer> listMaker = new ListMaker<Integer>();
 
 	/* These work together to allow for a maximum delay of two seconds for retries: */
 	private static int maxRetries = 10;		// maximum number of retries for non-fatal exceptions on update operations
@@ -67,15 +63,15 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 			User currentUser = userService.getUserByUsername(username);
 			if (currentUser != null) {
 				results.setItem(referenceService.createReference(reference, currentUser));
-				logRequest("POST /littriage", mapper.writeValueAsString(reference), Constants.MGITYPE_REFERENCE,
-					listMaker.toList(reference._refs_key), currentUser);
+				//logRequest("POST /littriage", mapper.writeValueAsString(reference), Constants.MGITYPE_REFERENCE,
+					//listMaker.toList(reference._refs_key), currentUser);
 			} 
 		} catch (APIException e) {
 			results.setError("LTReferenceController.createReference", "Failed to create reference: " + e.toString(),
 				Constants.HTTP_SERVER_ERROR);
-		} catch (JsonProcessingException e) {
-			results.setError("LTReferenceController.createReference", "Failed to log creation of reference: " + e.toString(),
-				Constants.HTTP_SERVER_ERROR);
+		//} catch (JsonProcessingException e) {
+		//	results.setError("LTReferenceController.createReference", "Failed to log creation of reference: " + e.toString(),
+		//		Constants.HTTP_SERVER_ERROR);
 		}
 		return results;
 	}
@@ -117,8 +113,8 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 					}
 				}
 
-				logRequest("PUT /littriage", mapper.writeValueAsString(reference), Constants.MGITYPE_REFERENCE,
-					listMaker.toList(reference._refs_key), currentUser);
+				//logRequest("PUT /littriage", mapper.writeValueAsString(reference), Constants.MGITYPE_REFERENCE,
+				//	listMaker.toList(reference._refs_key), currentUser);
 				return this.getReferenceByKey(reference._refs_key.toString());
 			} catch (Throwable t) {
 				results.setError("Failed", "Failed to save changes (" + t.toString() + ")", Constants.HTTP_SERVER_ERROR);
@@ -226,14 +222,14 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 
 		if (failures.size() > 0) {
 			results.setError("Partial Failure", "Status changes failed to save for: " + String.join(",", failures), Constants.HTTP_SERVER_ERROR);
-		} else {
-			String json = "{\"group\":\"" + group + "\", \"status\":\"" + status + "\"}";
-			try {
-				logRequest("PUT /littriage/statusUpdate", json, Constants.MGITYPE_REFERENCE, referenceKeys, currentUser);
-			} catch (APIException e) {
-				results.setError("Log Failure", "Changes saved, but failed to log them in API log: " + e.toString(), Constants.HTTP_SERVER_ERROR);
-			}
-			results.items = null;
+		//} else {
+		//	String json = "{\"group\":\"" + group + "\", \"status\":\"" + status + "\"}";
+		//	try {
+		//		logRequest("PUT /littriage/statusUpdate", json, Constants.MGITYPE_REFERENCE, referenceKeys, currentUser);
+		//	} catch (APIException e) {
+		//		results.setError("Log Failure", "Changes saved, but failed to log them in API log: " + e.toString(), Constants.HTTP_SERVER_ERROR);
+		//	}
+		//	results.items = null;
 		}
 
 		return results;
@@ -255,11 +251,11 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 			try {
 				referenceService.updateReferencesInBulk(input._refs_keys, input.workflow_tag, input.workflow_tag_operation, currentUser);
 				results.items = null;	// okay result
-				logRequest("PUT /littriage/bulkUpdate", mapper.writeValueAsString(input), Constants.MGITYPE_REFERENCE, input._refs_keys, currentUser);
+				//logRequest("PUT /littriage/bulkUpdate", mapper.writeValueAsString(input), Constants.MGITYPE_REFERENCE, input._refs_keys, currentUser);
 			} catch (APIException t) {
 				results.setError("Failed", "Failed to save changes: " + t.toString(), Constants.HTTP_SERVER_ERROR);
-			} catch (JsonProcessingException t) {
-				results.setError("Log Failure", "Changes saved, but failed to log them in API log: " + t.toString(), Constants.HTTP_SERVER_ERROR);
+			//} catch (JsonProcessingException t) {
+			//	results.setError("Log Failure", "Changes saved, but failed to log them in API log: " + t.toString(), Constants.HTTP_SERVER_ERROR);
 			}
 		} else {
 			results.setError("FailedAuthentication", "Failed - invalid username", Constants.HTTP_PERMISSION_DENIED);
@@ -355,15 +351,15 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 		User currentUser = userService.getUserByUsername(username);
 		if (currentUser != null) {
 			SearchResults<LTReferenceDomain> results = referenceService.deleteReference(key, currentUser);
-			if (results.items.size() > 0) {
-				LTReferenceDomain domain = results.items.get(0);
-				String json = "{\"key\":" + key + "\"}";
-				try {
-					logRequest("DELETE /littriage", json, Constants.MGITYPE_REFERENCE, listMaker.toList(domain._refs_key), currentUser);
-				} catch (APIException e) {
-					results.setError("Log Failure", "Changes saved, but could not write to API log: " + e.toString(), Constants.HTTP_SERVER_ERROR);
-				}
-			}
+			//if (results.items.size() > 0) {
+				//LTReferenceDomain domain = results.items.get(0);
+				//String json = "{\"key\":" + key + "\"}";
+				//try {
+				//	logRequest("DELETE /littriage", json, Constants.MGITYPE_REFERENCE, listMaker.toList(domain._refs_key), currentUser);
+				//} catch (APIException e) {
+				//	results.setError("Log Failure", "Changes saved, but could not write to API log: " + e.toString(), Constants.HTTP_SERVER_ERROR);
+				//}
+			//}
 			return results;
 		}
 		return null;

@@ -7,6 +7,6 @@ then
 fi
 . ${MGICONFIG}/master.config.sh
 
-LOG_DIR=/data/mgd_java_api/logs/
+LOG_DIR=/data/mgd_java_api/logs
 LOG_FILE=${LOG_DIR}/java_api.log
 export LOG_DIR LOG_FILE

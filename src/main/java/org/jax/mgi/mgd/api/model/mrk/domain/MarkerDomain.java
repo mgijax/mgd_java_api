@@ -52,13 +52,13 @@ public class MarkerDomain extends BaseDomain {
 	// instead will be populated by call to specific domain service
 	//
 	private List<AccessionDomain> editAccessionIds;
-	private List<AccessionDomain> noneditAccessionIds;
+	private List<AccessionDomain> nonEditAccessionIds;
 	private List<MGIReferenceAssocDomain> refAssocs;
 	
 	// display only, see individual object/service to methods that set these values
 	private List<MarkerFeatureTypeDomain> featureTypes;
 	private List<RelationshipDomain> geneToTssRelationships;
 	private List<RelationshipDomain> tssToGeneRelationships;
-	private List<MarkerDomain> aliases;
+	private List<SlimMarkerDomain> aliases;
 	   
 }

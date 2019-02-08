@@ -6,10 +6,13 @@ import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
+import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.voc.translator.MarkerFeatureTypeTranslator;
@@ -24,7 +27,9 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private MarkerHistoryTranslator historyTranslator = new MarkerHistoryTranslator();
 	private MGISynonymTranslator synonymTranslator = new MGISynonymTranslator();
 	private MarkerFeatureTypeTranslator featureTypeTranslator = new MarkerFeatureTypeTranslator();
-	
+	private RelationshipTranslator relationshipTranslator = new RelationshipTranslator();				
+	private SlimMarkerTranslator slimMarkerTranslator = new SlimMarkerTranslator();
+
 	@Override
 	protected MarkerDomain entityToDomain(Marker entity, int translationDepth) {
 		
@@ -124,15 +129,38 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 				domain.setFeatureTypes(IteratorUtils.toList(i.iterator()));
 			}
 		}
-			
+		
+		// one-to-many gene-to-tss relationships
+		if (entity.getGeneToTssRelationships() != null) {
+			Iterable<RelationshipDomain> i = relationshipTranslator.translateEntities(entity.getGeneToTssRelationships());
+			if(i.iterator().hasNext() == true) {
+				domain.setGeneToTssRelationships(IteratorUtils.toList(i.iterator()));
+			}
+		}
+		
+		// one-to-many tss-to-gene relationships
+		if (entity.getTssToGeneRelationships() != null) {
+			Iterable<RelationshipDomain> i = relationshipTranslator.translateEntities(entity.getTssToGeneRelationships());
+			if(i.iterator().hasNext() == true) {
+				domain.setTssToGeneRelationships(IteratorUtils.toList(i.iterator()));
+			}
+		}
+
+		// one-to-many marker aliases
+		if (entity.getAliases() != null) {
+			Iterable<SlimMarkerDomain> i = slimMarkerTranslator.translateEntities(entity.getAliases());
+			if(i.iterator().hasNext() == true) {
+				domain.setAliases(IteratorUtils.toList(i.iterator()));
+			}
+		}
+		
 		// these domains are only set by individual object endpoints
-		// that is, see acc/service/AccessionService:markerNucleotideAccessionIds
-		// or mgi/service/RelationshipService/markerTSS
+		// that is, see acc/service/AccessionService:getMarkerEditAccessionIds
 		
 		//if (translationDepth > 0) {
 			
 			// accession ids for nucleotide sequences (ldb = 9)
-			//if (entity.getNucleotideAccessionIds() != null) {
+			//if (entity.getEditAccessionIds() != null) {
 			//	Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getNucleotideAccessionIds());
 			//	if(acc.iterator().hasNext() == true) {
 			//		domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
@@ -140,7 +168,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			//}
 			
 			// accession ids other than nucleotide sequences 
-			//if (entity.getOtherAccessionIds() != null) {
+			//if (entity.getNonEditAccessionIds() != null) {
 			//	Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getOtherAccessionIds());
 			//	if(acc.iterator().hasNext() == true) {
 			//		domain.setNonEditAccessionIds(IteratorUtils.toList(acc.iterator()));
@@ -155,27 +183,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			//		domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
 			//	}
 			//}
-			
-			// gene-to-tss relationships
-			//if (entity.getGeneToTssRelationships() != null) {
-			//	RelationshipTranslator relationshipTranslator = new RelationshipTranslator();				
-			//	Iterable<RelationshipDomain> geneToTss = relationshipTranslator.translateEntities(entity.getGeneToTssRelationships());
-			//	if(geneToTss.iterator().hasNext() == true) {
-			//		domain.setGeneToTssRelationships(IteratorUtils.toList(geneToTss.iterator()));
-			//	}
-			//}
-			
-			// tss-to-gene relationships
-			//if (entity.getTssToGeneRelationships() != null) {
-			//	RelationshipTranslator relationshipTranslator = new RelationshipTranslator();				
-			//	Iterable<RelationshipDomain> tssToGene = relationshipTranslator.translateEntities(entity.getTssToGeneRelationships());
-			//	if(tssToGene.iterator().hasNext() == true) {
-			//		domain.setTssToGeneRelationships(IteratorUtils.toList(tssToGene.iterator()));
-			//	}
-			//}
-				
-			// alias are set via service/aliasSearch
-				
+								
 		//}
 		
 		return domain;

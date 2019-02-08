@@ -116,19 +116,19 @@ public class Marker extends BaseEntity {
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 	
-	// nucleotide only accession ids
+	// editable only accession ids
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` = 9")
+	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` in (8,9)")
 	@OrderBy(clause ="accid")
-	private List<Accession> nucleotideAccessionIds;
+	private List<Accession> editAccessionIds;
 	
-	// all other non-MGI, non-nucleotide sequence ids
+	// non-editable accession ids
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` not in (1,9,15)")
+	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` not in (1,8,9,117,118)")
 	@OrderBy(clause ="accid")
-	private List<Accession> otherAccessionIds;
+	private List<Accession> nonEditAccessionIds;
 	
 	@OneToMany
 	@JoinColumn(name="_marker_key", insertable=false, updatable=false)

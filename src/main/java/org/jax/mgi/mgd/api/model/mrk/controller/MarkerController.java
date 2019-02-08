@@ -93,7 +93,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 			results = markerService.update(domain, user);
 			results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
 			log.info(Constants.LOG_OUT_DOMAIN);
-			log.info(mapper.writeValueAsString(results.items.get(0)));		
+			log.info(mapper.writeValueAsString(results.items.get(0)));	
 		} catch (Exception e) {	
 			results.setError(Constants.LOG_FAIL_DOMAIN, e.getMessage(), Constants.HTTP_SERVER_ERROR);
 			return results;
@@ -123,6 +123,8 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		try {
 			results = markerService.delete(key, user);
 		} catch (Exception e) {
+	        //SQLException se = (SQLException)e.getCause();
+	        //results.setError(Constants.LOG_FAIL_DOMAIN, String.valueOf(se.getErrorCode()), Constants.HTTP_SERVER_ERROR);
 			results.setError(Constants.LOG_FAIL_DOMAIN, e.getMessage(), Constants.HTTP_SERVER_ERROR);
 		}
 		

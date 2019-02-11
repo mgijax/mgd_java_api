@@ -15,11 +15,7 @@ import org.jax.mgi.mgd.api.model.all.domain.AlleleVariantDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleVariantDomain;
 import org.jax.mgi.mgd.api.model.all.service.AlleleVariantService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
-import org.jboss.logging.Logger;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,61 +26,23 @@ import io.swagger.annotations.ApiOperation;
 @Consumes(MediaType.APPLICATION_JSON)
 public class AlleleVariantController extends BaseController<AlleleVariantDomain> {
 
-	ObjectMapper mapper = new ObjectMapper();
-	protected Logger log = Logger.getLogger(getClass());
-	
 	@Inject
 	private AlleleVariantService variantService;
 
 	@Override
 	public SearchResults<AlleleVariantDomain> create(AlleleVariantDomain domain, User user) {
 		
-		SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
+		SearchResults<AlleleVariantDomain> results = variantService.create(domain, user);
+		return variantService.getResults(Integer.valueOf(results.items.get(0).getVariantKey()));
 		
-		try {
-			log.info(Constants.LOG_IN_JSON);
-			log.info(mapper.writeValueAsString(domain));		
-		} catch (Exception e) {	
-			results.setError(Constants.LOG_FAIL_JSON, e.getMessage(), Constants.HTTP_SERVER_ERROR);
-			return results;	
-		}
-		
-		try {
-			results = variantService.create(domain, user);
-			results = variantService.getResults(Integer.valueOf(results.items.get(0).getVariantKey()));
-			log.info(Constants.LOG_OUT_DOMAIN);
-			log.info(mapper.writeValueAsString(results.items.get(0)));
-		} catch (Exception e) {
-			results.setError(Constants.LOG_FAIL_DOMAIN, e.getMessage(), Constants.HTTP_SERVER_ERROR);
-			return results;
-		}
-		
-		return results;
 	}
 
 	@Override
 	public SearchResults<AlleleVariantDomain> update(AlleleVariantDomain domain, User user) {
 		
-		SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
-		
-		try {
-			log.info(Constants.LOG_IN_JSON);
-			log.info(mapper.writeValueAsString(domain));		
-		} catch (Exception e) {	
-			results.setError(Constants.LOG_FAIL_JSON, e.getMessage(), Constants.HTTP_SERVER_ERROR);
-			return results;	
-		}
-		try {
-			results = variantService.update(domain, user);
-			results = variantService.getResults(Integer.valueOf(results.items.get(0).getVariantKey()));
-			log.info(Constants.LOG_OUT_DOMAIN);
-			log.info(mapper.writeValueAsString(results.items.get(0)));
-		} catch (Exception e) {
-			results.setError(Constants.LOG_FAIL_DOMAIN, e.getMessage(), Constants.HTTP_SERVER_ERROR);
-			return results;
-		}
-		
-		return results;		
+		SearchResults<AlleleVariantDomain> results = variantService.update(domain, user);
+		return variantService.getResults(Integer.valueOf(results.items.get(0).getVariantKey()));
+			
 	}
 
 	@Override
@@ -95,24 +53,8 @@ public class AlleleVariantController extends BaseController<AlleleVariantDomain>
 	@Override
 	public SearchResults<AlleleVariantDomain> delete(Integer key, User user) {
 		
-		SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
-		
-		try {
-			log.info(Constants.LOG_IN_PKEY);
-			log.info(mapper.writeValueAsString(key));		
-		} catch (Exception e) {	
-			results.setError(Constants.LOG_FAIL_PKEY, e.getMessage(), Constants.HTTP_SERVER_ERROR);
-			return results;	
-		}
-		try {
-			results = variantService.delete(key, user);
-			
-		} catch (Exception e) {
-			results.setError(Constants.LOG_FAIL_JSON, e.getMessage(), Constants.HTTP_SERVER_ERROR);
-			return results;
-		}
-		
-		return results;			
+		return variantService.delete(key, user);
+						
 	}
 	
 	@POST

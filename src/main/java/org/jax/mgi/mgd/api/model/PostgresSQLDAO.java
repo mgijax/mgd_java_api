@@ -55,7 +55,6 @@ public abstract class PostgresSQLDAO<T> {
 		Reflections r = new Reflections(myClass.getPackage().getName(), new FieldAnnotationsScanner());
 		
 		Set<Field> fields = r.getFieldsAnnotatedWith(Id.class);
-		//Set<Field> fields = r.getFieldsAnnotatedWith(EmbeddedId.class);
 
 		for(Field f: fields) {
 			if(f.getDeclaringClass().getName().equals(myClass.getName())) {
@@ -63,8 +62,6 @@ public abstract class PostgresSQLDAO<T> {
 				break;
 			}
 		}
-		//myClass = (Class<T>) DAOUtil.getTypeArguments(Foo.class, this.getClass()).get(0);
-		//myClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 
 	public T find(int primaryKey) {
@@ -72,25 +69,11 @@ public abstract class PostgresSQLDAO<T> {
 		return myT;
 	}
 	public T create(T model) {
-		log.info(model);
 		entityManager.persist(model);
 		return model;
 	}
 
-/* commented out, as we're not currently doing data-level logging
-  	private void log(T model) {
-		Integer id = (Integer)entityManager.getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(model);
-		try {
-			ApiLogObject log = new ApiLogObject(id, model.getClass().toString(), mapper.writeValueAsString(get(id)), mapper.writeValueAsString(model));
-			entityManager.persist(log);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-	}
-*/
-
 	public T update(T model) {
-		log.info(model);
 		entityManager.merge(model);
 		return model;
 	}
@@ -109,7 +92,6 @@ public abstract class PostgresSQLDAO<T> {
 	}
 
 	public T delete(T model) {
-		//log(model);
 		entityManager.remove(model);
 		return model;
 	}

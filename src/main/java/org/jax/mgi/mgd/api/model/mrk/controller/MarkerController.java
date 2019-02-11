@@ -20,11 +20,8 @@ import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
-import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,69 +33,27 @@ import io.swagger.annotations.ApiParam;
 @Consumes(MediaType.APPLICATION_JSON)
 public class MarkerController extends BaseController<MarkerDomain> {
 
-	// the try/except methods are in the Controller 
-	// because the Service does not seem to be picking up the exceptions
-	// if results.error is null, then API assumes success
-	// if results.error is not null, then API assumes fail
-	
 	// refresh/resync the results due to database triggers
 	// for example, the mgi accession id is created by a database trigger
 	
 	protected Logger log = Logger.getLogger(getClass());
-	ObjectMapper mapper = new ObjectMapper();
 
 	@Inject
 	private MarkerService markerService;
 
 	@Override
-	public SearchResults<MarkerDomain> create(MarkerDomain domain, User user) {
-		
+	public SearchResults<MarkerDomain> create(MarkerDomain domain, User user) {	
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
-
-		try {
-			log.info(Constants.LOG_IN_JSON);
-			log.info(mapper.writeValueAsString(domain));		
-		} catch (Exception e) {	
-			results.setError(Constants.LOG_FAIL_JSON, e.getMessage(), Constants.HTTP_SERVER_ERROR);
-			return results;
-		}
-				
-		try {
-			results = markerService.create(domain, user);
-			results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
-			log.info(Constants.LOG_OUT_DOMAIN);
-			log.info(mapper.writeValueAsString(results.items.get(0)));
-		} catch (Exception e) {
-			results.setError(Constants.LOG_FAIL_DOMAIN, e.getMessage(), Constants.HTTP_SERVER_ERROR);
-			return results;
-		}
-		
+		results = markerService.create(domain, user);
+		results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
 		return results;
 	}
 
 	@Override
 	public SearchResults<MarkerDomain> update(MarkerDomain domain, User user) {
-		
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
-
-		try {
-			log.info(Constants.LOG_IN_JSON);
-			log.info(mapper.writeValueAsString(domain));		
-		} catch (Exception e) {	
-			results.setError(Constants.LOG_FAIL_JSON, e.getMessage(), Constants.HTTP_SERVER_ERROR);
-			return results;
-		}
-		
-		try {
-			results = markerService.update(domain, user);
-			results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
-			log.info(Constants.LOG_OUT_DOMAIN);
-			log.info(mapper.writeValueAsString(results.items.get(0)));	
-		} catch (Exception e) {	
-			results.setError(Constants.LOG_FAIL_DOMAIN, e.getMessage(), Constants.HTTP_SERVER_ERROR);
-			return results;
-		}
-
+		results = markerService.update(domain, user);
+		results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
 		return results;	
 	}
 
@@ -109,26 +64,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 
 	@Override
 	public SearchResults<MarkerDomain> delete(Integer key, User user) {
-		
-		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
-
-		try {
-			log.info(Constants.LOG_IN_PKEY);
-			log.info(mapper.writeValueAsString(key));		
-		} catch (Exception e) {	
-			results.setError(Constants.LOG_FAIL_PKEY, e.getMessage(), Constants.HTTP_SERVER_ERROR);
-			return results;
-		}
-				
-		try {
-			results = markerService.delete(key, user);
-		} catch (Exception e) {
-	        //SQLException se = (SQLException)e.getCause();
-	        //results.setError(Constants.LOG_FAIL_DOMAIN, String.valueOf(se.getErrorCode()), Constants.HTTP_SERVER_ERROR);
-			results.setError(Constants.LOG_FAIL_DOMAIN, e.getMessage(), Constants.HTTP_SERVER_ERROR);
-		}
-		
-		return results;
+		return markerService.delete(key,  user);
 	}
 	
 	@POST

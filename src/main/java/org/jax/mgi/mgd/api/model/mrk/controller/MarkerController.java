@@ -21,7 +21,6 @@ import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
 import org.jax.mgi.mgd.api.util.SearchResults;
-import org.jboss.logging.Logger;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,8 +35,6 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	// refresh/resync the results due to database triggers
 	// for example, the mgi accession id is created by a database trigger
 	
-	protected Logger log = Logger.getLogger(getClass());
-
 	@Inject
 	private MarkerService markerService;
 

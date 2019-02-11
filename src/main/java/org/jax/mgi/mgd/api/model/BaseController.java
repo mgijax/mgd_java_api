@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +79,15 @@ public abstract class BaseController<T extends BaseDomain> {
 		apiLogService.create(endpoint, parameters, mgitype, objectKeys, user);
 	}
 
+	// get root exception of an exception
+	protected static Throwable getRootException(Throwable exception) {
+		Throwable rootException = exception;
+		while(rootException.getCause() != null){
+		  rootException = rootException.getCause();
+		}
+		return rootException;
+	}
+	
 	// if results.error is null, then API assumes success
 	// if results.error is not null, then API assumes fail
 	
@@ -105,7 +115,7 @@ public abstract class BaseController<T extends BaseDomain> {
 				results.setError(Constants.LOG_FAIL_USERAUTHENTICATION, api_access_token + "," + username, Constants.HTTP_SERVER_ERROR);
 			}
 		} catch (Exception e) {
-			results.setError(Constants.LOG_FAIL_DOMAIN, e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			results.setError(Constants.LOG_FAIL_DOMAIN, getRootException(e).getMessage(), Constants.HTTP_SERVER_ERROR);
 		}
 	
 		return results;			
@@ -142,7 +152,7 @@ public abstract class BaseController<T extends BaseDomain> {
 				results.setError(Constants.LOG_FAIL_USERAUTHENTICATION, api_access_token + "," + username, Constants.HTTP_SERVER_ERROR);
 			}
 		} catch (Exception e) {
-			results.setError(Constants.LOG_FAIL_DOMAIN, e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			results.setError(Constants.LOG_FAIL_DOMAIN, getRootException(e).getMessage(), Constants.HTTP_SERVER_ERROR);
 		}
 		
 		return results;		
@@ -154,7 +164,7 @@ public abstract class BaseController<T extends BaseDomain> {
 	public SearchResults<T> delete(
 			@HeaderParam(value="api_access_token") String api_access_token,
 			@HeaderParam(value="username") String username,
-			@PathParam("key") @ApiParam(value = "Delete object by primary key") Integer key) {
+			@PathParam("key") @ApiParam(value = "Delete object by primary key") Integer key) throws SQLException {
 		
 		SearchResults<T> results = new SearchResults<T>();
 					
@@ -173,9 +183,9 @@ public abstract class BaseController<T extends BaseDomain> {
 				results.setError(Constants.LOG_FAIL_USERAUTHENTICATION, api_access_token + "," + username, Constants.HTTP_SERVER_ERROR);
 			}
 		} catch (Exception e) {
-			results.setError(Constants.LOG_FAIL_DOMAIN, e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			results.setError(Constants.LOG_FAIL_DOMAIN, getRootException(e).getMessage(), Constants.HTTP_SERVER_ERROR);
 		}
-		
+	
 		return results;
 	}
 

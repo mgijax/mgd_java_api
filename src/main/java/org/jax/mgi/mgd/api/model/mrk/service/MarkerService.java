@@ -445,15 +445,31 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 
 		// synonym
+		// synonymTypeKey, synonym, j:, modified by, modification date
 		if (searchDomain.getSynonyms() != null) {
+			if (searchDomain.getSynonyms().get(0).getSynonymTypeKey() != null && !searchDomain.getSynonyms().get(0).getSynonymTypeKey().isEmpty()) {
+				where = where + "\nand ms._synonymtype_key = " + searchDomain.getSynonyms().get(0).getSynonymTypeKey();
+				from_synonym = true;
+			}
 			if (searchDomain.getSynonyms().get(0).getSynonym() != null && !searchDomain.getSynonyms().get(0).getSynonym().isEmpty()) {
 				where = where + "\nand ms.synonym ilike '" + searchDomain.getSynonyms().get(0).getSynonym() + "'";
 				from_synonym = true;
 			}
-			if (searchDomain.getSynonyms().get(0).getRefsKey() != null && !searchDomain.getSynonyms().get(0).getRefsKey().isEmpty()) {
-				where = where + "\nand ms._Ref_key = " + searchDomain.getSynonyms().get(0).getRefsKey();
+			if (searchDomain.getSynonyms().get(0).getJnumid() != null && !searchDomain.getSynonyms().get(0).getJnumid().isEmpty()) {
+				where = where + "\nand ms.jnumid ilike '" + searchDomain.getSynonyms().get(0).getJnumid() + "'";
 				from_synonym = true;
 			}
+			String synModifiedBy[] = 
+					DateSQLQuery.queryByCreationModification("ms", 
+							searchDomain.getSynonyms().get(0).getCreatedBy(), 
+							searchDomain.getSynonyms().get(0).getModifiedBy(), 
+							searchDomain.getSynonyms().get(0).getCreation_date(), 
+							searchDomain.getSynonyms().get(0).getModification_date());
+			if (synModifiedBy.length > 0) {
+				from = from + synModifiedBy[0];
+				where = where + synModifiedBy[1];
+				from_synonym = true;
+			}			
 		}
 		
 		// reference

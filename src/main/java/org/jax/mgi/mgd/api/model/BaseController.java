@@ -82,7 +82,7 @@ public abstract class BaseController<T extends BaseDomain> {
 	// get root exception of an exception
 	protected static Throwable getRootException(Throwable exception) {
 		Throwable rootException = exception;
-		while(rootException.getCause() != null){
+		while(rootException.getCause() != null) {
 		  rootException = rootException.getCause();
 		}
 		return rootException;

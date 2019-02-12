@@ -12,6 +12,7 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
+import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -64,8 +65,12 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 	@Transactional
 	public SearchResults<AlleleDomain> delete(Integer key, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		// get the entity object and delete
+				SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
+				Allele entity = alleleDAO.get(key);
+				results.setItem(translator.translate(alleleDAO.get(key),0));
+				alleleDAO.remove(entity);
+				return results;
 	}
 
 	@Transactional

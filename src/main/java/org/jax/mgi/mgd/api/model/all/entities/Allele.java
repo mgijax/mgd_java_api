@@ -33,7 +33,7 @@ import lombok.Setter;
 public class Allele extends BaseEntity {
 
 	@Id
-	private Integer _allele_key;
+	private int _allele_key;
 	private String symbol;
 	private String name;
 	private Integer isWildType;
@@ -104,7 +104,7 @@ public class Allele extends BaseEntity {
 	private List<Accession> mgiAccessionIds;
 	
 	@OneToMany
-	@JoinColumn(name="_object_key", referencedColumnName="_allele_key")
+	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 11")
 	private List<MGIReferenceAssoc> refAssocs;
 	

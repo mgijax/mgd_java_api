@@ -508,6 +508,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 					where = where + "\nand acc1.short_citation ilike '" + value + "'";
 					from_editAccession = true;
 				}
+				if (searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getJnumid() != null && !searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getJnumid().isEmpty()) {
+					where = where + "\nand acc1.jnumid ilike '" + searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getJnumid() + "'";
+					from_editAccession = true;
+				}					
 			}
 		}
 		

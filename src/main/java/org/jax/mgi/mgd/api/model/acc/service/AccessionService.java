@@ -231,6 +231,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		// using entity to compare domain vs entity
 		// but not using entity to handle actual create/delete/update processing
 		
+		
 		if (domain == null || domain.isEmpty()) {
 			log.info("processAccession/nothing to process");
 			return;
@@ -244,6 +245,8 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		for (int i = 0; i < domain.size(); i++) {
 				
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
+				// minumum domain info for create:
+				// processStatus (‘c’ for create) , logicaldbKey, mgitypekey, objectKey, accid
 
 				log.info("processAccession create");
 				

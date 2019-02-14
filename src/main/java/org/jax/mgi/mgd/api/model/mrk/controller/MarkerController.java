@@ -61,7 +61,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 
 	@Override
 	public SearchResults<MarkerDomain> delete(Integer key, User user) {
-		return markerService.delete(key,  user);
+		return markerService.delete(key, user);
 	}
 	
 	@POST

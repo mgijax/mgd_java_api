@@ -79,4 +79,7 @@ public class Constants {
 	public static String LOG_FAIL_JSON = LOG_MGI_API + "FAIL|JSON FROM UI|INCORRECT FORMAT";
 	public static String LOG_FAIL_DOMAIN = LOG_MGI_API + "FAIL|RESULTS FROM ENTITY/DOMAIN";
 	public static String LOG_FAIL_PKEY = LOG_MGI_API + "FAIL|PRIMARY KEY";
+	public static String LOG_FAIL_USERLOGIN = LOG_MGI_API + "FAIL|USER LOGIN|";
+	public static String LOG_SUCCESS_USERLOGIN = LOG_MGI_API + "SUCCESSFUL|USER LOGIN|";
+
 }

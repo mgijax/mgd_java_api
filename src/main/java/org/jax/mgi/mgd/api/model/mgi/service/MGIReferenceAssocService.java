@@ -108,7 +108,9 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		for (int i = 0; i < domain.size(); i++) {
 				
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
-
+				// minimum domain info for create:
+				// processStatus (‘c’ for create) , mgiTypeKey, parentKey/objectKey, refsKey, refType (string)
+				
 				log.info("processReferenceAssoc create");
 
 				cmd = "select count(*) from MGI_insertReferenceAssoc ("

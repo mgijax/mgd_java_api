@@ -16,6 +16,7 @@ import org.jax.mgi.mgd.api.model.mgi.domain.SlimUserDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.UserDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.UserTranslator;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -91,12 +92,10 @@ public class UserService extends BaseService<UserDomain> {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("login", username);
 		if(userDAO.search(map).total_count > 0) {
-			log.info("User found: " + username);
+			log.info(Constants.LOG_SUCCESS_USERLOGIN + username);
 			return userDAO.search(map).items.get(0);
 		} else {
-			log.info("User NOT found: " + username);
-			//map.put("login", "mgd_dbo");
-			//return userDAO.search(map).items.get(0);
+			log.info(Constants.LOG_FAIL_USERLOGIN + username);
 			return null;
 		}
 	}

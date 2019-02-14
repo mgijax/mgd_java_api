@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,8 +36,8 @@ public abstract class BaseController<T extends BaseDomain> {
 	@Inject
 	private ApiLogService apiLogService;
 		
-	/* if token is not defined in properties file, then do not require one.  Otherwise, must
-	 * be an exact match (case sensitive).
+	/* if token is not defined in properties file, then do not require one.  
+	 * Otherwise, must be an exact match (case sensitive).
 	 */
 	protected boolean authenticateToken(String api_access_token) {
 		String expectedToken = System.getProperty("swarm.access_token");
@@ -50,9 +49,6 @@ public abstract class BaseController<T extends BaseDomain> {
 	
 	protected User authenticateUser(String username) {
 		User user = userService.getUserByUsername(username);
-		if(user == null) {
-			return user;
-		}
 		return user;
 	}
 
@@ -164,7 +160,7 @@ public abstract class BaseController<T extends BaseDomain> {
 	public SearchResults<T> delete(
 			@HeaderParam(value="api_access_token") String api_access_token,
 			@HeaderParam(value="username") String username,
-			@PathParam("key") @ApiParam(value = "Delete object by primary key") Integer key) throws SQLException {
+			@PathParam("key") @ApiParam(value = "Delete object by primary key") Integer key) {
 		
 		SearchResults<T> results = new SearchResults<T>();
 					

@@ -245,7 +245,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		for (int i = 0; i < domain.size(); i++) {
 				
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
-				// minumum domain info for create:
+				// minimum domain info for create:
 				// processStatus (‘c’ for create) , logicaldbKey, mgitypekey, objectKey, accid
 
 				log.info("processAccession create");

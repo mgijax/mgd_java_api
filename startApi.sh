@@ -8,7 +8,7 @@
 
 . ./Configuration
 
-echo "Clean up temp files"
+echo "Clean up temp files and making package"
 make all
 
 echo "Starting Java API"

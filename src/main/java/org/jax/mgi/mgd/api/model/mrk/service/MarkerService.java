@@ -466,9 +466,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 							searchDomain.getSynonyms().get(0).getCreation_date(), 
 							searchDomain.getSynonyms().get(0).getModification_date());
 			if (synModifiedBy.length > 0) {
-				from = from + synModifiedBy[0];
-				where = where + synModifiedBy[1];
-				from_synonym = true;
+				if (!synModifiedBy[0].isEmpty() || !synModifiedBy[1].isEmpty()) {
+					from = from + synModifiedBy[0];
+					where = where + synModifiedBy[1];
+					from_synonym = true;
+				}
 			}			
 		}
 		

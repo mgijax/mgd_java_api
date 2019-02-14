@@ -672,6 +672,33 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	@Transactional		
 	public MarkerEIUtilitiesDomain eiUtilities(MarkerUtilitiesForm searchForm) throws IOException, InterruptedException {
 	
+//		required for all cases/set by user
+//		eventKey : MR_Event list
+//		eventReasonKey : MRK_EventReason list
+//		refKey  :  reference
+//
+//		merge, allele-of
+//		addAsSynonym :  1 or 0
+//		oldKey : existing marker key 
+//		newKey : marker key of the marker being merged into
+//		newSymbol : null 
+//		newName : null 
+//
+//		rename
+//		addAsSynonym :  1 or 0
+//		oldKey : existing marker key 
+//		newKey : null
+//		newSymbol : marker symbol 
+//		newName : marker name 
+//
+//		delete:
+//		addAsSynonym : null
+//		oldKey : existing marker key 
+//		newKey : null
+//		newSymbol : null 
+//		newName : null 
+//
+	
 		// domain object to be JSON-ed
 		MarkerEIUtilitiesDomain markerEIUtilitiesDomain = new MarkerEIUtilitiesDomain();
 	

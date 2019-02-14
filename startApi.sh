@@ -9,7 +9,7 @@
 . ./Configuration
 
 echo "Clean up temp files"
-make clean
+make all
 
 echo "Starting Java API"
 echo "log file: " ${LOG_FILE}

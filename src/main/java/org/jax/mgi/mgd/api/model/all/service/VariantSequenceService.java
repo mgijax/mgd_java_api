@@ -189,7 +189,7 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 				sequenceEntity.setReferenceSequence(domain.getReferenceSequence());
 				log.info("processVariantSequence setting variant sequence");
 				sequenceEntity.setVariantSequence(domain.getVariantSequence());
-				log.info("processVariantSequence setting versioin");
+				log.info("processVariantSequence setting version");
 				sequenceEntity.setVersion(domain.getVersion());
 				log.info("processVariantSequence setting createdBy");
 				sequenceEntity.setCreatedBy(user);
@@ -230,14 +230,13 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 				Boolean modified = false;
 				
 				VariantSequence entity = variantSequenceDAO.get(Integer.valueOf(domains.get(i).getVariantSequenceKey()));
-
-				//log.info("StartCoordinate");
-			
+				
 				if (!String.valueOf(entity.getStartCoordinate()).equals(domains.get(i).getStartCoordinate())) {
 					entity.setStartCoordinate(Integer.valueOf(domains.get(i).getStartCoordinate()));
+
 					modified = true;
 				}
-				//log.info("EndCoordinate");
+				log.info("EndCoordinate");
 				
 				if (!String.valueOf(entity.getEndCoordinate()).equals(domains.get(i).getEndCoordinate())) {
 					entity.setEndCoordinate(Integer.valueOf(domains.get(i).getEndCoordinate()));
@@ -250,7 +249,7 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 					entity.setSequenceType((termDAO.get(Integer.valueOf(domains.get(i).getSequenceTypeKey()))));
 					modified = true;
 				}
-				//log.info("ReferenceSequence");
+				log.info("ReferenceSequence");
 				if (!entity.getReferenceSequence().equals(domains.get(i).getReferenceSequence())) {
 					entity.setReferenceSequence(domains.get(i).getReferenceSequence());
 					modified = true;
@@ -268,12 +267,15 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 							domains.get(i).getAccessionIds(),
 							"Allele Variant Sequence", user);				
 				}
-				//log.info("Version");
-				if (!entity.getVersion().equals(domains.get(i).getVersion())) {
-					entity.setVersion(domains.get(i).getVersion());
-					modified = true;
+				log.info("Version");
+				if (domains.get(i).getVersion() != null) {
+					if (!entity.getVersion().equals(domains.get(i).getVersion())) {
+						entity.setVersion(domains.get(i).getVersion());
+						modified = true;
+					}
 				}
-				//log.info("reference: check if modified");
+				
+				log.info("reference: check if modified");
 				if (modified == true) {
 					log.info("processVariantSequence modified == true");
 					entity.setModification_date(new Date());

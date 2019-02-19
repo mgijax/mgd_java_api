@@ -228,14 +228,20 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		}
 		
 		// process curated variant sequences DADT-178
+		log.info("calling sequence service to process curated sequence");
 		if (domain.getVariantSequences() != null) {
 			sequenceService.process(String.valueOf(entity.get_variant_key()), domain.getVariantSequences(), user);
 		}
 		
 		// process source variant sequences DADT-178
+		log.info("calling sequence service to process source sequence");
 		if (domain.getSourceVariant().getVariantSequences() != null) {
-			
+			log.info("source variant key");
+			log.info("source variant key: " + entity.getSourceVariant().get_variant_key());
+			log.info("domain variant sequences");
+			log.info("domain variant sequences:" + domain.getSourceVariant().getVariantSequences());
 			sequenceService.process(String.valueOf(entity.getSourceVariant().get_variant_key()), domain.getSourceVariant().getVariantSequences(), user);
+			log.info("done processing source variant sequences");
 		}
 				
 		// return entity translated to domain

@@ -49,7 +49,7 @@ public class MGIReferenceAssocController extends BaseController<MGIReferenceAsso
 	}
 	
 	@POST
-	@ApiOperation(value = "Get All Reference Assocoations by Marker")
+	@ApiOperation(value = "Get All Reference Associations by Marker")
 	@Path("/marker")
 	public List<MGIReferenceAssocDomain> getByMarker(Integer key) {
 			

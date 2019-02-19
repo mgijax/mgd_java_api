@@ -231,18 +231,21 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 				
 				VariantSequence entity = variantSequenceDAO.get(Integer.valueOf(domains.get(i).getVariantSequenceKey()));
 				
-				if (!String.valueOf(entity.getStartCoordinate()).equals(domains.get(i).getStartCoordinate())) {
-					entity.setStartCoordinate(Integer.valueOf(domains.get(i).getStartCoordinate()));
-
-					modified = true;
+				log.info("StartCoordinate");
+				if (domains.get(i).getStartCoordinate() != null) {	
+					if (!String.valueOf(entity.getStartCoordinate()).equals(domains.get(i).getStartCoordinate())) {
+						entity.setStartCoordinate(Integer.valueOf(domains.get(i).getStartCoordinate()));
+						modified = true;
+					}
 				}
+				
 				log.info("EndCoordinate");
-				
-				if (!String.valueOf(entity.getEndCoordinate()).equals(domains.get(i).getEndCoordinate())) {
-					entity.setEndCoordinate(Integer.valueOf(domains.get(i).getEndCoordinate()));
-					modified = true;
+				if (domains.get(i).getEndCoordinate() != null) {
+					if (!String.valueOf(entity.getEndCoordinate()).equals(domains.get(i).getEndCoordinate())) {
+						entity.setEndCoordinate(Integer.valueOf(domains.get(i).getEndCoordinate()));
+						modified = true;
+					}
 				}
-				
 				log.info("sequenceTypeKey");
 				//sequenceEntity.setSequenceType(termDAO.get(Integer.valueOf(domain.getSequenceTypeKey())));
 				if (String.valueOf(entity.getSequenceType().get_term_key()) != domains.get(i).getSequenceTypeKey())  {
@@ -250,14 +253,18 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 					modified = true;
 				}
 				log.info("ReferenceSequence");
-				if (!entity.getReferenceSequence().equals(domains.get(i).getReferenceSequence())) {
-					entity.setReferenceSequence(domains.get(i).getReferenceSequence());
-					modified = true;
+				if (domains.get(i).getReferenceSequence() != null) {
+					if (!entity.getReferenceSequence().equals(domains.get(i).getReferenceSequence())) {
+						entity.setReferenceSequence(domains.get(i).getReferenceSequence());
+						modified = true;
+					}
 				}
 				log.info("VariantSequence");
-				if (!entity.getVariantSequence().equals(domains.get(i).getVariantSequence())) {
-					entity.setVariantSequence(domains.get(i).getVariantSequence());
-					modified = true;
+				if (domains.get(i).getVariantSequence() != null) {
+					if (!entity.getVariantSequence().equals(domains.get(i).getVariantSequence())) {
+						entity.setVariantSequence(domains.get(i).getVariantSequence());
+						modified = true;
+					}
 				}
 				log.info("VariantSequence Accession");
 				if (domains.get(i).getAccessionIds() != null) {

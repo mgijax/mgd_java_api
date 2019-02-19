@@ -72,4 +72,10 @@ public class TermController extends BaseController<TermDomain> {
 		return termService.validWorkflowStatus(status);
 	}
 		
+	@POST
+	@ApiOperation(value = "Get Terms by Set Name")
+	@Path("/termset")
+	public List<SlimTermDomain> getTermSet(String setName) {
+		return termService.getTermSet(setName);
+	}
 }

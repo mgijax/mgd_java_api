@@ -169,5 +169,35 @@ public class TermService extends BaseService<TermDomain> {
 		// _vocab_key = 128 ("Workflow Status")
 		return validTerm(128, status);
 	}
+	@Transactional
+	public List<SlimTermDomain> getTermSet(String setName) {
+		// get the set of terms for a given MGI_Set
+		// returns empty result items if setName does not exist
+		// for objectType VOC_Term
+		List<SlimTermDomain> results = new ArrayList<SlimTermDomain>();
+
+		String cmd = "select t._term_key, t.term, sm.sequencenum" + 
+				"\nfrom mgi_set s, mgi_setmember sm, voc_Term t" + 
+				"\nwhere s.name = '" + setName + "'" + 
+				"\nand s._mgitype_key = 13" + 
+				"\nand s._set_key = sm._set_key" + 
+				"\nand sm._object_key = t._term_key" + 
+				"\norder by sm.sequenceNum";
+		log.info(cmd);
 		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {	
+				SlimTermDomain domain = new SlimTermDomain();						
+				domain = slimtranslator.translate(termDAO.get(rs.getInt("_term_key")),1);
+				termDAO.clear();					
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}	
+		return results;
+	}
 }

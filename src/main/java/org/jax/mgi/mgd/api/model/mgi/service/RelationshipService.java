@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.Relationship;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipTranslator;
+import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -28,6 +29,9 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 	@Inject
 	private RelationshipDAO relationshipDAO;
 
+	@Inject
+	private MarkerDAO markerDAO;
+	
 	private RelationshipTranslator translator = new RelationshipTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
@@ -64,9 +68,9 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 	@Transactional	
 	public List<RelationshipDomain> getMarkerTSS(Integer key) {
 		// return all tss-marker relationships by specified marker key
-		
+		RelationshipTranslator translator = new RelationshipTranslator();
 		List<RelationshipDomain> results = new ArrayList<RelationshipDomain>();
-
+		
 		String cmd = "select * from mgi_relationship_markertss_view "
 				+ "\nwhere _object_key_1 = " + key
 				+ "\nor _object_key_2 = " + key;
@@ -83,6 +87,14 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				RelationshipDomain domain = new RelationshipDomain();
 				domain = translator.translate(relationshipDAO.get(rs.getInt("_relationship_key")),1);
 				relationshipDAO.clear();
+				
+				// here we get the tss and gene symbol values for object1 and object2 and
+				// add them to the domain
+				int tssKey = Integer.valueOf(domain.getObjectKey1()).intValue();
+				int geneKey = Integer.valueOf(domain.getObjectKey2()).intValue();
+				domain.setObject1(markerDAO.get(tssKey).getSymbol());
+				domain.setObject2(markerDAO.get(geneKey).getSymbol());
+				
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

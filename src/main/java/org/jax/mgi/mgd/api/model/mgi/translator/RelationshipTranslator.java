@@ -1,14 +1,16 @@
 package org.jax.mgi.mgd.api.model.mgi.translator;
 
+import javax.inject.Inject;
+
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.Relationship;
 import org.jax.mgi.mgd.api.util.Constants;
 
 public class RelationshipTranslator extends BaseEntityDomainTranslator<Relationship, RelationshipDomain> {
-
+	
 	@Override
-	protected RelationshipDomain entityToDomain(Relationship entity, int translationDepth) {
+	protected RelationshipDomain entityToDomain(Relationship entity, int translationDepth) {	
 		RelationshipDomain domain = new RelationshipDomain();
 		
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);

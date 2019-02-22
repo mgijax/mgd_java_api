@@ -5,8 +5,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -18,6 +20,7 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @Path("/mgireferenceassoc")
 @Api(value = "MGI Reference Assoc Endpoints")
@@ -48,10 +51,10 @@ public class MGIReferenceAssocController extends BaseController<MGIReferenceAsso
 		return referenceAssocService.delete(key, user);
 	}
 	
-	@POST
+	@GET
 	@ApiOperation(value = "Get All Reference Associations by Marker")
-	@Path("/marker")
-	public List<MGIReferenceAssocDomain> getByMarker(Integer key) {
+	@Path("/marker/{key}")
+	public List<MGIReferenceAssocDomain> getByMarker(@PathParam("key") @ApiParam(value = "Marker key associated w/ references") Integer key) {
 			
 		List<MGIReferenceAssocDomain> results = new ArrayList<MGIReferenceAssocDomain>();
 		

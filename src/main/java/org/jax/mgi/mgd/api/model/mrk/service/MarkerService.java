@@ -488,6 +488,19 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			if (searchDomain.getRefAssocs().get(0).getJnumid() != null && !searchDomain.getRefAssocs().get(0).getJnumid().isEmpty()) {
 				where = where + "\nand mr.jnumid ilike '" + searchDomain.getRefAssocs().get(0).getJnumid() + "'";
 				from_reference = true;
+			}
+			String refModifiedBy[] = 
+					DateSQLQuery.queryByCreationModification("mr", 
+							searchDomain.getRefAssocs().get(0).getCreatedBy(), 
+							searchDomain.getRefAssocs().get(0).getModifiedBy(), 
+							searchDomain.getRefAssocs().get(0).getCreation_date(), 
+							searchDomain.getRefAssocs().get(0).getModification_date());
+			if (refModifiedBy.length > 0) {
+				if (!refModifiedBy[0].isEmpty() || !refModifiedBy[1].isEmpty()) {
+					from = from + refModifiedBy[0];
+					where = where + refModifiedBy[1];
+					from_reference = true;
+				}
 			}			
 		}
 

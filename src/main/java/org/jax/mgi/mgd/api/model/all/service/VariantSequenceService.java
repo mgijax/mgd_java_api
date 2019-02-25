@@ -233,7 +233,7 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 				
 				log.info("StartCoordinate");
 				if (domains.get(i).getStartCoordinate() != null) {	
-					if (!String.valueOf(entity.getStartCoordinate()).equals(domains.get(i).getStartCoordinate())) {
+					if ((entity.getStartCoordinate() == null) || !String.valueOf(entity.getStartCoordinate()).equals(domains.get(i).getStartCoordinate())) {
 						entity.setStartCoordinate(Integer.valueOf(domains.get(i).getStartCoordinate()));
 						modified = true;
 					}
@@ -241,7 +241,7 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 				
 				log.info("EndCoordinate");
 				if (domains.get(i).getEndCoordinate() != null) {
-					if (!String.valueOf(entity.getEndCoordinate()).equals(domains.get(i).getEndCoordinate())) {
+					if ((entity.getEndCoordinate() == null) || !String.valueOf(entity.getEndCoordinate()).equals(domains.get(i).getEndCoordinate())) {
 						entity.setEndCoordinate(Integer.valueOf(domains.get(i).getEndCoordinate()));
 						modified = true;
 					}
@@ -254,14 +254,14 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 				}
 				log.info("ReferenceSequence");
 				if (domains.get(i).getReferenceSequence() != null) {
-					if (!entity.getReferenceSequence().equals(domains.get(i).getReferenceSequence())) {
+					if ((entity.getReferenceSequence() == null) || !entity.getReferenceSequence().equals(domains.get(i).getReferenceSequence())) {
 						entity.setReferenceSequence(domains.get(i).getReferenceSequence());
 						modified = true;
 					}
 				}
 				log.info("VariantSequence");
 				if (domains.get(i).getVariantSequence() != null) {
-					if (!entity.getVariantSequence().equals(domains.get(i).getVariantSequence())) {
+					if ((entity.getVariantSequence() == null) || !entity.getVariantSequence().equals(domains.get(i).getVariantSequence())) {
 						entity.setVariantSequence(domains.get(i).getVariantSequence());
 						modified = true;
 					}

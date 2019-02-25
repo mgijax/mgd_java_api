@@ -169,6 +169,7 @@ public class TermService extends BaseService<TermDomain> {
 		// _vocab_key = 128 ("Workflow Status")
 		return validTerm(128, status);
 	}
+	
 	@Transactional
 	public List<SlimTermDomain> getTermSet(String setName) {
 		// get the set of terms for a given MGI_Set

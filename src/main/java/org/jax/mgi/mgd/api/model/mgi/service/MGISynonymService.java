@@ -93,12 +93,14 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 	}
 	
 	@Transactional
-	public void process(String parentKey, List<MGISynonymDomain> domain, String mgiTypeKey, User user) {
+	public Boolean process(String parentKey, List<MGISynonymDomain> domain, String mgiTypeKey, User user) {
 		// process synonym associations (create, delete, update)
+		
+		Boolean modified = false;
 		
 		if (domain == null || domain.isEmpty()) {
 			log.info("processSynonym/nothing to process");
-			return;
+			return modified;
 		}
 				
 		String cmd = "";
@@ -123,22 +125,24 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 				log.info("cmd: " + cmd);
 				Query query = synonymDAO.createNativeQuery(cmd);
 				query.getResultList();
+				modified = true;
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processSynonym delete");
 				MGISynonym entity = synonymDAO.get(Integer.valueOf(domain.get(i).getSynonymKey()));
 				synonymDAO.remove(entity);
+				modified = true;
 				log.info("processSynonym delete successful");
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processSynonym update");
 
-				Boolean modified = false;
+				Boolean isUpdated = false;
 				MGISynonym entity = synonymDAO.get(Integer.valueOf(domain.get(i).getSynonymKey()));
 		
 				if (!entity.getSynonym().equals(domain.get(i).getSynonym())) {
 					entity.setSynonym(domain.get(i).getSynonym());
-					modified = true;
+					isUpdated = true;
 				}
 				
 				// reference can be null
@@ -146,24 +150,25 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 				if (entity.getReference() == null) {
 					if (!domain.get(i).getRefsKey().isEmpty()) {
 						entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
-						modified = true;
+						isUpdated = true;
 					}
 				}
 				// may be empty coming from domain
 				else if (domain.get(i).getRefsKey().isEmpty()) {
 					entity.setReference(null);
-					modified = true;
+					isUpdated = true;
 				}
 				// if not entity/null and not domain/empty, then check if equivalent
 				else if (entity.getReference().get_refs_key() != Integer.parseInt(domain.get(i).getRefsKey())) {
 					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
-					modified = true;
+					isUpdated = true;
 				}
 				
-				if (modified == true) {
+				if (isUpdated) {
 					entity.setModification_date(new Date());
 					entity.setModifiedBy(user);
 					synonymDAO.update(entity);
+					modified = true;
 					log.info("processSynonym/changes processed: " + domain.get(i).getSynonymKey());
 				}
 				else {
@@ -176,7 +181,7 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 		}
 		
 		log.info("processSynonym/processing successful");
-		return;
+		return modified;
 	}
 	
 }

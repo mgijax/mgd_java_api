@@ -12,6 +12,7 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.dao.NoteDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
+import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -89,15 +90,17 @@ public class NoteService extends BaseService<NoteDomain> {
 	}
 	
 	@Transactional
-	public void process(String parentKey, NoteDomain noteDomain, String mgiTypeKey, String noteTypeKey, User user) {
+	public Boolean process(String parentKey, NoteDomain noteDomain, String mgiTypeKey, String noteTypeKey, User user) {
 		// process note by calling stored procedure (create, delete, update)
 		
-		String noteKey;
-		String note;
+		String noteKey = "";
+		String note = "";
 
+		Boolean modified = false;
+		
 		if (noteDomain == null) {
 			log.info("processNote/no changes processed: " + parentKey);
-			return;
+			return modified;
 		}
 		
 		// create
@@ -105,17 +108,23 @@ public class NoteService extends BaseService<NoteDomain> {
 		{
 			noteKey = "null";
 			note = "'" + noteDomain.getNoteChunk().replaceAll("'",  "''") + "'"; 
+			modified = true;
 		}
 		// delete
 		else if (noteDomain.getNoteChunk() == null || noteDomain.getNoteChunk().isEmpty())
 		{
 			noteKey = noteDomain.getNoteKey().toString();		
-			note = null;	
+			note = null;
+			modified = true;
 		}
 		// update
 		else {
-			noteKey = noteDomain.getNoteKey().toString();
-			note = "'" + noteDomain.getNoteChunk().replaceAll("'",  "''") + "'"; 
+			Note entity = noteDAO.get(Integer.valueOf(noteDomain.getNoteKey()));
+			if (!entity.getNoteChunk().getNote().equals(noteDomain.getNoteChunk())) {
+				noteKey = noteDomain.getNoteKey().toString();
+				note = "'" + noteDomain.getNoteChunk().replaceAll("'",  "''") + "'"; 
+				modified = true;
+			}
 		}
 				
 		// stored procedure
@@ -123,7 +132,8 @@ public class NoteService extends BaseService<NoteDomain> {
 		// if noteKey is not null and note is null, then delete note
 		// else, update note
 		// returns void
-		String cmd = "select count(*) from MGI_processNote ("
+		if (modified) {
+			String cmd = "select count(*) from MGI_processNote ("
 				+ user.get_user_key().intValue()
 				+ "," + noteKey
 				+ "," + parentKey
@@ -131,13 +141,14 @@ public class NoteService extends BaseService<NoteDomain> {
 				+ "," + noteTypeKey
 				+ "," + note
 				+ ")";
-
-		log.info("cmd: " + cmd);
-		Query query = noteDAO.createNativeQuery(cmd);
-		query.getResultList();
+			log.info("cmd: " + cmd);
+			Query query = noteDAO.createNativeQuery(cmd);
+			query.getResultList();
+			modified = true;
+		}
 		
 		log.info("processNote/changes processed: " + parentKey);
-		return;
+		return modified;
 	}
 	
 }

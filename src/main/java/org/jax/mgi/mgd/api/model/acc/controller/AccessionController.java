@@ -108,9 +108,8 @@ public class AccessionController extends BaseController<AccessionDomain> {
 	@POST
 	@ApiOperation(value = "Process Accession Ids")
 	@Path("/process")
-	public void process(String parentKey, String logicaldbKey, List<AccessionDomain> domain, String mgiTypeKey, User user) {
-		accessionService.process(parentKey, logicaldbKey, domain, mgiTypeKey, user);
-		return;
+	public Boolean process(String parentKey, String logicaldbKey, List<AccessionDomain> domain, String mgiTypeKey, User user) {
+		return accessionService.process(parentKey, logicaldbKey, domain, mgiTypeKey, user);
 	}
 
 	

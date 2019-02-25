@@ -52,17 +52,15 @@ public class AnnotationController extends BaseController<AnnotationDomain> {
 	@POST
 	@ApiOperation(value = "Process Marker Feature Type")
 	@Path("/processMarkerFeatureType")
-	public void processMarkerFeatureType(String parentKey, List<MarkerFeatureTypeDomain> domain, String annotTypeKey, String qualifierKey, User user) {
-		annotationService.processMarkerFeatureType(parentKey, domain, annotTypeKey, qualifierKey, user);
-		return;
+	public Boolean processMarkerFeatureType(String parentKey, List<MarkerFeatureTypeDomain> domain, String annotTypeKey, String qualifierKey, User user) {
+		return annotationService.processMarkerFeatureType(parentKey, domain, annotTypeKey, qualifierKey, user);
 	}
 
 	@POST
 	@ApiOperation(value = "Process Allele Variant")
 	@Path("/processAlleleVariant")
-	public void processAlleleVariant(String parentKey, List<AlleleVariantAnnotationDomain> domain, String annotTypeKey, String qualifierKey, User user) {
-		annotationService.processAlleleVariant(parentKey, domain, annotTypeKey, qualifierKey, user);
-		return;
+	public Boolean processAlleleVariant(String parentKey, List<AlleleVariantAnnotationDomain> domain, String annotTypeKey, String qualifierKey, User user) {
+		return annotationService.processAlleleVariant(parentKey, domain, annotTypeKey, qualifierKey, user);
 	}
 		
 }

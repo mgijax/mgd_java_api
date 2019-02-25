@@ -105,14 +105,16 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 	}	
 	
 	@Transactional
-	public void process(String parentKey, List<MarkerHistoryDomain> domain, User user) {
+	public Boolean process(String parentKey, List<MarkerHistoryDomain> domain, User user) {
 		// process marker history associations (create, delete, update)
+		
+		Boolean modified = false;
 		
 		log.info("processHistory");
 		
 		if (domain == null || domain.isEmpty()) {
 			log.info("processHistory/nothing to process");
-			return;
+			return modified;
 		}
 				
 		String cmd = "";
@@ -136,6 +138,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				log.info("cmd: " + cmd);
 				Query query = historyDAO.createNativeQuery(cmd);
 				query.getResultList();
+				modified = true;
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processHistory delete");
@@ -151,11 +154,12 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				log.info("cmd: " + cmd);		
 				Query query = historyDAO.createNativeQuery(cmd);
 				query.getResultList();
+				modified = true;
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processHistory update");
-
-				Boolean modified = false;
+				
+				Boolean isUpdated = false;
 				
 				//log.info("historyDAO");
 				MarkerHistory entity = historyDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
@@ -163,19 +167,19 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				//log.info("marker history key");
 				if (!String.valueOf(entity.getMarkerHistory().get_marker_key()).equals(domain.get(i).getMarkerHistorySymbolKey())) {
 					entity.setMarkerHistory(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerHistorySymbolKey())));
-					modified = true;
+					isUpdated = true;
 				}
 				
 				//log.info("event");
 				if (!entity.getMarkerEvent().equals(eventDAO.get(Integer.valueOf(domain.get(i).getMarkerEventKey())))) {
 					entity.setMarkerEvent(eventDAO.get((Integer.valueOf(domain.get(i).getMarkerEventKey()))));
-					modified = true;
+					isUpdated = true;
 				}
 				
 				//log.info("event reason");
 				if (!entity.getMarkerEventReason().equals(eventReasonDAO.get(Integer.valueOf(domain.get(i).getMarkerEventReasonKey())))) {
 					entity.setMarkerEventReason(eventReasonDAO.get(Integer.valueOf(domain.get(i).getMarkerEventReasonKey())));
-					modified = true;
+					isUpdated = true;
 				}
 				
 				// reference can be null
@@ -192,13 +196,13 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				else if (domain.get(i).getRefsKey() != null && entity.getReference() == null) {
 					//log.info("reference: domain != null, entity = null");
 					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
-					modified = true;					
+					isUpdated = true;					
 				}
 				// if not entity/null and not domain/empty, then check if equivalent
 				else if (entity.getReference().get_refs_key() != Integer.parseInt(domain.get(i).getRefsKey())) {
 					//log.info("reference: entity != null");
 					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
-					modified = true;
+					isUpdated = true;
 				}
 						
 				// name can be null
@@ -214,12 +218,12 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				// domain != null, entity = null
 				else if (domain.get(i).getMarkerHistoryName() != null && entity.getName() == null) {
 					entity.setName(domain.get(i).getMarkerHistoryName());
-					modified = true;
+					isUpdated = true;
 				}
 				// if not entity/null and not domain/empty, then check if equivalent
 				else if (!entity.getName().equals(domain.get(i).getMarkerHistoryName())) {
 					entity.setName(domain.get(i).getMarkerHistoryName());
-					modified = true;
+					isUpdated = true;
 				}
 					
 				//log.info("event date");
@@ -233,34 +237,35 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 					try {
 						// convert String to Date
 						entity.setEvent_date(new SimpleDateFormat("yyyy-MM-dd").parse(domain.get(i).getEvent_date()));
-						modified = true;
+						isUpdated = true;
 					}
 					catch (ParseException  e) {
-						return;
+						return false;
 					}					
 				}
 				else if (!entity.getEvent_date().toString().equals(domain.get(i).getEvent_date())) {
 					try {
 						// convert String to Date
 						entity.setEvent_date(new SimpleDateFormat("yyyy-MM-dd").parse(domain.get(i).getEvent_date()));
-						modified = true;
+						isUpdated = true;
 					}
 					catch (ParseException  e) {
-						return;
+						return false;
 					}
 				}
 				
 				if (!String.valueOf(entity.getSequenceNum()).equals(domain.get(i).getSequenceNum())) {
 					entity.setSequenceNum(Integer.valueOf(domain.get(i).getSequenceNum()));
-					modified = true;						
+					isUpdated = true;						
 				}
 				
 				//log.info("reference: check if modified");
-				if (modified == true) {
+				if (isUpdated) {
 					log.info("processHistory modified == true");
 					entity.setModification_date(new Date());
 					entity.setModifiedBy(user);
 					historyDAO.update(entity);
+					modified = true;
 					log.info("processHistory/changes processed: " + domain.get(i).getAssocKey());
 				}
 				else {
@@ -273,7 +278,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 		}
 		
 		log.info("processHistory/processing successful");
-		return;
+		return modified;
 	}
 	
 }

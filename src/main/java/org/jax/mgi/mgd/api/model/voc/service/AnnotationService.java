@@ -184,7 +184,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 	}
 
 	@Transactional
-	public void process(List<AnnotationDomain> domain, User user) {
+	public Boolean process(List<AnnotationDomain> domain, User user) {
 
 		// process annotation associations (create, delete, update)
 		
@@ -193,9 +193,11 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 		//      voc_evidence_property is not included in this pass
 		// 2.  update is modifying _term_key only
 	
+		Boolean modified = false;
+		
 		if (domain == null || domain.isEmpty()) {
 			log.info("processAnnotation/nothing to process");
-			return;
+			return modified;
 		}
 						
 		// iterate thru the list of rows in the domain
@@ -236,12 +238,14 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 					evidenceDAO.persist(evidenceEntity);
 				}
 				
+				modified = true;
 				log.info("processAnnotation/create/returning results");				
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processAnnotation delete");
 				Annotation entity = annotationDAO.get(Integer.valueOf(domain.get(i).getAnnotKey()));
 				annotationDAO.remove(entity);
+				modified = true;
 				log.info("processAnnotation delete successful");
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
@@ -250,7 +254,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				
 				log.info("processAnnotation update");
 
-				Boolean modified = false;
+				Boolean isUpdated = false;
 				Annotation entity = annotationDAO.get(Integer.valueOf(domain.get(i).getAnnotKey()));
 				
 				if (!String.valueOf(entity.getTerm().get_term_key()).equals(domain.get(i).getTermKey())) {
@@ -262,13 +266,14 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 					entity.setMarkerFeatureTypeIds(null);	
 					entity.setAlleleVariantSOIds(null);
 					
-					modified = true;
+					isUpdated = true;
 				}
 				
 				// if any modifications made, then update DAO
-				if (modified == true) {
+				if (isUpdated) {
 					entity.setModification_date(new Date());
 					annotationDAO.persist(entity);
+					modified = true;
 					log.info("processAnnotation/changes processed: " + domain.get(i).getAnnotKey());
 				}
 				else {
@@ -281,11 +286,11 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 		}
 		
 		log.info("processAnnotation/processing successful");
-		return;
+		return modified;
 	}
 		
 	@Transactional
-	public void processMarkerFeatureType(String parentKey, 
+	public Boolean processMarkerFeatureType(String parentKey, 
 			List<MarkerFeatureTypeDomain> domain, 
 			String annotTypeKey, 
 			String qualifierKey, 
@@ -293,16 +298,16 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 		
 		// process marker feature type annotations
 		// using MarkerFeatureTypeDomain, create AnnotationDomain and send to "process"
-
+		
 		if (domain == null || domain.isEmpty()) {
 			log.info("processMarkerFeatureType/nothing to process");
-			return;
+			return false;
 		}
 
 		List<AnnotationDomain> annotDomains = new ArrayList<AnnotationDomain>();
 		
 		// iterate thru the list of rows in the MarkerFeatureTypeDomain
-		// to creating the AnnotationDomain
+		// to create the AnnotationDomain
 		
 		for (int i = 0; i < domain.size(); i++) {	
 			AnnotationDomain annotDomain = new AnnotationDomain();
@@ -317,12 +322,11 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 		
 		// process AnnotationDomain
 		log.info("processMarkerFeatureType/processing");
-		process(annotDomains, user);
-		return;
+		return process(annotDomains, user);
 	}
 
 	@Transactional
-	public void processAlleleVariant(String parentKey, 
+	public Boolean processAlleleVariant(String parentKey, 
 			List<AlleleVariantAnnotationDomain> domain, 
 			String annotTypeKey, 
 			String qualifierKey, 
@@ -333,7 +337,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 
 		if (domain == null || domain.isEmpty()) {
 			log.info("processAlleleVariant/nothing to process");
-			return;
+			return false;
 		}
 
 		List<AnnotationDomain> annotDomains = new ArrayList<AnnotationDomain>();
@@ -354,8 +358,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 		
 		// process AnnotationDomain
 		log.info("processAlleleVariant/processing");
-		process(annotDomains, user);
-		return;
+		return process(annotDomains, user);
 	}
 	
 }

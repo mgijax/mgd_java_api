@@ -58,9 +58,8 @@ public class MarkerHistoryController extends BaseController<MarkerHistoryDomain>
 	@POST
 	@ApiOperation(value = "Process")
 	@Path("/process")
-	public void process(String parentKey, List<MarkerHistoryDomain> domain, User user) {
-		markerHistoryService.process(parentKey, domain, user);
-		return;
+	public Boolean process(String parentKey, List<MarkerHistoryDomain> domain, User user) {
+		return markerHistoryService.process(parentKey, domain, user);
 	}
 	
 }

@@ -276,7 +276,7 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 				}
 				log.info("Version");
 				if (domains.get(i).getVersion() != null) {
-					if (!entity.getVersion().equals(domains.get(i).getVersion())) {
+					if (entity.getVersion()!= null || !entity.getVersion().equals(domains.get(i).getVersion())) {
 						entity.setVersion(domains.get(i).getVersion());
 						modified = true;
 					}

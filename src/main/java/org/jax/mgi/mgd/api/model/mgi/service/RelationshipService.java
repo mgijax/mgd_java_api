@@ -88,13 +88,6 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				domain = translator.translate(relationshipDAO.get(rs.getInt("_relationship_key")),1);
 				relationshipDAO.clear();
 				
-				// here we get the tss and gene symbol values for object1 and object2 and
-				// add them to the domain
-				int tssKey = Integer.valueOf(domain.getObjectKey1()).intValue();
-				int geneKey = Integer.valueOf(domain.getObjectKey2()).intValue();
-				domain.setObject1(markerDAO.get(tssKey).getSymbol());
-				domain.setObject2(markerDAO.get(geneKey).getSymbol());
-				
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

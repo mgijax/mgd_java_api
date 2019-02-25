@@ -32,7 +32,7 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 	@Inject
 	private MarkerDAO markerDAO;
 	
-	private RelationshipTranslator translator = new RelationshipTranslator();
+	//private RelationshipTranslator translator = new RelationshipTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
@@ -107,12 +107,14 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 	}
 	
 	@Transactional
-	public void process(String parentKey, List<RelationshipDomain> domain, String mgiTypeKey, User user) {
+	public Boolean process(String parentKey, List<RelationshipDomain> domain, String mgiTypeKey, User user) {
 		// process relationships (create, delete, update)
+		
+		Boolean modified = false;
 		
 		if (domain == null || domain.isEmpty()) {
 			log.info("processRelationships/nothing to process");
-			return;
+			return modified;
 		}
 				
 		String cmd = "";
@@ -144,6 +146,7 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				log.info("processRelationships delete");
 				Relationship entity = relationshipDAO.get(Integer.valueOf(domain.get(i).getRelationshipKey()));
 				relationshipDAO.remove(entity);
+				modified = true;
 				log.info("processRelationships delete successful");
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
@@ -152,7 +155,7 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				
 				log.info("processRelationships update");
 
-				Boolean modified = false;
+				Boolean isUpdated = false;
 				Relationship entity = relationshipDAO.get(Integer.valueOf(domain.get(i).getRelationshipKey()));
 		
 				//if (!entity.getSynonym().equals(domain.get(i).getRelationshipKey())) {
@@ -160,10 +163,11 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				//	modified = true;
 				//}
 				
-				if (modified == true) {
+				if (isUpdated) {
 					entity.setModification_date(new Date());
 					entity.setModifiedBy(user);
 					relationshipDAO.update(entity);
+					modified = true;
 					log.info("processRelationships/changes processed: " + domain.get(i).getRelationshipKey());
 				}
 				else {
@@ -176,7 +180,7 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 		}
 		
 		log.info("processRelationships/processing successful");
-		return;
+		return modified;
 	}
 	
 }

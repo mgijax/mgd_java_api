@@ -92,12 +92,14 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 	}
 	
 	@Transactional
-	public void process(String parentKey, List<MGIReferenceAssocDomain> domain, String mgiTypeKey, User user) {
+	public Boolean process(String parentKey, List<MGIReferenceAssocDomain> domain, String mgiTypeKey, User user) {
 		// process reference associations (create, delete, update)
+		
+		Boolean modified = false;
 		
 		if (domain == null || domain.isEmpty()) {
 			log.info("processReferenceAssoc/nothing to process");
-			return;
+			return modified;
 		}
 				
 		String cmd = "";
@@ -123,28 +125,31 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				log.info("cmd: " + cmd);
 				Query query = referenceAssocDAO.createNativeQuery(cmd);
 				query.getResultList();
+				modified = true;
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processReferenceAssoc delete");
 				MGIReferenceAssoc entity = referenceAssocDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
 				referenceAssocDAO.remove(entity);
 				log.info("processReferenceAssoc delete successful");
+				modified = true;
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processReferenceAssoc update");
 
-				Boolean modified = false;
+				Boolean isUpdated = false;
 				MGIReferenceAssoc entity = referenceAssocDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
 		
 				if (entity.getReference().get_refs_key() != Integer.parseInt(domain.get(i).getRefsKey())) {
 					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
-					modified = true;
+					isUpdated = true;
 				}
 				
-				if (modified == true) {
+				if (isUpdated) {
 					entity.setModification_date(new Date());
 					entity.setModifiedBy(user);
 					referenceAssocDAO.update(entity);
+					modified = true;
 					log.info("processReferenceAssoc/changes processed: " + domain.get(i).getAssocKey());
 				}
 				else {
@@ -157,7 +162,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		}
 		
 		log.info("processReferenceAssoc/processing successful");
-		return;
+		return modified;
 	}
 	
 }

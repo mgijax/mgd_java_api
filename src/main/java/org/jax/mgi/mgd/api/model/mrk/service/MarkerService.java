@@ -227,6 +227,58 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			modified = true;
 		}
 		
+		// process all notes
+		if (noteService.process(domain.getMarkerKey(), domain.getEditorNote(), mgiTypeKey, "1004", user)) {
+			modified = true;
+		}
+		if (noteService.process(domain.getMarkerKey(), domain.getSequenceNote(), mgiTypeKey, "1009", user)) {
+			modified = true;	
+		}
+		if (noteService.process(domain.getMarkerKey(), domain.getRevisionNote(), mgiTypeKey, "1030", user)) {
+			modified = true;	
+		}
+		if (noteService.process(domain.getMarkerKey(), domain.getStrainNote(), mgiTypeKey, "1035", user)) {
+			modified = true;
+		}
+		if (noteService.process(domain.getMarkerKey(), domain.getLocationNote(), mgiTypeKey, "1049", user)) {
+			modified = true;
+		}
+
+		// process marker history
+		if (markerHistoryService.process(domain.getMarkerKey(), domain.getHistory(), user)) {
+			modified = true;
+		}
+		
+		// process marker synonym
+		if (synonymService.process(domain.getMarkerKey(), domain.getSynonyms(), mgiTypeKey, user)) {
+			modified = true;
+		}
+		
+		// process marker reference
+		if (domain.getRefAssocs() != null) {
+			if (referenceAssocService.process(domain.getMarkerKey(), domain.getRefAssocs(), mgiTypeKey, user)) {
+				modified = true;
+			}
+		}
+		
+		// process marker nucleotide accession ids
+		if (domain.getEditAccessionIds() != null) {
+			if (accessionService.process(domain.getMarkerKey(), "9", domain.getEditAccessionIds(), mgiTypeName, user)) {
+				modified = true;
+			}
+		}
+
+		// process feature types
+		// use qualifier 'Generic Annotation Qualifier', value = null
+		if (domain.getFeatureTypes() != null) {
+			if (annotationService.processMarkerFeatureType(domain.getMarkerKey(), 
+					domain.getFeatureTypes(), 
+					domain.getFeatureTypes().get(0).getAnnotTypeKey(),
+					Constants.VOC_GENERIC_ANNOTATION_QUALIFIER, user) == true) {
+				modified = true;
+			}
+		}
+
 		// only if modifications were actually made
 		if (modified == true) {
 			entity.setModification_date(new Date());
@@ -237,39 +289,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		else {
 			log.info("processMarker/no changes processed: " + domain.getMarkerKey());
 		}
-		
-		// process all notes
-		noteService.process(domain.getMarkerKey(), domain.getEditorNote(), mgiTypeKey, "1004", user);
-		noteService.process(domain.getMarkerKey(), domain.getSequenceNote(), mgiTypeKey, "1009", user);
-		noteService.process(domain.getMarkerKey(), domain.getRevisionNote(), mgiTypeKey, "1030", user);
-		noteService.process(domain.getMarkerKey(), domain.getStrainNote(), mgiTypeKey, "1035", user);
-		noteService.process(domain.getMarkerKey(), domain.getLocationNote(), mgiTypeKey, "1049", user);
-
-		// process marker history
-		markerHistoryService.process(domain.getMarkerKey(), domain.getHistory(), user);
-		
-		// process marker synonym
-		synonymService.process(domain.getMarkerKey(), domain.getSynonyms(), mgiTypeKey, user);
-		
-		// process marker reference
-		if (domain.getRefAssocs() != null) {
-			referenceAssocService.process(domain.getMarkerKey(), domain.getRefAssocs(), mgiTypeKey, user);
-		}
-		
-		// process marker nucleotide accession ids
-		if (domain.getEditAccessionIds() != null) {
-			accessionService.process(domain.getMarkerKey(), "9", domain.getEditAccessionIds(), mgiTypeName, user);
-		}
-
-		// process feature types
-		// use qualifier 'Generic Annotation Qualifier', value = null
-		if (domain.getFeatureTypes() != null) {
-			annotationService.processMarkerFeatureType(domain.getMarkerKey(), 
-					domain.getFeatureTypes(), 
-					domain.getFeatureTypes().get(0).getAnnotTypeKey(),
-					Constants.VOC_GENERIC_ANNOTATION_QUALIFIER, user);		
-		}
-		
+				
 		// return entity translated to domain
 		log.info("processMarker/update/returning results");
 		results.setItem(translator.translate(entity, 0));
@@ -488,7 +508,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			if (searchDomain.getRefAssocs().get(0).getJnumid() != null && !searchDomain.getRefAssocs().get(0).getJnumid().isEmpty()) {
 				where = where + "\nand mr.jnumid ilike '" + searchDomain.getRefAssocs().get(0).getJnumid() + "'";
 				from_reference = true;
-			}
+			}		
 			String refModifiedBy[] = 
 					DateSQLQuery.queryByCreationModification("mr", 
 							searchDomain.getRefAssocs().get(0).getCreatedBy(), 
@@ -501,6 +521,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 					where = where + refModifiedBy[1];
 					from_reference = true;
 				}
+			}
+			if (searchDomain.getRefAssocs().get(0).getRefAssocTypeKey() != null && !searchDomain.getRefAssocs().get(0).getRefAssocTypeKey().isEmpty()) {
+				where = where + "\nand mr._refassoctype_key = " + searchDomain.getRefAssocs().get(0).getRefAssocTypeKey();
+				from_reference = true;
 			}			
 		}
 

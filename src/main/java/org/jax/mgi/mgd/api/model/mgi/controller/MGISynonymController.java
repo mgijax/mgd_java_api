@@ -67,9 +67,8 @@ public class MGISynonymController extends BaseController<MGISynonymDomain> {
 	@POST
 	@ApiOperation(value = "Process")
 	@Path("/process")
-	public void process(String parentKey, List<MGISynonymDomain> domain, String mgiTypeKey, User user) {
-		synonymService.process(parentKey, domain, mgiTypeKey, user);
-		return;
+	public Boolean process(String parentKey, List<MGISynonymDomain> domain, String mgiTypeKey, User user) {
+		return synonymService.process(parentKey, domain, mgiTypeKey, user);
 	}
 		
 }

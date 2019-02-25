@@ -70,9 +70,8 @@ public class MGIReferenceAssocController extends BaseController<MGIReferenceAsso
 	@POST
 	@ApiOperation(value = "Process")
 	@Path("/process")
-	public void process(String parentKey, List<MGIReferenceAssocDomain> domain, String mgiTypeKey, User user) {
-		referenceAssocService.process(parentKey, domain, mgiTypeKey, user);
-		return;
+	public Boolean process(String parentKey, List<MGIReferenceAssocDomain> domain, String mgiTypeKey, User user) {
+		return referenceAssocService.process(parentKey, domain, mgiTypeKey, user);
 	}
 	
 }

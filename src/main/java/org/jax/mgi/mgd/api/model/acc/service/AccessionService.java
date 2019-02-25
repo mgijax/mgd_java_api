@@ -225,16 +225,17 @@ public class AccessionService extends BaseService<AccessionDomain> {
 	//
 	
 	@Transactional
-	public void process(String parentKey, String logicaldbKey, List<AccessionDomain> domain, String mgiTypeName, User user) {
+	public Boolean process(String parentKey, String logicaldbKey, List<AccessionDomain> domain, String mgiTypeName, User user) {
 		// process accession associations (create, delete, update)
 		// using stored procedure methods (ACC_insert(), ACC_delete_byAccKey(), ACC_update())
 		// using entity to compare domain vs entity
 		// but not using entity to handle actual create/delete/update processing
 		
+		Boolean modified = false;
 		
 		if (domain == null || domain.isEmpty()) {
 			log.info("processAccession/nothing to process");
-			return;
+			return modified;
 		}
 				
 		String cmd = "";
@@ -268,6 +269,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 				log.info("cmd: " + cmd);
 				Query query = accessionDAO.createNativeQuery(cmd);
 				query.getResultList();
+				modified = true;
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processAccession delete");
@@ -277,18 +279,20 @@ public class AccessionService extends BaseService<AccessionDomain> {
 				log.info("cmd: " + cmd);
 				Query query = accessionDAO.createNativeQuery(cmd);
 				query.getResultList();
+				modified = true;
 				log.info("processAccession delete successful");
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processAccession update");
 
-				Boolean modified = false;
+				Boolean isUpdated = false;
 				Accession entity = accessionDAO.get(Integer.valueOf(domain.get(i).getAccessionKey()));
 		
 				if (!entity.getAccID().equals(domain.get(i).getAccID())) {
 					log.info("AccessionService: accid not the same");
-					modified = true;
+					isUpdated = true;
 				}
+				
 				// Our assumption is that if the domain OR entity has no AccessionReferences
 				// than it is not supposed to have one - and it is the UI responsibility to
 				// pass in appropriate values. e.g. Markers accIDs have AccessionReferences, but VariantSequence 
@@ -298,17 +302,16 @@ public class AccessionService extends BaseService<AccessionDomain> {
 						|| entity.getReferences() == null) {
 					log.info("AccessionService: domain is null or empty or entity is null");
 					continue;
-					
 				}
 				// if not entity/null and not domain/empty, then check if equivalent
 				else { 
-						if (entity.getReferences().get(0).getReference().get_refs_key() != Integer.parseInt(domain.get(i).getReferences().get(0).getRefsKey())) {
+					if (entity.getReferences().get(0).getReference().get_refs_key() != Integer.parseInt(domain.get(i).getReferences().get(0).getRefsKey())) {
 						log.info("AccessionService: references not the same");
-						modified = true;
+						isUpdated = true;
 					}
 				}
 				
-				if (modified == true) {
+				if (isUpdated) {
 					log.info("AccessionService: is modified " );
 					cmd = "select count(*) from ACC_update ("
 							+ user.get_user_key().intValue()
@@ -321,6 +324,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 					log.info("cmd: " + cmd);
 					Query query = accessionDAO.createNativeQuery(cmd);
 					query.getResultList();
+					modified = true;
 					log.info("processAccession/changes processed: " + domain.get(i).getAccessionKey());
 				}
 				else {
@@ -333,7 +337,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		}
 		
 		log.info("processAccession/processing successful");
-		return;
+		return modified;
 	}
 		
 }

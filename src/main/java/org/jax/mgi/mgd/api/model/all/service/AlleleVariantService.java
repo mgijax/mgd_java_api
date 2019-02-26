@@ -200,37 +200,49 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		}
 		
 		// process all notes DADT-180
-		noteService.process(domain.getVariantKey(), domain.getCuratorNote(), mgiTypeKey, "1050", user);
-		noteService.process(domain.getVariantKey(), domain.getPublicNote(), mgiTypeKey, "1051", user);
+		if(noteService.process(domain.getVariantKey(), domain.getCuratorNote(), mgiTypeKey, "1050", user)) {
+			modified = true;
+		}
+		if(noteService.process(domain.getVariantKey(), domain.getPublicNote(), mgiTypeKey, "1051", user)) {
+			modified = true;
+		}
 
 		// process reference DADT-180
 		if (domain.getRefAssocs() != null) {
 			log.info("referenceAssocService " + referenceAssocService);
 			log.info("domain " + domain);
-			referenceAssocService.process(domain.getVariantKey(), domain.getRefAssocs(), mgiTypeKey, user);
+			if(referenceAssocService.process(domain.getVariantKey(), domain.getRefAssocs(), mgiTypeKey, user)) {
+				modified = true;
+			}
 		}
 		
 		// process variant type - 
 		if (domain.getVariantTypes() != null) {
 			// parentKey, List ofAlleleVariantAnnotationDomain, annotTypeKey, qualifierKey, user
-			annotationService.processAlleleVariant(domain.getVariantKey(), 
+			if (annotationService.processAlleleVariant(domain.getVariantKey(), 
 					domain.getVariantTypes(), 
 					domain.getVariantTypes().get(0).getAnnotTypeKey(), 
-					Constants.VOC_GENERIC_ANNOTATION_QUALIFIER, user);
+					Constants.VOC_GENERIC_ANNOTATION_QUALIFIER, user)) {
+				modified = true;
+			}
 		}
 
 		// process variant effects
 		if (domain.getVariantEffects() != null) {
-			annotationService.processAlleleVariant(domain.getVariantKey(), 
+			if (annotationService.processAlleleVariant(domain.getVariantKey(), 
 					domain.getVariantEffects(), 
 					domain.getVariantEffects().get(0).getAnnotTypeKey(), 
-					Constants.VOC_GENERIC_ANNOTATION_QUALIFIER, user);
+					Constants.VOC_GENERIC_ANNOTATION_QUALIFIER, user)) {
+				modified = true;
+			}
 		}
 		
 		// process curated variant sequences DADT-178
 		log.info("calling sequence service to process curated sequence");
 		if (domain.getVariantSequences() != null) {
-			sequenceService.process(String.valueOf(entity.get_variant_key()), domain.getVariantSequences(), user);
+			if (sequenceService.process(String.valueOf(entity.get_variant_key()), domain.getVariantSequences(), user)) {
+				modified = true;
+			}
 		}
 		
 		// process source variant sequences DADT-178
@@ -240,8 +252,20 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			log.info("source variant key: " + entity.getSourceVariant().get_variant_key());
 			log.info("domain variant sequences");
 			log.info("domain variant sequences:" + domain.getSourceVariant().getVariantSequences());
-			sequenceService.process(String.valueOf(entity.getSourceVariant().get_variant_key()), domain.getSourceVariant().getVariantSequences(), user);
+			if(sequenceService.process(String.valueOf(entity.getSourceVariant().get_variant_key()), domain.getSourceVariant().getVariantSequences(), user)) {
+				modified = true;
+			}
 			log.info("done processing source variant sequences");
+		}
+		// only if modifications were actually made
+		if (modified == true) {
+			entity.setModification_date(new Date());
+			entity.setModifiedBy(user);
+			variantDAO.update(entity);
+			log.info("processVariant/changes processed: " + domain.getVariantKey());
+		}
+		else {
+			log.info("processVariant/no changes processed: " + domain.getVariantKey());
 		}
 				
 		// return entity translated to domain

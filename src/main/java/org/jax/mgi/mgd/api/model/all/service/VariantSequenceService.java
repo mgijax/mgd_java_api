@@ -152,14 +152,15 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 		return results;
 	}	
 	@Transactional
-	public void process(String parentKey, List<VariantSequenceDomain> domains, User user) {
+	public Boolean process(String parentKey, List<VariantSequenceDomain> domains, User user) {
 		// process variant sequence (create, delete, update)
+		Boolean modified = false;
 		
 		log.info("processVariantSequence");
 		
 		if (domains == null || domains.isEmpty()) {
 			log.info("processVariantSequence/nothing to process");
-			return;
+			return modified;
 		}
 				
 		
@@ -227,7 +228,6 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 			else if (domains.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processVariantSequence update");
 
-				Boolean modified = false;
 				
 				VariantSequence entity = variantSequenceDAO.get(Integer.valueOf(domains.get(i).getVariantSequenceKey()));
 				
@@ -299,5 +299,6 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 				log.info("processVariantSequence/no changes processed: " + domains.get(i).getVariantKey());
 			}
 		}
+		return modified;
 	}
 }

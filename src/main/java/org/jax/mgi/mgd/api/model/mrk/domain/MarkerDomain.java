@@ -7,7 +7,6 @@ import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 
 import lombok.Getter;
@@ -57,8 +56,8 @@ public class MarkerDomain extends BaseDomain {
 	
 	// display only, see individual object/service to methods that set these values
 	private List<MarkerFeatureTypeDomain> featureTypes;
-	private List<RelationshipDomain> geneToTssRelationships;
-	private List<RelationshipDomain> tssToGeneRelationships;
+	private List<SlimMarkerDomain> geneToTss;	
+	private List<SlimMarkerDomain> tssToGene;
 	private List<SlimMarkerDomain> aliases;
 	   
 }

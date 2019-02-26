@@ -33,7 +33,4 @@ public class RelationshipDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	
-	//private List<MarkerDomain> tssToMarker;
-	//private List<MarkerDomain> geneToMarker;
-	
 }   	

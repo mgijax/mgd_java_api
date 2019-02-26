@@ -6,10 +6,8 @@ import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
-import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
@@ -27,7 +25,6 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private MarkerHistoryTranslator historyTranslator = new MarkerHistoryTranslator();
 	private MGISynonymTranslator synonymTranslator = new MGISynonymTranslator();
 	private MarkerFeatureTypeTranslator featureTypeTranslator = new MarkerFeatureTypeTranslator();
-	private RelationshipTranslator relationshipTranslator = new RelationshipTranslator();				
 	private SlimMarkerTranslator slimMarkerTranslator = new SlimMarkerTranslator();
 
 	@Override
@@ -131,21 +128,21 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		}
 		
 		// one-to-many gene-to-tss relationships
-		if (entity.getGeneToTssRelationships() != null) {
-			Iterable<RelationshipDomain> i = relationshipTranslator.translateEntities(entity.getGeneToTssRelationships());
+		if (entity.getGeneToTss() != null) {
+			Iterable<SlimMarkerDomain> i = slimMarkerTranslator.translateEntities(entity.getGeneToTss());
 			if(i.iterator().hasNext() == true) {
-				domain.setGeneToTssRelationships(IteratorUtils.toList(i.iterator()));
-			}
-		}
-		
-		// one-to-many tss-to-gene relationships
-		if (entity.getTssToGeneRelationships() != null) {
-			Iterable<RelationshipDomain> i = relationshipTranslator.translateEntities(entity.getTssToGeneRelationships());
-			if(i.iterator().hasNext() == true) {
-				domain.setTssToGeneRelationships(IteratorUtils.toList(i.iterator()));
+				domain.setGeneToTss(IteratorUtils.toList(i.iterator()));
 			}
 		}
 
+		// one-to-many tss-to-gene relationships
+		if (entity.getTssToGene() != null) {
+			Iterable<SlimMarkerDomain> i = slimMarkerTranslator.translateEntities(entity.getTssToGene());
+			if(i.iterator().hasNext() == true) {
+				domain.setTssToGene(IteratorUtils.toList(i.iterator()));
+			}
+		}
+				
 		// one-to-many marker aliases
 		if (entity.getAliases() != null) {
 			Iterable<SlimMarkerDomain> i = slimMarkerTranslator.translateEntities(entity.getAliases());

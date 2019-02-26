@@ -1,18 +1,16 @@
 package org.jax.mgi.mgd.api.model.mgi.translator;
 
-import javax.inject.Inject;
-
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.Relationship;
 import org.jax.mgi.mgd.api.util.Constants;
 
 public class RelationshipTranslator extends BaseEntityDomainTranslator<Relationship, RelationshipDomain> {
-	
+		
 	@Override
 	protected RelationshipDomain entityToDomain(Relationship entity, int translationDepth) {	
 		RelationshipDomain domain = new RelationshipDomain();
-		
+
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setRelationshipKey(String.valueOf(entity.get_relationship_key()));
 		
@@ -45,28 +43,7 @@ public class RelationshipTranslator extends BaseEntityDomainTranslator<Relations
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-		
-		// these domains are only set by individual object endpoints
-		//if (translationDepth > 0) {
-		
-			// gene-to-tss relationships
-			//if (entity.getGeneToMarker() != null) {
-			//	Iterable<RelatinshipDomain> geneToTss = relationshipTranslator.translateEntities(entity.getGeneToMarker());
-			//	if(geneToTss.iterator().hasNext() == true) {
-			//		domain.setGeneToMarker(IteratorUtils.toList(geneToTss.iterator()));
-			//	}
-			//}
-			
-			// tss-to-gene relationships
-			//if (entity.getTssToMarker() != null) {
-			//	Iterable<RelationshipDomain> tssToGene = relationshipTranslator.translateEntities(entity.getTssToMarker());
-			//	if(tssToGene.iterator().hasNext() == true) {
-			//		domain.setTssToMarker(IteratorUtils.toList(tssToGene.iterator()));
-			//	}
-			//}
-			
-		//}
-		
+						
 		return domain;
 	}
 

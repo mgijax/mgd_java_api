@@ -15,7 +15,6 @@ import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.Relationship;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipTranslator;
-import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -29,9 +28,6 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 	@Inject
 	private RelationshipDAO relationshipDAO;
 
-	@Inject
-	private MarkerDAO markerDAO;
-	
 	//private RelationshipTranslator translator = new RelationshipTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 

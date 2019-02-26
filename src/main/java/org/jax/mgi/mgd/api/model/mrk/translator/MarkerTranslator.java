@@ -6,10 +6,8 @@ import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
-import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
@@ -27,7 +25,6 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private MarkerHistoryTranslator historyTranslator = new MarkerHistoryTranslator();
 	private MGISynonymTranslator synonymTranslator = new MGISynonymTranslator();
 	private MarkerFeatureTypeTranslator featureTypeTranslator = new MarkerFeatureTypeTranslator();
-	private RelationshipTranslator relationshipTranslator = new RelationshipTranslator();				
 	private SlimMarkerTranslator slimMarkerTranslator = new SlimMarkerTranslator();
 
 	@Override
@@ -131,21 +128,21 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		}
 		
 		// one-to-many gene-to-tss relationships
-		if (entity.getGeneToTssRelationships() != null) {
-			Iterable<RelationshipDomain> i = relationshipTranslator.translateEntities(entity.getGeneToTssRelationships());
+		if (entity.getGeneToTss() != null) {
+			Iterable<SlimMarkerDomain> i = slimMarkerTranslator.translateEntities(entity.getGeneToTss());
 			if(i.iterator().hasNext() == true) {
-				domain.setGeneToTssRelationships(IteratorUtils.toList(i.iterator()));
-			}
-		}
-		
-		// one-to-many tss-to-gene relationships
-		if (entity.getTssToGeneRelationships() != null) {
-			Iterable<RelationshipDomain> i = relationshipTranslator.translateEntities(entity.getTssToGeneRelationships());
-			if(i.iterator().hasNext() == true) {
-				domain.setTssToGeneRelationships(IteratorUtils.toList(i.iterator()));
+				domain.setGeneToTss(IteratorUtils.toList(i.iterator()));
 			}
 		}
 
+		// one-to-many tss-to-gene relationships
+		if (entity.getTssToGene() != null) {
+			Iterable<SlimMarkerDomain> i = slimMarkerTranslator.translateEntities(entity.getTssToGene());
+			if(i.iterator().hasNext() == true) {
+				domain.setTssToGene(IteratorUtils.toList(i.iterator()));
+			}
+		}
+				
 		// one-to-many marker aliases
 		if (entity.getAliases() != null) {
 			Iterable<SlimMarkerDomain> i = slimMarkerTranslator.translateEntities(entity.getAliases());
@@ -153,38 +150,35 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 				domain.setAliases(IteratorUtils.toList(i.iterator()));
 			}
 		}
+
+		// accession ids non-editable 
+		//
+		if (entity.getNonEditAccessionIds() != null) {
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getNonEditAccessionIds());
+			if(acc.iterator().hasNext() == true) {
+				domain.setNonEditAccessionIds(IteratorUtils.toList(acc.iterator()));
+			}
+		}
 		
 		// these domains are only set by individual object endpoints
 		// that is, see acc/service/AccessionService:getMarkerEditAccessionIds
-		
-		//if (translationDepth > 0) {
-			
-			// accession ids for nucleotide sequences (ldb = 9)
-			//if (entity.getEditAccessionIds() != null) {
-			//	Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getNucleotideAccessionIds());
-			//	if(acc.iterator().hasNext() == true) {
-			//		domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
-			//	}
-			//}
-			
-			// accession ids other than nucleotide sequences 
-			//if (entity.getNonEditAccessionIds() != null) {
-			//	Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getOtherAccessionIds());
-			//	if(acc.iterator().hasNext() == true) {
-			//		domain.setNonEditAccessionIds(IteratorUtils.toList(acc.iterator()));
-			//	}
-			//}
-			
-			// reference associations
-			//if (entity.getRefAssocs() != null) {
-			//	MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
-			//	Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
-			//	if(i.iterator().hasNext() == true) {
-			//		domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
-			//	}
-			//}
-								
+					
+		// accession ids for nucleotide sequences (ldb = 9)
+		//if (entity.getEditAccessionIds() != null) {
+		//	Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIds());
+		//	if(acc.iterator().hasNext() == true) {
+		//		domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
+		//	}
 		//}
+				
+		// reference associations
+		//if (entity.getRefAssocs() != null) {
+		//	MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
+		//	Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
+		//	if(i.iterator().hasNext() == true) {
+		//		domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
+		//	}
+		//}						
 		
 		return domain;
 	}

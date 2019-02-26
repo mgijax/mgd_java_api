@@ -58,14 +58,4 @@ public class Relationship extends BaseEntity {
 	@JoinColumn(name="_refs_key")
 	private Reference reference;
 	  
-	//@OneToMany
-    //@JoinColumn(name="_object_key_1", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	//@Where(clause="`_category_key` = 1008")
-	//private List<Marker> tssToMarker;
-	
-	//@OneToMany
-    //@JoinColumn(name="_object_key_2", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	//@Where(clause="`_category_key` = 1008")
-	//private List<Marker> geneToMarker;
-	
 }

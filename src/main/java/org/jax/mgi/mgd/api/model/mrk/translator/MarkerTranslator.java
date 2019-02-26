@@ -150,38 +150,35 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 				domain.setAliases(IteratorUtils.toList(i.iterator()));
 			}
 		}
+
+		// accession ids non-editable 
+		//
+		if (entity.getNonEditAccessionIds() != null) {
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getNonEditAccessionIds());
+			if(acc.iterator().hasNext() == true) {
+				domain.setNonEditAccessionIds(IteratorUtils.toList(acc.iterator()));
+			}
+		}
 		
 		// these domains are only set by individual object endpoints
 		// that is, see acc/service/AccessionService:getMarkerEditAccessionIds
-		
-		//if (translationDepth > 0) {
-			
-			// accession ids for nucleotide sequences (ldb = 9)
-			//if (entity.getEditAccessionIds() != null) {
-			//	Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getNucleotideAccessionIds());
-			//	if(acc.iterator().hasNext() == true) {
-			//		domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
-			//	}
-			//}
-			
-			// accession ids other than nucleotide sequences 
-			//if (entity.getNonEditAccessionIds() != null) {
-			//	Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getOtherAccessionIds());
-			//	if(acc.iterator().hasNext() == true) {
-			//		domain.setNonEditAccessionIds(IteratorUtils.toList(acc.iterator()));
-			//	}
-			//}
-			
-			// reference associations
-			//if (entity.getRefAssocs() != null) {
-			//	MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
-			//	Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
-			//	if(i.iterator().hasNext() == true) {
-			//		domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
-			//	}
-			//}
-								
+					
+		// accession ids for nucleotide sequences (ldb = 9)
+		//if (entity.getEditAccessionIds() != null) {
+		//	Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIds());
+		//	if(acc.iterator().hasNext() == true) {
+		//		domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
+		//	}
 		//}
+				
+		// reference associations
+		//if (entity.getRefAssocs() != null) {
+		//	MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
+		//	Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
+		//	if(i.iterator().hasNext() == true) {
+		//		domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
+		//	}
+		//}						
 		
 		return domain;
 	}

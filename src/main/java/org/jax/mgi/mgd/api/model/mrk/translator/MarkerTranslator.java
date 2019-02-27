@@ -151,6 +151,14 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			}
 		}
 
+		// accession ids editable
+		if (entity.getEditAccessionIds() != null) {
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIds());
+			if(acc.iterator().hasNext() == true) {
+				domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
+			}
+		}
+		
 		// accession ids non-editable 
 		//
 		if (entity.getNonEditAccessionIds() != null) {
@@ -162,15 +170,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		
 		// these domains are only set by individual object endpoints
 		// that is, see acc/service/AccessionService:getMarkerEditAccessionIds
-					
-		// accession ids for nucleotide sequences (ldb = 9)
-		//if (entity.getEditAccessionIds() != null) {
-		//	Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIds());
-		//	if(acc.iterator().hasNext() == true) {
-		//		domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
-		//	}
-		//}
-				
+							
 		// reference associations
 		//if (entity.getRefAssocs() != null) {
 		//	MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();

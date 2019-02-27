@@ -26,8 +26,12 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		domain.issue = entity.getIssue();
 		domain.date = entity.getDate();
 
-		if (entity.getYear() != null) domain.year = entity.getYear().toString();
-		else domain.year = null;
+		if (entity.getYear() != null) {
+			domain.year = entity.getYear().toString();
+		}
+		else {
+			domain.year = null;
+		}
 		
 		domain.pages = entity.getPages();
 		domain.ref_abstract = entity.getRef_abstract();

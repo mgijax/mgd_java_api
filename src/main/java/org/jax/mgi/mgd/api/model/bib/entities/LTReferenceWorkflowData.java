@@ -4,9 +4,12 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -23,7 +26,12 @@ import lombok.Setter;
 @ApiModel(value = "Reference Workflow Data Model Object")
 @Table(name="bib_workflow_data")
 public class LTReferenceWorkflowData extends BaseEntity {
+	
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="bib_workflow_data_generator")
+	@SequenceGenerator(name="bib_workflow_data_generator", sequenceName = "bib_workflow_data_seq", allocationSize=1)
+	private int _assoc_key;
+	
 	@Column(name="_refs_key")
 	private int _refs_key;
 
@@ -45,6 +53,10 @@ public class LTReferenceWorkflowData extends BaseEntity {
 	@OneToOne
 	@JoinColumn(name="_supplemental_key", referencedColumnName="_term_key")
 	private Term supplementalTerm;
+	
+	@OneToOne
+	@JoinColumn(name="_extractedtext_key", referencedColumnName="_term_key")
+	private Term extractedTextTerm;
 	
 	@OneToOne
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

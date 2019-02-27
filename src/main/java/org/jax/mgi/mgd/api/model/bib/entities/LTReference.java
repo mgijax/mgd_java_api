@@ -153,8 +153,10 @@ public class LTReference extends BaseEntity {
 	@JoinColumn(name="_refs_key")
 	private LTReferenceAssociatedData associatedData;
 
+	// only interested in workflow data where extracted text section = 'body' (48804490)
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key")
+	@Where(clause="`_extractedtext_key` = 48804490")
 	private Set<LTReferenceWorkflowData> workflowData;
 
 	@ManyToMany

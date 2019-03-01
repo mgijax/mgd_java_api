@@ -139,7 +139,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			if(i.iterator().hasNext() == true) {
 				domain.setGeneToTss(IteratorUtils.toList(i.iterator()));
 			}
-			domain.getGeneToTss().sort(Comparator.comparing(SlimMarkerDomain::getSymbol));
+			domain.getGeneToTss().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}
 
 		// one-to-many tss-to-gene relationships
@@ -148,7 +148,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			if(i.iterator().hasNext() == true) {
 				domain.setTssToGene(IteratorUtils.toList(i.iterator()));
 			}
-			domain.getTssToGene().sort(Comparator.comparing(SlimMarkerDomain::getSymbol));
+			domain.getTssToGene().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}
 				
 		// one-to-many marker aliases
@@ -157,7 +157,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			if(i.iterator().hasNext() == true) {
 				domain.setAliases(IteratorUtils.toList(i.iterator()));
 			}
-			domain.getAliases().sort(Comparator.comparing(SlimMarkerDomain::getSymbol));
+			domain.getAliases().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}
 
 		// accession ids editable

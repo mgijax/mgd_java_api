@@ -144,6 +144,7 @@ public class Marker extends BaseEntity {
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2")
+	@OrderBy(clause ="_refassoctype_key")
 	private List<MGIReferenceAssoc> refAssocs;
 
 	@OneToMany

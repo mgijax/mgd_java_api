@@ -71,7 +71,9 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 
 		List<MGIReferenceAssocDomain> results = new ArrayList<MGIReferenceAssocDomain>();
 
-		String cmd = "\nselect _assoc_key from mgi_reference_marker_view where _object_key = " + key;
+		String cmd = "\nselect _assoc_key from mgi_reference_marker_view " 
+				+ "\nwhere _object_key = " + key
+				+ "\norder by _refassoctype_key, jnum";
 		log.info(cmd);
 
 		try {

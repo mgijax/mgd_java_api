@@ -53,21 +53,21 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
 			domain.setSourceVariant(sourceVariantTranslator.translate(entity.getSourceVariant()));
 		}
 			
-        if (entity.getVariantTypes() != null) {
+        if (entity.getVariantTypes().size() > 0) {
         	Iterable<AlleleVariantAnnotationDomain> i = variantAnnotationTranslator.translateEntities(entity.getVariantTypes());
         	if(i.iterator().hasNext() == true) {
                 domain.setVariantTypes(IteratorUtils.toList(i.iterator()));
         	}
         }
         
-        if (entity.getVariantEffects() != null) {
+        if (entity.getVariantEffects().size() > 0) {
             Iterable<AlleleVariantAnnotationDomain> i = variantAnnotationTranslator.translateEntities(entity.getVariantEffects());
           	if(i.iterator().hasNext() == true) {
                 domain.setVariantEffects(IteratorUtils.toList(i.iterator()));
             }
         }
 
-        if (entity.getVariantSequences() != null) {
+        if (entity.getVariantSequences().size() > 0) {
             Iterable<VariantSequenceDomain> i = variantSequenceTranslator.translateEntities(entity.getVariantSequences());
           	if(i.iterator().hasNext() == true) {
                 domain.setVariantSequences(IteratorUtils.toList(i.iterator()));
@@ -91,7 +91,7 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
 		}
 		
 		// reference associations
-		if (entity.getRefAssocs() != null) {
+		if (entity.getRefAssocs().size() > 0) {
 			Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
 			if(i.iterator().hasNext() == true) {
 				domain.setRefAssocs(IteratorUtils.toList(i.iterator()));

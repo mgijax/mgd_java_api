@@ -22,7 +22,7 @@ public class ApiLogTranslator extends BaseEntityDomainTranslator<ApiLogEvent, Ap
 		domain.mgitype = null;
 		domain.username = entity.getCreatedBy().getLogin();
 		
-		if (entity.getObjects() != null) {
+		if (entity.getObjects().size() > 0) {
 			for (ApiLogObject object : entity.getObjects()) {
 				domain.objectKeys.add(object.get_object_key());
 				if (domain.mgitype == null) {

@@ -38,21 +38,21 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
 		// annotation has one evidence but is represented in OneToMany in entity
 		// some annotation types (_annottype_key in (1008, 1009, 1014)
 		// do not have a evidence record
-		if (entity.getEvidences() != null) {
+		if (entity.getEvidences().size() > 0) {
 			Iterable<EvidenceDomain> i = evidenceTranslator.translateEntities(entity.getEvidences());
 			if(i.iterator().hasNext() == true) {
 				domain.setEvidence(i.iterator().next());			
 			}
 		}
 
- 		if (entity.getMarkerFeatureTypeIds() != null) {
+ 		if (entity.getMarkerFeatureTypeIds().size() > 0) {
  			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getMarkerFeatureTypeIds());
  			if(acc.iterator().hasNext() == true) {
  				domain.setMarkerFeatureTypes(IteratorUtils.toList(acc.iterator()));
  			}
  		}
  		
- 		if (entity.getAlleleVariantSOIds() != null) {
+ 		if (entity.getAlleleVariantSOIds().size() > 0) {
  			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getAlleleVariantSOIds());
  			if(acc.iterator().hasNext() == true) {
  				domain.setAlleleVariantSOIds(IteratorUtils.toList(acc.iterator()));

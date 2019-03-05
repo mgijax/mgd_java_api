@@ -535,6 +535,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				where = where + "\nand acc1.accID ilike '" +  searchDomain.getEditAccessionIds().get(0).getAccID() + "'";
 				from_editAccession = true;
 			}
+			if (searchDomain.getEditAccessionIds().get(0).getLogicaldbKey() != null && !searchDomain.getEditAccessionIds().get(0).getLogicaldbKey().isEmpty()) {
+				where = where + "\nand acc1._logicaldb_key = " + searchDomain.getEditAccessionIds().get(0).getLogicaldbKey();
+				from_editAccession = true;
+			}
 			if (searchDomain.getEditAccessionIds().get(0).getReferences() != null) {
 				if (searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getRefsKey() != null 
 						&& !searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getRefsKey().isEmpty()) {
@@ -552,6 +556,19 @@ public class MarkerService extends BaseService<MarkerDomain> {
 					from_editAccession = true;
 				}					
 			}
+			String editAccModifiedBy[] = 
+					DateSQLQuery.queryByCreationModification("acc1", 
+							searchDomain.getEditAccessionIds().get(0).getCreatedBy(), 
+							searchDomain.getEditAccessionIds().get(0).getModifiedBy(), 
+							searchDomain.getEditAccessionIds().get(0).getCreation_date(), 
+							searchDomain.getEditAccessionIds().get(0).getModification_date());
+			if (editAccModifiedBy.length > 0) {
+				if (!editAccModifiedBy[0].isEmpty() || !editAccModifiedBy[1].isEmpty()) {
+					from = from + editAccModifiedBy[0];
+					where = where + editAccModifiedBy[1];
+					from_editAccession = true;
+				}
+			}			
 		}
 		
 		if (searchDomain.getFeatureTypes() != null) {

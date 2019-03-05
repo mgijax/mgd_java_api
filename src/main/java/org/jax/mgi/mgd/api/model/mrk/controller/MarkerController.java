@@ -1,12 +1,12 @@
 package org.jax.mgi.mgd.api.model.mrk.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -16,11 +16,14 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
-import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
+import org.jboss.logging.Logger;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,12 +35,15 @@ import io.swagger.annotations.ApiParam;
 @Consumes(MediaType.APPLICATION_JSON)
 public class MarkerController extends BaseController<MarkerDomain> {
 
-	// refresh/resync the results due to database triggers
-	// for example, the mgi accession id is created by a database trigger
+	protected Logger log = Logger.getLogger(getClass());
+	ObjectMapper mapper = new ObjectMapper();
 	
 	@Inject
 	private MarkerService markerService;
 
+	// refresh/resync the results due to database triggers
+	// for example, the mgi accession id is created by a database trigger
+	
 	@Override
 	public SearchResults<MarkerDomain> create(MarkerDomain domain, User user) {	
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
@@ -110,8 +116,19 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	@POST
 	@ApiOperation(value = "EI Utilities ")
 	@Path("/eiUtilities")
-	public MarkerEIUtilitiesDomain eiUtilities(MarkerUtilitiesForm searchForm) throws IOException, InterruptedException {
-		return markerService.eiUtilities(searchForm);
+	public SearchResults<MarkerDomain> eiUtilities(MarkerUtilitiesForm searchForm) {
+
+		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
+		
+		try {
+			log.info(Constants.LOG_IN_JSON);
+			log.info(mapper.writeValueAsString(searchForm));				
+			results = markerService.eiUtilities(searchForm);
+		} catch (Exception e) {
+			results.setError(Constants.LOG_FAIL_DOMAIN, getRootException(e).getMessage(), Constants.HTTP_SERVER_ERROR);
+		}
+		
+		return results;
 	}
 	
 }

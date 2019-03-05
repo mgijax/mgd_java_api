@@ -23,7 +23,6 @@ import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerStatusDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerTypeDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
-import org.jax.mgi.mgd.api.model.mrk.domain.MarkerEIUtilitiesDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
@@ -31,7 +30,7 @@ import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
-import org.jax.mgi.mgd.api.util.MarkerWithdrawal;
+import org.jax.mgi.mgd.api.util.RunCommand;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -801,7 +800,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}	
 		
 	@Transactional		
-	public MarkerEIUtilitiesDomain eiUtilities(MarkerUtilitiesForm searchForm) throws IOException, InterruptedException {
+	public SearchResults<MarkerDomain> eiUtilities(MarkerUtilitiesForm searchForm) throws IOException, InterruptedException {
 	
 //		required for all cases/set by user
 //		eventKey : MR_Event list
@@ -829,26 +828,54 @@ public class MarkerService extends BaseService<MarkerDomain> {
 //		newSymbol : null 
 //		newName : null 
 //
-	
-		// domain object to be JSON-ed
-		MarkerEIUtilitiesDomain markerEIUtilitiesDomain = new MarkerEIUtilitiesDomain();
-	
+		
+    	String markerWithdrawal = System.getProperty("swarm.ds.markerwithdrawal");
+    	String server = System.getProperty("swarm.ds.dbserver");
+        String db = System.getProperty("swarm.ds.dbname");
+        String user = System.getProperty("swarm.ds.username");
+        String pwd = System.getProperty("swarm.ds.dbpasswordfile");
+        
+        // input:  searchForm parameters
 		Map<String, Object> params = searchForm.getSearchFields();
-		log.info(params);
+
+        // output: results
+		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();      
+								
+		String command = markerWithdrawal;
+        command = command + " -S" + server;
+        command = command + " -D" + db;
+        command = command + " -U" + user;
+        command = command + " -P" + pwd;
+		command = command + " --eventKey=" + (String) params.get("eventKey");
+		command = command + " --eventReasonKey=" + (String) params.get("eventReasonKey");
+		command = command + " --oldKey=" + (String) params.get("oldKey");
+		command = command + " --refKey=" + (String) params.get("refKey");
+		command = command + " --addAsSynonym=" + (String) params.get("addAsSynonym");
 		
-		MarkerWithdrawal markerWithdrawal = new MarkerWithdrawal();
+		// mrk_event = rename
+		if (params.get("eventKey").equals("2")) {
+			command = command + " --newName='" + (String) params.get("newName") + "'";
+			command = command + " --newSymbols='" + (String) params.get("newSymbol") + "'";
+		}
 		
-		markerWithdrawal.doWithdrawal(
-				(String) params.get("eventKey"),
-				(String) params.get("eventReasonKey"),
-				(String) params.get("oldKey"),
-				(String) params.get("refKey"),
-				(String) params.get("addAsSynonym"),
-				(String) params.get("newName"),
-				(String) params.get("newSymbol"),
-				(String) params.get("newKey"));	
+		// mrk_event = merge
+		if (params.get("eventKey").equals("3") || params.get("eventKey").equals("4")) {
+			command = command + " --newKey=" + (String) params.get("newKey");
+		}
 		
-		return markerEIUtilitiesDomain;
+		log.info("eiUtilities command: " + command);
+		
+		RunCommand runner = RunCommand.runCommand(command);
+		int ec = runner.getExitCode();
+		
+		if(ec == 0) {
+			 log.info("eiUtilities: successful");			 			
+		}
+		else {
+			 results.setError(Constants.LOG_FAIL_DOMAIN, "eiUtilities: failed", Constants.HTTP_SERVER_ERROR);		
+		}
+		
+		return results;
 	}
 	
 }

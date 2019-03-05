@@ -15,7 +15,6 @@ import javax.ws.rs.PathParam;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mgi.service.ApiLogService;
 import org.jax.mgi.mgd.api.model.mgi.service.UserService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -33,8 +32,6 @@ public abstract class BaseController<T extends BaseDomain> {
 	
 	@Inject
 	private UserService userService;
-	@Inject
-	private ApiLogService apiLogService;
 		
 	/* if token is not defined in properties file, then do not require one.  
 	 * Otherwise, must be an exact match (case sensitive).
@@ -69,10 +66,6 @@ public abstract class BaseController<T extends BaseDomain> {
 			}
 		}
 		return filtered;
-	}
-
-	protected void logRequest(String endpoint, String parameters, String mgitype, List<Integer> objectKeys, User user) throws APIException {
-		apiLogService.create(endpoint, parameters, mgitype, objectKeys, user);
 	}
 
 	// get root exception of an exception

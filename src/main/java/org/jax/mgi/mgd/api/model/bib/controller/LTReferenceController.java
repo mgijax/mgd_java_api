@@ -16,9 +16,7 @@ import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.model.bib.interfaces.LTReferenceRESTInterface;
 import org.jax.mgi.mgd.api.model.bib.service.LTReferenceService;
-import org.jax.mgi.mgd.api.model.mgi.domain.ApiLogDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mgi.service.ApiLogService;
 import org.jax.mgi.mgd.api.model.mgi.service.UserService;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.service.TermService;
@@ -41,12 +39,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	@Inject
 	private UserService userService;
 	
-	@Inject
-	private ApiLogService apiLogService;
-	
 	private Logger log = Logger.getLogger(getClass());
-	//private ObjectMapper mapper = new ObjectMapper();
-	//private ListMaker<Integer> listMaker = new ListMaker<Integer>();
 
 	/* These work together to allow for a maximum delay of two seconds for retries: */
 	private static int maxRetries = 10;		// maximum number of retries for non-fatal exceptions on update operations
@@ -63,8 +56,6 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 			User currentUser = userService.getUserByUsername(username);
 			if (currentUser != null) {
 				results.setItem(referenceService.createReference(reference, currentUser));
-				//logRequest("POST /littriage", mapper.writeValueAsString(reference), Constants.MGITYPE_REFERENCE,
-					//listMaker.toList(reference._refs_key), currentUser);
 			} 
 		} catch (APIException e) {
 			results.setError("LTReferenceController.createReference", "Failed to create reference: " + e.toString(),
@@ -113,8 +104,6 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 					}
 				}
 
-				//logRequest("PUT /littriage", mapper.writeValueAsString(reference), Constants.MGITYPE_REFERENCE,
-				//	listMaker.toList(reference._refs_key), currentUser);
 				return this.getReferenceByKey(reference._refs_key.toString());
 			} catch (Throwable t) {
 				results.setError("Failed", "Failed to save changes (" + t.toString() + ")", Constants.HTTP_SERVER_ERROR);
@@ -224,12 +213,6 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 			results.setError("Partial Failure", "Status changes failed to save for: " + String.join(",", failures), Constants.HTTP_SERVER_ERROR);
 		//} else {
 		//	String json = "{\"group\":\"" + group + "\", \"status\":\"" + status + "\"}";
-		//	try {
-		//		logRequest("PUT /littriage/statusUpdate", json, Constants.MGITYPE_REFERENCE, referenceKeys, currentUser);
-		//	} catch (APIException e) {
-		//		results.setError("Log Failure", "Changes saved, but failed to log them in API log: " + e.toString(), Constants.HTTP_SERVER_ERROR);
-		//	}
-		//	results.items = null;
 		}
 
 		return results;
@@ -251,7 +234,6 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 			try {
 				referenceService.updateReferencesInBulk(input._refs_keys, input.workflow_tag, input.workflow_tag_operation, currentUser);
 				results.items = null;	// okay result
-				//logRequest("PUT /littriage/bulkUpdate", mapper.writeValueAsString(input), Constants.MGITYPE_REFERENCE, input._refs_keys, currentUser);
 			} catch (APIException t) {
 				results.setError("Failed", "Failed to save changes: " + t.toString(), Constants.HTTP_SERVER_ERROR);
 			//} catch (JsonProcessingException t) {
@@ -322,28 +304,6 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 		return results;
 	}
 
-	@Override
-	@Transactional
-	public SearchResults<ApiLogDomain> getReferenceLog (String id) {
-		SearchResults<ApiLogDomain> results = new SearchResults<ApiLogDomain>();
-		Map<String,Object> params = new HashMap<String,Object>();
-		params.put("accids", id);
-		SearchResults<LTReferenceSummaryDomain> refs = search(params);
-
-		if (refs.status_code != Constants.HTTP_OK) {
-			results.setError(refs.error, refs.message, refs.status_code);
-			return results;
-		}
-		if (refs.total_count == 0) {
-			results.setError("UnknownID", "No reference for ID: " + id, Constants.HTTP_NOT_FOUND);
-			return results;
-		}
-		
-		Map<String,Object> searchFields = new HashMap<String,Object>();
-		searchFields.put("_object_key", refs.items.get(0)._refs_key);
-		return apiLogService.search(searchFields);
-	}
-
 	/* delete the reference with the given accession ID...  TODO: need to flesh this out, return SearchResults object, etc.
 	 */
 	@Override
@@ -351,15 +311,6 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 		User currentUser = userService.getUserByUsername(username);
 		if (currentUser != null) {
 			SearchResults<LTReferenceDomain> results = referenceService.deleteReference(key, currentUser);
-			//if (results.items.size() > 0) {
-				//LTReferenceDomain domain = results.items.get(0);
-				//String json = "{\"key\":" + key + "\"}";
-				//try {
-				//	logRequest("DELETE /littriage", json, Constants.MGITYPE_REFERENCE, listMaker.toList(domain._refs_key), currentUser);
-				//} catch (APIException e) {
-				//	results.setError("Log Failure", "Changes saved, but could not write to API log: " + e.toString(), Constants.HTTP_SERVER_ERROR);
-				//}
-			//}
 			return results;
 		}
 		return null;

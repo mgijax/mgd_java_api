@@ -92,7 +92,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		if (entity.getLocationNote().size() > 0) {
 			Iterable<NoteDomain> locationNote = noteTranslator.translateEntities(entity.getLocationNote());
 			if(locationNote.iterator().hasNext() == true) {
-			domain.setLocationNote(locationNote.iterator().next());
+				domain.setLocationNote(locationNote.iterator().next());
 			}
 		}
 		

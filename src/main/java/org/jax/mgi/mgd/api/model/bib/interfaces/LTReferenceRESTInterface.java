@@ -17,7 +17,6 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceBulkDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceSummaryDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.ApiLogDomain;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
@@ -186,13 +185,6 @@ public interface LTReferenceRESTInterface {
 	 *  	date formats may be: mm/dd/yyyy, mm/dd/yy, or yyyy/mm/dd
 	 *  	operators may be: =, <, >, <=, >=, or ..
 	 */
-
-	@GET
-	@Path("/log/{id}")
-	@ApiOperation(value = "Value: Retrieve logged API events for reference with given ID")
-	public SearchResults<ApiLogDomain> getReferenceLog (
-			@ApiParam(value = "Value: Accession ID for desired reference")
-			@PathParam("id") String id);
 
 	@GET
 	@Path("/{key}")

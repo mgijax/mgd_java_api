@@ -350,6 +350,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Boolean from_synonym = false;
 		Boolean from_reference = false;
 		Boolean from_editAccession = false;
+		Boolean from_noneditAccession = false;
 		Boolean from_featureTypes = false;
 
 		// if parameter exists, then add to where-clause
@@ -571,6 +572,49 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			}			
 		}
 		
+		// non-editable accession ids
+		if (searchDomain.getNonEditAccessionIds() != null) {
+			if (searchDomain.getNonEditAccessionIds().get(0).getAccID() != null 
+					&& !searchDomain.getNonEditAccessionIds().get(0).getAccID().isEmpty()) {
+				where = where + "\nand acc2.accID ilike '" +  searchDomain.getNonEditAccessionIds().get(0).getAccID() + "'";
+				from_noneditAccession = true;
+			}
+			if (searchDomain.getNonEditAccessionIds().get(0).getLogicaldbKey() != null && !searchDomain.getNonEditAccessionIds().get(0).getLogicaldbKey().isEmpty()) {
+				where = where + "\nand acc2._logicaldb_key = " + searchDomain.getNonEditAccessionIds().get(0).getLogicaldbKey();
+				from_noneditAccession = true;
+			}
+			if (searchDomain.getNonEditAccessionIds().get(0).getReferences() != null) {
+				if (searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getRefsKey() != null 
+						&& !searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getRefsKey().isEmpty()) {
+					where = where + "\nand acc2._refs_key = " + searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getRefsKey();
+					from_noneditAccession = true;
+				}	
+				if (searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getShort_citation() != null 
+						&& !searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getShort_citation().isEmpty()) {
+					value = searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getShort_citation().replaceAll("'",  "''");
+					where = where + "\nand acc2.short_citation ilike '" + value + "'";
+					from_noneditAccession = true;
+				}
+				if (searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getJnumid() != null && !searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getJnumid().isEmpty()) {
+					where = where + "\nand acc2.jnumid ilike '" + searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getJnumid() + "'";
+					from_noneditAccession = true;
+				}					
+			}
+			String noneditAccModifiedBy[] = 
+					DateSQLQuery.queryByCreationModification("acc2", 
+							searchDomain.getNonEditAccessionIds().get(0).getCreatedBy(), 
+							searchDomain.getNonEditAccessionIds().get(0).getModifiedBy(), 
+							searchDomain.getNonEditAccessionIds().get(0).getCreation_date(), 
+							searchDomain.getNonEditAccessionIds().get(0).getModification_date());
+			if (noneditAccModifiedBy.length > 0) {
+				if (!noneditAccModifiedBy[0].isEmpty() || !noneditAccModifiedBy[1].isEmpty()) {
+					from = from + noneditAccModifiedBy[0];
+					where = where + noneditAccModifiedBy[1];
+					from_noneditAccession = true;
+				}
+			}			
+		}
+				
 		if (searchDomain.getFeatureTypes() != null) {
 			where = where + "\nand va.accid ilike '" + searchDomain.getFeatureTypes().get(0).getMarkerFeatureTypeIds().get(0).getAccID() + "'";
 			from_featureTypes = true;
@@ -617,8 +661,12 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 		if (from_editAccession == true) {
 			from = from + ", mrk_accref1_view acc1";
-			where = where + "\nand m._marker_key = acc1._object_key and acc1._logicaldb_key in (8, 9)";
+			where = where + "\nand m._marker_key = acc1._object_key";
 		}
+		if (from_noneditAccession == true) {
+			from = from + ", mrk_accref2_view acc2";
+			where = where + "\nand m._marker_key = acc2._object_key";
+		}		
 		if (from_featureTypes == true) {
 			from = from + ", voc_annot v, acc_accession va";
 			where = where + "\nand m._marker_key = v._object_key" 

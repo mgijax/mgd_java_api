@@ -81,5 +81,7 @@ public class Constants {
 	public static String LOG_FAIL_PKEY = LOG_MGI_API + "FAIL|PRIMARY KEY";
 	public static String LOG_FAIL_USERLOGIN = LOG_MGI_API + "FAIL|USER LOGIN|";
 	public static String LOG_SUCCESS_USERLOGIN = LOG_MGI_API + "SUCCESSFUL|USER LOGIN|";
+	public static String LOG_SUCCESS_EIUTILITIES = LOG_MGI_API + "SUCCESSFUL|EI UTILITIES";
+	public static String LOG_FAIL_EIUTILITIES = LOG_MGI_API + "FAIL|EI UTILITIES";
 
 }

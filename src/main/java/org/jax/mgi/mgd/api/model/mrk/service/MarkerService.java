@@ -893,10 +893,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 
 		if(ec == 0) {
-			 log.info("eiUtilities: successful");			 			
+			 log.info(Constants.LOG_SUCCESS_EIUTILITIES);			 			
 		}
 		else {
-			 log.info("eiUtilities: failed");			 			
+			 log.info(Constants.LOG_FAIL_EIUTILITIES);			 			
 		}
 			
 		// return list of results returned from query

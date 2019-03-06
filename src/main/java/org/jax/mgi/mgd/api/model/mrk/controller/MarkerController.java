@@ -123,6 +123,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 			log.info(Constants.LOG_IN_JSON);
 			log.info(mapper.writeValueAsString(searchForm));				
 			results = markerService.eiUtilities(searchForm);
+			log.info(Constants.LOG_OUT_DOMAIN);		
 		} catch (Exception e) {
 			results.setError(Constants.LOG_FAIL_DOMAIN, getRootException(e).getMessage(), Constants.HTTP_SERVER_ERROR);
 		}

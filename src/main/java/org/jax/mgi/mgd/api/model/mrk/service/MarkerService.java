@@ -800,7 +800,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}	
 		
 	@Transactional		
-	public SearchResults<MarkerDomain> eiUtilities(MarkerUtilitiesForm searchForm) throws IOException, InterruptedException {
+	public SearchResults<SlimMarkerDomain> eiUtilities(MarkerUtilitiesForm searchForm) throws IOException, InterruptedException {
 	
 //		required for all cases/set by user
 //		eventKey : MR_Event list
@@ -839,42 +839,68 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Map<String, Object> params = searchForm.getSearchFields();
 
         // output: results
-		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();      
-								
-		String command = markerWithdrawal;
-        command = command + " -S" + server;
-        command = command + " -D" + db;
-        command = command + " -U" + user;
-        command = command + " -P" + pwd;
-		command = command + " --eventKey=" + (String) params.get("eventKey");
-		command = command + " --eventReasonKey=" + (String) params.get("eventReasonKey");
-		command = command + " --oldKey=" + (String) params.get("oldKey");
-		command = command + " --refKey=" + (String) params.get("refKey");
-		command = command + " --addAsSynonym=" + (String) params.get("addAsSynonym");
-		
+		SearchResults<SlimMarkerDomain> results = new SearchResults<SlimMarkerDomain>();
+		List<SlimMarkerDomain> listOfResults = new ArrayList<SlimMarkerDomain>();
+
+		String runCmd = markerWithdrawal;
+        runCmd = runCmd + " -S" + server;
+        runCmd = runCmd + " -D" + db;
+        runCmd = runCmd + " -U" + user;
+        runCmd = runCmd + " -P" + pwd;
+        runCmd = runCmd + " --eventKey=" + (String) params.get("eventKey");
+        runCmd = runCmd + " --eventReasonKey=" + (String) params.get("eventReasonKey");
+        runCmd = runCmd + " --oldKey=" + (String) params.get("oldKey");
+        runCmd = runCmd + " --refKey=" + (String) params.get("refKey");
+        runCmd = runCmd + " --addAsSynonym=" + (String) params.get("addAsSynonym");
+
+		// rename/delete is "oldKey"
+		String key = (String) params.get("oldKey");
+
 		// mrk_event = rename
 		if (params.get("eventKey").equals("2")) {
-			command = command + " --newName='" + (String) params.get("newName") + "'";
-			command = command + " --newSymbols='" + (String) params.get("newSymbol") + "'";
+			runCmd = runCmd + " --newName='" + (String) params.get("newName") + "'";
+			runCmd = runCmd + " --newSymbols='" + (String) params.get("newSymbol") + "'";
 		}
 		
 		// mrk_event = merge
 		if (params.get("eventKey").equals("3") || params.get("eventKey").equals("4")) {
-			command = command + " --newKey=" + (String) params.get("newKey");
+			runCmd = runCmd + " --newKey=" + (String) params.get("newKey");
+			key = (String) params.get("newKey");
 		}
+			
+		log.info("eiUtilities runCmd: " + runCmd);
 		
-		log.info("eiUtilities command: " + command);
-		
-		RunCommand runner = RunCommand.runCommand(command);
+		RunCommand runner = RunCommand.runCommand(runCmd);
 		int ec = runner.getExitCode();
 		
+		String queryCmd = "\nselect _marker_key, symbol from mrk_current_view"
+				+ "\nwhere _current_key = " + key
+				+ "\norder by symbol";	
+		log.info(queryCmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(queryCmd);
+			while (rs.next()) {				
+				SlimMarkerDomain domain = new SlimMarkerDomain();				
+				domain.setMarkerKey(rs.getString("_marker_key"));
+				domain.setSymbol(rs.getString("symbol"));				
+				listOfResults.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		if(ec == 0) {
 			 log.info("eiUtilities: successful");			 			
 		}
 		else {
-			 results.setError(Constants.LOG_FAIL_DOMAIN, "eiUtilities: failed", Constants.HTTP_SERVER_ERROR);		
+			 log.info("eiUtilities: failed");			 			
 		}
-		
+			
+		// return list of results returned from query
+		results.setItems(listOfResults);
 		return results;
 	}
 	

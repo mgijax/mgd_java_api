@@ -139,7 +139,11 @@ public abstract class BaseController<T extends BaseDomain> {
 				results.setError(Constants.LOG_FAIL_USERAUTHENTICATION, api_access_token + "," + username, Constants.HTTP_SERVER_ERROR);
 			}
 		} catch (Exception e) {
-			results.setError(Constants.LOG_FAIL_DOMAIN, getRootException(e).getMessage(), Constants.HTTP_SERVER_ERROR);
+			Throwable t = getRootException(e);
+			StackTraceElement[] ste = t.getStackTrace();
+			String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";
+			
+			results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);
 		}
 		
 		return results;		

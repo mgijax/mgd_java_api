@@ -207,12 +207,13 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 				// assuming there is only 1 accession id per Variant Sequence			
 			    log.info("VariantSequenceService processing accIDs: ");
 				if (domain.getAccessionIds() != null) {
-					accessionService.process(
+					modified = accessionService.process(
 							String.valueOf(sequenceEntity.get_variantsequence_key()), 
 							domain.getAccessionIds().get(0).getLogicaldbKey(),  
 							domain.getAccessionIds(),
 							"Allele Variant Sequence", user);				
 				}
+				variantSequenceDAO.refresh(sequenceEntity);
 																
 			}
 			else if (domains.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
@@ -268,7 +269,7 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 				}
 				log.info("VariantSequence Accession");
 				if (domains.get(i).getAccessionIds() != null) {
-					accessionService.process(
+					modified = accessionService.process(
 							String.valueOf(entity.get_variantsequence_key()), 
 							domains.get(i).getAccessionIds().get(0).getLogicaldbKey(),  
 							domains.get(i).getAccessionIds(),

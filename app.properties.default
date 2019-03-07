@@ -8,5 +8,5 @@ swarm.access_token=myDefaultToken
 swarm.ds.dbname=prod
 swarm.ds.dbpasswordfile=/usr/local/mgi/live/dbutils/pgdbutilities/.pgpass_1
 swarm.ds.dbserver=bhmgidb01
-swarm.ds.markerwithdrawal=/usr/local/mgi/live/dbutils/pgdbutilities/bin/ei/markerWithdrawal.csh
+swarm.ds.markerwithdrawal=/usr/local/mgi/live/dbutils/pgdbutilities/bin/ei/markerWithdrawal.py
 

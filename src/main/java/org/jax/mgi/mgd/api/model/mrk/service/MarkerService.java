@@ -829,7 +829,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 //		newName : null 
 //
 		
-    	String markerWithdrawal = System.getProperty("swarm.ds.markerwithdrawal");
+		// these swarm variables are in 'app.properties'
+    	String eiUtilitiesScript = System.getProperty("swarm.ds.eiUtilities");
     	String server = System.getProperty("swarm.ds.dbserver");
         String db = System.getProperty("swarm.ds.dbname");
         String user = System.getProperty("swarm.ds.username");
@@ -842,7 +843,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		SearchResults<SlimMarkerDomain> results = new SearchResults<SlimMarkerDomain>();
 		List<SlimMarkerDomain> listOfResults = new ArrayList<SlimMarkerDomain>();
 
-		String runCmd = markerWithdrawal;
+		String runCmd = eiUtilitiesScript;
         runCmd = runCmd + " -S" + server;
         runCmd = runCmd + " -D" + db;
         runCmd = runCmd + " -U" + user;

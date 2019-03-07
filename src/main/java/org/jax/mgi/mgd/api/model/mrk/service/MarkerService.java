@@ -871,9 +871,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		log.info(Constants.LOG_INPROGRESS_EIUTILITIES + runCmd);
 		
 		RunCommand runner = RunCommand.runCommand(runCmd);
-		int ec = runner.getExitCode();
 			
-		if (ec == 0) {
+		if (runner.getExitCode() == 0) {
 			log.info(Constants.LOG_SUCCESS_EIUTILITIES);			 			
 		}
 		else {

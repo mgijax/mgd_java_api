@@ -125,7 +125,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 			results = markerService.eiUtilities(searchForm);
 			log.info(Constants.LOG_OUT_DOMAIN);		
 		} catch (Exception e) {
-			results.setError(Constants.LOG_FAIL_DOMAIN, getRootException(e).getMessage(), Constants.HTTP_SERVER_ERROR);
+			results.setError(Constants.LOG_FAIL_EIUTILITIES, getRootException(e).getMessage(), Constants.HTTP_SERVER_ERROR);
 		}
 		
 		return results;

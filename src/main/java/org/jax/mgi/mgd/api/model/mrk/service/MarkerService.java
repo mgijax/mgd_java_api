@@ -868,10 +868,18 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			key = (String) params.get("newKey");
 		}
 		
-		log.info("eiUtilities: " + runCmd);
+		log.info(Constants.LOG_INPROGRESS_EIUTILITIES + runCmd);
 		
 		RunCommand runner = RunCommand.runCommand(runCmd);
 		int ec = runner.getExitCode();
+			
+		if (ec == 0) {
+			log.info(Constants.LOG_SUCCESS_EIUTILITIES);			 			
+		}
+		else {
+			log.info(Constants.LOG_FAIL_EIUTILITIES);	
+			results.setError(Constants.LOG_FAIL_EIUTILITIES, runner.getStdErr(), Constants.HTTP_SERVER_ERROR);
+		}			
 
 		String queryCmd = "\nselect _marker_key, symbol from mrk_current_view"
 				+ "\nwhere _current_key = " + key
@@ -891,15 +899,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-	
-		if(ec == 0) {
-			 log.info(Constants.LOG_SUCCESS_EIUTILITIES);			 			
-		}
-		else {
-			 log.info(Constants.LOG_FAIL_EIUTILITIES);	
-			 results.setError(Constants.LOG_FAIL_EIUTILITIES, runCmd, Constants.HTTP_SERVER_ERROR);
-		}
-			
+		
 		// return list of results returned from query
 		results.setItems(listOfResults);
 		return results;

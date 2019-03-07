@@ -57,125 +57,97 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
 		// at most one editorNote
-		if (entity.getEditorNote().size() > 0) {
+		if (!entity.getEditorNote().isEmpty()) {
 			Iterable<NoteDomain> editorNote = noteTranslator.translateEntities(entity.getEditorNote());
-			if(editorNote.iterator().hasNext() == true) {
-				domain.setEditorNote(editorNote.iterator().next());
-			}
+			domain.setEditorNote(editorNote.iterator().next());
 		}
 
 		// at most one sequenceNote
-		if (entity.getSequenceNote().size() > 0) {
+		if (!entity.getSequenceNote().isEmpty()) {
 			Iterable<NoteDomain> sequenceNote = noteTranslator.translateEntities(entity.getSequenceNote());
-			if(sequenceNote.iterator().hasNext() == true) {
-				domain.setSequenceNote(sequenceNote.iterator().next());
-			}
+			domain.setSequenceNote(sequenceNote.iterator().next());
 		}
 		
 		// at most one revisionNote
-		if (entity.getRevisionNote().size() > 0) {
+		if (!entity.getRevisionNote().isEmpty()) {
 			Iterable<NoteDomain> revisionNote = noteTranslator.translateEntities(entity.getRevisionNote());
-			if(revisionNote.iterator().hasNext() == true) {
-				domain.setRevisionNote(revisionNote.iterator().next());
-			}
+			domain.setRevisionNote(revisionNote.iterator().next());
 		}
 		
 		// at most one strainNote
-		if (entity.getStrainNote().size() > 0) {
+		if (!entity.getStrainNote().isEmpty()) {
 			Iterable<NoteDomain> strainNote = noteTranslator.translateEntities(entity.getStrainNote());
-			if(strainNote.iterator().hasNext() == true) {
-				domain.setStrainNote(strainNote.iterator().next());
-			}
+			domain.setStrainNote(strainNote.iterator().next());
 		}
 		
 		// at most one locationNote
-		if (entity.getLocationNote().size() > 0) {
+		if (!entity.getLocationNote().isEmpty()) {
 			Iterable<NoteDomain> locationNote = noteTranslator.translateEntities(entity.getLocationNote());
-			if(locationNote.iterator().hasNext() == true) {
-				domain.setLocationNote(locationNote.iterator().next());
-			}
+			domain.setLocationNote(locationNote.iterator().next());
 		}
 		
 		// mgi accession ids only
-		if (entity.getMgiAccessionIds().size() > 0) {
+		if (!entity.getMgiAccessionIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
-			if(acc.iterator().hasNext() == true) {
-				domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
-			}
+			domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
 		}
 		
 		// one-to-many marker history
-		if (entity.getHistory().size() > 0) {
+		if (!entity.getHistory().isEmpty()) {
 			Iterable<MarkerHistoryDomain> i = historyTranslator.translateEntities(entity.getHistory());
-			if(i.iterator().hasNext() == true) {
-				domain.setHistory(IteratorUtils.toList(i.iterator()));
-			}
+			domain.setHistory(IteratorUtils.toList(i.iterator()));
 			//cannot use this for keys as they are stored as strings
 			//domain.getHistory().sort(Comparator.comparing(MarkerHistoryDomain::getSequenceNum));
 		}
 		
 		// one-to-many marker synonyms
-		if (entity.getSynonyms().size() > 0) {
+		if (!entity.getSynonyms().isEmpty()) {
 			Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getSynonyms());
-			if(i.iterator().hasNext() == true) {
-				domain.setSynonyms(IteratorUtils.toList(i.iterator()));
-			}
+			domain.setSynonyms(IteratorUtils.toList(i.iterator()));
 			domain.getSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymType).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
 		}
 
 		// one-to-many marker feature types
 		// featureTypes can also be set via voc/service/Annotation.service/markerFeatureTypes
-		if (entity.getFeatureTypes().size() > 0) {
+		if (!entity.getFeatureTypes().isEmpty()) {
 			Iterable<MarkerFeatureTypeDomain> i = featureTypeTranslator.translateEntities(entity.getFeatureTypes());
-			if(i.iterator().hasNext() == true) {
-				domain.setFeatureTypes(IteratorUtils.toList(i.iterator()));
-			}
+			domain.setFeatureTypes(IteratorUtils.toList(i.iterator()));
 			domain.getFeatureTypes().sort(Comparator.comparing(MarkerFeatureTypeDomain::getTerm));
 		}
 		
 		// one-to-many gene-to-tss relationships
-		if (entity.getGeneToTss().size() > 0) {
+		if (!entity.getGeneToTss().isEmpty()) {
 			Iterable<SlimMarkerDomain> i = slimMarkerTranslator.translateEntities(entity.getGeneToTss());
-			if(i.iterator().hasNext() == true) {
-				domain.setGeneToTss(IteratorUtils.toList(i.iterator()));
-			}
+			domain.setGeneToTss(IteratorUtils.toList(i.iterator()));
 			domain.getGeneToTss().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}
 
 		// one-to-many tss-to-gene relationships
-		if (entity.getTssToGene().size() > 0) {
+		if (!entity.getTssToGene().isEmpty()) {
 			Iterable<SlimMarkerDomain> i = slimMarkerTranslator.translateEntities(entity.getTssToGene());
-			if(i.iterator().hasNext() == true) {
-				domain.setTssToGene(IteratorUtils.toList(i.iterator()));
-			}
+			domain.setTssToGene(IteratorUtils.toList(i.iterator()));
 			domain.getTssToGene().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}
 				
 		// one-to-many marker aliases
-		if (entity.getAliases().size() > 0) {
+		if (!entity.getAliases().isEmpty()) {
 			Iterable<SlimMarkerDomain> i = slimMarkerTranslator.translateEntities(entity.getAliases());
-			if(i.iterator().hasNext() == true) {
-				domain.setAliases(IteratorUtils.toList(i.iterator()));
-			}
+			domain.setAliases(IteratorUtils.toList(i.iterator()));
 			domain.getAliases().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}
 
 		// accession ids editable
-		if (entity.getEditAccessionIds().size() > 0) {
+		if (!entity.getEditAccessionIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIds());
-			if(acc.iterator().hasNext() == true) {
-				domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
-			}
+			domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
 			domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
 		
 		// accession ids non-editable 
 		//
-		if (entity.getNonEditAccessionIds().size() > 0) {
+		if (!entity.getNonEditAccessionIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getNonEditAccessionIds());
-			if(acc.iterator().hasNext() == true) {
-				domain.setNonEditAccessionIds(IteratorUtils.toList(acc.iterator()));
-			}
+			domain.setNonEditAccessionIds(IteratorUtils.toList(acc.iterator()));
 			domain.getNonEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
 		
@@ -183,12 +155,10 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		// that is, see acc/service/AccessionService:getMarkerEditAccessionIds
 							
 		// reference associations
-		//if (entity.getRefAssocs().size() > 0) {
+		//if (!entity.getRefAssocs().isEmpty()) {
 		//	MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
 		//	Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
-		//	if(i.iterator().hasNext() == true) {
-		//		domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
-		//	}
+		//	domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
 		//	domain.setRefAssocs().sort(Comparator.comparing(MGIReferenceAssocDomain::getRefAssocTypeKey).thenComparing(MGIReferenceAssocDomain.getJnum));
 		//}						
 		

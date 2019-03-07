@@ -36,7 +36,7 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		// only used in SlimAlleleDomain
 		
 		// mgi accession ids only
-		if (entity.getMgiAccessionIds().size() > 0) {
+		if (!entity.getMgiAccessionIds().isEmpty()) {
 			AccessionTranslator accessionTranslator = new AccessionTranslator();		
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
 			if(acc.iterator().hasNext() == true) {
@@ -46,7 +46,7 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		}
 		
 		// reference associations
-		if (entity.getRefAssocs().size() > 0) {
+		if (!entity.getRefAssocs().isEmpty()) {
 			MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
 			Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
 			if(i.iterator().hasNext() == true) {

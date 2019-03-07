@@ -34,10 +34,7 @@ public class VariantSequenceTranslator extends BaseEntityDomainTranslator<Varian
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
 		// variant sequence accession ids
-		System.out.println("VSTranslator entity: " + entity.getAccessionIds());
-       // if ((entity.getAccessionIds() != null) && (entity.getAccessionIds().size() > 0)) {	
-		if (entity.getAccessionIds().size() > 0) {
-        	System.out.println("VSTranslator entity: " + entity.getAccessionIds());
+		if (!entity.getAccessionIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getAccessionIds());
 			if(acc.iterator().hasNext() == true) {
 				domain.setAccessionIds(IteratorUtils.toList(acc.iterator()));

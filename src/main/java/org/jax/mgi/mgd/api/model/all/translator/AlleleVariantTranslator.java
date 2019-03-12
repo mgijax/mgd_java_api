@@ -30,7 +30,7 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
 	protected AlleleVariantDomain entityToDomain(AlleleVariant entity, int translationDepth) {
 		
 		AlleleVariantDomain domain = new AlleleVariantDomain();
-		
+		AlleleVariantDomain sourceDomain = new AlleleVariantDomain();
 		domain.setVariantKey(String.valueOf(entity.get_variant_key()));
 		domain.setIsReviewed(String.valueOf(entity.getIsReviewed()));
 		domain.setDescription(entity.getDescription());
@@ -49,8 +49,31 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
 		// a curated variant has a source variant
 		// a source variant does *not* have a source variant (null)
 		if (entity.getSourceVariant() != null) {
-			AlleleVariantTranslator sourceVariantTranslator = new AlleleVariantTranslator();		
-			domain.setSourceVariant(sourceVariantTranslator.translate(entity.getSourceVariant()));
+			//AlleleVariantTranslator sourceVariantTranslator = new AlleleVariantTranslator();		
+			//domain.setSourceVariant(sourceVariantTranslator.translate(entity.getSourceVariant()));
+			
+			// NEW CODE TO REPLACE TWO LINES ABOVE
+			// get the sourceEntity from the entity
+			AlleleVariant sourceEntity = entity.getSourceVariant();
+			// now set the source domain from the source entity
+			sourceDomain.setVariantKey(String.valueOf(sourceEntity.get_variant_key()));
+			sourceDomain.setIsReviewed(String.valueOf(entity.getIsReviewed()));
+			sourceDomain.setDescription(sourceEntity.getDescription());
+			sourceDomain.setChromosome(sourceEntity.getAllele().getMarker().getChromosome());
+			sourceDomain.setStrand(sourceEntity.getAllele().getMarker().getLocationCache().getStrand());
+			sourceDomain.setCreatedByKey(sourceEntity.getCreatedBy().get_user_key().toString());
+			sourceDomain.setCreatedBy(sourceEntity.getCreatedBy().getLogin());
+			sourceDomain.setModifiedByKey(sourceEntity.getModifiedBy().get_user_key().toString());
+			sourceDomain.setModifiedBy(sourceEntity.getModifiedBy().getLogin());
+			sourceDomain.setCreation_date(dateFormatNoTime.format(sourceEntity.getCreation_date()));
+			sourceDomain.setModification_date(dateFormatNoTime.format(sourceEntity.getModification_date()));
+			
+			sourceDomain.setAllele(alleleTranslator.translate(entity.getAllele()));
+			sourceDomain.setStrain(strainTranslator.translate(entity.getStrain()));
+			
+			// now set the source variant domain in the domain
+			domain.setSourceVariant(sourceDomain);
+			// END NEW CODE
 		}
 			
         if (!entity.getVariantTypes().isEmpty()) {

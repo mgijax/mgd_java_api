@@ -29,7 +29,6 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
 	protected AlleleVariantDomain entityToDomain(AlleleVariant entity, int translationDepth) {
 		
 		AlleleVariantDomain domain = new AlleleVariantDomain();
-		AlleleVariantDomain sourceDomain = new AlleleVariantDomain();
 		domain.setVariantKey(String.valueOf(entity.get_variant_key()));
 		domain.setIsReviewed(String.valueOf(entity.getIsReviewed()));
 		domain.setDescription(entity.getDescription());

@@ -144,7 +144,6 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		}
 		
 		// accession ids non-editable 
-		//
 		if (!entity.getNonEditAccessionIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getNonEditAccessionIds());
 			domain.setNonEditAccessionIds(IteratorUtils.toList(acc.iterator()));

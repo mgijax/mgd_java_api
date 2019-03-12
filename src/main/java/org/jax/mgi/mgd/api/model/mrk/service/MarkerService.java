@@ -262,7 +262,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		// process marker nucleotide accession ids
 		if (domain.getEditAccessionIds() != null) {
-			if (accessionService.process(domain.getMarkerKey(), "9", domain.getEditAccessionIds(), mgiTypeName, user)) {
+			if (accessionService.process(domain.getMarkerKey(), domain.getEditAccessionIds(), mgiTypeName, user)) {
 				modified = true;
 			}
 		}
@@ -869,10 +869,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			key = (String) params.get("newKey");
 		}
 		
+		// run the runCmd
 		log.info(Constants.LOG_INPROGRESS_EIUTILITIES + runCmd);
-		
 		RunCommand runner = RunCommand.runCommand(runCmd);
-			
+		
+		// check exit code from RunCommand
 		if (runner.getExitCode() == 0) {
 			log.info(Constants.LOG_SUCCESS_EIUTILITIES);			 			
 		}
@@ -881,6 +882,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			results.setError(Constants.LOG_FAIL_EIUTILITIES, runner.getStdErr(), Constants.HTTP_SERVER_ERROR);
 		}			
 
+		// regardless of exit code from RunCommand
+		// select set of markers where current marker = marker being processed
 		String queryCmd = "\nselect _marker_key, symbol from mrk_current_view"
 				+ "\nwhere _current_key = " + key
 				+ "\norder by symbol";	
@@ -901,6 +904,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 		
 		// return list of results returned from query
+		// note that any run command errors have already been attached
 		results.setItems(listOfResults);
 		return results;
 	}

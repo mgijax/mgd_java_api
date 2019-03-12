@@ -225,7 +225,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 	//
 	
 	@Transactional
-	public Boolean process(String parentKey, String logicaldbKey, List<AccessionDomain> domain, String mgiTypeName, User user) {
+	public Boolean process(String parentKey, List<AccessionDomain> domain, String mgiTypeName, User user) {
 		// process accession associations (create, delete, update)
 		// using stored procedure methods (ACC_insert(), ACC_delete_byAccKey(), ACC_update())
 		// using entity to compare domain vs entity
@@ -262,7 +262,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 							//+ "," + domain.get(i).getObjectKey()
 							+ "," + parentKey
 							+ ",'" + domain.get(i).getAccID() + "'"
-							+ "," + logicaldbKey
+							+ "," + domain.get(0).getLogicaldbKey()
 							+ ",'" + mgiTypeName + "'"
 							+ "," + refsKey + ","
 							+ "1,0,1)";

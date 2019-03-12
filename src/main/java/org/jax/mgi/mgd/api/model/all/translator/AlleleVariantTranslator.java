@@ -12,7 +12,6 @@ import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeStrainTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantAnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.translator.AlleleVariantAnnotationTranslator;
-import org.jax.mgi.mgd.api.util.Constants;
 import org.jboss.logging.Logger;
 
 public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVariant, AlleleVariantDomain> {
@@ -49,31 +48,8 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
 		// a curated variant has a source variant
 		// a source variant does *not* have a source variant (null)
 		if (entity.getSourceVariant() != null) {
-			//AlleleVariantTranslator sourceVariantTranslator = new AlleleVariantTranslator();		
-			//domain.setSourceVariant(sourceVariantTranslator.translate(entity.getSourceVariant()));
-			
-			// NEW CODE TO REPLACE TWO LINES ABOVE
-			// get the sourceEntity from the entity
-			AlleleVariant sourceEntity = entity.getSourceVariant();
-			// now set the source domain from the source entity
-			sourceDomain.setVariantKey(String.valueOf(sourceEntity.get_variant_key()));
-			sourceDomain.setIsReviewed(String.valueOf(entity.getIsReviewed()));
-			sourceDomain.setDescription(sourceEntity.getDescription());
-			sourceDomain.setChromosome(sourceEntity.getAllele().getMarker().getChromosome());
-			sourceDomain.setStrand(sourceEntity.getAllele().getMarker().getLocationCache().getStrand());
-			sourceDomain.setCreatedByKey(sourceEntity.getCreatedBy().get_user_key().toString());
-			sourceDomain.setCreatedBy(sourceEntity.getCreatedBy().getLogin());
-			sourceDomain.setModifiedByKey(sourceEntity.getModifiedBy().get_user_key().toString());
-			sourceDomain.setModifiedBy(sourceEntity.getModifiedBy().getLogin());
-			sourceDomain.setCreation_date(dateFormatNoTime.format(sourceEntity.getCreation_date()));
-			sourceDomain.setModification_date(dateFormatNoTime.format(sourceEntity.getModification_date()));
-			
-			sourceDomain.setAllele(alleleTranslator.translate(entity.getAllele()));
-			sourceDomain.setStrain(strainTranslator.translate(entity.getStrain()));
-			
-			// now set the source variant domain in the domain
-			domain.setSourceVariant(sourceDomain);
-			// END NEW CODE
+			AlleleVariantTranslator sourceVariantTranslator = new AlleleVariantTranslator();		
+			domain.setSourceVariant(sourceVariantTranslator.translate(entity.getSourceVariant()));
 		}
 		
         if (entity.getVariantTypes() != null && !entity.getVariantTypes().isEmpty()) {

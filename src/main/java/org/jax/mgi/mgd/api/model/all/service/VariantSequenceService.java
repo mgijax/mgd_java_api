@@ -212,8 +212,7 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 							domain.getAccessionIds(),
 							"Allele Variant Sequence", user);				
 				}
-				variantSequenceDAO.refresh(sequenceEntity);
-																
+				//variantSequenceDAO.refresh(sequenceEntity);																
 			}
 			else if (domains.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				

@@ -75,22 +75,22 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
 			domain.setSourceVariant(sourceDomain);
 			// END NEW CODE
 		}
-			
-        if (!entity.getVariantTypes().isEmpty()) {
+		
+        if (entity.getVariantTypes() != null && !entity.getVariantTypes().isEmpty()) {
         	Iterable<AlleleVariantAnnotationDomain> i = variantAnnotationTranslator.translateEntities(entity.getVariantTypes());
         	if(i.iterator().hasNext() == true) {
                 domain.setVariantTypes(IteratorUtils.toList(i.iterator()));
         	}
         }
         
-        if (!entity.getVariantEffects().isEmpty()) {
+        if (entity.getVariantEffects() != null && !entity.getVariantEffects().isEmpty()) {
             Iterable<AlleleVariantAnnotationDomain> i = variantAnnotationTranslator.translateEntities(entity.getVariantEffects());
           	if(i.iterator().hasNext() == true) {
                 domain.setVariantEffects(IteratorUtils.toList(i.iterator()));
             }
         }
 
-        if (!entity.getVariantSequences().isEmpty()) {
+        if (entity.getVariantSequences() != null && !entity.getVariantSequences().isEmpty()) {
             Iterable<VariantSequenceDomain> i = variantSequenceTranslator.translateEntities(entity.getVariantSequences());
           	if(i.iterator().hasNext() == true) {
                 domain.setVariantSequences(IteratorUtils.toList(i.iterator()));
@@ -98,7 +98,7 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
         }
 
 		// at most one curatorNote; list of 1
-		if (entity.getCuratorNote() != null) {
+		if (entity.getCuratorNote() != null && entity.getCuratorNote() != null) {
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getCuratorNote());
 			if(note.iterator().hasNext() == true) {
 				domain.setCuratorNote(note.iterator().next());
@@ -106,7 +106,7 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
 		}
 
 		// at most one publicNote; list of 1
-		if (entity.getPublicNote() != null) {
+		if (entity.getPublicNote() != null && entity.getPublicNote() != null) {
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getPublicNote());
 			if(note.iterator().hasNext() == true) {
 				domain.setPublicNote(note.iterator().next());
@@ -114,7 +114,7 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
 		}
 		
 		// reference associations
-		if (!entity.getRefAssocs().isEmpty()) {
+		if (entity.getRefAssocs() != null && !entity.getRefAssocs().isEmpty()) {
 			Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
 			if(i.iterator().hasNext() == true) {
 				domain.setRefAssocs(IteratorUtils.toList(i.iterator()));

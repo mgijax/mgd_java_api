@@ -153,6 +153,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		// return curated entity translated to domain, set in results
 		// results has domain info and other info too
 		log.info("processAlleleVariant/create/returning results");
+		log.info(curatedEntity);
 		results.setItem(translator.translate(curatedEntity,0));
 		log.info("processAlleleVariant/translator curated entity returned");
 		return results;

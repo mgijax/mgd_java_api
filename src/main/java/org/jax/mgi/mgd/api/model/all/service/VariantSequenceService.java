@@ -183,15 +183,25 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 				log.info("processVariantSequence setting sequence type");
 				sequenceEntity.setSequenceType(termDAO.get(Integer.valueOf(domain.getSequenceTypeKey())));
 				log.info("processVariantSequence setting start coordinate");
-				sequenceEntity.setStartCoordinate(Integer.valueOf(domain.getStartCoordinate()));
+				if(domain.getStartCoordinate() != null) { 
+					sequenceEntity.setStartCoordinate(Integer.valueOf(domain.getStartCoordinate()));
+				}
 				log.info("processVariantSequence setting end coordinate");
-				sequenceEntity.setEndCoordinate(Integer.valueOf(domain.getEndCoordinate()));
+				if(domain.getEndCoordinate() != null) {
+				    sequenceEntity.setEndCoordinate(Integer.valueOf(domain.getEndCoordinate()));
+				}
 				log.info("processVariantSequence setting reference sequence");
-				sequenceEntity.setReferenceSequence(domain.getReferenceSequence());
+				if(domain.getReferenceSequence() != null) {
+					sequenceEntity.setReferenceSequence(domain.getReferenceSequence());
+				}
 				log.info("processVariantSequence setting variant sequence");
-				sequenceEntity.setVariantSequence(domain.getVariantSequence());
+				if (domain.getVariantSequence() != null) {
+					sequenceEntity.setVariantSequence(domain.getVariantSequence());
+				}
 				log.info("processVariantSequence setting version");
-				sequenceEntity.setVersion(domain.getVersion());
+				if(domain.getVersion() != null) {
+					sequenceEntity.setVersion(domain.getVersion());
+				}
 				log.info("processVariantSequence setting createdBy");
 				sequenceEntity.setCreatedBy(user);
 				log.info("processVariantSequence setting creation date");

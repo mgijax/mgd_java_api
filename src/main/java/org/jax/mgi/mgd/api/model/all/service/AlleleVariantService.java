@@ -134,7 +134,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		
 		// process variant type : curated only
 		// use qualifier 'Generic Annotation Qualifier', value = null
-		if (domain.getVariantTypes() != null) {
+		if (domain.getVariantTypes() != null && !domain.getVariantTypes().isEmpty()) {
 			annotationService.processAlleleVariant(String.valueOf(curatedEntity.get_variant_key()), 
 					domain.getVariantTypes(), 
 					domain.getVariantTypes().get(0).getAnnotTypeKey(), 
@@ -143,7 +143,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 
 		// process variant effects : curated only
 		// use qualifier 'Generic Annotation Qualifier', value = null
-		if (domain.getVariantEffects() != null) {
+		if (domain.getVariantEffects() != null && !domain.getVariantEffects().isEmpty()) {
 			annotationService.processAlleleVariant(String.valueOf(curatedEntity.get_variant_key()), 
 					domain.getVariantEffects(), 
 					domain.getVariantEffects().get(0).getAnnotTypeKey(), 

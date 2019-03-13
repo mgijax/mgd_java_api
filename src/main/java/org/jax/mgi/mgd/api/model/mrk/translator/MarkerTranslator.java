@@ -1,6 +1,11 @@
 package org.jax.mgi.mgd.api.model.mrk.translator;
 
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
+
+import javax.transaction.Transactional;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
@@ -16,6 +21,7 @@ import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.voc.translator.MarkerFeatureTypeTranslator;
+import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jboss.logging.Logger;
 
 public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerDomain> {
@@ -29,6 +35,8 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private MarkerFeatureTypeTranslator featureTypeTranslator = new MarkerFeatureTypeTranslator();
 	private SlimMarkerTranslator slimMarkerTranslator = new SlimMarkerTranslator();
 
+	private SQLExecutor sqlExecutor = new SQLExecutor();
+	
 	@Override
 	protected MarkerDomain entityToDomain(Marker entity, int translationDepth) {
 		
@@ -116,18 +124,25 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		}
 		
 		// one-to-many gene-to-tss relationships
-		if (!entity.getGeneToTss().isEmpty()) {
-			Iterable<SlimMarkerDomain> i = slimMarkerTranslator.translateEntities(entity.getGeneToTss());
-			domain.setGeneToTss(IteratorUtils.toList(i.iterator()));
-			domain.getGeneToTss().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
+		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
+		results = getMarkerTSS(Integer.valueOf(domain.getMarkerKey()));
+		if (!results.isEmpty()) {
+			domain.setGeneToTss(results);
+			domain.getGeneToTss().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));		
 		}
-
+		
+    	// once hibernate issue is fixed, we will go back to this implementation
+    	//if (!entity.getGeneToTss().isEmpty()) {
+		//	Iterable<SlimMarkerDomain> i = slimMarkerTranslator.translateEntities(entity.getGeneToTss());
+		//	domain.setGeneToTss(IteratorUtils.toList(i.iterator()));
+		//	domain.getGeneToTss().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
+		//}
 		// one-to-many tss-to-gene relationships
-		if (!entity.getTssToGene().isEmpty()) {
-			Iterable<SlimMarkerDomain> i = slimMarkerTranslator.translateEntities(entity.getTssToGene());
-			domain.setTssToGene(IteratorUtils.toList(i.iterator()));
-			domain.getTssToGene().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
-		}
+		//if (!entity.getTssToGene().isEmpty()) {
+		//	Iterable<SlimMarkerDomain> i = slimMarkerTranslator.translateEntities(entity.getTssToGene());
+		//	domain.setTssToGene(IteratorUtils.toList(i.iterator()));
+		//	domain.getTssToGene().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
+		//}
 				
 		// one-to-many marker aliases
 		if (!entity.getAliases().isEmpty()) {
@@ -170,4 +185,42 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		return null;
 	}
 
+	@Transactional	
+	public List<SlimMarkerDomain> getMarkerTSS(Integer key) {
+		// return all tss-marker relationships by specified marker key
+
+		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
+		
+		String cmd = "select _object_key_1, _object_key_2, marker1, marker2 "
+				+ "\nfrom mgi_relationship_markertss_view "
+				+ "\nwhere _object_key_1 = " + key
+				+ "\nor _object_key_2 = " + key;
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				
+				SlimMarkerDomain domain = new SlimMarkerDomain();				
+	
+				if (rs.getString("_object_key_1").equals(String.valueOf(key))) {
+					domain.setMarkerKey(rs.getString("_object_key_2"));
+					domain.setSymbol(rs.getString("marker2"));		
+				}
+				else {
+					domain.setMarkerKey(rs.getString("_object_key_1"));
+					domain.setSymbol(rs.getString("marker1"));						
+				}
+			
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

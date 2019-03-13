@@ -42,7 +42,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 	@Inject
 	private MarkerDAO markerDAO;
-	
 	@Inject
 	private OrganismDAO organismDAO;
 	@Inject
@@ -62,6 +61,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private AccessionService accessionService;
 	@Inject
 	private AnnotationService annotationService;
+
 	
 	private MarkerTranslator translator = new MarkerTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();

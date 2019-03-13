@@ -17,7 +17,6 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Where;
-import org.hibernate.annotations.WhereJoinTable;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
@@ -147,26 +146,27 @@ public class Marker extends BaseEntity {
 	@OrderBy(clause ="_refassoctype_key")
 	private List<MGIReferenceAssoc> refAssocs;
 
-	@OneToMany
-	@JoinTable(name = "mgi_relationship",
-		joinColumns = @JoinColumn(name="_object_key_2", referencedColumnName="_marker_key"),
-		inverseJoinColumns = @JoinColumn(name = "_object_key_1", referencedColumnName="_marker_key")
-	)	
-	@WhereJoinTable(clause="`_category_key` = 1008")
-	private List<Marker> geneToTss;
+	// once hibernate issue is fixed, we will go back to this implementation
+	//@OneToMany
+	//@JoinTable(name = "mgi_relationship",
+	//	joinColumns = @JoinColumn(name="_object_key_2", referencedColumnName="_marker_key", insertable=false, updatable=false),
+	//	inverseJoinColumns = @JoinColumn(name = "_object_key_1", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	//)	
+	//@WhereJoinTable(clause="`_category_key` = 1008")
+	//private List<Marker> geneToTss;
 	
-	@OneToMany
-	@JoinTable(name = "mgi_relationship",
-		joinColumns = @JoinColumn(name="_object_key_1", referencedColumnName="_marker_key"),
-		inverseJoinColumns = @JoinColumn(name = "_object_key_2", referencedColumnName="_marker_key")
-	)	
-	@WhereJoinTable(clause="`_category_key` = 1008")
-	private List<Marker> tssToGene;
+	//@OneToMany
+	//@JoinTable(name = "mgi_relationship",
+	//	joinColumns = @JoinColumn(name="_object_key_1", referencedColumnName="_marker_key", insertable=false, updatable=false),
+	//	inverseJoinColumns = @JoinColumn(name = "_object_key_2", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	//)	
+	//@WhereJoinTable(clause="`_category_key` = 1008")
+	//private List<Marker> tssToGene;
 
 	@OneToMany
 	@JoinTable(name = "mrk_alias",
-		joinColumns = @JoinColumn(name="_alias_key", referencedColumnName="_marker_key"),
-		inverseJoinColumns = @JoinColumn(name = "_marker_key", referencedColumnName="_marker_key")
+		joinColumns = @JoinColumn(name="_alias_key", referencedColumnName="_marker_key", insertable=false, updatable=false),
+		inverseJoinColumns = @JoinColumn(name = "_marker_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	)
 	private List<Marker> aliases;
 

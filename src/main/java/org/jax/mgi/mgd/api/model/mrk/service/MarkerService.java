@@ -352,7 +352,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Boolean from_noneditAccession = false;
 		Boolean from_featureTypes = false;		
 		Boolean from_tss1 = false;
-		Boolean from_tss2 = false;
 		Boolean from_alias = false;
 
 		// if parameter exists, then add to where-clause
@@ -622,15 +621,12 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			from_featureTypes = true;
 		}
 		
-		if (searchDomain.getGeneToTss() != null) {
-			where = where + "\nand tss1.marker1 ilike '" + searchDomain.getGeneToTss().get(0).getSymbol() + "'";
+		if (searchDomain.getTssToGene() != null) {
+			where = where + "\nand (tss1.marker1 ilike '" + searchDomain.getTssToGene().get(0).getSymbol() + "'" +
+						"or tss1.marker2 ilike '" + searchDomain.getTssToGene().get(0).getSymbol() + "')";
 			from_tss1 = true;
 		}
-		if (searchDomain.getTssToGene() != null) {
-			where = where + "\nand tss2.marker2 ilike '" + searchDomain.getTssToGene().get(0).getSymbol() + "'";
-			from_tss2 = true;
-		}
-		
+
 		if (searchDomain.getAliases() != null) {
 			where = where + "\nand alias.symbol ilike '" + searchDomain.getAliases().get(0).getSymbol() + "'";
 			from_alias = true;
@@ -693,11 +689,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 		if (from_tss1 == true) {
 			from = from + ", mgi_relationship_markertss_view tss1";
-			where = where + "\nand m._marker_key = tss1._object_key_2";
-		}
-		if (from_tss2 == true) {
-			from = from + ", mgi_relationship_markertss_view tss2";
-			where = where + "\nand m._marker_key = tss2._object_key_1";
+			where = where + "\nand (m._marker_key = tss1._object_key_1 or m._marker_key = tss1._object_key_2)";
 		}
 		if (from_alias == true) {
 			from = from + ", mrk_alias_View alias";

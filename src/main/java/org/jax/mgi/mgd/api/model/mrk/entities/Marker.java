@@ -23,6 +23,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
+import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipMarkerTSS;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 
@@ -146,26 +147,16 @@ public class Marker extends BaseEntity {
 	@OrderBy(clause ="_refassoctype_key")
 	private List<MGIReferenceAssoc> refAssocs;
 
-	// once hibernate issue is fixed, we will go back to this implementation
-	//@OneToMany
-	//@JoinTable(name = "mgi_relationship",
-	//	joinColumns = @JoinColumn(name="_object_key_2", referencedColumnName="_marker_key", insertable=false, updatable=false),
-	//	inverseJoinColumns = @JoinColumn(name = "_object_key_1", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	//)	
-	//@WhereJoinTable(clause="`_category_key` = 1008")
-	//private List<Marker> geneToTss;
+	@OneToMany
+	@JoinColumn(name="_object_key_1", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	private List<RelationshipMarkerTSS> tssToGene;
 	
-	//@OneToMany
-	//@JoinTable(name = "mgi_relationship",
-	//	joinColumns = @JoinColumn(name="_object_key_1", referencedColumnName="_marker_key", insertable=false, updatable=false),
-	//	inverseJoinColumns = @JoinColumn(name = "_object_key_2", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	//)	
-	//@WhereJoinTable(clause="`_category_key` = 1008")
-	//private List<Marker> tssToGene;
+	@OneToMany
+	@JoinColumn(name="_object_key_2", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	private List<RelationshipMarkerTSS> geneToTss;
 
 	@OneToMany
-	@JoinTable(name = "mrk_alias",
-		joinColumns = @JoinColumn(name="_alias_key", referencedColumnName="_marker_key", insertable=false, updatable=false),
+	@JoinTable(name = "mrk_alias",	joinColumns = @JoinColumn(name="_alias_key", referencedColumnName="_marker_key", insertable=false, updatable=false),
 		inverseJoinColumns = @JoinColumn(name = "_marker_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	)
 	private List<Marker> aliases;

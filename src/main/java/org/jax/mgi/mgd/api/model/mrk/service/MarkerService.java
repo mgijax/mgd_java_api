@@ -24,6 +24,7 @@ import org.jax.mgi.mgd.api.model.mrk.dao.MarkerStatusDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerTypeDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerOfficialChromDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
@@ -790,7 +791,59 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		return results;
 	}	
+
+	@Transactional	
+	public SearchResults<SlimMarkerOfficialChromDomain> validOfficialChrom(SlimMarkerOfficialChromDomain searchDomain) {
+		// use SlimMarkerOfficialChromDomain to return list of validated marker
+		// organism = 1 (mouse) expected
+		// marker status = official
+		// chromosomes of each marker must match
+		// returns empty list if value does not exist
+
+		SearchResults<SlimMarkerOfficialChromDomain> results = new SearchResults<SlimMarkerOfficialChromDomain>();
+		List<SlimMarkerOfficialChromDomain> listOfResults = new ArrayList<SlimMarkerOfficialChromDomain>();
+
+		String cmd = "\nselect m1._marker_key as markerKey1, m1.symbol as symbol1, m1.chromosome as chromosome1"
+				+ "\n,m2._marker_key as markerKey2, m2.symbol as symbol2, m2.chromosome as chromosome2"
+				+ "\nfrom mrk_marker m1, mrk_marker m2"
+				+ "\nwhere m1._organism_key = 1"
+				+ "\nand m1._marker_status_key = 1"
+				+ "\nand m1._marker_key = " + searchDomain.getMarkerKey1()
+				+ "\nand m2._organism_key = 1"
+				+ "\nand m2._marker_status_key = 1"		
+				+ "\nand lower(m2.symbol) = '" + searchDomain.getSymbol2().toLowerCase() + "'"
+				+ "\nand m1.chromosome = '" + searchDomain.getChromosome1() + "'"
+				+ "\nand m1.chromosome = m2.chromosome";
+				
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {	
+				SlimMarkerOfficialChromDomain domain = new SlimMarkerOfficialChromDomain();						
+				domain.setMarkerKey1(rs.getString("markerKey1"));
+				domain.setSymbol1(rs.getString("symbol1"));
+				domain.setChromosome1(rs.getString("chromosome1"));	
+				domain.setMarkerKey2(rs.getString("markerKey2"));
+				domain.setSymbol2(rs.getString("symbol2"));
+				domain.setChromosome2(rs.getString("chromosome2"));					
+				listOfResults.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		
+		results.setItems(listOfResults);
+		
+		if (results.items.isEmpty()) {
+			results.setError(Constants.LOG_MGI_API, "Check New Marker/must be Official/Chromosomes must match", Constants.HTTP_SERVER_ERROR);
+		}
+		
+		return results;
+	}	
+			
 	@Transactional		
 	public SearchResults<SlimMarkerDomain> eiUtilities(MarkerUtilitiesForm searchForm) throws IOException, InterruptedException {
 	

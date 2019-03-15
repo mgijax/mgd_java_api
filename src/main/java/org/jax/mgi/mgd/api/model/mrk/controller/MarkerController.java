@@ -16,6 +16,7 @@ import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerOfficialChromDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -111,7 +112,23 @@ public class MarkerController extends BaseController<MarkerDomain> {
 			String symbol) {
 		return markerService.valid(symbol, false, false);
 	}
-			
+
+	@POST
+	@ApiOperation(value = "Validate marker symbol/official status/chromosome match/returns slim marker domain")
+	@Path("/validMarkerOfficialChrom")
+	public SearchResults<SlimMarkerOfficialChromDomain> validOfficialChrom(SlimMarkerOfficialChromDomain searchDomain) {
+	
+		SearchResults<SlimMarkerOfficialChromDomain> results = new SearchResults<SlimMarkerOfficialChromDomain>();
+
+		try {
+			results = markerService.validOfficialChrom(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 	@POST
 	@ApiOperation(value = "EI Utilities ")
 	@Path("/eiUtilities")

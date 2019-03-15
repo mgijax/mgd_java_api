@@ -95,7 +95,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	@GET
 	@ApiOperation(value = "Validate marker symbol/any status is valid/returns slim marker domain")
 	@Path("/validAnyStatus/{symbol}")
-	public List<SlimMarkerDomain> validateAnyStatus(
+	public List<SlimMarkerDomain> validAnyStatus(
 			@PathParam("symbol") 
 			@ApiParam(value = "Validating Marker Symbol") 
 			String symbol) {

@@ -821,10 +821,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				+ "\nand a._logicaldb_key = 1"
 				+ "\nand a.preferred = 1";
 				
-		if (searchDomain.getSymbol2() != null) {
+		if (searchDomain.getSymbol2() != null && !searchDomain.getSymbol2().isEmpty()) {
 			cmd = cmd + "\nand lower(m2.symbol) = '" + searchDomain.getSymbol2().toLowerCase() + "'";
 		}
-		if (searchDomain.getMgiAccId2() != null) {
+		if (searchDomain.getMgiAccId2() != null && !searchDomain.getMgiAccId2().isEmpty()) {
 			cmd = cmd + "\nand a.accID = '" + searchDomain.getMgiAccId2() + "'";
 		}
 		

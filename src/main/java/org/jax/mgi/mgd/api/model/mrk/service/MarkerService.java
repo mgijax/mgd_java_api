@@ -747,7 +747,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}	
 
 	@Transactional	
-	public List<SlimMarkerDomain> valid(String value, Boolean allowWithdrawn, Boolean allowReserved) {
+	public List<SlimMarkerDomain> validate(String value, Boolean allowWithdrawn, Boolean allowReserved) {
 		// use SlimMarkerDomain to return list of validated marker
 		// one value is expected
 		// organism = 1 (mouse) expected
@@ -793,7 +793,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}	
 
 	@Transactional	
-	public SearchResults<SlimMarkerOfficialChromDomain> validOfficialChrom(SlimMarkerOfficialChromDomain searchDomain) {
+	public SearchResults<SlimMarkerOfficialChromDomain> validateOfficialChrom(SlimMarkerOfficialChromDomain searchDomain) {
 		// use SlimMarkerOfficialChromDomain to return list of validated markers
 		// marker1 = old/existing marker
 		// marker2 = new marker; the one that really needs validation

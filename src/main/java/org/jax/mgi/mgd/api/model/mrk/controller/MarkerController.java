@@ -95,33 +95,33 @@ public class MarkerController extends BaseController<MarkerDomain> {
 
 	@GET
 	@ApiOperation(value = "Validate marker symbol/any status is valid/returns slim marker domain")
-	@Path("/validAnyStatus/{symbol}")
-	public List<SlimMarkerDomain> validAnyStatus(
+	@Path("/validateAnyStatus/{symbol}")
+	public List<SlimMarkerDomain> validateAnyStatus(
 			@PathParam("symbol") 
 			@ApiParam(value = "Validating Marker Symbol") 
 			String symbol) {
-		return markerService.valid(symbol, true, true);
+		return markerService.validate(symbol, true, true);
 	}
 	
 	@GET
 	@ApiOperation(value = "Validate marker symbol/official status is valid/returns slim marker domain")
-	@Path("/validOfficialStatus/{symbol}")
-	public List<SlimMarkerDomain> validOfficialStatus(
+	@Path("/validateOfficialStatus/{symbol}")
+	public List<SlimMarkerDomain> validateOfficialStatus(
 			@PathParam("symbol") 
 			@ApiParam(value = "Validating Marker Symbol") 
 			String symbol) {
-		return markerService.valid(symbol, false, false);
+		return markerService.validate(symbol, false, false);
 	}
 
 	@POST
 	@ApiOperation(value = "Validate marker symbol/official status/chromosome match/returns slim marker domain")
-	@Path("/validMarkerOfficialChrom")
-	public SearchResults<SlimMarkerOfficialChromDomain> validOfficialChrom(SlimMarkerOfficialChromDomain searchDomain) {
+	@Path("/validateMarkerOfficialChrom")
+	public SearchResults<SlimMarkerOfficialChromDomain> validateOfficialChrom(SlimMarkerOfficialChromDomain searchDomain) {
 	
 		SearchResults<SlimMarkerOfficialChromDomain> results = new SearchResults<SlimMarkerOfficialChromDomain>();
 
 		try {
-			results = markerService.validOfficialChrom(searchDomain);
+			results = markerService.validateOfficialChrom(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

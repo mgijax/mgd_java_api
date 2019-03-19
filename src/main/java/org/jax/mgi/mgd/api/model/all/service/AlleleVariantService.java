@@ -209,6 +209,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		}
 
 		// process reference DADT-180
+		log.info("process references");
 		if (domain.getRefAssocs() != null) {
 			log.info("referenceAssocService " + referenceAssocService);
 			log.info("domain " + domain);
@@ -217,7 +218,8 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			}
 		}
 		
-		// process variant type - 
+		// process variant type
+		log.info("process variant type");
 		if (domain.getVariantTypes() != null) {
 			// parentKey, List ofAlleleVariantAnnotationDomain, annotTypeKey, qualifierKey, user
 			if (annotationService.processAlleleVariant(domain.getVariantKey(), 
@@ -229,6 +231,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		}
 
 		// process variant effects
+		log.info("process variant effects");
 		if (domain.getVariantEffects() != null) {
 			if (annotationService.processAlleleVariant(domain.getVariantKey(), 
 					domain.getVariantEffects(), 

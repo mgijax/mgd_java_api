@@ -255,14 +255,14 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 		
 		// process marker reference
-		if (domain.getRefAssocs() != null) {
+		if (domain.getRefAssocs() != null && !domain.getRefAssocs().isEmpty()) {
 			if (referenceAssocService.process(domain.getMarkerKey(), domain.getRefAssocs(), mgiTypeKey, user)) {
 				modified = true;
 			}
 		}
 		
 		// process marker nucleotide accession ids
-		if (domain.getEditAccessionIds() != null) {
+		if (domain.getEditAccessionIds() != null && !domain.getEditAccessionIds().isEmpty()) {
 			if (accessionService.process(domain.getMarkerKey(), domain.getEditAccessionIds(), mgiTypeName, user)) {
 				modified = true;
 			}
@@ -270,12 +270,12 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		// process feature types
 		// use qualifier 'Generic Annotation Qualifier', value = null
-		if (domain.getFeatureTypes() != null) {
+		if (domain.getFeatureTypes() != null && !domain.getFeatureTypes().isEmpty()) {
 			if (annotationService.processMarkerFeatureType(domain.getMarkerKey(), 
 					domain.getFeatureTypes(), 
 					domain.getFeatureTypes().get(0).getAnnotTypeKey(),
 					Constants.VOC_GENERIC_ANNOTATION_QUALIFIER, user) == true) {
-				modified = true;
+				modified = true;			
 			}
 		}
 

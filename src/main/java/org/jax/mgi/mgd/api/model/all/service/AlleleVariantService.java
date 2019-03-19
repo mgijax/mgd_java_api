@@ -184,7 +184,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		}
 		// description
 		log.info("process description");
-		if (!entity.getDescription().equals(domain.getDescription())) {
+		if (entity.getDescription()!= null && !entity.getDescription().equals(domain.getDescription())) {
 			entity.setDescription(domain.getDescription());
 			modified = true;
 		}

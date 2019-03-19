@@ -210,7 +210,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 
 		// process reference DADT-180
 		log.info("process references");
-		if (domain.getRefAssocs() != null) {
+		if (domain.getRefAssocs() != null && !domain.getRefAssocs().isEmpty()) {
 			log.info("referenceAssocService " + referenceAssocService);
 			log.info("domain " + domain);
 			if(referenceAssocService.process(domain.getVariantKey(), domain.getRefAssocs(), mgiTypeKey, user)) {
@@ -220,7 +220,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		
 		// process variant type
 		log.info("process variant type");
-		if (domain.getVariantTypes() != null) {
+		if (domain.getVariantTypes() != null && !domain.getVariantTypes().isEmpty()) {
 			// parentKey, List ofAlleleVariantAnnotationDomain, annotTypeKey, qualifierKey, user
 			if (annotationService.processAlleleVariant(domain.getVariantKey(), 
 					domain.getVariantTypes(), 
@@ -232,7 +232,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 
 		// process variant effects
 		log.info("process variant effects");
-		if (domain.getVariantEffects() != null) {
+		if (domain.getVariantEffects() != null && !domain.getVariantEffects().isEmpty()) {
 			if (annotationService.processAlleleVariant(domain.getVariantKey(), 
 					domain.getVariantEffects(), 
 					domain.getVariantEffects().get(0).getAnnotTypeKey(), 
@@ -243,7 +243,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		
 		// process curated variant sequences DADT-178
 		log.info("calling sequence service to process curated sequence");
-		if (domain.getVariantSequences() != null) {
+		if (domain.getVariantSequences() != null && !domain.getVariantSequences().isEmpty()) {
 			if (sequenceService.process(String.valueOf(entity.get_variant_key()), domain.getVariantSequences(), user)) {
 				modified = true;
 			}
@@ -261,6 +261,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			}
 			log.info("done processing source variant sequences");
 		}
+		
 		// only if modifications were actually made
 		if (modified == true) {
 			entity.setModification_date(new Date());

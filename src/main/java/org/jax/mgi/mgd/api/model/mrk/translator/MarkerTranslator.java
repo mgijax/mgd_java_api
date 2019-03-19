@@ -62,43 +62,43 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
 		// at most one editorNote
-		if (!entity.getEditorNote().isEmpty()) {
+		if (entity.getEditorNote() != null && !entity.getEditorNote().isEmpty()) {
 			Iterable<NoteDomain> editorNote = noteTranslator.translateEntities(entity.getEditorNote());
 			domain.setEditorNote(editorNote.iterator().next());
 		}
 
 		// at most one sequenceNote
-		if (!entity.getSequenceNote().isEmpty()) {
+		if (entity.getSequenceNote() != null && !entity.getSequenceNote().isEmpty()) {
 			Iterable<NoteDomain> sequenceNote = noteTranslator.translateEntities(entity.getSequenceNote());
 			domain.setSequenceNote(sequenceNote.iterator().next());
 		}
 		
 		// at most one revisionNote
-		if (!entity.getRevisionNote().isEmpty()) {
+		if (entity.getRevisionNote() != null && !entity.getRevisionNote().isEmpty()) {
 			Iterable<NoteDomain> revisionNote = noteTranslator.translateEntities(entity.getRevisionNote());
 			domain.setRevisionNote(revisionNote.iterator().next());
 		}
 		
 		// at most one strainNote
-		if (!entity.getStrainNote().isEmpty()) {
+		if (entity.getStrainNote() != null && !entity.getStrainNote().isEmpty()) {
 			Iterable<NoteDomain> strainNote = noteTranslator.translateEntities(entity.getStrainNote());
 			domain.setStrainNote(strainNote.iterator().next());
 		}
 		
 		// at most one locationNote
-		if (!entity.getLocationNote().isEmpty()) {
+		if (entity.getLocationNote() != null && !entity.getLocationNote().isEmpty()) {
 			Iterable<NoteDomain> locationNote = noteTranslator.translateEntities(entity.getLocationNote());
 			domain.setLocationNote(locationNote.iterator().next());
 		}
 		
 		// mgi accession ids only
-		if (!entity.getMgiAccessionIds().isEmpty()) {
+		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
 			domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
 		}
 		
 		// one-to-many marker history
-		if (!entity.getHistory().isEmpty()) {
+		if (entity.getHistory() != null && !entity.getHistory().isEmpty()) {
 			Iterable<MarkerHistoryDomain> i = historyTranslator.translateEntities(entity.getHistory());
 			domain.setHistory(IteratorUtils.toList(i.iterator()));
 			//cannot use this for keys as they are stored as strings
@@ -106,7 +106,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		}
 		
 		// one-to-many marker synonyms
-		if (!entity.getSynonyms().isEmpty()) {
+		if (entity.getSynonyms() != null && !entity.getSynonyms().isEmpty()) {
 			Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getSynonyms());
 			domain.setSynonyms(IteratorUtils.toList(i.iterator()));
 			domain.getSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymType).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
@@ -114,7 +114,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 
 		// one-to-many marker feature types
 		// featureTypes can also be set via voc/service/Annotation.service/markerFeatureTypes
-		if (!entity.getFeatureTypes().isEmpty()) {
+		if (entity.getFeatureTypes() != null && !entity.getFeatureTypes().isEmpty()) {
 			Iterable<MarkerFeatureTypeDomain> i = featureTypeTranslator.translateEntities(entity.getFeatureTypes());
 			domain.setFeatureTypes(IteratorUtils.toList(i.iterator()));
 			domain.getFeatureTypes().sort(Comparator.comparing(MarkerFeatureTypeDomain::getTerm));
@@ -122,7 +122,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		
 		// one-to-many tss-to-gene relationships
 		List<SlimMarkerDomain> markers = new ArrayList<SlimMarkerDomain>();
-		if (!entity.getTssToGene().isEmpty()) {
+		if (entity.getTssToGene() != null && !entity.getTssToGene().isEmpty()) {
     		Iterable<RelationshipMarkerTSSDomain> relationships = markerTSSTranslator.translateEntities(entity.getTssToGene());
 			for (RelationshipMarkerTSSDomain i : relationships) {
 				if (domain.getMarkerKey().equals(i.getObjectKey1())) {
@@ -135,7 +135,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
     		domain.setTssToGene(markers);
 			domain.getTssToGene().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}
-		if (!entity.getGeneToTss().isEmpty()) {
+		if (entity.getGeneToTss() != null && !entity.getGeneToTss().isEmpty()) {
     		Iterable<RelationshipMarkerTSSDomain> relationships = markerTSSTranslator.translateEntities(entity.getGeneToTss());
 			for (RelationshipMarkerTSSDomain i : relationships) {
 				if (domain.getMarkerKey().equals(i.getObjectKey2())) {
@@ -150,21 +150,21 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		}
 		   	
 		// one-to-many marker aliases
-		if (!entity.getAliases().isEmpty()) {
+		if (entity.getAliases() != null && !entity.getAliases().isEmpty()) {
 			Iterable<SlimMarkerDomain> i = slimMarkerTranslator.translateEntities(entity.getAliases());
 			domain.setAliases(IteratorUtils.toList(i.iterator()));
 			domain.getAliases().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}
 
 		// accession ids editable
-		if (!entity.getEditAccessionIds().isEmpty()) {
+		if (entity.getEditAccessionIds() != null && !entity.getEditAccessionIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIds());
 			domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
 			domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
 		
 		// accession ids non-editable 
-		if (!entity.getNonEditAccessionIds().isEmpty()) {
+		if (entity.getNonEditAccessionIds() != null && !entity.getNonEditAccessionIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getNonEditAccessionIds());
 			domain.setNonEditAccessionIds(IteratorUtils.toList(acc.iterator()));
 			domain.getNonEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
@@ -174,7 +174,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		// that is, see acc/service/AccessionService:getMarkerEditAccessionIds
 							
 		// reference associations
-		//if (!entity.getRefAssocs().isEmpty()) {
+		//if (entity.getRefAssocs() != null && !entity.getRefAssocs().isEmpty()) {
 		//	MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
 		//	Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
 		//	domain.setRefAssocs(IteratorUtils.toList(i.iterator()));

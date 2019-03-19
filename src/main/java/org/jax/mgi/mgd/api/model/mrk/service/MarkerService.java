@@ -120,7 +120,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		// default reference is J:23000 (22864)
 		String refKey;
-		if (domain.getHistory() == null) {
+		if (domain.getHistory().get(0).getRefsKey() != null && domain.getHistory().get(0).getRefsKey().isEmpty()) {
 			refKey = "22864";
 		}
 		else {
@@ -747,7 +747,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}	
 
 	@Transactional	
-	public List<SlimMarkerDomain> valid(String value, Boolean allowWithdrawn, Boolean allowReserved) {
+	public List<SlimMarkerDomain> validate(String value, Boolean allowWithdrawn, Boolean allowReserved) {
 		// use SlimMarkerDomain to return list of validated marker
 		// one value is expected
 		// organism = 1 (mouse) expected
@@ -793,28 +793,41 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}	
 
 	@Transactional	
-	public SearchResults<SlimMarkerOfficialChromDomain> validOfficialChrom(SlimMarkerOfficialChromDomain searchDomain) {
-		// use SlimMarkerOfficialChromDomain to return list of validated marker
+	public SearchResults<SlimMarkerOfficialChromDomain> validateOfficialChrom(SlimMarkerOfficialChromDomain searchDomain) {
+		// use SlimMarkerOfficialChromDomain to return list of validated markers
+		// marker1 = old/existing marker
+		// marker2 = new marker; the one that really needs validation
 		// organism = 1 (mouse) expected
 		// marker status = official
-		// chromosomes of each marker must match
-		// returns empty list if value does not exist
+		// chromosomes of marker1 must match chromosome of marker2
+		// returns empty list if values if validation fails
 
 		SearchResults<SlimMarkerOfficialChromDomain> results = new SearchResults<SlimMarkerOfficialChromDomain>();
 		List<SlimMarkerOfficialChromDomain> listOfResults = new ArrayList<SlimMarkerOfficialChromDomain>();
-
+	
 		String cmd = "\nselect m1._marker_key as markerKey1, m1.symbol as symbol1, m1.chromosome as chromosome1"
-				+ "\n,m2._marker_key as markerKey2, m2.symbol as symbol2, m2.chromosome as chromosome2"
-				+ "\nfrom mrk_marker m1, mrk_marker m2"
+				+ ",m2._marker_key as markerKey2, m2.symbol as symbol2, m2.chromosome as chromosome2"
+				+ ", a.accID"
+				+ "\nfrom mrk_marker m1, mrk_marker m2, acc_accession a"
 				+ "\nwhere m1._organism_key = 1"
 				+ "\nand m1._marker_status_key = 1"
 				+ "\nand m1._marker_key = " + searchDomain.getMarkerKey1()
 				+ "\nand m2._organism_key = 1"
 				+ "\nand m2._marker_status_key = 1"		
-				+ "\nand lower(m2.symbol) = '" + searchDomain.getSymbol2().toLowerCase() + "'"
 				+ "\nand m1.chromosome = '" + searchDomain.getChromosome1() + "'"
-				+ "\nand m1.chromosome = m2.chromosome";
+				+ "\nand m1.chromosome = m2.chromosome" 
+				+ "\nand m2._marker_key = a._object_key"
+				+ "\nand a._mgitype_key = 2"
+				+ "\nand a._logicaldb_key = 1"
+				+ "\nand a.preferred = 1";
 				
+		if (searchDomain.getSymbol2() != null && !searchDomain.getSymbol2().isEmpty()) {
+			cmd = cmd + "\nand lower(m2.symbol) = '" + searchDomain.getSymbol2().toLowerCase() + "'";
+		}
+		if (searchDomain.getMgiAccId2() != null && !searchDomain.getMgiAccId2().isEmpty()) {
+			cmd = cmd + "\nand a.accID = '" + searchDomain.getMgiAccId2() + "'";
+		}
+		
 		log.info(cmd);
 
 		try {
@@ -826,7 +839,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				domain.setChromosome1(rs.getString("chromosome1"));	
 				domain.setMarkerKey2(rs.getString("markerKey2"));
 				domain.setSymbol2(rs.getString("symbol2"));
-				domain.setChromosome2(rs.getString("chromosome2"));					
+				domain.setChromosome2(rs.getString("chromosome2"));		
+				domain.setMgiAccId2(rs.getString("accID"));
 				listOfResults.add(domain);
 			}
 			sqlExecutor.cleanup();

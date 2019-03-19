@@ -41,7 +41,7 @@ public class AccessionTranslator extends BaseEntityDomainTranslator<Accession, A
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
 		// list of references
-		if (!entity.getReferences().isEmpty()) {
+		if (entity.getReferences() != null && !entity.getReferences().isEmpty()) {
 			Iterable<AccessionReferenceDomain> acc = accessionReferenceTranslator.translateEntities(entity.getReferences());
 			domain.setReferences(IteratorUtils.toList(acc.iterator()));
 		}

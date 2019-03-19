@@ -9,7 +9,7 @@ import lombok.Setter;
 public class SlimMarkerOfficialChromDomain extends BaseDomain {
 
 	// a slim marker domain
-	// needs 2 official markers w/ chromsomes
+	// needs 2 official markers w/ chromosomes
 	// used by validOfficialChrom service method
 	
 	private String markerKey1;
@@ -18,5 +18,6 @@ public class SlimMarkerOfficialChromDomain extends BaseDomain {
 	private String markerKey2;
 	private String symbol2;
 	private String chromosome2;
+	private String mgiAccId2;
   
 }

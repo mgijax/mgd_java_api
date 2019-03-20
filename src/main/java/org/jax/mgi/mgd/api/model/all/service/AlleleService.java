@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
@@ -192,5 +193,93 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		
 		return results;
 	}
+//	@Transactional
+//	public List<SlimAlleleDomain> validateSymbol(String symbol) {
+//		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
+//		if (symbol.contains("%")) {
+//			return results;
+//		}
+//		String cmd;
+//
+//		cmd = "\nselect _allele_key, symbol"
+//				+ "\nfrom all_allele"
+//				+ "\nwhere _allele_status_key in (847114, 3983021)" //Approved,Autoload
+//				+ "\nand lower(symbol) = '" + symbol.toLowerCase() + "'";
+//		log.info(cmd);
+//		
+//		try {
+//			ResultSet rs = sqlExecutor.executeProto(cmd);
+//			while (rs.next()) {	
+//				SlimAlleleDomain slimDomain = new SlimAlleleDomain();						
+//				slimDomain.setAlleleKey(rs.getString("_allele_key"));
+//				slimDomain.setSymbol(rs.getString("symbol"));			
+//				results.add(slimDomain);
+//			
+//			}
+//			sqlExecutor.cleanup();
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return results;
+//	}
 
+	@Transactional
+	public SearchResults<SlimAlleleDomain> validateAllele(AlleleDomain searchDomain) {
+		
+		SearchResults<SlimAlleleDomain> results = new SearchResults<SlimAlleleDomain>();
+		SlimAlleleDomain slimDomain = new SlimAlleleDomain();
+		
+		String cmd = "";
+		
+		if(searchDomain.getSymbol() != null) {
+			if(searchDomain.getSymbol().contains("%")) {
+				return results;
+			}
+			else {
+				cmd = "\nselect aa._allele_key, aa.symbol, a.accid"
+						+ "\nfrom all_allele aa, acc_accession a"
+						+ "\nwhere aa._allele_status_key in (847114, 3983021)" //Approved,Autoload
+						+ "\nand lower(aa.symbol) = '" + searchDomain.getSymbol().toLowerCase() + "'"
+						+ "\nand aa._allele_key = a._object_key"
+						+ "\nand a._mgitype_key = 1"
+						+ "\nand a._logicaldb_key = 1"
+						+ "\nand a.preferred = 1"
+						+ "\nand a.prefixPart = 'MGI:'";
+			}
+				
+		}
+		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().isEmpty()) {
+			String alleleID = searchDomain.getMgiAccessionIds().get(0).getAccID();
+			cmd = "\nselect aa._allele_key, aa.symbol, a.accid"
+					+ "\nfrom acc_accession a, all_allele aa"
+					+ "\nwhere a.accid = '" + alleleID + "'"
+					+ "\nand a.preferred = 1"
+					+ "\nand a._mgitype_key = 11"
+					+ "\nand a._object_key = aa._allele_key"
+					+ "\nand aa._allele_status_key in (847114, 3983021)"; //Approved,Autoload"
+		}
+		log.info(cmd);
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			
+			while (rs.next()) {
+				List<SlimAccessionDomain> accList = new ArrayList<SlimAccessionDomain>();
+				SlimAccessionDomain accDomain = new SlimAccessionDomain();
+				slimDomain.setAlleleKey(rs.getString("_allele_key"));
+				slimDomain.setSymbol(rs.getString("symbol"));
+				accDomain.setAccID(rs.getString("accid"));
+				accList.add(accDomain);
+				slimDomain.setMgiAccessionIds(accList);
+			
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		results.setItem(slimDomain);
+		return results;
+	}
 }	

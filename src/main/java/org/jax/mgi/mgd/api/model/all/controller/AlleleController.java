@@ -5,8 +5,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -15,10 +17,13 @@ import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
 import org.jax.mgi.mgd.api.model.all.service.AlleleService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerOfficialChromDomain;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @Path("/allele")
 @Api(value = "Allele Endpoints", description="This is the description")
@@ -74,6 +79,41 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		
 		try {
 			results = alleleService.search(searchDomain, true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+//	@GET
+//	@ApiOperation(value = "Validate allele symbol/status Approved, AutoLoad/returns slim allele domain")
+//	@Path("/validateSymbol/{symbol}")
+//	public List<SlimAlleleDomain> validateSymbol(
+//			@PathParam("symbol") 
+//			@ApiParam(value = "Validating Allele Symbol") 
+//			String symbol) {
+//		return alleleService.validateSymbol(symbol);
+//	}
+	
+//	@GET
+//	@ApiOperation(value = "Validate allele symbol (status Approved, AutoLoad) OR MGI ID returns slim allele domain")
+//	@Path("/validateAllele1/{value, isSymbol}")
+//	public List<SlimAlleleDomain> validateAllele1(
+//			@PathParam("value") 
+//			@PathParam("IsSymbol")
+//			@ApiParam(value = "Validating Allele ID or Symbol") 
+//			String symbol) {
+//		return alleleService.validateSymbol(symbol);
+//	}
+	@POST
+	@ApiOperation(value = "Validate allele symbol (status Approved, AutoLoad) OR accID, returns List of SlimAlleleDomains")
+	@Path("/validateAllele")
+	public SearchResults<SlimAlleleDomain> validateAllele(AlleleDomain searchDomain) {
+	
+		SearchResults<SlimAlleleDomain> results = new SearchResults<SlimAlleleDomain>();
+
+		try {
+			results = alleleService.validateAllele(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

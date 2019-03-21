@@ -89,7 +89,7 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	@POST
 	@ApiOperation(value = "Validate allele symbol (status Approved, AutoLoad) OR accID, returns List of SlimAlleleDomains")
 	@Path("/validateAllele")
-	public List<SlimAlleleDomain> validateAllele(AlleleDomain searchDomain) {
+	public List<SlimAlleleDomain> validateAllele(SlimAlleleDomain searchDomain) {
 	
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 

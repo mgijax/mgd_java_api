@@ -195,7 +195,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	}
 
 	@Transactional
-	public List<SlimAlleleDomain> validateAllele(AlleleDomain searchDomain) {
+	public List<SlimAlleleDomain> validateAllele(SlimAlleleDomain searchDomain) {
 		
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 		
@@ -219,7 +219,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}
 
 		// In testing this can return a null List, a List with a null domain, and probably? an empty list?
-		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().isEmpty() && searchDomain.getMgiAccessionIds().get(0).getAccID() != null) {
+		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().isEmpty() && searchDomain.getMgiAccessionIds().get(0).getAccID() != null) { 
 			cmd = cmd + "\nand a.accid = '" + searchDomain.getMgiAccessionIds().get(0).getAccID() + "'";				 
 		}
 		log.info(cmd);

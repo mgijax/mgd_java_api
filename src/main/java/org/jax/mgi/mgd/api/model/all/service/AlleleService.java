@@ -252,12 +252,14 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().isEmpty()) {
 			String alleleID = searchDomain.getMgiAccessionIds().get(0).getAccID();
 			cmd = "\nselect aa._allele_key, aa.symbol, a.accid"
-					+ "\nfrom acc_accession a, all_allele aa"
-					+ "\nwhere a.accid = '" + alleleID + "'"
-					+ "\nand a.preferred = 1"
+					+ "\nfrom all_allele aa, acc_accession a"
+					+ "\nwhere aa._allele_status_key in (847114, 3983021)" //Approved,Autoload
+					+ "\nand a.accid = '" + alleleID + "'"
+					+ "\nand aa._allele_key = a._object_key"
 					+ "\nand a._mgitype_key = 11"
-					+ "\nand a._object_key = aa._allele_key"
-					+ "\nand aa._allele_status_key in (847114, 3983021)"; //Approved,Autoload"
+					+ "\nand a._logicaldb_key = 1"
+					+ "\nand a.preferred = 1"
+					+ "\nand a.prefixPart = 'MGI:'";				 
 		}
 		log.info(cmd);
 		try {

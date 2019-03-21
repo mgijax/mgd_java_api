@@ -193,87 +193,45 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		
 		return results;
 	}
-//	@Transactional
-//	public List<SlimAlleleDomain> validateSymbol(String symbol) {
-//		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
-//		if (symbol.contains("%")) {
-//			return results;
-//		}
-//		String cmd;
-//
-//		cmd = "\nselect _allele_key, symbol"
-//				+ "\nfrom all_allele"
-//				+ "\nwhere _allele_status_key in (847114, 3983021)" //Approved,Autoload
-//				+ "\nand lower(symbol) = '" + symbol.toLowerCase() + "'";
-//		log.info(cmd);
-//		
-//		try {
-//			ResultSet rs = sqlExecutor.executeProto(cmd);
-//			while (rs.next()) {	
-//				SlimAlleleDomain slimDomain = new SlimAlleleDomain();						
-//				slimDomain.setAlleleKey(rs.getString("_allele_key"));
-//				slimDomain.setSymbol(rs.getString("symbol"));			
-//				results.add(slimDomain);
-//			
-//			}
-//			sqlExecutor.cleanup();
-//		}
-//		catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return results;
-//	}
 
 	@Transactional
-	public SearchResults<SlimAlleleDomain> validateAllele(AlleleDomain searchDomain) {
+	public List<SlimAlleleDomain> validateAllele(AlleleDomain searchDomain) {
 		
-		SearchResults<SlimAlleleDomain> results = new SearchResults<SlimAlleleDomain>();
-		SlimAlleleDomain slimDomain = new SlimAlleleDomain();
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 		
-		String cmd = "";
+		String cmd = "\nselect aa._allele_key"
+				+ "\nfrom all_allele aa, acc_accession a"
+				+ "\nwhere aa._allele_status_key in (847114, 3983021)" //Approved,Autoload
+				+ "\nand aa._allele_key = a._object_key"
+				+ "\nand a._mgitype_key = 11"
+				+ "\nand a._logicaldb_key = 1"
+				+ "\nand a.preferred = 1"
+				+ "\nand a.prefixPart = 'MGI:'";
 		
 		if(searchDomain.getSymbol() != null) {
 			if(searchDomain.getSymbol().contains("%")) {
 				return results;
 			}
 			else {
-				cmd = "\nselect aa._allele_key, aa.symbol, a.accid"
-						+ "\nfrom all_allele aa, acc_accession a"
-						+ "\nwhere aa._allele_status_key in (847114, 3983021)" //Approved,Autoload
-						+ "\nand lower(aa.symbol) = '" + searchDomain.getSymbol().toLowerCase() + "'"
-						+ "\nand aa._allele_key = a._object_key"
-						+ "\nand a._mgitype_key = 11"
-						+ "\nand a._logicaldb_key = 1"
-						+ "\nand a.preferred = 1"
-						+ "\nand a.prefixPart = 'MGI:'";
+				cmd = cmd + "\nand lower(aa.symbol) = '" + searchDomain.getSymbol().toLowerCase() + "'";
 			}
 				
 		}
-		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().isEmpty()) {
-			String alleleID = searchDomain.getMgiAccessionIds().get(0).getAccID();
-			cmd = "\nselect aa._allele_key, aa.symbol, a.accid"
-					+ "\nfrom all_allele aa, acc_accession a"
-					+ "\nwhere aa._allele_status_key in (847114, 3983021)" //Approved,Autoload
-					+ "\nand a.accid = '" + alleleID + "'"
-					+ "\nand aa._allele_key = a._object_key"
-					+ "\nand a._mgitype_key = 11"
-					+ "\nand a._logicaldb_key = 1"
-					+ "\nand a.preferred = 1"
-					+ "\nand a.prefixPart = 'MGI:'";				 
+
+		// In testing this can return a null List, a List with a null domain, and probably? an empty list?
+		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().isEmpty() && searchDomain.getMgiAccessionIds().get(0).getAccID() != null) {
+			cmd = cmd + "\nand a.accid = '" + searchDomain.getMgiAccessionIds().get(0).getAccID() + "'";				 
 		}
 		log.info(cmd);
+		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			
 			while (rs.next()) {
-				List<SlimAccessionDomain> accList = new ArrayList<SlimAccessionDomain>();
-				SlimAccessionDomain accDomain = new SlimAccessionDomain();
-				slimDomain.setAlleleKey(rs.getString("_allele_key"));
-				slimDomain.setSymbol(rs.getString("symbol"));
-				accDomain.setAccID(rs.getString("accid"));
-				accList.add(accDomain);
-				slimDomain.setMgiAccessionIds(accList);
-			
+				SlimAlleleDomain slimdomain = new SlimAlleleDomain();
+				slimdomain = slimtranslator.translate(alleleDAO.get(rs.getInt("_allele_key")),1);				
+				alleleDAO.clear();
+				results.add(slimdomain);
 			}
 			sqlExecutor.cleanup();
 		}
@@ -281,7 +239,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			e.printStackTrace();
 		}
 	
-		results.setItem(slimDomain);
 		return results;
 	}
 }	

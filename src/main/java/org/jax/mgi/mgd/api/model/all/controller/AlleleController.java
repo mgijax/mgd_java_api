@@ -85,32 +85,13 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		
 		return results;
 	}
-//	@GET
-//	@ApiOperation(value = "Validate allele symbol/status Approved, AutoLoad/returns slim allele domain")
-//	@Path("/validateSymbol/{symbol}")
-//	public List<SlimAlleleDomain> validateSymbol(
-//			@PathParam("symbol") 
-//			@ApiParam(value = "Validating Allele Symbol") 
-//			String symbol) {
-//		return alleleService.validateSymbol(symbol);
-//	}
-	
-//	@GET
-//	@ApiOperation(value = "Validate allele symbol (status Approved, AutoLoad) OR MGI ID returns slim allele domain")
-//	@Path("/validateAllele1/{value, isSymbol}")
-//	public List<SlimAlleleDomain> validateAllele1(
-//			@PathParam("value") 
-//			@PathParam("IsSymbol")
-//			@ApiParam(value = "Validating Allele ID or Symbol") 
-//			String symbol) {
-//		return alleleService.validateSymbol(symbol);
-//	}
+
 	@POST
 	@ApiOperation(value = "Validate allele symbol (status Approved, AutoLoad) OR accID, returns List of SlimAlleleDomains")
 	@Path("/validateAllele")
-	public SearchResults<SlimAlleleDomain> validateAllele(AlleleDomain searchDomain) {
+	public List<SlimAlleleDomain> validateAllele(AlleleDomain searchDomain) {
 	
-		SearchResults<SlimAlleleDomain> results = new SearchResults<SlimAlleleDomain>();
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 
 		try {
 			results = alleleService.validateAllele(searchDomain);

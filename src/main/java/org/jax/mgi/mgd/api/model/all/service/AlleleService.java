@@ -242,7 +242,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 						+ "\nwhere aa._allele_status_key in (847114, 3983021)" //Approved,Autoload
 						+ "\nand lower(aa.symbol) = '" + searchDomain.getSymbol().toLowerCase() + "'"
 						+ "\nand aa._allele_key = a._object_key"
-						+ "\nand a._mgitype_key = 1"
+						+ "\nand a._mgitype_key = 11"
 						+ "\nand a._logicaldb_key = 1"
 						+ "\nand a.preferred = 1"
 						+ "\nand a.prefixPart = 'MGI:'";

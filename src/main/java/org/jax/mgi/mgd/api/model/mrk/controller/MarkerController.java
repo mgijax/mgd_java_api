@@ -115,7 +115,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 
 	@POST
 	@ApiOperation(value = "Validate marker symbol/official status/chromosome match/returns slim marker domain")
-	@Path("/validateMarkerOfficialChrom")
+	@Path("/validateOfficialChrom")
 	public SearchResults<SlimMarkerOfficialChromDomain> validateOfficialChrom(SlimMarkerOfficialChromDomain searchDomain) {
 	
 		SearchResults<SlimMarkerOfficialChromDomain> results = new SearchResults<SlimMarkerOfficialChromDomain>();

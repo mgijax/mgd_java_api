@@ -342,7 +342,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 
 		List<AnnotationDomain> annotDomains = new ArrayList<AnnotationDomain>();
 		
-		// iterate thru the list of rows in the MarkerFeatureTypeDomain
+		// iterate thru the list of rows in the AlleleVariantAnnotationDomain
 		// to creating the AnnotationDomain
 		
 		for (int i = 0; i < domain.size(); i++) {	

@@ -262,7 +262,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 							//+ "," + domain.get(i).getObjectKey()
 							+ "," + parentKey
 							+ ",'" + domain.get(i).getAccID() + "'"
-							+ "," + domain.get(0).getLogicaldbKey()
+							+ "," + domain.get(i).getLogicaldbKey()
 							+ ",'" + mgiTypeName + "'"
 							+ "," + refsKey + ","
 							+ "1,0,1)";

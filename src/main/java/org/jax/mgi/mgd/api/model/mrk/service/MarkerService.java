@@ -935,7 +935,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		//results.setItem(searchDomain);
 		
 		if (validation == false) {
-			results.setError(Constants.LOG_MGI_API, "Invalid Feature Type", Constants.HTTP_SERVER_ERROR);
+			results.setError(Constants.LOG_MGI_API, "Invalid Marker Type/Feature Type combination", Constants.HTTP_SERVER_ERROR);
 		}
 		
 		return results;

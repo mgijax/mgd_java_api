@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 public class SlimMarkerOfficialChromDomain extends BaseDomain {
 
-	// a slim marker domain
+	// a slim marker offset chromosome domain
 	// needs 2 official markers w/ chromosomes
 	// used by validOfficialChrom service method
 	

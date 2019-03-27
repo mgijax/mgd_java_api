@@ -24,10 +24,12 @@ import org.jax.mgi.mgd.api.model.mrk.dao.MarkerStatusDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerTypeDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerOfficialChromDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
+import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
@@ -800,7 +802,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// organism = 1 (mouse) expected
 		// marker status = official
 		// chromosomes of marker1 must match chromosome of marker2
-		// returns empty list if values if validation fails
+		// returns empty list of values if validation fails
 
 		SearchResults<SlimMarkerOfficialChromDomain> results = new SearchResults<SlimMarkerOfficialChromDomain>();
 		List<SlimMarkerOfficialChromDomain> listOfResults = new ArrayList<SlimMarkerOfficialChromDomain>();
@@ -857,7 +859,87 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		return results;
 	}	
+	
+	@Transactional	
+	public SearchResults<SlimMarkerFeatureTypeDomain> validateFeatureTypes(SlimMarkerFeatureTypeDomain searchDomain) {
+		// use SlimMarkerFeatureTypeDomain to return list of validated markers
+		// check that markerTypeKey and featureType.term are valid
+		// returns empty list of values if validation fails
+		
+		SearchResults<SlimMarkerFeatureTypeDomain> results = new SearchResults<SlimMarkerFeatureTypeDomain>();
+		List<SlimTermDomain> terms = new ArrayList<SlimTermDomain>();
+		String markerTypeKey = searchDomain.getMarkerTypeKey();
+		Boolean validation = true;
+		
+		// 2:DNA Segment—no feature type
+		// 6:QTL—no feature type
+		// 8:BAC/YAC end—no feature type
+		// 10:Complex/Cluster/Region—no feature type
+		// 12:Transgene—no feature type
+		
+		if (markerTypeKey.equals("2")
+				|| markerTypeKey.equals("6")
+				|| markerTypeKey.equals("8")
+				|| markerTypeKey.equals("10")
+				|| markerTypeKey.equals("12")) {
+			validation = false;
+		}
+		else {
+
+			//
+			// for each term in SlimMarkerFeatureTypeDomain.featureTypes()
+			// check if Feature Type is OK for SlimMarkerFeatureTypeDomain.markerTypeKey
+			//       
+			terms = searchDomain.getFeatureTypes();
+			for (int i = 0; i < terms.size(); i++) {
 			
+				String term = terms.get(i).getTerm();
+				
+				// Cytogenetic Marker
+				if (!markerTypeKey.equals("3") &&
+						(term.equals("chromosomal deletion")
+						|| term.equals("chromosomal duplication")
+						|| term.equals("chromosomal inversion")
+						|| term.equals("chromosomal translocation")
+						|| term.equals("chromosomal transposition")
+						|| term.equals("insertion")
+						|| term.equals("reciprocal chromosomal translocation")
+						|| term.equals("Robertsonian fusion")
+						|| term.equals("unclassified cytogenetic marker"))) {
+					validation = false;
+				}
+				// Pseudogene
+				else if (!markerTypeKey.equals("7") &&
+						(term.equals("polymorphic pseudogene")
+						|| term.equals("pseudogene")
+						|| term.equals("pseudogenic gene segment")
+						|| term.equals("pseudogenic region"))) {
+					validation = false;
+				}
+				// Other Genome Feature
+				else if (!markerTypeKey.equals("9") &&
+						(term.equals("polymorphic pseudogene")
+							|| term.equals("endogenous retroviral region")
+							|| term.equals("minisatellite")
+							|| term.equals("promoter")
+							|| term.equals("retrotransposon")
+							|| term.equals("telomere")
+							|| term.equals("TSS region")							
+							|| term.equals("unclassified other genome feature"))) {
+					validation = false;
+				}
+			}
+		}
+		
+		results.setItem(searchDomain);
+		
+		if (validation == false) {
+			results.setError(Constants.LOG_MGI_API, "Invalid Feature Type", Constants.HTTP_SERVER_ERROR);
+		}
+		
+		return results;
+	}	
+		
 	@Transactional		
 	public SearchResults<SlimMarkerDomain> eiUtilities(MarkerUtilitiesForm searchForm) throws IOException, InterruptedException {
 	

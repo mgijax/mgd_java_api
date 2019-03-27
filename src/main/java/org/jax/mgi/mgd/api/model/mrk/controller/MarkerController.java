@@ -16,6 +16,7 @@ import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerOfficialChromDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
@@ -114,7 +115,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Validate marker symbol/official status/chromosome match/returns slim marker domain")
+	@ApiOperation(value = "Validate marker symbol/official status/chromosome match/returns slim markeroffsetchrom domain")
 	@Path("/validateOfficialChrom")
 	public SearchResults<SlimMarkerOfficialChromDomain> validateOfficialChrom(SlimMarkerOfficialChromDomain searchDomain) {
 	
@@ -122,6 +123,22 @@ public class MarkerController extends BaseController<MarkerDomain> {
 
 		try {
 			results = markerService.validateOfficialChrom(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@POST
+	@ApiOperation(value = "Validate marker feature types/returns slim marker domain")
+	@Path("/validateFeatureTypes")
+	public SearchResults<SlimMarkerFeatureTypeDomain> validateFeatureTypes(SlimMarkerFeatureTypeDomain searchDomain) {
+	
+		SearchResults<SlimMarkerFeatureTypeDomain> results = new SearchResults<SlimMarkerFeatureTypeDomain>();
+
+		try {
+			results = markerService.validateFeatureTypes(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

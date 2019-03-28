@@ -871,6 +871,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		String markerTypeKey = searchDomain.getMarkerTypeKey();
 		Boolean validation = true;
 		
+		// 1:Gene : nothing special needs to be done
+		// verification will fail if any of the following is true...
+
+		// using any of these feature types is invalid
 		// 2:DNA Segment—no feature type
 		// 6:QTL—no feature type
 		// 8:BAC/YAC end—no feature type
@@ -894,8 +898,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			for (int i = 0; i < terms.size(); i++) {
 			
 				String term = terms.get(i).getTerm();
-				
-				// Cytogenetic Marker
+								
+				// 3:Cytogenetic Marker
 				if (!markerTypeKey.equals("3") &&
 						(term.equals("chromosomal deletion")
 						|| term.equals("chromosomal duplication")
@@ -908,7 +912,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 						|| term.equals("unclassified cytogenetic marker"))) {
 					validation = false;
 				}
-				// Pseudogene
+				// 7:Pseudogene
 				else if (!markerTypeKey.equals("7") &&
 						(term.equals("polymorphic pseudogene")
 						|| term.equals("pseudogene")
@@ -916,7 +920,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 						|| term.equals("pseudogenic region"))) {
 					validation = false;
 				}
-				// Other Genome Feature
+				// 9:Other Genome Feature
 				else if (!markerTypeKey.equals("9") &&
 						(term.equals("polymorphic pseudogene")
 							|| term.equals("endogenous retroviral region")

@@ -131,7 +131,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Validate marker feature types/returns slim marker domain")
+	@ApiOperation(value = "Validate marker feature types/check result error")
 	@Path("/validateFeatureTypes")
 	public SearchResults<SlimMarkerFeatureTypeDomain> validateFeatureTypes(SlimMarkerFeatureTypeDomain searchDomain) {
 	

@@ -619,8 +619,9 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			}			
 		}
 				
+		// by _term_key only
 		if (searchDomain.getFeatureTypes() != null) {
-			where = where + "\nand va.accid ilike '" + searchDomain.getFeatureTypes().get(0).getMarkerFeatureTypeIds().get(0).getAccID() + "'";
+			where = where + "\nand v._term_key = " + searchDomain.getFeatureTypes().get(0).getTermKey();
 			from_featureTypes = true;
 		}
 		
@@ -683,12 +684,9 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			where = where + "\nand m._marker_key = acc2._object_key";
 		}		
 		if (from_featureTypes == true) {
-			from = from + ", voc_annot v, acc_accession va";
+			from = from + ", voc_annot v";
 			where = where + "\nand m._marker_key = v._object_key" 
-					+ "\nand v._annottype_key = 1011"
-					+ "\nand v._term_key = va._object_key"
-					+ "\nand va._mgitype_key = 13"
-					+ "\nand va._logicaldb_key = 146";
+					+ "\nand v._annottype_key = 1011";
 		}
 		if (from_tss1 == true) {
 			from = from + ", mgi_relationship_markertss_view tss1";

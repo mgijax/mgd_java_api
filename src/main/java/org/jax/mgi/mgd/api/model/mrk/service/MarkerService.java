@@ -869,9 +869,13 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		String markerTypeKey = searchDomain.getMarkerTypeKey();
 		Boolean validation = true;
 		
+		// if a new Feature Type is added for Gene, then nothing needs to be added
 		// 1:Gene : nothing special needs to be done
 		// verification will fail if any of the following is true...
 
+		// if a new Feature Type is added for non-Gene marker type,
+		// then add Feature TYpe term to specific marker type below
+		
 		// using any of these feature types is invalid
 		// 2:DNA Segment—no feature type
 		// 6:QTL—no feature type

@@ -620,7 +620,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 				
 		// by _term_key only
-		if (searchDomain.getFeatureTypes() != null) {
+		if (searchDomain.getFeatureTypes() != null && !searchDomain.getFeatureTypes().get(0).getTermKey().isEmpty()) {
 			where = where + "\nand v._term_key = " + searchDomain.getFeatureTypes().get(0).getTermKey();
 			from_featureTypes = true;
 		}

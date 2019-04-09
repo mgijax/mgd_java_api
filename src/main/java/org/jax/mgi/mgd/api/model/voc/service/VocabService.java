@@ -72,6 +72,9 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		String select = "select v.*, t._term_key, t.term, t.abbreviation";
 		String from = "from voc_term t, voc_vocab v";
 		String where = "where t._vocab_key = v._vocab_key";
+		
+		// default order
+		// for vocab specific ordering, reset orderBy based on _vocab_key
 		String orderBy = "order by t.sequencenum";		
 		
 		// if parameter exists, then add to where-clause
@@ -84,6 +87,22 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		
 		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty()) {
 			where = where + "\nand t._vocab_key = " + searchDomain.getVocabKey();
+			
+			// list of _vocab_key = 79/marker feature types to exclude
+			if (searchDomain.getVocabKey().equals("79")) {
+				where = where + "\nand t.term not in ("
+					+ "'QTL',"
+					+ "'BAC/YAC end',"
+					+ "'BAC end',"
+					+ "'YAC end',"
+					+ "'PAC end',"
+					+ "'transgene',"
+					+ "'complex/cluster/region',"
+					+ "'cytogenetic marker',"
+					+ "'all feature types'"
+					+ ")";
+				 orderBy = "order by t.term";		
+			}
 		}
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
 			where = where + "\nand v.name ilike '" + searchDomain.getName() + "'";

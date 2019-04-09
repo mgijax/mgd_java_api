@@ -927,11 +927,13 @@ public class MarkerService extends BaseService<MarkerDomain> {
 						(term.equals("CpG island")
 							|| term.equals("endogenous retroviral region")
 							|| term.equals("minisatellite")
+							|| term.equals("mutation defined region")
 							|| term.equals("promoter")
 							|| term.equals("retrotransposon")
 							|| term.equals("telomere")
 							|| term.equals("TSS region")							
 							|| term.equals("unclassified other genome feature"))) {
+	
 					validation = false;
 				}
 			}

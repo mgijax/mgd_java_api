@@ -924,7 +924,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				}
 				// 9:Other Genome Feature
 				else if (!markerTypeKey.equals("9") &&
-						(term.equals("polymorphic pseudogene")
+						(term.equals("CpG island")
 							|| term.equals("endogenous retroviral region")
 							|| term.equals("minisatellite")
 							|| term.equals("promoter")

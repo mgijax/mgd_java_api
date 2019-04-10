@@ -26,7 +26,7 @@ echo "swarm.ds.connection.url=${MGD_JDBC_URL}" >> ${PROP_FILE}
 echo "swarm.access_token=${JAVA_API_TOKEN}" >> ${PROP_FILE}
 echo "swarm.ds.dbname=prod" >> ${PROP_FILE}
 echo "swarm.ds.dbpasswordfile=/usr/local/mgi/live/dbutils/pgdbutilities/.pgpass_1" >> ${PROP_FILE}
-echo "swarm.ds.dbserver=bhmgidb01" >> ${PROP_FILE}
+echo "swarm.ds.dbserver=${MGD_DBSERVER}" >> ${PROP_FILE}
 echo "swarm.ds.eiUtilities=/usr/local/mgi/live/dbutils/pgdbutilities/bin/ei/markerWithdrawal.py" >> ${PROP_FILE}
 
 make all

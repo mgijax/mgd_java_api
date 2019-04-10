@@ -1,10 +1,9 @@
 swarm.logging=INFO
 swarm.http.port=8099
-swarm.ds.username=mgd_public
-swarm.ds.password=mgdpub
-swarm.ds.connection.url=jdbc:postgresql://mgi-testdb4.jax.org:5432/scrumdog
+swarm.ds.username=${MGD_DBUSER}
+swarm.ds.password=`cat ${PG_1LINE_PASSFILE}`
+swarm.ds.connection.url=${MGD_JDBC_URL}
 swarm.access_token=myDefaultToken
-
 swarm.ds.dbname=prod
 swarm.ds.dbpasswordfile=/usr/local/mgi/live/dbutils/pgdbutilities/.pgpass_1
 swarm.ds.dbserver=bhmgidb01

@@ -5,6 +5,10 @@
 # remove the previous app.properties file
 # call:  make all
 #
+# for now, keep Install, app.properties.default in-sync
+#
+# need to redo the Install to use MGICONFIG && app.properties.default
+#
 
 cd `dirname $0`
 . Configuration
@@ -20,5 +24,9 @@ echo "swarm.ds.username=${MGD_DBUSER}" >> ${PROP_FILE}
 echo "swarm.ds.password=`cat ${PG_1LINE_PASSFILE}`" >> ${PROP_FILE}
 echo "swarm.ds.connection.url=${MGD_JDBC_URL}" >> ${PROP_FILE}
 echo "swarm.access_token=${JAVA_API_TOKEN}" >> ${PROP_FILE}
+echo "swarm.ds.dbname=prod" >> ${PROP_FILE}
+echo "swarm.ds.dbpasswordfile=/usr/local/mgi/live/dbutils/pgdbutilities/.pgpass_1" >> ${PROP_FILE}
+echo "swarm.ds.dbserver=bhmgidb01" >> ${PROP_FILE}
+echo "swarm.ds.eiUtilities=/usr/local/mgi/live/dbutils/pgdbutilities/bin/ei/markerWithdrawal.py" >> ${PROP_FILE}
 
 make all

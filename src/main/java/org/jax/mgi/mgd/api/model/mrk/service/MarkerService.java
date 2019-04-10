@@ -902,8 +902,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				String termKey = terms.get(i).getTermKey();
 								
 				// 3:Cytogenetic Marker
-				if (!markerTypeKey.equals("3") &&
-						(termKey.equals("7196768")
+				if (!markerTypeKey.equals("3")
+						&& (termKey.equals("7196768")
 						|| termKey.equals("7196774")
 						|| termKey.equals("7196770")
 						|| termKey.equals("7196773")
@@ -914,17 +914,36 @@ public class MarkerService extends BaseService<MarkerDomain> {
 						|| termKey.equals("7222413"))) {
 					validation = false;
 				}
+				else if (markerTypeKey.equals("3")
+						&& !termKey.equals("7196768")
+						&& !termKey.equals("7196774")
+						&& !termKey.equals("7196770")
+						&& !termKey.equals("7196773")
+						&& !termKey.equals("7196775")
+						&& !termKey.equals("7196769")
+						&& !termKey.equals("7196772")
+						&& !termKey.equals("7196771")
+						&& !termKey.equals("7222413")) {
+					validation = false;
+				}				
 				// 7:Pseudogene
-				else if (!markerTypeKey.equals("7") &&
-						(termKey.equals("7288449")
+				else if (!markerTypeKey.equals("7") 
+						&& (termKey.equals("7288449")
 						|| termKey.equals("7313348")
 						|| termKey.equals("6967235")
 						|| termKey.equals("7288448"))) {
 					validation = false;
 				}
+				else if (markerTypeKey.equals("7")
+						&& !termKey.equals("7288449")
+						&& !termKey.equals("7313348")
+						&& !termKey.equals("6967235")
+						&& !termKey.equals("7288448")) {
+					validation = false;
+				}				
 				// 9:Other Genome Feature
-				else if (!markerTypeKey.equals("9") &&
-						(termKey.equals("15406205")
+				else if (!markerTypeKey.equals("9")
+						&& (termKey.equals("15406205")
 							|| termKey.equals("9272146")
 							|| termKey.equals("7648968")
 							|| termKey.equals("11928467")
@@ -933,9 +952,21 @@ public class MarkerService extends BaseService<MarkerDomain> {
 							|| termKey.equals("7648967")
 							|| termKey.equals("36700088")							
 							|| termKey.equals("7648969"))) {
-	
 					validation = false;
 				}
+				// 9:Other Genome Feature
+				else if (markerTypeKey.equals("9")
+						 && !termKey.equals("15406205")
+						 && !termKey.equals("9272146")
+						 && !termKey.equals("7648968")
+						 && !termKey.equals("11928467")
+						 && !termKey.equals("15406207")
+						 && !termKey.equals("7648966")
+						 && !termKey.equals("7648967")
+						 && !termKey.equals("36700088")							
+						 && !termKey.equals("7648969")) {
+					validation = false;
+				}				
 			}
 		}
 		

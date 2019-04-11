@@ -109,7 +109,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		if (entity.getSynonyms() != null && !entity.getSynonyms().isEmpty()) {
 			Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getSynonyms());
 			domain.setSynonyms(IteratorUtils.toList(i.iterator()));
-			domain.getSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymType).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
+			domain.getSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
 		}
 
 		// one-to-many marker feature types

@@ -126,7 +126,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// process feature types
 		// use qualifier 'Generic Annotation Qualifier', value = null
 		if (domain.getFeatureTypes() != null && !domain.getFeatureTypes().isEmpty()) {
-			if (domain.getFeatureTypes().get(0).getTermKey() != null && !domain.getFeatureTypes().get(0).getTermKey().isEmpty()     ) {
+			if (domain.getFeatureTypes().get(0).getTermKey() != null && !domain.getFeatureTypes().get(0).getTermKey().isEmpty()) {
 				annotationService.processMarkerFeatureType(String.valueOf(entity.get_marker_key()), 
 					domain.getFeatureTypes(), 
 					domain.getFeatureTypes().get(0).getAnnotTypeKey(),

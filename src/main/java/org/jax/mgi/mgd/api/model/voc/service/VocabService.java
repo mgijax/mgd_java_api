@@ -91,6 +91,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			// list of _vocab_key = 79/marker feature types to exclude
 			if (searchDomain.getVocabKey().equals("79")) {
 				where = where + "\nand t.term not in ("
+					+ "'DNA segment',"
 					+ "'QTL',"
 					+ "'BAC/YAC end',"
 					+ "'BAC end',"

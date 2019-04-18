@@ -483,7 +483,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		// reference
 		if (searchDomain.getRefAssocs() != null) {
 			if (searchDomain.getRefAssocs().get(0).getRefsKey() != null && !searchDomain.getRefAssocs().get(0).getRefsKey().isEmpty()) {
-				where = where + "\nand vr._Ref_key = " + searchDomain.getRefAssocs().get(0).getRefsKey();
+				where = where + "\nand vr._Refs_key = " + searchDomain.getRefAssocs().get(0).getRefsKey();
 				from_reference = true;
 			}
 			if (searchDomain.getRefAssocs().get(0).getShort_citation() != null && !searchDomain.getRefAssocs().get(0).getShort_citation().isEmpty()) {

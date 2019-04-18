@@ -1,0 +1,10 @@
+swarm.logging=INFO
+swarm.http.port=8089
+swarm.ds.username=mgd_dbo
+swarm.ds.password=db0dev
+swarm.ds.connection.url=jdbc:postgresql://mgi-testdb4.jax.org:5432/lec
+swarm.access_token=myDefaultToken
+swarm.ds.dbname=lec
+swarm.ds.dbpasswordfile=/home/lec/mgi/dbutils/pgdbutilities/.pgpass_1
+swarm.ds.dbserver=mgi-testdb4
+swarm.ds.eiUtilities=/home/lec/mgi/dbutils/pgdbutilities/bin/ei/markerWithdrawal.py

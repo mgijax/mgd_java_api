@@ -444,7 +444,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				from_history = true;
 			}
 			if (searchDomain.getHistory().get(0).getRefsKey() != null && !searchDomain.getHistory().get(0).getRefsKey().isEmpty()) {
-				where = where + "\nand mh._Ref_key = " + searchDomain.getHistory().get(0).getRefsKey();
+				where = where + "\nand mh._Refs_key = " + searchDomain.getHistory().get(0).getRefsKey();
 				from_history = true;
 			}
 			if (searchDomain.getHistory().get(0).getJnumid() != null && !searchDomain.getHistory().get(0).getJnumid().isEmpty()) {
@@ -511,7 +511,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// reference
 		if (searchDomain.getRefAssocs() != null) {
 			if (searchDomain.getRefAssocs().get(0).getRefsKey() != null && !searchDomain.getRefAssocs().get(0).getRefsKey().isEmpty()) {
-				where = where + "\nand mr._Ref_key = " + searchDomain.getRefAssocs().get(0).getRefsKey();
+				where = where + "\nand mr._Refs_key = " + searchDomain.getRefAssocs().get(0).getRefsKey();
 				from_reference = true;
 			}
 			if (searchDomain.getRefAssocs().get(0).getShort_citation() != null && !searchDomain.getRefAssocs().get(0).getShort_citation().isEmpty()) {

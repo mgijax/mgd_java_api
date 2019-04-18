@@ -122,7 +122,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		// default reference is J:23000 (22864)
 		String refKey;
-		if (domain.getHistory() == null || domain.getHistory().isEmpty()) {
+		//if (domain.getHistory() == null || domain.getHistory().isEmpty()) {
+		if (domain.getHistory().get(0).getRefsKey() != null && domain.getHistory().get(0).getRefsKey().isEmpty()     ) {
 			refKey = "22864";
 		}
 		else {

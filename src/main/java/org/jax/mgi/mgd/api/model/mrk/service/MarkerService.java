@@ -129,6 +129,15 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			refKey = domain.getHistory().get(0).getRefsKey().toString();
 		}
 		
+		// process feature types
+		// use qualifier 'Generic Annotation Qualifier', value = null
+		if (domain.getFeatureTypes() != null && !domain.getFeatureTypes().isEmpty()) {
+			annotationService.processMarkerFeatureType(String.valueOf(entity.get_marker_key()), 
+					domain.getFeatureTypes(), 
+					domain.getFeatureTypes().get(0).getAnnotTypeKey(),
+					Constants.VOC_GENERIC_ANNOTATION_QUALIFIER, user);
+		}
+		
 		// event = assigned (1)
 		// event reason = Not Specified (-1)
 		String cmd = "select count(*) from MRK_insertHistory ("

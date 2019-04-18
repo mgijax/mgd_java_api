@@ -120,23 +120,18 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// create marker history assignment
 		// create 1 marker history row to track the initial marker assignment
 		
-		// default reference is J:23000 (22864)
-		String refKey;
-		//if (domain.getHistory() == null || domain.getHistory().isEmpty()) {
-		if (domain.getHistory().get(0).getRefsKey() != null && domain.getHistory().get(0).getRefsKey().isEmpty()     ) {
-			refKey = "22864";
-		}
-		else {
-			refKey = domain.getHistory().get(0).getRefsKey().toString();
-		}
+		// default reference is J:23000 (22864); sent by UI
+		String refKey = domain.getHistory().get(0).getRefsKey().toString();
 		
 		// process feature types
 		// use qualifier 'Generic Annotation Qualifier', value = null
 		if (domain.getFeatureTypes() != null && !domain.getFeatureTypes().isEmpty()) {
-			annotationService.processMarkerFeatureType(String.valueOf(entity.get_marker_key()), 
+			if (domain.getFeatureTypes().get(0).getTermKey() != null && !domain.getFeatureTypes().get(0).getTermKey().isEmpty()     ) {
+				annotationService.processMarkerFeatureType(String.valueOf(entity.get_marker_key()), 
 					domain.getFeatureTypes(), 
 					domain.getFeatureTypes().get(0).getAnnotTypeKey(),
 					Constants.VOC_GENERIC_ANNOTATION_QUALIFIER, user);
+			}
 		}
 		
 		// event = assigned (1)

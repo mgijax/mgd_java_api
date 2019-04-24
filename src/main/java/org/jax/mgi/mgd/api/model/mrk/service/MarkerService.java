@@ -117,12 +117,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// execute persist/insert/send to database
 		markerDAO.persist(entity);
 
-		// create marker history assignment
-		// create 1 marker history row to track the initial marker assignment
-		
-		// default reference is J:23000 (22864); sent by UI
-		String refKey = domain.getHistory().get(0).getRefsKey().toString();
-		
 		// process feature types
 		// use qualifier 'Generic Annotation Qualifier', value = null
 		if (domain.getFeatureTypes() != null && !domain.getFeatureTypes().isEmpty()) {
@@ -134,13 +128,16 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			}
 		}
 		
+		// create marker history assignment
+		// create 1 marker history row to track the initial marker assignment		
 		// event = assigned (1)
 		// event reason = Not Specified (-1)
+		// default reference is J:23000 (22864); sent by UI
 		String cmd = "select count(*) from MRK_insertHistory ("
 				+ user.get_user_key().intValue()
 				+ "," + entity.get_marker_key()
 				+ "," + entity.get_marker_key()
-				+ "," + refKey
+				+ "," + domain.getHistory().get(0).getRefsKey().toString()
 				+ ",1,-1"
 				+ ",'" + entity.getName() + "'"
 				+ ")";
@@ -443,8 +440,12 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				where = where + "\nand mh._Refs_key = " + searchDomain.getHistory().get(0).getRefsKey();
 				from_history = true;
 			}
-			if (searchDomain.getHistory().get(0).getJnumid() != null && !searchDomain.getHistory().get(0).getJnumid().isEmpty()) {
-				where = where + "\nand mh.jnumid = '" + searchDomain.getHistory().get(0).getJnumid() + "'";
+			else if (searchDomain.getHistory().get(0).getJnumid() != null && !searchDomain.getHistory().get(0).getJnumid().isEmpty()) {
+				String jnumid = searchDomain.getHistory().get(0).getJnumid().toUpperCase();
+				if (!jnumid.contains("J:")) {
+					jnumid = "J:" + jnumid;
+				}
+				where = where + "\nand mh.jnumid = '" + jnumid + "'";
 				from_history = true;
 			}
 			if (searchDomain.getHistory().get(0).getShort_citation() != null && !searchDomain.getHistory().get(0).getShort_citation().isEmpty()) {
@@ -485,8 +486,16 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				where = where + "\nand ms.synonym ilike '" + searchDomain.getSynonyms().get(0).getSynonym() + "'";
 				from_synonym = true;
 			}
-			if (searchDomain.getSynonyms().get(0).getJnumid() != null && !searchDomain.getSynonyms().get(0).getJnumid().isEmpty()) {
-				where = where + "\nand ms.jnumid ilike '" + searchDomain.getSynonyms().get(0).getJnumid() + "'";
+			if (searchDomain.getSynonyms().get(0).getRefsKey() != null && !searchDomain.getSynonyms().get(0).getRefsKey().isEmpty()) {
+				where = where + "\nand ms._Refs_key = " + searchDomain.getRefAssocs().get(0).getRefsKey();
+				from_synonym = true;
+			}
+			else if (searchDomain.getSynonyms().get(0).getJnumid() != null && !searchDomain.getSynonyms().get(0).getJnumid().isEmpty()) {
+				String jnumid = searchDomain.getSynonyms().get(0).getJnumid().toUpperCase();
+				if (!jnumid.contains("J:")) {
+					jnumid = "J:" + jnumid;
+				}
+				where = where + "\nand ms.jnumid ilike '" + jnumid + "'";
 				from_synonym = true;
 			}
 			String synModifiedBy[] = 
@@ -510,15 +519,19 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				where = where + "\nand mr._Refs_key = " + searchDomain.getRefAssocs().get(0).getRefsKey();
 				from_reference = true;
 			}
+			else if (searchDomain.getRefAssocs().get(0).getJnumid() != null && !searchDomain.getRefAssocs().get(0).getJnumid().isEmpty()) {
+				String jnumid = searchDomain.getRefAssocs().get(0).getJnumid().toUpperCase();
+				if (!jnumid.contains("J:")) {
+					jnumid = "J:" + jnumid;
+				}
+				where = where + "\nand mr.jnumid ilike '" + jnumid + "'";
+				from_reference = true;
+			}				
 			if (searchDomain.getRefAssocs().get(0).getShort_citation() != null && !searchDomain.getRefAssocs().get(0).getShort_citation().isEmpty()) {
 				value = searchDomain.getRefAssocs().get(0).getShort_citation().replaceAll("'",  "''");
 				where = where + "\nand mr.short_citation ilike '" + value + "'";
 				from_reference = true;
-			}
-			if (searchDomain.getRefAssocs().get(0).getJnumid() != null && !searchDomain.getRefAssocs().get(0).getJnumid().isEmpty()) {
-				where = where + "\nand mr.jnumid ilike '" + searchDomain.getRefAssocs().get(0).getJnumid() + "'";
-				from_reference = true;
-			}		
+			}	
 			String refModifiedBy[] = 
 					DateSQLQuery.queryByCreationModification("mr", 
 							searchDomain.getRefAssocs().get(0).getCreatedBy(), 

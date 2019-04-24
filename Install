@@ -19,7 +19,7 @@ PROP_FILE=app.properties
 rm -f ${PROP_FILE}
 
 echo "swarm.logging=INFO" >> ${PROP_FILE}
-echo "swarm.http.port=8099" >> ${PROP_FILE}
+echo "swarm.http.port=${JAVA_API_PORT}" >> ${PROP_FILE}
 echo "swarm.ds.username=${MGD_DBUSER}" >> ${PROP_FILE}
 echo "swarm.ds.password=`cat ${PG_1LINE_PASSFILE}`" >> ${PROP_FILE}
 echo "swarm.ds.connection.url=${MGD_JDBC_URL}" >> ${PROP_FILE}

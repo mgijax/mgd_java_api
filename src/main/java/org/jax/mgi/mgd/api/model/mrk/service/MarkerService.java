@@ -568,16 +568,20 @@ public class MarkerService extends BaseService<MarkerDomain> {
 					where = where + "\nand acc1._refs_key = " + searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getRefsKey();
 					from_editAccession = true;
 				}	
+				else if (searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getJnumid() != null && !searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getJnumid().isEmpty()) {
+					String jnumid = searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getJnumid().toUpperCase();
+					if (!jnumid.contains("J:")) {
+						jnumid = "J:" + jnumid;
+					}
+					where = where + "\nand acc1.jnumid ilike '" + jnumid + "'";
+					from_editAccession = true;
+				}
 				if (searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getShort_citation() != null 
 						&& !searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getShort_citation().isEmpty()) {
 					value = searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getShort_citation().replaceAll("'",  "''");
 					where = where + "\nand acc1.short_citation ilike '" + value + "'";
 					from_editAccession = true;
-				}
-				if (searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getJnumid() != null && !searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getJnumid().isEmpty()) {
-					where = where + "\nand acc1.jnumid ilike '" + searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getJnumid() + "'";
-					from_editAccession = true;
-				}					
+				}				
 			}
 			String editAccModifiedBy[] = 
 					DateSQLQuery.queryByCreationModification("acc1", 
@@ -611,16 +615,20 @@ public class MarkerService extends BaseService<MarkerDomain> {
 					where = where + "\nand acc2._refs_key = " + searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getRefsKey();
 					from_noneditAccession = true;
 				}	
+				else if (searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getJnumid() != null && !searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getJnumid().isEmpty()) {
+					String jnumid = searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getJnumid().toUpperCase();
+					if (!jnumid.contains("J:")) {
+						jnumid = "J:" + jnumid;
+					}
+					where = where + "\nand acc2.jnumid ilike '" + jnumid + "'";
+					from_noneditAccession = true;
+				}
 				if (searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getShort_citation() != null 
 						&& !searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getShort_citation().isEmpty()) {
 					value = searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getShort_citation().replaceAll("'",  "''");
 					where = where + "\nand acc2.short_citation ilike '" + value + "'";
 					from_noneditAccession = true;
-				}
-				if (searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getJnumid() != null && !searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getJnumid().isEmpty()) {
-					where = where + "\nand acc2.jnumid ilike '" + searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getJnumid() + "'";
-					from_noneditAccession = true;
-				}					
+				}				
 			}
 			String noneditAccModifiedBy[] = 
 					DateSQLQuery.queryByCreationModification("acc2", 

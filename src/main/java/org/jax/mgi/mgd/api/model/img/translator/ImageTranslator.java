@@ -99,11 +99,12 @@ public class ImageTranslator extends BaseEntityDomainTranslator<Image, ImageDoma
 		if (entity.getImagePanes() != null && !entity.getImagePanes().isEmpty()) {
 			Iterable<ImagePaneDomain> imagePane = imagePaneTranslator.translateEntities(entity.getImagePanes());
 			domain.setImagePanes(IteratorUtils.toList(imagePane.iterator()));
-			domain.getImagePanes().sort(Comparator.comparing(ImagePaneDomain::getPaneLabel));
+			//paneLabel may be null
+			//domain.getImagePanes().sort(Comparator.comparing(ImagePaneDomain::getPaneLabel));
 		}
 	
 		// may have 1 thumbnail
-		if (entity.getThumbnailImage() != null) {
+		if (entity.getThumbnailImage() != null ) {
 			ImageTranslator imageTranslator = new ImageTranslator();		
 			domain.setThumbnailImage(imageTranslator.translate(entity.getThumbnailImage()));
 		}

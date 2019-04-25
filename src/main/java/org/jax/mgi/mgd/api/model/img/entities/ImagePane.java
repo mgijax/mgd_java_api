@@ -28,6 +28,7 @@ public class ImagePane extends BaseEntity {
 	@ApiModelProperty(value="primary key")
 	private int _imagepane_key;
 	
+	private Integer _image_key;
 	private String paneLabel;
 	private Integer x;
 	private Integer y;

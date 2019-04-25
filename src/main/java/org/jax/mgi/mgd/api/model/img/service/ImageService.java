@@ -145,6 +145,7 @@ public class ImageService extends BaseService<ImageDomain> {
 		String orderBy = "order by i.jnum, i.figureLabel";
 		String limit = "LIMIT 5000";
 		String value;
+		Boolean from_imagepane = false;		
 		Boolean from_captionNote = false;
 		Boolean from_copyrightNote = false;
 		Boolean from_privateCuratorialNote = false;
@@ -179,6 +180,11 @@ public class ImageService extends BaseService<ImageDomain> {
 		if (searchDomain.getFigureLabel() != null && !searchDomain.getFigureLabel().isEmpty()) {
 			where = where + "\nand i.figureLabel ilike '" + searchDomain.getFigureLabel() + "'";
 		}		
+		if (searchDomain.getImagePanes().get(0).getPaneLabel() != null
+				&& !searchDomain.getImagePanes().get(0).getPaneLabel().isEmpty()) {
+			where = where + "\nand p.paneLabel ilike '" + searchDomain.getImagePanes().get(0).getPaneLabel() + "'";
+			from_imagepane = true;
+		}
 		
 		// image reference
 		if (searchDomain.getRefsKey() != null && !searchDomain.getRefsKey().isEmpty()) {
@@ -252,6 +258,10 @@ public class ImageService extends BaseService<ImageDomain> {
 				
 		// use views to match the teleuse implementation
 
+		if (from_imagepane == true) {
+			from = from + ", img_imagepane p";
+			where = where + "\nand i._image_key = p._image_key";
+		}
 		if (from_captionNote == true) {
 			from = from + ", mgi_note_image_view note1";
 			where = where + "\nand i._image_key = note1._object_key";

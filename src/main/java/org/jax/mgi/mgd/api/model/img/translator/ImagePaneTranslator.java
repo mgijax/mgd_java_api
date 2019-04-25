@@ -16,7 +16,6 @@ public class ImagePaneTranslator extends BaseEntityDomainTranslator<ImagePane, I
 		
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);		
 		domain.setImagePaneKey(String.valueOf(entity.get_imagepane_key()));
-		domain.setImageKey(String.valueOf(entity.getImage().get_image_key()));
 		domain.setX(String.valueOf(entity.getX()));
 		domain.setY(String.valueOf(entity.getY()));
 		domain.setWidth(String.valueOf(entity.getWidth()));

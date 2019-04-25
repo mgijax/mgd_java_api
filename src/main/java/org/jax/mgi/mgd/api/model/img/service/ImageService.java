@@ -182,18 +182,18 @@ public class ImageService extends BaseService<ImageDomain> {
 		
 		// image reference
 		if (searchDomain.getRefsKey() != null && !searchDomain.getRefsKey().isEmpty()) {
-			where = where + "\nand mh._Refs_key = " + searchDomain.getRefsKey();
+			where = where + "\nand i._Refs_key = " + searchDomain.getRefsKey();
 		}
 		else if (searchDomain.getJnumid() != null && !searchDomain.getJnumid().isEmpty()) {
 			String jnumid = searchDomain.getJnumid().toUpperCase();
 			if (!jnumid.contains("J:")) {
 				jnumid = "J:" + jnumid;
 			}
-			where = where + "\nand mh.jnumid = '" + jnumid + "'";
+			where = where + "\nand i.jnumid = '" + jnumid + "'";
 		}
 		if (searchDomain.getShort_citation() != null && !searchDomain.getShort_citation().isEmpty()) {
 			value = searchDomain.getShort_citation().replaceAll("'",  "''");
-			where = where + "\nand mh.short_citation ilike '" + value + "'";
+			where = where + "\nand i.short_citation ilike '" + value + "'";
 		}
 		
 		// notes

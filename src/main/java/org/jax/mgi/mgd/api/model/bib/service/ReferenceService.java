@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
@@ -112,5 +113,31 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		return results;
 	}	
-			
+
+	@Transactional	
+	public List<SlimReferenceDomain> validateCopyright(Integer key) {
+		// use SlimReferenceDomain to return reference copyright text
+		// one reference key is expected
+		// returns empty list if no copyright exists for the reference key
+
+		List<SlimReferenceDomain> results = new ArrayList<SlimReferenceDomain>();
+		SlimReferenceDomain domain = new SlimReferenceDomain();						
+
+		String cmd = "\nselect * from bib_getCopyright(" + String.valueOf(key) + ")";
+		
+		log.info("cmd: " + cmd);
+
+		try {
+			Query query = referenceDAO.createNativeQuery(cmd);
+			String r = (String) query.getSingleResult();
+			domain.setCopyright(r);
+			results.add(domain);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
+		
 }

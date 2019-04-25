@@ -79,4 +79,14 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		return referenceService.validJnum(jnum);
 	}
 
+	@GET
+	@ApiOperation(value = "Validate reference Copyright Text")
+	@Path("/validateCopyright/{key}")
+	public List<SlimReferenceDomain> validateCopyright(
+			@PathParam("key") 
+			@ApiParam(value = "Validating refrence Copyright") 
+			Integer key) {
+		return referenceService.validateCopyright(key);
+	}
+
 }

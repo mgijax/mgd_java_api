@@ -74,8 +74,8 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		String where = "where t._vocab_key = v._vocab_key";
 		
 		// default order
-		// for vocab specific ordering, reset orderBy based on _vocab_key
-		String orderBy = "order by t.sequencenum";		
+		// for vocab specific ordering, reset orderBy based on _vocab_key or name
+		String orderBy = "order by t.term";		
 		
 		// if parameter exists, then add to where-clause
 		
@@ -84,6 +84,20 @@ public class VocabService extends BaseService<VocabularyDomain> {
 //			from = from + cmResults[0];
 //			where = where + cmResults[1];
 //		}
+		
+		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
+			if (searchDomain.getName().equals("GXD HT Evaluation State")
+					|| searchDomain.getName().equals("GXD HT Curation State")
+					|| searchDomain.getName().equals("GXD HT Study Type")
+					|| searchDomain.getName().equals("GXD HT Age")
+					|| searchDomain.getName().equals("GXD HT Experiment Type")
+					|| searchDomain.getName().equals("GXD HT Experiment Variables")
+					|| searchDomain.getName().equals("GXD HT Relevance")
+					|| searchDomain.getName().equals("GXD HT Sample")
+					) {
+				orderBy = "order by t.sequencenum";
+			}
+		}
 		
 		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty()) {
 			where = where + "\nand t._vocab_key = " + searchDomain.getVocabKey();

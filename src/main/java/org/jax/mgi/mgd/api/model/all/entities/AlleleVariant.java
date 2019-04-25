@@ -66,17 +66,17 @@ public class AlleleVariant extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-    @OneToMany
+    @OneToMany()
     @JoinColumn(name="_object_key", referencedColumnName="_variant_key", insertable=false, updatable=false)
     @Where(clause="`_annottype_key` = 1026")
     private List<Annotation> variantTypes;
 
-    @OneToMany
+    @OneToMany()
     @JoinColumn(name="_object_key", referencedColumnName="_variant_key", insertable=false, updatable=false)
     @Where(clause="`_annottype_key` = 1027")
     private List<Annotation> variantEffects;
 
-    @OneToMany
+    @OneToMany()
     @JoinColumn(name="_variant_key", insertable=false, updatable=false)
     private List<VariantSequence> variantSequences;
 
@@ -93,7 +93,7 @@ public class AlleleVariant extends BaseEntity {
 	private List<Note> publicNote;
 	
 	// References
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_variant_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 45")
 	private List<MGIReferenceAssoc> refAssocs;

@@ -48,5 +48,6 @@ public class ImageDomain extends BaseDomain {
 	private List<AccessionDomain> nonEditAccessionIds;
 
 	private List<ImagePaneDomain> imagePanes;
+	private ImageDomain thumbnailImage;
 	
 }

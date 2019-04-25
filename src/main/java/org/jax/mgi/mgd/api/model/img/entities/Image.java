@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -46,31 +47,31 @@ public class Image extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_mgitype_key")
 	private MGIType mgitype;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_imageclass_key", referencedColumnName="_term_key")
 	private Term imageClass;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_imagetype_key", referencedColumnName="_term_key")
 	private Term imageType;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key")
 	private Reference reference;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_thumbnailimage_key", referencedColumnName="_image_key")
 	private Image thumbnailImage;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
@@ -99,28 +100,28 @@ public class Image extends BaseEntity {
 	private List<Note> externalLinkNote;
 		
 	// mgi accession ids only
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_image_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 9 and `_logicaldb_key` = 1")
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 
 	// editable only accession ids
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_image_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 9 and `_logicaldb_key` in (19)")
 	@OrderBy(clause ="accid")
 	private List<Accession> editAccessionIds;
 	
 	// non-editable accession ids
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_image_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 9 and `_logicaldb_key` not in (1,19)")
 	@OrderBy(clause ="accid")
 	private List<Accession> nonEditAccessionIds;
 	
 	// image panes
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_image_key", insertable=false, updatable=false)
 	@OrderBy(clause="paneLabel")
 	private List<ImagePane> imagePanes;	

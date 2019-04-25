@@ -27,11 +27,11 @@ public class MarkerReferenceCache extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 	
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "_marker_key", insertable = false, updatable = false)
     private Marker marker;
     
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "_refs_key", insertable = false, updatable = false)
     private Reference reference;
 

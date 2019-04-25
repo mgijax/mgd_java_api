@@ -86,82 +86,82 @@ public class Marker extends BaseEntity {
 	private List<Note> editorNote;
 	
 	// Sequence
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1009")
 	private List<Note> sequenceNote;
 	
 	//Marker Revision
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1030")
 	private List<Note> revisionNote;
 	
 	// Strain-Specific Marker
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1035")
 	private List<Note> strainNote;
 	
 	// Location
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1049")
 	private List<Note> locationNote;
 	
 	// mgi accession ids only
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` = 1")
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 	
 	// editable only accession ids
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` in (8,9)")
 	@OrderBy(clause ="accid")
 	private List<Accession> editAccessionIds;
 	
 	// non-editable accession ids
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` not in (1,8,9,117,118)")
 	@OrderBy(clause ="accid")
 	private List<Accession> nonEditAccessionIds;
 	
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_marker_key", insertable=false, updatable=false)
 	@OrderBy(clause="sequenceNum")
 	private List<MarkerHistory> history;
 	
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2")
 	@OrderBy(clause ="_synonymtype_key, synonym")
 	private List<MGISynonym> synonyms;
 	
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2")
 	@OrderBy(clause ="_refassoctype_key")
 	private List<MGIReferenceAssoc> refAssocs;
 
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_object_key_1", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	private List<RelationshipMarkerTSS> tssToGene;
 	
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_object_key_2", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	private List<RelationshipMarkerTSS> geneToTss;
 
-	@OneToMany
+	@OneToMany()
 	@JoinTable(name = "mrk_alias",	joinColumns = @JoinColumn(name="_alias_key", referencedColumnName="_marker_key", insertable=false, updatable=false),
 		inverseJoinColumns = @JoinColumn(name = "_marker_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	)
 	private List<Marker> aliases;
 
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_annottype_key` = 1011")	
 	private List<Annotation> featureTypes;

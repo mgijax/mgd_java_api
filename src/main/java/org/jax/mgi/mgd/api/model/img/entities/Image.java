@@ -1,38 +1,45 @@
 package org.jax.mgi.mgd.api.model.img.entities;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
+import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
-import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Image Model Object")
+@ApiModel(value = "Image Entity Object")
 @Table(name="img_image")
 public class Image extends BaseEntity {
 
 	@Id
-	private Integer _image_key;
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="img_image_generator")
+	@SequenceGenerator(name="img_image_generator", sequenceName = "img_image_seq", allocationSize=1)
+	@ApiModelProperty(value="primary key")
+	private int _image_key;
+
 	private Integer xDim;
 	private Integer yDim;
 	private String figureLabel;
@@ -66,31 +73,55 @@ public class Image extends BaseEntity {
 	@OneToOne
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
-	
-	@OneToOne
-	@JoinColumn(name="_image_key", referencedColumnName="_object_key")
-	@Where(clause="`_mgitype_key` = 9 AND preferred = 1 AND `_logicaldb_key` = 1")
-	private Accession mgiAccessionId;
 
+	// Caption
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_image_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 9 and `_notetype_key` = 1024")
+	private List<Note> captionNote;
+	
+	// Copyright
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_image_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 9 and `_notetype_key` = 1023")
+	private List<Note> copyrightNote;
+	
+	// Private Curatorial
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_image_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 9 and `_notetype_key` = 1025")
+	private List<Note> privateCuratorialNote;
+	
+	// External Link
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_image_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 9 and `_notetype_key` = 1039")
+	private List<Note> externalLinkNote;
+		
+	// mgi accession ids only
 	@OneToMany
-	@JoinColumn(name="_object_key", referencedColumnName="_image_key")
-	@Where(clause="`_mgitype_key` = 9 AND preferred = 1")
-	private Set<Accession> allAccessionIds;
-	
-	@Transient
-	public Set<Accession> getAccessionIdsByLogicalDb(LogicalDB db) {
-		return getAccessionIdsByLogicalDb(db.get_logicaldb_key());
-	}
-	
-	@Transient
-	public Set<Accession> getAccessionIdsByLogicalDb(Integer db_key) {
-		HashSet<Accession> set = new HashSet<Accession>();
-		for(Accession a: allAccessionIds) {
-			if(a.getLogicaldb().get_logicaldb_key() == db_key) {
-				set.add(a);
-			}
-		}
-		return set;
-	}
+	@JoinColumn(name="_object_key", referencedColumnName="_image_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 9 and `_logicaldb_key` = 1")
+	@OrderBy(clause="preferred desc, accID")
+	private List<Accession> mgiAccessionIds;
 
+	// editable only accession ids
+	@OneToMany
+	@JoinColumn(name="_object_key", referencedColumnName="_image_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 9 and `_logicaldb_key` in (19)")
+	@OrderBy(clause ="accid")
+	private List<Accession> editAccessionIds;
+	
+	// non-editable accession ids
+	@OneToMany
+	@JoinColumn(name="_object_key", referencedColumnName="_image_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 9 and `_logicaldb_key` not in (1,19)")
+	@OrderBy(clause ="accid")
+	private List<Accession> nonEditAccessionIds;
+	
+	// image panes
+	@OneToMany
+	@JoinColumn(name="_image_key", insertable=false, updatable=false)
+	@OrderBy(clause="paneLabel")
+	private List<ImagePane> imagePanes;	
 }

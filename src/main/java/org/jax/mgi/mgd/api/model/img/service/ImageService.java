@@ -1,0 +1,306 @@
+package org.jax.mgi.mgd.api.model.img.service;
+
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.transaction.Transactional;
+
+import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.img.dao.ImageDAO;
+import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
+import org.jax.mgi.mgd.api.model.img.domain.SlimImageDomain;
+import org.jax.mgi.mgd.api.model.img.entities.Image;
+import org.jax.mgi.mgd.api.model.img.translator.ImageTranslator;
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.util.DateSQLQuery;
+import org.jax.mgi.mgd.api.util.SQLExecutor;
+import org.jax.mgi.mgd.api.util.SearchResults;
+import org.jboss.logging.Logger;
+
+@RequestScoped
+public class ImageService extends BaseService<ImageDomain> {
+
+	protected Logger log = Logger.getLogger(getClass());
+
+	@Inject
+	private ImageDAO imageDAO;
+
+	private ImageTranslator translator = new ImageTranslator();
+	private SQLExecutor sqlExecutor = new SQLExecutor();
+	
+	@Transactional
+	public SearchResults<ImageDomain> create(ImageDomain domain, User user) {
+		
+		// create new entity object from in-coming domain
+		// the Entities class handles the generation of the primary key
+		// database trigger will assign the MGI id/see pgmgddbschema/trigger for details
+
+		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
+		Image entity = new Image();
+		
+		// assumes that required fields exist
+		//entity.setSymbol(domain.getSymbol());
+		
+		//entity.setMarkerType(markerTypeDAO.get(Integer.valueOf(domain.getMarkerTypeKey())));
+		
+		// add creation/modification 
+		entity.setCreatedBy(user);
+		entity.setCreation_date(new Date());
+		entity.setModifiedBy(user);
+		entity.setModification_date(new Date());
+		
+		// execute persist/insert/send to database
+		imageDAO.persist(entity);
+
+		// return entity translated to domain
+		log.info("processImage/create/returning results");
+		results.setItem(translator.translate(entity,0));
+		return results;
+	}
+	
+	@Transactional
+	public SearchResults<ImageDomain> update(ImageDomain domain, User user) {
+		
+		// the set of fields in "update" is similar to set of fields in "create"
+		// creation user/date are only set in "create"
+
+		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
+		Image entity = imageDAO.get(Integer.valueOf(domain.getImageKey()));
+		Boolean modified = false;
+		//String mgiTypeKey = "2";
+		//String mgiTypeName = "Marker";
+		
+		log.info("processImage/update");
+
+		//log.info("process symbol");
+		//if (!entity.getSymbol().equals(domain.getSymbol())) {
+		//	log.info("process entity");
+		//	entity.setSymbol(domain.getSymbol());
+		//	modified = true;
+		//}
+		
+		// only if modifications were actually made
+		if (modified == true) {
+			entity.setModification_date(new Date());
+			entity.setModifiedBy(user);
+			imageDAO.update(entity);
+			log.info("processImage/changes processed: " + domain.getImageKey());
+		}
+		else {
+			log.info("processImage/no changes processed: " + domain.getImageKey());
+		}
+				
+		// return entity translated to domain
+		log.info("processImage/update/returning results");
+		results.setItem(translator.translate(entity, 0));
+		log.info("processImage/update/returned results succsssful");
+		return results;
+	}
+
+	@Transactional
+	public ImageDomain get(Integer key) {
+		// get the DAO/entity and translate -> domain
+		ImageDomain domain = new ImageDomain();
+		if (imageDAO.get(key) != null) {
+			domain = translator.translate(imageDAO.get(key),1);
+		}
+		return domain;
+	}
+
+	@Transactional
+	public SearchResults<ImageDomain> getResults(Integer key) {
+		// get the DAO/entity and translate -> domain -> results
+		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
+		results.setItem(translator.translate(imageDAO.get(key),0));
+		return results;
+	}
+	
+	@Transactional
+	public SearchResults<ImageDomain> delete(Integer key, User user) {
+		// get the entity object and delete
+		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
+		Image entity = imageDAO.get(key);
+		results.setItem(translator.translate(imageDAO.get(key),0));
+		imageDAO.remove(entity);
+		return results;
+	}
+
+	@Transactional	
+	public List<SlimImageDomain> search(ImageDomain searchDomain) {
+		// using searchDomain fields, generate SQL command
+		
+		List<SlimImageDomain> results = new ArrayList<SlimImageDomain>();
+
+		// building SQL command : select + from + where + orderBy
+		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
+		String cmd = "";
+		String select = "select distinct i._image_key, i.jnum, i.figureLabel"
+				+ ", concat(i.jnumID,'; ',i.imageType,'; ',i.figureLabel) as imageDisplay";
+		String from = "from img_image_view i";
+		String where = "where i.figureLabel is not null";
+		String orderBy = "order by i.jnum, i.figureLabel";
+		String limit = "LIMIT 5000";
+		String value;
+		Boolean from_captionNote = false;
+		Boolean from_copyrightNote = false;
+		Boolean from_privateCuratorialNote = false;
+		Boolean from_externalLinkNote = false;
+		Boolean from_accession = false;
+		Boolean from_editAccession = false;
+		Boolean from_noneditAccession = false;
+
+		// if parameter exists, then add to where-clause
+		
+		String cmResults[] = DateSQLQuery.queryByCreationModification("i", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
+		if (cmResults.length > 0) {
+			from = from + cmResults[0];
+			where = where + cmResults[1];
+		}
+		
+		if (searchDomain.getImageKey() != null && !searchDomain.getImageKey().isEmpty()) {
+			where = where + "\nand i._image_key = " + searchDomain.getImageKey();
+		}
+		if (searchDomain.getImageClassKey() != null && !searchDomain.getImageClassKey().isEmpty()) {
+			where = where + "\nand i._imageclass_key = " + searchDomain.getImageClassKey();
+		}
+		if (searchDomain.getImageTypeKey() != null && !searchDomain.getImageTypeKey().isEmpty()) {
+			where = where + "\nand i._imagetype_key = " + searchDomain.getImageTypeKey();
+		}		
+		if (searchDomain.getXDim() != null && !searchDomain.getXDim().isEmpty()) {
+			where = where + "\nand i.xDim = " + searchDomain.getXDim();
+		}
+		if (searchDomain.getYDim() != null && !searchDomain.getYDim().isEmpty()) {
+			where = where + "\nand i.yDim = " + searchDomain.getYDim();
+		}			
+		if (searchDomain.getFigureLabel() != null && !searchDomain.getFigureLabel().isEmpty()) {
+			where = where + "\nand i.figureLabel ilike '" + searchDomain.getFigureLabel() + "'";
+		}		
+		
+		// image reference
+		if (searchDomain.getRefsKey() != null && !searchDomain.getRefsKey().isEmpty()) {
+			where = where + "\nand mh._Refs_key = " + searchDomain.getRefsKey();
+		}
+		else if (searchDomain.getJnumid() != null && !searchDomain.getJnumid().isEmpty()) {
+			String jnumid = searchDomain.getJnumid().toUpperCase();
+			if (!jnumid.contains("J:")) {
+				jnumid = "J:" + jnumid;
+			}
+			where = where + "\nand mh.jnumid = '" + jnumid + "'";
+		}
+		if (searchDomain.getShort_citation() != null && !searchDomain.getShort_citation().isEmpty()) {
+			value = searchDomain.getShort_citation().replaceAll("'",  "''");
+			where = where + "\nand mh.short_citation ilike '" + value + "'";
+		}
+		
+		// notes
+		if (searchDomain.getCaptionNote() != null) {
+			value = searchDomain.getCaptionNote().getNoteChunk().replaceAll("'",  "''");
+			where = where + "\nand note1._notetype_key = 1024 and note1.note ilike '" + value + "'" ;
+			from_captionNote = true;
+		}
+		if (searchDomain.getCopyrightNote() != null) {
+			value = searchDomain.getCopyrightNote().getNoteChunk().replaceAll("'",  "''");
+			where = where + "\nand note2._notetype_key = 1023 and note2.note ilike '" + value + "'" ;
+			from_copyrightNote = true;
+		}
+		if (searchDomain.getPrivateCuratorialNote() != null) {
+			value = searchDomain.getPrivateCuratorialNote().getNoteChunk().replaceAll("'",  "''");
+			where = where + "\nand note3._notetype_key = 1025 and note3.note ilike '" + value + "'" ;
+			from_privateCuratorialNote = true;
+		}
+		if (searchDomain.getExternalLinkNote() != null) {
+			value = searchDomain.getExternalLinkNote().getNoteChunk().replaceAll("'",  "''");
+			where = where + "\nand note4._notetype_key = 1039 and note4.note ilike '" + value + "'" ;
+			from_externalLinkNote = true;
+		}		
+				
+		// accession id
+		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {
+			where = where + "\nand a.accID ilike '" + searchDomain.getMgiAccessionIds().get(0).getAccID() + "'";
+			from_accession = true;
+		}
+		
+		// editable accession ids
+		if (searchDomain.getEditAccessionIds() != null) {
+			if (searchDomain.getEditAccessionIds().get(0).getAccID() != null 
+					&& !searchDomain.getEditAccessionIds().get(0).getAccID().isEmpty()) {
+				where = where + "\nand acc1.accID ilike '" +  searchDomain.getEditAccessionIds().get(0).getAccID() + "'";
+				from_editAccession = true;
+			}
+			if (searchDomain.getEditAccessionIds().get(0).getLogicaldbKey() != null && !searchDomain.getEditAccessionIds().get(0).getLogicaldbKey().isEmpty()) {
+				where = where + "\nand acc1._logicaldb_key = " + searchDomain.getEditAccessionIds().get(0).getLogicaldbKey();
+				from_editAccession = true;
+			}
+		}
+		
+		// non-editable accession ids
+		if (searchDomain.getNonEditAccessionIds() != null) {
+			if (searchDomain.getNonEditAccessionIds().get(0).getAccID() != null 
+					&& !searchDomain.getNonEditAccessionIds().get(0).getAccID().isEmpty()) {
+				where = where + "\nand acc2.accID ilike '" +  searchDomain.getNonEditAccessionIds().get(0).getAccID() + "'";
+				from_noneditAccession = true;
+			}
+			if (searchDomain.getNonEditAccessionIds().get(0).getLogicaldbKey() != null && !searchDomain.getNonEditAccessionIds().get(0).getLogicaldbKey().isEmpty()) {
+				where = where + "\nand acc2._logicaldb_key = " + searchDomain.getNonEditAccessionIds().get(0).getLogicaldbKey();
+				from_noneditAccession = true;
+			}			
+		}
+				
+		// use views to match the teleuse implementation
+
+		if (from_captionNote == true) {
+			from = from + ", mgi_note_image_view note1";
+			where = where + "\nand i._image_key = note1._object_key";
+		}
+		if (from_copyrightNote == true) {
+			from = from + ", mgi_note_image_view note2";
+			where = where + "\nand i._image_key = note2._object_key";
+		}	
+		if (from_privateCuratorialNote == true) {
+			from = from + ", mgi_note_image_view note3";
+			where = where + "\nand i._image_key = note3._object_key";
+		}	
+		if (from_externalLinkNote == true) {
+			from = from + ", mgi_note_image_view note4";
+			where = where + "\nand i._image_key = note4._object_key";
+		}			
+		if (from_accession == true) {
+			from = from + ", img_image_acc_view a";
+			where = where + "\nand i._image_key = a._object_key" 
+					+ "\nand a._mgitype_key = 9";
+		}
+		if (from_editAccession == true) {
+			from = from + ", img_imave_acc_view acc1";
+			where = where + "\nand i._image_key = acc1._object_key";
+		}
+		if (from_noneditAccession == true) {
+			from = from + ", mrk_accref2_view acc2";
+			where = where + "\nand i._image_key = acc2._object_key";
+		}
+		
+		// make this easy to copy/paste for troubleshooting
+		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimImageDomain domain = new SlimImageDomain();
+				domain.setImageKey(rs.getString("_image_key"));
+				domain.setImageDisplay(rs.getString("imageDisplay"));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
+
+}

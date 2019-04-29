@@ -16,8 +16,6 @@ public class ImageDomain extends BaseDomain {
 	// and only 1 master domain record is processed by the create/update endpoint
 	
 	private String imageKey;
-	private String mgiTypeKey;
-	private String mgiType;
 	private String imageClassKey;
 	private String imageClass;
 	private String imageTypeKey;

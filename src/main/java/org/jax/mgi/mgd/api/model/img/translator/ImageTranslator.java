@@ -30,8 +30,6 @@ public class ImageTranslator extends BaseEntityDomainTranslator<Image, ImageDoma
 		// and only 1 master domain record is processed by the create/update endpoint
 		
 		domain.setImageKey(String.valueOf(entity.get_image_key()));
-		domain.setMgiTypeKey(String.valueOf(entity.getMgitype().get_mgitype_key()));
-		domain.setMgiType(entity.getMgitype().getName());
 		domain.setImageClassKey(String.valueOf(entity.getImageClass().get_term_key()));
 		domain.setImageClass(entity.getImageClass().getTerm());
 		domain.setImageTypeKey(String.valueOf(entity.getImageType().get_term_key()));
@@ -45,7 +43,7 @@ public class ImageTranslator extends BaseEntityDomainTranslator<Image, ImageDoma
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-
+		
 		// reference
 		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
 		domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());

@@ -179,11 +179,14 @@ public class ImageService extends BaseService<ImageDomain> {
 		}			
 		if (searchDomain.getFigureLabel() != null && !searchDomain.getFigureLabel().isEmpty()) {
 			where = where + "\nand i.figureLabel ilike '" + searchDomain.getFigureLabel() + "'";
-		}		
-		if (searchDomain.getImagePanes().get(0).getPaneLabel() != null
+		}
+		if (searchDomain.getImagePanes() != null) {
+			if (searchDomain.getImagePanes().get(0).getPaneLabel() != null
 				&& !searchDomain.getImagePanes().get(0).getPaneLabel().isEmpty()) {
+			log.info("search 3");	
 			where = where + "\nand p.paneLabel ilike '" + searchDomain.getImagePanes().get(0).getPaneLabel() + "'";
 			from_imagepane = true;
+			}
 		}
 		
 		// image reference
@@ -202,6 +205,7 @@ public class ImageService extends BaseService<ImageDomain> {
 			where = where + "\nand i.short_citation ilike '" + value + "'";
 		}
 		
+		log.info("search 3");			
 		// notes
 		if (searchDomain.getCaptionNote() != null) {
 			value = searchDomain.getCaptionNote().getNoteChunk().replaceAll("'",  "''");

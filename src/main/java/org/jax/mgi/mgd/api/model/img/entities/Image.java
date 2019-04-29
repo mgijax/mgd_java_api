@@ -18,7 +18,6 @@ import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
-import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -47,10 +46,6 @@ public class Image extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_mgitype_key")
-	private MGIType mgitype;
-	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_imageclass_key", referencedColumnName="_term_key")
 	private Term imageClass;

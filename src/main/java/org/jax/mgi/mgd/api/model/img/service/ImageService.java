@@ -10,12 +10,15 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.img.dao.ImageDAO;
 import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImageDomain;
 import org.jax.mgi.mgd.api.model.img.entities.Image;
 import org.jax.mgi.mgd.api.model.img.translator.ImageTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -28,26 +31,59 @@ public class ImageService extends BaseService<ImageDomain> {
 
 	@Inject
 	private ImageDAO imageDAO;
-
+	@Inject
+	private ImageDAO thumbnailDAO;
+	
+	@Inject
+	private TermDAO termDAO;
+	@Inject
+	private ReferenceDAO referenceDAO;
+	
+	@Inject
+	private NoteService noteService;
+	@Inject
+	private ImagePaneService imagePaneService;
+	
 	private ImageTranslator translator = new ImageTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
+	private String mgiTypeKey = "9";
+
 	@Transactional
 	public SearchResults<ImageDomain> create(ImageDomain domain, User user) {
 		
 		// create new entity object from in-coming domain
 		// the Entities class handles the generation of the primary key
+		// thumbnailEntity will only be created if necessary
 		// database trigger will assign the MGI id/see pgmgddbschema/trigger for details
 
 		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
 		Image entity = new Image();
 		
-		// assumes that required fields exist
-		//entity.setSymbol(domain.getSymbol());
+		// if A&P (not Expression), then create Thumbnail (1072159)
+		//if (domain.getImageClass() != "Expression") {
+		if (domain.getImageClassKey() != "6481781") {
+			Image thumbnailEntity = new Image();
+			thumbnailEntity.setImageType(termDAO.get(1072159));
+			thumbnailEntity.setImageClass(termDAO.get(Integer.valueOf(domain.getImageClassKey())));
+			thumbnailEntity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));
+			thumbnailEntity.setFigureLabel(domain.getFigureLabel());
+			// thumbnailkey is null
+			thumbnailEntity.setCreatedBy(user);
+			thumbnailEntity.setCreation_date(new Date());
+			thumbnailEntity.setModifiedBy(user);
+			thumbnailEntity.setModification_date(new Date());
+			thumbnailDAO.persist(thumbnailEntity);
+			
+			// set full-size thumbail key = new thumbnail primary key
+			entity.setThumbnailImage(thumbnailDAO.get(thumbnailEntity.get_image_key()));
+		}
 		
-		//entity.setMarkerType(markerTypeDAO.get(Integer.valueOf(domain.getMarkerTypeKey())));
-		
-		// add creation/modification 
+		// create Full Size (1072158)
+		entity.setImageType(termDAO.get(1072158));
+		entity.setImageClass(termDAO.get(Integer.valueOf(domain.getImageClassKey())));
+		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));
+		entity.setFigureLabel(domain.getFigureLabel()); 
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
 		entity.setModifiedBy(user);
@@ -56,6 +92,15 @@ public class ImageService extends BaseService<ImageDomain> {
 		// execute persist/insert/send to database
 		imageDAO.persist(entity);
 
+		// process all notes
+		noteService.process(String.valueOf(entity.get_image_key()), domain.getCaptionNote(), mgiTypeKey, "1024", user);
+		noteService.process(String.valueOf(entity.get_image_key()), domain.getCopyrightNote(), mgiTypeKey, "1023", user);
+		noteService.process(String.valueOf(entity.get_image_key()), domain.getPrivateCuratorialNote(), mgiTypeKey, "1025", user);
+		noteService.process(String.valueOf(entity.get_image_key()), domain.getExternalLinkNote(), mgiTypeKey, "1039", user);
+
+		// process image pane
+		imagePaneService.process(String.valueOf(entity.get_image_key()), domain.getImagePanes(), user);
+		
 		// return entity translated to domain
 		log.info("processImage/create/returning results");
 		results.setItem(translator.translate(entity,0));
@@ -71,17 +116,37 @@ public class ImageService extends BaseService<ImageDomain> {
 		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
 		Image entity = imageDAO.get(Integer.valueOf(domain.getImageKey()));
 		Boolean modified = false;
-		//String mgiTypeKey = "2";
-		//String mgiTypeName = "Marker";
 		
 		log.info("processImage/update");
 
-		//log.info("process symbol");
-		//if (!entity.getSymbol().equals(domain.getSymbol())) {
-		//	log.info("process entity");
-		//	entity.setSymbol(domain.getSymbol());
-		//	modified = true;
-		//}
+		if (!String.valueOf(entity.getReference().get_refs_key()).equals(domain.getRefsKey())) {
+			entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));
+			modified = true;
+		}
+		
+		if (!entity.getFigureLabel().equals(domain.getFigureLabel())) {
+			entity.setFigureLabel(domain.getFigureLabel());
+			modified = true;
+		}
+		
+		// process all notes
+		if (noteService.process(domain.getImageKey(), domain.getCaptionNote(), mgiTypeKey, "1024", user)) {
+			modified = true;
+		}
+		if (noteService.process(domain.getImageKey(), domain.getCopyrightNote(), mgiTypeKey, "1023", user)) {
+			modified = true;
+		}
+		if (noteService.process(domain.getImageKey(), domain.getPrivateCuratorialNote(), mgiTypeKey, "1025", user)) {
+			modified = true;
+		}
+		if (noteService.process(domain.getImageKey(), domain.getExternalLinkNote(), mgiTypeKey, "1039", user)) {
+			modified = true;
+		}
+
+		// process image pane
+		if (imagePaneService.process(domain.getImageKey(), domain.getImagePanes(), user)) {
+			modified = true;
+		}
 		
 		// only if modifications were actually made
 		if (modified == true) {

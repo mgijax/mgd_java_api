@@ -356,12 +356,14 @@ public class ImageService extends BaseService<ImageDomain> {
 					+ "\nand a._mgitype_key = 9";
 		}
 		if (from_editAccession == true) {
-			from = from + ", img_imave_acc_view acc1";
-			where = where + "\nand i._image_key = acc1._object_key";
+			from = from + ", img_image_acc_view acc1";
+			where = where + "\nand acc1._logicaldb_key in (19)" +
+					"\nand i._image_key = acc1._object_key";
 		}
 		if (from_noneditAccession == true) {
-			from = from + ", mrk_accref2_view acc2";
-			where = where + "\nand i._image_key = acc2._object_key";
+			from = from + ", img_image_acc_view acc2";
+			where = where + "\nand acc2._logicaldb_key not in (1, 19)" +
+					"\nand i._image_key = acc2._object_key";		
 		}
 		
 		// make this easy to copy/paste for troubleshooting

@@ -1,3 +1,10 @@
+TAG: mgd_java_api-6-0-14-13
+DATE: 05/01/2019
+STAFF: sc
+CHANGES: TR13107
+AlleleVariantService.java update bug fix so update is done when curated
+description is null
+
 TAG: mgd_java_api-6-0-14-12
 TAG: mgd_java_api-6-0-14-11
 TAG: mgd_java_api-6-0-14-10

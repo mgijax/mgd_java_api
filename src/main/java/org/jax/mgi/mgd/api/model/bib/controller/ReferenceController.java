@@ -80,13 +80,13 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "Validate reference Copyright Text")
-	@Path("/validateCopyright/{key}")
-	public List<SlimReferenceDomain> validateCopyright(
-			@PathParam("key") 
-			@ApiParam(value = "Validating refrence Copyright") 
-			Integer key) {
-		return referenceService.validateCopyright(key);
+	@ApiOperation(value = "Validate reference & copyright")
+	@Path("/validateJnumCopyright/{jnum}")
+	public List<SlimReferenceDomain> validateJnumCopyright(
+			@PathParam("jnum") 
+			@ApiParam(value = "Validating jnum & copyright") 
+			String jnum) {
+		return referenceService.validateJnumCopyright(jnum);
 	}
 
 }

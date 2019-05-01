@@ -115,29 +115,39 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}	
 
 	@Transactional	
-	public List<SlimReferenceDomain> validateCopyright(Integer key) {
-		// use SlimReferenceDomain to return reference copyright text
-		// one reference key is expected
-		// returns empty list if no copyright exists for the reference key
+	public List<SlimReferenceDomain> validateJnumCopyright(String value) {
+		// use SlimReferenceDomain to return list of validated reference & copyright
 
 		List<SlimReferenceDomain> results = new ArrayList<SlimReferenceDomain>();
-		SlimReferenceDomain domain = new SlimReferenceDomain();						
 
-		String cmd = "\nselect * from bib_getCopyright(" + String.valueOf(key) + ")";
+		// validate the jnum
+		results = validJnum(value);
 		
-		log.info("cmd: " + cmd);
+		// if results is not null/empty
+		if (results != null && !results.isEmpty()) {
+			
+			String key = results.get(0).getRefsKey();
+			
+			// if reference key is not null/empty
+			if (key != null && !key.isEmpty()) {
+				
+				// return copyright/null is OK
+				
+				String cmd = "\nselect * from bib_getCopyright(" + key + ")";
+				log.info("cmd: " + cmd);
 
-		try {
-			Query query = referenceDAO.createNativeQuery(cmd);
-			String r = (String) query.getSingleResult();
-			domain.setCopyright(r);
-			results.add(domain);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
+				try {
+					Query query = referenceDAO.createNativeQuery(cmd);
+					String r = (String) query.getSingleResult();
+					results.get(0).setCopyright(r);
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}			
+			}
 		}
 		
 		return results;
-	}	
-		
+	}
+	
 }

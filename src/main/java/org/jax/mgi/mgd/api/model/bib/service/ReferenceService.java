@@ -115,21 +115,41 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}	
 
 	@Transactional	
-	public List<SlimReferenceDomain> validateJnumCopyright(String value) {
+	public List<SlimReferenceDomain> validateJnumCopyright(SlimReferenceDomain domain) {
 		// use SlimReferenceDomain to return list of validated reference & copyright
 
 		List<SlimReferenceDomain> results = new ArrayList<SlimReferenceDomain>();
 
 		// validate the jnum
-		results = validJnum(value);
+		String jnum = "";
+		if (domain.getJnum() != null && !domain.getJnum().isEmpty()) {
+			jnum = domain.getJnum();
+		}
+		else if (domain.getJnumID() != null && !domain.getJnumID().isEmpty()) {
+			jnum = domain.getJnumID();
+		}
+		results = validJnum(jnum);
+		
+		log.info("copyright check");
+		// set copyright to incoming json package
+		results.get(0).setCopyright(domain.getCopyright());
+		results.get(0).setNeedsDXDOIid(false);
 		
 		// if results is not null/empty
+		// if reference key is not null/empty
+		// if copyright is not null/empty
+		// that is, do not overwrite an existing copyright
+		
 		if (results != null && !results.isEmpty()) {
 			
 			String key = results.get(0).getRefsKey();
 			
-			// if reference key is not null/empty
-			if (key != null && !key.isEmpty()) {
+			log.info("copyright validation");
+			log.info(results.get(0).getCopyright());
+			
+			if (key != null && !key.isEmpty() 
+					&& (results.get(0).getCopyright() == null
+					|| results.get(0).getCopyright().isEmpty())) {
 				
 				// return copyright/null is OK
 				
@@ -140,6 +160,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					Query query = referenceDAO.createNativeQuery(cmd);
 					String r = (String) query.getSingleResult();
 					results.get(0).setCopyright(r);
+					
+					// if DXDOI is missing....
+					if (r.contains("DXDOI(||)")) {
+						results.get(0).setNeedsDXDOIid(true);
+					}
 				}
 				catch (Exception e) {
 					e.printStackTrace();

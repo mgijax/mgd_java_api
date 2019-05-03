@@ -19,6 +19,7 @@ import org.jax.mgi.mgd.api.model.img.translator.ImageTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -59,6 +60,13 @@ public class ImageService extends BaseService<ImageDomain> {
 
 		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
 		Image entity = new Image();
+		
+		// copyright/DXDOI validation
+		if (domain.getCopyrightNote().getNoteChunk().contains("DXDOI(||)")) {
+			log.info("processImage/create/DXDOI missing");
+			results.setError("Failed : Copyright/DXDOI error", "Copyright is missing the DXDOI identifier", Constants.HTTP_SERVER_ERROR);
+			return results;		
+		}
 		
 		// if A&P (not Expression), then create Thumbnail (1072159)
 		//if (domain.getImageClass() != "Expression") {
@@ -109,16 +117,22 @@ public class ImageService extends BaseService<ImageDomain> {
 	
 	@Transactional
 	public SearchResults<ImageDomain> update(ImageDomain domain, User user) {
-		
-		// the set of fields in "update" is similar to set of fields in "create"
-		// creation user/date are only set in "create"
 
+		// update exisitng entity object from in-coming domain
+		
 		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
 		Image entity = imageDAO.get(Integer.valueOf(domain.getImageKey()));
 		Boolean modified = false;
 		
 		log.info("processImage/update");
 
+		// copyright/DXDOI validation
+		if (domain.getCopyrightNote().getNoteChunk().contains("DXDOI(||)")) {
+			log.info("processImage/update/DXDOI missing");
+			results.setError("Failed : Copyright/DXDOI error", "Copyright is missing the DXDOI identifier", Constants.HTTP_SERVER_ERROR);
+			return results;		
+		}
+		
 		if (!String.valueOf(entity.getReference().get_refs_key()).equals(domain.getRefsKey())) {
 			entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));
 			modified = true;

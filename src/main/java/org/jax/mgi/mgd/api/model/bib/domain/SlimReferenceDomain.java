@@ -16,6 +16,8 @@ public class SlimReferenceDomain extends BaseDomain {
 	private String jnumID;
 	private String jnum;
 	private String short_citation;
+	
+	// used by validateJnumCopyright
 	private String copyright;
-	private Boolean needsDXDOIid;
+	private Boolean needsDXDOIid = false;
 }

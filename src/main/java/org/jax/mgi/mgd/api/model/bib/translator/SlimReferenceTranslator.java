@@ -15,6 +15,8 @@ public class SlimReferenceTranslator extends BaseEntityDomainTranslator<Referenc
 		domain.setJnumID(entity.getReferenceCitationCache().getJnumid());
 		domain.setJnum(String.valueOf(entity.getReferenceCitationCache().getNumericPart()));	
 		domain.setShort_citation(entity.getReferenceCitationCache().getShort_citation());
+		
+		// used by validateJnumCopyright
 		domain.setCopyright("");
 		domain.setNeedsDXDOIid(false);
 		

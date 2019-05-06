@@ -1,7 +1,7 @@
 package org.jax.mgi.mgd.api.model.gxd.entities;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -77,13 +77,13 @@ public class Assay extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 8 AND preferred = 1 AND `_logicaldb_key` = 1")
 	private Accession mgiAccessionId;
 
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_assay_key")
 	@OrderBy("sequenceNum")
-	private Set<GelLane> gelLanes;
+	private List<GelLane> gelLanes;
 	
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_assay_key")
 	@OrderBy("sequenceNum")
-	private Set<Specimen> specimens;
+	private List<Specimen> specimens;
 }

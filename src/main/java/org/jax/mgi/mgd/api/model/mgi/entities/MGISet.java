@@ -1,7 +1,7 @@
 package org.jax.mgi.mgd.api.model.mgi.entities;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -42,8 +42,8 @@ public class MGISet extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_set_key")
-	private Set<MGISetMember> setMembers;
+	private List<MGISetMember> setMembers;
 
 }

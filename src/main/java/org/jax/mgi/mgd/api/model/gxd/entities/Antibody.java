@@ -1,14 +1,14 @@
 package org.jax.mgi.mgd.api.model.gxd.entities;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -61,11 +61,11 @@ public class Antibody extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 6 AND preferred = 1 AND `_logicaldb_key` = 1")
 	private Accession mgiAccessionId;
 
-	@ManyToMany
+	@OneToMany()
 	@JoinTable(name = "gxd_antibodymarker",
 		joinColumns = @JoinColumn(name = "_antibody_key"),
 		inverseJoinColumns = @JoinColumn(name = "_marker_key")
 	)
-	private Set<Marker> markers;
+	private List<Marker> markers;
 	
 }

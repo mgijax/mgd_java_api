@@ -1,7 +1,7 @@
 package org.jax.mgi.mgd.api.model.prb.entities;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -57,49 +57,26 @@ public class ProbeStrain extends BaseEntity {
 
 	/* change to OneToMany List when we need this
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_strain_key", referencedColumnName="_object_key")
+	@JoinColumn(name="_strain_key", referencedColumnName="_object_key",insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 10 AND preferred = 1 AND `_logicaldb_key` = 1")
 	private Accession mgiAccessionId;
     */
-	@OneToMany
-	@JoinColumn(name="_strain_key")
-	private Set<ProbeStrainMarker> probeStrainMarkers;
+	@OneToMany()
+	@JoinColumn(name="_strain_key",insertable=false, updatable=false)
+	private List<ProbeStrainMarker> probeStrainMarkers;
 	
-	@OneToMany
-	@JoinColumn(name="_strain_key")
-	private Set<ProbeStrainGenotype> probeStrainGenotypes;
+	@OneToMany()
+	@JoinColumn(name="_strain_key",insertable=false, updatable=false)
+	private List<ProbeStrainGenotype> probeStrainGenotypes;
 	
-	@OneToMany
-	@JoinColumn(name="_object_key", referencedColumnName="_strain_key")
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_strain_key",insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 10 AND preferred = 1")
-	private Set<Accession> allAccessionIds;
+	private List<Accession> allAccessionIds;
 	
-	@OneToMany
-	@JoinColumn(name="_object_key", referencedColumnName="_strain_key")
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_strain_key",insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 10")
-	private Set<MGISynonym> synonyms;
-	
-	//@ManyToMany
-	//@JoinTable(name = "prb_allele_strain",
-	//	joinColumns = @JoinColumn(name = "_strain_key"),
-	//	inverseJoinColumns = @JoinColumn(name = "_allele_key")
-	//)
-	//private Set<ProbeAllele> alleles;
-
-	//@Transient
-	//public Set<Accession> getAccessionIdsByLogicalDb(LogicalDB db) {
-	//	return getAccessionIdsByLogicalDb(db.get_logicaldb_key());
-	//}
-	
-	//@Transient
-	//public Set<Accession> getAccessionIdsByLogicalDb(Integer db_key) {
-	//	HashSet<Accession> set = new HashSet<Accession>();
-	//	for(Accession a: allAccessionIds) {
-	//		if(a.getLogicaldb().get_logicaldb_key() == db_key) {
-	//			set.add(a);
-	//		}
-	//	}
-	//	return set;
-	//}
+	private List<MGISynonym> synonyms;
 	
 }

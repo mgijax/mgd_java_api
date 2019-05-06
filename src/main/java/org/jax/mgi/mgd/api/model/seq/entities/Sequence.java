@@ -1,14 +1,12 @@
 package org.jax.mgi.mgd.api.model.seq.entities;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -18,7 +16,6 @@ import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.map.entities.CoordinateFeature;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
@@ -72,19 +69,13 @@ public class Sequence extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_sequence_key")
-	private Set<SequenceMarkerCache> sequenceMarkers;
+	private List<SequenceMarkerCache> sequenceMarkers;
 	
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_sequence_key")
 	@Where(clause="`_mgitype_key` = 19")
-	private Set<CoordinateFeature> features;
+	private List<CoordinateFeature> features;
 	
-	@ManyToMany
-	@JoinTable(name = "seq_source_assoc",
-		joinColumns = @JoinColumn(name = "_sequence_key"),
-		inverseJoinColumns = @JoinColumn(name = "_source_key")
-	)
-	private Set<ProbeSource> probeSources;
 }

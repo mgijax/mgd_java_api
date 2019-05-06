@@ -1,25 +1,19 @@
 package org.jax.mgi.mgd.api.model.mgi.entities;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
-import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
-import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -51,32 +45,9 @@ public class Organism extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 20 AND preferred = 1 AND `_logicaldb_key` = 1")
 	private Accession mgiAccessionId;
 
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_organism_key")
 	@Where(clause="`_mgitype_key` = 20 AND preferred = 1")
-	private Set<Accession> allAccessionIds;
-
-	@ManyToMany
-	@JoinTable(name = "mgi_organism_mgitype",
-		joinColumns = @JoinColumn(name = "_organism_key"),
-		inverseJoinColumns = @JoinColumn(name = "_mgitype_key")
-	)
-	private Set<MGIType> mgiTypes;
-	
-	@Transient
-	public Set<Accession> getAccessionIdsByLogicalDb(LogicalDB db) {
-		return getAccessionIdsByLogicalDb(db.get_logicaldb_key());
-	}
-	
-	@Transient
-	public Set<Accession> getAccessionIdsByLogicalDb(Integer db_key) {
-		HashSet<Accession> set = new HashSet<Accession>();
-		for(Accession a: allAccessionIds) {
-			if(a.getLogicaldb().get_logicaldb_key() == db_key) {
-				set.add(a);
-			}
-		}
-		return set;
-	}
+	private List<Accession> allAccessionIds;
 
 }

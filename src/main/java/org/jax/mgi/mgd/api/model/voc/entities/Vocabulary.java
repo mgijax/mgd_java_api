@@ -45,10 +45,4 @@ public class Vocabulary extends BaseEntity {
 	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
 	private List<Term> terms;
 	
-	//@ManyToMany
-	//@JoinTable(name = "voc_vocabdag",
-	//	joinColumns = @JoinColumn(name = "_vocab_key", referencedColumnName="_vocab_key"),
-	//	inverseJoinColumns = @JoinColumn(name = "_dag_key", referencedColumnName="_dag_key")
-	//)
-	//private Set<Dag> dags;
 }

@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -50,11 +49,8 @@ public class GelLane extends BaseEntity {
 	@JoinColumn(name="_gelcontrol_key")
 	private GelControl gelControl;
 	
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_gellane_key")
 	private Set<GelLaneStructure> structures;
 	
-	@ManyToOne
-	@JoinColumn(name="_assay_key")
-	private Assay assay;
 }

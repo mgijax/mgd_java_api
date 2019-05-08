@@ -43,7 +43,7 @@ public class MGISynonymTypeService extends BaseService<MGISynonymTypeDomain> {
 
 	@Transactional
 	public MGISynonymTypeDomain get(Integer key) {
-		return translator.translate(synonymTypeDAO.get(key),1);
+		return translator.translate(synonymTypeDAO.get(key));
 	}
 
     @Transactional
@@ -73,7 +73,7 @@ public class MGISynonymTypeService extends BaseService<MGISynonymTypeDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				MGISynonymTypeDomain domain = new MGISynonymTypeDomain();
-				domain = translator.translate(synonymTypeDAO.get(rs.getInt("_synonymtype_key")),1);
+				domain = translator.translate(synonymTypeDAO.get(rs.getInt("_synonymtype_key")));
 				synonymTypeDAO.clear();
 				results.add(domain);
 			}

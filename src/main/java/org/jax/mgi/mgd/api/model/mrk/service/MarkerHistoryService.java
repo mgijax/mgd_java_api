@@ -91,7 +91,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				MarkerHistoryDomain domain = new MarkerHistoryDomain();	
-				domain = translator.translate(historyDAO.get(rs.getInt("_assoc_key")),1);
+				domain = translator.translate(historyDAO.get(rs.getInt("_assoc_key")));
 				historyDAO.clear();
 				results.add(domain);
 			}

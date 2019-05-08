@@ -12,7 +12,7 @@ public class MGITypeTranslator extends BaseEntityDomainTranslator<MGIType, MGITy
 	private OrganismTranslator organismTranslator = new OrganismTranslator();
 	
 	@Override
-	protected MGITypeDomain entityToDomain(MGIType entity, int translationDepth) {
+	protected MGITypeDomain entityToDomain(MGIType entity) {
 		MGITypeDomain domain = new MGITypeDomain();
 
 		domain.setMgiTypeKey(String.valueOf(entity.get_mgitype_key()));
@@ -24,10 +24,8 @@ public class MGITypeTranslator extends BaseEntityDomainTranslator<MGIType, MGITy
 		domain.setCreation_date(entity.getCreation_date());
 		domain.setModification_date(entity.getModification_date());
 
-		if(translationDepth > 0) {
-			Iterable<OrganismDomain> terms = organismTranslator.translateEntities(entity.getOrganisms(), translationDepth - 1);
-			domain.setOrganisms(IteratorUtils.toList(terms.iterator()));
-		}
+		Iterable<OrganismDomain> terms = organismTranslator.translateEntities(entity.getOrganisms());
+		domain.setOrganisms(IteratorUtils.toList(terms.iterator()));
 
 		return domain;
 	}

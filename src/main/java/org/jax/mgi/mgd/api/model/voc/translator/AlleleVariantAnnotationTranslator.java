@@ -13,7 +13,7 @@ public class AlleleVariantAnnotationTranslator extends BaseEntityDomainTranslato
 	private SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
 	
     @Override
-    protected AlleleVariantAnnotationDomain entityToDomain(Annotation entity, int translationDepth) {
+    protected AlleleVariantAnnotationDomain entityToDomain(Annotation entity) {
     	AlleleVariantAnnotationDomain domain = new AlleleVariantAnnotationDomain();
 
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);

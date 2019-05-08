@@ -77,7 +77,7 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				ImagePaneDomain domain = new ImagePaneDomain();	
-				domain = translator.translate(imagePaneDAO.get(rs.getInt("_imagepane_key")),1);
+				domain = translator.translate(imagePaneDAO.get(rs.getInt("_imagepane_key")));
 				imagePaneDAO.clear();
 				results.add(domain);
 			}

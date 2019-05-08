@@ -154,7 +154,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		// results has domain info and other info too
 		log.info("processAlleleVariant/create/returning results");
 		log.info(curatedEntity);
-		results.setItem(translator.translate(curatedEntity,0));
+		results.setItem(translator.translate(curatedEntity));
 		log.info("processAlleleVariant/translator curated entity returned");
 		return results;
 	}
@@ -277,7 +277,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 				
 		// return entity translated to domain
 		log.info("processAlleleVariant/update/returning results");
-		results.setItem(translator.translate(entity, 0));
+		results.setItem(translator.translate(entity));
 		return results;		
 	}
 
@@ -286,7 +286,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		// get the DAO/entity and translate -> domain	
 		AlleleVariantDomain domain = new AlleleVariantDomain();
 		if (variantDAO.get(key) != null) {
-			domain = translator.translate(variantDAO.get(key),1);
+			domain = translator.translate(variantDAO.get(key));
 		}
 		return domain;
 	}
@@ -304,7 +304,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		// get the entity object and delete
 		SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
 		AlleleVariant entity = variantDAO.get(key);
-		results.setItem(translator.translate(variantDAO.get(key),0));
+		results.setItem(translator.translate(variantDAO.get(key)));
 		variantDAO.remove(entity);
 		return results;
 	}
@@ -579,7 +579,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SlimAlleleVariantDomain domain = new SlimAlleleVariantDomain();
-				domain = slimtranslator.translate(variantDAO.get(rs.getInt("_variant_key")),1);
+				domain = slimtranslator.translate(variantDAO.get(rs.getInt("_variant_key")));
 				variantDAO.clear();
 				results.add(domain);
 			}
@@ -607,7 +607,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SlimAlleleVariantDomain domain = new SlimAlleleVariantDomain();				
-				domain = slimtranslator.translate(variantDAO.get(rs.getInt("_variant_key")),1);
+				domain = slimtranslator.translate(variantDAO.get(rs.getInt("_variant_key")));
 				variantDAO.clear();
 				results.add(domain);
 			}
@@ -634,7 +634,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				AlleleVariantDomain domain = new AlleleVariantDomain();				
-				domain = translator.translate(variantDAO.get(rs.getInt("_variant_key")),1);
+				domain = translator.translate(variantDAO.get(rs.getInt("_variant_key")));
 				variantDAO.clear();
 				results.add(domain);
 			}

@@ -7,7 +7,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 public class SlimUserTranslator extends BaseEntityDomainTranslator<User, SlimUserDomain> {
 
 	@Override
-	protected SlimUserDomain entityToDomain(User entity, int translationDepth) {
+	protected SlimUserDomain entityToDomain(User entity) {
 		SlimUserDomain domain = new SlimUserDomain();
 		
 		domain.setUserKey(String.valueOf(entity.get_user_key()));

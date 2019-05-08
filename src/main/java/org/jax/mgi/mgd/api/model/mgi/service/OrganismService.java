@@ -71,7 +71,7 @@ public class OrganismService extends BaseService<OrganismDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				OrganismDomain domain = new OrganismDomain();
-				domain = translator.translate(organismDAO.get(rs.getInt("_organism_key")),1);
+				domain = translator.translate(organismDAO.get(rs.getInt("_organism_key")));
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

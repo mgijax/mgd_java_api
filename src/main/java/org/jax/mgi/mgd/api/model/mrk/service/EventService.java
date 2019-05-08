@@ -42,7 +42,7 @@ public class EventService extends BaseService<EventDomain> {
 
 	@Transactional
 	public EventDomain get(Integer key) {
-		return translator.translate(eventDAO.get(key),1);
+		return translator.translate(eventDAO.get(key));
 	}
 
     @Transactional
@@ -70,7 +70,7 @@ public class EventService extends BaseService<EventDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				EventDomain domain = new EventDomain();
-				domain = translator.translate(eventDAO.get(rs.getInt("_marker_event_key")),1);
+				domain = translator.translate(eventDAO.get(rs.getInt("_marker_event_key")));
 				eventDAO.clear();
 				results.add(domain);
 			}

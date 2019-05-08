@@ -7,7 +7,7 @@ import org.jax.mgi.mgd.api.model.acc.entities.AccessionReference;
 public class AccessionReferenceTranslator extends BaseEntityDomainTranslator<AccessionReference, AccessionReferenceDomain> {
 	
 	@Override
-	protected AccessionReferenceDomain entityToDomain(AccessionReference entity, int translationDepth) {
+	protected AccessionReferenceDomain entityToDomain(AccessionReference entity) {
 		AccessionReferenceDomain domain = new AccessionReferenceDomain();
 
 		domain.setAccessionKey(String.valueOf(entity.get_accession_key()));

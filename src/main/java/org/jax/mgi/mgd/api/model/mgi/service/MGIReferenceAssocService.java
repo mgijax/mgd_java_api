@@ -80,7 +80,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				MGIReferenceAssocDomain domain = new MGIReferenceAssocDomain();
-				domain = translator.translate(referenceAssocDAO.get(rs.getInt("_assoc_key")),1);
+				domain = translator.translate(referenceAssocDAO.get(rs.getInt("_assoc_key")));
 				referenceAssocDAO.clear();
 				results.add(domain);
 			}

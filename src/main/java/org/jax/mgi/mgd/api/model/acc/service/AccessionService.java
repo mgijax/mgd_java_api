@@ -51,7 +51,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		// get the DAO/entity and translate -> domain
 		AccessionDomain domain = new AccessionDomain();
 		if (accessionDAO.get(key) != null) {
-			domain = translator.translate(accessionDAO.get(key),1);
+			domain = translator.translate(accessionDAO.get(key));
 		}
 		return domain;		
 	}
@@ -90,7 +90,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {							
 				AccessionDomain domain = new AccessionDomain();						
-				domain = translator.translate(accessionDAO.get(rs.getInt("_accession_key")),1);
+				domain = translator.translate(accessionDAO.get(rs.getInt("_accession_key")));
 				accessionDAO.clear();	
 				results.add(domain);
 			}
@@ -132,7 +132,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {	
 				SlimAccessionDomain domain = new SlimAccessionDomain();	
-				domain = slimtranslator.translate(accessionDAO.get(rs.getInt("_accession_key")),1);
+				domain = slimtranslator.translate(accessionDAO.get(rs.getInt("_accession_key")));
 				accessionDAO.clear();									
 				results.add(domain);
 			}
@@ -160,7 +160,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				AccessionDomain domain = new AccessionDomain();
-				domain = translator.translate(accessionDAO.get(rs.getInt("_accession_key")),1);
+				domain = translator.translate(accessionDAO.get(rs.getInt("_accession_key")));
 				accessionDAO.clear();					
 				results.add(domain);
 			}

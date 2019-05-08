@@ -44,7 +44,7 @@ public class MGITypeService extends BaseService<MGITypeDomain> {
 		// get the DAO/entity and translate -> domain
 		MGITypeDomain domain = new MGITypeDomain();
 		if (mgitypeDAO.get(key) != null) {
-			domain = translator.translate(mgitypeDAO.get(key),1);
+			domain = translator.translate(mgitypeDAO.get(key));
 		}
 		return domain;
 	}
@@ -81,7 +81,7 @@ public class MGITypeService extends BaseService<MGITypeDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {					
 				SlimMGITypeDomain domain = new SlimMGITypeDomain();									
-				domain = slimtranslator.translate(mgitypeDAO.get(rs.getInt("_mgitype_key")),1);
+				domain = slimtranslator.translate(mgitypeDAO.get(rs.getInt("_mgitype_key")));
 				mgitypeDAO.clear();	
 				results.setItem(domain);						
 			}

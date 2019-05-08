@@ -70,7 +70,7 @@ public class MarkerTypeService extends BaseService<MarkerTypeDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				MarkerTypeDomain domain = new MarkerTypeDomain();
-				domain = translator.translate(markerTypeDAO.get(rs.getInt("_marker_type_key")),1);
+				domain = translator.translate(markerTypeDAO.get(rs.getInt("_marker_type_key")));
 				markerTypeDAO.clear();
 				results.add(domain);
 			}

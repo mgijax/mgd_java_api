@@ -12,7 +12,7 @@ import lombok.Setter;
 public class MGISynonymTranslator extends BaseEntityDomainTranslator<MGISynonym, MGISynonymDomain> {
 
 	@Override
-	protected MGISynonymDomain entityToDomain(MGISynonym entity, int translationDepth) {
+	protected MGISynonymDomain entityToDomain(MGISynonym entity) {
 		MGISynonymDomain domain = new MGISynonymDomain();
 		
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);

@@ -9,7 +9,6 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
@@ -51,7 +50,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		// get the DAO/entity and translate -> domain	
 		AlleleDomain domain = new AlleleDomain();
 		if (alleleDAO.get(key) != null) {
-			domain = translator.translate(alleleDAO.get(key),1);
+			domain = translator.translate(alleleDAO.get(key));
 		}
 		return domain;	
 	}
@@ -69,7 +68,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		// get the entity object and delete
 				SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
 				Allele entity = alleleDAO.get(key);
-				results.setItem(translator.translate(alleleDAO.get(key),0));
+				results.setItem(translator.translate(alleleDAO.get(key)));
 				alleleDAO.remove(entity);
 				return results;
 	}
@@ -181,7 +180,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SlimAlleleDomain domain = new SlimAlleleDomain();
-				domain = slimtranslator.translate(alleleDAO.get(rs.getInt("_allele_key")),1);				
+				domain = slimtranslator.translate(alleleDAO.get(rs.getInt("_allele_key")));				
 				alleleDAO.clear();
 				results.add(domain);
 			}
@@ -229,7 +228,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			
 			while (rs.next()) {
 				SlimAlleleDomain slimdomain = new SlimAlleleDomain();
-				slimdomain = slimtranslator.translate(alleleDAO.get(rs.getInt("_allele_key")),1);				
+				slimdomain = slimtranslator.translate(alleleDAO.get(rs.getInt("_allele_key")));				
 				alleleDAO.clear();
 				results.add(slimdomain);
 			}

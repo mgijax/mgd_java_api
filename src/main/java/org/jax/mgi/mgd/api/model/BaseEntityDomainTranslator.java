@@ -1,7 +1,6 @@
 package org.jax.mgi.mgd.api.model;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
 public abstract class BaseEntityDomainTranslator<E extends BaseEntity, D extends BaseDomain> {
 
@@ -11,26 +10,13 @@ public abstract class BaseEntityDomainTranslator<E extends BaseEntity, D extends
     protected SimpleDateFormat dateFormatNoTime = new SimpleDateFormat("yyyy-MM-dd");
     
 	public D translate(E entity) {
-		return translate(entity, 1);
-	}
-	public D translate(E entity, int depth) {
-		return entityToDomain(entity, depth);
+		return translate(entity);
 	}
 
 	public Iterable<D> translateEntities(Iterable<E> entities) {
-		return translateEntities(entities, 1);
+		return translateEntities(entities);
 	}
 
-	public Iterable<D> translateEntities(Iterable<E> entities, int translationDepth) {
-		ArrayList<D> domains = new ArrayList<D>();
-		for(E entity: entities) {
-			if(entity != null) {
-				domains.add(entityToDomain(entity, translationDepth));
-			}
-		}
-		return domains;
-	}
-
-	protected abstract D entityToDomain(E entity, int translationDepth);
+	protected abstract D entityToDomain(E entity);
 	
 }

@@ -70,7 +70,7 @@ public class MarkerStatusService extends BaseService<MarkerStatusDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				MarkerStatusDomain domain = new MarkerStatusDomain();
-				domain = translator.translate(markerStatusDAO.get(rs.getInt("_marker_status_key")),1);
+				domain = translator.translate(markerStatusDAO.get(rs.getInt("_marker_status_key")));
 				markerStatusDAO.clear();
 				results.add(domain);
 			}

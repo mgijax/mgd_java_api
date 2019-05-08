@@ -81,7 +81,7 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				// for now, we are just using the generic RelationshipDomain
 				
 				RelationshipDomain domain = new RelationshipDomain();
-				domain = translator.translate(relationshipDAO.get(rs.getInt("_relationship_key")),1);
+				domain = translator.translate(relationshipDAO.get(rs.getInt("_relationship_key")));
 				relationshipDAO.clear();
 				
 				results.add(domain);

@@ -77,7 +77,7 @@ public class NoteService extends BaseService<NoteDomain> {
 			while (rs.next()) {
 							
 				NoteDomain domain = new NoteDomain();
-				domain = translator.translate(noteDAO.get(rs.getInt("_note_key")),1);
+				domain = translator.translate(noteDAO.get(rs.getInt("_note_key")));
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

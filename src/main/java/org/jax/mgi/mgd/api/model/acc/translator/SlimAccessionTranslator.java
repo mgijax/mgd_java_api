@@ -10,7 +10,7 @@ public class SlimAccessionTranslator extends BaseEntityDomainTranslator<Accessio
 	protected Logger log = Logger.getLogger(getClass());
 	
 	@Override
-	protected SlimAccessionDomain entityToDomain(Accession entity, int translationDepth) {
+	protected SlimAccessionDomain entityToDomain(Accession entity) {
 		SlimAccessionDomain domain = new SlimAccessionDomain();
 
 		domain.setAccessionKey(String.valueOf(entity.get_accession_key()));

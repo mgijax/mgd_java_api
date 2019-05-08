@@ -11,7 +11,7 @@ import lombok.Setter;
 public class SlimMGIReferenceAssocTranslator extends BaseEntityDomainTranslator<MGIReferenceAssoc, SlimMGIReferenceAssocDomain> {
 
 	@Override
-	protected SlimMGIReferenceAssocDomain entityToDomain(MGIReferenceAssoc entity, int translationDepth) {
+	protected SlimMGIReferenceAssocDomain entityToDomain(MGIReferenceAssoc entity) {
 		SlimMGIReferenceAssocDomain domain = new SlimMGIReferenceAssocDomain();
 		
 		domain.setAssocKey(String.valueOf(entity.get_assoc_key()));

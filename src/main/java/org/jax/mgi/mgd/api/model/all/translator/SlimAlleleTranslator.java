@@ -15,7 +15,7 @@ public class SlimAlleleTranslator extends BaseEntityDomainTranslator<Allele, Sli
 	private SlimMGIReferenceAssocTranslator refAssocTranslator = new SlimMGIReferenceAssocTranslator();
 	
 	@Override
-	protected SlimAlleleDomain entityToDomain(Allele entity, int translationDepth) {
+	protected SlimAlleleDomain entityToDomain(Allele entity) {
 		
 		SlimAlleleDomain domain = new SlimAlleleDomain();
 		

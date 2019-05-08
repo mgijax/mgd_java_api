@@ -111,7 +111,7 @@ public class ImageService extends BaseService<ImageDomain> {
 		
 		// return entity translated to domain
 		log.info("processImage/create/returning results");
-		results.setItem(translator.translate(entity,0));
+		results.setItem(translator.translate(entity));
 		return results;
 	}
 	
@@ -175,7 +175,7 @@ public class ImageService extends BaseService<ImageDomain> {
 				
 		// return entity translated to domain
 		log.info("processImage/update/returning results");
-		results.setItem(translator.translate(entity, 0));
+		results.setItem(translator.translate(entity));
 		log.info("processImage/update/returned results succsssful");
 		return results;
 	}
@@ -185,7 +185,7 @@ public class ImageService extends BaseService<ImageDomain> {
 		// get the DAO/entity and translate -> domain
 		ImageDomain domain = new ImageDomain();
 		if (imageDAO.get(key) != null) {
-			domain = translator.translate(imageDAO.get(key),1);
+			domain = translator.translate(imageDAO.get(key));
 		}
 		return domain;
 	}
@@ -194,7 +194,7 @@ public class ImageService extends BaseService<ImageDomain> {
 	public SearchResults<ImageDomain> getResults(Integer key) {
 		// get the DAO/entity and translate -> domain -> results
 		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
-		results.setItem(translator.translate(imageDAO.get(key),0));
+		results.setItem(translator.translate(imageDAO.get(key)));
 		return results;
 	}
 	
@@ -203,7 +203,7 @@ public class ImageService extends BaseService<ImageDomain> {
 		// get the entity object and delete
 		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
 		Image entity = imageDAO.get(key);
-		results.setItem(translator.translate(imageDAO.get(key),0));
+		results.setItem(translator.translate(imageDAO.get(key)));
 		imageDAO.remove(entity);
 		return results;
 	}

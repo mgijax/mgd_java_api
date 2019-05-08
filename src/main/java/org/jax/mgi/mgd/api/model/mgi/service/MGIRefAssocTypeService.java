@@ -71,7 +71,7 @@ public class MGIRefAssocTypeService extends BaseService<MGIRefAssocTypeDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				MGIRefAssocTypeDomain domain = new MGIRefAssocTypeDomain();
-				domain = translator.translate(refAssocTypeDAO.get(rs.getInt("_refassoctype_key")),1);
+				domain = translator.translate(refAssocTypeDAO.get(rs.getInt("_refassoctype_key")));
 				refAssocTypeDAO.clear();
 				results.add(domain);
 			}

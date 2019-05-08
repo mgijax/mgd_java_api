@@ -42,7 +42,7 @@ public class EventReasonService extends BaseService<EventReasonDomain> {
 
 	@Transactional
 	public EventReasonDomain get(Integer key) {
-		return translator.translate(eventReasonDAO.get(key),1);
+		return translator.translate(eventReasonDAO.get(key));
 	}
 
     @Transactional
@@ -70,7 +70,7 @@ public class EventReasonService extends BaseService<EventReasonDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				EventReasonDomain domain = new EventReasonDomain();
-				domain = translator.translate(eventReasonDAO.get(rs.getInt("_marker_eventreason_key")),1);
+				domain = translator.translate(eventReasonDAO.get(rs.getInt("_marker_eventreason_key")));
 				eventReasonDAO.clear();
 				results.add(domain);
 			}

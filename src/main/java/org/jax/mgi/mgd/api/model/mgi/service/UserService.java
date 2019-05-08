@@ -74,7 +74,7 @@ public class UserService extends BaseService<UserDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				UserDomain domain = new UserDomain();
-				domain = translator.translate(userDAO.get(rs.getInt("_user_key")),1);
+				domain = translator.translate(userDAO.get(rs.getInt("_user_key")));
 				userDAO.clear();
 				results.add(domain);
 			}

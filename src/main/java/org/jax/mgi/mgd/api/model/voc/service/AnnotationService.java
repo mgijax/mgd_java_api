@@ -65,7 +65,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 		// get the DAO/entity and translate -> domain
 		AnnotationDomain domain = new AnnotationDomain();
 		if (annotationDAO.get(key) != null) {
-			domain = translator.translate(annotationDAO.get(key),1);
+			domain = translator.translate(annotationDAO.get(key));
 		}
 		return domain;		
 	}
@@ -96,7 +96,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				AnnotationDomain domain = new AnnotationDomain();
-				domain = translator.translate(annotationDAO.get(rs.getInt("_annot_key")),1);
+				domain = translator.translate(annotationDAO.get(rs.getInt("_annot_key")));
 				annotationDAO.clear();				
 				results.add(domain);
 			}
@@ -131,7 +131,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				MarkerFeatureTypeDomain domain = new MarkerFeatureTypeDomain();
-				domain = markerFeatureTypeTranslator.translate(annotationDAO.get(rs.getInt("_annot_key")),1);
+				domain = markerFeatureTypeTranslator.translate(annotationDAO.get(rs.getInt("_annot_key")));
 				annotationDAO.clear();				
 				results.add(domain);
 			}
@@ -170,7 +170,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				AlleleVariantAnnotationDomain domain = new AlleleVariantAnnotationDomain();
-				domain = alleleVariantTranslator.translate(annotationDAO.get(rs.getInt("_annot_key")),1);
+				domain = alleleVariantTranslator.translate(annotationDAO.get(rs.getInt("_annot_key")));
 				annotationDAO.clear();				
 				results.add(domain);
 			}

@@ -58,7 +58,7 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 		// get the DAO/entity and translate -> domain
 		VariantSequenceDomain domain = new VariantSequenceDomain();
 		if (variantSequenceDAO.get(key) != null) {
-			domain = translator.translate(variantSequenceDAO.get(key),1);
+			domain = translator.translate(variantSequenceDAO.get(key));
 		}
 		return domain;
 	}

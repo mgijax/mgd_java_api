@@ -119,7 +119,7 @@ public class TermService extends BaseService<TermDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				TermDomain domain = new TermDomain();
-				domain = translator.translate(termDAO.get(rs.getInt("_term_key")),1);
+				domain = translator.translate(termDAO.get(rs.getInt("_term_key")));
 				termDAO.clear();		
 				results.add(domain);
 			}
@@ -149,7 +149,7 @@ public class TermService extends BaseService<TermDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {	
 				SlimTermDomain domain = new SlimTermDomain();						
-				domain = slimtranslator.translate(termDAO.get(rs.getInt("_term_key")),1);
+				domain = slimtranslator.translate(termDAO.get(rs.getInt("_term_key")));
 				termDAO.clear();					
 				results.setItem(domain);
 			}
@@ -190,7 +190,7 @@ public class TermService extends BaseService<TermDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {	
 				SlimTermDomain domain = new SlimTermDomain();						
-				domain = slimtranslator.translate(termDAO.get(rs.getInt("_term_key")),1);
+				domain = slimtranslator.translate(termDAO.get(rs.getInt("_term_key")));
 				termDAO.clear();					
 				results.add(domain);
 			}

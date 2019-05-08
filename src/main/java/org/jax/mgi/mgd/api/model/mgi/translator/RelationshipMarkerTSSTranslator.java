@@ -7,7 +7,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipMarkerTSS;
 public class RelationshipMarkerTSSTranslator extends BaseEntityDomainTranslator<RelationshipMarkerTSS, RelationshipMarkerTSSDomain> {
 		
 	@Override
-	protected RelationshipMarkerTSSDomain entityToDomain(RelationshipMarkerTSS entity, int translationDepth) {	
+	protected RelationshipMarkerTSSDomain entityToDomain(RelationshipMarkerTSS entity) {	
 		RelationshipMarkerTSSDomain domain = new RelationshipMarkerTSSDomain();
 
 		domain.setRelationshipKey(String.valueOf(entity.get_relationship_key()));

@@ -154,7 +154,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		// results has domain info and other info too
 		log.info("processAlleleVariant/create/returning results");
 		log.info(curatedEntity);
-		results.setItem(translator.translate(curatedEntity));
+		results.setItem(translator.translate(curatedEntity,0));
 		log.info("processAlleleVariant/translator curated entity returned");
 		return results;
 	}
@@ -304,7 +304,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		// get the entity object and delete
 		SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
 		AlleleVariant entity = variantDAO.get(key);
-		results.setItem(translator.translate(variantDAO.get(key)));
+		results.setItem(translator.translate(variantDAO.get(key),0));
 		variantDAO.remove(entity);
 		return results;
 	}

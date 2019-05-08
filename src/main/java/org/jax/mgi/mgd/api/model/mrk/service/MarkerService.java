@@ -150,7 +150,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		// return entity translated to domain
 		log.info("processMarker/create/returning results");
-		results.setItem(translator.translate(entity));
+		results.setItem(translator.translate(entity,0));
 		return results;
 	}
 	
@@ -315,7 +315,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	public SearchResults<MarkerDomain> getResults(Integer key) {
 		// get the DAO/entity and translate -> domain -> results
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
-		results.setItem(translator.translate(markerDAO.get(key)));
+		results.setItem(translator.translate(markerDAO.get(key),0));
 		return results;
 	}
 	
@@ -324,7 +324,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// get the entity object and delete
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		Marker entity = markerDAO.get(key);
-		results.setItem(translator.translate(markerDAO.get(key)));
+		results.setItem(translator.translate(markerDAO.get(key),0));
 		markerDAO.remove(entity);
 		return results;
 	}

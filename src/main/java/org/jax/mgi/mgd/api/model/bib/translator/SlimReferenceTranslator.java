@@ -7,7 +7,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 public class SlimReferenceTranslator extends BaseEntityDomainTranslator<Reference, SlimReferenceDomain> {
 
 	@Override
-	protected SlimReferenceDomain entityToDomain(Reference entity) {
+	protected SlimReferenceDomain entityToDomain(Reference entity, int translationDepth) {
 
 		SlimReferenceDomain domain = new SlimReferenceDomain();
 		

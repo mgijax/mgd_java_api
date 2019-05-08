@@ -7,7 +7,7 @@ import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
 public class SlimProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeStrain, SlimProbeStrainDomain> {
 
 	@Override
-	protected SlimProbeStrainDomain entityToDomain(ProbeStrain entity) {
+	protected SlimProbeStrainDomain entityToDomain(ProbeStrain entity, int translationDepth) {
 		
 		SlimProbeStrainDomain domain = new SlimProbeStrainDomain();
 		domain.setStrainKey(String.valueOf(entity.get_strain_key()));

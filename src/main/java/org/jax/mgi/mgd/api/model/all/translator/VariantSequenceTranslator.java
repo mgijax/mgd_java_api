@@ -13,7 +13,7 @@ public class VariantSequenceTranslator extends BaseEntityDomainTranslator<Varian
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	
 	@Override
-	protected VariantSequenceDomain entityToDomain(VariantSequence entity) {
+	protected VariantSequenceDomain entityToDomain(VariantSequence entity, int translationDepth) {
 		VariantSequenceDomain domain = new VariantSequenceDomain();
 		
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);		

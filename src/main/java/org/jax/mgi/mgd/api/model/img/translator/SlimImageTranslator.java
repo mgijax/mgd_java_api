@@ -10,7 +10,7 @@ public class SlimImageTranslator extends BaseEntityDomainTranslator<Image, SlimI
 	protected Logger log = Logger.getLogger(getClass());
 		
 	@Override
-	protected SlimImageDomain entityToDomain(Image entity) {
+	protected SlimImageDomain entityToDomain(Image entity, int translationDepth) {
 		
 		SlimImageDomain domain = new SlimImageDomain();
 

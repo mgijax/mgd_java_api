@@ -12,7 +12,7 @@ public class SlimMGITypeTranslator extends BaseEntityDomainTranslator<MGIType, S
 	private SlimOrganismTranslator organismTranslator = new SlimOrganismTranslator();
 	
 	@Override
-	protected SlimMGITypeDomain entityToDomain(MGIType entity) {
+	protected SlimMGITypeDomain entityToDomain(MGIType entity, int translationDepth) {
 		SlimMGITypeDomain domain = new SlimMGITypeDomain();
 
 		domain.setMgiTypeKey(String.valueOf(entity.get_mgitype_key()));

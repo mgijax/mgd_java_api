@@ -11,7 +11,7 @@ import lombok.Setter;
 public class MGIRefAssocTypeTranslator extends BaseEntityDomainTranslator<MGIRefAssocType, MGIRefAssocTypeDomain> {
 
 	@Override
-	protected MGIRefAssocTypeDomain entityToDomain(MGIRefAssocType entity) {
+	protected MGIRefAssocTypeDomain entityToDomain(MGIRefAssocType entity, int translationDepth) {
 		MGIRefAssocTypeDomain domain = new MGIRefAssocTypeDomain();
 		
 		domain.setRefAssocTypeKey(String.valueOf(entity.get_refAssocType_key()));

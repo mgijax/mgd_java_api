@@ -26,7 +26,7 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
 	private MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
 	
 	@Override
-	protected AlleleVariantDomain entityToDomain(AlleleVariant entity) {
+	protected AlleleVariantDomain entityToDomain(AlleleVariant entity, int translationDepth) {
 		
 		AlleleVariantDomain domain = new AlleleVariantDomain();
 		domain.setVariantKey(String.valueOf(entity.get_variant_key()));

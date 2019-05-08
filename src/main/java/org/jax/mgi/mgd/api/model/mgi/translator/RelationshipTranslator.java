@@ -8,7 +8,7 @@ import org.jax.mgi.mgd.api.util.Constants;
 public class RelationshipTranslator extends BaseEntityDomainTranslator<Relationship, RelationshipDomain> {
 		
 	@Override
-	protected RelationshipDomain entityToDomain(Relationship entity) {	
+	protected RelationshipDomain entityToDomain(Relationship entity, int translationDepth) {	
 		RelationshipDomain domain = new RelationshipDomain();
 
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);

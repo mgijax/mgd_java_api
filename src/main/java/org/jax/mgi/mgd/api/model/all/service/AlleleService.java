@@ -68,7 +68,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		// get the entity object and delete
 				SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
 				Allele entity = alleleDAO.get(key);
-				results.setItem(translator.translate(alleleDAO.get(key)));
+				results.setItem(translator.translate(alleleDAO.get(key),0));
 				alleleDAO.remove(entity);
 				return results;
 	}

@@ -11,7 +11,7 @@ public class ImagePaneTranslator extends BaseEntityDomainTranslator<ImagePane, I
 	protected Logger log = Logger.getLogger(getClass());
 	
 	@Override
-	protected ImagePaneDomain entityToDomain(ImagePane entity) {
+	protected ImagePaneDomain entityToDomain(ImagePane entity, int translationDepth) {
 		ImagePaneDomain domain = new ImagePaneDomain();
 		
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);		

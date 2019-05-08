@@ -7,7 +7,7 @@ import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 public class SlimMarkerTranslator extends BaseEntityDomainTranslator<Marker, SlimMarkerDomain> {
 	
 	@Override
-	protected SlimMarkerDomain entityToDomain(Marker entity) {
+	protected SlimMarkerDomain entityToDomain(Marker entity, int translationDepth) {
 			
 		SlimMarkerDomain domain = new SlimMarkerDomain();
 		

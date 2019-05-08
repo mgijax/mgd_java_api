@@ -11,7 +11,7 @@ import lombok.Setter;
 public class MGISynonymTypeTranslator extends BaseEntityDomainTranslator<MGISynonymType, MGISynonymTypeDomain> {
 
 	@Override
-	protected MGISynonymTypeDomain entityToDomain(MGISynonymType entity) {
+	protected MGISynonymTypeDomain entityToDomain(MGISynonymType entity, int translationDepth) {
 		MGISynonymTypeDomain domain = new MGISynonymTypeDomain();
 		
 		domain.setSynonymTypeKey(String.valueOf(entity.get_synonymType_key()));

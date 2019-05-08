@@ -15,7 +15,7 @@ public class AccessionTranslator extends BaseEntityDomainTranslator<Accession, A
 	private AccessionReferenceTranslator accessionReferenceTranslator = new AccessionReferenceTranslator();
 
 	@Override
-	protected AccessionDomain entityToDomain(Accession entity) {
+	protected AccessionDomain entityToDomain(Accession entity, int translationDepth) {
 		AccessionDomain domain = new AccessionDomain();
 
 		//log.info("AccessionTranslator: " + entity.get_accession_key() + "," + entity.get_object_key());

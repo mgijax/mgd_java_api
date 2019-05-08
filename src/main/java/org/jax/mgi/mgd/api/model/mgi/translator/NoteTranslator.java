@@ -7,7 +7,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 public class NoteTranslator extends BaseEntityDomainTranslator<Note, NoteDomain> {
 
 	@Override
-	protected NoteDomain entityToDomain(Note entity) {
+	protected NoteDomain entityToDomain(Note entity, int translationDepth) {
 		NoteDomain domain = new NoteDomain();
 
 		//domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);

@@ -13,7 +13,6 @@ public abstract class BaseEntityDomainTranslator<E extends BaseEntity, D extends
 	public D translate(E entity) {
 		return translate(entity, 1);
 	}
-	
 	public D translate(E entity, int depth) {
 		return entityToDomain(entity, depth);
 	}

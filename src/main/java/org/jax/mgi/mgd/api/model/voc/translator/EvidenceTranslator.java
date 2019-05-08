@@ -8,7 +8,7 @@ import org.jax.mgi.mgd.api.util.Constants;
 public class EvidenceTranslator extends BaseEntityDomainTranslator<Evidence, EvidenceDomain> {
 	
 	@Override
-	protected EvidenceDomain entityToDomain(Evidence entity) {
+	protected EvidenceDomain entityToDomain(Evidence entity, int translationDepth) {
 		EvidenceDomain domain = new EvidenceDomain();
 
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);

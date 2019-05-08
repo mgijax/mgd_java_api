@@ -7,7 +7,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, ReferenceDomain> {
 
 	@Override
-	protected ReferenceDomain entityToDomain(Reference entity) {
+	protected ReferenceDomain entityToDomain(Reference entity, int translationDepth) {
 
 		ReferenceDomain domain = new ReferenceDomain();
 		

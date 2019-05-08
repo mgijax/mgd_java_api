@@ -12,7 +12,7 @@ public class MGITypeTranslator extends BaseEntityDomainTranslator<MGIType, MGITy
 	private OrganismTranslator organismTranslator = new OrganismTranslator();
 	
 	@Override
-	protected MGITypeDomain entityToDomain(MGIType entity) {
+	protected MGITypeDomain entityToDomain(MGIType entity, int translationDepth) {
 		MGITypeDomain domain = new MGITypeDomain();
 
 		domain.setMgiTypeKey(String.valueOf(entity.get_mgitype_key()));

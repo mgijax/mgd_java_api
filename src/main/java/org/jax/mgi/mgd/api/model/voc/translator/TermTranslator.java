@@ -12,7 +12,7 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	
 	@Override
-	protected TermDomain entityToDomain(Term entity) {
+	protected TermDomain entityToDomain(Term entity, int translationDepth) {
 		TermDomain domain = new TermDomain();
 		
 		domain.setTermKey(String.valueOf(entity.get_term_key()));

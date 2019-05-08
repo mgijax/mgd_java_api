@@ -14,7 +14,7 @@ public class MarkerFeatureTypeTranslator extends BaseEntityDomainTranslator<Anno
 	//private EvidenceTranslator evidenceTranslator = new EvidenceTranslator();
 	
 	@Override
-	protected MarkerFeatureTypeDomain entityToDomain(Annotation entity) {
+	protected MarkerFeatureTypeDomain entityToDomain(Annotation entity, int translationDepth) {
 		MarkerFeatureTypeDomain domain = new MarkerFeatureTypeDomain();
 
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);

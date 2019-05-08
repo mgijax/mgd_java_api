@@ -22,7 +22,7 @@ public class ImageTranslator extends BaseEntityDomainTranslator<Image, ImageDoma
 	private ImagePaneTranslator imagePaneTranslator = new ImagePaneTranslator();
 	
 	@Override
-	protected ImageDomain entityToDomain(Image entity) {
+	protected ImageDomain entityToDomain(Image entity, int translationDepth) {
 		
 		ImageDomain domain = new ImageDomain();
 

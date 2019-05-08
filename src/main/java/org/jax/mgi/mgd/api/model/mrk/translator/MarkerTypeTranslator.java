@@ -7,7 +7,7 @@ import org.jax.mgi.mgd.api.model.mrk.entities.MarkerType;
 public class MarkerTypeTranslator extends BaseEntityDomainTranslator<MarkerType, MarkerTypeDomain> {
 
 	@Override
-	protected MarkerTypeDomain entityToDomain(MarkerType entity) {
+	protected MarkerTypeDomain entityToDomain(MarkerType entity, int translationDepth) {
 		MarkerTypeDomain domain = new MarkerTypeDomain();
 		domain.setMarkerTypeKey(String.valueOf(entity.get_marker_type_key()));
 		domain.setMarkerType(entity.getName());

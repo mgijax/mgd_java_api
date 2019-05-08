@@ -7,7 +7,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 public class SlimOrganismTranslator extends BaseEntityDomainTranslator<Organism, SlimOrganismDomain> {
 
 	@Override
-	protected SlimOrganismDomain entityToDomain(Organism entity) {
+	protected SlimOrganismDomain entityToDomain(Organism entity, int translationDepth) {
 		SlimOrganismDomain domain = new SlimOrganismDomain();
 		
 		domain.setOrganismKey(String.valueOf(entity.get_organism_key()));

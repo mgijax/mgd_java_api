@@ -11,7 +11,7 @@ public class SlimVocabularyTranslator extends BaseEntityDomainTranslator<Vocabul
 	private SlimTermTranslator termTranslator = new SlimTermTranslator();
 	
 	@Override
-	protected SlimVocabularyDomain entityToDomain(Vocabulary entity) {
+	protected SlimVocabularyDomain entityToDomain(Vocabulary entity, int translationDepth) {
 		SlimVocabularyDomain domain = new SlimVocabularyDomain();
 		
 		domain.setVocabKey(String.valueOf(entity.get_vocab_key()));

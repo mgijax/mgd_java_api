@@ -35,7 +35,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private RelationshipMarkerTSSTranslator markerTSSTranslator = new RelationshipMarkerTSSTranslator();
 	
 	@Override
-	protected MarkerDomain entityToDomain(Marker entity) {
+	protected MarkerDomain entityToDomain(Marker entity, int translationDepth) {
 		
 		MarkerDomain domain = new MarkerDomain();
 

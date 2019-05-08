@@ -10,6 +10,7 @@ public class ProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeStrai
 	protected ProbeStrainDomain entityToDomain(ProbeStrain entity, int translationDepth) {
 		
 		ProbeStrainDomain domain = new ProbeStrainDomain();
+		
 		domain.setStrainKey(String.valueOf(entity.get_strain_key()));
 		domain.setStrain(entity.getStrain());
 		domain.setStandard(String.valueOf(entity.getStandard()));
@@ -26,9 +27,6 @@ public class ProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeStrai
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
-		if(translationDepth > 0) {
-			// load relationships
-		}
 		return domain;
 	}
 

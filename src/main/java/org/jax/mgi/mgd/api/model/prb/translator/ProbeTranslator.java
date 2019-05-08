@@ -10,6 +10,7 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 	protected ProbeDomain entityToDomain(Probe entity, int translationDepth) {
 		
 		ProbeDomain domain = new ProbeDomain();
+		
 		domain.set_probe_key(entity.get_probe_key());
 		domain.setName(entity.getName());
 		domain.setDerivedFrom(entity.getDerivedFrom());
@@ -24,9 +25,6 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 		domain.setCreation_date(entity.getCreation_date());
 		domain.setModification_date(entity.getModification_date());
 		
-		if(translationDepth > 0) {
-			// load relationships
-		}
 		return domain;
 	}
 

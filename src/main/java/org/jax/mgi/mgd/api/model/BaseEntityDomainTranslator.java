@@ -33,27 +33,4 @@ public abstract class BaseEntityDomainTranslator<E extends BaseEntity, D extends
 
 	protected abstract D entityToDomain(E entity, int translationDepth);
 	
-// obsolete 05/08/2019
-//
-//	public E translate(D domain) {
-//		return translate(domain, 1);
-//	}
-//	public E translate(D domain, int depth) {
-//		return domainToEntity(domain, depth);
-//	}
-//
-//	public Iterable<E> translateDomains(Iterable<D> domains) {
-//		return translateDomains(domains, 1);
-//	}
-//
-//	public Iterable<E> translateDomains(Iterable<D> domains, int translationDepth) {
-//		ArrayList<E> entities = new ArrayList<E>();
-//		for(D domain: domains) {
-//			entities.add(domainToEntity(domain, translationDepth));
-//		}
-//		return entities;
-//	}
-//	
-//	protected abstract E domainToEntity(D domain, int translationDepth);
-	
 }

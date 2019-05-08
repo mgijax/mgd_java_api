@@ -31,10 +31,4 @@ public class VocabularyTranslator extends BaseEntityDomainTranslator<Vocabulary,
 		return domain;
 	}
 
-	@Override
-	protected Vocabulary domainToEntity(VocabularyDomain domain, int translationDepth) {
-		// Needs to be implemented once we choose to save terms
-		return null;
-	}
-
 }

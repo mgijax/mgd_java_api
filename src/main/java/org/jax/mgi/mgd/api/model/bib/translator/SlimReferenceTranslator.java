@@ -23,9 +23,4 @@ public class SlimReferenceTranslator extends BaseEntityDomainTranslator<Referenc
 		return domain;
 	}
 
-	@Override
-	protected Reference domainToEntity(SlimReferenceDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

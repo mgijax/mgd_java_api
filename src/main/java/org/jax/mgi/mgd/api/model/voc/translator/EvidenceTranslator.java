@@ -36,10 +36,4 @@ public class EvidenceTranslator extends BaseEntityDomainTranslator<Evidence, Evi
 		return domain;
 	}
 
-	@Override
-	protected Evidence domainToEntity(EvidenceDomain domain, int translationDepth) {
-		// Needs to be implemented once we choose to save terms
-		return null;
-	}
-
 }

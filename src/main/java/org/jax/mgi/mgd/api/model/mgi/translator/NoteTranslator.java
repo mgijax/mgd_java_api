@@ -28,10 +28,4 @@ public class NoteTranslator extends BaseEntityDomainTranslator<Note, NoteDomain>
 		return domain;
 	}
 
-	@Override
-	protected Note domainToEntity(NoteDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

@@ -34,10 +34,4 @@ public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDoma
 		return domain;
 	}
 
-	@Override
-	protected Assay domainToEntity(AssayDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

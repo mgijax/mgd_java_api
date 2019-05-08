@@ -23,10 +23,4 @@ public class ExperimentTranslator extends BaseEntityDomainTranslator<Experiment,
 		return domain;
 	}
 
-	@Override
-	protected Experiment domainToEntity(ExperimentDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

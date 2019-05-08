@@ -54,10 +54,4 @@ public class VariantSequenceTranslator extends BaseEntityDomainTranslator<Varian
 		return domain;
 	}
 
-	@Override
-	protected VariantSequence domainToEntity(VariantSequenceDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

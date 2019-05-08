@@ -23,10 +23,4 @@ public class SlimImageTranslator extends BaseEntityDomainTranslator<Image, SlimI
 		return domain;
 	}
 
-	@Override
-	protected Image domainToEntity(SlimImageDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

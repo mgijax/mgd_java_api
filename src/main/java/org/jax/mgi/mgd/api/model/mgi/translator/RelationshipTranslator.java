@@ -47,10 +47,4 @@ public class RelationshipTranslator extends BaseEntityDomainTranslator<Relations
 		return domain;
 	}
 
-	@Override
-	protected Relationship domainToEntity(RelationshipDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

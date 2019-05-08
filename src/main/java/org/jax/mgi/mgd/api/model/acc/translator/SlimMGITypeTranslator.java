@@ -26,10 +26,4 @@ public class SlimMGITypeTranslator extends BaseEntityDomainTranslator<MGIType, S
 		return domain;
 	}
 
-	@Override
-	protected MGIType domainToEntity(SlimMGITypeDomain domain, int translationDepth) {
-		// Needs to be implemented once we choose to save terms
-		return null;
-	}
-
 }

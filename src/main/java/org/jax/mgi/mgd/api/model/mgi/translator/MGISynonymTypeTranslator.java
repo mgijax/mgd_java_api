@@ -28,10 +28,4 @@ public class MGISynonymTypeTranslator extends BaseEntityDomainTranslator<MGISyno
 		return domain;
 	}
 
-	@Override
-	protected MGISynonymType domainToEntity(MGISynonymTypeDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

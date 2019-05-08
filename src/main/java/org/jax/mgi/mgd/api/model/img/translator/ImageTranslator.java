@@ -110,10 +110,4 @@ public class ImageTranslator extends BaseEntityDomainTranslator<Image, ImageDoma
 		return domain;
 	}
 
-	@Override
-	protected Image domainToEntity(ImageDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

@@ -29,10 +29,4 @@ public class MGIRefAssocTypeTranslator extends BaseEntityDomainTranslator<MGIRef
 		return domain;
 	}
 
-	@Override
-	protected MGIRefAssocType domainToEntity(MGIRefAssocTypeDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

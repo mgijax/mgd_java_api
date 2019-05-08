@@ -39,26 +39,4 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		return domain;
 	}
 
-	@Override
-	protected Term domainToEntity(TermDomain domain, int translationDepth) {
-		//Term entity = new Term();
-		
-		//entity.set_term_key(Integer.valueOf(domain.getTermKey()));
-		//entity.setTerm(domain.getTerm());
-		//entity.setVocab(vocabDAO.get(Integer.valueOf(domain.getVocabKey())));
-		//entity.setAbbreviation(domain.getAbbreviation());
-		//entity.setNote(domain.getNote());
-		//entity.setSequenceNum(Integer.valueOf(domain.getSequenceNum()));
-		//entity.setIsObsolete(Integer.valueOf(domain.getIsObsolete()));
-		//entity.setCreatedBy()
-		//entity.setModifiedBy()
-		//entity.setCreation_date(domain.getCreation_date());
-		//entity.setModification_date(domain.getModification_date());
-		
-		//return entity;
-		
-		// not used
-		return null;
-	}
-
 }

@@ -29,10 +29,4 @@ public class SlimMGIReferenceAssocTranslator extends BaseEntityDomainTranslator<
 		return domain;
 	}
 
-	@Override
-	protected MGIReferenceAssoc domainToEntity(SlimMGIReferenceAssocDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

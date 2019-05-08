@@ -19,9 +19,4 @@ public class SlimTermTranslator extends BaseEntityDomainTranslator<Term, SlimTer
 		return domain;
 	}
 
-	@Override
-	protected Term domainToEntity(SlimTermDomain domain, int translationDepth) {
-		return null;
-	}
-
 }

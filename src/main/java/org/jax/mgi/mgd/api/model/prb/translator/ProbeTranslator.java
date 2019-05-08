@@ -30,10 +30,4 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 		return domain;
 	}
 
-	@Override
-	protected Probe domainToEntity(ProbeDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

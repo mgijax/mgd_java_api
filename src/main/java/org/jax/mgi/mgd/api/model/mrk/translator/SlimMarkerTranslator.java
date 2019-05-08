@@ -17,10 +17,4 @@ public class SlimMarkerTranslator extends BaseEntityDomainTranslator<Marker, Sli
 		return domain;
 	}
 
-	@Override
-	protected Marker domainToEntity(SlimMarkerDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

@@ -61,11 +61,4 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		return domain;
 	}
 	
-
-	@Override
-	protected Allele domainToEntity(AlleleDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

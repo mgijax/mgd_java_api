@@ -16,10 +16,4 @@ public class SlimUserTranslator extends BaseEntityDomainTranslator<User, SlimUse
 		return domain;
 	}
 
-	@Override
-	protected User domainToEntity(SlimUserDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

@@ -7,13 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
-import org.jax.mgi.mgd.api.model.prb.entities.ProbeMarker;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -52,12 +50,8 @@ public class Specimen extends BaseEntity {
 	@JoinColumn(name="_genotype_key")
 	private Genotype genotype;
 	
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_specimen_key")
 	private Set<InSituResult> specimenResult;
-	
-	@ManyToOne
-	@JoinColumn(name="_assay_key")
-	private Assay assay;
 	
 }

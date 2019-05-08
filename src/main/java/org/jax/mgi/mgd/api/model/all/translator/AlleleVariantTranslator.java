@@ -99,10 +99,4 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
 		return domain;
 	}
 
-	@Override
-	protected AlleleVariant domainToEntity(AlleleVariantDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

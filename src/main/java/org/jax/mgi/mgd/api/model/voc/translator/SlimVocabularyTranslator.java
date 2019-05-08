@@ -22,10 +22,4 @@ public class SlimVocabularyTranslator extends BaseEntityDomainTranslator<Vocabul
 		return domain;
 	}
 
-	@Override
-	protected Vocabulary domainToEntity(SlimVocabularyDomain domain, int translationDepth) {
-		// Needs to be implemented once we choose to save terms
-		return null;
-	}
-
 }

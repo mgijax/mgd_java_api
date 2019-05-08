@@ -56,10 +56,4 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
 		return domain;
 	}
 
-	@Override
-	protected Annotation domainToEntity(AnnotationDomain domain, int translationDepth) {
-		// Needs to be implemented once we choose to save terms
-		return null;
-	}
-
 }

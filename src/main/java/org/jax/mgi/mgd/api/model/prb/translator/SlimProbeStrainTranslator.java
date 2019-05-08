@@ -16,10 +16,4 @@ public class SlimProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeS
 		return domain;
 	}
 
-	@Override
-	protected ProbeStrain domainToEntity(SlimProbeStrainDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

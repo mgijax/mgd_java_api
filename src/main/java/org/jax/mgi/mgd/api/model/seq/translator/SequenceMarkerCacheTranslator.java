@@ -31,9 +31,4 @@ public class SequenceMarkerCacheTranslator extends BaseEntityDomainTranslator<Se
 		return domain;
 	}
 
-	@Override
-	protected SequenceMarkerCache domainToEntity(SequenceMarkerCacheDomain domain, int translationDepth) {		
-		return null;
-	}
-
 }

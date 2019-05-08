@@ -18,10 +18,4 @@ public class SlimOrganismTranslator extends BaseEntityDomainTranslator<Organism,
 		return domain;
 	}
 
-	@Override
-	protected Organism domainToEntity(SlimOrganismDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

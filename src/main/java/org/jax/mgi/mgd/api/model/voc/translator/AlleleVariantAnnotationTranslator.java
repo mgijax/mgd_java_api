@@ -32,10 +32,4 @@ public class AlleleVariantAnnotationTranslator extends BaseEntityDomainTranslato
  		return domain;
     }
 
-    @Override
-    protected Annotation domainToEntity(AlleleVariantAnnotationDomain domain, int translationDepth) {
-        // Needs to be implemented once we choose to save terms
-        return null;
-    }
-
 }

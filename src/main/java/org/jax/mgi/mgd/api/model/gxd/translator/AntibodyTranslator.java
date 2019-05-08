@@ -24,10 +24,4 @@ public class AntibodyTranslator extends BaseEntityDomainTranslator<Antibody, Ant
 		return domain;
 	}
 
-	@Override
-	protected Antibody domainToEntity(AntibodyDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

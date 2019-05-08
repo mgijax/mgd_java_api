@@ -26,10 +26,4 @@ public class SlimAccessionTranslator extends BaseEntityDomainTranslator<Accessio
 		return domain;
 	}
 
-	@Override
-	protected Accession domainToEntity(SlimAccessionDomain domain, int translationDepth) {
-		// Needs to be implemented once we choose to save terms
-		return null;
-	}
-
 }

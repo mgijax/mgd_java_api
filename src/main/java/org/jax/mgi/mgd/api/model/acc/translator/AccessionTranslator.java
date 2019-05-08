@@ -49,10 +49,4 @@ public class AccessionTranslator extends BaseEntityDomainTranslator<Accession, A
 		return domain;
 	}
 
-	@Override
-	protected Accession domainToEntity(AccessionDomain domain, int translationDepth) {
-		// Needs to be implemented once we choose to save terms
-		return null;
-	}
-
 }

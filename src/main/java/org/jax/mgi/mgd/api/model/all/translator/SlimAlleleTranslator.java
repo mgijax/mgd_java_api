@@ -49,10 +49,4 @@ public class SlimAlleleTranslator extends BaseEntityDomainTranslator<Allele, Sli
 		return domain;
 	}
 
-	@Override
-	protected Allele domainToEntity(SlimAlleleDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

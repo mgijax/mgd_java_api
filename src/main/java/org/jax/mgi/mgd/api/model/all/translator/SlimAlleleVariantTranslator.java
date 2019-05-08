@@ -18,10 +18,4 @@ public class SlimAlleleVariantTranslator extends BaseEntityDomainTranslator<Alle
 		return domain;
 	}
 
-	@Override
-	protected AlleleVariant domainToEntity(SlimAlleleVariantDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

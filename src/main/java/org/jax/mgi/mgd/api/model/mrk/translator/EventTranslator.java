@@ -17,10 +17,4 @@ public class EventTranslator extends BaseEntityDomainTranslator<Event, EventDoma
 		return domain;
 	}
 
-	@Override
-	protected Event domainToEntity(EventDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

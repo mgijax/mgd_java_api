@@ -17,10 +17,4 @@ public class MarkerTypeTranslator extends BaseEntityDomainTranslator<MarkerType,
 		return domain;
 	}
 
-	@Override
-	protected MarkerType domainToEntity(MarkerTypeDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

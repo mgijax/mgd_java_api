@@ -21,10 +21,4 @@ public class InSituResultTranslator extends BaseEntityDomainTranslator<InSituRes
 		return domain;
 	}
 
-	@Override
-	protected InSituResult domainToEntity(InSituResultDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

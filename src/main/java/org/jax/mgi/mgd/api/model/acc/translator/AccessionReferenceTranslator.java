@@ -25,10 +25,4 @@ public class AccessionReferenceTranslator extends BaseEntityDomainTranslator<Acc
 		return domain;
 	}
 
-	@Override
-	protected AccessionReference domainToEntity(AccessionReferenceDomain domain, int translationDepth) {
-		// Needs to be implemented once we choose to save terms
-		return null;
-	}
-
 }

@@ -28,10 +28,4 @@ public class GelLaneTranslator extends BaseEntityDomainTranslator<GelLane, GelLa
 		return domain;
 	}
 
-	@Override
-	protected GelLane domainToEntity(GelLaneDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

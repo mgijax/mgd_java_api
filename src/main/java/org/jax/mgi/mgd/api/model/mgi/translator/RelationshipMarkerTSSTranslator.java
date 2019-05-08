@@ -19,10 +19,4 @@ public class RelationshipMarkerTSSTranslator extends BaseEntityDomainTranslator<
 		return domain;
 	}
 
-	@Override
-	protected RelationshipMarkerTSS domainToEntity(RelationshipMarkerTSSDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

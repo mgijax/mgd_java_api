@@ -28,10 +28,4 @@ public class SequenceTranslator extends BaseEntityDomainTranslator<Sequence, Seq
 		return domain;
 	}
 
-	@Override
-	protected Sequence domainToEntity(SequenceDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

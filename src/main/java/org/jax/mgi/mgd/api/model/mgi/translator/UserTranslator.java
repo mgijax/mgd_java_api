@@ -35,10 +35,4 @@ public class UserTranslator extends BaseEntityDomainTranslator<User, UserDomain>
 		return domain;
 	}
 
-	@Override
-	protected User domainToEntity(UserDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

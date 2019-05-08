@@ -47,10 +47,4 @@ public class MarkerHistoryTranslator extends BaseEntityDomainTranslator<MarkerHi
 		return domain;
 	}
 
-	@Override
-	protected MarkerHistory domainToEntity(MarkerHistoryDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

@@ -39,9 +39,4 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		return domain;
 	}
 
-	@Override
-	protected Reference domainToEntity(ReferenceDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

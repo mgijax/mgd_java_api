@@ -36,10 +36,4 @@ public class SpecimenTranslator extends BaseEntityDomainTranslator<Specimen, Spe
 		return domain;
 	}
 
-	@Override
-	protected Specimen domainToEntity(SpecimenDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

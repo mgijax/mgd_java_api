@@ -31,10 +31,4 @@ public class MarkerFeatureTypeTranslator extends BaseEntityDomainTranslator<Anno
 		return domain;
 	}
 
-	@Override
-	protected Annotation domainToEntity(MarkerFeatureTypeDomain domain, int translationDepth) {
-		// Needs to be implemented once we choose to save terms
-		return null;
-	}
-
 }

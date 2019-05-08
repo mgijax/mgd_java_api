@@ -28,10 +28,4 @@ public class ImagePaneTranslator extends BaseEntityDomainTranslator<ImagePane, I
 		return domain;
 	}
 
-	@Override
-	protected ImagePane domainToEntity(ImagePaneDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

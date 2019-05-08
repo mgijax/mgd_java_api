@@ -113,11 +113,4 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		return domain;
 	}
 
-	@Override
-	protected LTReference domainToEntity(LTReferenceDomain domain, int translationDepth) {
-		// Cannot do translation here, as it requires lookup of actual entity from database.  Must
-		// instead work with ReferenceRepository.
-		
-		return null;
-	}
 }

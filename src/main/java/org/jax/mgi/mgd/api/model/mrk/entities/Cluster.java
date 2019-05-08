@@ -1,18 +1,15 @@
 package org.jax.mgi.mgd.api.model.mrk.entities;
 
 import java.util.Date;
-import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
-import org.jax.mgi.mgd.api.model.mgi.entities.MGIProperty;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
@@ -34,25 +31,20 @@ public class Cluster extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_clustertype_key", referencedColumnName="_term_key")
 	private Term clusterType;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_clustersource_key", referencedColumnName="_term_key")
 	private Term clusterSource;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
-	
-	@OneToMany
-	@JoinColumn(name="_object_key", referencedColumnName="_cluster_key")
-	@Where(clause="`_mgitype_key` = 39")
-	private Set<MGIProperty> properties;
 	
 }

@@ -34,10 +34,4 @@ public class IndexTranslator extends BaseEntityDomainTranslator<Index, IndexDoma
 		return domain;
 	}
 
-	@Override
-	protected Index domainToEntity(IndexDomain domain, int translationDepth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

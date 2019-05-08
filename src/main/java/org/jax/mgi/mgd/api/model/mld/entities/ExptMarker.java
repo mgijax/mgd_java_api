@@ -6,7 +6,6 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -44,7 +43,4 @@ public class ExptMarker extends BaseEntity {
 	@JoinColumn(name="_allele_key", insertable = false, updatable = false)
 	private Allele allele;
 	
-    @ManyToOne
-    @JoinColumn(name = "_expt_key", insertable = false, updatable = false)
-    private Experiment expt;
 }

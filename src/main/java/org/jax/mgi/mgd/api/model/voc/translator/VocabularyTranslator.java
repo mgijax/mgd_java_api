@@ -11,7 +11,7 @@ public class VocabularyTranslator extends BaseEntityDomainTranslator<Vocabulary,
 	private TermTranslator termTranslator = new TermTranslator();
 	
 	@Override
-	protected VocabularyDomain entityToDomain(Vocabulary entity, int translationDepth) {
+	protected VocabularyDomain entityToDomain(Vocabulary entity) {
 		VocabularyDomain domain = new VocabularyDomain();
 		
 		domain.setVocabKey(String.valueOf(entity.get_vocab_key()));

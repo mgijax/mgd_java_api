@@ -7,7 +7,7 @@ import org.jax.mgi.mgd.api.model.voc.entities.Term;
 public class SlimTermTranslator extends BaseEntityDomainTranslator<Term, SlimTermDomain> {
 	
 	@Override
-	protected SlimTermDomain entityToDomain(Term entity, int translationDepth) {
+	protected SlimTermDomain entityToDomain(Term entity) {
 		SlimTermDomain domain = new SlimTermDomain();
 		
 		domain.setTermKey(String.valueOf(entity.get_term_key()));

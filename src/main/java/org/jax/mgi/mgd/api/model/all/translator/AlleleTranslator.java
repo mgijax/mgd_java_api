@@ -13,7 +13,7 @@ import org.jax.mgi.mgd.api.util.Constants;
 public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleDomain> {
 	
 	@Override
-	protected AlleleDomain entityToDomain(Allele entity, int translationDepth) {
+	protected AlleleDomain entityToDomain(Allele entity) {
 		
 		AlleleDomain domain = new AlleleDomain();
 		

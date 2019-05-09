@@ -8,7 +8,7 @@ import org.jax.mgi.mgd.api.util.Constants;
 public class MarkerHistoryTranslator extends BaseEntityDomainTranslator<MarkerHistory, MarkerHistoryDomain> {
 
 	@Override
-	protected MarkerHistoryDomain entityToDomain(MarkerHistory entity, int translationDepth) {
+	protected MarkerHistoryDomain entityToDomain(MarkerHistory entity) {
 		MarkerHistoryDomain domain = new MarkerHistoryDomain();
 		
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);

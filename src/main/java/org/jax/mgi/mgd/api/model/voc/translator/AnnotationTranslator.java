@@ -18,7 +18,7 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
 	private SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
 	
 	@Override
-	protected AnnotationDomain entityToDomain(Annotation entity, int translationDepth) {
+	protected AnnotationDomain entityToDomain(Annotation entity) {
 		AnnotationDomain domain = new AnnotationDomain();
 		
 		//log.info("AnnotationDomain: " + entity.get_annot_key());

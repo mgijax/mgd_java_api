@@ -12,7 +12,7 @@ import org.jax.mgi.mgd.api.util.Constants;
 
 public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReference, LTReferenceDomain>{
 	@Override
-	protected LTReferenceDomain entityToDomain(LTReference entity, int translationDepth) {
+	protected LTReferenceDomain entityToDomain(LTReference entity) {
 		if (entity == null) { return null; }
 		LTReferenceDomain domain = new LTReferenceDomain();
 

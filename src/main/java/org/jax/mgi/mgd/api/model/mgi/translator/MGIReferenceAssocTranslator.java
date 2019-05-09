@@ -12,7 +12,7 @@ import lombok.Setter;
 public class MGIReferenceAssocTranslator extends BaseEntityDomainTranslator<MGIReferenceAssoc, MGIReferenceAssocDomain> {
 
 	@Override
-	protected MGIReferenceAssocDomain entityToDomain(MGIReferenceAssoc entity, int translationDepth) {
+	protected MGIReferenceAssocDomain entityToDomain(MGIReferenceAssoc entity) {
 		MGIReferenceAssocDomain domain = new MGIReferenceAssocDomain();
 		
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);

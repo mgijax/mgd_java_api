@@ -7,7 +7,7 @@ import org.jax.mgi.mgd.api.model.mrk.entities.Event;
 public class EventTranslator extends BaseEntityDomainTranslator<Event, EventDomain> {
 
 	@Override
-	protected EventDomain entityToDomain(Event entity, int translationDepth) {
+	protected EventDomain entityToDomain(Event entity) {
 		EventDomain domain = new EventDomain();
 		domain.setMarkerEventKey(String.valueOf(entity.get_marker_event_key()));
 		domain.setEvent(entity.getEvent());

@@ -8,7 +8,7 @@ import org.jax.mgi.mgd.api.util.Constants;
 public class UserTranslator extends BaseEntityDomainTranslator<User, UserDomain> {
 
 	@Override
-	protected UserDomain entityToDomain(User entity, int translationDepth) {
+	protected UserDomain entityToDomain(User entity) {
 		UserDomain domain = new UserDomain();
 		
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);

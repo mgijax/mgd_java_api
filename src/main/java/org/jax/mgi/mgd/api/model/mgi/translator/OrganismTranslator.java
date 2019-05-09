@@ -7,7 +7,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 public class OrganismTranslator extends BaseEntityDomainTranslator<Organism, OrganismDomain> {
 
 	@Override
-	protected OrganismDomain entityToDomain(Organism entity, int translationDepth) {
+	protected OrganismDomain entityToDomain(Organism entity) {
 		OrganismDomain domain = new OrganismDomain();
 		domain.set_organism_key(String.valueOf(entity.get_organism_key()));
 		domain.setCommonname(entity.getCommonname());

@@ -7,7 +7,7 @@ import org.jax.mgi.mgd.api.model.all.entities.AlleleVariant;
 public class SlimAlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVariant, SlimAlleleVariantDomain> {
 	
 	@Override
-	protected SlimAlleleVariantDomain entityToDomain(AlleleVariant entity, int translationDepth) {
+	protected SlimAlleleVariantDomain entityToDomain(AlleleVariant entity) {
 		
 		SlimAlleleVariantDomain domain = new SlimAlleleVariantDomain();
 		

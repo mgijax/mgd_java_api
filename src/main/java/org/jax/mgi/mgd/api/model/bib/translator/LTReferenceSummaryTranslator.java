@@ -7,7 +7,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 
 public class LTReferenceSummaryTranslator extends BaseEntityDomainTranslator<LTReference, LTReferenceSummaryDomain>{
 	@Override
-	protected LTReferenceSummaryDomain entityToDomain(LTReference entity, int translationDepth) {
+	protected LTReferenceSummaryDomain entityToDomain(LTReference entity) {
 		if (entity == null) { return null; }
 		LTReferenceSummaryDomain domain = new LTReferenceSummaryDomain();
 

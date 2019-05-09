@@ -7,7 +7,7 @@ import org.jax.mgi.mgd.api.model.mrk.entities.MarkerStatus;
 public class MarkerStatusTranslator extends BaseEntityDomainTranslator<MarkerStatus, MarkerStatusDomain> {
 
 	@Override
-	protected MarkerStatusDomain entityToDomain(MarkerStatus entity, int translationDepth) {
+	protected MarkerStatusDomain entityToDomain(MarkerStatus entity) {
 		MarkerStatusDomain domain = new MarkerStatusDomain();
 		domain.setMarkerStatusKey(String.valueOf(entity.get_marker_status_key()));
 		domain.setMarkerStatus(entity.getStatus());

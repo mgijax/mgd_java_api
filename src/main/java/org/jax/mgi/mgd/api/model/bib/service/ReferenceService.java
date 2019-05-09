@@ -48,14 +48,14 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	@Transactional
 	public ReferenceDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain		
-		return translator.translate(referenceDAO.get(key),0);
+		return translator.translate(referenceDAO.get(key));
 	}
 
     @Transactional
     public SearchResults<ReferenceDomain> getResults(Integer key) {
 		// get the DAO/entity and translate -> domain -> results
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
-		results.setItem(translator.translate(referenceDAO.get(key),0));
+		results.setItem(translator.translate(referenceDAO.get(key)));
 		return results;   	
     }
 
@@ -64,7 +64,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// get the entity object and delete
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
 		Reference entity = referenceDAO.get(key);
-		results.setItem(translator.translate(referenceDAO.get(key),0));
+		results.setItem(translator.translate(referenceDAO.get(key)));
 		referenceDAO.remove(entity);
 		return results;
 	}

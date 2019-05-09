@@ -95,6 +95,32 @@ public abstract class PostgresSQLDAO<T> {
 		entityManager.remove(model);
 		return model;
 	}
+
+	/* Persist object o to the database
+	 * Sometimes we need to persist a sub-object before it can be added to a collection in a parent object;
+	 * this method facilitates that initial save of the sub-object.
+	 */
+	public void persist(Object o) {
+		entityManager.persist(o);
+	}
+
+	/* Remove object o from the database.  Make sure it has already been removed from any relationships.
+	 */
+	public void remove(Object o) {
+		entityManager.remove(o);
+	}
+
+	/* Refresh object o from the database.
+	 */
+	public void refresh(Object o) {
+		entityManager.refresh(o);
+	}
+
+	/* Remove all entities from the persistence context
+	 */
+	public void clear() {
+		entityManager.clear();
+	}
 	
 	public Query createNativeQuery(String cmd) {
 		Query query = entityManager.createNativeQuery(cmd);
@@ -153,6 +179,21 @@ public abstract class PostgresSQLDAO<T> {
 		return results;
 	}
 
+	/* method to get the database dump date from the mgi_dbinfo table
+	 */
+	public String getDumpDate() {
+		TypedQuery<String> q1 = entityManager.createQuery("select lastdump_date from DatabaseInfo", String.class);
+		String dumpDate = q1.getSingleResult();
+		if (dumpDate == null) {
+			dumpDate = "unknown";
+		}
+		return dumpDate;
+	}
+
+	//
+	// ONLY USED BY bib/LT (LitTriage)
+	//
+	
 	/* method to get the next available key for the specified 'fieldName' in the given 'tableName'.  Any methods
 	 * that wrap this method should be synchronized to ensure thread-safety.  (We do not synchronize this method
 	 * itself, as we want key requests for different tables to be able to proceed in parallel.)
@@ -184,43 +225,7 @@ public abstract class PostgresSQLDAO<T> {
 		keyExpiration.put(idFieldName, currentTime + expirationTime);
 		return nextKey;
 	}
-
-	/* Sometimes we need to persist a sub-object before it can be added to a collection in a parent object;
-	 * this method facilitates that initial save of the sub-object.
-	 */
-	public void persist(Object o) {
-		entityManager.persist(o);
-	}
-
-	/* Remove object o from the database.  Make sure it has already been removed from any relationships.
-	 */
-	public void remove(Object o) {
-		entityManager.remove(o);
-	}
-
-	/* Refresh object o from the database.
-	 */
-	public void refresh(Object o) {
-		entityManager.refresh(o);
-	}
-
-	/* Remove all entities from the persistence context
-	 */
-	public void clear() {
-		entityManager.clear();
-	}
 	
-	/* method to get the database dump date from the mgi_dbinfo table
-	 */
-	public String getDumpDate() {
-		TypedQuery<String> q1 = entityManager.createQuery("select lastdump_date from DatabaseInfo", String.class);
-		String dumpDate = q1.getSingleResult();
-		if (dumpDate == null) {
-			dumpDate = "unknown";
-		}
-		return dumpDate;
-	}
-
 	public Predicate datePredicate(CriteriaBuilder builder, Path<Date> path, String operator, String date) throws FatalAPIException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
 		try {

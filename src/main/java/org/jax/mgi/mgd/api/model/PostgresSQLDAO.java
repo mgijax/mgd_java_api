@@ -122,6 +122,9 @@ public abstract class PostgresSQLDAO<T> {
 		entityManager.clear();
 	}
 	
+	/* 
+	 * used for calling a postgres stored procedure
+	 */
 	public Query createNativeQuery(String cmd) {
 		Query query = entityManager.createNativeQuery(cmd);
 		return query;
@@ -130,6 +133,10 @@ public abstract class PostgresSQLDAO<T> {
 	public Query createQuery(String cmd) {
 		return entityManager.createQuery(cmd);
 	}
+
+	//
+	// ONLY USED BY bib/LT (LitTriage)
+	//
 	
 	/* default query handling; good for fields directly in the table backing model class T
 	 */
@@ -179,21 +186,6 @@ public abstract class PostgresSQLDAO<T> {
 		return results;
 	}
 
-	/* method to get the database dump date from the mgi_dbinfo table
-	 */
-	public String getDumpDate() {
-		TypedQuery<String> q1 = entityManager.createQuery("select lastdump_date from DatabaseInfo", String.class);
-		String dumpDate = q1.getSingleResult();
-		if (dumpDate == null) {
-			dumpDate = "unknown";
-		}
-		return dumpDate;
-	}
-
-	//
-	// ONLY USED BY bib/LT (LitTriage)
-	//
-	
 	/* method to get the next available key for the specified 'fieldName' in the given 'tableName'.  Any methods
 	 * that wrap this method should be synchronized to ensure thread-safety.  (We do not synchronize this method
 	 * itself, as we want key requests for different tables to be able to proceed in parallel.)

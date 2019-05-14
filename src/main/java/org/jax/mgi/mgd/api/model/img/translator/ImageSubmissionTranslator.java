@@ -32,8 +32,8 @@ public class ImageSubmissionTranslator extends BaseEntityDomainTranslator<Image,
 
 		// may have 1 thumbnail
 		if (entity.getThumbnailImage() != null ) {
-			ImageSubmissionTranslator imageTranslator = new ImageSubmissionTranslator();		
-			domain.setThumbnailImage(imageTranslator.translate(entity.getThumbnailImage()));
+			ImageSubmissionTranslator submissionTranslator = new ImageSubmissionTranslator();		
+			domain.setThumbnailImage(submissionTranslator.translate(entity.getThumbnailImage()));
 		}
 		
 		return domain;

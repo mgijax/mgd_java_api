@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
+import org.jax.mgi.mgd.api.model.img.domain.ImageSubmissionDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImageDomain;
 import org.jax.mgi.mgd.api.model.img.service.ImageService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -80,4 +81,20 @@ public class ImageController extends BaseController<ImageDomain> {
 		return results;
 	}
 
+	@POST
+	@ApiOperation(value = "Search by Jnum/returns image domain with image panes")
+	@Path("/searchImagePaneByJnum")
+	public List<ImageSubmissionDomain> searchImagePaneByJnum(ImageSubmissionDomain searchDomain) {
+	
+		List<ImageSubmissionDomain> results = new ArrayList<ImageSubmissionDomain>();
+
+		try {
+			results = imageService.searchImagePaneByJnum(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

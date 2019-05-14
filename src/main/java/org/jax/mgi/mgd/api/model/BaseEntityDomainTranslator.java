@@ -10,11 +10,12 @@ public abstract class BaseEntityDomainTranslator<E extends BaseEntity, D extends
 	// to copy what teleuse/ei does
     protected SimpleDateFormat dateFormatNoTime = new SimpleDateFormat("yyyy-MM-dd");
     
+    // to translate 1 Entity to 1 Domain
 	public D translate(E entity) {
 		return entityToDomain(entity);
 	}
 
-	// to be used if translating a list of Entities (i.e. in our OneToMany() lists)
+	// to translate list of Entities to list of Domains (see entities/OneToMany)
 	public Iterable<D> translateEntities(Iterable<E> entities) {
 		ArrayList<D> domains = new ArrayList<D>();
 		for(E entity: entities) {

@@ -13,8 +13,10 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.img.dao.ImageDAO;
 import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
+import org.jax.mgi.mgd.api.model.img.domain.ImageSubmissionDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImageDomain;
 import org.jax.mgi.mgd.api.model.img.entities.Image;
+import org.jax.mgi.mgd.api.model.img.translator.ImageSubmissionTranslator;
 import org.jax.mgi.mgd.api.model.img.translator.ImageTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
@@ -34,7 +36,7 @@ public class ImageService extends BaseService<ImageDomain> {
 	private ImageDAO imageDAO;
 	@Inject
 	private ImageDAO thumbnailDAO;
-	
+
 	@Inject
 	private TermDAO termDAO;
 	@Inject
@@ -46,6 +48,7 @@ public class ImageService extends BaseService<ImageDomain> {
 	private ImagePaneService imagePaneService;
 	
 	private ImageTranslator translator = new ImageTranslator();
+	private ImageSubmissionTranslator submissionTranslator = new ImageSubmissionTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	private String mgiTypeKey = "9";
@@ -401,4 +404,65 @@ public class ImageService extends BaseService<ImageDomain> {
 		return results;
 	}	
 
+	@Transactional	
+	public List<ImageSubmissionDomain> searchImagePaneByJnum(ImageSubmissionDomain searchDomain) {
+		// search for all image panes by specific Jnum
+		
+		List<ImageSubmissionDomain> results = new ArrayList<ImageSubmissionDomain>();
+
+		// building SQL command : select + from + where + orderBy
+		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
+		String cmd = "";
+		String select = "select distinct i._image_key, i.jnum, i.imageClass, i.imageType";
+		String from = "from img_image_view i";
+		String where = "where i.figureLabel is not null";
+		String orderBy = "order by i.jnum, i.imageClass, i.imageType";
+		String value;
+			
+		if (searchDomain.getImageKey() != null && !searchDomain.getImageKey().isEmpty()) {
+			where = where + "\nand i._image_key = " + searchDomain.getImageKey();
+		}	
+		if (searchDomain.getImageClassKey() != null && !searchDomain.getImageClassKey().isEmpty()) {
+			where = where + "\nand i._imageclass_key = " + searchDomain.getImageClassKey();
+		}	
+		if (searchDomain.getImageTypeKey() != null && !searchDomain.getImageTypeKey().isEmpty()) {
+			where = where + "\nand i._imagetype_key = " + searchDomain.getImageTypeKey();
+		}
+
+		// image reference
+		if (searchDomain.getRefsKey() != null && !searchDomain.getRefsKey().isEmpty()) {
+			where = where + "\nand i._Refs_key = " + searchDomain.getRefsKey();
+		}
+		else if (searchDomain.getJnumid() != null && !searchDomain.getJnumid().isEmpty()) {
+			String jnumid = searchDomain.getJnumid().toUpperCase();
+			if (!jnumid.contains("J:")) {
+				jnumid = "J:" + jnumid;
+			}
+			where = where + "\nand i.jnumid = '" + jnumid + "'";
+		}
+		if (searchDomain.getShort_citation() != null && !searchDomain.getShort_citation().isEmpty()) {
+			value = searchDomain.getShort_citation().replaceAll("'",  "''");
+			where = where + "\nand i.short_citation ilike '" + value + "'";
+		}
+						
+		// make this easy to copy/paste for troubleshooting
+		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				ImageSubmissionDomain domain = new ImageSubmissionDomain();
+				domain = submissionTranslator.translate(imageDAO.get(rs.getInt("_image_key")));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
+	
 }

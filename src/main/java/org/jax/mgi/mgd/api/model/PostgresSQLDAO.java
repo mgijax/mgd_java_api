@@ -39,6 +39,8 @@ public abstract class PostgresSQLDAO<T> {
 
 	protected Logger log = Logger.getLogger(getClass());
 
+	// ONLY USED BY bib/LT (LitTriage)
+	
 	/* how long can we cache keys without refreshing from database? (in milliseconds) */
 	protected static long expirationTime = 2 * 60 * 1000;
 
@@ -50,6 +52,8 @@ public abstract class PostgresSQLDAO<T> {
 	
 	protected String idFieldName = null;
 
+	// END ONLY USED BY bib/LT (LitTriage)
+	
 	protected PostgresSQLDAO(Class<T> myClass) {
 		this.myClass = myClass;
 		Reflections r = new Reflections(myClass.getPackage().getName(), new FieldAnnotationsScanner());
@@ -123,21 +127,24 @@ public abstract class PostgresSQLDAO<T> {
 	}
 	
 	/* 
-	 * used for calling a postgres stored procedure
+	 * used to call a postgres stored procedure
 	 */
 	public Query createNativeQuery(String cmd) {
 		Query query = entityManager.createNativeQuery(cmd);
 		return query;
 	}
 
+	//
+	// ONLY USED BY bib/LT (LitTriage)
+	//
+		
+	/*
+	 * builds query for LTReference search
+	 */
 	public Query createQuery(String cmd) {
 		return entityManager.createQuery(cmd);
 	}
 
-	//
-	// ONLY USED BY bib/LT (LitTriage)
-	//
-	
 	/* default query handling; good for fields directly in the table backing model class T
 	 */
 	public SearchResults<T> search(Map<String, Object> params) {

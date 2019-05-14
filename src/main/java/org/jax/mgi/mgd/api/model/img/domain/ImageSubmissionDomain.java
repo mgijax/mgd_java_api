@@ -20,5 +20,5 @@ public class ImageSubmissionDomain extends BaseDomain {
 	private String refsKey;
 	private String jnumid;
 	private String short_citation;	
-		
+	private ImageSubmissionDomain thumbnailImage;	
 }

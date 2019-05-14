@@ -29,6 +29,12 @@ public class ImageSubmissionTranslator extends BaseEntityDomainTranslator<Image,
 		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
 		domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());
 		domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());
+
+		// may have 1 thumbnail
+		if (entity.getThumbnailImage() != null ) {
+			ImageSubmissionTranslator imageTranslator = new ImageSubmissionTranslator();		
+			domain.setThumbnailImage(imageTranslator.translate(entity.getThumbnailImage()));
+		}
 		
 		return domain;
 	}

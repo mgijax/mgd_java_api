@@ -16,6 +16,8 @@ public class ImageSubmissionDomain extends BaseDomain {
 	private String imageClass;
 	private String imageTypeKey;
 	private String imageType;
+	private String xDim;
+	private String yDim;	
 	private String figureLabel;	
 	private String refsKey;
 	private String jnumid;

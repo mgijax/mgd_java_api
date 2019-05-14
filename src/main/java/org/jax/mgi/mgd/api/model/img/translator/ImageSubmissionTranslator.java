@@ -25,6 +25,8 @@ public class ImageSubmissionTranslator extends BaseEntityDomainTranslator<Image,
 		domain.setImageClass(entity.getImageClass().getTerm());
 		domain.setImageTypeKey(String.valueOf(entity.getImageType().get_term_key()));
 		domain.setImageType(entity.getImageType().getTerm());
+		domain.setXDim(String.valueOf(entity.getXDim()));
+		domain.setYDim(String.valueOf(entity.getYDim()));		
 		domain.setFigureLabel(entity.getFigureLabel());
 
 		// reference

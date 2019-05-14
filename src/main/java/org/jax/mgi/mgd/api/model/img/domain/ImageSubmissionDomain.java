@@ -1,7 +1,5 @@
 package org.jax.mgi.mgd.api.model.img.domain;
 
-import java.util.List;
-
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
 import lombok.Getter;
@@ -22,7 +20,5 @@ public class ImageSubmissionDomain extends BaseDomain {
 	private String refsKey;
 	private String jnumid;
 	private String short_citation;	
-	
-	private List<ImagePaneDomain> imagePanes;
-	
+		
 }

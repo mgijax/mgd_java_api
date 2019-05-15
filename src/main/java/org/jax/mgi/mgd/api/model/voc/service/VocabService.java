@@ -77,8 +77,8 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		// for vocab specific ordering, reset orderBy based on _vocab_key or name
 		String orderBy = "order by t.term";		
 		
-		// for ordering by sequenceNum, add specific vocab to this list
-		// depending on UI, may need to use getName() or getVocabKey()
+		// for UIs that use getName()
+		// for ordering by sequenceNum, add specific vocab to this list		
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
 			if (searchDomain.getName().equals("GXD HT Evaluation State")
 					|| searchDomain.getName().equals("GXD HT Curation State")
@@ -95,6 +95,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			}
 		}
 		
+		// for UIs that use getVocabKey()
 		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty()) {
 			where = where + "\nand t._vocab_key = " + searchDomain.getVocabKey();
 			

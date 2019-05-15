@@ -1,7 +1,7 @@
 package org.jax.mgi.mgd.api.model.acc.entities;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -44,8 +44,8 @@ public class LogicalDB extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_logicaldb_key")
-	private Set<ActualDB> actualDBs;
+	private List<ActualDB> actualDBs;
 	
 }

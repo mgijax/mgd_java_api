@@ -45,7 +45,7 @@ public class MGIType extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
-	@OneToMany
+	@OneToMany()
 	@JoinTable(name = "mgi_organism_mgitype",
 		joinColumns = @JoinColumn(name = "_mgitype_key"),
 		inverseJoinColumns = @JoinColumn(name = "_organism_key")

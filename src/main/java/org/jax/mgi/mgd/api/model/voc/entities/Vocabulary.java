@@ -41,7 +41,7 @@ public class Vocabulary extends BaseEntity {
 	@JoinColumn(name="_logicaldb_key")
 	private LogicalDB logicalDB;
 
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
 	private List<Term> terms;
 	

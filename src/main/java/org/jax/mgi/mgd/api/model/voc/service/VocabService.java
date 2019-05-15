@@ -77,14 +77,8 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		// for vocab specific ordering, reset orderBy based on _vocab_key or name
 		String orderBy = "order by t.term";		
 		
-		// if parameter exists, then add to where-clause
-		
-//		String cmResults[] = DateSQLQuery.queryByCreationModification("t", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
-//		if (cmResults.length > 0) {
-//			from = from + cmResults[0];
-//			where = where + cmResults[1];
-//		}
-		
+		// for ordering by sequenceNum, add specific vocab to this list
+		// depending on UI, may need to use getName() or getVocabKey()
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
 			if (searchDomain.getName().equals("GXD HT Evaluation State")
 					|| searchDomain.getName().equals("GXD HT Curation State")

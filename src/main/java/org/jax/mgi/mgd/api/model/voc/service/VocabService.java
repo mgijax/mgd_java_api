@@ -94,6 +94,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 					|| searchDomain.getName().equals("GXD HT Experiment Variables")
 					|| searchDomain.getName().equals("GXD HT Relevance")
 					|| searchDomain.getName().equals("GXD HT Sample")
+					|| searchDomain.getName().equals("GXD Index Stages")				
 					) {
 				orderBy = "order by t.sequencenum";
 			}

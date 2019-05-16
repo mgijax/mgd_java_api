@@ -1,5 +1,4 @@
 package org.jax.mgi.mgd.api.model.bib.entities;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -13,8 +12,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
@@ -124,7 +121,7 @@ public class LTReference extends BaseEntity {
 	// one to many, because notes might not exist (leaving it 1-0)
 	@OneToMany
 	@JoinColumn(name="_refs_key")
-	private List<LTReferenceNote> notes;
+	private List<ReferenceNote> notes;
 
 	// one to many, because row in citation cache might not exist (leaving it 1-0)
 	@OneToMany(fetch=FetchType.EAGER)
@@ -163,15 +160,6 @@ public class LTReference extends BaseEntity {
 					}
 				}
 			}
-		}
-		return null;
-	}
-
-	@Transient
-	public String getReferencenote() {
-		List<LTReferenceNote> rn = notes;
-		if ((rn != null) && (rn.size() > 0)) {
-			return rn.get(0).getNote();
 		}
 		return null;
 	}
@@ -270,17 +258,6 @@ public class LTReference extends BaseEntity {
 	public void setModificationInfo(User currentUser) {
 		modification_date = new Date();
 		modifiedByUser = currentUser;
-	}
-
-	/* If this reference is of type Book, return an object with the extra book-related data (if one exists);
-	 * otherwise return null.
-	 */
-	@Transient
-	public ReferenceBook getBookData() {
-		if ("Book".equals(referenceTypeTerm.getTerm()) && (bookList.size() > 0)) {
-			return bookList.get(0);
-		}
-		return null;
 	}
 
 	/* set the given workflow data object to be the one for this reference

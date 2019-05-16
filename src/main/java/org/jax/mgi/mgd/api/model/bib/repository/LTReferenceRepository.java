@@ -23,11 +23,11 @@ import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceNote;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
@@ -498,7 +498,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		if (hadNote && willHaveNote) {
 			// already have a note and will continue to have a note; just need to apply any difference
 
-			LTReferenceNote note = entity.getNotes().get(0);
+			ReferenceNote note = entity.getNotes().get(0);
 			if (!smartEqual(note.getNote(), domain.referencenote)) {
 				note.setNote(domain.referencenote);
 				anyChanges = true;
@@ -513,7 +513,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		} else if (willHaveNote) {
 			// did not have a note previously, but now need to create one
 
-			LTReferenceNote note = new LTReferenceNote();
+			ReferenceNote note = new ReferenceNote();
 			note.set_refs_key(entity.get_refs_key());
 			note.setNote(domain.referencenote);
 			note.setCreation_date(new Date());

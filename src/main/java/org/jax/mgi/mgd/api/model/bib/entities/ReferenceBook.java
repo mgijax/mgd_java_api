@@ -28,7 +28,8 @@ public class ReferenceBook extends BaseEntity {
 	private String book_title;
 	private String place;
 	private String publisher;
-	private String series_ed;	private Date creation_date;
+	private String series_ed;	
+	private Date creation_date;
 	private Date modification_date;
 
 }

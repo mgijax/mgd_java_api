@@ -52,7 +52,8 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		// reference book
 		if (entity.getReferenceBook() != null && !entity.getReferenceBook().isEmpty()) {
 			Iterable<ReferenceBookDomain> book = bookTranslator.translateEntities(entity.getReferenceBook());
-			domain.setReferenceBook(IteratorUtils.toList(book.iterator()));		}
+			domain.setReferenceBook(IteratorUtils.toList(book.iterator()));		
+		}
 		
 		// mgi accession ids only
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {

@@ -26,12 +26,12 @@ import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceNote;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -389,8 +389,8 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		//		"notes", "reference_type", "marker_id", "allele_id", "accids", "workflow_tag", "supplementalTerm"
 
 		if (params.containsKey("notes")) {
-			Subquery<LTReferenceNote> noteSubquery = query.subquery(LTReferenceNote.class);
-			Root<LTReferenceNote> noteRoot = noteSubquery.from(LTReferenceNote.class);
+			Subquery<ReferenceNote> noteSubquery = query.subquery(ReferenceNote.class);
+			Root<ReferenceNote> noteRoot = noteSubquery.from(ReferenceNote.class);
 			noteSubquery.select(noteRoot);
 
 			List<Predicate> notePredicates = new ArrayList<Predicate>();
@@ -658,7 +658,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		if (ref == null) { return null; }
 		Hibernate.initialize(ref.getWorkflowTags().size());
 		Hibernate.initialize(ref.getReferenceTypeTerm());
-		Hibernate.initialize(ref.getReferencenote());
+		Hibernate.initialize(ref.getNotes());
 		Hibernate.initialize(ref.getBookList());
 		Hibernate.initialize(ref.getCreatedByUser());
 		Hibernate.initialize(ref.getModifiedByUser());

@@ -1,13 +1,16 @@
 package org.jax.mgi.mgd.api.model.bib.translator;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBookDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceNoteDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceAssociatedData;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.util.Constants;
 
 public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReference, LTReferenceDomain>{
@@ -35,12 +38,11 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		
 		domain.pages = entity.getPages();
 		domain.ref_abstract = entity.getRef_abstract();
-		domain.referencenote = entity.getReferencenote();
 		domain.jnumid = entity.getJnumid();
 		domain.doiid = entity.getDoiid();
 		domain.pubmedid = entity.getPubmedid();
 		domain.mgiid = entity.getMgiid();
-		domain.gorefid = entity.getGorefid();
+		domain.gorefid = entity.getGorefid();	
 		domain.reference_type = entity.getReferenceType();
 		domain.short_citation = entity.getShort_citation();
 		domain.ap_status = entity.getStatus(Constants.WG_AP);
@@ -49,7 +51,6 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		domain.qtl_status = entity.getStatus(Constants.WG_QTL);
 		domain.tumor_status = entity.getStatus(Constants.WG_TUMOR);
 		domain.workflow_tags = entity.getWorkflowTagsAsStrings();
-
 		domain.creation_date = dateFormatter.format(entity.getCreation_date());
 		domain.modification_date = dateFormatter.format(entity.getModification_date());
 		domain.created_by = entity.getCreatedByUser().getLogin();
@@ -83,17 +84,27 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 			if (flags.getHas_alleles() != 0) { domain.associated_data.add("Alleles"); }
 			if (flags.getHas_markers() != 0) { domain.associated_data.add("Markers"); }
 		}
-		
-		// fields only applicable for references of type "book"
-		ReferenceBook bookData = entity.getBookData();
-		if (bookData != null) {
-			domain.book_author = bookData.getBook_author();			
-			domain.book_title = bookData.getBook_title();
-			domain.place = bookData.getPlace();
-			domain.publisher = bookData.getPublisher();
-			domain.series_ed = bookData.getSeries_ed();
+			
+		// at most one reference note
+		if (entity.getNotes() != null && !entity.getNotes().isEmpty()) {
+			ReferenceNoteTranslator noteTranslator = new ReferenceNoteTranslator();
+			Iterable<ReferenceNoteDomain> note = noteTranslator.translateEntities(entity.getNotes());
+			List<ReferenceNoteDomain> noteList = IteratorUtils.toList(note.iterator());			
+			domain.referencenote = noteList.get(0).getNote();
 		}
 		
+		// reference book
+		if (entity.getBookList() != null && !entity.getBookList().isEmpty()) {
+			ReferenceBookTranslator bookTranslator = new ReferenceBookTranslator();
+			Iterable<ReferenceBookDomain> book = bookTranslator.translateEntities(entity.getBookList());
+			List<ReferenceBookDomain> bookList = IteratorUtils.toList(book.iterator());
+			domain.book_author = bookList.get(0).getBook_author();
+			domain.book_title = bookList.get(0).getBook_title();
+			domain.place = bookList.get(0).getPlace();
+			domain.publisher = bookList.get(0).getPublisher();
+			domain.series_ed = bookList.get(0).getSeries_ed();			
+		}
+
 		// data specific to workflows: has supplemental data?, link to supplemental data, has PDF?, has extracted text?
 		LTReferenceWorkflowData workflowData = entity.getWorkflowData();
 		if (workflowData != null) {

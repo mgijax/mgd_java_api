@@ -21,7 +21,6 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
@@ -118,17 +117,6 @@ public class LTReference extends BaseEntity {
 	@OrderBy("_logicaldb_key, preferred desc")
 	private List<Accession> accessionIDs;
 
-	@OneToMany
-	@JoinColumn(name="_refs_key")
-	@BatchSize(size=200)
-	@Where(clause="`_mgitype_key` = 11")
-	private List<LTReferenceAlleleAssociation> alleleAssociations;
-
-	@OneToMany
-	@JoinColumn(name="_refs_key")
-	@BatchSize(size=200)
-	private List<LTReferenceMarkerAssociation> markerAssociations;
-
 	@OneToOne
 	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")
 	private Term referenceTypeTerm;
@@ -159,13 +147,6 @@ public class LTReference extends BaseEntity {
 	@Where(clause="`_extractedtext_key` = 48804490")
 	private Set<LTReferenceWorkflowData> workflowData;
 
-	@ManyToMany
-	@JoinTable(name = "acc_accessionreference",
-		joinColumns = @JoinColumn(name = "_refs_key"),
-		inverseJoinColumns = @JoinColumn(name = "_accession_key")
-	)
-	private Set<Accession> accessions;
-	
 	/* Find and return the first accession ID matching any specified logical database, prefix,
 	 * is-preferred, and is-private settings.
 	 */

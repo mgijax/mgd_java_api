@@ -26,8 +26,6 @@ import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceAlleleAssociation;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceMarkerAssociation;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceNote;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
@@ -431,40 +429,6 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 			if (idRestrictions.size() > 0) {
 				restrictions.add(builder.or(idRestrictions.toArray(new Predicate[0])));
 			}
-		}
-
-		if (params.containsKey("marker_id")) {
-			String idString = (String) params.get("marker_id");
-
-			Subquery<LTReferenceMarkerAssociation> idSubquery = query.subquery(LTReferenceMarkerAssociation.class);
-			Root<LTReferenceMarkerAssociation> idRoot = idSubquery.from(LTReferenceMarkerAssociation.class);
-			idSubquery.select(idRoot);
-
-			List<Predicate> idPredicates = new ArrayList<Predicate>();
-
-			idPredicates.add(builder.equal(root.get("_refs_key"), idRoot.get("keys").get("_refs_key")));
-			idPredicates.add(builder.equal(idRoot.get("markerID").get("accID"), idString));
-
-			idSubquery.where(idPredicates.toArray(new Predicate[]{}));
-			restrictions.add(builder.exists(idSubquery));
-		}
-
-		if (params.containsKey("allele_id")) {
-			String idString = (String) params.get("allele_id");
-
-			Subquery<LTReferenceAlleleAssociation> idSubquery = query.subquery(LTReferenceAlleleAssociation.class);
-			Root<LTReferenceAlleleAssociation> idRoot = idSubquery.from(LTReferenceAlleleAssociation.class);
-			idSubquery.select(idRoot);
-
-			List<Predicate> idPredicates = new ArrayList<Predicate>();
-
-			idPredicates.add(builder.equal(root.get("_refs_key"), idRoot.get("_refs_key")));
-			idPredicates.add(builder.equal(idRoot.get("mgiType").get("_mgitype_key"), 11));
-			idPredicates.add(builder.equal(idRoot.get("alleleID").get("accID"), idString));
-			idPredicates.add(builder.equal(idRoot.get("alleleID").get("_mgitype_key"), 11));
-
-			idSubquery.where(idPredicates.toArray(new Predicate[]{}));
-			restrictions.add(builder.exists(idSubquery));
 		}
 
 		// Deal with workflow tag searching.  This involves five tag fields paired with five NOT operator

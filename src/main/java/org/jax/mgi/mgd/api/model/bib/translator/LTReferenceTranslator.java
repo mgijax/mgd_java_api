@@ -87,13 +87,11 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		// fields only applicable for references of type "book"
 		ReferenceBook bookData = entity.getBookData();
 		if (bookData != null) {
-			//domain.book_author = bookData.getBook_author();
 			domain.book_author = bookData.getBook_author();			
 			domain.book_title = bookData.getBook_title();
 			domain.place = bookData.getPlace();
 			domain.publisher = bookData.getPublisher();
-			//domain.series_edition = bookData.getSeries_edition();			
-			domain.series_edition = bookData.getSeries_edition();
+			domain.series_ed = bookData.getSeries_ed();
 		}
 		
 		// data specific to workflows: has supplemental data?, link to supplemental data, has PDF?, has extracted text?

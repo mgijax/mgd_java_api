@@ -543,13 +543,13 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 			if (!smartEqual(book.getBook_author(), domain.book_author) || !smartEqual(book.getBook_title(), domain.book_title) || 
 					!smartEqual(book.getPlace(), domain.place) || !smartEqual(book.getPublisher(), domain.publisher) ||
-					!smartEqual(book.getSeries_edition(), domain.series_edition)) {
+					!smartEqual(book.getSeries_ed(), domain.series_ed)) {
 
 				book.setBook_author(domain.book_author);
 				book.setBook_title(domain.book_title);
 				book.setPlace(domain.place);
 				book.setPublisher(domain.publisher);
-				book.setSeries_edition(domain.series_edition);
+				book.setSeries_ed(domain.series_ed);
 				book.setModification_date(new Date());
 				anyChanges = true;
 			}

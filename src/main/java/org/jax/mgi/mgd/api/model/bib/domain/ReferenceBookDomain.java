@@ -14,7 +14,7 @@ public class ReferenceBookDomain extends BaseDomain {
 	private String book_title;
 	private String place;
 	private String publisher;
-	private String series_edition;	
+	private String series_ed;	
 	private String creation_date;
 	private String modification_date;
 

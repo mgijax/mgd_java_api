@@ -21,7 +21,7 @@ public class ReferenceBookTranslator extends BaseEntityDomainTranslator<Referenc
 		domain.setBook_title(entity.getBook_title());
 		domain.setPlace(entity.getPlace());
 		domain.setPublisher(entity.getPublisher());
-		domain.setSeries_edition(entity.getSeries_edition());	
+		domain.setSeries_ed(entity.getSeries_ed());	
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		

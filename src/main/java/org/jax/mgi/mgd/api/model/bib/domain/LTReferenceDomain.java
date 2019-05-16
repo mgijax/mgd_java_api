@@ -48,7 +48,7 @@ public class LTReferenceDomain extends BaseDomain {
 	public String book_title;
 	public String place;
 	public String publisher;
-	public String series_edition;
+	public String series_ed;
 	public String has_pdf;
 	public String has_supplemental;
 	public String link_to_supplemental;

@@ -344,7 +344,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 			String booktitle   = (String) params.get("book_title");
 			String place       = (String) params.get("place");
 			String publisher   = (String) params.get("publisher");
-			String seriesEd    = (String) params.get("series_edition");
+			String seriesEd    = (String) params.get("series_ed");
 
 			Subquery<ReferenceBook> bookSubquery = query.subquery(ReferenceBook.class);
 			Root<ReferenceBook> bookRoot = bookSubquery.from(ReferenceBook.class);			
@@ -375,7 +375,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 				bookPredicates.add(builder.like(lowerColumn, publisher.toLowerCase()));
 			}
 			if (seriesEd != null) {
-				Path<String> column = bookRoot.get("series_edition");
+				Path<String> column = bookRoot.get("series_ed");
 				Expression<String> lowerColumn = builder.lower(column);
 				bookPredicates.add(builder.like(lowerColumn, seriesEd.toLowerCase()));
 			}

@@ -9,7 +9,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
@@ -17,7 +16,6 @@ import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
@@ -53,23 +51,6 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		return referenceService.delete(key, user);
 	}
 	
-	//@GET
-	//@ApiOperation(value = "Confirm reference is valid")
-	//@Path("/valid")
-	//public SearchResults<ReferenceDomain> isValid(
-	//	@ApiParam(value = "Value: This is for searching by reference key")
-	//	@QueryParam("refsKey") String refsKey
-	//	) {
-	//	SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
-	//	ReferenceDomain ref = this.get(Integer.parseInt(refsKey));
-	//	if (ref != null) {
-	//		results.setItem(ref);
-	//	} else {
-	//		results.setError("InvalidReference", "No reference with key " + refsKey + " exists.", Constants.HTTP_NOT_FOUND);
-	//	}
-	//	return results;
-	//}
-
 	@GET
 	@ApiOperation(value = "Validate reference by J:/returns slim reference domain")
 	@Path("/validJnum/{jnum}")

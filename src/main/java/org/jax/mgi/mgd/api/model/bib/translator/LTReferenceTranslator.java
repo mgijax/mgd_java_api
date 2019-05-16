@@ -2,8 +2,10 @@ package org.jax.mgi.mgd.api.model.bib.translator;
 
 import java.util.ArrayList;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBookDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceAssociatedData;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceBook;

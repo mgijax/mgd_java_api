@@ -1,11 +1,23 @@
 package org.jax.mgi.mgd.api.model.bib.translator;
 
+import java.util.Comparator;
+
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBookDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jboss.logging.Logger;
 
 public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, ReferenceDomain> {
 
+	protected Logger log = Logger.getLogger(getClass());
+	
+	private AccessionTranslator accessionTranslator = new AccessionTranslator();
+	private ReferenceBookTranslator bookTranslator = new ReferenceBookTranslator();
+	
 	@Override
 	protected ReferenceDomain entityToDomain(Reference entity) {
 
@@ -21,6 +33,7 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		domain.setDate(entity.getDate());
 		domain.setYear(String.valueOf(entity.getYear()));
 		domain.setPages(entity.getPgs());
+		domain.setReferenceAbstract(entity.getReferenceAbstract());
 		domain.setDate(entity.getDate());
 		domain.setIsReviewArticle(String.valueOf(entity.getIsReviewArticle()));
 		domain.setIsDiscard(String.valueOf(entity.getIsDiscard()));
@@ -35,7 +48,25 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
+
+		// reference book
+		if (entity.getReferenceBook() != null && !entity.getReferenceBook().isEmpty()) {
+			Iterable<ReferenceBookDomain> book = bookTranslator.translateEntities(entity.getReferenceBook());
+			domain.setReferenceBook(IteratorUtils.toList(book.iterator()));		}
 		
+		// mgi accession ids only
+		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
+			domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
+		}
+
+		// accession ids editable
+		if (entity.getEditAccessionIds() != null && !entity.getEditAccessionIds().isEmpty()) {
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIds());
+			domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
+			domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
+		}
+				
 		return domain;
 	}
 

@@ -53,22 +53,22 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		return referenceService.delete(key, user);
 	}
 	
-	@GET
-	@ApiOperation(value = "Confirm reference is valid")
-	@Path("/valid")
-	public SearchResults<ReferenceDomain> isValid(
-		@ApiParam(value = "Value: This is for searching by reference key")
-		@QueryParam("refsKey") String refsKey
-		) {
-		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
-		ReferenceDomain ref = this.get(Integer.parseInt(refsKey));
-		if (ref != null) {
-			results.setItem(ref);
-		} else {
-			results.setError("InvalidReference", "No reference with key " + refsKey + " exists.", Constants.HTTP_NOT_FOUND);
-		}
-		return results;
-	}
+	//@GET
+	//@ApiOperation(value = "Confirm reference is valid")
+	//@Path("/valid")
+	//public SearchResults<ReferenceDomain> isValid(
+	//	@ApiParam(value = "Value: This is for searching by reference key")
+	//	@QueryParam("refsKey") String refsKey
+	//	) {
+	//	SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
+	//	ReferenceDomain ref = this.get(Integer.parseInt(refsKey));
+	//	if (ref != null) {
+	//		results.setItem(ref);
+	//	} else {
+	//		results.setError("InvalidReference", "No reference with key " + refsKey + " exists.", Constants.HTTP_NOT_FOUND);
+	//	}
+	//	return results;
+	//}
 
 	@GET
 	@ApiOperation(value = "Validate reference by J:/returns slim reference domain")

@@ -27,13 +27,13 @@ import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceAlleleAssociation;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceBook;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceMarkerAssociation;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceNote;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -344,10 +344,10 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 			String booktitle   = (String) params.get("book_title");
 			String place       = (String) params.get("place");
 			String publisher   = (String) params.get("publisher");
-			String seriesEd    = (String) params.get("series_ed");
+			String seriesEd    = (String) params.get("series_edition");
 
-			Subquery<LTReferenceBook> bookSubquery = query.subquery(LTReferenceBook.class);
-			Root<LTReferenceBook> bookRoot = bookSubquery.from(LTReferenceBook.class);
+			Subquery<ReferenceBook> bookSubquery = query.subquery(ReferenceBook.class);
+			Root<ReferenceBook> bookRoot = bookSubquery.from(ReferenceBook.class);			
 			bookSubquery.select(bookRoot);
 
 			List<Predicate> bookPredicates = new ArrayList<Predicate>();

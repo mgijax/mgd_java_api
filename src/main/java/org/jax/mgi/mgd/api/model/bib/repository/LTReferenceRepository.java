@@ -23,11 +23,11 @@ import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceNote;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
@@ -539,7 +539,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		// If this reference is already a book and will continue to be a book, need to apply
 		// any changes to the fields of the existing book data.
 		if (wasBook && willBeBook && (entity.getBookList().size() > 0)) {
-			LTReferenceBook book = entity.getBookList().get(0);
+			ReferenceBook book = entity.getBookList().get(0);
 
 			if (!smartEqual(book.getBook_author(), domain.book_author) || !smartEqual(book.getBook_title(), domain.book_title) || 
 					!smartEqual(book.getPlace(), domain.place) || !smartEqual(book.getPublisher(), domain.publisher) ||
@@ -563,7 +563,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		} else if (willBeBook) {
 			// This reference was not a book previously, but now will be, so we need to add book-specific data.
 
-			LTReferenceBook book = new LTReferenceBook();
+			ReferenceBook book = new ReferenceBook();			
 			book.set_refs_key(entity.get_refs_key());
 			book.setBook_author(domain.book_author);
 			book.setBook_title(domain.book_title);

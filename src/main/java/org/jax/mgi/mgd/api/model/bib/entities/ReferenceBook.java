@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.bib.entities;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -18,14 +19,17 @@ import lombok.Setter;
 @Table(name="bib_books")
 public class ReferenceBook extends BaseEntity {
 
+	// due to LTReference, use same String names
+	
 	@Id
 	private int _refs_key;
-	private String book_au;
+	@Column(name="book_au")
+	private String book_author;
 	private String book_title;
 	private String place;
 	private String publisher;
-	private String series_ed;
-	private Date creation_date;
+	@Column(name="series_ed")
+	private String series_edition;	private Date creation_date;
 	private Date modification_date;
 
 }

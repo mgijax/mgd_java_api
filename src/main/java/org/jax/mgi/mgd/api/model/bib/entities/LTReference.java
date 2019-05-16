@@ -146,7 +146,7 @@ public class LTReference extends BaseEntity {
 	// one to many, because book data most often does not exist (leaving it 1-0)
 	@OneToMany
 	@JoinColumn(name="_refs_key")
-	private List<LTReferenceBook> bookList;
+	private List<ReferenceBook> bookList;
 
 	// one to one, because counts will always exist
 	@OneToOne
@@ -295,7 +295,7 @@ public class LTReference extends BaseEntity {
 	 * otherwise return null.
 	 */
 	@Transient
-	public LTReferenceBook getBookData() {
+	public ReferenceBook getBookData() {
 		if ("Book".equals(referenceTypeTerm.getTerm()) && (bookList.size() > 0)) {
 			return bookList.get(0);
 		}

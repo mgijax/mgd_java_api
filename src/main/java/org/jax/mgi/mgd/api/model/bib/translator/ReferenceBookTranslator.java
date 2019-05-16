@@ -17,11 +17,11 @@ public class ReferenceBookTranslator extends BaseEntityDomainTranslator<Referenc
 		
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);		
 		domain.setRefsKey(String.valueOf(entity.get_refs_key()));
-		domain.setBook_au(entity.getBook_au());
+		domain.setBook_author(entity.getBook_author());
 		domain.setBook_title(entity.getBook_title());
 		domain.setPlace(entity.getPlace());
 		domain.setPublisher(entity.getPublisher());
-		domain.setSeries_ed(entity.getSeries_ed());	
+		domain.setSeries_edition(entity.getSeries_edition());	
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		

@@ -2,14 +2,12 @@ package org.jax.mgi.mgd.api.model.bib.translator;
 
 import java.util.ArrayList;
 
-import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBookDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceAssociatedData;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.util.Constants;
 
 public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReference, LTReferenceDomain>{
@@ -87,12 +85,14 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		}
 		
 		// fields only applicable for references of type "book"
-		LTReferenceBook bookData = entity.getBookData();
+		ReferenceBook bookData = entity.getBookData();
 		if (bookData != null) {
-			domain.book_author = bookData.getBook_author();
+			//domain.book_author = bookData.getBook_author();
+			domain.book_author = bookData.getBook_author();			
 			domain.book_title = bookData.getBook_title();
 			domain.place = bookData.getPlace();
 			domain.publisher = bookData.getPublisher();
+			//domain.series_edition = bookData.getSeries_edition();			
 			domain.series_edition = bookData.getSeries_edition();
 		}
 		

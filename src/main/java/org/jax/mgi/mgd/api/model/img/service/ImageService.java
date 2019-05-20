@@ -220,11 +220,11 @@ public class ImageService extends BaseService<ImageDomain> {
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
-		String select = "select distinct i._image_key, i.jnum, i.figureLabel"
+		String select = "select distinct i._image_key, i.jnum, i.figureLabel, i.imageType"
 				+ ", concat(i.jnumID,'; ',i.imageType,'; ',i.figureLabel) as imageDisplay";
 		String from = "from img_image_view i";
 		String where = "where i.figureLabel is not null";
-		String orderBy = "order by i.jnum, i.figureLabel";
+		String orderBy = "order by i.imageType, i.jnum, i.figureLabel";
 		String limit = "LIMIT 5000";
 		String value;
 		Boolean from_imagepane = false;		

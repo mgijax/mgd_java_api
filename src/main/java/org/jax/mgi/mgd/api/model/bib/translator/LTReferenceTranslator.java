@@ -38,11 +38,13 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		
 		domain.pages = entity.getPages();
 		domain.ref_abstract = entity.getRef_abstract();
+		
 		domain.jnumid = entity.getJnumid();
 		domain.doiid = entity.getDoiid();
 		domain.pubmedid = entity.getPubmedid();
 		domain.mgiid = entity.getMgiid();
 		domain.gorefid = entity.getGorefid();	
+		
 		domain.reference_type = entity.getReferenceType();
 		domain.short_citation = entity.getShort_citation();
 		domain.ap_status = entity.getStatus(Constants.WG_AP);

@@ -114,6 +114,12 @@ public class LTReference extends BaseEntity {
 	@OrderBy("_logicaldb_key, preferred desc")
 	private List<Accession> accessionIDs;
 
+	//@OneToMany
+	//@JoinColumn(name="_object_key", referencedColumnName="_refs_key")
+	//@Where(clause="`_mgitype_key` = 1 and `_logicaldb_key = 1 and prefixPart = 'J:'")
+	//@OrderBy("_logicaldb_key, preferred desc")
+	//private List<Accession> jnumIDs;
+	
 	@OneToOne
 	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")
 	private Term referenceTypeTerm;

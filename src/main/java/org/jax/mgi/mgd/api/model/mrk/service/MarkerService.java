@@ -391,27 +391,27 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 		
 		// notes
-		if (searchDomain.getEditorNote() != null) {
+		if (searchDomain.getEditorNote() != null  && !searchDomain.getEditorNote().getNoteChunk().isEmpty()) {
 			value = searchDomain.getEditorNote().getNoteChunk().replaceAll("'",  "''");
 			where = where + "\nand note1._notetype_key = 1004 and note1.note ilike '" + value + "'" ;
 			from_editorNote = true;
 		}
-		if (searchDomain.getSequenceNote() != null) {
+		if (searchDomain.getSequenceNote() != null  && !searchDomain.getSequenceNote().getNoteChunk().isEmpty()) {
 			value = searchDomain.getSequenceNote().getNoteChunk().replaceAll("'",  "''");
 			where = where + "\nand note2._notetype_key = 1009 and note2.note ilike '" + value + "'" ;
 			from_sequenceNote = true;
 		}
-		if (searchDomain.getRevisionNote() != null) {
+		if (searchDomain.getRevisionNote() != null  && !searchDomain.getRevisionNote().getNoteChunk().isEmpty()) {
 			value = searchDomain.getRevisionNote().getNoteChunk().replaceAll("'",  "''");
 			where = where + "\nand note3._notetype_key = 1030 and note3.note ilike '" + value + "'" ;
 			from_revisionNote = true;
 		}
-		if (searchDomain.getStrainNote() != null) {
+		if (searchDomain.getStrainNote() != null  && !searchDomain.getStrainNote().getNoteChunk().isEmpty()) {
 			value = searchDomain.getStrainNote().getNoteChunk().replaceAll("'",  "''");
 			where = where + "\nand note4._notetype_key = 1035 and note4.note ilike '" + value + "'" ;
 			from_strainNote = true;
 		}
-		if (searchDomain.getLocationNote() != null) {
+		if (searchDomain.getLocationNote() != null  && !searchDomain.getLocationNote().getNoteChunk().isEmpty()) {
 			value = searchDomain.getLocationNote().getNoteChunk().replaceAll("'",  "''");
 			where = where + "\nand note5._notetype_key = 1049 and note5.note ilike '" + value + "'" ;
 			from_locationNote = true;

@@ -288,17 +288,18 @@ public class ImageService extends BaseService<ImageDomain> {
 		}
 		
 		// notes
-		if (searchDomain.getCaptionNote() != null) {
+		if (searchDomain.getCaptionNote() != null && !searchDomain.getCaptionNote().getNoteChunk().isEmpty()) {
 			value = searchDomain.getCaptionNote().getNoteChunk().replaceAll("'",  "''");
 			where = where + "\nand note1._notetype_key = 1024 and note1.note ilike '" + value + "'" ;
 			from_captionNote = true;
 		}
-		if (searchDomain.getCopyrightNote() != null && searchDomain.getCopyrightNote().getNoteChunk().contains("%")) {
+		if (searchDomain.getCopyrightNote() != null && !searchDomain.getCaptionNote().getNoteChunk().isEmpty() 
+				&& searchDomain.getCopyrightNote().getNoteChunk().contains("%")) {
 			value = searchDomain.getCopyrightNote().getNoteChunk().replaceAll("'",  "''");
 			where = where + "\nand note2._notetype_key = 1023 and note2.note ilike '" + value + "'" ;
 			from_copyrightNote = true;
 		}
-		if (searchDomain.getPrivateCuratorialNote() != null) {
+		if (searchDomain.getPrivateCuratorialNote() != null && !searchDomain.getPrivateCuratorialNote().getNoteChunk().isEmpty()) {
 			value = searchDomain.getPrivateCuratorialNote().getNoteChunk().replaceAll("'",  "''");
 			where = where + "\nand note3._notetype_key = 1025 and note3.note ilike '" + value + "'" ;
 			from_privateCuratorialNote = true;

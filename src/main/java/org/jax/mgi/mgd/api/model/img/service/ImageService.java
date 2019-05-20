@@ -293,7 +293,7 @@ public class ImageService extends BaseService<ImageDomain> {
 			where = where + "\nand note1._notetype_key = 1024 and note1.note ilike '" + value + "'" ;
 			from_captionNote = true;
 		}
-		if (searchDomain.getCopyrightNote() != null && !searchDomain.getCaptionNote().getNoteChunk().isEmpty() 
+		if (searchDomain.getCopyrightNote() != null && !searchDomain.getCopyrightNote().getNoteChunk().isEmpty() 
 				&& searchDomain.getCopyrightNote().getNoteChunk().contains("%")) {
 			value = searchDomain.getCopyrightNote().getNoteChunk().replaceAll("'",  "''");
 			where = where + "\nand note2._notetype_key = 1023 and note2.note ilike '" + value + "'" ;

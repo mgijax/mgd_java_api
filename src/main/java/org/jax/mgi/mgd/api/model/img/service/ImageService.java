@@ -304,7 +304,7 @@ public class ImageService extends BaseService<ImageDomain> {
 			where = where + "\nand note3._notetype_key = 1025 and note3.note ilike '" + value + "'" ;
 			from_privateCuratorialNote = true;
 		}
-		if (searchDomain.getExternalLinkNote() != null) {
+		if (searchDomain.getExternalLinkNote() != null  && !searchDomain.getExternalLinkNote().getNoteChunk().isEmpty()) {
 			value = searchDomain.getExternalLinkNote().getNoteChunk().replaceAll("'",  "''");
 			where = where + "\nand note4._notetype_key = 1039 and note4.note ilike '" + value + "'" ;
 			from_externalLinkNote = true;

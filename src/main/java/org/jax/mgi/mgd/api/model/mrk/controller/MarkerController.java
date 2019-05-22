@@ -72,14 +72,14 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "EI Search/returns slim marker domain")
-	@Path("/eiSearch")
-	public List<SlimMarkerDomain> eiSearch(MarkerDomain searchDomain) {
+	@ApiOperation(value = "Search/returns slim marker domain")
+	@Path("/search")
+	public List<SlimMarkerDomain> search(MarkerDomain searchDomain) {
 	
 		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
 
 		try {
-			results = markerService.eiSearch(searchDomain);
+			results = markerService.search(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

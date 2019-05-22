@@ -70,6 +70,9 @@ public class Constants {
 	public static String PROCESS_DELETE = "d";
 	public static String PROCESS_NOTDIRTY = "x";
 
+	// default search limit
+	public static String SEARCH_RETURN_LIMIT = "limit 1000";
+	
 	// API logging using Logger.info()
 	public static String LOG_MGI_API = "LOG_MGI_API|";
 	public static String LOG_FAIL_USERAUTHENTICATION = LOG_MGI_API + "FAIL|USER AUTHETNICATION";

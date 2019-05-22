@@ -16,6 +16,7 @@ import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -85,7 +86,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		String from = "from all_allele a, voc_term v1";
 		String where = "where a._allele_type_key = v1._term_key";
 		String orderBy = "order by a.symbol";
-		String limit = "LIMIT 1000";	
+		String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
 		Boolean from_marker = false;
 		Boolean from_accession = false;

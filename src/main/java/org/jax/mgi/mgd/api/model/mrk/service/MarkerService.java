@@ -331,7 +331,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}
 
 	@Transactional	
-	public List<SlimMarkerDomain> eiSearch(MarkerDomain searchDomain) {
+	public List<SlimMarkerDomain> search(MarkerDomain searchDomain) {
 		// using searchDomain fields, generate SQL command
 		
 		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
@@ -343,7 +343,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		String from = "from mrk_marker m";
 		String where = "where m._organism_key = 1";
 		String orderBy = "order by m._marker_type_key, m.symbol";
-		String limit = "LIMIT 1000";
+		String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
 		Boolean from_editorNote = false;
 		Boolean from_sequenceNote = false;

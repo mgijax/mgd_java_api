@@ -121,7 +121,7 @@ public class ImageService extends BaseService<ImageDomain> {
 	@Transactional
 	public SearchResults<ImageDomain> update(ImageDomain domain, User user) {
 
-		// update exisitng entity object from in-coming domain
+		// update existing entity object from in-coming domain
 		
 		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
 		Image entity = imageDAO.get(Integer.valueOf(domain.getImageKey()));
@@ -224,9 +224,10 @@ public class ImageService extends BaseService<ImageDomain> {
 				+ ", concat(i.jnumID,'; ',i.imageType,'; ',i.figureLabel) as imageDisplay";
 		String from = "from img_image_view i";
 		String where = "where i.figureLabel is not null";
-		String orderBy = "order by i.imageType, i.jnum, i.figureLabel";
-		String limit = "LIMIT 5000";
+		String 	orderBy = "order by i.jnum, i.figureLabel, i.imageType";			
+		String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
+		
 		Boolean from_imagepane = false;		
 		Boolean from_captionNote = false;
 		Boolean from_copyrightNote = false;

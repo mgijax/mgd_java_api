@@ -322,7 +322,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		String where = "where v._sourcevariant_key is not null"
 				+ "\nand v._allele_key = a._allele_key";
 		String orderBy = "order by a.symbol";
-		String limit = "LIMIT 1000";
+		String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;	
 		Boolean from_strain = false;
 		Boolean from_marker = false;

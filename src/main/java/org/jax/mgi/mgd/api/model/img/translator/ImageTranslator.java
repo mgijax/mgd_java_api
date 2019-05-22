@@ -28,7 +28,7 @@ public class ImageTranslator extends BaseEntityDomainTranslator<Image, ImageDoma
 
 		// do not use 'processStatus' because this is a master domain
 		// and only 1 master domain record is processed by the create/update endpoint
-		
+			
 		domain.setImageKey(String.valueOf(entity.get_image_key()));
 		domain.setImageClassKey(String.valueOf(entity.getImageClass().get_term_key()));
 		domain.setImageClass(entity.getImageClass().getTerm());

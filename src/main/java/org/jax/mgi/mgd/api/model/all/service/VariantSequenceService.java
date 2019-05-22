@@ -88,7 +88,7 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 					+ "\nand vs._createdby_key = u1._user_key"
 					+ "\nand vs._modifiedby_key = u2._user_key";
 		String orderBy = "order by t1.term";
-		String limit = "LIMIT 1000";
+		String limit = Constants.SEARCH_RETURN_LIMIT;
 
 		// if parameter exists, then add to where-clause
 		

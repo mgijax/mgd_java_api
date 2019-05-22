@@ -79,7 +79,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		List<SlimReferenceDomain> results = new ArrayList<SlimReferenceDomain>();
 		
-		if (value.contains("%") || value.isEmpty()) {
+		if (value.contains("%") || value == null || value.isEmpty()) {
 			return results;
 		}
 

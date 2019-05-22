@@ -79,7 +79,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		List<SlimReferenceDomain> results = new ArrayList<SlimReferenceDomain>();
 		
-		if (value.contains("%")) {
+		if (value.contains("%") || value.isEmpty()) {
 			return results;
 		}
 
@@ -122,12 +122,14 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		// validate the jnum
 		String jnum = "";
+		
 		if (domain.getJnum() != null && !domain.getJnum().isEmpty()) {
 			jnum = domain.getJnum();
 		}
 		else if (domain.getJnumID() != null && !domain.getJnumID().isEmpty()) {
 			jnum = domain.getJnumID();
 		}
+		
 		results = validJnum(jnum);
 		
 		log.info("copyright check");

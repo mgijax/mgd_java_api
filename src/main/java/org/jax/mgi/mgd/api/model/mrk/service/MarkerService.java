@@ -212,7 +212,26 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			entity.setCytogeneticOffset(domain.getCytogeneticOffset());
 			modified = true;
 		}
-	
+
+		//log.info("process cmOffset");
+		// may be null coming from entity
+		if (entity.getCmOffset() == null) {
+			if (domain.getCmOffset() != null) {
+				entity.setCmOffset(Double.valueOf(domain.getCmOffset()));
+				modified = true;	
+			}
+		}
+		// may be null coming from domain
+		else if (domain.getCmOffset() == null) {
+			entity.setCmOffset(Double.valueOf(null));
+			modified = true;
+		}
+		// if not entity/null and not domain/empty, then check if equivalent
+		else if (!String.valueOf(entity.getCmOffset()).equals(domain.getCmOffset())) {
+			entity.setCmOffset(Double.valueOf(domain.getCmOffset()));
+			modified = true;
+		}
+		
 		// cannot change the status to "withdrawn"/2
 		//log.info("process marker status");
 		if (!String.valueOf(entity.getMarkerStatus().get_marker_status_key()).equals(domain.getMarkerStatusKey())) {

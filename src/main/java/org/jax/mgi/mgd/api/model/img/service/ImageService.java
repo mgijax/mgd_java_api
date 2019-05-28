@@ -212,6 +212,28 @@ public class ImageService extends BaseService<ImageDomain> {
 	}
 
 	@Transactional	
+	public List<String> getObjectCount() {
+		// return the object count from the database
+		
+		List<String> results = new ArrayList<String>();
+		
+		String cmd = "select count(*) as objectCount from img_image";
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.add(rs.getString("objectCount"));
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;		
+	}
+	
+	@Transactional	
 	public List<SlimImageDomain> search(ImageDomain searchDomain) {
 		// using searchDomain fields, generate SQL command
 		
@@ -466,5 +488,5 @@ public class ImageService extends BaseService<ImageDomain> {
 		
 		return results;
 	}	
-	
+
 }

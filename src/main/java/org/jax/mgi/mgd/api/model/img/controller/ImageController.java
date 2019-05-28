@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -64,7 +65,14 @@ public class ImageController extends BaseController<ImageDomain> {
 	public SearchResults<ImageDomain> delete(Integer key, User user) {
 		return imageService.delete(key, user);
 	}
-	
+
+	@GET
+	@ApiOperation(value = "Get the object count from img_image table")
+	@Path("/getObjectCount")
+	public List<String> getObjectCount() {
+		return imageService.getObjectCount();
+	}
+		
 	@POST
 	@ApiOperation(value = "Search/returns slim image domain")
 	@Path("/search")
@@ -96,5 +104,5 @@ public class ImageController extends BaseController<ImageDomain> {
 		
 		return results;
 	}
-	
+
 }

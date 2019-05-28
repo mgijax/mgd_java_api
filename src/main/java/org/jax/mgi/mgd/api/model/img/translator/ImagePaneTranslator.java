@@ -33,7 +33,6 @@ public class ImagePaneTranslator extends BaseEntityDomainTranslator<ImagePane, I
 		if (entity.getAlleleAssocs() != null && !entity.getAlleleAssocs().isEmpty()) {
 			Iterable<ImagePaneAssocDomain> i = assocTranslator.translateEntities(entity.getAlleleAssocs());
 			domain.setAlleleAssocs(IteratorUtils.toList(i.iterator()));
-			//domain.getAlleleImageAssocs().sort(Comparator.comparing(ImagePaneAssocDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
 		}
 			
 		return domain;

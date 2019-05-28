@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.img.translator;
 
+import java.util.Comparator;
+
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleImageDomain;
@@ -21,6 +23,7 @@ public class ImagePaneAssocTranslator extends BaseEntityDomainTranslator<ImagePa
 		
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);		
 		domain.setAssocKey(String.valueOf(entity.get_assoc_key()));
+		domain.setImagePaneKey(String.valueOf(entity.getImagePane().get_imagepane_key()));
 		domain.setMgiTypeKey(String.valueOf(entity.getMgiType().get_mgitype_key()));
 		domain.setObjectKey(String.valueOf(entity.get_object_key()));
 		domain.setIsPrimary(entity.getIsPrimary());
@@ -35,7 +38,7 @@ public class ImagePaneAssocTranslator extends BaseEntityDomainTranslator<ImagePa
 		if (entity.getAlleles() != null && !entity.getAlleles().isEmpty()) {
 			Iterable<SlimAlleleImageDomain> i = alleleTranslator.translateEntities(entity.getAlleles());
 			domain.setAlleles(IteratorUtils.toList(i.iterator()));
-			//domain.getAlleleImageAssocs().sort(Comparator.comparing(ImagePaneAssocDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
+			domain.getAlleles().sort(Comparator.comparing(SlimAlleleImageDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}
 		
 		return domain;

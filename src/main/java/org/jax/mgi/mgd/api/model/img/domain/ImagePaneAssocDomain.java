@@ -13,6 +13,7 @@ public class ImagePaneAssocDomain extends BaseDomain {
 
 	private String processStatus;
 	private String assocKey;
+	private String imagePaneKey;
 	private String mgiTypeKey;
 	private String objectKey;
 	private String isPrimary;

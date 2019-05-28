@@ -122,7 +122,7 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				entity.setModification_date(new Date());
 				imagePaneDAO.persist(entity);
 				modified = true;
-				log.info("processAnnotation/create/returning results");					
+				log.info("processImagePane/create/returning results");					
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processImagePane delete");

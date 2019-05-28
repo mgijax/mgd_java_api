@@ -21,8 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Path("/imagepane")
-@Api(value = "ImagePane Endpoints")
+@Path("/imagepaneassoc")
+@Api(value = "ImagePaneAssoc Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ImagePaneAssocController extends BaseController<ImagePaneAssocDomain> {

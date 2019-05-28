@@ -350,6 +350,27 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}
 
 	@Transactional	
+	public String getObjectCount() {
+		// return the object count from the database
+		
+		String results = "";
+		String cmd = "select count(*) as objectCount from mrk_marker";
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results = rs.getString("objectCount");
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;		
+	}
+		
+	@Transactional	
 	public List<SlimMarkerDomain> search(MarkerDomain searchDomain) {
 		// using searchDomain fields, generate SQL command
 		

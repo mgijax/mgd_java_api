@@ -58,6 +58,7 @@ public class ImagePaneAssoc extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
+	// use @Filter to filter the entity by _mgitype_key = 11 (alleles) only
 	@OneToMany()
 	@JoinColumn(name="_allele_key", referencedColumnName="_object_key", insertable=false, updatable=false)
 	@Filter(name="_object_key", condition="`_mgitype_key` = 11")

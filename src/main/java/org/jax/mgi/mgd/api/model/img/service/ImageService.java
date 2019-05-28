@@ -46,6 +46,8 @@ public class ImageService extends BaseService<ImageDomain> {
 	private NoteService noteService;
 	@Inject
 	private ImagePaneService imagePaneService;
+	@Inject
+	private ImagePaneAssocService imagePaneAssocService;
 	
 	private ImageTranslator translator = new ImageTranslator();
 	private ImageSubmissionTranslator submissionTranslator = new ImageSubmissionTranslator();
@@ -111,6 +113,11 @@ public class ImageService extends BaseService<ImageDomain> {
 
 		// process image pane
 		imagePaneService.process(String.valueOf(entity.get_image_key()), domain.getImagePanes(), user);
+			
+		// process image pane/allele associations
+		for (int i = 0; i < domain.getImagePanes().size(); i++) {
+			imagePaneAssocService.process(domain.getImagePanes().get(i).getImagePaneKey(), domain.getImagePanes().get(i).getAlleleAssocs(), user);
+		}
 		
 		// return entity translated to domain
 		log.info("processImage/create/returning results");
@@ -163,6 +170,13 @@ public class ImageService extends BaseService<ImageDomain> {
 		// process image pane
 		if (imagePaneService.process(domain.getImageKey(), domain.getImagePanes(), user)) {
 			modified = true;
+			
+			// for given image pane, process image pane/allele associations
+			for (int i = 0; i < domain.getImagePanes().size(); i++) {
+				if (imagePaneAssocService.process(domain.getImagePanes().get(i).getImagePaneKey(), domain.getImagePanes().get(i).getAlleleAssocs(), user)) {
+					modified = true;
+				}
+			}
 		}
 		
 		// only if modifications were actually made
@@ -212,17 +226,16 @@ public class ImageService extends BaseService<ImageDomain> {
 	}
 
 	@Transactional	
-	public List<String> getObjectCount() {
+	public String getObjectCount() {
 		// return the object count from the database
 		
-		List<String> results = new ArrayList<String>();
-		
+		String results = "";
 		String cmd = "select count(*) as objectCount from img_image";
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				results.add(rs.getString("objectCount"));
+				results = rs.getString("objectCount");
 			}
 			sqlExecutor.cleanup();
 		}

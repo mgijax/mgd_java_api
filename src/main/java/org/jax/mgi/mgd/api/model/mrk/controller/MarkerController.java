@@ -70,7 +70,14 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	public SearchResults<MarkerDomain> delete(Integer key, User user) {
 		return markerService.delete(key, user);
 	}
-	
+
+	@GET
+	@ApiOperation(value = "Get the object count from mrk_marker table")
+	@Path("/getObjectCount")
+	public String getObjectCount() {
+		return markerService.getObjectCount();
+	}
+		
 	@POST
 	@ApiOperation(value = "Search/returns slim marker domain")
 	@Path("/search")

@@ -69,7 +69,7 @@ public class ImageController extends BaseController<ImageDomain> {
 	@GET
 	@ApiOperation(value = "Get the object count from img_image table")
 	@Path("/getObjectCount")
-	public List<String> getObjectCount() {
+	public String getObjectCount() {
 		return imageService.getObjectCount();
 	}
 		

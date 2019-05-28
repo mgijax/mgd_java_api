@@ -308,7 +308,28 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		variantDAO.remove(entity);
 		return results;
 	}
-	
+
+	@Transactional	
+	public String getObjectCount() {
+		// return the object count from the database
+		
+		String results = "";
+		String cmd = "select count(*) as objectCount from all_variant";
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results = rs.getString("objectCount");
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;		
+	}
+		
 	@Transactional
 	public List<SlimAlleleVariantDomain> search(AlleleVariantDomain searchDomain) {
 		// return list of curated variants for specified query parameters

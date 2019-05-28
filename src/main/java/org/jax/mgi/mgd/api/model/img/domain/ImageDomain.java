@@ -47,5 +47,5 @@ public class ImageDomain extends BaseDomain {
 
 	private List<ImagePaneDomain> imagePanes;
 	private ImageDomain thumbnailImage;
-	
+		
 }

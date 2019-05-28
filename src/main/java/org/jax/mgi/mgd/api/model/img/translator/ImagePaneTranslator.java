@@ -1,6 +1,8 @@
 package org.jax.mgi.mgd.api.model.img.translator;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.entities.ImagePane;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -10,6 +12,8 @@ public class ImagePaneTranslator extends BaseEntityDomainTranslator<ImagePane, I
 
 	protected Logger log = Logger.getLogger(getClass());
 	
+	private ImagePaneAssocTranslator assocTranslator = new ImagePaneAssocTranslator();
+
 	@Override
 	protected ImagePaneDomain entityToDomain(ImagePane entity) {
 		ImagePaneDomain domain = new ImagePaneDomain();
@@ -24,7 +28,14 @@ public class ImagePaneTranslator extends BaseEntityDomainTranslator<ImagePane, I
 		domain.setHeight(String.valueOf(entity.getHeight()));
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-		
+
+		// one-to-many allele associations
+		if (entity.getAlleleAssocs() != null && !entity.getAlleleAssocs().isEmpty()) {
+			Iterable<ImagePaneAssocDomain> i = assocTranslator.translateEntities(entity.getAlleleAssocs());
+			domain.setAlleleAssocs(IteratorUtils.toList(i.iterator()));
+			//domain.getAlleleImageAssocs().sort(Comparator.comparing(ImagePaneAssocDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
+		}
+			
 		return domain;
 	}
 

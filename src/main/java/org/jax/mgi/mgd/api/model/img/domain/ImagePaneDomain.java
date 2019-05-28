@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.img.domain;
 
+import java.util.List;
+
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
 import lombok.Getter;
@@ -18,4 +20,7 @@ public class ImagePaneDomain extends BaseDomain {
 	private String height;	
 	private String creation_date;
 	private String modification_date;
+	
+	private List<ImagePaneAssocDomain> alleleAssocs;
+
 }

@@ -1,14 +1,18 @@
 package org.jax.mgi.mgd.api.model.img.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
 import io.swagger.annotations.ApiModel;
@@ -37,4 +41,10 @@ public class ImagePane extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 
+	// allele image pane associations
+	@OneToMany()
+	@JoinColumn(name="_imagepane_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 11")
+	private List<ImagePaneAssoc> alleleAssocs;
+	
 }

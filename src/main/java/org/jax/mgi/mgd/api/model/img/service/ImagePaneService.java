@@ -45,8 +45,12 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 
 	@Transactional
 	public ImagePaneDomain get(Integer key) {
-		// not used
-		return null;
+		// get the DAO/entity and translate -> domain
+		ImagePaneDomain domain = new ImagePaneDomain();
+		if (imagePaneDAO.get(key) != null) {
+			domain = translator.translate(imagePaneDAO.get(key));
+		}
+		return domain;
 	}
 
 	@Transactional

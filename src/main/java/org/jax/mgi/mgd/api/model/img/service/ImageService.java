@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.img.dao.ImageDAO;
 import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
@@ -36,7 +37,6 @@ public class ImageService extends BaseService<ImageDomain> {
 	private ImageDAO imageDAO;
 	@Inject
 	private ImageDAO thumbnailDAO;
-
 	@Inject
 	private TermDAO termDAO;
 	@Inject
@@ -48,6 +48,8 @@ public class ImageService extends BaseService<ImageDomain> {
 	private ImagePaneService imagePaneService;
 	@Inject
 	private ImagePaneAssocService imagePaneAssocService;
+	@Inject
+	private AccessionService accessionService;
 	
 	private ImageTranslator translator = new ImageTranslator();
 	private ImageSubmissionTranslator submissionTranslator = new ImageSubmissionTranslator();
@@ -134,6 +136,8 @@ public class ImageService extends BaseService<ImageDomain> {
 		Image entity = imageDAO.get(Integer.valueOf(domain.getImageKey()));
 		Boolean modified = false;
 		
+		String mgiTypeName = "Image";
+		
 		log.info("processImage/update");
 
 		// copyright/DXDOI validation
@@ -176,6 +180,13 @@ public class ImageService extends BaseService<ImageDomain> {
 				if (imagePaneAssocService.process(domain.getImagePanes().get(i).getImagePaneKey(), domain.getImagePanes().get(i).getAlleleAssocs(), user)) {
 					modified = true;
 				}
+			}
+		}
+
+		// process editable accession ids (ex. PIX:)
+		if (domain.getEditAccessionIds() != null && !domain.getEditAccessionIds().isEmpty()) {
+			if (accessionService.process(domain.getImageKey(), domain.getEditAccessionIds(), mgiTypeName, user)) {
+				modified = true;
 			}
 		}
 		

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleImageDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeImageDomain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -25,5 +26,6 @@ public class ImagePaneAssocDomain extends BaseDomain {
 	private String modification_date;
 	
 	private List<SlimAlleleImageDomain> alleles;
+	private List<SlimGenotypeImageDomain> genotypes;
 	
 }

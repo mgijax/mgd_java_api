@@ -12,7 +12,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
 import io.swagger.annotations.ApiModel;
@@ -41,10 +40,10 @@ public class ImagePane extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 
-	// allele image pane associations
+	// image pane associations
 	@OneToMany()
 	@JoinColumn(name="_imagepane_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 11")
-	private List<ImagePaneAssoc> alleleAssocs;
+	//@Where(clause="`_mgitype_key` in (11, 12)")
+	private List<ImagePaneAssoc> paneAssocs;
 	
 }

@@ -56,7 +56,9 @@ public class ImageService extends BaseService<ImageDomain> {
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	private String mgiTypeKey = "9";
-
+	private String fullSizeImageKey = "1072158";
+	private String thumbnailImageKey = "1072159";
+	
 	@Transactional
 	public SearchResults<ImageDomain> create(ImageDomain domain, User user) {
 		
@@ -79,7 +81,7 @@ public class ImageService extends BaseService<ImageDomain> {
 		//if (domain.getImageClass() != "Expression") {
 		if (domain.getImageClassKey() != "6481781") {
 			Image thumbnailEntity = new Image();
-			thumbnailEntity.setImageType(termDAO.get(1072159));
+			thumbnailEntity.setImageType(termDAO.get(Integer.valueOf(thumbnailImageKey)));
 			thumbnailEntity.setImageClass(termDAO.get(Integer.valueOf(domain.getImageClassKey())));
 			thumbnailEntity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));
 			thumbnailEntity.setFigureLabel(domain.getFigureLabel());
@@ -118,7 +120,7 @@ public class ImageService extends BaseService<ImageDomain> {
 			
 		// process image pane/allele associations
 		for (int i = 0; i < domain.getImagePanes().size(); i++) {
-			imagePaneAssocService.process(domain.getImagePanes().get(i).getImagePaneKey(), domain.getImagePanes().get(i).getAlleleAssocs(), user);
+			imagePaneAssocService.process(domain.getImagePanes().get(i).getImagePaneKey(), domain.getImagePanes().get(i).getPaneAssocs(), user);
 		}
 		
 		// return entity translated to domain
@@ -135,7 +137,6 @@ public class ImageService extends BaseService<ImageDomain> {
 		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
 		Image entity = imageDAO.get(Integer.valueOf(domain.getImageKey()));
 		Boolean modified = false;
-		
 		String mgiTypeName = "Image";
 		
 		log.info("processImage/update");
@@ -174,15 +175,17 @@ public class ImageService extends BaseService<ImageDomain> {
 		// process image pane
 		if (imagePaneService.process(domain.getImageKey(), domain.getImagePanes(), user)) {
 			modified = true;
-			
-			// for given image pane, process image pane/allele associations
-			for (int i = 0; i < domain.getImagePanes().size(); i++) {
-				if (imagePaneAssocService.process(domain.getImagePanes().get(i).getImagePaneKey(), domain.getImagePanes().get(i).getAlleleAssocs(), user)) {
-					modified = true;
-				}
-			}
 		}
 
+		// process image pane/allele associations 
+		// if full size image
+		if (domain.getImageTypeKey().equals(fullSizeImageKey)) {
+			// use the first image pane only (image entity does the ordering)
+			if (imagePaneAssocService.process(domain.getImagePanes().get(0).getImagePaneKey(), domain.getImagePanes().get(0).getPaneAssocs(), user)) {
+				modified = true;
+			}
+		}
+		
 		// process editable accession ids (ex. PIX:)
 		if (domain.getEditAccessionIds() != null && !domain.getEditAccessionIds().isEmpty()) {
 			if (accessionService.process(domain.getImageKey(), domain.getEditAccessionIds(), mgiTypeName, user)) {

@@ -32,12 +32,11 @@ public class ImagePaneTranslator extends BaseEntityDomainTranslator<ImagePane, I
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
-		// one-to-many allele associations
-		if (entity.getAlleleAssocs() != null && !entity.getAlleleAssocs().isEmpty()) {
-			Iterable<ImagePaneAssocDomain> i = assocTranslator.translateEntities(entity.getAlleleAssocs());
-			domain.setAlleleAssocs(IteratorUtils.toList(i.iterator()));
-			domain.getAlleleAssocs().get(0).getAlleles().sort(Comparator.comparing(SlimAlleleImageDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
-			//domain.getAlleleAssocs().forEach(action);
+		// one-to-many associations
+		if (entity.getPaneAssocs() != null && !entity.getPaneAssocs().isEmpty()) {
+			Iterable<ImagePaneAssocDomain> i = assocTranslator.translateEntities(entity.getPaneAssocs());
+			domain.setPaneAssocs(IteratorUtils.toList(i.iterator()));
+			domain.getPaneAssocs().get(0).getAlleles().sort(Comparator.comparing(SlimAlleleImageDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}
 			
 		return domain;

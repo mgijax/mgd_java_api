@@ -11,6 +11,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
@@ -30,7 +31,8 @@ import lombok.Setter;
 public class Genotype extends BaseEntity {
 
 	@Id
-	private Integer _genotype_key;
+	private int _genotype_key;
+	
 	private Integer isConditional;
 	private String note;
 	private Date creation_date;
@@ -52,16 +54,13 @@ public class Genotype extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_genotype_key", referencedColumnName="_object_key")
-	@Where(clause="`_mgitype_key` = 12 AND preferred = 1 AND `_logicaldb_key` = 1")
-	private Accession mgiAccessionId;
+	// mgi accession ids only
+	@OneToMany
+	@JoinColumn(name="_object_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 12 and `_logicaldb_key` = 1")
+	@OrderBy(clause="preferred desc, accID")
+	private List<Accession> mgiAccessionIds;
 
-	@OneToMany()
-	@JoinColumn(name="_object_key", referencedColumnName="_genotype_key")
-	@Where(clause="`_mgitype_key` = 12 AND preferred = 1")
-	private List<Accession> allAccessionIds;
-	
 	@OneToMany()
 	@JoinColumn(name="_genotype_key")
 	private List<ProbeStrainGenotype> probeStrainGenotypes;

@@ -18,6 +18,7 @@ import org.hibernate.annotations.Filter;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
+import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
 import io.swagger.annotations.ApiModel;
@@ -37,8 +38,8 @@ public class ImagePaneAssoc extends BaseEntity {
 	@ApiModelProperty(value="primary key")
 	private int _assoc_key;
 
-	private int _object_key;
-	private String isPrimary;
+	private Integer _object_key;
+	private Integer isPrimary;
 	private Date creation_date;
 	private Date modification_date;
 
@@ -64,4 +65,10 @@ public class ImagePaneAssoc extends BaseEntity {
 	@Filter(name="_object_key", condition="`_mgitype_key` = 11")
 	private List<Allele> alleles;	
 
+	// filter the entity by _mgitype_key = 12 (genotypes) only
+	@OneToMany()
+	@JoinColumn(name="_genotype_key", referencedColumnName="_object_key", insertable=false, updatable=false)
+	@Filter(name="_object_key", condition="`_mgitype_key` = 12")
+	private List<Genotype> genotypes;	
+	
 }

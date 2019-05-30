@@ -103,7 +103,7 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 	
 	@Transactional
 	public Boolean process(String parentKey, List<ImagePaneAssocDomain> domain, User user) {
-		// process image pane (create, delete, update)
+		// process image pane associations (create, delete, update)
 		
 		Boolean modified = false;
 		
@@ -124,9 +124,11 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 				ImagePaneAssoc entity = new ImagePaneAssoc();	
 				entity.setImagePane(imagePaneDAO.get(Integer.valueOf(parentKey)));				
 				entity.setMgiType(mgiTypeDAO.get(Integer.valueOf(domain.get(i).getMgiTypeKey())));
-				entity.set_object_key(Integer.valueOf(get(i).getObjectKey()));
-				entity.setIsPrimary(domain.get(i).getIsPrimary());
+				entity.set_object_key(Integer.valueOf(domain.get(i).getObjectKey()));
+				entity.setIsPrimary(Integer.valueOf(domain.get(i).getIsPrimary()));
+				entity.setCreatedBy(user);
 				entity.setCreation_date(new Date());
+				entity.setModifiedBy(user);
 				entity.setModification_date(new Date());
 				imagePaneAssocDAO.persist(entity);
 				modified = true;
@@ -143,14 +145,15 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 				Boolean isUpdated = false;
 				ImagePaneAssoc entity = imagePaneAssocDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
 								
-				if (!entity.getIsPrimary().equals(domain.get(i).getIsPrimary())) {
-					entity.setIsPrimary(domain.get(i).getIsPrimary());
+				if (!(String.valueOf(entity.getIsPrimary()).equals(domain.get(i).getIsPrimary()))) {
+					entity.setIsPrimary(Integer.valueOf(domain.get(i).getIsPrimary()));
 					isUpdated = true;
 				}
 				
 				if (isUpdated) {
 					log.info("processImagePaneAssoc modified == true");
-					entity.setModification_date(new Date());
+					entity.setModifiedBy(user);
+					entity.setModification_date(new Date());					
 					imagePaneAssocDAO.update(entity);
 					modified = true;
 					log.info("processImagePaneAssoc/changes processed: " + domain.get(i).getAssocKey());

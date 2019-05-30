@@ -14,7 +14,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Filter;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
@@ -59,16 +58,16 @@ public class ImagePaneAssoc extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
-	// filter the entity by _mgitype_key = 11 (alleles) only
+	// does this pane association contain an allele or a genotype?
+	// see ImagePaneAssocTranslator; translator will decide
+	// else, will need to write some sort of @Transiant method
+	
 	@OneToMany()
 	@JoinColumn(name="_allele_key", referencedColumnName="_object_key", insertable=false, updatable=false)
-	@Filter(name="_object_key", condition="`_mgitype_key` = 11")
 	private List<Allele> alleles;	
 
-	// filter the entity by _mgitype_key = 12 (genotypes) only
 	@OneToMany()
 	@JoinColumn(name="_genotype_key", referencedColumnName="_object_key", insertable=false, updatable=false)
-	@Filter(name="_object_key", condition="`_mgitype_key` = 12")
 	private List<Genotype> genotypes;	
 	
 }

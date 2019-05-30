@@ -118,7 +118,7 @@ public class ImageService extends BaseService<ImageDomain> {
 		// process image pane
 		imagePaneService.process(String.valueOf(entity.get_image_key()), domain.getImagePanes(), user);
 			
-		// process image pane/allele associations
+		// process image pane associations
 		for (int i = 0; i < domain.getImagePanes().size(); i++) {
 			imagePaneAssocService.process(domain.getImagePanes().get(i).getImagePaneKey(), domain.getImagePanes().get(i).getPaneAssocs(), user);
 		}
@@ -177,7 +177,7 @@ public class ImageService extends BaseService<ImageDomain> {
 			modified = true;
 		}
 
-		// process image pane/allele associations 
+		// process image pane associations 
 		// if full size image
 		if (domain.getImageTypeKey().equals(fullSizeImageKey)) {
 			// use the first image pane only (image entity does the ordering)

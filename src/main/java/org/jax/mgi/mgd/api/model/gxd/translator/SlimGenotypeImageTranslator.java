@@ -17,6 +17,9 @@ public class SlimGenotypeImageTranslator extends BaseEntityDomainTranslator<Geno
 		SlimGenotypeImageDomain domain = new SlimGenotypeImageDomain();
 		
 		domain.setGenotypeKey(String.valueOf(entity.get_genotype_key()));
+		
+		// see teleuse/EI/Genotype results
+		// use combination of Genotype fields to produce the GenotypeDisplay
 		//domain.setGenotypeDisplay(entity.getGenotypeDisplay());
 		
 		// mgi accession ids only

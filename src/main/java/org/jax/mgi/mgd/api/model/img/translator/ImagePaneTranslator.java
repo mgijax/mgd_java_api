@@ -1,10 +1,7 @@
 package org.jax.mgi.mgd.api.model.img.translator;
 
-import java.util.Comparator;
-
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleImageDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.entities.ImagePane;
@@ -29,15 +26,15 @@ public class ImagePaneTranslator extends BaseEntityDomainTranslator<ImagePane, I
 		if (entity.getX() != null) {
 			domain.setX(String.valueOf(entity.getX()));
 		}
-		
-		if (entity.getWidth() != null) {
-			domain.setWidth(String.valueOf(entity.getWidth()));
-		}
 				
 		if (entity.getY() != null) {
 			domain.setY(String.valueOf(entity.getY()));
 		}
-		
+
+		if (entity.getWidth() != null) {
+			domain.setWidth(String.valueOf(entity.getWidth()));
+		}
+				
 		if (entity.getHeight() != null) {
 			domain.setHeight(String.valueOf(entity.getHeight()));
 		}
@@ -49,7 +46,6 @@ public class ImagePaneTranslator extends BaseEntityDomainTranslator<ImagePane, I
 		if (entity.getPaneAssocs() != null && !entity.getPaneAssocs().isEmpty()) {
 			Iterable<ImagePaneAssocDomain> i = assocTranslator.translateEntities(entity.getPaneAssocs());
 			domain.setPaneAssocs(IteratorUtils.toList(i.iterator()));
-			domain.getPaneAssocs().get(0).getAlleles().sort(Comparator.comparing(SlimAlleleImageDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}
 			
 		return domain;

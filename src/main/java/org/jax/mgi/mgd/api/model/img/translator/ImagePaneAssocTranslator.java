@@ -38,16 +38,28 @@ public class ImagePaneAssocTranslator extends BaseEntityDomainTranslator<ImagePa
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
 		// one-to-many allele associations w/ allele info
-		if (entity.getAlleles() != null && !entity.getAlleles().isEmpty()
-				&& entity.getMgiType().get_mgitype_key() == 11) {
+		//if (entity.getAlleles() != null && !entity.getAlleles().isEmpty()
+		//		&& entity.getMgiType().get_mgitype_key() == 11) {
+		//	Iterable<SlimAlleleImageDomain> i = alleleTranslator.translateEntities(entity.getAlleles());
+		//	domain.setAlleles(IteratorUtils.toList(i.iterator()));
+		//	domain.getAlleles().sort(Comparator.comparing(SlimAlleleImageDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
+		//}
+		
+		if (entity.getAlleles() != null && !entity.getAlleles().isEmpty()) {
 			Iterable<SlimAlleleImageDomain> i = alleleTranslator.translateEntities(entity.getAlleles());
 			domain.setAlleles(IteratorUtils.toList(i.iterator()));
-			domain.getAlleles().sort(Comparator.comparing(SlimAlleleImageDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
+			domain.getAlleles().sort(Comparator.comparing(SlimAlleleImageDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));			
 		}
 		
 		// one-to-many genotype associations w/ genotype info
-		if (entity.getGenotypes() != null && !entity.getGenotypes().isEmpty()
-				&& entity.getMgiType().get_mgitype_key() == 12) {
+		//if (entity.getGenotypes() != null && !entity.getGenotypes().isEmpty()
+		//		&& entity.getMgiType().get_mgitype_key() == 12) {
+		//	Iterable<SlimGenotypeImageDomain> i = genotypeTranslator.translateEntities(entity.getGenotypes());
+		//	domain.setGenotypes(IteratorUtils.toList(i.iterator()));
+			//domain.getGenotypes().sort(Comparator.comparing(SlimAlleleImageDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
+		//}
+
+		if (entity.getGenotypes() != null && !entity.getGenotypes().isEmpty()) {
 			Iterable<SlimGenotypeImageDomain> i = genotypeTranslator.translateEntities(entity.getGenotypes());
 			domain.setGenotypes(IteratorUtils.toList(i.iterator()));
 			//domain.getGenotypes().sort(Comparator.comparing(SlimAlleleImageDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));

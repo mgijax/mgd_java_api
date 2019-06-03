@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.img.entities;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
@@ -60,14 +62,40 @@ public class ImagePaneAssoc extends BaseEntity {
 
 	// does this pane association contain an allele or a genotype?
 	// see ImagePaneAssocTranslator; translator will decide
-	// else, will need to write some sort of @Transiant method
+	// else, will need to write some sort of @Transient method
 	
 	@OneToMany()
 	@JoinColumn(name="_allele_key", referencedColumnName="_object_key", insertable=false, updatable=false)
-	private List<Allele> alleles;	
+	private List<Allele> allAlleles;	
 
 	@OneToMany()
 	@JoinColumn(name="_genotype_key", referencedColumnName="_object_key", insertable=false, updatable=false)
-	private List<Genotype> genotypes;	
+	private List<Genotype> allGenotypes;	
+	
+	@Transient
+	public List<Allele> getAlleles() {
+		List<Allele> alleles1 = new ArrayList<Allele>();
+
+		if (mgiType.get_mgitype_key() == 11) {
+			for (int i = 0; i < allAlleles.size(); i++) {
+				alleles1.add(allAlleles.get(i));
+			}
+		}
+		
+		return alleles1;
+	}
+	
+	@Transient
+	public List<Genotype> getGenotypes() {
+		List<Genotype> genotypes1 = new ArrayList<Genotype>();
+
+		if (mgiType.get_mgitype_key() == 12) {
+			for (int i = 0; i < allGenotypes.size(); i++) {
+				genotypes1.add(allGenotypes.get(i));
+			}
+		}
+		
+		return genotypes1;
+	}
 	
 }

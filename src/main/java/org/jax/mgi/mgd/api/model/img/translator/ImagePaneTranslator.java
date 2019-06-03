@@ -25,10 +25,23 @@ public class ImagePaneTranslator extends BaseEntityDomainTranslator<ImagePane, I
 		domain.setImagePaneKey(String.valueOf(entity.get_imagepane_key()));
 		domain.setImageKey(String.valueOf(entity.get_image_key()));
 		domain.setPaneLabel(entity.getPaneLabel());
-		domain.setX(String.valueOf(entity.getX()));
-		domain.setY(String.valueOf(entity.getY()));
-		domain.setWidth(String.valueOf(entity.getWidth()));
-		domain.setHeight(String.valueOf(entity.getHeight()));
+		
+		if (entity.getX() != null) {
+			domain.setX(String.valueOf(entity.getX()));
+		}
+		
+		if (entity.getWidth() != null) {
+			domain.setWidth(String.valueOf(entity.getWidth()));
+		}
+				
+		if (entity.getY() != null) {
+			domain.setY(String.valueOf(entity.getY()));
+		}
+		
+		if (entity.getHeight() != null) {
+			domain.setHeight(String.valueOf(entity.getHeight()));
+		}
+		
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 

@@ -16,7 +16,9 @@ import org.jax.mgi.mgd.api.util.Constants;
 public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReference, LTReferenceDomain>{
 	@Override
 	protected LTReferenceDomain entityToDomain(LTReference entity) {
+		
 		if (entity == null) { return null; }
+		
 		LTReferenceDomain domain = new LTReferenceDomain();
 
 		// basic 1-for-1 fields
@@ -53,6 +55,7 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		domain.qtl_status = entity.getStatus(Constants.WG_QTL);
 		domain.tumor_status = entity.getStatus(Constants.WG_TUMOR);
 		domain.workflow_tags = entity.getWorkflowTagsAsStrings();
+		
 		domain.creation_date = dateFormatter.format(entity.getCreation_date());
 		domain.modification_date = dateFormatter.format(entity.getModification_date());
 		domain.created_by = entity.getCreatedByUser().getLogin();

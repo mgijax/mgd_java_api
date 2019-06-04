@@ -310,13 +310,14 @@ public class ImageService extends BaseService<ImageDomain> {
 			where = where + "\nand i.yDim = " + searchDomain.getYDim();
 		}			
 		if (searchDomain.getFigureLabel() != null && !searchDomain.getFigureLabel().isEmpty()) {
-			where = where + "\nand i.figureLabel ilike '" + searchDomain.getFigureLabel() + "'";
+			value = searchDomain.getFigureLabel().replaceAll("'",  "''");
+			where = where + "\nand i.figureLabel ilike '" + value + "'";
 		}
 		if (searchDomain.getImagePanes() != null) {
 			if (searchDomain.getImagePanes().get(0).getPaneLabel() != null
 				&& !searchDomain.getImagePanes().get(0).getPaneLabel().isEmpty()) {
-			log.info("search 3");	
-			where = where + "\nand p.paneLabel ilike '" + searchDomain.getImagePanes().get(0).getPaneLabel() + "'";
+			value = searchDomain.getImagePanes().get(0).getPaneLabel().replaceAll("'",  "''");
+			where = where + "\nand p.paneLabel ilike '" + value + "'";
 			from_imagepane = true;
 			}
 		}

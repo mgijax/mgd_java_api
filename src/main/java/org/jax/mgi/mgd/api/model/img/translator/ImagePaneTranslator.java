@@ -12,8 +12,6 @@ public class ImagePaneTranslator extends BaseEntityDomainTranslator<ImagePane, I
 
 	protected Logger log = Logger.getLogger(getClass());
 	
-	private ImagePaneAssocTranslator assocTranslator = new ImagePaneAssocTranslator();
-
 	@Override
 	protected ImagePaneDomain entityToDomain(ImagePane entity) {
 		ImagePaneDomain domain = new ImagePaneDomain();
@@ -44,6 +42,7 @@ public class ImagePaneTranslator extends BaseEntityDomainTranslator<ImagePane, I
 
 		// one-to-many associations
 		if (entity.getPaneAssocs() != null && !entity.getPaneAssocs().isEmpty()) {
+			ImagePaneAssocTranslator assocTranslator = new ImagePaneAssocTranslator();
 			Iterable<ImagePaneAssocDomain> i = assocTranslator.translateEntities(entity.getPaneAssocs());
 			domain.setPaneAssocs(IteratorUtils.toList(i.iterator()));
 		}

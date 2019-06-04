@@ -64,13 +64,13 @@ public class ImageTranslator extends BaseEntityDomainTranslator<Image, ImageDoma
 		// at most one privateCuratorialNote
 		if (entity.getPrivateCuratorialNote() != null && !entity.getPrivateCuratorialNote().isEmpty()) {
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getPrivateCuratorialNote());
-			domain.setCopyrightNote(note.iterator().next());
+			domain.setPrivateCuratorialNote(note.iterator().next());
 		}
 		
 		// at most one externalLinkNote
 		if (entity.getExternalLinkNote() != null && !entity.getExternalLinkNote().isEmpty()) {
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getExternalLinkNote());
-			domain.setCopyrightNote(note.iterator().next());
+			domain.setExternalLinkNote(note.iterator().next());
 		}
 				
 		// mgi accession ids only

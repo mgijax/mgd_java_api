@@ -8,7 +8,10 @@ import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBookDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceNoteDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
 import org.jboss.logging.Logger;
 
 public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, ReferenceDomain> {
@@ -17,7 +20,8 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 	
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	private ReferenceBookTranslator bookTranslator = new ReferenceBookTranslator();
-	
+	private ReferenceNoteTranslator noteTranslator = new ReferenceNoteTranslator();
+
 	@Override
 	protected ReferenceDomain entityToDomain(Reference entity) {
 
@@ -28,18 +32,18 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		domain.setAuthors(entity.getAuthors());
 		domain.setTitle(entity.getTitle());
 		domain.setJournal(entity.getJournal());
-		domain.setVolume(entity.getVol());
+		domain.setVol(entity.getVol());
 		domain.setIssue(entity.getIssue());
 		domain.setDate(entity.getDate());
 		domain.setYear(String.valueOf(entity.getYear()));
-		domain.setPages(entity.getPgs());
+		domain.setPgs(entity.getPgs());
 		domain.setReferenceAbstract(entity.getReferenceAbstract());
 		domain.setDate(entity.getDate());
 		domain.setIsReviewArticle(String.valueOf(entity.getIsReviewArticle()));
 		domain.setIsDiscard(String.valueOf(entity.getIsDiscard()));
 		domain.setReferenceTypeKey(String.valueOf(entity.getReferenceType().get_term_key()));
 		domain.setReferenceType(entity.getReferenceType().getTerm());
-		domain.setJnumID(entity.getReferenceCitationCache().getJnumid());
+		domain.setJnumid(entity.getReferenceCitationCache().getJnumid());
 		domain.setJnum(String.valueOf(entity.getReferenceCitationCache().getNumericPart()));		
 		domain.setShort_citation(entity.getReferenceCitationCache().getShort_citation());
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
@@ -52,7 +56,13 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		// reference book
 		if (entity.getReferenceBook() != null && !entity.getReferenceBook().isEmpty()) {
 			Iterable<ReferenceBookDomain> book = bookTranslator.translateEntities(entity.getReferenceBook());
-			domain.setReferenceBook(IteratorUtils.toList(book.iterator()));		
+			domain.setReferenceBook(book.iterator().next());		
+		}
+		
+		// reference note
+		if (entity.getReferenceNote() != null && !entity.getReferenceNote().isEmpty()) {
+			Iterable<ReferenceNoteDomain> note = noteTranslator.translateEntities(entity.getReferenceNote());
+			domain.setReferenceNote(note.iterator().next());
 		}
 		
 		// mgi accession ids only
@@ -67,7 +77,14 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 			domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
 			domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
-				
+	
+		// one-to-many associations
+		if (entity.getRefAssocs() != null && !entity.getRefAssocs().isEmpty()) {
+			MGIReferenceAssocTranslator assocTranslator = new MGIReferenceAssocTranslator();
+			Iterable<MGIReferenceAssocDomain> i = assocTranslator.translateEntities(entity.getRefAssocs());
+			domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
+		}
+		
 		return domain;
 	}
 

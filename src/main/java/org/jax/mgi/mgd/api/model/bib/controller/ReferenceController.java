@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.bib.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -50,6 +51,22 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	public SearchResults<ReferenceDomain> delete(Integer key, User user) {
 		return referenceService.delete(key, user);
 	}
+
+	@POST
+	@ApiOperation(value = "Search/returns slim reference domain")
+	@Path("/search")
+	public List<SlimReferenceDomain> search(ReferenceDomain searchDomain) {
+	
+		List<SlimReferenceDomain> results = new ArrayList<SlimReferenceDomain>();
+
+		try {
+			results = referenceService.search(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
 	@GET
 	@ApiOperation(value = "Validate reference by J:/returns slim reference domain")
@@ -62,10 +79,10 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Validate reference & copyright")
-	@Path("/validateJnumCopyright")
-	public List<SlimReferenceDomain> validateJnumCopyright(SlimReferenceDomain domain) {
-		return referenceService.validateJnumCopyright(domain);
+	@ApiOperation(value = "Validate reference, copyright, creative commons")
+	@Path("/validateJnumImage")
+	public List<SlimReferenceDomain> validateJnumImage(SlimReferenceDomain domain) {
+		return referenceService.validateJnumImage(domain);
 	}
 
 }

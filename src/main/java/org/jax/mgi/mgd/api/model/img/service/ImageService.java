@@ -276,7 +276,7 @@ public class ImageService extends BaseService<ImageDomain> {
 		String 	orderBy = "order by i.jnum, i.figureLabel, i.imageType";			
 		String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
-		
+	
 		Boolean from_imagepane = false;		
 		Boolean from_captionNote = false;
 		Boolean from_copyrightNote = false;
@@ -317,6 +317,7 @@ public class ImageService extends BaseService<ImageDomain> {
 			if (searchDomain.getImagePanes().get(0).getPaneLabel() != null
 				&& !searchDomain.getImagePanes().get(0).getPaneLabel().isEmpty()) {
 			value = searchDomain.getImagePanes().get(0).getPaneLabel().replaceAll("'",  "''");
+			value = value.replaceAll("_",  "\\\\_");
 			where = where + "\nand p.paneLabel ilike '" + value + "'";
 			from_imagepane = true;
 			}

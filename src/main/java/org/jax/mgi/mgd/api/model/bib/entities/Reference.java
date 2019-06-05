@@ -16,6 +16,7 @@ import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
+import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
@@ -71,6 +72,11 @@ public class Reference extends BaseEntity {
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	private List<ReferenceBook> referenceBook;
 	
+	// at most one book note
+	@OneToMany()
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+	private List<ReferenceNote> referenceNote;
+		
 	// mgi accession ids only
 	@OneToMany()	
 	@JoinColumn(name="_object_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
@@ -85,4 +91,10 @@ public class Reference extends BaseEntity {
 	@OrderBy(clause ="accid")
 	private List<Accession> editAccessionIds;
 
+	// reference associations : alleles (11), markers (2), strains (10)
+	@OneToMany()
+	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
+	@OrderBy(clause ="_refassoctype_key")
+	private List<MGIReferenceAssoc> refAssocs;
+	
 }

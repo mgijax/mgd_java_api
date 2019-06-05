@@ -13,11 +13,13 @@ public class SlimReferenceDomain extends BaseDomain {
 	// to be used for returning search results
 	
 	private String refsKey;
-	private String jnumID;
+	private String jnumid;
 	private String jnum;
 	private String short_citation;
-	
-	// used by validateJnumCopyright
+	private String journal;
+
+	// used by validateJnumImage
 	private String copyright;
 	private Boolean needsDXDOIid = false;
+	private Boolean isCreativeCommons = false;
 }

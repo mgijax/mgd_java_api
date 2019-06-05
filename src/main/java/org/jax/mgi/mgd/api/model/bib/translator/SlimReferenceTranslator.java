@@ -12,14 +12,16 @@ public class SlimReferenceTranslator extends BaseEntityDomainTranslator<Referenc
 		SlimReferenceDomain domain = new SlimReferenceDomain();
 		
 		domain.setRefsKey(String.valueOf(entity.get_refs_key()));
-		domain.setJnumID(entity.getReferenceCitationCache().getJnumid());
+		domain.setJnumid(entity.getReferenceCitationCache().getJnumid());
 		domain.setJnum(String.valueOf(entity.getReferenceCitationCache().getNumericPart()));	
 		domain.setShort_citation(entity.getReferenceCitationCache().getShort_citation());
-		
-		// used by validateJnumCopyright
+		domain.setJournal(entity.getJournal());
+
+		// used by validateJnumImage
 		domain.setCopyright("");
 		domain.setNeedsDXDOIid(false);
-		
+		domain.setIsCreativeCommons(false);
+
 		return domain;
 	}
 

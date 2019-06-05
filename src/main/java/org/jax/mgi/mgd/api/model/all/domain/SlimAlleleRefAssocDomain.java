@@ -9,8 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class SlimAlleleImageDomain extends BaseDomain {
-	// used by ImagePaneAssocDomain to help display basic allele info
+public class SlimAlleleRefAssocDomain extends BaseDomain {
+	// used to help display basic allele info for handling MGI_Reference_Assoc
 	
 	private String alleleKey;
 	private String symbol;

@@ -21,6 +21,7 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	private ReferenceBookTranslator bookTranslator = new ReferenceBookTranslator();
 	private ReferenceNoteTranslator noteTranslator = new ReferenceNoteTranslator();
+	private MGIReferenceAssocTranslator assocTranslator = new MGIReferenceAssocTranslator();
 
 	@Override
 	protected ReferenceDomain entityToDomain(Reference entity) {
@@ -80,7 +81,6 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 	
 		// one-to-many associations
 		if (entity.getRefAssocs() != null && !entity.getRefAssocs().isEmpty()) {
-			MGIReferenceAssocTranslator assocTranslator = new MGIReferenceAssocTranslator();
 			Iterable<MGIReferenceAssocDomain> i = assocTranslator.translateEntities(entity.getRefAssocs());
 			domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
 		}

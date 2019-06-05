@@ -4,8 +4,8 @@ import java.util.Comparator;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleImageDomain;
-import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleImageTranslator;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleRefAssocDomain;
+import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleRefAssocTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeImageDomain;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimGenotypeImageTranslator;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocDomain;
@@ -37,10 +37,10 @@ public class ImagePaneAssocTranslator extends BaseEntityDomainTranslator<ImagePa
 		// one-to-many allele associations w/ allele info
 		if (entity.getAlleles() != null && !entity.getAlleles().isEmpty()
 				&& entity.getMgiType().get_mgitype_key() == 11) {
-			SlimAlleleImageTranslator alleleTranslator = new SlimAlleleImageTranslator();
-			Iterable<SlimAlleleImageDomain> i = alleleTranslator.translateEntities(entity.getAlleles());
+			SlimAlleleRefAssocTranslator alleleTranslator = new SlimAlleleRefAssocTranslator();
+			Iterable<SlimAlleleRefAssocDomain> i = alleleTranslator.translateEntities(entity.getAlleles());
 			domain.setAlleles(IteratorUtils.toList(i.iterator()));
-			domain.getAlleles().sort(Comparator.comparing(SlimAlleleImageDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
+			domain.getAlleles().sort(Comparator.comparing(SlimAlleleRefAssocDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}
 		
 		// one-to-many genotype associations w/ genotype info
@@ -49,7 +49,7 @@ public class ImagePaneAssocTranslator extends BaseEntityDomainTranslator<ImagePa
 			SlimGenotypeImageTranslator genotypeTranslator = new SlimGenotypeImageTranslator();
 			Iterable<SlimGenotypeImageDomain> i = genotypeTranslator.translateEntities(entity.getGenotypes());
 			domain.setGenotypes(IteratorUtils.toList(i.iterator()));
-			//domain.getGenotypes().sort(Comparator.comparing(SlimAlleleImageDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
+			//domain.getGenotypes().sort(Comparator.comparing(SlimAlleleRefAssocDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}
 		
 		return domain;

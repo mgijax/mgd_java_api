@@ -4,17 +4,17 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.SlimAccessionTranslator;
-import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleImageDomain;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleRefAssocDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
 
-public class SlimAlleleImageTranslator extends BaseEntityDomainTranslator<Allele, SlimAlleleImageDomain> {
+public class SlimAlleleRefAssocTranslator extends BaseEntityDomainTranslator<Allele, SlimAlleleRefAssocDomain> {
 
 	private SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
 	
 	@Override
-	protected SlimAlleleImageDomain entityToDomain(Allele entity) {
+	protected SlimAlleleRefAssocDomain entityToDomain(Allele entity) {
 		
-		SlimAlleleImageDomain domain = new SlimAlleleImageDomain();
+		SlimAlleleRefAssocDomain domain = new SlimAlleleRefAssocDomain();
 		
 		domain.setAlleleKey(String.valueOf(entity.get_allele_key()));
 		domain.setSymbol(entity.getSymbol());

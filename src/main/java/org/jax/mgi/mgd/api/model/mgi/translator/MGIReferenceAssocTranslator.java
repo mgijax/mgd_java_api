@@ -10,6 +10,8 @@ import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.translator.SlimMarkerTranslator;
+import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeStrainDomain;
+import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeStrainTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 
 import lombok.Getter;
@@ -58,6 +60,15 @@ public class MGIReferenceAssocTranslator extends BaseEntityDomainTranslator<MGIR
 			Iterable<SlimMarkerDomain> i = markerTranslator.translateEntities(entity.getMarkers());
 			domain.setMarkers(IteratorUtils.toList(i.iterator()));
 			domain.getMarkers().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
+		}
+		
+		// one-to-many reference associations w/ strain info
+		if (entity.getStrains() != null && !entity.getStrains().isEmpty()
+				&& entity.getMgiType().get_mgitype_key() == 10) {
+			SlimProbeStrainTranslator strainTranslator = new SlimProbeStrainTranslator();
+			Iterable<SlimProbeStrainDomain> i = strainTranslator.translateEntities(entity.getStrains());
+			domain.setStrains(IteratorUtils.toList(i.iterator()));
+			domain.getStrains().sort(Comparator.comparing(SlimProbeStrainDomain::getStrain, String.CASE_INSENSITIVE_ORDER));
 		}
 				
 		return domain;

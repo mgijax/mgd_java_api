@@ -19,6 +19,7 @@ import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -68,5 +69,9 @@ public class MGIReferenceAssoc extends BaseEntity {
 	@OneToMany()
 	@JoinColumn(name="_marker_key", referencedColumnName="_object_key", insertable=false, updatable=false)
 	private List<Marker> markers;
-		
+	
+	@OneToMany()
+	@JoinColumn(name="_strain_key", referencedColumnName="_object_key", insertable=false, updatable=false)
+	private List<ProbeStrain> strains;
+	
 }

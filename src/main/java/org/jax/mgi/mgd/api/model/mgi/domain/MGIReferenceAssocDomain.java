@@ -5,6 +5,7 @@ import java.util.List;
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleRefAssocDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeStrainDomain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -31,5 +32,6 @@ public class MGIReferenceAssocDomain extends BaseDomain {
 	
 	private List<SlimAlleleRefAssocDomain> alleles;
 	private List<SlimMarkerDomain> markers;
+	private List<SlimProbeStrainDomain> strains;
 
 }   	

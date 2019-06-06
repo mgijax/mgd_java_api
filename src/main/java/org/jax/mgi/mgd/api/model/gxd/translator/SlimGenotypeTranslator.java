@@ -4,17 +4,17 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.SlimAccessionTranslator;
-import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeImageDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
 
-public class SlimGenotypeImageTranslator extends BaseEntityDomainTranslator<Genotype, SlimGenotypeImageDomain> {
+public class SlimGenotypeTranslator extends BaseEntityDomainTranslator<Genotype, SlimGenotypeDomain> {
 
 	private SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
 	
 	@Override
-	protected SlimGenotypeImageDomain entityToDomain(Genotype entity) {
+	protected SlimGenotypeDomain entityToDomain(Genotype entity) {
 		
-		SlimGenotypeImageDomain domain = new SlimGenotypeImageDomain();
+		SlimGenotypeDomain domain = new SlimGenotypeDomain();
 		
 		domain.setGenotypeKey(String.valueOf(entity.get_genotype_key()));
 		

@@ -42,6 +42,7 @@ public class Genotype extends BaseEntity {
 	@JoinColumn(name="_strain_key")
 	private ProbeStrain strain;
 	
+	// _vocab_key = 60, "Genotype Exists As" vocabulary
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_existsas_key", referencedColumnName="_term_key")
 	private Term existsAs;

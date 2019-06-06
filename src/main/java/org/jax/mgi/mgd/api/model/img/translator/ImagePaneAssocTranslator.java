@@ -6,8 +6,8 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleRefAssocDomain;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleRefAssocTranslator;
-import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeImageDomain;
-import org.jax.mgi.mgd.api.model.gxd.translator.SlimGenotypeImageTranslator;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
+import org.jax.mgi.mgd.api.model.gxd.translator.SlimGenotypeTranslator;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocDomain;
 import org.jax.mgi.mgd.api.model.img.entities.ImagePaneAssoc;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -46,8 +46,8 @@ public class ImagePaneAssocTranslator extends BaseEntityDomainTranslator<ImagePa
 		// one-to-many genotype associations w/ genotype info
 		if (entity.getGenotypes() != null && !entity.getGenotypes().isEmpty()
 				&& entity.getMgiType().get_mgitype_key() == 12) {
-			SlimGenotypeImageTranslator genotypeTranslator = new SlimGenotypeImageTranslator();
-			Iterable<SlimGenotypeImageDomain> i = genotypeTranslator.translateEntities(entity.getGenotypes());
+			SlimGenotypeTranslator genotypeTranslator = new SlimGenotypeTranslator();
+			Iterable<SlimGenotypeDomain> i = genotypeTranslator.translateEntities(entity.getGenotypes());
 			domain.setGenotypes(IteratorUtils.toList(i.iterator()));
 			//domain.getGenotypes().sort(Comparator.comparing(SlimAlleleRefAssocDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}

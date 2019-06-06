@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @Path("/reference")
-@Api(value = "Reference Endpoints", description="This is the description")
+@Api(value = "Reference Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ReferenceController extends BaseController<ReferenceDomain> {

@@ -23,6 +23,7 @@ import lombok.Setter;
 @Table(name="prb_strain_genotype")
 
 public class ProbeStrainGenotype extends BaseEntity{
+	
 	@Id
 	private int _straingenotype_key;
 	private Date creation_date;

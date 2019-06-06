@@ -27,7 +27,7 @@ import lombok.Setter;
 public class AllelePair extends BaseEntity {
 
 	@Id
-	private Integer _allelepair_key;
+	private int _allelepair_key;
 	private Integer sequenceNum;
 	private Date creation_date;
 	private Date modification_date;
@@ -59,7 +59,7 @@ public class AllelePair extends BaseEntity {
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_pairstate_key", referencedColumnName="_term_key")
 	private Term pairState;
-
+	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_compound_key", referencedColumnName="_term_key")
 	private Term compound;

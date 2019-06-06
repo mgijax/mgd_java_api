@@ -10,14 +10,12 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
 import org.jax.mgi.mgd.api.model.gxd.translator.GenotypeTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -31,16 +29,11 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 
 	@Inject
 	private GenotypeDAO genotypeDAO;
-	@Inject
-	private TermDAO termDAO;
 
-	@Inject
-	private AccessionService accessionService;
-	
 	private GenotypeTranslator translator = new GenotypeTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
-	private String mgiTypeKey = "10";
+	private String mgiTypeKey = "12";
 	
 	@Transactional
 	public SearchResults<GenotypeDomain> create(GenotypeDomain domain, User user) {
@@ -75,7 +68,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		SearchResults<GenotypeDomain> results = new SearchResults<GenotypeDomain>();
 		Genotype entity = genotypeDAO.get(Integer.valueOf(domain.getGenotypeKey()));
 		Boolean modified = false;
-		String mgiTypeName = "Genotype";
+		//String mgiTypeName = "Genotype";
 		
 		log.info("processGenotype/update");
 
@@ -166,11 +159,17 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				" inner join all_allele a1 on (ap._allele_key_1 = a1._allele_key)" +
 				" left outer join all_allele a2 on (ap._allele_key_2 = a2._allele_key)" +
 				", mrk_marker m";
-		String where = "where g._strain_key = ps._strain_key";
+		String where = "where g._strain_key = ps._strain_key" +
+				"\nand g._genotype_key = ap._genotype_key" +
+				"\nand ap._marker_key = m._marker_key";
 		String 	orderBy = "order by strain, symbol nulls first";			
 		String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
-	
+		
+		//Boolean from_allelepair = false;
+		Boolean from_alleleDetailNote = false;
+		Boolean from_generalNote = false;
+		Boolean from_privateCuratorialNote = false;		
 		Boolean from_accession = false;
 		
 		// if parameter exists, then add to where-clause
@@ -184,7 +183,34 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		if (searchDomain.getGenotypeKey() != null && !searchDomain.getGenotypeKey().isEmpty()) {
 			where = where + "\nand g._genotype_key = " + searchDomain.getGenotypeKey();
 		}
-					
+		if (searchDomain.getStrain() != null && !searchDomain.getStrain().isEmpty()) {
+			where = where + "\nand ps.strain ilike '" + searchDomain.getStrain() + "'";
+		}
+		if (searchDomain.getIsConditional() != null && !searchDomain.getIsConditional().isEmpty()) {
+			where = where + "\nand g.isConditional = " + searchDomain.getIsConditional();
+		}
+		if (searchDomain.getExistsAsKey() != null && !searchDomain.getExistsAsKey().isEmpty()) {
+			where = where + "\nand g._ExistsAs_key = " + searchDomain.getExistsAsKey();
+		}
+		
+		// notes
+		if (searchDomain.getAlleleDetailNote() != null && !searchDomain.getAlleleDetailNote().getNoteChunk().isEmpty()) {
+			value = searchDomain.getAlleleDetailNote().getNoteChunk().replaceAll("'",  "''");
+			where = where + "\nand note1._notetype_key = 1016 and note1.note ilike '" + value + "'" ;
+			from_alleleDetailNote = true;
+		}
+		if (searchDomain.getGeneralNote() != null && !searchDomain.getGeneralNote().getNoteChunk().isEmpty() 
+				&& searchDomain.getGeneralNote().getNoteChunk().contains("%")) {
+			value = searchDomain.getGeneralNote().getNoteChunk().replaceAll("'",  "''");
+			where = where + "\nand note2._notetype_key = 1027 and note2.note ilike '" + value + "'" ;
+			from_generalNote = true;
+		}
+		if (searchDomain.getPrivateCuratorialNote() != null && !searchDomain.getPrivateCuratorialNote().getNoteChunk().isEmpty()) {
+			value = searchDomain.getPrivateCuratorialNote().getNoteChunk().replaceAll("'",  "''");
+			where = where + "\nand note3._notetype_key = 1028 and note3.note ilike '" + value + "'" ;
+			from_privateCuratorialNote = true;
+		}
+		
 		// accession id
 		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {
 			String mgiid = searchDomain.getMgiAccessionIds().get(0).getAccID().toUpperCase();
@@ -196,11 +222,23 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		}
 				
 		// use views to match the teleuse implementation
-			
+		
+		if (from_alleleDetailNote == true) {
+			from = from + ", mgi_note_genotype_view note1";
+			where = where + "\nand g._genotype_key = note1._object_key";
+		}
+		if (from_generalNote == true) {
+			from = from + ", mgi_note_genotype_view note2";
+			where = where + "\nand g._genotype_key = note2._object_key";
+		}	
+		if (from_privateCuratorialNote == true) {
+			from = from + ", mgi_note_genotype_view note3";
+			where = where + "\nand g._genotype_key = note3._object_key";
+		}		
 		if (from_accession == true) {
 			from = from + ", gxd_genotype_acc_view a";
 			where = where + "\nand g._genotype_key = a._object_key" 
-					+ "\nand a._mgitype_key = 9";
+					+ "\nand a._mgitype_key = " + mgiTypeKey;
 		}
 		
 		// make this easy to copy/paste for troubleshooting
@@ -213,6 +251,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				SlimGenotypeDomain domain = new SlimGenotypeDomain();
 				domain.setGenotypeKey(rs.getString("_genotype_key"));
 				domain.setGenotypeDisplay(rs.getString("genotypeDisplay"));
+				// domain.setMgiAccessionIds() intentionally not set
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

@@ -34,8 +34,6 @@ public class ImageTranslator extends BaseEntityDomainTranslator<Image, ImageDoma
 		domain.setImageClass(entity.getImageClass().getTerm());
 		domain.setImageTypeKey(String.valueOf(entity.getImageType().get_term_key()));
 		domain.setImageType(entity.getImageType().getTerm());
-		domain.setXDim(String.valueOf(entity.getXDim()));
-		domain.setYDim(String.valueOf(entity.getYDim()));
 		domain.setFigureLabel(entity.getFigureLabel());
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
@@ -44,6 +42,14 @@ public class ImageTranslator extends BaseEntityDomainTranslator<Image, ImageDoma
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
+		if (entity.getXDim() != null) {
+			domain.setXDim(String.valueOf(entity.getXDim()));
+		}
+		
+		if (entity.getYDim() != null) {
+			domain.setYDim(String.valueOf(entity.getYDim()));
+		}
+				
 		// reference
 		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
 		domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());

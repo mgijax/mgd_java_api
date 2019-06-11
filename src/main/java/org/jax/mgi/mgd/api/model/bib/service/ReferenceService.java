@@ -322,7 +322,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			results.get(0).setCopyright(domain.getCopyright());
 		}
 		results.get(0).setNeedsDXDOIid(false);
-		
+		results.get(0).setIsCreativeCommons(false);
+
 		// if results is not null/empty
 		// if reference key is not null/empty
 		// if copyright is not null/empty
@@ -363,26 +364,27 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		log.info("creative commons check");
-		if (results.get(0).getJournal().equals("Acta Biochim Biophys Sin (Shanghai)")
-				|| results.get(0).getJournal().equals("Brain")
-				|| results.get(0).getJournal().equals("Carcinogenesis")
-				|| results.get(0).getJournal().equals("Cardiovasc Res")
-				|| results.get(0).getJournal().equals("Cereb Cortex")
-				|| results.get(0).getJournal().equals("Chem Senses")
-				|| results.get(0).getJournal().equals("Glycobiology")
-				|| results.get(0).getJournal().equals("Hum Mol Genet")
-				|| results.get(0).getJournal().equals("Hum Reprod")
-				|| results.get(0).getJournal().equals("J Gerontol A Biol Sci Med Sci")
-				|| results.get(0).getJournal().equals("Mol Biol Evol")
-				|| results.get(0).getJournal().equals("Toxicol Sci")
-				|| results.get(0).getJournal().equals("EMBO J")				
-				|| results.get(0).getJournal().equals("J Invest Dermatol")				
-				|| results.get(0).getJournal().equals("Mol Psychiatry")				
-				|| results.get(0).getJournal().equals("Cell Cycle")) {
-			results.get(0).setIsCreativeCommons(true);	
-		}
-		else {	  				
-			results.get(0).setIsCreativeCommons(false);
+		if (results != null && !results.isEmpty()) {
+			if (results.get(0).getJournal() != null && !results.get(0).getJournal().isEmpty()) {
+				if (results.get(0).getJournal().equals("Acta Biochim Biophys Sin (Shanghai)")
+						|| results.get(0).getJournal().equals("Brain")
+						|| results.get(0).getJournal().equals("Carcinogenesis")
+						|| results.get(0).getJournal().equals("Cardiovasc Res")
+						|| results.get(0).getJournal().equals("Cereb Cortex")
+						|| results.get(0).getJournal().equals("Chem Senses")
+						|| results.get(0).getJournal().equals("Glycobiology")
+						|| results.get(0).getJournal().equals("Hum Mol Genet")
+						|| results.get(0).getJournal().equals("Hum Reprod")
+						|| results.get(0).getJournal().equals("J Gerontol A Biol Sci Med Sci")
+						|| results.get(0).getJournal().equals("Mol Biol Evol")
+						|| results.get(0).getJournal().equals("Toxicol Sci")
+						|| results.get(0).getJournal().equals("EMBO J")				
+						|| results.get(0).getJournal().equals("J Invest Dermatol")				
+						|| results.get(0).getJournal().equals("Mol Psychiatry")				
+						|| results.get(0).getJournal().equals("Cell Cycle")) {
+					results.get(0).setIsCreativeCommons(true);	
+				}
+			}
 		}
 				
 		return results;

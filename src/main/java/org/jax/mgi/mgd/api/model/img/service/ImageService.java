@@ -283,6 +283,7 @@ public class ImageService extends BaseService<ImageDomain> {
 		Boolean from_privateCuratorialNote = false;
 		Boolean from_externalLinkNote = false;
 		Boolean from_accession = false;
+		Boolean from_accessionThumbnail = false;
 		Boolean from_editAccession = false;
 		Boolean from_noneditAccession = false;
 
@@ -378,8 +379,8 @@ public class ImageService extends BaseService<ImageDomain> {
 			if (!mgiid.contains("MGI:")) {
 				mgiid = "MGI:" + mgiid;
 			}
-			where = where + "\nand a.accID ilike '" + mgiid + "'";
-			from_accession = true;
+			where = where + "\nand a2.accID ilike '" + mgiid + "'";
+			from_accessionThumbnail = true;
 		}
 				
 		// editable accession ids
@@ -435,6 +436,11 @@ public class ImageService extends BaseService<ImageDomain> {
 			where = where + "\nand i._image_key = a._object_key" 
 					+ "\nand a._mgitype_key = 9";
 		}
+		if (from_accessionThumbnail == true) {
+			from = from + ", img_image_acc_view a2";
+			where = where + "\nand i._image_key = a2._object_key" 
+					+ "\nand a2._mgitype_key = 9";
+		}		
 		if (from_editAccession == true) {
 			from = from + ", img_image_acc_view acc1";
 			where = where + "\nand acc1._logicaldb_key in (19)" +

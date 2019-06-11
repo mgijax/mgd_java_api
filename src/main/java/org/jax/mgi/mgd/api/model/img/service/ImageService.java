@@ -372,6 +372,16 @@ public class ImageService extends BaseService<ImageDomain> {
 			from_accession = true;
 		}
 		
+		// thumbnail accession id
+		if (searchDomain.getThumbnailImage().getMgiAccessionIds() != null && !searchDomain.getThumbnailImage().getMgiAccessionIds().get(0).getAccID().isEmpty()) {
+			String mgiid = searchDomain.getThumbnailImage().getMgiAccessionIds().get(0).getAccID().toUpperCase();
+			if (!mgiid.contains("MGI:")) {
+				mgiid = "MGI:" + mgiid;
+			}
+			where = where + "\nand a.accID ilike '" + mgiid + "'";
+			from_accession = true;
+		}
+				
 		// editable accession ids
 		if (searchDomain.getEditAccessionIds() != null) {
 			if (searchDomain.getEditAccessionIds().get(0).getAccID() != null 

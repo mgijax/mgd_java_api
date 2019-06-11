@@ -30,8 +30,8 @@ public class MGIReferenceAssocDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	
-	private List<SlimAlleleRefAssocDomain> alleles;
-	private List<SlimMarkerDomain> markers;
-	private List<SlimProbeStrainDomain> strains;
+	//private List<SlimAlleleRefAssocDomain> alleles;
+	//private List<SlimMarkerDomain> markers;
+	//private List<SlimProbeStrainDomain> strains;
 
 }   	

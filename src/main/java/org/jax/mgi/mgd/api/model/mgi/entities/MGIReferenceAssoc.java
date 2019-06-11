@@ -62,16 +62,16 @@ public class MGIReferenceAssoc extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
-	@OneToMany()
-	@JoinColumn(name="_allele_key", referencedColumnName="_object_key", insertable=false, updatable=false)
-	private List<Allele> alleles;
+	//@OneToMany()
+	//@JoinColumn(name="_allele_key", referencedColumnName="_object_key", insertable=false, updatable=false)
+	//private List<Allele> alleles;
 
-	@OneToMany()
-	@JoinColumn(name="_marker_key", referencedColumnName="_object_key", insertable=false, updatable=false)
-	private List<Marker> markers;
+	//@OneToMany()
+	//@JoinColumn(name="_marker_key", referencedColumnName="_object_key", insertable=false, updatable=false)
+	///private List<Marker> markers;
 	
-	@OneToMany()
-	@JoinColumn(name="_strain_key", referencedColumnName="_object_key", insertable=false, updatable=false)
-	private List<ProbeStrain> strains;
+	//@OneToMany()
+	//@JoinColumn(name="_strain_key", referencedColumnName="_object_key", insertable=false, updatable=false)
+	//private List<ProbeStrain> strains;
 	
 }

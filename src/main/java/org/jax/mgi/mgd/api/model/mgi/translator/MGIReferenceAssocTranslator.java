@@ -45,31 +45,31 @@ public class MGIReferenceAssocTranslator extends BaseEntityDomainTranslator<MGIR
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
 		// one-to-many reference associations w/ allele info
-		if (entity.getAlleles() != null && !entity.getAlleles().isEmpty()
-				&& entity.getMgiType().get_mgitype_key() == 11) {
-			SlimAlleleRefAssocTranslator alleleTranslator = new SlimAlleleRefAssocTranslator();
-			Iterable<SlimAlleleRefAssocDomain> i = alleleTranslator.translateEntities(entity.getAlleles());
-			domain.setAlleles(IteratorUtils.toList(i.iterator()));
-			domain.getAlleles().sort(Comparator.comparing(SlimAlleleRefAssocDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
-		}
+		//if (entity.getAlleles() != null && !entity.getAlleles().isEmpty()
+		//		&& entity.getMgiType().get_mgitype_key() == 11) {
+		//	SlimAlleleRefAssocTranslator alleleTranslator = new SlimAlleleRefAssocTranslator();
+		//	Iterable<SlimAlleleRefAssocDomain> i = alleleTranslator.translateEntities(entity.getAlleles());
+		//	domain.setAlleles(IteratorUtils.toList(i.iterator()));
+		//	domain.getAlleles().sort(Comparator.comparing(SlimAlleleRefAssocDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
+		//}
 		
 		// one-to-many reference associations w/ marker info
-		if (entity.getMarkers() != null && !entity.getMarkers().isEmpty()
-				&& entity.getMgiType().get_mgitype_key() == 2) {
-			SlimMarkerTranslator markerTranslator = new SlimMarkerTranslator();
-			Iterable<SlimMarkerDomain> i = markerTranslator.translateEntities(entity.getMarkers());
-			domain.setMarkers(IteratorUtils.toList(i.iterator()));
-			domain.getMarkers().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
-		}
+		//if (entity.getMarkers() != null && !entity.getMarkers().isEmpty()
+		//		&& entity.getMgiType().get_mgitype_key() == 2) {
+		//	SlimMarkerTranslator markerTranslator = new SlimMarkerTranslator();
+		//	Iterable<SlimMarkerDomain> i = markerTranslator.translateEntities(entity.getMarkers());
+		//	domain.setMarkers(IteratorUtils.toList(i.iterator()));
+		//	domain.getMarkers().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
+		//}
 		
 		// one-to-many reference associations w/ strain info
-		if (entity.getStrains() != null && !entity.getStrains().isEmpty()
-				&& entity.getMgiType().get_mgitype_key() == 10) {
-			SlimProbeStrainTranslator strainTranslator = new SlimProbeStrainTranslator();
-			Iterable<SlimProbeStrainDomain> i = strainTranslator.translateEntities(entity.getStrains());
-			domain.setStrains(IteratorUtils.toList(i.iterator()));
-			domain.getStrains().sort(Comparator.comparing(SlimProbeStrainDomain::getStrain, String.CASE_INSENSITIVE_ORDER));
-		}
+		//if (entity.getStrains() != null && !entity.getStrains().isEmpty()
+		//		&& entity.getMgiType().get_mgitype_key() == 10) {
+		//	SlimProbeStrainTranslator strainTranslator = new SlimProbeStrainTranslator();
+		//	Iterable<SlimProbeStrainDomain> i = strainTranslator.translateEntities(entity.getStrains());
+		//	domain.setStrains(IteratorUtils.toList(i.iterator()));
+		//	domain.getStrains().sort(Comparator.comparing(SlimProbeStrainDomain::getStrain, String.CASE_INSENSITIVE_ORDER));
+		//}
 				
 		return domain;
 	}

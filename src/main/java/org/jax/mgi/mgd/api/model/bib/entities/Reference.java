@@ -92,10 +92,10 @@ public class Reference extends BaseEntity {
 	private List<Accession> editAccessionIds;
 
 	// reference associations : alleles (11), markers (2), strains (10)
-	@OneToMany()
-	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` in (11,2,10)")
-	@OrderBy(clause ="_refassoctype_key")
-	private List<MGIReferenceAssoc> refAssocs;
+	//@OneToMany()
+	//@JoinColumn(name="_refs_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
+	//@Where(clause="`_mgitype_key` in (11,2,10)")
+	//@OrderBy(clause ="_refassoctype_key")
+	//private List<MGIReferenceAssoc> refAssocs;
 	
 }

@@ -80,10 +80,10 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		}
 	
 		// one-to-many associations
-		//if (entity.getRefAssocs() != null && !entity.getRefAssocs().isEmpty()) {
-		//	Iterable<MGIReferenceAssocDomain> i = assocTranslator.translateEntities(entity.getRefAssocs());
-		//	domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
-		//}
+		if (entity.getRefAssocs() != null && !entity.getRefAssocs().isEmpty()) {
+			Iterable<MGIReferenceAssocDomain> i = assocTranslator.translateEntities(entity.getRefAssocs());
+			domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
+		}
 		
 		return domain;
 	}

@@ -13,6 +13,7 @@ import org.jax.mgi.mgd.api.model.acc.domain.SlimMGITypeDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.MGITypeTranslator;
 import org.jax.mgi.mgd.api.model.acc.translator.SlimMGITypeTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -31,14 +32,25 @@ public class MGITypeService extends BaseService<MGITypeDomain> {
 
 	@Transactional
 	public SearchResults<MGITypeDomain> create(MGITypeDomain object, User user) {
-		return null;
+		SearchResults<MGITypeDomain> results = new SearchResults<MGITypeDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
 	public SearchResults<MGITypeDomain> update(MGITypeDomain object, User user) {
-		return null;
+		SearchResults<MGITypeDomain> results = new SearchResults<MGITypeDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
-
+    
+	@Transactional
+	public SearchResults<MGITypeDomain> delete(Integer key, User user) {
+		SearchResults<MGITypeDomain> results = new SearchResults<MGITypeDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
+	}
+	
 	@Transactional
 	public MGITypeDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain
@@ -55,11 +67,6 @@ public class MGITypeService extends BaseService<MGITypeDomain> {
         results.setItem(translator.translate(mgitypeDAO.get(key)));
         return results;
     }
-    
-	@Transactional
-	public SearchResults<MGITypeDomain> delete(Integer key, User user) {
-	    return null;
-	}
 
 	@Transactional
 	public SearchResults<SlimMGITypeDomain> search(SlimMGITypeDomain searchDomain) {	

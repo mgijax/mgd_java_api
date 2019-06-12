@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.translator.SlimTermTranslator;
 import org.jax.mgi.mgd.api.model.voc.translator.TermTranslator;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -34,17 +35,33 @@ public class TermService extends BaseService<TermDomain> {
 	
 	@Transactional
 	public SearchResults<TermDomain> create(TermDomain termDomain, User user) {
-		return null;
+		SearchResults<TermDomain> results = new SearchResults<TermDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
 	public SearchResults<TermDomain> update(TermDomain object, User user) {
-		return null;
+		SearchResults<TermDomain> results = new SearchResults<TermDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
+	}
+    
+	@Transactional
+	public SearchResults<TermDomain> delete(Integer key, User user) {
+		SearchResults<TermDomain> results = new SearchResults<TermDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 	
 	@Transactional
 	public TermDomain get(Integer key) {
-		return translator.translate(termDAO.get(key));
+		// get the DAO/entity and translate -> domain
+		TermDomain domain = new TermDomain();
+		if (termDAO.get(key) != null) {
+			domain = translator.translate(termDAO.get(key));
+		}
+		return domain;
 	}
 	
     @Transactional
@@ -53,12 +70,6 @@ public class TermService extends BaseService<TermDomain> {
         results.setItem(translator.translate(termDAO.get(key)));
         return results;
     }
-    
-	@Transactional
-	public SearchResults<TermDomain> delete(Integer key, User user) {
-        // TODO Auto-generated method stub
-		return null;
-	}
 
 	@Transactional	
 	public List<TermDomain> search(TermDomain searchDomain) {

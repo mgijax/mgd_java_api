@@ -13,6 +13,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.EventReasonDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.EventReasonDomain;
 import org.jax.mgi.mgd.api.model.mrk.translator.EventReasonTranslator;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -30,19 +31,33 @@ public class EventReasonService extends BaseService<EventReasonDomain> {
 	
 	@Transactional
 	public SearchResults<EventReasonDomain> create(EventReasonDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<EventReasonDomain> results = new SearchResults<EventReasonDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
 	public SearchResults<EventReasonDomain> update(EventReasonDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<EventReasonDomain> results = new SearchResults<EventReasonDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
+	}
+
+	@Transactional
+	public SearchResults<EventReasonDomain> delete(Integer key, User user) {
+		SearchResults<EventReasonDomain> results = new SearchResults<EventReasonDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
 	public EventReasonDomain get(Integer key) {
-		return translator.translate(eventReasonDAO.get(key));
+		// get the DAO/entity and translate -> domain
+		EventReasonDomain domain = new EventReasonDomain();
+		if (eventReasonDAO.get(key) != null) {
+			domain = translator.translate(eventReasonDAO.get(key));
+		}
+		return domain;
 	}
 
     @Transactional
@@ -51,12 +66,6 @@ public class EventReasonService extends BaseService<EventReasonDomain> {
         results.setItem(translator.translate(eventReasonDAO.get(key)));
         return results;
     }
-
-	@Transactional
-	public SearchResults<EventReasonDomain> delete(Integer key, User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Transactional	
 	public List<EventReasonDomain> search() {

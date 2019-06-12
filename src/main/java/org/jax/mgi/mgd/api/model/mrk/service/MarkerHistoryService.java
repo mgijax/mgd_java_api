@@ -48,34 +48,42 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 	
 	@Transactional
 	public SearchResults<MarkerHistoryDomain> create(MarkerHistoryDomain domain, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<MarkerHistoryDomain> results = new SearchResults<MarkerHistoryDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
 	public SearchResults<MarkerHistoryDomain> update(MarkerHistoryDomain domain, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<MarkerHistoryDomain> results = new SearchResults<MarkerHistoryDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
 	public MarkerHistoryDomain get(Integer key) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-    @Transactional
-    public SearchResults<MarkerHistoryDomain> getResults(Integer key) {
-		// TODO Auto-generated method stub
-    	return null;
-    }
-    
-	@Transactional
-	public SearchResults<MarkerHistoryDomain> delete(Integer key, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		// get the DAO/entity and translate -> domain
+		MarkerHistoryDomain domain = new MarkerHistoryDomain();
+		if (historyDAO.get(key) != null) {
+			domain = translator.translate(historyDAO.get(key));
+		}
+		return domain;
 	}
 
+    @Transactional
+    public SearchResults<MarkerHistoryDomain> getResults(Integer key) {
+        SearchResults<MarkerHistoryDomain> results = new SearchResults<MarkerHistoryDomain>();
+        results.setItem(translator.translate(historyDAO.get(key)));
+        return results;
+    }
+
+	@Transactional
+	public SearchResults<MarkerHistoryDomain> delete(Integer key, User user) {
+		SearchResults<MarkerHistoryDomain> results = new SearchResults<MarkerHistoryDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
+	}
+	
 	@Transactional	
 	public List<MarkerHistoryDomain> search(Integer key) {
 

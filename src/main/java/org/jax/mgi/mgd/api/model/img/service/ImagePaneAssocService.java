@@ -39,14 +39,23 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 	
 	@Transactional
 	public SearchResults<ImagePaneAssocDomain> create(ImagePaneAssocDomain domain, User user) {
-		// not used
-		return null;
+		SearchResults<ImagePaneAssocDomain> results = new SearchResults<ImagePaneAssocDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 	
 	@Transactional
 	public SearchResults<ImagePaneAssocDomain> update(ImagePaneAssocDomain domain, User user) {
-		// not used
-		return null;
+		SearchResults<ImagePaneAssocDomain> results = new SearchResults<ImagePaneAssocDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
+	}
+	
+	@Transactional
+	public SearchResults<ImagePaneAssocDomain> delete(Integer key, User user) {
+		SearchResults<ImagePaneAssocDomain> results = new SearchResults<ImagePaneAssocDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
@@ -58,17 +67,13 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 		}
 		return domain;
 	}
-
-	@Transactional
-	public SearchResults<ImagePaneAssocDomain> getResults(Integer key) {
-		// not used
-		return null;
-	}
 	
 	@Transactional
-	public SearchResults<ImagePaneAssocDomain> delete(Integer key, User user) {
-		// not used
-		return null;
+	public SearchResults<ImagePaneAssocDomain> getResults(Integer key) {
+		// get the DAO/entity and translate -> domain -> results
+		SearchResults<ImagePaneAssocDomain> results = new SearchResults<ImagePaneAssocDomain>();
+		results.setItem(translator.translate(imagePaneAssocDAO.get(key)));
+		return results;
 	}
 
 	@Transactional	

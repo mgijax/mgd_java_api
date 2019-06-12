@@ -34,33 +34,41 @@ public class UserService extends BaseService<UserDomain> {
 
 	@Transactional
 	public SearchResults<UserDomain> create(UserDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<UserDomain> results = new SearchResults<UserDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
 	public SearchResults<UserDomain> update(UserDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<UserDomain> results = new SearchResults<UserDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
+	public SearchResults<UserDomain> delete(Integer key, User user) {
+		SearchResults<UserDomain> results = new SearchResults<UserDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
+	}
+		
+	@Transactional
 	public UserDomain get(Integer key) {
-		// TODO Auto-generated method stub
-		return null;
+		// get the DAO/entity and translate -> domain
+		UserDomain domain = new UserDomain();
+		if (userDAO.get(key) != null) {
+			domain = translator.translate(userDAO.get(key));
+		}
+		return domain;
 	}
 
     @Transactional
     public SearchResults<UserDomain> getResults(Integer key) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<UserDomain> results = new SearchResults<UserDomain>();
+		results.setItem(translator.translate(userDAO.get(key)));
+		return results;
     }
-    
-	@Transactional
-	public SearchResults<UserDomain> delete(Integer key, User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Transactional
 	public List<UserDomain> search() {

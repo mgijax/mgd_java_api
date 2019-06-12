@@ -13,6 +13,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.EventDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.EventDomain;
 import org.jax.mgi.mgd.api.model.mrk.translator.EventTranslator;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -30,19 +31,33 @@ public class EventService extends BaseService<EventDomain> {
 	
 	@Transactional
 	public SearchResults<EventDomain> create(EventDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<EventDomain> results = new SearchResults<EventDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
-
+	
 	@Transactional
 	public SearchResults<EventDomain> update(EventDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<EventDomain> results = new SearchResults<EventDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
+	public SearchResults<EventDomain> delete(Integer key, User user) {
+		SearchResults<EventDomain> results = new SearchResults<EventDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
+	}
+	
+	@Transactional
 	public EventDomain get(Integer key) {
-		return translator.translate(eventDAO.get(key));
+		// get the DAO/entity and translate -> domain
+		EventDomain domain = new EventDomain();
+		if (eventDAO.get(key) != null) {
+			domain = translator.translate(eventDAO.get(key));
+		}
+		return domain;
 	}
 
     @Transactional
@@ -51,12 +66,6 @@ public class EventService extends BaseService<EventDomain> {
         results.setItem(translator.translate(eventDAO.get(key)));
         return results;
     }
-
-	@Transactional
-	public SearchResults<EventDomain> delete(Integer key, User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Transactional	
 	public List<EventDomain> search() {

@@ -37,29 +37,17 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	
 	@Transactional
 	public SearchResults<ReferenceDomain> create(ReferenceDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
 	public SearchResults<ReferenceDomain> update(ReferenceDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Transactional
-	public ReferenceDomain get(Integer key) {
-		// get the DAO/entity and translate -> domain		
-		return translator.translate(referenceDAO.get(key));
-	}
-
-    @Transactional
-    public SearchResults<ReferenceDomain> getResults(Integer key) {
-		// get the DAO/entity and translate -> domain -> results
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
-		results.setItem(translator.translate(referenceDAO.get(key)));
-		return results;   	
-    }
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
+	}
 
 	@Transactional
 	public SearchResults<ReferenceDomain> delete(Integer key, User user) {
@@ -70,6 +58,24 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		referenceDAO.remove(entity);
 		return results;
 	}
+
+	@Transactional
+	public ReferenceDomain get(Integer key) {
+		// get the DAO/entity and translate -> domain		
+		ReferenceDomain domain = new ReferenceDomain();
+		if (referenceDAO.get(key) != null) {
+			domain = translator.translate(referenceDAO.get(key));
+		}
+		return domain;
+	}
+
+    @Transactional
+    public SearchResults<ReferenceDomain> getResults(Integer key) {
+		// get the DAO/entity and translate -> domain -> results
+		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
+		results.setItem(translator.translate(referenceDAO.get(key)));
+		return results;   	
+    }
 
 	@Transactional	
 	public List<SlimReferenceDomain> search(ReferenceDomain searchDomain) {

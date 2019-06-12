@@ -28,39 +28,49 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 	@Inject
 	private RelationshipDAO relationshipDAO;
 
+	private RelationshipTranslator translator = new RelationshipTranslator();
+	
 	//private RelationshipTranslator translator = new RelationshipTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
 	public SearchResults<RelationshipDomain> create(RelationshipDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<RelationshipDomain> results = new SearchResults<RelationshipDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
 	public SearchResults<RelationshipDomain> update(RelationshipDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<RelationshipDomain> results = new SearchResults<RelationshipDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
+	public SearchResults<RelationshipDomain> delete(Integer key, User user) {
+		SearchResults<RelationshipDomain> results = new SearchResults<RelationshipDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
+	}
+	
+	@Transactional
 	public RelationshipDomain get(Integer key) {
-		// TODO Auto-generated method stub
-		return null;
+		// get the DAO/entity and translate -> domain
+		RelationshipDomain domain = new RelationshipDomain();
+		if (relationshipDAO.get(key) != null) {
+			domain = translator.translate(relationshipDAO.get(key));
+		}
+		return domain;
 	}
 
     @Transactional
     public SearchResults<RelationshipDomain> getResults(Integer key) {
-    	// TODO Auto-generated method stub
-    	return null;
+        SearchResults<RelationshipDomain> results = new SearchResults<RelationshipDomain>();
+        results.setItem(translator.translate(relationshipDAO.get(key)));
+        return results;
     }
     
-	@Transactional
-	public SearchResults<RelationshipDomain> delete(Integer key, User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	@Transactional	
 	public List<RelationshipDomain> getMarkerTSS(Integer key) {
 		// return all tss-marker relationships by specified marker key

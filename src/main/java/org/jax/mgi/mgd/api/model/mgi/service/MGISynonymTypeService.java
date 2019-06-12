@@ -13,6 +13,7 @@ import org.jax.mgi.mgd.api.model.mgi.dao.MGISynonymTypeDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymTypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTypeTranslator;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -31,19 +32,33 @@ public class MGISynonymTypeService extends BaseService<MGISynonymTypeDomain> {
 	
 	@Transactional
 	public SearchResults<MGISynonymTypeDomain> create(MGISynonymTypeDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<MGISynonymTypeDomain> results = new SearchResults<MGISynonymTypeDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
 	public SearchResults<MGISynonymTypeDomain> update(MGISynonymTypeDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<MGISynonymTypeDomain> results = new SearchResults<MGISynonymTypeDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
+	public SearchResults<MGISynonymTypeDomain> delete(Integer key, User user) {
+		SearchResults<MGISynonymTypeDomain> results = new SearchResults<MGISynonymTypeDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
+	}
+	
+	@Transactional
 	public MGISynonymTypeDomain get(Integer key) {
-		return translator.translate(synonymTypeDAO.get(key));
+		// get the DAO/entity and translate -> domain
+		MGISynonymTypeDomain domain = new MGISynonymTypeDomain();
+		if (synonymTypeDAO.get(key) != null) {
+			domain = translator.translate(synonymTypeDAO.get(key));
+		}
+		return domain;	
 	}
 
     @Transactional
@@ -52,12 +67,6 @@ public class MGISynonymTypeService extends BaseService<MGISynonymTypeDomain> {
         results.setItem(translator.translate(synonymTypeDAO.get(key)));
         return results;
     }
-
-	@Transactional
-	public SearchResults<MGISynonymTypeDomain> delete(Integer key, User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Transactional	
 	public List<MGISynonymTypeDomain> search() {

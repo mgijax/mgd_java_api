@@ -37,33 +37,41 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 
 	@Transactional
 	public SearchResults<MGISynonymDomain> create(MGISynonymDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<MGISynonymDomain> results = new SearchResults<MGISynonymDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
 	public SearchResults<MGISynonymDomain> update(MGISynonymDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<MGISynonymDomain> results = new SearchResults<MGISynonymDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
+	public SearchResults<MGISynonymDomain> delete(Integer key, User user) {
+		SearchResults<MGISynonymDomain> results = new SearchResults<MGISynonymDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
+	}
+	
+	@Transactional
 	public MGISynonymDomain get(Integer key) {
-		// TODO Auto-generated method stub
-		return null;
+		// get the DAO/entity and translate -> domain
+		MGISynonymDomain domain = new MGISynonymDomain();
+		if (synonymDAO.get(key) != null) {
+			domain = translator.translate(synonymDAO.get(key));
+		}
+		return domain;
 	}
 
     @Transactional
     public SearchResults<MGISynonymDomain> getResults(Integer key) {
-    	// TODO Auto-generated method stub
-    	return null;
+		SearchResults<MGISynonymDomain> results = new SearchResults<MGISynonymDomain>();
+		results.setItem(translator.translate(synonymDAO.get(key)));
+		return results;
     }
-    
-	@Transactional
-	public SearchResults<MGISynonymDomain> delete(Integer key, User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Transactional	
 	public List<MGISynonymDomain> getByMarker(Integer key) {

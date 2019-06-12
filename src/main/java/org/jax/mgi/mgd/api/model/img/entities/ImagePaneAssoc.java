@@ -61,12 +61,12 @@ public class ImagePaneAssoc extends BaseEntity {
 	// does this pane association contain an allele or a genotype?
 	// see ImagePaneAssocTranslator; translator will decide
 	
-	//@OneToMany()
-	//@JoinColumn(name="_allele_key", referencedColumnName="_object_key", insertable=false, updatable=false)
-	//private List<Allele> alleles;	
+	@OneToMany()
+	@JoinColumn(name="_allele_key", referencedColumnName="_object_key", insertable=false, updatable=false)
+	private List<Allele> alleles;	
 
-	//@OneToMany()
-	//@JoinColumn(name="_genotype_key", referencedColumnName="_object_key", insertable=false, updatable=false)
-	//private List<Genotype> genotypes;	
+	@OneToMany()
+	@JoinColumn(name="_genotype_key", referencedColumnName="_object_key", insertable=false, updatable=false)
+	private List<Genotype> genotypes;	
 	
 }

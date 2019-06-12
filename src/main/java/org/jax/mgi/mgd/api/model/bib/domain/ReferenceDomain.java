@@ -41,7 +41,7 @@ public class ReferenceDomain extends BaseDomain {
 	private ReferenceNoteDomain referenceNote;
 	private List<AccessionDomain> mgiAccessionIds;
 	private List<AccessionDomain> editAccessionIds;
-	//private List<MGIReferenceAssocDomain> refAssocs;
+	private List<MGIReferenceAssocDomain> refAssocs;
 
 	// ReferenceCitationCache not included in domain at this time 
 }

@@ -37,20 +37,33 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 
 	@Transactional
 	public SearchResults<MGIReferenceAssocDomain> create(MGIReferenceAssocDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<MGIReferenceAssocDomain> results = new SearchResults<MGIReferenceAssocDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
 	public SearchResults<MGIReferenceAssocDomain> update(MGIReferenceAssocDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<MGIReferenceAssocDomain> results = new SearchResults<MGIReferenceAssocDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
+	public SearchResults<MGIReferenceAssocDomain> delete(Integer key, User user) {
+		SearchResults<MGIReferenceAssocDomain> results = new SearchResults<MGIReferenceAssocDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
+	}
+	
+	@Transactional
 	public MGIReferenceAssocDomain get(Integer key) {
-		// TODO Auto-generated method stub
-		return null;
+		// get the DAO/entity and translate -> domain
+		MGIReferenceAssocDomain domain = new MGIReferenceAssocDomain();
+		if (referenceAssocDAO.get(key) != null) {
+			domain = translator.translate(referenceAssocDAO.get(key));
+		}
+		return domain;
 	}
 
 	@Transactional
@@ -58,12 +71,6 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		SearchResults<MGIReferenceAssocDomain> results = new SearchResults<MGIReferenceAssocDomain>();
 		results.setItem(translator.translate(referenceAssocDAO.get(key)));
 		return results;
-	}
-    
-	@Transactional
-	public SearchResults<MGIReferenceAssocDomain> delete(Integer key, User user) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Transactional	

@@ -13,6 +13,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerTypeDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerTypeDomain;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTypeTranslator;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -30,33 +31,41 @@ public class MarkerTypeService extends BaseService<MarkerTypeDomain> {
 	
 	@Transactional
 	public SearchResults<MarkerTypeDomain> create(MarkerTypeDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<MarkerTypeDomain> results = new SearchResults<MarkerTypeDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
 	public SearchResults<MarkerTypeDomain> update(MarkerTypeDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<MarkerTypeDomain> results = new SearchResults<MarkerTypeDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
-
-	@Transactional
-	public MarkerTypeDomain get(Integer key) {
-		return translator.translate(markerTypeDAO.get(key));
-	}
-
-        @Transactional
-        public SearchResults<MarkerTypeDomain> getResults(Integer key) {
-                SearchResults<MarkerTypeDomain> results = new SearchResults<MarkerTypeDomain>();
-                results.setItem(translator.translate(markerTypeDAO.get(key)));
-                return results;
-        }
     
 	@Transactional
 	public SearchResults<MarkerTypeDomain> delete(Integer key, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<MarkerTypeDomain> results = new SearchResults<MarkerTypeDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
+	
+	@Transactional
+	public MarkerTypeDomain get(Integer key) {
+		// get the DAO/entity and translate -> domain
+		MarkerTypeDomain domain = new MarkerTypeDomain();
+		if (markerTypeDAO.get(key) != null) {
+			domain = translator.translate(markerTypeDAO.get(key));
+		}
+		return domain;
+	}
+
+    @Transactional
+    public SearchResults<MarkerTypeDomain> getResults(Integer key) {
+        SearchResults<MarkerTypeDomain> results = new SearchResults<MarkerTypeDomain>();
+        results.setItem(translator.translate(markerTypeDAO.get(key)));
+        return results;
+    }
 
 	@Transactional	
 	public List<MarkerTypeDomain> search() {

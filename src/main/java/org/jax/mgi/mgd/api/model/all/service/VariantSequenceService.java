@@ -43,14 +43,23 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 	
 	@Transactional
 	public SearchResults<VariantSequenceDomain> create(VariantSequenceDomain domain, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<VariantSequenceDomain> results = new SearchResults<VariantSequenceDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
 	public SearchResults<VariantSequenceDomain> update(VariantSequenceDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<VariantSequenceDomain> results = new SearchResults<VariantSequenceDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
+	}
+
+	@Transactional
+	public SearchResults<VariantSequenceDomain> delete(Integer key, User user) {
+		SearchResults<VariantSequenceDomain> results = new SearchResults<VariantSequenceDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
@@ -69,12 +78,6 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
         results.setItem(translator.translate(variantSequenceDAO.get(key)));
         return results;
     }
-
-	@Transactional
-	public SearchResults<VariantSequenceDomain> delete(Integer key, User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	public List<VariantSequenceDomain> search(VariantSequenceDomain searchDomain) {
 

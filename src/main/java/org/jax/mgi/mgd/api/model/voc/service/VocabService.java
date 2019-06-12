@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimVocabularyDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.VocabularyDomain;
 import org.jax.mgi.mgd.api.model.voc.translator.VocabularyTranslator;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -32,17 +33,33 @@ public class VocabService extends BaseService<VocabularyDomain> {
 	
 	@Transactional
 	public SearchResults<VocabularyDomain> create(VocabularyDomain object, User user) {
-		return null;
+		SearchResults<VocabularyDomain> results = new SearchResults<VocabularyDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
 	public SearchResults<VocabularyDomain> update(VocabularyDomain object, User user) {
-		return null;
+		SearchResults<VocabularyDomain> results = new SearchResults<VocabularyDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
+	public SearchResults<VocabularyDomain> delete(Integer key, User user) {
+		SearchResults<VocabularyDomain> results = new SearchResults<VocabularyDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
+	}
+	
+	@Transactional
 	public VocabularyDomain get(Integer key) {
-		return translator.translate(vocabularyDAO.get(key));
+		// get the DAO/entity and translate -> domain
+		VocabularyDomain domain = new VocabularyDomain();
+		if (vocabularyDAO.get(key) != null) {
+			domain = translator.translate(vocabularyDAO.get(key));
+		}
+		return domain;
 	}
 	
     @Transactional
@@ -51,11 +68,6 @@ public class VocabService extends BaseService<VocabularyDomain> {
         results.setItem(translator.translate(vocabularyDAO.get(key)));
         return results;
     }
-    
-	@Transactional
-	public SearchResults<VocabularyDomain> delete(Integer key, User user) {
-		return null;
-	}
 
 	@Transactional
 	public SearchResults<SlimVocabularyDomain> search(SlimVocabularyDomain searchDomain) {	

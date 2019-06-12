@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
 import org.jax.mgi.mgd.api.model.gxd.translator.GenotypeTranslator;
+import org.jax.mgi.mgd.api.model.gxd.translator.SlimGenotypeTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
@@ -31,6 +32,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 	private GenotypeDAO genotypeDAO;
 
 	private GenotypeTranslator translator = new GenotypeTranslator();
+	private SlimGenotypeTranslator slimtranslator = new SlimGenotypeTranslator();	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	private String mgiTypeKey = "12";
@@ -96,6 +98,16 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 	}
 
 	@Transactional
+	public SearchResults<GenotypeDomain> delete(Integer key, User user) {
+		// get the entity object and delete
+		SearchResults<GenotypeDomain> results = new SearchResults<GenotypeDomain>();
+		Genotype entity = genotypeDAO.get(key);
+		results.setItem(translator.translate(genotypeDAO.get(key)));
+		genotypeDAO.remove(entity);
+		return results;
+	}
+	
+	@Transactional
 	public GenotypeDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain
 		GenotypeDomain domain = new GenotypeDomain();
@@ -113,16 +125,6 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		return results;
 	}
 	
-	@Transactional
-	public SearchResults<GenotypeDomain> delete(Integer key, User user) {
-		// get the entity object and delete
-		SearchResults<GenotypeDomain> results = new SearchResults<GenotypeDomain>();
-		Genotype entity = genotypeDAO.get(key);
-		results.setItem(translator.translate(genotypeDAO.get(key)));
-		genotypeDAO.remove(entity);
-		return results;
-	}
-
 	@Transactional	
 	public String getObjectCount() {
 		// return the object count from the database
@@ -249,9 +251,9 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SlimGenotypeDomain domain = new SlimGenotypeDomain();
-				domain.setGenotypeKey(rs.getString("_genotype_key"));
+				domain = slimtranslator.translate(genotypeDAO.get(rs.getInt("_genotype_key")));				
 				domain.setGenotypeDisplay(rs.getString("genotypeDisplay"));
-				// domain.setMgiAccessionIds() intentionally not set
+				genotypeDAO.clear();				
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

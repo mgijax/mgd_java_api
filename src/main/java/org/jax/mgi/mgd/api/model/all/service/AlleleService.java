@@ -36,16 +36,28 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	
 	@Transactional
 	public SearchResults<AlleleDomain> create(AlleleDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
 	public SearchResults<AlleleDomain> update(AlleleDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
+	@Transactional
+	public SearchResults<AlleleDomain> delete(Integer key, User user) {
+		// get the entity object and delete
+		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
+		Allele entity = alleleDAO.get(key);
+		results.setItem(translator.translate(alleleDAO.get(key)));
+		alleleDAO.remove(entity);
+		return results;
+	}
+		
 	@Transactional
 	public AlleleDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain	
@@ -55,7 +67,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}
 		return domain;	
 	}
-
+	
     @Transactional
     public SearchResults<AlleleDomain> getResults(Integer key) {
 		// get the DAO/entity and translate -> domain -> results 
@@ -63,16 +75,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
         results.setItem(translator.translate(alleleDAO.get(key)));
         return results;
     }
-
-	@Transactional
-	public SearchResults<AlleleDomain> delete(Integer key, User user) {
-		// get the entity object and delete
-				SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
-				Allele entity = alleleDAO.get(key);
-				results.setItem(translator.translate(alleleDAO.get(key)));
-				alleleDAO.remove(entity);
-				return results;
-	}
 
 	@Transactional
 	public List<SlimAlleleDomain> search(AlleleDomain searchDomain, Boolean hasVariant) {

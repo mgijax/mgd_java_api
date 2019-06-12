@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -33,20 +34,33 @@ public class NoteService extends BaseService<NoteDomain> {
 
 	@Transactional
 	public SearchResults<NoteDomain> create(NoteDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<NoteDomain> results = new SearchResults<NoteDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
 	public SearchResults<NoteDomain> update(NoteDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<NoteDomain> results = new SearchResults<NoteDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
-	public NoteDomain get(Integer key) {
-		return translator.translate(noteDAO.get(key));
+	public SearchResults<NoteDomain> delete(Integer key, User user) {
+		SearchResults<NoteDomain> results = new SearchResults<NoteDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
+	
+	@Transactional
+	public NoteDomain get(Integer key) {
+		// get the DAO/entity and translate -> domain
+		NoteDomain domain = new NoteDomain();
+		if (noteDAO.get(key) != null) {
+			domain = translator.translate(noteDAO.get(key));
+		}
+		return domain;	}
 
     @Transactional
     public SearchResults<NoteDomain> getResults(Integer key) {
@@ -55,12 +69,6 @@ public class NoteService extends BaseService<NoteDomain> {
         return results;
     }
     
-	@Transactional
-	public SearchResults<NoteDomain> delete(Integer key, User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	@Transactional	
 	public List<NoteDomain> getByMarker(Integer key) {
 

@@ -36,16 +36,25 @@ public class AccessionService extends BaseService<AccessionDomain> {
 
 	@Transactional
 	public SearchResults<AccessionDomain> create(AccessionDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<AccessionDomain> results = new SearchResults<AccessionDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
 	public SearchResults<AccessionDomain> update(AccessionDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<AccessionDomain> results = new SearchResults<AccessionDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
+	@Transactional
+	public SearchResults<AccessionDomain> delete(Integer key, User user) {
+		SearchResults<AccessionDomain> results = new SearchResults<AccessionDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
+	}
+	
 	@Transactional
 	public AccessionDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain
@@ -62,12 +71,6 @@ public class AccessionService extends BaseService<AccessionDomain> {
         results.setItem(translator.translate(accessionDAO.get(key)));
         return results;
     }
-    
-	@Transactional
-	public SearchResults<AccessionDomain> delete(Integer key, User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Transactional
 	public List<AccessionDomain> search(AccessionDomain searchDomain) {

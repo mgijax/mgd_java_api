@@ -58,6 +58,7 @@ public class ImageService extends BaseService<ImageDomain> {
 	private String mgiTypeKey = "9";
 	private String fullSizeImageKey = "1072158";
 	private String thumbnailImageKey = "1072159";
+	private String expressionClassKey = "6481781";
 	
 	@Transactional
 	public SearchResults<ImageDomain> create(ImageDomain domain, User user) {
@@ -77,9 +78,9 @@ public class ImageService extends BaseService<ImageDomain> {
 			return results;		
 		}
 		
-		// if A&P (not Expression), then create Thumbnail (1072159)
+		// if A&P (not Expression), then create Thumbnail
 		//if (domain.getImageClass() != "Expression") {
-		if (domain.getImageClassKey() != "6481781") {
+		if (domain.getImageClassKey() != expressionClassKey) {
 			Image thumbnailEntity = new Image();
 			thumbnailEntity.setImageType(termDAO.get(Integer.valueOf(thumbnailImageKey)));
 			thumbnailEntity.setImageClass(termDAO.get(Integer.valueOf(domain.getImageClassKey())));

@@ -52,14 +52,25 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 
 	@Transactional
 	public SearchResults<AnnotationDomain> create(AnnotationDomain object, User user) {
-		return null;
+		SearchResults<AnnotationDomain> results = new SearchResults<AnnotationDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
 	public SearchResults<AnnotationDomain> update(AnnotationDomain object, User user) {
-		return null;
+		SearchResults<AnnotationDomain> results = new SearchResults<AnnotationDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
-
+    
+	@Transactional
+	public SearchResults<AnnotationDomain> delete(Integer key, User user) {
+		SearchResults<AnnotationDomain> results = new SearchResults<AnnotationDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
+	}
+	
 	@Transactional
 	public AnnotationDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain
@@ -76,11 +87,6 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
         results.setItem(translator.translate(annotationDAO.get(key)));
         return results;
     }
-    
-	@Transactional
-	public SearchResults<AnnotationDomain> delete(Integer key, User user) {
-		return null;
-	}
 
 	@Transactional
 	private List<AnnotationDomain> getAnnotationDomainList(String cmd) {

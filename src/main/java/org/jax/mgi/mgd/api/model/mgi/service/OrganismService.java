@@ -13,6 +13,7 @@ import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.OrganismDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.OrganismTranslator;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -31,19 +32,33 @@ public class OrganismService extends BaseService<OrganismDomain> {
 
 	@Transactional
 	public SearchResults<OrganismDomain> create(OrganismDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<OrganismDomain> results = new SearchResults<OrganismDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
 	public SearchResults<OrganismDomain> update(OrganismDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<OrganismDomain> results = new SearchResults<OrganismDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
+	public SearchResults<OrganismDomain> delete(Integer key, User user) {
+		SearchResults<OrganismDomain> results = new SearchResults<OrganismDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
+	}
+	
+	@Transactional
 	public OrganismDomain get(Integer key) {
-		return translator.translate(organismDAO.get(key));
+		// get the DAO/entity and translate -> domain
+		OrganismDomain domain = new OrganismDomain();
+		if (organismDAO.get(key) != null) {
+			domain = translator.translate(organismDAO.get(key));
+		}
+		return domain;
 	}
 
     @Transactional
@@ -52,12 +67,6 @@ public class OrganismService extends BaseService<OrganismDomain> {
         results.setItem(translator.translate(organismDAO.get(key)));
         return results;
     }
-
-	@Transactional
-	public SearchResults<OrganismDomain> delete(Integer key, User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Transactional	
 	public List<OrganismDomain> search() {

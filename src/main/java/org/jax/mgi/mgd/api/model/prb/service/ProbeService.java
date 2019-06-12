@@ -9,6 +9,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeDAO;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeTranslator;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 @RequestScoped
@@ -21,19 +22,33 @@ public class ProbeService extends BaseService<ProbeDomain> {
 	
 	@Transactional
 	public SearchResults<ProbeDomain> create(ProbeDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<ProbeDomain> results = new SearchResults<ProbeDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
 	public SearchResults<ProbeDomain> update(ProbeDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<ProbeDomain> results = new SearchResults<ProbeDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
-
+    
+	@Transactional
+	public SearchResults<ProbeDomain> delete(Integer key, User user) {
+		SearchResults<ProbeDomain> results = new SearchResults<ProbeDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
+	}
+	
 	@Transactional
 	public ProbeDomain get(Integer key) {
-		return translator.translate(probeDAO.get(key));
+		// get the DAO/entity and translate -> domain
+		ProbeDomain domain = new ProbeDomain();
+		if (probeDAO.get(key) != null) {
+			domain = translator.translate(probeDAO.get(key));
+		}
+		return domain;
 	}
 
     @Transactional
@@ -42,11 +57,6 @@ public class ProbeService extends BaseService<ProbeDomain> {
         results.setItem(translator.translate(probeDAO.get(key)));
         return results;
     }
-    
-	@Transactional
-	public SearchResults<ProbeDomain> delete(Integer key, User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 }

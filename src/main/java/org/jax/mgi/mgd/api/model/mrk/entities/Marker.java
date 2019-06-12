@@ -156,7 +156,8 @@ public class Marker extends BaseEntity {
 	private List<RelationshipMarkerTSS> geneToTss;
 
 	@OneToMany()
-	@JoinTable(name = "mrk_alias",	joinColumns = @JoinColumn(name="_alias_key", referencedColumnName="_marker_key", insertable=false, updatable=false),
+	@JoinTable(name = "mrk_alias",	
+		joinColumns = @JoinColumn(name="_alias_key", referencedColumnName="_marker_key", insertable=false, updatable=false),
 		inverseJoinColumns = @JoinColumn(name = "_marker_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	)
 	private List<Marker> aliases;

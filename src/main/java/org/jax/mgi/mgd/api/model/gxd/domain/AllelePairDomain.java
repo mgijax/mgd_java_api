@@ -19,6 +19,8 @@ public class AllelePairDomain extends BaseDomain {
 	private String markerSymbol;
 	private String cellLineKey1;
 	private String cellLineKey2;
+	private String cellLine1;
+	private String cellLine2;
 	private String pairStateKey;
 	private String pairState;
 	private String compoundKey;

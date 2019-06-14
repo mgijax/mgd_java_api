@@ -7,6 +7,8 @@ import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.AllelePairDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
+import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocViewDomain;
+import org.jax.mgi.mgd.api.model.img.translator.ImagePaneAssocViewTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jboss.logging.Logger;
@@ -18,7 +20,8 @@ public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, Gen
 	private NoteTranslator noteTranslator = new NoteTranslator();		
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	private AllelePairTranslator allelePairsTranslator = new AllelePairTranslator();
-
+	private ImagePaneAssocViewTranslator imagePaneTranslator = new ImagePaneAssocViewTranslator();
+	
 	@Override
 	protected GenotypeDomain entityToDomain(Genotype entity) {
 		
@@ -69,7 +72,13 @@ public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, Gen
 			Iterable<AllelePairDomain> t = allelePairsTranslator.translateEntities(entity.getAllelePairs());
 			domain.setAllelePairs(IteratorUtils.toList(t.iterator()));
 		}
-			
+		
+		// imagepane associations by genotype
+		if (entity.getImagePaneAssocs() != null && !entity.getImagePaneAssocs().isEmpty()) {
+			Iterable<ImagePaneAssocViewDomain> t = imagePaneTranslator.translateEntities(entity.getImagePaneAssocs());
+			domain.setImagePaneAssocs(IteratorUtils.toList(t.iterator()));
+		}
+		
 		return domain;
 	}
 

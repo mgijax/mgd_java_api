@@ -155,23 +155,37 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
-		String select = "select distinct g._genotype_key, ps.strain, a1.symbol" +
+		
+		// search includes allele pair attribute
+		// if search does *not* include allele pair clause, see below for "union" 
+		
+		// "select" for all
+		String select = "(select distinct g._genotype_key, ps.strain, a1.symbol" +
 				", concat(ps.strain,',',a1.symbol,',',a2.symbol) as genotypeDisplay";
+		
+		// "from" if allele pair = true
 		String from = "from gxd_genotype g, prb_strain ps, gxd_allelepair ap" +
-				" inner join all_allele a1 on (ap._allele_key_1 = a1._allele_key)" +
-				" left outer join all_allele a2 on (ap._allele_key_2 = a2._allele_key)" +
-				", mrk_marker m";
-		String where = "where g._strain_key = ps._strain_key" +
-				"\nand g._genotype_key = ap._genotype_key" +
-				"\nand ap._marker_key = m._marker_key";
-		String 	orderBy = "order by strain, symbol nulls first";			
+				"\ninner join all_allele a1 on (ap._allele_key_1 = a1._allele_key)" +		
+				"\nleft outer join all_allele a2 on (ap._allele_key_2 = a2._allele_key)";		
+		
+		// "where" for all
+		String where = "where g._strain_key = ps._strain_key";
+		
+		// "where" if allele pair = true
+		String whereAllelePair = "\nand g._genotype_key = ap._genotype_key"; 
+
+		String orderBy = "order by strain, symbol nulls first";			
 		String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
+		String includeNotExists = "";
 		
-		//Boolean from_allelepair = false;
+		Boolean from_allele = false;
+		Boolean from_marker = false;
+		Boolean from_cellline = false;
+		Boolean from_image = false;
 		Boolean from_alleleDetailNote = false;
 		Boolean from_generalNote = false;
-		Boolean from_privateCuratorialNote = false;		
+		Boolean from_privateCuratorialNote = false;	
 		Boolean from_accession = false;
 		
 		// if parameter exists, then add to where-clause
@@ -193,6 +207,117 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		}
 		if (searchDomain.getExistsAsKey() != null && !searchDomain.getExistsAsKey().isEmpty()) {
 			where = where + "\nand g._ExistsAs_key = " + searchDomain.getExistsAsKey();
+		}
+		
+		// Allele Pair
+		if (searchDomain.getAllelePairs() != null && !searchDomain.getAllelePairs().isEmpty()) {
+
+			value = searchDomain.getAllelePairs().get(0).getMarkerKey();
+			if (value != null && !value.isEmpty()) {
+				whereAllelePair = whereAllelePair + "\nand ap._Marker_key = " + value;
+				from_allele = true;
+				from_marker = true;
+			}
+			
+			value = searchDomain.getAllelePairs().get(0).getMarkerSymbol();
+			if (value != null && !value.isEmpty()) {
+				value = "'" + value + "'";
+				whereAllelePair = whereAllelePair + "\nand m.symbol ilike " + value;
+				from_allele = true;
+				from_marker = true;
+			}
+					
+			value = searchDomain.getAllelePairs().get(0).getAlleleKey1();
+			if (value != null && !value.isEmpty()) {
+				whereAllelePair = whereAllelePair + 
+				"\nand (ap._Allele_key_1 = " + value +
+				"\nor ap._Allele_key_2 = " + value + ")";
+				from_allele = true;				
+			}
+			
+			value = searchDomain.getAllelePairs().get(0).getAlleleKey2();			
+			if (value != null && !value.isEmpty()) {
+				whereAllelePair = whereAllelePair + 
+				"\nand (ap._Allele_key_1 = " + value +
+				"\nor ap._Allele_key_2 = " + value + ")";
+				from_allele = true;				
+			}
+		
+			value = searchDomain.getAllelePairs().get(0).getAlleleSymbol1();			
+			if (value != null && !value.isEmpty()) {
+				whereAllelePair = whereAllelePair + 
+					"\nand (a1.symbol ilike '" + value + "'" +
+					"\nor a2.symbol ilike '" + value + "')";
+				from_allele = true;				
+			}
+			
+			value = searchDomain.getAllelePairs().get(0).getAlleleSymbol2();			
+			if (value != null && !value.isEmpty()) {
+				whereAllelePair = whereAllelePair + 
+					"\nand (a1.symbol ilike '" + value + "'" +
+					"\nor a2.symbol ilike '" + value + "')";
+				from_allele = true;				
+			}
+			
+			// mutant cell line
+			// only works if either mutant cell line 1 OR 2, not both
+			
+			value = searchDomain.getAllelePairs().get(0).getCellLineKey1();			
+			if (value != null && !value.isEmpty()) {
+				whereAllelePair = whereAllelePair + "\nand ap._mutantcellline_key_1 = ac._cellline_key";
+				whereAllelePair = whereAllelePair + "\nand ac._cellLine_key = " + value;
+				from_allele = true;				
+			}
+			
+			value = searchDomain.getAllelePairs().get(0).getCellLine1();
+			if (value != null && !value.isEmpty()) {
+				whereAllelePair = whereAllelePair + "\nand ap._mutantcellline_key_1 = ac._cellline_key";
+				whereAllelePair = whereAllelePair + "\nand ac.cellLine ilike '" + value + "'";
+				from_allele = true;
+				from_cellline = true;
+			}
+			
+			value = searchDomain.getAllelePairs().get(0).getCellLineKey2();			
+			if (value != null && !value.isEmpty()) {
+				whereAllelePair = whereAllelePair + "\nand ap._mutantcellline_key_2 = ac._cellline_key";
+				whereAllelePair = whereAllelePair + "\nand ac._cellLine_key = " + value;
+				from_allele = true;				
+			}
+			
+			value = searchDomain.getAllelePairs().get(0).getCellLine2();
+			if (value != null && !value.isEmpty()) {
+				whereAllelePair = whereAllelePair + "\nand ap._mutantcellline_key_2 = ac._cellline_key";				
+				whereAllelePair = whereAllelePair + "\nand ac.cellLine ilike '" + value + "'";
+				from_allele = true;
+				from_cellline = true;
+			}
+						
+			value = searchDomain.getAllelePairs().get(0).getPairStateKey();			
+			if (value != null && !value.isEmpty()) {
+				whereAllelePair = whereAllelePair + "\nand ap._pairstate_key = " + value;
+				from_allele = true;				
+			}
+			
+			value = searchDomain.getAllelePairs().get(0).getCompoundKey();			
+			if (value != null && !value.isEmpty()) {
+				whereAllelePair = whereAllelePair + "\nand ap._compound_key = " + value;
+				from_allele = true;				
+			}
+			
+		}
+		
+		// image pane associations
+		if (searchDomain.getImagePaneAssocs() != null && !searchDomain.getImagePaneAssocs().isEmpty()) {
+			value = searchDomain.getImagePaneAssocs().get(0).getMgiID();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand i.mgiID ilike '" + value + "'";
+				from_image = true;
+			}
+			value = searchDomain.getImagePaneAssocs().get(0).getPixID();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand i.pixID ilike '" + value + "'";
+				from_image = true;
+			}			
 		}
 		
 		// notes
@@ -223,11 +348,30 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			from_accession = true;
 		}
 				
-		// use views to match the teleuse implementation
-		
+		// union for the allele pair does *not* exist
+		if (from_allele == false && from_cellline == false && from_image == false) {
+			includeNotExists = "\nunion all" +
+				"\nselect distinct g._genotype_key, ps.strain, ps.strain, null" +
+				"\nfrom gxd_genotype g, prb_strain ps" +
+				"\n" + where +
+				"\nand not exists (select 1 from gxd_allelepair ap where g._genotype_key = ap._genotype_key)";
+		}
+
+		if (from_marker == true) {
+			from = from + ", mrk_marker m";
+			where = where + "\nand ap._marker_key = m._marker_key";
+		}
+		if (from_cellline == true) {
+			from = from + ", all_cellline ac";
+		}		
 		if (from_alleleDetailNote == true) {
 			from = from + ", mgi_note_genotype_view note1";
 			where = where + "\nand g._genotype_key = note1._object_key";
+		}
+		if (from_image == true) {
+			from = from + ", img_imagepane_assoc_view i";
+			where = where + "\nand g._genotype_key = i._object_key" +
+					"\nand i._mgitype_key = " + mgiTypeKey;
 		}
 		if (from_generalNote == true) {
 			from = from + ", mgi_note_genotype_view note2";
@@ -242,9 +386,16 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			where = where + "\nand g._genotype_key = a._object_key" 
 					+ "\nand a._mgitype_key = " + mgiTypeKey;
 		}
+
+		// J#/Data set list
+		// if J#/Data set is being search, then *just* use
+		// and ignore other search criteria
+		// see ei/csrc/mgdsql.c/genotype_search2 for SQL
 		
-		// make this easy to copy/paste for troubleshooting
-		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
+		cmd = "\n" + select + "\n" + from + "\n" + 
+				where + whereAllelePair + includeNotExists + ")\n" + 
+				orderBy + "\n" + limit;
+		 
 		log.info(cmd);
 
 		try {

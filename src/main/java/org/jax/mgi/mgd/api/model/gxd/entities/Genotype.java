@@ -15,6 +15,7 @@ import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
+import org.jax.mgi.mgd.api.model.img.entities.ImagePaneAssocView;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
@@ -89,7 +90,14 @@ public class Genotype extends BaseEntity {
 	
 	// allele pairs
 	@OneToMany()
-	@JoinColumn(name="_genotype_key")
+	@JoinColumn(name="_genotype_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
 	private List<AllelePair> allelePairs;
+	
+	// image pane associations
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 12")
+	@OrderBy(clause="isPrimary asc")
+	private List<ImagePaneAssocView> imagePaneAssocs;
 	
 }

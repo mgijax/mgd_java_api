@@ -284,7 +284,6 @@ public class ImageService extends BaseService<ImageDomain> {
 		Boolean from_privateCuratorialNote = false;
 		Boolean from_externalLinkNote = false;
 		Boolean from_accession = false;
-		Boolean from_accessionThumbnail = false;
 		Boolean from_editAccession = false;
 		Boolean from_noneditAccession = false;
 
@@ -373,15 +372,14 @@ public class ImageService extends BaseService<ImageDomain> {
 			where = where + "\nand a.accID ilike '" + mgiid + "'";
 			from_accession = true;
 		}
-		
-		// thumbnail accession id
-		if (searchDomain.getThumbnailImage().getMgiAccessionIds() != null && !searchDomain.getThumbnailImage().getMgiAccessionIds().get(0).getAccID().isEmpty()) {
+		// else thumbnail accession id
+		else if (searchDomain.getThumbnailImage().getMgiAccessionIds() != null && !searchDomain.getThumbnailImage().getMgiAccessionIds().get(0).getAccID().isEmpty()) {
 			String mgiid = searchDomain.getThumbnailImage().getMgiAccessionIds().get(0).getAccID().toUpperCase();
 			if (!mgiid.contains("MGI:")) {
 				mgiid = "MGI:" + mgiid;
 			}
-			where = where + "\nand a2.accID ilike '" + mgiid + "'";
-			from_accessionThumbnail = true;
+			where = where + "\nand a.accID ilike '" + mgiid + "'";
+			from_accession = true;
 		}
 				
 		// editable accession ids
@@ -436,11 +434,6 @@ public class ImageService extends BaseService<ImageDomain> {
 			from = from + ", img_image_acc_view a";
 			where = where + "\nand i._image_key = a._object_key" 
 					+ "\nand a._mgitype_key = 9";
-		}
-		if (from_accessionThumbnail == true) {
-			from = from + ", img_image_acc_view a2";
-			where = where + "\nand i._image_key = a2._object_key" 
-					+ "\nand a2._mgitype_key = 9";
 		}		
 		if (from_editAccession == true) {
 			from = from + ", img_image_acc_view acc1";

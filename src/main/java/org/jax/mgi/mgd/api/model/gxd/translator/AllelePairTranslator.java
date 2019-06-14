@@ -43,9 +43,18 @@ public class AllelePairTranslator extends BaseEntityDomainTranslator<AllelePair,
 			domain.setMarkerSymbol(String.valueOf(entity.getMarker().getSymbol()));
 		}	
 		
-		//domain.setCellLineKey1(String.valueOf(entity.getCellLine1().get_cellline_key()));
-		//domain.setCellLineKey2(String.valueOf(entity.getCellLine2().get_cellline_key()));
+		// may be null
+		if (entity.getCellLine1() != null) {
+			domain.setCellLineKey1(String.valueOf(entity.getCellLine1().get_cellline_key()));
+			domain.setCellLine1(entity.getCellLine1().getCellLine());
+		}
 		
+		// may be null
+		if (entity.getCellLine2() != null) {
+			domain.setCellLineKey1(String.valueOf(entity.getCellLine2().get_cellline_key()));
+			domain.setCellLine2(entity.getCellLine2().getCellLine());
+		}
+				
 		return domain;
 	}
 

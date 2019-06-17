@@ -10,6 +10,8 @@ public class GenotypeDataSetDomain extends BaseDomain {
 	// for returning stored procedure results
 	// see sp/GXD_getGenotypesDataSets
 	
+	private String refsKey;
+	private String jnum;
 	private String jnumid;
 	private String short_citation;	
 	private String dataSet;

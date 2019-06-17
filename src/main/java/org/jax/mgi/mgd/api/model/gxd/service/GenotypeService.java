@@ -421,7 +421,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		
 		List<GenotypeDataSetDomain> results = new ArrayList<GenotypeDataSetDomain>();
 
-		String cmd = "select * from gxd_getGentoypesDataSets(" + key + ")";
+		String cmd = "select * from gxd_getgenotypesdatasets(" + key + ")";
 
 		log.info(cmd);
 
@@ -429,9 +429,11 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				GenotypeDataSetDomain domain = new GenotypeDataSetDomain();
-				domain.setJnumid(rs.getString("jnum"));
-				domain.setShort_citation("short_citation");
-				domain.setDataSet("dataSet");
+				domain.setRefsKey(rs.getString("_refs_key"));
+				domain.setJnum(rs.getString("jnum"));
+				domain.setJnumid(rs.getString("jnumid"));
+				domain.setShort_citation(rs.getString("short_citation"));
+				domain.setDataSet(rs.getString("dataSet"));
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

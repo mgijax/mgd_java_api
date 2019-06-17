@@ -31,7 +31,6 @@ public class GenotypeDomain extends BaseDomain {
 	private NoteDomain privateCuratorialNote;
 	
 	private List<AccessionDomain> mgiAccessionIds;
-	
 	private List<AllelePairDomain> allelePairs;
 	private List<ImagePaneAssocViewDomain> imagePaneAssocs;
 	

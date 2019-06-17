@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
+import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDataSetDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
@@ -387,11 +388,6 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 					+ "\nand a._mgitype_key = " + mgiTypeKey;
 		}
 
-		// J#/Data set list
-		// if J#/Data set is being search, then *just* use
-		// and ignore other search criteria
-		// see ei/csrc/mgdsql.c/genotype_search2 for SQL
-		
 		cmd = "\n" + select + "\n" + from + "\n" + 
 				where + whereAllelePair + includeNotExists + ")\n" + 
 				orderBy + "\n" + limit;
@@ -415,5 +411,68 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		
 		return results;
 	}	
+	
+	// For Data Sets
+	
+	@Transactional	
+	public List<GenotypeDataSetDomain> getDataSets(Integer key) {
+		// search data sets by genotype key 
+		// return GenotypeDataSetDomain
+		
+		List<GenotypeDataSetDomain> results = new ArrayList<GenotypeDataSetDomain>();
 
+		String cmd = "select * from gxd_getGentoypesDataSets(" + key + ")";
+
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				GenotypeDataSetDomain domain = new GenotypeDataSetDomain();
+				domain.setJnumid(rs.getString("jnum"));
+				domain.setShort_citation("short_citation");
+				domain.setDataSet("dataSet");
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
+	
+	@Transactional	
+	public List<SlimGenotypeDomain> searchDataSets(Integer key) {
+		// search data sets by reference key
+		// return SlimGenotypeDomain
+		
+		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
+
+		String cmd = 
+				"select * from gxd_genotype_dataset_view where _Refs_key = " + key;
+
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimGenotypeDomain domain = new SlimGenotypeDomain();
+				domain = slimtranslator.translate(genotypeDAO.get(rs.getInt("_genotype_key")));				
+				domain.setGenotypeDisplay(rs.getString("strain"));
+				genotypeDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
+	
+	// end Data Sets
+	
 }

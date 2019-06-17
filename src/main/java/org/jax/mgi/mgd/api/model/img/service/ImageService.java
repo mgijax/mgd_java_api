@@ -71,11 +71,15 @@ public class ImageService extends BaseService<ImageDomain> {
 		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
 		Image entity = new Image();
 		
+		log.info("processImage/create/begin");
+		
 		// copyright/DXDOI validation
-		if (domain.getCopyrightNote().getNoteChunk().contains("DXDOI(||)")) {
-			log.info("processImage/create/DXDOI missing");
-			results.setError("Failed : Copyright/DXDOI error", "Copyright is missing the DXDOI identifier", Constants.HTTP_SERVER_ERROR);
-			return results;		
+		if (domain.getCopyrightNote() != null) {
+			if (domain.getCopyrightNote().getNoteChunk().contains("DXDOI(||)")) {
+				log.info("processImage/create/DXDOI missing");
+				results.setError("Failed : Copyright/DXDOI error", "Copyright is missing the DXDOI identifier", Constants.HTTP_SERVER_ERROR);
+				return results;		
+			}
 		}
 		
 		// if A&P (not Expression), then create Thumbnail
@@ -91,6 +95,7 @@ public class ImageService extends BaseService<ImageDomain> {
 			thumbnailEntity.setCreation_date(new Date());
 			thumbnailEntity.setModifiedBy(user);
 			thumbnailEntity.setModification_date(new Date());
+			log.info("processImage/create/thumbnailDAO");
 			thumbnailDAO.persist(thumbnailEntity);
 			
 			// set full-size thumbail key = new thumbnail primary key
@@ -108,18 +113,22 @@ public class ImageService extends BaseService<ImageDomain> {
 		entity.setModification_date(new Date());
 		
 		// execute persist/insert/send to database
+		log.info("processImage/create/imageDAO");
 		imageDAO.persist(entity);
 
 		// process all notes
+		log.info("processImage/notes");
 		noteService.process(String.valueOf(entity.get_image_key()), domain.getCaptionNote(), mgiTypeKey, "1024", user);
 		noteService.process(String.valueOf(entity.get_image_key()), domain.getCopyrightNote(), mgiTypeKey, "1023", user);
 		noteService.process(String.valueOf(entity.get_image_key()), domain.getPrivateCuratorialNote(), mgiTypeKey, "1025", user);
 		noteService.process(String.valueOf(entity.get_image_key()), domain.getExternalLinkNote(), mgiTypeKey, "1039", user);
 
 		// process image pane
+		log.info("processImage/pane label");
 		imagePaneService.process(String.valueOf(entity.get_image_key()), domain.getImagePanes(), user);
 			
 		// process image pane associations
+		log.info("processImage/pane associations");
 		for (int i = 0; i < domain.getImagePanes().size(); i++) {
 			imagePaneAssocService.process(domain.getImagePanes().get(i).getImagePaneKey(), domain.getImagePanes().get(i).getPaneAssocs(), user);
 		}

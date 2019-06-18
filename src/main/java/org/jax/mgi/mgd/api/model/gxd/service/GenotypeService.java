@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
@@ -57,6 +58,13 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		// execute persist/insert/send to database
 		genotypeDAO.persist(entity);
 
+		log.info("processGenotypes/order allele pairs");
+		if (domain.getUseAllelePairDefaultOrder() == "1") {
+			String cmd = "select * from GXD_orderAllelePairs (" + String.valueOf(entity.get_genotype_key()) + ")";
+			Query query = genotypeDAO.createNativeQuery(cmd);
+			query.getResultList();
+		}
+		
 		// return entity translated to domain
 		log.info("processGenotype/create/returning results");
 		results.setItem(translator.translate(entity));
@@ -90,7 +98,14 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		else {
 			log.info("processGenotype/no changes processed: " + domain.getGenotypeKey());
 		}
-				
+		
+		log.info("processGenotypes/order allele pairs");
+		if (domain.getUseAllelePairDefaultOrder() == "1") {
+			String cmd = "select * from GXD_orderAllelePairs (" + String.valueOf(entity.get_genotype_key()) + ")";
+			Query query = genotypeDAO.createNativeQuery(cmd);
+			query.getResultList();
+		}
+		
 		// return entity translated to domain
 		log.info("processGenotype/update/returning results");
 		results.setItem(translator.translate(entity));

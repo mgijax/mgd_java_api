@@ -11,6 +11,8 @@ import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocViewDomain;
 import org.jax.mgi.mgd.api.model.img.translator.ImagePaneAssocViewTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
+import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
+import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
 import org.jboss.logging.Logger;
 
 public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, GenotypeDomain> {
@@ -21,6 +23,7 @@ public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, Gen
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	private AllelePairTranslator allelePairsTranslator = new AllelePairTranslator();
 	private ImagePaneAssocViewTranslator imagePaneTranslator = new ImagePaneAssocViewTranslator();
+	private AnnotationTranslator annotTranslator = new AnnotationTranslator();
 	
 	@Override
 	protected GenotypeDomain entityToDomain(Genotype entity) {
@@ -42,7 +45,10 @@ public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, Gen
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-	
+		
+		// yes, use default allele pair ordering
+		domain.setUseAllelePairDefaultOrder("1");
+		
 		// at most one captionNote
 		if (entity.getAlleleDetailNote() != null && !entity.getAlleleDetailNote().isEmpty()) {
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getAlleleDetailNote());
@@ -79,6 +85,18 @@ public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, Gen
 			domain.setImagePaneAssocs(IteratorUtils.toList(t.iterator()));
 		}
 		
+		// mp annotations by genotype
+		if (entity.getMpAnnots() != null && !entity.getMpAnnots().isEmpty()) {
+			Iterable<AnnotationDomain> t = annotTranslator.translateEntities(entity.getMpAnnots());
+			domain.setMpAnnots(IteratorUtils.toList(t.iterator()));
+		}
+		
+		// DO annotations by genotype
+		if (entity.getDoAnnots() != null && !entity.getDoAnnots().isEmpty()) {
+			Iterable<AnnotationDomain> t = annotTranslator.translateEntities(entity.getDoAnnots());
+			domain.setDoAnnots(IteratorUtils.toList(t.iterator()));
+		}
+					
 		return domain;
 	}
 

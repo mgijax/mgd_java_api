@@ -68,4 +68,18 @@ public class Annotation extends BaseEntity {
     @Where(clause="`_mgitype_key` = 13 and `_logicaldb_key` = 145 and preferred = 1")
     private List<Accession> alleleVariantSOIds;
 
+	// mammalian phenotype ids:  from _annottype_key = 1002
+	// _term_key is the mp term, _object_key is the genotype
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 13 and `_logicaldb_key` = 34 and preferred = 1")
+	private List<Accession> mpIds;
+	
+	// disease ontology ids:  from _annottype_key = 1020
+	// _term_key is the mp term, _object_key is the genotype
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 13 and `_logicaldb_key` = 191 and preferred = 1")
+	private List<Accession> doIds;
+	  	
 }

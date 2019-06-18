@@ -71,7 +71,7 @@ public class ImageService extends BaseService<ImageDomain> {
 		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
 		Image entity = new Image();
 		
-		log.info("processImage/create/begin");
+		log.info("processImage/create");
 		
 		// copyright/DXDOI validation
 		if (domain.getCopyrightNote() != null) {
@@ -83,14 +83,13 @@ public class ImageService extends BaseService<ImageDomain> {
 		}
 		
 		// if A&P (not Expression), then create Thumbnail
-		//if (domain.getImageClass() != "Expression") {
-		if (domain.getImageClassKey() != expressionClassKey) {
+		if (!domain.getImageClassKey().equals(expressionClassKey)) {
 			Image thumbnailEntity = new Image();
 			thumbnailEntity.setImageType(termDAO.get(Integer.valueOf(thumbnailImageKey)));
 			thumbnailEntity.setImageClass(termDAO.get(Integer.valueOf(domain.getImageClassKey())));
 			thumbnailEntity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));
 			thumbnailEntity.setFigureLabel(domain.getFigureLabel());
-			// thumbnailkey is null
+			// thumbnailKey is null
 			thumbnailEntity.setCreatedBy(user);
 			thumbnailEntity.setCreation_date(new Date());
 			thumbnailEntity.setModifiedBy(user);
@@ -222,6 +221,16 @@ public class ImageService extends BaseService<ImageDomain> {
 	}
 
 	@Transactional
+	public SearchResults<ImageDomain> delete(Integer key, User user) {
+		// get the entity object and delete
+		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
+		Image entity = imageDAO.get(key);
+		results.setItem(translator.translate(imageDAO.get(key)));
+		imageDAO.remove(entity);
+		return results;
+	}
+
+	@Transactional
 	public ImageDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain
 		ImageDomain domain = new ImageDomain();
@@ -239,16 +248,6 @@ public class ImageService extends BaseService<ImageDomain> {
 		return results;
 	}
 	
-	@Transactional
-	public SearchResults<ImageDomain> delete(Integer key, User user) {
-		// get the entity object and delete
-		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
-		Image entity = imageDAO.get(key);
-		results.setItem(translator.translate(imageDAO.get(key)));
-		imageDAO.remove(entity);
-		return results;
-	}
-
 	@Transactional	
 	public String getObjectCount() {
 		// return the object count from the database

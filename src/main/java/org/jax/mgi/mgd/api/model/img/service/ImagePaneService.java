@@ -120,9 +120,8 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				
 			// null paneLabel only applicable for 1st paneLabel
 			// else, do nothing
-			if (i > 0 && 
-					(domain.get(i).getPaneLabel() == null || 
-						domain.get(i).getPaneAssocs().isEmpty())) {
+			if (i > 0 && (domain.get(i).getPaneLabel() == null 
+					|| domain.get(i).getPaneLabel().isEmpty())) {
 				continue;
 			}
 			

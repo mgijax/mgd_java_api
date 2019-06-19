@@ -152,7 +152,7 @@ public class ImageService extends BaseService<ImageDomain> {
 		log.info("processImage/update");
 
 		// may have thumbnail
-		if (!domain.getImageClassKey().equals(expressionClassKey)) {
+		if (domain.getImageTypeKey().equals(fullSizeImageKey)) {
 			thumbnailEntity = imageDAO.get(Integer.valueOf(domain.getThumbnailImage().getImageKey()));
 		}
 		
@@ -179,7 +179,7 @@ public class ImageService extends BaseService<ImageDomain> {
 			entity.setImageClass(termDAO.get(Integer.valueOf(domain.getImageClassKey())));
 			modified = true;
 			
-			if (!domain.getImageClassKey().equals(expressionClassKey)) {
+			if (domain.getImageTypeKey().equals(fullSizeImageKey)) {
 				thumbnailEntity.setImageClass(termDAO.get(Integer.valueOf(domain.getImageClassKey())));
 			}
 		}
@@ -224,7 +224,7 @@ public class ImageService extends BaseService<ImageDomain> {
 			entity.setModification_date(new Date());
 			entity.setModifiedBy(user);
 			imageDAO.update(entity);
-			if (!domain.getImageClassKey().equals(expressionClassKey)) {
+			if (domain.getImageTypeKey().equals(fullSizeImageKey)) {
 				thumbnailDAO.update(thumbnailEntity);
 			}
 			log.info("processImage/changes processed: " + domain.getImageKey());

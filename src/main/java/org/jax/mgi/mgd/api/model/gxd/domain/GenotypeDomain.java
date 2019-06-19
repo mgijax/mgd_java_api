@@ -29,7 +29,7 @@ public class GenotypeDomain extends BaseDomain {
 	
 	private String useAllelePairDefaultOrder;
 	
-	private NoteDomain alleleDetailNote;
+	private NoteDomain alleleDetailNote;	
 	private NoteDomain generalNote;
 	private NoteDomain privateCuratorialNote;
 	

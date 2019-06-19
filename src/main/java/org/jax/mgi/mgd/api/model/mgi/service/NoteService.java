@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.mgi.service;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.RunCommand;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -158,5 +160,47 @@ public class NoteService extends BaseService<NoteDomain> {
 		log.info("processNote/changes processed: " + parentKey);
 		return modified;
 	}
+
+	@Transactional		
+	public Boolean processAlleleCombinations(Integer genotypeKey) throws IOException, InterruptedException {
+
+//
+//		allelecacheload/allelecombinationByGenotype.py
+//		send -Kxxxx where xxxx = genotype key
+//
+//		this will update the genotypes Combination Type 1, 2, 3 with the proper values	
+//
 	
+		// these swarm variables are in 'app.properties'
+    	String utilitiesScript = System.getProperty("swarm.ds.alleleCombinationUtilities");
+    	String server = System.getProperty("swarm.ds.dbserver");
+        String db = System.getProperty("swarm.ds.dbname");
+        String user = System.getProperty("swarm.ds.username");
+        String pwd = System.getProperty("swarm.ds.dbpasswordfile");
+                
+		String runCmd = utilitiesScript;
+        runCmd = runCmd + " -S" + server;
+        runCmd = runCmd + " -D" + db;
+        runCmd = runCmd + " -U" + user;
+        runCmd = runCmd + " -P" + pwd;
+        runCmd = runCmd + " -K" + String.valueOf(genotypeKey);
+
+		Boolean modified = false;
+       
+		// run the runCmd
+		log.info(Constants.LOG_INPROGRESS_EIUTILITIES + runCmd);
+		RunCommand runner = RunCommand.runCommand(runCmd);
+		
+		// check exit code from RunCommand
+		if (runner.getExitCode() == 0) {
+			log.info(Constants.LOG_SUCCESS_EIUTILITIES);
+			modified = true;
+		}
+		else {
+			log.info(Constants.LOG_FAIL_EIUTILITIES);	
+		}			
+
+		return modified;
+	}
+		
 }

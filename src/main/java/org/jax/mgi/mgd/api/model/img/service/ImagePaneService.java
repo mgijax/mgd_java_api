@@ -118,6 +118,14 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 		
 		for (int i = 0; i < domain.size(); i++) {
 				
+			// null paneLabel only applicable for 1st paneLabel
+			// else, do nothing
+			if (i > 0 && 
+					(domain.get(i).getPaneLabel() == null || 
+						domain.get(i).getPaneAssocs().isEmpty())) {
+				continue;
+			}
+			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 				log.info("processImagePane create");
 				ImagePane entity = new ImagePane();	

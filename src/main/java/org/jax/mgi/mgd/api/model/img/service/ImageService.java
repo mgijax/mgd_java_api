@@ -168,6 +168,11 @@ public class ImageService extends BaseService<ImageDomain> {
 			entity.setFigureLabel(domain.getFigureLabel());
 			modified = true;
 		}
+
+		if (!String.valueOf(entity.getImageClass().get_term_key()).equals(domain.getImageClassKey())) {
+			entity.setImageClass(termDAO.get(Integer.valueOf(domain.getImageClassKey())));
+			modified = true;
+		}
 		
 		// process all notes
 		if (noteService.process(domain.getImageKey(), domain.getCaptionNote(), mgiTypeKey, "1024", user)) {

@@ -19,6 +19,8 @@ import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
 import org.jax.mgi.mgd.api.model.gxd.translator.GenotypeTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimGenotypeTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
+import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -33,8 +35,14 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 	@Inject
 	private GenotypeDAO genotypeDAO;
 
+	@Inject
+	private NoteService noteService;
+	@Inject
+	private AnnotationService annotationService;
+	
 	private GenotypeTranslator translator = new GenotypeTranslator();
-	private SlimGenotypeTranslator slimtranslator = new SlimGenotypeTranslator();	
+	private SlimGenotypeTranslator slimtranslator = new SlimGenotypeTranslator();
+	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	private String mgiTypeKey = "12";
@@ -58,11 +66,41 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		// execute persist/insert/send to database
 		genotypeDAO.persist(entity);
 
+		// process Allele Pairs
+		
 		log.info("processGenotypes/order allele pairs");
 		if (domain.getUseAllelePairDefaultOrder() == "1") {
 			String cmd = "select * from GXD_orderAllelePairs (" + String.valueOf(entity.get_genotype_key()) + ")";
 			Query query = genotypeDAO.createNativeQuery(cmd);
 			query.getResultList();
+		}
+		
+		// process all notes
+		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getGeneralNote(), mgiTypeKey, "1027", user);
+		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getPrivateCuratorialNote(), mgiTypeKey, "1028", user);
+		
+		// create combination note 1, 2, 3 
+		// using allele detail note
+		// then run processAlleleCombinations to finish the job
+		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getAlleleDetailNote(), mgiTypeKey, "1016", user);
+		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getAlleleDetailNote(), mgiTypeKey, "1017", user);
+		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getAlleleDetailNote(), mgiTypeKey, "1018", user);
+		try {
+			noteService.processAlleleCombinations(entity.get_genotype_key());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		// process mp annotations
+		log.info("process MP annotations");
+		if (domain.getMpAnnots() != null && !domain.getMpAnnots().isEmpty()) {
+			annotationService.process(domain.getMpAnnots(), user);
+		}
+	
+		// process DO annotations
+		log.info("process DO annotations");
+		if (domain.getDoAnnots() != null && !domain.getDoAnnots().isEmpty()) {
+			annotationService.process(domain.getDoAnnots(), user);
 		}
 		
 		// return entity translated to domain
@@ -99,13 +137,58 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			log.info("processGenotype/no changes processed: " + domain.getGenotypeKey());
 		}
 		
+		// process Allele Pairs
+		log.info("processGenotypes/allele pairs");
+		
 		log.info("processGenotypes/order allele pairs");
 		if (domain.getUseAllelePairDefaultOrder() == "1") {
 			String cmd = "select * from GXD_orderAllelePairs (" + String.valueOf(entity.get_genotype_key()) + ")";
 			Query query = genotypeDAO.createNativeQuery(cmd);
 			query.getResultList();
 		}
+
+		// process all notes
+		if (noteService.process(domain.getGenotypeKey(), domain.getGeneralNote(), mgiTypeKey, "1027", user)) {
+			modified = true;
+		}
+		if (noteService.process(domain.getGenotypeKey(), domain.getPrivateCuratorialNote(), mgiTypeKey, "1028", user)) {
+			modified = true;
+		}
 		
+		// update combination note 1, 2, 3 
+		// using allele detail note
+		// then run processAlleleCombinations to finish the job
+		if (noteService.process(domain.getGenotypeKey(), domain.getAlleleDetailNote(), mgiTypeKey, "1016", user)) {
+			modified = true;
+		}
+		if (noteService.process(domain.getGenotypeKey(), domain.getAlleleDetailNote(), mgiTypeKey, "1017", user)) {
+			modified = true;
+		}		
+		if (noteService.process(domain.getGenotypeKey(), domain.getAlleleDetailNote(), mgiTypeKey, "1018", user)) {
+			modified = true;
+		}
+		try {
+			modified = noteService.processAlleleCombinations(Integer.valueOf(domain.getGenotypeKey()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// process mp annotations
+		log.info("process MP annotations");
+		if (domain.getMpAnnots() != null && !domain.getMpAnnots().isEmpty()) {
+			if (annotationService.process(domain.getMpAnnots(), user)) {
+				modified = true;
+			}
+		}
+		
+		// process DO annotations
+		log.info("process DO annotations");
+		if (domain.getDoAnnots() != null && !domain.getDoAnnots().isEmpty()) {
+			if (annotationService.process(domain.getDoAnnots(), user)) {
+				modified = true;
+			}
+		}
+				
 		// return entity translated to domain
 		log.info("processGenotype/update/returning results");
 		results.setItem(translator.translate(entity));

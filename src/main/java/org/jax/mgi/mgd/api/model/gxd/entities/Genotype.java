@@ -64,7 +64,7 @@ public class Genotype extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	// Allele Detail Display
+	// Combination Type 1
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 12 and `_notetype_key` = 1016")

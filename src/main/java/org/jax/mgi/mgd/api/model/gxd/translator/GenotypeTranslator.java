@@ -54,7 +54,7 @@ public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, Gen
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getAlleleDetailNote());
 			domain.setAlleleDetailNote(note.iterator().next());
 		}
-		
+
 		// at most one copyrightNote
 		if (entity.getGeneralNote() != null && !entity.getGeneralNote().isEmpty()) {
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getGeneralNote());

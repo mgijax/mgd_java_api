@@ -145,11 +145,17 @@ public class ImageService extends BaseService<ImageDomain> {
 		
 		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
 		Image entity = imageDAO.get(Integer.valueOf(domain.getImageKey()));
+		Image thumbnailEntity = new Image();
 		Boolean modified = false;
 		String mgiTypeName = "Image";
 		
 		log.info("processImage/update");
 
+		// may have thumbnail
+		if (!domain.getImageClassKey().equals(expressionClassKey)) {
+			thumbnailEntity = imageDAO.get(Integer.valueOf(domain.getThumbnailImage().getImageKey()));
+		}
+		
 		// copyright/DXDOI validation
 		if (domain.getCopyrightNote() != null) {
 			if (domain.getCopyrightNote().getNoteChunk().contains("DXDOI(||)")) {
@@ -172,6 +178,10 @@ public class ImageService extends BaseService<ImageDomain> {
 		if (!String.valueOf(entity.getImageClass().get_term_key()).equals(domain.getImageClassKey())) {
 			entity.setImageClass(termDAO.get(Integer.valueOf(domain.getImageClassKey())));
 			modified = true;
+			
+			if (!domain.getImageClassKey().equals(expressionClassKey)) {
+				thumbnailEntity.setImageClass(termDAO.get(Integer.valueOf(domain.getImageClassKey())));
+			}
 		}
 		
 		// process all notes
@@ -214,6 +224,9 @@ public class ImageService extends BaseService<ImageDomain> {
 			entity.setModification_date(new Date());
 			entity.setModifiedBy(user);
 			imageDAO.update(entity);
+			if (!domain.getImageClassKey().equals(expressionClassKey)) {
+				thumbnailDAO.update(thumbnailEntity);
+			}
 			log.info("processImage/changes processed: " + domain.getImageKey());
 		}
 		else {

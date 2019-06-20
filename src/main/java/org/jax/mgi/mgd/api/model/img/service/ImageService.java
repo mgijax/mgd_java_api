@@ -407,7 +407,8 @@ public class ImageService extends BaseService<ImageDomain> {
 		}
 		// else thumbnail accession id
 		else if (searchDomain.getThumbnailImage() != null) {
-			if (searchDomain.getThumbnailImage().getMgiAccessionIds() != null && !searchDomain.getThumbnailImage().getMgiAccessionIds().get(0).getAccID().isEmpty()) {
+			if (searchDomain.getThumbnailImage().getMgiAccessionIds() != null 
+					&& !searchDomain.getThumbnailImage().getMgiAccessionIds().get(0).getAccID().isEmpty()) {
 				String mgiid = searchDomain.getThumbnailImage().getMgiAccessionIds().get(0).getAccID().toUpperCase();
 				if (!mgiid.contains("MGI:")) {
 					mgiid = "MGI:" + mgiid;

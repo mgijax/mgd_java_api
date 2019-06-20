@@ -118,6 +118,6 @@ public class Image extends BaseEntity {
 	// image panes
 	@OneToMany()
 	@JoinColumn(name="_image_key", insertable=false, updatable=false)
-	@OrderBy(clause="paneLabel")
+	@OrderBy(clause="paneLabel desc")
 	private List<ImagePane> imagePanes;	
 }

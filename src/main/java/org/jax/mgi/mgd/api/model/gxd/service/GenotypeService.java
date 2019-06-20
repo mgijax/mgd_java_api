@@ -36,6 +36,8 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 	private GenotypeDAO genotypeDAO;
 
 	@Inject
+	private AllelePairService allelePairService;
+	@Inject
 	private NoteService noteService;
 	@Inject
 	private AnnotationService annotationService;
@@ -67,6 +69,8 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		genotypeDAO.persist(entity);
 
 		// process Allele Pairs
+		log.info("processGenotypes/allele pairs");
+		allelePairService.process(domain.getGenotypeKey(), domain.getAllelePairs(), user);		
 		
 		log.info("processGenotypes/order allele pairs");
 		if (domain.getUseAllelePairDefaultOrder() == "1") {
@@ -139,6 +143,9 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		
 		// process Allele Pairs
 		log.info("processGenotypes/allele pairs");
+		if (allelePairService.process(domain.getGenotypeKey(), domain.getAllelePairs(), user)) {
+			modified = true;
+		}
 		
 		log.info("processGenotypes/order allele pairs");
 		if (domain.getUseAllelePairDefaultOrder() == "1") {
@@ -146,7 +153,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			Query query = genotypeDAO.createNativeQuery(cmd);
 			query.getResultList();
 		}
-
+		
 		// process all notes
 		if (noteService.process(domain.getGenotypeKey(), domain.getGeneralNote(), mgiTypeKey, "1027", user)) {
 			modified = true;

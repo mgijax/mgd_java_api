@@ -228,6 +228,8 @@ public class ImageService extends BaseService<ImageDomain> {
 			imageDAO.update(entity);
 			if (domain.getImageTypeKey().equals(fullSizeImageKey)
 					&& domain.getThumbnailImage() != null) {
+				thumbnailEntity.setModification_date(new Date());
+				thumbnailEntity.setModifiedBy(user);
 				thumbnailDAO.update(thumbnailEntity);
 			}
 			log.info("processImage/changes processed: " + domain.getImageKey());
@@ -404,13 +406,15 @@ public class ImageService extends BaseService<ImageDomain> {
 			from_accession = true;
 		}
 		// else thumbnail accession id
-		else if (searchDomain.getThumbnailImage().getMgiAccessionIds() != null && !searchDomain.getThumbnailImage().getMgiAccessionIds().get(0).getAccID().isEmpty()) {
-			String mgiid = searchDomain.getThumbnailImage().getMgiAccessionIds().get(0).getAccID().toUpperCase();
-			if (!mgiid.contains("MGI:")) {
-				mgiid = "MGI:" + mgiid;
+		else if (searchDomain.getThumbnailImage() != null) {
+			if (searchDomain.getThumbnailImage().getMgiAccessionIds() != null && !searchDomain.getThumbnailImage().getMgiAccessionIds().get(0).getAccID().isEmpty()) {
+				String mgiid = searchDomain.getThumbnailImage().getMgiAccessionIds().get(0).getAccID().toUpperCase();
+				if (!mgiid.contains("MGI:")) {
+					mgiid = "MGI:" + mgiid;
+				}
+				where = where + "\nand a.accID ilike '" + mgiid + "'";
+				from_accession = true;
 			}
-			where = where + "\nand a.accID ilike '" + mgiid + "'";
-			from_accession = true;
 		}
 				
 		// editable accession ids

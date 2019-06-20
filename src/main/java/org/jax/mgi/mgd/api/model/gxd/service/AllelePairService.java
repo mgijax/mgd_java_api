@@ -10,12 +10,15 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.all.dao.AlleleCellLineDAO;
+import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AllelePairDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AllelePairDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.AllelePair;
 import org.jax.mgi.mgd.api.model.gxd.translator.AllelePairTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -30,6 +33,12 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 	private AllelePairDAO allelePairDAO;
 	@Inject
 	private MarkerDAO markerDAO;
+	@Inject
+	private AlleleDAO alleleDAO;
+	@Inject
+	private AlleleCellLineDAO alleleCellLineDAO;
+	@Inject
+	private TermDAO termDAO;
 	
 	private AllelePairTranslator translator = new AllelePairTranslator();	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
@@ -125,9 +134,28 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 				log.info("processAllelePair create");
 				AllelePair entity = new AllelePair();	
 				entity.set_allelepair_key(Integer.valueOf(parentKey));
+				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));				
+				entity.setAllele1(alleleDAO.get(Integer.valueOf(domain.get(i).getAlleleKey1())));				
+
+				if (domain.get(i).getAlleleKey2() != null && !domain.get(i).getAlleleKey2().isEmpty()) {
+					entity.setAllele2(alleleDAO.get(Integer.valueOf(domain.get(i).getAlleleKey2())));				
+				}
+				
+				if (domain.get(i).getCellLineKey1() != null && !domain.get(i).getCellLineKey1().isEmpty()) {
+					entity.setCellLine1(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLineKey1())));				
+				}
+				
+				if (domain.get(i).getCellLineKey2() != null && !domain.get(i).getCellLineKey2().isEmpty()) {
+					entity.setCellLine2(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLineKey2())));				
+				}
+
+				entity.setPairState(termDAO.get(Integer.valueOf(domain.get(i).getPairStateKey())));
+				entity.setCompound(termDAO.get(Integer.valueOf(domain.get(i).getCompoundKey())));
+				entity.setSequenceNum(Integer.valueOf(domain.get(i).getSequenceNum()));
 				entity.setCreation_date(new Date());
 				entity.setModification_date(new Date());
-				allelePairDAO.persist(entity);
+				
+				allelePairDAO.persist(entity);				
 				modified = true;
 				log.info("processAllelePair/create/returning results");					
 			}
@@ -147,9 +175,44 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 					isUpdated = true;
 				}
 				
+				if (!String.valueOf(entity.getAllele1().get_allele_key()).equals(domain.get(i).getAlleleKey1())) {
+					entity.setAllele1(alleleDAO.get(Integer.valueOf(domain.get(i).getAlleleKey1())));
+					isUpdated = true;
+				}
+
+				if (entity.getAllele2() == null && 
+						(domain.get(i).getAlleleKey2() != null || !domain.get(i).getAlleleKey2().isEmpty())) {
+					entity.setAllele2(alleleDAO.get(Integer.valueOf(domain.get(i).getAlleleKey2())));
+					isUpdated = true;
+				}
+				else if (entity.getAllele2() != null && 
+						(domain.get(i).getAlleleKey2() == null || domain.get(i).getAlleleKey2().isEmpty())) {				
+					entity.setAllele2(null);
+					isUpdated = true;
+				}
+				else if (!String.valueOf(entity.getAllele2().get_allele_key()).equals(domain.get(i).getAlleleKey2())) {
+					entity.setAllele2(alleleDAO.get(Integer.valueOf(domain.get(i).getAlleleKey2())));
+					isUpdated = true;
+				}	
+				
+				if (!String.valueOf(entity.getPairState().get_term_key()).equals(domain.get(i).getPairStateKey())) {
+					entity.setPairState(termDAO.get(Integer.valueOf(domain.get(i).getPairStateKey())));
+					isUpdated = true;
+				}
+				
+				if (!String.valueOf(entity.getCompound().get_term_key()).equals(domain.get(i).getCompoundKey())) {
+					entity.setCompound(termDAO.get(Integer.valueOf(domain.get(i).getCompoundKey())));
+					isUpdated = true;
+				}
+				
+				if (!String.valueOf(entity.getSequenceNum()).equals(domain.get(i).getSequenceNum())) {
+					entity.setSequenceNum(Integer.valueOf(domain.get(i).getSequenceNum()));
+					isUpdated = true;					
+				}
 				if (isUpdated) {
 					log.info("processAllelePair modified == true");
 					entity.setModification_date(new Date());
+					entity.setModifiedBy(user);
 					allelePairDAO.update(entity);
 					modified = true;
 					log.info("processAllelePair/changes processed: " + domain.get(i).getAllelePairKey());

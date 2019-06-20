@@ -88,9 +88,9 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 		
 		List<AllelePairDomain> results = new ArrayList<AllelePairDomain>();
 
-		String cmd = "\nselect * from img_imagepane"
-				+ "\nwhere _image_key = " + key
-				+ "\norder by _imagepane_key";
+		String cmd = "\nselect * from gxd_allelepair"
+				+ "\nwhere _allelepair_key = " + key
+				+ "\norder by sequencenum";
 		
 		log.info(cmd);
 
@@ -98,7 +98,7 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				AllelePairDomain domain = new AllelePairDomain();	
-				domain = translator.translate(allelePairDAO.get(rs.getInt("_imagepane_key")));
+				domain = translator.translate(allelePairDAO.get(rs.getInt("_allelepair_key")));
 				allelePairDAO.clear();
 				results.add(domain);
 			}
@@ -195,6 +195,36 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 					isUpdated = true;
 				}	
 				
+				if (entity.getCellLine1() == null && 
+						(domain.get(i).getCellLine1() != null || !domain.get(i).getCellLine1().isEmpty())) {
+					entity.setCellLine1(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLine1())));
+					isUpdated = true;
+				}
+				else if (entity.getCellLine1() != null && 
+						(domain.get(i).getCellLine1() == null || domain.get(i).getCellLine1().isEmpty())) {				
+					entity.setCellLine1(null);
+					isUpdated = true;
+				}
+				else if (!String.valueOf(entity.getCellLine1().get_cellline_key()).equals(domain.get(i).getCellLine1())) {
+					entity.setCellLine1(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLine1())));
+					isUpdated = true;
+				}
+				
+				if (entity.getCellLine2() == null && 
+						(domain.get(i).getCellLine2() != null || !domain.get(i).getCellLine2().isEmpty())) {
+					entity.setCellLine2(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLine2())));
+					isUpdated = true;
+				}
+				else if (entity.getCellLine2() != null && 
+						(domain.get(i).getCellLine2() == null || domain.get(i).getCellLine2().isEmpty())) {				
+					entity.setCellLine2(null);
+					isUpdated = true;
+				}
+				else if (!String.valueOf(entity.getCellLine2().get_cellline_key()).equals(domain.get(i).getCellLine2())) {
+					entity.setCellLine2(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLine2())));
+					isUpdated = true;
+				}
+								
 				if (!String.valueOf(entity.getPairState().get_term_key()).equals(domain.get(i).getPairStateKey())) {
 					entity.setPairState(termDAO.get(Integer.valueOf(domain.get(i).getPairStateKey())));
 					isUpdated = true;
@@ -228,6 +258,128 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 		
 		log.info("processAllelePair/processing successful");
 		return modified;
+	}
+
+	@Transactional
+	public SearchResults<AllelePairDomain> validateAlleleState(AllelePairDomain domain) {
+		// validate the Allele State & Alleles
+		// returns SearchResults.error = null if valid = true
+		// else return SearchResults.error = error message
+	    
+		// Homozygous            Allele1 = Allele 2
+	    //
+	    // Heterozygote          Allele1 is NOT = Allele 2
+	    //
+		// Hemizygous X linked   Allele2 is null 
+	    //	                     Marker chromosome = "X"
+	    //	                     Compound = Not Applicable
+	    //
+		// Hemizygous Y linked   Allele2 is null
+	    //	                     and Marker chromosome  "Y" 
+	    //	                     and Compound = Not Applicable
+	    //
+		// Hemizygous Insertion  Allele2 is null
+	    //
+		// Hemizygous Deletion   Allele2 is null
+	    //	                     Compound = Top or Bottom
+	    //
+		// Indeterminate         Allele2 is null
+	    //	                     Compound = Not Applicable
+	    //
+		// Homoplasmic           no allele pair state error checking
+	    // Heteroplasmic         no allele pair state error checking
+	    //
+		
+		// return same domain; will add "error" messages if necessary
+		SearchResults<AllelePairDomain> results = new SearchResults<AllelePairDomain>();
+		results.setItem(domain);				
+
+		Boolean isValid = false;
+		String error = "";
+		
+		String pairState = domain.getPairState();
+		String alleleKey1 = domain.getAlleleKey1();
+		String alleleKey2 = domain.getAlleleKey2();
+		String markerChr = domain.getMarkerChromosome();
+		String compound = domain.getCompound();
+		
+		if (pairState.equals("Homoplasmic")
+			|| pairState.equals("Heteroplasmic")) {
+			isValid = true;
+		}
+		
+		if (pairState.equals("Homozygous")) {
+			if (alleleKey2 != null 
+				&& !alleleKey2.isEmpty() 
+				&& alleleKey1.equals(alleleKey2)) {
+				isValid = true;
+			}
+			else {
+				error = "Homozgous: Allele1 must equal Allele 2";
+			}
+		}
+		
+		if (pairState.equals("Heterozygote")) {
+			if (alleleKey2 != null 
+				&& !alleleKey2.isEmpty()
+				&& !alleleKey1.equals(alleleKey2)) {
+				isValid = true;
+			} else {
+				error = "Heretorzygote: Allele2 must NOT be null and Allele1 must NOT equal Allele 2";
+			}
+		}
+		
+		if (pairState.equals("Hemizygous X-linked")) {
+			if (alleleKey2 == null 
+				&& markerChr.equals("X")
+				&& compound.equals("Not Applicable")) {
+				isValid = true;
+			}
+			else {
+				error = "Hemizygous X-linked: Allele2 must be null, Marker chromosome must be (X), and Compound must be (Not Applicable)";
+			}
+		}
+		
+		if (pairState.equals("Hemizygous Y-linked")) {
+			if (alleleKey2 == null 
+				&& markerChr.equals("Y")
+				&& compound.equals("Not Applicable")) {
+				isValid = true;
+			}
+			else {
+				error = "Hemizygous Y-linked: Allele2 must be null, Marker chromosome must be (Y), and Compound must be (Not Applicable)";
+			}
+		}
+		
+		if (pairState.equals("Hemizygous Insertion")) {
+			if (alleleKey2 == null) {
+				isValid = true;
+			} else {
+				error = "Hemizygous Insertion: Allele2 must be null";
+			}
+		}
+
+		if (pairState.equals("Hemizygous Deletion")) {
+			if (alleleKey2 == null && !compound.equals("Not Applicable")) {
+				isValid = true;
+			} else {
+				error = "Hemizygous Deletion: Allele2 must be null, and Compound must be in (Top, Bottem)";
+			}
+		}
+		
+		if (pairState.equals("Indeterminate")) {
+			if (alleleKey2 == null && compound.equals("Not Applicable")				) {
+				isValid = true;
+			} else {
+				error = "Indeterminate: Allele2 must be null, and Compound must be (Not Applicable)";
+			}
+		}
+		
+		if (isValid == false) {
+			results.setError("Validate Allele State failed", error, Constants.HTTP_SERVER_ERROR);	
+		}
+		
+		return results;
 	}
 	
 }

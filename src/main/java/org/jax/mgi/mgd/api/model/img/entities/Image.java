@@ -116,6 +116,8 @@ public class Image extends BaseEntity {
 	private List<Accession> nonEditAccessionIds;
 	
 	// image panes
+	// sort descending to push any null pane labels to the top if imagePane list
+	// translator checks the first row of imagePane list for null before calling sort
 	@OneToMany()
 	@JoinColumn(name="_image_key", insertable=false, updatable=false)
 	@OrderBy(clause="paneLabel desc")

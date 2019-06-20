@@ -77,7 +77,7 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 		List<ImagePaneDomain> results = new ArrayList<ImagePaneDomain>();
 
 		String cmd = "\nselect * from img_imagepane"
-				+ "\nwhere _image_key = " + key
+				+ "\nwhere _imagepane_key = " + key
 				+ "\norder by _imagepane_key";
 		
 		log.info(cmd);

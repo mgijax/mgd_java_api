@@ -22,9 +22,11 @@ public class SlimAlleleTranslator extends BaseEntityDomainTranslator<Allele, Sli
 		domain.setAlleleKey(String.valueOf(entity.get_allele_key()));
 		domain.setSymbol(entity.getSymbol());
 		
-		// marker chromosome, strand via mrk_location_cache
+		// marker key, symbol, chromosome, strand via mrk_location_cache
 		if (entity.getMarker() != null) {
 			if (entity.getMarker().getLocationCache() != null) {
+				domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
+				domain.setMarkerSymbol(entity.getMarker().getSymbol());
 				domain.setChromosome(entity.getMarker().getChromosome());
 				domain.setStrand(entity.getMarker().getLocationCache().getStrand());				
 			}

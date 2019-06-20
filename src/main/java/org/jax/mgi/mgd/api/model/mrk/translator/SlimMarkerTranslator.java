@@ -13,7 +13,8 @@ public class SlimMarkerTranslator extends BaseEntityDomainTranslator<Marker, Sli
 		
 		domain.setMarkerKey(String.valueOf(entity.get_marker_key()));
 		domain.setSymbol(entity.getSymbol());
-	
+		domain.setChromosome(entity.getChromosome());
+		
 		return domain;
 	}
 

@@ -47,8 +47,8 @@ public class ImagePaneController extends BaseController<ImagePaneDomain> {
 	}
 
 	@Override
-	public ImagePaneDomain get(Integer imageKey) {
-		return imagePaneService.get(imageKey);
+	public ImagePaneDomain get(Integer key) {
+		return imagePaneService.get(key);
 	}
 
 	@Override

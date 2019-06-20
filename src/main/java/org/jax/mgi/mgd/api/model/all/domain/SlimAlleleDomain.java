@@ -14,6 +14,8 @@ public class SlimAlleleDomain extends BaseDomain {
 
 	private String alleleKey;
 	private String symbol;
+	private String markerKey;
+	private String markerSymbol;
 	private String chromosome;
 	private String strand;
 	private List<SlimAccessionDomain> mgiAccessionIds;

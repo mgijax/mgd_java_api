@@ -10,9 +10,11 @@ public class SlimProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeS
 	protected SlimProbeStrainDomain entityToDomain(ProbeStrain entity) {
 		
 		SlimProbeStrainDomain domain = new SlimProbeStrainDomain();
+		
 		domain.setStrainKey(String.valueOf(entity.get_strain_key()));
 		domain.setStrain(entity.getStrain());
-
+		domain.setIsPrivate(String.valueOf(entity.getIsPrivate()));
+		
 		return domain;
 	}
 

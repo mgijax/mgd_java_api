@@ -35,9 +35,6 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
-		// annotation has one evidence but is represented in OneToMany in entity
-		// some annotation types (_annottype_key in (1008, 1009, 1014)
-		// do not have a evidence record
 		if (entity.getEvidences() != null && !entity.getEvidences().isEmpty()) {
 			Iterable<EvidenceDomain> i = evidenceTranslator.translateEntities(entity.getEvidences());
 			domain.setEvidence(i.iterator().next());			

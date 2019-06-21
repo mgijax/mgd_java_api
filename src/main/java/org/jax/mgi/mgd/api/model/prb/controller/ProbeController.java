@@ -15,7 +15,7 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 import io.swagger.annotations.Api;
 
 @Path("/probe")
-@Api(value = "Probe Endpoints", description="CRUD operations for probes")
+@Api(value = "Probe Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ProbeController extends BaseController<ProbeDomain> {

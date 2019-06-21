@@ -11,14 +11,19 @@ import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
+import org.jboss.logging.Logger;
 
 @RequestScoped
 public class ProbeService extends BaseService<ProbeDomain> {
+
+	protected Logger log = Logger.getLogger(getClass());
 
 	@Inject
 	private ProbeDAO probeDAO;
 
 	private ProbeTranslator translator = new ProbeTranslator();
+	
+	//private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
 	public SearchResults<ProbeDomain> create(ProbeDomain object, User user) {
@@ -57,6 +62,5 @@ public class ProbeService extends BaseService<ProbeDomain> {
         results.setItem(translator.translate(probeDAO.get(key)));
         return results;
     }
-
 
 }

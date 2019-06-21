@@ -20,6 +20,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
+import org.jax.mgi.mgd.api.model.voc.entities.AnnotationHeader;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
@@ -107,10 +108,16 @@ public class Genotype extends BaseEntity {
     @Where(clause="`_annottype_key` = 1002")
     private List<Annotation> mpAnnots;
 	
+	// MP Header
+	@OneToMany()
+    @JoinColumn(name="_object_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
+    @Where(clause="`_annottype_key` = 1002")
+    private List<AnnotationHeader> mpHeaders;
+	
 	// DO term annotations
 	@OneToMany()
     @JoinColumn(name="_object_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
     @Where(clause="`_annottype_key` = 1020")
     private List<Annotation> doAnnots;
-		
+	
 }

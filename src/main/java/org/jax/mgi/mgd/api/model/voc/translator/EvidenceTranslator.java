@@ -1,12 +1,16 @@
 package org.jax.mgi.mgd.api.model.voc.translator;
 
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
+import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidenceDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Evidence;
 import org.jax.mgi.mgd.api.util.Constants;
 
 public class EvidenceTranslator extends BaseEntityDomainTranslator<Evidence, EvidenceDomain> {
 	
+	private NoteTranslator noteTranslator = new NoteTranslator();		
+
 	@Override
 	protected EvidenceDomain entityToDomain(Evidence entity) {
 		EvidenceDomain domain = new EvidenceDomain();
@@ -33,6 +37,24 @@ public class EvidenceTranslator extends BaseEntityDomainTranslator<Evidence, Evi
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));		
 	
+		// at most one general note
+		if (entity.getGeneralNote() != null && !entity.getGeneralNote().isEmpty()) {
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getGeneralNote());
+			domain.setGeneralNote(note.iterator().next());
+		}
+		
+		// at most one background sensivity
+		if (entity.getBackgroundSensitivityNote() != null && !entity.getBackgroundSensitivityNote().isEmpty()) {
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getBackgroundSensitivityNote());
+			domain.setBackgroundSensitivityNote(note.iterator().next());
+		}
+		
+		// at most one normal note
+		if (entity.getNormalNote() != null && !entity.getNormalNote().isEmpty()) {
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getNormalNote());
+			domain.setNormalNote(note.iterator().next());
+		}
+				
 		return domain;
 	}
 

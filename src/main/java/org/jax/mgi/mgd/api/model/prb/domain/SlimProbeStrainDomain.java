@@ -10,4 +10,6 @@ public class SlimProbeStrainDomain extends BaseDomain {
 
 	private String strainKey;
 	private String strain;
+	private String isPrivate;
+	
 }

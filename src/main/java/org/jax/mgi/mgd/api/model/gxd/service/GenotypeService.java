@@ -20,7 +20,6 @@ import org.jax.mgi.mgd.api.model.gxd.translator.GenotypeTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimGenotypeTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
-import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -39,9 +38,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 	private AllelePairService allelePairService;
 	@Inject
 	private NoteService noteService;
-	@Inject
-	private AnnotationService annotationService;
-	
+
 	private GenotypeTranslator translator = new GenotypeTranslator();
 	private SlimGenotypeTranslator slimtranslator = new SlimGenotypeTranslator();
 	
@@ -59,6 +56,13 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 
 		SearchResults<GenotypeDomain> results = new SearchResults<GenotypeDomain>();
 		Genotype entity = new Genotype();
+		String cmd;
+		Query query;
+		
+		// if no conditional value is set, then default = 0 (No)
+		if (domain.getIsConditional() == null || domain.getIsConditional().isEmpty()) {
+			domain.setIsConditional("0");
+		}
 		
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
@@ -74,8 +78,8 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		
 		log.info("processGenotypes/order allele pairs");
 		if (domain.getUseAllelePairDefaultOrder() == "1") {
-			String cmd = "select * from GXD_orderAllelePairs (" + String.valueOf(entity.get_genotype_key()) + ")";
-			Query query = genotypeDAO.createNativeQuery(cmd);
+			cmd = "select * from GXD_orderAllelePairs (" + String.valueOf(entity.get_genotype_key()) + ")";
+			query = genotypeDAO.createNativeQuery(cmd);
 			query.getResultList();
 		}
 		
@@ -96,16 +100,22 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		}
 		
 		// process mp annotations
-		log.info("process MP annotations");
-		if (domain.getMpAnnots() != null && !domain.getMpAnnots().isEmpty()) {
-			annotationService.process(domain.getMpAnnots(), user);
-		}
+		//log.info("process MP annotations");
+		//if (domain.getMpAnnots() != null && !domain.getMpAnnots().isEmpty()) {
+		//	annotationService.process(domain.getMpAnnots(), user);
+		//}
 	
 		// process DO annotations
-		log.info("process DO annotations");
-		if (domain.getDoAnnots() != null && !domain.getDoAnnots().isEmpty()) {
-			annotationService.process(domain.getDoAnnots(), user);
-		}
+		//log.info("process DO annotations");
+		//if (domain.getDoAnnots() != null && !domain.getDoAnnots().isEmpty()) {
+		//	annotationService.process(domain.getDoAnnots(), user);
+		//}
+		
+		// check duplicate genotype
+		log.info("processGenotypes/check duplicate");
+		cmd = "select * from GXD_checkDuplicateGenotype (" + String.valueOf(entity.get_genotype_key()) + ")";
+		query = genotypeDAO.createNativeQuery(cmd);
+		query.getResultList();
 		
 		// return entity translated to domain
 		log.info("processGenotype/create/returning results");
@@ -121,7 +131,8 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		SearchResults<GenotypeDomain> results = new SearchResults<GenotypeDomain>();
 		Genotype entity = genotypeDAO.get(Integer.valueOf(domain.getGenotypeKey()));
 		Boolean modified = false;
-		//String mgiTypeName = "Genotype";
+		String cmd;
+		Query query;
 		
 		log.info("processGenotype/update");
 
@@ -149,8 +160,8 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		
 		log.info("processGenotypes/order allele pairs");
 		if (domain.getUseAllelePairDefaultOrder() == "1") {
-			String cmd = "select * from GXD_orderAllelePairs (" + String.valueOf(entity.get_genotype_key()) + ")";
-			Query query = genotypeDAO.createNativeQuery(cmd);
+			cmd = "select * from GXD_orderAllelePairs (" + String.valueOf(entity.get_genotype_key()) + ")";
+			query = genotypeDAO.createNativeQuery(cmd);
 			query.getResultList();
 		}
 		
@@ -181,21 +192,27 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		}
 
 		// process mp annotations
-		log.info("process MP annotations");
-		if (domain.getMpAnnots() != null && !domain.getMpAnnots().isEmpty()) {
-			if (annotationService.process(domain.getMpAnnots(), user)) {
-				modified = true;
-			}
-		}
+		//log.info("process MP annotations");
+		//if (domain.getMpAnnots() != null && !domain.getMpAnnots().isEmpty()) {
+		//	if (annotationService.process(domain.getMpAnnots(), user)) {
+		//		modified = true;
+		//	}
+		//}
 		
 		// process DO annotations
-		log.info("process DO annotations");
-		if (domain.getDoAnnots() != null && !domain.getDoAnnots().isEmpty()) {
-			if (annotationService.process(domain.getDoAnnots(), user)) {
-				modified = true;
-			}
-		}
-				
+		//log.info("process DO annotations");
+		//if (domain.getDoAnnots() != null && !domain.getDoAnnots().isEmpty()) {
+		//	if (annotationService.process(domain.getDoAnnots(), user)) {
+		//		modified = true;
+		//	}
+		//}
+		
+		// check duplicate genotype
+		log.info("processGenotypes/check duplicate");
+		cmd = "select * from GXD_checkDuplicateGenotype (" + String.valueOf(entity.get_genotype_key()) + ")";
+		query = genotypeDAO.createNativeQuery(cmd);
+		query.getResultList();
+		
 		// return entity translated to domain
 		log.info("processGenotype/update/returning results");
 		results.setItem(translator.translate(entity));
@@ -581,5 +598,5 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 	}	
 	
 	// end Data Sets
-	
+
 }

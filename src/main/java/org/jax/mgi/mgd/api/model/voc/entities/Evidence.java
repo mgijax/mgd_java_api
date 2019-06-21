@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.voc.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,12 +9,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
 import io.swagger.annotations.ApiModel;
@@ -53,4 +57,22 @@ public class Evidence extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
+	// General
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_annotevidence_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 25 and `_notetype_key` = 1008")
+	private List<Note> generalNote;
+
+	// Background Sensitivity
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_annotevidence_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 25 and `_notetype_key` = 1015")
+	private List<Note> backgroundSensitivityNote;
+	
+	// Normal
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_annotevidence_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 25 and `_notetype_key` = 1031")
+	private List<Note> normalNote;
+		
 }

@@ -79,4 +79,11 @@ public class AllelePairController extends BaseController<AllelePairDomain> {
 		return allelePairService.validateAlleleState(domain);
 	}
 	
+	@POST
+	@ApiOperation(value = "Validate Mutant Cell Lines")
+	@Path("/validateMutantCellLines")
+	public SearchResults<AllelePairDomain> validateMutantCellLines(AllelePairDomain domain) {
+		return allelePairService.validateMutantCellLines(domain);
+	}
+		
 }

@@ -303,6 +303,11 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 		String markerChr = domain.getMarkerChromosome();
 		String compound = domain.getCompound();
 		
+		// no values/do nothing
+		if (alleleKey1 == null && alleleKey2 == null) {
+			return results;
+		}
+		
 		if (pairState.equals("Homoplasmic")
 			|| pairState.equals("Heteroplasmic")) {
 			isValid = true;
@@ -381,5 +386,78 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 		
 		return results;
 	}
+
+	@Transactional
+	public SearchResults<AllelePairDomain> validateMutantCellLines(AllelePairDomain domain) {
+		// validate the Allele/MCL associations  
+		// returns SearchResults.error = null if valid = true
+		// else return SearchResults.error = error message
+	    
+		// return same domain; will add "error" messages if necessary
+		SearchResults<AllelePairDomain> results = new SearchResults<AllelePairDomain>();
+		results.setItem(domain);				
 	
+		String error = "";
+		Boolean isValidMCL1 = false;
+		Boolean isValidMCL2 = false;
+		
+		String alleleKey1 = domain.getAlleleKey1();
+		String alleleKey2 = domain.getAlleleKey2();
+		String cellLineKey1 = domain.getCellLineKey1();
+		String cellLineKey2 = domain.getCellLineKey2();
+
+		// no values/do nothing
+		if (cellLineKey1 == null && cellLineKey2 == null) {
+			return results;
+		}
+	
+		String cmd = "\nselect c._cellLine_key "
+				+ "\nfrom all_cellLine c, all_allele_cellline a"
+				+ "\nwhere c.isMutant = 1"
+				+ "\nand c._cellLine_key = a._mutantcellLine_key"
+				+ "\nand c._cellLine_key = " + cellLineKey1
+				+ "\nand a._allele_key = " + alleleKey1;
+		
+		if (cellLineKey2 != null && !cellLineKey2.isEmpty()) {
+			cmd = cmd + "\nunion" +
+				"\nselect c._cellLine_key from all_cellline c, all_allele_cellline a"
+				+ "\nwhere c.isMutant = 1"
+				+ "\nand c._cellLine_key = a._mutantcellLine_key"
+				+ "\nand c._cellLine_key = " + cellLineKey2
+				+ "\nand a._allele_key = " + alleleKey2;				
+		}
+	
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				if (rs.getString("_cellline_key").equals(cellLineKey1)) {
+					isValidMCL1 = true;
+				}
+				if (rs.getString("_cellline_key").equals(cellLineKey2)) {
+					isValidMCL2 = true;
+				}				
+			}
+			sqlExecutor.cleanup();
+						
+			if (isValidMCL1 == false) {
+				error = "Mutant Cell Line 1 is invalid; ";
+			}
+
+			if (isValidMCL2 == false) {
+				error = error + "Mutant Cell Line 2 is invalid";
+			}
+			
+			if (isValidMCL1 == false || isValidMCL2 == false) {
+				results.setError("Validate Mutant Cell Line failed", error, Constants.HTTP_SERVER_ERROR);
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+				
+		return results;
+	}
+		
 }

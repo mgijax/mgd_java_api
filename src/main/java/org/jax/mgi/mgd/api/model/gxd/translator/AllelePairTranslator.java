@@ -52,7 +52,7 @@ public class AllelePairTranslator extends BaseEntityDomainTranslator<AllelePair,
 		
 		// may be null
 		if (entity.getCellLine2() != null) {
-			domain.setCellLineKey1(String.valueOf(entity.getCellLine2().get_cellline_key()));
+			domain.setCellLineKey2(String.valueOf(entity.getCellLine2().get_cellline_key()));
 			domain.setCellLine2(entity.getCellLine2().getCellLine());
 		}
 				

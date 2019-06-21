@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.voc.domain;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -26,5 +27,9 @@ public class EvidenceDomain extends BaseDomain {
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;
+	
+	private NoteDomain generalNote;
+	private NoteDomain backgroundSensitivityNote;
+	private NoteDomain normalNote;
 	
 }

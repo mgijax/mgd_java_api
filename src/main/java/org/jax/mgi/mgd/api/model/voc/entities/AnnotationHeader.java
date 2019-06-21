@@ -23,8 +23,11 @@ import lombok.Setter;
 public class AnnotationHeader extends BaseEntity {
 
 	@Id
-	private int _annotHeader_key;
-	private int _object_key;
+	//@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="voc_annotheader_generator")
+	//@SequenceGenerator(name="voc_annotheader_generator", sequenceName = "voc_annotheader_seq", allocationSize=1)
+	//@ApiModelProperty(value="primary key")	
+	private int _annotheader_key;
+	private Integer _object_key;
 	private Integer sequenceNum;
 	private Integer isNormal;
 	private Date approval_date;
@@ -37,7 +40,7 @@ public class AnnotationHeader extends BaseEntity {
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_term_key")
-	private Term headerTerm;
+	private Term term;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
@@ -51,8 +54,4 @@ public class AnnotationHeader extends BaseEntity {
 	@JoinColumn(name="_approvedby_key", referencedColumnName="_user_key")
 	private User approvedBy;
 	
-	//@OneToOne(fetch=FetchType.LAZY)
-	//@JoinColumn(name="_object_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
-	//@Where(clause="annotType.`_mgitype_key` = 12")
-	//private Genotype genotype;
 }

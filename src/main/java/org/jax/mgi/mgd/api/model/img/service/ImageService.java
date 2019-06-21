@@ -174,12 +174,19 @@ public class ImageService extends BaseService<ImageDomain> {
 		if (!entity.getFigureLabel().equals(domain.getFigureLabel())) {
 			entity.setFigureLabel(domain.getFigureLabel());
 			modified = true;
+			
+			//changing full size figure label also changes thumbnail figure label
+			if (domain.getImageTypeKey().equals(fullSizeImageKey)
+					&& domain.getThumbnailImage() != null) {
+				thumbnailEntity.setFigureLabel(domain.getFigureLabel());
+			}			
 		}
 
 		if (!String.valueOf(entity.getImageClass().get_term_key()).equals(domain.getImageClassKey())) {
 			entity.setImageClass(termDAO.get(Integer.valueOf(domain.getImageClassKey())));
 			modified = true;
 			
+			// changing full size image class also changes thumbnail image class
 			if (domain.getImageTypeKey().equals(fullSizeImageKey)
 					&& domain.getThumbnailImage() != null) {
 				thumbnailEntity.setImageClass(termDAO.get(Integer.valueOf(domain.getImageClassKey())));

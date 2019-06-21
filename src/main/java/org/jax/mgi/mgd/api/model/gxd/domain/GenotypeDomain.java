@@ -6,7 +6,6 @@ import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocViewDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
-import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -37,7 +36,4 @@ public class GenotypeDomain extends BaseDomain {
 	private List<AllelePairDomain> allelePairs;
 	private List<ImagePaneAssocViewDomain> imagePaneAssocs;
 
-	private List<AnnotationDomain> mpAnnots;
-	private List<AnnotationDomain> doAnnots;
-	
 }

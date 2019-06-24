@@ -2,6 +2,8 @@ package org.jax.mgi.mgd.api.model.gxd.translator;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeMPDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
@@ -14,6 +16,7 @@ public class GenotypeMPTranslator extends BaseEntityDomainTranslator<Genotype, G
 
 	protected Logger log = Logger.getLogger(getClass());
 
+	private AccessionTranslator accessionTranslator = new AccessionTranslator();	
 	private AnnotationTranslator annotTranslator = new AnnotationTranslator();
 	private AnnotationHeaderTranslator annotHeaderTranslator = new AnnotationHeaderTranslator();
 	
@@ -27,6 +30,12 @@ public class GenotypeMPTranslator extends BaseEntityDomainTranslator<Genotype, G
 			
 		domain.setGenotypeKey(String.valueOf(entity.get_genotype_key()));
 	
+		// mgi accession ids only
+		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
+			domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
+		}
+		
 		// mp annotations by genotype
 		if (entity.getMpAnnots() != null && !entity.getMpAnnots().isEmpty()) {
 			Iterable<AnnotationDomain> t = annotTranslator.translateEntities(entity.getMpAnnots());

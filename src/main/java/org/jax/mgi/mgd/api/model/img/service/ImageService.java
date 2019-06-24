@@ -59,6 +59,7 @@ public class ImageService extends BaseService<ImageDomain> {
 	private String fullSizeImageKey = "1072158";
 	private String thumbnailImageKey = "1072159";
 	private String expressionClassKey = "6481781";
+	private String phenotypeClassKey = "6481782";
 	
 	@Transactional
 	public SearchResults<ImageDomain> create(ImageDomain domain, User user) {
@@ -82,7 +83,12 @@ public class ImageService extends BaseService<ImageDomain> {
 			}
 		}
 		
-		// if A&P (not Expression), then create Thumbnail
+		// if null, default = Phenotype
+		if (domain.getImageClassKey() == null) {
+			domain.setImageClassKey(phenotypeClassKey);
+		}
+		
+		// if A&P (not Expression), then create Thumbnail too
 		if (!domain.getImageClassKey().equals(expressionClassKey)) {
 			Image thumbnailEntity = new Image();
 			thumbnailEntity.setImageType(termDAO.get(Integer.valueOf(thumbnailImageKey)));
@@ -101,9 +107,9 @@ public class ImageService extends BaseService<ImageDomain> {
 			entity.setThumbnailImage(thumbnailDAO.get(thumbnailEntity.get_image_key()));
 		}
 		
-		// create Full Size (1072158)
-		entity.setImageType(termDAO.get(1072158));
-		entity.setImageClass(termDAO.get(Integer.valueOf(domain.getImageClassKey())));
+		// create Full Size (1072158)		
+		entity.setImageClass(termDAO.get(Integer.valueOf(domain.getImageClassKey())));			
+		entity.setImageType(termDAO.get(Integer.valueOf(fullSizeImageKey)));
 		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));
 		entity.setFigureLabel(domain.getFigureLabel()); 
 		entity.setCreatedBy(user);
@@ -114,7 +120,7 @@ public class ImageService extends BaseService<ImageDomain> {
 		// execute persist/insert/send to database
 		log.info("processImage/create/imageDAO");
 		imageDAO.persist(entity);
-
+		
 		// process all notes
 		log.info("processImage/notes");
 		noteService.process(String.valueOf(entity.get_image_key()), domain.getCaptionNote(), mgiTypeKey, "1024", user);

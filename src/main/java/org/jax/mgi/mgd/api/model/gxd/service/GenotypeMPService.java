@@ -124,13 +124,20 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
-		String select = "select g._genotype_key, g.description";
-		String from = "from gxd_genotype_view g";		
-		String where = "where g.subType is not null";
+		String select = "select v._object_key, v.description";
+		String from = "from gxd_genotype_summary_view v";		
+		String where = "where v.subType is not null";
 		String orderBy = "order by description";			
 		String limit = Constants.SEARCH_RETURN_LIMIT;
 		
+		String value;
+		
 		Boolean from_accession = false;
+		Boolean from_annot = false;
+		Boolean from_evidence = false;
+		Boolean from_property = false;
+		Boolean from_user1 = false;
+		Boolean from_user2 = false;
 		
 		// if parameter exists, then add to where-clause
 		
@@ -141,23 +148,48 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 		//}
 		
 		if (searchDomain.getGenotypeKey() != null && !searchDomain.getGenotypeKey().isEmpty()) {
-			where = where + "\nand g._genotype_key = " + searchDomain.getGenotypeKey();
+			where = where + "\nand v._object_key = " + searchDomain.getGenotypeKey();
 		}
 	
 		// accession id
-		//if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {
-		//	String mgiid = searchDomain.getMgiAccessionIds().get(0).getAccID().toUpperCase();
-		//	if (!mgiid.contains("MGI:")) {
-		//		mgiid = "MGI:" + mgiid;
-		//	}
-		//	where = where + "\nand a.accID ilike '" + mgiid + "'";
-		//	from_accession = true;
-		//}
+		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {
+			String mgiid = searchDomain.getMgiAccessionIds().get(0).getAccID().toUpperCase();
+			if (!mgiid.contains("MGI:")) {
+				mgiid = "MGI:" + mgiid;
+			}
+			where = where + "\nand a.accID ilike '" + mgiid + "'";
+			from_accession = true;
+		}
+		
+		if (searchDomain.getMpAnnots() != null && !searchDomain.getMpAnnots().isEmpty()) {
+			value = searchDomain.getMpAnnots().get(0).getTermKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand a._term_key = " + value;
+				from_annot = true;
+			}
+			value = searchDomain.getMpAnnots().get(0).getQualifierKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand a._qualifier_key = " + value;
+				from_annot = true;
+			}
+			//value = searchDomain.getMpAnnots().get(0).
+			//if (value != null && !value.isEmpty()) {
+			//	where = where + "\nand a._term_key = " + value;
+			//	from_annot = true;
+			//}					
+		}
 					
 		if (from_accession == true) {
 			from = from + ", gxd_genotype_acc_view a";
-			where = where + "\nand g._genotype_key = a._object_key" 
+			where = where + "\nand v._object_key = a._object_key" 
 					+ "\nand a._mgitype_key = " + mgiTypeKey;
+		}
+		if (from_annot == true) {
+			from = from + ", voc_annot a";
+			where = where + "\nand v._object_key = a._object_key" 
+					+ "\nand v._logicaldb_key = 1"
+					+ "\nand v.preferred = 1"
+					+ "\nand a._annottype_key = 1002";
 		}
 
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;

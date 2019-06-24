@@ -12,6 +12,7 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationTypeDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.EvidenceDAO;
@@ -44,12 +45,16 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 	private TermDAO termDAO;
 	@Inject
 	private ReferenceDAO referenceDAO;
-
+	@Inject
+	private NoteService noteService;
+	
 	private AnnotationTranslator translator = new AnnotationTranslator();
 	private AlleleVariantAnnotationTranslator alleleVariantTranslator = new AlleleVariantAnnotationTranslator();	
 	private MarkerFeatureTypeTranslator markerFeatureTypeTranslator = new MarkerFeatureTypeTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
+	String mgiTypeKey = "25";
+	
 	@Transactional
 	public SearchResults<AnnotationDomain> create(AnnotationDomain object, User user) {
 		SearchResults<AnnotationDomain> results = new SearchResults<AnnotationDomain>();
@@ -242,6 +247,16 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 					evidenceEntity.setModifiedBy(user);
 					evidenceEntity.setModification_date(new Date());
 					evidenceDAO.persist(evidenceEntity);
+					
+					// evidence notes
+					noteService.process(String.valueOf(evidenceEntity.get_annotevidence_key()), 
+							domain.get(i).getEvidence().getGeneralNote(), mgiTypeKey, "1008", user);
+
+					noteService.process(String.valueOf(evidenceEntity.get_annotevidence_key()), 
+							domain.get(i).getEvidence().getBackgroundSensitivityNote(), mgiTypeKey, "1015", user);
+
+					noteService.process(String.valueOf(evidenceEntity.get_annotevidence_key()), 
+							domain.get(i).getEvidence().getNormalNote(), mgiTypeKey, "1031", user);	
 				}
 				
 				modified = true;
@@ -273,6 +288,47 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 					entity.setAlleleVariantSOIds(null);
 					
 					isUpdated = true;
+				}
+				
+				// not all annotation types have evidence records
+				// voc_evidence
+				if (domain.get(i).getEvidence() != null) {
+					
+					Evidence evidenceEntity = evidenceDAO.get(Integer.valueOf(domain.get(i).getEvidence().getAnnotEvidenceKey()));
+				
+					if (!String.valueOf(entity.getEvidences().get(0).getEvidenceTerm().get_term_key()).equals(domain.get(i).getEvidence().getEvidenceTermKey())) {
+						evidenceEntity.setEvidenceTerm(termDAO.get(Integer.valueOf(domain.get(i).getEvidence().getEvidenceTermKey())));
+						isUpdated = true;
+					}
+					
+					if (!String.valueOf(entity.getEvidences().get(0).getReference().get_refs_key()).equals(domain.get(i).getEvidence().getRefsKey())) {
+						evidenceEntity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getEvidence().getRefsKey())));
+						isUpdated = true;
+					}
+					
+					if (!entity.getEvidences().get(0).getInferredFrom().equals(domain.get(i).getEvidence().getInferredFrom())) {
+						evidenceEntity.setInferredFrom(domain.get(i).getEvidence().getInferredFrom());
+						isUpdated = true;
+					}
+															
+					if (isUpdated == true) {
+						evidenceEntity.setModifiedBy(user);
+						evidenceEntity.setModification_date(new Date());
+					}
+					
+					// evidence notes
+					if (noteService.process(String.valueOf(entity.getEvidences().get(0).get_annotevidence_key()), 
+							domain.get(i).getEvidence().getGeneralNote(), mgiTypeKey, "1008", user)) {
+						isUpdated = true;
+					}
+					if (noteService.process(String.valueOf(entity.getEvidences().get(0).get_annotevidence_key()), 
+							domain.get(i).getEvidence().getBackgroundSensitivityNote(), mgiTypeKey, "1015", user)) {
+						isUpdated = true;
+					}
+					if (noteService.process(String.valueOf(entity.getEvidences().get(0).get_annotevidence_key()), 
+							domain.get(i).getEvidence().getNormalNote(), mgiTypeKey, "1031", user)) {
+						isUpdated = true;
+					}
 				}
 				
 				// if any modifications made, then update DAO

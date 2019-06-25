@@ -210,7 +210,7 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 					from_evidence = true;
 				}
 				if (shortCitation != null && !shortCitation.isEmpty()) {
-					shortCitation = shortCitation.replaceAll("'",  "''");
+					shortCitation = shortCitation.replace("'",  "''");
 					where = where + "\nand e.short_citation ilike '" + shortCitation + "'";
 					from_evidence = true;
 				}				

@@ -372,7 +372,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			where = where + "\nand v.isReviewed = " + searchDomain.getIsReviewed();
 		}
 		if (searchDomain.getDescription() != null && !searchDomain.getDescription().isEmpty()) {
-			value = searchDomain.getDescription().replaceAll("'",  "''");
+			value = searchDomain.getDescription().replace("'",  "''");
 			where = where + "\nand v.description ilike '" + value + "'";
 		}		
 		
@@ -435,13 +435,13 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			}			
 			if (searchDomain.getVariantSequences().get(0).getReferenceSequence() != null 
 					&& !searchDomain.getVariantSequences().get(0).getReferenceSequence().isEmpty()) {
-				value = searchDomain.getVariantSequences().get(0).getReferenceSequence().replaceAll(",",  "''");
+				value = searchDomain.getVariantSequences().get(0).getReferenceSequence().replace(",",  "''");
 				where = where + "\nand vs.referenceSequence ilike '" + value + "'";
 				from_sequence = true;
 			}		
 			if (searchDomain.getVariantSequences().get(0).getVariantSequence() != null 
 					&& !searchDomain.getVariantSequences().get(0).getVariantSequence().isEmpty()) {
-				value = searchDomain.getVariantSequences().get(0).getVariantSequence().replaceAll(",",  "''");
+				value = searchDomain.getVariantSequences().get(0).getVariantSequence().replace(",",  "''");
 				where = where + "\nand vs.referenceSequence ilike '" + value + "'";
 				from_sequence = true;
 			}		
@@ -451,7 +451,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		if (searchDomain.getVariantTypes() != null) {
 			if (searchDomain.getVariantTypes().get(0).getTerm() != null 
 					&& !searchDomain.getVariantTypes().get(0).getTerm().isEmpty()) {
-				value = searchDomain.getVariantTypes().get(0).getTerm().replaceAll(",",  "''");
+				value = searchDomain.getVariantTypes().get(0).getTerm().replace(",",  "''");
 				where = where + "\nand t1.term ilike '" + value + "'";
 				from_variantType = true;
 			}		
@@ -473,7 +473,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		if (searchDomain.getVariantEffects() != null) {
 			if (searchDomain.getVariantEffects().get(0).getTerm() != null 
 					&& !searchDomain.getVariantEffects().get(0).getTerm().isEmpty()) {
-				value = searchDomain.getVariantEffects().get(0).getTerm().replaceAll(",",  "''");
+				value = searchDomain.getVariantEffects().get(0).getTerm().replace(",",  "''");
 				where = where + "\nand t2.term ilike '" + value + "'";
 				from_variantEffect = true;
 			}		
@@ -492,13 +492,13 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		}		
 		// curator notes
 		if (searchDomain.getCuratorNote() != null) {
-			value = searchDomain.getCuratorNote().getNoteChunk().replaceAll("'",  "''");
+			value = searchDomain.getCuratorNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note1._notetype_key = 1050 and note1.note ilike '" + value + "'" ;
 			from_note1 = true;
 		}
 		// public notes
 		if (searchDomain.getPublicNote() != null) {
-			value = searchDomain.getPublicNote().getNoteChunk().replaceAll("'",  "''");
+			value = searchDomain.getPublicNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note2._notetype_key = 1051 and note2.note ilike '" + value + "'" ;
 			from_note2 = true;
 		}
@@ -510,7 +510,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 				from_reference = true;
 			}
 			if (searchDomain.getRefAssocs().get(0).getShort_citation() != null && !searchDomain.getRefAssocs().get(0).getShort_citation().isEmpty()) {
-				value = searchDomain.getRefAssocs().get(0).getShort_citation().replaceAll("'",  "''");
+				value = searchDomain.getRefAssocs().get(0).getShort_citation().replace("'",  "''");
 				where = where + "\nand vr.short_citation ilike '" + value + "'";
 				from_reference = true;
 			}

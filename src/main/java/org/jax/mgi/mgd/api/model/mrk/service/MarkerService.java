@@ -432,27 +432,27 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		// notes
 		if (searchDomain.getEditorNote() != null  && !searchDomain.getEditorNote().getNoteChunk().isEmpty()) {
-			value = searchDomain.getEditorNote().getNoteChunk().replaceAll("'",  "''");
+			value = searchDomain.getEditorNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note1._notetype_key = 1004 and note1.note ilike '" + value + "'" ;
 			from_editorNote = true;
 		}
 		if (searchDomain.getSequenceNote() != null  && !searchDomain.getSequenceNote().getNoteChunk().isEmpty()) {
-			value = searchDomain.getSequenceNote().getNoteChunk().replaceAll("'",  "''");
+			value = searchDomain.getSequenceNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note2._notetype_key = 1009 and note2.note ilike '" + value + "'" ;
 			from_sequenceNote = true;
 		}
 		if (searchDomain.getRevisionNote() != null  && !searchDomain.getRevisionNote().getNoteChunk().isEmpty()) {
-			value = searchDomain.getRevisionNote().getNoteChunk().replaceAll("'",  "''");
+			value = searchDomain.getRevisionNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note3._notetype_key = 1030 and note3.note ilike '" + value + "'" ;
 			from_revisionNote = true;
 		}
 		if (searchDomain.getStrainNote() != null  && !searchDomain.getStrainNote().getNoteChunk().isEmpty()) {
-			value = searchDomain.getStrainNote().getNoteChunk().replaceAll("'",  "''");
+			value = searchDomain.getStrainNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note4._notetype_key = 1035 and note4.note ilike '" + value + "'" ;
 			from_strainNote = true;
 		}
 		if (searchDomain.getLocationNote() != null  && !searchDomain.getLocationNote().getNoteChunk().isEmpty()) {
-			value = searchDomain.getLocationNote().getNoteChunk().replaceAll("'",  "''");
+			value = searchDomain.getLocationNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note5._notetype_key = 1049 and note5.note ilike '" + value + "'" ;
 			from_locationNote = true;
 		}
@@ -490,7 +490,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				from_history = true;
 			}
 			if (searchDomain.getHistory().get(0).getShort_citation() != null && !searchDomain.getHistory().get(0).getShort_citation().isEmpty()) {
-				value = searchDomain.getHistory().get(0).getShort_citation().replaceAll("'",  "''");
+				value = searchDomain.getHistory().get(0).getShort_citation().replace("'",  "''");
 				where = where + "\nand mh.short_citation ilike '" + value + "'";
 				from_history = true;
 			}
@@ -569,7 +569,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				from_reference = true;
 			}				
 			if (searchDomain.getRefAssocs().get(0).getShort_citation() != null && !searchDomain.getRefAssocs().get(0).getShort_citation().isEmpty()) {
-				value = searchDomain.getRefAssocs().get(0).getShort_citation().replaceAll("'",  "''");
+				value = searchDomain.getRefAssocs().get(0).getShort_citation().replace("'",  "''");
 				where = where + "\nand mr.short_citation ilike '" + value + "'";
 				from_reference = true;
 			}	
@@ -619,7 +619,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				}
 				if (searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getShort_citation() != null 
 						&& !searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getShort_citation().isEmpty()) {
-					value = searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getShort_citation().replaceAll("'",  "''");
+					value = searchDomain.getEditAccessionIds().get(0).getReferences().get(0).getShort_citation().replace("'",  "''");
 					where = where + "\nand acc1.short_citation ilike '" + value + "'";
 					from_editAccession = true;
 				}				
@@ -666,7 +666,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				}
 				if (searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getShort_citation() != null 
 						&& !searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getShort_citation().isEmpty()) {
-					value = searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getShort_citation().replaceAll("'",  "''");
+					value = searchDomain.getNonEditAccessionIds().get(0).getReferences().get(0).getShort_citation().replace("'",  "''");
 					where = where + "\nand acc2.short_citation ilike '" + value + "'";
 					from_noneditAccession = true;
 				}				

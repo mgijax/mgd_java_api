@@ -117,7 +117,7 @@ public class NoteService extends BaseService<NoteDomain> {
 		if (noteDomain.getNoteKey() == null || noteDomain.getNoteKey().isEmpty())
 		{
 			noteKey = "null";
-			note = "'" + noteDomain.getNoteChunk().replaceAll("'",  "''") + "'"; 
+			note = "'" + noteDomain.getNoteChunk().replace("'",  "''") + "'"; 
 			modified = true;
 		}
 		// delete
@@ -132,7 +132,7 @@ public class NoteService extends BaseService<NoteDomain> {
 			Note entity = noteDAO.get(Integer.valueOf(noteDomain.getNoteKey()));
 			if (!entity.getNoteChunk().getNote().equals(noteDomain.getNoteChunk())) {
 				noteKey = noteDomain.getNoteKey().toString();
-				note = "'" + noteDomain.getNoteChunk().replaceAll("'",  "''") + "'"; 
+				note = "'" + noteDomain.getNoteChunk().replace("'",  "''") + "'"; 
 				modified = true;
 			}
 		}

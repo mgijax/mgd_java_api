@@ -445,18 +445,18 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		
 		// notes
 		if (searchDomain.getAlleleDetailNote() != null && !searchDomain.getAlleleDetailNote().getNoteChunk().isEmpty()) {
-			value = searchDomain.getAlleleDetailNote().getNoteChunk().replaceAll("'",  "''");
+			value = searchDomain.getAlleleDetailNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note1._notetype_key = 1016 and note1.note ilike '" + value + "'" ;
 			from_alleleDetailNote = true;
 		}
 		if (searchDomain.getGeneralNote() != null && !searchDomain.getGeneralNote().getNoteChunk().isEmpty() 
 				&& searchDomain.getGeneralNote().getNoteChunk().contains("%")) {
-			value = searchDomain.getGeneralNote().getNoteChunk().replaceAll("'",  "''");
+			value = searchDomain.getGeneralNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note2._notetype_key = 1027 and note2.note ilike '" + value + "'" ;
 			from_generalNote = true;
 		}
 		if (searchDomain.getPrivateCuratorialNote() != null && !searchDomain.getPrivateCuratorialNote().getNoteChunk().isEmpty()) {
-			value = searchDomain.getPrivateCuratorialNote().getNoteChunk().replaceAll("'",  "''");
+			value = searchDomain.getPrivateCuratorialNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note3._notetype_key = 1028 and note3.note ilike '" + value + "'" ;
 			from_privateCuratorialNote = true;
 		}

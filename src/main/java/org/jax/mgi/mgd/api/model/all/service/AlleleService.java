@@ -134,7 +134,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				from_reference = true;
 			}
 			if (searchDomain.getRefAssocs().get(0).getShort_citation() != null && !searchDomain.getRefAssocs().get(0).getShort_citation().isEmpty()) {
-				value = searchDomain.getRefAssocs().get(0).getShort_citation().replaceAll("'",  "''");
+				value = searchDomain.getRefAssocs().get(0).getShort_citation().replace("'",  "''");
 				where = where + "\nand ref.short_citation ilike '" + value + "'";
 				from_reference = true;
 			}

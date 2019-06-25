@@ -38,9 +38,7 @@ public class EvidenceTranslator extends BaseEntityDomainTranslator<Evidence, Evi
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));		
-	
-		// mp-sex-specificity
-		
+			
 		// at most one general note
 		if (entity.getGeneralNote() != null && !entity.getGeneralNote().isEmpty()) {
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getGeneralNote());

@@ -357,14 +357,14 @@ public class ImageService extends BaseService<ImageDomain> {
 			where = where + "\nand i.yDim = " + searchDomain.getYDim();
 		}			
 		if (searchDomain.getFigureLabel() != null && !searchDomain.getFigureLabel().isEmpty()) {
-			value = searchDomain.getFigureLabel().replaceAll("'",  "''");
+			value = searchDomain.getFigureLabel().replace("'",  "''");
 			where = where + "\nand i.figureLabel ilike '" + value + "'";
 		}
 		if (searchDomain.getImagePanes() != null) {
 			if (searchDomain.getImagePanes().get(0).getPaneLabel() != null
 				&& !searchDomain.getImagePanes().get(0).getPaneLabel().isEmpty()) {
-			value = searchDomain.getImagePanes().get(0).getPaneLabel().replaceAll("'",  "''");
-			value = value.replaceAll("_",  "\\\\_");
+			value = searchDomain.getImagePanes().get(0).getPaneLabel().replace("'",  "''");
+			value = value.replace("_",  "\\\\_");
 			where = where + "\nand p.paneLabel ilike '" + value + "'";
 			from_imagepane = true;
 			}
@@ -382,29 +382,30 @@ public class ImageService extends BaseService<ImageDomain> {
 			where = where + "\nand i.jnumid = '" + jnumid + "'";
 		}
 		if (searchDomain.getShort_citation() != null && !searchDomain.getShort_citation().isEmpty()) {
-			value = searchDomain.getShort_citation().replaceAll("'",  "''");
+			value = searchDomain.getShort_citation().replace("'",  "''");
 			where = where + "\nand i.short_citation ilike '" + value + "'";
 		}
 		
 		// notes
 		if (searchDomain.getCaptionNote() != null && !searchDomain.getCaptionNote().getNoteChunk().isEmpty()) {
-			value = searchDomain.getCaptionNote().getNoteChunk().replaceAll("'",  "''");
+			value = searchDomain.getCaptionNote().getNoteChunk().replace("'",  "''");
+			value = value.replace("\\", "\\\\");
 			where = where + "\nand note1._notetype_key = 1024 and note1.note ilike '" + value + "'" ;
 			from_captionNote = true;
 		}
 		if (searchDomain.getCopyrightNote() != null && !searchDomain.getCopyrightNote().getNoteChunk().isEmpty() 
 				&& searchDomain.getCopyrightNote().getNoteChunk().contains("%")) {
-			value = searchDomain.getCopyrightNote().getNoteChunk().replaceAll("'",  "''");
+			value = searchDomain.getCopyrightNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note2._notetype_key = 1023 and note2.note ilike '" + value + "'" ;
 			from_copyrightNote = true;
 		}
 		if (searchDomain.getPrivateCuratorialNote() != null && !searchDomain.getPrivateCuratorialNote().getNoteChunk().isEmpty()) {
-			value = searchDomain.getPrivateCuratorialNote().getNoteChunk().replaceAll("'",  "''");
+			value = searchDomain.getPrivateCuratorialNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note3._notetype_key = 1025 and note3.note ilike '" + value + "'" ;
 			from_privateCuratorialNote = true;
 		}
 		if (searchDomain.getExternalLinkNote() != null  && !searchDomain.getExternalLinkNote().getNoteChunk().isEmpty()) {
-			value = searchDomain.getExternalLinkNote().getNoteChunk().replaceAll("'",  "''");
+			value = searchDomain.getExternalLinkNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note4._notetype_key = 1039 and note4.note ilike '" + value + "'" ;
 			from_externalLinkNote = true;
 		}		
@@ -553,7 +554,7 @@ public class ImageService extends BaseService<ImageDomain> {
 			where = where + "\nand i.jnumid = '" + jnumid + "'";
 		}
 		if (searchDomain.getShort_citation() != null && !searchDomain.getShort_citation().isEmpty()) {
-			value = searchDomain.getShort_citation().replaceAll("'",  "''");
+			value = searchDomain.getShort_citation().replace("'",  "''");
 			where = where + "\nand i.short_citation ilike '" + value + "'";
 		}
 						

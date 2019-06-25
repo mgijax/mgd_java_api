@@ -31,5 +31,6 @@ public class EvidenceDomain extends BaseDomain {
 	private NoteDomain generalNote;
 	private NoteDomain backgroundSensitivityNote;
 	private NoteDomain normalNote;
+	private EvidencePropertyDomain mpSexSpecificity;
 	
 }

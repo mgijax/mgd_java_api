@@ -18,6 +18,7 @@ import org.jax.mgi.mgd.api.model.gxd.translator.SlimGenotypeTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -126,7 +127,7 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 		String cmd = "";
 		String select = "select v._object_key, v.description";
 		String from = "from gxd_genotype_summary_view v";		
-		String where = "where v.subType is not null";
+		String where = "where v._mgitype_key = " + mgiTypeKey;
 		String orderBy = "order by description";			
 		String limit = Constants.SEARCH_RETURN_LIMIT;
 		
@@ -136,16 +137,8 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 		Boolean from_annot = false;
 		Boolean from_evidence = false;
 		Boolean from_property = false;
-		Boolean from_user1 = false;
-		Boolean from_user2 = false;
 		
 		// if parameter exists, then add to where-clause
-		
-		//String cmResults[] = DateSQLQuery.queryByCreationModification("g", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
-		//if (cmResults.length > 0) {
-		//	from = from + cmResults[0];
-		//	where = where + cmResults[1];
-		//}
 		
 		if (searchDomain.getGenotypeKey() != null && !searchDomain.getGenotypeKey().isEmpty()) {
 			where = where + "\nand v._object_key = " + searchDomain.getGenotypeKey();
@@ -162,6 +155,7 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 		}
 		
 		if (searchDomain.getMpAnnots() != null && !searchDomain.getMpAnnots().isEmpty()) {
+	
 			value = searchDomain.getMpAnnots().get(0).getTermKey();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand a._term_key = " + value;
@@ -172,13 +166,61 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 				where = where + "\nand a._qualifier_key = " + value;
 				from_annot = true;
 			}
-			//value = searchDomain.getMpAnnots().get(0).
-			//if (value != null && !value.isEmpty()) {
-			//	where = where + "\nand a._term_key = " + value;
-			//	from_annot = true;
-			//}					
+			
+			if (searchDomain.getMpAnnots().get(0).getEvidence() != null) {
+				
+				String cmResults[] = DateSQLQuery.queryByCreationModification("e", 
+						searchDomain.getMpAnnots().get(0).getEvidence().getCreatedBy(), 
+						searchDomain.getMpAnnots().get(0).getEvidence().getModifiedBy(), 
+						searchDomain.getMpAnnots().get(0).getEvidence().getCreation_date(), 
+						searchDomain.getMpAnnots().get(0).getEvidence().getModification_date());
+				if (cmResults.length > 0) {
+					from = from + cmResults[0];
+					where = where + cmResults[1];
+					from_evidence = true;
+				}
+				
+				value = searchDomain.getMpAnnots().get(0).getEvidence().getMpSexSpecificity().getValue();
+				if (value != null && !value.isEmpty()) {
+					where = where + "\nand p.value ilike '" + value + "'";
+					from_evidence = true;
+					from_property = true;
+			
+				}
+				
+				value = searchDomain.getMpAnnots().get(0).getEvidence().getEvidenceTermKey();
+				if (value != null && !value.isEmpty()) {
+					where = where + "\nand e.value = " + value;
+					from_evidence = true;			
+				}
+
+				value = searchDomain.getMpAnnots().get(0).getEvidence().getRefsKey();
+				String jnumid = searchDomain.getMpAnnots().get(0).getEvidence().getJnumid();
+				String shortCitation = searchDomain.getMpAnnots().get(0).getEvidence().getShort_citation();				
+				if (value != null && !value.isEmpty()) {
+					where = where + "\nand e._Refs_key = " + value;
+					from_evidence = true;
+				}
+				else if (jnumid != null && !jnumid.isEmpty()) {
+					jnumid = jnumid.toUpperCase();
+					if (!jnumid.contains("J:")) {
+						jnumid = "J:" + jnumid;
+					}
+					where = where + "\nand e.jnumid = '" + jnumid + "'";
+					from_evidence = true;
+				}
+				if (shortCitation != null && !shortCitation.isEmpty()) {
+					shortCitation = shortCitation.replaceAll("'",  "''");
+					where = where + "\nand e.short_citation ilike '" + shortCitation + "'";
+					from_evidence = true;
+				}				
+			}
 		}
-					
+		
+		if (from_evidence == true) {
+			from_annot = true;
+		}
+		
 		if (from_accession == true) {
 			from = from + ", gxd_genotype_acc_view a";
 			where = where + "\nand v._object_key = a._object_key" 
@@ -191,6 +233,14 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 					+ "\nand v.preferred = 1"
 					+ "\nand a._annottype_key = 1002";
 		}
+		if (from_evidence == true) {
+			from = from + ", voc_evidence e";
+			where = where + "\nand a._annot_key = e._annot_key";
+		}
+		if (from_property == true) {
+			from = from + ", voc_evidence_property p";
+			where = where + "\nand e._annotevidence_key = p._annotevidence_key";
+		}
 
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
 	 
@@ -200,8 +250,8 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SlimGenotypeDomain domain = new SlimGenotypeDomain();
-				domain = slimtranslator.translate(genotypeDAO.get(rs.getInt("_genotype_key")));				
-				domain.setGenotypeDisplay(rs.getString("genotypeDisplay"));
+				domain = slimtranslator.translate(genotypeDAO.get(rs.getInt("_object_key")));				
+				domain.setGenotypeDisplay(rs.getString("description"));
 				genotypeDAO.clear();				
 				results.add(domain);
 			}

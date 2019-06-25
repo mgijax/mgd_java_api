@@ -50,13 +50,11 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
  			domain.setAlleleVariantSOIds(IteratorUtils.toList(acc.iterator()));
  		}
  		
- 		// mammalian phenotype/genotype
  		if (entity.getMpIds() != null && !entity.getMpIds().isEmpty()) {
  			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getMpIds());
  			domain.setMpIds(IteratorUtils.toList(acc.iterator()));
  		}
  		
- 		// disease ontology/genotype
  		if (entity.getDoIds() != null && !entity.getDoIds().isEmpty()) {
  			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getDoIds());
  			domain.setDoIds(IteratorUtils.toList(acc.iterator()));

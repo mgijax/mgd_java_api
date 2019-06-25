@@ -4,13 +4,15 @@ import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidenceDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.EvidencePropertyDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Evidence;
 import org.jax.mgi.mgd.api.util.Constants;
 
 public class EvidenceTranslator extends BaseEntityDomainTranslator<Evidence, EvidenceDomain> {
 	
 	private NoteTranslator noteTranslator = new NoteTranslator();		
-
+	private EvidencePropertyTranslator propertyTranslator = new EvidencePropertyTranslator();
+	
 	@Override
 	protected EvidenceDomain entityToDomain(Evidence entity) {
 		EvidenceDomain domain = new EvidenceDomain();
@@ -55,6 +57,12 @@ public class EvidenceTranslator extends BaseEntityDomainTranslator<Evidence, Evi
 		if (entity.getNormalNote() != null && !entity.getNormalNote().isEmpty()) {
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getNormalNote());
 			domain.setNormalNote(note.iterator().next());
+		}
+		
+		// at most one mp-sex-specificity
+		if (entity.getMpSexSpecificity() != null && !entity.getMpSexSpecificity().isEmpty()) {
+			Iterable<EvidencePropertyDomain> property = propertyTranslator.translateEntities(entity.getMpSexSpecificity());
+			domain.setMpSexSpecificity(property.iterator().next());
 		}
 				
 		return domain;

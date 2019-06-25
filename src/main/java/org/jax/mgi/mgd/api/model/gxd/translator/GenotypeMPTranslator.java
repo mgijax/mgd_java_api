@@ -37,10 +37,10 @@ public class GenotypeMPTranslator extends BaseEntityDomainTranslator<Genotype, G
 		}
 		
 		// mp annotations by genotype
-		if (entity.getMpAnnots() != null && !entity.getMpAnnots().isEmpty()) {
-			Iterable<AnnotationDomain> t = annotTranslator.translateEntities(entity.getMpAnnots());
-			domain.setMpAnnots(IteratorUtils.toList(t.iterator()));
-		}
+		//if (entity.getMpAnnots() != null && !entity.getMpAnnots().isEmpty()) {
+		//	Iterable<AnnotationDomain> t = annotTranslator.translateEntities(entity.getMpAnnots());
+		//	domain.setMpAnnots(IteratorUtils.toList(t.iterator()));
+		//}
 		
 		// mp header by genotype
 		if (entity.getMpHeaders() != null && !entity.getMpHeaders().isEmpty()) {

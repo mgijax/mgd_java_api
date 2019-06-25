@@ -6,10 +6,10 @@ import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeMPDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
-import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationHeaderDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.GenotypeMPAnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.translator.AnnotationHeaderTranslator;
-import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
+import org.jax.mgi.mgd.api.model.voc.translator.GenotypeMPAnnotationTranslator;
 import org.jboss.logging.Logger;
 
 public class GenotypeMPTranslator extends BaseEntityDomainTranslator<Genotype, GenotypeMPDomain> {
@@ -17,7 +17,7 @@ public class GenotypeMPTranslator extends BaseEntityDomainTranslator<Genotype, G
 	protected Logger log = Logger.getLogger(getClass());
 
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();	
-	private AnnotationTranslator annotTranslator = new AnnotationTranslator();
+	private GenotypeMPAnnotationTranslator annotTranslator = new GenotypeMPAnnotationTranslator();
 	private AnnotationHeaderTranslator annotHeaderTranslator = new AnnotationHeaderTranslator();
 	
 	@Override
@@ -37,10 +37,10 @@ public class GenotypeMPTranslator extends BaseEntityDomainTranslator<Genotype, G
 		}
 		
 		// mp annotations by genotype
-		//if (entity.getMpAnnots() != null && !entity.getMpAnnots().isEmpty()) {
-		//	Iterable<AnnotationDomain> t = annotTranslator.translateEntities(entity.getMpAnnots());
-		//	domain.setMpAnnots(IteratorUtils.toList(t.iterator()));
-		//}
+		if (entity.getMpAnnots() != null && !entity.getMpAnnots().isEmpty()) {
+			Iterable<GenotypeMPAnnotationDomain> t = annotTranslator.translateEntities(entity.getMpAnnots());
+			domain.setMpAnnots(IteratorUtils.toList(t.iterator()));
+		}
 		
 		// mp header by genotype
 		if (entity.getMpHeaders() != null && !entity.getMpHeaders().isEmpty()) {

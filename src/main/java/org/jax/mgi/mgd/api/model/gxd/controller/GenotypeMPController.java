@@ -25,7 +25,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @Path("/mpannot")
-@Api(value = "Genotype/MP Annotations Endpoints")
+@Api(value = "Genotype MP Annotations Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class GenotypeMPController extends BaseController<GenotypeMPDomain> {

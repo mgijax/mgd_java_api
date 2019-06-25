@@ -21,7 +21,7 @@ public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, Gen
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	private AllelePairTranslator allelePairsTranslator = new AllelePairTranslator();
 	private ImagePaneAssocViewTranslator imagePaneTranslator = new ImagePaneAssocViewTranslator();
-	
+
 	@Override
 	protected GenotypeDomain entityToDomain(Genotype entity) {
 		
@@ -81,7 +81,7 @@ public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, Gen
 			Iterable<ImagePaneAssocViewDomain> t = imagePaneTranslator.translateEntities(entity.getImagePaneAssocs());
 			domain.setImagePaneAssocs(IteratorUtils.toList(t.iterator()));
 		}
-					
+
 		return domain;
 	}
 

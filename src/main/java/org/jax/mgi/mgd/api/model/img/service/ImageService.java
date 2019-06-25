@@ -84,7 +84,7 @@ public class ImageService extends BaseService<ImageDomain> {
 		}
 		
 		// if null, default = Phenotype
-		if (domain.getImageClassKey() == null) {
+		if (domain.getImageClassKey() == null || domain.getImageClassKey().isEmpty()) {
 			domain.setImageClassKey(phenotypeClassKey);
 		}
 		

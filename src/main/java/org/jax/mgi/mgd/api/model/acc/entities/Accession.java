@@ -56,7 +56,7 @@ public class Accession extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_accession_key", insertable=false, updatable=false)
 	List<AccessionReference> references;
 	

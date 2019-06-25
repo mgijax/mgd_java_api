@@ -364,7 +364,7 @@ public class ImageService extends BaseService<ImageDomain> {
 			if (searchDomain.getImagePanes().get(0).getPaneLabel() != null
 				&& !searchDomain.getImagePanes().get(0).getPaneLabel().isEmpty()) {
 			value = searchDomain.getImagePanes().get(0).getPaneLabel().replace("'",  "''");
-			value = value.replace("_",  "\\\\_");
+			value = value.replace("_",  "\\_");
 			where = where + "\nand p.paneLabel ilike '" + value + "'";
 			from_imagepane = true;
 			}

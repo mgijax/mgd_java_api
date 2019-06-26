@@ -41,7 +41,7 @@ public class ImageController extends BaseController<ImageDomain> {
 	// for example, the mgi accession id is created by a database trigger
 	
 	@Override
-	public SearchResults<ImageDomain> create(ImageDomain domain, User user) {	
+	public SearchResults<ImageDomain> create(ImageDomain domain, User user) {
 		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
 		results = imageService.create(domain, user);
 		results = imageService.getResults(Integer.valueOf(results.items.get(0).getImageKey()));

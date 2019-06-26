@@ -75,13 +75,13 @@ public class ImageService extends BaseService<ImageDomain> {
 		log.info("processImage/create");
 		
 		// copyright/DXDOI validation
-		if (domain.getCopyrightNote() != null) {
-			if (domain.getCopyrightNote().getNoteChunk().contains("DXDOI(||)")) {
-				log.info("processImage/create/DXDOI missing");
-				results.setError("Failed : Copyright/DXDOI error", "Copyright is missing the DXDOI identifier", Constants.HTTP_SERVER_ERROR);
-				return results;		
-			}
-		}
+		//if (domain.getCopyrightNote() != null) {
+		//	if (domain.getCopyrightNote().getNoteChunk().contains("DXDOI(||)")) {
+		//		log.info("processImage/create/DXDOI missing");
+		//		results.setError("Failed : Copyright/DXDOI error", "Copyright is missing the DXDOI identifier", Constants.HTTP_SERVER_ERROR);
+		//		return results;		
+		//	}
+		//}
 		
 		// if null, default = Phenotype
 		if (domain.getImageClassKey() == null || domain.getImageClassKey().isEmpty()) {

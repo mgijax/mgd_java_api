@@ -103,9 +103,11 @@ public class ImageService extends BaseService<ImageDomain> {
 			log.info("processImage/create/thumbnailDAO");
 			thumbnailDAO.persist(thumbnailEntity);
 			
-			// process image pane
-			log.info("processImage/pane label");
+			// thumbnail image pane
 			imagePaneService.process(String.valueOf(thumbnailEntity.get_image_key()), domain.getImagePanes(), user);
+			
+			// thumbnail copyright
+			noteService.process(String.valueOf(thumbnailEntity.get_image_key()), domain.getCopyrightNote(), mgiTypeKey, "1023", user);
 
 			// set full-size thumbail key = new thumbnail primary key
 			entity.setThumbnailImage(thumbnailDAO.get(thumbnailEntity.get_image_key()));

@@ -40,9 +40,6 @@ public class ImageDomain extends BaseDomain {
 	
 	private List<AccessionDomain> mgiAccessionIds;
 	private List<AccessionDomain> editAccessionIds;
-	
-	// exists in domain, but not populated by marker translator
-	// instead will be populated by call to specific domain service	
 	private List<AccessionDomain> nonEditAccessionIds;
 
 	private List<ImagePaneDomain> imagePanes;

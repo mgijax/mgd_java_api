@@ -113,6 +113,14 @@ public class NoteService extends BaseService<NoteDomain> {
 			return modified;
 		}
 		
+		// note key null or empty and noteChunk = "", then ignore
+		if ((noteDomain.getNoteKey() == null || noteDomain.getNoteKey().isEmpty())
+				&& noteDomain.getNoteChunk().equals(""))
+			{
+			log.info("processNote/no changes processed: " + parentKey);
+			return modified;
+		}		
+		
 		// create
 		if (noteDomain.getNoteKey() == null || noteDomain.getNoteKey().isEmpty())
 		{

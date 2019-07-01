@@ -111,7 +111,7 @@ public class Image extends BaseEntity {
 	// non-editable accession ids
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_image_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 9 and `_logicaldb_key` not in (1,19)")
+	@Where(clause="`_mgitype_key` in (9, 35) and `_logicaldb_key` not in (1,19)")
 	@OrderBy(clause ="accid")
 	private List<Accession> nonEditAccessionIds;
 	

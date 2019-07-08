@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.mgi.service;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -105,9 +106,9 @@ public class NoteService extends BaseService<NoteDomain> {
 		
 		String noteKey = "";
 		String note = "";
-
-		Boolean modified = false;
 		
+		Boolean modified = false;
+				
 		if (noteDomain == null) {
 			log.info("processNote/no changes processed: " + parentKey);
 			return modified;
@@ -121,11 +122,21 @@ public class NoteService extends BaseService<NoteDomain> {
 			return modified;
 		}		
 		
+		note = "'" + noteDomain.getNoteChunk().replace("'",  "''") + "'";
+		
+		String decodedToISO8859 = "";
+		try {
+			decodedToISO8859 = new String(note.getBytes("UTF-8"), "ISO-8859-15");
+			note = decodedToISO8859;			
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		log.info("processNote/decodedToISO8859: " + note);
+
 		// create
 		if (noteDomain.getNoteKey() == null || noteDomain.getNoteKey().isEmpty())
 		{
 			noteKey = "null";
-			note = "'" + noteDomain.getNoteChunk().replace("'",  "''") + "'"; 
 			modified = true;
 		}
 		// delete
@@ -140,11 +151,12 @@ public class NoteService extends BaseService<NoteDomain> {
 			Note entity = noteDAO.get(Integer.valueOf(noteDomain.getNoteKey()));
 			if (!entity.getNoteChunk().getNote().equals(noteDomain.getNoteChunk())) {
 				noteKey = noteDomain.getNoteKey().toString();
-				note = "'" + noteDomain.getNoteChunk().replace("'",  "''") + "'"; 
 				modified = true;
 			}
 		}
-				
+		
+		log.info("note chunk: " + noteDomain.getNoteChunk());
+		
 		// stored procedure
 		// if noteKey is null, then insert new note
 		// if noteKey is not null and note is null, then delete note

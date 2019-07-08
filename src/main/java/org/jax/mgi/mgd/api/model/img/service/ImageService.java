@@ -395,7 +395,8 @@ public class ImageService extends BaseService<ImageDomain> {
 		// notes
 		if (searchDomain.getCaptionNote() != null && !searchDomain.getCaptionNote().getNoteChunk().isEmpty()) {
 			value = searchDomain.getCaptionNote().getNoteChunk().replace("'",  "''");
-			value = value.replace("\\", "\\\\");
+			log.info(searchDomain.getCaptionNote().getNoteChunk());
+			value = value.replace("\\", "\\\\");		
 			where = where + "\nand note1._notetype_key = 1024 and note1.note ilike '" + value + "'" ;
 			from_captionNote = true;
 		}

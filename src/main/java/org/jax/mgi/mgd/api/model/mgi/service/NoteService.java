@@ -124,14 +124,14 @@ public class NoteService extends BaseService<NoteDomain> {
 		
 		note = "'" + noteDomain.getNoteChunk().replace("'",  "''") + "'";
 		
-		String decodedToISO8859 = "";
-		try {
-			decodedToISO8859 = new String(note.getBytes("UTF-8"), "ISO-8859-15");
-			note = decodedToISO8859;			
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		log.info("processNote/decodedToISO8859: " + note);
+		//String decodedToISO8859 = "";
+		//try {
+		//	decodedToISO8859 = new String(note.getBytes("UTF-8"), "ISO-8859-15");
+		//	note = decodedToISO8859;			
+		//} catch (UnsupportedEncodingException e) {
+		//	e.printStackTrace();
+		//}
+		//log.info("processNote/decodedToISO8859: " + note);
 
 		// create
 		if (noteDomain.getNoteKey() == null || noteDomain.getNoteKey().isEmpty())

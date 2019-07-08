@@ -5,8 +5,11 @@ import java.io.UnsupportedEncodingException;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
+import org.jboss.logging.Logger;
 
 public class NoteTranslator extends BaseEntityDomainTranslator<Note, NoteDomain> {
+
+	protected Logger log = Logger.getLogger(getClass());
 
 	@Override
 	protected NoteDomain entityToDomain(Note entity) {
@@ -27,13 +30,18 @@ public class NoteTranslator extends BaseEntityDomainTranslator<Note, NoteDomain>
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
-		//String decodedToUTF8 = "";
-		//try {
-		//	decodedToUTF8 = new String(entity.getNoteChunk().getNote().getBytes("ISO-8859-15"), "UTF-8");
-		//	domain.setNoteChunk(decodedToUTF8);
-		//} catch (UnsupportedEncodingException e) {
-		//	e.printStackTrace();
-		//}
+		String decodedToUTF8 = "";
+		try {
+			byte[] c = entity.getNoteChunk().getNote().getBytes("ISO-8859-15");
+			log.info("note bytes: " + c);
+		    for(byte b: c){
+		           log.info(b);
+		    }			
+			decodedToUTF8 = new String(entity.getNoteChunk().getNote().getBytes("ISO-8859-15"), "UTF-8");
+			//domain.setNoteChunk(decodedToUTF8);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		
 		return domain;
 	}

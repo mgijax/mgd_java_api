@@ -327,8 +327,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (domain.getCopyright() != null && !domain.getCopyright().isEmpty()) {
 			results.get(0).setCopyright(domain.getCopyright());
 		}
-		results.get(0).setNeedsDXDOIid(false);
-		results.get(0).setIsCreativeCommons(false);
 
 		// if results is not null/empty
 		// if reference key is not null/empty
@@ -337,11 +335,14 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		if (results != null && !results.isEmpty()) {
 			
+			results.get(0).setNeedsDXDOIid(false);
+			results.get(0).setIsCreativeCommons(false);
+			
 			String key = results.get(0).getRefsKey();
 			
 			log.info("copyright validation");
 			log.info(results.get(0).getCopyright());
-			
+				
 			if (key != null && !key.isEmpty() 
 					&& (results.get(0).getCopyright() == null
 					|| results.get(0).getCopyright().isEmpty())) {

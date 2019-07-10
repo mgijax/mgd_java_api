@@ -3,12 +3,14 @@ package org.jax.mgi.mgd.api.util;
 import java.io.UnsupportedEncodingException;
 
 /*
- * Is a class that contains a method that returns a decoded 
- * string from ISO-8859-15 (postgres/latin9) to UTF8   
+ * Is a class that contains methods dealing with ISO-8859-15 (postgres/latin9) and UTF8   
  */
 public class DecodeString {
 		
 	public static String getDecodeToUTF8(String s) {
+		// get the ISO-8859-15/Latin9 string from the database
+		// if the decoding returns a question mark, then return the original string
+		// if the decoding does not return a question mark, then return the decoded/UTR8 string
 
 		String sDecoded = "";
 		try {
@@ -40,6 +42,8 @@ public class DecodeString {
 	}
 	
 	public static String setDecodeToLatin9(String s) {
+		// set the ISO-8859-15/Latin9 string to UTF-8
+		// also set the single quote to double quote for postgres
 
 		String sDecoded = "";
 		try {

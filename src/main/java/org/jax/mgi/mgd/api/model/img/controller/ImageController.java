@@ -80,7 +80,6 @@ public class ImageController extends BaseController<ImageDomain> {
 	
 		List<SlimImageDomain> results = new ArrayList<SlimImageDomain>();
 
-		log.info("searchDomain/controller: " + searchDomain.getCaptionNote().getNoteChunk());
 		try {
 			results = imageService.search(searchDomain);
 		} catch (Exception e) {

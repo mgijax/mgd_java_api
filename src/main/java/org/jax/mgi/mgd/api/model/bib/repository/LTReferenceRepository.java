@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model.bib.repository;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -34,6 +33,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.MapMaker;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -317,19 +317,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			entity.setYear(year);
 			entity.setPages(domain.pages);
 			entity.setReferenceTypeTerm(getTermByTerm(Constants.VOC_REFERENCE_TYPE, domain.reference_type));
+			entity.setRef_abstract(DecodeString.setDecodeToLatin9(domain.ref_abstract.replace("'", "''")));			
 			entity.setModificationInfo(currentUser);
-			
-			// convert to UTF8
-			// copied from NoteService.java
-			String note = domain.ref_abstract.replace("'",  "''");	
-			String decodedToISO8859 = "";
-			try {
-				decodedToISO8859 = new String(note.getBytes("UTF-8"), "ISO-8859-15");
-				note = decodedToISO8859;			
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}			
-			entity.setRef_abstract(note);
 			
 			anyChanges = true;
 		}
@@ -507,13 +496,13 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		boolean anyChanges = false;
 		boolean hadNote = entity.getNotes().size() > 0;
 		boolean willHaveNote = (domain.referencenote != null) && (domain.referencenote.length() > 0);
-
+		
 		if (hadNote && willHaveNote) {
 			// already have a note and will continue to have a note; just need to apply any difference
 
 			ReferenceNote note = entity.getNotes().get(0);
 			if (!smartEqual(note.getNote(), domain.referencenote)) {
-				note.setNote(domain.referencenote);
+				note.setNote(DecodeString.setDecodeToLatin9(domain.referencenote));			
 				anyChanges = true;
 			}
 
@@ -528,10 +517,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 			ReferenceNote note = new ReferenceNote();
 			note.set_refs_key(entity.get_refs_key());
-			note.setNote(domain.referencenote);
+			note.setNote(DecodeString.setDecodeToLatin9(domain.referencenote));			
 			note.setCreation_date(new Date());
 			note.setModification_date(note.getCreation_date()); 
-
 			referenceDAO.persist(note);
 			entity.getNotes().add(note);
 			anyChanges = true;

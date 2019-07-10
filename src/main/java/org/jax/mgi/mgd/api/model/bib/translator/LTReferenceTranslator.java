@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model.bib.translator;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +12,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceAssociatedData;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.DecodeString;
 
 public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReference, LTReferenceDomain>{
 	@Override
@@ -39,7 +39,8 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 			domain.year = null;
 		}
 		
-		domain.pages = entity.getPages();		
+		domain.pages = entity.getPages();
+		domain.ref_abstract = DecodeString.getDecodeToUTF8(entity.getRef_abstract());
 		domain.jnumid = entity.getJnumid();
 		domain.doiid = entity.getDoiid();
 		domain.pubmedid = entity.getPubmedid();
@@ -124,33 +125,6 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 			} else {
 				domain.has_extracted_text = "No";
 			}
-		}
-		
-		// see NoteTranslator.java
-		String decodedToUTF8 = "";
-		try {
-			Boolean executeDecode = true;
-			
-			// decode postgres/latin9 to UTF8
-			decodedToUTF8 = new String(entity.getRef_abstract().getBytes("ISO-8859-15"), "UTF-8");
-			
-			// if postgres contains characters that cannot be converted to UTF8
-			// then use existing postgres note
-			// else, use decoded UTF8 encoding
-			for (int i = 0; i < decodedToUTF8.length(); i++){
-				if (decodedToUTF8.codePointAt(i) == 65533) {
-					executeDecode = false;
-				}
-			}
-			
-			if (executeDecode) {
-				domain.ref_abstract = decodedToUTF8;				
-			}
-			else {
-				domain.ref_abstract = entity.getRef_abstract();
-			}
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
 		}
 		
 		return domain;

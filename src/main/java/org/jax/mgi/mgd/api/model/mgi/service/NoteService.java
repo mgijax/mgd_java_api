@@ -1,7 +1,6 @@
 package org.jax.mgi.mgd.api.model.mgi.service;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +17,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.RunCommand;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -122,18 +122,11 @@ public class NoteService extends BaseService<NoteDomain> {
 			return modified;
 		}		
 		
-		note = "'" + noteDomain.getNoteChunk().replace("'",  "''") + "'";
-		
-		// for any create/update, convert to UTF8
-		String decodedToISO8859 = "";
-		try {
-			decodedToISO8859 = new String(note.getBytes("UTF-8"), "ISO-8859-15");
-			note = decodedToISO8859;			
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
 		log.info("processNote/decodedToISO8859: " + note);
 
+		note = DecodeString.setDecodeToLatin9(noteDomain.getNoteChunk());
+		note = "'" + note + "'";
+		
 		// create
 		if (noteDomain.getNoteKey() == null || noteDomain.getNoteKey().isEmpty())
 		{

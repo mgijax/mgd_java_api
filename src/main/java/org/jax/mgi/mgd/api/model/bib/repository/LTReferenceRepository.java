@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.bib.repository;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -315,9 +316,21 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			entity.setDate(domain.date);
 			entity.setYear(year);
 			entity.setPages(domain.pages);
-			entity.setRef_abstract(domain.ref_abstract);
 			entity.setReferenceTypeTerm(getTermByTerm(Constants.VOC_REFERENCE_TYPE, domain.reference_type));
 			entity.setModificationInfo(currentUser);
+			
+			// convert to UTF8
+			// copied from NoteService.java
+			String note = domain.ref_abstract.replace("'",  "''");	
+			String decodedToISO8859 = "";
+			try {
+				decodedToISO8859 = new String(note.getBytes("UTF-8"), "ISO-8859-15");
+				note = decodedToISO8859;			
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}			
+			entity.setRef_abstract(note);
+			
 			anyChanges = true;
 		}
 

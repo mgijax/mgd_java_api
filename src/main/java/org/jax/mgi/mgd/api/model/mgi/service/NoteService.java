@@ -124,6 +124,7 @@ public class NoteService extends BaseService<NoteDomain> {
 		
 		note = "'" + noteDomain.getNoteChunk().replace("'",  "''") + "'";
 		
+		// for any create/update, convert to UTF8
 		String decodedToISO8859 = "";
 		try {
 			decodedToISO8859 = new String(note.getBytes("UTF-8"), "ISO-8859-15");

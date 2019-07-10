@@ -29,7 +29,6 @@ public class NoteTranslator extends BaseEntityDomainTranslator<Note, NoteDomain>
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
-		log.info("before decoding: " + entity.getNoteChunk().getNote());
 		String decodedToUTF8 = "";
 		try {
 			Boolean executeDecode = true;

@@ -42,7 +42,7 @@ public class DecodeString {
 	}
 	
 	public static String setDecodeToLatin9(String s) {
-		// set the ISO-8859-15/Latin9 string to UTF-8
+		// set any string to UTF-8
 		// also set the single quote to double quote for postgres
 
 		String sDecoded = "";

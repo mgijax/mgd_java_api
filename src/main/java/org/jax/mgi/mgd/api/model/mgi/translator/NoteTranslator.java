@@ -22,7 +22,7 @@ public class NoteTranslator extends BaseEntityDomainTranslator<Note, NoteDomain>
 		domain.setMgiType(entity.getMgiType().getName());
 		domain.setNoteTypeKey(String.valueOf(entity.getNoteType().get_noteType_key()));
 		domain.setNoteType(entity.getNoteType().getNoteType());
-		domain.setNoteChunk(entity.getNoteChunk().getNote());
+		//domain.setNoteChunk(entity.getNoteChunk().getNote());
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
@@ -30,15 +30,11 @@ public class NoteTranslator extends BaseEntityDomainTranslator<Note, NoteDomain>
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
+		log.info("before decoding: " + entity.getNoteChunk().getNote());
 		String decodedToUTF8 = "";
-		try {
-			byte[] c = entity.getNoteChunk().getNote().getBytes("ISO-8859-15");
-			log.info("note bytes: " + c);
-		    for(byte b: c){
-		           log.info(b);
-		    }			
+		try {		
 			decodedToUTF8 = new String(entity.getNoteChunk().getNote().getBytes("ISO-8859-15"), "UTF-8");
-			//domain.setNoteChunk(decodedToUTF8);
+			domain.setNoteChunk(decodedToUTF8);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

@@ -127,7 +127,7 @@ public class NoteService extends BaseService<NoteDomain> {
 		String decodedToISO8859 = "";
 		try {
 			decodedToISO8859 = new String(note.getBytes("UTF-8"), "ISO-8859-15");
-			//note = decodedToISO8859;			
+			note = decodedToISO8859;			
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

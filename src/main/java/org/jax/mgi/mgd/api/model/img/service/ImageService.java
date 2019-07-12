@@ -293,16 +293,16 @@ public class ImageService extends BaseService<ImageDomain> {
 	}
 	
 	@Transactional	
-	public String getObjectCount() {
+	public SearchResults<ImageDomain> getObjectCount() {
 		// return the object count from the database
 		
-		String results = "";
+		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
 		String cmd = "select count(*) as objectCount from img_image";
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				results = rs.getString("objectCount");
+				results.total_count = rs.getInt("objectCount");
 			}
 			sqlExecutor.cleanup();
 		}

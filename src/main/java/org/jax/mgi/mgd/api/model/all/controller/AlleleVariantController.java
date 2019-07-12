@@ -61,7 +61,7 @@ public class AlleleVariantController extends BaseController<AlleleVariantDomain>
 	@GET
 	@ApiOperation(value = "Get the object count from all_variant table")
 	@Path("/getObjectCount")
-	public String getObjectCount() {
+	public SearchResults<AlleleVariantDomain> getObjectCount() {
 		return variantService.getObjectCount();
 	}
 		

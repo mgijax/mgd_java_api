@@ -74,7 +74,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	@GET
 	@ApiOperation(value = "Get the object count from mrk_marker table")
 	@Path("/getObjectCount")
-	public String getObjectCount() {
+	public SearchResults<MarkerDomain> getObjectCount() {
 		return markerService.getObjectCount();
 	}
 		

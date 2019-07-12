@@ -69,7 +69,7 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 	@GET
 	@ApiOperation(value = "Get the object count from gxd_genotype table")
 	@Path("/getObjectCount")
-	public String getObjectCount() {
+	public SearchResults<GenotypeDomain> getObjectCount() {
 		return genotypeService.getObjectCount();
 	}
 		

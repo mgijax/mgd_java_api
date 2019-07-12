@@ -68,7 +68,7 @@ public class GenotypeMPController extends BaseController<GenotypeMPDomain> {
 	@GET
 	@ApiOperation(value = "Get the object count from voc_annot table where _annottype_key = 1002")
 	@Path("/getObjectCount")
-	public String getObjectCount() {
+	public SearchResults<GenotypeMPDomain> getObjectCount() {
 		return genotypeMPService.getObjectCount();
 	}
 		

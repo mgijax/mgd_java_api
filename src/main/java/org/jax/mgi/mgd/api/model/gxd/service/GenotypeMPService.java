@@ -96,16 +96,16 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 	}
 	
 	@Transactional	
-	public String getObjectCount() {
+	public SearchResults<GenotypeMPDomain> getObjectCount() {
 		// return the object count from the database
 		
-		String results = "";
+		SearchResults<GenotypeMPDomain> results = new SearchResults<GenotypeMPDomain>();
 		String cmd = "select count(*) as objectCount from voc_annot where _annottype_key = 1002";
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				results = rs.getString("objectCount");
+				results.total_count = rs.getInt("objectCount");
 			}
 			sqlExecutor.cleanup();
 		}

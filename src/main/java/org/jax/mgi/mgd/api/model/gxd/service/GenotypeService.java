@@ -249,16 +249,16 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 	}
 	
 	@Transactional	
-	public String getObjectCount() {
+	public SearchResults<GenotypeDomain> getObjectCount() {
 		// return the object count from the database
 		
-		String results = "";
+		SearchResults<GenotypeDomain> results = new SearchResults<GenotypeDomain>();
 		String cmd = "select count(*) as objectCount from gxd_genotype";
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				results = rs.getString("objectCount");
+				results.total_count = rs.getInt("objectCount");
 			}
 			sqlExecutor.cleanup();
 		}

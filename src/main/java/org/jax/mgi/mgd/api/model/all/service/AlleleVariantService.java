@@ -310,16 +310,16 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 	}
 
 	@Transactional	
-	public String getObjectCount() {
+	public SearchResults<AlleleVariantDomain> getObjectCount() {
 		// return the object count from the database
 		
-		String results = "";
+		SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
 		String cmd = "select count(*) as objectCount from all_variant";
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				results = rs.getString("objectCount");
+				results.total_count = rs.getInt("objectCount");
 			}
 			sqlExecutor.cleanup();
 		}

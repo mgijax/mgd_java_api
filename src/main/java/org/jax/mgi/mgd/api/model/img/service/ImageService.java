@@ -326,7 +326,9 @@ public class ImageService extends BaseService<ImageDomain> {
 				+ ", concat(i.jnumID,'; ',i.imageType,'; ',i.figureLabel) as imageDisplay";
 		String from = "from img_image_view i";
 		String where = "where i.figureLabel is not null";
-		String 	orderBy = "order by i.jnum, i.figureLabel, i.imageType";			
+		// smart alphanumeric sort
+		// put into utility method so others can use this
+		String orderBy = "order by i.jnum, substring(i.figureLabel from '([0-9]+)')::BIGINT ASC, i.figureLabel, i.imageType";
 		String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
 	
@@ -504,7 +506,9 @@ public class ImageService extends BaseService<ImageDomain> {
 		}
 		
 		// make this easy to copy/paste for troubleshooting
-		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
+		// for smart alphnumeric sort, must use WITH if using "select distinct"
+		cmd = "\nWITH i AS (" + select + "\n" + from + "\n" + where + 
+					"\n)\nselect * from i\n" + orderBy + "\n" + limit;
 		log.info(cmd);
 
 		try {

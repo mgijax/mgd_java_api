@@ -9,6 +9,7 @@ import lombok.Setter;
 public class ImageSubmissionDomain extends BaseDomain {
 
 	private String processStatus;
+	private String pixID;
 	private String imageStatus;
 	private String imageClassKey;
 	private String imageClass;	

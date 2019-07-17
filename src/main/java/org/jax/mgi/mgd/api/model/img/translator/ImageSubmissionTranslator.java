@@ -16,6 +16,7 @@ public class ImageSubmissionTranslator extends BaseEntityDomainTranslator<Image,
 		ImageSubmissionDomain domain = new ImageSubmissionDomain();
 
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
+		//domain.setPixID() remains blank
 		domain.setImageClassKey(String.valueOf(entity.getImageClass().get_term_key()));
 		domain.setImageClass(entity.getImageClass().getTerm());
 		domain.setImageKey(String.valueOf(entity.get_image_key()));

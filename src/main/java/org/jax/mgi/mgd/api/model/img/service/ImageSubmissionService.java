@@ -97,7 +97,7 @@ public class ImageSubmissionService extends BaseService<ImageSubmissionDomain> {
 		String cmd = "";
 		String select = "select distinct i._image_key, i.figureLabel, i.imageType";
 		String from = "from img_image_view i";
-		String where = "where i._imagetype_key = 1072158";
+		String where = "where i._image_key is not null";
 		String orderBy = "order by i.figureLabel, i.imageType";
 		String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;

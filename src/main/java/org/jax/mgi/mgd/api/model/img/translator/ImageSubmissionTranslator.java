@@ -1,6 +1,11 @@
 package org.jax.mgi.mgd.api.model.img.translator;
 
+import java.util.Comparator;
+
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.img.domain.ImageSubmissionDomain;
 import org.jax.mgi.mgd.api.model.img.entities.Image;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -10,13 +15,14 @@ public class ImageSubmissionTranslator extends BaseEntityDomainTranslator<Image,
 
 	protected Logger log = Logger.getLogger(getClass());
 
+	private AccessionTranslator accessionTranslator = new AccessionTranslator();
+	
 	@Override
 	protected ImageSubmissionDomain entityToDomain(Image entity) {
 		
 		ImageSubmissionDomain domain = new ImageSubmissionDomain();
 
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
-		//domain.setPixID() remains blank
 		domain.setImageClassKey(String.valueOf(entity.getImageClass().get_term_key()));
 		domain.setImageClass(entity.getImageClass().getTerm());
 		domain.setImageKey(String.valueOf(entity.get_image_key()));
@@ -31,10 +37,10 @@ public class ImageSubmissionTranslator extends BaseEntityDomainTranslator<Image,
 
 		if (entity.getXDim() != null) {
 			domain.setXDim(String.valueOf(entity.getXDim()));
-			domain.setImageStatus("Image file already loaded.");
+			domain.setHasPixId(true);
 		}
 		else {
-			domain.setImageStatus("No file chosen.");	
+			domain.setHasPixId(false);
 		}
 		
 		if (entity.getYDim() != null) {
@@ -43,6 +49,13 @@ public class ImageSubmissionTranslator extends BaseEntityDomainTranslator<Image,
 
 		if (entity.getThumbnailImage() != null) {
 			domain.setThumbnailFigureLabel(entity.getThumbnailImage().getFigureLabel());
+		}
+		
+		// accession ids editable
+		if (entity.getEditAccessionIds() != null && !entity.getEditAccessionIds().isEmpty()) {
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIds());
+			domain.setPixIds(IteratorUtils.toList(acc.iterator()));
+			domain.getPixIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
 		
 		return domain;

@@ -313,6 +313,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// validate the jnum
 		String jnum = "";
 		
+		log.info("reference/validateJnumImage/begin");
+		
 		if (domain.getJnum() != null && !domain.getJnum().isEmpty()) {
 			jnum = domain.getJnum();
 		}
@@ -393,7 +395,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				}
 			}
 		}
-				
+		
+		log.info("reference/validateJnumImage/end");
 		return results;
 	}
 	

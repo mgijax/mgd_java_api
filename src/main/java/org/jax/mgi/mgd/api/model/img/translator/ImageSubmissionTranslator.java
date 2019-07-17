@@ -15,10 +15,11 @@ public class ImageSubmissionTranslator extends BaseEntityDomainTranslator<Image,
 		
 		ImageSubmissionDomain domain = new ImageSubmissionDomain();
 
-		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);				
-		domain.setImageKey(String.valueOf(entity.get_image_key()));
+		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
+		domain.setImageStatus("Image file already loaded.");
 		domain.setImageClassKey(String.valueOf(entity.getImageClass().get_term_key()));
 		domain.setImageClass(entity.getImageClass().getTerm());
+		domain.setImageKey(String.valueOf(entity.get_image_key()));
 		domain.setImageTypeKey(String.valueOf(entity.getImageType().get_term_key()));
 		domain.setImageType(entity.getImageType().getTerm());
 		domain.setXDim(String.valueOf(entity.getXDim()));
@@ -30,10 +31,8 @@ public class ImageSubmissionTranslator extends BaseEntityDomainTranslator<Image,
 		domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());
 		domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());
 
-		// may have 1 thumbnail
-		if (entity.getThumbnailImage() != null ) {
-			ImageSubmissionTranslator submissionTranslator = new ImageSubmissionTranslator();		
-			domain.setThumbnailImage(submissionTranslator.translate(entity.getThumbnailImage()));
+		if (entity.getThumbnailImage() != null) {
+			domain.setThumbnailFigureLabel(entity.getThumbnailImage().getFigureLabel());
 		}
 		
 		return domain;

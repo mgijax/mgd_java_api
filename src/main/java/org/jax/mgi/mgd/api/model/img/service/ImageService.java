@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
@@ -589,4 +590,28 @@ public class ImageService extends BaseService<ImageDomain> {
 		return results;
 	}	
 
+	@Transactional
+	public SearchResults<ImageDomain> createPixAssociation(ImageSubmissionDomain domain, User user) {
+		
+		// call stored procedure IMG_setPDO()
+		// 1: associate pix id with image (via acc_accession)
+		// 2: update the img_image.xdim, ydim
+
+		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
+		
+		log.info("processImage/createPixAssociation");
+
+		String cmd = "select count(*) from IMG_setPDO ("
+				+ user.get_user_key().intValue()
+				+ ")";
+			
+		log.info("cmd: " + cmd);
+		Query query = imageDAO.createNativeQuery(cmd);
+		query.getResultList();
+			
+		log.info("processImage/createPixAssociation/returning results");
+		results = getResults(Integer.valueOf(results.items.get(0).getImageKey()));
+		return results;		
+	}
+	
 }

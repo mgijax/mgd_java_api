@@ -95,7 +95,7 @@ public class ImageSubmissionService extends BaseService<ImageSubmissionDomain> {
 
 		// building SQL command : select + from + where + orderBy
 		String cmd = "";
-		String select = "select distinct i._image_key, i.figureLabel, i.imageType";
+		String select = "select distinct i._image_key, i.figureLabel, i.imageClass";
 		String from = "from img_image_view i";
 		String where = "where i._image_key is not null";
 		String orderBy = "order by i.figureLabel, i.imageClass";

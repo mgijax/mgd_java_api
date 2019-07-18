@@ -38,9 +38,11 @@ public class ImageSubmissionTranslator extends BaseEntityDomainTranslator<Image,
 		if (entity.getXDim() != null) {
 			domain.setXDim(String.valueOf(entity.getXDim()));
 			domain.setHasPixId(true);
+			domain.setPixStatus("Image file already loaded.");
 		}
 		else {
 			domain.setHasPixId(false);
+			domain.setPixStatus("No file chosen.");			
 		}
 		
 		if (entity.getYDim() != null) {

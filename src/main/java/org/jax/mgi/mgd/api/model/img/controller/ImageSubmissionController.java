@@ -64,6 +64,13 @@ public class ImageSubmissionController extends BaseController<ImageSubmissionDom
 	}
 
 	@POST
+	@ApiOperation(value = "Process")
+	@Path("/process")
+	public Boolean process(SearchResults<ImageSubmissionDomain> domain, User user) {
+		return imageSubmissionService.process(domain, user);
+	}
+	
+	@POST
 	@ApiOperation(value = "Search/returns image submission domain")
 	@Path("/search")
 	public List<ImageSubmissionDomain> search(ImageSubmissionDomain searchDomain) {

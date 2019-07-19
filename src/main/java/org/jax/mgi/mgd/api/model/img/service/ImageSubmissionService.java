@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
@@ -37,30 +36,13 @@ public class ImageSubmissionService extends BaseService<ImageSubmissionDomain> {
 		return results;		
 	}
 	
-	
 	@Transactional
 	public SearchResults<ImageSubmissionDomain> update(ImageSubmissionDomain domain, User user) {
-		// call stored procedure IMG_setPDO()
-		// 1: associate pix id with image (via acc_accession)
-		// 2: update the img_image.xdim, ydim
-
 		SearchResults<ImageSubmissionDomain> results = new SearchResults<ImageSubmissionDomain>();
-		
-		log.info("processImage/create");
-
-		String cmd = "select count(*) from IMG_setPDO ("
-				+ user.get_user_key().intValue()
-				+ ")";
-			
-		log.info("cmd: " + cmd);
-		Query query = imageDAO.createNativeQuery(cmd);
-		query.getResultList();
-			
-		log.info("processImage/createPixAssociation/returning results");
-		results = getResults(Integer.valueOf(results.items.get(0).getImageKey()));
-		return results;			
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;		
 	}
-
+		
 	@Transactional
 	public SearchResults<ImageSubmissionDomain> delete(Integer key, User user) {
 		SearchResults<ImageSubmissionDomain> results = new SearchResults<ImageSubmissionDomain>();
@@ -84,6 +66,35 @@ public class ImageSubmissionService extends BaseService<ImageSubmissionDomain> {
 		SearchResults<ImageSubmissionDomain> results = new SearchResults<ImageSubmissionDomain>();
 		results.setItem(translator.translate(imageDAO.get(key)));
 		return results;
+	}
+
+	@Transactional
+	public Boolean process(SearchResults<ImageSubmissionDomain> results, User user) {
+		// call stored procedure IMG_setPDO()
+		// 1: associate pix id with image (via acc_accession)
+		// 2: update the img_image.xdim, ydim
+		
+		Boolean modified = true;
+		
+		log.info("processImageSubmission/update");
+
+		// iterate thru list of domain objects....
+		
+		// create pix id in /data/pixeldb
+		
+		// use new pix id to send to IMG_setPDO
+		
+		//String cmd = "select count(*) from IMG_setPDO ("
+		//		+ user.get_user_key().intValue()
+		//		+ ")";
+			
+		//log.info("cmd: " + cmd);
+		//Query query = imageDAO.createNativeQuery(cmd);
+		//query.getResultList();
+			
+		log.info("processImageSubmission/update/returning results");
+		
+		return modified;			
 	}
 	
 	@Transactional	

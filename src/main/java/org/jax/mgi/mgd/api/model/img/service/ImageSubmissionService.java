@@ -69,7 +69,7 @@ public class ImageSubmissionService extends BaseService<ImageSubmissionDomain> {
 	}
 
 	@Transactional
-	public Boolean process(SearchResults<ImageSubmissionDomain> results, User user) {
+	public Boolean processSubmit(SearchResults<ImageSubmissionDomain> results, User user) {
 		// call stored procedure IMG_setPDO()
 		// 1: associate pix id with image (via acc_accession)
 		// 2: update the img_image.xdim, ydim

@@ -64,10 +64,10 @@ public class ImageSubmissionController extends BaseController<ImageSubmissionDom
 	}
 
 	@POST
-	@ApiOperation(value = "Process")
-	@Path("/process")
+	@ApiOperation(value = "Process file upload/add new PIX:,xDim,yDim")
+	@Path("/processSubmit")
 	public Boolean process(SearchResults<ImageSubmissionDomain> domain, User user) {
-		return imageSubmissionService.process(domain, user);
+		return imageSubmissionService.processSubmit(domain, user);
 	}
 	
 	@POST

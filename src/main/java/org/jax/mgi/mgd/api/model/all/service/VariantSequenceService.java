@@ -43,14 +43,23 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 	
 	@Transactional
 	public SearchResults<VariantSequenceDomain> create(VariantSequenceDomain domain, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<VariantSequenceDomain> results = new SearchResults<VariantSequenceDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
 	public SearchResults<VariantSequenceDomain> update(VariantSequenceDomain object, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		SearchResults<VariantSequenceDomain> results = new SearchResults<VariantSequenceDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
+	}
+
+	@Transactional
+	public SearchResults<VariantSequenceDomain> delete(Integer key, User user) {
+		SearchResults<VariantSequenceDomain> results = new SearchResults<VariantSequenceDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 
 	@Transactional
@@ -58,7 +67,7 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 		// get the DAO/entity and translate -> domain
 		VariantSequenceDomain domain = new VariantSequenceDomain();
 		if (variantSequenceDAO.get(key) != null) {
-			domain = translator.translate(variantSequenceDAO.get(key),1);
+			domain = translator.translate(variantSequenceDAO.get(key));
 		}
 		return domain;
 	}
@@ -69,12 +78,6 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
         results.setItem(translator.translate(variantSequenceDAO.get(key)));
         return results;
     }
-
-	@Transactional
-	public SearchResults<VariantSequenceDomain> delete(Integer key, User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	public List<VariantSequenceDomain> search(VariantSequenceDomain searchDomain) {
 
@@ -88,7 +91,7 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 					+ "\nand vs._createdby_key = u1._user_key"
 					+ "\nand vs._modifiedby_key = u2._user_key";
 		String orderBy = "order by t1.term";
-		String limit = "LIMIT 1000";
+		String limit = Constants.SEARCH_RETURN_LIMIT;
 
 		// if parameter exists, then add to where-clause
 		
@@ -238,21 +241,26 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 
 				
 				VariantSequence entity = variantSequenceDAO.get(Integer.valueOf(domains.get(i).getVariantSequenceKey()));
-				
 				log.info("StartCoordinate");
-				if (domains.get(i).getStartCoordinate() != null) {	
-					if ((entity.getStartCoordinate() == null) || !String.valueOf(entity.getStartCoordinate()).equals(domains.get(i).getStartCoordinate())) {
-						entity.setStartCoordinate(Integer.valueOf(domains.get(i).getStartCoordinate()));
-						modified = true;
-					}
+				// the case where we are updating by setting to null  (deleting startCoordinate)
+				if (domains.get(i).getStartCoordinate() == null && entity.getStartCoordinate() != null) {
+					entity.setStartCoordinate(null);
+					modified = true;
 				}
-				
+				// the case where we are updating by setting to a different value
+				else if (domains.get(i).getStartCoordinate() != null && !String.valueOf(entity.getStartCoordinate()).equals(domains.get(i).getStartCoordinate())) {	
+					    entity.setStartCoordinate(Integer.valueOf(domains.get(i).getStartCoordinate()));
+					    modified = true;
+				}
 				log.info("EndCoordinate");
-				if (domains.get(i).getEndCoordinate() != null) {
-					if ((entity.getEndCoordinate() == null) || !String.valueOf(entity.getEndCoordinate()).equals(domains.get(i).getEndCoordinate())) {
-						entity.setEndCoordinate(Integer.valueOf(domains.get(i).getEndCoordinate()));
-						modified = true;
-					}
+				// the case where we are updating by setting to null  (deleting endCoordinate)
+				if (domains.get(i).getEndCoordinate() == null && entity.getEndCoordinate() != null) {
+					entity.setEndCoordinate(null);
+					modified = true;
+				}
+				else if (domains.get(i).getEndCoordinate() != null && !String.valueOf(entity.getEndCoordinate()).equals(domains.get(i).getEndCoordinate())) {
+					entity.setEndCoordinate(Integer.valueOf(domains.get(i).getEndCoordinate()));
+					modified = true;
 				}
 				log.info("sequenceTypeKey");
 				//sequenceEntity.setSequenceType(termDAO.get(Integer.valueOf(domain.getSequenceTypeKey())));

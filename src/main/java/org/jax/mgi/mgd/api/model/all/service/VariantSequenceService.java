@@ -240,19 +240,27 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 				VariantSequence entity = variantSequenceDAO.get(Integer.valueOf(domains.get(i).getVariantSequenceKey()));
 				
 				log.info("StartCoordinate");
-				if (domains.get(i).getStartCoordinate() != null) {	
-					if ((entity.getStartCoordinate() == null) || !String.valueOf(entity.getStartCoordinate()).equals(domains.get(i).getStartCoordinate())) {
+				
+				// the case where we are updating by setting to null  (deleting startCoordinate)
+				if (domains.get(i).getStartCoordinate() == null && entity.getStartCoordinate() != null) {
+					entity.setStartCoordinate(null);
+					modified = true;
+				}
+				// the case where we are updating by setting to a different value
+				else if (domains.get(i).getStartCoordinate() != null && !String.valueOf(entity.getStartCoordinate()).equals(domains.get(i).getStartCoordinate())) {
 						entity.setStartCoordinate(Integer.valueOf(domains.get(i).getStartCoordinate()));
 						modified = true;
-					}
 				}
 				
 				log.info("EndCoordinate");
-				if (domains.get(i).getEndCoordinate() != null) {
-					if ((entity.getEndCoordinate() == null) || !String.valueOf(entity.getEndCoordinate()).equals(domains.get(i).getEndCoordinate())) {
-						entity.setEndCoordinate(Integer.valueOf(domains.get(i).getEndCoordinate()));
-						modified = true;
-					}
+				// the case where we are updating by setting to null  (deleting endCoordinate)
+				if (domains.get(i).getEndCoordinate() == null && entity.getEndCoordinate() != null) {
+					entity.setEndCoordinate(null);
+					modified = true;
+				}
+				else if (domains.get(i).getEndCoordinate() != null && !String.valueOf(entity.getEndCoordinate()).equals(domains.get(i).getEndCoordinate())) {
+					entity.setEndCoordinate(Integer.valueOf(domains.get(i).getEndCoordinate()));
+					modified = true;
 				}
 				log.info("sequenceTypeKey");
 				//sequenceEntity.setSequenceType(termDAO.get(Integer.valueOf(domain.getSequenceTypeKey())));

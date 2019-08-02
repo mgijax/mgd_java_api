@@ -136,13 +136,19 @@ public class ImageSubmissionService extends BaseService<ImageSubmissionDomain> {
 
 	@Transactional	
 	public SearchResults<ImageSubmissionDomain> submit(MultipartFormDataInput input) {
-	
+		// submit chosen files to pixeldb folder (in swarm)
+		// call stored procedure to attach files (pixid) to image stub
+		// and to set xdim, ydim coordinates
+		
+		log.info("imageSubmission/submit/begin");
+		
 		SearchResults<ImageSubmissionDomain> results = new SearchResults<ImageSubmissionDomain>();		
 		Map<String, List<InputPart>> form = input.getFormDataMap();
 
-		log.info("imageSubmission/submit/begin");
-
-		for(String key: form.keySet()) {
+		String pixeldb = System.getProperty("swarm.ds.pixeldb");
+		String pixeldbCounter = System.getProperty("swarm.ds.pixeldbCounter");
+		
+		for (String key: form.keySet()) {
 
 			log.info("imageSubmission/submit/key: " + key);
 			
@@ -153,20 +159,18 @@ public class ImageSubmissionService extends BaseService<ImageSubmissionDomain> {
 					String[] array = key.split("_");
 					String imageKey = array[1];
 					
-					String pixeldb = System.getProperty("swarm.ds.pixeldb");
-					String pixeldbCounter = System.getProperty("swarm.ds.pixeldbCounter");
-
 					// open pixeldb counter
 					BufferedReader inCounter = new BufferedReader(new FileReader(pixeldbCounter));
 					String nextPixKey = inCounter.readLine();
 					String imageFile = pixeldb + "/" + nextPixKey + ".jpg";
 					inCounter.close();
-					
+										
 					// save file to pixeldb directory
+					log.info("imageSubmission/submit: fileUtils/copy/begin");
 					InputPart inputPart = form.get("file_" + imageKey).get(0);
 					File outPix = new File(imageFile);
-					log.info("imageSubmission/submit: fileUtils/copy/begin: " + outPix.getAbsolutePath());
-					
+					log.info("imageSubmission/submit: fileUtils/copy/file: " + outPix.getAbsolutePath());
+
 					// save as InputStream
 					InputStream is = inputPart.getBody(InputStream.class, null);
 					FileUtils.copyInputStreamToFile(is, outPix);
@@ -180,7 +184,6 @@ public class ImageSubmissionService extends BaseService<ImageSubmissionDomain> {
 					outCounter.close();
 					log.info("imageSubmission/submit: pixeldb counter/end");
 
-					// update the xdim/ydim coordinates
 					// call stored procedure IMG_setPDO()
 					// 1: associate pix id with image (via acc_accession)
 					// 2: update the img_image.xdim, ydim
@@ -197,9 +200,8 @@ public class ImageSubmissionService extends BaseService<ImageSubmissionDomain> {
 					log.info("imageSubmission/submit: dimensions/end");
 				
 				} catch (Exception e) {
-					log.error(e.getMessage());
-					//e.printStackTrace();
-					results.setError("imageSubmission/submit/failed", null, Constants.HTTP_SERVER_ERROR);
+					results.setError(Constants.LOG_FAIL_IMAGESUBMISSION, null, Constants.HTTP_SERVER_ERROR);					
+					e.printStackTrace();
 				}
 			}
 		}

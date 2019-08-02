@@ -1,3 +1,9 @@
+TAG: mgd_java_api-6-0-14-17
+DATE: 08/02/2019
+STAFF: sc
+CHANGES: GRSD-135, TR13128 search on variant created/modifiedBy
+    and created/modificationDate
+
 TAG: mgd_java_api-6-0-14-16
 DATE: 07/31/2019
 STAFF: sc

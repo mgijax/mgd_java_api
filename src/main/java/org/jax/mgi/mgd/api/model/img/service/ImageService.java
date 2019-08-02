@@ -228,6 +228,8 @@ public class ImageService extends BaseService<ImageDomain> {
 		// process editable accession ids (ex. PIX:)
 		if (domain.getEditAccessionIds() != null && !domain.getEditAccessionIds().isEmpty()) {
 			if (accessionService.process(domain.getImageKey(), domain.getEditAccessionIds(), mgiTypeName, user)) {
+				entity.setXDim(null);
+				entity.setYDim(null);
 				modified = true;
 			}
 		}

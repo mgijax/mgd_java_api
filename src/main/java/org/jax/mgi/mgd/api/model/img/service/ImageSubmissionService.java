@@ -1,13 +1,24 @@
 package org.jax.mgi.mgd.api.model.img.service;
 
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.InputStream;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
+import javax.imageio.ImageIO;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
+import org.apache.commons.io.FileUtils;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.img.dao.ImageDAO;
 import org.jax.mgi.mgd.api.model.img.domain.ImageSubmissionDomain;
@@ -17,6 +28,8 @@ import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
+import org.jboss.resteasy.plugins.providers.multipart.InputPart;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 @RequestScoped
 public class ImageSubmissionService extends BaseService<ImageSubmissionDomain> {
@@ -40,7 +53,7 @@ public class ImageSubmissionService extends BaseService<ImageSubmissionDomain> {
 	public SearchResults<ImageSubmissionDomain> update(ImageSubmissionDomain domain, User user) {
 		SearchResults<ImageSubmissionDomain> results = new SearchResults<ImageSubmissionDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
-		return results;		
+		return results;	
 	}
 		
 	@Transactional
@@ -68,35 +81,6 @@ public class ImageSubmissionService extends BaseService<ImageSubmissionDomain> {
 		return results;
 	}
 
-	@Transactional
-	public Boolean processSubmit(SearchResults<ImageSubmissionDomain> results, User user) {
-		// call stored procedure IMG_setPDO()
-		// 1: associate pix id with image (via acc_accession)
-		// 2: update the img_image.xdim, ydim
-		
-		Boolean modified = true;
-		
-		log.info("processImageSubmission/update");
-
-		// iterate thru list of domain objects....
-		
-		// create pix id in /data/pixeldb
-		
-		// use new pix id to send to IMG_setPDO
-		
-		//String cmd = "select count(*) from IMG_setPDO ("
-		//		+ user.get_user_key().intValue()
-		//		+ ")";
-			
-		//log.info("cmd: " + cmd);
-		//Query query = imageDAO.createNativeQuery(cmd);
-		//query.getResultList();
-			
-		log.info("processImageSubmission/update/returning results");
-		
-		return modified;			
-	}
-	
 	@Transactional	
 	public List<ImageSubmissionDomain> search(ImageSubmissionDomain searchDomain) {
 		// using searchDomain fields, generate SQL command
@@ -150,4 +134,77 @@ public class ImageSubmissionService extends BaseService<ImageSubmissionDomain> {
 		return results;
 	}	
 
+	@Transactional	
+	public SearchResults<ImageSubmissionDomain> submit(MultipartFormDataInput input) {
+	
+		SearchResults<ImageSubmissionDomain> results = new SearchResults<ImageSubmissionDomain>();		
+		Map<String, List<InputPart>> form = input.getFormDataMap();
+
+		log.info("imageSubmission/submit/begin");
+
+		for(String key: form.keySet()) {
+
+			log.info("imageSubmission/submit/key: " + key);
+			
+			if (key.startsWith("imageKey_")) {
+				
+				try {
+					
+					String[] array = key.split("_");
+					String imageKey = array[1];
+					
+					String pixeldb = System.getProperty("swarm.ds.pixeldb");
+					String pixeldbCounter = System.getProperty("swarm.ds.pixeldbCounter");
+
+					// open pixeldb counter
+					BufferedReader inCounter = new BufferedReader(new FileReader(pixeldbCounter));
+					String nextPixKey = inCounter.readLine();
+					String imageFile = pixeldb + "/" + nextPixKey + ".jpg";
+					inCounter.close();
+					
+					// save file to pixeldb directory
+					InputPart inputPart = form.get("file_" + imageKey).get(0);
+					File outPix = new File(imageFile);
+					log.info("imageSubmission/submit: fileUtils/copy/begin: " + outPix.getAbsolutePath());
+					
+					// save as InputStream
+					InputStream is = inputPart.getBody(InputStream.class, null);
+					FileUtils.copyInputStreamToFile(is, outPix);
+					log.info("imageSubmission/submit: fileUtils/copy/end");
+				
+					// update pixeldb counter
+					log.info("imageSubmission/submit: pixeldb counter/begin");
+					Integer newPixKey = (Integer.valueOf(nextPixKey)) + 1;
+					BufferedWriter outCounter = new BufferedWriter(new FileWriter(pixeldbCounter));
+					outCounter.append(String.valueOf(newPixKey) + "\n");
+					outCounter.close();
+					log.info("imageSubmission/submit: pixeldb counter/end");
+
+					// update the xdim/ydim coordinates
+					// call stored procedure IMG_setPDO()
+					// 1: associate pix id with image (via acc_accession)
+					// 2: update the img_image.xdim, ydim
+					log.info("imageSubmission/submit: dimensions/begin");
+					BufferedImage bi = ImageIO.read(outPix);				
+					String cmd = "select count(*) from IMG_setPDO (" 
+						+ nextPixKey + "," 
+						+ bi.getHeight() + ","
+						+ bi.getWidth() + "," 
+						+ imageKey + ")";
+					log.info("cmd: " + cmd);
+					Query query = imageDAO.createNativeQuery(cmd);
+					query.getResultList();
+					log.info("imageSubmission/submit: dimensions/end");
+				
+				} catch (Exception e) {
+					log.error(e.getMessage());
+					//e.printStackTrace();
+					results.setError("imageSubmission/submit/failed", null, Constants.HTTP_SERVER_ERROR);
+				}
+			}
+		}
+		
+		log.info("imageSubmission/submit/end");
+		return results;
+	}	
 }

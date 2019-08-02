@@ -9,3 +9,5 @@ swarm.ds.dbpasswordfile=/usr/local/mgi/live/dbutils/pgdbutilities/.pgpass_1
 swarm.ds.dbserver=bhmgidb01
 swarm.ds.eiUtilities=/usr/local/mgi/live/dbutils/pgdbutilities/bin/ei/markerWithdrawal.py
 swarm.ds.alleleCombinationUtilities=/usr/local/mgi/live/dbutils/allcacheload/allelecombinationByGenotype.py
+swarm.ds.pixeldb=/data/pixeldb
+swarm.ds.pixeldbCounter=/data/pixeldb/accession/counter

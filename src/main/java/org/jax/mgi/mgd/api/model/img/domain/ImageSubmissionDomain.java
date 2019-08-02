@@ -27,5 +27,6 @@ public class ImageSubmissionDomain extends BaseDomain {
 	private List<AccessionDomain> pixIds;
 	private Boolean hasPixId;
 	private String pixStatus;
-
+	private List<ImageSubmissionFileDomain> submissionFiles;
+	
 }

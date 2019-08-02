@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -14,8 +15,10 @@ import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.img.domain.ImageSubmissionDomain;
 import org.jax.mgi.mgd.api.model.img.service.ImageSubmissionService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -64,13 +67,6 @@ public class ImageSubmissionController extends BaseController<ImageSubmissionDom
 	}
 
 	@POST
-	@ApiOperation(value = "Process file upload/add new PIX:,xDim,yDim")
-	@Path("/processSubmit")
-	public Boolean process(SearchResults<ImageSubmissionDomain> domain, User user) {
-		return imageSubmissionService.processSubmit(domain, user);
-	}
-	
-	@POST
 	@ApiOperation(value = "Search/returns image submission domain")
 	@Path("/search")
 	public List<ImageSubmissionDomain> search(ImageSubmissionDomain searchDomain) {
@@ -86,4 +82,31 @@ public class ImageSubmissionController extends BaseController<ImageSubmissionDom
 		return results;
 	}
 
+	@POST
+	@Path("/submit")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public SearchResults<ImageSubmissionDomain> submit(			
+			@HeaderParam(value="api_access_token") String api_access_token,
+			@HeaderParam(value="username") String username,
+			MultipartFormDataInput input) {
+	
+		SearchResults<ImageSubmissionDomain> results = new SearchResults<ImageSubmissionDomain>();		
+		
+		try {
+			Boolean userToken = authenticateToken(api_access_token);
+			User user = authenticateUser(username);
+			
+			if (userToken && user != null) {		
+				results = imageSubmissionService.submit(input);
+				log.info(Constants.LOG_OUT_DOMAIN);
+			} else {
+				results.setError(Constants.LOG_FAIL_USERAUTHENTICATION, api_access_token + "," + username, Constants.HTTP_SERVER_ERROR);
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;		
+	}
+	
 }

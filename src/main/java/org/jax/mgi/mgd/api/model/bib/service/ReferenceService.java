@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
+import org.apache.commons.codec.binary.StringUtils;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
@@ -274,14 +275,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		String cmd = "\nselect _refs_key from bib_citation_cache";
 		String where = "\nwhere ";
 		
-		value = value.toLowerCase();
-		if (value.contains("j:")) {
-			where = where + "lower(jnumid) = '" + value + "'";
+		value = value.toUpperCase();
+		if (!value.contains("J:")) {
+			value = "J:" + value;
 		}
-		else {
-			where = where + "numericpart = " + value;			
-		}
-		
+		where = where + "jnumid = '" + value + "'";
+
 		cmd = cmd + where;
 		log.info(cmd);
 

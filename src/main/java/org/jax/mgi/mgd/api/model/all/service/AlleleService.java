@@ -171,7 +171,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		//log.info("searchDomain.getModifiedBy(): " + searchDomain.getModifiedBy());
 		if (from_variant == true) {
 			from = from + ", all_variant av";
-			where = where + "\nand a._allele_key = av._allele_key";
+			where = where + "\nand a._allele_key = av._allele_key \nand av._sourcevariant_key is not null";
 			// if from_variant is true, then createdBy et al is from the variant
 			String cmResults[] = DateSQLQuery.queryByCreationModification("av", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 			//log.info("cmResults[0]: " + cmResults[0]);

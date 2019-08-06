@@ -190,37 +190,33 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 	}
 	
 	@Transactional
-	public SearchResults<ImageDomain> updateAlleleAssoc(ImageDomain domain, User user) {
+	public SearchResults<ImageDomain> updateAlleleAssoc(ImageDomain imageDomain, User user) {
 		// update image pane associations for _mgitype_key = 11 (allele)
 		
 		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
+		Image imageEntity = imageDAO.get(Integer.valueOf(imageDomain.getImageKey()));		
 		String captionNote = "";
 		String allelePattern = "\\\\AlleleSymbol\\(([^|)]+)\\|[01]\\)";
 		
 		log.info("updateAlleleAssoc/start");
 		
 		// image type must = full size
-		if (domain.getImageType().equals("Thumbnail")) {
+		if (imageDomain.getImageType().equals("Thumbnail")) {
 			return results;
 		}
 		
 		// image class must = phenotype or molecular		
-		if (domain.getImageClass().equals("Expression")) {
+		if (imageDomain.getImageClass().equals("Expression")) {
 			return results;
 		}
 		
 		// caption must exist
-		if (domain.getCaptionNote() == null) {
-			return results;
-		}
-
-		// caption must not be empty
-		if (domain.getCaptionNote().getNoteChunk().isEmpty()) {
+		if (imageDomain.getCaptionNote() == null) {
 			return results;
 		}
 
 		// delete existing allele/image pane associations
-		List<ImagePaneAssocDomain> assocDomain = domain.getImagePanes().get(0).getPaneAssocs();	
+		List<ImagePaneAssocDomain> assocDomain = imageDomain.getImagePanes().get(0).getPaneAssocs();	
 		for (int i = 0; i < assocDomain.size(); i++) {
 			if (assocDomain.get(i).getMgiTypeKey().equals("11")) {
 				log.info("updateAlleleAssoc/delete: " + assocDomain.get(i).getAssocKey());
@@ -229,7 +225,13 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 			}
 		}
 		
-		captionNote = domain.getCaptionNote().getNoteChunk();
+		// caption must not be empty
+		if (imageDomain.getCaptionNote().getNoteChunk().isEmpty()) {
+			results.setItem(imageTranslator.translate(imageEntity));
+			return results;
+		}
+		
+		captionNote = imageDomain.getCaptionNote().getNoteChunk();
 		Pattern p;
 		p = Pattern.compile(allelePattern);
 		Matcher m = p.matcher(captionNote);
@@ -246,7 +248,7 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 			log.info("updateAlleleAssoc/create: " + aresults.get(i).getAlleleKey());
 			log.info(aresults.get(i).getAlleleKey());		
 			ImagePaneAssoc entity = new ImagePaneAssoc();	
-			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePanes().get(0).getImagePaneKey())));				
+			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(imageDomain.getImagePanes().get(0).getImagePaneKey())));				
 			entity.setMgiType(mgiTypeDAO.get(11));
 			entity.set_object_key(Integer.valueOf(aresults.get(i).getAlleleKey()));
 			entity.setIsPrimary(0);			
@@ -258,8 +260,7 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 		}
 			
 		log.info("updateAlleleAssoc/end");
-		Image entity = imageDAO.get(Integer.valueOf(domain.getImageKey()));		
-		results.setItem(imageTranslator.translate(entity));
+		results.setItem(imageTranslator.translate(imageEntity));
 		return results;
 	}
 

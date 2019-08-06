@@ -209,11 +209,6 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 		if (imageDomain.getImageClass().equals("Expression")) {
 			return results;
 		}
-		
-		// caption must exist
-		if (imageDomain.getCaptionNote() == null) {
-			return results;
-		}
 
 		// delete existing allele/image pane associations
 		List<ImagePaneAssocDomain> assocDomain = imageDomain.getImagePanes().get(0).getPaneAssocs();	
@@ -225,9 +220,13 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 			}
 		}
 		
+		// caption must exist
+		if (imageDomain.getCaptionNote() == null) {
+			return results;
+		}
+		
 		// caption must not be empty
 		if (imageDomain.getCaptionNote().getNoteChunk().isEmpty()) {
-			results.setItem(imageTranslator.translate(imageEntity));
 			return results;
 		}
 		

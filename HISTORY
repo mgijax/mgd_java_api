@@ -1,3 +1,11 @@
+TAG: mgd_java_api-6-0-14-16
+DATE: 07/31/2019
+STAFF: sc
+CHANGES: TR13125, GRSD-133 restore ability to delete coordinates
+
+TAG: mgd_java_api-6-0-14-15
+GitHub was reverted to 6-0-14-14 from 6-0-14-15
+
 TAG: mgd_java_api-6-0-14-14
 DATE: 05/23/2019
 STAFF: lec

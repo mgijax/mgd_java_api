@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
@@ -210,7 +211,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				+ "\nand a.preferred = 1"
 				+ "\nand a.prefixPart = 'MGI:'";
 		
-		if(searchDomain.getSymbol() != null) {
+		if (searchDomain.getSymbol() != null) {
 			if(searchDomain.getSymbol().contains("%")) {
 				return results;
 			}
@@ -243,4 +244,54 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	
 		return results;
 	}
+
+	@Transactional
+	public List<SlimAlleleDomain> validateAlleleByMGIIds(List<String> mgiIds) {
+		
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
+		
+		if (mgiIds.isEmpty()) {
+			return results;
+		}
+		
+		String value;
+		for (int i = 0; i < mgiIds.size(); i++) {
+			value = "'" + mgiIds.get(i) + "'";
+			mgiIds.set(i, value);
+		}
+		
+		String cmd = "\nselect distinct aa._allele_key, a.accID"
+				+ "\nfrom all_allele aa, acc_accession a"
+				+ "\nwhere aa._allele_status_key in (847114, 3983021)" //Approved,Autoload
+				+ "\nand aa._allele_key = a._object_key"
+				+ "\nand a._mgitype_key = 11"
+				+ "\nand a._logicaldb_key = 1"
+				+ "\nand a.preferred = 1"
+				+ "\nand a.prefixPart = 'MGI:'"
+				+ "\nand a.accID in (" + String.join("," , mgiIds) + ")";
+		
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			
+			while (rs.next()) {
+				SlimAlleleDomain alleleDomain = new SlimAlleleDomain();
+				SlimAccessionDomain accessionDomain = new SlimAccessionDomain();
+				List<SlimAccessionDomain> accessions = new ArrayList<SlimAccessionDomain>();
+				alleleDomain.setAlleleKey(rs.getString("_allele_key"));
+				accessionDomain.setAccID(rs.getString("accID"));
+				accessions.add(accessionDomain);
+				alleleDomain.setMgiAccessionIds(accessions);
+				results.add(alleleDomain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		return results;
+	}
+		
 }	

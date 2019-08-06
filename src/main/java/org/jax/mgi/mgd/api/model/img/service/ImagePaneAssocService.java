@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -11,11 +13,17 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.dao.MGITypeDAO;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
+import org.jax.mgi.mgd.api.model.all.service.AlleleService;
+import org.jax.mgi.mgd.api.model.img.dao.ImageDAO;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneAssocDAO;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
+import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocDomain;
+import org.jax.mgi.mgd.api.model.img.entities.Image;
 import org.jax.mgi.mgd.api.model.img.entities.ImagePaneAssoc;
 import org.jax.mgi.mgd.api.model.img.translator.ImagePaneAssocTranslator;
+import org.jax.mgi.mgd.api.model.img.translator.ImageTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -28,12 +36,17 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 	protected Logger log = Logger.getLogger(getClass());
 
 	@Inject
+	private ImageDAO imageDAO;	
+	@Inject
 	private ImagePaneAssocDAO imagePaneAssocDAO;
 	@Inject
 	private ImagePaneDAO imagePaneDAO;
 	@Inject
 	private MGITypeDAO mgiTypeDAO;
+	@Inject
+	private AlleleService alleleService;
 	
+	private ImageTranslator imageTranslator = new ImageTranslator();	
 	private ImagePaneAssocTranslator translator = new ImagePaneAssocTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
@@ -176,4 +189,78 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 		return modified;
 	}
 	
+	@Transactional
+	public SearchResults<ImageDomain> updateAlleleAssoc(ImageDomain domain, User user) {
+		// update image pane associations for _mgitype_key = 11 (allele)
+		
+		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
+		String captionNote = "";
+		String allelePattern = "\\\\AlleleSymbol\\(([^|)]+)\\|[01]\\)";
+		
+		log.info("updateAlleleAssoc/start");
+		
+		// image type must = full size
+		if (domain.getImageType().equals("Thumbnail")) {
+			return results;
+		}
+		
+		// image class must = phenotype or molecular		
+		if (domain.getImageClass().equals("Expression")) {
+			return results;
+		}
+		
+		// caption must exist
+		if (domain.getCaptionNote() == null) {
+			return results;
+		}
+
+		// caption must not be empty
+		if (domain.getCaptionNote().getNoteChunk().isEmpty()) {
+			return results;
+		}
+
+		// delete existing allele/image pane associations
+		List<ImagePaneAssocDomain> assocDomain = domain.getImagePanes().get(0).getPaneAssocs();	
+		for (int i = 0; i < assocDomain.size(); i++) {
+			if (assocDomain.get(i).getMgiTypeKey().equals("11")) {
+				log.info("updateAlleleAssoc/delete: " + assocDomain.get(i).getAssocKey());
+				ImagePaneAssoc entity = imagePaneAssocDAO.get(Integer.valueOf(assocDomain.get(i).getAssocKey()));
+				imagePaneAssocDAO.remove(entity);
+			}
+		}
+		
+		captionNote = domain.getCaptionNote().getNoteChunk();
+		Pattern p;
+		p = Pattern.compile(allelePattern);
+		Matcher m = p.matcher(captionNote);
+		List<String> mgiIds = new ArrayList<String>();
+		while (m.find()) {
+			mgiIds.add(m.group(1));
+	    }
+	    log.info(mgiIds);
+    	List<SlimAlleleDomain> aresults = new ArrayList<SlimAlleleDomain>();
+    	aresults = alleleService.validateAlleleByMGIIds(mgiIds);
+
+		// add all image pane association objects
+		for (int i = 0; i < aresults.size(); i++) {
+			log.info("updateAlleleAssoc/create: " + aresults.get(i).getAlleleKey());
+			log.info(aresults.get(i).getAlleleKey());		
+			ImagePaneAssoc entity = new ImagePaneAssoc();	
+			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePanes().get(0).getImagePaneKey())));				
+			entity.setMgiType(mgiTypeDAO.get(11));
+			entity.set_object_key(Integer.valueOf(aresults.get(i).getAlleleKey()));
+			entity.setIsPrimary(0);			
+			entity.setCreatedBy(user);
+			entity.setCreation_date(new Date());
+			entity.setModifiedBy(user);
+			entity.setModification_date(new Date());
+			imagePaneAssocDAO.persist(entity);	
+		}
+			
+		log.info("updateAlleleAssoc/end");
+		Image entity = imageDAO.get(Integer.valueOf(domain.getImageKey()));		
+		results.setItem(imageTranslator.translate(entity));
+		return results;
+	}
+
 }

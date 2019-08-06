@@ -48,8 +48,6 @@ public class ImageService extends BaseService<ImageDomain> {
 	@Inject
 	private ImagePaneService imagePaneService;
 	@Inject
-	private ImagePaneAssocService imagePaneAssocService;
-	@Inject
 	private AccessionService accessionService;
 	
 	private ImageTranslator translator = new ImageTranslator();
@@ -138,12 +136,6 @@ public class ImageService extends BaseService<ImageDomain> {
 		// process image pane
 		log.info("processImage/pane label");
 		imagePaneService.process(String.valueOf(entity.get_image_key()), domain.getImagePanes(), user);
-			
-		// process image pane associations
-		log.info("processImage/pane associations");
-		for (int i = 0; i < domain.getImagePanes().size(); i++) {
-			imagePaneAssocService.process(domain.getImagePanes().get(i).getImagePaneKey(), domain.getImagePanes().get(i).getPaneAssocs(), user);
-		}
 		
 		// return entity translated to domain
 		log.info("processImage/create/returning results");
@@ -216,15 +208,6 @@ public class ImageService extends BaseService<ImageDomain> {
 			modified = true;
 		}
 
-		// process image pane associations 
-		// if full size image
-		if (domain.getImageTypeKey().equals(fullSizeImageKey)) {
-			// use the first image pane only (image entity does the ordering)
-			if (imagePaneAssocService.process(domain.getImagePanes().get(0).getImagePaneKey(), domain.getImagePanes().get(0).getPaneAssocs(), user)) {
-				modified = true;
-			}
-		}
-		
 		// process editable accession ids (ex. PIX:)
 		if (domain.getEditAccessionIds() != null && !domain.getEditAccessionIds().isEmpty()) {
 			if (accessionService.process(domain.getImageKey(), domain.getEditAccessionIds(), mgiTypeName, user)) {

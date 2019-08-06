@@ -12,6 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OrderBy;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
 import io.swagger.annotations.ApiModel;
@@ -44,6 +45,7 @@ public class ImagePane extends BaseEntity {
 	@OneToMany()
 	@JoinColumn(name="_imagepane_key", insertable=false, updatable=false)
 	//@Where(clause="`_mgitype_key` in (11, 12)")
+	@OrderBy(clause="isPrimary desc")
 	private List<ImagePaneAssoc> paneAssocs;
 	
 }

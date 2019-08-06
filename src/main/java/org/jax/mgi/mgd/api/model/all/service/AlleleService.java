@@ -97,11 +97,14 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		Boolean from_variant = false;
 		
 		// if parameter exists, then add to where-clause
-		
-		String cmResults[] = DateSQLQuery.queryByCreationModification("aa", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
-		if (cmResults.length > 0) {
-			from = from + cmResults[0];
-			where = where + cmResults[1];
+		//log.info("CB: " + searchDomain.getCreatedBy() + " MB: " + searchDomain.getModifiedBy() + " CD: " + searchDomain.getCreation_date() + " MD: " + searchDomain.getModification_date() );
+		if (hasVariant == false) { // then createdBy etc is for the allele, see if from_variant == true below for variant createdBy etc
+			//log.info("CB: " + searchDomain.getCreatedBy() + " MB: " + searchDomain.getModifiedBy() + " CD: " + searchDomain.getCreation_date() + " MD: " + searchDomain.getModification_date() );
+			String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
+			if (cmResults.length > 0) {
+				from = from + cmResults[0];
+				where = where + cmResults[1];
+			}
 		}
 		
 		if (searchDomain.getSymbol() != null && !searchDomain.getSymbol().isEmpty()) {
@@ -152,10 +155,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			where = where + "\nand (" + jnumClauses.toString() + ")";
 		}
 	
-		// if searching for allele variants
-		if (hasVariant == true) {
-			from_variant = true;
-		}
 		
 		if (from_marker == true) {
 			from = from + ", mrk_location_cache m";
@@ -170,10 +169,20 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			from = from + ", mgi_reference_allele_view ref";
 			where = where + "\nand a._allele_key = ref._object_key";
 		}
-		
+		from_variant = hasVariant;
+		//log.info("from_variant: " + from_variant);
+		//log.info("searchDomain.getModifiedBy(): " + searchDomain.getModifiedBy());
 		if (from_variant == true) {
 			from = from + ", all_variant av";
-			where = where + "\nand a._allele_key = av._allele_key";
+			where = where + "\nand a._allele_key = av._allele_key \nand av._sourcevariant_key is not null";
+			// if from_variant is true, then createdBy et al is from the variant
+			String cmResults[] = DateSQLQuery.queryByCreationModification("av", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
+			//log.info("cmResults[0]: " + cmResults[0]);
+			//log.info("cmResults[1]: " + cmResults[1]);
+			if (cmResults.length > 0) {
+				from = from + cmResults[0];
+				where = where + cmResults[1];
+			}
 		}
 		
 		// make this easy to copy/paste for troubleshooting

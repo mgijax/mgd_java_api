@@ -322,18 +322,18 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		results = validJnum(jnum);
 	
-		log.info("copyright check");
-		// set copyright to incoming json package
-		if (domain.getCopyright() != null && !domain.getCopyright().isEmpty()) {
-			results.get(0).setCopyright(domain.getCopyright());
-		}
-
 		// if results is not null/empty
 		// if reference key is not null/empty
 		// if copyright is not null/empty
 		// that is, do not overwrite an existing copyright
 		
 		if (results != null && !results.isEmpty()) {
+
+			log.info("copyright check");
+			// set copyright to incoming json package
+			if (domain.getCopyright() != null && !domain.getCopyright().isEmpty()) {
+				results.get(0).setCopyright(domain.getCopyright());
+			}
 			
 			results.get(0).setNeedsDXDOIid(false);
 			results.get(0).setIsCreativeCommons(false);

@@ -192,6 +192,7 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 	@Transactional
 	public SearchResults<ImageDomain> updateAlleleAssoc(ImageDomain imageDomain, User user) {
 		// update image pane associations for _mgitype_key = 11 (allele)
+		// called from imageService!
 		
 		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
 		Image imageEntity = imageDAO.get(Integer.valueOf(imageDomain.getImageKey()));		

@@ -402,7 +402,7 @@ public class ImageService extends BaseService<ImageDomain> {
 			if (!mgiid.contains("MGI:")) {
 				mgiid = "MGI:" + mgiid;
 			}
-			where = where + "\nand a.accID ilike '" + mgiid + "'";
+			where = where + "\nand a.accID = '" + mgiid + "'";
 			from_accession = true;
 		}
 		// else thumbnail accession id

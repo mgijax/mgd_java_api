@@ -463,7 +463,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			if (!mgiid.contains("MGI:")) {
 				mgiid = "MGI:" + mgiid;
 			}
-			where = where + "\nand a.accID = '" + mgiid + "'";
+			where = where + "\nand a.accID ilike '" + mgiid + "'";
 			from_accession = true;
 		}
 		

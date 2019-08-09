@@ -191,8 +191,8 @@ public class ImageSubmissionService extends BaseService<ImageSubmissionDomain> {
 					BufferedImage bi = ImageIO.read(outPix);				
 					String cmd = "select count(*) from IMG_setPDO (" 
 						+ nextPixKey + "," 
-						+ bi.getHeight() + ","
 						+ bi.getWidth() + "," 
+						+ bi.getHeight() + ","
 						+ imageKey + ")";
 					log.info("cmd: " + cmd);
 					Query query = imageDAO.createNativeQuery(cmd);

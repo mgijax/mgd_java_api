@@ -314,7 +314,6 @@ public class ImageService extends BaseService<ImageDomain> {
 		Boolean from_copyrightNote = false;
 		Boolean from_privateCuratorialNote = false;
 		Boolean from_externalLinkNote = false;
-		Boolean from_accession = false;
 		Boolean from_editAccession = false;
 		Boolean from_noneditAccession = false;
 
@@ -402,8 +401,7 @@ public class ImageService extends BaseService<ImageDomain> {
 			if (!mgiid.contains("MGI:")) {
 				mgiid = "MGI:" + mgiid;
 			}
-			where = where + "\nand a.accID ilike '" + mgiid + "'";
-			from_accession = true;
+			where = where + "\nand i.mgiID = '" + mgiid + "'";
 		}
 		// else thumbnail accession id
 		else if (searchDomain.getThumbnailImage() != null) {
@@ -413,8 +411,7 @@ public class ImageService extends BaseService<ImageDomain> {
 				if (!mgiid.contains("MGI:")) {
 					mgiid = "MGI:" + mgiid;
 				}
-				where = where + "\nand a.accID ilike '" + mgiid + "'";
-				from_accession = true;
+				where = where + "\nand i.mgiID = '" + mgiid + "'";
 			}
 		}
 				
@@ -465,12 +462,7 @@ public class ImageService extends BaseService<ImageDomain> {
 		if (from_externalLinkNote == true) {
 			from = from + ", mgi_note_image_view note4";
 			where = where + "\nand i._image_key = note4._object_key";
-		}			
-		if (from_accession == true) {
-			from = from + ", img_image_acc_view a";
-			where = where + "\nand i._image_key = a._object_key" 
-					+ "\nand a._mgitype_key = 9";
-		}		
+		}					
 		if (from_editAccession == true) {
 			from = from + ", img_image_acc_view acc1";
 			where = where + "\nand acc1._logicaldb_key in (19)" +

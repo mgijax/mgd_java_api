@@ -212,12 +212,14 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 		}
 
 		// delete existing allele/image pane associations
-		List<ImagePaneAssocDomain> assocDomain = imageDomain.getImagePanes().get(0).getPaneAssocs();	
-		for (int i = 0; i < assocDomain.size(); i++) {
-			if (assocDomain.get(i).getMgiTypeKey().equals("11")) {
-				log.info("updateAlleleAssoc/delete: " + assocDomain.get(i).getAssocKey());
-				ImagePaneAssoc entity = imagePaneAssocDAO.get(Integer.valueOf(assocDomain.get(i).getAssocKey()));
-				imagePaneAssocDAO.remove(entity);
+		if (imageDomain.getImagePanes().get(0).getPaneAssocs() != null) {
+			List<ImagePaneAssocDomain> assocDomain = imageDomain.getImagePanes().get(0).getPaneAssocs();	
+			for (int i = 0; i < assocDomain.size(); i++) {
+				if (assocDomain.get(i).getMgiTypeKey().equals("11")) {
+					log.info("updateAlleleAssoc/delete: " + assocDomain.get(i).getAssocKey());
+					ImagePaneAssoc entity = imagePaneAssocDAO.get(Integer.valueOf(assocDomain.get(i).getAssocKey()));
+					imagePaneAssocDAO.remove(entity);
+				}
 			}
 		}
 		

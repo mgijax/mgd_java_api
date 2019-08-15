@@ -1118,7 +1118,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		// mrk_event = rename
 		if (params.get("eventKey").equals("2")) {
-			runCmd = runCmd + " --newName='" + (String) params.get("newName") + "'";
+			runCmd = runCmd + " --newName='" + 
+						((String) params.get("newName")).replaceAll("'",  "''") + "'";
 			runCmd = runCmd + " --newSymbols='" + (String) params.get("newSymbol") + "'";
 		}
 		

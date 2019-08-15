@@ -79,25 +79,17 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		Marker entity = new Marker();
 		
-		// assumes that required fields exist
-		entity.setSymbol(domain.getSymbol());
-		entity.setName(domain.getName());
-		entity.setChromosome(domain.getChromosome());
-		
-		// cytoGeneticOffset always defaults to null
-		// no special processing required
+		// default marker type = 1/gene
+		if (domain.getMarkerTypeKey() == null) {
+			domain.setMarkerTypeKey("1");
+		}
+		entity.setMarkerType(markerTypeDAO.get(Integer.valueOf(domain.getMarkerTypeKey())));			
 
-		// if chr = "UN", then cmOffset = -999, else cmOffset = -1
-		if (domain.getChromosome().equals("UN")) {
-			entity.setCmOffset(-999.0);
+		// default marker status = 1/official
+		if (domain.getMarkerStatusKey() == null) {
+			domain.setMarkerStatusKey("1");
 		}
-		else {
-			entity.setCmOffset(-1.0);
-		}
-			
-		entity.setOrganism(organismDAO.get(Integer.valueOf(domain.getOrganismKey())));
-		
-		// marker status cannot be "withdrawn"
+		// marker status cannot be "withdrawn"		
 		if (domain.getMarkerStatusKey().equals("2")) {
 			results.setError("Failed : Marker Status error",  "Cannot use 'withdrawn'", Constants.HTTP_SERVER_ERROR);
 			return results;
@@ -106,8 +98,22 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			entity.setMarkerStatus(markerStatusDAO.get(Integer.valueOf(domain.getMarkerStatusKey())));
 		}
 		
-		entity.setMarkerType(markerTypeDAO.get(Integer.valueOf(domain.getMarkerTypeKey())));
-		
+		entity.setSymbol(domain.getSymbol());
+		entity.setName(domain.getName());
+		entity.setOrganism(organismDAO.get(Integer.valueOf(domain.getOrganismKey())));
+
+		// default chr = "UN"
+		if (domain.getChromosome() == null) {
+			entity.setChromosome("UN");
+			entity.setCmOffset(-999.0);			
+		}
+		else if (domain.getChromosome().equals("UN")) {
+			entity.setCmOffset(-999.0);
+		}
+		else {
+			entity.setCmOffset(-1.0);
+		}
+	
 		// add creation/modification 
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
@@ -139,7 +145,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				+ "," + entity.get_marker_key()
 				+ "," + domain.getHistory().get(0).getRefsKey().toString()
 				+ ",1,-1"
-				+ ",'" + entity.getName() + "'"
+				+ ",'" + entity.getName().replaceAll("'", "''") + "'"
 				+ ")";
 
 		log.info("cmd: " + cmd);

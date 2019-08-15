@@ -289,12 +289,23 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 							domains.get(i).getAccessionIds(),
 							"Allele Variant Sequence", user);				
 				}
+				
 				log.info("Version");
-				if (domains.get(i).getVersion() != null) {
-					if (entity.getVersion()!= null || !entity.getVersion().equals(domains.get(i).getVersion())) {
+				if (entity.getVersion() == null) {
+					if (domains.get(i).getVersion() != null) {
 						entity.setVersion(domains.get(i).getVersion());
-						modified = true;
+						modified = true;	
 					}
+				}
+				// may be null coming from domain
+				else if (domains.get(i).getVersion() == null) {
+					entity.setVersion(null);
+					modified = true;
+				}
+				// if not entity/null and not domain/empty, then check if equivalent
+				else if (!entity.getVersion().equals(domains.get(i).getVersion())) {
+					entity.setVersion(domains.get(i).getVersion());
+					modified = true;
 				}
 				
 				log.info("reference: check if modified");

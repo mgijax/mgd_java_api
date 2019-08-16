@@ -357,7 +357,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// return the object count from the database
 		
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
-		String cmd = "select count(*) as objectCount from mrk_marker";
+		String cmd = "select count(*) as objectCount from mrk_marker where _organism_key = 1";
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);

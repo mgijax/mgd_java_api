@@ -1056,7 +1056,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}	
 		
 	@Transactional		
-	public SearchResults<SlimMarkerDomain> eiUtilities(MarkerUtilitiesForm searchForm) throws IOException, InterruptedException {
+	public SearchResults<SlimMarkerDomain> eiUtilities(MarkerUtilitiesForm searchForm, User user) throws IOException, InterruptedException {
 	
 //		required for all cases/set by user
 //		eventKey : MR_Event list
@@ -1085,11 +1085,14 @@ public class MarkerService extends BaseService<MarkerDomain> {
 //		newName : null 
 //
 		
+		// when we replace pgdbutilities/bin/ei/markerWithdrawal.py
+		// with java version, then we will use "User user".
+		
 		// these swarm variables are in 'app.properties'
     	String eiUtilitiesScript = System.getProperty("swarm.ds.eiUtilities");
     	String server = System.getProperty("swarm.ds.dbserver");
         String db = System.getProperty("swarm.ds.dbname");
-        String user = System.getProperty("swarm.ds.username");
+        String username = System.getProperty("swarm.ds.username");
         String pwd = System.getProperty("swarm.ds.dbpasswordfile");
         
         // input:  searchForm parameters
@@ -1102,7 +1105,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		String runCmd = eiUtilitiesScript;
         runCmd = runCmd + " -S" + server;
         runCmd = runCmd + " -D" + db;
-        runCmd = runCmd + " -U" + user;
+        runCmd = runCmd + " -U" + username;
         runCmd = runCmd + " -P" + pwd;
         runCmd = runCmd + " --eventKey=" + (String) params.get("eventKey");
         runCmd = runCmd + " --eventReasonKey=" + (String) params.get("eventReasonKey");
@@ -1117,7 +1120,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		if (params.get("eventKey").equals("2")) {
 			runCmd = runCmd + " --newName=\"" + 
 						((String) params.get("newName")).replaceAll("'",  "''") + "\"";
-			runCmd = runCmd + " --newSymbols='" + (String) params.get("newSymbol") + "'";
+			runCmd = runCmd + " --newSymbols=\"" + (String) params.get("newSymbol") + "\"";
 		}
 		
 		// mrk_event = merge
@@ -1139,6 +1142,82 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			results.setError(Constants.LOG_FAIL_EIUTILITIES, runner.getStdErr(), Constants.HTTP_SERVER_ERROR);
 		}			
 
+		// pre-processing snapshot
+		// once this is done, the pgdbutilities/bin/ei/markerWithdrawal* methods are obsolete
+		
+//		String queryCmd = "\nselect _marker_key, symbol from mrk_current_view"
+//				+ "\nwhere _current_key = " + key
+//				+ "\norder by symbol";	
+//		log.info(queryCmd);
+//		
+//		try {
+//			ResultSet rs = sqlExecutor.executeProto(queryCmd);
+//			while (rs.next()) {				
+//				SlimMarkerDomain domain = new SlimMarkerDomain();				
+//				domain.setMarkerKey(rs.getString("_marker_key"));
+//				domain.setSymbol(rs.getString("symbol"));				
+//				listOfResults.add(domain);
+//			}
+//			sqlExecutor.cleanup();
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		String cmd= "";
+//		
+//		// rename
+//		if (params.get("eventKey").equals("2")) {
+//			cmd = "select count(*) from MRK_simpleWithdrawal ("
+//				+ user.get_user_key().intValue()
+//				+ "," + (String) params.get("oldKey")
+//				+ "," + (String) params.get("refKey")
+//				+ "," + (String) params.get("eventReasonKey")
+//				+ ",'" + (String) params.get("newSymbol") + "'"
+//				+ ",'" + ((String) params.get("newName")).replaceAll("'",  "''") + "'"
+//				+ "," + (String) params.get("addAsSynonym")				
+//				+ ")";
+//		}
+//		
+//		// merge
+//		else if (params.get("eventKey").equals("3")) {
+//			cmd = "select count(*) from MRK_mergeWithdrawal ("
+//					+ user.get_user_key().intValue()
+//					+ "," + (String) params.get("oldKey")
+//					+ "," + (String) params.get("newKey")					
+//					+ "," + (String) params.get("refKey")
+//					+ "," + (String) params.get("eventKey")					
+//					+ "," + (String) params.get("eventReasonKey")
+//					+ "," + (String) params.get("addAsSynonym")				
+//					+ ")";			
+//		}
+//		
+//		//allele of
+//		else if (params.get("eventKey").equals("4")) {
+//			cmd = "select count(*) from MRK_alleleWithdrawal ("
+//					+ user.get_user_key().intValue()
+//					+ "," + (String) params.get("oldKey")
+//					+ "," + (String) params.get("newKey")					
+//					+ "," + (String) params.get("refKey")
+//					+ "," + (String) params.get("eventReasonKey")
+//					+ "," + (String) params.get("addAsSynonym")	
+//					+ ")";			
+//		}
+//		
+//		// delete
+//		else if (params.get("eventKey").equals("6")) {
+//			cmd = "select count(*) from MRK_deleteWithdrawal ("
+//					+ user.get_user_key().intValue()
+//					+ "," + (String) params.get("oldKey")
+//					+ "," + (String) params.get("refKey")
+//					+ "," + (String) params.get("eventReasonKey")
+//					+ ")";			
+//		}
+//
+//		log.info("cmd: " + cmd);
+//		Query query = markerDAO.createNativeQuery(cmd);
+//		query.getResultList();
+		
 		// regardless of exit code from RunCommand
 		// select set of markers where current marker = marker being processed
 		String queryCmd = "\nselect _marker_key, symbol from mrk_current_view"

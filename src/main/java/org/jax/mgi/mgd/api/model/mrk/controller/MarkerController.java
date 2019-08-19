@@ -6,6 +6,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -156,15 +157,25 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	@POST
 	@ApiOperation(value = "EI Utilities ")
 	@Path("/eiUtilities")
-	public SearchResults<SlimMarkerDomain> eiUtilities(MarkerUtilitiesForm searchForm) {
+	public SearchResults<SlimMarkerDomain> eiUtilities(
+			@HeaderParam(value="api_access_token") String api_access_token,
+			@HeaderParam(value="username") String username,
+			MarkerUtilitiesForm searchForm) {
 
 		SearchResults<SlimMarkerDomain> results = new SearchResults<SlimMarkerDomain>();
 		
 		try {
-			log.info(Constants.LOG_IN_JSON);
-			log.info(mapper.writeValueAsString(searchForm));				
-			results = markerService.eiUtilities(searchForm);
-			log.info(Constants.LOG_OUT_DOMAIN);		
+			Boolean userToken = authenticateToken(api_access_token);
+			User user = authenticateUser(username);
+			
+			if (userToken && user != null) {		
+				log.info(Constants.LOG_IN_JSON);
+				log.info(mapper.writeValueAsString(searchForm));				
+				results = markerService.eiUtilities(searchForm, user);
+				log.info(Constants.LOG_OUT_DOMAIN);					
+			} else {				
+				results.setError(Constants.LOG_FAIL_USERAUTHENTICATION, api_access_token + "," + username, Constants.HTTP_SERVER_ERROR);				
+			}
 		} catch (Exception e) {
 			results.setError(Constants.LOG_FAIL_EIUTILITIES, getRootException(e).getMessage(), Constants.HTTP_SERVER_ERROR);
 		}

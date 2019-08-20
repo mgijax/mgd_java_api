@@ -562,7 +562,8 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 			rwdPredicates.add(builder.equal(root.get("_refs_key"), rwdRoot.get("_refs_key")));
 			Join<LTReferenceWorkflowData,Term> supplementalTerm = rwdRoot.join("supplementalTerm");
 			rwdPredicates.add(builder.equal(supplementalTerm.get("term"), params.get("supplementalTerm")));
-
+			Join<LTReferenceWorkflowData,Term> extractedTextTerm = rwdRoot.join("extractedTextTerm");
+			rwdPredicates.add(builder.equal(extractedTextTerm.get("term"), "body"));
 			rwdSubquery.where(rwdPredicates.toArray(new Predicate[]{}));
 			restrictions.add(builder.exists(rwdSubquery));
 		}

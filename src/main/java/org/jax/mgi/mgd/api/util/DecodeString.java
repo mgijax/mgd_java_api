@@ -12,6 +12,10 @@ public class DecodeString {
 		// if the decoding returns a question mark, then return the original string
 		// if the decoding does not return a question mark, then return the decoded/UTR8 string
 
+		if (s == null) {
+			return(s);
+		}
+		
 		String sDecoded = "";
 		try {
 			Boolean executeDecode = true;
@@ -45,6 +49,10 @@ public class DecodeString {
 		// set any string to UTF-8
 		// also set the single quote to double quote for postgres
 
+		if (s == null) {
+			return(s);
+		}
+		
 		String sDecoded = "";
 		try {
 			sDecoded = new String(s.replace("'", "''").getBytes("UTF-8"), "ISO-8859-15");

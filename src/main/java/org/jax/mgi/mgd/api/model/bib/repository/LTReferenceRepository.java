@@ -332,7 +332,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		if (a == null) {
 			if (b == null) { return true; }
 			else { return false; }
-		}
+		}		
 		return a.equals(b);
 	}
 
@@ -425,22 +425,22 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			anyChanges = applyOneIDChange(entity, Constants.LDB_GOREF, domain.gorefid, prefixPart, numericPart, Constants.SECONDARY, Constants.PRIVATE, currentUser) || anyChanges;
 		}
 		
-		// jnumid can only be deleted,  not added or modified
-		if (!smartEqual(entity.getJnumid(), domain.jnumid)) {
-			if (domain.jnumid.isEmpty()) {
-				String prefixPart = domain.jnumid;				// defaults
-				Integer numericPart = null;
+		// if entity contains a jnum and domain does not, ok to try and delete it
+		if (entity.getJnumid() != null && 
+				(domain.jnumid == null || domain.jnumid.isEmpty())) {
+			
+			String prefixPart = domain.jnumid;				// defaults
+			Integer numericPart = null;
 
-				if (domain.jnumid != null) {
-					Matcher m = pattern.matcher(domain.jnumid);
-					if (m.find()) {
-						prefixPart = m.group(1);					// ID fit pattern, so use more accurate prefix / numeric parts
-						numericPart = Integer.parseInt(m.group(2));
-					}
+			if (domain.jnumid != null) {
+				Matcher m = pattern.matcher(domain.jnumid);
+				if (m.find()) {
+					prefixPart = m.group(1);					// ID fit pattern, so use more accurate prefix / numeric parts
+					numericPart = Integer.parseInt(m.group(2));
 				}
-
-				anyChanges = applyOneIDChange(entity, Constants.LDB_JNUM, domain.jnumid, prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, currentUser) || anyChanges;
 			}
+
+			anyChanges = applyOneIDChange(entity, Constants.LDB_JNUM, domain.jnumid, prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, currentUser) || anyChanges;
 		}
 		
 		return anyChanges;
@@ -452,17 +452,24 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	private boolean applyOneIDChange(LTReference entity, Integer ldb, String accID, String prefixPart, Integer numericPart, Integer preferred, Integer isPrivate, User currentUser) {
 		// first parameter is required; bail out if it is null
 		if (ldb == null) { return false; }
-
+		
 		// First, need to find any existing AccessionID object for this logical database.
 
 		List<Accession> ids = entity.getAccessionIDs();
 		int idPos = -1;			// position of correct ID in list of IDs
 		for (int i = 0; i < ids.size(); i++) {
 			Accession myID = ids.get(i);
+			
+			// skip if MGI:xxxx; J:xxxx is OK
+			if (ldb.equals(1)) {
+				if (myID.getPrefixPart().equals("MGI:")) {
+					continue;
+				}
+			}
+			
 			if (ldb.equals(myID.getLogicaldb().get_logicaldb_key())) {
 				idPos = i;
-				break;
-			}
+				break;	}
 		}
 
 		// If we had a previous ID for this logical database, we either need to modify it or delete it.

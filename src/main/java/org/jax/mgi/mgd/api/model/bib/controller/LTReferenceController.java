@@ -310,6 +310,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 		return results;
 	}
 
+	// never used/always use the ReferenceController/create
 	@Override
 	public SearchResults<LTReferenceDomain> create(LTReferenceDomain object, User user) {
 		return null;

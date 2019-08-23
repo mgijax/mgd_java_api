@@ -3,7 +3,6 @@ package org.jax.mgi.mgd.api.model.bib.interfaces;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -193,17 +192,4 @@ public interface LTReferenceRESTInterface {
 			@ApiParam(value = "Value: This is for searching by reference key")
 			@PathParam("key") String key);
 
-	@DELETE
-	@ApiOperation(value = "Value: Deletes Reference", notes="Notes: Deletes a Reference")
-	@Path("/{key}")
-	public SearchResults<LTReferenceDomain> deleteReference(
-			@ApiParam(value = "Name: Token for accessing this API")
-			@HeaderParam("api_access_token") String api_access_token,
-			
-			@ApiParam(value = "Name: Logged-in User")
-			@HeaderParam("username") String username,
-			
-			@ApiParam(value = "Value: Use this key to look up a Reference and then delete it")
-			@PathParam("key") Integer key
-	);
 }

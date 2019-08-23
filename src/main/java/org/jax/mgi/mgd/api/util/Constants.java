@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.util;
 public class Constants {
 	// logical databases
 	public static int LDB_MGI = 1;			// MGI
+	public static int LDB_JNUM = 1;			// Jnumid
 	public static int LDB_PUBMED = 29;		// PubMed
 	public static int LDB_DOI = 65;			// DOI / Journal Link
 	public static int LDB_GOREF = 185;		// GO_Ref

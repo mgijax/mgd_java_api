@@ -104,9 +104,16 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 				}
 
 				return this.getReferenceByKey(reference._refs_key.toString());
-			} catch (Throwable t) {
-				results.setError("Failed", "Failed to save changes (" + t.toString() + ")", Constants.HTTP_SERVER_ERROR);
+			} catch (Exception e) {
+				Throwable t = getRootException(e);
+				StackTraceElement[] ste = t.getStackTrace();
+				String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";
+				
+				results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);
 			}
+//			} catch (Throwable t) {
+//				results.setError("Failed", "Failed to save changes (" + t.toString() + ")", Constants.HTTP_SERVER_ERROR);
+//			}
 		} else {
 			results.setError("FailedAuthentication", "Failed - invalid username", Constants.HTTP_PERMISSION_DENIED);
 		}
@@ -303,18 +310,6 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 		return results;
 	}
 
-	/* delete the reference with the given accession ID...  TODO: need to flesh this out, return SearchResults object, etc.
-	 */
-	@Override
-	public SearchResults<LTReferenceDomain> deleteReference(String api_access_token, String username, Integer key) {
-		User currentUser = userService.getUserByUsername(username);
-		if (currentUser != null) {
-			SearchResults<LTReferenceDomain> results = referenceService.deleteReference(key, currentUser);
-			return results;
-		}
-		return null;
-	}
-	
 	@Override
 	public SearchResults<LTReferenceDomain> create(LTReferenceDomain object, User user) {
 		return null;
@@ -330,6 +325,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 		return null;
 	}
 
+	// never used/always use the ReferenceController/delete
 	@Override
 	public SearchResults<LTReferenceDomain> delete(Integer key, User user) {
 		return null;

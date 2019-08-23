@@ -1,7 +1,6 @@
 package org.jax.mgi.mgd.api.model.bib.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +27,7 @@ public class LTReferenceService {
 	 */
 	@Inject
 	private LTReferenceRepository repo;
-
+	
 	@Inject
 	private LTReferenceSummaryRepository summaryRepo;
 	
@@ -77,25 +76,5 @@ public class LTReferenceService {
 	public SearchResults<LTReferenceDomain> getReferences(Map<String, Object> searchFields) throws APIException {
 		return repo.search(searchFields);
 	}
-
-	@Transactional
-	public SearchResults<LTReferenceDomain> deleteReference(Integer key, User currentUser) {
-		SearchResults<LTReferenceDomain> out = new SearchResults<LTReferenceDomain>();
-		
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		if(key != null) { map.put("_refs_key", key); }
-		SearchResults<LTReferenceDomain> results = repo.search(map);
-		if (results.status_code != Constants.HTTP_OK) {
-			out.setError(results.error, results.message, results.status_code);
-			return out;
-		}
-
-		out.setItem(results.items.get(0));
-		try {
-			repo.delete(results.items.get(0), currentUser);
-		} catch (APIException e) {
-			out.setError("Failed", "Failed to delete reference with key " + key + ", exception: " + e.toString(), Constants.HTTP_SERVER_ERROR);
-		}
-		return out;
-	}
+	
 }

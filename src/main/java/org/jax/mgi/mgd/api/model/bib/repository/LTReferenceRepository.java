@@ -317,7 +317,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			entity.setYear(year);
 			entity.setPages(domain.pages);
 			entity.setReferenceTypeTerm(getTermByTerm(Constants.VOC_REFERENCE_TYPE, domain.reference_type));
-			entity.setRef_abstract(DecodeString.setDecodeToLatin9(domain.ref_abstract.replace("'", "''")));			
+			entity.setRef_abstract(DecodeString.setDecodeToLatin9(domain.ref_abstract));			
 			entity.setModificationInfo(currentUser);
 			
 			anyChanges = true;
@@ -424,6 +424,25 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 			anyChanges = applyOneIDChange(entity, Constants.LDB_GOREF, domain.gorefid, prefixPart, numericPart, Constants.SECONDARY, Constants.PRIVATE, currentUser) || anyChanges;
 		}
+		
+		// jnumid can only be deleted,  not added or modified
+		if (!smartEqual(entity.getJnumid(), domain.jnumid)) {
+			if (domain.jnumid.isEmpty()) {
+				String prefixPart = domain.jnumid;				// defaults
+				Integer numericPart = null;
+
+				if (domain.jnumid != null) {
+					Matcher m = pattern.matcher(domain.jnumid);
+					if (m.find()) {
+						prefixPart = m.group(1);					// ID fit pattern, so use more accurate prefix / numeric parts
+						numericPart = Integer.parseInt(m.group(2));
+					}
+				}
+
+				anyChanges = applyOneIDChange(entity, Constants.LDB_JNUM, domain.jnumid, prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, currentUser) || anyChanges;
+			}
+		}
+		
 		return anyChanges;
 	}
 

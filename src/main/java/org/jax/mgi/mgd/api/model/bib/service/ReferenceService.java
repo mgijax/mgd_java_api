@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.bib.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -50,19 +51,19 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		Reference entity = new Reference();
 		
 		// default reference type = ?
-		if (domain.getReferenceTypeKey() == null) {
-			domain.setReferenceTypeKey("1");
+		if (domain.getReferenceTypeKey() == null || domain.getReferenceTypeKey().isEmpty()) {
+			domain.setReferenceTypeKey("31576687");
 		}
 		entity.setReferenceType(termDAO.get(Integer.valueOf(domain.getReferenceTypeKey())));			
 
 		if (domain.getAuthors() == null || domain.getAuthors().isEmpty()) {
 			entity.setAuthors(null);
-			String[] authors = domain.getAuthors().split(";");
-			entity.setPrimaryAuthor(authors[0]);	
+			entity.setPrimaryAuthor(null);
 		}
 		else {
 			entity.setAuthors(domain.getAuthors());
-			entity.setPrimaryAuthor(null);
+			String[] authors = domain.getAuthors().split(";");
+			entity.setPrimaryAuthor(authors[0]);
 		}
 		
 		if (domain.getTitle() == null || domain.getTitle().isEmpty()) {
@@ -108,7 +109,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		if (domain.getYear() == null || domain.getYear().isEmpty()) {
-			entity.setYear(0);
+			//int y = Calendar.get(Calendar.YEAR) - 1900;
+			entity.setYear(0); 
 		}
 		else {
 			entity.setYear(Integer.valueOf(domain.getYear()));
@@ -143,29 +145,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		// execute persist/insert/send to database
 		referenceDAO.persist(entity);
-
-		// start stored procedures
-		
-		String cmd = "";
-		Query query;
-		
-		// create jnumid
-		cmd = "select count(*) from ACC_assignJ ("
-				+ user.get_user_key().intValue()
-				+ "," + entity.get_refs_key()
-				+ "-1)";
-		log.info("cmd: " + cmd);
-		query = referenceDAO.createNativeQuery(cmd);
-		query.getResultList();
-		
+				
 		// reload bib_citation_cache
-		cmd = "select count(*) from BIB_reloadCache (" + entity.get_refs_key() + ")";
+		String cmd = "select count(*) from BIB_reloadCache (" + entity.get_refs_key() + ")";
 		log.info("cmd: " + cmd);
-		query = referenceDAO.createNativeQuery(cmd);
+		Query query = referenceDAO.createNativeQuery(cmd);
 		query.getResultList();
-		
-		// end stored procedures
-		
+				
 		// return entity translated to domain
 		log.info("processReference/create/returning results");
 		results.setItem(translator.translate(entity));

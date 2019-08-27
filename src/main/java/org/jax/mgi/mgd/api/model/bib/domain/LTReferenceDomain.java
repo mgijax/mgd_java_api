@@ -17,7 +17,7 @@ import lombok.Setter;
  */
 @Getter @Setter
 public class LTReferenceDomain extends BaseDomain {
-	public Integer _refs_key;
+	public String refsKey;
 	public String authors;
 	public String primary_author;
 	public String title;
@@ -33,7 +33,8 @@ public class LTReferenceDomain extends BaseDomain {
 	public String pubmedid;
 	public String mgiid;
 	public String gorefid;
-	public String reference_type;
+	public String referenceType;
+	public String referenceTypeKey;
 	public String ref_abstract;
 	public String referencenote;
 	public String short_citation;
@@ -42,7 +43,7 @@ public class LTReferenceDomain extends BaseDomain {
 	public String gxd_status;
 	public String qtl_status;
 	public String tumor_status;
-	public String is_discard;
+	public String isDiscard;
 	public List<String> workflow_tags;
 	public String book_author;
 	public String book_title;

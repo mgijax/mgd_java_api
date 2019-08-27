@@ -31,14 +31,6 @@ public class LTReferenceService {
 	@Inject
 	private LTReferenceSummaryRepository summaryRepo;
 	
-	/* Create a reference entity that corresponds to the given domain object.  Returns domain object if
-	 * successful or throws APIException if not.
-	 */
-	@Transactional
-	public LTReferenceDomain createReference(LTReferenceDomain domain, User currentUser) throws APIException {
-		return repo.create(domain, currentUser);
-	}
-
 	/* Update the reference entity corresponding to the given domain object (and updates citation cache).  Returns
 	 * domain object if successful or throws APIException if not.
 	 */
@@ -52,11 +44,11 @@ public class LTReferenceService {
 	 * only workflow tags are processed currently
 	 */
 	@Transactional
-	public void updateReferencesInBulk(List<Integer> refsKeys, String workflow_tag, String workflow_tag_operation, User currentUser) throws APIException {
-		repo.updateInBulk(refsKeys, workflow_tag, workflow_tag_operation, currentUser);
+	public void updateReferencesInBulk(List<String> refsKey, String workflow_tag, String workflow_tag_operation, User currentUser) throws APIException {
+		repo.updateInBulk(refsKey, workflow_tag, workflow_tag_operation, currentUser);
 	}
 
-	public SearchResults<LTReferenceDomain> getReference(int refsKey) throws APIException {
+	public SearchResults<LTReferenceDomain> getReference(String refsKey) throws APIException {
 		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
 		try {
 			LTReferenceDomain domain = repo.get(refsKey);
@@ -76,5 +68,5 @@ public class LTReferenceService {
 	public SearchResults<LTReferenceDomain> getReferences(Map<String, Object> searchFields) throws APIException {
 		return repo.search(searchFields);
 	}
-	
+
 }

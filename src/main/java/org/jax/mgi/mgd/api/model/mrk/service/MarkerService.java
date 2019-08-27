@@ -153,7 +153,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		// return entity translated to domain
 		log.info("processMarker/create/returning results");
-		//,0
 		results.setItem(translator.translate(entity));
 		return results;
 	}

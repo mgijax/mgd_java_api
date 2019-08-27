@@ -73,7 +73,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	/* gets a ReferenceDomain object that is fully fleshed out from a Reference
 	 */
 	@Override
-	public LTReferenceDomain get(int primaryKey) throws FatalAPIException, APIException {
+	public LTReferenceDomain get(String primaryKey) throws FatalAPIException, APIException {
 		LTReference ref = getReference(primaryKey);
 		LTReferenceDomain domain = translator.translate(ref);
 		domain.setStatusHistory(getStatusHistory(domain));
@@ -106,28 +106,18 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	@Override
 	public LTReferenceDomain update(LTReferenceDomain domain, User user) throws FatalAPIException, NonFatalAPIException, APIException {
-		LTReference entity = getReference(domain._refs_key);
+		LTReference entity = getReference(domain.refsKey);
 		applyDomainChanges(entity, domain, user);
 		referenceDAO.persist(entity);
-		referenceDAO.updateCitationCache(domain._refs_key);
+		referenceDAO.updateCitationCache(domain.refsKey);
 		return translator.translate(entity);
-	}
-
-	@Override
-	public LTReferenceDomain delete(LTReferenceDomain domain, User user) throws FatalAPIException {
-		throw new FatalAPIException("Need to implement ReferenceRepository.delete() method");
-	}
-
-	@Override
-	public LTReferenceDomain create(LTReferenceDomain domain, User username) throws FatalAPIException {
-		throw new FatalAPIException("Need to implement ReferenceRepository.create() method");
 	}
 
 	/* get a list of events in the status history of the reference with the specified key
 	 */
 	public List<LTReferenceWorkflowStatusDomain> getStatusHistory(LTReferenceDomain domain) throws APIException {
 		List<LTReferenceWorkflowStatusDomain> history = new ArrayList<LTReferenceWorkflowStatusDomain>();
-		for (LTReferenceWorkflowStatus event : referenceDAO.getStatusHistory(domain._refs_key.toString())) {
+		for (LTReferenceWorkflowStatus event : referenceDAO.getStatusHistory(domain.refsKey)) {
 			history.add(new LTReferenceWorkflowStatusDomain(event));
 		}
 		return history;
@@ -135,9 +125,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	/* set the given workflow_tag for all references identified in the list of keys
 	 */
-	public void updateInBulk(List<Integer> refsKeys, String workflow_tag, String workflow_tag_operation, User currentUser) throws FatalAPIException, APIException {
+	public void updateInBulk(List<String> refsKey2, String workflow_tag, String workflow_tag_operation, User currentUser) throws FatalAPIException, APIException {
 		// if no references or no tags, just bail out as a no-op
-		if ((refsKeys == null) || (refsKeys.size() == 0) || (workflow_tag == null) || (workflow_tag.length() == 0)) {
+		if ((refsKey2 == null) || (refsKey2.size() == 0) || (workflow_tag == null) || (workflow_tag.length() == 0)) {
 			return; 
 		}
 
@@ -152,7 +142,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		 * 1. if the operation fails in a fatal manner, rethrow that exception immediately.
 		 * 2. if the operation fails in a non-fatal manner, wait briefly and try again up to maxRetries times.
 		 */
-		for (Integer refsKey : refsKeys) {
+		for (String refsKey : refsKey2) {
 			LTReference reference = referenceDAO.getReference(refsKey);
 			if (reference != null) {
 				int retries = 0;
@@ -223,7 +213,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	/* retrieve the Reference object with the given primaryKey
 	 */
-	private LTReference getReference(Integer primaryKey) throws FatalAPIException, APIException {
+	private LTReference getReference(String primaryKey) throws FatalAPIException, APIException {
 		if (primaryKey == null) {
 			throw new FatalAPIException("ReferenceRepository.getReference() : reference key is null");
 		}
@@ -257,15 +247,15 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	/* handle the basic fields that have changed between this Reference and the given ReferenceDomain
 	 */
 	private boolean applyBasicFieldChanges(LTReference entity, LTReferenceDomain domain, User currentUser) throws FatalAPIException {
-		// exactly one set of basic data per reference, including:  is_discard flag, reference type,
+		// exactly one set of basic data per reference, including:  isDiscard flag, reference type,
 		// author, primary author (derived), journal, title, volume, issue, date, year, pages, 
 		// abstract, and isReviewArticle flag
 
 		boolean anyChanges = false;
 
-		// determine if the is_discard flag is set in the ReferenceDomain object
+		// determine if the isDiscard flag is set in the ReferenceDomain object
 		int rdDiscard = 0;
-		if ("1".equals(domain.is_discard) || ("Yes".equalsIgnoreCase(domain.is_discard))) {
+		if ("1".equals(domain.isDiscard) || ("Yes".equalsIgnoreCase(domain.isDiscard))) {
 			rdDiscard = 1;
 		}
 
@@ -285,7 +275,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		}
 
 		// update this object's data to match what was passed in
-		if ((rdDiscard != entity.getIs_discard()) || (rdReview != entity.getIsReviewArticle())
+		if ((rdDiscard != entity.getIsDiscard()) || (rdReview != entity.getIsReviewArticle())
 				|| !smartEqual(entity.getAuthors(), domain.authors)
 				|| !smartEqual(entity.getJournal(), domain.journal)
 				|| !smartEqual(entity.getTitle(), domain.title)
@@ -293,7 +283,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				|| !smartEqual(entity.getIssue(), domain.issue)
 				|| !smartEqual(entity.getDate(), domain.date)
 				|| !smartEqual(entity.getYear(), year)
-				|| !smartEqual(refType, domain.reference_type)
+				|| !smartEqual(refType, domain.referenceType)
 				|| !smartEqual(entity.getPages(), domain.pages)
 				|| !smartEqual(entity.getRef_abstract(), domain.ref_abstract)
 				) {
@@ -306,7 +296,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				}
 			}
 
-			entity.setIs_discard(rdDiscard);
+			entity.setIsDiscard(rdDiscard);
 			entity.setIsReviewArticle(rdReview);
 			entity.setAuthors(domain.authors);
 			entity.setJournal(domain.journal);
@@ -316,7 +306,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			entity.setDate(domain.date);
 			entity.setYear(year);
 			entity.setPages(domain.pages);
-			entity.setReferenceTypeTerm(getTermByTerm(Constants.VOC_REFERENCE_TYPE, domain.reference_type));
+			entity.setReferenceTypeTerm(getTermByTerm(Constants.VOC_REFERENCE_TYPE, domain.referenceType));
 			entity.setRef_abstract(DecodeString.setDecodeToLatin9(domain.ref_abstract));			
 			entity.setModificationInfo(currentUser);
 			
@@ -561,7 +551,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 		boolean anyChanges = false;
 		boolean wasBook = "Book".equalsIgnoreCase(entity.getReferenceType());
-		boolean willBeBook = "Book".equalsIgnoreCase(domain.reference_type);
+		boolean willBeBook = "Book".equalsIgnoreCase(domain.referenceType);
 
 		// If this reference is already a book and will continue to be a book, need to apply
 		// any changes to the fields of the existing book data.
@@ -633,7 +623,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			// For some reason, no workflow data record exists.  So, create one.
 
 			myWD = new LTReferenceWorkflowData();
-			myWD.set_refs_key(domain._refs_key);
+			myWD.set_refs_key(Integer.valueOf(domain.refsKey));
 			myWD.setHas_pdf(0);
 			myWD.setSupplementalTerm(getTermByTerm(Constants.VOC_SUPPLEMENTAL, domain.has_supplemental));
 			myWD.setLink_supplemental(domain.link_to_supplemental);
@@ -839,7 +829,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				if (anyNotRouted) {
 					try {
 						log.info("Assigning new J: number");
-						referenceDAO.assignNewJnumID(entity.get_refs_key(), currentUser.get_user_key());
+						referenceDAO.assignNewJnumID(String.valueOf(entity.get_refs_key()), currentUser.get_user_key());
 						log.info(" - finished");
 					} catch (Exception e) {
 						log.info("Caught exception: " + e.toString());
@@ -850,4 +840,5 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		}
 		return anyChanges;
 	}
+
 }

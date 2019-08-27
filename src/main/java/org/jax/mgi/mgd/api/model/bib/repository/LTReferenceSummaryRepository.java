@@ -31,7 +31,7 @@ public class LTReferenceSummaryRepository extends BaseRepository<LTReferenceSumm
 	/***--- (public) instance methods ---***/
 
 	@Override
-	public LTReferenceSummaryDomain get(int primaryKey) throws APIException {
+	public LTReferenceSummaryDomain get(String primaryKey) throws APIException {
 		return translator.translate(getReference(primaryKey));
 	}
 
@@ -64,25 +64,15 @@ public class LTReferenceSummaryRepository extends BaseRepository<LTReferenceSumm
 		throw new APIException("Cannot update using a ReferenceSummaryDomain");
 	}
 
-	@Override
-	public LTReferenceSummaryDomain delete(LTReferenceSummaryDomain domain, User user) throws APIException {
-		throw new APIException("Cannot delete using a ReferenceSummaryDomain");
-	}
-
-	@Override
-	public LTReferenceSummaryDomain create(LTReferenceSummaryDomain domain, User username) throws APIException {
-		throw new APIException("Cannot create using a ReferenceSummaryDomain");
-	}
-
 	/***--- (private) instance methods ---***/
 	
 	/* retrieve the Reference object with the given primaryKey
 	 */
-	private LTReference getReference(Integer primaryKey) throws APIException {
+	private LTReference getReference(String primaryKey) throws APIException {
 		if (primaryKey == null) {
 			throw new APIException("ReferenceRepository.getReference() : reference key is null");
 		}
-		LTReference reference = referenceDAO.find(primaryKey);
+		LTReference reference = referenceDAO.find(Integer.valueOf(primaryKey));
 		if (reference == null) {
 			throw new APIException("ReferenceRepository.getReference(): Unknown reference key: " + primaryKey);
 		}

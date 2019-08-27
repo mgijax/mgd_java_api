@@ -11,7 +11,7 @@ public class LTReferenceSummaryTranslator extends BaseEntityDomainTranslator<LTR
 		if (entity == null) { return null; }
 		LTReferenceSummaryDomain domain = new LTReferenceSummaryDomain();
 
-		domain._refs_key = entity.get_refs_key();
+		domain.refsKey = String.valueOf(entity.get_refs_key());
 		domain.title = entity.getTitle();
 		domain.jnumid = entity.getCachedID("J:");
 		domain.doiid = entity.getCachedID("DOI");

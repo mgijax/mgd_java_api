@@ -153,26 +153,26 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 			}
 		}
 
-		// special internal parameter -- is_discard.  QF specifies three values, which need to be translated
+		// special internal parameter -- isDiscard.  QF specifies three values, which need to be translated
 		// for the actual data in the bib_refs table.
 
-		if (params.containsKey("is_discard")) {
-			String desiredValue = ((String) params.get("is_discard")).toLowerCase();
+		if (params.containsKey("isDiscard")) {
+			String desiredValue = ((String) params.get("isDiscard")).toLowerCase();
 
 			if (desiredValue.equals("no discard")) {
-				restrictions.add(builder.equal(root.get("is_discard"), 0));
+				restrictions.add(builder.equal(root.get("isDiscard"), 0));
 
 			} else if (desiredValue.equals("only discard")) {
-				restrictions.add(builder.equal(root.get("is_discard"), 1));
+				restrictions.add(builder.equal(root.get("isDiscard"), 1));
 
 			} else if (desiredValue.equals("search all")) {
-				// disregard the is_discard flag when searching
+				// disregard the isDiscard flag when searching
 			}
 
 		} else if (!params.containsKey("_refs_key")){
 			// default setting is to only return non-discarded references -- only apply if we're not
 			// doing a key-based lookup, though.
-			restrictions.add(builder.equal(root.get("is_discard"), 0));
+			restrictions.add(builder.equal(root.get("isDiscard"), 0));
 		}
 
 		// second, handle list of status parameters.  The status fields are always OR-ed within a group.
@@ -386,7 +386,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 
 
 		// third handle list of external parameters, including:
-		//		"notes", "reference_type", "marker_id", "allele_id", "accids", "workflow_tag", "supplementalTerm"
+		//		"notes", "referenceType", "marker_id", "allele_id", "accids", "workflow_tag", "supplementalTerm"
 
 		if (params.containsKey("notes")) {
 			Subquery<ReferenceNote> noteSubquery = query.subquery(ReferenceNote.class);
@@ -402,8 +402,8 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 			restrictions.add(builder.exists(noteSubquery));
 		}
 
-		if (params.containsKey("reference_type")) {
-			restrictions.add(builder.equal(root.get("referenceTypeTerm").get("term"), params.get("reference_type")));
+		if (params.containsKey("referenceType")) {
+			restrictions.add(builder.equal(root.get("referenceTypeTerm").get("term"), params.get("referenceType")));
 		}
 
 		if (params.containsKey("accids")) {
@@ -655,8 +655,8 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 	/* return a single reference for the given reference key with all needed lazy-loaded fields already loaded
 	 */
 	@Transactional
-	public LTReference getReference(int _refs_key) throws APIException {
-		LTReference ref =  entityManager.find(LTReference.class, _refs_key);
+	public LTReference getReference(String refsKey) throws APIException {
+		LTReference ref =  entityManager.find(LTReference.class, Integer.valueOf(refsKey));
 		if (ref == null) { return null; }
 		Hibernate.initialize(ref.getWorkflowTags().size());
 		Hibernate.initialize(ref.getReferenceTypeTerm());
@@ -691,7 +691,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 
 	/* update the bib_citation_cache table for the given reference key
 	 */
-	public void updateCitationCache(int refsKey) {
+	public void updateCitationCache(String refsKey) {
 		// returns an integer rather than *, as the void return was causing a mapping exception
 		Query query = entityManager.createNativeQuery("select count(1) from BIB_reloadCache(" + refsKey + ")");
 		query.getResultList();
@@ -700,11 +700,10 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 
 	/* add a new J: number for the given reference key and user key
 	 */
-	public void assignNewJnumID(int refsKey, int userKey) throws Exception {
-		int intRefsKey = Integer.parseInt(refsKey + "");
+	public void assignNewJnumID(String refsKey, int userKey) throws Exception {
 		// returns an integer rather than *, as the void return was causing a mapping exception
-		log.info("select count(1) from ACC_assignJ(" + userKey + "," + intRefsKey + ")");
-		Query query = entityManager.createNativeQuery("select count(1) from ACC_assignJ(" + userKey + "," + intRefsKey + ")");
+		log.info("select count(1) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
+		Query query = entityManager.createNativeQuery("select count(1) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
 		query.getResultList();
 		return;
 	}

@@ -9,7 +9,7 @@ import org.jax.mgi.mgd.api.model.BaseDomain;
  */
 // has-pdf flag, status for each of five groups
 public class LTReferenceSummaryDomain extends BaseDomain {
-	public Integer _refs_key;
+	public String refsKey;
 	public String title;
 	public String jnumid;
 	public String doiid;

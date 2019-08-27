@@ -12,6 +12,7 @@ import org.jax.mgi.mgd.api.model.bib.domain.ReferenceNoteDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
+import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jboss.logging.Logger;
 
 public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, ReferenceDomain> {
@@ -38,7 +39,7 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		domain.setDate(entity.getDate());
 		domain.setYear(String.valueOf(entity.getYear()));
 		domain.setPgs(entity.getPgs());
-		domain.setReferenceAbstract(entity.getReferenceAbstract());
+		domain.setReferenceAbstract(DecodeString.getDecodeToUTF8(entity.getReferenceAbstract()));
 		domain.setDate(entity.getDate());
 		domain.setIsReviewArticle(String.valueOf(entity.getIsReviewArticle()));
 		domain.setIsDiscard(String.valueOf(entity.getIsDiscard()));

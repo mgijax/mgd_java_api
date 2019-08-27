@@ -74,7 +74,7 @@ public class LTReference extends BaseEntity {
 	private int isReviewArticle;
 
 	@Column(name="isDiscard")
-	private int is_discard;
+	private int isDiscard;
 
 	@Column(name="creation_date")
 	private Date creation_date;

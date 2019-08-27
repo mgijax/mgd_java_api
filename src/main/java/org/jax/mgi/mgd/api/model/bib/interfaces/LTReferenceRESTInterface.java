@@ -28,19 +28,6 @@ import io.swagger.annotations.ApiParam;
 @Consumes(MediaType.APPLICATION_JSON)
 public interface LTReferenceRESTInterface {
 
-	@POST
-	@ApiOperation(value = "Value: Create Reference", notes="Notes: Creates a new Reference")
-	public SearchResults<LTReferenceDomain> createReference(
-			@ApiParam(value = "Name: Token for accessing this API")
-			@HeaderParam("api_access_token") String api_access_token,
-			
-			@ApiParam(value = "Name: Logged-in User")
-			@HeaderParam("username") String username,
-			
-			@ApiParam(value = "Value: This is the passed-in reference object")
-			LTReferenceDomain reference
-	);
-	
 	@PUT
 	@ApiOperation(value = "Value: Update Reference", notes="Notes: Updates a Reference")
 	public SearchResults<LTReferenceDomain> updateReference(
@@ -111,7 +98,7 @@ public interface LTReferenceRESTInterface {
 	 *	date : search by date (free text), case-insensitive, wildcards allowed
 	 *	extracted_text : search by extracted text, case-insensitive, AND search for all words in string
 	 *	isReviewArticle : search for whether this is a review article (Yes/1) or not (No/0)
-	 *	is_discard : search by value of is_discard flag (no discard, only discard, search all)
+	 *	isDiscard : search by value of isDiscard flag (no discard, only discard, search all)
 	 *	issue : search by issue field, case-insensitive, wildcards allowed
 	 *	journal : search by journal field, case-insensitive, wildcards allowed
 	 *	marker_id : searches by associated marker ID, case-insensitive, no wildcards
@@ -119,7 +106,7 @@ public interface LTReferenceRESTInterface {
 	 *	pages : search by pages field, case-insensitive, wildcards allowed
 	 *	primary_author : search by primary author field, case-insensitive, wildcards allowed
 	 *	ref_abstract : search by abstract field, case-insensitive, wildcards allowed
-	 *	reference_type : search by reference type field, case-sensitive, no wildcards
+	 *	referenceType : search by reference type field, case-sensitive, no wildcards
 	 *	row_limit : (integer) maximum number of rows to return (default is 1,001)
 	 *	supplementalTerm : search by supplementalTerm field, case-sensitive, no wildcards
 	 *	title : search by title field, case-insensitive, wildcards allowed

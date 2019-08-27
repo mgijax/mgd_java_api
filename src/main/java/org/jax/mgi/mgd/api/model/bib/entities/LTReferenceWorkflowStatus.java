@@ -102,4 +102,9 @@ public class LTReferenceWorkflowStatus extends BaseEntity {
 	public String getModificationDate() {
 		return formatter.format(this.modification_date);
 	}
+
+	public String getRefsKey() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -23,7 +23,7 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		LTReferenceDomain domain = new LTReferenceDomain();
 
 		// basic 1-for-1 fields
-		domain._refs_key = entity.get_refs_key();
+		domain.refsKey = String.valueOf(entity.get_refs_key());
 		domain.authors = entity.getAuthors();
 		domain.primary_author = entity.getPrimary_author();
 		domain.title = entity.getTitle();
@@ -47,7 +47,8 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		domain.mgiid = entity.getMgiid();
 		domain.gorefid = entity.getGorefid();	
 		
-		domain.reference_type = entity.getReferenceType();
+		domain.referenceType = entity.getReferenceType();
+		domain.referenceTypeKey = String.valueOf(entity.getReferenceTypeTerm().get_term_key());
 		domain.short_citation = entity.getShort_citation();
 		domain.ap_status = entity.getStatus(Constants.WG_AP);
 		domain.go_status = entity.getStatus(Constants.WG_GO);
@@ -69,10 +70,10 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		}
 
 		// has this article been discarded?
-		if (entity.getIs_discard() == 0) {
-			domain.is_discard = "No";
+		if (entity.getIsDiscard() == 0) {
+			domain.isDiscard = "No";
 		} else {
-			domain.is_discard = "Yes";
+			domain.isDiscard = "Yes";
 		}
 		
 		// list of strings, each of which indicates a type of data associated with the reference

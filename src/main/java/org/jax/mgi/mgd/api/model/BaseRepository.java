@@ -24,13 +24,10 @@ public abstract class BaseRepository<D extends BaseDomain> {
 	
 	/***--- (public) instance methods ---***/
 	
-	public abstract D get(int primaryKey) throws APIException;
-
-	public abstract D create(D domain, User username) throws APIException;
+	public abstract D get(String primaryKey) throws APIException;
 
 	public abstract D update(D domain, User user) throws APIException;
 
-	public abstract D delete(D domain, User user) throws APIException;
-
 	public abstract SearchResults<D> search(Map<String,Object> params) throws APIException;
+
 }

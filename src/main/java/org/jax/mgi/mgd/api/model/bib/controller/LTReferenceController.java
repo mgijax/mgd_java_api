@@ -46,26 +46,6 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	
 	/***--- methods ---***/
 	
-	/* create a database record for the given reference...  TODO: need to flesh this out, use SearchResults object, etc.
-	 */
-	@Override
-	public SearchResults<LTReferenceDomain> createReference(String api_access_token, String username, LTReferenceDomain reference) {
-		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
-		try {
-			User currentUser = userService.getUserByUsername(username);
-			if (currentUser != null) {
-				results.setItem(referenceService.createReference(reference, currentUser));
-			} 
-		} catch (APIException e) {
-			results.setError("LTReferenceController.createReference", "Failed to create reference: " + e.toString(),
-				Constants.HTTP_SERVER_ERROR);
-		//} catch (JsonProcessingException e) {
-		//	results.setError("LTReferenceController.createReference", "Failed to log creation of reference: " + e.toString(),
-		//		Constants.HTTP_SERVER_ERROR);
-		}
-		return results;
-	}
-
 	/* update the given reference in the database, then return a revised version of it in the SearchResults
 	 */
 	@Override
@@ -103,7 +83,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 					}
 				}
 
-				return this.getReferenceByKey(reference._refs_key.toString());
+				return this.getReferenceByKey(reference.refsKey);
 			} catch (Exception e) {
 				Throwable t = getRootException(e);
 				StackTraceElement[] ste = t.getStackTrace();
@@ -164,7 +144,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 		CommaSplitter splitter = new CommaSplitter();
 		List<String> failures = new ArrayList<String>();
 		String currentID = null;
-		List<Integer> referenceKeys = new ArrayList<Integer>();
+		List<String> referenceKeys = new ArrayList<String>();
 		
 		for (String myIDs : splitter.split(accid, 100)) {
 			try {
@@ -180,7 +160,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 								currentID = ref.jnumid;
 								ref.setStatus(group, status);
 								referenceService.updateReference(ref, currentUser);
-								referenceKeys.add(ref._refs_key);
+								referenceKeys.add(ref.refsKey);
 								moveOn = true;
 							} catch (FatalAPIException fe) {
 								log.error("Could not save status for " + currentID + " (" + fe.toString() + ")");
@@ -238,7 +218,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 		User currentUser = userService.getUserByUsername(username);
 		if (currentUser != null) {
 			try {
-				referenceService.updateReferencesInBulk(input._refs_keys, input.workflow_tag, input.workflow_tag_operation, currentUser);
+				referenceService.updateReferencesInBulk(input.refsKey, input.workflow_tag, input.workflow_tag_operation, currentUser);
 				results.items = null;	// okay result
 			} catch (APIException t) {
 				results.setError("Failed", "Failed to save changes: " + t.toString(), Constants.HTTP_SERVER_ERROR);
@@ -290,16 +270,8 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	public SearchResults<LTReferenceDomain> getReferenceByKey (String key) {
 		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
 		if (key != null) {
-			Integer intRefsKey = null;
 			try {
-				intRefsKey = Integer.parseInt(key);
-			} catch (Throwable e) {
-				results.setError("NotInteger", "Reference key not an integer: " + key, Constants.HTTP_BAD_REQUEST);
-				return results;
-			}
-
-			try {
-				return referenceService.getReference(intRefsKey);
+				return referenceService.getReference(key);
 			} catch (APIException e) {
 					results.setError("Failed", "Failed to get reference by key " + key + ", exception: " + e.toString(),
 						Constants.HTTP_NOT_FOUND);
@@ -316,11 +288,13 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 		return null;
 	}
 
+	// never used/always use the ReferenceController/get
 	@Override
 	public LTReferenceDomain get(Integer key) {
 		return null;
 	}
 
+	// never used/always use the ReferenceController/update	
 	@Override
 	public SearchResults<LTReferenceDomain> update(LTReferenceDomain object, User user) {
 		return null;

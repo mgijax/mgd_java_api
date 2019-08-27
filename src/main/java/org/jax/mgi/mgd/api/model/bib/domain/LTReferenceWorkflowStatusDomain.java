@@ -10,7 +10,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
  *	as possible
  */
 public class LTReferenceWorkflowStatusDomain extends BaseDomain {
-	public Integer _refs_key;
+	public String refsKey;
 	public boolean is_current;
 	public String creation_date;
 	public String modification_date;
@@ -23,7 +23,7 @@ public class LTReferenceWorkflowStatusDomain extends BaseDomain {
 	public LTReferenceWorkflowStatusDomain() {}
 
 	public LTReferenceWorkflowStatusDomain(LTReferenceWorkflowStatus rws) {
-		this._refs_key = rws.get_refs_key();
+		this.refsKey = rws.getRefsKey();
 		this.creation_date = rws.getCreationDate();
 		this.modification_date = rws.getModificationDate();
 		this.createdby_user = rws.getCreatedByUser().getLogin();

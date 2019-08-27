@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.bib.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -17,8 +18,10 @@ import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
 import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
+import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -30,15 +33,142 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 	@Inject
 	private ReferenceDAO referenceDAO;
+	@Inject
+	private TermDAO termDAO;
 	
 	private ReferenceTranslator translator = new ReferenceTranslator();
 	private SlimReferenceTranslator slimtranslator = new SlimReferenceTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
-	public SearchResults<ReferenceDomain> create(ReferenceDomain object, User user) {
+	public SearchResults<ReferenceDomain> create(ReferenceDomain domain, User user) {
+		// create new entity object from in-coming domain
+		// the Entities class handles the generation of the primary key
+		// database trigger will assign the MGI id/see pgmgddbschema/trigger for details
+
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		Reference entity = new Reference();
+		
+		// default reference type = ?
+		if (domain.getReferenceTypeKey() == null) {
+			domain.setReferenceTypeKey("1");
+		}
+		entity.setReferenceType(termDAO.get(Integer.valueOf(domain.getReferenceTypeKey())));			
+
+		if (domain.getAuthors() == null || domain.getAuthors().isEmpty()) {
+			entity.setAuthors(null);
+			String[] authors = domain.getAuthors().split(";");
+			entity.setPrimaryAuthor(authors[0]);	
+		}
+		else {
+			entity.setAuthors(domain.getAuthors());
+			entity.setPrimaryAuthor(null);
+		}
+		
+		if (domain.getTitle() == null || domain.getTitle().isEmpty()) {
+			entity.setTitle(null);
+		}
+		else {
+			entity.setTitle(domain.getTitle());
+		}
+		
+		if (domain.getJournal() == null || domain.getJournal().isEmpty()) {
+			entity.setJournal(null);
+		}
+		else {
+			entity.setJournal(domain.getJournal());
+		}
+		
+		if (domain.getVol() == null || domain.getVol().isEmpty()) {
+			entity.setVol(null);
+		}
+		else {
+			entity.setVol(domain.getVol());
+		}
+		
+		if (domain.getIssue() == null || domain.getIssue().isEmpty()) {
+			entity.setIssue(null);
+		}
+		else {
+			entity.setIssue(domain.getIssue());
+		}
+		
+		if (domain.getPgs() == null || domain.getPgs().isEmpty()) {
+			entity.setPgs(null);
+		}
+		else {
+			entity.setPgs(domain.getPgs());
+		}
+				
+		if (domain.getReferenceAbstract() == null || domain.getReferenceAbstract().isEmpty()) {
+			entity.setReferenceAbstract(null);
+		}
+		else {
+			entity.setReferenceAbstract(DecodeString.setDecodeToLatin9(domain.getReferenceAbstract()));
+		}
+		
+		if (domain.getYear() == null || domain.getYear().isEmpty()) {
+			entity.setYear(0);
+		}
+		else {
+			entity.setYear(Integer.valueOf(domain.getYear()));
+		}
+		
+		if (domain.getDate() == null || domain.getDate().isEmpty()) {
+			entity.setDate(domain.getYear());
+		}
+		else {
+			entity.setDate(domain.getDate());
+		}
+		
+		if (domain.getIsReviewArticle().equals("No")) {
+			entity.setIsReviewArticle(0);
+		}
+		else {
+			entity.setIsReviewArticle(1);
+		}
+		
+		if (domain.getIsDiscard().equals("No")) {
+			entity.setIsDiscard(0);
+		}
+		else {
+			entity.setIsDiscard(1);
+		}
+
+		// add creation/modification 
+		entity.setCreatedBy(user);
+		entity.setCreation_date(new Date());
+		entity.setModifiedBy(user);
+		entity.setModification_date(new Date());
+		
+		// execute persist/insert/send to database
+		referenceDAO.persist(entity);
+
+		// start stored procedures
+		
+		String cmd = "";
+		Query query;
+		
+		// create jnumid
+		cmd = "select count(*) from ACC_assignJ ("
+				+ user.get_user_key().intValue()
+				+ "," + entity.get_refs_key()
+				+ "-1)";
+		log.info("cmd: " + cmd);
+		query = referenceDAO.createNativeQuery(cmd);
+		query.getResultList();
+		
+		// reload bib_citation_cache
+		cmd = "select count(*) from BIB_reloadCache (" + entity.get_refs_key() + ")";
+		log.info("cmd: " + cmd);
+		query = referenceDAO.createNativeQuery(cmd);
+		query.getResultList();
+		
+		// end stored procedures
+		
+		// return entity translated to domain
+		log.info("processReference/create/returning results");
+		results.setItem(translator.translate(entity));
 		return results;
 	}
 

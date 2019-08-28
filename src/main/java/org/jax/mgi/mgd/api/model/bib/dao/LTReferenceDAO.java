@@ -159,7 +159,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		if (params.containsKey("isDiscard")) {
 			String desiredValue = ((String) params.get("isDiscard")).toLowerCase();
 
-			if (desiredValue.equals("no discard")) {
+			if (desiredValue.equals("no")) {
 				restrictions.add(builder.equal(root.get("isDiscard"), 0));
 
 			} else if (desiredValue.equals("only discard")) {

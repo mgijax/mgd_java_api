@@ -108,16 +108,17 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			entity.setReferenceAbstract(DecodeString.setDecodeToLatin9(domain.getReferenceAbstract()));
 		}
 		
+		int theYear;
 		if (domain.getYear() == null || domain.getYear().isEmpty()) {
-			//int y = Calendar.get(Calendar.YEAR) - 1900;
-			entity.setYear(0); 
+			theYear = Calendar.getInstance().get(Calendar.YEAR);
 		}
 		else {
-			entity.setYear(Integer.valueOf(domain.getYear()));
+			theYear = Integer.valueOf(domain.getYear());
 		}
+		entity.setYear(theYear);
 		
 		if (domain.getDate() == null || domain.getDate().isEmpty()) {
-			entity.setDate(domain.getYear());
+			entity.setDate(String.valueOf(theYear));
 		}
 		else {
 			entity.setDate(domain.getDate());

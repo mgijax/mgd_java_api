@@ -53,7 +53,7 @@ public class LTReference extends BaseEntity {
 	private String journal;
 
 	@Column(name="vol")
-	private String volume;
+	private String vol;
 
 	@Column(name="issue")
 	private String issue;
@@ -65,10 +65,10 @@ public class LTReference extends BaseEntity {
 	private Integer year;
 
 	@Column(name="pgs")
-	private String pages;
+	private String pgs;
 
 	@Column(name="abstract")
-	private String ref_abstract;		// just "abstract" is a Java reserved word, so need a prefix
+	private String referenceAbstract;		// just "abstract" is a Java reserved word, so need a prefix
 
 	@Column(name="isReviewArticle")
 	private int isReviewArticle;

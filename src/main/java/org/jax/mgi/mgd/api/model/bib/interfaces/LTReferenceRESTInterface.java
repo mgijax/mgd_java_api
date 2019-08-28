@@ -105,7 +105,7 @@ public interface LTReferenceRESTInterface {
 	 *	notes : search by reference notes field, case-insensitive, wildcards allowed
 	 *	pages : search by pages field, case-insensitive, wildcards allowed
 	 *	primary_author : search by primary author field, case-insensitive, wildcards allowed
-	 *	ref_abstract : search by abstract field, case-insensitive, wildcards allowed
+	 *	refeferenceAbstract : search by abstract field, case-insensitive, wildcards allowed
 	 *	referenceType : search by reference type field, case-sensitive, no wildcards
 	 *	row_limit : (integer) maximum number of rows to return (default is 1,001)
 	 *	supplementalTerm : search by supplementalTerm field, case-sensitive, no wildcards

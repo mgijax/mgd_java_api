@@ -279,13 +279,13 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				|| !smartEqual(entity.getAuthors(), domain.authors)
 				|| !smartEqual(entity.getJournal(), domain.journal)
 				|| !smartEqual(entity.getTitle(), domain.title)
-				|| !smartEqual(entity.getVolume(), domain.volume)
+				|| !smartEqual(entity.getVol(), domain.vol)
 				|| !smartEqual(entity.getIssue(), domain.issue)
 				|| !smartEqual(entity.getDate(), domain.date)
 				|| !smartEqual(entity.getYear(), year)
 				|| !smartEqual(refType, domain.referenceType)
-				|| !smartEqual(entity.getPages(), domain.pages)
-				|| !smartEqual(entity.getRef_abstract(), domain.ref_abstract)
+				|| !smartEqual(entity.getPgs(), domain.pgs)
+				|| !smartEqual(entity.getReferenceAbstract(), domain.referenceAbstract)
 				) {
 
 			if (domain.authors != null) {
@@ -301,13 +301,13 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			entity.setAuthors(domain.authors);
 			entity.setJournal(domain.journal);
 			entity.setTitle(domain.title);
-			entity.setVolume(domain.volume);
+			entity.setVol(domain.vol);
 			entity.setIssue(domain.issue);
 			entity.setDate(domain.date);
 			entity.setYear(year);
-			entity.setPages(domain.pages);
+			entity.setPgs(domain.pgs);
 			entity.setReferenceTypeTerm(getTermByTerm(Constants.VOC_REFERENCE_TYPE, domain.referenceType));
-			entity.setRef_abstract(DecodeString.setDecodeToLatin9(domain.ref_abstract));			
+			entity.setReferenceAbstract(DecodeString.setDecodeToLatin9(domain.referenceAbstract));			
 			entity.setModificationInfo(currentUser);
 			
 			anyChanges = true;
@@ -511,14 +511,14 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 		boolean anyChanges = false;
 		boolean hadNote = entity.getNotes().size() > 0;
-		boolean willHaveNote = (domain.referencenote != null) && (domain.referencenote.length() > 0);
+		boolean willHaveNote = (domain.referenceNote != null) && (domain.referenceNote.length() > 0);
 		
 		if (hadNote && willHaveNote) {
 			// already have a note and will continue to have a note; just need to apply any difference
 
 			ReferenceNote note = entity.getNotes().get(0);
-			if (!smartEqual(note.getNote(), domain.referencenote)) {
-				note.setNote(DecodeString.setDecodeToLatin9(domain.referencenote));			
+			if (!smartEqual(note.getNote(), domain.referenceNote)) {
+				note.setNote(DecodeString.setDecodeToLatin9(domain.referenceNote));			
 				anyChanges = true;
 			}
 
@@ -533,7 +533,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 			ReferenceNote note = new ReferenceNote();
 			note.set_refs_key(entity.get_refs_key());
-			note.setNote(DecodeString.setDecodeToLatin9(domain.referencenote));			
+			note.setNote(DecodeString.setDecodeToLatin9(domain.referenceNote));			
 			note.setCreation_date(new Date());
 			note.setModification_date(note.getCreation_date()); 
 			referenceDAO.persist(note);

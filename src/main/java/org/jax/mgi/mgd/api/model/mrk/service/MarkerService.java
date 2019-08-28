@@ -65,7 +65,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	@Inject
 	private AnnotationService annotationService;
 
-	
 	private MarkerTranslator translator = new MarkerTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	

@@ -22,11 +22,11 @@ public class LTReferenceDomain extends BaseDomain {
 	public String primary_author;
 	public String title;
 	public String journal;
-	public String volume;
+	public String vol;
 	public String issue;
 	public String date;
 	public String year;
-	public String pages;
+	public String pgs;
 	public String isReviewArticle;
 	public String jnumid;
 	public String doiid;
@@ -35,8 +35,8 @@ public class LTReferenceDomain extends BaseDomain {
 	public String gorefid;
 	public String referenceType;
 	public String referenceTypeKey;
-	public String ref_abstract;
-	public String referencenote;
+	public String referenceAbstract;
+	public String referenceNote;
 	public String short_citation;
 	public String ap_status;
 	public String go_status;

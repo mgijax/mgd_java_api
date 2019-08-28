@@ -152,7 +152,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		log.info("cmd: " + cmd);
 		Query query = referenceDAO.createNativeQuery(cmd);
 		query.getResultList();
-				
+		
 		// return entity translated to domain
 		log.info("processReference/create/returning results");
 		results.setItem(translator.translate(entity));
@@ -213,6 +213,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		Boolean from_book = false;
 		Boolean from_accession = false;
 		Boolean from_editAccession = false;
+		
 		//Boolean from_allele = false;
 		//Boolean from_marker = false;
 		//Boolean from_strain = false;

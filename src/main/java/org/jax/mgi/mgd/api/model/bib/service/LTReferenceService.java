@@ -35,6 +35,12 @@ public class LTReferenceService {
 	
 	@Inject
 	private LTReferenceSummaryRepository summaryRepo;
+
+	// for searchSQL
+	@Inject
+	private LTReferenceDAO ltrefDAO;	
+	private LTReferenceTranslator translator = new LTReferenceTranslator();
+	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	/* Update the reference entity corresponding to the given domain object (and updates citation cache).  Returns
 	 * domain object if successful or throws APIException if not.
@@ -74,11 +80,6 @@ public class LTReferenceService {
 		return repo.search(searchFields);
 	}
 
-	@Inject
-	private LTReferenceDAO ltrefDAO;	
-	private LTReferenceTranslator translator = new LTReferenceTranslator();
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
 	@Transactional	
 	public SearchResults<LTReferenceDomain> searchSQL(LTReferenceDomain searchDomain) {
 		// using searchDomain fields, generate SQL command
@@ -98,12 +99,7 @@ public class LTReferenceService {
 		Boolean from_note = false;
 		Boolean from_book = false;
 		Boolean from_accession = false;
-		Boolean from_editAccession = false;
 		
-		//Boolean from_allele = false;
-		//Boolean from_marker = false;
-		//Boolean from_strain = false;
-
 		// if parameter exists, then add to where-clause
 		
 		String cmResults[] = DateSQLQuery.queryByCreationModification("r", searchDomain.getCreated_by(), searchDomain.getModified_by(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -194,19 +190,6 @@ public class LTReferenceService {
 			where = where + "\nand a.accID ilike '" + mgiid + "'";
 			from_accession = true;
 		}
-		
-		// editable accession ids
-//		if (searchDomain.getEditAccessionIds() != null) {
-//			if (searchDomain.getEditAccessionIds().get(0).getAccID() != null 
-//					&& !searchDomain.getEditAccessionIds().get(0).getAccID().isEmpty()) {
-//				where = where + "\nand acc1.accID ilike '" +  searchDomain.getEditAccessionIds().get(0).getAccID() + "'";
-//				from_editAccession = true;
-//			}
-//			if (searchDomain.getEditAccessionIds().get(0).getLogicaldbKey() != null && !searchDomain.getEditAccessionIds().get(0).getLogicaldbKey().isEmpty()) {
-//				where = where + "\nand acc1._logicaldb_key = " + searchDomain.getEditAccessionIds().get(0).getLogicaldbKey();
-//				from_editAccession = true;
-//			}
-//		}
 									
 		if (from_book == true) {
 			from = from + ", bib_books k";
@@ -221,12 +204,7 @@ public class LTReferenceService {
 			where = where + "\nand c._refs_key = a._object_key" 
 					+ "\nand a._mgitype_key = 1";
 		}
-		if (from_editAccession == true) {
-			from = from + ", bib_acc_view acc1";
-			where = where + "\nand acc1._logicaldb_key in (29, 65, 185)" +
-					"\nand c._refs_key = acc1._object_key";
-		}
-		
+
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
 		//log.info(cmd);

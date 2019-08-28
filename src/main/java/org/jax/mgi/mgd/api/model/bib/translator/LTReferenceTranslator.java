@@ -80,15 +80,18 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		domain.associated_data = new ArrayList<String>();
 		LTReferenceAssociatedData flags = entity.getAssociatedData();
 		if (flags != null) {
+			if (flags.getHas_alleles() != 0) { domain.associated_data.add("Alleles"); }
+			if (flags.getHas_antibodies() != 0) { domain.associated_data.add("Antibodies"); }
+			if (flags.getHas_go() != 0) { domain.associated_data.add("GO"); }
 			if (flags.getHas_gxdindex() != 0) { domain.associated_data.add("GXD Index"); }
 			if (flags.getHas_gxdimages() != 0) { domain.associated_data.add("GXD/CRE Images"); }
 			if (flags.getHas_gxdspecimens() != 0) { domain.associated_data.add("GXD/CRE Specimens"); }
-			if (flags.getHas_probes() != 0) { domain.associated_data.add("Probes"); }
-			if (flags.getHas_antibodies() != 0) { domain.associated_data.add("Antibodies"); }
-			if (flags.getHas_gxdresults() != 0) { domain.associated_data.add("GXD/CRE Results"); }
 			if (flags.getHas_gxdresults() != 0) { domain.associated_data.add("GXD/CRE Assays"); }
-			if (flags.getHas_alleles() != 0) { domain.associated_data.add("Alleles"); }
+			if (flags.getHas_gxdresults() != 0) { domain.associated_data.add("GXD/CRE Results"); }
+			if (flags.getHas_mapping() != 0) { domain.associated_data.add("Mapping"); }
 			if (flags.getHas_markers() != 0) { domain.associated_data.add("Markers"); }
+			if (flags.getHas_probes() != 0) { domain.associated_data.add("Probes"); }
+			if (flags.getHas_strain() != 0) { domain.associated_data.add("Strain"); }			
 		}
 			
 		// at most one reference note

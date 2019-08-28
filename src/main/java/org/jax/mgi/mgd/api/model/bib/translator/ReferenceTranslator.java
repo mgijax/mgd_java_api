@@ -21,7 +21,6 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 	protected Logger log = Logger.getLogger(getClass());
 	
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
-	private ReferenceBookTranslator bookTranslator = new ReferenceBookTranslator();
 	private ReferenceNoteTranslator noteTranslator = new ReferenceNoteTranslator();
 	private MGIReferenceAssocTranslator assocTranslator = new MGIReferenceAssocTranslator();
 

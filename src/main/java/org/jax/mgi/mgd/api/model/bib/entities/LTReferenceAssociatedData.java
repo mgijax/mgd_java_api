@@ -20,6 +20,15 @@ public class LTReferenceAssociatedData extends BaseEntity {
 	@Column(name="_refs_key")
 	private int _refs_key;
 
+	@Column(name="has_alleles")
+	private int has_alleles;
+	
+	@Column(name="has_antibodies")
+	private int has_antibodies;
+
+	@Column(name="has_go")
+	private int has_go;
+	
 	@Column(name="has_gxdindex")
 	private int has_gxdindex;
 
@@ -31,16 +40,17 @@ public class LTReferenceAssociatedData extends BaseEntity {
 
 	@Column(name="has_gxdresults")
 	private int has_gxdresults;
-
-	@Column(name="has_antibodies")
-	private int has_antibodies;
-
+	
+	@Column(name="has_mapping")
+	private int has_mapping;
+		
+	@Column(name="has_markers")
+	private int has_markers;
+	
 	@Column(name="has_probes")
 	private int has_probes;
 
-	@Column(name="has_markers")
-	private int has_markers;
-
-	@Column(name="has_alleles")
-	private int has_alleles;
+	@Column(name="has_strain")
+	private int has_strain;
+	
 }

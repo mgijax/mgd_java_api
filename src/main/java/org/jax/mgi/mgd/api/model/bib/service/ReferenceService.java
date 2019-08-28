@@ -12,10 +12,12 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceBookDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
 import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -34,6 +36,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 	@Inject
 	private ReferenceDAO referenceDAO;
+	@Inject
+	private ReferenceBookDAO bookDAO;
 	@Inject
 	private TermDAO termDAO;
 	
@@ -146,7 +150,52 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		// execute persist/insert/send to database
 		referenceDAO.persist(entity);
-				
+			
+		// for books
+		if (domain.getReferenceTypeKey().equals("31576679")) {
+			ReferenceBook bookEntity = new ReferenceBook();
+			bookEntity.set_refs_key(entity.get_refs_key());
+			
+			if (domain.book_author.isEmpty()) {
+				bookEntity.setBook_author(null);
+			}
+			else {
+				bookEntity.setBook_author(domain.book_author);
+			}
+	
+			if (domain.book_author.isEmpty()) {
+				bookEntity.setBook_title(null);
+			}
+			else {
+				bookEntity.setBook_title(domain.book_title);
+			}
+			
+			if (domain.book_author.isEmpty()) {
+				bookEntity.setPlace(null);
+			}
+			else {
+				bookEntity.setPlace(domain.place);
+			}
+			
+			if (domain.book_author.isEmpty()) {
+				bookEntity.setPublisher(null);
+			}
+			else {
+				bookEntity.setPublisher(domain.publisher);
+			}
+									
+			if (domain.book_author.isEmpty()) {
+				bookEntity.setSeries_ed(null);
+			}
+			else {
+				bookEntity.setSeries_ed(domain.series_ed);
+			}
+			
+			bookEntity.setCreation_date(new Date());
+			bookEntity.setModification_date(new Date());
+			bookDAO.persist(bookEntity);
+		}
+		
 		// reload bib_citation_cache
 		String cmd = "select count(*) from BIB_reloadCache (" + entity.get_refs_key() + ")";
 		log.info("cmd: " + cmd);
@@ -272,28 +321,26 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		// bib_books
-		if (searchDomain.getReferenceBook() != null) {
-			if (searchDomain.getReferenceBook().getBook_author() != null && !searchDomain.getReferenceBook().getBook_author().isEmpty()) {
-				where = where + "\nand k.book_au ilike '" + searchDomain.getReferenceBook().getBook_author() + "'";
-				from_book = true;
-			}
-			if (searchDomain.getReferenceBook().getBook_title() != null && !searchDomain.getReferenceBook().getBook_title().isEmpty()) {
-				where = where + "\nand k.book_title ilike '" + searchDomain.getReferenceBook().getBook_title() + "'";
-				from_book = true;
-			}
-			if (searchDomain.getReferenceBook().getPlace() != null && !searchDomain.getReferenceBook().getPlace().isEmpty()) {
-				where = where + "\nand k.place ilike '" + searchDomain.getReferenceBook().getPlace() + "'";
-				from_book = true;
-			}
-			if (searchDomain.getReferenceBook().getPublisher() != null && !searchDomain.getReferenceBook().getPublisher().isEmpty()) {
-				where = where + "\nand k.publisher ilike '" + searchDomain.getReferenceBook().getPublisher() + "'";
-				from_book = true;
-			}
-			if (searchDomain.getReferenceBook().getSeries_ed() != null && !searchDomain.getReferenceBook().getSeries_ed().isEmpty()) {
-				where = where + "\nand k.series_ed ilike '" + searchDomain.getReferenceBook().getSeries_ed() + "'";
-				from_book = true;
-			}			
+		if (searchDomain.getBook_author() != null && !searchDomain.getBook_author().isEmpty()) {
+			where = where + "\nand k.book_au ilike '" + searchDomain.getBook_author() + "'";
+			from_book = true;
 		}
+		if (searchDomain.getBook_title() != null && !searchDomain.getBook_title().isEmpty()) {
+			where = where + "\nand k.book_title ilike '" + searchDomain.getBook_title() + "'";
+			from_book = true;
+		}
+		if (searchDomain.getPlace() != null && !searchDomain.getPlace().isEmpty()) {
+			where = where + "\nand k.place ilike '" + searchDomain.getPlace() + "'";
+			from_book = true;
+		}
+		if (searchDomain.getPublisher() != null && !searchDomain.getPublisher().isEmpty()) {
+			where = where + "\nand k.publisher ilike '" + searchDomain.getPublisher() + "'";
+			from_book = true;
+		}
+		if (searchDomain.getSeries_ed() != null && !searchDomain.getSeries_ed().isEmpty()) {
+			where = where + "\nand k.series_ed ilike '" + searchDomain.getSeries_ed() + "'";
+			from_book = true;
+		}			
 		
 		// bib_notes
 		if (searchDomain.getReferenceNote() != null && !searchDomain.getReferenceNote().getNote().isEmpty()) {

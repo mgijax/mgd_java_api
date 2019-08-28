@@ -132,7 +132,7 @@ public class LTReference extends BaseEntity {
 	// one to many, because book data most often does not exist (leaving it 1-0)
 	@OneToMany
 	@JoinColumn(name="_refs_key")
-	private List<ReferenceBook> bookList;
+	private List<ReferenceBook> referenceBook;
 
 	// one to one, because counts will always exist
 	@OneToOne

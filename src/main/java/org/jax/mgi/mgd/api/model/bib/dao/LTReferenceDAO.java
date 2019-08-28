@@ -667,7 +667,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		Hibernate.initialize(ref.getWorkflowTags().size());
 		Hibernate.initialize(ref.getReferenceTypeTerm());
 		Hibernate.initialize(ref.getNotes());
-		Hibernate.initialize(ref.getBookList());
+		Hibernate.initialize(ref.getReferenceBook());
 		Hibernate.initialize(ref.getCreatedByUser());
 		Hibernate.initialize(ref.getModifiedByUser());
 		Hibernate.initialize(ref.getAssociatedData());

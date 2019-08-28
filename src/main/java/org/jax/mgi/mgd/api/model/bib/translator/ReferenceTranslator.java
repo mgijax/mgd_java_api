@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.bib.translator;
 
 import java.util.Comparator;
+import java.util.List;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
@@ -61,9 +62,21 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 
 		// reference book
 		if (entity.getReferenceBook() != null && !entity.getReferenceBook().isEmpty()) {
+			ReferenceBookTranslator bookTranslator = new ReferenceBookTranslator();
 			Iterable<ReferenceBookDomain> book = bookTranslator.translateEntities(entity.getReferenceBook());
-			domain.setReferenceBook(book.iterator().next());		
+			List<ReferenceBookDomain> bookList = IteratorUtils.toList(book.iterator());
+			domain.book_author = bookList.get(0).getBook_author();
+			domain.book_title = bookList.get(0).getBook_title();
+			domain.place = bookList.get(0).getPlace();
+			domain.publisher = bookList.get(0).getPublisher();
+			domain.series_ed = bookList.get(0).getSeries_ed();			
 		}
+		
+		// reference book
+//		if (entity.getReferenceBook() != null && !entity.getReferenceBook().isEmpty()) {
+//			Iterable<ReferenceBookDomain> book = bookTranslator.translateEntities(entity.getReferenceBook());
+//			domain.setReferenceBook(book.iterator().next());		
+//		}
 		
 		// reference note
 		if (entity.getReferenceNote() != null && !entity.getReferenceNote().isEmpty()) {

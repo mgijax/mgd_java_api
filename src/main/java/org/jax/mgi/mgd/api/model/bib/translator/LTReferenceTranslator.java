@@ -100,9 +100,9 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		}
 		
 		// reference book
-		if (entity.getBookList() != null && !entity.getBookList().isEmpty()) {
+		if (entity.getReferenceBook() != null && !entity.getReferenceBook().isEmpty()) {
 			ReferenceBookTranslator bookTranslator = new ReferenceBookTranslator();
-			Iterable<ReferenceBookDomain> book = bookTranslator.translateEntities(entity.getBookList());
+			Iterable<ReferenceBookDomain> book = bookTranslator.translateEntities(entity.getReferenceBook());
 			List<ReferenceBookDomain> bookList = IteratorUtils.toList(book.iterator());
 			domain.book_author = bookList.get(0).getBook_author();
 			domain.book_title = bookList.get(0).getBook_title();

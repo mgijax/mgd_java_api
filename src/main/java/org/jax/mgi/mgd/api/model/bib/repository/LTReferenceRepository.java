@@ -555,8 +555,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 		// If this reference is already a book and will continue to be a book, need to apply
 		// any changes to the fields of the existing book data.
-		if (wasBook && willBeBook && (entity.getBookList().size() > 0)) {
-			ReferenceBook book = entity.getBookList().get(0);
+		if (wasBook && willBeBook && (entity.getReferenceBook().size() > 0)) {
+			ReferenceBook book = entity.getReferenceBook().get(0);
 
 			if (!smartEqual(book.getBook_author(), domain.book_author) || !smartEqual(book.getBook_title(), domain.book_title) || 
 					!smartEqual(book.getPlace(), domain.place) || !smartEqual(book.getPublisher(), domain.publisher) ||
@@ -571,10 +571,10 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				anyChanges = true;
 			}
 
-		} else if (wasBook && (entity.getBookList().size() > 0)) {
+		} else if (wasBook && (entity.getReferenceBook().size() > 0)) {
 			// This reference was a book previously, but its type has changed, so need to delete book-specific data.
 
-			referenceDAO.remove(entity.getBookList().get(0));
+			referenceDAO.remove(entity.getReferenceBook().get(0));
 			anyChanges = true;
 
 		} else if (willBeBook) {
@@ -586,11 +586,12 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			book.setBook_title(domain.book_title);
 			book.setPlace(domain.place);
 			book.setPublisher(domain.publisher);
+			book.setSeries_ed(domain.series_ed);			
 			book.setCreation_date(new Date());
 			book.setModification_date(book.getCreation_date()); 
 
 			referenceDAO.persist(book);
-			entity.getBookList().add(book);
+			entity.getReferenceBook().add(book);
 			anyChanges = true;
 		}
 		return anyChanges;

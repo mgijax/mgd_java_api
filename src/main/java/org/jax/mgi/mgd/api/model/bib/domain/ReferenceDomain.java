@@ -37,7 +37,14 @@ public class ReferenceDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 
-	private ReferenceBookDomain referenceBook;
+	// has to match the LTReferenceDomain
+	public String book_author;
+	public String book_title;
+	public String place;
+	public String publisher;
+	public String series_ed;
+	
+	//private ReferenceBookDomain referenceBook;
 	private ReferenceNoteDomain referenceNote;
 	private List<AccessionDomain> mgiAccessionIds;
 	private List<AccessionDomain> editAccessionIds;

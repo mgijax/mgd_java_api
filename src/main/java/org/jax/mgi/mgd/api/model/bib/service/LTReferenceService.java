@@ -182,13 +182,45 @@ public class LTReferenceService {
 		}
 		
 		// accession id
+		List<String> accIds = new ArrayList<String>();
 		if (searchDomain.getMgiid() != null) {
-			String mgiid = searchDomain.getMgiid().toUpperCase();
-			if (!mgiid.contains("MGI:")) {
-				mgiid = "MGI:" + mgiid;
-			}
-			where = where + "\nand a.accID ilike '" + mgiid + "'";
+			accIds.add("'" + searchDomain.getMgiid().toUpperCase() + "'");
+		}
+		if (searchDomain.getJnumid() != null) {
+			accIds.add("'" + searchDomain.getJnumid().toUpperCase() + "'");
+		}	
+		if (searchDomain.getPubmedid() != null) {
+			accIds.add("'" + searchDomain.getPubmedid().toUpperCase() + "'");
+		}
+		if (searchDomain.getDoiid() != null) {
+			accIds.add("'" + searchDomain.getDoiid().toUpperCase() + "'");
+		}			
+		if (accIds.size() > 0) {
+			where = where + "\nand a.accID in (" + String.join(",",  accIds) + ")";
 			from_accession = true;
+		}
+
+		// searchDomain.getAp_status = "xxxxx,xxxxx,xxxxx"
+		String apWhere = "and (";
+		String apClause = "exists (select 1 from BIB_Workflow_Status apWfs, VOC_Term apTerm"
+						+ "\nwhere c._Refs_key = apwfs._Refs_key"
+						+ "\nand apWfs._Group_key = 31576664"
+						+ "\nand apWfs._Status_key = apTerm._Term_key"
+						+ "\nand apTerm.term =";
+		List<String> apStatus = new ArrayList<String>();
+		if (searchDomain.getAp_status() != null && !searchDomain.getAp_status().isEmpty()) {
+			apStatus.add("'" + searchDomain.getAp_status() + "'");
+		}
+		if (apStatus.size() > 0) {
+			for (int i = 0; i < apStatus.size(); i++) {
+				if (i > 0) {
+					apWhere = apWhere + "\nand " + apClause + "'" + apStatus.get(i) + "'";
+				}
+				else {
+					apWhere = apWhere + apClause + "'" + apStatus.get(i) + "'";
+				}
+			}
+			apWhere = apWhere + ")";
 		}
 									
 		if (from_book == true) {

@@ -12,12 +12,20 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.acc.dao.AccessionDAO;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.entities.Accession;
+import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
+import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceWorkflowDataDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceBookDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceNoteDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
 import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -39,7 +47,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	@Inject
 	private ReferenceBookDAO bookDAO;
 	@Inject
+	private ReferenceNoteDAO noteDAO;
+	@Inject
+	private LTReferenceWorkflowDataDAO wfDataDAO;
+	@Inject
 	private TermDAO termDAO;
+	@Inject
+	private AccessionService accessionService;
 	
 	private ReferenceTranslator translator = new ReferenceTranslator();
 	private SlimReferenceTranslator slimtranslator = new SlimReferenceTranslator();
@@ -150,7 +164,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		// execute persist/insert/send to database
 		referenceDAO.persist(entity);
-			
+				
 		// for books
 		if (domain.getReferenceTypeKey().equals("31576679")) {
 			ReferenceBook bookEntity = new ReferenceBook();
@@ -195,7 +209,53 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			bookEntity.setModification_date(new Date());
 			bookDAO.persist(bookEntity);
 		}
-		
+
+		// notes
+		if (domain.getReferenceNote() != null && !domain.getReferenceNote().isEmpty()) {
+			ReferenceNote noteEntity = new ReferenceNote();
+			noteEntity.set_refs_key(entity.get_refs_key());
+			noteEntity.setNote(domain.referenceNote);			
+			noteEntity.setCreation_date(new Date());
+			noteEntity.setModification_date(new Date());
+			noteDAO.persist(noteEntity);			
+		}
+				
+		// supplement = Not checked (31576677)
+		LTReferenceWorkflowData wfDataEntity = new LTReferenceWorkflowData();
+		wfDataEntity.set_refs_key(entity.get_refs_key());
+		wfDataEntity.setSupplementalTerm(termDAO.get(31576677));
+		wfDataEntity.setExtractedTextTerm(termDAO.get(48804490));			
+		wfDataEntity.setExtracted_text(null);
+		wfDataEntity.setHas_pdf(0);
+		wfDataEntity.setLink_supplemental(null);
+		wfDataEntity.setCreatedByUser(user);
+		wfDataEntity.setCreation_date(new Date());
+		wfDataEntity.setModifiedByUser(user);
+		wfDataEntity.setModification_date(new Date());
+		wfDataDAO.persist(wfDataEntity);			
+
+		// process pubmed accession ids
+		if (domain.getPubmedid() != null && !domain.getPubmedid().isEmpty()) {
+			AccessionDomain accessionDomain = new AccessionDomain();
+			List<AccessionDomain> aresults = new ArrayList<AccessionDomain>();
+			accessionDomain.setProcessStatus("c");
+			accessionDomain.setAccID(domain.getPubmedid());
+			accessionDomain.setLogicaldbKey("29");
+			aresults.add(accessionDomain);
+			accessionService.process(String.valueOf(entity.get_refs_key()), aresults, "Reference", user);
+		}
+
+		// process doiid accession ids
+		if (domain.getDoiid() != null && !domain.getDoiid().isEmpty()) {
+			AccessionDomain accessionDomain = new AccessionDomain();
+			List<AccessionDomain> aresults = new ArrayList<AccessionDomain>();
+			accessionDomain.setProcessStatus("c");
+			accessionDomain.setAccID(domain.getDoiid());
+			accessionDomain.setLogicaldbKey("65");
+			aresults.add(accessionDomain);
+			accessionService.process(String.valueOf(entity.get_refs_key()), aresults, "Reference", user);
+		}
+				
 		// reload bib_citation_cache
 		String cmd = "select count(*) from BIB_reloadCache (" + entity.get_refs_key() + ")";
 		log.info("cmd: " + cmd);
@@ -343,43 +403,34 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}			
 		
 		// bib_notes
-		if (searchDomain.getReferenceNote() != null && !searchDomain.getReferenceNote().getNote().isEmpty()) {
-			where = where + "\nand n.note ilike '" + searchDomain.getReferenceNote().getNote() + "'";
+		if (searchDomain.getReferenceNote() != null && !searchDomain.getReferenceNote().isEmpty()) {
+			where = where + "\nand n.note ilike '" + searchDomain.getReferenceNote() + "'";
 			from_note = true;
 		}
 		
 		// accession id
-		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {
-			String mgiid = searchDomain.getMgiAccessionIds().get(0).getAccID().toUpperCase();
-			if (!mgiid.contains("MGI:")) {
-				mgiid = "MGI:" + mgiid;
-			}
-			where = where + "\nand a.accID ilike '" + mgiid + "'";
-			from_accession = true;
-		}
-		
-		// editable accession ids
-		if (searchDomain.getEditAccessionIds() != null) {
-			if (searchDomain.getEditAccessionIds().get(0).getAccID() != null 
-					&& !searchDomain.getEditAccessionIds().get(0).getAccID().isEmpty()) {
-				where = where + "\nand acc1.accID ilike '" +  searchDomain.getEditAccessionIds().get(0).getAccID() + "'";
-				from_editAccession = true;
-			}
-			if (searchDomain.getEditAccessionIds().get(0).getLogicaldbKey() != null && !searchDomain.getEditAccessionIds().get(0).getLogicaldbKey().isEmpty()) {
-				where = where + "\nand acc1._logicaldb_key = " + searchDomain.getEditAccessionIds().get(0).getLogicaldbKey();
-				from_editAccession = true;
-			}
-		}
-						
-		// Allele relationships
-		// MGI_Reference_Allele_View
-		
-		// Marker relationships
-		// MGI_Reference_Marker_View
-		
-		// Strain relationships
-		// MGI_Reference_Strain_View
-					
+//		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {
+//			String mgiid = searchDomain.getMgiAccessionIds().get(0).getAccID().toUpperCase();
+//			if (!mgiid.contains("MGI:")) {
+//				mgiid = "MGI:" + mgiid;
+//			}
+//			where = where + "\nand a.accID ilike '" + mgiid + "'";
+//			from_accession = true;
+//		}
+//		
+//		// editable accession ids
+//		if (searchDomain.getEditAccessionIds() != null) {
+//			if (searchDomain.getEditAccessionIds().get(0).getAccID() != null 
+//					&& !searchDomain.getEditAccessionIds().get(0).getAccID().isEmpty()) {
+//				where = where + "\nand acc1.accID ilike '" +  searchDomain.getEditAccessionIds().get(0).getAccID() + "'";
+//				from_editAccession = true;
+//			}
+//			if (searchDomain.getEditAccessionIds().get(0).getLogicaldbKey() != null && !searchDomain.getEditAccessionIds().get(0).getLogicaldbKey().isEmpty()) {
+//				where = where + "\nand acc1._logicaldb_key = " + searchDomain.getEditAccessionIds().get(0).getLogicaldbKey();
+//				from_editAccession = true;
+//			}
+//		}
+										
 		if (from_book == true) {
 			from = from + ", bib_books k";
 			where = where + "\nand c._refs_key = k._refs_key";

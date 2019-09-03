@@ -288,13 +288,13 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 		return null;
 	}
 
-	// never used/always use the ReferenceController/get
+	// never used
 	@Override
 	public LTReferenceDomain get(Integer key) {
 		return null;
 	}
 
-	// never used/always use the ReferenceController/update	
+	// never useds	
 	@Override
 	public SearchResults<LTReferenceDomain> update(LTReferenceDomain object, User user) {
 		return null;

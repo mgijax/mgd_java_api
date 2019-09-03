@@ -1,6 +1,6 @@
 package org.jax.mgi.mgd.api.model.bib.translator;
 
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections4.IteratorUtils;
@@ -11,7 +11,6 @@ import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBookDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceNoteDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
 import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jboss.logging.Logger;
@@ -59,16 +58,18 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
+		// ReferenceDomain must agree with what is coming from PWI/LitTriage
+		
 		// reference book
 		if (entity.getReferenceBook() != null && !entity.getReferenceBook().isEmpty()) {
 			ReferenceBookTranslator bookTranslator = new ReferenceBookTranslator();
 			Iterable<ReferenceBookDomain> book = bookTranslator.translateEntities(entity.getReferenceBook());
 			List<ReferenceBookDomain> bookList = IteratorUtils.toList(book.iterator());
-			domain.book_author = bookList.get(0).getBook_author();
-			domain.book_title = bookList.get(0).getBook_title();
-			domain.place = bookList.get(0).getPlace();
-			domain.publisher = bookList.get(0).getPublisher();
-			domain.series_ed = bookList.get(0).getSeries_ed();			
+			domain.setBook_author(bookList.get(0).getBook_author());
+			domain.setBook_title(bookList.get(0).getBook_title());
+			domain.setPlace(bookList.get(0).getPlace());
+			domain.setPublisher(bookList.get(0).getPublisher());
+			domain.setSeries_ed(bookList.get(0).getSeries_ed());			
 		}
 		
 		// reference book
@@ -80,27 +81,42 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		// reference note
 		if (entity.getReferenceNote() != null && !entity.getReferenceNote().isEmpty()) {
 			Iterable<ReferenceNoteDomain> note = noteTranslator.translateEntities(entity.getReferenceNote());
-			domain.setReferenceNote(note.iterator().next());
-		}
-		
-		// mgi accession ids only
-		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
-			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
-			domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
+			//domain.setReferenceNote(note.iterator().next());
+			domain.setReferenceNote(note.iterator().next().getNote());
 		}
 
-		// accession ids editable
+		// first mgi accession id only
+		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
+			//domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
+			domain.setMgiid(acc.iterator().next().getAccID());		
+		}
+
+		// non-mgi accession ids
 		if (entity.getEditAccessionIds() != null && !entity.getEditAccessionIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIds());
-			domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
-			domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
+			List<AccessionDomain> editAccessionIds = new ArrayList<AccessionDomain>();
+			editAccessionIds.addAll(IteratorUtils.toList(acc.iterator()));
+			for (int i = 0; i < editAccessionIds.size(); i++) {
+				if (editAccessionIds.get(i).getLogicaldbKey().equals("29")) {
+					domain.setPubmedid(editAccessionIds.get(i).getAccID());
+				}
+				else if (editAccessionIds.get(i).getLogicaldbKey().equals("65")) {
+					domain.setDoiid(editAccessionIds.get(i).getAccID());
+				}				
+				else if (editAccessionIds.get(i).getLogicaldbKey().equals("185")) {
+					domain.setGorefid(editAccessionIds.get(i).getAccID());
+				}				
+			}
+			//domain.getEditAccessionIds(IteratorUtils.toList(acc.iterator()));
+			//domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
 	
-		// one-to-many associations
-		if (entity.getRefAssocs() != null && !entity.getRefAssocs().isEmpty()) {
-			Iterable<MGIReferenceAssocDomain> i = assocTranslator.translateEntities(entity.getRefAssocs());
-			domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
-		}
+//		// one-to-many associations
+//		if (entity.getRefAssocs() != null && !entity.getRefAssocs().isEmpty()) {
+//			Iterable<MGIReferenceAssocDomain> i = assocTranslator.translateEntities(entity.getRefAssocs());
+//			domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
+//		}
 		
 		return domain;
 	}

@@ -41,15 +41,16 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		}
 		
 		domain.referenceAbstract = DecodeString.getDecodeToUTF8(entity.getReferenceAbstract());
+		domain.mgiid = entity.getMgiid();
 		domain.jnumid = entity.getJnumid();
 		domain.doiid = entity.getDoiid();
 		domain.pubmedid = entity.getPubmedid();
-		domain.mgiid = entity.getMgiid();
 		domain.gorefid = entity.getGorefid();	
 		
 		domain.referenceType = entity.getReferenceType();
 		domain.referenceTypeKey = String.valueOf(entity.getReferenceTypeTerm().get_term_key());
 		domain.short_citation = entity.getShort_citation();
+		
 		domain.ap_status = entity.getStatus(Constants.WG_AP);
 		domain.go_status = entity.getStatus(Constants.WG_GO);
 		domain.gxd_status = entity.getStatus(Constants.WG_GXD);
@@ -102,7 +103,7 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 			domain.referenceNote = noteList.get(0).getNote();
 		}
 		
-		// reference book
+		// at most one reference book
 		if (entity.getReferenceBook() != null && !entity.getReferenceBook().isEmpty()) {
 			ReferenceBookTranslator bookTranslator = new ReferenceBookTranslator();
 			Iterable<ReferenceBookDomain> book = bookTranslator.translateEntities(entity.getReferenceBook());

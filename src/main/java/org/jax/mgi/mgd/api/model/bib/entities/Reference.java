@@ -88,7 +88,7 @@ public class Reference extends BaseEntity {
 	@OneToMany()	
 	@JoinColumn(name="_object_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 1 and `_logicaldb_key` = 1")
-	@OrderBy(clause="preferred desc, accID")
+	@OrderBy(clause="prefixPart desc, preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 	
 	// editable only accession ids

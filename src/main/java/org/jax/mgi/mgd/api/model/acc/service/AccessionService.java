@@ -257,12 +257,11 @@ public class AccessionService extends BaseService<AccessionDomain> {
 				// refsKey can be null; set to -1
 				String refsKey = "-1";
 				if (domain.get(i).getReferences() != null) {
-				    refsKey = 	domain.get(i).getReferences().get(0).getRefsKey();
+				    refsKey = domain.get(i).getReferences().get(0).getRefsKey();
 				}
 				System.out.println("AccessionService refsKey " + refsKey);
 				cmd = "select count(*) from ACC_insert ("
 							+ user.get_user_key().intValue()
-							//+ "," + domain.get(i).getObjectKey()
 							+ "," + parentKey
 							+ ",'" + domain.get(i).getAccID() + "'"
 							+ "," + domain.get(i).getLogicaldbKey()

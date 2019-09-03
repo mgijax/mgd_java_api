@@ -16,8 +16,7 @@ import lombok.Setter;
  *	as possible
  */
 @Getter @Setter
-public class LTReferenceDomain extends BaseDomain {
-	
+public class LTReferenceSearchDomain extends BaseDomain {
 	public String refsKey;
 	public String authors;
 	public String primary_author;
@@ -28,56 +27,44 @@ public class LTReferenceDomain extends BaseDomain {
 	public String date;
 	public String year;
 	public String pgs;
-	
-	// books
-	public String book_author;
-	public String book_title;
-	public String place;
-	public String publisher;
-	public String series_ed;
-	
-	// accession ids
-	public String mgiid;	
+	public String isReviewArticle;
 	public String jnumid;
 	public String doiid;
 	public String pubmedid;
+	public String mgiid;
 	public String gorefid;
-	
 	public String referenceType;
 	public String referenceTypeKey;
 	public String referenceAbstract;
 	public String referenceNote;
 	public String short_citation;
-
-	public String isReviewArticle;	
-	public String isDiscard;
-
-	// workflow status
 	public String ap_status;
 	public String go_status;
 	public String gxd_status;
 	public String qtl_status;
 	public String tumor_status;
-	
-	// workflow data
+	public String isDiscard;
+	public List<String> workflow_tags;
+	public String book_author;
+	public String book_title;
+	public String place;
+	public String publisher;
+	public String series_ed;
 	public String has_pdf;
 	public String has_supplemental;
 	public String link_to_supplemental;
 	public String has_extracted_text;
-	
 	public String created_by;
 	public String modified_by;
 	public String creation_date;
 	public String modification_date;
-	
-	public List<String> workflow_tags;	
 	public List<String> associated_data;
 	public List<LTReferenceWorkflowStatusDomain> statusHistory;
 	
 	/***--- constructors ---***/
 	
 	/* empty constructor - ready for population from JSON */
-	public LTReferenceDomain() {}
+	public LTReferenceSearchDomain() {}
 	
 	/* add the given status history to this domain object (not here by default, but added for detail pages)
 	 */

@@ -72,19 +72,20 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		return results;
 	}
 
-	@POST
-	@ApiOperation(value = "Search/returns list of journals")
-	@Path("/searchJournals")
-	public List<String> searchJournals() {
+	@GET
+	@ApiOperation(value = "returns list of journals")
+	@Path("/getJournalList")
+	public SearchResults<String> getJournalList() {
 	
-		List<String> results = new ArrayList<String>();
+		SearchResults<String> results = null;
 
 		try {
-			results = referenceService.searchJournals();
+			results = referenceService.getJournalList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
+		//log.info(results);
 		return results;
 	}
 		

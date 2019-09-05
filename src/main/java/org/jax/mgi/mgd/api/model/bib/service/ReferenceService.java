@@ -473,7 +473,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}	
 	
 	@Transactional	
-	public List<String> searchJournals() {
+	public SearchResults<String> getJournalList() {
 		// generate SQL command to return a list of distinct journals
 		
 		List<String> results = new ArrayList<String>();
@@ -494,7 +494,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		Collections.sort(results);
-		return results;
+		return new SearchResults<String>(results);
 	}	
 		
 	@Transactional	

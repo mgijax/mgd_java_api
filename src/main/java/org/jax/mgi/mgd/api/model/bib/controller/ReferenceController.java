@@ -71,7 +71,23 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		
 		return results;
 	}
+
+	@POST
+	@ApiOperation(value = "Search/returns list of journals")
+	@Path("/searchJournals")
+	public List<String> searchJournals() {
 	
+		List<String> results = new ArrayList<String>();
+
+		try {
+			results = referenceService.searchJournals();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+		
 	@GET
 	@ApiOperation(value = "Validate reference by J:/returns slim reference domain")
 	@Path("/validJnum/{jnum}")

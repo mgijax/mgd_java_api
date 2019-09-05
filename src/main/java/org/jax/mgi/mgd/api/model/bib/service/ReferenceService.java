@@ -12,9 +12,7 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.acc.dao.AccessionDAO;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
-import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceWorkflowDataDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceBookDAO;
@@ -473,6 +471,30 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return results;
 	}	
 	
+	@Transactional	
+	public List<String> searchJournals() {
+		// generate SQL command to return a list of distinct journals
+		
+		List<String> results = new ArrayList<String>();
+
+		// building SQL command : select + from + where + orderBy
+		String cmd = "select distinct journal from BIB_Refs where journal is not null";
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.add(rs.getString("journal"));
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
+		
 	@Transactional	
 	public List<SlimReferenceDomain> validJnum(String value) {
 		// use SlimReferenceDomain to return list of validated reference

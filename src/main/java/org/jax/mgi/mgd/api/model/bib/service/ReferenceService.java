@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.bib.service;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -492,6 +493,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			e.printStackTrace();
 		}
 		
+		Collections.sort(results);
 		return results;
 	}	
 		

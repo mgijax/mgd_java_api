@@ -1,7 +1,5 @@
 package org.jax.mgi.mgd.api.model.mgi.controller;
 
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -50,8 +48,8 @@ public class MGIRefAssocTypeController extends BaseController<MGIRefAssocTypeDom
 	@POST
 	@ApiOperation(value = "Search")
 	@Path("/search")
-	public List<MGIRefAssocTypeDomain> search() {
-		return refAssocTypeService.search();
+	public SearchResults<MGIRefAssocTypeDomain> search(MGIRefAssocTypeDomain searchDomain) {
+		return refAssocTypeService.search(searchDomain);
 	}
 	
 }

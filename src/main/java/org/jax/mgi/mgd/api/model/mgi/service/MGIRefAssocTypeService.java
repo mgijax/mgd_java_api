@@ -68,21 +68,32 @@ public class MGIRefAssocTypeService extends BaseService<MGIRefAssocTypeDomain> {
     }
 
 	@Transactional	
-	public List<MGIRefAssocTypeDomain> search() {
+	public SearchResults<MGIRefAssocTypeDomain> search(MGIRefAssocTypeDomain searchDomain) {
 
-		List<MGIRefAssocTypeDomain> results = new ArrayList<MGIRefAssocTypeDomain>();
+		SearchResults<MGIRefAssocTypeDomain> results = new SearchResults<MGIRefAssocTypeDomain>();
 
-		String cmd = "select * from mgi_refassoctype order by _mgitype_key, assoctype";
+		String cmd = "select * from mgi_refassoctype";
+		String where = "where _mgitype_key is not null";
+		String orderBy = "order by _mgitype_key, assoctype";
+	
+		if (searchDomain.getMgiTypeKey() != null && !searchDomain.getMgiTypeKey().isEmpty()) {
+			where = where + "\nand _mgitype_key = " + searchDomain.getMgiTypeKey();
+		}
+		
+		cmd = "\n" + cmd + "\n" + where + "\n" + orderBy;
 		log.info(cmd);
 
 		try {
+			List<MGIRefAssocTypeDomain> refAssocList = new ArrayList<MGIRefAssocTypeDomain>();
+			
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				MGIRefAssocTypeDomain domain = new MGIRefAssocTypeDomain();
 				domain = translator.translate(refAssocTypeDAO.get(rs.getInt("_refassoctype_key")));
 				refAssocTypeDAO.clear();
-				results.add(domain);
+				refAssocList.add(domain);
 			}
+			results.setItems(refAssocList);			
 			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {

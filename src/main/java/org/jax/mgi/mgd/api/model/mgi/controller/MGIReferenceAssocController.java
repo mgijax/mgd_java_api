@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
@@ -20,7 +21,6 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 
 @Path("/mgireferenceassoc")
 @Api(value = "MGI Reference Assoc Endpoints")
@@ -54,12 +54,28 @@ public class MGIReferenceAssocController extends BaseController<MGIReferenceAsso
 	@GET
 	@ApiOperation(value = "Get All Reference Associations by Marker")
 	@Path("/marker/{key}")
-	public List<MGIReferenceAssocDomain> getByMarker(@PathParam("key") @ApiParam(value = "Marker key associated w/ references") Integer key) {
+	public List<MGIReferenceAssocDomain> getByMarker(@PathParam("key") Integer key) {
 			
 		List<MGIReferenceAssocDomain> results = new ArrayList<MGIReferenceAssocDomain>();
 		
 		try {
 			results = referenceAssocService.getByMarker(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+
+	@GET
+	@ApiOperation(value = "Get Allele Associations by Reference key")
+	@Path("/allele/{key}")
+	public List<MGIReferenceAlleleAssocDomain> getAlleles(@PathParam("key") Integer key) {
+		
+		List<MGIReferenceAlleleAssocDomain> results = new ArrayList<MGIReferenceAlleleAssocDomain>();
+		
+		try {
+			results = referenceAssocService.getAlleles(key);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

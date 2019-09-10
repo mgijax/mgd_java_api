@@ -143,7 +143,6 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {					
 				SlimTermDomain termDomain = new SlimTermDomain();				
-		
 				domain.setVocabKey(rs.getString("_vocab_key"));
 				domain.setName(rs.getString("name"));
 				termDomain.setTermKey(rs.getString("_term_key"));

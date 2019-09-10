@@ -1,6 +1,9 @@
 package org.jax.mgi.mgd.api.model.bib.domain;
 
+import java.util.List;
+
 import org.jax.mgi.mgd.api.model.BaseDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -52,7 +55,8 @@ public class ReferenceDomain extends BaseDomain {
 	//private ReferenceNoteDomain referenceNote;
 	//private List<AccessionDomain> mgiAccessionIds;
 	//private List<AccessionDomain> editAccessionIds;
-	//private List<MGIReferenceAssocDomain> refAssocs;
+	
+	private List<MGIReferenceAssocDomain> alleleAssocs;
 
 	// ReferenceCitationCache not included in domain at this time 
 }

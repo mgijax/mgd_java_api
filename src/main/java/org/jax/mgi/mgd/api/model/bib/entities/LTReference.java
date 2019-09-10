@@ -22,6 +22,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
+import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -82,15 +83,15 @@ public class LTReference extends BaseEntity {
 	@Column(name="modification_date")
 	private Date modification_date;
 
-	@OneToOne
+	@OneToOne()
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
 	private LTReferenceStatusView statusView;
 
-	@OneToOne
+	@OneToOne()
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdByUser;
 
-	@OneToOne
+	@OneToOne()
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedByUser;
 
@@ -101,26 +102,26 @@ public class LTReference extends BaseEntity {
 	/* The @Fetch annotation (below) allows us to specify multiple EAGER-loaded collections, which would
 	 * otherwise throw an error.
 	 */
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_refs_key")
 	private List<LTReferenceWorkflowStatus> workflowStatuses;
 
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_refs_key")
 	private List<LTReferenceWorkflowTag> workflowTags;
 
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_refs_key")
 	@Where(clause="`_mgitype_key` = 1")
 	@OrderBy("_logicaldb_key, preferred desc")
 	private List<Accession> accessionIDs;
 
-	@OneToOne
+	@OneToOne()
 	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")
 	private Term referenceTypeTerm;
 
 	// one to many, because notes might not exist (leaving it 1-0)
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_refs_key")
 	private List<ReferenceNote> notes;
 
@@ -130,12 +131,12 @@ public class LTReference extends BaseEntity {
 	private List<ReferenceCitationCache> citationData;
 
 	// one to many, because book data most often does not exist (leaving it 1-0)
-	@OneToMany
+	@OneToMany()
 	@JoinColumn(name="_refs_key")
 	private List<ReferenceBook> referenceBook;
 
 	// one to one, because counts will always exist
-	@OneToOne
+	@OneToOne()
 	@JoinColumn(name="_refs_key")
 	private LTReferenceAssociatedData associatedData;
 
@@ -145,6 +146,13 @@ public class LTReference extends BaseEntity {
 	@Where(clause="`_extractedtext_key` = 48804490")
 	private Set<LTReferenceWorkflowData> workflowData;
 
+	// reference allele associations : alleles (11)
+	@OneToMany()
+	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` in (11)")
+	@OrderBy("_refassoctype_key")
+	private List<MGIReferenceAssoc> alleleAssocs;
+	
 	/* Find and return the first accession ID matching any specified logical database, prefix,
 	 * is-preferred, and is-private settings.
 	 */

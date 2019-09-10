@@ -73,11 +73,11 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	/* gets a ReferenceDomain object that is fully fleshed out from a Reference
 	 */
 	@Override
-	public LTReferenceDomain get(String primaryKey) throws FatalAPIException, APIException {
-		LTReference ref = getReference(primaryKey);
+	public LTReferenceDomain get(String key) throws FatalAPIException, APIException {
+		LTReference ref = getReference(key);
 		LTReferenceDomain domain = translator.translate(ref);
 		domain.setStatusHistory(getStatusHistory(domain));
-		return domain;
+		return domain;	
 	}
 
 	@Override

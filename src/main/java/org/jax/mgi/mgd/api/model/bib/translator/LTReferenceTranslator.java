@@ -131,6 +131,14 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 				domain.has_extracted_text = "No";
 			}
 		}
+
+		// turning this on causes a LazyINitializationExpception; no idea why
+		// one-to-many allele associations
+//		if (entity.getAlleleAssocs() != null && !entity.getAlleleAssocs().isEmpty()) {
+//			MGIReferenceAssocTranslator assocTranslator = new MGIReferenceAssocTranslator();
+//			Iterable<MGIReferenceAssocDomain> i = assocTranslator.translateEntities(entity.getAlleleAssocs());
+//			domain.setAlleleAssocs(IteratorUtils.toList(i.iterator()));
+//		}
 		
 		return domain;
 	}

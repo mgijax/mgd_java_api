@@ -34,7 +34,7 @@ public class MGIReferenceAssocTranslator extends BaseEntityDomainTranslator<MGIR
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-	
+			
 		return domain;
 	}
 

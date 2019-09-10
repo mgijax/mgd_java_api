@@ -31,8 +31,8 @@ public class LTReferenceSummaryRepository extends BaseRepository<LTReferenceSumm
 	/***--- (public) instance methods ---***/
 
 	@Override
-	public LTReferenceSummaryDomain get(String primaryKey) throws APIException {
-		return translator.translate(getReference(primaryKey));
+	public LTReferenceSummaryDomain get(String key) throws APIException {
+		return translator.translate(getReference(key));
 	}
 
 	@Override

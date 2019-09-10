@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -73,7 +75,8 @@ public class LTReferenceDomain extends BaseDomain {
 	public List<String> workflow_tags;	
 	public List<String> associated_data;
 	public List<LTReferenceWorkflowStatusDomain> statusHistory;
-	
+	public List<MGIReferenceAssocDomain> alleleAssocs;
+
 	/***--- constructors ---***/
 	
 	/* empty constructor - ready for population from JSON */

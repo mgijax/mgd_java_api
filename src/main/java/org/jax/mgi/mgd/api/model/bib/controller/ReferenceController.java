@@ -73,7 +73,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "returns list of journals")
+	@ApiOperation(value = "get list of journals")
 	@Path("/getJournalList")
 	public SearchResults<String> getJournalList() {
 	
@@ -88,7 +88,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		//log.info(results);
 		return results;
 	}
-		
+	
 	@GET
 	@ApiOperation(value = "Validate reference by J:/returns slim reference domain")
 	@Path("/validJnum/{jnum}")

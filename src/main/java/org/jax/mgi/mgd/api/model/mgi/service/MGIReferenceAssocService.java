@@ -13,9 +13,11 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGIReferenceAssocDAO;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAlleleAssocTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -33,6 +35,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 	private ReferenceDAO referenceDAO;
 	
 	private MGIReferenceAssocTranslator translator = new MGIReferenceAssocTranslator();
+	private MGIReferenceAlleleAssocTranslator alleleTranslator = new MGIReferenceAlleleAssocTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
@@ -99,7 +102,37 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		
 		return results;
 	}
-	
+
+	@Transactional	
+	public List<MGIReferenceAlleleAssocDomain> getAlleles(Integer key) {
+
+		List<MGIReferenceAlleleAssocDomain> results = new ArrayList<MGIReferenceAlleleAssocDomain>();
+
+		String cmd = "\nselect r.* from MGI_Reference_Allele_View r "
+				+ "\nwhere r._Refs_key = " + key
+				+"\norder by r.symbol, r.assocType";
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				MGIReferenceAlleleAssocDomain domain = new MGIReferenceAlleleAssocDomain();
+				domain = alleleTranslator.translate(referenceAssocDAO.get(rs.getInt("_assoc_key")));
+				referenceAssocDAO.clear();
+				domain.setSymbol(rs.getString("symbol"));
+				domain.setAccID(rs.getString("accID"));
+				domain.setMarkerSymbol(rs.getString("markerSymbol"));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+		
 	@Transactional
 	public Boolean process(String parentKey, List<MGIReferenceAssocDomain> domain, String mgiTypeKey, User user) {
 		// process reference associations (create, delete, update)

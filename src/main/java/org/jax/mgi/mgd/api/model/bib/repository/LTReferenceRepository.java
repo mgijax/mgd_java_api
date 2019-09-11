@@ -30,6 +30,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -61,7 +62,10 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	
 	@Inject
 	private MGITypeDAO mgiTypeDAO;
-	
+
+	@Inject
+	private MGIReferenceAssocService referenceAssocService;	
+
 	LTReferenceTranslator translator = new LTReferenceTranslator();
 
 	/* These work together to allow for a maximum delay of two seconds for retries: */
@@ -239,6 +243,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		anyChanges = applyNoteChanges(entity, domain, currentUser) | anyChanges;
 		anyChanges = applyAccessionIDChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyWorkflowDataChanges(entity, domain, currentUser) || anyChanges;
+		anyChanges = applyAlleleAssocChanges(entity, domain, currentUser) || anyChanges;		
 		if (anyChanges) {
 			entity.setModificationInfo(currentUser);
 		}
@@ -540,6 +545,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			entity.getNotes().add(note);
 			anyChanges = true;
 		}
+			
 		return anyChanges;
 	}
 
@@ -842,4 +848,21 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		return anyChanges;
 	}
 
+	/* apply any changes from domain to entity for the reference/allele associations
+	 */
+	private boolean applyAlleleAssocChanges(LTReference entity, LTReferenceDomain domain, User currentUser) {
+		// referenceAssocService will handle add (c), delete (d)
+
+		boolean anyChanges = false;
+
+		if (domain.getAlleleAssocs() != null && !domain.getAlleleAssocs().isEmpty()) {
+			//  referenceAssocService.process() will check for null and use the correct object/allele key
+			if (referenceAssocService.process(null, domain.getAlleleAssocs(), "11", currentUser)) {
+				anyChanges = true;
+			}
+		}
+		
+		return anyChanges;
+	}
+	
 }

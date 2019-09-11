@@ -119,9 +119,9 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				MGIReferenceAlleleAssocDomain domain = new MGIReferenceAlleleAssocDomain();
 				domain = alleleTranslator.translate(referenceAssocDAO.get(rs.getInt("_assoc_key")));
 				referenceAssocDAO.clear();
-				domain.setSymbol(rs.getString("symbol"));
-				domain.setAccID(rs.getString("accID"));
-				domain.setMarkerSymbol(rs.getString("markerSymbol"));
+				domain.setAlleleSymbol(rs.getString("symbol"));
+				domain.setAlleleAccID(rs.getString("accID"));
+				domain.setAlleleMarkerSymbol(rs.getString("markerSymbol"));
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();
@@ -157,6 +157,10 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				
 				log.info("processReferenceAssoc create");
 
+				if (parentKey == null || parentKey.isEmpty()) {
+					parentKey = domain.get(i).getObjectKey();
+				}
+				
 				cmd = "select count(*) from MGI_insertReferenceAssoc ("
 							+ user.get_user_key().intValue()
 							+ "," + mgiTypeKey

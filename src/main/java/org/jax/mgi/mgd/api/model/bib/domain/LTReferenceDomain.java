@@ -75,6 +75,8 @@ public class LTReferenceDomain extends BaseDomain {
 	public List<String> workflow_tags;	
 	public List<String> associated_data;
 	public List<LTReferenceWorkflowStatusDomain> statusHistory;
+	
+	// PWI loads this data via call to MGIReferenceAssocService/getAlleles()
 	public List<MGIReferenceAssocDomain> alleleAssocs;
 
 	/***--- constructors ---***/

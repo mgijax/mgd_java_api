@@ -22,7 +22,12 @@ public class MGIReferenceAlleleAssocTranslator extends BaseEntityDomainTranslato
 		domain.setMgiTypeKey(String.valueOf(entity.getMgiType().get_mgitype_key()));
 		domain.setRefAssocTypeKey(String.valueOf(entity.getRefAssocType().get_refAssocType_key()));
 	    domain.setRefAssocType(entity.getRefAssocType().getAssocType());
-	        
+	    
+//		these fields are gotten via call to MGIReferenceService.getAlleles()
+//		private String alleleSymbol;
+//		private String alleleAccID;
+//		private String alleleMarkerSymbol;
+		
 		return domain;
 	}
 

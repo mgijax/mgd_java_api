@@ -264,10 +264,9 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		// from sub-class (Allele), build super-class and pass to "process()"
 		
 		List<MGIReferenceAssocDomain> listOfSuperDomains = new ArrayList<MGIReferenceAssocDomain>();
-		Boolean modified = false;
 
 		if (domain == null || domain.isEmpty()) {
-			return modified;
+			return false;
 		}
 						
 		// iterate thru the list of rows in the subclass-domain
@@ -294,10 +293,9 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		// from sub-class (Strain), build super-class and pass to "process()"
 		
 		List<MGIReferenceAssocDomain> listOfSuperDomains = new ArrayList<MGIReferenceAssocDomain>();
-		Boolean modified = false;
 
 		if (domain == null || domain.isEmpty()) {
-			return modified;
+			return false;
 		}
 						
 		// iterate thru the list of rows in the subclass-domain

@@ -24,9 +24,5 @@ public class MGIReferenceAssocDomain extends BaseDomain {
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;
-	
-	// for allele associations only
-	private String alleleSymbol;
-	private String alleleAccID;
-	private String alleleMarkerSymbol;	
+		
 }   	

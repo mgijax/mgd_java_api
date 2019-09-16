@@ -2,7 +2,6 @@ package org.jax.mgi.mgd.api.model.mgi.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -11,7 +10,6 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGIReferenceAssocDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
@@ -31,9 +29,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 	
 	@Inject
 	private MGIReferenceAssocDAO referenceAssocDAO;
-	@Inject
-	private ReferenceDAO referenceDAO;
-	
+
 	private MGIReferenceAssocTranslator translator = new MGIReferenceAssocTranslator();
 	private MGIReferenceAlleleAssocTranslator alleleTranslator = new MGIReferenceAlleleAssocTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
@@ -105,7 +101,8 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 
 	@Transactional	
 	public List<MGIReferenceAlleleAssocDomain> getAlleles(Integer key) {
-
+		// to do
+		
 		List<MGIReferenceAlleleAssocDomain> results = new ArrayList<MGIReferenceAlleleAssocDomain>();
 
 		String cmd = "\nselect r.* from MGI_Reference_Allele_View r "
@@ -136,6 +133,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 	@Transactional
 	public Boolean process(String parentKey, List<MGIReferenceAssocDomain> domain, String mgiTypeKey, User user) {
 		// process reference associations (create, delete, update)
+		// if parent is different in each domain row, then set parentKey = null
 		
 		Boolean modified = false;
 		
@@ -157,6 +155,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				
 				log.info("processReferenceAssoc create");
 
+				// if parentKey is null, then use object key 
 				if (parentKey == null || parentKey.isEmpty()) {
 					parentKey = domain.get(i).getObjectKey();
 				}
@@ -183,27 +182,18 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processReferenceAssoc update");
 
-				Boolean isUpdated = false;
-				MGIReferenceAssoc entity = referenceAssocDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
-		
-				if (entity.getReference().get_refs_key() != Integer.parseInt(domain.get(i).getRefsKey())) {
-					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
-					isUpdated = true;
-				}
-				
-				if (isUpdated) {
-					entity.setModification_date(new Date());
-					entity.setModifiedBy(user);
-					referenceAssocDAO.update(entity);
-					modified = true;
-					log.info("processReferenceAssoc/changes processed: " + domain.get(i).getAssocKey());
-				}
-				else {
-					log.info("processReferenceAssoc/no changes processed: " + domain.get(i).getAssocKey());
-				}
-			}
-			else {
-				log.info("processReferenceAssoc/no changes processed: " + domain.get(i).getAssocKey());
+				cmd = "select count(*) from MGI_updateReferenceAssoc ("
+						+ user.get_user_key().intValue()
+						+ "," + mgiTypeKey
+						+ "," + parentKey
+						+ "," + domain.get(i).getRefsKey()
+						+ ",'" + domain.get(i).getRefAssocType() + "'"
+						+ "," + domain.get(i).getAssocKey()
+						+ ")";
+				log.info("cmd: " + cmd);
+				Query query = referenceAssocDAO.createNativeQuery(cmd);
+				query.getResultList();
+				modified = true;
 			}
 		}
 		

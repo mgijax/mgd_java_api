@@ -267,7 +267,6 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		Boolean modified = false;
 
 		if (domain == null || domain.isEmpty()) {
-			log.info("processReferenceAlleleAssoc/nothing to process");
 			return modified;
 		}
 						
@@ -292,13 +291,12 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 	@Transactional
 	public Boolean processStrainAssoc(List<MGIReferenceStrainAssocDomain> domain, User user) {
 		// process reference/strain associations (create, delete, update)
-		// from sub-class (Allele), build super-class and pass to "process()"
+		// from sub-class (Strain), build super-class and pass to "process()"
 		
 		List<MGIReferenceAssocDomain> listOfSuperDomains = new ArrayList<MGIReferenceAssocDomain>();
 		Boolean modified = false;
 
 		if (domain == null || domain.isEmpty()) {
-			log.info("processReferenceAlleleAssoc/nothing to process");
 			return modified;
 		}
 						

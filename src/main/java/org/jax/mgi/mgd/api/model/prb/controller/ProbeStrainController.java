@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.prb.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -10,6 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeStrainDomain;
@@ -52,7 +54,16 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 	@ApiOperation(value = "Validate Strain")
 	@Path("/validateStrain")
 	public List<SlimProbeStrainDomain> validateStrain(SlimProbeStrainDomain searchDomain) {
-		return probeStrainService.validateStrain(searchDomain);
+		
+		List<SlimProbeStrainDomain> results = new ArrayList<SlimProbeStrainDomain>();
+
+		try {
+			results = probeStrainService.validateStrain(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
 	}
 		
 }

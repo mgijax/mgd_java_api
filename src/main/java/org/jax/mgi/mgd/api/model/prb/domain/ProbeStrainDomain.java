@@ -1,6 +1,9 @@
 package org.jax.mgi.mgd.api.model.prb.domain;
 
+import java.util.List;
+
 import org.jax.mgi.mgd.api.model.BaseDomain;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,4 +26,7 @@ public class ProbeStrainDomain extends BaseDomain {
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;
+	
+	private List<AccessionDomain> mgiAccessionIds;
+	
 }

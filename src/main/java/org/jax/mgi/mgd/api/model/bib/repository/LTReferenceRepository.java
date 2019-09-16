@@ -29,6 +29,8 @@ import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceTranslator;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceStrainAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
@@ -243,7 +245,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		anyChanges = applyNoteChanges(entity, domain, currentUser) | anyChanges;
 		anyChanges = applyAccessionIDChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyWorkflowDataChanges(entity, domain, currentUser) || anyChanges;
-		anyChanges = applyAlleleAssocChanges(entity, domain, currentUser) || anyChanges;		
+		anyChanges = applyAlleleAssocChanges(entity, domain.getAlleleAssocs(), currentUser) || anyChanges;		
+		anyChanges = applyStrainAssocChanges(entity, domain.getStrainAssocs(), currentUser) || anyChanges;		
+
 		if (anyChanges) {
 			entity.setModificationInfo(currentUser);
 		}
@@ -850,19 +854,34 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	/* apply any changes from domain to entity for the reference/allele associations
 	 */
-	private boolean applyAlleleAssocChanges(LTReference entity, LTReferenceDomain domain, User currentUser) {
+	private boolean applyAlleleAssocChanges(LTReference entity, List<MGIReferenceAlleleAssocDomain> domain, User currentUser) {
 		// referenceAssocService will handle add (c), delete (d)
 
 		boolean anyChanges = false;
 
-		if (domain.getAlleleAssocs() != null && !domain.getAlleleAssocs().isEmpty()) {
-			//  referenceAssocService.process() will check for null and use the correct object/allele key
-			if (referenceAssocService.process(null, domain.getAlleleAssocs(), "11", currentUser)) {
+		if (domain != null) {
+			if (referenceAssocService.processAlleleAssoc(domain, currentUser)) {
 				anyChanges = true;
 			}
 		}
 		
 		return anyChanges;
 	}
-	
+
+	/* apply any changes from domain to entity for the reference/strain associations
+	 */
+	private boolean applyStrainAssocChanges(LTReference entity, List<MGIReferenceStrainAssocDomain> domain, User currentUser) {
+		// referenceAssocService will handle add (c), delete (d)
+
+		boolean anyChanges = false;
+
+		if (domain != null) {
+			if (referenceAssocService.processStrainAssoc(domain, currentUser)) {
+				anyChanges = true;
+			}
+		}
+		
+		return anyChanges;
+	}
+		
 }

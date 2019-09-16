@@ -1,10 +1,15 @@
 package org.jax.mgi.mgd.api.model.prb.translator;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
 
 public class ProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeStrain, ProbeStrainDomain> {
+
+	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 
 	@Override
 	protected ProbeStrainDomain entityToDomain(ProbeStrain entity) {
@@ -26,7 +31,15 @@ public class ProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeStrai
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-		
+	
+		// mgi accession ids only
+		if (!entity.getMgiAccessionIds().isEmpty()) {
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
+			if(acc.iterator().hasNext() == true) {
+				domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
+			}
+		}
+				
 		return domain;
 	}
 

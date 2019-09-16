@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceStrainAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -82,7 +83,23 @@ public class MGIReferenceAssocController extends BaseController<MGIReferenceAsso
 		
 		return results;
 	}
-	
+
+	@GET
+	@ApiOperation(value = "Get Strain Associations by Reference key")
+	@Path("/strain/{key}")
+	public List<MGIReferenceStrainAssocDomain> getStrains(@PathParam("key") Integer key) {
+		
+		List<MGIReferenceStrainAssocDomain> results = new ArrayList<MGIReferenceStrainAssocDomain>();
+		
+		try {
+			results = referenceAssocService.getStrains(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+		
 	@POST
 	@ApiOperation(value = "Process")
 	@Path("/process")

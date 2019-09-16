@@ -73,11 +73,11 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 
 	@Transactional
 	public List<SlimProbeStrainDomain> validateStrain(SlimProbeStrainDomain searchDomain) {
-		// validate the Strain  
+		// validate the Strain by strain symbol
    
 		List<SlimProbeStrainDomain> results = new ArrayList<SlimProbeStrainDomain>();
 
-		String cmd = "select s._strain_key, s.strain, s.private "
+		String cmd = "select s._strain_key "
 				+ "\nfrom prb_strain s"
 				+ "\nwhere s.strain = '" + searchDomain.getStrain() + "'";
 		

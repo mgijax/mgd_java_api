@@ -13,9 +13,9 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGIReferenceAssocDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceStrainAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAlleleAssocTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -31,7 +31,6 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 	private MGIReferenceAssocDAO referenceAssocDAO;
 
 	private MGIReferenceAssocTranslator translator = new MGIReferenceAssocTranslator();
-	private MGIReferenceAlleleAssocTranslator alleleTranslator = new MGIReferenceAlleleAssocTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
@@ -101,7 +100,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 
 	@Transactional	
 	public List<MGIReferenceAlleleAssocDomain> getAlleles(Integer key) {
-		// to do
+		// return list of reference/allele associations for given reference key
 		
 		List<MGIReferenceAlleleAssocDomain> results = new ArrayList<MGIReferenceAlleleAssocDomain>();
 
@@ -113,9 +112,23 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				MGIReferenceAlleleAssocDomain domain = new MGIReferenceAlleleAssocDomain();
-				domain = alleleTranslator.translate(referenceAssocDAO.get(rs.getInt("_assoc_key")));
+				
+				// use super-class translator
+				MGIReferenceAssocDomain superDomain = new MGIReferenceAssocDomain();
+				superDomain = translator.translate(referenceAssocDAO.get(rs.getInt("_assoc_key")));
 				referenceAssocDAO.clear();
+				
+				MGIReferenceAlleleAssocDomain domain = new MGIReferenceAlleleAssocDomain();
+			
+				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);				
+				domain.setAssocKey(superDomain.getAssocKey());
+				domain.setObjectKey(superDomain.getObjectKey());
+				domain.setMgiTypeKey(superDomain.getMgiTypeKey());
+				domain.setRefAssocType(superDomain.getRefAssocType());
+				domain.setRefAssocTypeKey(superDomain.getRefAssocTypeKey());
+				domain.setRefsKey(superDomain.getRefsKey());
+				
+				// subclass-specific info from SQL query
 				domain.setAlleleSymbol(rs.getString("symbol"));
 				domain.setAlleleAccID(rs.getString("accID"));
 				domain.setAlleleMarkerSymbol(rs.getString("markerSymbol"));
@@ -129,7 +142,51 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		
 		return results;
 	}
+	
+	@Transactional	
+	public List<MGIReferenceStrainAssocDomain> getStrains(Integer key) {
+		// return list of reference/strain associations for given reference key
 		
+		List<MGIReferenceStrainAssocDomain> results = new ArrayList<MGIReferenceStrainAssocDomain>();
+
+		String cmd = "\nselect r.* from MGI_Reference_Strain_View r "
+				+ "\nwhere r._Refs_key = " + key
+				+"\norder by r.strain, r.assocType";
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				
+				// use super-class translator
+				MGIReferenceAssocDomain superDomain = new MGIReferenceAssocDomain();
+				superDomain = translator.translate(referenceAssocDAO.get(rs.getInt("_assoc_key")));
+				referenceAssocDAO.clear();
+				
+				MGIReferenceStrainAssocDomain domain = new MGIReferenceStrainAssocDomain();
+			
+				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);				
+				domain.setAssocKey(superDomain.getAssocKey());
+				domain.setObjectKey(superDomain.getObjectKey());
+				domain.setMgiTypeKey(superDomain.getMgiTypeKey());
+				domain.setRefAssocType(superDomain.getRefAssocType());
+				domain.setRefAssocTypeKey(superDomain.getRefAssocTypeKey());
+				domain.setRefsKey(superDomain.getRefsKey());
+				
+				// subclass-specific info from SQL query			
+				domain.setStrainSymbol(rs.getString("strain"));
+				domain.setStrainAccID(rs.getString("accID"));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 	@Transactional
 	public Boolean process(String parentKey, List<MGIReferenceAssocDomain> domain, String mgiTypeKey, User user) {
 		// process reference associations (create, delete, update)
@@ -148,18 +205,18 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		// for each row, determine whether to perform an insert, delete or update
 		
 		for (int i = 0; i < domain.size(); i++) {
-				
+			
+			// if parentKey is null, then use object key 
+			if (parentKey == null || parentKey.isEmpty()) {
+				parentKey = domain.get(i).getObjectKey();
+			}
+						
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 				// minimum domain info for create:
 				// processStatus (‘c’ for create) , mgiTypeKey, parentKey/objectKey, refsKey, refType (string)
 				
 				log.info("processReferenceAssoc create");
-
-				// if parentKey is null, then use object key 
-				if (parentKey == null || parentKey.isEmpty()) {
-					parentKey = domain.get(i).getObjectKey();
-				}
-				
+	
 				cmd = "select count(*) from MGI_insertReferenceAssoc ("
 							+ user.get_user_key().intValue()
 							+ "," + mgiTypeKey
@@ -200,5 +257,67 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		log.info("processReferenceAssoc/processing successful");
 		return modified;
 	}
-	
+
+	@Transactional
+	public Boolean processAlleleAssoc(List<MGIReferenceAlleleAssocDomain> domain, User user) {
+		// process reference/allele associations (create, delete, update)
+		// from sub-class (Allele), build super-class and pass to "process()"
+		
+		List<MGIReferenceAssocDomain> listOfSuperDomains = new ArrayList<MGIReferenceAssocDomain>();
+		Boolean modified = false;
+
+		if (domain == null || domain.isEmpty()) {
+			log.info("processReferenceAlleleAssoc/nothing to process");
+			return modified;
+		}
+						
+		// iterate thru the list of rows in the subclass-domain
+		
+		for (int i = 0; i < domain.size(); i++) {		
+			MGIReferenceAssocDomain superDomain = new MGIReferenceAssocDomain();
+			superDomain.setProcessStatus(domain.get(i).getProcessStatus());				
+			superDomain.setAssocKey(domain.get(i).getAssocKey());
+			superDomain.setObjectKey(domain.get(i).getObjectKey());
+			superDomain.setMgiTypeKey(domain.get(i).getMgiTypeKey());
+			superDomain.setRefAssocType(domain.get(i).getRefAssocType());
+			superDomain.setRefAssocTypeKey(domain.get(i).getRefAssocTypeKey());
+			superDomain.setRefsKey(domain.get(i).getRefsKey());
+			listOfSuperDomains.add(superDomain);
+		}
+		
+		String parentKey = "";		
+		return process(parentKey, listOfSuperDomains, "11", user);
+	}
+
+	@Transactional
+	public Boolean processStrainAssoc(List<MGIReferenceStrainAssocDomain> domain, User user) {
+		// process reference/strain associations (create, delete, update)
+		// from sub-class (Allele), build super-class and pass to "process()"
+		
+		List<MGIReferenceAssocDomain> listOfSuperDomains = new ArrayList<MGIReferenceAssocDomain>();
+		Boolean modified = false;
+
+		if (domain == null || domain.isEmpty()) {
+			log.info("processReferenceAlleleAssoc/nothing to process");
+			return modified;
+		}
+						
+		// iterate thru the list of rows in the subclass-domain
+		
+		for (int i = 0; i < domain.size(); i++) {		
+			MGIReferenceAssocDomain superDomain = new MGIReferenceAssocDomain();
+			superDomain.setProcessStatus(domain.get(i).getProcessStatus());				
+			superDomain.setAssocKey(domain.get(i).getAssocKey());
+			superDomain.setObjectKey(domain.get(i).getObjectKey());
+			superDomain.setMgiTypeKey(domain.get(i).getMgiTypeKey());
+			superDomain.setRefAssocType(domain.get(i).getRefAssocType());
+			superDomain.setRefAssocTypeKey(domain.get(i).getRefAssocTypeKey());
+			superDomain.setRefsKey(domain.get(i).getRefsKey());
+			listOfSuperDomains.add(superDomain);
+		}
+		
+		String parentKey = "";		
+		return process(parentKey, listOfSuperDomains, "10", user);
+	}
+		
 }

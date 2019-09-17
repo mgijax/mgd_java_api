@@ -261,15 +261,14 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		for (int i = 0; i < domain.size(); i++) {
 			
 			// if parentKey is null, then use object key 
-						
+			if (parentKey == null || parentKey.isEmpty()) {
+				parentKey = domain.get(i).getObjectKey();
+			}
+			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 				// minimum domain info for create:
 				// processStatus (‘c’ for create) , mgiTypeKey, parentKey/objectKey, refsKey, refType (string)
-				
-				if (parentKey == null || parentKey.isEmpty()) {
-					parentKey = domain.get(i).getObjectKey();
-				}
-				
+							
 				log.info("processReferenceAssoc create");
 	
 				cmd = "select count(*) from MGI_insertReferenceAssoc ("

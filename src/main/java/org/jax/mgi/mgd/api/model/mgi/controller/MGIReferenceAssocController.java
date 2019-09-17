@@ -71,7 +71,7 @@ public class MGIReferenceAssocController extends BaseController<MGIReferenceAsso
 
 	@GET
 	@ApiOperation(value = "Get Allele Associations by Reference key")
-	@Path("/allele/{key}")
+	@Path("/alleleByReference/{key}")
 	public List<MGIReferenceAlleleAssocDomain> getAlleles(@PathParam("key") Integer key) {
 		
 		List<MGIReferenceAlleleAssocDomain> results = new ArrayList<MGIReferenceAlleleAssocDomain>();
@@ -87,7 +87,7 @@ public class MGIReferenceAssocController extends BaseController<MGIReferenceAsso
 
 	@GET
 	@ApiOperation(value = "Get Marker Associations by Reference key")
-	@Path("/marker/{key}")
+	@Path("/markerByReference/{key}")
 	public List<MGIReferenceMarkerAssocDomain> getMarker(@PathParam("key") Integer key) {
 		
 		List<MGIReferenceMarkerAssocDomain> results = new ArrayList<MGIReferenceMarkerAssocDomain>();
@@ -103,7 +103,7 @@ public class MGIReferenceAssocController extends BaseController<MGIReferenceAsso
 		
 	@GET
 	@ApiOperation(value = "Get Strain Associations by Reference key")
-	@Path("/strain/{key}")
+	@Path("/strainByReference/{key}")
 	public List<MGIReferenceStrainAssocDomain> getStrains(@PathParam("key") Integer key) {
 		
 		List<MGIReferenceStrainAssocDomain> results = new ArrayList<MGIReferenceStrainAssocDomain>();

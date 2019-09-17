@@ -5,6 +5,7 @@ import java.util.List;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceMarkerAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceStrainAssocDomain;
 
 import lombok.Getter;
@@ -77,10 +78,11 @@ public class LTReferenceDomain extends BaseDomain {
 	public List<String> associated_data;
 	public List<LTReferenceWorkflowStatusDomain> statusHistory;
 	
-	// PWI loads this data via call to MGIReferenceAssocService/getAlleles()
+	// PWI loads this data via calls to MGIReferenceAssocService/getXXX()
 	public List<MGIReferenceAlleleAssocDomain> alleleAssocs;
 	public List<MGIReferenceStrainAssocDomain> strainAssocs;
-	
+	public List<MGIReferenceMarkerAssocDomain> markerAssocs;
+
 	/***--- constructors ---***/
 	
 	/* empty constructor - ready for population from JSON */

@@ -13,6 +13,7 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGIReferenceAssocDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceMarkerAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceStrainAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -127,6 +128,9 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				domain.setRefAssocType(superDomain.getRefAssocType());
 				domain.setRefAssocTypeKey(superDomain.getRefAssocTypeKey());
 				domain.setRefsKey(superDomain.getRefsKey());
+				domain.setModification_date(superDomain.getModification_date());
+				domain.setModifiedBy(superDomain.getModifiedBy());
+				domain.setModifiedByKey(superDomain.getModifiedByKey());
 				
 				// subclass-specific info from SQL query
 				domain.setAlleleSymbol(rs.getString("symbol"));
@@ -143,6 +147,53 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		return results;
 	}
 	
+	@Transactional	
+	public List<MGIReferenceMarkerAssocDomain> getMarkers(Integer key) {
+		// return list of reference/marker associations for given reference key
+		
+		List<MGIReferenceMarkerAssocDomain> results = new ArrayList<MGIReferenceMarkerAssocDomain>();
+
+		String cmd = "\nselect r.* from MGI_Reference_Marker_View r "
+				+ "\nwhere r._Refs_key = " + key
+				+"\norder by r.symbol, r.assocType";
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				
+				// use super-class translator
+				MGIReferenceAssocDomain superDomain = new MGIReferenceAssocDomain();
+				superDomain = translator.translate(referenceAssocDAO.get(rs.getInt("_assoc_key")));
+				referenceAssocDAO.clear();
+				
+				MGIReferenceMarkerAssocDomain domain = new MGIReferenceMarkerAssocDomain();
+			
+				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);				
+				domain.setAssocKey(superDomain.getAssocKey());
+				domain.setObjectKey(superDomain.getObjectKey());
+				domain.setMgiTypeKey(superDomain.getMgiTypeKey());
+				domain.setRefAssocType(superDomain.getRefAssocType());
+				domain.setRefAssocTypeKey(superDomain.getRefAssocTypeKey());
+				domain.setRefsKey(superDomain.getRefsKey());
+				domain.setModification_date(superDomain.getModification_date());
+				domain.setModifiedBy(superDomain.getModifiedBy());
+				domain.setModifiedByKey(superDomain.getModifiedByKey());
+				
+				// subclass-specific info from SQL query			
+				domain.setMarkerSymbol(rs.getString("symbol"));
+				domain.setMarkerAccID(rs.getString("accID"));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+		
 	@Transactional	
 	public List<MGIReferenceStrainAssocDomain> getStrains(Integer key) {
 		// return list of reference/strain associations for given reference key
@@ -172,6 +223,9 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				domain.setRefAssocType(superDomain.getRefAssocType());
 				domain.setRefAssocTypeKey(superDomain.getRefAssocTypeKey());
 				domain.setRefsKey(superDomain.getRefsKey());
+				domain.setModification_date(superDomain.getModification_date());
+				domain.setModifiedBy(superDomain.getModifiedBy());
+				domain.setModifiedByKey(superDomain.getModifiedByKey());
 				
 				// subclass-specific info from SQL query			
 				domain.setStrainSymbol(rs.getString("strain"));
@@ -186,7 +240,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		
 		return results;
 	}
-	
+		
 	@Transactional
 	public Boolean process(String parentKey, List<MGIReferenceAssocDomain> domain, String mgiTypeKey, User user) {
 		// process reference associations (create, delete, update)
@@ -263,12 +317,13 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		// process reference/allele associations (create, delete, update)
 		// from sub-class (Allele), build super-class and pass to "process()"
 		
-		List<MGIReferenceAssocDomain> listOfSuperDomains = new ArrayList<MGIReferenceAssocDomain>();
-
 		if (domain == null || domain.isEmpty()) {
 			return false;
 		}
-						
+
+		List<MGIReferenceAssocDomain> listOfSuperDomains = new ArrayList<MGIReferenceAssocDomain>();
+		String parentKey = "";		
+
 		// iterate thru the list of rows in the subclass-domain
 		
 		for (int i = 0; i < domain.size(); i++) {		
@@ -283,7 +338,6 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 			listOfSuperDomains.add(superDomain);
 		}
 		
-		String parentKey = "";		
 		return process(parentKey, listOfSuperDomains, "11", user);
 	}
 
@@ -292,12 +346,13 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		// process reference/strain associations (create, delete, update)
 		// from sub-class (Strain), build super-class and pass to "process()"
 		
-		List<MGIReferenceAssocDomain> listOfSuperDomains = new ArrayList<MGIReferenceAssocDomain>();
-
 		if (domain == null || domain.isEmpty()) {
 			return false;
 		}
-						
+	
+		List<MGIReferenceAssocDomain> listOfSuperDomains = new ArrayList<MGIReferenceAssocDomain>();
+		String parentKey = "";		
+
 		// iterate thru the list of rows in the subclass-domain
 		
 		for (int i = 0; i < domain.size(); i++) {		
@@ -312,8 +367,36 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 			listOfSuperDomains.add(superDomain);
 		}
 		
-		String parentKey = "";		
 		return process(parentKey, listOfSuperDomains, "10", user);
+	}
+
+	@Transactional
+	public Boolean processMarkerAssoc(List<MGIReferenceMarkerAssocDomain> domain, User user) {
+		// process reference/strain associations (create, delete, update)
+		// from sub-class (Marker), build super-class and pass to "process()"
+		
+		if (domain == null || domain.isEmpty()) {
+			return false;
+		}
+	
+		List<MGIReferenceAssocDomain> listOfSuperDomains = new ArrayList<MGIReferenceAssocDomain>();
+		String parentKey = "";		
+
+		// iterate thru the list of rows in the subclass-domain
+		
+		for (int i = 0; i < domain.size(); i++) {		
+			MGIReferenceAssocDomain superDomain = new MGIReferenceAssocDomain();
+			superDomain.setProcessStatus(domain.get(i).getProcessStatus());				
+			superDomain.setAssocKey(domain.get(i).getAssocKey());
+			superDomain.setObjectKey(domain.get(i).getObjectKey());
+			superDomain.setMgiTypeKey(domain.get(i).getMgiTypeKey());
+			superDomain.setRefAssocType(domain.get(i).getRefAssocType());
+			superDomain.setRefAssocTypeKey(domain.get(i).getRefAssocTypeKey());
+			superDomain.setRefsKey(domain.get(i).getRefsKey());
+			listOfSuperDomains.add(superDomain);
+		}
+		
+		return process(parentKey, listOfSuperDomains, "2", user);
 	}
 		
 }

@@ -15,5 +15,6 @@ public class SlimMarkerDomain extends BaseDomain {
 	private String markerKey;
 	private String symbol;
     private String chromosome;
+    private String accID;
     
 }

@@ -832,9 +832,13 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			return results;
 		}
 
-		String cmd = "\nselect _marker_key, symbol, chromosome"
-				+ "\nfrom mrk_marker"
-				+ "\nwhere _organism_key = 1"
+		String cmd = "\nselect m._marker_key, m.symbol, m.chromosome, a.accID"
+				+ "\nfrom mrk_marker m, acc_accession a"
+				+ "\nwhere m._organism_key = 1"
+				+ "\nand m._marker_key = a._object_key"
+				+ "\nand a._mgitype_key = 2"
+				+ "\nand a._logicaldb_key = 1"
+				+ "\nand a.preferred = 1"
 				+ "\nand lower(symbol) = '" + value.toLowerCase() + "'";
 		
 		if (allowWithdrawn == false) {
@@ -854,6 +858,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setSymbol(rs.getString("symbol"));
 				domain.setChromosome(rs.getString("chromosome"));
+				domain.setAccID(rs.getString("accID"));
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

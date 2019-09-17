@@ -30,6 +30,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceMarkerAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceStrainAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
@@ -247,6 +248,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		anyChanges = applyWorkflowDataChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyAlleleAssocChanges(entity, domain.getAlleleAssocs(), currentUser) || anyChanges;		
 		anyChanges = applyStrainAssocChanges(entity, domain.getStrainAssocs(), currentUser) || anyChanges;		
+		anyChanges = applyMarkerAssocChanges(entity, domain.getMarkerAssocs(), currentUser) || anyChanges;
 
 		if (anyChanges) {
 			entity.setModificationInfo(currentUser);
@@ -877,6 +879,22 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 		if (domain != null) {
 			if (referenceAssocService.processStrainAssoc(domain, currentUser)) {
+				anyChanges = true;
+			}
+		}
+		
+		return anyChanges;
+	}
+
+	/* apply any changes from domain to entity for the reference/marker associations
+	 */
+	private boolean applyMarkerAssocChanges(LTReference entity, List<MGIReferenceMarkerAssocDomain> domain, User currentUser) {
+		// referenceAssocService will handle add (c), delete (d)
+
+		boolean anyChanges = false;
+
+		if (domain != null) {
+			if (referenceAssocService.processMarkerAssoc(domain, currentUser)) {
 				anyChanges = true;
 			}
 		}

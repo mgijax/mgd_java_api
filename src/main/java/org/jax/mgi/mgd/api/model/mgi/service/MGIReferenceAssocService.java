@@ -246,6 +246,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		// process reference associations (create, delete, update)
 		// if parent is different in each domain row, then set parentKey = null
 		
+		String objectKey = null;
 		Boolean modified = false;
 		
 		if (domain == null || domain.isEmpty()) {
@@ -258,13 +259,16 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
 		
-		for (int i = 0; i < domain.size(); i++) {
+		for (int i = 0; i < domain.size(); i++) {		
 			
 			// if parentKey is null, then use object key 
 			if (parentKey == null || parentKey.isEmpty()) {
-				parentKey = domain.get(i).getObjectKey();
+				objectKey = domain.get(i).getObjectKey();
 			}
-			
+			else {
+				objectKey = parentKey;
+			}
+
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 				// minimum domain info for create:
 				// processStatus (‘c’ for create) , mgiTypeKey, parentKey/objectKey, refsKey, refType (string)
@@ -274,7 +278,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				cmd = "select count(*) from MGI_insertReferenceAssoc ("
 							+ user.get_user_key().intValue()
 							+ "," + mgiTypeKey
-							+ "," + parentKey
+							+ "," + objectKey
 							+ "," + domain.get(i).getRefsKey()
 							+ ",'" + domain.get(i).getRefAssocType() + "'"
 							+ ")";
@@ -296,7 +300,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				cmd = "select count(*) from MGI_updateReferenceAssoc ("
 						+ user.get_user_key().intValue()
 						+ "," + mgiTypeKey
-						+ "," + parentKey
+						+ "," + objectKey
 						+ "," + domain.get(i).getRefsKey()
 						+ "," + domain.get(i).getRefAssocTypeKey()
 						+ "," + domain.get(i).getAssocKey()
@@ -322,7 +326,6 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		}
 
 		List<MGIReferenceAssocDomain> listOfSuperDomains = new ArrayList<MGIReferenceAssocDomain>();
-		String parentKey = "";		
 
 		// iterate thru the list of rows in the subclass-domain
 		
@@ -338,7 +341,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 			listOfSuperDomains.add(superDomain);
 		}
 		
-		return process(parentKey, listOfSuperDomains, "11", user);
+		return process(null, listOfSuperDomains, "11", user);
 	}
 
 	@Transactional
@@ -351,7 +354,6 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		}
 	
 		List<MGIReferenceAssocDomain> listOfSuperDomains = new ArrayList<MGIReferenceAssocDomain>();
-		String parentKey = "";		
 
 		// iterate thru the list of rows in the subclass-domain
 		
@@ -365,9 +367,10 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 			superDomain.setRefAssocTypeKey(domain.get(i).getRefAssocTypeKey());
 			superDomain.setRefsKey(domain.get(i).getRefsKey());
 			listOfSuperDomains.add(superDomain);
+			log.info(domain.get(i).getObjectKey());
 		}
 		
-		return process(parentKey, listOfSuperDomains, "10", user);
+		return process(null, listOfSuperDomains, "10", user);
 	}
 
 	@Transactional
@@ -380,7 +383,6 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		}
 	
 		List<MGIReferenceAssocDomain> listOfSuperDomains = new ArrayList<MGIReferenceAssocDomain>();
-		String parentKey = "";		
 
 		// iterate thru the list of rows in the subclass-domain
 		
@@ -396,7 +398,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 			listOfSuperDomains.add(superDomain);
 		}
 		
-		return process(parentKey, listOfSuperDomains, "2", user);
+		return process(null, listOfSuperDomains, "2", user);
 	}
 		
 }

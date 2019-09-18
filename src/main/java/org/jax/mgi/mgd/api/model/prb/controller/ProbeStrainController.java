@@ -11,7 +11,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeStrainDomain;

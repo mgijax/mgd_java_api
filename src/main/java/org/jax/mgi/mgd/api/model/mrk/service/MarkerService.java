@@ -29,6 +29,7 @@ import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerOfficialChromDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
+import org.jax.mgi.mgd.api.model.mrk.translator.SlimMarkerTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -66,6 +67,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private AnnotationService annotationService;
 
 	private MarkerTranslator translator = new MarkerTranslator();
+	private SlimMarkerTranslator slimtranslator = new SlimMarkerTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -870,6 +872,58 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		return results;
 	}	
 
+	@Transactional	
+	public List<SlimMarkerDomain> validateMarker(SlimMarkerDomain searchDomain) {
+		// use SlimMarkerDomain to return list of validated markers
+		// returns empty list of values if validation fails
+
+		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
+
+		String cmd = "";
+		String select = "select m._marker_key ";
+		String from = "from mrk_marker m";
+		String where = "where m._organism_key = 1"
+				+ "\nand _marker_status_key not in (2,3)";
+		
+		Boolean from_accession = false;
+		
+		if (searchDomain.getSymbol() != null && !searchDomain.getSymbol().isEmpty()) {
+			where = where + "\nand lower(m.symbol) = '" + searchDomain.getSymbol().toLowerCase() + "'" ;
+		}
+		
+		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	
+			where = where + "\nand lower(acc.accID) = '" + searchDomain.getAccID().toLowerCase() + "'";
+			from_accession = true;
+		}
+
+		if (from_accession == true) {
+			from = from + ", mrk_acc_view acc";
+			where = where + "\nand m._marker_key = acc._object_key"
+					+ "\nand acc._mgitype_key = 2"
+					+ "\nand acc._logicaldb_key = 1"
+					+ "\nand acc.preferred = 1";
+		}
+		
+		cmd = "\n" + select + "\n" + from + "\n" + where;
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimMarkerDomain slimdomain = new SlimMarkerDomain();
+				slimdomain = slimtranslator.translate(markerDAO.get(rs.getInt("_marker_key")));				
+				markerDAO.clear();
+				results.add(slimdomain);
+			}
+			sqlExecutor.cleanup();			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
+		
 	@Transactional	
 	public SearchResults<SlimMarkerOfficialChromDomain> validateOfficialChrom(SlimMarkerOfficialChromDomain searchDomain) {
 		// use SlimMarkerOfficialChromDomain to return list of validated markers

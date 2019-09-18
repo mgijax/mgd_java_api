@@ -121,7 +121,23 @@ public class MarkerController extends BaseController<MarkerDomain> {
 			String symbol) {
 		return markerService.validate(symbol, false, false);
 	}
+	
+	@POST
+	@ApiOperation(value = "Validate Marker by Marker Symbol(=) or AccID (=)")
+	@Path("/validateMarker")
+	public List<SlimMarkerDomain> validateMarker(SlimMarkerDomain searchDomain) {
+		
+		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
 
+		try {
+			results = markerService.validateMarker(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 	@POST
 	@ApiOperation(value = "Validate marker symbol/official status/chromosome match/returns slim markeroffsetchrom domain")
 	@Path("/validateOfficialChrom")

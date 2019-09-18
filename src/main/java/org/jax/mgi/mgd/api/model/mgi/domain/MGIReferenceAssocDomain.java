@@ -24,5 +24,5 @@ public class MGIReferenceAssocDomain extends BaseDomain {
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;
-		
+
 }   	

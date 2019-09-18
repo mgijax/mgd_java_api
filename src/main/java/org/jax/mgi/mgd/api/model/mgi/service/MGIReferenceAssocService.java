@@ -367,7 +367,6 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 			superDomain.setRefAssocTypeKey(domain.get(i).getRefAssocTypeKey());
 			superDomain.setRefsKey(domain.get(i).getRefsKey());
 			listOfSuperDomains.add(superDomain);
-			log.info(domain.get(i).getObjectKey());
 		}
 		
 		return process(null, listOfSuperDomains, "10", user);

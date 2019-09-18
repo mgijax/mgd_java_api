@@ -77,12 +77,34 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
    
 		List<SlimProbeStrainDomain> results = new ArrayList<SlimProbeStrainDomain>();
 
-		String cmd = "select s._strain_key "
-				+ "\nfrom prb_strain s"
-				+ "\nwhere s.strain = '" + searchDomain.getStrain() + "'";
+		String cmd = "";
+		String select = "select s._strain_key ";
+		String from = "from prb_strain s";
+		String where = "where s._Strain_key is not null";
 		
-		log.info(cmd);
+		Boolean from_accession = false;
+		
+		if (searchDomain.getStrain() != null && !searchDomain.getStrain().isEmpty()) {
+			where = where + "\nand lower(strain) = '" + searchDomain.getStrain().toLowerCase() + "'" ;
+		}
+		
+		// allele accession id 
+		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {	
+			where = where + "\nand lower(acc.accID) = '" + searchDomain.getMgiAccessionIds().get(0).getAccID().toLowerCase() + "'";
+			from_accession = true;
+		}
 
+		if (from_accession == true) {
+			from = from + ", prb_strain_acc_view acc";
+			where = where + "\nand s._strain_key = acc._object_key" 
+				+ "\nand acc._mgitype_key = 10"
+				+ "\nand acc._logicaldb_key = 1"
+				+ "\nand acc.preferred = 1";		
+		}
+		
+		cmd = "\n" + select + "\n" + from + "\n" + where;
+		log.info(cmd);
+		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {

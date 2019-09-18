@@ -31,6 +31,7 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 	@Inject
 	private GenotypeDAO genotypeDAO;
 
+	@Inject
 	private AnnotationService annotationService;
 	
 	private GenotypeMPTranslator translator = new GenotypeMPTranslator();
@@ -58,10 +59,10 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 		log.info("processGenotypeMP/update");
 
 		// process mp annotations
-		//log.info("process MP annotations");
-		//if (domain.getMpAnnots() != null && !domain.getMpAnnots().isEmpty()) {
-		//	annotationService.process(domain.getMpAnnots(), user);
-		//}
+		log.info("process MP annotations");
+		if (domain.getMpAnnots() != null && !domain.getMpAnnots().isEmpty()) {
+			annotationService.process(domain.getMpAnnots(), user);
+		}
 		
 		// return entity translated to domain
 		log.info("processGenotype/update/returning results");

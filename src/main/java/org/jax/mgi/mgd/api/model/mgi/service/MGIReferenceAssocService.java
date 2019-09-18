@@ -298,7 +298,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 						+ "," + mgiTypeKey
 						+ "," + parentKey
 						+ "," + domain.get(i).getRefsKey()
-						+ ",'" + domain.get(i).getRefAssocType() + "'"
+						+ "," + domain.get(i).getRefAssocTypeKey()
 						+ "," + domain.get(i).getAssocKey()
 						+ ")";
 				log.info("cmd: " + cmd);

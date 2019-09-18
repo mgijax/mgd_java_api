@@ -59,6 +59,9 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 		log.info("processGenotypeMP/update");
 
 		// process mp annotations
+		// sc - 9/18 when uncommented the following 4 lines, had to update GenotypeMPDomain to have a list of 
+		// AnnotationDomains instead of GenotypeMPAnnotationDomains (see that class for further explanation
+		// also updated GenotypeMPTranslator to have an AnnotationTranslator rather than GenotypeMPAnnotationTranslator
 		log.info("process MP annotations");
 		if (domain.getMpAnnots() != null && !domain.getMpAnnots().isEmpty()) {
 			annotationService.process(domain.getMpAnnots(), user);

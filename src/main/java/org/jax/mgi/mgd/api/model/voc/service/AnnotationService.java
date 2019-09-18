@@ -236,6 +236,8 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 		
 				// not all annotation types have evidence records
 				// voc_evidence
+				// here we use an evidenceDAO directly to do evidence create - no need to create a service as
+				// only annotations deal with evidence
 				if (domain.get(i).getEvidence() != null) {
 					Evidence evidenceEntity = new Evidence();
 					evidenceEntity.set_annot_key(entity.get_annot_key());
@@ -292,6 +294,8 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				
 				// not all annotation types have evidence records
 				// voc_evidence
+				// here we use an evidenceDAO directly to do evidence updates - no need to create a service as
+				// only annotations deal with evidence
 				if (domain.get(i).getEvidence() != null) {
 					
 					Evidence evidenceEntity = evidenceDAO.get(Integer.valueOf(domain.get(i).getEvidence().getAnnotEvidenceKey()));

@@ -16,7 +16,9 @@ public class GenotypeMPTranslator extends BaseEntityDomainTranslator<Genotype, G
 
 	protected Logger log = Logger.getLogger(getClass());
 
-	private AccessionTranslator accessionTranslator = new AccessionTranslator();	
+	private AccessionTranslator accessionTranslator = new AccessionTranslator();
+	// sc 9/18 updated this from and GenotypeMPAnnotationTranslator as we changed the GenotypeMPDomain to
+	// have a list of AnnotationDomains instead of GenotypeMPAnnotationDomains
 	private AnnotationTranslator annotTranslator = new AnnotationTranslator();
 	private AnnotationHeaderTranslator annotHeaderTranslator = new AnnotationHeaderTranslator();
 	

@@ -276,12 +276,18 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				// implemented update for:  term only
 				
 				log.info("processAnnotation update");
-
+				
 				Boolean isUpdated = false;
 				Annotation entity = annotationDAO.get(Integer.valueOf(domain.get(i).getAnnotKey()));
+				log.info("qualifier: " + domain.get(i).getQualifier());
 				
+				if (!String.valueOf(entity.getQualifier().get_term_key()).equals(domain.get(i).getQualifierKey())) {
+					log.info("qualifiers are different entity: " + String.valueOf(entity.getQualifier().get_term_key()) + " domain: " + domain.get(i).getQualifierKey());
+					entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
+					isUpdated = true;
+				}
 				if (!String.valueOf(entity.getTerm().get_term_key()).equals(domain.get(i).getTermKey())) {
-					
+				    log.info("terms are different. entity: " + entity.getTerm().get_term_key() + " domain: " + domain.get(i).getTermKey());	
 					entity.setTerm(termDAO.get(Integer.valueOf(domain.get(i).getTermKey())));
 					
 					// null any of the entity fields that are not updated
@@ -299,7 +305,6 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				if (domain.get(i).getEvidence() != null) {
 					
 					Evidence evidenceEntity = evidenceDAO.get(Integer.valueOf(domain.get(i).getEvidence().getAnnotEvidenceKey()));
-				
 					if (!String.valueOf(entity.getEvidences().get(0).getEvidenceTerm().get_term_key()).equals(domain.get(i).getEvidence().getEvidenceTermKey())) {
 						evidenceEntity.setEvidenceTerm(termDAO.get(Integer.valueOf(domain.get(i).getEvidence().getEvidenceTermKey())));
 						isUpdated = true;
@@ -309,10 +314,15 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 						evidenceEntity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getEvidence().getRefsKey())));
 						isUpdated = true;
 					}
-					
-					if (!entity.getEvidences().get(0).getInferredFrom().equals(domain.get(i).getEvidence().getInferredFrom())) {
-						evidenceEntity.setInferredFrom(domain.get(i).getEvidence().getInferredFrom());
-						isUpdated = true;
+					//"message": "java.lang.NullPointerException [AnnotationService.java:313] (null)","status_code": 500
+					// in the swagger log these both report null:
+					log.info("entity inferrred from: " + entity.getEvidences().get(0).getInferredFrom());
+					log.info("domain Inferred from: " + domain.get(i).getEvidence().getInferredFrom());
+					if (entity.getEvidences().get(0).getInferredFrom() != null && domain.get(i).getEvidence().getInferredFrom() != null) {
+						if (!entity.getEvidences().get(0).getInferredFrom().equals(domain.get(i).getEvidence().getInferredFrom())) {
+							evidenceEntity.setInferredFrom(domain.get(i).getEvidence().getInferredFrom());
+							isUpdated = true;
+						}
 					}
 															
 					if (isUpdated == true) {

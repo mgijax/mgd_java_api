@@ -11,7 +11,6 @@ import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBookDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceNoteDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
 import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jboss.logging.Logger;
@@ -22,7 +21,6 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 	
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	private ReferenceNoteTranslator noteTranslator = new ReferenceNoteTranslator();
-	private MGIReferenceAssocTranslator assocTranslator = new MGIReferenceAssocTranslator();
 
 	@Override
 	protected ReferenceDomain entityToDomain(Reference entity) {
@@ -113,12 +111,6 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 			//domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
 	
-		// one-to-many allele associations
-		if (entity.getAlleleAssocs() != null && !entity.getAlleleAssocs().isEmpty()) {
-			Iterable<MGIReferenceAssocDomain> i = assocTranslator.translateEntities(entity.getAlleleAssocs());
-			domain.setAlleleAssocs(IteratorUtils.toList(i.iterator()));
-		}
-		
 		return domain;
 	}
 

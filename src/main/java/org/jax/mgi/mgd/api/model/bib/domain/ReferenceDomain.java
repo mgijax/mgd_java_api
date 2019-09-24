@@ -56,7 +56,10 @@ public class ReferenceDomain extends BaseDomain {
 	//private List<AccessionDomain> mgiAccessionIds;
 	//private List<AccessionDomain> editAccessionIds;
 	
+	// these lists are loaded by the pwi at runtime
 	private List<MGIReferenceAssocDomain> alleleAssocs;
+	private List<MGIReferenceAssocDomain> markerAssocs;
+	private List<MGIReferenceAssocDomain> strainAssocs;
 
 	// ReferenceCitationCache not included in domain at this time 
 }

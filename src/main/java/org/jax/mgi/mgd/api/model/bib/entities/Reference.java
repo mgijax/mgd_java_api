@@ -19,7 +19,6 @@ import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
-import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
@@ -98,13 +97,4 @@ public class Reference extends BaseEntity {
 	@OrderBy(clause ="accid")
 	private List<Accession> editAccessionIds;
 
-	// reference allele associations : alleles (11)
-	@OneToMany()
-	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` in (11)")
-	@OrderBy(clause ="_refassoctype_key")
-	private List<MGIReferenceAssoc> alleleAssocs;
-
-	//markers (2), strains (10)
-	
 }

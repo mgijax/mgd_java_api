@@ -103,6 +103,7 @@ public class NoteService extends BaseService<NoteDomain> {
 	@Transactional
 	public Boolean process(String parentKey, NoteDomain noteDomain, String mgiTypeKey, String noteTypeKey, User user) {
 		// process note by calling stored procedure (create, delete, update)
+	
 		
 		String noteKey = "";
 		String note = "";
@@ -150,7 +151,9 @@ public class NoteService extends BaseService<NoteDomain> {
 		}
 		
 		log.info("note chunk: " + noteDomain.getNoteChunk());
-		
+	    // SHARON: 9/25 updated 'cmd' to use noteDomain.getNoteTypeKey() rather than noteTypeKey coming
+		///        in as parameter. Not sure why there is a parameter when it should be in the domain, right?
+		//         whether it is create OR update.
 		// stored procedure
 		// if noteKey is null, then insert new note
 		// if noteKey is not null and note is null, then delete note
@@ -162,7 +165,7 @@ public class NoteService extends BaseService<NoteDomain> {
 				+ "," + noteKey
 				+ "," + parentKey
 				+ "," + mgiTypeKey
-				+ "," + noteTypeKey
+				+ "," + noteDomain.getNoteTypeKey()
 				+ "," + note
 				+ ")";
 			log.info("cmd: " + cmd);

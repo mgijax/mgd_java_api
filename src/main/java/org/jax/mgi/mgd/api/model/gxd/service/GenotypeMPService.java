@@ -44,7 +44,13 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 	@Transactional
 	public SearchResults<GenotypeMPDomain> create(GenotypeMPDomain domain, User user) {
 		SearchResults<GenotypeMPDomain> results = new SearchResults<GenotypeMPDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		Genotype entity = genotypeDAO.get(Integer.valueOf(domain.getGenotypeKey()));
+		//results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		log.info("processGenotypeMP/create");
+		if (domain.getMpAnnots() != null && !domain.getMpAnnots().isEmpty()) {
+			annotationService.process(domain.getMpAnnots(), user);
+		}
+		results.setItem(translator.translate(entity));
 		return results;
 	}
 	
@@ -62,7 +68,6 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 		// sc - 9/18 when uncommented the following 4 lines, had to update GenotypeMPDomain to have a list of 
 		// AnnotationDomains instead of GenotypeMPAnnotationDomains (see that class for further explanation
 		// also updated GenotypeMPTranslator to have an AnnotationTranslator rather than GenotypeMPAnnotationTranslator
-		log.info("process MP annotations");
 		if (domain.getMpAnnots() != null && !domain.getMpAnnots().isEmpty()) {
 			annotationService.process(domain.getMpAnnots(), user);
 		}
@@ -76,8 +81,11 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 
 	@Transactional
 	public SearchResults<GenotypeMPDomain> delete(Integer key, User user) {
+		log.info("processGenotypeMP/delete");
+		log.info("GenotypeMPService delete key: " + key + " user login: " + user.getLogin());
 		SearchResults<GenotypeMPDomain> results = new SearchResults<GenotypeMPDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		// get and Annotation Service and here ?????
 		return results;
 	}
 	

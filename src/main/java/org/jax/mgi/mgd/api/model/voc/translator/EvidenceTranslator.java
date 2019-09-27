@@ -22,6 +22,7 @@ public class EvidenceTranslator extends BaseEntityDomainTranslator<Evidence, Evi
 		domain.setAnnotKey(String.valueOf(entity.get_annot_key()));
 		domain.setEvidenceTermKey(String.valueOf(entity.getEvidenceTerm().get_term_key()));
 		domain.setEvidenceTerm(entity.getEvidenceTerm().getTerm());
+		domain.setEvidenceAbbreviation(entity.getEvidenceTerm().getAbbreviation());
 		domain.setInferredFrom(entity.getInferredFrom());
 		
 		// reference can be null
@@ -60,7 +61,11 @@ public class EvidenceTranslator extends BaseEntityDomainTranslator<Evidence, Evi
 		// at most one mp-sex-specificity
 		if (entity.getMpSexSpecificity() != null && !entity.getMpSexSpecificity().isEmpty()) {
 			Iterable<EvidencePropertyDomain> property = propertyTranslator.translateEntities(entity.getMpSexSpecificity());
-			domain.setMpSexSpecificity(property.iterator().next());
+			EvidencePropertyDomain propertyDomain = property.iterator().next();
+			domain.setMpSexSpecificity(propertyDomain);
+			domain.setMpSexSpecificityTerm(propertyDomain.getPropertyTerm());
+			domain.setMpSexSpecificityKey(propertyDomain.getPropertyTermKey());
+			
 		}
 				
 		return domain;

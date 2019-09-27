@@ -31,6 +31,7 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
 		domain.setTermKey(String.valueOf(entity.getTerm().get_term_key()));
 		domain.setTerm(entity.getTerm().getTerm());
 		domain.setQualifierKey(String.valueOf(entity.getQualifier().get_term_key()));
+		domain.setQualifierAbbreviation(String.valueOf(entity.getQualifier().getAbbreviation()));
 		domain.setQualifier(entity.getQualifier().getTerm());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));

@@ -19,6 +19,7 @@ import org.jax.mgi.mgd.api.model.voc.dao.EvidenceDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantAnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.EvidenceDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 import org.jax.mgi.mgd.api.model.voc.entities.Evidence;
@@ -232,6 +233,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
 				entity.setCreation_date(new Date());
 				entity.setModification_date(new Date());
+				log.info("AnnotationService persisting Annotation");
 				annotationDAO.persist(entity);
 		
 				// not all annotation types have evidence records
@@ -239,33 +241,39 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				// here we use an evidenceDAO directly to do evidence create - no need to create a service as
 				// only annotations deal with evidence
 				if (domain.get(i).getEvidence() != null) {
-					Evidence evidenceEntity = new Evidence();
-					evidenceEntity.set_annot_key(entity.get_annot_key());
-					evidenceEntity.setEvidenceTerm(termDAO.get(Integer.valueOf(domain.get(i).getEvidence().getEvidenceTermKey())));
-					evidenceEntity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getEvidence().getRefsKey())));
-					evidenceEntity.setInferredFrom(domain.get(i).getEvidence().getInferredFrom());
-					evidenceEntity.setCreatedBy(user);
-					evidenceEntity.setCreation_date(new Date());
-					evidenceEntity.setModifiedBy(user);
-					evidenceEntity.setModification_date(new Date());
-					evidenceDAO.persist(evidenceEntity);
+					List<EvidenceDomain> evidenceList = domain.get(i).getEvidence();
+					for (int j = 0; j < evidenceList.size(); j++) {
+						EvidenceDomain evidenceDomain = evidenceList.get(j);
+						log.info("AnnotationService creating evidence");
+						Evidence evidenceEntity = new Evidence();
+						evidenceEntity.set_annot_key(entity.get_annot_key());
+						evidenceEntity.setEvidenceTerm(termDAO.get(Integer.valueOf(evidenceDomain.getEvidenceTermKey())));
+						evidenceEntity.setReference(referenceDAO.get(Integer.valueOf(evidenceDomain.getRefsKey())));
+						evidenceEntity.setInferredFrom(evidenceDomain.getInferredFrom());
+						evidenceEntity.setCreatedBy(user);
+						evidenceEntity.setCreation_date(new Date());
+						evidenceEntity.setModifiedBy(user);
+						evidenceEntity.setModification_date(new Date());
+						log.info("AnnotationService persisting Evidence");
+						evidenceDAO.persist(evidenceEntity);
 					
-					// evidence notes
-					noteService.process(String.valueOf(evidenceEntity.get_annotevidence_key()), 
-							domain.get(i).getEvidence().getGeneralNote(), mgiTypeKey, "1008", user);
-
-					noteService.process(String.valueOf(evidenceEntity.get_annotevidence_key()), 
-							domain.get(i).getEvidence().getBackgroundSensitivityNote(), mgiTypeKey, "1015", user);
-
-					noteService.process(String.valueOf(evidenceEntity.get_annotevidence_key()), 
-							domain.get(i).getEvidence().getNormalNote(), mgiTypeKey, "1031", user);	
+						// evidence notes
+						noteService.process(String.valueOf(evidenceEntity.get_annotevidence_key()), 
+								evidenceDomain.getGeneralNote(), mgiTypeKey, "1008", user);
+	
+						noteService.process(String.valueOf(evidenceEntity.get_annotevidence_key()), 
+								evidenceDomain.getBackgroundSensitivityNote(), mgiTypeKey, "1015", user);
+	
+						noteService.process(String.valueOf(evidenceEntity.get_annotevidence_key()), 
+								evidenceDomain.getNormalNote(), mgiTypeKey, "1031", user);	
+					}
 				}
 				
 				modified = true;
 				log.info("processAnnotation/create/returning results");				
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-				log.info("processAnnotation delete");
+				log.info("processAnnotation delete using key: " + domain.get(i).getAnnotKey());
 				Annotation entity = annotationDAO.get(Integer.valueOf(domain.get(i).getAnnotKey()));
 				annotationDAO.remove(entity);
 				modified = true;
@@ -303,45 +311,52 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				// here we use an evidenceDAO directly to do evidence updates - no need to create a service as
 				// only annotations deal with evidence
 				if (domain.get(i).getEvidence() != null) {
-					
-					Evidence evidenceEntity = evidenceDAO.get(Integer.valueOf(domain.get(i).getEvidence().getAnnotEvidenceKey()));
-					if (!String.valueOf(entity.getEvidences().get(0).getEvidenceTerm().get_term_key()).equals(domain.get(i).getEvidence().getEvidenceTermKey())) {
-						evidenceEntity.setEvidenceTerm(termDAO.get(Integer.valueOf(domain.get(i).getEvidence().getEvidenceTermKey())));
-						isUpdated = true;
-					}
-					
-					if (!String.valueOf(entity.getEvidences().get(0).getReference().get_refs_key()).equals(domain.get(i).getEvidence().getRefsKey())) {
-						evidenceEntity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getEvidence().getRefsKey())));
-						isUpdated = true;
-					}
-					//"message": "java.lang.NullPointerException [AnnotationService.java:313] (null)","status_code": 500
-					// in the swagger log these both report null:
-					log.info("entity inferrred from: " + entity.getEvidences().get(0).getInferredFrom());
-					log.info("domain Inferred from: " + domain.get(i).getEvidence().getInferredFrom());
-					if (entity.getEvidences().get(0).getInferredFrom() != null && domain.get(i).getEvidence().getInferredFrom() != null) {
-						if (!entity.getEvidences().get(0).getInferredFrom().equals(domain.get(i).getEvidence().getInferredFrom())) {
-							evidenceEntity.setInferredFrom(domain.get(i).getEvidence().getInferredFrom());
+					List<EvidenceDomain> evidenceList = domain.get(i).getEvidence();
+					for (int j = 0; j < evidenceList.size(); j++) {
+						EvidenceDomain evidenceDomain = evidenceList.get(j);
+						Evidence evidenceEntity = evidenceDAO.get(Integer.valueOf(evidenceDomain.getAnnotEvidenceKey()));
+						if (!String.valueOf(entity.getEvidences().get(0).getEvidenceTerm().get_term_key()).equals(evidenceDomain.getEvidenceTermKey())) {
+							evidenceEntity.setEvidenceTerm(termDAO.get(Integer.valueOf(evidenceDomain.getEvidenceTermKey())));
 							isUpdated = true;
 						}
-					}
-															
-					if (isUpdated == true) {
-						evidenceEntity.setModifiedBy(user);
-						evidenceEntity.setModification_date(new Date());
-					}
-					
-					// evidence notes
-					if (noteService.process(String.valueOf(entity.getEvidences().get(0).get_annotevidence_key()), 
-							domain.get(i).getEvidence().getGeneralNote(), mgiTypeKey, "1008", user)) {
-						isUpdated = true;
-					}
-					if (noteService.process(String.valueOf(entity.getEvidences().get(0).get_annotevidence_key()), 
-							domain.get(i).getEvidence().getBackgroundSensitivityNote(), mgiTypeKey, "1015", user)) {
-						isUpdated = true;
-					}
-					if (noteService.process(String.valueOf(entity.getEvidences().get(0).get_annotevidence_key()), 
-							domain.get(i).getEvidence().getNormalNote(), mgiTypeKey, "1031", user)) {
-						isUpdated = true;
+						
+						if (!String.valueOf(entity.getEvidences().get(0).getReference().get_refs_key()).equals(evidenceDomain.getRefsKey())) {
+							evidenceEntity.setReference(referenceDAO.get(Integer.valueOf(evidenceDomain.getRefsKey())));
+							isUpdated = true;
+						}
+						//"message": "java.lang.NullPointerException [AnnotationService.java:313] (null)","status_code": 500
+						// in the swagger log these both report null:
+						log.info("entity inferrred from: " + entity.getEvidences().get(0).getInferredFrom());
+						log.info("domain Inferred from: " + evidenceDomain.getInferredFrom());
+						if (entity.getEvidences().get(0).getInferredFrom() != null && evidenceDomain.getInferredFrom() != null) {
+							if (!entity.getEvidences().get(0).getInferredFrom().equals(evidenceDomain.getInferredFrom())) {
+								evidenceEntity.setInferredFrom(evidenceDomain.getInferredFrom());
+								isUpdated = true;
+							}
+						}
+																
+						if (isUpdated == true) {
+							evidenceEntity.setModifiedBy(user);
+							evidenceEntity.setModification_date(new Date());
+						}
+						
+						// evidence notes
+						log.info("processing annotation notes");
+						if (noteService.process(String.valueOf(entity.getEvidences().get(0).get_annotevidence_key()), 
+								evidenceDomain.getGeneralNote(), mgiTypeKey, "1008", user)) {
+							log.info("general note updated");
+							isUpdated = true;
+						}
+						if (noteService.process(String.valueOf(entity.getEvidences().get(0).get_annotevidence_key()), 
+								evidenceDomain.getBackgroundSensitivityNote(), mgiTypeKey, "1015", user)) {
+							log.info("GB sensitivity not updated");
+							isUpdated = true;
+						}
+						if (noteService.process(String.valueOf(entity.getEvidences().get(0).get_annotevidence_key()), 
+								evidenceDomain.getNormalNote(), mgiTypeKey, "1031", user)) {
+							log.info("NormalNote updated");
+							isUpdated = true;
+						}
 					}
 				}
 				

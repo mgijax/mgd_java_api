@@ -36,8 +36,8 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
 		if (entity.getEvidences() != null && !entity.getEvidences().isEmpty()) {
-			Iterable<EvidenceDomain> i = evidenceTranslator.translateEntities(entity.getEvidences());
-			domain.setEvidence(i.iterator().next());			
+			Iterable<EvidenceDomain> evid = evidenceTranslator.translateEntities(entity.getEvidences());		
+			domain.setEvidence(IteratorUtils.toList(evid.iterator()));
 		}
 
  		if (entity.getMarkerFeatureTypeIds() != null && !entity.getMarkerFeatureTypeIds().isEmpty()) {

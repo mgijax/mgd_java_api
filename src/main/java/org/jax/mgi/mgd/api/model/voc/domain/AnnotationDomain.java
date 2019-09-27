@@ -21,6 +21,7 @@ public class AnnotationDomain extends BaseDomain {
 	private String termKey;
 	private String term;
 	private String qualifierKey;
+	private String qualifierAbbreviation;
 	private String qualifier;
 	private String creation_date;
 	private String modification_date;

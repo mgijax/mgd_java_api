@@ -16,6 +16,7 @@ import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
 import org.jax.mgi.mgd.api.model.gxd.translator.GenotypeMPTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimGenotypeTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.domain.EvidenceDomain;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
@@ -180,19 +181,21 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 			}
 			
 			if (searchDomain.getMpAnnots().get(0).getEvidence() != null) {
-				
+				List<EvidenceDomain> evidenceDomains = searchDomain.getMpAnnots().get(0).getEvidence();
+				// we may have more than one evidence in the list - get values for the first one
+				EvidenceDomain first = evidenceDomains.get(0);
 				String cmResults[] = DateSQLQuery.queryByCreationModification("e", 
-						searchDomain.getMpAnnots().get(0).getEvidence().getCreatedBy(), 
-						searchDomain.getMpAnnots().get(0).getEvidence().getModifiedBy(), 
-						searchDomain.getMpAnnots().get(0).getEvidence().getCreation_date(), 
-						searchDomain.getMpAnnots().get(0).getEvidence().getModification_date());
+						first.getCreatedBy(), 
+						first.getModifiedBy(), 
+						first.getCreation_date(), 
+						first.getModification_date());
 				if (cmResults.length > 0) {
 					from = from + cmResults[0];
 					where = where + cmResults[1];
 					from_evidence = true;
 				}
 				
-				value = searchDomain.getMpAnnots().get(0).getEvidence().getMpSexSpecificity().getValue();
+				value = first.getMpSexSpecificity().getValue();
 				if (value != null && !value.isEmpty()) {
 					where = where + "\nand p.value ilike '" + value + "'";
 					from_evidence = true;
@@ -200,15 +203,15 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 			
 				}
 				
-				value = searchDomain.getMpAnnots().get(0).getEvidence().getEvidenceTermKey();
+				value = first.getEvidenceTermKey();
 				if (value != null && !value.isEmpty()) {
 					where = where + "\nand e.value = " + value;
 					from_evidence = true;			
 				}
 
-				value = searchDomain.getMpAnnots().get(0).getEvidence().getRefsKey();
-				String jnumid = searchDomain.getMpAnnots().get(0).getEvidence().getJnumid();
-				String shortCitation = searchDomain.getMpAnnots().get(0).getEvidence().getShort_citation();				
+				value = searchDomain.getMpAnnots().get(0).getEvidence().get(0).getRefsKey();
+				String jnumid = first.getJnumid();
+				String shortCitation = first.getShort_citation();				
 				if (value != null && !value.isEmpty()) {
 					where = where + "\nand e._Refs_key = " + value;
 					from_evidence = true;

@@ -16,6 +16,7 @@ public class EvidenceDomain extends BaseDomain {
 	private String annotKey;
 	private String evidenceTermKey;
 	private String evidenceTerm;
+	private String evidenceAbbreviation;
 	private String inferredFrom;
 	private String refsKey;
 	private String jnumid;
@@ -27,6 +28,9 @@ public class EvidenceDomain extends BaseDomain {
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;
+	
+	private String mpSexSpecificityKey;
+	private String mpSexSpecificityTerm;
 	
 	private NoteDomain generalNote;
 	private NoteDomain backgroundSensitivityNote;

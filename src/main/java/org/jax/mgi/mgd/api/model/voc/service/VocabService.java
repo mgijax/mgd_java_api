@@ -131,6 +131,22 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
 			where = where + "\nand v.name ilike '" + searchDomain.getName() + "'";
 		}
+		// special list of _vocab_key = 86
+		// HTMP Property->MP-Sex Specificity
+		log.info("searchDomain.getName" + searchDomain.getName() );
+		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
+			if (searchDomain.getName().equals("MP-Sex-Specificity")) {		
+					select = "(select _Vocab_key, _Term_key, 'MP-Sex-Specificity' as name, 'F' as term, 'F' as abbreviation from VOC_Term where _Term_key = 8836535"
+						+ "\nunion"
+						+ "\nselect _Vocab_key, _Term_key, 'MP-Sex-Specificity' as name, 'M' as term, 'M' as abbreviation from VOC_Term where _Term_key = 8836535"
+						+ "\nunion"
+						+ "\nselect _Vocab_key, _Term_key, 'MP-Sex-Specificity' as name, 'NA' as term, 'NA' as abbreviation from VOC_Term where _Term_key = 8836535"						
+						+ ")";
+				from = "";
+				where = "";
+				orderBy = "order by term";				
+			}
+		}
 		
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;

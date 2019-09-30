@@ -163,15 +163,15 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 			if (!mgiid.contains("MGI:")) {
 				mgiid = "MGI:" + mgiid;
 			}
-			where = where + "\nand a.accID ilike '" + mgiid + "'";
+			where = where + "\nand lower(a.accID) = '" + mgiid.toLowerCase() + "'";
 			from_accession = true;
 		}
-		
+		// mp annotations and their evidence and sex specificity property
 		if (searchDomain.getMpAnnots() != null && !searchDomain.getMpAnnots().isEmpty()) {
 	
 			value = searchDomain.getMpAnnots().get(0).getTermKey();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand a._term_key = " + value;
+				where = where + "\nand va._term_key = " + value;
 				from_annot = true;
 			}
 			value = searchDomain.getMpAnnots().get(0).getQualifierKey();
@@ -205,7 +205,7 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 				
 				value = first.getEvidenceTermKey();
 				if (value != null && !value.isEmpty()) {
-					where = where + "\nand e.value = " + value;
+					where = where + "\nand e._evidenceterm_key = " + value;
 					from_evidence = true;			
 				}
 
@@ -223,12 +223,7 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 					}
 					where = where + "\nand e.jnumid = '" + jnumid + "'";
 					from_evidence = true;
-				}
-				if (shortCitation != null && !shortCitation.isEmpty()) {
-					shortCitation = shortCitation.replace("'",  "''");
-					where = where + "\nand e.short_citation ilike '" + shortCitation + "'";
-					from_evidence = true;
-				}				
+				}			
 			}
 		}
 		
@@ -242,15 +237,15 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 					+ "\nand a._mgitype_key = " + mgiTypeKey;
 		}
 		if (from_annot == true) {
-			from = from + ", voc_annot a";
-			where = where + "\nand v._object_key = a._object_key" 
+			from = from + ", voc_annot va";
+			where = where + "\nand v._object_key = va._object_key" 
 					+ "\nand v._logicaldb_key = 1"
 					+ "\nand v.preferred = 1"
-					+ "\nand a._annottype_key = 1002";
+					+ "\nand va._annottype_key = 1002";
 		}
 		if (from_evidence == true) {
 			from = from + ", voc_evidence e";
-			where = where + "\nand a._annot_key = e._annot_key";
+			where = where + "\nand va._annot_key = e._annot_key";
 		}
 		if (from_property == true) {
 			from = from + ", voc_evidence_property p";

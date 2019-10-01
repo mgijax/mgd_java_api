@@ -29,9 +29,6 @@ public class EvidenceDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	
-	private String mpSexSpecificityKey;
-	private String mpSexSpecificityTerm;
-	
 	private NoteDomain generalNote;
 	private NoteDomain backgroundSensitivityNote;
 	private NoteDomain normalNote;

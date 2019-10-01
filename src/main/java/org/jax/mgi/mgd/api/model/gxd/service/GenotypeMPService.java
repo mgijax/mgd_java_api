@@ -180,7 +180,7 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 				from_annot = true;
 			}
 			
-			if (searchDomain.getMpAnnots().get(0).getEvidence() != null) {
+			if (searchDomain.getMpAnnots().get(0).getEvidence() != null && !searchDomain.getMpAnnots().get(0).getEvidence().isEmpty()) {
 				List<EvidenceDomain> evidenceDomains = searchDomain.getMpAnnots().get(0).getEvidence();
 				// we may have more than one evidence in the list - get values for the first one
 				EvidenceDomain first = evidenceDomains.get(0);

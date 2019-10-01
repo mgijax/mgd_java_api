@@ -176,7 +176,7 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 			}
 			value = searchDomain.getMpAnnots().get(0).getQualifierKey();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand a._qualifier_key = " + value;
+				where = where + "\nand va._qualifier_key = " + value;
 				from_annot = true;
 			}
 			
@@ -210,8 +210,7 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 				}
 
 				value = searchDomain.getMpAnnots().get(0).getEvidence().get(0).getRefsKey();
-				String jnumid = first.getJnumid();
-				String shortCitation = first.getShort_citation();				
+				String jnumid = first.getJnumid();		
 				if (value != null && !value.isEmpty()) {
 					where = where + "\nand e._Refs_key = " + value;
 					from_evidence = true;

@@ -179,7 +179,6 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 				where = where + "\nand va._qualifier_key = " + value;
 				from_annot = true;
 			}
-			
 			if (searchDomain.getMpAnnots().get(0).getEvidence() != null && !searchDomain.getMpAnnots().get(0).getEvidence().isEmpty()) {
 				List<EvidenceDomain> evidenceDomains = searchDomain.getMpAnnots().get(0).getEvidence();
 				// we may have more than one evidence in the list - get values for the first one
@@ -195,7 +194,8 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 					from_evidence = true;
 				}
 				
-				if (first.getMpSexSpecificity().getValue() != null ) {
+				if (first.getMpSexSpecificity() != null ) {
+					value = first.getMpSexSpecificity().getValue();
 					where = where + "\nand p.value ilike '" + value + "'";
 					from_evidence = true;
 					from_property = true;

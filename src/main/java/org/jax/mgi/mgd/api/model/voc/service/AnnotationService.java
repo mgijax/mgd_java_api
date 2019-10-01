@@ -226,11 +226,21 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				// database trigger will assign the MGI id/see pgmgddbschema/trigger for details
 
 				// voc_annot
-				Annotation entity = new Annotation();	
-				entity.setAnnotType(annotTypeDAO.get(Integer.valueOf(domain.get(i).getAnnotTypeKey())));				
+				Annotation entity = new Annotation();
+				log.info("got entity");
+				Integer annotTypeKey = Integer.valueOf(domain.get(i).getAnnotTypeKey());
+				log.info("got annotTypeKey");
+				String qualifierKey = domain.get(i).getQualifierKey();
+				log.info("calculating qualifier");
+				// for MP annotations only, set default qualifier to "null"
+				if (annotTypeKey.equals(1002) && qualifierKey == null) {
+					qualifierKey = "2181423";
+				}
+				
+				entity.setAnnotType(annotTypeDAO.get(annotTypeKey));				
 				entity.set_object_key(Integer.valueOf(domain.get(i).getObjectKey()));
 				entity.setTerm(termDAO.get(Integer.valueOf(domain.get(i).getTermKey())));
-				entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
+				entity.setQualifier(termDAO.get(Integer.valueOf(qualifierKey)));
 				entity.setCreation_date(new Date());
 				entity.setModification_date(new Date());
 				log.info("AnnotationService persisting Annotation");
@@ -247,7 +257,13 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 						log.info("AnnotationService creating evidence");
 						Evidence evidenceEntity = new Evidence();
 						evidenceEntity.set_annot_key(entity.get_annot_key());
-						evidenceEntity.setEvidenceTerm(termDAO.get(Integer.valueOf(evidenceDomain.getEvidenceTermKey())));
+						String evidenceTermKey = evidenceDomain.getEvidenceTermKey();
+						log.info("calculating evidence term");
+						// for MP annotations only, set default evidence to "inferred from experiment"
+						if (annotTypeKey.equals(1002) && evidenceTermKey ==  null) {
+							evidenceTermKey = "52280";
+						}
+						evidenceEntity.setEvidenceTerm(termDAO.get(Integer.valueOf(evidenceTermKey)));
 						evidenceEntity.setReference(referenceDAO.get(Integer.valueOf(evidenceDomain.getRefsKey())));
 						evidenceEntity.setInferredFrom(evidenceDomain.getInferredFrom());
 						evidenceEntity.setCreatedBy(user);

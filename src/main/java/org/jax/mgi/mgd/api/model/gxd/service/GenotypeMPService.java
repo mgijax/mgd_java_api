@@ -207,7 +207,7 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 					from_evidence = true;			
 				}
 
-				value = searchDomain.getMpAnnots().get(0).getEvidence().get(0).getRefsKey();
+				value = first.getRefsKey();
 				String jnumid = first.getJnumid();		
 				if (value != null && !value.isEmpty()) {
 					where = where + "\nand e._Refs_key = " + value;

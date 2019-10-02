@@ -110,10 +110,10 @@ public class TermService extends BaseService<TermDomain> {
 //		}
 		
 		// accession id
-//		if (searchDomain.getAccessionIds() != null) {
-//			where = where + "\nand a.accID ilike '" + searchDomain.getAccessionIds().getAccID() + "'";
-//			from_accession = true;
-//		}
+		if (searchDomain.getAccessionIds() != null) {
+			where = where + "\nand lower(a.accID) = lower('" + searchDomain.getAccessionIds().get(0).getAccID() + "')";
+			from_accession = true;
+		}
 		
 		if (from_accession == true) {
 			select = select + ", a.*";
@@ -121,7 +121,10 @@ public class TermService extends BaseService<TermDomain> {
 			where = where + "\nand t._term_key = a._object_key" 
 					+ "\nand a._mgitype_key = 13 and a.preferred = 1";
 		}
-		
+		// include obsolete terms?
+		if(searchDomain.getIncludeObsolete().equals(Boolean.FALSE)) {
+			where = where + "\nand isObsolete != 1";
+		}
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info(cmd);
@@ -144,7 +147,15 @@ public class TermService extends BaseService<TermDomain> {
 	}	
 
 	@Transactional
-	public SearchResults<SlimTermDomain> validateTerm(int vocabKey, String term, Boolean allowObsolete) {
+	public List<TermDomain> validateTerm(TermDomain domain) {
+		// verify that the term is valid for the given vocabulary name
+		// returns empty result items if term does not exist
+		
+		return search(domain);
+	}
+	
+	@Transactional
+	public SearchResults<SlimTermDomain> validateTermSlim(int vocabKey, String term) {
 		// verify that the term is valid for the given vocabulary name
 		// returns empty result items if term does not exist
 	
@@ -154,9 +165,7 @@ public class TermService extends BaseService<TermDomain> {
 				+ "\nfrom voc_term t"
 				+ "\nwhere t._vocab_key = " + vocabKey
 				+ "\nand t.term = '" + term + "'";
-		if (allowObsolete.equals(Boolean.FALSE)) {
-			cmd = cmd + "\nand isObsolete != 1";
-		}
+		
 		log.info(cmd);
 
 		try {
@@ -178,23 +187,11 @@ public class TermService extends BaseService<TermDomain> {
 	
 	
 	@Transactional
-	public SearchResults<SlimTermDomain> validateOfficial(SlimTermDomain domain) {
-		// verify the term is an official term
-		return validateTerm(Integer.parseInt(domain.getVocabKey()), domain.getTerm(), Boolean.FALSE);
-	}
-	
-	@Transactional
-	public SearchResults<SlimTermDomain> validateAny(SlimTermDomain domain) {
-		// verify the term is an term; can be obsolete
-		return validateTerm(Integer.parseInt(domain.getVocabKey()), domain.getTerm(), Boolean.TRUE);
-	}
-	
-	@Transactional
 	public SearchResults<SlimTermDomain> validWorkflowStatus(String status) {
 		// verify that the work flow status is valid
 		// returns empty result items if workflow status does not exist
 		// _vocab_key = 128 ("Workflow Status")
-		return validateTerm(128, status, Boolean.TRUE);
+		return validateTermSlim(128, status);
 	}
 	
 	@Transactional

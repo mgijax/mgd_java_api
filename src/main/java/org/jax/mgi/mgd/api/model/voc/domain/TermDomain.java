@@ -27,6 +27,12 @@ public class TermDomain extends BaseDomain {
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;
+	
 	private List<AccessionDomain> accessionIds;
+	
+	// Added so validators can specify to include obsolete
+	// terms if desired; default is to exclude
+	// this value will be empty coming back out from the Service
+	private Boolean includeObsolete = Boolean.FALSE;
 		
 }

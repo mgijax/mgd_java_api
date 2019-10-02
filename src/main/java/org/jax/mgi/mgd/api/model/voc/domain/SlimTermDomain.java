@@ -10,6 +10,7 @@ import lombok.Setter;
 @ApiModel(value = "Slim Term Domain")
 public class SlimTermDomain extends BaseDomain {
 
+	private String vocabKey;
 	private String termKey;
 	private Integer _term_key;
 	private String term;

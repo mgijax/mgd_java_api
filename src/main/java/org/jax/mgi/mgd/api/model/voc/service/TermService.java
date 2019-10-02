@@ -144,7 +144,7 @@ public class TermService extends BaseService<TermDomain> {
 	}	
 
 	@Transactional
-	public SearchResults<SlimTermDomain> validTerm(int vocabKey, String term) {
+	public SearchResults<SlimTermDomain> validateTerm(int vocabKey, String term, Boolean allowObsolete) {
 		// verify that the term is valid for the given vocabulary name
 		// returns empty result items if term does not exist
 	
@@ -154,6 +154,9 @@ public class TermService extends BaseService<TermDomain> {
 				+ "\nfrom voc_term t"
 				+ "\nwhere t._vocab_key = " + vocabKey
 				+ "\nand t.term = '" + term + "'";
+		if (allowObsolete.equals(Boolean.FALSE)) {
+			cmd = cmd + "\nand isObsolete != 1";
+		}
 		log.info(cmd);
 
 		try {
@@ -172,13 +175,26 @@ public class TermService extends BaseService<TermDomain> {
 		
 		return results;
 	}
-		
+	
+	
+	@Transactional
+	public SearchResults<SlimTermDomain> validateOfficial(SlimTermDomain domain) {
+		// verify the term is an official term
+		return validateTerm(Integer.parseInt(domain.getVocabKey()), domain.getTerm(), Boolean.FALSE);
+	}
+	
+	@Transactional
+	public SearchResults<SlimTermDomain> validateAny(SlimTermDomain domain) {
+		// verify the term is an term; can be obsolete
+		return validateTerm(Integer.parseInt(domain.getVocabKey()), domain.getTerm(), Boolean.TRUE);
+	}
+	
 	@Transactional
 	public SearchResults<SlimTermDomain> validWorkflowStatus(String status) {
 		// verify that the work flow status is valid
 		// returns empty result items if workflow status does not exist
 		// _vocab_key = 128 ("Workflow Status")
-		return validTerm(128, status);
+		return validateTerm(128, status, Boolean.TRUE);
 	}
 	
 	@Transactional

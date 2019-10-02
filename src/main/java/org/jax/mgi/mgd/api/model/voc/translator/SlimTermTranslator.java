@@ -15,6 +15,7 @@ public class SlimTermTranslator extends BaseEntityDomainTranslator<Term, SlimTer
 		domain.set_term_key(entity.get_term_key());
 		domain.setTerm(entity.getTerm());
 		domain.setAbbreviation(entity.getAbbreviation());
+		domain.setVocabKey(entity.get_vocab_key().toString());
 
 		return domain;
 	}

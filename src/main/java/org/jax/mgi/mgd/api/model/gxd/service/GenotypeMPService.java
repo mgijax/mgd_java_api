@@ -190,11 +190,20 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 				
 				if (first.getMpSexSpecificity() != null ) {
 					value = first.getMpSexSpecificity().getPropertyTermKey();
-					where = where + "\nand p._propertyterm_key = " + value;
-					from_evidence = true;
-					from_property = true;
+					if (value != null) {
+						where = where + "\nand p._propertyterm_key = " + value;
+						from_evidence = true;
+						from_property = true;
+					}
 				}
-				
+				if (first.getMpSexSpecificity() != null ) {
+					value = first.getMpSexSpecificity().getValue();
+					if (value != null) {
+						where = where + "\nand p.value ilike '" + value + "'";
+						from_evidence = true;
+						from_property = true;
+					}
+				}
 				value = first.getEvidenceTermKey();
 				if (value != null && !value.isEmpty()) {
 					where = where + "\nand e._evidenceterm_key = " + value;

@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.gxd.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -42,51 +43,44 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 	
 	private String mgiTypeKey = "12";
 	
+		
 	@Transactional
 	public SearchResults<GenotypeMPDomain> create(GenotypeMPDomain domain, User user) {
+		
+		log.info("GenotypeMPService.create");
 		SearchResults<GenotypeMPDomain> results = new SearchResults<GenotypeMPDomain>();
-		Genotype entity = genotypeDAO.get(Integer.valueOf(domain.getGenotypeKey()));
-		//results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
-		log.info("processGenotypeMP/create");
-		if (domain.getMpAnnots() != null && !domain.getMpAnnots().isEmpty()) {
-			annotationService.process(domain.getMpAnnots(), user);
-		}
-		results.setItem(translator.translate(entity));
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		
 		return results;
 	}
 	
 	@Transactional
 	public SearchResults<GenotypeMPDomain> update(GenotypeMPDomain domain, User user) {
-
-		// update existing entity object from in-coming domain
+		
+		log.info("GenotypeMPService.update");
 		
 		SearchResults<GenotypeMPDomain> results = new SearchResults<GenotypeMPDomain>();
 		Genotype entity = genotypeDAO.get(Integer.valueOf(domain.getGenotypeKey()));
-
-		log.info("processGenotypeMP/update");
-
-		// process mp annotations
-		// sc - 9/18 when uncommented the following 4 lines, had to update GenotypeMPDomain to have a list of 
-		// AnnotationDomains instead of GenotypeMPAnnotationDomains (see that class for further explanation
-		// also updated GenotypeMPTranslator to have an AnnotationTranslator rather than GenotypeMPAnnotationTranslator
+		
 		if (domain.getMpAnnots() != null && !domain.getMpAnnots().isEmpty()) {
-			annotationService.process(domain.getMpAnnots(), user);
+			// we don't need to capture the Boolean return value (modified-true/false)
+			// because we don't need to update the genotype modBy/modDate
+			annotationService.process(domain.getMpAnnots(), user);		
 		}
 		
-		// return entity translated to domain
-		log.info("processGenotype/update/returning results");
+		// get the results by translating the entity
 		results.setItem(translator.translate(entity));
-		log.info("processGenotype/update/returned results succsssful");
+		
 		return results;
 	}
 
 	@Transactional
 	public SearchResults<GenotypeMPDomain> delete(Integer key, User user) {
-		log.info("processGenotypeMP/delete");
-		log.info("GenotypeMPService delete key: " + key + " user login: " + user.getLogin());
+		
+		log.info("GenotypeMPService.delete");
 		SearchResults<GenotypeMPDomain> results = new SearchResults<GenotypeMPDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
-		// get and Annotation Service and here ?????
+		
 		return results;
 	}
 	

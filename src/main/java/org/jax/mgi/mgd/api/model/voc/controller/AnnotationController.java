@@ -31,12 +31,12 @@ public class AnnotationController extends BaseController<AnnotationDomain> {
 
 	@Override
 	public SearchResults<AnnotationDomain> create(AnnotationDomain domain, User user) {
-		return null;
+		return annotationService.create(domain, user);
 	}
 
 	@Override
 	public SearchResults<AnnotationDomain> update(AnnotationDomain domain, User user) {
-		return null;
+		return annotationService.update(domain, user);
 	}
 
 	@Override

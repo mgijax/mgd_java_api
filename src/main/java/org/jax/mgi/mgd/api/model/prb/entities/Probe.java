@@ -66,11 +66,11 @@ public class Probe extends BaseEntity {
 	private Accession mgiAccessionId;
 
 	@OneToMany()
-	@JoinColumn(name="_probe_key")
+	@JoinColumn(name="_probe_key", insertable=false, updatable=false)
 	private List<ProbeMarker> probeMarkers;
 	
 	@OneToMany()
-	@JoinColumn(name="_object_key", referencedColumnName="_probe_key")
+	@JoinColumn(name="_object_key", referencedColumnName="_probe_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 3 AND preferred = 1")
 	private List<Accession> allAccessionIds;
 	

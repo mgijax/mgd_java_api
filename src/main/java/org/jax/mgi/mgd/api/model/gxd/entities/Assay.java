@@ -78,12 +78,12 @@ public class Assay extends BaseEntity {
 	private Accession mgiAccessionId;
 
 	@OneToMany()
-	@JoinColumn(name="_assay_key")
+	@JoinColumn(name="_assay_key", insertable=false, updatable=false)
 	@OrderBy("sequenceNum")
 	private List<GelLane> gelLanes;
 	
 	@OneToMany()
-	@JoinColumn(name="_assay_key")
+	@JoinColumn(name="_assay_key", insertable=false, updatable=false)
 	@OrderBy("sequenceNum")
 	private List<Specimen> specimens;
 }

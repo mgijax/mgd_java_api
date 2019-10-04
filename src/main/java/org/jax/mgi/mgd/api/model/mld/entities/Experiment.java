@@ -35,23 +35,23 @@ public class Experiment extends BaseEntity {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_refs_key")
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	private Reference reference;
 
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_expt_key", referencedColumnName="_object_key")
+	@JoinColumn(name="_expt_key", referencedColumnName="_object_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 4 AND preferred = 1 AND `_logicaldb_key` = 1")
 	private Accession mgiAccessionId;
 
 	@OneToMany
-	@JoinColumn(name="_expt_key")
+	@JoinColumn(name="_expt_key", insertable=false, updatable=false)
 	private Set<Hit> hits;
 	
 	@OneToMany
-	@JoinColumn(name="_expt_key")
+	@JoinColumn(name="_expt_key", insertable=false, updatable=false)
 	private Set<ExptMarker> exptMarkers;
 	
 	@OneToMany
-	@JoinColumn(name="_marker_key")
+	@JoinColumn(name="_marker_key", insertable=false, updatable=false)
 	private Set<ExptMarker> expt;
 }

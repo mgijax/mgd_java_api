@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.voc.translator;
 
+import java.util.Comparator;
+
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
@@ -39,6 +41,7 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
 		if (entity.getEvidences() != null && !entity.getEvidences().isEmpty()) {
 			Iterable<EvidenceDomain> evid = evidenceTranslator.translateEntities(entity.getEvidences());		
 			domain.setEvidence(IteratorUtils.toList(evid.iterator()));
+			domain.getEvidence().sort(Comparator.comparing(EvidenceDomain::getJnum, String.CASE_INSENSITIVE_ORDER));			
 		}
 
  		if (entity.getMarkerFeatureTypeIds() != null && !entity.getMarkerFeatureTypeIds().isEmpty()) {

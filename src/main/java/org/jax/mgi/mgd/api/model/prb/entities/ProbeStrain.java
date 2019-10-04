@@ -64,15 +64,15 @@ public class ProbeStrain extends BaseEntity {
 	private List<Accession> mgiAccessionIds;
 	
 	@OneToMany()
-	@JoinColumn(name="_strain_key",insertable=false, updatable=false)
+	@JoinColumn(name="_strain_key", insertable=false, updatable=false)
 	private List<ProbeStrainMarker> probeStrainMarkers;
 	
 	@OneToMany()
-	@JoinColumn(name="_strain_key",insertable=false, updatable=false)
+	@JoinColumn(name="_strain_key", insertable=false, updatable=false)
 	private List<ProbeStrainGenotype> probeStrainGenotypes;
 	
 	@OneToMany()
-	@JoinColumn(name="_object_key", referencedColumnName="_strain_key",insertable=false, updatable=false)
+	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 10")
 	private List<MGISynonym> synonyms;
 	

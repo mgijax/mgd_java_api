@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.gxd.translator;
 
+import java.util.Comparator;
+
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
@@ -42,6 +44,7 @@ public class GenotypeMPTranslator extends BaseEntityDomainTranslator<Genotype, G
 		if (entity.getMpAnnots() != null && !entity.getMpAnnots().isEmpty()) {
 			Iterable<AnnotationDomain> t = annotTranslator.translateEntities(entity.getMpAnnots());
 			domain.setMpAnnots(IteratorUtils.toList(t.iterator()));
+			domain.getMpAnnots().sort(Comparator.comparing(AnnotationDomain::getTerm, String.CASE_INSENSITIVE_ORDER));						
 		}
 		
 		// mp header by genotype

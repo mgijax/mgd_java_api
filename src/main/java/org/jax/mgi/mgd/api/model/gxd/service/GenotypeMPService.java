@@ -2,7 +2,7 @@ package org.jax.mgi.mgd.api.model.gxd.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -131,11 +131,12 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
+		// sc - 10/4/19 removed the 'order by description' as we can't do that using
+		// select "distinct on" because the description is arbitrary
 		String cmd = "";
 		String select = "select distinct on (v._object_key) v._object_key, v.description";
 		String from = "from gxd_genotype_summary_view v";		
-		String where = "where v._mgitype_key = " + mgiTypeKey;
-		//String orderBy = "order by description";			
+		String where = "where v._mgitype_key = " + mgiTypeKey;			
 		String limit = Constants.SEARCH_RETURN_LIMIT;
 		
 		String value;
@@ -252,7 +253,6 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 			where = where + "\nand e._annotevidence_key = p._annotevidence_key";
 		}
 
-		//cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + limit;
 		log.info(cmd);
 
@@ -266,6 +266,9 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();
+			
+			// now we order by description - see note above at first 'select = '
+			results.sort(Comparator.comparing(SlimGenotypeDomain::getGenotypeDisplay, String.CASE_INSENSITIVE_ORDER));
 		}
 		catch (Exception e) {
 			e.printStackTrace();

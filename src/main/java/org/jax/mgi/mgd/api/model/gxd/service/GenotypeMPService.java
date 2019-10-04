@@ -132,10 +132,10 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
-		String select = "select distinct v._object_key, v.description";
+		String select = "select distinct on (v._object_key) v._object_key, v.description";
 		String from = "from gxd_genotype_summary_view v";		
 		String where = "where v._mgitype_key = " + mgiTypeKey;
-		String orderBy = "order by description";			
+		//String orderBy = "order by description";			
 		String limit = Constants.SEARCH_RETURN_LIMIT;
 		
 		String value;
@@ -252,8 +252,8 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 			where = where + "\nand e._annotevidence_key = p._annotevidence_key";
 		}
 
-		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
-	 
+		//cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
+		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + limit;
 		log.info(cmd);
 
 		try {

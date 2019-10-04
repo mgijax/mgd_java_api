@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.voc.domain;
 
+import java.util.List;
+
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 
@@ -29,9 +31,9 @@ public class EvidenceDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	
-	private NoteDomain generalNote;
-	private NoteDomain backgroundSensitivityNote;
-	private NoteDomain normalNote;
+	private List<NoteDomain> generalNote;
+	private List<NoteDomain> backgroundSensitivityNote;
+	private List<NoteDomain> normalNote;
 	private EvidencePropertyDomain mpSexSpecificity;
 	
 }

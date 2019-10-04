@@ -101,6 +101,19 @@ public class NoteService extends BaseService<NoteDomain> {
 	}
 	
 	@Transactional
+	public Boolean process(String parentKey, List<NoteDomain> noteDomains, String mgiTypeKey, String noteTypeKey, User user) {
+		Boolean modified = Boolean.FALSE;
+		for (int i = 0; i < noteDomains.size(); i++) {
+			NoteDomain note = noteDomains.get(i);
+			Boolean m = process(parentKey, note, mgiTypeKey, noteTypeKey, user);
+			if (m.equals(Boolean.TRUE)) {
+				modified = m;
+			}
+		}
+		return modified;
+	}
+		
+	@Transactional
 	public Boolean process(String parentKey, NoteDomain noteDomain, String mgiTypeKey, String noteTypeKey, User user) {
 		// process note by calling stored procedure (create, delete, update)
 	

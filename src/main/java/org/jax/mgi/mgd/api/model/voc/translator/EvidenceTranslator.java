@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.voc.translator;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
@@ -43,19 +44,19 @@ public class EvidenceTranslator extends BaseEntityDomainTranslator<Evidence, Evi
 		// at most one general note
 		if (entity.getGeneralNote() != null && !entity.getGeneralNote().isEmpty()) {
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getGeneralNote());
-			domain.setGeneralNote(note.iterator().next());
+			domain.setGeneralNote(IteratorUtils.toList(note.iterator()));
 		}
 		
 		// at most one background sensivity
 		if (entity.getBackgroundSensitivityNote() != null && !entity.getBackgroundSensitivityNote().isEmpty()) {
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getBackgroundSensitivityNote());
-			domain.setBackgroundSensitivityNote(note.iterator().next());
+			domain.setBackgroundSensitivityNote(IteratorUtils.toList(note.iterator()));
 		}
 		
 		// at most one normal note
 		if (entity.getNormalNote() != null && !entity.getNormalNote().isEmpty()) {
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getNormalNote());
-			domain.setNormalNote(note.iterator().next());
+			domain.setNormalNote(IteratorUtils.toList(note.iterator()));
 		}
 		
 		// at most one mp-sex-specificity

@@ -227,17 +227,27 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 
 				// voc_annot
 				Annotation entity = new Annotation();
-				log.info("got entity");
-				Integer annotTypeKey = Integer.valueOf(domain.get(i).getAnnotTypeKey());
-				log.info("got annotTypeKey");
+				
+				String annotTypeKey = domain.get(i).getAnnotTypeKey();
+				String objectKey = domain.get(i).getObjectKey();
+				String termKey = domain.get(i).getTermKey();
 				String qualifierKey = domain.get(i).getQualifierKey();
+				
 				log.info("calculating qualifier");
 				// for MP annotations only, set default qualifier to "null"
-				if (annotTypeKey.equals(1002) && qualifierKey == null) {
+				if (annotTypeKey.equals("1002") && qualifierKey.isEmpty()) {
 					qualifierKey = "2181423";
 				}
 				
-				entity.setAnnotType(annotTypeDAO.get(annotTypeKey));				
+				// if the annotTypeKey, objectKey, termKey, qualifierKey are ALL null
+				// then simply skip (continue) because the pwi will be sending in a json
+				// string with some empty annotations due to the set number of empty rows
+				// displayed in the module
+				if(annotTypeKey.isEmpty()  && objectKey.isEmpty() && termKey.isEmpty() && qualifierKey.isEmpty()) {
+					continue;
+				}
+				
+				entity.setAnnotType(annotTypeDAO.get(Integer.valueOf(annotTypeKey)));				
 				entity.set_object_key(Integer.valueOf(domain.get(i).getObjectKey()));
 				entity.setTerm(termDAO.get(Integer.valueOf(domain.get(i).getTermKey())));
 				entity.setQualifier(termDAO.get(Integer.valueOf(qualifierKey)));

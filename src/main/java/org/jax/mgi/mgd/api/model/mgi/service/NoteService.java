@@ -103,11 +103,13 @@ public class NoteService extends BaseService<NoteDomain> {
 	@Transactional
 	public Boolean process(String parentKey, List<NoteDomain> noteDomains, String mgiTypeKey, String noteTypeKey, User user) {
 		Boolean modified = Boolean.FALSE;
-		for (int i = 0; i < noteDomains.size(); i++) {
-			NoteDomain note = noteDomains.get(i);
-			Boolean m = process(parentKey, note, mgiTypeKey, noteTypeKey, user);
-			if (m.equals(Boolean.TRUE)) {
-				modified = m;
+		if(noteDomains != null && !noteDomains.isEmpty()) {
+			for (int i = 0; i < noteDomains.size(); i++) {
+				NoteDomain note = noteDomains.get(i);
+				Boolean m = process(parentKey, note, mgiTypeKey, noteTypeKey, user);
+				if (m.equals(Boolean.TRUE)) {
+					modified = m;
+				}
 			}
 		}
 		return modified;

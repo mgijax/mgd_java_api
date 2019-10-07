@@ -151,7 +151,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info(cmd);		
-
+		
 		try {
 			SlimVocabularyDomain domain = new SlimVocabularyDomain();						
 			List<SlimTermDomain> termList = new ArrayList<SlimTermDomain>();
@@ -165,6 +165,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				termDomain.set_term_key(rs.getInt("_term_key"));
 				termDomain.setTerm(rs.getString("term"));
 				termDomain.setAbbreviation(rs.getString("abbreviation"));
+				termDomain.setVocabKey(rs.getString("_vocab_key"));
 				termList.add(termDomain);
 			}
 			

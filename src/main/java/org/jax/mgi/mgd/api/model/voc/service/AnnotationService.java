@@ -289,6 +289,14 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 						evidenceEntity.setModification_date(new Date());
 						evidenceEntity.setModifiedBy(user);
 						
+						// For MP annotations only, set default sex specificity evidence property to "NA"
+						String propertyTermKey = evidenceDomain.getMpSexSpecificity().getValue();
+						if (annotTypeKey.equals("1002") && propertyTermKey == null) {
+							propertyTermKey = "8836535";	
+							List<EvidenceProperty> propertyList = new ArrayList<EvidenceProperty>();
+							propertyList.add(evidencePropertyDAO.get(Integer.valueOf(propertyTermKey)));
+							evidenceEntity.setMpSexSpecificity(propertyList);
+						}
 						log.info("AnnotationService persisting Evidence");
 						evidenceDAO.persist(evidenceEntity);
 					
@@ -300,7 +308,9 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 								evidenceDomain.getBackgroundSensitivityNote(), mgiTypeKey, "1015", user);
 	
 						noteService.process(String.valueOf(evidenceEntity.get_annotevidence_key()), 
-								evidenceDomain.getNormalNote(), mgiTypeKey, "1031", user);	
+								evidenceDomain.getNormalNote(), mgiTypeKey, "1031", user);
+						
+						
 					}
 				}
 				
@@ -366,10 +376,8 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 							evidenceEntity.setReference(referenceDAO.get(Integer.valueOf(evidenceDomain.getRefsKey())));
 							isUpdated = true;
 						}
-						//"message": "java.lang.NullPointerException [AnnotationService.java:313] (null)","status_code": 500
-						// in the swagger log these both report null:
-						log.info("entity inferrred from: " + entity.getEvidences().get(0).getInferredFrom());
-						log.info("domain Inferred from: " + evidenceDomain.getInferredFrom());
+						
+						// check inferred from
 						if (entity.getEvidences().get(0).getInferredFrom() != null && evidenceDomain.getInferredFrom() != null) {
 							if (!entity.getEvidences().get(0).getInferredFrom().equals(evidenceDomain.getInferredFrom())) {
 								evidenceEntity.setInferredFrom(evidenceDomain.getInferredFrom());
@@ -377,28 +385,17 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 							}
 						}
 						
-						// 10/7/ add sex specificity							
-//						EvidencePropertyDomain propertyDomain = evidenceDomain.getMpSexSpecificity();
-//						EvidenceProperty mpSexSpecificityProperty = evidencePropertyDAO.get(Integer.valueOf(propertyDomain.getAnnotevidenceKey()));
-//						
-//						// this is not null:
-//						log.info("propertyDomain: " + propertyDomain);
-//						
-//						// this is 1343110:
-//						log.info("annotEvidKey: " + Integer.valueOf(propertyDomain.getAnnotevidenceKey()));
-//						
-//						// this is null - but it is in the database:
-//						log.info("mpSexSpecificityProperty: " + mpSexSpecificityProperty);
-//						
-//						if (propertyDomain != null && !propertyDomain.getValue().isEmpty() && mpSexSpecificityProperty != null) {
-//							String domainValue = propertyDomain.getValue();
-//							String entityValue = mpSexSpecificityProperty.getValue(); // nul pointer
-//							if(domainValue != entityValue ){
-//								List<EvidenceProperty> evidencePropertyList = new ArrayList<EvidenceProperty>();
-//								evidencePropertyList.add(mpSexSpecificityProperty);
-//								evidenceEntity.setMpSexSpecificity(evidencePropertyList);
-//							}
-//						}
+						// check sex specificity
+						EvidenceProperty evidencePropertyEntity = evidencePropertyDAO.get(Integer.valueOf(evidenceDomain.getMpSexSpecificity().getEvidencePropertyKey()));
+
+						// evidence property/mp-sex-specificity
+						log.info("processing annotation/mp-sex-specificity");
+						if (!entity.getEvidences().get(0).getMpSexSpecificity().get(0).getValue().equals(evidenceDomain.getMpSexSpecificity().getValue())) {
+							evidencePropertyEntity.setValue(evidenceDomain.getMpSexSpecificity().getValue());
+							isUpdated = true;
+						}
+						
+
 						// evidence notes
 						log.info("processing annotation notes");
 						if (noteService.process(String.valueOf(entity.getEvidences().get(0).get_annotevidence_key()), 

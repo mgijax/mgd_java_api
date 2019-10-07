@@ -16,15 +16,19 @@ import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationTypeDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.EvidenceDAO;
+import org.jax.mgi.mgd.api.model.voc.dao.EvidencePropertyDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantAnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidenceDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.EvidencePropertyDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 import org.jax.mgi.mgd.api.model.voc.entities.Evidence;
+import org.jax.mgi.mgd.api.model.voc.entities.EvidenceProperty;
 import org.jax.mgi.mgd.api.model.voc.translator.AlleleVariantAnnotationTranslator;
 import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
+import org.jax.mgi.mgd.api.model.voc.translator.EvidencePropertyTranslator;
 import org.jax.mgi.mgd.api.model.voc.translator.MarkerFeatureTypeTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -41,6 +45,8 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 	@Inject
 	private EvidenceDAO evidenceDAO;
 	@Inject
+	private EvidencePropertyDAO evidencePropertyDAO;
+	@Inject
 	private AnnotationTypeDAO annotTypeDAO;
 	@Inject
 	private TermDAO termDAO;
@@ -52,6 +58,8 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 	private AnnotationTranslator translator = new AnnotationTranslator();
 	private AlleleVariantAnnotationTranslator alleleVariantTranslator = new AlleleVariantAnnotationTranslator();	
 	private MarkerFeatureTypeTranslator markerFeatureTypeTranslator = new MarkerFeatureTypeTranslator();
+	private EvidencePropertyTranslator propertyTranslator = new EvidencePropertyTranslator();
+	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	String mgiTypeKey = "25";
@@ -270,7 +278,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 						String evidenceTermKey = evidenceDomain.getEvidenceTermKey();
 						log.info("calculating evidence term");
 						// for MP annotations only, set default evidence to "inferred from experiment"
-						if (annotTypeKey.equals(1002) && evidenceTermKey ==  null) {
+						if (annotTypeKey.equals("1002") && evidenceTermKey ==  null) {
 							evidenceTermKey = "52280";
 						}
 						evidenceEntity.setEvidenceTerm(termDAO.get(Integer.valueOf(evidenceTermKey)));
@@ -278,8 +286,9 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 						evidenceEntity.setInferredFrom(evidenceDomain.getInferredFrom());
 						evidenceEntity.setCreatedBy(user);
 						evidenceEntity.setCreation_date(new Date());
-						evidenceEntity.setModifiedBy(user);
 						evidenceEntity.setModification_date(new Date());
+						evidenceEntity.setModifiedBy(user);
+						
 						log.info("AnnotationService persisting Evidence");
 						evidenceDAO.persist(evidenceEntity);
 					
@@ -341,6 +350,13 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 					for (int j = 0; j < evidenceList.size(); j++) {
 						EvidenceDomain evidenceDomain = evidenceList.get(j);
 						Evidence evidenceEntity = evidenceDAO.get(Integer.valueOf(evidenceDomain.getAnnotEvidenceKey()));
+						log.info("evidenceDomain processStatus: " + evidenceDomain.getProcessStatus() );
+						if(evidenceDomain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+							evidenceDAO.remove(evidenceEntity);
+							isUpdated = true;
+							log.info("processAnnotation Evidence delete successful");
+							continue;
+						}
 						if (!String.valueOf(entity.getEvidences().get(0).getEvidenceTerm().get_term_key()).equals(evidenceDomain.getEvidenceTermKey())) {
 							evidenceEntity.setEvidenceTerm(termDAO.get(Integer.valueOf(evidenceDomain.getEvidenceTermKey())));
 							isUpdated = true;
@@ -360,12 +376,29 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 								isUpdated = true;
 							}
 						}
-																
-						if (isUpdated == true) {
-							evidenceEntity.setModifiedBy(user);
-							evidenceEntity.setModification_date(new Date());
-						}
 						
+						// 10/7/ add sex specificity							
+//						EvidencePropertyDomain propertyDomain = evidenceDomain.getMpSexSpecificity();
+//						EvidenceProperty mpSexSpecificityProperty = evidencePropertyDAO.get(Integer.valueOf(propertyDomain.getAnnotevidenceKey()));
+//						
+//						// this is not null:
+//						log.info("propertyDomain: " + propertyDomain);
+//						
+//						// this is 1343110:
+//						log.info("annotEvidKey: " + Integer.valueOf(propertyDomain.getAnnotevidenceKey()));
+//						
+//						// this is null - but it is in the database:
+//						log.info("mpSexSpecificityProperty: " + mpSexSpecificityProperty);
+//						
+//						if (propertyDomain != null && !propertyDomain.getValue().isEmpty() && mpSexSpecificityProperty != null) {
+//							String domainValue = propertyDomain.getValue();
+//							String entityValue = mpSexSpecificityProperty.getValue(); // nul pointer
+//							if(domainValue != entityValue ){
+//								List<EvidenceProperty> evidencePropertyList = new ArrayList<EvidenceProperty>();
+//								evidencePropertyList.add(mpSexSpecificityProperty);
+//								evidenceEntity.setMpSexSpecificity(evidencePropertyList);
+//							}
+//						}
 						// evidence notes
 						log.info("processing annotation notes");
 						if (noteService.process(String.valueOf(entity.getEvidences().get(0).get_annotevidence_key()), 

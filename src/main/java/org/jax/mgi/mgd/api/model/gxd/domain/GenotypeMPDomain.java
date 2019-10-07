@@ -14,7 +14,6 @@ import lombok.Setter;
 @Getter @Setter
 public class GenotypeMPDomain extends BaseDomain {
 
-	private String processStatus;
 	private String genotypeKey;
 	private String genotypeDisplay;
 	

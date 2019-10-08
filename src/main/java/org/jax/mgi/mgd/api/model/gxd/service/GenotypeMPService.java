@@ -190,7 +190,8 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 				}
 				
 				if (first.getMpSexSpecificity() != null ) {
-					value = first.getMpSexSpecificity().getPropertyTermKey();
+					//value = first.getMpSexSpecificity().get(0).getPropertyTermKey();
+				
 					if (value != null) {
 						where = where + "\nand p._propertyterm_key = " + value;
 						from_evidence = true;
@@ -198,7 +199,7 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 					}
 				}
 				if (first.getMpSexSpecificity() != null ) {
-					value = first.getMpSexSpecificity().getValue();
+					value = first.getMpSexSpecificity().get(0).getValue();
 					if (value != null) {
 						where = where + "\nand p.value ilike '" + value + "'";
 						from_evidence = true;

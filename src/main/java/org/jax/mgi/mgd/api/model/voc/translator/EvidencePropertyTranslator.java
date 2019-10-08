@@ -13,7 +13,8 @@ public class EvidencePropertyTranslator extends BaseEntityDomainTranslator<Evide
 
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setEvidencePropertyKey(String.valueOf(entity.get_evidenceProperty_key()));
-		domain.setAnnotevidenceKey(String.valueOf(entity.getEvidence().get_annotevidence_key()));
+		
+		domain.setAnnotevidenceKey(String.valueOf(entity.get_annotevidence_key())); 
 		domain.setPropertyTermKey(String.valueOf(entity.getPropertyTerm().get_term_key()));
 		domain.setPropertyTerm(String.valueOf(entity.getPropertyTerm().getTerm()));
 		domain.setStanza(String.valueOf(entity.getStanza()));

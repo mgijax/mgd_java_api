@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
@@ -21,14 +22,12 @@ import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantAnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidenceDomain;
-import org.jax.mgi.mgd.api.model.voc.domain.EvidencePropertyDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 import org.jax.mgi.mgd.api.model.voc.entities.Evidence;
 import org.jax.mgi.mgd.api.model.voc.entities.EvidenceProperty;
 import org.jax.mgi.mgd.api.model.voc.translator.AlleleVariantAnnotationTranslator;
 import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
-import org.jax.mgi.mgd.api.model.voc.translator.EvidencePropertyTranslator;
 import org.jax.mgi.mgd.api.model.voc.translator.MarkerFeatureTypeTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -58,7 +57,6 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 	private AnnotationTranslator translator = new AnnotationTranslator();
 	private AlleleVariantAnnotationTranslator alleleVariantTranslator = new AlleleVariantAnnotationTranslator();	
 	private MarkerFeatureTypeTranslator markerFeatureTypeTranslator = new MarkerFeatureTypeTranslator();
-	private EvidencePropertyTranslator propertyTranslator = new EvidencePropertyTranslator();
 	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
@@ -208,18 +206,17 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 
 		// process annotation associations (create, delete, update)
 		
-		// first pass:  
-		// 1.  only works for voc_annot, voc_evidence
-		//      voc_evidence_property is not included in this pass
-		// 2.  update is modifying _term_key only
-	
+		// Get these two values up front for MP annotations, to call SP later
+		String objectKey = domain.get(0).getObjectKey();
+		String annotTypeKey = domain.get(0).getAnnotTypeKey();
+		
 		Boolean modified = false;
 		
 		if (domain == null || domain.isEmpty()) {
 			log.info("processAnnotation/nothing to process");
 			return modified;
 		}
-						
+		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
 		
@@ -236,8 +233,6 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				// voc_annot
 				Annotation entity = new Annotation();
 				
-				String annotTypeKey = domain.get(i).getAnnotTypeKey();
-				String objectKey = domain.get(i).getObjectKey();
 				String termKey = domain.get(i).getTermKey();
 				String qualifierKey = domain.get(i).getQualifierKey();
 				
@@ -289,16 +284,33 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 						evidenceEntity.setModification_date(new Date());
 						evidenceEntity.setModifiedBy(user);
 						
-						// For MP annotations only, set default sex specificity evidence property to "NA"
-						String propertyTermKey = evidenceDomain.getMpSexSpecificity().getValue();
-						if (annotTypeKey.equals("1002") && propertyTermKey == null) {
-							propertyTermKey = "8836535";	
-							List<EvidenceProperty> propertyList = new ArrayList<EvidenceProperty>();
-							propertyList.add(evidencePropertyDAO.get(Integer.valueOf(propertyTermKey)));
-							evidenceEntity.setMpSexSpecificity(propertyList);
-						}
 						log.info("AnnotationService persisting Evidence");
 						evidenceDAO.persist(evidenceEntity);
+						
+// COMMENTED OUT UNTIL WE PUT AUTO_SEQUENCE on the property table
+//						// For MP annotations, create property
+//						// The property stanza and the sequenceNum will always be 1 
+//						if (annotTypeKey.equals("1002")) {
+//							String sexSpecificity = evidenceDomain.getMpSexSpecificity().getValue();
+//							if (sexSpecificity == null || sexSpecificity.isEmpty()) {
+//								// set sex specificity value to "NA" if not specified by user
+//								sexSpecificity = "NA";
+//							}
+//							EvidenceProperty propertyEntity = new EvidenceProperty();
+//							propertyEntity.set_evidence_key(evidenceEntity.get_annotevidence_key());
+//							propertyEntity.setPropertyTerm(termDAO.get(8836535));
+//							propertyEntity.setValue(sexSpecificity);
+//							propertyEntity.setSequenceNum(Integer.valueOf(1));
+//							propertyEntity.setStanza(Integer.valueOf(1));
+//							propertyEntity.setCreatedBy(user);
+//							propertyEntity.setCreation_date(new Date());
+//							propertyEntity.setModifiedBy(user);
+//							propertyEntity.setModification_date(new Date());
+//							
+//							
+//							log.info("AnnotationService persisting EvidenceProperty");
+//							evidencePropertyDAO.persist(evidenceEntity);
+//						}						
 					
 						// evidence notes
 						noteService.process(String.valueOf(evidenceEntity.get_annotevidence_key()), 
@@ -385,13 +397,13 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 							}
 						}
 						
-						// check sex specificity
-						EvidenceProperty evidencePropertyEntity = evidencePropertyDAO.get(Integer.valueOf(evidenceDomain.getMpSexSpecificity().getEvidencePropertyKey()));
-
+						// check sex specificity, only one
+						EvidenceProperty evidencePropertyEntity = evidencePropertyDAO.get(Integer.valueOf(evidenceDomain.getMpSexSpecificity().get(0).getEvidencePropertyKey()));
+				
 						// evidence property/mp-sex-specificity
 						log.info("processing annotation/mp-sex-specificity");
-						if (!entity.getEvidences().get(0).getMpSexSpecificity().get(0).getValue().equals(evidenceDomain.getMpSexSpecificity().getValue())) {
-							evidencePropertyEntity.setValue(evidenceDomain.getMpSexSpecificity().getValue());
+						if (!entity.getEvidences().get(0).getMpSexSpecificity().get(0).getValue().equals(evidenceDomain.getMpSexSpecificity().get(0).getValue())) {
+							evidencePropertyEntity.setValue(evidenceDomain.getMpSexSpecificity().get(0).getValue());
 							isUpdated = true;
 						}
 						
@@ -423,6 +435,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 					modified = true;
 					log.info("processAnnotation/changes processed: " + domain.get(i).getAnnotKey());
 				}
+				
 				else {
 					log.info("processAnnotation/no changes processed: " + domain.get(i).getAnnotKey());
 				}
@@ -430,8 +443,15 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 			else {
 				log.info("processAnnotation/no changes processed: " + domain.get(i).getAnnotKey());
 			}
+			if(annotTypeKey.equals("1002")) {
+			    String cmd = "select * from VOC_mergeDupAnnotations(1002, " + objectKey + ")";
+			    log.info("cmd: " + cmd);
+			    Query query = annotationDAO.createNativeQuery(cmd);
+			    query.getResultList();
+			}
 		}
 		
+	    	    
 		log.info("processAnnotation/processing successful");
 		return modified;
 	}
@@ -507,5 +527,4 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 		log.info("processAlleleVariant/processing");
 		return process(annotDomains, user);
 	}
-	
 }

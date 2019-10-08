@@ -24,15 +24,12 @@ public class EvidenceProperty extends BaseEntity {
 
 	@Id
 	private int _evidenceProperty_key;
+	private int _annotevidence_key;
 	private Integer stanza;
 	private Integer sequenceNum;
 	private String value;
 	private Date creation_date;
 	private Date modification_date;
-	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_annotevidence_key")
-	private Evidence evidence;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_propertyterm_key", referencedColumnName="_term_key")

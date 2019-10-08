@@ -47,7 +47,7 @@ public class EvidenceTranslator extends BaseEntityDomainTranslator<Evidence, Evi
 			domain.setGeneralNote(IteratorUtils.toList(note.iterator()));
 		}
 		
-		// at most one background sensivity
+		// at most one background sensitivity
 		if (entity.getBackgroundSensitivityNote() != null && !entity.getBackgroundSensitivityNote().isEmpty()) {
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getBackgroundSensitivityNote());
 			domain.setBackgroundSensitivityNote(IteratorUtils.toList(note.iterator()));
@@ -62,8 +62,7 @@ public class EvidenceTranslator extends BaseEntityDomainTranslator<Evidence, Evi
 		// at most one mp-sex-specificity
 		if (entity.getMpSexSpecificity() != null && !entity.getMpSexSpecificity().isEmpty()) {
 			Iterable<EvidencePropertyDomain> property = propertyTranslator.translateEntities(entity.getMpSexSpecificity());
-			EvidencePropertyDomain propertyDomain = property.iterator().next();
-			domain.setMpSexSpecificity(propertyDomain);
+			domain.setMpSexSpecificity(IteratorUtils.toList(property.iterator()));
 		}
 				
 		return domain;

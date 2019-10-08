@@ -131,6 +131,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
 			where = where + "\nand v.name ilike '" + searchDomain.getName() + "'";
 		}
+		
 		// special list of _vocab_key = 86
 		// HTMP Property->MP-Sex Specificity
 		log.info("searchDomain.getName" + searchDomain.getName() );

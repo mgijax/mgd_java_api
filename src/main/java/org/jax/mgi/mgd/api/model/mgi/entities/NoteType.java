@@ -22,19 +22,18 @@ import lombok.Setter;
 @ApiModel(value = "Note Type Object")
 @Table(name="mgi_notetype")
 public class NoteType extends BaseEntity {
+
 	@Id
 	private int _noteType_key;
 	private String noteType;
-	
 	@Column(name="private") // just "private" is a Java reserved word
-	private Integer isPrivate;
-
+	private int isPrivate;
 	private Date creation_date;
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_mgitype_key", referencedColumnName="_mgitype_key")
-	private MGIType mgitype;
+	@JoinColumn(name="_mgitype_key")
+	private MGIType mgiType;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

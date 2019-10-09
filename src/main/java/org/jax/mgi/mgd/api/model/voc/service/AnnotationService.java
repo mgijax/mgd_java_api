@@ -238,8 +238,11 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				
 				log.info("calculating qualifier");
 				// for MP annotations only, set default qualifier to "null"
-				if (annotTypeKey.equals("1002") && qualifierKey.isEmpty()) {
+				if (annotTypeKey.equals("1002")) {
+					
+					if( qualifierKey == null || qualifierKey.isEmpty()) {
 					qualifierKey = "2181423";
+					}
 				}
 				
 				// if the annotTypeKey, objectKey, termKey, qualifierKey are ALL null
@@ -273,8 +276,11 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 						String evidenceTermKey = evidenceDomain.getEvidenceTermKey();
 						log.info("calculating evidence term");
 						// for MP annotations only, set default evidence to "inferred from experiment"
-						if (annotTypeKey.equals("1002") && evidenceTermKey ==  null) {
-							evidenceTermKey = "52280";
+						if (annotTypeKey.equals("1002")) {
+							
+							if(evidenceTermKey ==  null || evidenceTermKey.isEmpty()) {
+									evidenceTermKey = "52280";
+							}
 						}
 						evidenceEntity.setEvidenceTerm(termDAO.get(Integer.valueOf(evidenceTermKey)));
 						evidenceEntity.setReference(referenceDAO.get(Integer.valueOf(evidenceDomain.getRefsKey())));

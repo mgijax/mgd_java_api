@@ -236,15 +236,6 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				String termKey = domain.get(i).getTermKey();
 				String qualifierKey = domain.get(i).getQualifierKey();
 				
-				log.info("calculating qualifier");
-				// for MP annotations only, set default qualifier to "null"
-				if (annotTypeKey.equals("1002")) {
-					
-					if( qualifierKey == null || qualifierKey.isEmpty()) {
-					qualifierKey = "2181423";
-					}
-				}
-				
 				// if the termKey, qualifierKey are ALL null
 				// then simply skip (continue) because the pwi will be sending in a json
 				// string with some empty annotations due to the set number of empty rows
@@ -254,6 +245,16 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				if(termKey.isEmpty() && qualifierKey.isEmpty()) {
 					continue;
 				}
+				
+				log.info("calculating qualifier");
+				// for MP annotations only, set default qualifier to "null"
+				if (annotTypeKey.equals("1002")) {
+					
+					if( qualifierKey == null || qualifierKey.isEmpty()) {
+					    qualifierKey = "2181423";
+					}
+				}
+				
 				
 				entity.setAnnotType(annotTypeDAO.get(Integer.valueOf(annotTypeKey)));				
 				entity.set_object_key(Integer.valueOf(domain.get(i).getObjectKey()));

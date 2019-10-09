@@ -245,11 +245,13 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 					}
 				}
 				
-				// if the annotTypeKey, objectKey, termKey, qualifierKey are ALL null
+				// if the termKey, qualifierKey are ALL null
 				// then simply skip (continue) because the pwi will be sending in a json
 				// string with some empty annotations due to the set number of empty rows
 				// displayed in the module
-				if(annotTypeKey.isEmpty()  && objectKey.isEmpty() && termKey.isEmpty() && qualifierKey.isEmpty()) {
+				// NOTE: The PWI automatically fills in annotTypeKey, objectKey even in the 
+				// blank rows
+				if(termKey.isEmpty() && qualifierKey.isEmpty()) {
 					continue;
 				}
 				

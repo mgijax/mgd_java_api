@@ -444,14 +444,13 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				log.info("processAnnotation/no changes processed: " + domain.get(i).getAnnotKey());
 			}
 			
-			// now merge any duplicate annotations that were created by the API when adding evidence
-		    String cmd = "select count(*) from VOC_mergeDupAnnotations(" + annotTypeKey + ", " + objectKey + ")";
-		    log.info("cmd: " + cmd);
-		    Query query = annotationDAO.createNativeQuery(cmd);
-		    query.getResultList();
-		
-		}
-		
+		}	
+			
+		// now merge any duplicate annotations that were created by the API when adding evidence
+	    String cmd = "select count(*) from VOC_mergeDupAnnotations(" + annotTypeKey + ", " + objectKey + ")";
+	    log.info("cmd: " + cmd);
+	    Query query = annotationDAO.createNativeQuery(cmd);
+	    query.getResultList();	
 	    	    
 		log.info("processAnnotation/processing successful");
 		return modified;

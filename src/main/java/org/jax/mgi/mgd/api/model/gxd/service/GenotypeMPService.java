@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
@@ -68,6 +69,7 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 			annotationService.process(domain.getMpAnnots(), user);		
 		}
 		
+		log.info("get the results by translating the entity");
 		// get the results by translating the entity
 		results.setItem(translator.translate(entity));
 		

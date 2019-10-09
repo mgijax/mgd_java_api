@@ -377,62 +377,68 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				// here we use an evidenceDAO directly to do evidence updates - no need to create a service as
 				// only annotations deal with evidence
 				if (domain.get(i).getEvidence() != null) {
-					List<EvidenceDomain> evidenceList = domain.get(i).getEvidence();
+
+					List<EvidenceDomain> evidenceList = domain.get(i).getEvidence();						
+					
 					for (int j = 0; j < evidenceList.size(); j++) {
+
 						EvidenceDomain evidenceDomain = evidenceList.get(j);
 						Evidence evidenceEntity = evidenceDAO.get(Integer.valueOf(evidenceDomain.getAnnotEvidenceKey()));
 						log.info("evidenceDomain processStatus: " + evidenceDomain.getProcessStatus() );
+					
 						if(evidenceDomain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 							evidenceDAO.remove(evidenceEntity);
 							isUpdated = true;
 							log.info("processAnnotation Evidence delete successful");
-							continue;
-						}
-						if (!String.valueOf(entity.getEvidences().get(0).getEvidenceTerm().get_term_key()).equals(evidenceDomain.getEvidenceTermKey())) {
-							evidenceEntity.setEvidenceTerm(termDAO.get(Integer.valueOf(evidenceDomain.getEvidenceTermKey())));
-							isUpdated = true;
 						}
 						
-						if (!String.valueOf(entity.getEvidences().get(0).getReference().get_refs_key()).equals(evidenceDomain.getRefsKey())) {
-							evidenceEntity.setReference(referenceDAO.get(Integer.valueOf(evidenceDomain.getRefsKey())));
-							isUpdated = true;
-						}
-						
-						// check inferred from
-						if (entity.getEvidences().get(0).getInferredFrom() != null && evidenceDomain.getInferredFrom() != null) {
-							if (!entity.getEvidences().get(0).getInferredFrom().equals(evidenceDomain.getInferredFrom())) {
-								evidenceEntity.setInferredFrom(evidenceDomain.getInferredFrom());
+						else if(evidenceDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+
+							if (!String.valueOf(evidenceEntity.getEvidenceTerm().get_term_key()).equals(evidenceDomain.getEvidenceTermKey())) {
+								evidenceEntity.setEvidenceTerm(termDAO.get(Integer.valueOf(evidenceDomain.getEvidenceTermKey())));
 								isUpdated = true;
 							}
-						}
 						
-//						// check sex specificity, only one
-//						EvidenceProperty evidencePropertyEntity = evidencePropertyDAO.get(Integer.valueOf(evidenceDomain.getMpSexSpecificity().get(0).getEvidencePropertyKey()));
-//				
-//						// evidence property/mp-sex-specificity
-//						log.info("processing annotation/mp-sex-specificity");
-//						if (!entity.getEvidences().get(0).getMpSexSpecificity().get(0).getValue().equals(evidenceDomain.getMpSexSpecificity().get(0).getValue())) {
-//							evidencePropertyEntity.setValue(evidenceDomain.getMpSexSpecificity().get(0).getValue());
-//							isUpdated = true;
-//						}
+							if (!String.valueOf(evidenceEntity.getReference().get_refs_key()).equals(evidenceDomain.getRefsKey())) {
+								evidenceEntity.setReference(referenceDAO.get(Integer.valueOf(evidenceDomain.getRefsKey())));
+								isUpdated = true;
+							}
 						
-
-						// evidence notes
-						log.info("processing annotation notes");
-						if (noteService.process(String.valueOf(entity.getEvidences().get(0).get_annotevidence_key()), 
-								evidenceDomain.getGeneralNote(), mgiTypeKey, "1008", user)) {
-							log.info("general note updated");
-							isUpdated = true;
-						}
-						if (noteService.process(String.valueOf(entity.getEvidences().get(0).get_annotevidence_key()), 
-								evidenceDomain.getBackgroundSensitivityNote(), mgiTypeKey, "1015", user)) {
-							log.info("GB sensitivity not updated");
-							isUpdated = true;
-						}
-						if (noteService.process(String.valueOf(entity.getEvidences().get(0).get_annotevidence_key()), 
-								evidenceDomain.getNormalNote(), mgiTypeKey, "1031", user)) {
-							log.info("NormalNote updated");
-							isUpdated = true;
+							// check inferred from
+							if (evidenceEntity.getInferredFrom() != null && evidenceDomain.getInferredFrom() != null) {
+								if (!evidenceEntity.getInferredFrom().equals(evidenceDomain.getInferredFrom())) {
+									evidenceEntity.setInferredFrom(evidenceDomain.getInferredFrom());
+									isUpdated = true;
+								}
+							}
+						
+	//						// check sex specificity, only one
+	//						EvidenceProperty evidencePropertyEntity = evidencePropertyDAO.get(Integer.valueOf(evidenceDomain.getMpSexSpecificity().get(0).getEvidencePropertyKey()));
+	//				
+	//						// evidence property/mp-sex-specificity
+	//						log.info("processing annotation/mp-sex-specificity");
+	//						if (!evidenceEntity.getMpSexSpecificity().get(0).getValue().equals(evidenceDomain.getMpSexSpecificity().get(0).getValue())) {
+	//							evidencePropertyEntity.setValue(evidenceDomain.getMpSexSpecificity().get(0).getValue());
+	//							isUpdated = true;
+	//						}
+							
+							// evidence notes
+//							log.info("processing annotation notes");
+//							if (noteService.process(String.valueOf(entity.getEvidences().get(j).get_annotevidence_key()), 
+//									evidenceDomain.getGeneralNote(), mgiTypeKey, "1008", user)) {
+//								log.info("general note updated");
+//								isUpdated = true;
+//							}
+//							if (noteService.process(String.valueOf(entity.getEvidences().get(j).get_annotevidence_key()), 
+//									evidenceDomain.getBackgroundSensitivityNote(), mgiTypeKey, "1015", user)) {
+//								log.info("GB sensitivity not updated");
+//								isUpdated = true;
+//							}
+//							if (noteService.process(String.valueOf(entity.getEvidences().get(j).get_annotevidence_key()), 
+//									evidenceDomain.getNormalNote(), mgiTypeKey, "1031", user)) {
+//								log.info("NormalNote updated");
+//								isUpdated = true;
+//							}
 						}
 					}
 				}
@@ -440,7 +446,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				// if any modifications made, then update DAO
 				if (isUpdated) {
 					entity.setModification_date(new Date());
-					annotationDAO.persist(entity);
+					annotationDAO.update(entity);
 					modified = true;
 					log.info("processAnnotation/changes processed: " + domain.get(i).getAnnotKey());
 				}

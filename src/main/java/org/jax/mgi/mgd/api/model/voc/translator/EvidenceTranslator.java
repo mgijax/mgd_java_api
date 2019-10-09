@@ -8,9 +8,12 @@ import org.jax.mgi.mgd.api.model.voc.domain.EvidenceDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidencePropertyDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Evidence;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jboss.logging.Logger;
 
 public class EvidenceTranslator extends BaseEntityDomainTranslator<Evidence, EvidenceDomain> {
 	
+	protected Logger log = Logger.getLogger(getClass());
+
 	private NoteTranslator noteTranslator = new NoteTranslator();		
 	private EvidencePropertyTranslator propertyTranslator = new EvidencePropertyTranslator();
 	

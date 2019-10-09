@@ -43,7 +43,7 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
 			domain.setEvidence(IteratorUtils.toList(evid.iterator()));
 			domain.getEvidence().sort(Comparator.comparing(EvidenceDomain::getJnum, String.CASE_INSENSITIVE_ORDER));			
 		}
-
+		
  		if (entity.getMarkerFeatureTypeIds() != null && !entity.getMarkerFeatureTypeIds().isEmpty()) {
  			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getMarkerFeatureTypeIds());
  			domain.setMarkerFeatureTypes(IteratorUtils.toList(acc.iterator()));

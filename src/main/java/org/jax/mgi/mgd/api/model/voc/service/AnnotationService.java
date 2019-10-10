@@ -405,15 +405,13 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 								}
 							}
 						
-	//						// check sex specificity, only one
-	//						EvidenceProperty evidencePropertyEntity = evidencePropertyDAO.get(Integer.valueOf(evidenceDomain.getMpSexSpecificity().get(0).getEvidencePropertyKey()));
-	//				
-	//						// evidence property/mp-sex-specificity
-	//						log.info("processing annotation/mp-sex-specificity");
-	//						if (!evidenceEntity.getMpSexSpecificity().get(0).getValue().equals(evidenceDomain.getMpSexSpecificity().get(0).getValue())) {
-	//							evidencePropertyEntity.setValue(evidenceDomain.getMpSexSpecificity().get(0).getValue());
-	//							isUpdated = true;
-	//						}
+							// evidence property/mp-sex-specificity; only one
+							log.info("processAnnotation/mp-sex-specificity");
+							EvidenceProperty evidencePropertyEntity = evidencePropertyDAO.get(Integer.valueOf(evidenceDomain.getMpSexSpecificity().get(0).getEvidencePropertyKey()));					
+							if (!evidenceEntity.getMpSexSpecificity().get(0).getValue().equals(evidenceDomain.getMpSexSpecificity().get(0).getValue())) {
+								evidencePropertyEntity.setValue(evidenceDomain.getMpSexSpecificity().get(0).getValue());
+								isUpdated = true;
+							}
 							
 							// evidence notes
 							log.info("processing annotation notes");

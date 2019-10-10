@@ -297,29 +297,29 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 						evidenceDAO.persist(evidenceEntity);
 						
 // COMMENTED OUT UNTIL WE PUT AUTO_SEQUENCE on the property table
-//						// For MP annotations, create property
-//						// The property stanza and the sequenceNum will always be 1 
-//						if (annotTypeKey.equals("1002")) {
-//							String sexSpecificity = evidenceDomain.getMpSexSpecificity().getValue();
-//							if (sexSpecificity == null || sexSpecificity.isEmpty()) {
-//								// set sex specificity value to "NA" if not specified by user
-//								sexSpecificity = "NA";
-//							}
-//							EvidenceProperty propertyEntity = new EvidenceProperty();
-//							propertyEntity.set_evidence_key(evidenceEntity.get_annotevidence_key());
-//							propertyEntity.setPropertyTerm(termDAO.get(8836535));
-//							propertyEntity.setValue(sexSpecificity);
-//							propertyEntity.setSequenceNum(Integer.valueOf(1));
-//							propertyEntity.setStanza(Integer.valueOf(1));
-//							propertyEntity.setCreatedBy(user);
-//							propertyEntity.setCreation_date(new Date());
-//							propertyEntity.setModifiedBy(user);
-//							propertyEntity.setModification_date(new Date());
-//							
-//							
-//							log.info("AnnotationService persisting EvidenceProperty");
-//							evidencePropertyDAO.persist(evidenceEntity);
-//						}						
+						// For MP annotations, create property
+						// The property stanza and the sequenceNum will always be 1 
+						if (annotTypeKey.equals("1002")) {
+							String sexSpecificity = evidenceDomain.getMpSexSpecificity().get(0).getValue();
+							if (sexSpecificity == null || sexSpecificity.isEmpty()) {
+								// set sex specificity value to "NA" if not specified by user
+								sexSpecificity = "NA";
+							}
+							EvidenceProperty propertyEntity = new EvidenceProperty();
+							propertyEntity.set_annotevidence_key(evidenceEntity.get_annotevidence_key());
+							propertyEntity.setPropertyTerm(termDAO.get(8836535));
+							propertyEntity.setValue(sexSpecificity);
+							propertyEntity.setSequenceNum(Integer.valueOf(1));
+							propertyEntity.setStanza(Integer.valueOf(1));
+							propertyEntity.setCreatedBy(user);
+							propertyEntity.setCreation_date(new Date());
+							propertyEntity.setModifiedBy(user);
+							propertyEntity.setModification_date(new Date());
+							
+							
+							log.info("AnnotationService persisting EvidenceProperty");
+							evidencePropertyDAO.persist(propertyEntity);
+						}						
 					
 						// evidence notes
 						noteService.processAll(String.valueOf(evidenceEntity.get_annotevidence_key()), 

@@ -322,16 +322,9 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 //						}						
 					
 						// evidence notes
-						noteService.process(String.valueOf(evidenceEntity.get_annotevidence_key()), 
-								evidenceDomain.getGeneralNote(), mgiTypeKey, "1008", user);
-	
-						noteService.process(String.valueOf(evidenceEntity.get_annotevidence_key()), 
-								evidenceDomain.getBackgroundSensitivityNote(), mgiTypeKey, "1015", user);
-	
-						noteService.process(String.valueOf(evidenceEntity.get_annotevidence_key()), 
-								evidenceDomain.getNormalNote(), mgiTypeKey, "1031", user);
-						
-						
+						noteService.processAll(String.valueOf(evidenceEntity.get_annotevidence_key()), 
+								evidenceDomain.getAllNotes(), mgiTypeKey, user);
+							
 					}
 				}
 				
@@ -423,22 +416,13 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 	//						}
 							
 							// evidence notes
-//							log.info("processing annotation notes");
-//							if (noteService.process(String.valueOf(entity.getEvidences().get(j).get_annotevidence_key()), 
-//									evidenceDomain.getGeneralNote(), mgiTypeKey, "1008", user)) {
-//								log.info("general note updated");
-//								isUpdated = true;
-//							}
-//							if (noteService.process(String.valueOf(entity.getEvidences().get(j).get_annotevidence_key()), 
-//									evidenceDomain.getBackgroundSensitivityNote(), mgiTypeKey, "1015", user)) {
-//								log.info("GB sensitivity not updated");
-//								isUpdated = true;
-//							}
-//							if (noteService.process(String.valueOf(entity.getEvidences().get(j).get_annotevidence_key()), 
-//									evidenceDomain.getNormalNote(), mgiTypeKey, "1031", user)) {
-//								log.info("NormalNote updated");
-//								isUpdated = true;
-//							}
+							log.info("processing annotation notes");
+							if (noteService.processAll(String.valueOf(entity.getEvidences().get(j).get_annotevidence_key()), 
+									evidenceDomain.getAllNotes(), mgiTypeKey,  user)) {
+								log.info("all note updated");
+								isUpdated = true;
+							}
+							
 						}
 					}
 				}

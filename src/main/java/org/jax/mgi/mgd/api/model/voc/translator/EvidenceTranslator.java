@@ -44,22 +44,10 @@ public class EvidenceTranslator extends BaseEntityDomainTranslator<Evidence, Evi
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));		
 			
-		// at most one general note
-		if (entity.getGeneralNote() != null && !entity.getGeneralNote().isEmpty()) {
-			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getGeneralNote());
-			domain.setGeneralNote(IteratorUtils.toList(note.iterator()));
-		}
-		
-		// at most one background sensitivity
-		if (entity.getBackgroundSensitivityNote() != null && !entity.getBackgroundSensitivityNote().isEmpty()) {
-			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getBackgroundSensitivityNote());
-			domain.setBackgroundSensitivityNote(IteratorUtils.toList(note.iterator()));
-		}
-		
-		// at most one normal note
-		if (entity.getNormalNote() != null && !entity.getNormalNote().isEmpty()) {
-			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getNormalNote());
-			domain.setNormalNote(IteratorUtils.toList(note.iterator()));
+		// notes
+		if (entity.getAllNotes() != null && !entity.getAllNotes().isEmpty()) {
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getAllNotes());
+			domain.setAllNotes(IteratorUtils.toList(note.iterator()));
 		}
 		
 		// at most one mp-sex-specificity

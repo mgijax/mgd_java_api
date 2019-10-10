@@ -100,12 +100,15 @@ public class NoteService extends BaseService<NoteDomain> {
 		return results;
 	}
 	
+	
 	@Transactional
-	public Boolean process(String parentKey, List<NoteDomain> noteDomains, String mgiTypeKey, String noteTypeKey, User user) {
+	public Boolean processAll(String parentKey, List<NoteDomain> noteDomains, String mgiTypeKey, User user) {
 		Boolean modified = Boolean.FALSE;
+		log.info("NoteService processAll");
 		if(noteDomains != null && !noteDomains.isEmpty()) {
 			for (int i = 0; i < noteDomains.size(); i++) {
 				NoteDomain note = noteDomains.get(i);
+				String noteTypeKey = note.getNoteTypeKey();
 				Boolean m = process(parentKey, note, mgiTypeKey, noteTypeKey, user);
 				if (m.equals(Boolean.TRUE)) {
 					modified = m;
@@ -119,7 +122,7 @@ public class NoteService extends BaseService<NoteDomain> {
 	public Boolean process(String parentKey, NoteDomain noteDomain, String mgiTypeKey, String noteTypeKey, User user) {
 		// process note by calling stored procedure (create, delete, update)
 	
-		
+		log.info("NoteService process");
 		String noteKey = "";
 		String note = "";
 		
@@ -146,29 +149,32 @@ public class NoteService extends BaseService<NoteDomain> {
 		// create
 		if (noteDomain.getNoteKey() == null || noteDomain.getNoteKey().isEmpty())
 		{
+			log.info("NoteService create");
 			noteKey = "null";
 			modified = true;
 		}
 		// delete
 		else if (noteDomain.getNoteChunk() == null || noteDomain.getNoteChunk().isEmpty())
 		{
+			log.info("NoteService delete");
 			noteKey = noteDomain.getNoteKey().toString();		
 			note = null;
 			modified = true;
 		}
 		// update
 		else {
+			
 			Note entity = noteDAO.get(Integer.valueOf(noteDomain.getNoteKey()));
 			if (!entity.getNoteChunk().getNote().equals(noteDomain.getNoteChunk())) {
+				log.info("NoteService update");
 				noteKey = noteDomain.getNoteKey().toString();
 				modified = true;
 			}
 		}
 		
-		log.info("note chunk: " + noteDomain.getNoteChunk());
 	    // SHARON: 9/25 updated 'cmd' to use noteDomain.getNoteTypeKey() rather than noteTypeKey coming
 		///        in as parameter. Not sure why there is a parameter when it should be in the domain, right?
-		//         whether it is create OR update.
+		//         whether it is create OR update.1
 		// stored procedure
 		// if noteKey is null, then insert new note
 		// if noteKey is not null and note is null, then delete note

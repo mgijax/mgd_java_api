@@ -66,19 +66,8 @@ public class Evidence extends BaseEntity {
 	// General
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_annotevidence_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 25 and `_notetype_key` = 1008")
-	private List<Note> generalNote;
+	@Where(clause="`_mgitype_key` = 25")
+	private List<Note> allNotes;
 
-	// Background Sensitivity
-	@OneToMany()
-	@JoinColumn(name="_object_key", referencedColumnName="_annotevidence_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 25 and `_notetype_key` = 1015")
-	private List<Note> backgroundSensitivityNote;
-	
-	// Normal
-	@OneToMany()
-	@JoinColumn(name="_object_key", referencedColumnName="_annotevidence_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 25 and `_notetype_key` = 1031")
-	private List<Note> normalNote;
 	
 }

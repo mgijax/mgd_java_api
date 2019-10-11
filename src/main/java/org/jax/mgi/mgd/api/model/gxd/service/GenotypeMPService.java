@@ -128,7 +128,6 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 	@Transactional	
 	public List<SlimGenotypeDomain> search(GenotypeMPDomain searchDomain) {
 		// using searchDomain fields, generate SQL command
-		
 		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
 
 		// building SQL command : select + from + where + orderBy
@@ -191,8 +190,8 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 					from_evidence = true;
 				}
 				
-				if (first.getMpSexSpecificity() != null ) {
-					//value = first.getMpSexSpecificity().get(0).getPropertyTermKey();
+				if (first.getMpSexSpecificity() != null && !first.getMpSexSpecificity().isEmpty() ) {
+					value = first.getMpSexSpecificity().get(0).getPropertyTermKey();
 				
 					if (value != null) {
 						where = where + "\nand p._propertyterm_key = " + value;
@@ -200,7 +199,7 @@ public class GenotypeMPService extends BaseService<GenotypeMPDomain> {
 						from_property = true;
 					}
 				}
-				if (first.getMpSexSpecificity() != null ) {
+				if (first.getMpSexSpecificity() != null && !first.getMpSexSpecificity().isEmpty()) {
 					value = first.getMpSexSpecificity().get(0).getValue();
 					if (value != null) {
 						where = where + "\nand p.value ilike '" + value + "'";

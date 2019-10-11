@@ -296,30 +296,31 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 						log.info("AnnotationService persisting Evidence");
 						evidenceDAO.persist(evidenceEntity);
 						
-// COMMENTED OUT UNTIL WE PUT AUTO_SEQUENCE on the property table
 						// For MP annotations, create property
 						// The property stanza and the sequenceNum will always be 1 
-						if (annotTypeKey.equals("1002")) {
-							String sexSpecificity = evidenceDomain.getMpSexSpecificity().get(0).getValue();
-							if (sexSpecificity == null || sexSpecificity.isEmpty()) {
+						String sexSpecificity;
+						if (annotTypeKey.equals("1002") && (evidenceDomain.getMpSexSpecificity() == null || evidenceDomain.getMpSexSpecificity().isEmpty())) {
+								
 								// set sex specificity value to "NA" if not specified by user
 								sexSpecificity = "NA";
-							}
-							EvidenceProperty propertyEntity = new EvidenceProperty();
-							propertyEntity.set_annotevidence_key(evidenceEntity.get_annotevidence_key());
-							propertyEntity.setPropertyTerm(termDAO.get(8836535));
-							propertyEntity.setValue(sexSpecificity);
-							propertyEntity.setSequenceNum(Integer.valueOf(1));
-							propertyEntity.setStanza(Integer.valueOf(1));
-							propertyEntity.setCreatedBy(user);
-							propertyEntity.setCreation_date(new Date());
-							propertyEntity.setModifiedBy(user);
-							propertyEntity.setModification_date(new Date());
-							
-							
-							log.info("AnnotationService persisting EvidenceProperty");
-							evidencePropertyDAO.persist(propertyEntity);
-						}						
+						}
+						else {
+							sexSpecificity = evidenceDomain.getMpSexSpecificity().get(0).getValue();
+						}
+						EvidenceProperty propertyEntity = new EvidenceProperty();
+						propertyEntity.set_annotevidence_key(evidenceEntity.get_annotevidence_key());
+						propertyEntity.setPropertyTerm(termDAO.get(8836535));
+						propertyEntity.setValue(sexSpecificity);
+						propertyEntity.setSequenceNum(Integer.valueOf(1));
+						propertyEntity.setStanza(Integer.valueOf(1));
+						propertyEntity.setCreatedBy(user);
+						propertyEntity.setCreation_date(new Date());
+						propertyEntity.setModifiedBy(user);
+						propertyEntity.setModification_date(new Date());
+						
+						
+						log.info("AnnotationService persisting EvidenceProperty");
+						evidencePropertyDAO.persist(propertyEntity);					
 					
 						// evidence notes
 						noteService.processAll(String.valueOf(evidenceEntity.get_annotevidence_key()), 
@@ -450,7 +451,12 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 	    log.info("cmd: " + cmd);
 	    Query query = annotationDAO.createNativeQuery(cmd);
 	    query.getResultList();	
-	    	    
+	    
+	    // determine and order MP Headers 
+	    // if (annotTypeKey.equals("1002")) { 
+	    // cmd = "select count(*) from  VOC_processAnnotHeader(" + user  + ", " + annotTypeKey+ ", " + objectKey+ ")";
+	    //}
+	    
 		log.info("processAnnotation/processing successful");
 		return modified;
 	}

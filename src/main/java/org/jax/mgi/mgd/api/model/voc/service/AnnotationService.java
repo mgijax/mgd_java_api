@@ -269,21 +269,25 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				// here we use an evidenceDAO directly to do evidence create - no need to create a service as
 				// only annotations deal with evidence
 				if (domain.get(i).getEvidence() != null) {
+
 					List<EvidenceDomain> evidenceList = domain.get(i).getEvidence();
+
 					for (int j = 0; j < evidenceList.size(); j++) {
+	
 						EvidenceDomain evidenceDomain = evidenceList.get(j);
 						log.info("AnnotationService creating evidence");
 						Evidence evidenceEntity = new Evidence();
 						evidenceEntity.set_annot_key(entity.get_annot_key());
 						String evidenceTermKey = evidenceDomain.getEvidenceTermKey();
 						log.info("calculating evidence term");
+
 						// for MP annotations only, set default evidence to "inferred from experiment"
 						if (annotTypeKey.equals("1002")) {
-							
 							if(evidenceTermKey ==  null || evidenceTermKey.isEmpty()) {
 									evidenceTermKey = "52280";
 							}
 						}
+	
 						evidenceEntity.setEvidenceTerm(termDAO.get(Integer.valueOf(evidenceTermKey)));
 						evidenceEntity.setReference(referenceDAO.get(Integer.valueOf(evidenceDomain.getRefsKey())));
 						evidenceEntity.setInferredFrom(evidenceDomain.getInferredFrom());
@@ -295,17 +299,18 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 						log.info("AnnotationService persisting Evidence");
 						evidenceDAO.persist(evidenceEntity);
 						
-						// For MP annotations, create property
+						// for MP annotations only, set default sex-specificity to "NA"
 						// The property stanza and the sequenceNum will always be 1 
 						String sexSpecificity;
-						if (annotTypeKey.equals("1002") && (evidenceDomain.getMpSexSpecificity() == null || evidenceDomain.getMpSexSpecificity().isEmpty())) {
-								
-								// set sex specificity value to "NA" if not specified by user
+						if (annotTypeKey.equals("1002")) {
+							if(evidenceDomain.getMpSexSpecificity() == null || evidenceDomain.getMpSexSpecificity().isEmpty()) {		
+						}
 								sexSpecificity = "NA";
 						}
 						else {
 							sexSpecificity = evidenceDomain.getMpSexSpecificity().get(0).getValue();
 						}
+						
 						EvidenceProperty propertyEntity = new EvidenceProperty();
 						propertyEntity.set_annotevidence_key(evidenceEntity.get_annotevidence_key());
 						propertyEntity.setPropertyTerm(termDAO.get(8836535));

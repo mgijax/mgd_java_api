@@ -254,8 +254,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 					    qualifierKey = "2181423";
 					}
 				}
-				
-				
+					
 				entity.setAnnotType(annotTypeDAO.get(Integer.valueOf(annotTypeKey)));				
 				entity.set_object_key(Integer.valueOf(domain.get(i).getObjectKey()));
 				entity.setTerm(termDAO.get(Integer.valueOf(domain.get(i).getTermKey())));
@@ -317,7 +316,6 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 						propertyEntity.setCreation_date(new Date());
 						propertyEntity.setModifiedBy(user);
 						propertyEntity.setModification_date(new Date());
-						
 						
 						log.info("AnnotationService persisting EvidenceProperty");
 						evidencePropertyDAO.persist(propertyEntity);					
@@ -424,6 +422,10 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 								isUpdated = true;
 							}
 							
+							if (isUpdated) {
+								evidenceEntity.setModification_date(new Date());
+								evidenceEntity.setModifiedBy(user);								
+							}
 						}
 					}
 				}

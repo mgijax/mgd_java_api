@@ -12,7 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeMPDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeMPDenormDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.GenotypeMPService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "Genotype MP Annotations Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class GenotypeMPController extends BaseController<GenotypeMPDomain> {
+public class GenotypeMPController extends BaseController<GenotypeMPDenormDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
 	ObjectMapper mapper = new ObjectMapper();
@@ -40,42 +40,42 @@ public class GenotypeMPController extends BaseController<GenotypeMPDomain> {
 	// for example, the mgi accession id is created by a database trigger
 	
 	@Override
-	public SearchResults<GenotypeMPDomain> create(GenotypeMPDomain domain, User user) {	
-		SearchResults<GenotypeMPDomain> results = new SearchResults<GenotypeMPDomain>();
+	public SearchResults<GenotypeMPDenormDomain> create(GenotypeMPDenormDomain domain, User user) {	
+		SearchResults<GenotypeMPDenormDomain> results = new SearchResults<GenotypeMPDenormDomain>();
 		results = genotypeMPService.create(domain, user);
 		results = genotypeMPService.getResults(Integer.valueOf(results.items.get(0).getGenotypeKey()));
 		return results;
 	}
 
 	@Override
-	public SearchResults<GenotypeMPDomain> update(GenotypeMPDomain domain, User user) {
-		SearchResults<GenotypeMPDomain> results = new SearchResults<GenotypeMPDomain>();
+	public SearchResults<GenotypeMPDenormDomain> update(GenotypeMPDenormDomain domain, User user) {
+		SearchResults<GenotypeMPDenormDomain> results = new SearchResults<GenotypeMPDenormDomain>();
 		results = genotypeMPService.update(domain, user);
 		results = genotypeMPService.getResults(Integer.valueOf(results.items.get(0).getGenotypeKey()));
 		return results;	
 	}
 
 	@Override
-	public GenotypeMPDomain get(Integer genotypeKey) {
+	public GenotypeMPDenormDomain get(Integer genotypeKey) {
 		return genotypeMPService.get(genotypeKey);
 	}
 
 	@Override
-	public SearchResults<GenotypeMPDomain> delete(Integer key, User user) {
+	public SearchResults<GenotypeMPDenormDomain> delete(Integer key, User user) {
 		return genotypeMPService.delete(key, user);
 	}
 
 	@GET
 	@ApiOperation(value = "Get the object count from voc_annot table where _annottype_key = 1002")
 	@Path("/getObjectCount")
-	public SearchResults<GenotypeMPDomain> getObjectCount() {
+	public SearchResults<GenotypeMPDenormDomain> getObjectCount() {
 		return genotypeMPService.getObjectCount();
 	}
 		
 	@POST
 	@ApiOperation(value = "Search/returns slim genotype domain")
 	@Path("/search")
-	public List<SlimGenotypeDomain> search(GenotypeMPDomain searchDomain) {
+	public List<SlimGenotypeDomain> search(GenotypeMPDenormDomain searchDomain) {
 	
 		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
 

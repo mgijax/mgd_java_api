@@ -63,11 +63,13 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 			mpDomain.setMpHeaders(domain.getMpHeaders());
 			
 			if (domain.getMpAnnots() != null) {
+				
+				int row = 0;
+
 				for (int i = 0; i < domain.getMpAnnots().size(); i++) {
 	
 					// annotation (term, qualifier)
 					AnnotationDomain annotDomain = domain.getMpAnnots().get(i);
-					int row = 0;
 	
 					// evidence
 					for (int j = 0; j < domain.getMpAnnots().get(i).getEvidence().size(); j++) {
@@ -219,7 +221,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 			// add sex-specificity to the evidenceDomain
 			evidenceDomain.setMpSexSpecificity(evidencePropertyList);
 
-			//  add evidenceDomain to evidenceList
+			// add evidenceDomain to evidenceList
 			evidenceList.add(evidenceDomain);
 
 			// add evidenceList to annotDomain

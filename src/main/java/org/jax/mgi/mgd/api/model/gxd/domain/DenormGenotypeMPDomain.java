@@ -16,6 +16,6 @@ public class DenormGenotypeMPDomain extends BaseDomain {
 	private String genotypeDisplay;
 	private String accid;
 	private List<AnnotationMPDomain> mpAnnots;
-	//private List<AnnotationHeaderDomain> mpHeaders;
+	private List<AnnotationHeaderDomain> mpHeaders;
 	
 }

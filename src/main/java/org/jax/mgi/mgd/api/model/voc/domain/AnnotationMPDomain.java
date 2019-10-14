@@ -1,6 +1,9 @@
 package org.jax.mgi.mgd.api.model.voc.domain;
 
+import java.util.List;
+
 import org.jax.mgi.mgd.api.model.BaseDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -45,4 +48,7 @@ public class AnnotationMPDomain extends BaseDomain {
 	private String propertyTermKey;
 	private String mpSexSpecificityValue;
 	
+	// all notes for given evidence
+	private List<NoteDomain> allNotes;
+
 }

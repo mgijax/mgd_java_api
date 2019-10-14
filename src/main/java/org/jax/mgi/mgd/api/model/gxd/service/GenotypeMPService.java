@@ -60,6 +60,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 			mpDomain.setGenotypeKey(domain.getGenotypeKey());
 			mpDomain.setGenotypeDisplay(domain.getGenotypeDisplay());
 			mpDomain.setAccid(domain.getMgiAccessionIds().get(0).getAccID());
+			mpDomain.setMpHeaders(domain.getMpHeaders());
 			
 			if (domain.getMpAnnots() != null) {
 				for (int i = 0; i < domain.getMpAnnots().size(); i++) {
@@ -102,6 +103,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 		                annotMPDomain.setModifiedBy(evidenceDomain.getModifiedBy());
 						annotMPDomain.setCreation_date(evidenceDomain.getCreation_date());
 						annotMPDomain.setModification_date(evidenceDomain.getModification_date());
+						annotMPDomain.setAllNotes(evidenceDomain.getAllNotes());
 						
 						// evidence-property : sex-specificity
 						EvidencePropertyDomain evidencePropertyDomain = evidenceDomain.getMpSexSpecificity().get(0);
@@ -153,6 +155,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 
     	mpDomain.setGenotypeKey(domain.getGenotypeKey());
 		//mpDomain.setGenotypeDisplay(domain.getGenotypeDisplay());
+    	mpDomain.setMpHeaders(domain.getMpHeaders());
 		
     	// incoming denormalized MP json domain
 		for (int i = 0; i < domain.getMpAnnots().size(); i++) {
@@ -201,6 +204,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
             evidenceDomain.setRefsKey(annotMPDomain.getRefsKey());
             evidenceDomain.setCreatedByKey(annotMPDomain.getCreatedByKey());
             evidenceDomain.setModifiedByKey(annotMPDomain.getModifiedByKey());
+            evidenceDomain.setAllNotes(annotMPDomain.getAllNotes());
 			
 			// sex-specificity : create evidence-property list of 1 result
             //log.info("add evidence-property");

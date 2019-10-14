@@ -436,8 +436,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 					annotationDAO.update(entity);
 					modified = true;
 					log.info("processAnnotation/changes processed: " + domain.get(i).getAnnotKey());
-				}
-				
+				}	
 				else {
 					log.info("processAnnotation/no changes processed: " + domain.get(i).getAnnotKey());
 				}

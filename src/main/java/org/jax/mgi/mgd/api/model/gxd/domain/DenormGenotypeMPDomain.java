@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class GenotypeMPDenormDomain extends BaseDomain {
+public class DenormGenotypeMPDomain extends BaseDomain {
 
 	private String genotypeKey;
 	private String genotypeDisplay;

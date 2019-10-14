@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter @Setter
 @ApiModel(value = "Annotation MP (denormalized) Domain")
 public class AnnotationMPDomain extends BaseDomain {
-	// works with the GenotypeMPDenormDomain
+	// works with the DenormGenotypeMPDomain
 	
 	private String processStatus;
 	private String row;

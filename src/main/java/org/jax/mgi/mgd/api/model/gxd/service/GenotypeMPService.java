@@ -11,7 +11,7 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
-import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeMPDenormDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.DenormGenotypeMPDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeMPDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.translator.GenotypeMPTranslator;
@@ -29,7 +29,7 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
 @RequestScoped
-public class GenotypeMPService extends BaseService<GenotypeMPDenormDomain> {
+public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
 
@@ -47,10 +47,10 @@ public class GenotypeMPService extends BaseService<GenotypeMPDenormDomain> {
 	private String mgiTypeKey = "12";
 
 	@Transactional
-	public GenotypeMPDenormDomain get(Integer key) {
+	public DenormGenotypeMPDomain get(Integer key) {
     	// get the DAO/entity and translate -> domain -> MP denormalized domain
 
-		GenotypeMPDenormDomain mpDomain = new GenotypeMPDenormDomain();
+		DenormGenotypeMPDomain mpDomain = new DenormGenotypeMPDomain();
 
     	try {
         	GenotypeMPDomain domain = new GenotypeMPDomain();   		
@@ -126,23 +126,23 @@ public class GenotypeMPService extends BaseService<GenotypeMPDenormDomain> {
 	}
 
 	@Transactional
-	public SearchResults<GenotypeMPDenormDomain> getResults(Integer key) {
+	public SearchResults<DenormGenotypeMPDomain> getResults(Integer key) {
 		// get the denormalized domain -> results
-		SearchResults<GenotypeMPDenormDomain> results = new SearchResults<GenotypeMPDenormDomain>();
+		SearchResults<DenormGenotypeMPDomain> results = new SearchResults<DenormGenotypeMPDomain>();
 		results.setItem(get(key));
 		return results;
 	}
 		
 	@Transactional
-	public SearchResults<GenotypeMPDenormDomain> create(GenotypeMPDenormDomain domain, User user) {	
+	public SearchResults<DenormGenotypeMPDomain> create(DenormGenotypeMPDomain domain, User user) {	
 		log.info("GenotypeMPService.create");
-		SearchResults<GenotypeMPDenormDomain> results = new SearchResults<GenotypeMPDenormDomain>();
+		SearchResults<DenormGenotypeMPDomain> results = new SearchResults<DenormGenotypeMPDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);	
 		return results;
 	}
 	
 	@Transactional
-	public SearchResults<GenotypeMPDenormDomain> update(GenotypeMPDenormDomain domain, User user) {
+	public SearchResults<DenormGenotypeMPDomain> update(DenormGenotypeMPDomain domain, User user) {
 		// translate pwi/incoming denormlized json domain to list of normalied domain (GenotypeMPDomain)
 		// use normalized domain to process hibernate entities
 		
@@ -221,25 +221,25 @@ public class GenotypeMPService extends BaseService<GenotypeMPDenormDomain> {
 		}
 		
 		log.info("repackage incoming domain as results");		
-		SearchResults<GenotypeMPDenormDomain> results = new SearchResults<GenotypeMPDenormDomain>();
+		SearchResults<DenormGenotypeMPDomain> results = new SearchResults<DenormGenotypeMPDomain>();
 		results.setItem(domain);
 		log.info("results: " + results);
 		return results;
 	}
 
 	@Transactional
-	public SearchResults<GenotypeMPDenormDomain> delete(Integer key, User user) {
+	public SearchResults<DenormGenotypeMPDomain> delete(Integer key, User user) {
 		log.info("GenotypeMPService.delete");
-		SearchResults<GenotypeMPDenormDomain> results = new SearchResults<GenotypeMPDenormDomain>();
+		SearchResults<DenormGenotypeMPDomain> results = new SearchResults<DenormGenotypeMPDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
 	}
 	
 	@Transactional	
-	public SearchResults<GenotypeMPDenormDomain> getObjectCount() {
+	public SearchResults<DenormGenotypeMPDomain> getObjectCount() {
 		// return the object count from the database
 		
-		SearchResults<GenotypeMPDenormDomain> results = new SearchResults<GenotypeMPDenormDomain>();
+		SearchResults<DenormGenotypeMPDomain> results = new SearchResults<DenormGenotypeMPDomain>();
 		String cmd = "select count(*) as objectCount from voc_annot where _annottype_key = 1002";
 		
 		try {
@@ -257,7 +257,7 @@ public class GenotypeMPService extends BaseService<GenotypeMPDenormDomain> {
 	}
 	
 	@Transactional	
-	public List<SlimGenotypeDomain> search(GenotypeMPDenormDomain searchDomain) {
+	public List<SlimGenotypeDomain> search(DenormGenotypeMPDomain searchDomain) {
 		// using searchDomain fields, generate SQL command
 		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
 

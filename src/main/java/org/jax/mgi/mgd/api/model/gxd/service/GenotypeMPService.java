@@ -66,12 +66,16 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 				
 				for (int i = 0; i < domain.getMpAnnots().size(); i++) {
 	
+					log.info("domain.getMpAnnots.row: " + i);
+					
 					// annotation (term, qualifier)
 					AnnotationDomain annotDomain = domain.getMpAnnots().get(i);
 	
 					// evidence
 					for (int j = 0; j < domain.getMpAnnots().get(i).getEvidence().size(); j++) {
 	
+						log.info("domain.getMpAnnots.getEvidence.row: " + j);
+
 						// annotation (term, qualifier)
 						AnnotationMPDomain annotMPDomain = new AnnotationMPDomain();
 						annotMPDomain.setProcessStatus(annotDomain.getProcessStatus());
@@ -117,6 +121,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 
 			// add all annotResults to the mpDomain
 			mpDomain.setMpAnnots(annotList);
+			annotList.sort(Comparator.comparing(AnnotationMPDomain::getJnum).thenComparing(AnnotationMPDomain::getTerm));				
     	}
 		catch (Exception e) {
 			e.printStackTrace();

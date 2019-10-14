@@ -169,6 +169,11 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 			// annotation (term, qualifier)
 			AnnotationDomain annotDomain = new AnnotationDomain();
 			
+			//
+			// if processStatus == "d", then process as "u"
+			// 1 annotation may have >= 1 evidence
+			// 1 evidence may be a "d", bu the other evidence may be "x", "u" or "c"
+			//
 			if (domain.getMpAnnots().get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				annotDomain.setProcessStatus(Constants.PROCESS_UPDATE);
 			}

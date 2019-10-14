@@ -66,7 +66,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 				
 				for (int i = 0; i < domain.getMpAnnots().size(); i++) {
 	
-					log.info("domain.getMpAnnots.row: " + i);
+					//log.info("domain.getMpAnnots.row: " + i);
 					
 					// annotation (term, qualifier)
 					AnnotationDomain annotDomain = domain.getMpAnnots().get(i);
@@ -74,7 +74,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 					// evidence
 					for (int j = 0; j < domain.getMpAnnots().get(i).getEvidence().size(); j++) {
 	
-						log.info("domain.getMpAnnots.getEvidence.row: " + j);
+						//log.info("domain.getMpAnnots.getEvidence.row: " + j);
 
 						// annotation (term, qualifier)
 						AnnotationMPDomain annotMPDomain = new AnnotationMPDomain();

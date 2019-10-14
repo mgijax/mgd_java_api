@@ -64,8 +64,6 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 			
 			if (domain.getMpAnnots() != null) {
 				
-				int row = 0;
-
 				for (int i = 0; i < domain.getMpAnnots().size(); i++) {
 	
 					// annotation (term, qualifier)
@@ -77,7 +75,6 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 						// annotation (term, qualifier)
 						AnnotationMPDomain annotMPDomain = new AnnotationMPDomain();
 						annotMPDomain.setProcessStatus(annotDomain.getProcessStatus());
-						annotMPDomain.setRow(String.valueOf(row));
 	                    annotMPDomain.setAnnotKey(annotDomain.getAnnotKey());
 	                    annotMPDomain.setAnnotTypeKey(annotDomain.getAnnotTypeKey());
 	                    annotMPDomain.setAnnotType(annotDomain.getAnnotType());
@@ -114,7 +111,6 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 						annotMPDomain.setMpSexSpecificityValue(evidencePropertyDomain.getValue());
 						
 						annotList.add(annotMPDomain);
-						row += 1;
 					}
 				}
 			}

@@ -15,7 +15,6 @@ public class AnnotationMPDomain extends BaseDomain {
 	// works with the DenormGenotypeMPDomain
 	
 	private String processStatus;
-	private String row;
 	private String annotKey;
 	private String annotTypeKey;
 	private String annotType;

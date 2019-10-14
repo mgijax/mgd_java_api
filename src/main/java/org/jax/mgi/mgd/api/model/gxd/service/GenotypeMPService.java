@@ -168,7 +168,14 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 		
 			// annotation (term, qualifier)
 			AnnotationDomain annotDomain = new AnnotationDomain();
-			annotDomain.setProcessStatus(Constants.PROCESS_UPDATE);
+			
+			if (domain.getMpAnnots().get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+				annotDomain.setProcessStatus(Constants.PROCESS_UPDATE);
+			}
+			else {
+				annotDomain.setProcessStatus(annotMPDomain.getProcessStatus());
+			}
+			
             annotDomain.setAnnotKey(annotMPDomain.getAnnotKey());
             annotDomain.setAnnotTypeKey(annotMPDomain.getAnnotTypeKey());
             annotDomain.setAnnotType(annotMPDomain.getAnnotType());

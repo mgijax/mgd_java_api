@@ -329,21 +329,27 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 				where = where + "\nand va._qualifier_key = " + value;
 				from_annot = true;
 			}
-				
-			if (!annotDomain.getCreatedBy().isEmpty()
-					|| !annotDomain.getModifiedBy().isEmpty()
-					|| !annotDomain.getCreation_date().isEmpty()
-					|| !annotDomain.getModification_date().isEmpty()) {
 
-				String cmResults[] = DateSQLQuery.queryByCreationModification("e", 
-						annotDomain.getCreatedBy(), 
-						annotDomain.getModifiedBy(), 
-						annotDomain.getCreation_date(), 
-						annotDomain.getModification_date());
-				if (cmResults.length > 0) {
-					from = from + cmResults[0];
-					where = where + cmResults[1];
-					from_evidence = true;
+			if (annotDomain.getCreatedBy() != null
+					|| annotDomain.getModifiedBy() != null
+					|| annotDomain.getCreation_date() != null
+					|| annotDomain.getModification_date() != null) {			
+				if (!annotDomain.getCreatedBy().isEmpty()
+						|| !annotDomain.getModifiedBy().isEmpty()
+						|| !annotDomain.getCreation_date().isEmpty()
+						|| !annotDomain.getModification_date().isEmpty()) {
+	
+					String cmResults[] = DateSQLQuery.queryByCreationModification("e", 
+							annotDomain.getCreatedBy(), 
+							annotDomain.getModifiedBy(), 
+							annotDomain.getCreation_date(), 
+							annotDomain.getModification_date());
+					
+					if (cmResults.length > 0) {
+						from = from + cmResults[0];
+						where = where + cmResults[1];
+						from_evidence = true;
+					}
 				}
 			}
 			

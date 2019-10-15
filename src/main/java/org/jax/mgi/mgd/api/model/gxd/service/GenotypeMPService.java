@@ -282,12 +282,18 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
+
 		// sc - 10/4/19 removed the 'order by description' as we can't do that using
 		// select "distinct on" because the description is arbitrary
+		//String select = "select distinct on (v._object_key) v._object_key, v.description";
+		// requirement changed/group description by _object_key
+		// saving this SQL incase it is needed again
+	
 		String cmd = "";
-		String select = "select distinct on (v._object_key) v._object_key, v.description";
+		String select = "select distinct v._object_key, v.subtype, v.short_description";
 		String from = "from gxd_genotype_summary_view v";		
-		String where = "where v._mgitype_key = " + mgiTypeKey;			
+		String where = "where v._mgitype_key = " + mgiTypeKey;
+		String orderBy = "order by v._object_key, v.subtype, v.short_description";
 		String limit = Constants.SEARCH_RETURN_LIMIT;
 		
 		String value;
@@ -427,17 +433,58 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 			where = where + "\nand e._annotevidence_key = n._object_key";
 		}
 
-		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + limit;
+		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
 		log.info(cmd);
 
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
+			Integer prevObjectKey = 0;
+			Integer newObjectKey = 0;
+			String newDescription = "";
+			String prevDescription = "";
+			String newStrain = "";
+			String prevStrain = "";
+			Boolean addResults = false;
+			
+			// concatenate description when grouped by _object_key
+			
 			while (rs.next()) {
-				SlimGenotypeDomain domain = new SlimGenotypeDomain();
-				domain = slimtranslator.translate(genotypeDAO.get(rs.getInt("_object_key")));				
-				domain.setGenotypeDisplay(rs.getString("description"));
-				genotypeDAO.clear();				
-				results.add(domain);
+				
+				newObjectKey = rs.getInt("_object_key");
+				newStrain = rs.getString("subtype");
+				newDescription = rs.getString("short_description");
+				
+				// group description by _object_key
+				if (prevObjectKey.equals(0)) {
+					prevObjectKey = newObjectKey;
+					prevStrain = newStrain;
+					prevDescription = newDescription;
+					addResults = false;
+				}
+				else if (newObjectKey.equals(prevObjectKey)) {
+					prevDescription = prevDescription + "," + newDescription;
+					addResults = false;
+				}
+				else {
+					prevObjectKey = newObjectKey;
+					prevStrain = newStrain;
+					prevDescription = newDescription;
+					addResults = true;
+				}
+				
+				// if last record, then add to result set
+				if (rs.isLast() == true) {
+					addResults = true;
+				}
+				
+				if (addResults) {
+					prevDescription = prevStrain + " " + prevDescription;
+					SlimGenotypeDomain domain = new SlimGenotypeDomain();
+					domain = slimtranslator.translate(genotypeDAO.get(prevObjectKey));				
+					domain.setGenotypeDisplay(prevDescription);
+					genotypeDAO.clear();				
+					results.add(domain);
+				}
 			}
 			sqlExecutor.cleanup();
 			

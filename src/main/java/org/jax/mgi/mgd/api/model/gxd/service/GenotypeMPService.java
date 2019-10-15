@@ -314,6 +314,10 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 			from_accession = true;
 		}
 		
+		if (searchDomain.getGenotypeDisplay() != null && !searchDomain.getGenotypeDisplay().isEmpty()) {
+			where = where + "\nand v.description ilike '" + searchDomain.getGenotypeDisplay() + "'";		
+		}
+		
 		if (searchDomain.getMpAnnots() != null) {
 						
 			AnnotationMPDomain annotDomain = searchDomain.getMpAnnots().get(0);

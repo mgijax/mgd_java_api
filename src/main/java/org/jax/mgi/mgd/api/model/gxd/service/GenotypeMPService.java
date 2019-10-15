@@ -107,6 +107,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
             
             // evidence : create evidence list of 1 result
             //log.info("add evidence list");
+            //log.info("getProcessStatus(): " + annotMPDomain.getProcessStatus());
 			EvidenceDomain evidenceDomain = new EvidenceDomain();
             List<EvidenceDomain> evidenceList = new ArrayList<EvidenceDomain>();
             evidenceDomain.setProcessStatus(annotMPDomain.getProcessStatus());

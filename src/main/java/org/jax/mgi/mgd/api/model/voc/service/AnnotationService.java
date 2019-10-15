@@ -343,9 +343,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				log.info("processAnnotation delete successful");
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-				
-				// implemented update for:  term only
-				
+								
 				log.info("processAnnotation update");
 				
 				Boolean isUpdated = false;
@@ -357,14 +355,15 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 					entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
 					isUpdated = true;
 				}
+				
 				if (!String.valueOf(entity.getTerm().get_term_key()).equals(domain.get(i).getTermKey())) {
 				    log.info("terms are different. entity: " + entity.getTerm().get_term_key() + " domain: " + domain.get(i).getTermKey());	
 					entity.setTerm(termDAO.get(Integer.valueOf(domain.get(i).getTermKey())));
 					
 					// null any of the entity fields that are not updated
 					// that is, any read-only fields
-					entity.setMarkerFeatureTypeIds(null);	
-					entity.setAlleleVariantSOIds(null);
+					//entity.setMarkerFeatureTypeIds(null);	
+					//entity.setAlleleVariantSOIds(null);
 					
 					isUpdated = true;
 				}
@@ -391,6 +390,9 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 						
 						else if(evidenceDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 
+							log.info("entity: " + evidenceEntity.getReference().get_refs_key());
+							log.info("domain: " + evidenceDomain.getRefsKey());
+							
 							if (!String.valueOf(evidenceEntity.getEvidenceTerm().get_term_key()).equals(evidenceDomain.getEvidenceTermKey())) {
 								evidenceEntity.setEvidenceTerm(termDAO.get(Integer.valueOf(evidenceDomain.getEvidenceTermKey())));
 								isUpdated = true;

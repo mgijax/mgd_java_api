@@ -297,6 +297,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 		Boolean from_annot = false;
 		Boolean from_evidence = false;
 		Boolean from_property = false;
+		Boolean from_note = false;
 				
 		// if parameter exists, then add to where-clause
 		
@@ -385,12 +386,23 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 				where = where + "\nand e.jnumid = '" + jnumid + "'";
 				from_evidence = true;			
 			}
+			
+			value = annotDomain.getAllNotes().get(0).getNoteChunk();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand n.note ilike '" + value + "'";
+				from_note = true;
+			}
 		}
 		
+		// dependencies
+		if (from_note == true) {
+			from_evidence = true;
+		}
 		if (from_evidence == true) {
 			from_annot = true;
 		}
 		
+		// from/where construction
 		if (from_accession == true) {
 			from = from + ", gxd_genotype_acc_view a";
 			where = where + "\nand v._object_key = a._object_key" 
@@ -410,6 +422,10 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 		if (from_property == true) {
 			from = from + ", voc_evidence_property p";
 			where = where + "\nand e._annotevidence_key = p._annotevidence_key";
+		}
+		if (from_note == true) {
+			from = from + ", mgi_note_vocevidence_view n";
+			where = where + "\nand e._annotevidence_key = n._object_key";
 		}
 
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + limit;

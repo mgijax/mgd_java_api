@@ -107,7 +107,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
             
             // evidence : create evidence list of 1 result
             //log.info("add evidence list");
-            //log.info("getProcessStatus(): " + annotMPDomain.getProcessStatus());
+            //jjjjjjjjjjjjjjklog.info("getProcessStatus(): " + annotMPDomain.getProcessStatus());
 			EvidenceDomain evidenceDomain = new EvidenceDomain();
             List<EvidenceDomain> evidenceList = new ArrayList<EvidenceDomain>();
             evidenceDomain.setProcessStatus(annotMPDomain.getProcessStatus());
@@ -315,9 +315,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 		}
 		
 		if (searchDomain.getMpAnnots() != null) {
-			
-			log.info("getMpAnnots()");
-			
+						
 			AnnotationMPDomain annotDomain = searchDomain.getMpAnnots().get(0);
 		
 			value = annotDomain.getTermKey();
@@ -332,26 +330,26 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 				from_annot = true;
 			}
 				
-			String cmResults[] = DateSQLQuery.queryByCreationModification("e", 
-					annotDomain.getCreatedBy(), 
-					annotDomain.getModifiedBy(), 
-					annotDomain.getCreation_date(), 
-					annotDomain.getModification_date());
-			if (cmResults.length > 0) {
-				from = from + cmResults[0];
-				where = where + cmResults[1];
-				from_evidence = true;
+			if (!annotDomain.getCreatedBy().isEmpty()
+					|| !annotDomain.getModifiedBy().isEmpty()
+					|| !annotDomain.getCreation_date().isEmpty()
+					|| !annotDomain.getModification_date().isEmpty()) {
+
+				String cmResults[] = DateSQLQuery.queryByCreationModification("e", 
+						annotDomain.getCreatedBy(), 
+						annotDomain.getModifiedBy(), 
+						annotDomain.getCreation_date(), 
+						annotDomain.getModification_date());
+				if (cmResults.length > 0) {
+					from = from + cmResults[0];
+					where = where + cmResults[1];
+					from_evidence = true;
+				}
 			}
-					
-			value = annotDomain.getPropertyTermKey();
-			if (value != null) {
-				where = where + "\nand p._propertyterm_key = " + value;
-				from_evidence = true;
-				from_property = true;
-			}
-				
+			
 			value = annotDomain.getMpSexSpecificityValue();
 			if (value != null && !value.isEmpty()) {
+				where = where + "\nand p._propertyterm_key = " + annotDomain.getPropertyTermKey();
 				where = where + "\nand p.value ilike '" + value + "'";
 				from_evidence = true;
 				from_property = true;

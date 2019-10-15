@@ -466,9 +466,6 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 					addResults = false;
 				}
 				else {
-					prevObjectKey = newObjectKey;
-					prevStrain = newStrain;
-					prevDescription = newDescription;
 					addResults = true;
 				}
 				
@@ -484,6 +481,11 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 					domain.setGenotypeDisplay(prevDescription);
 					genotypeDAO.clear();				
 					results.add(domain);
+					
+					prevObjectKey = newObjectKey;
+					prevStrain = newStrain;
+					prevDescription = newDescription;
+					addResults = false;
 				}
 			}
 			sqlExecutor.cleanup();

@@ -51,6 +51,7 @@ public class GenotypeMPTranslator extends BaseEntityDomainTranslator<Genotype, G
 		if (entity.getMpHeaders() != null && !entity.getMpHeaders().isEmpty()) {
 			Iterable<AnnotationHeaderDomain> t = annotHeaderTranslator.translateEntities(entity.getMpHeaders());
 			domain.setMpHeaders(IteratorUtils.toList(t.iterator()));
+			domain.getMpHeaders().sort(Comparator.comparing(AnnotationHeaderDomain::getSequenceNum));
 		}
 							
 		return domain;

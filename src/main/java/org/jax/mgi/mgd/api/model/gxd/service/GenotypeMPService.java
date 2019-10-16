@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.gxd.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -214,7 +215,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 		                annotMPDomain.setEvidenceAbbreviation(evidenceDomain.getEvidenceAbbreviation());
 		                annotMPDomain.setRefsKey(evidenceDomain.getRefsKey());
 		                annotMPDomain.setJnumid(evidenceDomain.getJnumid());
-		                annotMPDomain.setJnum(evidenceDomain.getJnum());
+		                annotMPDomain.setJnum(Integer.valueOf(evidenceDomain.getJnum()));
 		                annotMPDomain.setShort_citation(evidenceDomain.getShort_citation());
 		                annotMPDomain.setCreatedByKey(evidenceDomain.getCreatedByKey());
 		                annotMPDomain.setCreatedBy(evidenceDomain.getCreatedBy());
@@ -223,7 +224,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 						annotMPDomain.setCreation_date(evidenceDomain.getCreation_date());
 						annotMPDomain.setModification_date(evidenceDomain.getModification_date());
 						annotMPDomain.setAllNotes(evidenceDomain.getAllNotes());
-						
+
 						// evidence-property : sex-specificity
 						EvidencePropertyDomain evidencePropertyDomain = evidenceDomain.getMpSexSpecificity().get(0);
 						annotMPDomain.setEvidencePropertyKey(evidencePropertyDomain.getEvidencePropertyKey());
@@ -237,7 +238,9 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 
 			// add all annotResults to the mpDomain
 			mpDomain.setMpAnnots(annotList);
-			annotList.sort(Comparator.comparing(AnnotationMPDomain::getJnum).thenComparing(AnnotationMPDomain::getTerm));				
+			
+			// sort by jnum, term		
+			annotList.sort(Comparator.comparingInt(AnnotationMPDomain::getJnum).thenComparing(AnnotationMPDomain::getTerm));				
     	}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -287,7 +290,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 		// select "distinct on" because the description is arbitrary
 		//String select = "select distinct on (v._object_key) v._object_key, v.description";
 		// requirement changed/group description by _object_key
-		// saving this SQL incase it is needed again
+		// saving this SQL in case it is needed again
 	
 		String cmd = "";
 		String select = "select distinct v._object_key, v.subtype, v.short_description";
@@ -475,7 +478,9 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 				}
 				
 				if (addResults) {
+
 					prevDescription = prevStrain + " " + prevDescription;
+	
 					SlimGenotypeDomain domain = new SlimGenotypeDomain();
 					domain = slimtranslator.translate(genotypeDAO.get(prevObjectKey));				
 					domain.setGenotypeDisplay(prevDescription);

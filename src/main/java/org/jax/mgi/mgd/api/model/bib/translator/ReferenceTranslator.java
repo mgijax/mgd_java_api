@@ -11,7 +11,6 @@ import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBookDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceNoteDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
-import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
 import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jboss.logging.Logger;
 

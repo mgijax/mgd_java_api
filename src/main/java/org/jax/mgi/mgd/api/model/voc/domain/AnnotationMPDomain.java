@@ -33,7 +33,7 @@ public class AnnotationMPDomain extends BaseDomain {
 	private String evidenceAbbreviation;
 	private String refsKey;
 	private String jnumid;
-	private String jnum;
+	private Integer jnum;
 	private String short_citation;	
 	private String createdByKey;
 	private String createdBy;

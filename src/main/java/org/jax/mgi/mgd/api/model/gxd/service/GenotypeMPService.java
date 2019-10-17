@@ -394,10 +394,12 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 				from_evidence = true;			
 			}
 			
-			value = annotDomain.getAllNotes().get(0).getNoteChunk();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand n.note ilike '" + value + "'";
-				from_note = true;
+			if (annotDomain.getAllNotes() != null) {
+				value = annotDomain.getAllNotes().get(0).getNoteChunk();
+				if (value != null && !value.isEmpty()) {
+					where = where + "\nand n.note ilike '" + value + "'";
+					from_note = true;
+				}
 			}
 		}
 		

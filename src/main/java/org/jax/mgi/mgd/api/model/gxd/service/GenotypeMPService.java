@@ -144,7 +144,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 		if (annotList.size() > 0) {
 			log.info("send json normalized domain to services");			
 			mpDomain.setMpAnnots(annotList);
-			annotationService.process(mpDomain.getMpAnnots(), user);		
+			annotationService.process(mpDomain.getMpAnnots(), user);
 		}
 		
 		log.info("repackage incoming domain as results");		

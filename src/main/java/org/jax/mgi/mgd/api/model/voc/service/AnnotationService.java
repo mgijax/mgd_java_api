@@ -15,15 +15,18 @@ import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationDAO;
+import org.jax.mgi.mgd.api.model.voc.dao.AnnotationHeaderDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationTypeDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.EvidenceDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.EvidencePropertyDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantAnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.AnnotationHeaderDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidenceDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
+import org.jax.mgi.mgd.api.model.voc.entities.AnnotationHeader;
 import org.jax.mgi.mgd.api.model.voc.entities.Evidence;
 import org.jax.mgi.mgd.api.model.voc.entities.EvidenceProperty;
 import org.jax.mgi.mgd.api.model.voc.translator.AlleleVariantAnnotationTranslator;
@@ -45,6 +48,8 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 	private EvidenceDAO evidenceDAO;
 	@Inject
 	private EvidencePropertyDAO evidencePropertyDAO;
+	@Inject
+	private AnnotationHeaderDAO annotationHeaderDAO;
 	@Inject
 	private AnnotationTypeDAO annotTypeDAO;
 	@Inject
@@ -248,8 +253,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				
 				log.info("calculating qualifier");
 				// for MP annotations only, set default qualifier to "null"
-				if (annotTypeKey.equals("1002")) {
-					
+				if (annotTypeKey.equals("1002")) {					
 					if( qualifierKey == null || qualifierKey.isEmpty()) {
 					    qualifierKey = "2181423";
 					}
@@ -360,6 +364,26 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				    log.info("terms are different. entity: " + entity.getTerm().get_term_key() + " domain: " + domain.get(i).getTermKey());	
 					entity.setTerm(termDAO.get(Integer.valueOf(domain.get(i).getTermKey())));									
 					isUpdated = true;
+				}
+
+				// mp headers
+				if (annotTypeKey.equals("1002")) {
+					List<AnnotationHeaderDomain> headerList = domain.get(i).getMpHeaders();
+				
+					for (int j = 0; j < headerList.size(); j++) {
+	
+						AnnotationHeaderDomain headerDomain = headerList.get(j);
+						AnnotationHeader headerEntity = new AnnotationHeader();
+						
+						if (headerDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {	
+							if (!String.valueOf(headerEntity.getSequenceNum()).equals(headerDomain.getSequenceNum())) {
+								headerEntity.setSequenceNum(Integer.valueOf(headerDomain.getSequenceNum()));
+								headerEntity.setModification_date(new Date());
+								headerEntity.setModifiedBy(user);
+								isUpdated = true;
+							}
+						}
+					}	
 				}
 				
 				// not all annotation types have evidence records

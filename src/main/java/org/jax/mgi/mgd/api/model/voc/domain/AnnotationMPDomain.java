@@ -50,4 +50,7 @@ public class AnnotationMPDomain extends BaseDomain {
 	// all notes for given evidence
 	private List<NoteDomain> allNotes;
 
+	// mp headers
+	private List<AnnotationHeaderDomain> mpHeaders;
+
 }

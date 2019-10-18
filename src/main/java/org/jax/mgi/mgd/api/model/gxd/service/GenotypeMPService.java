@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.gxd.service;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -17,10 +18,14 @@ import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.translator.GenotypeMPTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimGenotypeTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.dao.AnnotationHeaderDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.AnnotationHeaderDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationMPDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidenceDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidencePropertyDomain;
+import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
+import org.jax.mgi.mgd.api.model.voc.entities.AnnotationHeader;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
@@ -38,6 +43,8 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 
 	@Inject
 	private AnnotationService annotationService;
+	@Inject
+	private AnnotationHeaderDAO annotationHeaderDAO;
 	
 	private GenotypeMPTranslator translator = new GenotypeMPTranslator();
 	private SlimGenotypeTranslator slimtranslator = new SlimGenotypeTranslator();
@@ -140,12 +147,28 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 			annotList.add(annotDomain);         
 		}
 		
-		// add annotList to the mpDomain and process annotations
-		if (annotList.size() > 0) {
-			log.info("send json normalized domain to services");			
-			mpDomain.setMpAnnots(annotList);
-			annotationService.process(mpDomain.getMpAnnots(), user);
-		}
+//		// add annotList to the mpDomain and process annotations
+//		if (annotList.size() > 0) {
+//			log.info("send json normalized domain to services");			
+//			mpDomain.setMpAnnots(annotList);
+//			annotationService.process(mpDomain.getMpAnnots(), user);
+//			
+//			List<AnnotationHeaderDomain> headerList = mpDomain.getMpHeaders();
+//			for (int j = 0; j < headerList.size(); j++) {
+//				AnnotationHeaderDomain headerDomain = headerList.get(j);
+//				AnnotationHeader headerEntity = new AnnotationHeader();
+//				AnnotationHeader headerDAO = annotationHeaderDAO.get(Integer.valueOf(headerEntity.get_annotheader_key()));
+//	
+//				if (headerDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+//					if (!String.valueOf(headerEntity.getSequenceNum()).equals(headerDomain.getSequenceNum())) {
+//						headerEntity.setSequenceNum(Integer.valueOf(headerDomain.getSequenceNum()));
+//						headerEntity.setModification_date(new Date());
+//						headerEntity.setModifiedBy(user);
+//						headerDAO.update(headerEntity);
+//					}
+//				}	
+//			}			
+//		}
 		
 		log.info("repackage incoming domain as results");		
 		SearchResults<DenormGenotypeMPDomain> results = new SearchResults<DenormGenotypeMPDomain>();

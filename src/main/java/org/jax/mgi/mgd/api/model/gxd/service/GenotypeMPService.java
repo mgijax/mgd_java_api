@@ -148,11 +148,11 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 		}
 		
 //		// add annotList to the mpDomain and process annotations
-//		if (annotList.size() > 0) {
-//			log.info("send json normalized domain to services");			
-//			mpDomain.setMpAnnots(annotList);
-//			annotationService.process(mpDomain.getMpAnnots(), user);
-//			
+		if (annotList.size() > 0) {
+			log.info("send json normalized domain to services");			
+			mpDomain.setMpAnnots(annotList);
+			annotationService.process(mpDomain.getMpAnnots(), user);
+			
 //			List<AnnotationHeaderDomain> headerList = mpDomain.getMpHeaders();
 //			for (int j = 0; j < headerList.size(); j++) {
 //				AnnotationHeaderDomain headerDomain = headerList.get(j);
@@ -168,7 +168,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 //					}
 //				}	
 //			}			
-//		}
+		}
 		
 		log.info("repackage incoming domain as results");		
 		SearchResults<DenormGenotypeMPDomain> results = new SearchResults<DenormGenotypeMPDomain>();

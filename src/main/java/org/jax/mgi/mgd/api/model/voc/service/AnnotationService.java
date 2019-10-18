@@ -452,9 +452,15 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 	    query.getResultList();	
 	    
 	    // determine and order MP Headers 
-	    // if (annotTypeKey.equals("1002")) { 
-	    // cmd = "select count(*) from  VOC_processAnnotHeader(" + user  + ", " + annotTypeKey+ ", " + objectKey+ ")";
-	    //}
+	    if (annotTypeKey.equals("1002")) { 
+	    	cmd = "select count(*) from  VOC_processAnnotHeader(" 
+	    		+ user.get_user_key().intValue()  
+	    		+ ", " + annotTypeKey 
+	    		+ ", " + objectKey+ ")";
+	 	    log.info("cmd: " + cmd);
+		    query = annotationDAO.createNativeQuery(cmd);
+		    query.getResultList();		    
+	     }
 	    
 		log.info("processAnnotation/processing successful");
 		return modified;

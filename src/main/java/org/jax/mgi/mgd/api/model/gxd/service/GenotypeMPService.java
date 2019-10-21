@@ -155,21 +155,23 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 			
 			// process change to annotationHeaderDomian.getSequenceNum()
 			List<AnnotationHeaderDomain> headerList = mpDomain.getMpHeaders();
-			for (int j = 0; j < headerList.size(); j++) {
-				AnnotationHeaderDomain annotationHeaderDomain = headerList.get(j);
-				AnnotationHeader annotationHeaderEntity = annotationHeaderDAO.get(Integer.valueOf(annotationHeaderDomain.getAnnotHeaderKey()));
-	
-				if (annotationHeaderDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-					if (!String.valueOf(annotationHeaderEntity.getSequenceNum()).equals(annotationHeaderDomain.getSequenceNum())) {
-						annotationHeaderEntity.setSequenceNum(Integer.valueOf(annotationHeaderDomain.getSequenceNum()));
-						annotationHeaderEntity.setModification_date(new Date());
-						annotationHeaderEntity.setModifiedBy(user);
-						annotationHeaderEntity.setApproval_date(new Date());
-						annotationHeaderEntity.setApprovedBy(user);						
-						annotationHeaderDAO.update(annotationHeaderEntity);
-					}
-				}	
-			}			
+			if (headerList != null) {
+				for (int j = 0; j < headerList.size(); j++) {
+					AnnotationHeaderDomain annotationHeaderDomain = headerList.get(j);
+					AnnotationHeader annotationHeaderEntity = annotationHeaderDAO.get(Integer.valueOf(annotationHeaderDomain.getAnnotHeaderKey()));
+		
+					if (annotationHeaderDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+						if (!String.valueOf(annotationHeaderEntity.getSequenceNum()).equals(annotationHeaderDomain.getSequenceNum())) {
+							annotationHeaderEntity.setSequenceNum(Integer.valueOf(annotationHeaderDomain.getSequenceNum()));
+							annotationHeaderEntity.setModification_date(new Date());
+							annotationHeaderEntity.setModifiedBy(user);
+							annotationHeaderEntity.setApproval_date(new Date());
+							annotationHeaderEntity.setApprovedBy(user);						
+							annotationHeaderDAO.update(annotationHeaderEntity);
+						}
+					}	
+				}
+			}
 		}
 		
 		log.info("repackage incoming domain as results");		

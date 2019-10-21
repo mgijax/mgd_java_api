@@ -164,6 +164,8 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 						annotationHeaderEntity.setSequenceNum(Integer.valueOf(annotationHeaderDomain.getSequenceNum()));
 						annotationHeaderEntity.setModification_date(new Date());
 						annotationHeaderEntity.setModifiedBy(user);
+						annotationHeaderEntity.setApproval_date(new Date());
+						annotationHeaderEntity.setApprovedBy(user);						
 						annotationHeaderDAO.update(annotationHeaderEntity);
 					}
 				}	

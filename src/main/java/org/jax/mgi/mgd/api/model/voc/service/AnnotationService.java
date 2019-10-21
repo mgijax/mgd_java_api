@@ -15,7 +15,6 @@ import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationDAO;
-import org.jax.mgi.mgd.api.model.voc.dao.AnnotationHeaderDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationTypeDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.EvidenceDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.EvidencePropertyDAO;

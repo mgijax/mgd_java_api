@@ -147,27 +147,27 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 			annotList.add(annotDomain);         
 		}
 		
-//		// add annotList to the mpDomain and process annotations
+		// add annotList to the mpDomain and process annotations
 		if (annotList.size() > 0) {
 			log.info("send json normalized domain to services");			
 			mpDomain.setMpAnnots(annotList);
 			annotationService.process(mpDomain.getMpAnnots(), user);
 			
-//			List<AnnotationHeaderDomain> headerList = mpDomain.getMpHeaders();
-//			for (int j = 0; j < headerList.size(); j++) {
-//				AnnotationHeaderDomain headerDomain = headerList.get(j);
-//				AnnotationHeader headerEntity = new AnnotationHeader();
-//				AnnotationHeader headerDAO = annotationHeaderDAO.get(Integer.valueOf(headerEntity.get_annotheader_key()));
-//	
-//				if (headerDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-//					if (!String.valueOf(headerEntity.getSequenceNum()).equals(headerDomain.getSequenceNum())) {
-//						headerEntity.setSequenceNum(Integer.valueOf(headerDomain.getSequenceNum()));
-//						headerEntity.setModification_date(new Date());
-//						headerEntity.setModifiedBy(user);
-//						headerDAO.update(headerEntity);
-//					}
-//				}	
-//			}			
+			// process change to annotationHeaderDomian.getSequenceNum()
+			List<AnnotationHeaderDomain> headerList = mpDomain.getMpHeaders();
+			for (int j = 0; j < headerList.size(); j++) {
+				AnnotationHeaderDomain annotationHeaderDomain = headerList.get(j);
+				AnnotationHeader annotationHeaderEntity = annotationHeaderDAO.get(Integer.valueOf(annotationHeaderDomain.getAnnotHeaderKey()));
+	
+				if (annotationHeaderDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+					if (!String.valueOf(annotationHeaderEntity.getSequenceNum()).equals(annotationHeaderDomain.getSequenceNum())) {
+						annotationHeaderEntity.setSequenceNum(Integer.valueOf(annotationHeaderDomain.getSequenceNum()));
+						annotationHeaderEntity.setModification_date(new Date());
+						annotationHeaderEntity.setModifiedBy(user);
+						annotationHeaderDAO.update(annotationHeaderEntity);
+					}
+				}	
+			}			
 		}
 		
 		log.info("repackage incoming domain as results");		

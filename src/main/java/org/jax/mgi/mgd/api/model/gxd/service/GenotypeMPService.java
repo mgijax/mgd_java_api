@@ -24,7 +24,6 @@ import org.jax.mgi.mgd.api.model.voc.domain.AnnotationHeaderDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationMPDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidenceDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidencePropertyDomain;
-import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 import org.jax.mgi.mgd.api.model.voc.entities.AnnotationHeader;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;

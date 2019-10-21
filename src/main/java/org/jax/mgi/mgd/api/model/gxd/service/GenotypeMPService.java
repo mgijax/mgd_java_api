@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.DenormGenotypeMPDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeMPDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeReferenceDomain;
 import org.jax.mgi.mgd.api.model.gxd.translator.GenotypeMPTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimGenotypeTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -536,5 +537,40 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 		
 		return results;
 	}	
-	
+
+	@Transactional	
+	public List<SlimGenotypeDomain> validateAlleleReference(SlimGenotypeReferenceDomain searchDomain) {
+		// use SlimGenoytpeMomain to return list of validated genotype
+		// returns empty list of values if validation fails
+
+		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
+
+		String cmd = "\nselect distinct g._genotype_key"
+				+ "\nfrom GXD_AlleleGenotype g, ALL_Allele a" 
+				+ "\nwhere g._Allele_key = a._Allele_key"
+				+ "\nand a.isWildType = 0"
+				+ "\nand g._Genotype_key = " + searchDomain.getGenotypeKey()
+				+ "\nand not exists (select 1 from MGI_Reference_Assoc a where a._MGIType_key = 11" 
+					+ "\nand a._Object_key = g._Allele_key"
+					+ "\nand a._Refs_key = " + searchDomain.getRefsKey() + ")";
+		
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();
+				slimdomain = slimtranslator.translate(genotypeDAO.get(rs.getInt("_genotype_key")));				
+				genotypeDAO.clear();
+				results.add(slimdomain);
+			}
+			sqlExecutor.cleanup();			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
+		
 }

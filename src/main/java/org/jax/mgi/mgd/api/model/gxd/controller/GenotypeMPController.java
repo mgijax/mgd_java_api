@@ -13,9 +13,10 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.DenormGenotypeMPDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeAlleleReferenceDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeReferenceDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.GenotypeMPService;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -92,9 +93,9 @@ public class GenotypeMPController extends BaseController<DenormGenotypeMPDomain>
 	@POST
 	@ApiOperation(value = "Validate Allele-Reference associatins for Genotype")
 	@Path("/validateAlleleReference")
-	public List<SlimGenotypeDomain> validateAlleleReference(SlimGenotypeReferenceDomain searchDomain) {
+	public List<MGIReferenceAssocDomain> validateAlleleReference(SlimGenotypeAlleleReferenceDomain searchDomain) {
 		
-		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
+		List<MGIReferenceAssocDomain> results = new ArrayList<MGIReferenceAssocDomain>();
 
 		try {
 			results = genotypeMPService.validateAlleleReference(searchDomain);

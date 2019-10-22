@@ -40,6 +40,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		List<MGIReferenceAssocDomain> domainList = new ArrayList<MGIReferenceAssocDomain>();
 		domainList.add(domain);
 		process(null, domainList, domain.getMgiTypeKey(), user);
+		results.setItem(domain);	
 		return results;
 	}
 

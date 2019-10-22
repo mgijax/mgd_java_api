@@ -14,10 +14,11 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.DenormGenotypeMPDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeMPDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeAlleleReferenceDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeReferenceDomain;
 import org.jax.mgi.mgd.api.model.gxd.translator.GenotypeMPTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimGenotypeTranslator;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationHeaderDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
@@ -541,13 +542,13 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 	}	
 
 	@Transactional	
-	public List<SlimGenotypeDomain> validateAlleleReference(SlimGenotypeReferenceDomain searchDomain) {
-		// use SlimGenoytpeMomain to return list of validated genotype
+	public List<MGIReferenceAssocDomain> validateAlleleReference(SlimGenotypeAlleleReferenceDomain searchDomain) {
+		// return a list of Allele/Reference associations that do not exist for this Genotype/Reference
 		// returns empty list of values if validation fails
 
-		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
-
-		String cmd = "\nselect distinct g._genotype_key"
+		List<MGIReferenceAssocDomain> results = new ArrayList<MGIReferenceAssocDomain>();
+		
+		String cmd = "\nselect distinct g._allele_key"
 				+ "\nfrom GXD_AlleleGenotype g, ALL_Allele a" 
 				+ "\nwhere g._Allele_key = a._Allele_key"
 				+ "\nand a.isWildType = 0"
@@ -561,10 +562,13 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();
-				slimdomain = slimtranslator.translate(genotypeDAO.get(rs.getInt("_genotype_key")));				
-				genotypeDAO.clear();
-				results.add(slimdomain);
+				MGIReferenceAssocDomain domain = new MGIReferenceAssocDomain();
+				domain.setProcessStatus(Constants.PROCESS_CREATE);
+				domain.setObjectKey(rs.getString("_allele_key"));
+				domain.setMgiTypeKey("11");
+				domain.setRefAssocType("Used-FC");
+				domain.setRefsKey(searchDomain.getRefsKey());
+				results.add(domain);
 			}
 			sqlExecutor.cleanup();			
 		}

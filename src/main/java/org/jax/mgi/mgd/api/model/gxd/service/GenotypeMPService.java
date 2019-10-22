@@ -162,7 +162,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 					AnnotationHeader annotationHeaderEntity = annotationHeaderDAO.get(Integer.valueOf(annotationHeaderDomain.getAnnotHeaderKey()));
 		
 					if (annotationHeaderDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-						if (!String.valueOf(annotationHeaderEntity.getSequenceNum()).equals(annotationHeaderDomain.getSequenceNum())) {
+						if (!String.valueOf(annotationHeaderEntity.getSequenceNum()).equals(annotationHeaderDomain.getSequenceNum())) {	
 							annotationHeaderEntity.setSequenceNum(Integer.valueOf(annotationHeaderDomain.getSequenceNum()));
 							annotationHeaderEntity.setModification_date(new Date());
 							annotationHeaderEntity.setModifiedBy(user);

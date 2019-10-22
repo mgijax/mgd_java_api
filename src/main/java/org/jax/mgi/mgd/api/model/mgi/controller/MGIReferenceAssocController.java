@@ -6,7 +6,6 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -35,7 +34,10 @@ public class MGIReferenceAssocController extends BaseController<MGIReferenceAsso
 
 	@Override
 	public SearchResults<MGIReferenceAssocDomain> create(MGIReferenceAssocDomain domain, User user) {
-		return referenceAssocService.create(domain, user);
+		SearchResults<MGIReferenceAssocDomain> results = new SearchResults<MGIReferenceAssocDomain>();
+		results = referenceAssocService.create(domain, user);
+		results = referenceAssocService.getResults(Integer.valueOf(results.items.get(0).getAssocKey()));
+		return results;
 	}
 
 	@Override
@@ -116,12 +118,5 @@ public class MGIReferenceAssocController extends BaseController<MGIReferenceAsso
 		
 		return results;
 	}
-		
-	@POST
-	@ApiOperation(value = "Process")
-	@Path("/process")
-	public Boolean process(String parentKey, List<MGIReferenceAssocDomain> domain, String mgiTypeKey, User user) {
-		return referenceAssocService.process(parentKey, domain, mgiTypeKey, user);
-	}
-	
+
 }

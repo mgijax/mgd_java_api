@@ -35,14 +35,16 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
-	public SearchResults<MGIReferenceAssocDomain> create(MGIReferenceAssocDomain object, User user) {
-		SearchResults<MGIReferenceAssocDomain> results = new SearchResults<MGIReferenceAssocDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+	public SearchResults<MGIReferenceAssocDomain> create(MGIReferenceAssocDomain domain, User user) {
+		SearchResults<MGIReferenceAssocDomain> results = new SearchResults<MGIReferenceAssocDomain>();		
+		List<MGIReferenceAssocDomain> domainList = new ArrayList<MGIReferenceAssocDomain>();
+		domainList.add(domain);
+		process(null, domainList, domain.getMgiTypeKey(), user);
 		return results;
 	}
 
 	@Transactional
-	public SearchResults<MGIReferenceAssocDomain> update(MGIReferenceAssocDomain object, User user) {
+	public SearchResults<MGIReferenceAssocDomain> update(MGIReferenceAssocDomain domain, User user) {
 		SearchResults<MGIReferenceAssocDomain> results = new SearchResults<MGIReferenceAssocDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;

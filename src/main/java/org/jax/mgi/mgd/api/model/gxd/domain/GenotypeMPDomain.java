@@ -15,7 +15,6 @@ public class GenotypeMPDomain extends BaseDomain {
 
 	private String genotypeKey;
 	private String genotypeDisplay;
-	
 	private List<AccessionDomain> mgiAccessionIds;
 	private List<AnnotationDomain> mpAnnots;
 	private List<AnnotationHeaderDomain> mpHeaders;

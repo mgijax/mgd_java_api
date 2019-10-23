@@ -355,10 +355,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 					isUpdated = true;
 				}
 				
-				// if term is null/empty, then don't check for changes
-				// see DenormGenotypeMPDomain
-				// see GenotypeMPService/update()
-				if (domain.get(i).getTermKey() != null && !domain.get(i).getTermKey().isEmpty()) {
+				if (domain.get(i).getAllowEditTerm()) {
 					if (!String.valueOf(entity.getTerm().get_term_key()).equals(domain.get(i).getTermKey())) {
 					    log.info("terms are different. entity: " + entity.getTerm().get_term_key() + " domain: " + domain.get(i).getTermKey());	
 						entity.setTerm(termDAO.get(Integer.valueOf(domain.get(i).getTermKey())));									

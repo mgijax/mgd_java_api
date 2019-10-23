@@ -75,6 +75,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
     	mpDomain.setGenotypeKey(domain.getGenotypeKey());
 		//mpDomain.setGenotypeDisplay(domain.getGenotypeDisplay());
     	mpDomain.setMpHeaders(domain.getMpHeaders());
+    	mpDomain.setAllowEditTerm(domain.getAllowEditTerm());
 		
     	// incoming denormalized MP json domain
 		for (int i = 0; i < domain.getMpAnnots().size(); i++) {
@@ -102,26 +103,17 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 			else {
 				annotDomain.setProcessStatus(annotMPDomain.getProcessStatus());
 			}
-			
-			// if pwi allows term to be changed, then set term from incoming pwi domain
-			// else, set term = empty
-			// see AnnotationService/process()/PROCESS_UPDATE
-			if (domain.getAllowEditTerm()) {
-	            annotDomain.setTermKey(annotMPDomain.getTermKey());
-	            annotDomain.setTerm(annotMPDomain.getTerm());				
-			}
-			else {
-	            annotDomain.setTermKey("");
-	            annotDomain.setTerm("");					
-			}
-			
+					
             annotDomain.setAnnotKey(annotMPDomain.getAnnotKey());
             annotDomain.setAnnotTypeKey(annotMPDomain.getAnnotTypeKey());
             annotDomain.setAnnotType(annotMPDomain.getAnnotType());
             annotDomain.setObjectKey(annotMPDomain.getObjectKey());
+            annotDomain.setTermKey(annotMPDomain.getTermKey());
+            annotDomain.setTerm(annotMPDomain.getTerm());           
             annotDomain.setQualifierKey(annotMPDomain.getQualifierKey());
             annotDomain.setQualifierAbbreviation(annotMPDomain.getQualifierAbbreviation());
             annotDomain.setQualifier(annotMPDomain.getQualifier());
+            annotDomain.setAllowEditTerm(domain.getAllowEditTerm());
             
             // evidence : create evidence list of 1 result
             //log.info("add evidence list");

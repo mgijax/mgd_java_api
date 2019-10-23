@@ -32,5 +32,7 @@ public class AnnotationDomain extends BaseDomain {
 	private List<SlimAccessionDomain> alleleVariantSOIds;
 	private List<SlimAccessionDomain> mpIds;
 	private List<SlimAccessionDomain> doIds;
+
+	private Boolean allowEditTerm = true;	
 	
 }

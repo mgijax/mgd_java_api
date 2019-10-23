@@ -103,12 +103,22 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 				annotDomain.setProcessStatus(annotMPDomain.getProcessStatus());
 			}
 			
+			// if pwi allows term to be changed, then set term from incoming pwi domain
+			// else, set term = empty
+			// see AnnotationService/process()/PROCESS_UPDATE
+			if (domain.getAllowEditTerm()) {
+	            annotDomain.setTermKey(annotMPDomain.getTermKey());
+	            annotDomain.setTerm(annotMPDomain.getTerm());				
+			}
+			else {
+	            annotDomain.setTermKey("");
+	            annotDomain.setTerm("");					
+			}
+			
             annotDomain.setAnnotKey(annotMPDomain.getAnnotKey());
             annotDomain.setAnnotTypeKey(annotMPDomain.getAnnotTypeKey());
             annotDomain.setAnnotType(annotMPDomain.getAnnotType());
             annotDomain.setObjectKey(annotMPDomain.getObjectKey());
-            annotDomain.setTermKey(annotMPDomain.getTermKey());
-            annotDomain.setTerm(annotMPDomain.getTerm());
             annotDomain.setQualifierKey(annotMPDomain.getQualifierKey());
             annotDomain.setQualifierAbbreviation(annotMPDomain.getQualifierAbbreviation());
             annotDomain.setQualifier(annotMPDomain.getQualifier());

@@ -17,7 +17,5 @@ public class DenormGenotypeMPDomain extends BaseDomain {
 	private String accid;
 	private List<AnnotationMPDomain> mpAnnots;
 	private List<AnnotationHeaderDomain> mpHeaders;
-	
-	// pwi sets this field/see GenotypeMPService/update()
 	private Boolean allowEditTerm = false;	
 }

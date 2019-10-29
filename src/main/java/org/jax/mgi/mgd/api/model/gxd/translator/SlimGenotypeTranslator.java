@@ -20,7 +20,7 @@ public class SlimGenotypeTranslator extends BaseEntityDomainTranslator<Genotype,
 		
 		// see teleuse/EI/Genotype results
 		// use combination of Genotype fields to produce the GenotypeDisplay
-		//domain.setGenotypeDisplay(entity.getGenotypeDisplay());
+		// This is set in the Service search method.
 		
 		// mgi accession ids only
 		if (!entity.getMgiAccessionIds().isEmpty()) {

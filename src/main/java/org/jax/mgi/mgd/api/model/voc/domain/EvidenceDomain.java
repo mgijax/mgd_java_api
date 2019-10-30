@@ -33,6 +33,6 @@ public class EvidenceDomain extends BaseDomain {
 	
 	private List<NoteDomain> allNotes;
 	
-	private List<EvidencePropertyDomain> mpSexSpecificity;
+	private List<EvidencePropertyDomain> properties;
 	
 }

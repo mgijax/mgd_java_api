@@ -72,7 +72,7 @@ public class EventReasonService extends BaseService<EventReasonDomain> {
 
 		List<EventReasonDomain> results = new ArrayList<EventReasonDomain>();
 
-		String cmd = "select * from mrk_eventreason";
+		String cmd = "select * from mrk_eventreason order by eventReason";
 		log.info(cmd);
 
 		try {

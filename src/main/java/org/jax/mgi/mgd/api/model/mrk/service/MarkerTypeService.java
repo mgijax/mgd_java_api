@@ -72,7 +72,7 @@ public class MarkerTypeService extends BaseService<MarkerTypeDomain> {
 
 		List<MarkerTypeDomain> results = new ArrayList<MarkerTypeDomain>();
 
-		String cmd = "select * from mrk_types";
+		String cmd = "select * from mrk_types order by name";
 		log.info(cmd);
 
 		try {

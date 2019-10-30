@@ -72,7 +72,7 @@ public class EventService extends BaseService<EventDomain> {
 
 		List<EventDomain> results = new ArrayList<EventDomain>();
 
-		String cmd = "select * from mrk_event";
+		String cmd = "select * from mrk_event order by event";
 		log.info(cmd);
 
 		try {

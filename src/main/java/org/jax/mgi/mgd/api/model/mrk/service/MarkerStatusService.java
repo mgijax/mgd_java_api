@@ -72,7 +72,7 @@ public class MarkerStatusService extends BaseService<MarkerStatusDomain> {
 
 		List<MarkerStatusDomain> results = new ArrayList<MarkerStatusDomain>();
 
-		String cmd = "select * from mrk_status";
+		String cmd = "select * from mrk_status order by status";
 		log.info(cmd);
 
 		try {

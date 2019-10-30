@@ -41,10 +41,7 @@ public class DenormAnnotationDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	
-	// evidence-property : sex-specificity
-	//private String evidencePropertyKey;
-	//private String propertyTermKey;
-	//private String mpSexSpecificityValue;
+	// evidence-properties
 	private List<EvidencePropertyDomain> properties;
 	
 	// all notes for given evidence

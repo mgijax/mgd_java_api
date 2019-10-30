@@ -18,6 +18,7 @@ import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.GenotypeMPService;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -43,9 +44,9 @@ public class GenotypeMPController extends BaseController<DenormGenotypeMPDomain>
 	
 	@Override
 	public SearchResults<DenormGenotypeMPDomain> create(DenormGenotypeMPDomain domain, User user) {	
+		log.info("GenotypeMPController.create");
 		SearchResults<DenormGenotypeMPDomain> results = new SearchResults<DenormGenotypeMPDomain>();
-		results = genotypeMPService.create(domain, user);
-		results = genotypeMPService.getResults(Integer.valueOf(results.items.get(0).getGenotypeKey()));
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);	
 		return results;
 	}
 
@@ -53,7 +54,7 @@ public class GenotypeMPController extends BaseController<DenormGenotypeMPDomain>
 	public SearchResults<DenormGenotypeMPDomain> update(DenormGenotypeMPDomain domain, User user) {
 		SearchResults<DenormGenotypeMPDomain> results = new SearchResults<DenormGenotypeMPDomain>();
 		results = genotypeMPService.update(domain, user);
-		results = genotypeMPService.getResults(Integer.valueOf(results.items.get(0).getGenotypeKey()));
+		//results = genotypeMPService.getResults(Integer.valueOf(results.items.get(0).getGenotypeKey()));
 		return results;	
 	}
 
@@ -64,7 +65,10 @@ public class GenotypeMPController extends BaseController<DenormGenotypeMPDomain>
 
 	@Override
 	public SearchResults<DenormGenotypeMPDomain> delete(Integer key, User user) {
-		return genotypeMPService.delete(key, user);
+		log.info("GenotypeMPController.delete");
+		SearchResults<DenormGenotypeMPDomain> results = new SearchResults<DenormGenotypeMPDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;		
 	}
 
 	@GET

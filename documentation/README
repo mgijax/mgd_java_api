@@ -35,3 +35,13 @@ To edit this doc:
 * If you want to delete something, select it, right click and select cut
    OR you can select and hit the delete button and you will be asked to confirm
    OR you can SHIFT:Del and it will not ask for confirmation. 
+
+* When you are done editing click the File tab at the top and 
+	* select Export Documentation
+	* select the PDF Button
+	* Click export
+	* Click the 'Save File' button and click 'OK'
+	* and select  your mgd_java_api/documentation directory to
+	   save it to
+	* now add/commit/push to git
+	* links to the document in the wiki etc are to git

@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@ApiModel(value = "Annotation MP (denormalized) Domain")
+@ApiModel(value = "Annotation (denormalized) Domain")
 public class DenormAnnotationDomain extends BaseDomain {
 	
 	private String processStatus;
@@ -23,7 +23,7 @@ public class DenormAnnotationDomain extends BaseDomain {
 	private String qualifierKey;
 	private String qualifierAbbreviation;
 	private String qualifier;
-	private String mpid;	
+	private String termid;	
 
 	// evidence
 	private String annotEvidenceKey;

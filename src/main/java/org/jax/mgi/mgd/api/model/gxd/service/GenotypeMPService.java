@@ -235,7 +235,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 	                    denormAnnotDomain.setQualifierKey(annotDomain.getQualifierKey());
 		                denormAnnotDomain.setQualifierAbbreviation(annotDomain.getQualifierAbbreviation());
 		                denormAnnotDomain.setQualifier(annotDomain.getQualifier());
-		                denormAnnotDomain.setMpid(annotDomain.getMpIds().get(0).getAccID());
+		                denormAnnotDomain.setTermid(annotDomain.getMpIds().get(0).getAccID());
 		
 		                // evidence
 						EvidenceDomain evidenceDomain = annotDomain.getEvidence().get(j);

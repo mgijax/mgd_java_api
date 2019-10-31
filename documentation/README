@@ -1,0 +1,37 @@
+To edit this doc:
+* Login:
+    Got to https://dashboard.genmymodel.com
+    Login: bitwise89@hotmail.com
+    Password: Slc3lliot
+
+* Click the 'Genotype MP' project - you'll see the class UML diagram
+* Click the orange 'Open in Editor' button in upper right
+* You'll see the three vertical panes with tabs on the far left
+    1. The First vertical column displays whichever tab you have selected e.g
+ 	Project or Properties
+    2. The Toolbar
+    3. The Canvas where you see the UML diagram 
+
+* To add to the diagram drag and drop from the toolbar 
+   Click the Class Name area of a class to see the editing tools. 
+       Hover over them to see their description. On the right there are:
+	"Add a new public attribute"
+	"Add a new protected attribute"
+	"Add a new private attribute"
+	"Add a new operation"
+       When you click on one the new attribute/operation will appear and
+	you can add the name, data type, return type etc
+* To Edit the diagram,  you can do so from the canvas or the properties
+    Click on Properties tab (lower left) then click on the class attribute
+       or operation you want to edit (in the diagram)
+	then select the 'pencil' icon and its properties will show in the 
+	first column. Name/type for attributes. Name, visibility, return 
+	parameter, parameters for an operation.
+    In the properties mode, select the icon underneath the pencil (looks like a
+	floppy disk) to edit the description of the class, attribute or 
+	operation
+* Connections between classes can be found in the Toolbar
+
+* If you want to delete something, select it, right click and select cut
+   OR you can select and hit the delete button and you will be asked to confirm
+   OR you can SHIFT:Del and it will not ask for confirmation. 

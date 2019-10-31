@@ -834,23 +834,33 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			return results;
 		}
 
-		String cmd = "\nselect m._marker_key, m.symbol, m.chromosome, a.accID"
-				+ "\nfrom mrk_marker m, acc_accession a"
-				+ "\nwhere m._organism_key = 1"
-				+ "\nand m._marker_key = a._object_key"
-				+ "\nand a._mgitype_key = 2"
-				+ "\nand a._logicaldb_key = 1"
-				+ "\nand a.preferred = 1"
+		String cmd = "\nselect m._marker_key, m.symbol, m.chromosome";
+		String from = "from mrk_marker m";
+		String where = "where m._organism_key = 1"
 				+ "\nand lower(symbol) = '" + value.toLowerCase() + "'";
+
+		Boolean hasAccID = false;
 		
+		// withdrawn/reserved symbols do not have accession ids
+		if (allowWithdrawn == false && allowReserved == false) {
+			cmd = cmd + ", a.accID";
+			from = from + ", acc_accession a"; 
+			where = where + "\nand m._marker_key = a._object_key"
+					+ "\nand a._mgitype_key = 2"
+					+ "\nand a._logicaldb_key = 1"
+					+ "\nand a.preferred = 1";
+			hasAccID = true;
+		}
+
 		if (allowWithdrawn == false) {
-			cmd = cmd + "\nand _marker_status_key not in (2)";
+			where = where + "\nand m._marker_status_key not in (2)";
 		}
 
 		if (allowReserved == false) {
-			cmd = cmd + "\nand _marker_status_key not in (3)";
+			where = where + "\nand m._marker_status_key not in (3)";
 		}
-				
+		
+		cmd = cmd + "\n" + from + "\n" + where;
 		log.info(cmd);
 
 		try {
@@ -860,7 +870,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setSymbol(rs.getString("symbol"));
 				domain.setChromosome(rs.getString("chromosome"));
-				domain.setAccID(rs.getString("accID"));
+				
+				if (hasAccID) {
+					domain.setAccID(rs.getString("accID"));
+				}
+				
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

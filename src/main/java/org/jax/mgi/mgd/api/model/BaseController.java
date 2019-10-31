@@ -141,7 +141,9 @@ public abstract class BaseController<T extends BaseDomain> {
 			if (userToken && user != null) {		
 				results = update(object, user);
 				log.info(Constants.LOG_OUT_DOMAIN);
-				log.info(mapper.writeValueAsString(results.items.get(0)));					
+				if (results.items != null && !results.items.isEmpty()) {
+					log.info(mapper.writeValueAsString(results.items.get(0)));
+				}				
 			} else {
 				results.setError(Constants.LOG_FAIL_USERAUTHENTICATION, api_access_token + "," + username, Constants.HTTP_SERVER_ERROR);
 			}

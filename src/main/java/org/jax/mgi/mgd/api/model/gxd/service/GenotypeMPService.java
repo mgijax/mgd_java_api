@@ -23,7 +23,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationHeaderDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationHeaderDomain;
-import org.jax.mgi.mgd.api.model.voc.domain.AnnotationMPDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.DenormAnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidenceDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidencePropertyDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.AnnotationHeader;
@@ -87,7 +87,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 			
 			//log.info("domain index: " + i);
 			
-			AnnotationMPDomain annotMPDomain = domain.getMpAnnots().get(i);
+			DenormAnnotationDomain denormAnnotDomain = domain.getMpAnnots().get(i);
 		
 			// annotation (term, qualifier)
 			AnnotationDomain annotDomain = new AnnotationDomain();
@@ -101,44 +101,44 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 				annotDomain.setProcessStatus(Constants.PROCESS_UPDATE);
 			}
 			else {
-				annotDomain.setProcessStatus(annotMPDomain.getProcessStatus());
+				annotDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
 			}
 					
-            annotDomain.setAnnotKey(annotMPDomain.getAnnotKey());
-            annotDomain.setAnnotTypeKey(annotMPDomain.getAnnotTypeKey());
-            annotDomain.setAnnotType(annotMPDomain.getAnnotType());
-            annotDomain.setObjectKey(annotMPDomain.getObjectKey());
-            annotDomain.setTermKey(annotMPDomain.getTermKey());
-            annotDomain.setTerm(annotMPDomain.getTerm());           
-            annotDomain.setQualifierKey(annotMPDomain.getQualifierKey());
-            annotDomain.setQualifierAbbreviation(annotMPDomain.getQualifierAbbreviation());
-            annotDomain.setQualifier(annotMPDomain.getQualifier());
+            annotDomain.setAnnotKey(denormAnnotDomain.getAnnotKey());
+            annotDomain.setAnnotTypeKey(denormAnnotDomain.getAnnotTypeKey());
+            annotDomain.setAnnotType(denormAnnotDomain.getAnnotType());
+            annotDomain.setObjectKey(denormAnnotDomain.getObjectKey());
+            annotDomain.setTermKey(denormAnnotDomain.getTermKey());
+            annotDomain.setTerm(denormAnnotDomain.getTerm());           
+            annotDomain.setQualifierKey(denormAnnotDomain.getQualifierKey());
+            annotDomain.setQualifierAbbreviation(denormAnnotDomain.getQualifierAbbreviation());
+            annotDomain.setQualifier(denormAnnotDomain.getQualifier());
             annotDomain.setAllowEditTerm(domain.getAllowEditTerm());
             
             // evidence : create evidence list of 1 result
             //log.info("add evidence list");
 			EvidenceDomain evidenceDomain = new EvidenceDomain();
             List<EvidenceDomain> evidenceList = new ArrayList<EvidenceDomain>();
-            evidenceDomain.setProcessStatus(annotMPDomain.getProcessStatus());
-            evidenceDomain.setAnnotEvidenceKey(annotMPDomain.getAnnotEvidenceKey());
-            evidenceDomain.setEvidenceTermKey(annotMPDomain.getEvidenceTermKey());
-            evidenceDomain.setRefsKey(annotMPDomain.getRefsKey());
-            evidenceDomain.setCreatedByKey(annotMPDomain.getCreatedByKey());
-            evidenceDomain.setModifiedByKey(annotMPDomain.getModifiedByKey());
-            evidenceDomain.setAllNotes(annotMPDomain.getAllNotes());
+            evidenceDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
+            evidenceDomain.setAnnotEvidenceKey(denormAnnotDomain.getAnnotEvidenceKey());
+            evidenceDomain.setEvidenceTermKey(denormAnnotDomain.getEvidenceTermKey());
+            evidenceDomain.setRefsKey(denormAnnotDomain.getRefsKey());
+            evidenceDomain.setCreatedByKey(denormAnnotDomain.getCreatedByKey());
+            evidenceDomain.setModifiedByKey(denormAnnotDomain.getModifiedByKey());
+            evidenceDomain.setAllNotes(denormAnnotDomain.getAllNotes());
 			
 			// sex-specificity : create evidence-property list of 1 result
             //log.info("add evidence-property");
 			EvidencePropertyDomain evidencePropertyDomain = new EvidencePropertyDomain();			
 			List<EvidencePropertyDomain > evidencePropertyList = new ArrayList<EvidencePropertyDomain>();
-			evidencePropertyDomain.setProcessStatus(annotMPDomain.getProcessStatus());
-			evidencePropertyDomain.setEvidencePropertyKey(annotMPDomain.getEvidencePropertyKey());
-			evidencePropertyDomain.setPropertyTermKey(annotMPDomain.getPropertyTermKey());
-			evidencePropertyDomain.setValue(annotMPDomain.getMpSexSpecificityValue());
+			evidencePropertyDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
+			evidencePropertyDomain.setEvidencePropertyKey(denormAnnotDomain.getProperties().get(0).getEvidencePropertyKey());
+			evidencePropertyDomain.setPropertyTermKey(denormAnnotDomain.getProperties().get(0).getPropertyTermKey());
+			evidencePropertyDomain.setValue(denormAnnotDomain.getProperties().get(0).getValue());
 			evidencePropertyList.add(evidencePropertyDomain);
 			
-			// add sex-specificity to the evidenceDomain
-			evidenceDomain.setMpSexSpecificity(evidencePropertyList);
+			// add properties to the evidenceDomain
+			evidenceDomain.setProperties(evidencePropertyList);
 
 			// add evidenceDomain to evidenceList
 			evidenceList.add(evidenceDomain);
@@ -179,6 +179,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 		
 		log.info("repackage incoming domain as results");		
 		SearchResults<DenormGenotypeMPDomain> results = new SearchResults<DenormGenotypeMPDomain>();
+		results = getResults(Integer.valueOf(domain.getGenotypeKey()));
 		results.setItem(domain);
 		log.info("results: " + results);
 		return results;
@@ -201,7 +202,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
     	try {
         	GenotypeMPDomain domain = new GenotypeMPDomain();   		
 			domain = translator.translate(genotypeDAO.get(key));
-			List<AnnotationMPDomain> annotList = new ArrayList<AnnotationMPDomain>();
+			List<DenormAnnotationDomain> annotList = new ArrayList<DenormAnnotationDomain>();
 			
 			mpDomain.setGenotypeKey(domain.getGenotypeKey());
 			mpDomain.setGenotypeDisplay(domain.getGenotypeDisplay());
@@ -223,44 +224,47 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 						//log.info("domain.getMpAnnots.getEvidence.row: " + j);
 
 						// annotation (term, qualifier)
-						AnnotationMPDomain annotMPDomain = new AnnotationMPDomain();
-						annotMPDomain.setProcessStatus(annotDomain.getProcessStatus());
-	                    annotMPDomain.setAnnotKey(annotDomain.getAnnotKey());
-	                    annotMPDomain.setAnnotTypeKey(annotDomain.getAnnotTypeKey());
-	                    annotMPDomain.setAnnotType(annotDomain.getAnnotType());
-	                    annotMPDomain.setObjectKey(annotDomain.getObjectKey());
-	                    annotMPDomain.setTermKey(annotDomain.getTermKey());
-	                    annotMPDomain.setTerm(annotDomain.getTerm());
-	                    annotMPDomain.setQualifierKey(annotDomain.getQualifierKey());
-		                annotMPDomain.setQualifierAbbreviation(annotDomain.getQualifierAbbreviation());
-		                annotMPDomain.setQualifier(annotDomain.getQualifier());
-		                annotMPDomain.setMpid(annotDomain.getMpIds().get(0).getAccID());
+						DenormAnnotationDomain denormAnnotDomain = new DenormAnnotationDomain();
+						denormAnnotDomain.setProcessStatus(annotDomain.getProcessStatus());
+	                    denormAnnotDomain.setAnnotKey(annotDomain.getAnnotKey());
+	                    denormAnnotDomain.setAnnotTypeKey(annotDomain.getAnnotTypeKey());
+	                    denormAnnotDomain.setAnnotType(annotDomain.getAnnotType());
+	                    denormAnnotDomain.setObjectKey(annotDomain.getObjectKey());
+	                    denormAnnotDomain.setTermKey(annotDomain.getTermKey());
+	                    denormAnnotDomain.setTerm(annotDomain.getTerm());
+	                    denormAnnotDomain.setQualifierKey(annotDomain.getQualifierKey());
+		                denormAnnotDomain.setQualifierAbbreviation(annotDomain.getQualifierAbbreviation());
+		                denormAnnotDomain.setQualifier(annotDomain.getQualifier());
+		                denormAnnotDomain.setMpid(annotDomain.getMpIds().get(0).getAccID());
 		
 		                // evidence
 						EvidenceDomain evidenceDomain = annotDomain.getEvidence().get(j);
-		                annotMPDomain.setAnnotEvidenceKey(evidenceDomain.getAnnotEvidenceKey());
-		                annotMPDomain.setEvidenceTermKey(evidenceDomain.getEvidenceTermKey());
-		                annotMPDomain.setEvidenceTerm(evidenceDomain.getEvidenceTerm());
-		                annotMPDomain.setEvidenceAbbreviation(evidenceDomain.getEvidenceAbbreviation());
-		                annotMPDomain.setRefsKey(evidenceDomain.getRefsKey());
-		                annotMPDomain.setJnumid(evidenceDomain.getJnumid());
-		                annotMPDomain.setJnum(Integer.valueOf(evidenceDomain.getJnum()));
-		                annotMPDomain.setShort_citation(evidenceDomain.getShort_citation());
-		                annotMPDomain.setCreatedByKey(evidenceDomain.getCreatedByKey());
-		                annotMPDomain.setCreatedBy(evidenceDomain.getCreatedBy());
-		                annotMPDomain.setModifiedByKey(evidenceDomain.getModifiedByKey());
-		                annotMPDomain.setModifiedBy(evidenceDomain.getModifiedBy());
-						annotMPDomain.setCreation_date(evidenceDomain.getCreation_date());
-						annotMPDomain.setModification_date(evidenceDomain.getModification_date());
-						annotMPDomain.setAllNotes(evidenceDomain.getAllNotes());
+		                denormAnnotDomain.setAnnotEvidenceKey(evidenceDomain.getAnnotEvidenceKey());
+		                denormAnnotDomain.setEvidenceTermKey(evidenceDomain.getEvidenceTermKey());
+		                denormAnnotDomain.setEvidenceTerm(evidenceDomain.getEvidenceTerm());
+		                denormAnnotDomain.setEvidenceAbbreviation(evidenceDomain.getEvidenceAbbreviation());
+		                denormAnnotDomain.setRefsKey(evidenceDomain.getRefsKey());
+		                denormAnnotDomain.setJnumid(evidenceDomain.getJnumid());
+		                denormAnnotDomain.setJnum(Integer.valueOf(evidenceDomain.getJnum()));
+		                denormAnnotDomain.setShort_citation(evidenceDomain.getShort_citation());
+		                denormAnnotDomain.setCreatedByKey(evidenceDomain.getCreatedByKey());
+		                denormAnnotDomain.setCreatedBy(evidenceDomain.getCreatedBy());
+		                denormAnnotDomain.setModifiedByKey(evidenceDomain.getModifiedByKey());
+		                denormAnnotDomain.setModifiedBy(evidenceDomain.getModifiedBy());
+						denormAnnotDomain.setCreation_date(evidenceDomain.getCreation_date());
+						denormAnnotDomain.setModification_date(evidenceDomain.getModification_date());
+						denormAnnotDomain.setAllNotes(evidenceDomain.getAllNotes());
 
 						// evidence-property : sex-specificity
-						EvidencePropertyDomain evidencePropertyDomain = evidenceDomain.getMpSexSpecificity().get(0);
-						annotMPDomain.setEvidencePropertyKey(evidencePropertyDomain.getEvidencePropertyKey());
-						annotMPDomain.setPropertyTermKey(evidencePropertyDomain.getPropertyTermKey());
-						annotMPDomain.setMpSexSpecificityValue(evidencePropertyDomain.getValue());
+						// properties are Lists - even though we have only one for sex-specificity 
+						List<EvidencePropertyDomain> propertyList = evidenceDomain.getProperties(); 
 						
-						annotList.add(annotMPDomain);
+						//denormAnnotDomain.setEvidencePropertyKey(evidencePropertyDomain.getEvidencePropertyKey());
+						//denormAnnotDomain.setPropertyTermKey(evidencePropertyDomain.getPropertyTermKey());
+						//denormAnnotDomain.setMpSexSpecificityValue(evidencePropertyDomain.getValue());
+						denormAnnotDomain.setProperties(propertyList);
+						
+						annotList.add(denormAnnotDomain);
 					}
 				}
 			}
@@ -269,7 +273,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 			mpDomain.setMpAnnots(annotList);
 			
 			// sort by jnum, term		
-			annotList.sort(Comparator.comparingInt(AnnotationMPDomain::getJnum).thenComparing(AnnotationMPDomain::getTerm));				
+			annotList.sort(Comparator.comparingInt(DenormAnnotationDomain::getJnum).thenComparing(DenormAnnotationDomain::getTerm));				
     	}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -358,7 +362,7 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 		
 		if (searchDomain.getMpAnnots() != null) {
 						
-			AnnotationMPDomain annotDomain = searchDomain.getMpAnnots().get(0);
+			DenormAnnotationDomain annotDomain = searchDomain.getMpAnnots().get(0);
 		
 			value = annotDomain.getTermKey();
 			if (value != null && !value.isEmpty()) {
@@ -395,9 +399,9 @@ public class GenotypeMPService extends BaseService<DenormGenotypeMPDomain> {
 				}
 			}
 			
-			value = annotDomain.getMpSexSpecificityValue();
+			value = annotDomain.getProperties().get(0).getValue(); 
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand p._propertyterm_key = " + annotDomain.getPropertyTermKey();
+				where = where + "\nand p._propertyterm_key = " + annotDomain.getProperties().get(0).getPropertyTermKey();
 				where = where + "\nand p.value ilike '" + value + "'";
 				from_evidence = true;
 				from_property = true;

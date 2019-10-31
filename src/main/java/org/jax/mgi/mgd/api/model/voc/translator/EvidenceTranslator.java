@@ -53,7 +53,7 @@ public class EvidenceTranslator extends BaseEntityDomainTranslator<Evidence, Evi
 		// at most one mp-sex-specificity
 		if (entity.getMpSexSpecificity() != null && !entity.getMpSexSpecificity().isEmpty()) {
 			Iterable<EvidencePropertyDomain> property = propertyTranslator.translateEntities(entity.getMpSexSpecificity());
-			domain.setMpSexSpecificity(IteratorUtils.toList(property.iterator()));
+			domain.setProperties(IteratorUtils.toList(property.iterator()));
 		}
 				
 		return domain;

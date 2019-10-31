@@ -11,8 +11,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @ApiModel(value = "Annotation MP (denormalized) Domain")
-public class AnnotationMPDomain extends BaseDomain {
-	// works with the DenormGenotypeMPDomain
+public class DenormAnnotationDomain extends BaseDomain {
 	
 	private String processStatus;
 	private String annotKey;
@@ -42,10 +41,8 @@ public class AnnotationMPDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	
-	// evidence-property : sex-specificity
-	private String evidencePropertyKey;
-	private String propertyTermKey;
-	private String mpSexSpecificityValue;
+	// evidence-properties
+	private List<EvidencePropertyDomain> properties;
 	
 	// all notes for given evidence
 	private List<NoteDomain> allNotes;

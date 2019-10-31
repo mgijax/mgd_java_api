@@ -302,12 +302,12 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 						// The property stanza and the sequenceNum will always be 1 
 						String sexSpecificity;
 						if (annotTypeKey.equals("1002")) {
-							if(evidenceDomain.getMpSexSpecificity() == null || evidenceDomain.getMpSexSpecificity().isEmpty()) {		
+							if(evidenceDomain.getProperties() == null || evidenceDomain.getProperties().isEmpty()) {		
 						}
 								sexSpecificity = "NA";
 						}
 						else {
-							sexSpecificity = evidenceDomain.getMpSexSpecificity().get(0).getValue();
+							sexSpecificity = evidenceDomain.getProperties().get(0).getValue();
 						}
 						
 						EvidenceProperty propertyEntity = new EvidenceProperty();
@@ -406,9 +406,9 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 							// evidence property/mp-sex-specificity; only one
 							if (annotTypeKey.equals("1002")) {
 								log.info("processAnnotation/mp-sex-specificity");
-								EvidenceProperty evidencePropertyEntity = evidencePropertyDAO.get(Integer.valueOf(evidenceDomain.getMpSexSpecificity().get(0).getEvidencePropertyKey()));					
-								if (!evidenceEntity.getMpSexSpecificity().get(0).getValue().equals(evidenceDomain.getMpSexSpecificity().get(0).getValue())) {
-									evidencePropertyEntity.setValue(evidenceDomain.getMpSexSpecificity().get(0).getValue());
+								EvidenceProperty evidencePropertyEntity = evidencePropertyDAO.get(Integer.valueOf(evidenceDomain.getProperties().get(0).getEvidencePropertyKey()));					
+								if (!evidenceEntity.getMpSexSpecificity().get(0).getValue().equals(evidenceDomain.getProperties().get(0).getValue())) {
+									evidencePropertyEntity.setValue(evidenceDomain.getProperties().get(0).getValue());
 									isUpdated = true;
 								}
 							}

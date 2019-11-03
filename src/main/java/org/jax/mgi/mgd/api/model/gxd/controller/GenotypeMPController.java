@@ -12,10 +12,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.gxd.domain.DenormGenotypeMPDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.DenormGenotypeAnnotDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeAlleleReferenceDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
-import org.jax.mgi.mgd.api.model.gxd.service.GenotypeMPService;
+import org.jax.mgi.mgd.api.model.gxd.service.GenotypeAnnotService;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -31,42 +31,43 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "Genotype MP Annotations Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class GenotypeMPController extends BaseController<DenormGenotypeMPDomain> {
+public class GenotypeMPController extends BaseController<DenormGenotypeAnnotDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
 	ObjectMapper mapper = new ObjectMapper();
+	String annotType = "1002";
 	
 	@Inject
-	private GenotypeMPService genotypeMPService;
+	private GenotypeAnnotService genotypeMPService;
 
 	// refresh/resync the results due to database triggers
 	// for example, the mgi accession id is created by a database trigger
 	
 	@Override
-	public SearchResults<DenormGenotypeMPDomain> create(DenormGenotypeMPDomain domain, User user) {	
+	public SearchResults<DenormGenotypeAnnotDomain> create(DenormGenotypeAnnotDomain domain, User user) {	
 		log.info("GenotypeMPController.create");
-		SearchResults<DenormGenotypeMPDomain> results = new SearchResults<DenormGenotypeMPDomain>();
+		SearchResults<DenormGenotypeAnnotDomain> results = new SearchResults<DenormGenotypeAnnotDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);	
 		return results;
 	}
 
 	@Override
-	public SearchResults<DenormGenotypeMPDomain> update(DenormGenotypeMPDomain domain, User user) {
-		SearchResults<DenormGenotypeMPDomain> results = new SearchResults<DenormGenotypeMPDomain>();
+	public SearchResults<DenormGenotypeAnnotDomain> update(DenormGenotypeAnnotDomain domain, User user) {
+		SearchResults<DenormGenotypeAnnotDomain> results = new SearchResults<DenormGenotypeAnnotDomain>();
 		results = genotypeMPService.update(domain, user);
-		//results = genotypeMPService.getResults(Integer.valueOf(results.items.get(0).getGenotypeKey()));
+		
 		return results;	
 	}
 
 	@Override
-	public DenormGenotypeMPDomain get(Integer genotypeKey) {
+	public DenormGenotypeAnnotDomain get(Integer genotypeKey) {
 		return genotypeMPService.get(genotypeKey);
 	}
 
 	@Override
-	public SearchResults<DenormGenotypeMPDomain> delete(Integer key, User user) {
+	public SearchResults<DenormGenotypeAnnotDomain> delete(Integer key, User user) {
 		log.info("GenotypeMPController.delete");
-		SearchResults<DenormGenotypeMPDomain> results = new SearchResults<DenormGenotypeMPDomain>();
+		SearchResults<DenormGenotypeAnnotDomain> results = new SearchResults<DenormGenotypeAnnotDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;		
 	}
@@ -74,14 +75,14 @@ public class GenotypeMPController extends BaseController<DenormGenotypeMPDomain>
 	@GET
 	@ApiOperation(value = "Get the object count from voc_annot table where _annottype_key = 1002")
 	@Path("/getObjectCount")
-	public SearchResults<DenormGenotypeMPDomain> getObjectCount() {
-		return genotypeMPService.getObjectCount();
+	public SearchResults<DenormGenotypeAnnotDomain> getObjectCount() {
+		return genotypeMPService.getObjectCount(annotType);
 	}
 		
 	@POST
 	@ApiOperation(value = "Search/returns slim genotype domain")
 	@Path("/search")
-	public List<SlimGenotypeDomain> search(DenormGenotypeMPDomain searchDomain) {
+	public List<SlimGenotypeDomain> search(DenormGenotypeAnnotDomain searchDomain) {
 	
 		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
 
@@ -95,7 +96,7 @@ public class GenotypeMPController extends BaseController<DenormGenotypeMPDomain>
 	}
 
 	@POST
-	@ApiOperation(value = "Validate Allele-Reference associatins for Genotype")
+	@ApiOperation(value = "Validate Allele-Reference associations for Genotype")
 	@Path("/validateAlleleReference")
 	public List<MGIReferenceAssocDomain> validateAlleleReference(SlimGenotypeAlleleReferenceDomain searchDomain) {
 		

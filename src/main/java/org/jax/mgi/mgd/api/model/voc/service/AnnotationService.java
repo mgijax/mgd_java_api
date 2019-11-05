@@ -247,8 +247,8 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				}
 				
 				log.info("calculating qualifier");
-				// for MP annotations only, set default qualifier to "null"
-				if (annotTypeKey.equals("1002")) {					
+				// for MP (1102) and DO (1020) annotations only, set default qualifier to "null"
+				if (annotTypeKey.equals("1002") || annotTypeKey.equals("1020")) {					
 					if( qualifierKey == null || qualifierKey.isEmpty()) {
 					    qualifierKey = "2181423";
 					}
@@ -285,6 +285,11 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 							if(evidenceTermKey ==  null || evidenceTermKey.isEmpty()) {
 									evidenceTermKey = "52280";
 							}
+						}
+						else if(annotTypeKey.equals("1020") ) {
+							if(evidenceTermKey ==  null || evidenceTermKey.isEmpty()) {
+								evidenceTermKey = "107";
+						}
 						}
 	
 						evidenceEntity.setEvidenceTerm(termDAO.get(Integer.valueOf(evidenceTermKey)));

@@ -38,7 +38,7 @@ public class GenotypeDOController extends BaseController<DenormGenotypeAnnotDoma
 	String annotType = "1020";
 	
 	@Inject
-	private GenotypeAnnotService genotypeDOService;
+	private GenotypeAnnotService genotypeAnnotService;
 
 	// refresh/resync the results due to database triggers
 	// for example, the mgi accession id is created by a database trigger
@@ -54,14 +54,14 @@ public class GenotypeDOController extends BaseController<DenormGenotypeAnnotDoma
 	@Override
 	public SearchResults<DenormGenotypeAnnotDomain> update(DenormGenotypeAnnotDomain domain, User user) {
 		SearchResults<DenormGenotypeAnnotDomain> results = new SearchResults<DenormGenotypeAnnotDomain>();
-		results = genotypeDOService.update(domain, user);
+		results = genotypeAnnotService.update(domain, user);
 		
 		return results;	
 	}
 
 	@Override
 	public DenormGenotypeAnnotDomain get(Integer genotypeKey) {
-		return genotypeDOService.get(genotypeKey, Integer.valueOf(annotType));
+		return genotypeAnnotService.get(genotypeKey, Integer.valueOf(annotType));
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class GenotypeDOController extends BaseController<DenormGenotypeAnnotDoma
 	@ApiOperation(value = "Get the object count from voc_annot table where _annottype_key = 1020")
 	@Path("/getObjectCount")
 	public SearchResults<DenormGenotypeAnnotDomain> getObjectCount() {
-		return genotypeDOService.getObjectCount(annotType);
+		return genotypeAnnotService.getObjectCount(annotType);
 	}
 		
 	@POST
@@ -87,7 +87,7 @@ public class GenotypeDOController extends BaseController<DenormGenotypeAnnotDoma
 		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
 
 		try {
-			results = genotypeDOService.search(searchDomain);
+			results = genotypeAnnotService.search(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -103,7 +103,7 @@ public class GenotypeDOController extends BaseController<DenormGenotypeAnnotDoma
 		List<MGIReferenceAssocDomain> results = new ArrayList<MGIReferenceAssocDomain>();
 
 		try {
-			results = genotypeDOService.validateAlleleReference(searchDomain);
+			results = genotypeAnnotService.validateAlleleReference(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

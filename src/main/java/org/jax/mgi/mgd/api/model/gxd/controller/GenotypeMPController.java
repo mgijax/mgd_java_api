@@ -61,7 +61,7 @@ public class GenotypeMPController extends BaseController<DenormGenotypeAnnotDoma
 
 	@Override
 	public DenormGenotypeAnnotDomain get(Integer genotypeKey) {
-		return genotypeMPService.get(genotypeKey);
+		return genotypeMPService.get(genotypeKey, Integer.valueOf(annotType));
 	}
 
 	@Override

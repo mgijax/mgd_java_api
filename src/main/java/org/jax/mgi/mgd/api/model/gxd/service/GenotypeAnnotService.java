@@ -133,25 +133,27 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
             evidenceDomain.setModifiedByKey(denormAnnotDomain.getModifiedByKey());
             evidenceDomain.setAllNotes(denormAnnotDomain.getAllNotes());
 			
-			// sex-specificity : create evidence-property list of 1 result
-            //log.info("add evidence-property");
-			EvidencePropertyDomain evidencePropertyDomain = new EvidencePropertyDomain();			
-			List<EvidencePropertyDomain > evidencePropertyList = new ArrayList<EvidencePropertyDomain>();
-			evidencePropertyDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
-			evidencePropertyDomain.setEvidencePropertyKey(denormAnnotDomain.getProperties().get(0).getEvidencePropertyKey());
-			evidencePropertyDomain.setPropertyTermKey(denormAnnotDomain.getProperties().get(0).getPropertyTermKey());
-			evidencePropertyDomain.setValue(denormAnnotDomain.getProperties().get(0).getValue());
-			evidencePropertyList.add(evidencePropertyDomain);
-			
-			// add properties to the evidenceDomain
-			evidenceDomain.setProperties(evidencePropertyList);
-
+            // Only MP has properties
+            if (annotTypeKey.equals("1002")) {
+				// sex-specificity : create evidence-property list of 1 result
+	            //log.info("add evidence-property");
+				EvidencePropertyDomain evidencePropertyDomain = new EvidencePropertyDomain();			
+				List<EvidencePropertyDomain > evidencePropertyList = new ArrayList<EvidencePropertyDomain>();
+				evidencePropertyDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
+				evidencePropertyDomain.setEvidencePropertyKey(denormAnnotDomain.getProperties().get(0).getEvidencePropertyKey());
+				evidencePropertyDomain.setPropertyTermKey(denormAnnotDomain.getProperties().get(0).getPropertyTermKey());
+				evidencePropertyDomain.setValue(denormAnnotDomain.getProperties().get(0).getValue());
+				evidencePropertyList.add(evidencePropertyDomain);
+				
+				// add properties to the evidenceDomain
+				evidenceDomain.setProperties(evidencePropertyList);
+            }
 			// add evidenceDomain to evidenceList
 			evidenceList.add(evidenceDomain);
 
 			// add evidenceList to annotDomain
 			annotDomain.setEvidence(evidenceList);
-
+            
 			// add annotDomain to annotList
 			annotList.add(annotDomain);         
 		}
@@ -162,26 +164,28 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			genoAnnotDomain.setAnnots(annotList);
 			annotationService.process(genoAnnotDomain.getAnnots(), user);
 			
-			// process change to annotationHeaderDomian.getSequenceNum()
-			List<AnnotationHeaderDomain> headerList = genoAnnotDomain.getHeaders();
-			// will be null for DO (1020), not null for MP (1002)
-			if (headerList != null && !headerList.isEmpty()) {
-				for (int j = 0; j < headerList.size(); j++) {
-					AnnotationHeaderDomain annotationHeaderDomain = headerList.get(j);
-					AnnotationHeader annotationHeaderEntity = annotationHeaderDAO.get(Integer.valueOf(annotationHeaderDomain.getAnnotHeaderKey()));
-		
-					if (annotationHeaderDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-						if (!annotationHeaderEntity.getSequenceNum().equals(annotationHeaderDomain.getSequenceNum())) {	
-							annotationHeaderEntity.setSequenceNum(annotationHeaderDomain.getSequenceNum());
-							annotationHeaderEntity.setModification_date(new Date());
-							annotationHeaderEntity.setModifiedBy(user);
-							annotationHeaderEntity.setApproval_date(new Date());
-							annotationHeaderEntity.setApprovedBy(user);						
-							annotationHeaderDAO.update(annotationHeaderEntity);
-						}
-					}	
+			if (annotTypeKey.equals("1002")) {
+				// process change to annotationHeaderDomian.getSequenceNum()
+				List<AnnotationHeaderDomain> headerList = genoAnnotDomain.getHeaders();
+				// will be null for DO (1020), not null for MP (1002)
+				if (headerList != null && !headerList.isEmpty()) {
+					for (int j = 0; j < headerList.size(); j++) {
+						AnnotationHeaderDomain annotationHeaderDomain = headerList.get(j);
+						AnnotationHeader annotationHeaderEntity = annotationHeaderDAO.get(Integer.valueOf(annotationHeaderDomain.getAnnotHeaderKey()));
+			
+						if (annotationHeaderDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+							if (!annotationHeaderEntity.getSequenceNum().equals(annotationHeaderDomain.getSequenceNum())) {	
+								annotationHeaderEntity.setSequenceNum(annotationHeaderDomain.getSequenceNum());
+								annotationHeaderEntity.setModification_date(new Date());
+								annotationHeaderEntity.setModifiedBy(user);
+								annotationHeaderEntity.setApproval_date(new Date());
+								annotationHeaderEntity.setApprovedBy(user);						
+								annotationHeaderDAO.update(annotationHeaderEntity);
+							}
+						}	
+					}
 				}
-			}
+		    }
 		}
 		
 		log.info("repackage incoming domain as results");		

@@ -72,13 +72,18 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 		GenotypeAnnotDomain genoAnnotDomain = new GenotypeAnnotDomain();
 		List<AnnotationDomain> annotList = new ArrayList<AnnotationDomain>();
 
+		// assuming the pwi will always pass in the annotTypeKey
+		String annotTypeKey = domain.getAnnots().get(0).getAnnotTypeKey();
+		
     	genoAnnotDomain.setGenotypeKey(domain.getGenotypeKey());
 		//genoAnnotDomain.setGenotypeDisplay(domain.getGenotypeDisplay());
-    	// if 1002
-    	genoAnnotDomain.setHeaders(domain.getHeaders());
+    	
+    	if (annotTypeKey.equals("1002")) {
+    		genoAnnotDomain.setHeaders(domain.getHeaders());
+    	}
     	genoAnnotDomain.setAllowEditTerm(domain.getAllowEditTerm());
 		
-    	// incoming denormalized denorm GenotypeAnnot json domain
+    	// Iterate thru incoming denormalized GenotypeAnnot domain
 		for (int i = 0; i < domain.getAnnots().size(); i++) {
 			
 			// if processStatus == "x", then continue; no need to create domain/process anything
@@ -96,7 +101,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			//
 			// if processStatus == "d", then process as "u"
 			// 1 annotation may have >= 1 evidence
-			// 1 evidence may be a "d", bu the other evidence may be "x", "u" or "c"
+			// 1 evidence may be a "d", but other evidences may be "x", "u" or "c"
 			//
 			if (domain.getAnnots().get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				annotDomain.setProcessStatus(Constants.PROCESS_UPDATE);
@@ -339,7 +344,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 	@Transactional	
 	public List<SlimGenotypeDomain> search(DenormGenotypeAnnotDomain searchDomain) {
 		// using searchDomain fields, generate SQL command
-		String annotType = searchDomain.getAnnots().get(0).getAnnotType();
+		
 		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
 
 		// building SQL command : select + from + where + orderBy
@@ -382,6 +387,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			from_accession = true;
 		}
 		
+		// sc - don't think the database description is what we want here, but not sure
 		if (searchDomain.getGenotypeDisplay() != null && !searchDomain.getGenotypeDisplay().isEmpty()) {
 			where = where + "\nand v.description ilike '" + searchDomain.getGenotypeDisplay() + "'";		
 		}
@@ -402,30 +408,45 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 				from_annot = true;
 			}
 
-			if (annotDomain.getCreatedBy() != null
-					|| annotDomain.getModifiedBy() != null
-					|| annotDomain.getCreation_date() != null
-					|| annotDomain.getModification_date() != null) {			
-				if (!annotDomain.getCreatedBy().isEmpty()
-						|| !annotDomain.getModifiedBy().isEmpty()
-						|| !annotDomain.getCreation_date().isEmpty()
-						|| !annotDomain.getModification_date().isEmpty()) {
+			// the followoing was returning null pointer exception when
+			// querying by just modification date or creation date or modified by
+			// it returned for created by. I reworked below because DataSQLQuery
+			// seems to do the work of excluding null/empty
+//			if (annotDomain.getCreatedBy() != null
+//					|| annotDomain.getModifiedBy() != null
+//					|| annotDomain.getCreation_date() != null
+//					|| annotDomain.getModification_date() != null) {			
+//				if (!annotDomain.getCreatedBy().isEmpty()
+//						|| !annotDomain.getModifiedBy().isEmpty()
+//						|| !annotDomain.getCreation_date().isEmpty()
+//						|| !annotDomain.getModification_date().isEmpty()) {
+//	
+//					String cmResults[] = DateSQLQuery.queryByCreationModification("e", 
+//							annotDomain.getCreatedBy(), 
+//							annotDomain.getModifiedBy(), 
+//							annotDomain.getCreation_date(), 
+//							annotDomain.getModification_date());
+//					
+//					if (cmResults.length > 0) {
+//						from = from + cmResults[0];
+//						where = where + cmResults[1];
+//						from_evidence = true;
+//					}
+//				}
+//			}
+			String cmResults[] = DateSQLQuery.queryByCreationModification("e", 
+			annotDomain.getCreatedBy(), 
+			annotDomain.getModifiedBy(), 
+			annotDomain.getCreation_date(), 
+			annotDomain.getModification_date());
 	
-					String cmResults[] = DateSQLQuery.queryByCreationModification("e", 
-							annotDomain.getCreatedBy(), 
-							annotDomain.getModifiedBy(), 
-							annotDomain.getCreation_date(), 
-							annotDomain.getModification_date());
-					
-					if (cmResults.length > 0) {
-						from = from + cmResults[0];
-						where = where + cmResults[1];
-						from_evidence = true;
-					}
-				}
+			if (cmResults.length > 0) {
+				from = from + cmResults[0];
+				where = where + cmResults[1];
+				from_evidence = true;
 			}
-			
-			if (annotDomain.getProperties() != null && !annotDomain.getProperties().isEmpty()) {
+			// for MP annotations only
+			if (searchDomain.getAnnots().get(0).getAnnotTypeKey().equals("1002") && annotDomain.getProperties() != null && !annotDomain.getProperties().isEmpty()) {
 				value = annotDomain.getProperties().get(0).getValue(); 
 				if (value != null && !value.isEmpty()) {
 					where = where + "\nand p._propertyterm_key = " + annotDomain.getProperties().get(0).getPropertyTermKey();
@@ -491,7 +512,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			where = where + "\nand v._object_key = va._object_key" 
 					+ "\nand v._logicaldb_key = 1"
 					+ "\nand v.preferred = 1"
-					+ "\nand va._annottype_key = " + annotType;
+					+ "\nand va._annottype_key = " + searchDomain.getAnnots().get(0).getAnnotTypeKey();
 		}
 		if (from_evidence == true) {
 			from = from + ", voc_evidence_view e";
@@ -507,7 +528,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 		}
 
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
-		log.info(cmd);
+		log.info("searchCmd: " + cmd);
 
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);

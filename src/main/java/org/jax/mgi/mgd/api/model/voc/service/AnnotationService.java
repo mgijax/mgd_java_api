@@ -305,30 +305,31 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 						
 						// for MP annotations only, set default sex-specificity to "NA"
 						// The property stanza and the sequenceNum will always be 1 
-						String sexSpecificity;
 						if (annotTypeKey.equals("1002")) {
-							if(evidenceDomain.getProperties() == null || evidenceDomain.getProperties().isEmpty()) {		
-						}
+							String sexSpecificity;
+
+							if (evidenceDomain.getProperties() == null || evidenceDomain.getProperties().isEmpty()) {		
 								sexSpecificity = "NA";
-						}
-						else {
-							sexSpecificity = evidenceDomain.getProperties().get(0).getValue();
+							}
+							else {
+								sexSpecificity = evidenceDomain.getProperties().get(0).getValue();
+							}
+						
+							EvidenceProperty propertyEntity = new EvidenceProperty();
+							propertyEntity.set_annotevidence_key(evidenceEntity.get_annotevidence_key());
+							propertyEntity.setPropertyTerm(termDAO.get(8836535));
+							propertyEntity.setValue(sexSpecificity);
+							propertyEntity.setSequenceNum(Integer.valueOf(1));
+							propertyEntity.setStanza(Integer.valueOf(1));
+							propertyEntity.setCreatedBy(user);
+							propertyEntity.setCreation_date(new Date());
+							propertyEntity.setModifiedBy(user);
+							propertyEntity.setModification_date(new Date());
+							
+							log.info("AnnotationService persisting EvidenceProperty");
+							evidencePropertyDAO.persist(propertyEntity);					
 						}
 						
-						EvidenceProperty propertyEntity = new EvidenceProperty();
-						propertyEntity.set_annotevidence_key(evidenceEntity.get_annotevidence_key());
-						propertyEntity.setPropertyTerm(termDAO.get(8836535));
-						propertyEntity.setValue(sexSpecificity);
-						propertyEntity.setSequenceNum(Integer.valueOf(1));
-						propertyEntity.setStanza(Integer.valueOf(1));
-						propertyEntity.setCreatedBy(user);
-						propertyEntity.setCreation_date(new Date());
-						propertyEntity.setModifiedBy(user);
-						propertyEntity.setModification_date(new Date());
-						
-						log.info("AnnotationService persisting EvidenceProperty");
-						evidencePropertyDAO.persist(propertyEntity);					
-					
 						// evidence notes
 						noteService.processAll(String.valueOf(evidenceEntity.get_annotevidence_key()), 
 								evidenceDomain.getAllNotes(), mgiTypeKey, user);

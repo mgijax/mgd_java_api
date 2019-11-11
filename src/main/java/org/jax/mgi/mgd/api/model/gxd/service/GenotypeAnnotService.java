@@ -506,7 +506,8 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			where = where + "\nand e._annotevidence_key = n._object_key";
 		}
 
-		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
+		// removed "limit"
+		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info("searchCmd: " + cmd);
 
 		try {

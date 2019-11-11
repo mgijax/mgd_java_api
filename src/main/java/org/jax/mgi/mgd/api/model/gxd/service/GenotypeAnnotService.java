@@ -458,17 +458,18 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			
 			if (annotDomain.getAllNotes() != null) {
 				
-				value = annotDomain.getAllNotes().get(0).getNoteTypeKey();
-				if (value != null && !value.isEmpty()) {
-					where = where + "\nand n._notetype_key = " + value;
-					from_note = true;
-				}
-				
 				value = annotDomain.getAllNotes().get(0).getNoteChunk();
 				if (value != null && !value.isEmpty()) {
+					
+					if (annotDomain.getAllNotes().get(0).getNoteTypeKey() != null 
+							&& !annotDomain.getAllNotes().get(0).getNoteTypeKey().isEmpty()) {
+						where = where + "\nand n._notetype_key = " + annotDomain.getAllNotes().get(0).getNoteTypeKey();
+					}
+					
 					where = where + "\nand n.note ilike '" + value + "'";
 					from_note = true;
 				}
+								
 			}
 		}
 		
@@ -527,7 +528,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 				newObjectKey = rs.getInt("_object_key");
 				newStrain = rs.getString("subtype");
 				newDescription = rs.getString("short_description");
-				
+								
 				// group description by _object_key
 				if (prevObjectKey.equals(0)) {
 					prevObjectKey = newObjectKey;
@@ -540,11 +541,6 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 					addResults = false;
 				}
 				else {
-					addResults = true;
-				}
-				
-				// if last record, then add to result set
-				if (rs.isLast() == true) {
 					addResults = true;
 				}
 				
@@ -563,6 +559,22 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 					prevDescription = newDescription;
 					addResults = false;
 				}
+				
+				// if last record, then add to result set
+				if (rs.isLast() == true) {
+					
+					prevObjectKey = newObjectKey;
+					prevStrain = newStrain;
+					prevDescription = newDescription;
+					prevDescription = prevStrain + " " + prevDescription;
+					
+					SlimGenotypeDomain domain = new SlimGenotypeDomain();
+					domain = slimtranslator.translate(genotypeDAO.get(prevObjectKey));				
+					domain.setGenotypeDisplay(prevDescription);
+					genotypeDAO.clear();				
+					results.add(domain);
+				}
+								
 			}
 			sqlExecutor.cleanup();
 			

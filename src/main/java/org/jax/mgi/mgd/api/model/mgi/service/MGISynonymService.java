@@ -120,13 +120,27 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 				
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 	
-				log.info("processSynonym create");
-
+				// if synonym is empty, then skip
+				// pwi has sent a "c" that is empty/not being used
+				if (domain.get(i).getSynonym().isEmpty()) {
+					continue;
+				}
+				
+				log.info("processSynonym create : " + mgiTypeKey);
+				
+				// if mgiTypeKey = marker, then set default synonym type "exact" (1004)
+				String synonymTypeKey = domain.get(i).getSynonymTypeKey();
+				if (mgiTypeKey.equals("2")) {
+					if (synonymTypeKey == null || synonymTypeKey.isEmpty()) {
+						synonymTypeKey = "1004";	
+					}
+				}
+				
 				cmd = "select count(*) from MGI_insertSynonym ("
 							+ user.get_user_key().intValue()
 							+ "," + parentKey
 							+ "," + mgiTypeKey
-							+ "," + domain.get(i).getSynonymTypeKey()
+							+ "," + synonymTypeKey
 							+ ",'" + domain.get(i).getSynonym() + "'"
 							+ "," + domain.get(i).getRefsKey()
 							+ ",0)";

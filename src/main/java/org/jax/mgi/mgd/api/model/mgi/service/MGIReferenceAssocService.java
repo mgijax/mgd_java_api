@@ -277,13 +277,27 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				// processStatus (‘c’ for create) , mgiTypeKey, parentKey/objectKey, refsKey, refType (string)
 							
 				log.info("processReferenceAssoc create");
-	
+
+				// if reference is empty, then skip
+				// pwi has sent a "c" that is empty/not being used
+				if (domain.get(i).getRefsKey().isEmpty()) {
+					continue;
+				}
+				
+				// if mgiTypeKey = marker, then set default synonym type "exact" (1004)
+				String refAssocType = domain.get(i).getRefAssocType();
+				if (mgiTypeKey.equals("2")) {
+					if (refAssocType == null || refAssocType.isEmpty()) {
+						refAssocType = "General";	
+					}
+				}
+				
 				cmd = "select count(*) from MGI_insertReferenceAssoc ("
 							+ user.get_user_key().intValue()
 							+ "," + mgiTypeKey
 							+ "," + objectKey
 							+ "," + domain.get(i).getRefsKey()
-							+ ",'" + domain.get(i).getRefAssocType() + "'"
+							+ ",'" + refAssocType + "'"
 							+ ")";
 				log.info("cmd: " + cmd);
 				Query query = referenceAssocDAO.createNativeQuery(cmd);

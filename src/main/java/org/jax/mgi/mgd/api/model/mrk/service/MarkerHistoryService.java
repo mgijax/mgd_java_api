@@ -133,7 +133,15 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 		for (int i = 0; i < domain.size(); i++) {
 				
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
+				
+				// if symbol key is empty, then skip
+				// pwi has sent a "c" that is empty/not being used
+				if (domain.get(i).getMarkerHistorySymbolKey().isEmpty()) {
+					continue;
+				}
+				
 				log.info("processHistory create");
+				
 				cmd = "select count(*) from MRK_insertHistory ("
 							+ user.get_user_key().intValue()
 							+ "," + parentKey

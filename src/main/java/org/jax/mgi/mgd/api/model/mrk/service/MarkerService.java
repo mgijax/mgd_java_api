@@ -834,7 +834,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			return results;
 		}
 
-		String cmd = "\nselect m._marker_key, m.symbol, m.chromosome";
+		String cmd = "\nselect m._marker_key, m.symbol, m.name, m.chromosome";
 		String from = "from mrk_marker m";
 		String where = "where m._organism_key = 1"
 				+ "\nand lower(symbol) = '" + value.toLowerCase() + "'";
@@ -869,6 +869,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				SlimMarkerDomain domain = new SlimMarkerDomain();						
 				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setSymbol(rs.getString("symbol"));
+				domain.setName(rs.getString("name"));
 				domain.setChromosome(rs.getString("chromosome"));
 				
 				if (hasAccID) {

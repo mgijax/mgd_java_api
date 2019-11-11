@@ -102,6 +102,9 @@ public class TermService extends BaseService<TermDomain> {
 		if (searchDomain.getTerm() != null && !searchDomain.getTerm().isEmpty()) {
 			where = where + "\nand t.term ilike '" + searchDomain.getTerm() + "'";
 		}
+		if (searchDomain.getAbbreviation() != null && !searchDomain.getAbbreviation().isEmpty()) {
+			where = where + "\nand t.abbreviation ilike '" + searchDomain.getAbbreviation() + "'";
+		}		
 		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty()) {
 			where = where + "\nand t._vocab_key = " + searchDomain.getVocabKey();
 		}

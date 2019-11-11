@@ -412,43 +412,18 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 				from_annot = true;
 			}
 
-			// the followoing was returning null pointer exception when
-			// querying by just modification date or creation date or modified by
-			// it returned for created by. I reworked below because DataSQLQuery
-			// seems to do the work of excluding null/empty
-//			if (annotDomain.getCreatedBy() != null
-//					|| annotDomain.getModifiedBy() != null
-//					|| annotDomain.getCreation_date() != null
-//					|| annotDomain.getModification_date() != null) {			
-//				if (!annotDomain.getCreatedBy().isEmpty()
-//						|| !annotDomain.getModifiedBy().isEmpty()
-//						|| !annotDomain.getCreation_date().isEmpty()
-//						|| !annotDomain.getModification_date().isEmpty()) {
-//	
-//					String cmResults[] = DateSQLQuery.queryByCreationModification("e", 
-//							annotDomain.getCreatedBy(), 
-//							annotDomain.getModifiedBy(), 
-//							annotDomain.getCreation_date(), 
-//							annotDomain.getModification_date());
-//					
-//					if (cmResults.length > 0) {
-//						from = from + cmResults[0];
-//						where = where + cmResults[1];
-//						from_evidence = true;
-//					}
-//				}
-//			}
 			String cmResults[] = DateSQLQuery.queryByCreationModification("e", 
-			annotDomain.getCreatedBy(), 
-			annotDomain.getModifiedBy(), 
-			annotDomain.getCreation_date(), 
-			annotDomain.getModification_date());
+				annotDomain.getCreatedBy(), 
+				annotDomain.getModifiedBy(), 
+				annotDomain.getCreation_date(), 
+				annotDomain.getModification_date());
 	
 			if (cmResults.length > 0) {
 				from = from + cmResults[0];
 				where = where + cmResults[1];
 				from_evidence = true;
 			}
+			
 			// for MP annotations only
 			if (searchDomain.getAnnots().get(0).getAnnotTypeKey().equals("1002") && annotDomain.getProperties() != null && !annotDomain.getProperties().isEmpty()) {
 				value = annotDomain.getProperties().get(0).getValue(); 
@@ -519,7 +494,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 					+ "\nand va._annottype_key = " + searchDomain.getAnnots().get(0).getAnnotTypeKey();
 		}
 		if (from_evidence == true) {
-			from = from + ", voc_evidence_view e";
+			from = from + ", voc_evidence e";
 			where = where + "\nand va._annot_key = e._annot_key";
 		}
 		if (from_property == true) {

@@ -247,10 +247,17 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				}
 				
 				log.info("calculating qualifier");
-				// for MP (1102) and DO (1020) annotations only, set default qualifier to "null"
-				if (annotTypeKey.equals("1002") || annotTypeKey.equals("1020")) {					
+				// for MP (1002) and DO (1020) annotations only, set default qualifier to "null"
+				if (annotTypeKey.equals("1002") ) {					
 					if( qualifierKey == null || qualifierKey.isEmpty()) {
+						log.info("setting default MP qualifier to 2181423");
 					    qualifierKey = "2181423";
+					}
+				}
+				else if (annotTypeKey.equals("1020") ) {
+					if( qualifierKey == null || qualifierKey.isEmpty()) {
+						log.info("setting defult DO qualifier to 1614158" );
+					    qualifierKey = "1614158";
 					}
 				}
 					
@@ -283,13 +290,15 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 						// for MP annotations only, set default evidence to "inferred from experiment"
 						if (annotTypeKey.equals("1002")) {
 							if(evidenceTermKey ==  null || evidenceTermKey.isEmpty()) {
-									evidenceTermKey = "52280";
+								log.info("setting default MP evidence to 52280");
+								evidenceTermKey = "52280";
 							}
 						}
 						else if(annotTypeKey.equals("1020") ) {
 							if(evidenceTermKey ==  null || evidenceTermKey.isEmpty()) {
-								evidenceTermKey = "107";
-						}
+								log.info("setting default DO evidence to 847168" );
+								evidenceTermKey = "847168";
+							}
 						}
 	
 						evidenceEntity.setEvidenceTerm(termDAO.get(Integer.valueOf(evidenceTermKey)));

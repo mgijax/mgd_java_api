@@ -247,20 +247,25 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				}
 				
 				log.info("calculating qualifier");
-				// for MP (1002) and DO (1020) annotations only, set default qualifier to "null"
+				// set default qualifiers
 				if (annotTypeKey.equals("1002") ) {					
 					if( qualifierKey == null || qualifierKey.isEmpty()) {
-						log.info("setting default MP qualifier to 2181423");
+						log.info("setting default genotype/MP qualifier to 'null'");
 					    qualifierKey = "2181423";
 					}
 				}
 				else if (annotTypeKey.equals("1020") ) {
 					if( qualifierKey == null || qualifierKey.isEmpty()) {
-						log.info("setting defult DO qualifier to 1614158" );
+						log.info("setting default genotype/DO qualifier to 'null' " );
 					    qualifierKey = "1614158";
 					}
 				}
-					
+				else if (annotTypeKey.equals("1021") ) {
+					if( qualifierKey == null || qualifierKey.isEmpty()) {
+						log.info("setting default allele/DO qualifier to 'null'" );
+					    qualifierKey = "8068250";
+					}
+				}
 				entity.setAnnotType(annotTypeDAO.get(Integer.valueOf(annotTypeKey)));				
 				entity.set_object_key(Integer.valueOf(domain.get(i).getObjectKey()));
 				entity.setTerm(termDAO.get(Integer.valueOf(domain.get(i).getTermKey())));
@@ -290,14 +295,20 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 						// for MP annotations only, set default evidence to "inferred from experiment"
 						if (annotTypeKey.equals("1002")) {
 							if(evidenceTermKey ==  null || evidenceTermKey.isEmpty()) {
-								log.info("setting default MP evidence to 52280");
+								log.info("setting default genotype/MP evidence to 'EXP'");
 								evidenceTermKey = "52280";
 							}
 						}
 						else if(annotTypeKey.equals("1020") ) {
 							if(evidenceTermKey ==  null || evidenceTermKey.isEmpty()) {
-								log.info("setting default DO evidence to 847168" );
+								log.info("setting default genotype/DO evidence to 'TAS'" );
 								evidenceTermKey = "847168";
+							}
+						}
+						else if(annotTypeKey.equals("1021") ) {
+							if(evidenceTermKey ==  null || evidenceTermKey.isEmpty()) {
+								log.info("setting default allele/DO evidence to 'TAS'" );
+								evidenceTermKey = "8068251";
 							}
 						}
 	

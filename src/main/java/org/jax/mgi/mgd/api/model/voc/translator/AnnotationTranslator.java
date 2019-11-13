@@ -60,7 +60,7 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
  			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getDoIds());
  			domain.setDoIds(IteratorUtils.toList(acc.iterator()));
  		}
- 		 		
+ 	
 		return domain;
 	}
 

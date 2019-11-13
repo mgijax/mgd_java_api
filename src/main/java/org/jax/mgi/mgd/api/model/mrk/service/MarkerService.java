@@ -563,6 +563,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		// reference
 		if (searchDomain.getRefAssocs() != null) {
+			if (searchDomain.getRefAssocs().get(0).getRefAssocTypeKey() != null && !searchDomain.getRefAssocs().get(0).getRefAssocTypeKey().isEmpty()) {
+				where = where + "\nand mr._refassoctype_key = " + searchDomain.getRefAssocs().get(0).getRefAssocTypeKey();
+				from_reference = true;
+			}
 			if (searchDomain.getRefAssocs().get(0).getRefsKey() != null && !searchDomain.getRefAssocs().get(0).getRefsKey().isEmpty()) {
 				where = where + "\nand mr._Refs_key = " + searchDomain.getRefAssocs().get(0).getRefsKey();
 				from_reference = true;

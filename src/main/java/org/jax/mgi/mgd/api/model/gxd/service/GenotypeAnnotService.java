@@ -565,10 +565,15 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 				// if last record, then add to result set
 				if (rs.isLast() == true) {
 					
-					prevObjectKey = newObjectKey;
-					prevStrain = newStrain;
-					prevDescription = newDescription;
-					prevDescription = prevStrain + " " + prevDescription;
+					if (prevObjectKey.equals(newObjectKey)) {
+						prevDescription = prevStrain + " " + prevDescription;
+					}
+					else {
+						prevObjectKey = newObjectKey;
+						prevStrain = newStrain;
+						prevDescription = newDescription;
+						prevDescription = prevStrain + " " + prevDescription;
+					}
 					
 					SlimGenotypeDomain domain = new SlimGenotypeDomain();
 					domain = slimtranslator.translate(genotypeDAO.get(prevObjectKey));				

@@ -20,6 +20,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
+import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
@@ -108,5 +109,11 @@ public class Allele extends BaseEntity {
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 11")
 	private List<MGIReferenceAssoc> refAssocs;
+
+	// DO term annotations
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
+	@Where(clause="`_annottype_key` = 1021")
+	private List<Annotation> doAnnots;
 	
 }

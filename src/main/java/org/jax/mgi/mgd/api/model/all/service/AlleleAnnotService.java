@@ -237,13 +237,15 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 						annotList.add(denormAnnotDomain);
 					}
 				}
-			}
-			
-			// sort by jnum, term		
-			annotList.sort(Comparator.comparingInt(DenormAnnotationDomain::getJnum).thenComparing(DenormAnnotationDomain::getTerm));
+			}	
 			
 			// add List of annotation domains to the denormalized allele annot domain
 			denormAlleleAnnotDomain.setAnnots(annotList);
+			
+			// sort by term, jnum
+			annotList.sort(Comparator.comparing(DenormAnnotationDomain::getTerm, String.CASE_INSENSITIVE_ORDER).thenComparingInt(DenormAnnotationDomain::getJnum));
+
+
     	}
 		catch (Exception e) {
 			e.printStackTrace();

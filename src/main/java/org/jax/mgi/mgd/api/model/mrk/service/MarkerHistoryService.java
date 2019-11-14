@@ -142,6 +142,10 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				
 				log.info("processHistory create");
 				
+				if (domain.get(i).getMarkerEventReasonKey().isEmpty()) {
+					domain.get(i).setMarkerEventReasonKey("-1");
+				}
+				
 				cmd = "select count(*) from MRK_insertHistory ("
 							+ user.get_user_key().intValue()
 							+ "," + parentKey

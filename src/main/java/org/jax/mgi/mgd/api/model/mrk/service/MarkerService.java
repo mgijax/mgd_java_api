@@ -535,7 +535,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				from_synonym = true;
 			}
 			if (searchDomain.getSynonyms().get(0).getRefsKey() != null && !searchDomain.getSynonyms().get(0).getRefsKey().isEmpty()) {
-				where = where + "\nand ms._Refs_key = " + searchDomain.getRefAssocs().get(0).getRefsKey();
+				where = where + "\nand ms._Refs_key = " + searchDomain.getSynonyms().get(0).getRefsKey();
 				from_synonym = true;
 			}
 			else if (searchDomain.getSynonyms().get(0).getJnumid() != null && !searchDomain.getSynonyms().get(0).getJnumid().isEmpty()) {

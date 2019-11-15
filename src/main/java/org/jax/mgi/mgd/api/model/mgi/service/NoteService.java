@@ -63,12 +63,15 @@ public class NoteService extends BaseService<NoteDomain> {
 		if (noteDAO.get(key) != null) {
 			domain = translator.translate(noteDAO.get(key));
 		}
-		return domain;	}
+		noteDAO.clear();
+		return domain;	
+	}
 
     @Transactional
     public SearchResults<NoteDomain> getResults(Integer key) {
         SearchResults<NoteDomain> results = new SearchResults<NoteDomain>();
         results.setItem(translator.translate(noteDAO.get(key)));
+        noteDAO.clear();
         return results;
     }
     

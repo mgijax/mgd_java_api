@@ -57,6 +57,7 @@ public class MarkerTypeService extends BaseService<MarkerTypeDomain> {
 		if (markerTypeDAO.get(key) != null) {
 			domain = translator.translate(markerTypeDAO.get(key));
 		}
+		markerTypeDAO.clear();
 		return domain;
 	}
 
@@ -64,6 +65,7 @@ public class MarkerTypeService extends BaseService<MarkerTypeDomain> {
     public SearchResults<MarkerTypeDomain> getResults(Integer key) {
         SearchResults<MarkerTypeDomain> results = new SearchResults<MarkerTypeDomain>();
         results.setItem(translator.translate(markerTypeDAO.get(key)));
+        markerTypeDAO.clear();
         return results;
     }
 

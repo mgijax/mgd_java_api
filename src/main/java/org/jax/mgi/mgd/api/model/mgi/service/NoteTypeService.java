@@ -57,6 +57,7 @@ public class NoteTypeService extends BaseService<NoteTypeDomain> {
 		if (noteTypeDAO.get(key) != null) {
 			domain = translator.translate(noteTypeDAO.get(key));
 		}
+		noteTypeDAO.clear();
 		return domain;
 	}
 
@@ -64,6 +65,7 @@ public class NoteTypeService extends BaseService<NoteTypeDomain> {
     public SearchResults<NoteTypeDomain> getResults(Integer key) {
         SearchResults<NoteTypeDomain> results = new SearchResults<NoteTypeDomain>();
         results.setItem(translator.translate(noteTypeDAO.get(key)));
+        noteTypeDAO.clear();
         return results;
     }
 

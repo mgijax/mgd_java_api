@@ -59,6 +59,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		if (vocabularyDAO.get(key) != null) {
 			domain = translator.translate(vocabularyDAO.get(key));
 		}
+		vocabularyDAO.clear();
 		return domain;
 	}
 	
@@ -66,6 +67,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
     public SearchResults<VocabularyDomain> getResults(Integer key) {
         SearchResults<VocabularyDomain> results = new SearchResults<VocabularyDomain>();
         results.setItem(translator.translate(vocabularyDAO.get(key)));
+        vocabularyDAO.clear();
         return results;
     }
 

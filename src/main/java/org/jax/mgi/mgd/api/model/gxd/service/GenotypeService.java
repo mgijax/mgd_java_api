@@ -237,6 +237,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		if (genotypeDAO.get(key) != null) {
 			domain = translator.translate(genotypeDAO.get(key));
 		}
+		genotypeDAO.clear();
 		return domain;
 	}
 
@@ -245,6 +246,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		// get the DAO/entity and translate -> domain -> results
 		SearchResults<GenotypeDomain> results = new SearchResults<GenotypeDomain>();
 		results.setItem(translator.translate(genotypeDAO.get(key)));
+		genotypeDAO.clear();
 		return results;
 	}
 	

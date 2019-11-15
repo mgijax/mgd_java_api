@@ -60,6 +60,7 @@ public class UserService extends BaseService<UserDomain> {
 		if (userDAO.get(key) != null) {
 			domain = translator.translate(userDAO.get(key));
 		}
+		userDAO.clear();
 		return domain;
 	}
 
@@ -67,6 +68,7 @@ public class UserService extends BaseService<UserDomain> {
     public SearchResults<UserDomain> getResults(Integer key) {
 		SearchResults<UserDomain> results = new SearchResults<UserDomain>();
 		results.setItem(translator.translate(userDAO.get(key)));
+		userDAO.clear();
 		return results;
     }
 

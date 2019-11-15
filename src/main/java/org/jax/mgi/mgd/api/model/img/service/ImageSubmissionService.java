@@ -70,6 +70,7 @@ public class ImageSubmissionService extends BaseService<ImageSubmissionDomain> {
 		if (imageDAO.get(key) != null) {
 			domain = translator.translate(imageDAO.get(key));
 		}
+		imageDAO.clear();
 		return domain;
 	}
 
@@ -78,6 +79,7 @@ public class ImageSubmissionService extends BaseService<ImageSubmissionDomain> {
 		// get the DAO/entity and translate -> domain -> results
 		SearchResults<ImageSubmissionDomain> results = new SearchResults<ImageSubmissionDomain>();
 		results.setItem(translator.translate(imageDAO.get(key)));
+		imageDAO.clear();
 		return results;
 	}
 

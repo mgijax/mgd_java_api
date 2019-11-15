@@ -67,6 +67,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 		if (historyDAO.get(key) != null) {
 			domain = translator.translate(historyDAO.get(key));
 		}
+		historyDAO.clear();
 		return domain;
 	}
 
@@ -74,6 +75,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
     public SearchResults<MarkerHistoryDomain> getResults(Integer key) {
         SearchResults<MarkerHistoryDomain> results = new SearchResults<MarkerHistoryDomain>();
         results.setItem(translator.translate(historyDAO.get(key)));
+        historyDAO.clear();
         return results;
     }
 

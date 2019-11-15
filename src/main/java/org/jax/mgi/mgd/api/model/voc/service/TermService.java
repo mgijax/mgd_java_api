@@ -61,6 +61,7 @@ public class TermService extends BaseService<TermDomain> {
 		if (termDAO.get(key) != null) {
 			domain = translator.translate(termDAO.get(key));
 		}
+		termDAO.clear();
 		return domain;
 	}
 	
@@ -68,6 +69,7 @@ public class TermService extends BaseService<TermDomain> {
     public SearchResults<TermDomain> getResults(Integer key) {
         SearchResults<TermDomain> results = new SearchResults<TermDomain>();
         results.setItem(translator.translate(termDAO.get(key)));
+        termDAO.clear();
         return results;
     }
 

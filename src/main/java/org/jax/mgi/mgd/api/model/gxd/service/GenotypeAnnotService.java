@@ -221,6 +221,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
     	try {
         	GenotypeAnnotDomain genoAnnotDomain = new GenotypeAnnotDomain();  
         	genoAnnotDomain = translator.translate(genotypeDAO.get(key));
+        	genotypeDAO.clear();
         	log.info("From the translator first annotKey: " + genoAnnotDomain.getAnnots().get(0).getAnnotKey());
 			
 			List<DenormAnnotationDomain> annotList = new ArrayList<DenormAnnotationDomain>();

@@ -58,6 +58,7 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		if (organismDAO.get(key) != null) {
 			domain = translator.translate(organismDAO.get(key));
 		}
+		organismDAO.clear();
 		return domain;
 	}
 
@@ -65,6 +66,7 @@ public class OrganismService extends BaseService<OrganismDomain> {
     public SearchResults<OrganismDomain> getResults(Integer key) {
         SearchResults<OrganismDomain> results = new SearchResults<OrganismDomain>();
         results.setItem(translator.translate(organismDAO.get(key)));
+        organismDAO.clear();
         return results;
     }
 

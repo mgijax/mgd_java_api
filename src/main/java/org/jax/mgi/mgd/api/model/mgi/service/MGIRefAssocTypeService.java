@@ -57,6 +57,7 @@ public class MGIRefAssocTypeService extends BaseService<MGIRefAssocTypeDomain> {
 		if (refAssocTypeDAO.get(key) != null) {
 			domain = translator.translate(refAssocTypeDAO.get(key));
 		}
+		refAssocTypeDAO.clear();
 		return domain;
 	}
 
@@ -64,6 +65,7 @@ public class MGIRefAssocTypeService extends BaseService<MGIRefAssocTypeDomain> {
     public SearchResults<MGIRefAssocTypeDomain> getResults(Integer key) {
         SearchResults<MGIRefAssocTypeDomain> results = new SearchResults<MGIRefAssocTypeDomain>();
         results.setItem(translator.translate(refAssocTypeDAO.get(key)));
+        refAssocTypeDAO.clear();
         return results;
     }
 

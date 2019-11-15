@@ -61,6 +61,7 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 		if (relationshipDAO.get(key) != null) {
 			domain = translator.translate(relationshipDAO.get(key));
 		}
+		relationshipDAO.clear();
 		return domain;
 	}
 
@@ -68,6 +69,7 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
     public SearchResults<RelationshipDomain> getResults(Integer key) {
         SearchResults<RelationshipDomain> results = new SearchResults<RelationshipDomain>();
         results.setItem(translator.translate(relationshipDAO.get(key)));
+        relationshipDAO.clear();
         return results;
     }
     

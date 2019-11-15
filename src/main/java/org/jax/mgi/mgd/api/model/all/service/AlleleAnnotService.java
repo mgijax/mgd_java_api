@@ -172,6 +172,7 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
     	try {
         	AlleleAnnotDomain alleleAnnotDomain = new AlleleAnnotDomain();  
         	alleleAnnotDomain = translator.translate(alleleDAO.get(key));
+        	alleleDAO.clear();
         	log.info("From the translator first annotKey: " + alleleAnnotDomain.getAnnots().get(0).getAnnotKey());
 			
 			List<DenormAnnotationDomain> annotList = new ArrayList<DenormAnnotationDomain>();

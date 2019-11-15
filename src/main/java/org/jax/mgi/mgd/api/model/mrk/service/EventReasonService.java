@@ -57,6 +57,7 @@ public class EventReasonService extends BaseService<EventReasonDomain> {
 		if (eventReasonDAO.get(key) != null) {
 			domain = translator.translate(eventReasonDAO.get(key));
 		}
+		eventReasonDAO.clear();
 		return domain;
 	}
 
@@ -64,6 +65,7 @@ public class EventReasonService extends BaseService<EventReasonDomain> {
     public SearchResults<EventReasonDomain> getResults(Integer key) {
         SearchResults<EventReasonDomain> results = new SearchResults<EventReasonDomain>();
         results.setItem(translator.translate(eventReasonDAO.get(key)));
+        eventReasonDAO.clear();
         return results;
     }
 

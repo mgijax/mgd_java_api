@@ -71,6 +71,7 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 		if (allelePairDAO.get(key) != null) {
 			domain = translator.translate(allelePairDAO.get(key));
 		}
+		allelePairDAO.clear();
 		return domain;
 	}
 
@@ -79,6 +80,7 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 		// get the DAO/entity and translate -> domain -> results
 		SearchResults<AllelePairDomain> results = new SearchResults<AllelePairDomain>();
 		results.setItem(translator.translate(allelePairDAO.get(key)));
+		allelePairDAO.clear();
 		return results;
 	}
 

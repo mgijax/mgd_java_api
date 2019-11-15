@@ -58,6 +58,7 @@ public class MGISynonymTypeService extends BaseService<MGISynonymTypeDomain> {
 		if (synonymTypeDAO.get(key) != null) {
 			domain = translator.translate(synonymTypeDAO.get(key));
 		}
+		synonymTypeDAO.clear();
 		return domain;	
 	}
 
@@ -65,6 +66,7 @@ public class MGISynonymTypeService extends BaseService<MGISynonymTypeDomain> {
     public SearchResults<MGISynonymTypeDomain> getResults(Integer key) {
         SearchResults<MGISynonymTypeDomain> results = new SearchResults<MGISynonymTypeDomain>();
         results.setItem(translator.translate(synonymTypeDAO.get(key)));
+        synonymTypeDAO.clear();
         return results;
     }
 

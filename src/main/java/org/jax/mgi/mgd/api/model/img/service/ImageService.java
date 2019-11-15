@@ -258,6 +258,7 @@ public class ImageService extends BaseService<ImageDomain> {
 		if (imageDAO.get(key) != null) {
 			domain = translator.translate(imageDAO.get(key));
 		}
+		imageDAO.clear();
 		return domain;
 	}
 
@@ -266,6 +267,7 @@ public class ImageService extends BaseService<ImageDomain> {
 		// get the DAO/entity and translate -> domain -> results
 		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
 		results.setItem(translator.translate(imageDAO.get(key)));
+		imageDAO.clear();
 		return results;
 	}
 	

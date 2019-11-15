@@ -331,6 +331,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		if (markerDAO.get(key) != null) {
 			domain = translator.translate(markerDAO.get(key));
 		}
+		markerDAO.clear();
 		return domain;
 	}
 
@@ -339,6 +340,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// get the DAO/entity and translate -> domain -> results
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		results.setItem(translator.translate(markerDAO.get(key)));
+		markerDAO.clear();
 		return results;
 	}
 	

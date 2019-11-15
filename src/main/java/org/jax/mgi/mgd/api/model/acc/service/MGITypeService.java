@@ -58,6 +58,7 @@ public class MGITypeService extends BaseService<MGITypeDomain> {
 		if (mgitypeDAO.get(key) != null) {
 			domain = translator.translate(mgitypeDAO.get(key));
 		}
+		mgitypeDAO.clear();
 		return domain;
 	}
 
@@ -65,6 +66,7 @@ public class MGITypeService extends BaseService<MGITypeDomain> {
     public SearchResults<MGITypeDomain> getResults(Integer key) {
         SearchResults<MGITypeDomain> results = new SearchResults<MGITypeDomain>();
         results.setItem(translator.translate(mgitypeDAO.get(key)));
+		mgitypeDAO.clear();
         return results;
     }
 

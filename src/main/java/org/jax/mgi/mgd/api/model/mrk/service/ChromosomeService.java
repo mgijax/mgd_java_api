@@ -57,6 +57,7 @@ public class ChromosomeService extends BaseService<ChromosomeDomain> {
 		if (chromosomeDAO.get(key) != null) {
 			domain = translator.translate(chromosomeDAO.get(key));
 		}
+		chromosomeDAO.clear();
 		return domain;
 	}
 
@@ -64,6 +65,7 @@ public class ChromosomeService extends BaseService<ChromosomeDomain> {
     public SearchResults<ChromosomeDomain> getResults(Integer key) {
         SearchResults<ChromosomeDomain> results = new SearchResults<ChromosomeDomain>();
         results.setItem(translator.translate(chromosomeDAO.get(key)));
+        chromosomeDAO.clear();
         return results;
     }
 

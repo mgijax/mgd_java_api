@@ -90,6 +90,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 		if (annotationDAO.get(key) != null) {
 			domain = translator.translate(annotationDAO.get(key));
 		}
+		annotationDAO.clear();
 		return domain;		
 	}
 	
@@ -97,6 +98,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
     public SearchResults<AnnotationDomain> getResults(Integer key) {
         SearchResults<AnnotationDomain> results = new SearchResults<AnnotationDomain>();
         results.setItem(translator.translate(annotationDAO.get(key)));
+		annotationDAO.clear();
         return results;
     }
 

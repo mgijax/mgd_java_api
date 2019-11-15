@@ -291,6 +291,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (referenceDAO.get(key) != null) {
 			domain = translator.translate(referenceDAO.get(key));
 		}
+		referenceDAO.clear();
 		return domain;
 	}
 
@@ -299,6 +300,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// get the DAO/entity and translate -> domain -> results
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
 		results.setItem(translator.translate(referenceDAO.get(key)));
+		referenceDAO.clear();
 		return results;   	
     }
 

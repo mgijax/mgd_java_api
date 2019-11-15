@@ -65,6 +65,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		if (referenceAssocDAO.get(key) != null) {
 			domain = translator.translate(referenceAssocDAO.get(key));
 		}
+		referenceAssocDAO.clear();
 		return domain;
 	}
 
@@ -72,6 +73,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 	public SearchResults<MGIReferenceAssocDomain> getResults(Integer key) {
 		SearchResults<MGIReferenceAssocDomain> results = new SearchResults<MGIReferenceAssocDomain>();
 		results.setItem(translator.translate(referenceAssocDAO.get(key)));
+		referenceAssocDAO.clear();
 		return results;
 	}
 

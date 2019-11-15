@@ -63,6 +63,7 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 		if (synonymDAO.get(key) != null) {
 			domain = translator.translate(synonymDAO.get(key));
 		}
+		synonymDAO.clear();
 		return domain;
 	}
 
@@ -70,6 +71,7 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
     public SearchResults<MGISynonymDomain> getResults(Integer key) {
 		SearchResults<MGISynonymDomain> results = new SearchResults<MGISynonymDomain>();
 		results.setItem(translator.translate(synonymDAO.get(key)));
+		synonymDAO.clear();
 		return results;
     }
 

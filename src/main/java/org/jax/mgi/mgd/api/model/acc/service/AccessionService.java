@@ -62,6 +62,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		if (accessionDAO.get(key) != null) {
 			domain = translator.translate(accessionDAO.get(key));
 		}
+		accessionDAO.clear();
 		return domain;		
 	}
 
@@ -69,6 +70,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
     public SearchResults<AccessionDomain> getResults(Integer key) {
         SearchResults<AccessionDomain> results = new SearchResults<AccessionDomain>();
         results.setItem(translator.translate(accessionDAO.get(key)));
+        accessionDAO.clear();
         return results;
     }
 

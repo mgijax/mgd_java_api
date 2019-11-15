@@ -78,6 +78,7 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 		if (imagePaneAssocDAO.get(key) != null) {
 			domain = translator.translate(imagePaneAssocDAO.get(key));
 		}
+		imagePaneAssocDAO.clear();
 		return domain;
 	}
 	
@@ -86,6 +87,7 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 		// get the DAO/entity and translate -> domain -> results
 		SearchResults<ImagePaneAssocDomain> results = new SearchResults<ImagePaneAssocDomain>();
 		results.setItem(translator.translate(imagePaneAssocDAO.get(key)));
+		imagePaneAssocDAO.clear();
 		return results;
 	}
 

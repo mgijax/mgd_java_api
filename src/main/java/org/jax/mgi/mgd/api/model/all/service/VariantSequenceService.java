@@ -69,6 +69,7 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 		if (variantSequenceDAO.get(key) != null) {
 			domain = translator.translate(variantSequenceDAO.get(key));
 		}
+		variantSequenceDAO.clear();
 		return domain;
 	}
 
@@ -76,6 +77,7 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
     public SearchResults<VariantSequenceDomain> getResults(Integer key) {
         SearchResults<VariantSequenceDomain> results = new SearchResults<VariantSequenceDomain>();
         results.setItem(translator.translate(variantSequenceDAO.get(key)));
+        variantSequenceDAO.clear();
         return results;
     }
 

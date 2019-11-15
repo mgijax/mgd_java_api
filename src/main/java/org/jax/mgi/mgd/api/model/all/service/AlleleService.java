@@ -75,6 +75,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		// get the DAO/entity and translate -> domain -> results 
     	SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
         results.setItem(translator.translate(alleleDAO.get(key)));
+        alleleDAO.clear();
         return results;
     }
 

@@ -288,6 +288,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		if (variantDAO.get(key) != null) {
 			domain = translator.translate(variantDAO.get(key));
 		}
+		variantDAO.clear();
 		return domain;
 	}
 
@@ -296,6 +297,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		// get the DAO/entity and translate -> domain -> results
     	SearchResults<AlleleVariantDomain> results = new SearchResults<AlleleVariantDomain>();
         results.setItem(translator.translate(variantDAO.get(key)));
+        variantDAO.clear();
         return results;
     }
 

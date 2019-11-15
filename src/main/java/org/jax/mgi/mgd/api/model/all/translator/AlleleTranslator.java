@@ -8,6 +8,8 @@ import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
+import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
+import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 
 public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleDomain> {
@@ -53,6 +55,15 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 				domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
 			}
 		}	
+		
+		// do annotations
+		if (!entity.getDoAnnots().isEmpty()) {
+			AnnotationTranslator annotTranslator = new AnnotationTranslator();
+			Iterable<AnnotationDomain> i = annotTranslator.translateEntities(entity.getDoAnnots());
+			if(i.iterator().hasNext() == true) {
+				domain.setDoAnnots(IteratorUtils.toList(i.iterator()));
+			}
+		}
 		
 		return domain;
 	}

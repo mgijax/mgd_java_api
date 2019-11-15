@@ -66,6 +66,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		if (alleleDAO.get(key) != null) {
 			domain = translator.translate(alleleDAO.get(key));
 		}
+		alleleDAO.clear();
 		return domain;	
 	}
 	

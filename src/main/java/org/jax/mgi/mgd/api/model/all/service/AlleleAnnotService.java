@@ -301,7 +301,8 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 		Boolean from_accession = false;
 		Boolean from_annot = false;
 		Boolean from_evidence = false;
-				
+		Boolean executeQuery = false;
+		
 		// if parameter exists, then add to where-clause
 		
 		if (searchDomain.getAlleleKey() != null && !searchDomain.getAlleleKey().isEmpty()) {
@@ -374,9 +375,10 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 		
 		// from/where construction
 		if (from_accession == true) {
-			from = from + ", all_allele_acc_view a";
+			from = from + ", all_acc_view a";
 			where = where + "\nand v._object_key = a._object_key" 
 					+ "\nand a._mgitype_key = " + mgiTypeKey;
+			executeQuery = true;
 		}
 		if (from_annot == true) {
 			from = from + ", voc_annot va";
@@ -384,10 +386,17 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 					+ "\nand v._logicaldb_key = 1"
 					+ "\nand v.preferred = 1"
 					+ "\nand va._annottype_key = " + searchDomain.getAnnots().get(0).getAnnotTypeKey();
+			executeQuery = true;
 		}
 		if (from_evidence == true) {
 			from = from + ", voc_evidence e";
 			where = where + "\nand va._annot_key = e._annot_key";
+			executeQuery = true;
+		}
+		
+		if (executeQuery == false) {
+			log.info("executeQuery = false; not enough parameters in search");
+			return results;
 		}
 
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;

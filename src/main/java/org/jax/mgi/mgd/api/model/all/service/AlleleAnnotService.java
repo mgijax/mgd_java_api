@@ -265,7 +265,7 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 		// return the object count from the database
 		
 		SearchResults<DenormAlleleAnnotDomain> results = new SearchResults<DenormAlleleAnnotDomain>();
-		String cmd = "select count(*) as objectCount from voc_annot where _annottype_key = " + annotType;
+		String cmd = "select count(distinct _object_key) as objectCount from voc_annot where _annottype_key = " + annotType;
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);

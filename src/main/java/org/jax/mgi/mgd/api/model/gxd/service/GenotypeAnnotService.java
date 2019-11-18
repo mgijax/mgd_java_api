@@ -222,7 +222,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
         	GenotypeAnnotDomain genoAnnotDomain = new GenotypeAnnotDomain();  
         	genoAnnotDomain = translator.translate(genotypeDAO.get(key));
         	genotypeDAO.clear();
-        	log.info("From the translator first annotKey: " + genoAnnotDomain.getAnnots().get(0).getAnnotKey());
+        	//log.info("From the translator first annotKey: " + genoAnnotDomain.getAnnots().get(0).getAnnotKey());
 			
 			List<DenormAnnotationDomain> annotList = new ArrayList<DenormAnnotationDomain>();
 			
@@ -330,7 +330,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 		// return the object count from the database
 		
 		SearchResults<DenormGenotypeAnnotDomain> results = new SearchResults<DenormGenotypeAnnotDomain>();
-		String cmd = "select count(*) as objectCount from voc_annot where _annottype_key = " + annotType;
+		String cmd = "select count(distinct _object_key) as objectCount from voc_annot where _annottype_key = " + annotType;
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);

@@ -379,10 +379,15 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 	
 		// if parameter exists, then add to where-clause
 		
-		if (searchDomain.getGenotypeKey() != null && !searchDomain.getGenotypeKey().isEmpty()) {
-			where = where + "\nand v._object_key = " + searchDomain.getGenotypeKey();
+//		if (searchDomain.getGenotypeKey() != null && !searchDomain.getGenotypeKey().isEmpty()) {
+//			where = where + "\nand v._object_key = " + searchDomain.getGenotypeKey();
+//		}
+		
+		if (searchDomain.getGenotypeDisplay() != null && !searchDomain.getGenotypeDisplay().isEmpty()) {
+			where = where + "\nand v.description ilike '" + searchDomain.getGenotypeDisplay() + "'";		
+			executeQuery = true;
 		}
-	
+		
 		// accession id
 		if (searchDomain.getAccid() != null && !searchDomain.getAccid().isEmpty()) {
 			String mgiid = searchDomain.getAccid().toUpperCase();
@@ -391,12 +396,9 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			}
 			where = where + "\nand lower(a.accID) = '" + mgiid.toLowerCase() + "'";
 			from_accession = true;
+			executeQuery = true;
 		}
-		
-		if (searchDomain.getGenotypeDisplay() != null && !searchDomain.getGenotypeDisplay().isEmpty()) {
-			where = where + "\nand v.description ilike '" + searchDomain.getGenotypeDisplay() + "'";		
-		}
-		
+
 		if (searchDomain.getAnnots() != null) {
 						
 			DenormAnnotationDomain annotDomain = searchDomain.getAnnots().get(0);

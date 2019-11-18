@@ -46,6 +46,7 @@ public class GenotypeAnnotTranslator extends BaseEntityDomainTranslator<Genotype
 		
 		// We have both MP and DO. Create a single list from both to set in domain
 		List<AnnotationDomain> newList  = new ArrayList<AnnotationDomain>();
+		
 		// do annotations by genotype
 		if (entity.getDoAnnots() != null && !entity.getDoAnnots().isEmpty()) {
 			Iterable<AnnotationDomain> t = annotTranslator.translateEntities(entity.getDoAnnots());			
@@ -57,6 +58,7 @@ public class GenotypeAnnotTranslator extends BaseEntityDomainTranslator<Genotype
 			Iterable<AnnotationDomain> t = annotTranslator.translateEntities(entity.getMpAnnots());
 			newList.addAll(IteratorUtils.toList(t.iterator()));		
 		}
+		
 		// now set the joined list in the doman
 		domain.setAnnots(newList);
 		

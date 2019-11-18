@@ -170,7 +170,7 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
         	AlleleAnnotDomain alleleAnnotDomain = new AlleleAnnotDomain();  
         	alleleAnnotDomain = translator.translate(alleleDAO.get(key));
         	alleleDAO.clear();
-        	log.info("From the translator first annotKey: " + alleleAnnotDomain.getAnnots().get(0).getAnnotKey());
+        	//log.info("From the translator first annotKey: " + alleleAnnotDomain.getAnnots().get(0).getAnnotKey());
 			
 			List<DenormAnnotationDomain> annotList = new ArrayList<DenormAnnotationDomain>();
 			
@@ -291,10 +291,10 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 
 		String cmd = "";
-		String select = "select distinct v._object_key, v.subtype, v.short_description";
+		String select = "select distinct v._object_key, v.description";
 		String from = "from all_summary_view v";		
 		String where = "where v._mgitype_key = " + mgiTypeKey;
-		String orderBy = "order by v._object_key, v.short_description, v.subtype";
+		String orderBy = "order by v._object_key, v.description";
 		
 		String value;
 
@@ -305,12 +305,13 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 		
 		// if parameter exists, then add to where-clause
 		
-		if (searchDomain.getAlleleKey() != null && !searchDomain.getAlleleKey().isEmpty()) {
-			where = where + "\nand v._object_key = " + searchDomain.getAlleleKey();
-		}
-	
+//		if (searchDomain.getAlleleKey() != null && !searchDomain.getAlleleKey().isEmpty()) {
+//			where = where + "\nand v._object_key = " + searchDomain.getAlleleKey();
+//		}
+		
 		if (searchDomain.getAlleleDisplay() != null && !searchDomain.getAlleleDisplay().isEmpty()) {
-			where = where + "\nand v.short_description ilike '" + searchDomain.getAlleleDisplay() + "'";		
+			where = where + "\nand v.description ilike '" + searchDomain.getAlleleDisplay() + "'";
+			executeQuery = true;
 		}
 		
 		// accession id
@@ -321,6 +322,7 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 			}
 			where = where + "\nand lower(a.accID) = '" + mgiid.toLowerCase() + "'";
 			from_accession = true;
+			executeQuery = true;
 		}
 		
 		if (searchDomain.getAnnots() != null) {
@@ -404,68 +406,13 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
-			Integer prevObjectKey = 0;
-			Integer newObjectKey = 0;
-			String newDescription = "";
-			String prevDescription = "";
-			String newAllele = "";
-			String prevAllele = "";
-			Boolean addResults = false;
-			
-			// concatenate description when grouped by _object_key
-			
-			while (rs.next()) {
-				
-				newObjectKey = rs.getInt("_object_key");
-				newAllele = rs.getString("short_description");
-				newDescription = rs.getString("subtype");
-								
-				// group description by _object_key
-				if (prevObjectKey.equals(0)) {
-					prevObjectKey = newObjectKey;
-					prevAllele = newAllele;
-					prevDescription = newDescription;
-					addResults = false;
-				}
-				else if (newObjectKey.equals(prevObjectKey)) {
-					prevDescription = prevDescription + "," + newDescription;
-					addResults = false;
-				}
-				else {
-					addResults = true;
-				}
-				
-				if (addResults) {
-
-					prevDescription = prevAllele + ", " + prevDescription;
-	
-					SlimAlleleAnnotDomain domain = new SlimAlleleAnnotDomain();
-					domain = slimtranslator.translate(alleleDAO.get(prevObjectKey));				
-					domain.setAlleleDisplay(prevDescription);
-					alleleDAO.clear();				
-					results.add(domain);
-					
-					prevObjectKey = newObjectKey;
-					prevAllele = newAllele;
-					prevDescription = newDescription;
-					addResults = false;
-				}
-				
-				// if last record, then add to result set
-				if (rs.isLast() == true) {
-					
-					prevObjectKey = newObjectKey;
-					prevAllele = newAllele;
-					prevDescription = newDescription;
-					prevDescription = prevAllele + ", " + prevDescription;
-					
-					SlimAlleleAnnotDomain domain = new SlimAlleleAnnotDomain();
-					domain = slimtranslator.translate(alleleDAO.get(prevObjectKey));				
-					domain.setAlleleDisplay(prevDescription);
-					alleleDAO.clear();				
-					results.add(domain);
-				}
-								
+						
+			while (rs.next())  {
+				SlimAlleleAnnotDomain domain = new SlimAlleleAnnotDomain();
+				domain = slimtranslator.translate(alleleDAO.get(rs.getInt("_object_key")));				
+				domain.setAlleleDisplay(rs.getString("description"));
+				alleleDAO.clear();				
+				results.add(domain);					
 			}
 			sqlExecutor.cleanup();
 			

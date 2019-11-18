@@ -12,6 +12,7 @@ import lombok.Setter;
 public class DenormAlleleAnnotDomain extends BaseDomain {
 
 	private String alleleKey;
+	private String alleleDisplay;
 	private String accid;
 	private List<DenormAnnotationDomain> annots;
 	private Boolean allowEditTerm = false;	

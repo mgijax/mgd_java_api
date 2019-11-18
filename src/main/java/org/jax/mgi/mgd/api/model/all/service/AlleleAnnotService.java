@@ -345,9 +345,11 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 				annotDomain.getModification_date());
 	
 			if (cmResults.length > 0) {
-				from = from + cmResults[0];
-				where = where + cmResults[1];
-				from_evidence = true;
+				if (cmResults[0].length() > 0 || cmResults[1].length() > 0) {
+					from = from + cmResults[0];
+					where = where + cmResults[1];
+					from_evidence = true;
+				}
 			}
 	
 			value = annotDomain.getRefsKey();

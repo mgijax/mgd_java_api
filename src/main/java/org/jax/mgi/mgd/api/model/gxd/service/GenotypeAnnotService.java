@@ -375,7 +375,8 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 		Boolean from_evidence = false;
 		Boolean from_property = false;
 		Boolean from_note = false;
-				
+		Boolean executeQuery = false;
+	
 		// if parameter exists, then add to where-clause
 		
 		if (searchDomain.getGenotypeKey() != null && !searchDomain.getGenotypeKey().isEmpty()) {
@@ -392,7 +393,6 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			from_accession = true;
 		}
 		
-		// sc - don't think the database description is what we want here, but not sure
 		if (searchDomain.getGenotypeDisplay() != null && !searchDomain.getGenotypeDisplay().isEmpty()) {
 			where = where + "\nand v.description ilike '" + searchDomain.getGenotypeDisplay() + "'";		
 		}
@@ -489,6 +489,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			from = from + ", gxd_genotype_acc_view a";
 			where = where + "\nand v._object_key = a._object_key" 
 					+ "\nand a._mgitype_key = " + mgiTypeKey;
+			executeQuery = true;
 		}
 		if (from_annot == true) {
 			from = from + ", voc_annot va";
@@ -496,21 +497,29 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 					+ "\nand v._logicaldb_key = 1"
 					+ "\nand v.preferred = 1"
 					+ "\nand va._annottype_key = " + searchDomain.getAnnots().get(0).getAnnotTypeKey();
+			executeQuery = true;
 		}
 		if (from_evidence == true) {
 			from = from + ", voc_evidence e";
 			where = where + "\nand va._annot_key = e._annot_key";
+			executeQuery = true;
 		}
 		if (from_property == true) {
 			from = from + ", voc_evidence_property p";
 			where = where + "\nand e._annotevidence_key = p._annotevidence_key";
+			executeQuery = true;
 		}
 		if (from_note == true) {
 			from = from + ", mgi_note_vocevidence_view n";
 			where = where + "\nand e._annotevidence_key = n._object_key";
+			executeQuery = true;
 		}
 
-		// removed "limit"
+		if (executeQuery == false) {
+			log.info("executeQuery = false; not enough parameters in search");
+			return results;
+		}
+		
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info("searchCmd: " + cmd);
 

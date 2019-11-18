@@ -77,7 +77,7 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 				continue;
 			}
 			
-			log.info("domain index: " + i);
+			//log.info("domain index: " + i);
 			
 			DenormAnnotationDomain denormAnnotDomain = domain.getAnnots().get(i);
 		
@@ -108,7 +108,7 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
             annotDomain.setAllowEditTerm(domain.getAllowEditTerm());
             
             // evidence : create evidence list of 1 result
-            log.info("add evidence list");
+            //log.info("add evidence list");
 			EvidenceDomain evidenceDomain = new EvidenceDomain();
             List<EvidenceDomain> evidenceList = new ArrayList<EvidenceDomain>();
             evidenceDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());

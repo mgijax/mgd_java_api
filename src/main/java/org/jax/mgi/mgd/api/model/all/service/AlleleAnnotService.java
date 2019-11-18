@@ -11,15 +11,11 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
-import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
-import org.jax.mgi.mgd.api.model.all.translator.AlleleAnnotTranslator;
-import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleAnnotTranslator;
-import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
+import org.jax.mgi.mgd.api.model.all.domain.AlleleAnnotDomain;
 import org.jax.mgi.mgd.api.model.all.domain.DenormAlleleAnnotDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleAnnotDomain;
-import org.jax.mgi.mgd.api.model.all.domain.AlleleAnnotDomain;
-import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleRefAssocDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
+import org.jax.mgi.mgd.api.model.all.translator.AlleleAnnotTranslator;
+import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleAnnotTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.DenormAnnotationDomain;
@@ -312,6 +308,10 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 			where = where + "\nand v._object_key = " + searchDomain.getAlleleKey();
 		}
 	
+		if (searchDomain.getAlleleDisplay() != null && !searchDomain.getAlleleDisplay().isEmpty()) {
+			where = where + "\nand v.short_description ilike '" + searchDomain.getAlleleDisplay() + "'";		
+		}
+		
 		// accession id
 		if (searchDomain.getAccid() != null && !searchDomain.getAccid().isEmpty()) {
 			String mgiid = searchDomain.getAccid().toUpperCase();

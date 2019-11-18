@@ -13,8 +13,10 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleAnnotTranslator;
+import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleAnnotTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.DenormAlleleAnnotDomain;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleAnnotDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleAnnotDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleRefAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
@@ -42,8 +44,7 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 	
 	private AlleleAnnotTranslator translator = new AlleleAnnotTranslator();
 	
-	private SlimAlleleTranslator slimtranslator = new SlimAlleleTranslator();
-	
+	private SlimAlleleAnnotTranslator slimtranslator = new SlimAlleleAnnotTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	private String mgiTypeKey = "11";
@@ -285,34 +286,25 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 	}
 	
 	@Transactional	
-	public List<SlimAlleleDomain> search(DenormAlleleAnnotDomain searchDomain) {
+	public List<SlimAlleleAnnotDomain> search(DenormAlleleAnnotDomain searchDomain) {
 		// using searchDomain fields, generate SQL command
 		
-		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
+		List<SlimAlleleAnnotDomain> results = new ArrayList<SlimAlleleAnnotDomain>();
 
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 
-		// sc - 10/4/19 removed the 'order by description' as we can't do that using
-		// select "distinct on" because the description is arbitrary
-		//String select = "select distinct on (v._object_key) v._object_key, v.description";
-		// requirement changed/group description by _object_key
-		// saving this SQL in case it is needed again
-	
 		String cmd = "";
 		String select = "select distinct v._object_key, v.subtype, v.short_description";
-		String from = "from gxd_genotype_summary_view v";		
+		String from = "from all_summary_view v";		
 		String where = "where v._mgitype_key = " + mgiTypeKey;
-		String orderBy = "order by v._object_key, v.subtype, v.short_description";
-		//String limit = Constants.SEARCH_RETURN_LIMIT;
+		String orderBy = "order by v._object_key, v.short_description, v.subtype";
 		
 		String value;
 
 		Boolean from_accession = false;
 		Boolean from_annot = false;
 		Boolean from_evidence = false;
-		//Boolean from_property = false;
-		//Boolean from_note = false;
 				
 		// if parameter exists, then add to where-clause
 		
@@ -329,7 +321,6 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 			where = where + "\nand lower(a.accID) = '" + mgiid.toLowerCase() + "'";
 			from_accession = true;
 		}
-		
 		
 		if (searchDomain.getAnnots() != null) {
 						
@@ -358,13 +349,6 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 				where = where + cmResults[1];
 				from_evidence = true;
 			}
-			
-				
-			value = annotDomain.getEvidenceTermKey();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand e._evidenceterm_key = " + value;
-				from_evidence = true;			
-			}
 	
 			value = annotDomain.getRefsKey();
 			String jnumid = annotDomain.getJnumid();		
@@ -380,36 +364,15 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 				where = where + "\nand e.jnumid = '" + jnumid + "'";
 				from_evidence = true;			
 			}
-			
-			//NO NOTES FOR Allele/DO annotations?
-//			if (annotDomain.getAllNotes() != null) {
-//
-//				value = annotDomain.getAllNotes().get(0).getNoteChunk();
-//				if (value != null && !value.isEmpty()) {
-//
-//					if (annotDomain.getAllNotes().get(0).getNoteTypeKey() != null 
-//							&& !annotDomain.getAllNotes().get(0).getNoteTypeKey().isEmpty()) {
-//						where = where + "\nand n._notetype_key = " + annotDomain.getAllNotes().get(0).getNoteTypeKey();
-//					}
-//
-//					where = where + "\nand n.note ilike '" + value + "'";
-//					from_note = true;
-//				}
-//
-//			}
 		}
 		
-		// dependencies
-//		if (from_note == true) {
-//			from_evidence = true;
-//		}
 		if (from_evidence == true) {
 			from_annot = true;
 		}
 		
 		// from/where construction
 		if (from_accession == true) {
-			from = from + ", gxd_genotype_acc_view a";
+			from = from + ", all_allele_acc_view a";
 			where = where + "\nand v._object_key = a._object_key" 
 					+ "\nand a._mgitype_key = " + mgiTypeKey;
 		}
@@ -424,16 +387,7 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 			from = from + ", voc_evidence e";
 			where = where + "\nand va._annot_key = e._annot_key";
 		}
-//		if (from_property == true) {
-//			from = from + ", voc_evidence_property p";
-//			where = where + "\nand e._annotevidence_key = p._annotevidence_key";
-//		}
-//		if (from_note == true) {
-//			from = from + ", mgi_note_vocevidence_view n";
-//			where = where + "\nand e._annotevidence_key = n._object_key";
-//		}
 
-		// removed "limit"
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info("searchCmd: " + cmd);
 
@@ -443,8 +397,8 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 			Integer newObjectKey = 0;
 			String newDescription = "";
 			String prevDescription = "";
-			String newStrain = "";
-			String prevStrain = "";
+			String newAllele = "";
+			String prevAllele = "";
 			Boolean addResults = false;
 			
 			// concatenate description when grouped by _object_key
@@ -452,13 +406,13 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 			while (rs.next()) {
 				
 				newObjectKey = rs.getInt("_object_key");
-				newStrain = rs.getString("subtype");
-				newDescription = rs.getString("short_description");
+				newAllele = rs.getString("short_description");
+				newDescription = rs.getString("subtype");
 								
 				// group description by _object_key
 				if (prevObjectKey.equals(0)) {
 					prevObjectKey = newObjectKey;
-					prevStrain = newStrain;
+					prevAllele = newAllele;
 					prevDescription = newDescription;
 					addResults = false;
 				}
@@ -472,15 +426,16 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 				
 				if (addResults) {
 
-					prevDescription = prevStrain + " " + prevDescription;
+					prevDescription = prevAllele + ", " + prevDescription;
 	
-					SlimAlleleDomain domain = new SlimAlleleDomain();
+					SlimAlleleAnnotDomain domain = new SlimAlleleAnnotDomain();
 					domain = slimtranslator.translate(alleleDAO.get(prevObjectKey));				
+					domain.setAlleleDisplay(prevDescription);
 					alleleDAO.clear();				
 					results.add(domain);
 					
 					prevObjectKey = newObjectKey;
-					prevStrain = newStrain;
+					prevAllele = newAllele;
 					prevDescription = newDescription;
 					addResults = false;
 				}
@@ -489,12 +444,13 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 				if (rs.isLast() == true) {
 					
 					prevObjectKey = newObjectKey;
-					prevStrain = newStrain;
+					prevAllele = newAllele;
 					prevDescription = newDescription;
-					prevDescription = prevStrain + " " + prevDescription;
+					prevDescription = prevAllele + ", " + prevDescription;
 					
-					SlimAlleleDomain domain = new SlimAlleleDomain();
+					SlimAlleleAnnotDomain domain = new SlimAlleleAnnotDomain();
 					domain = slimtranslator.translate(alleleDAO.get(prevObjectKey));				
+					domain.setAlleleDisplay(prevDescription);
 					alleleDAO.clear();				
 					results.add(domain);
 				}
@@ -502,8 +458,7 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 			}
 			sqlExecutor.cleanup();
 			
-			// now we order by description - see note above at first 'select = '
-			//results.sort(Comparator.comparing(SlimAlleleDomain::getGenotypeDisplay, String.CASE_INSENSITIVE_ORDER));
+			results.sort(Comparator.comparing(SlimAlleleAnnotDomain::getAlleleDisplay, String.CASE_INSENSITIVE_ORDER));
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -511,43 +466,5 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 		
 		return results;
 	}	
-
-	@Transactional	
-	public List<MGIReferenceAssocDomain> validateAlleleReference(SlimAlleleRefAssocDomain searchDomain) {
-		// return a list of Allele/Reference associations that do not exist for this Allele/Reference
-		// returns empty list of values if validation fails
-
-		List<MGIReferenceAssocDomain> results = new ArrayList<MGIReferenceAssocDomain>();
-		
-//		String cmd = "\nselect distinct g._allele_key"
-//				+ "\nfrom GXD_AlleleGenotype g, ALL_Allele a" 
-//				+ "\nwhere g._Allele_key = a._Allele_key"
-//				+ "\nand a.isWildType = 0"
-//				+ "\nand g._Genotype_key = " + searchDomain.getGenotypeKey()
-//				+ "\nand not exists (select 1 from MGI_Reference_Assoc a where a._MGIType_key = 11" 
-//					+ "\nand a._Object_key = g._Allele_key"
-//					+ "\nand a._Refs_key = " + searchDomain.getRefsKey() + ")";
-//		
-//		log.info(cmd);
-//		
-//		try {
-//			ResultSet rs = sqlExecutor.executeProto(cmd);
-//			while (rs.next()) {
-//				MGIReferenceAssocDomain domain = new MGIReferenceAssocDomain();
-//				domain.setProcessStatus(Constants.PROCESS_CREATE);
-//				domain.setObjectKey(rs.getString("_allele_key"));
-//				domain.setMgiTypeKey("11");
-//				domain.setRefAssocType("Used-FC");
-//				domain.setRefsKey(searchDomain.getRefsKey());
-//				results.add(domain);
-//			}
-//			sqlExecutor.cleanup();			
-//		}
-//		catch (Exception e) {
-//			e.printStackTrace();
-//		}
-		
-		return results;
-	}	
-		
+	
 }

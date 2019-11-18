@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.SlimMGIReferenceAssocDomain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +12,7 @@ import lombok.Setter;
 public class SlimAlleleAnnotDomain extends BaseDomain {
 
 	private String alleleKey;
-	private String symbol;	
+	private String alleleDisplay;
 	private List<SlimAccessionDomain> mgiAccessionIds;
 
 }

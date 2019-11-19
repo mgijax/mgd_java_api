@@ -333,6 +333,16 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		if (searchDomain.getExistsAsKey() != null && !searchDomain.getExistsAsKey().isEmpty()) {
 			where = where + "\nand g._ExistsAs_key = " + searchDomain.getExistsAsKey();
 		}
+
+		// accession id
+		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {
+			String mgiid = searchDomain.getMgiAccessionIds().get(0).getAccID().toUpperCase();
+			if (!mgiid.contains("MGI:")) {
+				mgiid = "MGI:" + mgiid;
+			}
+			where = where + "\nand a.accID ilike '" + mgiid + "'";
+			from_accession = true;
+		}
 		
 		// Allele Pair
 		if (searchDomain.getAllelePairs() != null && !searchDomain.getAllelePairs().isEmpty()) {
@@ -462,26 +472,24 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			where = where + "\nand note3._notetype_key = 1028 and note3.note ilike '" + value + "'" ;
 			from_privateCuratorialNote = true;
 		}
-		
-		// accession id
-		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {
-			String mgiid = searchDomain.getMgiAccessionIds().get(0).getAccID().toUpperCase();
-			if (!mgiid.contains("MGI:")) {
-				mgiid = "MGI:" + mgiid;
-			}
-			where = where + "\nand a.accID ilike '" + mgiid + "'";
-			from_accession = true;
-		}
-				
+
 		// union for the allele pair does *not* exist
-		if (from_allele == false && from_cellline == false && from_image == false) {
+		if (from_allele == false
+		 	&& from_marker == false
+		 	&& from_cellline == false
+		 	&& from_image == false
+		 	&& from_alleleDetailNote == false
+		 	&& from_generalNote == false
+		 	&& from_privateCuratorialNote == false	
+		 	&& from_accession == false) {
+			
 			includeNotExists = "\nunion all" +
-				"\nselect distinct g._genotype_key, ps.strain, ps.strain, null" +
+				"\nselect distinct g._genotype_key, ps.strain, ps.strain, ps.strain as genotypeDisplay" +
 				"\nfrom gxd_genotype g, prb_strain ps" +
 				"\n" + where +
 				"\nand not exists (select 1 from gxd_allelepair ap where g._genotype_key = ap._genotype_key)";
 		}
-
+				
 		if (from_marker == true) {
 			from = from + ", mrk_marker m";
 			where = where + "\nand ap._marker_key = m._marker_key";

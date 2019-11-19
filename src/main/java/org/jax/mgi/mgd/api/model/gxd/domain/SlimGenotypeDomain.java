@@ -10,7 +10,6 @@ import lombok.Setter;
 
 @Getter @Setter
 public class SlimGenotypeDomain extends BaseDomain {
-	// used by ImagePaneAssocDomain to help display basic genotype info
 
 	private String genotypeKey;
 	private String genotypeDisplay;

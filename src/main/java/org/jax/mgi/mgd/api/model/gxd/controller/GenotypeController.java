@@ -8,6 +8,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -16,6 +17,7 @@ import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDataSetDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.GenotypeService;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -89,17 +91,17 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 		return results;
 	}
 	
-	@POST
+	@GET
 	@ApiOperation(value = "Get genotype data sets by genotype key")
-	@Path("/getDataSets")
-	public List<GenotypeDataSetDomain> getDataSets(Integer key) {
+	@Path("/getDataSets/{key}")
+	public List<GenotypeDataSetDomain> getDataSet(@PathParam("key") Integer key) {
 		return genotypeService.getDataSets(key);
 	}
 	
 	@POST
 	@ApiOperation(value = "Search data sets by jnum key")
-	@Path("/searchDataSets")
-	public List<SlimGenotypeDomain> searchDataSets(Integer key) {
+	@Path("/searchDataSets/{key}")
+	public List<SlimGenotypeDomain> searchDataSet(@PathParam("key") Integer key) {
 		return genotypeService.searchDataSets(key);
 	}
 	

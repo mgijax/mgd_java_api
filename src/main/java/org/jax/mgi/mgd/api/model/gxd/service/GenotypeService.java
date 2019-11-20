@@ -575,7 +575,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		
 		return results;
 	}	
-	
+
 	@Transactional	
 	public List<SlimGenotypeDomain> searchDataSets(Integer key) {
 		// search data sets by reference key

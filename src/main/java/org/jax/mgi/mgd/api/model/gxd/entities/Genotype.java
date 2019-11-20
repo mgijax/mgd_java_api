@@ -90,6 +90,13 @@ public class Genotype extends BaseEntity {
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 	
+	// resource identification initiative accession ids only
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 12 and `_logicaldb_key` = 179")
+	@OrderBy(clause="preferred desc, accID")
+	private List<Accession> resourceIdentifierAccessionIds;
+	
 	// allele pairs
 	@OneToMany()
 	@JoinColumn(name="_genotype_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)

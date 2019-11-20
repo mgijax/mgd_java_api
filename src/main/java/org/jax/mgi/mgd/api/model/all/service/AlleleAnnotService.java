@@ -177,8 +177,8 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 			denormAlleleAnnotDomain.setAlleleKey(alleleAnnotDomain.getAlleleKey());
 			log.info("setting alleleKey: " + alleleAnnotDomain.getAlleleKey() );
 	
-			denormAlleleAnnotDomain.setAccid(alleleAnnotDomain.getMgiAccessionIds().get(0).getAccID());
-			log.info("setting accid: " + alleleAnnotDomain.getMgiAccessionIds().get(0).getAccID());
+			denormAlleleAnnotDomain.setAccID(alleleAnnotDomain.getAccID());
+			log.info("setting accid: " + alleleAnnotDomain.getAccID());
 			
 			if (alleleAnnotDomain.getAnnots() != null) {
 				for (int i = 0; i < alleleAnnotDomain.getAnnots().size(); i++) {	
@@ -315,8 +315,8 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 		}
 		
 		// accession id
-		if (searchDomain.getAccid() != null && !searchDomain.getAccid().isEmpty()) {
-			String mgiid = searchDomain.getAccid().toUpperCase();
+		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {
+			String mgiid = searchDomain.getAccID().toUpperCase();
 			if (!mgiid.contains("MGI:")) {
 				mgiid = "MGI:" + mgiid;
 			}

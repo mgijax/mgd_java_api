@@ -230,7 +230,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			log.info("setting genotypeKey: " + genoAnnotDomain.getGenotypeKey() );
 			denormGenoAnnotDomain.setGenotypeDisplay(genoAnnotDomain.getGenotypeDisplay());
 			log.info("setting genotypeDisplay: " + genoAnnotDomain.getGenotypeDisplay() );
-			denormGenoAnnotDomain.setAccid(genoAnnotDomain.getMgiAccessionIds().get(0).getAccID());
+			denormGenoAnnotDomain.setAccID(genoAnnotDomain.getMgiAccessionIds().get(0).getAccID());
 			log.info("setting accid: " + genoAnnotDomain.getMgiAccessionIds().get(0).getAccID());
 			// set header if MP only
 			if(controllerAnnotTypeKey.equals("1002")) {
@@ -389,8 +389,8 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 		}
 		
 		// accession id
-		if (searchDomain.getAccid() != null && !searchDomain.getAccid().isEmpty()) {
-			String mgiid = searchDomain.getAccid().toUpperCase();
+		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {
+			String mgiid = searchDomain.getAccID().toUpperCase();
 			if (!mgiid.contains("MGI:")) {
 				mgiid = "MGI:" + mgiid;
 			}

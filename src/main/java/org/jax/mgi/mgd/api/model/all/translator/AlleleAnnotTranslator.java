@@ -4,10 +4,8 @@ import java.util.Comparator;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
-import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
-import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleAnnotDomain;
+import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
 import org.jboss.logging.Logger;
@@ -16,7 +14,6 @@ public class AlleleAnnotTranslator extends BaseEntityDomainTranslator<Allele, Al
 
 	protected Logger log = Logger.getLogger(getClass());
 
-	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	private AnnotationTranslator annotTranslator = new AnnotationTranslator();	
 	
 	@Override
@@ -32,8 +29,7 @@ public class AlleleAnnotTranslator extends BaseEntityDomainTranslator<Allele, Al
 		
 		// mgi accession ids only
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
-			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
-			domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
+			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}
 		
 		// do annotations by allele

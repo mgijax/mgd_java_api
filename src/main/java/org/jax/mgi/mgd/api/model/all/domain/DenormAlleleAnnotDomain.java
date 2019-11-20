@@ -13,7 +13,7 @@ public class DenormAlleleAnnotDomain extends BaseDomain {
 
 	private String alleleKey;
 	private String alleleDisplay;
-	private String accid;
+	private String accID;
 	private List<DenormAnnotationDomain> annots;
 	private Boolean allowEditTerm = false;	
 }

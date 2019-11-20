@@ -1,15 +1,10 @@
 package org.jax.mgi.mgd.api.model.gxd.translator;
 
-import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
-import org.jax.mgi.mgd.api.model.acc.translator.SlimAccessionTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
 
 public class SlimGenotypeTranslator extends BaseEntityDomainTranslator<Genotype, SlimGenotypeDomain> {
-
-	private SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
 	
 	@Override
 	protected SlimGenotypeDomain entityToDomain(Genotype entity) {
@@ -24,12 +19,14 @@ public class SlimGenotypeTranslator extends BaseEntityDomainTranslator<Genotype,
 		
 		// mgi accession ids only
 		if (!entity.getMgiAccessionIds().isEmpty()) {
-			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
-			if(acc.iterator().hasNext() == true) {
-				domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
-			}
+			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}
 
+		// mgi accession ids only
+		if (!entity.getResourceIdentifierAccessionIds().isEmpty()) {
+			domain.setResourceIdentifierId(entity.getResourceIdentifierAccessionIds().get(0).getAccID());
+		}
+		
 		return domain;
 	}
 

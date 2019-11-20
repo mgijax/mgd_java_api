@@ -25,6 +25,7 @@ public class GenotypeDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	private String accID;
+	private String resourceIdentifierID;
 	private String useAllelePairDefaultOrder;
 	
 	private NoteDomain alleleDetailNote;	

@@ -22,11 +22,6 @@ public class SlimGenotypeTranslator extends BaseEntityDomainTranslator<Genotype,
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}
 
-		// mgi accession ids only
-		if (!entity.getResourceIdentifierAccessionIds().isEmpty()) {
-			domain.setResourceIdentifierId(entity.getResourceIdentifierAccessionIds().get(0).getAccID());
-		}
-		
 		return domain;
 	}
 

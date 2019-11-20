@@ -65,7 +65,12 @@ public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, Gen
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}
-
+		
+		// resource identifier ids only
+		if (!entity.getResourceIdentifierAccessionIds().isEmpty()) {
+			domain.setResourceIdentifierID(entity.getResourceIdentifierAccessionIds().get(0).getAccID());
+		}
+		
 		// allele pairs
 		if (entity.getAllelePairs() != null && !entity.getAllelePairs().isEmpty()) {
 			Iterable<AllelePairDomain> t = allelePairsTranslator.translateEntities(entity.getAllelePairs());

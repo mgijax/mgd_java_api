@@ -11,5 +11,4 @@ public class SlimGenotypeDomain extends BaseDomain {
 	private String genotypeKey;
 	private String genotypeDisplay;
 	private String accID;
-	private String resourceIdentifierId;
 }

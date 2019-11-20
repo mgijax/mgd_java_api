@@ -34,20 +34,17 @@ public class AlleleAnnotTranslator extends BaseEntityDomainTranslator<Allele, Al
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
 			domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
-			log.info("done setting accession ids in domain firs one" + entity.getMgiAccessionIds().get(0).getAccID());
 		}
 		
 		// do annotations by allele
 		if (entity.getDoAnnots() != null && !entity.getDoAnnots().isEmpty()) {
 			Iterable<AnnotationDomain> t = annotTranslator.translateEntities(entity.getDoAnnots());			
 			domain.setAnnots(IteratorUtils.toList(t.iterator()));
+			domain.getAnnots().sort(Comparator.comparing(AnnotationDomain::getTerm, String.CASE_INSENSITIVE_ORDER));	
 		}
+	
+		// Note: DO annotations have no header
 		
-		// now order the annotations
-		domain.getAnnots().sort(Comparator.comparing(AnnotationDomain::getTerm, String.CASE_INSENSITIVE_ORDER));	
-				
-		// Note: do annotations have no header
-		log.info("count of annotations: " + domain.getAnnots().size());
 		return domain;
 	}
 

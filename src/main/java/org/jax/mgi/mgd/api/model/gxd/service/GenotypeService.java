@@ -289,18 +289,20 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				", concat(ps.strain,',',a1.symbol,',',a2.symbol) as genotypeDisplay";
 		
 		// "from" if allele pair = true
-		String from = "from gxd_genotype g, prb_strain ps, gxd_allelepair ap" +
-				"\ninner join all_allele a1 on (ap._allele_key_1 = a1._allele_key)" +		
-				"\nleft outer join all_allele a2 on (ap._allele_key_2 = a2._allele_key)";		
+		String from = "from gxd_genotype g" +
+				"\nleft outer join gxd_allelepair ap on (g._genotype_key = ap._genotype_key)" +
+				"\nleft outer join all_allele a1 on (ap._allele_key_1 = a1._allele_key)" +		
+				"\nleft outer join all_allele a2 on (ap._allele_key_2 = a2._allele_key)," +
+				"\nprb_strain ps";
 		
 		// "where" for all
 		String where = "where g._strain_key = ps._strain_key";
 		
 		// "where" if allele pair = true
-		String whereAllelePair = "\nand g._genotype_key = ap._genotype_key"; 
+		String whereAllelePair = ""; 
 
 		String orderBy = "order by strain, symbol nulls first";			
-		String limit = Constants.SEARCH_RETURN_LIMIT;
+		String limit = Constants.SEARCH_RETURN_LIMIT5000;
 		String value;
 		String includeNotExists = "";
 		
@@ -333,6 +335,16 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		if (searchDomain.getExistsAsKey() != null && !searchDomain.getExistsAsKey().isEmpty()) {
 			where = where + "\nand g._ExistsAs_key = " + searchDomain.getExistsAsKey();
 		}
+
+		// accession id
+		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {
+			String mgiid = searchDomain.getMgiAccessionIds().get(0).getAccID().toUpperCase();
+			if (!mgiid.contains("MGI:")) {
+				mgiid = "MGI:" + mgiid;
+			}
+			where = where + "\nand a.accID ilike '" + mgiid + "'";
+			from_accession = true;
+		}
 		
 		// Allele Pair
 		if (searchDomain.getAllelePairs() != null && !searchDomain.getAllelePairs().isEmpty()) {
@@ -355,16 +367,16 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			value = searchDomain.getAllelePairs().get(0).getAlleleKey1();
 			if (value != null && !value.isEmpty()) {
 				whereAllelePair = whereAllelePair + 
-				"\nand (ap._Allele_key_1 = " + value +
-				"\nor ap._Allele_key_2 = " + value + ")";
+					"\nand (ap._Allele_key_1 = " + value +
+					"\nor ap._Allele_key_2 = " + value + ")";
 				from_allele = true;				
 			}
 			
 			value = searchDomain.getAllelePairs().get(0).getAlleleKey2();			
 			if (value != null && !value.isEmpty()) {
 				whereAllelePair = whereAllelePair + 
-				"\nand (ap._Allele_key_1 = " + value +
-				"\nor ap._Allele_key_2 = " + value + ")";
+					"\nand (ap._Allele_key_1 = " + value +
+					"\nor ap._Allele_key_2 = " + value + ")";
 				from_allele = true;				
 			}
 		
@@ -431,6 +443,19 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			
 		}
 		
+		// union for the allele pair does *not* exist
+		if (from_allele == false
+		 	&& from_marker == false
+		 	&& from_cellline == false
+		 	&& from_accession == false) {
+			
+			includeNotExists = "\nunion all" +
+				"\nselect distinct g._genotype_key, ps.strain, ps.strain, ps.strain as genotypeDisplay" +
+				"\nfrom gxd_genotype g, prb_strain ps" +
+				"\n" + where +
+				"\nand not exists (select 1 from gxd_allelepair ap where g._genotype_key = ap._genotype_key)";
+		}
+				
 		// image pane associations
 		if (searchDomain.getImagePaneAssocs() != null && !searchDomain.getImagePaneAssocs().isEmpty()) {
 			value = searchDomain.getImagePaneAssocs().get(0).getMgiID();
@@ -463,25 +488,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			from_privateCuratorialNote = true;
 		}
 		
-		// accession id
-		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {
-			String mgiid = searchDomain.getMgiAccessionIds().get(0).getAccID().toUpperCase();
-			if (!mgiid.contains("MGI:")) {
-				mgiid = "MGI:" + mgiid;
-			}
-			where = where + "\nand a.accID ilike '" + mgiid + "'";
-			from_accession = true;
-		}
-				
-		// union for the allele pair does *not* exist
-		if (from_allele == false && from_cellline == false && from_image == false) {
-			includeNotExists = "\nunion all" +
-				"\nselect distinct g._genotype_key, ps.strain, ps.strain, null" +
-				"\nfrom gxd_genotype g, prb_strain ps" +
-				"\n" + where +
-				"\nand not exists (select 1 from gxd_allelepair ap where g._genotype_key = ap._genotype_key)";
-		}
-
+		// final from/where
 		if (from_marker == true) {
 			from = from + ", mrk_marker m";
 			where = where + "\nand ap._marker_key = m._marker_key";

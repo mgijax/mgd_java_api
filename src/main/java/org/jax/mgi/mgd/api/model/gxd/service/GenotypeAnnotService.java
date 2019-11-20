@@ -222,7 +222,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
         	GenotypeAnnotDomain genoAnnotDomain = new GenotypeAnnotDomain();  
         	genoAnnotDomain = translator.translate(genotypeDAO.get(key));
         	genotypeDAO.clear();
-        	log.info("From the translator first annotKey: " + genoAnnotDomain.getAnnots().get(0).getAnnotKey());
+        	//log.info("From the translator first annotKey: " + genoAnnotDomain.getAnnots().get(0).getAnnotKey());
 			
 			List<DenormAnnotationDomain> annotList = new ArrayList<DenormAnnotationDomain>();
 			
@@ -330,7 +330,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 		// return the object count from the database
 		
 		SearchResults<DenormGenotypeAnnotDomain> results = new SearchResults<DenormGenotypeAnnotDomain>();
-		String cmd = "select count(*) as objectCount from voc_annot where _annottype_key = " + annotType;
+		String cmd = "select count(distinct _object_key) as objectCount from voc_annot where _annottype_key = " + annotType;
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
@@ -375,13 +375,19 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 		Boolean from_evidence = false;
 		Boolean from_property = false;
 		Boolean from_note = false;
-				
+		Boolean executeQuery = false;
+	
 		// if parameter exists, then add to where-clause
 		
-		if (searchDomain.getGenotypeKey() != null && !searchDomain.getGenotypeKey().isEmpty()) {
-			where = where + "\nand v._object_key = " + searchDomain.getGenotypeKey();
+//		if (searchDomain.getGenotypeKey() != null && !searchDomain.getGenotypeKey().isEmpty()) {
+//			where = where + "\nand v._object_key = " + searchDomain.getGenotypeKey();
+//		}
+		
+		if (searchDomain.getGenotypeDisplay() != null && !searchDomain.getGenotypeDisplay().isEmpty()) {
+			where = where + "\nand v.description ilike '" + searchDomain.getGenotypeDisplay() + "'";		
+			executeQuery = true;
 		}
-	
+		
 		// accession id
 		if (searchDomain.getAccid() != null && !searchDomain.getAccid().isEmpty()) {
 			String mgiid = searchDomain.getAccid().toUpperCase();
@@ -390,13 +396,9 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			}
 			where = where + "\nand lower(a.accID) = '" + mgiid.toLowerCase() + "'";
 			from_accession = true;
+			executeQuery = true;
 		}
-		
-		// sc - don't think the database description is what we want here, but not sure
-		if (searchDomain.getGenotypeDisplay() != null && !searchDomain.getGenotypeDisplay().isEmpty()) {
-			where = where + "\nand v.description ilike '" + searchDomain.getGenotypeDisplay() + "'";		
-		}
-		
+
 		if (searchDomain.getAnnots() != null) {
 						
 			DenormAnnotationDomain annotDomain = searchDomain.getAnnots().get(0);
@@ -489,6 +491,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			from = from + ", gxd_genotype_acc_view a";
 			where = where + "\nand v._object_key = a._object_key" 
 					+ "\nand a._mgitype_key = " + mgiTypeKey;
+			executeQuery = true;
 		}
 		if (from_annot == true) {
 			from = from + ", voc_annot va";
@@ -496,21 +499,29 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 					+ "\nand v._logicaldb_key = 1"
 					+ "\nand v.preferred = 1"
 					+ "\nand va._annottype_key = " + searchDomain.getAnnots().get(0).getAnnotTypeKey();
+			executeQuery = true;
 		}
 		if (from_evidence == true) {
 			from = from + ", voc_evidence e";
 			where = where + "\nand va._annot_key = e._annot_key";
+			executeQuery = true;
 		}
 		if (from_property == true) {
 			from = from + ", voc_evidence_property p";
 			where = where + "\nand e._annotevidence_key = p._annotevidence_key";
+			executeQuery = true;
 		}
 		if (from_note == true) {
 			from = from + ", mgi_note_vocevidence_view n";
 			where = where + "\nand e._annotevidence_key = n._object_key";
+			executeQuery = true;
 		}
 
-		// removed "limit"
+		if (executeQuery == false) {
+			log.info("executeQuery = false; not enough parameters in search");
+			return results;
+		}
+		
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info("searchCmd: " + cmd);
 

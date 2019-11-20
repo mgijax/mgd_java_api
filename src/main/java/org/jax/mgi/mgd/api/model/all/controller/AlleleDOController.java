@@ -13,10 +13,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.all.domain.DenormAlleleAnnotDomain;
-import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
-import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleRefAssocDomain;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleAnnotDomain;
 import org.jax.mgi.mgd.api.model.all.service.AlleleAnnotService;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -82,9 +80,9 @@ public class AlleleDOController extends BaseController<DenormAlleleAnnotDomain> 
 	@POST
 	@ApiOperation(value = "Search/returns slim genotype domain")
 	@Path("/search")
-	public List<SlimAlleleDomain> search(DenormAlleleAnnotDomain searchDomain) {
+	public List<SlimAlleleAnnotDomain> search(DenormAlleleAnnotDomain searchDomain) {
 	
-		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
+		List<SlimAlleleAnnotDomain> results = new ArrayList<SlimAlleleAnnotDomain>();
 
 		try {
 			results = alleleAnnotService.search(searchDomain);
@@ -94,21 +92,5 @@ public class AlleleDOController extends BaseController<DenormAlleleAnnotDomain> 
 		
 		return results;
 	}
-
-	@POST
-	@ApiOperation(value = "Validate Allele-Reference associations for Genotype")
-	@Path("/validateAlleleReference")
-	public List<MGIReferenceAssocDomain> validateAlleleReference(SlimAlleleRefAssocDomain searchDomain) {
-		
-		List<MGIReferenceAssocDomain> results = new ArrayList<MGIReferenceAssocDomain>();
-
-		try {
-			results = alleleAnnotService.validateAlleleReference(searchDomain);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
-		
+	
 }

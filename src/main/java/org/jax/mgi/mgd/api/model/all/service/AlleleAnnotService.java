@@ -11,13 +11,11 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
-import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
-import org.jax.mgi.mgd.api.model.all.translator.AlleleAnnotTranslator;
-import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
-import org.jax.mgi.mgd.api.model.all.domain.DenormAlleleAnnotDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleAnnotDomain;
-import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleRefAssocDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
+import org.jax.mgi.mgd.api.model.all.domain.DenormAlleleAnnotDomain;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleAnnotDomain;
+import org.jax.mgi.mgd.api.model.all.translator.AlleleAnnotTranslator;
+import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleAnnotTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.DenormAnnotationDomain;
@@ -42,8 +40,7 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 	
 	private AlleleAnnotTranslator translator = new AlleleAnnotTranslator();
 	
-	private SlimAlleleTranslator slimtranslator = new SlimAlleleTranslator();
-	
+	private SlimAlleleAnnotTranslator slimtranslator = new SlimAlleleAnnotTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	private String mgiTypeKey = "11";
@@ -60,90 +57,90 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 	public SearchResults<DenormAlleleAnnotDomain> update(DenormAlleleAnnotDomain domain, User user) {
 		// translate pwi/incoming denormalized json domain to list of normalized domain (AlleleAnnotDomain)
 		// use normalized domain to process hibernate entities
-//		
-//		log.info("AlleleAnnotService.update");
-//		
-//		AlleleAnnotDomain alleleAnnotDomain = new AlleleAnnotDomain();
-//		List<AnnotationDomain> annotList = new ArrayList<AnnotationDomain>();
-//
-//		// assuming the pwi will always pass in the annotTypeKey
-//		
-//    	alleleAnnotDomain.setAlleleKey(domain.getAlleleKey());
-//    	
-//    	alleleAnnotDomain.setAllowEditTerm(domain.getAllowEditTerm());
-//		
-//    	// Iterate thru incoming denormalized alleleAnnot domain
-//		for (int i = 0; i < domain.getAnnots().size(); i++) {
-//			
-//			// if processStatus == "x", then continue; no need to create domain/process anything
-//			if (domain.getAnnots().get(i).getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
-//				continue;
-//			}
-//			
-//			//log.info("domain index: " + i);
-//			
-//			DenormAnnotationDomain denormAnnotDomain = domain.getAnnots().get(i);
-//		
-//			// annotation (term, qualifier)
-//			AnnotationDomain annotDomain = new AnnotationDomain();
-//			
-//			//
-//			// if processStatus == "d", then process as "u"
-//			// 1 annotation may have >= 1 evidence
-//			// 1 evidence may be a "d", but other evidences may be "x", "u" or "c"
-//			//
-//			if (domain.getAnnots().get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-//				annotDomain.setProcessStatus(Constants.PROCESS_UPDATE);
-//			}
-//			else {
-//				annotDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
-//			}
-//					
-//            annotDomain.setAnnotKey(denormAnnotDomain.getAnnotKey());
-//            annotDomain.setAnnotTypeKey(denormAnnotDomain.getAnnotTypeKey());
-//            annotDomain.setAnnotType(denormAnnotDomain.getAnnotType());
-//            annotDomain.setObjectKey(denormAnnotDomain.getObjectKey());
-//            annotDomain.setTermKey(denormAnnotDomain.getTermKey());
-//            annotDomain.setTerm(denormAnnotDomain.getTerm());           
-//            annotDomain.setQualifierKey(denormAnnotDomain.getQualifierKey());
-//            annotDomain.setQualifierAbbreviation(denormAnnotDomain.getQualifierAbbreviation());
-//            annotDomain.setQualifier(denormAnnotDomain.getQualifier());
-//            annotDomain.setAllowEditTerm(domain.getAllowEditTerm());
-//            
-//            // evidence : create evidence list of 1 result
-//            //log.info("add evidence list");
-//			EvidenceDomain evidenceDomain = new EvidenceDomain();
-//            List<EvidenceDomain> evidenceList = new ArrayList<EvidenceDomain>();
-//            evidenceDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
-//            evidenceDomain.setAnnotEvidenceKey(denormAnnotDomain.getAnnotEvidenceKey());
-//            evidenceDomain.setEvidenceTermKey(denormAnnotDomain.getEvidenceTermKey());
-//            evidenceDomain.setRefsKey(denormAnnotDomain.getRefsKey());
-//            evidenceDomain.setCreatedByKey(denormAnnotDomain.getCreatedByKey());
-//            evidenceDomain.setModifiedByKey(denormAnnotDomain.getModifiedByKey());
-//            evidenceDomain.setAllNotes(denormAnnotDomain.getAllNotes());
-//			
-//			// add evidenceDomain to evidenceList
-//			evidenceList.add(evidenceDomain);
-//
-//			// add evidenceList to annotDomain
-//			annotDomain.setEvidence(evidenceList);
-//            
-//			// add annotDomain to annotList
-//			annotList.add(annotDomain);         
-//		}
-//		
-//		// add annotList to the AlleleAnnotDomain and process annotations
-//		if (annotList.size() > 0) {
-//			log.info("send json normalized domain to services");			
-//			alleleAnnotDomain.setAnnots(annotList);
-//			annotationService.process(alleleAnnotDomain.getAnnots(), user);
-//		}
-//		
-//		log.info("repackage incoming domain as results");		
+		
+		log.info("AlleleAnnotService.update");
+		
+		AlleleAnnotDomain alleleAnnotDomain = new AlleleAnnotDomain();
+		List<AnnotationDomain> annotList = new ArrayList<AnnotationDomain>();
+
+		// assuming the pwi will always pass in the annotTypeKey
+		
+		alleleAnnotDomain.setAlleleKey(domain.getAlleleKey());
+    	
+    	alleleAnnotDomain.setAllowEditTerm(domain.getAllowEditTerm());
+		
+    	// Iterate thru incoming denormalized alleleAnnot domain
+		for (int i = 0; i < domain.getAnnots().size(); i++) {
+			
+			// if processStatus == "x", then continue; no need to create domain/process anything
+			if (domain.getAnnots().get(i).getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
+				continue;
+			}
+			
+			//log.info("domain index: " + i);
+			
+			DenormAnnotationDomain denormAnnotDomain = domain.getAnnots().get(i);
+		
+			// annotation (term, qualifier)
+			AnnotationDomain annotDomain = new AnnotationDomain();
+			
+			//
+			// if processStatus == "d", then process as "u"
+			// 1 annotation may have >= 1 evidence
+			// 1 evidence may be a "d", but other evidences may be "x", "u" or "c"
+			//
+			if (domain.getAnnots().get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+				annotDomain.setProcessStatus(Constants.PROCESS_UPDATE);
+			}
+			else {
+				annotDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
+			}
+					
+            annotDomain.setAnnotKey(denormAnnotDomain.getAnnotKey());
+            annotDomain.setAnnotTypeKey(denormAnnotDomain.getAnnotTypeKey());
+            annotDomain.setAnnotType(denormAnnotDomain.getAnnotType());
+            annotDomain.setObjectKey(denormAnnotDomain.getObjectKey());
+            annotDomain.setTermKey(denormAnnotDomain.getTermKey());
+            annotDomain.setTerm(denormAnnotDomain.getTerm());           
+            annotDomain.setQualifierKey(denormAnnotDomain.getQualifierKey());
+            annotDomain.setQualifierAbbreviation(denormAnnotDomain.getQualifierAbbreviation());
+            annotDomain.setQualifier(denormAnnotDomain.getQualifier());
+            annotDomain.setAllowEditTerm(domain.getAllowEditTerm());
+            
+            // evidence : create evidence list of 1 result
+            //log.info("add evidence list");
+			EvidenceDomain evidenceDomain = new EvidenceDomain();
+            List<EvidenceDomain> evidenceList = new ArrayList<EvidenceDomain>();
+            evidenceDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
+            evidenceDomain.setAnnotEvidenceKey(denormAnnotDomain.getAnnotEvidenceKey());
+            evidenceDomain.setEvidenceTermKey(denormAnnotDomain.getEvidenceTermKey());
+            evidenceDomain.setRefsKey(denormAnnotDomain.getRefsKey());
+            evidenceDomain.setCreatedByKey(denormAnnotDomain.getCreatedByKey());
+            evidenceDomain.setModifiedByKey(denormAnnotDomain.getModifiedByKey());
+            evidenceDomain.setAllNotes(denormAnnotDomain.getAllNotes());
+			
+			// add evidenceDomain to evidenceList
+			evidenceList.add(evidenceDomain);
+
+			// add evidenceList to annotDomain
+			annotDomain.setEvidence(evidenceList);
+            
+			// add annotDomain to annotList
+			annotList.add(annotDomain);         
+		}
+		
+		// add annotList to the AlleleAnnotDomain and process annotations
+		if (annotList.size() > 0) {
+			log.info("send json normalized domain to services");			
+			alleleAnnotDomain.setAnnots(annotList);
+			annotationService.process(alleleAnnotDomain.getAnnots(), user);
+		}
+		
+		log.info("repackage incoming domain as results");		
 		SearchResults<DenormAlleleAnnotDomain> results = new SearchResults<DenormAlleleAnnotDomain>();
-//		results = getResults(Integer.valueOf(domain.getAlleleKey()));
-//		results.setItem(domain);
-//		//log.info("results: " + results);
+		results = getResults(Integer.valueOf(domain.getAlleleKey()));
+		results.setItem(domain);
+		log.info("results: " + results);
 		return results;
 	}
 
@@ -173,7 +170,7 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
         	AlleleAnnotDomain alleleAnnotDomain = new AlleleAnnotDomain();  
         	alleleAnnotDomain = translator.translate(alleleDAO.get(key));
         	alleleDAO.clear();
-        	log.info("From the translator first annotKey: " + alleleAnnotDomain.getAnnots().get(0).getAnnotKey());
+        	//log.info("From the translator first annotKey: " + alleleAnnotDomain.getAnnots().get(0).getAnnotKey());
 			
 			List<DenormAnnotationDomain> annotList = new ArrayList<DenormAnnotationDomain>();
 			
@@ -185,15 +182,16 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 			
 			if (alleleAnnotDomain.getAnnots() != null) {
 				for (int i = 0; i < alleleAnnotDomain.getAnnots().size(); i++) {	
+					
 					// annotation (term, qualifier)
 					AnnotationDomain annotDomain = alleleAnnotDomain.getAnnots().get(i);
 					String domainAnnotTypeKey = annotDomain.getAnnotTypeKey();
 					if (!domainAnnotTypeKey.equals(controllerAnnotTypeKey)) {
-						
 						log.info("Skipping annot domainAnnotTypeKey: " + domainAnnotTypeKey + "annotKey: " + annotDomain.getAnnotKey() + " controllerAnnotTypeKey: " + controllerAnnotTypeKey);
 						continue;
 					}
 					log.info("Match domainAnnotTypeKey: " + domainAnnotTypeKey + " controllerAnnotTypeKey: " + controllerAnnotTypeKey);
+					
 					// evidence
 					for (int j = 0; j < alleleAnnotDomain.getAnnots().get(i).getEvidence().size(); j++) {
 	
@@ -206,10 +204,11 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 	                    denormAnnotDomain.setObjectKey(annotDomain.getObjectKey());
 	                    denormAnnotDomain.setTermKey(annotDomain.getTermKey());
 	                    denormAnnotDomain.setTerm(annotDomain.getTerm());
-	                    if (controllerAnnotTypeKey.equals("1021")) {
-	                    	denormAnnotDomain.setTermid(annotDomain.getDoIds().get(0).getAccID());
-	                    	log.info("Adding Allele DO IDs: " + annotDomain.getDoIds().get(0).getAccID());
-	                    }
+	                    
+	                    //if (controllerAnnotTypeKey.equals("1021")) {
+	                    denormAnnotDomain.setTermid(annotDomain.getDoIds().get(0).getAccID());
+	                    log.info("Adding Allele DO IDs: " + annotDomain.getDoIds().get(0).getAccID());
+	                    //}
 	                    
 	                    denormAnnotDomain.setQualifierKey(annotDomain.getQualifierKey());
 		                denormAnnotDomain.setQualifierAbbreviation(annotDomain.getQualifierAbbreviation());
@@ -245,8 +244,6 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 			
 			// sort by term, jnum
 			annotList.sort(Comparator.comparing(DenormAnnotationDomain::getTerm, String.CASE_INSENSITIVE_ORDER).thenComparingInt(DenormAnnotationDomain::getJnum));
-
-
     	}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -268,7 +265,7 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 		// return the object count from the database
 		
 		SearchResults<DenormAlleleAnnotDomain> results = new SearchResults<DenormAlleleAnnotDomain>();
-		String cmd = "select count(*) as objectCount from voc_annot where _annottype_key = " + annotType;
+		String cmd = "select count(distinct _object_key) as objectCount from voc_annot where _annottype_key = " + annotType;
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
@@ -285,41 +282,38 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 	}
 	
 	@Transactional	
-	public List<SlimAlleleDomain> search(DenormAlleleAnnotDomain searchDomain) {
+	public List<SlimAlleleAnnotDomain> search(DenormAlleleAnnotDomain searchDomain) {
 		// using searchDomain fields, generate SQL command
 		
-		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
+		List<SlimAlleleAnnotDomain> results = new ArrayList<SlimAlleleAnnotDomain>();
 
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 
-		// sc - 10/4/19 removed the 'order by description' as we can't do that using
-		// select "distinct on" because the description is arbitrary
-		//String select = "select distinct on (v._object_key) v._object_key, v.description";
-		// requirement changed/group description by _object_key
-		// saving this SQL in case it is needed again
-	
 		String cmd = "";
-		String select = "select distinct v._object_key, v.subtype, v.short_description";
-		String from = "from gxd_genotype_summary_view v";		
+		String select = "select distinct v._object_key, v.description";
+		String from = "from all_summary_view v";		
 		String where = "where v._mgitype_key = " + mgiTypeKey;
-		String orderBy = "order by v._object_key, v.subtype, v.short_description";
-		//String limit = Constants.SEARCH_RETURN_LIMIT;
+		String orderBy = "order by v._object_key, v.description";
 		
 		String value;
 
 		Boolean from_accession = false;
 		Boolean from_annot = false;
 		Boolean from_evidence = false;
-		//Boolean from_property = false;
-		//Boolean from_note = false;
-				
+		Boolean executeQuery = false;
+		
 		// if parameter exists, then add to where-clause
 		
-		if (searchDomain.getAlleleKey() != null && !searchDomain.getAlleleKey().isEmpty()) {
-			where = where + "\nand v._object_key = " + searchDomain.getAlleleKey();
+//		if (searchDomain.getAlleleKey() != null && !searchDomain.getAlleleKey().isEmpty()) {
+//			where = where + "\nand v._object_key = " + searchDomain.getAlleleKey();
+//		}
+		
+		if (searchDomain.getAlleleDisplay() != null && !searchDomain.getAlleleDisplay().isEmpty()) {
+			where = where + "\nand v.description ilike '" + searchDomain.getAlleleDisplay() + "'";
+			executeQuery = true;
 		}
-	
+		
 		// accession id
 		if (searchDomain.getAccid() != null && !searchDomain.getAccid().isEmpty()) {
 			String mgiid = searchDomain.getAccid().toUpperCase();
@@ -328,8 +322,8 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 			}
 			where = where + "\nand lower(a.accID) = '" + mgiid.toLowerCase() + "'";
 			from_accession = true;
+			executeQuery = true;
 		}
-		
 		
 		if (searchDomain.getAnnots() != null) {
 						
@@ -354,16 +348,11 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 				annotDomain.getModification_date());
 	
 			if (cmResults.length > 0) {
-				from = from + cmResults[0];
-				where = where + cmResults[1];
-				from_evidence = true;
-			}
-			
-				
-			value = annotDomain.getEvidenceTermKey();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand e._evidenceterm_key = " + value;
-				from_evidence = true;			
+				if (cmResults[0].length() > 0 || cmResults[1].length() > 0) {
+					from = from + cmResults[0];
+					where = where + cmResults[1];
+					from_evidence = true;
+				}
 			}
 	
 			value = annotDomain.getRefsKey();
@@ -380,38 +369,18 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 				where = where + "\nand e.jnumid = '" + jnumid + "'";
 				from_evidence = true;			
 			}
-			
-			//NO NOTES FOR Allele/DO annotations?
-//			if (annotDomain.getAllNotes() != null) {
-//
-//				value = annotDomain.getAllNotes().get(0).getNoteChunk();
-//				if (value != null && !value.isEmpty()) {
-//
-//					if (annotDomain.getAllNotes().get(0).getNoteTypeKey() != null 
-//							&& !annotDomain.getAllNotes().get(0).getNoteTypeKey().isEmpty()) {
-//						where = where + "\nand n._notetype_key = " + annotDomain.getAllNotes().get(0).getNoteTypeKey();
-//					}
-//
-//					where = where + "\nand n.note ilike '" + value + "'";
-//					from_note = true;
-//				}
-//
-//			}
 		}
 		
-		// dependencies
-//		if (from_note == true) {
-//			from_evidence = true;
-//		}
 		if (from_evidence == true) {
 			from_annot = true;
 		}
 		
 		// from/where construction
 		if (from_accession == true) {
-			from = from + ", gxd_genotype_acc_view a";
+			from = from + ", all_acc_view a";
 			where = where + "\nand v._object_key = a._object_key" 
 					+ "\nand a._mgitype_key = " + mgiTypeKey;
+			executeQuery = true;
 		}
 		if (from_annot == true) {
 			from = from + ", voc_annot va";
@@ -419,91 +388,35 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 					+ "\nand v._logicaldb_key = 1"
 					+ "\nand v.preferred = 1"
 					+ "\nand va._annottype_key = " + searchDomain.getAnnots().get(0).getAnnotTypeKey();
+			executeQuery = true;
 		}
 		if (from_evidence == true) {
 			from = from + ", voc_evidence e";
 			where = where + "\nand va._annot_key = e._annot_key";
+			executeQuery = true;
 		}
-//		if (from_property == true) {
-//			from = from + ", voc_evidence_property p";
-//			where = where + "\nand e._annotevidence_key = p._annotevidence_key";
-//		}
-//		if (from_note == true) {
-//			from = from + ", mgi_note_vocevidence_view n";
-//			where = where + "\nand e._annotevidence_key = n._object_key";
-//		}
+		
+		if (executeQuery == false) {
+			log.info("executeQuery = false; not enough parameters in search");
+			return results;
+		}
 
-		// removed "limit"
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info("searchCmd: " + cmd);
 
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
-			Integer prevObjectKey = 0;
-			Integer newObjectKey = 0;
-			String newDescription = "";
-			String prevDescription = "";
-			String newStrain = "";
-			String prevStrain = "";
-			Boolean addResults = false;
-			
-			// concatenate description when grouped by _object_key
-			
-			while (rs.next()) {
-				
-				newObjectKey = rs.getInt("_object_key");
-				newStrain = rs.getString("subtype");
-				newDescription = rs.getString("short_description");
-								
-				// group description by _object_key
-				if (prevObjectKey.equals(0)) {
-					prevObjectKey = newObjectKey;
-					prevStrain = newStrain;
-					prevDescription = newDescription;
-					addResults = false;
-				}
-				else if (newObjectKey.equals(prevObjectKey)) {
-					prevDescription = prevDescription + "," + newDescription;
-					addResults = false;
-				}
-				else {
-					addResults = true;
-				}
-				
-				if (addResults) {
-
-					prevDescription = prevStrain + " " + prevDescription;
-	
-					SlimAlleleDomain domain = new SlimAlleleDomain();
-					domain = slimtranslator.translate(alleleDAO.get(prevObjectKey));				
-					alleleDAO.clear();				
-					results.add(domain);
-					
-					prevObjectKey = newObjectKey;
-					prevStrain = newStrain;
-					prevDescription = newDescription;
-					addResults = false;
-				}
-				
-				// if last record, then add to result set
-				if (rs.isLast() == true) {
-					
-					prevObjectKey = newObjectKey;
-					prevStrain = newStrain;
-					prevDescription = newDescription;
-					prevDescription = prevStrain + " " + prevDescription;
-					
-					SlimAlleleDomain domain = new SlimAlleleDomain();
-					domain = slimtranslator.translate(alleleDAO.get(prevObjectKey));				
-					alleleDAO.clear();				
-					results.add(domain);
-				}
-								
+						
+			while (rs.next())  {
+				SlimAlleleAnnotDomain domain = new SlimAlleleAnnotDomain();
+				domain = slimtranslator.translate(alleleDAO.get(rs.getInt("_object_key")));				
+				domain.setAlleleDisplay(rs.getString("description"));
+				alleleDAO.clear();				
+				results.add(domain);					
 			}
 			sqlExecutor.cleanup();
 			
-			// now we order by description - see note above at first 'select = '
-			//results.sort(Comparator.comparing(SlimAlleleDomain::getGenotypeDisplay, String.CASE_INSENSITIVE_ORDER));
+			results.sort(Comparator.comparing(SlimAlleleAnnotDomain::getAlleleDisplay, String.CASE_INSENSITIVE_ORDER));
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -511,43 +424,5 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 		
 		return results;
 	}	
-
-	@Transactional	
-	public List<MGIReferenceAssocDomain> validateAlleleReference(SlimAlleleRefAssocDomain searchDomain) {
-		// return a list of Allele/Reference associations that do not exist for this Allele/Reference
-		// returns empty list of values if validation fails
-
-		List<MGIReferenceAssocDomain> results = new ArrayList<MGIReferenceAssocDomain>();
-		
-//		String cmd = "\nselect distinct g._allele_key"
-//				+ "\nfrom GXD_AlleleGenotype g, ALL_Allele a" 
-//				+ "\nwhere g._Allele_key = a._Allele_key"
-//				+ "\nand a.isWildType = 0"
-//				+ "\nand g._Genotype_key = " + searchDomain.getGenotypeKey()
-//				+ "\nand not exists (select 1 from MGI_Reference_Assoc a where a._MGIType_key = 11" 
-//					+ "\nand a._Object_key = g._Allele_key"
-//					+ "\nand a._Refs_key = " + searchDomain.getRefsKey() + ")";
-//		
-//		log.info(cmd);
-//		
-//		try {
-//			ResultSet rs = sqlExecutor.executeProto(cmd);
-//			while (rs.next()) {
-//				MGIReferenceAssocDomain domain = new MGIReferenceAssocDomain();
-//				domain.setProcessStatus(Constants.PROCESS_CREATE);
-//				domain.setObjectKey(rs.getString("_allele_key"));
-//				domain.setMgiTypeKey("11");
-//				domain.setRefAssocType("Used-FC");
-//				domain.setRefsKey(searchDomain.getRefsKey());
-//				results.add(domain);
-//			}
-//			sqlExecutor.cleanup();			
-//		}
-//		catch (Exception e) {
-//			e.printStackTrace();
-//		}
-		
-		return results;
-	}	
-		
+	
 }

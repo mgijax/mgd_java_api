@@ -73,7 +73,8 @@ public class Constants {
 
 	// default search limit
 	public static String SEARCH_RETURN_LIMIT = "limit 1000";
-	
+	public static String SEARCH_RETURN_LIMIT5000 = "limit 5000";
+
 	// API logging using Logger.info()
 	public static String LOG_MGI_API = "LOG_MGI_API|";
 	public static String LOG_FAIL_USERAUTHENTICATION = LOG_MGI_API + "FAIL|USER AUTHENTICATION";

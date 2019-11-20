@@ -289,18 +289,20 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				", concat(ps.strain,',',a1.symbol,',',a2.symbol) as genotypeDisplay";
 		
 		// "from" if allele pair = true
-		String from = "from gxd_genotype g, prb_strain ps, gxd_allelepair ap" +
+		String from = "from gxd_genotype g" +
+				"\nleft outer join gxd_allelepair ap on (g._genotype_key = ap._genotype_key)" +
 				"\nleft outer join all_allele a1 on (ap._allele_key_1 = a1._allele_key)" +		
-				"\nleft outer join all_allele a2 on (ap._allele_key_2 = a2._allele_key)";		
+				"\nleft outer join all_allele a2 on (ap._allele_key_2 = a2._allele_key)," +
+				"\nprb_strain ps";
 		
 		// "where" for all
 		String where = "where g._strain_key = ps._strain_key";
 		
 		// "where" if allele pair = true
-		String whereAllelePair = "\nand g._genotype_key = ap._genotype_key"; 
+		String whereAllelePair = ""; 
 
 		String orderBy = "order by strain, symbol nulls first";			
-		String limit = Constants.SEARCH_RETURN_LIMIT;
+		String limit = Constants.SEARCH_RETURN_LIMIT5000;
 		String value;
 		String includeNotExists = "";
 		
@@ -365,16 +367,16 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			value = searchDomain.getAllelePairs().get(0).getAlleleKey1();
 			if (value != null && !value.isEmpty()) {
 				whereAllelePair = whereAllelePair + 
-				"\nand (ap._Allele_key_1 = " + value +
-				"\nor ap._Allele_key_2 = " + value + ")";
+					"\nand (ap._Allele_key_1 = " + value +
+					"\nor ap._Allele_key_2 = " + value + ")";
 				from_allele = true;				
 			}
 			
 			value = searchDomain.getAllelePairs().get(0).getAlleleKey2();			
 			if (value != null && !value.isEmpty()) {
 				whereAllelePair = whereAllelePair + 
-				"\nand (ap._Allele_key_1 = " + value +
-				"\nor ap._Allele_key_2 = " + value + ")";
+					"\nand (ap._Allele_key_1 = " + value +
+					"\nor ap._Allele_key_2 = " + value + ")";
 				from_allele = true;				
 			}
 		

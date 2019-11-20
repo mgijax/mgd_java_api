@@ -2,8 +2,6 @@ package org.jax.mgi.mgd.api.model.gxd.translator;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
-import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.AllelePairDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
@@ -18,7 +16,6 @@ public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, Gen
 	protected Logger log = Logger.getLogger(getClass());
 
 	private NoteTranslator noteTranslator = new NoteTranslator();		
-	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	private AllelePairTranslator allelePairsTranslator = new AllelePairTranslator();
 	private ImagePaneAssocViewTranslator imagePaneTranslator = new ImagePaneAssocViewTranslator();
 
@@ -66,8 +63,7 @@ public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, Gen
 				
 		// mgi accession ids only
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
-			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
-			domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
+			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}
 
 		// allele pairs

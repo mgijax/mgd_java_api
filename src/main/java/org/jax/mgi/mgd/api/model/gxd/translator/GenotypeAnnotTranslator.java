@@ -6,8 +6,6 @@ import java.util.List;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
-import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeAnnotDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
@@ -20,7 +18,6 @@ public class GenotypeAnnotTranslator extends BaseEntityDomainTranslator<Genotype
 
 	protected Logger log = Logger.getLogger(getClass());
 
-	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	// sc 9/18 updated this from and GenotypeMPAnnotationTranslator as we changed the GenotypeMPDomain to
 	// have a list of AnnotationDomains instead of GenotypeMPAnnotationDomains
 	private AnnotationTranslator annotTranslator = new AnnotationTranslator();
@@ -39,9 +36,7 @@ public class GenotypeAnnotTranslator extends BaseEntityDomainTranslator<Genotype
 		
 		// mgi accession ids only
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
-			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
-			domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
-			log.info("done setting accession ids in domain firs one" + entity.getMgiAccessionIds().get(0).getAccID());
+			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}
 		
 		// We have both MP and DO. Create a single list from both to set in domain

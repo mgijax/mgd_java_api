@@ -337,8 +337,8 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		}
 
 		// accession id
-		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {
-			String mgiid = searchDomain.getMgiAccessionIds().get(0).getAccID().toUpperCase();
+		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {
+			String mgiid = searchDomain.getAccID().toUpperCase();
 			if (!mgiid.contains("MGI:")) {
 				mgiid = "MGI:" + mgiid;
 			}

@@ -3,7 +3,6 @@ package org.jax.mgi.mgd.api.model.gxd.domain;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
-import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocViewDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 
@@ -25,14 +24,13 @@ public class GenotypeDomain extends BaseDomain {
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;
-	
+	private String accID;
 	private String useAllelePairDefaultOrder;
 	
 	private NoteDomain alleleDetailNote;	
 	private NoteDomain generalNote;
 	private NoteDomain privateCuratorialNote;
 	
-	private List<AccessionDomain> mgiAccessionIds;
 	private List<AllelePairDomain> allelePairs;
 	private List<ImagePaneAssocViewDomain> imagePaneAssocs;
 

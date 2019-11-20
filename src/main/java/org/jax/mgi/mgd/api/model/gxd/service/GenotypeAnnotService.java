@@ -230,8 +230,8 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			log.info("setting genotypeKey: " + genoAnnotDomain.getGenotypeKey() );
 			denormGenoAnnotDomain.setGenotypeDisplay(genoAnnotDomain.getGenotypeDisplay());
 			log.info("setting genotypeDisplay: " + genoAnnotDomain.getGenotypeDisplay() );
-			denormGenoAnnotDomain.setAccID(genoAnnotDomain.getMgiAccessionIds().get(0).getAccID());
-			log.info("setting accid: " + genoAnnotDomain.getMgiAccessionIds().get(0).getAccID());
+			denormGenoAnnotDomain.setAccID(genoAnnotDomain.getAccID());
+			log.info("setting accid: " + genoAnnotDomain.getAccID());
 			// set header if MP only
 			if(controllerAnnotTypeKey.equals("1002")) {
 			    denormGenoAnnotDomain.setHeaders(genoAnnotDomain.getHeaders());

@@ -290,7 +290,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		
 		// "from" if allele pair = true
 		String from = "from gxd_genotype g, prb_strain ps, gxd_allelepair ap" +
-				"\ninner join all_allele a1 on (ap._allele_key_1 = a1._allele_key)" +		
+				"\nleft outer join all_allele a1 on (ap._allele_key_1 = a1._allele_key)" +		
 				"\nleft outer join all_allele a2 on (ap._allele_key_2 = a2._allele_key)";		
 		
 		// "where" for all
@@ -441,6 +441,19 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			
 		}
 		
+		// union for the allele pair does *not* exist
+		if (from_allele == false
+		 	&& from_marker == false
+		 	&& from_cellline == false
+		 	&& from_accession == false) {
+			
+			includeNotExists = "\nunion all" +
+				"\nselect distinct g._genotype_key, ps.strain, ps.strain, ps.strain as genotypeDisplay" +
+				"\nfrom gxd_genotype g, prb_strain ps" +
+				"\n" + where +
+				"\nand not exists (select 1 from gxd_allelepair ap where g._genotype_key = ap._genotype_key)";
+		}
+				
 		// image pane associations
 		if (searchDomain.getImagePaneAssocs() != null && !searchDomain.getImagePaneAssocs().isEmpty()) {
 			value = searchDomain.getImagePaneAssocs().get(0).getMgiID();
@@ -472,24 +485,8 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			where = where + "\nand note3._notetype_key = 1028 and note3.note ilike '" + value + "'" ;
 			from_privateCuratorialNote = true;
 		}
-
-		// union for the allele pair does *not* exist
-		if (from_allele == false
-		 	&& from_marker == false
-		 	&& from_cellline == false
-		 	&& from_image == false
-		 	&& from_alleleDetailNote == false
-		 	&& from_generalNote == false
-		 	&& from_privateCuratorialNote == false	
-		 	&& from_accession == false) {
-			
-			includeNotExists = "\nunion all" +
-				"\nselect distinct g._genotype_key, ps.strain, ps.strain, ps.strain as genotypeDisplay" +
-				"\nfrom gxd_genotype g, prb_strain ps" +
-				"\n" + where +
-				"\nand not exists (select 1 from gxd_allelepair ap where g._genotype_key = ap._genotype_key)";
-		}
-				
+		
+		// final from/where
 		if (from_marker == true) {
 			from = from + ", mrk_marker m";
 			where = where + "\nand ap._marker_key = m._marker_key";

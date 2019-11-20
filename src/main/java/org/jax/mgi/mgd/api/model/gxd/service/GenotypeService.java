@@ -442,20 +442,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			}
 			
 		}
-		
-		// union for the allele pair does *not* exist
-		if (from_allele == false
-		 	&& from_marker == false
-		 	&& from_cellline == false
-		 	&& from_accession == false) {
-			
-			includeNotExists = "\nunion all" +
-				"\nselect distinct g._genotype_key, ps.strain, ps.strain, ps.strain as genotypeDisplay" +
-				"\nfrom gxd_genotype g, prb_strain ps" +
-				"\n" + where +
-				"\nand not exists (select 1 from gxd_allelepair ap where g._genotype_key = ap._genotype_key)";
-		}
-				
+
 		// image pane associations
 		if (searchDomain.getImagePaneAssocs() != null && !searchDomain.getImagePaneAssocs().isEmpty()) {
 			value = searchDomain.getImagePaneAssocs().get(0).getMgiID();
@@ -468,6 +455,20 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				where = where + "\nand i.pixID ilike '" + value + "'";
 				from_image = true;
 			}			
+		}
+		
+		// union for the allele pair does *not* exist
+		if (from_allele == false
+		 	&& from_marker == false
+		 	&& from_cellline == false
+		 	&& from_accession == false
+		 	&& from_image == false) {
+			
+			includeNotExists = "\nunion all" +
+				"\nselect distinct g._genotype_key, ps.strain, ps.strain, ps.strain as genotypeDisplay" +
+				"\nfrom gxd_genotype g, prb_strain ps" +
+				"\n" + where +
+				"\nand not exists (select 1 from gxd_allelepair ap where g._genotype_key = ap._genotype_key)";
 		}
 		
 		// notes

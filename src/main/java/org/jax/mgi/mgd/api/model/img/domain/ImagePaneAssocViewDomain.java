@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 public class ImagePaneAssocViewDomain extends BaseDomain {
 
+	private String processStatus;
 	private String assocKey;
 	private String imagePaneKey;
 	private String mgiTypeKey;

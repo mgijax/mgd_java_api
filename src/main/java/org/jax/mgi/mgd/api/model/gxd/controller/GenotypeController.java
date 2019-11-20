@@ -17,7 +17,6 @@ import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDataSetDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.GenotypeService;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;

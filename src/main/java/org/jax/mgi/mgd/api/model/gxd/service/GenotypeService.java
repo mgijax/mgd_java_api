@@ -462,6 +462,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		 	&& from_marker == false
 		 	&& from_cellline == false
 		 	&& from_accession == false
+		 	&& from_allele == false
 		 	&& from_image == false) {
 			
 			includeNotExists = "\nunion all" +

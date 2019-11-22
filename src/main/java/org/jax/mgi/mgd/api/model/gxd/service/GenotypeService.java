@@ -454,6 +454,11 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand i.pixID ilike '" + value + "'";
 				from_image = true;
+			}
+			value = searchDomain.getImagePaneAssocs().get(0).getIsPrimary();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand i.isPrimary =" + value;
+				from_image = true;
 			}			
 		}
 		

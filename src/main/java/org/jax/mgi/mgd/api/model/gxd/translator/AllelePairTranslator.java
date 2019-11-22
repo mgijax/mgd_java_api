@@ -24,7 +24,7 @@ public class AllelePairTranslator extends BaseEntityDomainTranslator<AllelePair,
 		domain.setPairState(String.valueOf(entity.getPairState().getTerm()));
 		domain.setCompoundKey(String.valueOf(entity.getCompound().get_term_key()));
 		domain.setCompound(String.valueOf(entity.getCompound().getTerm()));
-		domain.setSequenceNum(String.valueOf(entity.getSequenceNum()));		
+		domain.setSequenceNum(entity.getSequenceNum());		
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());

@@ -26,7 +26,7 @@ public class AllelePairDomain extends BaseDomain {
 	private String pairState;
 	private String compoundKey;
 	private String compound;
-	private String sequenceNum;
+	private Integer sequenceNum;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

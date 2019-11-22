@@ -142,6 +142,7 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 				log.info("processAllelePair create");
 				
 				AllelePair entity = new AllelePair();	
+				
 				entity.set_allelepair_key(Integer.valueOf(parentKey));
 				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));				
 				entity.setAllele1(alleleDAO.get(Integer.valueOf(domain.get(i).getAlleleKey1())));				
@@ -158,9 +159,14 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 					entity.setCellLine2(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLineKey2())));				
 				}
 
+				// default compound = Not Specified
+				if (domain.get(i).getCompoundKey() == null) {
+					domain.get(i).setCompoundKey("847167");
+				}
+				
 				entity.setPairState(termDAO.get(Integer.valueOf(domain.get(i).getPairStateKey())));
 				entity.setCompound(termDAO.get(Integer.valueOf(domain.get(i).getCompoundKey())));
-				entity.setSequenceNum(Integer.valueOf(domain.get(i).getSequenceNum()));
+				entity.setSequenceNum(domain.get(i).getSequenceNum());
 				entity.setCreation_date(new Date());
 				entity.setModification_date(new Date());
 				

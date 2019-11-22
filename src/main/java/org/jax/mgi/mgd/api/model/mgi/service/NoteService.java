@@ -130,7 +130,7 @@ public class NoteService extends BaseService<NoteDomain> {
 		String note = "";
 		
 		Boolean modified = false;
-				
+			
 		if (noteDomain == null) {
 			log.info("processNote/no changes processed: " + parentKey);
 			return modified;
@@ -144,8 +144,7 @@ public class NoteService extends BaseService<NoteDomain> {
 			return modified;
 		}		
 		
-		log.info("processNote/decodedToISO8859: " + note);
-
+		log.info("processNote/decodedToISO8859: " + noteDomain.getNoteChunk());
 		note = DecodeString.setDecodeToLatin9(noteDomain.getNoteChunk());
 		note = "'" + note + "'";
 		
@@ -165,8 +164,7 @@ public class NoteService extends BaseService<NoteDomain> {
 			modified = true;
 		}
 		// update
-		else {
-			
+		else {	
 			Note entity = noteDAO.get(Integer.valueOf(noteDomain.getNoteKey()));
 			if (!entity.getNoteChunk().getNote().equals(noteDomain.getNoteChunk())) {
 				log.info("NoteService update");

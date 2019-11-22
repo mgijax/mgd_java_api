@@ -133,7 +133,14 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 		for (int i = 0; i < domain.size(); i++) {
 			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
+				
+				if(domain.get(i).getMarkerKey().isEmpty()
+					|| domain.get(i).getAlleleKey1().isEmpty()) {
+					continue;
+				}
+				
 				log.info("processAllelePair create");
+				
 				AllelePair entity = new AllelePair();	
 				entity.set_allelepair_key(Integer.valueOf(parentKey));
 				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));				

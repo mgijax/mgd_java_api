@@ -20,6 +20,8 @@ import org.jax.mgi.mgd.api.model.gxd.translator.GenotypeTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimGenotypeTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
+import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -33,7 +35,11 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 
 	@Inject
 	private GenotypeDAO genotypeDAO;
-
+	@Inject
+	private ProbeStrainDAO strainDAO;
+	@Inject
+	private TermDAO termDAO;
+	
 	@Inject
 	private AllelePairService allelePairService;
 	@Inject
@@ -59,10 +65,19 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		String cmd;
 		Query query;
 		
+		entity.setStrain(strainDAO.get(Integer.valueOf(domain.getStrainKey())));	
+		
 		// if no conditional value is set, then default = 0 (No)
 		if (domain.getIsConditional() == null || domain.getIsConditional().isEmpty()) {
 			domain.setIsConditional("0");
 		}
+		entity.setIsConditional(Integer.valueOf(domain.getIsConditional()));			
+
+		// if no genotype exists as value is set, then default = 'Mouse Line' (3982946)
+		if (domain.getExistsAsKey() == null) {
+			domain.setExistsAsKey("3982946");
+		}
+		entity.setExistsAs(termDAO.get(Integer.valueOf(domain.getExistsAsKey())));			
 		
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
@@ -87,33 +102,19 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getGeneralNote(), mgiTypeKey, "1027", user);
 		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getPrivateCuratorialNote(), mgiTypeKey, "1028", user);
 		
-		// create combination note 1, 2, 3 
+		// create combination note 1 
 		// using allele detail note
 		// then run processAlleleCombinations to finish the job
 		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getAlleleDetailNote(), mgiTypeKey, "1016", user);
-		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getAlleleDetailNote(), mgiTypeKey, "1017", user);
-		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getAlleleDetailNote(), mgiTypeKey, "1018", user);
 		try {
 			noteService.processAlleleCombinations(entity.get_genotype_key());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		// process mp annotations
-		//log.info("process MP annotations");
-		//if (domain.getMpAnnots() != null && !domain.getMpAnnots().isEmpty()) {
-		//	annotationService.process(domain.getMpAnnots(), user);
-		//}
-	
-		// process DO annotations
-		//log.info("process DO annotations");
-		//if (domain.getDoAnnots() != null && !domain.getDoAnnots().isEmpty()) {
-		//	annotationService.process(domain.getDoAnnots(), user);
-		//}
-		
 		// check duplicate genotype
 		log.info("processGenotypes/check duplicate");
-		cmd = "select * from GXD_checkDuplicateGenotype (" + String.valueOf(entity.get_genotype_key()) + ")";
+		cmd = "select count(*) from GXD_checkDuplicateGenotype (" + String.valueOf(entity.get_genotype_key()) + ")";
 		query = genotypeDAO.createNativeQuery(cmd);
 		query.getResultList();
 		
@@ -135,12 +136,22 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		Query query;
 		
 		log.info("processGenotype/update");
-
-		//if (!entity.getFigureLabel().equals(domain.getFigureLabel())) {
-		//	entity.setFigureLabel(domain.getFigureLabel());
-		//	modified = true;
-		//}
 		
+		if (!String.valueOf(entity.getStrain().get_strain_key()).equals(domain.getStrainKey())) {
+			entity.setStrain(strainDAO.get(Integer.valueOf(domain.getStrainKey())));
+			modified = true;
+		}
+		
+		if (!String.valueOf(entity.getIsConditional()).equals(domain.getIsConditional())) {
+			entity.setIsConditional(Integer.valueOf(domain.getIsConditional()));
+			modified = true;
+		}
+		
+		if (!String.valueOf(entity.getExistsAs().get_term_key()).equals(domain.getExistsAsKey())) {
+			entity.setExistsAs(termDAO.get(Integer.valueOf(domain.getExistsAsKey())));
+			modified = true;
+		}
+				
 		// only if modifications were actually made
 		if (modified == true) {
 			entity.setModification_date(new Date());
@@ -173,16 +184,11 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			modified = true;
 		}
 		
-		// update combination note 1, 2, 3 
+		// update combination note 1
+		// combination note 2 & 3 get updated by nightly process (allelecombination)
 		// using allele detail note
 		// then run processAlleleCombinations to finish the job
 		if (noteService.process(domain.getGenotypeKey(), domain.getAlleleDetailNote(), mgiTypeKey, "1016", user)) {
-			modified = true;
-		}
-		if (noteService.process(domain.getGenotypeKey(), domain.getAlleleDetailNote(), mgiTypeKey, "1017", user)) {
-			modified = true;
-		}		
-		if (noteService.process(domain.getGenotypeKey(), domain.getAlleleDetailNote(), mgiTypeKey, "1018", user)) {
 			modified = true;
 		}
 		try {
@@ -190,26 +196,10 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		// process mp annotations
-		//log.info("process MP annotations");
-		//if (domain.getMpAnnots() != null && !domain.getMpAnnots().isEmpty()) {
-		//	if (annotationService.process(domain.getMpAnnots(), user)) {
-		//		modified = true;
-		//	}
-		//}
-		
-		// process DO annotations
-		//log.info("process DO annotations");
-		//if (domain.getDoAnnots() != null && !domain.getDoAnnots().isEmpty()) {
-		//	if (annotationService.process(domain.getDoAnnots(), user)) {
-		//		modified = true;
-		//	}
-		//}
 		
 		// check duplicate genotype
-		log.info("processGenotypes/check duplicate");
-		cmd = "select * from GXD_checkDuplicateGenotype (" + String.valueOf(entity.get_genotype_key()) + ")";
+		cmd = "select count(*) from GXD_checkDuplicateGenotype (" + String.valueOf(entity.get_genotype_key()) + ")";
+		log.info("processGenotype/check duplicate: " + cmd);
 		query = genotypeDAO.createNativeQuery(cmd);
 		query.getResultList();
 		

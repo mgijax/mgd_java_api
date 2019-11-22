@@ -97,8 +97,8 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 		return genotypeService.getDataSets(key);
 	}
 	
-	@POST
-	@ApiOperation(value = "Search data sets by jnum key")
+	@GET
+	@ApiOperation(value = "Search genotypes by jnum key")
 	@Path("/searchDataSets/{key}")
 	public List<SlimGenotypeDomain> searchDataSet(@PathParam("key") Integer key) {
 		return genotypeService.searchDataSets(key);

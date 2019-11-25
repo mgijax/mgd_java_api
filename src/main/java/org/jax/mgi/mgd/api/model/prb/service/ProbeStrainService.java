@@ -78,7 +78,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		List<SlimProbeStrainDomain> results = new ArrayList<SlimProbeStrainDomain>();
 
 		String cmd = "";
-		String select = "select s._strain_key ";
+		String select = "select s._strain_key";
 		String from = "from prb_strain s";
 		String where = "where s._Strain_key is not null";
 		

@@ -81,8 +81,7 @@ public class ImageTranslator extends BaseEntityDomainTranslator<Image, ImageDoma
 				
 		// mgi accession ids only
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
-			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
-			domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
+			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}
 
 		// accession ids editable

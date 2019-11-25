@@ -3,7 +3,6 @@ package org.jax.mgi.mgd.api.model.all.domain;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
-import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 
@@ -26,11 +25,10 @@ public class AlleleDomain extends BaseDomain {
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;
-	
 	private String chromosome;
 	private String strand;
+	private String accID;
 	
-	private List<AccessionDomain> mgiAccessionIds;
 	private List<MGIReferenceAssocDomain> refAssocs;	
 	private List<AnnotationDomain> doAnnots;	
 

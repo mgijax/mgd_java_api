@@ -88,9 +88,8 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			where = where + "\nand lower(strain) = '" + searchDomain.getStrain().toLowerCase() + "'" ;
 		}
 		
-		// allele accession id 
-		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {	
-			where = where + "\nand lower(acc.accID) = '" + searchDomain.getMgiAccessionIds().get(0).getAccID().toLowerCase() + "'";
+		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	
+			where = where + "\nand lower(acc.accID) = '" + searchDomain.getAccID().toLowerCase() + "'";
 			from_accession = true;
 		}
 

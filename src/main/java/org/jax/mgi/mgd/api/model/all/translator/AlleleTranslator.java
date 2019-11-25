@@ -2,8 +2,6 @@ package org.jax.mgi.mgd.api.model.all.translator;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
-import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
@@ -37,14 +35,9 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		// "strand" is not being translated; only used by 'allele/search'
 		// only used in SlimAlleleDomain
 		
-		// mgi accession ids only
+		// primary mgi accession ids only
 		if (!entity.getMgiAccessionIds().isEmpty()) {
-			AccessionTranslator accessionTranslator = new AccessionTranslator();		
-			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
-			if(acc.iterator().hasNext() == true) {
-				domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
-
-			}
+			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}
 		
 		// reference associations

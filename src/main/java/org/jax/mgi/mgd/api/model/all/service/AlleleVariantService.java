@@ -386,11 +386,11 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			if (searchDomain.getAllele().getSymbol() != null && !searchDomain.getAllele().getSymbol().isEmpty()) {
 				where = where + "\nand a.symbol ilike '" + searchDomain.getAllele().getSymbol() + "'" ;
 			}	
-			if ((searchDomain.getAllele().getMgiAccessionIds() != null) && (searchDomain.getAllele().getMgiAccessionIds().size() > 0)) {
-				if (searchDomain.getAllele().getMgiAccessionIds().get(0).getAccID().trim().length() > 0) {
+			if ((searchDomain.getAllele().getAccID() != null) && (searchDomain.getAllele().getAccID().length() > 0)) {
+				if (searchDomain.getAllele().getAccID().trim().length() > 0) {
 					from_alleleID = true;
 					StringBuffer alleleClauses = new StringBuffer("");
-					for (String alleleID : searchDomain.getAllele().getMgiAccessionIds().get(0).getAccID().split(" ")) {
+					for (String alleleID : searchDomain.getAllele().getAccID().split(" ")) {
 						if (alleleClauses.length() > 0) {
 							alleleClauses.append(" or ");
 						}

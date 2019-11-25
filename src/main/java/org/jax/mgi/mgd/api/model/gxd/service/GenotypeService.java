@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.gxd.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -523,14 +524,78 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
+			Integer prevObjectKey = 0;
+			Integer newObjectKey = 0;
+			String newDescription = "";
+			String prevDescription = "";
+			String newStrain = "";
+			String prevStrain = "";
+			Boolean addResults = false;
+			
+			// concatenate description when grouped by _genotype_key
+			
 			while (rs.next()) {
-				SlimGenotypeDomain domain = new SlimGenotypeDomain();
-				domain = slimtranslator.translate(genotypeDAO.get(rs.getInt("_genotype_key")));				
-				domain.setGenotypeDisplay(rs.getString("genotypeDisplay"));
-				genotypeDAO.clear();				
-				results.add(domain);
+				
+				newObjectKey = rs.getInt("_genotype_key");
+				newStrain = rs.getString("strain");
+				newDescription = rs.getString("symbol");
+								
+				// group description by _object_key
+				if (prevObjectKey.equals(0)) {
+					prevObjectKey = newObjectKey;
+					prevStrain = newStrain;
+					prevDescription = newDescription;
+					addResults = false;
+				}
+				else if (newObjectKey.equals(prevObjectKey)) {
+					prevDescription = prevDescription + "," + newDescription;
+					addResults = false;
+				}
+				else {
+					addResults = true;
+				}
+				
+				if (addResults) {
+
+					prevDescription = prevStrain + " " + prevDescription;
+	
+					SlimGenotypeDomain domain = new SlimGenotypeDomain();
+					domain = slimtranslator.translate(genotypeDAO.get(prevObjectKey));				
+					domain.setGenotypeDisplay(prevDescription);
+					genotypeDAO.clear();				
+					results.add(domain);
+					
+					prevObjectKey = newObjectKey;
+					prevStrain = newStrain;
+					prevDescription = newDescription;
+					addResults = false;
+				}
+				
+				// if last record, then add to result set
+				if (rs.isLast() == true) {
+					
+					if (prevObjectKey.equals(newObjectKey)) {
+						prevDescription = prevStrain + " " + prevDescription;
+					}
+					else {
+						prevObjectKey = newObjectKey;
+						prevStrain = newStrain;
+						prevDescription = newDescription;
+						prevDescription = prevStrain + " " + prevDescription;
+					}
+					
+					SlimGenotypeDomain domain = new SlimGenotypeDomain();
+					domain = slimtranslator.translate(genotypeDAO.get(prevObjectKey));				
+					domain.setGenotypeDisplay(prevDescription);
+					genotypeDAO.clear();				
+					results.add(domain);
+				}
+								
 			}
 			sqlExecutor.cleanup();
+			
+			// now we order by description - see note above at first 'select = '
+			results.sort(Comparator.comparing(SlimGenotypeDomain::getGenotypeDisplay, String.CASE_INSENSITIVE_ORDER));
 		}
 		catch (Exception e) {
 			e.printStackTrace();

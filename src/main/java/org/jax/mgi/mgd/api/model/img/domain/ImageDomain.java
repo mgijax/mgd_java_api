@@ -32,13 +32,13 @@ public class ImageDomain extends BaseDomain {
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;
+	private String accID;
 	
 	private NoteDomain captionNote;
 	private NoteDomain copyrightNote;
 	private NoteDomain privateCuratorialNote;
 	private NoteDomain externalLinkNote;
 	
-	private List<AccessionDomain> mgiAccessionIds;
 	private List<AccessionDomain> editAccessionIds;
 	private List<AccessionDomain> nonEditAccessionIds;
 

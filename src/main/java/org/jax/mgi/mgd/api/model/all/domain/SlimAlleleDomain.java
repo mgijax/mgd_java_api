@@ -3,7 +3,6 @@ package org.jax.mgi.mgd.api.model.all.domain;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
-import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.SlimMGIReferenceAssocDomain;
 
 import lombok.Getter;
@@ -18,6 +17,6 @@ public class SlimAlleleDomain extends BaseDomain {
 	private String markerSymbol;
 	private String chromosome;
 	private String strand;
-	private List<SlimAccessionDomain> mgiAccessionIds;
+	private String accID;
 	private List<SlimMGIReferenceAssocDomain> refAssocs;	
 }

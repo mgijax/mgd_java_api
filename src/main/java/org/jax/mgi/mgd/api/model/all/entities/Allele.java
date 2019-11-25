@@ -92,15 +92,10 @@ public class Allele extends BaseEntity {
 	@JoinColumn(name="_approvedby_key", referencedColumnName="_user_key")
 	private User approvedBy;
 	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_allele_key", referencedColumnName="_object_key")
-	@Where(clause="`_mgitype_key` = 11 AND preferred = 1 AND `_logicaldb_key` = 1")
-	private Accession mgiAccessionId;
-
 	// mgi accession ids only
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 11 and `_logicaldb_key` = 1")
+	@Where(clause="`_mgitype_key` = 11 and `_logicaldb_key` = 1 and preferred = 1")
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 	

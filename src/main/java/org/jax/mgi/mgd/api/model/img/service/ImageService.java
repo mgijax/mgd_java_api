@@ -398,8 +398,8 @@ public class ImageService extends BaseService<ImageDomain> {
 		}		
 				
 		// accession id
-		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {
-			String mgiid = searchDomain.getMgiAccessionIds().get(0).getAccID().toUpperCase();
+		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {
+			String mgiid = searchDomain.getAccID().toUpperCase();
 			if (!mgiid.contains("MGI:")) {
 				mgiid = "MGI:" + mgiid;
 			}
@@ -407,9 +407,9 @@ public class ImageService extends BaseService<ImageDomain> {
 		}
 		// else thumbnail accession id
 		else if (searchDomain.getThumbnailImage() != null) {
-			if (searchDomain.getThumbnailImage().getMgiAccessionIds() != null 
-					&& !searchDomain.getThumbnailImage().getMgiAccessionIds().get(0).getAccID().isEmpty()) {
-				String mgiid = searchDomain.getThumbnailImage().getMgiAccessionIds().get(0).getAccID().toUpperCase();
+			if (searchDomain.getThumbnailImage().getAccID() != null 
+					&& !searchDomain.getThumbnailImage().getAccID().isEmpty()) {
+				String mgiid = searchDomain.getThumbnailImage().getAccID().toUpperCase();
 				if (!mgiid.contains("MGI:")) {
 					mgiid = "MGI:" + mgiid;
 				}

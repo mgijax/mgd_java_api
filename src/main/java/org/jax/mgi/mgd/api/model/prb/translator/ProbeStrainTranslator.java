@@ -31,7 +31,7 @@ public class ProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeStrai
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-	
+		
 		// mgi accession ids only
 		if (!entity.getMgiAccessionIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());

@@ -9,7 +9,6 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
@@ -128,8 +127,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}
 				
 		// allele accession id 
-		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {	
-			where = where + "\nand acc.accID ilike '" + searchDomain.getMgiAccessionIds().get(0).getAccID() + "'";
+		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	
+			where = where + "\nand acc.accID ilike '" + searchDomain.getAccID() + "'";
 			from_accession = true;
 		}
 						
@@ -172,15 +171,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			where = where + "\nand a._allele_key = ref._object_key";
 		}
 		from_variant = hasVariant;
-		//log.info("from_variant: " + from_variant);
-		//log.info("searchDomain.getModifiedBy(): " + searchDomain.getModifiedBy());
 		if (from_variant == true) {
 			from = from + ", all_variant av";
 			where = where + "\nand a._allele_key = av._allele_key \nand av._sourcevariant_key is not null";
 			// if from_variant is true, then createdBy et al is from the variant
 			String cmResults[] = DateSQLQuery.queryByCreationModification("av", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
-			//log.info("cmResults[0]: " + cmResults[0]);
-			//log.info("cmResults[1]: " + cmResults[1]);
 			if (cmResults.length > 0) {
 				from = from + cmResults[0];
 				where = where + cmResults[1];
@@ -232,9 +227,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				
 		}
 
-		// In testing this can return a null List, a List with a null domain, and probably? an empty list?
-		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().isEmpty() && searchDomain.getMgiAccessionIds().get(0).getAccID() != null) { 
-			cmd = cmd + "\nand a.accid = '" + searchDomain.getMgiAccessionIds().get(0).getAccID() + "'";				 
+		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) { 
+			cmd = cmd + "\nand a.accid = '" + searchDomain.getAccID() + "'";				 
 		}
 		log.info(cmd);
 		
@@ -288,12 +282,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			
 			while (rs.next()) {
 				SlimAlleleDomain alleleDomain = new SlimAlleleDomain();
-				SlimAccessionDomain accessionDomain = new SlimAccessionDomain();
-				List<SlimAccessionDomain> accessions = new ArrayList<SlimAccessionDomain>();
-				alleleDomain.setAlleleKey(rs.getString("_allele_key"));
-				accessionDomain.setAccID(rs.getString("accID"));
-				accessions.add(accessionDomain);
-				alleleDomain.setMgiAccessionIds(accessions);
+				alleleDomain = slimtranslator.translate(alleleDAO.get(rs.getInt("_allele_key")));				
+				alleleDAO.clear();
 				results.add(alleleDomain);
 			}
 			sqlExecutor.cleanup();

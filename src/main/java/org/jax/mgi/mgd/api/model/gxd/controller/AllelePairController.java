@@ -13,6 +13,7 @@ import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.AllelePairDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.AllelePairService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -73,11 +74,11 @@ public class AllelePairController extends BaseController<AllelePairDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Validate Allele Pair State with Alleles")
+	@ApiOperation(value = "Validate Allele Pair State/check result error")
 	@Path("/validateAlleleState")
 	public SearchResults<AllelePairDomain> validateAlleleState(AllelePairDomain domain) {
 		return allelePairService.validateAlleleState(domain);
-	}
+	}	
 	
 	@POST
 	@ApiOperation(value = "Validate Mutant Cell Lines")

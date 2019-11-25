@@ -140,7 +140,7 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 				}
 				
 				log.info("processAllelePair create");
-				
+
 				AllelePair entity = new AllelePair();	
 				
 				entity.set_allelepair_key(Integer.valueOf(parentKey));
@@ -312,23 +312,37 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 		Boolean isValid = false;
 		String error = "";
 		
-		String pairState = domain.getPairState();
+		String pairStateKey = domain.getPairStateKey();
 		String alleleKey1 = domain.getAlleleKey1();
 		String alleleKey2 = domain.getAlleleKey2();
 		String markerChr = domain.getMarkerChromosome();
-		String compound = domain.getCompound();
+		String compoundKey = domain.getCompoundKey();
 		
 		// no values/do nothing
 		if (alleleKey1 == null && alleleKey2 == null) {
 			return results;
 		}
+
+//	    847133 | Hemizygous X-linked
+//	    847134 | Hemizygous Y-linked
+//	    847135 | Hemizygous Insertion
+//	    847136 | Hemizygous Deletion
+//	    847137 | Heterozygous
+//	    847138 | Homozygous
+//	    847139 | Indeterminate
+//	   7107400 | Homoplasmic
+//	   7107401 | Heteroplasmic
+
+//	    847165 | Top
+//	    847166 | Bottom
+//	    847167 | Not Applicable
 		
-		if (pairState.equals("Homoplasmic")
-			|| pairState.equals("Heteroplasmic")) {
+		if (pairStateKey.equals("7107400")
+			|| pairStateKey.equals("7107401")) {
 			isValid = true;
 		}
 		
-		if (pairState.equals("Homozygous")) {
+		if (pairStateKey.equals("847138")) {
 			if (alleleKey2 != null 
 				&& !alleleKey2.isEmpty() 
 				&& alleleKey1.equals(alleleKey2)) {
@@ -339,7 +353,7 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 			}
 		}
 		
-		if (pairState.equals("Heterozygote")) {
+		if (pairStateKey.equals("847137")) {
 			if (alleleKey2 != null 
 				&& !alleleKey2.isEmpty()
 				&& !alleleKey1.equals(alleleKey2)) {
@@ -349,10 +363,10 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 			}
 		}
 		
-		if (pairState.equals("Hemizygous X-linked")) {
+		if (pairStateKey.equals("847133")) {
 			if (alleleKey2 == null 
 				&& markerChr.equals("X")
-				&& compound.equals("Not Applicable")) {
+				&& compoundKey.equals("847167")) {
 				isValid = true;
 			}
 			else {
@@ -360,10 +374,10 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 			}
 		}
 		
-		if (pairState.equals("Hemizygous Y-linked")) {
+		if (pairStateKey.equals("847134")) {
 			if (alleleKey2 == null 
 				&& markerChr.equals("Y")
-				&& compound.equals("Not Applicable")) {
+				&& compoundKey.equals("847167")) {
 				isValid = true;
 			}
 			else {
@@ -371,7 +385,7 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 			}
 		}
 		
-		if (pairState.equals("Hemizygous Insertion")) {
+		if (pairStateKey.equals("847135")) {
 			if (alleleKey2 == null) {
 				isValid = true;
 			} else {
@@ -379,16 +393,16 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 			}
 		}
 
-		if (pairState.equals("Hemizygous Deletion")) {
-			if (alleleKey2 == null && !compound.equals("Not Applicable")) {
+		if (pairStateKey.equals("847136")) {
+			if (alleleKey2 == null && !compoundKey.equals("847167")) {
 				isValid = true;
 			} else {
 				error = "Hemizygous Deletion: Allele2 must be null, and Compound must be in (Top, Bottem)";
 			}
 		}
 		
-		if (pairState.equals("Indeterminate")) {
-			if (alleleKey2 == null && compound.equals("Not Applicable")				) {
+		if (pairStateKey.equals("847139")) {
+			if (alleleKey2 == null && compoundKey.equals("847167")				) {
 				isValid = true;
 			} else {
 				error = "Indeterminate: Allele2 must be null, and Compound must be (Not Applicable)";

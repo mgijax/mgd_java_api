@@ -370,7 +370,6 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 		
 		String value;
 
-		Boolean from_accession = false;
 		Boolean from_annot = false;
 		Boolean from_evidence = false;
 		Boolean from_property = false;
@@ -394,8 +393,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			if (!mgiid.contains("MGI:")) {
 				mgiid = "MGI:" + mgiid;
 			}
-			where = where + "\nand lower(a.accID) = '" + mgiid.toLowerCase() + "'";
-			from_accession = true;
+			where = where + "\nand lower(v.accID) = '" + mgiid.toLowerCase() + "'";
 			executeQuery = true;
 		}
 
@@ -487,12 +485,6 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 		}
 		
 		// from/where construction
-		if (from_accession == true) {
-			from = from + ", gxd_genotype_acc_view a";
-			where = where + "\nand v._object_key = a._object_key" 
-					+ "\nand a._mgitype_key = " + mgiTypeKey;
-			executeQuery = true;
-		}
 		if (from_annot == true) {
 			from = from + ", voc_annot va";
 			where = where + "\nand v._object_key = va._object_key" 

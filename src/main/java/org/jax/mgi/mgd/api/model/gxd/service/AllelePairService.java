@@ -432,28 +432,43 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 		
 		String alleleKey1 = domain.getAlleleKey1();
 		String alleleKey2 = domain.getAlleleKey2();
-		String cellLineKey1 = domain.getCellLineKey1();
-		String cellLineKey2 = domain.getCellLineKey2();
+		String cellLine1 = domain.getCellLine1();
+		String cellLine2 = domain.getCellLine2();
 
+		String validateFailed = "Validate Mutant Cell Line failed";
+		
 		// no values/do nothing
-		if (cellLineKey1 == null && cellLineKey2 == null) {
+		if (cellLine1.isEmpty() && cellLine2.isEmpty()) {
 			return results;
 		}
 	
-		String cmd = "\nselect c._cellLine_key "
+		if (alleleKey1.isEmpty() && !cellLine1.isEmpty()) {
+			results.setError(validateFailed, "Allele 1 is empty/missing", Constants.HTTP_SERVER_ERROR);
+			return results;
+		}
+		
+		if (alleleKey2.isEmpty() && !cellLine2.isEmpty() ) {
+			results.setError(validateFailed, "Allele 2 is empty/missing", Constants.HTTP_SERVER_ERROR);
+			return results;
+		}
+		
+		String cmd = "\nselect c._cellLine_key, c.cellline"
 				+ "\nfrom all_cellLine c, all_allele_cellline a"
 				+ "\nwhere c.isMutant = 1"
 				+ "\nand c._cellLine_key = a._mutantcellLine_key"
-				+ "\nand c._cellLine_key = " + cellLineKey1
+				+ "\nand c.cellline = '" + cellLine1 + "'"
 				+ "\nand a._allele_key = " + alleleKey1;
 		
-		if (cellLineKey2 != null && !cellLineKey2.isEmpty()) {
+		if (cellLine2 != null && !cellLine2.isEmpty()) {
 			cmd = cmd + "\nunion" +
-				"\nselect c._cellLine_key from all_cellline c, all_allele_cellline a"
+				"\nselect c._cellLine_key, c.cellline from all_cellline c, all_allele_cellline a"
 				+ "\nwhere c.isMutant = 1"
 				+ "\nand c._cellLine_key = a._mutantcellLine_key"
-				+ "\nand c._cellLine_key = " + cellLineKey2
+				+ "\nand c.cellline = '" + cellLine2 + "'"
 				+ "\nand a._allele_key = " + alleleKey2;				
+		}
+		else {
+			isValidMCL2 = true;
 		}
 	
 		log.info(cmd);
@@ -461,10 +476,10 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				if (rs.getString("_cellline_key").equals(cellLineKey1)) {
+				if (rs.getString("cellline").equals(cellLine1)) {
 					isValidMCL1 = true;
 				}
-				if (rs.getString("_cellline_key").equals(cellLineKey2)) {
+				if (rs.getString("cellline").equals(cellLine2)) {
 					isValidMCL2 = true;
 				}				
 			}
@@ -479,7 +494,7 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 			}
 			
 			if (isValidMCL1 == false || isValidMCL2 == false) {
-				results.setError("Validate Mutant Cell Line failed", error, Constants.HTTP_SERVER_ERROR);
+				results.setError(validateFailed, error, Constants.HTTP_SERVER_ERROR);
 			}
 		}
 		catch (Exception e) {

@@ -347,8 +347,8 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 	}
 	
 	@Transactional	
-	public List<SlimGenotypeDomain> search(DenormGenotypeAnnotDomain searchDomain) {
-		// using searchDomain fields, generate SQL command
+	public List<SlimGenotypeDomain> search(DenormGenotypeAnnotDomain domain) {
+		// using domain fields, generate SQL command
 		
 		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
 
@@ -378,18 +378,17 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 	
 		// if parameter exists, then add to where-clause
 		
-//		if (searchDomain.getGenotypeKey() != null && !searchDomain.getGenotypeKey().isEmpty()) {
-//			where = where + "\nand v._object_key = " + searchDomain.getGenotypeKey();
+//		if (domain.getGenotypeKey() != null && !domain.getGenotypeKey().isEmpty()) {
+//			where = where + "\nand v._object_key = " + domain.getGenotypeKey();
 //		}
 		
-		if (searchDomain.getGenotypeDisplay() != null && !searchDomain.getGenotypeDisplay().isEmpty()) {
-			where = where + "\nand v.description ilike '" + searchDomain.getGenotypeDisplay() + "'";		
+		if (domain.getGenotypeDisplay() != null && !domain.getGenotypeDisplay().isEmpty()) {
+			where = where + "\nand v.description ilike '" + domain.getGenotypeDisplay() + "'";		
 			executeQuery = true;
 		}
 		
-		// accession id
-		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {
-			String mgiid = searchDomain.getAccID().toUpperCase();
+		if (domain.getAccID() != null && !domain.getAccID().isEmpty()) {
+			String mgiid = domain.getAccID().toUpperCase();
 			if (!mgiid.contains("MGI:")) {
 				mgiid = "MGI:" + mgiid;
 			}
@@ -397,9 +396,9 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			executeQuery = true;
 		}
 
-		if (searchDomain.getAnnots() != null) {
+		if (domain.getAnnots() != null) {
 						
-			DenormAnnotationDomain annotDomain = searchDomain.getAnnots().get(0);
+			DenormAnnotationDomain annotDomain = domain.getAnnots().get(0);
 		
 			value = annotDomain.getTermKey();
 			if (value != null && !value.isEmpty()) {
@@ -428,7 +427,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			}
 			
 			// for MP annotations only
-			if (searchDomain.getAnnots().get(0).getAnnotTypeKey().equals("1002") && annotDomain.getProperties() != null && !annotDomain.getProperties().isEmpty()) {
+			if (domain.getAnnots().get(0).getAnnotTypeKey().equals("1002") && annotDomain.getProperties() != null && !annotDomain.getProperties().isEmpty()) {
 				value = annotDomain.getProperties().get(0).getValue(); 
 				if (value != null && !value.isEmpty()) {
 					where = where + "\nand p._propertyterm_key = " + annotDomain.getProperties().get(0).getPropertyTermKey();
@@ -490,7 +489,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			where = where + "\nand v._object_key = va._object_key" 
 					+ "\nand v._logicaldb_key = 1"
 					+ "\nand v.preferred = 1"
-					+ "\nand va._annottype_key = " + searchDomain.getAnnots().get(0).getAnnotTypeKey();
+					+ "\nand va._annottype_key = " + domain.getAnnots().get(0).getAnnotTypeKey();
 			executeQuery = true;
 		}
 		if (from_evidence == true) {
@@ -515,7 +514,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 		}
 		
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
-		log.info("searchCmd: " + cmd);
+		log.info(cmd);
 
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
@@ -554,11 +553,11 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 
 					prevDescription = prevStrain + " " + prevDescription;
 	
-					SlimGenotypeDomain domain = new SlimGenotypeDomain();
-					domain = slimtranslator.translate(genotypeDAO.get(prevObjectKey));				
-					domain.setGenotypeDisplay(prevDescription);
+					SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();
+					slimdomain = slimtranslator.translate(genotypeDAO.get(prevObjectKey));				
+					slimdomain.setGenotypeDisplay(prevDescription);
 					genotypeDAO.clear();				
-					results.add(domain);
+					results.add(slimdomain);
 					
 					prevObjectKey = newObjectKey;
 					prevStrain = newStrain;
@@ -579,17 +578,17 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 						prevDescription = prevStrain + " " + prevDescription;
 					}
 					
-					SlimGenotypeDomain domain = new SlimGenotypeDomain();
-					domain = slimtranslator.translate(genotypeDAO.get(prevObjectKey));				
-					domain.setGenotypeDisplay(prevDescription);
+					SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();
+					slimdomain = slimtranslator.translate(genotypeDAO.get(prevObjectKey));				
+					slimdomain.setGenotypeDisplay(prevDescription);
 					genotypeDAO.clear();				
-					results.add(domain);
+					results.add(slimdomain);
 				}
 								
 			}
 			sqlExecutor.cleanup();
 			
-			// now we order by description - see note above at first 'select = '
+			// order by description - see note above at first 'select = '
 			results.sort(Comparator.comparing(SlimGenotypeDomain::getGenotypeDisplay, String.CASE_INSENSITIVE_ORDER));
 		}
 		catch (Exception e) {
@@ -599,6 +598,105 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 		return results;
 	}	
 
+	@Transactional	
+	public List<SlimGenotypeDomain> searchByKeys(SlimGenotypeDomain domain) {
+		// using domain fields, generate SQL command
+		//
+		// where domain.genotypeKey is a list of genotypeKey:
+		//		1111,2222,3333,...
+		
+		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
+	
+		String cmd = "select distinct v._object_key, v.subtype, v.short_description"
+			+ "\nfrom gxd_genotype_summary_view v"
+			+ "\nwhere v._mgitype_key = " + mgiTypeKey 
+			+  "\nand v._object_key in (" + domain.getGenotypeKey() + ")"
+			+  "\norder by v._object_key, v.subtype, v.short_description";
+
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			Integer prevObjectKey = 0;
+			Integer newObjectKey = 0;
+			String newDescription = "";
+			String prevDescription = "";
+			String newStrain = "";
+			String prevStrain = "";
+			Boolean addResults = false;
+			
+			// concatenate description when grouped by _object_key
+			
+			while (rs.next()) {
+				
+				newObjectKey = rs.getInt("_object_key");
+				newStrain = rs.getString("subtype");
+				newDescription = rs.getString("short_description");
+								
+				// group description by _object_key
+				if (prevObjectKey.equals(0)) {
+					prevObjectKey = newObjectKey;
+					prevStrain = newStrain;
+					prevDescription = newDescription;
+					addResults = false;
+				}
+				else if (newObjectKey.equals(prevObjectKey)) {
+					prevDescription = prevDescription + "," + newDescription;
+					addResults = false;
+				}
+				else {
+					addResults = true;
+				}
+				
+				if (addResults) {
+
+					prevDescription = prevStrain + " " + prevDescription;
+	
+					SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();
+					slimdomain = slimtranslator.translate(genotypeDAO.get(prevObjectKey));				
+					slimdomain.setGenotypeDisplay(prevDescription);
+					genotypeDAO.clear();				
+					results.add(slimdomain);
+					
+					prevObjectKey = newObjectKey;
+					prevStrain = newStrain;
+					prevDescription = newDescription;
+					addResults = false;
+				}
+				
+				// if last record, then add to result set
+				if (rs.isLast() == true) {
+					
+					if (prevObjectKey.equals(newObjectKey)) {
+						prevDescription = prevStrain + " " + prevDescription;
+					}
+					else {
+						prevObjectKey = newObjectKey;
+						prevStrain = newStrain;
+						prevDescription = newDescription;
+						prevDescription = prevStrain + " " + prevDescription;
+					}
+					
+					SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();
+					slimdomain = slimtranslator.translate(genotypeDAO.get(prevObjectKey));				
+					slimdomain.setGenotypeDisplay(prevDescription);
+					genotypeDAO.clear();				
+					results.add(slimdomain);
+				}
+								
+			}
+			sqlExecutor.cleanup();
+
+			// order by description - see note above at first 'select = '
+			results.sort(Comparator.comparing(SlimGenotypeDomain::getGenotypeDisplay, String.CASE_INSENSITIVE_ORDER));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
+	
 	@Transactional	
 	public List<MGIReferenceAssocDomain> validateAlleleReference(SlimGenotypeAlleleReferenceDomain searchDomain) {
 		// return a list of Allele/Reference associations that do not exist for this Genotype/Reference

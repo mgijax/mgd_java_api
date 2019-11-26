@@ -80,14 +80,14 @@ public class GenotypeMPController extends BaseController<DenormGenotypeAnnotDoma
 	}
 		
 	@POST
-	@ApiOperation(value = "Search/returns slim genotype domain")
+	@ApiOperation(value = "Search denorm domain/returns slim domain")
 	@Path("/search")
-	public List<SlimGenotypeDomain> search(DenormGenotypeAnnotDomain searchDomain) {
+	public List<SlimGenotypeDomain> search(DenormGenotypeAnnotDomain domain) {
 	
 		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
 
 		try {
-			results = genotypeAnnotService.search(searchDomain);
+			results = genotypeAnnotService.search(domain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -95,6 +95,22 @@ public class GenotypeMPController extends BaseController<DenormGenotypeAnnotDoma
 		return results;
 	}
 
+	@POST
+	@ApiOperation(value = "Search slim domain/returns slim domain")
+	@Path("/searchByKeys")
+	public List<SlimGenotypeDomain> searchByKeys(SlimGenotypeDomain domain) {
+	
+		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
+
+		try {
+			results = genotypeAnnotService.searchByKeys(domain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 	@POST
 	@ApiOperation(value = "Validate Allele-Reference associations for Genotype")
 	@Path("/validateAlleleReference")

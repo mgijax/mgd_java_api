@@ -34,19 +34,19 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
-		domain.setChromosome(entity.getMarker().getChromosome());
-		// "strand" is not being translated; only used by 'allele/search'
-		// only used in SlimAlleleDomain
-		
-		// marker
-		if (!entity.getMarker().getSymbol().isEmpty()) {
-			domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
-			domain.setMarkerSymbol(entity.getMarker().getSymbol());			
-		}
-		
 		// primary mgi accession ids only
 		if (!entity.getMgiAccessionIds().isEmpty()) {
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
+		}
+		
+		// marker stuff
+		if (!entity.getMarker().getSymbol().isEmpty()) {
+			domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
+			domain.setMarkerSymbol(entity.getMarker().getSymbol());			
+			domain.setChromosome(entity.getMarker().getChromosome());
+			domain.setDetailClip(entity.getMarker().getDetailClipNote().get(0).getNote());
+			// "strand" is not being translated; only used by 'allele/search'
+			// only used in SlimAlleleDomain			
 		}
 		
 		// reference associations

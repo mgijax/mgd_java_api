@@ -16,15 +16,16 @@ public class AlleleDomain extends BaseDomain {
 	private String alleleKey;
 	private String symbol;
 	private String name;
-	private String markerKey;
-	private String markerSymbol;
 	private Integer isWildType;
 	private Integer isExtinct;
 	private Integer isMixed;
+	private String accID;
 
+	private String markerKey;
+	private String markerSymbol;
 	private String chromosome;
 	private String strand;
-	private String accID;
+	private String detailClip;
 	
 	private String createdByKey;
 	private String createdBy;

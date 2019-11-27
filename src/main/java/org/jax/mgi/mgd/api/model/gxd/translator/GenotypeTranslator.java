@@ -11,8 +11,6 @@ import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocViewDomain;
 import org.jax.mgi.mgd.api.model.img.translator.ImagePaneAssocViewTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
-import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
-import org.jax.mgi.mgd.api.model.voc.domain.DenormAnnotationDomain;
 import org.jboss.logging.Logger;
 
 public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, GenotypeDomain> {

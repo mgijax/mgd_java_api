@@ -33,5 +33,6 @@ public class AlleleDomain extends BaseDomain {
 	
 	private List<MGIReferenceAssocDomain> refAssocs;	
 	private List<AlleleMutationDomain> mutations;
+	private List<AnnotationDomain> subtypeAnnots;
 	private List<AnnotationDomain> doAnnots;	
 }

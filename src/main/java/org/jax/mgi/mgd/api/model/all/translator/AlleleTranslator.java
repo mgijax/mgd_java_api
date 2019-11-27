@@ -53,9 +53,16 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		// mutations
 		if (!entity.getMutations().isEmpty()) {
 			AlleleMutationTranslator mutationTranslator = new AlleleMutationTranslator();
-			Iterable<AlleleMutationDomain> t = mutationTranslator.translateEntities(entity.getMutations());
-			domain.setMutations(IteratorUtils.toList(t.iterator()));
+			Iterable<AlleleMutationDomain> i = mutationTranslator.translateEntities(entity.getMutations());
+			domain.setMutations(IteratorUtils.toList(i.iterator()));
 			domain.getMutations().sort(Comparator.comparing(AlleleMutationDomain::getMutation));
+		}
+		
+		// subtype annotations
+		if (!entity.getSubtypeAnnots().isEmpty()) {
+			AnnotationTranslator annotTranslator = new AnnotationTranslator();
+			Iterable<AnnotationDomain> i = annotTranslator.translateEntities(entity.getSubtypeAnnots());
+			domain.setSubtypeAnnots(IteratorUtils.toList(i.iterator()));
 		}
 		
 		// do annotations

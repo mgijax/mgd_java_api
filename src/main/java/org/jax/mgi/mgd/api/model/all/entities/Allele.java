@@ -112,7 +112,13 @@ public class Allele extends BaseEntity {
 	@OneToMany()
 	@JoinColumn(name="_allele_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
 	private List<AlleleMutation> mutations;
-		
+	
+	// allele/subtype annotations
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
+	@Where(clause="`_annottype_key` = 1014")
+	private List<Annotation> subtypeAnnots;
+	
 	// DO term annotations
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)

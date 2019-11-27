@@ -16,6 +16,8 @@ public class AlleleDomain extends BaseDomain {
 	private String alleleKey;
 	private String symbol;
 	private String name;
+	private String markerKey;
+	private String markerSymbol;
 	private Integer isWildType;
 	private Integer isExtinct;
 	private Integer isMixed;

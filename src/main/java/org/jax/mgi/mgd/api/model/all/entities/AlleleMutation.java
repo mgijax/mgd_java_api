@@ -28,12 +28,9 @@ public class AlleleMutation extends BaseEntity {
 	//@ApiModelProperty(value="primary key")
 	//private int _allelemutation_key;
 	
+	private int _allele_key;
 	private Date creation_date;
 	private Date modification_date;
-	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_allele_key")
-	private Allele allele;
 		 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_mutation_key")

@@ -38,6 +38,12 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		// "strand" is not being translated; only used by 'allele/search'
 		// only used in SlimAlleleDomain
 		
+		// marker
+		if (!entity.getMarker().getSymbol().isEmpty()) {
+			domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
+			domain.setMarkerSymbol(entity.getMarker().getSymbol());			
+		}
+		
 		// primary mgi accession ids only
 		if (!entity.getMgiAccessionIds().isEmpty()) {
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());

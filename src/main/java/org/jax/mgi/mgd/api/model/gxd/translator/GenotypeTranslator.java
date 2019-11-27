@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.gxd.translator;
 
+import java.util.Comparator;
+
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.AllelePairDomain;
@@ -9,6 +11,8 @@ import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocViewDomain;
 import org.jax.mgi.mgd.api.model.img.translator.ImagePaneAssocViewTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
+import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.DenormAnnotationDomain;
 import org.jboss.logging.Logger;
 
 public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, GenotypeDomain> {
@@ -75,6 +79,7 @@ public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, Gen
 		if (entity.getAllelePairs() != null && !entity.getAllelePairs().isEmpty()) {
 			Iterable<AllelePairDomain> t = allelePairsTranslator.translateEntities(entity.getAllelePairs());
 			domain.setAllelePairs(IteratorUtils.toList(t.iterator()));
+			domain.getAllelePairs().sort(Comparator.comparingInt(AllelePairDomain::getSequenceNum));
 		}
 		
 		// imagepane associations by genotype

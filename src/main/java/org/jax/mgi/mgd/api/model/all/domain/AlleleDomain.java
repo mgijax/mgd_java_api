@@ -19,17 +19,19 @@ public class AlleleDomain extends BaseDomain {
 	private Integer isWildType;
 	private Integer isExtinct;
 	private Integer isMixed;
+
+	private String chromosome;
+	private String strand;
+	private String accID;
+	
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;
-	private String chromosome;
-	private String strand;
-	private String accID;
 	
 	private List<MGIReferenceAssocDomain> refAssocs;	
+	private List<AlleleMutationDomain> mutations;
 	private List<AnnotationDomain> doAnnots;	
-
 }

@@ -34,6 +34,9 @@ import lombok.Setter;
 public class Allele extends BaseEntity {
 
 	@Id
+	//@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="all_allele_generator")
+	//@SequenceGenerator(name="all_allele_generator", sequenceName = "all_allele_seq", allocationSize=1)
+	//@ApiModelProperty(value="primary key")	
 	private int _allele_key;
 	private String symbol;
 	private String name;
@@ -105,10 +108,15 @@ public class Allele extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 11")
 	private List<MGIReferenceAssoc> refAssocs;
 
+	// mutations
+	@OneToMany()
+	@JoinColumn(name="_allele_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
+	private List<AlleleMutation> mutations;
+		
 	// DO term annotations
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
 	@Where(clause="`_annottype_key` = 1021")
 	private List<Annotation> doAnnots;
-	
+
 }

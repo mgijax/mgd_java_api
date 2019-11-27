@@ -1,8 +1,11 @@
 package org.jax.mgi.mgd.api.model.all.translator;
 
+import java.util.Comparator;
+
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
+import org.jax.mgi.mgd.api.model.all.domain.AlleleMutationDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
@@ -44,18 +47,22 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		if (!entity.getRefAssocs().isEmpty()) {
 			MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
 			Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
-			if(i.iterator().hasNext() == true) {
-				domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
-			}
+			domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
 		}	
+		
+		// mutations
+		if (!entity.getMutations().isEmpty()) {
+			AlleleMutationTranslator mutationTranslator = new AlleleMutationTranslator();
+			Iterable<AlleleMutationDomain> t = mutationTranslator.translateEntities(entity.getMutations());
+			domain.setMutations(IteratorUtils.toList(t.iterator()));
+			domain.getMutations().sort(Comparator.comparing(AlleleMutationDomain::getMutation));
+		}
 		
 		// do annotations
 		if (!entity.getDoAnnots().isEmpty()) {
 			AnnotationTranslator annotTranslator = new AnnotationTranslator();
 			Iterable<AnnotationDomain> i = annotTranslator.translateEntities(entity.getDoAnnots());
-			if(i.iterator().hasNext() == true) {
-				domain.setDoAnnots(IteratorUtils.toList(i.iterator()));
-			}
+			domain.setDoAnnots(IteratorUtils.toList(i.iterator()));
 		}
 		
 		return domain;

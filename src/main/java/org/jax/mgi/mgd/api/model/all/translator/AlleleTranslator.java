@@ -54,9 +54,10 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
 			Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
 			domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
+			domain.getRefAssocs().sort(Comparator.comparing(MGIReferenceAssocDomain::getAllowOnlyOne).thenComparing(MGIReferenceAssocDomain::getRefAssocType));
 		}	
 		
-		// mutations
+		// molecular mutations
 		if (!entity.getMutations().isEmpty()) {
 			AlleleMutationTranslator mutationTranslator = new AlleleMutationTranslator();
 			Iterable<AlleleMutationDomain> i = mutationTranslator.translateEntities(entity.getMutations());

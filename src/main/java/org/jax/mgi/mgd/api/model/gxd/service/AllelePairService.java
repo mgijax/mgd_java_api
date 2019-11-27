@@ -195,45 +195,51 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 					isUpdated = true;
 				}
 
-				if (entity.getAllele2() == null && 
-						(domain.get(i).getAlleleKey2() != null || !domain.get(i).getAlleleKey2().isEmpty())) {
-					entity.setAllele2(alleleDAO.get(Integer.valueOf(domain.get(i).getAlleleKey2())));
-					isUpdated = true;
+				if (entity.getAllele2() == null) {
+					if (domain.get(i).getAlleleKey2() != null) {
+						entity.setAllele2(alleleDAO.get(Integer.valueOf(domain.get(i).getAlleleKey2())));
+						isUpdated = true;
+					}
 				}
-				else if (entity.getAllele2() != null && 
-						(domain.get(i).getAlleleKey2() == null || domain.get(i).getAlleleKey2().isEmpty())) {				
-					entity.setAllele2(null);
-					isUpdated = true;
+				else if (entity.getAllele2() != null) { 
+					if (domain.get(i).getAlleleKey2() == null) {				
+						entity.setAllele2(null);
+						isUpdated = true;
+					}
 				}
 				else if (!String.valueOf(entity.getAllele2().get_allele_key()).equals(domain.get(i).getAlleleKey2())) {
 					entity.setAllele2(alleleDAO.get(Integer.valueOf(domain.get(i).getAlleleKey2())));
 					isUpdated = true;
 				}	
 				
-				if (entity.getCellLine1() == null && 
-						(domain.get(i).getCellLine1() != null || !domain.get(i).getCellLine1().isEmpty())) {
-					entity.setCellLine1(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLine1())));
-					isUpdated = true;
+				if (entity.getCellLine1() == null) { 
+					if (domain.get(i).getCellLine1() != null) {
+						entity.setCellLine1(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLine1())));
+						isUpdated = true;
+					}
 				}
-				else if (entity.getCellLine1() != null && 
-						(domain.get(i).getCellLine1() == null || domain.get(i).getCellLine1().isEmpty())) {				
-					entity.setCellLine1(null);
-					isUpdated = true;
+				else if (entity.getCellLine1() != null) { 
+					if (domain.get(i).getCellLine1() == null) {				
+						entity.setCellLine1(null);
+						isUpdated = true;
+					}
 				}
 				else if (!String.valueOf(entity.getCellLine1().get_cellline_key()).equals(domain.get(i).getCellLine1())) {
 					entity.setCellLine1(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLine1())));
 					isUpdated = true;
 				}
-				
-				if (entity.getCellLine2() == null && 
-						(domain.get(i).getCellLine2() != null || !domain.get(i).getCellLine2().isEmpty())) {
-					entity.setCellLine2(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLine2())));
-					isUpdated = true;
+
+				if (entity.getCellLine2() == null) { 
+					if (domain.get(i).getCellLine2() != null) {
+						entity.setCellLine2(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLine2())));
+						isUpdated = true;
+					}
 				}
-				else if (entity.getCellLine2() != null && 
-						(domain.get(i).getCellLine2() == null || domain.get(i).getCellLine2().isEmpty())) {				
-					entity.setCellLine2(null);
-					isUpdated = true;
+				else if (entity.getCellLine2() != null) { 
+					if (domain.get(i).getCellLine2() == null) {				
+						entity.setCellLine2(null);
+						isUpdated = true;
+					}
 				}
 				else if (!String.valueOf(entity.getCellLine2().get_cellline_key()).equals(domain.get(i).getCellLine2())) {
 					entity.setCellLine2(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLine2())));
@@ -250,10 +256,11 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 					isUpdated = true;
 				}
 				
-				if (!String.valueOf(entity.getSequenceNum()).equals(domain.get(i).getSequenceNum())) {
-					entity.setSequenceNum(Integer.valueOf(domain.get(i).getSequenceNum()));
+				if (!entity.getSequenceNum().equals(domain.get(i).getSequenceNum())) {
+					entity.setSequenceNum(domain.get(i).getSequenceNum());
 					isUpdated = true;					
 				}
+				
 				if (isUpdated) {
 					log.info("processAllelePair modified == true");
 					entity.setModification_date(new Date());

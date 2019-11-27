@@ -42,7 +42,8 @@ public class MarkerDomain extends BaseDomain {
 	private NoteDomain revisionNote;
 	private NoteDomain strainNote;
 	private NoteDomain locationNote;
-	
+	private MarkerNoteDomain detailClipNote;
+
 	private List<AccessionDomain> mgiAccessionIds;
 	private List<MarkerHistoryDomain> history;
 	private List<MGISynonymDomain> synonyms;

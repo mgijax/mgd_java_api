@@ -16,6 +16,7 @@ import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipMarkerTSSTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.MarkerNoteDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
@@ -98,6 +99,13 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			domain.setLocationNote(locationNote.iterator().next());
 		}
 		
+		// at most one detailClipNote
+		if (entity.getDetailClipNote() != null && !entity.getDetailClipNote().isEmpty()) {
+			MarkerNoteTranslator markerNoteTranslator = new MarkerNoteTranslator();
+			Iterable<MarkerNoteDomain> clipNote = markerNoteTranslator.translateEntities(entity.getDetailClipNote());
+			domain.setDetailClipNote(clipNote.iterator().next());
+		}
+				
 		// mgi accession ids only
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());

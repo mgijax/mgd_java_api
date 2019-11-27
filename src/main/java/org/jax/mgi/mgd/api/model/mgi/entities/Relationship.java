@@ -24,6 +24,8 @@ import lombok.Setter;
 public class Relationship extends BaseEntity {
 	
 	@Id
+//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="mgi_relationship_generator")
+//	@SequenceGenerator(name="mgi_relationship_generator", sequenceName = "mgi_relationship_seq", allocationSize=1)	
 	private int _relationship_key;
 	private int _object_key_1;
 	private int _object_key_2;

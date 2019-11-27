@@ -10,6 +10,6 @@ public class MarkerStatusDomain extends BaseDomain {
 	
 	private String markerStatusKey;
 	private String markerStatus;
-	private String creation_date;
-	private String modification_date;     
+//	private String creation_date;
+//	private String modification_date;     
 }

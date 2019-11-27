@@ -108,6 +108,11 @@ public class Marker extends BaseEntity {
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1049")
 	private List<Note> locationNote;
+
+	// marker detail clip note
+	@OneToMany()
+	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	private List<MarkerNote> detailClipNote;
 	
 	// mgi accession ids only
 	@OneToMany()

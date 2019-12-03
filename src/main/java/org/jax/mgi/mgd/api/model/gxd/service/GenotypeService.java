@@ -307,26 +307,6 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		Boolean from_accession = false;
 		
 		// if parameter exists, then add to where-clause
-		
-		String cmResults[] = DateSQLQuery.queryByCreationModification("g", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
-		if (cmResults.length > 0) {
-			from = from + cmResults[0];
-			where = where + cmResults[1];
-		}
-		
-		if (searchDomain.getGenotypeKey() != null && !searchDomain.getGenotypeKey().isEmpty()) {
-			where = where + "\nand g._genotype_key = " + searchDomain.getGenotypeKey();
-		}
-		if (searchDomain.getStrain() != null && !searchDomain.getStrain().isEmpty()) {
-			where = where + "\nand ps.strain ilike '" + searchDomain.getStrain() + "'";
-		}
-		if (searchDomain.getIsConditional() != null && !searchDomain.getIsConditional().isEmpty()) {
-			where = where + "\nand g.isConditional = " + searchDomain.getIsConditional();
-		}
-		if (searchDomain.getExistsAsKey() != null && !searchDomain.getExistsAsKey().isEmpty()) {
-			where = where + "\nand g._ExistsAs_key = " + searchDomain.getExistsAsKey();
-		}
-
 		// accession id
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {
 			String mgiid = searchDomain.getAccID().toUpperCase();
@@ -336,153 +316,174 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			where = where + "\nand a.accID ilike '" + mgiid + "'";
 			from_accession = true;
 		}
-		
-		// Allele Pair
-		if (searchDomain.getAllelePairs() != null && !searchDomain.getAllelePairs().isEmpty()) {
-
-			value = searchDomain.getAllelePairs().get(0).getMarkerKey();
-			if (value != null && !value.isEmpty()) {
-				whereAllelePair = whereAllelePair + "\nand ap._Marker_key = " + value;
-				from_allele = true;
-				from_marker = true;
+		else {
+			String cmResults[] = DateSQLQuery.queryByCreationModification("g", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
+			if (cmResults.length > 0) {
+				from = from + cmResults[0];
+				where = where + cmResults[1];
 			}
 			
-			value = searchDomain.getAllelePairs().get(0).getMarkerSymbol();
-			if (value != null && !value.isEmpty()) {
-				value = "'" + value + "'";
-				whereAllelePair = whereAllelePair + "\nand m.symbol ilike " + value;
-				from_allele = true;
-				from_marker = true;
+			if (searchDomain.getGenotypeKey() != null && !searchDomain.getGenotypeKey().isEmpty()) {
+				where = where + "\nand g._genotype_key = " + searchDomain.getGenotypeKey();
 			}
-					
-			value = searchDomain.getAllelePairs().get(0).getAlleleKey1();
-			if (value != null && !value.isEmpty()) {
-				whereAllelePair = whereAllelePair + 
-					"\nand (ap._Allele_key_1 = " + value +
-					"\nor ap._Allele_key_2 = " + value + ")";
-				from_allele = true;				
+			if (searchDomain.getStrain() != null && !searchDomain.getStrain().isEmpty()) {
+				where = where + "\nand ps.strain ilike '" + searchDomain.getStrain() + "'";
 			}
-			
-			value = searchDomain.getAllelePairs().get(0).getAlleleKey2();			
-			if (value != null && !value.isEmpty()) {
-				whereAllelePair = whereAllelePair + 
-					"\nand (ap._Allele_key_1 = " + value +
-					"\nor ap._Allele_key_2 = " + value + ")";
-				from_allele = true;				
+			if (searchDomain.getIsConditional() != null && !searchDomain.getIsConditional().isEmpty()) {
+				where = where + "\nand g.isConditional = " + searchDomain.getIsConditional();
 			}
-		
-			value = searchDomain.getAllelePairs().get(0).getAlleleSymbol1();			
-			if (value != null && !value.isEmpty()) {
-				whereAllelePair = whereAllelePair + 
-					"\nand (a1.symbol ilike '" + value + "'" +
-					"\nor a2.symbol ilike '" + value + "')";
-				from_allele = true;				
+			if (searchDomain.getExistsAsKey() != null && !searchDomain.getExistsAsKey().isEmpty()) {
+				where = where + "\nand g._ExistsAs_key = " + searchDomain.getExistsAsKey();
 			}
-			
-			value = searchDomain.getAllelePairs().get(0).getAlleleSymbol2();			
-			if (value != null && !value.isEmpty()) {
-				whereAllelePair = whereAllelePair + 
-					"\nand (a1.symbol ilike '" + value + "'" +
-					"\nor a2.symbol ilike '" + value + "')";
-				from_allele = true;				
-			}
-			
-			// mutant cell line
-			// only works if either mutant cell line 1 OR 2, not both
-			
-			value = searchDomain.getAllelePairs().get(0).getCellLineKey1();			
-			if (value != null && !value.isEmpty()) {
-				whereAllelePair = whereAllelePair + "\nand ap._mutantcellline_key_1 = ac._cellline_key";
-				whereAllelePair = whereAllelePair + "\nand ac._cellLine_key = " + value;
-				from_allele = true;				
-			}
-			
-			value = searchDomain.getAllelePairs().get(0).getCellLine1();
-			if (value != null && !value.isEmpty()) {
-				whereAllelePair = whereAllelePair + "\nand ap._mutantcellline_key_1 = ac._cellline_key";
-				whereAllelePair = whereAllelePair + "\nand ac.cellLine ilike '" + value + "'";
-				from_allele = true;
-				from_cellline = true;
-			}
-			
-			value = searchDomain.getAllelePairs().get(0).getCellLineKey2();			
-			if (value != null && !value.isEmpty()) {
-				whereAllelePair = whereAllelePair + "\nand ap._mutantcellline_key_2 = ac._cellline_key";
-				whereAllelePair = whereAllelePair + "\nand ac._cellLine_key = " + value;
-				from_allele = true;				
-			}
-			
-			value = searchDomain.getAllelePairs().get(0).getCellLine2();
-			if (value != null && !value.isEmpty()) {
-				whereAllelePair = whereAllelePair + "\nand ap._mutantcellline_key_2 = ac._cellline_key";				
-				whereAllelePair = whereAllelePair + "\nand ac.cellLine ilike '" + value + "'";
-				from_allele = true;
-				from_cellline = true;
-			}
+	
+			// Allele Pair
+			if (searchDomain.getAllelePairs() != null && !searchDomain.getAllelePairs().isEmpty()) {
+	
+				value = searchDomain.getAllelePairs().get(0).getMarkerKey();
+				if (value != null && !value.isEmpty()) {
+					whereAllelePair = whereAllelePair + "\nand ap._Marker_key = " + value;
+					from_allele = true;
+					from_marker = true;
+				}
+				
+				value = searchDomain.getAllelePairs().get(0).getMarkerSymbol();
+				if (value != null && !value.isEmpty()) {
+					value = "'" + value + "'";
+					whereAllelePair = whereAllelePair + "\nand m.symbol ilike " + value;
+					from_allele = true;
+					from_marker = true;
+				}
 						
-			value = searchDomain.getAllelePairs().get(0).getPairStateKey();			
-			if (value != null && !value.isEmpty()) {
-				whereAllelePair = whereAllelePair + "\nand ap._pairstate_key = " + value;
-				from_allele = true;				
+				value = searchDomain.getAllelePairs().get(0).getAlleleKey1();
+				if (value != null && !value.isEmpty()) {
+					whereAllelePair = whereAllelePair + 
+						"\nand (ap._Allele_key_1 = " + value +
+						"\nor ap._Allele_key_2 = " + value + ")";
+					from_allele = true;				
+				}
+				
+				value = searchDomain.getAllelePairs().get(0).getAlleleKey2();			
+				if (value != null && !value.isEmpty()) {
+					whereAllelePair = whereAllelePair + 
+						"\nand (ap._Allele_key_1 = " + value +
+						"\nor ap._Allele_key_2 = " + value + ")";
+					from_allele = true;				
+				}
+			
+				value = searchDomain.getAllelePairs().get(0).getAlleleSymbol1();			
+				if (value != null && !value.isEmpty()) {
+					whereAllelePair = whereAllelePair + 
+						"\nand (a1.symbol ilike '" + value + "'" +
+						"\nor a2.symbol ilike '" + value + "')";
+					from_allele = true;				
+				}
+				
+				value = searchDomain.getAllelePairs().get(0).getAlleleSymbol2();			
+				if (value != null && !value.isEmpty()) {
+					whereAllelePair = whereAllelePair + 
+						"\nand (a1.symbol ilike '" + value + "'" +
+						"\nor a2.symbol ilike '" + value + "')";
+					from_allele = true;				
+				}
+				
+				// mutant cell line
+				// only works if either mutant cell line 1 OR 2, not both
+				
+				value = searchDomain.getAllelePairs().get(0).getCellLineKey1();			
+				if (value != null && !value.isEmpty()) {
+					whereAllelePair = whereAllelePair + "\nand ap._mutantcellline_key_1 = ac._cellline_key";
+					whereAllelePair = whereAllelePair + "\nand ac._cellLine_key = " + value;
+					from_allele = true;				
+				}
+				
+				value = searchDomain.getAllelePairs().get(0).getCellLine1();
+				if (value != null && !value.isEmpty()) {
+					whereAllelePair = whereAllelePair + "\nand ap._mutantcellline_key_1 = ac._cellline_key";
+					whereAllelePair = whereAllelePair + "\nand ac.cellLine ilike '" + value + "'";
+					from_allele = true;
+					from_cellline = true;
+				}
+				
+				value = searchDomain.getAllelePairs().get(0).getCellLineKey2();			
+				if (value != null && !value.isEmpty()) {
+					whereAllelePair = whereAllelePair + "\nand ap._mutantcellline_key_2 = ac._cellline_key";
+					whereAllelePair = whereAllelePair + "\nand ac._cellLine_key = " + value;
+					from_allele = true;				
+				}
+				
+				value = searchDomain.getAllelePairs().get(0).getCellLine2();
+				if (value != null && !value.isEmpty()) {
+					whereAllelePair = whereAllelePair + "\nand ap._mutantcellline_key_2 = ac._cellline_key";				
+					whereAllelePair = whereAllelePair + "\nand ac.cellLine ilike '" + value + "'";
+					from_allele = true;
+					from_cellline = true;
+				}
+							
+				value = searchDomain.getAllelePairs().get(0).getPairStateKey();			
+				if (value != null && !value.isEmpty()) {
+					whereAllelePair = whereAllelePair + "\nand ap._pairstate_key = " + value;
+					from_allele = true;				
+				}
+				
+				value = searchDomain.getAllelePairs().get(0).getCompoundKey();			
+				if (value != null && !value.isEmpty()) {
+					whereAllelePair = whereAllelePair + "\nand ap._compound_key = " + value;
+					from_allele = true;				
+				}
+				
+			}
+	
+			// image pane associations
+			if (searchDomain.getImagePaneAssocs() != null && !searchDomain.getImagePaneAssocs().isEmpty()) {
+				value = searchDomain.getImagePaneAssocs().get(0).getMgiID();
+				if (value != null && !value.isEmpty()) {
+					where = where + "\nand i.mgiID ilike '" + value + "'";
+					from_image = true;
+				}
+				value = searchDomain.getImagePaneAssocs().get(0).getPixID();
+				if (value != null && !value.isEmpty()) {
+					where = where + "\nand i.pixID ilike '" + value + "'";
+					from_image = true;
+				}
+				value = searchDomain.getImagePaneAssocs().get(0).getIsPrimary();
+				if (value != null && !value.isEmpty()) {
+					where = where + "\nand i.isPrimary =" + value;
+					from_image = true;
+				}			
 			}
 			
-			value = searchDomain.getAllelePairs().get(0).getCompoundKey();			
-			if (value != null && !value.isEmpty()) {
-				whereAllelePair = whereAllelePair + "\nand ap._compound_key = " + value;
-				from_allele = true;				
+			// union for the allele pair does *not* exist
+			if (from_allele == false
+			 	&& from_marker == false
+			 	&& from_cellline == false
+			 	&& from_accession == false
+			 	&& from_image == false) {
+				
+				includeNotExists = "\nunion all" +
+					"\nselect distinct g._genotype_key, ps.strain, ps.strain, ps.strain as genotypeDisplay" +
+					"\nfrom gxd_genotype g, prb_strain ps" +
+					"\n" + where +
+					"\nand not exists (select 1 from gxd_allelepair ap where g._genotype_key = ap._genotype_key)";
 			}
 			
-		}
-
-		// image pane associations
-		if (searchDomain.getImagePaneAssocs() != null && !searchDomain.getImagePaneAssocs().isEmpty()) {
-			value = searchDomain.getImagePaneAssocs().get(0).getMgiID();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand i.mgiID ilike '" + value + "'";
-				from_image = true;
+			// notes
+			if (searchDomain.getAlleleDetailNote() != null && !searchDomain.getAlleleDetailNote().getNoteChunk().isEmpty()) {
+				value = searchDomain.getAlleleDetailNote().getNoteChunk().replace("'",  "''");
+				where = where + "\nand note1._notetype_key = 1016 and note1.note ilike '" + value + "'" ;
+				from_alleleDetailNote = true;
 			}
-			value = searchDomain.getImagePaneAssocs().get(0).getPixID();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand i.pixID ilike '" + value + "'";
-				from_image = true;
+			if (searchDomain.getGeneralNote() != null && !searchDomain.getGeneralNote().getNoteChunk().isEmpty() 
+					&& searchDomain.getGeneralNote().getNoteChunk().contains("%")) {
+				value = searchDomain.getGeneralNote().getNoteChunk().replace("'",  "''");
+				where = where + "\nand note2._notetype_key = 1027 and note2.note ilike '" + value + "'" ;
+				from_generalNote = true;
 			}
-			value = searchDomain.getImagePaneAssocs().get(0).getIsPrimary();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand i.isPrimary =" + value;
-				from_image = true;
-			}			
-		}
+			if (searchDomain.getPrivateCuratorialNote() != null && !searchDomain.getPrivateCuratorialNote().getNoteChunk().isEmpty()) {
+				value = searchDomain.getPrivateCuratorialNote().getNoteChunk().replace("'",  "''");
+				where = where + "\nand note3._notetype_key = 1028 and note3.note ilike '" + value + "'" ;
+				from_privateCuratorialNote = true;
+			}
 		
-		// union for the allele pair does *not* exist
-		if (from_allele == false
-		 	&& from_marker == false
-		 	&& from_cellline == false
-		 	&& from_accession == false
-		 	&& from_image == false) {
-			
-			includeNotExists = "\nunion all" +
-				"\nselect distinct g._genotype_key, ps.strain, ps.strain, ps.strain as genotypeDisplay" +
-				"\nfrom gxd_genotype g, prb_strain ps" +
-				"\n" + where +
-				"\nand not exists (select 1 from gxd_allelepair ap where g._genotype_key = ap._genotype_key)";
-		}
-		
-		// notes
-		if (searchDomain.getAlleleDetailNote() != null && !searchDomain.getAlleleDetailNote().getNoteChunk().isEmpty()) {
-			value = searchDomain.getAlleleDetailNote().getNoteChunk().replace("'",  "''");
-			where = where + "\nand note1._notetype_key = 1016 and note1.note ilike '" + value + "'" ;
-			from_alleleDetailNote = true;
-		}
-		if (searchDomain.getGeneralNote() != null && !searchDomain.getGeneralNote().getNoteChunk().isEmpty() 
-				&& searchDomain.getGeneralNote().getNoteChunk().contains("%")) {
-			value = searchDomain.getGeneralNote().getNoteChunk().replace("'",  "''");
-			where = where + "\nand note2._notetype_key = 1027 and note2.note ilike '" + value + "'" ;
-			from_generalNote = true;
-		}
-		if (searchDomain.getPrivateCuratorialNote() != null && !searchDomain.getPrivateCuratorialNote().getNoteChunk().isEmpty()) {
-			value = searchDomain.getPrivateCuratorialNote().getNoteChunk().replace("'",  "''");
-			where = where + "\nand note3._notetype_key = 1028 and note3.note ilike '" + value + "'" ;
-			from_privateCuratorialNote = true;
 		}
 		
 		// final from/where

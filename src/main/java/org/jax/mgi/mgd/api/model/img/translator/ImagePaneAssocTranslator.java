@@ -4,8 +4,8 @@ import java.util.Comparator;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleRefAssocDomain;
-import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleRefAssocTranslator;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
+import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimGenotypeTranslator;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocDomain;
@@ -37,10 +37,10 @@ public class ImagePaneAssocTranslator extends BaseEntityDomainTranslator<ImagePa
 		// one-to-many allele associations w/ allele info
 		if (entity.getAlleles() != null && !entity.getAlleles().isEmpty()
 				&& entity.getMgiType().get_mgitype_key() == 11) {
-			SlimAlleleRefAssocTranslator alleleTranslator = new SlimAlleleRefAssocTranslator();
-			Iterable<SlimAlleleRefAssocDomain> i = alleleTranslator.translateEntities(entity.getAlleles());
+			SlimAlleleTranslator alleleTranslator = new SlimAlleleTranslator();
+			Iterable<SlimAlleleDomain> i = alleleTranslator.translateEntities(entity.getAlleles());
 			domain.setAlleles(IteratorUtils.toList(i.iterator()));
-			domain.getAlleles().sort(Comparator.comparing(SlimAlleleRefAssocDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
+			domain.getAlleles().sort(Comparator.comparing(SlimAlleleDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}
 		
 		// one-to-many genotype associations w/ genotype info

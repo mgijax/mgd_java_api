@@ -103,7 +103,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 					|| searchDomain.getName().equals("GXD HT Relevance")
 					|| searchDomain.getName().equals("GXD HT Sample")
 					|| searchDomain.getName().equals("GXD Index Assay")
-					|| searchDomain.getName().equals("GXD Index Stages")									
+					|| searchDomain.getName().equals("GXD Index Stages")
 					) {
 				orderBy = "order by t.sequencenum";
 			}
@@ -128,6 +128,13 @@ public class VocabService extends BaseService<VocabularyDomain> {
 					+ "'all feature types'"
 					+ ")";
 				 orderBy = "order by t.term";		
+			}
+			
+			// 39 = Allele Pair State
+			// 42 = Allele Compound
+			if (searchDomain.getVocabKey().equals("39")
+					|| searchDomain.getVocabKey().equals("42")) {
+				orderBy = "order by t.sequenceNum";
 			}
 		}
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {

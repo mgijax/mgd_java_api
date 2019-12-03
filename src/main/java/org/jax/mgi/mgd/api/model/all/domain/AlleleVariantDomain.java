@@ -6,6 +6,7 @@ import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeStrainDomain;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleRefAssocDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantAnnotationDomain;
 
 import lombok.Getter;
@@ -26,7 +27,7 @@ public class AlleleVariantDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 		
-	private SlimAlleleDomain allele;
+	private SlimAlleleRefAssocDomain allele;
 	private SlimProbeStrainDomain strain;
     private List<AlleleVariantAnnotationDomain> variantTypes;
     private List<AlleleVariantAnnotationDomain> variantEffects;

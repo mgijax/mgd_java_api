@@ -17,6 +17,7 @@ import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
+import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
@@ -118,7 +119,49 @@ public class Allele extends BaseEntity {
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
 	@Where(clause="`_annottype_key` = 1014")
 	private List<Annotation> subtypeAnnots;
-	
+
+	//  1020 | General
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 11 and `_notetype_key` = 1020")
+	private List<Note> generalNote;
+
+	//    1021 | Molecular
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 11 and `_notetype_key` = 1021")
+	private List<Note> molecularNote;
+
+	//    1022 | Nomenclature
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 11 and `_notetype_key` = 1022")
+	private List<Note> nomenNote;
+
+	//    1032 | Inducible
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 11 and `_notetype_key` = 1032")
+	private List<Note> inducibleNote;
+
+	//    1036 | Associated PRO IDs
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 11 and `_notetype_key` = 1036")
+	private List<Note> proidNote;
+
+	//    1040 | User (Cre)
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 11 and `_notetype_key` = 1040")
+	private List<Note> creNote;
+
+	//    1041 | IKMC Allele Colony Name
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 11 and `_notetype_key` = 1041")
+	private List<Note> ikmcNote;
+
 	// DO term annotations
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)

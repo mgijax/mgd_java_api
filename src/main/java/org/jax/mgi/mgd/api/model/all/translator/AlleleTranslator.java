@@ -8,7 +8,9 @@ import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleMutationDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
+import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -44,9 +46,7 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 			domain.setMarkerSymbol(entity.getMarker().getSymbol());			
 			domain.setChromosome(entity.getMarker().getChromosome());
-			domain.setDetailClip(entity.getMarker().getDetailClipNote().get(0).getNote());
-			// "strand" is not being translated; only used by 'allele/search'
-			// only used in SlimAlleleDomain			
+			domain.setDetailClip(entity.getMarker().getDetailClipNote().get(0).getNote());		
 		}
 		
 		// reference associations
@@ -70,6 +70,55 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			AnnotationTranslator annotTranslator = new AnnotationTranslator();
 			Iterable<AnnotationDomain> i = annotTranslator.translateEntities(entity.getSubtypeAnnots());
 			domain.setSubtypeAnnots(IteratorUtils.toList(i.iterator()));
+		}
+
+		// at most one note
+		if (entity.getGeneralNote() != null && !entity.getGeneralNote().isEmpty()) {
+			NoteTranslator noteTranslator = new NoteTranslator();
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getGeneralNote());
+			domain.setGeneralNote(note.iterator().next());
+		}
+		
+		// at most one note
+		if (entity.getMolecularNote() != null && !entity.getMolecularNote().isEmpty()) {
+			NoteTranslator noteTranslator = new NoteTranslator();
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getMolecularNote());
+			domain.setMolecularNote(note.iterator().next());
+		}
+
+		// at most one note
+		if (entity.getNomenNote() != null && !entity.getNomenNote().isEmpty()) {
+			NoteTranslator noteTranslator = new NoteTranslator();
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getNomenNote());
+			domain.setNomenNote(note.iterator().next());
+		}
+		
+		// at most one note
+		if (entity.getInducibleNote() != null && !entity.getInducibleNote().isEmpty()) {
+			NoteTranslator noteTranslator = new NoteTranslator();
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getInducibleNote());
+			domain.setInducibleNote(note.iterator().next());
+		}
+
+		// at most one note
+		if (entity.getProidNote() != null && !entity.getProidNote().isEmpty()) {
+			NoteTranslator noteTranslator = new NoteTranslator();
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getProidNote());
+			domain.setProidNote(note.iterator().next());
+		}
+
+		// at most one note
+		if (entity.getCreNote() != null && !entity.getCreNote().isEmpty()) {
+			NoteTranslator noteTranslator = new NoteTranslator();
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getCreNote());
+			domain.setCreNote(note.iterator().next());
+		}
+		
+		// at most one note
+		if (entity.getIkmcNote() != null && !entity.getIkmcNote().isEmpty()) {
+			NoteTranslator noteTranslator = new NoteTranslator();
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getIkmcNote());
+			domain.setIkmcNote(note.iterator().next());
 		}
 		
 		// do annotations

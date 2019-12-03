@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleRefAssocDomain;
 import org.jax.mgi.mgd.api.model.all.service.AlleleService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -57,7 +58,7 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 		
 		try {
-			results = alleleService.search(searchDomain, false);
+			results = alleleService.search(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -68,12 +69,12 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	@POST
 	@ApiOperation(value = "Search by Variants")
 	@Path("/searchVariant")
-	public List<SlimAlleleDomain> searchVariant(AlleleDomain searchDomain) {
+	public List<SlimAlleleRefAssocDomain> searchVariant(AlleleDomain searchDomain) {
 			
-		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
+		List<SlimAlleleRefAssocDomain> results = new ArrayList<SlimAlleleRefAssocDomain>();
 		
 		try {
-			results = alleleService.search(searchDomain, true);
+			results = alleleService.searchVariant(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

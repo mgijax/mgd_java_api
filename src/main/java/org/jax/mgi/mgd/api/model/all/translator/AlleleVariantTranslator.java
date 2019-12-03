@@ -18,7 +18,7 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
 
 	protected Logger log = Logger.getLogger(getClass());
 	
-	private SlimAlleleTranslator alleleTranslator = new SlimAlleleTranslator();
+	private SlimAlleleRefAssocTranslator alleleTranslator = new SlimAlleleRefAssocTranslator();
 	private SlimProbeStrainTranslator strainTranslator = new SlimProbeStrainTranslator();
 	private AlleleVariantAnnotationTranslator variantAnnotationTranslator = new AlleleVariantAnnotationTranslator();
 	private VariantSequenceTranslator variantSequenceTranslator = new VariantSequenceTranslator();

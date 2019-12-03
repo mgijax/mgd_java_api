@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 
 import lombok.Getter;
@@ -37,5 +38,14 @@ public class AlleleDomain extends BaseDomain {
 	private List<MGIReferenceAssocDomain> refAssocs;	
 	private List<AlleleMutationDomain> mutations;
 	private List<AnnotationDomain> subtypeAnnots;
+	
+	private NoteDomain generalNote;
+	private NoteDomain molecularNote;
+	private NoteDomain nomenNote;
+	private NoteDomain inducibleNote;
+	private NoteDomain proidNote;
+	private NoteDomain creNote;
+	private NoteDomain ikmcNote;
+	
 	private List<AnnotationDomain> doAnnots;	
 }

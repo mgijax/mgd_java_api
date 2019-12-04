@@ -54,11 +54,9 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 	private String mgiTypeKey = "12";
 	
 	@Transactional
-	public SearchResults<GenotypeDomain> create(GenotypeDomain domain, User user) {
-		
+	public SearchResults<GenotypeDomain> create(GenotypeDomain domain, User user) {	
 		// create new entity object from in-coming domain
 		// the Entities class handles the generation of the primary key
-		// thumbnailEntity will only be created if necessary
 		// database trigger will assign the MGI id/see pgmgddbschema/trigger for details
 
 		SearchResults<GenotypeDomain> results = new SearchResults<GenotypeDomain>();
@@ -66,7 +64,15 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		String cmd;
 		Query query;
 		
-		entity.setStrain(strainDAO.get(Integer.valueOf(domain.getStrainKey())));	
+		// default strain = Not Specified
+		Integer strainKey; 
+		if (domain.getStrainKey() == null || domain.getStrainKey().isEmpty()) {
+			strainKey = -1;
+		}
+		else {
+			strainKey = Integer.valueOf(domain.getStrainKey());
+		}
+		entity.setStrain(strainDAO.get(strainKey));	
 		
 		// if no conditional value is set, then default = 0 (No)
 		if (domain.getIsConditional() == null || domain.getIsConditional().isEmpty()) {
@@ -88,17 +94,6 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		// execute persist/insert/send to database
 		genotypeDAO.persist(entity);
 
-		// process Allele Pairs
-		log.info("processGenotypes/allele pairs");
-		allelePairService.process(domain.getGenotypeKey(), domain.getAllelePairs(), user);		
-		
-		log.info("processGenotypes/order allele pairs");
-		if (domain.getUseAllelePairDefaultOrder() == "1") {
-			cmd = "select * from GXD_orderAllelePairs (" + String.valueOf(entity.get_genotype_key()) + ")";
-			query = genotypeDAO.createNativeQuery(cmd);
-			query.getResultList();
-		}
-		
 		// process all notes
 		noteService.process(domain.getGenotypeKey(), domain.getGeneralNote(), mgiTypeKey, "1027", user);
 		noteService.process(domain.getGenotypeKey(), domain.getPrivateCuratorialNote(), mgiTypeKey, "1028", user);
@@ -107,6 +102,17 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		// using allele detail note
 		// then run processAlleleCombinations to finish the job
 		noteService.process(domain.getGenotypeKey(), domain.getAlleleDetailNote(), mgiTypeKey, "1016", user);
+				
+		// process Allele Pairs
+		log.info("processGenotypes/allele pairs");
+		allelePairService.process(domain.getGenotypeKey(), domain.getAllelePairs(), user);		
+		
+		if (domain.getUseAllelePairDefaultOrder() == "1") {
+			cmd = "select count(*) from GXD_orderAllelePairs (" + String.valueOf(entity.get_genotype_key()) + ")";
+			log.info("processGenotypes/order allele pairs: " + cmd);
+			query = genotypeDAO.createNativeQuery(cmd);
+			query.getResultList();
+		}
 		
 		// check duplicate genotype
 		cmd = "select count(*) from GXD_checkDuplicateGenotype (" + String.valueOf(entity.get_genotype_key()) + ")";
@@ -122,7 +128,6 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 	
 	@Transactional
 	public SearchResults<GenotypeDomain> update(GenotypeDomain domain, User user) {
-
 		// update existing entity object from in-coming domain
 		
 		SearchResults<GenotypeDomain> results = new SearchResults<GenotypeDomain>();

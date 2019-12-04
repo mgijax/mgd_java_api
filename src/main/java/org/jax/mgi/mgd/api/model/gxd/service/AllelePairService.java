@@ -285,7 +285,7 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 	@Transactional
 	public SearchResults<AllelePairDomain> validateAlleleState(List<AllelePairDomain> domain) {
 		// validate the Allele State & Alleles
-		// returns error string if any values are false, else return error = ""
+		// returns error string
 
 		//	    847133 | Hemizygous X-linked
 		//	    847134 | Hemizygous Y-linked
@@ -317,26 +317,25 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 			
 			results.setItem(domain.get(i));
 
-	        //if ((alleleState = "Homozygous" or alleleState = "Heterozygous") and (alleleKey2 = "" or alleleKey2 = "NULL")) then
+	        //if (pairState = "Homozygous" or "Heterozygous") and (alleleKey2 = "" or "NULL")
   			if ((pairStateKey.equals("847138") || pairStateKey.equals("847137")) && alleleKey2 == null ) {
   				results.setError("If Allele State = 'Homozygous' or 'Heterozygous', then Allele 2 must exist.", null, Constants.HTTP_SERVER_ERROR);
   				return results;
   			}
 
-  			//if (alleleState = "Homozygous" and alleleKey2 != "" and alleleKey1 != alleleKey2) then
+  			//if pairState = "Homozygous" and alleleKey2 != "" and alleleKey1 != alleleKey2
   			if (pairStateKey.equals("847138") && alleleKey2 != null && !alleleKey1.equals(alleleKey2)) {
   				results.setError("If Allele State = 'Homozygous', then Allele 1 must equal Allele 2.", null, Constants.HTTP_SERVER_ERROR);
   				return results;
   			}
   			
-  			//if (alleleState = "Heterozygous" and alleleKey1 = alleleKey2) then
+  			//if pairState = "Heterozygous" and alleleKey1 = alleleKey2
   			if (pairStateKey.equals("847137") && alleleKey1.equals(alleleKey2)) {
   				results.setError("If Allele State = 'Heterozygous', then Allele 2 must exist but Allele 1 cannot equal Allele 2.", null, Constants.HTTP_SERVER_ERROR);
   				return results;
   			}
   			
-  			//if (alleleState != "" and alleleState != "Homozygous" and
-  			//  alleleState != "Heterozygous" and alleleKey2 != "" and alleleKey2 != "NULL") then
+  			//if pairState != "Homozygous" and != "Heterozygous" and alleleKey2 != "" and != "NULL"
   			if (!pairStateKey.equals("847138") && !pairStateKey.equals("847137")
   					&& alleleKey2 != null && !alleleKey2.isEmpty()) {
   				results.setError(pairStateKey + ":For this Allele State, only Allele 1 is required.", null, Constants.HTTP_SERVER_ERROR);
@@ -344,6 +343,7 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
   			}
 		}
 		
+		// setError() is null/empty
 		return results;
 	}
 

@@ -180,24 +180,24 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			entity.setModifiedBy(user);
 			genotypeDAO.update(entity);
 			
-			log.info("processGenotypes/order allele pairs");
 			if (domain.getUseAllelePairDefaultOrder() == "1") {
-				cmd = "select * from GXD_orderAllelePairs (" + String.valueOf(entity.get_genotype_key()) + ")";
+				cmd = "select count(*) from GXD_orderAllelePairs (" + String.valueOf(entity.get_genotype_key()) + ")";
+				log.info("processGenotypes/order allele pairs: " + cmd);
 				query = genotypeDAO.createNativeQuery(cmd);
 				query.getResultList();
 			}
+			
+			// check duplicate genotype
+			cmd = "select count(*) from GXD_checkDuplicateGenotype (" + String.valueOf(entity.get_genotype_key()) + ")";
+			log.info("processGenotype/check duplicate: " + cmd);
+			query = genotypeDAO.createNativeQuery(cmd);
+			query.getResultList();
 			
 			log.info("processGenotype/changes processed: " + domain.getGenotypeKey());
 		}
 		else {
 			log.info("processGenotype/no changes processed: " + domain.getGenotypeKey());
 		}
-		
-		// check duplicate genotype
-//		cmd = "select count(*) from GXD_checkDuplicateGenotype (" + String.valueOf(entity.get_genotype_key()) + ")";
-//		log.info("processGenotype/check duplicate: " + cmd);
-//		query = genotypeDAO.createNativeQuery(cmd);
-//		query.getResultList();
 
 		// return entity translated to domain
 		log.info("processGenotype/update/returning results");

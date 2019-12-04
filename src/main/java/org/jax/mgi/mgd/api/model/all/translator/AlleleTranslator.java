@@ -72,54 +72,54 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			domain.setSubtypeAnnots(IteratorUtils.toList(i.iterator()));
 		}
 
-		// at most one note
-		if (entity.getGeneralNote() != null && !entity.getGeneralNote().isEmpty()) {
-			NoteTranslator noteTranslator = new NoteTranslator();
-			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getGeneralNote());
-			domain.setGeneralNote(note.iterator().next());
-		}
-		
-		// at most one note
-		if (entity.getMolecularNote() != null && !entity.getMolecularNote().isEmpty()) {
-			NoteTranslator noteTranslator = new NoteTranslator();
-			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getMolecularNote());
-			domain.setMolecularNote(note.iterator().next());
-		}
-
-		// at most one note
-		if (entity.getNomenNote() != null && !entity.getNomenNote().isEmpty()) {
-			NoteTranslator noteTranslator = new NoteTranslator();
-			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getNomenNote());
-			domain.setNomenNote(note.iterator().next());
-		}
-		
-		// at most one note
-		if (entity.getInducibleNote() != null && !entity.getInducibleNote().isEmpty()) {
-			NoteTranslator noteTranslator = new NoteTranslator();
-			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getInducibleNote());
-			domain.setInducibleNote(note.iterator().next());
-		}
-
-		// at most one note
-		if (entity.getProidNote() != null && !entity.getProidNote().isEmpty()) {
-			NoteTranslator noteTranslator = new NoteTranslator();
-			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getProidNote());
-			domain.setProidNote(note.iterator().next());
-		}
-
-		// at most one note
-		if (entity.getCreNote() != null && !entity.getCreNote().isEmpty()) {
-			NoteTranslator noteTranslator = new NoteTranslator();
-			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getCreNote());
-			domain.setCreNote(note.iterator().next());
-		}
-		
-		// at most one note
-		if (entity.getIkmcNote() != null && !entity.getIkmcNote().isEmpty()) {
-			NoteTranslator noteTranslator = new NoteTranslator();
-			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getIkmcNote());
-			domain.setIkmcNote(note.iterator().next());
-		}
+//		// at most one note
+//		if (entity.getGeneralNote() != null && !entity.getGeneralNote().isEmpty()) {
+//			NoteTranslator noteTranslator = new NoteTranslator();
+//			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getGeneralNote());
+//			domain.setGeneralNote(note.iterator().next());
+//		}
+//		
+//		// at most one note
+//		if (entity.getMolecularNote() != null && !entity.getMolecularNote().isEmpty()) {
+//			NoteTranslator noteTranslator = new NoteTranslator();
+//			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getMolecularNote());
+//			domain.setMolecularNote(note.iterator().next());
+//		}
+//
+//		// at most one note
+//		if (entity.getNomenNote() != null && !entity.getNomenNote().isEmpty()) {
+//			NoteTranslator noteTranslator = new NoteTranslator();
+//			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getNomenNote());
+//			domain.setNomenNote(note.iterator().next());
+//		}
+//		
+//		// at most one note
+//		if (entity.getInducibleNote() != null && !entity.getInducibleNote().isEmpty()) {
+//			NoteTranslator noteTranslator = new NoteTranslator();
+//			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getInducibleNote());
+//			domain.setInducibleNote(note.iterator().next());
+//		}
+//
+//		// at most one note
+//		if (entity.getProidNote() != null && !entity.getProidNote().isEmpty()) {
+//			NoteTranslator noteTranslator = new NoteTranslator();
+//			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getProidNote());
+//			domain.setProidNote(note.iterator().next());
+//		}
+//
+//		// at most one note
+//		if (entity.getCreNote() != null && !entity.getCreNote().isEmpty()) {
+//			NoteTranslator noteTranslator = new NoteTranslator();
+//			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getCreNote());
+//			domain.setCreNote(note.iterator().next());
+//		}
+//		
+//		// at most one note
+//		if (entity.getIkmcNote() != null && !entity.getIkmcNote().isEmpty()) {
+//			NoteTranslator noteTranslator = new NoteTranslator();
+//			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getIkmcNote());
+//			domain.setIkmcNote(note.iterator().next());
+//		}
 		
 		// do annotations
 		if (!entity.getDoAnnots().isEmpty()) {

@@ -100,22 +100,17 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		}
 		
 		// process all notes
-		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getGeneralNote(), mgiTypeKey, "1027", user);
-		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getPrivateCuratorialNote(), mgiTypeKey, "1028", user);
-		
-		// create combination note 1 
+		noteService.process(domain.getGenotypeKey(), domain.getGeneralNote(), mgiTypeKey, "1027", user);
+		noteService.process(domain.getGenotypeKey(), domain.getPrivateCuratorialNote(), mgiTypeKey, "1028", user);
+		// update combination note 1
+		// combination note 2 & 3 get updated by nightly process (allelecombination)
 		// using allele detail note
 		// then run processAlleleCombinations to finish the job
-		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getAlleleDetailNote(), mgiTypeKey, "1016", user);
-		try {
-			noteService.processAlleleCombinations(entity.get_genotype_key());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		noteService.process(domain.getGenotypeKey(), domain.getAlleleDetailNote(), mgiTypeKey, "1016", user);
 		
 		// check duplicate genotype
-		log.info("processGenotypes/check duplicate");
 		cmd = "select count(*) from GXD_checkDuplicateGenotype (" + String.valueOf(entity.get_genotype_key()) + ")";
+		log.info("processGenotype/check duplicate: " + cmd);
 		query = genotypeDAO.createNativeQuery(cmd);
 		query.getResultList();
 		

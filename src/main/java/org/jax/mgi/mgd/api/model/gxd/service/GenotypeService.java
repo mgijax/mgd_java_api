@@ -152,30 +152,6 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			entity.setExistsAs(termDAO.get(Integer.valueOf(domain.getExistsAsKey())));
 			modified = true;
 		}
-				
-		// only if modifications were actually made
-		if (modified == true) {
-			entity.setModification_date(new Date());
-			entity.setModifiedBy(user);
-			genotypeDAO.update(entity);
-			log.info("processGenotype/changes processed: " + domain.getGenotypeKey());
-		}
-		else {
-			log.info("processGenotype/no changes processed: " + domain.getGenotypeKey());
-		}
-		
-		// process Allele Pairs
-		log.info("processGenotypes/allele pairs");
-		if (allelePairService.process(domain.getGenotypeKey(), domain.getAllelePairs(), user)) {
-			modified = true;
-		}
-		
-		log.info("processGenotypes/order allele pairs");
-		if (domain.getUseAllelePairDefaultOrder() == "1") {
-			cmd = "select * from GXD_orderAllelePairs (" + String.valueOf(entity.get_genotype_key()) + ")";
-			query = genotypeDAO.createNativeQuery(cmd);
-			query.getResultList();
-		}
 		
 		// process all notes
 		if (noteService.process(domain.getGenotypeKey(), domain.getGeneralNote(), mgiTypeKey, "1027", user)) {
@@ -184,7 +160,6 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		if (noteService.process(domain.getGenotypeKey(), domain.getPrivateCuratorialNote(), mgiTypeKey, "1028", user)) {
 			modified = true;
 		}
-		
 		// update combination note 1
 		// combination note 2 & 3 get updated by nightly process (allelecombination)
 		// using allele detail note
@@ -192,23 +167,42 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		if (noteService.process(domain.getGenotypeKey(), domain.getAlleleDetailNote(), mgiTypeKey, "1016", user)) {
 			modified = true;
 		}
-		try {
-			modified = noteService.processAlleleCombinations(Integer.valueOf(domain.getGenotypeKey()));
-		} catch (Exception e) {
-			e.printStackTrace();
+
+		// process Allele Pairs
+		log.info("processGenotypes/allele pairs");
+		if (allelePairService.process(domain.getGenotypeKey(), domain.getAllelePairs(), user)) {
+			modified = true;			
+		}
+		
+		// only if modifications were actually made
+		if (modified == true) {
+			entity.setModification_date(new Date());
+			entity.setModifiedBy(user);
+			genotypeDAO.update(entity);
+			
+			log.info("processGenotypes/order allele pairs");
+			if (domain.getUseAllelePairDefaultOrder() == "1") {
+				cmd = "select * from GXD_orderAllelePairs (" + String.valueOf(entity.get_genotype_key()) + ")";
+				query = genotypeDAO.createNativeQuery(cmd);
+				query.getResultList();
+			}
+			
+			log.info("processGenotype/changes processed: " + domain.getGenotypeKey());
+		}
+		else {
+			log.info("processGenotype/no changes processed: " + domain.getGenotypeKey());
 		}
 		
 		// check duplicate genotype
-		cmd = "select count(*) from GXD_checkDuplicateGenotype (" + String.valueOf(entity.get_genotype_key()) + ")";
-		log.info("processGenotype/check duplicate: " + cmd);
-		query = genotypeDAO.createNativeQuery(cmd);
-		query.getResultList();
-		
+//		cmd = "select count(*) from GXD_checkDuplicateGenotype (" + String.valueOf(entity.get_genotype_key()) + ")";
+//		log.info("processGenotype/check duplicate: " + cmd);
+//		query = genotypeDAO.createNativeQuery(cmd);
+//		query.getResultList();
+
 		// return entity translated to domain
 		log.info("processGenotype/update/returning results");
-		results.setItem(translator.translate(entity));
-		log.info("processGenotype/update/returned results succsssful");
-		return results;
+		results.setItem(translator.translate(entity));		log.info("processGenotype/update/returned results succsssful");
+		return results;			
 	}
 
 	@Transactional

@@ -75,7 +75,7 @@ public class AllelePairController extends BaseController<AllelePairDomain> {
 	@POST
 	@ApiOperation(value = "Validate Allele Pair State/check result error")
 	@Path("/validateAlleleState")
-	public SearchResults<AllelePairDomain> validateAlleleState(AllelePairDomain domain) {
+	public SearchResults<AllelePairDomain> validateAlleleState(List<AllelePairDomain> domain) {
 		return allelePairService.validateAlleleState(domain);
 	}	
 	

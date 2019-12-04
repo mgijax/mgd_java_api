@@ -126,7 +126,7 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 			log.info("processImagePane/nothing to process");
 			return modified;
 		}
-						
+		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
 		
@@ -171,8 +171,8 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 				entity.setModification_date(new Date());
 				
 				allelePairDAO.persist(entity);				
+				log.info("processAllelePair/create/returning results");	
 				modified = true;
-				log.info("processAllelePair/create/returning results");					
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processAllelePair delete");
@@ -266,8 +266,8 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 					entity.setModification_date(new Date());
 					entity.setModifiedBy(user);
 					allelePairDAO.update(entity);
-					modified = true;
 					log.info("processAllelePair/changes processed: " + domain.get(i).getAllelePairKey());
+					modified = true;
 				}
 				else {
 					log.info("processAllelePair/no changes processed: " + domain.get(i).getAllelePairKey());
@@ -283,141 +283,66 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 	}
 
 	@Transactional
-	public SearchResults<AllelePairDomain> validateAlleleState(AllelePairDomain domain) {
+	public SearchResults<AllelePairDomain> validateAlleleState(List<AllelePairDomain> domain) {
 		// validate the Allele State & Alleles
-		// returns SearchResults.error = null if valid = true
-		// else return SearchResults.error = error message
-	    
-		// Homozygous            Allele1 = Allele 2
-	    //
-	    // Heterozygote          Allele1 is NOT = Allele 2
-	    //
-		// Hemizygous X linked   Allele2 is null 
-	    //	                     Marker chromosome = "X"
-	    //	                     Compound = Not Applicable
-	    //
-		// Hemizygous Y linked   Allele2 is null
-	    //	                     and Marker chromosome  "Y" 
-	    //	                     and Compound = Not Applicable
-	    //
-		// Hemizygous Insertion  Allele2 is null
-	    //
-		// Hemizygous Deletion   Allele2 is null
-	    //	                     Compound = Top or Bottom
-	    //
-		// Indeterminate         Allele2 is null
-	    //	                     Compound = Not Applicable
-	    //
-		// Homoplasmic           no allele pair state error checking
-	    // Heteroplasmic         no allele pair state error checking
-	    //
+		// returns error string if any values are false, else return error = ""
+
+		//	    847133 | Hemizygous X-linked
+		//	    847134 | Hemizygous Y-linked
+		//	    847135 | Hemizygous Insertion
+		//	    847136 | Hemizygous Deletion
+		//	    847137 | Heterozygous
+		//	    847138 | Homozygous
+		//	    847139 | Indeterminate
+		//	   7107400 | Homoplasmic
+		//	   7107401 | Heteroplasmic
 		
-		// return same domain; will add "error" messages if necessary
+		// return same domain; will setError if necessary
 		SearchResults<AllelePairDomain> results = new SearchResults<AllelePairDomain>();
-		results.setItem(domain);				
+		
+		String pairStateKey;
+		String alleleKey1;
+		String alleleKey2;
+		
+		for (int i = 0; i < domain.size(); i++) {
+		
+			pairStateKey = domain.get(i).getPairStateKey();
+			alleleKey1 = domain.get(i).getAlleleKey1();
+			alleleKey2 = domain.get(i).getAlleleKey2();
+			
+			// no values/do nothing
+			if (alleleKey1 == null && alleleKey2 == null) {
+				continue;
+			}
+			
+			results.setItem(domain.get(i));
 
-		Boolean isValid = false;
-		String error = "";
-		
-		String pairStateKey = domain.getPairStateKey();
-		String alleleKey1 = domain.getAlleleKey1();
-		String alleleKey2 = domain.getAlleleKey2();
-		String markerChr = domain.getMarkerChromosome();
-		String compoundKey = domain.getCompoundKey();
-		
-		// no values/do nothing
-		if (alleleKey1 == null && alleleKey2 == null) {
-			return results;
-		}
+	        //if ((alleleState = "Homozygous" or alleleState = "Heterozygous") and (alleleKey2 = "" or alleleKey2 = "NULL")) then
+  			if ((pairStateKey.equals("847138") || pairStateKey.equals("847137")) && alleleKey2 == null ) {
+  				results.setError("If Allele State = 'Homozygous' or 'Heterozygous', then Allele 2 must exist.", null, Constants.HTTP_SERVER_ERROR);
+  				return results;
+  			}
 
-//	    847133 | Hemizygous X-linked
-//	    847134 | Hemizygous Y-linked
-//	    847135 | Hemizygous Insertion
-//	    847136 | Hemizygous Deletion
-//	    847137 | Heterozygous
-//	    847138 | Homozygous
-//	    847139 | Indeterminate
-//	   7107400 | Homoplasmic
-//	   7107401 | Heteroplasmic
-
-//	    847165 | Top
-//	    847166 | Bottom
-//	    847167 | Not Applicable
-		
-		if (pairStateKey.equals("7107400")
-			|| pairStateKey.equals("7107401")) {
-			isValid = true;
-		}
-		
-		if (pairStateKey.equals("847138")) {
-			if (alleleKey2 != null 
-				&& !alleleKey2.isEmpty() 
-				&& alleleKey1.equals(alleleKey2)) {
-				isValid = true;
-			}
-			else {
-				error = "Homozgous: Allele1 must equal Allele 2";
-			}
-		}
-		
-		if (pairStateKey.equals("847137")) {
-			if (alleleKey2 != null 
-				&& !alleleKey2.isEmpty()
-				&& !alleleKey1.equals(alleleKey2)) {
-				isValid = true;
-			} else {
-				error = "Heretorzygote: Allele2 must NOT be null and Allele1 must NOT equal Allele 2";
-			}
-		}
-		
-		if (pairStateKey.equals("847133")) {
-			if (alleleKey2 == null 
-				&& markerChr.equals("X")
-				&& compoundKey.equals("847167")) {
-				isValid = true;
-			}
-			else {
-				error = "Hemizygous X-linked: Allele2 must be null, Marker chromosome must be (X), and Compound must be (Not Applicable)";
-			}
-		}
-		
-		if (pairStateKey.equals("847134")) {
-			if (alleleKey2 == null 
-				&& markerChr.equals("Y")
-				&& compoundKey.equals("847167")) {
-				isValid = true;
-			}
-			else {
-				error = "Hemizygous Y-linked: Allele2 must be null, Marker chromosome must be (Y), and Compound must be (Not Applicable)";
-			}
-		}
-		
-		if (pairStateKey.equals("847135")) {
-			if (alleleKey2 == null) {
-				isValid = true;
-			} else {
-				error = "Hemizygous Insertion: Allele2 must be null";
-			}
-		}
-
-		if (pairStateKey.equals("847136")) {
-			if (alleleKey2 == null && !compoundKey.equals("847167")) {
-				isValid = true;
-			} else {
-				error = "Hemizygous Deletion: Allele2 must be null, and Compound must be in (Top, Bottem)";
-			}
-		}
-		
-		if (pairStateKey.equals("847139")) {
-			if (alleleKey2 == null && compoundKey.equals("847167")				) {
-				isValid = true;
-			} else {
-				error = "Indeterminate: Allele2 must be null, and Compound must be (Not Applicable)";
-			}
-		}
-		
-		if (isValid == false) {
-			results.setError("Validate Allele State failed", error, Constants.HTTP_SERVER_ERROR);	
+  			//if (alleleState = "Homozygous" and alleleKey2 != "" and alleleKey1 != alleleKey2) then
+  			if (pairStateKey.equals("847138") && alleleKey2 != null && !alleleKey1.equals(alleleKey2)) {
+  				results.setError("If Allele State = 'Homozygous', then Allele 1 must equal Allele 2.", null, Constants.HTTP_SERVER_ERROR);
+  				return results;
+  			}
+  			
+  			//if (alleleState = "Heterozygous" and alleleKey1 = alleleKey2) then
+  			if (pairStateKey.equals("847137") && alleleKey1.equals(alleleKey2)) {
+  				results.setError("If Allele State = 'Heterozygous', then Allele 2 must exist but Allele 1 cannot equal Allele 2.", null, Constants.HTTP_SERVER_ERROR);
+  				return results;
+  			}
+  			
+  			//if (alleleState != "" and alleleState != "Homozygous" and
+  			//  alleleState != "Heterozygous" and alleleKey2 != "" and alleleKey2 != "NULL") then
+  			if (!pairStateKey.equals("847138")
+  					&& !pairStateKey.equals("847137")
+  					&& alleleKey2 != null) {
+  				results.setError("For this Allele State, only Allele 1 is required.", null, Constants.HTTP_SERVER_ERROR);
+  				return results;
+  			}
 		}
 		
 		return results;
@@ -441,8 +366,6 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 		String alleleKey2 = domain.getAlleleKey2();
 		String cellLine1 = domain.getCellLine1();
 		String cellLine2 = domain.getCellLine2();
-
-		String validateFailed = "Validate Mutant Cell Line failed";
 		
 		// no values/do nothing
 		if (cellLine1.isEmpty() && cellLine2.isEmpty()) {
@@ -450,12 +373,12 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 		}
 	
 		if (alleleKey1.isEmpty() && !cellLine1.isEmpty()) {
-			results.setError(validateFailed, "Allele 1 is empty/missing", Constants.HTTP_SERVER_ERROR);
+			results.setError("Allele 1 is empty/missing", null, Constants.HTTP_SERVER_ERROR);
 			return results;
 		}
 		
 		if (alleleKey2.isEmpty() && !cellLine2.isEmpty() ) {
-			results.setError(validateFailed, "Allele 2 is empty/missing", Constants.HTTP_SERVER_ERROR);
+			results.setError("Allele 2 is empty/missing", null, Constants.HTTP_SERVER_ERROR);
 			return results;
 		}
 		
@@ -501,7 +424,7 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 			}
 			
 			if (isValidMCL1 == false || isValidMCL2 == false) {
-				results.setError(validateFailed, error, Constants.HTTP_SERVER_ERROR);
+				results.setError(error, null, Constants.HTTP_SERVER_ERROR);
 			}
 		}
 		catch (Exception e) {

@@ -31,7 +31,7 @@ public class AllelePairTranslator extends BaseEntityDomainTranslator<AllelePair,
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-	
+		
 		// may be null
 		if (entity.getAllele2() != null) {
 			domain.setAlleleKey2(String.valueOf(entity.getAllele2().get_allele_key()));

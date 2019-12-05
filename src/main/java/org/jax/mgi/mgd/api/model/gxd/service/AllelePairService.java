@@ -286,16 +286,6 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 	public SearchResults<AllelePairDomain> validateAlleleState(List<AllelePairDomain> domain) {
 		// validate the Allele State & Alleles
 		// returns error string
-
-		//	    847133 | Hemizygous X-linked
-		//	    847134 | Hemizygous Y-linked
-		//	    847135 | Hemizygous Insertion
-		//	    847136 | Hemizygous Deletion
-		//	    847137 | Heterozygous
-		//	    847138 | Homozygous
-		//	    847139 | Indeterminate
-		//	   7107400 | Homoplasmic
-		//	   7107401 | Heteroplasmic
 		
 		// return same domain; will setError if necessary
 		SearchResults<AllelePairDomain> results = new SearchResults<AllelePairDomain>();

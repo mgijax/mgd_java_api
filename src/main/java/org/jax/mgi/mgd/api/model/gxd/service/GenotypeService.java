@@ -299,6 +299,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		Boolean from_generalNote = false;
 		Boolean from_privateCuratorialNote = false;	
 		Boolean from_accession = false;
+		Boolean from_cmresults = false;
 		
 		// if parameter exists, then add to where-clause
 		// accession id
@@ -315,6 +316,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			if (cmResults.length > 0) {
 				from = from + cmResults[0];
 				where = where + cmResults[1];
+				from_cmresults = true;
 			}
 			
 			if (searchDomain.getGenotypeKey() != null && !searchDomain.getGenotypeKey().isEmpty()) {
@@ -451,7 +453,8 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			 	&& from_marker == false
 			 	&& from_cellline == false
 			 	&& from_accession == false
-			 	&& from_image == false) {
+			 	&& from_image == false
+			 	&& from_cmresults == false) {
 				
 				includeNotExists = "\nunion all" +
 					"\nselect distinct g._genotype_key, ps.strain, ps.strain, ps.strain as genotypeDisplay" +

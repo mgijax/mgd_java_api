@@ -31,7 +31,11 @@ import lombok.Setter;
 public class ProbeStrain extends BaseEntity {
 
 	@Id
+	//@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="prb_strain_generator")
+	//@SequenceGenerator(name="prb_strain_generator", sequenceName = "prb_strain_seq", allocationSize=1)
+	//@ApiModelProperty(value="primary key")		
 	private int _strain_key;
+	
 	private String strain;
 	private int standard;
 	@Column(name="private") // just "private" is a Java reserved word

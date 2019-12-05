@@ -334,13 +334,28 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
   				results.setError("If Allele State = 'Heterozygous', then Allele 2 must exist but Allele 1 cannot equal Allele 2.", null, Constants.HTTP_SERVER_ERROR);
   				return results;
   			}
-  			
-  			//if pairState != "Homozygous" and != "Heterozygous" and alleleKey2 != "" and != "NULL"
-  			if (!pairStateKey.equals("847138") && !pairStateKey.equals("847137")
+ 
+  			//	    847133 | Hemizygous X-linked
+  			//	    847134 | Hemizygous Y-linked
+  			//	    847135 | Hemizygous Insertion
+  			//	    847136 | Hemizygous Deletion
+  			//	    847139 | Indeterminate
+  			//	   7107400 | Homoplasmic
+  			//	   7107401 | Heteroplasmic 			
+  			//and alleleKey2 != "" and != "NULL"
+  			if ((pairStateKey.equals("847133") 
+  					|| pairStateKey.equals("847134")
+  					|| pairStateKey.equals("847135")
+  					|| pairStateKey.equals("847136")
+  					|| pairStateKey.equals("847139")
+  					|| pairStateKey.equals("7107400")
+  					|| pairStateKey.equals("7107401")
+  					)
   					&& alleleKey2 != null && !alleleKey2.isEmpty()) {
   				results.setError("For this Allele State, only Allele 1 is required.", null, Constants.HTTP_SERVER_ERROR);
   				return results;
-  			}
+  			} 			
+			
 		}
 		
 		// setError() is null/empty

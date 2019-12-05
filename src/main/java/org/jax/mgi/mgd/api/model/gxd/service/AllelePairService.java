@@ -338,7 +338,7 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
   			//if pairState != "Homozygous" and != "Heterozygous" and alleleKey2 != "" and != "NULL"
   			if (!pairStateKey.equals("847138") && !pairStateKey.equals("847137")
   					&& alleleKey2 != null && !alleleKey2.isEmpty()) {
-  				results.setError(pairStateKey + ":For this Allele State, only Allele 1 is required.", null, Constants.HTTP_SERVER_ERROR);
+  				results.setError("For this Allele State, only Allele 1 is required.", null, Constants.HTTP_SERVER_ERROR);
   				return results;
   			}
 		}

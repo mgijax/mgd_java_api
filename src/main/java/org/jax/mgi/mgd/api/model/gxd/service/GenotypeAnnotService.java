@@ -91,6 +91,9 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 				continue;
 			}
 			
+			// VOC_splitAnnotEvidence()
+			// VOC_mergeAnnotEvidence()
+			
 			//log.info("domain index: " + i);
 			
 			DenormAnnotationDomain denormAnnotDomain = domain.getAnnots().get(i);

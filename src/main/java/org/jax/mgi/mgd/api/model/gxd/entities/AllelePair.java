@@ -4,9 +4,12 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
@@ -17,6 +20,7 @@ import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,9 +31,9 @@ import lombok.Setter;
 public class AllelePair extends BaseEntity {
 
 	@Id
-	//@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="gxd_allelepair_generator")
-	//@SequenceGenerator(name="gxd_allelepair_generator", sequenceName = "gxd_allelepair_seq", allocationSize=1)
-	//@ApiModelProperty(value="primary key")	
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="gxd_allelepair_generator")
+	@SequenceGenerator(name="gxd_allelepair_generator", sequenceName = "gxd_allelepair_seq", allocationSize=1)
+	@ApiModelProperty(value="primary key")	
 	private int _allelepair_key;
 	private Integer sequenceNum;
 	private Date creation_date;

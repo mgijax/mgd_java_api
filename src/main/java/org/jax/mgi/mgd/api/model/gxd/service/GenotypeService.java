@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.gxd.service;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -64,6 +65,8 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		String cmd;
 		Query query;
 		
+		log.info("processGenotype/create");
+		
 		// default strain = Not Specified
 		Integer strainKey; 
 		if (domain.getStrainKey() == null || domain.getStrainKey().isEmpty()) {
@@ -81,7 +84,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		entity.setIsConditional(Integer.valueOf(domain.getIsConditional()));			
 
 		// if no genotype exists as value is set, then default = 'Mouse Line' (3982946)
-		if (domain.getExistsAsKey() == null) {
+		if (domain.getExistsAsKey() == null || domain.getExistsAsKey().isEmpty()) {
 			domain.setExistsAsKey("3982946");
 		}
 		entity.setExistsAs(termDAO.get(Integer.valueOf(domain.getExistsAsKey())));			
@@ -101,15 +104,15 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		// combination note 2 & 3 get updated by nightly process (allelecombination)
 		// using allele detail note
 		// then run processAlleleCombinations to finish the job
-		noteService.process(domain.getGenotypeKey(), domain.getAlleleDetailNote(), mgiTypeKey, "1016", user);
+		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getAlleleDetailNote(), mgiTypeKey, "1016", user);
 				
 		// process Allele Pairs
 		log.info("processGenotypes/allele pairs");
-		allelePairService.process(domain.getGenotypeKey(), domain.getAllelePairs(), user);		
+		allelePairService.process(String.valueOf(entity.get_genotype_key()), domain.getAllelePairs(), user);		
 		
 		if (domain.getUseAllelePairDefaultOrder() == "1") {
 			cmd = "select count(*) from GXD_orderAllelePairs (" + String.valueOf(entity.get_genotype_key()) + ")";
-			log.info("processGenotypes/order allele pairs: " + cmd);
+			log.info("processGenotype/order allele pairs: " + cmd);
 			query = genotypeDAO.createNativeQuery(cmd);
 			query.getResultList();
 		}
@@ -182,7 +185,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			
 			if (domain.getUseAllelePairDefaultOrder() == "1") {
 				cmd = "select count(*) from GXD_orderAllelePairs (" + String.valueOf(entity.get_genotype_key()) + ")";
-				log.info("processGenotypes/order allele pairs: " + cmd);
+				log.info("processGenotype/order allele pairs: " + cmd);
 				query = genotypeDAO.createNativeQuery(cmd);
 				query.getResultList();
 			}
@@ -193,15 +196,29 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			query = genotypeDAO.createNativeQuery(cmd);
 			query.getResultList();
 			
+			// set the allele-combination notes
+			log.info("processGenotype/alleleCombinationUtilities");	
+			try {
+				if (allelePairService.alleleCombinationUtilities(domain.getGenotypeKey()) == true) {
+					log.info("processGenotype/alleleCombinationUtilities: successful");	
+				}
+				else {
+					log.info("processGenotype/alleleCombinationUtilities: failure");	
+				}				
+			} catch (Exception e) {
+				results.setError(Constants.LOG_FAIL_EIUTILITIES, e.getMessage(), Constants.HTTP_SERVER_ERROR);
+			}			
+
 			log.info("processGenotype/changes processed: " + domain.getGenotypeKey());
 		}
 		else {
 			log.info("processGenotype/no changes processed: " + domain.getGenotypeKey());
 		}
-
+		
 		// return entity translated to domain
 		log.info("processGenotype/update/returning results");
-		results.setItem(translator.translate(entity));		log.info("processGenotype/update/returned results succsssful");
+		results.setItem(translator.translate(entity));		
+		log.info("processGenotype/update/returned results succsssful");
 		return results;			
 	}
 

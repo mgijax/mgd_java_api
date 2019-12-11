@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.gxd.service;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,6 +14,7 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleCellLineDAO;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AllelePairDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AllelePairDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.AllelePair;
 import org.jax.mgi.mgd.api.model.gxd.translator.AllelePairTranslator;
@@ -20,6 +22,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.RunCommand;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -31,6 +34,8 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 
 	@Inject
 	private AllelePairDAO allelePairDAO;
+	@Inject
+	private GenotypeDAO genotypeDAO;
 	@Inject
 	private MarkerDAO markerDAO;
 	@Inject
@@ -139,35 +144,46 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 					continue;
 				}
 				
-				log.info("processAllelePair create");
+				log.info("processAllelePair/create");
 
 				AllelePair entity = new AllelePair();	
-				
-				entity.set_allelepair_key(Integer.valueOf(parentKey));
+								
+				entity.setGenotype(genotypeDAO.get(Integer.valueOf(parentKey)));				
 				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));				
 				entity.setAllele1(alleleDAO.get(Integer.valueOf(domain.get(i).getAlleleKey1())));				
-
+				
 				if (domain.get(i).getAlleleKey2() != null && !domain.get(i).getAlleleKey2().isEmpty()) {
 					entity.setAllele2(alleleDAO.get(Integer.valueOf(domain.get(i).getAlleleKey2())));				
 				}
-				
+								
 				if (domain.get(i).getCellLineKey1() != null && !domain.get(i).getCellLineKey1().isEmpty()) {
 					entity.setCellLine1(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLineKey1())));				
 				}
-				
+					
 				if (domain.get(i).getCellLineKey2() != null && !domain.get(i).getCellLineKey2().isEmpty()) {
 					entity.setCellLine2(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLineKey2())));				
 				}
-
+				
 				// default compound = Not Specified
-				if (domain.get(i).getCompoundKey() == null) {
+				if (domain.get(i).getCompoundKey() == null || domain.get(i).getCompoundKey().isEmpty()) {
 					domain.get(i).setCompoundKey("847167");
 				}
 				
+				log.info("processAllelePair/create/6");
+				
+				log.info("pair state: " + domain.get(i).getPairStateKey());
 				entity.setPairState(termDAO.get(Integer.valueOf(domain.get(i).getPairStateKey())));
+				
+				log.info("compound: " + domain.get(i).getCompoundKey());				
 				entity.setCompound(termDAO.get(Integer.valueOf(domain.get(i).getCompoundKey())));
+				
+				log.info("sequencenum: " + domain.get(i).getSequenceNum());								
 				entity.setSequenceNum(domain.get(i).getSequenceNum());
+				
+				// add creation/modification 
+				entity.setCreatedBy(user);
 				entity.setCreation_date(new Date());
+				entity.setModifiedBy(user);
 				entity.setModification_date(new Date());
 				
 				allelePairDAO.persist(entity);				
@@ -175,13 +191,13 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 				modified = true;
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-				log.info("processAllelePair delete");
+				log.info("processAllelePair/delete");
 				AllelePair entity = allelePairDAO.get(Integer.valueOf(domain.get(i).getAllelePairKey()));
 				allelePairDAO.remove(entity);
 				modified = true;
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-				log.info("processAllelePair update");
+				log.info("processAllelePair/update");
 				Boolean isUpdated = false;
 				AllelePair entity = allelePairDAO.get(Integer.valueOf(domain.get(i).getAllelePairKey()));
 
@@ -437,5 +453,45 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 				
 		return results;
 	}
+
+	@Transactional		
+	public Boolean alleleCombinationUtilities(String genotypeKey) throws IOException, InterruptedException {
+		// see allcacheload/allelecombinationByGenotype.py
 		
+		// these swarm variables are in 'app.properties'
+    	String utilitiesScript = System.getProperty("swarm.ds.alleleCombinationUtilities");
+    	String server = System.getProperty("swarm.ds.dbserver");
+        String db = System.getProperty("swarm.ds.dbname");
+        String username = System.getProperty("swarm.ds.username");
+        String pwd = System.getProperty("swarm.ds.dbpasswordfile");
+        
+        // input:  genotypeKey
+
+        // output: true/false
+        Boolean returnCode = false;
+        
+		String runCmd = utilitiesScript;
+        runCmd = runCmd + " -S" + server;
+        runCmd = runCmd + " -D" + db;
+        runCmd = runCmd + " -U" + username;
+        runCmd = runCmd + " -P" + pwd;
+        runCmd = runCmd + " -K" + genotypeKey;
+		
+		// run the runCmd
+		log.info(Constants.LOG_INPROGRESS_EIUTILITIES + runCmd);
+		RunCommand runner = RunCommand.runCommand(runCmd);
+		
+		// check exit code from RunCommand
+		if (runner.getExitCode() == 0) {
+			log.info(Constants.LOG_SUCCESS_EIUTILITIES);
+			returnCode = true;
+		}
+		else {
+			log.info(Constants.LOG_FAIL_EIUTILITIES);
+			returnCode = false;
+		}			
+		
+		return returnCode;
+	}
+	
 }

@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model.gxd.service;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -182,37 +181,37 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			entity.setModification_date(new Date());
 			entity.setModifiedBy(user);
 			genotypeDAO.update(entity);
-			
-			if (domain.getUseAllelePairDefaultOrder() == "1") {
-				cmd = "select count(*) from GXD_orderAllelePairs (" + String.valueOf(entity.get_genotype_key()) + ")";
-				log.info("processGenotype/order allele pairs: " + cmd);
-				query = genotypeDAO.createNativeQuery(cmd);
-				query.getResultList();
-			}
-			
-			// check duplicate genotype
-			cmd = "select count(*) from GXD_checkDuplicateGenotype (" + String.valueOf(entity.get_genotype_key()) + ")";
-			log.info("processGenotype/check duplicate: " + cmd);
-			query = genotypeDAO.createNativeQuery(cmd);
-			query.getResultList();
-			
-			// set the allele-combination notes
-			log.info("processGenotype/alleleCombinationUtilities");	
-			try {
-				if (allelePairService.alleleCombinationUtilities(domain.getGenotypeKey()) == true) {
-					log.info("processGenotype/alleleCombinationUtilities: successful");	
-				}
-				else {
-					log.info("processGenotype/alleleCombinationUtilities: failure");	
-				}				
-			} catch (Exception e) {
-				results.setError(Constants.LOG_FAIL_EIUTILITIES, e.getMessage(), Constants.HTTP_SERVER_ERROR);
-			}			
-
 			log.info("processGenotype/changes processed: " + domain.getGenotypeKey());
 		}
 		else {
 			log.info("processGenotype/no changes processed: " + domain.getGenotypeKey());
+		}
+
+		// order allele pairs
+		if (domain.getUseAllelePairDefaultOrder() == "1") {
+			cmd = "select count(*) from GXD_orderAllelePairs (" + String.valueOf(entity.get_genotype_key()) + ")";
+			log.info("processGenotype/order allele pairs: " + cmd);
+			query = genotypeDAO.createNativeQuery(cmd);
+			query.getResultList();
+		}
+		
+		// check duplicate genotype
+		cmd = "select count(*) from GXD_checkDuplicateGenotype (" + String.valueOf(entity.get_genotype_key()) + ")";
+		log.info("processGenotype/check duplicate: " + cmd);
+		query = genotypeDAO.createNativeQuery(cmd);
+		query.getResultList();
+		
+		// set the allele-combination notes
+		log.info("processGenotype/alleleCombinationUtilities");	
+		try {
+			if (allelePairService.alleleCombinationUtilities(domain.getGenotypeKey()) == true) {
+				log.info("processGenotype/alleleCombinationUtilities: successful");	
+			}
+			else {
+				log.info("processGenotype/alleleCombinationUtilities: failure");	
+			}				
+		} catch (Exception e) {
+			results.setError(Constants.LOG_FAIL_EIUTILITIES, e.getMessage(), Constants.HTTP_SERVER_ERROR);
 		}
 		
 		// return entity translated to domain

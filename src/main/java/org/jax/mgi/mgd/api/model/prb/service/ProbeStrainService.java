@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.prb.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -13,8 +14,10 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeStrainDomain;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeStrainTranslator;
 import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeStrainTranslator;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -27,16 +30,42 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 
 	@Inject
 	private ProbeStrainDAO probeStrainDAO;
-
+	@Inject
+	private TermDAO termDAO;
+	
 	private ProbeStrainTranslator translator = new ProbeStrainTranslator();
 	private SlimProbeStrainTranslator slimtranslator = new SlimProbeStrainTranslator();
 	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
-	public SearchResults<ProbeStrainDomain> create(ProbeStrainDomain object, User user) {
+	public SearchResults<ProbeStrainDomain> create(ProbeStrainDomain domain, User user) {
+		// create new entity object from in-coming domain
+		// the Entities class handles the generation of the primary key
+		// database trigger will assign the MGI id/see pgmgddbschema/trigger for details
+
 		SearchResults<ProbeStrainDomain> results = new SearchResults<ProbeStrainDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		ProbeStrain entity = new ProbeStrain();
+		
+		log.info("processStrain/create");
+		
+		entity.setSpecies(termDAO.get(Integer.valueOf(domain.getSpeciesKey())));			
+		entity.setStrainType(termDAO.get(Integer.valueOf(domain.getStrainTypeKey())));
+		entity.setStrain(domain.getStrain());
+		entity.setStandard(Integer.valueOf(domain.getStandard()));
+		entity.setIsPrivate(Integer.valueOf(domain.getIsPrivate()));
+		entity.setGeneticBackground(Integer.valueOf(domain.getGeneticBackground()));
+		entity.setCreatedBy(user);
+		entity.setCreation_date(new Date());
+		entity.setModifiedBy(user);
+		entity.setModification_date(new Date());
+		
+		// execute persist/insert/send to database
+		probeStrainDAO.persist(entity);
+		
+		// return entity translated to domain
+		log.info("processStrain/create/returning results");
+		results.setItem(translator.translate(entity));
 		return results;
 	}
 

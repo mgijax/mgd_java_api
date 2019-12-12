@@ -333,6 +333,10 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 							if (evidenceDomain.getProperties() == null || evidenceDomain.getProperties().isEmpty()) {		
 								sexSpecificity = "NA";
 							}
+							else if (evidenceDomain.getProperties().get(0).getValue() == null 
+									|| evidenceDomain.getProperties().get(0).getValue().isEmpty()) {		
+								sexSpecificity = "NA";
+							}
 							else {
 								sexSpecificity = evidenceDomain.getProperties().get(0).getValue();
 							}

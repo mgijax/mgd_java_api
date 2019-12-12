@@ -20,6 +20,7 @@ public class SlimAlleleTranslator extends BaseEntityDomainTranslator<Allele, Sli
 			if (entity.getMarker().getLocationCache() != null) {
 				domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 				domain.setMarkerSymbol(entity.getMarker().getSymbol());
+				domain.setChromosome(entity.getMarker().getChromosome());
 			}
 		}
 		

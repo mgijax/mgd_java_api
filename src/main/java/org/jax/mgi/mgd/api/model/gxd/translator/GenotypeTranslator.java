@@ -69,7 +69,7 @@ public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, Gen
 		}
 		
 		// resource identifier ids only
-		if (!entity.getResourceIdentifierAccessionIds().isEmpty()) {
+		if (entity.getResourceIdentifierAccessionIds() != null && !entity.getResourceIdentifierAccessionIds().isEmpty()) {
 			domain.setResourceIdentifierID(entity.getResourceIdentifierAccessionIds().get(0).getAccID());
 		}
 		

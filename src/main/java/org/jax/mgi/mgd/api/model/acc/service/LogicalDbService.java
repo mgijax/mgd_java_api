@@ -127,15 +127,10 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 			}
 			
 		}
-		// now get the results from the database
-		//log.info("calling getResults(logicalDBKey)");
-		//results = getResults(logicalDBKey);
 		
-		// I believe this does the same thing as above:
-		log.info("Service calling translator.translate(logicalDBDAO.get(logicalDBKey).getActualDBs: " + logicalDBDAO.get(logicalDBKey).getActualDBs());
-		LogicalDbDomain d = translator.translate(logicalDBDAO.get(logicalDBKey));
-		//log.info("actualDB domain adbKey from database: " + d.getActualDBs().get(0).getActualDBKey());
-		results.setItem(translator.translate(logicalDBDAO.get(logicalDBKey)));
+		log.info("Service calling translator.translate(entity)");
+		results.setItem(translator.translate(entity));
+		
 		return results;
 	}
 

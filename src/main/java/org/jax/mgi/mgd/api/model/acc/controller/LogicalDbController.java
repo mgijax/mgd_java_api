@@ -12,6 +12,7 @@ import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.acc.domain.LogicalDbDomain;
 import org.jax.mgi.mgd.api.model.acc.service.LogicalDbService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
@@ -28,12 +29,18 @@ public class LogicalDbController extends BaseController<LogicalDbDomain> {
 
 	@Override
 	public SearchResults<LogicalDbDomain> create(LogicalDbDomain domain, User user) {
-		return ldbService.create(domain, user);
+		SearchResults<LogicalDbDomain> results = new SearchResults<LogicalDbDomain>();
+		results = ldbService.create(domain, user);
+		results = ldbService.getResults(Integer.valueOf(results.items.get(0).getLogicalDBKey()));
+		return results;
 	}
 
 	@Override
 	public SearchResults<LogicalDbDomain> update(LogicalDbDomain domain, User user) {
-		return ldbService.update(domain, user);
+		SearchResults<LogicalDbDomain> results = new SearchResults<LogicalDbDomain>();
+		results = ldbService.update(domain, user);
+		results = ldbService.getResults(Integer.valueOf(results.items.get(0).getLogicalDBKey()));
+		return results;	
 	}
 	
 	@Override
@@ -52,12 +59,20 @@ public class LogicalDbController extends BaseController<LogicalDbDomain> {
 	public SearchResults<LogicalDbDomain> getObjectCount() {
 		return ldbService.getObjectCount();
 	}
-//	
+	
 	@POST
 	@ApiOperation(value = "Search")
 	@Path("/search")	
 	public SearchResults<LogicalDbDomain> search(LogicalDbDomain searchDomain) {
-		return ldbService.search(searchDomain);
+		
+		SearchResults<LogicalDbDomain> results = new SearchResults<LogicalDbDomain>();
+		
+		try {
+		    results = ldbService.search(searchDomain);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return results; 
 	}
 		
 }

@@ -1,5 +1,8 @@
 package org.jax.mgi.mgd.api.model.acc.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -54,25 +57,26 @@ public class LogicalDbController extends BaseController<LogicalDbDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "Get the object count from mrk_marker table")
+	@ApiOperation(value = "Get the object count from acc_logicalDB table")
 	@Path("/getObjectCount")
 	public SearchResults<LogicalDbDomain> getObjectCount() {
 		return ldbService.getObjectCount();
 	}
-	
+
 	@POST
-	@ApiOperation(value = "Search")
+	@ApiOperation(value = "Search/returns LogicalDbDomain")
 	@Path("/search")	
 	public SearchResults<LogicalDbDomain> search(LogicalDbDomain searchDomain) {
-		
+
 		SearchResults<LogicalDbDomain> results = new SearchResults<LogicalDbDomain>();
-		
+
 		try {
-		    results = ldbService.search(searchDomain);
-		} catch(Exception e) {
+			results = ldbService.search(searchDomain);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return results; 
+		return results;
+
 	}
 		
 }

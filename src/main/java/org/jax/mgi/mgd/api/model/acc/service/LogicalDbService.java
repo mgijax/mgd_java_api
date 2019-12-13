@@ -130,7 +130,8 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 		
 		log.info("Service calling translator.translate(entity)");
 		results.setItem(translator.translate(entity));
-		
+		//logicalDBDAO.clear();
+
 		return results;
 	}
 
@@ -256,6 +257,7 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 		log.info("process Logical DB update returning results");
 		results.setItem(translator.translate(entity));
 		log.info("process Logical DB update returning results successful");
+		//logicalDBDAO.clear();
 		return results;
 
 	}
@@ -292,7 +294,7 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
         log.info("Calling ldb translator");
         results.setItem(translator.translate(logicalDBDAO.get(key)));
         log.info("Done calling ldb translator");
-		logicalDBDAO.clear();
+        logicalDBDAO.clear();
         return results;
     }
 

@@ -53,7 +53,7 @@ public class LogicalDB extends BaseEntity {
 	private User modifiedBy;
 	
 	@OneToMany()
-	@JoinColumn(name="_logicaldb_key", referencedColumnName="_logicaldb_key")
+	@JoinColumn(name="_logicaldb_key", referencedColumnName="_logicaldb_key", insertable=false, updatable=false)
 	private List<ActualDB> actualDBs;
 	
 }

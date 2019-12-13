@@ -127,15 +127,8 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 			}
 			
 		}
-		// now get the results from the database
-		//log.info("calling getResults(logicalDBKey)");
-		//results = getResults(logicalDBKey);
-		
-		// I believe this does the same thing as above:
-		log.info("Service calling translator.translate(logicalDBDAO.get(logicalDBKey).getActualDBs: " + logicalDBDAO.get(logicalDBKey).getActualDBs());
-		LogicalDbDomain d = translator.translate(logicalDBDAO.get(logicalDBKey));
-		//log.info("actualDB domain adbKey from database: " + d.getActualDBs().get(0).getActualDBKey());
-		results.setItem(translator.translate(logicalDBDAO.get(logicalDBKey)));
+		results.setItem(translator.translate(entity));
+		logicalDBDAO.clear();
 		return results;
 	}
 
@@ -260,7 +253,9 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 		// return entity translated to domain
 		log.info("process Logical DB update returning results");
 		results.setItem(translator.translate(entity));
+		log.info("actualDBKey: " + entity.getActualDBs().get(0).get_actualdb_key());
 		log.info("process Logical DB update returning results successful");
+		logicalDBDAO.clear();
 		return results;
 
 	}
@@ -297,7 +292,7 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
         log.info("Calling ldb translator");
         results.setItem(translator.translate(logicalDBDAO.get(key)));
         log.info("Done calling ldb translator");
-		logicalDBDAO.clear();
+	logicalDBDAO.clear();
         return results;
     }
 

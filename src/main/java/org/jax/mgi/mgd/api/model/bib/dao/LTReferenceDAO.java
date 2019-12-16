@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -36,7 +35,6 @@ import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateParser;
@@ -64,9 +62,6 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
-	@Inject
-	private MarkerService markerService;
-	
 	/* convenience method for instantiating a new search results object, populating its error fields,
 	 * and returning it.
 	 */
@@ -679,17 +674,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 	public void updateCitationCache(String refsKey) {
 		// returns an integer rather than *, as the void return was causing a mapping exception
 		Query query = entityManager.createNativeQuery("select count(1) from BIB_reloadCache(" + refsKey + ")");
-		query.getResultList();
-		
-		// to update the mrk_reference cache table
-		try {
-			log.info("mrkrefByReferenceUtilities");
-			markerService.mrkrefByReferenceUtilities(refsKey);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-				
+		query.getResultList();		
 		return;
 	}
 

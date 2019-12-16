@@ -34,6 +34,7 @@ import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceMarkerAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceStrainAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
+import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -69,6 +70,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	@Inject
 	private MGIReferenceAssocService referenceAssocService;	
 
+	@Inject
+	private MarkerService markerService;
+	
 	LTReferenceTranslator translator = new LTReferenceTranslator();
 
 	/* These work together to allow for a maximum delay of two seconds for retries: */
@@ -117,6 +121,16 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		applyDomainChanges(entity, domain, user);
 		referenceDAO.persist(entity);
 		referenceDAO.updateCitationCache(domain.refsKey);
+		
+		// to update the mrk_reference cache table
+		try {
+			log.info("mrkrefByReferenceUtilities");
+			markerService.mrkrefByReferenceUtilities(String.valueOf(entity.get_refs_key()));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return translator.translate(entity);
 	}
 
@@ -898,7 +912,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				anyChanges = true;
 			}
 		}
-		
+
 		return anyChanges;
 	}
 		

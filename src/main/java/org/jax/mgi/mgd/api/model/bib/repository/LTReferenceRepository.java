@@ -69,9 +69,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	@Inject
 	private MGIReferenceAssocService referenceAssocService;	
-
-	@Inject
-	private MarkerService markerService;
 	
 	LTReferenceTranslator translator = new LTReferenceTranslator();
 
@@ -120,17 +117,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		LTReference entity = getReference(domain.refsKey);
 		applyDomainChanges(entity, domain, user);
 		referenceDAO.persist(entity);
-		referenceDAO.updateCitationCache(domain.refsKey);
-		
-		// to update the mrk_reference cache table
-		try {
-			log.info("mrkrefByReferenceUtilities");
-			markerService.mrkrefByReferenceUtilities(String.valueOf(entity.get_refs_key()));
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
+		referenceDAO.updateCitationCache(domain.refsKey);		
 		return translator.translate(entity);
 	}
 

@@ -29,6 +29,9 @@ echo "swarm.ds.dbpasswordfile=${PG_1LINE_PASSFILE}" >> ${PROP_FILE}
 echo "swarm.ds.dbserver=${MGD_DBSERVER}" >> ${PROP_FILE}
 echo "swarm.ds.eiUtilities=${PG_DBUTILS}/bin/ei/markerWithdrawal.py" >> ${PROP_FILE}
 echo "swarm.ds.alleleCombinationUtilities=${PG_DBUTILS}/allcacheload/allelecombinationByGenotype.py" >> ${PROP_FILE}
+echo "swarm.ds.markerLocationUtilities=//usr/local/mgi/live/mgi/dbutils/mrkcacheload/mrklocation.py" >> ${PROP_FILE}
+echo "swarm.ds.mrkrefByMarkerUtilities=//usr/local/mgi/live/mgi/dbutils/mrkcacheload/mrkrefByMarker.py" >> ${PROP_FILE}
+echo "swarm.ds.mrkrefByReferenceUtilities=//usr/local/mgi/live/mgi/dbutils/mrkcacheload/mrkrefByReference.py" >> ${PROP_FILE}
 echo "swarm.ds.pixeldb=/data/pixeldb" >> ${PROP_FILE}
 echo "swarm.ds.pixeldbCounter=/data/pixeldb/accession/counter" >> ${PROP_FILE}
 

@@ -34,7 +34,6 @@ import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceMarkerAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceStrainAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
-import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.util.Constants;

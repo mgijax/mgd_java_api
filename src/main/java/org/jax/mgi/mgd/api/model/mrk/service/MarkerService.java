@@ -151,6 +151,15 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		query.getResultList();
 		
 		// to-add/create marker synonyms, if provided
+
+		// to update the mrk_reference cache table		
+		try {
+			log.info("processMarker/mrkrefByMarkerUtilities");
+			mrkrefByMarkerUtilities(String.valueOf(entity.get_marker_key()));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		// return entity translated to domain
 		log.info("processMarker/create/returning results");
@@ -315,6 +324,23 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 		else {
 			log.info("processMarker/no changes processed: " + domain.getMarkerKey());
+		}
+
+		try {
+			log.info("processMarker/markerLocationUtilities");
+			markerLocationUtilities(String.valueOf(entity.get_marker_key()));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// to update the mrk_reference cache table		
+		try {
+			log.info("processMarker/mrkrefByMarkerUtilities");
+			mrkrefByMarkerUtilities(String.valueOf(entity.get_marker_key()));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
 		}
 				
 		// return entity translated to domain
@@ -1317,6 +1343,102 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// note that any run command errors have already been attached
 		results.setItems(listOfResults);
 		return results;
+	}
+
+	@Transactional		
+	public Boolean markerLocationUtilities(String markerKey) throws IOException, InterruptedException {
+		// see mrkcacheload/mrklocation.py
+		
+		// these swarm variables are in 'app.properties'
+    	String utilitiesScript = System.getProperty("swarm.ds.markerLocationUtilities");
+        
+        // input:  makrerKey
+
+        // output: true/false
+        Boolean returnCode = false;
+        
+		String runCmd = utilitiesScript;
+        runCmd = runCmd + " " + markerKey;
+		
+		// run the runCmd
+		log.info(Constants.LOG_INPROGRESS_EIUTILITIES + runCmd);
+		RunCommand runner = RunCommand.runCommand(runCmd);
+		
+		// check exit code from RunCommand
+		if (runner.getExitCode() == 0) {
+			log.info(Constants.LOG_SUCCESS_EIUTILITIES);
+			returnCode = true;
+		}
+		else {
+			log.info(Constants.LOG_FAIL_EIUTILITIES);
+			returnCode = false;
+		}			
+		
+		return returnCode;
+	}
+	
+	@Transactional		
+	public Boolean mrkrefByMarkerUtilities(String markerKey) throws IOException, InterruptedException {
+		// see mrkcacheload/mrkrefByMarker.py
+		
+		// these swarm variables are in 'app.properties'
+    	String utilitiesScript = System.getProperty("swarm.ds.mrkrefByMarkerUtilities");
+        
+        // input:  makrerKey
+
+        // output: true/false
+        Boolean returnCode = false;
+        
+		String runCmd = utilitiesScript;
+        runCmd = runCmd + " " + markerKey;
+		
+		// run the runCmd
+		log.info(Constants.LOG_INPROGRESS_EIUTILITIES + runCmd);
+		RunCommand runner = RunCommand.runCommand(runCmd);
+		
+		// check exit code from RunCommand
+		if (runner.getExitCode() == 0) {
+			log.info(Constants.LOG_SUCCESS_EIUTILITIES);
+			returnCode = true;
+		}
+		else {
+			log.info(Constants.LOG_FAIL_EIUTILITIES);
+			returnCode = false;
+		}			
+		
+		return returnCode;
+	}	
+
+	@Transactional		
+	public Boolean mrkrefByReferenceUtilities(String refsKey) throws IOException, InterruptedException {
+		// see mrkcacheload/mrkrefByReference.py
+		
+		// these swarm variables are in 'app.properties'
+    	String utilitiesScript = System.getProperty("swarm.ds.mrkrefByReferenceUtilities");
+        
+        // input:  refsKey
+
+        // output: true/false
+        Boolean returnCode = false;
+        
+		String runCmd = utilitiesScript;
+        runCmd = runCmd + " " + refsKey;
+		
+		// run the runCmd
+		log.info(Constants.LOG_INPROGRESS_EIUTILITIES + runCmd);
+		RunCommand runner = RunCommand.runCommand(runCmd);
+		
+		// check exit code from RunCommand
+		if (runner.getExitCode() == 0) {
+			log.info(Constants.LOG_SUCCESS_EIUTILITIES);
+			returnCode = true;
+		}
+		else {
+			log.info(Constants.LOG_FAIL_EIUTILITIES);
+			returnCode = false;
+		}			
+		
+		return returnCode;
 	}
 	
 }

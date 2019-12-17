@@ -66,10 +66,17 @@ public class TermController extends BaseController<TermDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Validate Term")
+	@ApiOperation(value = "Validate term")
 	@Path("/validateTerm")
 	public List<TermDomain> validateTerm(TermDomain domain) {
 		return termService.validateTerm(domain);
+	}
+
+	@POST
+	@ApiOperation(value = "Validate MP header term")
+	@Path("/validateMPHeaderTerm")
+	public List<SlimTermDomain> validateMPHeaderTerm(SlimTermDomain domain) {
+		return termService.validateMPHeaderTerm(domain);
 	}
 	
 	@POST

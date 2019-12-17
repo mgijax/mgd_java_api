@@ -152,7 +152,16 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		// to-add/create marker synonyms, if provided
 
-		// to update the mrk_reference cache table		
+		// to update the mrk_location_cache table				
+		try {
+			log.info("processMarker/markerLocationUtilities");
+			markerLocationUtilities(String.valueOf(entity.get_marker_key()));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// to update the mrk_reference_cache table		
 		try {
 			log.info("processMarker/mrkrefByMarkerUtilities");
 			mrkrefByMarkerUtilities(String.valueOf(entity.get_marker_key()));
@@ -326,6 +335,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			log.info("processMarker/no changes processed: " + domain.getMarkerKey());
 		}
 
+		// to update the mrk_location_cache table						
 		try {
 			log.info("processMarker/markerLocationUtilities");
 			markerLocationUtilities(String.valueOf(entity.get_marker_key()));
@@ -334,7 +344,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			e.printStackTrace();
 		}
 
-		// to update the mrk_reference cache table		
+		// to update the mrk_reference_cache table		
 		try {
 			log.info("processMarker/mrkrefByMarkerUtilities");
 			mrkrefByMarkerUtilities(String.valueOf(entity.get_marker_key()));

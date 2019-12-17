@@ -17,6 +17,7 @@ import org.jax.mgi.mgd.api.model.bib.interfaces.LTReferenceRESTInterface;
 import org.jax.mgi.mgd.api.model.bib.service.LTReferenceService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.UserService;
+import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.CommaSplitter;
@@ -37,6 +38,9 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	
 	@Inject
 	private UserService userService;
+
+	@Inject
+	private MarkerService markerService;
 	
 	private Logger log = Logger.getLogger(getClass());
 
@@ -70,6 +74,15 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 				while (!succeeded) {
 					try {
 						referenceService.updateReference(reference, currentUser);
+						
+						// to update the mrk_reference cache table
+						try {
+							markerService.mrkrefByReferenceUtilities(reference.refsKey);
+						}
+						catch (Exception e) {
+							e.printStackTrace();
+						}
+						
 						succeeded = true;
 					} catch (FatalAPIException f) {	// if it's definitely a fatal exception, just propagate it
 						throw f;					

@@ -154,17 +154,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		// to update the mrk_location_cache table				
 		try {
-			log.info("processMarker/markerLocationUtilities");
-			markerLocationUtilities(String.valueOf(entity.get_marker_key()));
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		// to update the mrk_reference_cache table		
-		try {
-			log.info("processMarker/mrkrefByMarkerUtilities");
-			mrkrefByMarkerUtilities(String.valueOf(entity.get_marker_key()));
+			log.info("processMarker/mrkLocationUtilities");
+			mrklocationUtilities(String.valueOf(entity.get_marker_key()));
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -334,25 +325,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		else {
 			log.info("processMarker/no changes processed: " + domain.getMarkerKey());
 		}
-
-		// to update the mrk_location_cache table						
-		try {
-			log.info("processMarker/markerLocationUtilities");
-			markerLocationUtilities(String.valueOf(entity.get_marker_key()));
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		// to update the mrk_reference_cache table		
-		try {
-			log.info("processMarker/mrkrefByMarkerUtilities");
-			mrkrefByMarkerUtilities(String.valueOf(entity.get_marker_key()));
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-				
+			
 		// return entity translated to domain
 		log.info("processMarker/update/returning results");
 		results.setItem(translator.translate(entity));
@@ -1356,19 +1329,59 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}
 
 	@Transactional		
-	public Boolean markerLocationUtilities(String markerKey) throws IOException, InterruptedException {
+	public Boolean mrklocationUtilities(String markerKey) throws IOException, InterruptedException {
 		// see mrkcacheload/mrklocation.py
 		
 		// these swarm variables are in 'app.properties'
-    	String utilitiesScript = System.getProperty("swarm.ds.markerLocationUtilities");
+    	String utilitiesScript = System.getProperty("swarm.ds.mrkLocationUtilities");
         
-        // input:  makrerKey
+        // input:  markerKey
 
         // output: true/false
         Boolean returnCode = false;
         
 		String runCmd = utilitiesScript;
         runCmd = runCmd + " " + markerKey;
+		
+		// run the runCmd
+		log.info(Constants.LOG_INPROGRESS_EIUTILITIES + runCmd);
+		RunCommand runner = RunCommand.runCommand(runCmd);
+		
+		// check exit code from RunCommand
+		if (runner.getExitCode() == 0) {
+			log.info(Constants.LOG_SUCCESS_EIUTILITIES);
+			returnCode = true;
+		}
+		else {
+			log.info(Constants.LOG_FAIL_EIUTILITIES);
+			returnCode = false;
+		}			
+		
+		return returnCode;
+	}
+
+	@Transactional		
+	public Boolean mrkmcvUtilities(String markerKey) throws IOException, InterruptedException {
+		// see mrkcacheload/mrkmcv.py
+		
+		// these swarm variables are in 'app.properties'
+    	String utilitiesScript = System.getProperty("swarm.ds.mrkmcvUtilities");
+    	String server = System.getProperty("swarm.ds.dbserver");
+        String db = System.getProperty("swarm.ds.dbname");
+        String username = System.getProperty("swarm.ds.username");
+        String pwd = System.getProperty("swarm.ds.dbpasswordfile");
+        
+        // input:  markerKey
+
+        // output: true/false
+        Boolean returnCode = false;
+        
+		String runCmd = utilitiesScript;
+        runCmd = runCmd + " -S" + server;
+        runCmd = runCmd + " -D" + db;
+        runCmd = runCmd + " -U" + username;
+        runCmd = runCmd + " -P" + pwd;             
+		runCmd = runCmd + " -K" + markerKey;
 		
 		// run the runCmd
 		log.info(Constants.LOG_INPROGRESS_EIUTILITIES + runCmd);
@@ -1394,7 +1407,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// these swarm variables are in 'app.properties'
     	String utilitiesScript = System.getProperty("swarm.ds.mrkrefByMarkerUtilities");
         
-        // input:  makrerKey
+        // input:  markerKey
 
         // output: true/false
         Boolean returnCode = false;
@@ -1450,5 +1463,5 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		return returnCode;
 	}
-	
+		
 }

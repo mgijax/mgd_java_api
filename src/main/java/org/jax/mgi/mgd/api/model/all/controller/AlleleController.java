@@ -98,4 +98,19 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		return results;
 	}
 
+	@POST
+	@ApiOperation(value = "Validate allele symbol (all statuses) OR accID, returns List of SlimAlleleDomains")
+	@Path("/validateAlleleAnyStatus")
+	public List<SlimAlleleDomain> validateAlleleAnyStatus(SlimAlleleDomain searchDomain) {
+	
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
+
+		try {
+			results = alleleService.validateAlleleAnyStatus(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 }

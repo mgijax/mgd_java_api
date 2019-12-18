@@ -61,7 +61,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 	private static Map<String,String> dates = null;
 
 	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	/* convenience method for instantiating a new search results object, populating its error fields,
 	 * and returning it.
 	 */
@@ -674,7 +674,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 	public void updateCitationCache(String refsKey) {
 		// returns an integer rather than *, as the void return was causing a mapping exception
 		Query query = entityManager.createNativeQuery("select count(1) from BIB_reloadCache(" + refsKey + ")");
-		query.getResultList();
+		query.getResultList();		
 		return;
 	}
 

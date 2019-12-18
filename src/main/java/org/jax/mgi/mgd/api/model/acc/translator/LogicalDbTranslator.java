@@ -5,8 +5,6 @@ import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.ActualDbDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.LogicalDbDomain;
 import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
-import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
-import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jboss.logging.Logger;
 
 

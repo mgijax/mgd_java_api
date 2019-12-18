@@ -33,7 +33,9 @@ public class AlleleVariantTranslator extends BaseEntityDomainTranslator<AlleleVa
 		domain.setIsReviewed(String.valueOf(entity.getIsReviewed()));
 		domain.setDescription(entity.getDescription());
 		domain.setChromosome(entity.getAllele().getMarker().getChromosome());
-		domain.setStrand(entity.getAllele().getMarker().getLocationCache().getStrand());
+		if(entity.getAllele().getMarker().getLocationCache() != null) {
+			domain.setStrand(entity.getAllele().getMarker().getLocationCache().getStrand());
+		}
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());

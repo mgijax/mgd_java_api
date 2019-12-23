@@ -219,11 +219,28 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 			return modified;
 		}
 		
+		log.info("processAnnotation");
+		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
 		
 		for (int i = 0; i < domain.size(); i++) {
-				
+			
+			String termKey = domain.get(i).getTermKey();		
+			String qualifierKey = domain.get(i).getQualifierKey();
+
+			// if the termKey, qualifierKey are ALL null
+			// then simply skip (continue) because the pwi will be sending in a json
+			// string with some empty annotations due to the set number of empty rows
+			// displayed in the module
+			// NOTE: The PWI automatically fills in annotTypeKey, objectKey even in the 
+			// blank rows
+			if (termKey.isEmpty() && qualifierKey.isEmpty()) {
+				continue;
+			}
+			
+			log.info("processAnnotation.getProcessStatus(): " + domain.get(i).getProcessStatus());
+
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 	
 				log.info("processAnnotation create");
@@ -233,20 +250,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				// database trigger will assign the MGI id/see pgmgddbschema/trigger for details
 
 				// voc_annot
-				Annotation entity = new Annotation();
-				
-				String termKey = domain.get(i).getTermKey();
-				String qualifierKey = domain.get(i).getQualifierKey();
-				
-				// if the termKey, qualifierKey are ALL null
-				// then simply skip (continue) because the pwi will be sending in a json
-				// string with some empty annotations due to the set number of empty rows
-				// displayed in the module
-				// NOTE: The PWI automatically fills in annotTypeKey, objectKey even in the 
-				// blank rows
-				if(termKey.isEmpty() && qualifierKey.isEmpty()) {
-					continue;
-				}
+				Annotation entity = new Annotation();				
 				
 				log.info("calculating qualifier");
 				// set default qualifiers
@@ -268,6 +272,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 					    qualifierKey = "8068250";
 					}
 				}
+				
 				entity.setAnnotType(annotTypeDAO.get(Integer.valueOf(annotTypeKey)));				
 				entity.set_object_key(Integer.valueOf(domain.get(i).getObjectKey()));
 				entity.setTerm(termDAO.get(Integer.valueOf(domain.get(i).getTermKey())));
@@ -358,14 +363,48 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 						
 						// evidence notes
 						noteService.processAll(String.valueOf(evidenceEntity.get_annotevidence_key()), 
-								evidenceDomain.getAllNotes(), mgiTypeKey, user);
-							
+								evidenceDomain.getAllNotes(), mgiTypeKey, user);			
 					}
 				}
 				
 				modified = true;
 				log.info("processAnnotation/create/returning results");				
 			}
+			
+			// for splitting annotations that term and/or qualifier has changed
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_SPLIT)) {
+				
+				log.info("processAnnotation split");
+
+				// create new annotation
+				// set voc_evidence._annot_key to new _annot_key
+				// possibly delete voc_annot (trigger handles this)
+				
+				//  new voc_annot
+				Annotation entity = new Annotation();				
+				entity.setAnnotType(annotTypeDAO.get(Integer.valueOf(annotTypeKey)));				
+				entity.set_object_key(Integer.valueOf(domain.get(i).getObjectKey()));
+				entity.setTerm(termDAO.get(Integer.valueOf(domain.get(i).getTermKey())));
+				entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
+				entity.setCreation_date(new Date());
+				entity.setModification_date(new Date());
+				annotationDAO.persist(entity);
+				
+				// get existing evidence domain
+				// set evidence._annot_key = new entity key
+				if (domain.get(i).getEvidence() != null) {
+					List<EvidenceDomain> evidenceList = domain.get(i).getEvidence();
+					for (int j = 0; j < evidenceList.size(); j++) {
+						EvidenceDomain evidenceDomain = evidenceList.get(j);
+						Evidence evidenceEntity = evidenceDAO.get(Integer.valueOf(evidenceDomain.getAnnotEvidenceKey()));
+						evidenceEntity.set_annot_key(entity.get_annot_key());
+					}					 
+					annotationDAO.update(entity);
+				}
+				
+				modified = true;
+				log.info("processAnnotation/split/returning results");				
+			}			
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processAnnotation delete using key: " + domain.get(i).getAnnotKey());
 				Annotation entity = annotationDAO.get(Integer.valueOf(domain.get(i).getAnnotKey()));
@@ -409,7 +448,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 						Evidence evidenceEntity = evidenceDAO.get(Integer.valueOf(evidenceDomain.getAnnotEvidenceKey()));
 						log.info("evidenceDomain processStatus: " + evidenceDomain.getProcessStatus() );
 					
-						if(evidenceDomain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+						if (evidenceDomain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 							evidenceDAO.remove(evidenceEntity);
 							isUpdated = true;
 							log.info("processAnnotation Evidence delete successful");
@@ -475,7 +514,6 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 			else {
 				log.info("processAnnotation/no changes processed: " + domain.get(i).getAnnotKey());
 			}
-			
 		}	
 			
 		// now merge any duplicate annotations that were created by the API when adding evidence
@@ -493,7 +531,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 	 	    log.info("cmd: " + cmd);
 		    query = annotationDAO.createNativeQuery(cmd);
 		    query.getResultList();		    
-	     }
+	    }
 	    
 		log.info("processAnnotation/processing successful");
 		return modified;

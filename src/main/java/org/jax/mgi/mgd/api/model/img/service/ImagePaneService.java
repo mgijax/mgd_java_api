@@ -12,6 +12,7 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneDomain;
+import org.jax.mgi.mgd.api.model.img.domain.SlimImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.entities.ImagePane;
 import org.jax.mgi.mgd.api.model.img.translator.ImagePaneTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -183,5 +184,50 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 		log.info("processImagePane/processing successful");
 		return modified;
 	}
-	
+
+	@Transactional	
+	public List<SlimImagePaneDomain> validateImagePane(SlimImagePaneDomain searchDomain) {
+		// use SlimImagePaneDomain to return list of validated image panes
+		// returns empty list of values if validation fails
+
+		List<SlimImagePaneDomain> results = new ArrayList<SlimImagePaneDomain>();
+
+		String cmd = "\nselect i.*, a1.accID as mgiID, a2.accID as pixID"
+				+ "\nfrom img_imagepane i, acc_accession a1, acc_accession a2"
+				+ "\nwhere i._imagepane_key = a1._object_key"
+				+ "\nand a1._mgitype_key = 9"													
+				+ "\nand a1.preferred = 1"
+				+ "\nand a1._logicaldb_key = 1"
+				+ "\nand i._imagepane_key = a2._object_key"
+				+ "\nand a2._mgitype_key = 9"													
+				+ "\nand a2.preferred = 1"
+				+ "\nand a2._logicaldb_key = 19";
+
+		if (searchDomain.getMgiID() != null && !searchDomain.getMgiID().isEmpty()) {
+			cmd = cmd + "\nand a1.accID = '" + searchDomain.getMgiID() + "'";
+		}
+		
+		if (searchDomain.getPixID() != null && !searchDomain.getPixID().isEmpty()) {
+			cmd = cmd + "\nand a2.accID = '" + searchDomain.getPixID() + "'";
+		}
+
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {	
+				SlimImagePaneDomain domain = new SlimImagePaneDomain();							
+				domain.setImagePaneKey(rs.getString("_imagepane_key"));
+				domain.setMgiID(rs.getString("mgiID"));
+				domain.setPixID(rs.getString("pixID"));				
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
 }

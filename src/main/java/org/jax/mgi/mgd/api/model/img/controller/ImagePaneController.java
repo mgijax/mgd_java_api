@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.img.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -11,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneDomain;
+import org.jax.mgi.mgd.api.model.img.domain.SlimImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.service.ImagePaneService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -72,4 +74,20 @@ public class ImagePaneController extends BaseController<ImagePaneDomain> {
 		return imagePaneService.process(parentKey, domain, user);
 	}
 
+	@POST
+	@ApiOperation(value = "Validate image pane by mgi id/pix id")
+	@Path("/validateImagePane")
+	public List<SlimImagePaneDomain> validateImagePane(SlimImagePaneDomain searchDomain) {
+	
+		List<SlimImagePaneDomain> results = new ArrayList<SlimImagePaneDomain>();
+
+		try {
+			results = imagePaneService.validateImagePane(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

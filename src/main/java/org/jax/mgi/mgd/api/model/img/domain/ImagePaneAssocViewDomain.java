@@ -15,7 +15,7 @@ public class ImagePaneAssocViewDomain extends BaseDomain {
 	private String objectKey;
 	private String isPrimary;
 	private String figureLabel;
-	private String term;
+	private String imageClass;
 	private String mgiID;
 	private String pixID;
 }

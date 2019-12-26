@@ -21,7 +21,7 @@ public class ImagePaneAssocViewTranslator extends BaseEntityDomainTranslator<Ima
 		domain.setObjectKey(String.valueOf(entity.get_object_key()));
 		domain.setIsPrimary(String.valueOf(entity.getIsPrimary()));
 		domain.setFigureLabel(entity.getFigureLabel());
-		domain.setTerm(entity.getTerm());
+		domain.setImageClass(entity.getTerm());
 		domain.setMgiID(entity.getMgiID());
 		domain.setPixID(entity.getPixID());
 		

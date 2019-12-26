@@ -9,6 +9,8 @@ import lombok.Setter;
 public class SlimImagePaneDomain extends BaseDomain {
 
 	private String imagePaneKey;
+	private String figureLabel;
+	private String imageClass;
 	private String mgiID;
 	private String pixID;
 }

@@ -125,6 +125,7 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 	public Boolean process(String parentKey, List<ImagePaneAssocDomain> domain, User user) {
 		// process image pane associations (create, delete, update)
 		
+		String imagePaneKey = null;
 		Boolean modified = false;
 		
 		log.info("processImagePaneAssoc");
@@ -138,18 +139,39 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 		// for each row, determine whether to perform an insert, delete or update
 		
 		for (int i = 0; i < domain.size(); i++) {
-				
+
+			// if parentKey is null, then use object key 
+			if (parentKey == null || parentKey.isEmpty()) {
+				imagePaneKey = domain.get(i).getImagePaneKey();
+			}
+			else {
+				imagePaneKey = parentKey;
+			}
+			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
+
+				if (imagePaneKey == null || imagePaneKey.isEmpty()) {
+					continue;
+				}
+				
 				log.info("processImagePaneAssoc create");
+							
 				ImagePaneAssoc entity = new ImagePaneAssoc();	
-				entity.setImagePane(imagePaneDAO.get(Integer.valueOf(parentKey)));				
+				entity.setImagePane(imagePaneDAO.get(Integer.valueOf(imagePaneKey)));				
 				entity.setMgiType(mgiTypeDAO.get(Integer.valueOf(domain.get(i).getMgiTypeKey())));
 				entity.set_object_key(Integer.valueOf(domain.get(i).getObjectKey()));
-				entity.setIsPrimary(Integer.valueOf(domain.get(i).getIsPrimary()));
 				entity.setCreatedBy(user);
 				entity.setCreation_date(new Date());
 				entity.setModifiedBy(user);
 				entity.setModification_date(new Date());
+
+				if (domain.get(i).getIsPrimary() == null || domain.get(i).getIsPrimary().isEmpty()) {
+					entity.setIsPrimary(0);
+				}
+				else {
+					entity.setIsPrimary(Integer.valueOf(domain.get(i).getIsPrimary()));
+				}			
+
 				imagePaneAssocDAO.persist(entity);
 				modified = true;
 				log.info("processImagePaneAssoc/create/returning results");					

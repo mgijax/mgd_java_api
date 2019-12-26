@@ -33,7 +33,7 @@ public class ImagePaneAssocTranslator extends BaseEntityDomainTranslator<ImagePa
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-
+	
 		// one-to-many allele associations w/ allele info
 		if (entity.getAlleles() != null && !entity.getAlleles().isEmpty()
 				&& entity.getMgiType().get_mgitype_key() == 11) {

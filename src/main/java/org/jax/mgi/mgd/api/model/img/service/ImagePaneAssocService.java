@@ -15,14 +15,12 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.dao.MGITypeDAO;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
 import org.jax.mgi.mgd.api.model.all.service.AlleleService;
-import org.jax.mgi.mgd.api.model.img.dao.ImageDAO;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneAssocDAO;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
 import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocDomain;
 import org.jax.mgi.mgd.api.model.img.entities.ImagePaneAssoc;
 import org.jax.mgi.mgd.api.model.img.translator.ImagePaneAssocTranslator;
-import org.jax.mgi.mgd.api.model.img.translator.ImageTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -33,9 +31,7 @@ import org.jboss.logging.Logger;
 public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
-
-	@Inject
-	private ImageDAO imageDAO;	
+	
 	@Inject
 	private ImagePaneAssocDAO imagePaneAssocDAO;
 	@Inject
@@ -45,7 +41,6 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 	@Inject
 	private AlleleService alleleService;
 	
-	private ImageTranslator imageTranslator = new ImageTranslator();	
 	private ImagePaneAssocTranslator translator = new ImagePaneAssocTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
@@ -211,6 +206,24 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 		log.info("processImagePaneAssoc/processing successful");
 		return modified;
 	}
+
+	@Transactional
+	public void deleteAlleleAssoc(ImageDomain imageDomain, User user) {
+		// delete image pane associations for _mgitype_key = 11 (allele)
+		// called from updateAlleleAssoc()
+		
+		// delete existing allele/image pane associations
+		if (imageDomain.getImagePanes().get(0).getPaneAssocs() != null) {
+			List<ImagePaneAssocDomain> assocDomain = imageDomain.getImagePanes().get(0).getPaneAssocs();	
+			for (int i = 0; i < assocDomain.size(); i++) {
+				if (assocDomain.get(i).getMgiTypeKey().equals("11")) {
+					log.info("updateAlleleAssoc/delete: " + assocDomain.get(i).getAssocKey());
+					ImagePaneAssoc entity = imagePaneAssocDAO.get(Integer.valueOf(assocDomain.get(i).getAssocKey()));
+					imagePaneAssocDAO.remove(entity);
+				}
+			}
+		}
+	}
 	
 	@Transactional
 	public SearchResults<ImageDomain> updateAlleleAssoc(ImageDomain imageDomain, User user) {
@@ -232,19 +245,7 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 		if (imageDomain.getImageClass().equals("Expression")) {
 			return results;
 		}
-
-		// delete existing allele/image pane associations
-		if (imageDomain.getImagePanes().get(0).getPaneAssocs() != null) {
-			List<ImagePaneAssocDomain> assocDomain = imageDomain.getImagePanes().get(0).getPaneAssocs();	
-			for (int i = 0; i < assocDomain.size(); i++) {
-				if (assocDomain.get(i).getMgiTypeKey().equals("11")) {
-					log.info("updateAlleleAssoc/delete: " + assocDomain.get(i).getAssocKey());
-					ImagePaneAssoc entity = imagePaneAssocDAO.get(Integer.valueOf(assocDomain.get(i).getAssocKey()));
-					imagePaneAssocDAO.remove(entity);
-				}
-			}
-		}
-		
+				
 		// caption must exist
 		if (imageDomain.getCaptionNote() == null) {
 			return results;
@@ -261,7 +262,9 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 		Matcher m = p.matcher(captionNote);
 		List<String> mgiIds = new ArrayList<String>();
 		while (m.find()) {
-			mgiIds.add(m.group(1));
+			if (!mgiIds.contains(m.group(1))) {
+				mgiIds.add(m.group(1));
+			}
 	    }
 	    log.info(mgiIds);
     	List<SlimAlleleDomain> aresults = new ArrayList<SlimAlleleDomain>();
@@ -270,7 +273,6 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 		// add all image pane association objects
 		for (int i = 0; i < aresults.size(); i++) {
 			log.info("updateAlleleAssoc/create: " + aresults.get(i).getAlleleKey());
-			log.info(aresults.get(i).getAlleleKey());		
 			ImagePaneAssoc entity = new ImagePaneAssoc();	
 			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(imageDomain.getImagePanes().get(0).getImagePaneKey())));				
 			entity.setMgiType(mgiTypeDAO.get(11));
@@ -280,12 +282,10 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 			entity.setCreation_date(new Date());
 			entity.setModifiedBy(user);
 			entity.setModification_date(new Date());
-			imagePaneAssocDAO.persist(entity);	
+			imagePaneAssocDAO.persist(entity);
 		}
 		
 		log.info("updateAlleleAssoc/end");
-		imagePaneAssocDAO.clear();	
-		results.setItem(imageTranslator.translate(imageDAO.get(Integer.valueOf(imageDomain.getImageKey()))));
 		return results;
 	}
 

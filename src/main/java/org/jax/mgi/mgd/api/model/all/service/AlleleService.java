@@ -303,6 +303,53 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	}
 	
 	@Transactional
+public List<SlimAlleleDomain> validateAlleleAnyStatus(SlimAlleleDomain searchDomain) {
+		log.info("In Allele Service validateAlleleAnyStatus" );
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
+		
+		String cmd = "\nselect aa._allele_key"
+				+ "\nfrom all_allele aa, acc_accession a"
+				+ "\nwhere aa._allele_key = a._object_key"
+				+ "\nand a._mgitype_key = 11"
+				+ "\nand a._logicaldb_key = 1"
+				+ "\nand a.preferred = 1"
+				+ "\nand a.prefixPart = 'MGI:'";
+		
+		if (searchDomain.getSymbol() != null) {
+			if(searchDomain.getSymbol().contains("%")) {
+				return results;
+			}
+			else {
+				cmd = cmd + "\nand lower(aa.symbol) = '" + searchDomain.getSymbol().toLowerCase() + "'";
+			}
+				
+		}
+
+		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) { 
+			cmd = cmd + "\nand a.accid = '" + searchDomain.getAccID() + "'";				 
+		}
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			
+			while (rs.next()) {
+				SlimAlleleDomain slimdomain = new SlimAlleleDomain();
+				slimdomain = slimtranslator.translate(alleleDAO.get(rs.getInt("_allele_key")));	
+				log.info("slim domain allele status: " + slimdomain.getAlleleStatus());
+				alleleDAO.clear();
+				results.add(slimdomain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		return results;
+	}
+
+	@Transactional
 	public List<SlimAlleleDomain> validateAllele(SlimAlleleDomain searchDomain) {
 		
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();

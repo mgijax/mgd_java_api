@@ -19,6 +19,8 @@ import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
 import org.jax.mgi.mgd.api.model.gxd.translator.GenotypeTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimGenotypeTranslator;
+import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocDomain;
+import org.jax.mgi.mgd.api.model.img.service.ImagePaneAssocService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
@@ -45,7 +47,9 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 	private AllelePairService allelePairService;
 	@Inject
 	private NoteService noteService;
-
+	@Inject
+	private ImagePaneAssocService imagePaneAssocService;
+	
 	private GenotypeTranslator translator = new GenotypeTranslator();
 	private SlimGenotypeTranslator slimtranslator = new SlimGenotypeTranslator();
 	
@@ -121,6 +125,21 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		log.info("processGenotype/check duplicate: " + cmd);
 		query = genotypeDAO.createNativeQuery(cmd);
 		query.getResultList();
+
+		// process Image Pane Associations
+		log.info("processGenotypes/image pane associations");
+		List<ImagePaneAssocDomain> imagePaneAssocs = new ArrayList<ImagePaneAssocDomain>();
+		for (int i = 0; i < domain.getImagePaneAssocs().size(); i++) {
+			ImagePaneAssocDomain r = new ImagePaneAssocDomain();
+			r.setProcessStatus(domain.getImagePaneAssocs().get(i).getProcessStatus());
+			r.setAssocKey(domain.getImagePaneAssocs().get(i).getAssocKey());
+			r.setImagePaneKey(domain.getImagePaneAssocs().get(i).getImagePaneKey());
+			r.setMgiTypeKey(domain.getImagePaneAssocs().get(i).getMgiTypeKey());
+			r.setObjectKey(domain.getImagePaneAssocs().get(i).getObjectKey());
+			r.setIsPrimary(domain.getImagePaneAssocs().get(i).getIsPrimary());					;
+			imagePaneAssocs.add(r);
+		}
+		imagePaneAssocService.process(domain.getGenotypeKey(), imagePaneAssocs, user);
 		
 		// return entity translated to domain
 		log.info("processGenotype/create/returning results");
@@ -176,6 +195,23 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			modified = true;			
 		}
 		
+		// process Image Pane Associations
+		log.info("processGenotypes/image pane associations");
+		List<ImagePaneAssocDomain> imagePaneAssocs = new ArrayList<ImagePaneAssocDomain>();
+		for (int i = 0; i < domain.getImagePaneAssocs().size(); i++) {
+			ImagePaneAssocDomain r = new ImagePaneAssocDomain();
+			r.setProcessStatus(domain.getImagePaneAssocs().get(i).getProcessStatus());
+			r.setAssocKey(domain.getImagePaneAssocs().get(i).getAssocKey());
+			r.setImagePaneKey(domain.getImagePaneAssocs().get(i).getImagePaneKey());
+			r.setMgiTypeKey(domain.getImagePaneAssocs().get(i).getMgiTypeKey());
+			r.setObjectKey(domain.getImagePaneAssocs().get(i).getObjectKey());
+			r.setIsPrimary(domain.getImagePaneAssocs().get(i).getIsPrimary());					;
+			imagePaneAssocs.add(r);
+		}
+		if (imagePaneAssocService.process(null, imagePaneAssocs, user)) {
+			modified = true;			
+		}
+					
 		// only if modifications were actually made
 		if (modified == true) {
 			entity.setModification_date(new Date());

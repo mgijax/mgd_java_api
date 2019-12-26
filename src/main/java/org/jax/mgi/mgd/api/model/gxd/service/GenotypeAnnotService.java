@@ -20,12 +20,14 @@ import org.jax.mgi.mgd.api.model.gxd.translator.GenotypeAnnotTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimGenotypeTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.dao.AnnotationDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationHeaderDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationHeaderDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.DenormAnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidenceDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidencePropertyDomain;
+import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 import org.jax.mgi.mgd.api.model.voc.entities.AnnotationHeader;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -41,7 +43,8 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 
 	@Inject
 	private GenotypeDAO genotypeDAO;
-
+	@Inject
+	private AnnotationDAO annotationDAO;
 	@Inject
 	private AnnotationService annotationService;
 	@Inject
@@ -91,10 +94,11 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 				continue;
 			}
 			
-			// VOC_splitAnnotEvidence()
-			// VOC_mergeAnnotEvidence()
-			
-			//log.info("domain index: " + i);
+			// if term and qualifier are empty
+			if (domain.getAnnots().get(i).getTermKey().isEmpty()
+					&& domain.getAnnots().get(i).getQualifierKey().isEmpty()) {
+				continue;
+			}
 			
 			DenormAnnotationDomain denormAnnotDomain = domain.getAnnots().get(i);
 		
@@ -112,9 +116,10 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			else {
 				annotDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
 			}
-					
-            annotDomain.setAnnotKey(denormAnnotDomain.getAnnotKey());
-            annotDomain.setAnnotTypeKey(denormAnnotDomain.getAnnotTypeKey());
+			
+			log.info("GenotypeAnnotService.update : denormAnnotDomain to annotDomain");
+			annotDomain.setAnnotKey(denormAnnotDomain.getAnnotKey());
+			annotDomain.setAnnotTypeKey(denormAnnotDomain.getAnnotTypeKey());
             annotDomain.setAnnotType(denormAnnotDomain.getAnnotType());
             annotDomain.setObjectKey(denormAnnotDomain.getObjectKey());
             annotDomain.setTermKey(denormAnnotDomain.getTermKey());
@@ -123,23 +128,35 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
             annotDomain.setQualifierAbbreviation(denormAnnotDomain.getQualifierAbbreviation());
             annotDomain.setQualifier(denormAnnotDomain.getQualifier());
             annotDomain.setAllowEditTerm(domain.getAllowEditTerm());
-            
+
             // evidence : create evidence list of 1 result
-            //log.info("add evidence list");
+			//log.info("GenotypeAnnotService.update : add evidence list");           
 			EvidenceDomain evidenceDomain = new EvidenceDomain();
             List<EvidenceDomain> evidenceList = new ArrayList<EvidenceDomain>();
             evidenceDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
+            
+            // if term or qualifier has been changed...
+            if (denormAnnotDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+				//log.info("GenotypeAnnotService.update : check for changes");
+            	Annotation entity = annotationDAO.get(Integer.valueOf(denormAnnotDomain.getAnnotKey()));
+				if (!denormAnnotDomain.getTermKey().equals(String.valueOf(entity.getTerm().get_term_key()))
+	            		|| !denormAnnotDomain.getQualifierKey().equals(String.valueOf(entity.getQualifier().get_term_key()))) {
+	            	annotDomain.setProcessStatus(Constants.PROCESS_SPLIT); 
+	            	evidenceDomain.setProcessStatus(Constants.PROCESS_SPLIT);           	
+	            }				
+            }
+            
             evidenceDomain.setAnnotEvidenceKey(denormAnnotDomain.getAnnotEvidenceKey());
-            evidenceDomain.setEvidenceTermKey(denormAnnotDomain.getEvidenceTermKey());
-            evidenceDomain.setRefsKey(denormAnnotDomain.getRefsKey());
-            evidenceDomain.setCreatedByKey(denormAnnotDomain.getCreatedByKey());
+            evidenceDomain.setEvidenceTermKey(denormAnnotDomain.getEvidenceTermKey()); 
+            evidenceDomain.setRefsKey(denormAnnotDomain.getRefsKey()); 
+            evidenceDomain.setCreatedByKey(denormAnnotDomain.getCreatedByKey()); 
             evidenceDomain.setModifiedByKey(denormAnnotDomain.getModifiedByKey());
             evidenceDomain.setAllNotes(denormAnnotDomain.getAllNotes());
 			
             // Only MP has properties
             if (annotTypeKey.equals("1002")) {
 				// sex-specificity : create evidence-property list of 1 result
-	            //log.info("add evidence-property");
+    			//log.info("GenotypeAnnotService.update : add evidence property");           
 				EvidencePropertyDomain evidencePropertyDomain = new EvidencePropertyDomain();			
 				List<EvidencePropertyDomain > evidencePropertyList = new ArrayList<EvidencePropertyDomain>();
 				evidencePropertyDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
@@ -151,6 +168,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 				// add properties to the evidenceDomain
 				evidenceDomain.setProperties(evidencePropertyList);
             }
+            
 			// add evidenceDomain to evidenceList
 			evidenceList.add(evidenceDomain);
 
@@ -163,19 +181,18 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 		
 		// add annotList to the genoAnnotDomain and process annotations
 		if (annotList.size() > 0) {
-			log.info("send json normalized domain to services");			
+			log.info("send json normalized domain to services");
 			genoAnnotDomain.setAnnots(annotList);
 			annotationService.process(genoAnnotDomain.getAnnots(), user);
-			
-			if (annotTypeKey.equals("1002")) {
+
+			// MP annotations : 1002
+			if (annotTypeKey.equals("1002")) {				
 				// process change to annotationHeaderDomian.getSequenceNum()
 				List<AnnotationHeaderDomain> headerList = genoAnnotDomain.getHeaders();
-				// will be null for DO (1020), not null for MP (1002)
 				if (headerList != null && !headerList.isEmpty()) {
 					for (int j = 0; j < headerList.size(); j++) {
 						AnnotationHeaderDomain annotationHeaderDomain = headerList.get(j);
 						AnnotationHeader annotationHeaderEntity = annotationHeaderDAO.get(Integer.valueOf(annotationHeaderDomain.getAnnotHeaderKey()));
-			
 						if (annotationHeaderDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 							if (!annotationHeaderEntity.getSequenceNum().equals(annotationHeaderDomain.getSequenceNum())) {	
 								annotationHeaderEntity.setSequenceNum(annotationHeaderDomain.getSequenceNum());
@@ -189,6 +206,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 					}
 				}
 		    }
+			
 		}
 		
 		log.info("repackage incoming domain as results");		
@@ -230,31 +248,34 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			List<DenormAnnotationDomain> annotList = new ArrayList<DenormAnnotationDomain>();
 			
 			denormGenoAnnotDomain.setGenotypeKey(genoAnnotDomain.getGenotypeKey());
-			log.info("setting genotypeKey: " + genoAnnotDomain.getGenotypeKey() );
+			//log.info("setting genotypeKey: " + genoAnnotDomain.getGenotypeKey() );
+
 			denormGenoAnnotDomain.setGenotypeDisplay(genoAnnotDomain.getGenotypeDisplay());
-			log.info("setting genotypeDisplay: " + genoAnnotDomain.getGenotypeDisplay() );
+			//log.info("setting genotypeDisplay: " + genoAnnotDomain.getGenotypeDisplay() );
+
 			denormGenoAnnotDomain.setAccID(genoAnnotDomain.getAccID());
-			log.info("setting accid: " + genoAnnotDomain.getAccID());
+			//log.info("setting accid: " + genoAnnotDomain.getAccID());
+
 			// set header if MP only
 			if(controllerAnnotTypeKey.equals("1002")) {
 			    denormGenoAnnotDomain.setHeaders(genoAnnotDomain.getHeaders());
-			    log.info("Adding MP annot");
-			    
+			    //log.info("Adding MP annot");   
 			}
+			
 			if (genoAnnotDomain.getAnnots() != null) {
 				for (int i = 0; i < genoAnnotDomain.getAnnots().size(); i++) {	
 					// annotation (term, qualifier)
 					AnnotationDomain annotDomain = genoAnnotDomain.getAnnots().get(i);
 					String domainAnnotTypeKey = annotDomain.getAnnotTypeKey();
+
 					if (!domainAnnotTypeKey.equals(controllerAnnotTypeKey)) {
-						
 						log.info("Skipping MP annot domainAnnotTypeKey: " + domainAnnotTypeKey + "annotKey: " + annotDomain.getAnnotKey() + " controllerAnnotTypeKey: " + controllerAnnotTypeKey);
 						continue;
 					}
 					log.info("Match. domainAnnotTypeKey: " + domainAnnotTypeKey + " controllerAnnotTypeKey: " + controllerAnnotTypeKey);
+
 					// evidence
 					for (int j = 0; j < genoAnnotDomain.getAnnots().get(i).getEvidence().size(); j++) {
-	
 						// annotation (term, qualifier)
 						DenormAnnotationDomain denormAnnotDomain = new DenormAnnotationDomain();
 						denormAnnotDomain.setProcessStatus(annotDomain.getProcessStatus());
@@ -264,6 +285,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 	                    denormAnnotDomain.setObjectKey(annotDomain.getObjectKey());
 	                    denormAnnotDomain.setTermKey(annotDomain.getTermKey());
 	                    denormAnnotDomain.setTerm(annotDomain.getTerm());
+
 	                    // get MP or DO depending on 
 	                    if (controllerAnnotTypeKey.equals("1002")) {
 	                    	denormAnnotDomain.setTermid(annotDomain.getMpIds().get(0).getAccID());

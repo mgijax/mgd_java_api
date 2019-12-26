@@ -17,9 +17,11 @@ import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleAnnotDomain;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleAnnotTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleAnnotTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.dao.AnnotationDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.DenormAnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidenceDomain;
+import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
@@ -34,7 +36,8 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 
 	@Inject
 	private AlleleDAO alleleDAO;
-
+	@Inject
+	private AnnotationDAO annotationDAO;
 	@Inject
 	private AnnotationService annotationService;
 	
@@ -112,6 +115,18 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 			EvidenceDomain evidenceDomain = new EvidenceDomain();
             List<EvidenceDomain> evidenceList = new ArrayList<EvidenceDomain>();
             evidenceDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
+                        
+            // if term or qualifier has been changed...
+            if (denormAnnotDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+				//log.info("GenotypeAnnotService.update : check for changes");
+            	Annotation entity = annotationDAO.get(Integer.valueOf(denormAnnotDomain.getAnnotKey()));
+				if (!denormAnnotDomain.getTermKey().equals(String.valueOf(entity.getTerm().get_term_key()))
+	            		|| !denormAnnotDomain.getQualifierKey().equals(String.valueOf(entity.getQualifier().get_term_key()))) {
+	            	annotDomain.setProcessStatus(Constants.PROCESS_SPLIT); 
+	            	evidenceDomain.setProcessStatus(Constants.PROCESS_SPLIT);           	
+	            }				
+            }
+            
             evidenceDomain.setAnnotEvidenceKey(denormAnnotDomain.getAnnotEvidenceKey());
             evidenceDomain.setEvidenceTermKey(denormAnnotDomain.getEvidenceTermKey());
             evidenceDomain.setRefsKey(denormAnnotDomain.getRefsKey());

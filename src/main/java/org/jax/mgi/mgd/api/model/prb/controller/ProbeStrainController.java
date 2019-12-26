@@ -30,13 +30,19 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 	private ProbeStrainService probeStrainService;
 
 	@Override
-	public SearchResults<ProbeStrainDomain> create(ProbeStrainDomain strain, User user) {
-		return probeStrainService.create(strain, user);
+	public SearchResults<ProbeStrainDomain> create(ProbeStrainDomain domain, User user) {
+		SearchResults<ProbeStrainDomain> results = new SearchResults<ProbeStrainDomain>();
+		results = probeStrainService.create(domain, user);
+		results = probeStrainService.getResults(Integer.valueOf(results.items.get(0).getStrainKey()));
+		return results;
 	}
 
 	@Override
-	public SearchResults<ProbeStrainDomain> update(ProbeStrainDomain strain, User user) {
-		return probeStrainService.update(strain, user);
+	public SearchResults<ProbeStrainDomain> update(ProbeStrainDomain domain, User user) {
+		SearchResults<ProbeStrainDomain> results = new SearchResults<ProbeStrainDomain>();
+		results = probeStrainService.update(domain, user);
+		results = probeStrainService.getResults(Integer.valueOf(results.items.get(0).getStrainKey()));
+		return results;
 	}
 
 	@Override

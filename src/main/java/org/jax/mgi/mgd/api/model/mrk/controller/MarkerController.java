@@ -50,6 +50,34 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	public SearchResults<MarkerDomain> create(MarkerDomain domain, User user) {	
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		results = markerService.create(domain, user);
+		
+		// to update the mrk_location_cache table						
+		try {
+			log.info("processMarker/mrkLocationUtilities");
+			markerService.mrklocationUtilities(results.items.get(0).getMarkerKey());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		// to update the mrk_mcv_cache table				
+		try {
+			log.info("processMarker/mrkmcvUtilities");
+			markerService.mrkmcvUtilities(results.items.get(0).getMarkerKey());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// to update the mrk_reference_cache table		
+		try {
+			log.info("processMarker/mrkrefByMarkerUtilities");
+			markerService.mrkrefByMarkerUtilities(results.items.get(0).getMarkerKey());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
 		return results;
 	}
@@ -58,6 +86,34 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	public SearchResults<MarkerDomain> update(MarkerDomain domain, User user) {
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		results = markerService.update(domain, user);
+
+		// to update the mrk_location_cache table						
+		try {
+			log.info("processMarker/mrkLocationUtilities");
+			markerService.mrklocationUtilities(results.items.get(0).getMarkerKey());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		// to update the mrk_mcv_cache table				
+		try {
+			log.info("processMarker/mrkmcvUtilities");
+			markerService.mrkmcvUtilities(results.items.get(0).getMarkerKey());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// to update the mrk_reference_cache table		
+		try {
+			log.info("processMarker/mrkrefByMarkerUtilities");
+			markerService.mrkrefByMarkerUtilities(results.items.get(0).getMarkerKey());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+				
 		results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
 		return results;	
 	}

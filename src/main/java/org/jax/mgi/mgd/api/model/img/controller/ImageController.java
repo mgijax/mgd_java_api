@@ -125,6 +125,7 @@ public class ImageController extends BaseController<ImageDomain> {
 			User user = authenticateUser(username);
 			
 			if (userToken && user != null) {		
+				imagePaneAssocService.deleteAlleleAssoc(domain, user);
 				results = imagePaneAssocService.updateAlleleAssoc(domain, user);
 				results = imageService.getResults(Integer.valueOf(domain.getImageKey()));		
 				log.info(Constants.LOG_OUT_DOMAIN);

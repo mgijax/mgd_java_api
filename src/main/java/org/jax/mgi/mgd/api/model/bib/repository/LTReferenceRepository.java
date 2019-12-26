@@ -68,7 +68,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	@Inject
 	private MGIReferenceAssocService referenceAssocService;	
-
+	
 	LTReferenceTranslator translator = new LTReferenceTranslator();
 
 	/* These work together to allow for a maximum delay of two seconds for retries: */
@@ -116,7 +116,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		LTReference entity = getReference(domain.refsKey);
 		applyDomainChanges(entity, domain, user);
 		referenceDAO.persist(entity);
-		referenceDAO.updateCitationCache(domain.refsKey);
+		referenceDAO.updateCitationCache(domain.refsKey);		
 		return translator.translate(entity);
 	}
 

@@ -122,9 +122,9 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 				
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 	
-				// if synonym is empty, then skip
+				// if synonym is null/empty, then skip
 				// pwi has sent a "c" that is empty/not being used
-				if (domain.get(i).getSynonym().isEmpty()) {
+				if (domain.get(i).getSynonym() == null || domain.get(i).getSynonym().isEmpty()) {
 					continue;
 				}
 				

@@ -158,6 +158,37 @@ public class TermService extends BaseService<TermDomain> {
 		
 		return search(domain);
 	}
+
+	@Transactional	
+	public List<SlimTermDomain> validateMPHeaderTerm(SlimTermDomain domain) {
+		// verify that the term is a header term
+		// return empty result items if term is not a header term
+		
+		List<SlimTermDomain> results = new ArrayList<SlimTermDomain>();
+
+		String cmd = "select d._object_key from DAG_Node d" 
+				+ "\nwhere d._dag_key = 4" 
+				+  "\nand d._label_key = 3" 
+				+  "\nand d._object_key = " + domain.getTermKey();
+
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimTermDomain slimdomain = new SlimTermDomain();
+				slimdomain = slimtranslator.translate(termDAO.get(rs.getInt("_object_key")));
+				termDAO.clear();		
+				results.add(slimdomain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
 	
 	@Transactional
 	public SearchResults<SlimTermDomain> validateTermSlim(int vocabKey, String term) {

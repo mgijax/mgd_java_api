@@ -12,6 +12,7 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneDomain;
+import org.jax.mgi.mgd.api.model.img.domain.SlimImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.entities.ImagePane;
 import org.jax.mgi.mgd.api.model.img.translator.ImagePaneTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -183,5 +184,53 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 		log.info("processImagePane/processing successful");
 		return modified;
 	}
-	
+
+	@Transactional	
+	public List<SlimImagePaneDomain> validateImagePane(SlimImagePaneDomain searchDomain) {
+		// use SlimImagePaneDomain to return list of validated image panes
+		// returns empty list of values if validation fails
+
+		List<SlimImagePaneDomain> results = new ArrayList<SlimImagePaneDomain>();
+
+		String cmd = "\nselect p._imagepane_key, i.figureLabel, a1.accID as mgiID, a2.accID as pixID, t2.term as imageClass"
+				+ "\nfrom IMG_ImagePane p, IMG_Image i, ACC_Accession a1, ACC_Accession a2, VOC_Term t1, VOC_Term t2"
+				+ "\nwhere p._Image_key = i._Image_key" 
+				+ "\nand p._Image_key = a1._Object_key" 
+				+ "\nand a1._MGIType_key = 9"
+				+ "\nand p._Image_key = a2._Object_key"
+				+ "\nand a2._MGIType_key = 9"
+				+ "\nand a2._LogicalDB_key = 19"
+				+ "\nand i._ImageType_key = t1._Term_key"
+				+ "\nand t1.term = 'Full Size'"
+				+ "\nand i._ImageClass_key = t2._Term_key";
+
+		if (searchDomain.getMgiID() != null && !searchDomain.getMgiID().isEmpty()) {
+			cmd = cmd + "\nand a1.accID = '" + searchDomain.getMgiID() + "'";
+		}
+		
+		if (searchDomain.getPixID() != null && !searchDomain.getPixID().isEmpty()) {
+			cmd = cmd + "\nand a2.accID = '" + searchDomain.getPixID() + "'";
+		}
+
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {	
+				SlimImagePaneDomain domain = new SlimImagePaneDomain();							
+				domain.setImagePaneKey(rs.getString("_imagepane_key"));
+				domain.setFigureLabel(rs.getString("figureLabel"));
+				domain.setImageClass(rs.getString("imageClass"));
+				domain.setMgiID(rs.getString("mgiID"));
+				domain.setPixID(rs.getString("pixID"));				
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
 }

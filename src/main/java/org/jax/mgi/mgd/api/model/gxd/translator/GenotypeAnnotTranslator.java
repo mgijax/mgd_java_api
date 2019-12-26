@@ -32,7 +32,7 @@ public class GenotypeAnnotTranslator extends BaseEntityDomainTranslator<Genotype
 		// and only 1 master domain record is processed by the create/update endpoint
 		
 		domain.setGenotypeKey(String.valueOf(entity.get_genotype_key()));
-		log.info("done setting genotypeKey in domain: " + entity.get_genotype_key());
+		//log.info("done setting genotypeKey in domain: " + entity.get_genotype_key());
 		
 		// mgi accession ids only
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
@@ -66,8 +66,10 @@ public class GenotypeAnnotTranslator extends BaseEntityDomainTranslator<Genotype
 			domain.setHeaders(IteratorUtils.toList(t2.iterator()));
 			domain.getHeaders().sort(Comparator.comparingInt(AnnotationHeaderDomain::getSequenceNum));
 		}
+		
 		// Note: do annotations have no header
-		log.info("count of annotations: " + domain.getAnnots().size());
+		
+		//log.info("count of annotations: " + domain.getAnnots().size());
 		return domain;
 	}
 

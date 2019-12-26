@@ -211,6 +211,16 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 	public void deleteAlleleAssoc(ImageDomain imageDomain, User user) {
 		// delete existing allele/image pane associations
 		// called from imageService()
+
+		// image type must = full size
+		if (imageDomain.getImageType().equals("Thumbnail")) {
+			return;
+		}
+		
+		// image class must = phenotype or molecular		
+		if (imageDomain.getImageClass().equals("Expression")) {
+			return;
+		}
 		
 		if (imageDomain.getImagePanes().get(0).getPaneAssocs() != null) {
 			List<ImagePaneAssocDomain> assocDomain = imageDomain.getImagePanes().get(0).getPaneAssocs();	

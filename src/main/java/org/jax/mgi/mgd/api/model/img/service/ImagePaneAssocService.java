@@ -253,17 +253,16 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(imageDomain.getImagePanes().get(0).getImagePaneKey())));				
 			entity.setMgiType(mgiTypeDAO.get(11));
 			entity.set_object_key(Integer.valueOf(aresults.get(i).getAlleleKey()));
-			entity.setIsPrimary(0);			
+			entity.setIsPrimary(1);			
 			entity.setCreatedBy(user);
 			entity.setCreation_date(new Date());
 			entity.setModifiedBy(user);
 			entity.setModification_date(new Date());
-			imagePaneAssocDAO.persist(entity);	
+			imagePaneAssocDAO.persist(entity);
 		}
 			
 		log.info("updateAlleleAssoc/end");
-		imagePaneAssocDAO.clear();	
-		results.setItem(imageTranslator.translate(imageDAO.get(Integer.valueOf(imageDomain.getImageKey()))));		
+		//results.setItem(imageTranslator.translate(imageDAO.get(Integer.valueOf(imageDomain.getImageKey()))));		
 		return results;
 	}
 

@@ -13,6 +13,7 @@ public class SlimAlleleRefAssocDomain extends BaseDomain {
 	
 	private String alleleKey;
 	private String symbol;
+	private String alleleStatus;
 	private String markerKey;
 	private String markerSymbol;
 	private String chromosome;

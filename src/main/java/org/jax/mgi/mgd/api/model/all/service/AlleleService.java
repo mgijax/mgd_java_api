@@ -304,7 +304,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	
 	@Transactional
 public List<SlimAlleleDomain> validateAlleleAnyStatus(SlimAlleleDomain searchDomain) {
-		
+		log.info("In Allele Service validateAlleleAnyStatus" );
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 		
 		String cmd = "\nselect aa._allele_key"
@@ -335,7 +335,8 @@ public List<SlimAlleleDomain> validateAlleleAnyStatus(SlimAlleleDomain searchDom
 			
 			while (rs.next()) {
 				SlimAlleleDomain slimdomain = new SlimAlleleDomain();
-				slimdomain = slimtranslator.translate(alleleDAO.get(rs.getInt("_allele_key")));				
+				slimdomain = slimtranslator.translate(alleleDAO.get(rs.getInt("_allele_key")));	
+				log.info("slim domain allele status: " + slimdomain.getAlleleStatus());
 				alleleDAO.clear();
 				results.add(slimdomain);
 			}

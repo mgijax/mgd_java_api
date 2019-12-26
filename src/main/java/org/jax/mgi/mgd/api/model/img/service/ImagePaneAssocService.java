@@ -209,10 +209,9 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 
 	@Transactional
 	public void deleteAlleleAssoc(ImageDomain imageDomain, User user) {
-		// delete image pane associations for _mgitype_key = 11 (allele)
-		// called from updateAlleleAssoc()
-		
 		// delete existing allele/image pane associations
+		// called from imageService()
+		
 		if (imageDomain.getImagePanes().get(0).getPaneAssocs() != null) {
 			List<ImagePaneAssocDomain> assocDomain = imageDomain.getImagePanes().get(0).getPaneAssocs();	
 			for (int i = 0; i < assocDomain.size(); i++) {
@@ -228,7 +227,7 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 	@Transactional
 	public SearchResults<ImageDomain> updateAlleleAssoc(ImageDomain imageDomain, User user) {
 		// update image pane associations for _mgitype_key = 11 (allele)
-		// called from imageService!
+		// called from imageService()
 		
 		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
 		String captionNote = "";

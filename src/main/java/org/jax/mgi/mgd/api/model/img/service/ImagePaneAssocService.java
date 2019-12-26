@@ -20,7 +20,6 @@ import org.jax.mgi.mgd.api.model.img.dao.ImagePaneAssocDAO;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
 import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocDomain;
-import org.jax.mgi.mgd.api.model.img.entities.Image;
 import org.jax.mgi.mgd.api.model.img.entities.ImagePaneAssoc;
 import org.jax.mgi.mgd.api.model.img.translator.ImagePaneAssocTranslator;
 import org.jax.mgi.mgd.api.model.img.translator.ImageTranslator;
@@ -197,7 +196,6 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 		// called from imageService!
 		
 		SearchResults<ImageDomain> results = new SearchResults<ImageDomain>();
-		Image imageEntity = imageDAO.get(Integer.valueOf(imageDomain.getImageKey()));		
 		String captionNote = "";
 		String allelePattern = "\\\\AlleleSymbol\\(([^|)]+)\\|[01]\\)";
 		
@@ -264,7 +262,8 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 		}
 			
 		log.info("updateAlleleAssoc/end");
-		results.setItem(imageTranslator.translate(imageEntity));
+		imagePaneAssocDAO.clear();	
+		results.setItem(imageTranslator.translate(imageDAO.get(Integer.valueOf(imageDomain.getImageKey()))));		
 		return results;
 	}
 

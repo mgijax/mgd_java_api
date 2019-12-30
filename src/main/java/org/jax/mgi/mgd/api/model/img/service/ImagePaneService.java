@@ -205,11 +205,13 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				+ "\nand i._ImageClass_key = t2._Term_key";
 
 		if (searchDomain.getMgiID() != null && !searchDomain.getMgiID().isEmpty()) {
-			cmd = cmd + "\nand a1.accID = '" + searchDomain.getMgiID() + "'";
+			String mgiID = searchDomain.getMgiID().replace("mgi", "MGI");
+			cmd = cmd + "\nand a1.accID = '" + mgiID + "'";
 		}
 		
 		if (searchDomain.getPixID() != null && !searchDomain.getPixID().isEmpty()) {
-			cmd = cmd + "\nand a2.accID = '" + searchDomain.getPixID() + "'";
+			String pixID = searchDomain.getPixID().replace("pix", "PIX");
+			cmd = cmd + "\nand a2.accID = '" + pixID + "'";
 		}
 
 		log.info(cmd);

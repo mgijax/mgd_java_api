@@ -34,5 +34,8 @@ public class TermDomain extends BaseDomain {
 	// terms if desired; default is to exclude
 	// this value will be empty coming back out from the Service
 	private Boolean includeObsolete = Boolean.FALSE;
-		
+
+	// for GO-terms only
+	private String goDagAbbrev;
+	
 }

@@ -20,6 +20,7 @@ public class AnnotationDomain extends BaseDomain {
 	private String objectKey;
 	private String termKey;
 	private String term;
+	private String goDagAbbrev;
 	private String qualifierKey;
 	private String qualifierAbbreviation;
 	private String qualifier;
@@ -32,6 +33,7 @@ public class AnnotationDomain extends BaseDomain {
 	private List<SlimAccessionDomain> alleleVariantSOIds;
 	private List<SlimAccessionDomain> mpIds;
 	private List<SlimAccessionDomain> doIds;
+	private List<SlimAccessionDomain> goIds;
 
 	private Boolean allowEditTerm = true;	
 	

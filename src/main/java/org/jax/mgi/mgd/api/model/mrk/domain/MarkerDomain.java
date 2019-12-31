@@ -7,6 +7,7 @@ import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 
 import lombok.Getter;
@@ -60,4 +61,7 @@ public class MarkerDomain extends BaseDomain {
 	// instead will be populated by call to specific domain service	
 	private List<AccessionDomain> nonEditAccessionIds;
 
+	// GO annotations
+	private List<AnnotationDomain> goAnnots;	
+	
 }

@@ -20,9 +20,7 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
 	@Override
 	protected AnnotationDomain entityToDomain(Annotation entity) {
 		AnnotationDomain domain = new AnnotationDomain();
-		
-		//log.info("AnnotationDomain: " + entity.get_annot_key());
-		
+				
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setAnnotKey(String.valueOf(entity.get_annot_key()));
 		domain.setAnnotTypeKey(String.valueOf(entity.getAnnotType().get_annotType_key()));
@@ -60,7 +58,13 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
  			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getDoIds());
  			domain.setDoIds(IteratorUtils.toList(acc.iterator()));
  		}
- 	
+ 
+ 		if (entity.getGoIds() != null && !entity.getGoIds().isEmpty()) {
+ 			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getGoIds());
+ 			domain.setGoIds(IteratorUtils.toList(acc.iterator()));
+ 			domain.setGoDagAbbrev(entity.getTerm().getGoDagNodes().get(0).getDag().getAbbreviation());			
+ 		}
+ 			
 		return domain;
 	}
 

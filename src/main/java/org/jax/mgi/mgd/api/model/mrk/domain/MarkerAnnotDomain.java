@@ -1,0 +1,20 @@
+package org.jax.mgi.mgd.api.model.mrk.domain;
+
+import java.util.List;
+
+import org.jax.mgi.mgd.api.model.BaseDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter @Setter
+public class MarkerAnnotDomain extends BaseDomain {
+
+	private String markerKey;
+	private String markerDisplay;
+	private String accID;
+	private List<AnnotationDomain> annots;
+	private Boolean allowEditTerm = false;	
+	
+}

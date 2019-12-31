@@ -62,24 +62,31 @@ public class Annotation extends BaseEntity {
 	private List<Accession> markerFeatureTypeIds;
 	
 	// sequence ontology : from _annottype_key 1026, 1027
-	// _term_key is the SO, _object_key is the allele variant
+	// _term_key is the SO term, _object_key is the allele variant
     @OneToMany()
     @JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
     @Where(clause="`_mgitype_key` = 13 and `_logicaldb_key` = 145 and preferred = 1")
     private List<Accession> alleleVariantSOIds;
 
 	// mammalian phenotype ids:  from _annottype_key = 1002
-	// _term_key is the mp term, _object_key is the genotype
+	// _term_key is the MP term, _object_key is the genotype
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 13 and `_logicaldb_key` = 34 and preferred = 1")
 	private List<Accession> mpIds;
 	
 	// disease ontology ids:  from _annottype_key = 1020
-	// _term_key is the mp term, _object_key is the genotype
+	// _term_key is the DO term, _object_key is the genotype
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 13 and `_logicaldb_key` = 191 and preferred = 1")
 	private List<Accession> doIds;
-	  	
+
+	// go ids:  from _annottype_key = 1000
+	// _term_key is the GO term, _object_key is the marker
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 13 and `_logicaldb_key` = 31 and preferred = 1")
+	private List<Accession> goIds;
+		
 }

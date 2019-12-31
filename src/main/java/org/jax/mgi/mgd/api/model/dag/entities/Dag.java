@@ -29,7 +29,7 @@ public class Dag extends BaseEntity {
 	private String abbreviation;
 	private Date creation_date;
 	private Date modification_date;
-	
+
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key")
 	private Reference reference;
@@ -37,5 +37,4 @@ public class Dag extends BaseEntity {
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_mgitype_key")
 	private MGIType mgiType;
-	
-}
+}	

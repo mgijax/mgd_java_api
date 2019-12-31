@@ -231,7 +231,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 		User currentUser = userService.getUserByUsername(username);
 		if (currentUser != null) {
 			try {
-				referenceService.updateReferencesInBulk(input.refsKey, input.workflow_tag, input.workflow_tag_operation, currentUser);
+				referenceService.updateReferencesInBulk(input.refsKeys, input.workflow_tag, input.workflow_tag_operation, currentUser);
 				results.items = null;	// okay result
 			} catch (APIException t) {
 				results.setError("Failed", "Failed to save changes: " + t.toString(), Constants.HTTP_SERVER_ERROR);

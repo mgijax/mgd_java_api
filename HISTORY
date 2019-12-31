@@ -1,3 +1,9 @@
+TAG: mgd_java_api-6-0-15-17
+DATE: 12/31/2019
+STAFF: lec
+CHANGES: TR13216/PWI/Lit Triage/Bulk Apply Tag
+"refsKey" -> "refsKeys"
+
 TAG: mgd_java_api-6-0-15-16
 TAG: mgd_java_api-6-0-15-15
 TAG: mgd_java_api-6-0-15-14

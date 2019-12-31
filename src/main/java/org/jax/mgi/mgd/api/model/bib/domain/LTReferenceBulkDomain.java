@@ -11,7 +11,7 @@ import org.jax.mgi.mgd.api.model.BaseDomain;
  *	as possible
  */
 public class LTReferenceBulkDomain extends BaseDomain {
-	public List<String> refsKey;
+	public List<String> refsKeys;
 	public String workflow_tag;
 	public String workflow_tag_operation;	// "add" or "remove"; "add" is the default
 }

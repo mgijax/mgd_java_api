@@ -44,18 +44,18 @@ public class EvidenceTranslator extends BaseEntityDomainTranslator<Evidence, Evi
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));		
 			
+		// properties
+		if (entity.getProperties() != null && !entity.getProperties().isEmpty()) {
+			Iterable<EvidencePropertyDomain> property = propertyTranslator.translateEntities(entity.getProperties());
+			domain.setProperties(IteratorUtils.toList(property.iterator()));
+		}
+
 		// notes
 		if (entity.getAllNotes() != null && !entity.getAllNotes().isEmpty()) {
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getAllNotes());
 			domain.setAllNotes(IteratorUtils.toList(note.iterator()));
 		}
 		
-		// at most one mp-sex-specificity
-		if (entity.getMpSexSpecificity() != null && !entity.getMpSexSpecificity().isEmpty()) {
-			Iterable<EvidencePropertyDomain> property = propertyTranslator.translateEntities(entity.getMpSexSpecificity());
-			domain.setProperties(IteratorUtils.toList(property.iterator()));
-		}
-				
 		return domain;
 	}
 

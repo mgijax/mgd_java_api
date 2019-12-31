@@ -35,6 +35,6 @@ public class AnnotationDomain extends BaseDomain {
 	private List<SlimAccessionDomain> doIds;
 	private List<SlimAccessionDomain> goIds;
 
-	private Boolean allowEditTerm = true;	
+	private Boolean allowEditTerm = true;
 	
 }

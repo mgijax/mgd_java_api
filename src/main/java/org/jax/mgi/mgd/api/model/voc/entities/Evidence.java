@@ -57,17 +57,13 @@ public class Evidence extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
-	// MP-Sex-Specificity
 	@OneToMany()
 	@JoinColumn(name="_annotevidence_key", referencedColumnName="_annotevidence_key", insertable=false, updatable=false)
-	@Where(clause="`_propertyterm_key` = 8836535")
-	private List<EvidenceProperty> mpSexSpecificity;
-		
-	// General
+	private List<EvidenceProperty> properties;
+	
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_annotevidence_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 25")
 	private List<Note> allNotes;
-
 	
 }

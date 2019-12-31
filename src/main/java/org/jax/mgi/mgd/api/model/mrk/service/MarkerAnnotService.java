@@ -22,6 +22,7 @@ import org.jax.mgi.mgd.api.model.voc.dao.AnnotationDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.DenormAnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidenceDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.EvidencePropertyDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -132,7 +133,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
             evidenceDomain.setRefsKey(denormAnnotDomain.getRefsKey());
             evidenceDomain.setCreatedByKey(denormAnnotDomain.getCreatedByKey());
             evidenceDomain.setModifiedByKey(denormAnnotDomain.getModifiedByKey());
-            evidenceDomain.setAllNotes(denormAnnotDomain.getAllNotes());
+            evidenceDomain.setProperties(denormAnnotDomain.getProperties());
 			
 			// add evidenceDomain to evidenceList
 			evidenceList.add(evidenceDomain);
@@ -240,9 +241,12 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		                denormAnnotDomain.setModifiedBy(evidenceDomain.getModifiedBy());
 						denormAnnotDomain.setCreation_date(evidenceDomain.getCreation_date());
 						denormAnnotDomain.setModification_date(evidenceDomain.getModification_date());
-						denormAnnotDomain.setAllNotes(evidenceDomain.getAllNotes());
 						
-						// TBD: get properties
+						List<EvidencePropertyDomain> propertyDomain = evidenceDomain.getProperties();
+						denormAnnotDomain.setProperties(propertyDomain);
+						if (propertyDomain != null) {
+							denormAnnotDomain.setHasProperties(true);
+						}
 						
 						annotList.add(denormAnnotDomain);
 					}

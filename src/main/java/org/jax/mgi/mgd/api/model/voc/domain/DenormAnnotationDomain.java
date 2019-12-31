@@ -42,10 +42,11 @@ public class DenormAnnotationDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	
-	// evidence-properties
+	// properties
 	private List<EvidencePropertyDomain> properties;
+	private Boolean hasProperties = false;
 	
-	// all notes for given evidence
+	// notes for given evidence
 	private List<NoteDomain> allNotes;
 
 }

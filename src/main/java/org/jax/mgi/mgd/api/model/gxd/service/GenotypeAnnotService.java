@@ -269,10 +269,10 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 					String domainAnnotTypeKey = annotDomain.getAnnotTypeKey();
 
 					if (!domainAnnotTypeKey.equals(controllerAnnotTypeKey)) {
-						log.info("Skipping MP annot domainAnnotTypeKey: " + domainAnnotTypeKey + "annotKey: " + annotDomain.getAnnotKey() + " controllerAnnotTypeKey: " + controllerAnnotTypeKey);
+						//log.info("Skipping MP annot domainAnnotTypeKey: " + domainAnnotTypeKey + "annotKey: " + annotDomain.getAnnotKey() + " controllerAnnotTypeKey: " + controllerAnnotTypeKey);
 						continue;
 					}
-					log.info("Match. domainAnnotTypeKey: " + domainAnnotTypeKey + " controllerAnnotTypeKey: " + controllerAnnotTypeKey);
+					//log.info("Match. domainAnnotTypeKey: " + domainAnnotTypeKey + " controllerAnnotTypeKey: " + controllerAnnotTypeKey);
 
 					// evidence
 					for (int j = 0; j < genoAnnotDomain.getAnnots().get(i).getEvidence().size(); j++) {
@@ -289,11 +289,11 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 	                    // get MP or DO depending on 
 	                    if (controllerAnnotTypeKey.equals("1002")) {
 	                    	denormAnnotDomain.setTermid(annotDomain.getMpIds().get(0).getAccID());
-	                    	log.info("Adding MP IDs: " + annotDomain.getMpIds().get(0).getAccID());
+	                    	//log.info("Adding MP IDs: " + annotDomain.getMpIds().get(0).getAccID());
 	                    }
 	                    else if (controllerAnnotTypeKey.equals("1020")) {
 	                    	denormAnnotDomain.setTermid(annotDomain.getDoIds().get(0).getAccID());
-	                    	log.info("Adding DO IDs: " + annotDomain.getDoIds().get(0).getAccID());
+	                    	//log.info("Adding DO IDs: " + annotDomain.getDoIds().get(0).getAccID());
 	                    }
 	                    
 	                    denormAnnotDomain.setQualifierKey(annotDomain.getQualifierKey());

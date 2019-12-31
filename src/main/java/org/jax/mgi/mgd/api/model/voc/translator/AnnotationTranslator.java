@@ -36,7 +36,7 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
 
 		if (entity.getEvidences() != null && !entity.getEvidences().isEmpty()) {
 			Iterable<EvidenceDomain> evid = evidenceTranslator.translateEntities(entity.getEvidences());		
-			domain.setEvidence(IteratorUtils.toList(evid.iterator()));
+			domain.setEvidence(IteratorUtils.toList(evid.iterator()));	
 		}
 		
  		if (entity.getMarkerFeatureTypeIds() != null && !entity.getMarkerFeatureTypeIds().isEmpty()) {

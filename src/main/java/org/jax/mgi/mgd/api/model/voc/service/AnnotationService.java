@@ -436,8 +436,10 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				
 				// not all annotation types have evidence records
 				// voc_evidence
-				// here we use an evidenceDAO directly to do evidence updates - no need to create a service as
+				// use an evidenceDAO directly to do evidence updates - no need to create a service as
 				// only annotations deal with evidence
+				// use an evidencePropertyDAO directly
+				
 				if (domain.get(i).getEvidence() != null) {
 
 					List<EvidenceDomain> evidenceList = domain.get(i).getEvidence();						
@@ -478,7 +480,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 							if (annotTypeKey.equals("1002")) {
 								log.info("processAnnotation/mp-sex-specificity");
 								EvidenceProperty evidencePropertyEntity = evidencePropertyDAO.get(Integer.valueOf(evidenceDomain.getProperties().get(0).getEvidencePropertyKey()));					
-								if (!evidenceEntity.getMpSexSpecificity().get(0).getValue().equals(evidenceDomain.getProperties().get(0).getValue())) {
+								if (!evidenceEntity.getProperties().get(0).getValue().equals(evidenceDomain.getProperties().get(0).getValue())) {
 									evidencePropertyEntity.setValue(evidenceDomain.getProperties().get(0).getValue());
 									isUpdated = true;
 								}

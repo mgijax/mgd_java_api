@@ -341,7 +341,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 			executeQuery = true;
 		}
 
-		if (searchDomain.getGoNote() != null  && !searchDomain.getGoNote().get(0).getNoteChunk().isEmpty()) {
+		if (searchDomain.getGoNote() != null  && !searchDomain.getGoNote().isEmpty()) {
 			value = searchDomain.getGoNote().get(0).getNoteChunk().replace("'",  "''");
 			where = where + "\nand note._notetype_key = 1002 and note.note ilike '" + value + "'" ;
 			from_goNote = true;

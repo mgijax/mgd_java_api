@@ -15,7 +15,7 @@ public class MarkerAnnotDomain extends BaseDomain {
 	private String markerKey;
 	private String markerDisplay;
 	private String accID;
-	private NoteDomain goNote;
+	private List<NoteDomain> goNote;
 	private List<AnnotationDomain> annots;
 	private Boolean allowEditTerm = false;	
 }

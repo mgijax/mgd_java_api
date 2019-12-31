@@ -35,10 +35,10 @@ public class MarkerAnnotTranslator extends BaseEntityDomainTranslator<Marker, Ma
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}
 
-		// at most one goNote
+		// notes
 		if (entity.getGoNote() != null && !entity.getGoNote().isEmpty()) {
-			Iterable<NoteDomain> goNote = noteTranslator.translateEntities(entity.getGoNote());
-			domain.setGoNote(goNote.iterator().next());
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getGoNote());
+			domain.setGoNote(IteratorUtils.toList(note.iterator()));
 		}
 		
 		// GO annotations by marker

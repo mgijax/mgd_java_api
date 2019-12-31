@@ -4,6 +4,8 @@ import java.util.Comparator;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
+import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerAnnotDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
@@ -15,7 +17,8 @@ public class MarkerAnnotTranslator extends BaseEntityDomainTranslator<Marker, Ma
 	protected Logger log = Logger.getLogger(getClass());
 
 	private AnnotationTranslator annotTranslator = new AnnotationTranslator();	
-	
+	private NoteTranslator noteTranslator = new NoteTranslator();
+
 	@Override
 	protected MarkerAnnotDomain entityToDomain(Marker entity) {
 		
@@ -30,6 +33,12 @@ public class MarkerAnnotTranslator extends BaseEntityDomainTranslator<Marker, Ma
 		// mgi accession ids only
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
+		}
+
+		// at most one goNote
+		if (entity.getGoNote() != null && !entity.getGoNote().isEmpty()) {
+			Iterable<NoteDomain> goNote = noteTranslator.translateEntities(entity.getGoNote());
+			domain.setGoNote(goNote.iterator().next());
 		}
 		
 		// GO annotations by marker

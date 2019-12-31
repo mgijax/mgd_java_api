@@ -192,7 +192,8 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 			denormMarkerAnnotDomain.setMarkerKey(markerAnnotDomain.getMarkerKey());
 			denormMarkerAnnotDomain.setMarkerDisplay(markerAnnotDomain.getMarkerDisplay());
 			denormMarkerAnnotDomain.setAccID(markerAnnotDomain.getAccID());
-			
+			denormMarkerAnnotDomain.setGoNote(markerAnnotDomain.getGoNote());
+
 			if (markerAnnotDomain.getAnnots() != null) {
 				for (int i = 0; i < markerAnnotDomain.getAnnots().size(); i++) {	
 					
@@ -317,15 +318,12 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		String value;
 
 		Boolean from_accession = false;
+		Boolean from_goNote = false;
 		Boolean from_annot = false;
 		Boolean from_evidence = false;
 		Boolean executeQuery = false;
 		
 		// if parameter exists, then add to where-clause
-		
-//		if (searchDomain.getAlleleKey() != null && !searchDomain.getAlleleKey().isEmpty()) {
-//			where = where + "\nand v._object_key = " + searchDomain.getAlleleKey();
-//		}
 		
 		if (searchDomain.getMarkerDisplay() != null && !searchDomain.getMarkerDisplay().isEmpty()) {
 			where = where + "\nand v.description ilike '" + searchDomain.getMarkerDisplay() + "'";
@@ -341,6 +339,13 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 			where = where + "\nand lower(a.accID) = '" + mgiid.toLowerCase() + "'";
 			from_accession = true;
 			executeQuery = true;
+		}
+
+		if (searchDomain.getGoNote() != null  && !searchDomain.getGoNote().getNoteChunk().isEmpty()) {
+			value = searchDomain.getGoNote().getNoteChunk().replace("'",  "''");
+			where = where + "\nand note._notetype_key = 1002 and note.note ilike '" + value + "'" ;
+			from_goNote = true;
+			executeQuery = true;			
 		}
 		
 		if (searchDomain.getAnnots() != null) {
@@ -393,13 +398,17 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 			from_annot = true;
 		}
 		
-		// from/where construction
 		if (from_accession == true) {
 			from = from + ", all_acc_view a";
 			where = where + "\nand v._object_key = a._object_key" 
 					+ "\nand a._mgitype_key = " + mgiTypeKey;
 			executeQuery = true;
 		}
+		if (from_goNote == true) {
+			from = from + ", mgi_note_marker_view note";
+			where = where + "\nand m._marker_key = note._object_key";
+			executeQuery = true;			
+		}		
 		if (from_annot == true) {
 			from = from + ", voc_annot va";
 			where = where + "\nand v._object_key = va._object_key" 

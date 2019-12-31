@@ -109,6 +109,12 @@ public class Marker extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1049")
 	private List<Note> locationNote;
 
+	// GO
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1002")
+	private List<Note> goNote;
+	
 	// marker detail clip note
 	@OneToMany()
 	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key", insertable=false, updatable=false)

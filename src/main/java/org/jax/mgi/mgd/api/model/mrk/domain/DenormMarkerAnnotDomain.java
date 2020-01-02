@@ -17,5 +17,5 @@ public class DenormMarkerAnnotDomain extends BaseDomain {
 	private String accID;
 	private List<NoteDomain> goNote;	
 	private List<DenormAnnotationDomain> annots;
-	private Boolean allowEditTerm = false;	
+	private Boolean allowEditTerm = false;
 }

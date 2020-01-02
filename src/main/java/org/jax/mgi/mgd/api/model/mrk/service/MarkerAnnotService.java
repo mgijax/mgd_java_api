@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.DenormMarkerAnnotDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerAnnotDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.MarkerGOReferenceDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerAnnotDomain;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerAnnotTranslator;
 import org.jax.mgi.mgd.api.model.mrk.translator.SlimMarkerAnnotTranslator;
@@ -253,9 +254,6 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 					}
 				}
 			}	
-			
-			// add List of annotation domains to the denormalized marker annot domain
-			denormMarkerAnnotDomain.setAnnots(annotList);
 		
 			// sort by goDagAbbrev, modification_date desc, term			
 			Comparator<DenormAnnotationDomain> compareByAbbrev = Comparator.comparing(DenormAnnotationDomain::getGoDagAbbrev);	
@@ -263,6 +261,10 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 			Comparator<DenormAnnotationDomain> compareByTerm = Comparator.comparing(DenormAnnotationDomain::getTerm);			 
 			Comparator<DenormAnnotationDomain> compareAll = compareByAbbrev.thenComparing(compareByModDate).thenComparing(compareByTerm);
 			Collections.sort(annotList, compareAll);
+			
+			// add List of annotation domains to the denormalized marker annot domain
+			denormMarkerAnnotDomain.setAnnots(annotList);
+			
     	}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -485,5 +487,42 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		
 		return results;
 	}	
+
+	@Transactional	
+	public List<MarkerGOReferenceDomain> getGOReferences(Integer key) {
+		// search references by marker key 
+		// return MarkerGOReferenceDomain
+		
+		List<MarkerGOReferenceDomain> results = new ArrayList<MarkerGOReferenceDomain>();
+
+		String cmd = "select r._Refs_key, jnum, jnumid, short_citation"
+				+ "\nfrom BIB_GOXRef_View r"
+				+ "\nwhere r._Marker_key = " + key 
+				+ "\nand not exists (select 1 from VOC_Annot a, VOC_Evidence e"
+				+ "\nwhere a._Annot_key = e._Annot_key"
+				+ "\nand e._Refs_key = r._Refs_key"
+				+ "\nand a._AnnotType_key = 1000)"
+				+ "\norder by r.jnum desc"; 
+
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				MarkerGOReferenceDomain domain = new MarkerGOReferenceDomain();
+				domain.setRefsKey(rs.getString("_refs_key"));
+				domain.setJnum(rs.getString("jnum"));
+				domain.setJnumid(rs.getString("jnumid"));
+				domain.setShort_citation(rs.getString("short_citation"));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
 }

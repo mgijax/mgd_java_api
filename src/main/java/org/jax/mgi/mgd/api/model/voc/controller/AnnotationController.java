@@ -42,19 +42,5 @@ public class AnnotationController extends BaseController<AnnotationDomain> {
 	public SearchResults<AnnotationDomain> delete(Integer key, User user) {
 		return annotationService.delete(key, user);
 	}
-
-//	@POST
-//	@ApiOperation(value = "Process Marker Feature Type")
-//	@Path("/processMarkerFeatureType")
-//	public Boolean processMarkerFeatureType(String parentKey, List<MarkerFeatureTypeDomain> domain, String annotTypeKey, String qualifierKey, User user) {
-//		return annotationService.processMarkerFeatureType(parentKey, domain, annotTypeKey, qualifierKey, user);
-//	}
-//
-//	@POST
-//	@ApiOperation(value = "Process Allele Variant")
-//	@Path("/processAlleleVariant")
-//	public Boolean processAlleleVariant(String parentKey, List<AlleleVariantAnnotationDomain> domain, String annotTypeKey, String qualifierKey, User user) {
-//		return annotationService.processAlleleVariant(parentKey, domain, annotTypeKey, qualifierKey, user);
-//	}
 		
 }

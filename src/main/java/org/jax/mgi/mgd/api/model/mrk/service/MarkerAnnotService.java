@@ -321,12 +321,13 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		Boolean from_goNote = false;
 		Boolean from_annot = false;
 		Boolean from_evidence = false;
+		Boolean from_property = false;
 		Boolean executeQuery = false;
 		
 		// if parameter exists, then add to where-clause
 		
 		if (searchDomain.getMarkerDisplay() != null && !searchDomain.getMarkerDisplay().isEmpty()) {
-			where = where + "\nand v.description ilike '" + searchDomain.getMarkerDisplay() + "'";
+			where = where + "\nand v.short_description ilike '" + searchDomain.getMarkerDisplay() + "'";
 			executeQuery = true;
 		}
 		
@@ -392,14 +393,42 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 				where = where + "\nand e.jnumid = '" + jnumid + "'";
 				from_evidence = true;			
 			}
+			
+			if (annotDomain.getProperties() != null) {
+
+				value = annotDomain.getProperties().get(0).getStanza();
+				if (value != null && !value.isEmpty()) {
+					if (Integer.valueOf(value) > 1) {
+						where = where + "\nand p.stanza = " + value;
+						from_property = true;
+					}
+				}
+				
+				value = annotDomain.getProperties().get(0).getPropertyTermKey();
+				if (value != null && !value.isEmpty()) {
+					where = where + "\nand p._propertyterm_key = " + value;
+					from_property = true;
+				}
+
+				value = annotDomain.getProperties().get(0).getValue();
+				if (value != null && !value.isEmpty()) {
+					where = where + "\nand p.value ilike '" + value + "'";
+					from_property = true;
+				}
+				
+			}
+			
 		}
-		
+
+		if (from_property == true) {
+			from_evidence = true;
+		}
 		if (from_evidence == true) {
 			from_annot = true;
 		}
 		
 		if (from_accession == true) {
-			from = from + ", all_acc_view a";
+			from = from + ", mrk_acc_view a";
 			where = where + "\nand v._object_key = a._object_key" 
 					+ "\nand a._mgitype_key = " + mgiTypeKey;
 			executeQuery = true;
@@ -420,6 +449,11 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		if (from_evidence == true) {
 			from = from + ", voc_evidence e";
 			where = where + "\nand va._annot_key = e._annot_key";
+			executeQuery = true;
+		}
+		if (from_property == true) {
+			from = from + ", voc_evidence_property p";
+			where = where + "\nand e._annotevidence_key = p._annotevidence_key";
 			executeQuery = true;
 		}
 		

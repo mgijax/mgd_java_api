@@ -35,12 +35,13 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 
 		if (entity.getAccessionIds() != null && !entity.getAccessionIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getAccessionIds());		
-		//if (acc.iterator().hasNext() == true) {			
-			domain.setAccessionIds(IteratorUtils.toList(acc.iterator()));
+			if (acc.iterator().hasNext() == true) {			
+				domain.setAccessionIds(IteratorUtils.toList(acc.iterator()));
+			}
 		}
 		
 		// GO-DAG-abbreviation
-		if (entity.getGoDagNodes() != null) {
+		if (entity.getGoDagNodes() != null && !entity.getGoDagNodes().isEmpty()) {
 			domain.setGoDagAbbrev(entity.getGoDagNodes().get(0).getDag().getAbbreviation().trim());
 		}
 		

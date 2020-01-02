@@ -1,5 +1,8 @@
 package org.jax.mgi.mgd.api.model.voc.translator;
 
+import java.util.Collections;
+import java.util.Comparator;
+
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
@@ -48,6 +51,11 @@ public class EvidenceTranslator extends BaseEntityDomainTranslator<Evidence, Evi
 		if (entity.getProperties() != null && !entity.getProperties().isEmpty()) {
 			Iterable<EvidencePropertyDomain> property = propertyTranslator.translateEntities(entity.getProperties());
 			domain.setProperties(IteratorUtils.toList(property.iterator()));
+			Comparator<EvidencePropertyDomain> compareByStanza = Comparator.comparing(EvidencePropertyDomain::getStanza);	
+			Comparator<EvidencePropertyDomain> compareBySequenceNum = Comparator.comparing(EvidencePropertyDomain::getSequenceNum);			 
+			Comparator<EvidencePropertyDomain> compareByTerm = Comparator.comparing(EvidencePropertyDomain::getPropertyTerm);			 
+			Comparator<EvidencePropertyDomain> compareAll = compareByStanza.thenComparing(compareBySequenceNum).thenComparing(compareByTerm);
+			Collections.sort(domain.getProperties(), compareAll);		
 		}
 
 		// notes

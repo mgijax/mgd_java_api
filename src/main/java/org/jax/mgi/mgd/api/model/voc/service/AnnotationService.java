@@ -165,7 +165,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 	}
 	
 	@Transactional	
-	public List<AlleleVariantAnnotationDomain> alleleVariantAnnotations(Integer key, String annotTypeKey) {
+	public List<AlleleVariantAnnotationDomain> getAlleleVariantAnnotations(Integer key, String annotTypeKey) {
 		// list of allele variant type domains for given variant
 		
 		// if we need to include the voc_evidence info

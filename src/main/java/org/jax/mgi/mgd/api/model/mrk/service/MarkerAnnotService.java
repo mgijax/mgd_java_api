@@ -255,12 +255,8 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 				}
 			}	
 		
-			// sort by goDagAbbrev, modification_date desc, term			
-			Comparator<DenormAnnotationDomain> compareByAbbrev = Comparator.comparing(DenormAnnotationDomain::getGoDagAbbrev);	
-			Comparator<DenormAnnotationDomain> compareByModDate = Comparator.comparing(DenormAnnotationDomain::getModification_date).reversed();			 
-			Comparator<DenormAnnotationDomain> compareByTerm = Comparator.comparing(DenormAnnotationDomain::getTerm);			 
-			Comparator<DenormAnnotationDomain> compareAll = compareByAbbrev.thenComparing(compareByModDate).thenComparing(compareByTerm);
-			Collections.sort(annotList, compareAll);
+			// sort by goDagAbbrev, modification_date desc, term							
+			orderByA(annotList);
 			
 			// add List of annotation domains to the denormalized marker annot domain
 			denormMarkerAnnotDomain.setAnnots(annotList);
@@ -274,13 +270,106 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 	}
 
 	@Transactional
+	public void orderByA(List<DenormAnnotationDomain> annotList) {
+		// order by dag abbrev, modification date desc, term			
+		Comparator<DenormAnnotationDomain> compareByAbbrev = Comparator.comparing(DenormAnnotationDomain::getGoDagAbbrev);	
+		Comparator<DenormAnnotationDomain> compareByModificationDate = Comparator.comparing(DenormAnnotationDomain::getModification_date).reversed();			 
+		Comparator<DenormAnnotationDomain> compareByTerm = Comparator.comparing(DenormAnnotationDomain::getTerm);			 
+		Comparator<DenormAnnotationDomain> compareAll = compareByAbbrev.thenComparing(compareByModificationDate).thenComparing(compareByTerm);
+		Collections.sort(annotList, compareAll);		
+	}
+
+	@Transactional
+	public void orderByB(List<DenormAnnotationDomain> annotList) {
+		// order by creation date desc, term			
+		Comparator<DenormAnnotationDomain> compareByCreationDate = Comparator.comparing(DenormAnnotationDomain::getCreation_date).reversed();			 
+		Comparator<DenormAnnotationDomain> compareByTerm = Comparator.comparing(DenormAnnotationDomain::getTerm);			 
+		Comparator<DenormAnnotationDomain> compareAll = compareByCreationDate.thenComparing(compareByTerm);
+		Collections.sort(annotList, compareAll);		
+	}
+	
+	@Transactional
+	public void orderByC(List<DenormAnnotationDomain> annotList) {
+		// order by term id, term			
+		Comparator<DenormAnnotationDomain> compareByTermId = Comparator.comparing(DenormAnnotationDomain::getTermid);			 
+		Comparator<DenormAnnotationDomain> compareByTerm = Comparator.comparing(DenormAnnotationDomain::getTerm);			 
+		Comparator<DenormAnnotationDomain> compareAll = compareByTermId.thenComparing(compareByTerm);
+		Collections.sort(annotList, compareAll);		
+	}
+
+	@Transactional
+	public void orderByD(List<DenormAnnotationDomain> annotList) {
+		// order by jnum,term			
+		Comparator<DenormAnnotationDomain> compareByJnum = Comparator.comparingInt(DenormAnnotationDomain::getJnum);			 
+		Comparator<DenormAnnotationDomain> compareByTerm = Comparator.comparing(DenormAnnotationDomain::getTerm);			 
+		Comparator<DenormAnnotationDomain> compareAll = compareByJnum.thenComparing(compareByTerm);
+		Collections.sort(annotList, compareAll);		
+	}
+
+	@Transactional
+	public void orderByE(List<DenormAnnotationDomain> annotList) {
+		// order by evidence term, term			
+		Comparator<DenormAnnotationDomain> compareByEvidenceTerm = Comparator.comparing(DenormAnnotationDomain::getEvidenceTerm);			 
+		Comparator<DenormAnnotationDomain> compareByTerm = Comparator.comparing(DenormAnnotationDomain::getTerm);			 
+		Comparator<DenormAnnotationDomain> compareAll = compareByEvidenceTerm.thenComparing(compareByTerm);
+		Collections.sort(annotList, compareAll);		
+	}
+
+	@Transactional
+	public void orderByF(List<DenormAnnotationDomain> annotList) {
+		// order by modification date desc, term			
+		Comparator<DenormAnnotationDomain> compareByModificationDate = Comparator.comparing(DenormAnnotationDomain::getModification_date).reversed();			 
+		Comparator<DenormAnnotationDomain> compareByTerm = Comparator.comparing(DenormAnnotationDomain::getTerm);			 
+		Comparator<DenormAnnotationDomain> compareAll = compareByModificationDate.thenComparing(compareByTerm);
+		Collections.sort(annotList, compareAll);		
+	}
+
+	@Transactional
+	public SearchResults<DenormAnnotationDomain> getOrderBy(Integer orderBy, List<DenormAnnotationDomain> annotList) {
+		// return ordered annotList
+		
+		SearchResults<DenormAnnotationDomain> results = new SearchResults<DenormAnnotationDomain>();
+		
+		if (orderBy.equals(0)) {
+			orderByA(annotList);
+		}
+		else if (orderBy.equals(1)) {
+			orderByB(annotList);
+		}
+		else if (orderBy.equals(2)) {
+			orderByC(annotList);
+		}
+		else if (orderBy.equals(3)) {
+			orderByD(annotList);
+		}
+		else if (orderBy.equals(4)) {
+			orderByE(annotList);
+		}
+		else if (orderBy.equals(5)) {
+			orderByF(annotList);
+		}		
+
+		results.setItems(annotList);
+		return results;
+	}
+	
+	@Transactional
+	public SearchResults<DenormAnnotationDomain> getOrderByF(List<DenormAnnotationDomain> annotList) {
+		// return ordered annotList
+		SearchResults<DenormAnnotationDomain> results = new SearchResults<DenormAnnotationDomain>();
+		orderByF(annotList);
+		results.setItems(annotList);
+		return results;
+	}
+	
+	@Transactional
 	public SearchResults<DenormMarkerAnnotDomain> getResults(Integer key) {
 		// get the denormalized domain -> results
 		SearchResults<DenormMarkerAnnotDomain> results = new SearchResults<DenormMarkerAnnotDomain>();
 		results.setItem(get(key));
 		return results;
 	}
-		
+
 	@Transactional	
 	public SearchResults<DenormMarkerAnnotDomain> getObjectCount(String annotType) {
 		// return the object count from the database

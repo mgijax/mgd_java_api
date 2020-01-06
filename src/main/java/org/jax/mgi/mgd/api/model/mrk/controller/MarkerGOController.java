@@ -18,6 +18,7 @@ import org.jax.mgi.mgd.api.model.mrk.domain.DenormMarkerAnnotDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerGOReferenceDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerAnnotDomain;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerAnnotService;
+import org.jax.mgi.mgd.api.model.voc.domain.DenormAnnotationDomain;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -77,6 +78,48 @@ public class MarkerGOController extends BaseController<DenormMarkerAnnotDomain> 
 	@Path("/getObjectCount")
 	public SearchResults<DenormMarkerAnnotDomain> getObjectCount() {
 		return markerAnnotService.getObjectCount(annotType);
+	}
+	
+	@POST
+	@ApiOperation(value = "Get order A: dag abbrev, modification date desc, term")
+	@Path("/getOrderByA")
+	public SearchResults<DenormAnnotationDomain> getOrderByA(List<DenormAnnotationDomain> annotList) {
+		return(markerAnnotService.getOrderBy(0, annotList));
+	}
+
+	@POST
+	@ApiOperation(value = "Get order B: creation date desc, term")
+	@Path("/getOrderByB")
+	public SearchResults<DenormAnnotationDomain> getOrderByB(List<DenormAnnotationDomain> annotList) {
+		return(markerAnnotService.getOrderBy(1, annotList));
+	}
+	
+	@POST
+	@ApiOperation(value = "Get order C: go id, term")
+	@Path("/getOrderByC")
+	public SearchResults<DenormAnnotationDomain> getOrderByC(List<DenormAnnotationDomain> annotList) {
+		return(markerAnnotService.getOrderBy(2, annotList));
+	}
+
+	@POST
+	@ApiOperation(value = "Get order D: jnum, term")
+	@Path("/getOrderByD")
+	public SearchResults<DenormAnnotationDomain> getOrderByD(List<DenormAnnotationDomain> annotList) {
+		return(markerAnnotService.getOrderBy(3, annotList));
+	}
+
+	@POST
+	@ApiOperation(value = "Get order E: evidence term, term")
+	@Path("/getOrderByE")
+	public SearchResults<DenormAnnotationDomain> getOrderByE(List<DenormAnnotationDomain> annotList) {
+		return(markerAnnotService.getOrderBy(4, annotList));
+	}
+
+	@POST
+	@ApiOperation(value = "Get order F: modification date desc, term")
+	@Path("/getOrderByF")
+	public SearchResults<DenormAnnotationDomain> getOrderByF(List<DenormAnnotationDomain> annotList) {
+		return(markerAnnotService.getOrderBy(5, annotList));
 	}
 		
 	@POST

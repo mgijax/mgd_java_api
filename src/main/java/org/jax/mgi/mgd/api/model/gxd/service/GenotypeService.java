@@ -125,7 +125,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		log.info("processGenotype/check duplicate: " + cmd);
 		query = genotypeDAO.createNativeQuery(cmd);
 		query.getResultList();
-
+		
 		// process Image Pane Associations
 		log.info("processGenotypes/image pane associations");
 		List<ImagePaneAssocDomain> imagePaneAssocs = new ArrayList<ImagePaneAssocDomain>();
@@ -236,19 +236,6 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		log.info("processGenotype/check duplicate: " + cmd);
 		query = genotypeDAO.createNativeQuery(cmd);
 		query.getResultList();
-		
-		// set the allele-combination notes
-		log.info("processGenotype/alleleCombinationUtilities");	
-		try {
-			if (allelePairService.alleleCombinationUtilities(domain.getGenotypeKey()) == true) {
-				log.info("processGenotype/alleleCombinationUtilities: successful");	
-			}
-			else {
-				log.info("processGenotype/alleleCombinationUtilities: failure");	
-			}				
-		} catch (Exception e) {
-			results.setError(Constants.LOG_FAIL_EIUTILITIES, e.getMessage(), Constants.HTTP_SERVER_ERROR);
-		}
 		
 		// return entity translated to domain
 		log.info("processGenotype/update/returning results");

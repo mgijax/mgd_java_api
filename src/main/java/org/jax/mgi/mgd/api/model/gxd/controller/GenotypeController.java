@@ -16,8 +16,10 @@ import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDataSetDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
+import org.jax.mgi.mgd.api.model.gxd.service.AllelePairService;
 import org.jax.mgi.mgd.api.model.gxd.service.GenotypeService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -37,7 +39,9 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 	
 	@Inject
 	private GenotypeService genotypeService;
-
+	@Inject
+	private AllelePairService allelePairService;
+	
 	// refresh/resync the results due to database triggers
 	// for example, the mgi accession id is created by a database trigger
 	
@@ -45,6 +49,20 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 	public SearchResults<GenotypeDomain> create(GenotypeDomain domain, User user) {	
 		SearchResults<GenotypeDomain> results = new SearchResults<GenotypeDomain>();
 		results = genotypeService.create(domain, user);
+
+		// set the allele-combination notes
+		log.info("processGenotype/alleleCombinationUtilities");	
+		try {
+			if (allelePairService.alleleCombinationUtilities(results.items.get(0).getGenotypeKey()) == true) {
+				log.info("processGenotype/alleleCombinationUtilities: successful");	
+			}
+			else {
+				log.info("processGenotype/alleleCombinationUtilities: failure");	
+			}				
+		} catch (Exception e) {
+			results.setError(Constants.LOG_FAIL_EIUTILITIES, e.getMessage(), Constants.HTTP_SERVER_ERROR);
+		}
+		
 		results = genotypeService.getResults(Integer.valueOf(results.items.get(0).getGenotypeKey()));
 		return results;
 	}
@@ -53,6 +71,20 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 	public SearchResults<GenotypeDomain> update(GenotypeDomain domain, User user) {
 		SearchResults<GenotypeDomain> results = new SearchResults<GenotypeDomain>();
 		results = genotypeService.update(domain, user);
+
+		// set the allele-combination notes
+		log.info("processGenotype/alleleCombinationUtilities");	
+		try {
+			if (allelePairService.alleleCombinationUtilities(results.items.get(0).getGenotypeKey()) == true) {
+				log.info("processGenotype/alleleCombinationUtilities: successful");	
+			}
+			else {
+				log.info("processGenotype/alleleCombinationUtilities: failure");	
+			}				
+		} catch (Exception e) {
+			results.setError(Constants.LOG_FAIL_EIUTILITIES, e.getMessage(), Constants.HTTP_SERVER_ERROR);
+		}
+		
 		results = genotypeService.getResults(Integer.valueOf(results.items.get(0).getGenotypeKey()));
 		return results;	
 	}

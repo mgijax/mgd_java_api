@@ -50,6 +50,13 @@ public class ReferenceDomain extends BaseDomain {
 	public String publisher;
 	public String series_ed;
 	public String referenceNote;
+
+	// workflow status
+	public String ap_status;
+	public String go_status;
+	public String gxd_status;
+	public String qtl_status;
+	public String tumor_status;
 	
 	//private ReferenceBookDomain referenceBook;
 	//private ReferenceNoteDomain referenceNote;

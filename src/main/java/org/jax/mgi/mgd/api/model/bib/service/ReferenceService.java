@@ -22,7 +22,6 @@ import org.jax.mgi.mgd.api.model.bib.dao.ReferenceNoteDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;

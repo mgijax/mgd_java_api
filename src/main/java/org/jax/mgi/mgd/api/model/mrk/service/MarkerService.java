@@ -918,7 +918,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 		
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	
-			where = where + "\nand lower(acc.accID) = '" + searchDomain.getAccID().toLowerCase() + "'";
+			String mgiid = searchDomain.getAccID().toUpperCase();
+			if (!mgiid.contains("MGI:")) {
+				mgiid = "MGI:" + mgiid;
+			}
+			where = where + "\nand lower(acc.accID) = '" + mgiid.toLowerCase() + "'";	
 			from_accession = true;
 		}
 

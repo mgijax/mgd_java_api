@@ -326,7 +326,11 @@ public List<SlimAlleleDomain> validateAlleleAnyStatus(SlimAlleleDomain searchDom
 		}
 
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) { 
-			cmd = cmd + "\nand a.accid = '" + searchDomain.getAccID() + "'";				 
+			String mgiid = searchDomain.getAccID().toUpperCase();
+			if (!mgiid.contains("MGI:")) {
+				mgiid = "MGI:" + mgiid;
+			}
+			cmd = cmd + "\nand lower(a.accID) = '" + mgiid.toLowerCase() + "'";			
 		}
 		log.info(cmd);
 		
@@ -374,7 +378,11 @@ public List<SlimAlleleDomain> validateAlleleAnyStatus(SlimAlleleDomain searchDom
 		}
 
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) { 
-			cmd = cmd + "\nand a.accid = '" + searchDomain.getAccID() + "'";				 
+			String mgiid = searchDomain.getAccID().toUpperCase();
+			if (!mgiid.contains("MGI:")) {
+				mgiid = "MGI:" + mgiid;
+			}
+			cmd = cmd + "\nand lower(a.accID) = '" + mgiid.toLowerCase() + "'";	
 		}
 		log.info(cmd);
 		

@@ -230,7 +230,7 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 				
 				if (entity.getCellLine1() == null
 						&& domain.get(i).getCellLine1() != null) {
-					entity.setCellLine1(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLine1())));
+					entity.setCellLine1(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLineKey1())));
 					isUpdated = true;
 				}
 				else if (entity.getCellLine1() != null
@@ -241,13 +241,13 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 				else if (entity.getCellLine1() != null
 						&& domain.get(i).getCellLine1() != null
 						&& !String.valueOf(entity.getCellLine1().get_cellline_key()).equals(domain.get(i).getCellLine1())) {
-					entity.setCellLine1(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLine1())));
+					entity.setCellLine1(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLineKey1())));
 					isUpdated = true;
 				}
 
 				if (entity.getCellLine2() == null
 						&& domain.get(i).getCellLine2() != null) {
-					entity.setCellLine2(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLine2())));
+					entity.setCellLine2(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLineKey2())));
 					isUpdated = true;
 				}
 				else if (entity.getCellLine2() != null
@@ -258,7 +258,7 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 				else if (entity.getCellLine2() != null
 						&& domain.get(i).getCellLine2() != null				
 						&& !String.valueOf(entity.getCellLine2().get_cellline_key()).equals(domain.get(i).getCellLine2())) {
-					entity.setCellLine2(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLine2())));
+					entity.setCellLine2(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLineKey2())));
 					isUpdated = true;
 				}
 								
@@ -376,7 +376,6 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 	    
 		// return same domain; will add "error" messages if necessary
 		SearchResults<AllelePairDomain> results = new SearchResults<AllelePairDomain>();
-		results.setItem(domain);				
 	
 		String error = "";
 		Boolean isValidMCL1 = false;
@@ -389,15 +388,18 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 		
 		// no values/do nothing
 		if (cellLine1.isEmpty() && cellLine2.isEmpty()) {
+			results.setItem(domain);				
 			return results;
 		}
 	
 		if (alleleKey1.isEmpty() && !cellLine1.isEmpty()) {
+			results.setItem(domain);				
 			results.setError("Allele 1 is empty/missing", null, Constants.HTTP_SERVER_ERROR);
 			return results;
 		}
 		
 		if (alleleKey2.isEmpty() && !cellLine2.isEmpty() ) {
+			results.setItem(domain);				
 			results.setError("Allele 2 is empty/missing", null, Constants.HTTP_SERVER_ERROR);
 			return results;
 		}
@@ -427,9 +429,15 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				if (rs.getString("cellline").equals(cellLine1)) {
+					log.info("cellLine1: " + rs.getString("_cellLine_key"));
+					domain.setCellLineKey1(rs.getString("_cellLine_key"));
+					domain.setCellLine1(rs.getString("cellline"));
 					isValidMCL1 = true;
 				}
 				if (rs.getString("cellline").equals(cellLine2)) {
+					log.info("cellLine2: " + rs.getString("_cellLine_key"));
+					domain.setCellLineKey2(rs.getString("_cellLine_key"));
+					domain.setCellLine2(rs.getString("cellline"));					
 					isValidMCL2 = true;
 				}				
 			}
@@ -450,7 +458,8 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-				
+		
+		results.setItem(domain);						
 		return results;
 	}
 

@@ -14,6 +14,10 @@ public class MarkerAnnotDomain extends BaseDomain {
 
 	private String markerKey;
 	private String markerDisplay;
+	private String markerStatusKey;
+	private String markerStatus;
+	private String markerTypeKey;
+	private String markerType;		
 	private String accID;
 	private List<NoteDomain> goNote;
 	private List<AnnotationDomain> annots;

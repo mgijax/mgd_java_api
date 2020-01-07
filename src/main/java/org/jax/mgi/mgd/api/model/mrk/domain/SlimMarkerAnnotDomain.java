@@ -11,5 +11,4 @@ public class SlimMarkerAnnotDomain extends BaseDomain {
 	private String markerKey;
 	private String markerDisplay;
 	private String accID;
-
 }

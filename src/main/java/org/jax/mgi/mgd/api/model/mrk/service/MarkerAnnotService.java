@@ -192,6 +192,10 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 			
 			denormMarkerAnnotDomain.setMarkerKey(markerAnnotDomain.getMarkerKey());
 			denormMarkerAnnotDomain.setMarkerDisplay(markerAnnotDomain.getMarkerDisplay());
+			denormMarkerAnnotDomain.setMarkerStatusKey(markerAnnotDomain.getMarkerStatusKey());			
+			denormMarkerAnnotDomain.setMarkerStatus(markerAnnotDomain.getMarkerStatus());				
+			denormMarkerAnnotDomain.setMarkerTypeKey(markerAnnotDomain.getMarkerTypeKey());			
+			denormMarkerAnnotDomain.setMarkerType(markerAnnotDomain.getMarkerType());			
 			denormMarkerAnnotDomain.setAccID(markerAnnotDomain.getAccID());
 			denormMarkerAnnotDomain.setGoNote(markerAnnotDomain.getGoNote());
 

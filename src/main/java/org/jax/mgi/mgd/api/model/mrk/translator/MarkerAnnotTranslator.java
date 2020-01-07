@@ -29,6 +29,10 @@ public class MarkerAnnotTranslator extends BaseEntityDomainTranslator<Marker, Ma
 		
 		domain.setMarkerKey(String.valueOf(entity.get_marker_key()));
 		domain.setMarkerDisplay(entity.getSymbol() + ", " + entity.getName());
+		domain.setMarkerStatusKey(entity.getMarkerStatus().get_marker_status_key().toString());
+		domain.setMarkerStatus(entity.getMarkerStatus().getStatus());		
+		domain.setMarkerTypeKey(String.valueOf(entity.getMarkerType().get_marker_type_key()));
+		domain.setMarkerType(entity.getMarkerType().getName());
 		
 		// mgi accession ids only
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {

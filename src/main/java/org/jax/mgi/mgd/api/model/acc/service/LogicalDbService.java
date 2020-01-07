@@ -339,6 +339,11 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 		if (searchDomain.getDescription() != null && !searchDomain.getDescription().isEmpty()) {
 			where = where +  "\nand ldb.description ilike '" + searchDomain.getDescription() + "'";
 		}
+	        // translate the 'Not Specified' value back to null as that is what it is in the database -
+                // see LogicalDbTranslator.
+                if (searchDomain.getCommonName() == "Not Specified") {
+                        searchDomain.setCommonName(null);
+                }
 		if (searchDomain.getCommonName() != null && !searchDomain.getCommonName().isEmpty()) {
 			from = from + ", mgi_organism o";
 			where = where + "\nand ldb._organism_key = o._organism_key\nand o.commonName ilike '" + searchDomain.getCommonName() + "'";

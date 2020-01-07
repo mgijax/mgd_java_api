@@ -23,7 +23,11 @@ public class LogicalDbTranslator extends BaseEntityDomainTranslator<LogicalDB, L
 		if (entity.getDescription() != null && !entity.getDescription().isEmpty()) {
 		    domain.setDescription(entity.getDescription());
 		}
-		if (entity.getOrganism() != null ) {
+		if (entity.getOrganism() == null ) {
+		    domain.setOrganismKey("76");
+		    domain.setCommonName("Not Specified");
+		}
+		else {
 			domain.setOrganismKey(String.valueOf(entity.getOrganism().get_organism_key()));
 			domain.setCommonName(entity.getOrganism().getCommonname());
 		}

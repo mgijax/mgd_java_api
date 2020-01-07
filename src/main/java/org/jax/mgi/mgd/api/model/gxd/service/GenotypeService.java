@@ -140,6 +140,12 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			imagePaneAssocs.add(r);
 		}
 		imagePaneAssocService.process(domain.getGenotypeKey(), imagePaneAssocs, user);
+
+		// process allele/genotype
+		cmd = "select count(*) from GXD_orderGenotypesAll (" + entity.get_genotype_key() + ")";
+		log.info("processGenotype/process allele/genotype rows: " + cmd);
+		query = genotypeDAO.createNativeQuery(cmd);
+		query.getResultList();
 		
 		// return entity translated to domain
 		log.info("processGenotype/create/returning results");
@@ -194,7 +200,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		if (allelePairService.process(domain.getGenotypeKey(), domain.getAllelePairs(), user)) {
 			modified = true;			
 		}
-		
+
 		// process Image Pane Associations
 		log.info("processGenotypes/image pane associations");
 		List<ImagePaneAssocDomain> imagePaneAssocs = new ArrayList<ImagePaneAssocDomain>();
@@ -237,6 +243,12 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		query = genotypeDAO.createNativeQuery(cmd);
 		query.getResultList();
 		
+		// process allele/genotype
+		cmd = "select count(*) from GXD_orderGenotypesAll (" + entity.get_genotype_key() + ")";
+		log.info("processGenotype/process allele/genotype rows: " + cmd);
+		query = genotypeDAO.createNativeQuery(cmd);
+		query.getResultList();
+				
 		// return entity translated to domain
 		log.info("processGenotype/update/returning results");
 		results.setItem(translator.translate(entity));		

@@ -84,7 +84,7 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 		} catch (Exception e) {
 			results.setError(Constants.LOG_FAIL_EIUTILITIES, e.getMessage(), Constants.HTTP_SERVER_ERROR);
 		}
-		
+				
 		results = genotypeService.getResults(Integer.valueOf(results.items.get(0).getGenotypeKey()));
 		return results;	
 	}

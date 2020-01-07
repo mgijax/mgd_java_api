@@ -325,11 +325,23 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 	}
 
 	@Transactional
-	public SearchResults<DenormAnnotationDomain> getOrderBy(Integer orderBy, List<DenormAnnotationDomain> annotList) {
+	public SearchResults<DenormAnnotationDomain> getOrderBy(DenormMarkerAnnotDomain domain) {
 		// return ordered annotList
+
+		Integer orderBy = domain.getOrderBy();
+		
+		List<DenormAnnotationDomain> annotList = new ArrayList<DenormAnnotationDomain>();	
+		annotList = domain.getAnnots();
 		
 		SearchResults<DenormAnnotationDomain> results = new SearchResults<DenormAnnotationDomain>();
 		
+		// skip new rows which do not have DAG abbreviations
+		for (int i = 0; i < annotList.size(); i++) {
+			if (!annotList.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
+				annotList.add(annotList.get(i));
+			}
+		}
+
 		if (orderBy.equals(0)) {
 			orderByA(annotList);
 		}

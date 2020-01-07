@@ -18,4 +18,5 @@ public class MarkerAnnotDomain extends BaseDomain {
 	private List<NoteDomain> goNote;
 	private List<AnnotationDomain> annots;
 	private Boolean allowEditTerm = false;	
+	private Integer orderBy;		
 }

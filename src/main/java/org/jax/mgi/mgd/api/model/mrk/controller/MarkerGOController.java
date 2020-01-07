@@ -81,45 +81,10 @@ public class MarkerGOController extends BaseController<DenormMarkerAnnotDomain> 
 	}
 	
 	@POST
-	@ApiOperation(value = "Get order A: dag abbrev, modification date desc, term")
-	@Path("/getOrderByA")
-	public SearchResults<DenormAnnotationDomain> getOrderByA(List<DenormAnnotationDomain> annotList) {
-		return(markerAnnotService.getOrderBy(0, annotList));
-	}
-
-	@POST
-	@ApiOperation(value = "Get order B: creation date desc, term")
-	@Path("/getOrderByB")
-	public SearchResults<DenormAnnotationDomain> getOrderByB(List<DenormAnnotationDomain> annotList) {
-		return(markerAnnotService.getOrderBy(1, annotList));
-	}
-	
-	@POST
-	@ApiOperation(value = "Get order C: go id, term")
-	@Path("/getOrderByC")
-	public SearchResults<DenormAnnotationDomain> getOrderByC(List<DenormAnnotationDomain> annotList) {
-		return(markerAnnotService.getOrderBy(2, annotList));
-	}
-
-	@POST
-	@ApiOperation(value = "Get order D: jnum, term")
-	@Path("/getOrderByD")
-	public SearchResults<DenormAnnotationDomain> getOrderByD(List<DenormAnnotationDomain> annotList) {
-		return(markerAnnotService.getOrderBy(3, annotList));
-	}
-
-	@POST
-	@ApiOperation(value = "Get order E: evidence term, term")
-	@Path("/getOrderByE")
-	public SearchResults<DenormAnnotationDomain> getOrderByE(List<DenormAnnotationDomain> annotList) {
-		return(markerAnnotService.getOrderBy(4, annotList));
-	}
-
-	@POST
-	@ApiOperation(value = "Get order F: modification date desc, term")
-	@Path("/getOrderByF")
-	public SearchResults<DenormAnnotationDomain> getOrderByF(List<DenormAnnotationDomain> annotList) {
-		return(markerAnnotService.getOrderBy(5, annotList));
+	@ApiOperation(value = "Get ordered searh results")
+	@Path("/getOrderBy")
+	public SearchResults<DenormAnnotationDomain> getOrderBy(DenormMarkerAnnotDomain domain) {
+		return markerAnnotService.getOrderBy(domain);
 	}
 		
 	@POST

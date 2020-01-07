@@ -18,4 +18,5 @@ public class DenormMarkerAnnotDomain extends BaseDomain {
 	private List<NoteDomain> goNote;	
 	private List<DenormAnnotationDomain> annots;
 	private Boolean allowEditTerm = false;
+	private Integer orderBy;	
 }

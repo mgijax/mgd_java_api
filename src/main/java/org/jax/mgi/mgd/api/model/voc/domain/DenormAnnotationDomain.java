@@ -48,5 +48,5 @@ public class DenormAnnotationDomain extends BaseDomain {
 	
 	// notes for given evidence
 	private List<NoteDomain> allNotes;
-
+	
 }

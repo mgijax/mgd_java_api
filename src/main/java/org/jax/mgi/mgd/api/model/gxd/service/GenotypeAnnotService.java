@@ -184,31 +184,31 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			log.info("send json normalized domain to services");
 			genoAnnotDomain.setAnnots(annotList);
 			annotationService.process(genoAnnotDomain.getAnnots(), user);
-
-			// MP annotations : 1002
-			if (annotTypeKey.equals("1002")) {				
-				// process change to annotationHeaderDomian.getSequenceNum()
-				List<AnnotationHeaderDomain> headerList = genoAnnotDomain.getHeaders();
-				if (headerList != null && !headerList.isEmpty()) {
-					for (int j = 0; j < headerList.size(); j++) {
-						AnnotationHeaderDomain annotationHeaderDomain = headerList.get(j);
-						AnnotationHeader annotationHeaderEntity = annotationHeaderDAO.get(Integer.valueOf(annotationHeaderDomain.getAnnotHeaderKey()));
-						if (annotationHeaderDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-							if (!annotationHeaderEntity.getSequenceNum().equals(annotationHeaderDomain.getSequenceNum())) {	
-								annotationHeaderEntity.setSequenceNum(annotationHeaderDomain.getSequenceNum());
-								annotationHeaderEntity.setModification_date(new Date());
-								annotationHeaderEntity.setModifiedBy(user);
-								annotationHeaderEntity.setApproval_date(new Date());
-								annotationHeaderEntity.setApprovedBy(user);						
-								annotationHeaderDAO.update(annotationHeaderEntity);
-							}
-						}	
-					}
-				}
-		    }
-			
 		}
 		
+		// update headerList regardless of changes to rest of annotations
+		// MP annotations : 1002
+		if (annotTypeKey.equals("1002")) {				
+			// process change to annotationHeaderDomian.getSequenceNum()
+			List<AnnotationHeaderDomain> headerList = genoAnnotDomain.getHeaders();
+			if (headerList != null && !headerList.isEmpty()) {
+				for (int j = 0; j < headerList.size(); j++) {
+					AnnotationHeaderDomain annotationHeaderDomain = headerList.get(j);
+					AnnotationHeader annotationHeaderEntity = annotationHeaderDAO.get(Integer.valueOf(annotationHeaderDomain.getAnnotHeaderKey()));
+					if (annotationHeaderDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+						if (!annotationHeaderEntity.getSequenceNum().equals(annotationHeaderDomain.getSequenceNum())) {	
+							annotationHeaderEntity.setSequenceNum(annotationHeaderDomain.getSequenceNum());
+							annotationHeaderEntity.setModification_date(new Date());
+							annotationHeaderEntity.setModifiedBy(user);
+							annotationHeaderEntity.setApproval_date(new Date());
+							annotationHeaderEntity.setApprovedBy(user);						
+							annotationHeaderDAO.update(annotationHeaderEntity);
+						}
+					}	
+				}
+			}
+		}
+			
 		log.info("repackage incoming domain as results");		
 		SearchResults<DenormGenotypeAnnotDomain> results = new SearchResults<DenormGenotypeAnnotDomain>();
 		results = getResults(Integer.valueOf(domain.getGenotypeKey()));

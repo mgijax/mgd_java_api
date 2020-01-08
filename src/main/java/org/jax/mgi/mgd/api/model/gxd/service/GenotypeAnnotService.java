@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
@@ -206,6 +207,13 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 						}
 					}	
 				}
+				
+				// process order reset
+				String cmd = "select count(*) from MGI_resetSequenceNum ('VOC_AnnotHeaderMP'," + genoAnnotDomain.getGenotypeKey() + "," + user.get_user_key() + ")";
+				log.info("processGenotype/process order reset: " + cmd);
+				Query query = genotypeDAO.createNativeQuery(cmd);
+				query.getResultList();
+				
 			}
 		}
 			

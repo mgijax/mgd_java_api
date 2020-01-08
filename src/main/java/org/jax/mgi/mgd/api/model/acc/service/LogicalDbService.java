@@ -320,10 +320,10 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 	}
 		
 	@Transactional
-	public SearchResults<LogicalDbDomain> search(LogicalDbDomain searchDomain) {	
+	public List<LogicalDbDomain> search(LogicalDbDomain searchDomain) {	
 					
-		SearchResults<LogicalDbDomain> results = new SearchResults<LogicalDbDomain>();
-
+		//SearchResults<LogicalDbDomain> results = new SearchResults<LogicalDbDomain>();
+		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
@@ -362,21 +362,22 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
-			List<LogicalDbDomain> domainList = new ArrayList<LogicalDbDomain>();
+			//List<LogicalDbDomain> domainList = new ArrayList<LogicalDbDomain>();
 			while (rs.next()) {					
 				LogicalDbDomain domain = new LogicalDbDomain();									
 				domain = translator.translate(logicalDBDAO.get(rs.getInt("_logicaldb_key")));
 				log.info("ldb name: " + domain.getName());
-				domainList.add(domain);
+				results.add(domain);
 				logicalDBDAO.clear();
 			}
-			results.setItems(domainList);
+			//results.setItems(domainList);
 			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 		
+		//return results;
 		return results;
 	}
 	

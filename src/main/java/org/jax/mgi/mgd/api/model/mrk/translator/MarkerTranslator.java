@@ -199,7 +199,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		//}						
 
 		// GO annotations
-		if (!entity.getGoAnnots().isEmpty()) {
+		if (entity.getGoAnnots() != null && !entity.getGoAnnots().isEmpty()) {
 			AnnotationTranslator annotTranslator = new AnnotationTranslator();
 			Iterable<AnnotationDomain> i = annotTranslator.translateEntities(entity.getGoAnnots());
 			domain.setGoAnnots(IteratorUtils.toList(i.iterator()));

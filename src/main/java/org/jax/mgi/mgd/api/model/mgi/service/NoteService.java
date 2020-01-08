@@ -171,6 +171,11 @@ public class NoteService extends BaseService<NoteDomain> {
 				noteKey = noteDomain.getNoteKey().toString();
 				modified = true;
 			}
+			if (!String.valueOf(entity.getNoteType().get_noteType_key()).equals(noteDomain.getNoteTypeKey())) {
+				log.info("NoteService update");
+				noteKey = noteDomain.getNoteKey().toString();
+				modified = true;
+			}
 		}
 		
 	    // SHARON: 9/25 updated 'cmd' to use noteDomain.getNoteTypeKey() rather than noteTypeKey coming

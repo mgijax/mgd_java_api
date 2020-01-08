@@ -136,6 +136,14 @@ public class VocabService extends BaseService<VocabularyDomain> {
 					|| searchDomain.getVocabKey().equals("42")) {
 				orderBy = "order by t.sequenceNum";
 			}
+
+			// 2 = Mammalian Phenotype Evidence Code
+			// 3 = GO Evidence Code
+			if (searchDomain.getVocabKey().equals("2")
+					|| searchDomain.getVocabKey().equals("3")) {
+				orderBy = "order by t.abbreviation";
+			}
+			
 		}
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
 			where = where + "\nand v.name ilike '" + searchDomain.getName() + "'";

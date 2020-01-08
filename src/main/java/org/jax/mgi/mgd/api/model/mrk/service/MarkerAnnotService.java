@@ -468,7 +468,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 				where = where + "\nand va._qualifier_key = " + value;
 				from_annot = true;
 			}
-
+			
 			String cmResults[] = DateSQLQuery.queryByCreationModification("e", 
 				annotDomain.getCreatedBy(), 
 				annotDomain.getModifiedBy(), 
@@ -482,7 +482,13 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 					from_evidence = true;
 				}
 			}
-	
+
+			value = annotDomain.getEvidenceTermKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand e._evidenceterm_key = " + value;
+				from_evidence = true;			
+			}
+			
 			value = annotDomain.getRefsKey();
 			String jnumid = annotDomain.getJnumid();		
 			if (value != null && !value.isEmpty()) {

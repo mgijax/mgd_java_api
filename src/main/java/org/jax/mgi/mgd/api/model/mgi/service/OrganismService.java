@@ -75,7 +75,7 @@ public class OrganismService extends BaseService<OrganismDomain> {
 
 		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
 
-		String cmd = "select * from mgi_organism order by _organism_key";
+		String cmd = "select * from mgi_organism order by commonname";
 		log.info(cmd);
 
 		try {

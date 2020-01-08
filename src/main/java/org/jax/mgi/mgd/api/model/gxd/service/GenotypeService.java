@@ -337,7 +337,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		// "where" if allele pair = true
 		String whereAllelePair = ""; 
 
-		String orderBy = "order by strain, symbol nulls first";			
+		String orderBy = "order by strain, symbol NULLS FIRST";			
 		String limit = Constants.SEARCH_RETURN_LIMIT5000;
 		String value;
 		String includeNotExists = "";
@@ -606,14 +606,19 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				
 				if (addResults) {
 
-					prevDescription = prevStrain + " " + prevDescription;
-	
+					if (prevDescription != null) {
+						prevDescription = prevStrain + " " + prevDescription;
+					}
+					else {
+						prevDescription = prevStrain;
+					}
+					
 					SlimGenotypeDomain domain = new SlimGenotypeDomain();
 					domain = slimtranslator.translate(genotypeDAO.get(prevObjectKey));				
 					domain.setGenotypeDisplay(prevDescription);
 					genotypeDAO.clear();				
 					results.add(domain);
-					
+
 					prevObjectKey = newObjectKey;
 					prevStrain = newStrain;
 					prevDescription = newDescription;

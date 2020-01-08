@@ -125,6 +125,12 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		log.info("processGenotype/check duplicate: " + cmd);
 		query = genotypeDAO.createNativeQuery(cmd);
 		query.getResultList();
+
+		// process order reset
+		cmd = "select count(*) from MGI_resetSequenceNum ('GXD_AllelePair'," + entity.get_genotype_key() + "," + user.get_user_key() + ")";
+		log.info("processGenotype/process order reset: " + cmd);
+		query = genotypeDAO.createNativeQuery(cmd);
+		query.getResultList();
 		
 		// process allele/genotype
 		cmd = "select count(*) from GXD_orderGenotypesAll (" + entity.get_genotype_key() + ")";
@@ -240,6 +246,12 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		// check duplicate genotype
 		cmd = "select count(*) from GXD_checkDuplicateGenotype (" + String.valueOf(entity.get_genotype_key()) + ")";
 		log.info("processGenotype/check duplicate: " + cmd);
+		query = genotypeDAO.createNativeQuery(cmd);
+		query.getResultList();
+
+		// process order reset
+		cmd = "select count(*) from MGI_resetSequenceNum ('GXD_AllelePair'," + entity.get_genotype_key() + "," + user.get_user_key() + ")";
+		log.info("processGenotype/process order reset: " + cmd);
 		query = genotypeDAO.createNativeQuery(cmd);
 		query.getResultList();
 		

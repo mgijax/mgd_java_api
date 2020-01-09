@@ -1,5 +1,8 @@
 package org.jax.mgi.mgd.api.model.acc.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -62,10 +65,10 @@ public class LogicalDbController extends BaseController<LogicalDbDomain> {
 	@POST
 	@ApiOperation(value = "Search/returns LogicalDbDomain")
 	@Path("/search")	
-	public SearchResults<LogicalDbDomain> search(LogicalDbDomain searchDomain) {
+	public List<LogicalDbDomain> search(LogicalDbDomain searchDomain) {
 
-		SearchResults<LogicalDbDomain> results = new SearchResults<LogicalDbDomain>();
-
+		//SearchResults<LogicalDbDomain> results = new SearchResults<LogicalDbDomain>();
+		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
 		try {
 			results = ldbService.search(searchDomain);
 		} catch (Exception e) {

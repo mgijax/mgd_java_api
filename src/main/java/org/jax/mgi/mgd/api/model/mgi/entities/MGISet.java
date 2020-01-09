@@ -20,13 +20,14 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "MGISet Object")
+@ApiModel(value = "MGISet")
 @Table(name="mgi_set")
 public class MGISet extends BaseEntity {
+	
 	@Id
-	private Integer _set_key;
+	private int _set_key;
 	private String name;
-	private Integer sequenceNum;
+	private int sequenceNum;
 	private Date creation_date;
 	private Date modification_date;
 	

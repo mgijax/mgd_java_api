@@ -349,7 +349,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		// "where" if allele pair = true
 		String whereAllelePair = ""; 
 
-		String orderBy = "order by strain, symbol NULLS FIRST";			
+		String orderBy = "order by strain, _genotype_key, symbol NULLS FIRST";			
 		String limit = Constants.SEARCH_RETURN_LIMIT5000;
 		String value;
 		String includeNotExists = "";
@@ -598,18 +598,19 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			while (rs.next()) {
 				
 				newObjectKey = rs.getInt("_genotype_key");
-				newStrain = rs.getString("strain");
-				newDescription = rs.getString("symbol");
+				//newStrain = rs.getString("strain");
+				//newDescription = rs.getString("symbol");
+				newDescription = rs.getString("genotypeDisplay");
 								
 				// group description by _object_key
 				if (prevObjectKey.equals(0)) {
 					prevObjectKey = newObjectKey;
-					prevStrain = newStrain;
+					//prevStrain = newStrain;
 					prevDescription = newDescription;
 					addResults = false;
 				}
 				else if (newObjectKey.equals(prevObjectKey)) {
-					prevDescription = prevDescription + "," + newDescription;
+					//prevDescription = prevDescription + "," + newDescription;
 					addResults = false;
 				}
 				else {
@@ -618,12 +619,12 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				
 				if (addResults) {
 
-					if (prevDescription != null) {
-						prevDescription = prevStrain + " " + prevDescription;
-					}
-					else {
-						prevDescription = prevStrain;
-					}
+//					if (prevDescription != null) {
+//						prevDescription = prevStrain + " " + prevDescription;
+//					}
+//					else {
+//						prevDescription = prevStrain;
+//					}
 					
 					SlimGenotypeDomain domain = new SlimGenotypeDomain();
 					domain = slimtranslator.translate(genotypeDAO.get(prevObjectKey));				
@@ -640,14 +641,14 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				// if last record, then add to result set
 				if (rs.isLast() == true) {
 					
-					if (prevObjectKey.equals(newObjectKey)) {
-						prevDescription = prevStrain + " " + prevDescription;
-					}
-					else {
+//					if (prevObjectKey.equals(newObjectKey)) {
+//						prevDescription = prevStrain + " " + prevDescription;
+//					}
+					if (!prevObjectKey.equals(newObjectKey)) {
 						prevObjectKey = newObjectKey;
-						prevStrain = newStrain;
+						//prevStrain = newStrain;
 						prevDescription = newDescription;
-						prevDescription = prevStrain + " " + prevDescription;
+						//prevDescription = prevStrain + " " + prevDescription;
 					}
 					
 					SlimGenotypeDomain domain = new SlimGenotypeDomain();

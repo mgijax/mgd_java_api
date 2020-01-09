@@ -4,32 +4,36 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
-import org.jax.mgi.mgd.api.model.acc.entities.ActualDB;
-import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
-import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "MGISet Member Object")
+@ApiModel(value = "MGISet Member")
 @Table(name="mgi_setmember")
 public class MGISetMember extends BaseEntity {
-	@Id
-	private Integer _setmember_key;
 	
-	private Integer _object_key;
+	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="mgi_setmember_generator")
+	@SequenceGenerator(name="mgi_setmember_generator", sequenceName = "mgi_setmember_seq", allocationSize=1)
+	@ApiModelProperty(value="primary key")
+	private int _setmember_key;
+
+	private int _object_key;
 	private String label;
-	private Integer sequenceNum;
+	private int sequenceNum;
 	private Date creation_date;
 	private Date modification_date;
 	
@@ -45,19 +49,19 @@ public class MGISetMember extends BaseEntity {
 	@JoinColumn(name="_set_key")
 	private MGISet mgiSet;
 
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
-	@Where(clause="mgiSet.`_mgitype_key` = 13")
-	private Term term;
-	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_object_key", referencedColumnName="_logicaldb_key", insertable=false, updatable=false)
-	@Where(clause="mgiSet.`_mgitype_key` = 15")
-	private LogicalDB logicalDb;
-	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_object_key", referencedColumnName="_actualdb_key", insertable=false, updatable=false)
-	@Where(clause="mgiSet.`_mgitype_key` = 16")
-	private ActualDB actualDb;
+//	@OneToOne(fetch=FetchType.LAZY)
+//	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
+//	@Where(clause="mgiSet.`_mgitype_key` = 13")
+//	private Term term;
+//	
+//	@OneToOne(fetch=FetchType.LAZY)
+//	@JoinColumn(name="_object_key", referencedColumnName="_logicaldb_key", insertable=false, updatable=false)
+//	@Where(clause="mgiSet.`_mgitype_key` = 15")
+//	private LogicalDB logicalDb;
+//	
+//	@OneToOne(fetch=FetchType.LAZY)
+//	@JoinColumn(name="_object_key", referencedColumnName="_actualdb_key", insertable=false, updatable=false)
+//	@Where(clause="mgiSet.`_mgitype_key` = 16")
+//	private ActualDB actualDb;
 	
 }

@@ -265,14 +265,12 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 	@Transactional
 	public SearchResults<LogicalDbDomain> delete(Integer key, User user) {
 		SearchResults<LogicalDbDomain> results = new SearchResults<LogicalDbDomain>();
-		//results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
-		//LogicalDB entity = logicalDBDAO.get(key);
+		log.info("LogicalDbService.delete key: " + key);
 		// this returns the correct ldbKey from the adb.
-		log.info("LogicalDbService.delete actualDB.logicalDBKey: " + logicalDBDAO.get(key).getActualDBs().get(0).get_logicaldb_key());
-		LogicalDbDomain domain = translator.translate(logicalDBDAO.get(key));
-		log.info("LogicalDbService.delete actualDB.logicalDBKey after translate: " + domain.getActualDBs().get(0).getLogicalDBKey());
-		results.setItem(domain);
-		logicalDBDAO.remove(logicalDBDAO.get(key));
+		//log.info("LogicalDbService.delete actualDB.logicalDBKey: " + logicalDBDAO.get(key).getActualDBs().get(0).get_logicaldb_key());
+		LogicalDB entity = logicalDBDAO.get(key);
+		results.setItem(translator.translate(entity));
+		logicalDBDAO.remove(entity);
 		
 		return results;
 	}

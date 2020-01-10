@@ -42,5 +42,5 @@ public class MGISetMemberController extends BaseController<MGISetMemberDomain> {
 	public SearchResults<MGISetMemberDomain> delete(Integer key, User user) {
 		return setMemberService.delete(key, user);
 	}
-		
+	
 }

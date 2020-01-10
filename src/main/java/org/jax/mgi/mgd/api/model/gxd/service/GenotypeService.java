@@ -338,13 +338,14 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		
 		// "from" if allele pair = true
 		String from = "from gxd_genotype g" +
+				"\nleft outer join prb_strain ps on (g._strain_key = ps._strain_key)" +		
 				"\nleft outer join gxd_allelepair ap on (g._genotype_key = ap._genotype_key)" +
 				"\nleft outer join all_allele a1 on (ap._allele_key_1 = a1._allele_key)" +		
-				"\nleft outer join all_allele a2 on (ap._allele_key_2 = a2._allele_key)," +
-				"\nprb_strain ps";
+				"\nleft outer join all_allele a2 on (ap._allele_key_2 = a2._allele_key)";
+				//"\nprb_strain ps";
 		
 		// "where" for all
-		String where = "where g._strain_key = ps._strain_key";
+		String where = "where g._genotype_key is not null";
 		
 		// "where" if allele pair = true
 		String whereAllelePair = ""; 
@@ -589,8 +590,6 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			Integer newObjectKey = 0;
 			String newDescription = "";
 			String prevDescription = "";
-			String newStrain = "";
-			String prevStrain = "";
 			Boolean addResults = false;
 			
 			// concatenate description when grouped by _genotype_key
@@ -598,34 +597,22 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			while (rs.next()) {
 				
 				newObjectKey = rs.getInt("_genotype_key");
-				//newStrain = rs.getString("strain");
-				//newDescription = rs.getString("symbol");
 				newDescription = rs.getString("genotypeDisplay");
 								
 				// group description by _object_key
 				if (prevObjectKey.equals(0)) {
 					prevObjectKey = newObjectKey;
-					//prevStrain = newStrain;
 					prevDescription = newDescription;
 					addResults = false;
 				}
 				else if (newObjectKey.equals(prevObjectKey)) {
-					//prevDescription = prevDescription + "," + newDescription;
 					addResults = false;
 				}
 				else {
 					addResults = true;
 				}
 				
-				if (addResults) {
-
-//					if (prevDescription != null) {
-//						prevDescription = prevStrain + " " + prevDescription;
-//					}
-//					else {
-//						prevDescription = prevStrain;
-//					}
-					
+				if (addResults) {	
 					SlimGenotypeDomain domain = new SlimGenotypeDomain();
 					domain = slimtranslator.translate(genotypeDAO.get(prevObjectKey));				
 					domain.setGenotypeDisplay(prevDescription);
@@ -633,22 +620,15 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 					results.add(domain);
 
 					prevObjectKey = newObjectKey;
-					prevStrain = newStrain;
 					prevDescription = newDescription;
 					addResults = false;
 				}
 				
 				// if last record, then add to result set
 				if (rs.isLast() == true) {
-					
-//					if (prevObjectKey.equals(newObjectKey)) {
-//						prevDescription = prevStrain + " " + prevDescription;
-//					}
 					if (!prevObjectKey.equals(newObjectKey)) {
 						prevObjectKey = newObjectKey;
-						//prevStrain = newStrain;
 						prevDescription = newDescription;
-						//prevDescription = prevStrain + " " + prevDescription;
 					}
 					
 					SlimGenotypeDomain domain = new SlimGenotypeDomain();

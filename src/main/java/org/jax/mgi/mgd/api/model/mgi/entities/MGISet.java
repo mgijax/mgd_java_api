@@ -11,6 +11,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 
@@ -44,7 +45,12 @@ public class MGISet extends BaseEntity {
 	private User modifiedBy;
 	
 	@OneToMany()
-	@JoinColumn(name="_set_key")
-	private List<MGISetMember> setMembers;
+	@JoinColumn(name="_set_key", insertable=false, updatable=false)
+	@Where(clause="`_set_key` = 1046")
+	private List<MGISetMember> emapaStageMembers;
 
+	@OneToMany()
+	@JoinColumn(name="_set_key", insertable=false, updatable=false)
+	@Where(clause="`_set_key` = 1055")
+	private List<MGISetMember> genotypeClipboardMembers;	
 }

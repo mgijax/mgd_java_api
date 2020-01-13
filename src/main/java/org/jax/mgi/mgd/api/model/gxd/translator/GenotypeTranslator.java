@@ -43,7 +43,7 @@ public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, Gen
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
 		// yes, use default allele pair ordering
-		domain.setUseAllelePairDefaultOrder("1");
+		domain.setUseAllelePairDefaultOrder(true);
 		
 		// at most one captionNote
 		if (entity.getAlleleDetailNote() != null && !entity.getAlleleDetailNote().isEmpty()) {

@@ -23,7 +23,6 @@ public class MGISetMemberService extends BaseService<MGISetMemberDomain> {
 	@Inject
 	private MGISetMemberDAO setMemberDAO;
 
-
 	private MGISetMemberTranslator translator = new MGISetMemberTranslator();				
 
 	@Transactional

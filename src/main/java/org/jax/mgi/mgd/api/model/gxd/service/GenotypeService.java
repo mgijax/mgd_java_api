@@ -113,13 +113,6 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		log.info("processGenotypes/allele pairs");
 		allelePairService.process(String.valueOf(entity.get_genotype_key()), domain.getAllelePairs(), user);		
 		
-		if (domain.getUseAllelePairDefaultOrder() == "1") {
-			cmd = "select count(*) from GXD_orderAllelePairs (" + String.valueOf(entity.get_genotype_key()) + ")";
-			log.info("processGenotype/order allele pairs: " + cmd);
-			query = genotypeDAO.createNativeQuery(cmd);
-			query.getResultList();
-		}
-		
 		// check duplicate genotype
 		cmd = "select count(*) from GXD_checkDuplicateGenotype (" + String.valueOf(entity.get_genotype_key()) + ")";
 		log.info("processGenotype/check duplicate: " + cmd);
@@ -131,6 +124,12 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		log.info("processGenotype/process order reset: " + cmd);
 		query = genotypeDAO.createNativeQuery(cmd);
 		query.getResultList();
+	
+		// process order allele pairs
+		cmd = "select count(*) from GXD_orderAllelePairs (" + entity.get_genotype_key() + ")";
+		log.info("processGenotype/process order allele pairs rows: " + cmd);
+		query = genotypeDAO.createNativeQuery(cmd);
+		query.getResultList();	
 		
 		// process allele/genotype
 		cmd = "select count(*) from GXD_orderGenotypesAll (" + entity.get_genotype_key() + ")";
@@ -234,15 +233,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		else {
 			log.info("processGenotype/no changes processed: " + domain.getGenotypeKey());
 		}
-
-		// order allele pairs
-		if (domain.getUseAllelePairDefaultOrder() == "1") {
-			cmd = "select count(*) from GXD_orderAllelePairs (" + String.valueOf(entity.get_genotype_key()) + ")";
-			log.info("processGenotype/order allele pairs: " + cmd);
-			query = genotypeDAO.createNativeQuery(cmd);
-			query.getResultList();
-		}
-		
+	
 		// check duplicate genotype
 		cmd = "select count(*) from GXD_checkDuplicateGenotype (" + String.valueOf(entity.get_genotype_key()) + ")";
 		log.info("processGenotype/check duplicate: " + cmd);
@@ -254,6 +245,14 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		log.info("processGenotype/process order reset: " + cmd);
 		query = genotypeDAO.createNativeQuery(cmd);
 		query.getResultList();
+
+		// order allele pairs
+		if (domain.getUseAllelePairDefaultOrder()) {
+			cmd = "select count(*) from GXD_orderAllelePairs (" + entity.get_genotype_key() + ")";
+			log.info("processGenotype/order allele pairs: " + cmd);
+			query = genotypeDAO.createNativeQuery(cmd);
+			query.getResultList();
+		}
 		
 		// process allele/genotype
 		cmd = "select count(*) from GXD_orderGenotypesAll (" + entity.get_genotype_key() + ")";
@@ -351,7 +350,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		String whereAllelePair = ""; 
 
 		String orderBy = "order by strain, _genotype_key, symbol NULLS FIRST";			
-		String limit = Constants.SEARCH_RETURN_LIMIT5000;
+		//String limit = Constants.SEARCH_RETURN_LIMIT5000;
 		String value;
 		String includeNotExists = "";
 		
@@ -580,7 +579,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 
 		cmd = "\n" + select + "\n" + from + "\n" + 
 				where + whereAllelePair + includeNotExists + ")\n" + 
-				orderBy + "\n" + limit;
+				orderBy;
 		 
 		log.info(cmd);
 

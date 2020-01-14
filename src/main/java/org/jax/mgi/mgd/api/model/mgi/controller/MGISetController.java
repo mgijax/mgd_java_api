@@ -35,8 +35,10 @@ public class MGISetController extends BaseController<MGISetDomain> {
 
 	@Override
 	public SearchResults<MGISetDomain> update(MGISetDomain domain, User user) {
-		return setService.update(domain, user);
-	}
+		SearchResults<MGISetDomain> results = new SearchResults<MGISetDomain>();
+		results = setService.update(domain, user);	
+		results = setService.getResults(Integer.valueOf(results.items.get(0).getSetKey()));
+		return results;		}
 
 	@Override
 	public MGISetDomain get(Integer key) {

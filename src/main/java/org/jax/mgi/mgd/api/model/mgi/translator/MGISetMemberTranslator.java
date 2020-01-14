@@ -20,7 +20,7 @@ public class MGISetMemberTranslator extends BaseEntityDomainTranslator<MGISetMem
 		domain.setSetKey(String.valueOf(entity.get_set_key()));		
 		domain.setObjectKey(String.valueOf(entity.get_object_key()));		
 		domain.setLabel(entity.getLabel());
-		domain.setSequenceNum(String.valueOf(entity.getSequenceNum()));
+		domain.setSequenceNum(entity.getSequenceNum());
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());

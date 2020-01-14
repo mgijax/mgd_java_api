@@ -13,8 +13,7 @@ public class MGISetMemberDomain extends BaseDomain {
 	private String setKey;
 	private String objectKey;
 	private String label;
-	private String sequenceNum;
-	private String term;
+	private Integer sequenceNum;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

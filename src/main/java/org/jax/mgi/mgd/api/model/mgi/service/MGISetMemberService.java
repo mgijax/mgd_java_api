@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.mgi.service;
 
+import java.util.List;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.Query;
@@ -27,26 +29,8 @@ public class MGISetMemberService extends BaseService<MGISetMemberDomain> {
 
 	@Transactional
 	public SearchResults<MGISetMemberDomain> create(MGISetMemberDomain domain, User user) {
-		// create new entity object from in-coming domain
-		
 		SearchResults<MGISetMemberDomain> results = new SearchResults<MGISetMemberDomain>();
-		MGISetMember entity = new MGISetMember();
-		String cmd;
-		Query query;
-		
-		log.info("processSetMember/create");
-		
-		cmd = "select count(*) from MGI_addSetMember ("
-				+ domain.getSetKey()
-				+ "," + domain.getObjectKey()
-				+ "," + user.get_user_key() 
-				+")";
-		query = setMemberDAO.createNativeQuery(cmd);
-		query.getResultList();
-		
-		// return entity translated to domain
-		log.info("processSetMember/create/returning results");
-		results.setItem(translator.translate(entity));
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
 	}
 
@@ -86,4 +70,63 @@ public class MGISetMemberService extends BaseService<MGISetMemberDomain> {
 		return results;
     }
 
+	@Transactional
+	public Boolean process(String parentKey, List<MGISetMemberDomain> domain, User user) {
+		// process set member (create, delete, update)
+		
+		Boolean modified = false;
+		
+		if (domain == null || domain.isEmpty()) {
+			log.info("processSetMember/nothing to process");
+			return modified;
+		}
+				
+		String cmd = "";
+		Query query;
+
+		// iterate thru the list of rows in the domain
+		// for each row, determine whether to perform an insert, delete or update
+		
+		for (int i = 0; i < domain.size(); i++) {
+				
+			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
+	
+				// if synonym is null/empty, then skip
+				// pwi has sent a "c" that is empty/not being used
+				if (domain.get(i).getLabel() == null || domain.get(i).getLabel().isEmpty()) {
+					continue;
+				}
+				
+				log.info("processSetMember create");
+				
+				cmd = "select count(*) from MGI_addSetMember ("
+						+ domain.get(i).getSetKey()
+						+ "," + domain.get(i).getObjectKey()
+						+ "," + user.get_user_key() 
+						+ ", '" + domain.get(i).getLabel() + "'"
+						+")";
+				query = setMemberDAO.createNativeQuery(cmd);
+				query.getResultList();
+				modified = true;
+			}
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+				log.info("processSetMember delete");
+				MGISetMember entity = setMemberDAO.get(Integer.valueOf(domain.get(i).getSetMemberKey()));
+				setMemberDAO.remove(entity);
+				modified = true;
+				log.info("processSetMember delete successful");
+			}
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+				log.info("processSetMember update");
+				// not implemented
+			}
+			else {
+				log.info("processSetMember/no changes processed: " + domain.get(i).getSetMemberKey());
+			}
+		}
+		
+		log.info("processSetMember/processing successful");
+		return modified;
+	}
+    
 }

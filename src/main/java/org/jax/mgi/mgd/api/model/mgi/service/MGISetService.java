@@ -112,6 +112,7 @@ public class MGISetService extends BaseService<MGISetDomain> {
 
 		List<MGISetDomain> results = new ArrayList<MGISetDomain>();
 		List<MGISetMemberDomain> listOfMembers = new ArrayList<MGISetMemberDomain>();
+		
 		MGISetDomain domain = new MGISetDomain();
 		domain.setSetKey(searchDomain.getSetKey());
 		domain.setCreatedBy(searchDomain.getCreatedBy());

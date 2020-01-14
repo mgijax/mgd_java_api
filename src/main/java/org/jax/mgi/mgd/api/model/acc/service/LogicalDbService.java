@@ -68,7 +68,8 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 		
 		// get the key that has now been generated for use in creating the actualDB
 		Integer logicalDBKey = entity.get_logicaldb_key();
-		log.info("Persisted logicalDbKey: " + logicalDBKey);
+		log.info("Persisted logicalDbKey: " + logicalDBKey); //XX 276
+		
 		// Is there an actualDB to create?
 		if (domain.getActualDBs() != null && !domain.getActualDBs().isEmpty()) {
 			List<ActualDbDomain> adbList = domain.getActualDBs();
@@ -116,13 +117,13 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 				actualDBDAO.persist(adbEntity);
 				
 				log.info("Service create persisted actualDB attributes: ");
-				log.info("Service create actualDbKey: " + adbEntity.get_actualdb_key());
-				log.info("name: " + adbEntity.getName());
-				log.info("url: " + adbEntity.getUrl());
-				log.info("ldbKey: " + adbEntity.get_logicaldb_key());
-				log.info("active: " + adbEntity.getActive());
-				log.info("multiple: " + adbEntity.getAllowsMultiple());
-				log.info("delimiter: "+ adbEntity.getDelimiter());
+				log.info("Service create actualDbKey: " + adbEntity.get_actualdb_key()); //XXX185
+				log.info("name: " + adbEntity.getName()); //XXX A new ADB
+				log.info("url: " + adbEntity.getUrl()); //XXX A new ADB url
+				log.info("ldbKey: " + adbEntity.get_logicaldb_key()); //XXX 276
+				log.info("active: " + adbEntity.getActive()); //XXX 1
+				log.info("multiple: " + adbEntity.getAllowsMultiple()); //XXX 0
+				log.info("delimiter: "+ adbEntity.getDelimiter()); //XXX null
 				
 			}
 			
@@ -140,7 +141,7 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 		SearchResults<LogicalDbDomain> results = new SearchResults<LogicalDbDomain>(); 
 		LogicalDB entity = logicalDBDAO.get(Integer.valueOf(domain.getLogicalDBKey()));
 		Boolean modified = false;
-		
+		String logicalDBKey = domain.getLogicalDBKey();
 		log.info("LogicalDB/update");
 		if(!entity.getName().equals(domain.getName())) {
 			log.info("process name");
@@ -182,81 +183,157 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 			entity.setOrganism(organismDAO.get(Integer.valueOf(domain.getOrganismKey())));
 			modified = true;
 		}
-		// do we need a actualDB service with a process method 
+		// do we need a actualDB service with a process method? doing it this way for now
+		log.info("actualDBs: " + domain.getActualDBs());
+		// if the adb list is neither null nor empty
 		if (domain.getActualDBs() != null && !domain.getActualDBs().isEmpty()) {
+			log.info("have actualDB domain");
 			List<ActualDbDomain> adbList = domain.getActualDBs();
 			Boolean adbModified = false;
+
 			for (int i = 0; i < adbList.size(); i++) {
-				// The domain and entity to compare
+				
 				ActualDbDomain adbDomain = adbList.get(i);
-				ActualDB adbEntity = actualDBDAO.get(Integer.valueOf(adbDomain.getActualDBKey()));
+				log.info("key: " + adbDomain.getLogicalDBKey() + " name: " + adbDomain.getName() + " url: " + adbDomain.getUrl());
 				
-				// if actualDB name or url are empty set Error message in results
-				if (adbDomain.getName()!= null && !adbDomain.getName().isEmpty() ) {
-					if (!adbEntity.getName().equals(adbDomain.getName())) {
-						adbEntity.setName(adbDomain.getName());
-						adbModified = true;
-					}
-				    
-				}
-				if (adbDomain.getUrl() != null && !adbDomain.getUrl().isEmpty()) {
-					if(!adbEntity.getUrl().equals(adbDomain.getUrl())) {
-						adbEntity.setUrl(adbDomain.getUrl());
-						adbModified = true;
-					}
-				}
-				if (adbDomain.getActive() != null && !adbDomain.getActive().isEmpty()) {
-					if (!Integer.valueOf(adbEntity.getActive()).equals(Integer.valueOf(adbDomain.getActive()))) {
-					    adbEntity.setActive(Integer.valueOf(adbDomain.getActive()));
-					    adbModified = true;
-					}
-				}
-								
-				if (adbDomain.getAllowsMultiple() != null && !adbDomain.getAllowsMultiple().isEmpty()) {
-					if (!Integer.valueOf(adbEntity.getAllowsMultiple()).equals(Integer.valueOf(adbDomain.getAllowsMultiple()))) {
-						adbEntity.setAllowsMultiple(Integer.valueOf(adbDomain.getAllowsMultiple()));
-						adbModified = true;
-					}
-				}
-				if (adbDomain.getDelimiter() != null && !adbDomain.getDelimiter().isEmpty()) {
-					if (!adbEntity.getDelimiter().equals(adbDomain.getDelimiter())) {
-						adbEntity.setDelimiter(adbDomain.getDelimiter());
-						adbModified = true;
-					}
-				}
-				
-				if (adbModified == true) {
+				// This is new ADB for existing ldb if no adb key
+				if (adbDomain.getActualDBKey() == null || adbDomain.getActualDBKey().isEmpty()) {
 					
-					adbEntity.setModification_date(new Date());
+					// if name and url are empty, skip - this is a blank line we want to ignore
+					if ((adbDomain.getName() == null || adbDomain.getName().isEmpty()) && (adbDomain.getUrl()== null || adbDomain.getUrl().isEmpty())) {
+						continue;
+					}
+					// if actualDB name OR url are empty set Error message in results
+					else if (adbDomain.getName()== null || adbDomain.getName().isEmpty() ) {
+						results.setError("Failed : ActualDB error", "Missing Name", Constants.HTTP_SERVER_ERROR);
+						return results;
+					}
+						
+					else if (adbDomain.getUrl() == null || adbDomain.getUrl().isEmpty()) {
+						results.setError("Failed : ActualDB error", "Missing Url", Constants.HTTP_SERVER_ERROR);
+					    return results;
+				    }
+					    
+					// we have a new actual db, copy the attributes from domain to entity
+					ActualDB adbEntity = new ActualDB();
+					adbEntity.set_logicaldb_key(Integer.valueOf(logicalDBKey));
+					adbEntity.setName(adbDomain.getName());
+					adbEntity.setUrl(adbDomain.getUrl());
+					adbEntity.setDelimiter(adbDomain.getDelimiter());
+					
+					// set defaults if active or multiple null/empty
+					if (adbDomain.getActive() == null || adbDomain.getActive().isEmpty()) {
+						adbEntity.setActive(0);
+					}
+					else {
+						adbEntity.setActive(Integer.valueOf(adbDomain.getActive()));
+					}
+					
+					if (adbDomain.getAllowsMultiple() == null || adbDomain.getAllowsMultiple().isEmpty()) {
+						adbEntity.setAllowsMultiple(0);
+					}
+					else {
+						adbEntity.setAllowsMultiple(Integer.valueOf(adbDomain.getAllowsMultiple()));
+					}
+					// add creation/modification 
+					adbEntity.setCreatedBy(user);
+					adbEntity.setCreation_date(new Date());
 					adbEntity.setModifiedBy(user);
+					adbEntity.setModification_date(new Date());
+					
 					// execute persist/insert/send to database
+					
 					actualDBDAO.persist(adbEntity);
 					
-					log.info("Service update persisted actualDB attributes: ");
-					log.info("Service update actualDbKey: " + adbEntity.get_actualdb_key());
-					log.info("name" + adbEntity.getName());
-					log.info("url" + adbEntity.getUrl());
+					log.info("Service update persisted new actualDB attributes: ");
+					log.info("Service update created actualDbKey: " + adbEntity.get_actualdb_key());
+					log.info("name: " + adbEntity.getName());
+					log.info("url: " + adbEntity.getUrl());
 					log.info("ldbKey: " + adbEntity.get_logicaldb_key());
 					log.info("active: " + adbEntity.getActive());
 					log.info("multiple: " + adbEntity.getAllowsMultiple());
 					log.info("delimiter: "+ adbEntity.getDelimiter());
+					
+				}
+				else { // has adb key so do an update
+		
+					ActualDB adbEntity = actualDBDAO.get(Integer.valueOf(adbDomain.getActualDBKey()));
+					
+					log.info("adb name: " + adbDomain.getName());
+					if (adbDomain.getName()!= null && !adbDomain.getName().isEmpty() ) {
+						if (!adbEntity.getName().equals(adbDomain.getName())) {
+							adbEntity.setName(adbDomain.getName());
+							adbModified = true;
+						}
+					    
+					}
+					log.info("adb url: " + adbDomain.getUrl());
+					if (adbDomain.getUrl() != null && !adbDomain.getUrl().isEmpty()) {
+						if(!adbEntity.getUrl().equals(adbDomain.getUrl())) {
+							adbEntity.setUrl(adbDomain.getUrl());
+							adbModified = true;
+						}
+					}
+					log.info("adb active: " + adbDomain.getActive());
+					if (adbDomain.getActive() != null && !adbDomain.getActive().isEmpty()) {
+						if (!Integer.valueOf(adbEntity.getActive()).equals(Integer.valueOf(adbDomain.getActive()))) {
+						    adbEntity.setActive(Integer.valueOf(adbDomain.getActive()));
+						    adbModified = true;
+						}
+					}
+					log.info("adb multiple: " + adbDomain.getAllowsMultiple());				
+					if (adbDomain.getAllowsMultiple() != null && !adbDomain.getAllowsMultiple().isEmpty()) {
+						if (!Integer.valueOf(adbEntity.getAllowsMultiple()).equals(Integer.valueOf(adbDomain.getAllowsMultiple()))) {
+							adbEntity.setAllowsMultiple(Integer.valueOf(adbDomain.getAllowsMultiple()));
+							adbModified = true;
+						}
+					}
+					log.info("adb delimiter: " + adbDomain.getDelimiter());
+					if (adbDomain.getDelimiter() != null && !adbDomain.getDelimiter().isEmpty()) {
+						if (!adbEntity.getDelimiter().equals(adbDomain.getDelimiter())) {
+							adbEntity.setDelimiter(adbDomain.getDelimiter());
+							adbModified = true;
+						}
+					}
+					
+					if (adbModified == true) {
+																
+						adbEntity.setModification_date(new Date());
+						adbEntity.setModifiedBy(user);
+						// execute persist/insert/send to database
+						actualDBDAO.persist(adbEntity);
+						
+						log.info("Service update persisted actualDB attributes: ");
+						log.info("Service update actualDbKey: " + adbEntity.get_actualdb_key());
+						log.info("name: " + adbEntity.getName());
+						log.info("url: " + adbEntity.getUrl());
+						log.info("ldbKey: " + adbEntity.get_logicaldb_key());
+						log.info("active: " + adbEntity.getActive());
+						log.info("multiple: " + adbEntity.getAllowsMultiple());
+						log.info("delimiter: "+ adbEntity.getDelimiter());
+					}
 				}
 			}
 			
 		}
+		
+		log.info(" modified: " + modified);
 		if (modified == true) {
 			entity.setModification_date(new Date());
 			entity.setModifiedBy(user);
+			log.info("persisting ldb");
 			logicalDBDAO.persist(entity);
+			log.info("done persisting ldb");
 		}
 		else {
-			log.info("processMarker/no changes processed: " + domain.getLogicalDBKey());
+			log.info("update LDB/no changes processed: " + domain.getLogicalDBKey());
 		}
 				
 		// return entity translated to domain
-		log.info("process Logical DB update returning results");
+		log.info("process Logical DB update adding to results");
 		results.setItem(translator.translate(entity));
-		log.info("process Logical DB update returning results successful");
+		
+		log.info("process Logical DB update returning results");
 		//logicalDBDAO.clear();
 		return results;
 
@@ -265,9 +342,9 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 	@Transactional
 	public SearchResults<LogicalDbDomain> delete(Integer key, User user) {
 		SearchResults<LogicalDbDomain> results = new SearchResults<LogicalDbDomain>();
-		log.info("LogicalDbService.delete key: " + key);
+		
 		// this returns the correct ldbKey from the adb.
-		//log.info("LogicalDbService.delete actualDB.logicalDBKey: " + logicalDBDAO.get(key).getActualDBs().get(0).get_logicaldb_key());
+		log.info("LogicalDbService.delete actualDB.logicalDBKey: " + logicalDBDAO.get(key).getActualDBs().get(0).get_logicaldb_key());
 		LogicalDB entity = logicalDBDAO.get(key);
 		results.setItem(translator.translate(entity));
 		logicalDBDAO.remove(entity);

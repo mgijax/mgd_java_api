@@ -25,7 +25,6 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
-import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -246,13 +245,13 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		query = genotypeDAO.createNativeQuery(cmd);
 		query.getResultList();
 
-		// order allele pairs
-		if (domain.getUseAllelePairDefaultOrder()) {
-			cmd = "select count(*) from GXD_orderAllelePairs (" + entity.get_genotype_key() + ")";
-			log.info("processGenotype/order allele pairs: " + cmd);
-			query = genotypeDAO.createNativeQuery(cmd);
-			query.getResultList();
-		}
+		// commented out/don't run auto-allele pair order on modify
+//		if (domain.getEditAllelePairOrder() == false) {
+//			cmd = "select count(*) from GXD_orderAllelePairs (" + entity.get_genotype_key() + ")";
+//			log.info("processGenotype/order allele pairs: " + cmd);
+//			query = genotypeDAO.createNativeQuery(cmd);
+//			query.getResultList();
+//		}
 		
 		// process allele/genotype
 		cmd = "select count(*) from GXD_orderGenotypesAll (" + entity.get_genotype_key() + ")";

@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.mgi.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -11,6 +12,7 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGISetDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetDomain;
+import org.jax.mgi.mgd.api.model.mgi.entities.MGISet;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGISetTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -25,6 +27,8 @@ public class MGISetService extends BaseService<MGISetDomain> {
 	
 	@Inject
 	private MGISetDAO setDAO;
+	@Inject
+	private MGISetMemberService setMemberService;
 	
 	private MGISetTranslator translator = new MGISetTranslator();				
 	private SQLExecutor sqlExecutor = new SQLExecutor();
@@ -38,8 +42,35 @@ public class MGISetService extends BaseService<MGISetDomain> {
 
 	@Transactional
 	public SearchResults<MGISetDomain> update(MGISetDomain domain, User user) {
+		// the set of fields in "update" is similar to set of fields in "create"
+		// creation user/date are only set in "create"
+
 		SearchResults<MGISetDomain> results = new SearchResults<MGISetDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		MGISet entity = setDAO.get(Integer.valueOf(domain.getSetKey()));
+		Boolean modified = false;
+
+		// process genotype clipboard set member
+		if (domain.getGenotypeClipboardMembers() != null || !domain.getGenotypeClipboardMembers().isEmpty()) {		
+			if (setMemberService.process(domain.getSetKey(), domain.getGenotypeClipboardMembers(), user)) {
+				modified = true;
+			}
+		}
+		
+		// only if modifications were actually made
+		if (modified == true) {
+			entity.setModification_date(new Date());
+			entity.setModifiedBy(user);
+			setDAO.update(entity);
+			log.info("processSet/changes processed: " + domain.getSetKey());
+		}
+		else {
+			log.info("processSet/no changes processed: " + domain.getSetKey());
+		}
+			
+		// return entity translated to domain
+		log.info("processSet/update/returning results");
+		results.setItem(translator.translate(entity));
+		log.info("processSet/update/returned results succsssful");
 		return results;
 	}
 
@@ -72,12 +103,14 @@ public class MGISetService extends BaseService<MGISetDomain> {
 	@Transactional	
 	public List<MGISetDomain> getBySetUser(MGISetDomain searchDomain) {
 		// return all set members by _set_key, _createdby_key
-		
+
 		List<MGISetDomain> results = new ArrayList<MGISetDomain>();
 
-		String cmd = "\nselect * from mgi_setmember"
-				+ "\nwhere _set_key = " + searchDomain.getSetKey()
-				+ "\nand _createdby_key = " + searchDomain.getCreatedByKey();
+		String cmd = "\nselect s.* from mgi_setmember s, mgi_user u"
+				+ "\nwhere s._createdby_key = u._user_key" 
+				+ "\nand s._set_key = " + searchDomain.getSetKey()
+				+ "\nand u.login = '" + searchDomain.getCreatedBy() + "'"
+				+ "\norder by s.label";
 		log.info(cmd);
 
 		try {

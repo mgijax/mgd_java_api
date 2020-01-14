@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter @Setter
 public class MGISetMemberTranslator extends BaseEntityDomainTranslator<MGISetMember, MGISetMemberDomain> {
-
+	
 	@Override
 	protected MGISetMemberDomain entityToDomain(MGISetMember entity) {
 		MGISetMemberDomain domain = new MGISetMemberDomain();
@@ -28,6 +28,10 @@ public class MGISetMemberTranslator extends BaseEntityDomainTranslator<MGISetMem
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
+		// if set = 1055/enotype Clipboard, then translate accid of genotype
+		if (entity.getGenotypeAccessionIds() != null && !entity.getGenotypeAccessionIds().isEmpty()) {
+			domain.setGenotypeID(entity.getGenotypeAccessionIds().get(0).getAccID());			
+		}
 		return domain;
 	}
 

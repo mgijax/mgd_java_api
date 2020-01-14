@@ -109,6 +109,7 @@ public class MGISetService extends BaseService<MGISetDomain> {
 		String cmd = "\nselect s.* from mgi_setmember s, mgi_user u"
 				+ "\nwhere s._createdby_key = u._user_key" 
 				+ "\nand s._set_key = " + searchDomain.getSetKey()
+				+ "\nand s._createdby_key = u._user_key"
 				+ "\nand u.login = '" + searchDomain.getCreatedBy() + "'"
 				+ "\norder by s.label";
 		log.info(cmd);

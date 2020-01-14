@@ -76,18 +76,25 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 			
 			for (int i = 0; i < adbList.size(); i++) {
 				ActualDbDomain adbDomain = adbList.get(i);
-				// if actualDB name or url are empty set Error message in results
-				if (adbDomain.getName()!= null && !adbDomain.getName().isEmpty() ) {
-					if (adbDomain.getUrl() == null || adbDomain.getUrl().isEmpty()) {
-						results.setError("Failed : ActualDB error", "Missing Url", Constants.HTTP_SERVER_ERROR);
-					    return results;
-				    }
-				    
+				
+				//**********
+				// if name and url are empty, skip - this is a blank line we want to ignore
+				if ((adbDomain.getName() == null || adbDomain.getName().isEmpty()) && (adbDomain.getUrl()== null || adbDomain.getUrl().isEmpty())) {
+					continue;
 				}
-				else { 
-				    results.setError("Failed : Actual DB error", "Missing Name", Constants.HTTP_SERVER_ERROR);
+				// if actualDB name OR url are empty set Error message in results
+				else if (adbDomain.getName()== null || adbDomain.getName().isEmpty() ) {
+					results.setError("Failed : ActualDB error", "Missing Name", Constants.HTTP_SERVER_ERROR);
+					return results;
+				}
+					
+				else if (adbDomain.getUrl() == null || adbDomain.getUrl().isEmpty()) {
+					results.setError("Failed : ActualDB error", "Missing Url", Constants.HTTP_SERVER_ERROR);
 				    return results;
 			    }
+				    
+				//****************
+				
 				ActualDB adbEntity = new ActualDB();
 				adbEntity.set_logicaldb_key(logicalDBKey);
 				adbEntity.setName(adbDomain.getName());

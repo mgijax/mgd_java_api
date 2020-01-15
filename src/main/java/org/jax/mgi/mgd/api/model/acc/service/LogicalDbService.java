@@ -54,7 +54,11 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 		
 		entity.setName(domain.getName());
 		entity.setDescription(domain.getDescription());
-		entity.setOrganism(organismDAO.get(Integer.valueOf(domain.getOrganismKey())));
+		String organismKey = domain.getOrganismKey();
+		if (organismKey == null || organismKey.isEmpty()) {
+			organismKey = "1";
+		}
+		entity.setOrganism(organismDAO.get(Integer.valueOf(organismKey)));
 		
 		// add creation/modification 
 		entity.setCreatedBy(user);
@@ -351,7 +355,6 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 		SearchResults<LogicalDbDomain> results = new SearchResults<LogicalDbDomain>();
 		
 		// this returns the correct ldbKey from the adb.
-		log.info("LogicalDbService.delete actualDB.logicalDBKey: " + logicalDBDAO.get(key).getActualDBs().get(0).get_logicaldb_key());
 		LogicalDB entity = logicalDBDAO.get(key);
 		results.setItem(translator.translate(entity));
 		logicalDBDAO.remove(entity);

@@ -322,7 +322,9 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		// using searchDomain fields, generate SQL command
 		
 		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
-
+		List<String> markerList = new ArrayList<String>();
+		List<String> allele1List = new ArrayList<String>();
+		
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
@@ -331,16 +333,15 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		// if search does *not* include allele pair clause, see below for "union" 
 		
 		// "select" for all
-		String select = "(select distinct g._genotype_key, ps.strain, a1.symbol" +
-				", concat(ps.strain,',',a1.symbol,',',a2.symbol) as genotypeDisplay";
+		String select = "(select distinct g._genotype_key, ps.strain, a0.symbol" +
+				", concat(ps.strain,',',a0.symbol,',',a1.symbol) as genotypeDisplay";
 		
 		// "from" if allele pair = true
 		String from = "from gxd_genotype g" +
 				"\nleft outer join prb_strain ps on (g._strain_key = ps._strain_key)" +		
-				"\nleft outer join gxd_allelepair ap on (g._genotype_key = ap._genotype_key)" +
-				"\nleft outer join all_allele a1 on (ap._allele_key_1 = a1._allele_key)" +		
-				"\nleft outer join all_allele a2 on (ap._allele_key_2 = a2._allele_key)";
-				//"\nprb_strain ps";
+				"\nleft outer join gxd_allelepair ap0 on (g._genotype_key = ap0._genotype_key)" +
+				"\nleft outer join all_allele a0 on (ap0._allele_key_1 = a0._allele_key)" +		
+				"\nleft outer join all_allele a1 on (ap0._allele_key_2 = a1._allele_key)";
 		
 		// "where" for all
 		String where = "where g._genotype_key is not null";
@@ -396,51 +397,60 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 	
 			// Allele Pair
 			if (searchDomain.getAllelePairs() != null && !searchDomain.getAllelePairs().isEmpty()) {
-	
-				value = searchDomain.getAllelePairs().get(0).getMarkerKey();
-				if (value != null && !value.isEmpty()) {
-					whereAllelePair = whereAllelePair + "\nand ap._Marker_key = " + value;
+
+				for (int i = 0; i < searchDomain.getAllelePairs().size(); i++) {				
+
+					value = searchDomain.getAllelePairs().get(i).getMarkerKey();
+					if (value != null && !value.isEmpty()) {
+						markerList.add(value);
+						from_allele = true;
+						from_marker = true;
+					}
+					
+//					value = searchDomain.getAllelePairs().get(i).getAlleleKey1();
+//					if (value != null && !value.isEmpty()) {
+//						allele1List.add(value);
+//						from_allele = true;				
+//					}					
+				}
+
+				value = searchDomain.getAllelePairs().get(0).getMarkerSymbol();
+				if (value != null && !value.isEmpty() && value.contains("%")) {
+					value = "'" + value + "'";
+					whereAllelePair = whereAllelePair + "\nand m0.symbol ilike " + value;
 					from_allele = true;
 					from_marker = true;
 				}
 				
-				value = searchDomain.getAllelePairs().get(0).getMarkerSymbol();
-				if (value != null && !value.isEmpty()) {
-					value = "'" + value + "'";
-					whereAllelePair = whereAllelePair + "\nand m.symbol ilike " + value;
-					from_allele = true;
-					from_marker = true;
-				}
-						
 				value = searchDomain.getAllelePairs().get(0).getAlleleKey1();
 				if (value != null && !value.isEmpty()) {
 					whereAllelePair = whereAllelePair + 
-						"\nand (ap._Allele_key_1 = " + value +
-						"\nor ap._Allele_key_2 = " + value + ")";
+						"\nand (ap0._Allele_key_1 = " + value +
+						"\nor ap0._Allele_key_2 = " + value + ")";
 					from_allele = true;				
 				}
 				
 				value = searchDomain.getAllelePairs().get(0).getAlleleKey2();			
 				if (value != null && !value.isEmpty()) {
 					whereAllelePair = whereAllelePair + 
-						"\nand (ap._Allele_key_1 = " + value +
-						"\nor ap._Allele_key_2 = " + value + ")";
+						"\nand (ap0._Allele_key_1 = " + value +
+						"\nor ap0._Allele_key_2 = " + value + ")";
 					from_allele = true;				
 				}
 			
 				value = searchDomain.getAllelePairs().get(0).getAlleleSymbol1();			
 				if (value != null && !value.isEmpty()) {
 					whereAllelePair = whereAllelePair + 
-						"\nand (a1.symbol ilike '" + value + "'" +
-						"\nor a2.symbol ilike '" + value + "')";
+						"\nand (a0.symbol ilike '" + value + "'" +
+						"\nor a1.symbol ilike '" + value + "')";
 					from_allele = true;				
 				}
 				
 				value = searchDomain.getAllelePairs().get(0).getAlleleSymbol2();			
 				if (value != null && !value.isEmpty()) {
 					whereAllelePair = whereAllelePair + 
-						"\nand (a1.symbol ilike '" + value + "'" +
-						"\nor a2.symbol ilike '" + value + "')";
+						"\nand (a0.symbol ilike '" + value + "'" +
+						"\nor a1.symbol ilike '" + value + "')";
 					from_allele = true;				
 				}
 				
@@ -449,14 +459,14 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				
 				value = searchDomain.getAllelePairs().get(0).getCellLineKey1();			
 				if (value != null && !value.isEmpty()) {
-					whereAllelePair = whereAllelePair + "\nand ap._mutantcellline_key_1 = ac._cellline_key";
+					whereAllelePair = whereAllelePair + "\nand ap0._mutantcellline_key_1 = ac._cellline_key";
 					whereAllelePair = whereAllelePair + "\nand ac._cellLine_key = " + value;
 					from_allele = true;				
 				}
 				
 				value = searchDomain.getAllelePairs().get(0).getCellLine1();
 				if (value != null && !value.isEmpty()) {
-					whereAllelePair = whereAllelePair + "\nand ap._mutantcellline_key_1 = ac._cellline_key";
+					whereAllelePair = whereAllelePair + "\nand ap0._mutantcellline_key_1 = ac._cellline_key";
 					whereAllelePair = whereAllelePair + "\nand ac.cellLine ilike '" + value + "'";
 					from_allele = true;
 					from_cellline = true;
@@ -464,14 +474,14 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				
 				value = searchDomain.getAllelePairs().get(0).getCellLineKey2();			
 				if (value != null && !value.isEmpty()) {
-					whereAllelePair = whereAllelePair + "\nand ap._mutantcellline_key_2 = ac._cellline_key";
+					whereAllelePair = whereAllelePair + "\nand ap0._mutantcellline_key_2 = ac._cellline_key";
 					whereAllelePair = whereAllelePair + "\nand ac._cellLine_key = " + value;
 					from_allele = true;				
 				}
 				
 				value = searchDomain.getAllelePairs().get(0).getCellLine2();
 				if (value != null && !value.isEmpty()) {
-					whereAllelePair = whereAllelePair + "\nand ap._mutantcellline_key_2 = ac._cellline_key";				
+					whereAllelePair = whereAllelePair + "\nand ap0._mutantcellline_key_2 = ac._cellline_key";				
 					whereAllelePair = whereAllelePair + "\nand ac.cellLine ilike '" + value + "'";
 					from_allele = true;
 					from_cellline = true;
@@ -479,13 +489,13 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 							
 				value = searchDomain.getAllelePairs().get(0).getPairStateKey();			
 				if (value != null && !value.isEmpty()) {
-					whereAllelePair = whereAllelePair + "\nand ap._pairstate_key = " + value;
+					whereAllelePair = whereAllelePair + "\nand ap0._pairstate_key = " + value;
 					from_allele = true;				
 				}
 				
 				value = searchDomain.getAllelePairs().get(0).getCompoundKey();			
 				if (value != null && !value.isEmpty()) {
-					whereAllelePair = whereAllelePair + "\nand ap._compound_key = " + value;
+					whereAllelePair = whereAllelePair + "\nand ap0._compound_key = " + value;
 					from_allele = true;				
 				}
 				
@@ -546,9 +556,26 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		}
 		
 		// final from/where
-		if (from_marker == true) {
-			from = from + ", mrk_marker m";
-			where = where + "\nand ap._marker_key = m._marker_key";
+		
+		String fromLeft = "";
+		String fromMarker = "";
+		for (int i = 0; i < markerList.size(); i++) {
+			whereAllelePair = whereAllelePair + "\nand ap" + String.valueOf(i) + "._Marker_key = " + markerList.get(i);
+			
+			if (i > 0) {
+				fromLeft = fromLeft 
+					+ "\nleft outer join gxd_allelepair ap" + String.valueOf(i)
+					+ " on (g._genotype_key = ap" + String.valueOf(i) + "._genotype_key)";
+			}
+			
+			fromMarker = fromMarker + "\n, mrk_marker m" + String.valueOf(i);
+			where = where + "\nand ap" + String.valueOf(i) + "._marker_key = m"  + String.valueOf(i) + "._marker_key";
+		}
+		from = from + fromLeft + fromMarker;
+		
+		if (markerList.size() == 0 && from_marker == true) {
+			from = from + ", mrk_marker m0";
+			where = where + "\nand ap0._marker_key = m0._marker_key";
 		}
 		if (from_cellline == true) {
 			from = from + ", all_cellline ac";

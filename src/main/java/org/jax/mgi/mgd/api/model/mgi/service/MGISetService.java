@@ -11,9 +11,12 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGISetDAO;
+import org.jax.mgi.mgd.api.model.mgi.dao.MGISetMemberDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISet;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.translator.MGISetMemberTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGISetTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -28,9 +31,12 @@ public class MGISetService extends BaseService<MGISetDomain> {
 	@Inject
 	private MGISetDAO setDAO;
 	@Inject
+	private MGISetMemberDAO setMemberDAO;
+	@Inject
 	private MGISetMemberService setMemberService;
 	
 	private MGISetTranslator translator = new MGISetTranslator();				
+	private MGISetMemberTranslator memberTranslator = new MGISetMemberTranslator();					
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
@@ -105,10 +111,16 @@ public class MGISetService extends BaseService<MGISetDomain> {
 		// return all set members by _set_key, _createdby_key
 
 		List<MGISetDomain> results = new ArrayList<MGISetDomain>();
-
+		List<MGISetMemberDomain> listOfMembers = new ArrayList<MGISetMemberDomain>();
+		
+		MGISetDomain domain = new MGISetDomain();
+		domain.setSetKey(searchDomain.getSetKey());
+		domain.setCreatedBy(searchDomain.getCreatedBy());
+		
 		String cmd = "\nselect s.* from mgi_setmember s, mgi_user u"
 				+ "\nwhere s._createdby_key = u._user_key" 
 				+ "\nand s._set_key = " + searchDomain.getSetKey()
+				+ "\nand s._createdby_key = u._user_key"
 				+ "\nand u.login = '" + searchDomain.getCreatedBy() + "'"
 				+ "\norder by s.label";
 		log.info(cmd);
@@ -116,10 +128,10 @@ public class MGISetService extends BaseService<MGISetDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				MGISetDomain domain = new MGISetDomain();
-				domain = translator.translate(setDAO.get(rs.getInt("_set_key")));
-				setDAO.clear();
-				results.add(domain);
+				MGISetMemberDomain memberDomain = new MGISetMemberDomain();
+				memberDomain = memberTranslator.translate(setMemberDAO.get(rs.getInt("_setmember_key")));
+				setMemberDAO.clear();
+				listOfMembers.add(memberDomain);
 			}
 			sqlExecutor.cleanup();
 		}
@@ -127,6 +139,8 @@ public class MGISetService extends BaseService<MGISetDomain> {
 			e.printStackTrace();
 		}
 		
+		domain.setGenotypeClipboardMembers(listOfMembers);
+		results.add(domain);
 		return results;
 	}
 

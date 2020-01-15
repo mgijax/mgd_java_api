@@ -658,7 +658,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		
 		List<GenotypeDataSetDomain> results = new ArrayList<GenotypeDataSetDomain>();
 
-		String cmd = "select * from gxd_getgenotypesdatasets(" + key + ")";
+		String cmd = "select distinct * from gxd_getgenotypesdatasets(" + key + ")";
 
 		log.info(cmd);
 
@@ -690,7 +690,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
 
 		String cmd = 
-				"select * from gxd_genotype_dataset_view where _Refs_key = " + key;
+				"select distinct * from gxd_genotype_dataset_view where _Refs_key = " + key;
 
 		log.info(cmd);
 

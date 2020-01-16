@@ -422,15 +422,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 					whereAllelePair = whereAllelePair + "\nand m0.symbol ilike " + value;
 					from_allele = true;
 					from_marker = true;
-				}
-				
-//				value = searchDomain.getAllelePairs().get(0).getAlleleKey1();
-//				if (value != null && !value.isEmpty()) {
-//					whereAllelePair = whereAllelePair + 
-//						"\nand (ap0._Allele_key_1 = " + value +
-//						"\nor ap0._Allele_key_2 = " + value + ")";
-//					from_allele = true;				
-//				}
+				}			
 				
 				value = searchDomain.getAllelePairs().get(0).getAlleleKey2();			
 				if (value != null && !value.isEmpty()) {

@@ -562,7 +562,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		String fromLeft = "";
 		String fromMarker = "";
 		for (int i = 0; i < markerList.size(); i++) {
-			whereAllelePair = whereAllelePair + "\nand ap" + String.valueOf(i) + "._Marker_key = " + markerList.get(i);
+			whereAllelePair = whereAllelePair + "\nand ap" + String.valueOf(i) + "._marker_key = " + markerList.get(i);
 			
 			if (i > 0) {
 				fromLeft = fromLeft 
@@ -575,7 +575,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		}
 
 		for (int i = 0; i < allele1List.size(); i++) {
-			whereAllelePair = whereAllelePair + "\nand ap" + String.valueOf(i) + "._Marker_key = " + markerList.get(i);
+			whereAllelePair = whereAllelePair + "\nand ap" + String.valueOf(i) + "._allele_key_1 = " + allele1List.get(i);
 			
 			if (i > 0) {
 				fromLeft = fromLeft 

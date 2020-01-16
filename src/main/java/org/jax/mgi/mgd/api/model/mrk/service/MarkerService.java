@@ -397,7 +397,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		String from = "from mrk_marker m";
 		String where = "where m._organism_key = 1";
 		String orderBy = "order by m._marker_type_key, m.symbol";
-		String limit = Constants.SEARCH_RETURN_LIMIT;
+		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
 		Boolean from_editorNote = false;
 		Boolean from_sequenceNote = false;
@@ -783,7 +783,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 		
 		// make this easy to copy/paste for troubleshooting
-		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
+		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info(cmd);
 
 		try {

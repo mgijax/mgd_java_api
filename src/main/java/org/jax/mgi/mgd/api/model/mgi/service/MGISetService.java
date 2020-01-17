@@ -76,6 +76,7 @@ public class MGISetService extends BaseService<MGISetDomain> {
 		// return entity translated to domain
 		log.info("processSet/update/returning results");
 		results.setItem(translator.translate(entity));
+		setDAO.clear();
 		log.info("processSet/update/returned results succsssful");
 		return results;
 	}

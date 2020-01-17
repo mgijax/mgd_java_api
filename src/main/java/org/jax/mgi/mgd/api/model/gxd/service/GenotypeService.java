@@ -436,7 +436,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				if (value != null && !value.isEmpty() && value.contains("%")) {
 					whereAllelePair = whereAllelePair + 
 						"\nand (a0.symbol ilike '" + value + "'" +
-						"\nor a1.symbol ilike '" + value + "')";
+						"\nor aa0.symbol ilike '" + value + "')";
 					from_allele = true;				
 				}
 				
@@ -444,7 +444,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				if (value != null && !value.isEmpty() && value.contains("%")) {
 					whereAllelePair = whereAllelePair + 
 						"\nand (a0.symbol ilike '" + value + "'" +
-						"\nor a1.symbol ilike '" + value + "')";
+						"\nor aa0.symbol ilike '" + value + "')";
 					from_allele = true;				
 				}
 				
@@ -558,7 +558,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			
 			if (i > 0) {
 				fromLeft = fromLeft 
-					+ "\nleft outer join gxd_allelepair ap" + String.valueOf(i)
+				+ "\nleft outer join gxd_allelepair ap" + String.valueOf(i)
 					+ " on (g._genotype_key = ap" + String.valueOf(i) + "._genotype_key)";
 			}
 			
@@ -567,7 +567,9 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		}
 
 		for (int i = 0; i < allele1List.size(); i++) {
-			whereAllelePair = whereAllelePair + "\nand ap" + String.valueOf(i) + "._allele_key_1 = " + allele1List.get(i);
+			whereAllelePair = whereAllelePair 
+					+ "\nand (ap" + String.valueOf(i) + "._allele_key_1 = " + allele1List.get(i)
+					+ "\nor ap" + String.valueOf(i) + "._allele_key_2 = " + allele1List.get(i) + ")";
 			
 			if (i > 0) {
 				fromLeft = fromLeft 

@@ -714,6 +714,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		}
 		
 		results.sort(Comparator.comparing(GenotypeDataSetDomain::getJnum, String.CASE_INSENSITIVE_ORDER));
+		return(results);
 	}	
 
 	@Transactional	

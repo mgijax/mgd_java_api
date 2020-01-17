@@ -713,7 +713,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			e.printStackTrace();
 		}
 		
-		return results;
+		results.sort(Comparator.comparing(GenotypeDataSetDomain::getJnum, String.CASE_INSENSITIVE_ORDER));
 	}	
 
 	@Transactional	

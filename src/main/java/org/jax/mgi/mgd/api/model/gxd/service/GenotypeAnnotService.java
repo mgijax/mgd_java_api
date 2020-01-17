@@ -602,7 +602,12 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 				if (rs.isLast() == true) {
 					
 					if (prevObjectKey.equals(newObjectKey)) {
-						prevDescription = prevStrain + " " + prevDescription;
+						if (prevDescription == null) {
+							prevDescription = prevStrain;
+						}
+						else {
+							prevDescription = prevStrain + " " + prevDescription;							
+						}
 					}
 					else {
 						prevObjectKey = newObjectKey;
@@ -683,8 +688,13 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 				
 				if (addResults) {
 
-					prevDescription = prevStrain + " " + prevDescription;
-	
+					if (prevDescription == null) {
+						prevDescription = prevStrain;
+					}
+					else {
+						prevDescription = prevStrain + " " + prevDescription;
+					}
+					
 					SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();
 					slimdomain = slimtranslator.translate(genotypeDAO.get(prevObjectKey));				
 					slimdomain.setGenotypeDisplay(prevDescription);
@@ -712,7 +722,13 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 						prevObjectKey = newObjectKey;
 						prevStrain = newStrain;
 						prevDescription = newDescription;
-						prevDescription = prevStrain + " " + prevDescription;
+						
+						if (prevDescription == null) {
+							prevDescription = prevStrain;
+						}
+						else {
+							prevDescription = prevStrain + " " + prevDescription;
+						}
 					}
 					
 					SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();

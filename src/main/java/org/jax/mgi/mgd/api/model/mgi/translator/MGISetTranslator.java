@@ -1,7 +1,5 @@
 package org.jax.mgi.mgd.api.model.mgi.translator;
 
-import java.util.Comparator;
-
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetDomain;
@@ -38,13 +36,7 @@ public class MGISetTranslator extends BaseEntityDomainTranslator<MGISet, MGISetD
 			Iterable<MGISetMemberDomain> i = setTranslator.translateEntities(entity.getEmapaStageMembers());
 			domain.setEmapaStageMembers(IteratorUtils.toList(i.iterator()));
 		}
-
-		if (entity.getGenotypeClipboardMembers() != null && !entity.getGenotypeClipboardMembers().isEmpty()) {
-			Iterable<MGISetMemberDomain> i = setTranslator.translateEntities(entity.getGenotypeClipboardMembers());
-			domain.setGenotypeClipboardMembers(IteratorUtils.toList(i.iterator()));
-			domain.getGenotypeClipboardMembers().sort(Comparator.comparing(MGISetMemberDomain::getLabel, String.CASE_INSENSITIVE_ORDER));
-		}
-				
+		
 		return domain;
 	}
 

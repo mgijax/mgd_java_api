@@ -49,8 +49,10 @@ public class MGISet extends BaseEntity {
 	@Where(clause="`_set_key` = 1046")
 	private List<MGISetMember> emapaStageMembers;
 
-	@OneToMany()
-	@JoinColumn(name="_set_key", insertable=false, updatable=false)
-	@Where(clause="`_set_key` = 1055")
-	private List<MGISetMember> genotypeClipboardMembers;	
+	// this is loaded via MGISetService.java/getBySetUser 
+//	@OneToMany()
+//	@JoinColumn(name="_set_key", insertable=false, updatable=false)
+//	@Where(clause="`_set_key` = 1055")
+//	private List<MGISetMember> genotypeClipboardMembers;	
+	
 }

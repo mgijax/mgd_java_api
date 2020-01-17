@@ -2,7 +2,6 @@ package org.jax.mgi.mgd.api.model.mgi.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -64,8 +63,9 @@ public class MGISetService extends BaseService<MGISetDomain> {
 		
 		// only if modifications were actually made
 		if (modified == true) {
-			entity.setModification_date(new Date());
-			entity.setModifiedBy(user);
+			// only make this change if updating the mgi_set fields
+			//entity.setModification_date(new Date());
+			//entity.setModifiedBy(user);
 			setDAO.update(entity);
 			log.info("processSet/changes processed: " + domain.getSetKey());
 		}
@@ -76,7 +76,6 @@ public class MGISetService extends BaseService<MGISetDomain> {
 		// return entity translated to domain
 		log.info("processSet/update/returning results");
 		results.setItem(translator.translate(entity));
-		setDAO.clear();
 		log.info("processSet/update/returned results succsssful");
 		return results;
 	}

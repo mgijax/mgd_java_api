@@ -18,6 +18,7 @@ import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleRefAssocTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -303,7 +304,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	}
 	
 	@Transactional
-public List<SlimAlleleDomain> validateAlleleAnyStatus(SlimAlleleDomain searchDomain) {
+	public List<SlimAlleleDomain> validateAlleleAnyStatus(SlimAlleleDomain searchDomain) {
 		log.info("In Allele Service validateAlleleAnyStatus" );
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 		
@@ -349,7 +350,20 @@ public List<SlimAlleleDomain> validateAlleleAnyStatus(SlimAlleleDomain searchDom
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-	
+
+		// if more than 1 result, then use *exact* case from value
+		// if no match on exact case, then empty results should be returned
+		if (results.size() > 0) {
+			List<SlimAlleleDomain> newResults = new ArrayList<SlimAlleleDomain>();
+			for (int i = 0; i < results.size(); i++) {
+				if (results.get(i).getSymbol().equals(searchDomain.getSymbol())) {
+					newResults.add(results.get(i));
+					break;
+				}
+			}
+			results = newResults;
+		}
+		
 		return results;
 	}
 
@@ -400,7 +414,20 @@ public List<SlimAlleleDomain> validateAlleleAnyStatus(SlimAlleleDomain searchDom
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-	
+
+		// if more than 1 result, then use *exact* case from value
+		// if no match on exact case, then empty results should be returned
+		if (results.size() > 0) {
+			List<SlimAlleleDomain> newResults = new ArrayList<SlimAlleleDomain>();
+			for (int i = 0; i < results.size(); i++) {
+				if (results.get(i).getSymbol().equals(searchDomain.getSymbol())) {
+					newResults.add(results.get(i));
+					break;
+				}
+			}
+			results = newResults;
+		}
+		
 		return results;
 	}
 

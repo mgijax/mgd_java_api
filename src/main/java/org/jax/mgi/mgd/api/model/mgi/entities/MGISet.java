@@ -1,17 +1,14 @@
 package org.jax.mgi.mgd.api.model.mgi.entities;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 
@@ -44,10 +41,11 @@ public class MGISet extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@OneToMany()
-	@JoinColumn(name="_set_key", insertable=false, updatable=false)
-	@Where(clause="`_set_key` = 1046")
-	private List<MGISetMember> emapaStageMembers;
+	// not used
+//	@OneToMany()
+//	@JoinColumn(name="_set_key", insertable=false, updatable=false)
+//	@Where(clause="`_set_key` = 1046")
+//	private List<MGISetMember> emapaStageMembers;
 
 	// this is loaded via MGISetService.java/getBySetUser 
 //	@OneToMany()

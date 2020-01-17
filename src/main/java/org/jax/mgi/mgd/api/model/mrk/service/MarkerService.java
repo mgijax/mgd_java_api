@@ -884,8 +884,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				domain.setChromosome(rs.getString("chromosome"));
 				
 				if (hasAccID) {
-					domain.setAccID(rs.getString("accID"));
-				}
+					domain.setAccID(rs.getString("accID"));			}
 				
 				results.add(domain);
 			}
@@ -893,6 +892,19 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
+		}
+		
+		// if more than 1 result, then use *exact* case from value
+		// if no match on exact case, then empty results should be returned
+		if (results.size() > 0) {
+			List<SlimMarkerDomain> newResults = new ArrayList<SlimMarkerDomain>();
+			for (int i = 0; i < results.size(); i++) {
+				if (results.get(i).getSymbol().equals(value)) {
+					newResults.add(results.get(i));
+					break;
+				}
+			}
+			results = newResults;
 		}
 		
 		return results;

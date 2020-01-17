@@ -705,6 +705,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				domain.setShort_citation(rs.getString("short_citation"));
 				domain.setDataSet(rs.getString("dataSet"));	
 				
+				// puts null/no jnum to bottom of sort
 				if (rs.getInt("jnum") == 0) {
 					domain.setJnum(Integer.valueOf(999999999));
 				}

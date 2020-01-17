@@ -11,7 +11,7 @@ public class GenotypeDataSetDomain extends BaseDomain {
 	// see sp/GXD_getGenotypesDataSets
 	
 	private String refsKey;
-	private String jnum;
+	private Integer jnum;
 	private String jnumid;
 	private String short_citation;	
 	private String dataSet;

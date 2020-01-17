@@ -673,7 +673,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			}
 			sqlExecutor.cleanup();
 			
-			// now we order by description - see note above at first 'select = '
+			// order by description - see note above at first 'select = '
 			results.sort(Comparator.comparing(SlimGenotypeDomain::getGenotypeDisplay, String.CASE_INSENSITIVE_ORDER));
 		}
 		catch (Exception e) {
@@ -701,10 +701,17 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			while (rs.next()) {
 				GenotypeDataSetDomain domain = new GenotypeDataSetDomain();
 				domain.setRefsKey(rs.getString("_refs_key"));
-				domain.setJnum(rs.getString("jnum"));
-				domain.setJnumid(rs.getString("jnumid"));
+				domain.setJnumid(rs.getString("jnumid"));									
 				domain.setShort_citation(rs.getString("short_citation"));
-				domain.setDataSet(rs.getString("dataSet"));
+				domain.setDataSet(rs.getString("dataSet"));	
+				
+				if (rs.getInt("jnum") == 0) {
+					domain.setJnum(Integer.valueOf(999999999));
+				}
+				else {
+					domain.setJnum(rs.getInt("jnum"));					
+				}
+				
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();
@@ -713,7 +720,13 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			e.printStackTrace();
 		}
 		
-		results.sort(Comparator.comparing(GenotypeDataSetDomain::getJnum, String.CASE_INSENSITIVE_ORDER));
+		//  order by jnum, data set, short citation
+		Comparator<GenotypeDataSetDomain> compareByJnum = Comparator.comparingInt(GenotypeDataSetDomain::getJnum);	
+		Comparator<GenotypeDataSetDomain> compareByDataSet = Comparator.comparing(GenotypeDataSetDomain::getDataSet);	
+		Comparator<GenotypeDataSetDomain> compareByCitation = Comparator.comparing(GenotypeDataSetDomain::getShort_citation);	
+		Comparator<GenotypeDataSetDomain> compareAll = compareByJnum.thenComparing(compareByDataSet).thenComparing(compareByCitation);
+		results.sort(compareAll);
+		
 		return(results);
 	}	
 

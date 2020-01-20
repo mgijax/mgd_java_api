@@ -916,7 +916,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// returns empty list of values if validation fails
 
 		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
-
+		Boolean hasChromosome = false;
+		
 		String cmd = "";
 		String select = "select m._marker_key ";
 		String from = "from mrk_marker m";
@@ -927,6 +928,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		if (searchDomain.getSymbol() != null && !searchDomain.getSymbol().isEmpty()) {
 			where = where + "\nand lower(m.symbol) = '" + searchDomain.getSymbol().toLowerCase() + "'" ;
+		}
+
+		if (searchDomain.getChromosome() != null && !searchDomain.getChromosome().isEmpty()) {
+			where = where + "\nand m.chromosome = '" + searchDomain.getChromosome() + "'" ;
+			hasChromosome = true;
 		}
 		
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	
@@ -963,15 +969,23 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			e.printStackTrace();
 		}
 
-		// if more than 1 result, then use *exact* case from value
+		// if more than 1 result and may contains chromosome, then use *exact* case from value
 		// if no match on exact case, then empty results should be returned
 		if (results.size() > 1) {
 			List<SlimMarkerDomain> newResults = new ArrayList<SlimMarkerDomain>();
 			for (int i = 0; i < results.size(); i++) {
 				if (results.get(i).getSymbol().equals(searchDomain.getSymbol())) {
 					newResults.add(results.get(i));
-					break;
 				}
+			}
+			// still > 1 result means need to check chromosome too
+			if (newResults.size() > 1 && hasChromosome) {
+				for (int i = 0; i < results.size(); i++) {
+					if (results.get(i).getChromosome().equals(searchDomain.getChromosome())) {
+						newResults.add(results.get(i));
+						break;
+					}
+				}				
 			}
 			results = newResults;
 		}

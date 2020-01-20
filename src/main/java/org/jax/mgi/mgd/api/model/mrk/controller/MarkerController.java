@@ -179,7 +179,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Validate Marker by Marker Symbol(=) or AccID (=)")
+	@ApiOperation(value = "Validate Marker by Marker Symbol(=), Chromosome or AccID (=)")
 	@Path("/validateMarker")
 	public List<SlimMarkerDomain> validateMarker(SlimMarkerDomain searchDomain) {
 		

@@ -19,9 +19,7 @@ import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerNoteDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
-import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
-import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
 import org.jax.mgi.mgd.api.model.voc.translator.MarkerFeatureTypeTranslator;
 import org.jboss.logging.Logger;
 
@@ -197,14 +195,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		//	domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
 		//	domain.setRefAssocs().sort(Comparator.comparing(MGIReferenceAssocDomain::getRefAssocTypeKey).thenComparing(MGIReferenceAssocDomain.getJnum));
 		//}						
-
-		// GO annotations
-		if (entity.getGoAnnots() != null && !entity.getGoAnnots().isEmpty()) {
-			AnnotationTranslator annotTranslator = new AnnotationTranslator();
-			Iterable<AnnotationDomain> i = annotTranslator.translateEntities(entity.getGoAnnots());
-			domain.setGoAnnots(IteratorUtils.toList(i.iterator()));
-		}
-				
+		
 		return domain;
 	}
 

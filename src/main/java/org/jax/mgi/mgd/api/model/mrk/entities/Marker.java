@@ -183,5 +183,9 @@ public class Marker extends BaseEntity {
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_annottype_key` = 1000")
 	private List<Annotation> goAnnots;
-	
+
+	// GO Tracking
+	@OneToMany()
+	@JoinColumn(name="_marker_key", insertable=false, updatable=false)
+	private List<GOTracking> goTracking;	
 }

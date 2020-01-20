@@ -6,6 +6,7 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
+import org.jax.mgi.mgd.api.model.mrk.domain.GOTrackingDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerAnnotDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
@@ -15,9 +16,6 @@ import org.jboss.logging.Logger;
 public class MarkerAnnotTranslator extends BaseEntityDomainTranslator<Marker, MarkerAnnotDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
-
-	private AnnotationTranslator annotTranslator = new AnnotationTranslator();	
-	private NoteTranslator noteTranslator = new NoteTranslator();
 
 	@Override
 	protected MarkerAnnotDomain entityToDomain(Marker entity) {
@@ -41,17 +39,26 @@ public class MarkerAnnotTranslator extends BaseEntityDomainTranslator<Marker, Ma
 
 		// notes
 		if (entity.getGoNote() != null && !entity.getGoNote().isEmpty()) {
+			NoteTranslator noteTranslator = new NoteTranslator();
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getGoNote());
 			domain.setGoNote(IteratorUtils.toList(note.iterator()));
 		}
 		
 		// GO annotations by marker
 		if (entity.getGoAnnots() != null && !entity.getGoAnnots().isEmpty()) {
+			AnnotationTranslator annotTranslator = new AnnotationTranslator();	
 			Iterable<AnnotationDomain> t = annotTranslator.translateEntities(entity.getGoAnnots());			
 			domain.setAnnots(IteratorUtils.toList(t.iterator()));
 			domain.getAnnots().sort(Comparator.comparing(AnnotationDomain::getTerm, String.CASE_INSENSITIVE_ORDER));	
 		}
-			
+
+		// GO tracking
+		if (entity.getGoTracking() != null && !entity.getGoTracking().isEmpty()) {
+			GOTrackingTranslator goTrackingTranslator = new GOTrackingTranslator();
+			Iterable<GOTrackingDomain> i = goTrackingTranslator.translateEntities(entity.getGoTracking());
+			domain.setGoTracking(IteratorUtils.toList(i.iterator()));
+		}
+		
 		return domain;
 	}
 

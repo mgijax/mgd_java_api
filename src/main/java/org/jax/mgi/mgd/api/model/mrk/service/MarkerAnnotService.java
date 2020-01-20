@@ -198,6 +198,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 			denormMarkerAnnotDomain.setMarkerType(markerAnnotDomain.getMarkerType());			
 			denormMarkerAnnotDomain.setAccID(markerAnnotDomain.getAccID());
 			denormMarkerAnnotDomain.setGoNote(markerAnnotDomain.getGoNote());
+			denormMarkerAnnotDomain.setGoTracking(markerAnnotDomain.getGoTracking());
 
 			if (markerAnnotDomain.getAnnots() != null) {
 				for (int i = 0; i < markerAnnotDomain.getAnnots().size(); i++) {	
@@ -423,6 +424,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 
 		Boolean from_accession = false;
 		Boolean from_goNote = false;
+		Boolean from_goTracking = false;
 		Boolean from_annot = false;
 		Boolean from_evidence = false;
 		Boolean from_property = false;
@@ -451,6 +453,20 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 			where = where + "\nand note._notetype_key = 1002 and note.note ilike '" + value + "'" ;
 			from_goNote = true;
 			executeQuery = true;			
+		}
+
+		if (searchDomain.getGoTracking() != null  && !searchDomain.getGoTracking().isEmpty()) {
+			value = searchDomain.getGoTracking().get(0).getCompletion_date();
+			if (value.contains("%")) {
+				where = where + "\nand trk.completion_date is not null";
+				from_goTracking = true;
+				executeQuery = true;				
+			}
+			else if (value.length() > 0) {
+				where = where + "\nand trk.completion_date = '" + value + "'" ;
+				from_goTracking = true;
+				executeQuery = true;
+			}
 		}
 		
 		if (searchDomain.getAnnots() != null) {
@@ -546,6 +562,11 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		if (from_goNote == true) {
 			from = from + ", mgi_note_marker_view note";
 			where = where + "\nand m._marker_key = note._object_key";
+			executeQuery = true;			
+		}
+		if (from_goTracking == true) {
+			from = from + ", go_tracking trk";
+			where = where + "\nand v._object_key = trk._marker_key";
 			executeQuery = true;			
 		}		
 		if (from_annot == true) {

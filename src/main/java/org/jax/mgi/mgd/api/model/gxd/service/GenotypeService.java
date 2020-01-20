@@ -416,6 +416,14 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 					}					
 				}
 
+				value = searchDomain.getAllelePairs().get(0).getMarkerChromosome();
+				if (value != null && !value.isEmpty()) {
+					value = "'" + value + "'";
+					whereAllelePair = whereAllelePair + "\nand m0.chromosome ilike " + value;
+					from_allele = true;
+					from_marker = true;
+				}	
+				
 				value = searchDomain.getAllelePairs().get(0).getMarkerSymbol();
 				if (value != null && !value.isEmpty() && value.contains("%")) {
 					value = "'" + value + "'";

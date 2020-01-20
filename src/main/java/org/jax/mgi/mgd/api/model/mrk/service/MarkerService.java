@@ -896,7 +896,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		// if more than 1 result, then use *exact* case from value
 		// if no match on exact case, then empty results should be returned
-		if (results.size() > 0) {
+		if (results.size() > 1) {
 			List<SlimMarkerDomain> newResults = new ArrayList<SlimMarkerDomain>();
 			for (int i = 0; i < results.size(); i++) {
 				if (results.get(i).getSymbol().equals(value)) {
@@ -962,6 +962,19 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		// if more than 1 result, then use *exact* case from value
+		// if no match on exact case, then empty results should be returned
+		if (results.size() > 1) {
+			List<SlimMarkerDomain> newResults = new ArrayList<SlimMarkerDomain>();
+			for (int i = 0; i < results.size(); i++) {
+				if (results.get(i).getSymbol().equals(searchDomain.getSymbol())) {
+					newResults.add(results.get(i));
+					break;
+				}
+			}
+			results = newResults;
+		}
 		
 		return results;
 	}	
@@ -1022,7 +1035,19 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
+		// if more than 1 result, then use *exact* case from value
+		// if no match on exact case, then empty results should be returned
+		if (listOfResults.size() > 1) {
+			List<SlimMarkerOfficialChromDomain> newResults = new ArrayList<SlimMarkerOfficialChromDomain>();
+			for (int i = 0; i < listOfResults.size(); i++) {
+				if (listOfResults.get(i).getSymbol2().equals(searchDomain.getSymbol2())) {
+					newResults.add(listOfResults.get(i));
+					break;
+				}
+			}
+			listOfResults = newResults;
+		}
 		results.setItems(listOfResults);
 		
 		if (results.items.isEmpty()) {

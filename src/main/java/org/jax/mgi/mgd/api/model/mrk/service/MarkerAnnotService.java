@@ -1,9 +1,11 @@
 package org.jax.mgi.mgd.api.model.mrk.service;
 
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -12,11 +14,13 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mrk.dao.GOTrackingDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.DenormMarkerAnnotDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerAnnotDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerGOReferenceDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerAnnotDomain;
+import org.jax.mgi.mgd.api.model.mrk.entities.GOTracking;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerAnnotTranslator;
 import org.jax.mgi.mgd.api.model.mrk.translator.SlimMarkerAnnotTranslator;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationDAO;
@@ -41,6 +45,8 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 	private MarkerDAO markerDAO;
 	@Inject
 	private AnnotationDAO annotationDAO;
+	@Inject
+	private GOTrackingDAO goTrackingDAO;
 	@Inject
 	private AnnotationService annotationService;
 	
@@ -73,7 +79,9 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		
 		markerAnnotDomain.setMarkerKey(domain.getMarkerKey());
     	markerAnnotDomain.setAllowEditTerm(domain.getAllowEditTerm());
-		
+    	markerAnnotDomain.setGoNote(domain.getGoNote());
+    	markerAnnotDomain.setGoTracking(domain.getGoTracking());
+
     	// Iterate thru incoming denormalized markerAnnot domain
 		for (int i = 0; i < domain.getAnnots().size(); i++) {
 			
@@ -131,6 +139,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
             
             evidenceDomain.setAnnotEvidenceKey(denormAnnotDomain.getAnnotEvidenceKey());
             evidenceDomain.setEvidenceTermKey(denormAnnotDomain.getEvidenceTermKey());
+            evidenceDomain.setInferredFrom(denormAnnotDomain.getInferredFrom());
             evidenceDomain.setRefsKey(denormAnnotDomain.getRefsKey());
             evidenceDomain.setCreatedByKey(denormAnnotDomain.getCreatedByKey());
             evidenceDomain.setModifiedByKey(denormAnnotDomain.getModifiedByKey());
@@ -151,6 +160,31 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 			log.info("send json normalized domain to services");			
 			markerAnnotDomain.setAnnots(annotList);
 			annotationService.process(markerAnnotDomain.getAnnots(), user);
+			
+			// go-tracking/updating 
+			if (domain.getGoTracking().get(0).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+				try {
+					String newCompletionStr = domain.getGoTracking().get(0).getCompletion_date();
+					Date newCompletion = new Date();
+					
+					GOTracking goTrackingEntity = new GOTracking();
+					goTrackingEntity.set_marker_key(Integer.valueOf(domain.getMarkerKey()));
+					
+					if (newCompletionStr != null && !newCompletionStr.isEmpty()) {						
+						newCompletion = new SimpleDateFormat("dd/MM/yyyy").parse(newCompletionStr);
+					}
+					else {
+						newCompletion = null;
+					}
+					
+					goTrackingEntity.setCompletedBy(user);
+					goTrackingEntity.setCompletion_date(newCompletion);	
+					goTrackingDAO.update(goTrackingEntity);
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		
 		log.info("repackage incoming domain as results");		
@@ -238,6 +272,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		                denormAnnotDomain.setEvidenceTermKey(evidenceDomain.getEvidenceTermKey());
 		                denormAnnotDomain.setEvidenceTerm(evidenceDomain.getEvidenceTerm());
 		                denormAnnotDomain.setEvidenceAbbreviation(evidenceDomain.getEvidenceAbbreviation());
+		                denormAnnotDomain.setInferredFrom(evidenceDomain.getInferredFrom());		               
 		                denormAnnotDomain.setRefsKey(evidenceDomain.getRefsKey());
 		                denormAnnotDomain.setJnumid(evidenceDomain.getJnumid());
 		                denormAnnotDomain.setJnum(Integer.valueOf(evidenceDomain.getJnum()));
@@ -416,8 +451,10 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 
 		String cmd = "";
 		String select = "select distinct v._object_key, v.description";
-		String from = "from mrk_summary_view v";		
-		String where = "where v._mgitype_key = " + mgiTypeKey;
+		String from = "from mrk_summary_view v, mrk_marker m";		
+		String where = "where v._mgitype_key = " + mgiTypeKey
+				+ "\nand v._object_key = m._marker_key"
+				+ "\nand m._marker_status_key = 1";
 		String orderBy = "order by v._object_key, v.description";
 		
 		String value;
@@ -450,20 +487,23 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 
 		if (searchDomain.getGoNote() != null  && !searchDomain.getGoNote().isEmpty()) {
 			value = searchDomain.getGoNote().get(0).getNoteChunk().replace("'",  "''");
-			where = where + "\nand note._notetype_key = 1002 and note.note ilike '" + value + "'" ;
-			from_goNote = true;
-			executeQuery = true;			
+			if (value.length() > 0) {
+				where = where + "\nand note._notetype_key = 1002 and note.note ilike '" + value + "'" ;
+				from_goNote = true;
+				executeQuery = true;
+			}
 		}
 
+		// go tracking; is completed?
 		if (searchDomain.getGoTracking() != null  && !searchDomain.getGoTracking().isEmpty()) {
-			value = searchDomain.getGoTracking().get(0).getCompletion_date();
-			if (value.contains("%")) {
-				where = where + "\nand trk.completion_date is not null";
-				from_goTracking = true;
-				executeQuery = true;				
-			}
-			else if (value.length() > 0) {
-				where = where + "\nand trk.completion_date = '" + value + "'" ;
+			if (searchDomain.getGoTracking().get(0).getIsCompleted() != null) {				
+				if (searchDomain.getGoTracking().get(0).getIsCompleted()) {				
+					where = where + "\nand trk.completion_date is not null";
+				}
+				else {
+					where = where + "\nand trk.completion_date is null";
+				}
+				from_annot = true;
 				from_goTracking = true;
 				executeQuery = true;
 			}
@@ -522,7 +562,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 			
 			if (annotDomain.getProperties() != null) {
 
-				value = annotDomain.getProperties().get(0).getStanza();
+				value = String.valueOf(annotDomain.getProperties().get(0).getStanza());
 				if (value != null && !value.isEmpty()) {
 					if (Integer.valueOf(value) > 1) {
 						where = where + "\nand p.stanza = " + value;
@@ -561,7 +601,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		}
 		if (from_goNote == true) {
 			from = from + ", mgi_note_marker_view note";
-			where = where + "\nand m._marker_key = note._object_key";
+			where = where + "\nand v._marker_key = note._object_key";
 			executeQuery = true;			
 		}
 		if (from_goTracking == true) {

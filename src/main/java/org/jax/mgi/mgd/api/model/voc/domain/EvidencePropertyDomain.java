@@ -15,8 +15,8 @@ public class EvidencePropertyDomain extends BaseDomain {
 	private String annotevidenceKey;
 	private String propertyTermKey;
 	private String propertyTerm;
-	private String stanza;
-	private String sequenceNum;
+	private Integer stanza;
+	private Integer sequenceNum;
 	private String value;
 	private String createdByKey;
 	private String createdBy;

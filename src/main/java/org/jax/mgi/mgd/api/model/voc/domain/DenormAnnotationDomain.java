@@ -31,6 +31,7 @@ public class DenormAnnotationDomain extends BaseDomain {
 	private String evidenceTermKey;
 	private String evidenceTerm;
 	private String evidenceAbbreviation;
+	private String inferredFrom;
 	private String refsKey;
 	private String jnumid;
 	private Integer jnum;

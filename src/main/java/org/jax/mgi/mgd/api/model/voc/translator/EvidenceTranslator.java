@@ -51,8 +51,8 @@ public class EvidenceTranslator extends BaseEntityDomainTranslator<Evidence, Evi
 		if (entity.getProperties() != null && !entity.getProperties().isEmpty()) {
 			Iterable<EvidencePropertyDomain> property = propertyTranslator.translateEntities(entity.getProperties());
 			domain.setProperties(IteratorUtils.toList(property.iterator()));
-			Comparator<EvidencePropertyDomain> compareByStanza = Comparator.comparing(EvidencePropertyDomain::getStanza);	
-			Comparator<EvidencePropertyDomain> compareBySequenceNum = Comparator.comparing(EvidencePropertyDomain::getSequenceNum);			 
+			Comparator<EvidencePropertyDomain> compareByStanza = Comparator.comparingInt(EvidencePropertyDomain::getStanza);	
+			Comparator<EvidencePropertyDomain> compareBySequenceNum = Comparator.comparingInt(EvidencePropertyDomain::getSequenceNum);			 
 			Comparator<EvidencePropertyDomain> compareByTerm = Comparator.comparing(EvidencePropertyDomain::getPropertyTerm);			 
 			Comparator<EvidencePropertyDomain> compareAll = compareByStanza.thenComparing(compareBySequenceNum).thenComparing(compareByTerm);
 			Collections.sort(domain.getProperties(), compareAll);		

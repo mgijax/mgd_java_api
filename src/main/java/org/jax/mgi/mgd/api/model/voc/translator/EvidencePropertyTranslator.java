@@ -17,8 +17,8 @@ public class EvidencePropertyTranslator extends BaseEntityDomainTranslator<Evide
 		domain.setAnnotevidenceKey(String.valueOf(entity.get_annotevidence_key())); 
 		domain.setPropertyTermKey(String.valueOf(entity.getPropertyTerm().get_term_key()));
 		domain.setPropertyTerm(String.valueOf(entity.getPropertyTerm().getTerm()));
-		domain.setStanza(String.valueOf(entity.getStanza()));
-		domain.setSequenceNum(String.valueOf(entity.getSequenceNum()));
+		domain.setStanza(entity.getStanza());
+		domain.setSequenceNum(entity.getSequenceNum());
 		domain.setValue(entity.getValue());	
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());

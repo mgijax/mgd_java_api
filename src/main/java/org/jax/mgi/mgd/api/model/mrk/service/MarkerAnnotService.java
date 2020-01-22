@@ -314,7 +314,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		// order by dag abbrev, modification date desc, term			
 		Comparator<DenormAnnotationDomain> compareByAbbrev = Comparator.comparing(DenormAnnotationDomain::getGoDagAbbrev);	
 		Comparator<DenormAnnotationDomain> compareByModificationDate = Comparator.comparing(DenormAnnotationDomain::getModification_date).reversed();			 
-		Comparator<DenormAnnotationDomain> compareByTerm = Comparator.comparing(DenormAnnotationDomain::getTerm);			 
+		Comparator<DenormAnnotationDomain> compareByTerm = Comparator.comparing(DenormAnnotationDomain::getTerm, String.CASE_INSENSITIVE_ORDER);			 
 		Comparator<DenormAnnotationDomain> compareAll = compareByAbbrev.thenComparing(compareByModificationDate).thenComparing(compareByTerm);
 		Collections.sort(annotList, compareAll);		
 	}
@@ -323,7 +323,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 	public void orderByB(List<DenormAnnotationDomain> annotList) {
 		// order by creation date desc, term			
 		Comparator<DenormAnnotationDomain> compareByCreationDate = Comparator.comparing(DenormAnnotationDomain::getCreation_date).reversed();			 
-		Comparator<DenormAnnotationDomain> compareByTerm = Comparator.comparing(DenormAnnotationDomain::getTerm);			 
+		Comparator<DenormAnnotationDomain> compareByTerm = Comparator.comparing(DenormAnnotationDomain::getTerm, String.CASE_INSENSITIVE_ORDER);			 
 		Comparator<DenormAnnotationDomain> compareAll = compareByCreationDate.thenComparing(compareByTerm);
 		Collections.sort(annotList, compareAll);		
 	}
@@ -332,7 +332,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 	public void orderByC(List<DenormAnnotationDomain> annotList) {
 		// order by term id, term			
 		Comparator<DenormAnnotationDomain> compareByTermId = Comparator.comparing(DenormAnnotationDomain::getTermid);			 
-		Comparator<DenormAnnotationDomain> compareByTerm = Comparator.comparing(DenormAnnotationDomain::getTerm);			 
+		Comparator<DenormAnnotationDomain> compareByTerm = Comparator.comparing(DenormAnnotationDomain::getTerm, String.CASE_INSENSITIVE_ORDER);			 
 		Comparator<DenormAnnotationDomain> compareAll = compareByTermId.thenComparing(compareByTerm);
 		Collections.sort(annotList, compareAll);		
 	}
@@ -341,7 +341,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 	public void orderByD(List<DenormAnnotationDomain> annotList) {
 		// order by jnum,term			
 		Comparator<DenormAnnotationDomain> compareByJnum = Comparator.comparingInt(DenormAnnotationDomain::getJnum);			 
-		Comparator<DenormAnnotationDomain> compareByTerm = Comparator.comparing(DenormAnnotationDomain::getTerm);			 
+		Comparator<DenormAnnotationDomain> compareByTerm = Comparator.comparing(DenormAnnotationDomain::getTerm, String.CASE_INSENSITIVE_ORDER);			 
 		Comparator<DenormAnnotationDomain> compareAll = compareByJnum.thenComparing(compareByTerm);
 		Collections.sort(annotList, compareAll);		
 	}
@@ -350,7 +350,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 	public void orderByE(List<DenormAnnotationDomain> annotList) {
 		// order by evidence term, term			
 		Comparator<DenormAnnotationDomain> compareByEvidenceTerm = Comparator.comparing(DenormAnnotationDomain::getEvidenceTerm);			 
-		Comparator<DenormAnnotationDomain> compareByTerm = Comparator.comparing(DenormAnnotationDomain::getTerm);			 
+		Comparator<DenormAnnotationDomain> compareByTerm = Comparator.comparing(DenormAnnotationDomain::getTerm, String.CASE_INSENSITIVE_ORDER);			 
 		Comparator<DenormAnnotationDomain> compareAll = compareByEvidenceTerm.thenComparing(compareByTerm);
 		Collections.sort(annotList, compareAll);		
 	}

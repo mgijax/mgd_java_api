@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.mrk.dao.GOTrackingDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.DenormMarkerAnnotDomain;
@@ -46,9 +47,11 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 	@Inject
 	private AnnotationDAO annotationDAO;
 	@Inject
+	private AnnotationService annotationService;
+	@Inject
 	private GOTrackingDAO goTrackingDAO;
 	@Inject
-	private AnnotationService annotationService;
+	private NoteService noteService;
 	
 	private MarkerAnnotTranslator translator = new MarkerAnnotTranslator();
 	
@@ -74,6 +77,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		
 		MarkerAnnotDomain markerAnnotDomain = new MarkerAnnotDomain();
 		List<AnnotationDomain> annotList = new ArrayList<AnnotationDomain>();
+		Boolean modified = false;
 
 		// assuming the pwi will always pass in the annotTypeKey
 		
@@ -157,9 +161,19 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		
 		// add annotList to the MarkerAnnotDomain and process annotations
 		if (annotList.size() > 0) {
+
 			log.info("send json normalized domain to services");			
 			markerAnnotDomain.setAnnots(annotList);
-			annotationService.process(markerAnnotDomain.getAnnots(), user);
+
+			// go-marker annotations
+			if (annotationService.process(markerAnnotDomain.getAnnots(), user)) {
+				modified = true;
+			}
+
+			// go-marker note
+			if (noteService.process(domain.getMarkerKey(), domain.getGoNote().get(0), mgiTypeKey, "1002", user)) {
+				modified = true;
+			}
 			
 			// go-tracking/updating 
 			if (domain.getGoTracking().get(0).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
@@ -185,6 +199,13 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 					e.printStackTrace();
 				}
 			}
+		}
+		
+		if (modified) {
+			log.info("processMarkerAnnot/changes processed: " + domain.getMarkerKey());
+		}
+		else {
+			log.info("processMarkerAnnot/no changes processed: " + domain.getMarkerKey());
 		}
 		
 		log.info("repackage incoming domain as results");		

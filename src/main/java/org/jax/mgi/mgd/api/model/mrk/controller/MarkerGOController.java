@@ -56,7 +56,6 @@ public class MarkerGOController extends BaseController<DenormMarkerAnnotDomain> 
 	public SearchResults<DenormMarkerAnnotDomain> update(DenormMarkerAnnotDomain domain, User user) {
 		SearchResults<DenormMarkerAnnotDomain> results = new SearchResults<DenormMarkerAnnotDomain>();
 		results = markerAnnotService.update(domain, user);
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);	
 		return results;	
 	}
 
@@ -70,7 +69,7 @@ public class MarkerGOController extends BaseController<DenormMarkerAnnotDomain> 
 		log.info("MarkerGOController.delete");
 		SearchResults<DenormMarkerAnnotDomain> results = new SearchResults<DenormMarkerAnnotDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
-		return results;		
+		return results;
 	}
 
 	@GET

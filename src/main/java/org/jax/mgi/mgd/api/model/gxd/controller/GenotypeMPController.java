@@ -55,7 +55,6 @@ public class GenotypeMPController extends BaseController<DenormGenotypeAnnotDoma
 	public SearchResults<DenormGenotypeAnnotDomain> update(DenormGenotypeAnnotDomain domain, User user) {
 		SearchResults<DenormGenotypeAnnotDomain> results = new SearchResults<DenormGenotypeAnnotDomain>();
 		results = genotypeAnnotService.update(domain, user);
-		
 		return results;	
 	}
 

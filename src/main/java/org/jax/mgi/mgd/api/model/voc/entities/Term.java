@@ -11,10 +11,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.dag.entities.DagNode;
+import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
 import lombok.Getter;
@@ -56,7 +58,13 @@ public class Term extends BaseEntity {
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
 	@Where(clause="`_dag_key` in (1,2,3)")
-//	@Where(clause="`_dag_key` = 1 or `_dag_key` = 2 or `_dag_key` = 3")	
 	private List<DagNode> goDagNodes;
+
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 2")
+	@OrderBy(clause="_synonymtype_key, synonym")
+	private List<MGISynonym> goRelSynonyms;
+
 	
 }

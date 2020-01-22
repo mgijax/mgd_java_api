@@ -23,10 +23,10 @@ public class GOTrackingTranslator extends BaseEntityDomainTranslator<GOTracking,
 		if (entity.getCompletedBy() != null) {
 			domain.setCompletedByKey(entity.getCompletedBy().get_user_key().toString());
 			domain.setCompletion_date(dateFormatNoTime.format(entity.getCompletion_date()));
-			domain.setIsCompleted(true);
+			domain.setIsCompleted(1);
 		}
 		else {
-			domain.setIsCompleted(false);
+			domain.setIsCompleted(0);
 		}
 		
 		return domain;

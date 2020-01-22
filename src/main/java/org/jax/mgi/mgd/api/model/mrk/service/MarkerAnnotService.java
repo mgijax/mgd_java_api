@@ -497,7 +497,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		// go tracking; is completed?
 		if (searchDomain.getGoTracking() != null  && !searchDomain.getGoTracking().isEmpty()) {
 			if (searchDomain.getGoTracking().get(0).getIsCompleted() != null) {				
-				if (searchDomain.getGoTracking().get(0).getIsCompleted()) {				
+				if (searchDomain.getGoTracking().get(0).getIsCompleted().equals(1)) {				
 					where = where + "\nand trk.completion_date is not null";
 				}
 				else {

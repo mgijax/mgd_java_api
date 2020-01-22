@@ -18,5 +18,5 @@ public class GOTrackingDomain extends BaseDomain {
 	private String completion_date;
 	private String creation_date;
 	private String modification_date;  
-	private Boolean isCompleted;
+	private Integer isCompleted;
 }

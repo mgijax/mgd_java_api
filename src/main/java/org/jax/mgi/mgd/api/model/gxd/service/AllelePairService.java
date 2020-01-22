@@ -192,9 +192,11 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processAllelePair/delete");
-				AllelePair entity = allelePairDAO.get(Integer.valueOf(domain.get(i).getAllelePairKey()));
-				allelePairDAO.remove(entity);
-				modified = true;
+				if (domain.get(i).getAllelePairKey() != null && !domain.get(i).getAllelePairKey().isEmpty()) {
+					AllelePair entity = allelePairDAO.get(Integer.valueOf(domain.get(i).getAllelePairKey()));
+					allelePairDAO.remove(entity);
+					modified = true;
+				}
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processAllelePair/update");

@@ -359,7 +359,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 	public void orderByF(List<DenormAnnotationDomain> annotList) {
 		// order by modification date desc, term			
 		Comparator<DenormAnnotationDomain> compareByModificationDate = Comparator.comparing(DenormAnnotationDomain::getModification_date).reversed();			 
-		Comparator<DenormAnnotationDomain> compareByTerm = Comparator.comparing(DenormAnnotationDomain::getTerm);			 
+		Comparator<DenormAnnotationDomain> compareByTerm = Comparator.comparing(DenormAnnotationDomain::getTerm, String.CASE_INSENSITIVE_ORDER);			 
 		Comparator<DenormAnnotationDomain> compareAll = compareByModificationDate.thenComparing(compareByTerm);
 		Collections.sort(annotList, compareAll);		
 	}

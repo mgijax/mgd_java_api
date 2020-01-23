@@ -24,7 +24,7 @@ public class GOTracking extends BaseEntity {
 
 	@Id
 	private Integer _marker_key;
-	private String isReferenceGene; // obsolete
+	private Integer isReferenceGene; // obsolete
 	private Date completion_date;
 	private Date creation_date;
 	private Date modification_date;

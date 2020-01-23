@@ -476,6 +476,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		String where = "where v._mgitype_key = " + mgiTypeKey
 				+ "\nand v._object_key = m._marker_key"
 				+ "\nand m._marker_status_key = 1";
+				//+ "\nand m._marker_type_key = 1";
 		String orderBy = "order by v._object_key, v.description";
 		
 		String value;
@@ -622,7 +623,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		}
 		if (from_goNote == true) {
 			from = from + ", mgi_note_marker_view note";
-			where = where + "\nand v._marker_key = note._object_key";
+			where = where + "\nand v._object_key = note._object_key";
 			executeQuery = true;			
 		}
 		if (from_goTracking == true) {

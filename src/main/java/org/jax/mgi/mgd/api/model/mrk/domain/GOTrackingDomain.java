@@ -19,4 +19,5 @@ public class GOTrackingDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;  
 	private Integer isCompleted;
+	//private Integer isReferenceGene; // obsolete
 }

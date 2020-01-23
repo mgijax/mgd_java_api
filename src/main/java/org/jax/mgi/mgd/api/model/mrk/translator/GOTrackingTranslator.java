@@ -29,6 +29,9 @@ public class GOTrackingTranslator extends BaseEntityDomainTranslator<GOTracking,
 			domain.setIsCompleted(0);
 		}
 		
+		// obsolete
+		//domain.setIsReferenceGene(entity.getIsReferenceGene());
+		
 		return domain;
 	}
 

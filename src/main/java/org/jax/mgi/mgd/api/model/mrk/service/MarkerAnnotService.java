@@ -476,7 +476,6 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		String where = "where v._mgitype_key = " + mgiTypeKey
 				+ "\nand v._object_key = m._marker_key"
 				+ "\nand m._marker_status_key = 1";
-				//+ "\nand m._marker_type_key = 1";
 		String orderBy = "order by v._object_key, v.description";
 		
 		String value;

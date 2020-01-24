@@ -25,12 +25,16 @@ public class AnnotationController extends BaseController<AnnotationDomain> {
 
 	@Override
 	public SearchResults<AnnotationDomain> create(AnnotationDomain domain, User user) {
-		return annotationService.create(domain, user);
+		SearchResults<AnnotationDomain> results = new SearchResults<AnnotationDomain>();
+		results = annotationService.create(domain, user);
+		return results;		
 	}
 
 	@Override
 	public SearchResults<AnnotationDomain> update(AnnotationDomain domain, User user) {
-		return annotationService.update(domain, user);
+		SearchResults<AnnotationDomain> results = new SearchResults<AnnotationDomain>();
+		results = annotationService.update(domain, user);
+		return results;
 	}
 
 	@Override

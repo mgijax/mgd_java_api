@@ -12,7 +12,7 @@ public class EvidencePropertyDomain extends BaseDomain {
 
 	private String processStatus;
 	private String evidencePropertyKey;
-	private String annotevidenceKey;
+	private String annotEvidenceKey;
 	private String propertyTermKey;
 	private String propertyTerm;
 	private Integer stanza;

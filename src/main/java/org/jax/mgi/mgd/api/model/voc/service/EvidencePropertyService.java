@@ -149,14 +149,14 @@ public class EvidencePropertyService extends BaseService<EvidencePropertyDomain>
 				if (entity.getStanza() != null && domain.get(i).getStanza() != null) {
 					if (!entity.getStanza().equals(domain.get(i).getStanza())) {
 						entity.setStanza(domain.get(i).getStanza());
-						modified = true;
+						isUpdated = true;
 					}
 				}
 				
 				if (entity.getValue() != null && domain.get(i).getValue() != null) {
 					if (!entity.getValue().equals(domain.get(i).getValue())) {
 						entity.setValue(domain.get(i).getValue());
-						modified = true;
+						isUpdated = true;
 					}
 				}
 				

@@ -11,13 +11,10 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationTypeDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.EvidenceDAO;
-import org.jax.mgi.mgd.api.model.voc.dao.EvidencePropertyDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.AlleleVariantAnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
@@ -25,7 +22,6 @@ import org.jax.mgi.mgd.api.model.voc.domain.EvidenceDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 import org.jax.mgi.mgd.api.model.voc.entities.Evidence;
-import org.jax.mgi.mgd.api.model.voc.entities.EvidenceProperty;
 import org.jax.mgi.mgd.api.model.voc.translator.AlleleVariantAnnotationTranslator;
 import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
 import org.jax.mgi.mgd.api.model.voc.translator.MarkerFeatureTypeTranslator;
@@ -44,15 +40,11 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 	@Inject
 	private EvidenceDAO evidenceDAO;
 	@Inject
-	private EvidencePropertyDAO evidencePropertyDAO;
-	@Inject
 	private AnnotationTypeDAO annotTypeDAO;
 	@Inject
 	private TermDAO termDAO;
 	@Inject
-	private ReferenceDAO referenceDAO;
-	@Inject
-	private NoteService noteService;
+	private EvidenceService evidenceService;
 	
 	private AnnotationTranslator translator = new AnnotationTranslator();
 	private AlleleVariantAnnotationTranslator alleleVariantTranslator = new AlleleVariantAnnotationTranslator();	
@@ -252,9 +244,9 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				// voc_annot
 				Annotation entity = new Annotation();				
 				
-				log.info("calculating qualifier");
-				// set default qualifiers
-				if (annotTypeKey.equals("1002") ) {					
+				// set default qualifiers				
+				log.info("processAnnotation/qualifier");
+				if (annotTypeKey.equals("1002") ) {		
 					if( qualifierKey == null || qualifierKey.isEmpty()) {
 						log.info("setting default genotype/MP qualifier to 'null'");
 					    qualifierKey = "2181423";
@@ -272,6 +264,12 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 					    qualifierKey = "8068250";
 					}
 				}
+				else if (annotTypeKey.equals("1000") ) {
+					if( qualifierKey == null || qualifierKey.isEmpty()) {
+						log.info("setting default marker/GO qualifier to 'null'" );
+					    qualifierKey = "1614156";
+					}
+				}
 				
 				entity.setAnnotType(annotTypeDAO.get(Integer.valueOf(annotTypeKey)));				
 				entity.set_object_key(Integer.valueOf(domain.get(i).getObjectKey()));
@@ -282,91 +280,14 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				log.info("AnnotationService persisting Annotation");
 				annotationDAO.persist(entity);
 		
-				// not all annotation types have evidence records
-				// voc_evidence
-				// here we use an evidenceDAO directly to do evidence create - no need to create a service as
-				// only annotations deal with evidence
-				if (domain.get(i).getEvidence() != null) {
-
-					List<EvidenceDomain> evidenceList = domain.get(i).getEvidence();
-
-					for (int j = 0; j < evidenceList.size(); j++) {
-	
-						EvidenceDomain evidenceDomain = evidenceList.get(j);
-						log.info("AnnotationService creating evidence");
-						Evidence evidenceEntity = new Evidence();
-						evidenceEntity.set_annot_key(entity.get_annot_key());
-						String evidenceTermKey = evidenceDomain.getEvidenceTermKey();
-						log.info("calculating evidence term");
-
-						// for MP annotations only, set default evidence to "inferred from experiment"
-						if (annotTypeKey.equals("1002")) {
-							if(evidenceTermKey ==  null || evidenceTermKey.isEmpty()) {
-								log.info("setting default genotype/MP evidence to 'EXP'");
-								evidenceTermKey = "52280";
-							}
-						}
-						else if(annotTypeKey.equals("1020") ) {
-							if(evidenceTermKey ==  null || evidenceTermKey.isEmpty()) {
-								log.info("setting default genotype/DO evidence to 'TAS'" );
-								evidenceTermKey = "847168";
-							}
-						}
-						else if(annotTypeKey.equals("1021") ) {
-							if(evidenceTermKey ==  null || evidenceTermKey.isEmpty()) {
-								log.info("setting default allele/DO evidence to 'TAS'" );
-								evidenceTermKey = "8068251";
-							}
-						}
-	
-						evidenceEntity.setEvidenceTerm(termDAO.get(Integer.valueOf(evidenceTermKey)));
-						evidenceEntity.setReference(referenceDAO.get(Integer.valueOf(evidenceDomain.getRefsKey())));
-						evidenceEntity.setInferredFrom(evidenceDomain.getInferredFrom());
-						evidenceEntity.setCreatedBy(user);
-						evidenceEntity.setCreation_date(new Date());
-						evidenceEntity.setModification_date(new Date());
-						evidenceEntity.setModifiedBy(user);
-						
-						log.info("AnnotationService persisting Evidence");
-						evidenceDAO.persist(evidenceEntity);
-						
-						// for MP annotations only, set default sex-specificity to "NA"
-						// The property stanza and the sequenceNum will always be 1 
-						if (annotTypeKey.equals("1002")) {
-							String sexSpecificity;
-
-							if (evidenceDomain.getProperties() == null || evidenceDomain.getProperties().isEmpty()) {		
-								sexSpecificity = "NA";
-							}
-							else if (evidenceDomain.getProperties().get(0).getValue() == null 
-									|| evidenceDomain.getProperties().get(0).getValue().isEmpty()) {		
-								sexSpecificity = "NA";
-							}
-							else {
-								sexSpecificity = evidenceDomain.getProperties().get(0).getValue();
-							}
-						
-							EvidenceProperty propertyEntity = new EvidenceProperty();
-							propertyEntity.set_annotevidence_key(evidenceEntity.get_annotevidence_key());
-							propertyEntity.setPropertyTerm(termDAO.get(8836535));
-							propertyEntity.setValue(sexSpecificity);
-							propertyEntity.setSequenceNum(Integer.valueOf(1));
-							propertyEntity.setStanza(Integer.valueOf(1));
-							propertyEntity.setCreatedBy(user);
-							propertyEntity.setCreation_date(new Date());
-							propertyEntity.setModifiedBy(user);
-							propertyEntity.setModification_date(new Date());
-							
-							log.info("AnnotationService persisting EvidenceProperty");
-							evidencePropertyDAO.persist(propertyEntity);					
-						}
-						
-						// evidence notes
-						noteService.processAll(String.valueOf(evidenceEntity.get_annotevidence_key()), 
-								evidenceDomain.getAllNotes(), mgiTypeKey, user);			
+				// process evidence
+				if (domain.get(i).getEvidence() != null) {					
+					if (evidenceService.process(String.valueOf(entity.get_annot_key()), domain.get(i).getEvidence(), annotTypeKey, mgiTypeKey, user)) {
+						modified = true;
 					}
 				}
 				
+				// add is always true
 				modified = true;
 				log.info("processAnnotation/create/returning results");				
 			}
@@ -433,72 +354,11 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 						isUpdated = true;
 					}
 				}
-				
-				// not all annotation types have evidence records
-				// voc_evidence
-				// use an evidenceDAO directly to do evidence updates - no need to create a service as
-				// only annotations deal with evidence
-				// use an evidencePropertyDAO directly
-				
+
+				// process evidence
 				if (domain.get(i).getEvidence() != null) {
-
-					List<EvidenceDomain> evidenceList = domain.get(i).getEvidence();						
-					
-					for (int j = 0; j < evidenceList.size(); j++) {
-
-						EvidenceDomain evidenceDomain = evidenceList.get(j);
-						Evidence evidenceEntity = evidenceDAO.get(Integer.valueOf(evidenceDomain.getAnnotEvidenceKey()));
-						log.info("evidenceDomain processStatus: " + evidenceDomain.getProcessStatus() );
-					
-						if (evidenceDomain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-							evidenceDAO.remove(evidenceEntity);
-							isUpdated = true;
-							log.info("processAnnotation Evidence delete successful");
-						}
-						
-						else if(evidenceDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-							
-							if (!String.valueOf(evidenceEntity.getEvidenceTerm().get_term_key()).equals(evidenceDomain.getEvidenceTermKey())) {
-								evidenceEntity.setEvidenceTerm(termDAO.get(Integer.valueOf(evidenceDomain.getEvidenceTermKey())));
-								isUpdated = true;
-							}
-						
-							if (!String.valueOf(evidenceEntity.getReference().get_refs_key()).equals(evidenceDomain.getRefsKey())) {
-								evidenceEntity.setReference(referenceDAO.get(Integer.valueOf(evidenceDomain.getRefsKey())));
-								isUpdated = true;
-							}
-						
-							// check inferred from
-							if (evidenceEntity.getInferredFrom() != null && evidenceDomain.getInferredFrom() != null) {
-								if (!evidenceEntity.getInferredFrom().equals(evidenceDomain.getInferredFrom())) {
-									evidenceEntity.setInferredFrom(evidenceDomain.getInferredFrom());
-									isUpdated = true;
-								}
-							}
-						
-							// evidence property/mp-sex-specificity; only one
-							if (annotTypeKey.equals("1002")) {
-								log.info("processAnnotation/mp-sex-specificity");
-								EvidenceProperty evidencePropertyEntity = evidencePropertyDAO.get(Integer.valueOf(evidenceDomain.getProperties().get(0).getEvidencePropertyKey()));					
-								if (!evidenceEntity.getProperties().get(0).getValue().equals(evidenceDomain.getProperties().get(0).getValue())) {
-									evidencePropertyEntity.setValue(evidenceDomain.getProperties().get(0).getValue());
-									isUpdated = true;
-								}
-							}
-							
-							// evidence notes
-							log.info("processing annotation notes");
-							if (noteService.processAll(String.valueOf(entity.getEvidences().get(j).get_annotevidence_key()), 
-									evidenceDomain.getAllNotes(), mgiTypeKey,  user)) {
-								log.info("all note updated");
-								isUpdated = true;
-							}
-							
-							if (isUpdated) {
-								evidenceEntity.setModification_date(new Date());
-								evidenceEntity.setModifiedBy(user);								
-							}
-						}
+					if (evidenceService.process(domain.get(i).getAnnotKey(), domain.get(i).getEvidence(), annotTypeKey, mgiTypeKey, user)) {
+						modified = true;
 					}
 				}
 				

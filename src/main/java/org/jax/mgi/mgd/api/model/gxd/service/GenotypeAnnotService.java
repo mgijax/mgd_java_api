@@ -197,14 +197,12 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 					AnnotationHeaderDomain annotationHeaderDomain = headerList.get(j);
 					AnnotationHeader annotationHeaderEntity = annotationHeaderDAO.get(Integer.valueOf(annotationHeaderDomain.getAnnotHeaderKey()));
 					if (annotationHeaderDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-						if (!annotationHeaderEntity.getSequenceNum().equals(annotationHeaderDomain.getSequenceNum())) {	
-							annotationHeaderEntity.setSequenceNum(annotationHeaderDomain.getSequenceNum());
-							annotationHeaderEntity.setModification_date(new Date());
-							annotationHeaderEntity.setModifiedBy(user);
-							annotationHeaderEntity.setApproval_date(new Date());
-							annotationHeaderEntity.setApprovedBy(user);						
-							annotationHeaderDAO.update(annotationHeaderEntity);
-						}
+						annotationHeaderEntity.setSequenceNum(annotationHeaderDomain.getSequenceNum());
+						annotationHeaderEntity.setModification_date(new Date());
+						annotationHeaderEntity.setModifiedBy(user);
+						annotationHeaderEntity.setApproval_date(new Date());
+						annotationHeaderEntity.setApprovedBy(user);						
+						annotationHeaderDAO.update(annotationHeaderEntity);
 					}	
 				}
 				

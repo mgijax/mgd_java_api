@@ -113,7 +113,7 @@ public class EvidencePropertyService extends BaseService<EvidencePropertyDomain>
 				log.info("processProperty create");
 				
 				EvidenceProperty entity = new EvidenceProperty();
-				entity.set_annotevidence_key(Integer.valueOf(parentKey));
+				entity.set_annotEvidence_key(Integer.valueOf(parentKey));
 				entity.setPropertyTerm(termDAO.get(Integer.valueOf(domain.get(i).getPropertyTermKey())));
 				entity.setValue(domain.get(i).getValue());
 				entity.setSequenceNum(domain.get(i).getSequenceNum());

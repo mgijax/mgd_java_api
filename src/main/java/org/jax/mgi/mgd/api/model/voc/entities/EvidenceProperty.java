@@ -31,7 +31,7 @@ public class EvidenceProperty extends BaseEntity {
 	@SequenceGenerator(name="voc_evidence_property_generator", sequenceName = "voc_evidence_property_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")
 	private int _evidenceProperty_key;
-	private int _annotevidence_key;
+	private int _annotEvidence_key;
 	private Integer stanza;
 	private Integer sequenceNum;
 	private String value;

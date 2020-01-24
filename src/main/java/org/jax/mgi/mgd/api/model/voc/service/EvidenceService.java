@@ -139,6 +139,8 @@ public class EvidenceService extends BaseService<EvidenceDomain> {
 				entity.setCreation_date(new Date());
 				entity.setModification_date(new Date());
 				entity.setModifiedBy(user);
+				
+				evidenceDAO.persist(entity);			
 
 				// evidence property
 				if (propertyService.process(String.valueOf(entity.get_annotevidence_key()), domain.get(i).getProperties(), annotTypeKey,  user)) 
@@ -155,7 +157,6 @@ public class EvidenceService extends BaseService<EvidenceDomain> {
 				}
 				
 				log.info("processEvidence create");
-				evidenceDAO.persist(entity);			
 				modified = true;
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {

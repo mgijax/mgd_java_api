@@ -156,15 +156,15 @@ public class EvidenceService extends BaseService<EvidenceDomain> {
 					modified = true;
 				}
 				
-				log.info("processEvidence create");
-				modified = true;
+				modified = true;				
+				log.info("processEvidence/create processed");
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processEvidence delete");
 				Evidence entity = evidenceDAO.get(Integer.valueOf(domain.get(i).getAnnotEvidenceKey()));
 				evidenceDAO.remove(entity);
 				modified = true;
-				log.info("processEvidence delete successful");
+				log.info("processEvidence/delete processed");				
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processEvidence update");

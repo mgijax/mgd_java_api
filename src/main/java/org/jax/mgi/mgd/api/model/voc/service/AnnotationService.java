@@ -289,7 +289,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				
 				// add is always true
 				modified = true;
-				log.info("processAnnotation/create/returning results");				
+				log.info("processAnnotation/create processed");				
 			}
 			
 			// for splitting annotations that term and/or qualifier has changed
@@ -324,14 +324,14 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				}
 				
 				modified = true;
-				log.info("processAnnotation/split/returning results");				
+				log.info("processAnnotation/split processed");				
 			}			
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processAnnotation delete using key: " + domain.get(i).getAnnotKey());
 				Annotation entity = annotationDAO.get(Integer.valueOf(domain.get(i).getAnnotKey()));
 				annotationDAO.remove(entity);
 				modified = true;
-				log.info("processAnnotation delete successful");
+				log.info("processAnnotation/delete processed");
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {								
 				log.info("processAnnotation update");				

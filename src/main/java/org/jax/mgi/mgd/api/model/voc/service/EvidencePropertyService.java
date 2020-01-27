@@ -117,22 +117,23 @@ public class EvidencePropertyService extends BaseService<EvidencePropertyDomain>
 				EvidenceProperty entity = new EvidenceProperty();
 				entity.set_annotEvidence_key(Integer.valueOf(parentKey));
 				entity.setPropertyTerm(termDAO.get(Integer.valueOf(domain.get(i).getPropertyTermKey())));
-				entity.setValue(domain.get(i).getValue());
-				entity.setSequenceNum(domain.get(i).getSequenceNum());
 				entity.setStanza(domain.get(i).getStanza());
+				entity.setSequenceNum(domain.get(i).getSequenceNum());				
+				entity.setValue(domain.get(i).getValue());				
 				entity.setCreatedBy(user);
 				entity.setCreation_date(new Date());
 				entity.setModifiedBy(user);
 				entity.setModification_date(new Date());				
 				propertyDAO.persist(entity);			
 				modified = true;
+				log.info("processProperty/create processed");								
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processProperty delete");
 				EvidenceProperty entity = propertyDAO.get(Integer.valueOf(domain.get(i).getEvidencePropertyKey()));
 				propertyDAO.remove(entity);
 				modified = true;
-				log.info("processProperty delete successful");
+				log.info("processProperty/delete processed");								
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processProperty update");
@@ -145,6 +146,7 @@ public class EvidencePropertyService extends BaseService<EvidencePropertyDomain>
 				entity.setModifiedBy(user);
 				propertyDAO.update(entity);
 				modified = true;
+				log.info("processEvidence/changes processed: " + domain.get(i).getAnnotEvidenceKey());				
 			}
 			else {
 				log.info("processProperty/no changes processed: " + domain.get(i).getEvidencePropertyKey());

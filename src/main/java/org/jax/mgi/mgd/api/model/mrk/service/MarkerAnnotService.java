@@ -176,27 +176,29 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 			}
 			
 			// go-tracking/updating 
-			if (domain.getGoTracking().get(0).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-				try {
-					String newCompletionStr = domain.getGoTracking().get(0).getCompletion_date();
-					Date newCompletion = new Date();
-					
-					GOTracking goTrackingEntity = new GOTracking();
-					goTrackingEntity.set_marker_key(Integer.valueOf(domain.getMarkerKey()));
-					
-					if (newCompletionStr != null && !newCompletionStr.isEmpty()) {						
-						newCompletion = new SimpleDateFormat("dd/MM/yyyy").parse(newCompletionStr);
+			if (domain.getGoTracking() != null || !domain.getGoTracking().isEmpty()) {
+				if (domain.getGoTracking().get(0).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+					try {
+						String newCompletionStr = domain.getGoTracking().get(0).getCompletion_date();
+						Date newCompletion = new Date();
+						
+						GOTracking goTrackingEntity = new GOTracking();
+						goTrackingEntity.set_marker_key(Integer.valueOf(domain.getMarkerKey()));
+						
+						if (newCompletionStr != null && !newCompletionStr.isEmpty()) {						
+							newCompletion = new SimpleDateFormat("dd/MM/yyyy").parse(newCompletionStr);
+						}
+						else {
+							newCompletion = null;
+						}
+						
+						goTrackingEntity.setCompletedBy(user);
+						goTrackingEntity.setCompletion_date(newCompletion);	
+						goTrackingDAO.update(goTrackingEntity);
 					}
-					else {
-						newCompletion = null;
+					catch (Exception e) {
+						e.printStackTrace();
 					}
-					
-					goTrackingEntity.setCompletedBy(user);
-					goTrackingEntity.setCompletion_date(newCompletion);	
-					goTrackingDAO.update(goTrackingEntity);
-				}
-				catch (Exception e) {
-					e.printStackTrace();
 				}
 			}
 		}

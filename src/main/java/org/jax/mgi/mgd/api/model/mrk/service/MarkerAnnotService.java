@@ -176,7 +176,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 			}
 			
 			// go-tracking/updating 
-			if (domain.getGoTracking() != null || !domain.getGoTracking().isEmpty()) {
+			if (domain.getGoTracking() != null) {
 				if (domain.getGoTracking().get(0).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 					try {
 						String newCompletionStr = domain.getGoTracking().get(0).getCompletion_date();

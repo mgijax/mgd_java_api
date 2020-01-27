@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.gxd.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.jax.mgi.mgd.api.model.gxd.domain.DenormGenotypeAnnotDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeAnnotDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeAlleleReferenceDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeMPDomain;
 import org.jax.mgi.mgd.api.model.gxd.translator.GenotypeAnnotTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimGenotypeTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
@@ -244,7 +246,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 		String controllerAnnotTypeKey = String.valueOf(annotTypeKey);
 		
 		DenormGenotypeAnnotDomain denormGenoAnnotDomain = new DenormGenotypeAnnotDomain();
-
+		
     	try {
         	GenotypeAnnotDomain genoAnnotDomain = new GenotypeAnnotDomain();  
         	genoAnnotDomain = translator.translate(genotypeDAO.get(key));
@@ -269,7 +271,9 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			}
 			
 			if (genoAnnotDomain.getAnnots() != null) {
+
 				for (int i = 0; i < genoAnnotDomain.getAnnots().size(); i++) {	
+
 					// annotation (term, qualifier)
 					AnnotationDomain annotDomain = genoAnnotDomain.getAnnots().get(i);
 					String domainAnnotTypeKey = annotDomain.getAnnotTypeKey();
@@ -330,16 +334,70 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 						if (domainAnnotTypeKey.equals("1002")) {
 							denormAnnotDomain.setProperties(evidenceDomain.getProperties());
 						}
+						
 						annotList.add(denormAnnotDomain);
 					}
 				}
 			}
 
+			// if MP annnot/1002, then check for duplicates
+			if (annotTypeKey.equals(1002)) {
+				List<SlimGenotypeMPDomain> duplicateList = new ArrayList<SlimGenotypeMPDomain>();
+				String cmd = "select v._term_key, v._qualifier_key, e._evidenceterm_key, e._refs_key, p.value"
+					+ "\nfrom VOC_Annot v, VOC_Evidence e, VOC_Evidence_Property p"
+					+ "\nwhere v._AnnotType_key = 1002"
+					+ "\nand v._annot_key = e._annot_key"
+					+ "\nand e._annotevidence_key = p._annotevidence_key"
+					+ "\nand p._propertyterm_key = 8836535"
+					+ "\nand v._object_key = " + key
+					+ "\ngroup by v._object_key, e._refs_key, v._term_key, v._qualifier_key, e._evidenceterm_key, p.value"
+					+ "\nhaving count(*) > 1";
+				log.info("check if mp annotations contains duplicates");
+				log.info(cmd);
+				try {
+					ResultSet rs = sqlExecutor.executeProto(cmd);
+					SlimGenotypeMPDomain domain = new SlimGenotypeMPDomain();
+					while (rs.next()) {
+						domain.setTermKey(rs.getString("_term_key"));
+						domain.setQualifierKey(rs.getString("_qualifier_key"));
+						domain.setEvidenceTermKey(rs.getString("_evidenceterm_key"));
+						domain.setRefsKey(rs.getString("_refs_key"));
+						domain.setSexSpecificityValue(rs.getString("value"));						
+						duplicateList.add(domain);						
+					}
+					sqlExecutor.cleanup();
+
+					if (duplicateList.size() > 0) {
+						log.info("found mp annotaiton duplicates");
+						log.info(duplicateList.toString());
+						for (int i = 0; i < annotList.size(); i++) {				
+							// find result in annotList and set mpIsDuplicate = true
+							for (int j = 0; j < duplicateList.size(); j++) {	
+								if (duplicateList.get(j).getTermKey().equals(annotList.get(i).getTermKey())
+									&& duplicateList.get(j).getQualifierKey().equals(annotList.get(i).getQualifierKey())
+									&& duplicateList.get(j).getEvidenceTermKey().equals(annotList.get(i).getEvidenceTermKey())
+									&& duplicateList.get(j).getRefsKey().equals(annotList.get(i).getRefsKey())
+									&& duplicateList.get(j).getSexSpecificityValue().equals(annotList.get(i).getProperties().get(0).getValue())) {
+									annotList.get(i).setMpIsDuplicate(true);
+								}
+							}
+						}
+					}
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}			
+			}
+			
 			// add List of annotation domains to the denormalized geno annot domain
 			denormGenoAnnotDomain.setAnnots(annotList);
 			
 			// sort by jnum, term		
-			annotList.sort(Comparator.comparingInt(DenormAnnotationDomain::getJnum).thenComparing(DenormAnnotationDomain::getTerm));				
+			Comparator<DenormAnnotationDomain> compareByJnum = Comparator.comparingInt(DenormAnnotationDomain::getJnum);			 
+			Comparator<DenormAnnotationDomain> compareByTerm = Comparator.comparing(DenormAnnotationDomain::getTerm, String.CASE_INSENSITIVE_ORDER);			 
+			Comparator<DenormAnnotationDomain> compareAll = compareByJnum.thenComparing(compareByTerm);
+			Collections.sort(annotList, compareAll);			
+
     	}
 		catch (Exception e) {
 			e.printStackTrace();

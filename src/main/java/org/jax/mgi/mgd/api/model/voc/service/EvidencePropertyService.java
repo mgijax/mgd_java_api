@@ -90,8 +90,8 @@ public class EvidencePropertyService extends BaseService<EvidencePropertyDomain>
 	
 				// if property term is null/empty, then skip
 				// pwi has sent a "c" that is empty/not being used
-				if (domain.get(i).getEvidencePropertyKey() == null 
-						|| domain.get(i).getEvidencePropertyKey().isEmpty()) {
+				if (domain.get(i).getPropertyTermKey() == null 
+						|| domain.get(i).getPropertyTermKey().isEmpty()) {
 					continue;
 				}
 				

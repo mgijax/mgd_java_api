@@ -50,4 +50,8 @@ public class DenormAnnotationDomain extends BaseDomain {
 	// notes for given evidence
 	private List<NoteDomain> allNotes;
 	
+	// for mp annotations (1002), is this annotation a duplicate?
+	// jnum, term, qualifier, evidenceTerm, property/sex-specificity
+	Boolean mpIsDuplicate = false;
+	
 }

@@ -131,14 +131,14 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
             annotDomain.setAllowEditTerm(domain.getAllowEditTerm());
 
             // evidence : create evidence list of 1 result
-			//log.info("GenotypeAnnotService.update : add evidence list");           
+			log.info("GenotypeAnnotService.update : add evidence list");           
 			EvidenceDomain evidenceDomain = new EvidenceDomain();
             List<EvidenceDomain> evidenceList = new ArrayList<EvidenceDomain>();
             evidenceDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
             
             // if term or qualifier has been changed...
             if (denormAnnotDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-				//log.info("GenotypeAnnotService.update : check for changes");
+				log.info("GenotypeAnnotService.update : check for changes");
             	Annotation entity = annotationDAO.get(Integer.valueOf(denormAnnotDomain.getAnnotKey()));
 				if (!denormAnnotDomain.getTermKey().equals(String.valueOf(entity.getTerm().get_term_key()))
 	            		|| !denormAnnotDomain.getQualifierKey().equals(String.valueOf(entity.getQualifier().get_term_key()))) {
@@ -157,16 +157,16 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
             // Only MP has properties
             if (annotTypeKey.equals("1002")) {
 				// sex-specificity : create evidence-property list of 1 result
-    			//log.info("GenotypeAnnotService.update : add evidence property");           
+    			log.info("GenotypeAnnotService.update : evidence property");           
 				EvidencePropertyDomain evidencePropertyDomain = new EvidencePropertyDomain();			
 				List<EvidencePropertyDomain > evidencePropertyList = new ArrayList<EvidencePropertyDomain>();
 				evidencePropertyDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
 				evidencePropertyDomain.setEvidencePropertyKey(denormAnnotDomain.getProperties().get(0).getEvidencePropertyKey());
 				evidencePropertyDomain.setPropertyTermKey(denormAnnotDomain.getProperties().get(0).getPropertyTermKey());
+				evidencePropertyDomain.setStanza(denormAnnotDomain.getProperties().get(0).getStanza());
+				evidencePropertyDomain.setSequenceNum(denormAnnotDomain.getProperties().get(0).getSequenceNum());		
 				evidencePropertyDomain.setValue(denormAnnotDomain.getProperties().get(0).getValue());
 				evidencePropertyList.add(evidencePropertyDomain);
-				
-				// add properties to the evidenceDomain
 				evidenceDomain.setProperties(evidencePropertyList);
             }
             

@@ -168,52 +168,28 @@ public class EvidenceService extends BaseService<EvidenceDomain> {
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processEvidence update");
-
-				Boolean isUpdated = false;
 				Evidence entity = evidenceDAO.get(Integer.valueOf(domain.get(i).getAnnotEvidenceKey()));
 		
-				if (!String.valueOf(entity.getEvidenceTerm().get_term_key()).equals(domain.get(i).getEvidenceTermKey())) {
-					entity.setEvidenceTerm(termDAO.get(Integer.valueOf(domain.get(i).getEvidenceTermKey())));
-					isUpdated = true;
-				}
-			
-				if (!String.valueOf(entity.getReference().get_refs_key()).equals(domain.get(i).getRefsKey())) {
-					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
-					modified = true;
-				}
-			
-				if (entity.getInferredFrom() != null && domain.get(i).getInferredFrom() != null) {
-					if (!entity.getInferredFrom().equals(domain.get(i).getInferredFrom())) {
-						entity.setInferredFrom(domain.get(i).getInferredFrom());
-						modified = true;
-					}
-				}
-
 				// evidence property
 				if (propertyService.process(String.valueOf(entity.get_annotevidence_key()), domain.get(i).getProperties(), annotTypeKey,  user)) 
 				{
-					log.info("processEvidence/properties" + domain.get(i).getAnnotEvidenceKey());					
-					modified = true;
+					log.info("processEvidence/properties: " + domain.get(i).getAnnotEvidenceKey());					
 				}
 				
 				// evidence notes
-				log.info("processing annotation notes");
 				if (noteService.processAll(String.valueOf(entity.get_annotevidence_key()), domain.get(i).getAllNotes(), mgiTypeKey,  user)) 
 				{
-					log.info("processEvidence/notes" + domain.get(i).getAnnotEvidenceKey());					
-					isUpdated = true;
+					log.info("processEvidence/notes: " + domain.get(i).getAnnotEvidenceKey());					
 				}
-				
-				if (isUpdated) {
-					entity.setModification_date(new Date());
-					entity.setModifiedBy(user);
-					evidenceDAO.update(entity);
-					modified = true;
-					log.info("processEvidence/changes processed: " + domain.get(i).getAnnotEvidenceKey());
-				}
-				else {
-					log.info("processEvidence/no changes processed: " + domain.get(i).getAnnotEvidenceKey());
-				}
+
+				entity.setEvidenceTerm(termDAO.get(Integer.valueOf(domain.get(i).getEvidenceTermKey())));
+				entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));			
+				entity.setInferredFrom(domain.get(i).getInferredFrom());				
+				entity.setModification_date(new Date());
+				entity.setModifiedBy(user);
+				evidenceDAO.update(entity);
+				modified = true;
+				log.info("processEvidence/changes processed: " + domain.get(i).getAnnotEvidenceKey());
 			}
 			else {
 				log.info("processEvidence/no changes processed: " + domain.get(i).getAnnotEvidenceKey());

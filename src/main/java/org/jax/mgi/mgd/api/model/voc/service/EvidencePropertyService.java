@@ -123,8 +123,7 @@ public class EvidencePropertyService extends BaseService<EvidencePropertyDomain>
 				entity.setCreatedBy(user);
 				entity.setCreation_date(new Date());
 				entity.setModifiedBy(user);
-				entity.setModification_date(new Date());
-				
+				entity.setModification_date(new Date());				
 				propertyDAO.persist(entity);			
 				modified = true;
 			}
@@ -137,39 +136,15 @@ public class EvidencePropertyService extends BaseService<EvidencePropertyDomain>
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processProperty update");
-
-				Boolean isUpdated = false;
-				EvidenceProperty entity = propertyDAO.get(Integer.valueOf(domain.get(i).getEvidencePropertyKey()));
-		
-				if (!String.valueOf(entity.getPropertyTerm().get_term_key()).equals(domain.get(i).getPropertyTermKey())) {
-					entity.setPropertyTerm(termDAO.get(Integer.valueOf(domain.get(i).getPropertyTermKey())));
-					isUpdated = true;
-				}
-
-				if (entity.getStanza() != null && domain.get(i).getStanza() != null) {
-					if (!entity.getStanza().equals(domain.get(i).getStanza())) {
-						entity.setStanza(domain.get(i).getStanza());
-						isUpdated = true;
-					}
-				}
-				
-				if (entity.getValue() != null && domain.get(i).getValue() != null) {
-					if (!entity.getValue().equals(domain.get(i).getValue())) {
-						entity.setValue(domain.get(i).getValue());
-						isUpdated = true;
-					}
-				}
-				
-				if (isUpdated) {
-					entity.setModification_date(new Date());
-					entity.setModifiedBy(user);
-					propertyDAO.update(entity);
-					modified = true;
-					log.info("processProperty/changes processed: " + domain.get(i).getEvidencePropertyKey());
-				}
-				else {
-					log.info("processProperty/no changes processed: " + domain.get(i).getEvidencePropertyKey());
-				}
+				EvidenceProperty entity = propertyDAO.get(Integer.valueOf(domain.get(i).getEvidencePropertyKey()));		
+				entity.setPropertyTerm(termDAO.get(Integer.valueOf(domain.get(i).getPropertyTermKey())));
+				entity.setStanza(domain.get(i).getStanza());
+				entity.setSequenceNum(domain.get(i).getSequenceNum());
+				entity.setValue(domain.get(i).getValue());
+				entity.setModification_date(new Date());
+				entity.setModifiedBy(user);
+				propertyDAO.update(entity);
+				modified = true;
 			}
 			else {
 				log.info("processProperty/no changes processed: " + domain.get(i).getEvidencePropertyKey());

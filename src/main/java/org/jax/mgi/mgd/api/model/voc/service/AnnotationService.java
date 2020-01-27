@@ -333,45 +333,23 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 				modified = true;
 				log.info("processAnnotation delete successful");
 			}
-			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-								
-				log.info("processAnnotation update");
-				
-				Boolean isUpdated = false;
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {								
+				log.info("processAnnotation update");				
 				Annotation entity = annotationDAO.get(Integer.valueOf(domain.get(i).getAnnotKey()));
-				log.info("qualifier: " + domain.get(i).getQualifier());
 				
-				if (!String.valueOf(entity.getQualifier().get_term_key()).equals(domain.get(i).getQualifierKey())) {
-					log.info("qualifiers are different entity: " + String.valueOf(entity.getQualifier().get_term_key()) + " domain: " + domain.get(i).getQualifierKey());
-					entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
-					isUpdated = true;
-				}
-				
-				if (domain.get(i).getAllowEditTerm()) {
-					if (!String.valueOf(entity.getTerm().get_term_key()).equals(domain.get(i).getTermKey())) {
-					    log.info("terms are different. entity: " + entity.getTerm().get_term_key() + " domain: " + domain.get(i).getTermKey());	
-						entity.setTerm(termDAO.get(Integer.valueOf(domain.get(i).getTermKey())));									
-						isUpdated = true;
+				// process evidence; not every annotation has evidence
+				if (domain.get(i).getEvidence() != null) {
+					if (evidenceService.process(domain.get(i).getAnnotKey(), domain.get(i).getEvidence(), annotTypeKey, mgiTypeKey, user)) {
+						log.info("processAnnotation/evidence: " + domain.get(i).getAnnotKey());
 					}
 				}
 
-				// process evidence
-				if (domain.get(i).getEvidence() != null) {
-					if (evidenceService.process(domain.get(i).getAnnotKey(), domain.get(i).getEvidence(), annotTypeKey, mgiTypeKey, user)) {
-						modified = true;
-					}
-				}
-				
-				// if any modifications made, then update DAO
-				if (isUpdated) {
-					entity.setModification_date(new Date());
-					annotationDAO.update(entity);
-					modified = true;
-					log.info("processAnnotation/changes processed: " + domain.get(i).getAnnotKey());
-				}	
-				else {
-					log.info("processAnnotation/no changes processed: " + domain.get(i).getAnnotKey());
-				}
+				entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
+				entity.setTerm(termDAO.get(Integer.valueOf(domain.get(i).getTermKey())));									
+				entity.setModification_date(new Date());
+				annotationDAO.update(entity);
+				modified = true;
+				log.info("processAnnotation/changes processed: " + domain.get(i).getAnnotKey());
 			}
 			else {
 				log.info("processAnnotation/no changes processed: " + domain.get(i).getAnnotKey());

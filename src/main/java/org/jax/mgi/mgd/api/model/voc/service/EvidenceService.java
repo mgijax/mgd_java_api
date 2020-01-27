@@ -97,11 +97,13 @@ public class EvidenceService extends BaseService<EvidenceDomain> {
 				
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 	
-				// if evidence is null/empty, then skip
+				// commented out due to defaults below
+				// if evidence term is null/empty, then skip
 				// pwi has sent a "c" that is empty/not being used
-				if (domain.get(i).getEvidenceTermKey() == null) {
-					continue;
-				}
+//				if (domain.get(i).getEvidenceTermKey() == null 
+//						|| domain.get(i).getEvidenceTermKey().isEmpty()) {
+//					continue;
+//				}
 				
 				log.info("processEvidence create");
 

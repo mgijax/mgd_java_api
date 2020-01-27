@@ -88,12 +88,12 @@ public class EvidencePropertyService extends BaseService<EvidencePropertyDomain>
 				
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 	
-				// the evidence service will return before this even happens
-				// if evidence is null/empty, then skip
+				// if property term is null/empty, then skip
 				// pwi has sent a "c" that is empty/not being used
-//				if (domain.get(i).getEvidencePropertyKey() == null) {
-//					continue;
-//				}
+				if (domain.get(i).getEvidencePropertyKey() == null 
+						|| domain.get(i).getEvidencePropertyKey().isEmpty()) {
+					continue;
+				}
 				
 				log.info("processProperty create");
 

@@ -152,15 +152,25 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));				
 				entity.setAllele1(alleleDAO.get(Integer.valueOf(domain.get(i).getAlleleKey1())));				
 				
-				if (domain.get(i).getAlleleKey2() != null && !domain.get(i).getAlleleKey2().isEmpty()) {
+				// these fields allow null
+				if (domain.get(i).getAlleleKey2() == null || domain.get(i).getAlleleKey2().isEmpty()) {
+					entity.setAllele2(null);				
+				}
+				else {
 					entity.setAllele2(alleleDAO.get(Integer.valueOf(domain.get(i).getAlleleKey2())));				
 				}
-								
-				if (domain.get(i).getCellLineKey1() != null && !domain.get(i).getCellLineKey1().isEmpty()) {
+				
+				if (domain.get(i).getCellLineKey1() == null || domain.get(i).getCellLine1().isEmpty()) {
+					entity.setCellLine1(null);									
+				}
+				else {
 					entity.setCellLine1(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLineKey1())));				
 				}
-					
-				if (domain.get(i).getCellLineKey2() != null && !domain.get(i).getCellLineKey2().isEmpty()) {
+
+				if (domain.get(i).getCellLineKey2() == null || domain.get(i).getCellLine2().isEmpty()) {
+					entity.setCellLine2(null);									
+				}
+				else {
 					entity.setCellLine2(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLineKey2())));				
 				}
 				

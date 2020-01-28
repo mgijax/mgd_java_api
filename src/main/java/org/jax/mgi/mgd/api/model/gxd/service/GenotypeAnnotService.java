@@ -194,6 +194,8 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 		if (annotTypeKey.equals("1002")) {				
 			// process change to annotationHeaderDomian.getSequenceNum()
 			List<AnnotationHeaderDomain> headerList = genoAnnotDomain.getHeaders();
+		
+			// change order of existing headers
 			if (headerList != null && !headerList.isEmpty()) {
 				for (int j = 0; j < headerList.size(); j++) {
 					AnnotationHeaderDomain annotationHeaderDomain = headerList.get(j);
@@ -206,15 +208,15 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 						annotationHeaderEntity.setApprovedBy(user);						
 						annotationHeaderDAO.update(annotationHeaderEntity);
 					}	
-				}
-				
-				// process order reset
-				String cmd = "select count(*) from MGI_resetSequenceNum ('VOC_AnnotHeaderMP'," + genoAnnotDomain.getGenotypeKey() + "," + user.get_user_key() + ")";
-				log.info("processGenotype/process order reset: " + cmd);
-				Query query = genotypeDAO.createNativeQuery(cmd);
-				query.getResultList();
-				
+				}						
 			}
+			
+			// process headers
+			String cmd = "select count(*) from VOC_processAnnotHeader (" + user.get_user_key() + ","
+					+ annotTypeKey + "," + genoAnnotDomain.getGenotypeKey() + ")";
+			log.info("processGenotype/process header: " + cmd);
+			Query query = genotypeDAO.createNativeQuery(cmd);
+			query.getResultList();							
 		}
 			
 		log.info("repackage incoming domain as results");		

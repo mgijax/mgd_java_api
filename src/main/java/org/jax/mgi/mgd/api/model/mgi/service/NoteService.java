@@ -148,6 +148,15 @@ public class NoteService extends BaseService<NoteDomain> {
 		note = DecodeString.setDecodeToLatin9(noteDomain.getNoteChunk());
 		note = "'" + note + "'";
 		
+		// if processStatus is being used
+		// earlier pwis are not using processStatus
+		// at some point, all pwis should be changed to use processStatus
+		if (noteDomain.getProcessStatus() != null) {
+			if (noteDomain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+				noteDomain.setNoteChunk(null);
+			}
+		}
+		
 		// create
 		if (noteDomain.getNoteKey() == null || noteDomain.getNoteKey().isEmpty())
 		{

@@ -358,53 +358,38 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 				log.info(cmd);
 				try {
 					ResultSet rs = sqlExecutor.executeProto(cmd);
-					SlimGenotypeMPDomain domain = new SlimGenotypeMPDomain();
 					while (rs.next()) {
+						SlimGenotypeMPDomain domain = new SlimGenotypeMPDomain();
 						domain.setTermKey(rs.getString("_term_key"));
 						domain.setQualifierKey(rs.getString("_qualifier_key"));
 						domain.setEvidenceTermKey(rs.getString("_evidenceterm_key"));
 						domain.setRefsKey(rs.getString("_refs_key"));
-						domain.setSexSpecificityValue(rs.getString("value"));						
+						domain.setSexSpecificityValue(rs.getString("value"));
 						duplicateList.add(domain);						
 					}
 					sqlExecutor.cleanup();
-
-					if (duplicateList.size() > 0) {
-						log.info("found mp annotaiton duplicates");
-						for (int i = 0; i < annotList.size(); i++) {
-
-							log.info("annotList");
-							log.info(annotList.get(i).getTermKey());
-							log.info(annotList.get(i).getQualifierKey());
-							log.info(annotList.get(i).getEvidenceTermKey());
-							log.info(annotList.get(i).getRefsKey());
-							log.info(annotList.get(i).getProperties().get(0).getValue());
-							
-							// find result in annotList and set mpIsDuplicate = true
-							for (int j = 0; j < duplicateList.size(); j++) {
-								
-								log.info("duplicate");
-								log.info(duplicateList.get(j).getTermKey());
-								log.info(duplicateList.get(j).getQualifierKey());
-								log.info(duplicateList.get(j).getEvidenceTermKey());
-								log.info(duplicateList.get(j).getRefsKey());
-								log.info(duplicateList.get(j).getSexSpecificityValue());							
-
-								if (duplicateList.get(j).getTermKey().equals(annotList.get(i).getTermKey())
-									&& duplicateList.get(j).getQualifierKey().equals(annotList.get(i).getQualifierKey())
-									&& duplicateList.get(j).getEvidenceTermKey().equals(annotList.get(i).getEvidenceTermKey())
-									&& duplicateList.get(j).getRefsKey().equals(annotList.get(i).getRefsKey())
-									&& duplicateList.get(j).getSexSpecificityValue().equals(annotList.get(i).getProperties().get(0).getValue())) {
-									log.info("found dup: " + annotList.get(i).getAnnotKey());
-									annotList.get(i).setMpIsDuplicate(true);
-								}
+				}
+				catch (Exception e) {
+						e.printStackTrace();
+				}
+					
+				if (duplicateList.size() > 0) {
+					log.info("found mp annotaiton duplicates: " + duplicateList.size());
+									
+					for (int i = 0; i < annotList.size(); i++) {							
+						// find result in annotList and set mpIsDuplicate = true
+						for (int j = 0; j < duplicateList.size(); j++) {															
+							if (duplicateList.get(j).getTermKey().equals(annotList.get(i).getTermKey())
+								&& duplicateList.get(j).getQualifierKey().equals(annotList.get(i).getQualifierKey())
+								&& duplicateList.get(j).getEvidenceTermKey().equals(annotList.get(i).getEvidenceTermKey())
+								&& duplicateList.get(j).getRefsKey().equals(annotList.get(i).getRefsKey())
+								&& duplicateList.get(j).getSexSpecificityValue().equals(annotList.get(i).getProperties().get(0).getValue())) {
+								log.info("found dup: " + annotList.get(i).getAnnotKey());
+								annotList.get(i).setMpIsDuplicate(true);
 							}
 						}
 					}
 				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}			
 			}
 			
 			// add List of annotation domains to the denormalized geno annot domain

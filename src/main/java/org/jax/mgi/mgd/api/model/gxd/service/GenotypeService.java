@@ -623,59 +623,80 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				orderBy;
 		 
 		log.info(cmd);
-
+		
+		// must match GenotypeAnotService/search()
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			Integer prevObjectKey = 0;
 			Integer newObjectKey = 0;
 			String newDescription = "";
 			String prevDescription = "";
+			String newStrain = "";
+			String prevStrain = "";
 			Boolean addResults = false;
 			
-			// concatenate description when grouped by _genotype_key
+			// concatenate description when grouped by _object_key
 			
 			while (rs.next()) {
 				
 				newObjectKey = rs.getInt("_genotype_key");
-				newDescription = rs.getString("genotypeDisplay");
+				newStrain = rs.getString("strain");
+				newDescription = rs.getString("symbol");
 								
 				// group description by _object_key
 				if (prevObjectKey.equals(0)) {
 					prevObjectKey = newObjectKey;
+					prevStrain = newStrain;
 					prevDescription = newDescription;
 					addResults = false;
 				}
 				else if (newObjectKey.equals(prevObjectKey)) {
+					prevDescription = prevDescription + "," + newDescription;
 					addResults = false;
 				}
 				else {
 					addResults = true;
 				}
 				
-				if (addResults) {	
-					SlimGenotypeDomain domain = new SlimGenotypeDomain();
-					domain = slimtranslator.translate(genotypeDAO.get(prevObjectKey));				
-					domain.setGenotypeDisplay(prevDescription);
-					genotypeDAO.clear();				
-					results.add(domain);
+				if (addResults) {
 
+					prevDescription = prevStrain + " " + prevDescription;
+	
+					SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();
+					slimdomain = slimtranslator.translate(genotypeDAO.get(prevObjectKey));				
+					slimdomain.setGenotypeDisplay(prevDescription);
+					genotypeDAO.clear();				
+					results.add(slimdomain);
+					
 					prevObjectKey = newObjectKey;
+					prevStrain = newStrain;
 					prevDescription = newDescription;
 					addResults = false;
 				}
 				
 				// if last record, then add to result set
 				if (rs.isLast() == true) {
-					if (!prevObjectKey.equals(newObjectKey)) {
+					
+					if (prevObjectKey.equals(newObjectKey)) {
+						if (prevDescription == null) {
+							prevDescription = prevStrain;
+						}
+						else {
+							prevDescription = prevStrain + " " + prevDescription;							
+						}
+					}
+					else {
 						prevObjectKey = newObjectKey;
+						prevStrain = newStrain;
 						prevDescription = newDescription;
+						prevDescription = prevStrain + " " + prevDescription;
 					}
 					
-					SlimGenotypeDomain domain = new SlimGenotypeDomain();
-					domain = slimtranslator.translate(genotypeDAO.get(prevObjectKey));				
-					domain.setGenotypeDisplay(prevDescription);
+					SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();
+					slimdomain = slimtranslator.translate(genotypeDAO.get(prevObjectKey));				
+					slimdomain.setGenotypeDisplay(prevDescription);
 					genotypeDAO.clear();				
-					results.add(domain);
+					results.add(slimdomain);
 				}
 								
 			}
@@ -686,7 +707,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-		}
+		}		
 		
 		return results;
 	}	

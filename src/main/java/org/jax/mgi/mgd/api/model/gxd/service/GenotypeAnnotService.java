@@ -345,7 +345,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			// if MP annnot/1002, then check for duplicates
 			if (annotTypeKey.equals(1002)) {
 				List<SlimGenotypeMPDomain> duplicateList = new ArrayList<SlimGenotypeMPDomain>();
-				String cmd = "select v._term_key, v._qualifier_key, e._evidenceterm_key, e._refs_key, p.value"
+				String cmd = "\nselect v._term_key, v._qualifier_key, e._evidenceterm_key, e._refs_key, p.value"
 					+ "\nfrom VOC_Annot v, VOC_Evidence e, VOC_Evidence_Property p"
 					+ "\nwhere v._AnnotType_key = 1002"
 					+ "\nand v._annot_key = e._annot_key"
@@ -371,15 +371,31 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 
 					if (duplicateList.size() > 0) {
 						log.info("found mp annotaiton duplicates");
-						log.info(duplicateList.toString());
-						for (int i = 0; i < annotList.size(); i++) {				
+						for (int i = 0; i < annotList.size(); i++) {
+
+							log.info("annotList");
+							log.info(annotList.get(i).getTermKey());
+							log.info(annotList.get(i).getQualifierKey());
+							log.info(annotList.get(i).getEvidenceTermKey());
+							log.info(annotList.get(i).getRefsKey());
+							log.info(annotList.get(i).getProperties().get(0).getValue());
+							
 							// find result in annotList and set mpIsDuplicate = true
-							for (int j = 0; j < duplicateList.size(); j++) {	
+							for (int j = 0; j < duplicateList.size(); j++) {
+								
+								log.info("duplicate");
+								log.info(duplicateList.get(j).getTermKey());
+								log.info(duplicateList.get(j).getQualifierKey());
+								log.info(duplicateList.get(j).getEvidenceTermKey());
+								log.info(duplicateList.get(j).getRefsKey());
+								log.info(duplicateList.get(j).getSexSpecificityValue());							
+
 								if (duplicateList.get(j).getTermKey().equals(annotList.get(i).getTermKey())
 									&& duplicateList.get(j).getQualifierKey().equals(annotList.get(i).getQualifierKey())
 									&& duplicateList.get(j).getEvidenceTermKey().equals(annotList.get(i).getEvidenceTermKey())
 									&& duplicateList.get(j).getRefsKey().equals(annotList.get(i).getRefsKey())
 									&& duplicateList.get(j).getSexSpecificityValue().equals(annotList.get(i).getProperties().get(0).getValue())) {
+									log.info("found dup: " + annotList.get(i).getAnnotKey());
 									annotList.get(i).setMpIsDuplicate(true);
 								}
 							}
@@ -607,6 +623,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info(cmd);
 
+		// must match GenotypeService/search()		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			Integer prevObjectKey = 0;

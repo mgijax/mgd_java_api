@@ -181,67 +181,27 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		log.info("processMarker/update");
 
-		//log.info("process symbol");
-		if (!entity.getSymbol().equals(domain.getSymbol())) {
-			log.info("process entity");
-			entity.setSymbol(domain.getSymbol());
-			modified = true;
-		}
+		entity.setMarkerType(markerTypeDAO.get(Integer.valueOf(domain.getMarkerTypeKey())));	
+		entity.setSymbol(domain.getSymbol());
+		entity.setName(domain.getName());
 		
-		//log.info("process name");
-		if (!entity.getName().equals(domain.getName())) {
-			entity.setName(domain.getName());
-			modified = true;
-		}
+		entity.setChromosome(domain.getChromosome());			
+		if (domain.getChromosome().equals("UN")) {
+			entity.setCmOffset(-999.0);
+		}			
 		
-		//log.info("process chromosome");
-		if (!entity.getChromosome().equals(domain.getChromosome())) {
-			
-			entity.setChromosome(domain.getChromosome());
-			
-			if (domain.getChromosome().equals("UN")) {
-				entity.setCmOffset(-999.0);
-			}
-			
-			modified = true;
-		}
-		
-		//log.info("process cytogenetic offset");
-		// may be null coming from entity
-		if (entity.getCytogeneticOffset() == null) {
-			if (domain.getCytogeneticOffset() != null) {
-				entity.setCytogeneticOffset(domain.getCytogeneticOffset());
-				modified = true;	
-			}
-		}
-		// may be null coming from domain
-		else if (domain.getCytogeneticOffset() == null) {
+		if (domain.getCytogeneticOffset() == null || domain.getCytogeneticOffset().isEmpty()) {
 			entity.setCytogeneticOffset(null);
-			modified = true;
 		}
-		// if not entity/null and not domain/empty, then check if equivalent
-		else if (!entity.getCytogeneticOffset().equals(domain.getCytogeneticOffset())) {
+		else {
 			entity.setCytogeneticOffset(domain.getCytogeneticOffset());
-			modified = true;
 		}
 
-		//log.info("process cmOffset");
-		// may be null coming from entity
-		if (entity.getCmOffset() == null) {
-			if (domain.getCmOffset() != null) {
-				entity.setCmOffset(Double.valueOf(domain.getCmOffset()));
-				modified = true;	
-			}
-		}
-		// may be null coming from domain
-		else if (domain.getCmOffset() == null) {
+		if (domain.getCmOffset() == null || domain.getCmOffset().isEmpty()) {
 			entity.setCmOffset(Double.valueOf(null));
-			modified = true;
 		}
-		// if not entity/null and not domain/empty, then check if equivalent
-		else if (!String.valueOf(entity.getCmOffset()).equals(domain.getCmOffset())) {
+		else {
 			entity.setCmOffset(Double.valueOf(domain.getCmOffset()));
-			modified = true;
 		}
 		
 		// cannot change the status to "withdrawn"/2
@@ -255,13 +215,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				entity.setMarkerStatus(markerStatusDAO.get(Integer.valueOf(domain.getMarkerStatusKey())));
 				modified = true;
 			}
-		}
-		
-		//log.info("process marker type");
-		if (!String.valueOf(entity.getMarkerType().get_marker_type_key()).equals(domain.getMarkerTypeKey())) {
-			entity.setMarkerType(markerTypeDAO.get(Integer.valueOf(domain.getMarkerTypeKey())));
-			modified = true;
-		}
+		}		
 		
 		// process all notes
 		if (noteService.process(domain.getMarkerKey(), domain.getEditorNote(), mgiTypeKey, "1004", user)) {

@@ -138,13 +138,18 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 					}
 				}
 				
+				String refsKey = domain.get(i).getRefsKey();
+				if (refsKey == null || refsKey.isEmpty()) {
+					refsKey = "null";
+				}
+				
 				cmd = "select count(*) from MGI_insertSynonym ("
 							+ user.get_user_key().intValue()
 							+ "," + parentKey
 							+ "," + mgiTypeKey
 							+ "," + synonymTypeKey
 							+ ",'" + domain.get(i).getSynonym() + "'"
-							+ "," + domain.get(i).getRefsKey()
+							+ "," + refsKey
 							+ ",0)";
 				log.info("cmd: " + cmd);
 				Query query = synonymDAO.createNativeQuery(cmd);
@@ -161,43 +166,24 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processSynonym update");
 
-				Boolean isUpdated = false;
 				MGISynonym entity = synonymDAO.get(Integer.valueOf(domain.get(i).getSynonymKey()));
 		
-				if (!entity.getSynonym().equals(domain.get(i).getSynonym())) {
-					entity.setSynonym(domain.get(i).getSynonym());
-					isUpdated = true;
-				}
+				entity.setSynonym(domain.get(i).getSynonym());
 				
 				// reference can be null
 				// may be null coming from entity
-				if (entity.getReference() == null) {
-					if (!domain.get(i).getRefsKey().isEmpty()) {
-						entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
-						isUpdated = true;
-					}
-				}
-				// may be empty coming from domain
-				else if (domain.get(i).getRefsKey().isEmpty()) {
-					entity.setReference(null);
-					isUpdated = true;
-				}
-				// if not entity/null and not domain/empty, then check if equivalent
-				else if (entity.getReference().get_refs_key() != Integer.parseInt(domain.get(i).getRefsKey())) {
-					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
-					isUpdated = true;
-				}
-				
-				if (isUpdated) {
-					entity.setModification_date(new Date());
-					entity.setModifiedBy(user);
-					synonymDAO.update(entity);
-					modified = true;
-					log.info("processSynonym/changes processed: " + domain.get(i).getSynonymKey());
+				if (domain.get(i).getRefsKey() == null || domain.get(i).getRefsKey().isEmpty()) {
+					entity.setReference(null);					
 				}
 				else {
-					log.info("processSynonym/no changes processed: " + domain.get(i).getSynonymKey());
+					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
 				}
+			
+				entity.setModification_date(new Date());
+				entity.setModifiedBy(user);
+				synonymDAO.update(entity);
+				modified = true;
+				log.info("processSynonym/changes processed: " + domain.get(i).getSynonymKey());	
 			}
 			else {
 				log.info("processSynonym/no changes processed: " + domain.get(i).getSynonymKey());

@@ -147,34 +147,19 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processImagePane update");
-				Boolean isUpdated = false;
 				ImagePane entity = imagePaneDAO.get(Integer.valueOf(domain.get(i).getImagePaneKey()));
 
-				if (entity.getPaneLabel() == null && 
-						(domain.get(i).getPaneLabel() != null || !domain.get(i).getPaneLabel().isEmpty())) {
-					entity.setPaneLabel(domain.get(i).getPaneLabel());
-					isUpdated = true;
-				}
-				else if (entity.getPaneLabel() != null && 
-						(domain.get(i).getPaneLabel() == null || domain.get(i).getPaneLabel().isEmpty())) {
+				if (domain.get(i).getPaneLabel() == null || domain.get(i).getPaneLabel().isEmpty()) {
 					entity.setPaneLabel(null);
-					isUpdated = true;
-				}
-				else if (!entity.getPaneLabel().equals(domain.get(i).getPaneLabel())) {
-					entity.setPaneLabel(domain.get(i).getPaneLabel());
-					isUpdated = true;
-				}
-				
-				if (isUpdated) {
-					log.info("processImagePane modified == true");
-					entity.setModification_date(new Date());
-					imagePaneDAO.update(entity);
-					modified = true;
-					log.info("processImagePane/changes processed: " + domain.get(i).getImagePaneKey());
-				}
+				}	
 				else {
-					log.info("processImagePane/no changes processed: " + domain.get(i).getImagePaneKey());
+					entity.setPaneLabel(domain.get(i).getPaneLabel());
 				}
+
+				entity.setModification_date(new Date());
+				imagePaneDAO.update(entity);
+				modified = true;
+				log.info("processImagePane/changes processed: " + domain.get(i).getImagePaneKey());
 			}
 			else {
 				log.info("processImagePane/no changes processed: " + domain.get(i).getImagePaneKey());

@@ -180,119 +180,48 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processHistory update");
-				
-				Boolean isUpdated = false;
-				
-				//log.info("historyDAO");
+								
 				MarkerHistory entity = historyDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
 
-				//log.info("marker history key");
-				if (!String.valueOf(entity.getMarkerHistory().get_marker_key()).equals(domain.get(i).getMarkerHistorySymbolKey())) {
-					entity.setMarkerHistory(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerHistorySymbolKey())));
-					isUpdated = true;
-				}
+				entity.setMarkerHistory(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerHistorySymbolKey())));
+				entity.setMarkerEvent(eventDAO.get((Integer.valueOf(domain.get(i).getMarkerEventKey()))));
+				entity.setMarkerEventReason(eventReasonDAO.get(Integer.valueOf(domain.get(i).getMarkerEventReasonKey())));
+				entity.setSequenceNum(Integer.valueOf(domain.get(i).getSequenceNum()));
 				
-				//log.info("event");
-				if (!entity.getMarkerEvent().equals(eventDAO.get(Integer.valueOf(domain.get(i).getMarkerEventKey())))) {
-					entity.setMarkerEvent(eventDAO.get((Integer.valueOf(domain.get(i).getMarkerEventKey()))));
-					isUpdated = true;
-				}
+				// can be null
 				
-				//log.info("event reason");
-				if (!entity.getMarkerEventReason().equals(eventReasonDAO.get(Integer.valueOf(domain.get(i).getMarkerEventReasonKey())))) {
-					entity.setMarkerEventReason(eventReasonDAO.get(Integer.valueOf(domain.get(i).getMarkerEventReasonKey())));
-					isUpdated = true;
+				if (domain.get(i).getRefsKey() == null || domain.get(i).getRefsKey().isEmpty()) {
+					entity.setReference(null);
 				}
-				
-				// reference can be null
-				//log.info("reference");
-				// domain = null, entity = null
-				if (domain.get(i).getRefsKey() == null && entity.getReference() == null) {
-					//do nothing; don't want nulls");
-				}
-				// domain = null, entity != null
-				else if (domain.get(i).getRefsKey() == null && entity.getReference() != null) {
-					//do nothing; don't want nulls");
-				}
-				// domain != null, entity = null
-				else if (domain.get(i).getRefsKey() != null && entity.getReference() == null) {
-					//log.info("reference: domain != null, entity = null");
+				else {
 					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
-					isUpdated = true;					
-				}
-				// if not entity/null and not domain/empty, then check if equivalent
-				else if (entity.getReference().get_refs_key() != Integer.parseInt(domain.get(i).getRefsKey())) {
-					//log.info("reference: entity != null");
-					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
-					isUpdated = true;
 				}
 						
-				// name can be null
-				//log.info("history name");
-				// domain = null, entity = null
-				if (domain.get(0).getMarkerHistoryName() == null && entity.getName() == null) {
-					// do nothing; don't want nulls
+				if (domain.get(i).getMarkerHistoryName() == null || domain.get(i).getMarkerHistoryName().isEmpty()) {
+					entity.setName(null);
 				}
-				// domain = null, entity != null				
-				else if (domain.get(0).getMarkerHistoryName() == null && entity.getName() != null) {
-					// do nothing; don't want nulls
-				}
-				// domain != null, entity = null
-				else if (domain.get(i).getMarkerHistoryName() != null && entity.getName() == null) {
+				else {
 					entity.setName(domain.get(i).getMarkerHistoryName());
-					isUpdated = true;
 				}
-				// if not entity/null and not domain/empty, then check if equivalent
-				else if (!entity.getName().equals(domain.get(i).getMarkerHistoryName())) {
-					entity.setName(domain.get(i).getMarkerHistoryName());
-					isUpdated = true;
+
+				if (domain.get(i).getEvent_date() == null || domain.get(i).getEvent_date().isEmpty()) {
+					entity.setEvent_date(null);
 				}
-					
-				//log.info("event date");
-				if (domain.get(i).getEvent_date() == null && entity.getEvent_date() == null) {
-					// do nothing; don't want nulls
-				} 
-				else if (domain.get(i).getEvent_date() == null && entity.getEvent_date() != null) {
-					// do nothing; don't want nulls
-				}
-				else if (domain.get(i).getEvent_date() != null && entity.getEvent_date() == null) {
+				else {
 					try {
 						// convert String to Date
 						entity.setEvent_date(new SimpleDateFormat("yyyy-MM-dd").parse(domain.get(i).getEvent_date()));
-						isUpdated = true;
 					}
 					catch (ParseException  e) {
 						return false;
 					}					
-				}
-				else if (!entity.getEvent_date().toString().equals(domain.get(i).getEvent_date())) {
-					try {
-						// convert String to Date
-						entity.setEvent_date(new SimpleDateFormat("yyyy-MM-dd").parse(domain.get(i).getEvent_date()));
-						isUpdated = true;
-					}
-					catch (ParseException  e) {
-						return false;
-					}
-				}
+				}				
 				
-				if (!String.valueOf(entity.getSequenceNum()).equals(domain.get(i).getSequenceNum())) {
-					entity.setSequenceNum(Integer.valueOf(domain.get(i).getSequenceNum()));
-					isUpdated = true;						
-				}
-				
-				//log.info("reference: check if modified");
-				if (isUpdated) {
-					log.info("processHistory modified == true");
-					entity.setModification_date(new Date());
-					entity.setModifiedBy(user);
-					historyDAO.update(entity);
-					modified = true;
-					log.info("processHistory/changes processed: " + domain.get(i).getAssocKey());
-				}
-				else {
-					log.info("processHistory/no changes processed: " + domain.get(i).getAssocKey());
-				}
+				entity.setModification_date(new Date());
+				entity.setModifiedBy(user);
+				historyDAO.update(entity);
+				modified = true;
+				log.info("processHistory/changes processed: " + domain.get(i).getAssocKey());
 			}
 			else {
 				log.info("processHistory/no changes processed: " + domain.get(i).getAssocKey());

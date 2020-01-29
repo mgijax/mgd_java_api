@@ -178,25 +178,13 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processImagePaneAssoc update");
-				Boolean isUpdated = false;
-				ImagePaneAssoc entity = imagePaneAssocDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
-								
-				if (!(String.valueOf(entity.getIsPrimary()).equals(domain.get(i).getIsPrimary()))) {
-					entity.setIsPrimary(Integer.valueOf(domain.get(i).getIsPrimary()));
-					isUpdated = true;
-				}
-				
-				if (isUpdated) {
-					log.info("processImagePaneAssoc modified == true");
-					entity.setModifiedBy(user);
-					entity.setModification_date(new Date());					
-					imagePaneAssocDAO.update(entity);
-					modified = true;
-					log.info("processImagePaneAssoc/changes processed: " + domain.get(i).getAssocKey());
-				}
-				else {
-					log.info("processImagePaneAssoc/no changes processed: " + domain.get(i).getAssocKey());
-				}
+				ImagePaneAssoc entity = imagePaneAssocDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));								
+				entity.setIsPrimary(Integer.valueOf(domain.get(i).getIsPrimary()));				
+				entity.setModifiedBy(user);
+				entity.setModification_date(new Date());					
+				imagePaneAssocDAO.update(entity);
+				modified = true;
+				log.info("processImagePaneAssoc/changes processed: " + domain.get(i).getAssocKey());
 			}
 			else {
 				log.info("processImagePaneAssoc/no changes processed: " + domain.get(i).getAssocKey());

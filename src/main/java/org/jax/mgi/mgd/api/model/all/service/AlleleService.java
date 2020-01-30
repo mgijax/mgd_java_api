@@ -303,9 +303,9 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	}
 	
 	@Transactional
-	public List<SlimAlleleDomain> validateAlleleAnyStatus(SlimAlleleDomain searchDomain) {
+	public List<SlimAlleleRefAssocDomain> validateAlleleAnyStatus(SlimAlleleRefAssocDomain searchDomain) {
 		log.info("In Allele Service validateAlleleAnyStatus" );
-		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
+		List<SlimAlleleRefAssocDomain> results = new ArrayList<SlimAlleleRefAssocDomain>();
 		
 		String cmd = "\nselect aa._allele_key"
 				+ "\nfrom all_allele aa, acc_accession a"
@@ -338,8 +338,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			
 			while (rs.next()) {
-				SlimAlleleDomain slimdomain = new SlimAlleleDomain();
-				slimdomain = slimtranslator.translate(alleleDAO.get(rs.getInt("_allele_key")));	
+				SlimAlleleRefAssocDomain slimdomain = new SlimAlleleRefAssocDomain();
+				slimdomain = slimreftranslator.translate(alleleDAO.get(rs.getInt("_allele_key")));	
 				log.info("slim domain allele status: " + slimdomain.getAlleleStatus());
 				alleleDAO.clear();
 				results.add(slimdomain);
@@ -353,7 +353,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		// if more than 1 result, then use *exact* case from value
 		// if no match on exact case, then empty results should be returned
 		if (results.size() > 1) {
-			List<SlimAlleleDomain> newResults = new ArrayList<SlimAlleleDomain>();
+			List<SlimAlleleRefAssocDomain> newResults = new ArrayList<SlimAlleleRefAssocDomain>();
 			for (int i = 0; i < results.size(); i++) {
 				if (results.get(i).getSymbol().equals(searchDomain.getSymbol())) {
 					newResults.add(results.get(i));

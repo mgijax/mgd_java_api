@@ -101,9 +101,9 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	@POST
 	@ApiOperation(value = "Validate allele symbol (all statuses) OR accID, returns List of SlimAlleleDomains")
 	@Path("/validateAlleleAnyStatus")
-	public List<SlimAlleleDomain> validateAlleleAnyStatus(SlimAlleleDomain searchDomain) {
+	public List<SlimAlleleRefAssocDomain> validateAlleleAnyStatus(SlimAlleleRefAssocDomain searchDomain) {
 	
-		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
+		List<SlimAlleleRefAssocDomain> results = new ArrayList<SlimAlleleRefAssocDomain>();
 
 		try {
 			results = alleleService.validateAlleleAnyStatus(searchDomain);

@@ -1472,5 +1472,5 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		return returnCode;
 	}
-		
+
 }

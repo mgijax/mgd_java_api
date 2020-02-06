@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.mrk.service;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import org.jax.mgi.mgd.api.model.mrk.domain.DenormMarkerAnnotDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerAnnotDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerGOReferenceDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerAnnotDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.GOTracking;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerAnnotTranslator;
 import org.jax.mgi.mgd.api.model.mrk.translator.SlimMarkerAnnotTranslator;
@@ -33,6 +35,7 @@ import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
+import org.jax.mgi.mgd.api.util.RunCommand;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -716,5 +719,35 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		
 		return results;
 	}
-	
+
+	@Transactional		
+	public List<SlimMarkerDomain> getGOReferenceReport(SlimMarkerDomain domain) throws IOException, InterruptedException {
+		// see pgdbutilities/bin/ei/GORefs.py
+		
+		// these swarm variables are in 'app.properties'
+    	String utilitiesScript = System.getProperty("swarm.ds.gorefsUtilities");
+        
+        // input:  markerKey
+
+        // output: empty domain; because we have to return something
+    	List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
+        
+		String runCmd = utilitiesScript;
+        runCmd = runCmd + " " + domain.getModifiedBy() + " " + domain.getMarkerKey();
+		
+		// run the runCmd
+		log.info(Constants.LOG_INPROGRESS_EIUTILITIES + runCmd);
+		RunCommand runner = RunCommand.runCommand(runCmd);
+		
+		// check exit code from RunCommand
+		if (runner.getExitCode() == 0) {
+			log.info(Constants.LOG_SUCCESS_EIUTILITIES);
+		}
+		else {
+			log.info(Constants.LOG_FAIL_EIUTILITIES);
+		}			
+		
+		return results;
+	}
+		
 }

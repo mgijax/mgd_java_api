@@ -17,6 +17,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.DenormMarkerAnnotDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerGOReferenceDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerAnnotDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerAnnotService;
 import org.jax.mgi.mgd.api.model.voc.domain.DenormAnnotationDomain;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -107,6 +108,22 @@ public class MarkerGOController extends BaseController<DenormMarkerAnnotDomain> 
 	@Path("/getReferences/{key}")
 	public List<MarkerGOReferenceDomain> getReferences(@PathParam("key") Integer key) {
 		return markerAnnotService.getGOReferences(key);
+	}
+
+	@POST
+	@ApiOperation(value = "Get GO reference report by marker key")
+	@Path("/getReferenceReport")
+	public List<SlimMarkerDomain> getReferenceReport(SlimMarkerDomain domain) {
+	
+		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
+
+		try {
+			results = markerAnnotService.getGOReferenceReport(domain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
 	}
 	
 }

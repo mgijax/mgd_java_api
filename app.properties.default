@@ -13,5 +13,6 @@ swarm.ds.mrkLocationUtilities=/usr/local/mgi/live/dbutils/mrkcacheload/mrklocati
 swarm.ds.mrkrefByMarkerUtilities=/usr/local/mgi/live/dbutils/mrkcacheload/mrkrefByMarker.py
 swarm.ds.mrkrefByReferenceUtilities=/usr/local/mgi/live/dbutils/mrkcacheload/mrkrefByReference.py
 swarm.ds.mrkmcvUtilities=/usr/local/mgi/live/dbutils/mrkcacheload/mrkmcv.py
+swarm.ds.gorefsUtilities=/usr/local/mgi/live/dbutils/pgdbutilities/bin/ei/GORefs.py
 swarm.ds.pixeldb=/data/pixeldb
 swarm.ds.pixeldbCounter=/data/pixeldb/accession/counter

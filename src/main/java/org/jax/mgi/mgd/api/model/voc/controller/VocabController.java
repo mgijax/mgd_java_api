@@ -1,7 +1,10 @@
 package org.jax.mgi.mgd.api.model.voc.controller;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -10,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimVocabularyDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.SlimVocabularyTermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.VocabularyDomain;
 import org.jax.mgi.mgd.api.model.voc.service.VocabService;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -41,6 +45,13 @@ public class VocabController extends BaseController<VocabularyDomain> {
 		return vocabService.get(key);
 	}
 
+	@GET
+	@ApiOperation(value = "Get the object count from voc_vocab table")
+	@Path("/getObjectCount")
+	public SearchResults<VocabularyDomain> getObjectCount() {
+		return vocabService.getObjectCount();
+	}
+	
 	@Override
 	public SearchResults<VocabularyDomain> delete(Integer key, User user) {
 		return vocabService.delete(key, user);
@@ -49,8 +60,14 @@ public class VocabController extends BaseController<VocabularyDomain> {
 	@POST
 	@ApiOperation(value = "Search by vocab key or name")
 	@Path("/search")	
-	public SearchResults<SlimVocabularyDomain> search(SlimVocabularyDomain searchDomain) {
+	public SearchResults<SlimVocabularyTermDomain> search(SlimVocabularyTermDomain searchDomain) {
 		return vocabService.search(searchDomain);
+	}
+	@GET
+	@ApiOperation(value = "return all simple vocabs")
+	@Path("/searchsimple")	
+	public List<SlimVocabularyDomain> searchSimple() {
+		return vocabService.searchSimple();
 	}
 	
 }

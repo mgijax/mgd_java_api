@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.voc.translator;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.VocabularyDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Vocabulary;
@@ -9,7 +10,7 @@ import org.jax.mgi.mgd.api.model.voc.entities.Vocabulary;
 public class VocabularyTranslator extends BaseEntityDomainTranslator<Vocabulary, VocabularyDomain> {
 
 	private TermTranslator termTranslator = new TermTranslator();
-	
+	private SlimReferenceTranslator referenceTranslator = new SlimReferenceTranslator();
 	@Override
 	protected VocabularyDomain entityToDomain(Vocabulary entity) {
 		VocabularyDomain domain = new VocabularyDomain();
@@ -20,9 +21,10 @@ public class VocabularyTranslator extends BaseEntityDomainTranslator<Vocabulary,
 		domain.setIsSimple(entity.getIsSimple());
 		domain.setIsPrivate(entity.getIsPrivate());
 		domain.setName(entity.getName());
-		domain.setCreation_date(entity.getCreation_date());
-		domain.setModification_date(entity.getModification_date());
-		
+		domain.setReference(referenceTranslator.translate(entity.getReference()));
+		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
+		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
+			
 		Iterable<TermDomain> terms = termTranslator.translateEntities(entity.getTerms());
 		domain.setTerms(IteratorUtils.toList(terms.iterator()));
 		

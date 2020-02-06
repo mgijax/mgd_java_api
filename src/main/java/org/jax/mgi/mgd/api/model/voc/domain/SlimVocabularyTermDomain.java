@@ -10,9 +10,10 @@ import lombok.Setter;
 
 @Getter @Setter
 @ApiModel
-public class SlimVocabularyDomain extends BaseDomain {
-
+public class SlimVocabularyTermDomain extends BaseDomain {
+	// this class used for lookups
 	private String vocabKey;
 	private String name;
+	private List<SlimTermDomain> terms;
 
 }

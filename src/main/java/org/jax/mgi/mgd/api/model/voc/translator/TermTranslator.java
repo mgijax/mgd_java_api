@@ -1,9 +1,13 @@
 package org.jax.mgi.mgd.api.model.voc.translator;
 
+import java.util.Comparator;
+
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
+import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jboss.logging.Logger;
@@ -13,6 +17,7 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 	protected Logger log = Logger.getLogger(getClass());
 
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
+	private MGISynonymTranslator synonymTranslator = new MGISynonymTranslator();
 	
 	@Override
 	protected TermDomain entityToDomain(Term entity) {
@@ -44,7 +49,12 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		if (entity.getGoDagNodes() != null && !entity.getGoDagNodes().isEmpty()) {
 			domain.setGoDagAbbrev(entity.getGoDagNodes().get(0).getDag().getAbbreviation().trim());
 		}
-		
+       // one-to-many term synonyms
+       if (entity.getGoRelSynonyms() != null && !entity.getGoRelSynonyms().isEmpty()) {
+               Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getGoRelSynonyms());
+               domain.setGoRelSynonyms(IteratorUtils.toList(i.iterator()));
+               domain.getGoRelSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
+       }
 		return domain;
 	}
 

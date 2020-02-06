@@ -13,6 +13,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.VocabularyDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimVocabularyDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.SlimVocabularyTermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.VocabularyDomain;
 import org.jax.mgi.mgd.api.model.voc.translator.VocabularyTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -71,14 +72,68 @@ public class VocabService extends BaseService<VocabularyDomain> {
         return results;
     }
 
+    @Transactional	
+	public SearchResults<VocabularyDomain> getObjectCount() {
+		// return the object count from the database
+		
+		SearchResults<VocabularyDomain> results = new SearchResults<VocabularyDomain>();
+		String cmd = "select count(*) as objectCount from voc_vocab";
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getInt("objectCount");
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;		
+	}
+    
+    @Transactional
+    public List<SlimVocabularyDomain> searchSimple() {
+    	
+    	List<SlimVocabularyDomain> results = new ArrayList<SlimVocabularyDomain>();
+    	
+    	String cmd = "";
+		String select = "select v._vocab_key, v.name";
+		String from = "from voc_vocab v";
+		String where = "where v.isSimple = '1'";
+		String orderBy = "order by v.name";
+		
+		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
+		log.info(cmd);
+		
+		try {						
+			
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimVocabularyDomain domain = new SlimVocabularyDomain();
+				domain.setVocabKey(rs.getString("_vocab_key"));
+				domain.setName(rs.getString("name"));
+				log.info("key: " + domain.getVocabKey() + " name: " + domain.getName());
+				results.add(domain);
+			}
+					
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+			
+    	return results;
+    }
 	@Transactional
-	public SearchResults<SlimVocabularyDomain> search(SlimVocabularyDomain searchDomain) {	
+	public SearchResults<SlimVocabularyTermDomain> search(SlimVocabularyTermDomain searchDomain) {	
 		// search for 1 vocabulary
 		// assumes that either key or  name is being searched
 		// returns empty result items if vocabulary does not exist
 		// returns SlimVocabularyDomain results if vocabulary does exist
 			
-		SearchResults<SlimVocabularyDomain> results = new SearchResults<SlimVocabularyDomain>();
+		SearchResults<SlimVocabularyTermDomain> results = new SearchResults<SlimVocabularyTermDomain>();
 
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
@@ -171,7 +226,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		log.info(cmd);		
 		
 		try {
-			SlimVocabularyDomain domain = new SlimVocabularyDomain();						
+			SlimVocabularyTermDomain domain = new SlimVocabularyTermDomain();						
 			List<SlimTermDomain> termList = new ArrayList<SlimTermDomain>();
 			
 			ResultSet rs = sqlExecutor.executeProto(cmd);

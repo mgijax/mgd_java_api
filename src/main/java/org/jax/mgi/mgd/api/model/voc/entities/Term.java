@@ -60,11 +60,10 @@ public class Term extends BaseEntity {
 	@Where(clause="`_dag_key` in (1,2,3)")
 	private List<DagNode> goDagNodes;
 
-//	@OneToMany()
-//	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-//	@Where(clause="`_mgitype_key` = 2")
-//	@OrderBy(clause="_synonymtype_key, synonym")
-//	private List<MGISynonym> goRelSynonyms;
-
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
+	@Where(clause ="`_mgitype_key` = 13 and `_synonymtype_key` = 1034")
+	@OrderBy(clause ="_synonymtype_key, synonym")
+	private List<MGISynonym> goRelSynonyms;
 	
 }

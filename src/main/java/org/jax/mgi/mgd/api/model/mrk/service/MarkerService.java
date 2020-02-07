@@ -81,15 +81,16 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Marker entity = new Marker();
 		
 		// default marker type = 1/gene
-		if (domain.getMarkerTypeKey() == null) {
+		if (domain.getMarkerTypeKey() == null || domain.getMarkerTypeKey().isEmpty()) {
 			domain.setMarkerTypeKey("1");
 		}
 		entity.setMarkerType(markerTypeDAO.get(Integer.valueOf(domain.getMarkerTypeKey())));			
 
 		// default marker status = 1/official
-		if (domain.getMarkerStatusKey() == null) {
+		if (domain.getMarkerStatusKey() == null || domain.getMarkerStatus().isEmpty()) {
 			domain.setMarkerStatusKey("1");
 		}
+		
 		// marker status cannot be "withdrawn"		
 		if (domain.getMarkerStatusKey().equals("2")) {
 			results.setError("Failed : Marker Status error",  "Cannot use 'withdrawn'", Constants.HTTP_SERVER_ERROR);
@@ -121,45 +122,51 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// execute persist/insert/send to database
 		markerDAO.persist(entity);
 
-		// process feature types
-		// use qualifier 'Generic Annotation Qualifier', value = null
-		if (domain.getFeatureTypes() != null && !domain.getFeatureTypes().isEmpty()) {
-			if (domain.getFeatureTypes().get(0).getTermKey() != null && !domain.getFeatureTypes().get(0).getTermKey().isEmpty()) {
-				annotationService.processMarkerFeatureType(String.valueOf(entity.get_marker_key()), 
-					domain.getFeatureTypes(), 
-					domain.getFeatureTypes().get(0).getAnnotTypeKey(),
-					Constants.VOC_GENERIC_ANNOTATION_QUALIFIER, user);
+		// mouse only stuff		
+		if (domain.getOrganismKey().equals("1")) {		
+
+			// process feature types
+			// use qualifier 'Generic Annotation Qualifier', value = null
+			if (domain.getFeatureTypes() != null && !domain.getFeatureTypes().isEmpty()) {
+				if (domain.getFeatureTypes().get(0).getTermKey() != null && !domain.getFeatureTypes().get(0).getTermKey().isEmpty()) {
+					annotationService.processMarkerFeatureType(String.valueOf(entity.get_marker_key()), 
+						domain.getFeatureTypes(), 
+						domain.getFeatureTypes().get(0).getAnnotTypeKey(),
+						Constants.VOC_GENERIC_ANNOTATION_QUALIFIER, user);
+				}
 			}
+			
+			// create marker history assignment
+			// create 1 marker history row to track the initial marker assignment		
+			// event = assigned (1)
+			// event reason = Not Specified (-1)
+			// default reference is J:23000 (22864); sent by UI
+			
+			String cmd = "select count(*) from MRK_insertHistory ("
+					+ user.get_user_key().intValue()
+					+ "," + entity.get_marker_key()
+					+ "," + entity.get_marker_key()
+					+ "," + domain.getHistory().get(0).getRefsKey().toString()
+					+ ",1,-1"
+					+ ",'" + entity.getName().replaceAll("'", "''") + "'"
+					+ ")";
+	
+			log.info("cmd: " + cmd);
+			Query query = markerDAO.createNativeQuery(cmd);
+			query.getResultList();
+			
+			// to-add/create marker synonyms, if provided
+	
+			// to update the mrk_location_cache table				
+			try {
+				log.info("processMarker/mrkLocationUtilities");
+				mrklocationUtilities(String.valueOf(entity.get_marker_key()));
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}	
 		}
-		
-		// create marker history assignment
-		// create 1 marker history row to track the initial marker assignment		
-		// event = assigned (1)
-		// event reason = Not Specified (-1)
-		// default reference is J:23000 (22864); sent by UI
-		String cmd = "select count(*) from MRK_insertHistory ("
-				+ user.get_user_key().intValue()
-				+ "," + entity.get_marker_key()
-				+ "," + entity.get_marker_key()
-				+ "," + domain.getHistory().get(0).getRefsKey().toString()
-				+ ",1,-1"
-				+ ",'" + entity.getName().replaceAll("'", "''") + "'"
-				+ ")";
-
-		log.info("cmd: " + cmd);
-		Query query = markerDAO.createNativeQuery(cmd);
-		query.getResultList();
-		
-		// to-add/create marker synonyms, if provided
-
-		// to update the mrk_location_cache table				
-		try {
-			log.info("processMarker/mrkLocationUtilities");
-			mrklocationUtilities(String.valueOf(entity.get_marker_key()));
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+		// end mouse only stuff
 		
 		// return entity translated to domain
 		log.info("processMarker/create/returning results");
@@ -349,7 +356,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		String cmd = "";
 		String select = "select distinct m._marker_key, m._marker_type_key, m.symbol";
 		String from = "from mrk_marker m";
-		String where = "where m._organism_key = 1";
+		String where = "where m._organism_key = " + searchDomain.getOrganismKey();
 		String orderBy = "order by m._marker_type_key, m.symbol";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;

@@ -192,6 +192,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		entity.setSymbol(domain.getSymbol());
 		entity.setName(domain.getName());
 		
+		// note:  entity.setOrganism() is ignored on purpose
+		
 		entity.setChromosome(domain.getChromosome());			
 		if (domain.getChromosome().equals("UN")) {
 			entity.setCmOffset(-999.0);

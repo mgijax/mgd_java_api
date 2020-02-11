@@ -14,6 +14,7 @@ import lombok.Setter;
 @ApiModel(value = "Term Domain")
 public class TermDomain extends BaseDomain {
 
+	private String processStatus;
 	private String termKey;
 	private String term;
 	private String vocabKey;

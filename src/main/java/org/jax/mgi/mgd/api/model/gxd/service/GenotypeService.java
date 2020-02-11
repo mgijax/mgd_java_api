@@ -641,7 +641,8 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				
 				newObjectKey = rs.getInt("_genotype_key");
 				newStrain = rs.getString("strain");
-				newDescription = rs.getString("symbol");
+				//newDescription = rs.getString("symbol");
+				newDescription = rs.getString("genotypeDisplay");				
 				if (newDescription == null) {
 					newDescription = "";					
 				}
@@ -654,7 +655,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 					addResults = false;
 				}
 				else if (newObjectKey.equals(prevObjectKey)) {
-					prevDescription = prevDescription + "," + newDescription;
+					//prevDescription = prevDescription + "," + newDescription;
 					addResults = false;
 				}
 				else {

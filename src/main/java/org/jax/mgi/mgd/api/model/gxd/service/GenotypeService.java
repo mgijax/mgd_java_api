@@ -642,7 +642,10 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				newObjectKey = rs.getInt("_genotype_key");
 				newStrain = rs.getString("strain");
 				newDescription = rs.getString("symbol");
-								
+				if (newDescription == null) {
+					newDescription = "";					
+				}
+				
 				// group description by _object_key
 				if (prevObjectKey.equals(0)) {
 					prevObjectKey = newObjectKey;

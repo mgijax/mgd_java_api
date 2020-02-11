@@ -356,10 +356,13 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 			}
 		}	
 			
+		String cmd;
+		Query query;
+		
 		// now merge any duplicate annotations that were created by the API when adding evidence
-	    String cmd = "select count(*) from VOC_mergeDupAnnotations(" + annotTypeKey + ", " + objectKey + ")";
+	    cmd = "select count(*) from VOC_mergeDupAnnotations(" + annotTypeKey + ", " + objectKey + ")";
 	    log.info("cmd: " + cmd);
-	    Query query = annotationDAO.createNativeQuery(cmd);
+	    query = annotationDAO.createNativeQuery(cmd);
 	    query.getResultList();	
 	    
 	    // determine and order MP Headers 

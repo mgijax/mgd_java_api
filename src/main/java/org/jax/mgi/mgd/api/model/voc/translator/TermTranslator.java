@@ -10,6 +10,7 @@ import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jboss.logging.Logger;
 
 public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain> {
@@ -22,7 +23,7 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 	@Override
 	protected TermDomain entityToDomain(Term entity) {
 		TermDomain domain = new TermDomain();
-		
+		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setTermKey(String.valueOf(entity.get_term_key()));
 		domain.setVocabKey(String.valueOf(entity.get_vocab_key()));
 		domain.setVocabName(entity.getVocab().getName());

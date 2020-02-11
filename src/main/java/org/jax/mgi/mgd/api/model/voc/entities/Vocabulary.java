@@ -11,6 +11,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OrderBy;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
@@ -43,6 +44,7 @@ public class Vocabulary extends BaseEntity {
 
 	@OneToMany()
 	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
+	@OrderBy(clause ="sequenceNum")
 	private List<Term> terms;
 	
 }

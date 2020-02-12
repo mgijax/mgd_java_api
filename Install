@@ -32,7 +32,7 @@ echo "swarm.ds.alleleCombinationUtilities=${DBUTILS}/allcacheload/allelecombinat
 echo "swarm.ds.mrkLocationUtilities=${DBUTILS}/mrkcacheload/mrklocation.py" >> ${PROP_FILE}
 echo "swarm.ds.mrkrefByMarkerUtilities=${DBUTILS}/mrkcacheload/mrkrefByMarker.py" >> ${PROP_FILE}
 echo "swarm.ds.mrkrefByReferenceUtilities=${DBUTILS}/mrkcacheload/mrkrefByReference.py" >> ${PROP_FILE}
-echo "swarm.ds.mrkmcvUtilities=${DBUTILS}/dbutils/mrkcacheload/mrkmcv.py" >> ${PROP_FILE}
+echo "swarm.ds.mrkmcvUtilities=${DBUTILS}/mrkcacheload/mrkmcv.py" >> ${PROP_FILE}
 echo "swarm.ds.pixeldb=/data/pixeldb" >> ${PROP_FILE}
 echo "swarm.ds.pixeldbCounter=/data/pixeldb/accession/counter" >> ${PROP_FILE}
 

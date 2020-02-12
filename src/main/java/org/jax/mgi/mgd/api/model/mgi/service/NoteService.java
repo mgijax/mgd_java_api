@@ -180,7 +180,7 @@ public class NoteService extends BaseService<NoteDomain> {
 				noteKey = noteDomain.getNoteKey().toString();
 				modified = true;
 			}
-			if (!String.valueOf(entity.getNoteType().get_noteType_key()).equals(noteDomain.getNoteTypeKey())) {
+			if (!String.valueOf(entity.getNoteType().get_noteType_key()).equals(noteTypeKey)) {
 				log.info("NoteService update");
 				noteKey = noteDomain.getNoteKey().toString();
 				modified = true;
@@ -201,7 +201,7 @@ public class NoteService extends BaseService<NoteDomain> {
 				+ "," + noteKey
 				+ "," + parentKey
 				+ "," + mgiTypeKey
-				+ "," + noteDomain.getNoteTypeKey()
+				+ "," + noteTypeKey
 				+ "," + note
 				+ ")";
 			log.info("cmd: " + cmd);

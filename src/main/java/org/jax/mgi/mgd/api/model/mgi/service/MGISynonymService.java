@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGISynonymDAO;
+import org.jax.mgi.mgd.api.model.mgi.dao.MGISynonymTypeDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -29,6 +30,8 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 	
 	@Inject
 	private MGISynonymDAO synonymDAO;
+	@Inject
+	private MGISynonymTypeDAO synonymTypeDAO;
 	@Inject
 	private ReferenceDAO referenceDAO;
 
@@ -168,6 +171,7 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 
 				MGISynonym entity = synonymDAO.get(Integer.valueOf(domain.get(i).getSynonymKey()));
 		
+				entity.setSynonymType(synonymTypeDAO.get(Integer.valueOf(domain.get(i).getSynonymTypeKey())));
 				entity.setSynonym(domain.get(i).getSynonym());
 				
 				// reference can be null

@@ -100,8 +100,8 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		genotypeDAO.persist(entity);
 
 		// process all notes
-		noteService.process(domain.getGenotypeKey(), domain.getGeneralNote(), mgiTypeKey, "1027", user);
-		noteService.process(domain.getGenotypeKey(), domain.getPrivateCuratorialNote(), mgiTypeKey, "1028", user);
+		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getGeneralNote(), mgiTypeKey, "1027", user);
+		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getPrivateCuratorialNote(), mgiTypeKey, "1028", user);
 		// update combination note 1
 		// combination note 2 & 3 get updated by nightly process (allelecombination)
 		// using allele detail note
@@ -636,12 +636,13 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			Boolean addResults = false;
 			
 			// concatenate description when grouped by _object_key
+			// genotypeDisplay will display 1 allele pair row
+			// depending on query, the allele pair row may *not* always be the first row
 			
 			while (rs.next()) {
 				
 				newObjectKey = rs.getInt("_genotype_key");
 				newStrain = rs.getString("strain");
-				//newDescription = rs.getString("symbol");
 				newDescription = rs.getString("genotypeDisplay");				
 				if (newDescription == null) {
 					newDescription = "";					
@@ -655,17 +656,13 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 					addResults = false;
 				}
 				else if (newObjectKey.equals(prevObjectKey)) {
-					//prevDescription = prevDescription + "," + newDescription;
 					addResults = false;
 				}
 				else {
 					addResults = true;
 				}
 				
-				if (addResults) {
-
-//					prevDescription = prevStrain + " " + prevDescription;
-	
+				if (addResults) {	
 					SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();
 					slimdomain = slimtranslator.translate(genotypeDAO.get(prevObjectKey));				
 					slimdomain.setGenotypeDisplay(prevDescription);
@@ -685,15 +682,11 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 						if (prevDescription == null) {
 							prevDescription = prevStrain;
 						}
-//						else {
-//							prevDescription = prevStrain + " " + prevDescription;							
-//						}
 					}
 					else {
 						prevObjectKey = newObjectKey;
 						prevStrain = newStrain;
 						prevDescription = newDescription;
-						//prevDescription = prevStrain + " " + prevDescription;
 					}
 					
 					SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();

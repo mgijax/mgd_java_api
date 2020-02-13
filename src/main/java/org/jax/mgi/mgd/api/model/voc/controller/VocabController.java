@@ -26,25 +26,25 @@ import io.swagger.annotations.ApiOperation;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class VocabController extends BaseController<VocabularyDomain> {
-
+	
 	@Inject
 	private VocabService vocabService;
 
 	@Override
-	public SearchResults<VocabularyDomain> create(VocabularyDomain object, User user) {
-		return vocabService.create(object, user);
+	public SearchResults<VocabularyDomain> create(VocabularyDomain domain, User user) {
+		return vocabService.create(domain, user);
 	}
 
 	@Override
-	public SearchResults<VocabularyDomain> update(VocabularyDomain object, User user) {
-		return vocabService.update(object, user);
+	public SearchResults<VocabularyDomain> update(VocabularyDomain domain, User user) {
+		return vocabService.update(domain, user);
 	}
 
 	@Override
 	public VocabularyDomain get(Integer key) {
 		return vocabService.get(key);
 	}
-
+	
 	@GET
 	@ApiOperation(value = "Get the object count from voc_vocab table")
 	@Path("/getObjectCount")

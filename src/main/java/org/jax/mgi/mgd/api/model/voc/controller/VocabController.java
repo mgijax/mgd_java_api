@@ -33,7 +33,7 @@ public class VocabController extends BaseController<VocabularyDomain> {
 	@Override
 	public SearchResults<VocabularyDomain> create(VocabularyDomain domain, User user) {
 		SearchResults<VocabularyDomain> results = new SearchResults<VocabularyDomain>();
-        results = vocabService.update(domain, user);
+        results = vocabService.create(domain, user);
         results = vocabService.getResults(Integer.valueOf(results.items.get(0).getVocabKey()));
 
 		return results;
@@ -41,7 +41,11 @@ public class VocabController extends BaseController<VocabularyDomain> {
 
 	@Override
 	public SearchResults<VocabularyDomain> update(VocabularyDomain domain, User user) {
-		return vocabService.update(domain, user);
+		SearchResults<VocabularyDomain> results = new SearchResults<VocabularyDomain>();
+        results = vocabService.update(domain, user);
+        results = vocabService.getResults(Integer.valueOf(results.items.get(0).getVocabKey()));
+        
+        return results;
 	}
 
 	@Override

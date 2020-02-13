@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimVocabularyDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimVocabularyTermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.VocabularyDomain;
+import org.jax.mgi.mgd.api.model.voc.entities.Vocabulary;
 import org.jax.mgi.mgd.api.model.voc.translator.VocabularyTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -53,8 +54,9 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			
 		}
 		// otherwise return the same results
+		Vocabulary entity = vocabularyDAO.get(Integer.valueOf(domain.getVocabKey()));
 		log.info("VocabService.createTerms no terms to process"); // should never get here.
-		results.setItem(domain);
+		results.setItem(translator.translate(entity));
 		return results;
 	}
 

@@ -96,6 +96,8 @@ public class TermService extends BaseService<TermDomain> {
 				+ "\nand t._modifiedby_key = u2._user_key";
 		String orderBy = "order by t.term";
 
+		Boolean from_accession = false;
+		
 		// if parameter exists, then add to where-clause
 		
 		String cmResults[] = DateSQLQuery.queryByCreationModification("t", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -119,6 +121,19 @@ public class TermService extends BaseService<TermDomain> {
 //		if (searchDomain.getVocabName() != null && !searchDomain.getVocabName().isEmpty()) {
 //			where = where + "\nand v.name ilike '" + searchDomain.getVocabName() + "'";
 //		}
+		
+		// accession id
+		if (searchDomain.getAccessionIds() != null) {
+			where = where + "\nand lower(a.accID) = lower('" + searchDomain.getAccessionIds().get(0).getAccID() + "')";
+			from_accession = true;
+		}
+
+		if (from_accession == true) {
+			select = select + ", a.*";
+			from = from + ", acc_accession a";
+			where = where + "\nand t._term_key = a._object_key" 
+					+ "\nand a._mgitype_key = 13 and a.preferred = 1";
+		}
 		
 		// include obsolete terms?
 		if(searchDomain.getIncludeObsolete().equals(Boolean.FALSE)) {

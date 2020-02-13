@@ -4,6 +4,8 @@ import java.util.Comparator;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
@@ -15,6 +17,7 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 	
 	protected Logger log = Logger.getLogger(getClass());
 
+	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	private MGISynonymTranslator synonymTranslator = new MGISynonymTranslator();
 	
 	@Override
@@ -36,6 +39,12 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
+		if (entity.getAccessionIds() != null && !entity.getAccessionIds().isEmpty()) {
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getAccessionIds());		
+			if (acc.iterator().hasNext() == true) {			
+				domain.setAccessionIds(IteratorUtils.toList(acc.iterator()));
+			}
+		}
 		// GO-DAG-abbreviation
 		if (entity.getGoDagNodes() != null && !entity.getGoDagNodes().isEmpty()) {
 			domain.setGoDagAbbrev(entity.getGoDagNodes().get(0).getDag().getAbbreviation().trim());

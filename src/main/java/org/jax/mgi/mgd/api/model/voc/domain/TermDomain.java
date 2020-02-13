@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.voc.domain;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 
 import io.swagger.annotations.ApiModel;
@@ -28,6 +29,8 @@ public class TermDomain extends BaseDomain {
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;
+	
+	private List<AccessionDomain> accessionIds;
 	
 	// Added so validators can specify to include obsolete
 	// terms if desired; default is to exclude

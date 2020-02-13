@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
+import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.dag.entities.DagNode;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -48,6 +49,13 @@ public class Term extends BaseEntity {
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key", insertable=false, updatable=false)
 	private User modifiedBy;
+
+
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 13 and preferred = 1")
+	private List<Accession> accessionIds;
+
 
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)

@@ -31,7 +31,7 @@ public class TermController extends BaseController<TermDomain> {
 
 	@Override
 	public SearchResults<TermDomain> create(TermDomain term, User user) {
-		return null;
+		return termService.create(term, user);
 	}
 
 	@Override

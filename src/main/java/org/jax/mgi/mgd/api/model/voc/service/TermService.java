@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.voc.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -10,9 +11,11 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.voc.translator.SlimTermTranslator;
 import org.jax.mgi.mgd.api.model.voc.translator.TermTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -28,6 +31,9 @@ public class TermService extends BaseService<TermDomain> {
 
 	@Inject
 	private TermDAO termDAO;
+	
+	@Inject
+	private MGISynonymService synonymService;
 	
 	private TermTranslator translator = new TermTranslator();
 	private SlimTermTranslator slimtranslator = new SlimTermTranslator();
@@ -57,6 +63,7 @@ public class TermService extends BaseService<TermDomain> {
 	@Transactional
 	public TermDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain
+		log.info("get termDAO: " + termDAO);
 		TermDomain domain = new TermDomain();
 		if (termDAO.get(key) != null) {
 			domain = translator.translate(termDAO.get(key));
@@ -88,7 +95,6 @@ public class TermService extends BaseService<TermDomain> {
 				+ "\nand t._createdby_key = u1._user_key"
 				+ "\nand t._modifiedby_key = u2._user_key";
 		String orderBy = "order by t.term";
-		Boolean from_accession = false;
 
 		// if parameter exists, then add to where-clause
 		
@@ -114,18 +120,6 @@ public class TermService extends BaseService<TermDomain> {
 //			where = where + "\nand v.name ilike '" + searchDomain.getVocabName() + "'";
 //		}
 		
-		// accession id
-		if (searchDomain.getAccessionIds() != null) {
-			where = where + "\nand lower(a.accID) = lower('" + searchDomain.getAccessionIds().get(0).getAccID() + "')";
-			from_accession = true;
-		}
-		
-		if (from_accession == true) {
-			select = select + ", a.*";
-			from = from + ", acc_accession a";
-			where = where + "\nand t._term_key = a._object_key" 
-					+ "\nand a._mgitype_key = 13 and a.preferred = 1";
-		}
 		// include obsolete terms?
 		if(searchDomain.getIncludeObsolete().equals(Boolean.FALSE)) {
 			where = where + "\nand isObsolete != 1";
@@ -151,6 +145,92 @@ public class TermService extends BaseService<TermDomain> {
 		return results;
 	}	
 
+	@Transactional
+	public Boolean process(List<TermDomain> domains, User user) {
+		// process synonym associations (create, delete, update)
+		
+		Boolean modified = false;
+		String mgiTypeKey = "13";
+		
+		if (domains == null || domains.isEmpty()) {
+			log.info("processTerm/nothing to process");
+			return modified;
+		}
+				
+		// iterate thru the list of domains
+		// for each domain, determine whether to perform an insert, delete or update
+		
+		for (int i = 0; i < domains.size(); i++) {
+				
+			if (domains.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
+	
+				// if term is null/empty, then skip
+				// pwi has sent a "c" that is empty/not being used
+				if (domains.get(i).getTerm() == null || domains.get(i).getTerm().isEmpty()) {
+					continue;
+				}
+	
+				Term entity = new Term();
+				String vocabKey = domains.get(i).getVocabKey();
+				log.info("processTerm create vocabKey: " + vocabKey + " term: " + domains.get(i).getTerm());
+				
+				entity.set_vocab_key(Integer.valueOf(vocabKey));
+				entity.setTerm(domains.get(i).getTerm());
+				entity.setAbbreviation(domains.get(i).getAbbreviation());
+				entity.setNote(domains.get(i).getNote());
+				entity.setSequenceNum(Integer.valueOf(domains.get(i).getSequenceNum()));
+				entity.setIsObsolete(Integer.valueOf(domains.get(i).getIsObsolete()));
+				
+				log.info("processTerm create,  set user objects");
+				entity.setCreatedBy(user);
+				entity.setModifiedBy(user);
+				log.info("processTerm create,  set date objects");
+				entity.setCreation_date(new Date());
+				entity.setModification_date(new Date());
+				
+				log.info("processTerm create persisting entity");
+				log.info(" process create termDAO: " + termDAO);
+				termDAO.persist(entity);
+				
+				log.info("processTerm create persisting entity");
+				if (domains.get(i).getGoRelSynonyms() != null) {
+					log.info("processTerm processing synonym");
+					synonymService.process(vocabKey, domains.get(i).getGoRelSynonyms(), mgiTypeKey, user);
+				}
+				// create is always true				
+				modified = true;
+			}
+			/** copied text - 
+			else if (domains.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+				log.info("processTerm delete");
+				Term entity = termDAO.get(Integer.valueOf(domains.get(i).getTermKey()));
+				termDAO.remove(entity);
+				modified = true;
+				log.info("processTerm delete successful");
+			}
+			else if (domains.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+				log.info("processTerm update");
+
+				Term entity = termDAO.get(Integer.valueOf(domains.get(i).getTermKey()));
+		
+				entity.setTerm(domains.get(i).getTerm());
+				
+				// ... flesh this out
+			
+				entity.setModification_date(new Date());
+				entity.setModifiedBy(user);
+				termDAO.update(entity);
+				modified = true;
+				log.info("processTerm/changes processed: " + domains.get(i).getTermKey());	
+			}
+			else {
+				log.info("processTerm/no changes processed: " + domains.get(i).getTermKey());
+			} **/
+		}
+		
+		log.info("processTerm/processing successful");
+		return modified;
+	}
 	@Transactional
 	public List<TermDomain> validateTerm(TermDomain domain) {
 		// verify that the term is valid for the given vocabulary name

@@ -30,19 +30,31 @@ public class VocabService extends BaseService<VocabularyDomain> {
 	private VocabularyDAO vocabularyDAO;
 	
 	private VocabularyTranslator translator = new VocabularyTranslator();
+	private TermService termService = new TermService();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
-	public SearchResults<VocabularyDomain> create(VocabularyDomain object, User user) {
+	public SearchResults<VocabularyDomain> create(VocabularyDomain domain, User user) {
 		SearchResults<VocabularyDomain> results = new SearchResults<VocabularyDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
 	}
 
 	@Transactional
-	public SearchResults<VocabularyDomain> update(VocabularyDomain object, User user) {
+	public SearchResults<VocabularyDomain> update(VocabularyDomain domain, User user) {
 		SearchResults<VocabularyDomain> results = new SearchResults<VocabularyDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		
+		if(domain.getTerms() != null && !domain.getTerms().isEmpty()) {
+			log.info("VocabService.createTerms calling TermService.process");
+			termService.process(domain.getTerms(), user);
+			log.info("VocabService.createTerms returned from calling TermService.process");
+			// return results with new terms 
+			return  this.getResults(Integer.valueOf(domain.getVocabKey()));
+			
+		}
+		// otherwise return the same results
+		log.info("VocabService.createTerms no terms to process"); // should never get here.
+		results.setItem(domain);
 		return results;
 	}
 
@@ -53,6 +65,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		return results;
 	}
 	
+
 	@Transactional
 	public VocabularyDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain

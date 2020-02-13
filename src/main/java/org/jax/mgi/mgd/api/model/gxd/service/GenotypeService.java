@@ -641,8 +641,12 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				
 				newObjectKey = rs.getInt("_genotype_key");
 				newStrain = rs.getString("strain");
-				newDescription = rs.getString("symbol");
-								
+				//newDescription = rs.getString("symbol");
+				newDescription = rs.getString("genotypeDisplay");				
+				if (newDescription == null) {
+					newDescription = "";					
+				}
+				
 				// group description by _object_key
 				if (prevObjectKey.equals(0)) {
 					prevObjectKey = newObjectKey;
@@ -651,7 +655,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 					addResults = false;
 				}
 				else if (newObjectKey.equals(prevObjectKey)) {
-					prevDescription = prevDescription + "," + newDescription;
+					//prevDescription = prevDescription + "," + newDescription;
 					addResults = false;
 				}
 				else {
@@ -660,7 +664,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				
 				if (addResults) {
 
-					prevDescription = prevStrain + " " + prevDescription;
+//					prevDescription = prevStrain + " " + prevDescription;
 	
 					SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();
 					slimdomain = slimtranslator.translate(genotypeDAO.get(prevObjectKey));				
@@ -681,15 +685,15 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 						if (prevDescription == null) {
 							prevDescription = prevStrain;
 						}
-						else {
-							prevDescription = prevStrain + " " + prevDescription;							
-						}
+//						else {
+//							prevDescription = prevStrain + " " + prevDescription;							
+//						}
 					}
 					else {
 						prevObjectKey = newObjectKey;
 						prevStrain = newStrain;
 						prevDescription = newDescription;
-						prevDescription = prevStrain + " " + prevDescription;
+						//prevDescription = prevStrain + " " + prevDescription;
 					}
 					
 					SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();

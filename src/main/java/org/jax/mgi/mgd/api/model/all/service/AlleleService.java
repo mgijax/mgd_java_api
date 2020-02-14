@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.all.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -39,25 +40,60 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	
 	@Transactional
 	public SearchResults<AlleleDomain> create(AlleleDomain object, User user) {
+		
+		// create new entity object from in-coming domain
+		// the Entities class handles the generation of the primary key
+		// database trigger will assign the MGI id/see pgmgddbschema/trigger for details
+
 		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		Allele entity = new Allele();
+		
+		// in progress
+		
+		// add creation/modification 
+		entity.setCreatedBy(user);
+		entity.setCreation_date(new Date());
+		entity.setModifiedBy(user);
+		entity.setModification_date(new Date());
+		
+		// execute persist/insert/send to database
+		alleleDAO.persist(entity);
+
+		// return entity translated to domain
+		log.info("processAllele/create/returning results");
+		results.setItem(translator.translate(entity));
 		return results;
 	}
 
 	@Transactional
-	public SearchResults<AlleleDomain> update(AlleleDomain object, User user) {
-		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
-		return results;
-	}
+	public SearchResults<AlleleDomain> update(AlleleDomain domain, User user) {
+		
+		// the set of fields in "update" is similar to set of fields in "create"
+		// creation user/date are only set in "create"
 
-	@Transactional
-	public SearchResults<AlleleDomain> delete(Integer key, User user) {
-		// get the entity object and delete
 		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
-		Allele entity = alleleDAO.get(key);
-		results.setItem(translator.translate(alleleDAO.get(key)));
-		alleleDAO.remove(entity);
+		Allele entity = alleleDAO.get(Integer.valueOf(domain.getAlleleKey()));
+		Boolean modified = false;
+//		String mgiTypeKey = "11";
+//		String mgiTypeName = "Allele";
+		
+		log.info("processAllele/update");
+
+		// only if modifications were actually made
+		if (modified == true) {
+			entity.setModification_date(new Date());
+			entity.setModifiedBy(user);
+			alleleDAO.update(entity);
+			log.info("processAllele/changes processed: " + domain.getAlleleKey());
+		}
+		else {
+			log.info("processAllele/no changes processed: " + domain.getAlleleKey());
+		}
+			
+		// return entity translated to domain
+		log.info("processAllele/update/returning results");
+		results.setItem(translator.translate(entity));
+		log.info("processAllele/update/returned results succsssful");
 		return results;
 	}
 		
@@ -81,6 +117,16 @@ public class AlleleService extends BaseService<AlleleDomain> {
         return results;
     }
 
+	@Transactional
+	public SearchResults<AlleleDomain> delete(Integer key, User user) {
+		// get the entity object and delete
+		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
+		Allele entity = alleleDAO.get(key);
+		results.setItem(translator.translate(alleleDAO.get(key)));
+		alleleDAO.remove(entity);
+		return results;
+	}
+	
 	@Transactional
 	public List<SlimAlleleDomain> search(AlleleDomain searchDomain) {
 

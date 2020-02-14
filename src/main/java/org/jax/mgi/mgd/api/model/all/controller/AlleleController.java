@@ -31,13 +31,19 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	private AlleleService alleleService;
 
 	@Override
-	public SearchResults<AlleleDomain> create(AlleleDomain allele, User user) {
-		return alleleService.create(allele, user);
+	public SearchResults<AlleleDomain> create(AlleleDomain domain, User user) {
+		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
+		results = alleleService.create(domain, user);
+		results = alleleService.getResults(Integer.valueOf(results.items.get(0).getAlleleKey()));
+		return results;	
 	}
 
 	@Override
-	public SearchResults<AlleleDomain> update(AlleleDomain allele, User user) {
-		return alleleService.update(allele, user);
+	public SearchResults<AlleleDomain> update(AlleleDomain domain, User user) {
+		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
+		results = alleleService.update(domain, user);				
+		results = alleleService.getResults(Integer.valueOf(results.items.get(0).getAlleleKey()));
+		return results;		
 	}
 
 	@Override

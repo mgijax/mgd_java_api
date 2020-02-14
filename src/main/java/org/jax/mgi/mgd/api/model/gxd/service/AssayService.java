@@ -46,6 +46,10 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		log.info("processAssay/create");
 		
+		//
+		// IN PROGRESSS
+		//
+		
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
 		entity.setModifiedBy(user);
@@ -73,7 +77,11 @@ public class AssayService extends BaseService<AssayDomain> {
 //		String mgiTypeName = "Assay";
 		
 		log.info("processAssay/update");
-
+		
+		//
+		// IN PROGRESSS
+		//
+		
 		// only if modifications were actually made
 		if (modified == true) {
 			entity.setModification_date(new Date());
@@ -136,6 +144,10 @@ public class AssayService extends BaseService<AssayDomain> {
 		Boolean from_marker = false;
 		Boolean from_accession = false;
 		Boolean from_reference = false;
+		
+		//
+		// IN PROGRESSS
+		//
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());

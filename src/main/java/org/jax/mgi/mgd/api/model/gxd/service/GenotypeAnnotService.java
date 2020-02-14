@@ -410,7 +410,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			log.info("found MP annotaiton duplicates: " + duplicateList.size());
 								
 			for (int i = 0; i < annotList.size(); i++) {							
-				// find result in annotList and set mpIsDuplicate = true
+				// find result in annotList and set isDuplicate = true
 				for (int j = 0; j < duplicateList.size(); j++) {															
 					if (duplicateList.get(j).getTermKey().equals(annotList.get(i).getTermKey())
 						&& duplicateList.get(j).getQualifierKey().equals(annotList.get(i).getQualifierKey())
@@ -464,7 +464,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			log.info("found DO annotaiton duplicates: " + duplicateList.size());
 								
 			for (int i = 0; i < annotList.size(); i++) {							
-				// find result in annotList and set mpIsDuplicate = true
+				// find result in annotList and set isDuplicate = true
 				for (int j = 0; j < duplicateList.size(); j++) {															
 					if (duplicateList.get(j).getTermKey().equals(annotList.get(i).getTermKey())
 						&& duplicateList.get(j).getQualifierKey().equals(annotList.get(i).getQualifierKey())

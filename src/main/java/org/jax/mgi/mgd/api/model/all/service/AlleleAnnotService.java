@@ -14,6 +14,7 @@ import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleAnnotDomain;
 import org.jax.mgi.mgd.api.model.all.domain.DenormAlleleAnnotDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleAnnotDomain;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDODomain;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleAnnotTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleAnnotTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -253,6 +254,11 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 					}
 				}
 			}	
+
+			// if DO annnot/1021, then check for duplicates
+			if (annotTypeKey.equals(1021)) {
+				annotList = checkDODuplicates(key, annotTypeKey, annotList);
+			}	
 			
 			// add List of annotation domains to the denormalized allele annot domain
 			denormAlleleAnnotDomain.setAnnots(annotList);
@@ -267,6 +273,59 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
     	return denormAlleleAnnotDomain;
 	}
 
+	@Transactional
+	public List<DenormAnnotationDomain> checkDODuplicates(Integer key, Integer annotTypeKey, List<DenormAnnotationDomain> annotList) {
+		
+		String cmd;
+		List<SlimAlleleDODomain> duplicateList = new ArrayList<SlimAlleleDODomain>();
+
+		cmd = "\nselect v._term_key, v._qualifier_key, e._evidenceterm_key, e._refs_key"
+				+ "\nfrom VOC_Annot v, VOC_Evidence e"
+				+ "\nwhere v._AnnotType_key = 1021"
+				+ "\nand v._annot_key = e._annot_key"
+				+ "\nand v._object_key = " + key
+				+ "\ngroup by v._object_key, e._refs_key, v._term_key, v._qualifier_key, e._evidenceterm_key"
+				+ "\nhaving count(*) > 1";
+			
+		log.info("check if DO annotations contains duplicates");			
+		log.info(cmd);
+			
+		try {
+				ResultSet rs = sqlExecutor.executeProto(cmd);
+				while (rs.next()) {
+					SlimAlleleDODomain domain = new SlimAlleleDODomain();
+					domain.setTermKey(rs.getString("_term_key"));
+					domain.setQualifierKey(rs.getString("_qualifier_key"));
+					domain.setEvidenceTermKey(rs.getString("_evidenceterm_key"));
+					domain.setRefsKey(rs.getString("_refs_key"));
+					duplicateList.add(domain);						
+				}
+				sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+				e.printStackTrace();
+		}
+				
+		if (duplicateList.size() > 0) {
+			log.info("found DO annotaiton duplicates: " + duplicateList.size());
+								
+			for (int i = 0; i < annotList.size(); i++) {							
+				// find result in annotList and set isDuplicate = true
+				for (int j = 0; j < duplicateList.size(); j++) {															
+					if (duplicateList.get(j).getTermKey().equals(annotList.get(i).getTermKey())
+						&& duplicateList.get(j).getQualifierKey().equals(annotList.get(i).getQualifierKey())
+						&& duplicateList.get(j).getEvidenceTermKey().equals(annotList.get(i).getEvidenceTermKey())
+						&& duplicateList.get(j).getRefsKey().equals(annotList.get(i).getRefsKey())) {
+						log.info("found dup: " + annotList.get(i).getAnnotKey());
+						annotList.get(i).setIsDuplicate(true);
+					}
+				}
+			}
+		}
+		
+		return annotList;
+	}
+	
 	@Transactional
 	public SearchResults<DenormAlleleAnnotDomain> getResults(Integer key) {
 		// get the denormalized domain -> results

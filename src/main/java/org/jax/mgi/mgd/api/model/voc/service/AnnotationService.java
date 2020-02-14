@@ -319,6 +319,9 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 						EvidenceDomain evidenceDomain = evidenceList.get(j);
 						Evidence evidenceEntity = evidenceDAO.get(Integer.valueOf(evidenceDomain.getAnnotEvidenceKey()));
 						evidenceEntity.set_annot_key(entity.get_annot_key());
+						evidenceEntity.setModification_date(new Date());
+						evidenceEntity.setModifiedBy(user);	
+						evidenceDAO.update(evidenceEntity);
 					}					 
 					annotationDAO.update(entity);
 				}

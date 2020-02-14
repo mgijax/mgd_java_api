@@ -21,7 +21,7 @@ public class AssayType extends BaseEntity {
 	@Id
 	private Integer _assaytype_key;
 	private String assayType;
-	private Integer isRNNAAssay;
+	private Integer isRNAAssay;
 	private Integer isGelAssay;
 	private Integer sequenceNum;
 	private Date creation_date;

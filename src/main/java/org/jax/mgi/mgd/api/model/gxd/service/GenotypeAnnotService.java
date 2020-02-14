@@ -17,6 +17,7 @@ import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.DenormGenotypeAnnotDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeAnnotDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeAlleleReferenceDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDODomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeMPDomain;
 import org.jax.mgi.mgd.api.model.gxd.translator.GenotypeAnnotTranslator;
@@ -347,6 +348,11 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 				annotList = checkMPDuplicates(key, annotTypeKey, annotList);
 			}
 			
+			// if DO annnot/1020, then check for duplicates
+			if (annotTypeKey.equals(1020)) {
+				annotList = checkDODuplicates(key, annotTypeKey, annotList);
+			}	
+			
 			// add List of annotation domains to the denormalized geno annot domain
 			denormGenoAnnotDomain.setAnnots(annotList);
 			
@@ -380,7 +386,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 				+ "\ngroup by v._object_key, e._refs_key, v._term_key, v._qualifier_key, e._evidenceterm_key, p.value"
 				+ "\nhaving count(*) > 1";
 			
-		log.info("check if mp annotations contains duplicates");			
+		log.info("check if MP annotations contains duplicates");			
 		log.info(cmd);
 			
 		try {
@@ -401,7 +407,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 		}
 				
 		if (duplicateList.size() > 0) {
-			log.info("found mp annotaiton duplicates: " + duplicateList.size());
+			log.info("found MP annotaiton duplicates: " + duplicateList.size());
 								
 			for (int i = 0; i < annotList.size(); i++) {							
 				// find result in annotList and set mpIsDuplicate = true
@@ -412,7 +418,60 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 						&& duplicateList.get(j).getRefsKey().equals(annotList.get(i).getRefsKey())
 						&& duplicateList.get(j).getSexSpecificityValue().equals(annotList.get(i).getProperties().get(0).getValue())) {
 						log.info("found dup: " + annotList.get(i).getAnnotKey());
-						annotList.get(i).setMpIsDuplicate(true);
+						annotList.get(i).setIsDuplicate(true);
+					}
+				}
+			}
+		}
+		
+		return annotList;
+	}
+
+	@Transactional
+	public List<DenormAnnotationDomain> checkDODuplicates(Integer key, Integer annotTypeKey, List<DenormAnnotationDomain> annotList) {
+		
+		String cmd;
+		List<SlimGenotypeDODomain> duplicateList = new ArrayList<SlimGenotypeDODomain>();
+
+		cmd = "\nselect v._term_key, v._qualifier_key, e._evidenceterm_key, e._refs_key"
+				+ "\nfrom VOC_Annot v, VOC_Evidence e"
+				+ "\nwhere v._AnnotType_key = 1020"
+				+ "\nand v._annot_key = e._annot_key"
+				+ "\nand v._object_key = " + key
+				+ "\ngroup by v._object_key, e._refs_key, v._term_key, v._qualifier_key, e._evidenceterm_key"
+				+ "\nhaving count(*) > 1";
+			
+		log.info("check if DO annotations contains duplicates");			
+		log.info(cmd);
+			
+		try {
+				ResultSet rs = sqlExecutor.executeProto(cmd);
+				while (rs.next()) {
+					SlimGenotypeDODomain domain = new SlimGenotypeDODomain();
+					domain.setTermKey(rs.getString("_term_key"));
+					domain.setQualifierKey(rs.getString("_qualifier_key"));
+					domain.setEvidenceTermKey(rs.getString("_evidenceterm_key"));
+					domain.setRefsKey(rs.getString("_refs_key"));
+					duplicateList.add(domain);						
+				}
+				sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+				e.printStackTrace();
+		}
+				
+		if (duplicateList.size() > 0) {
+			log.info("found DO annotaiton duplicates: " + duplicateList.size());
+								
+			for (int i = 0; i < annotList.size(); i++) {							
+				// find result in annotList and set mpIsDuplicate = true
+				for (int j = 0; j < duplicateList.size(); j++) {															
+					if (duplicateList.get(j).getTermKey().equals(annotList.get(i).getTermKey())
+						&& duplicateList.get(j).getQualifierKey().equals(annotList.get(i).getQualifierKey())
+						&& duplicateList.get(j).getEvidenceTermKey().equals(annotList.get(i).getEvidenceTermKey())
+						&& duplicateList.get(j).getRefsKey().equals(annotList.get(i).getRefsKey())) {
+						log.info("found dup: " + annotList.get(i).getAnnotKey());
+						annotList.get(i).setIsDuplicate(true);
 					}
 				}
 			}

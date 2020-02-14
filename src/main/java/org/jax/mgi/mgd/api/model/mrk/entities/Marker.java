@@ -146,9 +146,10 @@ public class Marker extends BaseEntity {
 	@OrderBy(clause="sequenceNum")
 	private List<MarkerHistory> history;
 	
+	// mouse synonyms only
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 2")
+	@Where(clause="`_mgitype_key` = 2 and `_synonymtype_key` in (1004,1005,1006,1007)")
 	@OrderBy(clause="_synonymtype_key, synonym")
 	private List<MGISynonym> synonyms;
 	

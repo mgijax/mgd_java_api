@@ -43,6 +43,7 @@ public class TermService extends BaseService<TermDomain> {
 	public SearchResults<TermDomain> create(TermDomain termDomain, User user) {
 		SearchResults<TermDomain> results = new SearchResults<TermDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		
 		return results;
 	}
 
@@ -63,7 +64,6 @@ public class TermService extends BaseService<TermDomain> {
 	@Transactional
 	public TermDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain
-		log.info("get termDAO: " + termDAO);
 		TermDomain domain = new TermDomain();
 		if (termDAO.get(key) != null) {
 			domain = translator.translate(termDAO.get(key));
@@ -83,7 +83,6 @@ public class TermService extends BaseService<TermDomain> {
 	@Transactional	
 	public List<TermDomain> search(TermDomain searchDomain) {
 		// using searchDomain fields, generate SQL command
-		
 		List<TermDomain> results = new ArrayList<TermDomain>();
 
 		// building SQL command : select + from + where + orderBy
@@ -163,7 +162,6 @@ public class TermService extends BaseService<TermDomain> {
 	@Transactional
 	public Boolean process(List<TermDomain> domains, User user) {
 		// process synonym associations (create, delete, update)
-		
 		Boolean modified = false;
 		String mgiTypeKey = "13";
 		
@@ -255,7 +253,6 @@ public class TermService extends BaseService<TermDomain> {
 	public List<TermDomain> validateTerm(TermDomain domain) {
 		// verify that the term is valid for the given vocabulary name
 		// returns empty result items if term does not exist
-		
 		return search(domain);
 	}
 
@@ -294,7 +291,6 @@ public class TermService extends BaseService<TermDomain> {
 	public SearchResults<SlimTermDomain> validateTermSlim(int vocabKey, String term) {
 		// verify that the term is valid for the given vocabulary name
 		// returns empty result items if term does not exist
-	
 		SearchResults<SlimTermDomain> results = new SearchResults<SlimTermDomain>();
 
 		String cmd = "select t._term_key, t.term, t.abbreviation"

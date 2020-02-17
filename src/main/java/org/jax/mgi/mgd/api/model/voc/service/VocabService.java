@@ -53,7 +53,6 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			return  this.getResults(Integer.valueOf(domain.getVocabKey()));
 			
 		}
-		// otherwise return the same results
 		Vocabulary entity = vocabularyDAO.get(Integer.valueOf(domain.getVocabKey()));
 		log.info("VocabService.createTerms no terms to process"); // should never get here.
 		results.setItem(translator.translate(entity));

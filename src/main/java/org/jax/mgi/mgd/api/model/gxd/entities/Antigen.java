@@ -1,14 +1,17 @@
 package org.jax.mgi.mgd.api.model.gxd.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
@@ -45,9 +48,11 @@ public class Antigen extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_antigen_key", referencedColumnName="_object_key")
-	@Where(clause="`_mgitype_key` = 7 AND preferred = 1 AND `_logicaldb_key` = 1")
-	private Accession mgiAccessionId;
+	// mgi accession ids only
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_antigen_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 7 and `_logicaldb_key` = 1")
+	@OrderBy(clause="preferred desc, accID")
+	private List<Accession> mgiAccessionIds;
 
 }

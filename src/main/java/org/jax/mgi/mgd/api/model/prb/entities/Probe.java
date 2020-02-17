@@ -11,6 +11,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
@@ -60,18 +61,15 @@ public class Probe extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_probe_key", referencedColumnName="_object_key")
-	@Where(clause="`_mgitype_key` = 3 AND preferred = 1 AND `_logicaldb_key` = 1")
-	private Accession mgiAccessionId;
+	// mgi accession ids only
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_probe_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 3 and `_logicaldb_key` = 1")
+	@OrderBy(clause="preferred desc, accID")
+	private List<Accession> mgiAccessionIds;
 
 	@OneToMany()
 	@JoinColumn(name="_probe_key", insertable=false, updatable=false)
 	private List<ProbeMarker> probeMarkers;
-	
-	@OneToMany()
-	@JoinColumn(name="_object_key", referencedColumnName="_probe_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 3 AND preferred = 1")
-	private List<Accession> allAccessionIds;
 	
 }

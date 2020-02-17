@@ -9,9 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
@@ -72,18 +72,20 @@ public class Assay extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_assay_key", referencedColumnName="_object_key")
-	@Where(clause="`_mgitype_key` = 8 AND preferred = 1 AND `_logicaldb_key` = 1")
-	private Accession mgiAccessionId;
+	// mgi accession ids only
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_assay_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 8 and `_logicaldb_key` = 1")
+	@OrderBy(clause="preferred desc, accID")
+	private List<Accession> mgiAccessionIds;
 
 	@OneToMany()
 	@JoinColumn(name="_assay_key", insertable=false, updatable=false)
-	@OrderBy("sequenceNum")
+	@OrderBy(clause="sequenceNum")
 	private List<GelLane> gelLanes;
 	
 	@OneToMany()
 	@JoinColumn(name="_assay_key", insertable=false, updatable=false)
-	@OrderBy("sequenceNum")
+	@OrderBy(clause="sequenceNum")
 	private List<Specimen> specimens;
 }

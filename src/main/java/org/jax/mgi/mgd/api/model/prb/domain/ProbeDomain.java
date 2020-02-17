@@ -10,9 +10,9 @@ import lombok.Setter;
 @Getter @Setter
 public class ProbeDomain extends BaseDomain {
 
-	private Integer _probe_key;
+	private String probeKey;
 	private String name;
-	private Integer derivedFrom;
+	private String derivedFrom;
 	private String primer1sequence;
 	private String primer2sequence;
 	private String regionCovered;
@@ -23,4 +23,5 @@ public class ProbeDomain extends BaseDomain {
 	private String modifiedBy;
 	private Date creation_date;
 	private Date modification_date;
+	private String accID;
 }

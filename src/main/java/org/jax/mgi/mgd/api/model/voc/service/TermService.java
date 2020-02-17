@@ -176,7 +176,7 @@ public class TermService extends BaseService<TermDomain> {
 		// for each domain, determine whether to perform an insert, delete or update
 		
 		for (int i = 0; i < domains.size(); i++) {
-				
+			String vocabKey = domains.get(i).getVocabKey();
 			if (domains.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 	
 				// if term is null/empty, then skip
@@ -186,7 +186,7 @@ public class TermService extends BaseService<TermDomain> {
 				}
 	
 				Term entity = new Term();
-				String vocabKey = domains.get(i).getVocabKey();
+				
 				log.info("processTerm create vocabKey: " + vocabKey + " term: " + domains.get(i).getTerm());
 				
 				entity.set_vocab_key(Integer.valueOf(vocabKey));
@@ -208,29 +208,34 @@ public class TermService extends BaseService<TermDomain> {
 				termDAO.persist(entity);
 				
 				log.info("processTerm create persisting entity");
-				if (domains.get(i).getGoRelSynonyms() != null) {
+				if (domains.get(i).getVocabKey() == "4" && domains.get(i).getGoRelSynonyms() != null) {
 					log.info("processTerm processing synonym");
 					synonymService.process(vocabKey, domains.get(i).getGoRelSynonyms(), mgiTypeKey, user);
 				}
 				// create is always true				
 				modified = true;
 			}
-			/** copied text - 
+			
 			else if (domains.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processTerm delete");
 				Term entity = termDAO.get(Integer.valueOf(domains.get(i).getTermKey()));
 				termDAO.remove(entity);
 				modified = true;
 				log.info("processTerm delete successful");
-			}
+			} 
 			else if (domains.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processTerm update");
 
 				Term entity = termDAO.get(Integer.valueOf(domains.get(i).getTermKey()));
 		
 				entity.setTerm(domains.get(i).getTerm());
-				
-				// ... flesh this out
+				entity.setAbbreviation(domains.get(i).getAbbreviation());
+				entity.setNote(domains.get(i).getNote());
+				entity.setSequenceNum(Integer.valueOf(domains.get(i).getSequenceNum()));
+				entity.setIsObsolete(Integer.valueOf(domains.get(i).getIsObsolete()));
+				if (domains.get(i).getVocabKey() == "4") {
+					synonymService.process(vocabKey, domains.get(i).getGoRelSynonyms(), mgiTypeKey, user);
+				}
 			
 				entity.setModification_date(new Date());
 				entity.setModifiedBy(user);
@@ -240,7 +245,7 @@ public class TermService extends BaseService<TermDomain> {
 			}
 			else {
 				log.info("processTerm/no changes processed: " + domains.get(i).getTermKey());
-			} **/
+			} 
 		}
 		
 		log.info("processTerm/processing successful");

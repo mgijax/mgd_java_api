@@ -29,9 +29,10 @@ public class VocabService extends BaseService<VocabularyDomain> {
 	
 	@Inject
 	private VocabularyDAO vocabularyDAO;
+	@Inject
+	private TermService termService = new TermService();
 	
 	private VocabularyTranslator translator = new VocabularyTranslator();
-	private TermService termService = new TermService();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -46,15 +47,16 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		SearchResults<VocabularyDomain> results = new SearchResults<VocabularyDomain>();
 		
 		if(domain.getTerms() != null && !domain.getTerms().isEmpty()) {
-			log.info("VocabService.createTerms calling TermService.process");
+			log.info("VocabService.update calling TermService.process");
 			termService.process(domain.getTerms(), user);
-			log.info("VocabService.createTerms returned from calling TermService.process");
+			log.info("VocabService.update returned from calling TermService.process");
 			// return results with new terms 
 			return  this.getResults(Integer.valueOf(domain.getVocabKey()));
 			
 		}
+	
 		Vocabulary entity = vocabularyDAO.get(Integer.valueOf(domain.getVocabKey()));
-		log.info("VocabService.createTerms no terms to process"); // should never get here.
+		log.info("VocabService.update no terms to process"); // should never get here.
 		results.setItem(translator.translate(entity));
 		return results;
 	}

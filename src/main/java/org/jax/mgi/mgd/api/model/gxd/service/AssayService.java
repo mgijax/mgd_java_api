@@ -99,7 +99,17 @@ public class AssayService extends BaseService<AssayDomain> {
 		log.info("processAssay/update/returned results succsssful");
 		return results;
 	}
-	
+	 
+	@Transactional
+	public SearchResults<AssayDomain> delete(Integer key, User user) {
+		// get the entity object and delete
+		SearchResults<AssayDomain> results = new SearchResults<AssayDomain>();
+		Assay entity = assayDAO.get(key);
+		results.setItem(translator.translate(assayDAO.get(key)));
+		assayDAO.remove(entity);
+		return results;
+	}  
+		
 	@Transactional
 	public AssayDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain
@@ -115,18 +125,29 @@ public class AssayService extends BaseService<AssayDomain> {
         SearchResults<AssayDomain> results = new SearchResults<AssayDomain>();
         results.setItem(translator.translate(assayDAO.get(key)));
         return results;
-    }
- 
-	@Transactional
-	public SearchResults<AssayDomain> delete(Integer key, User user) {
-		// get the entity object and delete
-		SearchResults<AssayDomain> results = new SearchResults<AssayDomain>();
-		Assay entity = assayDAO.get(key);
-		results.setItem(translator.translate(assayDAO.get(key)));
-		assayDAO.remove(entity);
-		return results;
-	}   
+    } 
 
+	@Transactional	
+	public SearchResults<AssayDomain> getObjectCount() {
+		// return the object count from the database
+		
+		SearchResults<AssayDomain> results = new SearchResults<AssayDomain>();
+		String cmd = "select count(*) as objectCount from gxd_assay";
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getInt("objectCount");
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;		
+	}
+	
 	@Transactional
 	public List<SlimAssayDomain> search(AssayDomain searchDomain) {
 
@@ -135,15 +156,15 @@ public class AssayService extends BaseService<AssayDomain> {
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
-		String select = "select distinct a._assay_key";
-		String from = "from gxd_assay a, gxd_assaytype t";
-		String where = "where a._assaytype_key = t._assaytype_key";
-		String orderBy = "order by a.assaytype";
+		String select = "select distinct a._assay_key, t.assaytype, r.numericPart";
+		String from = "from gxd_assay a, gxd_assaytype t, bib_citation_cache r";
+		String where = "where a._assaytype_key = t._assaytype_key"
+				+ "\nand a._refs_key = r._refs_key";
+		String orderBy = "order by r.numericPart, t.assaytype";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
-		//String value;
+		String value;
 		Boolean from_marker = false;
 		Boolean from_accession = false;
-		Boolean from_reference = false;
 		
 		//
 		// IN PROGRESSS
@@ -170,11 +191,19 @@ public class AssayService extends BaseService<AssayDomain> {
 			where = where + "\nand acc.accID ilike '" + searchDomain.getAccID() + "'";
 			from_accession = true;
 		}
-						
+
 		// reference
-		if (searchDomain.getRefsKey() != null && !searchDomain.getRefsKey().isEmpty()) {
-			where = where + "\nand r._Refs_key = " + searchDomain.getRefsKey();
-			from_reference = true;
+		value = searchDomain.getRefsKey();
+		String jnumid = searchDomain.getJnumid();		
+		if (value != null && !value.isEmpty()) {
+			where = where + "\nand r._Refs_key = " + value;
+		}
+		else if (jnumid != null && !jnumid.isEmpty()) {
+			jnumid = jnumid.toUpperCase();
+			if (!jnumid.contains("J:")) {
+					jnumid = "J:" + jnumid;
+			}
+			where = where + "\nand r.jnumid = '" + jnumid + "'";
 		}
 	
 		if (from_marker == true) {
@@ -184,10 +213,6 @@ public class AssayService extends BaseService<AssayDomain> {
 		if (from_accession == true) {
 			from = from + ", gxd_assay_acc_view acc";
 			where = where + "\nand a._assay_key = acc._object_key"; 
-		}
-		if (from_reference == true) {
-			from = from + ", bib_citation_cache r";
-			where = where + "\nand a._refs_key = r._refs_key";
 		}
 
 		// make this easy to copy/paste for troubleshooting

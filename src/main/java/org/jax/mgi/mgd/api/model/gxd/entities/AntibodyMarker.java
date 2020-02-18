@@ -13,7 +13,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
-import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -22,22 +22,20 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Antibody Alias Model Object")
-@Table(name="gxd_antibodyalias")
-public class AntibodyAlias extends BaseEntity {
+@ApiModel(value = "Antibody Marker Model Object")
+@Table(name="gxd_antibodymarker")
+public class AntibodyMarker extends BaseEntity {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="gxd_antibodyalias_generator")
-	@SequenceGenerator(name="gxd_antibodyalias_generator", sequenceName = "gxd_antibodyalias_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="gxd_antibodymarker_generator")
+	@SequenceGenerator(name="gxd_antibodymarker_generator", sequenceName = "gxd_antibodymarker_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")	
-	private int _antibodyalias_key;
+	private int _antibodymarker_key;
 	private int _antibody_key;
-	private String alias;
 	private Date creation_date;
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_refs_key")
-	private Reference reference;
-	
+	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
+	private Marker marker;	
 }

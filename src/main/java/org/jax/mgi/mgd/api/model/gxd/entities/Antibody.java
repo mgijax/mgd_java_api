@@ -5,11 +5,13 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.OrderBy;
@@ -19,9 +21,9 @@ import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,6 +34,9 @@ import lombok.Setter;
 public class Antibody extends BaseEntity {
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="gxd_antibody_generator")
+	@SequenceGenerator(name="gxd_antibody_generator", sequenceName = "gxd_antibody_seq", allocationSize=1)
+	@ApiModelProperty(value="primary key")	
 	private int _antibody_key;
 	private String antibodyName;
 	private String antibodyNote;
@@ -69,13 +74,15 @@ public class Antibody extends BaseEntity {
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 
+	// antibody alias
+	@OneToMany()
+	@JoinColumn(name="_antibody_key", referencedColumnName="_antibody_key", insertable=false, updatable=false)
+	private List<AntibodyAlias> aliases;	
+	
 	// antibody marker
 	@OneToMany()
-	@JoinTable(name = "gxd_antibodymarker",
-		joinColumns = @JoinColumn(name = "_antibody_key"),
-		inverseJoinColumns = @JoinColumn(name = "_marker_key")
-	)
-	private List<Marker> markers;
+	@JoinColumn(name="_antibody_key", referencedColumnName="_antibody_key", insertable=false, updatable=false)
+	private List<AntibodyMarker> markers;
 
 	// reference associations
 	@OneToMany()
@@ -83,9 +90,4 @@ public class Antibody extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 6")
 	private List<MGIReferenceAssoc> refAssocs;
 
-	// antibody alias
-	@OneToMany()
-	@JoinColumn(name="_antibody_key", referencedColumnName="_antibody_key", insertable=false, updatable=false)
-	private List<AntibodyAlias> aliases;	
-	
 }

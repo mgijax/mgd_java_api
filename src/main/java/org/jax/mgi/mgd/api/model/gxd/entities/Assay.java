@@ -36,8 +36,8 @@ import lombok.Setter;
 public class Assay extends BaseEntity {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="gxd_allele_generator")
-	@SequenceGenerator(name="gxd_allele_generator", sequenceName = "gxd_allele_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="gxd_assay_generator")
+	@SequenceGenerator(name="gxd_assay_generator", sequenceName = "gxd_assay_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")	
 	private Integer _assay_key;
 	private Date creation_date;

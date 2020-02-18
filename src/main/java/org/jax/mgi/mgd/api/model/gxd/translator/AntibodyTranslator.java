@@ -4,8 +4,11 @@ import java.util.Comparator;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyAliasDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Antibody;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.translator.SlimMarkerTranslator;
 import org.jboss.logging.Logger;
@@ -15,7 +18,6 @@ public class AntibodyTranslator extends BaseEntityDomainTranslator<Antibody, Ant
 	protected Logger log = Logger.getLogger(getClass());
 
 	private AntigenTranslator antigenTranslator = new AntigenTranslator();
-	private SlimMarkerTranslator markerTranslator = new SlimMarkerTranslator();
 	
 	@Override
 	protected AntibodyDomain entityToDomain(Antibody entity) {
@@ -50,9 +52,26 @@ public class AntibodyTranslator extends BaseEntityDomainTranslator<Antibody, Ant
 	
 		// markers
 		if (entity.getMarkers() != null && !entity.getMarkers().isEmpty()) {
+			SlimMarkerTranslator markerTranslator = new SlimMarkerTranslator();			
 			Iterable<SlimMarkerDomain> t = markerTranslator.translateEntities(entity.getMarkers());
 			domain.setMarkers(IteratorUtils.toList(t.iterator()));
 			domain.getMarkers().sort(Comparator.comparing(SlimMarkerDomain::getSymbol));
+		}
+
+		// reference associations
+		if (entity.getRefAssocs() != null && !entity.getRefAssocs().isEmpty()) {
+			MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
+			Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
+			domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
+			domain.getRefAssocs().sort(Comparator.comparing(MGIReferenceAssocDomain::getRefAssocType));
+		}
+
+		// aliases
+		if (entity.getAliases() != null && !entity.getAliases().isEmpty()) {
+			AntibodyAliasTranslator aliasTranslator = new AntibodyAliasTranslator();
+			Iterable<AntibodyAliasDomain> i = aliasTranslator.translateEntities(entity.getAliases());
+			domain.setAliases(IteratorUtils.toList(i.iterator()));
+			domain.getAliases().sort(Comparator.comparing(AntibodyAliasDomain::getAlias));
 		}
 		
 		return domain;

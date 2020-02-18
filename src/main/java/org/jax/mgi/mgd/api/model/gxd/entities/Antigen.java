@@ -54,5 +54,5 @@ public class Antigen extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 7 and `_logicaldb_key` = 1")
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
-
+	
 }

@@ -21,6 +21,5 @@ public class AntigenDomain extends BaseDomain {
 	private String modification_date;
 	private String accID;
 
-	// probe-source info
-	private ProbeSourceDomain probeSource;	
+	private ProbeSourceDomain probeSource;
 }

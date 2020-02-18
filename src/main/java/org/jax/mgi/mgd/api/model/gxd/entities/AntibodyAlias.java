@@ -23,14 +23,11 @@ import lombok.Setter;
 public class AntibodyAlias extends BaseEntity {
 
 	@Id
-	private Integer _antibodyalias_key;
+	private int _antibodyalias_key;
+	private int _antibody_key;
 	private String alias;
 	private Date creation_date;
 	private Date modification_date;
-	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_antibody_key")
-	private Antibody antibody;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key")

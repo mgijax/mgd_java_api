@@ -13,6 +13,11 @@ public class SlimAntibodyTranslator extends BaseEntityDomainTranslator<Antibody,
 		
 		domain.setAntibodyKey(String.valueOf(entity.get_antibody_key()));
 		domain.setAntibodyName(entity.getAntibodyName());
+
+		// mgi accession ids only
+		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
+			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
+		}
 		
 		return domain;
 	}

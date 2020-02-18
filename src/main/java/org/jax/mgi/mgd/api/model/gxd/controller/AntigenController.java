@@ -8,11 +8,14 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntigenDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDataSetDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimAntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAntigenDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.AntigenService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -77,5 +80,12 @@ public class AntigenController extends BaseController<AntigenDomain> {
 		}
 		
 		return results;
+	}
+	
+	@GET
+	@ApiOperation(value = "Get antibodies by antigen key")
+	@Path("/getAntibodies/{key}")
+	public List<SlimAntibodyDomain> getAntibodies(@PathParam("key") Integer key) {
+		return antigenService.getAntibodies(key);
 	}	
 }

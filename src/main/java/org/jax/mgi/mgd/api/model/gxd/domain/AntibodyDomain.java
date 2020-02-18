@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.gxd.domain;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 
 import lombok.Getter;
@@ -30,4 +31,7 @@ public class AntibodyDomain extends BaseDomain {
 
 	private AntigenDomain antigen;
 	private List<SlimMarkerDomain> markers;
+	private List<AntibodyAliasDomain> aliases;
+	private List<MGIReferenceAssocDomain> refAssocs;	
+	
 }

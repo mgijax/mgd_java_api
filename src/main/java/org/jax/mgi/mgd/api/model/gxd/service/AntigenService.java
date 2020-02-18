@@ -12,6 +12,7 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntigenDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntigenDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimAntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAntigenDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Antigen;
 import org.jax.mgi.mgd.api.model.gxd.translator.AntigenTranslator;
@@ -206,5 +207,36 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		
 		return results;
 	}
-	
+
+	@Transactional	
+	public List<SlimAntibodyDomain> getAntibodies(Integer key) {
+		// get antibodies by antigen key 
+		// return AntibodyDomain
+		
+		List<SlimAntibodyDomain> results = new ArrayList<SlimAntibodyDomain>();
+
+		String cmd = "select distinct g._antibody_key, g.antibodyName, acc.accID"
+				+ "\nfrom gxd_antibody g, gxd_antibody_acc_view acc"
+				+ "\nwhere g._antigen_key = " + key
+				+ "\nand g._antibody_key = acc._object_key"
+				+ "\norder by antibodyName";
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimAntibodyDomain domain = new SlimAntibodyDomain();
+				domain.setAntibodyKey(rs.getString("_antibody_key"));
+				domain.setAntibodyName(rs.getString("antibodyName"));				
+				domain.setAccID(rs.getString("accID"));								
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+				
+		return(results);
+	}		
 }

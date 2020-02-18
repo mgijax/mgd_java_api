@@ -14,4 +14,5 @@ public class SlimAntibodyDomain extends BaseDomain {
 	
 	private String antibodyKey;
 	private String antibodyName;
+	private String accID;
 }

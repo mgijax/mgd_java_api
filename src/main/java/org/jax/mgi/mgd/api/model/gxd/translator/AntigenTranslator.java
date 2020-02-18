@@ -37,7 +37,7 @@ public class AntigenTranslator extends BaseEntityDomainTranslator<Antigen, Antig
 		if (entity.getProbeSource() != null) {
 			domain.setProbeSource(probeSourceTranslator.translate(entity.getProbeSource()));
 		}
-		
+
 		return domain;
 	}
 

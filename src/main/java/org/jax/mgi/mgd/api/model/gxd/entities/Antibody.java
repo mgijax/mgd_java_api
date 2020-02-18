@@ -16,6 +16,7 @@ import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
+import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
@@ -68,12 +69,23 @@ public class Antibody extends BaseEntity {
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 
-	// add _AntibodyMarker_key to GXD_AntibodyMarker table
+	// antibody marker
 	@OneToMany()
 	@JoinTable(name = "gxd_antibodymarker",
 		joinColumns = @JoinColumn(name = "_antibody_key"),
 		inverseJoinColumns = @JoinColumn(name = "_marker_key")
 	)
 	private List<Marker> markers;
+
+	// reference associations
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_antibody_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 6")
+	private List<MGIReferenceAssoc> refAssocs;
+
+	// antibody alias
+	@OneToMany()
+	@JoinColumn(name="_antibody_key", referencedColumnName="_antibody_key", insertable=false, updatable=false)
+	private List<AntibodyAlias> aliases;	
 	
 }

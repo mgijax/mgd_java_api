@@ -203,6 +203,7 @@ public class TermService extends BaseService<TermDomain> {
 				
 				log.info("processTerm create persisting entity");
 				log.info(" process create termDAO: " + termDAO);
+				log.info("creating: " + entity.getTerm() );
 				termDAO.persist(entity);
 				
 				log.info("processTerm create persisting entity");
@@ -217,6 +218,7 @@ public class TermService extends BaseService<TermDomain> {
 			else if (domains.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processTerm delete");
 				Term entity = termDAO.get(Integer.valueOf(domains.get(i).getTermKey()));
+				log.info("deleting: " + entity.getTerm() + " " + entity.get_term_key());
 				termDAO.remove(entity);
 				modified = true;
 				log.info("processTerm delete successful");
@@ -237,6 +239,7 @@ public class TermService extends BaseService<TermDomain> {
 			
 				entity.setModification_date(new Date());
 				entity.setModifiedBy(user);
+				log.info("updating: " + entity.getTerm() + " " + entity.get_term_key());
 				termDAO.update(entity);
 				modified = true;
 				log.info("processTerm/changes processed: " + domains.get(i).getTermKey());	

@@ -29,7 +29,7 @@ import lombok.Setter;
 public class Antigen extends BaseEntity {
 
 	@Id
-	private Integer _antigen_key;
+	private int _antigen_key;
 	private String antigenName;
 	private String regionCovered;
 	private String antigenNote;
@@ -37,16 +37,16 @@ public class Antigen extends BaseEntity {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_source_key")
-	private ProbeSource source;
-
-	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
+
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_source_key", referencedColumnName="_source_key", insertable=false, updatable=false)
+	private ProbeSource probeSource;
 	
 	// mgi accession ids only
 	@OneToMany()

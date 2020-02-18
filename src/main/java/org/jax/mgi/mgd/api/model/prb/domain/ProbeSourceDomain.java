@@ -1,11 +1,6 @@
 package org.jax.mgi.mgd.api.model.prb.domain;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
-import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLine;
-import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
-import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
-import org.jax.mgi.mgd.api.model.prb.entities.ProbeTissue;
-import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,14 +12,23 @@ public class ProbeSourceDomain extends BaseDomain {
 	private String name;
 	private String description;
 	private String age;
-	private Term segmentType;
-	private Term vector;
-	private Organism organism;
-	private ProbeStrain strain;
-	private ProbeTissue tissue;
-	private Term gender;
-	private AlleleCellLine cellLine;		
+	private String segmentTypeKey;
+	private String segmentType;
+	private String vectorKey;
+	private String vector;
+	private String organismKey;
+	private String organism;
+	private String strainKey;
+	private String strain;
+	private String tissueKey;
+	private String tissue;
+	private String genderKey;
+	private String gender;
+	private String cellLineKey;
+	private String cellLine;		
+	private String createdByKey;
 	private String createdBy;
+	private String modifiedByKey;
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;

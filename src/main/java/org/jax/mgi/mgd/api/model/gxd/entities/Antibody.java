@@ -31,7 +31,7 @@ import lombok.Setter;
 public class Antibody extends BaseEntity {
 
 	@Id
-	private Integer _antibody_key;
+	private int _antibody_key;
 	private String antibodyName;
 	private String antibodyNote;
 	private Date creation_date;
@@ -57,6 +57,10 @@ public class Antibody extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_antigen_key", referencedColumnName="_antigen_key")
+	private Antigen antigen;
+		
 	// mgi accession ids only
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_antibody_key", insertable=false, updatable=false)
@@ -64,6 +68,7 @@ public class Antibody extends BaseEntity {
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 
+	// add _AntibodyMarker_key to GXD_AntibodyMarker table
 	@OneToMany()
 	@JoinTable(name = "gxd_antibodymarker",
 		joinColumns = @JoinColumn(name = "_antibody_key"),

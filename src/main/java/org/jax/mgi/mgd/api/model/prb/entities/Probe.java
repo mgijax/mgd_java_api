@@ -31,7 +31,7 @@ public class Probe extends BaseEntity {
 	@Id
 	private int _probe_key;
 	private String name;
-	private int derivedFrom;
+	private Integer derivedFrom;
 	private String primer1sequence;
 	private String primer2sequence;
 	private String regionCovered;

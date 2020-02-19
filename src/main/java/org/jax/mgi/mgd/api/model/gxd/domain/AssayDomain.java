@@ -17,7 +17,12 @@ public class AssayDomain extends BaseDomain {
 	private String jnumid;
 	private String jnum;
 	private String short_citation;
-	private String accID;
+	private String accID;	
+	private String imagePaneKey;
+	private String imagePaneLabel;
+	private String imageFigureLabel;
+	private String reporterGeneKey;
+	private String reporterGeneTerm;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;
@@ -25,32 +30,8 @@ public class AssayDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	
-	// may be null
-	private String antibodyPrepKey;
-	private String antibodyPrepName;
-	private String antibodyPrepSecondaryKey;
-	private String antibodyPrepSecondary;	
-	private String antibodyPrepLabelKey;
-	private String antibodyPrepLabel;
-	private String antibodyAccID;
-
-	// may be null
-	private String probePrepKey;
-	private String probePrepType;
-	private String probePrepSenseKey;
-	private String probePrepSense;
-	private String probePrepLabelKey;
-	private String probePrepLabel;
-	private String probePrepVisualizationKey;
-	private String probePrepVisualiation;
-	private String probeAccID;
-
-	// may be null
-	private String imagePaneKey;
-	private String imagePaneLabel;
-	
-	// may be null
-	private String reporterGeneKey;
-	private String reporterGene;
+	private AntibodyPrepDomain antibodyPrep;
+	private ProbePrepDomain probePrep;
+	private AssayNoteDomain assayNote;	
 	
 }

@@ -2,10 +2,14 @@ package org.jax.mgi.mgd.api.model.gxd.translator;
 
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.AssayNoteDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
+import org.jboss.logging.Logger;
 
 public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDomain> {
 
+	protected Logger log = Logger.getLogger(getClass());
+	
 	@Override
 	protected AssayDomain entityToDomain(Assay entity) {
 
@@ -31,42 +35,36 @@ public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDoma
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}
-		
-		if (entity.getAntibodyPrep() != null) {
-			domain.setAntibodyPrepKey(String.valueOf(entity.getAntibodyPrep().get_antibodyprep_key()));
-			domain.setAntibodyPrepName(entity.getAntibodyPrep().getAntibody().getAntibodyName());
-			domain.setAntibodyPrepSecondaryKey(String.valueOf(entity.getAntibodyPrep().getSecondary().get_secondary_key()));
-			domain.setAntibodyPrepSecondary(entity.getAntibodyPrep().getSecondary().getSecondary());
-			domain.setAntibodyPrepLabelKey(String.valueOf(entity.getAntibodyPrep().getLabel().get_label_key()));
-			domain.setAntibodyPrepLabel(entity.getAntibodyPrep().getLabel().getLabel());
-			if (entity.getAntibodyPrep().getAntibody().getMgiAccessionIds() != null && !entity.getAntibodyPrep().getAntibody().getMgiAccessionIds().isEmpty()) {
-				domain.setAntibodyAccID(entity.getMgiAccessionIds().get(0).getAccID());
-			}
-		}
 
-		if (entity.getAntibodyPrep() != null) {
-			domain.setProbePrepKey(String.valueOf(entity.getProbePrep().get_probeprep_key()));
-			domain.setProbePrepType(entity.getProbePrep().getType());
-			domain.setProbePrepSenseKey(String.valueOf(entity.getProbePrep().getProbeSense().get_sense_key()));
-			domain.setProbePrepSense(entity.getProbePrep().getProbeSense().getSense());
-			domain.setProbePrepLabelKey(String.valueOf(entity.getProbePrep().getLabel().get_label_key()));
-			domain.setProbePrepLabel(entity.getProbePrep().getLabel().getLabel());
-			domain.setProbePrepVisualizationKey(String.valueOf(entity.getProbePrep().getVisualizationMethod().get_visualization_key()));
-			domain.setProbePrepVisualiation(entity.getProbePrep().getVisualizationMethod().getVisualization());
-			if (entity.getProbePrep().getProbe().getMgiAccessionIds() != null && !entity.getProbePrep().getProbe().getMgiAccessionIds().isEmpty()) {
-				domain.setProbeAccID(entity.getMgiAccessionIds().get(0).getAccID());
-			}
-		
-		}
-		
+		// image pane
 		if (entity.getImagePane() != null) {
-			domain.setImagePaneKey(String.valueOf(entity.getImagePane().get_imagepane_key()));
+			domain.setImagePaneKey(String.valueOf(entity.getImagePane().get_image_key()));
 			domain.setImagePaneLabel(entity.getImagePane().getPaneLabel());
 		}
 		
+		// reporter gene
 		if (entity.getReporterGene() != null) {
 			domain.setReporterGeneKey(String.valueOf(entity.getReporterGene().get_term_key()));
-			domain.setReporterGene(entity.getReporterGene().getTerm());
+			domain.setReporterGeneTerm(entity.getReporterGene().getTerm());
+		}
+		
+		// antibody prep
+		if (entity.getAntibodyPrep() != null) {
+			AntibodyPrepTranslator aprepTranslator = new AntibodyPrepTranslator();
+			domain.setAntibodyPrep(aprepTranslator.translate(entity.getAntibodyPrep()));
+		}
+
+		// probe prep
+		if (entity.getProbePrep() != null) {
+			ProbePrepTranslator pprepTranslator = new ProbePrepTranslator();
+			domain.setProbePrep(pprepTranslator.translate(entity.getProbePrep()));
+		}
+
+		// assay note
+		if (entity.getAssayNote() != null && !entity.getAssayNote().isEmpty()) {
+			AssayNoteTranslator assayNoteTranslator = new AssayNoteTranslator();
+			Iterable<AssayNoteDomain> assayNote = assayNoteTranslator.translateEntities(entity.getAssayNote());
+			domain.setAssayNote(assayNote.iterator().next());
 		}
 		
 		return domain;

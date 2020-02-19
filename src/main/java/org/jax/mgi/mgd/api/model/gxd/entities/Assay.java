@@ -39,7 +39,7 @@ public class Assay extends BaseEntity {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="gxd_assay_generator")
 	@SequenceGenerator(name="gxd_assay_generator", sequenceName = "gxd_assay_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")	
-	private Integer _assay_key;
+	private int _assay_key;
 	private Date creation_date;
 	private Date modification_date;
 	
@@ -56,12 +56,12 @@ public class Assay extends BaseEntity {
 	private Marker marker;
 
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_probeprep_key")
-	private ProbePrep probePrep;
-
-	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_antibodyprep_key")
 	private AntibodyPrep antibodyPrep;
+	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_probeprep_key")
+	private ProbePrep probePrep;
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_imagepane_key")
@@ -78,7 +78,7 @@ public class Assay extends BaseEntity {
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
-	
+
 	// mgi accession ids only
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_assay_key", insertable=false, updatable=false)
@@ -86,6 +86,10 @@ public class Assay extends BaseEntity {
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 
+	@OneToMany()
+	@JoinColumn(name="_assay_key", insertable=false, updatable=false)
+	private List<AssayNote> assayNote;
+	
 	@OneToMany()
 	@JoinColumn(name="_assay_key", insertable=false, updatable=false)
 	@OrderBy(clause="sequenceNum")

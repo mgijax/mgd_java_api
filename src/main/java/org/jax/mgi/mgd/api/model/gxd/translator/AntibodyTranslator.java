@@ -15,8 +15,6 @@ import org.jboss.logging.Logger;
 public class AntibodyTranslator extends BaseEntityDomainTranslator<Antibody, AntibodyDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
-
-	private AntigenTranslator antigenTranslator = new AntigenTranslator();
 	
 	@Override
 	protected AntibodyDomain entityToDomain(Antibody entity) {
@@ -46,6 +44,7 @@ public class AntibodyTranslator extends BaseEntityDomainTranslator<Antibody, Ant
 
 		// at most one probeSource
 		if (entity.getAntigen() != null) {
+			AntigenTranslator antigenTranslator = new AntigenTranslator();
 			domain.setAntigen(antigenTranslator.translate(entity.getAntigen()));
 		}
 

@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 public class AntibodyAliasDomain extends BaseDomain {
 
+	private String processStatus;	
 	private String antibodyAliasKey;
 	private String antibodyKey;
 	private String alias;

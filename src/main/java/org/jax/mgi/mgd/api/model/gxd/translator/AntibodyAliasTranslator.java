@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.gxd.translator;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyAliasDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.AntibodyAlias;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jboss.logging.Logger;
 
 public class AntibodyAliasTranslator extends BaseEntityDomainTranslator<AntibodyAlias, AntibodyAliasDomain> {
@@ -14,6 +15,7 @@ public class AntibodyAliasTranslator extends BaseEntityDomainTranslator<Antibody
 
 		AntibodyAliasDomain domain = new AntibodyAliasDomain();
 
+		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);		
 		domain.setAntibodyAliasKey(String.valueOf(entity.get_antibodyalias_key()));
 		domain.setAntibodyKey(String.valueOf(entity.get_antibody_key()));
 		domain.setAlias(entity.getAlias());

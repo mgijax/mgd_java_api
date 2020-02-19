@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 public class AntibodyMarkerDomain extends BaseDomain {
 
+	private String processStatus;	
 	private String antibodyMarkerKey;
 	private String antibodyKey;
 	private String markerKey;

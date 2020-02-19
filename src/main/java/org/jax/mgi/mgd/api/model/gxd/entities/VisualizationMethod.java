@@ -14,8 +14,8 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "VisualizationMethod Model Object")
-@Table(name="gxd_visualization")
+@ApiModel(value = "Visualization Method Model Object")
+@Table(name="gxd_visualizationmethod")
 public class VisualizationMethod extends BaseEntity {
 
 	@Id

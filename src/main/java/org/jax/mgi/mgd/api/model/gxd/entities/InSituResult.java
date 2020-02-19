@@ -50,4 +50,4 @@ public class InSituResult extends BaseEntity {
 	@JoinColumn(name="_result_key", insertable=false, updatable=false)
 	private List<InSituResultStructure> structures;
 	
-	}
+}

@@ -59,6 +59,6 @@ public class Specimen extends BaseEntity {
 	
 	@OneToMany()
 	@JoinColumn(name="_specimen_key", insertable=false, updatable=false)
-	private List<InSituResult> specimenResults;
+	private List<InSituResult> results;
 	
 }

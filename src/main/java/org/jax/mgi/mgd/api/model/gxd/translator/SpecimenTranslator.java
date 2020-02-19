@@ -1,6 +1,10 @@
 package org.jax.mgi.mgd.api.model.gxd.translator;
 
+import java.util.Comparator;
+
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.gxd.domain.InSituResultDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SpecimenDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Specimen;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -35,6 +39,14 @@ public class SpecimenTranslator extends BaseEntityDomainTranslator<Specimen, Spe
 		domain.setSpecimenNote(entity.getSpecimenNote());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
+
+		// results
+		if (entity.getResults() != null && !entity.getResults().isEmpty()) {
+			InSituResultTranslator resultTranslator = new InSituResultTranslator();
+			Iterable<InSituResultDomain> i = resultTranslator.translateEntities(entity.getResults());
+			domain.setResults(IteratorUtils.toList(i.iterator()));
+			domain.getResults().sort(Comparator.comparingInt(InSituResultDomain::getSequenceNum));
+		}
 		
 		return domain;
 	}

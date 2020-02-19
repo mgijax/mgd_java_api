@@ -54,21 +54,21 @@ public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDoma
 		
 		// antibody prep
 		if (entity.getAntibodyPrep() != null) {
-			AntibodyPrepTranslator aprepTranslator = new AntibodyPrepTranslator();
-			domain.setAntibodyPrep(aprepTranslator.translate(entity.getAntibodyPrep()));
+			AntibodyPrepTranslator i = new AntibodyPrepTranslator();
+			domain.setAntibodyPrep(i.translate(entity.getAntibodyPrep()));
 		}
 
 		// probe prep
 		if (entity.getProbePrep() != null) {
-			ProbePrepTranslator pprepTranslator = new ProbePrepTranslator();
-			domain.setProbePrep(pprepTranslator.translate(entity.getProbePrep()));
+			ProbePrepTranslator i = new ProbePrepTranslator();
+			domain.setProbePrep(i.translate(entity.getProbePrep()));
 		}
 
 		// assay note
 		if (entity.getAssayNote() != null && !entity.getAssayNote().isEmpty()) {
 			AssayNoteTranslator assayNoteTranslator = new AssayNoteTranslator();
-			Iterable<AssayNoteDomain> assayNote = assayNoteTranslator.translateEntities(entity.getAssayNote());
-			domain.setAssayNote(assayNote.iterator().next());
+			Iterable<AssayNoteDomain> i = assayNoteTranslator.translateEntities(entity.getAssayNote());
+			domain.setAssayNote(i.iterator().next());
 		}
 
 		// specimens

@@ -5,6 +5,7 @@ import java.util.Comparator;
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.InSituResultDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.InSituResultImageDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.InSituResultStructureDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.InSituResult;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -33,10 +34,18 @@ public class InSituResultTranslator extends BaseEntityDomainTranslator<InSituRes
 
 		// structures
 		if (entity.getStructures() != null && !entity.getStructures().isEmpty()) {
-			InSituResultStructureTranslator resultTranslator = new InSituResultStructureTranslator();
-			Iterable<InSituResultStructureDomain> i = resultTranslator.translateEntities(entity.getStructures());
+			InSituResultStructureTranslator structureTranslator = new InSituResultStructureTranslator();
+			Iterable<InSituResultStructureDomain> i = structureTranslator.translateEntities(entity.getStructures());
 			domain.setStructures(IteratorUtils.toList(i.iterator()));
 			domain.getStructures().sort(Comparator.comparing(InSituResultStructureDomain::getEmapaTerm));
+		}
+
+		// images
+		if (entity.getImagePanes() != null && !entity.getImagePanes().isEmpty()) {
+			InSituResultImageTranslator imageTranslator = new InSituResultImageTranslator();
+			Iterable<InSituResultImageDomain> i = imageTranslator.translateEntities(entity.getImagePanes());
+			domain.setImagePanes(IteratorUtils.toList(i.iterator()));
+			domain.getImagePanes().sort(Comparator.comparing(InSituResultImageDomain::getImagePane));
 		}
 		
 		return domain;

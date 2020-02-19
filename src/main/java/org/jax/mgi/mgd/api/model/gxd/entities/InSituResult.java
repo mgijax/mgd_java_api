@@ -49,5 +49,9 @@ public class InSituResult extends BaseEntity {
 	@OneToMany()
 	@JoinColumn(name="_result_key", insertable=false, updatable=false)
 	private List<InSituResultStructure> structures;
-	
+
+	@OneToMany()
+	@JoinColumn(name="_result_key", insertable=false, updatable=false)
+	private List<InSituResultImage> imagePanes;
+		
 }

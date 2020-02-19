@@ -23,6 +23,6 @@ public class InSituResultDomain extends BaseDomain {
 	private String modification_date;
 	
 	private List<InSituResultStructureDomain> structures;
-	private List<InSituResultImageDomain> imagepanes;
+	private List<InSituResultImageDomain> imagePanes;
 
 }

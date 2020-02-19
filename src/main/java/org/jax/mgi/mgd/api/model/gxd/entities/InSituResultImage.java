@@ -36,7 +36,7 @@ public class InSituResultImage extends BaseEntity {
 	private Date modification_date;
 
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_imagepane_term_key", referencedColumnName="_term_key")
+	@JoinColumn(name="_imagepane_key")
 	private ImagePane imagepane;
 
 }

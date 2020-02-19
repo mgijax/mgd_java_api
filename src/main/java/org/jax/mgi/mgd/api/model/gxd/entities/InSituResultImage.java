@@ -31,6 +31,7 @@ public class InSituResultImage extends BaseEntity {
 	@SequenceGenerator(name="gxd_insituresultimage_generator", sequenceName = "gxd_insituresultimage_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")
 	private int _resultimage_key;
+	private int _result_key;
 	private Date creation_date;
 	private Date modification_date;
 

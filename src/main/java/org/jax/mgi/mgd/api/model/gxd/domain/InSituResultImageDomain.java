@@ -6,15 +6,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class InSituResultStructureDomain extends BaseDomain {
+public class InSituResultImageDomain extends BaseDomain {
 
 	private String processStatus;
-	private String resultStructureKey;
+	private String resultImageKey;
 	private String resultKey;
-	private String emapaTermKey;
-	private String emapaTerm;
-	private String theilerStageKey;
-	private String theilerStage;	
+	private String imagePaneKey;
+	private String imagePane;	
 	private String creation_date;
 	private String modification_date;
 		

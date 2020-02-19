@@ -30,8 +30,7 @@ public class ImagePane extends BaseEntity {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="img_imagepane_generator")
 	@SequenceGenerator(name="img_imagepane_generator", sequenceName = "img_imagepane_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")
-	private int _imagepane_key;
-	
+	private int _imagepane_key;	
 	private Integer _image_key;
 	private String paneLabel;
 	private Integer x;
@@ -40,7 +39,7 @@ public class ImagePane extends BaseEntity {
 	private Integer height;
 	private Date creation_date;
 	private Date modification_date;
-
+	
 	// image pane associations
 	@OneToMany()
 	@JoinColumn(name="_imagepane_key", insertable=false, updatable=false)

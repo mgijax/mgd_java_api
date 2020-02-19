@@ -5,7 +5,7 @@ import java.util.Comparator;
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.InSituResultDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.InSituResultImageDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.InSituResultImageViewDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.InSituResultStructureDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.InSituResult;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -40,12 +40,12 @@ public class InSituResultTranslator extends BaseEntityDomainTranslator<InSituRes
 			domain.getStructures().sort(Comparator.comparing(InSituResultStructureDomain::getEmapaTerm));
 		}
 
-		// images
+		// images using view that contains concatenated figureLabel plus paneLabel
 		if (entity.getImagePanes() != null && !entity.getImagePanes().isEmpty()) {
-			InSituResultImageTranslator imageTranslator = new InSituResultImageTranslator();
-			Iterable<InSituResultImageDomain> i = imageTranslator.translateEntities(entity.getImagePanes());
+			InSituResultImageViewTranslator imageTranslator = new InSituResultImageViewTranslator();
+			Iterable<InSituResultImageViewDomain> i = imageTranslator.translateEntities(entity.getImagePanes());
 			domain.setImagePanes(IteratorUtils.toList(i.iterator()));
-			domain.getImagePanes().sort(Comparator.comparing(InSituResultImageDomain::getImagePane));
+			domain.getImagePanes().sort(Comparator.comparing(InSituResultImageViewDomain::getFigurepaneLabel));
 		}
 		
 		return domain;

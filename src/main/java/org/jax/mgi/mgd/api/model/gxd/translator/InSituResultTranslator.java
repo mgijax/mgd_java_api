@@ -40,7 +40,7 @@ public class InSituResultTranslator extends BaseEntityDomainTranslator<InSituRes
 			domain.getStructures().sort(Comparator.comparing(InSituResultStructureDomain::getEmapaTerm));
 		}
 
-		// images using view that contains concatenated figureLabel plus paneLabel
+		// images uses view that contains concatenated figureLabel plus paneLabel
 		if (entity.getImagePanes() != null && !entity.getImagePanes().isEmpty()) {
 			InSituResultImageViewTranslator imageTranslator = new InSituResultImageViewTranslator();
 			Iterable<InSituResultImageViewDomain> i = imageTranslator.translateEntities(entity.getImagePanes());

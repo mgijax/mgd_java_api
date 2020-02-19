@@ -1,8 +1,12 @@
 package org.jax.mgi.mgd.api.model.gxd.translator;
 
+import java.util.Comparator;
+
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayNoteDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SpecimenDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
 import org.jboss.logging.Logger;
 
@@ -65,6 +69,14 @@ public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDoma
 			AssayNoteTranslator assayNoteTranslator = new AssayNoteTranslator();
 			Iterable<AssayNoteDomain> assayNote = assayNoteTranslator.translateEntities(entity.getAssayNote());
 			domain.setAssayNote(assayNote.iterator().next());
+		}
+
+		// specimens
+		if (entity.getSpecimens() != null && !entity.getSpecimens().isEmpty()) {
+			SpecimenTranslator specimenTranslator = new SpecimenTranslator();
+			Iterable<SpecimenDomain> i = specimenTranslator.translateEntities(entity.getSpecimens());
+			domain.setSpecimens(IteratorUtils.toList(i.iterator()));
+			domain.getSpecimens().sort(Comparator.comparingInt(SpecimenDomain::getSequenceNum));
 		}
 		
 		return domain;

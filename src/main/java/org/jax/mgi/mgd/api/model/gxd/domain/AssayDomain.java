@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.gxd.domain;
 
+import java.util.List;
+
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
 import lombok.Getter;
@@ -33,5 +35,6 @@ public class AssayDomain extends BaseDomain {
 	private AntibodyPrepDomain antibodyPrep;
 	private ProbePrepDomain probePrep;
 	private AssayNoteDomain assayNote;	
+	private List<SpecimenDomain> specimens;
 	
 }

@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
+import org.jax.mgi.mgd.api.model.img.domain.GXDImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.entities.ImagePane;
@@ -103,6 +104,41 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 		
 	}	
 
+	@Transactional	
+	public List<GXDImagePaneDomain> getGXDByReference(Integer key) {
+		// return list of full size image panes by reference (_refs_key)
+		// class = Expression
+		// type = Full Size
+	
+		List<GXDImagePaneDomain> results = new ArrayList<GXDImagePaneDomain>();
+
+		String cmd = "\nselect p._imagepane_key, concat(i.figureLabel,p.paneLabel) as figurePaneLabel"
+				+ "\nfrom img_imagepane p, img_image i"
+				+ "\nwhere i._refs_key = " + key
+				+ "\nand i._ImageClass_key = 6481781"
+				+ "\nand i._ImageType_key = 1072158"
+				+ "\nand i._image_key = p._image_key"				
+				+ "\norder by figurePaneLabel";
+		
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				GXDImagePaneDomain domain = new GXDImagePaneDomain();
+				domain.setImagePaneKey(rs.getString("_imagepane_key"));
+				domain.setFigurePaneLabel(rs.getString("figurePaneLabel"));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;	
+	}
+	
 	@Transactional
 	public Boolean process(String parentKey, List<ImagePaneDomain> domain, User user) {
 		// process image pane (create, delete, update)

@@ -11,6 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
+import org.jax.mgi.mgd.api.model.img.domain.GXDImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.service.ImagePaneService;
@@ -55,9 +56,7 @@ public class ImagePaneController extends BaseController<ImagePaneDomain> {
 
 	@Override
 	public SearchResults<ImagePaneDomain> delete(Integer key, User user) {
-		// this table contains a compound primary key
-		// deletes to this table are implemented in the parent's "update" method
-		return null;
+		return imagePaneService.delete(key, user);
 	}
 	
 	@POST
@@ -65,6 +64,22 @@ public class ImagePaneController extends BaseController<ImagePaneDomain> {
 	@Path("/search")
 	public List<ImagePaneDomain> search(Integer key) {
 		return imagePaneService.search(key);
+	}
+
+	@POST
+	@ApiOperation(value = "Get GXD Image Panes by Ref key")
+	@Path("/getGXDByReference")
+	public List<GXDImagePaneDomain> getGXDByReference(Integer key) {
+	
+		List<GXDImagePaneDomain> results = new ArrayList<GXDImagePaneDomain>();
+
+		try {
+			results = imagePaneService.getGXDByReference(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
 	}
 	
 	@POST

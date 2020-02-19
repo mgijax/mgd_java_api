@@ -21,8 +21,6 @@ public class AssayDomain extends BaseDomain {
 	private String short_citation;
 	private String accID;	
 	private String imagePaneKey;
-	private String imagePaneLabel;
-	private String imageFigureLabel;
 	private String reporterGeneKey;
 	private String reporterGeneTerm;
 	private String createdByKey;

@@ -60,5 +60,9 @@ public class GelLane extends BaseEntity {
 	@OneToMany()
 	@JoinColumn(name="_gellane_key", insertable=false, updatable=false)
 	private Set<GelLaneStructure> structures;
+
+	@OneToMany()
+	@JoinColumn(name="_gellane_key", insertable=false, updatable=false)
+	private Set<GelBand> gelBands;
 	
 }

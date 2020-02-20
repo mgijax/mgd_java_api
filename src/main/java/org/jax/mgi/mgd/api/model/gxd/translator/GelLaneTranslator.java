@@ -4,6 +4,7 @@ import java.util.Comparator;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.gxd.domain.GelBandDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneStructureDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.GelLane;
@@ -46,6 +47,13 @@ public class GelLaneTranslator extends BaseEntityDomainTranslator<GelLane, GelLa
 			Iterable<GelLaneStructureDomain> i = structureTranslator.translateEntities(entity.getStructures());
 			domain.setStructures(IteratorUtils.toList(i.iterator()));
 			domain.getStructures().sort(Comparator.comparing(GelLaneStructureDomain::getEmapaTerm));
+		}
+
+		// gel bands
+		if (entity.getGelBands() != null && !entity.getGelBands().isEmpty()) {
+			GelBandTranslator bandTranslator = new GelBandTranslator();
+			Iterable<GelBandDomain> i = bandTranslator.translateEntities(entity.getGelBands());
+			domain.setGelBands(IteratorUtils.toList(i.iterator()));
 		}
 		
 		return domain;

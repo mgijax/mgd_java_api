@@ -32,4 +32,6 @@ public class GelLaneDomain extends BaseDomain {
 	private String modification_date;
 	
 	private List<GelLaneStructureDomain> structures;
+	private List<GelBandDomain> gelBands;
+	
 }

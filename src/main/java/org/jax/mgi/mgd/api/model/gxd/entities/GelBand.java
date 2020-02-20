@@ -31,7 +31,6 @@ public class GelBand extends BaseEntity {
 	@ApiModelProperty(value="primary key")	
 	private int _gelband_key;
 	private int _gellane_key;
-	private int _gelrow_key;
 	private String bandNote;
 	private Date creation_date;
 	private Date modification_date;
@@ -39,4 +38,9 @@ public class GelBand extends BaseEntity {
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_strength_key")
 	private Strength strength;
+	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_gelrow_key")
+	private GelRow gelRow;
+		
 }

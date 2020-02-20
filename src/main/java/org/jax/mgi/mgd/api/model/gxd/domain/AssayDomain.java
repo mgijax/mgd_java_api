@@ -35,6 +35,5 @@ public class AssayDomain extends BaseDomain {
 	private AssayNoteDomain assayNote;	
 	private List<SpecimenDomain> specimens;
 	private List<GelLaneDomain> gelLanes;
-	private List<GelRowDomain> gelRows;
 	
 }

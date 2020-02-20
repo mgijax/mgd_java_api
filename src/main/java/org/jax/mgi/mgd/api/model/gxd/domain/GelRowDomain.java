@@ -18,5 +18,4 @@ public class GelRowDomain extends BaseDomain {
 	private String rowNote;
 	private String creation_date;
 	private String modification_date;
-	
 }

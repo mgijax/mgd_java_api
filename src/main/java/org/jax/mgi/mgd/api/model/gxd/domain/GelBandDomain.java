@@ -11,11 +11,11 @@ public class GelBandDomain extends BaseDomain {
 	private String processStatus;
 	private String gelBandKey;
 	private String gelLaneKey;
-	private String gelRowKey;
 	private String strengthKey;
 	private String strength;
 	private String bandNote;
 	private String creation_date;
 	private String modification_date;
 	
+	GelRowDomain gelRow;
 }

@@ -6,16 +6,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class GelRowDomain extends BaseDomain {
+public class GelBandDomain extends BaseDomain {
 
 	private String processStatus;
+	private String gelBandKey;
+	private String gelLaneKey;
 	private String gelRowKey;
-	private String assayKey;
-	private String gelUnitsKey;
-	private String gelUnits;
-	private Integer sequenceNum;
-	private Integer size;
-	private String rowNote;
+	private String strengthKey;
+	private String strength;
+	private String bandNote;
 	private String creation_date;
 	private String modification_date;
 	

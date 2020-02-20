@@ -4,14 +4,18 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,18 +26,15 @@ import lombok.Setter;
 public class GelBand extends BaseEntity {
 
 	@Id
-	private Integer _gelband_key;
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="gxd_gelband_generator")
+	@SequenceGenerator(name="gxd_gelband_generator", sequenceName = "gxd_gelband_seq", allocationSize=1)
+	@ApiModelProperty(value="primary key")	
+	private int _gelband_key;
+	private int _gellane_key;
+	private int _gelrow_key;
 	private String bandNote;
 	private Date creation_date;
 	private Date modification_date;
-	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_gellane_key")
-	private GelLane gelLane;
-	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_gelrow_key")
-	private GelRow gelRow;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_strength_key")

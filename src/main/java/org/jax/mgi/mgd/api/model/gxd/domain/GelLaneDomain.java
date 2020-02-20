@@ -11,7 +11,7 @@ import lombok.Setter;
 public class GelLaneDomain extends BaseDomain {
 
 	private String processStatus;
-	private String gellaneKey;
+	private String gelLaneKey;
 	private String assayKey;
 	private String genotypeKey;
 	private String genotypeAccID;

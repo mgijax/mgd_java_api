@@ -20,7 +20,7 @@ public class GelLaneTranslator extends BaseEntityDomainTranslator<GelLane, GelLa
 		GelLaneDomain domain = new GelLaneDomain();
 
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
-		domain.setGellaneKey(String.valueOf(entity.get_gellane_key()));
+		domain.setGelLaneKey(String.valueOf(entity.get_gellane_key()));
 		domain.setAssayKey(String.valueOf(entity.get_assay_key()));
 		domain.setGenotypeKey(String.valueOf(entity.getGenotype().get_genotype_key()));
 		domain.setGenotypeAccID(entity.getGenotype().getMgiAccessionIds().get(0).getAccID());

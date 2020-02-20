@@ -93,10 +93,16 @@ public class Assay extends BaseEntity {
 	@OneToMany()
 	@JoinColumn(name="_assay_key", insertable=false, updatable=false)
 	@OrderBy(clause="sequenceNum")
-	private List<GelLane> gelLanes;
+	private List<Specimen> specimens;
 	
 	@OneToMany()
 	@JoinColumn(name="_assay_key", insertable=false, updatable=false)
 	@OrderBy(clause="sequenceNum")
-	private List<Specimen> specimens;
+	private List<GelLane> gelLanes;
+
+	@OneToMany()
+	@JoinColumn(name="_assay_key", insertable=false, updatable=false)
+	@OrderBy(clause="sequenceNum")
+	private List<GelRow> gelRows;
+	
 }

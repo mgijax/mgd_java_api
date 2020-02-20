@@ -6,6 +6,8 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayNoteDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.GelRowDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SpecimenDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
 import org.jboss.logging.Logger;
@@ -77,7 +79,23 @@ public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDoma
 			domain.setSpecimens(IteratorUtils.toList(i.iterator()));
 			domain.getSpecimens().sort(Comparator.comparingInt(SpecimenDomain::getSequenceNum));
 		}
-		
+
+		// gel lanes
+		if (entity.getGelLanes() != null && !entity.getGelLanes().isEmpty()) {
+			GelLaneTranslator gellaneTranslator = new GelLaneTranslator();
+			Iterable<GelLaneDomain> i = gellaneTranslator.translateEntities(entity.getGelLanes());
+			domain.setGelLanes(IteratorUtils.toList(i.iterator()));
+			domain.getGelLanes().sort(Comparator.comparingInt(GelLaneDomain::getSequenceNum));
+		}
+
+		// gel rows
+		if (entity.getGelRows() != null && !entity.getGelRows().isEmpty()) {
+			GelRowTranslator gelrowTranslator = new GelRowTranslator();
+			Iterable<GelRowDomain> i = gelrowTranslator.translateEntities(entity.getGelRows());
+			domain.setGelRows(IteratorUtils.toList(i.iterator()));
+			domain.getGelRows().sort(Comparator.comparingInt(GelRowDomain::getSequenceNum));
+		}
+				
 		return domain;
 	}
 

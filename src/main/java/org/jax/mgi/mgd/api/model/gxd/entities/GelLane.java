@@ -5,26 +5,34 @@ import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "GelLane Model Object")
+@ApiModel(value = "Gel Lane Model Object")
 @Table(name="gxd_gellane")
 public class GelLane extends BaseEntity {
 
 	@Id
-	private Integer _gellane_key;
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="gxd_gellane_generator")
+	@SequenceGenerator(name="gxd_gellane_generator", sequenceName = "gxd_gellane_seq", allocationSize=1)
+	@ApiModelProperty(value="primary key")		
+	private int _gellane_key;
+	private int _assay_key;
 	private Integer sequenceNum;
 	private String laneLabel;
 	private String sampleAmount;
@@ -50,7 +58,7 @@ public class GelLane extends BaseEntity {
 	private GelControl gelControl;
 	
 	@OneToMany()
-	@JoinColumn(name="_gellane_key")
+	@JoinColumn(name="_gellane_key", insertable=false, updatable=false)
 	private Set<GelLaneStructure> structures;
 	
 }

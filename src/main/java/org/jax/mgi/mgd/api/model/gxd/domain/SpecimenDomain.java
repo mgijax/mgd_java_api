@@ -22,6 +22,8 @@ public class SpecimenDomain extends BaseDomain {
 	private Integer sequenceNum;
 	private String specimenLabel;
 	private String sex;
+	private String agePrefix;
+	private String agePostfix;
 	private String age;
 	private String ageMin;
 	private String ageMax;

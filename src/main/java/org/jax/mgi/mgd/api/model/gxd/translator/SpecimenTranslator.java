@@ -31,7 +31,12 @@ public class SpecimenTranslator extends BaseEntityDomainTranslator<Specimen, Spe
 		domain.setSequenceNum(entity.getSequenceNum());
 		domain.setSpecimenLabel(entity.getSpecimenLabel());
 		domain.setSex(entity.getSex());
+		
+		// need to split "age" into agePrefix + agePostfix
+		domain.setAgePrefix(entity.getAge());
+		domain.setAgePostfix(entity.getAge());
 		domain.setAge(entity.getAge());
+		
 		domain.setAgeMin(String.valueOf(entity.getAgeMin()));
 		domain.setAgeMax(String.valueOf(entity.getAgeMax()));
 		domain.setAgeNote(entity.getAgeNote());

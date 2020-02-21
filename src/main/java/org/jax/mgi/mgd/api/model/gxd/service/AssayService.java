@@ -10,13 +10,20 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyPrepDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AssayDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.AssayTypeDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.ProbePrepDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
 import org.jax.mgi.mgd.api.model.gxd.translator.AssayTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimAssayTranslator;
+import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -29,11 +36,32 @@ public class AssayService extends BaseService<AssayDomain> {
 
 	@Inject
 	private AssayDAO assayDAO;
+	@Inject
+	private AssayTypeDAO assayTypeDAO;
+	@Inject
+	private ReferenceDAO referenceDAO;
+	@Inject
+	private MarkerDAO markerDAO;
+	@Inject
+	private AntibodyPrepDAO antibodyPrepDAO;
+	@Inject
+	private ProbePrepDAO probePrepDAO;
+	@Inject
+	private ImagePaneDAO imagePaneDAO;
+	@Inject
+	private TermDAO termDAO;
+	@Inject
+	private AssayNoteService assayNoteService;
+	@Inject
+	private SpecimenService specimenService;
 	
 	private AssayTranslator translator = new AssayTranslator();
 	private SlimAssayTranslator slimtranslator = new SlimAssayTranslator();
 
 	private SQLExecutor sqlExecutor = new SQLExecutor();
+
+	String mgiTypeKey = "8";
+	String mgiTypeName = "Assay";
 	
 	@Transactional
 	public SearchResults<AssayDomain> create(AssayDomain domain, User user) {
@@ -43,12 +71,9 @@ public class AssayService extends BaseService<AssayDomain> {
 
 		SearchResults<AssayDomain> results = new SearchResults<AssayDomain>();
 		Assay entity = new Assay();
+		Boolean modified = false;
 		
 		log.info("processAssay/create");
-		
-		//
-		// IN PROGRESSS
-		//
 		
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
@@ -58,8 +83,22 @@ public class AssayService extends BaseService<AssayDomain> {
 		// execute persist/insert/send to database
 		assayDAO.persist(entity);
 		
+		// process gxd_assaynote
+		if (domain.getAssayNote() != null) {
+			if (assayNoteService.process(entity.get_assay_key(), domain.getAssayNote(), user)) {
+				modified = true;
+			}
+		}
+
+		// process gxd_specimen		
+		if (domain.getSpecimens() != null && !domain.getSpecimens().isEmpty()) {
+			if (specimenService.process(entity.get_assay_key(), domain.getSpecimens(), user)) {
+				modified = true;
+			}
+		}
+		
 		// return entity translated to domain
-		log.info("processAssay/create/returning results");
+		log.info("processAssay/create/returning results : " + modified);
 		results.setItem(translator.translate(entity));
 		return results;
 	}
@@ -73,14 +112,44 @@ public class AssayService extends BaseService<AssayDomain> {
 		SearchResults<AssayDomain> results = new SearchResults<AssayDomain>();
 		Assay entity = assayDAO.get(Integer.valueOf(domain.getAssayKey()));
 		Boolean modified = false;
-//		String mgiTypeKey = "8";
-//		String mgiTypeName = "Assay";
 		
 		log.info("processAssay/update");
 		
-		//
-		// IN PROGRESSS
-		//
+		entity.setAssayType(assayTypeDAO.get(Integer.valueOf(domain.getAssayTypeKey())));	
+		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));	
+		entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));
+		
+		if (domain.getAntibodyPrep() != null) {
+			entity.setAntibodyPrep(antibodyPrepDAO.get(Integer.valueOf(domain.getAntibodyPrep().getAntibodyPrepKey())));				
+		}
+
+		if (domain.getProbePrep() != null) {
+			entity.setProbePrep(probePrepDAO.get(Integer.valueOf(domain.getProbePrep().getProbePrepKey())));				
+		}
+
+		if (domain.getImagePaneKey() != null) {
+			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePaneKey())));		
+		}
+
+		if (domain.getReporterGeneKey() != null) {
+			entity.setReporterGene(termDAO.get(Integer.valueOf(domain.getReporterGeneKey())));		
+		}
+
+		// process gxd_assaynote
+		if (domain.getAssayNote() != null) {
+			if (assayNoteService.process(Integer.valueOf(domain.getAssayKey()), domain.getAssayNote(), user)) {
+				modified = true;
+			}
+		}
+
+		// process gxd_specimen		
+		if (domain.getSpecimens() != null && !domain.getSpecimens().isEmpty()) {
+			if (specimenService.process(Integer.valueOf(domain.getAssayKey()), domain.getSpecimens(), user)) {
+				modified = true;
+			}
+		}
+	
+		// gxd_gellane
 		
 		// only if modifications were actually made
 		if (modified == true) {
@@ -156,7 +225,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
-		String select = "select distinct a._assay_key, t.assaytype, r.numericPart";
+		String select = "select a._assay_key, t.assaytype, r.numericPart";
 		String from = "from gxd_assay a, gxd_assaytype t, bib_citation_cache r";
 		String where = "where a._assaytype_key = t._assaytype_key"
 				+ "\nand a._refs_key = r._refs_key";
@@ -165,10 +234,16 @@ public class AssayService extends BaseService<AssayDomain> {
 		String value;
 		Boolean from_marker = false;
 		Boolean from_accession = false;
-		
-		//
-		// IN PROGRESSS
-		//
+		Boolean from_assaynote = false;
+		Boolean from_probeprep = false;
+		Boolean from_probeacc = false;
+		Boolean from_probe = false;
+		Boolean from_antibodyprep = false;
+		Boolean from_antibodyacc = false;
+		Boolean from_antibody = false;
+		Boolean from_specimen = false;
+		Boolean from_gellane = false;
+		Boolean from_genotype = false;
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -177,21 +252,21 @@ public class AssayService extends BaseService<AssayDomain> {
 			where = where + cmResults[1];
 		}
 		
-		// marker
-		if (searchDomain.getMarkerKey() != null && !searchDomain.getMarkerKey().isEmpty()) {
-			where = where + "\nand a._marker_key = " + searchDomain.getMarkerKey();
+		value = searchDomain.getAssayTypeKey();
+		if (value != null && !value.isEmpty()) {
+			where = where + "\nand a._assaytype_key = " + value;		
 		}
-		if (searchDomain.getMarkerSymbol() != null && !searchDomain.getMarkerSymbol().isEmpty()) {
-			where = where + "\nand m.symbol ilike '" + searchDomain.getMarkerSymbol() + "'";
-			from_marker = true;
-		}		
 		
-		// assay accession id 
-		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	
-			where = where + "\nand acc.accID ilike '" + searchDomain.getAccID() + "'";
-			from_accession = true;
+		value = searchDomain.getImagePaneKey();
+		if (value != null && !value.isEmpty()) {
+			where = where + "\nand a._imagepane_key = " + value;		
 		}
-
+		
+		value = searchDomain.getReporterGeneKey();
+		if (value != null && !value.isEmpty()) {
+			where = where + "\nand a._reportergene_key = " + value;		
+		}
+		
 		// reference
 		value = searchDomain.getRefsKey();
 		String jnumid = searchDomain.getJnumid();		
@@ -205,7 +280,209 @@ public class AssayService extends BaseService<AssayDomain> {
 			}
 			where = where + "\nand r.jnumid = '" + jnumid + "'";
 		}
-	
+		
+		// marker
+		value = searchDomain.getMarkerKey();
+		if (value != null && !value.isEmpty()) {
+			where = where + "\nand a._marker_key = " + value;					
+		}
+		else {
+			value = searchDomain.getMarkerSymbol();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand m.symbol ilike '" + value + "'";
+				from_marker = true;
+			}
+		}
+
+		if (searchDomain.getProbePrep() != null) {
+			value = searchDomain.getProbePrep().getProbePrepKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand a._probeprep_key = " + value;		
+			}
+			value = searchDomain.getProbePrep().getProbeSenseKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand pprep._sense_key = " + value;
+				from_probeprep = true;
+			}
+			value = searchDomain.getProbePrep().getLabelKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand pprep._label_key = " + value;
+				from_probeprep = true;				
+			}
+			value = searchDomain.getProbePrep().getVisualizationMethodKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand pprep._visualization_key = " + value;	
+				from_probeprep = true;				
+			}
+			value = searchDomain.getProbePrep().getPrepType();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand pprep.type ilike '" + value + "'";
+				from_probeprep = true;				
+			}
+			value = searchDomain.getProbePrep().getProbeAccID();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand pacc.accID = '" + value + "'";
+				from_probeprep = true;
+				from_probeacc = true;
+			}
+			value = searchDomain.getProbePrep().getProbeName();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand probe.name ilike '" + value + "'";
+				from_probeprep = true;
+				from_probe = true;
+			}			
+		}
+
+		if (searchDomain.getAntibodyPrep() != null) {		
+			value = searchDomain.getAntibodyPrep().getAntibodyPrepKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand a._antibodyprep_key = " + value;		
+			}
+			value = searchDomain.getAntibodyPrep().getSecondaryKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand aprep._secondary_key = " + value;
+				from_antibodyprep = true;
+			}
+			value = searchDomain.getAntibodyPrep().getLabelKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand aprep._label_key = " + value;
+				from_antibodyprep = true;				
+			}
+			value = searchDomain.getAntibodyPrep().getAntibodyAccID();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand aacc.accID = '" + value + "'";
+				from_antibodyprep = true;
+				from_antibodyacc = true;
+			}
+			value = searchDomain.getAntibodyPrep().getAntibodyName();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand antibody.antibodyname ilike '" + value + "'";
+				from_antibodyprep = true;
+				from_antibody = true;
+			}			
+		}
+		
+		if (searchDomain.getSpecimens() != null) {
+			value = searchDomain.getSpecimens().get(0).getSpecimenLabel();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand s.specimenLabel ilike '" + value + "'";				
+				from_specimen = true;
+			}
+			value = searchDomain.getSpecimens().get(0).getGenotypeID();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand g.accID ilike '" + value + "'";	
+				from_genotype = true;
+				from_specimen = true;
+			}			
+			value = searchDomain.getSpecimens().get(0).getAgePrefix();	
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand s.age ilike '" + value + "%'";				
+				from_specimen = true;
+			}			
+			value = searchDomain.getSpecimens().get(0).getAgePostfix();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand s.age ilike '%" + value + "'";				
+				from_specimen = true;
+			}			
+			value = searchDomain.getSpecimens().get(0).getAgeNote();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand s.ageNote ilike '" + value + "'";				
+				from_specimen = true;
+			}			
+			value = searchDomain.getSpecimens().get(0).getSex();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand s.sex ilike '" + value + "'";				
+				from_specimen = true;
+			}			
+			value = searchDomain.getSpecimens().get(0).getFixationKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand s.fixation_key = " + value;							
+				from_specimen = true;
+			}			
+			value = searchDomain.getSpecimens().get(0).getEmbeddingKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand s._embedding_key = " + value;				
+				from_specimen = true;
+			}			
+			value = searchDomain.getSpecimens().get(0).getHybridization();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand s.hybridization ilike '" + value + "'";				
+				from_specimen = true;
+			}			
+			value = searchDomain.getSpecimens().get(0).getSpecimenNote();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand s.specimenNote ilike '" + value + "'";				
+				from_specimen = true;
+			}			
+		}
+		
+		if (searchDomain.getGelLanes() != null) {
+			value = searchDomain.getGelLanes().get(0).getLaneLabel();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand l.laneLabel ilike '" + value + "'";				
+				from_gellane = true;
+			}
+			value = searchDomain.getGelLanes().get(0).getGenotypeID();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand g.accID ilike '" + value + "'";	
+				from_genotype = true;
+				from_gellane = true;
+			}			
+			value = searchDomain.getGelLanes().get(0).getAgePrefix();	
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand l.age ilike '" + value + "%'";				
+				from_gellane = true;
+			}			
+			value = searchDomain.getGelLanes().get(0).getAgePostfix();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand l.age ilike '%" + value + "'";				
+				from_gellane = true;
+			}			
+			value = searchDomain.getGelLanes().get(0).getAgeNote();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand l.ageNote ilike '" + value + "'";				
+				from_gellane = true;
+			}			
+			value = searchDomain.getGelLanes().get(0).getSex();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand l.sex ilike '" + value + "'";				
+				from_gellane = true;
+			}			
+			value = searchDomain.getGelLanes().get(0).getGelRNATypeKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand l._gelrnatype_key = " + value;				
+				from_gellane = true;
+			}			
+			value = searchDomain.getGelLanes().get(0).getGelControlKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand l._gelcontrol_key = " + value;
+				from_gellane = true;
+			}			
+			value = searchDomain.getGelLanes().get(0).getSampleAmount();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand l.sampleAmount ilike '" + value + "'";			
+				from_gellane = true;
+			}			
+			value = searchDomain.getGelLanes().get(0).getLaneNote();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand l.laneNote ilike '" + value + "'";				
+				from_gellane = true;
+			}			
+		}
+		
+		// assay accession id 
+		value = searchDomain.getAccID();			
+		if (value != null && !value.isEmpty()) {	
+			where = where + "\nand acc.accID ilike '" + value + "'";
+			from_accession = true;
+		}
+		
+		if (searchDomain.getAssayNote() != null) {
+			value = searchDomain.getAssayNote().getAssayNote();
+			where = where + "\nand n.assaynote ilike '" + value + "'";
+			from_assaynote = true;
+		}
+		
 		if (from_marker == true) {
 			from = from + ", mrk_marker m";
 			where = where + "\nand a._marker_key = m._marker_key";
@@ -214,7 +491,47 @@ public class AssayService extends BaseService<AssayDomain> {
 			from = from + ", gxd_assay_acc_view acc";
 			where = where + "\nand a._assay_key = acc._object_key"; 
 		}
-
+		if (from_assaynote == true) {
+			from = from + ", gxd_assaynote n";
+			where = where + "\nand a._assay_key = n._assay_key";
+		}
+		if (from_probeprep == true) {
+			from = from + ", gxd_probeprep pprep";
+			where = where + "\nand a._probeprep_key = pprep._probeprep_key";
+		}
+		if (from_probeacc == true) {
+			from = from + ", prb_acc_view pacc";
+			where = where + "\nand pprep._probe_key = pacc._object_key";
+		}
+		if (from_probe == true) {
+			from = from + ", prb_probe probe";
+			where = where + "\nand pprep._probe_key = probe._probe_key";
+		}
+		if (from_antibodyprep == true) {
+			from = from + ", gxd_antibodyprep aprep";
+			where = where + "\nand a._antibodyprep_key = aprep._antibodyprep_key";
+		}
+		if (from_antibodyacc == true) {
+			from = from + ", gxd_antibody_acc_view aacc";
+			where = where + "\nand aprep._antibody_key = aacc._object_key";
+		}
+		if (from_antibody == true) {
+			from = from + ", gxd_antibody antibody";
+			where = where + "\nand aprep._antibody_key = antibody._antibody_key";
+		}
+		if (from_specimen == true) {
+			from = from + ", gxd_specimen s";
+			where = where + "\nand a._assay_key = s._assay_key";
+		}
+		if (from_gellane == true) {
+			from = from + ", gxd_gellane l";
+			where = where + "\nand a._assay_key = l._assay_key";
+		}		
+		if (from_genotype == true) {
+			from = from + ", gxd_genotype_acc_view g";
+			where = where + "\nand a._assay_key = g._object_key";
+		}
+		
 		// make this easy to copy/paste for troubleshooting
 		//cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;

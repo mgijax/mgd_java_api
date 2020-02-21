@@ -128,6 +128,7 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 				// if synonym is null/empty, then skip
 				// pwi has sent a "c" that is empty/not being used
 				if (domain.get(i).getSynonym() == null || domain.get(i).getSynonym().isEmpty()) {
+					log.info("no synonym to create");
 					continue;
 				}
 				

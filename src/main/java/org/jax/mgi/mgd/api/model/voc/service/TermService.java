@@ -175,6 +175,7 @@ public class TermService extends BaseService<TermDomain> {
 		
 		for (int i = 0; i < domains.size(); i++) {
 			String vocabKey = domains.get(i).getVocabKey();
+			String termKey = domains.get(i).getTermKey();
 			if (domains.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 	
 				// if term is null/empty, then skip
@@ -207,10 +208,11 @@ public class TermService extends BaseService<TermDomain> {
 				termDAO.persist(entity);
 				
 				log.info("processTerm create persisting entity");
-				if (domains.get(i).getVocabKey() == "4" && domains.get(i).getGoRelSynonyms() != null) {
-					log.info("processTerm processing synonym");
-					synonymService.process(vocabKey, domains.get(i).getGoRelSynonyms(), mgiTypeKey, user);
-				}
+				//if (domains.get(i).getVocabKey() == "82" && domains.get(i).getGoRelSynonyms() != null) {
+				log.info("processTerm create processing synonyms");
+				// get the termKey from the recently persisted entity
+				synonymService.process(String.valueOf(entity.get_term_key()), domains.get(i).getGoRelSynonyms(), mgiTypeKey, user);
+				//}
 				// create is always true				
 				modified = true;
 			}
@@ -225,22 +227,24 @@ public class TermService extends BaseService<TermDomain> {
 			} 
 			else if (domains.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processTerm update");
-
-				Term entity = termDAO.get(Integer.valueOf(domains.get(i).getTermKey()));
+				Term entity = termDAO.get(Integer.valueOf(termKey));
 		
 				entity.setTerm(domains.get(i).getTerm());
 				entity.setAbbreviation(domains.get(i).getAbbreviation());
 				entity.setNote(domains.get(i).getNote());
 				entity.setSequenceNum(Integer.valueOf(domains.get(i).getSequenceNum()));
 				entity.setIsObsolete(Integer.valueOf(domains.get(i).getIsObsolete()));
-				if (domains.get(i).getVocabKey() == "4") {
-					synonymService.process(vocabKey, domains.get(i).getGoRelSynonyms(), mgiTypeKey, user);
-				}
 			
 				entity.setModification_date(new Date());
 				entity.setModifiedBy(user);
 				log.info("updating: " + entity.getTerm() + " " + entity.get_term_key());
 				termDAO.update(entity);
+				
+				//if (domains.get(i).getVocabKey() == "82") {
+				log.info("processTerm update processing synonyms");
+				synonymService.process(String.valueOf(entity.get_term_key()), domains.get(i).getGoRelSynonyms(), mgiTypeKey, user);
+				//}
+				
 				modified = true;
 				log.info("processTerm/changes processed: " + domains.get(i).getTermKey());	
 			}

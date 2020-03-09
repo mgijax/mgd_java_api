@@ -16,8 +16,8 @@ public class GelLaneStructureTranslator extends BaseEntityDomainTranslator<GelLa
 		GelLaneStructureDomain domain = new GelLaneStructureDomain();
 
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
-		domain.setGellaneStructureKey(String.valueOf(entity.get_gellanestructure_key()));				
-		domain.setGellaneKey(String.valueOf(entity.get_gellane_key()));				
+		domain.setGelLaneStructureKey(String.valueOf(entity.get_gellanestructure_key()));				
+		domain.setGelLaneKey(String.valueOf(entity.get_gellane_key()));				
 		domain.setEmapaTermKey(String.valueOf(entity.getEmapaTerm().get_term_key()));
 		domain.setEmapaTerm(entity.getEmapaTerm().getTerm());
 		domain.setTheilerStageKey(String.valueOf(entity.getTheilerStage().get_stage_key()));

@@ -25,12 +25,16 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 	protected Logger log = Logger.getLogger(getClass());
 	
 	@Inject
-	private InSituResultDAO insituresultDAO;
+	private InSituResultDAO resultDAO;
 	@Inject
 	private StrengthDAO strengthDAO;
 	@Inject 
 	private PatternDAO patternDAO;
-
+	@Inject
+	private InSituResultStructureService structureService;
+	@Inject 
+	private InSituResultImageService imagePaneService;
+	
 	private InSituResultTranslator translator = new InSituResultTranslator();				
 
 	@Transactional
@@ -58,18 +62,18 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 	public InSituResultDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain
 		InSituResultDomain domain = new InSituResultDomain();
-		if (insituresultDAO.get(key) != null) {
-			domain = translator.translate(insituresultDAO.get(key));
+		if (resultDAO.get(key) != null) {
+			domain = translator.translate(resultDAO.get(key));
 		}
-		insituresultDAO.clear();
+		resultDAO.clear();
 		return domain;
 	}
 
     @Transactional
     public SearchResults<InSituResultDomain> getResults(Integer key) {
 		SearchResults<InSituResultDomain> results = new SearchResults<InSituResultDomain>();
-		results.setItem(translator.translate(insituresultDAO.get(key)));
-		insituresultDAO.clear();
+		results.setItem(translator.translate(resultDAO.get(key)));
+		resultDAO.clear();
 		return results;
     }
 
@@ -116,25 +120,30 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 				entity.setCreation_date(new Date());				
 				entity.setModification_date(new Date());
 				
-				insituresultDAO.persist(entity);
+				resultDAO.persist(entity);
 				
-				// call structures using entity.get(
-				// call images
+				if (domain.get(i).getStructures() != null && !domain.get(i).getStructures().isEmpty()) {
+					modified = structureService.process(entity.get_result_key(), domain.get(i).getStructures(), user);
+				}
+
+//				if (domain.get(i).getImagePanes() != null && !domain.get(i).getImagePanes().isEmpty()) {
+//					modified = imagePaneService.process(entity.get_result_key(), domain.get(i).getImagePanes(), user);
+//				}
 				
 				modified = true;
 				log.info("processInSituResults/create processed: " + entity.get_result_key());					
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processInSituResults delete");
-				InSituResult entity = insituresultDAO.get(Integer.valueOf(domain.get(i).getResultKey()));
-				insituresultDAO.remove(entity);
+				InSituResult entity = resultDAO.get(Integer.valueOf(domain.get(i).getResultKey()));
+				resultDAO.remove(entity);
 				modified = true;
 				log.info("processInSituResults delete successful");
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processInSituResults update");
 
-				InSituResult entity = insituresultDAO.get(Integer.valueOf(domain.get(i).getResultKey()));
+				InSituResult entity = resultDAO.get(Integer.valueOf(domain.get(i).getResultKey()));
 				
 				entity.set_specimen_key(parentKey);
 				entity.setStrength(strengthDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
@@ -143,7 +152,15 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 				entity.setResultNote(domain.get(i).getResultNote());
 				entity.setModification_date(new Date());
 				
-				insituresultDAO.update(entity);
+				if (domain.get(i).getStructures() != null && !domain.get(i).getStructures().isEmpty()) {
+					modified = structureService.process(Integer.valueOf(domain.get(i).getResultKey()), domain.get(i).getStructures(), user);
+				}
+
+//				if (domain.get(i).getImagePanes() != null && !domain.get(i).getImagePanes().isEmpty()) {
+//					modified = imagePaneService.process(Integer.valueOf(domain.get(i).getResultKey()), domain.get(i).getImagePanes(), user);
+//				}
+				
+				resultDAO.update(entity);
 				modified = true;
 				log.info("processInSituResults/changes processed: " + domain.get(i).getResultKey());	
 			}

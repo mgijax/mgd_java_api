@@ -37,6 +37,6 @@ public class InSituResultImage extends BaseEntity {
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_imagepane_key")
-	private ImagePane imagepane;
+	private ImagePane imagePane;
 
 }

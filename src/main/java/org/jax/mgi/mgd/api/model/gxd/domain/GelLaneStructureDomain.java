@@ -9,8 +9,8 @@ import lombok.Setter;
 public class GelLaneStructureDomain extends BaseDomain {
 
 	private String processStatus;
-	private String gellaneStructureKey;
-	private String gellaneKey;
+	private String gelLaneStructureKey;
+	private String gelLaneKey;
 	private String emapaTermKey;
 	private String emapaTerm;
 	private String theilerStageKey;

@@ -90,7 +90,7 @@ public class AssayNoteService extends BaseService<AssayNoteDomain> {
 				entity.setModification_date(new Date());	
 				assayNoteDAO.persist(entity);
 				modified = true;
-				log.info("processSpecimen/create processed: " + entity.get_assaynote_key());									
+				log.info("processSpecimen/create processed: " + entity.get_assay_key());									
 			}
 		}
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {

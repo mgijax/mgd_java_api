@@ -13,9 +13,15 @@ public class GelBandDomain extends BaseDomain {
 	private String gelLaneKey;
 	private String strengthKey;
 	private String strength;
+	private String gelRowKey;
+	private String assayKey;
+	private String gelUnitsKey;
+	private String gelUnits;
+	private String sequenceNum;
+	private String size;
+	private String rowNote;
 	private String bandNote;
 	private String creation_date;
 	private String modification_date;
 	
-	GelRowDomain gelRow;
 }

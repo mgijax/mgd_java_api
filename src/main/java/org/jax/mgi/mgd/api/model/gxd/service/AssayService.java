@@ -121,12 +121,15 @@ public class AssayService extends BaseService<AssayDomain> {
 				modified = true;
 			}
 		}
-//		if (domain.getGelRows() != null && !domain.getGelRows().isEmpty()) {
-//			if (gelRowService.process(entity.get_assay_key(), domain.getGelRows(), user)) {
-//				modified = true;
-//			}
-//		}
 
+		// process gxd_gelrow
+		// if assaytype in Gel Assay Type
+		if (domain.getGelRows() != null && !domain.getGelRows().isEmpty()) {
+			if (gelRowService.process(entity.get_assay_key(), domain.getGelRows(), user)) {
+				modified = true;
+			}
+		}
+		
 		// return entity translated to domain
 		log.info("processAssay/create/returning results : " + modified);
 		results.setItem(translator.translate(entity));
@@ -187,11 +190,14 @@ public class AssayService extends BaseService<AssayDomain> {
 				modified = true;
 			}
 		}
-//		if (domain.getGelRows() != null && !domain.getGelRows().isEmpty()) {
-//			if (gelRowService.process(Integer.valueOf(domain.getAssayKey()), domain.getGelRows(), user)) {
-//				modified = true;
-//			}
-//		}
+
+		// process gxd_gelrow
+		// if assaytype in Gel Assay Type
+		if (domain.getGelRows() != null && !domain.getGelRows().isEmpty()) {
+			if (gelRowService.process(Integer.valueOf(domain.getAssayKey()), domain.getGelRows(), user)) {
+				modified = true;
+			}
+		}
 		
 		// only if modifications were actually made
 		if (modified == true) {

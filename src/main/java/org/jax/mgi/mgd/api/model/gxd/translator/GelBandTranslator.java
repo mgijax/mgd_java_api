@@ -20,15 +20,16 @@ public class GelBandTranslator extends BaseEntityDomainTranslator<GelBand, GelBa
 		domain.setGelLaneKey(String.valueOf(entity.get_gellane_key()));	
 		domain.setStrengthKey(String.valueOf(entity.getStrength().get_strength_key()));
 		domain.setStrength(entity.getStrength().getStrength());
+		domain.setGelRowKey(String.valueOf(entity.getGelRow().get_gelrow_key()));
+		domain.setAssayKey(String.valueOf(entity.getGelRow().get_assay_key()));
+		domain.setGelUnitsKey(String.valueOf(entity.getGelRow().getGelUnits().get_gelunits_key()));
+		domain.setGelUnits(entity.getGelRow().getGelUnits().getUnits());
+		domain.setSequenceNum(String.valueOf(entity.getGelRow().getSequenceNum()));
+		domain.setSize(String.valueOf(entity.getGelRow().getSize()));
+		domain.setRowNote(entity.getGelRow().getRowNote());
 		domain.setBandNote(entity.getBandNote());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-
-		// gel row
-		if (entity.getGelRow() != null) {
-			GelRowTranslator i = new GelRowTranslator();
-			domain.setGelRow(i.translate(entity.getGelRow()));
-		}
 		
 		return domain;
 	}

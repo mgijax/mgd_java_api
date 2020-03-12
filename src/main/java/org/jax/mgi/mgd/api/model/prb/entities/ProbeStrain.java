@@ -19,6 +19,7 @@ import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
+import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym	;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -73,11 +74,24 @@ public class ProbeStrain extends BaseEntity {
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 
+	// other accession ids only
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 10 and `_logicaldb_key` != 1")
+	@OrderBy(clause="preferred desc, accID")
+	private List<Accession> otherAccessionIds;
+	
 	// Strain Attributes
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
 	@Where(clause="`_annottype_key` = 1009")
 	private List<Annotation> attributes;	
+
+	// Needs Review
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
+	@Where(clause="`_annottype_key` = 1008")
+	private List<Annotation> needsReview;	
 	
 	// Markers
 	@OneToMany()
@@ -95,6 +109,12 @@ public class ProbeStrain extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 10")
 	private List<MGISynonym> synonyms;
 
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 10")
+	@OrderBy(clause="_refassoctype_key")
+	private List<MGIReferenceAssoc> refAssocs;
+	
 	// Strain Origin
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)

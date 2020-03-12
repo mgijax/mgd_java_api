@@ -3,6 +3,8 @@ package org.jax.mgi.mgd.api.model.prb.domain;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
@@ -34,9 +36,13 @@ public class ProbeStrainDomain extends BaseDomain {
 	private NoteDomain impcColonyNote;
 	private NoteDomain nomenclatureNote;
 	private NoteDomain mutantCellLineNote;
+	private List<AccessionDomain> otherAccIds;
 	private List<AnnotationDomain> attributes;
+	private List<AnnotationDomain> needsReview;
 	private List<ProbeStrainMarkerDomain> markers;
 	private List<ProbeStrainGenotypeDomain> genotypes;
 	private List<MGISynonymDomain> synonyms;
+	private List<MGIReferenceAssocDomain> refAssocs;
+	
 	
 }

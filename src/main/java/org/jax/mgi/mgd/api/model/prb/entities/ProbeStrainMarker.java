@@ -3,9 +3,12 @@ package org.jax.mgi.mgd.api.model.prb.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
@@ -15,6 +18,7 @@ import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,14 +28,15 @@ import lombok.Setter;
 @Table(name="prb_strain_marker")
 
 public class ProbeStrainMarker extends BaseEntity{
+	
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="prb_strain_marker_generator")
+	@SequenceGenerator(name="prb_strain_marker_generator", sequenceName = "prb_strain_marker_seq", allocationSize=1)
+	@ApiModelProperty(value="primary key")	
 	private int _strainmarker_key;
+	private int _strain_key;
 	private Date creation_date;
 	private Date modification_date;
-	
-	@OneToOne
-	@JoinColumn(name="_strain_key")
-	private ProbeStrain strain;
 	
 	@OneToOne
 	@JoinColumn(name="_marker_key")

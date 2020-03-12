@@ -20,7 +20,9 @@ import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym	;
+import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
@@ -70,18 +72,51 @@ public class ProbeStrain extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 10 and `_logicaldb_key` = 1")
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
+
+	// Strain Attributes
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
+	@Where(clause="`_annottype_key` = 1009")
+	private List<Annotation> attributes;	
 	
+	// Markers
 	@OneToMany()
 	@JoinColumn(name="_strain_key", insertable=false, updatable=false)
-	private List<ProbeStrainMarker> probeStrainMarkers;
+	private List<ProbeStrainMarker> markers;
 	
+	// Genotypes
 	@OneToMany()
 	@JoinColumn(name="_strain_key", insertable=false, updatable=false)
-	private List<ProbeStrainGenotype> probeStrainGenotypes;
+	private List<ProbeStrainGenotype> genotypes;
 	
+	//Synonyms
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 10")
 	private List<MGISynonym> synonyms;
+
+	// Strain Origin
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 10 and `_notetype_key` = 1011")
+	private List<Note> strainOriginNote;
+
+	// IMPC Colony ID
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 10 and `_notetype_key` = 1012")
+	private List<Note> impcColonyNote;
 	
+	// Nomenclature
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 10 and `_notetype_key` = 1013")
+	private List<Note> nomenclatureNote;
+
+	// Mutant Cell Line of Origin
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 10 and `_notetype_key` = 1038")
+	private List<Note> mutantCellLineNote;
+
 }

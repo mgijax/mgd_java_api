@@ -21,12 +21,12 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "CellLine Model Object")
 @Table(name="all_cellline")
-public class AlleleCellLine extends BaseEntity {
+public class CellLine extends BaseEntity {
 
 	@Id
-	private Integer _cellline_key;
+	private int _cellline_key;
 	private String cellLine;
-	private Integer isMutant;
+	private int isMutant;
 	private Date creation_date;
 	private Date modification_date;
 	

@@ -4,18 +4,25 @@ import java.util.Comparator;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleMutationDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
+import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 
 public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleDomain> {
+
+	private AccessionTranslator accessionTranslator = new AccessionTranslator();	
+	private MGISynonymTranslator synonymTranslator = new MGISynonymTranslator();
 	
 	@Override
 	protected AlleleDomain entityToDomain(Allele entity) {
@@ -40,6 +47,13 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		if (!entity.getMgiAccessionIds().isEmpty()) {
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}
+
+		// other accession ids
+		if (entity.getOtherAccessionIds() != null && !entity.getOtherAccessionIds().isEmpty()) {
+			Iterable<AccessionDomain> t = accessionTranslator.translateEntities(entity.getOtherAccessionIds());
+			domain.setOtherAccIds(IteratorUtils.toList(t.iterator()));
+			domain.getOtherAccIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb));
+		}
 		
 		// marker stuff
 		if (!entity.getMarker().getSymbol().isEmpty()) {
@@ -56,6 +70,13 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
 			domain.getRefAssocs().sort(Comparator.comparing(MGIReferenceAssocDomain::getAllowOnlyOne).thenComparing(MGIReferenceAssocDomain::getRefAssocType));
 		}	
+
+		// synonyms
+		if (entity.getSynonyms() != null && !entity.getSynonyms().isEmpty()) {
+			Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getSynonyms());
+			domain.setSynonyms(IteratorUtils.toList(i.iterator()));
+			domain.getSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
+		}
 		
 		// molecular mutations
 		if (!entity.getMutations().isEmpty()) {

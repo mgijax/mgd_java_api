@@ -14,7 +14,7 @@ import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
-import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLine;
+import org.jax.mgi.mgd.api.model.all.entities.CellLine;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
@@ -57,11 +57,11 @@ public class AllelePair extends BaseEntity {
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_mutantcellline_key_1", referencedColumnName="_cellline_key")
-	private AlleleCellLine cellLine1;
+	private CellLine cellLine1;
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_mutantcellline_key_2", referencedColumnName="_cellline_key")
-	private AlleleCellLine cellLine2;
+	private CellLine cellLine2;
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_pairstate_key", referencedColumnName="_term_key")

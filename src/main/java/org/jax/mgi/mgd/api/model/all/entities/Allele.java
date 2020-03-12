@@ -17,6 +17,7 @@ import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
+import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
@@ -102,6 +103,13 @@ public class Allele extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 11 and `_logicaldb_key` = 1 and preferred = 1")
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
+
+	// other accession ids only
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 11 and `_logicaldb_key` != 1")
+	@OrderBy(clause="preferred desc, accID")
+	private List<Accession> otherAccessionIds;
 	
 	// reference associations
 	@OneToMany()
@@ -109,12 +117,18 @@ public class Allele extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 11")
 	private List<MGIReferenceAssoc> refAssocs;
 
-	// mutations
+	//Synonyms
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 11")
+	private List<MGISynonym> synonyms;
+	
+	// molecular mutations
 	@OneToMany()
 	@JoinColumn(name="_allele_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
 	private List<AlleleMutation> mutations;
 	
-	// allele/subtype annotations
+	// allele/subtype annotations(aka allele attributes)
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
 	@Where(clause="`_annottype_key` = 1014")

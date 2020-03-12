@@ -9,7 +9,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
-import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLine;
+import org.jax.mgi.mgd.api.model.all.entities.CellLine;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -62,7 +62,7 @@ public class ProbeSource extends BaseEntity {
 
 	@OneToOne
 	@JoinColumn(name="_cellline_key")
-	private AlleleCellLine cellLine;
+	private CellLine cellLine;
 
 	@OneToOne
 	@JoinColumn(name="_refs_key")

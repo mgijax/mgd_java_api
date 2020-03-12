@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.all.dao.AlleleCellLineDAO;
+import org.jax.mgi.mgd.api.model.all.dao.CellLineDAO;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AllelePairDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
@@ -41,7 +41,7 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 	@Inject
 	private AlleleDAO alleleDAO;
 	@Inject
-	private AlleleCellLineDAO alleleCellLineDAO;
+	private CellLineDAO cellLineDAO;
 	@Inject
 	private TermDAO termDAO;
 	
@@ -164,14 +164,14 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 					entity.setCellLine1(null);									
 				}
 				else {
-					entity.setCellLine1(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLineKey1())));				
+					entity.setCellLine1(cellLineDAO.get(Integer.valueOf(domain.get(i).getCellLineKey1())));				
 				}
 
 				if (domain.get(i).getCellLineKey2() == null || domain.get(i).getCellLine2().isEmpty()) {
 					entity.setCellLine2(null);									
 				}
 				else {
-					entity.setCellLine2(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLineKey2())));				
+					entity.setCellLine2(cellLineDAO.get(Integer.valueOf(domain.get(i).getCellLineKey2())));				
 				}
 				
 				// default compound = Not Specified
@@ -230,14 +230,14 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 					entity.setCellLine1(null);									
 				}
 				else {
-					entity.setCellLine1(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLineKey1())));				
+					entity.setCellLine1(cellLineDAO.get(Integer.valueOf(domain.get(i).getCellLineKey1())));				
 				}
 
 				if (domain.get(i).getCellLineKey2() == null || domain.get(i).getCellLine2().isEmpty()) {
 					entity.setCellLine2(null);									
 				}
 				else {
-					entity.setCellLine2(alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getCellLineKey2())));				
+					entity.setCellLine2(cellLineDAO.get(Integer.valueOf(domain.get(i).getCellLineKey2())));				
 				}				
 											
 				entity.setModification_date(new Date());

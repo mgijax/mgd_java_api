@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
-import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLine;
+import org.jax.mgi.mgd.api.model.all.entities.CellLine;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLineDerivation;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTSample;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
@@ -52,7 +52,7 @@ public class MGITranslation extends BaseEntity {
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_object_key", referencedColumnName="_cellline_key", insertable=false, updatable=false)
 	@Where(clause="translationType.`_mgitype_key` = 28")
-	private AlleleCellLine cellLine;
+	private CellLine cellLine;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_object_key", referencedColumnName="_derivation_key", insertable=false, updatable=false)

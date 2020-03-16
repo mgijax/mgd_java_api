@@ -7,6 +7,7 @@ import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipAlleleDriverGeneDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 
 import lombok.Getter;
@@ -28,6 +29,11 @@ public class AlleleDomain extends BaseDomain {
 	private String markerSymbol;
 	private String chromosome;
 	private String strand;
+	private String refsKey;
+	private String jnumid;
+	private String short_citation;
+	private String markerStatusKey;
+	private String markerStatus;
 	private String detailClip;
 	
 	private String createdByKey;
@@ -42,6 +48,8 @@ public class AlleleDomain extends BaseDomain {
 	private List<MGISynonymDomain> synonyms;
 	private List<AlleleMutationDomain> mutations;
 	private List<AnnotationDomain> subtypeAnnots;
+	private List<AlleleCellLineDomain> mutantCellLines;
+	private List<RelationshipAlleleDriverGeneDomain> driverGenes;
 	
 	private NoteDomain generalNote;
 	private NoteDomain molecularNote;

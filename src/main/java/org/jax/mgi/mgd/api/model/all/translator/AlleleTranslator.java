@@ -6,23 +6,23 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
+import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleMutationDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipAlleleDriverGeneDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
+import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipAlleleDriverGeneTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 
 public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleDomain> {
-
-	private AccessionTranslator accessionTranslator = new AccessionTranslator();	
-	private MGISynonymTranslator synonymTranslator = new MGISynonymTranslator();
 	
 	@Override
 	protected AlleleDomain entityToDomain(Allele entity) {
@@ -50,6 +50,7 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 
 		// other accession ids
 		if (entity.getOtherAccessionIds() != null && !entity.getOtherAccessionIds().isEmpty()) {
+			AccessionTranslator accessionTranslator = new AccessionTranslator();	
 			Iterable<AccessionDomain> t = accessionTranslator.translateEntities(entity.getOtherAccessionIds());
 			domain.setOtherAccIds(IteratorUtils.toList(t.iterator()));
 			domain.getOtherAccIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb));
@@ -60,7 +61,19 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 			domain.setMarkerSymbol(entity.getMarker().getSymbol());			
 			domain.setChromosome(entity.getMarker().getChromosome());
-			domain.setDetailClip(entity.getMarker().getDetailClipNote().get(0).getNote());		
+
+			// reference can be null
+			if (entity.getMarkerReference() != null) {
+				domain.setRefsKey(String.valueOf(entity.getMarkerReference().get_refs_key()));
+				domain.setJnumid(entity.getMarkerReference().getReferenceCitationCache().getJnumid());
+				domain.setShort_citation(entity.getMarkerReference().getReferenceCitationCache().getShort_citation());
+				domain.setMarkerStatusKey(String.valueOf(entity.getMarkerStatus().get_term_key()));
+				domain.setMarkerStatus(entity.getMarkerStatus().getTerm());
+			}
+			
+			if (entity.getMarker().getDetailClipNote() != null && !entity.getMarker().getDetailClipNote().isEmpty()) {
+				domain.setDetailClip(entity.getMarker().getDetailClipNote().get(0).getNote());		
+			}
 		}
 		
 		// reference associations
@@ -73,6 +86,7 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 
 		// synonyms
 		if (entity.getSynonyms() != null && !entity.getSynonyms().isEmpty()) {
+			MGISynonymTranslator synonymTranslator = new MGISynonymTranslator();
 			Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getSynonyms());
 			domain.setSynonyms(IteratorUtils.toList(i.iterator()));
 			domain.getSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
@@ -93,6 +107,20 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			domain.setSubtypeAnnots(IteratorUtils.toList(i.iterator()));
 		}
 
+		// mutant cell lines
+		if (!entity.getMutantCellLines().isEmpty()) {
+			AlleleCellLineTranslator cellLineTranslator = new AlleleCellLineTranslator();
+			Iterable<AlleleCellLineDomain> i = cellLineTranslator.translateEntities(entity.getMutantCellLines());
+			domain.setMutantCellLines(IteratorUtils.toList(i.iterator()));
+		}
+	
+		// driver genes
+		if (!entity.getDriverGenes().isEmpty()) {
+			RelationshipAlleleDriverGeneTranslator driverTranslator = new RelationshipAlleleDriverGeneTranslator();
+			Iterable<RelationshipAlleleDriverGeneDomain> i = driverTranslator.translateEntities(entity.getDriverGenes());
+			domain.setDriverGenes(IteratorUtils.toList(i.iterator()));
+		}
+		
 		// at most one note
 		if (entity.getGeneralNote() != null && !entity.getGeneralNote().isEmpty()) {
 			NoteTranslator noteTranslator = new NoteTranslator();

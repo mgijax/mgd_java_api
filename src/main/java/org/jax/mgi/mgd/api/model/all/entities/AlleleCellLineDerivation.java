@@ -3,9 +3,12 @@ package org.jax.mgi.mgd.api.model.all.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
@@ -14,6 +17,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,7 +28,10 @@ import lombok.Setter;
 public class AlleleCellLineDerivation extends BaseEntity {
 
 	@Id
-	private Integer _derivation_key;
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="all_allele_cellline_derivation_generator")
+	@SequenceGenerator(name="all_allele_cellline_derivation_generator", sequenceName = "all_allele_cellline_derivation_seq", allocationSize=1)
+	@ApiModelProperty(value="primary key")	
+	private int _derivation_key;
 	private String name;
 	private String description;
 	private Date creation_date;

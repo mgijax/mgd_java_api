@@ -4,9 +4,12 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
@@ -24,8 +27,8 @@ import lombok.Setter;
 public class Relationship extends BaseEntity {
 	
 	@Id
-//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="mgi_relationship_generator")
-//	@SequenceGenerator(name="mgi_relationship_generator", sequenceName = "mgi_relationship_seq", allocationSize=1)	
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="mgi_relationship_generator")
+	@SequenceGenerator(name="mgi_relationship_generator", sequenceName = "mgi_relationship_seq", allocationSize=1)	
 	private int _relationship_key;
 	private int _object_key_1;
 	private int _object_key_2;

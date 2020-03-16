@@ -24,6 +24,7 @@ import org.jax.mgi.mgd.api.model.mrk.domain.MarkerGOReferenceDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerAnnotDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.GOTracking;
+import org.jax.mgi.mgd.api.model.mrk.entities.MarkerHistory;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerAnnotTranslator;
 import org.jax.mgi.mgd.api.model.mrk.translator.SlimMarkerAnnotTranslator;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationDAO;
@@ -182,11 +183,10 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 			if (domain.getGoTracking() != null) {
 				if (domain.getGoTracking().get(0).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 					try {
-						String newCompletionStr = domain.getGoTracking().get(0).getCompletion_date();
-						Date newCompletion = new Date();
+						GOTracking goTrackingEntity = goTrackingDAO.get(Integer.valueOf(domain.getMarkerKey()));				
 						
-						GOTracking goTrackingEntity = new GOTracking();
-						goTrackingEntity.set_marker_key(Integer.valueOf(domain.getMarkerKey()));
+						String newCompletionStr = domain.getGoTracking().get(0).getCompletion_date();
+						Date newCompletion = new Date();						
 						
 						if (newCompletionStr != null && !newCompletionStr.isEmpty()) {						
 							newCompletion = new SimpleDateFormat("dd/MM/yyyy").parse(newCompletionStr);
@@ -197,6 +197,9 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 						
 						goTrackingEntity.setCompletedBy(user);
 						goTrackingEntity.setCompletion_date(newCompletion);	
+						goTrackingEntity.setModification_date(new Date());
+						goTrackingEntity.setModifiedBy(user);						
+						//goTrackingEntity.setIsReferenceGene(0);
 						goTrackingDAO.update(goTrackingEntity);
 					}
 					catch (Exception e) {

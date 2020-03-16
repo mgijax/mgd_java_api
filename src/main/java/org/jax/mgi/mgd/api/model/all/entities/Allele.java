@@ -5,10 +5,13 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.OrderBy;
@@ -19,6 +22,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
+import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipAlleleDriverGene;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
@@ -26,6 +30,7 @@ import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,9 +41,9 @@ import lombok.Setter;
 public class Allele extends BaseEntity {
 
 	@Id
-	//@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="all_allele_generator")
-	//@SequenceGenerator(name="all_allele_generator", sequenceName = "all_allele_seq", allocationSize=1)
-	//@ApiModelProperty(value="primary key")	
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="all_allele_generator")
+	@SequenceGenerator(name="all_allele_generator", sequenceName = "all_allele_seq", allocationSize=1)
+	@ApiModelProperty(value="primary key")	
 	private int _allele_key;
 	private String symbol;
 	private String name;
@@ -83,7 +88,7 @@ public class Allele extends BaseEntity {
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_markerallele_status_key", referencedColumnName="_term_key")
-	private Term markerAlleleStatus;
+	private Term markerStatus;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
@@ -134,6 +139,16 @@ public class Allele extends BaseEntity {
 	@Where(clause="`_annottype_key` = 1014")
 	private List<Annotation> subtypeAnnots;
 
+	// allele/mutant cell lines
+	@OneToMany()
+	@JoinColumn(name="_allele_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
+	private List<AlleleCellLine> mutantCellLines;
+
+	// driver gene
+	@OneToMany()
+	@JoinColumn(name="_allele_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
+	private List<RelationshipAlleleDriverGene> driverGenes;
+	
 	//  1020 | General
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)

@@ -13,8 +13,6 @@ import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
-import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -23,31 +21,22 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "CellLine Model Object")
-@Table(name="all_cellline")
-public class CellLine extends BaseEntity {
+@ApiModel(value = "Allele CellLine Association Entity Model")
+@Table(name="all_allele_cellline")
+public class AlleleCellLine extends BaseEntity {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="all_cellline_generator")
-	@SequenceGenerator(name="all_cellline_generator", sequenceName = "all_cellline_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="all_allele_cellline_generator")
+	@SequenceGenerator(name="all_allele_cellline_generator", sequenceName = "all_allele_cellline_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")	
-	private int _cellline_key;
-	private String cellLine;
-	private int isMutant;
+	private int _assoc_key;
+	private int _allele_key;
 	private Date creation_date;
 	private Date modification_date;
 	
 	@OneToOne
-	@JoinColumn(name="_cellline_type_key", referencedColumnName="_term_key")
-	private Term cellLineType;
-	
-	@OneToOne
-	@JoinColumn(name="_strain_key")
-	private ProbeStrain strain;
-	
-	@OneToOne
-	@JoinColumn(name="_derivation_key")
-	private AlleleCellLineDerivation derivation;
+	@JoinColumn(name="_mutantcellline_key", referencedColumnName="_cellline_key")
+	private CellLine mutantCellLine;
 	
 	@OneToOne
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

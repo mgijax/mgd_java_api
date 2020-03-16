@@ -122,7 +122,7 @@ public class Allele extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 11")
 	private List<MGIReferenceAssoc> refAssocs;
 
-	//Synonyms
+	// synonyms
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 11")

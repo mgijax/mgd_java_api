@@ -21,8 +21,11 @@ import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipAlleleDriverGeneTran
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jboss.logging.Logger;
 
 public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleDomain> {
+
+	protected Logger log = Logger.getLogger(getClass());
 	
 	@Override
 	protected AlleleDomain entityToDomain(Allele entity) {
@@ -57,7 +60,7 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		}
 		
 		// marker stuff
-		if (!entity.getMarker().getSymbol().isEmpty()) {
+		if (entity.getMarker() != null && !entity.getMarker().getSymbol().isEmpty()) {
 			domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 			domain.setMarkerSymbol(entity.getMarker().getSymbol());			
 			domain.setChromosome(entity.getMarker().getChromosome());
@@ -77,7 +80,7 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		}
 		
 		// reference associations
-		if (!entity.getRefAssocs().isEmpty()) {
+		if (entity.getRefAssocs() != null && !entity.getRefAssocs().isEmpty()) {
 			MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
 			Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
 			domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
@@ -93,7 +96,7 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		}
 		
 		// molecular mutations
-		if (!entity.getMutations().isEmpty()) {
+		if (entity.getMutations() != null && !entity.getMutations().isEmpty()) {
 			AlleleMutationTranslator mutationTranslator = new AlleleMutationTranslator();
 			Iterable<AlleleMutationDomain> i = mutationTranslator.translateEntities(entity.getMutations());
 			domain.setMutations(IteratorUtils.toList(i.iterator()));
@@ -101,21 +104,21 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		}
 		
 		// subtype annotations
-		if (!entity.getSubtypeAnnots().isEmpty()) {
+		if (entity.getSubtypeAnnots() != null && !entity.getSubtypeAnnots().isEmpty()) {
 			AnnotationTranslator annotTranslator = new AnnotationTranslator();
 			Iterable<AnnotationDomain> i = annotTranslator.translateEntities(entity.getSubtypeAnnots());
 			domain.setSubtypeAnnots(IteratorUtils.toList(i.iterator()));
 		}
 
 		// mutant cell lines
-		if (!entity.getMutantCellLines().isEmpty()) {
+		if (entity.getMutantCellLines() != null && !entity.getMutantCellLines().isEmpty()) {
 			AlleleCellLineTranslator cellLineTranslator = new AlleleCellLineTranslator();
 			Iterable<AlleleCellLineDomain> i = cellLineTranslator.translateEntities(entity.getMutantCellLines());
 			domain.setMutantCellLines(IteratorUtils.toList(i.iterator()));
 		}
 	
 		// driver genes
-		if (!entity.getDriverGenes().isEmpty()) {
+		if (entity.getDriverGenes() != null && !entity.getDriverGenes().isEmpty()) {
 			RelationshipAlleleDriverGeneTranslator driverTranslator = new RelationshipAlleleDriverGeneTranslator();
 			Iterable<RelationshipAlleleDriverGeneDomain> i = driverTranslator.translateEntities(entity.getDriverGenes());
 			domain.setDriverGenes(IteratorUtils.toList(i.iterator()));

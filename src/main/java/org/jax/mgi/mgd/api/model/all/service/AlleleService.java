@@ -144,6 +144,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		Boolean from_marker = false;
 		Boolean from_accession = false;
 		Boolean from_reference = false;
+		Boolean from_inheritanceMode = false;
+		Boolean from_alleleType = false;
+		Boolean from_alleleStatus = false;
+		Boolean from_generation = false;
+		Boolean from_collection = false;
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -160,6 +165,20 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			where = where + "\nand a.name ilike '" + searchDomain.getName() + "'" ;
 		}
 		
+		if (searchDomain.getIsExtinct() != null) {
+			where = where + "\nand a.isExtinct = " + searchDomain.getIsExtinct();
+		}
+		
+		if (searchDomain.getIsMixed() != null) {
+			where = where + "\nand a.isMixed = " + searchDomain.getIsMixed();
+		}
+
+//		Boolean from_inheritanceMode = false;
+//		Boolean from_alleleType = false;
+//		Boolean from_alleleStatus = false;
+//		Boolean from_generation = false;
+//		Boolean from_collection = false;
+		
 		// marker
 		if (searchDomain.getMarkerKey() != null && !searchDomain.getMarkerKey().isEmpty()) {
 			where = where + "\nand a._marker_key = " + searchDomain.getMarkerKey();
@@ -167,20 +186,20 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		if (searchDomain.getMarkerSymbol() != null && !searchDomain.getMarkerSymbol().isEmpty()) {
 			where = where + "\nand m.symbol ilike '" + searchDomain.getMarkerSymbol() + "'";
 			from_marker = true;
-		}		
-		if (searchDomain.getChromosome() != null && !searchDomain.getChromosome().isEmpty()) {
-			where = where + "\nand m.chromosome ilike '" + searchDomain.getChromosome() + "'";
-			from_marker = true;
 		}
+		// ADD : Marker/Reference
 		
 		// allele accession id 
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	
 			where = where + "\nand acc.accID ilike '" + searchDomain.getAccID() + "'";
 			from_accession = true;
 		}
-						
+			
+		// other accession id
+		
 		// reference; allow > 1 jnumid
 		if (searchDomain.getRefAssocs() != null) {
+
 			if (searchDomain.getRefAssocs().get(0).getRefsKey() != null && !searchDomain.getRefAssocs().get(0).getRefsKey().isEmpty()) {
 				where = where + "\nand ref._Refs_key = " + searchDomain.getRefAssocs().get(0).getRefsKey();
 				from_reference = true;
@@ -203,6 +222,26 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			where = where + "\nand (" + jnumClauses.toString() + ")";
 		}
 	
+		// general note
+		// molecular note
+		// nomenclature note
+		// inducible note
+		// pro ids note
+		// ikmc note
+		// cre note
+		
+		// mutatnt cell line/creator/modified by/date
+		
+		// parent cell line
+		// parent cell line strain
+		// cell line type
+		// strain of origin
+		
+		// synonym
+		// allele attribute
+		// molecular mutation
+		// driver gene
+		
 		if (from_marker == true) {
 			from = from + ", mrk_marker m";
 			where = where + "\nand a._marker_key = m._marker_key";

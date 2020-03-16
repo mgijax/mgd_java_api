@@ -23,6 +23,18 @@ public class AlleleDomain extends BaseDomain {
 	private Integer isWildType;
 	private Integer isExtinct;
 	private Integer isMixed;
+	private String inheritanceModeKey;
+	private String inheritanceMode;
+	private String alleleTypeKey;
+	private String alleleType;
+	private String alleleStatusKey;
+	private String alleleStatus;	
+	private String generationKey;
+	private String generation;
+	private String collectionKey;
+	private String collection;
+	private String strainOfOriginKey;
+	private String strainOfOrigin;
 	private String accID;
 
 	private String markerKey;
@@ -40,8 +52,11 @@ public class AlleleDomain extends BaseDomain {
 	private String createdBy;
 	private String modifiedByKey;
 	private String modifiedBy;
+	private String approvedByKey;
+	private String approvedBy;
 	private String creation_date;
 	private String modification_date;
+	private String approval_date;
 	
 	private List<AccessionDomain> otherAccIds;
 	private List<MGIReferenceAssocDomain> refAssocs;

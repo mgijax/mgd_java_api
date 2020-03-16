@@ -39,13 +39,33 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		domain.setIsWildType(entity.getIsWildType());
 		domain.setIsExtinct(entity.getIsExtinct());
 		domain.setIsMixed(entity.getIsMixed());
+
+		domain.setInheritanceModeKey(String.valueOf(entity.getInheritanceMode().get_term_key()));
+		domain.setInheritanceMode(entity.getInheritanceMode().getTerm());
+		domain.setAlleleTypeKey(String.valueOf(entity.getAlleleType().get_term_key()));
+		domain.setAlleleType(entity.getAlleleType().getTerm());
+		domain.setAlleleStatusKey(String.valueOf(entity.getAlleleStatus().get_term_key()));
+		domain.setAlleleStatus(entity.getAlleleStatus().getTerm());	
+		domain.setGenerationKey(String.valueOf(entity.getGeneration().get_term_key()));
+		domain.setGeneration(entity.getGeneration().getTerm());
+		domain.setCollectionKey(String.valueOf(entity.getCollection().get_term_key()));
+		domain.setCollection(entity.getCollection().getTerm());
+		domain.setStrainOfOriginKey(String.valueOf(entity.getStrain().get_strain_key()));
+		domain.setStrainOfOrigin(entity.getStrain().getStrain());
+		
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-
+		
+		if (entity.getApprovedBy() != null) {
+			domain.setApprovedByKey(entity.getApprovedBy().get_user_key().toString());
+			domain.setApprovedBy(entity.getApprovedBy().getLogin());
+			domain.setApproval_date(dateFormatNoTime.format(entity.getApproval_date()));
+		}
+		
 		// primary mgi accession ids only
 		if (!entity.getMgiAccessionIds().isEmpty()) {
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());

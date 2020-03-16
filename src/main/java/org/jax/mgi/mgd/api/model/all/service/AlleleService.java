@@ -144,11 +144,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		Boolean from_marker = false;
 		Boolean from_accession = false;
 		Boolean from_reference = false;
-		Boolean from_inheritanceMode = false;
-		Boolean from_alleleType = false;
-		Boolean from_alleleStatus = false;
-		Boolean from_generation = false;
-		Boolean from_collection = false;
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -173,12 +168,26 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			where = where + "\nand a.isMixed = " + searchDomain.getIsMixed();
 		}
 
-//		Boolean from_inheritanceMode = false;
-//		Boolean from_alleleType = false;
-//		Boolean from_alleleStatus = false;
-//		Boolean from_generation = false;
-//		Boolean from_collection = false;
+		if (searchDomain.getInheritanceModeKey() != null && !searchDomain.getInheritanceModeKey().isEmpty()) {
+			where = where + "\nand a._mode_key = " + searchDomain.getInheritanceModeKey();
+		}
+
+		if (searchDomain.getAlleleTypeKey() != null && !searchDomain.getAlleleTypeKey().isEmpty()) {
+			where = where + "\nand a._allele_type_key = " + searchDomain.getAlleleTypeKey();
+		}
+
+		if (searchDomain.getAlleleStatusKey() != null && !searchDomain.getAlleleStatusKey().isEmpty()) {
+			where = where + "\nand a._allele_status_key = " + searchDomain.getAlleleStatusKey();
+		}
 		
+		if (searchDomain.getGenerationKey() != null && !searchDomain.getGenerationKey().isEmpty()) {
+			where = where + "\nand a._transmission_key = " + searchDomain.getGenerationKey();
+		}
+
+		if (searchDomain.getCollectionKey() != null && !searchDomain.getCollectionKey().isEmpty()) {
+			where = where + "\nand a._collection_key = " + searchDomain.getCollectionKey();
+		}
+				
 		// marker
 		if (searchDomain.getMarkerKey() != null && !searchDomain.getMarkerKey().isEmpty()) {
 			where = where + "\nand a._marker_key = " + searchDomain.getMarkerKey();
@@ -195,7 +204,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			from_accession = true;
 		}
 			
-		// other accession id
+		// ADD: other accession id
 		
 		// reference; allow > 1 jnumid
 		if (searchDomain.getRefAssocs() != null) {

@@ -19,6 +19,7 @@ import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.img.entities.ImagePaneAssocView;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
@@ -148,6 +149,13 @@ public class Allele extends BaseEntity {
 	@OneToMany()
 	@JoinColumn(name="_allele_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
 	private List<RelationshipAlleleDriverGene> driverGenes;
+
+	// image pane associations
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 11")
+	@OrderBy(clause="isPrimary asc")
+	private List<ImagePaneAssocView> imagePaneAssocs;
 	
 	//  1020 | General
 	@OneToMany()

@@ -17,7 +17,6 @@ public class SlimAlleleTranslator extends BaseEntityDomainTranslator<Allele, Sli
 		domain.setAlleleKey(String.valueOf(entity.get_allele_key()));
 		domain.setSymbol(entity.getSymbol());
 		domain.setAlleleStatus(entity.getAlleleStatus().getTerm());
-		log.info("allele status: " + entity.getAlleleStatus().getTerm());
 		
 		// marker
 		if (entity.getMarker() != null) {

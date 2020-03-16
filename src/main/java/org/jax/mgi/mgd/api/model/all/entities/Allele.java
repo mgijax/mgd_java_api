@@ -77,7 +77,7 @@ public class Allele extends BaseEntity {
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_transmission_key", referencedColumnName="_term_key")
-	private Term generation;
+	private Term transmission;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_collection_key", referencedColumnName="_term_key")

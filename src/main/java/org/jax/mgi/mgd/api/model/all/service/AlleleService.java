@@ -180,8 +180,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			where = where + "\nand a._allele_status_key = " + searchDomain.getAlleleStatusKey();
 		}
 		
-		if (searchDomain.getGenerationKey() != null && !searchDomain.getGenerationKey().isEmpty()) {
-			where = where + "\nand a._transmission_key = " + searchDomain.getGenerationKey();
+		if (searchDomain.getTransmissionKey() != null && !searchDomain.getTransmissionKey().isEmpty()) {
+			where = where + "\nand a._transmission_key = " + searchDomain.getTransmissionKey();
 		}
 
 		if (searchDomain.getCollectionKey() != null && !searchDomain.getCollectionKey().isEmpty()) {

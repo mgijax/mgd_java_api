@@ -30,8 +30,8 @@ public class AlleleDomain extends BaseDomain {
 	private String alleleType;
 	private String alleleStatusKey;
 	private String alleleStatus;	
-	private String generationKey;
-	private String generation;
+	private String transmissionKey;
+	private String transmission;
 	private String collectionKey;
 	private String collection;
 	private String strainOfOriginKey;

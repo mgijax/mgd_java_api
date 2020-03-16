@@ -24,7 +24,6 @@ import org.jax.mgi.mgd.api.model.mrk.domain.MarkerGOReferenceDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerAnnotDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.GOTracking;
-import org.jax.mgi.mgd.api.model.mrk.entities.MarkerHistory;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerAnnotTranslator;
 import org.jax.mgi.mgd.api.model.mrk.translator.SlimMarkerAnnotTranslator;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationDAO;

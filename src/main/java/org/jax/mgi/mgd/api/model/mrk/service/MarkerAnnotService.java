@@ -187,7 +187,6 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 						String newCompletionStr = domain.getGoTracking().get(0).getCompletion_date();
 						Date newCompletion = new Date();						
 						
-						log.info("newCompletionStr: " + newCompletionStr);
 						if (newCompletionStr != null && !newCompletionStr.isEmpty()) {						
 							newCompletion = new SimpleDateFormat("MM/dd/yyyy").parse(newCompletionStr);
 						}

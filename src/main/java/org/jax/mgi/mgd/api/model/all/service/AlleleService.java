@@ -144,6 +144,13 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		Boolean from_marker = false;
 		Boolean from_accession = false;
 		Boolean from_reference = false;
+		Boolean from_generalNote = false;
+		Boolean from_molecularNote = false;
+		Boolean from_nomenNote = false;
+		Boolean from_inducibleNote = false;
+		Boolean from_proidNote = false;
+		Boolean from_ikmcNote = false;
+		Boolean from_creNote = false;
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -196,15 +203,19 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			where = where + "\nand m.symbol ilike '" + searchDomain.getMarkerSymbol() + "'";
 			from_marker = true;
 		}
-		// ADD : Marker/Reference
+		if (searchDomain.getRefsKey() != null && !searchDomain.getRefsKey().isEmpty()) {
+			where = where + "\nand a._Refs_key = " + searchDomain.getRefsKey();
+		}
 		
 		// allele accession id 
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	
 			where = where + "\nand acc.accID ilike '" + searchDomain.getAccID() + "'";
 			from_accession = true;
 		}
-			
-		// ADD: other accession id
+		else if	(searchDomain.getOtherAccIDs() != null && !searchDomain.getOtherAccIDs().isEmpty()) {	
+			where = where + "\nand acc.accID ilike '" + searchDomain.getOtherAccIDs().get(0).getAccID() + "'";
+			from_accession = true;
+		}
 		
 		// reference; allow > 1 jnumid
 		if (searchDomain.getRefAssocs() != null) {
@@ -231,13 +242,41 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			where = where + "\nand (" + jnumClauses.toString() + ")";
 		}
 	
-		// general note
-		// molecular note
-		// nomenclature note
-		// inducible note
-		// pro ids note
-		// ikmc note
-		// cre note
+		if (searchDomain.getGeneralNote() != null && !searchDomain.getGeneralNote().getNoteChunk().isEmpty()) {
+			value = searchDomain.getGeneralNote().getNoteChunk().replace("'",  "''");
+			where = where + "\nand note1.note ilike '" + value + "'" ;
+			from_generalNote = true;
+		}
+		if (searchDomain.getMolecularNote() != null && !searchDomain.getMolecularNote().getNoteChunk().isEmpty()) {
+			value = searchDomain.getMolecularNote().getNoteChunk().replace("'",  "''");
+			where = where + "\nand note2.note ilike '" + value + "'" ;
+			from_molecularNote = true;
+		}
+		if (searchDomain.getNomenNote() != null && !searchDomain.getNomenNote().getNoteChunk().isEmpty()) {
+			value = searchDomain.getNomenNote().getNoteChunk().replace("'",  "''");
+			where = where + "\nand note3.note ilike '" + value + "'" ;
+			from_nomenNote = true;
+		}
+		if (searchDomain.getInducibleNote() != null && !searchDomain.getInducibleNote().getNoteChunk().isEmpty()) {
+			value = searchDomain.getInducibleNote().getNoteChunk().replace("'",  "''");
+			where = where + "\nand note4.note ilike '" + value + "'" ;
+			from_inducibleNote = true;
+		}		
+		if (searchDomain.getProidNote() != null && !searchDomain.getProidNote().getNoteChunk().isEmpty()) {
+			value = searchDomain.getProidNote().getNoteChunk().replace("'",  "''");
+			where = where + "\nand note5.note ilike '" + value + "'" ;
+			from_proidNote = true;
+		}				
+		if (searchDomain.getIkmcNote() != null && !searchDomain.getIkmcNote().getNoteChunk().isEmpty()) {
+			value = searchDomain.getIkmcNote().getNoteChunk().replace("'",  "''");
+			where = where + "\nand note6.note ilike '" + value + "'" ;
+			from_ikmcNote = true;
+		}
+		if (searchDomain.getCreNote() != null && !searchDomain.getCreNote().getNoteChunk().isEmpty()) {
+			value = searchDomain.getCreNote().getNoteChunk().replace("'",  "''");
+			where = where + "\nand note7.note ilike '" + value + "'" ;
+			from_creNote = true;
+		}
 		
 		// mutatnt cell line/creator/modified by/date
 		
@@ -263,7 +302,42 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			from = from + ", mgi_reference_allele_view ref";
 			where = where + "\nand a._allele_key = ref._object_key";
 		}
-
+		if (from_generalNote == true) {
+			from = from + ", mgi_note_allele_view note1";
+			where = where + "\nand a._allele_key = note1._object_key";
+			where = where + "\nand note1._notetype_key = 1020";			
+		}
+		if (from_molecularNote == true) {
+			from = from + ", mgi_note_allele_view note2";
+			where = where + "\nand a._allele_key = note2._object_key";
+			where = where + "\nand note2._notetype_key = 1021";
+		}
+		if (from_nomenNote == true) {
+			from = from + ", mgi_note_allele_view note3";
+			where = where + "\nand a._allele_key = note3._object_key";
+			where = where + "\nand note3._notetype_key = 1022";
+		}
+		if (from_inducibleNote == true) {
+			from = from + ", mgi_note_allele_view note4";
+			where = where + "\nand a._allele_key = note4._object_key";
+			where = where + "\nand note4._notetype_key = 1032";
+		}			
+		if (from_proidNote == true) {
+			from = from + ", mgi_note_allele_view note5";
+			where = where + "\nand a._allele_key = note5._object_key";
+			where = where + "\nand note5._notetype_key = 1036";
+		}
+		if (from_ikmcNote == true) {
+			from = from + ", mgi_note_allele_view note6";
+			where = where + "\nand a._allele_key = note6._object_key";
+			where = where + "\nand note6._notetype_key = 1041";
+		}	
+		if (from_creNote == true) {
+			from = from + ", mgi_note_allele_view note7";
+			where = where + "\nand a._allele_key = note7._object_key";
+			where = where + "\nand note7._notetype_key = 1040";
+		}	
+		
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
 		log.info(cmd);

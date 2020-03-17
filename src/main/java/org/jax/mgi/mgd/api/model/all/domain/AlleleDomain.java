@@ -59,7 +59,7 @@ public class AlleleDomain extends BaseDomain {
 	private String modification_date;
 	private String approval_date;
 	
-	private List<AccessionDomain> otherAccIds;
+	private List<AccessionDomain> otherAccIDs;
 	private List<MGIReferenceAssocDomain> refAssocs;
 	private List<MGISynonymDomain> synonyms;
 	private List<AlleleMutationDomain> mutations;

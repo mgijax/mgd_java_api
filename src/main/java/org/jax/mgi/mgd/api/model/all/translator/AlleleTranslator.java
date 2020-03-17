@@ -77,8 +77,8 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		if (entity.getOtherAccessionIds() != null && !entity.getOtherAccessionIds().isEmpty()) {
 			AccessionTranslator accessionTranslator = new AccessionTranslator();	
 			Iterable<AccessionDomain> t = accessionTranslator.translateEntities(entity.getOtherAccessionIds());
-			domain.setOtherAccIds(IteratorUtils.toList(t.iterator()));
-			domain.getOtherAccIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb));
+			domain.setOtherAccIDs(IteratorUtils.toList(t.iterator()));
+			domain.getOtherAccIDs().sort(Comparator.comparing(AccessionDomain::getLogicaldb));
 		}
 		
 		// marker stuff

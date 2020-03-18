@@ -188,17 +188,22 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		log.info("processMarker/update");
 
+		log.info("processMarker/getMarkerType");								
 		entity.setMarkerType(markerTypeDAO.get(Integer.valueOf(domain.getMarkerTypeKey())));	
+		log.info("processMarker/getSymbol");						
 		entity.setSymbol(domain.getSymbol());
+		log.info("processMarker/getName");						
 		entity.setName(domain.getName());
 		
 		// note:  entity.setOrganism() is ignored on purpose
-		
+
+		log.info("processMarker/getChromosome");						
 		entity.setChromosome(domain.getChromosome());			
 		if (domain.getChromosome().equals("UN")) {
 			entity.setCmOffset(-999.0);
 		}			
-		
+
+		log.info("processMarker/getCytogeneticOffset");				
 		if (domain.getCytogeneticOffset() == null || domain.getCytogeneticOffset().isEmpty()) {
 			entity.setCytogeneticOffset(null);
 		}
@@ -206,78 +211,84 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			entity.setCytogeneticOffset(domain.getCytogeneticOffset());
 		}
 
+		log.info("processMarker/getCmOffset");		
 		if (domain.getCmOffset() == null || domain.getCmOffset().isEmpty()) {
 			entity.setCmOffset(Double.valueOf(null));
 		}
 		else {
 			entity.setCmOffset(Double.valueOf(domain.getCmOffset()));
 		}
+
+		// mouse only stuff		
+		if (domain.getOrganismKey().equals("1")) {			
+			log.info("processMarker/mouse only stuff");
+
+			// cannot change the status to "withdrawn"/2
+			//log.info("process marker status");
+			if (!String.valueOf(entity.getMarkerStatus().get_marker_status_key()).equals(domain.getMarkerStatusKey())) {
+				if (domain.getMarkerStatusKey().equals("2")) {
+					results.setError("Failed : Marker Status error",  "Cannot change Marker Status to 'withdrawn'", Constants.HTTP_SERVER_ERROR);
+					return results;
+				}
+				else {
+					entity.setMarkerStatus(markerStatusDAO.get(Integer.valueOf(domain.getMarkerStatusKey())));
+					modified = true;
+				}
+			}		
 		
-		// cannot change the status to "withdrawn"/2
-		//log.info("process marker status");
-		if (!String.valueOf(entity.getMarkerStatus().get_marker_status_key()).equals(domain.getMarkerStatusKey())) {
-			if (domain.getMarkerStatusKey().equals("2")) {
-				results.setError("Failed : Marker Status error",  "Cannot change Marker Status to 'withdrawn'", Constants.HTTP_SERVER_ERROR);
-				return results;
-			}
-			else {
-				entity.setMarkerStatus(markerStatusDAO.get(Integer.valueOf(domain.getMarkerStatusKey())));
+			// process all notes
+			if (noteService.process(domain.getMarkerKey(), domain.getEditorNote(), mgiTypeKey, "1004", user)) {
 				modified = true;
 			}
-		}		
-		
-		// process all notes
-		if (noteService.process(domain.getMarkerKey(), domain.getEditorNote(), mgiTypeKey, "1004", user)) {
-			modified = true;
-		}
-		if (noteService.process(domain.getMarkerKey(), domain.getSequenceNote(), mgiTypeKey, "1009", user)) {
-			modified = true;	
-		}
-		if (noteService.process(domain.getMarkerKey(), domain.getRevisionNote(), mgiTypeKey, "1030", user)) {
-			modified = true;	
-		}
-		if (noteService.process(domain.getMarkerKey(), domain.getStrainNote(), mgiTypeKey, "1035", user)) {
-			modified = true;
-		}
-		if (noteService.process(domain.getMarkerKey(), domain.getLocationNote(), mgiTypeKey, "1049", user)) {
-			modified = true;
-		}
-
-		// process marker history
-		if (markerHistoryService.process(domain.getMarkerKey(), domain.getHistory(), user)) {
-			modified = true;
-		}
-		
-		// process marker synonym
-		if (synonymService.process(domain.getMarkerKey(), domain.getSynonyms(), mgiTypeKey, user)) {
-			modified = true;
-		}
-		
-		// process marker reference
-		if (domain.getRefAssocs() != null && !domain.getRefAssocs().isEmpty()) {
-			if (referenceAssocService.process(domain.getMarkerKey(), domain.getRefAssocs(), mgiTypeKey, user)) {
+			if (noteService.process(domain.getMarkerKey(), domain.getSequenceNote(), mgiTypeKey, "1009", user)) {
+				modified = true;	
+			}
+			if (noteService.process(domain.getMarkerKey(), domain.getRevisionNote(), mgiTypeKey, "1030", user)) {
+				modified = true;	
+			}
+			if (noteService.process(domain.getMarkerKey(), domain.getStrainNote(), mgiTypeKey, "1035", user)) {
 				modified = true;
 			}
-		}
-		
-		// process marker nucleotide accession ids
-		if (domain.getEditAccessionIds() != null && !domain.getEditAccessionIds().isEmpty()) {
-			if (accessionService.process(domain.getMarkerKey(), domain.getEditAccessionIds(), mgiTypeName, user)) {
+			if (noteService.process(domain.getMarkerKey(), domain.getLocationNote(), mgiTypeKey, "1049", user)) {
 				modified = true;
 			}
-		}
-
-		// process feature types
-		// use qualifier 'Generic Annotation Qualifier', value = null
-		if (domain.getFeatureTypes() != null && !domain.getFeatureTypes().isEmpty()) {
-			if (annotationService.processMarkerFeatureType(domain.getMarkerKey(), 
-					domain.getFeatureTypes(), 
-					domain.getFeatureTypes().get(0).getAnnotTypeKey(),
-					Constants.VOC_GENERIC_ANNOTATION_QUALIFIER, user) == true) {
-				modified = true;			
+	
+			// process marker history
+			if (markerHistoryService.process(domain.getMarkerKey(), domain.getHistory(), user)) {
+				modified = true;
+			}
+			
+			// process marker synonym
+			if (synonymService.process(domain.getMarkerKey(), domain.getSynonyms(), mgiTypeKey, user)) {
+				modified = true;
+			}
+			
+			// process marker reference
+			if (domain.getRefAssocs() != null && !domain.getRefAssocs().isEmpty()) {
+				if (referenceAssocService.process(domain.getMarkerKey(), domain.getRefAssocs(), mgiTypeKey, user)) {
+					modified = true;
+				}
+			}
+			
+			// process marker nucleotide accession ids
+			if (domain.getEditAccessionIds() != null && !domain.getEditAccessionIds().isEmpty()) {
+				if (accessionService.process(domain.getMarkerKey(), domain.getEditAccessionIds(), mgiTypeName, user)) {
+					modified = true;
+				}
+			}
+	
+			// process feature types
+			// use qualifier 'Generic Annotation Qualifier', value = null
+			if (domain.getFeatureTypes() != null && !domain.getFeatureTypes().isEmpty()) {
+				if (annotationService.processMarkerFeatureType(domain.getMarkerKey(), 
+						domain.getFeatureTypes(), 
+						domain.getFeatureTypes().get(0).getAnnotTypeKey(),
+						Constants.VOC_GENERIC_ANNOTATION_QUALIFIER, user) == true) {
+					modified = true;			
+				}
 			}
 		}
-
+		
 		// only if modifications were actually made
 		if (modified == true) {
 			entity.setModification_date(new Date());

@@ -213,13 +213,14 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		log.info("processMarker/getCmOffset");		
 		if (domain.getCmOffset() == null || domain.getCmOffset().isEmpty()) {
-			entity.setCmOffset(Double.valueOf(null));
+			entity.setCmOffset(null);
 		}
 		else {
 			entity.setCmOffset(Double.valueOf(domain.getCmOffset()));
 		}
 
 		// mouse only stuff		
+		log.info("processMarker/getOrganism");		
 		if (domain.getOrganismKey().equals("1")) {			
 			log.info("processMarker/mouse only stuff");
 

@@ -188,22 +188,17 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		log.info("processMarker/update");
 
-		log.info("processMarker/getMarkerType");								
 		entity.setMarkerType(markerTypeDAO.get(Integer.valueOf(domain.getMarkerTypeKey())));	
-		log.info("processMarker/getSymbol");						
 		entity.setSymbol(domain.getSymbol());
-		log.info("processMarker/getName");						
 		entity.setName(domain.getName());
 		
 		// note:  entity.setOrganism() is ignored on purpose
 
-		log.info("processMarker/getChromosome");						
 		entity.setChromosome(domain.getChromosome());			
 		if (domain.getChromosome().equals("UN")) {
 			entity.setCmOffset(-999.0);
 		}			
 
-		log.info("processMarker/getCytogeneticOffset");				
 		if (domain.getCytogeneticOffset() == null || domain.getCytogeneticOffset().isEmpty()) {
 			entity.setCytogeneticOffset(null);
 		}
@@ -211,7 +206,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			entity.setCytogeneticOffset(domain.getCytogeneticOffset());
 		}
 
-		log.info("processMarker/getCmOffset");		
 		if (domain.getCmOffset() == null || domain.getCmOffset().isEmpty()) {
 			entity.setCmOffset(null);
 		}

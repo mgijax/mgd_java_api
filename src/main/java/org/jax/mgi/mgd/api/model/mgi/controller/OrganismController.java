@@ -54,4 +54,11 @@ public class OrganismController extends BaseController<OrganismDomain> {
 		return organismService.search();
 	}
 	
+	@POST
+	@ApiOperation(value = "Search for Marker module")
+	@Path("/searchMarker")
+	public List<OrganismDomain> searchMarker() {
+		return organismService.searchMarker();
+	}
+	
 }

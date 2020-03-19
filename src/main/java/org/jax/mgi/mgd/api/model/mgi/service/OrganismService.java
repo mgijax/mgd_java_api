@@ -90,5 +90,30 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		catch (Exception e) {e.printStackTrace();}
 		
 		return results;
+	}
+	
+	@Transactional	
+	public List<OrganismDomain> searchMarker() {
+
+		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
+
+		String cmd = "select _organism_key, commonname||' ('||latinname||')'"
+				+ "\nfrom mgi_organism"
+				+ "\nwhere _organism_key not in (74,75,76,77)"
+				+ "\norder by commonname";
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				OrganismDomain domain = new OrganismDomain();
+				domain = translator.translate(organismDAO.get(rs.getInt("_organism_key")));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {e.printStackTrace();}
+		
+		return results;
 	}	
 }

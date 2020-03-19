@@ -94,10 +94,12 @@ public class OrganismService extends BaseService<OrganismDomain> {
 	
 	@Transactional	
 	public List<OrganismDomain> searchMarker() {
-
+		// for marker module
+		// exclude: Other, Not Specified, Not Applicable, Not Loaded
+		
 		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
 
-		String cmd = "select _organism_key, commonname||' ('||latinname||')'"
+		String cmd = "select _organism_key, commonname||' ('||latinname||')' as commonname"
 				+ "\nfrom mgi_organism"
 				+ "\nwhere _organism_key not in (74,75,76,77)"
 				+ "\norder by commonname";

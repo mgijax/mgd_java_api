@@ -12,6 +12,7 @@ public class OrganismTranslator extends BaseEntityDomainTranslator<Organism, Org
 		domain.set_organism_key(String.valueOf(entity.get_organism_key()));
 		domain.setCommonname(entity.getCommonname());
 		domain.setLatinname(entity.getLatinname());
+		domain.setFullName(domain.getCommonname() + " (" + domain.getLatinname() + ")");
 		domain.setCreation_date(entity.getCreation_date());
 		domain.setModification_date(entity.getModification_date());
 		

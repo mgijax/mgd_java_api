@@ -13,6 +13,7 @@ public class OrganismDomain extends BaseDomain {
 	private String _organism_key;
 	private String commonname;
 	private String latinname;
+	private String fullName;
 	private Date creation_date;
 	private Date modification_date;
 	

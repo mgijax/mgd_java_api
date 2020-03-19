@@ -87,7 +87,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		entity.setMarkerType(markerTypeDAO.get(Integer.valueOf(domain.getMarkerTypeKey())));			
 
 		// default marker status = 1/official
-		if (domain.getMarkerStatusKey() == null || domain.getMarkerStatus().isEmpty()) {
+		if (domain.getMarkerStatusKey() == null || domain.getMarkerStatusKey().isEmpty()) {
 			domain.setMarkerStatusKey("1");
 		}
 		
@@ -364,7 +364,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		String cmd = "";
 		String select = "select distinct m._marker_key, m._marker_type_key, m.symbol";
 		String from = "from mrk_marker m";
-		String where = "where m._organism_key = " + searchDomain.getOrganismKey();
+		String where = "where m._organism_key";
 		String orderBy = "order by m._marker_type_key, m.symbol";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
@@ -384,6 +384,12 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Boolean from_alias = false;
 
 		// if parameter exists, then add to where-clause
+		if (searchDomain.getOrganismKey() == null) {
+			where = where + " is not null";
+		}
+		else {
+			where = where + " = " + searchDomain.getOrganismKey();			
+		}
 		
 		String cmResults[] = DateSQLQuery.queryByCreationModification("m", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {

@@ -26,6 +26,7 @@ public class MarkerDomain extends BaseDomain {
 	private String cmOffset;
 	private String organismKey;
 	private String organism;
+	private String organismLatin;
 	private String markerStatusKey;
 	private String markerStatus;
 	private String markerTypeKey;

@@ -87,7 +87,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		entity.setMarkerType(markerTypeDAO.get(Integer.valueOf(domain.getMarkerTypeKey())));			
 
 		// default marker status = 1/official
-		if (domain.getMarkerStatusKey() == null || domain.getMarkerStatus().isEmpty()) {
+		if (domain.getMarkerStatusKey() == null || domain.getMarkerStatusKey().isEmpty()) {
 			domain.setMarkerStatusKey("1");
 		}
 		

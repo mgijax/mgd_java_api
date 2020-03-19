@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.mgi.domain;
 
+import java.util.Date;
+
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
 import lombok.Getter;
@@ -12,7 +14,7 @@ public class OrganismDomain extends BaseDomain {
 	private String commonname;
 	private String latinname;
 	private String fullName;
-//	private Date creation_date;
-//	private Date modification_date;
+	private Date creation_date;
+	private Date modification_date;
 	
 }

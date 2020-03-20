@@ -45,14 +45,28 @@ public class VocabService extends BaseService<VocabularyDomain> {
 	@Transactional
 	public SearchResults<VocabularyDomain> update(VocabularyDomain domain, User user) {
 		SearchResults<VocabularyDomain> results = new SearchResults<VocabularyDomain>();
-		
-		log.info("VocabService.update calling TermService.process");
-		termService.process(domain.getTerms(), user);
-		log.info("VocabService.update returned from calling TermService.process");
-	
 		Vocabulary entity = vocabularyDAO.get(Integer.valueOf(domain.getVocabKey()));
+		Boolean modified = false;
+		
+		log.info("processVocabuary/update");
+		if (termService.process(domain.getVocabKey(), domain.getTerms(), user)) {
+			modified = true;
+		}		
+		
+		// only if modifications were actually made
+		if (modified == true) {
+			vocabularyDAO.update(entity);
+			log.info("processVocabulary/changes processed: " + domain.getVocabKey());
+		}
+		else {
+			log.info("processVocabulary/no changes processed: " + domain.getVocabKey());
+		}
+			
+		// return entity translated to domain
+		log.info("processVocabulary/update/returning results");
 		results.setItem(translator.translate(entity));
-		return results;
+		log.info("processVocabulary/update/returned results succsssful");
+		return results;		
 	}
 
 	@Transactional
@@ -62,7 +76,6 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		return results;
 	}
 	
-
 	@Transactional
 	public VocabularyDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain

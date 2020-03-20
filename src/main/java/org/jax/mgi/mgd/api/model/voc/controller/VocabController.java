@@ -35,7 +35,6 @@ public class VocabController extends BaseController<VocabularyDomain> {
 		SearchResults<VocabularyDomain> results = new SearchResults<VocabularyDomain>();
         results = vocabService.create(domain, user);
         results = vocabService.getResults(Integer.valueOf(results.items.get(0).getVocabKey()));
-
 		return results;
 	}
 
@@ -43,8 +42,7 @@ public class VocabController extends BaseController<VocabularyDomain> {
 	public SearchResults<VocabularyDomain> update(VocabularyDomain domain, User user) {
 		SearchResults<VocabularyDomain> results = new SearchResults<VocabularyDomain>();
         results = vocabService.update(domain, user);
-        results = vocabService.getResults(Integer.valueOf(results.items.get(0).getVocabKey()));
-        
+        results = vocabService.getResults(Integer.valueOf(results.items.get(0).getVocabKey()));       
         return results;
 	}
 

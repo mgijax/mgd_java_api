@@ -160,12 +160,13 @@ public class TermService extends BaseService<TermDomain> {
 	}	
 
 	@Transactional
-	public Boolean process(List<TermDomain> domains, User user) {
-		// process synonym associations (create, delete, update)
+	public Boolean process(String vocabKey, List<TermDomain> domain, User user) {
+		// process term associations (create, delete, update)
+
 		Boolean modified = false;
 		String mgiTypeKey = "13";
 		
-		if (domains == null || domains.isEmpty()) {
+		if (domain == null || domain.isEmpty()) {
 			log.info("processTerm/nothing to process");
 			return modified;
 		}
@@ -173,89 +174,75 @@ public class TermService extends BaseService<TermDomain> {
 		// iterate thru the list of domains
 		// for each domain, determine whether to perform an insert, delete or update
 		
-		for (int i = 0; i < domains.size(); i++) {
-			String vocabKey = domains.get(i).getVocabKey();
-			String termKey = domains.get(i).getTermKey();
-			if (domains.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
+		for (int i = 0; i < domain.size(); i++) {
+
+			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 	
 				// if term is null/empty, then skip
 				// pwi has sent a "c" that is empty/not being used
-				if (domains.get(i).getTerm() == null || domains.get(i).getTerm().isEmpty()) {
+				if (domain.get(i).getTerm() == null || domain.get(i).getTerm().isEmpty()) {
 					continue;
 				}
-	
-				Term entity = new Term();
+
+				log.info("processTerm create");
 				
-				log.info("processTerm create vocabKey: " + vocabKey + " term: " + domains.get(i).getTerm());
-				
+				Term entity = new Term();				
 				entity.set_vocab_key(Integer.valueOf(vocabKey));
-				entity.setTerm(domains.get(i).getTerm());
-				entity.setAbbreviation(domains.get(i).getAbbreviation());
-				entity.setNote(domains.get(i).getNote());
-				entity.setSequenceNum(Integer.valueOf(domains.get(i).getSequenceNum()));
-				entity.setIsObsolete(Integer.valueOf(domains.get(i).getIsObsolete()));
-				
-				log.info("processTerm create,  set user objects");
+				entity.setTerm(domain.get(i).getTerm());
+				entity.setAbbreviation(domain.get(i).getAbbreviation());
+				entity.setNote(domain.get(i).getNote());
+				entity.setSequenceNum(Integer.valueOf(domain.get(i).getSequenceNum()));
+				entity.setIsObsolete(Integer.valueOf(domain.get(i).getIsObsolete()));				
 				entity.setCreatedBy(user);
 				entity.setModifiedBy(user);
-				log.info("processTerm create,  set date objects");
 				entity.setCreation_date(new Date());
 				entity.setModification_date(new Date());
-				
-				log.info("processTerm create persisting entity");
-				log.info(" process create termDAO: " + termDAO);
-				log.info("creating: " + entity.getTerm() );
 				termDAO.persist(entity);
 				
-				log.info("processTerm create persisting entity");
-				//if (domains.get(i).getVocabKey() == "82" && domains.get(i).getGoRelSynonyms() != null) {
-				log.info("processTerm create processing synonyms");
-				// get the termKey from the recently persisted entity
-				synonymService.process(String.valueOf(entity.get_term_key()), domains.get(i).getGoRelSynonyms(), mgiTypeKey, user);
-				//}
-				// create is always true				
+//				log.info("processTerm create persisting entity");
+//				log.info("processTerm create processing synonyms");
+//				synonymService.process(String.valueOf(entity.get_term_key()), domains.get(i).getGoRelSynonyms(), mgiTypeKey, user);
+
 				modified = true;
+				log.info("processTerm/create processed");												
 			}
 			
-			else if (domains.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processTerm delete");
-				Term entity = termDAO.get(Integer.valueOf(domains.get(i).getTermKey()));
-				log.info("deleting: " + entity.getTerm() + " " + entity.get_term_key());
+				Term entity = termDAO.get(Integer.valueOf(domain.get(i).getTermKey()));
 				termDAO.remove(entity);
 				modified = true;
-				log.info("processTerm delete successful");
+				log.info("processTerm/delete processed");
 			} 
-			else if (domains.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processTerm update");
-				Term entity = termDAO.get(Integer.valueOf(termKey));
-		
-				entity.setTerm(domains.get(i).getTerm());
-				entity.setAbbreviation(domains.get(i).getAbbreviation());
-				entity.setNote(domains.get(i).getNote());
-				entity.setSequenceNum(Integer.valueOf(domains.get(i).getSequenceNum()));
-				entity.setIsObsolete(Integer.valueOf(domains.get(i).getIsObsolete()));
-			
+				Term entity = termDAO.get(Integer.valueOf(domain.get(i).getTermKey()));		
+
+//				//if (domains.get(i).getVocabKey() == "82") {
+//				log.info("processTerm update processing synonyms");
+//				synonymService.process(String.valueOf(entity.get_term_key()), domain.get(i).getGoRelSynonyms(), mgiTypeKey, user);
+//				//}	
+				
+				entity.setTerm(domain.get(i).getTerm());
+				entity.setAbbreviation(domain.get(i).getAbbreviation());
+				entity.setNote(domain.get(i).getNote());
+				entity.setSequenceNum(Integer.valueOf(domain.get(i).getSequenceNum()));
+				entity.setIsObsolete(Integer.valueOf(domain.get(i).getIsObsolete()));			
 				entity.setModification_date(new Date());
-				entity.setModifiedBy(user);
-				log.info("updating: " + entity.getTerm() + " " + entity.get_term_key());
+				entity.setModifiedBy(user);		
 				termDAO.update(entity);
-				
-				//if (domains.get(i).getVocabKey() == "82") {
-				log.info("processTerm update processing synonyms");
-				synonymService.process(String.valueOf(entity.get_term_key()), domains.get(i).getGoRelSynonyms(), mgiTypeKey, user);
-				//}
-				
 				modified = true;
-				log.info("processTerm/changes processed: " + domains.get(i).getTermKey());	
+				log.info("processTerm/changes processed: " + domain.get(i).getTermKey());								
 			}
 			else {
-				log.info("processTerm/no changes processed: " + domains.get(i).getTermKey());
+				log.info("processTerm/no changes processed: " + domain.get(i).getTermKey());
 			} 
 		}
 		
 		log.info("processTerm/processing successful");
 		return modified;
 	}
+	
 	@Transactional
 	public List<TermDomain> validateTerm(TermDomain domain) {
 		// verify that the term is valid for the given vocabulary name

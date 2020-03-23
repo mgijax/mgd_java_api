@@ -133,7 +133,7 @@ public abstract class BaseController<T extends BaseDomain> {
 		
 		try {
 			log.info(Constants.LOG_IN_JSON);
-			log.info(mapper.writeValueAsString(object));			
+			//log.info(mapper.writeValueAsString(object));			
 			
 			Boolean userToken = authenticateToken(api_access_token);
 			User user = authenticateUser(username);

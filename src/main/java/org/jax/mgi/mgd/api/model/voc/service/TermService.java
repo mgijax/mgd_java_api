@@ -199,10 +199,11 @@ public class TermService extends BaseService<TermDomain> {
 				entity.setModification_date(new Date());
 				termDAO.persist(entity);
 				
-//				log.info("processTerm create persisting entity");
-//				log.info("processTerm create processing synonyms");
-//				synonymService.process(String.valueOf(entity.get_term_key()), domains.get(i).getGoRelSynonyms(), mgiTypeKey, user);
-
+				if (domain.get(i).getVocabKey().equals("82")) {
+					log.info("processTerm/update synonym");
+					modified = synonymService.process(String.valueOf(entity.get_term_key()), domain.get(i).getGoRelSynonyms(), mgiTypeKey, user);
+				}
+				
 				modified = true;
 				log.info("processTerm/create processed");												
 			}

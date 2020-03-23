@@ -117,9 +117,9 @@ public class TermService extends BaseService<TermDomain> {
 		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty()) {
 			where = where + "\nand t._vocab_key = " + searchDomain.getVocabKey();
 		}
-		if (searchDomain.getVocabName() != null && !searchDomain.getVocabName().isEmpty()) {
-			where = where + "\nand v.name ilike '" + searchDomain.getVocabName() + "'";
-		}
+//		if (searchDomain.getVocabName() != null && !searchDomain.getVocabName().isEmpty()) {
+//			where = where + "\nand v.name ilike '" + searchDomain.getVocabName() + "'";
+//		}
 		
 		// accession id
 		if (searchDomain.getAccessionIds() != null) {

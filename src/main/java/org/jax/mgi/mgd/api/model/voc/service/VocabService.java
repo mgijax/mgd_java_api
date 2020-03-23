@@ -137,7 +137,6 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				SlimVocabularyDomain domain = new SlimVocabularyDomain();
 				domain.setVocabKey(rs.getString("_vocab_key"));
 				domain.setName(rs.getString("name"));
-				log.info("key: " + domain.getVocabKey() + " name: " + domain.getName());
 				results.add(domain);
 			}
 					

@@ -26,7 +26,6 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setTermKey(String.valueOf(entity.get_term_key()));
 		domain.setVocabKey(String.valueOf(entity.get_vocab_key()));
-		//domain.setVocabName(entity.getVocab().getName());
 		domain.setTerm(entity.getTerm());
 		domain.setAbbreviation(entity.getAbbreviation());
 		domain.setNote(entity.getNote());

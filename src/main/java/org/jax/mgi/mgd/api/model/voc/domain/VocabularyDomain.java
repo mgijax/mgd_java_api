@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model.voc.domain;
 
-import java.util.Date;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;

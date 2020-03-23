@@ -36,7 +36,7 @@ public class Term extends BaseEntity {
     @SequenceGenerator(name="voc_term_generator", sequenceName = "voc_term_seq", allocationSize=1)
     @ApiModelProperty(value="primary key")
 	private int _term_key;
-	private Integer _vocab_key;
+	private int _vocab_key;
 	private String term;
 	private String abbreviation;
 	private String note;
@@ -45,9 +45,9 @@ public class Term extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_vocab_key", insertable=false, updatable=false)
-	private Vocabulary vocab;
+//	@OneToOne(fetch=FetchType.LAZY)
+//	@JoinColumn(name="_vocab_key", insertable=false, updatable=false)
+//	private Vocabulary vocab;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key", insertable=false, updatable=false)

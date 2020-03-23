@@ -218,10 +218,10 @@ public class TermService extends BaseService<TermDomain> {
 				log.info("processTerm update");
 				Term entity = termDAO.get(Integer.valueOf(domain.get(i).getTermKey()));		
 
-//				//if (domains.get(i).getVocabKey() == "82") {
-//				log.info("processTerm update processing synonyms");
-//				synonymService.process(String.valueOf(entity.get_term_key()), domain.get(i).getGoRelSynonyms(), mgiTypeKey, user);
-//				//}	
+				if (domain.get(i).getVocabKey() == "82") {
+					log.info("processTerm/update synonym");
+					modified = synonymService.process(String.valueOf(entity.get_term_key()), domain.get(i).getGoRelSynonyms(), mgiTypeKey, user);
+				}	
 				
 				entity.setTerm(domain.get(i).getTerm());
 				entity.setAbbreviation(domain.get(i).getAbbreviation());

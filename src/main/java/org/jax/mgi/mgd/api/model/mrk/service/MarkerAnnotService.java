@@ -131,7 +131,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
             //log.info("add evidence list");
 			EvidenceDomain evidenceDomain = new EvidenceDomain();
             List<EvidenceDomain> evidenceList = new ArrayList<EvidenceDomain>();
-            evidenceDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
+            evidenceDomain.setProcessStatus(denormAnnotDomain.getProcessStatusEvidence());
                         
             // if term or qualifier has been changed...
             if (denormAnnotDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
@@ -296,7 +296,8 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		
 		                // evidence
 						EvidenceDomain evidenceDomain = annotDomain.getEvidence().get(j);
-		                denormAnnotDomain.setAnnotEvidenceKey(evidenceDomain.getAnnotEvidenceKey());
+		                denormAnnotDomain.setProcessStatusEvidence(evidenceDomain.getProcessStatus());
+						denormAnnotDomain.setAnnotEvidenceKey(evidenceDomain.getAnnotEvidenceKey());
 		                denormAnnotDomain.setEvidenceTermKey(evidenceDomain.getEvidenceTermKey());
 		                denormAnnotDomain.setEvidenceTerm(evidenceDomain.getEvidenceTerm());
 		                denormAnnotDomain.setEvidenceAbbreviation(evidenceDomain.getEvidenceAbbreviation());

@@ -27,7 +27,6 @@ public class DenormAnnotationDomain extends BaseDomain {
 	private String termid;	
 
 	// evidence
-	private String processStatusEvidence;
 	private String annotEvidenceKey;
 	private String evidenceTermKey;
 	private String evidenceTerm;

@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.voc.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -55,6 +56,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		
 		// only if modifications were actually made
 		if (modified == true) {
+			entity.setModification_date(new Date());
 			vocabularyDAO.update(entity);
 			log.info("processVocabulary/changes processed: " + domain.getVocabKey());
 		}

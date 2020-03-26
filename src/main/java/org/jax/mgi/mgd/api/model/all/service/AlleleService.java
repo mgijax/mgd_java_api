@@ -126,7 +126,28 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		alleleDAO.remove(entity);
 		return results;
 	}
-	
+
+	@Transactional	
+	public SearchResults<AlleleDomain> getObjectCount() {
+		// return the object count from the database
+		
+		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
+		String cmd = "select count(*) as objectCount from all_allele";
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getInt("objectCount");
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;		
+	}
+		
 	@Transactional
 	public List<SlimAlleleDomain> search(AlleleDomain searchDomain) {
 

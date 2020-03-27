@@ -86,14 +86,14 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 			domain.setMarkerSymbol(entity.getMarker().getSymbol());			
 			domain.setChromosome(entity.getMarker().getChromosome());
-
+			domain.setMarkerStatusKey(String.valueOf(entity.getMarkerStatus().get_term_key()));
+			domain.setMarkerStatus(entity.getMarkerStatus().getTerm());
+			
 			// reference can be null
 			if (entity.getMarkerReference() != null) {
 				domain.setRefsKey(String.valueOf(entity.getMarkerReference().get_refs_key()));
 				domain.setJnumid(entity.getMarkerReference().getReferenceCitationCache().getJnumid());
 				domain.setShort_citation(entity.getMarkerReference().getReferenceCitationCache().getShort_citation());
-				domain.setMarkerStatusKey(String.valueOf(entity.getMarkerStatus().get_term_key()));
-				domain.setMarkerStatus(entity.getMarkerStatus().getTerm());
 			}
 			
 			if (entity.getMarker().getDetailClipNote() != null && !entity.getMarker().getDetailClipNote().isEmpty()) {

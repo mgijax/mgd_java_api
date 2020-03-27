@@ -19,6 +19,5 @@ public class SlimMarkerDomain extends BaseDomain {
     private String accID;
 	private String modifiedByKey;
 	private String modifiedBy;
-	private MarkerNoteDomain detailClipNote;
 	
 }

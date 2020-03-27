@@ -106,7 +106,7 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
 			Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
 			domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
-			domain.getRefAssocs().sort(Comparator.comparing(MGIReferenceAssocDomain::getAllowOnlyOne).thenComparing(MGIReferenceAssocDomain::getRefAssocType));
+			domain.getRefAssocs().sort(Comparator.comparingInt(MGIReferenceAssocDomain::getAllowOnlyOne).thenComparing(MGIReferenceAssocDomain::getRefAssocType).thenComparing(MGIReferenceAssocDomain::getAssocKey));
 		}	
 
 		// synonyms

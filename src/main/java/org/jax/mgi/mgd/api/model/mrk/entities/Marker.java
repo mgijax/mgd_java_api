@@ -116,6 +116,7 @@ public class Marker extends BaseEntity {
 	private List<Note> goNote;
 	
 	// marker detail clip note
+	// should *not* exceed 300 characters
 	@OneToMany()
 	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	private List<MarkerNote> detailClipNote;

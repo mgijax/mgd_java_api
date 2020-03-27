@@ -38,9 +38,9 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		domain.setAlleleKey(String.valueOf(entity.get_allele_key()));
 		domain.setSymbol(entity.getSymbol());
 		domain.setName(entity.getName());
-		domain.setIsWildType(entity.getIsWildType());
-		domain.setIsExtinct(entity.getIsExtinct());
-		domain.setIsMixed(entity.getIsMixed());
+		domain.setIsWildType(String.valueOf(entity.getIsWildType()));
+		domain.setIsExtinct(String.valueOf(entity.getIsExtinct()));
+		domain.setIsMixed(String.valueOf(entity.getIsMixed()));
 
 		domain.setInheritanceModeKey(String.valueOf(entity.getInheritanceMode().get_term_key()));
 		domain.setInheritanceMode(entity.getInheritanceMode().getTerm());

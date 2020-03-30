@@ -297,6 +297,10 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			if (searchDomain.getMutantCellLines().get(0).getCreator() != null && !searchDomain.getMutantCellLines().get(0).getCreator().isEmpty()) {
 				where = where + "\nand c.creator ilike '" + searchDomain.getMutantCellLines().get(0).getCreator() + "'";
 				from_cellLine = true;
+			}
+			if (searchDomain.getMutantCellLines().get(0).getCellLineTypeKey() != null && !searchDomain.getMutantCellLines().get(0).getCellLineTypeKey().isEmpty()) {
+				where = where + "\nand c.parentCellLineType_key = " + searchDomain.getMutantCellLines().get(0).getCellLineTypeKey();
+				from_cellLine = true;
 			}			
 		}
 		

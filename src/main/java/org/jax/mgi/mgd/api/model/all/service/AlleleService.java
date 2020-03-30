@@ -307,11 +307,14 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			// parent cell line strain
 			// strain of origin
 			
-			String cmResults2[] = DateSQLQuery.queryByCreationModification("c", searchDomain.getMutantCellLines().get(0).getCreatedBy(), searchDomain.getMutantCellLines().get(0).getModifiedBy(), searchDomain.getMutantCellLines().get(0).getCreation_date(), searchDomain.getMutantCellLines().get(0).getModification_date());
-			if (cmResults2.length > 0) {
-				from = from + cmResults2[0];
-				where = where + cmResults2[1];
-				from_cellLine = true;
+			if ((searchDomain.getMutantCellLines().get(0).getModifiedBy() != null && !searchDomain.getMutantCellLines().get(0).getModifiedBy().isEmpty())
+					|| (searchDomain.getMutantCellLines().get(0).getModification_date() != null && !searchDomain.getMutantCellLines().get(0).getModification_date().isEmpty())) {
+				String cmResults2[] = DateSQLQuery.queryByCreationModification("c", searchDomain.getMutantCellLines().get(0).getCreatedBy(), searchDomain.getMutantCellLines().get(0).getModifiedBy(), searchDomain.getMutantCellLines().get(0).getCreation_date(), searchDomain.getMutantCellLines().get(0).getModification_date());
+				if (cmResults2.length > 0) {
+					from = from + cmResults2[0];
+					where = where + cmResults2[1];
+					from_cellLine = true;
+				}
 			}
 			
 		}

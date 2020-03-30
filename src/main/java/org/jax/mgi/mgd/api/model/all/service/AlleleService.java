@@ -156,10 +156,10 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
-		String select = "select distinct a._allele_key, a.symbol";
+		String select = "select distinct a._allele_key, a.symbol, v1.sequenceNum";
 		String from = "from all_allele a, voc_term v1";
-		String where = "where a._allele_type_key = v1._term_key";
-		String orderBy = "order by a.symbol";
+		String where = "where a._allele_status_key = v1._term_key";
+		String orderBy = "order by v1.sequenceNum, a.symbol";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
 		Boolean from_marker = false;

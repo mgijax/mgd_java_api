@@ -17,7 +17,6 @@ import lombok.Setter;
 @Getter @Setter
 public class AlleleDomain extends BaseDomain {
 
-	private String processStatus;
 	private String alleleKey;
 	private String symbol;
 	private String name;

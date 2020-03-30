@@ -22,7 +22,6 @@ import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipAlleleDriverGeneTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
-import org.jax.mgi.mgd.api.util.Constants;
 import org.jboss.logging.Logger;
 
 public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleDomain> {
@@ -34,7 +33,6 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		
 		AlleleDomain domain = new AlleleDomain();
 		
-		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setAlleleKey(String.valueOf(entity.get_allele_key()));
 		domain.setSymbol(entity.getSymbol());
 		domain.setName(entity.getName());

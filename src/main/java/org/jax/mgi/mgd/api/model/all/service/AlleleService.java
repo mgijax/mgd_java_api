@@ -228,6 +228,9 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		if (searchDomain.getRefsKey() != null && !searchDomain.getRefsKey().isEmpty()) {
 			where = where + "\nand a._Refs_key = " + searchDomain.getRefsKey();
 		}
+		if (searchDomain.getMarkerStatusKey() != null && !searchDomain.getMarkerStatusKey().isEmpty()) {
+			where = where + "\nand a._markerallele_status_key = " + searchDomain.getMarkerStatusKey();
+		}
 		
 		// allele accession id 
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	
@@ -444,7 +447,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			where = where + "\nand m.strand ilike '" + searchDomain.getStrand() + "'";
 			from_marker = true;
 		}
-				
+		
 		// allele accession id 
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	
 			where = where + "\nand acc.accID ilike '" + searchDomain.getAccID() + "'";

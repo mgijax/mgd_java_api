@@ -160,7 +160,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		String from = "from all_allele a, voc_term v1";
 		String where = "where a._allele_type_key = v1._term_key";
 		String orderBy = "order by a.symbol";
-		String limit = Constants.SEARCH_RETURN_LIMIT;
+		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
 		Boolean from_marker = false;
 		Boolean from_accession = false;
@@ -349,7 +349,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}	
 		
 		// make this easy to copy/paste for troubleshooting
-		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
+		//cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
+		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n";
 		log.info(cmd);
 		
 		try {

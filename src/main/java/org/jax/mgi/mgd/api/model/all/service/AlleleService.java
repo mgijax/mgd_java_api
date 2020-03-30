@@ -172,6 +172,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		Boolean from_proidNote = false;
 		Boolean from_ikmcNote = false;
 		Boolean from_creNote = false;
+		Boolean from_cellLine = false;
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -238,9 +239,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			from_accession = true;
 		}
 		
-		// reference; allow > 1 jnumid
+		// reference
 		if (searchDomain.getRefAssocs() != null) {
-
 			if (searchDomain.getRefAssocs().get(0).getRefsKey() != null && !searchDomain.getRefAssocs().get(0).getRefsKey().isEmpty()) {
 				where = where + "\nand ref._Refs_key = " + searchDomain.getRefAssocs().get(0).getRefsKey();
 				from_reference = true;
@@ -289,6 +289,16 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}
 		
 		// mutatnt cell line/creator/modified by/date
+		if (searchDomain.getMutantCellLines() != null) {
+			if (searchDomain.getMutantCellLines().get(0).getMutantCellLine() != null && !searchDomain.getMutantCellLines().get(0).getMutantCellLine().isEmpty()) {
+				where = where + "\nand c.cellLine ilike '" + searchDomain.getMutantCellLines().get(0).getMutantCellLine() + "'";
+				from_cellLine = true;
+			}
+			if (searchDomain.getMutantCellLines().get(0).getCreator() != null && !searchDomain.getMutantCellLines().get(0).getCreator().isEmpty()) {
+				where = where + "\nand c.creator ilike '" + searchDomain.getMutantCellLines().get(0).getCreator() + "'";
+				from_cellLine = true;
+			}			
+		}
 		
 		// parent cell line
 		// parent cell line strain
@@ -347,6 +357,10 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			where = where + "\nand a._allele_key = note7._object_key";
 			where = where + "\nand note7._notetype_key = 1040";
 		}	
+		if (from_cellLine == true) {
+			from = from + ", all_allele_cellline_view c";
+			where = where +"\nand a._allele_key = c._allele_key";
+		}
 		
 		// make this easy to copy/paste for troubleshooting
 		//cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;

@@ -13,6 +13,5 @@ public class AlleleMutationDomain extends BaseDomain {
 	private String alleleKey;
 	private String mutationKey;
 	private String mutation;
-//	private String creation_date;
-//	private String modification_date;	
+	
 }

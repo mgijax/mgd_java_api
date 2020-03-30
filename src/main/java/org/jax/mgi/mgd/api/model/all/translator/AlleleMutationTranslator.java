@@ -16,8 +16,6 @@ public class AlleleMutationTranslator extends BaseEntityDomainTranslator<AlleleM
 		domain.setAlleleKey(String.valueOf(entity.get_allele_key()));
 		domain.setMutationKey(String.valueOf(entity.getMutation().get_term_key()));
 		domain.setMutation(entity.getMutation().getTerm());
-//		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
-//		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
 		return domain;
 	}

@@ -43,6 +43,7 @@ public class AlleleDomain extends BaseDomain {
 	private String strand;
 	private String refsKey;
 	private String jnumid;
+	private Integer jnum;
 	private String short_citation;
 	private String markerStatusKey;
 	private String markerStatus;

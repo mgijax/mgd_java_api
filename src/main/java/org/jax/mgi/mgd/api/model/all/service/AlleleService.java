@@ -288,7 +288,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			from_creNote = true;
 		}
 		
-		// mutatnt cell line/creator/modified by/date
+		// mutant cell line
 		if (searchDomain.getMutantCellLines() != null) {
 			if (searchDomain.getMutantCellLines().get(0).getMutantCellLine() != null && !searchDomain.getMutantCellLines().get(0).getMutantCellLine().isEmpty()) {
 				where = where + "\nand c.cellLine ilike '" + searchDomain.getMutantCellLines().get(0).getMutantCellLine() + "'";
@@ -297,17 +297,24 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			if (searchDomain.getMutantCellLines().get(0).getCreator() != null && !searchDomain.getMutantCellLines().get(0).getCreator().isEmpty()) {
 				where = where + "\nand c.creator ilike '" + searchDomain.getMutantCellLines().get(0).getCreator() + "'";
 				from_cellLine = true;
-			}
+			}			
 			if (searchDomain.getMutantCellLines().get(0).getCellLineTypeKey() != null && !searchDomain.getMutantCellLines().get(0).getCellLineTypeKey().isEmpty()) {
 				where = where + "\nand c.parentCellLineType_key = " + searchDomain.getMutantCellLines().get(0).getCellLineTypeKey();
 				from_cellLine = true;
 			}			
+
+			// parent cell line
+			// parent cell line strain
+			// strain of origin
+			
+			String cmResults2[] = DateSQLQuery.queryByCreationModification("c", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
+			if (cmResults2.length > 0) {
+				from = from + cmResults2[0];
+				where = where + cmResults2[1];
+				from_cellLine = true;
+			}
+			
 		}
-		
-		// parent cell line
-		// parent cell line strain
-		// cell line type
-		// strain of origin
 		
 		// synonym
 		// allele attribute

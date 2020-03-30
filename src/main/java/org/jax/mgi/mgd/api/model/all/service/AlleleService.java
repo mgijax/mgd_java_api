@@ -250,17 +250,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				where = where + "\nand ref.short_citation ilike '" + value + "'";
 				from_reference = true;
 			}
-			
-			// accepts > 1 jnumid
-			StringBuffer jnumClauses = new StringBuffer("");
-			for (String jnumID : searchDomain.getRefAssocs().get(0).getJnumid().split(" ")) {
-				from_reference = true;
-				if (jnumClauses.length() > 0) {
-					jnumClauses.append(" or ");
-				}
-				jnumClauses.append("ref.jnumid ilike '" + jnumID + "'");
-			}
-			where = where + "\nand (" + jnumClauses.toString() + ")";
 		}
 	
 		if (searchDomain.getGeneralNote() != null && !searchDomain.getGeneralNote().getNoteChunk().isEmpty()) {

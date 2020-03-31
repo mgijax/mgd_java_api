@@ -74,10 +74,10 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 
 		List<AlleleCellLineDomain> results = new ArrayList<AlleleCellLineDomain>();
 		
-		String cmd = "\nselect _mutantcellline_key"
+		String cmd = "\nselect _cellline_key"
 				+ "\nfrom ALL_CellLine"
 				+ "\nwhere isMutant = 1"
-				+ "\nand lower(cellLine) = lower(" + searchDomain.getMutantCellLine() + ")";
+				+ "\nand lower(cellLine) = lower('" + searchDomain.getMutantCellLine() + "')";
 
 		log.info(cmd);
 		

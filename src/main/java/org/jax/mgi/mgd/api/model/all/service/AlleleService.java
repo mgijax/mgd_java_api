@@ -238,8 +238,10 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			from_accession = true;
 		}
 		else if	(searchDomain.getOtherAccIDs() != null && !searchDomain.getOtherAccIDs().isEmpty()) {	
-			where = where + "\nand acc.accID ilike '" + searchDomain.getOtherAccIDs().get(0).getAccID() + "'";
-			from_accession = true;
+			if (searchDomain.getOtherAccIDs().get(0).getAccID() != null && !searchDomain.getOtherAccIDs().get(0).getAccID().isEmpty()) {				
+				where = where + "\nand acc.accID ilike '" + searchDomain.getOtherAccIDs().get(0).getAccID() + "'";
+				from_accession = true;
+			}
 		}
 		
 		// reference

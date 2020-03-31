@@ -86,7 +86,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 			
 			while (rs.next()) {
 				AlleleCellLineDomain domain = new AlleleCellLineDomain();
-				domain = translator.translate(cellLineDAO.get(rs.getInt("_mutantcellline_key")));	
+				domain = translator.translate(cellLineDAO.get(rs.getInt("_cellline_key")));	
 				cellLineDAO.clear();
 				results.add(domain);
 			}

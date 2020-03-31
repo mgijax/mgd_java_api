@@ -16,8 +16,8 @@ public class CellLineTranslator extends BaseEntityDomainTranslator<CellLine, Cel
 		domain.setIsMutant(String.valueOf(entity.getIsMutant()));
 		domain.setCellLineTypeKey(String.valueOf(entity.getCellLineType().get_term_key()));
 		domain.setCellLineType(entity.getCellLineType().getTerm());
-		domain.setStrainKey(String.valueOf(entity.getStrain().get_strain_key()));
-		domain.setStrain(entity.getStrain().getStrain());
+		domain.setParentStrainKey(String.valueOf(entity.getStrain().get_strain_key()));
+		domain.setParentStrain(entity.getStrain().getStrain());
 
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
@@ -31,8 +31,6 @@ public class CellLineTranslator extends BaseEntityDomainTranslator<CellLine, Cel
 			domain.setCreator(entity.getDerivation().getCellLineCreator().getTerm());
 			domain.setParentCellLineKey(String.valueOf(entity.getDerivation().getParentCellLine().get_cellline_key()));
 			domain.setParentCellLine(entity.getDerivation().getParentCellLine().getCellLine());
-			domain.setParentStrainKey(String.valueOf(entity.getDerivation().getParentCellLine().getStrain().get_strain_key()));
-			domain.setParentStrain(entity.getDerivation().getParentCellLine().getStrain().getStrain());				
 		}
 		
 		return domain;

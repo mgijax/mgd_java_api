@@ -13,8 +13,6 @@ public class CellLineDomain extends BaseDomain {
 	private String isMutant;
 	private String cellLineTypeKey;
 	private String cellLineType;
-	private String strainKey;
-	private String strain;
 	private String derivationKey;
 	private String creator;
 	private String parentCellLineKey;

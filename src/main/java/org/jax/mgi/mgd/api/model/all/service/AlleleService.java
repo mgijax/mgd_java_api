@@ -298,7 +298,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			from_creNote = true;
 		}
 		
-		// mutant cell line
+		// mutant & parent cell line
 		if (searchDomain.getMutantCellLines() != null) {
 			if (searchDomain.getMutantCellLines().get(0).getMutantCellLine() != null && !searchDomain.getMutantCellLines().get(0).getMutantCellLine().isEmpty()) {
 				where = where + "\nand c.cellLine ilike '" + searchDomain.getMutantCellLines().get(0).getMutantCellLine() + "'";
@@ -313,7 +313,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				from_cellLine = true;
 			}			
 			if (searchDomain.getMutantCellLines().get(0).getParentCellLineKey() != null && !searchDomain.getMutantCellLines().get(0).getParentCellLineKey().isEmpty()) {
-				where = where + "\nand c.parentCellLineKey_key = " + searchDomain.getMutantCellLines().get(0).getParentCellLineKey();
+				where = where + "\nand c.parentCellLine_key = " + searchDomain.getMutantCellLines().get(0).getParentCellLineKey();
 				from_cellLine = true;
 			}
 			if (searchDomain.getMutantCellLines().get(0).getStrainKey() != null && !searchDomain.getMutantCellLines().get(0).getStrainKey().isEmpty()) {

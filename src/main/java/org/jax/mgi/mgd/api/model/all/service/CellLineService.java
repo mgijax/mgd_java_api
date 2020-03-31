@@ -98,5 +98,35 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		
 		return results;
 	}
-	
+
+	@Transactional
+	public List<CellLineDomain> validateParentCellLine(CellLineDomain searchDomain) {
+
+		List<CellLineDomain> results = new ArrayList<CellLineDomain>();
+		
+		String cmd = "\nselect _cellline_key"
+				+ "\nfrom ALL_CellLine"
+				+ "\nwhere isMutant = 0"
+				+ "\nand lower(cellLine) = lower('" + searchDomain.getCellLine() + "')";
+
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			
+			while (rs.next()) {
+				CellLineDomain domain = new CellLineDomain();
+				domain = translator.translate(cellLineDAO.get(rs.getInt("_cellline_key")));	
+				cellLineDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+		
 }

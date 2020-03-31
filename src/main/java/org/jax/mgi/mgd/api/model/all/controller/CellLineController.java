@@ -57,7 +57,7 @@ public class CellLineController extends BaseController<CellLineDomain> {
 	@POST
 	@ApiOperation(value = "Validate Mutant Cell Line")
 	@Path("/validateMutantCellLine")
-	public List<CellLineDomain> validateAllele(CellLineDomain searchDomain) {
+	public List<CellLineDomain> validateMutantCellLine(CellLineDomain searchDomain) {
 	
 		List<CellLineDomain> results = new ArrayList<CellLineDomain>();
 
@@ -68,5 +68,22 @@ public class CellLineController extends BaseController<CellLineDomain> {
 		}
 		
 		return results;
-	}	
+	}
+	
+	@POST
+	@ApiOperation(value = "Validate Parent Cell Line")
+	@Path("/validateParentCellLine")
+	public List<CellLineDomain> validateParentCellLine(CellLineDomain searchDomain) {
+	
+		List<CellLineDomain> results = new ArrayList<CellLineDomain>();
+
+		try {
+			results = cellLineService.validateParentCellLine(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

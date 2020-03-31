@@ -26,8 +26,8 @@ public class AlleleCellLineTranslator extends BaseEntityDomainTranslator<AlleleC
 		domain.setCreator(entity.getMutantCellLine().getDerivation().getCellLineCreator().getTerm());
 		domain.setParentCellLineKey(String.valueOf(entity.getMutantCellLine().getDerivation().getParentCellLine().get_cellline_key()));
 		domain.setParentCellLine(entity.getMutantCellLine().getDerivation().getParentCellLine().getCellLine());
-		domain.setParentStrainKey(String.valueOf(entity.getMutantCellLine().getDerivation().getParentCellLine().getStrain().get_strain_key()));
-		domain.setParentStrain(entity.getMutantCellLine().getDerivation().getParentCellLine().getStrain().getStrain());		
+//		domain.setParentStrainKey(String.valueOf(entity.getMutantCellLine().getDerivation().getParentCellLine().getStrain().get_strain_key()));
+//		domain.setParentStrain(entity.getMutantCellLine().getDerivation().getParentCellLine().getStrain().getStrain());		
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());

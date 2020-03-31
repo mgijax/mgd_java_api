@@ -22,8 +22,8 @@ public class AlleleCellLineDomain extends BaseDomain {
 	private String creator;
 	private String parentCellLineKey;
 	private String parentCellLine;
-	private String parentStrainKey;
-	private String parentStrain;
+//	private String parentStrainKey;
+//	private String parentStrain;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

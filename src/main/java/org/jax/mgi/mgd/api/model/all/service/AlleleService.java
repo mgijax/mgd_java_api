@@ -312,11 +312,14 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				where = where + "\nand c.parentCellLineType_key = " + searchDomain.getMutantCellLines().get(0).getCellLineTypeKey();
 				from_cellLine = true;
 			}			
-
-			// parent cell line
-			// parent cell line strain
-			// strain of origin
-			
+			if (searchDomain.getMutantCellLines().get(0).getParentCellLineKey() != null && !searchDomain.getMutantCellLines().get(0).getParentCellLineKey().isEmpty()) {
+				where = where + "\nand c.parentCellLineKey_key = " + searchDomain.getMutantCellLines().get(0).getParentCellLineKey();
+				from_cellLine = true;
+			}
+			if (searchDomain.getMutantCellLines().get(0).getStrainKey() != null && !searchDomain.getMutantCellLines().get(0).getStrainKey().isEmpty()) {
+				where = where + "\nand c.cellLineStrain_key = " + searchDomain.getMutantCellLines().get(0).getStrainKey();
+				from_cellLine = true;
+			}			
 			if ((searchDomain.getMutantCellLines().get(0).getModifiedBy() != null && !searchDomain.getMutantCellLines().get(0).getModifiedBy().isEmpty())
 					|| (searchDomain.getMutantCellLines().get(0).getModification_date() != null && !searchDomain.getMutantCellLines().get(0).getModification_date().isEmpty())) {
 				String cmResults2[] = DateSQLQuery.queryByCreationModification("c", searchDomain.getMutantCellLines().get(0).getCreatedBy(), searchDomain.getMutantCellLines().get(0).getModifiedBy(), searchDomain.getMutantCellLines().get(0).getCreation_date(), searchDomain.getMutantCellLines().get(0).getModification_date());

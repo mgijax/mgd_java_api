@@ -243,6 +243,10 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				where = where + "\nand acc.accID ilike '" + searchDomain.getOtherAccIDs().get(0).getAccID() + "'";
 				from_accession = true;
 			}
+			if (searchDomain.getOtherAccIDs().get(0).getLogicaldbKey() != null && !searchDomain.getOtherAccIDs().get(0).getLogicaldbKey().isEmpty()) {				
+				where = where + "\nand acc._logicaldb_key = " + searchDomain.getOtherAccIDs().get(0).getLogicaldbKey();
+				from_accession = true;
+			}			
 		}
 		
 		// reference

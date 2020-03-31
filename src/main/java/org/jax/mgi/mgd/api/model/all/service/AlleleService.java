@@ -232,11 +232,12 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			where = where + "\nand a._markerallele_status_key = " + searchDomain.getMarkerStatusKey();
 		}
 		
-		// allele accession id 
+		// mgi accession id 
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	
 			where = where + "\nand acc.accID ilike '" + searchDomain.getAccID() + "'";
 			from_accession = true;
 		}
+		// other non-mgi accession ids
 		else if	(searchDomain.getOtherAccIDs() != null && !searchDomain.getOtherAccIDs().isEmpty()) {	
 			if (searchDomain.getOtherAccIDs().get(0).getAccID() != null && !searchDomain.getOtherAccIDs().get(0).getAccID().isEmpty()) {				
 				where = where + "\nand acc.accID ilike '" + searchDomain.getOtherAccIDs().get(0).getAccID() + "'";

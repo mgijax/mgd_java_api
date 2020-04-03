@@ -347,8 +347,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			where = where + "\nand a._marker_key = m._marker_key";
 		}
 		if (from_displayclip == true) {
-			from = from + ", mrk_note notec";
-			where = where + "nand a._marker_key = notec._marker_key";
+			from = from + ", mrk_notes notec";
+			where = where + "\nand a._marker_key = notec._marker_key";
 		}
 		if (from_accession == true) {
 			from = from + ", all_acc_view acc";

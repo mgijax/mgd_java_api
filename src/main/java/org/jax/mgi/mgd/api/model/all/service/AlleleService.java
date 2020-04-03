@@ -165,6 +165,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		Boolean from_marker = false;
 		Boolean from_accession = false;
 		Boolean from_reference = false;
+		Boolean from_displayclip = false;
 		Boolean from_generalNote = false;
 		Boolean from_molecularNote = false;
 		Boolean from_nomenNote = false;
@@ -231,7 +232,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		if (searchDomain.getMarkerStatusKey() != null && !searchDomain.getMarkerStatusKey().isEmpty()) {
 			where = where + "\nand a._markerallele_status_key = " + searchDomain.getMarkerStatusKey();
 		}
-		
+		if (searchDomain.getDetailClip() != null && !searchDomain.getDetailClip().isEmpty()) {
+			where = where + "\nand notec.note ilike '" + searchDomain.getDetailClip() + "'" ;
+			from_displayclip = true;
+		}
+				
 		// mgi accession id 
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	
 			where = where + "\nand acc.accID ilike '" + searchDomain.getAccID() + "'";
@@ -261,7 +266,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				from_reference = true;
 			}
 		}
-	
+
 		if (searchDomain.getGeneralNote() != null && !searchDomain.getGeneralNote().getNoteChunk().isEmpty()) {
 			value = searchDomain.getGeneralNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note1.note ilike '" + value + "'" ;
@@ -340,6 +345,10 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		if (from_marker == true) {
 			from = from + ", mrk_marker m";
 			where = where + "\nand a._marker_key = m._marker_key";
+		}
+		if (from_displayclip == true) {
+			from = from + ", mrk_note notec";
+			where = where + "nand a._marker_key = notec._marker_key";
 		}
 		if (from_accession == true) {
 			from = from + ", all_acc_view acc";

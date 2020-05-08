@@ -618,6 +618,10 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			}
 				
 		}
+		
+		if (searchDomain.getMarkerKey() != null) {
+			cmd = cmd + "\nand aa._marker_key = " + searchDomain.getMarkerKey();
+		}
 
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) { 
 			String mgiid = searchDomain.getAccID().toUpperCase();

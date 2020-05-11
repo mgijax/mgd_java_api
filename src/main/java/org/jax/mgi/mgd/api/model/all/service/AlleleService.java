@@ -619,7 +619,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				
 		}
 		
-		if (searchDomain.getMarkerKey() != null) {
+		if (searchDomain.getMarkerKey() != null && !searchDomain.getMarkerKey().isEmpty()) {
 			cmd = cmd + "\nand aa._marker_key = " + searchDomain.getMarkerKey();
 		}
 

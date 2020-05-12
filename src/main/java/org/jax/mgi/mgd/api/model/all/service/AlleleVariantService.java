@@ -174,7 +174,6 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		
 		log.info("processAlleleVariant/update");
 
-
 		// isReviewed
 		log.info("process isReviewed");
 		if(!String.valueOf(entity.getIsReviewed()).equals(domain.getIsReviewed())) {

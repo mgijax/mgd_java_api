@@ -155,7 +155,8 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 		catch (Exception e) {e.printStackTrace();}
 		
 		return results;
-	}	
+	}
+	
 	@Transactional
 	public Boolean process(String parentKey, List<VariantSequenceDomain> domains, User user) {
 		// process variant sequence (create, delete, update)
@@ -167,8 +168,7 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 			log.info("processVariantSequence/nothing to process");
 			return modified;
 		}
-				
-		
+	
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
 		
@@ -217,30 +217,30 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 				sequenceEntity.setModification_date(new Date());
 				log.info("processSequenceVariant persisting the sequence entity");
 				variantSequenceDAO.persist(sequenceEntity);
+				modified = true;
 			
 				// create accession ids of source variant sequence
 				// assuming there is only 1 accession id per Variant Sequence			
 			    log.info("VariantSequenceService processing accIDs: ");
 				if (domain.getAccessionIds() != null) {
-					modified = accessionService.process(
+					if (accessionService.process(
 							String.valueOf(sequenceEntity.get_variantsequence_key()), 
 							domain.getAccessionIds(),
-							"Allele Variant Sequence", user);				
+							"Allele Variant Sequence", user) == true) {
+						modified = true;
+					};				
 				}
 			}
-			else if (domains.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-				
+			else if (domains.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {				
 				log.info("processVariantSequence delete");
 				
 				VariantSequence entity = variantSequenceDAO.get(Integer.valueOf(domains.get(i).getVariantSequenceKey()));
 				variantSequenceDAO.remove(entity);
-				
 								
 				log.info("processVariantSequence delete successful");
 			}
 			else if (domains.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processVariantSequence update");
-
 				
 				VariantSequence entity = variantSequenceDAO.get(Integer.valueOf(domains.get(i).getVariantSequenceKey()));
 				

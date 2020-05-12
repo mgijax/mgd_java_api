@@ -190,17 +190,6 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			entity.setDescription(domain.getDescription());
 			modified = true;
 		}
-
-		// only if modifications were actually made
-		if (modified == true) {
-			entity.setModification_date(new Date());
-			entity.setModifiedBy(user);
-			variantDAO.update(entity);
-			log.info("processAlleleVariant/changes processed: " + domain.getVariantKey());
-		}
-		else {
-			log.info("processAlleleVariant/no changes processed: " + domain.getVariantKey());
-		}
 		
 		// process all notes DADT-180
 		if(noteService.process(domain.getVariantKey(), domain.getCuratorNote(), mgiTypeKey, "1050", user)) {

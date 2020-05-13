@@ -141,8 +141,8 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		// driver genes
 		if (entity.getDriverGenes() != null && !entity.getDriverGenes().isEmpty()) {
 			RelationshipAlleleDriverGeneTranslator driverTranslator = new RelationshipAlleleDriverGeneTranslator();
-//			Iterable<RelationshipAlleleDriverGeneDomain> i = driverTranslator.translateEntities(entity.getDriverGenes());
-//			domain.setDriverGenes(IteratorUtils.toList(i.iterator()));
+			Iterable<RelationshipAlleleDriverGeneDomain> i = driverTranslator.translateEntities(entity.getDriverGenes());
+			domain.setDriverGenes(IteratorUtils.toList(i.iterator()));
 		}
 
 		// imagepane associations by allele

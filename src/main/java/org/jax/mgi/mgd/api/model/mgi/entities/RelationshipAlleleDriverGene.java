@@ -28,7 +28,7 @@ public class RelationshipAlleleDriverGene extends BaseEntity {
 	private int _allele_key;
 	private int _marker_key;
 	private int _organism_key;
-	private String markerSymbol;
+	private String symbol;
 	private String commonName;
   
 }

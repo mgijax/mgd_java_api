@@ -341,7 +341,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			
 		}
 
-		// synonym
 		// synonym, j:
 		if (searchDomain.getSynonyms() != null) {
 			if (searchDomain.getSynonyms().get(0).getSynonym() != null && !searchDomain.getSynonyms().get(0).getSynonym().isEmpty()) {
@@ -363,10 +362,28 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}
 		
 		// allele attribute/subtype
-		
-		// molecular mutation
-		
+		if (searchDomain.getSubtypeAnnots() != null) {
+			if (searchDomain.getSubtypeAnnots().get(0).getTermKey() != null && !searchDomain.getSubtypeAnnots().get(0).getTermKey().isEmpty()) {
+				where = where + "\nand st._term_key = " + searchDomain.getSubtypeAnnots().get(0).getTermKey();
+				from_subtype = true;
+			}	
+		}
+
+		// molecular mutations
+		if (searchDomain.getMutations() != null) {
+			if (searchDomain.getMutations().get(0).getMutationKey() != null && !searchDomain.getMutations().get(0).getMutationKey().isEmpty()) {
+				where = where + "\nand mt._mutation_key = " + searchDomain.getMutations().get(0).getMutationKey();
+				from_mutation = true;
+			}	
+		}
+				
 		// driver gene
+		if (searchDomain.getDriverGenes() != null) {
+			if (searchDomain.getDriverGenes().get(0).getMarkerSymbol() != null && !searchDomain.getDriverGenes().get(0).getMarkerSymbol().isEmpty()) {
+				where = where + "\nand lower(dg.symbol) ilike '" + searchDomain.getDriverGenes().get(0).getMarkerSymbol().toLowerCase() + "'";
+				from_drivergene = true;
+			}	
+		}
 		
 		if (from_marker == true) {
 			from = from + ", mrk_marker m";
@@ -426,6 +443,18 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		if (from_synonym == true) {
 			from = from + ", mgi_synonym_allele_view ms";
 			where = where + "\nand a._allele_key = ms._object_key";
+		}
+		if (from_subtype == true) {
+			from = from + ", all_allele_subtype_view st";
+			where = where + "\nand a._allele_key = st._allele_key";
+		}
+		if (from_mutation == true) {
+			from = from + ", all_allele_mutation_view mt";
+			where = where + "\nand a._allele_key = mt._allele_key";
+		}
+		if (from_drivergene == true) {
+			from = from + ", all_allele_driver_view dg";
+			where = where + "\nand a._allele_key = dg._allele_key";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

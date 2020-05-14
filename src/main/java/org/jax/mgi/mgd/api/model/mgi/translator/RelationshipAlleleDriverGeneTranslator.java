@@ -17,7 +17,7 @@ public class RelationshipAlleleDriverGeneTranslator extends BaseEntityDomainTran
 		domain.setMarkerKey(String.valueOf(entity.get_marker_key()));
 		domain.setOrganismKey(String.valueOf(entity.get_organism_key()));
 		domain.setMarkerSymbol(entity.getSymbol());	
-		domain.setCommonName(entity.getCommonName());
+		domain.setCommonname(entity.getCommonname());
 		
 		return domain;
 	}

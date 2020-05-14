@@ -174,7 +174,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		Boolean from_ikmcNote = false;
 		Boolean from_creNote = false;
 		Boolean from_cellLine = false;
-		
+		Boolean from_synonym = false;
+		Boolean from_subtype = false;
+		Boolean from_mutation = false;
+		Boolean from_drivergene = false;
+				
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {
@@ -336,10 +340,32 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			}
 			
 		}
-		
+
 		// synonym
-		// allele attribute
+		// synonym, j:
+		if (searchDomain.getSynonyms() != null) {
+			if (searchDomain.getSynonyms().get(0).getSynonym() != null && !searchDomain.getSynonyms().get(0).getSynonym().isEmpty()) {
+				where = where + "\nand ms.synonym ilike '" + searchDomain.getSynonyms().get(0).getSynonym() + "'";
+				from_synonym = true;
+			}
+			if (searchDomain.getSynonyms().get(0).getRefsKey() != null && !searchDomain.getSynonyms().get(0).getRefsKey().isEmpty()) {
+				where = where + "\nand ms._Refs_key = " + searchDomain.getSynonyms().get(0).getRefsKey();
+				from_synonym = true;
+			}
+			else if (searchDomain.getSynonyms().get(0).getJnumid() != null && !searchDomain.getSynonyms().get(0).getJnumid().isEmpty()) {
+				String jnumid = searchDomain.getSynonyms().get(0).getJnumid().toUpperCase();
+				if (!jnumid.contains("J:")) {
+					jnumid = "J:" + jnumid;
+				}
+				where = where + "\nand ms.jnumid ilike '" + jnumid + "'";
+				from_synonym = true;
+			}	
+		}
+		
+		// allele attribute/subtype
+		
 		// molecular mutation
+		
 		// driver gene
 		
 		if (from_marker == true) {
@@ -396,6 +422,10 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		if (from_cellLine == true) {
 			from = from + ", all_allele_cellline_view c";
 			where = where +"\nand a._allele_key = c._allele_key";
+		}
+		if (from_synonym == true) {
+			from = from + ", mgi_synonym_allele_view ms";
+			where = where + "\nand a._allele_key = ms._object_key";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

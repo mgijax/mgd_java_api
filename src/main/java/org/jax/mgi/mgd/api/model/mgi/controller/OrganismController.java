@@ -55,10 +55,17 @@ public class OrganismController extends BaseController<OrganismDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Search for Marker moduleddd")
+	@ApiOperation(value = "Search for Marker module")
 	@Path("/searchMarker")
 	public List<OrganismDomain> searchMarker() {
 		return organismService.searchMarker();
 	}
-	
+
+	@POST
+	@ApiOperation(value = "Search for Allele Module/Driver Gene")
+	@Path("/searchDriverGene")
+	public List<OrganismDomain> searchDriverGene() {
+		return organismService.searchDriverGene();
+	}
+		
 }

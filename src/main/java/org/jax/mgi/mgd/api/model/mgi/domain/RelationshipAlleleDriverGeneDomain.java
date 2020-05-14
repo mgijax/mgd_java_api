@@ -14,6 +14,6 @@ public class RelationshipAlleleDriverGeneDomain extends BaseDomain {
 	private String markerKey;
 	private String organismKey;
 	private String markerSymbol;	
-	private String commonName;
+	private String commonname;
 
 }   	

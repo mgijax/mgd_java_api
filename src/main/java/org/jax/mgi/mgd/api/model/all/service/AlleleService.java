@@ -382,7 +382,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			if (searchDomain.getDriverGenes().get(0).getMarkerSymbol() != null && !searchDomain.getDriverGenes().get(0).getMarkerSymbol().isEmpty()) {
 				where = where + "\nand lower(dg.symbol) ilike '" + searchDomain.getDriverGenes().get(0).getMarkerSymbol().toLowerCase() + "'";
 				from_drivergene = true;
-			}	
+			}
+			if (searchDomain.getDriverGenes().get(0).getOrganismKey() != null && !searchDomain.getDriverGenes().get(0).getOrganismKey().isEmpty()) {
+				where = where + "\nand dg._organism_key = " + searchDomain.getDriverGenes().get(0).getOrganismKey();
+				from_drivergene = true;
+			}			
 		}
 		
 		if (from_marker == true) {

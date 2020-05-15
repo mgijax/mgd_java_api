@@ -119,8 +119,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}
 		
 		// if allele status is being set to Approved
-		if (entity.getAlleleStatus().get_term_key() != 847114
-				&& domain.getAlleleStatusKey().equals("847114")) {
+		if (domain.getAlleleStatusKey().equals("847114")
+				&& (domain.getApprovedByKey() == null || domain.getApprovedByKey().isEmpty())) {
 			entity.setApproval_date(new Date());
 			entity.setApprovedBy(user);			
 		}

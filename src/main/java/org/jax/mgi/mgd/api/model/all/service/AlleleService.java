@@ -85,7 +85,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
 		Allele entity = alleleDAO.get(Integer.valueOf(domain.getAlleleKey()));
-		Boolean modified = false;
+		Boolean modified = true;
 //		String mgiTypeKey = "11";
 //		String mgiTypeName = "Allele";
 		

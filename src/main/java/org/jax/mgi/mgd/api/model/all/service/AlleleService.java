@@ -187,11 +187,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}
 		
 		if (searchDomain.getSymbol() != null && !searchDomain.getSymbol().isEmpty()) {
-			where = where + "\nand a.symbol ilike '" + searchDomain.getSymbol() + "'" ;
+			where = where + "\nand lower(a.symbol) ilike '" + searchDomain.getSymbol().toLowerCase() + "'" ;
 		}
 
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
-			where = where + "\nand a.name ilike '" + searchDomain.getName() + "'" ;
+			where = where + "\nand lower(a.name) ilike '" + searchDomain.getName().toLowerCase() + "'" ;
 		}
 		
 		if (searchDomain.getIsExtinct() != null) {
@@ -227,7 +227,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			where = where + "\nand a._marker_key = " + searchDomain.getMarkerKey();
 		}
 		if (searchDomain.getMarkerSymbol() != null && !searchDomain.getMarkerSymbol().isEmpty()) {
-			where = where + "\nand m.symbol ilike '" + searchDomain.getMarkerSymbol() + "'";
+			where = where + "\nand lower(m.symbol) ilike '" + searchDomain.getMarkerSymbol().toLowerCase() + "'";
 			from_marker = true;
 		}
 		if (searchDomain.getRefsKey() != null && !searchDomain.getRefsKey().isEmpty()) {
@@ -237,7 +237,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			where = where + "\nand a._markerallele_status_key = " + searchDomain.getMarkerStatusKey();
 		}
 		if (searchDomain.getDetailClip() != null && !searchDomain.getDetailClip().isEmpty()) {
-			where = where + "\nand notec.note ilike '" + searchDomain.getDetailClip() + "'" ;
+			where = where + "\nand lower(notec.note) ilike '" + searchDomain.getDetailClip().toLowerCase() + "'" ;
 			from_displayclip = true;
 		}
 				

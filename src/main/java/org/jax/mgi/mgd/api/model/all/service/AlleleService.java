@@ -18,7 +18,11 @@ import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleRefAssocTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
+import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -32,7 +36,15 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	
 	@Inject
 	private AlleleDAO alleleDAO;
-
+	@Inject
+	private MarkerDAO markerDAO;
+	@Inject
+	private ProbeStrainDAO strainDAO;
+	@Inject
+	private TermDAO termDAO;
+	@Inject
+	private ReferenceDAO referenceDAO;
+	
 	private AlleleTranslator translator = new AlleleTranslator();
 	private SlimAlleleTranslator slimtranslator = new SlimAlleleTranslator();	
 	private SlimAlleleRefAssocTranslator slimreftranslator = new SlimAlleleRefAssocTranslator();	
@@ -79,6 +91,50 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		
 		log.info("processAllele/update");
 
+		entity.setSymbol(domain.getSymbol());
+		entity.setName(domain.getName());
+		entity.setIsWildType(Integer.valueOf(domain.getIsWildType()));
+		entity.setIsExtinct(Integer.valueOf(domain.getIsExtinct()));
+		entity.setIsMixed(Integer.valueOf(domain.getIsMixed()));		
+		entity.setStrain(strainDAO.get(Integer.valueOf(domain.getStrainOfOriginKey())));
+		entity.setInheritanceMode(termDAO.get(Integer.valueOf(domain.getInheritanceModeKey())));
+		entity.setAlleleType(termDAO.get(Integer.valueOf(domain.getAlleleTypeKey())));
+		entity.setAlleleStatus(termDAO.get(Integer.valueOf(domain.getAlleleStatusKey())));
+		entity.setTransmission(termDAO.get(Integer.valueOf(domain.getTransmissionKey())));
+		entity.setCollection(termDAO.get(Integer.valueOf(domain.getCollectionKey())));
+		entity.setMarkerStatus(termDAO.get(Integer.valueOf(domain.getMarkerStatusKey())));
+
+		if (domain.getMarkerKey() != null && !domain.getMarkerKey().isEmpty()) {
+			entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));	
+		}
+		else {
+			entity.setMarker(null);
+		}
+
+		if (domain.getRefsKey() != null && !domain.getRefsKey().isEmpty()) {
+			entity.setMarkerReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));	
+		}
+		else {
+			entity.setMarkerReference(null);
+		}
+		
+		// if allele status is being set to Approved
+		if (entity.getAlleleStatus().get_term_key() != 847114
+				&& domain.getAlleleStatusKey().equals("847114")) {
+			entity.setApproval_date(new Date());
+			entity.setApprovedBy(user);			
+		}
+		else {
+			entity.setApproval_date(null);
+			entity.setApprovedBy(null);			
+		}
+		
+		// process mutant cell lines
+		// process synonyms
+		// process allele attributes/subtypes
+		// process molecular mutations
+		// process driver genes
+		
 		// only if modifications were actually made
 		if (modified == true) {
 			entity.setModification_date(new Date());

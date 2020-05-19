@@ -86,6 +86,7 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			domain.setChromosome(entity.getMarker().getChromosome());
 			domain.setMarkerStatusKey(String.valueOf(entity.getMarker().getMarkerStatus().get_marker_status_key()));
 			domain.setMarkerStatus(entity.getMarker().getMarkerStatus().getStatus());
+			log.info(entity.getAlleleMarkerStatus().get_term_key());
 			domain.setAlleleMarkerStatusKey(String.valueOf(entity.getAlleleMarkerStatus().get_term_key()));
 			domain.setAlleleMarkerStatus(entity.getAlleleMarkerStatus().getTerm());
 			

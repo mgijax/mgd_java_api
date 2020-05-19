@@ -74,7 +74,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		entity.setAlleleStatus(termDAO.get(Integer.valueOf(domain.getAlleleStatusKey())));
 		entity.setTransmission(termDAO.get(Integer.valueOf(domain.getTransmissionKey())));
 		entity.setCollection(termDAO.get(Integer.valueOf(domain.getCollectionKey())));
-		entity.setMarkerStatus(termDAO.get(Integer.valueOf(domain.getMarkerStatusKey())));
+		entity.setAlleleMarkerStatus(termDAO.get(Integer.valueOf(domain.getMarkerStatusKey())));
 
 		if (domain.getMarkerKey() != null && !domain.getMarkerKey().isEmpty()) {
 			entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));	
@@ -139,7 +139,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		entity.setAlleleStatus(termDAO.get(Integer.valueOf(domain.getAlleleStatusKey())));
 		entity.setTransmission(termDAO.get(Integer.valueOf(domain.getTransmissionKey())));
 		entity.setCollection(termDAO.get(Integer.valueOf(domain.getCollectionKey())));
-		entity.setMarkerStatus(termDAO.get(Integer.valueOf(domain.getMarkerStatusKey())));
+		entity.setAlleleMarkerStatus(termDAO.get(Integer.valueOf(domain.getMarkerStatusKey())));
 
 		if (domain.getMarkerKey() != null && !domain.getMarkerKey().isEmpty()) {
 			entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));	
@@ -326,8 +326,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		if (searchDomain.getRefsKey() != null && !searchDomain.getRefsKey().isEmpty()) {
 			where = where + "\nand a._Refs_key = " + searchDomain.getRefsKey();
 		}
-		if (searchDomain.getMarkerStatusKey() != null && !searchDomain.getMarkerStatusKey().isEmpty()) {
-			where = where + "\nand a._markerallele_status_key = " + searchDomain.getMarkerStatusKey();
+		if (searchDomain.getAlleleMarkerStatusKey() != null && !searchDomain.getAlleleMarkerStatusKey().isEmpty()) {
+			where = where + "\nand a._markerallele_status_key = " + searchDomain.getAlleleMarkerStatusKey();
 		}
 		if (searchDomain.getDetailClip() != null && !searchDomain.getDetailClip().isEmpty()) {
 			where = where + "\nand notec.note ilike '" + searchDomain.getDetailClip() + "'" ;

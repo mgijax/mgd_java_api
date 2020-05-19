@@ -89,7 +89,7 @@ public class Allele extends BaseEntity {
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_markerallele_status_key", referencedColumnName="_term_key")
-	private Term markerStatus;
+	private Term alleleMarkerStatus;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

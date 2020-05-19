@@ -86,7 +86,6 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			domain.setChromosome(entity.getMarker().getChromosome());
 			domain.setMarkerStatusKey(String.valueOf(entity.getMarker().getMarkerStatus().get_marker_status_key()));
 			domain.setMarkerStatus(entity.getMarker().getMarkerStatus().getStatus());
-			log.info(entity.getAlleleMarkerStatus().get_term_key());
 			domain.setAlleleMarkerStatusKey(String.valueOf(entity.getAlleleMarkerStatus().get_term_key()));
 			domain.setAlleleMarkerStatus(entity.getAlleleMarkerStatus().getTerm());
 			
@@ -123,7 +122,7 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		if (entity.getMutations() != null && !entity.getMutations().isEmpty()) {
 			AlleleMutationTranslator mutationTranslator = new AlleleMutationTranslator();
 			Iterable<AlleleMutationDomain> i = mutationTranslator.translateEntities(entity.getMutations());
-			domain.setMutations(IteratorUtils.toList(i.iterator()));
+			domain.setMutations(IteratorUtils.toList(i.iterator()));			
 			domain.getMutations().sort(Comparator.comparing(AlleleMutationDomain::getMutation));
 		}
 		

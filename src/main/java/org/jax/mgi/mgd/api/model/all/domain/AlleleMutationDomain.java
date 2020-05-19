@@ -9,7 +9,7 @@ import lombok.Setter;
 public class AlleleMutationDomain extends BaseDomain {
 
 	private String processStatus;
-	//private String allelemutationKey;
+	private String assocKey;
 	private String alleleKey;
 	private String mutationKey;
 	private String mutation;

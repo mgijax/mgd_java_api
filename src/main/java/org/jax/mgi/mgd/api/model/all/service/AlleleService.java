@@ -165,7 +165,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			entity.setApproval_date(null);
 			entity.setApprovedBy(null);			
 		}
-		
+
 		// process mutant cell lines
 		// process synonyms
 		// process allele attributes/subtypes

@@ -139,7 +139,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		entity.setAlleleStatus(termDAO.get(Integer.valueOf(domain.getAlleleStatusKey())));
 		entity.setTransmission(termDAO.get(Integer.valueOf(domain.getTransmissionKey())));
 		entity.setCollection(termDAO.get(Integer.valueOf(domain.getCollectionKey())));
-		entity.setAlleleMarkerStatus(termDAO.get(Integer.valueOf(domain.getMarkerStatusKey())));
+		entity.setAlleleMarkerStatus(termDAO.get(Integer.valueOf(domain.getAlleleMarkerStatusKey())));
 
 		if (domain.getMarkerKey() != null && !domain.getMarkerKey().isEmpty()) {
 			entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));	

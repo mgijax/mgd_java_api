@@ -49,9 +49,12 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	private SlimAlleleTranslator slimtranslator = new SlimAlleleTranslator();	
 	private SlimAlleleRefAssocTranslator slimreftranslator = new SlimAlleleRefAssocTranslator();	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
+
+//	String mgiTypeKey = "11";
+//	String mgiTypeName = "Allele";
 	
 	@Transactional
-	public SearchResults<AlleleDomain> create(AlleleDomain object, User user) {
+	public SearchResults<AlleleDomain> create(AlleleDomain domain, User user) {
 		
 		// create new entity object from in-coming domain
 		// the Entities class handles the generation of the primary key
@@ -60,7 +63,43 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
 		Allele entity = new Allele();
 		
-		// in progress
+		entity.setSymbol(domain.getSymbol());
+		entity.setName(domain.getName());
+		entity.setIsWildType(Integer.valueOf(domain.getIsWildType()));
+		entity.setIsExtinct(Integer.valueOf(domain.getIsExtinct()));
+		entity.setIsMixed(Integer.valueOf(domain.getIsMixed()));		
+		entity.setStrain(strainDAO.get(Integer.valueOf(domain.getStrainOfOriginKey())));
+		entity.setInheritanceMode(termDAO.get(Integer.valueOf(domain.getInheritanceModeKey())));
+		entity.setAlleleType(termDAO.get(Integer.valueOf(domain.getAlleleTypeKey())));
+		entity.setAlleleStatus(termDAO.get(Integer.valueOf(domain.getAlleleStatusKey())));
+		entity.setTransmission(termDAO.get(Integer.valueOf(domain.getTransmissionKey())));
+		entity.setCollection(termDAO.get(Integer.valueOf(domain.getCollectionKey())));
+		entity.setMarkerStatus(termDAO.get(Integer.valueOf(domain.getMarkerStatusKey())));
+
+		if (domain.getMarkerKey() != null && !domain.getMarkerKey().isEmpty()) {
+			entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));	
+		}
+		else {
+			entity.setMarker(null);
+		}
+
+		if (domain.getRefsKey() != null && !domain.getRefsKey().isEmpty()) {
+			entity.setMarkerReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));	
+		}
+		else {
+			entity.setMarkerReference(null);
+		}
+		
+		// if allele status is being set to Approved
+		if (domain.getAlleleStatusKey().equals("847114")
+				&& (domain.getApprovedByKey() == null || domain.getApprovedByKey().isEmpty())) {
+			entity.setApproval_date(new Date());
+			entity.setApprovedBy(user);			
+		}
+		else {
+			entity.setApproval_date(null);
+			entity.setApprovedBy(null);			
+		}
 		
 		// add creation/modification 
 		entity.setCreatedBy(user);
@@ -86,8 +125,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
 		Allele entity = alleleDAO.get(Integer.valueOf(domain.getAlleleKey()));
 		Boolean modified = true;
-//		String mgiTypeKey = "11";
-//		String mgiTypeName = "Allele";
 		
 		log.info("processAllele/update");
 

@@ -110,6 +110,12 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		// execute persist/insert/send to database
 		alleleDAO.persist(entity);
 
+		// process mutant cell lines
+		// process synonyms
+		// process allele attributes/subtypes
+		// process molecular mutations
+		// process driver genes
+		
 		// return entity translated to domain
 		log.info("processAllele/create/returning results");
 		results.setItem(translator.translate(entity));

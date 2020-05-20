@@ -121,14 +121,14 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 
 	@Transactional
 	public Boolean process(String parentKey, List<AllelePairDomain> domain, User user) {
-		// process image pane (create, delete, update)
+		// process allele pair (create, delete, update)
 		
 		Boolean modified = false;
 		
 		log.info("processAllelePair");
 		
 		if (domain == null || domain.isEmpty()) {
-			log.info("processImagePane/nothing to process");
+			log.info("processAllelePair/nothing to process");
 			return modified;
 		}
 		

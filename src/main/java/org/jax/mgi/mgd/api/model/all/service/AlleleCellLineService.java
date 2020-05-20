@@ -1,14 +1,21 @@
 package org.jax.mgi.mgd.api.model.all.service;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleCellLineDAO;
+import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
+import org.jax.mgi.mgd.api.model.all.dao.CellLineDAO;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDomain;
+import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLine;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleCellLineTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -21,9 +28,10 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 	
 	@Inject
 	private AlleleCellLineDAO alleleCellLineDAO;
+	@Inject
+	private CellLineDAO cellLineDAO;
 	
 	private AlleleCellLineTranslator translator = new AlleleCellLineTranslator();				
-	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
 	public SearchResults<AlleleCellLineDomain> create(AlleleCellLineDomain domain, User user) {
@@ -64,5 +72,68 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 		alleleCellLineDAO.clear();
 		return results;
     }
-	
+
+	@Transactional
+	public Boolean process(String parentKey, List<AlleleCellLineDomain> domain, User user) {
+		// process allele cell line (create, delete, update)
+		
+		Boolean modified = false;
+		
+		log.info("processAlleleCellLine");
+		
+		if (domain == null || domain.isEmpty()) {
+			log.info("processAlleleCellLine/nothing to process");
+			return modified;
+		}
+		
+		// iterate thru the list of rows in the domain
+		// for each row, determine whether to perform an insert, delete or update
+		
+		for (int i = 0; i < domain.size(); i++) {
+			
+			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
+				
+				if (domain.get(i).getAlleleKey().isEmpty()) {
+					continue;
+				}
+				
+				log.info("processAlleleCellLine/create");
+				AlleleCellLine entity = new AlleleCellLine();									
+				entity.set_allele_key(Integer.valueOf(parentKey));
+				entity.setMutantCellLine(cellLineDAO.get(Integer.valueOf(domain.get(i).getMutantCellLineKey())));				
+				entity.setCreatedBy(user);
+				entity.setCreation_date(new Date());
+				entity.setModifiedBy(user);
+				entity.setModification_date(new Date());				
+				alleleCellLineDAO.persist(entity);				
+				log.info("processAllelePair/create/returning results");	
+				modified = true;
+			}
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+				log.info("processAlleleCellLine/delete");
+				if (domain.get(i).getAssocKey() != null && !domain.get(i).getAssocKey().isEmpty()) {
+					AlleleCellLine entity = alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
+					alleleCellLineDAO.remove(entity);
+					modified = true;
+				}
+			}
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+				log.info("processAlleleCellLine/update");
+				AlleleCellLine entity = alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));			
+				entity.setMutantCellLine(cellLineDAO.get(Integer.valueOf(domain.get(i).getMutantCellLineKey())));								
+				entity.setModification_date(new Date());
+				entity.setModifiedBy(user);
+				alleleCellLineDAO.update(entity);
+				log.info("processAlleleCellLine/changes processed: " + domain.get(i).getAssocKey());				
+				modified = true;
+			}
+			else {
+				log.info("processAlleleCellLine/no changes processed: " + domain.get(i).getAssocKey());
+			}
+		}
+		
+		log.info("processAlleleCellLine/processing successful");
+		return modified;
+	}
+   
 }

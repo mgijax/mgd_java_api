@@ -376,6 +376,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				where = where + "\nand ref.short_citation ilike '" + value + "'";
 				from_reference = true;
 			}
+			if (searchDomain.getRefAssocs().get(0).getJnumid() != null && !searchDomain.getRefAssocs().get(0).getJnumid().isEmpty()) {
+				where = where + "\nand ref._refassoctype_key =" + searchDomain.getRefAssocs().get(0).getRefAssocTypeKey();
+				where = where + "\nand ref.jnumid ilike '" + searchDomain.getRefAssocs().get(0).getJnumid() + "'";
+				from_reference = true;				
+			}
 		}
 
 		if (searchDomain.getGeneralNote() != null && !searchDomain.getGeneralNote().getNoteChunk().isEmpty()) {

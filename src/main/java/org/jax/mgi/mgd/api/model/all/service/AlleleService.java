@@ -19,6 +19,7 @@ import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleRefAssocTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.gxd.service.AllelePairService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
@@ -44,6 +45,9 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	private TermDAO termDAO;
 	@Inject
 	private ReferenceDAO referenceDAO;
+
+	@Inject
+	private AlleleCellLineService alleleCellLineService;
 	
 	private AlleleTranslator translator = new AlleleTranslator();
 	private SlimAlleleTranslator slimtranslator = new SlimAlleleTranslator();	
@@ -173,6 +177,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}
 
 		// process mutant cell lines
+		log.info("processAllele/mutant cell lines");
+		if (alleleCellLineService.process(domain.getAlleleKey(), domain.getMutantCellLines(), user)) {
+			modified = true;			
+		}
+		
 		// process synonyms
 		// process allele attributes/subtypes
 		// process molecular mutations

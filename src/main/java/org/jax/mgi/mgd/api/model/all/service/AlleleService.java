@@ -19,7 +19,6 @@ import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleRefAssocTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
-import org.jax.mgi.mgd.api.model.gxd.service.AllelePairService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;

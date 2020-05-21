@@ -90,7 +90,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 				
-				if (domain.get(i).getAlleleKey().isEmpty()) {
+				if (domain.get(i).getMutantCellLineKey().isEmpty()) {
 					continue;
 				}
 				

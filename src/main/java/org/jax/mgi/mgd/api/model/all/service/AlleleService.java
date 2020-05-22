@@ -114,6 +114,9 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		alleleDAO.persist(entity);
 
 		// process mutant cell lines
+		log.info("processAllele/mutant cell lines");
+		alleleCellLineService.process(domain.getAlleleKey(), domain.getMutantCellLines(), user);
+
 		// process synonyms
 		// process allele attributes/subtypes
 		// process molecular mutations

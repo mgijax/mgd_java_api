@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 public class CellLineDomain extends BaseDomain {
 
+	private String processStatus;
 	private String cellLineKey;
 	private String cellLine;
 	private String isMutant;

@@ -103,7 +103,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 				entity.setModifiedBy(user);
 				entity.setModification_date(new Date());				
 				alleleCellLineDAO.persist(entity);				
-				log.info("processAllelePair/create/returning results");	
+				log.info("processAlleleCellLine/create/returning results");	
 				modified = true;
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {

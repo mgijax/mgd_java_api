@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.all.translator;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.CellLineDomain;
 import org.jax.mgi.mgd.api.model.all.entities.CellLine;
+import org.jax.mgi.mgd.api.util.Constants;
 
 public class CellLineTranslator extends BaseEntityDomainTranslator<CellLine, CellLineDomain> {
 	
@@ -10,7 +11,8 @@ public class CellLineTranslator extends BaseEntityDomainTranslator<CellLine, Cel
 	protected CellLineDomain entityToDomain(CellLine entity) {
 		
 		CellLineDomain domain = new CellLineDomain();
-		
+
+		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);		
 		domain.setCellLineKey(String.valueOf(entity.get_cellline_key()));
 		domain.setCellLine(entity.getCellLine());
 		domain.setIsMutant(String.valueOf(entity.getIsMutant()));

@@ -30,7 +30,7 @@ public class CellLineTranslator extends BaseEntityDomainTranslator<CellLine, Cel
 
 		if (entity.getDerivation() != null) {
 			domain.setDerivationKey(String.valueOf(entity.getDerivation().get_derivation_key()));
-			domain.setCreator(entity.getDerivation().getCellLineCreator().getTerm());
+			domain.setCreator(entity.getDerivation().getCreator().getTerm());
 			domain.setParentCellLineKey(String.valueOf(entity.getDerivation().getParentCellLine().get_cellline_key()));
 			domain.setParentCellLine(entity.getDerivation().getParentCellLine().getCellLine());
 //			domain.setParentStrainKey(String.valueOf(entity.getDerivation().getParentCellLine().getStrain().get_strain_key()));

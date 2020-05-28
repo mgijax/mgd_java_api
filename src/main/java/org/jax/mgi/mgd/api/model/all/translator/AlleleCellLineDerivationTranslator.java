@@ -16,10 +16,16 @@ public class AlleleCellLineDerivationTranslator extends BaseEntityDomainTranslat
 		domain.setDerivationKey(String.valueOf(entity.get_derivation_key()));
 		domain.setName(entity.getName());
 		domain.setDescription(entity.getDescription());
-		domain.setCellLineVectorKey(String.valueOf(entity.getCellLineVector().get_term_key()));
-		domain.setCellLineVector(entity.getCellLineVector().getTerm());
+		domain.setVectorKey(String.valueOf(entity.getVector().get_term_key()));
+		domain.setVector(entity.getVector().getTerm());
+		domain.setVectorTypeKey(String.valueOf(entity.getVectorType().get_term_key()));
+		domain.setVectorType(entity.getVectorType().getTerm());
 		domain.setParentCellLineKey(String.valueOf(entity.getParentCellLine().get_cellline_key()));
 		domain.setParentCellLine(entity.getParentCellLine().getCellLine());
+		domain.setCreatorKey(String.valueOf(entity.getCreator().get_term_key()));
+		domain.setCreator(entity.getCreator().getTerm());
+		domain.setDerivationTypeKey(String.valueOf(entity.getDerivationType().get_term_key()));
+		domain.setDerivationType(entity.getDerivationType().getTerm());
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());

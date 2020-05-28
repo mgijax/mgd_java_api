@@ -115,7 +115,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		// process mutant cell lines
 		log.info("processAllele/mutant cell lines");
-		alleleCellLineService.process(domain.getAlleleKey(), domain.getMutantCellLines(), user);
+		alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLines(), user);
 
 		// process synonyms
 		// process allele attributes/subtypes
@@ -180,7 +180,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		// process mutant cell lines
 		log.info("processAllele/mutant cell lines");
-		if (alleleCellLineService.process(domain.getAlleleKey(), domain.getMutantCellLines(), user)) {
+		if (alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLines(), user)) {
 			modified = true;			
 		}
 		

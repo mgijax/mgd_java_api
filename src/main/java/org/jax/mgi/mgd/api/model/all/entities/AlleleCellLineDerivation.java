@@ -39,7 +39,11 @@ public class AlleleCellLineDerivation extends BaseEntity {
 	
 	@OneToOne
 	@JoinColumn(name="_vector_key", referencedColumnName="_term_key")
-	private Term cellLineVector;
+	private Term vector;
+	
+	@OneToOne
+	@JoinColumn(name="_vectortype_key", referencedColumnName="_term_key")
+	private Term vectorType;
 	
 	@OneToOne
 	@JoinColumn(name="_parentcellline_key", referencedColumnName="_cellline_key")
@@ -51,7 +55,7 @@ public class AlleleCellLineDerivation extends BaseEntity {
 	
 	@OneToOne
 	@JoinColumn(name="_creator_key", referencedColumnName="_term_key")
-	private Term cellLineCreator;
+	private Term creator;
 	
 	@OneToOne
 	@JoinColumn(name="_refs_key" )

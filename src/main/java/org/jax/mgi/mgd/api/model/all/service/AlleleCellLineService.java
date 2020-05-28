@@ -71,22 +71,65 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
     }
 
 	@Transactional
-	public Boolean process(String parentKey, List<AlleleCellLineDomain> domain, User user) {
+	public Boolean process(String parentKey, String alleleTypeKey, String alleleType, List<AlleleCellLineDomain> domain, User user) {
 		// process allele cell line (create, delete, update)
 		
 		Boolean modified = false;
-		
+
+		Boolean isParent = true;
+		Boolean isMutant = true;
+		Boolean addCellLine = false;
+		Boolean addAssociation = true;
+        Boolean getDerivation = true;
+        
+        String mutantCellLine;
+        String mutantCellLineKey;
+        String creatorKey;
+        String vectorKey;
+        
+//        cellAssocKey : string := "maxCellAssoc";
+//        cellAssocDefined : boolean := false;
+//        cellLineKey : string := "maxCellLine";
+//        cellLineDefined : boolean := false;
+
 		log.info("processAlleleCellLine");
 		
 		if (domain == null || domain.isEmpty()) {
 			log.info("processAlleleCellLine/nothing to process");
 			return modified;
 		}
+        
+        // set the allele type and type key
+        // set the parent
+        // NOTE:  use the PARENT strain (not the Strain of Origin)
+        // set the strain
+        // set the derivation
+        String parentCellLineKey = domain.get(0).getParentCellLineKey();
+        String strainKey = domain.get(0).getStrainKey();     		       		
+        String strainName = domain.get(0).getStrain();
+        String derivationKey = domain.get(0).getDerivationKey();
+        String cellLineTypeKey = domain.get(0).getCellLineTypeKey();
+		
+        // set the isParent
+
+        if (parentCellLineKey.isEmpty()) {
+          isParent = false;
+        };
+
+        // default cellLineType = Embryonic Stem Cell (3982968)
+        if (cellLineTypeKey.isEmpty()) {
+          cellLineTypeKey = "3982968";
+        };
 		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
 		
 		for (int i = 0; i < domain.size(); i++) {
+			
+            mutantCellLine = domain.get(i).getMutantCellLine();
+            mutantCellLineKey = domain.get(i).getMutantCellLineKey();
+            creatorKey = domain.get(i).getCreatorKey();
+            vectorKey = domain.get(i).getVectorKey();
 			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 				
@@ -125,6 +168,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 				modified = true;
 			}
 			else {
+		        getDerivation = false;
 				log.info("processAlleleCellLine/no changes processed: " + domain.get(i).getAssocKey());
 			}
 		}

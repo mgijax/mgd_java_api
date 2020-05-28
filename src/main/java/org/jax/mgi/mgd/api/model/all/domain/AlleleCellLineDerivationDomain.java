@@ -12,10 +12,16 @@ public class AlleleCellLineDerivationDomain extends BaseDomain {
 	private String derivationKey;
 	private String name;
 	private String description;
-	private String cellLineVectorKey;
-	private String cellLineVector;
+	private String vectorKey;
+	private String vector;
+	private String vectorTypeKey;
+	private String vectorType;
 	private String parentCellLineKey;
 	private String parentCellLine;
+	private String derivationTypeKey;
+	private String derivationType;
+	private String creatorKey;
+	private String creator;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

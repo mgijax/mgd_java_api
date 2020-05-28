@@ -23,11 +23,12 @@ public class AlleleCellLineTranslator extends BaseEntityDomainTranslator<AlleleC
 		domain.setStrainKey(String.valueOf(entity.getMutantCellLine().getStrain().get_strain_key()));
 		domain.setStrain(entity.getMutantCellLine().getStrain().getStrain());
 		domain.setDerivationKey(String.valueOf(entity.getMutantCellLine().getDerivation().get_derivation_key()));
-		domain.setCreator(entity.getMutantCellLine().getDerivation().getCellLineCreator().getTerm());
+		domain.setVectorKey(String.valueOf(entity.getMutantCellLine().getDerivation().getVector().get_term_key()));
+		domain.setVector(entity.getMutantCellLine().getDerivation().getVector().getTerm());
 		domain.setParentCellLineKey(String.valueOf(entity.getMutantCellLine().getDerivation().getParentCellLine().get_cellline_key()));
 		domain.setParentCellLine(entity.getMutantCellLine().getDerivation().getParentCellLine().getCellLine());
-//		domain.setParentStrainKey(String.valueOf(entity.getMutantCellLine().getDerivation().getParentCellLine().getStrain().get_strain_key()));
-//		domain.setParentStrain(entity.getMutantCellLine().getDerivation().getParentCellLine().getStrain().getStrain());		
+		domain.setCreatorKey(String.valueOf(entity.getMutantCellLine().getDerivation().getCreator().get_term_key()));
+		domain.setCreator(entity.getMutantCellLine().getDerivation().getCreator().getTerm());
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());

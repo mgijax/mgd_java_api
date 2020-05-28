@@ -85,7 +85,7 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 			return modified;
 		}
 		
-		if (domain.getCellLineVectorKey().isEmpty()) {
+		if (domain.getVectorKey().isEmpty()) {
 			log.info("processAlleleCellLineDerivation/nothing to process");
 			return modified;
 		}					
@@ -98,7 +98,8 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 			AlleleCellLineDerivation entity = new AlleleCellLineDerivation();									
 			entity.setName(domain.getName());
 			entity.setDescription(domain.getDescription());
-			entity.setCellLineVector(termDAO.get(Integer.valueOf(domain.getCellLineVectorKey())));				
+			entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));
+			entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));							
 			entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.getParentCellLineKey())));				
 			entity.setCreatedBy(user);
 			entity.setCreation_date(new Date());
@@ -122,7 +123,8 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 			entity.setModification_date(new Date());
 			entity.setName(domain.getName());
 			entity.setDescription(domain.getDescription());
-			entity.setCellLineVector(termDAO.get(Integer.valueOf(domain.getCellLineVectorKey())));				
+			entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));
+			entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));
 			entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.getParentCellLineKey())));	
 			entity.setModifiedBy(user);
 			derivationDAO.update(entity);

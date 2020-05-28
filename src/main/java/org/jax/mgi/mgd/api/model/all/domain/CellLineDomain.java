@@ -27,6 +27,5 @@ public class CellLineDomain extends BaseDomain {
 	private String modifiedByKey;
 	private String modifiedBy;
 	private String creation_date;
-	private String modification_date;
-	
+	private String modification_date;		
 }

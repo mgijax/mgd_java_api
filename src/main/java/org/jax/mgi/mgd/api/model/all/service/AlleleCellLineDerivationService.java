@@ -1,7 +1,6 @@
 package org.jax.mgi.mgd.api.model.all.service;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -74,67 +73,64 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
     }
 
 	@Transactional
-	public Boolean process(String parentKey, List<AlleleCellLineDerivationDomain> domain, User user) {
+	public Boolean process(String parentKey, AlleleCellLineDerivationDomain domain, User user) {
 		// process allele cell line derivation (create, delete, update)
 		
 		Boolean modified = false;
 		
 		log.info("processAlleleCellLineDerivation");
 		
-		if (domain == null || domain.isEmpty()) {
+		if (domain == null) {
 			log.info("processAlleleCellLineDerivation/nothing to process");
 			return modified;
 		}
 		
+		if (domain.getCellLineVectorKey().isEmpty()) {
+			log.info("processAlleleCellLineDerivation/nothing to process");
+			return modified;
+		}					
+		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
-		
-		for (int i = 0; i < domain.size(); i++) {
-			
-			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
-				
-				if (domain.get(i).getCellLineVectorKey().isEmpty()) {
-					continue;
-				}
-				
-				log.info("processAlleleCellLineDerivation/create");
-				AlleleCellLineDerivation entity = new AlleleCellLineDerivation();									
-				entity.setName(domain.get(i).getName());
-				entity.setDescription(domain.get(i).getDescription());
-				entity.setCellLineVector(termDAO.get(Integer.valueOf(domain.get(i).getCellLineVectorKey())));				
-				entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.get(i).getParentCellLineKey())));				
-				entity.setCreatedBy(user);
-				entity.setCreation_date(new Date());
-				entity.setModifiedBy(user);
-				entity.setModification_date(new Date());				
-				derivationDAO.persist(entity);				
-				log.info("processAlleleCellLineDerivation/create/returning results");	
+					
+		if (domain.getProcessStatus().equals(Constants.PROCESS_CREATE)) {				
+			log.info("processAlleleCellLineDerivation/create");
+			AlleleCellLineDerivation entity = new AlleleCellLineDerivation();									
+			entity.setName(domain.getName());
+			entity.setDescription(domain.getDescription());
+			entity.setCellLineVector(termDAO.get(Integer.valueOf(domain.getCellLineVectorKey())));				
+			entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.getParentCellLineKey())));				
+			entity.setCreatedBy(user);
+			entity.setCreation_date(new Date());
+			entity.setModifiedBy(user);
+			entity.setModification_date(new Date());				
+			derivationDAO.persist(entity);				
+			log.info("processAlleleCellLineDerivation/create/returning results");	
+			modified = true;
+		}
+		else if (domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+			log.info("processAlleleCellLineDerivation/delete");
+			if (domain.getDerivationKey() != null && !domain.getDerivationKey().isEmpty()) {
+				AlleleCellLineDerivation entity = derivationDAO.get(Integer.valueOf(domain.getDerivationKey()));
+				derivationDAO.remove(entity);
 				modified = true;
 			}
-			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-				log.info("processAlleleCellLineDerivation/delete");
-				if (domain.get(i).getDerivationKey() != null && !domain.get(i).getDerivationKey().isEmpty()) {
-					AlleleCellLineDerivation entity = derivationDAO.get(Integer.valueOf(domain.get(i).getDerivationKey()));
-					derivationDAO.remove(entity);
-					modified = true;
-				}
-			}
-			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-				log.info("processAlleleCellLineDerivation/update");
-				AlleleCellLineDerivation entity = derivationDAO.get(Integer.valueOf(domain.get(i).getDerivationKey()));			
-				entity.setModification_date(new Date());
-				entity.setName(domain.get(i).getName());
-				entity.setDescription(domain.get(i).getDescription());
-				entity.setCellLineVector(termDAO.get(Integer.valueOf(domain.get(i).getCellLineVectorKey())));				
-				entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.get(i).getParentCellLineKey())));	
-				entity.setModifiedBy(user);
-				derivationDAO.update(entity);
-				log.info("processAlleleCellLineDerivation/changes processed: " + domain.get(i).getDerivationKey());				
-				modified = true;
-			}
-			else {
-				log.info("processAlleleCellLineDerivation/no changes processed: " + domain.get(i).getDerivationKey());
-			}
+		}
+		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+			log.info("processAlleleCellLineDerivation/update");
+			AlleleCellLineDerivation entity = derivationDAO.get(Integer.valueOf(domain.getDerivationKey()));			
+			entity.setModification_date(new Date());
+			entity.setName(domain.getName());
+			entity.setDescription(domain.getDescription());
+			entity.setCellLineVector(termDAO.get(Integer.valueOf(domain.getCellLineVectorKey())));				
+			entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.getParentCellLineKey())));	
+			entity.setModifiedBy(user);
+			derivationDAO.update(entity);
+			log.info("processAlleleCellLineDerivation/changes processed: " + domain.getDerivationKey());				
+			modified = true;
+		}
+		else {
+			log.info("processAlleleCellLineDerivation/no changes processed: " + domain.getDerivationKey());
 		}
 		
 		log.info("processAlleleCellLineDerivation/processing successful");

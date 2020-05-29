@@ -115,7 +115,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		// process mutant cell lines
 		log.info("processAllele/mutant cell lines");
-		alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLines(), user);
+		alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLineAssocs(), user);
 
 		// process synonyms
 		// process allele attributes/subtypes
@@ -180,7 +180,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		// process mutant cell lines
 		log.info("processAllele/mutant cell lines");
-		if (alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLines(), user)) {
+		if (alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLineAssocs(), user)) {
 			modified = true;			
 		}
 		
@@ -423,30 +423,30 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}
 		
 		// mutant & parent cell line
-		if (searchDomain.getMutantCellLines() != null) {
-//			if (searchDomain.getMutantCellLines().get(0).getMutantCellLine() != null) {
-//				where = where + "\nand c.cellLine ilike '" + searchDomain.getMutantCellLines().get(0).getMutantCellLine() + "'";
-//				from_cellLine = true;
-//			}
-//			if (searchDomain.getMutantCellLines().get(0).getMutantCellLine().getDerivation().getCreator() != null && !searchDomain.getMutantCellLines().get(0).getMutantCellLine().getDerivation().getCreator().isEmpty()) {
-//				where = where + "\nand c.creator ilike '" + searchDomain.getMutantCellLines().get(0).getCreator() + "'";
-//				from_cellLine = true;
-//			}			
-//			if (searchDomain.getMutantCellLines().get(0).getCellLineTypeKey() != null && !searchDomain.getMutantCellLines().get(0).getCellLineTypeKey().isEmpty()) {
-//				where = where + "\nand c.parentCellLineType_key = " + searchDomain.getMutantCellLines().get(0).getCellLineTypeKey();
-//				from_cellLine = true;
-//			}			
-//			if (searchDomain.getMutantCellLines().get(0).getParentCellLineKey() != null && !searchDomain.getMutantCellLines().get(0).getParentCellLineKey().isEmpty()) {
-//				where = where + "\nand c.parentCellLine_key = " + searchDomain.getMutantCellLines().get(0).getParentCellLineKey();
-//				from_cellLine = true;
-//			}
-			if (searchDomain.getMutantCellLines().get(0).getStrainKey() != null && !searchDomain.getMutantCellLines().get(0).getStrainKey().isEmpty()) {
-				where = where + "\nand c.cellLineStrain_key = " + searchDomain.getMutantCellLines().get(0).getStrainKey();
+		if (searchDomain.getMutantCellLineAssocs() != null) {
+			if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine() != null) {
+				where = where + "\nand c.cellLine ilike '" + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLine() + "'";
+				from_cellLine = true;
+			}
+			if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getCreator() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getCreator().isEmpty()) {
+				where = where + "\nand c.creator ilike '" + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getCreator() + "'";
 				from_cellLine = true;
 			}			
-			if ((searchDomain.getMutantCellLines().get(0).getModifiedBy() != null && !searchDomain.getMutantCellLines().get(0).getModifiedBy().isEmpty())
-					|| (searchDomain.getMutantCellLines().get(0).getModification_date() != null && !searchDomain.getMutantCellLines().get(0).getModification_date().isEmpty())) {
-				String cmResults2[] = DateSQLQuery.queryByCreationModification("c", searchDomain.getMutantCellLines().get(0).getCreatedBy(), searchDomain.getMutantCellLines().get(0).getModifiedBy(), searchDomain.getMutantCellLines().get(0).getCreation_date(), searchDomain.getMutantCellLines().get(0).getModification_date());
+			if (searchDomain.getMutantCellLineAssocs().get(0).getCellLineTypeKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getCellLineTypeKey().isEmpty()) {
+				where = where + "\nand c.parentCellLineType_key = " + searchDomain.getMutantCellLineAssocs().get(0).getCellLineTypeKey();
+				from_cellLine = true;
+			}			
+			if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLineKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLineKey().isEmpty()) {
+				where = where + "\nand c.parentCellLine_key = " + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLineKey();
+				from_cellLine = true;
+			}
+			if (searchDomain.getMutantCellLineAssocs().get(0).getStrainKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getStrainKey().isEmpty()) {
+				where = where + "\nand c.cellLineStrain_key = " + searchDomain.getMutantCellLineAssocs().get(0).getStrainKey();
+				from_cellLine = true;
+			}			
+			if ((searchDomain.getMutantCellLineAssocs().get(0).getModifiedBy() != null && !searchDomain.getMutantCellLineAssocs().get(0).getModifiedBy().isEmpty())
+					|| (searchDomain.getMutantCellLineAssocs().get(0).getModification_date() != null && !searchDomain.getMutantCellLineAssocs().get(0).getModification_date().isEmpty())) {
+				String cmResults2[] = DateSQLQuery.queryByCreationModification("c", searchDomain.getMutantCellLineAssocs().get(0).getCreatedBy(), searchDomain.getMutantCellLineAssocs().get(0).getModifiedBy(), searchDomain.getMutantCellLineAssocs().get(0).getCreation_date(), searchDomain.getMutantCellLineAssocs().get(0).getModification_date());
 				if (cmResults2.length > 0) {
 					from = from + cmResults2[0];
 					where = where + cmResults2[1];

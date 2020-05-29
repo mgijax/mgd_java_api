@@ -425,57 +425,57 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		// mutant & parent cell lines
 		if (searchDomain.getMutantCellLineAssocs() != null) {
 			
-			log.info("mutant cell line : 1");
-			
 			// mutant cell line : cell line, creator, modification date, strain of origin
 			if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine() != null) {
-				where = where + "\nand c._mutantcellline_key = " + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLineKey();
-				from_cellLine = true;
-			}
-			else if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine() != null) {
-				where = where + "\nand c.cellLine ilike '" + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLine() + "'";
-				from_cellLine = true;
-			}
-
-			log.info("mutant cell line : 2");
-		
-			if ((searchDomain.getMutantCellLineAssocs().get(0).getModifiedBy() != null && !searchDomain.getMutantCellLineAssocs().get(0).getModifiedBy().isEmpty())
-					|| (searchDomain.getMutantCellLineAssocs().get(0).getModification_date() != null && !searchDomain.getMutantCellLineAssocs().get(0).getModification_date().isEmpty())) {
-				String cmResults2[] = DateSQLQuery.queryByCreationModification("c", searchDomain.getMutantCellLineAssocs().get(0).getCreatedBy(), searchDomain.getMutantCellLineAssocs().get(0).getModifiedBy(), searchDomain.getMutantCellLineAssocs().get(0).getCreation_date(), searchDomain.getMutantCellLineAssocs().get(0).getModification_date());
-				if (cmResults2.length > 0) {
-					from = from + cmResults2[0];
-					where = where + cmResults2[1];
+	
+				if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLineKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLineKey().isEmpty()) {
+					where = where + "\nand c._mutantcellline_key = " + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLineKey();
 					from_cellLine = true;
 				}
-			}			
-			if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getStrain() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getStrain().isEmpty()) {
-				where = where + "\nand c.celllinestrain ilile '" + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getStrain() + "'";
-				from_cellLine = true;
-			}			
-
+				else if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLine() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLine().isEmpty()) {
+					where = where + "\nand c.cellLine ilike '" + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLine() + "'";
+					from_cellLine = true;
+				}		
+			
+				if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getStrain() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getStrain().isEmpty()) {
+					where = where + "\nand c.celllinestrain ilile '" + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getStrain() + "'";
+					from_cellLine = true;
+				}
+				
+				if ((searchDomain.getMutantCellLineAssocs().get(0).getModifiedBy() != null && !searchDomain.getMutantCellLineAssocs().get(0).getModifiedBy().isEmpty())
+						|| (searchDomain.getMutantCellLineAssocs().get(0).getModification_date() != null && !searchDomain.getMutantCellLineAssocs().get(0).getModification_date().isEmpty())) {
+					String cmResults2[] = DateSQLQuery.queryByCreationModification("c", searchDomain.getMutantCellLineAssocs().get(0).getCreatedBy(), searchDomain.getMutantCellLineAssocs().get(0).getModifiedBy(), searchDomain.getMutantCellLineAssocs().get(0).getCreation_date(), searchDomain.getMutantCellLineAssocs().get(0).getModification_date());
+					if (cmResults2.length > 0) {
+						from = from + cmResults2[0];
+						where = where + cmResults2[1];
+						from_cellLine = true;
+					}
+				}				
+			}
+			
 			// parent cell line : cell line, strain, cell line type
 			
-			log.info("mutant cell line : 3");
-
 			if (searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine() != null) {
-				where = where + "\nand c.parentcellline_key = " + searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLineKey();
-				from_cellLine = true;
-			}
-			else if (searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine() != null) {
-				where = where + "\nand c.parentcellline ilike '" + searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLine() + "'";
-				from_cellLine = true;
-			}			
-			if (searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLineTypeKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLineTypeKey().isEmpty()) {
-				where = where + "\nand c.parentcelllinetype_key = " + searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLineTypeKey();
-				from_cellLine = true;
-			}
-//			if (searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getStrain() != null && !searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getStrain().isEmpty()) {
-//				where = where + "\nand c.strain ilile '" + searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getStrain() + "'";
-//				from_cellLine = true;
-//			}			
 
-			log.info("mutant cell line : 4");
-			
+				if (searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine() != null) {
+					where = where + "\nand c.parentcellline_key = " + searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLineKey();
+					from_cellLine = true;
+				}
+				else if (searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine() != null) {
+					where = where + "\nand c.parentcellline ilike '" + searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLine() + "'";
+					from_cellLine = true;
+				}			
+				if (searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLineTypeKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLineTypeKey().isEmpty()) {
+					where = where + "\nand c.parentcelllinetype_key = " + searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLineTypeKey();
+					from_cellLine = true;
+				}
+	//			if (searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getStrain() != null && !searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getStrain().isEmpty()) {
+	//				where = where + "\nand c.strain ilile '" + searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getStrain() + "'";
+	//				from_cellLine = true;
+	//			}
+				
+			}
+						
 		}
 		
 		// synonym, j:

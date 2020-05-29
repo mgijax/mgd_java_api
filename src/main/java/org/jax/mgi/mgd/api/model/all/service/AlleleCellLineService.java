@@ -107,7 +107,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
         // NOTE:  use the PARENT strain (not the Strain of Origin)
         // set the strain
         // set the derivation
-        String parentCellLineKey = domain.get(0).getMutantCellLine().getDerivation().getParentCellLineKey();
+        String parentCellLineKey = domain.get(0).getMutantCellLine().getDerivation().getCellLineKey();
         String strainKey = domain.get(0).getMutantCellLine().getStrainKey();     		       		
         String strainName = domain.get(0).getMutantCellLine().getStrain();
         String cellLineTypeKey = domain.get(0).getMutantCellLine().getCellLineTypeKey();

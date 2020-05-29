@@ -436,8 +436,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				where = where + "\nand c.parentCellLineType_key = " + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLineTypeKey();
 				from_cellLine = true;
 			}			
-			if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLineKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLineKey().isEmpty()) {
-				where = where + "\nand c.parentCellLine_key = " + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLineKey();
+			if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getCellLineKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getCellLineKey().isEmpty()) {
+				where = where + "\nand c.parentCellLine_key = " + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getCellLineKey();
 				from_cellLine = true;
 			}
 			if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getStrainKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getStrainKey().isEmpty()) {

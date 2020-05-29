@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.all.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -10,7 +11,9 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleCellLineDAO;
 import org.jax.mgi.mgd.api.model.all.dao.CellLineDAO;
+import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDomain;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLine;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleCellLineTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -27,6 +30,8 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 	private AlleleCellLineDAO alleleCellLineDAO;
 	@Inject
 	private CellLineDAO cellLineDAO;
+	@Inject
+	private AlleleCellLineDerivationService derivationService;
 	
 	private AlleleCellLineTranslator translator = new AlleleCellLineTranslator();				
 
@@ -87,10 +92,8 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
         String creatorKey;
         String vectorKey;
         
-//        cellAssocKey : string := "maxCellAssoc";
-//        cellAssocDefined : boolean := false;
-//        cellLineKey : string := "maxCellLine";
-//        cellLineDefined : boolean := false;
+		SlimAlleleCellLineDerivationDomain derivationSearch = new SlimAlleleCellLineDerivationDomain();
+		List<AlleleCellLineDerivationDomain> derivationResults = new ArrayList<AlleleCellLineDerivationDomain>();
 
 		log.info("processAlleleCellLine");
 		
@@ -107,7 +110,6 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
         String parentCellLineKey = domain.get(0).getParentCellLineKey();
         String strainKey = domain.get(0).getStrainKey();     		       		
         String strainName = domain.get(0).getStrain();
-        String derivationKey = domain.get(0).getDerivationKey();
         String cellLineTypeKey = domain.get(0).getCellLineTypeKey();
 		
         // set the isParent
@@ -131,6 +133,60 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
             creatorKey = domain.get(i).getCreatorKey();
             vectorKey = domain.get(i).getVectorKey();
 			
+            if (mutantCellLineKey.isEmpty()) {
+            	isMutant = false;
+			}
+            
+            //
+            // check isParent, isMutant
+            //
+
+            if (isParent == false && isMutant == false) {
+ 
+            	// not specified
+            	//if = "Gene trapped" or "Targeted"
+            	if (alleleTypeKey.equals("847121") || alleleTypeKey.equals("847116")) {
+
+		            // select the derivation key that is associated with:
+		            //   allele type
+		            //   creator = Not Specified (3982966)
+		            //   vector = Not Specified (3982979)
+		            //   parent cell line = Not Specified (-1)
+		            //   strain = Not Specified (-1)
+		            //   cell line type
+		            //
+            		derivationSearch.setAlleleTypeKey(alleleTypeKey);
+            		derivationSearch.setVectorKey("3982979");
+            		derivationSearch.setParentCellLineKey("-1");
+            		derivationSearch.setCreatorKey("3982966");
+            		derivationSearch.setStrainKey("-1");
+            		derivationSearch.setCellLineTypeKey(cellLineTypeKey);
+            		
+            		derivationResults = derivationService.validateDerivation(derivationSearch);
+            		
+            		if (derivationResults.get(0).getDerivationKey().isEmpty()) {
+                		log.info("Cannot find Derivation for this Allele Type and Parent = 'Not Specified'");
+                		return modified;
+                	}
+
+                	mutantCellLine = "Not Specifeid";
+                	strainKey = "-1";
+                	addCellLine = true;
+                	addAssociation = true;
+            	}
+            	
+                // do not default 'not applicable'
+                else {
+                	addCellLine = false;
+                	addAssociation = false;
+                }
+                	
+            }
+            
+            //
+            // end check isParent, isMutant
+            //
+              
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 				
 				if (domain.get(i).getMutantCellLineKey().isEmpty()) {

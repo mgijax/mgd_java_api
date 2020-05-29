@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.all.translator;
 
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.domain.CellLineDomain;
 import org.jax.mgi.mgd.api.model.all.entities.CellLine;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -29,13 +30,16 @@ public class CellLineTranslator extends BaseEntityDomainTranslator<CellLine, Cel
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
 		if (entity.getDerivation() != null) {
-			domain.setDerivationKey(String.valueOf(entity.getDerivation().get_derivation_key()));
-			domain.setVectorKey(String.valueOf(entity.getDerivation().getVector().get_term_key()));
-			domain.setVector(entity.getDerivation().getVector().getTerm());
-			domain.setParentCellLineKey(String.valueOf(entity.getDerivation().getParentCellLine().get_cellline_key()));
-			domain.setParentCellLine(entity.getDerivation().getParentCellLine().getCellLine());
-			domain.setCreatorKey(String.valueOf(entity.getDerivation().getCreator().get_term_key()));
-			domain.setCreator(entity.getDerivation().getCreator().getTerm());
+//			domain.setDerivationKey(String.valueOf(entity.getDerivation().get_derivation_key()));
+//			domain.setVectorKey(String.valueOf(entity.getDerivation().getVector().get_term_key()));
+//			domain.setVector(entity.getDerivation().getVector().getTerm());
+//			domain.setParentCellLineKey(String.valueOf(entity.getDerivation().getParentCellLine().get_cellline_key()));
+//			domain.setParentCellLine(entity.getDerivation().getParentCellLine().getCellLine());
+//			domain.setCreatorKey(String.valueOf(entity.getDerivation().getCreator().get_term_key()));
+//			domain.setCreator(entity.getDerivation().getCreator().getTerm());
+			AlleleCellLineDerivationTranslator derivationTranslator = new AlleleCellLineDerivationTranslator();
+			AlleleCellLineDerivationDomain derivation = derivationTranslator.translate(entity.getDerivation());
+			domain.setDerivation(derivation);
 		}
 		
 		return domain;

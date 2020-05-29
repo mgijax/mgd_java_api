@@ -1,6 +1,9 @@
 package org.jax.mgi.mgd.api.model.all.service;
 
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -10,11 +13,13 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleCellLineDerivationDAO;
 import org.jax.mgi.mgd.api.model.all.dao.CellLineDAO;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDerivationDomain;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLineDerivation;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleCellLineDerivationTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -31,6 +36,7 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 	private CellLineDAO cellLineDAO;
 	
 	private AlleleCellLineDerivationTranslator translator = new AlleleCellLineDerivationTranslator();				
+	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
 	public SearchResults<AlleleCellLineDerivationDomain> create(AlleleCellLineDerivationDomain domain, User user) {
@@ -138,5 +144,43 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		log.info("processAlleleCellLineDerivation/processing successful");
 		return modified;
 	}
-   
+ 
+	@Transactional
+	public List<AlleleCellLineDerivationDomain> validateDerivation(SlimAlleleCellLineDerivationDomain searchDomain) {
+		
+		List<AlleleCellLineDerivationDomain> results = new ArrayList<AlleleCellLineDerivationDomain>();	
+
+		// derivation type key == allele type key
+		
+		String cmd = "\nselect d._Derivation_key"
+		   + "\nfrom ALL_CellLine_Derivation d, ALL_CellLine c"
+		   + "\nwhere d._DerivationType_key = " + searchDomain.getAlleleTypeKey()
+		   + "\nand d._Creator_key = " + searchDomain.getCreatorKey()
+		   + "\nand d._Vector_key = " + searchDomain.getVectorKey()
+		   + "\nand d._ParentCellLine_key = " + searchDomain.getParentCellLineKey()
+		   + "\nand d._ParentCellLine_key = c._CellLine_key"
+		   + "\nand c._Strain_key = " + searchDomain.getStrainKey()
+		   + "\nand c._CellLine_Type_key = " + searchDomain.getCellLineTypeKey()
+		   + "\nand c.isMutant = 0";
+		
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			
+			while (rs.next()) {
+				AlleleCellLineDerivationDomain domain = new AlleleCellLineDerivationDomain();
+				domain = translator.translate(derivationDAO.get(rs.getInt("_derivation_key")));				
+				derivationDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
+	
 }

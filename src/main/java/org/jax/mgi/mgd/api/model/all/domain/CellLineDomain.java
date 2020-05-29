@@ -16,13 +16,6 @@ public class CellLineDomain extends BaseDomain {
 	private String cellLineType;
 	private String strainKey;
 	private String strain;
-//	private String derivationKey;
-//	private String vectorKey;
-//	private String vector;
-//	private String parentCellLineKey;
-//	private String parentCellLine;
-//	private String creatorKey;
-//	private String creator;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

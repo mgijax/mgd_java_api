@@ -33,10 +33,10 @@ public class AlleleCellLineDerivationTranslator extends BaseEntityDomainTranslat
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
-		if (entity.getParentCellLine() != null) {
-			domain.setParentStrainKey(String.valueOf(entity.getParentCellLine().getStrain().get_strain_key()));
-			domain.setParentStrain(entity.getParentCellLine().getStrain().getStrain());
-		}
+//		if (entity.getParentCellLine() != null) {
+//			domain.setParentStrainKey(String.valueOf(entity.getParentCellLine().getStrain().get_strain_key()));
+//			domain.setParentStrain(entity.getParentCellLine().getStrain().getStrain());
+//		}
 		
 		return domain;
 	}

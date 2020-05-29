@@ -425,6 +425,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		// mutant & parent cell lines
 		if (searchDomain.getMutantCellLineAssocs() != null) {
 			
+			log.info("mutant cell line : 1");
+			
 			// mutant cell line : cell line, creator, modification date, strain of origin
 			if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine() != null) {
 				where = where + "\nand c._cellline_key = " + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLineKey();
@@ -433,7 +435,10 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			else if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine() != null) {
 				where = where + "\nand c.cellLine ilike '" + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLine() + "'";
 				from_cellLine = true;
-			}			
+			}
+
+			log.info("mutant cell line : 2");
+		
 			if ((searchDomain.getMutantCellLineAssocs().get(0).getModifiedBy() != null && !searchDomain.getMutantCellLineAssocs().get(0).getModifiedBy().isEmpty())
 					|| (searchDomain.getMutantCellLineAssocs().get(0).getModification_date() != null && !searchDomain.getMutantCellLineAssocs().get(0).getModification_date().isEmpty())) {
 				String cmResults2[] = DateSQLQuery.queryByCreationModification("c", searchDomain.getMutantCellLineAssocs().get(0).getCreatedBy(), searchDomain.getMutantCellLineAssocs().get(0).getModifiedBy(), searchDomain.getMutantCellLineAssocs().get(0).getCreation_date(), searchDomain.getMutantCellLineAssocs().get(0).getModification_date());
@@ -443,12 +448,16 @@ public class AlleleService extends BaseService<AlleleDomain> {
 					from_cellLine = true;
 				}
 			}
+			
 			if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getStrain() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getStrain().isEmpty()) {
 				where = where + "\nand c.strain ilile '" + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getStrain() + "'";
 				from_cellLine = true;
 			}			
 
 			// parent cell line : cell line, strain, cell line type
+			
+			log.info("mutant cell line : 3");
+
 			if (searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine() != null) {
 				where = where + "\nand pc._cellline_key = " + searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLineKey();
 				from_cellLine = true;
@@ -465,7 +474,9 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				where = where + "\nand pc.strain ilile '" + searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getStrain() + "'";
 				from_cellLine = true;
 			}			
-						
+
+			log.info("mutant cell line : 4");
+			
 		}
 		
 		// synonym, j:

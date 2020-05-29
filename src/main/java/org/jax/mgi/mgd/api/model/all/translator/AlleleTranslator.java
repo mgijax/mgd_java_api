@@ -137,7 +137,7 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		if (entity.getMutantCellLines() != null && !entity.getMutantCellLines().isEmpty()) {
 			AlleleCellLineTranslator cellLineTranslator = new AlleleCellLineTranslator();
 			Iterable<AlleleCellLineDomain> i = cellLineTranslator.translateEntities(entity.getMutantCellLines());
-			domain.setMutantCellLines(IteratorUtils.toList(i.iterator()));
+			domain.setMutantCellLineAssocs(IteratorUtils.toList(i.iterator()));
 		}
 	
 		// driver genes

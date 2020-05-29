@@ -110,11 +110,18 @@ public class CellLineService extends BaseService<CellLineDomain> {
 				entity.setIsMutant(Integer.valueOf(domain.get(i).getIsMutant()));				
 				entity.setCellLineType(termDAO.get(Integer.valueOf(domain.get(i).getCellLineTypeKey())));
 				entity.setStrain(strainDAO.get(Integer.valueOf(domain.get(i).getStrainKey())));
-				//entity.setDerivation(derivationDAO.get(Integer.valueOf(domain.get(i).getDerivationKey())));				
 				entity.setCreatedBy(user);
 				entity.setCreation_date(new Date());
 				entity.setModifiedBy(user);
-				entity.setModification_date(new Date());				
+				entity.setModification_date(new Date());
+				
+				if (domain.get(i).getDerivation() != null) {
+					entity.setDerivation(derivationDAO.get(Integer.valueOf(domain.get(i).getDerivation().getDerivationKey())));									
+				}
+				else {
+					entity.setDerivation(null);					
+				}
+				
 				cellLineDAO.persist(entity);				
 				log.info("processCellLine/create/returning results");	
 				modified = true;
@@ -134,9 +141,16 @@ public class CellLineService extends BaseService<CellLineDomain> {
 				entity.setIsMutant(Integer.valueOf(domain.get(i).getIsMutant()));				
 				entity.setCellLineType(termDAO.get(Integer.valueOf(domain.get(i).getCellLineTypeKey())));
 				entity.setStrain(strainDAO.get(Integer.valueOf(domain.get(i).getStrainKey())));
-				//entity.setDerivation(derivationDAO.get(Integer.valueOf(domain.get(i).getDerivationKey())));				
 				entity.setModification_date(new Date());
 				entity.setModifiedBy(user);
+				
+				if (domain.get(i).getDerivation() != null) {
+					entity.setDerivation(derivationDAO.get(Integer.valueOf(domain.get(i).getDerivation().getDerivationKey())));									
+				}
+				else {
+					entity.setDerivation(null);					
+				}
+				
 				cellLineDAO.update(entity);
 				log.info("processCellLine/changes processed: " + domain.get(i).getCellLineKey());				
 				modified = true;

@@ -429,7 +429,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			
 			// mutant cell line : cell line, creator, modification date, strain of origin
 			if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine() != null) {
-				where = where + "\nand c._cellline_key = " + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLineKey();
+				where = where + "\nand c._mutantcellline_key = " + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLineKey();
 				from_cellLine = true;
 			}
 			else if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine() != null) {
@@ -447,10 +447,9 @@ public class AlleleService extends BaseService<AlleleDomain> {
 					where = where + cmResults2[1];
 					from_cellLine = true;
 				}
-			}
-			
+			}			
 			if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getStrain() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getStrain().isEmpty()) {
-				where = where + "\nand c.strain ilile '" + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getStrain() + "'";
+				where = where + "\nand c.celllinestrain ilile '" + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getStrain() + "'";
 				from_cellLine = true;
 			}			
 
@@ -459,21 +458,21 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			log.info("mutant cell line : 3");
 
 			if (searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine() != null) {
-				where = where + "\nand pc._cellline_key = " + searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLineKey();
+				where = where + "\nand c.parentcellline_key = " + searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLineKey();
 				from_cellLine = true;
 			}
 			else if (searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine() != null) {
-				where = where + "\nand pc.cellLine ilike '" + searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLine() + "'";
+				where = where + "\nand c.parentcellline ilike '" + searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLine() + "'";
 				from_cellLine = true;
 			}			
 			if (searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLineTypeKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLineTypeKey().isEmpty()) {
-				where = where + "\nand pc.cellLineType_key = " + searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLineTypeKey();
+				where = where + "\nand c.parentcelllinetype_key = " + searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLineTypeKey();
 				from_cellLine = true;
 			}
-			if (searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getStrain() != null && !searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getStrain().isEmpty()) {
-				where = where + "\nand pc.strain ilile '" + searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getStrain() + "'";
-				from_cellLine = true;
-			}			
+//			if (searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getStrain() != null && !searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getStrain().isEmpty()) {
+//				where = where + "\nand c.strain ilile '" + searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getStrain() + "'";
+//				from_cellLine = true;
+//			}			
 
 			log.info("mutant cell line : 4");
 			

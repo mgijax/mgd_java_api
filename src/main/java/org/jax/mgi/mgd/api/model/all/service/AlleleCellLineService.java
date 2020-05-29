@@ -107,7 +107,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
         // NOTE:  use the PARENT strain (not the Strain of Origin)
         // set the strain
         // set the derivation
-        String parentCellLineKey = domain.get(0).getParentCellLineKey();
+        String parentCellLineKey = domain.get(0).getMutantCellLine().getDerivation().getParentCellLineKey();
         String strainKey = domain.get(0).getStrainKey();     		       		
         String strainName = domain.get(0).getStrain();
         String cellLineTypeKey = domain.get(0).getCellLineTypeKey();
@@ -128,10 +128,10 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 		
 		for (int i = 0; i < domain.size(); i++) {
 			
-            mutantCellLine = domain.get(i).getMutantCellLine();
-            mutantCellLineKey = domain.get(i).getMutantCellLineKey();
-            creatorKey = domain.get(i).getCreatorKey();
-            vectorKey = domain.get(i).getVectorKey();
+//            mutantCellLine = domain.get(i).getMutantCellLine();
+            mutantCellLineKey = domain.get(i).getMutantCellLine().getCellLineKey();
+            creatorKey = domain.get(i).getMutantCellLine().getDerivation().getCreatorKey();
+            vectorKey = domain.get(i).getMutantCellLine().getDerivation().getVectorKey();
 			
             if (mutantCellLineKey.isEmpty()) {
             	isMutant = false;
@@ -189,14 +189,14 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
               
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 				
-				if (domain.get(i).getMutantCellLineKey().isEmpty()) {
+				if (domain.get(i).getMutantCellLine().getCellLineKey().isEmpty()) {
 					continue;
 				}
 				
 				log.info("processAlleleCellLine/create");
 				AlleleCellLine entity = new AlleleCellLine();									
 				entity.set_allele_key(Integer.valueOf(parentKey));
-				entity.setMutantCellLine(cellLineDAO.get(Integer.valueOf(domain.get(i).getMutantCellLineKey())));				
+				entity.setMutantCellLine(cellLineDAO.get(Integer.valueOf(domain.get(i).getMutantCellLine().getCellLineKey())));				
 				entity.setCreatedBy(user);
 				entity.setCreation_date(new Date());
 				entity.setModifiedBy(user);
@@ -216,7 +216,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processAlleleCellLine/update");
 				AlleleCellLine entity = alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));			
-				entity.setMutantCellLine(cellLineDAO.get(Integer.valueOf(domain.get(i).getMutantCellLineKey())));								
+				entity.setMutantCellLine(cellLineDAO.get(Integer.valueOf(domain.get(i).getMutantCellLine().getCellLineKey())));				
 				entity.setModification_date(new Date());
 				entity.setModifiedBy(user);
 				alleleCellLineDAO.update(entity);

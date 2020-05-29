@@ -21,7 +21,6 @@ public class CellLineTranslator extends BaseEntityDomainTranslator<CellLine, Cel
 		domain.setCellLineType(entity.getCellLineType().getTerm());
 		domain.setStrainKey(String.valueOf(entity.getStrain().get_strain_key()));
 		domain.setStrain(entity.getStrain().getStrain());		
-
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());

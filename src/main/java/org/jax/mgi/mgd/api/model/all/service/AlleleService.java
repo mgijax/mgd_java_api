@@ -432,16 +432,16 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				where = where + "\nand c.creator ilike '" + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getCreator() + "'";
 				from_cellLine = true;
 			}			
-			if (searchDomain.getMutantCellLineAssocs().get(0).getCellLineTypeKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getCellLineTypeKey().isEmpty()) {
-				where = where + "\nand c.parentCellLineType_key = " + searchDomain.getMutantCellLineAssocs().get(0).getCellLineTypeKey();
+			if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLineTypeKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLineTypeKey().isEmpty()) {
+				where = where + "\nand c.parentCellLineType_key = " + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLineTypeKey();
 				from_cellLine = true;
 			}			
 			if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLineKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLineKey().isEmpty()) {
 				where = where + "\nand c.parentCellLine_key = " + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLineKey();
 				from_cellLine = true;
 			}
-			if (searchDomain.getMutantCellLineAssocs().get(0).getStrainKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getStrainKey().isEmpty()) {
-				where = where + "\nand c.cellLineStrain_key = " + searchDomain.getMutantCellLineAssocs().get(0).getStrainKey();
+			if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getStrainKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getStrainKey().isEmpty()) {
+				where = where + "\nand c.cellLineStrain_key = " + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getStrainKey();
 				from_cellLine = true;
 			}			
 			if ((searchDomain.getMutantCellLineAssocs().get(0).getModifiedBy() != null && !searchDomain.getMutantCellLineAssocs().get(0).getModifiedBy().isEmpty())

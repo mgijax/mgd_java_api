@@ -11,11 +11,6 @@ public class AlleleCellLineDomain extends BaseDomain {
 	private String processStatus;
 	private String assocKey;
 	private String alleleKey;
-	private String isMutant;
-	private String cellLineTypeKey;
-	private String cellLineType;
-	private String strainKey;
-	private String strain;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

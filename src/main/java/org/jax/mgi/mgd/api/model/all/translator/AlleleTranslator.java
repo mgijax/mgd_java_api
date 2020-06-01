@@ -9,6 +9,7 @@ import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleMutationDomain;
+import org.jax.mgi.mgd.api.model.all.domain.CellLineDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocViewDomain;
 import org.jax.mgi.mgd.api.model.img.translator.ImagePaneAssocViewTranslator;
@@ -133,13 +134,16 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			domain.setSubtypeAnnots(IteratorUtils.toList(i.iterator()));
 		}
 
-		// mutant cell lines
+		// mutant cell lines, parent cell line (at most 1)
 		if (entity.getMutantCellLines() != null && !entity.getMutantCellLines().isEmpty()) {
-			AlleleCellLineTranslator cellLineTranslator = new AlleleCellLineTranslator();
-			Iterable<AlleleCellLineDomain> i = cellLineTranslator.translateEntities(entity.getMutantCellLines());
+			AlleleCellLineTranslator allelecellLineTranslator = new AlleleCellLineTranslator();
+			Iterable<AlleleCellLineDomain> i = allelecellLineTranslator.translateEntities(entity.getMutantCellLines());
 			domain.setMutantCellLineAssocs(IteratorUtils.toList(i.iterator()));
+			CellLineTranslator cellLineTranslator = new CellLineTranslator();
+			CellLineDomain parentCellLine = cellLineTranslator.translate(entity.getMutantCellLines().get(0).getMutantCellLine().getDerivation().getParentCellLine());
+			domain.setParentCellLine(parentCellLine);				
 		}
-	
+		
 		// driver genes
 		if (entity.getDriverGenes() != null && !entity.getDriverGenes().isEmpty()) {
 			RelationshipAlleleDriverGeneTranslator driverTranslator = new RelationshipAlleleDriverGeneTranslator();

@@ -13,6 +13,7 @@ import org.jax.mgi.mgd.api.model.all.dao.AlleleCellLineDAO;
 import org.jax.mgi.mgd.api.model.all.dao.CellLineDAO;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDomain;
+import org.jax.mgi.mgd.api.model.all.domain.CellLineDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLine;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleCellLineTranslator;
@@ -30,6 +31,8 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 	private AlleleCellLineDAO alleleCellLineDAO;
 	@Inject
 	private CellLineDAO cellLineDAO;
+	@Inject
+	private CellLineService cellLineService;
 	@Inject
 	private AlleleCellLineDerivationService derivationService;
 	
@@ -76,7 +79,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
     }
 
 	@Transactional
-	public Boolean process(String parentKey, String alleleTypeKey, String alleleType, List<AlleleCellLineDomain> domain, User user) {
+	public Boolean process(String parentKey, String alleleTypeKey, String alleleType, CellLineDomain parentDomain, List<AlleleCellLineDomain> domain, User user) {
 		// process allele cell line (create, delete, update)
 		
 		Boolean modified = false;
@@ -85,13 +88,9 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 		Boolean isMutant = true;
 		Boolean addCellLine = false;
 		Boolean addAssociation = true;
-        Boolean getDerivation = true;
-        
-        String mutantCellLine;
-        String mutantCellLineKey;
-        String creatorKey;
-        String vectorKey;
-        
+
+        String cellLineTypeKey = parentDomain.getCellLineTypeKey();
+
 		SlimAlleleCellLineDerivationDomain derivationSearch = new SlimAlleleCellLineDerivationDomain();
 		List<AlleleCellLineDerivationDomain> derivationResults = new ArrayList<AlleleCellLineDerivationDomain>();
 
@@ -100,21 +99,10 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 		if (domain == null || domain.isEmpty()) {
 			log.info("processAlleleCellLine/nothing to process");
 			return modified;
-		}
-        
-        // set the allele type and type key
-        // set the parent
-        // NOTE:  use the PARENT strain (not the Strain of Origin)
-        // set the strain
-        // set the derivation
-        String parentCellLineKey = domain.get(0).getMutantCellLine().getDerivation().getCellLineKey();
-        String strainKey = domain.get(0).getMutantCellLine().getStrainKey();     		       		
-        String strainName = domain.get(0).getMutantCellLine().getStrain();
-        String cellLineTypeKey = domain.get(0).getMutantCellLine().getCellLineTypeKey();
+		}      
 		
         // set the isParent
-
-        if (parentCellLineKey.isEmpty()) {
+        if (parentDomain.getCellLineKey().isEmpty()) {
           isParent = false;
         };
 
@@ -127,13 +115,14 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 		// for each row, determine whether to perform an insert, delete or update
 		
 		for (int i = 0; i < domain.size(); i++) {
-			
-//            mutantCellLine = domain.get(i).getMutantCellLine();
-            mutantCellLineKey = domain.get(i).getMutantCellLine().getCellLineKey();
-            creatorKey = domain.get(i).getMutantCellLine().getDerivation().getCreatorKey();
-            vectorKey = domain.get(i).getMutantCellLine().getDerivation().getVectorKey();
-			
-            if (mutantCellLineKey.isEmpty()) {
+		
+			CellLineDomain cellLineDomain = new CellLineDomain();
+						
+            if (i > 0 && domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
+    			return modified;
+			}
+            
+            if (domain.get(i).getMutantCellLine().getCellLineKey().isEmpty()) {
             	isMutant = false;
 			}
             
@@ -168,9 +157,9 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
                 		log.info("Cannot find Derivation for this Allele Type and Parent = 'Not Specified'");
                 		return modified;
                 	}
-
-                	mutantCellLine = "Not Specifeid";
-                	strainKey = "-1";
+            		
+            		cellLineDomain.setCellLine("Not Specified");
+            		cellLineDomain.setStrain("-1");
                 	addCellLine = true;
                 	addAssociation = true;
             	}
@@ -186,8 +175,22 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
             //
             // end check isParent, isMutant
             //
-              
-			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
+            
+            // create new cell line
+			if (addCellLine) {
+				cellLineDomain.setCellLine(domain.get(i).getMutantCellLine().getCellLine());
+				cellLineDomain.setCellLineKey(domain.get(i).getMutantCellLine().getCellLine());
+				cellLineDomain.setCellLineTypeKey(cellLineTypeKey);
+				cellLineDomain.setStrainKey(domain.get(i).getMutantCellLine().getStrainKey());
+				cellLineDomain.setDerivation(derivationResults.get(0));				
+				cellLineDomain.setIsMutant("1");
+				SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
+				cellLineResults = cellLineService.create(cellLineDomain, user);
+				domain.get(i).setMutantCellLine(cellLineResults.items.get(0));
+			}
+			
+			// create cell line/allele association
+			if (addAssociation) {
 				
 				if (domain.get(i).getMutantCellLine().getCellLineKey().isEmpty()) {
 					continue;
@@ -224,7 +227,6 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 				modified = true;
 			}
 			else {
-		        getDerivation = false;
 				log.info("processAlleleCellLine/no changes processed: " + domain.get(i).getAssocKey());
 			}
 		}

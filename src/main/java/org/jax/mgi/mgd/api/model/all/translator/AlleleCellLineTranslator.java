@@ -27,10 +27,7 @@ public class AlleleCellLineTranslator extends BaseEntityDomainTranslator<AlleleC
 			CellLineTranslator cellLineTranslator = new CellLineTranslator();
 			CellLineDomain mutationCellLine = cellLineTranslator.translate(entity.getMutantCellLine());
 			domain.setMutantCellLine(mutationCellLine);				
-			CellLineDomain parentCellLine = cellLineTranslator.translate(entity.getMutantCellLine().getDerivation().getParentCellLine());
-			domain.setParentCellLine(parentCellLine);				
 		}
-		
 		
 		return domain;
 	}

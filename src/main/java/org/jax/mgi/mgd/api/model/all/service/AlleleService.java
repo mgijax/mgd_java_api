@@ -20,6 +20,7 @@ import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleRefAssocTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
@@ -44,16 +45,17 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	private TermDAO termDAO;
 	@Inject
 	private ReferenceDAO referenceDAO;
-
 	@Inject
 	private AlleleCellLineService alleleCellLineService;
+	@Inject
+	private MGIReferenceAssocService referenceAssocService;
 	
 	private AlleleTranslator translator = new AlleleTranslator();
 	private SlimAlleleTranslator slimtranslator = new SlimAlleleTranslator();	
 	private SlimAlleleRefAssocTranslator slimreftranslator = new SlimAlleleRefAssocTranslator();	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
-//	String mgiTypeKey = "11";
+	String mgiTypeKey = "11";
 //	String mgiTypeName = "Allele";
 	
 	@Transactional
@@ -113,6 +115,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		// execute persist/insert/send to database
 		alleleDAO.persist(entity);
 
+		// process marker reference
+		if (domain.getRefAssocs() != null && !domain.getRefAssocs().isEmpty()) {
+			referenceAssocService.process(domain.getMarkerKey(), domain.getRefAssocs(), mgiTypeKey, user);
+		}
+		
 		// process mutant cell lines
 		log.info("processAllele/mutant cell lines");
 		alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLineAssocs(), user);
@@ -177,9 +184,14 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			entity.setApprovedBy(null);			
 		}
 
+		// process marker reference
+		if (domain.getRefAssocs() != null && !domain.getRefAssocs().isEmpty()) {
+			referenceAssocService.process(domain.getMarkerKey(), domain.getRefAssocs(), mgiTypeKey, user);
+		}
+		
 		// process mutant cell lines
-		log.info("processAllele/mutant cell lines");
-		alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLineAssocs(), user);
+//		log.info("processAllele/mutant cell lines");
+//		alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLineAssocs(), user);
 		
 		// process synonyms
 		// process allele attributes/subtypes

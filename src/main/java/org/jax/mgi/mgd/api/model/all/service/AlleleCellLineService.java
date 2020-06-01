@@ -117,6 +117,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 		for (int i = 0; i < domain.size(); i++) {
 		
 			CellLineDomain cellLineDomain = new CellLineDomain();
+			String mutantCellLineKey = "";
 						
             if (i > 0 && domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
     			return modified;
@@ -186,20 +187,23 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 				cellLineDomain.setIsMutant("1");
 				SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
 				cellLineResults = cellLineService.create(cellLineDomain, user);
-				domain.get(i).setMutantCellLine(cellLineResults.items.get(0));
+				mutantCellLineKey = cellLineResults.items.get(0).getCellLineKey();
+			}
+			else {
+				mutantCellLineKey = domain.get(i).getMutantCellLine().getCellLineKey();
 			}
 			
 			// create cell line/allele association
 			if (addAssociation) {
 				
-				if (domain.get(i).getMutantCellLine().getCellLineKey().isEmpty()) {
+				if (mutantCellLineKey.isEmpty()) {
 					continue;
 				}
 				
 				log.info("processAlleleCellLine/create");
 				AlleleCellLine entity = new AlleleCellLine();									
 				entity.set_allele_key(Integer.valueOf(parentKey));
-				entity.setMutantCellLine(cellLineDAO.get(Integer.valueOf(domain.get(i).getMutantCellLine().getCellLineKey())));				
+				entity.setMutantCellLine(cellLineDAO.get(Integer.valueOf(mutantCellLineKey)));				
 				entity.setCreatedBy(user);
 				entity.setCreation_date(new Date());
 				entity.setModifiedBy(user);
@@ -219,7 +223,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processAlleleCellLine/update");
 				AlleleCellLine entity = alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));			
-				entity.setMutantCellLine(cellLineDAO.get(Integer.valueOf(domain.get(i).getMutantCellLine().getCellLineKey())));				
+				entity.setMutantCellLine(cellLineDAO.get(Integer.valueOf(mutantCellLineKey)));				
 				entity.setModification_date(new Date());
 				entity.setModifiedBy(user);
 				alleleCellLineDAO.update(entity);

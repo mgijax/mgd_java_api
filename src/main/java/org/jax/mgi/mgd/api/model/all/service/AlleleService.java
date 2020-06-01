@@ -453,8 +453,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			}						
 		}
 
-		// parent cell line : cell line, strain, cell line type
-		
+		// parent cell line : cell line, strain, cell line type		
 		if (searchDomain.getParentDerivation().getParentCellLine() != null) {
 			if (searchDomain.getParentDerivation().getParentCellLine().getCellLineKey() != null && !searchDomain.getParentDerivation().getParentCellLine().getCellLineKey().isEmpty()) {
 				where = where + "\nand c.parentcellline_key = " + searchDomain.getParentDerivation().getParentCellLine().getCellLineKey();

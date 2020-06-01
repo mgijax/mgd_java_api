@@ -66,7 +66,6 @@ public class AlleleDomain extends BaseDomain {
 
 	private List<AlleleCellLineDomain> mutantCellLineAssocs;
 	private AlleleCellLineDerivationDomain parentDerivation;
-	private CellLineDomain parentCellLine;	
 
 	private List<MGISynonymDomain> synonyms;
 	private List<AlleleMutationDomain> mutations;

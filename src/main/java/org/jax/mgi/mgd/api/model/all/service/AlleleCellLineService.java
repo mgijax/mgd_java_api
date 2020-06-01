@@ -79,7 +79,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
     }
 
 	@Transactional
-	public Boolean process(String parentKey, String alleleTypeKey, String alleleType, CellLineDomain parentDomain, List<AlleleCellLineDomain> domain, User user) {
+	public Boolean process(String parentKey, String alleleTypeKey, String alleleType, AlleleCellLineDerivationDomain derivationDomain, List<AlleleCellLineDomain> domain, User user) {
 		// process allele cell line (create, delete, update)
 		
 		Boolean modified = false;
@@ -89,7 +89,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 		Boolean addCellLine = false;
 		Boolean addAssociation = true;
 
-        String cellLineTypeKey = parentDomain.getCellLineTypeKey();
+        String cellLineTypeKey = derivationDomain.getParentCellLine().getCellLineTypeKey();
 
 		SlimAlleleCellLineDerivationDomain derivationSearch = new SlimAlleleCellLineDerivationDomain();
 		List<AlleleCellLineDerivationDomain> derivationResults = new ArrayList<AlleleCellLineDerivationDomain>();
@@ -102,7 +102,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 		}      
 		
         // set the isParent
-        if (parentDomain.getCellLineKey().isEmpty()) {
+        if (derivationDomain.getParentCellLine().getCellLineKey().isEmpty()) {
           isParent = false;
         };
 

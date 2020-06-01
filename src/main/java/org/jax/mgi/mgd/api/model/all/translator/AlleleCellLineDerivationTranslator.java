@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.all.translator;
 
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDerivationDomain;
+import org.jax.mgi.mgd.api.model.all.domain.CellLineDomain;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLineDerivation;
 import org.jax.mgi.mgd.api.util.Constants;
 
@@ -20,8 +21,6 @@ public class AlleleCellLineDerivationTranslator extends BaseEntityDomainTranslat
 		domain.setVector(entity.getVector().getTerm());
 		domain.setVectorTypeKey(String.valueOf(entity.getVectorType().get_term_key()));
 		domain.setVectorType(entity.getVectorType().getTerm());
-		domain.setCellLineKey(String.valueOf(entity.getParentCellLine().get_cellline_key()));
-		domain.setCellLine(entity.getParentCellLine().getCellLine());
 		domain.setCreatorKey(String.valueOf(entity.getCreator().get_term_key()));
 		domain.setCreator(entity.getCreator().getTerm());
 		domain.setDerivationTypeKey(String.valueOf(entity.getDerivationType().get_term_key()));
@@ -32,6 +31,12 @@ public class AlleleCellLineDerivationTranslator extends BaseEntityDomainTranslat
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));		
+	
+		if (entity.getParentCellLine() != null) {
+			CellLineTranslator cellLineTranslator = new CellLineTranslator();
+			CellLineDomain parentCellLine = cellLineTranslator.translate(entity.getParentCellLine());
+			domain.setParentCellLine(parentCellLine);				
+		}
 		
 		return domain;
 	}

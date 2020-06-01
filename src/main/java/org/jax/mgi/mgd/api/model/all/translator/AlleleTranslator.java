@@ -10,7 +10,6 @@ import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleMutationDomain;
-import org.jax.mgi.mgd.api.model.all.domain.CellLineDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocViewDomain;
 import org.jax.mgi.mgd.api.model.img.translator.ImagePaneAssocViewTranslator;
@@ -143,9 +142,6 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			AlleleCellLineDerivationTranslator derivationTransltor = new AlleleCellLineDerivationTranslator();
 			AlleleCellLineDerivationDomain parentDerivation = derivationTransltor.translate(entity.getMutantCellLines().get(0).getMutantCellLine().getDerivation());
 			domain.setParentDerivation(parentDerivation);
-			CellLineTranslator cellLineTranslator = new CellLineTranslator();
-			CellLineDomain parentCellLine = cellLineTranslator.translate(entity.getMutantCellLines().get(0).getMutantCellLine().getDerivation().getParentCellLine());
-			domain.setParentCellLine(parentCellLine);				
 		}
 		
 		// driver genes

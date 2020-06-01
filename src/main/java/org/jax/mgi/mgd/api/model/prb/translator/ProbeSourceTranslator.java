@@ -27,8 +27,8 @@ public class ProbeSourceTranslator extends BaseEntityDomainTranslator<ProbeSourc
 		domain.setTissue(entity.getTissue().getTissue());
 		domain.setGenderKey(String.valueOf(entity.getGender().get_term_key()));
 		domain.setGender(entity.getGender().getTerm());
-		domain.setCellLineKey(String.valueOf(entity.getCellLine().get_cellline_key()));
-		domain.setCellLine(entity.getCellLine().getCellLine());		
+		domain.setCellLineKey(String.valueOf(entity.getCellLine().get_term_key()));
+		domain.setCellLine(entity.getCellLine().getTerm());		
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());

@@ -33,15 +33,15 @@ public class CellLineController extends BaseController<CellLineDomain> {
 		SearchResults<CellLineDomain> results = new SearchResults<CellLineDomain>();
 		results = cellLineService.create(domain, user);
 		results = cellLineService.getResults(Integer.valueOf(results.items.get(0).getCellLineKey()));
-		return results;
+		return results;	
 	}
 
 	@Override
 	public SearchResults<CellLineDomain> update(CellLineDomain domain, User user) {
 		SearchResults<CellLineDomain> results = new SearchResults<CellLineDomain>();
-		results = cellLineService.update(domain, user);
+		results = cellLineService.update(domain, user);				
 		results = cellLineService.getResults(Integer.valueOf(results.items.get(0).getCellLineKey()));
-		return results;
+		return results;		
 	}
 
 	@Override

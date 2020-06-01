@@ -18,7 +18,6 @@ import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLineDerivation;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleCellLineDerivationTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
-import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -40,22 +39,68 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 
 	@Transactional
 	public SearchResults<AlleleCellLineDerivationDomain> create(AlleleCellLineDerivationDomain domain, User user) {
+		
+		// create new entity object from in-coming domain
+		// the Entities class handles the generation of the primary key
+		// database trigger will assign the MGI id/see pgmgddbschema/trigger for details
+
 		SearchResults<AlleleCellLineDerivationDomain> results = new SearchResults<AlleleCellLineDerivationDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		AlleleCellLineDerivation entity = new AlleleCellLineDerivation();
+		
+		entity.setName(domain.getName());
+		entity.setDescription(domain.getDescription());
+		entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));
+		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));							
+		entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.getCellLineKey())));				
+		entity.setCreatedBy(user);
+		entity.setCreation_date(new Date());
+		entity.setModifiedBy(user);
+		entity.setModification_date(new Date());
+		
+		// execute persist/insert/send to database
+		derivationDAO.persist(entity);
+	
+		// return entity translated to domain
+		log.info("processDerivation/create/returning results");
+		results.setItem(translator.translate(entity));
 		return results;
 	}
 
 	@Transactional
 	public SearchResults<AlleleCellLineDerivationDomain> update(AlleleCellLineDerivationDomain domain, User user) {
+		
+		// the set of fields in "update" is similar to set of fields in "create"
+		// creation user/date are only set in "create"
+
 		SearchResults<AlleleCellLineDerivationDomain> results = new SearchResults<AlleleCellLineDerivationDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		AlleleCellLineDerivation entity = derivationDAO.get(Integer.valueOf(domain.getDerivationKey()));
+		
+		log.info("processDerivation/update");
+
+		entity.setName(domain.getName());
+		entity.setDescription(domain.getDescription());
+		entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));
+		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));
+		entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.getCellLineKey())));	
+		entity.setModification_date(new Date());
+		entity.setModifiedBy(user);
+		derivationDAO.update(entity);
+		log.info("processDerivation/changes processed: " + domain.getDerivationKey());	
+
+		// return entity translated to domain
+		log.info("processDerivation/update/returning results");
+		results.setItem(translator.translate(entity));
+		log.info("processDerivation/update/returned results succsssful");
 		return results;
 	}
 
 	@Transactional
 	public SearchResults<AlleleCellLineDerivationDomain> delete(Integer key, User user) {
+		// get the entity object and delete
 		SearchResults<AlleleCellLineDerivationDomain> results = new SearchResults<AlleleCellLineDerivationDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		AlleleCellLineDerivation entity = derivationDAO.get(key);
+		results.setItem(translator.translate(derivationDAO.get(key)));
+		derivationDAO.remove(entity);
 		return results;
 	}
 	
@@ -77,73 +122,6 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		derivationDAO.clear();
 		return results;
     }
-
-	@Transactional
-	public Boolean process(String parentKey, AlleleCellLineDerivationDomain domain, User user) {
-		// process allele cell line derivation (create, delete, update)
-		
-		Boolean modified = false;
-		
-		log.info("processAlleleCellLineDerivation");
-		
-		if (domain == null) {
-			log.info("processAlleleCellLineDerivation/nothing to process");
-			return modified;
-		}
-		
-		if (domain.getVectorKey().isEmpty()) {
-			log.info("processAlleleCellLineDerivation/nothing to process");
-			return modified;
-		}					
-		
-		// iterate thru the list of rows in the domain
-		// for each row, determine whether to perform an insert, delete or update
-					
-		if (domain.getProcessStatus().equals(Constants.PROCESS_CREATE)) {				
-			log.info("processAlleleCellLineDerivation/create");
-			AlleleCellLineDerivation entity = new AlleleCellLineDerivation();									
-			entity.setName(domain.getName());
-			entity.setDescription(domain.getDescription());
-			entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));
-			entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));							
-			entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.getCellLineKey())));				
-			entity.setCreatedBy(user);
-			entity.setCreation_date(new Date());
-			entity.setModifiedBy(user);
-			entity.setModification_date(new Date());				
-			derivationDAO.persist(entity);				
-			log.info("processAlleleCellLineDerivation/create/returning results");	
-			modified = true;
-		}
-		else if (domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-			log.info("processAlleleCellLineDerivation/delete");
-			if (domain.getDerivationKey() != null && !domain.getDerivationKey().isEmpty()) {
-				AlleleCellLineDerivation entity = derivationDAO.get(Integer.valueOf(domain.getDerivationKey()));
-				derivationDAO.remove(entity);
-				modified = true;
-			}
-		}
-		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-			log.info("processAlleleCellLineDerivation/update");
-			AlleleCellLineDerivation entity = derivationDAO.get(Integer.valueOf(domain.getDerivationKey()));			
-			entity.setModification_date(new Date());
-			entity.setName(domain.getName());
-			entity.setDescription(domain.getDescription());
-			entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));
-			entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));
-			entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.getCellLineKey())));	
-			entity.setModifiedBy(user);
-			derivationDAO.update(entity);
-			log.info("processAlleleCellLineDerivation/changes processed: " + domain.getDerivationKey());				
-			modified = true;
-		}
-		else {
-			log.info("processAlleleCellLineDerivation/no changes processed: " + domain.getDerivationKey());
-		}
-		
-		log.info("processAlleleCellLineDerivation/processing successful");
-		return modified;
-	}
  
 	@Transactional
 	public List<AlleleCellLineDerivationDomain> validateDerivation(SlimAlleleCellLineDerivationDomain searchDomain) {

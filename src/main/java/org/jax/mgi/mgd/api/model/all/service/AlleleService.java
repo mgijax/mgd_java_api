@@ -136,7 +136,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
 		Allele entity = alleleDAO.get(Integer.valueOf(domain.getAlleleKey()));
-		Boolean modified = true;
 		
 		log.info("processAllele/update");
 
@@ -180,25 +179,17 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		// process mutant cell lines
 		log.info("processAllele/mutant cell lines");
-		if (alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLineAssocs(), user)) {
-			modified = true;			
-		}
+		alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLineAssocs(), user);
 		
 		// process synonyms
 		// process allele attributes/subtypes
 		// process molecular mutations
 		// process driver genes
 		
-		// only if modifications were actually made
-		if (modified == true) {
-			entity.setModification_date(new Date());
-			entity.setModifiedBy(user);
-			alleleDAO.update(entity);
-			log.info("processAllele/changes processed: " + domain.getAlleleKey());
-		}
-		else {
-			log.info("processAllele/no changes processed: " + domain.getAlleleKey());
-		}
+		entity.setModification_date(new Date());
+		entity.setModifiedBy(user);
+		alleleDAO.update(entity);
+		log.info("processAllele/changes processed: " + domain.getAlleleKey());
 			
 		// return entity translated to domain
 		log.info("processAllele/update/returning results");

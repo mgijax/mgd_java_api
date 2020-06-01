@@ -163,47 +163,28 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		
 		SearchResults<GenotypeDomain> results = new SearchResults<GenotypeDomain>();
 		Genotype entity = genotypeDAO.get(Integer.valueOf(domain.getGenotypeKey()));
-		Boolean modified = false;
 		String cmd;
 		Query query;
 		
 		log.info("processGenotype/update");
 		
-		if (!String.valueOf(entity.getStrain().get_strain_key()).equals(domain.getStrainKey())) {
-			entity.setStrain(strainDAO.get(Integer.valueOf(domain.getStrainKey())));
-			modified = true;
-		}
-		
-		if (!String.valueOf(entity.getIsConditional()).equals(domain.getIsConditional())) {
-			entity.setIsConditional(Integer.valueOf(domain.getIsConditional()));
-			modified = true;
-		}
-		
-		if (!String.valueOf(entity.getExistsAs().get_term_key()).equals(domain.getExistsAsKey())) {
-			entity.setExistsAs(termDAO.get(Integer.valueOf(domain.getExistsAsKey())));
-			modified = true;
-		}
+		entity.setStrain(strainDAO.get(Integer.valueOf(domain.getStrainKey())));
+		entity.setIsConditional(Integer.valueOf(domain.getIsConditional()));
+		entity.setExistsAs(termDAO.get(Integer.valueOf(domain.getExistsAsKey())));
 		
 		// process all notes
-		if (noteService.process(domain.getGenotypeKey(), domain.getGeneralNote(), mgiTypeKey, "1027", user)) {
-			modified = true;
-		}
-		if (noteService.process(domain.getGenotypeKey(), domain.getPrivateCuratorialNote(), mgiTypeKey, "1028", user)) {
-			modified = true;
-		}
+		noteService.process(domain.getGenotypeKey(), domain.getGeneralNote(), mgiTypeKey, "1027", user);
+		noteService.process(domain.getGenotypeKey(), domain.getPrivateCuratorialNote(), mgiTypeKey, "1028", user);
+
 		// update combination note 1
 		// combination note 2 & 3 get updated by nightly process (allelecombination)
 		// using allele detail note
 		// then run processAlleleCombinations to finish the job
-		if (noteService.process(domain.getGenotypeKey(), domain.getAlleleDetailNote(), mgiTypeKey, "1016", user)) {
-			modified = true;
-		}
+		noteService.process(domain.getGenotypeKey(), domain.getAlleleDetailNote(), mgiTypeKey, "1016", user);
 
 		// process Allele Pairs
 		log.info("processGenotypes/allele pairs");
-		if (allelePairService.process(domain.getGenotypeKey(), domain.getAllelePairs(), user)) {
-			modified = true;			
-		}
+		allelePairService.process(domain.getGenotypeKey(), domain.getAllelePairs(), user);
 
 		// process Image Pane Associations
 		log.info("processGenotypes/image pane associations");
@@ -218,20 +199,12 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			r.setIsPrimary(domain.getImagePaneAssocs().get(i).getIsPrimary());					;
 			imagePaneAssocs.add(r);
 		}
-		if (imagePaneAssocService.process(null, imagePaneAssocs, user)) {
-			modified = true;			
-		}
+		imagePaneAssocService.process(null, imagePaneAssocs, user);
 					
-		// only if modifications were actually made
-		if (modified == true) {
-			entity.setModification_date(new Date());
-			entity.setModifiedBy(user);
-			genotypeDAO.update(entity);
-			log.info("processGenotype/changes processed: " + domain.getGenotypeKey());
-		}
-		else {
-			log.info("processGenotype/no changes processed: " + domain.getGenotypeKey());
-		}
+		entity.setModification_date(new Date());
+		entity.setModifiedBy(user);
+		genotypeDAO.update(entity);
+		log.info("processGenotype/changes processed: " + domain.getGenotypeKey());
 	
 		// check duplicate genotype
 		cmd = "select count(*) from GXD_checkDuplicateGenotype (" + String.valueOf(entity.get_genotype_key()) + ")";

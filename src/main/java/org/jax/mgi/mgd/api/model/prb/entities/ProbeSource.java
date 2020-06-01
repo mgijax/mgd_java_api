@@ -55,15 +55,19 @@ public class ProbeSource extends BaseEntity {
 	@OneToOne
 	@JoinColumn(name="_tissue_key")
 	private ProbeTissue tissue;
-
+	
+	@OneToOne
+	@JoinColumn(name="_cellline_key", referencedColumnName="_term_key")
+	private Term cellLine;
+	
 	@OneToOne
 	@JoinColumn(name="_gender_key", referencedColumnName="_term_key")
 	private Term gender;
 
-	@OneToOne
+	/*@OneToOne turns out this is a vocabulary
 	@JoinColumn(name="_cellline_key")
 	private CellLine cellLine;
-
+    */
 	@OneToOne
 	@JoinColumn(name="_refs_key")
 	private Reference reference;

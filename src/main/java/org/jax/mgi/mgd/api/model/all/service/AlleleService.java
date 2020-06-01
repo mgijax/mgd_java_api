@@ -116,9 +116,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		alleleDAO.persist(entity);
 
 		// process marker reference
-		if (domain.getRefAssocs() != null && !domain.getRefAssocs().isEmpty()) {
-			referenceAssocService.process(domain.getMarkerKey(), domain.getRefAssocs(), mgiTypeKey, user);
-		}
+		referenceAssocService.process(domain.getAlleleKey(), domain.getRefAssocs(), mgiTypeKey, user);
 		
 		// process mutant cell lines
 		log.info("processAllele/mutant cell lines");
@@ -184,10 +182,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			entity.setApprovedBy(null);			
 		}
 
-		// process marker reference
-		if (domain.getRefAssocs() != null && !domain.getRefAssocs().isEmpty()) {
-			referenceAssocService.process(domain.getMarkerKey(), domain.getRefAssocs(), mgiTypeKey, user);
-		}
+		// process allele reference
+		referenceAssocService.process(domain.getAlleleKey(), domain.getRefAssocs(), mgiTypeKey, user);
 		
 		// process mutant cell lines
 //		log.info("processAllele/mutant cell lines");

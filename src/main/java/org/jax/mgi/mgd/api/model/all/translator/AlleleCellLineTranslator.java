@@ -2,7 +2,7 @@ package org.jax.mgi.mgd.api.model.all.translator;
 
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDomain;
-import org.jax.mgi.mgd.api.model.all.domain.CellLineDomain;
+import org.jax.mgi.mgd.api.model.all.domain.SlimCellLineDomain;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLine;
 import org.jax.mgi.mgd.api.util.Constants;
 
@@ -24,8 +24,8 @@ public class AlleleCellLineTranslator extends BaseEntityDomainTranslator<AlleleC
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
 		if (entity.getMutantCellLine() != null) {
-			CellLineTranslator cellLineTranslator = new CellLineTranslator();
-			CellLineDomain mutationCellLine = cellLineTranslator.translate(entity.getMutantCellLine());
+			SlimCellLineTranslator cellLineTranslator = new SlimCellLineTranslator();
+			SlimCellLineDomain mutationCellLine = cellLineTranslator.translate(entity.getMutantCellLine());
 			domain.setMutantCellLine(mutationCellLine);				
 		}
 		

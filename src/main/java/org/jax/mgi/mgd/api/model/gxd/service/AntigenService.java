@@ -32,8 +32,11 @@ public class AntigenService extends BaseService<AntigenDomain> {
 	private AntigenDAO antigenDAO;
 	
 	private AntigenTranslator translator = new AntigenTranslator();
+	
+	// for Search
 	private SlimAntigenTranslator slimtranslator = new SlimAntigenTranslator();
 	
+
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -48,9 +51,9 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		log.info("processAntigen/create");
 		
 		//
-		// IN PROGRESSS
+		// IN PROGRESS
 		//
-		
+		entity.setAntigenName(domain.getAntigenName());
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
 		entity.setModifiedBy(user);

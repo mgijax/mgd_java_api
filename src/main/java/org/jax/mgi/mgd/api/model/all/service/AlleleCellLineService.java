@@ -239,6 +239,10 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 //			else {
 //				log.info("processAlleleCellLine/no changes processed: " + domain.get(i).getAssocKey());
 //			}
+            
+            if (addCellLine) {
+            	break;
+            }
 		}
 		
 		log.info("processAlleleCellLine/processing successful");

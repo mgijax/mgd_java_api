@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model.all.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,10 +10,7 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleCellLineDAO;
 import org.jax.mgi.mgd.api.model.all.dao.CellLineDAO;
-import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDomain;
-import org.jax.mgi.mgd.api.model.all.domain.CellLineDomain;
-import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLine;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleCellLineTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -31,10 +27,6 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 	private AlleleCellLineDAO alleleCellLineDAO;
 	@Inject
 	private CellLineDAO cellLineDAO;
-	@Inject
-	private CellLineService cellLineService;
-	@Inject
-	private AlleleCellLineDerivationService derivationService;
 	
 	private AlleleCellLineTranslator translator = new AlleleCellLineTranslator();				
 
@@ -84,29 +76,12 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 		
 		Boolean modified = false;
 
-		Boolean isParent = true;
-		Boolean isMutant = true;
-		Boolean addCellLine = false;
-		Boolean addAssociation = true;
-
-        String cellLineTypeKey = domain.get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineTypeKey();
-
-		SlimAlleleCellLineDerivationDomain derivationSearch = new SlimAlleleCellLineDerivationDomain();
-		List<AlleleCellLineDerivationDomain> derivationResults = new ArrayList<AlleleCellLineDerivationDomain>();
-
 		log.info("processAlleleCellLine");
 		
 		if (domain == null || domain.isEmpty()) {
 			log.info("processAlleleCellLine/nothing to process");
 			return modified;
 		}      
-		
-        // set the isParent
-        // default cellLineType = Embryonic Stem Cell (3982968)		
-        if (cellLineTypeKey.isEmpty()) {
-          isParent = false;
-          cellLineTypeKey = "3982968";          
-        };
 		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
@@ -115,134 +90,43 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 		
         	log.info("processAlleleCellLine/domain :" + i);
 		
-			CellLineDomain cellLineDomain = new CellLineDomain();
-			String mutantCellLineKey = "";
-            
-            if (domain.get(i).getMutantCellLine().getCellLineKey().isEmpty()) {
-            	isMutant = false;
+        	if (domain.get(i).getMutantCellLine().getCellLineKey().isEmpty()) {
+        		return modified;
+        	}                 
+						
+			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {			
+				AlleleCellLine entity = new AlleleCellLine();									
+				entity.set_allele_key(Integer.valueOf(parentKey));
+				entity.setMutantCellLine(cellLineDAO.get(Integer.valueOf(domain.get(i).getMutantCellLine().getCellLineKey())));				
+				entity.setCreatedBy(user);
+				entity.setCreation_date(new Date());
+				entity.setModifiedBy(user);
+				entity.setModification_date(new Date());				
+				alleleCellLineDAO.persist(entity);				
+				log.info("processAlleleCellLine/create/returning results");	
+				modified = true;
 			}
-            
-            //
-            // check isParent, isMutant
-            //
-
-            if (isParent == false && isMutant == false) {
- 
-            	log.info("processAlleleCellLine/isParent == false && isMutant == false");
- 
-            	// not specified
-            	//if = "Gene trapped" or "Targeted"
-            	if (alleleTypeKey.equals("847121") || alleleTypeKey.equals("847116")) {
-
-                	log.info("processAlleleCellLine: " + alleleTypeKey);
-
-		            // select the derivation key that is associated with:
-		            //   allele type
-		            //   creator = Not Specified (3982966)
-		            //   vector = Not Specified (4311225)           		
-		            //   vector type = Not Specified (3982979)
-		            //   parent cell line = Not Specified (-1)
-		            //   strain = Not Specified (-1)
-		            //   cell line type
-		            //
-                	
-            		derivationSearch.setAlleleTypeKey(alleleTypeKey);
-            		derivationSearch.setVectorKey("4311225");
-            		derivationSearch.setVectorTypeKey("3982979");
-            		derivationSearch.setParentCellLineKey("-1");
-            		derivationSearch.setCreatorKey("3982966");
-            		derivationSearch.setStrainKey("-1");
-            		derivationSearch.setCellLineTypeKey(cellLineTypeKey);
-            		
-            		derivationResults = derivationService.validateDerivation(derivationSearch);
-            		
-            		if (derivationResults.get(0).getDerivationKey().isEmpty()) {
-                		log.info("Cannot find Derivation for this Allele Type and Parent = 'Not Specified'");
-                		return modified;
-                	}
-            		
-            		log.info("processAlleleCellLine/validated derivation: " + derivationResults.get(0).getDerivationKey());
-            		
-            		cellLineDomain.setCellLine("Not Specified");
-            		cellLineDomain.setStrainKey("-1");
-                	addCellLine = true;
-                	addAssociation = true;
-            	}
-            	
-                // do not default 'not applicable'
-                else {
-                	addCellLine = false;
-                	addAssociation = false;
-                }
-                	
-            }
-            
-            //
-            // end check isParent, isMutant
-            //
-            
-            // create new cell line
-//			if (addCellLine) {
-//				log.info("processAlleleCellLine/create new cell line");
-//				// no cell line key
-//				// cell line set above
-//				// strain key set above
-//				cellLineDomain.setCellLineTypeKey(cellLineTypeKey);
-//				cellLineDomain.setDerivation(derivationResults.get(0));				
-//				cellLineDomain.setIsMutant("1");
-//				SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
-//				log.info("processAlleleCellLine/calling cellLineService.create()");				
-//				cellLineResults = cellLineService.create(cellLineDomain, user);
-//				mutantCellLineKey = cellLineResults.items.get(0).getCellLineKey();
-//			}
-//			else {
-//				mutantCellLineKey = domain.get(i).getMutantCellLine().getCellLineKey();
-//			}
-//						
-//			// create allele/cell line association
-//			if (addAssociation) {
-//				
-//				if (mutantCellLineKey.isEmpty()) {
-//					continue;
-//				}
-//				
-//				log.info("processAlleleCellLine/create");
-//				AlleleCellLine entity = new AlleleCellLine();									
-//				entity.set_allele_key(Integer.valueOf(parentKey));
-//				entity.setMutantCellLine(cellLineDAO.get(Integer.valueOf(mutantCellLineKey)));				
-//				entity.setCreatedBy(user);
-//				entity.setCreation_date(new Date());
-//				entity.setModifiedBy(user);
-//				entity.setModification_date(new Date());				
-//				alleleCellLineDAO.persist(entity);				
-//				log.info("processAlleleCellLine/create/returning results");	
-//				modified = true;
-//			}
-//			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-//				log.info("processAlleleCellLine/delete");
-//				if (domain.get(i).getAssocKey() != null && !domain.get(i).getAssocKey().isEmpty()) {
-//					AlleleCellLine entity = alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
-//					alleleCellLineDAO.remove(entity);
-//					modified = true;
-//				}
-//			}
-//			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-//				log.info("processAlleleCellLine/update");
-//				AlleleCellLine entity = alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));			
-//				entity.setMutantCellLine(cellLineDAO.get(Integer.valueOf(mutantCellLineKey)));				
-//				entity.setModification_date(new Date());
-//				entity.setModifiedBy(user);
-//				alleleCellLineDAO.update(entity);
-//				log.info("processAlleleCellLine/changes processed: " + domain.get(i).getAssocKey());				
-//				modified = true;
-//			}
-//			else {
-//				log.info("processAlleleCellLine/no changes processed: " + domain.get(i).getAssocKey());
-//			}
-            
-            if (addCellLine) {
-            	break;
-            }
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+				log.info("processAlleleCellLine/delete");
+				if (domain.get(i).getAssocKey() != null && !domain.get(i).getAssocKey().isEmpty()) {
+					AlleleCellLine entity = alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
+					alleleCellLineDAO.remove(entity);
+					modified = true;
+				}
+			}
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+				log.info("processAlleleCellLine/update");
+				AlleleCellLine entity = alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));			
+				entity.setMutantCellLine(cellLineDAO.get(Integer.valueOf(domain.get(i).getMutantCellLine().getCellLineKey())));				
+				entity.setModification_date(new Date());
+				entity.setModifiedBy(user);
+				alleleCellLineDAO.update(entity);
+				log.info("processAlleleCellLine/changes processed: " + domain.get(i).getAssocKey());				
+				modified = true;
+			}
+			else {
+				log.info("processAlleleCellLine/no changes processed: " + domain.get(i).getAssocKey());
+			}          
 		}
 		
 		log.info("processAlleleCellLine/processing successful");

@@ -137,13 +137,15 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 		            // select the derivation key that is associated with:
 		            //   allele type
 		            //   creator = Not Specified (3982966)
-		            //   vector = Not Specified (3982979)
+		            //   vector = Not Specified (4311225)           		
+		            //   vector type = Not Specified (3982979)
 		            //   parent cell line = Not Specified (-1)
 		            //   strain = Not Specified (-1)
 		            //   cell line type
 		            //
             		derivationSearch.setAlleleTypeKey(alleleTypeKey);
             		derivationSearch.setVectorKey("4311225");
+            		derivationSearch.setVectorTypeKey("3982979");
             		derivationSearch.setParentCellLineKey("-1");
             		derivationSearch.setCreatorKey("3982966");
             		derivationSearch.setStrainKey("-1");

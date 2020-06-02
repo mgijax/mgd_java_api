@@ -10,6 +10,7 @@ public class SlimAlleleCellLineDerivationDomain extends BaseDomain {
 
 	private String alleleTypeKey;
 	private String vectorKey;
+	private String vectorTypeKey;
 	private String parentCellLineKey;
 	private String creatorKey;
 	private String strainKey;

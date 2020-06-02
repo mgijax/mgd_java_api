@@ -133,13 +133,13 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			domain.setSubtypeAnnots(IteratorUtils.toList(i.iterator()));
 		}
 
-		// mutant cell lines
+		// mutant cell lines, parent cell line (at most 1)
 		if (entity.getMutantCellLines() != null && !entity.getMutantCellLines().isEmpty()) {
-			AlleleCellLineTranslator cellLineTranslator = new AlleleCellLineTranslator();
-			Iterable<AlleleCellLineDomain> i = cellLineTranslator.translateEntities(entity.getMutantCellLines());
+			AlleleCellLineTranslator allelecellLineTranslator = new AlleleCellLineTranslator();
+			Iterable<AlleleCellLineDomain> i = allelecellLineTranslator.translateEntities(entity.getMutantCellLines());
 			domain.setMutantCellLineAssocs(IteratorUtils.toList(i.iterator()));
 		}
-	
+		
 		// driver genes
 		if (entity.getDriverGenes() != null && !entity.getDriverGenes().isEmpty()) {
 			RelationshipAlleleDriverGeneTranslator driverTranslator = new RelationshipAlleleDriverGeneTranslator();

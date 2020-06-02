@@ -51,7 +51,7 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		entity.setDescription(domain.getDescription());
 		entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));
 		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));							
-		entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.getCellLineKey())));				
+		entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.getParentCellLine().getCellLineKey())));	
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
 		entity.setModifiedBy(user);
@@ -81,12 +81,12 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		entity.setDescription(domain.getDescription());
 		entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));
 		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));
-		entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.getCellLineKey())));	
+		entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.getParentCellLine().getCellLineKey())));	
 		entity.setModification_date(new Date());
 		entity.setModifiedBy(user);
 		derivationDAO.update(entity);
-		log.info("processDerivation/changes processed: " + domain.getDerivationKey());	
-
+		log.info("processDerivation/changes processed: " + domain.getDerivationKey());
+			
 		// return entity translated to domain
 		log.info("processDerivation/update/returning results");
 		results.setItem(translator.translate(entity));
@@ -135,6 +135,7 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		   + "\nwhere d._DerivationType_key = " + searchDomain.getAlleleTypeKey()
 		   + "\nand d._Creator_key = " + searchDomain.getCreatorKey()
 		   + "\nand d._Vector_key = " + searchDomain.getVectorKey()
+		   + "\nand d._VectorType_key = " + searchDomain.getVectorTypeKey()		   
 		   + "\nand d._ParentCellLine_key = " + searchDomain.getParentCellLineKey()
 		   + "\nand d._ParentCellLine_key = c._CellLine_key"
 		   + "\nand c._Strain_key = " + searchDomain.getStrainKey()

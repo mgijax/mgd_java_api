@@ -20,6 +20,7 @@ import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleRefAssocTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
@@ -44,16 +45,17 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	private TermDAO termDAO;
 	@Inject
 	private ReferenceDAO referenceDAO;
-
 	@Inject
 	private AlleleCellLineService alleleCellLineService;
+	@Inject
+	private MGIReferenceAssocService referenceAssocService;
 	
 	private AlleleTranslator translator = new AlleleTranslator();
 	private SlimAlleleTranslator slimtranslator = new SlimAlleleTranslator();	
 	private SlimAlleleRefAssocTranslator slimreftranslator = new SlimAlleleRefAssocTranslator();	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
-//	String mgiTypeKey = "11";
+	String mgiTypeKey = "11";
 //	String mgiTypeName = "Allele";
 	
 	@Transactional
@@ -113,6 +115,9 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		// execute persist/insert/send to database
 		alleleDAO.persist(entity);
 
+		// process marker reference
+		referenceAssocService.process(domain.getAlleleKey(), domain.getRefAssocs(), mgiTypeKey, user);
+		
 		// process mutant cell lines
 		log.info("processAllele/mutant cell lines");
 		alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLineAssocs(), user);
@@ -177,6 +182,9 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			entity.setApprovedBy(null);			
 		}
 
+		// process allele reference
+		referenceAssocService.process(domain.getAlleleKey(), domain.getRefAssocs(), mgiTypeKey, user);
+		
 		// process mutant cell lines
 		log.info("processAllele/mutant cell lines");
 		alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLineAssocs(), user);
@@ -413,9 +421,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			from_creNote = true;
 		}
 		
-		// mutant & parent cell lines
-		if (searchDomain.getMutantCellLineAssocs() != null) {
-			
+		// mutant cell lines
+		if (searchDomain.getMutantCellLineAssocs() != null) {			
 			// mutant cell line : cell line, creator, modification date, strain of origin
 			if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine() != null) {
 	
@@ -444,30 +451,27 @@ public class AlleleService extends BaseService<AlleleDomain> {
 					}
 				}				
 			}
-			
-			// parent cell line : cell line, strain, cell line type
-			
-			if (searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine() != null) {
 
-				if (searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLineKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLineKey().isEmpty()) {
-					where = where + "\nand c.parentcellline_key = " + searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLineKey();
+			// parent cell line : cell line, strain, cell line type		
+			if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine() != null) {
+				if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineKey().isEmpty()) {
+					where = where + "\nand c.parentcellline_key = " + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineKey();
 					from_cellLine = true;
 				}
-				else if (searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLine() != null && !searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLine().isEmpty()) {
-					where = where + "\nand c.parentcellline ilike '" + searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLine() + "'";
+				else if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLine() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLine().isEmpty()) {
+					where = where + "\nand c.parentcellline ilike '" + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLine() + "'";
 					from_cellLine = true;
 				}			
-				if (searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLineTypeKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLineTypeKey().isEmpty()) {
-					where = where + "\nand c.parentcelllinetype_key = " + searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getCellLineTypeKey();
+				if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineTypeKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineTypeKey().isEmpty()) {
+					where = where + "\nand c.parentcelllinetype_key = " + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineTypeKey();
 					from_cellLine = true;
 				}
-				if (searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getStrain() != null && !searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getStrain().isEmpty()) {
-					where = where + "\nand c.celllinestrain ilike '" + searchDomain.getMutantCellLineAssocs().get(0).getParentCellLine().getStrain() + "'";
+				if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getStrain() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getStrain().isEmpty()) {
+					where = where + "\nand c.celllinestrain ilike '" + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getStrain() + "'";
 					from_cellLine = true;
 				}
 				
-			}
-						
+			}			
 		}
 		
 		// synonym, j:

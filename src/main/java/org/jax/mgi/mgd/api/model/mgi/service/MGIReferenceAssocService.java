@@ -286,11 +286,25 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 					continue;
 				}
 				
-				// if mgiTypeKey = marker, then set default synonym type "exact" (1004)
+				// if mgiTypeKey = marker and no reference assoc type chosen, then set default synonym type "exact" (1004)
 				String refAssocType = domain.get(i).getRefAssocType();
 				if (mgiTypeKey.equals("2")) {
 					if (refAssocType == null || refAssocType.isEmpty()) {
 						refAssocType = "General";	
+					}
+				}
+				// else, set refAssocType by using refAssocTypeKey
+				else {
+					cmd = "select assoctype from mgi_refassoctype where _refassoctype_key = " + domain.get(i).getRefAssocTypeKey();
+					try {
+						ResultSet rs = sqlExecutor.executeProto(cmd);
+						while (rs.next()) {
+							refAssocType = rs.getString("assoctype");
+						}
+						sqlExecutor.cleanup();
+					}
+					catch (Exception e) {
+						e.printStackTrace();
 					}
 				}
 				

@@ -16,8 +16,6 @@ public class AlleleCellLineDerivationDomain extends BaseDomain {
 	private String vector;
 	private String vectorTypeKey;
 	private String vectorType;
-	private String cellLineKey;
-	private String cellLine;
 	private String derivationTypeKey;
 	private String derivationType;
 	private String creatorKey;
@@ -28,4 +26,7 @@ public class AlleleCellLineDerivationDomain extends BaseDomain {
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;
+	
+	private CellLineDomain parentCellLine;	
+	
 }

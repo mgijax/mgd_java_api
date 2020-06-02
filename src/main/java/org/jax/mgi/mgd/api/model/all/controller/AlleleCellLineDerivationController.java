@@ -1,18 +1,24 @@
 package org.jax.mgi.mgd.api.model.all.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDerivationDomain;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.service.AlleleCellLineDerivationService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Path("/allelecelllinederivation")
 @Api(value = "Allele Cell Line Derivation Endpoints")
@@ -49,4 +55,20 @@ public class AlleleCellLineDerivationController extends BaseController<AlleleCel
 		return derivationService.get(key);
 	}
 
+	@POST
+	@ApiOperation(value = "Validate Derivation")
+	@Path("/validateDerivation")
+	public List<AlleleCellLineDerivationDomain> validateDerivation(SlimAlleleCellLineDerivationDomain searchDomain) {	
+		
+		List<AlleleCellLineDerivationDomain> results = new ArrayList<AlleleCellLineDerivationDomain>();
+
+		try {
+			results = derivationService.validateDerivation(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

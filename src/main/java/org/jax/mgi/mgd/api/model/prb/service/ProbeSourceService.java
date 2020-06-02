@@ -65,6 +65,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		entity.setReference(null);
 		
 		// description is null unless specified
+		log.info("domain description: " + domain.getDescription());
 		if(domain.getDescription() == null || domain.getDescription().isEmpty()) {
 			entity.setDescription(null);
 		}
@@ -88,38 +89,9 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		
 		entity.setAgeMin(-1);
 		entity.setAgeMax(-1);
-		/* 
-		//############ set ageMin/ageMax 
-		// attempt to use PRB_ageMinMax sp to get a row with ageMin/ageMax and set those
-		// values in the domain
-		String cmd = "\nselect * from PRB_ageMinMax ('" + domain.getAge() + "')";
-		log.info("cmd: " + cmd);
-		String ageMin = "";
-		String ageMax = "";
-		try {
-		    log.info("running query");
-			Query query = probeSourceDAO.createNativeQuery(cmd);
-			// Get single result, returns type Object, won't cast to string
-			//String r = (String) query.getSingleResult();
-			//log.info("result: " + r);
-			//log.info("getting results: " + query.getSingleResult());
-			
-			// try getting result list, doesn't work either
-			List <?> resultList = query.getResultList();
-			log.info("get results 1 as string");
-			ageMin = resultList.get(0).toString();
-			log.info("get results 2 as string");
-			ageMax = resultList.get(1).toString();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		// domain does not have agemin/agemax - set in entity
-		entity.setAgeMin(new Integer(ageMin).intValue());
-		entity.setAgeMax(new Integer(ageMax).intValue());
-		//#########
-		*/
-		if(domain.getOrganismKey() == null ||  domain.getOrganism().isEmpty()) {
+		
+		log.info("domain.getOrganismKey(): " + domain.getOrganismKey());
+		if(domain.getOrganismKey() == null ||  domain.getOrganismKey().isEmpty()) {
 			// 'Not Specified'
 			domain.setOrganismKey("76");
 		}
@@ -149,6 +121,26 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		}
 		entity.setCellLine(termDAO.get(Integer.valueOf(domain.getCellLineKey())));
 		
+		// special handling of source
+		
+		// if organism other than mouse (or Not Specified) then strain default is Not Applicable
+		if (domain.getOrganismKey() != "1" && domain.getOrganismKey() != "-1") {
+			domain.setStrainKey("-2"); 
+		}
+		entity.setStrain(probeStrainDAO.get(Integer.valueOf(domain.getStrainKey())));
+		
+		// if tissue is specified, then cell line is Not applicable
+		if (domain.getTissueKey() != "-1") {
+			domain.setCellLineKey("316336");
+		}
+		entity.setCellLine(termDAO.get(Integer.valueOf(domain.getCellLineKey())));
+
+		// when cell line is specified and age is 'Not Specified', change default to 'Not Applicable'
+		if(domain.getCellLineKey() != "316335" && domain.getCellLineKey() != "316336" && domain.getAge() == "Not Specified") {
+			domain.setAge("Not Applicable");
+		}
+		entity.setAge(domain.getAge());
+		
 		// add creation/modification 
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
@@ -160,7 +152,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		
 		// update not happening here
 		int newKey = entity.get_source_key();
-		String cmd = "\nselect * from MGI_resetAgeMinMax ('PRB_Source', " +  newKey + ")";
+		String cmd = "\nselect count(*) from MGI_resetAgeMinMax ('PRB_Source', " +  newKey + ")";
 		log.info("cmd: " + cmd);
 		
 		Query query = probeSourceDAO.createNativeQuery(cmd); 
@@ -201,19 +193,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 	@Transactional
 	public SearchResults<ProbeSourceDomain> update(ProbeSourceDomain domain, User user) {
 		SearchResults<ProbeSourceDomain> results = new SearchResults<ProbeSourceDomain>();
-		ProbeSource entity = probeSourceDAO.get(Integer.valueOf(domain.getSourceKey()));
-		//results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
-		try {
-		    log.info("update age min/max");
-		    results = runAgeMinMax(Integer.valueOf(domain.getSourceKey()), user);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		probeSourceDAO.update(entity);
-		log.info("source update/returning results");
-		results.setItem(translator.translate(entity));
-		log.info("source update/returned results successful");
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
 	}
     

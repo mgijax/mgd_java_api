@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.prb.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -13,6 +14,7 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.all.dao.CellLineDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeSourceDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
@@ -70,7 +72,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		}
 		
 		// segment type is always 'NS'
-		domain.setSegmentTypeKey("63437");
+		domain.setSegmentTypeKey("63474");
 		entity.setSegmentType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));
 		
 		// vector is always 'NS"
@@ -81,27 +83,41 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 			domain.setAge("Not Specified");
 		}
 		entity.setAge(domain.getAge());
+		// default min/max to 'Not Specified' call SP later to fix
 		
-		//############ set ageMin/ageMax why not in domain/entity
-		String cmd = "\nselect * from PRB_ageMinMax (" + domain.getAge() + ")";
+		entity.setAgeMin(-1);
+		entity.setAgeMax(-1);
+		/* 
+		//############ set ageMin/ageMax 
+		// attempt to use PRB_ageMinMax sp to get a row with ageMin/ageMax and set those
+		// values in the domain
+		String cmd = "\nselect * from PRB_ageMinMax ('" + domain.getAge() + "')";
 		log.info("cmd: " + cmd);
 		String ageMin = "";
 		String ageMax = "";
 		try {
+		    log.info("running query");
 			Query query = probeSourceDAO.createNativeQuery(cmd);
+			// Get single result, returns type Object, won't cast to string
 			//String r = (String) query.getSingleResult();
-			List<String> resultList = query.getResultList();
-			ageMin = (String)resultList.get(0);
-			ageMax = (String)resultList.get(1);
+			//log.info("result: " + r);
+			//log.info("getting results: " + query.getSingleResult());
+			
+			// try getting result list, doesn't work either
+			List <?> resultList = query.getResultList();
+			log.info("get results 1 as string");
+			ageMin = resultList.get(0).toString();
+			log.info("get results 2 as string");
+			ageMax = resultList.get(1).toString();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-		}			
-		//#########
-		
+		}
+		// domain does not have agemin/agemax - set in entity
 		entity.setAgeMin(new Integer(ageMin).intValue());
 		entity.setAgeMax(new Integer(ageMax).intValue());
-		
+		//#########
+		*/
 		if(domain.getOrganismKey() == null ||  domain.getOrganism().isEmpty()) {
 			// 'Not Specified'
 			domain.setOrganismKey("76");
@@ -132,13 +148,52 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		}
 		entity.setCellLine(termDAO.get(Integer.valueOf(domain.getCellLineKey())));
 		
+		// add creation/modification 
+		entity.setCreatedBy(user);
+		entity.setCreation_date(new Date());
+		entity.setModifiedBy(user);
+		entity.setModification_date(new Date());
+		
 		// execute persist/insert/send to database
 		probeSourceDAO.persist(entity);
+		
+		// update not happening here
+		int newKey = entity.get_source_key();
+		String cmd = "\nselect * from MGI_resetAgeMinMax ('PRB_Source', " +  newKey + ")";
+		log.info("cmd: " + cmd);
+		
+		Query query = probeSourceDAO.createNativeQuery(cmd); 
+		log.info("getting resultlist");
+		// below produces this error:
+		// "message": "org.hibernate.MappingException: No Dialect mapping for JDBC type: 1111 [TypeNames.java:70] (No Dialect mapping for JDBC type: 1111)", "status_code": 500
+		query.getResultList();
 		
 		// return entity translated to domain
 		log.info("Source/create/returning results");
 		results.setItem(translator.translate(entity));
+		// break up the pieces so we can log stuff
+		//ProbeSourceDomain d = translator.translate(entity);
+		//log.info("New key: " + d.getSourceKey());
+		//log.info("New ageMin: " + probeSourceDAO.get(Integer.valueOf(d.getSourceKey())).getAgeMin() + " ageMax: " + probeSourceDAO.get(Integer.valueOf(d.getSourceKey())).getAgeMax());
+		//results.setItem(d);
 		
+		return results;
+	}
+	@Transactional
+	public SearchResults<ProbeSourceDomain> runAgeMinMax(Integer key, User user) {
+		SearchResults<ProbeSourceDomain> results = new SearchResults<ProbeSourceDomain>();
+		ProbeSource entity = new ProbeSource();
+		
+		String cmd = "\nselect * from MGI_resetAgeMinMax ('PRB_Source', " +  key + ")";
+		log.info("cmd: " + cmd);
+		
+		Query query = probeSourceDAO.createNativeQuery(cmd); 
+		log.info("getting resultlist");
+		// below produces this error:
+		// "message": "org.hibernate.MappingException: No Dialect mapping for JDBC type: 1111 [TypeNames.java:70] (No Dialect mapping for JDBC type: 1111)", "status_code": 500
+		query.getResultList();
+		entity = probeSourceDAO.get(key);
+		results.setItem(translator.translate(entity));
 		return results;
 	}
 

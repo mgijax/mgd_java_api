@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.all.dao.CellLineDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
+import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeSourceDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
@@ -184,7 +185,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		SearchResults<ProbeSourceDomain> results = new SearchResults<ProbeSourceDomain>();
 		ProbeSource entity = new ProbeSource();
 		
-		String cmd = "\nselect * from MGI_resetAgeMinMax ('PRB_Source', " +  key + ")";
+		String cmd = "\nselect count(*) from MGI_resetAgeMinMax ('PRB_Source', " +  key + ")";
 		log.info("cmd: " + cmd);
 		
 		Query query = probeSourceDAO.createNativeQuery(cmd); 
@@ -200,8 +201,19 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 	@Transactional
 	public SearchResults<ProbeSourceDomain> update(ProbeSourceDomain domain, User user) {
 		SearchResults<ProbeSourceDomain> results = new SearchResults<ProbeSourceDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
-		
+		ProbeSource entity = probeSourceDAO.get(Integer.valueOf(domain.getSourceKey()));
+		//results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		try {
+		    log.info("update age min/max");
+		    results = runAgeMinMax(Integer.valueOf(domain.getSourceKey()), user);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		probeSourceDAO.update(entity);
+		log.info("source update/returning results");
+		results.setItem(translator.translate(entity));
+		log.info("source update/returned results successful");
 		return results;
 	}
     

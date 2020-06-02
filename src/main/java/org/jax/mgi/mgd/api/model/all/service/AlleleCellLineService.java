@@ -113,12 +113,10 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 		
 		for (int i = 0; i < domain.size(); i++) {
 		
+        	log.info("processAlleleCellLine/domain :" + i);
+		
 			CellLineDomain cellLineDomain = new CellLineDomain();
 			String mutantCellLineKey = "";
-						
-            if (i > 0 && domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
-    			return modified;
-			}
             
             if (domain.get(i).getMutantCellLine().getCellLineKey().isEmpty()) {
             	isMutant = false;
@@ -130,6 +128,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 
             if (isParent == false && isMutant == false) {
  
+            	log.info("processAlleleCellLine/isParent == false && isMutant == false");
             	// not specified
             	//if = "Gene trapped" or "Targeted"
             	if (alleleTypeKey.equals("847121") || alleleTypeKey.equals("847116")) {
@@ -158,6 +157,8 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
                 		return modified;
                 	}
             		
+            		log.info("processAlleleCellLine/created new derivation: " + derivationResults.get(0).getDerivationKey());
+            		
             		cellLineDomain.setCellLine("Not Specified");
             		cellLineDomain.setStrain("-1");
                 	addCellLine = true;
@@ -178,6 +179,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
             
             // create new cell line
 			if (addCellLine) {
+				log.info("processAlleleCellLine/create new cell line");
 				cellLineDomain.setCellLine(domain.get(i).getMutantCellLine().getCellLine());
 				cellLineDomain.setCellLineKey(domain.get(i).getMutantCellLine().getCellLine());
 				cellLineDomain.setCellLineTypeKey(cellLineTypeKey);
@@ -192,7 +194,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 				mutantCellLineKey = domain.get(i).getMutantCellLine().getCellLineKey();
 			}
 			
-			// create cell line/allele association
+			// create allele/cell line association
 			if (addAssociation) {
 				
 				if (mutantCellLineKey.isEmpty()) {

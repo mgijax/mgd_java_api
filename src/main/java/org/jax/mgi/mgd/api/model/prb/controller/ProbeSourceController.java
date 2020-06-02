@@ -37,14 +37,6 @@ public class ProbeSourceController extends BaseController<ProbeSourceDomain> {
 	public SearchResults<ProbeSourceDomain> update(ProbeSourceDomain domain, User user) {
 		SearchResults<ProbeSourceDomain> results = new SearchResults<ProbeSourceDomain>();
 		results = probeSourceService.update(domain, user);
-		// to update the mrk_reference_cache table		
-		/*try {
-			log.info("update age min/max");
-			probeSourceService.runAgeMinMax(Integer.valueOf(domain.getSourceKey()), user);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}*/
 		results = probeSourceService.getResults(Integer.valueOf(results.items.get(0).getSourceKey()));
 		return results;
 	}

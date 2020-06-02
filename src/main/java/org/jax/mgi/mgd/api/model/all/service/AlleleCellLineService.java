@@ -154,19 +154,19 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
             		derivationSearch.setStrainKey("-1");
             		derivationSearch.setCellLineTypeKey(cellLineTypeKey);
             		
-//            		derivationResults = derivationService.validateDerivation(derivationSearch);
-//            		
-//            		if (derivationResults.get(0).getDerivationKey().isEmpty()) {
-//                		log.info("Cannot find Derivation for this Allele Type and Parent = 'Not Specified'");
-//                		return modified;
-//                	}
-//            		
-//            		log.info("processAlleleCellLine/validated derivation: " + derivationResults.get(0).getDerivationKey());
-//            		
-//            		cellLineDomain.setCellLine("Not Specified");
-//            		cellLineDomain.setStrainKey("-1");
-//                	addCellLine = true;
-//                	addAssociation = true;
+            		derivationResults = derivationService.validateDerivation(derivationSearch);
+            		
+            		if (derivationResults.get(0).getDerivationKey().isEmpty()) {
+                		log.info("Cannot find Derivation for this Allele Type and Parent = 'Not Specified'");
+                		return modified;
+                	}
+            		
+            		log.info("processAlleleCellLine/validated derivation: " + derivationResults.get(0).getDerivationKey());
+            		
+            		cellLineDomain.setCellLine("Not Specified");
+            		cellLineDomain.setStrainKey("-1");
+                	addCellLine = true;
+                	addAssociation = true;
             	}
             	
                 // do not default 'not applicable'

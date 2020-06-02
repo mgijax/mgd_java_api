@@ -129,9 +129,12 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
             if (isParent == false && isMutant == false) {
  
             	log.info("processAlleleCellLine/isParent == false && isMutant == false");
+ 
             	// not specified
             	//if = "Gene trapped" or "Targeted"
             	if (alleleTypeKey.equals("847121") || alleleTypeKey.equals("847116")) {
+
+                	log.info("processAlleleCellLine: " + alleleTypeKey);
 
 		            // select the derivation key that is associated with:
 		            //   allele type
@@ -142,6 +145,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 		            //   strain = Not Specified (-1)
 		            //   cell line type
 		            //
+                	
             		derivationSearch.setAlleleTypeKey(alleleTypeKey);
             		derivationSearch.setVectorKey("4311225");
             		derivationSearch.setVectorTypeKey("3982979");
@@ -160,7 +164,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
             		log.info("processAlleleCellLine/created new derivation: " + derivationResults.get(0).getDerivationKey());
             		
             		cellLineDomain.setCellLine("Not Specified");
-            		cellLineDomain.setStrain("-1");
+            		cellLineDomain.setStrainKey("-1");
                 	addCellLine = true;
                 	addAssociation = true;
             	}
@@ -180,20 +184,21 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
             // create new cell line
 			if (addCellLine) {
 				log.info("processAlleleCellLine/create new cell line");
-				cellLineDomain.setCellLine(domain.get(i).getMutantCellLine().getCellLine());
-				cellLineDomain.setCellLineKey(domain.get(i).getMutantCellLine().getCellLine());
+				// no cell line key
+				// cell line set above
+				// strain key set above
 				cellLineDomain.setCellLineTypeKey(cellLineTypeKey);
-				cellLineDomain.setStrainKey(domain.get(i).getMutantCellLine().getStrainKey());
 				cellLineDomain.setDerivation(derivationResults.get(0));				
 				cellLineDomain.setIsMutant("1");
 				SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
+				log.info("processAlleleCellLine/calling cellLineService.create()");				
 				cellLineResults = cellLineService.create(cellLineDomain, user);
 				mutantCellLineKey = cellLineResults.items.get(0).getCellLineKey();
 			}
 			else {
 				mutantCellLineKey = domain.get(i).getMutantCellLine().getCellLineKey();
 			}
-			
+						
 			// create allele/cell line association
 			if (addAssociation) {
 				

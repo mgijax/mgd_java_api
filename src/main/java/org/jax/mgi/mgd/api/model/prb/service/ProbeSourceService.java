@@ -192,8 +192,8 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		// below produces this error:
 		// "message": "org.hibernate.MappingException: No Dialect mapping for JDBC type: 1111 [TypeNames.java:70] (No Dialect mapping for JDBC type: 1111)", "status_code": 500
 		query.getResultList();
-		entity = probeSourceDAO.get(key);
-		results.setItem(translator.translate(entity));
+		//entity = probeSourceDAO.get(key);
+		//results.setItem(translator.translate(entity));
 		return results;
 	}
 

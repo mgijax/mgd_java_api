@@ -183,12 +183,13 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}
 
 		// process allele reference
+		log.info("processAllele/referenes");
 		referenceAssocService.process(domain.getAlleleKey(), domain.getRefAssocs(), mgiTypeKey, user);
 		
 		// process mutant cell lines
-		log.info("processAllele/mutant cell lines");
-		alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLineAssocs(), user);
-		
+//		log.info("processAllele/mutant cell lines");
+//		alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLineAssocs(), user);
+//		
 		// process synonyms
 		// process allele attributes/subtypes
 		// process molecular mutations

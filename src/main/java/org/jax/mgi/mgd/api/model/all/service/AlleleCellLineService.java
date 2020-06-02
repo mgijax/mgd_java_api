@@ -102,15 +102,10 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 		}      
 		
         // set the isParent
+        // default cellLineType = Embryonic Stem Cell (3982968)		
         if (cellLineTypeKey.isEmpty()) {
           isParent = false;
-        };
-
-        // default cellLineType = Embryonic Stem Cell (3982968)
-        //if (cellLineTypeKey.isEmpty()) {
-        if (cellLineTypeKey.contains("%")) {
-       	
-          cellLineTypeKey = "3982968";
+          cellLineTypeKey = "3982968";          
         };
 		
 		// iterate thru the list of rows in the domain
@@ -148,7 +143,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 		            //   cell line type
 		            //
             		derivationSearch.setAlleleTypeKey(alleleTypeKey);
-            		derivationSearch.setVectorKey("3982979");
+            		derivationSearch.setVectorKey("4311225");
             		derivationSearch.setParentCellLineKey("-1");
             		derivationSearch.setCreatorKey("3982966");
             		derivationSearch.setStrainKey("-1");

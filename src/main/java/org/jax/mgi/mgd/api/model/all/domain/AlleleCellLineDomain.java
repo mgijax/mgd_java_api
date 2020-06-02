@@ -18,7 +18,7 @@ public class AlleleCellLineDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	
-	private SlimCellLineDomain mutantCellLine;	
+	private CellLineDomain mutantCellLine;	
 
 }
 

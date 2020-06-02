@@ -6,7 +6,6 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
-import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleMutationDomain;
@@ -139,9 +138,6 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			AlleleCellLineTranslator allelecellLineTranslator = new AlleleCellLineTranslator();
 			Iterable<AlleleCellLineDomain> i = allelecellLineTranslator.translateEntities(entity.getMutantCellLines());
 			domain.setMutantCellLineAssocs(IteratorUtils.toList(i.iterator()));
-			AlleleCellLineDerivationTranslator derivationTransltor = new AlleleCellLineDerivationTranslator();
-			AlleleCellLineDerivationDomain parentDerivation = derivationTransltor.translate(entity.getMutantCellLines().get(0).getMutantCellLine().getDerivation());
-			domain.setParentDerivation(parentDerivation);
 		}
 		
 		// driver genes

@@ -79,7 +79,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
     }
 
 	@Transactional
-	public Boolean process(String parentKey, String alleleTypeKey, String alleleType, AlleleCellLineDerivationDomain derivationDomain, List<AlleleCellLineDomain> domain, User user) {
+	public Boolean process(String parentKey, String alleleTypeKey, String alleleType, List<AlleleCellLineDomain> domain, User user) {
 		// process allele cell line (create, delete, update)
 		
 		Boolean modified = false;
@@ -89,7 +89,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 		Boolean addCellLine = false;
 		Boolean addAssociation = true;
 
-        String cellLineTypeKey = derivationDomain.getParentCellLine().getCellLineTypeKey();
+        String cellLineTypeKey = domain.get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineTypeKey();
 
 		SlimAlleleCellLineDerivationDomain derivationSearch = new SlimAlleleCellLineDerivationDomain();
 		List<AlleleCellLineDerivationDomain> derivationResults = new ArrayList<AlleleCellLineDerivationDomain>();
@@ -102,12 +102,14 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 		}      
 		
         // set the isParent
-        if (derivationDomain.getParentCellLine().getCellLineKey().isEmpty()) {
+        if (cellLineTypeKey.isEmpty()) {
           isParent = false;
         };
 
         // default cellLineType = Embryonic Stem Cell (3982968)
-        if (cellLineTypeKey.isEmpty()) {
+        //if (cellLineTypeKey.isEmpty()) {
+        if (cellLineTypeKey.contains("%")) {
+       	
           cellLineTypeKey = "3982968";
         };
 		

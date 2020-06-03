@@ -319,6 +319,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
         	}
         }       
         
+    	log.info("alleleCreate/new allele was not created");       
 		return(null);
     }
     	

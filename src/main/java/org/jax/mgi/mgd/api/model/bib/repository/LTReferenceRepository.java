@@ -1,4 +1,4 @@
-Fapppackage org.jax.mgi.mgd.api.model.bib.repository;
+package org.jax.mgi.mgd.api.model.bib.repository;
 
 import java.util.ArrayList;
 import java.util.Date;

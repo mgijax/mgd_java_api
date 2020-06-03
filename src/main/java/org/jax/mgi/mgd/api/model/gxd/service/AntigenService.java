@@ -87,11 +87,14 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		
 		// this is logging the correct description from the source results - but the source was not persisted. 
 		log.info("antigen service probe source create results description: " + sourceResults.items.get(0).getDescription());
-		// not sure if we need to call getResults ...
+		// same outcome whether we call getResults or not:
 		//sourceResults = probeSourceService.getResults(Integer.valueOf(sourceResults.items.get(0).getSourceKey()));
 		
 		// get the probeSource entity from the DAO using the sourceResults to get the source key
+		log.info("antigen service - new source key: " + sourceResults.items.get(0).getSourceKey());
 		ProbeSource probeSource = probeSourceDAO.get(Integer.valueOf(sourceResults.items.get(0).getSourceKey()));
+		
+		// this is null - source was not persisted
 		log.info("entity probe source object: " + entity.getProbeSource());
 		log.info("entity description" + entity.getProbeSource().getDescription());
 		// now set the probe source in the entity

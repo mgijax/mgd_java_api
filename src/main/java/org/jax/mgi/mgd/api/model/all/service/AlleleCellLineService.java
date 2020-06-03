@@ -108,7 +108,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 
 		String cellLineTypeKey = domain.get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineTypeKey();
 		if (cellLineTypeKey.isEmpty()) {
-          //isParent = false;
+          isParent = false;
           cellLineTypeKey = "3982968";          
         };
 
@@ -191,8 +191,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 //		}
 //		else {
 //			mutantCellLineKey = domain.get(i).getMutantCellLine().getCellLineKey();
-//		}
-        
+//		}        
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
 		

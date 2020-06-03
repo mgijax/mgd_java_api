@@ -117,7 +117,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		// process marker reference
 		referenceAssocService.process(domain.getAlleleKey(), domain.getRefAssocs(), mgiTypeKey, user);
-		
+				
 		// process mutant cell lines
 		log.info("processAllele/mutant cell lines");
 		alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLineAssocs(), user);
@@ -143,7 +143,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		Allele entity = alleleDAO.get(Integer.valueOf(domain.getAlleleKey()));
 		
 		log.info("processAllele/update");
-
+		
 		entity.setSymbol(domain.getSymbol());
 		entity.setName(domain.getName());
 		entity.setIsWildType(Integer.valueOf(domain.getIsWildType()));

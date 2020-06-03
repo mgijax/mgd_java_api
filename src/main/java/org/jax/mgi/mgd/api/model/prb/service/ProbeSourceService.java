@@ -65,7 +65,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		entity.setReference(null);
 		
 		// description is null unless specified
-		log.info("domain description: " + domain.getDescription());
+		log.info("probe source incoming domain description: " + domain.getDescription());
 		if(domain.getDescription() == null || domain.getDescription().isEmpty()) {
 			entity.setDescription(null);
 		}
@@ -90,7 +90,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		entity.setAgeMin(-1);
 		entity.setAgeMax(-1);
 		
-		log.info("domain.getOrganismKey(): " + domain.getOrganismKey());
+		log.info("probe source incoming domain organismKey: " + domain.getOrganismKey());
 		if(domain.getOrganismKey() == null ||  domain.getOrganismKey().isEmpty()) {
 			// 'Not Specified'
 			domain.setOrganismKey("76");
@@ -150,7 +150,6 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		// execute persist/insert/send to database
 		probeSourceDAO.persist(entity);
 		
-		// update not happening here
 		int newKey = entity.get_source_key();
 		String cmd = "\nselect count(*) from MGI_resetAgeMinMax ('PRB_Source', " +  newKey + ")";
 		log.info("cmd: " + cmd);
@@ -163,13 +162,15 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		
 		// return entity translated to domain
 		log.info("Source/create/returning results");
+		log.info("source service create outgoing domain description: " + translator.translate(entity).getDescription());
+		log.info("source service create outgoing domain organism: " + translator.translate(entity).getOrganism());
 		results.setItem(translator.translate(entity));
 		// break up the pieces so we can log stuff
 		//ProbeSourceDomain d = translator.translate(entity);
 		//log.info("New key: " + d.getSourceKey());
 		//log.info("New ageMin: " + probeSourceDAO.get(Integer.valueOf(d.getSourceKey())).getAgeMin() + " ageMax: " + probeSourceDAO.get(Integer.valueOf(d.getSourceKey())).getAgeMax());
 		//results.setItem(d);
-		
+		log.info("source service results description: " + results.items.get(0).getDescription());
 		return results;
 	}
 	@Transactional

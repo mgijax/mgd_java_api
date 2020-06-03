@@ -94,7 +94,6 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
         		return modified;
         	}
         			
-			// create allele/cell line association
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {								
 				log.info("processAlleleCellLine/create");
 				AlleleCellLine entity = new AlleleCellLine();									

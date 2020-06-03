@@ -231,7 +231,9 @@ public class CellLineService extends BaseService<CellLineDomain> {
         if (domain.getCellLineKey().isEmpty()) {
         	isMutant = false;
 		}
-        
+ 
+    	log.info("alleleCreate/isParent/isMutant: " + isParent + "," + isMutant);       
+       
         if (isParent == false && isMutant == false) {
 
         	log.info("alleleCreate/isParent == false && isMutant == false");
@@ -275,7 +277,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 	                return(cellLineResults.items.get(0).getCellLineKey());	        		
         		}
         	} 
-        	
+       	
         	else if (isParent == true && isMutant == false) {
             	log.info("alleleCreate/isParent == true && isMutant == false");
 

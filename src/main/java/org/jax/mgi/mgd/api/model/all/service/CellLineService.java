@@ -13,7 +13,6 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleCellLineDerivationDAO;
 import org.jax.mgi.mgd.api.model.all.dao.CellLineDAO;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDerivationDomain;
-import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.CellLineDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.entities.CellLine;
@@ -206,30 +205,30 @@ public class CellLineService extends BaseService<CellLineDomain> {
 	}
 
     @Transactional
-    public String alleleCreate(AlleleDomain domain, User user) {
+    public String alleleCreate(String alleleTypeKey, CellLineDomain domain, User user) {
 		// potential new cell line to be used for allele/cellline association
-    	
-        //
-		// for 1st row only...
-        // check isParent, isMutant to see if a new cell line needs to be created
-        //
+    	// depends on isParent, isMutation settings
+    	// applies only to domain.getMutatnCellLineAssocs().get(0)
+    	  	
+    	String cellLineNS = "Not Specified";
+    	String anyNS = "-1";
+    	String isMutantTrue = "1";
+		String cellLineTypeKey = domain.getDerivation().getParentCellLine().getCellLineTypeKey();
 
 		SlimAlleleCellLineDerivationDomain derivationSearch = new SlimAlleleCellLineDerivationDomain();
 		List<AlleleCellLineDerivationDomain> derivationResults = new ArrayList<AlleleCellLineDerivationDomain>();
     	CellLineDomain cellLineDomain = new CellLineDomain();
 
-        // set the isParent
-        // default cellLineType = Embryonic Stem Cell (3982968)		
 		Boolean isParent = true;
 		Boolean isMutant = true;
 
-		String cellLineTypeKey = domain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineTypeKey();
+        // default cellLineType = Embryonic Stem Cell (3982968)		
 		if (cellLineTypeKey.isEmpty()) {
           isParent = false;
           cellLineTypeKey = "3982968";          
         };
 
-        if (domain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLineKey().isEmpty()) {
+        if (domain.getCellLineKey().isEmpty()) {
         	isMutant = false;
 		}
         
@@ -237,11 +236,10 @@ public class CellLineService extends BaseService<CellLineDomain> {
 
         	log.info("alleleCreate/isParent == false && isMutant == false");
 
-        	// not specified
-        	//if = "Gene trapped" or "Targeted"
-        	if (domain.getAlleleTypeKey().equals("847121") || domain.getAlleleTypeKey().equals("847116")) {
+        	//if = "Gene trapped" or "Targeted", then create "Not Specified" cell line
+        	if (alleleTypeKey.equals("847121") || alleleTypeKey.equals("847116")) {
 
-            	log.info("alleleCreate: " + domain.getAlleleTypeKey());
+            	log.info("alleleCreate: " + alleleTypeKey);
 
 	            // select the derivation key that is associated with:
 	            //   allele type
@@ -253,12 +251,12 @@ public class CellLineService extends BaseService<CellLineDomain> {
 	            //   cell line type
 	            //
             	
-        		derivationSearch.setAlleleTypeKey(domain.getAlleleTypeKey());
+        		derivationSearch.setAlleleTypeKey(alleleTypeKey);
         		derivationSearch.setVectorKey("4311225");
         		derivationSearch.setVectorTypeKey("3982979");
-        		derivationSearch.setParentCellLineKey("-1");
+        		derivationSearch.setParentCellLineKey(anyNS);
         		derivationSearch.setCreatorKey("3982966");
-        		derivationSearch.setStrainKey("-1");
+        		derivationSearch.setStrainKey(anyNS);
         		derivationSearch.setCellLineTypeKey(cellLineTypeKey);
         		
         		derivationResults = derivationService.validateDerivation(derivationSearch);
@@ -266,7 +264,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
         		if (!derivationResults.get(0).getDerivationKey().isEmpty()) {       		
 	        		log.info("alleleCreate/validated derivation: " + derivationResults.get(0).getDerivationKey());       		
 	        		log.info("alleleCreate/create new cell line");
-	        		cellLineDomain.setCellLine("Not Specified");
+	        		cellLineDomain.setCellLine(cellLineNS);
 	        		cellLineDomain.setStrainKey("-1");
 	        		cellLineDomain.setCellLineTypeKey(cellLineTypeKey);
 	        		cellLineDomain.setDerivation(derivationResults.get(0));				
@@ -276,12 +274,50 @@ public class CellLineService extends BaseService<CellLineDomain> {
 	        		cellLineResults = create(cellLineDomain, user);
 	                return(cellLineResults.items.get(0).getCellLineKey());	        		
         		}
-        	}         	
-        }
-        
-        //
-        // end check isParent, isMutant to see if a new cell line needs to be created
-        //
+        	} 
+        	
+        	else if (isParent == true && isMutant == false) {
+            	log.info("alleleCreate/isParent == true && isMutant == false");
+
+	            //
+	            // select the derivation key that is associated with:
+	            //   allele type
+	            //   creator = Not Specified (3982966)
+	            //   vector = Not Specified (4311225)           		
+	            //   vector type = Not Specified (3982979)
+	            //   parent cell line = from domain
+	            //   strain = from domain
+	            //   cell line type
+	            // 
+            	
+        		derivationSearch.setAlleleTypeKey(alleleTypeKey);
+        		derivationSearch.setVectorKey("4311225");
+        		derivationSearch.setVectorTypeKey("3982979");
+        		derivationSearch.setParentCellLineKey(domain.getDerivation().getParentCellLine().getCellLineKey());
+        		derivationSearch.setCreatorKey("3982966");
+        		derivationSearch.setStrainKey(domain.getDerivation().getParentCellLine().getStrainKey());
+        		derivationSearch.setCellLineTypeKey(cellLineTypeKey);
+        		
+        		derivationResults = derivationService.validateDerivation(derivationSearch);
+	
+        		if (!derivationResults.get(0).getDerivationKey().isEmpty()) {       		
+	        		log.info("alleleCreate/validated derivation: " + derivationResults.get(0).getDerivationKey());       		
+	        		log.info("alleleCreate/create new cell line");
+	        		cellLineDomain.setCellLine(cellLineNS);
+	        		cellLineDomain.setStrainKey(anyNS);
+	        		cellLineDomain.setCellLineTypeKey(cellLineTypeKey);
+	        		cellLineDomain.setDerivation(derivationResults.get(0));				
+	        		cellLineDomain.setIsMutant(isMutantTrue);
+	        		SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
+	        		log.info("processAlleleCellLine/calling cellLineService.create()");				
+	        		cellLineResults = create(cellLineDomain, user);
+	                return(cellLineResults.items.get(0).getCellLineKey());	        		
+        		}
+        	}
+        	else if (isParent == true && isMutant == true) {
+            	log.info("alleleCreate/isParent == true && isMutant == true");
+        	}
+        }       
         
 		return(null);
     }

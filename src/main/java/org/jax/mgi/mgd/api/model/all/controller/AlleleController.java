@@ -46,7 +46,7 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	public SearchResults<AlleleDomain> update(AlleleDomain domain, User user) {
 		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
 		
-		String newCellLineKey = cellLineService.alleleCreate(domain, user);
+		String newCellLineKey = cellLineService.alleleCreate(domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
 		if (newCellLineKey != null) {
     		domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(newCellLineKey);        		
 		}

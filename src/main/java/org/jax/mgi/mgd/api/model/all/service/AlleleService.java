@@ -11,10 +11,7 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
-import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
-import org.jax.mgi.mgd.api.model.all.domain.CellLineDomain;
-import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleRefAssocDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
@@ -42,10 +39,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	private AlleleDAO alleleDAO;
 	@Inject
 	private MarkerDAO markerDAO;
-	@Inject
-	private AlleleCellLineDerivationService derivationService;
-	@Inject
-	private CellLineService cellLineService;
 	@Inject
 	private ProbeStrainDAO strainDAO;
 	@Inject
@@ -912,85 +905,4 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		return results;
 	}
 
-    @Transactional
-    public String processNewCellLine(AlleleDomain domain, User user) {
-		// process potential new cell line
-    	
-        //
-		// for 1st row only...
-        // check isParent, isMutant to see if a new cell line needs to be created
-        //
-
-		SlimAlleleCellLineDerivationDomain derivationSearch = new SlimAlleleCellLineDerivationDomain();
-		List<AlleleCellLineDerivationDomain> derivationResults = new ArrayList<AlleleCellLineDerivationDomain>();
-    	CellLineDomain cellLineDomain = new CellLineDomain();
-
-        // set the isParent
-        // default cellLineType = Embryonic Stem Cell (3982968)		
-		Boolean isParent = true;
-		Boolean isMutant = true;
-
-		String cellLineTypeKey = domain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineTypeKey();
-		if (cellLineTypeKey.isEmpty()) {
-          isParent = false;
-          cellLineTypeKey = "3982968";          
-        };
-
-        if (domain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLineKey().isEmpty()) {
-        	isMutant = false;
-		}
-        
-        if (isParent == false && isMutant == false) {
-
-        	log.info("processAlleleCellLine/isParent == false && isMutant == false");
-
-        	// not specified
-        	//if = "Gene trapped" or "Targeted"
-        	if (domain.getAlleleTypeKey().equals("847121") || domain.getAlleleTypeKey().equals("847116")) {
-
-            	log.info("processAlleleCellLine: " + domain.getAlleleTypeKey());
-
-	            // select the derivation key that is associated with:
-	            //   allele type
-	            //   creator = Not Specified (3982966)
-	            //   vector = Not Specified (4311225)           		
-	            //   vector type = Not Specified (3982979)
-	            //   parent cell line = Not Specified (-1)
-	            //   strain = Not Specified (-1)
-	            //   cell line type
-	            //
-            	
-        		derivationSearch.setAlleleTypeKey(domain.getAlleleTypeKey());
-        		derivationSearch.setVectorKey("4311225");
-        		derivationSearch.setVectorTypeKey("3982979");
-        		derivationSearch.setParentCellLineKey("-1");
-        		derivationSearch.setCreatorKey("3982966");
-        		derivationSearch.setStrainKey("-1");
-        		derivationSearch.setCellLineTypeKey(cellLineTypeKey);
-        		
-        		derivationResults = derivationService.validateDerivation(derivationSearch);
-        		
-        		if (!derivationResults.get(0).getDerivationKey().isEmpty()) {       		
-	        		log.info("processAlleleCellLine/validated derivation: " + derivationResults.get(0).getDerivationKey());       		
-	        		log.info("processAlleleCellLine/create new cell line");
-	        		cellLineDomain.setCellLine("Not Specified");
-	        		cellLineDomain.setStrainKey("-1");
-	        		cellLineDomain.setCellLineTypeKey(cellLineTypeKey);
-	        		cellLineDomain.setDerivation(derivationResults.get(0));				
-	        		cellLineDomain.setIsMutant("1");
-	        		SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
-	        		log.info("processAlleleCellLine/calling cellLineService.create()");				
-	        		cellLineResults = cellLineService.create(cellLineDomain, user);
-	                return(cellLineResults.items.get(0).getCellLineKey());	        		
-        		}
-        	}         	
-        }
-        
-        //
-        // end check isParent, isMutant to see if a new cell line needs to be created
-        //
-        
-		return(null);
-    }
-    
 }	

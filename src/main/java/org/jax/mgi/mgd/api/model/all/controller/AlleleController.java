@@ -16,6 +16,7 @@ import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleRefAssocDomain;
 import org.jax.mgi.mgd.api.model.all.service.AlleleService;
+import org.jax.mgi.mgd.api.model.all.service.CellLineService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -30,6 +31,8 @@ public class AlleleController extends BaseController<AlleleDomain> {
 
 	@Inject
 	private AlleleService alleleService;
+	@Inject
+	private CellLineService cellLineService;
 	
 	@Override
 	public SearchResults<AlleleDomain> create(AlleleDomain domain, User user) {
@@ -43,7 +46,7 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	public SearchResults<AlleleDomain> update(AlleleDomain domain, User user) {
 		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
 		
-		String newCellLineKey = alleleService.processNewCellLine(domain, user);
+		String newCellLineKey = cellLineService.alleleCreate(domain, user);
 		if (newCellLineKey != null) {
     		domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(newCellLineKey);        		
 		}

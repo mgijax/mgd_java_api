@@ -20,6 +20,7 @@ import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleRefAssocDomain;
 import org.jax.mgi.mgd.api.model.all.service.AlleleCellLineDerivationService;
 import org.jax.mgi.mgd.api.model.all.service.AlleleService;
+import org.jax.mgi.mgd.api.model.all.service.CellLineService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -36,6 +37,8 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	private AlleleService alleleService;
 	@Inject
 	private AlleleCellLineDerivationService derivationService;
+	@Inject
+	private CellLineService cellLineService;
 	
 	@Override
 	public SearchResults<AlleleDomain> create(AlleleDomain domain, User user) {
@@ -51,7 +54,7 @@ public class AlleleController extends BaseController<AlleleDomain> {
 
         //
 		// for 1st row only...
-        // check isParent, isMutant
+        // check isParent, isMutant to see if a new cell line needs to be created
         //
 
 		SlimAlleleCellLineDerivationDomain derivationSearch = new SlimAlleleCellLineDerivationDomain();
@@ -103,20 +106,27 @@ public class AlleleController extends BaseController<AlleleDomain> {
         		
         		derivationResults = derivationService.validateDerivation(derivationSearch);
         		
-        		if (!derivationResults.get(0).getDerivationKey().isEmpty()) {
-        		
-        		log.info("processAlleleCellLine/validated derivation: " + derivationResults.get(0).getDerivationKey());
-        		
-        		cellLineDomain.setCellLine("Not Specified");
-        		cellLineDomain.setStrainKey("-1");
+        		if (!derivationResults.get(0).getDerivationKey().isEmpty()) {       		
+	        		log.info("processAlleleCellLine/validated derivation: " + derivationResults.get(0).getDerivationKey());       		
+	        		log.info("processAlleleCellLine/create new cell line");
+	        		cellLineDomain.setCellLine("Not Specified");
+	        		cellLineDomain.setStrainKey("-1");
+	        		cellLineDomain.setCellLineTypeKey(cellLineTypeKey);
+	        		cellLineDomain.setDerivation(derivationResults.get(0));				
+	        		cellLineDomain.setIsMutant("1");
+	        		SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
+	        		log.info("processAlleleCellLine/calling cellLineService.create()");				
+	        		cellLineResults = cellLineService.create(cellLineDomain, user);
+	        		domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(cellLineResults.items.get(0).getCellLineKey());        		
         		}
         	}         	
         }
         
         //
-        // end check isParent, isMutant
+        // end check isParent, isMutant to see if a new cell line needs to be created
         //
 		
+        log.info("processAlleleController/cell line (0):" + domain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLineKey());
 		results = alleleService.update(domain, user);				
 		results = alleleService.getResults(Integer.valueOf(results.items.get(0).getAlleleKey()));
 		return results;		

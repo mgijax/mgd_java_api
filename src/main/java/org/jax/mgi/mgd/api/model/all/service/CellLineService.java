@@ -234,48 +234,42 @@ public class CellLineService extends BaseService<CellLineDomain> {
  
     	log.info("alleleCreate/isParent/isMutant: " + isParent + "," + isMutant);       
        
-        if (isParent == false && isMutant == false) {
+        if ((isParent == false && isMutant == false)
+        		&& (alleleTypeKey.equals("847121") || alleleTypeKey.equals("847116"))) {
 
-        	log.info("alleleCreate/isParent == false && isMutant == false");
+        	log.info("alleleCreate/isParent == false && isMutant == false, Gene trapped or Targeted");
 
-        	//if = "Gene trapped" or "Targeted", then create "Not Specified" cell line
-        	if (alleleTypeKey.equals("847121") || alleleTypeKey.equals("847116")) {
-
-            	log.info("alleleCreate: " + alleleTypeKey);
-
-	            // select the derivation key that is associated with:
-	            //   allele type
-	            //   creator = Not Specified (3982966)
-	            //   vector = Not Specified (4311225)           		
-	            //   vector type = Not Specified (3982979)
-	            //   parent cell line = Not Specified (-1)
-	            //   strain = Not Specified (-1)
-	            //   cell line type
-	            //
+	        // select the derivation key that is associated with:
+	        //   allele type = from domain
+	        //   creator = Not Specified (3982966)
+	        //   vector = Not Specified (4311225)           		
+	        //   vector type = Not Specified (3982979)
+	        //   parent cell line = Not Specified (-1)
+	        //   strain = Not Specified (-1)
+	        //   cell line type
+	        //
             	
-        		derivationSearch.setAlleleTypeKey(alleleTypeKey);
-        		derivationSearch.setVectorKey("4311225");
-        		derivationSearch.setVectorTypeKey("3982979");
-        		derivationSearch.setParentCellLineKey(anyNS);
-        		derivationSearch.setCreatorKey("3982966");
-        		derivationSearch.setStrainKey(anyNS);
-        		derivationSearch.setCellLineTypeKey(cellLineTypeKey);
+        	derivationSearch.setAlleleTypeKey(alleleTypeKey);
+        	derivationSearch.setVectorKey("4311225");
+        	derivationSearch.setVectorTypeKey("3982979");
+        	derivationSearch.setParentCellLineKey(anyNS);
+        	derivationSearch.setCreatorKey("3982966");
+        	derivationSearch.setStrainKey(anyNS);
+        	derivationSearch.setCellLineTypeKey(cellLineTypeKey);
         		
-        		derivationResults = derivationService.validateDerivation(derivationSearch);
+        	derivationResults = derivationService.validateDerivation(derivationSearch);
         		
-        		if (!derivationResults.get(0).getDerivationKey().isEmpty()) {       		
-	        		log.info("alleleCreate/validated derivation: " + derivationResults.get(0).getDerivationKey());       		
-	        		log.info("alleleCreate/create new cell line");
-	        		cellLineDomain.setCellLine(cellLineNS);
-	        		cellLineDomain.setStrainKey("-1");
-	        		cellLineDomain.setCellLineTypeKey(cellLineTypeKey);
-	        		cellLineDomain.setDerivation(derivationResults.get(0));				
-	        		cellLineDomain.setIsMutant("1");
-	        		SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
-	        		log.info("processAlleleCellLine/calling cellLineService.create()");				
-	        		cellLineResults = create(cellLineDomain, user);
-	                return(cellLineResults.items.get(0).getCellLineKey());	        		
-        		}
+        	if (!derivationResults.get(0).getDerivationKey().isEmpty()) {       		
+	        	log.info("alleleCreate/validated derivation: " + derivationResults.get(0).getDerivationKey());       		
+	        	cellLineDomain.setCellLine(cellLineNS);
+	        	cellLineDomain.setStrainKey("-1");
+	        	cellLineDomain.setCellLineTypeKey(cellLineTypeKey);
+	        	cellLineDomain.setDerivation(derivationResults.get(0));				
+	        	cellLineDomain.setIsMutant("1");
+	        	SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
+	        	log.info("alleleCreate/create new cell line");
+	        	cellLineResults = create(cellLineDomain, user);
+	            return(cellLineResults.items.get(0).getCellLineKey());	        		
         	}
         }
         else if (isParent == true && isMutant == false) {
@@ -283,7 +277,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 
 	        //
 	        // select the derivation key that is associated with:
-	        //   allele type
+	        //   allele type = from domain
 	        //   creator = Not Specified (3982966)
 	        //   vector = Not Specified (4311225)           		
 	        //   vector type = Not Specified (3982979)
@@ -304,24 +298,56 @@ public class CellLineService extends BaseService<CellLineDomain> {
 	
         	if (!derivationResults.get(0).getDerivationKey().isEmpty()) {       		
 	        	log.info("alleleCreate/validated derivation: " + derivationResults.get(0).getDerivationKey());       		
-	        	log.info("alleleCreate/create new cell line");
 	        	cellLineDomain.setCellLine(cellLineNS);
 	        	cellLineDomain.setStrainKey(anyNS);
 	        	cellLineDomain.setCellLineTypeKey(cellLineTypeKey);
 	        	cellLineDomain.setDerivation(derivationResults.get(0));				
 	        	cellLineDomain.setIsMutant(isMutantTrue);
 	        	SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
-	        	log.info("processAlleleCellLine/calling cellLineService.create()");				
+	        	log.info("alleleCreate/create new cell line");
 	        	cellLineResults = create(cellLineDomain, user);
 	            return(cellLineResults.items.get(0).getCellLineKey());	        		
         	}
         }
-        else if (isParent == true && isMutant == true) {
-        	log.info("alleleCreate/isParent == true && isMutant == true");
+        else if (isParent == true && isMutant == true && domain.getCellLine().equals(cellLineNS)) {
+        	log.info("alleleCreate/isParent == true && isMutant == true && cellline = Not Specified");
+        	
+	        //
+	        // select the derivation key that is associated with:
+	        //   allele type = from domain
+	        //   creator = from domain
+	        //   vector = from domain           		
+	        //   vector type = from domain
+	        //   parent cell line = from domain
+	        //   strain = from domain
+	        //   cell line type = from domain
+	        // 
+            	
+        	derivationSearch.setAlleleTypeKey(alleleTypeKey);
+        	derivationSearch.setVectorKey(domain.getDerivation().getVectorKey());
+        	derivationSearch.setVectorTypeKey(domain.getDerivation().getVectorTypeKey());
+        	derivationSearch.setParentCellLineKey(domain.getDerivation().getParentCellLine().getCellLineKey());
+        	derivationSearch.setCreatorKey(domain.getDerivation().getCreator());
+        	derivationSearch.setStrainKey(domain.getDerivation().getParentCellLine().getStrainKey());
+        	derivationSearch.setCellLineTypeKey(domain.getDerivation().getParentCellLine().getCellLineTypeKey());
+        		
+        	derivationResults = derivationService.validateDerivation(derivationSearch);
+	
+        	if (!derivationResults.get(0).getDerivationKey().isEmpty()) {       		
+	        	log.info("alleleCreate/validated derivation: " + derivationResults.get(0).getDerivationKey());       		
+	        	cellLineDomain.setCellLine(cellLineNS);
+	        	cellLineDomain.setStrainKey(domain.getDerivation().getParentCellLine().getStrainKey());
+	        	cellLineDomain.setCellLineTypeKey(domain.getDerivation().getParentCellLine().getCellLineTypeKey());
+	        	cellLineDomain.setDerivation(derivationResults.get(0));				
+	        	cellLineDomain.setIsMutant(isMutantTrue);
+	        	SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
+	        	cellLineResults = create(cellLineDomain, user);
+	        	log.info("alleleCreate/create new cell line");	        	
+	            return(cellLineResults.items.get(0).getCellLineKey()); 
+        	}
         }
               
     	log.info("alleleCreate/new allele was not created");       
 		return(null);
-    }
-    	
+    } 	
 }

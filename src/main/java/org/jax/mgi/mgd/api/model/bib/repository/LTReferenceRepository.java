@@ -1,4 +1,4 @@
-package org.jax.mgi.mgd.api.model.bib.repository;
+Fapppackage org.jax.mgi.mgd.api.model.bib.repository;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -276,8 +276,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			rdReview = 1;
 		}
 
-		String refType = entity.getReferenceTypeTerm().getTerm();
-
 		Integer year = null;
 		try {
 			year = Integer.parseInt(domain.year);
@@ -285,6 +283,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			throw new FatalAPIException("Year is not an integer: " + domain.year);
 		}
 
+		String refTypeKey = String.valueOf(entity.getReferenceTypeTerm().get_term_key());
+		
 		// update this object's data to match what was passed in
 		if ((rdDiscard != entity.getIsDiscard()) || (rdReview != entity.getIsReviewArticle())
 				|| !smartEqual(entity.getAuthors(), domain.authors)
@@ -294,7 +294,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				|| !smartEqual(entity.getIssue(), domain.issue)
 				|| !smartEqual(entity.getDate(), domain.date)
 				|| !smartEqual(entity.getYear(), year)
-				|| !smartEqual(refType, domain.referenceType)
+				|| !smartEqual(refTypeKey, domain.referenceTypeKey)
 				|| !smartEqual(entity.getPgs(), domain.pgs)
 				|| !smartEqual(entity.getReferenceAbstract(), domain.referenceAbstract)
 				) {
@@ -317,7 +317,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			entity.setDate(domain.date);
 			entity.setYear(year);
 			entity.setPgs(domain.pgs);
-			entity.setReferenceTypeTerm(getTermByTerm(Constants.VOC_REFERENCE_TYPE, domain.referenceType));
+			entity.setReferenceTypeTerm(termDAO.get(Integer.valueOf(domain.getReferenceTypeKey())));
 			entity.setReferenceAbstract(DecodeString.setDecodeToLatin9(domain.referenceAbstract));			
 			entity.setModificationInfo(currentUser);
 			

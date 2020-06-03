@@ -97,7 +97,11 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {			
 				AlleleCellLine entity = new AlleleCellLine();									
 				entity.set_allele_key(Integer.valueOf(parentKey));
+				
+				// to-do
+				// if no cell line, then create it
 				entity.setMutantCellLine(cellLineDAO.get(Integer.valueOf(domain.get(i).getMutantCellLine().getCellLineKey())));				
+				
 				entity.setCreatedBy(user);
 				entity.setCreation_date(new Date());
 				entity.setModifiedBy(user);
@@ -117,7 +121,11 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processAlleleCellLine/update");
 				AlleleCellLine entity = alleleCellLineDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));			
+				
+				// to-do
+				// if no cell line, then create it
 				entity.setMutantCellLine(cellLineDAO.get(Integer.valueOf(domain.get(i).getMutantCellLine().getCellLineKey())));				
+				
 				entity.setModification_date(new Date());
 				entity.setModifiedBy(user);
 				alleleCellLineDAO.update(entity);

@@ -108,7 +108,7 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 
 		String cellLineTypeKey = domain.get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineTypeKey();
 		if (cellLineTypeKey.isEmpty()) {
-          isParent = false;
+          //isParent = false;
           cellLineTypeKey = "3982968";          
         };
 

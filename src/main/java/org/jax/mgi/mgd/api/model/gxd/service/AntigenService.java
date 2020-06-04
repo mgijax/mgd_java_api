@@ -81,6 +81,7 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		entity.setCreation_date(new Date());
 		entity.setModifiedBy(user);
 		entity.setModification_date(new Date());
+		/* DOING IN THE CONTROLLER AS SOURCE IS NOT BEING PERSISTED HERE
 		log.info("antigen incoming domain source description: " + domain.getProbeSource().getDescription() + " organism: " + domain.getProbeSource().getOrganism());
 		SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
 		sourceResults = probeSourceService.create(domain.getProbeSource(), user);
@@ -99,7 +100,7 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		log.info("entity description" + entity.getProbeSource().getDescription());
 		// now set the probe source in the entity
 		entity.setProbeSource(probeSource);
-				
+		*/	
 		// execute persist/insert/send to database
 		antigenDAO.persist(entity);
 		
@@ -123,9 +124,27 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		
 		log.info("processAntigen/update");
 		
-		//
-		// IN PROGRESSS
-		//
+		// may not be null
+		entity.setAntigenName(domain.getAntigenName());
+		
+		// may be null
+		if(domain.getRegionCovered() ==  null || domain.getRegionCovered().isEmpty()) {
+			entity.setRegionCovered(null);
+		}
+		else {
+			entity.setRegionCovered(domain.getRegionCovered());
+		}
+		
+		// may be null
+		if(domain.getAntigenNote() == null || domain.getAntigenNote().isEmpty()) {
+			entity.setAntigenNote(null);
+		}
+		else {
+			entity.setAntigenNote(domain.getAntigenNote());
+		}	
+		
+		// update source
+		probeSourceService.update(domain.getProbeSource(), user);
 		
 		// only if modifications were actually made
 		if (modified == true) {

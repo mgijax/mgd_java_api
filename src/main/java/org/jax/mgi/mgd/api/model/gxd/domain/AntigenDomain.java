@@ -12,7 +12,7 @@ public class AntigenDomain extends BaseDomain {
 	private String antigenKey;
 	private String antigenName;
 	private String regionCovered;
-	private String antigenNote;		
+	private String antigenNote;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;
@@ -21,5 +21,6 @@ public class AntigenDomain extends BaseDomain {
 	private String modification_date;
 	private String accID;
 
+	// private String sourceKey; added out of desperation
 	private ProbeSourceDomain probeSource;
 }

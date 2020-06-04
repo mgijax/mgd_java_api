@@ -11,22 +11,15 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.all.dao.CellLineDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
-import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
-import org.jax.mgi.mgd.api.model.prb.dao.ProbeDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeSourceDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeTissueDAO;
-import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeSourceTranslator;
-import org.jax.mgi.mgd.api.model.prb.translator.ProbeTranslator;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
-import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -182,18 +175,14 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 	@Transactional
 	public SearchResults<ProbeSourceDomain> runAgeMinMax(Integer key, User user) {
 		SearchResults<ProbeSourceDomain> results = new SearchResults<ProbeSourceDomain>();
-		ProbeSource entity = new ProbeSource();
-		
+				
 		String cmd = "\nselect count(*) from MGI_resetAgeMinMax ('PRB_Source', " +  key + ")";
 		log.info("cmd: " + cmd);
 		
 		Query query = probeSourceDAO.createNativeQuery(cmd); 
-		log.info("getting resultlist");
-		// below produces this error:
-		// "message": "org.hibernate.MappingException: No Dialect mapping for JDBC type: 1111 [TypeNames.java:70] (No Dialect mapping for JDBC type: 1111)", "status_code": 500
+		log.info("getting resultlist");	
 		query.getResultList();
-		//entity = probeSourceDAO.get(key);
-		//results.setItem(translator.translate(entity));
+		
 		return results;
 	}
 

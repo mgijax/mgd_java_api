@@ -304,11 +304,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			where = where + "\nand a.name ilike '" + searchDomain.getName() + "'" ;
 		}
 		
-		if (searchDomain.getIsExtinct() != null) {
+		if (searchDomain.getIsExtinct() != null && !searchDomain.getIsExtinct().isEmpty()) {
 			where = where + "\nand a.isExtinct = " + searchDomain.getIsExtinct();
 		}
 		
-		if (searchDomain.getIsMixed() != null) {
+		if (searchDomain.getIsMixed() != null && !searchDomain.getIsMixed().isEmpty()) {
 			where = where + "\nand a.isMixed = " + searchDomain.getIsMixed();
 		}
 

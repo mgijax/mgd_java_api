@@ -36,7 +36,8 @@ public class AntigenTranslator extends BaseEntityDomainTranslator<Antigen, Antig
 		// at most one probeSource
 		if (entity.getProbeSource() != null) {
 			domain.setProbeSource(probeSourceTranslator.translate(entity.getProbeSource()));
-			domain.setSourceKey(String.valueOf(entity.getProbeSource().get_source_key()));
+			// tried this out of desperation
+			//domain.setSourceKey(String.valueOf(entity.getProbeSource().get_source_key()));
 		}
 
 		return domain;

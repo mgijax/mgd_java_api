@@ -24,7 +24,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @Path("/allele")
-@Api(value = "Allele Endpoints", description="This is the description")
+@Api(value = "Allele Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class AlleleController extends BaseController<AlleleDomain> {
@@ -38,7 +38,7 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	public SearchResults<AlleleDomain> create(AlleleDomain domain, User user) {
 		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
 
-		String newCellLineKey = cellLineService.alleleCreate(domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
+		String newCellLineKey = cellLineService.createMutantCellLine (domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
 		if (newCellLineKey != null) {
     		domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(newCellLineKey);        		
 		}
@@ -52,7 +52,7 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	public SearchResults<AlleleDomain> update(AlleleDomain domain, User user) {
 		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
 		
-		String newCellLineKey = cellLineService.alleleCreate(domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
+		String newCellLineKey = cellLineService.createMutantCellLine (domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
 		if (newCellLineKey != null) {
     		domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(newCellLineKey);        		
 		}

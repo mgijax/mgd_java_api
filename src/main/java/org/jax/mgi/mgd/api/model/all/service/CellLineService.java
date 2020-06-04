@@ -143,67 +143,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		cellLineDAO.clear();
 		return results;
     }
-       
-	@Transactional
-	public List<CellLineDomain> validateMutantCellLine(CellLineDomain searchDomain) {
-
-		List<CellLineDomain> results = new ArrayList<CellLineDomain>();
-		
-		String cmd = "\nselect _cellline_key"
-				+ "\nfrom ALL_CellLine"
-				+ "\nwhere isMutant = 1"
-				+ "\nand lower(cellLine) = lower('" + searchDomain.getCellLine() + "')";
-
-		log.info(cmd);
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			
-			while (rs.next()) {
-				CellLineDomain domain = new CellLineDomain();
-				domain = translator.translate(cellLineDAO.get(rs.getInt("_cellline_key")));	
-				cellLineDAO.clear();
-				results.add(domain);
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
-
-	@Transactional
-	public List<CellLineDomain> validateParentCellLine(CellLineDomain searchDomain) {
-
-		List<CellLineDomain> results = new ArrayList<CellLineDomain>();
-		
-		String cmd = "\nselect _cellline_key"
-				+ "\nfrom ALL_CellLine"
-				+ "\nwhere isMutant = 0"
-				+ "\nand lower(cellLine) = lower('" + searchDomain.getCellLine() + "')";
-
-		log.info(cmd);
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			
-			while (rs.next()) {
-				CellLineDomain domain = new CellLineDomain();
-				domain = translator.translate(cellLineDAO.get(rs.getInt("_cellline_key")));	
-				cellLineDAO.clear();
-				results.add(domain);
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
-
+ 
     @Transactional
     public String createMutantCellLine (String alleleTypeKey, CellLineDomain domain, User user) {
 		// potential new mutant cell line for allele/cellline association
@@ -352,5 +292,107 @@ public class CellLineService extends BaseService<CellLineDomain> {
               
     	log.info("alleleCreate/new allele was not created");       
 		return(null);
-    } 	
+    } 
+
+	@Transactional
+	public SearchResults<CellLineDomain> searchParentCellLines(CellLineDomain searchDomain) {
+
+		SearchResults<CellLineDomain> results = new SearchResults<CellLineDomain>();
+		
+		String cmd = "\nselect c._CellLine_key, c.cellLine || ';' || s.strain as cellLine"
+				+ "\nfrom ALL_CellLine c, PRB_Strain s"
+				+ "\nwhere c.isMutant = 0"
+				+ "\nand c._CellLine_Type_key = 3982968"
+				+ "\nand c._Strain_key = s._Strain_key"
+				+ "\nunion"
+				+ "\nselect c._CellLine_key, c.cellLine || ';' || s.strain || ';' || vt.term as cellLine"
+				+ "\nfrom ALL_CellLine c, PRB_Strain s, VOC_Term vt"
+				+ "\nwhere c.isMutant = 0"
+				+ "\nand c._CellLine_Type_key != 3982968"
+				+ "\nand c._Strain_key = s._Strain_key"
+				+ "\nand c._CellLine_Type_key = vt._Term_key"
+				+ "\norder by cellLine";
+
+		log.info(cmd);
+		
+		try {
+			List<CellLineDomain> cellLineList = new ArrayList<CellLineDomain>();
+			
+			ResultSet rs = sqlExecutor.executeProto(cmd);			
+			while (rs.next()) {
+				CellLineDomain domain = new CellLineDomain();
+				domain = translator.translate(cellLineDAO.get(rs.getInt("_cellline_key")));	
+				cellLineDAO.clear();
+				cellLineList.add(domain);
+			}
+			results.setItems(cellLineList);
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@Transactional
+	public List<CellLineDomain> validateMutantCellLine(CellLineDomain searchDomain) {
+
+		List<CellLineDomain> results = new ArrayList<CellLineDomain>();
+		
+		String cmd = "\nselect _cellline_key"
+				+ "\nfrom ALL_CellLine"
+				+ "\nwhere isMutant = 1"
+				+ "\nand lower(cellLine) = lower('" + searchDomain.getCellLine() + "')";
+
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			
+			while (rs.next()) {
+				CellLineDomain domain = new CellLineDomain();
+				domain = translator.translate(cellLineDAO.get(rs.getInt("_cellline_key")));	
+				cellLineDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+
+	@Transactional
+	public List<CellLineDomain> validateParentCellLine(CellLineDomain searchDomain) {
+
+		List<CellLineDomain> results = new ArrayList<CellLineDomain>();
+		
+		String cmd = "\nselect _cellline_key"
+				+ "\nfrom ALL_CellLine"
+				+ "\nwhere isMutant = 0"
+				+ "\nand lower(cellLine) = lower('" + searchDomain.getCellLine() + "')";
+
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			
+			while (rs.next()) {
+				CellLineDomain domain = new CellLineDomain();
+				domain = translator.translate(cellLineDAO.get(rs.getInt("_cellline_key")));	
+				cellLineDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+		
 }

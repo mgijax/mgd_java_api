@@ -19,6 +19,8 @@ import org.jax.mgi.mgd.api.model.gxd.domain.SlimAntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAntigenDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.AntigenService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
+import org.jax.mgi.mgd.api.model.prb.service.ProbeSourceService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
@@ -32,10 +34,30 @@ public class AntigenController extends BaseController<AntigenDomain> {
 
 	@Inject
 	private AntigenService antigenService;
-
+	@Inject
+	private ProbeSourceService sourceService;
+	
 	@Override
 	public SearchResults<AntigenDomain> create(AntigenDomain domain, User user) {
 		SearchResults<AntigenDomain> results = new SearchResults<AntigenDomain>();
+		
+		// first create the new source
+		
+		// try just getting the key back from sourceService: nope didn't work, source is persisted, bu
+		/* antigen cannot be persisted because sourceKey is missing? This prints out the newSourceKey though ....
+		String newSourceKey = sourceService.createAntigenSource(domain.getProbeSource(), user);
+		log.info("Antigen Controller newSourceKey: " + newSourceKey);
+		domain.getProbeSource().setSourceKey(newSourceKey);
+		*/
+		
+		// try calling the create and pulling source out of sourceResults to set in antigendomain
+		SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
+		sourceResults = sourceService.create(domain.getProbeSource(), user);
+		domain.setProbeSource(sourceResults.items.get(0));
+		
+		// antigen cannot be persisted because sourceKey is missing? This prints out the newSourceKey though ....
+		log.info("Antigen Controller newSourceKey: " + sourceResults.items.get(0).getSourceKey());
+		// create the new antigen
 		results = antigenService.create(domain, user);
 		results = antigenService.getResults(Integer.valueOf(results.items.get(0).getAntigenKey()));
 		return results;

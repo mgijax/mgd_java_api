@@ -12,7 +12,8 @@ public class AntigenDomain extends BaseDomain {
 	private String antigenKey;
 	private String antigenName;
 	private String regionCovered;
-	private String antigenNote;		
+	private String antigenNote;
+	private String sourceKey;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

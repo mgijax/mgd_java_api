@@ -27,6 +27,7 @@ public class ProbeSourceController extends BaseController<ProbeSourceDomain> {
 	
 	@Override
 	public SearchResults<ProbeSourceDomain> create(ProbeSourceDomain domain, User user) {
+		log.info("ProbeSourceController create");
 		SearchResults<ProbeSourceDomain> results = new SearchResults<ProbeSourceDomain>();
 		results = probeSourceService.create(domain, user);
 		results = probeSourceService.getResults(Integer.valueOf(results.items.get(0).getSourceKey()));

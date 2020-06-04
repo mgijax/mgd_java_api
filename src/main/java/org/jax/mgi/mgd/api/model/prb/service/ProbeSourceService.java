@@ -156,8 +156,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		
 		Query query = probeSourceDAO.createNativeQuery(cmd); 
 		log.info("getting resultlist");
-		// below produces this error:
-		// "message": "org.hibernate.MappingException: No Dialect mapping for JDBC type: 1111 [TypeNames.java:70] (No Dialect mapping for JDBC type: 1111)", "status_code": 500
+		
 		query.getResultList();
 		
 		// return entity translated to domain
@@ -173,6 +172,13 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		log.info("source service results description: " + results.items.get(0).getDescription());
 		return results;
 	}
+	@Transactional
+	public String createAntigenSource(ProbeSourceDomain domain, User user) {
+		SearchResults<ProbeSourceDomain> results = new SearchResults<ProbeSourceDomain>();
+		results = create(domain, user);
+		return results.items.get(0).getSourceKey();
+	}
+	
 	@Transactional
 	public SearchResults<ProbeSourceDomain> runAgeMinMax(Integer key, User user) {
 		SearchResults<ProbeSourceDomain> results = new SearchResults<ProbeSourceDomain>();
@@ -193,15 +199,139 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 
 	@Transactional
 	public SearchResults<ProbeSourceDomain> update(ProbeSourceDomain domain, User user) {
+	
 		SearchResults<ProbeSourceDomain> results = new SearchResults<ProbeSourceDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		//results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		ProbeSource entity = probeSourceDAO.get(Integer.valueOf(domain.getSourceKey()));
+		
+		Boolean modified = false;
+		
+		// description is null unless specified
+		log.info("probe source incoming domain description: " + domain.getDescription());
+		if(domain.getDescription() == null || domain.getDescription().isEmpty()) {
+			entity.setDescription(null);
+		}
+		else {
+			if (entity.getDescription() != domain.getDescription()) {
+				modified = true;
+			}
+			entity.setDescription(domain.getDescription());
+		}
+		if(domain.getAge() == null || domain.getAge().isEmpty()) {
+			domain.setAge("Not Specified");
+		}
+		else {
+			if (entity.getAge() != domain.getAge()) {
+				modified = true;
+			}
+			entity.setAge(domain.getAge());
+		}
+		log.info("probe source incoming domain organismKey: " + domain.getOrganismKey());
+		if(domain.getOrganismKey() == null ||  domain.getOrganismKey().isEmpty()) {
+			// 'Not Specified'
+			domain.setOrganismKey("76");
+		}
+		else {
+			if (String.valueOf(entity.getOrganism().get_organism_key()) != domain.getOrganism()) {
+				modified = true;
+			}
+			entity.setOrganism(organismDAO.get(Integer.valueOf(domain.getOrganismKey())));
+		}
+		if(domain.getStrainKey() == null || domain.getStrainKey().isEmpty()) {
+			// 'Not Specified'
+			domain.setStrainKey("-1");
+		}
+		else {
+			if(String.valueOf(entity.getStrain().get_strain_key()) != domain.getStrainKey()) {
+				modified = true;
+			}
+			entity.setStrain(probeStrainDAO.get(Integer.valueOf(domain.getStrainKey())));
+		}
+		if(domain.getTissueKey() == null || domain.getTissueKey().isEmpty()) {
+			// 'Not Specified'
+			domain.setTissueKey("-1");
+		}
+		else {
+			if (String.valueOf(entity.getTissue().get_tissue_key()) != domain.getTissueKey()) {
+				modified = true;
+			}
+			entity.setTissue(probeTissueDAO.get(Integer.valueOf(domain.getTissueKey())));
+		}
+		if(domain.getGenderKey() == null || domain.getGenderKey().isEmpty()) {
+			domain.setGenderKey("315167");
+		}
+		else {
+			if (String.valueOf(entity.getGender().get_term_key()) != domain.getGenderKey()) {
+				modified = true;
+			}
+			entity.setGender(termDAO.get(Integer.valueOf(domain.getGenderKey())));
+		}
+		
+		if(domain.getCellLineKey() == null ||  domain.getStrainKey().isEmpty()) {
+			// 'Not Specified'
+			domain.setCellLineKey("316335");
+		}
+		else {
+			if (String.valueOf(entity.getCellLine().get_term_key()) != domain.getCellLineKey()) {
+				modified = true;
+			}
+			entity.setCellLine(termDAO.get(Integer.valueOf(domain.getCellLineKey())));
+		}
+		// special handling of source
+		
+		// if organism other than mouse (or Not Specified) then strain default is Not Applicable
+		if (domain.getOrganismKey() != "1" && domain.getOrganismKey() != "-1") {
+			domain.setStrainKey("-2"); 
+		}
+		entity.setStrain(probeStrainDAO.get(Integer.valueOf(domain.getStrainKey())));
+		
+		// if tissue is specified, then cell line is Not applicable
+		if (domain.getTissueKey() != "-1") {
+			domain.setCellLineKey("316336");
+		}
+		entity.setCellLine(termDAO.get(Integer.valueOf(domain.getCellLineKey())));
+
+		// when cell line is specified and age is 'Not Specified', change default to 'Not Applicable'
+		if(domain.getCellLineKey() != "316335" && domain.getCellLineKey() != "316336" && domain.getAge() == "Not Specified") {
+			domain.setAge("Not Applicable");
+		}
+		entity.setAge(domain.getAge());
+		
+		// only if modifications were actually made
+		if (modified == true) {
+			entity.setModification_date(new Date());
+			entity.setModifiedBy(user);
+			probeSourceDAO.update(entity);
+			log.info("processMarker/changes processed: " + domain.getSourceKey());
+		}
+		else {
+			log.info("processMarker/no changes processed: " + domain.getSourceKey());
+		}
+		
+		// update ageMin/ageMax
+		String cmd = "\nselect count(*) from MGI_resetAgeMinMax ('PRB_Source', " +  entity.get_source_key() + ")";
+		log.info("cmd: " + cmd);
+		
+		Query query = probeSourceDAO.createNativeQuery(cmd); 
+		log.info("getting resultlist");
+		
+		query.getResultList();
+		
+		// return entity translated to domain
+		log.info("processSource/update/returning results");
+		results.setItem(translator.translate(entity));
+		log.info("processSource/update/returned results succsssful");
+		
 		return results;
 	}
     
 	@Transactional
 	public SearchResults<ProbeSourceDomain> delete(Integer key, User user) {
 		SearchResults<ProbeSourceDomain> results = new SearchResults<ProbeSourceDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		//results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		ProbeSource entity = probeSourceDAO.get(key);
+		results.setItem(translator.translate(probeSourceDAO.get(key)));
+		probeSourceDAO.remove(entity);
 		return results;
 	}
 	

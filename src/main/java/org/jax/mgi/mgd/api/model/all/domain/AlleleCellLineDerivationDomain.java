@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 public class AlleleCellLineDerivationDomain extends BaseDomain {
 
+	private String processStatus;	
 	private String derivationKey;
 	private String name;
 	private String description;

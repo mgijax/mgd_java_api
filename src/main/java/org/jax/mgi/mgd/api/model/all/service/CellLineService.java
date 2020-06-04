@@ -327,7 +327,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
         	derivationSearch.setVectorKey(domain.getDerivation().getVectorKey());
         	derivationSearch.setVectorTypeKey(domain.getDerivation().getVectorTypeKey());
         	derivationSearch.setParentCellLineKey(domain.getDerivation().getParentCellLine().getCellLineKey());
-        	derivationSearch.setCreatorKey(domain.getDerivation().getCreator());
+        	derivationSearch.setCreatorKey(domain.getDerivation().getCreatorKey());
         	derivationSearch.setStrainKey(domain.getDerivation().getParentCellLine().getStrainKey());
         	derivationSearch.setCellLineTypeKey(domain.getDerivation().getParentCellLine().getCellLineTypeKey());
         		

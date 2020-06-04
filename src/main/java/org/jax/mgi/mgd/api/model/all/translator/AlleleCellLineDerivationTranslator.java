@@ -4,6 +4,7 @@ import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.domain.CellLineDomain;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLineDerivation;
+import org.jax.mgi.mgd.api.util.Constants;
 
 public class AlleleCellLineDerivationTranslator extends BaseEntityDomainTranslator<AlleleCellLineDerivation, AlleleCellLineDerivationDomain> {
 	
@@ -11,7 +12,8 @@ public class AlleleCellLineDerivationTranslator extends BaseEntityDomainTranslat
 	protected AlleleCellLineDerivationDomain entityToDomain(AlleleCellLineDerivation entity) {
 		
 		AlleleCellLineDerivationDomain domain = new AlleleCellLineDerivationDomain();
-		
+
+		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);		
 		domain.setDerivationKey(String.valueOf(entity.get_derivation_key()));
 		domain.setName(entity.getName());
 		domain.setDescription(entity.getDescription());

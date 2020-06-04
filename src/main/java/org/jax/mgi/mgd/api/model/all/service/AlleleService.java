@@ -331,7 +331,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		if (searchDomain.getCollectionKey() != null && !searchDomain.getCollectionKey().isEmpty()) {
 			where = where + "\nand a._collection_key = " + searchDomain.getCollectionKey();
 		}
-				
+
+		if (searchDomain.getStrainOfOriginKey() != null && !searchDomain.getStrainOfOriginKey().isEmpty()) {
+			where = where + "\nand a._strain_key = " + searchDomain.getStrainOfOriginKey();
+		}
+		
 		// marker
 		if (searchDomain.getMarkerKey() != null && !searchDomain.getMarkerKey().isEmpty()) {
 			where = where + "\nand a._marker_key = " + searchDomain.getMarkerKey();

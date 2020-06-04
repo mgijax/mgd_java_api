@@ -205,9 +205,9 @@ public class CellLineService extends BaseService<CellLineDomain> {
 	}
 
     @Transactional
-    public String alleleCreate(String alleleTypeKey, CellLineDomain domain, User user) {
-		// potential new cell line to be used for allele/cellline association
-    	// depends on isParent, isMutation settings
+    public String createMutantCellLine (String alleleTypeKey, CellLineDomain domain, User user) {
+		// potential new mutant cell line for allele/cellline association
+    	// depends on isParent, isMutation settings (see below)
     	// applies only to domain.getMutatnCellLineAssocs().get(0)
     	  	
     	String cellLineNS = "Not Specified";
@@ -228,6 +228,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
           cellLineTypeKey = "3982968";          
         };
 
+        // if domain cell line has not been selected...
         if (domain.getCellLineKey().isEmpty()) {
         	isMutant = false;
 		}
@@ -273,7 +274,8 @@ public class CellLineService extends BaseService<CellLineDomain> {
         	}
         }
         else if (isParent == true && isMutant == false) {
-            log.info("alleleCreate/isParent == true && isMutant == false");
+ 
+        	log.info("alleleCreate/isParent == true && isMutant == false");
 
 	        //
 	        // select the derivation key that is associated with:
@@ -310,6 +312,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
         	}
         }
         else if (isParent == true && isMutant == true && domain.getCellLine().equals(cellLineNS)) {
+ 
         	log.info("alleleCreate/isParent == true && isMutant == true && cellline = Not Specified");
         	
 	        //

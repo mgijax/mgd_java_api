@@ -295,7 +295,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
     } 
 
 	@Transactional
-	public SearchResults<CellLineDomain> searchParentCellLines(CellLineDomain searchDomain) {
+	public SearchResults<CellLineDomain> searchParentCellLines() {
 
 		SearchResults<CellLineDomain> results = new SearchResults<CellLineDomain>();
 		

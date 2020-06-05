@@ -41,23 +41,10 @@ public class AntigenController extends BaseController<AntigenDomain> {
 		SearchResults<AntigenDomain> results = new SearchResults<AntigenDomain>();
 		
 		// first create the new source
-		
-		// try just getting the key back from sourceService: nope didn't work, source is persisted, bu
-		/* antigen cannot be persisted because sourceKey is missing? This prints out the newSourceKey though ....
-		String newSourceKey = sourceService.createAntigenSource(domain.getProbeSource(), user);
-		log.info("Antigen Controller newSourceKey: " + newSourceKey);
-		domain.getProbeSource().setSourceKey(newSourceKey);
-		*/
-		
-		// try calling the create and pulling source out of sourceResults to set in antigen domain
 		SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
 		sourceResults = sourceService.create(domain.getProbeSource(), user);
-		domain.getProbeSource().setSourceKey(sourceResults.items.get(0).getSourceKey());;
-		//domain.setProbeSource(sourceResults.items.get(0));
+		domain.getProbeSource().setSourceKey(sourceResults.items.get(0).getSourceKey());
 		
-		// antigen cannot be persisted because sourceKey is missing? This prints out the newSourceKey though ....
-		log.info("Antigen Controller newSourceKey from sourceResults: " + sourceResults.items.get(0).getSourceKey());
-		log.info("Antigen Controller newSourceKey from domain: " + domain.getProbeSource().getSourceKey());
 		
 		// create the new antigen
 		results = antigenService.create(domain, user);
@@ -68,16 +55,16 @@ public class AntigenController extends BaseController<AntigenDomain> {
 	@Override
 	public SearchResults<AntigenDomain> update(AntigenDomain domain, User user) {
 		SearchResults<AntigenDomain> results = new SearchResults<AntigenDomain>();
-		log.info("AntigenController AntigenDomain source organism" + domain.getProbeSource().getOrganism());
-		log.info("AntigenController AntigenDomain source age" + domain.getProbeSource().getAge());
-		// add source call here when the create is fixed
 		SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
+		
+		// update the source first, note this does not work in the AntigenService
 		sourceResults = sourceService.update(domain.getProbeSource(), user);
 		domain.setProbeSource(sourceResults.items.get(0));
 		
-
+		// now update the antigen
 		results = antigenService.update(domain, user);
 		results = antigenService.getResults(Integer.valueOf(results.items.get(0).getAntigenKey()));
+		
 		return results;
 	}
 

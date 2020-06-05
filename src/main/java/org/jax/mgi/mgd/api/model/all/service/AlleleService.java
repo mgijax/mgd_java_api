@@ -119,11 +119,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		// process marker reference
 		log.info("processAllele/referenes");
-		referenceAssocService.process(domain.getAlleleKey(), domain.getRefAssocs(), mgiTypeKey, user);
+		referenceAssocService.process(String.valueOf(entity.get_allele_key()), domain.getRefAssocs(), mgiTypeKey, user);
 				
 		// process mutant cell lines
 		log.info("processAllele/mutant cell lines");
-		alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLineAssocs(), user);
+		alleleCellLineService.process(String.valueOf(entity.get_allele_key()), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLineAssocs(), user);
 
 		// process synonyms
 		// process allele attributes/subtypes

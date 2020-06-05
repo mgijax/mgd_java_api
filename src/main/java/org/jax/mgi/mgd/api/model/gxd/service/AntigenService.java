@@ -18,11 +18,6 @@ import org.jax.mgi.mgd.api.model.gxd.entities.Antigen;
 import org.jax.mgi.mgd.api.model.gxd.translator.AntigenTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimAntigenTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
-import org.jax.mgi.mgd.api.model.prb.dao.ProbeSourceDAO;
-import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
-import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
-import org.jax.mgi.mgd.api.model.prb.service.ProbeSourceService;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -35,12 +30,7 @@ public class AntigenService extends BaseService<AntigenDomain> {
 
 	@Inject
 	private AntigenDAO antigenDAO;
-	@Inject
-	private ProbeSourceDAO probeSourceDAO;
-	
-	@Inject
-	private ProbeSourceService probeSourceService;
-	
+		
 	private AntigenTranslator translator = new AntigenTranslator();
 	
 	// for Search
@@ -81,26 +71,7 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		entity.setCreation_date(new Date());
 		entity.setModifiedBy(user);
 		entity.setModification_date(new Date());
-		/* DOING IN THE CONTROLLER AS SOURCE IS NOT BEING PERSISTED HERE
-		log.info("antigen incoming domain source description: " + domain.getProbeSource().getDescription() + " organism: " + domain.getProbeSource().getOrganism());
-		SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
-		sourceResults = probeSourceService.create(domain.getProbeSource(), user);
 		
-		// this is logging the correct description from the source results - but the source was not persisted. 
-		log.info("antigen service probe source create results description: " + sourceResults.items.get(0).getDescription());
-		// same outcome whether we call getResults or not:
-		//sourceResults = probeSourceService.getResults(Integer.valueOf(sourceResults.items.get(0).getSourceKey()));
-		
-		// get the probeSource entity from the DAO using the sourceResults to get the source key
-		log.info("antigen service - new source key: " + sourceResults.items.get(0).getSourceKey());
-		ProbeSource probeSource = probeSourceDAO.get(Integer.valueOf(sourceResults.items.get(0).getSourceKey()));
-		
-		// this is null - source was not persisted
-		log.info("entity probe source object: " + entity.getProbeSource());
-		log.info("entity description" + entity.getProbeSource().getDescription());
-		// now set the probe source in the entity
-		entity.setProbeSource(probeSource);
-		*/	
 		// execute persist/insert/send to database
 		antigenDAO.persist(entity);
 		
@@ -119,20 +90,24 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		SearchResults<AntigenDomain> results = new SearchResults<AntigenDomain>();
 		Antigen entity = antigenDAO.get(Integer.valueOf(domain.getAntigenKey()));
 		Boolean modified = false;
-//		String mgiTypeKey = "7";
-//		String mgiTypeName = "Antigen";
 		
 		log.info("processAntigen/update");
 		
 		// may not be null
-		entity.setAntigenName(domain.getAntigenName());
+		if(entity.getAntigenName() != domain.getAntigenName()) {
+			entity.setAntigenName(domain.getAntigenName());
+			modified = true;
+		}
 		
 		// may be null
 		if(domain.getRegionCovered() ==  null || domain.getRegionCovered().isEmpty()) {
 			entity.setRegionCovered(null);
 		}
 		else {
-			entity.setRegionCovered(domain.getRegionCovered());
+			if (entity.getRegionCovered() != domain.getRegionCovered()) {
+				entity.setRegionCovered(domain.getRegionCovered());
+				modified = true;
+			}
 		}
 		
 		// may be null
@@ -140,11 +115,11 @@ public class AntigenService extends BaseService<AntigenDomain> {
 			entity.setAntigenNote(null);
 		}
 		else {
-			entity.setAntigenNote(domain.getAntigenNote());
+			if(entity.getAntigenNote() != domain.getAntigenName()) {
+				entity.setAntigenNote(domain.getAntigenNote());
+				modified = true;
+			}
 		}	
-		
-		// update source
-		probeSourceService.update(domain.getProbeSource(), user);
 		
 		// only if modifications were actually made
 		if (modified == true) {

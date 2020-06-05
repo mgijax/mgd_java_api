@@ -14,7 +14,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntigenDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDataSetDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAntigenDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.AntigenService;
@@ -50,13 +49,14 @@ public class AntigenController extends BaseController<AntigenDomain> {
 		domain.getProbeSource().setSourceKey(newSourceKey);
 		*/
 		
-		// try calling the create and pulling source out of sourceResults to set in antigendomain
+		// try calling the create and pulling source out of sourceResults to set in antigen domain
 		SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
 		sourceResults = sourceService.create(domain.getProbeSource(), user);
 		domain.setProbeSource(sourceResults.items.get(0));
 		
 		// antigen cannot be persisted because sourceKey is missing? This prints out the newSourceKey though ....
 		log.info("Antigen Controller newSourceKey: " + sourceResults.items.get(0).getSourceKey());
+		
 		// create the new antigen
 		results = antigenService.create(domain, user);
 		results = antigenService.getResults(Integer.valueOf(results.items.get(0).getAntigenKey()));
@@ -66,6 +66,14 @@ public class AntigenController extends BaseController<AntigenDomain> {
 	@Override
 	public SearchResults<AntigenDomain> update(AntigenDomain domain, User user) {
 		SearchResults<AntigenDomain> results = new SearchResults<AntigenDomain>();
+		log.info("AntigenController AntigenDomain source organism" + domain.getProbeSource().getOrganism());
+		log.info("AntigenController AntigenDomain source age" + domain.getProbeSource().getAge());
+		// add source call here when the create is fixed
+		SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
+		sourceResults = sourceService.update(domain.getProbeSource(), user);
+		domain.setProbeSource(sourceResults.items.get(0));
+		
+
 		results = antigenService.update(domain, user);
 		results = antigenService.getResults(Integer.valueOf(results.items.get(0).getAntigenKey()));
 		return results;

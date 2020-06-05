@@ -18,6 +18,8 @@ import org.jax.mgi.mgd.api.model.gxd.entities.Antigen;
 import org.jax.mgi.mgd.api.model.gxd.translator.AntigenTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimAntigenTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.prb.dao.ProbeSourceDAO;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -30,6 +32,8 @@ public class AntigenService extends BaseService<AntigenDomain> {
 
 	@Inject
 	private AntigenDAO antigenDAO;
+	@Inject
+	private ProbeSourceDAO sourceDAO;
 		
 	private AntigenTranslator translator = new AntigenTranslator();
 	
@@ -71,6 +75,9 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		entity.setCreation_date(new Date());
 		entity.setModifiedBy(user);
 		entity.setModification_date(new Date());
+		// tried this still get null source key
+		log.info("AntigenServer.create sourceKey from sourceDAO.get(Integer.valueOf(domain.getProbeSource().getSourceKey(): " + String.valueOf(sourceDAO.get(Integer.valueOf(domain.getProbeSource().getSourceKey())).get_source_key()));
+		entity.setProbeSource(sourceDAO.get(Integer.valueOf(domain.getProbeSource().getSourceKey())));
 		
 		// execute persist/insert/send to database
 		antigenDAO.persist(entity);
@@ -204,7 +211,7 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		Boolean from_accession = false;
 		
 		//
-		// IN PROGRESSS
+		// IN PROGRESS
 		//
 		
 		// if parameter exists, then add to where-clause

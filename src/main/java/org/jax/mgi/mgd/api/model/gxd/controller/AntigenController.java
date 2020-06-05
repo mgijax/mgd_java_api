@@ -52,10 +52,12 @@ public class AntigenController extends BaseController<AntigenDomain> {
 		// try calling the create and pulling source out of sourceResults to set in antigen domain
 		SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
 		sourceResults = sourceService.create(domain.getProbeSource(), user);
-		domain.setProbeSource(sourceResults.items.get(0));
+		domain.getProbeSource().setSourceKey(sourceResults.items.get(0).getSourceKey());;
+		//domain.setProbeSource(sourceResults.items.get(0));
 		
 		// antigen cannot be persisted because sourceKey is missing? This prints out the newSourceKey though ....
-		log.info("Antigen Controller newSourceKey: " + sourceResults.items.get(0).getSourceKey());
+		log.info("Antigen Controller newSourceKey from sourceResults: " + sourceResults.items.get(0).getSourceKey());
+		log.info("Antigen Controller newSourceKey from domain: " + domain.getProbeSource().getSourceKey());
 		
 		// create the new antigen
 		results = antigenService.create(domain, user);

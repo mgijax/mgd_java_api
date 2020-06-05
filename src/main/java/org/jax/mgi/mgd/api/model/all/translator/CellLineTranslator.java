@@ -34,10 +34,13 @@ public class CellLineTranslator extends BaseEntityDomainTranslator<CellLine, Cel
 			domain.setDerivation(derivation);
 		}
 		
-		domain.setCellLineDisplay(String.valueOf(entity.getCellLine() + ';' + entity.getStrain().getStrain()));
-//		+ "\nand c._CellLine_Type_key != 3982968"
-//		+ "\nand c._Strain_key = s._Strain_key"
-//		+ "\nand c._CellLine_Type_key = vt._Term_key"	
+		// if cell line type = embryonic stem cell...
+		if (entity.getCellLineType().get_term_key() == 3982968) {
+			domain.setCellLineDisplay(String.valueOf(entity.getCellLine() + ';' + entity.getStrain().getStrain()));			
+		}
+		else {
+			domain.setCellLineDisplay(String.valueOf(entity.getCellLine() + ';' + entity.getStrain().getStrain() + ';' + entity.getCellLineType().getTerm()));						
+		}
 		
 		return domain;
 	}

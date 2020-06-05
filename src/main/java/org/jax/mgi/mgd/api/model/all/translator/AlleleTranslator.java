@@ -204,7 +204,7 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		}
 		
 		// do annotations
-		if (!entity.getDoAnnots().isEmpty()) {
+		if (entity.getDoAnnots() != null && !entity.getDoAnnots().isEmpty()) {
 			AnnotationTranslator annotTranslator = new AnnotationTranslator();
 			Iterable<AnnotationDomain> i = annotTranslator.translateEntities(entity.getDoAnnots());
 			domain.setDoAnnots(IteratorUtils.toList(i.iterator()));

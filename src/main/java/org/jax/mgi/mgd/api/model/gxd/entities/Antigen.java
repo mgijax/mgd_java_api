@@ -52,7 +52,7 @@ public class Antigen extends BaseEntity {
 	private User modifiedBy;
 
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_source_key", referencedColumnName="_source_key", insertable=false, updatable=false)
+	@JoinColumn(name="_source_key", referencedColumnName="_source_key")
 	private ProbeSource probeSource;
 	
 	// mgi accession ids only

@@ -75,8 +75,7 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		entity.setCreation_date(new Date());
 		entity.setModifiedBy(user);
 		entity.setModification_date(new Date());
-		// tried this still get null source key
-		log.info("AntigenServer.create sourceKey from sourceDAO.get(Integer.valueOf(domain.getProbeSource().getSourceKey(): " + String.valueOf(sourceDAO.get(Integer.valueOf(domain.getProbeSource().getSourceKey())).get_source_key()));
+			
 		entity.setProbeSource(sourceDAO.get(Integer.valueOf(domain.getProbeSource().getSourceKey())));
 		
 		// execute persist/insert/send to database

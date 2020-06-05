@@ -67,6 +67,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
 		Allele entity = new Allele();
+
+		log.info("processAllele/create");
 		
 		entity.setSymbol(domain.getSymbol());
 		entity.setName(domain.getName());
@@ -116,6 +118,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		alleleDAO.persist(entity);
 
 		// process marker reference
+		log.info("processAllele/referenes");
 		referenceAssocService.process(domain.getAlleleKey(), domain.getRefAssocs(), mgiTypeKey, user);
 				
 		// process mutant cell lines

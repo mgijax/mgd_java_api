@@ -45,6 +45,7 @@ public class AlleleController extends BaseController<AlleleDomain> {
 			}
 		}
 		
+		log.info("new cell line: " + domain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLineKey());
 		results = alleleService.create(domain, user);
 		results = alleleService.getResults(Integer.valueOf(results.items.get(0).getAlleleKey()));
 		return results;	

@@ -295,9 +295,9 @@ public class CellLineService extends BaseService<CellLineDomain> {
     } 
 
 	@Transactional
-	public SearchResults<CellLineDomain> searchParentCellLines() {
+	public List<CellLineDomain> searchParentCellLines() {
 
-		SearchResults<CellLineDomain> results = new SearchResults<CellLineDomain>();
+		List<CellLineDomain> results = new ArrayList<CellLineDomain>();
 		
 		String cmd = "\nselect c._CellLine_key, c.cellLine || ';' || s.strain as cellLine"
 				+ "\nfrom ALL_CellLine c, PRB_Strain s"
@@ -315,17 +315,14 @@ public class CellLineService extends BaseService<CellLineDomain> {
 
 		log.info(cmd);
 		
-		try {
-			List<CellLineDomain> cellLineList = new ArrayList<CellLineDomain>();
-			
+		try {			
 			ResultSet rs = sqlExecutor.executeProto(cmd);			
 			while (rs.next()) {
 				CellLineDomain domain = new CellLineDomain();
 				domain = translator.translate(cellLineDAO.get(rs.getInt("_cellline_key")));	
 				cellLineDAO.clear();
-				cellLineList.add(domain);
+				results.add(domain);
 			}
-			results.setItems(cellLineList);
 			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {

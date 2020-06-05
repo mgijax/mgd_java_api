@@ -11,6 +11,7 @@ public class CellLineDomain extends BaseDomain {
 	private String processStatus;
 	private String cellLineKey;
 	private String cellLine;
+	private String cellLineDisplay;
 	private String isMutant;
 	private String cellLineTypeKey;
 	private String cellLineType;

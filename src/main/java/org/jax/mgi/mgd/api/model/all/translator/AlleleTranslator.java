@@ -65,9 +65,9 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			domain.setApprovedBy(entity.getApprovedBy().getLogin());
 			domain.setApproval_date(dateFormatNoTime.format(entity.getApproval_date()));
 		}
-		
-		// primary mgi accession ids only
-		if (!entity.getMgiAccessionIds().isEmpty()) {
+
+		// mgi accession ids only
+		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}
 

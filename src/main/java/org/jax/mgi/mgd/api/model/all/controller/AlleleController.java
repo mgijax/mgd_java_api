@@ -38,11 +38,14 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	public SearchResults<AlleleDomain> create(AlleleDomain domain, User user) {
 		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
 
-		String newCellLineKey = cellLineService.createMutantCellLine (domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
-		if (newCellLineKey != null) {
-    		domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(newCellLineKey);        		
+		if (domain.getMutantCellLineAssocs() != null) {
+			String newCellLineKey = cellLineService.createMutantCellLine(domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
+			if (newCellLineKey != null) {
+	    		domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(newCellLineKey);        		
+			}
 		}
 		
+		log.info("new cell line: " + domain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLineKey());
 		results = alleleService.create(domain, user);
 		results = alleleService.getResults(Integer.valueOf(results.items.get(0).getAlleleKey()));
 		return results;	
@@ -52,9 +55,11 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	public SearchResults<AlleleDomain> update(AlleleDomain domain, User user) {
 		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
 		
-		String newCellLineKey = cellLineService.createMutantCellLine (domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
-		if (newCellLineKey != null) {
-    		domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(newCellLineKey);        		
+		if (domain.getMutantCellLineAssocs() != null) {	
+			String newCellLineKey = cellLineService.createMutantCellLine(domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
+			if (newCellLineKey != null) {
+	    		domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(newCellLineKey);        		
+			}
 		}
 		
 		results = alleleService.update(domain, user);				

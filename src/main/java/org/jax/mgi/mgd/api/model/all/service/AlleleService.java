@@ -67,6 +67,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
 		Allele entity = new Allele();
+
+		log.info("processAllele/create");
 		
 		entity.setSymbol(domain.getSymbol());
 		entity.setName(domain.getName());
@@ -79,7 +81,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		entity.setAlleleStatus(termDAO.get(Integer.valueOf(domain.getAlleleStatusKey())));
 		entity.setTransmission(termDAO.get(Integer.valueOf(domain.getTransmissionKey())));
 		entity.setCollection(termDAO.get(Integer.valueOf(domain.getCollectionKey())));
-		entity.setAlleleMarkerStatus(termDAO.get(Integer.valueOf(domain.getMarkerStatusKey())));
+		entity.setAlleleMarkerStatus(termDAO.get(Integer.valueOf(domain.getAlleleMarkerStatusKey())));
 
 		if (domain.getMarkerKey() != null && !domain.getMarkerKey().isEmpty()) {
 			entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));	
@@ -116,11 +118,12 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		alleleDAO.persist(entity);
 
 		// process marker reference
-		referenceAssocService.process(domain.getAlleleKey(), domain.getRefAssocs(), mgiTypeKey, user);
+		log.info("processAllele/referenes");
+		referenceAssocService.process(String.valueOf(entity.get_allele_key()), domain.getRefAssocs(), mgiTypeKey, user);
 				
 		// process mutant cell lines
 		log.info("processAllele/mutant cell lines");
-		alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLineAssocs(), user);
+		alleleCellLineService.process(String.valueOf(entity.get_allele_key()), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLineAssocs(), user);
 
 		// process synonyms
 		// process allele attributes/subtypes

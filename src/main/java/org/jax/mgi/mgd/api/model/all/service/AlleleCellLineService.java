@@ -89,6 +89,8 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 		for (int i = 0; i < domain.size(); i++) {
 		
         	log.info("processAlleleCellLine/domain :" + i);
+        	log.info("processAlleleCellLine/mutant cell line key : " + domain.get(i).getMutantCellLine().getCellLineKey());
+        	log.info("processAlleleCellLine/processStatus : " + domain.get(i).getProcessStatus());
 		
         	if (domain.get(i).getMutantCellLine().getCellLineKey().isEmpty()) {
         		return modified;

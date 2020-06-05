@@ -299,19 +299,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 
 		List<CellLineDomain> results = new ArrayList<CellLineDomain>();
 		
-		String cmd = "\nselect c._CellLine_key, c.cellLine || ';' || s.strain as cellLine"
-				+ "\nfrom ALL_CellLine c, PRB_Strain s"
-				+ "\nwhere c.isMutant = 0"
-				+ "\nand c._CellLine_Type_key = 3982968"
-				+ "\nand c._Strain_key = s._Strain_key"
-				+ "\nunion"
-				+ "\nselect c._CellLine_key, c.cellLine || ';' || s.strain || ';' || vt.term as cellLine"
-				+ "\nfrom ALL_CellLine c, PRB_Strain s, VOC_Term vt"
-				+ "\nwhere c.isMutant = 0"
-				+ "\nand c._CellLine_Type_key != 3982968"
-				+ "\nand c._Strain_key = s._Strain_key"
-				+ "\nand c._CellLine_Type_key = vt._Term_key"
-				+ "\norder by cellLine";
+		String cmd = "\nselect _CellLine_key from ALL_CellLine where isMutant = 0 order by cellLine";
 
 		log.info(cmd);
 		

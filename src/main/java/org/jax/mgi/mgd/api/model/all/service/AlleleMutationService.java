@@ -13,6 +13,7 @@ import org.jax.mgi.mgd.api.model.all.domain.AlleleMutationDomain;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleMutation;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleMutationTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -24,6 +25,8 @@ public class AlleleMutationService extends BaseService<AlleleMutationDomain> {
 	
 	@Inject
 	private AlleleMutationDAO alleleMutationDAO;
+	@Inject
+	private TermDAO termDAO;
 	
 	private AlleleMutationTranslator translator = new AlleleMutationTranslator();				
 
@@ -93,6 +96,7 @@ public class AlleleMutationService extends BaseService<AlleleMutationDomain> {
 				log.info("processAlleleMutation/create");
 				AlleleMutation entity = new AlleleMutation();									
 				entity.set_allele_key(Integer.valueOf(parentKey));
+				entity.setMutation(termDAO.get(Integer.valueOf(domain.get(i).getMutationKey())));
 				entity.setCreation_date(new Date());
 				entity.setModification_date(new Date());				
 				alleleMutationDAO.persist(entity);				
@@ -109,7 +113,8 @@ public class AlleleMutationService extends BaseService<AlleleMutationDomain> {
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processAlleleMutation/update");
-				AlleleMutation entity = alleleMutationDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));			
+				AlleleMutation entity = alleleMutationDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));	
+				entity.setMutation(termDAO.get(Integer.valueOf(domain.get(i).getMutationKey())));
 				entity.setModification_date(new Date());
 				alleleMutationDAO.update(entity);
 				log.info("processAlleleMutation/changes processed: " + domain.get(i).getAssocKey());				

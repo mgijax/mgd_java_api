@@ -18,6 +18,7 @@ import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleRefAssocDomain;
 import org.jax.mgi.mgd.api.model.all.service.AlleleService;
 import org.jax.mgi.mgd.api.model.all.service.CellLineService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
@@ -38,7 +39,7 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	public SearchResults<AlleleDomain> create(AlleleDomain domain, User user) {
 		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
 
-		if (domain.getMutantCellLineAssocs() != null) {
+		if (domain.getMutantCellLineAssocs() != null && !domain.getMutantCellLineAssocs().get(0).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 			String newCellLineKey = cellLineService.createMutantCellLine(domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
 			if (newCellLineKey != null) {
 	    		domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(newCellLineKey);        		
@@ -55,7 +56,7 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	public SearchResults<AlleleDomain> update(AlleleDomain domain, User user) {
 		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
 		
-		if (domain.getMutantCellLineAssocs() != null) {	
+		if (domain.getMutantCellLineAssocs() != null && !domain.getMutantCellLineAssocs().get(0).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 			String newCellLineKey = cellLineService.createMutantCellLine(domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
 			if (newCellLineKey != null) {
 	    		domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(newCellLineKey);        		

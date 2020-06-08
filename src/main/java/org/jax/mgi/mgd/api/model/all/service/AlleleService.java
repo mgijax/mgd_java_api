@@ -52,6 +52,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	private MGIReferenceAssocService referenceAssocService;
 	@Inject
 	private MGISynonymService synonymService;
+	@Inject
+	private AlleleMutationService molmutationService;
 	
 	private AlleleTranslator translator = new AlleleTranslator();
 	private SlimAlleleTranslator slimtranslator = new SlimAlleleTranslator();	
@@ -133,7 +135,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		synonymService.process(domain.getAlleleKey(), domain.getSynonyms(), mgiTypeKey, user);
 		
 		// process allele attributes/subtypes
+
 		// process molecular mutations
+		log.info("processAllele/molecular mutation");
+		molmutationService.process(domain.getAlleleKey(), domain.getMutations(), user);
+		
 		// process driver genes
 		
 		// return entity translated to domain
@@ -204,7 +210,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		synonymService.process(domain.getAlleleKey(), domain.getSynonyms(), mgiTypeKey, user);
 		
 		// process allele attributes/subtypes
+
 		// process molecular mutations
+		log.info("processAllele/molecular mutation");
+		molmutationService.process(domain.getAlleleKey(), domain.getMutations(), user);
+
 		// process driver genes
 		
 		entity.setModification_date(new Date());

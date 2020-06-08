@@ -68,7 +68,7 @@ public class AlleleMutationService extends BaseService<AlleleMutationDomain> {
     }
 
 	@Transactional
-	public Boolean process(String parentKey, String alleleTypeKey, String alleleType, List<AlleleMutationDomain> domain, User user) {
+	public Boolean process(String parentKey, List<AlleleMutationDomain> domain, User user) {
 		// process allele cell line associations (create, delete, update)
 		
 		Boolean modified = false;

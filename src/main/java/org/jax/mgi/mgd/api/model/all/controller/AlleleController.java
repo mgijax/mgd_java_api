@@ -50,8 +50,8 @@ public class AlleleController extends BaseController<AlleleDomain> {
 
 		if (cellLineResults.error.isEmpty()) {		
 			results = alleleService.create(domain, user);
+			results = alleleService.getResults(Integer.valueOf(results.items.get(0).getAlleleKey()));
 		}
-		results = alleleService.getResults(Integer.valueOf(results.items.get(0).getAlleleKey()));
 		
 		if (!cellLineResults.error.isEmpty()) {
 			results.setError("Add", cellLineResults.error, Constants.HTTP_SERVER_ERROR);
@@ -74,10 +74,9 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		
 		if (cellLineResults.error.isEmpty()) {		
 			results = alleleService.update(domain, user);				
+			results = alleleService.getResults(Integer.valueOf(results.items.get(0).getAlleleKey()));		
 		}
-		
-		results = alleleService.getResults(Integer.valueOf(results.items.get(0).getAlleleKey()));
-		
+				
 		if (!cellLineResults.error.isEmpty()) {
 			results.setError("Modify", cellLineResults.error, Constants.HTTP_SERVER_ERROR);
 		}

@@ -145,7 +145,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
     }
  
     @Transactional
-    public String createMutantCellLine (String alleleTypeKey, CellLineDomain domain, User user) {
+    public SearchResults<CellLineDomain> createMutantCellLine (String alleleTypeKey, CellLineDomain domain, User user) {
 		// potential new mutant cell line for allele/cellline association
     	// depends on isParent, isMutation settings (see below)
     	// applies only to domain.getMutatnCellLineAssocs().get(0)
@@ -155,6 +155,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
     	String isMutantTrue = "1";
 		String cellLineTypeKey = domain.getDerivation().getParentCellLine().getCellLineTypeKey();
 
+    	SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();		
 		SlimAlleleCellLineDerivationDomain derivationSearch = new SlimAlleleCellLineDerivationDomain();
 		List<AlleleCellLineDerivationDomain> derivationResults = new ArrayList<AlleleCellLineDerivationDomain>();
     	CellLineDomain cellLineDomain = new CellLineDomain();
@@ -207,13 +208,11 @@ public class CellLineService extends BaseService<CellLineDomain> {
 	        	cellLineDomain.setCellLineTypeKey(cellLineTypeKey);
 	        	cellLineDomain.setDerivation(derivationResults.get(0));				
 	        	cellLineDomain.setIsMutant("1");
-	        	SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
 	        	log.info("alleleCreate/create new cell line");
 	        	cellLineResults = create(cellLineDomain, user);
-	            return(cellLineResults.items.get(0).getCellLineKey());	        		
         	}
         	else {
-        		return("-99");
+        		cellLineResults.error = "Cannot find Derivation for this Allele Type and Parent";
         	}
         }
         else if (isParent == true && isMutant == false) {
@@ -248,13 +247,11 @@ public class CellLineService extends BaseService<CellLineDomain> {
 	        	cellLineDomain.setCellLineTypeKey(cellLineTypeKey);
 	        	cellLineDomain.setDerivation(derivationResults.get(0));				
 	        	cellLineDomain.setIsMutant(isMutantTrue);
-	        	SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
 	        	log.info("alleleCreate/create new cell line");
 	        	cellLineResults = create(cellLineDomain, user);
-	            return(cellLineResults.items.get(0).getCellLineKey());	        		
         	}
         	else {
-        		return("-99");
+        		cellLineResults.error = "Cannot find Derivation for this Allele Type and Parent";
         	}       	
         }
         else if (isParent == true && isMutant == true && domain.getCellLine().equals(cellLineNS)) {
@@ -289,18 +286,16 @@ public class CellLineService extends BaseService<CellLineDomain> {
 	        	cellLineDomain.setCellLineTypeKey(domain.getDerivation().getParentCellLine().getCellLineTypeKey());
 	        	cellLineDomain.setDerivation(derivationResults.get(0));				
 	        	cellLineDomain.setIsMutant(isMutantTrue);
-	        	SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
 	        	cellLineResults = create(cellLineDomain, user);
 	        	log.info("alleleCreate/create new cell line");	        	
-	            return(cellLineResults.items.get(0).getCellLineKey()); 
         	}
         	else {
-        		return("-99");
+        		cellLineResults.error = "Cannot find Derivation for this Allele Type and Parent";
         	}       	
         }
               
     	log.info("alleleCreate/new allele was not created");       
-		return(null);
+        return(cellLineResults);	        		
     } 
 
 	@Transactional

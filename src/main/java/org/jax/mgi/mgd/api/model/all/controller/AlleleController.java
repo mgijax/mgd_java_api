@@ -47,12 +47,14 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	    		domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(cellLineResults.items.get(0).getCellLineKey());        		
 			}
 		}
-		
-		results = alleleService.create(domain, user);
+
+		if (!cellLineResults.error.isEmpty()) {		
+			results = alleleService.create(domain, user);
+		}
 		results = alleleService.getResults(Integer.valueOf(results.items.get(0).getAlleleKey()));
 		
 		if (!cellLineResults.error.isEmpty()) {
-			results.setError("Add: ", cellLineResults.error, Constants.HTTP_SERVER_ERROR);
+			results.setError("Add", cellLineResults.error, Constants.HTTP_SERVER_ERROR);
 		}
 				
 		return results;	
@@ -70,11 +72,14 @@ public class AlleleController extends BaseController<AlleleDomain> {
 			}
 		}
 		
-		results = alleleService.update(domain, user);				
+		if (!cellLineResults.error.isEmpty()) {		
+			results = alleleService.update(domain, user);				
+		}
+		
 		results = alleleService.getResults(Integer.valueOf(results.items.get(0).getAlleleKey()));
 		
 		if (!cellLineResults.error.isEmpty()) {
-			results.setError("Modify: ", cellLineResults.error, Constants.HTTP_SERVER_ERROR);
+			results.setError("Modify", cellLineResults.error, Constants.HTTP_SERVER_ERROR);
 		}
 		
 		return results;		

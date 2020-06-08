@@ -200,7 +200,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
         		
         	derivationResults = derivationService.validateDerivation(derivationSearch);
         		
-        	if (!derivationResults.get(0).getDerivationKey().isEmpty()) {       		
+        	if (!derivationResults.isEmpty()) {       		
 	        	log.info("alleleCreate/validated derivation: " + derivationResults.get(0).getDerivationKey());       		
 	        	cellLineDomain.setCellLine(cellLineNS);
 	        	cellLineDomain.setStrainKey("-1");
@@ -238,7 +238,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
         		
         	derivationResults = derivationService.validateDerivation(derivationSearch);
 	
-        	if (!derivationResults.get(0).getDerivationKey().isEmpty()) {       		
+        	if (!derivationResults.isEmpty()) {       		
 	        	log.info("alleleCreate/validated derivation: " + derivationResults.get(0).getDerivationKey());       		
 	        	cellLineDomain.setCellLine(cellLineNS);
 	        	cellLineDomain.setStrainKey(anyNS);
@@ -276,7 +276,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
         		
         	derivationResults = derivationService.validateDerivation(derivationSearch);
 	
-        	if (!derivationResults.get(0).getDerivationKey().isEmpty()) {       		
+        	if (!derivationResults.isEmpty()) {       		
 	        	log.info("alleleCreate/validated derivation: " + derivationResults.get(0).getDerivationKey());       		
 	        	cellLineDomain.setCellLine(cellLineNS);
 	        	cellLineDomain.setStrainKey(domain.getDerivation().getParentCellLine().getStrainKey());

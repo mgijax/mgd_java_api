@@ -155,7 +155,9 @@ public class CellLineService extends BaseService<CellLineDomain> {
     	String isMutantTrue = "1";
 		String cellLineTypeKey = domain.getDerivation().getParentCellLine().getCellLineTypeKey();
 
-    	SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();		
+    	SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
+    	cellLineResults.error = "";
+    	
 		SlimAlleleCellLineDerivationDomain derivationSearch = new SlimAlleleCellLineDerivationDomain();
 		List<AlleleCellLineDerivationDomain> derivationResults = new ArrayList<AlleleCellLineDerivationDomain>();
     	CellLineDomain cellLineDomain = new CellLineDomain();

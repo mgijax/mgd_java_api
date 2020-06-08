@@ -88,7 +88,7 @@ public class AlleleMutationService extends BaseService<AlleleMutationDomain> {
 		
 		for (int i = 0; i < domain.size(); i++) {
 		
-        	if (domain.get(i).getAlleleKey() == null || domain.get(i).getAlleleKey().isEmpty()) {
+        	if (domain.get(i).getMutationKey() == null || domain.get(i).getMutationKey().isEmpty()) {
         		return modified;
         	}
         			

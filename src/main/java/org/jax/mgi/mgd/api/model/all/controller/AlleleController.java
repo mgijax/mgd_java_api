@@ -41,7 +41,9 @@ public class AlleleController extends BaseController<AlleleDomain> {
 
 		if (domain.getMutantCellLineAssocs() != null && !domain.getMutantCellLineAssocs().get(0).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 			String newCellLineKey = cellLineService.createMutantCellLine(domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
-			if (newCellLineKey != null) {
+			if (newCellLineKey.equals("-99")) {
+				results.error = "Cannot find Derivation for this Allele Type and Parent";
+			} else if (newCellLineKey != null) {
 	    		domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(newCellLineKey);        		
 			}
 		}
@@ -58,7 +60,9 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		
 		if (domain.getMutantCellLineAssocs() != null && !domain.getMutantCellLineAssocs().get(0).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 			String newCellLineKey = cellLineService.createMutantCellLine(domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
-			if (newCellLineKey != null) {
+			if (newCellLineKey.equals("-99")) {
+				results.error = "Cannot find Derivation for this Allele Type and Parent";
+			} else if (newCellLineKey != null) {
 	    		domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(newCellLineKey);        		
 			}
 		}

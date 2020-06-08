@@ -212,6 +212,9 @@ public class CellLineService extends BaseService<CellLineDomain> {
 	        	cellLineResults = create(cellLineDomain, user);
 	            return(cellLineResults.items.get(0).getCellLineKey());	        		
         	}
+        	else {
+        		return("-99");
+        	}
         }
         else if (isParent == true && isMutant == false) {
  
@@ -250,6 +253,9 @@ public class CellLineService extends BaseService<CellLineDomain> {
 	        	cellLineResults = create(cellLineDomain, user);
 	            return(cellLineResults.items.get(0).getCellLineKey());	        		
         	}
+        	else {
+        		return("-99");
+        	}       	
         }
         else if (isParent == true && isMutant == true && domain.getCellLine().equals(cellLineNS)) {
  
@@ -288,6 +294,9 @@ public class CellLineService extends BaseService<CellLineDomain> {
 	        	log.info("alleleCreate/create new cell line");	        	
 	            return(cellLineResults.items.get(0).getCellLineKey()); 
         	}
+        	else {
+        		return("-99");
+        	}       	
         }
               
     	log.info("alleleCreate/new allele was not created");       

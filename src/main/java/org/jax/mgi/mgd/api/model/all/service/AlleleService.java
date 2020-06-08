@@ -21,6 +21,7 @@ import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
+import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
@@ -49,6 +50,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	private AlleleCellLineService alleleCellLineService;
 	@Inject
 	private MGIReferenceAssocService referenceAssocService;
+	@Inject
+	private MGISynonymService synonymService;
 	
 	private AlleleTranslator translator = new AlleleTranslator();
 	private SlimAlleleTranslator slimtranslator = new SlimAlleleTranslator();	
@@ -126,6 +129,9 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		alleleCellLineService.process(String.valueOf(entity.get_allele_key()), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLineAssocs(), user);
 
 		// process synonyms
+		log.info("processAllele/synonyms");		
+		synonymService.process(domain.getAlleleKey(), domain.getSynonyms(), mgiTypeKey, user);
+		
 		// process allele attributes/subtypes
 		// process molecular mutations
 		// process driver genes
@@ -194,6 +200,9 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLineAssocs(), user);
 		
 		// process synonyms
+		log.info("processAllele/synonyms");		
+		synonymService.process(domain.getAlleleKey(), domain.getSynonyms(), mgiTypeKey, user);
+		
 		// process allele attributes/subtypes
 		// process molecular mutations
 		// process driver genes

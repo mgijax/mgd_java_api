@@ -69,7 +69,7 @@ public class AntigenService extends BaseService<AntigenDomain> {
 			entity.setAntigenNote(null);
 		}
 		else {
-			entity.setAntigenNote(entity.getAntigenNote());
+			entity.setAntigenNote(domain.getAntigenNote());
 		}
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());

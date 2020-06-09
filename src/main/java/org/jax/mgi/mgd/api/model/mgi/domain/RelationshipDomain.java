@@ -32,5 +32,5 @@ public class RelationshipDomain extends BaseDomain {
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;
-	
+
 }   	

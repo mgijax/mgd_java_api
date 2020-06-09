@@ -19,9 +19,11 @@ import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleRefAssocTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
+import org.jax.mgi.mgd.api.model.mgi.service.RelationshipService;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
@@ -57,6 +59,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	private AlleleMutationService molmutationService;
 	@Inject
 	private AnnotationService annotationService;
+	@Inject
+	private RelationshipService relationshipSerivce;
 	
 	private AlleleTranslator translator = new AlleleTranslator();
 	private SlimAlleleTranslator slimtranslator = new SlimAlleleTranslator();	
@@ -146,6 +150,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		molmutationService.process(domain.getAlleleKey(), domain.getMutations(), user);
 		
 		// process driver genes
+		List<RelationshipDomain> relationshipDomain = new ArrayList<RelationshipDomain>();
+//		for (int i = 0; i < domain.getDriverGenes().size(); i++) {
+//			relationshipDomain.
+//		}
+		relationshipSerivce.process(domain.getAlleleKey(), relationshipDomain, mgiTypeKey, user);
 		
 		// return entity translated to domain
 		log.info("processAllele/create/returning results");
@@ -223,6 +232,21 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		molmutationService.process(domain.getAlleleKey(), domain.getMutations(), user);
 
 		// process driver genes
+		List<RelationshipDomain> relationshipDomain = new ArrayList<RelationshipDomain>();
+		for (int i = 0; i < domain.getDriverGenes().size(); i++) {
+			RelationshipDomain rdomain = new RelationshipDomain();
+			rdomain.setProcessStatus(domain.getDriverGenes().get(i).getProcessStatus());
+			rdomain.setRelationshipKey(domain.getDriverGenes().get(i).getRelationshipKey());
+			rdomain.setCategoryKey("1006");
+			rdomain.setObjectKey1(domain.getDriverGenes().get(i).getAlleleKey());
+			rdomain.setObjectKey2(domain.getDriverGenes().get(i).getMarkerKey());
+			rdomain.setRelationshipTermKey("36770349");
+			rdomain.setQualifierKey("11391898");
+			rdomain.setEvidenceKey("17396909");
+			rdomain.setRefsKey(domain.getMolRefKey());
+			relationshipDomain.add(rdomain);
+		}
+		relationshipSerivce.process(domain.getAlleleKey(), relationshipDomain, mgiTypeKey, user);
 		
 		entity.setModification_date(new Date());
 		entity.setModifiedBy(user);

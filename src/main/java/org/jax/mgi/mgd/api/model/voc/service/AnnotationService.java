@@ -270,6 +270,12 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 					    qualifierKey = "1614156";
 					}
 				}
+				else if (annotTypeKey.equals("1014") ) {
+					if( qualifierKey == null || qualifierKey.isEmpty()) {
+						log.info("setting default allle/subtype qualifier to 'null'" );
+					    qualifierKey = "1614158";
+					}
+				}
 				
 				entity.setAnnotType(annotTypeDAO.get(Integer.valueOf(annotTypeKey)));				
 				entity.set_object_key(Integer.valueOf(domain.get(i).getObjectKey()));

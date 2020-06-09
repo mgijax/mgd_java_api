@@ -25,6 +25,7 @@ import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -54,6 +55,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	private MGISynonymService synonymService;
 	@Inject
 	private AlleleMutationService molmutationService;
+	@Inject
+	private AnnotationService annotationService;
 	
 	private AlleleTranslator translator = new AlleleTranslator();
 	private SlimAlleleTranslator slimtranslator = new SlimAlleleTranslator();	
@@ -135,7 +138,9 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		synonymService.process(domain.getAlleleKey(), domain.getSynonyms(), mgiTypeKey, user);
 		
 		// process allele attributes/subtypes
-
+		log.info("processAllele/attribute/subtype");
+		annotationService.process(domain.getSubtypeAnnots(), user);
+		
 		// process molecular mutations
 		log.info("processAllele/molecular mutation");
 		molmutationService.process(domain.getAlleleKey(), domain.getMutations(), user);
@@ -210,7 +215,9 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		synonymService.process(domain.getAlleleKey(), domain.getSynonyms(), mgiTypeKey, user);
 		
 		// process allele attributes/subtypes
-
+		log.info("processAllele/attribute/subtype");
+		annotationService.process(domain.getSubtypeAnnots(), user);
+		
 		// process molecular mutations
 		log.info("processAllele/molecular mutation");
 		molmutationService.process(domain.getAlleleKey(), domain.getMutations(), user);

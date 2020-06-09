@@ -78,6 +78,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		// return entity translated to domain
 		log.info("processCellLine/create/returning results");
 		results.setItem(translator.translate(entity));
+		results.error = "";
 		return results;
 	}
 
@@ -302,7 +303,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
         	}       	
         }
               
-    	log.info("createMutantCellLine/new allele was not created");
+    	log.info("createMutantCellLine.error: " + cellLineResults.error);
         return(cellLineResults);	        		
     } 
 

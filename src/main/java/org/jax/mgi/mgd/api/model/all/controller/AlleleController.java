@@ -42,7 +42,7 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
 		cellLineResults.error = "";
 
-		if (domain.getMutantCellLineAssocs() != null && !domain.getMutantCellLineAssocs().get(0).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+		if (domain.getMutantCellLineAssocs() != null) {
 			cellLineResults = cellLineService.createMutantCellLine(domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
 			if (cellLineResults.items != null) {
 	    		domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(cellLineResults.items.get(0).getCellLineKey());        		
@@ -67,7 +67,7 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
 		cellLineResults.error = "";
 		
-		if (domain.getMutantCellLineAssocs() != null && !domain.getMutantCellLineAssocs().get(0).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+		if (domain.getMutantCellLineAssocs() != null) {
 			cellLineResults = cellLineService.createMutantCellLine(domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
 			if (cellLineResults.items != null) {
 	    		domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(cellLineResults.items.get(0).getCellLineKey());        		

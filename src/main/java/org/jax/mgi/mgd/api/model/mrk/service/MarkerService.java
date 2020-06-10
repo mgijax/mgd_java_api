@@ -896,7 +896,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		String cmd = "";
 		String select = "select m._marker_key ";
 		String from = "from mrk_marker m";
-		String where = "where _marker_status_key not in (2,3)";
+		String where = "where m._marker_status_key not in (2,3)";
 		
 		Boolean from_accession = false;
 

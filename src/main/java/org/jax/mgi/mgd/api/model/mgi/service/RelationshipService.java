@@ -165,9 +165,9 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				log.info(domain.get(i).getCategoryKey());
 				entity.setCategory(categoryDAO.get(Integer.valueOf(domain.get(i).getCategoryKey())));
 				log.info(domain.get(i).getObjectKey1());		
-				entity.set_object_key_1(Integer.valueOf(domain.get(i).getObject1()));
+				entity.set_object_key_1(Integer.valueOf(domain.get(i).getObjectKey1()));
 				log.info(domain.get(i).getObjectKey2());
-				entity.set_object_key_2(Integer.valueOf(domain.get(i).getObject2()));
+				entity.set_object_key_2(Integer.valueOf(domain.get(i).getObjectKey1()));
 				log.info(domain.get(i).getRelationshipTermKey());
 				entity.setRelationshipTerm(termDAO.get(Integer.valueOf(domain.get(i).getRelationshipTermKey())));
 				log.info(domain.get(i).getQualifierKey());

@@ -150,11 +150,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		molmutationService.process(domain.getAlleleKey(), domain.getMutations(), user);
 		
 		// process driver genes
-		List<RelationshipDomain> relationshipDomain = new ArrayList<RelationshipDomain>();
-//		for (int i = 0; i < domain.getDriverGenes().size(); i++) {
-//			relationshipDomain.
-//		}
-		relationshipSerivce.process(domain.getAlleleKey(), relationshipDomain, mgiTypeKey, user);
+		log.info("processAllele/driver gene");
+		processDriverGene(domain, user);
 		
 		// return entity translated to domain
 		log.info("processAllele/create/returning results");
@@ -232,6 +229,26 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		molmutationService.process(domain.getAlleleKey(), domain.getMutations(), user);
 
 		// process driver genes
+		log.info("processAllele/driver gene");
+		processDriverGene(domain, user);
+		
+		// finish update
+		entity.setModification_date(new Date());
+		entity.setModifiedBy(user);
+		alleleDAO.update(entity);
+		log.info("processAllele/changes processed: " + domain.getAlleleKey());
+			
+		// return entity translated to domain
+		log.info("processAllele/update/returning results");
+		results.setItem(translator.translate(entity));
+		log.info("processAllele/update/returned results succsssful");
+		return results;
+	}
+
+	@Transactional
+	public void processDriverGene(AlleleDomain domain, User user) {
+		// process the driver gene/relationship
+		
 		List<RelationshipDomain> relationshipDomain = new ArrayList<RelationshipDomain>();
 		for (int i = 0; i < domain.getDriverGenes().size(); i++) {
 			RelationshipDomain rdomain = new RelationshipDomain();
@@ -246,20 +263,10 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			rdomain.setRefsKey(domain.getMolRefKey());
 			relationshipDomain.add(rdomain);
 		}
-		relationshipSerivce.process(domain.getAlleleKey(), relationshipDomain, mgiTypeKey, user);
 		
-		entity.setModification_date(new Date());
-		entity.setModifiedBy(user);
-		alleleDAO.update(entity);
-		log.info("processAllele/changes processed: " + domain.getAlleleKey());
-			
-		// return entity translated to domain
-		log.info("processAllele/update/returning results");
-		results.setItem(translator.translate(entity));
-		log.info("processAllele/update/returned results succsssful");
-		return results;
+		relationshipSerivce.process(domain.getAlleleKey(), relationshipDomain, mgiTypeKey, user);		
 	}
-		
+	
 	@Transactional
 	public AlleleDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain	

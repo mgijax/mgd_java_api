@@ -183,26 +183,32 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		entity.setAlleleMarkerStatus(termDAO.get(Integer.valueOf(domain.getAlleleMarkerStatusKey())));
 
 		if (domain.getMarkerKey() != null && !domain.getMarkerKey().isEmpty()) {
+			log.info("processAllele/marker");
 			entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));	
 		}
 		else {
+			log.info("processAllele/no marker");			
 			entity.setMarker(null);
 		}
 
 		if (domain.getRefsKey() != null && !domain.getRefsKey().isEmpty()) {
+			log.info("processAllele/marker/reference");
 			entity.setMarkerReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));	
 		}
 		else {
+			log.info("processAllele/marker/no reference");
 			entity.setMarkerReference(null);
 		}
 		
 		// if allele status is being set to Approved
 		if (domain.getAlleleStatusKey().equals("847114")
 				&& (domain.getApprovedByKey() == null || domain.getApprovedByKey().isEmpty())) {
+			log.info("processAllele/approval");
 			entity.setApproval_date(new Date());
 			entity.setApprovedBy(user);			
 		}
 		else {
+			log.info("processAllele/no approval");			
 			entity.setApproval_date(null);
 			entity.setApprovedBy(null);			
 		}

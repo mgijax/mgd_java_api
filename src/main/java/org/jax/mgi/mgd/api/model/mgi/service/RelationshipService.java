@@ -158,22 +158,24 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {								
 				log.info("processRelationships update");
+				
 				log.info(domain.get(i).getRelationshipKey());
-				log.info(domain.get(i).getCategoryKey());
-				log.info(domain.get(i).getObjectKey1());
-				log.info(domain.get(i).getObjectKey2());
-				log.info(domain.get(i).getRelationshipTermKey());
-				log.info(domain.get(i).getQualifierKey());
-				log.info(domain.get(i).getEvidenceKey());
-				log.info(domain.get(i).getRefsKey());				
 				Relationship entity = relationshipDAO.get(Integer.valueOf(domain.get(i).getRelationshipKey()));
-		        entity.setCategory(categoryDAO.get(Integer.valueOf(domain.get(i).getCategoryKey())));
-		        entity.set_object_key_1(Integer.valueOf(domain.get(i).getObject1()));
-		        entity.set_object_key_2(Integer.valueOf(domain.get(i).getObject2()));
-		        entity.setRelationshipTerm(termDAO.get(Integer.valueOf(domain.get(i).getRelationshipTermKey())));
-		        entity.setQualifierTerm(termDAO.get(Integer.valueOf(domain.get(0).getQualifierKey())));
-		        entity.setEvidenceTerm(termDAO.get(Integer.valueOf(domain.get(0).getEvidenceKey())));
-		        entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
+
+				log.info(domain.get(i).getCategoryKey());
+				entity.setCategory(categoryDAO.get(Integer.valueOf(domain.get(i).getCategoryKey())));
+				log.info(domain.get(i).getObjectKey1());		
+				entity.set_object_key_1(Integer.valueOf(domain.get(i).getObject1()));
+				log.info(domain.get(i).getObjectKey2());
+				entity.set_object_key_2(Integer.valueOf(domain.get(i).getObject2()));
+				log.info(domain.get(i).getRelationshipTermKey());
+				entity.setRelationshipTerm(termDAO.get(Integer.valueOf(domain.get(i).getRelationshipTermKey())));
+				log.info(domain.get(i).getQualifierKey());
+				entity.setQualifierTerm(termDAO.get(Integer.valueOf(domain.get(0).getQualifierKey())));
+				log.info(domain.get(i).getEvidenceKey());
+				entity.setEvidenceTerm(termDAO.get(Integer.valueOf(domain.get(0).getEvidenceKey())));
+				log.info(domain.get(i).getRefsKey());		
+				entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
 				entity.setModification_date(new Date());
 				entity.setModifiedBy(user);
 				relationshipDAO.update(entity);

@@ -10,11 +10,14 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.mgi.dao.RelationshipCategoryDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.RelationshipDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.Relationship;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipTranslator;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -27,7 +30,13 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 	
 	@Inject
 	private RelationshipDAO relationshipDAO;
-
+	@Inject
+	private RelationshipCategoryDAO categoryDAO;
+	@Inject
+	private TermDAO termDAO;
+	@Inject
+	private ReferenceDAO referenceDAO;
+	
 	private RelationshipTranslator translator = new RelationshipTranslator();
 	
 	//private RelationshipTranslator translator = new RelationshipTranslator();
@@ -117,31 +126,28 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 			log.info("processRelationships/nothing to process");
 			return modified;
 		}
-				
-		String cmd = "";
-		
+						
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
 		
-		for (int i = 0; i < domain.size(); i++) {
-				
-			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
-	
-				// not fully implemented
-				
-				log.info("processRelationships create");
-
-				//cmd = "select count(*) from MGI_insertSynonym ("
-				//			+ user.get_user_key().intValue()
-				//			+ "," + parentKey
-				//			+ "," + mgiTypeKey
-				//			//+ "," + domain.get(i).getSynonymTypeKey()
-				//			//+ ",'" + domain.get(i).getSynonym() + "'"
-				//			+ "," + domain.get(i).getRefsKey()
-				//			+ ")";
-				log.info("cmd: " + cmd);
-				//Query query = relationshipDAO.createNativeQuery(cmd);
-				//query.getResultList();
+		for (int i = 0; i < domain.size(); i++) {				
+			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {				
+				log.info("processRelationships create");				
+				Relationship entity = relationshipDAO.get(Integer.valueOf(domain.get(i).getRelationshipKey()));
+		        entity.setCategory(categoryDAO.get(Integer.valueOf(domain.get(i).getCategoryKey())));
+				entity.set_object_key_1(Integer.valueOf(domain.get(i).getObjectKey1()));
+				entity.set_object_key_2(Integer.valueOf(domain.get(i).getObjectKey2()));
+		        entity.setRelationshipTerm(termDAO.get(Integer.valueOf(domain.get(i).getRelationshipTermKey())));
+		        entity.setQualifierTerm(termDAO.get(Integer.valueOf(domain.get(0).getQualifierKey())));
+		        entity.setEvidenceTerm(termDAO.get(Integer.valueOf(domain.get(0).getEvidenceKey())));
+		        entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));				
+				entity.setCreation_date(new Date());
+				entity.setCreatedBy(user);
+		        entity.setModification_date(new Date());
+				entity.setModifiedBy(user);
+				relationshipDAO.persist(entity);				
+				modified = true;
+				log.info("processRelationships create successful");
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processRelationships delete");
@@ -150,30 +156,21 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				modified = true;
 				log.info("processRelationships delete successful");
 			}
-			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-				
-				// not fully implemented
-				
-				log.info("processRelationships update");
-
-				Boolean isUpdated = false;
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {								
+				log.info("processRelationships update");			
 				Relationship entity = relationshipDAO.get(Integer.valueOf(domain.get(i).getRelationshipKey()));
-		
-				//if (!entity.getSynonym().equals(domain.get(i).getRelationshipKey())) {
-				//	entity.setSynonym(domain.get(i).getRelationshipKey());
-				//	modified = true;
-				//}
-				
-				if (isUpdated) {
-					entity.setModification_date(new Date());
-					entity.setModifiedBy(user);
-					relationshipDAO.update(entity);
-					modified = true;
-					log.info("processRelationships/changes processed: " + domain.get(i).getRelationshipKey());
-				}
-				else {
-					log.info("processRelationships/no changes processed: " + domain.get(i).getRelationshipKey());
-				}
+				entity.setCategory(categoryDAO.get(Integer.valueOf(domain.get(i).getCategoryKey())));
+				entity.set_object_key_1(Integer.valueOf(domain.get(i).getObjectKey1()));
+				entity.set_object_key_2(Integer.valueOf(domain.get(i).getObjectKey2()));
+				entity.setRelationshipTerm(termDAO.get(Integer.valueOf(domain.get(i).getRelationshipTermKey())));
+				entity.setQualifierTerm(termDAO.get(Integer.valueOf(domain.get(0).getQualifierKey())));
+				entity.setEvidenceTerm(termDAO.get(Integer.valueOf(domain.get(0).getEvidenceKey())));
+				entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
+				entity.setModification_date(new Date());
+				entity.setModifiedBy(user);
+				relationshipDAO.update(entity);
+				modified = true;
+				log.info("processRelationships/changes processed: " + domain.get(i).getRelationshipKey());
 			}
 			else {
 				log.info("processRelationships/no changes processed: " + domain.get(i).getRelationshipKey());

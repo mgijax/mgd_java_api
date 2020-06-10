@@ -20,6 +20,7 @@ import org.jax.mgi.mgd.api.model.all.translator.CellLineTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -77,6 +78,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		// return entity translated to domain
 		log.info("processCellLine/create/returning results");
 		results.setItem(translator.translate(entity));
+		results.error = "";
 		return results;
 	}
 
@@ -165,6 +167,11 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		Boolean isParent = true;
 		Boolean isMutant = true;
 
+		if (domain.getProcessStatus().equals(Constants.PROCESS_NOTDIRTY) || domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+	    	log.info("createMutantCellLine/do nothing");
+	        return(cellLineResults);		
+		}
+		
         // default cellLineType = Embryonic Stem Cell (3982968)		
 		if (cellLineTypeKey.isEmpty()) {
           isParent = false;
@@ -296,7 +303,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
         	}       	
         }
               
-    	log.info("createMutantCellLine/new allele was not created");
+    	log.info("createMutantCellLine.error: " + cellLineResults.error);
         return(cellLineResults);	        		
     } 
 

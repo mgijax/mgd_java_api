@@ -29,6 +29,8 @@ public class AlleleDomain extends BaseDomain {
 	private String alleleType;
 	private String alleleStatusKey;
 	private String alleleStatus;	
+	private String markerAlleleStatusKey;
+	private String markerAlleleStatus;
 	private String transmissionKey;
 	private String transmission;
 	private String collectionKey;
@@ -47,8 +49,7 @@ public class AlleleDomain extends BaseDomain {
 	private String jnumid;
 	private Integer jnum;
 	private String short_citation;
-	private String alleleMarkerStatusKey;
-	private String alleleMarkerStatus;
+
 	private String detailClip;
 	
 	private String createdByKey;
@@ -60,6 +61,9 @@ public class AlleleDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	private String approval_date;
+	
+	// molecular reference needed for driverGenes
+	private String molRefKey;
 	
 	private List<AccessionDomain> otherAccIDs;
 	private List<MGIReferenceAssocDomain> refAssocs;

@@ -46,6 +46,8 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		domain.setAlleleType(entity.getAlleleType().getTerm());
 		domain.setAlleleStatusKey(String.valueOf(entity.getAlleleStatus().get_term_key()));
 		domain.setAlleleStatus(entity.getAlleleStatus().getTerm());	
+		domain.setMarkerAlleleStatusKey(String.valueOf(entity.getMarkerAlleleStatus().get_term_key()));
+		domain.setMarkerAlleleStatus(entity.getMarkerAlleleStatus().getTerm());
 		domain.setTransmissionKey(String.valueOf(entity.getTransmission().get_term_key()));
 		domain.setTransmission(entity.getTransmission().getTerm());
 		domain.setCollectionKey(String.valueOf(entity.getCollection().get_term_key()));
@@ -86,8 +88,6 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			domain.setChromosome(entity.getMarker().getChromosome());
 			domain.setMarkerStatusKey(String.valueOf(entity.getMarker().getMarkerStatus().get_marker_status_key()));
 			domain.setMarkerStatus(entity.getMarker().getMarkerStatus().getStatus());
-			domain.setAlleleMarkerStatusKey(String.valueOf(entity.getAlleleMarkerStatus().get_term_key()));
-			domain.setAlleleMarkerStatus(entity.getAlleleMarkerStatus().getTerm());
 			
 			// reference can be null
 			if (entity.getMarkerReference() != null) {
@@ -108,6 +108,13 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
 			domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
 			domain.getRefAssocs().sort(Comparator.comparingInt(MGIReferenceAssocDomain::getAllowOnlyOne).reversed().thenComparing(MGIReferenceAssocDomain::getRefAssocTypeKey));
+
+			// save molecular reference
+			for (int r = 0; r < domain.getRefAssocs().size(); r++) {
+				if (domain.getRefAssocs().get(r).getRefAssocTypeKey().equals("1012")) {
+					domain.setMolRefKey(domain.getRefAssocs().get(r).getRefsKey());
+				}
+			}
 		}	
 
 		// synonyms

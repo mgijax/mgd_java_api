@@ -19,12 +19,15 @@ import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleRefAssocTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
+import org.jax.mgi.mgd.api.model.mgi.service.RelationshipService;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -54,6 +57,10 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	private MGISynonymService synonymService;
 	@Inject
 	private AlleleMutationService molmutationService;
+	@Inject
+	private AnnotationService annotationService;
+	@Inject
+	private RelationshipService relationshipSerivce;
 	
 	private AlleleTranslator translator = new AlleleTranslator();
 	private SlimAlleleTranslator slimtranslator = new SlimAlleleTranslator();	
@@ -61,7 +68,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	String mgiTypeKey = "11";
-//	String mgiTypeName = "Allele";
 	
 	@Transactional
 	public SearchResults<AlleleDomain> create(AlleleDomain domain, User user) {
@@ -86,7 +92,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		entity.setAlleleStatus(termDAO.get(Integer.valueOf(domain.getAlleleStatusKey())));
 		entity.setTransmission(termDAO.get(Integer.valueOf(domain.getTransmissionKey())));
 		entity.setCollection(termDAO.get(Integer.valueOf(domain.getCollectionKey())));
-		entity.setAlleleMarkerStatus(termDAO.get(Integer.valueOf(domain.getAlleleMarkerStatusKey())));
+		entity.setMarkerAlleleStatus(termDAO.get(Integer.valueOf(domain.getMarkerAlleleStatusKey())));
 
 		if (domain.getMarkerKey() != null && !domain.getMarkerKey().isEmpty()) {
 			entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));	
@@ -135,12 +141,16 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		synonymService.process(domain.getAlleleKey(), domain.getSynonyms(), mgiTypeKey, user);
 		
 		// process allele attributes/subtypes
-
+		log.info("processAllele/attribute/subtype");
+		annotationService.process(domain.getSubtypeAnnots(), user);
+		
 		// process molecular mutations
 		log.info("processAllele/molecular mutation");
 		molmutationService.process(domain.getAlleleKey(), domain.getMutations(), user);
 		
 		// process driver genes
+		log.info("processAllele/driver gene");
+		processDriverGene(domain, user);
 		
 		// return entity translated to domain
 		log.info("processAllele/create/returning results");
@@ -170,29 +180,35 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		entity.setAlleleStatus(termDAO.get(Integer.valueOf(domain.getAlleleStatusKey())));
 		entity.setTransmission(termDAO.get(Integer.valueOf(domain.getTransmissionKey())));
 		entity.setCollection(termDAO.get(Integer.valueOf(domain.getCollectionKey())));
-		entity.setAlleleMarkerStatus(termDAO.get(Integer.valueOf(domain.getAlleleMarkerStatusKey())));
+		entity.setMarkerAlleleStatus(termDAO.get(Integer.valueOf(domain.getMarkerAlleleStatusKey())));
 
 		if (domain.getMarkerKey() != null && !domain.getMarkerKey().isEmpty()) {
+			log.info("processAllele/marker");
 			entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));	
 		}
 		else {
+			log.info("processAllele/no marker");			
 			entity.setMarker(null);
 		}
 
 		if (domain.getRefsKey() != null && !domain.getRefsKey().isEmpty()) {
+			log.info("processAllele/marker/reference");
 			entity.setMarkerReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));	
 		}
 		else {
+			log.info("processAllele/marker/no reference");
 			entity.setMarkerReference(null);
 		}
 		
 		// if allele status is being set to Approved
 		if (domain.getAlleleStatusKey().equals("847114")
 				&& (domain.getApprovedByKey() == null || domain.getApprovedByKey().isEmpty())) {
+			log.info("processAllele/approval");
 			entity.setApproval_date(new Date());
 			entity.setApprovedBy(user);			
 		}
 		else {
+			log.info("processAllele/no approval");			
 			entity.setApproval_date(null);
 			entity.setApprovedBy(null);			
 		}
@@ -210,13 +226,18 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		synonymService.process(domain.getAlleleKey(), domain.getSynonyms(), mgiTypeKey, user);
 		
 		// process allele attributes/subtypes
-
+		log.info("processAllele/attribute/subtype");
+		annotationService.process(domain.getSubtypeAnnots(), user);
+		
 		// process molecular mutations
 		log.info("processAllele/molecular mutation");
 		molmutationService.process(domain.getAlleleKey(), domain.getMutations(), user);
 
 		// process driver genes
+		log.info("processAllele/driver gene");
+		processDriverGene(domain, user);
 		
+		// finish update
 		entity.setModification_date(new Date());
 		entity.setModifiedBy(user);
 		alleleDAO.update(entity);
@@ -228,7 +249,42 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		log.info("processAllele/update/returned results succsssful");
 		return results;
 	}
+
+	@Transactional
+	public void processDriverGene(AlleleDomain domain, User user) {
+		// process the driver gene/relationship
 		
+		List<RelationshipDomain> relationshipDomain = new ArrayList<RelationshipDomain>();
+
+		for (int i = 0; i < domain.getDriverGenes().size(); i++) {
+
+			RelationshipDomain rdomain = new RelationshipDomain();
+
+			rdomain.setProcessStatus(domain.getDriverGenes().get(i).getProcessStatus());			
+			rdomain.setRelationshipKey(domain.getDriverGenes().get(i).getRelationshipKey());
+			rdomain.setCategoryKey("1006");
+			rdomain.setObjectKey1(domain.getDriverGenes().get(i).getAlleleKey());
+			rdomain.setObjectKey2(domain.getDriverGenes().get(i).getMarkerKey());
+
+			// has_driver
+			rdomain.setRelationshipTermKey("36770349");
+
+			// not specified
+			rdomain.setQualifierKey("11391898");
+			
+			// not specified
+			rdomain.setEvidenceKey("17396909");
+			
+			// molecular reference
+			rdomain.setRefsKey(domain.getMolRefKey());
+			
+			relationshipDomain.add(rdomain);
+		}
+		
+		log.info("processDriverGene/relationship: " + relationshipDomain.size());
+		relationshipSerivce.process(domain.getAlleleKey(), relationshipDomain, mgiTypeKey, user);		
+	}
+	
 	@Transactional
 	public AlleleDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain	
@@ -369,8 +425,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		if (searchDomain.getRefsKey() != null && !searchDomain.getRefsKey().isEmpty()) {
 			where = where + "\nand a._Refs_key = " + searchDomain.getRefsKey();
 		}
-		if (searchDomain.getAlleleMarkerStatusKey() != null && !searchDomain.getAlleleMarkerStatusKey().isEmpty()) {
-			where = where + "\nand a._markerallele_status_key = " + searchDomain.getAlleleMarkerStatusKey();
+		if (searchDomain.getMarkerAlleleStatusKey() != null && !searchDomain.getMarkerAlleleStatusKey().isEmpty()) {
+			where = where + "\nand a._markerallele_status_key = " + searchDomain.getMarkerAlleleStatusKey();
 		}
 		if (searchDomain.getDetailClip() != null && !searchDomain.getDetailClip().isEmpty()) {
 			where = where + "\nand notec.note ilike '" + searchDomain.getDetailClip() + "'" ;
@@ -496,8 +552,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getStrain() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getStrain().isEmpty()) {
 					where = where + "\nand c.celllinestrain ilike '" + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getStrain() + "'";
 					from_cellLine = true;
-				}
-				
+				}				
 			}			
 		}
 		

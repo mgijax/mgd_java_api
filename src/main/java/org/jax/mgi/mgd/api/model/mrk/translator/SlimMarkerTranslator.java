@@ -25,6 +25,7 @@ public class SlimMarkerTranslator extends BaseEntityDomainTranslator<Marker, Sli
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 
 		log.info("getMgiAccessionIds: " + entity.getMgiAccessionIds());
+		log.info("getMgiAccessionIds.isEmpty: " + entity.getMgiAccessionIds().isEmpty());
 		if (entity.getMgiAccessionIds() != null || !entity.getMgiAccessionIds().isEmpty()) {
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}

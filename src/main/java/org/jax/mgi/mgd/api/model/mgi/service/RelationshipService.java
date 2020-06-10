@@ -136,6 +136,7 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				Relationship entity = relationshipDAO.get(Integer.valueOf(domain.get(i).getRelationshipKey()));
 		        entity.setCategory(categoryDAO.get(Integer.valueOf(domain.get(i).getCategoryKey())));
 		        entity.set_object_key_1(Integer.valueOf(domain.get(i).getObject1()));
+		        entity.set_object_key_2(Integer.valueOf(domain.get(i).getObject2()));
 		        entity.setRelationshipTerm(termDAO.get(Integer.valueOf(domain.get(i).getRelationshipTermKey())));
 		        entity.setQualifierTerm(termDAO.get(Integer.valueOf(domain.get(0).getQualifierKey())));
 		        entity.setEvidenceTerm(termDAO.get(Integer.valueOf(domain.get(0).getEvidenceKey())));
@@ -160,6 +161,7 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				Relationship entity = relationshipDAO.get(Integer.valueOf(domain.get(i).getRelationshipKey()));
 		        entity.setCategory(categoryDAO.get(Integer.valueOf(domain.get(i).getCategoryKey())));
 		        entity.set_object_key_1(Integer.valueOf(domain.get(i).getObject1()));
+		        entity.set_object_key_2(Integer.valueOf(domain.get(i).getObject2()));
 		        entity.setRelationshipTerm(termDAO.get(Integer.valueOf(domain.get(i).getRelationshipTermKey())));
 		        entity.setQualifierTerm(termDAO.get(Integer.valueOf(domain.get(0).getQualifierKey())));
 		        entity.setEvidenceTerm(termDAO.get(Integer.valueOf(domain.get(0).getEvidenceKey())));

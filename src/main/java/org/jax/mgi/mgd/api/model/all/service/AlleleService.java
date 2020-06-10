@@ -92,14 +92,13 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		entity.setAlleleStatus(termDAO.get(Integer.valueOf(domain.getAlleleStatusKey())));
 		entity.setTransmission(termDAO.get(Integer.valueOf(domain.getTransmissionKey())));
 		entity.setCollection(termDAO.get(Integer.valueOf(domain.getCollectionKey())));
+		entity.setMarkerAlleleStatus(termDAO.get(Integer.valueOf(domain.getMarkerAlleleStatusKey())));
 
 		if (domain.getMarkerKey() != null && !domain.getMarkerKey().isEmpty()) {
 			entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));	
-			entity.setAlleleMarkerStatus(termDAO.get(Integer.valueOf(domain.getAlleleMarkerStatusKey())));
 		}
 		else {
 			entity.setMarker(null);
-			entity.setAlleleMarkerStatus(null);
 		}
 
 		if (domain.getRefsKey() != null && !domain.getRefsKey().isEmpty()) {
@@ -181,16 +180,15 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		entity.setAlleleStatus(termDAO.get(Integer.valueOf(domain.getAlleleStatusKey())));
 		entity.setTransmission(termDAO.get(Integer.valueOf(domain.getTransmissionKey())));
 		entity.setCollection(termDAO.get(Integer.valueOf(domain.getCollectionKey())));
+		entity.setMarkerAlleleStatus(termDAO.get(Integer.valueOf(domain.getMarkerAlleleStatusKey())));
 
 		if (domain.getMarkerKey() != null && !domain.getMarkerKey().isEmpty()) {
 			log.info("processAllele/marker");
 			entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));	
-			entity.setAlleleMarkerStatus(termDAO.get(Integer.valueOf(domain.getAlleleMarkerStatusKey())));
 		}
 		else {
 			log.info("processAllele/no marker");			
 			entity.setMarker(null);
-			entity.setAlleleMarkerStatus(null);			
 		}
 
 		if (domain.getRefsKey() != null && !domain.getRefsKey().isEmpty()) {
@@ -426,8 +424,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		if (searchDomain.getRefsKey() != null && !searchDomain.getRefsKey().isEmpty()) {
 			where = where + "\nand a._Refs_key = " + searchDomain.getRefsKey();
 		}
-		if (searchDomain.getAlleleMarkerStatusKey() != null && !searchDomain.getAlleleMarkerStatusKey().isEmpty()) {
-			where = where + "\nand a._markerallele_status_key = " + searchDomain.getAlleleMarkerStatusKey();
+		if (searchDomain.getMarkerAlleleStatusKey() != null && !searchDomain.getMarkerAlleleStatusKey().isEmpty()) {
+			where = where + "\nand a._markerallele_status_key = " + searchDomain.getMarkerAlleleStatusKey();
 		}
 		if (searchDomain.getDetailClip() != null && !searchDomain.getDetailClip().isEmpty()) {
 			where = where + "\nand notec.note ilike '" + searchDomain.getDetailClip() + "'" ;

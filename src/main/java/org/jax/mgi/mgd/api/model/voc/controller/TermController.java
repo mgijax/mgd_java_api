@@ -73,6 +73,14 @@ public class TermController extends BaseController<TermDomain> {
 	}
 
 	@POST
+	@ApiOperation(value = "Validate term slim")
+	@Path("/validateTermSlim")
+	public SearchResults<SlimTermDomain> validateTermSlim(SlimTermDomain domain) {
+		log.info("key: " + domain.getVocabKey() + " term: " + domain.getTerm());
+		return termService.validateTermSlim(Integer.valueOf(domain.getVocabKey()).intValue() , domain.getTerm());
+	}
+	
+	@POST
 	@ApiOperation(value = "Validate MP header term")
 	@Path("/validateMPHeaderTerm")
 	public List<SlimTermDomain> validateMPHeaderTerm(SlimTermDomain domain) {

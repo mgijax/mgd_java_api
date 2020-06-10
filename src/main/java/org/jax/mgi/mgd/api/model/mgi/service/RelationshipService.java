@@ -158,6 +158,14 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {								
 				log.info("processRelationships update");
+				log.info(domain.get(i).getRelationshipKey());
+				log.info(domain.get(i).getCategoryKey());
+				log.info(domain.get(i).getObjectKey1());
+				log.info(domain.get(i).getObjectKey2());
+				log.info(domain.get(i).getRelationshipTermKey());
+				log.info(domain.get(i).getQualifierKey());
+				log.info(domain.get(i).getEvidenceKey());
+				log.info(domain.get(i).getRefsKey());				
 				Relationship entity = relationshipDAO.get(Integer.valueOf(domain.get(i).getRelationshipKey()));
 		        entity.setCategory(categoryDAO.get(Integer.valueOf(domain.get(i).getCategoryKey())));
 		        entity.set_object_key_1(Integer.valueOf(domain.get(i).getObject1()));

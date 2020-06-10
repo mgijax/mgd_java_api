@@ -896,10 +896,16 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		String cmd = "";
 		String select = "select m._marker_key ";
 		String from = "from mrk_marker m";
-		String where = "where m._organism_key = 1"
-				+ "\nand _marker_status_key not in (2,3)";
+		String where = "where _marker_status_key not in (2,3)";
 		
 		Boolean from_accession = false;
+
+		if (searchDomain.getOrganismKey() != null && !searchDomain.getOrganismKey().isEmpty()) {
+			where = where + "\nand m._Organism_key = " + searchDomain.getOrganismKey();
+		}
+		else {
+			where = where + "\nand m._Organism_key = 1";
+		}
 		
 		if (searchDomain.getSymbol() != null && !searchDomain.getSymbol().isEmpty()) {
 			where = where + "\nand lower(m.symbol) = '" + searchDomain.getSymbol().toLowerCase() + "'" ;

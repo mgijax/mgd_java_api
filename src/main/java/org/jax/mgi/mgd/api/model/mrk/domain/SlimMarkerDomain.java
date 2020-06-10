@@ -17,6 +17,9 @@ public class SlimMarkerDomain extends BaseDomain {
 	private String name;
     private String chromosome;
     private String accID;
+	private String organismKey;
+	private String organism;
+	private String organismLatin;
 	private String modifiedByKey;
 	private String modifiedBy;
 	

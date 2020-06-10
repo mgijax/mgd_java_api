@@ -68,7 +68,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	String mgiTypeKey = "11";
-//	String mgiTypeName = "Allele";
 	
 	@Transactional
 	public SearchResults<AlleleDomain> create(AlleleDomain domain, User user) {
@@ -250,17 +249,29 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		// process the driver gene/relationship
 		
 		List<RelationshipDomain> relationshipDomain = new ArrayList<RelationshipDomain>();
+
 		for (int i = 0; i < domain.getDriverGenes().size(); i++) {
+
 			RelationshipDomain rdomain = new RelationshipDomain();
+
 			rdomain.setProcessStatus(domain.getDriverGenes().get(i).getProcessStatus());
 			rdomain.setRelationshipKey(domain.getDriverGenes().get(i).getRelationshipKey());
 			rdomain.setCategoryKey("1006");
 			rdomain.setObjectKey1(domain.getDriverGenes().get(i).getAlleleKey());
 			rdomain.setObjectKey2(domain.getDriverGenes().get(i).getMarkerKey());
+
+			// has_driver
 			rdomain.setRelationshipTermKey("36770349");
+
+			// not specified
 			rdomain.setQualifierKey("11391898");
+			
+			// not specified
 			rdomain.setEvidenceKey("17396909");
+			
+			// molecular reference
 			rdomain.setRefsKey(domain.getMolRefKey());
+			
 			relationshipDomain.add(rdomain);
 		}
 		
@@ -534,8 +545,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getStrain() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getStrain().isEmpty()) {
 					where = where + "\nand c.celllinestrain ilike '" + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getStrain() + "'";
 					from_cellLine = true;
-				}
-				
+				}				
 			}			
 		}
 		

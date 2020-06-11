@@ -44,14 +44,11 @@ public class AlleleController extends BaseController<AlleleDomain> {
 
 		if (domain.getMutantCellLineAssocs() != null) {
 			cellLineResults = cellLineService.createMutantCellLine(domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
-	    	log.info("createMutantCellLine/returned cellLineResults");
 			if (cellLineResults.items != null) {
 		    	log.info("alleleController/cellLineResults.items created");
 				domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(cellLineResults.items.get(0).getCellLineKey());        		
 			}
 		}
-
-    	log.info("alleleController/checking error.isEmpty()");
 
 		if (cellLineResults.error.isEmpty()) {		
 	    	log.info("alleleController/will call alleleService/create()");

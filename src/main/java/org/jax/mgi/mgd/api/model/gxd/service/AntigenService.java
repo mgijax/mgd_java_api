@@ -198,6 +198,7 @@ public class AntigenService extends BaseService<AntigenDomain> {
 
 		List<SlimAntigenDomain> results = new ArrayList<SlimAntigenDomain>();
 		
+		log.info("domain toString: " + searchDomain.toString());
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";

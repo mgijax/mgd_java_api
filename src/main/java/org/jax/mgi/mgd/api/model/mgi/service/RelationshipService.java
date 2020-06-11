@@ -133,7 +133,7 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 		for (int i = 0; i < domain.size(); i++) {				
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {				
 				log.info("processRelationships create");				
-				Relationship entity = relationshipDAO.get(Integer.valueOf(domain.get(i).getRelationshipKey()));
+				Relationship entity = new Relationship();
 		        entity.setCategory(categoryDAO.get(Integer.valueOf(domain.get(i).getCategoryKey())));
 				entity.set_object_key_1(Integer.valueOf(domain.get(i).getObjectKey1()));
 				entity.set_object_key_2(Integer.valueOf(domain.get(i).getObjectKey2()));

@@ -168,7 +168,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		Boolean isMutant = true;
 
 		if (domain.getProcessStatus().equals(Constants.PROCESS_NOTDIRTY) || domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-	    	log.info("createMutantCellLine/do nothing");
+	    	log.info("createMutantCellLine/do nothing/returning cellLineResults");
 	        return(cellLineResults);		
 		}
 		

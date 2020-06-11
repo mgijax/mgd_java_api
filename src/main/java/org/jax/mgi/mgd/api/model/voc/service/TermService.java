@@ -300,6 +300,7 @@ public class TermService extends BaseService<TermDomain> {
 			while (rs.next()) {	
 				SlimTermDomain domain = new SlimTermDomain();						
 				domain = slimtranslator.translate(termDAO.get(rs.getInt("_term_key")));
+				log.info("domain vocabKey: " + domain.getVocabKey() + " domain term key: " + domain.getTermKey() + " domain term: " + domain.getTerm());
 				termDAO.clear();					
 				results.setItem(domain);
 			}

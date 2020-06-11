@@ -11,13 +11,13 @@ import org.apache.commons.collections4.IteratorUtils;
  * result set.
  */
 public class SearchResults<T> {
-	private long startTime;				// time of object creation (used to measure timings)
+	private long startTime = 0;			// time of object creation (used to measure timings)
 	public List<T> items;				// list of items returned from a query
 	public long total_count = 0;		// total count of items returned by the query (ignoring pagination)
 	public long all_match_count = 0;	// total count of items that could be returned by the query
 	public long elapsed_ms = 0;			// number of elapsed milliseconds for query results
-	public String error;				// error code
-	public String message;				// more explanatory error message
+	public String error = "";				// error code
+	public String message = "";				// more explanatory error message
 	public int status_code = Constants.HTTP_OK;		// HTTP status code value
 	
 	public SearchResults() {

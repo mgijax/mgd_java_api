@@ -50,6 +50,8 @@ public class AlleleController extends BaseController<AlleleDomain> {
 			}
 		}
 
+    	log.info("alleleController/checking error.isEmpty()");
+
 		if (cellLineResults.error.isEmpty()) {		
 	    	log.info("alleleController/will call alleleService/create()");
 			results = alleleService.create(domain, user);

@@ -10,8 +10,6 @@ import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleMutationDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
-import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocViewDomain;
-import org.jax.mgi.mgd.api.model.img.translator.ImagePaneAssocViewTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
@@ -20,6 +18,8 @@ import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipAlleleDriverGeneTranslator;
+import org.jax.mgi.mgd.api.model.mrk.domain.MarkerNoteDomain;
+import org.jax.mgi.mgd.api.model.mrk.translator.MarkerNoteTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
 import org.jboss.logging.Logger;
@@ -97,8 +97,11 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 				domain.setShort_citation(entity.getMarkerReference().getReferenceCitationCache().getShort_citation());
 			}
 			
+			// marker detail clip
 			if (entity.getMarker().getDetailClipNote() != null && !entity.getMarker().getDetailClipNote().isEmpty()) {
-				domain.setDetailClip(entity.getMarker().getDetailClipNote().get(0).getNote());		
+				MarkerNoteTranslator noteTranslator = new MarkerNoteTranslator();
+				Iterable<MarkerNoteDomain> note = noteTranslator.translateEntities(entity.getMarker().getDetailClipNote());
+				domain.setDetailClip(note.iterator().next());
 			}
 		}
 		
@@ -155,11 +158,11 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		}
 
 		// imagepane associations by allele
-		if (entity.getImagePaneAssocs() != null && !entity.getImagePaneAssocs().isEmpty()) {
-			ImagePaneAssocViewTranslator imagePaneTranslator = new ImagePaneAssocViewTranslator();
-			Iterable<ImagePaneAssocViewDomain> t = imagePaneTranslator.translateEntities(entity.getImagePaneAssocs());
-			domain.setImagePaneAssocs(IteratorUtils.toList(t.iterator()));
-		}
+//		if (entity.getImagePaneAssocs() != null && !entity.getImagePaneAssocs().isEmpty()) {
+//			ImagePaneAssocViewTranslator imagePaneTranslator = new ImagePaneAssocViewTranslator();
+//			Iterable<ImagePaneAssocViewDomain> t = imagePaneTranslator.translateEntities(entity.getImagePaneAssocs());
+//			domain.setImagePaneAssocs(IteratorUtils.toList(t.iterator()));
+//		}
 		
 		// at most one note
 		if (entity.getGeneralNote() != null && !entity.getGeneralNote().isEmpty()) {

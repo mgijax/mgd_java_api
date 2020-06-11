@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
-import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocViewDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipAlleleDriverGeneDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.MarkerNoteDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 
 import lombok.Getter;
@@ -49,8 +49,6 @@ public class AlleleDomain extends BaseDomain {
 	private String jnumid;
 	private Integer jnum;
 	private String short_citation;
-
-	private String detailClip;
 	
 	private String createdByKey;
 	private String createdBy;
@@ -74,8 +72,9 @@ public class AlleleDomain extends BaseDomain {
 	private List<AlleleMutationDomain> mutations;
 	private List<AnnotationDomain> subtypeAnnots;
 	private List<RelationshipAlleleDriverGeneDomain> driverGenes;
-	private List<ImagePaneAssocViewDomain> imagePaneAssocs;
+	//private List<ImagePaneAssocViewDomain> imagePaneAssocs;
 	
+	private MarkerNoteDomain detailClip;
 	private NoteDomain generalNote;
 	private NoteDomain molecularNote;
 	private NoteDomain nomenNote;

@@ -23,8 +23,10 @@ import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
+import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.mgi.service.RelationshipService;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
+import org.jax.mgi.mgd.api.model.mrk.service.MarkerNoteService;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
@@ -49,6 +51,10 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	private TermDAO termDAO;
 	@Inject
 	private ReferenceDAO referenceDAO;
+	@Inject
+	private MarkerNoteService markerNoteService;
+	@Inject
+	private NoteService noteService;
 	@Inject
 	private AlleleCellLineService alleleCellLineService;
 	@Inject
@@ -78,7 +84,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
 		Allele entity = new Allele();
-
+		
 		log.info("processAllele/create");
 		
 		entity.setSymbol(domain.getSymbol());
@@ -166,6 +172,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
 		Allele entity = alleleDAO.get(Integer.valueOf(domain.getAlleleKey()));
+		Boolean modified = true;
 		
 		log.info("processAllele/update");
 		
@@ -213,36 +220,78 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			entity.setApprovedBy(null);			
 		}
 
+		// process detail clip
+		if (markerNoteService.process(domain.getMarkerKey(), domain.getDetailClip(), user)) {
+			modified = true;
+		}
+		
+		// process all notes
+		if (noteService.process(domain.getAlleleKey(), domain.getGeneralNote(), mgiTypeKey, domain.getGeneralNote().getNoteTypeKey(), user)) {
+			modified = true;
+		}
+		if (noteService.process(domain.getAlleleKey(), domain.getMolecularNote(), mgiTypeKey, domain.getMolecularNote().getNoteTypeKey(), user)) {
+			modified = true;
+		}
+		if (noteService.process(domain.getAlleleKey(), domain.getNomenNote(), mgiTypeKey, domain.getNomenNote().getNoteTypeKey(), user)) {
+			modified = true;
+		}
+		if (noteService.process(domain.getAlleleKey(), domain.getInducibleNote(), mgiTypeKey, domain.getInducibleNote().getNoteTypeKey(), user)) {
+			modified = true;
+		}
+		if (noteService.process(domain.getAlleleKey(), domain.getProidNote(), mgiTypeKey, domain.getProidNote().getNoteTypeKey(), user)) {
+			modified = true;
+		}
+		if (noteService.process(domain.getAlleleKey(), domain.getCreNote(), mgiTypeKey, domain.getCreNote().getNoteTypeKey(), user)) {
+			modified = true;
+		}
+		if (noteService.process(domain.getAlleleKey(), domain.getIkmcNote(), mgiTypeKey, domain.getIkmcNote().getNoteTypeKey(), user)) {
+			modified = true;
+		}
+		
 		// process allele reference
 		log.info("processAllele/referenes");
-		referenceAssocService.process(domain.getAlleleKey(), domain.getRefAssocs(), mgiTypeKey, user);
+		if (referenceAssocService.process(domain.getAlleleKey(), domain.getRefAssocs(), mgiTypeKey, user)) {
+			modified = true;
+		}
 		
 		// process mutant cell lines
 		log.info("processAllele/mutant cell lines");
-		alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLineAssocs(), user);
+		if (alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLineAssocs(), user)) {
+			modified = true;
+		}
 		
 		// process synonyms
 		log.info("processAllele/synonyms");		
-		synonymService.process(domain.getAlleleKey(), domain.getSynonyms(), mgiTypeKey, user);
+		if (synonymService.process(domain.getAlleleKey(), domain.getSynonyms(), mgiTypeKey, user)) {
+			modified = true;
+		}
 		
 		// process allele attributes/subtypes
 		log.info("processAllele/attribute/subtype");
-		annotationService.process(domain.getSubtypeAnnots(), user);
+		if (annotationService.process(domain.getSubtypeAnnots(), user)) {
+			modified = true;
+		}
 		
 		// process molecular mutations
 		log.info("processAllele/molecular mutation");
-		molmutationService.process(domain.getAlleleKey(), domain.getMutations(), user);
+		if (molmutationService.process(domain.getAlleleKey(), domain.getMutations(), user)) {
+			modified = true;
+		}
 
 		// process driver genes
 		log.info("processAllele/driver gene");
-		processDriverGene(domain, user);
+		if (processDriverGene(domain, user)) {
+			modified = true;
+		}
 		
 		// finish update
-		entity.setModification_date(new Date());
-		entity.setModifiedBy(user);
-		alleleDAO.update(entity);
-		log.info("processAllele/changes processed: " + domain.getAlleleKey());
-			
+		if (modified) {
+			entity.setModification_date(new Date());
+			entity.setModifiedBy(user);
+			alleleDAO.update(entity);
+			log.info("processAllele/changes processed: " + domain.getAlleleKey());
+		}
+		
 		// return entity translated to domain
 		log.info("processAllele/update/returning results");
 		results.setItem(translator.translate(entity));
@@ -251,7 +300,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	}
 
 	@Transactional
-	public void processDriverGene(AlleleDomain domain, User user) {
+	public Boolean processDriverGene(AlleleDomain domain, User user) {
 		// process the driver gene/relationship
 		
 		List<RelationshipDomain> relationshipDomain = new ArrayList<RelationshipDomain>();
@@ -282,7 +331,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}
 		
 		log.info("processDriverGene/relationship: " + relationshipDomain.size());
-		relationshipSerivce.process(domain.getAlleleKey(), relationshipDomain, mgiTypeKey, user);		
+		return(relationshipSerivce.process(domain.getAlleleKey(), relationshipDomain, mgiTypeKey, user));		
 	}
 	
 	@Transactional
@@ -428,8 +477,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		if (searchDomain.getMarkerAlleleStatusKey() != null && !searchDomain.getMarkerAlleleStatusKey().isEmpty()) {
 			where = where + "\nand a._markerallele_status_key = " + searchDomain.getMarkerAlleleStatusKey();
 		}
-		if (searchDomain.getDetailClip() != null && !searchDomain.getDetailClip().isEmpty()) {
-			where = where + "\nand notec.note ilike '" + searchDomain.getDetailClip() + "'" ;
+		if (searchDomain.getDetailClip().getNote() != null && !searchDomain.getDetailClip().getNote().isEmpty()) {
+			where = where + "\nand notec.note ilike '" + searchDomain.getDetailClip().getNote() + "'" ;
 			from_displayclip = true;
 		}
 				

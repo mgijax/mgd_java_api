@@ -307,6 +307,10 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		for (int i = 0; i < domain.getDriverGenes().size(); i++) {
 
+			if (domain.getDriverGenes().get(i).getMarkerKey().isEmpty()) {
+				continue;
+			}
+			
 			RelationshipDomain rdomain = new RelationshipDomain();
 
 			rdomain.setProcessStatus(domain.getDriverGenes().get(i).getProcessStatus());			

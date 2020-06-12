@@ -112,11 +112,14 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
 			domain.getRefAssocs().sort(Comparator.comparingInt(MGIReferenceAssocDomain::getAllowOnlyOne).reversed().thenComparing(MGIReferenceAssocDomain::getRefAssocTypeKey));
 
-			// save molecular reference
+			// save molecular, mixed references
 			for (int r = 0; r < domain.getRefAssocs().size(); r++) {
 				if (domain.getRefAssocs().get(r).getRefAssocTypeKey().equals("1012")) {
 					domain.setMolRefKey(domain.getRefAssocs().get(r).getRefsKey());
 				}
+				if (domain.getRefAssocs().get(r).getRefAssocTypeKey().equals("1024")) {
+					domain.setMixedRefKey(domain.getRefAssocs().get(r).getRefsKey());
+				}				
 			}
 		}	
 

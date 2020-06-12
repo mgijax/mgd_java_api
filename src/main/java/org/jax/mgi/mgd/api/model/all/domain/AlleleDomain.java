@@ -63,6 +63,9 @@ public class AlleleDomain extends BaseDomain {
 	// molecular reference needed for driverGenes
 	private String molRefKey;
 	
+	// mixed reference 
+	private String mixedRefKey;
+	
 	private List<AccessionDomain> otherAccIDs;
 	private List<MGIReferenceAssocDomain> refAssocs;
 

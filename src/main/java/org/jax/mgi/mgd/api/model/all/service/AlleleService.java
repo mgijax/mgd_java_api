@@ -87,42 +87,91 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		
 		log.info("processAllele/create");
 		
-		log.info("processAllele/getSymbol()");
 		entity.setSymbol(domain.getSymbol());
-		
-		log.info("processAllele/getName()");
-		entity.setName(domain.getName());
-		
-		log.info("processAllele/getIsWildType()");
-		entity.setIsWildType(Integer.valueOf(domain.getIsWildType()));
-		
-		log.info("processAllele/getIsExtrinct()");	
-		entity.setIsExtinct(Integer.valueOf(domain.getIsExtinct()));
-		
-		log.info("processAllele/getIsMixed()");		
-		entity.setIsMixed(Integer.valueOf(domain.getIsMixed()));		
-		
-		log.info("processAllele/getStrainOfOriginKey()");	
-		entity.setStrain(strainDAO.get(Integer.valueOf(domain.getStrainOfOriginKey())));
-		
-		log.info("processAllele/getInheritanceModeKey()");		
-		entity.setInheritanceMode(termDAO.get(Integer.valueOf(domain.getInheritanceModeKey())));
-		
-		log.info("processAllele/getAlleleTypeKey()");		
-		entity.setAlleleType(termDAO.get(Integer.valueOf(domain.getAlleleTypeKey())));
-		
-		log.info("processAllele/getAlleleStatusKey()");		
+		entity.setName(domain.getName());	
+		entity.setAlleleType(termDAO.get(Integer.valueOf(domain.getAlleleTypeKey())));	
 		entity.setAlleleStatus(termDAO.get(Integer.valueOf(domain.getAlleleStatusKey())));
 		
-		log.info("processAllele/getTransmissionKey()");		
-		entity.setTransmission(termDAO.get(Integer.valueOf(domain.getTransmissionKey())));
+		if (domain.getName().equals("wild type") || domain.getName().equals("wild-type")) {
+			entity.setIsWildType(1);
+		}
+		else {
+			entity.setIsWildType(0);			
+		}
 		
-		log.info("processAllele/getCollectionKey()");		
-		entity.setCollection(termDAO.get(Integer.valueOf(domain.getCollectionKey())));
+		if (domain.getIsExtinct() != null && !domain.getIsExtinct().isEmpty()) {
+			entity.setIsExtinct(1);			
+		}
+		else {
+			entity.setIsExtinct(0);						
+		}
 		
-		log.info("processAllele/getMarkerAlleleStatusKey()");		
-		entity.setMarkerAlleleStatus(termDAO.get(Integer.valueOf(domain.getMarkerAlleleStatusKey())));
+		if (domain.getMixedRefKey() != null && !domain.getMixedRefKey().isEmpty()) {
+			entity.setIsMixed(1);
+		}
+		else {
+			entity.setIsMixed(0);			
+		}		
+		
+		log.info("processAllele/getStrainOfOriginKey()");
+		if (domain.getStrainOfOriginKey() != null && !domain.getStrainOfOriginKey().isEmpty()) {
+			entity.setStrain(strainDAO.get(Integer.valueOf(domain.getStrainOfOriginKey())));
+		}
+		else {
+			// if allele type = 'Gene trapped' or 'Targeted', then SOO = 'Not Specified'
+			if (domain.getAlleleTypeKey().equals("847121") || domain.getAlleleTypeKey().equals("847116")) {
+				// not specified
+				entity.setStrain(strainDAO.get(-1));
+			}
+			else {
+				// not applicable
+				entity.setStrain(strainDAO.get(-2));				
+			}
+		}
 
+		// default inheritance mode = Not Applicable (847095)
+		if (domain.getInheritanceModeKey() != null && !domain.getInheritanceModeKey().isEmpty()) {
+			entity.setInheritanceMode(termDAO.get(Integer.valueOf(domain.getInheritanceModeKey())));
+		}
+		else {
+			entity.setInheritanceMode(termDAO.get(847095));			
+		}
+		
+        // if Germ Line Transmission has not been selected
+        //      if the Mutant Cell Line = null/Not Specified then
+        //              default = Not Applicable
+        //      else
+        //              default = Not Specified
+		if (domain.getTransmissionKey() != null && !domain.getTransmissionKey().isEmpty()) {
+			entity.setTransmission(termDAO.get(Integer.valueOf(domain.getTransmissionKey())));
+		}
+		else {
+			if (domain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLine() == null
+					|| domain.getMutantCellLineAssocs().get(0).getMutantCellLine().getCellLine().equals("Not Specified")) {
+				entity.setTransmission(termDAO.get(3982955));
+			}
+			else {
+				entity.setTransmission(termDAO.get(3982954));				
+			}
+		}
+		
+		// default collection = Not Specified (11025586)
+		if (domain.getCollectionKey() != null && !domain.getCollectionKey().isEmpty()) {
+			entity.setCollection(termDAO.get(Integer.valueOf(domain.getCollectionKey())));
+		}
+		else {
+			entity.setCollection(termDAO.get(11025586));			
+		}
+		
+		// default allele status = Curated (4268545)
+		if (domain.getMarkerAlleleStatusKey() != null && !domain.getMarkerAlleleStatusKey().isEmpty()) {
+			entity.setMarkerAlleleStatus(termDAO.get(Integer.valueOf(domain.getMarkerAlleleStatusKey())));			
+		}
+		else {
+			entity.setMarkerAlleleStatus(termDAO.get(4268545));			
+		}
+		
+		// marker/reference
 		if (domain.getMarkerKey() != null && !domain.getMarkerKey().isEmpty()) {
 			entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));	
 		}
@@ -213,13 +262,13 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		
 		entity.setSymbol(domain.getSymbol());
 		entity.setName(domain.getName());
+		entity.setAlleleType(termDAO.get(Integer.valueOf(domain.getAlleleTypeKey())));
+		entity.setAlleleStatus(termDAO.get(Integer.valueOf(domain.getAlleleStatusKey())));
 		entity.setIsWildType(Integer.valueOf(domain.getIsWildType()));
 		entity.setIsExtinct(Integer.valueOf(domain.getIsExtinct()));
 		entity.setIsMixed(Integer.valueOf(domain.getIsMixed()));		
 		entity.setStrain(strainDAO.get(Integer.valueOf(domain.getStrainOfOriginKey())));
 		entity.setInheritanceMode(termDAO.get(Integer.valueOf(domain.getInheritanceModeKey())));
-		entity.setAlleleType(termDAO.get(Integer.valueOf(domain.getAlleleTypeKey())));
-		entity.setAlleleStatus(termDAO.get(Integer.valueOf(domain.getAlleleStatusKey())));
 		entity.setTransmission(termDAO.get(Integer.valueOf(domain.getTransmissionKey())));
 		entity.setCollection(termDAO.get(Integer.valueOf(domain.getCollectionKey())));
 		entity.setMarkerAlleleStatus(termDAO.get(Integer.valueOf(domain.getMarkerAlleleStatusKey())));

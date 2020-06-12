@@ -78,7 +78,6 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		// return entity translated to domain
 		log.info("processCellLine/create/returning results");
 		results.setItem(translator.translate(entity));
-		results.error = "";
 		return results;
 	}
 
@@ -158,7 +157,6 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		String cellLineTypeKey = domain.getDerivation().getParentCellLine().getCellLineTypeKey();
 
     	SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
-    	cellLineResults.error = "";
     	
 		SlimAlleleCellLineDerivationDomain derivationSearch = new SlimAlleleCellLineDerivationDomain();
 		List<AlleleCellLineDerivationDomain> derivationResults = new ArrayList<AlleleCellLineDerivationDomain>();
@@ -303,7 +301,6 @@ public class CellLineService extends BaseService<CellLineDomain> {
         	}       	
         }
               
-    	log.info("createMutantCellLine.error: " + cellLineResults.error);
         return(cellLineResults);	        		
     } 
 

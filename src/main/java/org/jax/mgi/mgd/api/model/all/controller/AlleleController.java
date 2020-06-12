@@ -40,7 +40,6 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	public SearchResults<AlleleDomain> create(AlleleDomain domain, User user) {
 		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
 		SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
-		cellLineResults.error = "";
 
 		if (domain.getMutantCellLineAssocs() != null) {
 			cellLineResults = cellLineService.createMutantCellLine(domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
@@ -50,13 +49,13 @@ public class AlleleController extends BaseController<AlleleDomain> {
 			}
 		}
 
-		if (cellLineResults.error.isEmpty()) {		
+		if (cellLineResults.error == null || cellLineResults.error.isEmpty()) {		
 	    	log.info("alleleController/will call alleleService/create()");
 			results = alleleService.create(domain, user);
 			results = alleleService.getResults(Integer.valueOf(results.items.get(0).getAlleleKey()));
 		}
 		
-		if (!cellLineResults.error.isEmpty()) {
+		if (cellLineResults.error != null || !cellLineResults.error.isEmpty()) {
 			results.setError("Add", cellLineResults.error, Constants.HTTP_SERVER_ERROR);
 		}
 				

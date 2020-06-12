@@ -113,7 +113,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			entity.setIsMixed(0);			
 		}		
 		
-		log.info("processAllele/getStrainOfOriginKey()");
 		if (domain.getStrainOfOriginKey() != null && !domain.getStrainOfOriginKey().isEmpty()) {
 			entity.setStrain(strainDAO.get(Integer.valueOf(domain.getStrainOfOriginKey())));
 		}
@@ -272,7 +271,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		entity.setTransmission(termDAO.get(Integer.valueOf(domain.getTransmissionKey())));
 		entity.setCollection(termDAO.get(Integer.valueOf(domain.getCollectionKey())));
 		entity.setMarkerAlleleStatus(termDAO.get(Integer.valueOf(domain.getMarkerAlleleStatusKey())));
-
+		
 		if (domain.getMarkerKey() != null && !domain.getMarkerKey().isEmpty()) {
 			log.info("processAllele/marker");
 			entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));	

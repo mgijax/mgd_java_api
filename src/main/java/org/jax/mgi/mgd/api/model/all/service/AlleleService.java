@@ -88,10 +88,17 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		log.info("processAllele/create");
 		
 		entity.setSymbol(domain.getSymbol());
-		entity.setName(domain.getName());	
+		entity.setName(domain.getName());			
 		entity.setAlleleType(termDAO.get(Integer.valueOf(domain.getAlleleTypeKey())));	
-		entity.setAlleleStatus(termDAO.get(Integer.valueOf(domain.getAlleleStatusKey())));
 		
+		// default allele status = Reserved (847113)
+		if (domain.getAlleleStatusKey() != null && !domain.getAlleleStatusKey().isEmpty()) {
+			entity.setAlleleStatus(termDAO.get(Integer.valueOf(domain.getAlleleStatusKey())));			
+		}
+		else {
+			entity.setAlleleStatus(termDAO.get(847113));						
+		}
+				
 		if (domain.getName().equals("wild type") || domain.getName().equals("wild-type")) {
 			entity.setIsWildType(1);
 		}

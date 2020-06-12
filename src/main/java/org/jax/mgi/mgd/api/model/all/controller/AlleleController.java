@@ -75,13 +75,13 @@ public class AlleleController extends BaseController<AlleleDomain> {
 			}
 		}
 		
-		if (cellLineResults.error.isEmpty()) {		
+		if (cellLineResults.error == null || cellLineResults.error.isEmpty()) {		
 			results = alleleService.update(domain, user);				
 		}
 			
 		results = alleleService.getResults(Integer.valueOf(domain.getAlleleKey()));		
 		
-		if (!cellLineResults.error.isEmpty()) {
+		if (cellLineResults.error != null && !cellLineResults.error.isEmpty()) {
 			results.setError("Modify", cellLineResults.error, Constants.HTTP_SERVER_ERROR);
 		}
 		

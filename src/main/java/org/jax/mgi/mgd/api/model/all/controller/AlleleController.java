@@ -55,7 +55,7 @@ public class AlleleController extends BaseController<AlleleDomain> {
 			results = alleleService.getResults(Integer.valueOf(results.items.get(0).getAlleleKey()));
 		}
 		
-		if (cellLineResults.error != null || !cellLineResults.error.isEmpty()) {
+		if (cellLineResults.error != null && !cellLineResults.error.isEmpty()) {
 			results.setError("Add", cellLineResults.error, Constants.HTTP_SERVER_ERROR);
 		}
 				

@@ -17,6 +17,7 @@ import org.jax.mgi.mgd.api.model.gxd.domain.SlimAntigenDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Antigen;
 import org.jax.mgi.mgd.api.model.gxd.translator.AntigenTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimAntigenTranslator;
+import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeSourceDAO;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
@@ -34,6 +35,8 @@ public class AntigenService extends BaseService<AntigenDomain> {
 	private AntigenDAO antigenDAO;
 	@Inject
 	private ProbeSourceDAO sourceDAO;
+	@Inject
+	private OrganismDAO organismDAO;
 		
 	private AntigenTranslator translator = new AntigenTranslator();
 	
@@ -209,12 +212,11 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		//String value;
 		Boolean from_accession = false;
-		
-		//
-		// IN PROGRESS
-		//
+		Boolean from_source = false;
 		
 		// if parameter exists, then add to where-clause
+		// creation/modification by/date
+		log.info("createdBy: " + searchDomain.getCreatedBy() + " modifiedBy: " + searchDomain.getModifiedBy() + " createDate: " + searchDomain.getCreation_date() + "modDate" + searchDomain.getModification_date());
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {
 			from = from + cmResults[0];
@@ -229,12 +231,75 @@ public class AntigenService extends BaseService<AntigenDomain> {
 	
 		if (from_accession == true) {
 			from = from + ", gxd_antigen_acc_view acc";
-			where = where + "\nand a._assay_key = acc._object_key"; 
+			where = where + "\nand a._antigen_key = acc._object_key"; 
 		}
 
+		// name
+		if (searchDomain.getAntigenName() != null && ! searchDomain.getAntigenName().isEmpty()) {
+			where = where + "\nand a.antigenName ilike '" + searchDomain.getAntigenName() + "'";
+		}
+		
+		// region covered
+		if (searchDomain.getRegionCovered() != null && !searchDomain.getRegionCovered().isEmpty()) {
+			where = where + "\nand a.regionCovered ilike '" + searchDomain.getRegionCovered() + "'";
+		}
+		
+		// notes
+		if (searchDomain.getAntigenNote() != null && !searchDomain.getAntigenNote().isEmpty()) {
+			where = where + "\nand a.antigenNote ilike '" + searchDomain.getAntigenNote() + "'";
+		}
+		
+		// source organism
+				
+		if (searchDomain.getProbeSource() != null && searchDomain.getProbeSource().getOrganismKey() != null && !searchDomain.getProbeSource().getOrganismKey().isEmpty()) {
+			where = where + "\nand  s._organism_key = " + searchDomain.getProbeSource().getOrganismKey();
+			from_source = true;
+		}
+		
+		// source strain
+		if (searchDomain.getProbeSource() != null && searchDomain.getProbeSource().getStrainKey() != null && !searchDomain.getProbeSource().getStrainKey().isEmpty()) {
+			where = where + "\nand  s._strain_key = " + searchDomain.getProbeSource().getStrainKey();
+			from_source = true;
+		}
+		
+		// source tissue
+		if (searchDomain.getProbeSource() != null && searchDomain.getProbeSource().getTissueKey() != null && !searchDomain.getProbeSource().getTissueKey().isEmpty()) {
+			where = where + "\nand  s._Tissue_key = " + searchDomain.getProbeSource().getTissueKey();
+			from_source = true;
+		}
+		
+		// source tissue description
+		if (searchDomain.getProbeSource() != null && searchDomain.getProbeSource().getDescription() != null && !searchDomain.getProbeSource().getDescription().isEmpty()) {
+			where = where + "\nand s.description ilike '" + searchDomain.getProbeSource().getDescription() + "'";
+			from_source = true;
+		}
+		
+		// source cell line
+		if (searchDomain.getProbeSource() != null && searchDomain.getProbeSource().getCellLineKey() != null  && !searchDomain.getProbeSource().getCellLineKey().isEmpty() ) {
+			where = where + "\nand s._cellline_key = " + searchDomain.getProbeSource().getCellLineKey();
+			from_source = true;
+		}
+		
+		// source gender
+		if (searchDomain.getProbeSource() != null && searchDomain.getProbeSource().getGenderKey() != null && ! searchDomain.getProbeSource().getGenderKey().isEmpty() ) {
+			where = where + "\nand s._gender_key = " + searchDomain.getProbeSource().getGenderKey();
+			from_source = true;
+		}
+		
+		// source age
+		if (searchDomain.getProbeSource() != null && searchDomain.getProbeSource().getAge() != null && ! searchDomain.getProbeSource().getAge().isEmpty() ) {
+			where = where + "\nand s.age ilike '" + searchDomain.getProbeSource().getAge() + "'";
+			from_source = true;
+		}
+		
+		if (from_source == true) {
+			from = from + ", prb_source s";
+			where = where + "\nand a._source_key = s._source_key";
+		}
+		
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
-		log.info(cmd);
+		log.info("cmd: " + cmd);
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);

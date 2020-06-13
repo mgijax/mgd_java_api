@@ -86,7 +86,7 @@ public class AntigenController extends BaseController<AntigenDomain> {
 	}
 		
 	@POST
-	@ApiOperation(value = "Search/returns antigen domain")
+	@ApiOperation(value = "Search/returns slim antigen domain")
 	@Path("/search")
 	public List<SlimAntigenDomain> search(AntigenDomain searchDomain) {
 	

@@ -57,6 +57,7 @@ public class ProbeSourceController extends BaseController<ProbeSourceDomain> {
 	public SearchResults<ProbeSourceDomain> delete(Integer key, User user) {
 		return probeSourceService.delete(key, user);
 	}
+	
 	@POST
 	@ApiOperation(value = "Search/returns probe source domain")
 	@Path("/search")

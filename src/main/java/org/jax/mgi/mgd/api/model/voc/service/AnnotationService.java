@@ -365,11 +365,11 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 			}
 		}	
 		
+		// merge any duplicate annotations that were created by the API when adding evidence		
 		if (objectKey != null && !objectKey.isEmpty()) {
 			String cmd;
 			Query query;
 			
-			// now merge any duplicate annotations that were created by the API when adding evidence
 		    cmd = "select count(*) from VOC_mergeDupAnnotations(" + annotTypeKey + ", " + objectKey + ")";
 		    log.info("cmd: " + cmd);
 		    query = annotationDAO.createNativeQuery(cmd);

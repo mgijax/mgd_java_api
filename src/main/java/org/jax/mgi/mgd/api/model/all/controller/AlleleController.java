@@ -75,11 +75,15 @@ public class AlleleController extends BaseController<AlleleDomain> {
 			cellLineResults = cellLineService.createMutantCellLine(domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
 			log.info("cellLineResults: " + cellLineResults);
 			if (cellLineResults != null) {
+				log.info("here A");				
 				if (cellLineResults.items != null) {
+					log.info("here B");				
 					domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(cellLineResults.items.get(0).getCellLineKey());        		
 				}
 			}
 		}
+		
+		log.info("here C");				
 		
 		if (cellLineResults == null || cellLineResults.error == null || cellLineResults.error.isEmpty()) {		
 			results = alleleService.update(domain, user);				

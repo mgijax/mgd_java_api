@@ -152,11 +152,11 @@ public class CellLineService extends BaseService<CellLineDomain> {
     	// applies only to domain.getMutatnCellLineAssocs().get(0)
     	
     	SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
-		
-		if (domain.getProcessStatus().equals(Constants.PROCESS_NOTDIRTY) || domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+
+    	if (domain.getProcessStatus().equals(Constants.PROCESS_NOTDIRTY) || domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 	    	log.info("createMutantCellLine/do nothing/returning cellLineResults");
-	    	log.info("createMutantCellLine/cellLineResults: " + cellLineResults.items);
-	    	return(cellLineResults);
+	    	//return(cellLineResults);
+	    	return(null);
 		}
 
     	String cellLineNS = "Not Specified";

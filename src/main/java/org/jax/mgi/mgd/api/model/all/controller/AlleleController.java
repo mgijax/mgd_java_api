@@ -52,15 +52,13 @@ public class AlleleController extends BaseController<AlleleDomain> {
 			}
 		}
 
-    	log.info("alleleController/checking cellLineResults.error: 2");		
-		if (cellLineResults.error == null || cellLineResults.error.isEmpty()) {		
+		if (cellLineResults == null || cellLineResults.error == null || cellLineResults.error.isEmpty()) {		
 	    	log.info("alleleController/will call alleleService/create()");
 			results = alleleService.create(domain, user);
 			results = alleleService.getResults(Integer.valueOf(results.items.get(0).getAlleleKey()));
 		}
 		
-    	log.info("alleleController/checking cellLineResults.error: 3");				
-		if (cellLineResults.error != null && !cellLineResults.error.isEmpty()) {
+		if (cellLineResults != null && cellLineResults.error != null && !cellLineResults.error.isEmpty()) {
 			results.setError("Add", cellLineResults.error, Constants.HTTP_SERVER_ERROR);
 		}
 				
@@ -82,13 +80,13 @@ public class AlleleController extends BaseController<AlleleDomain> {
 			}
 		}
 		
-		if (cellLineResults.error == null || cellLineResults.error.isEmpty()) {		
+		if (cellLineResults == null || cellLineResults.error == null || cellLineResults.error.isEmpty()) {		
 			results = alleleService.update(domain, user);				
 		}
 			
 		results = alleleService.getResults(Integer.valueOf(domain.getAlleleKey()));		
 		
-		if (cellLineResults.error != null && !cellLineResults.error.isEmpty()) {
+		if (cellLineResults != null && cellLineResults.error != null && !cellLineResults.error.isEmpty()) {
 			results.setError("Modify", cellLineResults.error, Constants.HTTP_SERVER_ERROR);
 		}
 		

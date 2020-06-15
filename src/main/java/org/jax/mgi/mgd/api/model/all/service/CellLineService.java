@@ -152,17 +152,18 @@ public class CellLineService extends BaseService<CellLineDomain> {
     	// applies only to domain.getMutatnCellLineAssocs().get(0)
     	
     	SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
-
+		
 		if (domain.getProcessStatus().equals(Constants.PROCESS_NOTDIRTY) || domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 	    	log.info("createMutantCellLine/do nothing/returning cellLineResults");
-	        return(cellLineResults);		
+	    	log.info("createMutantCellLine/cellLineResults: " + cellLineResults.items);
+	    	return(cellLineResults);
 		}
-		
+
     	String cellLineNS = "Not Specified";
     	String anyNS = "-1";
     	String isMutantTrue = "1";
 		String cellLineTypeKey = domain.getDerivation().getParentCellLine().getCellLineTypeKey();
-
+		
 		SlimAlleleCellLineDerivationDomain derivationSearch = new SlimAlleleCellLineDerivationDomain();
 		List<AlleleCellLineDerivationDomain> derivationResults = new ArrayList<AlleleCellLineDerivationDomain>();
     	CellLineDomain cellLineDomain = new CellLineDomain();

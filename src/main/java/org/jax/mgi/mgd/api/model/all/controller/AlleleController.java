@@ -83,7 +83,9 @@ public class AlleleController extends BaseController<AlleleDomain> {
 			}
 		}
 		
-		log.info("here C");				
+		log.info("here C");		
+		log.info(cellLineResults);
+		log.info(cellLineResults.error);
 		
 		if (cellLineResults == null || cellLineResults.error == null || cellLineResults.error.isEmpty()) {		
 			results = alleleService.update(domain, user);				

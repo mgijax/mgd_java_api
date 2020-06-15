@@ -44,21 +44,23 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		if (domain.getMutantCellLineAssocs() != null) {
 			cellLineResults = cellLineService.createMutantCellLine(domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
 	    	log.info("alleleController/checking cellLineResults.error: 1");		
-			if (cellLineResults != null) {
-				if (cellLineResults.items != null) {					
-					log.info("alleleController/cellLineResults.items created");
-					domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(cellLineResults.items.get(0).getCellLineKey());        		
-				}
+			if (cellLineResults.items != null) {					
+				log.info("alleleController/cellLineResults.items created");
+				domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(cellLineResults.items.get(0).getCellLineKey());        		
 			}
 		}
 
-		if (cellLineResults == null || cellLineResults.error == null || cellLineResults.error.isEmpty()) {		
+		log.info("create/here C");		
+		log.info(cellLineResults);
+		log.info(cellLineResults.error);
+		
+		if (cellLineResults.error == null || cellLineResults.error.isEmpty()) {		
 	    	log.info("alleleController/will call alleleService/create()");
 			results = alleleService.create(domain, user);
 			results = alleleService.getResults(Integer.valueOf(results.items.get(0).getAlleleKey()));
 		}
 		
-		if (cellLineResults != null && cellLineResults.error != null && !cellLineResults.error.isEmpty()) {
+		if (cellLineResults.error != null && !cellLineResults.error.isEmpty()) {
 			results.setError("Add", cellLineResults.error, Constants.HTTP_SERVER_ERROR);
 		}
 				
@@ -74,26 +76,23 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		if (domain.getMutantCellLineAssocs() != null) {
 			cellLineResults = cellLineService.createMutantCellLine(domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
 			log.info("cellLineResults: " + cellLineResults);
-			if (cellLineResults != null) {
-				log.info("here A");				
-				if (cellLineResults.items != null) {
-					log.info("here B");				
-					domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(cellLineResults.items.get(0).getCellLineKey());        		
-				}
+			log.info("here A");				
+			if (cellLineResults.items != null) {
+				domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(cellLineResults.items.get(0).getCellLineKey());        		
 			}
 		}
 		
-		log.info("here C");		
+		log.info("update/here C");		
 		log.info(cellLineResults);
 		log.info(cellLineResults.error);
 		
-		if (cellLineResults == null || cellLineResults.error == null || cellLineResults.error.isEmpty()) {		
+		if (cellLineResults.error == null || cellLineResults.error.isEmpty()) {		
 			results = alleleService.update(domain, user);				
 		}
 			
 		results = alleleService.getResults(Integer.valueOf(domain.getAlleleKey()));		
 		
-		if (cellLineResults != null && cellLineResults.error != null && !cellLineResults.error.isEmpty()) {
+		if (cellLineResults.error != null && !cellLineResults.error.isEmpty()) {
 			results.setError("Modify", cellLineResults.error, Constants.HTTP_SERVER_ERROR);
 		}
 		

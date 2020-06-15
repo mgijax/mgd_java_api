@@ -41,11 +41,13 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
 		SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
 
+		log.info("alleleController/create");
+		
 		if (domain.getMutantCellLineAssocs() != null) {
 			cellLineResults = cellLineService.createMutantCellLine(domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
-	    	log.info("alleleController/checking cellLineResults.error: 1");		
+	    	log.info("alleleController/create/checking cellLineResults.error: 1");		
 			if (cellLineResults.items != null) {					
-				log.info("alleleController/cellLineResults.items created");
+				log.info("alleleController/create/cellLineResults.items created");
 				domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(cellLineResults.items.get(0).getCellLineKey());        		
 			}
 		}
@@ -73,10 +75,11 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
 		cellLineResults.error = "";
 		
+		log.info("alleleController/update");
+		
 		if (domain.getMutantCellLineAssocs() != null) {
 			cellLineResults = cellLineService.createMutantCellLine(domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
-			log.info("cellLineResults: " + cellLineResults);
-			log.info("here A");				
+			log.info("alleleController/update/cellLineResults.items created");
 			if (cellLineResults.items != null) {
 				domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(cellLineResults.items.get(0).getCellLineKey());        		
 			}

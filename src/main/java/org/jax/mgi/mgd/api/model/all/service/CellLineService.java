@@ -150,25 +150,25 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		// potential new mutant cell line for allele/cellline association
     	// depends on isParent, isMutation settings (see below)
     	// applies only to domain.getMutatnCellLineAssocs().get(0)
-    	  	
-    	String cellLineNS = "Not Specified";
-    	String anyNS = "-1";
-    	String isMutantTrue = "1";
-		String cellLineTypeKey = domain.getDerivation().getParentCellLine().getCellLineTypeKey();
-
-    	SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
     	
-		SlimAlleleCellLineDerivationDomain derivationSearch = new SlimAlleleCellLineDerivationDomain();
-		List<AlleleCellLineDerivationDomain> derivationResults = new ArrayList<AlleleCellLineDerivationDomain>();
-    	CellLineDomain cellLineDomain = new CellLineDomain();
-
-		Boolean isParent = true;
-		Boolean isMutant = true;
+    	SearchResults<CellLineDomain> cellLineResults = new SearchResults<CellLineDomain>();
 
 		if (domain.getProcessStatus().equals(Constants.PROCESS_NOTDIRTY) || domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 	    	log.info("createMutantCellLine/do nothing/returning cellLineResults");
 	        return(cellLineResults);		
 		}
+		
+    	String cellLineNS = "Not Specified";
+    	String anyNS = "-1";
+    	String isMutantTrue = "1";
+		String cellLineTypeKey = domain.getDerivation().getParentCellLine().getCellLineTypeKey();
+
+		SlimAlleleCellLineDerivationDomain derivationSearch = new SlimAlleleCellLineDerivationDomain();
+		List<AlleleCellLineDerivationDomain> derivationResults = new ArrayList<AlleleCellLineDerivationDomain>();
+    	CellLineDomain cellLineDomain = new CellLineDomain();
+    	
+		Boolean isParent = true;
+		Boolean isMutant = true;
 		
         // default cellLineType = Embryonic Stem Cell (3982968)		
 		if (cellLineTypeKey.isEmpty()) {

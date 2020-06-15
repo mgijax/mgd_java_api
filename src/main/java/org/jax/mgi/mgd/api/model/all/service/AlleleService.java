@@ -419,6 +419,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			rdomain.setEvidenceKey("17396909");
 			
 			// molecular reference
+			// MUST EXIST
 			rdomain.setRefsKey(domain.getMolRefKey());
 			
 			relationshipDomain.add(rdomain);

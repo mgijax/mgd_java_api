@@ -155,7 +155,6 @@ public class CellLineService extends BaseService<CellLineDomain> {
 
     	if (domain.getProcessStatus().equals(Constants.PROCESS_NOTDIRTY) || domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 	    	log.info("createMutantCellLine/do nothing/returning cellLineResults");
-	    	log.info("cellLineResults: " + cellLineResults);
 	    	return(cellLineResults);
 		}
 

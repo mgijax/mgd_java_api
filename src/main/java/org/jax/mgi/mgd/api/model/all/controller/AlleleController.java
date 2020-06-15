@@ -43,18 +43,21 @@ public class AlleleController extends BaseController<AlleleDomain> {
 
 		if (domain.getMutantCellLineAssocs() != null) {
 			cellLineResults = cellLineService.createMutantCellLine(domain.getAlleleTypeKey(), domain.getMutantCellLineAssocs().get(0).getMutantCellLine(), user);
-			if (cellLineResults.items != null) {
+	    	log.info("alleleController/checking cellLineResults.error: 1");		
+			if (cellLineResults.error == null || cellLineResults.error.isEmpty()) {					
 		    	log.info("alleleController/cellLineResults.items created");
 				domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(cellLineResults.items.get(0).getCellLineKey());        		
 			}
 		}
 
+    	log.info("alleleController/checking cellLineResults.error: 2");		
 		if (cellLineResults.error == null || cellLineResults.error.isEmpty()) {		
 	    	log.info("alleleController/will call alleleService/create()");
 			results = alleleService.create(domain, user);
 			results = alleleService.getResults(Integer.valueOf(results.items.get(0).getAlleleKey()));
 		}
 		
+    	log.info("alleleController/checking cellLineResults.error: 3");				
 		if (cellLineResults.error != null && !cellLineResults.error.isEmpty()) {
 			results.setError("Add", cellLineResults.error, Constants.HTTP_SERVER_ERROR);
 		}

@@ -29,6 +29,7 @@ import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerNoteService;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
@@ -234,19 +235,19 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		// process synonyms
 		log.info("processAllele/synonyms");		
-		synonymService.process(domain.getAlleleKey(), domain.getSynonyms(), mgiTypeKey, user);
+		synonymService.process(String.valueOf(entity.get_allele_key()), domain.getSynonyms(), mgiTypeKey, user);
 		
 		// process allele attributes/subtypes
 		log.info("processAllele/attribute/subtype");
-		annotationService.process(domain.getSubtypeAnnots(), user);
+		processSubtype(String.valueOf(entity.get_allele_key()), domain, user);
 		
 		// process molecular mutations
 		log.info("processAllele/molecular mutation");
-		molmutationService.process(domain.getAlleleKey(), domain.getMutations(), user);
+		molmutationService.process(String.valueOf(entity.get_allele_key()), domain.getMutations(), user);
 		
 		// process driver genes
 		log.info("processAllele/driver gene");
-		processDriverGene(domain, user);
+		processDriverGene(String.valueOf(entity.get_allele_key()), domain, user);
 		
 		// return entity translated to domain
 		log.info("processAllele/create/returning results");
@@ -358,7 +359,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		
 		// process allele attributes/subtypes
 		log.info("processAllele/attribute/subtype");
-		if (annotationService.process(domain.getSubtypeAnnots(), user)) {
+		if (processSubtype(domain.getAlleleKey(), domain, user)) {
 			modified = true;
 		}
 		
@@ -370,7 +371,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		// process driver genes
 		log.info("processAllele/driver gene");
-		if (processDriverGene(domain, user)) {
+		if (processDriverGene(domain.getAlleleKey(), domain, user)) {
 			modified = true;
 		}
 		
@@ -390,7 +391,35 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	}
 
 	@Transactional
-	public Boolean processDriverGene(AlleleDomain domain, User user) {
+	public Boolean processSubtype(String alleleKey, AlleleDomain domain, User user) {
+		// process the driver gene/relationship
+		
+		List<AnnotationDomain> annotDomain = new ArrayList<AnnotationDomain>();
+
+		for (int i = 0; i < domain.getSubtypeAnnots().size(); i++) {
+
+			if (domain.getSubtypeAnnots().get(i).getTerm().isEmpty()) {
+				continue;
+			}
+			
+			AnnotationDomain adomain = new AnnotationDomain();
+
+			adomain.setProcessStatus(domain.getSubtypeAnnots().get(i).getProcessStatus());
+			adomain.setAnnotKey(domain.getSubtypeAnnots().get(i).getAnnotKey());						
+			adomain.setAnnotTypeKey(domain.getSubtypeAnnots().get(i).getAnnotTypeKey());			
+			adomain.setObjectKey(domain.getSubtypeAnnots().get(i).getObjectKey());
+			adomain.setTermKey(domain.getSubtypeAnnots().get(i).getTermKey());
+			adomain.setQualifierKey(domain.getSubtypeAnnots().get(i).getQualifierKey());
+			
+			annotDomain.add(adomain);
+		}
+		
+		log.info("processSubtype: " + annotDomain.size());
+		return(annotationService.process(domain.getSubtypeAnnots(), user));
+	}
+	
+	@Transactional
+	public Boolean processDriverGene(String alleleKey, AlleleDomain domain, User user) {
 		// process the driver gene/relationship
 		
 		List<RelationshipDomain> relationshipDomain = new ArrayList<RelationshipDomain>();
@@ -406,7 +435,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			rdomain.setProcessStatus(domain.getDriverGenes().get(i).getProcessStatus());			
 			rdomain.setRelationshipKey(domain.getDriverGenes().get(i).getRelationshipKey());
 			rdomain.setCategoryKey("1006");
-			rdomain.setObjectKey1(domain.getDriverGenes().get(i).getAlleleKey());
+			rdomain.setObjectKey1(alleleKey);
 			rdomain.setObjectKey2(domain.getDriverGenes().get(i).getMarkerKey());
 
 			// has_driver

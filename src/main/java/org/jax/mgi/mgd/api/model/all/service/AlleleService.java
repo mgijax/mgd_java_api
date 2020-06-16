@@ -417,7 +417,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}
 		
 		log.info("processSubtype: " + annotDomain.size());
-		return(annotationService.process(domain.getSubtypeAnnots(), user));
+		return(annotationService.process(annotDomain, user));
 	}
 	
 	@Transactional

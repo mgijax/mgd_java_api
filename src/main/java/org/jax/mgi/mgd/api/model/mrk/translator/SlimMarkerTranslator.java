@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.mrk.translator;
 
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.mrk.domain.MarkerNoteDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jboss.logging.Logger;
@@ -26,6 +27,13 @@ public class SlimMarkerTranslator extends BaseEntityDomainTranslator<Marker, Sli
 
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
+		}
+
+		// marker detail clip
+		if (entity.getDetailClipNote() != null && !entity.getDetailClipNote().isEmpty()) {
+			MarkerNoteTranslator noteTranslator = new MarkerNoteTranslator();
+			Iterable<MarkerNoteDomain> note = noteTranslator.translateEntities(entity.getDetailClipNote());
+			domain.setDetailClip(note.iterator().next());
 		}
 		
 		return domain;

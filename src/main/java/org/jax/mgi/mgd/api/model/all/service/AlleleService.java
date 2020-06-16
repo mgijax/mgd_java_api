@@ -246,10 +246,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		molmutationService.process(String.valueOf(entity.get_allele_key()), domain.getMutations(), user);
 		
 		// process driver genes
-		// because driver gene relies on molecular reference,
-		// the driver gene must be added separately/as a second step
-//		log.info("processAllele/driver gene");
-//		processDriverGene(String.valueOf(entity.get_allele_key()), domain, user);
+		log.info("processAllele/driver gene");
+		processDriverGene(String.valueOf(entity.get_allele_key()), domain, user);
 		
 		// return entity translated to domain
 		log.info("processAllele/create/returning results");

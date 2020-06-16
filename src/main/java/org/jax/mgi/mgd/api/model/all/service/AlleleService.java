@@ -460,7 +460,12 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}
 		
 		log.info("processDriverGene/relationship: " + relationshipDomain.size());
-		return(relationshipSerivce.process(domain.getAlleleKey(), relationshipDomain, mgiTypeKey, user));		
+		if (relationshipDomain.size() > 0) {
+			return(relationshipSerivce.process(domain.getAlleleKey(), relationshipDomain, mgiTypeKey, user));		
+		}
+		else {
+			return(true);
+		}		
 	}
 	
 	@Transactional

@@ -392,13 +392,13 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 	@Transactional
 	public Boolean processSubtype(String alleleKey, AlleleDomain domain, User user) {
-		// process the driver gene/relationship
+		// process the subtype/annotation 
 		
 		List<AnnotationDomain> annotDomain = new ArrayList<AnnotationDomain>();
 
 		for (int i = 0; i < domain.getSubtypeAnnots().size(); i++) {
 
-			if (domain.getSubtypeAnnots().get(i).getTerm().isEmpty()) {
+			if (domain.getSubtypeAnnots().get(i).getTermKey().isEmpty()) {
 				continue;
 			}
 			

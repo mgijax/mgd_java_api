@@ -217,13 +217,13 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		markerNoteService.process(domain.getMarkerKey(), domain.getDetailClip(), user);
 		
 		// process all notes
-		noteService.process(domain.getAlleleKey(), domain.getGeneralNote(), mgiTypeKey, domain.getGeneralNote().getNoteTypeKey(), user);
-		noteService.process(domain.getAlleleKey(), domain.getMolecularNote(), mgiTypeKey, domain.getMolecularNote().getNoteTypeKey(), user);
-		noteService.process(domain.getAlleleKey(), domain.getNomenNote(), mgiTypeKey, domain.getNomenNote().getNoteTypeKey(), user);
-		noteService.process(domain.getAlleleKey(), domain.getInducibleNote(), mgiTypeKey, domain.getInducibleNote().getNoteTypeKey(), user);
-		noteService.process(domain.getAlleleKey(), domain.getProidNote(), mgiTypeKey, domain.getProidNote().getNoteTypeKey(), user);
-		noteService.process(domain.getAlleleKey(), domain.getCreNote(), mgiTypeKey, domain.getCreNote().getNoteTypeKey(), user);
-		noteService.process(domain.getAlleleKey(), domain.getIkmcNote(), mgiTypeKey, domain.getIkmcNote().getNoteTypeKey(), user);
+		noteService.process(String.valueOf(entity.get_allele_key()), domain.getGeneralNote(), mgiTypeKey, domain.getGeneralNote().getNoteTypeKey(), user);
+		noteService.process(String.valueOf(entity.get_allele_key()), domain.getMolecularNote(), mgiTypeKey, domain.getMolecularNote().getNoteTypeKey(), user);
+		noteService.process(String.valueOf(entity.get_allele_key()), domain.getNomenNote(), mgiTypeKey, domain.getNomenNote().getNoteTypeKey(), user);
+		noteService.process(String.valueOf(entity.get_allele_key()), domain.getInducibleNote(), mgiTypeKey, domain.getInducibleNote().getNoteTypeKey(), user);
+		noteService.process(String.valueOf(entity.get_allele_key()), domain.getProidNote(), mgiTypeKey, domain.getProidNote().getNoteTypeKey(), user);
+		noteService.process(String.valueOf(entity.get_allele_key()), domain.getCreNote(), mgiTypeKey, domain.getCreNote().getNoteTypeKey(), user);
+		noteService.process(String.valueOf(entity.get_allele_key()), domain.getIkmcNote(), mgiTypeKey, domain.getIkmcNote().getNoteTypeKey(), user);
 		
 		// process marker reference
 		log.info("processAllele/referenes");

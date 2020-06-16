@@ -406,8 +406,10 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 			adomain.setProcessStatus(domain.getSubtypeAnnots().get(i).getProcessStatus());
 			adomain.setAnnotKey(domain.getSubtypeAnnots().get(i).getAnnotKey());						
-			adomain.setAnnotTypeKey(domain.getSubtypeAnnots().get(i).getAnnotTypeKey());			
+			adomain.setAnnotTypeKey(domain.getSubtypeAnnots().get(i).getAnnotTypeKey());
+			log.info(alleleKey);
 			adomain.setObjectKey(alleleKey);
+			log.info(adomain.getObjectKey());
 			adomain.setTermKey(domain.getSubtypeAnnots().get(i).getTermKey());
 			adomain.setQualifierKey(domain.getSubtypeAnnots().get(i).getQualifierKey());
 			

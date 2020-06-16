@@ -296,6 +296,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				// else, set refAssocType by using refAssocTypeKey
 				else {
 					cmd = "select assoctype from mgi_refassoctype where _refassoctype_key = " + domain.get(i).getRefAssocTypeKey();
+					log.info("cmd: " + cmd);
 					try {
 						ResultSet rs = sqlExecutor.executeProto(cmd);
 						while (rs.next()) {

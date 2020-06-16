@@ -294,20 +294,20 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 					}
 				}
 				// else, set refAssocType by using refAssocTypeKey
-				else {
-					cmd = "select assoctype from mgi_refassoctype where _refassoctype_key = " + domain.get(i).getRefAssocTypeKey();
-					log.info("cmd: " + cmd);
-					try {
-						ResultSet rs = sqlExecutor.executeProto(cmd);
-						while (rs.next()) {
-							refAssocType = rs.getString("assoctype");
-						}
-						sqlExecutor.cleanup();
-					}
-					catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
+//				else {
+//					cmd = "select assoctype from mgi_refassoctype where _refassoctype_key = " + domain.get(i).getRefAssocTypeKey();
+//					log.info("cmd: " + cmd);
+//					try {
+//						ResultSet rs = sqlExecutor.executeProto(cmd);
+//						while (rs.next()) {
+//							refAssocType = rs.getString("assoctype");
+//						}
+//						sqlExecutor.cleanup();
+//					}
+//					catch (Exception e) {
+//						e.printStackTrace();
+//					}
+//				}
 				
 				cmd = "select count(*) from MGI_insertReferenceAssoc ("
 							+ user.get_user_key().intValue()
@@ -315,6 +315,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 							+ "," + objectKey
 							+ "," + domain.get(i).getRefsKey()
 							+ ",'" + refAssocType + "'"
+							+ "," + domain.get(i).getRefAssocTypeKey()
 							+ ")";
 				log.info("cmd: " + cmd);
 				Query query = referenceAssocDAO.createNativeQuery(cmd);

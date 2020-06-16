@@ -277,6 +277,7 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 					}
 				}
 				
+				log.info(annotTypeKey);
 				entity.setAnnotType(annotTypeDAO.get(Integer.valueOf(annotTypeKey)));				
 				log.info(domain.get(i).getObjectKey());
 				entity.set_object_key(Integer.valueOf(domain.get(i).getObjectKey()));

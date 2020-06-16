@@ -130,9 +130,16 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
 		
-		for (int i = 0; i < domain.size(); i++) {				
+		for (int i = 0; i < domain.size(); i++) {
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {				
 				log.info("processRelationships create");				
+				
+				// if reference is empty, then skip
+				// pwi has sent a "c" that is empty/not being used
+				if (domain.get(i).getRefsKey().isEmpty()) {
+					continue;
+				}
+				
 				Relationship entity = new Relationship();
 		        entity.setCategory(categoryDAO.get(Integer.valueOf(domain.get(i).getCategoryKey())));
 		        entity.set_object_key_1(Integer.valueOf(domain.get(i).getObjectKey1()));

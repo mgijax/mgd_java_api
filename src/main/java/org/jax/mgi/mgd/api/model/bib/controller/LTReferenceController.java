@@ -168,9 +168,6 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 						int retries = 0;
 						boolean moveOn = false;
 						
-						log.info(ref.jnumid);
-						log.info(ref.refsKey);
-						
 						while (!moveOn) {
 							try {
 								currentID = ref.jnumid;

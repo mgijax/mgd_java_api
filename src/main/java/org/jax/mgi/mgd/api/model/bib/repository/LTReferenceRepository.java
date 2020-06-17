@@ -192,9 +192,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	 */
 	private Term getTerm (String json) throws FatalAPIException {
 		MapMaker mapMaker = new MapMaker();
-		
-		log.info("getTerm(): " + json);
-		
+				
 		try {
 			SearchResults<Term> terms = termDAO.search(mapMaker.toMap(json));
 

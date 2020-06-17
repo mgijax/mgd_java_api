@@ -114,6 +114,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	@Override
 	public LTReferenceDomain update(LTReferenceDomain domain, User user) throws FatalAPIException, NonFatalAPIException, APIException {
 		LTReference entity = getReference(domain.refsKey);
+		log.info("found LTReference/entity");
 		applyDomainChanges(entity, domain, user);
 		referenceDAO.persist(entity);
 		referenceDAO.updateCitationCache(domain.refsKey);		

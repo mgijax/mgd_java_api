@@ -1,4 +1,14 @@
 TESTING
+=======
+TAG: mgd_java_api-6-0-15-28
+DATE: 06/17/2020
+STAFF: lec
+CHANGES: TR13326/statusUpdate/getTerm fix
+
+TAG: mgd_java_api-6-0-15-27
+DATE: 06/03/2020
+STAFF: lec
+CHANGES: TR13315/P-WI Bug: Can't change lit triage reference type
 
 TAG: mgd_java_api-6-0-15-26
 TAG: mgd_java_api-6-0-15-25

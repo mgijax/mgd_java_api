@@ -431,7 +431,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		for (int i = 0; i < domain.getDriverGenes().size(); i++) {
 
-			if (domain.getDriverGenes().get(i).getMarkerKey().isEmpty() && domain.getMolRefKey().isEmpty()) {
+			if (domain.getDriverGenes().get(i).getMarkerKey().isEmpty()) {
 				continue;
 			}
 			

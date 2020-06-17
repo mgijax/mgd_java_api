@@ -112,7 +112,8 @@ public class MarkerNoteService extends BaseService<MarkerNoteDomain> {
 										
 		if (domain.getProcessStatus().equals(Constants.PROCESS_CREATE)) {				
 			log.info("processMarkerNote create");
-			MarkerNote entity = noteDAO.get(Integer.valueOf(domain.getMarkerKey()));
+			MarkerNote entity = new MarkerNote();
+			entity.set_marker_key(Integer.valueOf(domain.getMarkerKey()));
 			entity.setNote(domain.getNote());
 			entity.setCreation_date(new Date());				
 			entity.setModification_date(new Date());

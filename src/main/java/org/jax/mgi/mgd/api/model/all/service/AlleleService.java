@@ -178,7 +178,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			entity.setMarkerAlleleStatus(termDAO.get(4268545));			
 		}
 		
-		// marker/reference
+		// marker/reference/can be null
 		if (domain.getMarkerKey() != null && !domain.getMarkerKey().isEmpty()) {
 			entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));	
 		}
@@ -431,7 +431,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		for (int i = 0; i < domain.getDriverGenes().size(); i++) {
 
-			if (domain.getDriverGenes().get(i).getMarkerKey().isEmpty()) {
+			if (domain.getDriverGenes().get(i).getMarkerKey().isEmpty() && domain.getMolRefKey().isEmpty()) {
 				continue;
 			}
 			

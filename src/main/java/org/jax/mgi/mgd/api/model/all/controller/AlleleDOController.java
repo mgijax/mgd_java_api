@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.all.domain.DenormAlleleAnnotDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleAnnotDomain;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
 import org.jax.mgi.mgd.api.model.all.service.AlleleAnnotService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -86,6 +87,22 @@ public class AlleleDOController extends BaseController<DenormAlleleAnnotDomain> 
 
 		try {
 			results = alleleAnnotService.search(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+
+	@POST
+	@ApiOperation(value = "Search slim domain/returns slim domain")
+	@Path("/searchByKeys")
+	public List<SlimAlleleDomain> searchByKeys(SlimAlleleDomain domain) {
+	
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
+
+		try {
+			results = alleleAnnotService.searchByKeys(domain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

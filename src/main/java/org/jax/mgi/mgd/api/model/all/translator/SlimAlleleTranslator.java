@@ -31,6 +31,9 @@ public class SlimAlleleTranslator extends BaseEntityDomainTranslator<Allele, Sli
 		if (entity.getMgiAccessionIds() != null) {
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}
+
+		// use combination of Allele fields to produce the alleleDisplay
+		// This is set in the Service search method.
 		
 		return domain;
 	}

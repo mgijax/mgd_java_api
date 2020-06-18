@@ -15,8 +15,10 @@ import org.jax.mgi.mgd.api.model.all.domain.AlleleAnnotDomain;
 import org.jax.mgi.mgd.api.model.all.domain.DenormAlleleAnnotDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleAnnotDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDODomain;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleAnnotTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleAnnotTranslator;
+import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.AnnotationDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
@@ -43,8 +45,9 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 	private AnnotationService annotationService;
 	
 	private AlleleAnnotTranslator translator = new AlleleAnnotTranslator();
+	private SlimAlleleAnnotTranslator slim1translator = new SlimAlleleAnnotTranslator();
+	private SlimAlleleTranslator slim2translator = new SlimAlleleTranslator();
 	
-	private SlimAlleleAnnotTranslator slimtranslator = new SlimAlleleAnnotTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	private String mgiTypeKey = "11";
@@ -483,7 +486,7 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 						
 			while (rs.next())  {
 				SlimAlleleAnnotDomain domain = new SlimAlleleAnnotDomain();
-				domain = slimtranslator.translate(alleleDAO.get(rs.getInt("_object_key")));				
+				domain = slim1translator.translate(alleleDAO.get(rs.getInt("_object_key")));				
 				domain.setAlleleDisplay(rs.getString("description"));
 				alleleDAO.clear();				
 				results.add(domain);					
@@ -491,6 +494,121 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 			sqlExecutor.cleanup();
 			
 			results.sort(Comparator.comparing(SlimAlleleAnnotDomain::getAlleleDisplay, String.CASE_INSENSITIVE_ORDER));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
+
+	@Transactional	
+	public List<SlimAlleleDomain> searchByKeys(SlimAlleleDomain domain) {
+		// using domain fields, generate SQL command
+		//
+		// where domain.alleleKey is a list of alleleKey:
+		//		1111,2222,3333,...
+		
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
+	
+		String cmd = "select distinct v._object_key, v.subtype, v.short_description"
+			+ "\nfrom all_allele_summary_view v"
+			+ "\nwhere v._mgitype_key = " + mgiTypeKey 
+			+  "\nand v._object_key in (" + domain.getAlleleKey() + ")"
+			+  "\norder by v._object_key, v.subtype, v.short_description";
+
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			Integer prevObjectKey = 0;
+			Integer newObjectKey = 0;
+			String newDescription = "";
+			String prevDescription = "";
+			String newStrain = "";
+			String prevStrain = "";
+			Boolean addResults = false;
+			
+			// concatenate description when grouped by _object_key
+			
+			while (rs.next()) {
+				
+				newObjectKey = rs.getInt("_object_key");
+				newStrain = rs.getString("subtype");
+				newDescription = rs.getString("short_description");
+								
+				// group description by _object_key
+				if (prevObjectKey.equals(0)) {
+					prevObjectKey = newObjectKey;
+					prevStrain = newStrain;
+					prevDescription = newDescription;
+					addResults = false;
+				}
+				else if (newObjectKey.equals(prevObjectKey)) {
+					prevDescription = prevDescription + "," + newDescription;
+					addResults = false;
+				}
+				else {
+					addResults = true;
+				}
+				
+				if (addResults) {
+
+					if (prevDescription == null) {
+						prevDescription = prevStrain;
+					}
+					else {
+						prevDescription = prevStrain + " " + prevDescription;
+					}
+					
+					SlimAlleleDomain slimdomain = new SlimAlleleDomain();
+					slimdomain = slim2translator.translate(alleleDAO.get(prevObjectKey));				
+					slimdomain.setAlleleDisplay(prevDescription);
+					alleleDAO.clear();				
+					results.add(slimdomain);
+					
+					prevObjectKey = newObjectKey;
+					prevStrain = newStrain;
+					prevDescription = newDescription;
+					addResults = false;
+				}
+				
+				// if last record, then add to result set
+				if (rs.isLast() == true) {
+					
+					if (prevObjectKey.equals(newObjectKey)) {
+						if (prevDescription == null) {
+							prevDescription = prevStrain;
+						}
+						else {
+							prevDescription = prevStrain + " " + prevDescription;
+						}
+					}
+					else {
+						prevObjectKey = newObjectKey;
+						prevStrain = newStrain;
+						prevDescription = newDescription;
+						
+						if (prevDescription == null) {
+							prevDescription = prevStrain;
+						}
+						else {
+							prevDescription = prevStrain + " " + prevDescription;
+						}
+					}
+					
+					SlimAlleleDomain slimdomain = new SlimAlleleDomain();
+					slimdomain = slim2translator.translate(alleleDAO.get(prevObjectKey));				
+					slimdomain.setAlleleDisplay(prevDescription);
+					alleleDAO.clear();				
+					results.add(slimdomain);
+				}
+								
+			}
+			sqlExecutor.cleanup();
+
+			// order by description - see note above at first 'select = '
+			results.sort(Comparator.comparing(SlimAlleleDomain::getAlleleDisplay, String.CASE_INSENSITIVE_ORDER));
 		}
 		catch (Exception e) {
 			e.printStackTrace();

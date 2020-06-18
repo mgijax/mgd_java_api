@@ -13,7 +13,6 @@ public class SlimGenotypeTranslator extends BaseEntityDomainTranslator<Genotype,
 		
 		domain.setGenotypeKey(String.valueOf(entity.get_genotype_key()));
 		
-		// see teleuse/EI/Genotype results
 		// use combination of Genotype fields to produce the GenotypeDisplay
 		// This is set in the Service search method.
 		

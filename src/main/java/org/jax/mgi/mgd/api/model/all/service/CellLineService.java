@@ -306,6 +306,32 @@ public class CellLineService extends BaseService<CellLineDomain> {
     } 
 
 	@Transactional
+	public List<CellLineDomain> searchMutantCellLines() {
+
+		List<CellLineDomain> results = new ArrayList<CellLineDomain>();
+		
+		String cmd = "\nselect _CellLine_key from ALL_CellLine where isMutant = 1 order by cellLine";
+
+		log.info(cmd);
+		
+		try {			
+			ResultSet rs = sqlExecutor.executeProto(cmd);			
+			while (rs.next()) {
+				CellLineDomain domain = new CellLineDomain();
+				domain = translator.translate(cellLineDAO.get(rs.getInt("_cellline_key")));	
+				cellLineDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@Transactional
 	public List<CellLineDomain> searchParentCellLines() {
 
 		List<CellLineDomain> results = new ArrayList<CellLineDomain>();

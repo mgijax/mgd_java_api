@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.all.domain.CellLineDomain;
+import org.jax.mgi.mgd.api.model.all.domain.SlimCellLineDomain;
 import org.jax.mgi.mgd.api.model.all.service.CellLineService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -57,8 +58,17 @@ public class CellLineController extends BaseController<CellLineDomain> {
 	@POST
 	@ApiOperation(value = "Search Mutant Cell Lines")
 	@Path("/searchMutantCellLines")
-	public List<CellLineDomain> searchMutantCellLines() {
-		return cellLineService.searchMutantCellLines();
+	public List<SlimCellLineDomain> searchMutantCellLines(CellLineDomain searchDomain) {
+
+		List<SlimCellLineDomain> results = new ArrayList<SlimCellLineDomain>();
+		
+		try {
+			results = cellLineService.searchMutantCellLines(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;	
 	}
 	
 	@POST

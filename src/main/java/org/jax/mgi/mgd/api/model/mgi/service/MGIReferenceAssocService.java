@@ -287,11 +287,11 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				}	
 			
 				// if mgiTypeKey = marker and no reference assoc type chosen, then set default synonym type "exact" (1004)
-				String refAssocTypeKey = domain.get(i).getRefAssocTypeKey();
+//				String refAssocTypeKey = domain.get(i).getRefAssocTypeKey();
 //				String refAssocType = domain.get(i).getRefAssocType();
 				if (mgiTypeKey.equals("2")) {
-					if (refAssocTypeKey == null || refAssocTypeKey.isEmpty()) {
-						refAssocTypeKey = "1018";	
+					if (domain.get(i).getRefAssocTypeKey() == null || domain.get(i).getRefAssocTypeKey().isEmpty()) {
+						domain.get(i).setRefAssocTypeKey("1018");
 					}
 //					if (refAssocType == null || refAssocType.isEmpty()) {
 //						refAssocType = "General";	

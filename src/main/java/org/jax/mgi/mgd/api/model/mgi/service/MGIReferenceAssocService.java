@@ -284,14 +284,18 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				// pwi has sent a "c" that is empty/not being used
 				if (domain.get(i).getRefsKey().isEmpty()) {
 					continue;
-				}
-				
+				}	
+			
 				// if mgiTypeKey = marker and no reference assoc type chosen, then set default synonym type "exact" (1004)
-				String refAssocType = domain.get(i).getRefAssocType();
+				String refAssocTypeKey = domain.get(i).getRefAssocTypeKey();
+//				String refAssocType = domain.get(i).getRefAssocType();
 				if (mgiTypeKey.equals("2")) {
-					if (refAssocType == null || refAssocType.isEmpty()) {
-						refAssocType = "General";	
+					if (refAssocTypeKey == null || refAssocTypeKey.isEmpty()) {
+						refAssocTypeKey = "1018";	
 					}
+//					if (refAssocType == null || refAssocType.isEmpty()) {
+//						refAssocType = "General";	
+//					}
 				}
 				// else, set refAssocType by using refAssocTypeKey
 //				else {
@@ -314,8 +318,8 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 							+ "," + mgiTypeKey
 							+ "," + objectKey
 							+ "," + domain.get(i).getRefsKey()
-							+ ",'" + refAssocType + "'"
-							+ "," + domain.get(i).getRefAssocTypeKey()
+//							+ ",'" + refAssocType + "'"
+							+ "null," + domain.get(i).getRefAssocTypeKey()
 							+ ")";
 				log.info("cmd: " + cmd);
 				Query query = referenceAssocDAO.createNativeQuery(cmd);

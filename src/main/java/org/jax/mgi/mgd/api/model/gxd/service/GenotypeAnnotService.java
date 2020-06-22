@@ -907,7 +907,8 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 				domain.setProcessStatus(Constants.PROCESS_CREATE);
 				domain.setObjectKey(rs.getString("_allele_key"));
 				domain.setMgiTypeKey("11");
-				domain.setRefAssocType("Used-FC");
+				domain.setRefAssocTypeKey("1017");
+				//domain.setRefAssocType("Used-FC");
 				domain.setRefsKey(searchDomain.getRefsKey());
 				results.add(domain);
 			}

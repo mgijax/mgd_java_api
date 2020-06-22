@@ -611,9 +611,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		if (searchDomain.getMarkerAlleleStatusKey() != null && !searchDomain.getMarkerAlleleStatusKey().isEmpty()) {
 			where = where + "\nand a._markerallele_status_key = " + searchDomain.getMarkerAlleleStatusKey();
 		}
-		if (searchDomain.getDetailClip().getNote() != null && !searchDomain.getDetailClip().getNote().isEmpty()) {
-			where = where + "\nand notec.note ilike '" + searchDomain.getDetailClip().getNote() + "'" ;
-			from_displayclip = true;
+		if (searchDomain.getDetailClip() != null) {
+			if (searchDomain.getDetailClip().getNote() != null && !searchDomain.getDetailClip().getNote().isEmpty()) {
+				where = where + "\nand notec.note ilike '" + searchDomain.getDetailClip().getNote() + "'" ;
+				from_displayclip = true;
+			}
 		}
 				
 		// mgi accession id 

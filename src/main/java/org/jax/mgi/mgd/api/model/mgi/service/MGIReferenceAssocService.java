@@ -319,7 +319,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 							+ "," + objectKey
 							+ "," + domain.get(i).getRefsKey()
 //							+ ",'" + refAssocType + "'"
-							+ "null," + domain.get(i).getRefAssocTypeKey()
+							+ ",null," + domain.get(i).getRefAssocTypeKey()
 							+ ")";
 				log.info("cmd: " + cmd);
 				Query query = referenceAssocDAO.createNativeQuery(cmd);

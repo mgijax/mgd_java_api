@@ -287,39 +287,18 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				}	
 			
 				// if mgiTypeKey = marker and no reference assoc type chosen, then set default synonym type "exact" (1004)
-//				String refAssocTypeKey = domain.get(i).getRefAssocTypeKey();
-//				String refAssocType = domain.get(i).getRefAssocType();
 				if (mgiTypeKey.equals("2")) {
 					if (domain.get(i).getRefAssocTypeKey() == null || domain.get(i).getRefAssocTypeKey().isEmpty()) {
 						domain.get(i).setRefAssocTypeKey("1018");
 					}
-//					if (refAssocType == null || refAssocType.isEmpty()) {
-//						refAssocType = "General";	
-//					}
 				}
-				// else, set refAssocType by using refAssocTypeKey
-//				else {
-//					cmd = "select assoctype from mgi_refassoctype where _refassoctype_key = " + domain.get(i).getRefAssocTypeKey();
-//					log.info("cmd: " + cmd);
-//					try {
-//						ResultSet rs = sqlExecutor.executeProto(cmd);
-//						while (rs.next()) {
-//							refAssocType = rs.getString("assoctype");
-//						}
-//						sqlExecutor.cleanup();
-//					}
-//					catch (Exception e) {
-//						e.printStackTrace();
-//					}
-//				}
 				
 				cmd = "select count(*) from MGI_insertReferenceAssoc ("
 							+ user.get_user_key().intValue()
 							+ "," + mgiTypeKey
 							+ "," + objectKey
 							+ "," + domain.get(i).getRefsKey()
-//							+ ",'" + refAssocType + "'"
-							+ ",null," + domain.get(i).getRefAssocTypeKey()
+							+ "," + domain.get(i).getRefAssocTypeKey()
 							+ ")";
 				log.info("cmd: " + cmd);
 				Query query = referenceAssocDAO.createNativeQuery(cmd);

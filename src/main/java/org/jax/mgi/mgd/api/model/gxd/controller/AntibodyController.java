@@ -57,14 +57,14 @@ public class AntibodyController extends BaseController<AntibodyDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "Get the object count from gxd_antigen table")
+	@ApiOperation(value = "Get the object count from gxd_antibody table")
 	@Path("/getObjectCount")
 	public SearchResults<AntibodyDomain> getObjectCount() {
 		return antibodyService.getObjectCount();
 	}
 		
 	@POST
-	@ApiOperation(value = "Search/returns antigen domain")
+	@ApiOperation(value = "Search/returns antibody domain")
 	@Path("/search")
 	public List<SlimAntibodyDomain> search(AntibodyDomain searchDomain) {
 	
@@ -78,4 +78,5 @@ public class AntibodyController extends BaseController<AntibodyDomain> {
 		
 		return results;
 	}	
+	
 }

@@ -169,6 +169,12 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		//
 		
 		// if parameter exists, then add to where-clause
+		// antibodyName
+		if(searchDomain.getAntibodyName() != null && ! searchDomain.getAntibodyName().isEmpty()) {
+			where = where + "\n and a.antibodyName ilike '" + searchDomain.getAntibodyName() + "'";
+		}
+		
+		// create/mode by/date
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {
 			from = from + cmResults[0];
@@ -183,7 +189,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 	
 		if (from_accession == true) {
 			from = from + ", gxd_antibody_acc_view acc";
-			where = where + "\nand a._assay_key = acc._object_key"; 
+			where = where + "\nand a._antibody_key = acc._object_key"; 
 		}
 
 		// make this easy to copy/paste for troubleshooting

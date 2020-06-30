@@ -54,7 +54,6 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		ProbeSource entity = new ProbeSource();
 		
 		log.info("processProbeSource/create");
-
 		
 		// Not Specified
 		if(domain.getSegmentTypeKey() == null || domain.getSegmentTypeKey().isEmpty()) {
@@ -91,11 +90,22 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 			domain.setGenderKey("315167");
 		}
 
-		
 		// Not Specified
 		if(domain.getAge() == null || domain.getAge().isEmpty()) {
 			domain.setAge("Not Specified");
 		}
+		
+		entity.setSegmentType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));
+		entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));
+		entity.setOrganism(organismDAO.get(Integer.valueOf(domain.getOrganismKey())));
+		entity.setStrain(strainDAO.get(Integer.valueOf(domain.getStrainKey())));
+		entity.setTissue(tissueDAO.get(Integer.valueOf(domain.getTissueKey())));
+		entity.setCellLine(termDAO.get(Integer.valueOf(domain.getCellLineKey())));
+		entity.setGender(termDAO.get(Integer.valueOf(domain.getGenderKey())));
+
+		// age stuff
+		
+		entity.setAge(domain.getAge());
 		
 		// will be properly set using MGI_resetAgeMinMax() below
 		entity.setAgeMin(-1);

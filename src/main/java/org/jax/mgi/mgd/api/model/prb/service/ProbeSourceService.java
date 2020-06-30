@@ -94,6 +94,11 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		if(domain.getAge() == null || domain.getAge().isEmpty()) {
 			domain.setAge("Not Specified");
 		}
+
+		// true/1
+		if (domain.getIsCuratorEdited() == null || domain.getIsCuratorEdited().isEmpty()) {
+			domain.setIsCuratorEdited("1");
+		}
 		
 		entity.setSegmentType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));
 		entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));
@@ -102,7 +107,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		entity.setTissue(tissueDAO.get(Integer.valueOf(domain.getTissueKey())));
 		entity.setCellLine(termDAO.get(Integer.valueOf(domain.getCellLineKey())));
 		entity.setGender(termDAO.get(Integer.valueOf(domain.getGenderKey())));
-
+		
 		// age stuff
 		
 		entity.setAge(domain.getAge());
@@ -122,8 +127,8 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		if (domain.getDescription() != null && !domain.getDescription().isEmpty()) {
 			entity.setDescription(domain.getDescription());
 		}				
-			
-		entity.setIsCuratorEdited(Integer.valueOf(domain.getIsCuratorEdited()));
+	
+		entity.setIsCuratorEdited(Integer.valueOf(domain.getIsCuratorEdited()));		
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
 		entity.setModifiedBy(user);

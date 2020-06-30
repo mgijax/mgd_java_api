@@ -86,7 +86,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		probeSourceDAO.persist(entity);				
 
 		// validate age and set age min/age max
-		String cmd = "\nselect count(*) from MGI_resetAgeMinMax ('PRB_Source', " +  domain.getSourceKey() + ")";
+		String cmd = "\nselect count(*) from MGI_resetAgeMinMax ('PRB_Source', " +  entity.get_source_key() + ")";
 		log.info("cmd: " + cmd);		
 		Query query = probeSourceDAO.createNativeQuery(cmd); 
 		log.info("processProbeSource/MGI_resetAgeMinMax results");

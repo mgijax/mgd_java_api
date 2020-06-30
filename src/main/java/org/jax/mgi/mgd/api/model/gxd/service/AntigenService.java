@@ -56,10 +56,13 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		
 		log.info("processAntigen/create");
 		
-		// may not be null
-		entity.setAntigenName(domain.getAntigenName());
+		if(domain.getAntigenName() ==  null || domain.getAntigenName().isEmpty()) {
+			entity.setAntigenName(null);
+		}
+		else {
+			entity.setAntigenName(domain.getAntigenName());
+		}
 		
-		// may be null
 		if(domain.getRegionCovered() ==  null || domain.getRegionCovered().isEmpty()) {
 			entity.setRegionCovered(null);
 		}
@@ -67,13 +70,13 @@ public class AntigenService extends BaseService<AntigenDomain> {
 			entity.setRegionCovered(domain.getRegionCovered());
 		}
 		
-		// may be null
 		if(domain.getAntigenNote() == null || domain.getAntigenNote().isEmpty()) {
 			entity.setAntigenNote(null);
 		}
 		else {
 			entity.setAntigenNote(domain.getAntigenNote());
 		}
+		
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
 		entity.setModifiedBy(user);
@@ -102,36 +105,29 @@ public class AntigenService extends BaseService<AntigenDomain> {
 
 		SearchResults<AntigenDomain> results = new SearchResults<AntigenDomain>();
 		Antigen entity = antigenDAO.get(Integer.valueOf(domain.getAntigenKey()));
-		Boolean modified = false;
+		Boolean modified = true;
 		
 		log.info("processAntigen/update");
 		
-		// may not be null
-		if(entity.getAntigenName() != domain.getAntigenName()) {
+		if(domain.getAntigenName() ==  null || domain.getAntigenName().isEmpty()) {
+			entity.setAntigenName(null);
+		}
+		else {
 			entity.setAntigenName(domain.getAntigenName());
-			modified = true;
 		}
 		
-		// may be null
 		if(domain.getRegionCovered() ==  null || domain.getRegionCovered().isEmpty()) {
 			entity.setRegionCovered(null);
 		}
 		else {
-			if (entity.getRegionCovered() != domain.getRegionCovered()) {
-				entity.setRegionCovered(domain.getRegionCovered());
-				modified = true;
-			}
+			entity.setRegionCovered(domain.getRegionCovered());
 		}
 		
-		// may be null
 		if(domain.getAntigenNote() == null || domain.getAntigenNote().isEmpty()) {
 			entity.setAntigenNote(null);
 		}
 		else {
-			if(entity.getAntigenNote() != domain.getAntigenName()) {
-				entity.setAntigenNote(domain.getAntigenNote());
-				modified = true;
-			}
+			entity.setAntigenNote(domain.getAntigenNote());
 		}	
 		
 		// update antigen source

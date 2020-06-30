@@ -3,7 +3,6 @@ package org.jax.mgi.mgd.api.model.prb.translator;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
-import org.jax.mgi.mgd.api.util.Constants;
 
 public class ProbeSourceTranslator extends BaseEntityDomainTranslator<ProbeSource, ProbeSourceDomain> {
 
@@ -12,7 +11,6 @@ public class ProbeSourceTranslator extends BaseEntityDomainTranslator<ProbeSourc
 		
 		ProbeSourceDomain domain = new ProbeSourceDomain();
 
-		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setSourceKey(String.valueOf(entity.get_source_key()));
 		domain.setName(entity.getName());
 		domain.setDescription(entity.getDescription());

@@ -44,29 +44,29 @@ public class ProbeSourceTranslator extends BaseEntityDomainTranslator<ProbeSourc
 		domain.setAge(entity.getAge());
 		String age = domain.getAge();
 		
-		if (age.equals("Not Applicable")
-				|| age.equals("Not Loaded")
-				|| age.equals("Not Resolved")
-				|| age.equals("Not Specified")
-				|| age.equals("embryonic")
-				|| age.equals("embryonic brain")
-				|| age.equals("postnatal")
-				|| age.equals("postnatal adult")
-				|| age.equals("postnatal newborn")
-				) {
-			domain.setAgePrefix(age);
-		}
-		else {		
-			// example :  embryonic day 13.5,14.5,16.5,17.5
-			// agePrefix = "embryonic day" : list[0], list[1]
-			// ageStage = "13.5,14.5,16.5,17.5" : remainder of list
-
-			List<String> ageList = Arrays.asList(age.split(" "));					
-			domain.setAgePrefix(ageList.get(0) + " " + ageList.get(1));
-			ageList.remove(ageList.get(0));
-			ageList.remove(ageList.get(1));
-			domain.setAgeStage(String.join("",  ageList));
-		}
+//		if (age.equals("Not Applicable")
+//				|| age.equals("Not Loaded")
+//				|| age.equals("Not Resolved")
+//				|| age.equals("Not Specified")
+//				|| age.equals("embryonic")
+//				|| age.equals("embryonic brain")
+//				|| age.equals("postnatal")
+//				|| age.equals("postnatal adult")
+//				|| age.equals("postnatal newborn")
+//				) {
+//			domain.setAgePrefix(age);
+//		}
+//		else {		
+//			// example :  embryonic day 13.5,14.5,16.5,17.5
+//			// agePrefix = "embryonic day" : list[0], list[1]
+//			// ageStage = "13.5,14.5,16.5,17.5" : remainder of list
+//
+//			List<String> ageList = Arrays.asList(age.split(" "));					
+//			domain.setAgePrefix(ageList.get(0) + " " + ageList.get(1));
+//			ageList.remove(ageList.get(0));
+//			ageList.remove(ageList.get(1));
+//			domain.setAgeStage(String.join("",  ageList));
+//		}
 		
 		// end age stuff
 		

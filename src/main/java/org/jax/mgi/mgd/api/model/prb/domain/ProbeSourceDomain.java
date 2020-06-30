@@ -12,6 +12,8 @@ public class ProbeSourceDomain extends BaseDomain {
 	private String name;
 	private String description;
 	private String age;
+	private String agePrefix;
+	private String ageStage;
 	private String segmentTypeKey;
 	private String segmentType;
 	private String vectorKey;

@@ -17,10 +17,10 @@ import org.jax.mgi.mgd.api.model.gxd.domain.SlimAntigenDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Antigen;
 import org.jax.mgi.mgd.api.model.gxd.translator.AntigenTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimAntigenTranslator;
-import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeSourceDAO;
-import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
+import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
+import org.jax.mgi.mgd.api.model.prb.service.ProbeSourceService;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -36,7 +36,7 @@ public class AntigenService extends BaseService<AntigenDomain> {
 	@Inject
 	private ProbeSourceDAO sourceDAO;
 	@Inject
-	private OrganismDAO organismDAO;
+	private ProbeSourceService sourceService;
 		
 	private AntigenTranslator translator = new AntigenTranslator();
 	
@@ -79,7 +79,10 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		entity.setModifiedBy(user);
 		entity.setModification_date(new Date());
 			
-		entity.setProbeSource(sourceDAO.get(Integer.valueOf(domain.getProbeSource().getSourceKey())));
+//		// add antigen source/put in controller
+//		log.info("processAntigen/sourceService.update()");
+//		SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
+//		sourceResults = sourceService.create(domain.getProbeSource(), user);
 		
 		// execute persist/insert/send to database
 		antigenDAO.persist(entity);
@@ -87,7 +90,7 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		// return entity translated to domain
 		log.info("processAntigen/create/returning results");
 		results.setItem(translator.translate(entity));
-		return results;
+		return results;		
 	}
 
 	@Transactional
@@ -130,6 +133,11 @@ public class AntigenService extends BaseService<AntigenDomain> {
 			}
 		}	
 		
+		// update antigen source
+		log.info("processAntigen/sourceService.update()");
+		SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
+		sourceResults = sourceService.update(domain.getProbeSource(), user);
+
 		// only if modifications were actually made
 		if (modified == true) {
 			entity.setModification_date(new Date());

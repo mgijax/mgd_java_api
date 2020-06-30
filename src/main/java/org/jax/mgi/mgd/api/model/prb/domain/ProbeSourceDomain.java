@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 public class ProbeSourceDomain extends BaseDomain {
 
+	private String processStatus;
 	private String sourceKey;
 	private String name;
 	private String description;
@@ -26,6 +27,11 @@ public class ProbeSourceDomain extends BaseDomain {
 	private String gender;
 	private String cellLineKey;
 	private String cellLine;		
+	private String refsKey;
+	private String jnumid;
+	private String jnum;
+	private String short_citation;
+	private String isCuratorEdited;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

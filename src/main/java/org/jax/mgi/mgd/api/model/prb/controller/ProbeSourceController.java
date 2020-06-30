@@ -12,8 +12,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
-import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.service.ProbeSourceService;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -73,5 +71,5 @@ public class ProbeSourceController extends BaseController<ProbeSourceDomain> {
 		
 		return results;
 	}
-		
+	
 }

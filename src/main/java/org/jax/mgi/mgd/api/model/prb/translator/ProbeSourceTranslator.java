@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.prb.translator;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
+import org.jax.mgi.mgd.api.util.Constants;
 
 public class ProbeSourceTranslator extends BaseEntityDomainTranslator<ProbeSource, ProbeSourceDomain> {
 
@@ -11,6 +12,7 @@ public class ProbeSourceTranslator extends BaseEntityDomainTranslator<ProbeSourc
 		
 		ProbeSourceDomain domain = new ProbeSourceDomain();
 
+		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setSourceKey(String.valueOf(entity.get_source_key()));
 		domain.setName(entity.getName());
 		domain.setDescription(entity.getDescription());
@@ -28,14 +30,23 @@ public class ProbeSourceTranslator extends BaseEntityDomainTranslator<ProbeSourc
 		domain.setGenderKey(String.valueOf(entity.getGender().get_term_key()));
 		domain.setGender(entity.getGender().getTerm());
 		domain.setCellLineKey(String.valueOf(entity.getCellLine().get_term_key()));
-		domain.setCellLine(entity.getCellLine().getTerm());		
+		domain.setCellLine(entity.getCellLine().getTerm());	
+		domain.setIsCuratorEdited(String.valueOf(entity.getIsCuratorEdited()));
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-				
+		
+		// reference can be null
+		if (entity.getReference() != null) {
+			domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
+			domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());
+			domain.setJnum(String.valueOf(entity.getReference().getReferenceCitationCache().getNumericPart()));
+			domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());
+		}
+		
 		return domain;
 	}
 

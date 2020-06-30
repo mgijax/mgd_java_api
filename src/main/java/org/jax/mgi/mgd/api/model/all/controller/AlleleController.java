@@ -51,10 +51,6 @@ public class AlleleController extends BaseController<AlleleDomain> {
 				domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(cellLineResults.items.get(0).getCellLineKey());        		
 			}
 		}
-
-		log.info("create/here C");		
-		log.info(cellLineResults);
-		log.info(cellLineResults.error);
 		
 		if (cellLineResults.error == null || cellLineResults.error.isEmpty()) {		
 	    	log.info("alleleController/will call alleleService/create()");
@@ -84,10 +80,6 @@ public class AlleleController extends BaseController<AlleleDomain> {
 				domain.getMutantCellLineAssocs().get(0).getMutantCellLine().setCellLineKey(cellLineResults.items.get(0).getCellLineKey());        		
 			}
 		}
-		
-		log.info("update/here C");		
-		log.info(cellLineResults);
-		log.info(cellLineResults.error);
 		
 		if (cellLineResults.error == null || cellLineResults.error.isEmpty()) {		
 			results = alleleService.update(domain, user);				

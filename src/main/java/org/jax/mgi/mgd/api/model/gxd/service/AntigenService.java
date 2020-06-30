@@ -79,10 +79,11 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		entity.setModifiedBy(user);
 		entity.setModification_date(new Date());
 			
-//		// add antigen source/put in controller
-//		log.info("processAntigen/sourceService.update()");
-//		SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
-//		sourceResults = sourceService.create(domain.getProbeSource(), user);
+		// add antigen source/put in controller??
+		log.info("processAntigen/sourceService.update()");
+		SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
+		sourceResults = sourceService.create(domain.getProbeSource(), user);
+		entity.setProbeSource(sourceDAO.get(Integer.valueOf(sourceResults.items.get(0).getSourceKey())));
 		
 		// execute persist/insert/send to database
 		antigenDAO.persist(entity);

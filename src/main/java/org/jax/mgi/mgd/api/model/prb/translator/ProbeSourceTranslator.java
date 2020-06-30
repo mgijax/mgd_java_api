@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model.prb.translator;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

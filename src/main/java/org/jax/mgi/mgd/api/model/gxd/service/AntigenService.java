@@ -79,7 +79,7 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		entity.setModifiedBy(user);
 		entity.setModification_date(new Date());
 			
-		// add antigen source/put in controller??
+		// add antigen source
 		log.info("processAntigen/sourceService.update()");
 		SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
 		sourceResults = sourceService.create(domain.getProbeSource(), user);
@@ -138,6 +138,7 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		log.info("processAntigen/sourceService.update()");
 		SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
 		sourceResults = sourceService.update(domain.getProbeSource(), user);
+		entity.setProbeSource(sourceDAO.get(Integer.valueOf(sourceResults.items.get(0).getSourceKey())));
 
 		// only if modifications were actually made
 		if (modified == true) {

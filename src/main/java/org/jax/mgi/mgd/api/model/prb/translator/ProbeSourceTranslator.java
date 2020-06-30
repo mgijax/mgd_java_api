@@ -65,7 +65,7 @@ public class ProbeSourceTranslator extends BaseEntityDomainTranslator<ProbeSourc
 			// ageStage = "13.5,14.5,16.5,17.5" : remainder of list
 
 			List<String> ageList = Arrays.asList(age.split(" "));;
-			log.info(ageList);
+			log.info("age : " + ageList);
 //			domain.setAgePrefix(ageList.get(0) + " " + ageList.get(1));
 //			ageList.remove(ageList.get(0));
 //			ageList.remove(ageList.get(1));

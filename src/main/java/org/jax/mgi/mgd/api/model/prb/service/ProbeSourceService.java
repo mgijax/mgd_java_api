@@ -55,14 +55,49 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		
 		log.info("processProbeSource/create");
 
-		entity.setSegmentType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));
-		entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));
-		entity.setOrganism(organismDAO.get(Integer.valueOf(domain.getOrganismKey())));
-		entity.setStrain(strainDAO.get(Integer.valueOf(domain.getStrainKey())));
-		entity.setTissue(tissueDAO.get(Integer.valueOf(domain.getTissueKey())));
-		entity.setGender(termDAO.get(Integer.valueOf(domain.getGenderKey())));
-		entity.setCellLine(termDAO.get(Integer.valueOf(domain.getCellLineKey())));
-		entity.setAge(domain.getAge());
+		
+		// Not Specified
+		if(domain.getSegmentTypeKey() == null || domain.getSegmentTypeKey().isEmpty()) {
+			domain.setSegmentTypeKey("63474");
+		}
+
+		// Not Specified
+		if(domain.getVectorKey() == null || domain.getVectorKey().isEmpty()) {
+			domain.setVectorKey("316370");
+		}
+		
+		// Not Specified 
+		if(domain.getOrganismKey() == null || domain.getOrganismKey().isEmpty()) {
+			domain.setOrganismKey("76");
+		}
+
+		// Not Specified
+		if(domain.getStrainKey() == null || domain.getStrainKey().isEmpty()) {
+			domain.setStrainKey("-1");
+		}
+
+		// Not Specified
+		if(domain.getTissueKey() == null || domain.getOrganismKey().isEmpty()) {
+			domain.setTissueKey("-1");
+		}
+		
+		// Not Specified
+		if(domain.getCellLineKey() == null || domain.getCellLineKey().isEmpty()) {
+			domain.setCellLineKey("316335");
+		}
+		
+		// Not Specified
+		if(domain.getGenderKey() == null || domain.getGenderKey().isEmpty()) {
+			domain.setGenderKey("315167");
+		}
+
+		
+		// Not Specified
+		if(domain.getAge() == null || domain.getAge().isEmpty()) {
+			domain.setAge("Not Specified");
+		}
+		
+		// will be properly set using MGI_resetAgeMinMax() below
 		entity.setAgeMin(-1);
 		entity.setAgeMax(-1);								
 

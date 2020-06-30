@@ -84,43 +84,6 @@ public class AntigenService extends BaseService<AntigenDomain> {
 			
 		// add antigen source
 		log.info("processAntigen/sourceService.update()");
-		
-		// set defaults
-		
-		// Not Specified 
-		if(domain.getProbeSource().getOrganismKey() == null || domain.getProbeSource().getOrganismKey().isEmpty()) {
-			domain.getProbeSource().setOrganismKey("76");
-		}
-
-		// Not Specified
-		if(domain.getProbeSource().getStrainKey() == null || domain.getProbeSource().getStrainKey().isEmpty()) {
-			domain.getProbeSource().setStrainKey("-1");
-		}
-
-		// Not Specified
-		if(domain.getProbeSource().getTissueKey() == null || domain.getProbeSource().getOrganismKey().isEmpty()) {
-			domain.getProbeSource().setTissueKey("-1");
-		}
-		
-		// Not Specified
-		if(domain.getProbeSource().getCellLineKey() == null || domain.getProbeSource().getCellLineKey().isEmpty()) {
-			domain.getProbeSource().setCellLineKey("316335");
-		}
-		
-		// Not Specified
-		if(domain.getProbeSource().getAge() == null || domain.getProbeSource().getAge().isEmpty()) {
-			domain.getProbeSource().setAge("Not Specified");
-		}
-		
-		// Not Specified
-		if(domain.getProbeSource().getGenderKey() == null || domain.getProbeSource().getGenderKey().isEmpty()) {
-			domain.getProbeSource().setGenderKey("315167");
-		}
-		
-		// segmentType = Not Specified, vector = Not Specified
-		domain.getProbeSource().setSegmentTypeKey("63474");
-		domain.getProbeSource().setVectorKey("316370");
-		
 		SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
 		sourceResults = sourceService.create(domain.getProbeSource(), user);
 		entity.setProbeSource(sourceDAO.get(Integer.valueOf(sourceResults.items.get(0).getSourceKey())));

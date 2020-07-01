@@ -86,13 +86,10 @@ public class AlleleCellLineService extends BaseService<AlleleCellLineDomain> {
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
 		
-		for (int i = 0; i < domain.size(); i++) {
-		
-        	log.info("processAlleleCellLine/domain :" + i);
-        	log.info("processAlleleCellLine/mutant cell line key : " + domain.get(i).getMutantCellLine().getCellLineKey());
-        	log.info("processAlleleCellLine/processStatus : " + domain.get(i).getProcessStatus());
+		for (int i = 0; i < domain.size(); i++) {		
 		
         	if (domain.get(i).getMutantCellLine().getCellLineKey() == null || domain.get(i).getMutantCellLine().getCellLineKey().isEmpty()) {
+				log.info("processAlleleCellLine/no change");
         		return modified;
         	}
         			

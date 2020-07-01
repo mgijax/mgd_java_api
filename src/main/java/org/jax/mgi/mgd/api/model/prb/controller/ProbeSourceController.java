@@ -12,15 +12,12 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
-import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.service.ProbeSourceService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-
 
 @Path("/source")
 @Api(value = "Source Endpoints")
@@ -33,7 +30,6 @@ public class ProbeSourceController extends BaseController<ProbeSourceDomain> {
 	
 	@Override
 	public SearchResults<ProbeSourceDomain> create(ProbeSourceDomain domain, User user) {
-		log.info("ProbeSourceController create");
 		SearchResults<ProbeSourceDomain> results = new SearchResults<ProbeSourceDomain>();
 		results = probeSourceService.create(domain, user);
 		results = probeSourceService.getResults(Integer.valueOf(results.items.get(0).getSourceKey()));
@@ -73,5 +69,5 @@ public class ProbeSourceController extends BaseController<ProbeSourceDomain> {
 		
 		return results;
 	}
-		
+	
 }

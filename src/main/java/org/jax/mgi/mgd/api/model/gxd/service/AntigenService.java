@@ -296,12 +296,13 @@ public class AntigenService extends BaseService<AntigenDomain> {
 				ageSearch = searchDomain.getProbeSource().getAgePrefix();
 			}
 			if (searchDomain.getProbeSource().getAgeStage() != null && ! searchDomain.getProbeSource().getAgeStage().isEmpty() ) {
-				ageSearch = ageSearch + " " + searchDomain.getProbeSource().getAgeStage();
+				ageSearch = ageSearch + "%" + searchDomain.getProbeSource().getAgeStage();
 			}			
 			if (ageSearch.length() > 0) {
 				where = where + "\nand s.age ilike '%" + ageSearch + "%'";
 				from_source = true;	
 			}
+			
 		}
 
 		if (from_accession == true) {

@@ -147,20 +147,6 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		results.setItem(translator.translate(entity));
 		return results;		
 	}
-	
-//	@Transactional
-//	public SearchResults<ProbeSourceDomain> runAgeMinMax(Integer key, User user) {
-//		SearchResults<ProbeSourceDomain> results = new SearchResults<ProbeSourceDomain>();
-//				
-//		String cmd = "\nselect count(*) from MGI_resetAgeMinMax ('PRB_Source', " +  key + ")";
-//		log.info("cmd: " + cmd);
-//		
-//		Query query = probeSourceDAO.createNativeQuery(cmd); 
-//		log.info("getting resultlist");	
-//		query.getResultList();
-//		
-//		return results;
-//	}
 
 	@Transactional
 	public SearchResults<ProbeSourceDomain> update(ProbeSourceDomain domain, User user) {

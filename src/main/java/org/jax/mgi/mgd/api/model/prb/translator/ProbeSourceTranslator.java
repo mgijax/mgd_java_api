@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.prb.translator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -64,18 +65,15 @@ public class ProbeSourceTranslator extends BaseEntityDomainTranslator<ProbeSourc
 			// agePrefix = "embryonic day" : list[0], list[1]
 			// ageStage = "13.5,14.5,16.5,17.5" : remainder of list
 
-			List<String> ageList = Arrays.asList(age.split(" "));;
+			//List<String> ageList = Arrays.asList(age.split(" "));;
+			List<String> ageList = new ArrayList<String>(Arrays.asList(age.split(" ")));
 			log.info("age : " + ageList);
-			log.info("age 0 : " + ageList.get(0));
 			domain.setAgePrefix(ageList.get(0) + " " + ageList.get(1));
-//			try {
-//				ageList.remove(0);
-//				log.info("age: " + ageList);			
-//				domain.setAgeStage(String.join("",  ageList));
-//			}
-//			catch (Exception e) {
-//				e.printStackTrace();
-//			}			
+			log.info("age : " + domain.getAgePrefix());
+			ageList.remove(0);
+			ageList.remove(1);
+			log.info("age: " + ageList);			
+			domain.setAgeStage(String.join("",  ageList));			
 		}
 		
 		// end age stuff

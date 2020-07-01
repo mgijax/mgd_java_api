@@ -130,7 +130,7 @@ public class ProbeTissueService extends BaseService<ProbeTissueDomain> {
 		}
 		
 		if (searchDomain.getTissue() != null && ! searchDomain.getTissue().isEmpty()) {
-			where = where + " and a.tissue = '" + searchDomain.getTissue() + "'";
+			where = where + " and a.tissue ilike '" + searchDomain.getTissue() + "'";
 		} 
 		
 		// make this easy to copy/paste for troubleshooting

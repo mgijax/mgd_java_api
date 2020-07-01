@@ -234,11 +234,6 @@ public class AntigenService extends BaseService<AntigenDomain> {
 			where = where + "\nand acc.accID ilike '" + searchDomain.getAccID() + "'";
 			from_accession = true;
 		}						
-	
-		if (from_accession == true) {
-			from = from + ", gxd_antigen_acc_view acc";
-			where = where + "\nand a._antigen_key = acc._object_key"; 
-		}
 
 		// name
 		if (searchDomain.getAntigenName() != null && ! searchDomain.getAntigenName().isEmpty()) {
@@ -307,6 +302,11 @@ public class AntigenService extends BaseService<AntigenDomain> {
 				where = where + "\nand s.age ilike '%" + ageSearch + "%'";
 				from_source = true;	
 			}
+		}
+
+		if (from_accession == true) {
+			from = from + ", gxd_antigen_acc_view acc";
+			where = where + "\nand a._antigen_key = acc._object_key"; 
 		}
 		
 		if (from_source == true) {

@@ -19,7 +19,6 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-
 @Path("/source")
 @Api(value = "Source Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
@@ -31,7 +30,6 @@ public class ProbeSourceController extends BaseController<ProbeSourceDomain> {
 	
 	@Override
 	public SearchResults<ProbeSourceDomain> create(ProbeSourceDomain domain, User user) {
-		log.info("ProbeSourceController create");
 		SearchResults<ProbeSourceDomain> results = new SearchResults<ProbeSourceDomain>();
 		results = probeSourceService.create(domain, user);
 		results = probeSourceService.getResults(Integer.valueOf(results.items.get(0).getSourceKey()));

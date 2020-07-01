@@ -291,7 +291,7 @@ public class TermService extends BaseService<TermDomain> {
 		String cmd = "select t._term_key, t.term, t.abbreviation"
 				+ "\nfrom voc_term t"
 				+ "\nwhere t._vocab_key = " + vocabKey
-				+ "\nand t.term = '" + term + "'";
+				+ "\nand t.term ilike '" + term + "'";
 		
 		log.info(cmd);
 

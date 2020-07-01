@@ -64,15 +64,10 @@ public class ProbeSourceTranslator extends BaseEntityDomainTranslator<ProbeSourc
 			// example :  embryonic day 13.5,14.5,16.5,17.5
 			// agePrefix = "embryonic day" : list[0], list[1]
 			// ageStage = "13.5,14.5,16.5,17.5" : remainder of list
-
-			//List<String> ageList = Arrays.asList(age.split(" "));;
 			List<String> ageList = new ArrayList<String>(Arrays.asList(age.split(" ")));
-			log.info("age : " + ageList);
 			domain.setAgePrefix(ageList.get(0) + " " + ageList.get(1));
-			log.info("age : " + domain.getAgePrefix());
 			String ageStage = "";
 			for (int i = 2; i < ageList.size(); i++) {
-				log.info("age: " + i + "," + ageList.get(i));
 				ageStage = ageStage + ageList.get(i);
 			}
 			domain.setAgeStage(ageStage);			

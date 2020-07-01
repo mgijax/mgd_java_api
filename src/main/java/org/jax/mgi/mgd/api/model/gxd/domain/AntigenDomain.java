@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.gxd.domain;
 
+import java.util.List;
+
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
 
@@ -22,4 +24,5 @@ public class AntigenDomain extends BaseDomain {
 	private String accID;
 
 	private ProbeSourceDomain probeSource;
+	private List<SlimAntibodyDomain> antibodies;
 }

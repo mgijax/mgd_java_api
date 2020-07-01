@@ -219,6 +219,8 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		//String value;
 		Boolean from_accession = false;
 		Boolean from_source = false;
+		Boolean from_antibody = false;
+		Boolean from_antibodyaccession = false;
 		
 		// if parameter exists, then add to where-clause
 		// creation/modification by/date
@@ -302,12 +304,33 @@ public class AntigenService extends BaseService<AntigenDomain> {
 				where = where + "\nand s.age ilike '%" + ageSearch + "%'";
 				from_source = true;	
 			}
-			
+		}
+		
+		// antibodies
+		if(searchDomain.getAntibodies() != null && ! searchDomain.getAntibodies().isEmpty()) {
+			if (searchDomain.getAntibodies().get(0).getAccID()!= null && ! searchDomain.getAntibodies().get(0).getAccID().isEmpty()) {
+				where = where + "\nand acc2.accID ilike '" + searchDomain.getAntibodies().get(0).getAccID() + "'";
+				from_antibodyaccession = true;
+			}
+			else if (searchDomain.getAntibodies().get(0).getAntibodyName() != null && ! searchDomain.getAntibodies().get(0).getAntibodyName().isEmpty()) {
+				where = where + "\nand aav.antibodyName ilike '" + searchDomain.getAntibodies().get(0).getAntibodyName()+ "'";
+				from_antibody =  true;
+			}
 		}
 
 		if (from_accession == true) {
 			from = from + ", gxd_antigen_acc_view acc";
 			where = where + "\nand a._antigen_key = acc._object_key"; 
+		}
+		
+		if (from_antibodyaccession == true) {
+			from = from + ", gxd_antibodyantigen_view aav, gxd_antibody_acc_view acc2";
+			where = where + "\nand a._antigen_key = aav._antigen_key and aav._antibody_key = acc2._object_key"; 
+		}
+		
+		if (from_antibody == true ) {
+			from = from + ", gxd_antibodyantigen_view aav";
+			where = where + "\nand a._antigen_key = aav._antigen_key";
 		}
 		
 		if (from_source == true) {

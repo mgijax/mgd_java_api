@@ -255,47 +255,58 @@ public class AntigenService extends BaseService<AntigenDomain> {
 			where = where + "\nand a.antigenNote ilike '" + searchDomain.getAntigenNote() + "'";
 		}
 		
-		// source organism
+		// source
 				
-		if (searchDomain.getProbeSource() != null && searchDomain.getProbeSource().getOrganismKey() != null && !searchDomain.getProbeSource().getOrganismKey().isEmpty()) {
-			where = where + "\nand  s._organism_key = " + searchDomain.getProbeSource().getOrganismKey();
-			from_source = true;
-		}
-		
-		// source strain
-		if (searchDomain.getProbeSource() != null && searchDomain.getProbeSource().getStrainKey() != null && !searchDomain.getProbeSource().getStrainKey().isEmpty()) {
-			where = where + "\nand  s._strain_key = " + searchDomain.getProbeSource().getStrainKey();
-			from_source = true;
-		}
-		
-		// source tissue
-		if (searchDomain.getProbeSource() != null && searchDomain.getProbeSource().getTissueKey() != null && !searchDomain.getProbeSource().getTissueKey().isEmpty()) {
-			where = where + "\nand  s._Tissue_key = " + searchDomain.getProbeSource().getTissueKey();
-			from_source = true;
-		}
-		
-		// source tissue description
-		if (searchDomain.getProbeSource() != null && searchDomain.getProbeSource().getDescription() != null && !searchDomain.getProbeSource().getDescription().isEmpty()) {
-			where = where + "\nand s.description ilike '" + searchDomain.getProbeSource().getDescription() + "'";
-			from_source = true;
-		}
-		
-		// source cell line
-		if (searchDomain.getProbeSource() != null && searchDomain.getProbeSource().getCellLineKey() != null  && !searchDomain.getProbeSource().getCellLineKey().isEmpty() ) {
-			where = where + "\nand s._cellline_key = " + searchDomain.getProbeSource().getCellLineKey();
-			from_source = true;
-		}
-		
-		// source gender
-		if (searchDomain.getProbeSource() != null && searchDomain.getProbeSource().getGenderKey() != null && ! searchDomain.getProbeSource().getGenderKey().isEmpty() ) {
-			where = where + "\nand s._gender_key = " + searchDomain.getProbeSource().getGenderKey();
-			from_source = true;
-		}
-		
-		// source age
-		if (searchDomain.getProbeSource() != null && searchDomain.getProbeSource().getAge() != null && ! searchDomain.getProbeSource().getAge().isEmpty() ) {
-			where = where + "\nand s.age ilike '" + searchDomain.getProbeSource().getAge() + "'";
-			from_source = true;
+		if (searchDomain.getProbeSource() != null) {
+
+			// source organism
+			if (searchDomain.getProbeSource().getOrganismKey() != null && !searchDomain.getProbeSource().getOrganismKey().isEmpty()) {
+				where = where + "\nand s._organism_key = " + searchDomain.getProbeSource().getOrganismKey();
+				from_source = true;
+			}
+			
+			// source strain
+			if (searchDomain.getProbeSource().getStrainKey() != null && !searchDomain.getProbeSource().getStrainKey().isEmpty()) {
+				where = where + "\nand s._strain_key = " + searchDomain.getProbeSource().getStrainKey();
+				from_source = true;
+			}
+			
+			// source tissue
+			if (searchDomain.getProbeSource().getTissueKey() != null && !searchDomain.getProbeSource().getTissueKey().isEmpty()) {
+				where = where + "\nand s._Tissue_key = " + searchDomain.getProbeSource().getTissueKey();
+				from_source = true;
+			}
+			
+			// source tissue description
+			if (searchDomain.getProbeSource().getDescription() != null && !searchDomain.getProbeSource().getDescription().isEmpty()) {
+				where = where + "\nand s.description ilike '" + searchDomain.getProbeSource().getDescription() + "'";
+				from_source = true;
+			}
+			
+			// source cell line
+			if (searchDomain.getProbeSource().getCellLineKey() != null  && !searchDomain.getProbeSource().getCellLineKey().isEmpty() ) {
+				where = where + "\nand s._cellline_key = " + searchDomain.getProbeSource().getCellLineKey();
+				from_source = true;
+			}
+			
+			// source gender
+			if (searchDomain.getProbeSource().getGenderKey() != null && ! searchDomain.getProbeSource().getGenderKey().isEmpty() ) {
+				where = where + "\nand s._gender_key = " + searchDomain.getProbeSource().getGenderKey();
+				from_source = true;
+			}
+			
+			// source age
+			String ageSearch = "";
+			if (searchDomain.getProbeSource().getAgePrefix() != null && ! searchDomain.getProbeSource().getAgePrefix().isEmpty() ) {
+				ageSearch = searchDomain.getProbeSource().getAgePrefix();
+			}
+			if (searchDomain.getProbeSource().getAgeStage() != null && ! searchDomain.getProbeSource().getAgeStage().isEmpty() ) {
+				ageSearch = ageSearch + " " + searchDomain.getProbeSource().getAgeStage();
+			}			
+			if (ageSearch.length() > 0) {
+				where = where + "\nand s.age ilike '%" + ageSearch + "%'";
+				from_source = true;	
+			}
 		}
 		
 		if (from_source == true) {

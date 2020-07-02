@@ -150,6 +150,48 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		return results;
     }
  
+	@Transactional	
+	public SearchResults<CellLineDomain> getMutantCellLineCount() {
+		// return the object count from the database
+		
+		SearchResults<CellLineDomain> results = new SearchResults<CellLineDomain>();
+		String cmd = "select count(*) as objectCount from all_cellline where isMutant = 1";
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getInt("objectCount");
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;		
+	}
+	
+	@Transactional	
+	public SearchResults<CellLineDomain> getParentCellLineCount() {
+		// return the object count from the database
+		
+		SearchResults<CellLineDomain> results = new SearchResults<CellLineDomain>();
+		String cmd = "select count(*) as objectCount from all_cellline where isMutant = 0";
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getInt("objectCount");
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;		
+	}
+		
     @Transactional
     public SearchResults<CellLineDomain> createMutantCellLine (String alleleTypeKey, CellLineDomain domain, User user) {
 		// potential new mutant cell line for allele/cellline association
@@ -320,7 +362,10 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		String from = "from all_cellline c";
 		String where = "where c.isMutant = 1";
 		String orderBy = "order by c.cellLine";		
-
+		Boolean from_derivation = false;
+		Boolean from_vector = false;
+		Boolean from_parentcellline = false;
+		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("c", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {
@@ -338,6 +383,69 @@ public class CellLineService extends BaseService<CellLineDomain> {
 
 		if (searchDomain.getStrainKey() != null && !searchDomain.getStrainKey().isEmpty()) {
 			where = where + "\nand c._strain_key = " + searchDomain.getStrainKey();
+		}
+		
+		if (searchDomain.getDerivation() != null) {
+			if (searchDomain.getDerivation().getCreatorKey() != null && !searchDomain.getDerivation().getCreatorKey().isEmpty()) {
+				where = where + "\nand d._creator_key = " + searchDomain.getDerivation().getCreatorKey();
+				from_derivation = true;
+			}
+			
+			if (searchDomain.getDerivation().getDerivationTypeKey() != null && !searchDomain.getDerivation().getDerivationTypeKey().isEmpty()) {
+				where = where + "\nand d._derivationtype_key = " + searchDomain.getDerivation().getDerivationTypeKey();
+				from_derivation = true;
+			}
+			
+			if (searchDomain.getDerivation().getVectorKey() != null && !searchDomain.getDerivation().getVectorKey().isEmpty()) {
+				where = where + "\nand d._vector_key = " + searchDomain.getDerivation().getVectorKey();
+				from_derivation = true;
+			}
+					
+			if (searchDomain.getDerivation().getVector() != null && !searchDomain.getDerivation().getVector().isEmpty()) {
+				where = where + "\nand lower(vt.term) ilike '" + searchDomain.getDerivation().getVector().toLowerCase() + "'";
+				from_derivation = true;
+				from_vector = true;
+			}
+			
+			if (searchDomain.getDerivation().getVectorTypeKey() != null && !searchDomain.getDerivation().getVectorTypeKey().isEmpty()) {
+				where = where + "\nand d._vectortype_key = " + searchDomain.getDerivation().getVectorTypeKey();
+				from_derivation = true;
+			}
+			
+			if (searchDomain.getDerivation().getParentCellLine() != null) {
+				if (searchDomain.getDerivation().getParentCellLine().getCellLineKey() != null && !searchDomain.getDerivation().getParentCellLine().getCellLineKey().isEmpty()) {
+					where = where + "\nand pcl._cellline_key_key = " + searchDomain.getDerivation().getParentCellLine().getCellLineKey();
+					from_derivation = true;
+					from_parentcellline = true;
+				}
+				
+				if (searchDomain.getDerivation().getParentCellLine().getStrainKey() != null && !searchDomain.getDerivation().getParentCellLine().getStrainKey().isEmpty()) {
+					where = where + "\nand pcl._strain_key_key = " + searchDomain.getDerivation().getParentCellLine().getStrainKey();
+					from_derivation = true;
+					from_parentcellline = true;
+				}
+				
+				if (searchDomain.getDerivation().getParentCellLine().getCellLineTypeKey() != null && !searchDomain.getDerivation().getParentCellLine().getCellLineTypeKey().isEmpty()) {
+					where = where + "\nand pcl._cellline_type_key = " + searchDomain.getDerivation().getParentCellLine().getCellLineTypeKey();
+					from_derivation = true;
+					from_parentcellline = true;
+				}				
+			}
+		}
+		
+		if (from_derivation == true) {
+			from = from + ", all_cellline_derivation d";
+			where = where + "\nand c._derivation_key = d._derivation_key";
+		}
+		
+		if (from_vector == true) {
+			from = from + ", voc_term vt";
+			where = where + "\nand d._vector_key = vt._term_key";
+		}
+		
+		if (from_parentcellline == true) {
+			from = from + ", all_cellline pcl";
+			where = where + "\nand d._parentcellline_key = pcl._cellline_key";			
 		}
 		
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n";

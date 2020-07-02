@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -55,6 +56,20 @@ public class CellLineController extends BaseController<CellLineDomain> {
 		return cellLineService.get(key);
 	}
 
+	@GET
+	@ApiOperation(value = "Get the mutant cell line count from all_cellline table")
+	@Path("/getObjectCount")
+	public SearchResults<CellLineDomain> getMutantCellLineCount() {
+		return cellLineService.getMutantCellLineCount();
+	}
+
+	@GET
+	@ApiOperation(value = "Get the mutant cell line count from all_cellline table")
+	@Path("/getObjectCount")
+	public SearchResults<CellLineDomain> getParentCellLineCount() {
+		return cellLineService.getParentCellLineCount();
+	}
+	
 	@POST
 	@ApiOperation(value = "Search Mutant Cell Lines")
 	@Path("/searchMutantCellLines")

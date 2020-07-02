@@ -172,13 +172,19 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 			entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));
 		}
 			
-			if (domain.getName() != null && !domain.getName().isEmpty()) {
+		if (domain.getName() != null && !domain.getName().isEmpty()) {
 			entity.setName(domain.getName());
+		}
+		else {
+			entity.setName(null);
 		}
 
 		if (domain.getDescription() != null && !domain.getDescription().isEmpty()) {
 			entity.setDescription(domain.getDescription());
-		}				
+		}
+		else {
+			entity.setDescription(null);
+		}
 			
 		entity.setIsCuratorEdited(Integer.valueOf(domain.getIsCuratorEdited()));
 				

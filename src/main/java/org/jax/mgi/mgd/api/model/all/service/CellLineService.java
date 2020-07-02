@@ -320,6 +320,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		String from = "from all_cellline c";
 		String where = "where c.isMutant = 1";
 		String orderBy = "order by c.cellLine";		
+		Boolean from_derivation = false;
 
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("c", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -338,6 +339,42 @@ public class CellLineService extends BaseService<CellLineDomain> {
 
 		if (searchDomain.getStrainKey() != null && !searchDomain.getStrainKey().isEmpty()) {
 			where = where + "\nand c._strain_key = " + searchDomain.getStrainKey();
+		}
+		
+		// creator
+		// derivation type (allele type)
+		// vector name
+		// vector
+		
+		if(searchDomain.getDerivation() != null) {
+			if (searchDomain.getDerivation().getCreatorKey() != null && !searchDomain.getDerivation().getCreatorKey().isEmpty()) {
+				where = where + "\nand d._creator_key = " + searchDomain.getDerivation().getCreatorKey();
+				from_derivation = true;
+			}
+			
+			if (searchDomain.getDerivation().getDerivationTypeKey() != null && !searchDomain.getDerivation().getDerivationTypeKey().isEmpty()) {
+				where = where + "\nand d._derivationtype_key = " + searchDomain.getDerivation().getDerivationTypeKey();
+				from_derivation = true;
+			}
+			
+			if (searchDomain.getDerivation().getVector() != null && !searchDomain.getDerivation().getVector().isEmpty()) {
+				where = where + "\nand d._vector_key = " + searchDomain.getDerivation().getVector();
+				from_derivation = true;
+			}
+			
+			if (searchDomain.getDerivation().getVectorTypeKey() != null && !searchDomain.getDerivation().getVectorTypeKey().isEmpty()) {
+				where = where + "\nand d._vectortype_key = " + searchDomain.getDerivation().getVectorTypeKey();
+				from_derivation = true;
+			}			
+		}
+		
+		// pcl
+		// pcl strain
+		// cell line type
+		
+		if (from_derivation == true) {
+			from = from + ", all_cellline_derivation d";
+			where = where + "\nand c._derivation_key = d._derivation_key";
 		}
 		
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n";

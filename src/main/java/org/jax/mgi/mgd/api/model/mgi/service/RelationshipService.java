@@ -117,7 +117,7 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 	}
 	
 	@Transactional
-	public Boolean process(String parentKey, List<RelationshipDomain> domain, String mgiTypeKey, User user) {
+	public Boolean process(List<RelationshipDomain> domain, String mgiTypeKey, User user) {
 		// process relationships (create, delete, update)
 		
 		Boolean modified = false;

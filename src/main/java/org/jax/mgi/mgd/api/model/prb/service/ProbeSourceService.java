@@ -157,6 +157,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 
 		log.info("processProbeSource/update");
 
+		log.info("domain.getSegmentTypeKey(); " + domain.getSegmentTypeKey());
 		entity.setSegmentType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));
 		entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));
 		entity.setOrganism(organismDAO.get(Integer.valueOf(domain.getOrganismKey())));

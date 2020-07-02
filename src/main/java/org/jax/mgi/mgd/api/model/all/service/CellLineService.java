@@ -150,6 +150,48 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		return results;
     }
  
+	@Transactional	
+	public SearchResults<CellLineDomain> getMutantCellLineCount() {
+		// return the object count from the database
+		
+		SearchResults<CellLineDomain> results = new SearchResults<CellLineDomain>();
+		String cmd = "select count(*) as objectCount from all_cellline where isMutant = 1";
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getInt("objectCount");
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;		
+	}
+	
+	@Transactional	
+	public SearchResults<CellLineDomain> getParentCellLineCount() {
+		// return the object count from the database
+		
+		SearchResults<CellLineDomain> results = new SearchResults<CellLineDomain>();
+		String cmd = "select count(*) as objectCount from all_cellline where isMutant = 0";
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getInt("objectCount");
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;		
+	}
+		
     @Transactional
     public SearchResults<CellLineDomain> createMutantCellLine (String alleleTypeKey, CellLineDomain domain, User user) {
 		// potential new mutant cell line for allele/cellline association

@@ -321,7 +321,8 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		String where = "where c.isMutant = 1";
 		String orderBy = "order by c.cellLine";		
 		Boolean from_derivation = false;
-
+		Boolean from_parentcellline = false;
+		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("c", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {
@@ -341,12 +342,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 			where = where + "\nand c._strain_key = " + searchDomain.getStrainKey();
 		}
 		
-		// creator
-		// derivation type (allele type)
-		// vector name
-		// vector
-		
-		if(searchDomain.getDerivation() != null) {
+		if (searchDomain.getDerivation() != null) {
 			if (searchDomain.getDerivation().getCreatorKey() != null && !searchDomain.getDerivation().getCreatorKey().isEmpty()) {
 				where = where + "\nand d._creator_key = " + searchDomain.getDerivation().getCreatorKey();
 				from_derivation = true;
@@ -357,24 +353,45 @@ public class CellLineService extends BaseService<CellLineDomain> {
 				from_derivation = true;
 			}
 			
-			if (searchDomain.getDerivation().getVector() != null && !searchDomain.getDerivation().getVector().isEmpty()) {
-				where = where + "\nand d._vector_key = " + searchDomain.getDerivation().getVector();
+			if (searchDomain.getDerivation().getVectorKey() != null && !searchDomain.getDerivation().getVectorKey().isEmpty()) {
+				where = where + "\nand d._vector_key = " + searchDomain.getDerivation().getVectorKey();
 				from_derivation = true;
 			}
 			
 			if (searchDomain.getDerivation().getVectorTypeKey() != null && !searchDomain.getDerivation().getVectorTypeKey().isEmpty()) {
 				where = where + "\nand d._vectortype_key = " + searchDomain.getDerivation().getVectorTypeKey();
 				from_derivation = true;
-			}			
+			}
+			
+			if (searchDomain.getDerivation().getParentCellLine() != null) {
+				if (searchDomain.getDerivation().getParentCellLine().getCellLineKey() != null && !searchDomain.getDerivation().getParentCellLine().getCellLineKey().isEmpty()) {
+					where = where + "\nand pcl._cellline_key_key = " + searchDomain.getDerivation().getParentCellLine().getCellLineKey();
+					from_derivation = true;
+					from_parentcellline = true;
+				}
+				
+				if (searchDomain.getDerivation().getParentCellLine().getStrainKey() != null && !searchDomain.getDerivation().getParentCellLine().getStrainKey().isEmpty()) {
+					where = where + "\nand pcl._strain_key_key = " + searchDomain.getDerivation().getParentCellLine().getStrainKey();
+					from_derivation = true;
+					from_parentcellline = true;
+				}
+				
+				if (searchDomain.getDerivation().getParentCellLine().getCellLineTypeKey() != null && !searchDomain.getDerivation().getParentCellLine().getCellLineTypeKey().isEmpty()) {
+					where = where + "\nand pcl._cellline_type_key = " + searchDomain.getDerivation().getParentCellLine().getCellLineTypeKey();
+					from_derivation = true;
+					from_parentcellline = true;
+				}				
+			}
 		}
-		
-		// pcl
-		// pcl strain
-		// cell line type
 		
 		if (from_derivation == true) {
 			from = from + ", all_cellline_derivation d";
 			where = where + "\nand c._derivation_key = d._derivation_key";
+		}
+		
+		if (from_parentcellline == true) {
+			from = from + ", all_cellline pcl";
+			where = where + "\nand d._parentcellline_key = pcl._cellline_key";			
 		}
 		
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n";

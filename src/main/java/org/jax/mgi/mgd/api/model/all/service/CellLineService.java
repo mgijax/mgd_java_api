@@ -398,7 +398,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		
 		if (from_vector == true) {
 			from = from + ", voc_term vt";
-			where = where + "\nd._vector_key = vt._term_key";
+			where = where + "\nand d._vector_key = vt._term_key";
 		}
 		
 		if (from_parentcellline == true) {

@@ -321,6 +321,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		String where = "where c.isMutant = 1";
 		String orderBy = "order by c.cellLine";		
 		Boolean from_derivation = false;
+		Boolean from_vector = false;
 		Boolean from_parentcellline = false;
 		
 		// if parameter exists, then add to where-clause
@@ -357,6 +358,12 @@ public class CellLineService extends BaseService<CellLineDomain> {
 				where = where + "\nand d._vector_key = " + searchDomain.getDerivation().getVectorKey();
 				from_derivation = true;
 			}
+					
+			if (searchDomain.getDerivation().getVector() != null && !searchDomain.getDerivation().getVector().isEmpty()) {
+				where = where + "\nand lower(vt.term) ilike '" + searchDomain.getDerivation().getVector().toLowerCase() + "'";
+				from_derivation = true;
+				from_vector = true;
+			}
 			
 			if (searchDomain.getDerivation().getVectorTypeKey() != null && !searchDomain.getDerivation().getVectorTypeKey().isEmpty()) {
 				where = where + "\nand d._vectortype_key = " + searchDomain.getDerivation().getVectorTypeKey();
@@ -387,6 +394,10 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		if (from_derivation == true) {
 			from = from + ", all_cellline_derivation d";
 			where = where + "\nand c._derivation_key = d._derivation_key";
+		}
+		
+		if (from_vector == true) {
+			
 		}
 		
 		if (from_parentcellline == true) {

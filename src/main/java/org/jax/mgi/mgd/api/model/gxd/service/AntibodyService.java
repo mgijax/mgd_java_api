@@ -76,10 +76,10 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		log.info("antibody note");
 		// may be null
 		if(domain.getAntibodyNote() !=  null || !domain.getAntibodyNote().isEmpty()) {
-			entity.setAntibodyNote(null);
+			entity.setAntibodyNote(domain.getAntibodyNote());
 		}
 		else {
-			entity.setAntibodyNote(domain.getAntibodyNote());
+			entity.setAntibodyNote(null);
 		}
 		log.info("antibody class");
 		// has default if not set

@@ -105,7 +105,6 @@ public class AntigenService extends BaseService<AntigenDomain> {
 
 		SearchResults<AntigenDomain> results = new SearchResults<AntigenDomain>();
 		Antigen entity = antigenDAO.get(Integer.valueOf(domain.getAntigenKey()));
-		Boolean modified = true;
 		
 		log.info("processAntigen/update");
 		
@@ -136,16 +135,10 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		sourceResults = sourceService.update(domain.getProbeSource(), user);
 		entity.setProbeSource(sourceDAO.get(Integer.valueOf(sourceResults.items.get(0).getSourceKey())));
 
-		// only if modifications were actually made
-		if (modified == true) {
-			entity.setModification_date(new Date());
-			entity.setModifiedBy(user);
-			antigenDAO.update(entity);
-			log.info("processAntigen/changes processed: " + domain.getAntigenKey());
-		}
-		else {
-			log.info("processAntigen/no changes processed: " + domain.getAntigenKey());
-		}
+		entity.setModification_date(new Date());
+		entity.setModifiedBy(user);
+		antigenDAO.update(entity);
+		log.info("processAntigen/changes processed: " + domain.getAntigenKey());
 			
 		// return entity translated to domain
 		log.info("processAntigen/update/returning results");

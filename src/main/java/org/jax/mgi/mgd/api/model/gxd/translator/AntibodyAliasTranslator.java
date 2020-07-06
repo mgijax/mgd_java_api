@@ -19,10 +19,12 @@ public class AntibodyAliasTranslator extends BaseEntityDomainTranslator<Antibody
 		domain.setAntibodyAliasKey(String.valueOf(entity.get_antibodyalias_key()));
 		domain.setAntibodyKey(String.valueOf(entity.get_antibody_key()));
 		domain.setAlias(entity.getAlias());
-		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
-		domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());
-		domain.setJnum(String.valueOf(entity.getReference().getReferenceCitationCache().getNumericPart()));
-		domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());
+		if (entity.getReference() != null ) {
+			domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
+			domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());
+			domain.setJnum(String.valueOf(entity.getReference().getReferenceCitationCache().getNumericPart()));
+			domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());
+		}
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		

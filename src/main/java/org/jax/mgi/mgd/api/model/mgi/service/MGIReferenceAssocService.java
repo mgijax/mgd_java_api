@@ -292,7 +292,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 						domain.get(i).setRefAssocTypeKey("1018");
 					}
 				}
-				
+				// select count(*) from MGI_insertReferenceAssoc (1014,6,0,275403,1027)
 				cmd = "select count(*) from MGI_insertReferenceAssoc ("
 							+ user.get_user_key().intValue()
 							+ "," + mgiTypeKey

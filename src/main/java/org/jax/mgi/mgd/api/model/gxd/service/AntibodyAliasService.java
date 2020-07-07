@@ -213,6 +213,21 @@ public class AntibodyAliasService extends BaseService<AntibodyAliasDomain> {
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processAlias update");
 				// IN PROGRESS
+				AntibodyAlias entity = aliasDAO.get(Integer.valueOf(domain.get(i).getAntibodyAliasKey()));
+
+				entity.set_antibody_key(Integer.valueOf(parentKey));
+				
+				entity.setAlias(domain.get(i).getAlias());
+				
+				if(domain.get(i).getRefsKey() != null && ! domain.get(i).getRefsKey().isEmpty()) {
+					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
+				}
+								
+				entity.setModification_date(new Date());				
+				aliasDAO.update(entity);
+				
+				modified = true;
+				log.info("process Alias/update processed: " + entity.get_antibodyalias_key());					
 			}
 		
 		    log.info("processAlias/processing successful");

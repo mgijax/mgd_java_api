@@ -73,34 +73,36 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		//
 		// may not be null
 		entity.setAntibodyName(domain.getAntibodyName());
+		
 		log.info("antibody note");
 		// may be null
-		if(domain.getAntibodyNote() !=  null || !domain.getAntibodyNote().isEmpty()) {
+		if(domain.getAntibodyNote() !=  null && !domain.getAntibodyNote().isEmpty()) {
 			entity.setAntibodyNote(domain.getAntibodyNote());
 		}
 		else {
 			entity.setAntibodyNote(null);
 		}
+		
 		log.info("antibody class");
 		// has default if not set
-		if(domain.getAntibodyClassKey() !=  null || !domain.getAntibodyClassKey().isEmpty()){
+		if(domain.getAntibodyClassKey() ==  null || domain.getAntibodyClassKey().isEmpty()){
 			// 'Not Specified'
 			domain.setAntibodyClassKey("-1");
 			
 		}
 		entity.setAntibodyClass(classDAO.get(Integer.valueOf(domain.getAntibodyClassKey())));
+		
 		log.info("antibody type");
 		// has default if not set
-		if(domain.getAntibodyTypeKey() !=  null || !domain.getAntibodyTypeKey().isEmpty()) {
+		if(domain.getAntibodyTypeKey() ==  null || domain.getAntibodyTypeKey().isEmpty()) {
 			// 'Not Specified'
 			domain.setAntibodyTypeKey("-1");
 		}
 	    entity.setAntibodyType(typeDAO.get(Integer.valueOf(domain.getAntibodyTypeKey())));
-	    
 		
 	    // has default if not set
 	    log.info("antibody organism");
-		if(domain.getOrganismKey() != null ||  !domain.getOrganismKey().isEmpty()) {
+		if(domain.getOrganismKey() == null || domain.getOrganismKey().isEmpty()) {
 			// 'Not Specified'
 			domain.setOrganismKey("76");
 		}
@@ -160,26 +162,88 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 
 		SearchResults<AntibodyDomain> results = new SearchResults<AntibodyDomain>();
 		Antibody entity = antibodyDAO.get(Integer.valueOf(domain.getAntibodyKey()));
-		Boolean modified = false;
-//		String mgiTypeKey = "6";
-//		String mgiTypeName = "Antibody";
+		//		String mgiTypeKey = "6";
+		//		String mgiTypeName = "Antibody";
 		
 		log.info("Antibody/update");
 		
 		//
-		// IN PROGRESSS
+		// IN PROGRESS
 		//
+		log.info("update antibody name: " + domain.getAntibodyName());
 		
-		// only if modifications were actually made
-		if (modified == true) {
-			entity.setModification_date(new Date());
-			entity.setModifiedBy(user);
-			antibodyDAO.update(entity);
-			log.info("processAntibody/changes processed: " + domain.getAntibodyKey());
+		entity.setAntibodyName(domain.getAntibodyName());
+		
+		log.info("antibody note: " + domain.getAntibodyNote());
+		// may be null
+		if(domain.getAntibodyNote() ==  null || domain.getAntibodyNote().isEmpty()) {
+			entity.setAntibodyNote(null);
 		}
 		else {
-			log.info("processAntibody/no changes processed: " + domain.getAntibodyKey());
+			entity.setAntibodyNote(domain.getAntibodyNote());
+			
 		}
+		
+		log.info("antibody class");
+		// has default if not set
+		if(domain.getAntibodyClassKey() ==  null || domain.getAntibodyClassKey().isEmpty()){
+			// 'Not Specified'
+			domain.setAntibodyClassKey("-1");
+			
+		}
+		entity.setAntibodyClass(classDAO.get(Integer.valueOf(domain.getAntibodyClassKey())));
+		
+		log.info("antibody type");
+		// has default if not set
+		if(domain.getAntibodyTypeKey() ==  null || domain.getAntibodyTypeKey().isEmpty()) {
+			// 'Not Specified'
+			domain.setAntibodyTypeKey("-1");
+		}
+	    entity.setAntibodyType(typeDAO.get(Integer.valueOf(domain.getAntibodyTypeKey())));
+	    
+		
+	    // has default if not set
+	    log.info("antibody organism");
+		if(domain.getOrganismKey() == null ||  domain.getOrganismKey().isEmpty()) {
+			// 'Not Specified'
+			domain.setOrganismKey("76");
+		}
+		entity.setOrganism(organismDAO.get(Integer.valueOf(domain.getOrganismKey())));
+		
+		log.info("antibody antigen key: " + domain.getAntigen().getAntigenKey());
+		if (domain.getAntigen().getAntigenKey() != null && !domain.getAntigen().getAntigenKey().isEmpty()) {
+			entity.setAntigen(antigenDAO.get(Integer.valueOf(domain.getAntigen().getAntigenKey())));
+		}
+		
+		
+		// process antibody aliases, can be null
+		if (domain.getAliases() != null && !domain.getAliases().isEmpty()) {
+			log.info("Antibody/update aliases");
+			log.info("antibody key: " + String.valueOf(entity.get_antibody_key()));
+			log.info("aliasDomain alias: " + domain.getAliases().get(0).getAlias());
+			log.info("alisDomain creation_date:" + domain.getAliases().get(0).getCreation_date());
+			aliasService.process(String.valueOf(entity.get_antibody_key()), domain.getAliases(), user);
+		}
+		
+		// process antibody markers, can be null
+		if (domain.getMarkers() != null && !domain.getMarkers().isEmpty()) {
+			log.info("Antibody/update markers");
+			log.info("antibody key: " + String.valueOf(entity.get_antibody_key()));
+			log.info("antibodyMarkerDomain markerKey: " + domain.getMarkers().get(0).getMarkerKey());
+			antibodyMarkerService.process(String.valueOf(entity.get_antibody_key()), domain.getMarkers(), user);
+		}
+		// process antibody references, can be null
+		if (domain.getRefAssocs() != null && ! domain.getRefAssocs().isEmpty()) {
+			log.info("Antibody/update references");
+			log.info("antibody key: " + String.valueOf(entity.get_antibody_key()));
+			log.info("refAssocDomain mgitypeKey: " + domain.getRefAssocs().get(0).getMgiTypeKey() + " refsKey: " + domain.getRefAssocs().get(0).getRefsKey());
+			referenceAssocService.process(String.valueOf(entity.get_antibody_key()), domain.getRefAssocs(), mgiTypeKey, user);
+		}
+		
+		entity.setModification_date(new Date());
+		entity.setModifiedBy(user);
+		antibodyDAO.update(entity);
+		log.info("processAntibody/changes processed: " + domain.getAntibodyKey());
 			
 		// return entity translated to domain
 		log.info("processAntibody/update/returning results");

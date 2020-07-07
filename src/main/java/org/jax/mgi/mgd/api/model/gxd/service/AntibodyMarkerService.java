@@ -210,6 +210,16 @@ public class AntibodyMarkerService extends BaseService<AntibodyMarkerDomain> {
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processAntibodyMarker update");
 				// IN PROGRESS
+				AntibodyMarker entity = antibodyMarkerDAO.get(Integer.valueOf(domain.get(i).getAntibodyMarkerKey()));
+
+				entity.set_antibody_key(Integer.valueOf(parentKey));
+				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));
+								
+				entity.setModification_date(new Date());				
+				antibodyMarkerDAO.update(entity);
+				
+				modified = true;
+				log.info("processAntibodyMarker update successful");
 			}
 		
 		    log.info("processAntibodyMarker/processing successful");

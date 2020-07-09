@@ -67,5 +67,11 @@ public class OrganismController extends BaseController<OrganismDomain> {
 	public List<OrganismDomain> searchDriverGene() {
 		return organismService.searchDriverGene();
 	}
-		
+	
+	@POST
+	@ApiOperation(value = "Search for Search for Antigen module")
+	@Path("/searchAntigen")
+	public List<OrganismDomain> searchAntigen() {
+		return organismService.searchAntigen();
+	}
 }

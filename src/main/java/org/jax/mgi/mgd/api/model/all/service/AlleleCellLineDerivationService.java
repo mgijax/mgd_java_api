@@ -124,6 +124,38 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
     }
  
 	@Transactional
+	public List<AlleleCellLineDerivationDomain> searchMCLSet() {
+		// search a mutant cell line set of derivations
+		// exclude those where create = "Not Specified", "Not Applicable"
+		
+		List<AlleleCellLineDerivationDomain> results = new ArrayList<AlleleCellLineDerivationDomain>();	
+		
+		String cmd = "\nselect _Derivation_key"
+		   + "\nfrom ALL_CellLine_Derivation"
+		   + "\nwhere _Creator_key not in (3982966, 3982967)";
+
+		
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			
+			while (rs.next()) {
+				AlleleCellLineDerivationDomain domain = new AlleleCellLineDerivationDomain();
+				domain = translator.translate(derivationDAO.get(rs.getInt("_derivation_key")));				
+				derivationDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
+	   
+	@Transactional
 	public List<AlleleCellLineDerivationDomain> validateDerivation(SlimAlleleCellLineDerivationDomain searchDomain) {
 		
 		List<AlleleCellLineDerivationDomain> results = new ArrayList<AlleleCellLineDerivationDomain>();	

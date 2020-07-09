@@ -132,9 +132,9 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		
 		String cmd = "\nselect _Derivation_key"
 		   + "\nfrom ALL_CellLine_Derivation"
-		   + "\nwhere _Creator_key not in (3982966, 3982967)";
+		   + "\nwhere _Creator_key not in (3982966, 3982967)"
+		   + "\norder by name";
 
-		
 		log.info(cmd);
 		
 		try {

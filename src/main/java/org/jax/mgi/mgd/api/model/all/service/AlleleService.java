@@ -1170,4 +1170,30 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		return results;
 	}
 
+	@Transactional
+	public List<SlimAlleleDomain> getSlimByMCL(Integer key) {
+		// return SlimAlleleDoman list of mutant cell line key
+
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
+		
+		String cmd = "select _allele_key from ALL_Allele_CellLine_View where _MutantCellLine_key = " + key;
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimAlleleDomain domain = new SlimAlleleDomain();				
+				domain = slimtranslator.translate(alleleDAO.get(rs.getInt("_allele_key")));
+				alleleDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return results;
+	}
+	
 }	

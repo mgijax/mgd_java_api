@@ -174,4 +174,21 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		
 		return results;
 	}
+	
+	@POST
+	@ApiOperation(value = "Get SlimAllele by Mutant Cell Line key")
+	@Path("/getSlimByMCL")
+	public List<SlimAlleleDomain> getSlimByMCL(Integer key) {
+			
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
+		
+		try {
+			results = alleleService.getSlimByMCL(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

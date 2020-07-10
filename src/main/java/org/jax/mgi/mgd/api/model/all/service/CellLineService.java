@@ -429,7 +429,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 					from_parentcellline = true;
 				}
 				else if (searchDomain.getDerivation().getParentCellLine().getStrain() != null && !searchDomain.getDerivation().getParentCellLine().getStrain().isEmpty()) {
-					where = where + "\nand lower(pcl.strain) ilike '" + searchDomain.getDerivation().getParentCellLine().getStrain().toLowerCase() + "'";
+					where = where + "\nand lower(pcl.parentcelllinestrain) ilike '" + searchDomain.getDerivation().getParentCellLine().getStrain().toLowerCase() + "'";
 					from_derivation = true;
 					from_parentcellline = true;
 				}

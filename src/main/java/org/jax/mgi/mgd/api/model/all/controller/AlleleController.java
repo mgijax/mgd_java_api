@@ -123,7 +123,7 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return results;
 	}
 	

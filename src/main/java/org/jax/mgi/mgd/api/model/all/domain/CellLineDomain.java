@@ -25,5 +25,6 @@ public class CellLineDomain extends BaseDomain {
 	private String modification_date;	
 	
 	private AlleleCellLineDerivationDomain derivation;
+	private String alleleSymbols;
 	
 }

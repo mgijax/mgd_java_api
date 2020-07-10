@@ -148,7 +148,22 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		// for antigen module organism pick list
 		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
 
-		String cmd = "select _organism_key from mgi_organism_antigen_view order by commonname";
+		String cmd = "select _organism_key, commonname, 0 as org\n" + 
+				"from mgi_organism_antigen_view\n" + 
+				"where commonname = 'mouse, laboratory'\n" + 
+				"union\n" + 
+				"select _organism_key, commonname, 1 as org\n" + 
+				"from mgi_organism_antigen_view\n" + 
+				"where commonname = 'human'\n" + 
+				"union\n" + 
+				"select _organism_key, commonname, 2 as org\n" + 
+				"from mgi_organism_antigen_view\n" + 
+				"where commonname = 'Not Specified'\n" + 
+				"union\n" + 
+				"select _organism_key, commonname, 3 as org\n" + 
+				"from mgi_organism_antigen_view\n" + 
+				"where commonname not in ('mouse, laboratory', 'Not Specified', 'human')\n" + 
+				"order by org, commonname";
 		log.info(cmd);
 
 		try {

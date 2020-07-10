@@ -213,10 +213,13 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			// 42 = Allele Compound
 			// 37 = Allele Status
 			// 147 = GXD Default Age
+			// 17 = Gender
 			if (searchDomain.getVocabKey().equals("39")
 					|| searchDomain.getVocabKey().equals("42")
 					|| searchDomain.getVocabKey().equals("37") 
-					|| searchDomain.getVocabKey().equals("147")) {
+					|| searchDomain.getVocabKey().equals("147")
+					|| searchDomain.getVocabKey().equals("17")
+					) {
 				orderBy = "order by t.sequenceNum";
 			}
 

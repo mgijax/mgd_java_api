@@ -248,6 +248,7 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		// source
 				
 		if (searchDomain.getProbeSource() != null) {
+			 log.info("AntigenService.search has search domain: " + searchDomain.getProbeSource().getTissue());
 
 			// source organism
 			if (searchDomain.getProbeSource().getOrganismKey() != null && !searchDomain.getProbeSource().getOrganismKey().isEmpty()) {
@@ -256,14 +257,16 @@ public class AntigenService extends BaseService<AntigenDomain> {
 			}
 			
 			// source strain
-			if (searchDomain.getProbeSource().getStrainKey() != null && !searchDomain.getProbeSource().getStrainKey().isEmpty()) {
-				where = where + "\nand s._strain_key = " + searchDomain.getProbeSource().getStrainKey();
+			if (searchDomain.getProbeSource().getStrain() != null && !searchDomain.getProbeSource().getStrain().isEmpty()) {
+				//where = where + "\nand s._strain_key = " + searchDomain.getProbeSource().getStrainKey();
+				where = where + "\nand s.strain ilike '" + searchDomain.getProbeSource().getStrain() + "'";
 				from_source = true;
 			}
 			
 			// source tissue
-			if (searchDomain.getProbeSource().getTissueKey() != null && !searchDomain.getProbeSource().getTissueKey().isEmpty()) {
-				where = where + "\nand s._Tissue_key = " + searchDomain.getProbeSource().getTissueKey();
+			if (searchDomain.getProbeSource().getTissue() != null && !searchDomain.getProbeSource().getTissue().isEmpty()) {
+				//where = where + "\nand s._Tissue_key = " + searchDomain.getProbeSource().getTissueKey();
+				where = where + "\nand s.tissue ilike '" + searchDomain.getProbeSource().getTissue() + "'";
 				from_source = true;
 			}
 			
@@ -274,8 +277,8 @@ public class AntigenService extends BaseService<AntigenDomain> {
 			}
 			
 			// source cell line
-			if (searchDomain.getProbeSource().getCellLineKey() != null  && !searchDomain.getProbeSource().getCellLineKey().isEmpty() ) {
-				where = where + "\nand s._cellline_key = " + searchDomain.getProbeSource().getCellLineKey();
+			if (searchDomain.getProbeSource().getCellLine() != null  && !searchDomain.getProbeSource().getCellLine().isEmpty() ) {
+				where = where + "\nand s.cellline ilike '" + searchDomain.getProbeSource().getCellLine() + "'";
 				from_source = true;
 			}
 			
@@ -327,7 +330,7 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		}
 		
 		if (from_source == true) {
-			from = from + ", prb_source s";
+			from = from + ", prb_source_view s";
 			where = where + "\nand a._source_key = s._source_key";
 		}
 		

@@ -424,7 +424,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 			}
 		}		
 		
-		if (searchDomain.getAlleleSymbols() != null || !searchDomain.getAlleleSymbols().isEmpty()) {
+		if (searchDomain.getAlleleSymbols() != null && !searchDomain.getAlleleSymbols().isEmpty()) {
 			where = where + "\nand a.symbol ilike '" + searchDomain.getAlleleSymbols() + "'";
 			from_allele = true;
 		}

@@ -404,10 +404,10 @@ public class CellLineService extends BaseService<CellLineDomain> {
 			
 			if (searchDomain.getDerivation().getParentCellLine() != null) {
 				if (searchDomain.getDerivation().getParentCellLine().getCellLineKey() != null && !searchDomain.getDerivation().getParentCellLine().getCellLineKey().isEmpty()) {
-					where = where + "\nand c._cellline_key = " + searchDomain.getDerivation().getParentCellLine().getCellLineKey();
+					where = where + "\nand c.parentCellLine_key = " + searchDomain.getDerivation().getParentCellLine().getCellLineKey();
 				}
 				else if (searchDomain.getDerivation().getParentCellLine().getCellLine() != null && !searchDomain.getDerivation().getParentCellLine().getCellLine().isEmpty()) {
-					where = where + "\nand lower(c.cellLine) ilike '" + searchDomain.getDerivation().getParentCellLine().getCellLine().toLowerCase() + "'";
+					where = where + "\nand lower(c.parentCellLine) ilike '" + searchDomain.getDerivation().getParentCellLine().getCellLine().toLowerCase() + "'";
 				}
 				
 				if (searchDomain.getDerivation().getParentCellLine().getStrainKey() != null && !searchDomain.getDerivation().getParentCellLine().getStrainKey().isEmpty()) {

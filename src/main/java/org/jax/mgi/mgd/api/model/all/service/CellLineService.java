@@ -399,9 +399,8 @@ public class CellLineService extends BaseService<CellLineDomain> {
 			if (searchDomain.getDerivation().getVectorKey() != null && !searchDomain.getDerivation().getVectorKey().isEmpty()) {
 				where = where + "\nand d._vector_key = " + searchDomain.getDerivation().getVectorKey();
 				from_derivation = true;
-			}
-					
-			if (searchDomain.getDerivation().getVector() != null && !searchDomain.getDerivation().getVector().isEmpty()) {
+			}		
+			else if (searchDomain.getDerivation().getVector() != null && !searchDomain.getDerivation().getVector().isEmpty()) {
 				where = where + "\nand lower(vt.term) ilike '" + searchDomain.getDerivation().getVector().toLowerCase() + "'";
 				from_derivation = true;
 				from_vector = true;
@@ -418,9 +417,19 @@ public class CellLineService extends BaseService<CellLineDomain> {
 					from_derivation = true;
 					from_parentcellline = true;
 				}
+				else if (searchDomain.getDerivation().getParentCellLine().getCellLine() != null && !searchDomain.getDerivation().getParentCellLine().getCellLine().isEmpty()) {
+					where = where + "\nand lower(pcl.cellLine) ilike '" + searchDomain.getDerivation().getParentCellLine().getCellLine().toLowerCase() + "'";
+					from_derivation = true;
+					from_parentcellline = true;
+				}
 				
 				if (searchDomain.getDerivation().getParentCellLine().getStrainKey() != null && !searchDomain.getDerivation().getParentCellLine().getStrainKey().isEmpty()) {
 					where = where + "\nand pcl._strain_key = " + searchDomain.getDerivation().getParentCellLine().getStrainKey();
+					from_derivation = true;
+					from_parentcellline = true;
+				}
+				else if (searchDomain.getDerivation().getParentCellLine().getStrain() != null && !searchDomain.getDerivation().getParentCellLine().getStrain().isEmpty()) {
+					where = where + "\nand lower(pcl.strain) ilike '" + searchDomain.getDerivation().getParentCellLine().getStrain().toLowerCase() + "'";
 					from_derivation = true;
 					from_parentcellline = true;
 				}
@@ -444,7 +453,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		}
 		
 		if (from_parentcellline == true) {
-			from = from + ", all_cellline pcl";
+			from = from + ", all_cellline_view pcl";
 			where = where + "\nand d._parentcellline_key = pcl._cellline_key";			
 		}
 		

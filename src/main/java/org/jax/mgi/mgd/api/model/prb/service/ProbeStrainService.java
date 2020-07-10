@@ -114,7 +114,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		Boolean from_accession = false;
 		
 		if (searchDomain.getStrain() != null && !searchDomain.getStrain().isEmpty()) {
-			where = where + "\nand strain ilike '" + searchDomain.getStrain() + "'" ;
+			where = where + "\nand s.strain ilike '" + searchDomain.getStrain() + "'" ;
 		}
 		
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	

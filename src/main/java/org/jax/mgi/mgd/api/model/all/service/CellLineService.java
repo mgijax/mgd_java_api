@@ -359,12 +359,9 @@ public class CellLineService extends BaseService<CellLineDomain> {
 
 		String cmd = "";
 		String select = "select distinct c._cellline_key, c.cellLine";
-		String from = "from all_cellline c";
+		String from = "from all_cellline_view c";
 		String where = "where c.isMutant = 1";
 		String orderBy = "order by c.cellLine";		
-		Boolean from_derivation = false;
-		Boolean from_vector = false;
-		Boolean from_parentcellline = false;
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("c", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -387,75 +384,44 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		
 		if (searchDomain.getDerivation() != null) {
 			if (searchDomain.getDerivation().getCreatorKey() != null && !searchDomain.getDerivation().getCreatorKey().isEmpty()) {
-				where = where + "\nand d._creator_key = " + searchDomain.getDerivation().getCreatorKey();
-				from_derivation = true;
+				where = where + "\nand c._creator_key = " + searchDomain.getDerivation().getCreatorKey();
 			}
 			
 			if (searchDomain.getDerivation().getDerivationTypeKey() != null && !searchDomain.getDerivation().getDerivationTypeKey().isEmpty()) {
-				where = where + "\nand d._derivationtype_key = " + searchDomain.getDerivation().getDerivationTypeKey();
-				from_derivation = true;
+				where = where + "\nand c._derivationtype_key = " + searchDomain.getDerivation().getDerivationTypeKey();
 			}
 			
 			if (searchDomain.getDerivation().getVectorKey() != null && !searchDomain.getDerivation().getVectorKey().isEmpty()) {
-				where = where + "\nand d._vector_key = " + searchDomain.getDerivation().getVectorKey();
-				from_derivation = true;
+				where = where + "\nand c._vector_key = " + searchDomain.getDerivation().getVectorKey();
 			}		
 			else if (searchDomain.getDerivation().getVector() != null && !searchDomain.getDerivation().getVector().isEmpty()) {
-				where = where + "\nand lower(vt.term) ilike '" + searchDomain.getDerivation().getVector().toLowerCase() + "'";
-				from_derivation = true;
-				from_vector = true;
+				where = where + "\nand lower(c.vector) ilike '" + searchDomain.getDerivation().getVector().toLowerCase() + "'";
 			}
 			
 			if (searchDomain.getDerivation().getVectorTypeKey() != null && !searchDomain.getDerivation().getVectorTypeKey().isEmpty()) {
-				where = where + "\nand d._vectortype_key = " + searchDomain.getDerivation().getVectorTypeKey();
-				from_derivation = true;
+				where = where + "\nand c._vectortype_key = " + searchDomain.getDerivation().getVectorTypeKey();
 			}
 			
 			if (searchDomain.getDerivation().getParentCellLine() != null) {
 				if (searchDomain.getDerivation().getParentCellLine().getCellLineKey() != null && !searchDomain.getDerivation().getParentCellLine().getCellLineKey().isEmpty()) {
-					where = where + "\nand pcl._cellline_key = " + searchDomain.getDerivation().getParentCellLine().getCellLineKey();
-					from_derivation = true;
-					from_parentcellline = true;
+					where = where + "\nand c._cellline_key = " + searchDomain.getDerivation().getParentCellLine().getCellLineKey();
 				}
 				else if (searchDomain.getDerivation().getParentCellLine().getCellLine() != null && !searchDomain.getDerivation().getParentCellLine().getCellLine().isEmpty()) {
-					where = where + "\nand lower(pcl.cellLine) ilike '" + searchDomain.getDerivation().getParentCellLine().getCellLine().toLowerCase() + "'";
-					from_derivation = true;
-					from_parentcellline = true;
+					where = where + "\nand lower(c.cellLine) ilike '" + searchDomain.getDerivation().getParentCellLine().getCellLine().toLowerCase() + "'";
 				}
 				
 				if (searchDomain.getDerivation().getParentCellLine().getStrainKey() != null && !searchDomain.getDerivation().getParentCellLine().getStrainKey().isEmpty()) {
-					where = where + "\nand pcl._strain_key = " + searchDomain.getDerivation().getParentCellLine().getStrainKey();
-					from_derivation = true;
-					from_parentcellline = true;
+					where = where + "\nand c.parentCellLineStrain_key = " + searchDomain.getDerivation().getParentCellLine().getStrainKey();
 				}
 				else if (searchDomain.getDerivation().getParentCellLine().getStrain() != null && !searchDomain.getDerivation().getParentCellLine().getStrain().isEmpty()) {
-					where = where + "\nand lower(pcl.parentcelllinestrain) ilike '" + searchDomain.getDerivation().getParentCellLine().getStrain().toLowerCase() + "'";
-					from_derivation = true;
-					from_parentcellline = true;
+					where = where + "\nand lower(c.parentcelllinestrain) ilike '" + searchDomain.getDerivation().getParentCellLine().getStrain().toLowerCase() + "'";
 				}
 				
 				if (searchDomain.getDerivation().getParentCellLine().getCellLineTypeKey() != null && !searchDomain.getDerivation().getParentCellLine().getCellLineTypeKey().isEmpty()) {
-					where = where + "\nand pcl._cellline_type_key = " + searchDomain.getDerivation().getParentCellLine().getCellLineTypeKey();
-					from_derivation = true;
-					from_parentcellline = true;
+					where = where + "\nand c._cellline_type_key = " + searchDomain.getDerivation().getParentCellLine().getCellLineTypeKey();
 				}				
 			}
-		}
-		
-		if (from_derivation == true) {
-			from = from + ", all_cellline_derivation d";
-			where = where + "\nand c._derivation_key = d._derivation_key";
-		}
-		
-		if (from_vector == true) {
-			from = from + ", voc_term vt";
-			where = where + "\nand d._vector_key = vt._term_key";
-		}
-		
-		if (from_parentcellline == true) {
-			from = from + ", all_cellline_view pcl";
-			where = where + "\nand d._parentcellline_key = pcl._cellline_key";			
-		}
+		}		
 		
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n";
 		log.info(cmd);

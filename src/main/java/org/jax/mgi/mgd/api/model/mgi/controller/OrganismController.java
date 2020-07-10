@@ -69,7 +69,7 @@ public class OrganismController extends BaseController<OrganismDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Search for Search for Antigen module")
+	@ApiOperation(value = "Search for organisms Antigen module")
 	@Path("/searchAntigen")
 	public List<OrganismDomain> searchAntigen() {
 		return organismService.searchAntigen();

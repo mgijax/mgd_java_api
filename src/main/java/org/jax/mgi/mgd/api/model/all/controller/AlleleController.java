@@ -178,7 +178,7 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	@POST
 	@ApiOperation(value = "Get SlimAllele by Mutant Cell Line key")
 	@Path("/getSlimByMCL")
-	public List<SlimAlleleDomain> getSlimByAllele(Integer key) {
+	public List<SlimAlleleDomain> getSlimByMCL(Integer key) {
 			
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 		

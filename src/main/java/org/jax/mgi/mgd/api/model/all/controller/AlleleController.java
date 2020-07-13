@@ -95,8 +95,8 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	}
 
 	@Override
-	public AlleleDomain get(Integer alleleKey) {
-		return alleleService.get(alleleKey);
+	public AlleleDomain get(Integer key) {
+		return alleleService.get(key);
 	}
 
 	@Override

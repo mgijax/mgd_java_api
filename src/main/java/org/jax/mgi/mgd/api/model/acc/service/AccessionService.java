@@ -334,7 +334,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 						+ "," + origRefsKey
 						+ "," + refsKey
 						+ ")";
-				log.info("cmd: " + cmd);
+				log.info("cmd: " + cmd);				
 				Query query = accessionDAO.createNativeQuery(cmd);
 				query.getResultList();
 				modified = true;

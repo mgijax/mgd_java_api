@@ -464,12 +464,12 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		
 		if (from_allele == true) {
 			from = from + ",all_allele_cellline_view a";
-			where = where + "\nand a._MutantCellLine_key = c._CellLine_key";
+			where = where + "\nand c._CellLine_key = a._MutantCellLine_key";
 		}
 		
 		if (from_accession == true) {
 			from = from + ",all_cellline_acc_view acc";
-			where = where + "\nand a._MutantCellLine_key = acc._object_key"
+			where = where + "\nand c._cellLine_key = acc._object_key"
 					+ "\nand acc._mgitype_key = 28";
 		}
 		

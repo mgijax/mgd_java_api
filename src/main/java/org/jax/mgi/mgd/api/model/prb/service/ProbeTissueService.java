@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.prb.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -153,5 +154,29 @@ public class ProbeTissueService extends BaseService<ProbeTissueDomain> {
 		
 		return results;
 	}
+	@Transactional	
+	public SearchResults<String> getTissueList() {
+		// generate SQL command to return a list of distinct journals
+		
+		List<String> results = new ArrayList<String>();
+
+		// building SQL command : select + from + where + orderBy
+		String cmd = "select distinct tissue from PRB_Tissue";
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.add(rs.getString("tissue"));
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		Collections.sort(results);
+		return new SearchResults<String>(results);
+	}	
 	   
 }

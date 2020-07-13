@@ -1,6 +1,11 @@
 package org.jax.mgi.mgd.api.model.all.translator;
 
+import java.util.Comparator;
+
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.domain.CellLineDomain;
 import org.jax.mgi.mgd.api.model.all.entities.CellLine;
@@ -40,6 +45,14 @@ public class CellLineTranslator extends BaseEntityDomainTranslator<CellLine, Cel
 		}
 		else {
 			domain.setCellLineDisplay(String.valueOf(entity.getCellLine() + ';' + entity.getStrain().getStrain() + ';' + entity.getCellLineType().getTerm()));						
+		}
+		
+		// accession ids editable
+		if (entity.getEditAccessionIds() != null && !entity.getEditAccessionIds().isEmpty()) {
+			AccessionTranslator accessionTranslator = new AccessionTranslator();
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIds());
+			domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
+			domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
 		
 		return domain;

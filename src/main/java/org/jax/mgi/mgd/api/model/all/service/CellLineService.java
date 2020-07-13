@@ -59,6 +59,8 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		SearchResults<CellLineDomain> results = new SearchResults<CellLineDomain>();
 		CellLine entity = new CellLine();
 		
+		log.info("processCellLine/create");
+
 		entity.setCellLine(domain.getCellLine());
 		entity.setIsMutant(Integer.valueOf(domain.getIsMutant()));
 		entity.setCellLineType(termDAO.get(Integer.valueOf(domain.getCellLineTypeKey())));
@@ -70,7 +72,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		else {
 			entity.setDerivation(null);
 		}
-
+		
 		// add creation/modification 
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
@@ -362,6 +364,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		String from = "from all_cellline_view c";
 		String where = "where c.isMutant = 1";
 		String orderBy = "order by c.cellLine";		
+		Boolean from_allele = false;
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("c", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -395,7 +398,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 				where = where + "\nand c._vector_key = " + searchDomain.getDerivation().getVectorKey();
 			}		
 			else if (searchDomain.getDerivation().getVector() != null && !searchDomain.getDerivation().getVector().isEmpty()) {
-				where = where + "\nand lower(c.vector) ilike '" + searchDomain.getDerivation().getVector().toLowerCase() + "'";
+				where = where + "\nand c.vector ilike '" + searchDomain.getDerivation().getVector() + "'";
 			}
 			
 			if (searchDomain.getDerivation().getVectorTypeKey() != null && !searchDomain.getDerivation().getVectorTypeKey().isEmpty()) {
@@ -407,14 +410,14 @@ public class CellLineService extends BaseService<CellLineDomain> {
 					where = where + "\nand c.parentCellLine_key = " + searchDomain.getDerivation().getParentCellLine().getCellLineKey();
 				}
 				else if (searchDomain.getDerivation().getParentCellLine().getCellLine() != null && !searchDomain.getDerivation().getParentCellLine().getCellLine().isEmpty()) {
-					where = where + "\nand lower(c.parentCellLine) ilike '" + searchDomain.getDerivation().getParentCellLine().getCellLine().toLowerCase() + "'";
+					where = where + "\nand c.parentCellLine ilike '" + searchDomain.getDerivation().getParentCellLine().getCellLine() + "'";
 				}
 				
 				if (searchDomain.getDerivation().getParentCellLine().getStrainKey() != null && !searchDomain.getDerivation().getParentCellLine().getStrainKey().isEmpty()) {
 					where = where + "\nand c.parentCellLineStrain_key = " + searchDomain.getDerivation().getParentCellLine().getStrainKey();
 				}
 				else if (searchDomain.getDerivation().getParentCellLine().getStrain() != null && !searchDomain.getDerivation().getParentCellLine().getStrain().isEmpty()) {
-					where = where + "\nand lower(c.parentcelllinestrain) ilike '" + searchDomain.getDerivation().getParentCellLine().getStrain().toLowerCase() + "'";
+					where = where + "\nand c.parentcelllinestrain ilike '" + searchDomain.getDerivation().getParentCellLine().getStrain() + "'";
 				}
 				
 				if (searchDomain.getDerivation().getParentCellLine().getCellLineTypeKey() != null && !searchDomain.getDerivation().getParentCellLine().getCellLineTypeKey().isEmpty()) {
@@ -422,6 +425,16 @@ public class CellLineService extends BaseService<CellLineDomain> {
 				}				
 			}
 		}		
+		
+		if (searchDomain.getAlleleSymbols() != null && !searchDomain.getAlleleSymbols().isEmpty()) {
+			where = where + "\nand a.symbol ilike '" + searchDomain.getAlleleSymbols() + "'";
+			from_allele = true;
+		}
+		
+		if (from_allele == true) {
+			from = from + ",all_allele_cellline_view a";
+			where = where + "\nand a._MutantCellLine_key = c._CellLine_key";
+		}
 		
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n";
 		log.info(cmd);
@@ -477,7 +490,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		String cmd = "\nselect _cellline_key"
 				+ "\nfrom ALL_CellLine"
 				+ "\nwhere isMutant = 1"
-				+ "\nand lower(cellLine) = lower('" + searchDomain.getCellLine() + "')";
+				+ "\nand cellLine ilike '" + searchDomain.getCellLine() + "'";
 
 		log.info(cmd);
 		
@@ -507,7 +520,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		String cmd = "\nselect _cellline_key"
 				+ "\nfrom ALL_CellLine"
 				+ "\nwhere isMutant = 0"
-				+ "\nand lower(cellLine) = lower('" + searchDomain.getCellLine() + "')";
+				+ "\nand cellLine ilike " + searchDomain.getCellLine() + "'";
 
 		log.info(cmd);
 		

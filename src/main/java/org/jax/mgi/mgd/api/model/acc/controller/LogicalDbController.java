@@ -67,8 +67,8 @@ public class LogicalDbController extends BaseController<LogicalDbDomain> {
 	@Path("/search")	
 	public List<LogicalDbDomain> search(LogicalDbDomain searchDomain) {
 
-		//SearchResults<LogicalDbDomain> results = new SearchResults<LogicalDbDomain>();
 		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
+
 		try {
 			results = ldbService.search(searchDomain);
 		} catch (Exception e) {
@@ -77,5 +77,21 @@ public class LogicalDbController extends BaseController<LogicalDbDomain> {
 		return results;
 
 	}
+
+	@POST
+	@ApiOperation(value = "Get Mutant Cell Line Logical DBs")
+	@Path("/searchMCLSet")
+	public List<LogicalDbDomain> searchMCLSet() {
+			
+		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
 		
+		try {
+			results = ldbService.searchMCLSet();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

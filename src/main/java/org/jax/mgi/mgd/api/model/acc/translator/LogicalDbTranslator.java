@@ -37,7 +37,6 @@ public class LogicalDbTranslator extends BaseEntityDomainTranslator<LogicalDB, L
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
 		if (entity.getActualDBs() != null && !entity.getActualDBs().isEmpty()) {
-			log.info("LogicalDbTranslator translating actual db");
 			Iterable<ActualDbDomain> actualDBs = adbTranslator.translateEntities(entity.getActualDBs());
 			domain.setActualDBs(IteratorUtils.toList(actualDBs.iterator()));
 

@@ -382,6 +382,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		String where = "where c.isMutant = 1";
 		String orderBy = "order by c.cellLine";		
 		Boolean from_allele = false;
+		Boolean from_accession = false;
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("c", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -448,9 +449,22 @@ public class CellLineService extends BaseService<CellLineDomain> {
 			from_allele = true;
 		}
 		
+		if (searchDomain.getEditAccessionIds() != null && !searchDomain.getEditAccessionIds().isEmpty()) {
+			if (searchDomain.getEditAccessionIds().get(0).getAccID() != null && !searchDomain.getEditAccessionIds().get(0).getAccID().isEmpty()) {	
+				where = where + "\nand acc.accID ilike '" + searchDomain.getEditAccessionIds().get(0).getAccID() + "'";
+				from_accession = true;
+			}			
+		}
+		
 		if (from_allele == true) {
 			from = from + ",all_allele_cellline_view a";
 			where = where + "\nand a._MutantCellLine_key = c._CellLine_key";
+		}
+		
+		if (from_accession == true) {
+			from = from + ",all_cellline_acc_view av";
+			where = where + "\nand a._MutantCellLine_key = av._object_key"
+					+ "\nand av._mgitype_key = 28";
 		}
 		
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n";

@@ -312,51 +312,55 @@ public class AccessionService extends BaseService<AccessionDomain> {
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processAccession update");
 
-				Boolean isUpdated = false;
+//				Boolean isUpdated = false;
 				Accession entity = accessionDAO.get(Integer.valueOf(domain.get(i).getAccessionKey()));
 		
-				if (!entity.getAccID().equals(domain.get(i).getAccID())) {
-					log.info("AccessionService: accid not the same");
-					isUpdated = true;
-				}
+//				if (!entity.getAccID().equals(domain.get(i).getAccID())) {
+//					log.info("AccessionService: accid not the same");
+//					isUpdated = true;
+//				}
+//				
+//				// Our assumption is that if the domain OR entity has no AccessionReferences
+//				// than it is not supposed to have one - and it is the UI responsibility to
+//				// pass in appropriate values. e.g. Markers accIDs have AccessionReferences, but VariantSequence 
+//				// accIDs do not. 
+//				// What we do here is only compare IFF both domain and entity have a value.
+//				if ((domain.get(i).getReferences() == null || domain.get(i).getReferences().get(0).getRefsKey().isEmpty()) 
+//						|| entity.getReferences() == null) {
+//					log.info("AccessionService: domain is null or empty or entity is null");
+//					continue;
+//				}
+//				else if ((domain.get(i).getReferences() == null || domain.get(i).getReferences().get(0).getRefsKey().isEmpty()) 
+//						|| entity.getReferences() == null) {
+//					log.info("AccessionService: domain is null or empty or entity is null");
+//					continue;
+//				}
+//				// if not entity/null and not domain/empty, then check if equivalent
+//				else { 
+//					if (entity.getReferences().get(0).getReference().get_refs_key() != Integer.parseInt(domain.get(i).getReferences().get(0).getRefsKey())) {
+//						log.info("AccessionService: references not the same");
+//						isUpdated = true;
+//					}
+//				}
 				
-				// Our assumption is that if the domain OR entity has no AccessionReferences
-				// than it is not supposed to have one - and it is the UI responsibility to
-				// pass in appropriate values. e.g. Markers accIDs have AccessionReferences, but VariantSequence 
-				// accIDs do not. 
-				// What we do here is only compare IFF both domain and entity have a value.
-				if ((domain.get(i).getReferences() == null || domain.get(i).getReferences().get(0).getRefsKey().isEmpty()) 
-						|| entity.getReferences() == null) {
-					log.info("AccessionService: domain is null or empty or entity is null");
-					continue;
-				}
-				// if not entity/null and not domain/empty, then check if equivalent
-				else { 
-					if (entity.getReferences().get(0).getReference().get_refs_key() != Integer.parseInt(domain.get(i).getReferences().get(0).getRefsKey())) {
-						log.info("AccessionService: references not the same");
-						isUpdated = true;
-					}
-				}
-				
-				if (isUpdated) {
-					log.info("AccessionService: is modified " );
-					cmd = "select count(*) from ACC_update ("
-							+ user.get_user_key().intValue()
-							+ "," + domain.get(i).getAccessionKey()
-							+ ",'" + domain.get(i).getAccID() + "'"
-							+ "," + domain.get(i).getObjectKey()
-							+ "," + entity.getReferences().get(0).getReference().get_refs_key()
-							+ "," + domain.get(i).getReferences().get(0).getRefsKey()
-							+ ")";
-					log.info("cmd: " + cmd);
-					Query query = accessionDAO.createNativeQuery(cmd);
-					query.getResultList();
-					modified = true;
-					log.info("processAccession/changes processed: " + domain.get(i).getAccessionKey());
-				}
-				else {
-					log.info("processAccession/no changes processed: " + domain.get(i).getAccessionKey());
-				}
+//				if (isUpdated) {
+				cmd = "select count(*) from ACC_update ("
+						+ user.get_user_key().intValue()
+						+ "," + domain.get(i).getAccessionKey()
+						+ ",'" + domain.get(i).getAccID() + "'"
+						+ "," + domain.get(i).getObjectKey()
+						+ "," + entity.getReferences().get(0).getReference().get_refs_key()
+						+ "," + domain.get(i).getReferences().get(0).getRefsKey()
+						+ ")";
+				log.info("cmd: " + cmd);
+				Query query = accessionDAO.createNativeQuery(cmd);
+				query.getResultList();
+				modified = true;
+				log.info("processAccession/changes processed: " + domain.get(i).getAccessionKey());
+//				}
+//				else {
+//					log.info("processAccession/no changes processed: " + domain.get(i).getAccessionKey());
+//				}
 			}
 			else {
 				log.info("processAccession/no changes processed: " + domain.get(i).getAccessionKey());

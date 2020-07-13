@@ -156,7 +156,7 @@ public class ProbeTissueService extends BaseService<ProbeTissueDomain> {
 	}
 	@Transactional	
 	public SearchResults<String> getTissueList() {
-		// generate SQL command to return a list of distinct journals
+		// generate SQL command to return a list of distinct strains
 		
 		List<String> results = new ArrayList<String>();
 

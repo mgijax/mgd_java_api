@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.prb.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -154,4 +155,29 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		return results;
 	}
 	
+	@Transactional	
+	public SearchResults<String> getStrainList() {
+		// generate SQL command to return a list of distinct strains
+		
+		List<String> results = new ArrayList<String>();
+
+		// building SQL command : select + from + where + orderBy
+		String cmd = "select distinct strain from PRB_Strain";
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.add(rs.getString("strain"));
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		Collections.sort(results);
+		return new SearchResults<String>(results);
+	}	
+	   
 }

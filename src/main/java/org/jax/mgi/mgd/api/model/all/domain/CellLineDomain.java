@@ -1,6 +1,9 @@
 package org.jax.mgi.mgd.api.model.all.domain;
 
+import java.util.List;
+
 import org.jax.mgi.mgd.api.model.BaseDomain;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -26,5 +29,6 @@ public class CellLineDomain extends BaseDomain {
 	
 	private AlleleCellLineDerivationDomain derivation;
 	private String alleleSymbols;
-	
+	private List<AccessionDomain> editAccessionIds;
+
 }

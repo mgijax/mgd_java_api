@@ -463,5 +463,56 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 		//return results;
 		return results;
 	}
+
+	@Transactional
+	public List<LogicalDbDomain> getMCLLogicalDBs() {
+		// get mutant cell line logical db list
+		// returns list of logical db domain
+
+		//		BayGenomics                 |             95
+		//		CMHD                        |             99
+		//		CSD-KOMP                    |            108
+		//		EGTC                        |            101
+		//		ESDB                        |            100
+		//		EUCOMM                      |            137
+		//		EUCOMM-GTcellline           |            128
+		//		FHCRC                       |            104
+		//		GGTC                        |            102
+		//		IGTC                        |             66
+		//		Ishida Y Cell Line          |            152
+		//		Lexicon                     |             96
+		//		mirKO                       |            165
+		//		NorCOMM                     |            142
+		//		Pleiades Promoter Cell Line |            181
+		//		Regeneron-KOMP              |            109
+		//		Ruley HE Cell Line          |            150
+		//		SIGTR                       |            103
+		//		TIGEM                       |             98
+		//		TIGM                        |             97
+		//		TIGM Cell Line              |            121	
+		
+		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
+
+		String cmd = "select _logicaldb_key, name from acc_logicaldb "
+				+ "\nwhere _logicaldb_key in (95,99,108,101,100,137,128,104,102,66,152,96,165,142,181,109,150,103,98,97,121)"
+				+ "\norder by name";
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {					
+				LogicalDbDomain domain = new LogicalDbDomain();									
+				domain = translator.translate(logicalDBDAO.get(rs.getInt("_logicaldb_key")));
+				results.add(domain);
+				logicalDBDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
 }

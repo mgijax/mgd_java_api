@@ -224,6 +224,29 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		
 		return results;
 	}
+		
+	@Transactional
+	public List<AccessionDomain> getMCLEditAccessionIds(Integer key) {
+		// gets mutant cell line accession ids : edit list
+		// see all_cellline_acc_view for details
+		// returns list of accession domain
+
+		List<AccessionDomain> results = new ArrayList<AccessionDomain>();
+
+		String cmd = "select * from all_cellline_acc_view "
+				+ "\nwhere _object_key = " + key
+				+ "\norder by _accession_key";
+		log.info(cmd);
+		
+		try {
+			results = getAccessionDomainList(cmd);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
 	//
 	// process accession ids : create, delete, update

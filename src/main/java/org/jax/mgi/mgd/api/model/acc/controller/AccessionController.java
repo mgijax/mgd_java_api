@@ -106,6 +106,22 @@ public class AccessionController extends BaseController<AccessionDomain> {
 	}
 	
 	@POST
+	@ApiOperation(value = "Get Mutant Cell Line Edit Accession Ids")
+	@Path("/mclEditAccessionIds")
+	public List<AccessionDomain> getMCLEditAccessionIds(Integer key) {
+			
+		List<AccessionDomain> results = new ArrayList<AccessionDomain>();
+		
+		try {
+			results = accessionService.getMarkerEditAccessionIds(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@POST
 	@ApiOperation(value = "Process Accession Ids")
 	@Path("/process")
 	public Boolean process(String parentKey, List<AccessionDomain> domain, String mgiTypeKey, User user) {

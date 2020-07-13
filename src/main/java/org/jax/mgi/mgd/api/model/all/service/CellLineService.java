@@ -450,6 +450,12 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		}
 		
 		if (searchDomain.getEditAccessionIds() != null && !searchDomain.getEditAccessionIds().isEmpty()) {
+
+			if (searchDomain.getEditAccessionIds().get(0).getLogicaldbKey() != null && !searchDomain.getEditAccessionIds().get(0).getLogicaldbKey().isEmpty()) {	
+				where = where + "\nand acc._logicaldb_key = " + searchDomain.getEditAccessionIds().get(0).getLogicaldbKey();
+				from_accession = true;
+			}
+			
 			if (searchDomain.getEditAccessionIds().get(0).getAccID() != null && !searchDomain.getEditAccessionIds().get(0).getAccID().isEmpty()) {	
 				where = where + "\nand acc.accID ilike '" + searchDomain.getEditAccessionIds().get(0).getAccID() + "'";
 				from_accession = true;
@@ -462,9 +468,9 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		}
 		
 		if (from_accession == true) {
-			from = from + ",all_cellline_acc_view av";
-			where = where + "\nand a._MutantCellLine_key = av._object_key"
-					+ "\nand av._mgitype_key = 28";
+			from = from + ",all_cellline_acc_view acc";
+			where = where + "\nand a._MutantCellLine_key = acc._object_key"
+					+ "\nand acc._mgitype_key = 28";
 		}
 		
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n";

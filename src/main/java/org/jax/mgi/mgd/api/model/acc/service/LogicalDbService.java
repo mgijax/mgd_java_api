@@ -465,7 +465,7 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 	}
 
 	@Transactional
-	public List<LogicalDbDomain> getMCLLogicalDBs() {
+	public List<LogicalDbDomain> searchMCLSet() {
 		// get mutant cell line logical db list
 		// returns list of logical db domain
 

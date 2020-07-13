@@ -81,12 +81,12 @@ public class LogicalDbController extends BaseController<LogicalDbDomain> {
 	@POST
 	@ApiOperation(value = "Get Mutant Cell Line Logical DBs")
 	@Path("/mclLogicalDBs")
-	public List<LogicalDbDomain> getMCLLogicalDBs() {
+	public List<LogicalDbDomain> searchMCLSet() {
 			
 		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
 		
 		try {
-			results = ldbService.getMCLLogicalDBs();
+			results = ldbService.searchMCLSet();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

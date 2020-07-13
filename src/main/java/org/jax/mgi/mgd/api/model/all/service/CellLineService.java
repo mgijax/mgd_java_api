@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleCellLineDerivationDAO;
 import org.jax.mgi.mgd.api.model.all.dao.CellLineDAO;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDerivationDomain;
@@ -43,11 +44,17 @@ public class CellLineService extends BaseService<CellLineDomain> {
 	private AlleleCellLineDerivationDAO derivationDAO;
 	@Inject
 	private AlleleCellLineDerivationService derivationService;
+	@Inject
+	private AccessionService accessionService;
 	
 	private CellLineTranslator translator = new CellLineTranslator();	
 	private SlimCellLineTranslator slimtranslator = new SlimCellLineTranslator();
 	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
+	
+	//private String mgiTypeKey = "28";
+	private String mgiTypeName = "ES Cell Line";
+	
 
 	@Transactional
 	public SearchResults<CellLineDomain> create(CellLineDomain domain, User user) {
@@ -82,6 +89,11 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		// execute persist/insert/send to database
 		cellLineDAO.persist(entity);
 	
+		// process accession ids
+		if (domain.getEditAccessionIds() != null && !domain.getEditAccessionIds().isEmpty()) {
+			accessionService.process(String.valueOf(entity.get_cellline_key()), domain.getEditAccessionIds(), mgiTypeName, user);
+		}
+		
 		// return entity translated to domain
 		log.info("processCellLine/create/returning results");
 		results.setItem(translator.translate(entity));
@@ -109,6 +121,11 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		}
 		else {
 			entity.setDerivation(null);
+		}
+		
+		// process accession ids
+		if (domain.getEditAccessionIds() != null && !domain.getEditAccessionIds().isEmpty()) {
+			accessionService.process(domain.getCellLineKey(), domain.getEditAccessionIds(), mgiTypeName, user);
 		}
 		
 		entity.setModification_date(new Date());

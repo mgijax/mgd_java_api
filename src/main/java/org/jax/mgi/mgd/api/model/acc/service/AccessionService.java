@@ -315,7 +315,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 				
 				// origRefsKey can be null; default = -1
 				String origRefsKey = "-1";
-				if (entity.getReferences() != null) {
+				if (entity.getReferences().size() > 0) {
 					log.info("processAccession update/getting original reference");
 				    origRefsKey = String.valueOf(entity.getReferences().get(0).getReference().get_refs_key());
 				}
@@ -323,7 +323,8 @@ public class AccessionService extends BaseService<AccessionDomain> {
 				// refsKey can be null; default = -1
 				String refsKey = "-1";
 				if (domain.get(i).getReferences() != null) {
-				    refsKey = domain.get(i).getReferences().get(0).getRefsKey();
+					log.info("processAccession update/getting new reference");
+					refsKey = domain.get(i).getReferences().get(0).getRefsKey();
 				}
 											
 				cmd = "select count(*) from ACC_update ("

@@ -80,7 +80,7 @@ public class LogicalDbController extends BaseController<LogicalDbDomain> {
 
 	@POST
 	@ApiOperation(value = "Get Mutant Cell Line Logical DBs")
-	@Path("/mclLogicalDBs")
+	@Path("/searchMCLSet")
 	public List<LogicalDbDomain> searchMCLSet() {
 			
 		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();

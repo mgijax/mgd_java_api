@@ -113,7 +113,7 @@ public class AccessionController extends BaseController<AccessionDomain> {
 		List<AccessionDomain> results = new ArrayList<AccessionDomain>();
 		
 		try {
-			results = accessionService.getMarkerEditAccessionIds(key);
+			results = accessionService.getMCLEditAccessionIds(key);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -316,6 +316,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 				// origRefsKey can be null; default = -1
 				String origRefsKey = "-1";
 				if (entity.getReferences() != null) {
+					log.info("processAccession update/getting original reference");
 				    origRefsKey = String.valueOf(entity.getReferences().get(0).getReference().get_refs_key());
 				}
 				

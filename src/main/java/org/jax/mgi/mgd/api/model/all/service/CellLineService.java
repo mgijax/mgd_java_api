@@ -61,13 +61,9 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		
 		log.info("processCellLine/create");
 
-		log.info("processCellLine/getCellLine");
 		entity.setCellLine(domain.getCellLine());
-		log.info("processCellLine/getIsMutant");
 		entity.setIsMutant(Integer.valueOf(domain.getIsMutant()));
-		log.info("processCellLine/getCellLineType");
 		entity.setCellLineType(termDAO.get(Integer.valueOf(domain.getCellLineTypeKey())));
-		log.info("processCellLine/getStrain");
 		entity.setStrain(strainDAO.get(Integer.valueOf(domain.getStrainKey())));
 		
 		if (domain.getDerivation() != null) {

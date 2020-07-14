@@ -69,6 +69,13 @@ public class CellLineController extends BaseController<CellLineDomain> {
 	public SearchResults<CellLineDomain> getParentCellLineCount() {
 		return cellLineService.getParentCellLineCount();
 	}
+
+	@POST
+	@ApiOperation(value = "Get the mutant cell line count by parent cell line")
+	@Path("/getMCLCountByParentCellLine")
+	public SearchResults<CellLineDomain> getMCLCountByParentCellLine(Integer key) {
+		return cellLineService.getMCLCountByParentCellLine(key);
+	}
 	
 	@POST
 	@ApiOperation(value = "Search Mutant Cell Lines")
@@ -89,8 +96,17 @@ public class CellLineController extends BaseController<CellLineDomain> {
 	@POST
 	@ApiOperation(value = "Search Parent Cell Lines")
 	@Path("/searchParentCellLines")
-	public List<CellLineDomain> searchParentCellLines() {
-		return cellLineService.searchParentCellLines();
+	public List<CellLineDomain> searchParentCellLines(CellLineDomain searchDomain) {
+
+		List<CellLineDomain> results = new ArrayList<CellLineDomain>();
+		
+		try {
+			results = cellLineService.searchParentCellLines(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;	
 	}
 	
 	@POST

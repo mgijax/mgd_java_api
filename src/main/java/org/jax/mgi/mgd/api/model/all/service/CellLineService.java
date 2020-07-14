@@ -175,7 +175,8 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		
 		SearchResults<CellLineDomain> results = new SearchResults<CellLineDomain>();
 		String cmd = "select count(*) as objectCount from all_cellline where isMutant = 1";
-		
+		log.info(cmd);
+
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
@@ -196,7 +197,31 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		
 		SearchResults<CellLineDomain> results = new SearchResults<CellLineDomain>();
 		String cmd = "select count(*) as objectCount from all_cellline where isMutant = 0";
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getInt("objectCount");
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		
+		
+		return results;		
+	}
+
+	@Transactional	
+	public SearchResults<CellLineDomain> getMCLCountByParentCellLine(Integer key) {
+		// count of mutant cell lines by parent cell line key
+		
+		SearchResults<CellLineDomain> results = new SearchResults<CellLineDomain>();
+		String cmd = "select count(_CellLine_key) as objectCount from ALL_CellLine_View where parentCellLine_key = " + key;
+		log.info(cmd);
+
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
@@ -210,7 +235,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		
 		return results;		
 	}
-		
+	
     @Transactional
     public SearchResults<CellLineDomain> createMutantCellLine (String alleleTypeKey, CellLineDomain domain, User user) {
 		// potential new mutant cell line for allele/cellline association
@@ -382,6 +407,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		String where = "where c.isMutant = 1";
 		String orderBy = "order by c.cellLine";		
 		Boolean from_allele = false;
+		Boolean from_accession = false;
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("c", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -448,9 +474,28 @@ public class CellLineService extends BaseService<CellLineDomain> {
 			from_allele = true;
 		}
 		
+		if (searchDomain.getEditAccessionIds() != null && !searchDomain.getEditAccessionIds().isEmpty()) {
+
+			if (searchDomain.getEditAccessionIds().get(0).getLogicaldbKey() != null && !searchDomain.getEditAccessionIds().get(0).getLogicaldbKey().isEmpty()) {	
+				where = where + "\nand acc._logicaldb_key = " + searchDomain.getEditAccessionIds().get(0).getLogicaldbKey();
+				from_accession = true;
+			}
+			
+			if (searchDomain.getEditAccessionIds().get(0).getAccID() != null && !searchDomain.getEditAccessionIds().get(0).getAccID().isEmpty()) {	
+				where = where + "\nand acc.accID ilike '" + searchDomain.getEditAccessionIds().get(0).getAccID() + "'";
+				from_accession = true;
+			}			
+		}
+		
 		if (from_allele == true) {
 			from = from + ",all_allele_cellline_view a";
-			where = where + "\nand a._MutantCellLine_key = c._CellLine_key";
+			where = where + "\nand c._CellLine_key = a._MutantCellLine_key";
+		}
+		
+		if (from_accession == true) {
+			from = from + ",all_cellline_acc_view acc";
+			where = where + "\nand c._cellLine_key = acc._object_key"
+					+ "\nand acc._mgitype_key = 28";
 		}
 		
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n";
@@ -474,12 +519,36 @@ public class CellLineService extends BaseService<CellLineDomain> {
 	}
 	
 	@Transactional
-	public List<CellLineDomain> searchParentCellLines() {
+	public List<CellLineDomain> searchParentCellLines(CellLineDomain searchDomain) {
 
 		List<CellLineDomain> results = new ArrayList<CellLineDomain>();
 		
-		String cmd = "\nselect _CellLine_key from ALL_CellLine where isMutant = 0 order by cellLine";
+		String cmd = "";
+		String select = "select distinct c._cellline_key, c.cellLine";
+		String from = "from all_cellline_view c";
+		String where = "where c.isMutant = 0";
+		String orderBy = "order by c.cellLine";		
 
+		// if parameter exists, then add to where-clause
+		String cmResults[] = DateSQLQuery.queryByCreationModification("c", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
+		if (cmResults.length > 0) {
+			from = from + cmResults[0];
+			where = where + cmResults[1];
+		}
+
+		if (searchDomain.getCellLine() != null && !searchDomain.getCellLine().isEmpty()) {
+			where = where + "\nand c.cellLine ilike '" + searchDomain.getCellLine() + "'" ;
+		}
+
+		if (searchDomain.getCellLineTypeKey() != null && !searchDomain.getCellLineTypeKey().isEmpty()) {
+			where = where + "\nand c._cellline_type_key = " + searchDomain.getCellLineTypeKey();
+		}
+
+		if (searchDomain.getStrainKey() != null && !searchDomain.getStrainKey().isEmpty()) {
+			where = where + "\nand c._strain_key = " + searchDomain.getStrainKey();
+		}
+		
+		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n";
 		log.info(cmd);
 		
 		try {			

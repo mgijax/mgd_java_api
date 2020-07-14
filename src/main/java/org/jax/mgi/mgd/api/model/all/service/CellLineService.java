@@ -175,7 +175,8 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		
 		SearchResults<CellLineDomain> results = new SearchResults<CellLineDomain>();
 		String cmd = "select count(*) as objectCount from all_cellline where isMutant = 1";
-		
+		log.info(cmd);
+
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
@@ -187,7 +188,6 @@ public class CellLineService extends BaseService<CellLineDomain> {
 			e.printStackTrace();
 		}
 		
-		log.info(cmd);
 		return results;		
 	}
 	
@@ -197,7 +197,8 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		
 		SearchResults<CellLineDomain> results = new SearchResults<CellLineDomain>();
 		String cmd = "select count(*) as objectCount from all_cellline where isMutant = 0";
-		
+		log.info(cmd);
+
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
@@ -208,6 +209,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		
 		return results;		
 	}
@@ -218,7 +220,8 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		
 		SearchResults<CellLineDomain> results = new SearchResults<CellLineDomain>();
 		String cmd = "select count(_CellLine_key) as objectCount from ALL_CellLine_View where parentCellLine_key = " + key;
-		
+		log.info(cmd);
+
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {

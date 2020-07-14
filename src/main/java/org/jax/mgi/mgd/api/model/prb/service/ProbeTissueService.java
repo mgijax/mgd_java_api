@@ -42,7 +42,7 @@ public class ProbeTissueService extends BaseService<ProbeTissueDomain> {
 	@Transactional
 	public SearchResults<ProbeTissueDomain> create(ProbeTissueDomain domain, User user) {
 		SearchResults<ProbeTissueDomain> results = new SearchResults<ProbeTissueDomain>();
-		//results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		
 		log.info("ProbeTissueService.create");
 		ProbeTissue entity = new ProbeTissue();
 		

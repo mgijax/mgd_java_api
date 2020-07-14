@@ -519,12 +519,36 @@ public class CellLineService extends BaseService<CellLineDomain> {
 	}
 	
 	@Transactional
-	public List<CellLineDomain> searchParentCellLines() {
+	public List<CellLineDomain> searchParentCellLines(CellLineDomain searchDomain) {
 
 		List<CellLineDomain> results = new ArrayList<CellLineDomain>();
 		
-		String cmd = "\nselect _CellLine_key from ALL_CellLine where isMutant = 0 order by cellLine";
+		String cmd = "";
+		String select = "select distinct c._cellline_key, c.cellLine";
+		String from = "from all_cellline_view c";
+		String where = "where c.isMutant = 0";
+		String orderBy = "order by c.cellLine";		
 
+		// if parameter exists, then add to where-clause
+		String cmResults[] = DateSQLQuery.queryByCreationModification("c", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
+		if (cmResults.length > 0) {
+			from = from + cmResults[0];
+			where = where + cmResults[1];
+		}
+
+		if (searchDomain.getCellLine() != null && !searchDomain.getCellLine().isEmpty()) {
+			where = where + "\nand c.cellLine ilike '" + searchDomain.getCellLine() + "'" ;
+		}
+
+		if (searchDomain.getCellLineTypeKey() != null && !searchDomain.getCellLineTypeKey().isEmpty()) {
+			where = where + "\nand c._cellline_type_key = " + searchDomain.getCellLineTypeKey();
+		}
+
+		if (searchDomain.getStrainKey() != null && !searchDomain.getStrainKey().isEmpty()) {
+			where = where + "\nand c._strain_key = " + searchDomain.getStrainKey();
+		}
+		
+		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n";
 		log.info(cmd);
 		
 		try {			

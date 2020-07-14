@@ -96,8 +96,17 @@ public class CellLineController extends BaseController<CellLineDomain> {
 	@POST
 	@ApiOperation(value = "Search Parent Cell Lines")
 	@Path("/searchParentCellLines")
-	public List<CellLineDomain> searchParentCellLines() {
-		return cellLineService.searchParentCellLines();
+	public List<CellLineDomain> searchParentCellLines(CellLineDomain searchDomain) {
+
+		List<CellLineDomain> results = new ArrayList<CellLineDomain>();
+		
+		try {
+			results = cellLineService.searchParentCellLines(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;	
 	}
 	
 	@POST

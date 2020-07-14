@@ -57,10 +57,7 @@ public class ProbeTissueService extends BaseService<ProbeTissueDomain> {
 		probeTissueDAO.persist(entity);
 		
 		log.info("Tissue/create/returning results");
-		
-		ProbeTissueDomain tDomain = translator.translate(entity);
-		log.info("ProbeTissueService.create after persist tissue: " + tDomain.getTissue() + " key: " + tDomain.getTissueKey());
-		results.setItem(tDomain);
+		results.setItem(translator.translate(entity));
 		
 		return results;
 	}

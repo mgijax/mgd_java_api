@@ -187,6 +187,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 			e.printStackTrace();
 		}
 		
+		log.info(cmd);
 		return results;		
 	}
 	

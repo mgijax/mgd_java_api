@@ -210,7 +210,28 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		
 		return results;		
 	}
+
+	@Transactional	
+	public SearchResults<CellLineDomain> getMCLCountByParentCellLine(Integer key) {
+		// count of mutant cell lines by parent cell line key
 		
+		SearchResults<CellLineDomain> results = new SearchResults<CellLineDomain>();
+		String cmd = "select count(_CellLine_key) as objectCount from ALL_CellLine_View where parentCellLine_key = " + key;
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getInt("objectCount");
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;		
+	}
+	
     @Transactional
     public SearchResults<CellLineDomain> createMutantCellLine (String alleleTypeKey, CellLineDomain domain, User user) {
 		// potential new mutant cell line for allele/cellline association

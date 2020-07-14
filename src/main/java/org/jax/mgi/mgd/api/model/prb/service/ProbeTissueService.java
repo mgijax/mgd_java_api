@@ -34,7 +34,6 @@ public class ProbeTissueService extends BaseService<ProbeTissueDomain> {
 
 	@Inject
 	ProbeTissueDAO probeTissueDAO;
-	@Inject
 	
 	private ProbeTissueTranslator translator = new ProbeTissueTranslator();
 	
@@ -43,7 +42,25 @@ public class ProbeTissueService extends BaseService<ProbeTissueDomain> {
 	@Transactional
 	public SearchResults<ProbeTissueDomain> create(ProbeTissueDomain domain, User user) {
 		SearchResults<ProbeTissueDomain> results = new SearchResults<ProbeTissueDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		//results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		log.info("ProbeTissueService.create");
+		ProbeTissue entity = new ProbeTissue();
+		
+		if (domain.getStandard() == null || domain.getStandard().isEmpty()) {
+			domain.setStandard("1");
+		}
+		entity.setTissue(domain.getTissue());
+		entity.setStandard(Integer.valueOf(domain.getStandard()));
+		entity.setCreation_date(new Date());
+		entity.setModification_date(new Date());	
+		
+		probeTissueDAO.persist(entity);
+		
+		log.info("Tissue/create/returning results");
+		
+		ProbeTissueDomain tDomain = translator.translate(entity);
+		log.info("ProbeTissueService.create after persist tissue: " + tDomain.getTissue() + " key: " + tDomain.getTissueKey());
+		results.setItem(tDomain);
 		
 		return results;
 	}

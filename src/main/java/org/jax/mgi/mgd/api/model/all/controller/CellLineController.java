@@ -70,7 +70,7 @@ public class CellLineController extends BaseController<CellLineDomain> {
 		return cellLineService.getParentCellLineCount();
 	}
 
-	@GET
+	@POST
 	@ApiOperation(value = "Get the mutant cell line count by parent cell line")
 	@Path("/getMCLCountByParentCellLine")
 	public SearchResults<CellLineDomain> getMCLCountByParentCellLine(Integer key) {

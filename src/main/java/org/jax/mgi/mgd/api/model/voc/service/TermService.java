@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.voc.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -352,5 +353,29 @@ public class TermService extends BaseService<TermDomain> {
 			e.printStackTrace();
 		}	
 		return results;
+	}
+	
+	@Transactional	
+	public SearchResults<String> getTermList(Integer key) {
+		// generate SQL command to return a list of terms
+		List<String> results = new ArrayList<String>();
+		
+		String cmd = "select term from VOC_Term where _Vocab_key = " + key;
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.add(rs.getString("term"));
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		Collections.sort(results);
+		return new SearchResults<String>(results);
+	
 	}
 }

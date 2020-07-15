@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -99,5 +100,21 @@ public class TermController extends BaseController<TermDomain> {
 	@Path("/termset")
 	public List<SlimTermDomain> getTermSet(String setName) {
 		return termService.getTermSet(setName);
+	}
+	@POST
+	@ApiOperation(value = "get list of terms")
+	@Path("/getTermList")
+	public SearchResults<String> getTermList(Integer vocabKey) {
+	
+		SearchResults<String> results = null;
+
+		try {
+			results = termService.getTermList(vocabKey);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		//log.info(results);
+		return results;
 	}
 }

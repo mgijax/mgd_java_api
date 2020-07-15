@@ -45,9 +45,6 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 	@Inject
 	private TermDAO termDAO;
 	
-	@Inject 
-	private ProbeTissueService tissueService;
-	
 	private ProbeSourceTranslator translator = new ProbeSourceTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
@@ -82,22 +79,8 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		// If key is empty we either set to default or check tissue
 		if(domain.getTissueKey() == null || domain.getTissueKey().isEmpty()) {
 			// Not Specified
-			if (domain.getTissue() == null || domain.getTissue().isEmpty()) {
-				domain.setTissueKey("-1");
-			}
-			else {
-				// new tissue to create
-				ProbeTissueDomain tissueDomain = new ProbeTissueDomain();
-				tissueDomain.setTissue(domain.getTissue());
-				
-				SearchResults<ProbeTissueDomain> tissueResults = tissueService.create(tissueDomain, user);
+			domain.setTissueKey("-1");
 
-				domain.setTissueKey(tissueResults.items.get(0).getTissueKey());
-
-				log.info("done setting tissue key in ProbeSourceDomain");
-				
-			}
-			// otherwise the tissue key is already set in the domain. The key will be transferred to the entity below
 		}
 		
 		// Not Specified
@@ -153,6 +136,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		entity.setCreation_date(new Date());
 		entity.setModifiedBy(user);
 		entity.setModification_date(new Date());				
+		
 		
 		probeSourceDAO.persist(entity);				
 

@@ -102,14 +102,14 @@ public class TermController extends BaseController<TermDomain> {
 		return termService.getTermSet(setName);
 	}
 	@POST
-	@ApiOperation(value = "get list of terms")
+	@ApiOperation(value = "get list of terms by vocabKey")
 	@Path("/getTermList")
-	public SearchResults<String> getTermList(Integer vocabKey) {
+	public SearchResults<String> getVocabTermList(Integer vocabKey) {
 	
 		SearchResults<String> results = null;
 
 		try {
-			results = termService.getTermList(vocabKey);
+			results = termService.getVocabTermList(vocabKey);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

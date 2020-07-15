@@ -356,11 +356,11 @@ public class TermService extends BaseService<TermDomain> {
 	}
 	
 	@Transactional	
-	public SearchResults<String> getTermList(Integer key) {
+	public SearchResults<String> getVocabTermList(int vocabKey) {
 		// generate SQL command to return a list of terms
 		List<String> results = new ArrayList<String>();
 		
-		String cmd = "select term from VOC_Term where _Vocab_key = " + key;
+		String cmd = "select term from VOC_Term where _Vocab_key = " + vocabKey;
 		log.info(cmd);
 
 		try {

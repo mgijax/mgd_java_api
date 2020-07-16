@@ -178,7 +178,7 @@ public class TermService extends BaseService<TermDomain> {
 		for (int i = 0; i < domain.size(); i++) {
 
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
-	
+				log.info("TermService.process.update");
 				// if term is null/empty, then skip
 				// pwi has sent a "c" that is empty/not being used
 				if (domain.get(i).getTerm() == null || domain.get(i).getTerm().isEmpty()) {

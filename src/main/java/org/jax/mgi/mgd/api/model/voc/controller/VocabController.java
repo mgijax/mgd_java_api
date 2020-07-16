@@ -40,6 +40,7 @@ public class VocabController extends BaseController<VocabularyDomain> {
 
 	@Override
 	public SearchResults<VocabularyDomain> update(VocabularyDomain domain, User user) {
+		log.info("VocabController.update");
 		SearchResults<VocabularyDomain> results = new SearchResults<VocabularyDomain>();
         results = vocabService.update(domain, user);
         results = vocabService.getResults(Integer.valueOf(results.items.get(0).getVocabKey()));       

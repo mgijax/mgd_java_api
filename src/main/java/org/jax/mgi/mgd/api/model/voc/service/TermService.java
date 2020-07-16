@@ -178,15 +178,15 @@ public class TermService extends BaseService<TermDomain> {
 		for (int i = 0; i < domain.size(); i++) {
 
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
-				log.info("TermService.process.update");
+				log.info("TermService.process.create");
 				// if term is null/empty, then skip
 				// pwi has sent a "c" that is empty/not being used
 				if (domain.get(i).getTerm() == null || domain.get(i).getTerm().isEmpty()) {
+					log.info("empty term");
 					continue;
 				}
 
-				log.info("processTerm create");
-				
+				log.info("creating entity");
 				Term entity = new Term();	
 				log.info("vocabKey");
 				entity.set_vocab_key(Integer.valueOf(vocabKey));

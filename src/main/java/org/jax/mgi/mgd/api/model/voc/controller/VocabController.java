@@ -32,6 +32,7 @@ public class VocabController extends BaseController<VocabularyDomain> {
 
 	@Override
 	public SearchResults<VocabularyDomain> create(VocabularyDomain domain, User user) {
+		log.info("VocabController.create");
 		SearchResults<VocabularyDomain> results = new SearchResults<VocabularyDomain>();
         results = vocabService.create(domain, user);
         results = vocabService.getResults(Integer.valueOf(results.items.get(0).getVocabKey()));

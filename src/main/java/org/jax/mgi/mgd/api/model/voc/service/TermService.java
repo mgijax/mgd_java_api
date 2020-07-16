@@ -187,16 +187,26 @@ public class TermService extends BaseService<TermDomain> {
 
 				log.info("processTerm create");
 				
-				Term entity = new Term();				
+				Term entity = new Term();	
+				log.info("vocabKey");
 				entity.set_vocab_key(Integer.valueOf(vocabKey));
+				log.info("term");
 				entity.setTerm(domain.get(i).getTerm());
+				log.info("abbrev");
 				entity.setAbbreviation(domain.get(i).getAbbreviation());
+				log.info("note");
 				entity.setNote(domain.get(i).getNote());
+				log.info("seqNum");
 				entity.setSequenceNum(Integer.valueOf(domain.get(i).getSequenceNum()));
-				entity.setIsObsolete(Integer.valueOf(domain.get(i).getIsObsolete()));				
+				log.info("isObsolete");
+				entity.setIsObsolete(Integer.valueOf(domain.get(i).getIsObsolete()));	
+				log.info("createdby");
 				entity.setCreatedBy(user);
+				log.info("modifiedby");
 				entity.setModifiedBy(user);
+				log.info("creation date");
 				entity.setCreation_date(new Date());
+				log.info("mod date");
 				entity.setModification_date(new Date());
 				termDAO.persist(entity);
 				

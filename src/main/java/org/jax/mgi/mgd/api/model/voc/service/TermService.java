@@ -196,9 +196,9 @@ public class TermService extends BaseService<TermDomain> {
 				entity.setAbbreviation(domain.get(i).getAbbreviation());
 				log.info("note");
 				entity.setNote(domain.get(i).getNote());
-				log.info("seqNum" + domain.get(i).getSequenceNum());
+				log.info("seqNum: " + domain.get(i).getSequenceNum());
 				entity.setSequenceNum(Integer.valueOf(domain.get(i).getSequenceNum()));
-				log.info("isObsolete");
+				log.info("isObsolete: " +  domain.get(i).getIsObsolete());
 				entity.setIsObsolete(Integer.valueOf(domain.get(i).getIsObsolete()));	
 				log.info("createdby");
 				entity.setCreatedBy(user);

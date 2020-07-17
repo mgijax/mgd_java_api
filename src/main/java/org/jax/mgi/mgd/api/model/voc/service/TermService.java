@@ -185,28 +185,40 @@ public class TermService extends BaseService<TermDomain> {
 					log.info("empty term");
 					continue;
 				}
-
-				log.info("creating entity");
+				
 				Term entity = new Term();	
-				log.info("vocabKey");
+				log.info("vocabKey: " + vocabKey );
 				entity.set_vocab_key(Integer.valueOf(vocabKey));
-				log.info("term");
+				log.info("term: " + domain.get(i).getTerm());
 				entity.setTerm(domain.get(i).getTerm());
-				log.info("abbrev");
 				entity.setAbbreviation(domain.get(i).getAbbreviation());
-				log.info("note");
 				entity.setNote(domain.get(i).getNote());
 				log.info("seqNum: " + domain.get(i).getSequenceNum());
-				entity.setSequenceNum(Integer.valueOf(domain.get(i).getSequenceNum()));
+				if (domain.get(i).getVocabKey().equals("18")) { // cell line vocab
+					log.info("cell line vocab");
+					String seqNum = getNextSequenceNum(domain.get(i).getVocabKey());
+					log.info("next cell line seqnum: " + seqNum);
+					entity.setSequenceNum(Integer.valueOf(seqNum));
+				}
+				else if (domain.get(i).getSequenceNum() == null || domain.get(0).getSequenceNum().isEmpty()) {
+					entity.setSequenceNum(null); // some vocabs have null sequenceNum
+				}
+				else {
+					entity.setSequenceNum(Integer.valueOf(domain.get(i).getSequenceNum()));
+				}
+				log.info("seqNum after calculating: " + domain.get(i).getSequenceNum());
+				
 				log.info("isObsolete: " +  domain.get(i).getIsObsolete());
-				entity.setIsObsolete(Integer.valueOf(domain.get(i).getIsObsolete()));	
-				log.info("createdby");
+				if (domain.get(i).getIsObsolete() == null || domain.get(i).getIsObsolete().isEmpty() ) {
+					entity.setIsObsolete(0); // default
+				}
+				else {
+					entity.setIsObsolete(Integer.valueOf(domain.get(i).getIsObsolete()));	
+				}
+
 				entity.setCreatedBy(user);
-				log.info("modifiedby");
 				entity.setModifiedBy(user);
-				log.info("creation date");
 				entity.setCreation_date(new Date());
-				log.info("mod date");
 				entity.setModification_date(new Date());
 				termDAO.persist(entity);
 				
@@ -262,6 +274,36 @@ public class TermService extends BaseService<TermDomain> {
 		return search(domain);
 	}
 
+	@Transactional
+	// Assumes the vocabKey being sent has non-null sequenceNum
+	public String getNextSequenceNum(String vocabKey) {
+		log.info("in getNextSequencNum");
+		String next = null;
+		
+		String cmd = "select max(sequenceNum) as maxNum from VOC_Term"
+					+ "\nwhere _Vocab_key = " + vocabKey;
+		
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			log.info("iterating over rs");
+			while (rs.next()) {
+				log.info("calling rs.getInt(\"maxNum\") + 1");
+				int n  = rs.getInt("maxNum") + 1;
+				log.info("value of n: " + n);
+				log.info("calling String.valueOf(n)");
+				next = String.valueOf(n);
+				log.info("getNextSequenceNum next: " + next);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return next;
+	}
+	
 	@Transactional	
 	public List<SlimTermDomain> validateMPHeaderTerm(SlimTermDomain domain) {
 		// verify that the term is a header term

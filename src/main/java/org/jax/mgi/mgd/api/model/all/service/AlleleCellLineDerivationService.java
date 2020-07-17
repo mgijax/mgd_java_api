@@ -123,6 +123,27 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		return results;
     }
  
+	@Transactional	
+	public SearchResults<AlleleCellLineDerivationDomain> getObjectCount() {
+		// return the object count from the database
+		
+		SearchResults<AlleleCellLineDerivationDomain> results = new SearchResults<AlleleCellLineDerivationDomain>();
+		String cmd = "select count(*) as objectCount from all_cellline_derivation";
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getInt("objectCount");
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;		
+	}
+	
 	@Transactional
 	public List<AlleleCellLineDerivationDomain> searchMCLSet() {
 		// search a mutant cell line set of derivations

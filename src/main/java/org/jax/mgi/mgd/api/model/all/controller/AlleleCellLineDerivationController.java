@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -55,6 +56,13 @@ public class AlleleCellLineDerivationController extends BaseController<AlleleCel
 		return derivationService.get(key);
 	}
 
+	@GET
+	@ApiOperation(value = "Get the object count from all_cellline_derivation table")
+	@Path("/getObjectCount")
+	public SearchResults<AlleleCellLineDerivationDomain> getObjectCount() {
+		return derivationService.getObjectCount();
+	}
+	
 	@POST
 	@ApiOperation(value = "Search Mutant Cell Line Set")
 	@Path("/searchMCLSet")

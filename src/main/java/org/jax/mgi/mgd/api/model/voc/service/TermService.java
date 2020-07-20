@@ -41,10 +41,54 @@ public class TermService extends BaseService<TermDomain> {
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
-	public SearchResults<TermDomain> create(TermDomain termDomain, User user) {
+	public SearchResults<TermDomain> create(TermDomain domain, User user) {
 		SearchResults<TermDomain> results = new SearchResults<TermDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		//results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		
+		Term entity = new Term();	
+		String vocabKey = domain.getVocabKey();
+		
+		log.info("vocabKey: " + vocabKey );
+		entity.set_vocab_key(Integer.valueOf(vocabKey));
+		
+		log.info("term: " + domain.getTerm());
+		entity.setTerm(domain.getTerm());
+		entity.setAbbreviation(domain.getAbbreviation());
+		entity.setNote(domain.getNote());
+		
+		log.info("seqNum: " + domain.getSequenceNum());
+		if (vocabKey.equals("18")) { // cell line vocab
+			log.info("cell line vocab");
+			String seqNum = getNextSequenceNum(vocabKey);
+			
+			log.info("next cell line seqnum: " + seqNum);
+			entity.setSequenceNum(Integer.valueOf(seqNum));
+		}
+		else if (domain.getSequenceNum() == null || domain.getSequenceNum().isEmpty()) {
+			entity.setSequenceNum(null); // some vocabs have null sequenceNum
+		}
+		else {
+			entity.setSequenceNum(Integer.valueOf(domain.getSequenceNum()));
+		}
+		log.info("seqNum after calculating: " + domain.getSequenceNum());
+		
+		log.info("isObsolete: " +  domain.getIsObsolete());
+		if (domain.getIsObsolete() == null || domain.getIsObsolete().isEmpty() ) {
+			entity.setIsObsolete(0); // default
+		}
+		else {
+			entity.setIsObsolete(Integer.valueOf(domain.getIsObsolete()));	
+		}
+
+		entity.setCreatedBy(user);
+		entity.setModifiedBy(user);
+		entity.setCreation_date(new Date());
+		entity.setModification_date(new Date());
+		termDAO.persist(entity);
+		
+		results.setItem(translator.translate(entity));
+	
+		log.info("processTerm/create processed");												
 		return results;
 	}
 

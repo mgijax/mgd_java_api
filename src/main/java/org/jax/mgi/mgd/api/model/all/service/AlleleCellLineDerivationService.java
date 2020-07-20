@@ -18,6 +18,7 @@ import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLineDerivation;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleCellLineDerivationTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -142,6 +143,77 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		}
 		
 		return results;		
+	}
+
+	@Transactional
+	public List<AlleleCellLineDerivationDomain> search(AlleleCellLineDerivationDomain searchDomain) {
+
+		List<AlleleCellLineDerivationDomain> results = new ArrayList<AlleleCellLineDerivationDomain>();
+		
+		// building SQL command : select + from + where + orderBy
+		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
+		String cmd = "";
+		String select = "select distinct a._allele_key, a.symbol, v1.sequenceNum";
+		String from = "from all_allele a, voc_term v1";
+		String where = "where a._allele_status_key = v1._term_key";
+		String orderBy = "order by v1.sequenceNum, a.symbol";
+		//String limit = Constants.SEARCH_RETURN_LIMIT;
+		String value;
+				
+		// if parameter exists, then add to where-clause
+		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
+		if (cmResults.length > 0) {
+			from = from + cmResults[0];
+			where = where + cmResults[1];
+		}
+		
+//		if (searchDomain.getSymbol() != null && !searchDomain.getSymbol().isEmpty()) {
+//			where = where + "\nand a.symbol ilike '" + searchDomain.getSymbol() + "'" ;
+//		}			
+		
+//		// mutant cell lines
+//		if (searchDomain.getMutantCellLineAssocs() != null) {			
+//
+//			// parent cell line : cell line, strain, cell line type		
+//			if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine() != null) {
+//				if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineKey().isEmpty()) {
+//					where = where + "\nand c.parentcellline_key = " + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineKey();
+//					from_cellLine = true;
+//				}
+//				else if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLine() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLine().isEmpty()) {
+//					where = where + "\nand c.parentcellline ilike '" + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLine() + "'";
+//					from_cellLine = true;
+//				}			
+//				if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineTypeKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineTypeKey().isEmpty()) {
+//					where = where + "\nand c.parentcelllinetype_key = " + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineTypeKey();
+//					from_cellLine = true;
+//				}
+//				if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getStrain() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getStrain().isEmpty()) {
+//					where = where + "\nand c.celllinestrain ilike '" + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getStrain() + "'";
+//					from_cellLine = true;
+//				}				
+//			}			
+//		}				
+		
+		// make this easy to copy/paste for troubleshooting
+		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n";
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				AlleleCellLineDerivationDomain domain = new AlleleCellLineDerivationDomain();
+				domain = translator.translate(derivationDAO.get(rs.getInt("_derivation_key")));				
+				derivationDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
 	}
 	
 	@Transactional

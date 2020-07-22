@@ -78,6 +78,13 @@ public class CellLineController extends BaseController<CellLineDomain> {
 	}
 	
 	@POST
+	@ApiOperation(value = "Get the mutant cell line count by parent cell line")
+	@Path("/getMCLCountByDerivation")
+	public SearchResults<CellLineDomain> getMCLCountByDerivation(Integer key) {
+		return cellLineService.getMCLCountByDerivation(key);
+	}
+	
+	@POST
 	@ApiOperation(value = "Search Mutant Cell Lines")
 	@Path("/searchMutantCellLines")
 	public List<SlimCellLineDomain> searchMutantCellLines(CellLineDomain searchDomain) {

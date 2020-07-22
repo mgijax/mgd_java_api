@@ -144,7 +144,7 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		
 		return results;		
 	}
-
+	
 	@Transactional
 	public List<AlleleCellLineDerivationDomain> search(AlleleCellLineDerivationDomain searchDomain) {
 

@@ -104,7 +104,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		}
 		// Special defaults
 		// if organism not Mouse or not Not Specified, default strain is Not Applicable
-		if (!domain.getOrganismKey().equals("1") && ! domain.getOrganismKey().equals("-1") && !domain.getStrainKey().equals("-1")) {
+		if ((!domain.getOrganismKey().equals("1") || ! domain.getOrganismKey().equals("-1")) && !domain.getStrainKey().equals("-1")) {
 			domain.setStrainKey("-2");
 		}
 		//if tissue is specified (NOT Not Specified), cell line default is Not Applicable

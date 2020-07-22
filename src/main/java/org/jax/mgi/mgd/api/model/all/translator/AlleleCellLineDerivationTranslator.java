@@ -40,6 +40,13 @@ public class AlleleCellLineDerivationTranslator extends BaseEntityDomainTranslat
 			domain.setParentCellLine(parentCellLine);				
 		}
 		
+		// reference
+		if (entity.getReference() != null) {
+			domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
+			domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());
+			domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());
+		}
+		
 		// at most one note
 		if (entity.getGeneralNote() != null && !entity.getGeneralNote().isEmpty()) {
 			NoteTranslator noteTranslator = new NoteTranslator();

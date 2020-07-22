@@ -167,33 +167,39 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 			where = where + cmResults[1];
 		}
 		
-//		if (searchDomain.getSymbol() != null && !searchDomain.getSymbol().isEmpty()) {
-//			where = where + "\nand a.symbol ilike '" + searchDomain.getSymbol() + "'" ;
-//		}			
+		if (searchDomain.getCreatorKey() != null && !searchDomain.getCreatorKey().isEmpty()) {
+			where = where + "\nand a._creator_key = " + searchDomain.getCreatorKey();
+		}			
+
+		if (searchDomain.getVectorKey() != null && !searchDomain.getVectorKey().isEmpty()) {
+			where = where + "\nand a._vector_key = " + searchDomain.getVectorKey();
+		}
+		else if (searchDomain.getVector() != null && !searchDomain.getVector().isEmpty()) {
+			where = where + "\nand a.vector ilike '" + searchDomain.getVector() + "'";
+		}
 		
-//		// mutant cell lines
-//		if (searchDomain.getMutantCellLineAssocs() != null) {			
-//
-//			// parent cell line : cell line, strain, cell line type		
-//			if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine() != null) {
-//				if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineKey().isEmpty()) {
-//					where = where + "\nand c.parentcellline_key = " + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineKey();
-//					from_cellLine = true;
-//				}
-//				else if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLine() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLine().isEmpty()) {
-//					where = where + "\nand c.parentcellline ilike '" + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLine() + "'";
-//					from_cellLine = true;
-//				}			
-//				if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineTypeKey() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineTypeKey().isEmpty()) {
-//					where = where + "\nand c.parentcelllinetype_key = " + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getCellLineTypeKey();
-//					from_cellLine = true;
-//				}
-//				if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getStrain() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getStrain().isEmpty()) {
-//					where = where + "\nand c.celllinestrain ilike '" + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getStrain() + "'";
-//					from_cellLine = true;
-//				}				
-//			}			
-//		}				
+		if (searchDomain.getVectorTypeKey() != null && !searchDomain.getVectorTypeKey().isEmpty()) {
+			where = where + "\nand a._vectortype_key = " + searchDomain.getVectorTypeKey();
+		}
+				
+		// parent cell lines
+		if (searchDomain.getParentCellLine() != null) {			
+			if (searchDomain.getParentCellLine().getCellLineKey() != null && !searchDomain.getParentCellLine().getCellLineKey().isEmpty()) {
+				where = where + "\nand a.parentcellline_key = " + searchDomain.getParentCellLine().getCellLineKey();
+			}
+			else if (searchDomain.getParentCellLine().getCellLine() != null && !searchDomain.getParentCellLine().getCellLine().isEmpty()) {
+				where = where + "\nand a.parentcellline ilike '" + searchDomain.getParentCellLine().getCellLine() + "'";
+			}			
+			if (searchDomain.getParentCellLine().getCellLineTypeKey() != null && !searchDomain.getParentCellLine().getCellLineTypeKey().isEmpty()) {
+				where = where + "\nand a.parentcelllinetype_key = " + searchDomain.getParentCellLine().getCellLineTypeKey();
+			}
+			if (searchDomain.getParentCellLine().getStrainKey() != null && !searchDomain.getParentCellLine().getStrainKey().isEmpty()) {
+				where = where + "\nand a.parentcelllinestrain_key ilike '" + searchDomain.getParentCellLine().getStrain() + "'";
+			}
+			else if (searchDomain.getParentCellLine().getStrain() != null && !searchDomain.getParentCellLine().getStrain().isEmpty()) {
+				where = where + "\nand a.parentcelllinestrain ilike '" + searchDomain.getParentCellLine().getStrain() + "'";
+			}		
+		}				
 		
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n";

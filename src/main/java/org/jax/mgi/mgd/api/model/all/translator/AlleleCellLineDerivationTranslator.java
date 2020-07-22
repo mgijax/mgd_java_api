@@ -37,10 +37,6 @@ public class AlleleCellLineDerivationTranslator extends BaseEntityDomainTranslat
 			CellLineDomain parentCellLine = cellLineTranslator.translate(entity.getParentCellLine());
 			domain.setParentCellLine(parentCellLine);				
 		}
-		else {
-			CellLineDomain parentCellLine = new CellLineDomain();
-			domain.setParentCellLine(parentCellLine);
-		}
 		
 		return domain;
 	}

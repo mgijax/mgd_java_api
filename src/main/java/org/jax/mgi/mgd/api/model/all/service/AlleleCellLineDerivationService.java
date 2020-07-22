@@ -215,7 +215,7 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 			if (!jnumid.contains("J:")) {
 				jnumid = "J:" + jnumid;
 			}
-			where = where + "\nand a.jnumid = '" + jnumid + "'";
+			where = where + "\nand a.jnumid ilike '" + jnumid + "'";
 		}
 		else if (searchDomain.getShort_citation() != null && !searchDomain.getShort_citation().isEmpty()) {
 			value = searchDomain.getShort_citation().replace("'",  "''");

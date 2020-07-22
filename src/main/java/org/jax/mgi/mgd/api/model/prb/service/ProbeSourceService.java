@@ -118,10 +118,13 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 			log.info("setting cell line to not applicable");
 			domain.setCellLineKey("316336");
 		}
+		log.info("cellLineKey: "  + domain.getCellLineKey());
 		// if cell line is specified (NOT Not Specified), age is Not Applicable
-		if (!domain.getCellLineKey().equals("316335") && ! domain.getAge().equals("Not Specified")) {
+		if (!domain.getCellLineKey().equals("316335") ) {
+			log.info("setting age to Not applicable");
 			domain.setAge("Not Applicable");
 		}
+		//START HERE CHECK WHY NOT SETTING TO NA
 		
 		entity.setSegmentType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));
 		entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));

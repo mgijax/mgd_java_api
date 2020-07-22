@@ -158,8 +158,9 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		String where = "where a._derivation_key is not null";
 		String orderBy = "order by a.name";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
-		//String value;
-				
+		String value;
+		Boolean from_generalNote = false;
+		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {
@@ -204,6 +205,18 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 				where = where + "\nand a.parentcelllinestrain ilike '" + searchDomain.getParentCellLine().getStrain() + "'";
 			}		
 		}				
+		
+		if (searchDomain.getGeneralNote() != null && !searchDomain.getGeneralNote().getNoteChunk().isEmpty()) {
+			value = searchDomain.getGeneralNote().getNoteChunk().replace("'",  "''");
+			where = where + "\nand note1.note ilike '" + value + "'" ;
+			from_generalNote = true;
+		}
+		
+		if (from_generalNote == true) {
+			from = from + ", mgi_note_derivation_view note1";
+			where = where + "\nand a._derivation_key = note1._object_key";
+			where = where + "\nand note1._notetype_key = 1033";			
+		}
 		
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n";

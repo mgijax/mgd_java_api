@@ -1,18 +1,22 @@
 package org.jax.mgi.mgd.api.model.all.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
@@ -68,4 +72,10 @@ public class AlleleCellLineDerivation extends BaseEntity {
 	@OneToOne
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
+	
+	//  1033 | General
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_derivation_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 36 and `_notetype_key` = 1033")
+	private List<Note> generalNote;	
 }

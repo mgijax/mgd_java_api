@@ -4,6 +4,8 @@ import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.domain.CellLineDomain;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLineDerivation;
+import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
+import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 
 public class AlleleCellLineDerivationTranslator extends BaseEntityDomainTranslator<AlleleCellLineDerivation, AlleleCellLineDerivationDomain> {
@@ -36,6 +38,13 @@ public class AlleleCellLineDerivationTranslator extends BaseEntityDomainTranslat
 			CellLineTranslator cellLineTranslator = new CellLineTranslator();
 			CellLineDomain parentCellLine = cellLineTranslator.translate(entity.getParentCellLine());
 			domain.setParentCellLine(parentCellLine);				
+		}
+		
+		// at most one note
+		if (entity.getGeneralNote() != null && !entity.getGeneralNote().isEmpty()) {
+			NoteTranslator noteTranslator = new NoteTranslator();
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getGeneralNote());
+			domain.setGeneralNote(note.iterator().next());
 		}
 		
 		return domain;

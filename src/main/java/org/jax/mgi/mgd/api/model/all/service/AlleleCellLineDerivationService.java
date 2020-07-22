@@ -167,8 +167,8 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 			where = where + cmResults[1];
 		}
 		
-		if (searchDomain.getDerivationType() != null && !searchDomain.getDerivationType().isEmpty()) {
-			where = where + "\nand a._derivationtype_key = " + searchDomain.getDerivationType();
+		if (searchDomain.getDerivationTypeKey() != null && !searchDomain.getDerivationTypeKey().isEmpty()) {
+			where = where + "\nand a._derivationtype_key = " + searchDomain.getDerivationTypeKey();
 		}
 		
 		if (searchDomain.getCreatorKey() != null && !searchDomain.getCreatorKey().isEmpty()) {

@@ -206,6 +206,18 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 			}		
 		}				
 		
+		// reference
+		if (searchDomain.getRefsKey() != null && !searchDomain.getRefsKey().isEmpty()) {
+			where = where + "\nand a_Refs_key = " + searchDomain.getRefsKey();
+		}
+		if (searchDomain.getShort_citation() != null && !searchDomain.getShort_citation().isEmpty()) {
+			value = searchDomain.getShort_citation().replace("'",  "''");
+			where = where + "\nand a.short_citation ilike '" + value + "'";
+		}
+		if (searchDomain.getJnumid() != null && !searchDomain.getJnumid().isEmpty()) {
+			where = where + "\nand a.jnumid ilike '" + searchDomain.getJnumid() + "'";
+		}
+		
 		if (searchDomain.getGeneralNote() != null && !searchDomain.getGeneralNote().getNoteChunk().isEmpty()) {
 			value = searchDomain.getGeneralNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note1.note ilike '" + value + "'" ;

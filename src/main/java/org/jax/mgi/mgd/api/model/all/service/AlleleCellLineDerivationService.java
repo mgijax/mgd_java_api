@@ -208,18 +208,14 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		
 		// reference
 		if (searchDomain.getRefsKey() != null && !searchDomain.getRefsKey().isEmpty()) {
-			where = where + "\nand a._Refs_key = " + searchDomain.getRefsKey();
+			where = where + "\nand ref._Refs_key = " + searchDomain.getRefsKey();
 		}
-		else if (searchDomain.getJnumid() != null && !searchDomain.getJnumid().isEmpty()) {
-			String jnumid = searchDomain.getJnumid().toUpperCase();
-			if (!jnumid.contains("J:")) {
-				jnumid = "J:" + jnumid;
-			}
-			where = where + "\nand a.jnumid ilike '" + jnumid + "'";
-		}
-		else if (searchDomain.getShort_citation() != null && !searchDomain.getShort_citation().isEmpty()) {
+		if (searchDomain.getShort_citation() != null && !searchDomain.getShort_citation().isEmpty()) {
 			value = searchDomain.getShort_citation().replace("'",  "''");
-			where = where + "\nand a.short_citation ilike '" + value + "'";
+			where = where + "\nand ref.short_citation ilike '" + value + "'";
+		}
+		if (searchDomain.getJnumid() != null && !searchDomain.getJnumid().isEmpty()) {
+			where = where + "\nand ref.jnumid ilike '" + searchDomain.getJnumid() + "'";
 		}
 		
 		if (searchDomain.getGeneralNote() != null && !searchDomain.getGeneralNote().getNoteChunk().isEmpty()) {

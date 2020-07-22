@@ -114,7 +114,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		//if (domain.getTissueKey() != null && !domain.getTissueKey().isEmpty() && ! domain.getCellLineKey().equals("316335")) {
 		log.info("tissueKey: "  + domain.getTissueKey());
 		log.info("cellLineKey: "  + domain.getCellLineKey());
-		if (!domain.getTissueKey().equals("-1") && ! domain.getCellLineKey().equals("316335")) {
+		if (!domain.getTissueKey().equals("-1")) {
 			log.info("setting cell line to not applicable");
 			domain.setCellLineKey("316336");
 		}

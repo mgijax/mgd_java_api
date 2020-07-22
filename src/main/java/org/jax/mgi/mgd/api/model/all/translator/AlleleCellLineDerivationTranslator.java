@@ -44,6 +44,7 @@ public class AlleleCellLineDerivationTranslator extends BaseEntityDomainTranslat
 		if (entity.getReference() != null) {
 			domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
 			domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());
+			domain.setJnum(entity.getReference().getReferenceCitationCache().getNumericPart());
 			domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());
 		}
 		

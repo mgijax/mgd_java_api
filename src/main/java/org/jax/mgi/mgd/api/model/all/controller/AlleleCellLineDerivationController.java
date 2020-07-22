@@ -64,6 +64,22 @@ public class AlleleCellLineDerivationController extends BaseController<AlleleCel
 	}
 	
 	@POST
+	@ApiOperation(value = "Search")
+	@Path("/search")
+	public List<AlleleCellLineDerivationDomain> search(AlleleCellLineDerivationDomain searchDomain) {
+			
+		List<AlleleCellLineDerivationDomain> results = new ArrayList<AlleleCellLineDerivationDomain>();
+		
+		try {
+			results = derivationService.search(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return results;
+	}
+	
+	@POST
 	@ApiOperation(value = "Search Mutant Cell Line Set")
 	@Path("/searchMCLSet")
 	public List<AlleleCellLineDerivationDomain> searchMCLSet() {

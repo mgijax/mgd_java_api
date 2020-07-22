@@ -18,6 +18,7 @@ import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLineDerivation;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleCellLineDerivationTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -142,6 +143,87 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		}
 		
 		return results;		
+	}
+
+	@Transactional
+	public List<AlleleCellLineDerivationDomain> search(AlleleCellLineDerivationDomain searchDomain) {
+
+		List<AlleleCellLineDerivationDomain> results = new ArrayList<AlleleCellLineDerivationDomain>();
+		
+		// building SQL command : select + from + where + orderBy
+		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
+		String cmd = "";
+		String select = "select distinct a._derivation_key, a.name";
+		String from = "from all_cellline_derivation_view a";
+		String where = "where a._derivation_key is not null";
+		String orderBy = "order by a.name";
+		//String limit = Constants.SEARCH_RETURN_LIMIT;
+		//String value;
+				
+		// if parameter exists, then add to where-clause
+		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
+		if (cmResults.length > 0) {
+			from = from + cmResults[0];
+			where = where + cmResults[1];
+		}
+		
+		if (searchDomain.getDerivationTypeKey() != null && !searchDomain.getDerivationTypeKey().isEmpty()) {
+			where = where + "\nand a._derivationtype_key = " + searchDomain.getDerivationTypeKey();
+		}
+		
+		if (searchDomain.getCreatorKey() != null && !searchDomain.getCreatorKey().isEmpty()) {
+			where = where + "\nand a._creator_key = " + searchDomain.getCreatorKey();
+		}			
+
+		if (searchDomain.getVectorKey() != null && !searchDomain.getVectorKey().isEmpty()) {
+			where = where + "\nand a._vector_key = " + searchDomain.getVectorKey();
+		}
+		else if (searchDomain.getVector() != null && !searchDomain.getVector().isEmpty()) {
+			where = where + "\nand a.vector ilike '" + searchDomain.getVector() + "'";
+		}
+		
+		if (searchDomain.getVectorTypeKey() != null && !searchDomain.getVectorTypeKey().isEmpty()) {
+			where = where + "\nand a._vectortype_key = " + searchDomain.getVectorTypeKey();
+		}
+				
+		// parent cell lines
+		if (searchDomain.getParentCellLine() != null) {			
+			if (searchDomain.getParentCellLine().getCellLineKey() != null && !searchDomain.getParentCellLine().getCellLineKey().isEmpty()) {
+				where = where + "\nand a.parentcellline_key = " + searchDomain.getParentCellLine().getCellLineKey();
+			}
+			else if (searchDomain.getParentCellLine().getCellLine() != null && !searchDomain.getParentCellLine().getCellLine().isEmpty()) {
+				where = where + "\nand a.parentcellline ilike '" + searchDomain.getParentCellLine().getCellLine() + "'";
+			}			
+			if (searchDomain.getParentCellLine().getCellLineTypeKey() != null && !searchDomain.getParentCellLine().getCellLineTypeKey().isEmpty()) {
+				where = where + "\nand a.parentcelllinetype_key = " + searchDomain.getParentCellLine().getCellLineTypeKey();
+			}
+			if (searchDomain.getParentCellLine().getStrainKey() != null && !searchDomain.getParentCellLine().getStrainKey().isEmpty()) {
+				where = where + "\nand a.parentcelllinestrain_key = " + searchDomain.getParentCellLine().getStrainKey();
+			}
+			else if (searchDomain.getParentCellLine().getStrain() != null && !searchDomain.getParentCellLine().getStrain().isEmpty()) {
+				where = where + "\nand a.parentcelllinestrain ilike '" + searchDomain.getParentCellLine().getStrain() + "'";
+			}		
+		}				
+		
+		// make this easy to copy/paste for troubleshooting
+		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n";
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				AlleleCellLineDerivationDomain domain = new AlleleCellLineDerivationDomain();
+				domain = translator.translate(derivationDAO.get(rs.getInt("_derivation_key")));				
+				derivationDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
 	}
 	
 	@Transactional

@@ -102,6 +102,19 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		if (domain.getIsCuratorEdited() == null || domain.getIsCuratorEdited().isEmpty()) {
 			domain.setIsCuratorEdited("1");
 		}
+		// Special defaults
+		// if organism not Mouse or not Not Specified, default strain is Not Applicable
+		if (!domain.getOrganismKey().equals("1") && ! domain.getOrganismKey().equals("-1")) {
+			domain.setStrainKey("-2");
+		}
+		//if tissue is specified, cell line default is Not Applicable
+		if (domain.getTissueKey() != null && !domain.getTissueKey().isEmpty()) {
+			domain.setCellLineKey("316336");
+		}
+		// if cell line is specified, age is Not Applicable
+		if (domain.getCellLineKey() != null && ! domain.getCellLineKey().isEmpty()) {
+			domain.setAge("Not Applicable");
+		}
 		
 		entity.setSegmentType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));
 		entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));

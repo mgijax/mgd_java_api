@@ -106,7 +106,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		// if organism not Mouse or not Not Specified, default strain is Not Applicable
 		log.info("organismKey: "  + domain.getOrganismKey());
 		log.info("strainKey: " + domain.getStrainKey());
-		if (!domain.getOrganismKey().equals("1") && ! domain.getOrganismKey().equals("-1") ) {
+		if (!domain.getOrganismKey().equals("1") && ! domain.getOrganismKey().equals("76") ) {
 			log.info("setting strain key to not applicable not mouse not not resolved");
 			domain.setStrainKey("-2");
 		}

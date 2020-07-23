@@ -16,7 +16,9 @@ import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLineDerivation;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleCellLineDerivationTranslator;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -34,10 +36,16 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 	private TermDAO termDAO;
 	@Inject
 	private CellLineDAO cellLineDAO;
+	@Inject
+	private ReferenceDAO referenceDAO;
+	@Inject
+	private NoteService noteService;
 	
 	private AlleleCellLineDerivationTranslator translator = new AlleleCellLineDerivationTranslator();				
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
+	String mgiTypeKey = "36";
+	
 	@Transactional
 	public SearchResults<AlleleCellLineDerivationDomain> create(AlleleCellLineDerivationDomain domain, User user) {
 		
@@ -53,6 +61,14 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));
 		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));							
 		entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.getParentCellLine().getCellLineKey())));	
+
+		if (domain.getRefsKey() != null && !domain.getRefsKey().isEmpty()) {
+			entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));				
+		}
+		else {
+			entity.setReference(null);
+		}
+		
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
 		entity.setModifiedBy(user);
@@ -61,6 +77,9 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		// execute persist/insert/send to database
 		derivationDAO.persist(entity);
 	
+		// process all notes		
+		noteService.process(String.valueOf(entity.get_derivation_key()), domain.getGeneralNote(), mgiTypeKey, domain.getGeneralNote().getNoteTypeKey(), user);
+			
 		// return entity translated to domain
 		log.info("processDerivation/create/returning results");
 		results.setItem(translator.translate(entity));
@@ -75,7 +94,8 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 
 		SearchResults<AlleleCellLineDerivationDomain> results = new SearchResults<AlleleCellLineDerivationDomain>();
 		AlleleCellLineDerivation entity = derivationDAO.get(Integer.valueOf(domain.getDerivationKey()));
-		
+		Boolean modified = true;
+
 		log.info("processDerivation/update");
 
 		entity.setName(domain.getName());
@@ -83,11 +103,27 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));
 		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));
 		entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.getParentCellLine().getCellLineKey())));	
+		
+		if (domain.getRefsKey() != null && !domain.getRefsKey().isEmpty()) {
+			entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));				
+		}
+		else {
+			entity.setReference(null);
+		}
+		
 		entity.setModification_date(new Date());
 		entity.setModifiedBy(user);
-		derivationDAO.update(entity);
-		log.info("processDerivation/changes processed: " + domain.getDerivationKey());
-			
+		
+		// process all notes
+		if (noteService.process(domain.getDerivationKey(), domain.getGeneralNote(), mgiTypeKey, domain.getGeneralNote().getNoteTypeKey(), user)) {
+			modified = true;
+		}
+		
+		if (modified) {
+			derivationDAO.update(entity);
+			log.info("processDerivation/changes processed: " + domain.getDerivationKey());
+		}
+		
 		// return entity translated to domain
 		log.info("processDerivation/update/returning results");
 		results.setItem(translator.translate(entity));
@@ -208,7 +244,7 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		
 		// reference
 		if (searchDomain.getRefsKey() != null && !searchDomain.getRefsKey().isEmpty()) {
-			where = where + "\nand a_Refs_key = " + searchDomain.getRefsKey();
+			where = where + "\nand a._Refs_key = " + searchDomain.getRefsKey();
 		}
 		if (searchDomain.getShort_citation() != null && !searchDomain.getShort_citation().isEmpty()) {
 			value = searchDomain.getShort_citation().replace("'",  "''");
@@ -218,6 +254,7 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 			where = where + "\nand a.jnumid ilike '" + searchDomain.getJnumid() + "'";
 		}
 		
+		// notes
 		if (searchDomain.getGeneralNote() != null && !searchDomain.getGeneralNote().getNoteChunk().isEmpty()) {
 			value = searchDomain.getGeneralNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note1.note ilike '" + value + "'" ;

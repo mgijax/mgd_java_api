@@ -32,8 +32,8 @@ import lombok.Setter;
 public class AlleleCellLineDerivation extends BaseEntity {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="all_allele_cellline_derivation_generator")
-	@SequenceGenerator(name="all_allele_cellline_derivation_generator", sequenceName = "all_allele_cellline_derivation_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="all_cellline_derivation_generator")
+	@SequenceGenerator(name="all_cellline_derivation_generator", sequenceName = "all_cellline_derivation_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")	
 	private int _derivation_key;
 	private String name;

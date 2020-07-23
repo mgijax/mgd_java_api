@@ -102,29 +102,26 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		if (domain.getIsCuratorEdited() == null || domain.getIsCuratorEdited().isEmpty()) {
 			domain.setIsCuratorEdited("1");
 		}
-		// Special default
+		
+		// Special defaults
 		// if organism not Mouse or not Not Specified, default strain is Not Applicable
-		log.info("organismKey: "  + domain.getOrganismKey());
-		log.info("strainKey: " + domain.getStrainKey());
 		if (!domain.getOrganismKey().equals("1") && ! domain.getOrganismKey().equals("76") ) {
 			log.info("setting strain key to not applicable not mouse not not resolved");
 			domain.setStrainKey("-2");
 		}
+		
 		//if tissue is specified (NOT Not Specified), cell line default is Not Applicable
-		//if (domain.getTissueKey() != null && !domain.getTissueKey().isEmpty() && ! domain.getCellLineKey().equals("316335")) {
-		log.info("tissueKey: "  + domain.getTissueKey());
-		log.info("cellLineKey: "  + domain.getCellLineKey());
+		
 		if (!domain.getTissueKey().equals("-1")) {
 			log.info("setting cell line to not applicable");
 			domain.setCellLineKey("316336");
 		}
-		log.info("cellLineKey: "  + domain.getCellLineKey());
+
 		// if cell line is specified (NOT Not Specified), age is Not Applicable
 		if (!domain.getCellLineKey().equals("316335") ) {
 			log.info("setting age to Not applicable");
 			domain.setAge("Not Applicable");
 		}
-		//START HERE CHECK WHY NOT SETTING TO NA
 		
 		entity.setSegmentType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));
 		entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));
@@ -184,17 +181,24 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		Boolean modified = true;
 
 		log.info("processProbeSource/update");
+
 		// Special defaults
 		// if organism not Mouse or not Not Specified, default strain is Not Applicable
-		if (!domain.getOrganismKey().equals("1") && ! domain.getOrganismKey().equals("-1")) {
+		if (!domain.getOrganismKey().equals("1") && ! domain.getOrganismKey().equals("76") ) {
+			log.info("setting strain key to not applicable not mouse not not resolved");
 			domain.setStrainKey("-2");
 		}
-		//if tissue is specified, cell line default is Not Applicable
-		if (domain.getTissueKey() != null && !domain.getTissueKey().isEmpty()) {
+		
+		//if tissue is specified (NOT Not Specified), cell line default is Not Applicable
+		
+		if (!domain.getTissueKey().equals("-1")) {
+			log.info("setting cell line to not applicable");
 			domain.setCellLineKey("316336");
 		}
-		// if cell line is specified, age is Not Applicable
-		if (domain.getCellLineKey() != null && ! domain.getCellLineKey().isEmpty()) {
+
+		// if cell line is specified (NOT Not Specified), age is Not Applicable
+		if (!domain.getCellLineKey().equals("316335") ) {
+			log.info("setting age to Not applicable");
 			domain.setAge("Not Applicable");
 		}
 		

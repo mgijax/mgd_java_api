@@ -56,12 +56,22 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		SearchResults<AlleleCellLineDerivationDomain> results = new SearchResults<AlleleCellLineDerivationDomain>();
 		AlleleCellLineDerivation entity = new AlleleCellLineDerivation();
 		
+		log.info("processDerivation/create");
+		
 		entity.setName(domain.getName());
-		entity.setDescription(domain.getDescription());
 		entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));
 		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));							
 		entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.getParentCellLine().getCellLineKey())));	
+		entity.setDerivationType(termDAO.get(Integer.valueOf(domain.getDerivationTypeKey())));							
+		entity.setCreator(termDAO.get(Integer.valueOf(domain.getCreatorKey())));							
 
+		if (domain.getDescription() != null && !domain.getDescription().isEmpty()) {
+			entity.setDescription(domain.getDescription());
+		}
+		else {
+			entity.setDescription(null);
+		}
+		
 		if (domain.getRefsKey() != null && !domain.getRefsKey().isEmpty()) {
 			entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));				
 		}
@@ -99,10 +109,18 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		log.info("processDerivation/update");
 
 		entity.setName(domain.getName());
-		entity.setDescription(domain.getDescription());
 		entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));
 		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));
 		entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.getParentCellLine().getCellLineKey())));	
+		entity.setDerivationType(termDAO.get(Integer.valueOf(domain.getDerivationTypeKey())));							
+		entity.setCreator(termDAO.get(Integer.valueOf(domain.getCreatorKey())));
+		
+		if (domain.getDescription() != null && !domain.getDescription().isEmpty()) {
+			entity.setDescription(domain.getDescription());
+		}
+		else {
+			entity.setDescription(null);
+		}
 		
 		if (domain.getRefsKey() != null && !domain.getRefsKey().isEmpty()) {
 			entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));				

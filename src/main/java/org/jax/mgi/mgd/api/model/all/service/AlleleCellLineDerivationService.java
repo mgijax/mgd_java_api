@@ -208,7 +208,7 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		
 		// reference
 		if (searchDomain.getRefsKey() != null && !searchDomain.getRefsKey().isEmpty()) {
-			where = where + "\nand a_Refs_key = " + searchDomain.getRefsKey();
+			where = where + "\nand a._Refs_key = " + searchDomain.getRefsKey();
 		}
 		if (searchDomain.getShort_citation() != null && !searchDomain.getShort_citation().isEmpty()) {
 			value = searchDomain.getShort_citation().replace("'",  "''");
@@ -218,6 +218,7 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 			where = where + "\nand a.jnumid ilike '" + searchDomain.getJnumid() + "'";
 		}
 		
+		// notes
 		if (searchDomain.getGeneralNote() != null && !searchDomain.getGeneralNote().getNoteChunk().isEmpty()) {
 			value = searchDomain.getGeneralNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note1.note ilike '" + value + "'" ;

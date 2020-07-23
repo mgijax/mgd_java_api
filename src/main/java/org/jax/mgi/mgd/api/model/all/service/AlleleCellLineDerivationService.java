@@ -16,6 +16,7 @@ import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLineDerivation;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleCellLineDerivationTranslator;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
@@ -34,6 +35,8 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 	private TermDAO termDAO;
 	@Inject
 	private CellLineDAO cellLineDAO;
+	@Inject
+	private ReferenceDAO referenceDAO;
 	
 	private AlleleCellLineDerivationTranslator translator = new AlleleCellLineDerivationTranslator();				
 	private SQLExecutor sqlExecutor = new SQLExecutor();
@@ -53,6 +56,14 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));
 		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));							
 		entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.getParentCellLine().getCellLineKey())));	
+
+		if (domain.getRefsKey() != null && !domain.getRefsKey().isEmpty()) {
+			entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));				
+		}
+		else {
+			entity.setReference(null);
+		}
+		
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
 		entity.setModifiedBy(user);
@@ -83,6 +94,14 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));
 		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));
 		entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.getParentCellLine().getCellLineKey())));	
+		
+		if (domain.getRefsKey() != null && !domain.getRefsKey().isEmpty()) {
+			entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));				
+		}
+		else {
+			entity.setReference(null);
+		}
+		
 		entity.setModification_date(new Date());
 		entity.setModifiedBy(user);
 		derivationDAO.update(entity);

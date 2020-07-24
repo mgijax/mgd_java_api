@@ -569,7 +569,10 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		if (searchDomain.getStrainKey() != null && !searchDomain.getStrainKey().isEmpty()) {
 			where = where + "\nand c._strain_key = " + searchDomain.getStrainKey();
 		}
-		
+		else if (searchDomain.getStrain() != null && !searchDomain.getStrain().isEmpty()) {
+			where = where + "\nand c.celllinestrain ilike '" + searchDomain.getStrain() + "'";
+		}			
+				
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n";
 		log.info(cmd);
 		

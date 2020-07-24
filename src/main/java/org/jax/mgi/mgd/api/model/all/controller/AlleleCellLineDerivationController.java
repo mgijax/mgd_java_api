@@ -94,6 +94,22 @@ public class AlleleCellLineDerivationController extends BaseController<AlleleCel
 		
 		return results;	
 	}
+
+	@POST
+	@ApiOperation(value = "Search Duplicate Derivation Name")
+	@Path("/searchDuplicateByName")
+	public List<AlleleCellLineDerivationDomain> searchDuplicateByName(AlleleCellLineDerivationDomain domain) {
+
+		List<AlleleCellLineDerivationDomain> results = new ArrayList<AlleleCellLineDerivationDomain>();
+		
+		try {
+			results = derivationService.searchDuplicateByName(domain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;	
+	}
 	
 	@POST
 	@ApiOperation(value = "Validate Derivation")

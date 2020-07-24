@@ -61,10 +61,12 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		entity.setName(domain.getName());
 		entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));
 		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));							
-		entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.getParentCellLine().getCellLineKey())));	
 		entity.setDerivationType(termDAO.get(Integer.valueOf(domain.getDerivationTypeKey())));							
 		entity.setCreator(termDAO.get(Integer.valueOf(domain.getCreatorKey())));							
 
+		// can never change parent cell line from the derivation
+		entity.setParentCellLine(cellLineDAO.get(entity.getParentCellLine().get_cellline_key()));
+		
 		if (domain.getDescription() != null && !domain.getDescription().isEmpty()) {
 			entity.setDescription(domain.getDescription());
 		}
@@ -111,10 +113,12 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		entity.setName(domain.getName());
 		entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));
 		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));
-		entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.getParentCellLine().getCellLineKey())));	
 		entity.setDerivationType(termDAO.get(Integer.valueOf(domain.getDerivationTypeKey())));							
 		entity.setCreator(termDAO.get(Integer.valueOf(domain.getCreatorKey())));
 		
+		// can never change parent cell line from the derivation
+		entity.setParentCellLine(cellLineDAO.get(entity.getParentCellLine().get_cellline_key()));	
+
 		if (domain.getDescription() != null && !domain.getDescription().isEmpty()) {
 			entity.setDescription(domain.getDescription());
 		}
@@ -337,7 +341,41 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		
 		return results;
 	}	
-	   
+
+	@Transactional
+	public List<AlleleCellLineDerivationDomain> searchDuplicateByName(AlleleCellLineDerivationDomain searchDomain) {
+		// search existing derivation by derivation name
+		
+		List<AlleleCellLineDerivationDomain> results = new ArrayList<AlleleCellLineDerivationDomain>();	
+		
+		String cmd = "\nselect _Derivation_key"
+		   + "\nfrom ALL_CellLine_Derivation"
+		   + "\nwhere name ilike '" + searchDomain.getName() + "'";
+		
+		if (searchDomain.getDerivationKey() != null && !searchDomain.getDerivationKey().isEmpty()) {
+		   cmd = cmd + "\nand _derivation_key != " + searchDomain.getDerivationKey();
+		}
+		
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			
+			while (rs.next()) {
+				AlleleCellLineDerivationDomain domain = new AlleleCellLineDerivationDomain();
+				domain = translator.translate(derivationDAO.get(rs.getInt("_derivation_key")));				
+				derivationDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 	@Transactional
 	public List<AlleleCellLineDerivationDomain> validateDerivation(SlimAlleleCellLineDerivationDomain searchDomain) {
 		
@@ -375,6 +413,6 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		}
 		
 		return results;
-	}	
+	}
 	
 }

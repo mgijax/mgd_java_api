@@ -196,7 +196,13 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		entity.setTissue(tissueDAO.get(Integer.valueOf(domain.getTissueKey())));
 		entity.setGender(termDAO.get(Integer.valueOf(domain.getGenderKey())));
 		entity.setCellLine(termDAO.get(Integer.valueOf(domain.getCellLineKey())));
-		entity.setAge(domain.getAge());
+		
+		// agePrefix and ageStage are catenated into age
+		String age = domain.getAgePrefix();
+		if (domain.getAgeStage() != null && ! domain.getAgeStage().isEmpty()) {
+			age = domain.getAgePrefix() + " " + domain.getAgeStage();
+		}
+		entity.setAge(age);
 		entity.setAgeMin(-1);
 		entity.setAgeMax(-1);								
 

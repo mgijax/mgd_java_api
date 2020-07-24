@@ -341,7 +341,37 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		
 		return results;
 	}	
-	   
+
+	@Transactional
+	public List<AlleleCellLineDerivationDomain> searchDuplicateByName(AlleleCellLineDerivationDomain searchDomain) {
+		// search existing derivation by derivation name
+		
+		List<AlleleCellLineDerivationDomain> results = new ArrayList<AlleleCellLineDerivationDomain>();	
+		
+		String cmd = "\nselect _Derivation_key"
+		   + "\nfrom ALL_CellLine_Derivation"
+		   + "\nwhere name ilike '" + searchDomain.getName() + "'";
+
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			
+			while (rs.next()) {
+				AlleleCellLineDerivationDomain domain = new AlleleCellLineDerivationDomain();
+				domain = translator.translate(derivationDAO.get(rs.getInt("_derivation_key")));				
+				derivationDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 	@Transactional
 	public List<AlleleCellLineDerivationDomain> validateDerivation(SlimAlleleCellLineDerivationDomain searchDomain) {
 		
@@ -379,6 +409,6 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		}
 		
 		return results;
-	}	
+	}
 	
 }

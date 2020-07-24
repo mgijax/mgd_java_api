@@ -569,47 +569,9 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		if (searchDomain.getStrainKey() != null && !searchDomain.getStrainKey().isEmpty()) {
 			where = where + "\nand c._strain_key = " + searchDomain.getStrainKey();
 		}
-		
-		if (searchDomain.getDerivation() != null) {
-			if (searchDomain.getDerivation().getCreatorKey() != null && !searchDomain.getDerivation().getCreatorKey().isEmpty()) {
-				where = where + "\nand c._creator_key = " + searchDomain.getDerivation().getCreatorKey();
-			}
-			
-			if (searchDomain.getDerivation().getDerivationTypeKey() != null && !searchDomain.getDerivation().getDerivationTypeKey().isEmpty()) {
-				where = where + "\nand c._derivationtype_key = " + searchDomain.getDerivation().getDerivationTypeKey();
-			}
-			
-			if (searchDomain.getDerivation().getVectorKey() != null && !searchDomain.getDerivation().getVectorKey().isEmpty()) {
-				where = where + "\nand c._vector_key = " + searchDomain.getDerivation().getVectorKey();
-			}		
-			else if (searchDomain.getDerivation().getVector() != null && !searchDomain.getDerivation().getVector().isEmpty()) {
-				where = where + "\nand c.vector ilike '" + searchDomain.getDerivation().getVector() + "'";
-			}
-			
-			if (searchDomain.getDerivation().getVectorTypeKey() != null && !searchDomain.getDerivation().getVectorTypeKey().isEmpty()) {
-				where = where + "\nand c._vectortype_key = " + searchDomain.getDerivation().getVectorTypeKey();
-			}
-			
-			if (searchDomain.getDerivation().getParentCellLine() != null) {
-				if (searchDomain.getDerivation().getParentCellLine().getCellLineKey() != null && !searchDomain.getDerivation().getParentCellLine().getCellLineKey().isEmpty()) {
-					where = where + "\nand c.parentCellLine_key = " + searchDomain.getDerivation().getParentCellLine().getCellLineKey();
-				}
-				else if (searchDomain.getDerivation().getParentCellLine().getCellLine() != null && !searchDomain.getDerivation().getParentCellLine().getCellLine().isEmpty()) {
-					where = where + "\nand c.parentCellLine ilike '" + searchDomain.getDerivation().getParentCellLine().getCellLine() + "'";
-				}
-				
-				if (searchDomain.getDerivation().getParentCellLine().getStrainKey() != null && !searchDomain.getDerivation().getParentCellLine().getStrainKey().isEmpty()) {
-					where = where + "\nand c.parentCellLineStrain_key = " + searchDomain.getDerivation().getParentCellLine().getStrainKey();
-				}
-				else if (searchDomain.getDerivation().getParentCellLine().getStrain() != null && !searchDomain.getDerivation().getParentCellLine().getStrain().isEmpty()) {
-					where = where + "\nand c.parentcelllinestrain ilike '" + searchDomain.getDerivation().getParentCellLine().getStrain() + "'";
-				}
-				
-				if (searchDomain.getDerivation().getParentCellLine().getCellLineTypeKey() != null && !searchDomain.getDerivation().getParentCellLine().getCellLineTypeKey().isEmpty()) {
-					where = where + "\nand c._cellline_type_key = " + searchDomain.getDerivation().getParentCellLine().getCellLineTypeKey();
-				}				
-			}
-		}		
+		else if (searchDomain.getStrain() != null && !searchDomain.getStrain().isEmpty()) {
+			where = where + "\nand c.strain ilike '" + searchDomain.getStrain() + "'";
+		}			
 				
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n";
 		log.info(cmd);

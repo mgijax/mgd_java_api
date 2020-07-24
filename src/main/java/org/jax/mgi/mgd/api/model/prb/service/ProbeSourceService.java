@@ -181,26 +181,6 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		Boolean modified = true;
 
 		log.info("processProbeSource/update");
-
-		// Special defaults
-		// if organism not Mouse or not Not Specified, default strain is Not Applicable
-		if (!domain.getOrganismKey().equals("1") && ! domain.getOrganismKey().equals("76") ) {
-			log.info("setting strain key to not applicable not mouse not not resolved");
-			domain.setStrainKey("-2");
-		}
-		
-		//if tissue is specified (NOT Not Specified), cell line default is Not Applicable
-		
-		if (!domain.getTissueKey().equals("-1")) {
-			log.info("setting cell line to not applicable");
-			domain.setCellLineKey("316336");
-		}
-
-		// if cell line is specified (NOT Not Specified), age is Not Applicable
-		if (!domain.getCellLineKey().equals("316335") ) {
-			log.info("setting age to Not applicable");
-			domain.setAge("Not Applicable");
-		}
 		
 		entity.setSegmentType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));
 		entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));

@@ -61,10 +61,12 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		entity.setName(domain.getName());
 		entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));
 		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));							
-		entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.getParentCellLine().getCellLineKey())));	
 		entity.setDerivationType(termDAO.get(Integer.valueOf(domain.getDerivationTypeKey())));							
 		entity.setCreator(termDAO.get(Integer.valueOf(domain.getCreatorKey())));							
 
+		// can never change parent cell line from the derivation
+		entity.setParentCellLine(cellLineDAO.get(entity.getParentCellLine().get_cellline_key()));
+		
 		if (domain.getDescription() != null && !domain.getDescription().isEmpty()) {
 			entity.setDescription(domain.getDescription());
 		}
@@ -114,7 +116,7 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		entity.setDerivationType(termDAO.get(Integer.valueOf(domain.getDerivationTypeKey())));							
 		entity.setCreator(termDAO.get(Integer.valueOf(domain.getCreatorKey())));
 		
-		// never parent cell line from the derivation
+		// can never change parent cell line from the derivation
 		entity.setParentCellLine(cellLineDAO.get(entity.getParentCellLine().get_cellline_key()));	
 
 		if (domain.getDescription() != null && !domain.getDescription().isEmpty()) {

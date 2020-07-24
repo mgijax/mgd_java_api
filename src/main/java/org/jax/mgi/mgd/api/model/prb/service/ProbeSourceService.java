@@ -132,10 +132,17 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		entity.setGender(termDAO.get(Integer.valueOf(domain.getGenderKey())));
 		
 		// age stuff
+		log.info("domain agePrefix + ageStage: " + domain.getAgePrefix() + " " + domain.getAgeStage());
+		//entity.setAge(domain.getAge());
+		String age = domain.getAgePrefix();
 		
-		entity.setAge(domain.getAge());
-		
+		if (domain.getAgeStage() != null && ! domain.getAgeStage().isEmpty()) {
+			age = domain.getAgePrefix() + " " + domain.getAgeStage();
+		}
+		log.info ("setting entity age to: " + age);
+		entity.setAge(age);
 		// will be properly set using MGI_resetAgeMinMax() below
+		
 		entity.setAgeMin(-1);
 		entity.setAgeMax(-1);								
 

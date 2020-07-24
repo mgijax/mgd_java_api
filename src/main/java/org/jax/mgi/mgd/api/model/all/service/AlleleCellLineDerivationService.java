@@ -351,7 +351,11 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		String cmd = "\nselect _Derivation_key"
 		   + "\nfrom ALL_CellLine_Derivation"
 		   + "\nwhere name ilike '" + searchDomain.getName() + "'";
-
+		
+		if (searchDomain.getDerivationKey() != null && !searchDomain.getDerivationKey().isEmpty()) {
+		   cmd = cmd + "\nand _derivation_key != " + searchDomain.getDerivationKey();
+		}
+		
 		log.info(cmd);
 		
 		try {

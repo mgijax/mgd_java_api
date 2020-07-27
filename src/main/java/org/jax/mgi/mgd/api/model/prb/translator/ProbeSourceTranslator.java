@@ -70,6 +70,7 @@ public class ProbeSourceTranslator extends BaseEntityDomainTranslator<ProbeSourc
 			for (int i = 2; i < ageList.size(); i++) {
 				ageStage = ageStage + ageList.get(i);
 			}
+			log.info("PS Translator ageStage: " + ageStage); 
 			domain.setAgeStage(ageStage);			
 		}
 		

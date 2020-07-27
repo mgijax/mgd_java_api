@@ -94,8 +94,8 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		}
 
 		// Not Specified
-		if(domain.getAge() == null || domain.getAge().isEmpty()) {
-			domain.setAge("Not Specified");
+		if(domain.getAgePrefix() == null || domain.getAgePrefix().isEmpty()) {
+			domain.setAgePrefix("Not Specified");
 		}
 
 		// true/1
@@ -284,7 +284,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		String cmd = "";
 		String select = "select a.*";
 		String from = "from prb_source a";
-		String where = "where s._source_key is not null";
+		String where = "where a._source_key is not null";
 		String orderBy = "order by a.name";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		//String value;

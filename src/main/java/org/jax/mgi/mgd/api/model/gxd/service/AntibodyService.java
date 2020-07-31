@@ -315,8 +315,13 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		String where = "where a._antibody_key is not null";
 		String orderBy = "order by a.antibodyName";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
-		//String value;
+		String value;
 		Boolean from_accession = false;
+		Boolean from_reference = false;
+		Boolean from_alias = false;
+		Boolean from_aliasref = false;
+		Boolean from_antigen = false;
+		Boolean from_marker = false;
 		
 		//
 		// IN PROGRESS - minimal search for the create story
@@ -328,6 +333,75 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 			where = where + "\n and a.antibodyName ilike '" + searchDomain.getAntibodyName() + "'";
 		}
 		
+		if(searchDomain.getAntibodyTypeKey() != null && ! searchDomain.getAntibodyTypeKey().isEmpty()) {
+			where = where + "\n and a._antibodyType_key = " + searchDomain.getAntibodyTypeKey();
+		}
+		
+		if(searchDomain.getAntibodyClassKey() != null && ! searchDomain.getAntibodyClassKey().isEmpty()) {
+			where = where + "\n and a._antibodyClass_key = " + searchDomain.getAntibodyClassKey();
+		}
+		
+		if(searchDomain.getOrganismKey() != null && ! searchDomain.getOrganismKey().isEmpty()) {
+			where = where + "\n and a._organism_key = " + searchDomain.getOrganismKey();
+		}
+		
+		if(searchDomain.getAntibodyNote() != null && ! searchDomain.getAntibodyNote().isEmpty()) {
+			where = where + "\n and a.antibodyNote ilike '" + searchDomain.getAntibodyNote() + "'";
+		}
+		if (searchDomain.getAntigen().getAntigenKey() != null && ! searchDomain.getAntigen().getAntigenKey().isEmpty()) {
+			where = where + "\n and a._antigen_key = " + searchDomain.getAntigen().getAntigenKey();
+		}
+		else { // no antigen key check for antigen and antigen source attributes
+			if (searchDomain.getAntigen().getAntigenName() != null && ! searchDomain.getAntigen().getAntigenName().isEmpty()) {
+				where = where + "\n and av.antigenname ilike '" + searchDomain.getAntigen().getAntigenName() + "'";
+				from_antigen = true;
+			}
+			if (searchDomain.getAntigen().getRegionCovered() != null && ! searchDomain.getAntigen().getRegionCovered().isEmpty()) {
+				where = where + "\n and av.regioncovered ilike '" + searchDomain.getAntigen().getRegionCovered()+ "'";
+				from_antigen = true;
+			}
+			if (searchDomain.getAntigen().getAntigenNote() != null && ! searchDomain.getAntigen().getAntigenNote().isEmpty()) {
+				where = where + "\n and av.antigennote ilike '" + searchDomain.getAntigen().getAntigenNote() + "'";
+				from_antigen = true;
+			}
+			if (searchDomain.getAntigen().getProbeSource().getOrganismKey() != null && ! searchDomain.getAntigen().getProbeSource().getOrganismKey().isEmpty()) {
+				where = where + "\n and av._organism_key = " + searchDomain.getAntigen().getProbeSource().getOrganismKey();
+				from_antigen = true;
+			}
+			if (searchDomain.getAntigen().getProbeSource().getStrainKey() != null && ! searchDomain.getAntigen().getProbeSource().getStrainKey().isEmpty()) {
+				where = where + "\n and av._strain_key = " + searchDomain.getAntigen().getProbeSource().getStrainKey();
+				from_antigen = true;
+			}
+			if (searchDomain.getAntigen().getProbeSource().getTissueKey() != null && ! searchDomain.getAntigen().getProbeSource().getTissueKey().isEmpty()) {
+				where = where + "\n and av._tissue_key = " + searchDomain.getAntigen().getProbeSource().getTissueKey();
+				from_antigen = true;
+			}
+			if (searchDomain.getAntigen().getProbeSource().getDescription() != null && ! searchDomain.getAntigen().getProbeSource().getDescription().isEmpty()) {
+				where = where + "\n and av.description ilike '" + searchDomain.getAntigen().getProbeSource().getDescription() + "'";
+				from_antigen = true;
+			}
+			// cell line key is actually a VOC_Term._term_key
+			if (searchDomain.getAntigen().getProbeSource().getCellLineKey() != null && ! searchDomain.getAntigen().getProbeSource().getCellLineKey().isEmpty()) {
+				where = where + "\n and av._cellline_key = " + searchDomain.getAntigen().getProbeSource().getCellLineKey();
+				from_antigen = true;
+			}
+			if (searchDomain.getAntigen().getProbeSource().getGenderKey() != null && ! searchDomain.getAntigen().getProbeSource().getGenderKey().isEmpty()) {
+				where = where + "\n and av._gender_key = " + searchDomain.getAntigen().getProbeSource().getGenderKey();
+				from_antigen = true;
+			}
+			String ageSearch = "";
+			if (searchDomain.getAntigen().getProbeSource().getAgePrefix() != null && ! searchDomain.getAntigen().getProbeSource().getAgePrefix().isEmpty() ) {
+				ageSearch = searchDomain.getAntigen().getProbeSource().getAgePrefix();
+			}
+			if (searchDomain.getAntigen().getProbeSource().getAgeStage() != null && ! searchDomain.getAntigen().getProbeSource().getAgeStage().isEmpty() ) {
+				ageSearch = ageSearch + "%" + searchDomain.getAntigen().getProbeSource().getAgeStage();
+			}			
+			if (ageSearch.length() > 0) {
+				where = where + "\nand av.age ilike '%" + ageSearch + "%'";
+				from_antigen = true;	
+			}
+			
+		}
 		// create/mode by/date
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {
@@ -337,15 +411,108 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 						
 		// accession id 
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	
-			where = where + "\nand acc.accID ilike '" + searchDomain.getAccID() + "'";
+			if (! searchDomain.getAccID().startsWith("MGI:")) {
+				where = where + "\nand acc.numericPart = '" + searchDomain.getAccID() + "'";
+			}
+			else {
+				where = where + "\nand acc.accID ilike '" + searchDomain.getAccID() + "'";
+			}
 			from_accession = true;
 		}						
 	
+		// reference associations
+		if (searchDomain.getRefAssocs() != null && !searchDomain.getRefAssocs().isEmpty()) {
+			log.info("searchDomain.getRefAssocs() is not null");
+            if (searchDomain.getRefAssocs().get(0).getRefsKey() != null && !searchDomain.getRefAssocs().get(0).getRefsKey().isEmpty()) {
+            		log.info("adding refsKey clause");
+                    where = where + "\nand ref._Refs_key = " + searchDomain.getRefAssocs().get(0).getRefsKey();
+                    from_reference = true;
+            }
+            if (searchDomain.getRefAssocs().get(0).getShort_citation() != null && !searchDomain.getRefAssocs().get(0).getShort_citation().isEmpty()) {
+                    log.info("adding short citation clause");
+            		value = searchDomain.getRefAssocs().get(0).getShort_citation().replace("'",  "''");
+                    where = where + "\nand ref.short_citation ilike '" + value + "'";
+                    from_reference = true;
+            }
+            if (searchDomain.getRefAssocs().get(0).getJnumid() != null && !searchDomain.getRefAssocs().get(0).getJnumid().isEmpty()) {
+            		log.info("Adding jnum id/assoc type clause");
+                    where = where + "\nand ref._refassoctype_key =" + searchDomain.getRefAssocs().get(0).getRefAssocTypeKey();
+                    where = where + "\nand ref.jnumid ilike '" + searchDomain.getRefAssocs().get(0).getJnumid() + "'";
+                    from_reference = true;
+            }
+		}
+
+		// aliases
+		if (searchDomain.getAliases() != null && ! searchDomain.getAliases().isEmpty()) {
+			log.info("searchDomain.getAliases() is not null");
+			if (searchDomain.getAliases().get(0).getAntibodyAliasKey() != null && !searchDomain.getAliases().get(0).getAntibodyAliasKey().isEmpty()) {
+        		log.info("adding aliasKey clause");
+                where = where + "\nand al._antibodyAlias_key = " + searchDomain.getAliases().get(0).getAntibodyAliasKey();
+                from_alias = true;
+			}
+			if (searchDomain.getAliases().get(0).getRefsKey() != null && ! searchDomain.getAliases().get(0).getRefsKey().isEmpty()) {
+				log.info("adding alias refsKey clause");
+				where = where+ "\nand  al._Refs_key = " + searchDomain.getAliases().get(0).getRefsKey();
+				from_alias = true;
+			}
+			if (searchDomain.getAliases().get(0).getShort_citation() != null && !searchDomain.getAliases().get(0).getShort_citation().isEmpty()) {
+                log.info("adding alias short citation clause");
+        		value = searchDomain.getAliases().get(0).getShort_citation().replace("'",  "''");
+                where = where + "\nand aref.short_citation ilike '" + value + "'";
+                from_aliasref = true;
+        }
+	        if (searchDomain.getAliases().get(0).getJnumid() != null && !searchDomain.getAliases().get(0).getJnumid().isEmpty()) {
+        		log.info("Adding alias jnum id/assoc type clause");
+                where = where + "\nand aref.jnumid = '" + searchDomain.getAliases().get(0).getJnumid() + "'";
+	            from_aliasref = true;
+	        }
+		}
+		
+		// markers
+		
+		if (searchDomain.getMarkers() != null && ! searchDomain.getMarkers().isEmpty()) {
+			log.info("getMarkers is not null");
+			//log.info(searchDomain.getMarkers().get(0).getMarkerKey());
+			if (searchDomain.getMarkers().get(0).getMarkerKey() != null & ! searchDomain.getMarkers().get(0).getMarkerKey().isEmpty()) {
+				log.info("Adding marker to clause");
+				where = where + "\nand mv._marker_key = " + searchDomain.getMarkers().get(0).getMarkerKey();
+				from_marker = true;
+			}
+			if (searchDomain.getMarkers().get(0).getChromosome() != null & ! searchDomain.getMarkers().get(0).getChromosome().isEmpty()) {
+				log.info("Adding chromosome to clause");
+				where = where + "\nand mv.chromosome = '" + searchDomain.getMarkers().get(0).getChromosome() + "'";
+				from_marker = true;
+			}
+		}
+		
+		
 		if (from_accession == true) {
 			from = from + ", gxd_antibody_acc_view acc";
 			where = where + "\nand a._antibody_key = acc._object_key"; 
 		}
-
+		
+		if (from_reference == true) {
+            from = from + ", mgi_reference_antibody_view ref";
+            where = where + "\nand a._antibody_key = ref._object_key";
+		}
+		
+		if (from_alias == true) {
+			from = from + ", gxd_antibodyalias al";
+			where = where + "\nand a._antibody_key = al._antibody_key";
+		}
+		if (from_aliasref == true) {
+			from = from + ", gxd_antibodyaliasref_view aref";
+			where = where + "\nand a._antibody_key = aref._antibody_key";
+		}
+		if (from_antigen == true) {
+			from = from + ", gxd_antibodyantigen_view av";
+			where = where + "\nand a._antibody_key = av._antibody_key";
+		}
+		if (from_marker == true) {
+			from = from + ", gxd_antibodymarker_view mv";
+			where = where + "\nand a._antibody_key = mv._antibody_key";
+		}
+		
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info(cmd);

@@ -83,7 +83,7 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		entity.setModification_date(new Date());
 			
 		// add antigen source
-		log.info("processAntigen/sourceService.create() tissue: " + domain.getProbeSource().getTissue() + " tissueKey: " + domain.getProbeSource().getTissueKey());
+		log.info("processAntigen/sourceService.create() agePrefix: " + domain.getProbeSource().getAgePrefix() + " ageStage: " + domain.getProbeSource().getAgeStage());
 		SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
 		sourceResults = sourceService.create(domain.getProbeSource(), user);
 		entity.setProbeSource(sourceDAO.get(Integer.valueOf(sourceResults.items.get(0).getSourceKey())));

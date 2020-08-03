@@ -329,18 +329,19 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		
 		// if parameter exists, then add to where-clause
 		// antibodyName
+		log.info("Antibody name: " + searchDomain.getAntibodyName());
 		if(searchDomain.getAntibodyName() != null && ! searchDomain.getAntibodyName().isEmpty()) {
 			where = where + "\n and a.antibodyName ilike '" + searchDomain.getAntibodyName() + "'";
 		}
-		
+		log.info("Antibody typeKey: " + searchDomain.getAntibodyTypeKey());
 		if(searchDomain.getAntibodyTypeKey() != null && ! searchDomain.getAntibodyTypeKey().isEmpty()) {
 			where = where + "\n and a._antibodyType_key = " + searchDomain.getAntibodyTypeKey();
 		}
-		
+		log.info("Antibody classKey: " + searchDomain.getAntibodyClassKey());
 		if(searchDomain.getAntibodyClassKey() != null && ! searchDomain.getAntibodyClassKey().isEmpty()) {
 			where = where + "\n and a._antibodyClass_key = " + searchDomain.getAntibodyClassKey();
 		}
-		
+		log.info("Antibody organismKey: " + searchDomain.getOrganismKey());
 		if(searchDomain.getOrganismKey() != null && ! searchDomain.getOrganismKey().isEmpty()) {
 			where = where + "\n and a._organism_key = " + searchDomain.getOrganismKey();
 		}
@@ -348,6 +349,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		if(searchDomain.getAntibodyNote() != null && ! searchDomain.getAntibodyNote().isEmpty()) {
 			where = where + "\n and a.antibodyNote ilike '" + searchDomain.getAntibodyNote() + "'";
 		}
+		log.info("Antibody antigenKey: " + searchDomain.getAntigen().getAntigenKey());
 		if (searchDomain.getAntigen() != null && searchDomain.getAntigen().getAntigenKey() != null && ! searchDomain.getAntigen().getAntigenKey().isEmpty()) {
 			log.info("antigen is specified");
 			if (searchDomain.getAntigen().getAntigenKey() != null && ! searchDomain.getAntigen().getAntigenKey().isEmpty()) {

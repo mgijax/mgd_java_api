@@ -514,7 +514,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		if (from_antigenaccession == true) {
 			from = from + ", gxd_antibodyantigen_view acc2, gxd_antigen_acc_view acc2v";
 			where = where + "\nand a._antibody_key = acc2._antibody_key";
-			where = where + "\nand acc2._antigen_key = acc2v._antigen_key";
+			where = where + "\nand acc2._antigen_key = acc2v._object_key";
 		}		
 		if (from_reference == true) {
             from = from + ", mgi_reference_antibody_view ref";

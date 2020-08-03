@@ -184,7 +184,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 			
 		}
 		
-		log.info("antibody class");
+		log.info("antibody class: " + domain.getAntibodyClassKey());
 		// has default if not set
 		if(domain.getAntibodyClassKey() ==  null || domain.getAntibodyClassKey().isEmpty()){
 			// 'Not Specified'

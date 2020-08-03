@@ -182,9 +182,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		else {
 			entity.setAntibodyNote(domain.getAntibodyNote());
 			
-		} :$
-		:$
-		
+		}
 		
 		log.info("antibody class: " + domain.getAntibodyClassKey());
 		// has default if not set

@@ -344,25 +344,30 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		if(searchDomain.getOrganismKey() != null && ! searchDomain.getOrganismKey().isEmpty()) {
 			where = where + "\n and a._organism_key = " + searchDomain.getOrganismKey();
 		}
-		
+		log.info("antibody note: " + searchDomain.getAntibodyNote());
 		if(searchDomain.getAntibodyNote() != null && ! searchDomain.getAntibodyNote().isEmpty()) {
 			where = where + "\n and a.antibodyNote ilike '" + searchDomain.getAntibodyNote() + "'";
 		}
 		if (searchDomain.getAntigen() != null && searchDomain.getAntigen().getAntigenKey() != null && ! searchDomain.getAntigen().getAntigenKey().isEmpty()) {
+			log.info("antigen is specified");
 			if (searchDomain.getAntigen().getAntigenKey() != null && ! searchDomain.getAntigen().getAntigenKey().isEmpty()) {
 				where = where + "\n and a._antigen_key = " + searchDomain.getAntigen().getAntigenKey();
 			}
 		}
 		else { // no antigen key check for antigen and antigen source attributes
+			log.info("antigen is not specified, check antigen attributes");
 			if (searchDomain.getAntigen().getAntigenName() != null && ! searchDomain.getAntigen().getAntigenName().isEmpty()) {
+				log.info("antigen name: " + searchDomain.getAntigen().getAntigenName());
 				where = where + "\n and av.antigenname ilike '" + searchDomain.getAntigen().getAntigenName() + "'";
 				from_antigen = true;
 			}
 			if (searchDomain.getAntigen().getRegionCovered() != null && ! searchDomain.getAntigen().getRegionCovered().isEmpty()) {
+				log.info("antigen regioncovered: " + searchDomain.getAntigen().getRegionCovered());
 				where = where + "\n and av.regioncovered ilike '" + searchDomain.getAntigen().getRegionCovered()+ "'";
 				from_antigen = true;
 			}
 			if (searchDomain.getAntigen().getAntigenNote() != null && ! searchDomain.getAntigen().getAntigenNote().isEmpty()) {
+				log.info("antigen note: " + searchDomain.getAntigen().getAntigenNote());
 				where = where + "\n and av.antigennote ilike '" + searchDomain.getAntigen().getAntigenNote() + "'";
 				from_antigen = true;
 			}

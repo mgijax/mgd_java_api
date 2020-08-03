@@ -182,7 +182,9 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		else {
 			entity.setAntibodyNote(domain.getAntibodyNote());
 			
-		}
+		} :$
+		:$
+		
 		
 		log.info("antibody class: " + domain.getAntibodyClassKey());
 		// has default if not set
@@ -348,11 +350,11 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		if(searchDomain.getAntibodyNote() != null && ! searchDomain.getAntibodyNote().isEmpty()) {
 			where = where + "\n and a.antibodyNote ilike '" + searchDomain.getAntibodyNote() + "'";
 		}
-		//if (searchDomain.getAntigen() != null && searchDomain.getAntigen().getAntigenKey() != null && ! searchDomain.getAntigen().getAntigenKey().isEmpty()) {
-			//if (searchDomain.getAntigen().getAntigenKey() != null && ! searchDomain.getAntigen().getAntigenKey().isEmpty()) {
-			//	where = where + "\n and a._antigen_key = " + searchDomain.getAntigen().getAntigenKey();
-			//}
-		//}
+		if (searchDomain.getAntigen() != null && searchDomain.getAntigen().getAntigenKey() != null && ! searchDomain.getAntigen().getAntigenKey().isEmpty()) {
+			if (searchDomain.getAntigen().getAntigenKey() != null && ! searchDomain.getAntigen().getAntigenKey().isEmpty()) {
+				where = where + "\n and a._antigen_key = " + searchDomain.getAntigen().getAntigenKey();
+			}
+		}
 		else { // no antigen key check for antigen and antigen source attributes
 			if (searchDomain.getAntigen().getAntigenName() != null && ! searchDomain.getAntigen().getAntigenName().isEmpty()) {
 				where = where + "\n and av.antigenname ilike '" + searchDomain.getAntigen().getAntigenName() + "'";

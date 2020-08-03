@@ -457,7 +457,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
             }
             if (searchDomain.getRefAssocs().get(0).getJnumid() != null && !searchDomain.getRefAssocs().get(0).getJnumid().isEmpty()) {
             		log.info("Adding jnum id/assoc type clause");
-                    where = where + "\nand ref._refassoctype_key =" + searchDomain.getRefAssocs().get(0).getRefAssocTypeKey();
+                    //where = where + "\nand ref._refassoctype_key =" + searchDomain.getRefAssocs().get(0).getRefAssocTypeKey();
                     where = where + "\nand ref.jnumid ilike '" + searchDomain.getRefAssocs().get(0).getJnumid() + "'";
                     from_reference = true;
             }

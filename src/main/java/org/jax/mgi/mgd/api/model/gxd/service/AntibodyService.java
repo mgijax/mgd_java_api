@@ -364,7 +364,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 				where = where + "\nand acc2v.numericPart = '" + searchDomain.getAntigen().getAccID() + "'";
 			}
 			else {
-				where = where + "\nand acc2v.accID ilike '" + searchDomain.getAccID() + "'";
+				where = where + "\nand acc2v.accID ilike '" + searchDomain.getAntigen().getAccID() + "'";
 			}
 			from_antigenaccession = true;
 		}

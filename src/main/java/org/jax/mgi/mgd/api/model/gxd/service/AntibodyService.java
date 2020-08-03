@@ -317,6 +317,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
 		Boolean from_accession = false;
+		Boolean from_antigenaccession = false;
 		Boolean from_reference = false;
 		Boolean from_alias = false;
 		Boolean from_aliasref = false;
@@ -358,7 +359,14 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		}*/
 		if (searchDomain.getAntigen() != null && searchDomain.getAntigen().getAccID() != null && ! searchDomain.getAntigen().getAccID().isEmpty()) {
 			log.info("antigen ID is specified");
-			where = where + "\n and a._antigen_key = " + searchDomain.getAntigen().getAntigenKey();
+			//where = where + "\n and a._antigen_key = " + searchDomain.getAntigen().getAntigenKey();
+			if (! searchDomain.getAntigen().getAccID().startsWith("MGI:")) {
+				where = where + "\nand acc2v.numericPart = '" + searchDomain.getAntigen().getAccID() + "'";
+			}
+			else {
+				where = where + "\nand acc2v.accID ilike '" + searchDomain.getAccID() + "'";
+			}
+			from_antigenaccession = true;
 		}
 		else { // no antigen key check for antigen and antigen source attributes
 			log.info("antigen is not specified, check antigen attributes");
@@ -503,7 +511,11 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 			from = from + ", gxd_antibody_acc_view acc";
 			where = where + "\nand a._antibody_key = acc._object_key"; 
 		}
-		
+		if (from_antigenaccession == true) {
+			from = from + ", gxd_antibodyantigen_view acc2, gxd_antigen_acc_view acc2v";
+			where = where + "\nand a._antibody_key = acc2._antibody_key";
+			where = where + "\nand acc2._antigen_key = acc2v._antigen_key";
+		}		
 		if (from_reference == true) {
             from = from + ", mgi_reference_antibody_view ref";
             where = where + "\nand a._antibody_key = ref._object_key";

@@ -402,6 +402,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 				from_antigen = true;
 			}
 			// cell line key is actually a VOC_Term._term_key
+			log.info("antigen celline key: " + searchDomain.getAntigen().getProbeSource().getCellLineKey());
 			if (searchDomain.getAntigen().getProbeSource().getCellLineKey() != null && ! searchDomain.getAntigen().getProbeSource().getCellLineKey().isEmpty()) {
 				where = where + "\n and av._cellline_key = " + searchDomain.getAntigen().getProbeSource().getCellLineKey();
 				from_antigen = true;

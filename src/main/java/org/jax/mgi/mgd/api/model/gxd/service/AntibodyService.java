@@ -349,12 +349,16 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		if(searchDomain.getAntibodyNote() != null && ! searchDomain.getAntibodyNote().isEmpty()) {
 			where = where + "\n and a.antibodyNote ilike '" + searchDomain.getAntibodyNote() + "'";
 		}
-		log.info("Antibody antigenKey: " + searchDomain.getAntigen().getAntigenKey());
+		/*log.info("Antibody antigenKey: " + searchDomain.getAntigen().getAntigenKey());
 		if (searchDomain.getAntigen() != null && searchDomain.getAntigen().getAntigenKey() != null && ! searchDomain.getAntigen().getAntigenKey().isEmpty()) {
 			log.info("antigen is specified");
 			if (searchDomain.getAntigen().getAntigenKey() != null && ! searchDomain.getAntigen().getAntigenKey().isEmpty()) {
 				where = where + "\n and a._antigen_key = " + searchDomain.getAntigen().getAntigenKey();
 			}
+		}*/
+		if (searchDomain.getAntigen() != null && searchDomain.getAntigen().getAccID() != null && ! searchDomain.getAntigen().getAccID().isEmpty()) {
+			log.info("antigen ID is specified");
+			where = where + "\n and a._antigen_key = " + searchDomain.getAntigen().getAntigenKey();
 		}
 		else { // no antigen key check for antigen and antigen source attributes
 			log.info("antigen is not specified, check antigen attributes");

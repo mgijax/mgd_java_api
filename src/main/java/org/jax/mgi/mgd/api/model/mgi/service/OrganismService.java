@@ -179,5 +179,29 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		
 		return results;
 	}
+	@Transactional	
+	public List<OrganismDomain> searchAntibody() {
+		// for antigen module organism pick list
+		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
+
+		String cmd ="select s.*\n" + 
+				"from MGI_Organism s, MGI_Organism_MGIType t\n" + 
+				"where s._Organism_key = t._Organism_key\n" +
+				"and t._MGIType_key = 6";
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				OrganismDomain domain = new OrganismDomain();
+				domain = translator.translate(organismDAO.get(rs.getInt("_organism_key")));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {e.printStackTrace();}
+		
+		return results;
+	}
 	
 }

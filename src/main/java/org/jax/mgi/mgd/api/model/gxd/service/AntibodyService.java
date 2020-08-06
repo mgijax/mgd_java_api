@@ -501,7 +501,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 			//log.info(searchDomain.getMarkers().get(0).getMarkerKey());
 			if (searchDomain.getMarkers().get(0).getMarkerSymbol() != null & ! searchDomain.getMarkers().get(0).getMarkerSymbol().isEmpty()) {
 				log.info("Adding marker symbol to clause");
-				where = where + "\nand mv.symbol ilike " + searchDomain.getMarkers().get(0).getMarkerSymbol();
+				where = where + "\nand mv.symbol ilike '" + searchDomain.getMarkers().get(0).getMarkerSymbol() + "'";
 				from_marker = true;
 			}
 			if (searchDomain.getMarkers().get(0).getMarkerKey() != null & ! searchDomain.getMarkers().get(0).getMarkerKey().isEmpty()) {

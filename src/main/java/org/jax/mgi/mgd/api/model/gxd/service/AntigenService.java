@@ -407,6 +407,7 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		log.info("accID: " + domain.getAccID());
 		return domain;
 	}
 }

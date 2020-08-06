@@ -107,5 +107,6 @@ public class AntigenController extends BaseController<AntigenDomain> {
 	
 	public AntigenDomain validateAntigenAcc(AntigenDomain searchDomain) {
 		return antigenService.validateAntigenAcc(searchDomain);
+		
 	}
 }

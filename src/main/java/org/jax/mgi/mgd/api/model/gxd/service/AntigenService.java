@@ -18,7 +18,6 @@ import org.jax.mgi.mgd.api.model.gxd.entities.Antigen;
 import org.jax.mgi.mgd.api.model.gxd.translator.AntigenTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimAntigenTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeSourceDAO;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.service.ProbeSourceService;

@@ -101,10 +101,11 @@ public class AntigenController extends BaseController<AntigenDomain> {
 		return results;
 	}
 	
-	@GET
-	@ApiOperation(value = "Get antibodies by antigen key")
-	@Path("/getAntibodies/{key}")
-	public List<SlimAntibodyDomain> getAntibodies(@PathParam("key") Integer key) {
-		return antigenService.getAntibodies(key);
-	}	
+	@POST
+	@ApiOperation(value = "validate antigen accID")
+	@Path("/validateAntigenAcc")
+	
+	public AntigenDomain validateAntigenAcc(AntigenDomain searchDomain) {
+		return antigenService.validateAntigenAcc(searchDomain);
+	}
 }

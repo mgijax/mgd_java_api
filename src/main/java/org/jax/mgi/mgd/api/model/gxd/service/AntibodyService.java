@@ -499,6 +499,11 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		if (searchDomain.getMarkers() != null && ! searchDomain.getMarkers().isEmpty()) {
 			log.info("getMarkers is not null");
 			//log.info(searchDomain.getMarkers().get(0).getMarkerKey());
+			if (searchDomain.getMarkers().get(0).getMarkerSymbol() != null & ! searchDomain.getMarkers().get(0).getMarkerSymbol().isEmpty()) {
+				log.info("Adding marker symbol to clause");
+				where = where + "\nand mv.symbol ilike " + searchDomain.getMarkers().get(0).getMarkerSymbol();
+				from_marker = true;
+			}
 			if (searchDomain.getMarkers().get(0).getMarkerKey() != null & ! searchDomain.getMarkers().get(0).getMarkerKey().isEmpty()) {
 				log.info("Adding marker to clause");
 				where = where + "\nand mv._marker_key = " + searchDomain.getMarkers().get(0).getMarkerKey();

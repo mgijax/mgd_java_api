@@ -386,29 +386,29 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 				from_antigen = true;
 			}
 			if (searchDomain.getAntigen().getProbeSource().getOrganismKey() != null && ! searchDomain.getAntigen().getProbeSource().getOrganismKey().isEmpty()) {
-				where = where + "\n and av._organism_key = " + searchDomain.getAntigen().getProbeSource().getOrganismKey();
+				where = where + "\n and sv._organism_key = " + searchDomain.getAntigen().getProbeSource().getOrganismKey();
 				from_antigen = true;
 			}
-			if (searchDomain.getAntigen().getProbeSource().getStrainKey() != null && ! searchDomain.getAntigen().getProbeSource().getStrainKey().isEmpty()) {
-				where = where + "\n and av._strain_key = " + searchDomain.getAntigen().getProbeSource().getStrainKey();
+			if (searchDomain.getAntigen().getProbeSource().getStrain() != null && ! searchDomain.getAntigen().getProbeSource().getStrain().isEmpty()) {
+				where = where + "\n and sv.strain ilike '" + searchDomain.getAntigen().getProbeSource().getStrain() +  "'";
 				from_antigen = true;
 			}
-			if (searchDomain.getAntigen().getProbeSource().getTissueKey() != null && ! searchDomain.getAntigen().getProbeSource().getTissueKey().isEmpty()) {
-				where = where + "\n and av._tissue_key = " + searchDomain.getAntigen().getProbeSource().getTissueKey();
+			if (searchDomain.getAntigen().getProbeSource().getTissue() != null && ! searchDomain.getAntigen().getProbeSource().getTissue().isEmpty()) {
+				where = where + "\n and sv.tissue ilike '" + searchDomain.getAntigen().getProbeSource().getTissue() + "'";
 				from_antigen = true;
 			}
 			if (searchDomain.getAntigen().getProbeSource().getDescription() != null && ! searchDomain.getAntigen().getProbeSource().getDescription().isEmpty()) {
-				where = where + "\n and av.description ilike '" + searchDomain.getAntigen().getProbeSource().getDescription() + "'";
+				where = where + "\n and sv.description ilike '" + searchDomain.getAntigen().getProbeSource().getDescription() + "'";
 				from_antigen = true;
 			}
 			// cell line key is actually a VOC_Term._term_key
-			log.info("antigen celline key: " + searchDomain.getAntigen().getProbeSource().getCellLine());
-			if (searchDomain.getAntigen().getProbeSource().getCellLineKey() != null && ! searchDomain.getAntigen().getProbeSource().getCellLineKey().isEmpty()) {
-				where = where + "\n and av._cellline_key = " + searchDomain.getAntigen().getProbeSource().getCellLineKey();
+			log.info("antigen celline : " + searchDomain.getAntigen().getProbeSource().getCellLine());
+			if (searchDomain.getAntigen().getProbeSource().getCellLine() != null && ! searchDomain.getAntigen().getProbeSource().getCellLine().isEmpty()) {
+				where = where + "\n and sv.cellline ilike '" + searchDomain.getAntigen().getProbeSource().getCellLine() + "'";
 				from_antigen = true;
 			}
 			if (searchDomain.getAntigen().getProbeSource().getGenderKey() != null && ! searchDomain.getAntigen().getProbeSource().getGenderKey().isEmpty()) {
-				where = where + "\n and av._gender_key = " + searchDomain.getAntigen().getProbeSource().getGenderKey();
+				where = where + "\n and sv._gender_key = " + searchDomain.getAntigen().getProbeSource().getGenderKey();
 				from_antigen = true;
 			}
 			String ageSearch = "";
@@ -419,7 +419,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 				ageSearch = ageSearch + "%" + searchDomain.getAntigen().getProbeSource().getAgeStage();
 			}			
 			if (ageSearch.length() > 0) {
-				where = where + "\nand av.age ilike '%" + ageSearch + "%'";
+				where = where + "\nand sv.age ilike '%" + ageSearch + "%'";
 				from_antigen = true;	
 			}
 			
@@ -530,7 +530,6 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
             from = from + ", mgi_reference_antibody_view ref";
             where = where + "\nand a._antibody_key = ref._object_key";
 		}
-		
 		if (from_alias == true) {
 			from = from + ", gxd_antibodyalias al";
 			where = where + "\nand a._antibody_key = al._antibody_key";
@@ -540,9 +539,11 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 			where = where + "\nand a._antibody_key = aref._antibody_key";
 		}
 		if (from_antigen == true) {
-			from = from + ", gxd_antibodyantigen_view av";
+			from = from + ", gxd_antibodyantigen_view av, prb_source_view sv";
 			where = where + "\nand a._antibody_key = av._antibody_key";
+			where = where + "\nand av._source_key = sv._source_key";
 		}
+		
 		if (from_marker == true) {
 			from = from + ", gxd_antibodymarker_view mv";
 			where = where + "\nand a._antibody_key = mv._antibody_key";

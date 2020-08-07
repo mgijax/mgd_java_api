@@ -471,9 +471,10 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		// aliases
 		if (searchDomain.getAliases() != null && ! searchDomain.getAliases().isEmpty()) {
 			log.info("searchDomain.getAliases() is not null");
-			if (searchDomain.getAliases().get(0).getAntibodyAliasKey() != null && !searchDomain.getAliases().get(0).getAntibodyAliasKey().isEmpty()) {
+			log.info("searchDomain.getAliases().get(0).getAlias(): " + searchDomain.getAliases().get(0).getAlias());
+			if (searchDomain.getAliases().get(0).getAlias()!= null && !searchDomain.getAliases().get(0).getAlias().isEmpty()) {
         		log.info("adding aliasKey clause");
-                where = where + "\nand al._antibodyAlias_key = " + searchDomain.getAliases().get(0).getAntibodyAliasKey();
+                where = where + "\nand al.alias = " + searchDomain.getAliases().get(0).getAlias();
                 from_alias = true;
 			}
 			if (searchDomain.getAliases().get(0).getRefsKey() != null && ! searchDomain.getAliases().get(0).getRefsKey().isEmpty()) {

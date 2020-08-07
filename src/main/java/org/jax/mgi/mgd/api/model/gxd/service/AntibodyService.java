@@ -332,8 +332,9 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		// antibodyName
 		log.info("Antibody name: " + searchDomain.getAntibodyName());
 		if(searchDomain.getAntibodyName() != null && ! searchDomain.getAntibodyName().isEmpty()) {
-			where = where + "\n and a.antibodyName ilike '" + searchDomain.getAntibodyName() + "'";
-			where = where + "\nand al.alias ilike '" + searchDomain.getAntibodyName() + "'";
+			where = where + "\n and (a.antibodyName ilike '" + searchDomain.getAntibodyName() + "'";
+			where = where + "\nor al.alias ilike '" + searchDomain.getAntibodyName() + "')";
+			from_alias = true;
 		}
 		log.info("Antibody typeKey: " + searchDomain.getAntibodyTypeKey());
 		if(searchDomain.getAntibodyTypeKey() != null && ! searchDomain.getAntibodyTypeKey().isEmpty()) {

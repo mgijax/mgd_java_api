@@ -534,6 +534,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
             where = where + "\nand a._antibody_key = ref._object_key";
 		}
 		if (from_alias == true) {
+			select = select + ", al.jnumid as alias_jnumid, al.short_citation as alias_short_citation";
 			from = from + ", gxd_antibodyalias al";
 			where = where + "\nand a._antibody_key = al._antibody_key";
 		}

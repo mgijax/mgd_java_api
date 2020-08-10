@@ -83,6 +83,14 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 			entity.setAntibodyNote(null);
 		}
 		
+		log.info("antibody type");
+		// has default if not set
+		if(domain.getAntibodyTypeKey() ==  null || domain.getAntibodyTypeKey().isEmpty()) {
+			// 'Not Specified'
+			domain.setAntibodyTypeKey("-1");
+		}
+	    entity.setAntibodyType(typeDAO.get(Integer.valueOf(domain.getAntibodyTypeKey())));
+		
 		log.info("antibody class");
 		// has default if not set
 		if(domain.getAntibodyClassKey() ==  null || domain.getAntibodyClassKey().isEmpty()){
@@ -92,13 +100,6 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		}
 		entity.setAntibodyClass(classDAO.get(Integer.valueOf(domain.getAntibodyClassKey())));
 		
-		log.info("antibody type");
-		// has default if not set
-		if(domain.getAntibodyTypeKey() ==  null || domain.getAntibodyTypeKey().isEmpty()) {
-			// 'Not Specified'
-			domain.setAntibodyTypeKey("-1");
-		}
-	    entity.setAntibodyType(typeDAO.get(Integer.valueOf(domain.getAntibodyTypeKey())));
 		
 	    // has default if not set
 	    log.info("antibody organism");
@@ -121,6 +122,15 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		
 		// execute persist/insert/send to database
 		antibodyDAO.persist(entity);
+
+		// process antibody references, can be null
+		log.info("Antibody/create references");
+		if (domain.getRefAssocs() != null && ! domain.getRefAssocs().isEmpty()) {
+			log.info("create references");
+			log.info("antibody key: " + String.valueOf(entity.get_antibody_key()));
+			log.info("refAssocDomain mgitypeKey: " + domain.getRefAssocs().get(0).getMgiTypeKey() + " refsKey: " + domain.getRefAssocs().get(0).getRefsKey());
+			referenceAssocService.process(String.valueOf(entity.get_antibody_key()), domain.getRefAssocs(), mgiTypeKey, user);
+		}
 		
 		// process antibody aliases, can be null
 		log.info("Antibody/create aliases");
@@ -138,14 +148,6 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 			log.info("create markers");
 			log.info("antibody key: " + String.valueOf(entity.get_antibody_key()));
 			log.info("antibodyMarkerDomain markerKey: " + domain.getMarkers().get(0).getMarkerKey());
-		}
-		// process antibody references, can be null
-		log.info("Antibody/create references");
-		if (domain.getRefAssocs() != null && ! domain.getRefAssocs().isEmpty()) {
-			log.info("create references");
-			log.info("antibody key: " + String.valueOf(entity.get_antibody_key()));
-			log.info("refAssocDomain mgitypeKey: " + domain.getRefAssocs().get(0).getMgiTypeKey() + " refsKey: " + domain.getRefAssocs().get(0).getRefsKey());
-			referenceAssocService.process(String.valueOf(entity.get_antibody_key()), domain.getRefAssocs(), mgiTypeKey, user);
 		}
 				
 		// return entity translated to domain
@@ -324,9 +326,6 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		Boolean from_antigen = false;
 		Boolean from_marker = false;
 		
-		//
-		// IN PROGRESS - minimal search for the create story
-		//
 		
 		// if parameter exists, then add to where-clause
 		// antibodyName

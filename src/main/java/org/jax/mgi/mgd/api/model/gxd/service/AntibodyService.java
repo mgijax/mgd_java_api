@@ -257,10 +257,23 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 	@Transactional
 	public SearchResults<AntibodyDomain> delete(Integer key, User user) {
 		// get the entity object and delete
+		log.info("AntibodyPrep/delete");
+		String cmd = "delete from GXD_AntibodyPrep where _Antibody_key = " + key;
+		log.info("cmd: "+ cmd);
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			log.info(rs.rowDeleted());
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		log.info("Antibody/delete");
 		
 		SearchResults<AntibodyDomain> results = new SearchResults<AntibodyDomain>();
 		Antibody entity = antibodyDAO.get(key);
+		
 		results.setItem(translator.translate(antibodyDAO.get(key)));
 		antibodyDAO.remove(entity);
 		return results;

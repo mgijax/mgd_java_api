@@ -12,9 +12,11 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyClassDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyPrepDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyTypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntigenDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyPrepDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Antibody;
 import org.jax.mgi.mgd.api.model.gxd.translator.AntibodyTranslator;
@@ -49,6 +51,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 	private AntibodyAliasService aliasService;
 	@Inject
 	private AntibodyMarkerService antibodyMarkerService;
+	@Inject AntibodyPrepService antibodyPrepService;
 	
 	private AntibodyTranslator translator = new AntibodyTranslator();
 	private SlimAntibodyTranslator slimtranslator = new SlimAntibodyTranslator();
@@ -256,23 +259,29 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 
 	@Transactional
 	public SearchResults<AntibodyDomain> delete(Integer key, User user) {
-		// get the entity object and delete
-		log.info("AntibodyPrep/delete");
-		String cmd = "delete from GXD_AntibodyPrep where _Antibody_key = " + key;
-		log.info("cmd: "+ cmd);
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			log.info(rs.rowDeleted());
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
 		log.info("Antibody/delete");
 		
+		// remove all AntibodyPrep referencing this antibody
+		log.info("getting antibodyPrep objects for antibody");
+		AntibodyPrepDomain inPrepDomain = new AntibodyPrepDomain();
+		inPrepDomain.setAntibodyKey(String.valueOf(key));
+		
+		
+		//SearchResults<AntibodyPrepDomain> outDomain = new SearchResults<AntibodyPrepDomain> ();
+		
+		List<AntibodyPrepDomain> prepDomainList =  antibodyPrepService.search(inPrepDomain);
+		for (int i = 0; i < prepDomainList.size(); i++) {
+			String prepKey = prepDomainList.get(i).getAntibodyPrepKey();
+			log.info(" deleting antibody prep key: " + prepKey);
+			//outDomain = antibodyPrepService.delete(Integer.valueOf(prepKey), user);
+			antibodyPrepService.delete(Integer.valueOf(prepKey), user);
+			log.info("done deleting antibody prep key: " + prepKey);
+		}
+		
+		// now delete the antibody.
 		SearchResults<AntibodyDomain> results = new SearchResults<AntibodyDomain>();
 		Antibody entity = antibodyDAO.get(key);
+		
 		
 		results.setItem(translator.translate(antibodyDAO.get(key)));
 		antibodyDAO.remove(entity);

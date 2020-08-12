@@ -292,6 +292,12 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 						domain.get(i).setRefAssocTypeKey("1018");
 					}
 				}
+				// if mgiTypeKey = antibody and no reference assoc type chosen, then set default refAssoc type "primary" (1026)
+				if (mgiTypeKey.equals("2")) {
+					if (domain.get(i).getRefAssocTypeKey() == null || domain.get(i).getRefAssocTypeKey().isEmpty()) {
+						domain.get(i).setRefAssocTypeKey("1026");
+					}
+				}
 				// select count(*) from MGI_insertReferenceAssoc (1014,6,0,275403,1027)
 				cmd = "select count(*) from MGI_insertReferenceAssoc ("
 							+ user.get_user_key().intValue()

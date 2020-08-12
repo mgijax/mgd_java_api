@@ -337,7 +337,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		String select = "select a.*";
 		String from = "from gxd_antibody a";
 		String where = "where a._antibody_key is not null";
-		String orderBy = "order by a.antibodyName";
+		String orderBy = "order by antibodyName";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
 		Boolean from_accession = false;
@@ -348,14 +348,29 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		Boolean from_antigen = false;
 		Boolean from_marker = false;
 		
-		
+		String union = "\nunion \nselect a.*\n" + 
+				"from gxd_antibody a, gxd_antibodyalias aa\n" + 
+				"where a._antibody_key = aa._antibody_key\n" + 
+				"and aa.alias ilike '";
+
 		// if parameter exists, then add to where-clause
 		// antibodyName
+		/*select g._Antibody_key, g.antibodyName
+from gxd_antibody g
+where antibodyName ilike 'anti-Dp1'
+union
+select a._Antibody_key, a.antibodyName
+from gxd_antibody a, gxd_antibodyalias aa
+where a._antibody_key is not null
+ and aa.alias ilike 'anti-Dp1'
+and a._antibody_key = aa._antibody_key
+*/
 		log.info("Antibody name: " + searchDomain.getAntibodyName());
 		if(searchDomain.getAntibodyName() != null && ! searchDomain.getAntibodyName().isEmpty()) {
-			where = where + "\n and (a.antibodyName ilike '" + searchDomain.getAntibodyName() + "'";
-			where = where + "\nor al.alias ilike '" + searchDomain.getAntibodyName() + "')";
-			from_alias = true;
+			//where = where + "\n and (a.antibodyName ilike '" + searchDomain.getAntibodyName() + "'";
+			//where = where + "\nor al.alias ilike '" + searchDomain.getAntibodyName() + "')";
+			where = where + "\n and a.antibodyName ilike '" + searchDomain.getAntibodyName() +  "'";
+			where = where + union + searchDomain.getAntibodyName() + "'";
 		}
 		log.info("Antibody typeKey: " + searchDomain.getAntibodyTypeKey());
 		if(searchDomain.getAntibodyTypeKey() != null && ! searchDomain.getAntibodyTypeKey().isEmpty()) {
@@ -380,73 +395,74 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 				where = where + "\n and a._antigen_key = " + searchDomain.getAntigen().getAntigenKey();
 			}
 		}*/
-		if (searchDomain.getAntigen() != null && searchDomain.getAntigen().getAccID() != null && ! searchDomain.getAntigen().getAccID().isEmpty()) {
-			log.info("antigen ID is specified");
-			//where = where + "\n and a._antigen_key = " + searchDomain.getAntigen().getAntigenKey();
-			if (! searchDomain.getAntigen().getAccID().startsWith("MGI:")) {
-				where = where + "\nand acc2v.numericPart = '" + searchDomain.getAntigen().getAccID() + "'";
+		if (searchDomain.getAntigen() != null)  {
+			if( searchDomain.getAntigen().getAccID() != null && ! searchDomain.getAntigen().getAccID().isEmpty()) {
+				log.info("antigen ID is specified");
+				//where = where + "\n and a._antigen_key = " + searchDomain.getAntigen().getAntigenKey();
+				if (! searchDomain.getAntigen().getAccID().startsWith("MGI:")) {
+					where = where + "\nand acc2v.numericPart = '" + searchDomain.getAntigen().getAccID() + "'";
+				}
+				else {
+					where = where + "\nand acc2v.accID ilike '" + searchDomain.getAntigen().getAccID() + "'";
+				}
+				from_antigenaccession = true;
 			}
-			else {
-				where = where + "\nand acc2v.accID ilike '" + searchDomain.getAntigen().getAccID() + "'";
+			else { // no antigen key check for antigen and antigen source attributes
+				log.info("antigen is not specified, check antigen attributes");
+				if (searchDomain.getAntigen().getAntigenName() != null && ! searchDomain.getAntigen().getAntigenName().isEmpty()) {
+					log.info("antigen name: " + searchDomain.getAntigen().getAntigenName());
+					where = where + "\n and av.antigenname ilike '" + searchDomain.getAntigen().getAntigenName() + "'";
+					from_antigen = true;
+				}
+				if (searchDomain.getAntigen().getRegionCovered() != null && ! searchDomain.getAntigen().getRegionCovered().isEmpty()) {
+					log.info("antigen regioncovered: " + searchDomain.getAntigen().getRegionCovered());
+					where = where + "\n and av.regioncovered ilike '" + searchDomain.getAntigen().getRegionCovered()+ "'";
+					from_antigen = true;
+				}
+				if (searchDomain.getAntigen().getAntigenNote() != null && ! searchDomain.getAntigen().getAntigenNote().isEmpty()) {
+					log.info("antigen note: " + searchDomain.getAntigen().getAntigenNote());
+					where = where + "\n and av.antigennote ilike '" + searchDomain.getAntigen().getAntigenNote() + "'";
+					from_antigen = true;
+				}
+				if (searchDomain.getAntigen().getProbeSource().getOrganismKey() != null && ! searchDomain.getAntigen().getProbeSource().getOrganismKey().isEmpty()) {
+					where = where + "\n and sv._organism_key = " + searchDomain.getAntigen().getProbeSource().getOrganismKey();
+					from_antigen = true;
+				}
+				if (searchDomain.getAntigen().getProbeSource().getStrain() != null && ! searchDomain.getAntigen().getProbeSource().getStrain().isEmpty()) {
+					where = where + "\n and sv.strain ilike '" + searchDomain.getAntigen().getProbeSource().getStrain() +  "'";
+					from_antigen = true;
+				}
+				if (searchDomain.getAntigen().getProbeSource().getTissue() != null && ! searchDomain.getAntigen().getProbeSource().getTissue().isEmpty()) {
+					where = where + "\n and sv.tissue ilike '" + searchDomain.getAntigen().getProbeSource().getTissue() + "'";
+					from_antigen = true;
+				}
+				if (searchDomain.getAntigen().getProbeSource().getDescription() != null && ! searchDomain.getAntigen().getProbeSource().getDescription().isEmpty()) {
+					where = where + "\n and sv.description ilike '" + searchDomain.getAntigen().getProbeSource().getDescription() + "'";
+					from_antigen = true;
+				}
+				// cell line key is actually a VOC_Term._term_key
+				log.info("antigen celline : " + searchDomain.getAntigen().getProbeSource().getCellLine());
+				if (searchDomain.getAntigen().getProbeSource().getCellLine() != null && ! searchDomain.getAntigen().getProbeSource().getCellLine().isEmpty()) {
+					where = where + "\n and sv.cellline ilike '" + searchDomain.getAntigen().getProbeSource().getCellLine() + "'";
+					from_antigen = true;
+				}
+				if (searchDomain.getAntigen().getProbeSource().getGenderKey() != null && ! searchDomain.getAntigen().getProbeSource().getGenderKey().isEmpty()) {
+					where = where + "\n and sv._gender_key = " + searchDomain.getAntigen().getProbeSource().getGenderKey();
+					from_antigen = true;
+				}
+				String ageSearch = "";
+				if (searchDomain.getAntigen().getProbeSource().getAgePrefix() != null && ! searchDomain.getAntigen().getProbeSource().getAgePrefix().isEmpty() ) {
+					ageSearch = searchDomain.getAntigen().getProbeSource().getAgePrefix();
+				}
+				if (searchDomain.getAntigen().getProbeSource().getAgeStage() != null && ! searchDomain.getAntigen().getProbeSource().getAgeStage().isEmpty() ) {
+					ageSearch = ageSearch + "%" + searchDomain.getAntigen().getProbeSource().getAgeStage();
+				}			
+				if (ageSearch.length() > 0) {
+					where = where + "\nand sv.age ilike '%" + ageSearch + "%'";
+					from_antigen = true;	
+				}		
 			}
-			from_antigenaccession = true;
-		}
-		else { // no antigen key check for antigen and antigen source attributes
-			log.info("antigen is not specified, check antigen attributes");
-			if (searchDomain.getAntigen().getAntigenName() != null && ! searchDomain.getAntigen().getAntigenName().isEmpty()) {
-				log.info("antigen name: " + searchDomain.getAntigen().getAntigenName());
-				where = where + "\n and av.antigenname ilike '" + searchDomain.getAntigen().getAntigenName() + "'";
-				from_antigen = true;
-			}
-			if (searchDomain.getAntigen().getRegionCovered() != null && ! searchDomain.getAntigen().getRegionCovered().isEmpty()) {
-				log.info("antigen regioncovered: " + searchDomain.getAntigen().getRegionCovered());
-				where = where + "\n and av.regioncovered ilike '" + searchDomain.getAntigen().getRegionCovered()+ "'";
-				from_antigen = true;
-			}
-			if (searchDomain.getAntigen().getAntigenNote() != null && ! searchDomain.getAntigen().getAntigenNote().isEmpty()) {
-				log.info("antigen note: " + searchDomain.getAntigen().getAntigenNote());
-				where = where + "\n and av.antigennote ilike '" + searchDomain.getAntigen().getAntigenNote() + "'";
-				from_antigen = true;
-			}
-			if (searchDomain.getAntigen().getProbeSource().getOrganismKey() != null && ! searchDomain.getAntigen().getProbeSource().getOrganismKey().isEmpty()) {
-				where = where + "\n and sv._organism_key = " + searchDomain.getAntigen().getProbeSource().getOrganismKey();
-				from_antigen = true;
-			}
-			if (searchDomain.getAntigen().getProbeSource().getStrain() != null && ! searchDomain.getAntigen().getProbeSource().getStrain().isEmpty()) {
-				where = where + "\n and sv.strain ilike '" + searchDomain.getAntigen().getProbeSource().getStrain() +  "'";
-				from_antigen = true;
-			}
-			if (searchDomain.getAntigen().getProbeSource().getTissue() != null && ! searchDomain.getAntigen().getProbeSource().getTissue().isEmpty()) {
-				where = where + "\n and sv.tissue ilike '" + searchDomain.getAntigen().getProbeSource().getTissue() + "'";
-				from_antigen = true;
-			}
-			if (searchDomain.getAntigen().getProbeSource().getDescription() != null && ! searchDomain.getAntigen().getProbeSource().getDescription().isEmpty()) {
-				where = where + "\n and sv.description ilike '" + searchDomain.getAntigen().getProbeSource().getDescription() + "'";
-				from_antigen = true;
-			}
-			// cell line key is actually a VOC_Term._term_key
-			log.info("antigen celline : " + searchDomain.getAntigen().getProbeSource().getCellLine());
-			if (searchDomain.getAntigen().getProbeSource().getCellLine() != null && ! searchDomain.getAntigen().getProbeSource().getCellLine().isEmpty()) {
-				where = where + "\n and sv.cellline ilike '" + searchDomain.getAntigen().getProbeSource().getCellLine() + "'";
-				from_antigen = true;
-			}
-			if (searchDomain.getAntigen().getProbeSource().getGenderKey() != null && ! searchDomain.getAntigen().getProbeSource().getGenderKey().isEmpty()) {
-				where = where + "\n and sv._gender_key = " + searchDomain.getAntigen().getProbeSource().getGenderKey();
-				from_antigen = true;
-			}
-			String ageSearch = "";
-			if (searchDomain.getAntigen().getProbeSource().getAgePrefix() != null && ! searchDomain.getAntigen().getProbeSource().getAgePrefix().isEmpty() ) {
-				ageSearch = searchDomain.getAntigen().getProbeSource().getAgePrefix();
-			}
-			if (searchDomain.getAntigen().getProbeSource().getAgeStage() != null && ! searchDomain.getAntigen().getProbeSource().getAgeStage().isEmpty() ) {
-				ageSearch = ageSearch + "%" + searchDomain.getAntigen().getProbeSource().getAgeStage();
-			}			
-			if (ageSearch.length() > 0) {
-				where = where + "\nand sv.age ilike '%" + ageSearch + "%'";
-				from_antigen = true;	
-			}
-			
-		}
+		}	
 		// create/mode by/date
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {

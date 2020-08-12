@@ -293,7 +293,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 					}
 				}
 				// if mgiTypeKey = antibody and no reference assoc type chosen, then set default refAssoc type "primary" (1026)
-				if (mgiTypeKey.equals("2")) {
+				if (mgiTypeKey.equals("6")) {
 					if (domain.get(i).getRefAssocTypeKey() == null || domain.get(i).getRefAssocTypeKey().isEmpty()) {
 						domain.get(i).setRefAssocTypeKey("1026");
 					}

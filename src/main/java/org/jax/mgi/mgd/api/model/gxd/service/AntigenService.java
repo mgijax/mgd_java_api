@@ -389,9 +389,9 @@ public class AntigenService extends BaseService<AntigenDomain> {
 	@Transactional	
 	public AntigenDomain validateAntigenAcc(AntigenDomain searchDomain) {
 		
-		String where = "\nand acc.accID = '" + searchDomain.getAccID() + "'";
+		String where = "\nwhere acc.accID = '" + searchDomain.getAccID() + "'";
 		if (! searchDomain.getAccID().startsWith("MGI:")) {
-			where = "\nand acc.numericPart = " + searchDomain.getAccID();
+			where = "\nwhere acc.numericPart = " + searchDomain.getAccID();
 		}
 		
 		String cmd = "select ga._antigen_Key" 

@@ -389,11 +389,17 @@ public class AntigenService extends BaseService<AntigenDomain> {
 	@Transactional	
 	public AntigenDomain validateAntigenAcc(AntigenDomain searchDomain) {
 		
-		String accID = searchDomain.getAccID();
+		String where = "\nand acc.accID ilike '" + searchDomain.getAccID() + "'";
+		if (! searchDomain.getAccID().startsWith("MGI:")) {
+			where = where + "\nand acc.numericPart = '" + searchDomain.getAccID() + "'";
+		}
+		
 		String cmd = "select ga._antigen_Key" 
 				+ "\nfrom gxd_antigen_view ga"
-				+ "\nwhere ga.mgiid = '" + accID +  "'";
+				+ where;
+		
 		log.info(cmd);
+		
 		AntigenDomain domain = new AntigenDomain();
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);

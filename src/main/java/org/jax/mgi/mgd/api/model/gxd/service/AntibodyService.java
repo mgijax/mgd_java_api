@@ -71,9 +71,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		
 		log.info("Antibody/create");
 		
-		//
-		// IN PROGRESS
-		//
+		
 		// may not be null
 		entity.setAntibodyName(domain.getAntibodyName());
 		
@@ -129,6 +127,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		// process antibody references, can be null
 		log.info("Antibody/create references");
 		if (domain.getRefAssocs() != null && ! domain.getRefAssocs().isEmpty()) {
+			
 			log.info("create references");
 			log.info("antibody key: " + String.valueOf(entity.get_antibody_key()));
 			log.info("refAssocDomain mgitypeKey: " + domain.getRefAssocs().get(0).getMgiTypeKey() + " refsKey: " + domain.getRefAssocs().get(0).getRefsKey());

@@ -346,8 +346,9 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		Boolean from_aliasref = false;
 		Boolean from_antigen = false;
 		Boolean from_marker = false;
+		Boolean do_union = false;
 		
-		String union = "\nunion \nselect a.*\n" + 
+		String union = "union \nselect a.*\n" + 
 				"from gxd_antibody a, gxd_antibodyalias aa\n" + 
 				"where a._antibody_key = aa._antibody_key\n" + 
 				"and aa.alias ilike '";
@@ -369,7 +370,7 @@ and a._antibody_key = aa._antibody_key
 			//where = where + "\n and (a.antibodyName ilike '" + searchDomain.getAntibodyName() + "'";
 			//where = where + "\nor al.alias ilike '" + searchDomain.getAntibodyName() + "')";
 			where = where + "\n and a.antibodyName ilike '" + searchDomain.getAntibodyName() +  "'";
-			where = where + union + searchDomain.getAntibodyName() + "'";
+			do_union = true;
 		}
 		log.info("Antibody typeKey: " + searchDomain.getAntibodyTypeKey());
 		if(searchDomain.getAntibodyTypeKey() != null && ! searchDomain.getAntibodyTypeKey().isEmpty()) {
@@ -590,6 +591,10 @@ and a._antibody_key = aa._antibody_key
 		
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
+		if (do_union == true) {
+			String union_text = union + searchDomain.getAntibodyName() +  "'";
+			cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + union_text + "\n" + orderBy;
+		}
 		log.info(cmd);
 		
 		try {

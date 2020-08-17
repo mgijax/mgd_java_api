@@ -219,9 +219,12 @@ public class AntibodyAliasService extends BaseService<AntibodyAliasDomain> {
 				
 				entity.setAlias(domain.get(i).getAlias());
 				
-				//if(domain.get(i).getRefsKey() != null && ! domain.get(i).getRefsKey().isEmpty()) {
+				if(domain.get(i).getRefsKey() != null && ! domain.get(i).getRefsKey().isEmpty()) {
 					entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
-				//}
+				}
+				else {
+					entity.setReference(null);
+				}
 								
 				entity.setModification_date(new Date());				
 				aliasDAO.update(entity);

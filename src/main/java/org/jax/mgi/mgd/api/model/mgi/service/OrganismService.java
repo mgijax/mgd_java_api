@@ -99,6 +99,9 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		
 		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
 
+		// original list of 29 from ei/non-mouse module
+		// select _organism_key, organism from MGI_Organism_Marker_View order by organism
+
 		String cmd = "select _organism_key"
 				+ "\nfrom mgi_organism"
 				+ "\nwhere _organism_key not in (74,75,77)"

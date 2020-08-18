@@ -390,7 +390,7 @@ public class AntigenService extends BaseService<AntigenDomain> {
 	public AntigenDomain validateAntigenAcc(AntigenDomain searchDomain) {
 		
 		String where = "\nwhere mgiid = '" + searchDomain.getAccID() + "'";
-		if (! searchDomain.getAccID().startsWith("MGI:")) {
+		if (! searchDomain.getAccID().toUpperCase().startsWith("MGI:")) {
 			where = "\nwhere numericPart = " + searchDomain.getAccID();
 		}
 		

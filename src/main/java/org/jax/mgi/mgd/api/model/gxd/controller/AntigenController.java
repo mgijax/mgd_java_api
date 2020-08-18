@@ -111,7 +111,7 @@ public class AntigenController extends BaseController<AntigenDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "get antibodies for antigen")
+	@ApiOperation(value = "get antibodies by antigen key")
 	@Path("/getAntibodies")
 	
 	public List<SlimAntibodyDomain> getAntibodies(Integer key) {

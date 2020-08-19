@@ -99,7 +99,7 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		
 		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
 
-		String cmd = "select _organism_key from_organism_marker_view order by commonname";
+		String cmd = "select _organism_key from mgi_organism_marker_view order by commonname";
 		log.info(cmd);
 
 		try {

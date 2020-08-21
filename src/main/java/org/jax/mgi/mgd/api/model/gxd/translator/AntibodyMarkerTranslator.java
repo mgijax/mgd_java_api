@@ -24,6 +24,11 @@ public class AntibodyMarkerTranslator extends BaseEntityDomainTranslator<Antibod
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
+		// mgi marker accession ids only
+		if (entity.getMarker().getMgiAccessionIds()!= null && !entity.getMarker().getMgiAccessionIds().isEmpty()) {
+			domain.setMarkerMGIID(entity.getMarker().getMgiAccessionIds().get(0).getAccID());
+		}
+		
 		return domain;
 	}
 

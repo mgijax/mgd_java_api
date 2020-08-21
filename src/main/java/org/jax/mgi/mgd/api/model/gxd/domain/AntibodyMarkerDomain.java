@@ -16,4 +16,5 @@ public class AntibodyMarkerDomain extends BaseDomain {
 	private String chromosome;
 	private String creation_date;
 	private String modification_date;
+	private String markerMGIID;
 }

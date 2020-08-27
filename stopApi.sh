@@ -5,7 +5,13 @@
 # archive the ${LOG_FILE}
 #
 
-. ./Configuration
+if [ -f ./Configuration ]
+then
+    . ./Configuration
+else
+    echo "Configuration file is missing in mgd_java_api"
+    exit 1
+fi
 
 echo "Stopping Java API"
 

@@ -10,7 +10,13 @@
 # BUILD_ID=dontKillMe
 #
 
-. ./Configuration
+if [ -f ./Configuration ]
+then
+    . ./Configuration
+else
+    echo "Configuration file is missing in mgd_java_api"
+    exit 1
+fi
 
 echo "Clean up temp files and making package"
 make all

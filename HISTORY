@@ -1,3 +1,8 @@
+TAG: mgd_java_api-6-0-16-2
+DATE: 08/27/2020
+STAFF: dbm
+CHANGES: fixed start/stop scripts to check for Configuration file
+
 TAG: mgd_java_api-6-0-16-1
 DATE: 08/24/2020
 STAFF: lec

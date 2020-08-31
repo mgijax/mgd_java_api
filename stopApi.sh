@@ -16,9 +16,11 @@ fi
 echo "Stopping Java API"
 
 # only kill process started by user running this command
-PID=`pgrep -u ${USER} -f "target/mgd_java_api-swarm.jar"`
+#PID=`pgrep -u ${USER} -f "target/mgd_java_api-swarm.jar"`
+PID=`cat mgd_java_api.pid`
 printf "Killing process with pid=$PID\n"
 kill -HUP $PID
+rm -rf mgd_java_api.pid
 
 # some time for log to flush before archiving
 sleep 5

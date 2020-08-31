@@ -28,6 +28,7 @@ touch ${LOG_FILE}
 
 # redirect stdout and stderr to ${LOG_FILE}
 /usr/java/jdk1.8.0_131/bin/java -jar target/mgd_java_api-swarm.jar -Papp.properties -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true &> ${LOG_FILE} &
+echo $! > mgd_java_api.pid
 
 # takes about 20 secs to finish, then you know it is done
 sleep 20

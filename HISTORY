@@ -1,3 +1,9 @@
+TAG: mgd_java_api-6-0-16-3
+DATE: 08/30/2020
+STAFF: lec
+CHANGES: TR13204/Infrastructure Release
+start/stop scripts:  added code to save process id (PID)
+
 TAG: mgd_java_api-6-0-16-2
 DATE: 08/27/2020
 STAFF: dbm

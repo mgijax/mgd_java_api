@@ -631,7 +631,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 		String cmd = "\nselect _cellline_key"
 				+ "\nfrom ALL_CellLine"
 				+ "\nwhere isMutant = 0"
-				+ "\nand cellLine ilike " + searchDomain.getCellLine() + "'";
+				+ "\nand cellLine ilike '" + searchDomain.getCellLine() + "'";
 
 		log.info(cmd);
 		

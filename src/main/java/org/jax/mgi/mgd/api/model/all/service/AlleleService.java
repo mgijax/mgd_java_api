@@ -299,11 +299,13 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}
 		
 		// if allele status is being set to Approved
-		if (domain.getAlleleStatusKey().equals("847114")
-				&& (domain.getApprovedByKey() == null || domain.getApprovedByKey().isEmpty())) {
-			log.info("processAllele/approval");
-			entity.setApproval_date(new Date());
-			entity.setApprovedBy(user);			
+		if (domain.getAlleleStatusKey().equals("847114")) {
+			if (domain.getApprovedByKey() == null || domain.getApprovedByKey().isEmpty()) {
+				log.info("processAllele/approval");
+				entity.setApproval_date(new Date());
+				entity.setApprovedBy(user);
+			}
+			// else do nothing
 		}
 		else {
 			log.info("processAllele/no approval");			

@@ -1132,6 +1132,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 	@Transactional
 	public List<SlimAlleleDomain> validateAlleleByMGIIds(List<String> mgiIds) {
+		// validate list of mgi ids are valid, non-wild type
 		
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 		
@@ -1148,6 +1149,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		String cmd = "\nselect distinct aa._allele_key, a.accID"
 				+ "\nfrom all_allele aa, acc_accession a"
 				+ "\nwhere aa._allele_status_key in (847114, 3983021)" //Approved,Autoload
+				+ "\nand aa.iswildtype= 0"
 				+ "\nand aa._allele_key = a._object_key"
 				+ "\nand a._mgitype_key = 11"
 				+ "\nand a._logicaldb_key = 1"

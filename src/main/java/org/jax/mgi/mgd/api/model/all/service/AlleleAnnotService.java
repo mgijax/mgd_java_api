@@ -12,7 +12,6 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleAnnotDomain;
-import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.DenormAlleleAnnotDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleAnnotDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDODomain;
@@ -368,14 +367,11 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 
-		// ordering should match the alleleService.search(AlleleDomain searchDomain)
 		String cmd = "";
-		String select = "select distinct v._object_key, v1.sequenceNum, a.symbol as description";
-		String from = "from all_summary_view v, , all_allele a, voc_term v1";		
-		String where = "where v._mgitype_key = " + mgiTypeKey 
-				+ "\nand v._object_key = a._allele_key"
-				+ "\nand a._allele_status_key = v1._term_key";
-		String orderBy = "order by v1.sequenceNum, description";
+		String select = "select distinct v._object_key, v.description";
+		String from = "from all_summary_view v";		
+		String where = "where v._mgitype_key = " + mgiTypeKey;
+		String orderBy = "order by v._object_key, v.description";
 		
 		String value;
 
@@ -515,11 +511,14 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 		
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 	
-		String cmd = "select distinct v._object_key, v.description"
-			+ "\nfrom all_summary_view v"
+		// ordering should match the alleleService.search(AlleleDomain searchDomain)
+		String cmd = "sselect distinct v._object_key, v1.sequenceNum, a.symbol as description"
+			+ "\nfrom all_summary_view v, all_allele a, voc_term v1"
 			+ "\nwhere v._mgitype_key = " + mgiTypeKey 
+			+ "\nand v._object_key = a._allele_key"
+			+ "\nand a._allele_status_key = v1._term_key"		
 			+  "\nand v._object_key in (" + searchDomain.getAlleleKey() + ")"
-			+  "\norder by v._object_key, v.description";
+			+  "\norder by v1.sequenceNum, description";
 
 		log.info(cmd);
 

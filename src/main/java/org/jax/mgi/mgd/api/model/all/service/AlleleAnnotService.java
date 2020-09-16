@@ -512,7 +512,7 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 	
 		// ordering should match the alleleService.search(AlleleDomain searchDomain)
-		String cmd = "sselect distinct v._object_key, v1.sequenceNum, a.symbol as description"
+		String cmd = "select distinct v._object_key, v1.sequenceNum, a.symbol as description"
 			+ "\nfrom all_summary_view v, all_allele a, voc_term v1"
 			+ "\nwhere v._mgitype_key = " + mgiTypeKey 
 			+ "\nand v._object_key = a._allele_key"

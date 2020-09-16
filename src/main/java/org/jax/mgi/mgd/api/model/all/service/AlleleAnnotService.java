@@ -12,6 +12,7 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleAnnotDomain;
+import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.DenormAlleleAnnotDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleAnnotDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDODomain;
@@ -367,6 +368,7 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 
+		// ordering should match the alleleService.search(AlleleDomain searchDomain)
 		String cmd = "";
 		String select = "select distinct v._object_key, v1.sequenceNum, a.symbol as description";
 		String from = "from all_summary_view v, , all_allele a, voc_term v1";		

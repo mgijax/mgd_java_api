@@ -534,7 +534,7 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 			}
 			sqlExecutor.cleanup();
 			
-			results.sort(Comparator.comparing(SlimAlleleDomain::getAlleleDisplay, String.CASE_INSENSITIVE_ORDER));
+			//results.sort(Comparator.comparing(SlimAlleleDomain::getAlleleDisplay, String.CASE_INSENSITIVE_ORDER));
 		}
 		catch (Exception e) {
 			e.printStackTrace();

@@ -10,6 +10,8 @@ import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleMutationDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
+import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocViewDomain;
+import org.jax.mgi.mgd.api.model.img.translator.ImagePaneAssocViewTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
@@ -161,11 +163,11 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		}
 
 		// imagepane associations by allele
-//		if (entity.getImagePaneAssocs() != null && !entity.getImagePaneAssocs().isEmpty()) {
-//			ImagePaneAssocViewTranslator imagePaneTranslator = new ImagePaneAssocViewTranslator();
-//			Iterable<ImagePaneAssocViewDomain> t = imagePaneTranslator.translateEntities(entity.getImagePaneAssocs());
-//			domain.setImagePaneAssocs(IteratorUtils.toList(t.iterator()));
-//		}
+		if (entity.getImagePaneAssocs() != null && !entity.getImagePaneAssocs().isEmpty()) {
+			ImagePaneAssocViewTranslator imagePaneTranslator = new ImagePaneAssocViewTranslator();
+			Iterable<ImagePaneAssocViewDomain> t = imagePaneTranslator.translateEntities(entity.getImagePaneAssocs());
+			domain.setImagePaneAssocs(IteratorUtils.toList(t.iterator()));
+		}
 		
 		// at most one note
 		if (entity.getGeneralNote() != null && !entity.getGeneralNote().isEmpty()) {

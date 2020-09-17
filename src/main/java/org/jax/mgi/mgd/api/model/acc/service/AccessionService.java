@@ -361,7 +361,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		
 		List<SlimAccessionDomain> results = new ArrayList<SlimAccessionDomain>();
 
-		String cmd = "select accID from ACC_Accession a, VOC_Annot va" 
+		String cmd = "select a.accID from ACC_Accession a, VOC_Annot va" 
 				+ "\nwhere a._LogicalDB_key = 183"
 				+ "\nand a.accID = '" + searchDomain.getAccID() + "'"
 				+ "\nand a._Object_key = va._Term_key"

@@ -353,5 +353,37 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		log.info("processAccession/processing successful");
 		return modified;
 	}
+
+	@Transactional	
+	public List<SlimAccessionDomain> validateGOIsoform(SlimAccessionDomain searchDomain) {
+		// validates if GO/Isoform matches given Marker 
+		// return SlimAccessionDomain
 		
+		List<SlimAccessionDomain> results = new ArrayList<SlimAccessionDomain>();
+
+		String cmd = "select accID from ACC_Accession a, VOC_Annot va" 
+				+ "\nwhere a._LogicalDB_key = 183"
+				+ "\nand a.accID = '" + searchDomain.getAccID() + "'"
+				+ "\nand a._Object_key = va._Term_key"
+				+ "\nand va._AnnotType_key = 1019"
+				+ "\nand va._Object_key = " + searchDomain.getObjectKey();
+
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimAccessionDomain domain = new SlimAccessionDomain();
+				domain.setAccID(rs.getString("accID"));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

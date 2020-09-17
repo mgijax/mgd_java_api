@@ -189,12 +189,13 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 						
 						if (newCompletionStr != null && !newCompletionStr.isEmpty()) {						
 							newCompletion = new SimpleDateFormat("MM/dd/yyyy").parse(newCompletionStr);
+							goTrackingEntity.setCompletedBy(user);							
 						}
 						else {
 							newCompletion = null;
+							goTrackingEntity.setCompletedBy(null);							
 						}						
-
-						goTrackingEntity.setCompletedBy(user);
+						
 						goTrackingEntity.setCompletion_date(newCompletion);	
 						goTrackingEntity.setModification_date(new Date());
 						goTrackingEntity.setModifiedBy(user);						

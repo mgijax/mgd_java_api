@@ -252,6 +252,10 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		// process driver genes
 		log.info("processAllele/driver gene");
 		processDriverGene(String.valueOf(entity.get_allele_key()), domain, user);
+
+		// process image pane assoc
+		log.info("processAllele/image pane assoc");
+		processImagePaneAssoc(domain.getAlleleKey(), domain, user);
 		
 		// return entity translated to domain
 		log.info("processAllele/create/returning results");
@@ -488,7 +492,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		for (int i = 0; i < domain.getImagePaneAssocs().size(); i++) {
 
-			if (domain.getImagePaneAssocs().get(i).getMgiID().isEmpty()) {
+			if (domain.getImagePaneAssocs().get(i).getImagePaneKey().isEmpty()) {
 				continue;
 			}
 			
@@ -500,7 +504,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			rdomain.setMgiTypeKey(domain.getImagePaneAssocs().get(i).getMgiTypeKey());
 			rdomain.setObjectKey(domain.getImagePaneAssocs().get(i).getObjectKey());
 			rdomain.setIsPrimary(domain.getImagePaneAssocs().get(i).getIsPrimary());
-			
 			imagepaneDomain.add(rdomain);
 		}
 		

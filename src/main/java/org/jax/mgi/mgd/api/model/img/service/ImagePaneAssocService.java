@@ -148,7 +148,7 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 					continue;
 				}
 				
-				log.info("processImagePaneAssoc create");
+				log.info("processImagePaneAssoc/create");
 							
 				ImagePaneAssoc entity = new ImagePaneAssoc();	
 				entity.setImagePane(imagePaneDAO.get(Integer.valueOf(imagePaneKey)));				
@@ -159,12 +159,14 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 				entity.setModifiedBy(user);
 				entity.setModification_date(new Date());
 
+				log.info("processImagePaneAssoc/isPrimary: start");
 				if (domain.get(i).getIsPrimary() == null || domain.get(i).getIsPrimary().isEmpty()) {
 					entity.setIsPrimary(0);
 				}
 				else {
 					entity.setIsPrimary(Integer.valueOf(domain.get(i).getIsPrimary()));
 				}			
+				log.info("processImagePaneAssoc/isPrimary: end");
 
 				imagePaneAssocDAO.persist(entity);
 				modified = true;

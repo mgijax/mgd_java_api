@@ -499,14 +499,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			rdomain.setImagePaneKey(domain.getImagePaneAssocs().get(i).getImagePaneKey());
 			rdomain.setMgiTypeKey(domain.getImagePaneAssocs().get(i).getMgiTypeKey());
 			rdomain.setObjectKey(domain.getImagePaneAssocs().get(i).getObjectKey());
-			
-			// default isPrimary = 0 (No)
-			if (domain.getImagePaneAssocs().get(i).getIsPrimary() == null || domain.getImagePaneAssocs().get(i).getIsPrimary().isEmpty()) {
-				rdomain.setIsPrimary("0");
-			}
-			else {
-				rdomain.setIsPrimary(domain.getImagePaneAssocs().get(i).getIsPrimary());
-			}
+			rdomain.setIsPrimary(domain.getImagePaneAssocs().get(i).getIsPrimary());
 			
 			imagepaneDomain.add(rdomain);
 		}

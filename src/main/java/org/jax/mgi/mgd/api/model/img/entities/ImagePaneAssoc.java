@@ -65,8 +65,8 @@ public class ImagePaneAssoc extends BaseEntity {
 	@JoinColumn(name="_allele_key", referencedColumnName="_object_key", insertable=false, updatable=false)
 	private List<Allele> alleles;	
 
-	@OneToMany()
-	@JoinColumn(name="_genotype_key", referencedColumnName="_object_key", insertable=false, updatable=false)
-	private List<Genotype> genotypes;	
+//	@OneToMany()
+//	@JoinColumn(name="_genotype_key", referencedColumnName="_object_key", insertable=false, updatable=false)
+//	private List<Genotype> genotypes;	
 	
 }

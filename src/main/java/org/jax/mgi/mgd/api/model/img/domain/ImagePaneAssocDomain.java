@@ -26,6 +26,6 @@ public class ImagePaneAssocDomain extends BaseDomain {
 	private String modification_date;
 	
 	private List<SlimAlleleDomain> alleles;
-	private List<SlimGenotypeDomain> genotypes;
+//	private List<SlimGenotypeDomain> genotypes;
 	
 }

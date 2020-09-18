@@ -551,6 +551,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		Boolean from_subtype = false;
 		Boolean from_mutation = false;
 		Boolean from_drivergene = false;
+		Boolean from_imagepane = false;
 				
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -794,6 +795,14 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			}			
 		}
 		
+		// image pane
+		if (searchDomain.getImagePaneAssocs() != null) {
+			if (searchDomain.getImagePaneAssocs().get(0).getPixID() != null && !searchDomain.getImagePaneAssocs().get(0).getPixID().isEmpty()) {
+				where = where + "\nand i.pixID ilike '" + searchDomain.getImagePaneAssocs().get(0).getPixID() + "'";
+				from_imagepane = true;
+			}			
+		}		
+		
 		if (from_marker == true) {
 			from = from + ", mrk_marker m";
 			where = where + "\nand a._marker_key = m._marker_key";
@@ -865,6 +874,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			from = from + ", all_allele_driver_view dg";
 			where = where + "\nand a._allele_key = dg._allele_key";
 		}
+		if (from_imagepane == true) {
+			from = from + ", img_imagepane_assoc_view i";
+			where = where + "\nand a._allele_key = i._object_key"
+					+ "\nand i._mgitype_key = 11";
+		}		
 		
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n";

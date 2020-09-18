@@ -75,7 +75,7 @@ public class ImagePaneAssocController extends BaseController<ImagePaneAssocDomai
 
 	@POST
 	@ApiOperation(value = "Get Allele/Image Panes Assoc by Image key")
-	@Path("/getAllelelByImage")
+	@Path("/getAlleleByImage")
 	public List<ImagePaneAssocDomain> getAlleleByImage(Integer key) {
 	
 		List<ImagePaneAssocDomain> results = new ArrayList<ImagePaneAssocDomain>();

@@ -167,6 +167,7 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			ImagePaneAssocViewTranslator imagePaneTranslator = new ImagePaneAssocViewTranslator();
 			Iterable<ImagePaneAssocViewDomain> t = imagePaneTranslator.translateEntities(entity.getImagePaneAssocs());
 			domain.setImagePaneAssocs(IteratorUtils.toList(t.iterator()));
+			domain.getImagePaneAssocs().sort(Comparator.comparing(ImagePaneAssocViewDomain::getIsPrimary).reversed());
 		}
 		
 		// at most one note

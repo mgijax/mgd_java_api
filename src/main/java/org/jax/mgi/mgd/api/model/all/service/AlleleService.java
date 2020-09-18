@@ -797,6 +797,10 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		
 		// image pane
 		if (searchDomain.getImagePaneAssocs() != null) {
+			if (searchDomain.getImagePaneAssocs().get(0).getMgiID() != null && !searchDomain.getImagePaneAssocs().get(0).getMgiID().isEmpty()) {
+				where = where + "\nand i.mgiID ilike '" + searchDomain.getImagePaneAssocs().get(0).getMgiID() + "'";
+				from_imagepane = true;
+			}
 			if (searchDomain.getImagePaneAssocs().get(0).getPixID() != null && !searchDomain.getImagePaneAssocs().get(0).getPixID().isEmpty()) {
 				where = where + "\nand i.pixID ilike '" + searchDomain.getImagePaneAssocs().get(0).getPixID() + "'";
 				from_imagepane = true;

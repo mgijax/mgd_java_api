@@ -1,13 +1,6 @@
 package org.jax.mgi.mgd.api.model.img.translator;
 
-import java.util.Comparator;
-
-import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
-import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
-import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
-import org.jax.mgi.mgd.api.model.gxd.translator.SlimGenotypeTranslator;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocDomain;
 import org.jax.mgi.mgd.api.model.img.entities.ImagePaneAssoc;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -34,6 +27,7 @@ public class ImagePaneAssocTranslator extends BaseEntityDomainTranslator<ImagePa
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 	
+		// must be loaded by its own call; Allele/ImagePaneAssoc can only exist in 1 entity		
 //		// one-to-many allele associations w/ allele info
 //		if (entity.getAlleles() != null && !entity.getAlleles().isEmpty()
 //				&& entity.getMgiType().get_mgitype_key() == 11) {
@@ -43,14 +37,6 @@ public class ImagePaneAssocTranslator extends BaseEntityDomainTranslator<ImagePa
 //			domain.getAlleles().sort(Comparator.comparing(SlimAlleleDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 //		}
 		
-//		// one-to-many genotype associations w/ genotype info
-//		if (entity.getGenotypes() != null && !entity.getGenotypes().isEmpty()
-//				&& entity.getMgiType().get_mgitype_key() == 12) {
-//			SlimGenotypeTranslator genotypeTranslator = new SlimGenotypeTranslator();
-//			Iterable<SlimGenotypeDomain> i = genotypeTranslator.translateEntities(entity.getGenotypes());
-//			domain.setGenotypes(IteratorUtils.toList(i.iterator()));
-//			//domain.getGenotypes().sort(Comparator.comparing(SlimGenotypeRefAssocDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
-//		}
 		
 		return domain;
 	}

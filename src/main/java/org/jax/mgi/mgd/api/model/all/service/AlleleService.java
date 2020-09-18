@@ -19,6 +19,8 @@ import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleRefAssocTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocDomain;
+import org.jax.mgi.mgd.api.model.img.service.ImagePaneAssocService;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
@@ -68,6 +70,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	private AnnotationService annotationService;
 	@Inject
 	private RelationshipService relationshipService;
+	@Inject
+	private ImagePaneAssocService imagePaneAssocService;
 	
 	private AlleleTranslator translator = new AlleleTranslator();
 	private SlimAlleleTranslator slimtranslator = new SlimAlleleTranslator();	
@@ -377,6 +381,12 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			modified = true;
 		}
 		
+		// process image pane assoc
+		log.info("processAllele/image pane assoc");
+		if (processImagePaneAssoc(domain.getAlleleKey(), domain, user)) {
+			modified = true;
+		}
+		
 		// finish update
 		if (modified) {
 			entity.setModification_date(new Date());
@@ -464,6 +474,39 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		log.info("processDriverGene/relationship: " + relationshipDomain.size());
 		if (relationshipDomain.size() > 0) {
 			return(relationshipService.process(relationshipDomain, mgiTypeKey, user));		
+		}
+		else {
+			return(true);
+		}		
+	}
+
+	@Transactional
+	public Boolean processImagePaneAssoc(String alleleKey, AlleleDomain domain, User user) {
+		// process the image pane assoc
+		
+		List<ImagePaneAssocDomain> imagepaneDomain = new ArrayList<ImagePaneAssocDomain>();
+
+		for (int i = 0; i < domain.getImagePaneAssocs().size(); i++) {
+
+			if (domain.getImagePaneAssocs().get(i).getMgiID().isEmpty()) {
+				continue;
+			}
+			
+			ImagePaneAssocDomain rdomain = new ImagePaneAssocDomain();
+
+			rdomain.setProcessStatus(domain.getImagePaneAssocs().get(i).getProcessStatus());			
+			rdomain.setAssocKey(domain.getImagePaneAssocs().get(i).getAssocKey());
+			rdomain.setImagePaneKey(domain.getImagePaneAssocs().get(i).getImagePaneKey());
+			rdomain.setMgiTypeKey(domain.getImagePaneAssocs().get(i).getMgiTypeKey());
+			rdomain.setObjectKey(domain.getImagePaneAssocs().get(i).getObjectKey());
+			rdomain.setIsPrimary(domain.getImagePaneAssocs().get(i).getIsPrimary());
+			
+			imagepaneDomain.add(rdomain);
+		}
+		
+		log.info("processImagePaneAssoc: " + imagepaneDomain.size());
+		if (imagepaneDomain.size() > 0) {
+			return(imagePaneAssocService.process(null, imagepaneDomain, user));		
 		}
 		else {
 			return(true);

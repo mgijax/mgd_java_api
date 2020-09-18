@@ -151,15 +151,22 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 				log.info("processImagePaneAssoc/create");
 							
 				ImagePaneAssoc entity = new ImagePaneAssoc();	
+				log.info("processImagePaneAssoc/A");
 				entity.setImagePane(imagePaneDAO.get(Integer.valueOf(imagePaneKey)));				
+				log.info("processImagePaneAssoc/B");
 				entity.setMgiType(mgiTypeDAO.get(Integer.valueOf(domain.get(i).getMgiTypeKey())));
+				log.info("processImagePaneAssoc/C");
 				entity.set_object_key(Integer.valueOf(domain.get(i).getObjectKey()));
+				log.info("processImagePaneAssoc/D");
 				entity.setCreatedBy(user);
+				log.info("processImagePaneAssoc/E");
 				entity.setCreation_date(new Date());
+				log.info("processImagePaneAssoc/F");
 				entity.setModifiedBy(user);
+				log.info("processImagePaneAssoc/G");
 				entity.setModification_date(new Date());
 
-				log.info("processImagePaneAssoc/isPrimary: start");
+				log.info("processImagePaneAssoc/H");
 				if (domain.get(i).getIsPrimary() == null || domain.get(i).getIsPrimary().isEmpty()) {
 					entity.setIsPrimary(0);
 				}

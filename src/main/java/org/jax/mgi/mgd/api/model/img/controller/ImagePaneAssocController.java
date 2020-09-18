@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.img.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -72,4 +73,20 @@ public class ImagePaneAssocController extends BaseController<ImagePaneAssocDomai
 		return imagePaneAssocService.process(parentKey, domain, user);
 	}
 
+	@POST
+	@ApiOperation(value = "Get Allele/Image Panes Assoc by Image key")
+	@Path("/getAllelelByImage")
+	public List<ImagePaneAssocDomain> getAlleleByImage(Integer key) {
+	
+		List<ImagePaneAssocDomain> results = new ArrayList<ImagePaneAssocDomain>();
+
+		try {
+			results = imagePaneAssocService.getAlleleByImage(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

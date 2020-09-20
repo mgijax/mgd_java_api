@@ -162,13 +162,13 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			domain.setDriverGenes(IteratorUtils.toList(i.iterator()));
 		}
 
-		// imagepane associations by allele
-		if (entity.getImagePaneAssocs() != null && !entity.getImagePaneAssocs().isEmpty()) {
-			ImagePaneAssocViewTranslator imagePaneTranslator = new ImagePaneAssocViewTranslator();
-			Iterable<ImagePaneAssocViewDomain> t = imagePaneTranslator.translateEntities(entity.getImagePaneAssocs());
-			domain.setImagePaneAssocs(IteratorUtils.toList(t.iterator()));
-			domain.getImagePaneAssocs().sort(Comparator.comparing(ImagePaneAssocViewDomain::getIsPrimary).reversed());
-		}
+//		// imagepane associations by allele
+//		if (entity.getImagePaneAssocs() != null && !entity.getImagePaneAssocs().isEmpty()) {
+//			ImagePaneAssocViewTranslator imagePaneTranslator = new ImagePaneAssocViewTranslator();
+//			Iterable<ImagePaneAssocViewDomain> t = imagePaneTranslator.translateEntities(entity.getImagePaneAssocs());
+//			domain.setImagePaneAssocs(IteratorUtils.toList(t.iterator()));
+//			domain.getImagePaneAssocs().sort(Comparator.comparing(ImagePaneAssocViewDomain::getIsPrimary).reversed());
+//		}
 		
 		// at most one note
 		if (entity.getGeneralNote() != null && !entity.getGeneralNote().isEmpty()) {

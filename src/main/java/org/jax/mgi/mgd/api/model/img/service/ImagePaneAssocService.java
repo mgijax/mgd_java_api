@@ -21,6 +21,7 @@ import org.jax.mgi.mgd.api.model.img.dao.ImagePaneAssocDAO;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
 import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocDomain;
+import org.jax.mgi.mgd.api.model.img.domain.SlimImageDomain;
 import org.jax.mgi.mgd.api.model.img.entities.ImagePaneAssoc;
 import org.jax.mgi.mgd.api.model.img.translator.ImagePaneAssocTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -293,14 +294,14 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 	}
 
 	@Transactional	
-	public List<ImagePaneAssocDomain> getAlleleByImage(Integer key) {
+	public List<ImagePaneAssocDomain> getAlleleByImage(SlimImageDomain searchDomain) {
 		// return list of image pane assoc with alleles
 	
 		List<ImagePaneAssocDomain> results = new ArrayList<ImagePaneAssocDomain>();
 
 		String cmd = "\nselect ipa._assoc_key, a._allele_key"
 				+ "\nfrom img_image i, img_imagepane ip, img_imagepane_assoc ipa, all_allele a" 
-				+ "\nwhere i._image_key = " + key
+				+ "\nwhere i._image_key = " + searchDomain.getImageKey()
 				+ "\nand i._image_key = ip._image_key" 
 				+ "\nand ip._imagepane_key = ipa._imagepane_key" 
 				+ "\nand ipa._mgitype_key = 11"

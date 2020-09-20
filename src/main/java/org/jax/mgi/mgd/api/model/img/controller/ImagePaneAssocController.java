@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocDomain;
+import org.jax.mgi.mgd.api.model.img.domain.SlimImageDomain;
 import org.jax.mgi.mgd.api.model.img.service.ImagePaneAssocService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -76,12 +77,12 @@ public class ImagePaneAssocController extends BaseController<ImagePaneAssocDomai
 	@POST
 	@ApiOperation(value = "Get Allele/Image Panes Assoc by Image key")
 	@Path("/getAlleleByImage")
-	public List<ImagePaneAssocDomain> getAlleleByImage(Integer key) {
+	public List<ImagePaneAssocDomain> getAlleleByImage(SlimImageDomain searchDomain) {
 	
 		List<ImagePaneAssocDomain> results = new ArrayList<ImagePaneAssocDomain>();
 
 		try {
-			results = imagePaneAssocService.getAlleleByImage(key);
+			results = imagePaneAssocService.getAlleleByImage(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

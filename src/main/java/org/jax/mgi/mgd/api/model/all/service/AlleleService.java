@@ -1269,8 +1269,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	}
 
 	@Transactional	
-	public List<SlimAlleleDomain> getAlleleByImage(SlimImageDomain searchDomain) {
-		// return list of image pane assoc with alleles
+	public List<SlimAlleleDomain> getAlleleByImagePane(SlimImageDomain searchDomain) {
+		// return list of alleles that are associated with image panes of given image
 	
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 

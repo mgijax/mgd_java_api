@@ -194,13 +194,13 @@ public class AlleleController extends BaseController<AlleleDomain> {
 
 	@POST
 	@ApiOperation(value = "Get Allele/Image Panes Assoc by Image key")
-	@Path("/getAlleleByImage")
+	@Path("/getAlleleByImagePane")
 	public List<SlimAlleleDomain> getAlleleByImage(SlimImageDomain searchDomain) {
 	
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 
 		try {
-			results = alleleService.getAlleleByImage(searchDomain);
+			results = alleleService.getAlleleByImagePane(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -241,26 +241,27 @@ public class RunCommand
             BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));                    
             if (inputReader.ready()) 
             {
+                System.out.println("BufferedReader inputReader: ready");
                 while ((line = inputReader.readLine()) != null)
-                	System.out.println("reading input: " + line);
                 	this.stdout = this.stdout + line + "\n";
             }      
-            System.out.println("BufferedReader errorReader: done");
+            System.out.println("BufferedReader inputReader: done");
             
             // read error stream
             BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));                    
             if (errorReader.ready()) 
             {
-                while ((line = errorReader.readLine()) != null)
-                	System.out.println("reading error: " + line);
+                System.out.println("BufferedReader errorReader: ready");
+            	while ((line = errorReader.readLine()) != null)
                 	this.stdout = this.stdout + line + "\n";
             }      
             System.out.println("BufferedReader errorReader: done");
 
 	        // wait until that process has finished
             // save exit value
-            System.out.println("waitFor(): start");          
-            this.exitcode = process.waitFor();
+            System.out.println("waitFor(): start");  
+            process.waitFor();
+            this.exitcode = process.exitValue();
             this.cmdRun = true;
             System.out.println("waitFor(): stop");          
         }

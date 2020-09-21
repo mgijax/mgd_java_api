@@ -237,6 +237,8 @@ public class RunCommand
             String [] cmdArr = this.convertCmd();
 
             // execute 'cmdArr' in a new process
+            System.out.println(cmdArr);
+            System.out.println(this.envp);
             Process process = Runtime.getRuntime().exec(cmdArr, this.envp);
 
             // read stdout from 'process'

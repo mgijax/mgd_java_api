@@ -264,8 +264,8 @@ public class RunCommand
              while ((line = in.readLine()) != null)
                         stderr = stderr + line + "\n";
 
-                    // wait until that process has finished
-                    proc.waitFor();
+             // wait until that process has finished
+//             proc.waitFor();
 
             // get the exit value of the subprocess 'proc'
                         this.exitcode = proc.exitValue();

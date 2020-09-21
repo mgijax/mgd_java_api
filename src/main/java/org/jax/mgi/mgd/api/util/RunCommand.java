@@ -239,7 +239,9 @@ public class RunCommand
             // execute 'cmdArr' in a new process
             System.out.println(cmdArr);
             System.out.println(this.envp);
+            System.out.println(cmdArr.toString());
             Process process = Runtime.getRuntime().exec(cmdArr, this.envp);
+            System.out.println("Runtime.getRuntime() done");
 
             // read stdout from 'process'
             BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));         

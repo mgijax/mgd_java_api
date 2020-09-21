@@ -229,7 +229,6 @@ public class RunCommand
         //          interrupted by another thread
 
         String line;
-        BufferedReader in;
 
         // if cmd has been set - run it
         if(this.cmdSet == true)
@@ -238,29 +237,24 @@ public class RunCommand
             String [] cmdArr = this.convertCmd();
 
             // execute 'cmdArr' in a new process
-            Process proc = Runtime.getRuntime().exec(cmdArr, this.envp);
+            Process process = Runtime.getRuntime().exec(cmdArr, this.envp);
 
-            // for reading stdout
-            // get the input stream connected to the stdoutput stream of the subprocess 'proc'                    
-            in = new BufferedReader(new InputStreamReader(proc.getInputStream()));                               
-
-            // read stdout from 'proc'
-            while ((line = in.readLine()) != null)
+            // read stdout from 'process'
+            BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+           
+            while ((line = inputReader.readLine()) != null)
             	this.stdout = this.stdout + line + "\n";
 
-            // reuse 'in' for reading stderr
-            // get the input stream connected to the error stream of the subprocess 'process'            
-            in = new BufferedReader(new InputStreamReader(proc.getErrorStream()));              
-
-            //read stderr from 'proc'
-            while ((line = in.readLine()) != null)
+            //read stderr from 'process'
+            BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            while ((line = errorReader.readLine()) != null)
             	stderr = stderr + line + "\n";
 
 	        // wait until that process has finished
-	        proc.waitFor();
+	        process.waitFor();
 
-	        // get the exit value of the subprocess 'proc'
-            this.exitcode = proc.exitValue();
+	        // get the exit value of the subprocess 'process'
+            this.exitcode = process.exitValue();
             this.cmdRun = true;
         }
 

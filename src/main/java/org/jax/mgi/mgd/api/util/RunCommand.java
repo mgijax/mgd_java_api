@@ -231,8 +231,8 @@ public class RunCommand
         String line;
 
         // if cmd has been set - run it
-        if(this.cmdSet == true)
-        {
+        //if(this.cmdSet == true)
+        try {
             // convert cmdStr to String array
             String [] cmdArr = this.convertCmd();
 
@@ -250,17 +250,15 @@ public class RunCommand
 //            	stderr = stderr + line + "\n";
 
 	        // wait until that process has finished
+            // save exit value
 	        this.exitcode = process.waitFor();
-
-	        // get the exit value of the subprocess 'process'
-            //this.exitcode = process.exitValue();
             this.cmdRun = true;
         }
 
         // command has not been set, raise an exception
-        else
-        {
-            throw new IOException("RunCommand Error: No command to run.");
+        //else
+        catch (IOException e) {
+            //throw new IOException("RunCommand Error: No command to run.");
         }
 
         return this.exitcode;

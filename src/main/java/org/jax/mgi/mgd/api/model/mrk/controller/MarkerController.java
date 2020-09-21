@@ -84,6 +84,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 
 	@Override
 	public SearchResults<MarkerDomain> update(MarkerDomain domain, User user) {
+
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		results = markerService.update(domain, user);
 
@@ -109,6 +110,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		try {
 			log.info("processMarker/mrkrefByMarkerUtilities");
 			markerService.mrkrefByMarkerUtilities(results.items.get(0).getMarkerKey());
+			Thread.sleep(200);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

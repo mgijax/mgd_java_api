@@ -240,15 +240,14 @@ public class RunCommand
             Process process = Runtime.getRuntime().exec(cmdArr, this.envp);
 
             // read stdout from 'process'
-            BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-           
+            BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));         
             while ((line = inputReader.readLine()) != null)
             	this.stdout = this.stdout + line + "\n";
 
-            //read stderr from 'process'
-            BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            while ((line = errorReader.readLine()) != null)
-            	stderr = stderr + line + "\n";
+//            //read stderr from 'process'
+//            BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+//            while ((line = errorReader.readLine()) != null)
+//            	stderr = stderr + line + "\n";
 
 	        // wait until that process has finished
 	        process.waitFor();

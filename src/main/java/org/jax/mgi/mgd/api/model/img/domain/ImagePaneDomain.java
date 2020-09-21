@@ -21,6 +21,6 @@ public class ImagePaneDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	
-	private List<ImagePaneAssocDomain> paneAssocs;
+//	private List<ImagePaneAssocDomain> paneAssocs;
 
 }

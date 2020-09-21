@@ -41,11 +41,11 @@ public class ImagePaneTranslator extends BaseEntityDomainTranslator<ImagePane, I
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
 		// one-to-many associations
-		if (entity.getPaneAssocs() != null && !entity.getPaneAssocs().isEmpty()) {
-			ImagePaneAssocTranslator assocTranslator = new ImagePaneAssocTranslator();
-			Iterable<ImagePaneAssocDomain> i = assocTranslator.translateEntities(entity.getPaneAssocs());
-			domain.setPaneAssocs(IteratorUtils.toList(i.iterator()));
-		}
+//		if (entity.getPaneAssocs() != null && !entity.getPaneAssocs().isEmpty()) {
+//			ImagePaneAssocTranslator assocTranslator = new ImagePaneAssocTranslator();
+//			Iterable<ImagePaneAssocDomain> i = assocTranslator.translateEntities(entity.getPaneAssocs());
+//			domain.setPaneAssocs(IteratorUtils.toList(i.iterator()));
+//		}
 			
 		return domain;
 	}

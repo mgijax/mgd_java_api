@@ -230,8 +230,6 @@ public class RunCommand
 
         String line;
 
-        // if cmd has been set - run it
-        //if(this.cmdSet == true)
         try {
             // convert cmdStr to String array
             String [] cmdArr = this.convertCmd();
@@ -239,6 +237,16 @@ public class RunCommand
             // execute 'cmdArr' in a new process
             Process process = Runtime.getRuntime().exec(cmdArr, this.envp);
 
+            // read input stream
+            BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));                    
+            if (inputReader.ready()) 
+            {
+                while ((line = inputReader.readLine()) != null)
+                	System.out.println("reading input: " + line);
+                	this.stdout = this.stdout + line + "\n";
+            }      
+            System.out.println("BufferedReader errorReader: done");
+            
             // read error stream
             BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));                    
             if (errorReader.ready()) 
@@ -256,9 +264,6 @@ public class RunCommand
             this.cmdRun = true;
             System.out.println("waitFor(): stop");          
         }
-
-        // command has not been set, raise an exception
-        //else
         catch (IOException e) {
             //throw new IOException("RunCommand Error: No command to run.");
         }

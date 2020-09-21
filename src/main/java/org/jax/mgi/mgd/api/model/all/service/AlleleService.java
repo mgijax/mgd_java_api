@@ -20,6 +20,7 @@ import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleRefAssocTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocDomain;
+import org.jax.mgi.mgd.api.model.img.domain.SlimImageDomain;
 import org.jax.mgi.mgd.api.model.img.service.ImagePaneAssocService;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -1265,6 +1266,39 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}
 
 		return results;
+	}
+
+	@Transactional	
+	public List<SlimAlleleDomain> getAlleleByImage(SlimImageDomain searchDomain) {
+		// return list of image pane assoc with alleles
+	
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
+
+		String cmd = "\nselect distinct a._allele_key"
+				+ "\nfrom img_image i, img_imagepane ip, img_imagepane_assoc ipa, all_allele a" 
+				+ "\nwhere i._image_key = " + searchDomain.getImageKey()
+				+ "\nand i._image_key = ip._image_key" 
+				+ "\nand ip._imagepane_key = ipa._imagepane_key" 
+				+ "\nand ipa._mgitype_key = 11"
+				+ "\nand ipa._object_key = a._allele_key";
+		
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimAlleleDomain domain = new SlimAlleleDomain();
+				domain = slimtranslator.translate(alleleDAO.get(rs.getInt("_allele_key")));
+				alleleDAO.clear();
+				results.add(domain);				
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;	
 	}
 	
 }	

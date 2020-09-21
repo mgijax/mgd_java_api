@@ -1,9 +1,6 @@
 package org.jax.mgi.mgd.api.model.img.domain;
 
-import java.util.List;
-
 import org.jax.mgi.mgd.api.model.BaseDomain;
-import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +21,6 @@ public class ImagePaneAssocDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	
-//	private List<SlimAlleleDomain> alleles;
+//	if looking for the ImagePaneAssoc/Allele, see AlleleService/getAlleleByImage()
 	
 }

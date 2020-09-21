@@ -18,6 +18,7 @@ import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleRefAssocDomain;
 import org.jax.mgi.mgd.api.model.all.service.AlleleService;
 import org.jax.mgi.mgd.api.model.all.service.CellLineService;
+import org.jax.mgi.mgd.api.model.img.domain.SlimImageDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -184,6 +185,22 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		
 		try {
 			results = alleleService.getSlimByMCL(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+
+	@POST
+	@ApiOperation(value = "Get Allele/Image Panes Assoc by Image key")
+	@Path("/getAlleleByImage")
+	public List<SlimAlleleDomain> getAlleleByImage(SlimImageDomain searchDomain) {
+	
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
+
+		try {
+			results = alleleService.getAlleleByImage(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

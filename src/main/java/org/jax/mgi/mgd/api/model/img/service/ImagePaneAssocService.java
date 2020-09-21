@@ -13,15 +13,12 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.dao.MGITypeDAO;
-import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
 import org.jax.mgi.mgd.api.model.all.service.AlleleService;
-import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneAssocDAO;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
 import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocDomain;
-import org.jax.mgi.mgd.api.model.img.domain.SlimImageDomain;
 import org.jax.mgi.mgd.api.model.img.entities.ImagePaneAssoc;
 import org.jax.mgi.mgd.api.model.img.translator.ImagePaneAssocTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -41,14 +38,11 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 	private ImagePaneDAO imagePaneDAO;
 	@Inject
 	private MGITypeDAO mgiTypeDAO;
-	@Inject
-	private AlleleDAO alleleDAO;
+
 	@Inject
 	private AlleleService alleleService;
 	
-	private ImagePaneAssocTranslator translator = new ImagePaneAssocTranslator();
-	private SlimAlleleTranslator slimalleletranslator = new SlimAlleleTranslator();
-	
+	private ImagePaneAssocTranslator translator = new ImagePaneAssocTranslator();	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -291,46 +285,6 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 		
 		log.info("updateAlleleAssoc/end");
 		return results;
-	}
-
-	@Transactional	
-	public List<SlimAlleleDomain> getAlleleByImage(SlimImageDomain searchDomain) {
-		// return list of image pane assoc with alleles
-	
-		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
-
-//		String cmd = "\nselect ipa._assoc_key, a._allele_key"
-		String cmd = "\nselect distinct a._allele_key"
-				+ "\nfrom img_image i, img_imagepane ip, img_imagepane_assoc ipa, all_allele a" 
-				+ "\nwhere i._image_key = " + searchDomain.getImageKey()
-				+ "\nand i._image_key = ip._image_key" 
-				+ "\nand ip._imagepane_key = ipa._imagepane_key" 
-				+ "\nand ipa._mgitype_key = 11"
-				+ "\nand ipa._object_key = a._allele_key";
-		
-		log.info(cmd);
-
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-//				ImagePaneAssocDomain domain = new ImagePaneAssocDomain();
-//				domain = translator.translate(imagePaneAssocDAO.get(rs.getInt("_assoc_key")));				
-//				imagePaneAssocDAO.clear();
-				SlimAlleleDomain domain = new SlimAlleleDomain();
-				domain = slimalleletranslator.translate(alleleDAO.get(rs.getInt("_allele_key")));
-				alleleDAO.clear();
-//				List<SlimAlleleDomain> aresults = new ArrayList<SlimAlleleDomain>();
-//				aresults.add(adomain);
-//				domain.setAlleles(aresults);
-				results.add(domain);				
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;	
 	}
 	
 }

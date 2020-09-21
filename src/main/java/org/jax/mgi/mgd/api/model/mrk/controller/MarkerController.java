@@ -108,9 +108,9 @@ public class MarkerController extends BaseController<MarkerDomain> {
 
 		// to update the mrk_reference_cache table		
 		try {
-			log.info("processMarker/mrkrefByMarkerUtilities");
+			log.info("processMarker/mrkrefByMarkerUtilities/start");
 			markerService.mrkrefByMarkerUtilities(results.items.get(0).getMarkerKey());
-			Thread.sleep(200);
+			log.info("processMarker/mrkrefBymarkerUtilities/end");
 		}
 		catch (Exception e) {
 			e.printStackTrace();

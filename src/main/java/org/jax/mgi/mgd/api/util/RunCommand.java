@@ -239,12 +239,12 @@ public class RunCommand
 
             // read input stream
             BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));                    
-            if (inputReader.ready()) 
-            {
-                System.out.println("BufferedReader inputReader: ready");
-                while ((line = inputReader.readLine()) != null)
-                	this.stdout = this.stdout + line + "\n";
-            }      
+//            if (inputReader.ready()) 
+//            {
+            System.out.println("BufferedReader inputReader: ready");
+            while ((line = inputReader.readLine()) != null)
+            	this.stdout = this.stdout + line + "\n";
+//            }      
             System.out.println("BufferedReader inputReader: done");
             
             // read error stream

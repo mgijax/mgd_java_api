@@ -244,6 +244,7 @@ public class RunCommand
             System.out.println("Runtime.getRuntime() done");
 
             // read stdout from 'process'
+            System.out.println("BufferedReader");
             BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));         
             while ((line = inputReader.readLine()) != null)
             	System.out.println("reading input: " + line);

@@ -243,6 +243,7 @@ public class RunCommand
             BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));         
             while ((line = inputReader.readLine()) != null)
             	this.stdout = this.stdout + line + "\n";
+            System.out.println("BufferedReader iputReader done");          
 
 //            //read stderr from 'process'
 //            BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
@@ -253,6 +254,7 @@ public class RunCommand
             // save exit value
 	        this.exitcode = process.waitFor();
             this.cmdRun = true;
+            System.out.println("waitFor() done");          
         }
 
         // command has not been set, raise an exception

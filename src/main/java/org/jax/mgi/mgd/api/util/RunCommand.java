@@ -247,11 +247,13 @@ public class RunCommand
             System.out.println("BufferedReader:start");
             BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));         
             System.out.println("BufferedReader:stop");
-            line = inputReader.readLine();
-            System.out.println("line:" + line);
-            while ((line = inputReader.readLine()) != null)
-            	System.out.println("reading input: " + line);
-            	this.stdout = this.stdout + line + "\n";
+            
+            if (inputReader.ready()) 
+            {
+                while ((line = inputReader.readLine()) != null)
+                	System.out.println("reading input: " + line);
+                	this.stdout = this.stdout + line + "\n";
+            }      
             System.out.println("BufferedReader inputReader done");
             
 //            //read stderr from 'process'

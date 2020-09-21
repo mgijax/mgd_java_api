@@ -250,10 +250,10 @@ public class RunCommand
 //            	stderr = stderr + line + "\n";
 
 	        // wait until that process has finished
-	        process.waitFor();
+	        this.exitcode = process.waitFor();
 
 	        // get the exit value of the subprocess 'process'
-            this.exitcode = process.exitValue();
+            //this.exitcode = process.exitValue();
             this.cmdRun = true;
         }
 

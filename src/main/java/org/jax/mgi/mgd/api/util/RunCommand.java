@@ -237,35 +237,24 @@ public class RunCommand
             String [] cmdArr = this.convertCmd();
 
             // execute 'cmdArr' in a new process
-            System.out.println(cmdArr);
-            System.out.println(this.envp);
-            System.out.println(cmdArr.toString());
             Process process = Runtime.getRuntime().exec(cmdArr, this.envp);
-            System.out.println("Runtime.getRuntime() done");
 
-            // read stdout from 'process'
-            System.out.println("BufferedReader:start");
-            BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));         
-            System.out.println("BufferedReader:stop");
-            
-            if (inputReader.ready()) 
+            // read error stream
+            BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));                    
+            if (errorReader.ready()) 
             {
-                while ((line = inputReader.readLine()) != null)
-                	System.out.println("reading input: " + line);
+                while ((line = errorReader.readLine()) != null)
+                	System.out.println("reading error: " + line);
                 	this.stdout = this.stdout + line + "\n";
             }      
-            System.out.println("BufferedReader inputReader done");
-            
-//            //read stderr from 'process'
-//            BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-//            while ((line = errorReader.readLine()) != null)
-//            	stderr = stderr + line + "\n";
+            System.out.println("BufferedReader errorReader: done");
 
 	        // wait until that process has finished
             // save exit value
-	        this.exitcode = process.waitFor();
+            System.out.println("waitFor(): start");          
+            this.exitcode = process.waitFor();
             this.cmdRun = true;
-            System.out.println("waitFor() done");          
+            System.out.println("waitFor(): stop");          
         }
 
         // command has not been set, raise an exception

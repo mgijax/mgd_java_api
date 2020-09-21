@@ -27,17 +27,9 @@ public class ImagePaneAssocTranslator extends BaseEntityDomainTranslator<ImagePa
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 	
-		// must be loaded by its own call; Allele/ImagePaneAssoc can only exist in 1 entity		
-		// one-to-many allele associations w/ allele info
-//		if (entity.getAlleles() != null && !entity.getAlleles().isEmpty()
-//				&& entity.getMgiType().get_mgitype_key() == 11) {
-//			SlimAlleleTranslator alleleTranslator = new SlimAlleleTranslator();
-//			Iterable<SlimAlleleDomain> i = alleleTranslator.translateEntities(entity.getAlleles());
-//			domain.setAlleles(IteratorUtils.toList(i.iterator()));
-//			domain.getAlleles().sort(Comparator.comparing(SlimAlleleDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
-//		}
-		
-		
+		// alleles or genotypes associated with the image pane must be translated by separate method
+		// for example, see AlleleService/getAlleleByImagePane
+
 		return domain;
 	}
 

@@ -11,6 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImageDomain;
 import org.jax.mgi.mgd.api.model.img.service.ImagePaneAssocService;
@@ -77,9 +78,9 @@ public class ImagePaneAssocController extends BaseController<ImagePaneAssocDomai
 	@POST
 	@ApiOperation(value = "Get Allele/Image Panes Assoc by Image key")
 	@Path("/getAlleleByImage")
-	public List<ImagePaneAssocDomain> getAlleleByImage(SlimImageDomain searchDomain) {
+	public List<SlimAlleleDomain> getAlleleByImage(SlimImageDomain searchDomain) {
 	
-		List<ImagePaneAssocDomain> results = new ArrayList<ImagePaneAssocDomain>();
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 
 		try {
 			results = imagePaneAssocService.getAlleleByImage(searchDomain);

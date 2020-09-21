@@ -294,12 +294,13 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 	}
 
 	@Transactional	
-	public List<ImagePaneAssocDomain> getAlleleByImage(SlimImageDomain searchDomain) {
+	public List<SlimAlleleDomain> getAlleleByImage(SlimImageDomain searchDomain) {
 		// return list of image pane assoc with alleles
 	
-		List<ImagePaneAssocDomain> results = new ArrayList<ImagePaneAssocDomain>();
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 
-		String cmd = "\nselect ipa._assoc_key, a._allele_key"
+//		String cmd = "\nselect ipa._assoc_key, a._allele_key"
+		String cmd = "\nselect distinct a._allele_key"
 				+ "\nfrom img_image i, img_imagepane ip, img_imagepane_assoc ipa, all_allele a" 
 				+ "\nwhere i._image_key = " + searchDomain.getImageKey()
 				+ "\nand i._image_key = ip._image_key" 
@@ -312,15 +313,15 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				ImagePaneAssocDomain domain = new ImagePaneAssocDomain();
-				domain = translator.translate(imagePaneAssocDAO.get(rs.getInt("_assoc_key")));				
-				imagePaneAssocDAO.clear();
-				SlimAlleleDomain adomain = new SlimAlleleDomain();
-				adomain = slimalleletranslator.translate(alleleDAO.get(rs.getInt("_allele_key")));
+//				ImagePaneAssocDomain domain = new ImagePaneAssocDomain();
+//				domain = translator.translate(imagePaneAssocDAO.get(rs.getInt("_assoc_key")));				
+//				imagePaneAssocDAO.clear();
+				SlimAlleleDomain domain = new SlimAlleleDomain();
+				domain = slimalleletranslator.translate(alleleDAO.get(rs.getInt("_allele_key")));
 				alleleDAO.clear();
-				List<SlimAlleleDomain> aresults = new ArrayList<SlimAlleleDomain>();
-				aresults.add(adomain);
-				domain.setAlleles(aresults);
+//				List<SlimAlleleDomain> aresults = new ArrayList<SlimAlleleDomain>();
+//				aresults.add(adomain);
+//				domain.setAlleles(aresults);
 				results.add(domain);				
 			}
 			sqlExecutor.cleanup();

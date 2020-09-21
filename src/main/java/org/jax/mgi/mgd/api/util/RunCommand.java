@@ -110,17 +110,16 @@ public class RunCommand
      */
     public RunCommand(String cmdStr,  // a specified system command
             String[] envp)    // Environment in which to run cmdStr
-        {
-                // Purpose: creates a RunCommand object to run command 'cmdStr'
-        //          with environment 'envp'
-                // Throws: nothing
+    {
+        // Purpose: creates a RunCommand object to run command 'cmdStr' with environment 'envp'
+        // Throws: nothing
 
         this.setCommand(cmdStr);
         this.envp = envp;
-        }
+    }
 
-        //
-        // methods
+    //
+    // methods
     //
 
     /**
@@ -149,10 +148,10 @@ public class RunCommand
                        // command
     {
         // Purpose: init the environment.
-                // Returns: nothing
-                // Assumes: nothing
-                // Effects: will overwrite any existing value
-                // Throws: nothing
+        // Returns: nothing
+        // Assumes: nothing
+        // Effects: will overwrite any existing value
+        // Throws: nothing
 
         this.envp = envp;
     }
@@ -165,18 +164,17 @@ public class RunCommand
      * @throws InterruptedException thrown if there if the command was
      * interrupted from the command line
      */
-    public static RunCommand runCommand(
-                String cmdStr)	// specified system cmd
+    public static RunCommand runCommand(String cmdStr)	// specified system cmd
         throws IOException, InterruptedException
     {
         // Purpose: Create a RunCommand object with 'cmdStr' and run it
-                // Returns: the object
-                // Assumes: that there is no special environment
-                // Effects: vary depending on the nature of  the command run
+        // Returns: the object
+        // Assumes: that there is no special environment
+        // Effects: vary depending on the nature of  the command run
         // Throws: IOException with appropriate message if failed or
-                //          interrupted IO operations
-                //         InterruptedException if the new process is
-                //          interrupted by another thread
+        //          interrupted IO operations
+        //         InterruptedException if the new process is
+        //          interrupted by another thread
 
         RunCommand runner = new RunCommand(cmdStr);
         runner.run();
@@ -196,37 +194,36 @@ public class RunCommand
      */
     public static RunCommand runCommand(
                 String cmdStr, // specified system cmd
-                String[] envp) // environment in which to
-                           // run 'cmdStr'
+                String[] envp) // environment in which to run 'cmdStr'
                 throws IOException, InterruptedException
-        {
-        // Purpose: Create a RunCommand object with 'cmdStr' and run it
-                // Returns: the object
-                // Assumes: nothing
-                // Effects: vary depending on the nature of  the command run
-                // Throws: See runCommand(String cmdStr)
+    {
+    	// Purpose: Create a RunCommand object with 'cmdStr' and run it
+	    // Returns: the object
+	    // Assumes: nothing
+	    // Effects: vary depending on the nature of  the command run
+	    // Throws: See runCommand(String cmdStr)
 
-                RunCommand runner = new RunCommand(cmdStr, envp);
-                runner.run();
-                return runner;
-        }
+        RunCommand runner = new RunCommand(cmdStr, envp);
+        runner.run();
+        return runner;
+    }
 
-        /**
-         * run the command
-         * @return the command return code
-         * @throws IOException thrown if there is an error in IO
-         * @throws InterruptedException thrown if there if the command was
-         * interrupted from the command line
-         */
+    /**
+     * run the command
+     * @return the command return code
+     * @throws IOException thrown if there is an error in IO
+     * @throws InterruptedException thrown if there if the command was
+     * interrupted from the command line
+     */
     public int run()
         throws IOException, InterruptedException
     {
         // Purpose: Create a new process, run this.cmd
         //          in new process and capture its output
-                // Returns: an integer exit code
-                // Assumes: if setEnv has not been called, this.envp = null
-                // Effects: vary depending on the nature of  the command run
-                // Throws: IOException with appropriate message if failed or
+        // Returns: an integer exit code
+        // Assumes: if setEnv has not been called, this.envp = null
+        // Effects: vary depending on the nature of  the command run
+        // Throws: IOException with appropriate message if failed or
         //          interrupted IO operations or no command to run
         //	   InterruptedException if the new process is
         //          interrupted by another thread
@@ -238,47 +235,39 @@ public class RunCommand
         if(this.cmdSet == true)
         {
             // convert cmdStr to String array
-                    String [] cmdArr = this.convertCmd();
+            String [] cmdArr = this.convertCmd();
 
-                    // execute 'cmdArr' in a new process
-                    Process proc = Runtime.getRuntime().exec(
-                cmdArr, this.envp);
+            // execute 'cmdArr' in a new process
+            Process proc = Runtime.getRuntime().exec(cmdArr, this.envp);
 
             // for reading stdout
-            in = new BufferedReader(new InputStreamReader(
-                // get the input stream connected to the std
-                                // output stream of the subprocess 'proc'
-                                proc.getInputStream() ));
+            // get the input stream connected to the stdoutput stream of the subprocess 'proc'                    
+            in = new BufferedReader(new InputStreamReader(proc.getInputStream()));                               
 
             // read stdout from 'proc'
             while ((line = in.readLine()) != null)
-                this.stdout = this.stdout + line + "\n";
+            	this.stdout = this.stdout + line + "\n";
 
             // reuse 'in' for reading stderr
-            in = new BufferedReader(new InputStreamReader(
-                // get the input stream connected to the error
-                                // stream of the subprocess 'process'
-                                proc.getErrorStream() ));
+            // get the input stream connected to the error stream of the subprocess 'process'            
+            in = new BufferedReader(new InputStreamReader(proc.getErrorStream()));              
 
             //read stderr from 'proc'
-             while ((line = in.readLine()) != null)
-                        stderr = stderr + line + "\n";
+            while ((line = in.readLine()) != null)
+            	stderr = stderr + line + "\n";
 
-             // wait until that process has finished
-//             proc.waitFor();
+	        // wait until that process has finished
+	        proc.waitFor();
 
-            // get the exit value of the subprocess 'proc'
-                        this.exitcode = proc.exitValue();
-
-                    this.cmdRun = true;
-
+	        // get the exit value of the subprocess 'proc'
+            this.exitcode = proc.exitValue();
+            this.cmdRun = true;
         }
 
         // command has not been set, raise an exception
         else
         {
-            throw new IOException(
-                "RunCommand Error: No command to run.");
+            throw new IOException("RunCommand Error: No command to run.");
         }
 
         return this.exitcode;
@@ -338,18 +327,18 @@ public class RunCommand
     {
         // Purpose: Create a cmd array to invoke 'cmd' in the
         //          Bourne shell
-                // Returns: A String array representing 'cmd' to be invoked
+        // Returns: A String array representing 'cmd' to be invoked
         //	    in a Bourne shell
-                // Assumes: nothing
-                // Effects: nothing
-                // Throws:
+        // Assumes: nothing
+        // Effects: nothing
+        // Throws:
 
         return new String [] {"/usr/bin/sh", "-c", this.cmd};
     }
 
     //
-        //instance variables
-        //
+    //instance variables
+    //
 
     // Command to run
     private String cmd = null;
@@ -364,12 +353,12 @@ public class RunCommand
     private boolean cmdRun = false;
 
     // stdout from process running command
-        private String stdout = null;
+    private String stdout = null;
 
     // stderr from process running command
-        private String stderr = null;
+    private String stderr = null;
 
     // exit code from process running command
-        private int exitcode = 0;
+    private int exitcode = 0;
 }
 

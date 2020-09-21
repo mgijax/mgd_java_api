@@ -60,9 +60,9 @@ public class ImagePaneAssoc extends BaseEntity {
 	// allele/image pane assoc can only exist in 1 entity
 	// genotye/image pane assoc can only exist in 1 entity
 		
-	@OneToMany()
-	@JoinColumn(name="_allele_key", referencedColumnName="_object_key", insertable=false, updatable=false)
-	private List<Allele> alleles;	
+//	@OneToMany()
+//	@JoinColumn(name="_allele_key", referencedColumnName="_object_key", insertable=false, updatable=false)
+//	private List<Allele> alleles;	
 
 //	@OneToMany()
 //	@JoinColumn(name="_genotype_key", referencedColumnName="_object_key", insertable=false, updatable=false)

@@ -150,12 +150,12 @@ public class Allele extends BaseEntity {
 	@JoinColumn(name="_allele_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
 	private List<RelationshipAlleleDriverGene> driverGenes;
 
-//	// image pane associations
-//	@OneToMany()
-//	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
-//	@Where(clause="`_mgitype_key` = 11")
-//	@OrderBy(clause="isPrimary asc")
-//	private List<ImagePaneAssocView> imagePaneAssocs;
+	// image pane associations
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 11")
+	@OrderBy(clause="isPrimary asc")
+	private List<ImagePaneAssocView> imagePaneAssocs;
 	
 	//  1020 | General
 	@OneToMany()

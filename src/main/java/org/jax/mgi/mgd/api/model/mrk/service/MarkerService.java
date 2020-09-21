@@ -1486,7 +1486,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// run the runCmd
 		log.info(Constants.LOG_INPROGRESS_EIUTILITIES + runCmd);
 		RunCommand runner = RunCommand.runCommand(runCmd);
-		log.info(Constants.LOG_INPROGRESS_EIUTILITIES + "RunCommand finished");
 		
 		// check exit code from RunCommand
 		if (runner.getExitCode() == 0) {

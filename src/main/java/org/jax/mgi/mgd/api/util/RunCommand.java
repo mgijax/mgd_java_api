@@ -132,7 +132,6 @@ public class RunCommand
     public void setCommand(String cmdStr)	// a specified system command
     {
         this.cmd = cmdStr;
-        this.cmdSet = true;
         this.cmdRun = false;
         this.stdout = null;
         this.stderr = null;
@@ -239,31 +238,21 @@ public class RunCommand
 
             // read input stream
             BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));                    
-            while (inputReader.ready()) 
-            {
-            	System.out.println("BufferedReader inputReader: ready");
-            	while ((line = inputReader.readLine()) != null)
-            		this.stdout = this.stdout + line + "\n";
-            }      
-            System.out.println("BufferedReader inputReader: done");
+            while ((line = inputReader.readLine()) != null)
+            	this.stdout = this.stdout + line + "\n";
             
             // read error stream
             BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));                    
-            while (errorReader.ready()) 
-            {
-	            System.out.println("BufferedReader errorReader: ready");
-	            while ((line = errorReader.readLine()) != null)
-	                this.stdout = this.stdout + line + "\n";
-            }      
-            System.out.println("BufferedReader errorReader: done");
+	        while ((line = errorReader.readLine()) != null)
+	            this.stdout = this.stdout + line + "\n";
 
 	        // wait until that process has finished
             // save exit value
-            System.out.println("waitFor(): start");  
+            //System.out.println("waitFor(): start");  
             process.waitFor();
             this.exitcode = process.exitValue();
             this.cmdRun = true;
-            System.out.println("waitFor(): stop");          
+            //System.out.println("waitFor(): stop");          
         }
         catch (IOException e) {
             //throw new IOException("RunCommand Error: No command to run.");
@@ -341,9 +330,6 @@ public class RunCommand
 
     // Command to run
     private String cmd = null;
-
-    // true if a command has been set
-    private boolean cmdSet = false;
 
     // Array of name=value pairs representing environment variable settings
     private String[] envp = null;

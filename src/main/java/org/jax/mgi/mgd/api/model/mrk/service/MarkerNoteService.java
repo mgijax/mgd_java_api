@@ -105,9 +105,11 @@ public class MarkerNoteService extends BaseService<MarkerNoteDomain> {
 		
 		log.info("processMarkerNote");
 		
-		if (domain == null || domain.getNote().isEmpty()) {
-			log.info("processMarkerNote/nothing to process");
-			return modified;
+		if (!domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+			if (domain == null || domain.getNote().isEmpty()) {
+				log.info("processMarkerNote/nothing to process");
+				return modified;
+			}
 		}
 										
 		if (domain.getProcessStatus().equals(Constants.PROCESS_CREATE)) {				

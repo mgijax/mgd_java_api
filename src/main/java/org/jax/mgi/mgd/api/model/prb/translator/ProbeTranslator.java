@@ -2,10 +2,9 @@ package org.jax.mgi.mgd.api.model.prb.translator;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
-import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeMarkerDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.ProbeNotesDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.Probe;
 import org.jax.mgi.mgd.api.util.Constants;
 
@@ -44,13 +43,20 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 			Iterable<ProbeMarkerDomain> i = markerTranslator.translateEntities(entity.getMarkers());
 			domain.setMarkers(IteratorUtils.toList(i.iterator()));
 		}
-		
+
 		// at most one note
 		if (entity.getGeneralNote() != null && !entity.getGeneralNote().isEmpty()) {
-			NoteTranslator noteTranslator = new NoteTranslator();
-			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getGeneralNote());
+			ProbeNotesTranslator noteTranslator = new ProbeNotesTranslator();
+			Iterable<ProbeNotesDomain> note = noteTranslator.translateEntities(entity.getGeneralNote());
 			domain.setGeneralNote(note.iterator().next());
-		}				
+		}
+		
+//		// at most one note
+//		if (entity.getGeneralNote() != null && !entity.getGeneralNote().isEmpty()) {
+//			NoteTranslator noteTranslator = new NoteTranslator();
+//			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getGeneralNote());
+//			domain.setGeneralNote(note.iterator().next());
+//		}				
 		
 		return domain;
 	}

@@ -18,7 +18,6 @@ import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
-import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
@@ -83,8 +82,13 @@ public class Probe extends BaseEntity {
 
 	// General
 	@OneToMany()
-	@JoinColumn(name="_object_key", referencedColumnName="_probe_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 3 and `_notetype_key` = 1052")
-	private List<Note> generalNote;
+	@JoinColumn(name="_probe_key", insertable=false, updatable=false)
+	private List<ProbeNotes> generalNote;
+	
+//	// General
+//	@OneToMany()
+//	@JoinColumn(name="_object_key", referencedColumnName="_probe_key", insertable=false, updatable=false)
+//	@Where(clause="`_mgitype_key` = 3 and `_notetype_key` = 1052")
+//	private List<Note> generalNote;
 	
 }

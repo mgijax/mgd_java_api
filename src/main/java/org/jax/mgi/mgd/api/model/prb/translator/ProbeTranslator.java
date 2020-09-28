@@ -7,6 +7,7 @@ import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeMarkerDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.Probe;
+import org.jax.mgi.mgd.api.util.Constants;
 
 public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDomain> {
 
@@ -15,6 +16,7 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 		
 		ProbeDomain domain = new ProbeDomain();
 		
+		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setProbeKey(String.valueOf(entity.get_probe_key()));
 		domain.setName(entity.getName());
 		domain.setDerivedFrom(String.valueOf(entity.getDerivedFrom()));

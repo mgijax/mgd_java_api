@@ -33,7 +33,7 @@ public class ProbeMarker extends BaseEntity {
 	@SequenceGenerator(name="prb_marker_generator", sequenceName = "prb_marker_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")
 	private int _assoc_key;
-
+	private int _probe_key;
 	private String relationship;
 	private Date creation_date;
 	private Date modification_date;

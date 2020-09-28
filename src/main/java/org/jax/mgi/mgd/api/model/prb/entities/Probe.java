@@ -79,7 +79,7 @@ public class Probe extends BaseEntity {
 
 	@OneToMany()
 	@JoinColumn(name="_probe_key", insertable=false, updatable=false)
-	private List<ProbeMarker> probeMarkers;
+	private List<ProbeMarker> markers;
 
 	// General
 	@OneToMany()

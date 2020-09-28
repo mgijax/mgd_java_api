@@ -15,7 +15,7 @@ public class ProbeNotesTranslator extends BaseEntityDomainTranslator<ProbeNotes,
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setNoteKey(String.valueOf(entity.get_note_key()));
 		domain.setProbeKey(String.valueOf(entity.get_probe_key()));
-		domain.setNotes(String.valueOf(entity.getNotes()));
+		domain.setNotes(String.valueOf(entity.getNote()));
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		

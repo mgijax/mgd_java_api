@@ -28,7 +28,7 @@ public class ProbeNotes extends BaseEntity {
 	@ApiModelProperty(value="primary key")
 	private int _note_key;
 	private int _probe_key;
-	private String notes;
+	private String note;
 	private Date creation_date;
 	private Date modification_date;
 

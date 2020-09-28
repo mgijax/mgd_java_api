@@ -2,18 +2,23 @@ package org.jax.mgi.mgd.api.model.prb.entities;
 
 import java.util.Date;
 
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,14 +28,20 @@ import lombok.Setter;
 @Table(name="prb_marker")
 public class ProbeMarker extends BaseEntity {
 
-	// This only needs to be done if there is no other primary key for the table
-	@EmbeddedId
-	private ProbeMarkerKey key;
+	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="prb_marker_generator")
+	@SequenceGenerator(name="prb_marker_generator", sequenceName = "prb_marker_seq", allocationSize=1)
+	@ApiModelProperty(value="primary key")
+	private int _assoc_key;
 
 	private String relationship;
 	private Date creation_date;
 	private Date modification_date;
 
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_marker_key")
+	private Marker marker;
+	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key")
 	private Reference reference;

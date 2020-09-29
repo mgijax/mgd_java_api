@@ -16,6 +16,10 @@ public class ProbeReferenceDomain extends BaseDomain {
 	private String probeKey;
 	private String hasRmap;
 	private String hasSequence;
+	private String refsKey;
+	private String jnumid;
+	private Integer jnum;
+	private String short_citation;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

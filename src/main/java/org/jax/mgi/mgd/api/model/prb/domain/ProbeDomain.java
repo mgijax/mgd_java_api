@@ -30,6 +30,6 @@ public class ProbeDomain extends BaseDomain {
 
 	private List<ProbeMarkerDomain> markers;
 	private List<ProbeReferenceDomain> references;
-	private ProbeNotesDomain generalNote;
+	private ProbeNoteDomain generalNote;
 	
 }

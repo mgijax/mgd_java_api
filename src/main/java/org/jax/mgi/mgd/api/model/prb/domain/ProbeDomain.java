@@ -29,7 +29,7 @@ public class ProbeDomain extends BaseDomain {
 	private String accID;
 
 	private List<ProbeMarkerDomain> markers;
+	private List<ProbeReferenceDomain> references;
 	private ProbeNotesDomain generalNote;
-	//private NoteDomain generalNote;
 	
 }

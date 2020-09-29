@@ -5,6 +5,7 @@ import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeMarkerDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeNotesDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.ProbeReferenceDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.Probe;
 import org.jax.mgi.mgd.api.util.Constants;
 
@@ -44,19 +45,19 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 			domain.setMarkers(IteratorUtils.toList(i.iterator()));
 		}
 
+		// references
+		if (entity.getReferences() != null && !entity.getReferences().isEmpty()) {
+			ProbeReferenceTranslator referenceTranslator =new ProbeReferenceTranslator();
+			Iterable<ProbeReferenceDomain> i = referenceTranslator.translateEntities(entity.getReferences());
+			domain.setReferences(IteratorUtils.toList(i.iterator()));
+		}
+		
 		// at most one note
 		if (entity.getGeneralNote() != null && !entity.getGeneralNote().isEmpty()) {
 			ProbeNotesTranslator noteTranslator = new ProbeNotesTranslator();
 			Iterable<ProbeNotesDomain> note = noteTranslator.translateEntities(entity.getGeneralNote());
 			domain.setGeneralNote(note.iterator().next());
 		}
-		
-//		// at most one note
-//		if (entity.getGeneralNote() != null && !entity.getGeneralNote().isEmpty()) {
-//			NoteTranslator noteTranslator = new NoteTranslator();
-//			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getGeneralNote());
-//			domain.setGeneralNote(note.iterator().next());
-//		}				
 		
 		return domain;
 	}

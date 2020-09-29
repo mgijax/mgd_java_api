@@ -76,19 +76,19 @@ public class Probe extends BaseEntity {
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 
+	// markers
 	@OneToMany()
 	@JoinColumn(name="_probe_key", insertable=false, updatable=false)
 	private List<ProbeMarker> markers;
+	
+	// references
+	@OneToMany()
+	@JoinColumn(name="_probe_key", insertable=false, updatable=false)
+	private List<ProbeReference> references;
 
-	// General
+	// note
 	@OneToMany()
 	@JoinColumn(name="_probe_key", insertable=false, updatable=false)
 	private List<ProbeNotes> generalNote;
-	
-//	// General
-//	@OneToMany()
-//	@JoinColumn(name="_object_key", referencedColumnName="_probe_key", insertable=false, updatable=false)
-//	@Where(clause="`_mgitype_key` = 3 and `_notetype_key` = 1052")
-//	private List<Note> generalNote;
 	
 }

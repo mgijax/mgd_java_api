@@ -56,7 +56,7 @@ public class ProbeReference extends BaseEntity {
 	
 	// accession ids
 	@OneToMany()
-	@JoinColumn(name="_object_key", referencedColumnName="_reference_key", insertable=false, updatable=false)
+	@JoinColumn(name="_object_key", referencedColumnName="_probe_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 3")
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> accessionIds;

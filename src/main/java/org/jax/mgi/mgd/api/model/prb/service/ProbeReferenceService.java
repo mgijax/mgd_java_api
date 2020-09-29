@@ -30,6 +30,8 @@ public class ProbeReferenceService extends BaseService<ProbeReferenceDomain> {
 	private ProbeReferenceDAO probeDAO;
 	@Inject
 	private ReferenceDAO referenceDAO;
+	@Inject
+	private ProbeAliasService aliasService;
 
 	private ProbeReferenceTranslator translator = new ProbeReferenceTranslator();						
 	private SQLExecutor sqlExecutor = new SQLExecutor();
@@ -101,55 +103,74 @@ public class ProbeReferenceService extends BaseService<ProbeReferenceDomain> {
 	}	
 	
 	@Transactional
-	public Boolean process(String parentKey, ProbeReferenceDomain domain, User user) {
+	public Boolean process(String parentKey, List<ProbeReferenceDomain> domain, User user) {
 		// process probe reference (create, delete, update)
 		
 		Boolean modified = false;
 		
 		log.info("processProbeReference");
 		
-		if (!domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-			if (domain == null || domain.getRefsKey().isEmpty()) {
+		// iterate thru the list of rows in the domain
+		// for each row, determine whether to perform an insert, delete or update
+		
+		for (int i = 0; i < domain.size(); i++) {
+
+			if (domain == null || domain.isEmpty()) {
 				log.info("processProbeReference/nothing to process");
 				return modified;
 			}
-		}
-										
-		if (domain.getProcessStatus().equals(Constants.PROCESS_CREATE)) {				
-			log.info("processProbeReference create");
-			ProbeReference entity = new ProbeReference();
-			entity.set_probe_key(Integer.valueOf(domain.getProbeKey()));
-			entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));
-			entity.setHasRmap(Integer.valueOf(domain.getHasRmap()));
-			entity.setHasSequence(Integer.valueOf(domain.getHasSequence()));
-			entity.setCreatedBy(user);
-			entity.setModifiedBy(user);
-			entity.setCreation_date(new Date());				
-			entity.setModification_date(new Date());
-			probeDAO.persist(entity);				
-			modified = true;
-		}
-		else if (domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-			log.info("processProbeReference delete");				
-			ProbeReference entity = probeDAO.get(Integer.valueOf(domain.getReferenceKey()));
-			probeDAO.remove(entity);
-			modified = true;
-		}
-		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-			log.info("processProbeReference update");								
-			ProbeReference entity = probeDAO.get(Integer.valueOf(domain.getReferenceKey()));
-			entity.set_probe_key(Integer.valueOf(domain.getProbeKey()));
-			entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));
-			entity.setHasRmap(Integer.valueOf(domain.getHasRmap()));
-			entity.setHasSequence(Integer.valueOf(domain.getHasSequence()));
-			entity.setModifiedBy(user);
-			entity.setModification_date(new Date());
-			probeDAO.update(entity);
-			modified = true;
-			log.info("processProbeReference/changes processed: " + domain.getReferenceKey());
-		}
-		else {
-			log.info("processProbeReference/no changes processed: " + domain.getReferenceKey());
+			
+			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {								
+				log.info("processProbeReference/create");
+
+	        	if (domain.get(i).getRefsKey() == null || domain.get(i).getRefsKey().isEmpty()) {
+	        		return modified;
+	        	}
+	        	
+				ProbeReference entity = new ProbeReference();									
+				entity.set_probe_key(Integer.valueOf(parentKey));
+				entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
+				entity.setHasRmap(Integer.valueOf(domain.get(i).getHasRmap()));
+				entity.setHasSequence(Integer.valueOf(domain.get(i).getHasSequence()));
+				entity.setCreatedBy(user);
+				entity.setModifiedBy(user);
+				entity.setCreation_date(new Date());
+				entity.setModification_date(new Date());				
+				probeDAO.persist(entity);				
+				log.info("processProbeReference/create/returning results");	
+				modified = true;
+			}
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+				log.info("processProbeReference/delete");
+				if (domain.get(i).getReferenceKey() != null && !domain.get(i).getReferenceKey().isEmpty()) {
+					ProbeReference entity = probeDAO.get(Integer.valueOf(domain.get(i).getReferenceKey()));
+					probeDAO.remove(entity);
+					modified = true;
+				}
+			}
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+				log.info("processProbeReference/update");
+				ProbeReference entity = probeDAO.get(Integer.valueOf(domain.get(i).getReferenceKey()));	
+				entity.set_probe_key(Integer.valueOf(parentKey));
+				entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
+				entity.setHasRmap(Integer.valueOf(domain.get(i).getHasRmap()));
+				entity.setHasSequence(Integer.valueOf(domain.get(i).getHasSequence()));
+				entity.setModifiedBy(user);
+				entity.setModification_date(new Date());
+
+				// process alias
+				if (aliasService.process(domain.get(i).getReferenceKey(), domain.get(i).getAliases(), user)) {
+					modified = true;
+				}
+				
+				probeDAO.update(entity);
+
+				log.info("processProbeReference/changes processed: " + domain.get(i).getReferenceKey());				
+				modified = true;
+			}
+			else {
+				log.info("processProbeReference/no changes processed: " + domain.get(i).getReferenceKey());
+			}           
 		}
 		
 		log.info("processProbeReference/processing successful");

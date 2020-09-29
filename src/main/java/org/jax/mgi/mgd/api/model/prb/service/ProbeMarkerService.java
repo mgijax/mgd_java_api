@@ -104,59 +104,70 @@ public class ProbeMarkerService extends BaseService<ProbeMarkerDomain> {
 	}	
 	
 	@Transactional
-	public Boolean process(String parentKey, ProbeMarkerDomain domain, User user) {
+	public Boolean process(String parentKey, List<ProbeMarkerDomain> domain, User user) {
 		// process probe marker (create, delete, update)
 		
 		Boolean modified = false;
 		
 		log.info("processProbeMarker");
+
+		if (domain == null || domain.isEmpty()) {
+			log.info("processProbeMarker/nothing to process");
+			return modified;
+		}
 		
-		if (!domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-			if (domain == null || domain.getMarkerKey().isEmpty()) {
-				log.info("processProbeMarker/nothing to process");
-				return modified;
+		// iterate thru the list of rows in the domain
+		// for each row, determine whether to perform an insert, delete or update
+		
+		for (int i = 0; i < domain.size(); i++) {
+		
+        	if (domain.get(i).getMarkerKey() == null || domain.get(i).getMarkerKey().isEmpty()) {
+        		return modified;
+        	}
+        			
+			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {								
+				log.info("processProbeMarker/create");
+				ProbeMarker entity = new ProbeMarker();									
+				entity.set_probe_key(Integer.valueOf(parentKey));
+				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));
+				entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
+				entity.setRelationship(domain.get(i).getRelationship());
+				entity.setCreatedBy(user);
+				entity.setModifiedBy(user);
+				entity.setCreation_date(new Date());
+				entity.setModification_date(new Date());				
+				probeDAO.persist(entity);				
+				log.info("processProbeMarker/create/returning results");	
+				modified = true;
 			}
-		}
-										
-		if (domain.getProcessStatus().equals(Constants.PROCESS_CREATE)) {				
-			log.info("processProbeMarker create");
-			ProbeMarker entity = new ProbeMarker();
-			entity.set_probe_key(Integer.valueOf(domain.getProbeKey()));
-			entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));
-			entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));
-			entity.setRelationship(domain.getRelationship());
-			entity.setCreatedBy(user);
-			entity.setModifiedBy(user);
-			entity.setCreation_date(new Date());				
-			entity.setModification_date(new Date());
-			probeDAO.persist(entity);				
-			modified = true;
-		}
-		else if (domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-			log.info("processProbeMarker delete");				
-			ProbeMarker entity = probeDAO.get(Integer.valueOf(domain.getAssocKey()));
-			probeDAO.remove(entity);
-			modified = true;
-		}
-		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-			log.info("processProbeMarker update");								
-			ProbeMarker entity = probeDAO.get(Integer.valueOf(domain.getAssocKey()));
-			entity.set_probe_key(Integer.valueOf(domain.getProbeKey()));
-			entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));			
-			entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));
-			entity.setRelationship(domain.getRelationship());
-			entity.setModifiedBy(user);
-			entity.setModification_date(new Date());
-			probeDAO.update(entity);
-			modified = true;
-			log.info("processProbeMarker/changes processed: " + domain.getAssocKey());
-		}
-		else {
-			log.info("processProbeMarker/no changes processed: " + domain.getAssocKey());
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+				log.info("processProbeMarker/delete");
+				if (domain.get(i).getAssocKey() != null && !domain.get(i).getAssocKey().isEmpty()) {
+					ProbeMarker entity = probeDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
+					probeDAO.remove(entity);
+					modified = true;
+				}
+			}
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+				log.info("processProbeMarker/update");
+				ProbeMarker entity = probeDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));	
+				entity.set_probe_key(Integer.valueOf(parentKey));
+				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));
+				entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
+				entity.setRelationship(domain.get(i).getRelationship());
+				entity.setModifiedBy(user);
+				entity.setModification_date(new Date());
+				probeDAO.update(entity);
+				log.info("processProbeMarker/changes processed: " + domain.get(i).getAssocKey());				
+				modified = true;
+			}
+			else {
+				log.info("processProbeMarker/no changes processed: " + domain.get(i).getAssocKey());
+			}           
 		}
 		
 		log.info("processProbeMarker/processing successful");
 		return modified;
-	}
+	}		
 	
 }

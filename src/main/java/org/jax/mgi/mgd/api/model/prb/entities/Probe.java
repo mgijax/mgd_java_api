@@ -89,6 +89,6 @@ public class Probe extends BaseEntity {
 	// note
 	@OneToMany()
 	@JoinColumn(name="_probe_key", insertable=false, updatable=false)
-	private List<ProbeNotes> generalNote;
+	private List<ProbeNote> generalNote;
 	
 }

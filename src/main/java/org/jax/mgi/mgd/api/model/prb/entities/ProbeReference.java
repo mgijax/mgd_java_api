@@ -54,10 +54,10 @@ public class ProbeReference extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	// accession ids
+	// accession ids (non-MGI)
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_probe_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 3")
+	@Where(clause="`_mgitype_key` = 3 and `_logicaldb_key != 1`")
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> accessionIds;
 	

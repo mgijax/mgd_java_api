@@ -20,7 +20,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "PRBNotes Model Object")
 @Table(name="prb_notes")
-public class ProbeNotes extends BaseEntity {
+public class ProbeNote extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="prb_notes_generator")

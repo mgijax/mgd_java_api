@@ -30,13 +30,10 @@ public class ProbeAlias extends BaseEntity {
 	@SequenceGenerator(name="prb_alias_generator", sequenceName = "prb_alias_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")
 	private int _alias_key;
+	private int _reference_key;
 	private String alias;
 	private Date creation_date;
 	private Date modification_date;
-	
-	@OneToOne
-	@JoinColumn(name="_reference_key")
-	private ProbeReference reference;
 	
 	@OneToOne
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

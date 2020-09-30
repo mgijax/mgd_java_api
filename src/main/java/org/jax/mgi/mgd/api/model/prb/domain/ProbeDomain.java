@@ -14,6 +14,13 @@ public class ProbeDomain extends BaseDomain {
 	private String processStatus;
 	private String probeKey;
 	private String name;
+	private String segmentTypeKey;
+	private String segmentType;
+	private String derivedFromKey;
+	private String derivedFromName;
+	private String derivedFromAccID;
+	private String vectorTypeKey;
+	private String vectorType;
 	private String primer1sequence;
 	private String primer2sequence;
 	private String regionCovered;
@@ -27,10 +34,8 @@ public class ProbeDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	private String accID;
-	private String derivedFromKey;
-	private String derivedFromName;
-	private String derivedFromAccID;
 
+	private ProbeSourceDomain source;
 	private List<ProbeMarkerDomain> markers;
 	private List<ProbeReferenceDomain> references;
 	private ProbeNoteDomain generalNote;

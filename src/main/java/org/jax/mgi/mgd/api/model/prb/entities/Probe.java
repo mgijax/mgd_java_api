@@ -52,19 +52,19 @@ public class Probe extends BaseEntity {
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="derivedFrom")
 	private Probe derivedFrom;
-	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_source_key")
-	private ProbeSource source;
-
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_vector_key", referencedColumnName="_term_key")
-	private Term vector;
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_segmenttype_key", referencedColumnName="_term_key")
 	private Term segmentType;
 
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_vector_key", referencedColumnName="_term_key")
+	private Term vectorType;
+
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_source_key")
+	private ProbeSource source;
+	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;

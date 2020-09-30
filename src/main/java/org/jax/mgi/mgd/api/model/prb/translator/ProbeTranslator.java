@@ -24,6 +24,10 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setProbeKey(String.valueOf(entity.get_probe_key()));
 		domain.setName(entity.getName());
+		domain.setSegmentTypeKey(String.valueOf(entity.getSegmentType().get_term_key()));
+		domain.setSegmentType(entity.getSegmentType().getTerm());
+		domain.setVectorTypeKey(String.valueOf(entity.getVectorType().get_term_key()));
+		domain.setVectorType(entity.getVectorType().getTerm());
 		domain.setPrimer1sequence(entity.getPrimer1sequence());
 		domain.setPrimer2sequence(entity.getPrimer2sequence());
 		domain.setRegionCovered(entity.getRegionCovered());
@@ -42,9 +46,12 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}
 
+		// source
+		ProbeSourceTranslator sourceTranslator = new ProbeSourceTranslator();
+		domain.setSource(sourceTranslator.entityToDomain(entity.getSource()));
+		
 		// at most one derived-from
 		if (entity.getDerivedFrom() != null && !entity.getDerivedFrom().getName().isEmpty()) {
-			log.info("translating getDerviedFrom");
 			domain.setDerivedFromKey(String.valueOf(entity.getDerivedFrom().get_probe_key()));
 			domain.setDerivedFromName(entity.getDerivedFrom().getName());
 			domain.setDerivedFromAccID(entity.getDerivedFrom().getMgiAccessionIds().get(0).getAccID());
@@ -52,14 +59,14 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 		
 		// markers
 		if (entity.getMarkers() != null && !entity.getMarkers().isEmpty()) {
-			ProbeMarkerTranslator markerTranslator =new ProbeMarkerTranslator();
+			ProbeMarkerTranslator markerTranslator = new ProbeMarkerTranslator();
 			Iterable<ProbeMarkerDomain> i = markerTranslator.translateEntities(entity.getMarkers());
 			domain.setMarkers(IteratorUtils.toList(i.iterator()));
 		}
 
 		// references
 		if (entity.getReferences() != null && !entity.getReferences().isEmpty()) {
-			ProbeReferenceTranslator referenceTranslator =new ProbeReferenceTranslator();
+			ProbeReferenceTranslator referenceTranslator = new ProbeReferenceTranslator();
 			Iterable<ProbeReferenceDomain> i = referenceTranslator.translateEntities(entity.getReferences());
 			domain.setReferences(IteratorUtils.toList(i.iterator()));
 		}

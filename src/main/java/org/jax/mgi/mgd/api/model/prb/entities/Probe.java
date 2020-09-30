@@ -50,7 +50,7 @@ public class Probe extends BaseEntity {
 	private Date modification_date;
 
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="derviedFrom")
+	@JoinColumn(name="derivedFrom")
 	private Probe derivedFrom;
 	
 	@OneToOne(fetch=FetchType.LAZY)

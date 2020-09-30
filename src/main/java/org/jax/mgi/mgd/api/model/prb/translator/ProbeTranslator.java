@@ -47,7 +47,7 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 			log.info("translating getDerviedFrom");
 			domain.setDerivedFromKey(String.valueOf(entity.getDerivedFrom().get_probe_key()));
 //			domain.setDerivedFromName(entity.getDerivedFrom().getDerivedFrom().getName());
-			domain.setDerivedFromAccID(entity.getDerivedFrom().getDerivedFrom().getMgiAccessionIds().get(0).getAccID());
+//			domain.setDerivedFromAccID(entity.getDerivedFrom().getDerivedFrom().getMgiAccessionIds().get(0).getAccID());
 		}
 		
 		// markers

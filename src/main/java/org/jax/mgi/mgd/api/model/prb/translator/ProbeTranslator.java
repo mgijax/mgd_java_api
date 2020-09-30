@@ -21,7 +21,6 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setProbeKey(String.valueOf(entity.get_probe_key()));
 		domain.setName(entity.getName());
-		domain.setDerivedFrom(String.valueOf(entity.getDerivedFrom()));
 		domain.setPrimer1sequence(entity.getPrimer1sequence());
 		domain.setPrimer2sequence(entity.getPrimer2sequence());
 		domain.setRegionCovered(entity.getRegionCovered());
@@ -40,6 +39,13 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}
 
+		// at most one derived-from
+		if (entity.getDerivedFrom() != null) {
+			domain.setDerivedFromKey(String.valueOf(entity.getDerivedFrom().get_probe_key()));
+			domain.setDerivedFromName(entity.getDerivedFrom().getDerivedFrom().getName());
+			domain.setDerivedFromAccID(entity.getDerivedFrom().getDerivedFrom().getMgiAccessionIds().get(0).getAccID());
+		}
+		
 		// markers
 		if (entity.getMarkers() != null && !entity.getMarkers().isEmpty()) {
 			ProbeMarkerTranslator markerTranslator =new ProbeMarkerTranslator();

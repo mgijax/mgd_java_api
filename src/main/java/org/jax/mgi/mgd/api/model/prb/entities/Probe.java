@@ -40,7 +40,6 @@ public class Probe extends BaseEntity {
 	private int _probe_key;
 	
 	private String name;
-	private Integer derivedFrom;
 	private String primer1sequence;
 	private String primer2sequence;
 	private String regionCovered;
@@ -50,6 +49,10 @@ public class Probe extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="derviedFrom")
+	private Probe derivedFrom;
+	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_source_key")
 	private ProbeSource source;

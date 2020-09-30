@@ -40,7 +40,7 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 		}
 
 		// at most one derived-from
-		if (entity.getDerivedFrom() != null) {
+		if (entity.getDerivedFrom() != null && !entity.getDerivedFrom().getName().isEmpty()) {
 			domain.setDerivedFromKey(String.valueOf(entity.getDerivedFrom().get_probe_key()));
 			domain.setDerivedFromName(entity.getDerivedFrom().getDerivedFrom().getName());
 			domain.setDerivedFromAccID(entity.getDerivedFrom().getDerivedFrom().getMgiAccessionIds().get(0).getAccID());

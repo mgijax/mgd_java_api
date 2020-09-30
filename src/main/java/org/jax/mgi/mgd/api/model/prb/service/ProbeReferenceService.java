@@ -10,6 +10,8 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeReferenceDAO;
@@ -30,6 +32,8 @@ public class ProbeReferenceService extends BaseService<ProbeReferenceDomain> {
 	private ProbeReferenceDAO probeDAO;
 	@Inject
 	private ReferenceDAO referenceDAO;
+	@Inject
+	private AccessionService accessionService;
 	@Inject
 	private ProbeAliasService aliasService;
 
@@ -137,6 +141,14 @@ public class ProbeReferenceService extends BaseService<ProbeReferenceDomain> {
 				entity.setCreation_date(new Date());
 				entity.setModification_date(new Date());				
 				probeDAO.persist(entity);				
+
+				// process accession ids
+				
+				// process alias
+				if (aliasService.process(String.valueOf(entity.get_reference_key()), domain.get(i).getAliases(), user)) {
+					modified = true;
+				}
+				
 				log.info("processProbeReference/create/returning results");	
 				modified = true;
 			}
@@ -158,6 +170,9 @@ public class ProbeReferenceService extends BaseService<ProbeReferenceDomain> {
 				entity.setModifiedBy(user);
 				entity.setModification_date(new Date());
 
+				// process accession ids
+				//public Boolean process(parentKey, domain.get(i).getAccessionIds(), "Segment", user) {
+				
 				// process alias
 				if (aliasService.process(domain.get(i).getReferenceKey(), domain.get(i).getAliases(), user)) {
 					modified = true;

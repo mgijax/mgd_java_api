@@ -10,9 +10,12 @@ import org.jax.mgi.mgd.api.model.prb.domain.ProbeNoteDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeReferenceDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.Probe;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jboss.logging.Logger;
 
 public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDomain> {
 
+	protected Logger log = Logger.getLogger(getClass());
+	
 	@Override
 	protected ProbeDomain entityToDomain(Probe entity) {
 		
@@ -41,9 +44,10 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 
 		// at most one derived-from
 		if (entity.getDerivedFrom() != null && !entity.getDerivedFrom().getName().isEmpty()) {
-			domain.setDerivedFromKey(String.valueOf(entity.getDerivedFrom().get_probe_key()));
-			domain.setDerivedFromName(entity.getDerivedFrom().getDerivedFrom().getName());
-			domain.setDerivedFromAccID(entity.getDerivedFrom().getDerivedFrom().getMgiAccessionIds().get(0).getAccID());
+			log.info("translating getDerviedFrom");
+//			domain.setDerivedFromKey(String.valueOf(entity.getDerivedFrom().get_probe_key()));
+//			domain.setDerivedFromName(entity.getDerivedFrom().getDerivedFrom().getName());
+//			domain.setDerivedFromAccID(entity.getDerivedFrom().getDerivedFrom().getMgiAccessionIds().get(0).getAccID());
 		}
 		
 		// markers

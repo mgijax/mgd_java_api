@@ -134,8 +134,10 @@ public class ProbeReferenceService extends BaseService<ProbeReferenceDomain> {
 				ProbeReference entity = new ProbeReference();									
 				entity.set_probe_key(Integer.valueOf(parentKey));
 				entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
-				entity.setHasRmap(Integer.valueOf(domain.get(i).getHasRmap()));
-				entity.setHasSequence(Integer.valueOf(domain.get(i).getHasSequence()));
+//				entity.setHasRmap(Integer.valueOf(domain.get(i).getHasRmap()));
+//				entity.setHasSequence(Integer.valueOf(domain.get(i).getHasSequence()));
+				entity.setHasRmap(0);
+				entity.setHasSequence(0);				
 				entity.setCreatedBy(user);
 				entity.setModifiedBy(user);
 				entity.setCreation_date(new Date());
@@ -165,8 +167,10 @@ public class ProbeReferenceService extends BaseService<ProbeReferenceDomain> {
 				ProbeReference entity = probeDAO.get(Integer.valueOf(domain.get(i).getReferenceKey()));	
 				entity.set_probe_key(Integer.valueOf(parentKey));
 				entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
-				entity.setHasRmap(Integer.valueOf(domain.get(i).getHasRmap()));
-				entity.setHasSequence(Integer.valueOf(domain.get(i).getHasSequence()));
+//				entity.setHasRmap(Integer.valueOf(domain.get(i).getHasRmap()));
+//				entity.setHasSequence(Integer.valueOf(domain.get(i).getHasSequence()));
+				entity.setHasRmap(0);
+				entity.setHasSequence(0);
 				entity.setModifiedBy(user);
 				entity.setModification_date(new Date());
 

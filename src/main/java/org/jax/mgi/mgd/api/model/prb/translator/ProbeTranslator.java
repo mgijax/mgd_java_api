@@ -2,6 +2,8 @@ package org.jax.mgi.mgd.api.model.prb.translator;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
+import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeMarkerDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeNoteDomain;
@@ -57,6 +59,13 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 			ProbeNoteTranslator noteTranslator = new ProbeNoteTranslator();
 			Iterable<ProbeNoteDomain> note = noteTranslator.translateEntities(entity.getGeneralNote());
 			domain.setGeneralNote(note.iterator().next());
+		}
+
+		// at most one sequenceNote
+		if (entity.getRawsequenceNote() != null && !entity.getRawsequenceNote().isEmpty()) {
+			NoteTranslator noteTranslator = new NoteTranslator();
+			Iterable<NoteDomain> sequenceNote = noteTranslator.translateEntities(entity.getRawsequenceNote());
+			domain.setRawsequenceNote(sequenceNote.iterator().next());
 		}
 		
 		return domain;

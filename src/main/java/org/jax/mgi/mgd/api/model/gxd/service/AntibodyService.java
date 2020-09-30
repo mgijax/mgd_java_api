@@ -12,7 +12,6 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyClassDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyDAO;
-import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyPrepDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyTypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntigenDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
@@ -579,7 +578,7 @@ and a._antibody_key = aa._antibody_key
 			where = where + "\nand a._antibody_key = aref._antibody_key";
 		}
 		if (from_antigen == true) {
-			from = from + ", gxd_antibodyantigen_view av, prb_source_view sv";
+			from = from + ", gxd_antibodyantigen_view av, prb_source sv";
 			where = where + "\nand a._antibody_key = av._antibody_key";
 			where = where + "\nand av._source_key = sv._source_key";
 		}

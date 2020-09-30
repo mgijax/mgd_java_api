@@ -12,7 +12,6 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyClassDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyDAO;
-import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyPrepDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyTypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntigenDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;

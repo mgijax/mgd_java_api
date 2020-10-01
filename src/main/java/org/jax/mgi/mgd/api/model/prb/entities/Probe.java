@@ -90,12 +90,12 @@ public class Probe extends BaseEntity {
 	@JoinColumn(name="_probe_key", insertable=false, updatable=false)
 	private List<ProbeReference> references;
 
-	// note
+	// General note
 	@OneToMany()
 	@JoinColumn(name="_probe_key", insertable=false, updatable=false)
 	private List<ProbeNote> generalNote;
 
-	// Raw Sequence
+	// Raw Sequence note
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_probe_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 3 and `_notetype_key` = 1037")

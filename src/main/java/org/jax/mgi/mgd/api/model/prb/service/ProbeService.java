@@ -101,7 +101,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		String select = "select a.*";
 		String from = "from prb_probe a";
 		String where = "where a._probe_key is not null";
-		String orderBy = "order by a.probe";
+		String orderBy = "order by a.name";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		//String value;
 		Boolean from_accession = false;
@@ -116,7 +116,11 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			from = from + cmResults[0];
 			where = where + cmResults[1];
 		}
-						
+
+		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
+			where = where + "\nand a.name ilike '" + searchDomain.getName() + "'" ;
+		}
+		
 		// accession id 
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	
 			where = where + "\nand acc.accID ilike '" + searchDomain.getAccID() + "'";

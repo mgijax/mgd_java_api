@@ -18,7 +18,6 @@ import org.jax.mgi.mgd.api.model.prb.dao.ProbeSourceDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeTissueDAO;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
-import org.jax.mgi.mgd.api.model.prb.domain.ProbeTissueDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeSourceTranslator;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
@@ -289,10 +288,6 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		//String value;
 		//Boolean from_accession = false;
-		
-		//
-		// IN PROGRESSS
-		//
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());

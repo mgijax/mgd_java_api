@@ -74,7 +74,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		// return the object count from the database
 		
 		SearchResults<ProbeDomain> results = new SearchResults<ProbeDomain>();
-		String cmd = "select count(*) as objectCount from gxd_antigen";
+		String cmd = "select count(*) as objectCount from prb_probe";
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
@@ -140,7 +140,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				ProbeDomain domain = new ProbeDomain();
-				domain = translator.translate(probeDAO.get(rs.getInt("_antigen_key")));				
+				domain = translator.translate(probeDAO.get(rs.getInt("_probe_key")));				
 				probeDAO.clear();
 				results.add(domain);
 			}

@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.service.ProbeService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -60,9 +61,9 @@ public class ProbeController extends BaseController<ProbeDomain> {
 	@POST
 	@ApiOperation(value = "Search/returns antigen domain")
 	@Path("/search")
-	public List<ProbeDomain> search(ProbeDomain searchDomain) {
+	public List<SlimProbeDomain> search(ProbeDomain searchDomain) {
 	
-		List<ProbeDomain> results = new ArrayList<ProbeDomain>();
+		List<SlimProbeDomain> results = new ArrayList<SlimProbeDomain>();
 
 		try {
 			results = probeService.search(searchDomain);

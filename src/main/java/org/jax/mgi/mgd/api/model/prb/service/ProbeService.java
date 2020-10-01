@@ -12,7 +12,9 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeDAO;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeTranslator;
+import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -28,7 +30,8 @@ public class ProbeService extends BaseService<ProbeDomain> {
 	private ProbeDAO probeDAO;
 
 	private ProbeTranslator translator = new ProbeTranslator();
-	
+	private SlimProbeTranslator slimtranslator = new SlimProbeTranslator();
+
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -91,9 +94,9 @@ public class ProbeService extends BaseService<ProbeDomain> {
 	}
 	
 	@Transactional
-	public List<ProbeDomain> search(ProbeDomain searchDomain) {
+	public List<SlimProbeDomain> search(ProbeDomain searchDomain) {
 
-		List<ProbeDomain> results = new ArrayList<ProbeDomain>();
+		List<SlimProbeDomain> results = new ArrayList<SlimProbeDomain>();
 		
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
@@ -105,10 +108,6 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		//String value;
 		Boolean from_accession = false;
-		
-		//
-		// IN PROGRESSS
-		//
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -139,8 +138,8 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				ProbeDomain domain = new ProbeDomain();
-				domain = translator.translate(probeDAO.get(rs.getInt("_probe_key")));				
+				SlimProbeDomain domain = new SlimProbeDomain();
+				domain = slimtranslator.translate(probeDAO.get(rs.getInt("_probe_key")));				
 				probeDAO.clear();
 				results.add(domain);
 			}

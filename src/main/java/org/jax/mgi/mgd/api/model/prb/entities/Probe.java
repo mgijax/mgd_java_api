@@ -63,7 +63,7 @@ public class Probe extends BaseEntity {
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_source_key")
-	private ProbeSource source;
+	private ProbeSource probeSource;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

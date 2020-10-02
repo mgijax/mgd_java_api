@@ -46,9 +46,9 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}
 
-		// source
-		ProbeSourceTranslator sourceTranslator = new ProbeSourceTranslator();
-		domain.setSource(sourceTranslator.entityToDomain(entity.getSource()));
+		// probe source
+		ProbeSourceTranslator probesourceTranslator = new ProbeSourceTranslator();
+		domain.setProbeSource(probesourceTranslator.entityToDomain(entity.getProbeSource()));
 		
 		// at most one derived-from
 		if (entity.getDerivedFrom() != null && !entity.getDerivedFrom().getName().isEmpty()) {

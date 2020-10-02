@@ -35,7 +35,7 @@ public class ProbeDomain extends BaseDomain {
 	private String modification_date;
 	private String accID;
 
-	private ProbeSourceDomain source;
+	private ProbeSourceDomain probeSource;
 	private List<ProbeMarkerDomain> markers;
 	private List<ProbeReferenceDomain> references;
 	private ProbeNoteDomain generalNote;

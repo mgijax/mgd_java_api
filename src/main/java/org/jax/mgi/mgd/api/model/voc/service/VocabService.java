@@ -118,38 +118,6 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		return results;		
 	}
     
-    @Transactional
-    public List<SlimVocabularyDomain> searchSimple() {
-    	
-    	List<SlimVocabularyDomain> results = new ArrayList<SlimVocabularyDomain>();
-    	
-    	String cmd = "";
-		String select = "select v._vocab_key, v.name";
-		String from = "from voc_vocab v";
-		String where = "where v.isSimple = '1'";
-		String orderBy = "order by v.name";
-		
-		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
-		log.info(cmd);
-		
-		try {						
-			
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				SlimVocabularyDomain domain = new SlimVocabularyDomain();
-				domain.setVocabKey(rs.getString("_vocab_key"));
-				domain.setName(rs.getString("name"));
-				results.add(domain);
-			}
-					
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-			
-    	return results;
-    }
 	@Transactional
 	public SearchResults<SlimVocabularyTermDomain> search(SlimVocabularyTermDomain searchDomain) {	
 		// search for 1 vocabulary
@@ -284,4 +252,63 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		return results;
 	}
 
+    @Transactional
+    public List<SlimVocabularyDomain> searchSimple() {
+    	
+    	List<SlimVocabularyDomain> results = new ArrayList<SlimVocabularyDomain>();
+    	
+    	String cmd = "";
+		String select = "select v._vocab_key, v.name";
+		String from = "from voc_vocab v";
+		String where = "where v.isSimple = '1'";
+		String orderBy = "order by v.name";
+		
+		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
+		log.info(cmd);
+		
+		try {						
+			
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimVocabularyDomain domain = new SlimVocabularyDomain();
+				domain.setVocabKey(rs.getString("_vocab_key"));
+				domain.setName(rs.getString("name"));
+				results.add(domain);
+			}
+					
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+			
+    	return results;
+    }
+    
+	@Transactional	
+	public SearchResults<String> getVocabList(SlimVocabularyTermDomain searchDomain) {
+		// generate SQL command to return a list of distinct terms for given vocabulary
+		
+		List<String> results = new ArrayList<String>();
+
+		String cmd = "";
+		String select = "select distinct term from VOC_Vocab where _vocab_key = " + searchDomain.getVocabKey();
+		String orderBy = "order by term";
+		cmd = select + "\n" + orderBy;
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.add(rs.getString("term"));
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new SearchResults<String>(results);
+	}
+	
 }

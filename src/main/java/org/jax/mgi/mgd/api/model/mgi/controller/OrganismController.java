@@ -53,6 +53,14 @@ public class OrganismController extends BaseController<OrganismDomain> {
 	public List<OrganismDomain> search() {
 		return organismService.search();
 	}
+
+
+	@POST
+	@ApiOperation(value = "Search for Allele Module/Driver Gene")
+	@Path("/searchDriverGene")
+	public List<OrganismDomain> searchDriverGene() {
+		return organismService.searchDriverGene();
+	}
 	
 	@POST
 	@ApiOperation(value = "Search for Marker module")
@@ -62,10 +70,10 @@ public class OrganismController extends BaseController<OrganismDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Search for Allele Module/Driver Gene")
-	@Path("/searchDriverGene")
-	public List<OrganismDomain> searchDriverGene() {
-		return organismService.searchDriverGene();
+	@ApiOperation(value = "Search for Probe module")
+	@Path("/searchProbe")
+	public List<OrganismDomain> searchProbe() {
+		return organismService.searchProbe();
 	}
 	
 	@POST

@@ -91,30 +91,6 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		
 		return results;
 	}
-	
-	@Transactional	
-	public List<OrganismDomain> searchMarker() {
-		// for marker module
-		// include: see mgi_organism_marker_view
-		
-		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
-
-		String cmd = "select _organism_key from mgi_organism_marker_view order by commonname";
-		log.info(cmd);
-
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				OrganismDomain domain = new OrganismDomain();
-				domain = translator.translate(organismDAO.get(rs.getInt("_organism_key")));
-				results.add(domain);
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {e.printStackTrace();}
-		
-		return results;
-	}
 
 	@Transactional	
 	public List<OrganismDomain> searchDriverGene() {
@@ -139,6 +115,56 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		
 		return results;
 	}	
+
+	
+	@Transactional	
+	public List<OrganismDomain> searchMarker() {
+		// for marker module
+		// include: see mgi_organism_marker_view
+		
+		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
+
+		String cmd = "select _organism_key from mgi_organism_marker_view order by commonname";
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				OrganismDomain domain = new OrganismDomain();
+				domain = translator.translate(organismDAO.get(rs.getInt("_organism_key")));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {e.printStackTrace();}
+		
+		return results;
+	}
+	
+	
+	@Transactional	
+	public List<OrganismDomain> searchProbe() {
+		// for probe module
+		// include: see mgi_organism_probe_view
+		
+		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
+
+		String cmd = "select _organism_key from mgi_organism_probe_view order by commonname";
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				OrganismDomain domain = new OrganismDomain();
+				domain = translator.translate(organismDAO.get(rs.getInt("_organism_key")));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {e.printStackTrace();}
+		
+		return results;
+	}
 	
 	@Transactional	
 	public List<OrganismDomain> searchAntigen() {

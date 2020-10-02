@@ -292,7 +292,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		List<String> results = new ArrayList<String>();
 
 		String cmd = "";
-		String select = "select distinct term from VOC_Vocab where _vocab_key = " + searchDomain.getVocabKey();
+		String select = "select distinct term from VOC_Term where _vocab_key = " + searchDomain.getVocabKey();
 		String orderBy = "order by term";
 		cmd = select + "\n" + orderBy;
 		log.info(cmd);

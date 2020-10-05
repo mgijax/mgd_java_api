@@ -294,7 +294,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 	                    	denormAnnotDomain.setGoDagAbbrev(annotDomain.getGoDagAbbrev());
 	                    }
 	                    else {
-	                    	denormAnnotDomain.setGoDagAbbrev(null);
+	                    	denormAnnotDomain.setGoDagAbbrev("");
 	                    }
 	                    
 	                    denormAnnotDomain.setQualifierKey(annotDomain.getQualifierKey());

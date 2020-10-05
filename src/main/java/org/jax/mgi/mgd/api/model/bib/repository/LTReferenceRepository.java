@@ -320,7 +320,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			entity.setYear(year);
 			entity.setPgs(domain.pgs);
 			entity.setReferenceTypeTerm(termDAO.get(Integer.valueOf(domain.getReferenceTypeKey())));
-			entity.setReferenceAbstract(DecodeString.setDecodeToLatin9(domain.referenceAbstract));			
+			entity.setReferenceAbstract(DecodeString.setDecodeToLatin9(domain.referenceAbstract).replace("''",  "'"));			
 			entity.setModificationInfo(currentUser);
 			
 			anyChanges = true;

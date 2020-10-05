@@ -288,8 +288,14 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 
 	                    //if (controllerAnnotTypeKey.equals("1000")) {
 	                    denormAnnotDomain.setTermid(annotDomain.getGoIds().get(0).getAccID());
-	                    denormAnnotDomain.setGoDagAbbrev(annotDomain.getGoDagAbbrev());
-	                    //}
+	                    
+	                    // obsolete markers do not have GoDagAbbrev
+	                    if (!annotDomain.getGoDagAbbrev().isEmpty()) {
+	                    	denormAnnotDomain.setGoDagAbbrev(annotDomain.getGoDagAbbrev());
+	                    }
+	                    else {
+	                    	denormAnnotDomain.setGoDagAbbrev(null);
+	                    }
 	                    
 	                    denormAnnotDomain.setQualifierKey(annotDomain.getQualifierKey());
 		                denormAnnotDomain.setQualifierAbbreviation(annotDomain.getQualifierAbbreviation());

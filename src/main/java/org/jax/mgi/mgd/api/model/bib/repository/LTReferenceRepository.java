@@ -531,7 +531,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 			ReferenceNote note = entity.getNotes().get(0);
 			if (!smartEqual(note.getNote(), domain.referenceNote)) {
-				note.setNote(DecodeString.setDecodeToLatin9(domain.referenceNote));			
+				note.setNote(DecodeString.setDecodeToLatin9(domain.referenceNote).replace("''",  "'"));
 				anyChanges = true;
 			}
 
@@ -546,7 +546,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 			ReferenceNote note = new ReferenceNote();
 			note.set_refs_key(entity.get_refs_key());
-			note.setNote(DecodeString.setDecodeToLatin9(domain.referenceNote));			
+			note.setNote(DecodeString.setDecodeToLatin9(domain.referenceNote).replace("''",  "'"));			
 			note.setCreation_date(new Date());
 			note.setModification_date(note.getCreation_date()); 
 			referenceDAO.persist(note);

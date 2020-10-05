@@ -290,7 +290,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 	                    denormAnnotDomain.setTermid(annotDomain.getGoIds().get(0).getAccID());
 	                    
 	                    // obsolete markers do not have GoDagAbbrev
-	                    if (!annotDomain.getGoDagAbbrev().isEmpty()) {
+	                    if (annotDomain.getGoDagAbbrev() != null && !annotDomain.getGoDagAbbrev().isEmpty()) {
 	                    	denormAnnotDomain.setGoDagAbbrev(annotDomain.getGoDagAbbrev());
 	                    }
 	                    else {

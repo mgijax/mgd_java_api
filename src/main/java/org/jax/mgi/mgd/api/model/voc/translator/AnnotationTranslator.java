@@ -62,7 +62,10 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
  		if (entity.getGoIds() != null && !entity.getGoIds().isEmpty()) {
  			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getGoIds());
  			domain.setGoIds(IteratorUtils.toList(acc.iterator()));
- 			domain.setGoDagAbbrev(entity.getTerm().getGoDagNodes().get(0).getDag().getAbbreviation());			
+ 			
+ 			if (entity.getTerm().getGoDagNodes() != null && !entity.getTerm().getGoDagNodes().isEmpty()) {
+ 				domain.setGoDagAbbrev(entity.getTerm().getGoDagNodes().get(0).getDag().getAbbreviation());	
+ 			}
  		}
  			
 		return domain;

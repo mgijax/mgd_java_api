@@ -281,13 +281,10 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
-		String select = "select a.*";
+		String select = "select a._source_key";
 		String from = "from prb_source a";
 		String where = "where a._source_key is not null";
 		String orderBy = "order by a.name";
-		//String limit = Constants.SEARCH_RETURN_LIMIT;
-		//String value;
-		//Boolean from_accession = false;
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -317,5 +314,30 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		return results;
 	}
 
+	@Transactional
+	public List<ProbeSourceDomain> getLibraryList(ProbeSourceDomain searchDomain) {
+
+		List<ProbeSourceDomain> results = new ArrayList<ProbeSourceDomain>();
+		
+		String cmd = "select _Source_key from PRB_Source where name is not null and _Source_key > 0 order by name";
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				ProbeSourceDomain domain = new ProbeSourceDomain();
+				domain = translator.translate(probeSourceDAO.get(rs.getInt("_source_key")));				
+				probeSourceDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }
 

@@ -276,7 +276,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		
 		log.info("processAllele/update");
 		
-		entity.setSymbol(domain.getSymbol());
+		// only update symbol if it has changed, else trigger PRB_setStrainReview will fire
+		if (!domain.getSymbol().equals(entity.getSymbol())) {
+			entity.setSymbol(domain.getSymbol());
+		}
+		
 		entity.setName(domain.getName());
 		entity.setAlleleType(termDAO.get(Integer.valueOf(domain.getAlleleTypeKey())));
 		entity.setAlleleStatus(termDAO.get(Integer.valueOf(domain.getAlleleStatusKey())));

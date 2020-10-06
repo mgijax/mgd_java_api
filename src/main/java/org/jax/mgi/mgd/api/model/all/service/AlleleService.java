@@ -402,6 +402,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}
 
 		// only if allele symbol has been changed
+		log.info(domain.getSymbol());
+		log.info(entity.getSymbol());
 		if (!domain.getSymbol().equals(entity.getSymbol())) {
 			String cmd;
 			Query query;

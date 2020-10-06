@@ -15,6 +15,7 @@ public class ProbeMarkerTranslator extends BaseEntityDomainTranslator<ProbeMarke
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setAssocKey(String.valueOf(entity.get_assoc_key()));
 		domain.setProbeKey(String.valueOf(entity.get_probe_key()));
+		domain.setRelationship(entity.getRelationship());
 		domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 		domain.setMarkerSymbol(entity.getMarker().getSymbol());
 		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));

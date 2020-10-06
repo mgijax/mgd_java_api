@@ -274,9 +274,15 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		SearchResults<AlleleDomain> results = new SearchResults<AlleleDomain>();
 		Allele entity = alleleDAO.get(Integer.valueOf(domain.getAlleleKey()));
 		Boolean modified = true;
+		Boolean setStrainNeedsReview = false;
 		
 		log.info("processAllele/update");
 		
+		// only if allele symbol has been changed
+		if (!domain.getSymbol().equals(entity.getSymbol())) {
+			setStrainNeedsReview = true;
+		}
+
 		entity.setSymbol(domain.getSymbol());		
 		entity.setName(domain.getName());
 		entity.setAlleleType(termDAO.get(Integer.valueOf(domain.getAlleleTypeKey())));
@@ -401,10 +407,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			log.info("processAllele/changes processed: " + domain.getAlleleKey());
 		}
 
-		// only if allele symbol has been changed
-		log.info(domain.getSymbol());
-		log.info(entity.getSymbol());
-		if (!domain.getSymbol().equals(entity.getSymbol())) {
+		if (setStrainNeedsReview == true) {
 			String cmd;
 			Query query;
 			

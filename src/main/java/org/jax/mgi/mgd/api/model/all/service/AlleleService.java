@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
@@ -276,11 +277,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		
 		log.info("processAllele/update");
 		
-		// only update symbol if it has changed, else trigger PRB_setStrainReview will fire
-		if (!domain.getSymbol().equals(entity.getSymbol())) {
-			entity.setSymbol(domain.getSymbol());
-		}
-		
+		entity.setSymbol(domain.getSymbol());		
 		entity.setName(domain.getName());
 		entity.setAlleleType(termDAO.get(Integer.valueOf(domain.getAlleleTypeKey())));
 		entity.setAlleleStatus(termDAO.get(Integer.valueOf(domain.getAlleleStatusKey())));
@@ -402,6 +399,17 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			entity.setModifiedBy(user);
 			alleleDAO.update(entity);
 			log.info("processAllele/changes processed: " + domain.getAlleleKey());
+		}
+
+		// only if allele symbol has been changed
+		if (!domain.getSymbol().equals(entity.getSymbol())) {
+			String cmd;
+			Query query;
+			
+		    cmd = "select count(*) from PRB_setStrainReview (NULL, " + domain.getAlleleKey() + ")";
+		    log.info("cmd: " + cmd);
+		    query = alleleDAO.createNativeQuery(cmd);
+		    query.getResultList();	
 		}
 		
 		// return entity translated to domain

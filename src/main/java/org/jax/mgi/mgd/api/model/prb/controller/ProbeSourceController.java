@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -70,19 +71,20 @@ public class ProbeSourceController extends BaseController<ProbeSourceDomain> {
 		return results;
 	}
 
-	@POST
-	@ApiOperation(value = "Get Library List/returns probe source domain")
+	@GET
+	@ApiOperation(value = "get list of source library")
 	@Path("/getLibraryList")
-	public List<ProbeSourceDomain> getLibraryList(ProbeSourceDomain searchDomain) {
+	public SearchResults<String> getLibraryList() {
 	
-		List<ProbeSourceDomain> results = new ArrayList<ProbeSourceDomain>();
+		SearchResults<String> results = null;
 
 		try {
-			results = probeSourceService.getLibraryList(searchDomain);
+			results = probeSourceService.getLibraryList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
+		//log.info(results);
 		return results;
 	}
 	

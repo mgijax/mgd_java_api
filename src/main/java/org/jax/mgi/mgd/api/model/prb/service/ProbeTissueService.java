@@ -8,19 +8,14 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.prb.dao.ProbeTissueDAO;
-import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeTissueDAO;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeTissueDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeTissue;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeTissueTranslator;
-import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -168,6 +163,7 @@ public class ProbeTissueService extends BaseService<ProbeTissueDomain> {
 		
 		return results;
 	}
+	
 	@Transactional	
 	public SearchResults<String> getTissueList() {
 		// generate SQL command to return a list of distinct strains

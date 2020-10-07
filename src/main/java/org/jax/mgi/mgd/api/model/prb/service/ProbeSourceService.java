@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.prb.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -314,21 +315,20 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		return results;
 	}
 
-	@Transactional
-	public List<ProbeSourceDomain> getLibraryList(ProbeSourceDomain searchDomain) {
+	@Transactional	
+	public SearchResults<String> getLibraryList() {
+		// generate SQL command to return a list of distinct libraries
+		
+		List<String> results = new ArrayList<String>();
 
-		List<ProbeSourceDomain> results = new ArrayList<ProbeSourceDomain>();
-		
-		String cmd = "select _Source_key from PRB_Source where name is not null and _Source_key > 0 order by name";
+		// building SQL command : select + from + where + orderBy
+		String cmd = "select name from PRB_Source where name is not null and _Source_key > 0 order by name";
 		log.info(cmd);
-		
+
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				ProbeSourceDomain domain = new ProbeSourceDomain();
-				domain = translator.translate(probeSourceDAO.get(rs.getInt("_source_key")));				
-				probeSourceDAO.clear();
-				results.add(domain);
+				results.add(rs.getString("name"));
 			}
 			sqlExecutor.cleanup();
 		}
@@ -336,7 +336,8 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 			e.printStackTrace();
 		}
 		
-		return results;
+		Collections.sort(results);
+		return new SearchResults<String>(results);
 	}
 	
 }

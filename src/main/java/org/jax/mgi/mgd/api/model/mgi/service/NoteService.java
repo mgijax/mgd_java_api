@@ -111,7 +111,7 @@ public class NoteService extends BaseService<NoteDomain> {
 			for (int i = 0; i < noteDomains.size(); i++) {
 				NoteDomain note = noteDomains.get(i);
 				//String noteTypeKey = note.getNoteTypeKey();
-				Boolean m = process(parentKey, note, mgiTypeKey, null, user);
+				Boolean m = process(parentKey, note, mgiTypeKey, user);
 				if (m.equals(Boolean.TRUE)) {
 					modified = m;
 				}
@@ -121,20 +121,20 @@ public class NoteService extends BaseService<NoteDomain> {
 	}
 		
 	@Transactional
-	public Boolean process(String parentKey, NoteDomain noteDomain, String mgiTypeKey, String noteTypeKey, User user) {
+	public Boolean process(String parentKey, NoteDomain noteDomain, String mgiTypeKey, User user) {
 		// process note by calling stored procedure (create, delete, update)
 
 		// earlier pwis may be using "String noteTypeKey" parameter
 		// once these are all changed, this parameter can be removed		
 		// noteTypeKey can be found in noteDomain...
 		// AlleleService : noteTypeKey = null
-		// AlleleVariantService
+		// AlleleVariantService : noteTypeKey = null
 		// AlleleCellLineDerivationService : noteTypeKey = null
 		// GenotypeService : noteTypeKey = null
 		// ImageService : noteTypeKey = null
 		// MarkerAnnotService : noteTypeKey = null
 		// MarkerService : noteTypeKey = null
-		// EvidenceService
+		// EvidenceService : noteTypeKey = null
 		
 		log.info("NoteService process");
 		String noteKey = "";
@@ -168,10 +168,10 @@ public class NoteService extends BaseService<NoteDomain> {
 			}
 		}
 		
-		// if noteTypeKey is null, then set noteTypeKey = noteDomain.getNoteTypeKey()
-		if (noteTypeKey == null || noteTypeKey.isEmpty()) {
-			noteTypeKey = noteDomain.getNoteTypeKey();
-		}
+//		// if noteTypeKey is null, then set noteTypeKey = noteDomain.getNoteTypeKey()
+//		if (noteTypeKey == null || noteTypeKey.isEmpty()) {
+//			noteTypeKey = noteDomain.getNoteTypeKey();
+//		}
 		
 		// create
 		if (noteDomain.getNoteKey() == null || noteDomain.getNoteKey().isEmpty())
@@ -196,7 +196,7 @@ public class NoteService extends BaseService<NoteDomain> {
 				noteKey = noteDomain.getNoteKey().toString();
 				modified = true;
 			}
-			if (!String.valueOf(entity.getNoteType().get_noteType_key()).equals(noteTypeKey)) {
+			if (!String.valueOf(entity.getNoteType().get_noteType_key()).equals(noteDomain.getNoteTypeKey())) {
 				log.info("NoteService update");
 				noteKey = noteDomain.getNoteKey().toString();
 				modified = true;
@@ -214,7 +214,7 @@ public class NoteService extends BaseService<NoteDomain> {
 				+ "," + noteKey
 				+ "," + parentKey
 				+ "," + mgiTypeKey
-				+ "," + noteTypeKey
+				+ "," + noteDomain.getNoteTypeKey()
 				+ "," + note
 				+ ")";
 			log.info("cmd: " + cmd);

@@ -232,19 +232,19 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			}		
 		
 			// process all notes
-			if (noteService.process(domain.getMarkerKey(), domain.getEditorNote(), mgiTypeKey, null, user)) {
+			if (noteService.process(domain.getMarkerKey(), domain.getEditorNote(), mgiTypeKey, user)) {
 				modified = true;
 			}
-			if (noteService.process(domain.getMarkerKey(), domain.getSequenceNote(), mgiTypeKey, null, user)) {
+			if (noteService.process(domain.getMarkerKey(), domain.getSequenceNote(), mgiTypeKey, user)) {
 				modified = true;	
 			}
-			if (noteService.process(domain.getMarkerKey(), domain.getRevisionNote(), mgiTypeKey, null, user)) {
+			if (noteService.process(domain.getMarkerKey(), domain.getRevisionNote(), mgiTypeKey, user)) {
 				modified = true;	
 			}
-			if (noteService.process(domain.getMarkerKey(), domain.getStrainNote(), mgiTypeKey, null, user)) {
+			if (noteService.process(domain.getMarkerKey(), domain.getStrainNote(), mgiTypeKey, user)) {
 				modified = true;
 			}
-			if (noteService.process(domain.getMarkerKey(), domain.getLocationNote(), mgiTypeKey, null, user)) {
+			if (noteService.process(domain.getMarkerKey(), domain.getLocationNote(), mgiTypeKey, user)) {
 				modified = true;
 			}
 	

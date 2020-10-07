@@ -64,24 +64,24 @@ public class NoteController extends BaseController<NoteDomain> {
 		return results;
 	}
 	
-	@POST
-	@ApiOperation(value = "Process")
-	@Path("/process")
-	public Boolean process(String parentKey, NoteDomain noteDomain, String mgiTypeKey, String noteTypeKey, User user) {
-		return noteService.process(parentKey, noteDomain, mgiTypeKey, user);
-	}
-
-	@POST
-	@ApiOperation(value = "Process Allele Combinations by Genotype key")
-	@Path("/processAlleleCombinations")
-	public Boolean processAlleleCombinations(Integer genotypeKey) {
-		
-		try {
-			return noteService.processAlleleCombinations(genotypeKey);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}	
-	}
+//	@POST
+//	@ApiOperation(value = "Process")
+//	@Path("/process")
+//	public Boolean process(String parentKey, NoteDomain noteDomain, String mgiTypeKey, User user) {
+//		return noteService.process(parentKey, noteDomain, mgiTypeKey, user);
+//	}
+//
+//	@POST
+//	@ApiOperation(value = "Process Allele Combinations by Genotype key")
+//	@Path("/processAlleleCombinations")
+//	public Boolean processAlleleCombinations(Integer genotypeKey) {
+//		
+//		try {
+//			return noteService.processAlleleCombinations(genotypeKey);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return false;
+//		}	
+//	}
 		
 }

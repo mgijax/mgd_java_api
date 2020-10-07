@@ -128,10 +128,10 @@ public class NoteService extends BaseService<NoteDomain> {
 		// earlier pwis may be using "String noteTypeKey" parameter
 		// once these are all changed, this parameter can be removed		
 		// noteTypeKey can be found in noteDomain...
-		// AlleleService
+		// AlleleService : noteTypeKey = null
 		// AlleleVariantService
-		// AlleleCellLineDerivationService
-		// GenotypeService
+		// AlleleCellLineDerivationService : noteTypeKey = null
+		// GenotypeService : noteTypeKey = null
 		// ImageService
 		// MarkerAnnotService
 		// MarkerService

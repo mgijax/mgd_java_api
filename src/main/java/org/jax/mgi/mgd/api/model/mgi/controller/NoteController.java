@@ -68,7 +68,7 @@ public class NoteController extends BaseController<NoteDomain> {
 	@ApiOperation(value = "Process")
 	@Path("/process")
 	public Boolean process(String parentKey, NoteDomain noteDomain, String mgiTypeKey, String noteTypeKey, User user) {
-		return noteService.process(parentKey, noteDomain, mgiTypeKey, noteTypeKey, user);
+		return noteService.process(parentKey, noteDomain, mgiTypeKey, user);
 	}
 
 	@POST

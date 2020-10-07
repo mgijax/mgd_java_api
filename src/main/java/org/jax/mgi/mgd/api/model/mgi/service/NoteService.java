@@ -123,18 +123,6 @@ public class NoteService extends BaseService<NoteDomain> {
 	@Transactional
 	public Boolean process(String parentKey, NoteDomain noteDomain, String mgiTypeKey, User user) {
 		// process note by calling stored procedure (create, delete, update)
-
-		// earlier pwis may be using "String noteTypeKey" parameter
-		// once these are all changed, this parameter can be removed		
-		// noteTypeKey can be found in noteDomain...
-		// AlleleService : noteTypeKey = null
-		// AlleleVariantService : noteTypeKey = null
-		// AlleleCellLineDerivationService : noteTypeKey = null
-		// GenotypeService : noteTypeKey = null
-		// ImageService : noteTypeKey = null
-		// MarkerAnnotService : noteTypeKey = null
-		// MarkerService : noteTypeKey = null
-		// EvidenceService : noteTypeKey = null
 		
 		log.info("NoteService process");
 		String noteKey = "";
@@ -167,11 +155,6 @@ public class NoteService extends BaseService<NoteDomain> {
 				noteDomain.setNoteChunk(null);
 			}
 		}
-		
-//		// if noteTypeKey is null, then set noteTypeKey = noteDomain.getNoteTypeKey()
-//		if (noteTypeKey == null || noteTypeKey.isEmpty()) {
-//			noteTypeKey = noteDomain.getNoteTypeKey();
-//		}
 		
 		// create
 		if (noteDomain.getNoteKey() == null || noteDomain.getNoteKey().isEmpty())

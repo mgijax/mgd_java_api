@@ -145,14 +145,14 @@ public class EvidenceService extends BaseService<EvidenceDomain> {
 				evidenceDAO.persist(entity);			
 
 				// evidence property
-				if (propertyService.process(String.valueOf(entity.get_annotevidence_key()), domain.get(i).getProperties(), annotTypeKey,  user)) 
+				if (propertyService.process(String.valueOf(entity.get_annotevidence_key()), domain.get(i).getProperties(), annotTypeKey, user)) 
 				{
 					log.info("processEvidence/properties successful");					
 					modified = true;
 				}
 				
 				// evidence notes
-				if (noteService.processAll(String.valueOf(entity.get_annotevidence_key()), domain.get(i).getAllNotes(), mgiTypeKey,  user)) 
+				if (noteService.processAll(String.valueOf(entity.get_annotevidence_key()), domain.get(i).getAllNotes(), mgiTypeKey, user)) 
 				{
 					log.info("processEvidence/notes successful");					
 					modified = true;
@@ -173,13 +173,13 @@ public class EvidenceService extends BaseService<EvidenceDomain> {
 				Evidence entity = evidenceDAO.get(Integer.valueOf(domain.get(i).getAnnotEvidenceKey()));
 		
 				// evidence property
-				if (propertyService.process(String.valueOf(entity.get_annotevidence_key()), domain.get(i).getProperties(), annotTypeKey,  user)) 
+				if (propertyService.process(String.valueOf(entity.get_annotevidence_key()), domain.get(i).getProperties(), annotTypeKey, user)) 
 				{
 					log.info("processEvidence/properties: " + domain.get(i).getAnnotEvidenceKey());					
 				}
 				
 				// evidence notes
-				if (noteService.processAll(String.valueOf(entity.get_annotevidence_key()), domain.get(i).getAllNotes(), mgiTypeKey,  user)) 
+				if (noteService.processAll(String.valueOf(entity.get_annotevidence_key()), domain.get(i).getAllNotes(), mgiTypeKey, user)) 
 				{
 					log.info("processEvidence/notes: " + domain.get(i).getAnnotEvidenceKey());					
 				}

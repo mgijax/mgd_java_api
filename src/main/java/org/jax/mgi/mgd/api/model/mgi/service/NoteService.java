@@ -103,7 +103,6 @@ public class NoteService extends BaseService<NoteDomain> {
 		return results;
 	}
 	
-	
 	@Transactional
 	public Boolean processAll(String parentKey, List<NoteDomain> noteDomains, String mgiTypeKey, User user) {
 		Boolean modified = Boolean.FALSE;
@@ -111,8 +110,8 @@ public class NoteService extends BaseService<NoteDomain> {
 		if(noteDomains != null && !noteDomains.isEmpty()) {
 			for (int i = 0; i < noteDomains.size(); i++) {
 				NoteDomain note = noteDomains.get(i);
-				String noteTypeKey = note.getNoteTypeKey();
-				Boolean m = process(parentKey, note, mgiTypeKey, noteTypeKey, user);
+				//String noteTypeKey = note.getNoteTypeKey();
+				Boolean m = process(parentKey, note, mgiTypeKey, null, user);
 				if (m.equals(Boolean.TRUE)) {
 					modified = m;
 				}
@@ -133,8 +132,8 @@ public class NoteService extends BaseService<NoteDomain> {
 		// AlleleCellLineDerivationService : noteTypeKey = null
 		// GenotypeService : noteTypeKey = null
 		// ImageService : noteTypeKey = null
-		// MarkerAnnotService
-		// MarkerService
+		// MarkerAnnotService : noteTypeKey = null
+		// MarkerService : noteTypeKey = null
 		// EvidenceService
 		
 		log.info("NoteService process");

@@ -124,7 +124,19 @@ public class NoteService extends BaseService<NoteDomain> {
 	@Transactional
 	public Boolean process(String parentKey, NoteDomain noteDomain, String mgiTypeKey, String noteTypeKey, User user) {
 		// process note by calling stored procedure (create, delete, update)
-	
+
+		// earlier pwis may be using "String noteTypeKey" parameter
+		// once these are all changed, this parameter can be removed		
+		// noteTypeKey can be found in noteDomain...
+		// AlleleService
+		// AlleleVariantService
+		// AlleleCellLineDerivationService
+		// GenotypeService
+		// ImageService
+		// MarkerAnnotService
+		// MarkerService
+		// EvidenceService
+		
 		log.info("NoteService process");
 		String noteKey = "";
 		String note = "";
@@ -157,6 +169,11 @@ public class NoteService extends BaseService<NoteDomain> {
 			}
 		}
 		
+		// if noteTypeKey is null, then set noteTypeKey = noteDomain.getNoteTypeKey()
+		if (noteTypeKey == null || noteTypeKey.isEmpty()) {
+			noteTypeKey = noteDomain.getNoteTypeKey();
+		}
+		
 		// create
 		if (noteDomain.getNoteKey() == null || noteDomain.getNoteKey().isEmpty())
 		{
@@ -187,9 +204,6 @@ public class NoteService extends BaseService<NoteDomain> {
 			}
 		}
 		
-	    // SHARON: 9/25 updated 'cmd' to use noteDomain.getNoteTypeKey() rather than noteTypeKey coming
-		///        in as parameter. Not sure why there is a parameter when it should be in the domain, right?
-		//         whether it is create OR update.1
 		// stored procedure
 		// if noteKey is null, then insert new note
 		// if noteKey is not null and note is null, then delete note

@@ -335,7 +335,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}
 		
 		// process all notes
-		if (noteService.process(domain.getAlleleKey(), domain.getGeneralNote(), mgiTypeKey, domain.getGeneralNote().getNoteTypeKey(), user)) {
+		if (noteService.process(domain.getAlleleKey(), domain.getGeneralNote(), mgiTypeKey, null, user)) {
 			modified = true;
 		}
 		if (noteService.process(domain.getAlleleKey(), domain.getMolecularNote(), mgiTypeKey, domain.getMolecularNote().getNoteTypeKey(), user)) {

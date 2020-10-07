@@ -100,13 +100,14 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		genotypeDAO.persist(entity);
 
 		// process all notes
-		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getGeneralNote(), mgiTypeKey, "1027", user);
-		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getPrivateCuratorialNote(), mgiTypeKey, "1028", user);
+		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getGeneralNote(), mgiTypeKey, null, user);
+		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getPrivateCuratorialNote(), mgiTypeKey, null, user);
+
 		// update combination note 1
 		// combination note 2 & 3 get updated by nightly process (allelecombination)
 		// using allele detail note
 		// then run processAlleleCombinations to finish the job
-		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getAlleleDetailNote(), mgiTypeKey, "1016", user);
+		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getAlleleDetailNote(), mgiTypeKey, null, user);
 				
 		// process Allele Pairs
 		log.info("processGenotypes/allele pairs");
@@ -173,14 +174,14 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		entity.setExistsAs(termDAO.get(Integer.valueOf(domain.getExistsAsKey())));
 		
 		// process all notes
-		noteService.process(domain.getGenotypeKey(), domain.getGeneralNote(), mgiTypeKey, "1027", user);
-		noteService.process(domain.getGenotypeKey(), domain.getPrivateCuratorialNote(), mgiTypeKey, "1028", user);
+		noteService.process(domain.getGenotypeKey(), domain.getGeneralNote(), mgiTypeKey, null, user);
+		noteService.process(domain.getGenotypeKey(), domain.getPrivateCuratorialNote(), mgiTypeKey, null, user);
 
 		// update combination note 1
 		// combination note 2 & 3 get updated by nightly process (allelecombination)
 		// using allele detail note
 		// then run processAlleleCombinations to finish the job
-		noteService.process(domain.getGenotypeKey(), domain.getAlleleDetailNote(), mgiTypeKey, "1016", user);
+		noteService.process(domain.getGenotypeKey(), domain.getAlleleDetailNote(), mgiTypeKey, null, user);
 
 		// process Allele Pairs
 		log.info("processGenotypes/allele pairs");

@@ -223,13 +223,13 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		markerNoteService.process(domain.getMarkerKey(), domain.getDetailClip(), user);
 		
 		// process all notes
-		noteService.process(String.valueOf(entity.get_allele_key()), domain.getGeneralNote(), mgiTypeKey, domain.getGeneralNote().getNoteTypeKey(), user);
-		noteService.process(String.valueOf(entity.get_allele_key()), domain.getMolecularNote(), mgiTypeKey, domain.getMolecularNote().getNoteTypeKey(), user);
-		noteService.process(String.valueOf(entity.get_allele_key()), domain.getNomenNote(), mgiTypeKey, domain.getNomenNote().getNoteTypeKey(), user);
-		noteService.process(String.valueOf(entity.get_allele_key()), domain.getInducibleNote(), mgiTypeKey, domain.getInducibleNote().getNoteTypeKey(), user);
-		noteService.process(String.valueOf(entity.get_allele_key()), domain.getProidNote(), mgiTypeKey, domain.getProidNote().getNoteTypeKey(), user);
-		noteService.process(String.valueOf(entity.get_allele_key()), domain.getCreNote(), mgiTypeKey, domain.getCreNote().getNoteTypeKey(), user);
-		noteService.process(String.valueOf(entity.get_allele_key()), domain.getIkmcNote(), mgiTypeKey, domain.getIkmcNote().getNoteTypeKey(), user);
+		noteService.process(String.valueOf(entity.get_allele_key()), domain.getGeneralNote(), mgiTypeKey, null, user);
+		noteService.process(String.valueOf(entity.get_allele_key()), domain.getMolecularNote(), mgiTypeKey, null, user);
+		noteService.process(String.valueOf(entity.get_allele_key()), domain.getNomenNote(), mgiTypeKey, null, user);
+		noteService.process(String.valueOf(entity.get_allele_key()), domain.getInducibleNote(), mgiTypeKey, null, user);
+		noteService.process(String.valueOf(entity.get_allele_key()), domain.getProidNote(), mgiTypeKey, null, user);
+		noteService.process(String.valueOf(entity.get_allele_key()), domain.getCreNote(), mgiTypeKey, null, user);
+		noteService.process(String.valueOf(entity.get_allele_key()), domain.getIkmcNote(), mgiTypeKey, null, user);
 		
 		// process marker reference
 		log.info("processAllele/referenes");
@@ -338,22 +338,22 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		if (noteService.process(domain.getAlleleKey(), domain.getGeneralNote(), mgiTypeKey, null, user)) {
 			modified = true;
 		}
-		if (noteService.process(domain.getAlleleKey(), domain.getMolecularNote(), mgiTypeKey, domain.getMolecularNote().getNoteTypeKey(), user)) {
+		if (noteService.process(domain.getAlleleKey(), domain.getMolecularNote(), mgiTypeKey, null, user)) {
 			modified = true;
 		}
-		if (noteService.process(domain.getAlleleKey(), domain.getNomenNote(), mgiTypeKey, domain.getNomenNote().getNoteTypeKey(), user)) {
+		if (noteService.process(domain.getAlleleKey(), domain.getNomenNote(), mgiTypeKey, null, user)) {
 			modified = true;
 		}
-		if (noteService.process(domain.getAlleleKey(), domain.getInducibleNote(), mgiTypeKey, domain.getInducibleNote().getNoteTypeKey(), user)) {
+		if (noteService.process(domain.getAlleleKey(), domain.getInducibleNote(), mgiTypeKey, null, user)) {
 			modified = true;
 		}
-		if (noteService.process(domain.getAlleleKey(), domain.getProidNote(), mgiTypeKey, domain.getProidNote().getNoteTypeKey(), user)) {
+		if (noteService.process(domain.getAlleleKey(), domain.getProidNote(), mgiTypeKey, null, user)) {
 			modified = true;
 		}
-		if (noteService.process(domain.getAlleleKey(), domain.getCreNote(), mgiTypeKey, domain.getCreNote().getNoteTypeKey(), user)) {
+		if (noteService.process(domain.getAlleleKey(), domain.getCreNote(), mgiTypeKey, null, user)) {
 			modified = true;
 		}
-		if (noteService.process(domain.getAlleleKey(), domain.getIkmcNote(), mgiTypeKey, domain.getIkmcNote().getNoteTypeKey(), user)) {
+		if (noteService.process(domain.getAlleleKey(), domain.getIkmcNote(), mgiTypeKey, null, user)) {
 			modified = true;
 		}
 		

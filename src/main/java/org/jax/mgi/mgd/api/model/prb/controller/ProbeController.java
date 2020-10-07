@@ -50,7 +50,6 @@ public class ProbeController extends BaseController<ProbeDomain> {
 		return probeService.get(key);
 	}
 
-
 	@GET
 	@ApiOperation(value = "Get the object count from prb_probe table")
 	@Path("/getObjectCount")

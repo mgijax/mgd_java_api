@@ -12,6 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
+import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.service.ProbeSourceService;
@@ -71,21 +72,20 @@ public class ProbeSourceController extends BaseController<ProbeSourceDomain> {
 		return results;
 	}
 
-	@GET
-	@ApiOperation(value = "get list of source library")
-	@Path("/getLibraryList")
-	public SearchResults<String> getLibraryList() {
-	
-		SearchResults<String> results = null;
+	@POST
+	@ApiOperation(value = "Search Library Set")
+	@Path("/searchLibrarySet")
+	public List<ProbeSourceDomain> searchLibrarySet() {
 
+		List<ProbeSourceDomain> results = new ArrayList<ProbeSourceDomain>();
+		
 		try {
-			results = probeSourceService.getLibraryList();
+			results = probeSourceService.searchLibrarySet();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		//log.info(results);
-		return results;
+		return results;	
 	}
 	
 }

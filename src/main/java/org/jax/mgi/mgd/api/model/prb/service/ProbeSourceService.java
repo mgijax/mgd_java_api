@@ -12,6 +12,7 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -315,20 +316,23 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		return results;
 	}
 
-	@Transactional	
-	public SearchResults<String> getLibraryList() {
-		// generate SQL command to return a list of distinct libraries
+	@Transactional
+	public List<ProbeSourceDomain> searchLibrarySet() {
+		// search a probe source library set
 		
-		List<String> results = new ArrayList<String>();
+		List<ProbeSourceDomain> results = new ArrayList<ProbeSourceDomain>();	
 
-		// building SQL command : select + from + where + orderBy
-		String cmd = "select name from PRB_Source where name is not null and _Source_key > 0 order by name";
+		String cmd = "select _source_key from PRB_Source where name is not null and _Source_key > 0 order by name";
 		log.info(cmd);
-
+		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
+			
 			while (rs.next()) {
-				results.add(rs.getString("name"));
+				ProbeSourceDomain domain = new ProbeSourceDomain();
+				domain = translator.translate(probeSourceDAO.get(rs.getInt("_source_key")));				
+				probeSourceDAO.clear();
+				results.add(domain);
 			}
 			sqlExecutor.cleanup();
 		}
@@ -336,8 +340,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 			e.printStackTrace();
 		}
 		
-		Collections.sort(results);
-		return new SearchResults<String>(results);
+		return results;
 	}
 	
 }

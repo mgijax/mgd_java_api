@@ -13,6 +13,7 @@ public class ProbeMarkerDomain extends BaseDomain {
 	private String probeKey;
 	private String markerKey;
 	private String markerSymbol;
+	private String markerChromosome;
 	private String refsKey;
 	private String jnumid;
 	private Integer jnum;

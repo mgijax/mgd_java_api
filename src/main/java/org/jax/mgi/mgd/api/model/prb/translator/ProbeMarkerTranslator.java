@@ -18,6 +18,7 @@ public class ProbeMarkerTranslator extends BaseEntityDomainTranslator<ProbeMarke
 		domain.setRelationship(entity.getRelationship());
 		domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 		domain.setMarkerSymbol(entity.getMarker().getSymbol());
+		domain.setMarkerChromosome(entity.getMarker().getChromosome());
 		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
 		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
 		domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());

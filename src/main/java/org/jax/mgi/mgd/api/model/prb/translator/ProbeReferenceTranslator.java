@@ -33,19 +33,19 @@ public class ProbeReferenceTranslator extends BaseEntityDomainTranslator<ProbeRe
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
-		// accession ids
-		if (entity.getAccessionIds() != null && !entity.getAccessionIds().isEmpty()) {
-			SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
-			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getAccessionIds());
-			domain.setAccessionIds(IteratorUtils.toList(acc.iterator()));
-		}
-
-		// aliases
-		if (entity.getAliases() != null && !entity.getAliases().isEmpty()) {
-			ProbeAliasTranslator aliasTranslator = new ProbeAliasTranslator();
-			Iterable<ProbeAliasDomain> alias = aliasTranslator.translateEntities(entity.getAliases());
-			domain.setAliases(IteratorUtils.toList(alias.iterator()));
-		}
+//		// accession ids
+//		if (entity.getAccessionIds() != null && !entity.getAccessionIds().isEmpty()) {
+//			SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
+//			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getAccessionIds());
+//			domain.setAccessionIds(IteratorUtils.toList(acc.iterator()));
+//		}
+//
+//		// aliases
+//		if (entity.getAliases() != null && !entity.getAliases().isEmpty()) {
+//			ProbeAliasTranslator aliasTranslator = new ProbeAliasTranslator();
+//			Iterable<ProbeAliasDomain> alias = aliasTranslator.translateEntities(entity.getAliases());
+//			domain.setAliases(IteratorUtils.toList(alias.iterator()));
+//		}
 		
 		return domain;
 	}

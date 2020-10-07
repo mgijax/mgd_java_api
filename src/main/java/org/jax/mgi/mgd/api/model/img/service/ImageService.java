@@ -190,16 +190,16 @@ public class ImageService extends BaseService<ImageDomain> {
 		}
 		
 		// process all notes
-		if (noteService.process(domain.getImageKey(), domain.getCaptionNote(), mgiTypeKey, "1024", user)) {
+		if (noteService.process(domain.getImageKey(), domain.getCaptionNote(), mgiTypeKey, null, user)) {
 			modified = true;
 		}
-		if (noteService.process(domain.getImageKey(), domain.getCopyrightNote(), mgiTypeKey, "1023", user)) {
+		if (noteService.process(domain.getImageKey(), domain.getCopyrightNote(), mgiTypeKey, null, user)) {
 			modified = true;
 		}
-		if (noteService.process(domain.getImageKey(), domain.getPrivateCuratorialNote(), mgiTypeKey, "1025", user)) {
+		if (noteService.process(domain.getImageKey(), domain.getPrivateCuratorialNote(), mgiTypeKey, null, user)) {
 			modified = true;
 		}
-		if (noteService.process(domain.getImageKey(), domain.getExternalLinkNote(), mgiTypeKey, "1039", user)) {
+		if (noteService.process(domain.getImageKey(), domain.getExternalLinkNote(), mgiTypeKey, null, user)) {
 			modified = true;
 		}
 

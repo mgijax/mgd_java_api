@@ -132,7 +132,7 @@ public class NoteService extends BaseService<NoteDomain> {
 		// AlleleVariantService
 		// AlleleCellLineDerivationService : noteTypeKey = null
 		// GenotypeService : noteTypeKey = null
-		// ImageService
+		// ImageService : noteTypeKey = null
 		// MarkerAnnotService
 		// MarkerService
 		// EvidenceService

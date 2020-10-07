@@ -174,7 +174,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 			}
 
 			// go-marker note
-			if (noteService.process(domain.getMarkerKey(), domain.getGoNote().get(0), mgiTypeKey, "1002", user)) {
+			if (noteService.process(domain.getMarkerKey(), domain.getGoNote().get(0), mgiTypeKey, null, user)) {
 				modified = true;
 			}
 			

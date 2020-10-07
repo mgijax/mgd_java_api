@@ -88,7 +88,7 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		derivationDAO.persist(entity);
 	
 		// process all notes		
-		noteService.process(String.valueOf(entity.get_derivation_key()), domain.getGeneralNote(), mgiTypeKey, domain.getGeneralNote().getNoteTypeKey(), user);
+		noteService.process(String.valueOf(entity.get_derivation_key()), domain.getGeneralNote(), mgiTypeKey, null, user);
 			
 		// return entity translated to domain
 		log.info("processDerivation/create/returning results");
@@ -135,7 +135,7 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		entity.setModifiedBy(user);
 		
 		// process all notes
-		if (noteService.process(domain.getDerivationKey(), domain.getGeneralNote(), mgiTypeKey, domain.getGeneralNote().getNoteTypeKey(), user)) {
+		if (noteService.process(domain.getDerivationKey(), domain.getGeneralNote(), mgiTypeKey, null, user)) {
 			modified = true;
 		}
 		

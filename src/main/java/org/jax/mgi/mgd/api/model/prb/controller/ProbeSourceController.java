@@ -69,5 +69,21 @@ public class ProbeSourceController extends BaseController<ProbeSourceDomain> {
 		
 		return results;
 	}
+
+	@POST
+	@ApiOperation(value = "Get Library List/returns probe source domain")
+	@Path("/getLibraryList")
+	public List<ProbeSourceDomain> getLibraryList(ProbeSourceDomain searchDomain) {
+	
+		List<ProbeSourceDomain> results = new ArrayList<ProbeSourceDomain>();
+
+		try {
+			results = probeSourceService.getLibraryList(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
 }

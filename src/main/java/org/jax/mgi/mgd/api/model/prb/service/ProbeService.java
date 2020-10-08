@@ -207,10 +207,18 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				from_source = true;					
 			}		
 
-			if (searchDomain.getProbeSource().getAge() != null && !searchDomain.getProbeSource().getAge().isEmpty()) {
-				where = where + "\nand s.age ilike '" + searchDomain.getProbeSource().getAge() + "'";
-				from_source = true;					
-			}				
+			String agePrefix = "";
+			String ageStage = "";
+			if (searchDomain.getProbeSource().getAgePrefix() != null && !searchDomain.getProbeSource().getAgePrefix().isEmpty()) {
+				agePrefix = searchDomain.getProbeSource().getAgePrefix() + "%";
+			}
+			if (searchDomain.getProbeSource().getAgeStage() != null && !searchDomain.getProbeSource().getAgeStage().isEmpty()) {
+				ageStage = "%" + searchDomain.getProbeSource().getAgeStage() + "%";
+			}
+			if (agePrefix.length() > 0 || ageStage.length() > 0) {
+				where = where + "\nand s.age ilike '" + agePrefix + ageStage + "'";
+				from_source = true;									
+			}
 		}
 	
 		if (from_accession == true) {

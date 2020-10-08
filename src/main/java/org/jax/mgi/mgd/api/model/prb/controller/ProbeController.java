@@ -58,7 +58,7 @@ public class ProbeController extends BaseController<ProbeDomain> {
 	}
 		
 	@POST
-	@ApiOperation(value = "Search/returns antigen domain")
+	@ApiOperation(value = "Search/returns slim probe domain")
 	@Path("/search")
 	public List<SlimProbeDomain> search(ProbeDomain searchDomain) {
 	

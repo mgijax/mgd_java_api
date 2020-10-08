@@ -2,7 +2,6 @@ package org.jax.mgi.mgd.api.model.prb.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +11,6 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -20,8 +18,10 @@ import org.jax.mgi.mgd.api.model.prb.dao.ProbeSourceDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeTissueDAO;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeSourceTranslator;
+import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeSourceTranslator;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -47,6 +47,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 	private TermDAO termDAO;
 	
 	private ProbeSourceTranslator translator = new ProbeSourceTranslator();
+	private SlimProbeSourceTranslator slimtranslator = new SlimProbeSourceTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -317,20 +318,20 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 	}
 
 	@Transactional
-	public List<ProbeSourceDomain> searchLibrarySet() {
+	public List<SlimProbeSourceDomain> searchLibrarySet() {
 		// search a probe source library set
 		
-		List<ProbeSourceDomain> results = new ArrayList<ProbeSourceDomain>();	
+		List<SlimProbeSourceDomain> results = new ArrayList<SlimProbeSourceDomain>();	
 
-		String cmd = "select _source_key from PRB_Source where name is not null and _Source_key > 0 order by name";
+		String cmd = "select _source_key from PRB_Source where name is not null and _Source_key > 0order by name";
 		log.info(cmd);
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			
 			while (rs.next()) {
-				ProbeSourceDomain domain = new ProbeSourceDomain();
-				domain = translator.translate(probeSourceDAO.get(rs.getInt("_source_key")));				
+				SlimProbeSourceDomain domain = new SlimProbeSourceDomain();
+				domain = slimtranslator.translate(probeSourceDAO.get(rs.getInt("_source_key")));				
 				probeSourceDAO.clear();
 				results.add(domain);
 			}

@@ -113,7 +113,7 @@ public class ProbeTissueService extends BaseService<ProbeTissueDomain> {
 	}
 	
 	@Transactional
-	public List<ProbeTissueDomain> search(ProbeTissueDomain searchDomain) {
+	public List<ProbeTissueDomain> validateTissue(ProbeTissueDomain searchDomain) {
 
 		List<ProbeTissueDomain> results = new ArrayList<ProbeTissueDomain>();
 		

@@ -323,19 +323,26 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		
 		List<SlimProbeSourceDomain> results = new ArrayList<SlimProbeSourceDomain>();	
 
-		String cmd = "select _source_key from PRB_Source where name is not null and _Source_key > 0order by name";
+		String cmd = "select _source_key from PRB_Source where name is not null and _Source_key > 0"
+				+ "\norder by name";
 		log.info(cmd);
 		
-		try {
+		try {			
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			
+			SlimProbeSourceDomain domain = new SlimProbeSourceDomain();
+			domain.setName("Search All");
+			results.add(domain);
+			
 			while (rs.next()) {
-				SlimProbeSourceDomain domain = new SlimProbeSourceDomain();
+				//SlimProbeSourceDomain domain = new SlimProbeSourceDomain();
 				domain = slimtranslator.translate(probeSourceDAO.get(rs.getInt("_source_key")));				
 				probeSourceDAO.clear();
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();
+			
+
 		}
 		catch (Exception e) {
 			e.printStackTrace();

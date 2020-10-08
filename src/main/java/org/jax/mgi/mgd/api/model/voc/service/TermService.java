@@ -59,8 +59,7 @@ public class TermService extends BaseService<TermDomain> {
 		log.info("seqNum: " + domain.getSequenceNum());
 		if (vocabKey.equals("18")) { // cell line vocab
 			log.info("cell line vocab");
-			String seqNum = getNextSequenceNum(vocabKey);
-			
+			String seqNum = getNextSequenceNum(vocabKey);		
 			log.info("next cell line seqnum: " + seqNum);
 			entity.setSequenceNum(Integer.valueOf(seqNum));
 		}

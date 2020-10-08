@@ -30,47 +30,44 @@ public class ProbeTissueService extends BaseService<ProbeTissueDomain> {
 	@Inject
 	ProbeTissueDAO probeTissueDAO;
 	
-	private ProbeTissueTranslator translator = new ProbeTissueTranslator();
-	
+	private ProbeTissueTranslator translator = new ProbeTissueTranslator();	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
 	public SearchResults<ProbeTissueDomain> create(ProbeTissueDomain domain, User user) {
-		SearchResults<ProbeTissueDomain> results = new SearchResults<ProbeTissueDomain>();
-		
-		log.info("ProbeTissueService.create");
+		SearchResults<ProbeTissueDomain> results = new SearchResults<ProbeTissueDomain>();		
 		ProbeTissue entity = new ProbeTissue();
+
+		log.info("processTissue/create");
 		
 		if (domain.getStandard() == null || domain.getStandard().isEmpty()) {
 			domain.setStandard("1");
 		}
+		
 		entity.setTissue(domain.getTissue());
 		entity.setStandard(Integer.valueOf(domain.getStandard()));
 		entity.setCreation_date(new Date());
 		entity.setModification_date(new Date());	
 		
+		// execute persist/insert/send to database		
 		probeTissueDAO.persist(entity);
 		
-		log.info("Tissue/create/returning results");
-		results.setItem(translator.translate(entity));
-		
+		log.info("processTissue/create/returning results");
+		results.setItem(translator.translate(entity));		
 		return results;
 	}
 	
 	@Transactional
-	public SearchResults<ProbeTissueDomain> update(ProbeTissueDomain domain, User user) {
-	
+	public SearchResults<ProbeTissueDomain> update(ProbeTissueDomain domain, User user) {	
 		SearchResults<ProbeTissueDomain> results = new SearchResults<ProbeTissueDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
-		
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);	
 		return results;
 	}
     
 	@Transactional
 	public SearchResults<ProbeTissueDomain> delete(Integer key, User user) {
 		SearchResults<ProbeTissueDomain> results = new SearchResults<ProbeTissueDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
-		
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);	
 		return results;
 	}
 	
@@ -126,8 +123,7 @@ public class ProbeTissueService extends BaseService<ProbeTissueDomain> {
 		String orderBy = "order by a.tissue";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		//String value;
-		
-		
+			
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", null, null, searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {

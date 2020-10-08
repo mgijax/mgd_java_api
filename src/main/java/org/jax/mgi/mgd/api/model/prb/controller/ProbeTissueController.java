@@ -56,22 +56,23 @@ public class ProbeTissueController extends BaseController<ProbeTissueDomain> {
 	public SearchResults<ProbeTissueDomain> delete(Integer key, User user) {
 		return probeTissueService.delete(key, user);
 	}
+	
 	@POST
-	@ApiOperation(value = "Search/returns probe tissue domain")
-	@Path("/search")
-	public List<ProbeTissueDomain> search(ProbeTissueDomain searchDomain) {
+	@ApiOperation(value = "Validate Tissue")
+	@Path("/validateTissue")
+	public List<ProbeTissueDomain> validateStrain(ProbeTissueDomain searchDomain) {
 	
 		List<ProbeTissueDomain> results = new ArrayList<ProbeTissueDomain>();
 
 		try {
-			results = probeTissueService.search(searchDomain);
+			results = probeTissueService.validateTissue(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		return results;
 	}
-		
+	
 	@GET
 	@ApiOperation(value = "get list of tissues")
 	@Path("/getTissueList")

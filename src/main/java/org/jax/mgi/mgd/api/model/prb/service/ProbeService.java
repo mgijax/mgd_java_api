@@ -109,6 +109,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		//String value;
 		Boolean from_accession = false;
 		Boolean from_source = false;
+		Boolean from_source_view = false;
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -185,8 +186,8 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				from_source = true;				
 			}
 			else if (searchDomain.getProbeSource().getStrain() != null && !searchDomain.getProbeSource().getStrain().isEmpty()) {
-				where = where + "\nand s.strain ilike '" + searchDomain.getProbeSource().getStrain() + "'";
-				from_source = true;					
+				where = where + "\nand sv.strain ilike '" + searchDomain.getProbeSource().getStrain() + "'";
+				from_source_view = true;					
 			}
 
 			if (searchDomain.getProbeSource().getTissueKey() != null && !searchDomain.getProbeSource().getTissueKey().isEmpty()) {
@@ -194,8 +195,8 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				from_source = true;				
 			}
 			else if (searchDomain.getProbeSource().getTissue() != null && !searchDomain.getProbeSource().getTissue().isEmpty()) {
-				where = where + "\nand s.tissue ilike '" + searchDomain.getProbeSource().getTissue() + "'";
-				from_source = true;					
+				where = where + "\nand sv.tissue ilike '" + searchDomain.getProbeSource().getTissue() + "'";
+				from_source_view = true;					
 			}
 				
 			if (searchDomain.getProbeSource().getCellLineKey() != null && !searchDomain.getProbeSource().getCellLineKey().isEmpty()) {
@@ -203,8 +204,8 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				from_source = true;				
 			}
 			else if (searchDomain.getProbeSource().getCellLine() != null && !searchDomain.getProbeSource().getCellLine().isEmpty()) {
-				where = where + "\nand s.cellline ilike '" + searchDomain.getProbeSource().getCellLine() + "'";
-				from_source = true;					
+				where = where + "\nand sv.cellline ilike '" + searchDomain.getProbeSource().getCellLine() + "'";
+				from_source_view = true;					
 			}		
 
 			String agePrefix = "";
@@ -227,10 +228,15 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		}
 		
 		if (from_source == true) {
-			from = from + ", prb_source_view s";
+			from = from + ", prb_source s";
 			where = where + "\nand a._source_key = s._source_key";
 		}
 
+		if (from_source_view == true) {
+			from = from + ", prb_source_view sv";
+			where = where + "\nand a._source_key = sv._source_key";
+		}
+		
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info(cmd);

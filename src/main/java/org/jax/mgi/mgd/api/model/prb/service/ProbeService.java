@@ -109,7 +109,9 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		//String value;
 		Boolean from_accession = false;
 		Boolean from_source = false;
-		Boolean from_source_view = false;
+		Boolean from_strain = false;
+		Boolean from_tissue = false;
+		Boolean from_cellline = false;
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -166,6 +168,36 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		}
 		else {
 
+			if (searchDomain.getProbeSource().getStrainKey() != null && !searchDomain.getProbeSource().getStrainKey().isEmpty()) {
+				where = where + "\nand s._strain_key = " + searchDomain.getProbeSource().getStrainKey();
+				from_source = true;				
+			}
+			else if (searchDomain.getProbeSource().getStrain() != null && !searchDomain.getProbeSource().getStrain().isEmpty()) {
+				where = where + "\nand ss.strain ilike '" + searchDomain.getProbeSource().getStrain() + "'";
+				from_source = true;
+				from_strain = true;					
+			}
+
+			if (searchDomain.getProbeSource().getTissueKey() != null && !searchDomain.getProbeSource().getTissueKey().isEmpty()) {
+				where = where + "\nand s._tissue_key = " + searchDomain.getProbeSource().getTissueKey();
+				from_source = true;				
+			}
+			else if (searchDomain.getProbeSource().getTissue() != null && !searchDomain.getProbeSource().getTissue().isEmpty()) {
+				where = where + "\nand st.tissue ilike '" + searchDomain.getProbeSource().getTissue() + "'";
+				from_source = true;
+				from_tissue = true;					
+			}
+				
+			if (searchDomain.getProbeSource().getCellLineKey() != null && !searchDomain.getProbeSource().getCellLineKey().isEmpty()) {
+				where = where + "\nand s._cellline_key = " + searchDomain.getProbeSource().getCellLineKey();
+				from_source = true;				
+			}
+			else if (searchDomain.getProbeSource().getCellLine() != null && !searchDomain.getProbeSource().getCellLine().isEmpty()) {
+				where = where + "\nand sc.term ilike '" + searchDomain.getProbeSource().getCellLine() + "'";
+				from_source = true;
+				from_cellline = true;					
+			}		
+
 			if (searchDomain.getProbeSource().getOrganismKey() != null && !searchDomain.getProbeSource().getOrganismKey().isEmpty()) {
 				where = where + "\nand s._organism_key = " + searchDomain.getProbeSource().getOrganismKey();
 				from_source = true;
@@ -180,34 +212,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				where = where + "\nand s._gender_key = " + searchDomain.getProbeSource().getGenderKey();
 				from_source = true;					
 			}
-
-			if (searchDomain.getProbeSource().getStrainKey() != null && !searchDomain.getProbeSource().getStrainKey().isEmpty()) {
-				where = where + "\nand s._strain_key = " + searchDomain.getProbeSource().getStrainKey();
-				from_source = true;				
-			}
-			else if (searchDomain.getProbeSource().getStrain() != null && !searchDomain.getProbeSource().getStrain().isEmpty()) {
-				where = where + "\nand sv.strain ilike '" + searchDomain.getProbeSource().getStrain() + "'";
-				from_source_view = true;					
-			}
-
-			if (searchDomain.getProbeSource().getTissueKey() != null && !searchDomain.getProbeSource().getTissueKey().isEmpty()) {
-				where = where + "\nand s._tissue_key = " + searchDomain.getProbeSource().getTissueKey();
-				from_source = true;				
-			}
-			else if (searchDomain.getProbeSource().getTissue() != null && !searchDomain.getProbeSource().getTissue().isEmpty()) {
-				where = where + "\nand sv.tissue ilike '" + searchDomain.getProbeSource().getTissue() + "'";
-				from_source_view = true;					
-			}
-				
-			if (searchDomain.getProbeSource().getCellLineKey() != null && !searchDomain.getProbeSource().getCellLineKey().isEmpty()) {
-				where = where + "\nand s._cellline_key = " + searchDomain.getProbeSource().getCellLineKey();
-				from_source = true;				
-			}
-			else if (searchDomain.getProbeSource().getCellLine() != null && !searchDomain.getProbeSource().getCellLine().isEmpty()) {
-				where = where + "\nand sv.cellline ilike '" + searchDomain.getProbeSource().getCellLine() + "'";
-				from_source_view = true;					
-			}		
-
+			
 			String agePrefix = "";
 			String ageStage = "";
 			if (searchDomain.getProbeSource().getAgePrefix() != null && !searchDomain.getProbeSource().getAgePrefix().isEmpty()) {
@@ -232,9 +237,23 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			where = where + "\nand a._source_key = s._source_key";
 		}
 
-		if (from_source_view == true) {
-			from = from + ", prb_source_view sv";
-			where = where + "\nand a._source_key = sv._source_key";
+		if (from_strain == true) {
+			from = from + ", prb_strain ss";
+			where = where + "\nand a._source_key = s._source_key"
+					+ "\nand s._strain_key = ss._strain_key";
+		}
+	
+		if (from_tissue == true) {
+			from = from + ", prb_tissue st";
+			where = where + "\nand a._source_key = s._source_key"
+					+ "\nand s._tissue_key = st._tissue_key";
+		}
+
+		if (from_cellline == true) {
+			from = from + ", voc_term sc";
+			where = where + "\nand a._source_key = s._source_key"
+					+ "\nand s._cellline_key = sc._term_key"
+					+ "\nand sc._vocab_key = 18";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

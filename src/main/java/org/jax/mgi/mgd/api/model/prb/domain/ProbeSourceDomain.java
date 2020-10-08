@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 public class ProbeSourceDomain extends BaseDomain {
 
+	private String processStatus;	
 	private String sourceKey;
 	private String name;
 	private String description;

@@ -108,6 +108,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		//String value;
 		Boolean from_accession = false;
+		Boolean from_source = false;
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -116,19 +117,110 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			where = where + cmResults[1];
 		}
 
+		if (searchDomain.getSegmentTypeKey() != null && !searchDomain.getSegmentTypeKey().isEmpty()) {
+			where = where + "\nand a._segmenttype_key = " + searchDomain.getSegmentTypeKey();
+		}
+
+		if (searchDomain.getVectorTypeKey() != null && !searchDomain.getVectorTypeKey().isEmpty()) {
+			where = where + "\nand a._vector_key = " + searchDomain.getVectorTypeKey();
+		}
+		
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
 			where = where + "\nand a.name ilike '" + searchDomain.getName() + "'" ;
+		}
+
+		if (searchDomain.getRegionCovered() != null && !searchDomain.getRegionCovered().isEmpty()) {
+			where = where + "\nand a.regioncovered ilike '" + searchDomain.getRegionCovered() + "'" ;
+		}
+
+		if (searchDomain.getPrimer1sequence() != null && !searchDomain.getPrimer1sequence().isEmpty()) {
+			where = where + "\nand a.primer1sequence ilike '" + searchDomain.getPrimer1sequence() + "'" ;
+		}
+
+		if (searchDomain.getPrimer2sequence() != null && !searchDomain.getPrimer2sequence().isEmpty()) {
+			where = where + "\nand a.primer2sequence ilike '" + searchDomain.getPrimer2sequence() + "'" ;
+		}
+
+		if (searchDomain.getInsertSite() != null && !searchDomain.getInsertSite().isEmpty()) {
+			where = where + "\nand a.insertsite ilike '" + searchDomain.getInsertSite() + "'" ;
+		}
+
+		if (searchDomain.getInsertSize() != null && !searchDomain.getInsertSize().isEmpty()) {
+			where = where + "\nand a.insertsize ilike '" + searchDomain.getInsertSize() + "'" ;
+		}
+
+		if (searchDomain.getProductSize() != null && !searchDomain.getProductSize().isEmpty()) {
+			where = where + "\nand a.productsize ilike '" + searchDomain.getProductSize() + "'" ;
 		}
 		
 		// accession id 
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	
 			where = where + "\nand acc.accID ilike '" + searchDomain.getAccID() + "'";
 			from_accession = true;
-		}						
+		}	
+		
+		// probe source
+		if (searchDomain.getProbeSource().getSourceKey() != null && !searchDomain.getProbeSource().getSourceKey().isEmpty()) {
+			where = where + "\nand a._source_key = " + searchDomain.getProbeSource().getSourceKey();			
+		}
+		else {
+
+			if (searchDomain.getProbeSource().getOrganismKey() != null && !searchDomain.getProbeSource().getOrganismKey().isEmpty()) {
+				where = where + "\nand s._organism_key = " + searchDomain.getProbeSource().getOrganismKey();
+				from_source = true;
+			}
+				
+			if (searchDomain.getProbeSource().getDescription() != null && !searchDomain.getProbeSource().getDescription().isEmpty()) {
+				where = where + "\nand s.description ilike '" + searchDomain.getProbeSource().getDescription() + "'" ;
+				from_source = true;					
+			}	
+
+			if (searchDomain.getProbeSource().getGenderKey() != null && !searchDomain.getProbeSource().getGenderKey().isEmpty()) {
+				where = where + "\nand s._gender_key = " + searchDomain.getProbeSource().getGenderKey();
+				from_source = true;					
+			}
+
+			if (searchDomain.getProbeSource().getStrainKey() != null && !searchDomain.getProbeSource().getStrainKey().isEmpty()) {
+				where = where + "\nand s._strain_key = " + searchDomain.getProbeSource().getStrainKey();
+				from_source = true;				
+			}
+			else if (searchDomain.getProbeSource().getStrain() != null && !searchDomain.getProbeSource().getStrain().isEmpty()) {
+				where = where + "\nand s.strain ilike '" + searchDomain.getProbeSource().getStrain() + "'";
+				from_source = true;					
+			}
+
+			if (searchDomain.getProbeSource().getTissueKey() != null && !searchDomain.getProbeSource().getTissueKey().isEmpty()) {
+				where = where + "\nand s._tissue_key = " + searchDomain.getProbeSource().getTissueKey();
+				from_source = true;				
+			}
+			else if (searchDomain.getProbeSource().getTissue() != null && !searchDomain.getProbeSource().getTissue().isEmpty()) {
+				where = where + "\nand s.tissue ilike '" + searchDomain.getProbeSource().getTissue() + "'";
+				from_source = true;					
+			}
+				
+			if (searchDomain.getProbeSource().getCellLineKey() != null && !searchDomain.getProbeSource().getCellLineKey().isEmpty()) {
+				where = where + "\nand s._cellline_key = " + searchDomain.getProbeSource().getCellLineKey();
+				from_source = true;				
+			}
+			else if (searchDomain.getProbeSource().getCellLine() != null && !searchDomain.getProbeSource().getCellLine().isEmpty()) {
+				where = where + "\nand s.cellline ilike '" + searchDomain.getProbeSource().getCellLine() + "'";
+				from_source = true;					
+			}		
+
+			if (searchDomain.getProbeSource().getAge() != null && !searchDomain.getProbeSource().getAge().isEmpty()) {
+				where = where + "\nand s.age ilike '" + searchDomain.getProbeSource().getAge() + "'";
+				from_source = true;					
+			}				
+		}
 	
 		if (from_accession == true) {
 			from = from + ", prb_probe_acc_view acc";
 			where = where + "\nand a._assay_key = acc._object_key"; 
+		}
+		
+		if (from_source == true) {
+			from = from + ", prb_source_view s";
+			where = where + "\nand a._source_key = s._source_key";
 		}
 
 		// make this easy to copy/paste for troubleshooting

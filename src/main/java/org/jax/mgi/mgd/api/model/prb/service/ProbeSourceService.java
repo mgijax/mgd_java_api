@@ -330,12 +330,8 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		try {			
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			
-			SlimProbeSourceDomain domain = new SlimProbeSourceDomain();
-			domain.setName("Search All");
-			results.add(domain);
-			
 			while (rs.next()) {
-				//SlimProbeSourceDomain domain = new SlimProbeSourceDomain();
+				SlimProbeSourceDomain domain = new SlimProbeSourceDomain();
 				domain = slimtranslator.translate(probeSourceDAO.get(rs.getInt("_source_key")));				
 				probeSourceDAO.clear();
 				results.add(domain);

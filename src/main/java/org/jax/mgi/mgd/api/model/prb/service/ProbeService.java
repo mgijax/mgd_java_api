@@ -242,7 +242,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			}
 			
 			if (searchDomain.getMarkers().get(0).getRelationship() != null && !searchDomain.getMarkers().get(0).getRelationship().isEmpty()) {
-				if (searchDomain.getMarkers().get(0).getRelationship().equals("(note)")) {
+				if (searchDomain.getMarkers().get(0).getRelationship().equals("(none)")) {
 					where = where + "\nand m.relationship is null";
 				}
 				else {

@@ -23,10 +23,10 @@ public class ProbeDomain extends BaseDomain {
 	private String vectorType;
 	private String primer1sequence;
 	private String primer2sequence;
+	private String productSize;
 	private String regionCovered;
 	private String insertSite;
 	private String insertSize;
-	private String productSize;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

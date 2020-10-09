@@ -30,7 +30,7 @@ public class ProbeMarkerTranslator extends BaseEntityDomainTranslator<ProbeMarke
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
-		if (entity.getRelationship().isEmpty()) {
+		if (entity.getRelationship() == null) {
 			domain.setRelationship("(none)");			
 		}
 		else {

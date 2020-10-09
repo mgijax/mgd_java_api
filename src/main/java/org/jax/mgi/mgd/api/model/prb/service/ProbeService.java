@@ -267,8 +267,8 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		}
 	
 		if (from_accession == true) {
-			from = from + ", prb_probe_acc_view acc";
-			where = where + "\nand a._assay_key = acc._object_key"; 
+			from = from + ", prb_acc_view acc";
+			where = where + "\nand a._probe_key = acc._object_key"; 
 		}
 		
 		if (from_source == true) {

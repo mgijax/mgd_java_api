@@ -71,5 +71,6 @@ public class ProbeController extends BaseController<ProbeDomain> {
 		}
 		
 		return results;
-	}	
+	}
+		
 }

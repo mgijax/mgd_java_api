@@ -15,7 +15,6 @@ public class ProbeMarkerTranslator extends BaseEntityDomainTranslator<ProbeMarke
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setAssocKey(String.valueOf(entity.get_assoc_key()));
 		domain.setProbeKey(String.valueOf(entity.get_probe_key()));
-		domain.setRelationship(entity.getRelationship());
 		domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 		domain.setMarkerSymbol(entity.getMarker().getSymbol());
 		domain.setMarkerChromosome(entity.getMarker().getChromosome());
@@ -30,6 +29,13 @@ public class ProbeMarkerTranslator extends BaseEntityDomainTranslator<ProbeMarke
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
+		
+		if (entity.getRelationship().isEmpty()) {
+			domain.setRelationship("(none)");			
+		}
+		else {
+			domain.setRelationship(entity.getRelationship());			
+		}
 		
 		return domain;
 	}

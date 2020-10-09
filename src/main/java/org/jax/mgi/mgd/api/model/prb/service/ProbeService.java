@@ -252,10 +252,10 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			}
 			
 			String markercmResults[] = DateSQLQuery.queryByCreationModification("m", 
-					searchDomain.getCreatedBy(), 
-					searchDomain.getModifiedBy(), 
-					searchDomain.getCreation_date(), 
-					searchDomain.getModification_date());
+					searchDomain.getMarkers().get(0).getCreatedBy(), 
+					searchDomain.getMarkers().get(0).getModifiedBy(), 
+					searchDomain.getMarkers().get(0).getCreation_date(), 
+					searchDomain.getMarkers().get(0).getModification_date());
 		
 			if (markercmResults.length > 0) {
 				if (markercmResults[0].length() > 0 || markercmResults[1].length() > 0) {

@@ -280,7 +280,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 
 		if (from_parentclone == true) {
 			from = from + ", prb_acc_view pc";
-			where = where + "\nand a.dervedfrom = pc._object_key"; 
+			where = where + "\nand a.derivedfrom = pc._object_key"; 
 		}
 		
 		if (from_source == true) {

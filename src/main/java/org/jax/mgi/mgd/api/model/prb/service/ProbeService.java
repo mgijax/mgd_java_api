@@ -108,6 +108,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		//String value;
 		Boolean from_accession = false;
+		Boolean from_parentclone = false;
 		Boolean from_source = false;
 		Boolean from_strain = false;
 		Boolean from_tissue = false;
@@ -162,6 +163,12 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			where = where + "\nand acc.accID ilike '" + searchDomain.getAccID() + "'";
 			from_accession = true;
 		}	
+		
+		// parent clone
+		if (searchDomain.getDerivedFromAccID() != null && !searchDomain.getDerivedFromAccID().isEmpty()) {
+			where = where + "\nand pc.accID ilike '" + searchDomain.getDerivedFromAccID() + "'";
+			from_parentclone = true;			
+		}
 		
 		// probe source
 		if (searchDomain.getProbeSource().getSourceKey() != null && !searchDomain.getProbeSource().getSourceKey().isEmpty()) {
@@ -269,6 +276,11 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		if (from_accession == true) {
 			from = from + ", prb_acc_view acc";
 			where = where + "\nand a._probe_key = acc._object_key"; 
+		}
+
+		if (from_parentclone == true) {
+			from = from + ", prb_acc_view pc";
+			where = where + "\nand a._probe_key = pc._object_key"; 
 		}
 		
 		if (from_source == true) {

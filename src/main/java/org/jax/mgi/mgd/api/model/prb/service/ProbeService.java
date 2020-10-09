@@ -242,7 +242,12 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			}
 			
 			if (searchDomain.getMarkers().get(0).getRelationship() != null && !searchDomain.getMarkers().get(0).getRelationship().isEmpty()) {
-				where = where + "\nand m.relationship = '" + searchDomain.getMarkers().get(0).getRelationship() + "'";
+				if (searchDomain.getMarkers().get(0).getRelationship().isEmpty()) {
+					where = where + "\nand m.relationship is null";
+				}
+				else {
+					where = where + "\nand m.relationship = '" + searchDomain.getMarkers().get(0).getRelationship() + "'";
+				}
 				from_marker = true;
 			}			
 		}

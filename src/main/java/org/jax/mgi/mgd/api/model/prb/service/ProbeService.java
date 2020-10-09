@@ -249,6 +249,20 @@ public class ProbeService extends BaseService<ProbeDomain> {
 					where = where + "\nand m.relationship = '" + searchDomain.getMarkers().get(0).getRelationship() + "'";
 				}
 				from_marker = true;
+			}
+			
+			String markercmResults[] = DateSQLQuery.queryByCreationModification("m", 
+					searchDomain.getCreatedBy(), 
+					searchDomain.getModifiedBy(), 
+					searchDomain.getCreation_date(), 
+					searchDomain.getModification_date());
+		
+			if (markercmResults.length > 0) {
+				if (markercmResults[0].length() > 0 || markercmResults[1].length() > 0) {
+					from = from + markercmResults[0];
+					where = where + markercmResults[1];
+					from_marker = true;
+				}
 			}			
 		}
 	

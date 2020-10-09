@@ -112,6 +112,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		Boolean from_strain = false;
 		Boolean from_tissue = false;
 		Boolean from_cellline = false;
+		Boolean from_marker = false;
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -226,6 +227,25 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				from_source = true;									
 			}
 		}
+		
+		// markers
+		if (searchDomain.getMarkers() != null) {
+			
+			if (searchDomain.getMarkers().get(0).getMarkerKey() != null && !searchDomain.getMarkers().get(0).getMarkerKey().isEmpty()) {
+				where = where + "\nand m._marker_key = " + searchDomain.getMarkers().get(0).getMarkerKey();
+				from_marker = true;
+			}
+			
+			if (searchDomain.getMarkers().get(0).getRefsKey() != null && !searchDomain.getMarkers().get(0).getRefsKey().isEmpty()) {
+				where = where + "\nand m._refs_key = " + searchDomain.getMarkers().get(0).getRefsKey();
+				from_marker = true;
+			}
+			
+			if (searchDomain.getMarkers().get(0).getRelationship() != null && !searchDomain.getMarkers().get(0).getRelationship().isEmpty()) {
+				where = where + "\nand m.relationship = '" + searchDomain.getMarkers().get(0).getRelationship() + "'";
+				from_marker = true;
+			}			
+		}
 	
 		if (from_accession == true) {
 			from = from + ", prb_probe_acc_view acc";
@@ -254,6 +274,11 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			where = where + "\nand a._source_key = s._source_key"
 					+ "\nand s._cellline_key = sc._term_key"
 					+ "\nand sc._vocab_key = 18";
+		}
+		
+		if (from_marker == true) {
+			from = from + ", prb_marker m";
+			where = where + "\nand a._probe_key = m._probe_key";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

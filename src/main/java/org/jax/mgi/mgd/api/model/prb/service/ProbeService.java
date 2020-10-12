@@ -238,7 +238,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 					agePrefix = searchDomain.getProbeSource().getAgePrefix() + "% ";
 				}
 				if (searchDomain.getProbeSource().getAgeStage() != null && !searchDomain.getProbeSource().getAgeStage().isEmpty()) {
-					ageStage = "% " + searchDomain.getProbeSource().getAgeStage() + "%";
+					ageStage = "% " + searchDomain.getProbeSource().getAgeStage();
 				}
 				if (agePrefix.length() > 0 || ageStage.length() > 0) {
 					where = where + "\nand s.age ilike '" + agePrefix + ageStage + "'";

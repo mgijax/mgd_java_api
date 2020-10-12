@@ -349,20 +349,17 @@ public class ProbeService extends BaseService<ProbeDomain> {
 
 		if (from_strain == true) {
 			from = from + ", prb_strain ss";
-			where = where + "\nand p._source_key = s._source_key"
-					+ "\nand s._strain_key = ss._strain_key";
+			where = where + "\nand s._strain_key = ss._strain_key";
 		}
 	
 		if (from_tissue == true) {
 			from = from + ", prb_tissue st";
-			where = where + "\nand p._source_key = s._source_key"
-					+ "\nand s._tissue_key = st._tissue_key";
+			where = where + "\nand s._tissue_key = st._tissue_key";
 		}
 
 		if (from_cellline == true) {
 			from = from + ", voc_term sc";
-			where = where + "\nand p._source_key = s._source_key"
-					+ "\nand s._cellline_key = sc._term_key"
+			where = where + "\nand s._cellline_key = sc._term_key"
 					+ "\nand sc._vocab_key = 18";
 		}
 		

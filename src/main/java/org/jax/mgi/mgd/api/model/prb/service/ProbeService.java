@@ -166,7 +166,8 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				where = where + "\nand acc.numericPart = '" + searchDomain.getAccID() + "'";
 			}
 			else {
-				where = where + "\nand acc.accID ilike '" + searchDomain.getAccID() + "'";
+				String value = searchDomain.getAccID().toUpperCase();
+				where = where + "\nand acc.accID = " + value + "'";
 			}
 			from_accession = true;
 		}	

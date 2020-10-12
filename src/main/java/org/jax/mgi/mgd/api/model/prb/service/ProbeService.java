@@ -359,8 +359,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 
 		if (from_cellline == true) {
 			from = from + ", voc_term sc";
-			where = where + "\nand s._cellline_key = sc._term_key"
-					+ "\nand sc._vocab_key = 18";
+			where = where + "\nand s._cellline_key = sc._term_key and sc._vocab_key = 18";
 		}
 		
 		if (from_marker == true) {

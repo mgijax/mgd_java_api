@@ -34,11 +34,11 @@ public class ProbeReferenceTranslator extends BaseEntityDomainTranslator<ProbeRe
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
 		// accession ids
-//		if (entity.getAccessionIds() != null && !entity.getAccessionIds().isEmpty()) {
-//			SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
-//			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getAccessionIds());
-//			domain.setAccessionIds(IteratorUtils.toList(acc.iterator()));
-//		}
+		if (entity.getAccessionIds() != null && !entity.getAccessionIds().isEmpty()) {
+			SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
+			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getAccessionIds());
+			domain.setAccessionIds(IteratorUtils.toList(acc.iterator()));
+		}
 
 		// aliases
 		if (entity.getAliases() != null && !entity.getAliases().isEmpty()) {

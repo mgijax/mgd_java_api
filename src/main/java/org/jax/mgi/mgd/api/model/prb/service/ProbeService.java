@@ -248,6 +248,11 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				from_marker = true;
 			}
 			
+			else if (searchDomain.getMarkers().get(0).getMarkerSymbol() != null && !searchDomain.getMarkers().get(0).getMarkerSymbol().isEmpty()) {
+				where = where + "\nand m.symbol ilike '" + searchDomain.getMarkers().get(0).getMarkerSymbol() + "'";
+				from_marker = true;
+			}
+			
 			if (searchDomain.getMarkers().get(0).getRefsKey() != null && !searchDomain.getMarkers().get(0).getRefsKey().isEmpty()) {
 				where = where + "\nand m._refs_key = " + searchDomain.getMarkers().get(0).getRefsKey();
 				from_marker = true;

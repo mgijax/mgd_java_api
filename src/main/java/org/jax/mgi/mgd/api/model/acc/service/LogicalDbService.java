@@ -520,10 +520,26 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 		// get probe logical db list
 		// returns list of logical db domain
 		
+		//        9 | Sequence DB (aka Nucleotide Sequence)
+		//       12 | ATCC
+		//       82 | BROAD
+		//       17 | IMAGE
+		//       44 | MGC
+		//       49 | NIA
+		//       46 | NIA 15K
+		//       50 | NIA 7.4K
+		//       51 | RIKEN
+		//       25 | RIKEN Cluster
+		//       26 | RIKEN (FANTOM)
+		//       48 | RPCI-23
+		//       52 | RPCI-24
+		//       80 | UniSTS
+		//       16 | WashU		
+		
 		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
 
 		String cmd = "select _logicaldb_key, name from acc_logicaldb "
-				+ "\nwhere _mgitype_key = 3"
+				+ "\nwhere _logicaldb_key in (9,12,82,17,44,49,46,50,51,25,26,48,52,80,16)"
 				+ "\norder by name";
 		log.info(cmd);
 		

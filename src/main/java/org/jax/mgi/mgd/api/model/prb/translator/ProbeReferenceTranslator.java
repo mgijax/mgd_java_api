@@ -2,6 +2,8 @@ package org.jax.mgi.mgd.api.model.prb.translator;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.translator.SlimAccessionTranslator;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeAliasDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeReferenceDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeReference;
@@ -31,13 +33,13 @@ public class ProbeReferenceTranslator extends BaseEntityDomainTranslator<ProbeRe
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
-//		// accession ids
-//		if (entity.getAccessionIds() != null && !entity.getAccessionIds().isEmpty()) {
-//			SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
-//			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getAccessionIds());
-//			domain.setAccessionIds(IteratorUtils.toList(acc.iterator()));
-//		}
-//
+		// accession ids
+		if (entity.getAccessionIds() != null && !entity.getAccessionIds().isEmpty()) {
+			SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();
+			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getAccessionIds());
+			domain.setAccessionIds(IteratorUtils.toList(acc.iterator()));
+		}
+
 		// aliases
 		if (entity.getAliases() != null && !entity.getAliases().isEmpty()) {
 			ProbeAliasTranslator aliasTranslator = new ProbeAliasTranslator();

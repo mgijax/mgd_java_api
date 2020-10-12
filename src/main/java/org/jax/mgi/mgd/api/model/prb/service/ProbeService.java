@@ -108,6 +108,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		//String value;
 		Boolean from_accession = false;
+		Boolean from_raccession = false;
 		Boolean from_parentclone = false;
 		Boolean from_source = false;
 		Boolean from_strain = false;
@@ -302,7 +303,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 					searchDomain.getReferences().get(0).getModifiedBy(), 
 					searchDomain.getReferences().get(0).getCreation_date(), 
 					searchDomain.getReferences().get(0).getModification_date());
-		
+			
 			if (refcmResults.length > 0) {
 				if (refcmResults[0].length() > 0 || refcmResults[1].length() > 0) {
 					from = from + refcmResults[0];
@@ -314,11 +315,13 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			if (searchDomain.getReferences().get(0).getAccessionIds() != null) {
 				if (searchDomain.getReferences().get(0).getAccessionIds().get(0).getAccID() != null && !searchDomain.getReferences().get(0).getAccessionIds().get(0).getAccID().isEmpty()) {
 					where = where + "\nand racc.accID ilike '" + searchDomain.getReferences().get(0).getAccessionIds().get(0).getAccID() + "'";
-					from_accession = true;
+					from_reference = true;
+					from_raccession = true;
 				}
 				if (searchDomain.getReferences().get(0).getAccessionIds().get(0).getLogicaldbKey() != null && !searchDomain.getReferences().get(0).getAccessionIds().get(0).getLogicaldbKey().isEmpty()) {
 					where = where + "\nand racc._logicaldb_key = " + searchDomain.getReferences().get(0).getAccessionIds().get(0).getLogicaldbKey();
-					from_accession = true;
+					from_reference = true;
+					from_raccession = true;
 				}				
 			}
 			
@@ -373,6 +376,11 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		if (from_reference == true) {
 			from = from + ", prb_reference r";
 			where = where + "\nand p._probe_key = r._probe_key";
+		}
+		
+		if (from_raccession == true) {
+			from = from + ", acc_accession racc";
+			where = where + "\nand racc._mgitype_key = 3 and r._reference_key = racc._object_key";			
 		}
 
 		if (from_alias == true) {

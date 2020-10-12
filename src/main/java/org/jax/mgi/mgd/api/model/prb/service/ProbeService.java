@@ -162,7 +162,12 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		
 		// accession id 
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	
-			where = where + "\nand acc.accID ilike '" + searchDomain.getAccID() + "'";
+			if (!searchDomain.getAccID().startsWith("MGI:")) {
+				where = where + "\nand acc.numericPart = '" + searchDomain.getAccID() + "'";
+			}
+			else {
+				where = where + "\nand acc.accID ilike '" + searchDomain.getAccID() + "'";
+			}
 			from_accession = true;
 		}	
 		

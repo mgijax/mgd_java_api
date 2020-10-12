@@ -17,7 +17,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "PRBAllele Model Object")
+@ApiModel(value = "Probe/Allele Model Object")
 @Table(name="prb_allele")
 public class ProbeAllele extends BaseEntity {
 

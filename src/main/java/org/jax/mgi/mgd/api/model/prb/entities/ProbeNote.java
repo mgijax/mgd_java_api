@@ -18,7 +18,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "PRBNotes Model Object")
+@ApiModel(value = "Probe/Notes Model Object")
 @Table(name="prb_notes")
 public class ProbeNote extends BaseEntity {
 

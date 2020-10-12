@@ -114,6 +114,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		Boolean from_tissue = false;
 		Boolean from_cellline = false;
 		Boolean from_marker = false;
+		Boolean from_reference = false;
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -275,7 +276,30 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				}
 			}			
 		}
-	
+
+		// references
+		if (searchDomain.getReferences() != null) {			
+			
+			if (searchDomain.getReferences().get(0).getRefsKey() != null && !searchDomain.getReferences().get(0).getRefsKey().isEmpty()) {
+				where = where + "\nand r._refs_key = " + searchDomain.getReferences().get(0).getRefsKey();
+				from_reference = true;
+			}			
+			
+			String refcmResults[] = DateSQLQuery.queryByCreationModification("r", 
+					searchDomain.getReferences().get(0).getCreatedBy(), 
+					searchDomain.getReferences().get(0).getModifiedBy(), 
+					searchDomain.getReferences().get(0).getCreation_date(), 
+					searchDomain.getReferences().get(0).getModification_date());
+		
+			if (refcmResults.length > 0) {
+				if (refcmResults[0].length() > 0 || refcmResults[1].length() > 0) {
+					from = from + refcmResults[0];
+					where = where + refcmResults[1];
+					from_reference = true;
+				}
+			}			
+		}
+		
 		if (from_accession == true) {
 			from = from + ", acc_accession acc";
 			where = where + "\nand acc._mgitype_key = 3 and a._probe_key = acc._object_key";
@@ -313,6 +337,11 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		if (from_marker == true) {
 			from = from + ", prb_marker m";
 			where = where + "\nand a._probe_key = m._probe_key";
+		}
+
+		if (from_reference == true) {
+			from = from + ", prb_reference r";
+			where = where + "\nand a._probe_key = r._probe_key";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

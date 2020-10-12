@@ -102,9 +102,9 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
 		String select = "select a.*";
-		String from = "from prb_probe a";
-		String where = "where a._probe_key is not null";
-		String orderBy = "order by a.name";
+		String from = "from prb_probe p";
+		String where = "where p._probe_key is not null";
+		String orderBy = "order by p.name";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		//String value;
 		Boolean from_accession = false;
@@ -115,48 +115,49 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		Boolean from_cellline = false;
 		Boolean from_marker = false;
 		Boolean from_reference = false;
+		Boolean from_alias = false;
 		
 		// if parameter exists, then add to where-clause
-		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
+		String cmResults[] = DateSQLQuery.queryByCreationModification("p", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {
 			from = from + cmResults[0];
 			where = where + cmResults[1];
 		}
 
 		if (searchDomain.getSegmentTypeKey() != null && !searchDomain.getSegmentTypeKey().isEmpty()) {
-			where = where + "\nand a._segmenttype_key = " + searchDomain.getSegmentTypeKey();
+			where = where + "\nand p._segmenttype_key = " + searchDomain.getSegmentTypeKey();
 		}
 
 		if (searchDomain.getVectorTypeKey() != null && !searchDomain.getVectorTypeKey().isEmpty()) {
-			where = where + "\nand a._vector_key = " + searchDomain.getVectorTypeKey();
+			where = where + "\nand p._vector_key = " + searchDomain.getVectorTypeKey();
 		}
 		
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
-			where = where + "\nand a.name ilike '" + searchDomain.getName() + "'" ;
+			where = where + "\nand p.name ilike '" + searchDomain.getName() + "'" ;
 		}
 
 		if (searchDomain.getRegionCovered() != null && !searchDomain.getRegionCovered().isEmpty()) {
-			where = where + "\nand a.regioncovered ilike '" + searchDomain.getRegionCovered() + "'" ;
+			where = where + "\nand p.regioncovered ilike '" + searchDomain.getRegionCovered() + "'" ;
 		}
 
 		if (searchDomain.getPrimer1sequence() != null && !searchDomain.getPrimer1sequence().isEmpty()) {
-			where = where + "\nand a.primer1sequence ilike '" + searchDomain.getPrimer1sequence() + "'" ;
+			where = where + "\nand p.primer1sequence ilike '" + searchDomain.getPrimer1sequence() + "'" ;
 		}
 
 		if (searchDomain.getPrimer2sequence() != null && !searchDomain.getPrimer2sequence().isEmpty()) {
-			where = where + "\nand a.primer2sequence ilike '" + searchDomain.getPrimer2sequence() + "'" ;
+			where = where + "\nand p.primer2sequence ilike '" + searchDomain.getPrimer2sequence() + "'" ;
 		}
 
 		if (searchDomain.getInsertSite() != null && !searchDomain.getInsertSite().isEmpty()) {
-			where = where + "\nand a.insertsite ilike '" + searchDomain.getInsertSite() + "'" ;
+			where = where + "\nand p.insertsite ilike '" + searchDomain.getInsertSite() + "'" ;
 		}
 
 		if (searchDomain.getInsertSize() != null && !searchDomain.getInsertSize().isEmpty()) {
-			where = where + "\nand a.insertsize ilike '" + searchDomain.getInsertSize() + "'" ;
+			where = where + "\nand p.insertsize ilike '" + searchDomain.getInsertSize() + "'" ;
 		}
 
 		if (searchDomain.getProductSize() != null && !searchDomain.getProductSize().isEmpty()) {
-			where = where + "\nand a.productsize ilike '" + searchDomain.getProductSize() + "'" ;
+			where = where + "\nand p.productsize ilike '" + searchDomain.getProductSize() + "'" ;
 		}
 		
 		// accession id 
@@ -175,7 +176,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		if (searchDomain.getProbeSource() != null) {
 			
 			if (searchDomain.getProbeSource().getSourceKey() != null && !searchDomain.getProbeSource().getSourceKey().isEmpty()) {
-				where = where + "\nand a._source_key = " + searchDomain.getProbeSource().getSourceKey();			
+				where = where + "\nand p._source_key = " + searchDomain.getProbeSource().getSourceKey();			
 			}
 			else {
 	
@@ -297,22 +298,30 @@ public class ProbeService extends BaseService<ProbeDomain> {
 					where = where + refcmResults[1];
 					from_reference = true;
 				}
-			}			
+			}
+			
+			if (searchDomain.getReferences().get(0).getAliases() != null) {
+				if (searchDomain.getReferences().get(0).getAliases().get(0).getAlias() != null && !searchDomain.getReferences().get(0).getAliases().get(0).getAlias().isEmpty()) {
+					where = where + "\nand a.alias ilike '" + searchDomain.getReferences().get(0).getAliases().get(0).getAlias() + "'";
+					from_reference = true;
+					from_alias = true;
+				}				
+			}
 		}
 		
 		if (from_accession == true) {
 			from = from + ", acc_accession acc";
-			where = where + "\nand acc._mgitype_key = 3 and a._probe_key = acc._object_key";
+			where = where + "\nand acc._mgitype_key = 3 and p._probe_key = acc._object_key";
 		}
 
 		if (from_parentclone == true) {
 			from = from + ", acc_accession pc";
-			where = where + "\nand pc._mgitype_key = 3 and a.derivedfrom = pc._object_key"; 
+			where = where + "\nand pc._mgitype_key = 3 and p.derivedfrom = pc._object_key"; 
 		}
 		
 		if (from_source == true) {
 			from = from + ", prb_source s";
-			where = where + "\nand a._source_key = s._source_key";
+			where = where + "\nand p._source_key = s._source_key";
 		}
 
 		if (from_strain == true) {
@@ -336,12 +345,17 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		
 		if (from_marker == true) {
 			from = from + ", prb_marker m";
-			where = where + "\nand a._probe_key = m._probe_key";
+			where = where + "\nand p._probe_key = m._probe_key";
 		}
 
 		if (from_reference == true) {
 			from = from + ", prb_reference r";
-			where = where + "\nand a._probe_key = r._probe_key";
+			where = where + "\nand p._probe_key = r._probe_key";
+		}
+
+		if (from_alias == true) {
+			from = from + ", prb_alias a";
+			where = where + "\nand r._reference_key = a._reference_key";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

@@ -21,7 +21,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "PRBAlias Model Object")
+@ApiModel(value = "Probe/Alias Model Object")
 @Table(name="prb_alias")
 public class ProbeAlias extends BaseEntity {
 

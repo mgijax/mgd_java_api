@@ -514,5 +514,34 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 		
 		return results;
 	}
-	
+
+	@Transactional
+	public List<LogicalDbDomain> searchProbeSet() {
+		// get probe logical db list
+		// returns list of logical db domain
+		
+		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
+
+		String cmd = "select _logicaldb_key, name from acc_logicaldb "
+				+ "\nwhere _mgitype_key = 3"
+				+ "\norder by name";
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {					
+				LogicalDbDomain domain = new LogicalDbDomain();									
+				domain = translator.translate(logicalDBDAO.get(rs.getInt("_logicaldb_key")));
+				results.add(domain);
+				logicalDBDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+		
 }

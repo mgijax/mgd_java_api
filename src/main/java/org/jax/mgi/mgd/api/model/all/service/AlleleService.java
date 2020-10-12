@@ -687,7 +687,12 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				
 		// mgi accession id 
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	
-			where = where + "\nand acc.accID ilike '" + searchDomain.getAccID() + "'";
+			if (!searchDomain.getAccID().startsWith("MGI:")) {
+				where = where + "\nand acc.numericPart = '" + searchDomain.getAccID() + "'";
+			}
+			else {
+				where = where + "\nand acc.accID = '" + searchDomain.getAccID().toUpperCase() + "'";
+			}
 			from_accession = true;
 		}
 		// other non-mgi accession ids

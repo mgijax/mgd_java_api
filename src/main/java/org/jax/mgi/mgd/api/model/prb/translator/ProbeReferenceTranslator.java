@@ -40,12 +40,12 @@ public class ProbeReferenceTranslator extends BaseEntityDomainTranslator<ProbeRe
 //			domain.setAccessionIds(IteratorUtils.toList(acc.iterator()));
 //		}
 //
-//		// aliases
-//		if (entity.getAliases() != null && !entity.getAliases().isEmpty()) {
-//			ProbeAliasTranslator aliasTranslator = new ProbeAliasTranslator();
-//			Iterable<ProbeAliasDomain> alias = aliasTranslator.translateEntities(entity.getAliases());
-//			domain.setAliases(IteratorUtils.toList(alias.iterator()));
-//		}
+		// aliases
+		if (entity.getAliases() != null && !entity.getAliases().isEmpty()) {
+			ProbeAliasTranslator aliasTranslator = new ProbeAliasTranslator();
+			Iterable<ProbeAliasDomain> alias = aliasTranslator.translateEntities(entity.getAliases());
+			domain.setAliases(IteratorUtils.toList(alias.iterator()));
+		}
 		
 		return domain;
 	}

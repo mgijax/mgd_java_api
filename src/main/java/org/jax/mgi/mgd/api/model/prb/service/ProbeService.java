@@ -310,6 +310,17 @@ public class ProbeService extends BaseService<ProbeDomain> {
 					from_reference = true;
 				}
 			}
+
+			if (searchDomain.getReferences().get(0).getAccessionIds() != null) {
+				if (searchDomain.getReferences().get(0).getAccessionIds().get(0).getAccID() != null && !searchDomain.getReferences().get(0).getAccessionIds().get(0).getAccID().isEmpty()) {
+					where = where + "\nand racc.accID ilike '" + searchDomain.getReferences().get(0).getAccessionIds().get(0).getAccID() + "'";
+					from_accession = true;
+				}
+				if (searchDomain.getReferences().get(0).getAccessionIds().get(0).getLogicaldbKey() != null && !searchDomain.getReferences().get(0).getAccessionIds().get(0).getLogicaldbKey().isEmpty()) {
+					where = where + "\nand racc._logicaldb_key = " + searchDomain.getReferences().get(0).getAccessionIds().get(0).getLogicaldbKey();
+					from_accession = true;
+				}				
+			}
 			
 			if (searchDomain.getReferences().get(0).getAliases() != null) {
 				if (searchDomain.getReferences().get(0).getAliases().get(0).getAlias() != null && !searchDomain.getReferences().get(0).getAliases().get(0).getAlias().isEmpty()) {

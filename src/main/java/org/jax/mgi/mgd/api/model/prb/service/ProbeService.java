@@ -349,7 +349,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		}
 		
 		if (from_marker == true) {
-			from = from + ", prb_marker m";
+			from = from + ", prb_marker_view m";
 			where = where + "\nand p._probe_key = m._probe_key";
 		}
 

@@ -2,7 +2,9 @@ package org.jax.mgi.mgd.api.model.prb.translator;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.acc.translator.SlimAccessionTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
@@ -47,6 +49,13 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 			SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();			
 			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
 			domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
+		}
+
+		// other accession ids only
+		if (entity.getOtherAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
+			AccessionTranslator accessionTranslator = new AccessionTranslator();			
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getOtherAccessionIds());
+			domain.setOtherAccessionIds(IteratorUtils.toList(acc.iterator()));
 		}
 		
 		// probe source

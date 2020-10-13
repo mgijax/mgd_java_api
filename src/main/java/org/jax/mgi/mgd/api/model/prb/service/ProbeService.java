@@ -325,12 +325,14 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				}				
 			}
 			
-			if (searchDomain.getReferences().get(0).getAliases() != null) {
-				if (searchDomain.getReferences().get(0).getAliases().get(0).getAlias() != null && !searchDomain.getReferences().get(0).getAliases().get(0).getAlias().isEmpty()) {
-					where = where + "\nand a.alias ilike '" + searchDomain.getReferences().get(0).getAliases().get(0).getAlias() + "'";
-					from_reference = true;
-					from_alias = true;
-				}				
+			if (searchDomain.getReferences().get(0).getAliases() != null) {						
+				if (searchDomain.getReferences().get(0).getAliases() != null) {
+					if (searchDomain.getReferences().get(0).getAliases().get(0).getAlias() != null && !searchDomain.getReferences().get(0).getAliases().get(0).getAlias().isEmpty()) {
+						where = where + "\nand a.alias ilike '" + searchDomain.getReferences().get(0).getAliases().get(0).getAlias() + "'";
+						from_reference = true;
+						from_alias = true;
+					}				
+				}
 			}
 		}
 
@@ -346,6 +348,8 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			where = where + "\nand note2.note ilike '" + value + "'" ;
 			from_rawsequenceNote = true;
 		}
+		
+		// building from...
 		
 		if (from_accession == true) {
 			from = from + ", acc_accession acc";

@@ -117,6 +117,8 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		Boolean from_marker = false;
 		Boolean from_reference = false;
 		Boolean from_alias = false;
+		Boolean from_generalNote = false;
+		Boolean from_rawsequenceNote = false;
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("p", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -331,6 +333,19 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				}				
 			}
 		}
+
+		String value;
+		if (searchDomain.getGeneralNote() != null && !searchDomain.getGeneralNote().getNote().isEmpty()) {
+			value = searchDomain.getGeneralNote().getNote().replace("'",  "''");
+			where = where + "\nand note1.note ilike '" + value + "'" ;
+			from_generalNote = true;
+		}
+		
+		if (searchDomain.getRawsequenceNote() != null && !searchDomain.getRawsequenceNote().getNoteChunk().isEmpty()) {
+			value = searchDomain.getRawsequenceNote().getNoteChunk().replace("'",  "''");
+			where = where + "\nand note2.note ilike '" + value + "'" ;
+			from_rawsequenceNote = true;
+		}
 		
 		if (from_accession == true) {
 			from = from + ", acc_accession acc";
@@ -380,6 +395,17 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		if (from_alias == true) {
 			from = from + ", prb_alias a";
 			where = where + "\nand r._reference_key = a._reference_key";
+		}
+	
+		if (from_generalNote == true) {
+			from = from + ", prb_notes note1";
+			where = where + "\nand p._probe_key = note1._probe_key";
+		}
+		
+		if (from_rawsequenceNote == true) {
+			from = from + ", mgi_note_probe_view note2";
+			where = where + "\nand p._probe_key = note2._object_key";
+			where = where + "\nand note2._notetype_key = 1037";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

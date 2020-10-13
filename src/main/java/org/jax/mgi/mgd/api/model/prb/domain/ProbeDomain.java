@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.prb.domain;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 
 import lombok.Getter;
@@ -35,6 +36,7 @@ public class ProbeDomain extends BaseDomain {
 	private String modification_date;
 	private String accID;
 
+	private List<AccessionDomain> mgiAccessionIds;
 	private ProbeSourceDomain probeSource;
 	private List<ProbeMarkerDomain> markers;
 	private List<ProbeReferenceDomain> references;

@@ -400,7 +400,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		
 		if (from_accession == true) {
 			from = from + ", acc_accession acc";
-			where = where + "\nand acc._mgitype_key = 3 and p._probe_key = acc._object_key";
+			where = where + "\nand acc._mgitype_key = 3 and p._probe_key = acc._object_key and acc.prefixPart = 'MGI:'";
 		}
 
 		if (from_parentclone == true) {

@@ -12,7 +12,6 @@ import lombok.Setter;
 @Getter @Setter
 public class ProbeDomain extends BaseDomain {
 
-	private String processStatus;
 	private String probeKey;
 	private String name;
 	private String segmentTypeKey;

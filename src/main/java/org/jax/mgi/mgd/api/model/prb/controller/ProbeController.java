@@ -31,20 +31,26 @@ public class ProbeController extends BaseController<ProbeDomain> {
 	private ProbeService probeService;
 
 	@Override
-	public SearchResults<ProbeDomain> create(ProbeDomain probe, User user) {
-		return probeService.create(probe, user);
+	public SearchResults<ProbeDomain> create(ProbeDomain domain, User user) {
+		SearchResults<ProbeDomain> results = new SearchResults<ProbeDomain>();
+		results = probeService.create(domain, user);
+		results = probeService.getResults(Integer.valueOf(results.items.get(0).getProbeKey()));
+		return results;
 	}
 
 	@Override
-	public SearchResults<ProbeDomain> update(ProbeDomain probe, User user) {
-		return probeService.update(probe, user);
+	public SearchResults<ProbeDomain> update(ProbeDomain domain, User user) {
+		SearchResults<ProbeDomain> results = new SearchResults<ProbeDomain>();
+		results = probeService.update(domain, user);
+		results = probeService.getResults(Integer.valueOf(results.items.get(0).getProbeKey()));
+		return results;
 	}
 
 	@Override
 	public SearchResults<ProbeDomain> delete(Integer key, User user) {
 		return probeService.delete(key, user);
 	}
-		
+	
 	@Override
 	public ProbeDomain get(Integer key) {
 		return probeService.get(key);

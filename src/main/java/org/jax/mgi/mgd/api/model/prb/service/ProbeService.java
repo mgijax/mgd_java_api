@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.prb.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -10,12 +11,13 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeDAO;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeDomain;
+import org.jax.mgi.mgd.api.model.prb.entities.Probe;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeTranslator;
 import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeTranslator;
-import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -28,33 +30,80 @@ public class ProbeService extends BaseService<ProbeDomain> {
 
 	@Inject
 	private ProbeDAO probeDAO;
+	@Inject
+	private NoteService noteService;
 
 	private ProbeTranslator translator = new ProbeTranslator();
 	private SlimProbeTranslator slimtranslator = new SlimProbeTranslator();
 
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
+	private String mgiTypeKey = "3";
+	
 	@Transactional
-	public SearchResults<ProbeDomain> create(ProbeDomain object, User user) {
-		SearchResults<ProbeDomain> results = new SearchResults<ProbeDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
-		return results;
-	}
+	public SearchResults<ProbeDomain> create(ProbeDomain domain, User user) {	
+		// create new entity object from in-coming domain
+		// the Entities class handles the generation of the primary key
+		// database trigger will assign the MGI id/see pgmgddbschema/trigger for details
 
-	@Transactional
-	public SearchResults<ProbeDomain> update(ProbeDomain object, User user) {
 		SearchResults<ProbeDomain> results = new SearchResults<ProbeDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
-		return results;
-	}
-    
-	@Transactional
-	public SearchResults<ProbeDomain> delete(Integer key, User user) {
-		SearchResults<ProbeDomain> results = new SearchResults<ProbeDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		Probe entity = new Probe();
+		
+		log.info("processProbe/create");		
+		
+		entity.setCreatedBy(user);
+		entity.setCreation_date(new Date());
+		entity.setModifiedBy(user);
+		entity.setModification_date(new Date());
+		
+		// execute persist/insert/send to database
+		probeDAO.persist(entity);
+
+		// process all notes
+		//		noteService.process(String.valueOf(entity.get_probe_key()), domain.getGeneralNote(), mgiTypeKey, user);
+		noteService.process(String.valueOf(entity.get_probe_key()), domain.getRawsequenceNote(), mgiTypeKey, user);
+		
+		// return entity translated to domain
+		log.info("processProbe/create/returning results");
+		results.setItem(translator.translate(entity));
 		return results;
 	}
 	
+	@Transactional
+	public SearchResults<ProbeDomain> update(ProbeDomain domain, User user) {
+		// update existing entity object from in-coming domain
+		
+		SearchResults<ProbeDomain> results = new SearchResults<ProbeDomain>();
+		Probe entity = probeDAO.get(Integer.valueOf(domain.getProbeKey()));
+		
+		log.info("processProbe/update");
+				
+		// process all notes
+		//		noteService.process(String.valueOf(entity.get_probe_key()), domain.getGeneralNote(), mgiTypeKey, user);
+		noteService.process(domain.getProbeKey(), domain.getRawsequenceNote(), mgiTypeKey, user);
+		
+		entity.setModification_date(new Date());
+		entity.setModifiedBy(user);
+		probeDAO.update(entity);
+		log.info("processProbe/changes processed: " + domain.getProbeKey());		
+				
+		// return entity translated to domain
+		log.info("processProbe/update/returning results");
+		results.setItem(translator.translate(entity));		
+		log.info("processProbe/update/returned results succsssful");
+		return results;			
+	}
+
+	@Transactional
+	public SearchResults<ProbeDomain> delete(Integer key, User user) {
+		// get the entity object and delete
+		SearchResults<ProbeDomain> results = new SearchResults<ProbeDomain>();
+		Probe entity = probeDAO.get(key);
+		results.setItem(translator.translate(probeDAO.get(key)));
+		probeDAO.remove(entity);
+		return results;
+	}
+
 	@Transactional
 	public ProbeDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain
@@ -106,7 +155,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		String where = "where p._probe_key is not null";
 		String orderBy = "order by p.name";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
-		//String value;
+		String value;
 		Boolean from_accession = false;
 		Boolean from_raccession = false;
 		Boolean from_parentclone = false;
@@ -140,7 +189,8 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		}
 
 		if (searchDomain.getRegionCovered() != null && !searchDomain.getRegionCovered().isEmpty()) {
-			where = where + "\nand p.regioncovered ilike '" + searchDomain.getRegionCovered() + "'" ;
+			value = searchDomain.getRegionCovered().replace("'", "''");
+			where = where + "\nand p.regioncovered ilike '" + value + "'" ;
 		}
 
 		if (searchDomain.getPrimer1sequence() != null && !searchDomain.getPrimer1sequence().isEmpty()) {
@@ -165,7 +215,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		
 		// accession id 
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {
-			String value = searchDomain.getAccID().toUpperCase();
+			value = searchDomain.getAccID().toUpperCase();
 			if (!value.startsWith("MGI:")) {
 				where = where + "\nand acc.numericPart = '" + value + "'";
 			}
@@ -334,7 +384,6 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			}
 		}
 
-		String value;
 		if (searchDomain.getGeneralNote() != null && !searchDomain.getGeneralNote().getNote().isEmpty()) {
 			value = searchDomain.getGeneralNote().getNote().replace("'",  "''");
 			where = where + "\nand note1.note ilike '" + value + "'" ;

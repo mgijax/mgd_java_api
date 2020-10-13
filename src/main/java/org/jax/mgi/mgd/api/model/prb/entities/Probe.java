@@ -80,6 +80,13 @@ public class Probe extends BaseEntity {
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 
+	// other accession ids
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_probe_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 3 and `_logicaldb_key` != 1")
+	@OrderBy(clause="preferred desc, accID")
+	private List<Accession> otherAccessionIds;
+	
 	// markers
 	@OneToMany()
 	@JoinColumn(name="_probe_key", insertable=false, updatable=false)

@@ -237,7 +237,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				String agePrefix = "";
 				String ageStage = "";
 				if (searchDomain.getProbeSource().getAgePrefix() != null && !searchDomain.getProbeSource().getAgePrefix().isEmpty()) {
-					agePrefix = searchDomain.getProbeSource().getAgePrefix() + "% ";
+					agePrefix = searchDomain.getProbeSource().getAgePrefix() + "%";
 				}
 				if (searchDomain.getProbeSource().getAgeStage() != null && !searchDomain.getProbeSource().getAgeStage().isEmpty()) {
 					ageStage = "% " + searchDomain.getProbeSource().getAgeStage();

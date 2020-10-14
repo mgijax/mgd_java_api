@@ -163,7 +163,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
-		String select = "select p._probe_key, p.name";
+		String select = "select distinct p._probe_key, p.name";
 		String from = "from prb_probe p";
 		String where = "where p._probe_key is not null";
 		String orderBy = "order by p.name";

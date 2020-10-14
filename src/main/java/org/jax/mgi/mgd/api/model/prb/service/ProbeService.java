@@ -108,7 +108,9 @@ public class ProbeService extends BaseService<ProbeDomain> {
 	@Transactional
 	public ProbeDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain
+
 		ProbeDomain domain = new ProbeDomain();
+
 		if (probeDAO.get(key) != null) {
 			domain = translator.translate(probeDAO.get(key));
 
@@ -359,32 +361,18 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			if (searchDomain.getReferences().get(0).getRefsKey() != null && !searchDomain.getReferences().get(0).getRefsKey().isEmpty()) {
 				where = where + "\nand r._refs_key = " + searchDomain.getReferences().get(0).getRefsKey();
 				from_reference = true;
-			}			
-			
-			String refcmResults[] = DateSQLQuery.queryByCreationModification("r", 
-					searchDomain.getReferences().get(0).getCreatedBy(), 
-					searchDomain.getReferences().get(0).getModifiedBy(), 
-					searchDomain.getReferences().get(0).getCreation_date(), 
-					searchDomain.getReferences().get(0).getModification_date());
-			
-			if (refcmResults.length > 0) {
-				if (refcmResults[0].length() > 0 || refcmResults[1].length() > 0) {
-					from = from + refcmResults[0];
-					where = where + refcmResults[1];
-					from_reference = true;
-				}
 			}
 
-//			if (searchDomain.getReferences().get(0).getAccessionIds() != null) {
-//				if (searchDomain.getReferences().get(0).getAccessionIds().get(0).getAccID() != null && !searchDomain.getReferences().get(0).getAccessionIds().get(0).getAccID().isEmpty()) {
-//					if (searchDomain.getReferences().get(0).getAccessionIds().get(0).getLogicaldbKey() != null && !searchDomain.getReferences().get(0).getAccessionIds().get(0).getLogicaldbKey().isEmpty()) {
-//						where = where + "\nand racc._logicaldb_key = " + searchDomain.getReferences().get(0).getAccessionIds().get(0).getLogicaldbKey();
-//					}	
-//					where = where + "\nand racc.accID ilike '" + searchDomain.getReferences().get(0).getAccessionIds().get(0).getAccID() + "'";
-//					from_reference = true;
-//					from_raccession = true;			
-//				}				
-//			}
+			if (searchDomain.getReferences().get(0).getAccessionIds() != null) {
+				if (searchDomain.getReferences().get(0).getAccessionIds().get(0).getAccID() != null && !searchDomain.getReferences().get(0).getAccessionIds().get(0).getAccID().isEmpty()) {
+					if (searchDomain.getReferences().get(0).getAccessionIds().get(0).getLogicaldbKey() != null && !searchDomain.getReferences().get(0).getAccessionIds().get(0).getLogicaldbKey().isEmpty()) {
+						where = where + "\nand racc._logicaldb_key = " + searchDomain.getReferences().get(0).getAccessionIds().get(0).getLogicaldbKey();
+					}	
+					where = where + "\nand racc.accID ilike '" + searchDomain.getReferences().get(0).getAccessionIds().get(0).getAccID() + "'";
+					from_reference = true;
+					from_raccession = true;			
+				}				
+			}
 			
 			if (searchDomain.getReferences().get(0).getAliases() != null) {
 				if (searchDomain.getReferences().get(0).getAliases().get(0).getAlias() != null && !searchDomain.getReferences().get(0).getAliases().get(0).getAlias().isEmpty()) {
@@ -450,8 +438,10 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		}
 		
 		if (from_raccession == true) {
-			from = from + ", acc_accession racc";
-			where = where + "\nand racc._mgitype_key = 3 and r._reference_key = racc._object_key";			
+			from = from + ", acc_accession racc, acc_accessionreference rracc";
+			where = where + "\nand r._refs_key = rracc._refs_key"
+					+ "\nand rracc._accession_key = racc._accession_key"
+					+ "\nand racc._mgitype_key = 3";
 		}
 
 		if (from_alias == true) {
@@ -501,7 +491,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			+ "\nfrom PRB_AccRef_View p"
 			+ "\nwhere p._object_key = " + probeKey
 			+ "\nand p._reference_key = " + referenceKey
-			+ "\norder by p.logicaldb";
+			+ "\norder by p._reference_key, p.logicaldb";
 		
 		log.info(cmd);
 		
@@ -517,6 +507,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				domain.setAccID(rs.getString("accID"));
 				results.add(domain);
 			}
+			// do not cleanup() until after all calls have been made
 			//sqlExecutor.cleanup();
 		}
 		catch (Exception e) {

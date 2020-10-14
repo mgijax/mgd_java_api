@@ -13,12 +13,14 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeDAO;
+import org.jax.mgi.mgd.api.model.prb.dao.ProbeSourceDAO;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeAccRefDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.Probe;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeTranslator;
 import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeTranslator;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -31,6 +33,12 @@ public class ProbeService extends BaseService<ProbeDomain> {
 
 	@Inject
 	private ProbeDAO probeDAO;
+	@Inject
+	private TermDAO termDAO;
+	@Inject
+	private ProbeSourceDAO sourceDAO;
+	@Inject
+	private ProbeNoteService probeNoteService;
 	@Inject
 	private NoteService noteService;
 	
@@ -61,7 +69,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		probeDAO.persist(entity);
 
 		// process all notes
-		//		noteService.process(String.valueOf(entity.get_probe_key()), domain.getGeneralNote(), mgiTypeKey, user);
+		probeNoteService.process(String.valueOf(entity.get_probe_key()), domain.getGeneralNote(), user);
 		noteService.process(String.valueOf(entity.get_probe_key()), domain.getRawsequenceNote(), mgiTypeKey, user);
 		
 		// return entity translated to domain
@@ -79,8 +87,72 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		
 		log.info("processProbe/update");
 				
+		entity.setName(domain.getName());
+		entity.setRegionCovered(domain.getRegionCovered());
+		entity.setSegmentType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));	
+		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));	
+		entity.setProbeSource(sourceDAO.get(Integer.valueOf(domain.getProbeSource().getSourceKey())));
+		
+		// primer
+		if (domain.getSegmentTypeKey().equals("63473")) {		
+	
+			entity.setInsertSite(null);
+			entity.setInsertSize(null);
+			entity.setDerivedFrom(null);
+			
+			if (domain.getPrimer1sequence() == null || domain.getPrimer1sequence().isEmpty()) {
+				entity.setPrimer1sequence(null);
+			}
+			else {
+				entity.setPrimer1sequence(domain.getPrimer1sequence());
+			}
+	
+			if (domain.getPrimer2sequence() == null || domain.getPrimer2sequence().isEmpty()) {
+				entity.setPrimer2sequence(null);
+			}
+			else {
+				entity.setPrimer2sequence(domain.getPrimer2sequence());
+			}
+			
+			if (domain.getProductSize() == null || domain.getProductSize().isEmpty()) {
+				entity.setProductSize(null);
+			}
+			else {
+				entity.setProductSize(domain.getProductSize());
+			}			
+		}
+		
+		// molecular segment
+		else {
+
+			entity.setPrimer1sequence(null);
+			entity.setPrimer2sequence(null);
+			entity.setProductSize(null);
+			
+			if (domain.getDerivedFromAccID() == null || domain.getDerivedFromAccID().isEmpty()) {
+				entity.setDerivedFrom(null);
+			}
+			else {
+				entity.setDerivedFrom(probeDAO.get(Integer.valueOf(domain.getDerivedFromKey())));
+			}
+			
+			if (domain.getInsertSite() == null || domain.getInsertSite().isEmpty()) {
+				entity.setInsertSite(null);
+			}
+			else {
+				entity.setInsertSite(domain.getInsertSite());
+			}
+
+			if (domain.getInsertSize() == null || domain.getInsertSize().isEmpty()) {
+				entity.setInsertSize(null);
+			}
+			else {
+				entity.setInsertSize(domain.getInsertSize());
+			}					
+		}
+		
 		// process all notes
-		//		noteService.process(String.valueOf(entity.get_probe_key()), domain.getGeneralNote(), mgiTypeKey, user);
+		probeNoteService.process(domain.getProbeKey(), domain.getGeneralNote(), user);
 		noteService.process(domain.getProbeKey(), domain.getRawsequenceNote(), mgiTypeKey, user);
 		
 		entity.setModification_date(new Date());

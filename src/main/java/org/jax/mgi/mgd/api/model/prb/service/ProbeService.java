@@ -13,6 +13,7 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeDAO;
+import org.jax.mgi.mgd.api.model.prb.domain.ProbeAccRefDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.Probe;
@@ -32,10 +33,10 @@ public class ProbeService extends BaseService<ProbeDomain> {
 	private ProbeDAO probeDAO;
 	@Inject
 	private NoteService noteService;
-
+	
 	private ProbeTranslator translator = new ProbeTranslator();
 	private SlimProbeTranslator slimtranslator = new SlimProbeTranslator();
-
+	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	private String mgiTypeKey = "3";
@@ -110,6 +111,13 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		ProbeDomain domain = new ProbeDomain();
 		if (probeDAO.get(key) != null) {
 			domain = translator.translate(probeDAO.get(key));
+			
+			// attach accession ids for each prb_reference
+			for (int i = 0; i < domain.getReferences().size(); i++) {
+				List<ProbeAccRefDomain> accessionIds = new ArrayList<ProbeAccRefDomain>();
+				accessionIds = searchReferences(domain.getProbeKey(), domain.getReferences().get(i).getReferenceKey());
+				domain.getReferences().get(i).setAccessionIds(accessionIds);
+			}
 		}
 		return domain;
 	}
@@ -479,5 +487,40 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		
 		return results;
 	}
-	   
+
+	@Transactional
+	public List<ProbeAccRefDomain> searchReferences(String probeKey, String referenceKey) {
+		// select prb_accref_view for given probe
+		
+		List<ProbeAccRefDomain> results = new ArrayList<ProbeAccRefDomain>();
+		
+		String cmd = "select p.*"
+			+ "\nfrom PRB_AccRef_View p"
+			+ "\nwhere p._object_key = " + probeKey
+			+ "\nand p._reference_key = " + referenceKey
+			+ "\norder by p.logicaldb";
+		
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				ProbeAccRefDomain domain = new ProbeAccRefDomain();
+				domain.setReferenceKey(rs.getString("_reference_key"));
+				domain.setProbeKey(rs.getString("_object_key"));	
+				domain.setAccessionKey(rs.getString("_accession_key"));
+				domain.setLogicaldbKey(rs.getString("_logicaldb_key"));
+				domain.setLogicaldbName(rs.getString("logicaldb"));
+				domain.setAccID(rs.getString("accID"));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

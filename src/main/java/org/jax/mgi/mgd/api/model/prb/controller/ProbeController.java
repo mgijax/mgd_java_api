@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.prb.domain.ProbeAccRefDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.service.ProbeService;
@@ -53,7 +54,19 @@ public class ProbeController extends BaseController<ProbeDomain> {
 	
 	@Override
 	public ProbeDomain get(Integer key) {
-		return probeService.get(key);
+		ProbeDomain domain = new ProbeDomain();
+		domain = probeService.get(key);
+
+		// attach accession ids for each prb_reference
+		for (int i = 0; i < domain.getReferences().size(); i++) {
+			List<ProbeAccRefDomain> accessionIds = new ArrayList<ProbeAccRefDomain>();
+			accessionIds = probeService.searchReferences(domain.getProbeKey(), domain.getReferences().get(i).getReferenceKey());
+			if (!accessionIds.isEmpty()) {
+				domain.getReferences().get(i).setAccessionIds(accessionIds);
+			}
+		}
+		
+		return domain;
 	}
 
 	@GET

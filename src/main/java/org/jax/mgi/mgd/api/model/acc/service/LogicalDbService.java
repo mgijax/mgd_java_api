@@ -548,7 +548,6 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 			while (rs.next()) {					
 				LogicalDbDomain domain = new LogicalDbDomain();									
 				domain = translator.translate(logicalDBDAO.get(rs.getInt("_logicaldb_key")));
-				domain.setName(domain.getName().replace("Sequence DB",  "Nucleotide Sequence"));
 				results.add(domain);
 				logicalDBDAO.clear();
 			}

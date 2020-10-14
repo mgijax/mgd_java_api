@@ -439,9 +439,10 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		
 		if (from_raccession == true) {
 			from = from + ", acc_accession racc, acc_accessionreference rracc";
-			where = where + "\nand r._refs_key = rracc._refs_key"
-					+ "\nand rracc._accession_key = racc._accession_key"
-					+ "\nand racc._mgitype_key = 3";
+			where = where + "\nand p._probe_key = racc._object_key"
+					+ "\nand r._refs_key = rracc._refs_key"
+					+ "\nand racc._mgitype_key = 3"
+					+ "\nand rracc._accession_key = racc._accession_key";
 		}
 
 		if (from_alias == true) {

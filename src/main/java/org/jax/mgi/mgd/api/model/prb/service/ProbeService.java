@@ -497,7 +497,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		
 		List<ProbeAccRefDomain> results = new ArrayList<ProbeAccRefDomain>();
 		
-		String cmd = "select p.*"
+		String cmd = "\nselect p.*"
 			+ "\nfrom PRB_AccRef_View p"
 			+ "\nwhere p._object_key = " + probeKey
 			+ "\nand p._reference_key = " + referenceKey
@@ -515,7 +515,6 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				domain.setLogicaldbKey(rs.getString("_logicaldb_key"));
 				domain.setLogicaldbName(rs.getString("logicaldb"));
 				domain.setAccID(rs.getString("accID"));
-				probeDAO.clear();
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

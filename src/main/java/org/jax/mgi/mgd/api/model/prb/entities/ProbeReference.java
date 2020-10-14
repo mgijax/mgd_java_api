@@ -14,7 +14,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
-import org.jax.mgi.mgd.api.model.acc.entities.AccessionReference;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
@@ -51,11 +50,6 @@ public class ProbeReference extends BaseEntity {
 	@OneToOne
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
-	
-	// accession ids (non-MGI)/must be done via PWI
-	@OneToMany()
-	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
-	private List<AccessionReference> accessionIds;
 	
 	// aliases
 	@OneToMany()

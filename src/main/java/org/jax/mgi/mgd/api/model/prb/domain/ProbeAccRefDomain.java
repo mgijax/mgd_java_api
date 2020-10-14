@@ -13,9 +13,9 @@ public class ProbeAccRefDomain extends BaseDomain {
 	private String accessionKey;
 	private String logicaldbKey;
 	private String logicaldbName;
-	private String objectKey;
-	private String mgiTypeKey;
+	//private String objectKey;
+	//private String mgiTypeKey;
 	private String accID;
-	private String prefixPart;
-	private String numericPart;	
+	//private String prefixPart;
+	//private String numericPart;	
 }

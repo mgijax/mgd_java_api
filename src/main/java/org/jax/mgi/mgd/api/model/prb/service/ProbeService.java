@@ -492,7 +492,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			+ "\nfrom PRB_AccRef_View p"
 			+ "\nwhere p._object_key = " + probeKey
 			+ "\nand p._reference_key = " + referenceKey
-			+ "\norder by p._reference_key, p.logicaldb";
+			+ "\norder by p._reference_key, p.logicaldb, p.accid";
 		
 		log.info(cmd);
 		

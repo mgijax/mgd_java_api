@@ -52,11 +52,11 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 		}
 	
 		// other accession ids only
-		if (entity.getOtherAccessionIds() != null && !entity.getOtherAccessionIds().isEmpty()) {
-			AccessionTranslator accessionTranslator = new AccessionTranslator();			
-			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getOtherAccessionIds());
-			domain.setOtherAccessionIds(IteratorUtils.toList(acc.iterator()));
-		}
+//		if (entity.getOtherAccessionIds() != null && !entity.getOtherAccessionIds().isEmpty()) {
+//			AccessionTranslator accessionTranslator = new AccessionTranslator();			
+//			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getOtherAccessionIds());
+//			domain.setOtherAccessionIds(IteratorUtils.toList(acc.iterator()));
+//		}
 		
 		// probe source
 		ProbeSourceTranslator probesourceTranslator = new ProbeSourceTranslator();

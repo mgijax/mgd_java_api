@@ -116,7 +116,9 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			for (int i = 0; i < domain.getReferences().size(); i++) {
 				List<ProbeAccRefDomain> accessionIds = new ArrayList<ProbeAccRefDomain>();
 				accessionIds = searchReferences(domain.getProbeKey(), domain.getReferences().get(i).getReferenceKey());
-				domain.getReferences().get(i).setAccessionIds(accessionIds);
+				if (!accessionIds.isEmpty()) {
+					domain.getReferences().get(i).setAccessionIds(accessionIds);
+				}
 			}
 		}
 		return domain;
@@ -512,6 +514,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				domain.setLogicaldbKey(rs.getString("_logicaldb_key"));
 				domain.setLogicaldbName(rs.getString("logicaldb"));
 				domain.setAccID(rs.getString("accID"));
+				probeDAO.clear();
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

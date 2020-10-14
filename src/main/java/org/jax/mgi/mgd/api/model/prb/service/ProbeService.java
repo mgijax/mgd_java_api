@@ -119,7 +119,6 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				if (!accessionIds.isEmpty()) {
 					domain.getReferences().get(i).setAccessionIds(accessionIds);
 				}
-				probeDAO.clear();
 			}
 		}
 		
@@ -518,7 +517,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				domain.setAccID(rs.getString("accID"));
 				results.add(domain);
 			}
-			sqlExecutor.cleanup();
+			//sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();

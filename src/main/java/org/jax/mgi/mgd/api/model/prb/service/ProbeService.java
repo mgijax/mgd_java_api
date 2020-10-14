@@ -512,6 +512,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				domain.setLogicaldbKey(rs.getString("_logicaldb_key"));
 				domain.setLogicaldbName(rs.getString("logicaldb"));
 				domain.setAccID(rs.getString("accID"));
+				probeDAO.clear();
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

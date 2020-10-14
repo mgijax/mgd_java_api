@@ -119,7 +119,6 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				if (!accessionIds.isEmpty()) {
 					domain.getReferences().get(i).setAccessionIds(accessionIds);
 				}
-				accessionIds.clear();
 			}
 		}
 		return domain;

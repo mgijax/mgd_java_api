@@ -116,7 +116,6 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		return results;
 	}	
 
-	
 	@Transactional	
 	public List<OrganismDomain> searchMarker() {
 		// for marker module
@@ -125,42 +124,6 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
 
 		String cmd = "select _organism_key from mgi_organism_marker_view order by commonname";
-		log.info(cmd);
-
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				OrganismDomain domain = new OrganismDomain();
-				domain = translator.translate(organismDAO.get(rs.getInt("_organism_key")));
-				results.add(domain);
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {e.printStackTrace();}
-		
-		return results;
-	}
-	
-	
-	@Transactional	
-	public List<OrganismDomain> searchProbe() {
-		// for probe module
-		// include: see mgi_organism_probe_view
-		
-		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
-
-		String cmd = "select _organism_key, commonname, 0 as org\n" + 
-				"from mgi_organism_probe_view\n" + 
-				"where commonname = 'mouse, laboratory'\n" + 
-				"union\n" + 
-				"select _organism_key, commonname, 2 as org\n" + 
-				"from mgi_organism_probe_view\n" + 
-				"where commonname = 'Not Specified'\n" + 
-				"union\n" + 
-				"select _organism_key, commonname, 3 as org\n" + 
-				"from mgi_organism_probe_view\n" + 
-				"where commonname not in ('mouse, laboratory', 'Not Specified')\n" + 
-				"order by org, commonname";	
 		log.info(cmd);
 
 		try {
@@ -223,6 +186,41 @@ public class OrganismService extends BaseService<OrganismDomain> {
 				"from MGI_Organism s, MGI_Organism_MGIType t\n" + 
 				"where s._Organism_key = t._Organism_key\n" +
 				"and t._MGIType_key = 6";
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				OrganismDomain domain = new OrganismDomain();
+				domain = translator.translate(organismDAO.get(rs.getInt("_organism_key")));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {e.printStackTrace();}
+		
+		return results;
+	}
+
+	@Transactional	
+	public List<OrganismDomain> searchProbe() {
+		// for probe module
+		// include: see mgi_organism_probe_view
+		
+		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
+
+		String cmd = "select _organism_key, commonname, 0 as org\n" + 
+				"from mgi_organism_probe_view\n" + 
+				"where commonname = 'mouse, laboratory'\n" + 
+				"union\n" + 
+				"select _organism_key, commonname, 2 as org\n" + 
+				"from mgi_organism_probe_view\n" + 
+				"where commonname = 'Not Specified'\n" + 
+				"union\n" + 
+				"select _organism_key, commonname, 3 as org\n" + 
+				"from mgi_organism_probe_view\n" + 
+				"where commonname not in ('mouse, laboratory', 'Not Specified')\n" + 
+				"order by org, commonname";	
 		log.info(cmd);
 
 		try {

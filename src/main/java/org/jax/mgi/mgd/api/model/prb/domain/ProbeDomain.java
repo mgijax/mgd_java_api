@@ -36,6 +36,7 @@ public class ProbeDomain extends BaseDomain {
 	private String accID;
 
 	private List<SlimAccessionDomain> mgiAccessionIds;
+	private List<SlimAccessionDomain> otherAccessionIds;
 	private ProbeSourceDomain probeSource;
 	private List<ProbeMarkerDomain> markers;
 	private List<ProbeReferenceDomain> references;

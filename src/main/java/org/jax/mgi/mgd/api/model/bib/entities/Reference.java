@@ -96,5 +96,5 @@ public class Reference extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 1 and `_logicaldb_key` in (29, 65, 185)")
 	@OrderBy(clause ="accid")
 	private List<Accession> editAccessionIds;
-
+	
 }

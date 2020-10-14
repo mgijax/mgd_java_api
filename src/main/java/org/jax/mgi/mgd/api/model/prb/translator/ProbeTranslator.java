@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.prb.translator;
 
+import java.util.Comparator;
+
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
@@ -72,6 +74,7 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 			ProbeReferenceTranslator referenceTranslator = new ProbeReferenceTranslator();
 			Iterable<ProbeReferenceDomain> i = referenceTranslator.translateEntities(entity.getReferences());
 			domain.setReferences(IteratorUtils.toList(i.iterator()));
+			 domain.getReferences().sort(Comparator.comparing(ProbeReferenceDomain::getJnum));			
 		}
 		
 		// at most one note

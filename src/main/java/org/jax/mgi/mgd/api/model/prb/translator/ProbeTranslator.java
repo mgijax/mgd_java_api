@@ -48,6 +48,13 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
 			domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
 		}
+	
+		// other accession ids only
+		if (entity.getOtherAccessionIds() != null && !entity.getOtherAccessionIds().isEmpty()) {
+			SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();			
+			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getOtherAccessionIds());
+			domain.setOtherAccessionIds(IteratorUtils.toList(acc.iterator()));
+		}
 		
 		// probe source
 		ProbeSourceTranslator probesourceTranslator = new ProbeSourceTranslator();

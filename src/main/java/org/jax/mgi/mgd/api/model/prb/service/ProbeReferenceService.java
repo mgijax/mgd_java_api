@@ -146,6 +146,9 @@ public class ProbeReferenceService extends BaseService<ProbeReferenceDomain> {
 				probeDAO.persist(entity);				
 
 				// process accession ids
+				if (accessionService.process(String.valueOf(entity.get_probe_key()), domain.get(i).getAccessionIds(), mgiTypeName, user)) {
+					modified = true;
+				}
 				
 				// process alias
 				if (aliasService.process(String.valueOf(entity.get_reference_key()), domain.get(i).getAliases(), user)) {
@@ -176,10 +179,8 @@ public class ProbeReferenceService extends BaseService<ProbeReferenceDomain> {
 				entity.setModification_date(new Date());
 
 				// process accession ids
-				if (domain.get(i).getAccessionIds() != null && !domain.get(i).getAccessionIds().isEmpty()) {
-					if (accessionService.process(domain.get(i).getProbeKey(), domain.get(i).getAccessionIds(), mgiTypeName, user)) {
-						modified = true;
-					}
+				if (accessionService.process(domain.get(i).getProbeKey(), domain.get(i).getAccessionIds(), mgiTypeName, user)) {
+					modified = true;
 				}
 				
 				// process alias

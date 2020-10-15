@@ -146,6 +146,11 @@ public class ProbeReferenceService extends BaseService<ProbeReferenceDomain> {
 				probeDAO.persist(entity);				
 
 				// process accession ids
+				// set the refsKey in the accession/reference domain
+				String refsKey = domain.get(i).getRefsKey();
+				for (int j = 0; i < domain.get(i).getAccessionIds().size(); j++) {
+					domain.get(i).getAccessionIds().get(j).getReferences().get(0).setRefsKey(refsKey);
+				}
 				if (accessionService.process(String.valueOf(entity.get_probe_key()), domain.get(i).getAccessionIds(), mgiTypeName, user)) {
 					modified = true;
 				}

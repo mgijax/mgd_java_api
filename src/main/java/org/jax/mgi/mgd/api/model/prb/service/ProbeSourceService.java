@@ -336,8 +336,6 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();
-			
-
 		}
 		catch (Exception e) {
 			e.printStackTrace();

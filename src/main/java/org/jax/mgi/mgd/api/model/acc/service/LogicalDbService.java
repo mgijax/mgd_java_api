@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.acc.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -512,6 +513,7 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 			e.printStackTrace();
 		}
 		
+		//Collections.sort(results);		
 		return results;
 	}
 
@@ -548,6 +550,7 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 			while (rs.next()) {					
 				LogicalDbDomain domain = new LogicalDbDomain();									
 				domain = translator.translate(logicalDBDAO.get(rs.getInt("_logicaldb_key")));
+				domain.setName(domain.getName().replace("Sequence DB", "Nucleotide"));
 				results.add(domain);
 				logicalDBDAO.clear();
 			}

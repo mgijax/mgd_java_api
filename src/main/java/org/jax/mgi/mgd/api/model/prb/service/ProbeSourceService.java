@@ -166,7 +166,6 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		entity.setModifiedBy(user);
 		entity.setModification_date(new Date());				
 		
-		
 		probeSourceDAO.persist(entity);				
 
 		// validate age and set age min/age max

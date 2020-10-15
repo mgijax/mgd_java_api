@@ -132,25 +132,25 @@ public class ProbeAliasService extends BaseService<ProbeAliasDomain> {
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processProbeAlias/delete");
-				if (domain.get(i).getReferenceKey() != null && !domain.get(i).getReferenceKey().isEmpty()) {
-					ProbeAlias entity = aliasDAO.get(Integer.valueOf(domain.get(i).getReferenceKey()));
+				if (domain.get(i).getAliasKey() != null && !domain.get(i).getAliasKey().isEmpty()) {
+					ProbeAlias entity = aliasDAO.get(Integer.valueOf(domain.get(i).getAliasKey()));
 					aliasDAO.remove(entity);
 					modified = true;
 				}
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-				log.info("processProbeReference/update");
-				ProbeAlias entity = aliasDAO.get(Integer.valueOf(domain.get(i).getReferenceKey()));	
+				log.info("processProbeAlias/update");
+				ProbeAlias entity = aliasDAO.get(Integer.valueOf(domain.get(i).getAliasKey()));	
 				entity.set_reference_key(Integer.valueOf(parentKey));
 				entity.setAlias(domain.get(i).getAlias());
 				entity.setModifiedBy(user);
 				entity.setModification_date(new Date());				
 				aliasDAO.update(entity);
-				log.info("processProbeAlias/changes processed: " + domain.get(i).getReferenceKey());				
+				log.info("processProbeAlias/changes processed: " + domain.get(i).getAliasKey());				
 				modified = true;
 			}
 			else {
-				log.info("processProbeReference/no changes processed: " + domain.get(i).getReferenceKey());
+				log.info("processProbeAlias/no changes processed: " + domain.get(i).getAliasKey());
 			}
 		}
 		

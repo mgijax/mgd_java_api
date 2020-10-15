@@ -67,6 +67,7 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 			ProbeMarkerTranslator markerTranslator = new ProbeMarkerTranslator();
 			Iterable<ProbeMarkerDomain> i = markerTranslator.translateEntities(entity.getMarkers());
 			domain.setMarkers(IteratorUtils.toList(i.iterator()));
+			domain.getMarkers().sort(Comparator.comparing(ProbeMarkerDomain::getMarkerSymbol).thenComparing(ProbeMarkerDomain::getJnum));			
 		}
 
 		// references
@@ -74,7 +75,7 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 			ProbeReferenceTranslator referenceTranslator = new ProbeReferenceTranslator();
 			Iterable<ProbeReferenceDomain> i = referenceTranslator.translateEntities(entity.getReferences());
 			domain.setReferences(IteratorUtils.toList(i.iterator()));
-			 domain.getReferences().sort(Comparator.comparing(ProbeReferenceDomain::getJnum));			
+			domain.getReferences().sort(Comparator.comparing(ProbeReferenceDomain::getJnum));			
 		}
 		
 		// at most one note

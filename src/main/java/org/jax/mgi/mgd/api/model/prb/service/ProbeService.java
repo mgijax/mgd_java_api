@@ -23,7 +23,6 @@ import org.jax.mgi.mgd.api.model.prb.entities.Probe;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeTranslator;
 import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeTranslator;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
-import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -666,17 +665,6 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			while (rs.next()) {
 				AccessionDomain domain = new AccessionDomain();
 				domain = acctranslator.translate(accDAO.get(rs.getInt("_accession_key")));				
-				
-//				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
-//				domain.setObjectKey(rs.getString("_object_key"));
-//				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
-//				domain.setAccessionKey(rs.getString("_accession_key"));
-//				domain.setLogicaldbKey(rs.getString("_logicaldb_key"));
-//				domain.setLogicaldb(rs.getString("logicaldb"));
-//				domain.setAccID(rs.getString("accID"));
-//				domain.setPrefixPart(rs.getString("prefixpart"));
-//				domain.setNumericPart(rs.getString("numericpart"));
-
 				accDAO.clear();
 				results.add(domain);
 			}

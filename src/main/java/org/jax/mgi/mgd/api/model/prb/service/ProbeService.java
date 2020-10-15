@@ -231,7 +231,6 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		// can only modify an anonymous source
 		if (domain.getProbeSource().getName() == null || domain.getProbeSource().getName().isEmpty()) {
 			sourceService.update(domain.getProbeSource(), user);
-			//entity.setProbeSource(sourceDAO.get(Integer.valueOf(domain.getProbeSource().getSourceKey())));			
 		}
 		
 		if (probeNoteService.process(domain.getProbeKey(), domain.getGeneralNote(), user)) {

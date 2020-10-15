@@ -39,6 +39,8 @@ public class ProbeReferenceService extends BaseService<ProbeReferenceDomain> {
 	private ProbeReferenceTranslator translator = new ProbeReferenceTranslator();						
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
+	private String mgiTypeName = "Segment";
+	
 	@Transactional
 	public SearchResults<ProbeReferenceDomain> create(ProbeReferenceDomain domain, User user) {
 		SearchResults<ProbeReferenceDomain> results = new SearchResults<ProbeReferenceDomain>();
@@ -174,7 +176,11 @@ public class ProbeReferenceService extends BaseService<ProbeReferenceDomain> {
 				entity.setModification_date(new Date());
 
 				// process accession ids
-				//public Boolean process(parentKey, domain.get(i).getAccessionIds(), "Segment", user) {
+				if (domain.get(i).getAccessionIds() != null && !domain.get(i).getAccessionIds().isEmpty()) {
+					if (accessionService.process(domain.get(i).getProbeKey(), domain.get(i).getAccessionIds(), mgiTypeName, user)) {
+						modified = true;
+					}
+				}
 				
 				// process alias
 				if (aliasService.process(domain.get(i).getReferenceKey(), domain.get(i).getAliases(), user)) {

@@ -10,17 +10,18 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeSourceDAO;
-import org.jax.mgi.mgd.api.model.prb.domain.ProbeAccRefDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.Probe;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeTranslator;
 import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeTranslator;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -274,7 +275,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 
 			// attach accession ids for each prb_reference
 			for (int i = 0; i < domain.getReferences().size(); i++) {
-				List<ProbeAccRefDomain> accessionIds = new ArrayList<ProbeAccRefDomain>();
+				List<AccessionDomain> accessionIds = new ArrayList<AccessionDomain>();
 				accessionIds = searchReferences(domain.getProbeKey(), domain.getReferences().get(i).getReferenceKey());
 				if (!accessionIds.isEmpty()) {
 					domain.getReferences().get(i).setAccessionIds(accessionIds);
@@ -641,10 +642,10 @@ public class ProbeService extends BaseService<ProbeDomain> {
 	}
 
 	@Transactional
-	public List<ProbeAccRefDomain> searchReferences(String probeKey, String referenceKey) {
+	public List<AccessionDomain> searchReferences(String probeKey, String referenceKey) {
 		// select prb_accref_view for given probe
 		
-		List<ProbeAccRefDomain> results = new ArrayList<ProbeAccRefDomain>();
+		List<AccessionDomain> results = new ArrayList<AccessionDomain>();
 		
 		String cmd = "\nselect p.*"
 			+ "\nfrom PRB_AccRef_View p"
@@ -657,12 +658,13 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				ProbeAccRefDomain domain = new ProbeAccRefDomain();
-				domain.setReferenceKey(rs.getString("_reference_key"));
-				domain.setProbeKey(rs.getString("_object_key"));	
+				AccessionDomain domain = new AccessionDomain();
+				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
+				domain.setObjectKey(rs.getString("_object_key"));
+				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
 				domain.setAccessionKey(rs.getString("_accession_key"));
 				domain.setLogicaldbKey(rs.getString("_logicaldb_key"));
-				domain.setLogicaldbName(rs.getString("logicaldb"));
+				domain.setLogicaldb(rs.getString("logicaldb"));
 				domain.setAccID(rs.getString("accID"));
 				results.add(domain);
 			}

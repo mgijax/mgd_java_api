@@ -10,7 +10,9 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.acc.dao.AccessionDAO;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeDAO;
@@ -39,6 +41,9 @@ public class ProbeService extends BaseService<ProbeDomain> {
 	@Inject
 	private TermDAO termDAO;
 	@Inject
+	private AccessionDAO accDAO;
+	
+	@Inject
 	private ProbeMarkerService markerService;
 	@Inject
 	private ProbeReferenceService referenceService;
@@ -46,9 +51,10 @@ public class ProbeService extends BaseService<ProbeDomain> {
 	private ProbeNoteService probeNoteService;
 	@Inject
 	private NoteService noteService;
-
+	
 	private ProbeTranslator translator = new ProbeTranslator();
 	private SlimProbeTranslator slimtranslator = new SlimProbeTranslator();
+	private AccessionTranslator acctranslator = new AccessionTranslator();
 	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
@@ -647,11 +653,11 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		
 		List<AccessionDomain> results = new ArrayList<AccessionDomain>();
 		
-		String cmd = "\nselect p.*"
-			+ "\nfrom PRB_AccRef_View p"
-			+ "\nwhere p._object_key = " + probeKey
-			+ "\nand p._reference_key = " + referenceKey
-			+ "\norder by p._reference_key, p.logicaldb, p.accid";
+		String cmd = "\nselect _accession_key"
+			+ "\nfrom PRB_AccRef_View"
+			+ "\nwhere _object_key = " + probeKey
+			+ "\nand._reference_key = " + referenceKey
+			+ "\norder by _reference_key, logicaldb, accid";
 		
 		log.info(cmd);
 		
@@ -659,13 +665,19 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				AccessionDomain domain = new AccessionDomain();
-				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
-				domain.setObjectKey(rs.getString("_object_key"));
-				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
-				domain.setAccessionKey(rs.getString("_accession_key"));
-				domain.setLogicaldbKey(rs.getString("_logicaldb_key"));
-				domain.setLogicaldb(rs.getString("logicaldb"));
-				domain.setAccID(rs.getString("accID"));
+				domain = acctranslator.translate(accDAO.get(rs.getInt("_accession_key")));				
+				
+//				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
+//				domain.setObjectKey(rs.getString("_object_key"));
+//				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
+//				domain.setAccessionKey(rs.getString("_accession_key"));
+//				domain.setLogicaldbKey(rs.getString("_logicaldb_key"));
+//				domain.setLogicaldb(rs.getString("logicaldb"));
+//				domain.setAccID(rs.getString("accID"));
+//				domain.setPrefixPart(rs.getString("prefixpart"));
+//				domain.setNumericPart(rs.getString("numericpart"));
+
+				accDAO.clear();
 				results.add(domain);
 			}
 			// do not cleanup() until after all calls have been made

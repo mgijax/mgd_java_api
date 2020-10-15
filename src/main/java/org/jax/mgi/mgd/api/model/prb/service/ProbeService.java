@@ -34,14 +34,18 @@ public class ProbeService extends BaseService<ProbeDomain> {
 	@Inject
 	private ProbeDAO probeDAO;
 	@Inject
+	private ProbeSourceDAO sourceDAO;
+	@Inject
 	private TermDAO termDAO;
 	@Inject
-	private ProbeSourceDAO sourceDAO;
+	private ProbeMarkerService markerService;
+	@Inject
+	private ProbeReferenceService referenceService;
 	@Inject
 	private ProbeNoteService probeNoteService;
 	@Inject
 	private NoteService noteService;
-	
+
 	private ProbeTranslator translator = new ProbeTranslator();
 	private SlimProbeTranslator slimtranslator = new SlimProbeTranslator();
 	
@@ -59,6 +63,70 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		Probe entity = new Probe();
 		
 		log.info("processProbe/create");		
+
+		entity.setName(domain.getName());
+		entity.setRegionCovered(domain.getRegionCovered());
+		entity.setSegmentType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));	
+		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));	
+		entity.setProbeSource(sourceDAO.get(Integer.valueOf(domain.getProbeSource().getSourceKey())));
+		
+		// primer
+		if (domain.getSegmentTypeKey().equals("63473")) {		
+	
+			entity.setInsertSite(null);
+			entity.setInsertSize(null);
+			entity.setDerivedFrom(null);
+			
+			if (domain.getPrimer1sequence() == null || domain.getPrimer1sequence().isEmpty()) {
+				entity.setPrimer1sequence(null);
+			}
+			else {
+				entity.setPrimer1sequence(domain.getPrimer1sequence());
+			}
+	
+			if (domain.getPrimer2sequence() == null || domain.getPrimer2sequence().isEmpty()) {
+				entity.setPrimer2sequence(null);
+			}
+			else {
+				entity.setPrimer2sequence(domain.getPrimer2sequence());
+			}
+			
+			if (domain.getProductSize() == null || domain.getProductSize().isEmpty()) {
+				entity.setProductSize(null);
+			}
+			else {
+				entity.setProductSize(domain.getProductSize());
+			}			
+		}
+		
+		// molecular segment
+		else {
+
+			entity.setPrimer1sequence(null);
+			entity.setPrimer2sequence(null);
+			entity.setProductSize(null);
+			
+			if (domain.getDerivedFromAccID() == null || domain.getDerivedFromAccID().isEmpty()) {
+				entity.setDerivedFrom(null);
+			}
+			else {
+				entity.setDerivedFrom(probeDAO.get(Integer.valueOf(domain.getDerivedFromKey())));
+			}
+			
+			if (domain.getInsertSite() == null || domain.getInsertSite().isEmpty()) {
+				entity.setInsertSite(null);
+			}
+			else {
+				entity.setInsertSite(domain.getInsertSite());
+			}
+
+			if (domain.getInsertSize() == null || domain.getInsertSize().isEmpty()) {
+				entity.setInsertSize(null);
+			}
+			else {
+				entity.setInsertSize(domain.getInsertSize());
+			}					
+		}
 		
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
@@ -68,9 +136,10 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		// execute persist/insert/send to database
 		probeDAO.persist(entity);
 
-		// process all notes
 		probeNoteService.process(String.valueOf(entity.get_probe_key()), domain.getGeneralNote(), user);
 		noteService.process(String.valueOf(entity.get_probe_key()), domain.getRawsequenceNote(), mgiTypeKey, user);
+		markerService.process(String.valueOf(entity.get_probe_key()), domain.getMarkers(), user);
+		referenceService.process(String.valueOf(entity.get_probe_key()), domain.getReferences(), user);
 		
 		// return entity translated to domain
 		log.info("processProbe/create/returning results");
@@ -84,6 +153,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		
 		SearchResults<ProbeDomain> results = new SearchResults<ProbeDomain>();
 		Probe entity = probeDAO.get(Integer.valueOf(domain.getProbeKey()));
+		Boolean modified = true;
 		
 		log.info("processProbe/update");
 				
@@ -151,15 +221,27 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			}					
 		}
 		
-		// process all notes
-		probeNoteService.process(domain.getProbeKey(), domain.getGeneralNote(), user);
-		noteService.process(domain.getProbeKey(), domain.getRawsequenceNote(), mgiTypeKey, user);
+		if (probeNoteService.process(domain.getProbeKey(), domain.getGeneralNote(), user)) {
+			modified = true;
+		}
+		if (noteService.process(domain.getProbeKey(), domain.getRawsequenceNote(), mgiTypeKey, user)) {
+			modified = true;			
+		}
+		if (markerService.process(domain.getProbeKey(), domain.getMarkers(), user)) {
+			modified = true;			
+		}
+		if (referenceService.process(domain.getProbeKey(), domain.getReferences(), user)) {
+			modified = true;			
+		}
 		
-		entity.setModification_date(new Date());
-		entity.setModifiedBy(user);
-		probeDAO.update(entity);
-		log.info("processProbe/changes processed: " + domain.getProbeKey());		
-				
+		// finish update
+		if (modified) {		
+			entity.setModification_date(new Date());
+			entity.setModifiedBy(user);
+			probeDAO.update(entity);
+			log.info("processProbe/changes processed: " + domain.getProbeKey());		
+		}
+		
 		// return entity translated to domain
 		log.info("processProbe/update/returning results");
 		results.setItem(translator.translate(entity));		

@@ -656,7 +656,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		String cmd = "\nselect _accession_key"
 			+ "\nfrom PRB_AccRef_View"
 			+ "\nwhere _object_key = " + probeKey
-			+ "\nand._reference_key = " + referenceKey
+			+ "\nand _reference_key = " + referenceKey
 			+ "\norder by _reference_key, logicaldb, accid";
 		
 		log.info(cmd);

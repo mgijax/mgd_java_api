@@ -321,7 +321,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			entity.setPgs(domain.pgs);
 			entity.setReferenceTypeTerm(termDAO.get(Integer.valueOf(domain.getReferenceTypeKey())));
 			
-			if (domain.referenceAbstract == null || domain.referenceAbstract.isEmpty()) {
+			if (domain.getReferenceAbstract() == null || domain.getReferenceAbstract().isEmpty()) {
 				entity.setReferenceAbstract(null);
 			}
 			else {

@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.prb.translator;
 
+import java.util.Comparator;
+
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeAliasDomain;
@@ -36,6 +38,7 @@ public class ProbeReferenceTranslator extends BaseEntityDomainTranslator<ProbeRe
 			ProbeAliasTranslator aliasTranslator = new ProbeAliasTranslator();
 			Iterable<ProbeAliasDomain> alias = aliasTranslator.translateEntities(entity.getAliases());
 			domain.setAliases(IteratorUtils.toList(alias.iterator()));
+			domain.getAliases().sort(Comparator.comparing(ProbeAliasDomain::getAlias));						
 		}
 		
 		return domain;

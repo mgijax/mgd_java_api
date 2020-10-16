@@ -115,7 +115,7 @@ public class ProbeNoteService extends BaseService<ProbeNoteDomain> {
 		if (domain.getProcessStatus().equals(Constants.PROCESS_CREATE)) {				
 			log.info("processProbeNote create");
 			ProbeNote entity = new ProbeNote();
-			entity.set_probe_key(Integer.valueOf(domain.getProbeKey()));
+			entity.set_probe_key(Integer.valueOf(parentKey));
 			entity.setNote(domain.getNote());
 			entity.setCreation_date(new Date());				
 			entity.setModification_date(new Date());

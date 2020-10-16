@@ -80,7 +80,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		
 		// default = Not Specified
 		if (domain.getVectorTypeKey() == null || domain.getVectorTypeKey().isEmpty()) {
-			domain.setVectorType("316370");
+			domain.setVectorTypeKey("316370");
 		}
 		
 		// primer
@@ -141,8 +141,6 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			}					
 		}
 
-		log.info("processProbe/createB");		
-
 		entity.setName(domain.getName());
 		
 		if (domain.getRegionCovered() == null || domain.getRegionCovered().isEmpty()) {
@@ -152,10 +150,8 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			entity.setRegionCovered(domain.getRegionCovered());
 		}
 		
-		log.info("processProbe/createC");		
 		entity.setSegmentType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));
 		log.info("processProbe/createD");		
-
 		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));		
 		log.info("processProbe/createE");		
 

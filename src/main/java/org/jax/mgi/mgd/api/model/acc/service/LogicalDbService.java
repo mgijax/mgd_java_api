@@ -539,9 +539,12 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 		
 		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
 
-		String cmd = "select _logicaldb_key, name from acc_logicaldb "
-				+ "\nwhere _logicaldb_key in (9,12,82,17,44,49,46,50,51,25,26,48,52,80,16)"
-				+ "\norder by name";
+		String cmd = "select _logicaldb_key, name from acc_logicaldb, 0 as org"
+				+ "\nwhere _logicaldb_key in (9)"
+				+ "\nunion"
+				+ "\nselect _logicaldb_key, name from acc_logicaldb, 1 as org"
+				+ "\nwhere _logicaldb_key in (12,82,17,44,49,46,50,51,25,26,48,52,80,16)"
+				+ "\norder by org, name";
 		log.info(cmd);
 		
 		try {

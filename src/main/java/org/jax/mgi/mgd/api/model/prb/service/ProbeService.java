@@ -146,7 +146,14 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		log.info("processProbe/createB");		
 
 		entity.setName(domain.getName());
-		entity.setRegionCovered(domain.getRegionCovered());
+		
+		if (domain.getRegionCovered() == null || domain.getRegionCovered().isEmpty()) {
+			entity.setRegionCovered(null);
+		}
+		else {
+			entity.setRegionCovered(domain.getRegionCovered());
+		}
+		
 		entity.setSegmentType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));
 		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));		
 		entity.setCreatedBy(user);

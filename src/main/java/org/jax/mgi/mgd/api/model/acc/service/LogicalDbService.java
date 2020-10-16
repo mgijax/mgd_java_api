@@ -564,7 +564,6 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 			e.printStackTrace();
 		}
 		
-		results.sort(Comparator.comparing(LogicalDbDomain::getName));						
 		return results;
 	}
 		

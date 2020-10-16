@@ -71,26 +71,15 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		Probe entity = new Probe();
 		
 		log.info("processProbe/create");		
-
-		entity.setName(domain.getName());
-		entity.setRegionCovered(domain.getRegionCovered());
 		
 		// default = Not Specified
 		if (domain.getSegmentTypeKey() == null || domain.getSegmentTypeKey().isEmpty()) {
-			// need to check this value later...
 			domain.setSegmentTypeKey("63474");
-			entity.setSegmentType(termDAO.get(63474));
-		}
-		else {
-			entity.setSegmentType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));
 		}
 		
 		// default = Not Specified
 		if (domain.getVectorTypeKey() == null || domain.getVectorTypeKey().isEmpty()) {
-			entity.setVectorType(termDAO.get(316370));
-		}
-		else {
-			entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));
+			domain.setVectorType("316370");
 		}
 		
 		// primer
@@ -151,6 +140,11 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			}					
 		}
 
+		entity.setName(domain.getName());
+		entity.setRegionCovered(domain.getRegionCovered());
+		entity.setSegmentType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));
+		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));
+		
 		// can add an anonymous source
 		if (domain.getProbeSource().getName() == null || domain.getProbeSource().getName().isEmpty()) {
 			sourceService.create(domain.getProbeSource(), user);

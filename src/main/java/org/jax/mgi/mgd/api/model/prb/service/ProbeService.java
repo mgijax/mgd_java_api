@@ -76,7 +76,6 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		entity.setRegionCovered(domain.getRegionCovered());
 		entity.setSegmentType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));	
 		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));	
-		entity.setProbeSource(sourceDAO.get(Integer.valueOf(domain.getProbeSource().getSourceKey())));
 		
 		// primer
 		if (domain.getSegmentTypeKey().equals("63473")) {		
@@ -134,6 +133,14 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			else {
 				entity.setInsertSize(domain.getInsertSize());
 			}					
+		}
+
+		// can add an anonymous source
+		if (domain.getProbeSource().getName() == null || domain.getProbeSource().getName().isEmpty()) {
+			sourceService.update(domain.getProbeSource(), user);
+		}
+		else {
+			entity.setProbeSource(sourceDAO.get(Integer.valueOf(domain.getProbeSource().getSourceKey())));	
 		}
 		
 		entity.setCreatedBy(user);

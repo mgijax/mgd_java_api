@@ -2,7 +2,7 @@ package org.jax.mgi.mgd.api.model.acc.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -513,7 +513,6 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 			e.printStackTrace();
 		}
 		
-		//Collections.sort(results);		
 		return results;
 	}
 
@@ -560,6 +559,7 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 			e.printStackTrace();
 		}
 		
+		results.sort(Comparator.comparing(LogicalDbDomain::getName));						
 		return results;
 	}
 		

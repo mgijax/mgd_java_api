@@ -144,26 +144,16 @@ public class ProbeReferenceService extends BaseService<ProbeReferenceDomain> {
 				entity.setCreation_date(new Date());
 				entity.setModification_date(new Date());				
 				probeDAO.persist(entity);				
-
 				
 				// process accession ids
-				// set the refsKey in the accession/reference domain
-//				String refsKey = domain.get(i).getRefsKey();
-//				for (int j = 0; i < domain.get(i).getAccessionIds().size(); j++) {
-//					domain.get(i).getAccessionIds().get(j).getReferences().get(0).setRefsKey(refsKey);
-//				}
-//				if (accessionService.process(String.valueOf(entity.get_probe_key()), domain.get(i).getAccessionIds(), mgiTypeName, user)) {
-//					modified = true;
-//				}
+				if (accessionService.process(String.valueOf(entity.get_probe_key()), domain.get(i).getAccessionIds(), mgiTypeName, user)) {
+					modified = true;
+				}
 				
 				// process alias
 				if (aliasService.process(String.valueOf(entity.get_reference_key()), domain.get(i).getAliases(), user)) {
 					modified = true;
 				}
-
-				
-//				select * from ACC_update (1001, 32901089,'X55123',-1,92242);
-//				select ACCRef_process (1001, 2440934,92242,'xxxxx',9,'Segment',1,0);
 				
 				log.info("processProbeReference/create/returning results");	
 				modified = true;

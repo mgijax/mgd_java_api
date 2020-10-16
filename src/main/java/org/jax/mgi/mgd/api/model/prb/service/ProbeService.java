@@ -313,7 +313,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			domain = translator.translate(probeDAO.get(key));
 
 			// attach accession ids for each prb_reference
-			if (domain.getReferences() != null || !domain.getReferences().isEmpty()) {
+			if (domain.getReferences() != null && !domain.getReferences().isEmpty()) {
 				for (int i = 0; i < domain.getReferences().size(); i++) {
 					List<AccessionDomain> accessionIds = new ArrayList<AccessionDomain>();
 					accessionIds = searchReferences(domain.getProbeKey(), domain.getReferences().get(i).getReferenceKey());

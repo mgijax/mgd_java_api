@@ -18,6 +18,7 @@ import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeSourceDAO;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.Probe;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeTranslator;
@@ -143,20 +144,22 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		entity.setName(domain.getName());
 		entity.setRegionCovered(domain.getRegionCovered());
 		entity.setSegmentType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));
-		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));
-		
-		// can add an anonymous source
-		if (domain.getProbeSource().getName() == null || domain.getProbeSource().getName().isEmpty()) {
-			sourceService.create(domain.getProbeSource(), user);
-		}
-		else {
-			entity.setProbeSource(sourceDAO.get(Integer.valueOf(domain.getProbeSource().getSourceKey())));	
-		}
-		
+		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));		
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
 		entity.setModifiedBy(user);
 		entity.setModification_date(new Date());
+		
+		// can add an anonymous probe source
+		if (domain.getProbeSource().getName() == null || domain.getProbeSource().getName().isEmpty()) {
+			log.info("processProbe/sourceService.create()");
+			SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
+			sourceResults = sourceService.create(domain.getProbeSource(), user);
+			entity.setProbeSource(sourceDAO.get(Integer.valueOf(sourceResults.items.get(0).getSourceKey())));
+		}
+		else {
+			entity.setProbeSource(sourceDAO.get(Integer.valueOf(domain.getProbeSource().getSourceKey())));	
+		}
 		
 		// execute persist/insert/send to database
 		probeDAO.persist(entity);

@@ -74,8 +74,22 @@ public class ProbeService extends BaseService<ProbeDomain> {
 
 		entity.setName(domain.getName());
 		entity.setRegionCovered(domain.getRegionCovered());
-		entity.setSegmentType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));	
-		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));	
+		
+		// default = Not Specified
+		if (domain.getSegmentTypeKey() == null || domain.getSegmentTypeKey().isEmpty()) {
+			entity.setSegmentType(termDAO.get(63474));
+		}
+		else {
+			entity.setSegmentType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));
+		}
+		
+		// default = Not Specified
+		if (domain.getSegmentTypeKey() == null || domain.getVectorTypeKey().isEmpty()) {
+			entity.setVectorType(termDAO.get(316370));
+		}
+		else {
+			entity.setVectorType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));
+		}
 		
 		// primer
 		if (domain.getSegmentTypeKey().equals("63473")) {		

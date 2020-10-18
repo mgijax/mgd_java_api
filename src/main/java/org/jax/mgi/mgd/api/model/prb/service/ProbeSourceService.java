@@ -84,10 +84,16 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 			domain.setTissueKey("-1");
 
 		}
-		
+				
 		// Not Specified
 		if(domain.getCellLineKey() == null || domain.getCellLineKey().isEmpty()) {
 			domain.setCellLineKey("316335");
+		}
+		else {
+			// if cell line entered, and age is not, then default age = Not Applicable
+			if(domain.getAgePrefix() == null || domain.getAgePrefix().isEmpty()) {
+				domain.setAgePrefix("Not Applicable");
+			}
 		}
 		
 		// Not Specified

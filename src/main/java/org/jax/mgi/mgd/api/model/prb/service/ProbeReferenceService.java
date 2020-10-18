@@ -145,7 +145,7 @@ public class ProbeReferenceService extends BaseService<ProbeReferenceDomain> {
 				entity.setModification_date(new Date());				
 				probeDAO.persist(entity);				
 				
-				// process accession ids
+				// process accession ids				
 				if (accessionService.process(String.valueOf(entity.get_probe_key()), domain.get(i).getAccessionIds(), mgiTypeName, user)) {
 					modified = true;
 				}

@@ -8,9 +8,9 @@ import lombok.Setter;
 @Getter @Setter
 public class SlimProbeDomain extends BaseDomain {
 
-	private String processStatus;
 	private String probeKey;
 	private String name;
 	private String accID;
+	private ProbeSourceDomain probeSource;
 
 }

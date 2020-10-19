@@ -322,6 +322,12 @@ public class ProbeService extends BaseService<ProbeDomain> {
 						domain.getReferences().get(i).setAccessionIds(accessionIds);
 					}
 				}
+				try {
+					sqlExecutor.cleanup();
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}				
 			}
 		}
 		

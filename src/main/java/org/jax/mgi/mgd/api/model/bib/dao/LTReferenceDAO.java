@@ -162,24 +162,24 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		// special internal parameter -- isDiscard.  QF specifies three values, which need to be translated
 		// for the actual data in the bib_refs table.
 
-		if (params.containsKey("isDiscard")) {
-			String desiredValue = ((String) params.get("isDiscard")).toLowerCase();
-
-			if (desiredValue.equals("no")) {
-				restrictions.add(builder.equal(root.get("isDiscard"), 0));
-
-			} else if (desiredValue.equals("only discard")) {
-				restrictions.add(builder.equal(root.get("isDiscard"), 1));
-
-			} else if (desiredValue.equals("search all")) {
-				// disregard the isDiscard flag when searching
-			}
-
-		} else if (!params.containsKey("_refs_key")){
-			// default setting is to only return non-discarded references -- only apply if we're not
-			// doing a key-based lookup, though.
-			restrictions.add(builder.equal(root.get("isDiscard"), 0));
-		}
+//		if (params.containsKey("isDiscard")) {
+//			String desiredValue = ((String) params.get("isDiscard")).toLowerCase();
+//
+//			if (desiredValue.equals("no")) {
+//				restrictions.add(builder.equal(root.get("isDiscard"), 0));
+//
+//			} else if (desiredValue.equals("only discard")) {
+//				restrictions.add(builder.equal(root.get("isDiscard"), 1));
+//
+//			} else if (desiredValue.equals("search all")) {
+//				// disregard the isDiscard flag when searching
+//			}
+//
+//		} else if (!params.containsKey("_refs_key")){
+//			// default setting is to only return non-discarded references -- only apply if we're not
+//			// doing a key-based lookup, though.
+//			restrictions.add(builder.equal(root.get("isDiscard"), 0));
+//		}
 
 		// second, handle list of status parameters.  The status fields are always OR-ed within a group.
 		// The status_operator field tells us whether to OR or AND them across groups (and defaults to OR).
@@ -816,9 +816,9 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		if (searchDomain.getIsReviewArticle() != null && !searchDomain.getIsReviewArticle().isEmpty()) {
 			where = where + "\nand r.isReviewArticle = " + searchDomain.getIsReviewArticle();
 		}
-		if (searchDomain.getIsDiscard() != null && !searchDomain.getIsDiscard().isEmpty()) {
-			where = where + "\nand r.isDiscard = " + searchDomain.getIsDiscard();
-		}
+//		if (searchDomain.getIsDiscard() != null && !searchDomain.getIsDiscard().isEmpty()) {
+//			where = where + "\nand r.isDiscard = " + searchDomain.getIsDiscard();
+//		}
 		if (searchDomain.getReferenceAbstract() != null && !searchDomain.getReferenceAbstract().isEmpty()) {
 			where = where + "\nand r.abstract ilike '" + searchDomain.getReferenceAbstract() + "'";
 		}

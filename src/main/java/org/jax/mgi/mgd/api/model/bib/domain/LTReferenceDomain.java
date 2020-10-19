@@ -54,7 +54,7 @@ public class LTReferenceDomain extends BaseDomain {
 	public String short_citation;
 
 	public String isReviewArticle;	
-	public String isDiscard;
+	//public String isDiscard;
 
 	// workflow status
 	public String ap_status;

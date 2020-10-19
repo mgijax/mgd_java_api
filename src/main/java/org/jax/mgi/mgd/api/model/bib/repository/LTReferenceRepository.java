@@ -267,10 +267,10 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		boolean anyChanges = false;
 
 		// determine if the isDiscard flag is set in the ReferenceDomain object
-		int rdDiscard = 0;
-		if ("1".equals(domain.isDiscard) || ("Yes".equalsIgnoreCase(domain.isDiscard))) {
-			rdDiscard = 1;
-		}
+//		int rdDiscard = 0;
+//		if ("1".equals(domain.isDiscard) || ("Yes".equalsIgnoreCase(domain.isDiscard))) {
+//			rdDiscard = 1;
+//		}
 
 		// determine if the isReviewArticle flag is set in the ReferenceDomain object
 		int rdReview = 0;
@@ -288,7 +288,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		String refTypeKey = String.valueOf(entity.getReferenceTypeTerm().get_term_key());
 		
 		// update this object's data to match what was passed in
-		if ((rdDiscard != entity.getIsDiscard()) || (rdReview != entity.getIsReviewArticle())
+//		if ((rdDiscard != entity.getIsDiscard()) || (rdReview != entity.getIsReviewArticle())
+		
+		if ((rdReview != entity.getIsReviewArticle())
 				|| !smartEqual(entity.getAuthors(), domain.authors)
 				|| !smartEqual(entity.getJournal(), domain.journal)
 				|| !smartEqual(entity.getTitle(), domain.title)
@@ -300,16 +302,17 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				|| !smartEqual(entity.getPgs(), domain.pgs)
 				|| !smartEqual(entity.getReferenceAbstract(), domain.referenceAbstract)
 				) {
-
-			if (domain.authors != null) {
-				Pattern pattern = Pattern.compile("([^;]+).*");		// any characters up to the first semicolon are the primary author
-				Matcher matcher = pattern.matcher(domain.authors);
-				if (matcher.find()) {
-					entity.setPrimary_author(matcher.group(1));
-				}
-			}
-
-			entity.setIsDiscard(rdDiscard);
+//
+//			if (domain.authors != null) {
+//				Pattern pattern = Pattern.compile("([^;]+).*");		// any characters up to the first semicolon are the primary author
+//				Matcher matcher = pattern.matcher(domain.authors);
+//				if (matcher.find()) {
+//					entity.setPrimary_author(matcher.group(1));
+//				}
+//			}
+//
+//			entity.setIsDiscard(rdDiscard);
+		
 			entity.setIsReviewArticle(rdReview);
 			entity.setAuthors(domain.authors);
 			entity.setJournal(domain.journal);

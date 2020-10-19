@@ -98,7 +98,6 @@ public interface LTReferenceRESTInterface {
 	 *	date : search by date (free text), case-insensitive, wildcards allowed
 	 *	extracted_text : search by extracted text, case-insensitive, AND search for all words in string
 	 *	isReviewArticle : search for whether this is a review article (Yes/1) or not (No/0)
-	 *	isDiscard : search by value of isDiscard flag (no discard, only discard, search all)
 	 *	issue : search by issue field, case-insensitive, wildcards allowed
 	 *	journal : search by journal field, case-insensitive, wildcards allowed
 	 *	marker_id : searches by associated marker ID, case-insensitive, no wildcards

@@ -130,7 +130,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 
 		// if cell line is specified (NOT Not Specified), age is Not Applicable
 		if (!domain.getCellLineKey().equals("316335") ) {
-			log.info("setting age to Not Applicable");
+			log.info("setting age to not applicable");
 			domain.setAgePrefix("Not Applicable");
 		}
 		
@@ -144,7 +144,6 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		
 		// age stuff
 		log.info("domain agePrefix + ageStage: " + domain.getAgePrefix() + " " + domain.getAgeStage());
-		//entity.setAge(domain.getAge());
 		String age = domain.getAgePrefix();
 		
 		if (domain.getAgeStage() != null && ! domain.getAgeStage().isEmpty()) {
@@ -152,8 +151,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		}
 		log.info ("setting entity age to: " + age);
 		entity.setAge(age);
-		// will be properly set using MGI_resetAgeMinMax() below
-		
+		// will be properly set using MGI_resetAgeMinMax() below		
 		entity.setAgeMin(-1);
 		entity.setAgeMax(-1);								
 

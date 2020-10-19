@@ -84,9 +84,14 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 			domain.setTissueKey("-1");
 		}
 				
-		// Not Specified
+		// Not Applicable/Not Specified
 		if(domain.getCellLineKey() == null || domain.getCellLineKey().isEmpty()) {
-			domain.setCellLineKey("316335");
+			if (domain.getTissueKey().equals("-2")) {
+				domain.setCellLineKey("316336");
+			}
+			else {
+				domain.setCellLineKey("316335");
+			}
 		}
 		else {
 			// if cell line entered, and age is not, then default age = Not Applicable

@@ -96,6 +96,11 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 			}
 		}
 		
+		// if tissue = Not Applicable and cellline = Not Applicable....
+		if(domain.getTissue().equals("-2") && domain.getCellLine().equals("316336")) {
+			domain.setAgePrefix("Not Applicable");
+		}
+		
 		// Not Specified
 		if(domain.getGenderKey() == null || domain.getGenderKey().isEmpty()) {
 			domain.setGenderKey("315167");

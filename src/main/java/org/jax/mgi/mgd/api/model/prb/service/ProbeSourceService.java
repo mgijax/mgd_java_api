@@ -92,12 +92,14 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 			// if cell line entered, and age is not, then default age = Not Applicable
 			if(domain.getAgePrefix() == null || domain.getAgePrefix().isEmpty()) {
 				domain.setAgePrefix("Not Applicable");
+				log.info("set age1:" + domain.getAgePrefix());
 			}
 		}
 		
 		// if tissue = Not Applicable and cellline = Not Applicable, then age = Not Applicable
 		if(domain.getTissueKey().equals("-2") && domain.getCellLineKey().equals("316336")) {
 			domain.setAgePrefix("Not Applicable");
+			log.info("set age2:" + domain.getAgePrefix());			
 		}
 		
 		// Not Specified
@@ -108,6 +110,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		// Not Specified
 		if(domain.getAgePrefix() == null || domain.getAgePrefix().isEmpty()) {
 			domain.setAgePrefix("Not Specified");
+			log.info("set age3:" + domain.getAgePrefix());						
 		}
 
 		// true/1

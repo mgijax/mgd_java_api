@@ -918,7 +918,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 	
 		if (searchDomain.getMarkerStatusKey() != null && !searchDomain.getMarkerStatusKey().isEmpty()) {
-			where = where + "\nand m._marker_status_key = " + searchDomain.getMarkerStatusKey();
+			where = where + "\nand m._marker_status_key in (" + searchDomain.getMarkerStatusKey() + ")";
 		}
 		
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	

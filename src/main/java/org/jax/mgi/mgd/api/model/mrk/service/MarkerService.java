@@ -916,6 +916,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			where = where + "\nand m.chromosome = '" + searchDomain.getChromosome() + "'" ;
 			hasChromosome = true;
 		}
+	
+		if (searchDomain.getMarkerStatusKey() != null && !searchDomain.getMarkerStatusKey().isEmpty()) {
+			where = where + "\nand m._marker_status_key = " + searchDomain.getMarkerStatusKey();
+		}
 		
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	
 			String mgiid = searchDomain.getAccID().toUpperCase();

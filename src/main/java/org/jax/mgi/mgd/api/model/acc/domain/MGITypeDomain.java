@@ -20,5 +20,5 @@ public class MGITypeDomain extends BaseDomain {
 	private String dbView;
 	private Date creation_date;
 	private Date modification_date;
-	private List<OrganismDomain> organisms;
+	//private List<OrganismDomain> organisms;
 }

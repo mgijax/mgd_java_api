@@ -22,7 +22,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Organism/MGI Type Object")
+@ApiModel(value = "Organism MGI Type Object")
 @Table(name="mgi_organism_mgitype")
 public class OrganismMGIType extends BaseEntity {
 

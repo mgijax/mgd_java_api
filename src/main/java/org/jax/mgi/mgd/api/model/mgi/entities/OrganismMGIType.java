@@ -31,6 +31,7 @@ public class OrganismMGIType extends BaseEntity {
 	@SequenceGenerator(name="mgi_organism_mgitype_generator", sequenceName = "mgi_organism_mgitype_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")
 	private int _assoc_key;
+
 	private int _organism_key;
 	private Integer sequenceNum;
 	private Date creation_date;

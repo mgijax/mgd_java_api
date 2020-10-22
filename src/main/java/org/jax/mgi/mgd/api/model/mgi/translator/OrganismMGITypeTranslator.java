@@ -1,20 +1,21 @@
-package org.jax.mgi.mgd.api.model.mrk.translator;
+package org.jax.mgi.mgd.api.model.mgi.translator;
 
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.mrk.domain.ChromosomeDomain;
-import org.jax.mgi.mgd.api.model.mrk.entities.Chromosome;
+import org.jax.mgi.mgd.api.model.mgi.domain.OrganismMGITypeDomain;
+import org.jax.mgi.mgd.api.model.mgi.entities.OrganismMGIType;
 import org.jax.mgi.mgd.api.util.Constants;
 
-public class ChromosomeTranslator extends BaseEntityDomainTranslator<Chromosome, ChromosomeDomain> {
+public class OrganismMGITypeTranslator extends BaseEntityDomainTranslator<OrganismMGIType, OrganismMGITypeDomain> {
 
 	@Override
-	protected ChromosomeDomain entityToDomain(Chromosome entity) {
-		ChromosomeDomain domain = new ChromosomeDomain();
+	protected OrganismMGITypeDomain entityToDomain(OrganismMGIType entity) {
+		OrganismMGITypeDomain domain = new OrganismMGITypeDomain();
 
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);		
-		domain.setChromosomeKey(String.valueOf(entity.get_chromosome_key()));
+		domain.setAssocKey(String.valueOf(entity.get_assoc_key()));
 		domain.setOrganismKey(String.valueOf(entity.get_organism_key()));
-		domain.setChromosome(entity.getChromosome());
+		domain.setMgiTypeKey(String.valueOf(entity.getMgiType().get_mgitype_key()));
+		domain.setMgiType(entity.getMgiType().getName());
 		domain.setSequenceNum(String.valueOf(entity.getSequenceNum()));
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());

@@ -31,6 +31,7 @@ public class Chromosome extends BaseEntity {
 	@SequenceGenerator(name="mrk_chromosome_generator", sequenceName = "mrk_chromosome_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")
 	private int _chromosome_key;
+
 	private int _organism_key;
 	private String chromosome;
 	private Integer sequenceNum;

@@ -82,7 +82,7 @@ public class MGITypeService extends BaseService<MGITypeDomain> {
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "select * from mgi_organism_mgitype_view"
-				+ "\nwhere typename = '" + searchDomain.getName() + "'"
+				+ "\nwhere typename ilike '" + searchDomain.getName() + "'"
 				+ "\norder by sequencenum";	
 		log.info(cmd);		
 

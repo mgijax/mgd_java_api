@@ -65,8 +65,8 @@ public class OrganismController extends BaseController<OrganismDomain> {
 	@POST
 	@ApiOperation(value = "Search")
 	@Path("/search")
-	public List<OrganismDomain> search() {
-		return organismService.search();
+	public List<OrganismDomain> search(OrganismDomain searchDomain) {
+		return organismService.search(searchDomain);
 	}
 
 	@POST

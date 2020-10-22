@@ -147,11 +147,51 @@ public class OrganismService extends BaseService<OrganismDomain> {
 	}
 	
 	@Transactional	
-	public List<OrganismDomain> search() {
+	public List<OrganismDomain> search(OrganismDomain searchDomain) {
 
 		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
 
-		String cmd = "select * from mgi_organism order by commonname";
+		String cmd = "";
+		String select = "select distinct o._organism_key, o.commonname";
+		String from = "from mgi_organism o";
+		String where = "where o._organism_key is not null";
+		String orderBy = "\norder by o.commonname";
+		Boolean from_mgitype = false;
+		Boolean from_chromosome = false;
+		
+		if (searchDomain.getCommonname() != null && !searchDomain.getCommonname().isEmpty()) {
+			where = where + "\nand o.commonname ilike '" + searchDomain.getCommonname() + ")";
+		}
+		
+		if (searchDomain.getLatinname() != null && !searchDomain.getLatinname().isEmpty()) {
+			where = where + "\nand o.latinname ilike '" + searchDomain.getLatinname() + ")";
+		}
+
+		if (searchDomain.getMgiTypes() != null) {		
+			if (searchDomain.getMgiTypes().get(0).getMgiTypeKey() != null && !searchDomain.getMgiTypes().get(0).getMgiTypeKey().isEmpty()) {
+				where = where + "\nand m._mgitype_key = " + searchDomain.getMgiTypes().get(0).getMgiTypeKey();
+				from_mgitype = true;
+			}			
+		}
+
+		if (searchDomain.getChromosomes() != null) {			
+			if (searchDomain.getChromosomes().get(0).getChromosome() != null && !searchDomain.getChromosomes().get(0).getChromosome().isEmpty()) {
+				where = where + "\nand c.chromosome ilike '" + searchDomain.getChromosomes().get(0).getChromosome() + "'";
+				from_chromosome = true;
+			}			
+		}
+		
+		if (from_mgitype == true) {
+			from = from + ", mgi_organism_mgitype_view m";
+			where = where + "\nand o._organism_key = m._organism_key";
+		}
+
+		if (from_chromosome == true) {
+			from = from + ", mrk_chromosome m";
+			where = where + "\nand o._organism_key = c._organism_key";
+		}
+		
+		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info(cmd);
 
 		try {

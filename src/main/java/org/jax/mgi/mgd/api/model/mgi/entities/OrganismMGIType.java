@@ -31,19 +31,14 @@ public class OrganismMGIType extends BaseEntity {
 	@SequenceGenerator(name="mgi_organism_mgitype_generator", sequenceName = "mgi_organism_mgitype_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")
 	private int _assoc_key;
-	
+	private int _organism_key;
 	private Integer sequenceNum;
-	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_organism_key")
-	private Organism organism;
+	private Date creation_date;
+	private Date modification_date;
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_mgitype_key")
 	private MGIType mgiType;
-	
-	private Date creation_date;
-	private Date modification_date;
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

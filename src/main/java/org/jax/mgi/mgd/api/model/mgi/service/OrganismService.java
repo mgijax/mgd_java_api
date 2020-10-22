@@ -11,8 +11,10 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.OrganismDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.SlimOrganismDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.OrganismTranslator;
+import org.jax.mgi.mgd.api.model.mgi.translator.SlimOrganismTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -27,7 +29,7 @@ public class OrganismService extends BaseService<OrganismDomain> {
 	private OrganismDAO organismDAO;
 
 	private OrganismTranslator translator = new OrganismTranslator();
-	
+	private SlimOrganismTranslator slimtranslator = new SlimOrganismTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
@@ -238,9 +240,9 @@ public class OrganismService extends BaseService<OrganismDomain> {
 	}
 
 	@Transactional	
-	public List<OrganismDomain> searchGXDHTSample() {
+	public List<SlimOrganismDomain> searchGXDHTSample() {
 		// for gxd ht sample module organism pick list
-		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
+		List<SlimOrganismDomain> results = new ArrayList<SlimOrganismDomain>();
 
 		String cmd ="select s.*\n" + 
 				"from MGI_Organism s, MGI_Organism_MGIType t\n" + 
@@ -251,8 +253,8 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				OrganismDomain domain = new OrganismDomain();
-				domain = translator.translate(organismDAO.get(rs.getInt("_organism_key")));
+				SlimOrganismDomain domain = new SlimOrganismDomain();
+				domain = slimtranslator.translate(organismDAO.get(rs.getInt("_organism_key")));
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

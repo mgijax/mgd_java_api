@@ -11,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.domain.OrganismDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.SlimOrganismDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.OrganismService;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -92,7 +93,7 @@ public class OrganismController extends BaseController<OrganismDomain> {
 	@POST
 	@ApiOperation(value = "Search for organisms GXD/HT Sample module")
 	@Path("/searchGXDHTSample")
-	public List<OrganismDomain> searchGXDHTSample() {
+	public List<SlimOrganismDomain> searchGXDHTSample() {
 		return organismService.searchGXDHTSample();
 	}	
 }

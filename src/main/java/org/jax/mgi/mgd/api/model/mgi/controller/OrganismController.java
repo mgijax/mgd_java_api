@@ -88,4 +88,11 @@ public class OrganismController extends BaseController<OrganismDomain> {
 	public List<OrganismDomain> searchAntibody() {
 		return organismService.searchAntibody();
 	}
+	
+	@POST
+	@ApiOperation(value = "Search for organisms GXD/HT Sample module")
+	@Path("/searchGXDHTSample")
+	public List<OrganismDomain> searchGXDHTSample() {
+		return organismService.searchGXDHTSample();
+	}	
 }

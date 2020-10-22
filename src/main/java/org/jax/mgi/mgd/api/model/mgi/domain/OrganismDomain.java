@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.mgi.domain;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.ChromosomeDomain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +22,6 @@ public class OrganismDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date; 
 	
-	//private List<OrganismMGITypeDomain> mgiTypes;
-	
+	private List<OrganismMGITypeDomain> mgiTypes;
+	private List<ChromosomeDomain> chromosomes;
 }

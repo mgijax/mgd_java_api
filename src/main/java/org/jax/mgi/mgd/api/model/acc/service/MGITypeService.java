@@ -1,6 +1,8 @@
 package org.jax.mgi.mgd.api.model.acc.service;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -71,10 +73,10 @@ public class MGITypeService extends BaseService<MGITypeDomain> {
     }
 
 	@Transactional
-	public SearchResults<SlimMGITypeDomain> search(SlimMGITypeDomain searchDomain) {	
+	public List<SlimMGITypeDomain> search(SlimMGITypeDomain searchDomain) {	
 		// search for all acc_mgitype
 			
-		SearchResults<SlimMGITypeDomain> results = new SearchResults<SlimMGITypeDomain>();
+		List<SlimMGITypeDomain> results = new ArrayList<SlimMGITypeDomain>();
 
 		String cmd = "select * from acc_mgitype order by name";
 		log.info(cmd);		
@@ -85,7 +87,7 @@ public class MGITypeService extends BaseService<MGITypeDomain> {
 				SlimMGITypeDomain domain = new SlimMGITypeDomain();									
 				domain = slimtranslator.translate(mgitypeDAO.get(rs.getInt("_mgitype_key")));
 				mgitypeDAO.clear();	
-				results.setItem(domain);						
+				results.add(domain);						
 			}
 			sqlExecutor.cleanup();
 		}

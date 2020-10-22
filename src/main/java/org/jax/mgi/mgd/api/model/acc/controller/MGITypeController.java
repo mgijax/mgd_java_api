@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.acc.controller;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -49,7 +51,7 @@ public class MGITypeController extends BaseController<MGITypeDomain> {
 	@POST
 	@ApiOperation(value = "Search")
 	@Path("/search")	
-	public SearchResults<SlimMGITypeDomain> search(SlimMGITypeDomain searchDomain) {
+	public List<SlimMGITypeDomain> search(SlimMGITypeDomain searchDomain) {
 		return mgitypeService.search(searchDomain);
 	}
 		

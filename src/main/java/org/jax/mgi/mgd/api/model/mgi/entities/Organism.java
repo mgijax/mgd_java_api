@@ -59,9 +59,9 @@ public class Organism extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 20 AND preferred = 1")
 	private List<Accession> allAccessionIds;
 
-//	@OneToMany()
-//	@JoinColumn(name="_organism_key", insertable=false, updatable=false)
-//	private List<OrganismMGIType> mgiTypes;
+	@OneToMany()
+	@JoinColumn(name="_organism_key", insertable=false, updatable=false)
+	private List<OrganismMGIType> mgiTypes;
 
 	@OneToMany()
 	@JoinColumn(name="_organism_key", insertable=false, updatable=false)

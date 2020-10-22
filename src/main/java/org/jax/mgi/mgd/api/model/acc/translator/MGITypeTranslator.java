@@ -24,8 +24,8 @@ public class MGITypeTranslator extends BaseEntityDomainTranslator<MGIType, MGITy
 		domain.setCreation_date(entity.getCreation_date());
 		domain.setModification_date(entity.getModification_date());
 
-		Iterable<OrganismDomain> terms = organismTranslator.translateEntities(entity.getOrganisms());
-		domain.setOrganisms(IteratorUtils.toList(terms.iterator()));
+//		Iterable<OrganismDomain> terms = organismTranslator.translateEntities(entity.getOrganisms());
+//		domain.setOrganisms(IteratorUtils.toList(terms.iterator()));
 
 		return domain;
 	}

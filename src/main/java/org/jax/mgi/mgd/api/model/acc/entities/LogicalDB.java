@@ -41,9 +41,9 @@ public class LogicalDB extends BaseEntity {
 	private Date modification_date;
 
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_organism_key", referencedColumnName="_organism_key")
+	@JoinColumn(name="_organism_key")
 	private Organism organism;
-
+	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;

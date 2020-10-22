@@ -18,8 +18,8 @@ public class SlimMGITypeTranslator extends BaseEntityDomainTranslator<MGIType, S
 		domain.setMgiTypeKey(String.valueOf(entity.get_mgitype_key()));
 		domain.setName(entity.getName());
 
-		Iterable<SlimOrganismDomain> terms = organismTranslator.translateEntities(entity.getOrganisms());
-		domain.setOrganisms(IteratorUtils.toList(terms.iterator()));
+//		Iterable<SlimOrganismDomain> terms = organismTranslator.translateEntities(entity.getOrganisms());
+//		domain.setOrganisms(IteratorUtils.toList(terms.iterator()));
 
 		return domain;
 	}

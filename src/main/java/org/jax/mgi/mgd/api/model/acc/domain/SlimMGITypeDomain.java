@@ -13,5 +13,5 @@ public class SlimMGITypeDomain extends BaseDomain {
 
 	private String MgiTypeKey;	
 	private String name;
-	private List<SlimOrganismDomain> organisms;
+	//private List<SlimOrganismDomain> organisms;
 }

@@ -17,7 +17,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
-import org.jax.mgi.mgd.api.model.mrk.entities.MarkerChromosome;
+import org.jax.mgi.mgd.api.model.mrk.entities.Chromosome;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -65,6 +65,6 @@ public class Organism extends BaseEntity {
 
 	@OneToMany()
 	@JoinColumn(name="_organism_key", insertable=false, updatable=false)
-	private List<MarkerChromosome> chromosomes;	
+	private List<Chromosome> chromosomes;	
 	
 }

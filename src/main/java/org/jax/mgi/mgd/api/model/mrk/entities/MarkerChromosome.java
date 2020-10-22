@@ -13,7 +13,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
-import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
 import io.swagger.annotations.ApiModel;
@@ -32,15 +31,11 @@ public class MarkerChromosome extends BaseEntity {
 	@SequenceGenerator(name="mrk_chromosome_generator", sequenceName = "mrk_chromosome_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")
 	private int _chromosome_key;
-	
+	private int _organism_key;
 	private String chromosome;
 	private Integer sequenceNum;
 	private Date creation_date;
 	private Date modification_date;
-
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_organism_key")
-	private Organism organism;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

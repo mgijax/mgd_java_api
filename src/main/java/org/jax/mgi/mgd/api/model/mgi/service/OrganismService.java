@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.mgi.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -12,10 +13,10 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.OrganismDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.SlimOrganismDomain;
+import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.OrganismTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.SlimOrganismTranslator;
-import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -33,26 +34,78 @@ public class OrganismService extends BaseService<OrganismDomain> {
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
-	public SearchResults<OrganismDomain> create(OrganismDomain object, User user) {
+	public SearchResults<OrganismDomain> create(OrganismDomain domain, User user) {	
+		// create new entity object from in-coming domain
+		// the Entities class handles the generation of the primary key
+		// database trigger will assign the MGI id/see pgmgddbschema/trigger for details
+
 		SearchResults<OrganismDomain> results = new SearchResults<OrganismDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		Organism entity = new Organism();
+		
+		log.info("processOrganism/create");		
+		
+		entity.setCommonname(domain.getCommonname());
+		entity.setLatinname(domain.getLatinname());
+		entity.setCreatedBy(user);
+		entity.setCreation_date(new Date());
+		entity.setModifiedBy(user);
+		entity.setModification_date(new Date());
+	
+		log.info("processOrganism/createF");		
+		
+		// execute persist/insert/send to database
+		organismDAO.persist(entity);
+		
+		// process mgitypes
+		// process chromosomes
+		
+		// return entity translated to domain
+		log.info("processOrganism/create/returning results");
+		results.setItem(translator.translate(entity));
 		return results;
 	}
-
+	
 	@Transactional
-	public SearchResults<OrganismDomain> update(OrganismDomain object, User user) {
+	public SearchResults<OrganismDomain> update(OrganismDomain domain, User user) {
+		// update existing entity object from in-coming domain
+		
 		SearchResults<OrganismDomain> results = new SearchResults<OrganismDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
-		return results;
+		Organism entity = organismDAO.get(Integer.valueOf(domain.getOrganismKey()));
+		Boolean modified = true;
+		
+		log.info("processOrganism/update");
+				
+		entity.setCommonname(domain.getCommonname());
+		entity.setLatinname(domain.getLatinname());
+
+		// process mgitypes
+		// process chromosomes
+		
+		// finish update
+		if (modified) {		
+			entity.setModification_date(new Date());
+			entity.setModifiedBy(user);
+			organismDAO.update(entity);
+			log.info("processOrganism/changes processed: " + domain.getOrganismKey());		
+		}
+		
+		// return entity translated to domain
+		log.info("processOrganism/update/returning results");
+		results.setItem(translator.translate(entity));		
+		log.info("processOrganism/update/returned results succsssful");
+		return results;			
 	}
 
 	@Transactional
 	public SearchResults<OrganismDomain> delete(Integer key, User user) {
+		// get the entity object and delete
 		SearchResults<OrganismDomain> results = new SearchResults<OrganismDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		Organism entity = organismDAO.get(key);
+		results.setItem(translator.translate(organismDAO.get(key)));
+		organismDAO.remove(entity);
 		return results;
 	}
-	
+
 	@Transactional
 	public OrganismDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain
@@ -72,6 +125,27 @@ public class OrganismService extends BaseService<OrganismDomain> {
         return results;
     }
 
+	@Transactional	
+	public SearchResults<OrganismDomain> getObjectCount() {
+		// return the object count from the database
+		
+		SearchResults<OrganismDomain> results = new SearchResults<OrganismDomain>();
+		String cmd = "select count(*) as objectCount from mgi_organism";
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getInt("objectCount");
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;		
+	}
+	
 	@Transactional	
 	public List<OrganismDomain> search() {
 

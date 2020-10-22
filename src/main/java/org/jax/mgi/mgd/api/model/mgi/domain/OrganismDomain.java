@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter @Setter
 public class OrganismDomain extends BaseDomain {
 
-	private String _organism_key;
+	private String organismKey;
 	private String commonname;
 	private String latinname;
 	private String fullName;

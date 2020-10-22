@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -29,23 +30,36 @@ public class OrganismController extends BaseController<OrganismDomain> {
 	private OrganismService organismService;
 
 	@Override
-	public SearchResults<OrganismDomain> create(OrganismDomain organism, User user) {
-		return organismService.create(organism, user);
+	public SearchResults<OrganismDomain> create(OrganismDomain domain, User user) {
+		SearchResults<OrganismDomain> results = new SearchResults<OrganismDomain>();
+		results = organismService.create(domain, user);
+		results = organismService.getResults(Integer.valueOf(results.items.get(0).getOrganismKey()));
+		return results;
 	}
 
 	@Override
-	public SearchResults<OrganismDomain> update(OrganismDomain organism, User user) {
-		return organismService.update(organism, user);
-	}
-
-	@Override
-	public OrganismDomain get(Integer key) {
-		return organismService.get(key);
+	public SearchResults<OrganismDomain> update(OrganismDomain domain, User user) {
+		SearchResults<OrganismDomain> results = new SearchResults<OrganismDomain>();
+		results = organismService.update(domain, user);
+		results = organismService.getResults(Integer.valueOf(results.items.get(0).getOrganismKey()));
+		return results;
 	}
 
 	@Override
 	public SearchResults<OrganismDomain> delete(Integer key, User user) {
 		return organismService.delete(key, user);
+	}
+	
+	@Override
+	public OrganismDomain get(Integer key) {
+		return organismService.get(key);
+	}
+
+	@GET
+	@ApiOperation(value = "Get the object count from prb_probe table")
+	@Path("/getObjectCount")
+	public SearchResults<OrganismDomain> getObjectCount() {
+		return organismService.getObjectCount();
 	}
 
 	@POST

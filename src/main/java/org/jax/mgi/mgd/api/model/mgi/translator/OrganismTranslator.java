@@ -9,7 +9,6 @@ import org.jax.mgi.mgd.api.model.mgi.domain.OrganismMGITypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mrk.domain.ChromosomeDomain;
 import org.jax.mgi.mgd.api.model.mrk.translator.ChromosomeTranslator;
-import org.jax.mgi.mgd.api.model.prb.domain.ProbeMarkerDomain;
 
 public class OrganismTranslator extends BaseEntityDomainTranslator<Organism, OrganismDomain> {
 

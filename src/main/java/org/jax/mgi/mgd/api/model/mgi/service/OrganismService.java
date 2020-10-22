@@ -187,7 +187,7 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		}
 
 		if (from_chromosome == true) {
-			from = from + ", mrk_chromosome m";
+			from = from + ", mrk_chromosome c";
 			where = where + "\nand o._organism_key = c._organism_key";
 		}
 		

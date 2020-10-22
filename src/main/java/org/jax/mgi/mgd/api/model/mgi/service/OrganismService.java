@@ -160,11 +160,11 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		Boolean from_chromosome = false;
 		
 		if (searchDomain.getCommonname() != null && !searchDomain.getCommonname().isEmpty()) {
-			where = where + "\nand o.commonname ilike '" + searchDomain.getCommonname() + ")";
+			where = where + "\nand o.commonname ilike '" + searchDomain.getCommonname() + "'";
 		}
 		
 		if (searchDomain.getLatinname() != null && !searchDomain.getLatinname().isEmpty()) {
-			where = where + "\nand o.latinname ilike '" + searchDomain.getLatinname() + ")";
+			where = where + "\nand o.latinname ilike '" + searchDomain.getLatinname() + "'";
 		}
 
 		if (searchDomain.getMgiTypes() != null) {		

@@ -75,10 +75,20 @@ public class MGITypeService extends BaseService<MGITypeDomain> {
 	@Transactional
 	public List<SlimMGITypeDomain> search(SlimMGITypeDomain searchDomain) {	
 		// search for all acc_mgitype
+		// only those that have pwi/modules
+		// Marker : 2
+		// Segment : 3
+		// Antibody : 6
+		// Antigen : 7
+
+		// GXD HT Sample : 43
+		// Allele : 11
 			
 		List<SlimMGITypeDomain> results = new ArrayList<SlimMGITypeDomain>();
 
-		String cmd = "select * from acc_mgitype order by name";
+		String cmd = "select * from acc_mgitype"
+				+ "\nwhere _mgitype_key in (2, 3, 6, 7, 11, 43)"
+				+ "\norder by name";
 		log.info(cmd);		
 
 		try {

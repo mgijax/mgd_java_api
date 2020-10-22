@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.mgi.translator;
 
+import java.util.Comparator;
+
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.OrganismDomain;
@@ -7,6 +9,7 @@ import org.jax.mgi.mgd.api.model.mgi.domain.OrganismMGITypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mrk.domain.ChromosomeDomain;
 import org.jax.mgi.mgd.api.model.mrk.translator.ChromosomeTranslator;
+import org.jax.mgi.mgd.api.model.prb.domain.ProbeMarkerDomain;
 
 public class OrganismTranslator extends BaseEntityDomainTranslator<Organism, OrganismDomain> {
 
@@ -30,6 +33,7 @@ public class OrganismTranslator extends BaseEntityDomainTranslator<Organism, Org
 			OrganismMGITypeTranslator mgitypeTranslator = new OrganismMGITypeTranslator();
 			Iterable<OrganismMGITypeDomain> i = mgitypeTranslator.translateEntities(entity.getMgiTypes());
 			domain.setMgiTypes(IteratorUtils.toList(i.iterator()));
+			domain.getMgiTypes().sort(Comparator.comparing(OrganismMGITypeDomain::getMgiType));						
 		}
 	
 		// chromosomes
@@ -37,6 +41,7 @@ public class OrganismTranslator extends BaseEntityDomainTranslator<Organism, Org
 			ChromosomeTranslator chrTranslator = new ChromosomeTranslator();
 			Iterable<ChromosomeDomain> i = chrTranslator.translateEntities(entity.getChromosomes());
 			domain.setChromosomes(IteratorUtils.toList(i.iterator()));
+			domain.getChromosomes().sort(Comparator.comparing(ChromosomeDomain::getSequenceNum));									
 		}
 			
 		return domain;

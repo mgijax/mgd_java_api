@@ -72,18 +72,11 @@ public class MGITypeService extends BaseService<MGITypeDomain> {
 
 	@Transactional
 	public SearchResults<SlimMGITypeDomain> search(SlimMGITypeDomain searchDomain) {	
-		// search for 1 mgi type with >= 1 organisms
-		// assumes that name is being searched
-		// returns empty result items if vocabulary does not exist
-		// returns MGITypeDomain results if vocabulary does exist
+		// search for all acc_mgitype
 			
 		SearchResults<SlimMGITypeDomain> results = new SearchResults<SlimMGITypeDomain>();
 
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
-		String cmd = "select * from mgi_organism_mgitype_view"
-				+ "\nwhere typename ilike '" + searchDomain.getName() + "'"
-				+ "\norder by sequencenum";	
+		String cmd = "select * from acc_mgitype order by name";
 		log.info(cmd);		
 
 		try {

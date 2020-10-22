@@ -10,10 +10,9 @@ public class ChromosomeDomain extends BaseDomain {
 
 	private String processStatus;	
 	private String chromosomeKey;
+	private String organismKey;
 	private String chromosome;
 	private String sequenceNum;
-	private String organismKey;
-	private String commonname;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

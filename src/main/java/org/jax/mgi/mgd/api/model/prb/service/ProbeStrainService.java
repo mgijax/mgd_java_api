@@ -187,17 +187,17 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		List<String> results = new ArrayList<String>();
 
 		// building SQL command : select + from + where + orderBy
-		String cmd = "s(select distinct s.strain\r\n" + 
-				"from prb_strain s, prb_source ps, prb_probe p\r\n" + 
-				"where p._source_key = ps._Source_key\r\n" + 
-				"and ps._strain_key = s._strain_key\r\n" + 
-				"union\r\n" + 
-				"select distinct s.strain\r\n" + 
-				"from prb_strain s, prb_source ps, gxd_antigen p\r\n" + 
-				"where p._source_key = ps._Source_key\r\n" + 
-				"and ps._strain_key = s._strain_key\r\n" + 
-				")\r\n" + 
-				"order by strain";
+		String cmd = "(select distinct s.strain" + 
+				"\nfrom prb_strain s, prb_source ps, prb_probe p" + 
+				"\nwhere p._source_key = ps._Source_key" + 
+				"\nand ps._strain_key = s._strain_key" + 
+				"\nunion" + 
+				"\nselect distinct s.strain" + 
+				"\nfrom prb_strain s, prb_source ps, gxd_antigen p" + 
+				"\nwhere p._source_key = ps._Source_key" + 
+				"\nand ps._strain_key = s._strain_key" + 
+				"\n)" + 
+				"\norder by strain";
 		log.info(cmd);
 
 		try {

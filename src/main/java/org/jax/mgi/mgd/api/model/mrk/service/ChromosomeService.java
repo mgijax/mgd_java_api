@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.mrk.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -12,6 +13,7 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.ChromosomeDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.ChromosomeDomain;
+import org.jax.mgi.mgd.api.model.mrk.entities.Chromosome;
 import org.jax.mgi.mgd.api.model.mrk.translator.ChromosomeTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -93,5 +95,70 @@ public class ChromosomeService extends BaseService<ChromosomeDomain> {
 		
 		return results;
 	}	
+
+	@Transactional
+	public Boolean process(String parentKey, List<ChromosomeDomain> domain, User user) {
+		// process chromosome/organism (create, delete, update)
+		
+		Boolean modified = false;
+		
+		log.info("processChromosome");
+
+		if (domain == null || domain.isEmpty()) {
+			log.info("processChromosome/nothing to process");
+			return modified;
+		}
+		
+		// iterate thru the list of rows in the domain
+		// for each row, determine whether to perform an insert, delete or update
+		
+		for (int i = 0; i < domain.size(); i++) {
+		
+        	if (domain.get(i).getChromosome() == null || domain.get(i).getChromosome().isEmpty()) {
+        		return modified;
+        	}
+        			
+			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {								
+				log.info("processChromosome/create");
+				Chromosome entity = new Chromosome();									
+				entity.set_organism_key(Integer.valueOf(parentKey));
+				entity.setSequenceNum(Integer.valueOf(domain.get(0).getSequenceNum()));
+				entity.setChromosome(domain.get(0).getChromosome());
+				entity.setCreatedBy(user);
+				entity.setModifiedBy(user);
+				entity.setCreation_date(new Date());
+				entity.setModification_date(new Date());				
+				chromosomeDAO.persist(entity);				
+				log.info("processChromosome/create/returning results");	
+				modified = true;
+			}
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+				log.info("processChromosome/delete");
+				if (domain.get(i).getChromosomeKey() != null && !domain.get(i).getChromosomeKey().isEmpty()) {
+					Chromosome entity = chromosomeDAO.get(Integer.valueOf(domain.get(i).getChromosomeKey()));
+					chromosomeDAO.remove(entity);
+					modified = true;
+				}
+			}
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+				log.info("processChromosome/update");
+				Chromosome entity = chromosomeDAO.get(Integer.valueOf(domain.get(i).getChromosomeKey()));	
+				entity.set_organism_key(Integer.valueOf(parentKey));
+				entity.setSequenceNum(Integer.valueOf(domain.get(0).getSequenceNum()));	
+				entity.setChromosome(domain.get(0).getChromosome());
+				entity.setModifiedBy(user);
+				entity.setModification_date(new Date());
+				chromosomeDAO.update(entity);
+				log.info("processChromosome/changes processed: " + domain.get(i).getChromosomeKey());				
+				modified = true;
+			}
+			else {
+				log.info("processChromosome/no changes processed: " + domain.get(i).getChromosomeKey());
+			}           
+		}
+		
+		log.info("processChromosome/processing successful");
+		return modified;
+	}
 	
 }

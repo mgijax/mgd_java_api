@@ -17,6 +17,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.OrganismTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.SlimOrganismTranslator;
+import org.jax.mgi.mgd.api.model.mrk.service.ChromosomeService;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -28,7 +29,11 @@ public class OrganismService extends BaseService<OrganismDomain> {
 
 	@Inject
 	private OrganismDAO organismDAO;
-
+	@Inject
+	private OrganismMGITypeService organismMGITypeService;
+	@Inject
+	private ChromosomeService chromosomeService;
+	
 	private OrganismTranslator translator = new OrganismTranslator();
 	private SlimOrganismTranslator slimtranslator = new SlimOrganismTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
@@ -57,7 +62,10 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		organismDAO.persist(entity);
 		
 		// process mgitypes
+		organismMGITypeService.process(String.valueOf(entity.get_organism_key()), domain.getMgiTypes(), user);
+
 		// process chromosomes
+		chromosomeService.process(domain.getOrganismKey(), domain.getChromosomes(), user);
 		
 		// return entity translated to domain
 		log.info("processOrganism/create/returning results");
@@ -79,7 +87,14 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		entity.setLatinname(domain.getLatinname());
 
 		// process mgitypes
+		if (organismMGITypeService.process(domain.getOrganismKey(), domain.getMgiTypes(), user)) {
+			modified = true;			
+		}
+		
 		// process chromosomes
+		if (chromosomeService.process(domain.getOrganismKey(), domain.getChromosomes(), user)) {
+			modified = true;			
+		}
 		
 		// finish update
 		if (modified) {		

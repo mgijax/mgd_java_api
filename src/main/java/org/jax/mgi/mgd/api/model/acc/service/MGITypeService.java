@@ -107,5 +107,5 @@ public class MGITypeService extends BaseService<MGITypeDomain> {
 		
 		return results;
 	}
-	
+
 }

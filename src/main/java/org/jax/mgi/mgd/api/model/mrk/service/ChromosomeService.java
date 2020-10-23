@@ -122,8 +122,8 @@ public class ChromosomeService extends BaseService<ChromosomeDomain> {
 				log.info("processChromosome/create");
 				Chromosome entity = new Chromosome();									
 				entity.set_organism_key(Integer.valueOf(parentKey));
-				entity.setSequenceNum(Integer.valueOf(domain.get(0).getSequenceNum()));
-				entity.setChromosome(domain.get(0).getChromosome());
+				entity.setSequenceNum(Integer.valueOf(domain.get(i).getSequenceNum()));
+				entity.setChromosome(domain.get(i).getChromosome());
 				entity.setCreatedBy(user);
 				entity.setModifiedBy(user);
 				entity.setCreation_date(new Date());
@@ -144,8 +144,8 @@ public class ChromosomeService extends BaseService<ChromosomeDomain> {
 				log.info("processChromosome/update");
 				Chromosome entity = chromosomeDAO.get(Integer.valueOf(domain.get(i).getChromosomeKey()));	
 				entity.set_organism_key(Integer.valueOf(parentKey));
-				entity.setSequenceNum(Integer.valueOf(domain.get(0).getSequenceNum()));	
-				entity.setChromosome(domain.get(0).getChromosome());
+				entity.setSequenceNum(Integer.valueOf(domain.get(i).getSequenceNum()));	
+				entity.setChromosome(domain.get(i).getChromosome());
 				entity.setModifiedBy(user);
 				entity.setModification_date(new Date());
 				chromosomeDAO.update(entity);

@@ -40,7 +40,7 @@ public class OrganismTranslator extends BaseEntityDomainTranslator<Organism, Org
 			ChromosomeTranslator chrTranslator = new ChromosomeTranslator();
 			Iterable<ChromosomeDomain> i = chrTranslator.translateEntities(entity.getChromosomes());
 			domain.setChromosomes(IteratorUtils.toList(i.iterator()));
-			domain.getChromosomes().sort(Comparator.comparing(ChromosomeDomain::getSequenceNum));									
+			//domain.getChromosomes().sort(Comparator.comparing(ChromosomeDomain::getSequenceNum));									
 		}
 			
 		return domain;

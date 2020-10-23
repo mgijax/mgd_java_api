@@ -179,5 +179,41 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		Collections.sort(results);
 		return new SearchResults<String>(results);
 	}	
-	   
+
+	@Transactional	
+	public SearchResults<String> getStrainListProbeAntigen() {
+		// generate SQL command to return a list of distinct strains probe/antigen
+		
+		List<String> results = new ArrayList<String>();
+
+		// building SQL command : select + from + where + orderBy
+		String cmd = "s(select distinct s.strain\r\n" + 
+				"from prb_strain s, prb_source ps, prb_probe p\r\n" + 
+				"where p._source_key = ps._Source_key\r\n" + 
+				"and ps._strain_key = s._strain_key\r\n" + 
+				"union\r\n" + 
+				"select distinct s.strain\r\n" + 
+				"from prb_strain s, prb_source ps, gxd_antigen p\r\n" + 
+				"where p._source_key = ps._Source_key\r\n" + 
+				"and ps._strain_key = s._strain_key\r\n" + 
+				")\r\n" + 
+				"order by strain";
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.add(rs.getString("strain"));
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		Collections.sort(results);
+		return new SearchResults<String>(results);
+	}	
+	
+	
 }

@@ -88,5 +88,22 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 		//log.info(results);
 		return results;
 	}
+
+	@GET
+	@ApiOperation(value = "get list of strains for probes/antigen")
+	@Path("/getStrainList")
+	public SearchResults<String> getStrainListProbeAntigen() {
+	
+		SearchResults<String> results = null;
+
+		try {
+			results = probeStrainService.getStrainListProbeAntigen();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
+		//log.info(results);
+		return results;
+	}
+	
 }

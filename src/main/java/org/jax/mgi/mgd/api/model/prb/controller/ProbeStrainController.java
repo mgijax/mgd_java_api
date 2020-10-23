@@ -91,7 +91,7 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 
 	@GET
 	@ApiOperation(value = "get list of strains for probes/antigen")
-	@Path("/getStrainList")
+	@Path("/getStrainListProbeAntigen")
 	public SearchResults<String> getStrainListProbeAntigen() {
 	
 		SearchResults<String> results = null;

@@ -12,7 +12,7 @@ public class ChromosomeDomain extends BaseDomain {
 	private String chromosomeKey;
 	private String organismKey;
 	private String chromosome;
-	private String sequenceNum;
+	private Integer sequenceNum;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

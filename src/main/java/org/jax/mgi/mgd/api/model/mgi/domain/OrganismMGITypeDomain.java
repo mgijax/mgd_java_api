@@ -13,7 +13,7 @@ public class OrganismMGITypeDomain extends BaseDomain {
 	private String organismKey;
 	private String mgiTypeKey;
 	private String mgiType;
-	private String sequenceNum;
+	private Integer sequenceNum;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

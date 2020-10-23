@@ -127,7 +127,7 @@ public class OrganismMGITypeService extends BaseService<OrganismMGITypeDomain> {
 				OrganismMGIType entity = new OrganismMGIType();									
 				entity.set_organism_key(Integer.valueOf(parentKey));
 				entity.setMgiType(mgiTypeDAO.get(Integer.valueOf(domain.get(i).getMgiTypeKey())));	
-				entity.setSequenceNum(Integer.valueOf(domain.get(i).getSequenceNum()));
+				entity.setSequenceNum(domain.get(i).getSequenceNum());
 				entity.setCreatedBy(user);
 				entity.setModifiedBy(user);
 				entity.setCreation_date(new Date());
@@ -149,7 +149,7 @@ public class OrganismMGITypeService extends BaseService<OrganismMGITypeDomain> {
 				OrganismMGIType entity = organismMGITypeDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));	
 				entity.set_organism_key(Integer.valueOf(parentKey));
 				entity.setMgiType(mgiTypeDAO.get(Integer.valueOf(domain.get(i).getMgiTypeKey())));	
-				entity.setSequenceNum(Integer.valueOf(domain.get(i).getSequenceNum()));	
+				entity.setSequenceNum(domain.get(i).getSequenceNum());	
 				entity.setModifiedBy(user);
 				entity.setModification_date(new Date());
 				organismMGITypeDAO.update(entity);

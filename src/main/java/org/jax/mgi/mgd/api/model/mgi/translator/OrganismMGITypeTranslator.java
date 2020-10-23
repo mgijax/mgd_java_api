@@ -16,7 +16,7 @@ public class OrganismMGITypeTranslator extends BaseEntityDomainTranslator<Organi
 		domain.setOrganismKey(String.valueOf(entity.get_organism_key()));
 		domain.setMgiTypeKey(String.valueOf(entity.getMgiType().get_mgitype_key()));
 		domain.setMgiType(entity.getMgiType().getName());
-		domain.setSequenceNum(String.valueOf(entity.getSequenceNum()));
+		domain.setSequenceNum(entity.getSequenceNum());
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());

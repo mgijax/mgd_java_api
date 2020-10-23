@@ -15,7 +15,7 @@ public class ChromosomeTranslator extends BaseEntityDomainTranslator<Chromosome,
 		domain.setChromosomeKey(String.valueOf(entity.get_chromosome_key()));
 		domain.setOrganismKey(String.valueOf(entity.get_organism_key()));
 		domain.setChromosome(entity.getChromosome());
-		domain.setSequenceNum(String.valueOf(entity.getSequenceNum()));
+		domain.setSequenceNum(entity.getSequenceNum());
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());

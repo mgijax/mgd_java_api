@@ -17,6 +17,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeSourceDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeTissueDAO;
+import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
@@ -281,6 +282,27 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
         results.setItem(translator.translate(probeSourceDAO.get(key)));
         return results;
     }
+
+	@Transactional	
+	public SearchResults<ProbeSourceDomain> getObjectCount() {
+		// return the object count from the database
+		
+		SearchResults<ProbeSourceDomain> results = new SearchResults<ProbeSourceDomain>();
+		String cmd = "select count(*) as objectCount from prb_source";
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getInt("objectCount");
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;		
+	}
 	
 	@Transactional
 	public List<ProbeSourceDomain> search(ProbeSourceDomain searchDomain) {

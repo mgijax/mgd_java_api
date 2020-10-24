@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -50,6 +51,13 @@ public class ProbeSourceController extends BaseController<ProbeSourceDomain> {
 		return probeSourceService.get(key);
 	}
 
+	@GET
+	@ApiOperation(value = "Get the object count from prb_source table")
+	@Path("/getObjectCount")
+	public SearchResults<ProbeSourceDomain> getObjectCount() {
+		return probeSourceService.getObjectCount();
+	}
+	
 	@Override
 	public SearchResults<ProbeSourceDomain> delete(Integer key, User user) {
 		return probeSourceService.delete(key, user);

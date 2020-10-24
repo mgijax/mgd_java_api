@@ -338,8 +338,8 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 			where = where + "\nand s._segmenttype_key = " + searchDomain.getSegmentTypeKey();
 		}
 
-		if (searchDomain.getVector() != null && !searchDomain.getVector().isEmpty()) {
-			where = where + "\nand s._vector_key = " + searchDomain.getVector();
+		if (searchDomain.getVectorKey() != null && !searchDomain.getVectorKey().isEmpty()) {
+			where = where + "\nand s._vector_key = " + searchDomain.getVectorKey();
 		}
 		
 		if (searchDomain.getStrainKey() != null && !searchDomain.getStrainKey().isEmpty()) {

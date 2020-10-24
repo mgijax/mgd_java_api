@@ -17,7 +17,6 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeSourceDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeTissueDAO;
-import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
@@ -323,7 +322,11 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 			from = from + cmResults[0];
 			where = where + cmResults[1];
 		}
-						
+		
+		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
+			where = where + "\nand a.name ilike '" + searchDomain.getName() + "'";
+		}
+		
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info(cmd);

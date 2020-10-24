@@ -311,10 +311,13 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
-		String select = "select a._source_key";
-		String from = "from prb_source a";
-		String where = "where a._source_key is not null";
-		String orderBy = "order by a.name";
+		String select = "select s._source_key";
+		String from = "from prb_source s";
+		String where = "where s._source_key is not null";
+		String orderBy = "order by s.name";
+		Boolean from_strain = false;
+		Boolean from_tissue = false;
+		Boolean from_cellline = false;
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -322,9 +325,76 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 			from = from + cmResults[0];
 			where = where + cmResults[1];
 		}
+
+		if (searchDomain.getSourceKey() != null && !searchDomain.getSourceKey().isEmpty()) {
+			where = where + "\nand s._source_key = " + searchDomain.getSourceKey();
+		}
 		
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
-			where = where + "\nand a.name ilike '" + searchDomain.getName() + "'";
+			where = where + "\nand s.name ilike '" + searchDomain.getName() + "'";
+		}			
+	
+		if (searchDomain.getStrainKey() != null && !searchDomain.getStrainKey().isEmpty()) {
+			where = where + "\nand s._strain_key = " + searchDomain.getStrainKey();
+		}
+		else if (searchDomain.getStrain() != null && !searchDomain.getStrain().isEmpty()) {
+			where = where + "\nand ss.strain ilike '" + searchDomain.getStrain() + "'";
+			from_strain = true;					
+		}
+	
+		if (searchDomain.getTissueKey() != null && !searchDomain.getTissueKey().isEmpty()) {
+			where = where + "\nand s._tissue_key = " + searchDomain.getTissueKey();
+		}
+		else if (searchDomain.getTissue() != null && !searchDomain.getTissue().isEmpty()) {
+			where = where + "\nand st.tissue ilike '" + searchDomain.getTissue() + "'";
+			from_tissue = true;					
+		}
+					
+		if (searchDomain.getCellLineKey() != null && !searchDomain.getCellLineKey().isEmpty()) {
+			where = where + "\nand s._cellline_key = " + searchDomain.getCellLineKey();
+		}
+		else if (searchDomain.getCellLine() != null && !searchDomain.getCellLine().isEmpty()) {
+			where = where + "\nand sc.term ilike '" + searchDomain.getCellLine() + "'";
+			from_cellline = true;					
+		}		
+	
+		if (searchDomain.getOrganismKey() != null && !searchDomain.getOrganismKey().isEmpty()) {
+			where = where + "\nand s._organism_key = " + searchDomain.getOrganismKey();
+		}
+					
+		if (searchDomain.getDescription() != null && !searchDomain.getDescription().isEmpty()) {
+			where = where + "\nand s.description ilike '" + searchDomain.getDescription() + "'" ;
+		}	
+	
+		if (searchDomain.getGenderKey() != null && !searchDomain.getGenderKey().isEmpty()) {
+			where = where + "\nand s._gender_key = " + searchDomain.getGenderKey();
+		}
+				
+		String agePrefix = "";
+		String ageStage = "";
+		if (searchDomain.getAgePrefix() != null && !searchDomain.getAgePrefix().isEmpty()) {
+			agePrefix = searchDomain.getAgePrefix() + "%";
+		}
+		if (searchDomain.getAgeStage() != null && !searchDomain.getAgeStage().isEmpty()) {
+			ageStage = "% " + searchDomain.getAgeStage();
+		}
+		if (agePrefix.length() > 0 || ageStage.length() > 0) {
+			where = where + "\nand s.age ilike '" + agePrefix + ageStage + "'";
+		}
+
+		if (from_strain == true) {
+			from = from + ", prb_strain ss";
+			where = where + "\nand s._strain_key = ss._strain_key";
+		}
+	
+		if (from_tissue == true) {
+			from = from + ", prb_tissue st";
+			where = where + "\nand s._tissue_key = st._tissue_key";
+		}
+
+		if (from_cellline == true) {
+			from = from + ", voc_term sc";
+			where = where + "\nand s._cellline_key = sc._term_key and sc._vocab_key = 18";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

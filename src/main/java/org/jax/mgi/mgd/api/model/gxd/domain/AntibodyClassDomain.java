@@ -12,10 +12,6 @@ public class AntibodyClassDomain extends BaseDomain {
 	private String termKey;
 	private String term;
 	private String vocabKey;
-	private String abbreviation;
-	private String note;
-	private String sequenceNum;
-	private Boolean includeObsolete = Boolean.FALSE;
 	private String creation_date;
 	private String modification_date;
 }

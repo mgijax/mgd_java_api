@@ -565,5 +565,40 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 		
 		return results;
 	}
+
+	@Transactional
+	public List<LogicalDbDomain> searchProbeSourceSet() {
+		// get probe source logical db list
+		// returns list of logical db domain	
+
+        // 43 | IMAGE Clone Libraries
+        // 18 | dbEST Libraries
+        // 46 | NIA 15K
 		
+		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
+
+		String cmd = "select _logicaldb_key, name, 0 as org"
+				+ "\nfrom acc_logicaldb"
+				+ "\nwhere _logicaldb_key in (18, 43, 46)"
+				+ "\norder by name";
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {					
+				LogicalDbDomain domain = new LogicalDbDomain();									
+				domain = translator.translate(logicalDBDAO.get(rs.getInt("_logicaldb_key")));
+				domain.setName(domain.getName().replace("Sequence DB", "Nucleotide"));
+				results.add(domain);
+				logicalDBDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

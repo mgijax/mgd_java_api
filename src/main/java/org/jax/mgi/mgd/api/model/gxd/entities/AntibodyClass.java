@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.gxd.entities;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,6 +28,7 @@ public class AntibodyClass extends BaseEntity {
 	@SequenceGenerator(name="gxd_antibodyclass_generator", sequenceName = "gxd_antibodyclass_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")	
 	private int _antibodyclass_key;
+	@Column(name="class")		// just "class" is a Java reserved word
 	private String antibodyClass;	
 	private Date creation_date;
 	private Date modification_date;

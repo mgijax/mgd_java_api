@@ -262,13 +262,11 @@ public class VocabService extends BaseService<VocabularyDomain> {
     	
     	List<SlimVocabularyDomain> results = new ArrayList<SlimVocabularyDomain>();
     	
-    	String cmd = "";
-		String select = "select v._vocab_key, v.name";
-		String from = "from voc_vocab v";
-		String where = "where v.isSimple = '1'";
-		String orderBy = "order by v.name";
+    	String cmd = "select _vocab_key, name"
+				+ "\nfrom voc_vocab"
+    			+ "\nwhere isSimple = '1'"
+				+ "\norder by name";
 		
-		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info(cmd);
 		
 		try {						
@@ -279,14 +277,13 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				domain.setVocabKey(rs.getString("_vocab_key"));
 				domain.setName(rs.getString("name"));
 				results.add(domain);
-			}
-					
+			}				
 			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-			
+				
     	return results;
     }
     

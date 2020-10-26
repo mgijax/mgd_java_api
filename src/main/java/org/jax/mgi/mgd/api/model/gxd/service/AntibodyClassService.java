@@ -25,7 +25,7 @@ public class AntibodyClassService extends BaseService<AntibodyClassDomain> {
 	protected Logger log = Logger.getLogger(getClass());
 
 	@Inject
-	private AntibodyClassDAO typeDAO;
+	private AntibodyClassDAO antibodyClassDAO;
 	
 	private AntibodyClassTranslator translator = new AntibodyClassTranslator();
 	
@@ -34,12 +34,7 @@ public class AntibodyClassService extends BaseService<AntibodyClassDomain> {
 	
 	@Transactional
 	public SearchResults<AntibodyClassDomain> create(AntibodyClassDomain domain, User user) {
-		// create new entity object from in-coming domain
-		// the Entities class handles the generation of the primary key
-		// database trigger will assign the MGI id/see pgmgddbschema/trigger for details
-
 		SearchResults<AntibodyClassDomain> results = new SearchResults<AntibodyClassDomain>();
-		
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
 		
@@ -47,10 +42,6 @@ public class AntibodyClassService extends BaseService<AntibodyClassDomain> {
 
 	@Transactional
 	public SearchResults<AntibodyClassDomain> update(AntibodyClassDomain domain, User user) {
-		
-		// the set of fields in "update" is similar to set of fields in "create"
-		// creation user/date are only set in "create"
-
 		SearchResults<AntibodyClassDomain> results = new SearchResults<AntibodyClassDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
@@ -58,7 +49,6 @@ public class AntibodyClassService extends BaseService<AntibodyClassDomain> {
 
 	@Transactional
 	public SearchResults<AntibodyClassDomain> delete(Integer key, User user) {
-		// get the entity object and delete
 		SearchResults<AntibodyClassDomain> results = new SearchResults<AntibodyClassDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
@@ -69,8 +59,8 @@ public class AntibodyClassService extends BaseService<AntibodyClassDomain> {
 	public AntibodyClassDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain
 		AntibodyClassDomain domain = new AntibodyClassDomain();
-		if (typeDAO.get(key) != null) {
-			domain = translator.translate(typeDAO.get(key));
+		if (antibodyClassDAO.get(key) != null) {
+			domain = translator.translate(antibodyClassDAO.get(key));
 		}
 		return domain;
 	}
@@ -78,7 +68,7 @@ public class AntibodyClassService extends BaseService<AntibodyClassDomain> {
     @Transactional
     public SearchResults<AntibodyClassDomain> getResults(Integer key) {
         SearchResults<AntibodyClassDomain> results = new SearchResults<AntibodyClassDomain>();
-        results.setItem(translator.translate(typeDAO.get(key)));
+        results.setItem(translator.translate(antibodyClassDAO.get(key)));
         return results;
     } 
 	
@@ -116,7 +106,6 @@ public class AntibodyClassService extends BaseService<AntibodyClassDomain> {
 		String where = "where a._AntibodyClass_key is not null";
 		String orderBy = "order by a.class";
 		
-		// if parameter exists, then add to where-clause
 		// antibodyName
 		if(searchDomain.getAntibodyClass() != null && ! searchDomain.getAntibodyClass().isEmpty()) {
 			where = where + "\n and a.class ilike '" + searchDomain.getAntibodyClass() + "'";
@@ -128,8 +117,7 @@ public class AntibodyClassService extends BaseService<AntibodyClassDomain> {
 			from = from + cmResults[0];
 			where = where + cmResults[1];
 		}
-						
-		
+
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info(cmd);
@@ -138,8 +126,8 @@ public class AntibodyClassService extends BaseService<AntibodyClassDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				AntibodyClassDomain domain = new AntibodyClassDomain();
-				domain = translator.translate(typeDAO.get(rs.getInt("_antibodyclass_key")));				
-				typeDAO.clear();
+				domain = translator.translate(antibodyClassDAO.get(rs.getInt("_antibodyclass_key")));				
+				antibodyClassDAO.clear();
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

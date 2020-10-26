@@ -33,7 +33,7 @@ public class AntibodyClassController extends BaseController<AntibodyClassDomain>
 	public SearchResults<AntibodyClassDomain> create(AntibodyClassDomain domain, User user) {
 		SearchResults<AntibodyClassDomain> results = new SearchResults<AntibodyClassDomain>();
 		results = AntibodyClassService.create(domain, user);
-		results = AntibodyClassService.getResults(Integer.valueOf(results.items.get(0).getAntibodyClassKey()));
+		results = AntibodyClassService.getResults(Integer.valueOf(results.items.get(0).getTermKey()));
 		return results;
 	}
 
@@ -41,7 +41,7 @@ public class AntibodyClassController extends BaseController<AntibodyClassDomain>
 	public SearchResults<AntibodyClassDomain> update(AntibodyClassDomain domain, User user) {
 		SearchResults<AntibodyClassDomain> results = new SearchResults<AntibodyClassDomain>();
 		results = AntibodyClassService.update(domain, user);
-		results = AntibodyClassService.getResults(Integer.valueOf(results.items.get(0).getAntibodyClassKey()));
+		results = AntibodyClassService.getResults(Integer.valueOf(results.items.get(0).getTermKey()));
 		return results;
 	}
 

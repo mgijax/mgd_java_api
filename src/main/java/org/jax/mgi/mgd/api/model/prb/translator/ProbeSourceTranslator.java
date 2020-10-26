@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
-import org.jax.mgi.mgd.api.model.acc.translator.SlimAccessionTranslator;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -91,8 +91,8 @@ public class ProbeSourceTranslator extends BaseEntityDomainTranslator<ProbeSourc
 
 		//  accession ids 
 		if (entity.getAccessionIds() != null && !entity.getAccessionIds().isEmpty()) {
-			SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();			
-			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getAccessionIds());
+			AccessionTranslator accessionTranslator = new AccessionTranslator();			
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getAccessionIds());
 			domain.setAccessionIds(IteratorUtils.toList(acc.iterator()));
 		}
 		

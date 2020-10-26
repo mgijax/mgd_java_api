@@ -11,6 +11,7 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -45,10 +46,14 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 	private ReferenceDAO referenceDAO;
 	@Inject
 	private TermDAO termDAO;
+	@Inject
+	private AccessionService accessionService;
 	
 	private ProbeSourceTranslator translator = new ProbeSourceTranslator();
 	private SlimProbeSourceTranslator slimtranslator = new SlimProbeSourceTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
+	
+	String mgiTypeName = "Source";
 	
 	@Transactional
 	public SearchResults<ProbeSourceDomain> create(ProbeSourceDomain domain, User user) {
@@ -172,8 +177,10 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		entity.setCreation_date(new Date());
 		entity.setModifiedBy(user);
 		entity.setModification_date(new Date());				
-		
 		probeSourceDAO.persist(entity);				
+
+		// process accession ids				
+		accessionService.process(String.valueOf(entity.get_source_key()), domain.getAccessionIds(), mgiTypeName, user);		
 
 		// validate age and set age min/age max
 		String cmd = "\nselect count(*) from MGI_resetAgeMinMax ('PRB_Source', " +  entity.get_source_key() + ")";
@@ -233,7 +240,12 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		}
 			
 		entity.setIsCuratorEdited(Integer.valueOf(domain.getIsCuratorEdited()));
-				
+
+		// process accession ids
+		if (accessionService.process(domain.getSourceKey(), domain.getAccessionIds(), mgiTypeName, user)) {
+			modified = true;
+		}
+		
 		// finish update
 		if (modified) {
 			entity.setModification_date(new Date());
@@ -318,6 +330,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		Boolean from_strain = false;
 		Boolean from_tissue = false;
 		Boolean from_cellline = false;
+		Boolean from_accession = false;
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -394,6 +407,16 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 			where = where + "\nand s.age ilike '" + agePrefix + ageStage + "'";
 		}
 
+		if (searchDomain.getAccessionIds() != null) {
+			if (searchDomain.getAccessionIds().get(0).getAccID() != null && !searchDomain.getAccessionIds().get(0).getAccID().isEmpty()) {
+				if (searchDomain.getAccessionIds().get(0).getLogicaldbKey() != null && !searchDomain.getAccessionIds().get(0).getLogicaldbKey().isEmpty()) {
+					where = where + "\nand acc._logicaldb_key = " + searchDomain.getAccessionIds().get(0).getLogicaldbKey();
+				}	
+				where = where + "\nand acc.accID ilike '" + searchDomain.getAccessionIds().get(0).getAccID() + "'";
+				from_accession = true;			
+				}				
+		}	
+		
 		if (from_strain == true) {
 			from = from + ", prb_strain ss";
 			where = where + "\nand s._strain_key = ss._strain_key";
@@ -407,6 +430,10 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		if (from_cellline == true) {
 			from = from + ", voc_term sc";
 			where = where + "\nand s._cellline_key = sc._term_key and sc._vocab_key = 18";
+		}
+		if (from_accession == true) {
+			from = from + ", acc_accession acc";
+			where = where + "\nand acc._mgitype_key = 5 and s._source_key_key = acc._object_key";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

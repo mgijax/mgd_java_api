@@ -211,7 +211,6 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		
 		// special list of _vocab_key = 86
 		// HTMP Property->MP-Sex Specificity
-		log.info("searchDomain.getName" + searchDomain.getName() );
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
 			if (searchDomain.getName().equals("MP-Sex-Specificity")) {		
 					select = "(select _Vocab_key, _Term_key, 'MP-Sex-Specificity' as name, 'F' as term, 'F' as abbreviation from VOC_Term where _Term_key = 8836535"

@@ -14,7 +14,6 @@ import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyClassDomain;
 import org.jax.mgi.mgd.api.model.gxd.translator.AntibodyClassTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -106,19 +105,6 @@ public class AntibodyClassService extends BaseService<AntibodyClassDomain> {
 		String where = "where a._AntibodyClass_key is not null";
 		String orderBy = "order by a.class";
 		
-		// antibodyName
-		if(searchDomain.getAntibodyClass() != null && ! searchDomain.getAntibodyClass().isEmpty()) {
-			where = where + "\n and a.class ilike '" + searchDomain.getAntibodyClass() + "'";
-		}
-		
-		// create/mod date (no 'by')
-		String cmResults[] = DateSQLQuery.queryByCreationModification("a", null, null, searchDomain.getCreation_date(), searchDomain.getModification_date());
-		if (cmResults.length > 0) {
-			from = from + cmResults[0];
-			where = where + cmResults[1];
-		}
-
-		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info(cmd);
 		

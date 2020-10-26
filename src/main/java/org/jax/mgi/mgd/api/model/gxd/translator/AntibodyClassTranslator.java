@@ -19,9 +19,6 @@ public class AntibodyClassTranslator extends BaseEntityDomainTranslator<Antibody
 		domain.setTermKey(String.valueOf(entity.get_antibodyclass_key()));
 		domain.setTerm(entity.getAntibodyClass());
 		domain.setVocabKey("151");
-//		domain.setAbbreviation(null);
-//		domain.setNote(null);
-//		domain.setSequenceNum(null);
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		

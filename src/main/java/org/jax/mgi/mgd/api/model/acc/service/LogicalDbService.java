@@ -577,7 +577,7 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 		
 		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
 
-		String cmd = "select _logicaldb_key, name, 0 as org"
+		String cmd = "select _logicaldb_key, name"
 				+ "\nfrom acc_logicaldb"
 				+ "\nwhere _logicaldb_key in (18, 43, 46)"
 				+ "\norder by name";
@@ -588,7 +588,6 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 			while (rs.next()) {					
 				LogicalDbDomain domain = new LogicalDbDomain();									
 				domain = translator.translate(logicalDBDAO.get(rs.getInt("_logicaldb_key")));
-				domain.setName(domain.getName().replace("Sequence DB", "Nucleotide"));
 				results.add(domain);
 				logicalDBDAO.clear();
 			}

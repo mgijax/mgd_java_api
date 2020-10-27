@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter @Setter
 public class GelControlDomain extends BaseDomain {
 
-	private String vocabKey = "153";
+	private String vocabKey = "154";
 	private int isSimple = 1;
 	private int isPrivate = 0;
 	private String name = "GXD Gel Control";

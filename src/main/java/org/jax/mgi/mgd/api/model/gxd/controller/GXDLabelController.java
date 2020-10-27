@@ -55,7 +55,7 @@ public class GXDLabelController extends BaseController<GXDLabelDomain> {
 	}
 		
 	@POST
-	@ApiOperation(value = "Search/returns antibody class domain")
+	@ApiOperation(value = "Search/returns domain")
 	@Path("/search")
 	public List<GXDLabelDomain> search(GXDLabelDomain searchDomain) {
 	

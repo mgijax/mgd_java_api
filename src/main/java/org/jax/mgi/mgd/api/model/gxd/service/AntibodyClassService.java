@@ -13,6 +13,9 @@ import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyClassDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyClassDomain;
 import org.jax.mgi.mgd.api.model.gxd.translator.AntibodyClassTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
+import org.jax.mgi.mgd.api.model.voc.translator.TermTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -27,9 +30,8 @@ public class AntibodyClassService extends BaseService<AntibodyClassDomain> {
 	private AntibodyClassDAO antibodyClassDAO;
 	
 	private AntibodyClassTranslator translator = new AntibodyClassTranslator();
-	
+	private TermTranslator termtranslator = new TermTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
 	
 	@Transactional
 	public SearchResults<AntibodyClassDomain> create(AntibodyClassDomain domain, User user) {
@@ -96,31 +98,31 @@ public class AntibodyClassService extends BaseService<AntibodyClassDomain> {
 	public List<AntibodyClassDomain> search(AntibodyClassDomain searchDomain) {
 
 		List<AntibodyClassDomain> results = new ArrayList<AntibodyClassDomain>();
+		List<TermDomain> termresults = new ArrayList<TermDomain>();
 		
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
-		String cmd = "";
-		String select = "select a.*";
-		String from = "from gxd_AntibodyClass a";
-		String where = "where a._AntibodyClass_key is not null";
-		String orderBy = "order by a.class";
-		
-		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
+		String cmd = "select * from gxd_AntibodyClass order by class";
 		log.info(cmd);
-		
+
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				AntibodyClassDomain domain = new AntibodyClassDomain();
-				domain = translator.translate(antibodyClassDAO.get(rs.getInt("_antibodyclass_key")));				
-				antibodyClassDAO.clear();
-				results.add(domain);
+				TermDomain tdomain = new TermDomain();
+				tdomain.setTermKey(rs.getString("_antibodyclass_key"));
+				tdomain.setTerm(rs.getString("class"));
+				termresults.add(tdomain);
 			}
 			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		AntibodyClassDomain adomain = new AntibodyClassDomain();
+		adomain.setVocabKey("151");
+		adomain.setIsSimple(1);
+		adomain.setIsPrivate(0);
+		adomain.setTerms(termresults);
+		results.add(adomain);
 		
 		return results;
 	}

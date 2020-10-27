@@ -433,7 +433,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		}
 		if (from_accession == true) {
 			from = from + ", acc_accession acc";
-			where = where + "\nand acc._mgitype_key = 5 and s._source_key_key = acc._object_key";
+			where = where + "\nand acc._mgitype_key = 5 and s._source_key = acc._object_key";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

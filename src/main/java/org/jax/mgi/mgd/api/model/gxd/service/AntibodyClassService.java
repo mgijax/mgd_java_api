@@ -14,7 +14,6 @@ import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyClassDomain;
 import org.jax.mgi.mgd.api.model.gxd.translator.AntibodyClassTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
-import org.jax.mgi.mgd.api.model.voc.translator.TermTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -29,7 +28,6 @@ public class AntibodyClassService extends BaseService<AntibodyClassDomain> {
 	private AntibodyClassDAO antibodyClassDAO;
 	
 	private AntibodyClassTranslator translator = new AntibodyClassTranslator();
-	private TermTranslator termtranslator = new TermTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -113,6 +111,7 @@ public class AntibodyClassService extends BaseService<AntibodyClassDomain> {
 				tdomain.setVocabKey(adomain.getVocabKey());
 				tdomain.setTermKey(rs.getString("_antibodyclass_key"));
 				tdomain.setTerm(rs.getString("class"));
+				tdomain.setIsObsolete("0");
 				tdomain.setSequenceNum(String.valueOf(sequenceNum));
 				termresults.add(tdomain);
 				sequenceNum = sequenceNum + 1;

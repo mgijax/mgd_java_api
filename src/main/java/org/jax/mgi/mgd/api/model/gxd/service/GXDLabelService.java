@@ -125,7 +125,7 @@ public class GXDLabelService extends BaseService<GXDLabelDomain> {
 		List<TermDomain> termresults = new ArrayList<TermDomain>();
 		Integer sequenceNum = 1;
 		
-		String cmd = "select * from gxd_AntibodyClass order by class";
+		String cmd = "select * from gxd_label order by label";
 		log.info(cmd);
 
 		try {
@@ -134,8 +134,8 @@ public class GXDLabelService extends BaseService<GXDLabelDomain> {
 				TermDomain tdomain = new TermDomain();
 				tdomain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 				tdomain.setVocabKey(adomain.getVocabKey());
-				tdomain.setTermKey(rs.getString("_antibodyclass_key"));
-				tdomain.setTerm(rs.getString("class"));
+				tdomain.setTermKey(rs.getString("_label_key"));
+				tdomain.setTerm(rs.getString("label"));
 				tdomain.setIsObsolete("0");
 				tdomain.setSequenceNum(String.valueOf(sequenceNum));
 				termresults.add(tdomain);

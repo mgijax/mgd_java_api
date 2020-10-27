@@ -10,9 +10,9 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyClassDAO;
-import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyClassDomain;
-import org.jax.mgi.mgd.api.model.gxd.entities.AntibodyClass;
+import org.jax.mgi.mgd.api.model.gxd.dao.GXDLabelDAO;
+import org.jax.mgi.mgd.api.model.gxd.domain.GXDLabelDomain;
+import org.jax.mgi.mgd.api.model.gxd.entities.GXDLabel;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -21,30 +21,30 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
 @RequestScoped
-public class AntibodyClassService extends BaseService<AntibodyClassDomain> {
+public class GXDLabelService extends BaseService<GXDLabelDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
 
 	@Inject
-	private AntibodyClassDAO antibodyClassDAO;
+	private GXDLabelDAO gxdLabelDAO;
 	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
-	public SearchResults<AntibodyClassDomain> create(AntibodyClassDomain domain, User user) {
-		SearchResults<AntibodyClassDomain> results = new SearchResults<AntibodyClassDomain>();
+	public SearchResults<GXDLabelDomain> create(GXDLabelDomain domain, User user) {
+		SearchResults<GXDLabelDomain> results = new SearchResults<GXDLabelDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
 		
 	}
 
 	@Transactional
-	public SearchResults<AntibodyClassDomain> update(AntibodyClassDomain domain, User user) {
-		SearchResults<AntibodyClassDomain> results = new SearchResults<AntibodyClassDomain>();
+	public SearchResults<GXDLabelDomain> update(GXDLabelDomain domain, User user) {
+		SearchResults<GXDLabelDomain> results = new SearchResults<GXDLabelDomain>();
 
 		List<TermDomain> termdomain = domain.getTerms();
 				
-		log.info("processAntibodyClass/update");
+		log.info("processGXDLabel/update");
 				
 		// iterate thru the list of domains
 		// for each domain, determine whether to perform an insert, delete or update
@@ -52,76 +52,76 @@ public class AntibodyClassService extends BaseService<AntibodyClassDomain> {
 		for (int i = 0; i < termdomain.size(); i++) {
 
 			if (termdomain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
-				log.info("processAntibodyClass/create");
+				log.info("processGXDLabel/create");
 
 				if (termdomain.get(i).getTerm() == null || termdomain.get(i).getTerm().isEmpty()) {
-					log.info("processAntibodyClass/nothing to create");
+					log.info("processGXDLabel/nothing to create");
 					continue;
 				}
 				
-				AntibodyClass entity = new AntibodyClass();	
-				entity.setAntibodyClass(termdomain.get(i).getTerm());
+				GXDLabel entity = new GXDLabel();	
+				entity.setLabel(termdomain.get(i).getTerm());
 				entity.setCreation_date(new Date());
 				entity.setModification_date(new Date());
-				antibodyClassDAO.persist(entity);				
-				log.info("processAntibodyClass/create processed");												
+				gxdLabelDAO.persist(entity);				
+				log.info("processGXDLabel/create processed");												
 			}
 			
 			else if (termdomain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-				log.info("processAntibodyClass delete");
-				AntibodyClass entity = antibodyClassDAO.get(Integer.valueOf(termdomain.get(i).getTermKey()));
-				antibodyClassDAO.remove(entity);
-				log.info("processAntibodyClass/delete processed");
+				log.info("processGXDLabel delete");
+				GXDLabel entity = gxdLabelDAO.get(Integer.valueOf(termdomain.get(i).getTermKey()));
+				gxdLabelDAO.remove(entity);
+				log.info("processGXDLabel/delete processed");
 			} 
 			else if (termdomain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-				log.info("processAntibodyClass update");
-				AntibodyClass entity = antibodyClassDAO.get(Integer.valueOf(termdomain.get(i).getTermKey()));
-				entity.setAntibodyClass(termdomain.get(i).getTerm());
+				log.info("processGXDLabel update");
+				GXDLabel entity = gxdLabelDAO.get(Integer.valueOf(termdomain.get(i).getTermKey()));
+				entity.setLabel(termdomain.get(i).getTerm());
 				entity.setModification_date(new Date());
-				antibodyClassDAO.update(entity);
-				log.info("processAntibodyClass/changes processed: " + termdomain.get(i).getTermKey());								
+				gxdLabelDAO.update(entity);
+				log.info("processGXDLabel/changes processed: " + termdomain.get(i).getTermKey());								
 			}
 			else {
-				log.info("processAntibodyClass/no changes processed: " + termdomain.get(i).getTermKey());
+				log.info("processGXDLabel/no changes processed: " + termdomain.get(i).getTermKey());
 			} 
 		}
 			
-		log.info("processAntibodyClass/update/returning results");
+		log.info("processGXDLabel/update/returning results");
 		results.setItems(search(domain));
-		log.info("processAntibodyClass/update/returned results succsssful");
+		log.info("processGXDLabel/update/returned results succsssful");
 		
 		return results;
 	}
 
 	@Transactional
-	public SearchResults<AntibodyClassDomain> delete(Integer key, User user) {
-		SearchResults<AntibodyClassDomain> results = new SearchResults<AntibodyClassDomain>();
+	public SearchResults<GXDLabelDomain> delete(Integer key, User user) {
+		SearchResults<GXDLabelDomain> results = new SearchResults<GXDLabelDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
 		
 	}
 	
 	@Transactional
-	public AntibodyClassDomain get(Integer key) {
+	public GXDLabelDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain
-		AntibodyClassDomain domain = new AntibodyClassDomain();
+		GXDLabelDomain domain = new GXDLabelDomain();
 		// do not implement
 		return domain;
 	}
 
     @Transactional
-    public SearchResults<AntibodyClassDomain> getResults(Integer key) {
-        SearchResults<AntibodyClassDomain> results = new SearchResults<AntibodyClassDomain>();
+    public SearchResults<GXDLabelDomain> getResults(Integer key) {
+        SearchResults<GXDLabelDomain> results = new SearchResults<GXDLabelDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
         return results;
     } 
 	
 	@Transactional
-	public List<AntibodyClassDomain> search(AntibodyClassDomain searchDomain) {
-		// return AntibodyClassDomain which looks like a vocab/term domain
+	public List<GXDLabelDomain> search(GXDLabelDomain searchDomain) {
+		// return GXDLabelDomain which looks like a vocab/term domain
 
-		List<AntibodyClassDomain> results = new ArrayList<AntibodyClassDomain>();
-		AntibodyClassDomain adomain = new AntibodyClassDomain();
+		List<GXDLabelDomain> results = new ArrayList<GXDLabelDomain>();
+		GXDLabelDomain adomain = new GXDLabelDomain();
 		List<TermDomain> termresults = new ArrayList<TermDomain>();
 		Integer sequenceNum = 1;
 		

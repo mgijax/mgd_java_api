@@ -9,11 +9,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class AntibodyClassDomain extends BaseDomain {
+public class GXDLabelDomain extends BaseDomain {
 
-	private String vocabKey = "151";
+	private String vocabKey = "152";
 	private int isSimple = 1;
 	private int isPrivate = 0;
-	private String name = "GXD Antibody Class";
+	private String name = "GXD Label";
 	private List<TermDomain> terms;
 }

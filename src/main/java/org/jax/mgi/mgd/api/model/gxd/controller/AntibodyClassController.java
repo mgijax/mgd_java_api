@@ -40,7 +40,7 @@ public class AntibodyClassController extends BaseController<AntibodyClassDomain>
 	public SearchResults<AntibodyClassDomain> update(AntibodyClassDomain domain, User user) {
 		SearchResults<AntibodyClassDomain> results = new SearchResults<AntibodyClassDomain>();
 		results = antibodyclassService.update(domain, user);
-		results = antibodyclassService.getResults(Integer.valueOf(results.items.get(0).getVocabKey()));
+		results.setItems(antibodyclassService.search(domain));
 		return results;
 	}
 

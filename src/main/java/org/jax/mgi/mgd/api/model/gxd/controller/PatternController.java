@@ -40,7 +40,7 @@ public class PatternController extends BaseController<PatternDomain> {
 	public SearchResults<PatternDomain> update(PatternDomain domain, User user) {
 		SearchResults<PatternDomain> results = new SearchResults<PatternDomain>();
 		results = patternService.update(domain, user);
-		results = patternService.getResults(Integer.valueOf(results.items.get(0).getVocabKey()));
+		results.setItems(patternService.search(domain));
 		return results;
 	}
 

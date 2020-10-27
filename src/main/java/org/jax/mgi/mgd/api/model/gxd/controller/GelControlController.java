@@ -40,7 +40,7 @@ public class GelControlController extends BaseController<GelControlDomain> {
 	public SearchResults<GelControlDomain> update(GelControlDomain domain, User user) {
 		SearchResults<GelControlDomain> results = new SearchResults<GelControlDomain>();
 		results = gelControlService.update(domain, user);
-		results = gelControlService.getResults(Integer.valueOf(results.items.get(0).getVocabKey()));
+		results.setItems(gelControlService.search(domain));
 		return results;
 	}
 

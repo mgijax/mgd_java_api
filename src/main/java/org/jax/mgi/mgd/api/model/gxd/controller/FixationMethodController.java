@@ -40,7 +40,7 @@ public class FixationMethodController extends BaseController<FixationMethodDomai
 	public SearchResults<FixationMethodDomain> update(FixationMethodDomain domain, User user) {
 		SearchResults<FixationMethodDomain> results = new SearchResults<FixationMethodDomain>();
 		results = fixationService.update(domain, user);
-		results = fixationService.getResults(Integer.valueOf(results.items.get(0).getVocabKey()));
+		results.setItems(fixationService.search(domain));
 		return results;
 	}
 

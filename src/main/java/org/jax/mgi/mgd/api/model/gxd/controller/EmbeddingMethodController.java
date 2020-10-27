@@ -40,10 +40,11 @@ public class EmbeddingMethodController extends BaseController<EmbeddingMethodDom
 	public SearchResults<EmbeddingMethodDomain> update(EmbeddingMethodDomain domain, User user) {
 		SearchResults<EmbeddingMethodDomain> results = new SearchResults<EmbeddingMethodDomain>();
 		results = embeddingService.update(domain, user);
-		results = embeddingService.getResults(Integer.valueOf(results.items.get(0).getVocabKey()));
+		//results = embeddingService.getResults(Integer.valueOf(results.items.get(0).getVocabKey()));
+		results.setItems(embeddingService.search(domain));
 		return results;
 	}
-
+	
 	@Override
 	public SearchResults<EmbeddingMethodDomain> delete(Integer key, User user) {
 		return embeddingService.delete(key, user);

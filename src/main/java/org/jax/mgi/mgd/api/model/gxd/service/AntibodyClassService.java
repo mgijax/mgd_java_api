@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.gxd.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -11,6 +12,7 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyClassDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyClassDomain;
+import org.jax.mgi.mgd.api.model.gxd.entities.AntibodyClass;
 import org.jax.mgi.mgd.api.model.gxd.translator.AntibodyClassTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
@@ -41,7 +43,55 @@ public class AntibodyClassService extends BaseService<AntibodyClassDomain> {
 	@Transactional
 	public SearchResults<AntibodyClassDomain> update(AntibodyClassDomain domain, User user) {
 		SearchResults<AntibodyClassDomain> results = new SearchResults<AntibodyClassDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+
+		List<TermDomain> termdomain = domain.getTerms();
+				
+		log.info("processAntibodyClass/update");
+				
+		// iterate thru the list of domains
+		// for each domain, determine whether to perform an insert, delete or update
+		
+		for (int i = 0; i < termdomain.size(); i++) {
+
+			if (termdomain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
+				log.info("processAntibodyClass/create");
+
+				if (termdomain.get(i).getTerm() == null || termdomain.get(i).getTerm().isEmpty()) {
+					log.info("processAntibodyClass/nothing to create");
+					continue;
+				}
+				
+				AntibodyClass entity = new AntibodyClass();	
+				entity.setAntibodyClass(termdomain.get(i).getTerm());
+				entity.setCreation_date(new Date());
+				entity.setModification_date(new Date());
+				antibodyClassDAO.persist(entity);				
+				log.info("processAntibodyClass/create processed");												
+			}
+			
+			else if (termdomain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+				log.info("processAntibodyClass delete");
+				AntibodyClass entity = antibodyClassDAO.get(Integer.valueOf(termdomain.get(i).getTermKey()));
+				antibodyClassDAO.remove(entity);
+				log.info("processAntibodyClass/delete processed");
+			} 
+			else if (termdomain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+				log.info("processAntibodyClass update");
+				AntibodyClass entity = antibodyClassDAO.get(Integer.valueOf(termdomain.get(i).getTermKey()));
+				entity.setAntibodyClass(termdomain.get(i).getTerm());
+				entity.setModification_date(new Date());
+				antibodyClassDAO.update(entity);
+				log.info("processAntibodyClass/changes processed: " + termdomain.get(i).getTermKey());								
+			}
+			else {
+				log.info("processAntibodyClass/no changes processed: " + termdomain.get(i).getTermKey());
+			} 
+		}
+			
+		log.info("processAntibodyClass/update/returning results");
+		results.setItems(search(domain));
+		log.info("processAntibodyClass/update/returned results succsssful");
+		
 		return results;
 	}
 

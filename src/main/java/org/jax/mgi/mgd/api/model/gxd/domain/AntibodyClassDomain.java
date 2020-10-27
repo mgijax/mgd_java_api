@@ -11,11 +11,9 @@ import lombok.Setter;
 @Getter @Setter
 public class AntibodyClassDomain extends BaseDomain {
 
-	private String vocabKey;
-	private int isSimple;
-	private int isPrivate;
-	private String name;
-	private String creation_date;
-	private String modification_date;
+	private String vocabKey = "151";
+	private int isSimple = 1;
+	private int isPrivate = 0;
+	private String name = "Antibody Class";
 	private List<TermDomain> terms;
 }

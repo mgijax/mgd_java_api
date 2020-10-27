@@ -13,7 +13,6 @@ import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyClassDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyClassDomain;
 import org.jax.mgi.mgd.api.model.gxd.translator.AntibodyClassTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.translator.TermTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -96,9 +95,12 @@ public class AntibodyClassService extends BaseService<AntibodyClassDomain> {
 	
 	@Transactional
 	public List<AntibodyClassDomain> search(AntibodyClassDomain searchDomain) {
+		// return AntibodyClassDomain which looks like a vocab/term domain
 
 		List<AntibodyClassDomain> results = new ArrayList<AntibodyClassDomain>();
+		AntibodyClassDomain adomain = new AntibodyClassDomain();
 		List<TermDomain> termresults = new ArrayList<TermDomain>();
+		Integer sequenceNum = 1;
 		
 		String cmd = "select * from gxd_AntibodyClass order by class";
 		log.info(cmd);
@@ -107,9 +109,13 @@ public class AntibodyClassService extends BaseService<AntibodyClassDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				TermDomain tdomain = new TermDomain();
+				tdomain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
+				tdomain.setVocabKey(adomain.getVocabKey());
 				tdomain.setTermKey(rs.getString("_antibodyclass_key"));
 				tdomain.setTerm(rs.getString("class"));
+				tdomain.setSequenceNum(String.valueOf(sequenceNum));
 				termresults.add(tdomain);
+				sequenceNum = sequenceNum + 1;
 			}
 			sqlExecutor.cleanup();
 		}
@@ -117,10 +123,6 @@ public class AntibodyClassService extends BaseService<AntibodyClassDomain> {
 			e.printStackTrace();
 		}
 		
-		AntibodyClassDomain adomain = new AntibodyClassDomain();
-		adomain.setVocabKey("151");
-		adomain.setIsSimple(1);
-		adomain.setIsPrivate(0);
 		adomain.setTerms(termresults);
 		results.add(adomain);
 		

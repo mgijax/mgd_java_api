@@ -18,11 +18,6 @@ public class AntibodyClassTranslator extends BaseEntityDomainTranslator<Antibody
 		domain.setIsSimple(1);
 		domain.setIsPrivate(0);
 		domain.setName(entity.getAntibodyClass());
-		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
-		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-			
-//		Iterable<TermDomain> terms = termTranslator.translateEntities(entity.getTerms());
-//		domain.setTerms(IteratorUtils.toList(terms.iterator()));
 		
 		return domain;
 	}

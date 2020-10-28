@@ -40,7 +40,6 @@ public class GXDLabelController extends BaseController<GXDLabelDomain> {
 	public SearchResults<GXDLabelDomain> update(GXDLabelDomain domain, User user) {
 		SearchResults<GXDLabelDomain> results = new SearchResults<GXDLabelDomain>();
 		results = gxdLabelService.update(domain, user);
-		results.setItems(gxdLabelService.search(domain));
 		return results;
 	}
 

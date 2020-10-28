@@ -40,7 +40,6 @@ public class VisualizationMethodController extends BaseController<VisualizationM
 	public SearchResults<VisualizationMethodDomain> update(VisualizationMethodDomain domain, User user) {
 		SearchResults<VisualizationMethodDomain> results = new SearchResults<VisualizationMethodDomain>();
 		results = visualizationService.update(domain, user);
-		results = visualizationService.getResults(Integer.valueOf(results.items.get(0).getVocabKey()));
 		return results;
 	}
 

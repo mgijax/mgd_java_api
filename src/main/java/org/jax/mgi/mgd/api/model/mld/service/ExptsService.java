@@ -138,10 +138,10 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
-		String select = "select distinct p._probe_key, p.name";
-		String from = "from prb_probe p";
-		String where = "where p._probe_key is not null";
-		String orderBy = "order by p.name";
+		String select = "select distinct e.*";
+		String from = "from mld_expts_view e";
+		String where = "where e._expt_key is not null";
+		String orderBy = "order by e.jnum";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		Boolean from_accession = false;
 		
@@ -151,12 +151,16 @@ public class ExptsService extends BaseService<ExptsDomain> {
 //			from = from + cmResults[0];
 //			where = where + cmResults[1];
 //		}
+
+		if (searchDomain.getRefsKey() != null && !searchDomain.getRefsKey().isEmpty()) {
+			where = where + "\nand e._refs_key = " + searchDomain.getRefsKey();
+		}
 		
 		// building from...
 		
 		if (from_accession == true) {
 			from = from + ", acc_accession acc";
-			where = where + "\nand acc._mgitype_key = 3 and p._probe_key = acc._object_key and acc.prefixPart = 'MGI:'";
+			where = where + "\nand acc._mgitype_key = 4 and e._expt_key = acc._object_key and acc.prefixPart = 'MGI:'";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

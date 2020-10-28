@@ -32,6 +32,7 @@ public class ExptMarker extends BaseEntity {
 	@SequenceGenerator(name="mld_expt_marker_generator", sequenceName = "mld_expt_marker_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")
 	private int _assoc_key;
+	private int _expt_key;
 	private Integer sequenceNum;
 	private String gene;
 	private String description;
@@ -42,10 +43,6 @@ public class ExptMarker extends BaseEntity {
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_assay_type_key")
 	private MLDAssayType assayType;
-	
-    @OneToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "_expt_key", insertable = false, updatable = false)
-	private Expts experiment;
     
     @OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "_marker_key", insertable = false, updatable = false)

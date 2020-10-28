@@ -151,20 +151,14 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		}
 		
 		entity.setSegmentType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));
-		log.info("processProbe/createD");		
 		entity.setVectorType(termDAO.get(Integer.valueOf(domain.getVectorTypeKey())));		
-		log.info("processProbe/createE");		
-
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
 		entity.setModifiedBy(user);
 		entity.setModification_date(new Date());
-	
-		log.info("processProbe/createF");		
-		
+			
 		// can add an anonymous probe source
 		if (domain.getProbeSource().getName() == null || domain.getProbeSource().getName().isEmpty()) {
-			log.info("processProbe/sourceService.create()");
 			SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
 			sourceResults = sourceService.create(domain.getProbeSource(), user);
 			entity.setProbeSource(sourceDAO.get(Integer.valueOf(sourceResults.items.get(0).getSourceKey())));

@@ -135,9 +135,9 @@ public class AntibodyClassService extends BaseService<AntibodyClassDomain> {
 				tdomain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 				tdomain.setVocabKey(adomain.getVocabKey());
 				tdomain.setTermKey(rs.getString("_antibodyclass_key"));
-				tdomain.setTerm(rs.getString("class"));
+				tdomain.setTerm(rs.getString("class"));	
 				tdomain.setIsObsolete("0");
-				tdomain.setSequenceNum(String.valueOf(sequenceNum));
+				tdomain.setSequenceNum(String.valueOf(sequenceNum));			
 				termresults.add(tdomain);
 				sequenceNum = sequenceNum + 1;
 			}

@@ -77,5 +77,5 @@ public class ExptsController extends BaseController<ExptsDomain> {
 		
 		return results;
 	}
-		
+	
 }

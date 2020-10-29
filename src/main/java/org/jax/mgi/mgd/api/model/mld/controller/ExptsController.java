@@ -20,8 +20,8 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Path("/expts")
-@Api(value = "Experiments Endpoints")
+@Path("/mapping")
+@Api(value = "Mapping Experiments Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ExptsController extends BaseController<ExptsDomain> {

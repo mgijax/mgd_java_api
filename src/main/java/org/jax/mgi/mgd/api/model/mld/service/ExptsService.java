@@ -152,6 +152,10 @@ public class ExptsService extends BaseService<ExptsDomain> {
 //			where = where + cmResults[1];
 //		}
 
+		if (searchDomain.getExptType() != null && !searchDomain.getExptType().isEmpty()) {
+			where = where + "\nand e.exptType = '" + searchDomain.getExptType() + "'";
+		}
+		
 		if (searchDomain.getRefsKey() != null && !searchDomain.getRefsKey().isEmpty()) {
 			where = where + "\nand e._refs_key = " + searchDomain.getRefsKey();
 		}

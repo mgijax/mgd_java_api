@@ -84,10 +84,10 @@ public class Reference extends BaseEntity {
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	private List<ReferenceNote> referenceNote;
 
-	// at most one mapping note
-	@OneToMany()
-	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-	private List<MappingNote> mappingNote;
+//	// at most one mapping note
+//	@OneToMany()
+//	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+//	private List<MappingNote> mappingNote;
 	
 	// mgi accession ids only
 	@OneToMany()	

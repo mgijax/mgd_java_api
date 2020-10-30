@@ -11,6 +11,7 @@ import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBookDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceNoteDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.mld.domain.MappingNoteDomain;
 import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jboss.logging.Logger;
 
@@ -82,7 +83,7 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 			//domain.setReferenceNote(note.iterator().next());
 			domain.setReferenceNote(note.iterator().next().getNote());
 		}
-
+		
 		// first mgi accession id only
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());

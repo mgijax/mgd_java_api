@@ -16,7 +16,6 @@ public class ExptNoteTranslator extends BaseEntityDomainTranslator<ExptNote, Exp
 		ExptNoteDomain domain = new ExptNoteDomain();
 
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
-		domain.setNoteKey(entity.getNote());
 		domain.setExptKey(String.valueOf(entity.get_expt_key()));
 		domain.setNote(entity.getNote());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));

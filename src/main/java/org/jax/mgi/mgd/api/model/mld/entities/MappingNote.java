@@ -26,7 +26,6 @@ public class MappingNote extends BaseEntity {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="mld_note_generator")
 	@SequenceGenerator(name="mld_note_generator", sequenceName = "mld_note_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")
-	private int _note_key;
 	private int _refs_key;
 	private String note;
 	private Date creation_date;

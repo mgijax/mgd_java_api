@@ -7,6 +7,7 @@ import org.jax.mgi.mgd.api.model.acc.translator.SlimAccessionTranslator;
 import org.jax.mgi.mgd.api.model.mld.domain.ExptMarkerDomain;
 import org.jax.mgi.mgd.api.model.mld.domain.ExptNoteDomain;
 import org.jax.mgi.mgd.api.model.mld.domain.ExptsDomain;
+import org.jax.mgi.mgd.api.model.mld.domain.MappingNoteDomain;
 import org.jax.mgi.mgd.api.model.mld.entities.Expts;
 import org.jboss.logging.Logger;
 
@@ -28,8 +29,6 @@ public class ExptsTranslator extends BaseEntityDomainTranslator<Expts, ExptsDoma
 		domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());
 		domain.setJnum(entity.getReference().getReferenceCitationCache().getNumericPart());
 		domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());		
-		domain.setRefNoteKey(String.valueOf(entity.getReference().getMappingNote().get(0).get_note_key()));
-		domain.setRefNote(entity.getReference().getMappingNote().get(0).getNote());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
@@ -41,6 +40,13 @@ public class ExptsTranslator extends BaseEntityDomainTranslator<Expts, ExptsDoma
 			domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
 		}
 	
+		// reference note
+		if (entity.getReference().getMappingNote() != null && !entity.getReference().getMappingNote().isEmpty()) {
+			MappingNoteTranslator noteTranslator = new MappingNoteTranslator();
+			Iterable<MappingNoteDomain> note = noteTranslator.translateEntities(entity.getReference().getMappingNote());
+			domain.setReferenceNote(note.iterator().next());
+		}
+		
 		// markers
 		if (entity.getMarkers() != null && !entity.getMarkers().isEmpty()) {
 			ExptMarkerTranslator markerTranslator = new ExptMarkerTranslator();			

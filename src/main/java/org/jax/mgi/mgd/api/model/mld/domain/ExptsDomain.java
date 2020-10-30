@@ -19,13 +19,12 @@ public class ExptsDomain extends BaseDomain {
 	private String jnumid;
 	private Integer jnum;
 	private String short_citation;
-	private String refNoteKey;
-	private String refNote;
 	private String creation_date;
 	private String modification_date;
 	private String accID;
 	
 	private List<SlimAccessionDomain> mgiAccessionIds;
+	private MappingNoteDomain referenceNote;	
     private List<ExptMarkerDomain> markers;
     private ExptNoteDomain exptNote;
 }

@@ -24,8 +24,8 @@ public class AntibodyTranslator extends BaseEntityDomainTranslator<Antibody, Ant
 		domain.setAntibodyKey(String.valueOf(entity.get_antibody_key()));
 		domain.setAntibodyName(entity.getAntibodyName());
 		domain.setAntibodyNote(entity.getAntibodyNote());
-		domain.setAntibodyClassKey(String.valueOf(entity.getAntibodyClass().get_antibodyclass_key()));
-		domain.setAntibodyClass(entity.getAntibodyClass().getAntibodyClass());
+//		domain.setAntibodyClassKey(String.valueOf(entity.getAntibodyClass().get_antibodyclass_key()));
+//		domain.setAntibodyClass(entity.getAntibodyClass().getAntibodyClass());
 		domain.setAntibodyTypeKey(String.valueOf(entity.getAntibodyType().get_antibodytype_key()));
 		domain.setAntibodyType(entity.getAntibodyType().getAntibodyType());
 		domain.setOrganismKey(String.valueOf(entity.getOrganism().get_organism_key()));

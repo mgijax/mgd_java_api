@@ -26,6 +26,8 @@ public class ExptsService extends BaseService<ExptsDomain> {
 
 	@Inject
 	private ExptsDAO exptsDAO;
+	@Inject
+	private MappingNoteService mappingNoteService;
 	
 	private ExptsTranslator translator = new ExptsTranslator();	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
@@ -71,6 +73,9 @@ public class ExptsService extends BaseService<ExptsDomain> {
 			exptsDAO.update(entity);
 			log.info("processExpt/changes processed: " + domain.getExptKey());		
 		}
+
+		// process detail clip
+		mappingNoteService.process(domain.getRefsKey(), domain.getReferenceNote(), user);
 		
 		// return entity translated to domain
 		log.info("processExpt/update/returning results");

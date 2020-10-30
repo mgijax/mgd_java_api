@@ -41,11 +41,11 @@ public class ExptsTranslator extends BaseEntityDomainTranslator<Expts, ExptsDoma
 		}
 	
 		// reference note
-//		if (entity.getReference().getMappingNote() != null && !entity.getReference().getMappingNote().isEmpty()) {
-//			MappingNoteTranslator noteTranslator = new MappingNoteTranslator();
-//			Iterable<MappingNoteDomain> note = noteTranslator.translateEntities(entity.getReference().getMappingNote());
-//			domain.setReferenceNote(note.iterator().next());
-//		}
+		if (entity.getReference().getMappingNote() != null && !entity.getReference().getMappingNote().isEmpty()) {
+			MappingNoteTranslator noteTranslator = new MappingNoteTranslator();
+			Iterable<MappingNoteDomain> note = noteTranslator.translateEntities(entity.getReference().getMappingNote());
+			domain.setReferenceNote(note.iterator().next());
+		}
 		
 		// markers
 		if (entity.getMarkers() != null && !entity.getMarkers().isEmpty()) {

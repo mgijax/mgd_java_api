@@ -21,8 +21,6 @@ public class ExptMarkerTranslator extends BaseEntityDomainTranslator<ExptMarker,
 		domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 		domain.setMarkerSymbol(entity.getMarker().getSymbol());
 		domain.setMarkerId(entity.getMarker().getMgiAccessionIds().get(0).getAccID());
-		domain.setAlleleKey(String.valueOf(entity.getAllele().get_allele_key()));
-		domain.setAlleleSymbol(entity.getAllele().getSymbol());
 		domain.setAssayTypeKey(String.valueOf(entity.getAssayType().get_assay_type_key()));
 		domain.setAssayType(entity.getAssayType().getDescription());
 		domain.setSequenceNum(entity.getSequenceNum());
@@ -31,6 +29,11 @@ public class ExptMarkerTranslator extends BaseEntityDomainTranslator<ExptMarker,
 		//domain.setMatrixData(entity.getMatrixData());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
+		
+		if (domain.getAlleleKey() != null && !domain.getAlleleKey().isEmpty()) {
+			domain.setAlleleKey(String.valueOf(entity.getAllele().get_allele_key()));
+			domain.setAlleleSymbol(entity.getAllele().getSymbol());			
+		}
 		
 		return domain;
 	}

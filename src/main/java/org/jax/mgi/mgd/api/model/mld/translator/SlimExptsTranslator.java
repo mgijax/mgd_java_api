@@ -15,7 +15,7 @@ public class SlimExptsTranslator extends BaseEntityDomainTranslator<Expts, SlimE
 		SlimExptsDomain domain = new SlimExptsDomain();
 
 		domain.setExptKey(String.valueOf(entity.get_expt_key()));
-		domain.setExptDisplay(entity.getReference().getReferenceCitationCache().getJnumid() + ", Chr" + entity.getChromosome() + "," + entity.getExptType());
+		domain.setExptDisplay(entity.getReference().getReferenceCitationCache().getJnumid() + ", " + entity.getExptType() + ", Chr " + entity.getChromosome());
 		domain.setExptType(entity.getExptType());
 
 		return domain;

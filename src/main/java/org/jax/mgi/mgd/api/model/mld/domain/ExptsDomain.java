@@ -12,6 +12,7 @@ import lombok.Setter;
 public class ExptsDomain extends BaseDomain {
 
 	private String exptKey;
+	private String exptDisplay;
 	private String exptType;
 	private Integer tag;
 	private String chromosome;

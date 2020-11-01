@@ -143,7 +143,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
-		String select = "select distinct e.*";
+		String select = "select distinct e._expt_key, e.jnum";
 		String from = "from mld_expt_view e";
 		String where = "where e._expt_key is not null";
 		String orderBy = "order by e.jnum";
@@ -180,7 +180,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				ExptsDomain domain = new ExptsDomain();
-				domain = translator.translate(exptsDAO.get(rs.getInt("_probe_key")));				
+				domain = translator.translate(exptsDAO.get(rs.getInt("_expt_key")));				
 				exptsDAO.clear();
 				results.add(domain);
 			}

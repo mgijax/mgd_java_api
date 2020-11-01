@@ -13,8 +13,10 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mld.dao.ExptsDAO;
 import org.jax.mgi.mgd.api.model.mld.domain.ExptsDomain;
+import org.jax.mgi.mgd.api.model.mld.domain.SlimExptsDomain;
 import org.jax.mgi.mgd.api.model.mld.entities.Expts;
 import org.jax.mgi.mgd.api.model.mld.translator.ExptsTranslator;
+import org.jax.mgi.mgd.api.model.mld.translator.SlimExptsTranslator;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -30,6 +32,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 	private MappingNoteService mappingNoteService;
 	
 	private ExptsTranslator translator = new ExptsTranslator();	
+	private SlimExptsTranslator slimtranslator = new SlimExptsTranslator();		
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	//private String mgiTypeKey = "4";
@@ -136,9 +139,9 @@ public class ExptsService extends BaseService<ExptsDomain> {
 	}
 	
 	@Transactional
-	public List<ExptsDomain> search(ExptsDomain searchDomain) {
+	public List<SlimExptsDomain> search(ExptsDomain searchDomain) {
 
-		List<ExptsDomain> results = new ArrayList<ExptsDomain>();
+		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
 		
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
@@ -179,8 +182,8 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				ExptsDomain domain = new ExptsDomain();
-				domain = translator.translate(exptsDAO.get(rs.getInt("_expt_key")));				
+				SlimExptsDomain domain = new SlimExptsDomain();
+				domain = slimtranslator.translate(exptsDAO.get(rs.getInt("_expt_key")));				
 				exptsDAO.clear();
 				results.add(domain);
 			}

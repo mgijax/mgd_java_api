@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mld.domain.ExptsDomain;
+import org.jax.mgi.mgd.api.model.mld.domain.SlimExptsDomain;
 import org.jax.mgi.mgd.api.model.mld.service.ExptsService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -65,9 +66,9 @@ public class ExptsController extends BaseController<ExptsDomain> {
 	@POST
 	@ApiOperation(value = "Search/returns domain")
 	@Path("/search")
-	public List<ExptsDomain> search(ExptsDomain searchDomain) {
+	public List<SlimExptsDomain> search(ExptsDomain searchDomain) {
 	
-		List<ExptsDomain> results = new ArrayList<ExptsDomain>();
+		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
 
 		try {
 			results = exptsService.search(searchDomain);

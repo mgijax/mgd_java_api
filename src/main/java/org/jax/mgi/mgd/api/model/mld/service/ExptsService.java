@@ -144,7 +144,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
 		String select = "select distinct e.*";
-		String from = "from mld_expts_view e";
+		String from = "from mld_expt_view e";
 		String where = "where e._expt_key is not null";
 		String orderBy = "order by e.jnum";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;

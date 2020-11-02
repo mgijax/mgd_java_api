@@ -34,7 +34,6 @@ public class ExptMarker extends BaseEntity {
 	private int _assoc_key;
 	private int _expt_key;
 	private Integer sequenceNum;
-	private String gene;
 	private String description;
 	private Integer matrixData;
 	private Date creation_date;

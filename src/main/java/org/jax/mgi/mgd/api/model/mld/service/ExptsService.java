@@ -190,10 +190,18 @@ public class ExptsService extends BaseService<ExptsDomain> {
 				where = where + "\nand m._Marker_key = " + searchDomain.getMarkers().get(0).getMarkerKey();
 				from_marker = true;	
 			}
+			if (searchDomain.getMarkers().get(0).getMarkerSymbol() != null && !searchDomain.getMarkers().get(0).getMarkerSymbol().isEmpty()) {
+				where = where + "\nand m.symbol ilike '" + searchDomain.getMarkers().get(0).getMarkerSymbol() + "'";
+				from_marker = true;	
+			}			
 			if (searchDomain.getMarkers().get(0).getAlleleKey() != null && !searchDomain.getMarkers().get(0).getAlleleKey().isEmpty()) {
 				where = where + "\nand m._Allele_key = " + searchDomain.getMarkers().get(0).getAlleleKey();
 				from_marker = true;	
 			}
+			if (searchDomain.getMarkers().get(0).getAlleleSymbol() != null && !searchDomain.getMarkers().get(0).getAlleleSymbol().isEmpty()) {
+				where = where + "\nand m.allele ilike '" + searchDomain.getMarkers().get(0).getAlleleSymbol() + "'";
+				from_marker = true;	
+			}			
 			if (searchDomain.getMarkers().get(0).getAssayTypeKey() != null && !searchDomain.getMarkers().get(0).getAssayTypeKey().isEmpty()) {
 				where = where + "\nand m._assay_type_key = " + searchDomain.getMarkers().get(0).getAssayTypeKey();
 				from_marker = true;	

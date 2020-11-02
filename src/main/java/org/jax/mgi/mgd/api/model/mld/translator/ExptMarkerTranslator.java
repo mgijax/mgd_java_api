@@ -30,7 +30,7 @@ public class ExptMarkerTranslator extends BaseEntityDomainTranslator<ExptMarker,
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
-		if (domain.getAlleleKey() != null && !domain.getAlleleKey().isEmpty()) {
+		if (entity.getAllele() != null) {
 			domain.setAlleleKey(String.valueOf(entity.getAllele().get_allele_key()));
 			domain.setAlleleSymbol(entity.getAllele().getSymbol());			
 		}

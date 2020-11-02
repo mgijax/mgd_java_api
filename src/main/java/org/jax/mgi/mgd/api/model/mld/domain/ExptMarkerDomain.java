@@ -13,7 +13,7 @@ public class ExptMarkerDomain extends BaseDomain {
 	private String exptKey;
 	private String markerKey;
 	private String markerSymbol;
-	private String markerId;
+	private String markerAccID;
 	private String alleleKey;
 	private String alleleSymbol;
 	private String assayTypeKey;

@@ -20,7 +20,7 @@ public class ExptMarkerTranslator extends BaseEntityDomainTranslator<ExptMarker,
 		domain.setExptKey(String.valueOf(entity.get_expt_key()));
 		domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 		domain.setMarkerSymbol(entity.getMarker().getSymbol());
-		domain.setMarkerId(entity.getMarker().getMgiAccessionIds().get(0).getAccID());
+		domain.setMarkerAccID(entity.getMarker().getMgiAccessionIds().get(0).getAccID());
 		domain.setAssayTypeKey(String.valueOf(entity.getAssayType().get_assay_type_key()));
 		domain.setAssayType(entity.getAssayType().getDescription());
 		domain.setSequenceNum(entity.getSequenceNum());

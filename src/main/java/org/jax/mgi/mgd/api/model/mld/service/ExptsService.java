@@ -148,7 +148,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		String cmd = "";
 		String select = "select distinct e._expt_key, e.jnum";
 		String from = "from mld_expt_view e";
-		String where = "where e._expt_key is not null";
+		String where = "where e.exptType in ('TEXT-QTL','TEXT-Physical Mapping','TEXT-Congenic','TEXT-QTL-Candidate Genes','TEXT-Meta Analysis')";
 		String orderBy = "order by e.jnum";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		Boolean from_accession = false;

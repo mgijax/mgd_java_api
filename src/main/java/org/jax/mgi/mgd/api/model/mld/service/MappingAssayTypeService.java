@@ -73,7 +73,7 @@ public class MappingAssayTypeService extends BaseService<MappingAssayTypeDomain>
 
 		List<MappingAssayTypeDomain> results = new ArrayList<MappingAssayTypeDomain>();
 
-		String cmd = "\nselect * from mld_assay_types where _assay_type_key >= 1 order by description";
+		String cmd = "\nselect * from mld_assay_types where _assay_type_key = 3 order by description";
 		
 		log.info(cmd);
 

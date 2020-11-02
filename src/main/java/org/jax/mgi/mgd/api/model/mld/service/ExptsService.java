@@ -152,6 +152,9 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		String orderBy = "order by e.jnum";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		Boolean from_accession = false;
+		Boolean from_rnote = false;
+		Boolean from_enote = false;
+		Boolean from_marker = false;
 		
 		// if parameter exists, then add to where-clause
 //		String cmResults[] = DateSQLQuery.queryByCreationModification("p", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -168,11 +171,56 @@ public class ExptsService extends BaseService<ExptsDomain> {
 			where = where + "\nand e._refs_key = " + searchDomain.getRefsKey();
 		}
 		
+		// reference note
+		if (searchDomain.getReferenceNote() != null) {
+			where = where + "\nand rnote.note ilike = '" + searchDomain.getReferenceNote() + "'";
+			from_rnote = true;
+		}
+		
+		// expt note
+		if (searchDomain.getExptNote() != null) {
+			where = where + "\nand enote.note ilike = '" + searchDomain.getExptNote() + "'";
+			from_enote = true;			
+		}
+		
+		// markers
+		if (searchDomain.getMarkers() != null && !searchDomain.getMarkers().isEmpty()) {
+			
+			if (searchDomain.getMarkers().get(0).getMarkerKey() != null && !searchDomain.getMarkers().get(0).getMarkerKey().isEmpty()) {
+				where = where + "\nand m._Marker_key = " + searchDomain.getMarkers().get(0).getMarkerKey();
+				from_marker = true;	
+			}
+			if (searchDomain.getMarkers().get(0).getAlleleKey() != null && !searchDomain.getMarkers().get(0).getAlleleKey().isEmpty()) {
+				where = where + "\nand m._Allele_key = " + searchDomain.getMarkers().get(0).getAlleleKey();
+				from_marker = true;	
+			}
+			if (searchDomain.getMarkers().get(0).getAssayTypeKey() != null && !searchDomain.getMarkers().get(0).getAssayTypeKey().isEmpty()) {
+				where = where + "\nand m._assay_type_key = " + searchDomain.getMarkers().get(0).getAssayTypeKey();
+				from_marker = true;	
+			}	
+			if (searchDomain.getMarkers().get(0).getDescription() != null && !searchDomain.getMarkers().get(0).getDescription().isEmpty()) {
+				where = where + "\nand m.description ilike '" + searchDomain.getMarkers().get(0).getDescription() + "'";
+				from_marker = true;	
+			}			
+		}
+		
 		// building from...
 		
 		if (from_accession == true) {
 			from = from + ", acc_accession acc";
 			where = where + "\nand acc._mgitype_key = 4 and e._expt_key = acc._object_key and acc.prefixPart = 'MGI:'";
+		}
+		if (from_rnote == true) {
+			from = from + ", mld_notes rnote";
+			where = where + "\nand e._refs_key = rn._refs_key";
+		}
+		if (from_enote == true) {
+			from = from + ", mld_expt_notes enote";
+			where = where + "\nand e._expt_key = en._expt_key";
+		}
+		if (from_marker == true) {
+			from = from + ", mld_expt_marker_view m";
+			where = where + "\nand e._expt_key = m._expt_key";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

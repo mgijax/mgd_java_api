@@ -3,7 +3,6 @@ package org.jax.mgi.mgd.api.model.mld.translator;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.mld.domain.MappingAssayTypeDomain;
 import org.jax.mgi.mgd.api.model.mld.entities.MappingAssayType;
-import org.jax.mgi.mgd.api.util.Constants;
 
 public class MappingAssayTypeTranslator extends BaseEntityDomainTranslator<MappingAssayType, MappingAssayTypeDomain> {
 
@@ -12,7 +11,6 @@ public class MappingAssayTypeTranslator extends BaseEntityDomainTranslator<Mappi
 
 		MappingAssayTypeDomain domain = new MappingAssayTypeDomain();
 
-		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setAssayTypeKey(String.valueOf(entity.get_assay_type_key()));
 		domain.setDescription(entity.getDescription());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));

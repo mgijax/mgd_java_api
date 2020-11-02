@@ -173,13 +173,13 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		
 		// reference note
 		if (searchDomain.getReferenceNote().getNote() != null && !searchDomain.getReferenceNote().getNote().isEmpty()) {
-			where = where + "\nand rnote.note ilike = '" + searchDomain.getReferenceNote().getNote() + "'";
+			where = where + "\nand rnote.note ilike '" + searchDomain.getReferenceNote().getNote() + "'";
 			from_rnote = true;
 		}
 		
 		// expt note
 		if (searchDomain.getExptNote().getNote() != null && !searchDomain.getExptNote().getNote().isEmpty()) {
-			where = where + "\nand enote.note ilike = '" + searchDomain.getExptNote().getNote() + "'";
+			where = where + "\nand enote.note ilike '" + searchDomain.getExptNote().getNote() + "'";
 			from_enote = true;			
 		}
 		
@@ -220,11 +220,11 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		}
 		if (from_rnote == true) {
 			from = from + ", mld_notes rnote";
-			where = where + "\nand e._refs_key = rn._refs_key";
+			where = where + "\nand e._refs_key = rnote._refs_key";
 		}
 		if (from_enote == true) {
 			from = from + ", mld_expt_notes enote";
-			where = where + "\nand e._expt_key = en._expt_key";
+			where = where + "\nand e._expt_key = enote._expt_key";
 		}
 		if (from_marker == true) {
 			from = from + ", mld_expt_marker_view m";

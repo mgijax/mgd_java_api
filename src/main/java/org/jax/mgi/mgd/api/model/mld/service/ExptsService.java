@@ -17,6 +17,7 @@ import org.jax.mgi.mgd.api.model.mld.domain.SlimExptsDomain;
 import org.jax.mgi.mgd.api.model.mld.entities.Expts;
 import org.jax.mgi.mgd.api.model.mld.translator.ExptsTranslator;
 import org.jax.mgi.mgd.api.model.mld.translator.SlimExptsTranslator;
+import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -157,11 +158,11 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		Boolean from_marker = false;
 		
 		// if parameter exists, then add to where-clause
-//		String cmResults[] = DateSQLQuery.queryByCreationModification("p", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
-//		if (cmResults.length > 0) {
-//			from = from + cmResults[0];
-//			where = where + cmResults[1];
-//		}
+		String cmResults[] = DateSQLQuery.queryByCreationModification("p", null, null, searchDomain.getCreation_date(), searchDomain.getModification_date());
+		if (cmResults.length > 0) {
+			from = from + cmResults[0];
+			where = where + cmResults[1];
+		}
 
 		if (searchDomain.getExptType() != null && !searchDomain.getExptType().isEmpty()) {
 			where = where + "\nand e.exptType = '" + searchDomain.getExptType() + "'";

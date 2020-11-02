@@ -19,7 +19,7 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Path("/mappingassastype")
+@Path("/mappingassaytype")
 @Api(value = "Mapping Assay Type Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

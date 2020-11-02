@@ -18,9 +18,9 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "MLD Assay Types Object")
+@ApiModel(value = "Mapping Assay Types Object")
 @Table(name="mld_assay_types")
-public class MLDAssayType extends BaseEntity {
+public class MappingAssayType extends BaseEntity {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="mld_assay_types_generator")

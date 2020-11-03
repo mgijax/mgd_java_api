@@ -162,7 +162,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		// return the object count from the database
 		
 		SearchResults<ExptsDomain> results = new SearchResults<ExptsDomain>();
-		String cmd = "select count(*) as objectCount from mld_expts";
+		String cmd = "select count(*) as objectCount from mld_expts where exptType in ('TEXT-QTL','TEXT-Physical Mapping','TEXT-Congenic','TEXT-QTL-Candidate Genes','TEXT-Meta Analysis')";
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);

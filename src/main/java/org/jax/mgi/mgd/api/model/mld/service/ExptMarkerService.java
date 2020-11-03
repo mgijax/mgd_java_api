@@ -168,6 +168,7 @@ public class ExptMarkerService extends BaseService<ExptMarkerDomain> {
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processExptMarker/update");
 				ExptMarker entity = exptMarkerDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));	
+				entity.set_expt_key(Integer.valueOf(parentKey));
 				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));
 				entity.setAssayType(assayTypeDAO.get(Integer.valueOf(domain.get(i).getAssayTypeKey())));
 				entity.setSequenceNum(domain.get(i).getSequenceNum());

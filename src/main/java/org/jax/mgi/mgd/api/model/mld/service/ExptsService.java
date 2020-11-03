@@ -33,8 +33,8 @@ public class ExptsService extends BaseService<ExptsDomain> {
 	private MappingNoteService mappingNoteService;
 	@Inject
 	private ExptNoteService exptNoteService;
-//	@Inject
-//	private ExptMarkerService markerService;
+	@Inject
+	private ExptMarkerService markerService;
 	
 	private ExptsTranslator translator = new ExptsTranslator();	
 	private SlimExptsTranslator slimtranslator = new SlimExptsTranslator();		
@@ -68,7 +68,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		exptNoteService.process(String.valueOf(entity.get_expt_key()), domain.getExptNote(), user);
 		
 		// markers
-//		markersSerivce.process();
+		markerService.process(domain.getExptKey(), domain.getMarkers(), user);
 		
 		// return entity translated to domain
 		log.info("processExpt/create/returning results");
@@ -96,6 +96,11 @@ public class ExptsService extends BaseService<ExptsDomain> {
 
 		// process experiment notes
 		if (exptNoteService.process(domain.getExptKey(), domain.getExptNote(), user)) {
+			modified = true;
+		}
+
+		// process markers
+		if (markerService.process(domain.getExptKey(), domain.getMarkers(), user)) {
 			modified = true;
 		}
 		

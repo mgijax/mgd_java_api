@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mld.dao.ExptsDAO;
 import org.jax.mgi.mgd.api.model.mld.domain.ExptsDomain;
@@ -29,6 +30,8 @@ public class ExptsService extends BaseService<ExptsDomain> {
 
 	@Inject
 	private ExptsDAO exptsDAO;
+	@Inject
+	private ReferenceDAO referenceDAO;
 	@Inject
 	private MappingNoteService mappingNoteService;
 	@Inject
@@ -53,6 +56,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 
 		log.info("processExpt/create");		
 		
+		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));
 		entity.setExptType(domain.getExptType());
 		entity.setChromosome(domain.getChromosome());
 		entity.setCreation_date(new Date());
@@ -86,6 +90,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		
 		log.info("processExpt/update");				
 
+		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));		
 		entity.setExptType(domain.getExptType());
 		entity.setChromosome(domain.getChromosome());
 		
@@ -198,6 +203,9 @@ public class ExptsService extends BaseService<ExptsDomain> {
 
 		if (searchDomain.getRefsKey() != null && !searchDomain.getRefsKey().isEmpty()) {
 			where = where + "\nand e._refs_key = " + searchDomain.getRefsKey();
+		}
+		else if (searchDomain.getShort_citation() != null && !searchDomain.getShort_citation().isEmpty()) {
+			where = where + "\nand e.short_citation ilike '" + searchDomain.getShort_citation().replace("'",  "''")  + "'";
 		}
 		
 		if (searchDomain.getExptType() != null && !searchDomain.getExptType().isEmpty()) {

@@ -73,7 +73,10 @@ public class MappingAssayTypeService extends BaseService<MappingAssayTypeDomain>
 
 		List<MappingAssayTypeDomain> results = new ArrayList<MappingAssayTypeDomain>();
 
-		String cmd = "\nselect * from mld_assay_types where _assay_type_key != -1 order by description";
+		String cmd = "\nselect a._assay_type_key from mld_assay_types a"
+				+ "\nwhere a._assay_type_key != -1"
+				+ "\nand exists (select 1 from mld_expt_marker m where a._assay_type_key = m._assay_type_key"
+				+ "\norder by a.description";
 		
 		log.info(cmd);
 

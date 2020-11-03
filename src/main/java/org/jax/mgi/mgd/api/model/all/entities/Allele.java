@@ -200,9 +200,9 @@ public class Allele extends BaseEntity {
 	private List<Note> ikmcNote;
 
 	// DO term annotations
-//	@OneToMany()
-//	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
-//	@Where(clause="`_annottype_key` = 1021")
-//	private List<Annotation> doAnnots;
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
+	@Where(clause="`_annottype_key` = 1021")
+	private List<Annotation> doAnnots;
 
 }

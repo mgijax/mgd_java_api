@@ -25,7 +25,6 @@ public class ExptMarkerTranslator extends BaseEntityDomainTranslator<ExptMarker,
 		domain.setAssayType(entity.getAssayType().getDescription());
 		domain.setSequenceNum(entity.getSequenceNum());
 		domain.setDescription(entity.getDescription());
-		//domain.setMatrixData(entity.getMatrixData());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		

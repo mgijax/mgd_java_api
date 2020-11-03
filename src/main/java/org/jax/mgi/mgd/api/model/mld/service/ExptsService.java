@@ -31,6 +31,10 @@ public class ExptsService extends BaseService<ExptsDomain> {
 	private ExptsDAO exptsDAO;
 	@Inject
 	private MappingNoteService mappingNoteService;
+	@Inject
+	private ExptNoteService exptNoteService;
+//	@Inject
+//	private ExptMarkerService markerService;
 	
 	private ExptsTranslator translator = new ExptsTranslator();	
 	private SlimExptsTranslator slimtranslator = new SlimExptsTranslator();		
@@ -49,11 +53,22 @@ public class ExptsService extends BaseService<ExptsDomain> {
 
 		log.info("processExpt/create");		
 		
+		entity.setExptType(domain.getExptType());
+		entity.setChromosome(domain.getChromosome());
 		entity.setCreation_date(new Date());
 		entity.setModification_date(new Date());
 		
 		// execute persist/insert/send to database
 		exptsDAO.persist(entity);
+
+		// process mapping notes
+		mappingNoteService.process(domain.getRefsKey(), domain.getReferenceNote(), user);
+		
+		// process experiment notes
+		exptNoteService.process(String.valueOf(entity.get_expt_key()), domain.getExptNote(), user);
+		
+		// markers
+//		markersSerivce.process();
 		
 		// return entity translated to domain
 		log.info("processExpt/create/returning results");
@@ -70,6 +85,19 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		Boolean modified = true;
 		
 		log.info("processExpt/update");				
+
+		entity.setExptType(domain.getExptType());
+		entity.setChromosome(domain.getChromosome());
+		
+		// process mapping notes
+		if (mappingNoteService.process(domain.getRefsKey(), domain.getReferenceNote(), user)) {
+			modified = true;
+		}
+
+		// process experiment notes
+		if (exptNoteService.process(domain.getExptKey(), domain.getExptNote(), user)) {
+			modified = true;
+		}
 		
 		// finish update
 		if (modified) {		
@@ -78,9 +106,8 @@ public class ExptsService extends BaseService<ExptsDomain> {
 			log.info("processExpt/changes processed: " + domain.getExptKey());		
 		}
 
-		// process detail clip
-		mappingNoteService.process(domain.getRefsKey(), domain.getReferenceNote(), user);
 		
+		// 
 		// return entity translated to domain
 		log.info("processExpt/update/returning results");
 		results.setItem(translator.translate(entity));		
@@ -186,6 +213,18 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		if (searchDomain.getExptNote().getNote() != null && !searchDomain.getExptNote().getNote().isEmpty()) {
 			where = where + "\nand enote.note ilike '" + searchDomain.getExptNote().getNote() + "'";
 			from_enote = true;			
+		}
+
+		// accession id 
+		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {
+			String value = searchDomain.getAccID().toUpperCase();
+			if (!value.startsWith("MGI:")) {
+				where = where + "\nand acc.numericPart = '" + value + "'";
+			}
+			else {
+				where = where + "\nand acc.accID = '" + value + "'";
+			}
+			from_accession = true;
 		}
 		
 		// markers

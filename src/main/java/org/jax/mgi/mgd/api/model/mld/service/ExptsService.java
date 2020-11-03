@@ -56,7 +56,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 
 		log.info("processExpt/create");		
 		
-		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));
+		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));	
 		entity.setExptType(domain.getExptType());
 		entity.setTag(1);
 		entity.setChromosome(domain.getChromosome());
@@ -91,6 +91,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		
 		log.info("processExpt/update");				
 
+		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));		
 		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));		
 		entity.setExptType(domain.getExptType());
 		entity.setTag(domain.getTag());

@@ -25,7 +25,6 @@ public class ExptsTranslator extends BaseEntityDomainTranslator<Expts, ExptsDoma
 		domain.setTag(entity.getTag());		
 		domain.setChromosome(entity.getChromosome());
 		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
-		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
 		domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());
 		domain.setJnum(entity.getReference().getReferenceCitationCache().getNumericPart());
 		domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());		

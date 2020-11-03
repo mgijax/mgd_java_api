@@ -75,7 +75,9 @@ public class MappingAssayTypeService extends BaseService<MappingAssayTypeDomain>
 
 		String cmd = "\nselect a._assay_type_key from mld_assay_types a"
 				+ "\nwhere a._assay_type_key != -1"
-				+ "\nand exists (select 1 from mld_expt_marker m where a._assay_type_key = m._assay_type_key"
+				+ "\nand exists (select 1 from mld_expt_marker m where a._assay_type_key = m._assay_type_key)"
+				+ "\nand exists (select 1 from mld_expts e where m._expt_key = e._expt_key"
+				+ "\nand e.exptType in ('TEXT-QTL','TEXT-Physical Mapping','TEXT-Congenic','TEXT-QTL-Candidate Genes','TEXT-Meta Analysis'))"
 				+ "\norder by a.description";
 		
 		log.info(cmd);

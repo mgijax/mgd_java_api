@@ -54,7 +54,7 @@ public class GenotypeAnnotTranslator extends BaseEntityDomainTranslator<Genotype
 			newList.addAll(IteratorUtils.toList(t.iterator()));		
 		}
 		
-		// now set the joined list in the doman
+		// now set the joined list in the domain
 		domain.setAnnots(newList);
 		
 		// now order the annotations

@@ -190,7 +190,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		Boolean from_marker = false;
 		
 		// if parameter exists, then add to where-clause
-		String cmResults[] = DateSQLQuery.queryByCreationModification("p", null, null, searchDomain.getCreation_date(), searchDomain.getModification_date());
+		String cmResults[] = DateSQLQuery.queryByCreationModification("e", null, null, searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {
 			from = from + cmResults[0];
 			where = where + cmResults[1];

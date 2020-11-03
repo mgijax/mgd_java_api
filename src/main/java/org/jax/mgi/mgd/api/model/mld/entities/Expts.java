@@ -43,9 +43,9 @@ public class Expts extends BaseEntity {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+	@JoinColumn(name="_refs_key")
 	private Reference reference;
-
+	
 	// mgi accession ids only
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_expt_key", insertable=false, updatable=false)

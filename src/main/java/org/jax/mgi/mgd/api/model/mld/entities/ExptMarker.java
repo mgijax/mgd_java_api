@@ -44,11 +44,11 @@ public class ExptMarker extends BaseEntity {
 	private MappingAssayType assayType;
     
     @OneToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "_marker_key", insertable = false, updatable = false)
+    @JoinColumn(name = "_marker_key")
 	private Marker marker;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_allele_key", insertable = false, updatable = false)
+	@JoinColumn(name="_allele_key")
 	private Allele allele;
 	
 }

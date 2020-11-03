@@ -133,7 +133,6 @@ public class ExptMarkerService extends BaseService<ExptMarkerDomain> {
 				ExptMarker entity = new ExptMarker();									
 				entity.set_expt_key(Integer.valueOf(parentKey));
 				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));
-				entity.setAssayType(assayTypeDAO.get(Integer.valueOf(domain.get(i).getAssayTypeKey())));
 				entity.setSequenceNum(1);
 				entity.setMatrixData(0);
 				entity.setCreation_date(new Date());

@@ -73,7 +73,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		exptNoteService.process(String.valueOf(entity.get_expt_key()), domain.getExptNote(), user);
 		
 		// markers
-		markerService.process(domain.getExptKey(), domain.getMarkers(), user);
+		markerService.process(String.valueOf(entity.get_expt_key()), domain.getMarkers(), user);
 		
 		// return entity translated to domain
 		log.info("processExpt/create/returning results");

@@ -139,6 +139,14 @@ public class ExptMarkerService extends BaseService<ExptMarkerDomain> {
 				entity.setCreation_date(new Date());
 				entity.setModification_date(new Date());				
 
+				// default = visual phenotype (3)
+				if (domain.get(i).getAssayTypeKey() != null && !domain.get(i).getAssayTypeKey().isEmpty()) {
+					entity.setAssayType(assayTypeDAO.get(Integer.valueOf(domain.get(i).getAssayTypeKey())));
+				}
+				else {
+					entity.setAssayType(assayTypeDAO.get(3));
+				}
+				
 				if (domain.get(i).getAlleleKey() != null && !domain.get(i).getAlleleKey().isEmpty()) {
 					entity.setAllele(alleleDAO.get(Integer.valueOf(domain.get(i).getAlleleKey())));
 				}

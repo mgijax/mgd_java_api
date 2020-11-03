@@ -58,6 +58,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		
 		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));
 		entity.setExptType(domain.getExptType());
+		entity.setTag(1);
 		entity.setChromosome(domain.getChromosome());
 		entity.setCreation_date(new Date());
 		entity.setModification_date(new Date());
@@ -92,6 +93,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 
 		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));		
 		entity.setExptType(domain.getExptType());
+		entity.setTag(domain.getTag());
 		entity.setChromosome(domain.getChromosome());
 		
 		// process mapping notes
@@ -115,7 +117,6 @@ public class ExptsService extends BaseService<ExptsDomain> {
 			exptsDAO.update(entity);
 			log.info("processExpt/changes processed: " + domain.getExptKey());		
 		}
-
 		
 		// 
 		// return entity translated to domain

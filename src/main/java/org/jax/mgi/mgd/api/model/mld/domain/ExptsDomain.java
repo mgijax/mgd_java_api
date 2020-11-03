@@ -14,7 +14,6 @@ public class ExptsDomain extends BaseDomain {
 	private String exptKey;
 	private String exptDisplay;
 	private String exptType;
-	private Integer tag;
 	private String chromosome;
 	private String refsKey;
 	private String jnumid;

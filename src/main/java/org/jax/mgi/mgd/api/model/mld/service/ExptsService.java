@@ -94,7 +94,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));		
 		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));		
 		entity.setExptType(domain.getExptType());
-		entity.setTag(domain.getTag());
+		entity.setTag(1);
 		entity.setChromosome(domain.getChromosome());
 		
 		// process mapping notes

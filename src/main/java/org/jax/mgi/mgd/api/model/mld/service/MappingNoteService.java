@@ -27,7 +27,7 @@ public class MappingNoteService extends BaseService<MappingNoteDomain> {
 
 	@Inject
 	private MappingNoteDAO noteDAO;
-
+	
 	private MappingNoteTranslator translator = new MappingNoteTranslator();						
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
@@ -129,7 +129,7 @@ public class MappingNoteService extends BaseService<MappingNoteDomain> {
 			modified = true;
 		}
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-			log.info("processMappingNote update");								
+			log.info("processMappingNote update");				
 			MappingNote entity = noteDAO.get(Integer.valueOf(domain.getRefsKey()));				
 			entity.setNote(domain.getNote());
 			entity.setModification_date(new Date());

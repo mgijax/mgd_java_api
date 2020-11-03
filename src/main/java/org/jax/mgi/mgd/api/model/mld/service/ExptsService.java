@@ -199,10 +199,6 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		if (searchDomain.getExptType() != null && !searchDomain.getExptType().isEmpty()) {
 			where = where + "\nand e.exptType = '" + searchDomain.getExptType() + "'";
 		}
-
-		if (searchDomain.getExptType() != null && !searchDomain.getExptType().isEmpty()) {
-			where = where + "\nand e.exptType = '" + searchDomain.getExptType() + "'";
-		}
 		
 		if (searchDomain.getChromosome() != null && !searchDomain.getChromosome().isEmpty()) {
 			where = where + "\nand e.chromosome = '" + searchDomain.getChromosome() + "'";

@@ -329,75 +329,75 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			entity.setApprovedBy(null);			
 		}
 
-		// process detail clip
-		if (markerNoteService.process(domain.getMarkerKey(), domain.getDetailClip(), user)) {
-			modified = true;
-		}
-		
-		// process all notes
-		if (noteService.process(domain.getAlleleKey(), domain.getGeneralNote(), mgiTypeKey, user)) {
-			modified = true;
-		}
-		if (noteService.process(domain.getAlleleKey(), domain.getMolecularNote(), mgiTypeKey, user)) {
-			modified = true;
-		}
-		if (noteService.process(domain.getAlleleKey(), domain.getNomenNote(), mgiTypeKey, user)) {
-			modified = true;
-		}
-		if (noteService.process(domain.getAlleleKey(), domain.getInducibleNote(), mgiTypeKey, user)) {
-			modified = true;
-		}
-		if (noteService.process(domain.getAlleleKey(), domain.getProidNote(), mgiTypeKey, user)) {
-			modified = true;
-		}
-		if (noteService.process(domain.getAlleleKey(), domain.getCreNote(), mgiTypeKey, user)) {
-			modified = true;
-		}
-		if (noteService.process(domain.getAlleleKey(), domain.getIkmcNote(), mgiTypeKey, user)) {
-			modified = true;
-		}
-		
-		// process allele reference
-		log.info("processAllele/referenes");
-		if (referenceAssocService.process(domain.getAlleleKey(), domain.getRefAssocs(), mgiTypeKey, user)) {
-			modified = true;
-		}
-		
-		// process mutant cell lines
-		log.info("processAllele/mutant cell lines");
-		if (alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLineAssocs(), user)) {
-			modified = true;
-		}
-		
-		// process synonyms
-		log.info("processAllele/synonyms");		
-		if (synonymService.process(domain.getAlleleKey(), domain.getSynonyms(), mgiTypeKey, user)) {
-			modified = true;
-		}
-		
-		// process allele attributes/subtypes
-		log.info("processAllele/attribute/subtype");
-		if (processSubtype(domain.getAlleleKey(), domain, user)) {
-			modified = true;
-		}
-		
-		// process molecular mutations
-		log.info("processAllele/molecular mutation");
-		if (molmutationService.process(domain.getAlleleKey(), domain.getMutations(), user)) {
-			modified = true;
-		}
-
-		// process driver genes
-		log.info("processAllele/driver gene");
-		if (processDriverGene(domain.getAlleleKey(), domain, user)) {
-			modified = true;
-		}
-		
-		// process image pane assoc
-		log.info("processAllele/image pane assoc");
-		if (processImagePaneAssoc(domain.getAlleleKey(), domain, user)) {
-			modified = true;
-		}
+//		// process detail clip
+//		if (markerNoteService.process(domain.getMarkerKey(), domain.getDetailClip(), user)) {
+//			modified = true;
+//		}
+//		
+//		// process all notes
+//		if (noteService.process(domain.getAlleleKey(), domain.getGeneralNote(), mgiTypeKey, user)) {
+//			modified = true;
+//		}
+//		if (noteService.process(domain.getAlleleKey(), domain.getMolecularNote(), mgiTypeKey, user)) {
+//			modified = true;
+//		}
+//		if (noteService.process(domain.getAlleleKey(), domain.getNomenNote(), mgiTypeKey, user)) {
+//			modified = true;
+//		}
+//		if (noteService.process(domain.getAlleleKey(), domain.getInducibleNote(), mgiTypeKey, user)) {
+//			modified = true;
+//		}
+//		if (noteService.process(domain.getAlleleKey(), domain.getProidNote(), mgiTypeKey, user)) {
+//			modified = true;
+//		}
+//		if (noteService.process(domain.getAlleleKey(), domain.getCreNote(), mgiTypeKey, user)) {
+//			modified = true;
+//		}
+//		if (noteService.process(domain.getAlleleKey(), domain.getIkmcNote(), mgiTypeKey, user)) {
+//			modified = true;
+//		}
+//		
+//		// process allele reference
+//		log.info("processAllele/referenes");
+//		if (referenceAssocService.process(domain.getAlleleKey(), domain.getRefAssocs(), mgiTypeKey, user)) {
+//			modified = true;
+//		}
+//		
+//		// process mutant cell lines
+//		log.info("processAllele/mutant cell lines");
+//		if (alleleCellLineService.process(domain.getAlleleKey(), domain.getAlleleTypeKey(), domain.getAlleleType(), domain.getMutantCellLineAssocs(), user)) {
+//			modified = true;
+//		}
+//		
+//		// process synonyms
+//		log.info("processAllele/synonyms");		
+//		if (synonymService.process(domain.getAlleleKey(), domain.getSynonyms(), mgiTypeKey, user)) {
+//			modified = true;
+//		}
+//		
+//		// process allele attributes/subtypes
+//		log.info("processAllele/attribute/subtype");
+//		if (processSubtype(domain.getAlleleKey(), domain, user)) {
+//			modified = true;
+//		}
+//		
+//		// process molecular mutations
+//		log.info("processAllele/molecular mutation");
+//		if (molmutationService.process(domain.getAlleleKey(), domain.getMutations(), user)) {
+//			modified = true;
+//		}
+//
+//		// process driver genes
+//		log.info("processAllele/driver gene");
+//		if (processDriverGene(domain.getAlleleKey(), domain, user)) {
+//			modified = true;
+//		}
+//		
+//		// process image pane assoc
+//		log.info("processAllele/image pane assoc");
+//		if (processImagePaneAssoc(domain.getAlleleKey(), domain, user)) {
+//			modified = true;
+//		}
 		
 		// finish update
 		if (modified) {

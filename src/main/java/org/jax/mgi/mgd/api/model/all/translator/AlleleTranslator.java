@@ -220,11 +220,13 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		}
 		
 		// do annotations
-		if (entity.getDoAnnots() != null && !entity.getDoAnnots().isEmpty()) {
-			AnnotationTranslator annotTranslator = new AnnotationTranslator();
-			Iterable<AnnotationDomain> i = annotTranslator.translateEntities(entity.getDoAnnots());
-			domain.setDoAnnots(IteratorUtils.toList(i.iterator()));
-		}
+		// not needed per lec/11/03/2020
+		// causes hiberate/collection issue
+//		if (entity.getDoAnnots() != null && !entity.getDoAnnots().isEmpty()) {
+//			AnnotationTranslator annotTranslator = new AnnotationTranslator();
+//			Iterable<AnnotationDomain> i = annotTranslator.translateEntities(entity.getDoAnnots());
+//			domain.setDoAnnots(IteratorUtils.toList(i.iterator()));
+//		}
 		
 		return domain;
 	}

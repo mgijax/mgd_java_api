@@ -115,7 +115,7 @@ public class ExptNoteService extends BaseService<ExptNoteDomain> {
 		if (domain.getProcessStatus().equals(Constants.PROCESS_CREATE)) {				
 			log.info("processExptNote create");
 			ExptNote entity = new ExptNote();
-			entity.set_expt_key(Integer.valueOf(domain.getExptKey()));
+			entity.set_expt_key(Integer.valueOf(parentKey));
 			entity.setNote(domain.getNote());
 			entity.setCreation_date(new Date());				
 			entity.setModification_date(new Date());
@@ -124,13 +124,13 @@ public class ExptNoteService extends BaseService<ExptNoteDomain> {
 		}
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 			log.info("processExptNote delete");				
-			ExptNote entity = noteDAO.get(Integer.valueOf(domain.getExptKey()));
+			ExptNote entity = noteDAO.get(Integer.valueOf(parentKey));
 			noteDAO.remove(entity);
 			modified = true;
 		}
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 			log.info("processExptNote update");								
-			ExptNote entity = noteDAO.get(Integer.valueOf(domain.getExptKey()));				
+			ExptNote entity = noteDAO.get(Integer.valueOf(parentKey));				
 			entity.setNote(domain.getNote());
 			entity.setModification_date(new Date());
 			noteDAO.update(entity);

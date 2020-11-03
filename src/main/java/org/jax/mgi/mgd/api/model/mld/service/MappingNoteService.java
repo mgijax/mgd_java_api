@@ -115,7 +115,7 @@ public class MappingNoteService extends BaseService<MappingNoteDomain> {
 		if (domain.getProcessStatus().equals(Constants.PROCESS_CREATE)) {				
 			log.info("processMappingNote create");
 			MappingNote entity = new MappingNote();
-			entity.set_refs_key(Integer.valueOf(domain.getRefsKey()));
+			entity.set_refs_key(Integer.valueOf(parentKey));
 			entity.setNote(domain.getNote());
 			entity.setCreation_date(new Date());				
 			entity.setModification_date(new Date());
@@ -124,13 +124,13 @@ public class MappingNoteService extends BaseService<MappingNoteDomain> {
 		}
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 			log.info("processMappingNote delete");				
-			MappingNote entity = noteDAO.get(Integer.valueOf(domain.getRefsKey()));
+			MappingNote entity = noteDAO.get(Integer.valueOf(parentKey));
 			noteDAO.remove(entity);
 			modified = true;
 		}
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 			log.info("processMappingNote update");				
-			MappingNote entity = noteDAO.get(Integer.valueOf(domain.getRefsKey()));				
+			MappingNote entity = noteDAO.get(Integer.valueOf(parentKey));				
 			entity.setNote(domain.getNote());
 			entity.setModification_date(new Date());
 			noteDAO.update(entity);

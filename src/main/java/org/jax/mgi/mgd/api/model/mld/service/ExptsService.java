@@ -186,7 +186,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
-		String select = "select distinct e._expt_key, e.jnum";
+		String select = "select distinct e._expt_key, e.jnum, e.expttype, e.chromosome";
 		String from = "from mld_expt_view e";
 		String where = "where e.exptType in ('TEXT-QTL','TEXT-Physical Mapping','TEXT-Congenic','TEXT-QTL-Candidate Genes','TEXT-Meta Analysis')";
 		String orderBy = "order by e.jnum";

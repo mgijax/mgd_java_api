@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
@@ -63,7 +64,18 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		else {
 			log.info("processVocabulary/no changes processed: " + domain.getVocabKey());
 		}
+
+		// 48 = Journal
+		if (domain.getVocabKey().equals("48")) {
+			String cmd;
+			Query query;
 			
+		    cmd = "select count(*) from VOC_restTerms(" + domain.getVocabKey() + ")";
+		    log.info("cmd: " + cmd);
+		    query = vocabularyDAO.createNativeQuery(cmd);
+		    query.getResultList();	
+		}
+		
 		// return entity translated to domain
 		log.info("processVocabulary/update/returning results");
 		results.setItem(translator.translate(entity));

@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceCitationCacheDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceService;
@@ -92,7 +93,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	@GET
 	@ApiOperation(value = "Validate reference by J:/returns slim reference domain")
 	@Path("/validJnum/{jnum}")
-	public List<SlimReferenceDomain> validJnum(
+	public List<ReferenceCitationCacheDomain> validJnum(
 			@PathParam("jnum") 
 			@ApiParam(value = "Validating jnum") 
 			String jnum) {
@@ -102,7 +103,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	@POST
 	@ApiOperation(value = "Validate reference, copyright, creative commons")
 	@Path("/validateJnumImage")
-	public List<SlimReferenceDomain> validateJnumImage(SlimReferenceDomain domain) {
+	public List<ReferenceCitationCacheDomain> validateJnumImage(SlimReferenceDomain domain) {
 		return referenceService.validateJnumImage(domain);
 	}
 

@@ -610,7 +610,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					// replace 1st * = short_citation
 					// replace 2nd * = year
 					if (journal.equals("Proc Natl Acad Sci U S A")) {
-						log.info("validateJnumImage/Proc Natl Acad Sci U S A");					
+						log.info("validateJnumImage/processing Proc Natl Acad Sci U S A");					
 						copyright = copyright.replaceFirst("\\*", results.get(0).getYear());
 					}
 
@@ -619,8 +619,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					// replace 1st * = short_citation
 					// replace JBiolChem(||) = JbiolChem(pubmedid|JBC|)
 					else if (journal.equals("J Biol Chem")) {
-						log.info("validateJnumImage/J Biol Chem");					
-						copyright = copyright.replaceAll("JBioChem(||)", "JBioChem(" + results.get(0).getPubmedid() + "|JBC|)");
+						log.info("validateJnumImage/processing J Biol Chem");					
+						copyright = copyright.replaceAll("JBioChem(\\|\\|)", "JBioChem(" + results.get(0).getPubmedid() + "|JBC|)");
 					}
 					
 					log.info("validateJnumImage/copyright: " + copyright);					

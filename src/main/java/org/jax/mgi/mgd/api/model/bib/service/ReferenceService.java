@@ -604,7 +604,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					log.info("validateJnumImage:found 1 item");
 					String license = journalLicense.get(0).getAbbreviation();
 					String copyright = license.replaceFirst("\\*", results.get(0).getShort_citation());
-					log.info("validateJnumImage/copyright: " + copyright);
 
 					// Proc Natl Acad Sci U S A
 					// replace 1st * = short_citation
@@ -617,9 +616,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					// replace 1st * = short_citation
 					// replace JBiolChem(||) = JbiolChem(pubmedid|JBC|)
 					if (results.get(0).getJournal().equals("J Biol Chem")) {
-						copyright = copyright.replaceFirst("JBioChem(||)", "JBioChem(" + results.get(0).getPubmedid() + "|JBC|)");
+						log.info("validateJnumImage/J Biol Chem");					
+						copyright = copyright.replaceAll("JBioChem(||)", "JBioChem(" + results.get(0).getPubmedid() + "|JBC|)");
 					}
 					
+					log.info("validateJnumImage/copyright: " + copyright);					
 					results.get(0).setCopyright(copyright);
 					
 					// if DXDOI is missing....

@@ -620,8 +620,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					// replace JBiolChem(||) = JbiolChem(pubmedid|JBC|)
 					else if (journal.equals("J Biol Chem") && results.get(0).getPubmedid() != null) {
 						log.info("validateJnumImage/processing J Biol Chem");					
-						copyright = copyright.replaceAll("JBiolChem(||)", "JBioChem(" + results.get(0).getPubmedid() + "|JBC|)");
-						copyright = copyright.replaceAll("(||)", "");
+						copyright = copyright.replaceAll("JBiolChem(\\|\\|)", "JBioChem(" + results.get(0).getPubmedid() + "|JBC|)");
 					}
 					
 					// J Lipid Res

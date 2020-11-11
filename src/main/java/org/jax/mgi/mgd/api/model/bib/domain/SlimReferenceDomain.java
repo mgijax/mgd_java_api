@@ -18,8 +18,10 @@ public class SlimReferenceDomain extends BaseDomain {
 	private String short_citation;
 	private String journal;
 	private String year;
-	private String pubmedid;
-
+	public String mgiid;	
+	public String doiid;
+	public String pubmedid;
+	
 	// used by validateJnumImage
 	private String copyright;
 	private Boolean needsDXDOIid = false;

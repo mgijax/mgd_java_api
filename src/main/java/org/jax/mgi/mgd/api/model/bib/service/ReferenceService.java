@@ -618,7 +618,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					// example:  J:150
 					// replace 1st * = short_citation
 					// replace JBiolChem(||) = JbiolChem(pubmedid|JBC|)
-					else if (journal.equals("J Biol Chem")) {
+					else if (journal.equals("J Biol Chem") && results.get(0).getPubmedid() != null) {
 						log.info("validateJnumImage/processing J Biol Chem");					
 						copyright = copyright.replaceAll("JBiolChem(||)", "JBioChem(" + results.get(0).getPubmedid() + "|JBC|)");
 					}

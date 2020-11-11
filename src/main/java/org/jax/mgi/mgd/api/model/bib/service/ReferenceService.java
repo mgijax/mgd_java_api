@@ -621,9 +621,17 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					else if (journal.equals("J Biol Chem") && results.get(0).getPubmedid() != null) {
 						log.info("validateJnumImage/processing J Biol Chem");					
 						copyright = copyright.replaceAll("JBiolChem(||)", "JBioChem(" + results.get(0).getPubmedid() + "|JBC|)");
+						copyright = copyright.replaceAll("(||)", "");
 					}
 					
 					// J Lipid Res
+					// example:  J:75524
+					// replace 1st * = short_citation
+					// replace JLipidRes(||) = JLipidRes(pubmedid|JLR|)
+					else if (journal.equals("J Lipid Res") && results.get(0).getPubmedid() != null) {
+						log.info("validateJnumImage/processing J Lipid Res");					
+						copyright = copyright.replaceAll("JLipidRes(||)", "JLipidRes(" + results.get(0).getPubmedid() + "|JLR|)");
+					}
 					
 					// Elsevier
 					

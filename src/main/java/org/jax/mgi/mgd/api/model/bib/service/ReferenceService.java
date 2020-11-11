@@ -600,12 +600,29 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				journalLicense = termService.getJournalLicense(results.get(0).getJournal());
 				
 				if (journalLicense.size() == 1) {
-					results.get(0).setCopyright(journalLicense.get(0).getAbbreviation());
+
+					String license = journalLicense.get(0).getAbbreviation();
+					String copyright = license.replaceFirst("*", results.get(0).getShort_citation());
+					
+					// Proc Natl Acad Sci U S A
+					// replace 1st * = short_citation
+					// replace 2nd * = year
+					if (results.get(0).getJournal().equals("Proc Natl Acad Sci U S A")) {
+						copyright = copyright.replaceFirst("*", results.get(0).getYear());
+					}
+
+					results.get(0).setCopyright(copyright);
 					
 					// if DXDOI is missing....
 					if (journalLicense.get(0).getAbbreviation().contains("DXDOI(||)")) {
 							results.get(0).setNeedsDXDOIid(true);
 					}
+					
+					// does license contain 'Creative Commons'
+					if (journalLicense.get(0).getAbbreviation().contains("Creative Commons")) {
+						results.get(0).setIsCreativeCommons(true);							
+					}
+					
 				}
 
 //				String cmd = "\nselect * from bib_getCopyright(" + key + ")";
@@ -628,30 +645,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 //				}
 			}
 		}
-		
-		log.info("creative commons check");
-		if (results != null && !results.isEmpty()) {
-			if (results.get(0).getJournal() != null && !results.get(0).getJournal().isEmpty()) {
-				if (results.get(0).getJournal().equals("Acta Biochim Biophys Sin (Shanghai)")
-						|| results.get(0).getJournal().equals("Brain")
-						|| results.get(0).getJournal().equals("Carcinogenesis")
-						|| results.get(0).getJournal().equals("Cardiovasc Res")
-						|| results.get(0).getJournal().equals("Cereb Cortex")
-						|| results.get(0).getJournal().equals("Chem Senses")
-						|| results.get(0).getJournal().equals("Glycobiology")
-						|| results.get(0).getJournal().equals("Hum Mol Genet")
-						|| results.get(0).getJournal().equals("Hum Reprod")
-						|| results.get(0).getJournal().equals("J Gerontol A Biol Sci Med Sci")
-						|| results.get(0).getJournal().equals("Mol Biol Evol")
-						|| results.get(0).getJournal().equals("Toxicol Sci")
-						|| results.get(0).getJournal().equals("EMBO J")				
-						|| results.get(0).getJournal().equals("J Invest Dermatol")				
-						|| results.get(0).getJournal().equals("Mol Psychiatry")				
-						|| results.get(0).getJournal().equals("Cell Cycle")) {
-					results.get(0).setIsCreativeCommons(true);	
-				}
-			}
-		}
+
 		
 		log.info("reference/validateJnumImage/end");
 		return results;

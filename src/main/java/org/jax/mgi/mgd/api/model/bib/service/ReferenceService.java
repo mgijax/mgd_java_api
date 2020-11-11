@@ -603,14 +603,14 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 					log.info("validateJnumImage:found 1 item");
 					String license = journalLicense.get(0).getAbbreviation();
-					String copyright = license.replaceFirst("*", results.get(0).getShort_citation());
+					String copyright = license.replaceFirst("\\*", results.get(0).getShort_citation());
 					log.info("validateJnumImage/copyright: " + copyright);
 
 					// Proc Natl Acad Sci U S A
 					// replace 1st * = short_citation
 					// replace 2nd * = year
 					if (results.get(0).getJournal().equals("Proc Natl Acad Sci U S A")) {
-						copyright = copyright.replaceFirst("*", results.get(0).getYear());
+						copyright = copyright.replaceFirst("\\*", results.get(0).getYear());
 					}
 
 					results.get(0).setCopyright(copyright);

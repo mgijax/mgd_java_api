@@ -29,6 +29,8 @@ import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
 import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
+import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.DecodeString;
@@ -53,6 +55,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	private TermDAO termDAO;
 	@Inject
 	private AccessionService accessionService;
+	@Inject
+	private TermService termService;
 	
 	private ReferenceTranslator translator = new ReferenceTranslator();
 	private SlimReferenceTranslator slimtranslator = new SlimReferenceTranslator();
@@ -589,26 +593,39 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					&& (results.get(0).getCopyright() == null
 					|| results.get(0).getCopyright().isEmpty())) {
 				
-				// return copyright/null is OK
+				//
+				// REPLACE WITH TermSerivce/getJournalLicense(results.get(0).getJournal())
+				//
+				List<TermDomain> journalLicense = new ArrayList<TermDomain>();				
+				journalLicense = termService.getJournalLicense(results.get(0).getJournal());
 				
-				String cmd = "\nselect * from bib_getCopyright(" + key + ")";
-				log.info("cmd: " + cmd);
-
-				try {
-					Query query = referenceDAO.createNativeQuery(cmd);
-					String r = (String) query.getSingleResult();
-					results.get(0).setCopyright(r);
+				if (journalLicense.size() == 1) {
+					results.get(0).setCopyright(journalLicense.get(0).getAbbreviation());
 					
 					// if DXDOI is missing....
-					if (r != null && !r.isEmpty()) {
-						if (r.contains("DXDOI(||)")) {
+					if (journalLicense.get(0).getAbbreviation().contains("DXDOI(||)")) {
 							results.get(0).setNeedsDXDOIid(true);
-						}
 					}
 				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}			
+
+//				String cmd = "\nselect * from bib_getCopyright(" + key + ")";
+//				log.info("cmd: " + cmd);
+//	
+//				try {
+//					Query query = referenceDAO.createNativeQuery(cmd);
+//					String r = (String) query.getSingleResult();
+//					results.get(0).setCopyright(r);
+//						
+//					// if DXDOI is missing....
+//					if (r != null && !r.isEmpty()) {
+//						if (r.contains("DXDOI(||)")) {
+//							results.get(0).setNeedsDXDOIid(true);
+//						}
+//					}
+//				}
+//				catch (Exception e) {
+//					e.printStackTrace();
+//				}
 			}
 		}
 		

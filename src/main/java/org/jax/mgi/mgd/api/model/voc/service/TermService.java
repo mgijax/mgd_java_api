@@ -447,6 +447,7 @@ public class TermService extends BaseService<TermDomain> {
 		catch (Exception e) {
 			e.printStackTrace();
 		}	
+		
 		return results;
 	}
 	
@@ -473,4 +474,34 @@ public class TermService extends BaseService<TermDomain> {
 		return new SearchResults<String>(results);
 	
 	}
+
+	@Transactional	
+	public List<TermDomain> getJournalLicense(String journal) {
+		// return list of journal license terms
+
+		List<TermDomain> results = new ArrayList<TermDomain>();
+
+		String cmd = "select _term_key"
+				+ "\nfrom voc_term"
+				+ "\nwhere _vocab_key = 48"
+				+ "\nand term = '" + journal + "'";
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {	
+				TermDomain domain = new TermDomain();						
+				domain = translator.translate(termDAO.get(rs.getInt("_term_key")));
+				termDAO.clear();					
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

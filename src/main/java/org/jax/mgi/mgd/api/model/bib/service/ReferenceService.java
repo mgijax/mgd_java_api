@@ -19,15 +19,14 @@ import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceWorkflowDataDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceBookDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceNoteDAO;
-import org.jax.mgi.mgd.api.model.bib.domain.ReferenceCitationCacheDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
-import org.jax.mgi.mgd.api.model.bib.translator.ReferenceCitationCacheTranslator;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
+import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
@@ -60,7 +59,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	private TermService termService;
 	
 	private ReferenceTranslator translator = new ReferenceTranslator();
-	private ReferenceCitationCacheTranslator citationtranslator = new ReferenceCitationCacheTranslator();	
+	private SlimReferenceTranslator slimtranslator = new SlimReferenceTranslator();	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -505,14 +504,14 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}	
 		
 	@Transactional	
-	public List<ReferenceCitationCacheDomain> validJnum(String value) {
+	public List<SlimReferenceDomain> validJnum(String value) {
 		// use SlimReferenceDomain to return list of validated reference
 		// one value is expected
 		// accepts value :  J:xxx or xxxx
 		// returns empty list if value contains "%"
 		// returns empty list if value does not exist
 
-		List<ReferenceCitationCacheDomain> results = new ArrayList<ReferenceCitationCacheDomain>();
+		List<SlimReferenceDomain> results = new ArrayList<SlimReferenceDomain>();
 		
 		if (value.contains("%") || value == null || value.isEmpty()) {
 			return results;
@@ -533,8 +532,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {	
-				ReferenceCitationCacheDomain domain = new ReferenceCitationCacheDomain();						
-				domain = citationtranslator.translate(referenceDAO.get(rs.getInt("_refs_key")));			
+				SlimReferenceDomain domain = new SlimReferenceDomain();						
+				domain = slimtranslator.translate(referenceDAO.get(rs.getInt("_refs_key")));			
 				referenceDAO.clear();
 				results.add(domain);
 			}
@@ -548,12 +547,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}	
 
 	@Transactional	
-	public List<ReferenceCitationCacheDomain> validateJnumImage(SlimReferenceDomain domain) {
+	public List<SlimReferenceDomain> validateJnumImage(SlimReferenceDomain domain) {
 		// use ReferenceCitationCacheDomain to return list of validated reference
 		// copyright
 		// creative commons journal list
 
-		List<ReferenceCitationCacheDomain> results = new ArrayList<ReferenceCitationCacheDomain>();
+		List<SlimReferenceDomain> results = new ArrayList<SlimReferenceDomain>();
 
 		// validate the jnum
 		String jnum = "";
@@ -585,7 +584,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			results.get(0).setNeedsDXDOIid(false);
 			results.get(0).setIsCreativeCommons(false);
 			
-			String key = String.valueOf(results.get(0).get_refs_key());
+			String key = results.get(0).getRefsKey();
 			
 			log.info("copyright validation");
 			log.info(results.get(0).getCopyright());

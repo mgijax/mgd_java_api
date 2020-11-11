@@ -593,17 +593,19 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					&& (results.get(0).getCopyright() == null
 					|| results.get(0).getCopyright().isEmpty())) {
 				
-				//
-				// REPLACE WITH TermSerivce/getJournalLicense(results.get(0).getJournal())
-				//
+
+				log.info("termService.getJournalLicense():begin");				
 				List<TermDomain> journalLicense = new ArrayList<TermDomain>();				
 				journalLicense = termService.getJournalLicense(results.get(0).getJournal());
+				log.info("termService.getJournalLicense():end");
 				
 				if (journalLicense.size() == 1) {
 
+					log.info("validateJnumImage:found 1 item");
 					String license = journalLicense.get(0).getAbbreviation();
 					String copyright = license.replaceFirst("*", results.get(0).getShort_citation());
-					
+					log.info("validateJnumImage/copyright: " + copyright);
+
 					// Proc Natl Acad Sci U S A
 					// replace 1st * = short_citation
 					// replace 2nd * = year

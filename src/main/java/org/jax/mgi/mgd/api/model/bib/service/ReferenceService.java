@@ -594,28 +594,31 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					|| results.get(0).getCopyright().isEmpty())) {
 				
 
-				log.info("termService.getJournalLicense():begin");				
 				List<TermDomain> journalLicense = new ArrayList<TermDomain>();				
 				journalLicense = termService.getJournalLicense(results.get(0).getJournal());
-				log.info("termService.getJournalLicense():end");
 				
 				if (journalLicense.size() == 1) {
 
-					log.info("validateJnumImage:found 1 item");
+					String journal = results.get(0).getJournal();
 					String license = journalLicense.get(0).getAbbreviation();
 					String copyright = license.replaceFirst("\\*", results.get(0).getShort_citation());
-
+					
+					log.info("validateJnumImage: " + journal);
+					
 					// Proc Natl Acad Sci U S A
+					// example: J:9
 					// replace 1st * = short_citation
 					// replace 2nd * = year
-					if (results.get(0).getJournal().equals("Proc Natl Acad Sci U S A")) {
+					if (journal.equals("Proc Natl Acad Sci U S A")) {
+						log.info("validateJnumImage/Proc Natl Acad Sci U S A");					
 						copyright = copyright.replaceFirst("\\*", results.get(0).getYear());
 					}
 
 					// J Biol Chem
+					// example:  J:150
 					// replace 1st * = short_citation
 					// replace JBiolChem(||) = JbiolChem(pubmedid|JBC|)
-					if (results.get(0).getJournal().equals("J Biol Chem")) {
+					else if (journal.equals("J Biol Chem")) {
 						log.info("validateJnumImage/J Biol Chem");					
 						copyright = copyright.replaceAll("JBioChem(||)", "JBioChem(" + results.get(0).getPubmedid() + "|JBC|)");
 					}

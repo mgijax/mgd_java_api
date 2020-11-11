@@ -70,7 +70,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			String cmd;
 			Query query;
 			
-		    cmd = "select count(*) from VOC_restTerms(" + domain.getVocabKey() + ")";
+		    cmd = "select count(*) from VOC_resetTerms(" + domain.getVocabKey() + ")";
 		    log.info("cmd: " + cmd);
 		    query = vocabularyDAO.createNativeQuery(cmd);
 		    query.getResultList();	

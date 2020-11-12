@@ -51,7 +51,7 @@ public class SlimReferenceTranslator extends BaseEntityDomainTranslator<Referenc
 		// used by validateJnumImage
 		domain.setJournalLicenses(null);
 		domain.setCopyright("");
-		domain.setSelectedLicense("");
+		domain.setSelectedJournalLicense("");
 		domain.setNeedsDXDOIid(false);
 		domain.setIsCreativeCommons(false);
 

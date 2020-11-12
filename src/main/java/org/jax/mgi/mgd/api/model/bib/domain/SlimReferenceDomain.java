@@ -28,7 +28,7 @@ public class SlimReferenceDomain extends BaseDomain {
 	// used by validateJnumImage
 	private List<TermDomain> journalLicenses;
 	private String copyright;
-	private String selectedLicense;
+	private String selectedJournalLicense;
 	private Boolean needsDXDOIid = false;
 	private Boolean isCreativeCommons = false;
 }

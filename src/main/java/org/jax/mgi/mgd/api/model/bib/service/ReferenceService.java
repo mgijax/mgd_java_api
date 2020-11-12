@@ -664,17 +664,21 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 								// compare journal/SQL year with reference/year
 								// if compare matches expected journal/SQL, then pass = true
 								int retResult =  refYear.compareTo(intSqlYear);
-								if (retResult > 0 && checkGreater) {
-									passYear = true;
+								if (retResult > 0) {
+									if (checkGreater) {
+										passYear = true;
+									}
 								}
-								else if (retResult < 0 && checkLess) {
-									passYear = true;
+								else if (retResult < 0) {
+									if (checkLess) {
+										passYear = true;
+									}
 								}
 								else if (checkEqual) {
 									passYear = true;
 								}
 								
-								log.info("validateJnumImage: " + sqlYear + "," + intSqlYear + "," + refYear + "," + passYear);
+								log.info("validateJnumImage: " + sqlYear + "," + refYear + "," + intSqlYear + "," + passYear);
 								
 								// if passYear = true, then set journalLicenses = this license *only* 
 						    }

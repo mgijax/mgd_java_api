@@ -610,7 +610,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					// replace 1st * = short_citation
 					// replace 2nd * = year
 					if (journal.equals("Proc Natl Acad Sci U S A")) {
-						log.info("validateJnumImage/processing Proc Natl Acad Sci U S A");					
+						//log.info("validateJnumImage/processing Proc Natl Acad Sci U S A");					
 						copyright = copyright.replaceFirst("\\*", results.get(0).getYear());
 					}
 
@@ -619,7 +619,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					// replace 1st * = short_citation
 					// replace JBiolChem(||) = JbiolChem(pubmedid|JBC|)
 					else if (journal.equals("J Biol Chem") && results.get(0).getPubmedid() != null) {
-						log.info("validateJnumImage/processing J Biol Chem");					
+						//log.info("validateJnumImage/processing J Biol Chem");					
 						copyright = copyright.replaceAll("JBiolChem", "JBioChem(" + results.get(0).getPubmedid() + "|JBC|)");
 					}
 					
@@ -628,11 +628,17 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					// replace 1st * = short_citation
 					// replace JLipidRes(||) = JLipidRes(pubmedid|JLR|)
 					else if (journal.equals("J Lipid Res") && results.get(0).getPubmedid() != null) {
-						log.info("validateJnumImage/processing J Lipid Res");					
+						//log.info("validateJnumImage/processing J Lipid Res");					
 						copyright = copyright.replaceAll("JLipidRes", "JLipidRes(" + results.get(0).getPubmedid() + "|JLR|)");
 					}
 					
 					// Elsevier
+					// example: J:75717
+					// 
+					else if (copyright.contains("Elsevier")) {
+						//log.info("validateJnumImage/processing Elsevier");					
+						copyright = copyright.replaceAll("Elsevier(||)", "Elsevier(" + results.get(0).getJnumid() + "||)");					
+					}
 					
 					log.info("validateJnumImage/copyright: " + copyright);					
 					results.get(0).setCopyright(copyright);

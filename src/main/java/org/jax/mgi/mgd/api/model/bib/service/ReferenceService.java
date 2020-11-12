@@ -607,21 +607,73 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					results.get(0).setJournalLicenses(journalLicenses);
 				}
 
-				// compare results.get(0).getYear() with sqlYear in journal/term/note (definition)
+				// compare results.get(0).getYear() with sql in journal/term/note (definition)
+				// term=BMC Biochem, note=SQL(<2008)
+				// J:xxxx, year = 2007 -> pass = true, year = 2008 -> pass = false
+				
 				for (int i = 0; i < journalLicenses.size(); i++) {
 					if (journalLicenses.get(i).getNote() != null && !journalLicenses.get(i).getNote().isEmpty()) {
 						if (journalLicenses.get(i).getNote().contains("SQL(")) {
-							String sqlYear = journalLicenses.get(i).getNote();
-							String refYear = results.get(0).getYear();
+							
+							String sql = journalLicenses.get(i).getNote();
+							String sqlYear = "";
+							Integer intSqlYear = 0;
+							Integer refYear = Integer.valueOf(results.get(0).getYear());
+							Boolean checkLess = false;
+							Boolean checkGreater = false;
+							Boolean checkEqual = false;
+							Boolean passYear = false;
 							Pattern p;
 							p = Pattern.compile(sqlPattern);
-							Matcher m = p.matcher(sqlYear);
+							Matcher m = p.matcher(sql);
+
 							while (m.find()) {
-//								if (sqlYear.startsWith("<=") == true) {
-//								}
-								//else if (sqlYear.startsWith("<") == true) {
 								
-								log.info("validateJnumImage: " + m.group(1));
+								// example:  SQL(<2008)
+								sqlYear = m.group(1);
+
+								// remove "<", "<=", ">", ">=", "="
+								// convert to Integer
+								
+								if (sqlYear.startsWith("<=") == true) {
+									intSqlYear = Integer.valueOf(sqlYear.replace("<=", ""));
+									checkLess = true;
+									checkEqual = true;
+								}
+								else if (sqlYear.startsWith("<") == true) {
+									intSqlYear = Integer.valueOf(sqlYear.replace("<", ""));
+									checkLess = true;
+								}
+								else if (sqlYear.startsWith(">=") == true) {
+									intSqlYear = Integer.valueOf(sqlYear.replace(">=", ""));
+									checkGreater = true;
+									checkEqual = true;
+								}
+								else if (sqlYear.startsWith(">") == true) {
+									intSqlYear = Integer.valueOf(sqlYear.replace(">", ""));
+									checkGreater = true;
+								}
+								else if (sqlYear.startsWith("=") == true) {
+									intSqlYear = Integer.valueOf(sqlYear.replace("=", ""));
+									checkEqual = true;
+								}
+								
+								// compare journal/SQL year with reference/year
+								// if compare matches expected journal/SQL, then pass = true
+								int retResult =  intSqlYear.compareTo(refYear);
+								if (retResult > 0 && checkGreater) {
+									passYear = true;
+								}
+								else if (retResult < 0 && checkLess) {
+									passYear = true;
+								}
+								else if (checkEqual) {
+									passYear = true;
+								}
+								
+								log.info("validateJnumImage: " + sqlYear + "," + intSqlYear + "," + refYear + "," + passYear);
+								
+								// if passYear = true, then set journalLicenses = this license *only* 
 						    }
 						}
 					}

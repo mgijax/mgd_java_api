@@ -596,7 +596,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				// if incoming SlimReferenceDomain.selectedLicense exists, then use that License
 				// else, find all Licenses for given Journal
 				List<TermDomain> journalLicenses = new ArrayList<TermDomain>();
-				if (results.get(0).getSelectedLicense() != null && !results.get(0).getSelectedLicense().isEmpty()) {
+				if (domain.getSelectedLicense() != null && !domain.getSelectedLicense().isEmpty()) {
 					journalLicenses.add(termService.get(Integer.valueOf(results.get(0).getSelectedLicense())));
 				}
 				else {

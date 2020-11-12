@@ -592,10 +592,17 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			if (key != null && !key.isEmpty() 
 					&& (results.get(0).getCopyright() == null
 					|| results.get(0).getCopyright().isEmpty())) {
-				
-				List<TermDomain> journalLicenses = new ArrayList<TermDomain>();				
-				journalLicenses = termService.getJournalLicense(results.get(0).getJournal());
-				results.get(0).setJournalLicenses(journalLicenses);
+	
+				// if incoming SlimReferenceDomain.selectedLicense exists, then use that License
+				// else, find all Licenses for given Journal
+				List<TermDomain> journalLicenses = new ArrayList<TermDomain>();
+				if (results.get(0).getSelectedLicense() != null && !results.get(0).getSelectedLicense().isEmpty()) {
+					journalLicenses.add(termService.get(Integer.valueOf(results.get(0).getSelectedLicense())));
+				}
+				else {
+					journalLicenses = termService.getJournalLicense(results.get(0).getJournal());
+					results.get(0).setJournalLicenses(journalLicenses);
+				}
 				
 				if (journalLicenses.size() == 1) {
 
@@ -659,7 +666,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				}
 			}
 		}
-
 		
 		log.info("reference/validateJnumImage/end");
 		return results;

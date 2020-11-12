@@ -587,7 +587,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			results.get(0).setIsCreativeCommons(false);
 			
 			String key = results.get(0).getRefsKey();
-			String sqlPattern = "\\SQL((.*?)\\)";
+			String sqlPattern = "SQL\\((.*?)\\)";
 			
 			log.info("copyright validation");
 			log.info(results.get(0).getCopyright());

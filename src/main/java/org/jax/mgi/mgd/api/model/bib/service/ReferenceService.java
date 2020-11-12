@@ -637,7 +637,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					// 
 					else if (copyright.contains("Elsevier")) {
 						//log.info("validateJnumImage/processing Elsevier");					
-						copyright = copyright.replaceAll("Elsevier(||)", "Elsevier(" + results.get(0).getJnumid() + "||)");					
+						if (results.get(0).getDoiid() != null) {
+							copyright = copyright.replaceAll("DXDOI\\(\\|\\|\\)", "DXDOI(" + results.get(0).getDoiid() + "||)");					
+						}
+						copyright = copyright.replaceAll("Elsevier\\(\\|\\|\\)", "Elsevier(" + results.get(0).getJnumid() + "||)");					
 					}
 					
 					log.info("validateJnumImage/copyright: " + copyright);					

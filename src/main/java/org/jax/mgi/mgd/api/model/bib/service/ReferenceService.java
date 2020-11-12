@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -585,6 +587,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			results.get(0).setIsCreativeCommons(false);
 			
 			String key = results.get(0).getRefsKey();
+			String sqlPattern = "\\SQL((.*?)\\)";
 			
 			log.info("copyright validation");
 			log.info(results.get(0).getCopyright());
@@ -602,6 +605,26 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				else {
 					journalLicenses = termService.getJournalLicense(results.get(0).getJournal());
 					results.get(0).setJournalLicenses(journalLicenses);
+				}
+
+				// compare results.get(0).getYear() with sqlYear in journal/term/note (definition)
+				for (int i = 0; i < journalLicenses.size(); i++) {
+					if (journalLicenses.get(i).getNote() != null && !journalLicenses.get(i).getNote().isEmpty()) {
+						if (journalLicenses.get(i).getNote().contains("SQL(")) {
+							String sqlYear = journalLicenses.get(i).getNote();
+							String refYear = results.get(0).getYear();
+							Pattern p;
+							p = Pattern.compile(sqlPattern);
+							Matcher m = p.matcher(sqlYear);
+							while (m.find()) {
+//								if (sqlYear.startsWith("<=") == true) {
+//								}
+								//else if (sqlYear.startsWith("<") == true) {
+								
+								log.info("validateJnumImage: " + m.group(1));
+						    }
+						}
+					}
 				}
 				
 				if (journalLicenses.size() == 1) {

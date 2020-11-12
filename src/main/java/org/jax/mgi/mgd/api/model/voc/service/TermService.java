@@ -480,7 +480,7 @@ public class TermService extends BaseService<TermDomain> {
 		// return list of journal license terms
 
 		List<TermDomain> results = new ArrayList<TermDomain>();
-
+		
 		String cmd = "select _term_key"
 				+ "\nfrom voc_term"
 				+ "\nwhere _vocab_key = 48"

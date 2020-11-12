@@ -685,6 +685,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 									List<TermDomain> newjournalLicenses = new ArrayList<TermDomain>();
 									newjournalLicenses.add(journalLicenses.get(0));
 									journalLicenses = newjournalLicenses;
+									results.get(0).setJournalLicenses(journalLicenses);									
 								}
 						    }
 						}

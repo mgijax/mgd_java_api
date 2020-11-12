@@ -663,7 +663,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 								
 								// compare journal/SQL year with reference/year
 								// if compare matches expected journal/SQL, then pass = true
-								int retResult =  intSqlYear.compareTo(refYear);
+								int retResult =  refYear.compareTo(intSqlYear);
 								if (retResult > 0 && checkGreater) {
 									passYear = true;
 								}

@@ -593,14 +593,14 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					&& (results.get(0).getCopyright() == null
 					|| results.get(0).getCopyright().isEmpty())) {
 				
-
-				List<TermDomain> journalLicense = new ArrayList<TermDomain>();				
-				journalLicense = termService.getJournalLicense(results.get(0).getJournal());
+				List<TermDomain> journalLicenses = new ArrayList<TermDomain>();				
+				journalLicenses = termService.getJournalLicense(results.get(0).getJournal());
+				results.get(0).setJournalLicenses(journalLicenses);
 				
-				if (journalLicense.size() == 1) {
+				if (journalLicenses.size() == 1) {
 
 					String journal = results.get(0).getJournal();
-					String license = journalLicense.get(0).getAbbreviation();
+					String license = journalLicenses.get(0).getAbbreviation();
 					String copyright = license.replaceFirst("\\*", results.get(0).getShort_citation());
 					
 					log.info("validateJnumImage: " + journal);
@@ -647,12 +647,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					results.get(0).setCopyright(copyright);
 					
 					// if DXDOI is missing....
-					if (journalLicense.get(0).getAbbreviation().contains("DXDOI(||)")) {
+					if (journalLicenses.get(0).getAbbreviation().contains("DXDOI(||)")) {
 							results.get(0).setNeedsDXDOIid(true);
 					}
 					
 					// does license contain 'Creative Commons'
-					if (journalLicense.get(0).getAbbreviation().contains("Creative Commons")) {
+					if (journalLicenses.get(0).getAbbreviation().contains("Creative Commons")) {
 						results.get(0).setIsCreativeCommons(true);							
 					}
 					

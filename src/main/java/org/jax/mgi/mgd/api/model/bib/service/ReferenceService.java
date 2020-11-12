@@ -617,12 +617,15 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 							
 							String sql = journalLicenses.get(i).getNote();
 							String sqlYear = "";
+
 							Integer intSqlYear = 0;
 							Integer refYear = Integer.valueOf(results.get(0).getYear());
+	
 							Boolean checkLess = false;
 							Boolean checkGreater = false;
 							Boolean checkEqual = false;
 							Boolean passYear = false;
+
 							Pattern p;
 							p = Pattern.compile(sqlPattern);
 							Matcher m = p.matcher(sql);

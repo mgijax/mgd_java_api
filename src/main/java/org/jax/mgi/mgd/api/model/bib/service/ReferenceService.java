@@ -620,7 +620,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					// replace JBiolChem(||) = JbiolChem(pubmedid|JBC|)
 					else if (journal.equals("J Biol Chem") && results.get(0).getPubmedid() != null) {
 						//log.info("validateJnumImage/processing J Biol Chem");					
-						copyright = copyright.replaceAll("JBiolChem\\\\(\\\\|\\\\|\\\\)", "JBioChem(" + results.get(0).getPubmedid() + "|JBC|)");
+						copyright = copyright.replaceAll("JBiolChem\\(\\|\\|\\)", "JBioChem(" + results.get(0).getPubmedid() + "|JBC|)");
 					}
 					
 					// J Lipid Res
@@ -629,7 +629,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					// replace JLipidRes(||) = JLipidRes(pubmedid|JLR|)
 					else if (journal.equals("J Lipid Res") && results.get(0).getPubmedid() != null) {
 						//log.info("validateJnumImage/processing J Lipid Res");					
-						copyright = copyright.replaceAll("JLipidRes\\\\(\\\\|\\\\|\\\\)", "JLipidRes(" + results.get(0).getPubmedid() + "|JLR|)");
+						copyright = copyright.replaceAll("JLipidRes\\(\\|\\|\\)", "JLipidRes(" + results.get(0).getPubmedid() + "|JLR|)");
 					}
 					
 					// Elsevier
@@ -657,25 +657,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					}
 					
 				}
-
-//				String cmd = "\nselect * from bib_getCopyright(" + key + ")";
-//				log.info("cmd: " + cmd);
-//	
-//				try {
-//					Query query = referenceDAO.createNativeQuery(cmd);
-//					String r = (String) query.getSingleResult();
-//					results.get(0).setCopyright(r);
-//						
-//					// if DXDOI is missing....
-//					if (r != null && !r.isEmpty()) {
-//						if (r.contains("DXDOI(||)")) {
-//							results.get(0).setNeedsDXDOIid(true);
-//						}
-//					}
-//				}
-//				catch (Exception e) {
-//					e.printStackTrace();
-//				}
 			}
 		}
 

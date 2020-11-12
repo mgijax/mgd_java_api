@@ -597,7 +597,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				// else, find all Licenses for given Journal
 				List<TermDomain> journalLicenses = new ArrayList<TermDomain>();
 				if (domain.getSelectedJournalLicense() != null && !domain.getSelectedJournalLicense().isEmpty()) {
-					journalLicenses.add(termService.get(Integer.valueOf(results.get(0).getSelectedJournalLicense())));
+					journalLicenses.add(termService.get(Integer.valueOf(domain.getSelectedJournalLicense())));
 				}
 				else {
 					journalLicenses = termService.getJournalLicense(results.get(0).getJournal());

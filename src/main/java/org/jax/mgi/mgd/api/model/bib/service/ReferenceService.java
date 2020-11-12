@@ -662,7 +662,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 								}
 								
 								// compare journal/SQL year with reference/year
-								// if compare matches expected journal/SQL, then pass = true
+								// if compare matches the expected journal/SQL, then pass = true
 								int retResult =  refYear.compareTo(intSqlYear);
 								if (retResult > 0) {
 									if (checkGreater) {
@@ -681,6 +681,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 								log.info("validateJnumImage: " + sqlYear + "," + refYear + "," + intSqlYear + "," + passYear);
 								
 								// if passYear = true, then set journalLicenses = this license *only* 
+								if (passYear) {
+									List<TermDomain> newjournalLicenses = new ArrayList<TermDomain>();
+									newjournalLicenses.add(journalLicenses.get(0));
+									journalLicenses = newjournalLicenses;
+								}
 						    }
 						}
 					}

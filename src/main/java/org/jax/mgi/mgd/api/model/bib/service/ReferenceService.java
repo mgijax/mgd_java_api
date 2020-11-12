@@ -647,12 +647,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					results.get(0).setCopyright(copyright);
 					
 					// if DXDOI is missing....
-					if (journalLicenses.get(0).getAbbreviation().contains("DXDOI(||)")) {
+					if (copyright.contains("DXDOI(||)")) {
 							results.get(0).setNeedsDXDOIid(true);
 					}
 					
 					// does license contain 'Creative Commons'
-					if (journalLicenses.get(0).getAbbreviation().contains("Creative Commons")) {
+					if (copyright.contains("Creative Commons")) {
 						results.get(0).setIsCreativeCommons(true);							
 					}
 					

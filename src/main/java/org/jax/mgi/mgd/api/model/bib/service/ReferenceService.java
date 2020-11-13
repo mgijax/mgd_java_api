@@ -709,7 +709,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 								// if passYear = true, then set journalLicenses = this license *only* 
 								if (passYear) {
 									List<TermDomain> newjournalLicenses = new ArrayList<TermDomain>();
-									newjournalLicenses.add(journalLicenses.get(0));
+									newjournalLicenses.add(journalLicenses.get(i));
 									journalLicenses = newjournalLicenses;
 									results.get(0).setJournalLicenses(journalLicenses);									
 								}

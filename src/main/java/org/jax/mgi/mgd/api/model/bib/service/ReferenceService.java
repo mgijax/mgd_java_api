@@ -559,7 +559,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// validate the jnum
 		String jnum = "";
 		
-		log.info("reference/validateJnumImage/begin");
+		log.info("validateJnumImage/begin");
 		
 		if (domain.getJnum() != null && !domain.getJnum().isEmpty()) {
 			jnum = domain.getJnum();
@@ -577,7 +577,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		if (results != null && !results.isEmpty()) {
 
-			log.info("copyright check");
 			// set copyright to incoming json package
 			if (domain.getCopyright() != null && !domain.getCopyright().isEmpty()) {
 				results.get(0).setCopyright(domain.getCopyright());
@@ -588,9 +587,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			
 			String key = results.get(0).getRefsKey();
 			String sqlPattern = "SQL\\((.*?)\\)";
-			
-			log.info("copyright validation");
-			log.info(results.get(0).getCopyright());
 				
 			if (key != null && !key.isEmpty() 
 					&& (results.get(0).getCopyright() == null
@@ -708,7 +704,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 									passYear = true;
 								}
 								
-								log.info("validateJnumImage: " + "bib_refs.year:" + refYear + ",license.year:" + intSqlYear + ",pass=" + passYear);
+								log.info("validateJnumImage: " + "bib_refs.year:" + refYear + ",license.year:" + sqlYear + ",pass=" + passYear);
 								
 								// if passYear = true, then set journalLicenses = this license *only* 
 								if (passYear) {
@@ -728,7 +724,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					String license = journalLicenses.get(0).getAbbreviation();
 					String copyright = license.replaceFirst("\\*", results.get(0).getShort_citation());
 					
-					log.info("validateJnumImage: " + journal);
+					log.info("validateJnumImage/journal/" + journal);
 					
 					// Proc Natl Acad Sci U S A
 					// example: J:9
@@ -768,7 +764,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 						copyright = copyright.replaceAll("Elsevier\\(\\|\\|\\)", "Elsevier(" + results.get(0).getJnumid() + "||)");					
 					}
 					
-					log.info("validateJnumImage/copyright: " + copyright);					
+					log.info("validateJnumImage/copyright/" + copyright);					
 					results.get(0).setCopyright(copyright);
 					
 					// if DXDOI is missing....
@@ -785,7 +781,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 		}
 		
-		log.info("reference/validateJnumImage/end");
+		log.info("validateJnumImage/end");
 		return results;
 	}
 	

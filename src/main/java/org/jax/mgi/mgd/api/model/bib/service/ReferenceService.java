@@ -738,15 +738,15 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					// example: J:xxx
 					// replace 1st * = short_citation
 					// replace 2nd * = year
-					if (journal.equals("J Neurosci") && copyright.contains("\\*")) {
-						//log.info("validateJnumImage/processing J Neurosci w/year");					
+					if (journal.equals("J Neurosci")) {
+						log.info("validateJnumImage/processing J Neurosci w/year");					
 						copyright = copyright.replaceFirst("\\*", results.get(0).getYear());
 					}
 					
 					// J Biol Chem
 					// example:  J:150
 					// replace 1st * = short_citation
-					// replace JBiolChem(||) = JbiolChem(pubmedid|JBC|)
+					// replace JBiolChem(||) = JBiolChem(pubmedid|JBC|)
 					else if (journal.equals("J Biol Chem") && results.get(0).getPubmedid() != null) {
 						//log.info("validateJnumImage/processing J Biol Chem");					
 						copyright = copyright.replaceAll("JBiolChem\\(\\|\\|\\)", "JBiolChem(" + results.get(0).getPubmedid() + "|JBC|)");

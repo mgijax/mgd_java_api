@@ -668,10 +668,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 								else if (sqlYear.startsWith("between") == true) {
 									// SQL(between 2003 and 2008)
 									passYear = true;
-									sqlYear = sqlYear.replace("between", "");
-									sqlYear = sqlYear.replace("and",  "");
+									sqlYear = sqlYear.replace("between ", "");
+									sqlYear = sqlYear.replace("and ",  "");
 									// 2003 2008
 									String[] array = sqlYear.split(" ", -1);
+									log.info(array);
 									int retResult1 =  refYear.compareTo(Integer.valueOf(array[0]));
 									int retResult2 =  refYear.compareTo(Integer.valueOf(array[1]));
 									if (retResult1 < 0) {

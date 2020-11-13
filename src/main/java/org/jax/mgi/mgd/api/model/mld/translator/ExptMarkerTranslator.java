@@ -18,6 +18,7 @@ public class ExptMarkerTranslator extends BaseEntityDomainTranslator<ExptMarker,
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);		
 		domain.setAssocKey(String.valueOf(entity.get_assoc_key()));
 		domain.setExptKey(String.valueOf(entity.get_expt_key()));
+		domain.setMarkerChr(entity.getMarker().getChromosome());
 		domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 		domain.setMarkerSymbol(entity.getMarker().getSymbol());
 		domain.setMarkerAccID(entity.getMarker().getMgiAccessionIds().get(0).getAccID());

@@ -11,6 +11,7 @@ public class ExptMarkerDomain extends BaseDomain {
 	private String processStatus;
 	private String assocKey;
 	private String exptKey;
+	private String markerChr;
 	private String markerKey;
 	private String markerSymbol;
 	private String markerAccID;

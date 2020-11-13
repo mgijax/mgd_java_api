@@ -620,7 +620,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 							Integer intSqlYear = 0;
 							Integer refYear = Integer.valueOf(results.get(0).getYear());
-	
+							
 							Boolean checkLess = false;
 							Boolean checkGreater = false;
 							Boolean checkEqual = false;
@@ -629,7 +629,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 							Pattern p;
 							p = Pattern.compile(sqlPattern);
 							Matcher m = p.matcher(sql);
-
+							
 							while (m.find()) {
 								
 								// example:  SQL(<2008)
@@ -639,26 +639,47 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 								// convert to Integer
 								
 								if (sqlYear.startsWith("<=") == true) {
+									// SQL(<=2008)
 									intSqlYear = Integer.valueOf(sqlYear.replace("<=", ""));
 									checkLess = true;
 									checkEqual = true;
 								}
 								else if (sqlYear.startsWith("<") == true) {
+									// SQL(<2008)
 									intSqlYear = Integer.valueOf(sqlYear.replace("<", ""));
 									checkLess = true;
 								}
 								else if (sqlYear.startsWith(">=") == true) {
+									// SQL(>=2008)
 									intSqlYear = Integer.valueOf(sqlYear.replace(">=", ""));
 									checkGreater = true;
 									checkEqual = true;
 								}
 								else if (sqlYear.startsWith(">") == true) {
+									// SQL(>2008)
 									intSqlYear = Integer.valueOf(sqlYear.replace(">", ""));
 									checkGreater = true;
 								}
 								else if (sqlYear.startsWith("=") == true) {
+									// SQL(=2008)
 									intSqlYear = Integer.valueOf(sqlYear.replace("=", ""));
 									checkEqual = true;
+								}
+								else if (sqlYear.startsWith("between") == true) {
+									// SQL(between 2003 and 2008)
+									passYear = true;
+									sqlYear = sqlYear.replace("between", "");
+									sqlYear = sqlYear.replace("and",  "");
+									// 2003 2008
+									String[] array = sqlYear.split(" ", -1);
+									int retResult1 =  refYear.compareTo(Integer.valueOf(array[0]));
+									int retResult2 =  refYear.compareTo(Integer.valueOf(array[1]));
+									if (retResult1 < 0) {
+										passYear = false;
+									}
+									if (retResult2 > 0) {
+										passYear = false;
+									}
 								}
 								
 								// compare journal/SQL year with reference/year

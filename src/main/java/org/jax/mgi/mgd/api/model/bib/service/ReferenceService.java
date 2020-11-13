@@ -672,7 +672,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 									sqlYear = sqlYear.replace("and ",  "");
 									// 2003 2008
 									String[] array = sqlYear.split(" ", -1);
-									log.info(array);
 									int retResult1 =  refYear.compareTo(Integer.valueOf(array[0]));
 									int retResult2 =  refYear.compareTo(Integer.valueOf(array[1]));
 									if (retResult1 < 0) {

@@ -708,7 +708,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 									passYear = true;
 								}
 								
-								log.info("validateJnumImage: " + sqlYear + "," + refYear + "," + intSqlYear + "," + passYear);
+								log.info("validateJnumImage: " + "bib_refs.year:" + refYear + ",license.year:" + intSqlYear + ",pass=" + passYear);
 								
 								// if passYear = true, then set journalLicenses = this license *only* 
 								if (passYear) {

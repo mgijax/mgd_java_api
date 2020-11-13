@@ -583,7 +583,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 			
 			results.get(0).setNeedsDXDOIid(false);
-			results.get(0).setIsCreativeCommons(false);
 			
 			String key = results.get(0).getRefsKey();
 			String sqlPattern = "SQL\\((.*?)\\)";
@@ -735,6 +734,15 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 						copyright = copyright.replaceFirst("\\*", results.get(0).getYear());
 					}
 
+					// J Neurosci
+					// example: J:xxx
+					// replace 1st * = short_citation
+					// replace 2nd * = year
+					if (journal.equals("J Neurosci") && copyright.contains("\\*")) {
+						//log.info("validateJnumImage/processing J Neurosci w/year");					
+						copyright = copyright.replaceFirst("\\*", results.get(0).getYear());
+					}
+					
 					// J Biol Chem
 					// example:  J:150
 					// replace 1st * = short_citation
@@ -770,13 +778,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					// if DXDOI is missing....
 					if (copyright.contains("DXDOI(||)")) {
 							results.get(0).setNeedsDXDOIid(true);
-					}
-					
-					// does license contain 'Creative Commons'
-					if (copyright.contains("Creative Commons")) {
-						results.get(0).setIsCreativeCommons(true);							
-					}
-					
+					}					
 				}
 			}
 		}

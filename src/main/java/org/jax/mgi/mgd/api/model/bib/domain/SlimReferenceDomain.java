@@ -30,5 +30,4 @@ public class SlimReferenceDomain extends BaseDomain {
 	private String copyright;
 	private String selectedJournalLicense;
 	private Boolean needsDXDOIid = false;
-	private Boolean isCreativeCommons = false;
 }

@@ -53,7 +53,6 @@ public class SlimReferenceTranslator extends BaseEntityDomainTranslator<Referenc
 		domain.setCopyright("");
 		domain.setSelectedJournalLicense("");
 		domain.setNeedsDXDOIid(false);
-		domain.setIsCreativeCommons(false);
 
 		return domain;
 	}

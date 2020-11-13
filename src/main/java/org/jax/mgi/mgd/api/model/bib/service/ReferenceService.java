@@ -607,9 +607,18 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					results.get(0).setJournalLicenses(journalLicenses);
 				}
 
+				//
 				// compare results.get(0).getYear() with sql in journal/term/note (definition)
 				// term=BMC Biochem, note=SQL(<2008)
 				// J:xxxx, year = 2007 -> pass = true, year = 2008 -> pass = false
+				//
+				//		SQL(<2008)
+				//		SQL(<=2008)
+				//		SQL(>2008)
+				//		SQL(>=2008)
+				//		SQL(=2008)
+				//		SQL(between 2003 and 2008)
+				//
 				
 				for (int i = 0; i < journalLicenses.size(); i++) {
 					if (journalLicenses.get(i).getNote() != null && !journalLicenses.get(i).getNote().isEmpty()) {

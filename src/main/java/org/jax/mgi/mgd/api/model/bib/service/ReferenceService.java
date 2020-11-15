@@ -771,6 +771,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 						}
 						copyright = copyright.replaceAll("Elsevier\\(\\|\\|\\)", "Elsevier(" + results.get(0).getJnumid() + "||)");					
 					}
+
+					// J Cell Biol
+					// example: J:12031
+					else if (journal.equals("J Cell Biol") && results.get(0).getDoiid() != null) {
+						copyright = copyright.replaceAll("DXDOI\\(\\|\\|\\)", "DXDOI(" + results.get(0).getDoiid() + "||)");
+					}
 					
 					log.info("validateJnumImage/copyright/" + copyright);					
 					results.get(0).setCopyright(copyright);

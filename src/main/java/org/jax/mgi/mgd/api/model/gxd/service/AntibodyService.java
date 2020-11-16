@@ -427,22 +427,22 @@ and a._antibody_key = aa._antibody_key
 					where = where + "\n and sv._organism_key = " + searchDomain.getAntigen().getProbeSource().getOrganismKey();
 					from_antigen = true;
 				}
-				if (searchDomain.getAntigen().getProbeSource().getStrain() != null && ! searchDomain.getAntigen().getProbeSource().getStrain().isEmpty()) {
-					where = where + "\n and sv.strain ilike '" + searchDomain.getAntigen().getProbeSource().getStrain() +  "'";
+				if (searchDomain.getAntigen().getProbeSource().getStrainKey() != null && ! searchDomain.getAntigen().getProbeSource().getStrainKey().isEmpty()) {
+					where = where + "\n and sv._strain_key = " + searchDomain.getAntigen().getProbeSource().getStrainKey();
 					from_antigen = true;
 				}
-				if (searchDomain.getAntigen().getProbeSource().getTissue() != null && ! searchDomain.getAntigen().getProbeSource().getTissue().isEmpty()) {
-					where = where + "\n and sv.tissue ilike '" + searchDomain.getAntigen().getProbeSource().getTissue() + "'";
+				if (searchDomain.getAntigen().getProbeSource().getTissueKey() != null && ! searchDomain.getAntigen().getProbeSource().getTissueKey().isEmpty()) {
+					where = where + "\n and sv._tissue_key = " + searchDomain.getAntigen().getProbeSource().getTissueKey();
 					from_antigen = true;
 				}
 				if (searchDomain.getAntigen().getProbeSource().getDescription() != null && ! searchDomain.getAntigen().getProbeSource().getDescription().isEmpty()) {
-					where = where + "\n and sv.description ilike '" + searchDomain.getAntigen().getProbeSource().getDescription() + "'";
+					where = where + "\n and sv.description = '" + searchDomain.getAntigen().getProbeSource().getDescription() + "'";
 					from_antigen = true;
 				}
 				// cell line key is actually a VOC_Term._term_key
-				log.info("antigen celline : " + searchDomain.getAntigen().getProbeSource().getCellLine());
-				if (searchDomain.getAntigen().getProbeSource().getCellLine() != null && ! searchDomain.getAntigen().getProbeSource().getCellLine().isEmpty()) {
-					where = where + "\n and sv.cellline ilike '" + searchDomain.getAntigen().getProbeSource().getCellLine() + "'";
+				log.info("antigen celline key : " + searchDomain.getAntigen().getProbeSource().getCellLineKey());
+				if (searchDomain.getAntigen().getProbeSource().getCellLineKey() != null && ! searchDomain.getAntigen().getProbeSource().getCellLineKey().isEmpty()) {
+					where = where + "\n and sv._cellline_key = " + searchDomain.getAntigen().getProbeSource().getCellLineKey();
 					from_antigen = true;
 				}
 				if (searchDomain.getAntigen().getProbeSource().getGenderKey() != null && ! searchDomain.getAntigen().getProbeSource().getGenderKey().isEmpty()) {
@@ -578,7 +578,7 @@ and a._antibody_key = aa._antibody_key
 			where = where + "\nand a._antibody_key = aref._antibody_key";
 		}
 		if (from_antigen == true) {
-			from = from + ", gxd_antigen_view av, prb_source_view sv";
+			from = from + ", gxd_antigen_view av, prb_source sv";
 			where = where + "\nand a._antigen_key = av._antigen_key";
 			where = where + "\nand av._source_key = sv._source_key";
 		}

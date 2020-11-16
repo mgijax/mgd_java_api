@@ -1,3 +1,11 @@
+TAG: mgd_java_api-6-0-16-21
+DATE: 11/16/2020
+STAFF: sc
+CHANGES: TR13424 antibody module: source searching broken
+AntibodyService - validation on strain, tissue and cell line
+so the api has access to the keys to avoid using prb_source_view
+which is causing issues on production
+
 TAG: mgd_java_api-6-0-16-20
 DATE: 11/03/2020
 STAFF: lec

@@ -24,7 +24,7 @@ public class SlimReferenceTranslator extends BaseEntityDomainTranslator<Referenc
 		domain.setJnum(String.valueOf(entity.getReferenceCitationCache().getNumericPart()));	
 		domain.setShort_citation(entity.getReferenceCitationCache().getShort_citation());
 		domain.setJournal(entity.getJournal());
-		//domain.setYear(String.valueOf(entity.getYear()));
+		domain.setYear(String.valueOf(entity.getYear()));
 
 		// first mgi accession id only
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {

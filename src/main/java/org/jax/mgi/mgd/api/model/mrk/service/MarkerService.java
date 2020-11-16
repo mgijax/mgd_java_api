@@ -102,7 +102,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		entity.setSymbol(domain.getSymbol());
 		entity.setName(domain.getName());
-		entity.setChromosome(domain.getChromosome());		
+		entity.setChromosome(domain.getChromosome().toUpperCase());		
 		entity.setOrganism(organismDAO.get(Integer.valueOf(domain.getOrganismKey())));
 
 		// default cmOffset
@@ -194,7 +194,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		// note:  entity.setOrganism() is ignored on purpose
 
-		entity.setChromosome(domain.getChromosome());			
+		entity.setChromosome(domain.getChromosome().toUpperCase());			
 		if (domain.getChromosome().equals("UN")) {
 			entity.setCmOffset(-999.0);
 		}			

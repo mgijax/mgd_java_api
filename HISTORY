@@ -1,3 +1,10 @@
+TAG: mgd_java_api-6-0-16-22
+DATE: 11/16/2020
+STAFF: sc
+CHANGES: TR13431 Marker missing from location cache 
+- chromosomes need to be converted to upper case before
+     storing in the database.
+
 TAG: mgd_java_api-6-0-16-21
 DATE: 11/16/2020
 STAFF: sc

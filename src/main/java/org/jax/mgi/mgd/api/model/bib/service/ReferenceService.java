@@ -775,7 +775,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					// J Cell Biol
 					// J Gen Physiol
 					// J Expt Med
-					// example: J:12031
+					// example: J:3145, J:2418, J:82858
 					else if (results.get(0).getDoiid() != null) {
 						copyright = copyright.replaceAll("DXDOI\\(\\|\\|\\)", "DXDOI(" + results.get(0).getDoiid() + "||)");
 					}

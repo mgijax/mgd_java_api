@@ -773,8 +773,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					}
 
 					// J Cell Biol
+					// J Gen Physiol
+					// J Expt Med
 					// example: J:12031
-					else if (journal.equals("J Cell Biol") && results.get(0).getDoiid() != null) {
+					else if (results.get(0).getDoiid() != null) {
 						copyright = copyright.replaceAll("DXDOI\\(\\|\\|\\)", "DXDOI(" + results.get(0).getDoiid() + "||)");
 					}
 					

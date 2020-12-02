@@ -19,7 +19,7 @@ import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeStrainTranslator;
 import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeStrainTranslator;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
-import org.jax.mgi.mgd.api.model.voc.domain.DenormAnnotationDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -189,7 +189,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		}	
 
 		if (searchDomain.getAttributes() != null) {		
-			DenormAnnotationDomain annotDomain = searchDomain.getAttributes().get(0);		
+			AnnotationDomain annotDomain = searchDomain.getAttributes().get(0);		
 			value = annotDomain.getTermKey();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand va1._term_key = " + value;
@@ -198,7 +198,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		}
 
 		if (searchDomain.getNeedsReview() != null) {		
-			DenormAnnotationDomain annotDomain = searchDomain.getNeedsReview().get(0);		
+			AnnotationDomain annotDomain = searchDomain.getNeedsReview().get(0);		
 			value = annotDomain.getTermKey();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand va2._term_key = " + value;

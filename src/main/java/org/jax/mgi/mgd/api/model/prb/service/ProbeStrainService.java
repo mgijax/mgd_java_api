@@ -298,7 +298,11 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 					+ "\nand racc._mgitype_key = 3"
 					+ "\nand rracc._accession_key = racc._accession_key";
 		}
-	
+		if (from_attribute == true) {
+			from = from + ", voc_annot va1";
+			where = where + "\nand va1._annottype_key = " + searchDomain.getAttributes().get(0).getAnnotTypeKey();
+			//executeQuery = true;
+		}	
 //		if (from_generalNote == true) {
 //			from = from + ", prb_notes note1";
 //			where = where + "\nand p._probe_key = note1._probe_key";

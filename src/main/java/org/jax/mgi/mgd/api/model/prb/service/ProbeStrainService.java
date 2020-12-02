@@ -164,7 +164,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		}
 
 		if (searchDomain.getIsPrivate() != null && !searchDomain.getIsPrivate().isEmpty()) {
-			where = where + "\nand p.isPrivate = " + searchDomain.getIsPrivate();
+			where = where + "\nand p.private = " + searchDomain.getIsPrivate();
 		}
 
 		if (searchDomain.getStandard() != null && !searchDomain.getStandard().isEmpty()) {

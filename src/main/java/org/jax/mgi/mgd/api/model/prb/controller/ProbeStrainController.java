@@ -13,7 +13,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeStrainDomain;
 import org.jax.mgi.mgd.api.model.prb.service.ProbeStrainService;
@@ -64,6 +63,22 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 		return probeStrainService.delete(key, user);
 	}
 
+	@POST
+	@ApiOperation(value = "Search/returns slim probe strain domain")
+	@Path("/search")
+	public List<SlimProbeStrainDomain> search(ProbeStrainDomain searchDomain) {
+	
+		List<SlimProbeStrainDomain> results = new ArrayList<SlimProbeStrainDomain>();
+
+		try {
+			results = probeStrainService.search(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 	@POST
 	@ApiOperation(value = "Validate Strain")
 	@Path("/validateStrain")

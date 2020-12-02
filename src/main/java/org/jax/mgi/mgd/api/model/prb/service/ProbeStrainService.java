@@ -172,7 +172,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		}
 		
 		if (searchDomain.getGeneticBackground() != null && !searchDomain.getGeneticBackground().isEmpty()) {
-			where = where + "\nand p.getGeneticBackground = " + searchDomain.getGeneticBackground();
+			where = where + "\nand p.geneticBackground = " + searchDomain.getGeneticBackground();
 		}
 		
 		// accession id 

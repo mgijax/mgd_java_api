@@ -101,6 +101,27 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
         return results;
     }
 
+	@Transactional	
+	public SearchResults<ProbeStrainDomain> getObjectCount() {
+		// return the object count from the database
+		
+		SearchResults<ProbeStrainDomain> results = new SearchResults<ProbeStrainDomain>();
+		String cmd = "select count(*) as objectCount from prb_strain";
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getInt("objectCount");
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;		
+	}
+	
 	@Transactional
 	public List<SlimProbeStrainDomain> validateStrain(SlimProbeStrainDomain searchDomain) {
 		// validate the Strain by strain symbol

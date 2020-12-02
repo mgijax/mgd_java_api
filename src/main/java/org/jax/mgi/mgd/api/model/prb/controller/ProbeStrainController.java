@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeStrainDomain;
 import org.jax.mgi.mgd.api.model.prb.service.ProbeStrainService;
@@ -51,6 +52,13 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 		return probeStrainService.get(key);
 	}
 
+	@GET
+	@ApiOperation(value = "Get the object count from prb_strain table")
+	@Path("/getObjectCount")
+	public SearchResults<ProbeStrainDomain> getObjectCount() {
+		return probeStrainService.getObjectCount();
+	}
+	
 	@Override
 	public SearchResults<ProbeStrainDomain> delete(Integer key, User user) {
 		return probeStrainService.delete(key, user);

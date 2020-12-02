@@ -19,6 +19,7 @@ import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeStrainTranslator;
 import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeStrainTranslator;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.model.voc.domain.DenormAnnotationDomain;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -139,10 +140,10 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		String value;
 		Boolean from_accession = false;
 		Boolean from_raccession = false;
+		Boolean from_attribute = false;
+		Boolean from_needsreview = false;
 		Boolean from_marker = false;
 		Boolean from_reference = false;
-		Boolean from_generalNote = false;
-		Boolean from_rawsequenceNote = false;
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("p", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -186,7 +187,25 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			}
 			from_accession = true;
 		}	
-				
+
+		if (searchDomain.getAttributes() != null) {		
+			DenormAnnotationDomain annotDomain = searchDomain.getAttributes().get(0);		
+			value = annotDomain.getTermKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand va1._term_key = " + value;
+				from_attribute = true;
+			}
+		}
+
+		if (searchDomain.getNeedsReview() != null) {		
+			DenormAnnotationDomain annotDomain = searchDomain.getNeedsReview().get(0);		
+			value = annotDomain.getTermKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand va2._term_key = " + value;
+				from_needsreview = true;
+			}
+		}
+		
 		// markers
 		if (searchDomain.getMarkers() != null) {
 			
@@ -280,16 +299,16 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 					+ "\nand rracc._accession_key = racc._accession_key";
 		}
 	
-		if (from_generalNote == true) {
-			from = from + ", prb_notes note1";
-			where = where + "\nand p._probe_key = note1._probe_key";
-		}
-		
-		if (from_rawsequenceNote == true) {
-			from = from + ", mgi_note_probe_view note2";
-			where = where + "\nand p._probe_key = note2._object_key";
-			where = where + "\nand note2._notetype_key = 1037";
-		}
+//		if (from_generalNote == true) {
+//			from = from + ", prb_notes note1";
+//			where = where + "\nand p._probe_key = note1._probe_key";
+//		}
+//		
+//		if (from_rawsequenceNote == true) {
+//			from = from + ", mgi_note_probe_view note2";
+//			where = where + "\nand p._probe_key = note2._object_key";
+//			where = where + "\nand note2._notetype_key = 1037";
+//		}
 		
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;

@@ -7,7 +7,7 @@ import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
-import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.DenormAnnotationDomain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -37,8 +37,8 @@ public class ProbeStrainDomain extends BaseDomain {
 	private NoteDomain nomenclatureNote;
 	private NoteDomain mutantCellLineNote;
 	private List<AccessionDomain> otherAccIds;
-	private List<AnnotationDomain> attributes;
-	private List<AnnotationDomain> needsReview;
+	private List<DenormAnnotationDomain> attributes;
+	private List<DenormAnnotationDomain> needsReview;
 	private List<ProbeStrainMarkerDomain> markers;
 	private List<ProbeStrainGenotypeDomain> genotypes;
 	private List<MGISynonymDomain> synonyms;

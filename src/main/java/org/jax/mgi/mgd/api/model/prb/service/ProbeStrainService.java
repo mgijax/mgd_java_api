@@ -281,32 +281,34 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			where = where + "\nand acc._mgitype_key = 3 and p._probe_key = acc._object_key and acc.prefixPart = 'MGI:'";
 		}
 		
-		if (from_marker == true) {
-			from = from + ", prb_marker_view m";
-			where = where + "\nand p._probe_key = m._probe_key";
-		}
-
-		if (from_reference == true) {
-			from = from + ", prb_reference r";
-			where = where + "\nand p._probe_key = r._probe_key";
-		}
-		
-		if (from_raccession == true) {
-			from = from + ", acc_accession racc, acc_accessionreference rracc";
-			where = where + "\nand p._probe_key = racc._object_key"
-					+ "\nand r._refs_key = rracc._refs_key"
-					+ "\nand racc._mgitype_key = 3"
-					+ "\nand rracc._accession_key = racc._accession_key";
-		}
+//		if (from_marker == true) {
+//			from = from + ", prb_marker_view m";
+//			where = where + "\nand p._probe_key = m._probe_key";
+//		}
+//
+//		if (from_reference == true) {
+//			from = from + ", prb_reference r";
+//			where = where + "\nand p._probe_key = r._probe_key";
+//		}
+//		
+//		if (from_raccession == true) {
+//			from = from + ", acc_accession racc, acc_accessionreference rracc";
+//			where = where + "\nand p._probe_key = racc._object_key"
+//					+ "\nand r._refs_key = rracc._refs_key"
+//					+ "\nand racc._mgitype_key = 3"
+//					+ "\nand rracc._accession_key = racc._accession_key";
+//		}
 
 		if (from_attribute == true) {
 			from = from + ", voc_annot va1";
-			where = where + "\nand va1._annottype_key = " + searchDomain.getAttributes().get(0).getAnnotTypeKey();
+			where = where + "\nand va1._annottype_key = " + searchDomain.getAttributes().get(0).getAnnotTypeKey()
+					+ "\nand p._strain_key = va1._object_key";
 		}
 
 		if (from_needsreview == true) {
 			from = from + ", voc_annot va2";
-			where = where + "\nand va2._annottype_key = " + searchDomain.getNeedsReview().get(0).getAnnotTypeKey();
+			where = where + "\nand va2._annottype_key = " + searchDomain.getNeedsReview().get(0).getAnnotTypeKey()
+						+ "\nand p._strain_key = va2._object_key";
 		}
 		
 //		if (from_generalNote == true) {

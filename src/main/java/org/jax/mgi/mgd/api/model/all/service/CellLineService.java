@@ -504,7 +504,7 @@ public class CellLineService extends BaseService<CellLineDomain> {
 			}
 			
 			if (searchDomain.getEditAccessionIds().get(0).getAccID() != null && !searchDomain.getEditAccessionIds().get(0).getAccID().isEmpty()) {	
-				if (!searchDomain.getEditAccessionIds().get(0).getAccID().startsWith("MGI:")) {
+				if (searchDomain.getEditAccessionIds().get(0).getAccID().startsWith("MGI:")) {
 					where = where + "\nand acc.numericPart = '" + searchDomain.getEditAccessionIds().get(0).getAccID() + "'";
 				}
 				else {

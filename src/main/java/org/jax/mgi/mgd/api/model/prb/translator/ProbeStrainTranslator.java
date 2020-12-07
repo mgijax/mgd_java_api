@@ -78,9 +78,9 @@ public class ProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeStrai
 		}
 
 		// at most one nomenclatureNote
-		if (entity.getImpcColonyNote() != null && !entity.getImpcColonyNote().isEmpty()) {
-			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getImpcColonyNote());
-			domain.setImpcColonyNote(note.iterator().next());
+		if (entity.getNomenclatureNote() != null && !entity.getNomenclatureNote().isEmpty()) {
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getNomenclatureNote());
+			domain.setNomenclatureNote(note.iterator().next());
 		}
 
 		// at most one mutantCellLineNote
@@ -104,32 +104,32 @@ public class ProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeStrai
 		}
 		
 		// markers
-		if (entity.getMarkers() != null && !entity.getMarkers().isEmpty()) {
-			Iterable<ProbeStrainMarkerDomain> t = markerTranslator.translateEntities(entity.getMarkers());
-			domain.setMarkers(IteratorUtils.toList(t.iterator()));
-			domain.getMarkers().sort(Comparator.comparing(ProbeStrainMarkerDomain::getQualifierTerm));
-		}
-
-		// genotypes
-		if (entity.getGenotypes() != null && !entity.getGenotypes().isEmpty()) {
-			Iterable<ProbeStrainGenotypeDomain> t = genotypeTranslator.translateEntities(entity.getGenotypes());
-			domain.setGenotypes(IteratorUtils.toList(t.iterator()));
-			domain.getGenotypes().sort(Comparator.comparing(ProbeStrainGenotypeDomain::getQualifierTerm));
-		}
-
-		// synonyms
-		if (entity.getSynonyms() != null && !entity.getSynonyms().isEmpty()) {
-			Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getSynonyms());
-			domain.setSynonyms(IteratorUtils.toList(i.iterator()));
-			domain.getSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
-		}
-
-		// references
-		if (entity.getRefAssocs() != null && !entity.getRefAssocs().isEmpty()) {
-			Iterable<MGIReferenceAssocDomain> i = refTranslator.translateEntities(entity.getRefAssocs());
-			domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
-			domain.getRefAssocs().sort(Comparator.comparing(MGIReferenceAssocDomain::getRefAssocType).thenComparingInt(MGIReferenceAssocDomain::getJnum));
-		}
+//		if (entity.getMarkers() != null && !entity.getMarkers().isEmpty()) {
+//			Iterable<ProbeStrainMarkerDomain> t = markerTranslator.translateEntities(entity.getMarkers());
+//			domain.setMarkers(IteratorUtils.toList(t.iterator()));
+//			domain.getMarkers().sort(Comparator.comparing(ProbeStrainMarkerDomain::getQualifierTerm));
+//		}
+//
+//		// genotypes
+//		if (entity.getGenotypes() != null && !entity.getGenotypes().isEmpty()) {
+//			Iterable<ProbeStrainGenotypeDomain> t = genotypeTranslator.translateEntities(entity.getGenotypes());
+//			domain.setGenotypes(IteratorUtils.toList(t.iterator()));
+//			domain.getGenotypes().sort(Comparator.comparing(ProbeStrainGenotypeDomain::getQualifierTerm));
+//		}
+//
+//		// synonyms
+//		if (entity.getSynonyms() != null && !entity.getSynonyms().isEmpty()) {
+//			Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getSynonyms());
+//			domain.setSynonyms(IteratorUtils.toList(i.iterator()));
+//			domain.getSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
+//		}
+//
+//		// references
+//		if (entity.getRefAssocs() != null && !entity.getRefAssocs().isEmpty()) {
+//			Iterable<MGIReferenceAssocDomain> i = refTranslator.translateEntities(entity.getRefAssocs());
+//			domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
+//			domain.getRefAssocs().sort(Comparator.comparing(MGIReferenceAssocDomain::getRefAssocType).thenComparingInt(MGIReferenceAssocDomain::getJnum));
+//		}
 		
 		return domain;
 	}

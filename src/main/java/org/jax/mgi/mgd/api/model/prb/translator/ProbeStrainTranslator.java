@@ -104,12 +104,12 @@ public class ProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeStrai
 		}
 		
 		// markers
-//		if (entity.getMarkers() != null && !entity.getMarkers().isEmpty()) {
-//			Iterable<ProbeStrainMarkerDomain> t = markerTranslator.translateEntities(entity.getMarkers());
-//			domain.setMarkers(IteratorUtils.toList(t.iterator()));
-//			domain.getMarkers().sort(Comparator.comparing(ProbeStrainMarkerDomain::getQualifierTerm));
-//		}
-//
+		if (entity.getMarkers() != null && !entity.getMarkers().isEmpty()) {
+			Iterable<ProbeStrainMarkerDomain> t = markerTranslator.translateEntities(entity.getMarkers());
+			domain.setMarkers(IteratorUtils.toList(t.iterator()));
+			domain.getMarkers().sort(Comparator.comparing(ProbeStrainMarkerDomain::getQualifierTerm));
+		}
+
 //		// genotypes
 //		if (entity.getGenotypes() != null && !entity.getGenotypes().isEmpty()) {
 //			Iterable<ProbeStrainGenotypeDomain> t = genotypeTranslator.translateEntities(entity.getGenotypes());

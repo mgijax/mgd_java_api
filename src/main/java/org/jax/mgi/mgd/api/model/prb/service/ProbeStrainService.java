@@ -208,30 +208,40 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		
 		// markers
 		if (searchDomain.getMarkers() != null) {
-			
-			if (searchDomain.getMarkers().get(0).getMarkerKey() != null && !searchDomain.getMarkers().get(0).getMarkerKey().isEmpty()) {
-				where = where + "\nand m._marker_key = " + searchDomain.getMarkers().get(0).getMarkerKey();
+
+			value = searchDomain.getMarkers().get(0).getMarkerKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand m._marker_key = " + value;				
+				from_marker = true;
+			}
+
+			value = searchDomain.getMarkers().get(0).getAlleleKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand m._allele_key = " + value;				
 				from_marker = true;
 			}
 			
-			else if (searchDomain.getMarkers().get(0).getMarkerSymbol() != null && !searchDomain.getMarkers().get(0).getMarkerSymbol().isEmpty()) {
-				where = where + "\nand m.symbol ilike '" + searchDomain.getMarkers().get(0).getMarkerSymbol() + "'";
+			value = searchDomain.getMarkers().get(0).getChromosome();
+			if (value != null && !value.isEmpty()) {
+				value = "'" + value + "'";
+				where = where + "\nand m.chromosome ilike " + value;
+				from_marker = true;
+			}	
+			
+			value = searchDomain.getMarkers().get(0).getMarkerSymbol();
+			if (value != null && !value.isEmpty() && value.contains("%")) {
+				value = "'" + value + "'";
+				where = where + "\nand m.symbol ilike " + value;
+				from_marker = true;
+			}
+	
+			value = searchDomain.getMarkers().get(0).getAlleleSymbol();
+			if (value != null && !value.isEmpty() && value.contains("%")) {
+				value = "'" + value + "'";
+				where = where + "\nand m.alleleSymbol ilike " + value;
 				from_marker = true;
 			}
 			
-			String markercmResults[] = DateSQLQuery.queryByCreationModification("m", 
-					searchDomain.getMarkers().get(0).getCreatedBy(), 
-					searchDomain.getMarkers().get(0).getModifiedBy(), 
-					searchDomain.getMarkers().get(0).getCreation_date(), 
-					searchDomain.getMarkers().get(0).getModification_date());
-		
-			if (markercmResults.length > 0) {
-				if (markercmResults[0].length() > 0 || markercmResults[1].length() > 0) {
-					from = from + markercmResults[0];
-					where = where + markercmResults[1];
-					from_marker = true;
-				}
-			}			
 		}
 
 		// references
@@ -278,24 +288,24 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		
 		if (from_accession == true) {
 			from = from + ", acc_accession acc";
-			where = where + "\nand acc._mgitype_key = 3 and p._probe_key = acc._object_key and acc.prefixPart = 'MGI:'";
+			where = where + "\nand acc._mgitype_key = 10 and p._probe_key = acc._object_key and acc.prefixPart = 'MGI:'";
 		}
 		
-//		if (from_marker == true) {
-//			from = from + ", prb_marker_view m";
-//			where = where + "\nand p._probe_key = m._probe_key";
-//		}
-//
+		if (from_marker == true) {
+			from = from + ", prb_strain_marker_view m";
+			where = where + "\nand p._strain_key = m._strain_key";
+		}
+
 //		if (from_reference == true) {
 //			from = from + ", prb_reference r";
-//			where = where + "\nand p._probe_key = r._probe_key";
+//			where = where + "\nand p._strain_key = r._strain_key";
 //		}
 //		
 //		if (from_raccession == true) {
 //			from = from + ", acc_accession racc, acc_accessionreference rracc";
 //			where = where + "\nand p._probe_key = racc._object_key"
 //					+ "\nand r._refs_key = rracc._refs_key"
-//					+ "\nand racc._mgitype_key = 3"
+//					+ "\nand racc._mgitype_key = 10"
 //					+ "\nand rracc._accession_key = racc._accession_key";
 //		}
 
@@ -311,10 +321,6 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 						+ "\nand p._strain_key = va2._object_key";
 		}
 		
-//		if (from_generalNote == true) {
-//			from = from + ", prb_notes note1";
-//			where = where + "\nand p._probe_key = note1._probe_key";
-//		}
 //		
 //		if (from_rawsequenceNote == true) {
 //			from = from + ", mgi_note_probe_view note2";

@@ -272,11 +272,6 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 //			}
 //		}
 
-//		if (searchDomain.getGeneralNote() != null && !searchDomain.getGeneralNote().getNote().isEmpty()) {
-//			value = searchDomain.getGeneralNote().getNote().replace("'",  "''");
-//			where = where + "\nand note1.note ilike '" + value + "'" ;
-//			from_generalNote = true;
-//		}
 //		
 //		if (searchDomain.getRawsequenceNote() != null && !searchDomain.getRawsequenceNote().getNoteChunk().isEmpty()) {
 //			value = searchDomain.getRawsequenceNote().getNoteChunk().replace("'",  "''");

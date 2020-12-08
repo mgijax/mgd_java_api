@@ -110,6 +110,13 @@ public class ProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeStrai
 			domain.getMarkers().sort(Comparator.comparing(ProbeStrainMarkerDomain::getQualifierTerm));
 		}
 
+		// genotypes
+		if (entity.getGenotypes() != null && !entity.getGenotypes().isEmpty()) {
+			Iterable<ProbeStrainGenotypeDomain> t = genotypeTranslator.translateEntities(entity.getGenotypes());
+			domain.setGenotypes(IteratorUtils.toList(t.iterator()));
+			domain.getGenotypes().sort(Comparator.comparing(ProbeStrainGenotypeDomain::getQualifierTerm));
+		}
+	
 		// synonyms
 		if (entity.getSynonyms() != null && !entity.getSynonyms().isEmpty()) {
 			Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getSynonyms());
@@ -123,14 +130,6 @@ public class ProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeStrai
 //			domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
 //			domain.getRefAssocs().sort(Comparator.comparing(MGIReferenceAssocDomain::getRefAssocType).thenComparingInt(MGIReferenceAssocDomain::getJnum));
 //		}
-
-//		// genotypes
-//		if (entity.getGenotypes() != null && !entity.getGenotypes().isEmpty()) {
-//			Iterable<ProbeStrainGenotypeDomain> t = genotypeTranslator.translateEntities(entity.getGenotypes());
-//			domain.setGenotypes(IteratorUtils.toList(t.iterator()));
-//			domain.getGenotypes().sort(Comparator.comparing(ProbeStrainGenotypeDomain::getQualifierTerm));
-//		}
-//
 		
 		return domain;
 	}

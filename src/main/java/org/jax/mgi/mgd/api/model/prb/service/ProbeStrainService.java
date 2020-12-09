@@ -143,6 +143,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		Boolean from_attribute = false;
 		Boolean from_needsreview = false;
 		Boolean from_marker = false;
+		Boolean from_genotype = false;
 		Boolean from_reference = false;
 		
 		// if parameter exists, then add to where-clause
@@ -209,6 +210,12 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		// markers
 		if (searchDomain.getMarkers() != null) {
 
+			value = searchDomain.getMarkers().get(0).getQualifierKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand m._qualifier_key = " + value;				
+				from_marker = true;
+			}
+			
 			value = searchDomain.getMarkers().get(0).getMarkerKey();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand m._marker_key = " + value;				
@@ -244,6 +251,30 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			
 		}
 
+		// genotypes
+		if (searchDomain.getGenotypes() != null) {
+
+			value = searchDomain.getGenotypes().get(0).getQualifierKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand g._qualifier_key = " + value;				
+				from_marker = true;
+			}
+			
+			value = searchDomain.getGenotypes().get(0).getGenotypeKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand g._genotype_key = " + value;				
+				from_genotype = true;
+			}
+
+			value = searchDomain.getGenotypes().get(0).getGenotypeDisplay();
+			if (value != null && !value.isEmpty() && value.contains("%")) {
+				value = "'" + value + "'";
+				where = where + "\nand g.description ilike " + value;
+				from_marker = true;
+			}
+			
+		}
+		
 		// references
 //		if (searchDomain.getReferences() != null) {			
 //			
@@ -290,7 +321,12 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			from = from + ", prb_strain_marker_view m";
 			where = where + "\nand p._strain_key = m._strain_key";
 		}
-
+		
+		if (from_genotype == true) {
+			from = from + ", prb_strain_genotype_view g";
+			where = where + "\nand p._strain_key = g._strain_key";
+		}
+		
 //		if (from_reference == true) {
 //			from = from + ", prb_reference r";
 //			where = where + "\nand p._strain_key = r._strain_key";

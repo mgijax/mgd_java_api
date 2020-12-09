@@ -277,9 +277,9 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			if (gcmResults.length > 0) {
 				from = from + gcmResults[0];
 				where = where + gcmResults[1];
-				log.info("gcmResults[0]:" + gcmResults[0]);
-				log.info("gcmResults[1]:" + gcmResults[1]);				
-				from_genotype = true;
+				if (!gcmResults[0].isEmpty() || !gcmResults[1].isEmpty()) {			
+					from_genotype = true;
+				}
 			}			
 		}
 		

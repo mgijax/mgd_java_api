@@ -257,7 +257,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			value = searchDomain.getGenotypes().get(0).getQualifierKey();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand g._qualifier_key = " + value;				
-				from_marker = true;
+				from_genotype = true;
 			}
 			
 			value = searchDomain.getGenotypes().get(0).getGenotypeKey();
@@ -270,9 +270,15 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			if (value != null && !value.isEmpty() && value.contains("%")) {
 				value = "'" + value + "'";
 				where = where + "\nand g.description ilike " + value;
-				from_marker = true;
+				from_genotype = true;
 			}
 			
+			String gcmResults[] = DateSQLQuery.queryByCreationModification("g", searchDomain.getGenotypes().get(0).getCreatedBy(), searchDomain.getGenotypes().get(0).getModifiedBy(), searchDomain.getGenotypes().get(0).getCreation_date(), searchDomain.getGenotypes().get(0).getModification_date());
+			if (gcmResults.length > 0) {
+				from = from + gcmResults[0];
+				where = where + gcmResults[1];
+				from_genotype = true;
+			}			
 		}
 		
 		// references

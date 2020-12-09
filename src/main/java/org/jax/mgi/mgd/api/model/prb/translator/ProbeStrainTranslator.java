@@ -124,12 +124,12 @@ public class ProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeStrai
 			domain.getSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
 		}
 
-//		// references
-//		if (entity.getRefAssocs() != null && !entity.getRefAssocs().isEmpty()) {
-//			Iterable<MGIReferenceAssocDomain> i = refTranslator.translateEntities(entity.getRefAssocs());
-//			domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
-//			domain.getRefAssocs().sort(Comparator.comparing(MGIReferenceAssocDomain::getRefAssocType).thenComparingInt(MGIReferenceAssocDomain::getJnum));
-//		}
+		// references
+		if (entity.getRefAssocs() != null && !entity.getRefAssocs().isEmpty()) {
+			Iterable<MGIReferenceAssocDomain> i = refTranslator.translateEntities(entity.getRefAssocs());
+			domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
+			domain.getRefAssocs().sort(Comparator.comparing(MGIReferenceAssocDomain::getRefAssocType).thenComparingInt(MGIReferenceAssocDomain::getJnum));
+		}
 		
 		return domain;
 	}

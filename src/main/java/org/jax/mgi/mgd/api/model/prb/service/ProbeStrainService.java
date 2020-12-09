@@ -284,32 +284,29 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		}
 		
 		// references
-//		if (searchDomain.getReferences() != null) {			
-//			
-//			if (searchDomain.getReferences().get(0).getRefsKey() != null && !searchDomain.getReferences().get(0).getRefsKey().isEmpty()) {
-//				where = where + "\nand r._refs_key = " + searchDomain.getReferences().get(0).getRefsKey();
-//				from_reference = true;
-//			}
-//
-//			if (searchDomain.getReferences().get(0).getAccessionIds() != null) {
-//				if (searchDomain.getReferences().get(0).getAccessionIds().get(0).getAccID() != null && !searchDomain.getReferences().get(0).getAccessionIds().get(0).getAccID().isEmpty()) {
-//					if (searchDomain.getReferences().get(0).getAccessionIds().get(0).getLogicaldbKey() != null && !searchDomain.getReferences().get(0).getAccessionIds().get(0).getLogicaldbKey().isEmpty()) {
-//						where = where + "\nand racc._logicaldb_key = " + searchDomain.getReferences().get(0).getAccessionIds().get(0).getLogicaldbKey();
-//					}	
-//					where = where + "\nand racc.accID ilike '" + searchDomain.getReferences().get(0).getAccessionIds().get(0).getAccID() + "'";
-//					from_reference = true;
-//					from_raccession = true;			
-//				}				
-//			}
-//			
-//			if (searchDomain.getReferences().get(0).getAliases() != null) {
-//				if (searchDomain.getReferences().get(0).getAliases().get(0).getAlias() != null && !searchDomain.getReferences().get(0).getAliases().get(0).getAlias().isEmpty()) {
-//					where = where + "\nand a.alias ilike '" + searchDomain.getReferences().get(0).getAliases().get(0).getAlias() + "'";
-//					from_reference = true;
-//					from_alias = true;
-//				}				
-//			}
-//		}
+		if (searchDomain.getRefAssocs() != null) {
+			if (searchDomain.getRefAssocs().get(0).getRefsKey() != null && !searchDomain.getRefAssocs().get(0).getRefsKey().isEmpty()) {
+				where = where + "\nand ref._Refs_key = " + searchDomain.getRefAssocs().get(0).getRefsKey();
+				from_reference = true;
+			}
+			if (searchDomain.getRefAssocs().get(0).getShort_citation() != null && !searchDomain.getRefAssocs().get(0).getShort_citation().isEmpty()) {
+				value = searchDomain.getRefAssocs().get(0).getShort_citation().replace("'",  "''");
+				where = where + "\nand ref.short_citation ilike '" + value + "'";
+				from_reference = true;
+			}
+			if (searchDomain.getRefAssocs().get(0).getJnumid() != null && !searchDomain.getRefAssocs().get(0).getJnumid().isEmpty()) {
+				where = where + "\nand ref.jnumid ilike '" + searchDomain.getRefAssocs().get(0).getJnumid() + "'";
+				from_reference = true;				
+			}
+			String rcmResults[] = DateSQLQuery.queryByCreationModification("ref", searchDomain.getRefAssocs().get(0).getCreatedBy(), searchDomain.getRefAssocs().get(0).getModifiedBy(), searchDomain.getRefAssocs().get(0).getCreation_date(), searchDomain.getRefAssocs().get(0).getModification_date());
+			if (rcmResults.length > 0) {
+				from = from + rcmResults[0];
+				where = where + rcmResults[1];
+				if (!rcmResults[0].isEmpty() || !rcmResults[1].isEmpty()) {			
+					from_reference = true;
+				}
+			}			
+		}
 
 //		
 //		if (searchDomain.getRawsequenceNote() != null && !searchDomain.getRawsequenceNote().getNoteChunk().isEmpty()) {
@@ -335,11 +332,11 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			where = where + "\nand p._strain_key = g._strain_key";
 		}
 		
-//		if (from_reference == true) {
-//			from = from + ", prb_reference r";
-//			where = where + "\nand p._strain_key = r._strain_key";
-//		}
-//		
+		if (from_reference == true) {
+			from = from + ", mgi_reference_strain_view ref";
+			where = where + "\nand p._strain_key = ref._object_key";
+		}
+
 //		if (from_raccession == true) {
 //			from = from + ", acc_accession racc, acc_accessionreference rracc";
 //			where = where + "\nand p._probe_key = racc._object_key"

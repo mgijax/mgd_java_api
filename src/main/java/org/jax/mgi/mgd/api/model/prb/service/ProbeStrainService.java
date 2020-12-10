@@ -313,13 +313,13 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		}
 
 		if (searchDomain.getStrainOriginNote() != null && !searchDomain.getStrainOriginNote().getNoteChunk().isEmpty()) {
-			value = searchDomain.getNomenNote().getNoteChunk().replace("'",  "''");
+			value = searchDomain.getStrainOriginNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note1.note ilike '" + value + "'" ;
 			from_strainNote = true;
 		}
 		
 		if (searchDomain.getImpcNote() != null && !searchDomain.getImpcNote().getNoteChunk().isEmpty()) {
-			value = searchDomain.getNomenNote().getNoteChunk().replace("'",  "''");
+			value = searchDomain.getImpcNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note2.note ilike '" + value + "'" ;
 			from_impcNote = true;
 		}
@@ -331,7 +331,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		}
 		
 		if (searchDomain.getMclNote() != null && !searchDomain.getMclNote().getNoteChunk().isEmpty()) {
-			value = searchDomain.getNomenNote().getNoteChunk().replace("'",  "''");
+			value = searchDomain.getMclNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note4.note ilike '" + value + "'" ;
 			from_mclNote = true;
 		}

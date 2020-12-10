@@ -10,10 +10,10 @@ public class StrainDataSetDomain extends BaseDomain {
 	// for returning stored procedure results
 	// see sp/PRB_getStrainReferences
 	
-	private String refsKey;
+	//private String refsKey;
 	private Integer jnum;
-	private String jnumid;
-	private String short_citation;	
+	//private String jnumid;
+	//private String short_citation;	
 	private String dataSet;
 	
 }

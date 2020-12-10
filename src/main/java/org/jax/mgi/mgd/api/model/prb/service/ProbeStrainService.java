@@ -139,13 +139,17 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
 		Boolean from_accession = false;
-		Boolean from_raccession = false;
+		//Boolean from_raccession = false;
 		Boolean from_attribute = false;
 		Boolean from_needsreview = false;
 		Boolean from_marker = false;
 		Boolean from_genotype = false;
 		Boolean from_reference = false;
-		
+		Boolean from_strainNote = false;
+		Boolean from_impcNote = false;
+		Boolean from_nomenNote = false;
+		Boolean from_mclNote = false;
+
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("p", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {
@@ -308,7 +312,30 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			}			
 		}
 
-//		
+		if (searchDomain.getStrainOriginNote() != null && !searchDomain.getStrainOriginNote().getNoteChunk().isEmpty()) {
+			value = searchDomain.getNomenNote().getNoteChunk().replace("'",  "''");
+			where = where + "\nand note1.note ilike '" + value + "'" ;
+			from_strainNote = true;
+		}
+		
+		if (searchDomain.getImpcNote() != null && !searchDomain.getImpcNote().getNoteChunk().isEmpty()) {
+			value = searchDomain.getNomenNote().getNoteChunk().replace("'",  "''");
+			where = where + "\nand note2.note ilike '" + value + "'" ;
+			from_impcNote = true;
+		}
+	
+		if (searchDomain.getNomenNote() != null && !searchDomain.getNomenNote().getNoteChunk().isEmpty()) {
+			value = searchDomain.getNomenNote().getNoteChunk().replace("'",  "''");
+			where = where + "\nand note3.note ilike '" + value + "'" ;
+			from_nomenNote = true;
+		}
+		
+		if (searchDomain.getMclNote() != null && !searchDomain.getMclNote().getNoteChunk().isEmpty()) {
+			value = searchDomain.getNomenNote().getNoteChunk().replace("'",  "''");
+			where = where + "\nand note4.note ilike '" + value + "'" ;
+			from_mclNote = true;
+		}
+			
 //		if (searchDomain.getRawsequenceNote() != null && !searchDomain.getRawsequenceNote().getNoteChunk().isEmpty()) {
 //			value = searchDomain.getRawsequenceNote().getNoteChunk().replace("'",  "''");
 //			where = where + "\nand note2.note ilike '" + value + "'" ;
@@ -337,6 +364,30 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			where = where + "\nand p._strain_key = ref._object_key";
 		}
 
+		if (from_strainNote == true) {
+			from = from + ", mgi_note_strain_view note1";
+			where = where + "\nand p._strain_key = note1._object_key";
+			where = where + "\nand note1._notetype_key = 1011";
+		}
+		
+		if (from_impcNote == true) {
+			from = from + ", mgi_note_strain_view note2";
+			where = where + "\nand p._strain_key = note2._object_key";
+			where = where + "\nand note2._notetype_key = 1012";
+		}
+		
+		if (from_nomenNote == true) {
+			from = from + ", mgi_note_strain_view note3";
+			where = where + "\nand p._strain_key = note3._object_key";
+			where = where + "\nand note3._notetype_key = 1013";
+		}
+		
+		if (from_mclNote == true) {
+			from = from + ", mgi_note_strain_view note4";
+			where = where + "\nand p._strain_key = note4._object_key";
+			where = where + "\nand note4._notetype_key = 1038";
+		}
+		
 //		if (from_raccession == true) {
 //			from = from + ", acc_accession racc, acc_accessionreference rracc";
 //			where = where + "\nand p._probe_key = racc._object_key"

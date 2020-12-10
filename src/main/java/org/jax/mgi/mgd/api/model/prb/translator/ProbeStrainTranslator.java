@@ -71,10 +71,10 @@ public class ProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeStrai
 			domain.setStrainOriginNote(note.iterator().next());
 		}
 
-		// at most one impcColonyNote
-		if (entity.getImpcColonyNote() != null && !entity.getImpcColonyNote().isEmpty()) {
-			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getImpcColonyNote());
-			domain.setImpcColonyNote(note.iterator().next());
+		// at most one impcNote
+		if (entity.getImpcNote() != null && !entity.getImpcNote().isEmpty()) {
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getImpcNote());
+			domain.setImpcNote(note.iterator().next());
 		}
 
 		// at most one nomenclatureNote
@@ -83,10 +83,10 @@ public class ProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeStrai
 			domain.setNomenNote(note.iterator().next());
 		}
 
-		// at most one mutantCellLineNote
-		if (entity.getMutantCellLineNote() != null && !entity.getMutantCellLineNote().isEmpty()) {
-			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getMutantCellLineNote());
-			domain.setMutantCellLineNote(note.iterator().next());
+		// at most one mclNote
+		if (entity.getMclNote() != null && !entity.getMclNote().isEmpty()) {
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getMclNote());
+			domain.setMclNote(note.iterator().next());
 		}
 
 		// strain attributes

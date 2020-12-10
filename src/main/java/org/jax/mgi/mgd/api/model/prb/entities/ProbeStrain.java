@@ -125,7 +125,7 @@ public class ProbeStrain extends BaseEntity {
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 10 and `_notetype_key` = 1012")
-	private List<Note> impcColonyNote;
+	private List<Note> impcNote;
 	
 	// Nomenclature
 	@OneToMany()
@@ -137,6 +137,6 @@ public class ProbeStrain extends BaseEntity {
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 10 and `_notetype_key` = 1038")
-	private List<Note> mutantCellLineNote;
+	private List<Note> mclNote;
 
 }

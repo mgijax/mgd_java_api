@@ -33,9 +33,9 @@ public class ProbeStrainDomain extends BaseDomain {
 	private String accID;
 	
 	private NoteDomain strainOriginNote;
-	private NoteDomain impcColonyNote;
+	private NoteDomain impcNote;
 	private NoteDomain nomenNote;
-	private NoteDomain mutantCellLineNote;
+	private NoteDomain mclNote;
 	private List<AccessionDomain> otherAccIds;
 	private List<AnnotationDomain> attributes;
 	private List<AnnotationDomain> needsReview;

@@ -78,9 +78,9 @@ public class ProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeStrai
 		}
 
 		// at most one nomenclatureNote
-		if (entity.getNomenclatureNote() != null && !entity.getNomenclatureNote().isEmpty()) {
-			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getNomenclatureNote());
-			domain.setNomenclatureNote(note.iterator().next());
+		if (entity.getNomenNote() != null && !entity.getNomenNote().isEmpty()) {
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getNomenNote());
+			domain.setNomenNote(note.iterator().next());
 		}
 
 		// at most one mutantCellLineNote

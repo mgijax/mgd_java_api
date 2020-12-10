@@ -131,7 +131,7 @@ public class ProbeStrain extends BaseEntity {
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 10 and `_notetype_key` = 1013")
-	private List<Note> nomenclatureNote;
+	private List<Note> nomenNote;
 
 	// Mutant Cell Line of Origin
 	@OneToMany()

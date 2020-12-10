@@ -34,7 +34,7 @@ public class ProbeStrainDomain extends BaseDomain {
 	
 	private NoteDomain strainOriginNote;
 	private NoteDomain impcColonyNote;
-	private NoteDomain nomenclatureNote;
+	private NoteDomain nomenNote;
 	private NoteDomain mutantCellLineNote;
 	private List<AccessionDomain> otherAccIds;
 	private List<AnnotationDomain> attributes;

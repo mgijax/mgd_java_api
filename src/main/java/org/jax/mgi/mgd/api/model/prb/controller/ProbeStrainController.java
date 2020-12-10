@@ -8,6 +8,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -15,6 +16,7 @@ import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeStrainDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.StrainDataSetDomain;
 import org.jax.mgi.mgd.api.model.prb.service.ProbeStrainService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -127,6 +129,13 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 		
 		//log.info(results);
 		return results;
+	}
+
+	@GET
+	@ApiOperation(value = "Get strain data sets by strain key")
+	@Path("/getDataSets/{key}")
+	public List<StrainDataSetDomain> getDataSet(@PathParam("key") Integer key) {
+		return probeStrainService.getDataSets(key);
 	}
 	
 }

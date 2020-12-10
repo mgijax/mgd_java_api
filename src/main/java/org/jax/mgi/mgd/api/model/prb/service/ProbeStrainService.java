@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.prb.service;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeStrainDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.StrainDataSetDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeStrainTranslator;
 import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeStrainTranslator;
@@ -550,5 +552,52 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		return new SearchResults<String>(results);
 	}	
 	
+	// For Data Sets
+	
+	@Transactional	
+	public List<StrainDataSetDomain> getDataSets(Integer key) {
+		// search data sets by strain key 
+		// return StrainDataSetDomain
+		
+		List<StrainDataSetDomain> results = new ArrayList<StrainDataSetDomain>();
+
+		String cmd = "select distinct * from PRB_getStrainReferences(" + key + ")";
+
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				StrainDataSetDomain domain = new StrainDataSetDomain();
+				//domain.setRefsKey(rs.getString("_refs_key"));
+				//domain.setJnumid(rs.getString("jnumid"));	
+				domain.setJnum(rs.getInt("jnum"));													
+				//domain.setShort_citation(rs.getString("short_citation"));
+				domain.setDataSet(rs.getString("dataSet"));	
+				
+				// puts null/no jnum to bottom of sort
+				if (rs.getInt("jnum") == 0) {
+					domain.setJnum(Integer.valueOf(999999999));
+				}
+				else {
+					domain.setJnum(rs.getInt("jnum"));					
+				}
+				
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		//  order by jnum, data set, short citation
+		Comparator<StrainDataSetDomain> compareByJnum = Comparator.comparingInt(StrainDataSetDomain::getJnum);	
+		Comparator<StrainDataSetDomain> compareByDataSet = Comparator.comparing(StrainDataSetDomain::getDataSet);	
+		Comparator<StrainDataSetDomain> compareAll = compareByJnum.thenComparing(compareByDataSet);
+		results.sort(compareAll);
+		
+		return(results);
+	}	
 	
 }

@@ -570,7 +570,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				StrainDataSetDomain domain = new StrainDataSetDomain();
-				domain.setAccID(rs.getString("accID"));													
+				domain.setAccid(rs.getString("accid"));													
 				domain.setDataSet(rs.getString("dataSet"));					
 				results.add(domain);
 			}
@@ -581,7 +581,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		}
 		
 		Comparator<StrainDataSetDomain> compareByDataSet = Comparator.comparing(StrainDataSetDomain::getDataSet);	
-		Comparator<StrainDataSetDomain> compareByAccID = Comparator.comparing(StrainDataSetDomain::getAccID);	
+		Comparator<StrainDataSetDomain> compareByAccID = Comparator.comparing(StrainDataSetDomain::getAccid);	
 		Comparator<StrainDataSetDomain> compareAll = compareByDataSet.thenComparing(compareByAccID);
 		results.sort(compareAll);
 		

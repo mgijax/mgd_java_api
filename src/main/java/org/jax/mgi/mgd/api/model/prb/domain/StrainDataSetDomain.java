@@ -11,8 +11,9 @@ public class StrainDataSetDomain extends BaseDomain {
 	// see sp/PRB_getStrainReferences
 	// see ap/PRB_getStrainDataSets
 	
+	private String refsKey;
 	private Integer jnum;
-	private String accID;
+	private String jnumid;
+	private String accid;
 	private String dataSet;
-	
 }

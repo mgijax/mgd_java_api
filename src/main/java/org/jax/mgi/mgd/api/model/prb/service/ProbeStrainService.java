@@ -605,7 +605,8 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			while (rs.next()) {
 				StrainDataSetDomain domain = new StrainDataSetDomain();
 				domain.setJnum(rs.getInt("jnum"));													
-				domain.setDataSet(rs.getString("dataSet"));				
+				domain.setDataSet(rs.getString("dataSet"));		
+				domain.setJnumid(rs.getString("jnumid"));																	
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

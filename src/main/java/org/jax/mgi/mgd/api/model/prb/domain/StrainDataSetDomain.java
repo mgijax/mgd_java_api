@@ -9,11 +9,10 @@ import lombok.Setter;
 public class StrainDataSetDomain extends BaseDomain {
 	// for returning stored procedure results
 	// see sp/PRB_getStrainReferences
+	// see ap/PRB_getStrainDataSets
 	
-	//private String refsKey;
 	private Integer jnum;
-	//private String jnumid;
-	//private String short_citation;	
+	private String accID;
 	private String dataSet;
 	
 }

@@ -132,10 +132,17 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "Get strain data sets by strain key")
-	@Path("/getDataSets/{key}")
-	public List<StrainDataSetDomain> getDataSet(@PathParam("key") Integer key) {
-		return probeStrainService.getDataSets(key);
+	@ApiOperation(value = "Get accession data sets by strain key")
+	@Path("/getDataSetsAcc/{key}")
+	public List<StrainDataSetDomain> getDataSetsAcc(@PathParam("key") Integer key) {
+		return probeStrainService.getDataSetsAcc(key);
+	}
+
+	@GET
+	@ApiOperation(value = "Get reference data sets by strain key")
+	@Path("/getDataSetsRef/{key}")
+	public List<StrainDataSetDomain> getDataSetsRef(@PathParam("key") Integer key) {
+		return probeStrainService.getDataSetsRef(key);
 	}
 	
 }

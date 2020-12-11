@@ -14,6 +14,7 @@ public class StrainDataSetDomain extends BaseDomain {
 	private String refsKey;
 	private Integer jnum;
 	private String jnumid;
+	private String short_citation;
 	private String accid;
 	private String dataSet;
 }

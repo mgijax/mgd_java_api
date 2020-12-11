@@ -623,7 +623,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 	}
 
 	@Transactional	
-	public List<SlimProbeStrainDomain> getStrainByRef(Integer key) {
+	public List<SlimProbeStrainDomain> getByRef(Integer key) {
 		// search strains by ref key 
 		// using PRB_getStrainByReference
 		

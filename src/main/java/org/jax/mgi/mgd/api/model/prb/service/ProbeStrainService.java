@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeStrainDomain;
@@ -22,7 +23,6 @@ import org.jax.mgi.mgd.api.model.prb.translator.ProbeStrainTranslator;
 import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeStrainTranslator;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
-import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -37,11 +37,15 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 	private ProbeStrainDAO probeStrainDAO;
 	@Inject
 	private TermDAO termDAO;
+	@Inject
+	private NoteService noteService;
 	
 	private ProbeStrainTranslator translator = new ProbeStrainTranslator();
 	private SlimProbeStrainTranslator slimtranslator = new SlimProbeStrainTranslator();
 	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
+	
+	private String mgiTypeKey = "10";
 	
 	@Transactional
 	public SearchResults<ProbeStrainDomain> create(ProbeStrainDomain domain, User user) {
@@ -75,16 +79,89 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 	}
 
 	@Transactional
-	public SearchResults<ProbeStrainDomain> update(ProbeStrainDomain object, User user) {
+	public SearchResults<ProbeStrainDomain> update(ProbeStrainDomain domain, User user) {
+		// the set of fields in "update" is similar to set of fields in "create"
+		// creation user/date are only set in "create"
+
 		SearchResults<ProbeStrainDomain> results = new SearchResults<ProbeStrainDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		ProbeStrain entity = probeStrainDAO.get(Integer.valueOf(domain.getStrainKey()));
+		Boolean modified = true;
+		
+		log.info("processStrain/update");
+
+		entity.setStrain(domain.getStrain());		
+		entity.setStandard(Integer.valueOf(domain.getStandard()));
+		entity.setIsPrivate(Integer.valueOf(domain.getIsPrivate()));
+		entity.setGeneticBackground(Integer.valueOf(domain.getGeneticBackground()));		
+		entity.setSpecies(termDAO.get(Integer.valueOf(domain.getSpeciesKey())));
+		entity.setStrainType(termDAO.get(Integer.valueOf(domain.getStrainTypeKey())));
+		
+		// process all notes
+		if (noteService.process(domain.getStrain(), domain.getStrainOriginNote(), mgiTypeKey, user)) {
+			modified = true;
+		}
+		if (noteService.process(domain.getStrain(), domain.getImpcNote(), mgiTypeKey, user)) {
+			modified = true;
+		}
+		if (noteService.process(domain.getStrain(), domain.getNomenNote(), mgiTypeKey, user)) {
+			modified = true;
+		}
+		if (noteService.process(domain.getStrain(), domain.getMclNote(), mgiTypeKey, user)) {
+			modified = true;
+		}
+		
+		// strain attributes
+		
+		// strain needs review
+		
+		// marker/allele
+		
+		// synonyms
+		
+		// references
+		
+		// genotypes
+		
+		// process allele reference
+//		log.info("processAllele/referenes");
+//		if (referenceAssocService.process(domain.getStrain(), domain.getRefAssocs(), mgiTypeKey, user)) {
+//			modified = true;
+//		}
+		
+		// process synonyms
+//		log.info("processAllele/synonyms");		
+//		if (synonymService.process(domain.getStrain(), domain.getSynonyms(), mgiTypeKey, user)) {
+//			modified = true;
+//		}
+//		
+//		// process allele attributes/subtypes
+//		log.info("processAllele/attribute/subtype");
+//		if (processSubtype(domain.getStrain(), domain, user)) {
+//			modified = true;
+//		}
+		
+		// finish update
+		if (modified) {
+			entity.setModification_date(new Date());
+			entity.setModifiedBy(user);
+			probeStrainDAO.update(entity);
+			log.info("processStrain/changes processed: " + domain.getStrainKey());
+		}
+		
+		// return entity translated to domain
+		log.info("processStrain/update/returning results");
+		results.setItem(translator.translate(entity));
+		log.info("processStrain/update/returned results succsssful");
 		return results;
 	}
-    
+
 	@Transactional
 	public SearchResults<ProbeStrainDomain> delete(Integer key, User user) {
+		// get the entity object and delete
 		SearchResults<ProbeStrainDomain> results = new SearchResults<ProbeStrainDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		ProbeStrain entity = probeStrainDAO.get(key);
+		results.setItem(translator.translate(probeStrainDAO.get(key)));
+		probeStrainDAO.remove(entity);
 		return results;
 	}
 	

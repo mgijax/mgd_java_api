@@ -585,7 +585,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		Comparator<StrainDataSetDomain> compareAll = compareByDataSet.thenComparing(compareByAccID);
 		results.sort(compareAll);
 		
-		return(results);
+		return results;
 	}	
 
 	@Transactional	
@@ -619,7 +619,34 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		Comparator<StrainDataSetDomain> compareAll = compareByJnum.thenComparing(compareByDataSet);
 		results.sort(compareAll);
 		
-		return(results);
+		return results;
+	}
+
+	@Transactional	
+	public List<SlimProbeStrainDomain> getStrainByRef(Integer key) {
+		// search strains by ref key 
+		// using PRB_getStrainByReference
+		
+		List<SlimProbeStrainDomain> results = new ArrayList<SlimProbeStrainDomain>();
+
+		String cmd = "select distinct * from PRB_getStrainByReference(" + key + ")";
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimProbeStrainDomain domain = new SlimProbeStrainDomain();
+				domain = slimtranslator.translate(probeStrainDAO.get(rs.getInt("_strain_key")));				
+				probeStrainDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
 	}
 	
 }

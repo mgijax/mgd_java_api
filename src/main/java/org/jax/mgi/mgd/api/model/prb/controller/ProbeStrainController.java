@@ -144,5 +144,12 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 	public List<StrainDataSetDomain> getDataSetsRef(@PathParam("key") Integer key) {
 		return probeStrainService.getDataSetsRef(key);
 	}
+
+	@GET
+	@ApiOperation(value = "Get strains by refs key")
+	@Path("/getStrainByRef/{key}")
+	public List<SlimProbeStrainDomain> getStrainByRef(@PathParam("key") Integer key) {
+		return probeStrainService.getStrainByRef(key);
+	}
 	
 }

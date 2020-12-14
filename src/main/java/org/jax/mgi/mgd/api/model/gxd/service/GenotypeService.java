@@ -771,7 +771,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		String cmd = "\nselect g._genotype_key"
 				+ "\nfrom gxd_genotype g, acc_accession a"
 				+ "\nwhere g._genotype_key = a._object_key"
-				+ "\nand a._mgitype_key = 10"
+				+ "\nand a._mgitype_key = 12"
 				+ "\nand a._logicaldb_key = 1"
 				+ "\nand a.preferred = 1"
 				+ "\nand a.prefixPart = 'MGI:'";

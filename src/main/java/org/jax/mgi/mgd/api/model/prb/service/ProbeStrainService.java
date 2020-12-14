@@ -13,16 +13,21 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
+import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeStrainDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.StrainDataSetDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrainGenotype;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrainMarker;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeStrainTranslator;
 import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeStrainTranslator;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
+import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -39,6 +44,16 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 	private TermDAO termDAO;
 	@Inject
 	private NoteService noteService;
+	@Inject
+	private MGISynonymService synonymService;
+	@Inject
+	private MGIReferenceAssocService referenceAssocService;
+	@Inject
+	private AnnotationService annotationService;
+	@Inject
+	private ProbeStrainGenotype genotypeSerivce;
+	@Inject
+	private ProbeStrainMarker markerService;
 	
 	private ProbeStrainTranslator translator = new ProbeStrainTranslator();
 	private SlimProbeStrainTranslator slimtranslator = new SlimProbeStrainTranslator();
@@ -111,34 +126,32 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		}
 		
 		// strain attributes
+		log.info("processStrain/attribute");
+		if (processAttribute(domain.getStrainKey(), domain, user)) {
+			modified = true;
+		}
 		
 		// strain needs review
-		
-		// marker/allele
-		
-		// synonyms
-		
-		// references
-		
-		// genotypes
-		
-		// process allele reference
-//		log.info("processAllele/referenes");
-//		if (referenceAssocService.process(domain.getStrain(), domain.getRefAssocs(), mgiTypeKey, user)) {
-//			modified = true;
-//		}
-		
+		log.info("processStrain/needs review");
+		if (processNeedsReview(domain.getStrainKey(), domain, user)) {
+			modified = true;
+		}
+				
 		// process synonyms
-//		log.info("processAllele/synonyms");		
-//		if (synonymService.process(domain.getStrain(), domain.getSynonyms(), mgiTypeKey, user)) {
-//			modified = true;
-//		}
-//		
-//		// process allele attributes/subtypes
-//		log.info("processAllele/attribute/subtype");
-//		if (processSubtype(domain.getStrain(), domain, user)) {
-//			modified = true;
-//		}
+		log.info("processStrain/synonyms");		
+		if (synonymService.process(domain.getStrain(), domain.getSynonyms(), mgiTypeKey, user)) {
+			modified = true;
+		}
+		
+		// process references
+		log.info("processStrain/referenes");
+		if (referenceAssocService.process(domain.getStrain(), domain.getRefAssocs(), mgiTypeKey, user)) {
+			modified = true;
+		}
+
+		// marker/allele (ProbeStrainMarker)
+		
+		// genotypes (ProbeStrainGenotype)
 		
 		// finish update
 		if (modified) {
@@ -155,6 +168,72 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		return results;
 	}
 
+	@Transactional
+	public Boolean processAttribute(String strainKey, ProbeStrainDomain domain, User user) {
+		// process the attribute/annotation 
+		
+		List<AnnotationDomain> annotDomain = new ArrayList<AnnotationDomain>();
+
+		for (int i = 0; i < domain.getAttributes().size(); i++) {
+
+			if (domain.getAttributes().get(i).getTermKey().isEmpty()) {
+				continue;
+			}
+			
+			AnnotationDomain adomain = new AnnotationDomain();
+
+			adomain.setProcessStatus(domain.getAttributes().get(i).getProcessStatus());
+			adomain.setAnnotKey(domain.getAttributes().get(i).getAnnotKey());						
+			adomain.setAnnotTypeKey(domain.getAttributes().get(i).getAnnotTypeKey());
+			adomain.setObjectKey(strainKey);
+			adomain.setTermKey(domain.getAttributes().get(i).getTermKey());
+			adomain.setQualifierKey(domain.getAttributes().get(i).getQualifierKey());
+			
+			annotDomain.add(adomain);
+		}
+		
+		log.info("processAttribute: " + annotDomain.size());
+		if (annotDomain.size() > 0) {
+			return(annotationService.process(annotDomain, user));
+		}
+		else {
+			return(true);
+		}
+	}
+
+	@Transactional
+	public Boolean processNeedsReview(String strainKey, ProbeStrainDomain domain, User user) {
+		// process the needs review/annotation 
+		
+		List<AnnotationDomain> annotDomain = new ArrayList<AnnotationDomain>();
+
+		for (int i = 0; i < domain.getAttributes().size(); i++) {
+
+			if (domain.getNeedsReview().get(i).getTermKey().isEmpty()) {
+				continue;
+			}
+			
+			AnnotationDomain adomain = new AnnotationDomain();
+
+			adomain.setProcessStatus(domain.getNeedsReview().get(i).getProcessStatus());
+			adomain.setAnnotKey(domain.getNeedsReview().get(i).getAnnotKey());						
+			adomain.setAnnotTypeKey(domain.getNeedsReview().get(i).getAnnotTypeKey());
+			adomain.setObjectKey(strainKey);
+			adomain.setTermKey(domain.getNeedsReview().get(i).getTermKey());
+			adomain.setQualifierKey(domain.getNeedsReview().get(i).getQualifierKey());
+			
+			annotDomain.add(adomain);
+		}
+		
+		log.info("processNeedsReview: " + annotDomain.size());
+		if (annotDomain.size() > 0) {
+			return(annotationService.process(annotDomain, user));
+		}
+		else {
+			return(true);
+		}
+	}
+	
 	@Transactional
 	public SearchResults<ProbeStrainDomain> delete(Integer key, User user) {
 		// get the entity object and delete

@@ -75,7 +75,7 @@ public class ProbeStrainGenotypeService extends BaseService<ProbeStrainGenotypeD
 
 	@Transactional
 	public Boolean process(String parentKey, List<ProbeStrainGenotypeDomain> domain, User user) {
-		// process strain/marker associations (create, delete, update)
+		// process strain/genotype associations (create, delete, update)
 		
 		Boolean modified = false;
 
@@ -108,7 +108,7 @@ public class ProbeStrainGenotypeService extends BaseService<ProbeStrainGenotypeD
 				modified = true;
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-				log.info("processStrainMarker/delete");
+				log.info("processStrainGenotype/delete");
 				if (domain.get(i).getStrainGenotypeKey() != null && !domain.get(i).getStrainGenotypeKey().isEmpty()) {
 					ProbeStrainGenotype entity = strainGenotypeDAO.get(Integer.valueOf(domain.get(i).getStrainGenotypeKey()));
 					strainGenotypeDAO.remove(entity);
@@ -116,7 +116,7 @@ public class ProbeStrainGenotypeService extends BaseService<ProbeStrainGenotypeD
 				}
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-				log.info("processStrainMarker/update");
+				log.info("processStrainGenotype/update");
 				ProbeStrainGenotype entity = strainGenotypeDAO.get(Integer.valueOf(domain.get(i).getStrainGenotypeKey()));	
 				entity.set_strain_key(Integer.valueOf(parentKey));
 				entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));

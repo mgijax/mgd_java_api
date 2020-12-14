@@ -18,6 +18,7 @@ import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainMarkerDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeStrainDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.StrainDataSetDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
@@ -51,9 +52,9 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 	@Inject
 	private AnnotationService annotationService;
 	@Inject
-	private ProbeStrainGenotype genotypeSerivce;
-	@Inject
-	private ProbeStrainMarker markerService;
+	private ProbeStrainMarkerService markerService;
+//	@Inject
+//	private ProbeStrainGenotypeService genotypeService;
 	
 	private ProbeStrainTranslator translator = new ProbeStrainTranslator();
 	private SlimProbeStrainTranslator slimtranslator = new SlimProbeStrainTranslator();
@@ -150,6 +151,10 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		}
 
 		// marker/allele (ProbeStrainMarker)
+		log.info("processStrain/marker/allele");
+		if (markerService.process(domain.getStrainKey(), domain.getMarkers(), user)) {
+			modified = true;
+		}
 		
 		// genotypes (ProbeStrainGenotype)
 		
@@ -303,6 +308,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		Boolean from_marker = false;
 		Boolean from_genotype = false;
 		Boolean from_reference = false;
+		Boolean from_synonym = false;
 		Boolean from_strainNote = false;
 		Boolean from_impcNote = false;
 		Boolean from_nomenNote = false;
@@ -470,6 +476,32 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			}			
 		}
 
+		// synonyms
+		if (searchDomain.getSynonyms() != null) {
+
+			if (searchDomain.getSynonyms().get(0).getSynonymTypeKey() != null && !searchDomain.getSynonyms().get(0).getSynonymTypeKey().isEmpty()) {
+				where = where + "\nand syn._synonymtype_key = " + searchDomain.getSynonyms().get(0).getSynonymTypeKey();
+				from_synonym = true;
+			}			
+			if (searchDomain.getSynonyms().get(0).getSynonym() != null && !searchDomain.getSynonyms().get(0).getSynonym().isEmpty()) {
+				where = where + "\nand syn.synonym ilike '" + searchDomain.getSynonyms().get(0).getSynonym() + "'";
+				from_synonym = true;
+			}
+			if (searchDomain.getSynonyms().get(0).getRefsKey() != null && !searchDomain.getSynonyms().get(0).getRefsKey().isEmpty()) {
+				where = where + "\nand syn._Refs_key = " + searchDomain.getSynonyms().get(0).getRefsKey();
+				from_synonym = true;
+			}
+			if (searchDomain.getSynonyms().get(0).getShort_citation() != null && !searchDomain.getSynonyms().get(0).getShort_citation().isEmpty()) {
+				value = searchDomain.getSynonyms().get(0).getShort_citation().replace("'",  "''");
+				where = where + "\nand syn.short_citation ilike '" + value + "'";
+				from_synonym = true;
+			}
+			if (searchDomain.getSynonyms().get(0).getJnumid() != null && !searchDomain.getSynonyms().get(0).getJnumid().isEmpty()) {
+				where = where + "\nand syn.jnumid ilike '" + searchDomain.getSynonyms().get(0).getJnumid() + "'";
+				from_synonym = true;				
+			}		
+		}
+		
 		if (searchDomain.getStrainOriginNote() != null && !searchDomain.getStrainOriginNote().getNoteChunk().isEmpty()) {
 			value = searchDomain.getStrainOriginNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note1.note ilike '" + value + "'" ;
@@ -493,12 +525,6 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			where = where + "\nand note4.note ilike '" + value + "'" ;
 			from_mclNote = true;
 		}
-			
-//		if (searchDomain.getRawsequenceNote() != null && !searchDomain.getRawsequenceNote().getNoteChunk().isEmpty()) {
-//			value = searchDomain.getRawsequenceNote().getNoteChunk().replace("'",  "''");
-//			where = where + "\nand note2.note ilike '" + value + "'" ;
-//			from_rawsequenceNote = true;
-//		}
 		
 		// building from...
 		
@@ -522,6 +548,11 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			where = where + "\nand p._strain_key = ref._object_key";
 		}
 
+		if (from_synonym == true) {
+			from = from + ", mgi_synonym_strain_view syn";
+			where = where + "\nand p._strain_key = syn._object_key";
+		}
+		
 		if (from_strainNote == true) {
 			from = from + ", mgi_note_strain_view note1";
 			where = where + "\nand p._strain_key = note1._object_key";

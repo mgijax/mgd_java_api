@@ -762,5 +762,45 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 	}	
 	
 	// end Data Sets
+	
+	@Transactional
+	public List<SlimGenotypeDomain> validateGenotype(SlimGenotypeDomain searchDomain) {
+		
+		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
+		
+		String cmd = "\nselect g._genotype_key"
+				+ "\nfrom gxd_genotype g, acc_accession a"
+				+ "\nwhere g._genotype_key = a._object_key"
+				+ "\nand a._mgitype_key = 10"
+				+ "\nand a._logicaldb_key = 1"
+				+ "\nand a.preferred = 1"
+				+ "\nand a.prefixPart = 'MGI:'";
+
+		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) { 
+			String mgiid = searchDomain.getAccID().toUpperCase();
+			if (!mgiid.contains("MGI:")) {
+				mgiid = "MGI:" + mgiid;
+			}
+			cmd = cmd + "\nand lower(a.accID) = '" + mgiid.toLowerCase() + "'";	
+		}
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			
+			while (rs.next()) {
+				SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();
+				slimdomain = slimtranslator.translate(genotypeDAO.get(rs.getInt("_gentype_key")));				
+				genotypeDAO.clear();
+				results.add(slimdomain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 
 }

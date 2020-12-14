@@ -135,5 +135,21 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 	public List<SlimGenotypeDomain> searchDataSet(@PathParam("key") Integer key) {
 		return genotypeService.searchDataSets(key);
 	}
+
+	@POST
+	@ApiOperation(value = "Validate Genotype by accID, returns List of SlimGenotypeDomain")
+	@Path("/validateGenotype")
+	public List<SlimGenotypeDomain> validateAllele(SlimGenotypeDomain searchDomain) {
+	
+		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
+
+		try {
+			results = genotypeService.validateGenotype(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
 }

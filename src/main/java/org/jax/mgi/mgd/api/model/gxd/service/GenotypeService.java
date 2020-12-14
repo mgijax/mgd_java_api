@@ -790,7 +790,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			
 			while (rs.next()) {
 				SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();
-				slimdomain = slimtranslator.translate(genotypeDAO.get(rs.getInt("_gentype_key")));				
+				slimdomain = slimtranslator.translate(genotypeDAO.get(rs.getInt("_genotype_key")));				
 				genotypeDAO.clear();
 				results.add(slimdomain);
 			}

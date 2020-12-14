@@ -8,84 +8,81 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
-import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainMarkerDAO;
-import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainMarkerDomain;
-import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrainMarker;
-import org.jax.mgi.mgd.api.model.prb.translator.ProbeStrainMarkerTranslator;
+import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainGenotypeDAO;
+import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainGenotypeDomain;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrainGenotype;
+import org.jax.mgi.mgd.api.model.prb.translator.ProbeStrainGenotypeTranslator;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
 @RequestScoped
-public class ProbeStrainMarkerService extends BaseService<ProbeStrainMarkerDomain> {
+public class ProbeStrainGenotypeService extends BaseService<ProbeStrainGenotypeDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
 	
 	@Inject
-	private ProbeStrainMarkerDAO strainMarkerDAO;
+	private ProbeStrainGenotypeDAO strainGenotypeDAO;
 	@Inject
-	private MarkerDAO markerDAO;
-	@Inject
-	private AlleleDAO alleleDAO;
+	private GenotypeDAO genotypeDAO;
 	@Inject
 	private TermDAO termDAO;
 	
-	private ProbeStrainMarkerTranslator translator = new ProbeStrainMarkerTranslator();				
+	private ProbeStrainGenotypeTranslator translator = new ProbeStrainGenotypeTranslator();				
 
 	@Transactional
-	public SearchResults<ProbeStrainMarkerDomain> create(ProbeStrainMarkerDomain domain, User user) {
-		SearchResults<ProbeStrainMarkerDomain> results = new SearchResults<ProbeStrainMarkerDomain>();
+	public SearchResults<ProbeStrainGenotypeDomain> create(ProbeStrainGenotypeDomain domain, User user) {
+		SearchResults<ProbeStrainGenotypeDomain> results = new SearchResults<ProbeStrainGenotypeDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
 	}
 
 	@Transactional
-	public SearchResults<ProbeStrainMarkerDomain> update(ProbeStrainMarkerDomain domain, User user) {
-		SearchResults<ProbeStrainMarkerDomain> results = new SearchResults<ProbeStrainMarkerDomain>();
+	public SearchResults<ProbeStrainGenotypeDomain> update(ProbeStrainGenotypeDomain domain, User user) {
+		SearchResults<ProbeStrainGenotypeDomain> results = new SearchResults<ProbeStrainGenotypeDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
 	}
 
 	@Transactional
-	public SearchResults<ProbeStrainMarkerDomain> delete(Integer key, User user) {
-		SearchResults<ProbeStrainMarkerDomain> results = new SearchResults<ProbeStrainMarkerDomain>();
+	public SearchResults<ProbeStrainGenotypeDomain> delete(Integer key, User user) {
+		SearchResults<ProbeStrainGenotypeDomain> results = new SearchResults<ProbeStrainGenotypeDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
 	}
 	
 	@Transactional
-	public ProbeStrainMarkerDomain get(Integer key) {
+	public ProbeStrainGenotypeDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain
-		ProbeStrainMarkerDomain domain = new ProbeStrainMarkerDomain();
-		if (strainMarkerDAO.get(key) != null) {
-			domain = translator.translate(strainMarkerDAO.get(key));
+		ProbeStrainGenotypeDomain domain = new ProbeStrainGenotypeDomain();
+		if (strainGenotypeDAO.get(key) != null) {
+			domain = translator.translate(strainGenotypeDAO.get(key));
 		}
-		strainMarkerDAO.clear();
+		strainGenotypeDAO.clear();
 		return domain;
 	}
 
     @Transactional
-    public SearchResults<ProbeStrainMarkerDomain> getResults(Integer key) {
-		SearchResults<ProbeStrainMarkerDomain> results = new SearchResults<ProbeStrainMarkerDomain>();
-		results.setItem(translator.translate(strainMarkerDAO.get(key)));
-		strainMarkerDAO.clear();
+    public SearchResults<ProbeStrainGenotypeDomain> getResults(Integer key) {
+		SearchResults<ProbeStrainGenotypeDomain> results = new SearchResults<ProbeStrainGenotypeDomain>();
+		results.setItem(translator.translate(strainGenotypeDAO.get(key)));
+		strainGenotypeDAO.clear();
 		return results;
     }
 
 	@Transactional
-	public Boolean process(String parentKey, List<ProbeStrainMarkerDomain> domain, User user) {
+	public Boolean process(String parentKey, List<ProbeStrainGenotypeDomain> domain, User user) {
 		// process strain/marker associations (create, delete, update)
 		
 		Boolean modified = false;
 
-		log.info("processStrainMarker");
+		log.info("processStrainGenotype");
 		
 		if (domain == null || domain.isEmpty()) {
-			log.info("processStrainMarker/nothing to process");
+			log.info("processStrainGenotype/nothing to process");
 			return modified;
 		}
 		
@@ -94,50 +91,46 @@ public class ProbeStrainMarkerService extends BaseService<ProbeStrainMarkerDomai
 		
 		for (int i = 0; i < domain.size(); i++) {
 		
-        	if (domain.get(i).getMarkerKey() == null || domain.get(i).getMarkerKey().isEmpty()) {
+        	if (domain.get(i).getGenotypeKey() == null || domain.get(i).getGenotypeKey().isEmpty()) {
         		return modified;
         	}
         			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {								
-				log.info("processStrainMarker/create");
-				ProbeStrainMarker entity = new ProbeStrainMarker();									
+				log.info("processStrainGenotype/create");
+				ProbeStrainGenotype entity = new ProbeStrainGenotype();									
 				entity.set_strain_key(Integer.valueOf(parentKey));
-				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));
-				entity.setAllele(alleleDAO.get(Integer.valueOf(domain.get(i).getAlleleKey())));
+				entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));
 				entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
 				entity.setCreation_date(new Date());
 				entity.setModification_date(new Date());				
-				strainMarkerDAO.persist(entity);				
-				log.info("processStrainMarker/create/returning results");	
+				strainGenotypeDAO.persist(entity);				
+				log.info("processStrainGenotype/create/returning results");	
 				modified = true;
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processStrainMarker/delete");
-				if (domain.get(i).getStrainMarkerKey() != null && !domain.get(i).getStrainMarkerKey().isEmpty()) {
-					ProbeStrainMarker entity = strainMarkerDAO.get(Integer.valueOf(domain.get(i).getStrainMarkerKey()));
-					strainMarkerDAO.remove(entity);
+				if (domain.get(i).getStrainGenotypeKey() != null && !domain.get(i).getStrainGenotypeKey().isEmpty()) {
+					ProbeStrainGenotype entity = strainGenotypeDAO.get(Integer.valueOf(domain.get(i).getStrainGenotypeKey()));
+					strainGenotypeDAO.remove(entity);
 					modified = true;
 				}
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processStrainMarker/update");
-				ProbeStrainMarker entity = strainMarkerDAO.get(Integer.valueOf(domain.get(i).getStrainMarkerKey()));	
-				entity.setModification_date(new Date());
-				entity.set_strain_key(Integer.valueOf(parentKey));
-				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));
-				entity.setAllele(alleleDAO.get(Integer.valueOf(domain.get(i).getAlleleKey())));
+				ProbeStrainGenotype entity = strainGenotypeDAO.get(Integer.valueOf(domain.get(i).getStrainGenotypeKey()));	
+				entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));
 				entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
 				entity.setModification_date(new Date());								
-				strainMarkerDAO.update(entity);
-				log.info("processStrainMarker/changes processed: " + domain.get(i).getStrainMarkerKey());				
+				strainGenotypeDAO.update(entity);
+				log.info("processStrainGenotype/changes processed: " + domain.get(i).getStrainGenotypeKey());				
 				modified = true;
 			}
 			else {
-				log.info("processStrainMarker/no changes processed: " + domain.get(i).getStrainMarkerKey());
+				log.info("processStrainGenotype/no changes processed: " + domain.get(i).getStrainGenotypeKey());
 			}           
 		}
 		
-		log.info("processStrainMarker/processing successful");
+		log.info("processStrainGenotype/processing successful");
 		return modified;
 	}
    

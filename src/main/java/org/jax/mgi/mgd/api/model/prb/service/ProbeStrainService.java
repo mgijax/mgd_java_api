@@ -207,7 +207,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		
 		List<AnnotationDomain> annotDomain = new ArrayList<AnnotationDomain>();
 
-		for (int i = 0; i < domain.getAttributes().size(); i++) {
+		for (int i = 0; i < domain.getNeedsReview().size(); i++) {
 
 			if (domain.getNeedsReview().get(i).getTermKey().isEmpty()) {
 				continue;

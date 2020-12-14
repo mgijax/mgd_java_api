@@ -768,21 +768,8 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		
 		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
 		
-		String cmd = "\nselect g._genotype_key"
-				+ "\nfrom gxd_genotype g, acc_accession a"
-				+ "\nwhere g._genotype_key = a._object_key"
-				+ "\nand a._mgitype_key = 12"
-				+ "\nand a._logicaldb_key = 1"
-				+ "\nand a.preferred = 1"
-				+ "\nand a.prefixPart = 'MGI:'";
-
-		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) { 
-			String mgiid = searchDomain.getAccID().toUpperCase();
-			if (!mgiid.contains("MGI:")) {
-				mgiid = "MGI:" + mgiid;
-			}
-			cmd = cmd + "\nand lower(a.accID) = '" + mgiid.toLowerCase() + "'";	
-		}
+		String cmd = "select mgiID, _object_key, description from GXD_Genotype_Summary_View"
+					+ "\nwhere mgiID ilike ='" + searchDomain.getAccID() + "'";
 		log.info(cmd);
 		
 		try {
@@ -790,8 +777,9 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			
 			while (rs.next()) {
 				SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();
-				slimdomain = slimtranslator.translate(genotypeDAO.get(rs.getInt("_genotype_key")));				
-				genotypeDAO.clear();
+				slimdomain.setAccID(rs.getString("mgiID"));
+				slimdomain.setGenotypeKey(rs.getString("_object_key"));
+				slimdomain.setGenotypeDisplay(rs.getString("description"));
 				results.add(slimdomain);
 			}
 			sqlExecutor.cleanup();

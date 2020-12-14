@@ -139,13 +139,13 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 				
 		// process synonyms
 		log.info("processStrain/synonyms");		
-		if (synonymService.process(domain.getStrain(), domain.getSynonyms(), mgiTypeKey, user)) {
+		if (synonymService.process(domain.getStrainKey(), domain.getSynonyms(), mgiTypeKey, user)) {
 			modified = true;
 		}
 		
 		// process references
 		log.info("processStrain/referenes");
-		if (referenceAssocService.process(domain.getStrain(), domain.getRefAssocs(), mgiTypeKey, user)) {
+		if (referenceAssocService.process(domain.getStrainKey(), domain.getRefAssocs(), mgiTypeKey, user)) {
 			modified = true;
 		}
 

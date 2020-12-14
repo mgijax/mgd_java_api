@@ -84,6 +84,36 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		
 		// execute persist/insert/send to database
 		probeStrainDAO.persist(entity);
+
+		// process all notes
+		noteService.process(String.valueOf(entity.get_strain_key()), domain.getStrainOriginNote(), mgiTypeKey, user);
+		noteService.process(String.valueOf(entity.get_strain_key()), domain.getImpcNote(), mgiTypeKey, user);
+		noteService.process(String.valueOf(entity.get_strain_key()), domain.getNomenNote(), mgiTypeKey, user);
+		noteService.process(String.valueOf(entity.get_strain_key()), domain.getMclNote(), mgiTypeKey, user);
+		
+		// strain attributes
+		log.info("processStrain/attribute");
+		processAttribute(String.valueOf(entity.get_strain_key()), domain, user);
+		
+		// strain needs review
+		log.info("processStrain/needs review");
+		processNeedsReview(String.valueOf(entity.get_strain_key()), domain, user);
+				
+		// process synonyms
+		log.info("processStrain/synonyms");		
+		synonymService.process(String.valueOf(entity.get_strain_key()), domain.getSynonyms(), mgiTypeKey, user);
+		
+		// process references
+		log.info("processStrain/referenes");
+		referenceAssocService.process(String.valueOf(entity.get_strain_key()), domain.getRefAssocs(), mgiTypeKey, user);
+
+		// marker/allele (ProbeStrainMarker)
+		log.info("processStrain/marker/allele");
+		markerService.process(String.valueOf(entity.get_strain_key()), domain.getMarkers(), user);
+		
+		// genotypes (ProbeStrainGenotype)
+		log.info("processStrain/genotype");
+		genotypeService.process(String.valueOf(entity.get_strain_key()), domain.getGenotypes(), user);
 		
 		// return entity translated to domain
 		log.info("processStrain/create/returning results");

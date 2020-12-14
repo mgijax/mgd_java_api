@@ -50,8 +50,8 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 	private AnnotationService annotationService;
 	@Inject
 	private ProbeStrainMarkerService markerService;
-//	@Inject
-//	private ProbeStrainGenotypeService genotypeService;
+	@Inject
+	private ProbeStrainGenotypeService genotypeService;
 	
 	private ProbeStrainTranslator translator = new ProbeStrainTranslator();
 	private SlimProbeStrainTranslator slimtranslator = new SlimProbeStrainTranslator();
@@ -154,6 +154,10 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		}
 		
 		// genotypes (ProbeStrainGenotype)
+		log.info("processStrain/genotype");
+		if (genotypeService.process(domain.getStrainKey(), domain.getGenotypes(), user)) {
+			modified = true;
+		}
 		
 		// finish update
 		if (modified) {

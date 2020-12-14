@@ -71,12 +71,43 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		
 		log.info("processStrain/create");
 		
-		entity.setSpecies(termDAO.get(Integer.valueOf(domain.getSpeciesKey())));			
-		entity.setStrainType(termDAO.get(Integer.valueOf(domain.getStrainTypeKey())));
 		entity.setStrain(domain.getStrain());
-		entity.setStandard(Integer.valueOf(domain.getStandard()));
-		entity.setIsPrivate(Integer.valueOf(domain.getIsPrivate()));
-		entity.setGeneticBackground(Integer.valueOf(domain.getGeneticBackground()));
+		
+		if (domain.getSpeciesKey().isEmpty()) {
+			entity.setSpecies(termDAO.get(481338));
+		}
+		else {
+			entity.setSpecies(termDAO.get(Integer.valueOf(domain.getSpeciesKey())));			
+		}
+		
+		if (domain.getStrainTypeKey().isEmpty()) {
+			entity.setStrainType(termDAO.get(3410535));
+		}
+		else {
+			entity.setStrainType(termDAO.get(Integer.valueOf(domain.getStrainTypeKey())));
+		}
+		
+		if (domain.getStandard().isEmpty()) {
+			entity.setStandard(0);
+		}
+		else {
+			entity.setStandard(Integer.valueOf(domain.getStandard()));
+		}
+		
+		if (domain.getIsPrivate().isEmpty()) {
+			entity.setIsPrivate(0);
+		}
+		else {
+			entity.setIsPrivate(Integer.valueOf(domain.getIsPrivate()));
+		}
+		
+		if (domain.getGeneticBackground().isEmpty()) {
+			entity.setGeneticBackground(0);
+		}
+		else {
+			entity.setGeneticBackground(Integer.valueOf(domain.getGeneticBackground()));			
+		}
+		
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
 		entity.setModifiedBy(user);

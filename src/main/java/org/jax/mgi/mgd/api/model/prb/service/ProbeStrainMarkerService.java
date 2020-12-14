@@ -122,7 +122,6 @@ public class ProbeStrainMarkerService extends BaseService<ProbeStrainMarkerDomai
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processStrainMarker/update");
 				ProbeStrainMarker entity = strainMarkerDAO.get(Integer.valueOf(domain.get(i).getStrainMarkerKey()));	
-				entity.setModification_date(new Date());
 				entity.set_strain_key(Integer.valueOf(parentKey));
 				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));
 				entity.setAllele(alleleDAO.get(Integer.valueOf(domain.get(i).getAlleleKey())));

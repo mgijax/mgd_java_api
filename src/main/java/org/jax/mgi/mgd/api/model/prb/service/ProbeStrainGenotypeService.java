@@ -118,6 +118,7 @@ public class ProbeStrainGenotypeService extends BaseService<ProbeStrainGenotypeD
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processStrainMarker/update");
 				ProbeStrainGenotype entity = strainGenotypeDAO.get(Integer.valueOf(domain.get(i).getStrainGenotypeKey()));	
+				entity.set_strain_key(Integer.valueOf(parentKey));
 				entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));
 				entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
 				entity.setModification_date(new Date());								

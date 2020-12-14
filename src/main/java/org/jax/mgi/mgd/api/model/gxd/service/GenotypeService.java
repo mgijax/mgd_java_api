@@ -769,7 +769,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
 		
 		String cmd = "select mgiID, _object_key, description from GXD_Genotype_Summary_View"
-					+ "\nwhere mgiID ilike ='" + searchDomain.getAccID() + "'";
+					+ "\nwhere mgiID ilike '" + searchDomain.getAccID() + "'";
 		log.info(cmd);
 		
 		try {

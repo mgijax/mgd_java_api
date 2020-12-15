@@ -111,7 +111,13 @@ public class ProbeStrainMarkerService extends BaseService<ProbeStrainMarkerDomai
 					entity.setAllele(null);
 				}
 				
-				entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
+				if (domain.get(i).getQualifierKey() != null && !domain.get(i).getQualifierKey().isEmpty()) {
+					entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
+				}
+				else {
+					entity.setQualifier(termDAO.get(615427));
+				}
+				
 				entity.setCreation_date(new Date());
 				entity.setModification_date(new Date());				
 				strainMarkerDAO.persist(entity);				
@@ -139,7 +145,12 @@ public class ProbeStrainMarkerService extends BaseService<ProbeStrainMarkerDomai
 					entity.setAllele(null);
 				}
 				
-				entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
+				if (domain.get(i).getQualifierKey() != null && !domain.get(i).getQualifierKey().isEmpty()) {
+					entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
+				}
+				else {
+					entity.setQualifier(termDAO.get(615427));
+				}
 				entity.setModification_date(new Date());								
 				strainMarkerDAO.update(entity);
 				log.info("processStrainMarker/changes processed: " + domain.get(i).getStrainMarkerKey());				

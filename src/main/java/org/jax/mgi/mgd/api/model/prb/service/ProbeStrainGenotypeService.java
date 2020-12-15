@@ -101,7 +101,9 @@ public class ProbeStrainGenotypeService extends BaseService<ProbeStrainGenotypeD
 				entity.set_strain_key(Integer.valueOf(parentKey));
 				entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));
 				entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
+				entity.setCreatedBy(user);
 				entity.setCreation_date(new Date());
+				entity.setModifiedBy(user);
 				entity.setModification_date(new Date());				
 				strainGenotypeDAO.persist(entity);				
 				log.info("processStrainGenotype/create/returning results");	
@@ -121,8 +123,8 @@ public class ProbeStrainGenotypeService extends BaseService<ProbeStrainGenotypeD
 				entity.set_strain_key(Integer.valueOf(parentKey));
 				entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));
 				entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
-				entity.setModification_date(new Date());								
-				strainGenotypeDAO.update(entity);
+				entity.setModifiedBy(user);
+				entity.setModification_date(new Date());				strainGenotypeDAO.update(entity);
 				log.info("processStrainGenotype/changes processed: " + domain.get(i).getStrainGenotypeKey());				
 				modified = true;
 			}

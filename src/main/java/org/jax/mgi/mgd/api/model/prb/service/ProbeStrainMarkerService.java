@@ -118,8 +118,11 @@ public class ProbeStrainMarkerService extends BaseService<ProbeStrainMarkerDomai
 					entity.setQualifier(termDAO.get(615427));
 				}
 				
+				entity.setCreatedBy(user);
 				entity.setCreation_date(new Date());
-				entity.setModification_date(new Date());				
+				entity.setModifiedBy(user);
+				entity.setModification_date(new Date());
+				
 				strainMarkerDAO.persist(entity);				
 				log.info("processStrainMarker/create/returning results");	
 				modified = true;
@@ -151,7 +154,10 @@ public class ProbeStrainMarkerService extends BaseService<ProbeStrainMarkerDomai
 				else {
 					entity.setQualifier(termDAO.get(615427));
 				}
-				entity.setModification_date(new Date());								
+				
+				entity.setModifiedBy(user);
+				entity.setModification_date(new Date());
+				
 				strainMarkerDAO.update(entity);
 				log.info("processStrainMarker/changes processed: " + domain.get(i).getStrainMarkerKey());				
 				modified = true;

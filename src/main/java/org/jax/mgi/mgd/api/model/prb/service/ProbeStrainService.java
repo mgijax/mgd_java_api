@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
@@ -49,6 +50,8 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 	@Inject
 	private AnnotationService annotationService;
 	@Inject
+	private AccessionService accessionService;
+	@Inject
 	private ProbeStrainMarkerService markerService;
 	@Inject
 	private ProbeStrainGenotypeService genotypeService;
@@ -59,6 +62,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	private String mgiTypeKey = "10";
+	private String mgiTypeName = "Strain";
 	
 	@Transactional
 	public SearchResults<ProbeStrainDomain> create(ProbeStrainDomain domain, User user) {
@@ -129,7 +133,10 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		// strain needs review
 		log.info("processStrain/needs review");
 		processNeedsReview(String.valueOf(entity.get_strain_key()), domain, user);
-				
+
+		// process other accession ids
+		accessionService.process(String.valueOf(entity.get_strain_key()), domain.getOtherAccIds(), mgiTypeName, user);
+		
 		// process synonyms
 		log.info("processStrain/synonyms");		
 		synonymService.process(String.valueOf(entity.get_strain_key()), domain.getSynonyms(), mgiTypeKey, user);
@@ -195,7 +202,14 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		if (processNeedsReview(domain.getStrainKey(), domain, user)) {
 			modified = true;
 		}
-				
+
+		// process other accession ids
+		if (domain.getOtherAccIds() != null && !domain.getOtherAccIds().isEmpty()) {
+			if (accessionService.process(domain.getStrainKey(), domain.getOtherAccIds(), mgiTypeName, user)) {
+				modified = true;
+			}
+		}
+		
 		// process synonyms
 		log.info("processStrain/synonyms");		
 		if (synonymService.process(domain.getStrainKey(), domain.getSynonyms(), mgiTypeKey, user)) {

@@ -604,7 +604,6 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 	public List<LogicalDbDomain> searchProbeStrainSet() {
 		// get probe strain logical db list
 		// returns list of logical db domain	
-
 		
 		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
 
@@ -612,7 +611,7 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 				+ "\nfrom acc_logicaldb"
 				+ "\nwhere _logicaldb_key in (22)"
 				+ "\nunion"
-				+ "select _logicaldb_key, name, 1 as org"
+				+ "\nselect _logicaldb_key, name, 1 as org"
 				+ "\nfrom acc_logicaldb"
 				+ "\nwhere _logicaldb_key in (38)"				
 				+ "\nunion"

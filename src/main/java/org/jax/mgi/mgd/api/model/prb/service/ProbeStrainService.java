@@ -441,8 +441,13 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 				from_otheraccids = true;
 			}
 			value = searchDomain.getOtherAccIds().get(0).getAccID().toUpperCase();
-			if (value != null && !value.isEmpty()) {				
-				where = where + "\nand acc2.accID = '" + value + "'";
+			if (value != null && !value.isEmpty()) {
+				if(value.contains("%")) {
+					where = where + "\nand acc2.accID ilike '" + value + "'";
+				}
+				else {
+					where = where + "\nand acc2.accID = '" + value + "'";
+				}
 				from_otheraccids = true;
 			}
 		}	

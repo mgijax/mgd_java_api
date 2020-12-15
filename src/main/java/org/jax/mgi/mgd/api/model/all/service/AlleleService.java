@@ -1105,8 +1105,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			}
 			else {
 				cmd = cmd + "\nand lower(aa.symbol) = '" + searchDomain.getSymbol().toLowerCase() + "'";
-			}
-				
+			}				
 		}
 
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) { 

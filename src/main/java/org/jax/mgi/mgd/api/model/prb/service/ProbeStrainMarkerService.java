@@ -103,7 +103,14 @@ public class ProbeStrainMarkerService extends BaseService<ProbeStrainMarkerDomai
 				ProbeStrainMarker entity = new ProbeStrainMarker();									
 				entity.set_strain_key(Integer.valueOf(parentKey));
 				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));
-				entity.setAllele(alleleDAO.get(Integer.valueOf(domain.get(i).getAlleleKey())));
+				
+				if (domain.get(i).getAlleleKey() != null && !domain.get(i).getAlleleKey().isEmpty()) {
+					entity.setAllele(alleleDAO.get(Integer.valueOf(domain.get(i).getAlleleKey())));
+				}
+				else {
+					entity.setAllele(null);
+				}
+				
 				entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
 				entity.setCreation_date(new Date());
 				entity.setModification_date(new Date());				
@@ -124,7 +131,14 @@ public class ProbeStrainMarkerService extends BaseService<ProbeStrainMarkerDomai
 				ProbeStrainMarker entity = strainMarkerDAO.get(Integer.valueOf(domain.get(i).getStrainMarkerKey()));	
 				entity.set_strain_key(Integer.valueOf(parentKey));
 				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));
-				entity.setAllele(alleleDAO.get(Integer.valueOf(domain.get(i).getAlleleKey())));
+
+				if (domain.get(i).getAlleleKey() != null && !domain.get(i).getAlleleKey().isEmpty()) {
+					entity.setAllele(alleleDAO.get(Integer.valueOf(domain.get(i).getAlleleKey())));
+				}
+				else {
+					entity.setAllele(null);
+				}
+				
 				entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
 				entity.setModification_date(new Date());								
 				strainMarkerDAO.update(entity);

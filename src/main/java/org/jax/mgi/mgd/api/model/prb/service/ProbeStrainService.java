@@ -364,7 +364,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
 		Boolean from_accession = false;
-		//Boolean from_raccession = false;
+		Boolean from_otheraccids = false;
 		Boolean from_attribute = false;
 		Boolean from_needsreview = false;
 		Boolean from_marker = false;
@@ -419,6 +419,13 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			from_accession = true;
 		}	
 
+		// other accession id 
+		if (searchDomain.getOtherAccIds() != null && !searchDomain.getOtherAccIds().isEmpty()) {
+			value = searchDomain.getOtherAccIds().get(0).getAccID().toUpperCase();
+			where = where + "\nand acc2.accID = '" + value + "'";
+			from_otheraccids = true;
+		}	
+		
 		if (searchDomain.getAttributes() != null) {		
 			AnnotationDomain annotDomain = searchDomain.getAttributes().get(0);		
 			value = annotDomain.getTermKey();
@@ -592,7 +599,12 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		
 		if (from_accession == true) {
 			from = from + ", acc_accession acc";
-			where = where + "\nand acc._mgitype_key = 10 and p._probe_key = acc._object_key and acc.prefixPart = 'MGI:'";
+			where = where + "\nand acc._mgitype_key = 10 and p._strain_key = acc._object_key and acc.prefixPart = 'MGI:'";
+		}
+
+		if (from_otheraccids == true) {
+			from = from + ", acc_accession acc2";
+			where = where + "\nand acc2._mgitype_key = 10 and p._strain_key = acc._object_key";
 		}
 		
 		if (from_marker == true) {

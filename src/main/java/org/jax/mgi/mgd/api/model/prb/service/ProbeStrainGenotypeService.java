@@ -98,9 +98,17 @@ public class ProbeStrainGenotypeService extends BaseService<ProbeStrainGenotypeD
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {								
 				log.info("processStrainGenotype/create");
 				ProbeStrainGenotype entity = new ProbeStrainGenotype();									
+
 				entity.set_strain_key(Integer.valueOf(parentKey));
 				entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));
-				entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
+				
+				if (domain.get(i).getQualifierKey() != null && !domain.get(i).getQualifierKey().isEmpty()) {
+					entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
+				}
+				else {
+					entity.setQualifier(termDAO.get(706916));
+				}
+				
 				entity.setCreatedBy(user);
 				entity.setCreation_date(new Date());
 				entity.setModifiedBy(user);
@@ -120,9 +128,16 @@ public class ProbeStrainGenotypeService extends BaseService<ProbeStrainGenotypeD
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processStrainGenotype/update");
 				ProbeStrainGenotype entity = strainGenotypeDAO.get(Integer.valueOf(domain.get(i).getStrainGenotypeKey()));	
+
 				entity.set_strain_key(Integer.valueOf(parentKey));
 				entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));
-				entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
+
+				if (domain.get(i).getQualifierKey() != null && !domain.get(i).getQualifierKey().isEmpty()) {
+					entity.setQualifier(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
+				}
+				else {
+					entity.setQualifier(termDAO.get(706916));
+				}
 				entity.setModifiedBy(user);
 				entity.setModification_date(new Date());				strainGenotypeDAO.update(entity);
 				log.info("processStrainGenotype/changes processed: " + domain.get(i).getStrainGenotypeKey());				

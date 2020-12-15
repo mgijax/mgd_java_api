@@ -437,7 +437,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		if (searchDomain.getOtherAccIds() != null && !searchDomain.getOtherAccIds().isEmpty()) {
 			value = searchDomain.getOtherAccIds().get(0).getLogicaldbKey();
 			if (value != null && !value.isEmpty()) {				
-				where = where + "\nand acc2._logicaldb_key =" + value;
+				where = where + "\nand acc2._logicaldb_key = " + value;
 				from_otheraccids = true;
 			}
 			value = searchDomain.getOtherAccIds().get(0).getAccID().toUpperCase();

@@ -421,9 +421,16 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 
 		// other accession id 
 		if (searchDomain.getOtherAccIds() != null && !searchDomain.getOtherAccIds().isEmpty()) {
+			value = searchDomain.getOtherAccIds().get(0).getLogicaldbKey();
+			if (value != null && !value.isEmpty()) {				
+				where = where + "\nand acc2._logicaldb_key =" + value;
+				from_otheraccids = true;
+			}
 			value = searchDomain.getOtherAccIds().get(0).getAccID().toUpperCase();
-			where = where + "\nand acc2.accID = '" + value + "'";
-			from_otheraccids = true;
+			if (value != null && !value.isEmpty()) {				
+				where = where + "\nand acc2.accID = '" + value + "'";
+				from_otheraccids = true;
+			}
 		}	
 		
 		if (searchDomain.getAttributes() != null) {		
@@ -604,7 +611,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 
 		if (from_otheraccids == true) {
 			from = from + ", acc_accession acc2";
-			where = where + "\nand acc2._mgitype_key = 10 and p._strain_key = acc._object_key";
+			where = where + "\nand acc2._mgitype_key = 10 and p._strain_key = acc2._object_key";
 		}
 		
 		if (from_marker == true) {

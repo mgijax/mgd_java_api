@@ -125,5 +125,21 @@ public class LogicalDbController extends BaseController<LogicalDbDomain> {
 		
 		return results;
 	}
+
+	@POST
+	@ApiOperation(value = "Get Probe Strain Logical DBs")
+	@Path("/searchProbeStrainSet")
+	public List<LogicalDbDomain> searchProbeStrainSet() {
+			
+		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
+		
+		try {
+			results = ldbService.searchProbeStrainSet();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
 }

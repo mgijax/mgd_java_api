@@ -599,5 +599,36 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 		
 		return results;
 	}
+
+	@Transactional
+	public List<LogicalDbDomain> searchProbeStrainSet() {
+		// get probe strain logical db list
+		// returns list of logical db domain	
+
+		
+		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
+
+		String cmd = "select _logicaldb_key, name"
+				+ "\nfrom acc_logicaldb"
+				+ "\nwhere _logicaldb_key in (22,37,38,39,40,54,56,57,58,70,71,83,87,90,91,92,93,94,154,161,177,184,188,200,206,207,208,213,215,216,217,219)"
+				+ "\norder by name";
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {					
+				LogicalDbDomain domain = new LogicalDbDomain();									
+				domain = translator.translate(logicalDBDAO.get(rs.getInt("_logicaldb_key")));
+				results.add(domain);
+				logicalDBDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
 }

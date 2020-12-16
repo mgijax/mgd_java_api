@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
@@ -19,6 +20,7 @@ import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainMergeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeStrainDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.StrainDataSetDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
@@ -931,5 +933,37 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		
 		return results;
 	}
+
+	@Transactional
+	public List<SlimProbeStrainDomain> processMerge(ProbeStrainMergeDomain mergeDomain) {
+
+		List<SlimProbeStrainDomain> results = new ArrayList<SlimProbeStrainDomain>();
+		
+	    String cmd = "select count(*) from PRB_mergeStrain(" + mergeDomain.getIncorrectStrainKey() + ", " + mergeDomain.getCorrectStrainKey() + ")";
+		Query query;
+		
+	    log.info(cmd);
+	    query = probeStrainDAO.createNativeQuery(cmd);
+	    query.getResultList();	
 	
+		cmd = "\nselect _strain_key from prb_strain where _strain_key = " + mergeDomain.getCorrectStrainKey();
+		log.info(cmd);	    
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimProbeStrainDomain domain = new SlimProbeStrainDomain();
+				domain = slimtranslator.translate(probeStrainDAO.get(rs.getInt("_strain_key")));				
+				probeStrainDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+		
 }

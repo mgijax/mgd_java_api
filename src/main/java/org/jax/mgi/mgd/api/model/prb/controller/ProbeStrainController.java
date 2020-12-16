@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainMergeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeStrainDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.StrainDataSetDomain;
 import org.jax.mgi.mgd.api.model.prb.service.ProbeStrainService;
@@ -150,6 +151,22 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 	@Path("/getByRef/{key}")
 	public List<SlimProbeStrainDomain> getByRef(@PathParam("key") Integer key) {
 		return probeStrainService.getByRef(key);
+	}
+
+	@POST
+	@ApiOperation(value = "Process Strain Merge/returns slim probe strain domain")
+	@Path("/processMerge")
+	public List<SlimProbeStrainDomain> processMerge(ProbeStrainMergeDomain mergeDomain) {
+	
+		List<SlimProbeStrainDomain> results = new ArrayList<SlimProbeStrainDomain>();
+
+		try {
+			results = probeStrainService.processMerge(mergeDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
 	}
 	
 }

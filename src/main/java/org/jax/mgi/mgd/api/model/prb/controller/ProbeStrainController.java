@@ -168,5 +168,21 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 		
 		return results;
 	}
+
+	@POST
+	@ApiOperation(value = "Search Duplicates/returns slim probe strain domain")
+	@Path("/searchDuplicates")
+	public List<SlimProbeStrainDomain> searchDuplicates() {
+	
+		List<SlimProbeStrainDomain> results = new ArrayList<SlimProbeStrainDomain>();
+
+		try {
+			results = probeStrainService.searchDuplicates();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
 }

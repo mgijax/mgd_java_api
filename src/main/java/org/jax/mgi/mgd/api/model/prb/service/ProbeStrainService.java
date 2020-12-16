@@ -673,14 +673,6 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			where = where + "\nand p._strain_key = note4._object_key";
 			where = where + "\nand note4._notetype_key = 1038";
 		}
-		
-//		if (from_raccession == true) {
-//			from = from + ", acc_accession racc, acc_accessionreference rracc";
-//			where = where + "\nand p._probe_key = racc._object_key"
-//					+ "\nand r._refs_key = rracc._refs_key"
-//					+ "\nand racc._mgitype_key = 10"
-//					+ "\nand rracc._accession_key = racc._accession_key";
-//		}
 
 		if (from_attribute == true) {
 			from = from + ", voc_annot va1";
@@ -693,13 +685,6 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			where = where + "\nand va2._annottype_key = " + searchDomain.getNeedsReview().get(0).getAnnotTypeKey()
 						+ "\nand p._strain_key = va2._object_key";
 		}
-		
-//		
-//		if (from_rawsequenceNote == true) {
-//			from = from + ", mgi_note_probe_view note2";
-//			where = where + "\nand p._probe_key = note2._object_key";
-//			where = where + "\nand note2._notetype_key = 1037";
-//		}
 		
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
@@ -946,6 +931,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 	    query = probeStrainDAO.createNativeQuery(cmd);
 	    query.getResultList();	
 	
+	    // return the "correct" strain to the strain results
 		cmd = "\nselect _strain_key from prb_strain where _strain_key = " + mergeDomain.getCorrectStrainKey();
 		log.info(cmd);	    
 
@@ -965,5 +951,34 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		
 		return results;
 	}
+
+	@Transactional
+	public List<SlimProbeStrainDomain> searchDuplicates() {
+
+		List<SlimProbeStrainDomain> results = new ArrayList<SlimProbeStrainDomain>();
 		
+		String cmd = "select distinct _strain_key, strain"
+			+ "\nfrom prb_strain"
+			+ "\ngroup by strain having count(*) > 1"
+			+ "\norder by strain";
+		
+		log.info(cmd);	    
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimProbeStrainDomain domain = new SlimProbeStrainDomain();
+				domain = slimtranslator.translate(probeStrainDAO.get(rs.getInt("_strain_key")));				
+				probeStrainDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

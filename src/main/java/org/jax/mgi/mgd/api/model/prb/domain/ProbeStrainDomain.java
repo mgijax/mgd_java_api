@@ -44,5 +44,4 @@ public class ProbeStrainDomain extends BaseDomain {
 	private List<MGISynonymDomain> synonyms;
 	private List<MGIReferenceAssocDomain> refAssocs;
 	
-	
 }

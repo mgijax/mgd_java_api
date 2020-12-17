@@ -170,7 +170,7 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 			results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);				
 		}
 		
-		if (results.error.isEmpty()) {
+		if (results.error == null || results.error.isEmpty()) {
 			try {
 				results = probeStrainService.searchMergeResults(mergeDomain);
 			} catch (Exception e) {

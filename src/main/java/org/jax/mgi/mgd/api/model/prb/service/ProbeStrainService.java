@@ -957,10 +957,15 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 
 		List<SlimProbeStrainDomain> results = new ArrayList<SlimProbeStrainDomain>();
 		
-		String cmd = "select distinct _strain_key, strain"
-			+ "\nfrom prb_strain"
-			+ "\ngroup by strain having count(*) > 1"
-			+ "\norder by strain";
+		String cmd = "with strains as ("
+				+ "\nselect distinct strain"
+				+ "\nfrom prb_strain"
+				+ "\ngroup by strain having count(*) > 1"
+				+ "\n)"
+				+ "\nselect s._strain_key, s.strain"
+				+ "\nfrom strains ss, prb_strain s"
+				+ "\nwhere ss.strain = s.strain"
+				+ "\norder by s.strain";
 		
 		log.info(cmd);	    
 

@@ -163,6 +163,7 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 		try {
 			results = probeStrainService.processMerge(mergeDomain);
 		} catch (Exception e) {
+			log.info("processMerge/exception");
 			e.printStackTrace();
 		}
 		

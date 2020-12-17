@@ -958,13 +958,13 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		List<SlimProbeStrainDomain> results = new ArrayList<SlimProbeStrainDomain>();
 		
 		String cmd = "with strains as ("
-				+ "\nselect distinct strain"
+				+ "\nselect lower(strain) as dupstrain"
 				+ "\nfrom prb_strain"
-				+ "\ngroup by strain having count(*) > 1"
+				+ "\ngroup by dupstrain having count(*) > 1"
 				+ "\n)"
 				+ "\nselect s._strain_key, s.strain"
 				+ "\nfrom strains ss, prb_strain s"
-				+ "\nwhere ss.strain = s.strain"
+				+ "\nwhere ss.dupstrain ilike s.strain"
 				+ "\norder by s.strain";
 		
 		log.info(cmd);	    

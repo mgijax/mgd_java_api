@@ -922,7 +922,6 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 	@Transactional
 	public SearchResults<SlimProbeStrainDomain> processMerge(ProbeStrainMergeDomain mergeDomain) {
 
-		//List<SlimProbeStrainDomain> results = new ArrayList<SlimProbeStrainDomain>();
 		SearchResults<SlimProbeStrainDomain> results = new SearchResults<SlimProbeStrainDomain>();
 		
 	    String cmd = "select count(*) from PRB_mergeStrain(" + mergeDomain.getIncorrectStrainKey() + ", " + mergeDomain.getCorrectStrainKey() + ")";
@@ -931,28 +930,36 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 	    log.info(cmd);
 	    query = probeStrainDAO.createNativeQuery(cmd);
 	    query.getResultList();
-	
-	    // return the "correct" strain to the strain results
-//		cmd = "\nselect _strain_key from prb_strain where _strain_key = " + mergeDomain.getCorrectStrainKey();
-//		log.info(cmd);	    
-//
-//		try {
-//			ResultSet rs = sqlExecutor.executeProto(cmd);
-//			while (rs.next()) {
-//				SlimProbeStrainDomain domain = new SlimProbeStrainDomain();
-//				domain = slimtranslator.translate(probeStrainDAO.get(rs.getInt("_strain_key")));				
-//				probeStrainDAO.clear();
-//				results.add(domain);
-//			}
-//			sqlExecutor.cleanup();
-//		}
-//		catch (Exception e) {
-//			e.printStackTrace();
-//		}
 		
 		return results;
 	}
 
+	@Transactional
+	public SearchResults<SlimProbeStrainDomain> searchMergeResults(ProbeStrainMergeDomain mergeDomain) {
+
+		SearchResults<SlimProbeStrainDomain> results = new SearchResults<SlimProbeStrainDomain>();
+	
+	    // return the "correct" strain to the strain results
+		String cmd = "\nselect _strain_key from prb_strain where _strain_key = " + mergeDomain.getCorrectStrainKey();
+		log.info(cmd);	    
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimProbeStrainDomain domain = new SlimProbeStrainDomain();
+				domain = slimtranslator.translate(probeStrainDAO.get(rs.getInt("_strain_key")));				
+				probeStrainDAO.clear();
+				results.items.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 	@Transactional
 	public List<SlimProbeStrainDomain> searchDuplicates() {
 

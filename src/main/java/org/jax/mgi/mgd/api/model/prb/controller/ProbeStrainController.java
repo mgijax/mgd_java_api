@@ -159,7 +159,6 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 	@Path("/processMerge")
 	public SearchResults<SlimProbeStrainDomain> processMerge(ProbeStrainMergeDomain mergeDomain) {
 	
-		//List<SlimProbeStrainDomain> results = new ArrayList<SlimProbeStrainDomain>();
 		SearchResults<SlimProbeStrainDomain> results = new SearchResults<SlimProbeStrainDomain>();
 
 		try {
@@ -169,6 +168,14 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 			StackTraceElement[] ste = t.getStackTrace();
 			String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";
 			results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);				
+		}
+		
+		if (results.error.isEmpty()) {
+			try {
+				results = probeStrainService.searchMergeResults(mergeDomain);
+			} catch (Exception e) {
+				e.printStackTrace();		
+			}
 		}
 		
 		return results;

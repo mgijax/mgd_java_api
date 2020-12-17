@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -154,7 +155,7 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 		return probeStrainService.getByRef(key);
 	}
 
-	@POST
+	@PUT
 	@ApiOperation(value = "Process Strain Merge/returns slim probe strain domain")
 	@Path("/processMerge")
 	public SearchResults<SlimProbeStrainDomain> processMerge(ProbeStrainMergeDomain mergeDomain) {
@@ -165,8 +166,6 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 		try {
 			results = probeStrainService.processMerge(mergeDomain);
 		} catch (Exception e) {
-			log.info("processMerge/exception");
-			e.printStackTrace();
 			Throwable t = getRootException(e);
 			StackTraceElement[] ste = t.getStackTrace();
 			String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";

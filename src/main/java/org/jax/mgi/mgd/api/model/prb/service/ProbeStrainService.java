@@ -932,22 +932,22 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 	    query.getResultList();	
 	
 	    // return the "correct" strain to the strain results
-		cmd = "\nselect _strain_key from prb_strain where _strain_key = " + mergeDomain.getCorrectStrainKey();
-		log.info(cmd);	    
-
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				SlimProbeStrainDomain domain = new SlimProbeStrainDomain();
-				domain = slimtranslator.translate(probeStrainDAO.get(rs.getInt("_strain_key")));				
-				probeStrainDAO.clear();
-				results.add(domain);
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+//		cmd = "\nselect _strain_key from prb_strain where _strain_key = " + mergeDomain.getCorrectStrainKey();
+//		log.info(cmd);	    
+//
+//		try {
+//			ResultSet rs = sqlExecutor.executeProto(cmd);
+//			while (rs.next()) {
+//				SlimProbeStrainDomain domain = new SlimProbeStrainDomain();
+//				domain = slimtranslator.translate(probeStrainDAO.get(rs.getInt("_strain_key")));				
+//				probeStrainDAO.clear();
+//				results.add(domain);
+//			}
+//			sqlExecutor.cleanup();
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		
 		return results;
 	}

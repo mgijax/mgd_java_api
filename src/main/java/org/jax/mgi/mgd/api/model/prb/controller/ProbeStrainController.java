@@ -19,6 +19,7 @@ import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainMergeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeStrainDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.StrainDataSetDomain;
 import org.jax.mgi.mgd.api.model.prb.service.ProbeStrainService;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
@@ -156,15 +157,20 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 	@POST
 	@ApiOperation(value = "Process Strain Merge/returns slim probe strain domain")
 	@Path("/processMerge")
-	public List<SlimProbeStrainDomain> processMerge(ProbeStrainMergeDomain mergeDomain) {
+	public SearchResults<SlimProbeStrainDomain> processMerge(ProbeStrainMergeDomain mergeDomain) {
 	
-		List<SlimProbeStrainDomain> results = new ArrayList<SlimProbeStrainDomain>();
+		//List<SlimProbeStrainDomain> results = new ArrayList<SlimProbeStrainDomain>();
+		SearchResults<SlimProbeStrainDomain> results = new SearchResults<SlimProbeStrainDomain>();
 
 		try {
 			results = probeStrainService.processMerge(mergeDomain);
 		} catch (Exception e) {
 			log.info("processMerge/exception");
 			e.printStackTrace();
+			Throwable t = getRootException(e);
+			StackTraceElement[] ste = t.getStackTrace();
+			String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";
+			results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);				
 		}
 		
 		return results;
@@ -180,7 +186,7 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 		try {
 			results = probeStrainService.searchDuplicates();
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace();		
 		}
 		
 		return results;

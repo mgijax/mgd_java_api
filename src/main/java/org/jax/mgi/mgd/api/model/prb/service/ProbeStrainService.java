@@ -920,9 +920,10 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 	}
 
 	@Transactional
-	public List<SlimProbeStrainDomain> processMerge(ProbeStrainMergeDomain mergeDomain) {
+	public SearchResults<SlimProbeStrainDomain> processMerge(ProbeStrainMergeDomain mergeDomain) {
 
-		List<SlimProbeStrainDomain> results = new ArrayList<SlimProbeStrainDomain>();
+		//List<SlimProbeStrainDomain> results = new ArrayList<SlimProbeStrainDomain>();
+		SearchResults<SlimProbeStrainDomain> results = new SearchResults<SlimProbeStrainDomain>();
 		
 	    String cmd = "select count(*) from PRB_mergeStrain(" + mergeDomain.getIncorrectStrainKey() + ", " + mergeDomain.getCorrectStrainKey() + ")";
 		Query query;

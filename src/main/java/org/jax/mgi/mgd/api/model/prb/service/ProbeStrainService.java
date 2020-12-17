@@ -929,7 +929,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		
 	    log.info(cmd);
 	    query = probeStrainDAO.createNativeQuery(cmd);
-	    query.getResultList();	
+	    query.getResultList();
 	
 	    // return the "correct" strain to the strain results
 //		cmd = "\nselect _strain_key from prb_strain where _strain_key = " + mergeDomain.getCorrectStrainKey();

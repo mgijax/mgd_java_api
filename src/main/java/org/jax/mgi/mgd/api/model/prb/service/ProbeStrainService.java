@@ -949,6 +949,10 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 				SlimProbeStrainDomain domain = new SlimProbeStrainDomain();
 				domain = slimtranslator.translate(probeStrainDAO.get(rs.getInt("_strain_key")));				
 				probeStrainDAO.clear();
+				log.info(domain.getStrainKey());				
+				log.info(domain.getStrain());
+				log.info(domain.getIsPrivate());
+				log.info(domain.getAccID());
 				results.items.add(domain);
 			}
 			sqlExecutor.cleanup();

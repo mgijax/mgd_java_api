@@ -955,7 +955,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 				log.info(domain.getIsPrivate());
 				log.info(domain.getAccID());
 				results.items = new ArrayList<SlimProbeStrainDomain>();
-				results.items.add(domain);
+				results.items.add(0, domain);
 			}
 			sqlExecutor.cleanup();
 		}

@@ -950,10 +950,6 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 				SlimProbeStrainDomain domain = new SlimProbeStrainDomain();
 				domain = slimtranslator.translate(probeStrainDAO.get(rs.getInt("_strain_key")));				
 				probeStrainDAO.clear();
-				log.info(domain.getStrainKey());				
-				log.info(domain.getStrain());
-				log.info(domain.getIsPrivate());
-				log.info(domain.getAccID());
 				results.items = new ArrayList<SlimProbeStrainDomain>();
 				results.items.add(0, domain);
 			}

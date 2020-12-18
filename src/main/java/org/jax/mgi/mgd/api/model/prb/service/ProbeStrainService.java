@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
+import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
@@ -938,7 +939,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 	public SearchResults<SlimProbeStrainDomain> searchMergeResults(ProbeStrainMergeDomain mergeDomain) {
 
 		SearchResults<SlimProbeStrainDomain> results = new SearchResults<SlimProbeStrainDomain>();
-	
+		
 	    // return the "correct" strain to the strain results
 		String cmd = "\nselect _strain_key from prb_strain where _strain_key = " + mergeDomain.getCorrectStrainKey();
 		log.info(cmd);	    
@@ -953,6 +954,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 				log.info(domain.getStrain());
 				log.info(domain.getIsPrivate());
 				log.info(domain.getAccID());
+				results.items = new ArrayList<SlimProbeStrainDomain>();
 				results.items.add(domain);
 			}
 			sqlExecutor.cleanup();

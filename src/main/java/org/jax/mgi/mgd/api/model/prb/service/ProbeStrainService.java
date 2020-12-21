@@ -14,7 +14,6 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
-import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
@@ -181,16 +180,16 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		entity.setStrainType(termDAO.get(Integer.valueOf(domain.getStrainTypeKey())));
 		
 		// process all notes
-		if (noteService.process(domain.getStrain(), domain.getStrainOriginNote(), mgiTypeKey, user)) {
+		if (noteService.process(domain.getStrainKey(), domain.getStrainOriginNote(), mgiTypeKey, user)) {
 			modified = true;
 		}
-		if (noteService.process(domain.getStrain(), domain.getImpcNote(), mgiTypeKey, user)) {
+		if (noteService.process(domain.getStrainKey(), domain.getImpcNote(), mgiTypeKey, user)) {
 			modified = true;
 		}
-		if (noteService.process(domain.getStrain(), domain.getNomenNote(), mgiTypeKey, user)) {
+		if (noteService.process(domain.getStrainKey(), domain.getNomenNote(), mgiTypeKey, user)) {
 			modified = true;
 		}
-		if (noteService.process(domain.getStrain(), domain.getMclNote(), mgiTypeKey, user)) {
+		if (noteService.process(domain.getStrainKey(), domain.getMclNote(), mgiTypeKey, user)) {
 			modified = true;
 		}
 		

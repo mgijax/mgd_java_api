@@ -79,13 +79,15 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		
 		entity.setStrain(domain.getStrain());
 		
+		// laboratory mouse
 		if (domain.getSpeciesKey().isEmpty()) {
-			entity.setSpecies(termDAO.get(481338));
+			entity.setSpecies(termDAO.get(481207));
 		}
 		else {
 			entity.setSpecies(termDAO.get(Integer.valueOf(domain.getSpeciesKey())));			
 		}
 		
+		// not specified
 		if (domain.getStrainTypeKey().isEmpty()) {
 			entity.setStrainType(termDAO.get(3410535));
 		}
@@ -93,6 +95,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			entity.setStrainType(termDAO.get(Integer.valueOf(domain.getStrainTypeKey())));
 		}
 		
+		// no
 		if (domain.getStandard().isEmpty()) {
 			entity.setStandard(0);
 		}
@@ -100,6 +103,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			entity.setStandard(Integer.valueOf(domain.getStandard()));
 		}
 		
+		// no
 		if (domain.getIsPrivate().isEmpty()) {
 			entity.setIsPrivate(0);
 		}
@@ -107,6 +111,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			entity.setIsPrivate(Integer.valueOf(domain.getIsPrivate()));
 		}
 		
+		//no
 		if (domain.getGeneticBackground().isEmpty()) {
 			entity.setGeneticBackground(0);
 		}

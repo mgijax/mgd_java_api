@@ -387,7 +387,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 	}
 
 	@Transactional	
-	public List<SlimAccessionDomain> strainAccessionByAccessionId(SlimAccessionDomain searchDomain) {
+	public List<SlimAccessionDomain> strainByAccessionId(SlimAccessionDomain searchDomain) {
 		// search strains by accession id, logical db 
 		// return SlimAccessionDomain
 		

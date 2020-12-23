@@ -139,13 +139,13 @@ public class AccessionController extends BaseController<AccessionDomain> {
 
 	@POST
 	@ApiOperation(value = "Get Strain Accession Ids by Acccession Id")
-	@Path("/strainAccessionByAccessionId")
-	public List<SlimAccessionDomain> strainAccessionByAccessionId(SlimAccessionDomain searchDomain) {
+	@Path("/strainByAccessionId")
+	public List<SlimAccessionDomain> strainByAccessionId(SlimAccessionDomain searchDomain) {
 		
 		List<SlimAccessionDomain> results = new ArrayList<SlimAccessionDomain>();
 
 		try {
-			results = accessionService.strainAccessionByAccessionId(searchDomain);
+			results = accessionService.strainByAccessionId(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -272,11 +272,6 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		// for each row, determine whether to perform an insert, delete or update
 		
 		for (int i = 0; i < domain.size(); i++) {
-				
-			// for strain/mgitype = 10
-			if (domain.get(i).getMgiTypeKey().equals("10")) {
-				
-			}
 			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 				

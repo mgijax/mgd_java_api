@@ -273,11 +273,12 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		
 		for (int i = 0; i < domain.size(); i++) {
 				
-			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
+			// for strain/mgitype = 10
+			if (domain.get(i).getMgiTypeKey().equals("10")) {
 				
-				if (domain.get(i).getAccID() == null || domain.get(i).getAccID().isEmpty()) {
-					continue;
-				}
+			}
+			
+			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 				
 				// minimum domain info for create:
 				// processStatus (‘c’ for create) , logicaldbKey, mgitypekey, objectKey, accid
@@ -367,36 +368,6 @@ public class AccessionService extends BaseService<AccessionDomain> {
 				+ "\nand a._Object_key = va._Term_key"
 				+ "\nand va._AnnotType_key = 1019"
 				+ "\nand va._Object_key = " + searchDomain.getObjectKey();
-
-		log.info(cmd);
-
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				SlimAccessionDomain domain = new SlimAccessionDomain();
-				domain.setAccID(rs.getString("accID"));
-				results.add(domain);
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
-
-	@Transactional	
-	public List<SlimAccessionDomain> strainByAccessionId(SlimAccessionDomain searchDomain) {
-		// search strains by accession id, logical db 
-		// return SlimAccessionDomain
-		
-		List<SlimAccessionDomain> results = new ArrayList<SlimAccessionDomain>();
-
-		String cmd = "select a.accID from ACC_Accession a" 
-				+ "\nwhere a._mgitype_key = 10"
-				+ "\nand a._logicaldb_key = " + searchDomain.getLogicaldbKey()
-				+ "\nand a.accID = '" + searchDomain.getAccID() + "'";
 
 		log.info(cmd);
 

@@ -136,21 +136,5 @@ public class AccessionController extends BaseController<AccessionDomain> {
 		
 		return results;
 	}
-
-	@POST
-	@ApiOperation(value = "Get Strains by Acccession Id")
-	@Path("/strainByAccessionId")
-	public List<SlimAccessionDomain> strainByAccessionId(SlimAccessionDomain searchDomain) {
-		
-		List<SlimAccessionDomain> results = new ArrayList<SlimAccessionDomain>();
-
-		try {
-			results = accessionService.strainByAccessionId(searchDomain);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
 	
 }

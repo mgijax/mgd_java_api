@@ -385,5 +385,35 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		
 		return results;
 	}
-	
+
+	@Transactional	
+	public List<SlimAccessionDomain> strainAccessionByAccessionId(SlimAccessionDomain searchDomain) {
+		// search strains by accession id, logical db 
+		// return SlimAccessionDomain
+		
+		List<SlimAccessionDomain> results = new ArrayList<SlimAccessionDomain>();
+
+		String cmd = "select a.accID from ACC_Accession a" 
+				+ "\nwhere a._mgitype_key = 10"
+				+ "\nand a._logicaldb_key = " + searchDomain.getLogicaldbKey()
+				+ "\nand a.accID = '" + searchDomain.getAccID() + "'";
+
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimAccessionDomain domain = new SlimAccessionDomain();
+				domain.setAccID(rs.getString("accID"));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+		
 }

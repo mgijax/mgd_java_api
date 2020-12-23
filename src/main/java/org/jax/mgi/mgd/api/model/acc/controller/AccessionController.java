@@ -138,7 +138,7 @@ public class AccessionController extends BaseController<AccessionDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Get Strain Accession Ids by Acccession Id")
+	@ApiOperation(value = "Get Strains by Acccession Id")
 	@Path("/strainByAccessionId")
 	public List<SlimAccessionDomain> strainByAccessionId(SlimAccessionDomain searchDomain) {
 		

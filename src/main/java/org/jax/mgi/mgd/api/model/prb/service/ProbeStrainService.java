@@ -262,6 +262,10 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		
 		List<AnnotationDomain> annotDomain = new ArrayList<AnnotationDomain>();
 
+		if (domain.getAttributes() == null) {
+			return(true);
+		}
+		
 		for (int i = 0; i < domain.getAttributes().size(); i++) {
 
 			if (domain.getAttributes().get(i).getTermKey().isEmpty()) {
@@ -295,6 +299,10 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		
 		List<AnnotationDomain> annotDomain = new ArrayList<AnnotationDomain>();
 
+		if (domain.getNeedsReview() == null) {
+			return(true);
+		}
+		
 		for (int i = 0; i < domain.getNeedsReview().size(); i++) {
 
 			if (domain.getNeedsReview().get(i).getTermKey().isEmpty()) {

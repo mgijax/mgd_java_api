@@ -42,6 +42,7 @@ public class AllelePairTranslator extends BaseEntityDomainTranslator<AllelePair,
 			domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 			domain.setMarkerSymbol(String.valueOf(entity.getMarker().getSymbol()));
 			domain.setMarkerChromosome(entity.getMarker().getChromosome());
+			domain.setMarkerAccID(entity.getMarker().getMgiAccessionIds().get(0).getAccID());			
 		}	
 		
 		// may be null

@@ -150,6 +150,41 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		// for vocab specific ordering, reset orderBy based on _vocab_key or name
 		String orderBy = "order by t.term";		
 		
+		// for non-vocab tables that are acting like voc_vocab/voc_term
+		if (searchDomain.getVocabKey().equals("158")) {
+			
+			// create "searchGXDAssayType()" method
+			// eventually, gxd_assaytype will move into voc_vocab/voc_term
+			cmd = "select * from gxd_assaytype order by assaytype";
+			log.info(cmd);		
+			
+			try {
+				SlimVocabularyTermDomain domain = new SlimVocabularyTermDomain();						
+				List<SlimTermDomain> termList = new ArrayList<SlimTermDomain>();
+				
+				ResultSet rs = sqlExecutor.executeProto(cmd);
+				while (rs.next()) {					
+					SlimTermDomain termDomain = new SlimTermDomain();				
+					domain.setVocabKey(searchDomain.getVocabKey());
+					domain.setName(rs.getString("assaytype"));
+					termDomain.setTermKey(rs.getString("_assaytype_key"));
+					termDomain.set_term_key(rs.getInt("_assaytype_key"));
+					termDomain.setTerm(rs.getString("assaytype"));
+					termDomain.setVocabKey(rs.getString("_assaytype_key"));
+					termList.add(termDomain);
+				}
+				
+				domain.setTerms(termList);
+				results.setItem(domain);		
+				sqlExecutor.cleanup();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			return results;			
+		}
+				
 		// for UIs that use getName()
 		// for ordering by sequenceNum, add specific vocab to this list		
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {

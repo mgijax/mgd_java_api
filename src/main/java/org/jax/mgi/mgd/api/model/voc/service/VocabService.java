@@ -152,39 +152,12 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		
 		// for non-vocab tables that are acting like voc_vocab/voc_term
 		if (searchDomain.getVocabKey().equals("158")) {
-			
-			// create "searchGXDAssayType()" method
-			// eventually, gxd_assaytype will move into voc_vocab/voc_term
-			cmd = "select * from gxd_assaytype order by assaytype";
-			log.info(cmd);		
-			
-			try {
-				SlimVocabularyTermDomain domain = new SlimVocabularyTermDomain();						
-				List<SlimTermDomain> termList = new ArrayList<SlimTermDomain>();
-				
-				ResultSet rs = sqlExecutor.executeProto(cmd);
-				while (rs.next()) {					
-					SlimTermDomain termDomain = new SlimTermDomain();				
-					domain.setVocabKey(searchDomain.getVocabKey());
-					domain.setName(rs.getString("assaytype"));
-					termDomain.setTermKey(rs.getString("_assaytype_key"));
-					termDomain.set_term_key(rs.getInt("_assaytype_key"));
-					termDomain.setTerm(rs.getString("assaytype"));
-					termDomain.setVocabKey(rs.getString("_assaytype_key"));
-					termList.add(termDomain);
-				}
-				
-				domain.setTerms(termList);
-				results.setItem(domain);		
-				sqlExecutor.cleanup();
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-			return results;			
+			return searchGXDAssayType(searchDomain.getVocabKey());		
 		}
-				
+		if (searchDomain.getVocabKey().equals("159")) {
+			return searchGXDProbeSense(searchDomain.getVocabKey());		
+		}
+		
 		// for UIs that use getName()
 		// for ordering by sequenceNum, add specific vocab to this list		
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
@@ -304,6 +277,78 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		return results;
 	}
 
+	@Transactional
+	public SearchResults<SlimVocabularyTermDomain> searchGXDAssayType(String vocabKey) {	
+		// returns list of gxd_assaytype into SlimVocabularyTermDomain format
+		
+		SearchResults<SlimVocabularyTermDomain> results = new SearchResults<SlimVocabularyTermDomain>();
+		
+		String cmd = "select * from gxd_assaytype order by assaytype";
+		log.info(cmd);		
+		
+		try {
+			SlimVocabularyTermDomain domain = new SlimVocabularyTermDomain();						
+			List<SlimTermDomain> termList = new ArrayList<SlimTermDomain>();
+			
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {					
+				SlimTermDomain termDomain = new SlimTermDomain();				
+				domain.setVocabKey(vocabKey);
+				domain.setName(rs.getString("assaytype"));
+				termDomain.setTermKey(rs.getString("_assaytype_key"));
+				termDomain.set_term_key(rs.getInt("_assaytype_key"));
+				termDomain.setTerm(rs.getString("assaytype"));
+				termDomain.setVocabKey(rs.getString("_assaytype_key"));
+				termList.add(termDomain);
+			}
+			
+			domain.setTerms(termList);
+			results.setItem(domain);		
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;			
+	}
+	
+	@Transactional
+	public SearchResults<SlimVocabularyTermDomain> searchGXDProbeSense(String vocabKey) {	
+		// returns list of gxd_probesense into SlimVocabularyTermDomain format
+		
+		SearchResults<SlimVocabularyTermDomain> results = new SearchResults<SlimVocabularyTermDomain>();
+		
+		String cmd = "select * from gxd_probesense order by sense";
+		log.info(cmd);		
+		
+		try {
+			SlimVocabularyTermDomain domain = new SlimVocabularyTermDomain();						
+			List<SlimTermDomain> termList = new ArrayList<SlimTermDomain>();
+			
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {					
+				SlimTermDomain termDomain = new SlimTermDomain();				
+				domain.setVocabKey(vocabKey);
+				domain.setName(rs.getString("sense"));
+				termDomain.setTermKey(rs.getString("_sense_key"));
+				termDomain.set_term_key(rs.getInt("_sense_key"));
+				termDomain.setTerm(rs.getString("sense"));
+				termDomain.setVocabKey(rs.getString("_sense_key"));
+				termList.add(termDomain);
+			}
+			
+			domain.setTerms(termList);
+			results.setItem(domain);		
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;			
+	}
+	
     @Transactional
     public List<SlimVocabularyDomain> searchSimple() {
     	

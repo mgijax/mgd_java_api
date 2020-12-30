@@ -36,5 +36,10 @@ public class AssayDomain extends BaseDomain {
 	private List<SpecimenDomain> specimens;
 	private List<GelLaneDomain> gelLanes;
 	private List<GelRowDomain> gelRows;
+
+	/* for searching only */
+	
+	/* 1 = nucleotide, 2 = antibody, 3 =  */
+	private String detectionKey;
 	
 }

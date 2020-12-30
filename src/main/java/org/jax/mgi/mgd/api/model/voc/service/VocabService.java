@@ -151,11 +151,16 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		String orderBy = "order by t.term";		
 		
 		// for non-vocab tables that are acting like voc_vocab/voc_term
-		if (searchDomain.getVocabKey().equals("158")) {
-			return searchGXDAssayType(searchDomain.getVocabKey());		
-		}
-		if (searchDomain.getVocabKey().equals("159")) {
-			return searchGXDProbeSense(searchDomain.getVocabKey());		
+		if (searchDomain.getVocabKey().equals("151")
+				|| searchDomain.getVocabKey().equals("152")
+				|| searchDomain.getVocabKey().equals("153")
+				|| searchDomain.getVocabKey().equals("154")
+				|| searchDomain.getVocabKey().equals("155")
+				|| searchDomain.getVocabKey().equals("156")
+				|| searchDomain.getVocabKey().equals("157")
+				|| searchDomain.getVocabKey().equals("158")				
+				|| searchDomain.getVocabKey().equals("159")) {
+			return searchGXDVocab(searchDomain.getVocabKey());		
 		}
 		
 		// for UIs that use getName()
@@ -278,12 +283,19 @@ public class VocabService extends BaseService<VocabularyDomain> {
 	}
 
 	@Transactional
-	public SearchResults<SlimVocabularyTermDomain> searchGXDAssayType(String vocabKey) {	
+	public SearchResults<SlimVocabularyTermDomain> searchGXDVocab(String vocabKey) {	
 		// returns list of gxd_assaytype into SlimVocabularyTermDomain format
 		
 		SearchResults<SlimVocabularyTermDomain> results = new SearchResults<SlimVocabularyTermDomain>();
 		
-		String cmd = "select * from gxd_assaytype order by assaytype";
+		String cmd = "";
+		
+		if (vocabKey.equals("158")) {
+			cmd = "select _assaytype_key as termKey, assayType as term from gxd_assaytype order by term";
+		}
+		else if (vocabKey.equals("159") ) {
+			cmd = "select _sense_key as termKey, sense as term from gxd_probesense order by term";
+		}
 		log.info(cmd);		
 		
 		try {
@@ -293,48 +305,12 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {					
 				SlimTermDomain termDomain = new SlimTermDomain();				
-				domain.setVocabKey(vocabKey);
-				domain.setName(rs.getString("assaytype"));
-				termDomain.setTermKey(rs.getString("_assaytype_key"));
-				termDomain.set_term_key(rs.getInt("_assaytype_key"));
-				termDomain.setTerm(rs.getString("assaytype"));
-				termDomain.setVocabKey(rs.getString("_assaytype_key"));
-				termList.add(termDomain);
-			}
-			
-			domain.setTerms(termList);
-			results.setItem(domain);		
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;			
-	}
-	
-	@Transactional
-	public SearchResults<SlimVocabularyTermDomain> searchGXDProbeSense(String vocabKey) {	
-		// returns list of gxd_probesense into SlimVocabularyTermDomain format
-		
-		SearchResults<SlimVocabularyTermDomain> results = new SearchResults<SlimVocabularyTermDomain>();
-		
-		String cmd = "select * from gxd_probesense order by sense";
-		log.info(cmd);		
-		
-		try {
-			SlimVocabularyTermDomain domain = new SlimVocabularyTermDomain();						
-			List<SlimTermDomain> termList = new ArrayList<SlimTermDomain>();
-			
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {					
-				SlimTermDomain termDomain = new SlimTermDomain();				
-				domain.setVocabKey(vocabKey);
-				domain.setName(rs.getString("sense"));
-				termDomain.setTermKey(rs.getString("_sense_key"));
-				termDomain.set_term_key(rs.getInt("_sense_key"));
-				termDomain.setTerm(rs.getString("sense"));
-				termDomain.setVocabKey(rs.getString("_sense_key"));
+				domain.setVocabKey(vocabKey);						
+				domain.setName(rs.getString("term"));
+				termDomain.setTermKey(rs.getString("termKey"));
+				termDomain.set_term_key(rs.getInt("termKey"));
+				termDomain.setTerm(rs.getString("term"));
+				termDomain.setVocabKey(rs.getString("termKey"));
 				termList.add(termDomain);
 			}
 			

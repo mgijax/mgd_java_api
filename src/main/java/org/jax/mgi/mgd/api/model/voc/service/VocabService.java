@@ -159,7 +159,9 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				|| searchDomain.getVocabKey().equals("156")
 				|| searchDomain.getVocabKey().equals("157")
 				|| searchDomain.getVocabKey().equals("158")				
-				|| searchDomain.getVocabKey().equals("159")) {
+				|| searchDomain.getVocabKey().equals("159")
+				|| searchDomain.getVocabKey().equals("160")) {
+			
 			return searchGXDVocab(searchDomain.getVocabKey());		
 		}
 		
@@ -317,6 +319,9 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		else if (vocabKey.equals("159") ) {
 			cmd = "select _sense_key as termKey, sense as term from gxd_probesense order by term";
 		}
+		else if (vocabKey.equals("160") ) {
+			cmd = "select _secondary_key as termKey, secondary as term from gxd_secondary order by term";
+		}		
 		log.info(cmd);		
 		
 		try {

@@ -284,13 +284,34 @@ public class VocabService extends BaseService<VocabularyDomain> {
 
 	@Transactional
 	public SearchResults<SlimVocabularyTermDomain> searchGXDVocab(String vocabKey) {	
-		// returns list of gxd_assaytype into SlimVocabularyTermDomain format
+		// returns list of gxd vocabulary into SlimVocabularyTermDomain format
 		
 		SearchResults<SlimVocabularyTermDomain> results = new SearchResults<SlimVocabularyTermDomain>();
 		
 		String cmd = "";
 		
-		if (vocabKey.equals("158")) {
+		if (vocabKey.equals("151")) {
+			cmd = "select _antibodyclass as termKey, class as term from gxd_antibodyclass order by term";
+		}
+		else if (vocabKey.equals("152")) {
+			cmd = "select _label_key as termKey, label as term from gxd_label order by term";
+		}
+		else if (vocabKey.equals("153")) {
+			cmd = "select _pattern_key as termKey, pattern as term from gxd_pattern order by term";
+		}
+		else if (vocabKey.equals("154") ) {
+			cmd = "select _gelcontrol_key as termKey, gelLaneCountent as term from gxd_gelcontrol order by term";
+		}		
+		else if (vocabKey.equals("155")) {
+			cmd = "select _embedding_key as termKey, embeddingMethod as term from gxd_embeddingmethod order by term";
+		}
+		else if (vocabKey.equals("156") ) {
+			cmd = "select _fixation_key as termKey, fixation as term from gxd_fixationmethod order by term";
+		}		
+		else if (vocabKey.equals("157")) {
+			cmd = "select _visualization_key as termKey, visualization as term from gxd_visualizationmethod order by term";
+		}		
+		else if (vocabKey.equals("158")) {
 			cmd = "select _assaytype_key as termKey, assayType as term from gxd_assaytype order by term";
 		}
 		else if (vocabKey.equals("159") ) {

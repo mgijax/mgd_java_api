@@ -11,7 +11,6 @@ import lombok.Setter;
 public class AssayDomain extends BaseDomain {
 
 	private String assayKey;
-	private String assayDisplay;
 	private String assayTypeKey;
 	private String assayType;
 	private String markerKey;

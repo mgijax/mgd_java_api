@@ -37,8 +37,6 @@ public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDoma
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
-		domain.setAssayDisplay(entity.getReference().getReferenceCitationCache().getJnumid() + ";" + entity.getAssayType() + ";" + entity.getMarker().getSymbol());
-		
 		// mgi accession ids only
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());

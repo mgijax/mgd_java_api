@@ -13,6 +13,7 @@ public class SlimAssayDomain extends BaseDomain {
 	// to be used for returning search results
 	
 	private String assayKey;
+	private String assayDisplay;	
 	private String assayTypeKey;
 	private String assayType;
 	private String refsKey;

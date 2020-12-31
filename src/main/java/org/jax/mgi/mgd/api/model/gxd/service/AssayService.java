@@ -315,6 +315,19 @@ public class AssayService extends BaseService<AssayDomain> {
 			where = where + "\nand a._reportergene_key = " + value;		
 		}
 		
+		value = searchDomain.getDetectionKey();
+		if (value != null && !value.isEmpty()) {
+			if (value.equals("1")) {
+				where = where + "\nand a._ProbePrep_key is not null";
+			}
+			else if (value.equals("2")) {
+				where = where + "\nand a._AntibodyPrep_key is not null";
+			}
+			else {
+				where = where + "\nand a._ProbePrep_key is not null and a._AntibodyPrep_key is not null";				
+			}
+		}
+		
 		// reference
 		value = searchDomain.getRefsKey();
 		String jnumid = searchDomain.getJnumid();		

@@ -40,7 +40,7 @@ public class AssayDomain extends BaseDomain {
 
 	/* for searching only */
 	
-	/* 1 = nucleotide, 2 = antibody, 3 =  */
+	/* 1 = nucleotide, 2 = antibody, 3 = direct detection ; see search() */
 	private String detectionKey;
 	
 }

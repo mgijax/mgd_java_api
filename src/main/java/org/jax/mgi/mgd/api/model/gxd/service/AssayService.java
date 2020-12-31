@@ -21,6 +21,8 @@ import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
 import org.jax.mgi.mgd.api.model.gxd.translator.AssayTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimAssayTranslator;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISetDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
@@ -607,6 +609,61 @@ public class AssayService extends BaseService<AssayDomain> {
 			e.printStackTrace();
 		}
 		
+		return results;
+	}
+
+	@Transactional	
+	public List<MGISetDomain> getGenotypesBySetUser(SlimAssayDomain searchDomain) {
+		// return all genotypes for given assay (searchDomain.getAssayKey())
+		// union set members of genotype (_set_key = 1055) + user (searchDomain.getCreatedByKey())
+
+		List<MGISetDomain> results = new ArrayList<MGISetDomain>();		
+		List<MGISetMemberDomain> listOfMembers = new ArrayList<MGISetMemberDomain>();
+		MGISetDomain domain = new MGISetDomain();
+		
+		String cmd = "\n(select distinct g._Genotype_key, " +
+				"\nCONCAT(g.displayIt,',',a1.symbol,',',a2.symbol) as displayIt, g.mgiID, 0 as setMemberKey" + 
+				"\nfrom GXD_Genotype_View g" + 
+				"\nINNER JOIN GXD_Specimen s on (g._Genotype_key = s._Genotype_key)" + 
+				"\nLEFT OUTER JOIN GXD_AllelePair ap on (g._Genotype_key = ap._Genotype_key)" + 
+				"\nLEFT OUTER JOIN ALL_Allele a1 on (ap._Allele_key_1 = a1._Allele_key)" + 
+				"\nLEFT OUTER JOIN ALL_Allele a2 on (ap._Allele_key_2 = a2._Allele_key)" + 
+				"\nwhere s._Assay_key = " + searchDomain.getAssayKey() +
+				"\nunion all" + 
+				"\nselect distinct s._Object_key," + 
+				"\n'*['||a.accID||'] '||s.label," + 
+				"\na.accID," + 
+				"\ns._setmember_key as setMemberKey" + 
+				"\nfrom mgi_setmember s, acc_accession a" + 
+				"\nwhere s._set_key = 1055" + 
+				"\nand s._object_key = a._object_key" + 
+				"\nand s._createdby_key = " + searchDomain.getCreatedByKey() +
+				"\nand a._mgitype_key = 12" + 
+				"\nand a._logicaldb_key = 1" + 
+				"\nand a.prefixPart = 'MGI:'" + 
+				"\nand a.preferred = 1" +
+				"\n)";
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				MGISetMemberDomain memberDomain = new MGISetMemberDomain();
+				memberDomain.setSetMemberKey(rs.getString("setMemberKey"));
+				memberDomain.setSetKey("1055");
+				memberDomain.setObjectKey(rs.getString("_Object_key"));
+				memberDomain.setLabel(rs.getString("displayIt"));
+				assayDAO.clear();
+				listOfMembers.add(memberDomain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		domain.setGenotypeClipboardMembers(listOfMembers);
+		results.add(domain);
 		return results;
 	}
 	

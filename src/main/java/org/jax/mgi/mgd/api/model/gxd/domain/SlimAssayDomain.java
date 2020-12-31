@@ -19,4 +19,6 @@ public class SlimAssayDomain extends BaseDomain {
 	private String refsKey;
 	private String jnumid;
 	private String jnum;
+	private String createdByKey;
+	private String createdBy;
 }

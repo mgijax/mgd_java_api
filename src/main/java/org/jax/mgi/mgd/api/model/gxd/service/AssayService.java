@@ -273,12 +273,12 @@ public class AssayService extends BaseService<AssayDomain> {
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
-		String select = "select a._assay_key, t.assaytype, r.numericPart";
+		String select = "select a._assay_key, r.jnumid, t.assayType, m.symbol";
 		String from = "from gxd_assay a, gxd_assaytype t, bib_citation_cache r, mrk_marker m";
 		String where = "where a._assaytype_key = t._assaytype_key"
 				+ "\nand a._refs_key = r._refs_key"
 				+ "\nand a._marker_key = m._marker_key";
-		String orderBy = "order by r.jnumid, a.assayType, m.symbol";
+		String orderBy = "order by r.jnumid, t.assayType, m.symbol";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
 		Boolean from_accession = false;

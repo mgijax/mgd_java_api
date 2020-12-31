@@ -324,7 +324,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				where = where + "\nand a._AntibodyPrep_key is not null";
 			}
 			else {
-				where = where + "\nand a._ProbePrep_key is not null and a._AntibodyPrep_key is not null";				
+				where = where + "\nand a._ProbePrep_key is null and a._AntibodyPrep_key is null";				
 			}
 		}
 		

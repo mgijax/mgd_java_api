@@ -628,7 +628,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\n(select distinct s._Object_key," + 
 				"\n'*['||a.accID||'] '||s.label as displayIt," + 
 				"\na.accID," + 
-				"\ns._setmember_key as setMemberKey" + 
+				"\ns._setmember_key as setMemberKey, s._createdby_key" + 
 				"\nfrom mgi_setmember s, acc_accession a, mgi_user u" + 
 				"\nwhere s._set_key = 1055" + 
 				"\nand s._createdby_key = u._user_key" +
@@ -644,7 +644,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nselect distinct g._Genotype_key, " +
 				"\nCONCAT(g.displayIt,',',a1.symbol,',',a2.symbol) as displayIt," +
 				"\nmgiID as accID," +
-				"\n0 as setMemberKey" +
+				"\n0 as setMemberKey, g._createdby_key" +
 				"\nfrom GXD_Genotype_View g" + 
 				"\nINNER JOIN GXD_Specimen s on (g._Genotype_key = s._Genotype_key)" + 
 				"\nLEFT OUTER JOIN GXD_AllelePair ap on (g._Genotype_key = ap._Genotype_key)" + 

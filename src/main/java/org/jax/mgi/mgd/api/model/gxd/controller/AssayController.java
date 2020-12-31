@@ -82,7 +82,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	
 	@POST
 	@ApiOperation(value = "Get Genotype Set Members by Assay and Set/User")
-	@Path("/getGenotypseBySetUser")
+	@Path("/getGenotypesBySetUser")
 	public List<MGISetDomain> getGenotypesBySetUser(SlimAssayDomain domain) {
 			
 		List<MGISetDomain> results = new ArrayList<MGISetDomain>();

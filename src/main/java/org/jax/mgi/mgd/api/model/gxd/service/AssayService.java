@@ -643,7 +643,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			cmd = cmd + "\nunion all" + 				
 				"\nselect distinct g._Genotype_key, " +
 				"\nCONCAT(g.displayIt,',',a1.symbol,',',a2.symbol) as displayIt," +
-				"\nmgiID as accID," +
+				"\ng.mgiID as accID," +
 				"\n0 as setMemberKey, g._createdby_key" +
 				"\nfrom GXD_Genotype_View g" + 
 				"\nINNER JOIN GXD_Specimen s on (g._Genotype_key = s._Genotype_key)" + 
@@ -651,6 +651,18 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nLEFT OUTER JOIN ALL_Allele a1 on (ap._Allele_key_1 = a1._Allele_key)" + 
 				"\nLEFT OUTER JOIN ALL_Allele a2 on (ap._Allele_key_2 = a2._Allele_key)" + 
 				"\nwhere s._Assay_key = " + searchDomain.getAssayKey();
+			
+			cmd = cmd + "\nunion all" + 				
+					"\nselect distinct g._Genotype_key, " +
+					"\nCONCAT(g.displayIt,',',a1.symbol,',',a2.symbol) as displayIt," +
+					"\ng.mgiID as accID," +
+					"\n0 as setMemberKey, g._createdby_key" +
+					"\nfrom GXD_Genotype_View g" + 
+					"\nINNER JOIN GXD_GelLane s on (g._Genotype_key = s._Genotype_key)" + 
+					"\nLEFT OUTER JOIN GXD_AllelePair ap on (g._Genotype_key = ap._Genotype_key)" + 
+					"\nLEFT OUTER JOIN ALL_Allele a1 on (ap._Allele_key_1 = a1._Allele_key)" + 
+					"\nLEFT OUTER JOIN ALL_Allele a2 on (ap._Allele_key_2 = a2._Allele_key)" + 
+					"\nwhere s._Assay_key = " + searchDomain.getAssayKey();			
 			}
 		
 		cmd = cmd + "\n)";

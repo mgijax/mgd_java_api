@@ -642,7 +642,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand a._logicaldb_key = 1" + 
 				"\nand a.prefixPart = 'MGI:'" + 
 				"\nand a.preferred = 1" +
-				"\n)";
+				")\n)";
 		log.info(cmd);
 
 		try {

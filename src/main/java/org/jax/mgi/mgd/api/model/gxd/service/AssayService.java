@@ -274,13 +274,13 @@ public class AssayService extends BaseService<AssayDomain> {
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
 		String select = "select a._assay_key, t.assaytype, r.numericPart";
-		String from = "from gxd_assay a, gxd_assaytype t, bib_citation_cache r";
+		String from = "from gxd_assay a, gxd_assaytype t, bib_citation_cache r, mrk_marker m";
 		String where = "where a._assaytype_key = t._assaytype_key"
-				+ "\nand a._refs_key = r._refs_key";
-		String orderBy = "order by r.numericPart, t.assaytype";
+				+ "\nand a._refs_key = r._refs_key"
+				+ "\nand a._marker_key = m._marker_key";
+		String orderBy = "order by r.jnumid, a.assayType, m.symbol";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
-		Boolean from_marker = false;
 		Boolean from_accession = false;
 		Boolean from_assaynote = false;
 		Boolean from_probeprep = false;
@@ -338,7 +338,6 @@ public class AssayService extends BaseService<AssayDomain> {
 			value = searchDomain.getMarkerSymbol();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand m.symbol ilike '" + value + "'";
-				from_marker = true;
 			}
 		}
 
@@ -531,10 +530,6 @@ public class AssayService extends BaseService<AssayDomain> {
 			from_assaynote = true;
 		}
 		
-		if (from_marker == true) {
-			from = from + ", mrk_marker m";
-			where = where + "\nand a._marker_key = m._marker_key";
-		}
 		if (from_accession == true) {
 			from = from + ", gxd_assay_acc_view acc";
 			where = where + "\nand a._assay_key = acc._object_key"; 

@@ -26,6 +26,7 @@ import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -641,7 +642,9 @@ public class AssayService extends BaseService<AssayDomain> {
 		if (searchDomain.getAssayKey() != null && !searchDomain.getAssayKey().isEmpty()) {
 			cmd = cmd + "\nunion all" + 				
 				"\nselect distinct g._Genotype_key, " +
-				"\nCONCAT(g.displayIt,',',a1.symbol,',',a2.symbol) as displayIt, g.mgiID, 0 as setMemberKey" + 
+				"\nCONCAT(g.displayIt,',',a1.symbol,',',a2.symbol) as displayIt," +
+				"\nmgiID as accID," +
+				"\n0 as setMemberKey" +
 				"\nfrom GXD_Genotype_View g" + 
 				"\nINNER JOIN GXD_Specimen s on (g._Genotype_key = s._Genotype_key)" + 
 				"\nLEFT OUTER JOIN GXD_AllelePair ap on (g._Genotype_key = ap._Genotype_key)" + 
@@ -657,10 +660,13 @@ public class AssayService extends BaseService<AssayDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				MGISetMemberDomain memberDomain = new MGISetMemberDomain();
+				memberDomain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 				memberDomain.setSetMemberKey(rs.getString("setMemberKey"));
 				memberDomain.setSetKey("1055");
-				memberDomain.setObjectKey(rs.getString("_Object_key"));
+				memberDomain.setObjectKey(rs.getString("_object_key"));
 				memberDomain.setLabel(rs.getString("displayIt"));
+				memberDomain.setCreatedByKey(rs.getString("_createdby_key"));
+				memberDomain.setGenotypeID(rs.getString("accID"));
 				assayDAO.clear();
 				listOfMembers.add(memberDomain);
 			}

@@ -12,7 +12,7 @@ public class SlimAssayTranslator extends BaseEntityDomainTranslator<Assay, SlimA
 		SlimAssayDomain domain = new SlimAssayDomain();
 		
 		domain.setAssayKey(String.valueOf(entity.get_assay_key()));
-		domain.setAssayDisplay(entity.getReference().getReferenceCitationCache().getJnumid() + ";" + entity.getAssayType() + ";" + entity.getMarker().getSymbol());
+		domain.setAssayDisplay(entity.getReference().getReferenceCitationCache().getJnumid() + ";" + entity.getAssayType().getAssayType() + ";" + entity.getMarker().getSymbol());
 		domain.setAssayTypeKey(String.valueOf(entity.getAssayType().get_assaytype_key()));
 		domain.setAssayType(entity.getAssayType().getAssayType());
 		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));

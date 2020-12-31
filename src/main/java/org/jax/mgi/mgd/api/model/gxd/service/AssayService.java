@@ -614,8 +614,10 @@ public class AssayService extends BaseService<AssayDomain> {
 
 	@Transactional	
 	public List<MGISetDomain> getGenotypesBySetUser(SlimAssayDomain searchDomain) {
-		// return all genotypes for given assay (searchDomain.getAssayKey())
-		// union set members of genotype (_set_key = 1055) + user (searchDomain.getCreatedByKey())
+		// return 
+		// all set members of genotype (_set_key = 1055) + user (searchDomain.getCreatedByKey())
+		// union
+		// all genotypes for given assay (searchDomain.getAssayKey())
 
 		List<MGISetDomain> results = new ArrayList<MGISetDomain>();		
 		List<MGISetMemberDomain> listOfMembers = new ArrayList<MGISetMemberDomain>();
@@ -626,10 +628,11 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\n'*['||a.accID||'] '||s.label," + 
 				"\na.accID," + 
 				"\ns._setmember_key as setMemberKey" + 
-				"\nfrom mgi_setmember s, acc_accession a" + 
+				"\nfrom mgi_setmember s, acc_accession a, mgi_user u" + 
 				"\nwhere s._set_key = 1055" + 
+				"\nand s._createdby_key = u._user_key" +
+				"\nand u.login = '" + searchDomain.getCreatedBy() + "'" +
 				"\nand s._object_key = a._object_key" + 
-				"\nand s._createdby_key = " + searchDomain.getCreatedByKey() +
 				"\nand a._mgitype_key = 12" + 
 				"\nand a._logicaldb_key = 1" + 
 				"\nand a.prefixPart = 'MGI:'" + 
@@ -637,15 +640,15 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		if (searchDomain.getAssayKey() != null && !searchDomain.getAssayKey().isEmpty()) {
 			cmd = cmd + "\nunion all" + 				
-			"\nselect distinct g._Genotype_key, " +
-			"\nCONCAT(g.displayIt,',',a1.symbol,',',a2.symbol) as displayIt, g.mgiID, 0 as setMemberKey" + 
-			"\nfrom GXD_Genotype_View g" + 
-			"\nINNER JOIN GXD_Specimen s on (g._Genotype_key = s._Genotype_key)" + 
-			"\nLEFT OUTER JOIN GXD_AllelePair ap on (g._Genotype_key = ap._Genotype_key)" + 
-			"\nLEFT OUTER JOIN ALL_Allele a1 on (ap._Allele_key_1 = a1._Allele_key)" + 
-			"\nLEFT OUTER JOIN ALL_Allele a2 on (ap._Allele_key_2 = a2._Allele_key)" + 
-			"\nwhere s._Assay_key = " + searchDomain.getAssayKey();
-		}
+				"\nselect distinct g._Genotype_key, " +
+				"\nCONCAT(g.displayIt,',',a1.symbol,',',a2.symbol) as displayIt, g.mgiID, 0 as setMemberKey" + 
+				"\nfrom GXD_Genotype_View g" + 
+				"\nINNER JOIN GXD_Specimen s on (g._Genotype_key = s._Genotype_key)" + 
+				"\nLEFT OUTER JOIN GXD_AllelePair ap on (g._Genotype_key = ap._Genotype_key)" + 
+				"\nLEFT OUTER JOIN ALL_Allele a1 on (ap._Allele_key_1 = a1._Allele_key)" + 
+				"\nLEFT OUTER JOIN ALL_Allele a2 on (ap._Allele_key_2 = a2._Allele_key)" + 
+				"\nwhere s._Assay_key = " + searchDomain.getAssayKey();
+			}
 		
 		cmd = cmd + "\n)";
 		log.info(cmd);

@@ -525,7 +525,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			from_accession = true;
 		}
 		
-		if (searchDomain.getAssayNote() != null) {
+		if (searchDomain.getAssayNote().getAssayNote() != null && !searchDomain.getAssayNote().getAssayNote().isEmpty()) {
 			value = searchDomain.getAssayNote().getAssayNote();
 			where = where + "\nand n.assaynote ilike '" + value + "'";
 			from_assaynote = true;

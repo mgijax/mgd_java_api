@@ -621,16 +621,8 @@ public class AssayService extends BaseService<AssayDomain> {
 		List<MGISetMemberDomain> listOfMembers = new ArrayList<MGISetMemberDomain>();
 		MGISetDomain domain = new MGISetDomain();
 		
-		String cmd = "\n(select distinct g._Genotype_key, " +
-				"\nCONCAT(g.displayIt,',',a1.symbol,',',a2.symbol) as displayIt, g.mgiID, 0 as setMemberKey" + 
-				"\nfrom GXD_Genotype_View g" + 
-				"\nINNER JOIN GXD_Specimen s on (g._Genotype_key = s._Genotype_key)" + 
-				"\nLEFT OUTER JOIN GXD_AllelePair ap on (g._Genotype_key = ap._Genotype_key)" + 
-				"\nLEFT OUTER JOIN ALL_Allele a1 on (ap._Allele_key_1 = a1._Allele_key)" + 
-				"\nLEFT OUTER JOIN ALL_Allele a2 on (ap._Allele_key_2 = a2._Allele_key)" + 
-				"\nwhere s._Assay_key = " + searchDomain.getAssayKey() +
-				"\nunion all" + 
-				"\nselect distinct s._Object_key," + 
+		String cmd = 
+				"\n(select distinct s._Object_key," + 
 				"\n'*['||a.accID||'] '||s.label," + 
 				"\na.accID," + 
 				"\ns._setmember_key as setMemberKey" + 
@@ -641,8 +633,21 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand a._mgitype_key = 12" + 
 				"\nand a._logicaldb_key = 1" + 
 				"\nand a.prefixPart = 'MGI:'" + 
-				"\nand a.preferred = 1" +
-				")\n)";
+				"\nand a.preferred = 1";
+		
+		if (searchDomain.getAssayKey() != null && !searchDomain.getAssayKey().isEmpty()) {
+			cmd = cmd + "\nunion all" + 				
+			"\nselect distinct g._Genotype_key, " +
+			"\nCONCAT(g.displayIt,',',a1.symbol,',',a2.symbol) as displayIt, g.mgiID, 0 as setMemberKey" + 
+			"\nfrom GXD_Genotype_View g" + 
+			"\nINNER JOIN GXD_Specimen s on (g._Genotype_key = s._Genotype_key)" + 
+			"\nLEFT OUTER JOIN GXD_AllelePair ap on (g._Genotype_key = ap._Genotype_key)" + 
+			"\nLEFT OUTER JOIN ALL_Allele a1 on (ap._Allele_key_1 = a1._Allele_key)" + 
+			"\nLEFT OUTER JOIN ALL_Allele a2 on (ap._Allele_key_2 = a2._Allele_key)" + 
+			"\nwhere s._Assay_key = " + searchDomain.getAssayKey();
+		}
+		
+		cmd = cmd + "\n)";
 		log.info(cmd);
 
 		try {

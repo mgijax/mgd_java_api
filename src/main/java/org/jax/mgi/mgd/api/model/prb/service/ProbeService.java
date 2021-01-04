@@ -721,7 +721,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		List<SlimProbeDomain> results = new ArrayList<SlimProbeDomain>();
 		
 		String cmd = "select accID, _object_key, description from PRB_Acc_View"
-					+ "\nwhere accID ilike '" + searchDomain.getAccID() + "'";
+					+ "\nwhere accID = '" + searchDomain.getAccID().toUpperCase() + "'";
 		log.info(cmd);
 		
 		try {

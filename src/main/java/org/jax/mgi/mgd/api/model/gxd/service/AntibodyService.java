@@ -619,7 +619,7 @@ and a._antibody_key = aa._antibody_key
 		List<SlimAntibodyDomain> results = new ArrayList<SlimAntibodyDomain>();
 		
 		String cmd = "select accID, _object_key, description from GXD_Antibody_Acc_View"
-					+ "\nwhere accID ilike '" + searchDomain.getAccID() + "'";
+					+ "\nwhere accID = '" + searchDomain.getAccID().toUpperCase() + "'";
 		log.info(cmd);
 		
 		try {

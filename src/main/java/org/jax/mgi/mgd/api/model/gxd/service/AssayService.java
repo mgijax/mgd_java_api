@@ -431,7 +431,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				where = where + "\nand s.specimenLabel ilike '" + value + "'";				
 				from_specimen = true;
 			}
-			value = searchDomain.getSpecimens().get(0).getGenotypeID();
+			value = searchDomain.getSpecimens().get(0).getGenotypeAccID();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand g.accID ilike '" + value + "'";	
 				from_genotype = true;

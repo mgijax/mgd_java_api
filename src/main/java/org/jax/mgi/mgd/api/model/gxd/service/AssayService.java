@@ -442,7 +442,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				where = where + "\nand s.age ilike '" + value + "%'";				
 				from_specimen = true;
 			}			
-			value = searchDomain.getSpecimens().get(0).getAgePostfix();
+			value = searchDomain.getSpecimens().get(0).getAgeStage();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand s.age ilike '%" + value + "'";				
 				from_specimen = true;

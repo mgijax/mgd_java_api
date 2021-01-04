@@ -34,6 +34,5 @@ public class SpecimenDomain extends BaseDomain {
 	private String modification_date;
 	
 	private List<InSituResultDomain> results;
-	private int resultsCount;
 	
 }

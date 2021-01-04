@@ -212,6 +212,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			// 10 = Segment Type (probe)
 			// 24 = Vector Type (probe)
 			// 150 = Molecular Segment Note (probe)
+			// 161 = GXD Assay Age
 			if (searchDomain.getVocabKey().equals("39")
 					|| searchDomain.getVocabKey().equals("42")
 					|| searchDomain.getVocabKey().equals("37") 
@@ -219,7 +220,8 @@ public class VocabService extends BaseService<VocabularyDomain> {
 					|| searchDomain.getVocabKey().equals("17")
 					|| searchDomain.getVocabKey().equals("10")
 					|| searchDomain.getVocabKey().equals("24")
-					|| searchDomain.getVocabKey().equals("150")										
+					|| searchDomain.getVocabKey().equals("150")	
+					|| searchDomain.getVocabKey().equals("161")															
 					) {
 				orderBy = "order by t.sequenceNum";
 			}

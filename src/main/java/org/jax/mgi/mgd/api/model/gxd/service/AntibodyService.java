@@ -618,8 +618,8 @@ and a._antibody_key = aa._antibody_key
 		
 		List<SlimAntibodyDomain> results = new ArrayList<SlimAntibodyDomain>();
 		
-		String cmd = "select mgiID, _object_key, description from GXD_Antibody_Summary_View"
-					+ "\nwhere mgiID ilike '" + searchDomain.getAccID() + "'";
+		String cmd = "select accID, _object_key, description from GXD_Antibody_Acc_View"
+					+ "\nwhere accID ilike '" + searchDomain.getAccID() + "'";
 		log.info(cmd);
 		
 		try {
@@ -627,7 +627,7 @@ and a._antibody_key = aa._antibody_key
 			
 			while (rs.next()) {
 				SlimAntibodyDomain slimdomain = new SlimAntibodyDomain();
-				slimdomain.setAccID(rs.getString("mgiID"));
+				slimdomain.setAccID(rs.getString("accID"));
 				slimdomain.setAntibodyKey(rs.getString("_object_key"));
 				slimdomain.setAntibodyName(rs.getString("description"));
 				results.add(slimdomain);

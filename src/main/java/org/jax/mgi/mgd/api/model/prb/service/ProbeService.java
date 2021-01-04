@@ -720,8 +720,8 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		
 		List<SlimProbeDomain> results = new ArrayList<SlimProbeDomain>();
 		
-		String cmd = "select mgiID, _object_key, description from PRB_Probe_Summary_View"
-					+ "\nwhere mgiID ilike '" + searchDomain.getAccID() + "'";
+		String cmd = "select accID, _object_key, description from PRB_Acc_View"
+					+ "\nwhere accID ilike '" + searchDomain.getAccID() + "'";
 		log.info(cmd);
 		
 		try {
@@ -729,7 +729,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			
 			while (rs.next()) {
 				SlimProbeDomain slimdomain = new SlimProbeDomain();
-				slimdomain.setAccID(rs.getString("mgiID"));
+				slimdomain.setAccID(rs.getString("accID"));
 				slimdomain.setProbeKey(rs.getString("_object_key"));
 				slimdomain.setName(rs.getString("description"));
 				results.add(slimdomain);

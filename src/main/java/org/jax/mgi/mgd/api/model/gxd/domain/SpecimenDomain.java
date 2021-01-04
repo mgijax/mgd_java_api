@@ -23,7 +23,7 @@ public class SpecimenDomain extends BaseDomain {
 	private String specimenLabel;
 	private String sex;
 	private String agePrefix;
-	private String agePostfix;
+	private String ageStage;
 	private String age;
 	private String ageMin;
 	private String ageMax;

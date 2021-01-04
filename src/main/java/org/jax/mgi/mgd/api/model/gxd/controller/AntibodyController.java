@@ -78,5 +78,21 @@ public class AntibodyController extends BaseController<AntibodyDomain> {
 		
 		return results;
 	}	
+
+	@POST
+	@ApiOperation(value = "Validate Antibody by accID, returns List of SlimAntibodyDomain")
+	@Path("/validateAntibody")
+	public List<SlimAntibodyDomain> validateAntibody(SlimAntibodyDomain searchDomain) {
+	
+		List<SlimAntibodyDomain> results = new ArrayList<SlimAntibodyDomain>();
+
+		try {
+			results = antibodyService.validateAntibody(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
 }

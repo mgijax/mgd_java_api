@@ -624,6 +624,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		List<MGISetMemberDomain> listOfMembers = new ArrayList<MGISetMemberDomain>();
 		MGISetDomain domain = new MGISetDomain();
 		
+		// search mgi_setmembers where _set_key = 1055 (genotype)
 		String cmd = 
 				"\n(select distinct s._Object_key," + 
 				"\n'*['||a.accID||'] '||s.label as displayIt," + 
@@ -640,6 +641,8 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand a.preferred = 1";
 		
 		if (searchDomain.getAssayKey() != null && !searchDomain.getAssayKey().isEmpty()) {
+			
+			// search gxd_specimen
 			cmd = cmd + "\nunion all" + 				
 				"\nselect distinct g._Genotype_key, " +
 				"\nCONCAT(g.displayIt,',',a1.symbol,',',a2.symbol) as displayIt," +
@@ -652,6 +655,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nLEFT OUTER JOIN ALL_Allele a2 on (ap._Allele_key_2 = a2._Allele_key)" + 
 				"\nwhere s._Assay_key = " + searchDomain.getAssayKey();
 			
+			// search gxd_gellane
 			cmd = cmd + "\nunion all" + 				
 					"\nselect distinct g._Genotype_key, " +
 					"\nCONCAT(g.displayIt,',',a1.symbol,',',a2.symbol) as displayIt," +

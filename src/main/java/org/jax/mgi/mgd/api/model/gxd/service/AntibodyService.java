@@ -612,5 +612,33 @@ and a._antibody_key = aa._antibody_key
 		
 		return results;
 	}
+
+	@Transactional
+	public List<SlimAntibodyDomain> validateAntibody(SlimAntibodyDomain searchDomain) {
+		
+		List<SlimAntibodyDomain> results = new ArrayList<SlimAntibodyDomain>();
+		
+		String cmd = "select mgiID, _object_key, description from GXD_Antibody_Summary_View"
+					+ "\nwhere mgiID ilike '" + searchDomain.getAccID() + "'";
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			
+			while (rs.next()) {
+				SlimAntibodyDomain slimdomain = new SlimAntibodyDomain();
+				slimdomain.setAccID(rs.getString("mgiID"));
+				slimdomain.setAntibodyKey(rs.getString("_object_key"));
+				slimdomain.setAntibodyName(rs.getString("description"));
+				results.add(slimdomain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
 }

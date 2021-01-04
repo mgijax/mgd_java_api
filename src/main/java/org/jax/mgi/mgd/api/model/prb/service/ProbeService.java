@@ -714,5 +714,33 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		
 		return results;
 	}
+
+	@Transactional
+	public List<SlimProbeDomain> validateProbe(SlimProbeDomain searchDomain) {
+		
+		List<SlimProbeDomain> results = new ArrayList<SlimProbeDomain>();
+		
+		String cmd = "select mgiID, _object_key, description from PRB_Probe_Summary_View"
+					+ "\nwhere mgiID ilike '" + searchDomain.getAccID() + "'";
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			
+			while (rs.next()) {
+				SlimProbeDomain slimdomain = new SlimProbeDomain();
+				slimdomain.setAccID(rs.getString("mgiID"));
+				slimdomain.setProbeKey(rs.getString("_object_key"));
+				slimdomain.setName(rs.getString("description"));
+				results.add(slimdomain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
 }

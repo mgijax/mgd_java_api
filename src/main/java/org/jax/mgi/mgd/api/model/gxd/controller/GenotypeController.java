@@ -139,7 +139,7 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 	@POST
 	@ApiOperation(value = "Validate Genotype by accID, returns List of SlimGenotypeDomain")
 	@Path("/validateGenotype")
-	public List<SlimGenotypeDomain> validateAllele(SlimGenotypeDomain searchDomain) {
+	public List<SlimGenotypeDomain> validateGenotype(SlimGenotypeDomain searchDomain) {
 	
 		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
 

@@ -160,7 +160,9 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				|| searchDomain.getVocabKey().equals("157")
 				|| searchDomain.getVocabKey().equals("158")				
 				|| searchDomain.getVocabKey().equals("159")
-				|| searchDomain.getVocabKey().equals("160")) {
+				|| searchDomain.getVocabKey().equals("160")
+				|| searchDomain.getVocabKey().equals("163")				
+				) {
 			
 			return searchGXDVocab(searchDomain.getVocabKey());		
 		}

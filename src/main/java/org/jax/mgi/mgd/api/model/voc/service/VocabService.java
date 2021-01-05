@@ -327,7 +327,10 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		}
 		else if (vocabKey.equals("160") ) {
 			cmd = "select _secondary_key as termKey, secondary as term from gxd_secondary order by term";
-		}		
+		}
+		else if (vocabKey.equals("163") ) {
+			cmd = "select _strength_key as termKey, strength as term from gxd_strength order by term";
+		}			
 		log.info(cmd);		
 		
 		try {

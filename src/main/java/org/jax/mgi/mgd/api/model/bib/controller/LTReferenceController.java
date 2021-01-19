@@ -278,7 +278,10 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	}
 
 	/* return domain object for single reference with given key
+	 * Note: added Transactional annotation to ensure that the session stays open for the duration of
+	 * this method, allowing for collection of the workflow relevance data.
 	 */
+	@Transactional
 	@Override
 	public SearchResults<LTReferenceDomain> getReferenceByKey (String key) {
 		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();

@@ -6,11 +6,13 @@ import java.util.List;
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBookDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceNoteDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceAssociatedData;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
+import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DecodeString;
 
@@ -132,6 +134,15 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 			}
 		}
 
+		// Data for workflow relevance settings
+		List<LTReferenceWorkflowRelevance> relevanceHistory = entity.getWorkflowRelevances();
+		if ((relevanceHistory != null) && (relevanceHistory.size() > 0)) {
+			domain.relevanceHistory = new ArrayList<LTReferenceWorkflowRelevanceDomain>();
+			for (LTReferenceWorkflowRelevance wr : relevanceHistory) {
+				domain.relevanceHistory.add(new LTReferenceWorkflowRelevanceDomain(wr));
+			}
+		}
+		
 		// turning this on causes a LazyINitializationExpception; no idea why
 		// one-to-many allele associations
 //		if (entity.getAlleleAssocs() != null && !entity.getAlleleAssocs().isEmpty()) {

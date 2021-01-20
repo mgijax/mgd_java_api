@@ -106,7 +106,7 @@ public class LTReference extends BaseEntity {
 	@JoinColumn(name="_refs_key")
 	private List<LTReferenceWorkflowStatus> workflowStatuses;
 
-	@OneToMany(fetch=FetchType.EAGER)
+	@OneToMany()
 	@JoinColumn(name="_refs_key")
 	@OrderBy("isCurrent desc")
 	private List<LTReferenceWorkflowRelevance> workflowRelevances;

@@ -272,6 +272,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 
 	/* return domain object for single reference with given key
 	 */
+	@Transactional
 	@Override
 	public SearchResults<LTReferenceDomain> getValidReferenceCheck (String refsKey) {
 		return this.getReferenceByKey(refsKey);
@@ -310,7 +311,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 		return null;
 	}
 
-	// never useds	
+	// never used
 	@Override
 	public SearchResults<LTReferenceDomain> update(LTReferenceDomain object, User user) {
 		return null;

@@ -150,8 +150,8 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		// for vocab specific ordering, reset orderBy based on _vocab_key or name
 		String orderBy = "order by t.term";		
 		
+		// for non-vocab tables that are acting like voc_vocab/voc_term		
 		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty()) {
-			// for non-vocab tables that are acting like voc_vocab/voc_term
 			if (searchDomain.getVocabKey().equals("151")
 					|| searchDomain.getVocabKey().equals("152")
 					|| searchDomain.getVocabKey().equals("153")

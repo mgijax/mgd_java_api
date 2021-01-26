@@ -150,21 +150,23 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		// for vocab specific ordering, reset orderBy based on _vocab_key or name
 		String orderBy = "order by t.term";		
 		
-		// for non-vocab tables that are acting like voc_vocab/voc_term
-		if (searchDomain.getVocabKey().equals("151")
-				|| searchDomain.getVocabKey().equals("152")
-				|| searchDomain.getVocabKey().equals("153")
-				|| searchDomain.getVocabKey().equals("154")
-				|| searchDomain.getVocabKey().equals("155")
-				|| searchDomain.getVocabKey().equals("156")
-				|| searchDomain.getVocabKey().equals("157")
-				|| searchDomain.getVocabKey().equals("158")				
-				|| searchDomain.getVocabKey().equals("159")
-				|| searchDomain.getVocabKey().equals("160")
-				|| searchDomain.getVocabKey().equals("163")				
-				) {
-			
-			return searchGXDVocab(searchDomain.getVocabKey());		
+		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty()) {
+			// for non-vocab tables that are acting like voc_vocab/voc_term
+			if (searchDomain.getVocabKey().equals("151")
+					|| searchDomain.getVocabKey().equals("152")
+					|| searchDomain.getVocabKey().equals("153")
+					|| searchDomain.getVocabKey().equals("154")
+					|| searchDomain.getVocabKey().equals("155")
+					|| searchDomain.getVocabKey().equals("156")
+					|| searchDomain.getVocabKey().equals("157")
+					|| searchDomain.getVocabKey().equals("158")				
+					|| searchDomain.getVocabKey().equals("159")
+					|| searchDomain.getVocabKey().equals("160")
+					|| searchDomain.getVocabKey().equals("163")				
+					) {
+				
+				return searchGXDVocab(searchDomain.getVocabKey());		
+			}
 		}
 		
 		// for UIs that use getName()

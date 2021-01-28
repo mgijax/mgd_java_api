@@ -104,9 +104,6 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 				
 				results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);
 			}
-//			} catch (Throwable t) {
-//				results.setError("Failed", "Failed to save changes (" + t.toString() + ")", Constants.HTTP_SERVER_ERROR);
-//			}
 		} else {
 			results.setError("FailedAuthentication", "Failed - invalid username", Constants.HTTP_PERMISSION_DENIED);
 		}

@@ -788,6 +788,15 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		return results.intValue();
 	}
 
+	/* get the next available primary key for a workflow relevance record
+	 */
+	public synchronized int getNextWorkflowRelevanceKey() {
+		// returns an integer rather than *, as the void return was causing a mapping exception
+		Query query = entityManager.createNativeQuery("select nextval('bib_workflow_relevance_seq')");
+		BigInteger results = (BigInteger) query.getSingleResult();
+		return results.intValue();
+	}
+
 	/* update the bib_citation_cache table for the given reference key
 	 */
 	public void updateCitationCache(String refsKey) {

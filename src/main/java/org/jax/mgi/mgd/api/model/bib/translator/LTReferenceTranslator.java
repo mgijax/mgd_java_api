@@ -141,6 +141,7 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 			for (LTReferenceWorkflowRelevance wr : relevanceHistory) {
 				domain.relevanceHistory.add(new LTReferenceWorkflowRelevanceDomain(wr));
 			}
+			domain.relevance = domain.relevanceHistory.get(0).relevance;
 		}
 		
 		// turning this on causes a LazyINitializationExpception; no idea why

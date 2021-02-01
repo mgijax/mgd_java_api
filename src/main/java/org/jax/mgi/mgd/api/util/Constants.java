@@ -50,6 +50,7 @@ public class Constants {
 	public static Integer VOC_WORKFLOW_TAGS = 129;
 	public static Integer VOC_SUPPLEMENTAL = 130;
 	public static Integer VOC_REFERENCE_TYPE = 131;
+	public static Integer VOC_RELEVANCE = 149;
 
 	// voc_term where _vocab_key = 53
 	// qualifier 'Generic Annotation Qualifier', value = null	

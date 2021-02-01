@@ -60,6 +60,11 @@ public class LTReferenceWorkflowRelevance extends BaseEntity {
 	/***--- transient methods ---***/
 	
 	@Transient
+	public void setIsCurrent(Integer isCurrent) {
+		this.isCurrent = isCurrent;
+	}
+	
+	@Transient
 	public String getRelevance() {
 		if (this.relevance == null) { return null; }
 		return this.relevance.getTerm();

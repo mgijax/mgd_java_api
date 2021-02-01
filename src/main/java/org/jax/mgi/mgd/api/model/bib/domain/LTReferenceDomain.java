@@ -54,7 +54,6 @@ public class LTReferenceDomain extends BaseDomain {
 	public String short_citation;
 
 	public String isReviewArticle;	
-	//public String isDiscard;
 
 	// workflow status
 	public String ap_status;
@@ -65,8 +64,6 @@ public class LTReferenceDomain extends BaseDomain {
 	
 	// workflow relevance
 	public String relevance;
-	public String confidence;
-	public String version;
 	
 	// workflow data
 	public String has_pdf;
@@ -128,9 +125,7 @@ public class LTReferenceDomain extends BaseDomain {
 	/* update the relevance data for this domain object (This method does not persist the
 	 * change to the database.)
 	 */
-	public void setRelevance (String relevance, String confidence, String version) throws APIException {
-		this.confidence = confidence;
-		this.version = version;
+	public void setRelevance (String relevance) throws APIException {
 		this.relevance = relevance;
 	}
 }

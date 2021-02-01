@@ -24,6 +24,7 @@ import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
+import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
@@ -248,6 +249,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		anyChanges = applyNoteChanges(entity, domain, currentUser) | anyChanges;
 		anyChanges = applyAccessionIDChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyWorkflowDataChanges(entity, domain, currentUser) || anyChanges;
+		// TODO : must handle relevance changes here, create new relevance record if needed
+		anyChanges = applyWorkflowRelevanceChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyAlleleAssocChanges(entity, domain.getAlleleAssocs(), currentUser) || anyChanges;		
 		anyChanges = applyStrainAssocChanges(entity, domain.getStrainAssocs(), currentUser) || anyChanges;		
 		anyChanges = applyMarkerAssocChanges(entity, domain.getMarkerAssocs(), currentUser) || anyChanges;
@@ -617,6 +620,46 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			referenceDAO.persist(book);
 			entity.getReferenceBook().add(book);
 			anyChanges = true;
+		}
+		return anyChanges;
+	}
+
+	/* apply changes in workflow relevance from domain to entity
+	 */
+	private boolean applyWorkflowRelevanceChanges(LTReference entity, LTReferenceDomain domain, User currentUser) throws APIException {
+		// need to handle:  updated workflow relevance, new workflow relevance -- (no deletions)
+
+		boolean anyChanges = false;
+		LTReferenceWorkflowRelevance oldRel = entity.getWorkflowRelevance();
+
+		if (oldRel != null) {
+			// Compare with old relevance.  If matches, no change.  If does not match, need to create a new
+			// relevance record, and need to mark any old one as no longer current.
+
+			if (!smartEqual(oldRel.getRelevance(), domain.relevance)) {
+
+				if (oldRel != null) {
+					// need to mark old as no longer current
+					oldRel.setIsCurrent(0);
+					referenceDAO.persist(oldRel);
+				}
+
+				LTReferenceWorkflowRelevance rel = new LTReferenceWorkflowRelevance();
+				rel.set_refs_key(Integer.valueOf(domain.refsKey));
+				rel.setIsCurrent(1);
+				rel.setRelevance(getTermByTerm(Constants.VOC_RELEVANCE, domain.relevance));
+
+				rel.setCreatedByUser(currentUser);
+				rel.setModifiedByUser(currentUser);
+				rel.setCreation_date(new Date());
+				rel.setModification_date(new Date());
+
+				rel.set_assoc_key(referenceDAO.getNextWorkflowRelevanceKey());
+
+				referenceDAO.persist(rel);
+				entity.addWorkflowRelevance(rel);
+				anyChanges = true;
+			}
 		}
 		return anyChanges;
 	}

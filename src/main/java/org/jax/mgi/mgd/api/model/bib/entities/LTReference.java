@@ -99,6 +99,10 @@ public class LTReference extends BaseEntity {
 	@Transient
 	private Map<String,String> workflowStatusCache;
 
+	// current workflow relevance value (cached with main object) -- not persisted
+	@Transient
+	private String relevanceCache;
+	
 	/* The @Fetch annotation (below) allows us to specify multiple EAGER-loaded collections, which would
 	 * otherwise throw an error.
 	 */
@@ -157,6 +161,11 @@ public class LTReference extends BaseEntity {
 	@Where(clause="`_mgitype_key` in (11)")
 	@OrderBy("_refassoctype_key")
 	private List<MGIReferenceAssoc> alleleAssocs;
+	
+	@Transient
+	public void addWorkflowRelevance(LTReferenceWorkflowRelevance rel) {
+		this.workflowRelevances.add(rel);
+	}
 	
 	/* Find and return the first accession ID matching any specified logical database, prefix,
 	 * is-preferred, and is-private settings.
@@ -241,6 +250,34 @@ public class LTReference extends BaseEntity {
 			return workflowStatusCache.get(groupAbbrev);
 		}
 		return null;
+	}
+
+	@Transient
+	public void clearRelevanceCache() {
+		relevanceCache = null;
+	}
+
+	@Transient
+	private void buildRelevanceCache() {
+		clearRelevanceCache();
+		if (workflowRelevances != null) {
+			for (LTReferenceWorkflowRelevance rel : workflowRelevances) {
+				if (rel.getIsCurrent() == 1) {
+					if ("keep".equals(rel.getRelevance())) {
+						relevanceCache = rel.getRelevance();
+					} else if ("discard".equals(rel.getRelevance())) {
+						relevanceCache = rel.getRelevance();
+					}
+					return;		// bail out once we find the current one
+				}
+			}
+		}
+	}
+	
+	@Transient
+	public String getRelevance() {
+		if (relevanceCache == null) { buildRelevanceCache(); }
+		return relevanceCache;
 	}
 
 	@Transient

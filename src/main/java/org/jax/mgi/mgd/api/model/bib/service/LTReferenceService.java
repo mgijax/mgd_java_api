@@ -23,6 +23,7 @@ import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
+import org.jboss.logging.Logger;
 
 @RequestScoped
 public class LTReferenceService {
@@ -47,8 +48,11 @@ public class LTReferenceService {
 	 */
 	@Transactional
 	public LTReferenceDomain updateReference(LTReferenceDomain domain, User currentUser) throws FatalAPIException, NonFatalAPIException, APIException {
+		Logger log = Logger.getLogger(getClass());
+		log.info("in LTReferenceService");
 		repo.update(domain, currentUser);
-		return domain;
+		log.info("back in LTReferenceService");
+		return repo.get(domain.refsKey);
 	}
 
 	/* returns true if references were updated, false if not; does not update citation cache, as
@@ -259,5 +263,24 @@ public class LTReferenceService {
 		return results;
 	}	
 	
-	
+	/* Get a list of valid relevance versions for use in a search pick list in the pwi.
+	 */
+	public List<String> getRelevanceVersions() {
+		List<String> versions = new ArrayList<String>();
+
+		String cmd = "select distinct version " + 
+				"from bib_workflow_relevance " + 
+				"where version is not null " +
+				"order by version";
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				versions.add(rs.getString("version"));
+			}
+			sqlExecutor.cleanup();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return versions;
+	}
 }

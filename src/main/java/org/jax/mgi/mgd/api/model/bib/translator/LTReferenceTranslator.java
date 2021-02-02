@@ -138,10 +138,14 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		List<LTReferenceWorkflowRelevance> relevanceHistory = entity.getWorkflowRelevances();
 		if ((relevanceHistory != null) && (relevanceHistory.size() > 0)) {
 			domain.relevanceHistory = new ArrayList<LTReferenceWorkflowRelevanceDomain>();
+			String current = null;
 			for (LTReferenceWorkflowRelevance wr : relevanceHistory) {
 				domain.relevanceHistory.add(new LTReferenceWorkflowRelevanceDomain(wr));
+				if (wr.getIsCurrent() == 1) {
+					current = wr.getRelevance();
+				}
 			}
-			domain.relevance = domain.relevanceHistory.get(0).relevance;
+			domain.relevance = current;
 		}
 		
 		// turning this on causes a LazyINitializationExpception; no idea why

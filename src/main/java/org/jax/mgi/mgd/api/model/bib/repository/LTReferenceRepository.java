@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.exception.FatalAPIException;
@@ -117,9 +118,12 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		LTReference entity = getReference(domain.refsKey);
 		log.info("found LTReference/entity");
 		applyDomainChanges(entity, domain, user);
+		log.info("applied domain changes");
 		referenceDAO.persist(entity);
+		log.info("presisted entity");
 		referenceDAO.updateCitationCache(domain.refsKey);		
-		return translator.translate(entity);
+		log.info("updated citation cache");
+		return null;	// just return null, will look up later on
 	}
 
 	/* get a list of events in the status history of the reference with the specified key

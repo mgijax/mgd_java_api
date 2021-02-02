@@ -53,6 +53,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	/* update the given reference in the database, then return a revised version of it in the SearchResults
 	 */
 	@Override
+	@Transactional
 	public SearchResults<LTReferenceDomain> updateReference(String api_access_token, String username, LTReferenceDomain reference) {
 		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
 
@@ -296,6 +297,12 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 		return results;
 	}
 
+	/* return a list of valid values for the version field (for relevance data), for use in a search pick list
+	 */
+	public List<String> getRelevanceVersions() {
+		return referenceService.getRelevanceVersions();
+	}
+	
 	// never used/always use the ReferenceController/create
 	@Override
 	public SearchResults<LTReferenceDomain> create(LTReferenceDomain object, User user) {

@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.bib.interfaces;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
@@ -84,6 +85,11 @@ public interface LTReferenceRESTInterface {
 			@QueryParam("refsKey") String refsKey
 	);
 
+	@GET
+	@Path("/versions")
+	@ApiOperation(value = "Value: Get a list of valid choices for relevance version")
+	public List<String> getRelevanceVersions();
+	
 	@POST
 	@Path("/search")
 	@ApiOperation(value = "Value: Searches Reference by Fields", notes="Notes: Searches Reference Fields")

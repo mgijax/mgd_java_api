@@ -99,10 +99,6 @@ public class LTReference extends BaseEntity {
 	@Transient
 	private Map<String,String> workflowStatusCache;
 
-	// current workflow relevance value (cached with main object) -- not persisted
-	@Transient
-	private String relevanceCache;
-	
 	/* The @Fetch annotation (below) allows us to specify multiple EAGER-loaded collections, which would
 	 * otherwise throw an error.
 	 */
@@ -253,31 +249,15 @@ public class LTReference extends BaseEntity {
 	}
 
 	@Transient
-	public void clearRelevanceCache() {
-		relevanceCache = null;
-	}
-
-	@Transient
-	private void buildRelevanceCache() {
-		clearRelevanceCache();
+	public String getRelevance() {
 		if (workflowRelevances != null) {
 			for (LTReferenceWorkflowRelevance rel : workflowRelevances) {
 				if (rel.getIsCurrent() == 1) {
-					if ("keep".equals(rel.getRelevance())) {
-						relevanceCache = rel.getRelevance();
-					} else if ("discard".equals(rel.getRelevance())) {
-						relevanceCache = rel.getRelevance();
-					}
-					return;		// bail out once we find the current one
+					return rel.getRelevance();
 				}
 			}
 		}
-	}
-	
-	@Transient
-	public String getRelevance() {
-		if (relevanceCache == null) { buildRelevanceCache(); }
-		return relevanceCache;
+		return null;
 	}
 
 	@Transient

@@ -483,13 +483,13 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
+		// + "\nand m._marker_status_key = 1";
 
 		String cmd = "";
 		String select = "select distinct v._object_key, v.description";
 		String from = "from mrk_summary_view v, mrk_marker m";		
 		String where = "where v._mgitype_key = " + mgiTypeKey
-				+ "\nand v._object_key = m._marker_key"
-				+ "\nand m._marker_status_key = 1";
+				+ "\nand v._object_key = m._marker_key";
 		String orderBy = "order by v._object_key, v.description";
 		
 		String value;

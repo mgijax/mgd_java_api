@@ -113,11 +113,12 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			entity.setIsWildType(0);			
 		}
 		
-		if (domain.getIsExtinct() != null && !domain.getIsExtinct().isEmpty()) {
-			entity.setIsExtinct(1);			
+		// default = No
+		if (domain.getIsExtinct() == null || domain.getIsExtinct().isEmpty()) {
+			entity.setIsExtinct(0);			
 		}
 		else {
-			entity.setIsExtinct(0);						
+			entity.setIsExtinct(Integer.valueOf(domain.getIsExtinct()));						
 		}
 		
 		if (domain.getMixedRefKey() != null && !domain.getMixedRefKey().isEmpty()) {

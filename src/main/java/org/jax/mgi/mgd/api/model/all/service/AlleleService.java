@@ -121,11 +121,12 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			entity.setIsExtinct(Integer.valueOf(domain.getIsExtinct()));						
 		}
 		
+		// if Mixed Reference exists, then Mixed = Yes
 		if (domain.getMixedRefKey() != null && !domain.getMixedRefKey().isEmpty()) {
 			entity.setIsMixed(1);
 		}
 		else {
-			entity.setIsMixed(0);			
+			entity.setIsMixed(Integer.valueOf(domain.getIsMixed()));			
 		}		
 		
 		if (domain.getStrainOfOriginKey() != null && !domain.getStrainOfOriginKey().isEmpty()) {

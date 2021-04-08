@@ -125,6 +125,9 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		if (domain.getMixedRefKey() != null && !domain.getMixedRefKey().isEmpty()) {
 			entity.setIsMixed(1);
 		}
+		else if (domain.getIsMixed() == null || domain.getIsMixed().isEmpty()) {
+			entity.setIsMixed(0);
+		}
 		else {
 			entity.setIsMixed(Integer.valueOf(domain.getIsMixed()));			
 		}		
@@ -265,6 +268,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		log.info("processAllele/create/returning results");
 		results.setItem(translator.translate(entity));
 		return results;
+	}
+
+	private void elseif(boolean b) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Transactional

@@ -270,11 +270,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		return results;
 	}
 
-	private void elseif(boolean b) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	@Transactional
 	public SearchResults<AlleleDomain> update(AlleleDomain domain, User user) {
 		

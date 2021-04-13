@@ -824,6 +824,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	 * to the database.
 	 */
 	private boolean updateStatus(LTReference entity, String groupAbbrev, String currentStatus, String newStatus, User currentUser) throws NonFatalAPIException, APIException {
+
 		// no update if new status matches old status (or if no group is specified)
 		if ( ((currentStatus != null) && currentStatus.equals(newStatus)) || (groupAbbrev == null) ||
 				((currentStatus == null) && (newStatus == null)) ) {
@@ -879,6 +880,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		boolean anyChanges = updateStatus(entity, Constants.WG_AP, entity.getStatus(Constants.WG_AP), domain.ap_status, currentUser);
 		anyChanges = updateStatus(entity, Constants.WG_GO, entity.getStatus(Constants.WG_GO), domain.go_status, currentUser) || anyChanges;
 		anyChanges = updateStatus(entity, Constants.WG_GXD, entity.getStatus(Constants.WG_GXD), domain.gxd_status, currentUser) || anyChanges;
+		anyChanges = updateStatus(entity, Constants.WG_PRO, entity.getStatus(Constants.WG_PRO), domain.pro_status, currentUser) || anyChanges;
 		anyChanges = updateStatus(entity, Constants.WG_QTL, entity.getStatus(Constants.WG_QTL), domain.qtl_status, currentUser) || anyChanges;
 		anyChanges = updateStatus(entity, Constants.WG_TUMOR, entity.getStatus(Constants.WG_TUMOR), domain.tumor_status, currentUser) || anyChanges;
 

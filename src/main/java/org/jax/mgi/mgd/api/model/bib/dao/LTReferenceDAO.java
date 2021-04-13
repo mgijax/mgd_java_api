@@ -95,7 +95,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 			statuses = new HashMap<String,String>();
 		}
 
-		for (String group : new String[] { "AP", "GO", "GXD", "QTL", "Tumor" }) {
+		for (String group : new String[] { "AP", "GO", "GXD", "PRO", "QTL", "Tumor" }) {
 			for (String status : new String[] { "New", "Not_Routed", "Routed", "Indexed", "Chosen", "Full_coded", "Rejected"}) {
 				String fieldname = "status_" + group + "_" + status;
 				statusParameters.add(fieldname);

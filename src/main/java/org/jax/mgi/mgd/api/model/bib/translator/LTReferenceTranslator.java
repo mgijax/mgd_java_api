@@ -56,6 +56,7 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		domain.ap_status = entity.getStatus(Constants.WG_AP);
 		domain.go_status = entity.getStatus(Constants.WG_GO);
 		domain.gxd_status = entity.getStatus(Constants.WG_GXD);
+		domain.pro_status = entity.getStatus(Constants.WG_PRO);
 		domain.qtl_status = entity.getStatus(Constants.WG_QTL);
 		domain.tumor_status = entity.getStatus(Constants.WG_TUMOR);
 		domain.workflow_tags = entity.getWorkflowTagsAsStrings();

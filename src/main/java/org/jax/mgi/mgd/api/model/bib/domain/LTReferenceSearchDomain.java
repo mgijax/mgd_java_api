@@ -41,6 +41,7 @@ public class LTReferenceSearchDomain extends BaseDomain {
 	public String ap_status;
 	public String go_status;
 	public String gxd_status;
+	public String pro_status;
 	public String qtl_status;
 	public String tumor_status;
 	public String isDiscard;
@@ -82,6 +83,8 @@ public class LTReferenceSearchDomain extends BaseDomain {
 			this.go_status = status;
 		} else if (group.equalsIgnoreCase("GXD")) {
 			this.gxd_status = status;
+		} else if (group.equalsIgnoreCase("PRO")) {
+			this.pro_status = status;
 		} else if (group.equalsIgnoreCase("QTL")) {
 			this.qtl_status = status;
 		} else if (group.equalsIgnoreCase("Tumor")) {

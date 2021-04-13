@@ -25,9 +25,10 @@ public class Constants {
 	public static String WG_GXD = "GXD";
 	public static String WG_AP = "AP";
 	public static String WG_TUMOR = "Tumor";
+	public static String WG_PRO = "PRO";
 	public static String WG_QTL = "QTL";
 	
-	public static String[] WG_ALL = { WG_AP, WG_GO, WG_GXD, WG_TUMOR, WG_QTL };
+	public static String[] WG_ALL = { WG_AP, WG_GO, WG_GXD, WG_PRO, WG_TUMOR, WG_QTL };
 	
 	// reference workflow statuses
 	public static String WS_CHOSEN = "Chosen";

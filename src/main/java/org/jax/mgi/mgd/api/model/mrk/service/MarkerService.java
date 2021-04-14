@@ -449,10 +449,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// marker accession id
 		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {
 			if (!searchDomain.getMgiAccessionIds().get(0).getAccID().startsWith("MGI:")) {
-				where = where + "\nand acc.numericPart = '" + searchDomain.getMgiAccessionIds().get(0).getAccID() + "'";
+				where = where + "\nand a.numericPart = '" + searchDomain.getMgiAccessionIds().get(0).getAccID() + "'";
 			}
 			else {
-				where = where + "\nand acc.accID = '" + searchDomain.getMgiAccessionIds().get(0).getAccID().toUpperCase() + "'";
+				where = where + "\nand a.accID = '" + searchDomain.getMgiAccessionIds().get(0).getAccID().toUpperCase() + "'";
 			}			
 			from_accession = true;
 		}

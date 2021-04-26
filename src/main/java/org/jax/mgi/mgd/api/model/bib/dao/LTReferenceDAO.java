@@ -43,6 +43,7 @@ import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.NumberParser;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
+import org.jboss.logging.Logger;
 
 public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 
@@ -63,6 +64,9 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 	private static Map<String,String> dates = null;
 
 	private SQLExecutor sqlExecutor = new SQLExecutor();
+
+	private Logger log = Logger.getLogger(getClass());
+
 
 	/* convenience method for instantiating a new search results object, populating its error fields,
 	 * and returning it.
@@ -167,24 +171,17 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		// it considers (for each reference) the current record in the LTReferenceWorkflowRelevance object
 		// (from the BIB_Workflow_Relevance table).  It has three possible values:  Keep, Discard, or Search All.
 		
-		String disTerm = null;		// what isDiscard abbreviation should we require?
-		
-		if (params.containsKey("isDiscard")) {
-			String desiredValue = ((String) params.get("isDiscard")).toLowerCase();
-
+		String relevanceTerm = null;		
+		if (params.containsKey("currentRelevance")) {
+			String desiredValue = ((String) params.get("currentRelevance")).toLowerCase();
 			if ("keep".equals(desiredValue)) {
-				disTerm = "keep";
+				relevanceTerm = "keep";
 			} else if ("discard".equals(desiredValue)) {
-				disTerm = "discard";
+				relevanceTerm = "discard";
 			}
 		}
-		// If the isDiscard parameter was not supplied -- and if we are not looking up an individual
-		// reference by key -- then we only want to return those which are keepers.
-		else if (!params.containsKey("_refs_key")) {
-			disTerm = "keep";
-		}
 		
-		if (disTerm != null) {
+		if (relevanceTerm != null) {
 			Subquery<LTReferenceWorkflowRelevance> disSubquery = query.subquery(LTReferenceWorkflowRelevance.class);
 			Root<LTReferenceWorkflowRelevance> disRoot = disSubquery.from(LTReferenceWorkflowRelevance.class);
 			disSubquery.select(disRoot);
@@ -192,8 +189,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 			List<Predicate> disPredicates = new ArrayList<Predicate>();
 			disPredicates.add(builder.equal(root.get("_refs_key"), disRoot.get("_refs_key")));
 			disPredicates.add(builder.equal(disRoot.get("isCurrent"), 1));
-			disPredicates.add(builder.equal(disRoot.get("relevance").get("term"), disTerm));
-
+			disPredicates.add(builder.equal(disRoot.get("relevance").get("term"), relevanceTerm));
 			disSubquery.where(disPredicates.toArray(new Predicate[]{}));
 			restrictions.add(builder.exists(disSubquery));
 		}
@@ -201,7 +197,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		// Need to handle the workflow relevance history searching...  AND multiple fields within a single
 		// subquery.  Includes:  relevance, relevance_user, relevance_date, relevance_version, and
 		// relevance_confidence.
-		
+/*		
 		if (params.containsKey("relevance") || params.containsKey("relevance_user") || 
 			params.containsKey("relevance_date") || params.containsKey("relevance_version") ||
 			params.containsKey("relevance_confidence")) {
@@ -289,7 +285,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 					}
 				}
 			}
-		
+
 			// If we found at least one criteria for workflow relevance, bundle them into an Exists clause where
 			// all those criteria must match a single record.
 
@@ -299,7 +295,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 				restrictions.add(builder.exists(wfrSubquery));
 			}
 		}
-		
+*/		
 		// Handle list of (workflow) status parameters.  The status fields are always OR-ed within a group.
 		// The status_operator field tells us whether to OR or AND them across groups (and defaults to OR).
 
@@ -744,6 +740,19 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<LTReferenceWorkflowStatus> query = builder.createQuery(LTReferenceWorkflowStatus.class);
 		Root<LTReferenceWorkflowStatus> root = query.from(LTReferenceWorkflowStatus.class);
+
+		query.where(builder.equal(root.get("_refs_key"), refsKey));
+		query.orderBy(builder.desc(root.get("modification_date")));
+
+		return entityManager.createQuery(query).getResultList();
+	}
+
+	/* get a list of the workflow relevance records for a reference
+	 */
+	public List<LTReferenceWorkflowRelevance> getRelevanceHistory (String refsKey) {
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<LTReferenceWorkflowRelevance> query = builder.createQuery(LTReferenceWorkflowRelevance.class);
+		Root<LTReferenceWorkflowRelevance> root = query.from(LTReferenceWorkflowRelevance.class);
 
 		query.where(builder.equal(root.get("_refs_key"), refsKey));
 		query.orderBy(builder.desc(root.get("modification_date")));

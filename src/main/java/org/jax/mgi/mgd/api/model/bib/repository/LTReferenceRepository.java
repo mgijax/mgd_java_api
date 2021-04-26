@@ -23,6 +23,7 @@ import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowStatusDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;
@@ -86,6 +87,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		LTReference ref = getReference(key);
 		LTReferenceDomain domain = translator.translate(ref);
 		domain.setStatusHistory(getStatusHistory(domain));
+		domain.setRelevanceHistory(setRelevanceHistory(domain));
 		return domain;	
 	}
 
@@ -132,6 +134,16 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		List<LTReferenceWorkflowStatusDomain> history = new ArrayList<LTReferenceWorkflowStatusDomain>();
 		for (LTReferenceWorkflowStatus event : referenceDAO.getStatusHistory(domain.refsKey)) {
 			history.add(new LTReferenceWorkflowStatusDomain(event));
+		}
+		return history;
+	}
+
+	/* get a list of events in the status history of the reference with the specified key
+	 */
+	public List<LTReferenceWorkflowRelevanceDomain> setRelevanceHistory(LTReferenceDomain domain) throws APIException {
+		List<LTReferenceWorkflowRelevanceDomain> history = new ArrayList<LTReferenceWorkflowRelevanceDomain>();
+		for (LTReferenceWorkflowRelevance event : referenceDAO.getRelevanceHistory(domain.refsKey)) {
+			history.add(new LTReferenceWorkflowRelevanceDomain(event));
 		}
 		return history;
 	}

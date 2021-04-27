@@ -10,7 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.exception.FatalAPIException;
@@ -22,8 +21,8 @@ import org.jax.mgi.mgd.api.model.acc.dao.MGITypeDAO;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowRelevanceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;

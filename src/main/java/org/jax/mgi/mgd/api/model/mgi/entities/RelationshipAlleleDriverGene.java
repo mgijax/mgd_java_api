@@ -2,10 +2,7 @@ package org.jax.mgi.mgd.api.model.mgi.entities;
 
 import javax.annotation.concurrent.Immutable;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;

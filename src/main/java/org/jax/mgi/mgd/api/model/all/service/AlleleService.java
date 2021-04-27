@@ -236,7 +236,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		noteService.process(String.valueOf(entity.get_allele_key()), domain.getCreNote(), mgiTypeKey, user);
 		noteService.process(String.valueOf(entity.get_allele_key()), domain.getIkmcNote(), mgiTypeKey, user);
 		
-		// process marker reference
+		// process allele reference
 		log.info("processAllele/referenes");
 		referenceAssocService.process(String.valueOf(entity.get_allele_key()), domain.getRefAssocs(), mgiTypeKey, user);
 				

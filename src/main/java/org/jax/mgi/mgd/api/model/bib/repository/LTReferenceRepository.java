@@ -899,20 +899,24 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		if (anyChanges) {
 			entity.clearWorkflowStatusCache();
 
-			// if we had a status change, if at least one status is not "Not Routed", and if the reference
-			// doesn't already have a J#, we need to create one
+			// if no J#  and Status in (Chosen, INdexed, Full-coded), then add J#
 
 			if (entity.getJnumid() == null) {
-				boolean anyNotRouted = false;
+
+				boolean addJnumid = false;
+
 				for (String workgroup : Constants.WG_ALL) {
 					String wgStatus = entity.getStatus(workgroup);
-					if ((wgStatus != null) && !wgStatus.equals(Constants.WS_NOT_ROUTED)) {
-						anyNotRouted = true;
+					if ((wgStatus != null) && (
+							wgStatus.equals(Constants.WS_CHOSEN) ||
+							wgStatus.equals(Constants.WS_INDEXED) ||
+							wgStatus.equals(Constants.WS_CURATED))) {
+						addJnumid = true;
 						break;
 					}
 				}
 
-				if (anyNotRouted) {
+				if (addJnumid) {
 					try {
 						log.info("Assigning new J: number");
 						referenceDAO.assignNewJnumID(String.valueOf(entity.get_refs_key()), currentUser.get_user_key());

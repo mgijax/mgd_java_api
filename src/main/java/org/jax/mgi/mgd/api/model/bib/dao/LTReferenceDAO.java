@@ -193,11 +193,18 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 			disSubquery.where(disPredicates.toArray(new Predicate[]{}));
 			restrictions.add(builder.exists(disSubquery));
 		}
+
+
+
+
+
+
+
+
 		
 		// Need to handle the workflow relevance history searching...  AND multiple fields within a single
 		// subquery.  Includes:  relevance, relevance_user, relevance_date, relevance_version, and
 		// relevance_confidence.
-/*		
 		if (params.containsKey("relevance") || params.containsKey("relevance_user") || 
 			params.containsKey("relevance_date") || params.containsKey("relevance_version") ||
 			params.containsKey("relevance_confidence")) {
@@ -295,7 +302,14 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 				restrictions.add(builder.exists(wfrSubquery));
 			}
 		}
-*/		
+
+
+
+
+
+
+
+
 		// Handle list of (workflow) status parameters.  The status fields are always OR-ed within a group.
 		// The status_operator field tells us whether to OR or AND them across groups (and defaults to OR).
 

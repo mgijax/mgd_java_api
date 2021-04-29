@@ -18,6 +18,7 @@ public class LTReferenceWorkflowRelevanceDomain extends BaseDomain {
 	public String relevance;
 	public String relevance_abbreviation;
 	public String confidence;
+	public String version;
 	public String createdby_user;
 	public String modifiedby_user;
 	
@@ -30,6 +31,7 @@ public class LTReferenceWorkflowRelevanceDomain extends BaseDomain {
 		this.createdby_user = rws.getCreatedByUser().getLogin();
 		this.modifiedby_user = this.createdby_user;
 		this.relevance = rws.getRelevance();
+		this.version = rws.getVersion();
 		this.relevance_abbreviation = rws.getRelevanceAbbreviation();
 
 		if (rws.getConfidence() != null) {

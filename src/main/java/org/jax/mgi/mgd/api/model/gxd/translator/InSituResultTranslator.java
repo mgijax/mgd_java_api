@@ -39,6 +39,7 @@ public class InSituResultTranslator extends BaseEntityDomainTranslator<InSituRes
 			domain.setStructures(IteratorUtils.toList(i.iterator()));
 			domain.getStructures().sort(Comparator.comparing(InSituResultStructureDomain::getEmapaTerm));
 		}
+		domain.setStructuresCount(domain.getStructures().size());
 
 		// images uses view that contains concatenated figureLabel plus paneLabel
 		if (entity.getImagePanes() != null && !entity.getImagePanes().isEmpty()) {
@@ -47,7 +48,8 @@ public class InSituResultTranslator extends BaseEntityDomainTranslator<InSituRes
 			domain.setImagePanes(IteratorUtils.toList(i.iterator()));
 			domain.getImagePanes().sort(Comparator.comparing(InSituResultImageViewDomain::getFigurepaneLabel));
 		}
-		
+		domain.setImagePanesCount(domain.getImagePanes().size());
+
 		return domain;
 	}
 

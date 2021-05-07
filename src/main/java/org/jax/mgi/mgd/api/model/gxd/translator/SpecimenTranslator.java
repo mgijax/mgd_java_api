@@ -75,8 +75,8 @@ public class SpecimenTranslator extends BaseEntityDomainTranslator<Specimen, Spe
 		if (entity.getResults() != null && !entity.getResults().isEmpty()) {
 			InSituResultTranslator resultTranslator = new InSituResultTranslator();
 			Iterable<InSituResultDomain> i = resultTranslator.translateEntities(entity.getResults());
-			domain.setResults(IteratorUtils.toList(i.iterator()));
-			domain.getResults().sort(Comparator.comparingInt(InSituResultDomain::getSequenceNum));
+			domain.setSresults(IteratorUtils.toList(i.iterator()));
+			domain.getSresults().sort(Comparator.comparingInt(InSituResultDomain::getSequenceNum));
 		}
 		
 		return domain;

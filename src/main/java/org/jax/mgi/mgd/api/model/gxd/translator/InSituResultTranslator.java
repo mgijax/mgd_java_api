@@ -47,8 +47,8 @@ public class InSituResultTranslator extends BaseEntityDomainTranslator<InSituRes
 			Iterable<InSituResultImageViewDomain> i = imageTranslator.translateEntities(entity.getImagePanes());
 			domain.setImagePanes(IteratorUtils.toList(i.iterator()));
 			domain.getImagePanes().sort(Comparator.comparing(InSituResultImageViewDomain::getFigurepaneLabel));
+			domain.setImagePanesCount(domain.getImagePanes().size());			
 		}
-		domain.setImagePanesCount(domain.getImagePanes().size());
 
 		return domain;
 	}

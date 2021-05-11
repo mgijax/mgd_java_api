@@ -14,7 +14,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "MLD Expt_Notes Model Object")
+@ApiModel(value = "MLD Expt Notes Object")
 @Table(name="mld_expt_notes")
 public class ExptNote extends BaseEntity {
 

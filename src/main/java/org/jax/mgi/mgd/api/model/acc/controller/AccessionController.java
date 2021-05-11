@@ -120,14 +120,6 @@ public class AccessionController extends BaseController<AccessionDomain> {
 		
 		return results;
 	}
-	
-	@POST
-	@ApiOperation(value = "Process Accession Ids")
-	@Path("/process")
-	public Boolean process(String parentKey, List<AccessionDomain> domain, String mgiTypeKey, User user) {
-		return accessionService.process(parentKey, domain, mgiTypeKey, user);
-		
-	}
 
 	@POST
 	@ApiOperation(value = "Validate GO Isoform")
@@ -144,5 +136,5 @@ public class AccessionController extends BaseController<AccessionDomain> {
 		
 		return results;
 	}
-		
+	
 }

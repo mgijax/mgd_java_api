@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
@@ -63,7 +64,18 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		else {
 			log.info("processVocabulary/no changes processed: " + domain.getVocabKey());
 		}
+
+		// 48 = Journal
+		if (domain.getVocabKey().equals("48")) {
+			String cmd;
+			Query query;
 			
+		    cmd = "select count(*) from VOC_resetTerms(" + domain.getVocabKey() + ")";
+		    log.info("cmd: " + cmd);
+		    query = vocabularyDAO.createNativeQuery(cmd);
+		    query.getResultList();	
+		}
+		
 		// return entity translated to domain
 		log.info("processVocabulary/update/returning results");
 		results.setItem(translator.translate(entity));
@@ -118,38 +130,6 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		return results;		
 	}
     
-    @Transactional
-    public List<SlimVocabularyDomain> searchSimple() {
-    	
-    	List<SlimVocabularyDomain> results = new ArrayList<SlimVocabularyDomain>();
-    	
-    	String cmd = "";
-		String select = "select v._vocab_key, v.name";
-		String from = "from voc_vocab v";
-		String where = "where v.isSimple = '1'";
-		String orderBy = "order by v.name";
-		
-		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
-		log.info(cmd);
-		
-		try {						
-			
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				SlimVocabularyDomain domain = new SlimVocabularyDomain();
-				domain.setVocabKey(rs.getString("_vocab_key"));
-				domain.setName(rs.getString("name"));
-				results.add(domain);
-			}
-					
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-			
-    	return results;
-    }
 	@Transactional
 	public SearchResults<SlimVocabularyTermDomain> search(SlimVocabularyTermDomain searchDomain) {	
 		// search for 1 vocabulary
@@ -169,6 +149,25 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		// default order
 		// for vocab specific ordering, reset orderBy based on _vocab_key or name
 		String orderBy = "order by t.term";		
+		
+		// for non-vocab tables that are acting like voc_vocab/voc_term		
+		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty()) {
+			if (searchDomain.getVocabKey().equals("151")
+					|| searchDomain.getVocabKey().equals("152")
+					|| searchDomain.getVocabKey().equals("153")
+					|| searchDomain.getVocabKey().equals("154")
+					|| searchDomain.getVocabKey().equals("155")
+					|| searchDomain.getVocabKey().equals("156")
+					|| searchDomain.getVocabKey().equals("157")
+					|| searchDomain.getVocabKey().equals("158")				
+					|| searchDomain.getVocabKey().equals("159")
+					|| searchDomain.getVocabKey().equals("160")
+					|| searchDomain.getVocabKey().equals("163")				
+					) {
+				
+				return searchGXDVocab(searchDomain.getVocabKey());		
+			}
+		}
 		
 		// for UIs that use getName()
 		// for ordering by sequenceNum, add specific vocab to this list		
@@ -214,11 +213,21 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			// 37 = Allele Status
 			// 147 = GXD Default Age
 			// 17 = Gender
+			// 10 = Segment Type (probe)
+			// 24 = Vector Type (probe)
+			// 150 = Molecular Segment Note (probe)
+			// 161 = GXD Assay Age
+			// 162 = GXD Hybridization
 			if (searchDomain.getVocabKey().equals("39")
 					|| searchDomain.getVocabKey().equals("42")
 					|| searchDomain.getVocabKey().equals("37") 
 					|| searchDomain.getVocabKey().equals("147")
 					|| searchDomain.getVocabKey().equals("17")
+					|| searchDomain.getVocabKey().equals("10")
+					|| searchDomain.getVocabKey().equals("24")
+					|| searchDomain.getVocabKey().equals("150")	
+					|| searchDomain.getVocabKey().equals("161")	
+					|| searchDomain.getVocabKey().equals("162")																				
 					) {
 				orderBy = "order by t.sequenceNum";
 			}
@@ -237,7 +246,6 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		
 		// special list of _vocab_key = 86
 		// HTMP Property->MP-Sex Specificity
-		log.info("searchDomain.getName" + searchDomain.getName() );
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
 			if (searchDomain.getName().equals("MP-Sex-Specificity")) {		
 					select = "(select _Vocab_key, _Term_key, 'MP-Sex-Specificity' as name, 'F' as term, 'F' as abbreviation from VOC_Term where _Term_key = 8836535"
@@ -284,4 +292,130 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		return results;
 	}
 
+	@Transactional
+	public SearchResults<SlimVocabularyTermDomain> searchGXDVocab(String vocabKey) {	
+		// returns list of gxd vocabulary into SlimVocabularyTermDomain format
+		
+		SearchResults<SlimVocabularyTermDomain> results = new SearchResults<SlimVocabularyTermDomain>();
+		
+		String cmd = "";
+		
+		if (vocabKey.equals("151")) {
+			cmd = "select _antibodyclass as termKey, class as term from gxd_antibodyclass order by term";
+		}
+		else if (vocabKey.equals("152")) {
+			cmd = "select _label_key as termKey, label as term from gxd_label order by term";
+		}
+		else if (vocabKey.equals("153")) {
+			cmd = "select _pattern_key as termKey, pattern as term from gxd_pattern order by term";
+		}
+		else if (vocabKey.equals("154") ) {
+			cmd = "select _gelcontrol_key as termKey, gelLaneCountent as term from gxd_gelcontrol order by term";
+		}		
+		else if (vocabKey.equals("155")) {
+			cmd = "select _embedding_key as termKey, embeddingMethod as term from gxd_embeddingmethod order by term";
+		}
+		else if (vocabKey.equals("156") ) {
+			cmd = "select _fixation_key as termKey, fixation as term from gxd_fixationmethod order by term";
+		}		
+		else if (vocabKey.equals("157")) {
+			cmd = "select _visualization_key as termKey, visualization as term from gxd_visualizationmethod order by term";
+		}		
+		else if (vocabKey.equals("158")) {
+			cmd = "select _assaytype_key as termKey, assayType as term from gxd_assaytype order by term";
+		}
+		else if (vocabKey.equals("159") ) {
+			cmd = "select _sense_key as termKey, sense as term from gxd_probesense order by term";
+		}
+		else if (vocabKey.equals("160") ) {
+			cmd = "select _secondary_key as termKey, secondary as term from gxd_secondary order by term";
+		}
+		else if (vocabKey.equals("163") ) {
+			cmd = "select _strength_key as termKey, strength as term from gxd_strength order by term";
+		}			
+		log.info(cmd);		
+		
+		try {
+			SlimVocabularyTermDomain domain = new SlimVocabularyTermDomain();						
+			List<SlimTermDomain> termList = new ArrayList<SlimTermDomain>();
+			
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {					
+				SlimTermDomain termDomain = new SlimTermDomain();				
+				domain.setVocabKey(vocabKey);						
+				domain.setName(rs.getString("term"));
+				termDomain.setTermKey(rs.getString("termKey"));
+				termDomain.set_term_key(rs.getInt("termKey"));
+				termDomain.setTerm(rs.getString("term"));
+				termDomain.setVocabKey(rs.getString("termKey"));
+				termList.add(termDomain);
+			}
+			
+			domain.setTerms(termList);
+			results.setItem(domain);		
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;			
+	}
+	
+    @Transactional
+    public List<SlimVocabularyDomain> searchSimple() {
+    	
+    	List<SlimVocabularyDomain> results = new ArrayList<SlimVocabularyDomain>();
+    	
+    	String cmd = "select _vocab_key, name"
+				+ "\nfrom voc_vocab"
+    			+ "\nwhere isSimple = '1'"
+				+ "\norder by name";
+		
+		log.info(cmd);
+		
+		try {						
+			
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimVocabularyDomain domain = new SlimVocabularyDomain();
+				domain.setVocabKey(rs.getString("_vocab_key"));
+				domain.setName(rs.getString("name"));
+				results.add(domain);
+			}				
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+				
+    	return results;
+    }
+    
+	@Transactional	
+	public SearchResults<String> getVocabList(SlimVocabularyTermDomain searchDomain) {
+		// generate SQL command to return a list of distinct terms for given vocabulary
+		
+		List<String> results = new ArrayList<String>();
+
+		String cmd = "";
+		String select = "select distinct term from VOC_Term where _vocab_key = " + searchDomain.getVocabKey();
+		String orderBy = "order by term";
+		cmd = select + "\n" + orderBy;
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.add(rs.getString("term"));
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new SearchResults<String>(results);
+	}
+	
 }

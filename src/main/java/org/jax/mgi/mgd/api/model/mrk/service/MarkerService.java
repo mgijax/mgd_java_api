@@ -232,19 +232,19 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			}		
 		
 			// process all notes
-			if (noteService.process(domain.getMarkerKey(), domain.getEditorNote(), mgiTypeKey, "1004", user)) {
+			if (noteService.process(domain.getMarkerKey(), domain.getEditorNote(), mgiTypeKey, user)) {
 				modified = true;
 			}
-			if (noteService.process(domain.getMarkerKey(), domain.getSequenceNote(), mgiTypeKey, "1009", user)) {
+			if (noteService.process(domain.getMarkerKey(), domain.getSequenceNote(), mgiTypeKey, user)) {
 				modified = true;	
 			}
-			if (noteService.process(domain.getMarkerKey(), domain.getRevisionNote(), mgiTypeKey, "1030", user)) {
+			if (noteService.process(domain.getMarkerKey(), domain.getRevisionNote(), mgiTypeKey, user)) {
 				modified = true;	
 			}
-			if (noteService.process(domain.getMarkerKey(), domain.getStrainNote(), mgiTypeKey, "1035", user)) {
+			if (noteService.process(domain.getMarkerKey(), domain.getStrainNote(), mgiTypeKey, user)) {
 				modified = true;
 			}
-			if (noteService.process(domain.getMarkerKey(), domain.getLocationNote(), mgiTypeKey, "1049", user)) {
+			if (noteService.process(domain.getMarkerKey(), domain.getLocationNote(), mgiTypeKey, user)) {
 				modified = true;
 			}
 	
@@ -448,11 +448,12 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	
 		// marker accession id
 		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {
-			String mgiid = searchDomain.getMgiAccessionIds().get(0).getAccID().toUpperCase();
-			if (!mgiid.contains("MGI:")) {
-				mgiid = "MGI:" + mgiid;
+			if (!searchDomain.getMgiAccessionIds().get(0).getAccID().startsWith("MGI:")) {
+				where = where + "\nand a.numericPart = '" + searchDomain.getMgiAccessionIds().get(0).getAccID() + "'";
 			}
-			where = where + "\nand a.accID = '" + mgiid + "'";
+			else {
+				where = where + "\nand a.accID = '" + searchDomain.getMgiAccessionIds().get(0).getAccID().toUpperCase() + "'";
+			}			
 			from_accession = true;
 		}
 		
@@ -914,6 +915,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		if (searchDomain.getChromosome() != null && !searchDomain.getChromosome().isEmpty()) {
 			where = where + "\nand m.chromosome = '" + searchDomain.getChromosome() + "'" ;
 			hasChromosome = true;
+		}
+	
+		if (searchDomain.getMarkerStatusKey() != null && !searchDomain.getMarkerStatusKey().isEmpty()) {
+			where = where + "\nand m._marker_status_key in (" + searchDomain.getMarkerStatusKey() + ")";
 		}
 		
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	

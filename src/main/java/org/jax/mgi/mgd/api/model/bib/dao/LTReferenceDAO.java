@@ -29,6 +29,7 @@ import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
+import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
@@ -39,8 +40,10 @@ import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateParser;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
+import org.jax.mgi.mgd.api.util.NumberParser;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
+import org.jboss.logging.Logger;
 
 public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 
@@ -61,6 +64,9 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 	private static Map<String,String> dates = null;
 
 	private SQLExecutor sqlExecutor = new SQLExecutor();
+
+	private Logger log = Logger.getLogger(getClass());
+
 
 	/* convenience method for instantiating a new search results object, populating its error fields,
 	 * and returning it.
@@ -93,8 +99,8 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 			statuses = new HashMap<String,String>();
 		}
 
-		for (String group : new String[] { "AP", "GO", "GXD", "QTL", "Tumor" }) {
-			for (String status : new String[] { "Not_Routed", "Routed", "Indexed", "Chosen", "Full_coded", "Rejected"}) {
+		for (String group : new String[] { "AP", "GO", "GXD", "PRO", "QTL", "Tumor" }) {
+			for (String status : new String[] { "New", "Not_Routed", "Routed", "Indexed", "Chosen", "Full_coded", "Rejected"}) {
 				String fieldname = "status_" + group + "_" + status;
 				statusParameters.add(fieldname);
 
@@ -109,19 +115,21 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 			}
 		}
 
+		// user fields that exist within the Reference object itself (in BIB_Refs)
 		if (users == null) {
 			users = new HashMap<String,String>();
 			users.put("created_by", "createdByUser");
 			users.put("modified_by", "modifiedByUser");
 		}
 
+		// date fields that exist within the Reference object itself (in BIB_Refs)
 		if (dates == null) {
 			dates = new HashMap<String,String>();
 			dates.put("creation_date", "Creation Date");
 			dates.put("modification_date", "Modification Date");
 		}
 
-		// begin building the query
+		// begin building the query using JPA
 
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<LTReference> query = builder.createQuery(myClass);
@@ -159,29 +167,150 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 			}
 		}
 
-		// special internal parameter -- isDiscard.  QF specifies three values, which need to be translated
-		// for the actual data in the bib_refs table.
-
-		if (params.containsKey("isDiscard")) {
-			String desiredValue = ((String) params.get("isDiscard")).toLowerCase();
-
-			if (desiredValue.equals("no")) {
-				restrictions.add(builder.equal(root.get("isDiscard"), 0));
-
-			} else if (desiredValue.equals("only discard")) {
-				restrictions.add(builder.equal(root.get("isDiscard"), 1));
-
-			} else if (desiredValue.equals("search all")) {
-				// disregard the isDiscard flag when searching
+		// isDiscard is no longer internal to the LTReference object (directly in the BIB_Refs table). Instead
+		// it considers (for each reference) the current record in the LTReferenceWorkflowRelevance object
+		// (from the BIB_Workflow_Relevance table).  It has three possible values:  Keep, Discard, or Search All.
+		
+		String relevanceTerm = null;		
+		if (params.containsKey("currentRelevance")) {
+			String desiredValue = ((String) params.get("currentRelevance")).toLowerCase();
+			if ("keep".equals(desiredValue)) {
+				relevanceTerm = "keep";
+			} else if ("discard".equals(desiredValue)) {
+				relevanceTerm = "discard";
 			}
+		}
+		
+		if (relevanceTerm != null) {
+			Subquery<LTReferenceWorkflowRelevance> disSubquery = query.subquery(LTReferenceWorkflowRelevance.class);
+			Root<LTReferenceWorkflowRelevance> disRoot = disSubquery.from(LTReferenceWorkflowRelevance.class);
+			disSubquery.select(disRoot);
 
-		} else if (!params.containsKey("_refs_key")){
-			// default setting is to only return non-discarded references -- only apply if we're not
-			// doing a key-based lookup, though.
-			restrictions.add(builder.equal(root.get("isDiscard"), 0));
+			List<Predicate> disPredicates = new ArrayList<Predicate>();
+			disPredicates.add(builder.equal(root.get("_refs_key"), disRoot.get("_refs_key")));
+			disPredicates.add(builder.equal(disRoot.get("isCurrent"), 1));
+			disPredicates.add(builder.equal(disRoot.get("relevance").get("term"), relevanceTerm));
+			disSubquery.where(disPredicates.toArray(new Predicate[]{}));
+			restrictions.add(builder.exists(disSubquery));
 		}
 
-		// second, handle list of status parameters.  The status fields are always OR-ed within a group.
+
+
+
+
+
+
+
+		
+		// Need to handle the workflow relevance history searching...  AND multiple fields within a single
+		// subquery.  Includes:  relevance, relevance_user, relevance_date, relevance_version, and
+		// relevance_confidence.
+		if (params.containsKey("relevance") || params.containsKey("relevance_user") || 
+			params.containsKey("relevance_date") || params.containsKey("relevance_version") ||
+			params.containsKey("relevance_confidence")) {
+
+			Subquery<LTReferenceWorkflowRelevance> wfrSubquery = query.subquery(LTReferenceWorkflowRelevance.class);
+			Root<LTReferenceWorkflowRelevance> wfrRoot = wfrSubquery.from(LTReferenceWorkflowRelevance.class);
+			wfrSubquery.select(wfrRoot);
+
+			List<Predicate> wfrPredicates = new ArrayList<Predicate>();
+
+			// refers to a User object
+			if (params.containsKey("relevance_user")) {
+				Subquery<User> userSubquery = query.subquery(User.class);
+				Root<User> userRoot = userSubquery.from(User.class);
+				userSubquery.select(userRoot);
+
+				List<Predicate> userPredicates = new ArrayList<Predicate>();
+				userPredicates.add(builder.equal(wfrRoot.get("createdByUser"), userRoot.get("_user_key")));
+				Path<String> column = userRoot.get("login");
+				Expression<String> lowerColumn = builder.lower(column);
+				userPredicates.add(builder.like(lowerColumn, params.get("relevance_user").toString().toLowerCase()));
+				userSubquery.where(userPredicates.toArray(new Predicate[]{}));
+
+				wfrPredicates.add(builder.exists(userSubquery));
+			}
+			
+			// refers to a Date object
+			if (params.containsKey("relevance_date")) {
+				try {
+					DateParser parser = new DateParser();
+					List<String> datePieces = parser.parse((String) params.get("relevance_date"));
+					if (datePieces.size() >= 2) {
+						Path<Date> path = wfrRoot.get("creation_date");
+						wfrPredicates.add(datePredicate(builder, path, datePieces.get(0), datePieces.get(1)));
+					}
+					if (datePieces.size() >= 4) {
+						Path<Date> path = wfrRoot.get("creation_date");
+						wfrPredicates.add(datePredicate(builder, path, datePieces.get(2), datePieces.get(3)));
+					}
+				} catch (FatalAPIException e) {
+					return errorSR("InvalidDateFormat", params.get("relevance_date") + " is invalid", Constants.HTTP_BAD_REQUEST);
+				}
+			}
+
+			// refers to a Term object, chosen from a drop-down, ignoring "All".
+			if (params.containsKey("relevance") && (!"all".equalsIgnoreCase((String) params.get("relevance")))) {
+				String desiredValue = (String) params.get("relevance");
+
+				// no wildcards, case-insensitive equals search
+
+				Path<String> relColumn = wfrRoot.get("relevance").get("term");
+				Expression<String> lowerColumn = builder.lower(relColumn);
+				wfrPredicates.add(builder.equal(lowerColumn, desiredValue.toLowerCase()));
+			}
+			
+			// refers to a String, chosen from a drop-down (no wildcard processing)
+			if (params.containsKey("relevance_version")) {
+				String desiredValue = (String) params.get("relevance_version");
+				Path<String> column = wfrRoot.get("version");
+
+				// no wildcards, case-insensitive equals search
+				wfrPredicates.add(builder.equal(builder.lower(column), desiredValue.toLowerCase()));
+			}
+
+			// refers to a Double, allowing relational operators and ranges, and ignoring null
+			if (params.containsKey("relevance_confidence")) {
+				String desiredValue = ((String) params.get("relevance_confidence")).trim().toLowerCase();
+				if (desiredValue.length() > 0) {
+					List<Predicate> confPredicates = new ArrayList<Predicate>();
+					confPredicates.add(builder.isNotNull(wfrRoot.get("confidence")));
+					
+					try {
+						NumberParser parser = new NumberParser();
+						List<String> confPieces = parser.parse((String) params.get("relevance_confidence"));
+						if (confPieces.size() >= 2) {
+							Path<Double> path = wfrRoot.get("confidence");
+							wfrPredicates.add(doublePredicate(builder, path, confPieces.get(0), confPieces.get(1)));
+						}
+						if (confPieces.size() >= 4) {
+							Path<Double> path = wfrRoot.get("confidence");
+							wfrPredicates.add(doublePredicate(builder, path, confPieces.get(2), confPieces.get(3)));
+						}
+					} catch (FatalAPIException e) {
+						return errorSR("InvalidNumberFormat", params.get("relevance_confidence") + " is invalid (" + e.toString() + ")", Constants.HTTP_BAD_REQUEST);
+					}
+				}
+			}
+
+			// If we found at least one criteria for workflow relevance, bundle them into an Exists clause where
+			// all those criteria must match a single record.
+
+			if (wfrPredicates.size() > 0) {
+				wfrPredicates.add(builder.equal(root.get("_refs_key"), wfrRoot.get("_refs_key")));
+				wfrSubquery.where(wfrPredicates.toArray(new Predicate[]{}));
+				restrictions.add(builder.exists(wfrSubquery));
+			}
+		}
+
+
+
+
+
+
+
+
+		// Handle list of (workflow) status parameters.  The status fields are always OR-ed within a group.
 		// The status_operator field tells us whether to OR or AND them across groups (and defaults to OR).
 
 		List<Predicate> wfsRestrictions = new ArrayList<Predicate>();
@@ -235,7 +364,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 			}
 		}
 
-		// special handling for 'year' allowing for fairly sophistaicated queries
+		// special handling for 'year' allowing for fairly sophisticated queries
 
 		if (params.containsKey("year")) {
 			Expression<Integer> yearField = root.get("year");
@@ -632,6 +761,19 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		return entityManager.createQuery(query).getResultList();
 	}
 
+	/* get a list of the workflow relevance records for a reference
+	 */
+	public List<LTReferenceWorkflowRelevance> getRelevanceHistory (String refsKey) {
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<LTReferenceWorkflowRelevance> query = builder.createQuery(LTReferenceWorkflowRelevance.class);
+		Root<LTReferenceWorkflowRelevance> root = query.from(LTReferenceWorkflowRelevance.class);
+
+		query.where(builder.equal(root.get("_refs_key"), refsKey));
+		query.orderBy(builder.desc(root.get("modification_date")));
+
+		return entityManager.createQuery(query).getResultList();
+	}
+
 	/* return a single reference for the given reference key with all needed lazy-loaded fields already loaded
 	 */
 	@Transactional
@@ -665,6 +807,15 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 	public synchronized int getNextWorkflowTagKey() {
 		// returns an integer rather than *, as the void return was causing a mapping exception
 		Query query = entityManager.createNativeQuery("select nextval('bib_workflow_tag_seq')");
+		BigInteger results = (BigInteger) query.getSingleResult();
+		return results.intValue();
+	}
+
+	/* get the next available primary key for a workflow relevance record
+	 */
+	public synchronized int getNextWorkflowRelevanceKey() {
+		// returns an integer rather than *, as the void return was causing a mapping exception
+		Query query = entityManager.createNativeQuery("select nextval('bib_workflow_relevance_seq')");
 		BigInteger results = (BigInteger) query.getSingleResult();
 		return results.intValue();
 	}
@@ -746,6 +897,8 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		return builder.equal(field, getInteger(year));
 	}
 	
+	// Note: This method appears to be a no-op, as a query is generated and run, but no results
+	// from it are collected.  (It will always return an empty set of search results.) -- jsb
 	@Transactional	
 	public SearchResults<LTReference> searchSQL(LTReferenceDomain searchDomain) {
 		// using searchDomain fields, generate SQL command
@@ -816,9 +969,9 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		if (searchDomain.getIsReviewArticle() != null && !searchDomain.getIsReviewArticle().isEmpty()) {
 			where = where + "\nand r.isReviewArticle = " + searchDomain.getIsReviewArticle();
 		}
-		if (searchDomain.getIsDiscard() != null && !searchDomain.getIsDiscard().isEmpty()) {
-			where = where + "\nand r.isDiscard = " + searchDomain.getIsDiscard();
-		}
+//		if (searchDomain.getIsDiscard() != null && !searchDomain.getIsDiscard().isEmpty()) {
+//			where = where + "\nand r.isDiscard = " + searchDomain.getIsDiscard();
+//		}
 		if (searchDomain.getReferenceAbstract() != null && !searchDomain.getReferenceAbstract().isEmpty()) {
 			where = where + "\nand r.abstract ilike '" + searchDomain.getReferenceAbstract() + "'";
 		}

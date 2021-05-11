@@ -1,6 +1,8 @@
 package org.jax.mgi.mgd.api.model.acc.service;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -71,19 +73,22 @@ public class MGITypeService extends BaseService<MGITypeDomain> {
     }
 
 	@Transactional
-	public SearchResults<SlimMGITypeDomain> search(SlimMGITypeDomain searchDomain) {	
-		// search for 1 mgi type with >= 1 organisms
-		// assumes that name is being searched
-		// returns empty result items if vocabulary does not exist
-		// returns MGITypeDomain results if vocabulary does exist
-			
-		SearchResults<SlimMGITypeDomain> results = new SearchResults<SlimMGITypeDomain>();
+	public List<SlimMGITypeDomain> search(SlimMGITypeDomain searchDomain) {	
+		// search for all acc_mgitype
+		// only those that have pwi/modules
+		// Marker : 2
+		// Segment : 3
+		// Antibody : 6
+		// Antigen : 7
 
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
-		String cmd = "select * from mgi_organism_mgitype_view"
-				+ "\nwhere typename = '" + searchDomain.getName() + "'"
-				+ "\norder by sequencenum";	
+		// GXD HT Sample : 43
+		// Allele : 11
+			
+		List<SlimMGITypeDomain> results = new ArrayList<SlimMGITypeDomain>();
+
+		String cmd = "select * from acc_mgitype"
+				+ "\nwhere _mgitype_key in (2, 3, 6, 7, 11, 43)"
+				+ "\norder by name";
 		log.info(cmd);		
 
 		try {
@@ -92,7 +97,7 @@ public class MGITypeService extends BaseService<MGITypeDomain> {
 				SlimMGITypeDomain domain = new SlimMGITypeDomain();									
 				domain = slimtranslator.translate(mgitypeDAO.get(rs.getInt("_mgitype_key")));
 				mgitypeDAO.clear();	
-				results.setItem(domain);						
+				results.add(domain);						
 			}
 			sqlExecutor.cleanup();
 		}
@@ -102,5 +107,5 @@ public class MGITypeService extends BaseService<MGITypeDomain> {
 		
 		return results;
 	}
-	
+
 }

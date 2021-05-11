@@ -21,9 +21,12 @@ import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
 import org.jax.mgi.mgd.api.model.gxd.translator.AssayTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimAssayTranslator;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISetDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -273,14 +276,14 @@ public class AssayService extends BaseService<AssayDomain> {
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
-		String select = "select a._assay_key, t.assaytype, r.numericPart";
-		String from = "from gxd_assay a, gxd_assaytype t, bib_citation_cache r";
+		String select = "select a._assay_key, r.jnumid, t.assayType, m.symbol";
+		String from = "from gxd_assay a, gxd_assaytype t, bib_citation_cache r, mrk_marker m";
 		String where = "where a._assaytype_key = t._assaytype_key"
-				+ "\nand a._refs_key = r._refs_key";
-		String orderBy = "order by r.numericPart, t.assaytype";
+				+ "\nand a._refs_key = r._refs_key"
+				+ "\nand a._marker_key = m._marker_key";
+		String orderBy = "order by r.jnumid, t.assayType, m.symbol";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
-		Boolean from_marker = false;
 		Boolean from_accession = false;
 		Boolean from_assaynote = false;
 		Boolean from_probeprep = false;
@@ -315,6 +318,19 @@ public class AssayService extends BaseService<AssayDomain> {
 			where = where + "\nand a._reportergene_key = " + value;		
 		}
 		
+		value = searchDomain.getDetectionKey();
+		if (value != null && !value.isEmpty()) {
+			if (value.equals("1")) {
+				where = where + "\nand a._ProbePrep_key is not null";
+			}
+			else if (value.equals("2")) {
+				where = where + "\nand a._AntibodyPrep_key is not null";
+			}
+			else {
+				where = where + "\nand a._ProbePrep_key is null and a._AntibodyPrep_key is null";				
+			}
+		}
+		
 		// reference
 		value = searchDomain.getRefsKey();
 		String jnumid = searchDomain.getJnumid();		
@@ -338,7 +354,6 @@ public class AssayService extends BaseService<AssayDomain> {
 			value = searchDomain.getMarkerSymbol();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand m.symbol ilike '" + value + "'";
-				from_marker = true;
 			}
 		}
 
@@ -416,7 +431,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				where = where + "\nand s.specimenLabel ilike '" + value + "'";				
 				from_specimen = true;
 			}
-			value = searchDomain.getSpecimens().get(0).getGenotypeID();
+			value = searchDomain.getSpecimens().get(0).getGenotypeAccID();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand g.accID ilike '" + value + "'";	
 				from_genotype = true;
@@ -427,7 +442,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				where = where + "\nand s.age ilike '" + value + "%'";				
 				from_specimen = true;
 			}			
-			value = searchDomain.getSpecimens().get(0).getAgePostfix();
+			value = searchDomain.getSpecimens().get(0).getAgeStage();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand s.age ilike '%" + value + "'";				
 				from_specimen = true;
@@ -525,16 +540,12 @@ public class AssayService extends BaseService<AssayDomain> {
 			from_accession = true;
 		}
 		
-		if (searchDomain.getAssayNote() != null) {
+		if (searchDomain.getAssayNote().getAssayNote() != null && !searchDomain.getAssayNote().getAssayNote().isEmpty()) {
 			value = searchDomain.getAssayNote().getAssayNote();
 			where = where + "\nand n.assaynote ilike '" + value + "'";
 			from_assaynote = true;
 		}
 		
-		if (from_marker == true) {
-			from = from + ", mrk_marker m";
-			where = where + "\nand a._marker_key = m._marker_key";
-		}
 		if (from_accession == true) {
 			from = from + ", gxd_assay_acc_view acc";
 			where = where + "\nand a._assay_key = acc._object_key"; 
@@ -599,6 +610,90 @@ public class AssayService extends BaseService<AssayDomain> {
 			e.printStackTrace();
 		}
 		
+		return results;
+	}
+
+	@Transactional	
+	public List<MGISetDomain> getGenotypesBySetUser(SlimAssayDomain searchDomain) {
+		// return 
+		// all set members of genotype (_set_key = 1055) + user (searchDomain.getCreatedByKey())
+		// union
+		// all genotypes for given assay (searchDomain.getAssayKey())
+
+		List<MGISetDomain> results = new ArrayList<MGISetDomain>();		
+		List<MGISetMemberDomain> listOfMembers = new ArrayList<MGISetMemberDomain>();
+		MGISetDomain domain = new MGISetDomain();
+		
+		// search mgi_setmembers where _set_key = 1055 (genotype)
+		String cmd = 
+				"\n(select distinct s._Object_key," + 
+				"\n'*['||a.accID||'] '||s.label as displayIt," + 
+				"\na.accID," + 
+				"\ns._setmember_key as setMemberKey, s._createdby_key" + 
+				"\nfrom mgi_setmember s, acc_accession a, mgi_user u" + 
+				"\nwhere s._set_key = 1055" + 
+				"\nand s._createdby_key = u._user_key" +
+				"\nand u.login = '" + searchDomain.getCreatedBy() + "'" +
+				"\nand s._object_key = a._object_key" + 
+				"\nand a._mgitype_key = 12" + 
+				"\nand a._logicaldb_key = 1" + 
+				"\nand a.prefixPart = 'MGI:'" + 
+				"\nand a.preferred = 1";
+		
+		if (searchDomain.getAssayKey() != null && !searchDomain.getAssayKey().isEmpty()) {
+			
+			// search gxd_specimen
+			cmd = cmd + "\nunion all" + 				
+				"\nselect distinct g._Genotype_key, " +
+				"\nCONCAT(g.displayIt,',',a1.symbol,',',a2.symbol) as displayIt," +
+				"\ng.mgiID as accID," +
+				"\n0 as setMemberKey, g._createdby_key" +
+				"\nfrom GXD_Genotype_View g" + 
+				"\nINNER JOIN GXD_Specimen s on (g._Genotype_key = s._Genotype_key)" + 
+				"\nLEFT OUTER JOIN GXD_AllelePair ap on (g._Genotype_key = ap._Genotype_key)" + 
+				"\nLEFT OUTER JOIN ALL_Allele a1 on (ap._Allele_key_1 = a1._Allele_key)" + 
+				"\nLEFT OUTER JOIN ALL_Allele a2 on (ap._Allele_key_2 = a2._Allele_key)" + 
+				"\nwhere s._Assay_key = " + searchDomain.getAssayKey();
+			
+			// search gxd_gellane
+			cmd = cmd + "\nunion all" + 				
+					"\nselect distinct g._Genotype_key, " +
+					"\nCONCAT(g.displayIt,',',a1.symbol,',',a2.symbol) as displayIt," +
+					"\ng.mgiID as accID," +
+					"\n0 as setMemberKey, g._createdby_key" +
+					"\nfrom GXD_Genotype_View g" + 
+					"\nINNER JOIN GXD_GelLane s on (g._Genotype_key = s._Genotype_key)" + 
+					"\nLEFT OUTER JOIN GXD_AllelePair ap on (g._Genotype_key = ap._Genotype_key)" + 
+					"\nLEFT OUTER JOIN ALL_Allele a1 on (ap._Allele_key_1 = a1._Allele_key)" + 
+					"\nLEFT OUTER JOIN ALL_Allele a2 on (ap._Allele_key_2 = a2._Allele_key)" + 
+					"\nwhere s._Assay_key = " + searchDomain.getAssayKey();			
+			}
+		
+		cmd = cmd + "\n)";
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				MGISetMemberDomain memberDomain = new MGISetMemberDomain();
+				memberDomain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
+				memberDomain.setSetMemberKey(rs.getString("setMemberKey"));
+				memberDomain.setSetKey("1055");
+				memberDomain.setObjectKey(rs.getString("_object_key"));
+				memberDomain.setLabel(rs.getString("displayIt"));
+				memberDomain.setCreatedByKey(rs.getString("_createdby_key"));
+				memberDomain.setGenotypeID(rs.getString("accID"));
+				assayDAO.clear();
+				listOfMembers.add(memberDomain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		domain.setGenotypeClipboardMembers(listOfMembers);
+		results.add(domain);
 		return results;
 	}
 	

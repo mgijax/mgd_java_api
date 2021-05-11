@@ -71,13 +71,19 @@ public class MGISynonymTypeService extends BaseService<MGISynonymTypeDomain> {
     }
 
 	@Transactional	
-	public List<MGISynonymTypeDomain> search() {
+	public List<MGISynonymTypeDomain> search(MGISynonymTypeDomain searchDomain) {
 
 		List<MGISynonymTypeDomain> results = new ArrayList<MGISynonymTypeDomain>();
 		
 		String cmd = "select * from mgi_synonymtype"
-			+ "\nwhere _organism_key = 1"
-			+ "\norder by _mgitype_key, synonymtype";
+			+ "\nwhere _mgitype_key = " + searchDomain.getMgiTypeKey();
+		
+		if (searchDomain.getOrganismKey() != null && !searchDomain.getOrganismKey().isEmpty()) {
+			cmd = cmd + "\nand _organism_key = " + searchDomain.getOrganismKey();
+		}
+		
+		cmd = cmd + "\norder by _mgitype_key, synonymtype";
+		
 		log.info(cmd);
 
 		try {

@@ -21,6 +21,7 @@ public class LTReferenceSummaryTranslator extends BaseEntityDomainTranslator<LTR
 		domain.ap_status = entity.getStatusView().getAp_status();
 		domain.go_status = entity.getStatusView().getGo_status();
 		domain.gxd_status = entity.getStatusView().getGxd_status();
+		domain.pro_status = entity.getStatusView().getPro_status();
 		domain.qtl_status = entity.getStatusView().getQtl_status();
 		domain.tumor_status = entity.getStatusView().getTumor_status();
 

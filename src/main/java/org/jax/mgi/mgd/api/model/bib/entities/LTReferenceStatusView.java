@@ -20,6 +20,7 @@ public class LTReferenceStatusView extends BaseEntity {
 	private String ap_status;
 	private String go_status;
 	private String gxd_status;
+	private String pro_status;
 	private String qtl_status;
 	private String tumor_status;
 }

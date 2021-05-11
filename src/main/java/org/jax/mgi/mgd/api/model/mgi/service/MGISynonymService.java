@@ -146,6 +146,12 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 						synonymTypeKey = "1004";	
 					}
 				}
+				// if mgiTypeKey = strain, then set default synonym type "synonym" (1000)
+				else if (mgiTypeKey.equals("10")) {
+					if (synonymTypeKey == null || synonymTypeKey.isEmpty()) {
+						synonymTypeKey = "1000";	
+					}
+				}
 				
 				String refsKey = domain.get(i).getRefsKey();
 				if (refsKey == null || refsKey.isEmpty()) {

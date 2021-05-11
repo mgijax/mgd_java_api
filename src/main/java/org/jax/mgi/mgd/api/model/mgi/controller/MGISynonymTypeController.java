@@ -50,8 +50,8 @@ public class MGISynonymTypeController extends BaseController<MGISynonymTypeDomai
 	@POST
 	@ApiOperation(value = "Search")
 	@Path("/search")
-	public List<MGISynonymTypeDomain> search() {
-		return synonymTypeService.search();
+	public List<MGISynonymTypeDomain> search(MGISynonymTypeDomain searchDomain) {
+		return synonymTypeService.search(searchDomain);
 	}
 	
 }

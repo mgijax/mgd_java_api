@@ -107,9 +107,7 @@ public abstract class BaseController<T extends BaseDomain> {
 			Throwable t = getRootException(e);
 			StackTraceElement[] ste = t.getStackTrace();
 			String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";
-			
-			results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);
-			
+			results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);	
 		}
 	
 		return results;			
@@ -151,7 +149,6 @@ public abstract class BaseController<T extends BaseDomain> {
 			Throwable t = getRootException(e);
 			StackTraceElement[] ste = t.getStackTrace();
 			String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";
-			
 			results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);
 		}
 		
@@ -187,8 +184,7 @@ public abstract class BaseController<T extends BaseDomain> {
 		} catch (Exception e) {
 			Throwable t = getRootException(e);
 			StackTraceElement[] ste = t.getStackTrace();
-			String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";
-			
+			String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";		
 			results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);
 		}
 	

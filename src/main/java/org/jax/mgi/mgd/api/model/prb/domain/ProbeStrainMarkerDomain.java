@@ -14,6 +14,7 @@ public class ProbeStrainMarkerDomain extends BaseDomain {
 	private String markerKey;
 	private String markerSymbol;
 	private String chromosome;
+    private String markerAccID;	
 	private String alleleKey;
 	private String alleleSymbol;
 	private String strainOfOrigin;

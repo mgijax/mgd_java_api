@@ -71,11 +71,19 @@ public class VocabController extends BaseController<VocabularyDomain> {
 	public SearchResults<SlimVocabularyTermDomain> search(SlimVocabularyTermDomain searchDomain) {
 		return vocabService.search(searchDomain);
 	}
+	
 	@GET
 	@ApiOperation(value = "return all simple vocabs")
 	@Path("/searchsimple")	
 	public List<SlimVocabularyDomain> searchSimple() {
 		return vocabService.searchSimple();
+	}
+	
+	@POST
+	@ApiOperation(value = "Search by vocab key or name")
+	@Path("/getVocabList")	
+	public SearchResults<String> getVocabList(SlimVocabularyTermDomain searchDomain) {
+		return vocabService.getVocabList(searchDomain);
 	}
 	
 }

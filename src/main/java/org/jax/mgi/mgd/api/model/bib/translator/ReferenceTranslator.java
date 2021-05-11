@@ -39,7 +39,7 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		domain.setReferenceAbstract(DecodeString.getDecodeToUTF8(entity.getReferenceAbstract()));
 		domain.setDate(entity.getDate());
 		domain.setIsReviewArticle(String.valueOf(entity.getIsReviewArticle()));
-		domain.setIsDiscard(String.valueOf(entity.getIsDiscard()));
+		//domain.setIsDiscard(String.valueOf(entity.getIsDiscard()));
 		domain.setReferenceTypeKey(String.valueOf(entity.getReferenceType().get_term_key()));
 		domain.setReferenceType(entity.getReferenceType().getTerm());
 		
@@ -82,7 +82,7 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 			//domain.setReferenceNote(note.iterator().next());
 			domain.setReferenceNote(note.iterator().next().getNote());
 		}
-
+		
 		// first mgi accession id only
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());

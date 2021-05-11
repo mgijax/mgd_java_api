@@ -9,9 +9,9 @@ import lombok.Setter;
 public class InSituResultImageViewDomain extends BaseDomain {
 
 	private String processStatus;
-	private String resultimageKey;
+	private String resultImageKey;
 	private String resultKey;
-	private String imagepaneKey;
+	private String imagePaneKey;
 	private String figurepaneLabel;
 	private String creation_date;
 	private String modification_date;	

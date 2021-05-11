@@ -9,7 +9,7 @@ import lombok.Setter;
 public class ProbeStrainGenotypeDomain extends BaseDomain {
 
 	private String processStatus;
-	private String strainMarkerKey;
+	private String strainGenotypeKey;
 	private String strainKey;
 	private String genotypeKey;
 	private String genotypeDisplay;

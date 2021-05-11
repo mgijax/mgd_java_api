@@ -1,7 +1,5 @@
 package org.jax.mgi.mgd.api.model.voc.domain;
 
-import java.util.List;
-
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
 import io.swagger.annotations.ApiModel;

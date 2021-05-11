@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jboss.logging.Logger;
 
 public class ProbeSourceTranslator extends BaseEntityDomainTranslator<ProbeSource, ProbeSourceDomain> {
@@ -18,6 +22,7 @@ public class ProbeSourceTranslator extends BaseEntityDomainTranslator<ProbeSourc
 		
 		ProbeSourceDomain domain = new ProbeSourceDomain();
 
+		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);		
 		domain.setSourceKey(String.valueOf(entity.get_source_key()));
 		domain.setName(entity.getName());
 		domain.setDescription(entity.getDescription());
@@ -70,7 +75,7 @@ public class ProbeSourceTranslator extends BaseEntityDomainTranslator<ProbeSourc
 			for (int i = 2; i < ageList.size(); i++) {
 				ageStage = ageStage + ageList.get(i);
 			}
-			log.info("PS Translator ageStage: " + ageStage); 
+			//log.info("PS Translator ageStage: " + ageStage); 
 			domain.setAgeStage(ageStage);			
 		}
 		
@@ -82,6 +87,13 @@ public class ProbeSourceTranslator extends BaseEntityDomainTranslator<ProbeSourc
 			domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());
 			domain.setJnum(String.valueOf(entity.getReference().getReferenceCitationCache().getNumericPart()));
 			domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());
+		}
+
+		//  accession ids 
+		if (entity.getAccessionIds() != null && !entity.getAccessionIds().isEmpty()) {
+			AccessionTranslator accessionTranslator = new AccessionTranslator();			
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getAccessionIds());
+			domain.setAccessionIds(IteratorUtils.toList(acc.iterator()));
 		}
 		
 		return domain;

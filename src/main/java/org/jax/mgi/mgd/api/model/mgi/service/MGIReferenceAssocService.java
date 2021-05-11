@@ -286,18 +286,25 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 					continue;
 				}	
 			
-				// if mgiTypeKey = marker and no reference assoc type chosen, then set default synonym type "exact" (1004)
+				// if mgiTypeKey = marker, then default synonym type "exact" (1004)
 				if (mgiTypeKey.equals("2")) {
 					if (domain.get(i).getRefAssocTypeKey() == null || domain.get(i).getRefAssocTypeKey().isEmpty()) {
 						domain.get(i).setRefAssocTypeKey("1018");
 					}
 				}
-				// if mgiTypeKey = antibody and no reference assoc type chosen, then set default refAssoc type "primary" (1026)
-				if (mgiTypeKey.equals("6")) {
+				// if mgiTypeKey = antibody, then default refAssoc type "primary" (1026)
+				else if (mgiTypeKey.equals("6")) {
 					if (domain.get(i).getRefAssocTypeKey() == null || domain.get(i).getRefAssocTypeKey().isEmpty()) {
 						domain.get(i).setRefAssocTypeKey("1026");
 					}
 				}
+				// if mgiTypeKey = strain, then default refAssoc type "Selected" (1009)
+				else if (mgiTypeKey.equals("10")) {
+					if (domain.get(i).getRefAssocTypeKey() == null || domain.get(i).getRefAssocTypeKey().isEmpty()) {
+						domain.get(i).setRefAssocTypeKey("1009");
+					}
+				}
+				
 				// select count(*) from MGI_insertReferenceAssoc (1014,6,0,275403,1027)
 				cmd = "select count(*) from MGI_insertReferenceAssoc ("
 							+ user.get_user_key().intValue()

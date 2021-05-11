@@ -1,11 +1,8 @@
 package org.jax.mgi.mgd.api.model.gxd.translator;
 
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyAliasDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyTypeDomain;
-import org.jax.mgi.mgd.api.model.gxd.entities.AntibodyAlias;
 import org.jax.mgi.mgd.api.model.gxd.entities.AntibodyType;
-import org.jax.mgi.mgd.api.util.Constants;
 import org.jboss.logging.Logger;
 
 public class AntibodyTypeTranslator extends BaseEntityDomainTranslator<AntibodyType, AntibodyTypeDomain> {

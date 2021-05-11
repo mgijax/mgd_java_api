@@ -21,9 +21,7 @@ public class ProbeStrainMarkerTranslator extends BaseEntityDomainTranslator<Prob
 		domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 		domain.setMarkerSymbol(entity.getMarker().getSymbol());
 		domain.setChromosome(entity.getMarker().getChromosome());
-		domain.setAlleleKey(String.valueOf(entity.getAllele().get_allele_key()));
-		domain.setAlleleSymbol(entity.getAllele().getSymbol());
-		domain.setStrainOfOrigin(entity.getAllele().getStrain().getStrain());
+		domain.setMarkerAccID(entity.getMarker().getMgiAccessionIds().get(0).getAccID());
 		domain.setQualifierKey(String.valueOf(entity.getQualifier().get_term_key()));
 		domain.setQualifierTerm(entity.getQualifier().getTerm());
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
@@ -33,6 +31,12 @@ public class ProbeStrainMarkerTranslator extends BaseEntityDomainTranslator<Prob
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));	
 		
+		if (entity.getAllele() != null) {
+			domain.setAlleleKey(String.valueOf(entity.getAllele().get_allele_key()));
+			domain.setAlleleSymbol(entity.getAllele().getSymbol());
+			domain.setStrainOfOrigin(entity.getAllele().getStrain().getStrain());			
+		}
+				
 		return domain;
 	}
 

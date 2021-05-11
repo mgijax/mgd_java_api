@@ -514,5 +514,128 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 		
 		return results;
 	}
+
+	@Transactional
+	public List<LogicalDbDomain> searchProbeSet() {
+		// get probe logical db list
+		// returns list of logical db domain
+		
+		//        9 | Sequence DB (aka Nucleotide Sequence)
+		//       12 | ATCC
+		//       82 | BROAD
+		//       17 | IMAGE
+		//       44 | MGC
+		//       49 | NIA
+		//       46 | NIA 15K
+		//       50 | NIA 7.4K
+		//       51 | RIKEN
+		//       25 | RIKEN Cluster
+		//       26 | RIKEN (FANTOM)
+		//       48 | RPCI-23
+		//       52 | RPCI-24
+		//       80 | UniSTS
+		//       16 | WashU		
+		
+		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
+
+		String cmd = "select _logicaldb_key, name, 0 as org"
+				+ "\nfrom acc_logicaldb"
+				+ "\nwhere _logicaldb_key in (9)"
+				+ "\nunion"
+				+ "\nselect _logicaldb_key, name, 1 as org"
+				+ "\nfrom acc_logicaldb"
+				+ "\nwhere _logicaldb_key in (12,82,17,44,49,46,50,51,25,26,48,52,80,16)"
+				+ "\norder by org, name";
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {					
+				LogicalDbDomain domain = new LogicalDbDomain();									
+				domain = translator.translate(logicalDBDAO.get(rs.getInt("_logicaldb_key")));
+				domain.setName(domain.getName().replace("Sequence DB", "Nucleotide"));
+				results.add(domain);
+				logicalDBDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+
+	@Transactional
+	public List<LogicalDbDomain> searchProbeSourceSet() {
+		// get probe source logical db list
+		// returns list of logical db domain	
+
+        // 43 | IMAGE Clone Libraries
+        // 18 | dbEST Libraries
+        // 46 | NIA 15K
+		
+		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
+
+		String cmd = "select _logicaldb_key, name"
+				+ "\nfrom acc_logicaldb"
+				+ "\nwhere _logicaldb_key in (18, 43, 46)"
+				+ "\norder by name";
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {					
+				LogicalDbDomain domain = new LogicalDbDomain();									
+				domain = translator.translate(logicalDBDAO.get(rs.getInt("_logicaldb_key")));
+				results.add(domain);
+				logicalDBDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+
+	@Transactional
+	public List<LogicalDbDomain> searchProbeStrainSet() {
+		// get probe strain logical db list
+		// returns list of logical db domain	
+		
+		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
+
+		String cmd = "select _logicaldb_key, name, 0 as org"
+				+ "\nfrom acc_logicaldb"
+				+ "\nwhere _logicaldb_key in (22)"
+				+ "\nunion"
+				+ "\nselect _logicaldb_key, name, 1 as org"
+				+ "\nfrom acc_logicaldb"
+				+ "\nwhere _logicaldb_key in (38)"				
+				+ "\nunion"
+				+ "\nselect _logicaldb_key, name, 2 as org"
+				+ "\nfrom acc_logicaldb"
+				+ "\nwhere _logicaldb_key in (37,39,40,54,56,57,58,70,71,83,87,90,91,92,93,94,154,161,177,184,188,200,206,207,208,213,215,216,217,219,220)"
+				+ "\norder by org, name";
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {					
+				LogicalDbDomain domain = new LogicalDbDomain();									
+				domain = translator.translate(logicalDBDAO.get(rs.getInt("_logicaldb_key")));
+				results.add(domain);
+				logicalDBDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
 }

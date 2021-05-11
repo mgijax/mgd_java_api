@@ -20,6 +20,8 @@ public class SlimMarkerDomain extends BaseDomain {
 	private String organismKey;
 	private String organism;
 	private String organismLatin;
+	private String markerStatusKey;	
+	private String markerStatus;
 	private String modifiedByKey;
 	private String modifiedBy;
 	private MarkerNoteDomain detailClip;

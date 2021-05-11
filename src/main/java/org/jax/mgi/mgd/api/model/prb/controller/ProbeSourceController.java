@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -13,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.service.ProbeSourceService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -49,6 +51,13 @@ public class ProbeSourceController extends BaseController<ProbeSourceDomain> {
 		return probeSourceService.get(key);
 	}
 
+	@GET
+	@ApiOperation(value = "Get the object count from prb_source table")
+	@Path("/getObjectCount")
+	public SearchResults<ProbeSourceDomain> getObjectCount() {
+		return probeSourceService.getObjectCount();
+	}
+	
 	@Override
 	public SearchResults<ProbeSourceDomain> delete(Integer key, User user) {
 		return probeSourceService.delete(key, user);
@@ -68,6 +77,22 @@ public class ProbeSourceController extends BaseController<ProbeSourceDomain> {
 		}
 		
 		return results;
+	}
+
+	@POST
+	@ApiOperation(value = "Search Library Set")
+	@Path("/searchLibrarySet")
+	public List<SlimProbeSourceDomain> searchLibrarySet() {
+
+		List<SlimProbeSourceDomain> results = new ArrayList<SlimProbeSourceDomain>();
+		
+		try {
+			results = probeSourceService.searchLibrarySet();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;	
 	}
 	
 }

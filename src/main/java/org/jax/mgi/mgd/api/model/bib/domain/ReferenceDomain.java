@@ -23,10 +23,10 @@ public class ReferenceDomain extends BaseDomain {
 	private String pgs;
 	private String referenceAbstract;
 	private String isReviewArticle;
-	private String isDiscard;
+	//private String isDiscard;
 	private String referenceTypeKey;
 	private String referenceType;
-	
+
 	private String jnumid;
 	private String jnum;
 	private String short_citation;

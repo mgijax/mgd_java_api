@@ -100,13 +100,14 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		genotypeDAO.persist(entity);
 
 		// process all notes
-		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getGeneralNote(), mgiTypeKey, "1027", user);
-		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getPrivateCuratorialNote(), mgiTypeKey, "1028", user);
+		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getGeneralNote(), mgiTypeKey, user);
+		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getPrivateCuratorialNote(), mgiTypeKey, user);
+
 		// update combination note 1
 		// combination note 2 & 3 get updated by nightly process (allelecombination)
 		// using allele detail note
 		// then run processAlleleCombinations to finish the job
-		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getAlleleDetailNote(), mgiTypeKey, "1016", user);
+		noteService.process(String.valueOf(entity.get_genotype_key()), domain.getAlleleDetailNote(), mgiTypeKey, user);
 				
 		// process Allele Pairs
 		log.info("processGenotypes/allele pairs");
@@ -173,14 +174,14 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		entity.setExistsAs(termDAO.get(Integer.valueOf(domain.getExistsAsKey())));
 		
 		// process all notes
-		noteService.process(domain.getGenotypeKey(), domain.getGeneralNote(), mgiTypeKey, "1027", user);
-		noteService.process(domain.getGenotypeKey(), domain.getPrivateCuratorialNote(), mgiTypeKey, "1028", user);
+		noteService.process(domain.getGenotypeKey(), domain.getGeneralNote(), mgiTypeKey, user);
+		noteService.process(domain.getGenotypeKey(), domain.getPrivateCuratorialNote(), mgiTypeKey, user);
 
 		// update combination note 1
 		// combination note 2 & 3 get updated by nightly process (allelecombination)
 		// using allele detail note
 		// then run processAlleleCombinations to finish the job
-		noteService.process(domain.getGenotypeKey(), domain.getAlleleDetailNote(), mgiTypeKey, "1016", user);
+		noteService.process(domain.getGenotypeKey(), domain.getAlleleDetailNote(), mgiTypeKey, user);
 
 		// process Allele Pairs
 		log.info("processGenotypes/allele pairs");
@@ -761,5 +762,33 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 	}	
 	
 	// end Data Sets
+	
+	@Transactional
+	public List<SlimGenotypeDomain> validateGenotype(SlimGenotypeDomain searchDomain) {
+		
+		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
+		
+		String cmd = "select mgiID, _object_key, description from GXD_Genotype_Summary_View"
+					+ "\nwhere mgiID = '" + searchDomain.getAccID().toUpperCase() + "'";
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			
+			while (rs.next()) {
+				SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();
+				slimdomain.setAccID(rs.getString("mgiID"));
+				slimdomain.setGenotypeKey(rs.getString("_object_key"));
+				slimdomain.setGenotypeDisplay(rs.getString("description"));
+				results.add(slimdomain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 
 }

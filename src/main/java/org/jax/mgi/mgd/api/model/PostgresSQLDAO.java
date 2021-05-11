@@ -24,6 +24,7 @@ import javax.persistence.criteria.Root;
 
 import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.util.DateParser;
+import org.jax.mgi.mgd.api.util.NumberParser;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 import org.reflections.Reflections;
@@ -249,6 +250,31 @@ public abstract class PostgresSQLDAO<T> {
 			}
 		} catch (ParseException p) {
 			throw new FatalAPIException("ReferenceDAO.datePredicate(): Cannot parse date: " + date);
+		}
+		return null;
+	}
+
+	public Predicate doublePredicate(CriteriaBuilder builder, Path<Double> path, String operator, String dbl) throws FatalAPIException {
+		try {
+			Double d = Double.parseDouble(dbl);
+			
+			if (NumberParser.AFTER.equals(operator)) {
+				return builder.greaterThan(path, d);
+
+			} else if (NumberParser.STARTING_WITH.equals(operator)) {
+				return builder.greaterThanOrEqualTo(path, d);
+
+			} else if (NumberParser.UP_THROUGH.equals(operator)) {
+				return builder.lessThanOrEqualTo(path, d);
+
+			} else if (NumberParser.UP_TO.equals(operator)) {
+				return builder.lessThan(path, d);
+
+			} else if (NumberParser.EXACTLY.equals(operator)) {
+				return builder.equal(path, d);
+			}
+		} catch (NumberFormatException p) {
+			throw new FatalAPIException("ReferenceDAO.doublePredicate(): Cannot parse double: " + dbl);
 		}
 		return null;
 	}

@@ -272,7 +272,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		// for each row, determine whether to perform an insert, delete or update
 		
 		for (int i = 0; i < domain.size(); i++) {
-				
+			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 				
 				if (domain.get(i).getAccID() == null || domain.get(i).getAccID().isEmpty()) {
@@ -385,5 +385,5 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		
 		return results;
 	}
-	
+		
 }

@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -29,6 +31,8 @@ import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
 import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
+import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.DecodeString;
@@ -53,9 +57,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	private TermDAO termDAO;
 	@Inject
 	private AccessionService accessionService;
+	@Inject
+	private TermService termService;
 	
 	private ReferenceTranslator translator = new ReferenceTranslator();
-	private SlimReferenceTranslator slimtranslator = new SlimReferenceTranslator();
+	private SlimReferenceTranslator slimtranslator = new SlimReferenceTranslator();	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -148,12 +154,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			entity.setIsReviewArticle(1);
 		}
 		
-		if (domain.getIsDiscard().equals("No")) {
-			entity.setIsDiscard(0);
-		}
-		else {
-			entity.setIsDiscard(1);
-		}
+//		if (domain.getIsDiscard().equals("No")) {
+//			entity.setIsDiscard(0);
+//		}
+//		else {
+//			entity.setIsDiscard(1);
+//		}
 
 		// add creation/modification 
 		entity.setCreatedBy(user);
@@ -399,9 +405,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (searchDomain.getIsReviewArticle() != null && !searchDomain.getIsReviewArticle().isEmpty()) {
 			where = where + "\nand r.isReviewArticle = " + searchDomain.getIsReviewArticle();
 		}
-		if (searchDomain.getIsDiscard() != null && !searchDomain.getIsDiscard().isEmpty()) {
-			where = where + "\nand r.isDiscard = " + searchDomain.getIsDiscard();
-		}
+//		if (searchDomain.getIsDiscard() != null && !searchDomain.getIsDiscard().isEmpty()) {
+//			where = where + "\nand r.isDiscard = " + searchDomain.getIsDiscard();
+//		}
 		if (searchDomain.getReferenceAbstract() != null && !searchDomain.getReferenceAbstract().isEmpty()) {
 			where = where + "\nand r.abstract ilike '" + searchDomain.getReferenceAbstract() + "'";
 		}
@@ -544,7 +550,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 	@Transactional	
 	public List<SlimReferenceDomain> validateJnumImage(SlimReferenceDomain domain) {
-		// use SlimReferenceDomain to return list of validated reference
+		// use ReferenceCitationCacheDomain to return list of validated reference
 		// copyright
 		// creative commons journal list
 
@@ -553,7 +559,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// validate the jnum
 		String jnum = "";
 		
-		log.info("reference/validateJnumImage/begin");
+		log.info("validateJnumImage/begin");
 		
 		if (domain.getJnum() != null && !domain.getJnum().isEmpty()) {
 			jnum = domain.getJnum();
@@ -571,72 +577,221 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		if (results != null && !results.isEmpty()) {
 
-			log.info("copyright check");
 			// set copyright to incoming json package
 			if (domain.getCopyright() != null && !domain.getCopyright().isEmpty()) {
 				results.get(0).setCopyright(domain.getCopyright());
 			}
 			
 			results.get(0).setNeedsDXDOIid(false);
-			results.get(0).setIsCreativeCommons(false);
 			
 			String key = results.get(0).getRefsKey();
-			
-			log.info("copyright validation");
-			log.info(results.get(0).getCopyright());
+			String sqlPattern = "SQL\\((.*?)\\)";
 				
 			if (key != null && !key.isEmpty() 
 					&& (results.get(0).getCopyright() == null
 					|| results.get(0).getCopyright().isEmpty())) {
-				
-				// return copyright/null is OK
-				
-				String cmd = "\nselect * from bib_getCopyright(" + key + ")";
-				log.info("cmd: " + cmd);
+	
+				// if incoming SlimReferenceDomain.selectedLicense exists, then use that License
+				// else, find all Licenses for given Journal
+				List<TermDomain> journalLicenses = new ArrayList<TermDomain>();
+				if (domain.getSelectedJournalLicense() != null && !domain.getSelectedJournalLicense().isEmpty()) {
+					journalLicenses.add(termService.get(Integer.valueOf(domain.getSelectedJournalLicense())));
+				}
+				else {
+					journalLicenses = termService.getJournalLicense(results.get(0).getJournal());
+					results.get(0).setJournalLicenses(journalLicenses);
+				}
 
-				try {
-					Query query = referenceDAO.createNativeQuery(cmd);
-					String r = (String) query.getSingleResult();
-					results.get(0).setCopyright(r);
-					
-					// if DXDOI is missing....
-					if (r != null && !r.isEmpty()) {
-						if (r.contains("DXDOI(||)")) {
-							results.get(0).setNeedsDXDOIid(true);
+				//
+				// compare results.get(0).getYear() with sql in journal/term/note (definition)
+				// term=BMC Biochem, note=SQL(<2008)
+				// J:xxxx, year = 2007 -> pass = true, year = 2008 -> pass = false
+				//
+				//		SQL(<2008)
+				//		SQL(<=2008)
+				//		SQL(>2008)
+				//		SQL(>=2008)
+				//		SQL(=2008)
+				//		SQL(between 2003 and 2008)
+				//
+				
+				for (int i = 0; i < journalLicenses.size(); i++) {
+					if (journalLicenses.get(i).getNote() != null && !journalLicenses.get(i).getNote().isEmpty()) {
+						if (journalLicenses.get(i).getNote().contains("SQL(")) {
+							
+							String sql = journalLicenses.get(i).getNote();
+							String sqlYear = "";
+
+							Integer intSqlYear = 0;
+							Integer refYear = Integer.valueOf(results.get(0).getYear());
+							
+							Boolean checkLess = false;
+							Boolean checkGreater = false;
+							Boolean checkEqual = false;
+							Boolean passYear = false;
+
+							Pattern p;
+							p = Pattern.compile(sqlPattern);
+							Matcher m = p.matcher(sql);
+							
+							while (m.find()) {
+								
+								// example:  SQL(<2008)
+								sqlYear = m.group(1);
+
+								// remove "<", "<=", ">", ">=", "="
+								// convert to Integer
+								
+								if (sqlYear.startsWith("<=") == true) {
+									// SQL(<=2008)
+									intSqlYear = Integer.valueOf(sqlYear.replace("<=", ""));
+									checkLess = true;
+									checkEqual = true;
+								}
+								else if (sqlYear.startsWith("<") == true) {
+									// SQL(<2008)
+									intSqlYear = Integer.valueOf(sqlYear.replace("<", ""));
+									checkLess = true;
+								}
+								else if (sqlYear.startsWith(">=") == true) {
+									// SQL(>=2008)
+									intSqlYear = Integer.valueOf(sqlYear.replace(">=", ""));
+									checkGreater = true;
+									checkEqual = true;
+								}
+								else if (sqlYear.startsWith(">") == true) {
+									// SQL(>2008)
+									intSqlYear = Integer.valueOf(sqlYear.replace(">", ""));
+									checkGreater = true;
+								}
+								else if (sqlYear.startsWith("=") == true) {
+									// SQL(=2008)
+									intSqlYear = Integer.valueOf(sqlYear.replace("=", ""));
+									checkEqual = true;
+								}
+								else if (sqlYear.startsWith("between") == true) {
+									// SQL(between 2003 and 2008)
+									passYear = true;
+									sqlYear = sqlYear.replace("between ", "");
+									sqlYear = sqlYear.replace("and ",  "");
+									// 2003 2008
+									String[] array = sqlYear.split(" ", -1);
+									int retResult1 =  refYear.compareTo(Integer.valueOf(array[0]));
+									int retResult2 =  refYear.compareTo(Integer.valueOf(array[1]));
+									if (retResult1 < 0) {
+										passYear = false;
+									}
+									if (retResult2 > 0) {
+										passYear = false;
+									}
+								}
+								
+								// compare journal/SQL year with reference/year
+								// if compare matches the expected journal/SQL, then pass = true
+								int retResult =  refYear.compareTo(intSqlYear);
+								if (retResult > 0) {
+									if (checkGreater) {
+										passYear = true;
+									}
+								}
+								else if (retResult < 0) {
+									if (checkLess) {
+										passYear = true;
+									}
+								}
+								else if (checkEqual) {
+									passYear = true;
+								}
+								
+								log.info("validateJnumImage: " + "bib_refs.year:" + refYear + ",license.year:" + sqlYear + ",pass=" + passYear);
+								
+								// if passYear = true, then set journalLicenses = this license *only* 
+								if (passYear) {
+									List<TermDomain> newjournalLicenses = new ArrayList<TermDomain>();
+									newjournalLicenses.add(journalLicenses.get(i));
+									journalLicenses = newjournalLicenses;
+									results.get(0).setJournalLicenses(journalLicenses);									
+								}
+						    }
 						}
 					}
 				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}			
-			}
-		}
-		
-		log.info("creative commons check");
-		if (results != null && !results.isEmpty()) {
-			if (results.get(0).getJournal() != null && !results.get(0).getJournal().isEmpty()) {
-				if (results.get(0).getJournal().equals("Acta Biochim Biophys Sin (Shanghai)")
-						|| results.get(0).getJournal().equals("Brain")
-						|| results.get(0).getJournal().equals("Carcinogenesis")
-						|| results.get(0).getJournal().equals("Cardiovasc Res")
-						|| results.get(0).getJournal().equals("Cereb Cortex")
-						|| results.get(0).getJournal().equals("Chem Senses")
-						|| results.get(0).getJournal().equals("Glycobiology")
-						|| results.get(0).getJournal().equals("Hum Mol Genet")
-						|| results.get(0).getJournal().equals("Hum Reprod")
-						|| results.get(0).getJournal().equals("J Gerontol A Biol Sci Med Sci")
-						|| results.get(0).getJournal().equals("Mol Biol Evol")
-						|| results.get(0).getJournal().equals("Toxicol Sci")
-						|| results.get(0).getJournal().equals("EMBO J")				
-						|| results.get(0).getJournal().equals("J Invest Dermatol")				
-						|| results.get(0).getJournal().equals("Mol Psychiatry")				
-						|| results.get(0).getJournal().equals("Cell Cycle")) {
-					results.get(0).setIsCreativeCommons(true);	
+				
+				if (journalLicenses.size() == 1) {
+
+					String journal = results.get(0).getJournal();
+					String license = journalLicenses.get(0).getAbbreviation();
+					String copyright = license.replaceFirst("\\*", results.get(0).getShort_citation());
+					
+					log.info("validateJnumImage/journal/" + journal);
+					
+					// Proc Natl Acad Sci U S A
+					// example: J:9
+					// replace 1st * = short_citation
+					// replace 2nd * = year
+					if (journal.equals("Proc Natl Acad Sci U S A")) {
+						//log.info("validateJnumImage/processing Proc Natl Acad Sci U S A");					
+						copyright = copyright.replaceFirst("\\*", results.get(0).getYear());
+					}
+
+					// J Neurosci
+					// example: J:xxx
+					// replace 1st * = short_citation
+					// replace 2nd * = year
+					if (journal.equals("J Neurosci")) {
+						log.info("validateJnumImage/processing J Neurosci w/year");					
+						copyright = copyright.replaceFirst("\\*", results.get(0).getYear());
+					}
+					
+					// J Biol Chem
+					// example:  J:150
+					// replace 1st * = short_citation
+					// replace JBiolChem(||) = JBiolChem(pubmedid|JBC|)
+					else if (journal.equals("J Biol Chem") && results.get(0).getPubmedid() != null) {
+						//log.info("validateJnumImage/processing J Biol Chem");					
+						copyright = copyright.replaceAll("JBiolChem\\(\\|\\|\\)", "JBiolChem(" + results.get(0).getPubmedid() + "|JBC|)");
+					}
+					
+					// J Lipid Res
+					// example:  J:75524
+					// replace 1st * = short_citation
+					// replace JLipidRes(||) = JLipidRes(pubmedid|JLR|)
+					else if (journal.equals("J Lipid Res") && results.get(0).getPubmedid() != null) {
+						//log.info("validateJnumImage/processing J Lipid Res");					
+						copyright = copyright.replaceAll("JLipidRes\\(\\|\\|\\)", "JLipidRes(" + results.get(0).getPubmedid() + "|JLR|)");
+					}
+					
+					// Elsevier
+					// example: J:75717, J:15248
+					// 
+					else if (copyright.contains("Elsevier")) {
+						//log.info("validateJnumImage/processing Elsevier");					
+						if (results.get(0).getDoiid() != null) {
+							copyright = copyright.replaceAll("DXDOI\\(\\|\\|\\)", "DXDOI(" + results.get(0).getDoiid() + "||)");					
+						}
+						copyright = copyright.replaceAll("Elsevier\\(\\|\\|\\)", "Elsevier(" + results.get(0).getJnumid() + "||)");					
+					}
+
+					// J Cell Biol
+					// J Gen Physiol
+					// J Expt Med
+					// example: J:3145, J:2418, J:82858
+					else if (results.get(0).getDoiid() != null) {
+						copyright = copyright.replaceAll("DXDOI\\(\\|\\|\\)", "DXDOI(" + results.get(0).getDoiid() + "||)");
+					}
+					
+					log.info("validateJnumImage/copyright/" + copyright);					
+					results.get(0).setCopyright(copyright);
+					
+					// if DXDOI is missing....
+					if (copyright.contains("DXDOI(||)")) {
+							results.get(0).setNeedsDXDOIid(true);
+					}					
 				}
 			}
 		}
 		
-		log.info("reference/validateJnumImage/end");
+		log.info("validateJnumImage/end");
 		return results;
 	}
 	

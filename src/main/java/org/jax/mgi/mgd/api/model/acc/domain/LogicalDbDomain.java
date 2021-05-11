@@ -14,13 +14,11 @@ public class LogicalDbDomain extends BaseDomain {
 	private String name;
 	private String description;
 	private String organismKey;
-	private String commonName;
-	
+	private String commonName;	
 	private String createdBy;
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;
-	
 	
 	private List<ActualDbDomain> actualDBs;
 

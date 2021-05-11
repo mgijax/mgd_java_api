@@ -30,7 +30,7 @@ public class MGISetMemberTranslator extends BaseEntityDomainTranslator<MGISetMem
 
 		// if set = 1055/genotype Clipboard, then translate accid of genotype
 		if (entity.getGenotypeAccessionIds() != null && !entity.getGenotypeAccessionIds().isEmpty()) {
-			domain.setGenotypeID(entity.getGenotypeAccessionIds().get(0).getAccID());			
+			domain.setGenotypeID(entity.getGenotypeAccessionIds().get(0).getAccID());
 		}
 		
 		return domain;

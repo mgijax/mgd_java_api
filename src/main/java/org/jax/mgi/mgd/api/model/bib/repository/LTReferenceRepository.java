@@ -21,9 +21,11 @@ import org.jax.mgi.mgd.api.model.acc.dao.MGITypeDAO;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
+import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
@@ -84,6 +86,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		LTReference ref = getReference(key);
 		LTReferenceDomain domain = translator.translate(ref);
 		domain.setStatusHistory(getStatusHistory(domain));
+		domain.setRelevanceHistory(setRelevanceHistory(domain));
 		return domain;	
 	}
 
@@ -116,9 +119,12 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		LTReference entity = getReference(domain.refsKey);
 		log.info("found LTReference/entity");
 		applyDomainChanges(entity, domain, user);
+		log.info("applied domain changes");
 		referenceDAO.persist(entity);
+		log.info("presisted entity");
 		referenceDAO.updateCitationCache(domain.refsKey);		
-		return translator.translate(entity);
+		log.info("updated citation cache");
+		return null;	// just return null, will look up later on
 	}
 
 	/* get a list of events in the status history of the reference with the specified key
@@ -127,6 +133,16 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		List<LTReferenceWorkflowStatusDomain> history = new ArrayList<LTReferenceWorkflowStatusDomain>();
 		for (LTReferenceWorkflowStatus event : referenceDAO.getStatusHistory(domain.refsKey)) {
 			history.add(new LTReferenceWorkflowStatusDomain(event));
+		}
+		return history;
+	}
+
+	/* get a list of events in the status history of the reference with the specified key
+	 */
+	public List<LTReferenceWorkflowRelevanceDomain> setRelevanceHistory(LTReferenceDomain domain) throws APIException {
+		List<LTReferenceWorkflowRelevanceDomain> history = new ArrayList<LTReferenceWorkflowRelevanceDomain>();
+		for (LTReferenceWorkflowRelevance event : referenceDAO.getRelevanceHistory(domain.refsKey)) {
+			history.add(new LTReferenceWorkflowRelevanceDomain(event));
 		}
 		return history;
 	}
@@ -248,6 +264,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		anyChanges = applyNoteChanges(entity, domain, currentUser) | anyChanges;
 		anyChanges = applyAccessionIDChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyWorkflowDataChanges(entity, domain, currentUser) || anyChanges;
+		// TODO : must handle relevance changes here, create new relevance record if needed
+		anyChanges = applyWorkflowRelevanceChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyAlleleAssocChanges(entity, domain.getAlleleAssocs(), currentUser) || anyChanges;		
 		anyChanges = applyStrainAssocChanges(entity, domain.getStrainAssocs(), currentUser) || anyChanges;		
 		anyChanges = applyMarkerAssocChanges(entity, domain.getMarkerAssocs(), currentUser) || anyChanges;
@@ -267,10 +285,10 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		boolean anyChanges = false;
 
 		// determine if the isDiscard flag is set in the ReferenceDomain object
-		int rdDiscard = 0;
-		if ("1".equals(domain.isDiscard) || ("Yes".equalsIgnoreCase(domain.isDiscard))) {
-			rdDiscard = 1;
-		}
+//		int rdDiscard = 0;
+//		if ("1".equals(domain.isDiscard) || ("Yes".equalsIgnoreCase(domain.isDiscard))) {
+//			rdDiscard = 1;
+//		}
 
 		// determine if the isReviewArticle flag is set in the ReferenceDomain object
 		int rdReview = 0;
@@ -288,7 +306,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		String refTypeKey = String.valueOf(entity.getReferenceTypeTerm().get_term_key());
 		
 		// update this object's data to match what was passed in
-		if ((rdDiscard != entity.getIsDiscard()) || (rdReview != entity.getIsReviewArticle())
+//		if ((rdDiscard != entity.getIsDiscard()) || (rdReview != entity.getIsReviewArticle())
+		
+		if ((rdReview != entity.getIsReviewArticle())
 				|| !smartEqual(entity.getAuthors(), domain.authors)
 				|| !smartEqual(entity.getJournal(), domain.journal)
 				|| !smartEqual(entity.getTitle(), domain.title)
@@ -300,16 +320,17 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				|| !smartEqual(entity.getPgs(), domain.pgs)
 				|| !smartEqual(entity.getReferenceAbstract(), domain.referenceAbstract)
 				) {
-
-			if (domain.authors != null) {
-				Pattern pattern = Pattern.compile("([^;]+).*");		// any characters up to the first semicolon are the primary author
-				Matcher matcher = pattern.matcher(domain.authors);
-				if (matcher.find()) {
-					entity.setPrimary_author(matcher.group(1));
-				}
-			}
-
-			entity.setIsDiscard(rdDiscard);
+//
+//			if (domain.authors != null) {
+//				Pattern pattern = Pattern.compile("([^;]+).*");		// any characters up to the first semicolon are the primary author
+//				Matcher matcher = pattern.matcher(domain.authors);
+//				if (matcher.find()) {
+//					entity.setPrimary_author(matcher.group(1));
+//				}
+//			}
+//
+//			entity.setIsDiscard(rdDiscard);
+		
 			entity.setIsReviewArticle(rdReview);
 			entity.setAuthors(domain.authors);
 			entity.setJournal(domain.journal);
@@ -618,6 +639,46 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		return anyChanges;
 	}
 
+	/* apply changes in workflow relevance from domain to entity
+	 */
+	private boolean applyWorkflowRelevanceChanges(LTReference entity, LTReferenceDomain domain, User currentUser) throws APIException {
+		// need to handle:  updated workflow relevance, new workflow relevance -- (no deletions)
+
+		boolean anyChanges = false;
+		LTReferenceWorkflowRelevance oldRel = entity.getWorkflowRelevance();
+
+		if (oldRel != null) {
+			// Compare with old relevance.  If matches, no change.  If does not match, need to create a new
+			// relevance record, and need to mark any old one as no longer current.
+
+			if (!smartEqual(oldRel.getRelevance(), domain.relevance)) {
+
+				if (oldRel != null) {
+					// need to mark old as no longer current
+					oldRel.setIsCurrent(0);
+					referenceDAO.persist(oldRel);
+				}
+
+				LTReferenceWorkflowRelevance rel = new LTReferenceWorkflowRelevance();
+				rel.set_refs_key(Integer.valueOf(domain.refsKey));
+				rel.setIsCurrent(1);
+				rel.setRelevance(getTermByTerm(Constants.VOC_RELEVANCE, domain.relevance));
+
+				rel.setCreatedByUser(currentUser);
+				rel.setModifiedByUser(currentUser);
+				rel.setCreation_date(new Date());
+				rel.setModification_date(new Date());
+
+				rel.set_assoc_key(referenceDAO.getNextWorkflowRelevanceKey());
+
+				referenceDAO.persist(rel);
+				entity.addWorkflowRelevance(rel);
+				anyChanges = true;
+			}
+		}
+		return anyChanges;
+	}
+
 	/* apply changes in workflow data fields (not status, though) from domain to entity
 	 */
 	private boolean applyWorkflowDataChanges(LTReference entity, LTReferenceDomain domain, User currentUser) throws APIException {
@@ -774,6 +835,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	 * to the database.
 	 */
 	private boolean updateStatus(LTReference entity, String groupAbbrev, String currentStatus, String newStatus, User currentUser) throws NonFatalAPIException, APIException {
+
 		// no update if new status matches old status (or if no group is specified)
 		if ( ((currentStatus != null) && currentStatus.equals(newStatus)) || (groupAbbrev == null) ||
 				((currentStatus == null) && (newStatus == null)) ) {
@@ -829,26 +891,31 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		boolean anyChanges = updateStatus(entity, Constants.WG_AP, entity.getStatus(Constants.WG_AP), domain.ap_status, currentUser);
 		anyChanges = updateStatus(entity, Constants.WG_GO, entity.getStatus(Constants.WG_GO), domain.go_status, currentUser) || anyChanges;
 		anyChanges = updateStatus(entity, Constants.WG_GXD, entity.getStatus(Constants.WG_GXD), domain.gxd_status, currentUser) || anyChanges;
+		anyChanges = updateStatus(entity, Constants.WG_PRO, entity.getStatus(Constants.WG_PRO), domain.pro_status, currentUser) || anyChanges;
 		anyChanges = updateStatus(entity, Constants.WG_QTL, entity.getStatus(Constants.WG_QTL), domain.qtl_status, currentUser) || anyChanges;
 		anyChanges = updateStatus(entity, Constants.WG_TUMOR, entity.getStatus(Constants.WG_TUMOR), domain.tumor_status, currentUser) || anyChanges;
 
 		if (anyChanges) {
 			entity.clearWorkflowStatusCache();
 
-			// if we had a status change, if at least one status is not "Not Routed", and if the reference
-			// doesn't already have a J#, we need to create one
+			// if no J#  and Status in (Chosen, INdexed, Full-coded), then add J#
 
 			if (entity.getJnumid() == null) {
-				boolean anyNotRouted = false;
+
+				boolean addJnumid = false;
+
 				for (String workgroup : Constants.WG_ALL) {
 					String wgStatus = entity.getStatus(workgroup);
-					if ((wgStatus != null) && !wgStatus.equals(Constants.WS_NOT_ROUTED)) {
-						anyNotRouted = true;
+					if ((wgStatus != null) && (
+							wgStatus.equals(Constants.WS_CHOSEN) ||
+							wgStatus.equals(Constants.WS_INDEXED) ||
+							wgStatus.equals(Constants.WS_CURATED))) {
+						addJnumid = true;
 						break;
 					}
 				}
 
-				if (anyNotRouted) {
+				if (addJnumid) {
 					try {
 						log.info("Assigning new J: number");
 						referenceDAO.assignNewJnumID(String.valueOf(entity.get_refs_key()), currentUser.get_user_key());

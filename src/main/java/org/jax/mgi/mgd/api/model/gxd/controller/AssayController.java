@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.AssayService;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISetDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -72,6 +73,22 @@ public class AssayController extends BaseController<AssayDomain> {
 
 		try {
 			results = assayService.search(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@POST
+	@ApiOperation(value = "Get Genotype Set Members by Assay and Set/User")
+	@Path("/getGenotypesBySetUser")
+	public List<MGISetDomain> getGenotypesBySetUser(SlimAssayDomain domain) {
+			
+		List<MGISetDomain> results = new ArrayList<MGISetDomain>();
+		
+		try {
+			results = assayService.getGenotypesBySetUser(domain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

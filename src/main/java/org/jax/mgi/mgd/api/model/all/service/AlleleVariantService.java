@@ -124,8 +124,8 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		}
 	
 		// process all notes : curated only
-		noteService.process(String.valueOf(curatedEntity.get_variant_key()), domain.getCuratorNote(), mgiTypeKey, "1050", user);
-		noteService.process(String.valueOf(curatedEntity.get_variant_key()), domain.getPublicNote(), mgiTypeKey, "1051", user);
+		noteService.process(String.valueOf(curatedEntity.get_variant_key()), domain.getCuratorNote(), mgiTypeKey, user);
+		noteService.process(String.valueOf(curatedEntity.get_variant_key()), domain.getPublicNote(), mgiTypeKey, user);
 		
 		// process reference : curated only
 		if (domain.getRefAssocs() != null) {
@@ -191,10 +191,10 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		}
 		
 		// process all notes DADT-180
-		if(noteService.process(domain.getVariantKey(), domain.getCuratorNote(), mgiTypeKey, "1050", user)) {
+		if(noteService.process(domain.getVariantKey(), domain.getCuratorNote(), mgiTypeKey, user)) {
 			modified = true;
 		}
-		if(noteService.process(domain.getVariantKey(), domain.getPublicNote(), mgiTypeKey, "1051", user)) {
+		if(noteService.process(domain.getVariantKey(), domain.getPublicNote(), mgiTypeKey, user)) {
 			modified = true;
 		}
 

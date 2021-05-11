@@ -106,7 +106,7 @@ public class ImageService extends BaseService<ImageDomain> {
 			imagePaneService.process(String.valueOf(thumbnailEntity.get_image_key()), domain.getImagePanes(), user);
 			
 			// thumbnail copyright
-			noteService.process(String.valueOf(thumbnailEntity.get_image_key()), domain.getCopyrightNote(), mgiTypeKey, "1023", user);
+			noteService.process(String.valueOf(thumbnailEntity.get_image_key()), domain.getCopyrightNote(), mgiTypeKey, user);
 
 			// set full-size thumbail key = new thumbnail primary key
 			entity.setThumbnailImage(thumbnailDAO.get(thumbnailEntity.get_image_key()));
@@ -128,10 +128,10 @@ public class ImageService extends BaseService<ImageDomain> {
 		
 		// process all notes
 		log.info("processImage/notes");
-		noteService.process(String.valueOf(entity.get_image_key()), domain.getCaptionNote(), mgiTypeKey, "1024", user);
-		noteService.process(String.valueOf(entity.get_image_key()), domain.getCopyrightNote(), mgiTypeKey, "1023", user);
-		noteService.process(String.valueOf(entity.get_image_key()), domain.getPrivateCuratorialNote(), mgiTypeKey, "1025", user);
-		noteService.process(String.valueOf(entity.get_image_key()), domain.getExternalLinkNote(), mgiTypeKey, "1039", user);
+		noteService.process(String.valueOf(entity.get_image_key()), domain.getCaptionNote(), mgiTypeKey, user);
+		noteService.process(String.valueOf(entity.get_image_key()), domain.getCopyrightNote(), mgiTypeKey, user);
+		noteService.process(String.valueOf(entity.get_image_key()), domain.getPrivateCuratorialNote(), mgiTypeKey, user);
+		noteService.process(String.valueOf(entity.get_image_key()), domain.getExternalLinkNote(), mgiTypeKey, user);
 
 		// process image pane
 		log.info("processImage/pane label");
@@ -190,16 +190,16 @@ public class ImageService extends BaseService<ImageDomain> {
 		}
 		
 		// process all notes
-		if (noteService.process(domain.getImageKey(), domain.getCaptionNote(), mgiTypeKey, "1024", user)) {
+		if (noteService.process(domain.getImageKey(), domain.getCaptionNote(), mgiTypeKey, user)) {
 			modified = true;
 		}
-		if (noteService.process(domain.getImageKey(), domain.getCopyrightNote(), mgiTypeKey, "1023", user)) {
+		if (noteService.process(domain.getImageKey(), domain.getCopyrightNote(), mgiTypeKey, user)) {
 			modified = true;
 		}
-		if (noteService.process(domain.getImageKey(), domain.getPrivateCuratorialNote(), mgiTypeKey, "1025", user)) {
+		if (noteService.process(domain.getImageKey(), domain.getPrivateCuratorialNote(), mgiTypeKey, user)) {
 			modified = true;
 		}
-		if (noteService.process(domain.getImageKey(), domain.getExternalLinkNote(), mgiTypeKey, "1039", user)) {
+		if (noteService.process(domain.getImageKey(), domain.getExternalLinkNote(), mgiTypeKey, user)) {
 			modified = true;
 		}
 

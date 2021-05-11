@@ -103,7 +103,6 @@ public class NoteService extends BaseService<NoteDomain> {
 		return results;
 	}
 	
-	
 	@Transactional
 	public Boolean processAll(String parentKey, List<NoteDomain> noteDomains, String mgiTypeKey, User user) {
 		Boolean modified = Boolean.FALSE;
@@ -111,8 +110,8 @@ public class NoteService extends BaseService<NoteDomain> {
 		if(noteDomains != null && !noteDomains.isEmpty()) {
 			for (int i = 0; i < noteDomains.size(); i++) {
 				NoteDomain note = noteDomains.get(i);
-				String noteTypeKey = note.getNoteTypeKey();
-				Boolean m = process(parentKey, note, mgiTypeKey, noteTypeKey, user);
+				//String noteTypeKey = note.getNoteTypeKey();
+				Boolean m = process(parentKey, note, mgiTypeKey, user);
 				if (m.equals(Boolean.TRUE)) {
 					modified = m;
 				}
@@ -122,9 +121,9 @@ public class NoteService extends BaseService<NoteDomain> {
 	}
 		
 	@Transactional
-	public Boolean process(String parentKey, NoteDomain noteDomain, String mgiTypeKey, String noteTypeKey, User user) {
+	public Boolean process(String parentKey, NoteDomain noteDomain, String mgiTypeKey, User user) {
 		// process note by calling stored procedure (create, delete, update)
-	
+		
 		log.info("NoteService process");
 		String noteKey = "";
 		String note = "";
@@ -180,16 +179,13 @@ public class NoteService extends BaseService<NoteDomain> {
 				noteKey = noteDomain.getNoteKey().toString();
 				modified = true;
 			}
-			if (!String.valueOf(entity.getNoteType().get_noteType_key()).equals(noteTypeKey)) {
+			if (!String.valueOf(entity.getNoteType().get_noteType_key()).equals(noteDomain.getNoteTypeKey())) {
 				log.info("NoteService update");
 				noteKey = noteDomain.getNoteKey().toString();
 				modified = true;
 			}
 		}
 		
-	    // SHARON: 9/25 updated 'cmd' to use noteDomain.getNoteTypeKey() rather than noteTypeKey coming
-		///        in as parameter. Not sure why there is a parameter when it should be in the domain, right?
-		//         whether it is create OR update.1
 		// stored procedure
 		// if noteKey is null, then insert new note
 		// if noteKey is not null and note is null, then delete note
@@ -201,7 +197,7 @@ public class NoteService extends BaseService<NoteDomain> {
 				+ "," + noteKey
 				+ "," + parentKey
 				+ "," + mgiTypeKey
-				+ "," + noteTypeKey
+				+ "," + noteDomain.getNoteTypeKey()
 				+ "," + note
 				+ ")";
 			log.info("cmd: " + cmd);

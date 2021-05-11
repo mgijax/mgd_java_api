@@ -16,7 +16,7 @@ public class ProbeStrainGenotypeTranslator extends BaseEntityDomainTranslator<Pr
 		ProbeStrainGenotypeDomain domain = new ProbeStrainGenotypeDomain();
 		
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
-		domain.setStrainMarkerKey(String.valueOf(entity.get_straingenotype_key()));		
+		domain.setStrainGenotypeKey(String.valueOf(entity.get_straingenotype_key()));		
 		domain.setStrainKey(String.valueOf(entity.get_strain_key()));
 		domain.setGenotypeKey(String.valueOf(entity.getGenotype().get_genotype_key()));
 		domain.setGenotypeDisplay(entity.getGenotype().getStrain().getStrain());

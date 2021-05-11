@@ -138,8 +138,8 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				specimenDAO.persist(entity);
 				
 				// process gxd_insituresult
-				if (domain.get(i).getResults() != null && !domain.get(i).getResults().isEmpty()) {
-					if (insituresultService.process(entity.get_specimen_key(), domain.get(i).getResults(), user)) {
+				if (domain.get(i).getSresults() != null && !domain.get(i).getSresults().isEmpty()) {
+					if (insituresultService.process(entity.get_specimen_key(), domain.get(i).getSresults(), user)) {
 						modified = true;
 					}
 				}
@@ -189,8 +189,8 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				entity.setModification_date(new Date());
 
 				// process gxd_insituresult
-				if (domain.get(i).getResults() != null && !domain.get(i).getResults().isEmpty()) {
-					if (insituresultService.process(Integer.valueOf(domain.get(i).getSpecimenKey()), domain.get(i).getResults(), user)) {
+				if (domain.get(i).getSresults() != null && !domain.get(i).getSresults().isEmpty()) {
+					if (insituresultService.process(Integer.valueOf(domain.get(i).getSpecimenKey()), domain.get(i).getSresults(), user)) {
 						modified = true;
 					}
 				}

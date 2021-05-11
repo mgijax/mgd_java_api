@@ -54,14 +54,17 @@ public class LTReferenceDomain extends BaseDomain {
 	public String short_citation;
 
 	public String isReviewArticle;	
-	public String isDiscard;
 
 	// workflow status
 	public String ap_status;
 	public String go_status;
 	public String gxd_status;
+	public String pro_status;
 	public String qtl_status;
 	public String tumor_status;
+	
+	// workflow relevance
+	public String relevance;
 	
 	// workflow data
 	public String has_pdf;
@@ -77,6 +80,7 @@ public class LTReferenceDomain extends BaseDomain {
 	public List<String> workflow_tags;	
 	public List<String> associated_data;
 	public List<LTReferenceWorkflowStatusDomain> statusHistory;
+	public List<LTReferenceWorkflowRelevanceDomain> relevanceHistory;
 	
 	// PWI loads this data via calls to MGIReferenceAssocService/getXXX()
 	public List<MGIReferenceAlleleAssocDomain> alleleAssocs;
@@ -104,6 +108,8 @@ public class LTReferenceDomain extends BaseDomain {
 			this.go_status = status;
 		} else if (group.equalsIgnoreCase("GXD")) {
 			this.gxd_status = status;
+		} else if (group.equalsIgnoreCase("PRO")) {
+			this.pro_status = status;
 		} else if (group.equalsIgnoreCase("QTL")) {
 			this.qtl_status = status;
 		} else if (group.equalsIgnoreCase("Tumor")) {
@@ -111,5 +117,18 @@ public class LTReferenceDomain extends BaseDomain {
 		} else {
 			throw new APIException("Unknown workflow group: " + group);
 		}
+	}
+
+	/* add the given relevance history to this domain object (not here by default, but added for detail pages)
+	 */
+	public void setRelevanceHistory (List<LTReferenceWorkflowRelevanceDomain> history) {
+		this.relevanceHistory = history;
+	}
+	
+	/* update the relevance data for this domain object (This method does not persist the
+	 * change to the database.)
+	 */
+	public void setRelevance (String relevance) throws APIException {
+		this.relevance = relevance;
 	}
 }

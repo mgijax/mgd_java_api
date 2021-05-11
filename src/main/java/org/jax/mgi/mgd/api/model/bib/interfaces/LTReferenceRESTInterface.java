@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.bib.interfaces;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
@@ -41,6 +42,7 @@ public interface LTReferenceRESTInterface {
 			LTReferenceDomain reference
 	);
 
+	// Note that this is specifically for adding workflow tags for a set of reference keys.
 	@PUT
 	@Path("/bulkUpdate")
 	@ApiOperation(value = "Value: Update list of References en masse", notes="Notes: Updates a list of References")
@@ -83,6 +85,11 @@ public interface LTReferenceRESTInterface {
 			@QueryParam("refsKey") String refsKey
 	);
 
+	@GET
+	@Path("/versions")
+	@ApiOperation(value = "Value: Get a list of valid choices for relevance version")
+	public List<String> getRelevanceVersions();
+	
 	@POST
 	@Path("/search")
 	@ApiOperation(value = "Value: Searches Reference by Fields", notes="Notes: Searches Reference Fields")
@@ -98,7 +105,6 @@ public interface LTReferenceRESTInterface {
 	 *	date : search by date (free text), case-insensitive, wildcards allowed
 	 *	extracted_text : search by extracted text, case-insensitive, AND search for all words in string
 	 *	isReviewArticle : search for whether this is a review article (Yes/1) or not (No/0)
-	 *	isDiscard : search by value of isDiscard flag (no discard, only discard, search all)
 	 *	issue : search by issue field, case-insensitive, wildcards allowed
 	 *	journal : search by journal field, case-insensitive, wildcards allowed
 	 *	marker_id : searches by associated marker ID, case-insensitive, no wildcards
@@ -120,6 +126,12 @@ public interface LTReferenceRESTInterface {
 	 *  	operators may be: =, <, >, <=, >=, or ..
 	 *  modification_date : date on which reference was most recently modified, using the criteria shown above
 	 *
+	 *	relevance : keep, discard, or Not Specified (from pick list)
+	 *	relevance_date : search by date (free text), ranges allowed
+	 *	relevance_user : user who created the current relevance record (case-insensitive, no wildcards)
+	 *	relevance_version : version of the classifier that assigned the current relevance (from pick list)
+	 *	relevance_confidence : float value judging the classifier's confidence in its assignment (+ or -, range)
+	 *
 	 *	workflow_tag_operator : operator to use when searching for multiple workflow tags (AND/OR)
 	 *	not_workflow_tag1 : flag to indicate whether to apply a NOT operator (1/true) to the search for tag 1 or not (0/false)
 	 *	workflow_tag1 : search by workflow tag 1, case-insensitive, no wildcards
@@ -133,30 +145,35 @@ public interface LTReferenceRESTInterface {
 	 *	workflow_tag5 : search by workflow tag 5, case-insensitive, no wildcards
 	 *
 	 *	status_operator : operator to use when searching across status field for multiple workflow groups (AND/OR)
+	 *	status_AP_New : flag to search for current status of New for AP group (if field present = yes)
 	 *	status_AP_Chosen : flag to search for current status of Chosen for AP group (if field present = yes)
 	 *	status_AP_Full_coded : flag to search for current status of Full-coded for AP group (if field present = yes)
 	 *	status_AP_Indexed : flag to search for current status of Indexed for AP group (if field present = yes)
 	 *	status_AP_Not_Routed : flag to search for current status of Not Routed for AP group (if field present = yes)
 	 *	status_AP_Rejected : flag to search for current status of Rejected for AP group (if field present = yes)
 	 *	status_AP_Routed : flag to search for current status of Routed for AP group (if field present = yes)
+	 *	status_GO_New : flag to search for current status of New for GO group (if field present = yes)
 	 *	status_GO_Chosen : flag to search for current status of Chosen for GO group (if field present = yes)
 	 *	status_GO_Full_coded : flag to search for current status of Full-coded for GO group (if field present = yes)
 	 *	status_GO_Indexed : flag to search for current status of Indexed for GO group (if field present = yes)
 	 *	status_GO_Not_Routed : flag to search for current status of Not Routed for GO group (if field present = yes)
 	 *	status_GO_Rejected : flag to search for current status of Rejected for GO group (if field present = yes)
 	 *	status_GO_Routed : flag to search for current status of Routed for GO group (if field present = yes)
+	 *	status_GXD_New : flag to search for current status of New for GXD group (if field present = yes)
 	 *	status_GXD_Chosen : flag to search for current status of Chosen for GXD group (if field present = yes)
 	 *	status_GXD_Full_coded : flag to search for current status of Full-coded for GXD group (if field present = yes)
 	 *	status_GXD_Indexed : flag to search for current status of Indexed for GXD group (if field present = yes)
 	 *	status_GXD_Not_Routed : flag to search for current status of Not Routed for GXD group (if field present = yes)
 	 *	status_GXD_Rejected : flag to search for current status of Rejected for GXD group (if field present = yes)
 	 *	status_GXD_Routed : flag to search for current status of Routed for GXD group (if field present = yes)
+	 *	status_QTL_New : flag to search for current status of New for QTL group (if field present = yes)
 	 *	status_QTL_Chosen : flag to search for current status of Chosen for QTL group (if field present = yes)
 	 *	status_QTL_Full_coded : flag to search for current status of Full-coded for QTL group (if field present = yes)
 	 *	status_QTL_Indexed : flag to search for current status of Indexed for QTL group (if field present = yes)
 	 *	status_QTL_Not_Routed : flag to search for current status of Not Routed for QTL group (if field present = yes)
 	 *	status_QTL_Rejected : flag to search for current status of Rejected for QTL group (if field present = yes)
 	 *	status_QTL_Routed : flag to search for current status of Routed for QTL group (if field present = yes)
+	 *	status_Tumor_New : flag to search for current status of New for Tumor group (if field present = yes)
 	 *	status_Tumor_Chosen : flag to search for current status of Chosen for Tumor group (if field present = yes)
 	 *	status_Tumor_Full_coded : flag to search for current status of Full-coded for Tumor group (if field present = yes)
 	 *	status_Tumor_Indexed : flag to search for current status of Indexed for Tumor group (if field present = yes)

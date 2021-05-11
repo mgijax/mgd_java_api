@@ -20,6 +20,7 @@ import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mld.entities.MappingNote;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
@@ -47,7 +48,7 @@ public class Reference extends BaseEntity {
 	private int year;
 	private String pgs;
 	private int isReviewArticle;
-	private int isDiscard;
+	//private int isDiscard;
 	private Date creation_date;
 	private Date modification_date;
 
@@ -82,7 +83,12 @@ public class Reference extends BaseEntity {
 	@OneToMany()
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	private List<ReferenceNote> referenceNote;
-		
+
+	// at most one mapping note
+	@OneToMany()
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+	private List<MappingNote> mappingNote;
+	
 	// mgi accession ids only
 	@OneToMany()	
 	@JoinColumn(name="_object_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
@@ -96,5 +102,5 @@ public class Reference extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 1 and `_logicaldb_key` in (29, 65, 185)")
 	@OrderBy(clause ="accid")
 	private List<Accession> editAccessionIds;
-
+	
 }

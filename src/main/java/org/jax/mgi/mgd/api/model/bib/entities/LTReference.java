@@ -74,8 +74,8 @@ public class LTReference extends BaseEntity {
 	@Column(name="isReviewArticle")
 	private int isReviewArticle;
 
-	@Column(name="isDiscard")
-	private int isDiscard;
+//	@Column(name="isDiscard")
+//	private int isDiscard;
 
 	@Column(name="creation_date")
 	private Date creation_date;
@@ -105,6 +105,11 @@ public class LTReference extends BaseEntity {
 	@OneToMany()
 	@JoinColumn(name="_refs_key")
 	private List<LTReferenceWorkflowStatus> workflowStatuses;
+
+	@OneToMany()
+	@JoinColumn(name="_refs_key")
+	@OrderBy("isCurrent desc")
+	private List<LTReferenceWorkflowRelevance> workflowRelevances;
 
 	@OneToMany()
 	@JoinColumn(name="_refs_key")
@@ -152,6 +157,11 @@ public class LTReference extends BaseEntity {
 	@Where(clause="`_mgitype_key` in (11)")
 	@OrderBy("_refassoctype_key")
 	private List<MGIReferenceAssoc> alleleAssocs;
+	
+	@Transient
+	public void addWorkflowRelevance(LTReferenceWorkflowRelevance rel) {
+		this.workflowRelevances.add(rel);
+	}
 	
 	/* Find and return the first accession ID matching any specified logical database, prefix,
 	 * is-preferred, and is-private settings.
@@ -239,6 +249,18 @@ public class LTReference extends BaseEntity {
 	}
 
 	@Transient
+	public String getRelevance() {
+		if (workflowRelevances != null) {
+			for (LTReferenceWorkflowRelevance rel : workflowRelevances) {
+				if (rel.getIsCurrent() == 1) {
+					return rel.getRelevance();
+				}
+			}
+		}
+		return null;
+	}
+
+	@Transient
 	public String getShort_citation() {
 		citationData.size(); // loads it
 		if ((citationData != null) && (citationData.size() > 0)) {
@@ -289,6 +311,15 @@ public class LTReference extends BaseEntity {
 		workflowData.size(); // Loads it
 		for(LTReferenceWorkflowData data: workflowData) {
 			return data;
+		}
+		return null;
+	}
+	
+	@Transient
+	public LTReferenceWorkflowRelevance getWorkflowRelevance() {
+		if ((this.workflowRelevances != null) && (this.workflowRelevances.size() > 0)) {
+			// first one should be the active one
+			return this.workflowRelevances.get(0);
 		}
 		return null;
 	}

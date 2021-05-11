@@ -6,11 +6,13 @@ import java.util.List;
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBookDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceNoteDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceAssociatedData;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
+import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DecodeString;
 
@@ -54,6 +56,7 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		domain.ap_status = entity.getStatus(Constants.WG_AP);
 		domain.go_status = entity.getStatus(Constants.WG_GO);
 		domain.gxd_status = entity.getStatus(Constants.WG_GXD);
+		domain.pro_status = entity.getStatus(Constants.WG_PRO);
 		domain.qtl_status = entity.getStatus(Constants.WG_QTL);
 		domain.tumor_status = entity.getStatus(Constants.WG_TUMOR);
 		domain.workflow_tags = entity.getWorkflowTagsAsStrings();
@@ -71,11 +74,11 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		}
 
 		// has this article been discarded?
-		if (entity.getIsDiscard() == 0) {
-			domain.isDiscard = "No";
-		} else {
-			domain.isDiscard = "Yes";
-		}
+//		if (entity.getIsDiscard() == 0) {
+//			domain.isDiscard = "No";
+//		} else {
+//			domain.isDiscard = "Yes";
+//		}
 		
 		// list of strings, each of which indicates a type of data associated with the reference
 		domain.associated_data = new ArrayList<String>();
@@ -132,6 +135,20 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 			}
 		}
 
+		// Data for workflow relevance settings
+		List<LTReferenceWorkflowRelevance> relevanceHistory = entity.getWorkflowRelevances();
+		if ((relevanceHistory != null) && (relevanceHistory.size() > 0)) {
+			domain.relevanceHistory = new ArrayList<LTReferenceWorkflowRelevanceDomain>();
+			String current = null;
+			for (LTReferenceWorkflowRelevance wr : relevanceHistory) {
+				domain.relevanceHistory.add(new LTReferenceWorkflowRelevanceDomain(wr));
+				if (wr.getIsCurrent() == 1) {
+					current = wr.getRelevance();
+				}
+			}
+			domain.relevance = current;
+		}
+		
 		// turning this on causes a LazyINitializationExpception; no idea why
 		// one-to-many allele associations
 //		if (entity.getAlleleAssocs() != null && !entity.getAlleleAssocs().isEmpty()) {

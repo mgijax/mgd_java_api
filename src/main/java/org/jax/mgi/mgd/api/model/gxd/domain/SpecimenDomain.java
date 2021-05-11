@@ -18,12 +18,12 @@ public class SpecimenDomain extends BaseDomain {
 	private String fixationKey;
 	private String fixationMethod;
 	private String genotypeKey;
-	private String genotypeID;
+	private String genotypeAccID;
 	private Integer sequenceNum;
 	private String specimenLabel;
 	private String sex;
 	private String agePrefix;
-	private String agePostfix;
+	private String ageStage;
 	private String age;
 	private String ageMin;
 	private String ageMax;
@@ -33,6 +33,7 @@ public class SpecimenDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	
-	private List<InSituResultDomain> results;
+	private Integer sresultsCount;
+	private List<InSituResultDomain> sresults;
 	
 }

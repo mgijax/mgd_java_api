@@ -5,7 +5,9 @@ import java.util.Comparator;
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
+import org.jax.mgi.mgd.api.model.acc.translator.SlimAccessionTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
@@ -56,6 +58,9 @@ public class ProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeStrai
 		// mgi accession ids only
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
+			SlimAccessionTranslator accessionTranslator = new SlimAccessionTranslator();			
+			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
+			domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
 		}
 
 		// other accession ids
@@ -71,22 +76,22 @@ public class ProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeStrai
 			domain.setStrainOriginNote(note.iterator().next());
 		}
 
-		// at most one impcColonyNote
-		if (entity.getImpcColonyNote() != null && !entity.getImpcColonyNote().isEmpty()) {
-			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getImpcColonyNote());
-			domain.setImpcColonyNote(note.iterator().next());
+		// at most one impcNote
+		if (entity.getImpcNote() != null && !entity.getImpcNote().isEmpty()) {
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getImpcNote());
+			domain.setImpcNote(note.iterator().next());
 		}
 
 		// at most one nomenclatureNote
-		if (entity.getImpcColonyNote() != null && !entity.getImpcColonyNote().isEmpty()) {
-			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getImpcColonyNote());
-			domain.setImpcColonyNote(note.iterator().next());
+		if (entity.getNomenNote() != null && !entity.getNomenNote().isEmpty()) {
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getNomenNote());
+			domain.setNomenNote(note.iterator().next());
 		}
 
-		// at most one mutantCellLineNote
-		if (entity.getMutantCellLineNote() != null && !entity.getMutantCellLineNote().isEmpty()) {
-			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getMutantCellLineNote());
-			domain.setMutantCellLineNote(note.iterator().next());
+		// at most one mclNote
+		if (entity.getMclNote() != null && !entity.getMclNote().isEmpty()) {
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getMclNote());
+			domain.setMclNote(note.iterator().next());
 		}
 
 		// strain attributes
@@ -116,7 +121,7 @@ public class ProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeStrai
 			domain.setGenotypes(IteratorUtils.toList(t.iterator()));
 			domain.getGenotypes().sort(Comparator.comparing(ProbeStrainGenotypeDomain::getQualifierTerm));
 		}
-
+	
 		// synonyms
 		if (entity.getSynonyms() != null && !entity.getSynonyms().isEmpty()) {
 			Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getSynonyms());

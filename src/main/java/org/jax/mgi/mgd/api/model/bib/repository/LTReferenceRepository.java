@@ -42,6 +42,8 @@ import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.MapMaker;
 import org.jax.mgi.mgd.api.util.SearchResults;
+import org.jboss.logging.Logger;
+
 
 /* Is: a repository that deals with ReferenceDomain objects and handles their translation to
  *    Reference entity objects for storage to and retrieval from the database
@@ -72,6 +74,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	private MGIReferenceAssocService referenceAssocService;	
 	
 	LTReferenceTranslator translator = new LTReferenceTranslator();
+
+	private Logger log = Logger.getLogger(getClass());
 
 	/* These work together to allow for a maximum delay of two seconds for retries: */
 	private static int maxRetries = 10;		// maximum number of retries for non-fatal exceptions on update operations
@@ -651,7 +655,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			// Compare with old relevance.  If matches, no change.  If does not match, need to create a new
 			// relevance record, and need to mark any old one as no longer current.
 
-			if (!smartEqual(oldRel.getRelevance(), domain.relevance)) {
+			if ( !smartEqual(oldRel.getRelevance(), domain.relevance) || 
+				 !smartEqual(oldRel.getModifidBy(), currentUser.getLogin())
+				) {
 
 				if (oldRel != null) {
 					// need to mark old as no longer current

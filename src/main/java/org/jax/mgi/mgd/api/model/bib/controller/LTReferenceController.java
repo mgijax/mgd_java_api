@@ -171,7 +171,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 								currentID = ref.jnumid;
 								ref.setStatus(group, status);
 								// ensure we keep the relevance status in sync
-								if ("Full_coded".equals(status) ||
+								if ("Full-coded".equals(status) ||
 									"Routed".equals(status) ||
 									"Indexed".equals(status) ||
 									"Chosen".equals(status)) 

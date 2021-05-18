@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
@@ -82,7 +81,6 @@ public class ProbeStrainMarkerService extends BaseService<ProbeStrainMarkerDomai
 		// process strain/marker associations (create, delete, update)
 		
 		Boolean modified = false;
-		Boolean setStrainNeedsReview = false;
 
 		log.info("processStrainMarker");
 		
@@ -141,16 +139,7 @@ public class ProbeStrainMarkerService extends BaseService<ProbeStrainMarkerDomai
 				log.info("processStrainMarker/update");
 				ProbeStrainMarker entity = strainMarkerDAO.get(Integer.valueOf(domain.get(i).getStrainMarkerKey()));	
 				entity.set_strain_key(Integer.valueOf(parentKey));
-				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));
-
-				// only if allele symbol has been changed
-				if (!domain.get(i).getAlleleKey().equals(String.valueOf(entity.getAllele().get_allele_key()))) {
-					setStrainNeedsReview = true;
-				}
-				// only if marker symbol has been changed
-				if (!domain.get(i).getMarkerKey().equals(String.valueOf(entity.getMarker().get_marker_key()))) {
-					setStrainNeedsReview = true;
-				}				
+				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));				
 				
 				if (domain.get(i).getAlleleKey() != null && !domain.get(i).getAlleleKey().isEmpty()) {
 					entity.setAllele(alleleDAO.get(Integer.valueOf(domain.get(i).getAlleleKey())));
@@ -171,18 +160,7 @@ public class ProbeStrainMarkerService extends BaseService<ProbeStrainMarkerDomai
 				
 				strainMarkerDAO.update(entity);
 				log.info("processStrainMarker/changes processed: " + domain.get(i).getStrainMarkerKey());				
-				modified = true;
-				
-				
-				if (setStrainNeedsReview == true) {
-					String cmd;
-					Query query;
-					
-				    cmd = "select count(*) from PRB_setStrainReview (NULL, " + domain.get(i).getAlleleKey() + ")";
-				    log.info("cmd: " + cmd);
-				    query = alleleDAO.createNativeQuery(cmd);
-				    query.getResultList();	
-				}				
+				modified = true;			
 			}
 			else {
 				log.info("processStrainMarker/no changes processed: " + domain.get(i).getStrainMarkerKey());

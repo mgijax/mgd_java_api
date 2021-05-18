@@ -185,9 +185,15 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Boolean modified = false;
 		String mgiTypeKey = "2";
 		String mgiTypeName = "Marker";
+		Boolean setStrainNeedsReview = false;
 		
 		log.info("processMarker/update");
 
+		// only if marker symbol has been changed
+		if (!domain.getSymbol().equals(entity.getSymbol())) {
+			setStrainNeedsReview = true;
+		}
+		
 		entity.setMarkerType(markerTypeDAO.get(Integer.valueOf(domain.getMarkerTypeKey())));	
 		entity.setSymbol(domain.getSymbol());
 		entity.setName(domain.getName());
@@ -294,7 +300,17 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		else {
 			log.info("processMarker/no changes processed: " + domain.getMarkerKey());
 		}
+
+		if (setStrainNeedsReview == true) {
+			String cmd;
+			Query query;
 			
+		    cmd = "select count(*) from PRB_setStrainReview (" + domain.getMarkerKey() + ",NULL)";
+		    log.info("cmd: " + cmd);
+		    query = markerDAO.createNativeQuery(cmd);
+		    query.getResultList();	
+		}
+		
 		// return entity translated to domain
 		log.info("processMarker/update/returning results");
 		results.setItem(translator.translate(entity));

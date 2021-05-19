@@ -168,7 +168,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			// if primer, default Organism, Strain, Tissue, Cell Line, Age, and Sex = “Not Applicable.”
 			if (domain.getSegmentTypeKey().equals("63473")) {		
 				domain.getProbeSource().setSegmentTypeKey("63473");
-				domain.getProbeSource().setVectorKey("316370");
+				domain.getProbeSource().setVectorKey("316369");
 				domain.getProbeSource().setOrganismKey("74");
 				domain.getProbeSource().setStrainKey("-2");
 				domain.getProbeSource().setTissueKey("-2");

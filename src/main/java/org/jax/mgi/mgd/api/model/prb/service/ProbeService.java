@@ -72,20 +72,20 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		Probe entity = new Probe();
 		
 		log.info("processProbe/create");		
-		
-		// default = Not Specified
+
+		// default = Not Applicable
 		if (domain.getSegmentTypeKey() == null || domain.getSegmentTypeKey().isEmpty()) {
 			domain.setSegmentTypeKey("63474");
 		}
 		
-		// default = Not Specified
-		if (domain.getVectorTypeKey() == null || domain.getVectorTypeKey().isEmpty()) {
-			domain.setVectorTypeKey("316370");
-		}
-		
 		// primer
 		if (domain.getSegmentTypeKey().equals("63473")) {		
-	
+			
+			// default = Not Applicable
+			if (domain.getVectorTypeKey() == null || domain.getVectorTypeKey().isEmpty()) {
+				domain.setVectorTypeKey("316369");
+			}		
+			
 			entity.setInsertSite(null);
 			entity.setInsertSize(null);
 			entity.setDerivedFrom(null);
@@ -114,7 +114,12 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		
 		// molecular segment
 		else {
-
+			
+			// default = Not Specified
+			if (domain.getVectorTypeKey() == null || domain.getVectorTypeKey().isEmpty()) {
+				domain.setVectorTypeKey("316370");
+			}
+			
 			entity.setPrimer1sequence(null);
 			entity.setPrimer2sequence(null);
 			entity.setProductSize(null);
@@ -159,6 +164,21 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			
 		// can add an anonymous probe source
 		if (domain.getProbeSource().getName() == null || domain.getProbeSource().getName().isEmpty()) {
+			
+			// if primer, default Organism, Strain, Tissue, Cell Line, Age, and Sex = “Not Applicable.”
+			if (domain.getSegmentTypeKey().equals("63473")) {		
+				domain.getProbeSource().setSegmentTypeKey("63473");
+				domain.getProbeSource().setVectorKey("316370");
+				domain.getProbeSource().setOrganismKey("74");
+				domain.getProbeSource().setStrainKey("-2");
+				domain.getProbeSource().setTissueKey("-2");
+				domain.getProbeSource().setCellLineKey("316336");
+				domain.getProbeSource().setAgePrefix("Not Applicable");
+				domain.getProbeSource().setGenderKey("315168");
+			}
+			
+			// else, defaults = "Not Specified" in sourceService.create()
+
 			SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
 			sourceResults = sourceService.create(domain.getProbeSource(), user);
 			entity.setProbeSource(sourceDAO.get(Integer.valueOf(sourceResults.items.get(0).getSourceKey())));

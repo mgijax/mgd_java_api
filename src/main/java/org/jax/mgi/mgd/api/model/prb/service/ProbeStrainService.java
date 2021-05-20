@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
@@ -998,6 +999,32 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 				domain = slimtranslator.translate(probeStrainDAO.get(rs.getInt("_strain_key")));				
 				probeStrainDAO.clear();
 				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+
+	@Transactional
+	public List<SlimGenotypeDomain> validateGenotype(SlimProbeStrainDomain searchDomain) {
+		
+		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
+		
+		String cmd = "select _genotype_key from GXD_Genotype"
+					+ "\nwhere _strain_key = " + searchDomain.getStrainKey();
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			
+			while (rs.next()) {
+				SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();
+				slimdomain.setGenotypeKey(rs.getString("_object_key"));
+				results.add(slimdomain);
 			}
 			sqlExecutor.cleanup();
 		}

@@ -790,5 +790,5 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		
 		return results;
 	}
-
+	
 }

@@ -1023,7 +1023,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			
 			while (rs.next()) {
 				SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();
-				slimdomain.setGenotypeKey(rs.getString("_object_key"));
+				slimdomain.setGenotypeKey(rs.getString("_strain_key"));
 				results.add(slimdomain);
 			}
 			sqlExecutor.cleanup();

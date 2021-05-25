@@ -153,13 +153,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		else {
 			entity.setIsReviewArticle(1);
 		}
-		
-//		if (domain.getIsDiscard().equals("No")) {
-//			entity.setIsDiscard(0);
-//		}
-//		else {
-//			entity.setIsDiscard(1);
-//		}
 
 		// add creation/modification 
 		entity.setCreatedBy(user);
@@ -405,9 +398,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (searchDomain.getIsReviewArticle() != null && !searchDomain.getIsReviewArticle().isEmpty()) {
 			where = where + "\nand r.isReviewArticle = " + searchDomain.getIsReviewArticle();
 		}
-//		if (searchDomain.getIsDiscard() != null && !searchDomain.getIsDiscard().isEmpty()) {
-//			where = where + "\nand r.isDiscard = " + searchDomain.getIsDiscard();
-//		}
 		if (searchDomain.getReferenceAbstract() != null && !searchDomain.getReferenceAbstract().isEmpty()) {
 			where = where + "\nand r.abstract ilike '" + searchDomain.getReferenceAbstract() + "'";
 		}

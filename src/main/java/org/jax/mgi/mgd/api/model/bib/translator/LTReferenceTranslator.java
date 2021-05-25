@@ -72,13 +72,6 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		} else {
 			domain.isReviewArticle = "Yes";
 		}
-
-		// has this article been discarded?
-//		if (entity.getIsDiscard() == 0) {
-//			domain.isDiscard = "No";
-//		} else {
-//			domain.isDiscard = "Yes";
-//		}
 		
 		// list of strings, each of which indicates a type of data associated with the reference
 		domain.associated_data = new ArrayList<String>();

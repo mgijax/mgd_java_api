@@ -48,7 +48,6 @@ public class Reference extends BaseEntity {
 	private int year;
 	private String pgs;
 	private int isReviewArticle;
-	//private int isDiscard;
 	private Date creation_date;
 	private Date modification_date;
 

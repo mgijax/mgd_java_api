@@ -1040,7 +1040,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		
 		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
 		
-		String cmd = "select _object_key from GXD_Genotype_Acc_View"
+		String cmd = "select _object_key, accid, description from GXD_Genotype_Acc_View"
 					+ "\nwhere lower(accid) = lower('" + searchDomain.getAccID() + "')";
 		log.info(cmd);
 		
@@ -1050,6 +1050,8 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			while (rs.next()) {
 				SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();
 				slimdomain.setGenotypeKey(rs.getString("_object_key"));
+				slimdomain.setAccID(rs.getString("accid"));
+				slimdomain.setGenotypeDisplay(rs.getString("description"));
 				results.add(slimdomain);
 			}
 			sqlExecutor.cleanup();

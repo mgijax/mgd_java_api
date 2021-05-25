@@ -1010,6 +1010,32 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 	}
 
 	@Transactional
+	public List<SlimGenotypeDomain> validateGenotypeStrain(SlimProbeStrainDomain searchDomain) {
+		
+		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
+		
+		String cmd = "select _genotype_key from GXD_Genotype"
+					+ "\nwhere _strain_ke = " + searchDomain.getStrainKey();
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			
+			while (rs.next()) {
+				SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();
+				slimdomain.setGenotypeKey(rs.getString("_genotype_key"));
+				results.add(slimdomain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@Transactional
 	public List<SlimGenotypeDomain> validateGenotype(SlimGenotypeDomain searchDomain) {
 		
 		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();

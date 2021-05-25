@@ -1015,7 +1015,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
 		
 		String cmd = "select _genotype_key from GXD_Genotype"
-					+ "\nwhere _strain_ke = " + searchDomain.getStrainKey();
+					+ "\nwhere _strain_key = " + searchDomain.getStrainKey();
 		log.info(cmd);
 		
 		try {

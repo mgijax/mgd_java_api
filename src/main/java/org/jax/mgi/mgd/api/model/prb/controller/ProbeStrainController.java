@@ -214,19 +214,4 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 		return results;
 	}	
 	
-	@POST
-	@ApiOperation(value = "Validate Genotype association exists, returns List of SlimGenotypeDomain")
-	@Path("/validateGenotype")
-	public List<SlimGenotypeDomain> validateGenotypeStrain(SlimGenotypeDomain searchDomain) {
-	
-		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
-
-		try {
-			results = probeStrainService.validateGenotype(searchDomain);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}	
 }

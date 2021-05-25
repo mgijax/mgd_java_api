@@ -274,10 +274,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		
 		for (int i = 0; i < domain.size(); i++) {
 			
-			if (domain.get(i).getIsPrivate() == null) {
-				isPrivate = "0";
-			}
-			else if (domain.get(i).getIsPrivate().isEmpty()) {
+			if (domain.get(i).getIsPrivate() == null || domain.get(i).getIsPrivate().isEmpty()) {
 				isPrivate = "0";
 			}
 			else {

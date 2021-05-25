@@ -260,6 +260,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		// but not using entity to handle actual create/delete/update processing
 		
 		Boolean modified = false;
+		String isPrivate = "0";
 		
 		if (domain == null || domain.isEmpty()) {
 			log.info("processAccession/nothing to process");
@@ -272,6 +273,13 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		// for each row, determine whether to perform an insert, delete or update
 		
 		for (int i = 0; i < domain.size(); i++) {
+			
+			if (domain.get(i).getIsPrivate().isEmpty()) {
+				isPrivate = "0";
+			}
+			else {
+				isPrivate = domain.get(i).getIsPrivate();
+			}
 			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 				
@@ -297,7 +305,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 							+ "," + domain.get(i).getLogicaldbKey()
 							+ ",'" + mgiTypeName + "'"
 							+ "," + refsKey + ","
-							+ "1,0,1)";
+							+ "1," + isPrivate + ",1)";
 				log.info("cmd: " + cmd);
 				Query query = accessionDAO.createNativeQuery(cmd);
 				query.getResultList();
@@ -331,7 +339,8 @@ public class AccessionService extends BaseService<AccessionDomain> {
 					log.info("processAccession update/getting new reference");
 					refsKey = domain.get(i).getReferences().get(0).getRefsKey();
 				}
-											
+				
+				// need to add "v_private" to this SP
 				cmd = "select count(*) from ACC_update ("
 						+ user.get_user_key().intValue()
 						+ "," + domain.get(i).getAccessionKey()

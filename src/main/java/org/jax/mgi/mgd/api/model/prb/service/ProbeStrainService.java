@@ -1041,7 +1041,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
 		
 		String cmd = "select _object_key from GXD_Genotype_Acc_View"
-					+ "\nwhere lower(accid) = lower(" + searchDomain.getAccID() + ")";
+					+ "\nwhere lower(accid) = lower('" + searchDomain.getAccID() + "')";
 		log.info(cmd);
 		
 		try {

@@ -201,7 +201,7 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 	@POST
 	@ApiOperation(value = "Validate Genotype association exists, returns List of SlimGenotypeDomain")
 	@Path("/validateGenotype")
-	public List<SlimGenotypeDomain> validateGenotypeStrain(SlimProbeStrainDomain searchDomain) {
+	public List<SlimGenotypeDomain> validateGenotypeStrain(SlimGenotypeDomain searchDomain) {
 	
 		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
 

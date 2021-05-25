@@ -1010,12 +1010,12 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 	}
 
 	@Transactional
-	public List<SlimGenotypeDomain> validateGenotype(SlimProbeStrainDomain searchDomain) {
+	public List<SlimGenotypeDomain> validateGenotype(SlimGenotypeDomain searchDomain) {
 		
 		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
 		
-		String cmd = "select _genotype_key from GXD_Genotype"
-					+ "\nwhere _strain_key = " + searchDomain.getStrainKey();
+		String cmd = "select _object_key from GXD_Genotype_Acc_View"
+					+ "\nwhere accid.lower(" + searchDomain.getAccID() + ")";
 		log.info(cmd);
 		
 		try {
@@ -1023,7 +1023,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			
 			while (rs.next()) {
 				SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();
-				slimdomain.setGenotypeKey(rs.getString("_genotype_key"));
+				slimdomain.setGenotypeKey(rs.getString("_object_key"));
 				results.add(slimdomain);
 			}
 			sqlExecutor.cleanup();

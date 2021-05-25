@@ -282,17 +282,11 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	/* handle the basic fields that have changed between this Reference and the given ReferenceDomain
 	 */
 	private boolean applyBasicFieldChanges(LTReference entity, LTReferenceDomain domain, User currentUser) throws FatalAPIException {
-		// exactly one set of basic data per reference, including:  isDiscard flag, reference type,
+		// exactly one set of basic data per reference, including:  reference type,
 		// author, primary author (derived), journal, title, volume, issue, date, year, pages, 
 		// abstract, and isReviewArticle flag
 
 		boolean anyChanges = false;
-
-		// determine if the isDiscard flag is set in the ReferenceDomain object
-//		int rdDiscard = 0;
-//		if ("1".equals(domain.isDiscard) || ("Yes".equalsIgnoreCase(domain.isDiscard))) {
-//			rdDiscard = 1;
-//		}
 
 		// determine if the isReviewArticle flag is set in the ReferenceDomain object
 		int rdReview = 0;
@@ -309,9 +303,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 		String refTypeKey = String.valueOf(entity.getReferenceTypeTerm().get_term_key());
 		
-		// update this object's data to match what was passed in
-//		if ((rdDiscard != entity.getIsDiscard()) || (rdReview != entity.getIsReviewArticle())
-		
+		// update this object's data to match what was passed in		
 		if ((rdReview != entity.getIsReviewArticle())
 				|| !smartEqual(entity.getAuthors(), domain.authors)
 				|| !smartEqual(entity.getJournal(), domain.journal)
@@ -333,7 +325,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 //				}
 //			}
 //
-//			entity.setIsDiscard(rdDiscard);
 		
 			entity.setIsReviewArticle(rdReview);
 			entity.setAuthors(domain.authors);

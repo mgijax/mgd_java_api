@@ -44,7 +44,6 @@ public class LTReferenceSearchDomain extends BaseDomain {
 	public String pro_status;
 	public String qtl_status;
 	public String tumor_status;
-	public String isDiscard;
 	public List<String> workflow_tags;
 	public String book_author;
 	public String book_title;

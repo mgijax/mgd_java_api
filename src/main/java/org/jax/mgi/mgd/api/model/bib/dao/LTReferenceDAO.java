@@ -969,9 +969,6 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		if (searchDomain.getIsReviewArticle() != null && !searchDomain.getIsReviewArticle().isEmpty()) {
 			where = where + "\nand r.isReviewArticle = " + searchDomain.getIsReviewArticle();
 		}
-//		if (searchDomain.getIsDiscard() != null && !searchDomain.getIsDiscard().isEmpty()) {
-//			where = where + "\nand r.isDiscard = " + searchDomain.getIsDiscard();
-//		}
 		if (searchDomain.getReferenceAbstract() != null && !searchDomain.getReferenceAbstract().isEmpty()) {
 			where = where + "\nand r.abstract ilike '" + searchDomain.getReferenceAbstract() + "'";
 		}

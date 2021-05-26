@@ -1010,7 +1010,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 	}
 
 	@Transactional
-	public List<SlimGenotypeDomain> validateGenotype(SlimProbeStrainDomain searchDomain) {
+	public List<SlimGenotypeDomain> validateGenotypeStrain(SlimProbeStrainDomain searchDomain) {
 		
 		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
 		

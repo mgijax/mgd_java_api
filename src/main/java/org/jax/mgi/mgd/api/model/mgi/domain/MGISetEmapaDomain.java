@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class MGISetDomain extends BaseDomain {
+public class MGISetEmapaDomain extends BaseDomain {
 
 	private String setKey;
 //	private String mgiTypeKey;
@@ -21,6 +21,6 @@ public class MGISetDomain extends BaseDomain {
 //	private String creation_date;
 //	private String modification_date;
 	
-	private List<MGISetMemberDomain> genotypeClipboardMembers;	
+	private List<MGISetMemberEmapaDomain> emapaMembers;
 	
 }   	

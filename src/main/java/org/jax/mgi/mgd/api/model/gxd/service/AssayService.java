@@ -17,12 +17,15 @@ import org.jax.mgi.mgd.api.model.gxd.dao.AssayTypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.ProbePrepDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
 import org.jax.mgi.mgd.api.model.gxd.translator.AssayTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimAssayTranslator;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISetEmapaDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberEmapaDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
@@ -693,6 +696,65 @@ public class AssayService extends BaseService<AssayDomain> {
 		}
 		
 		domain.setGenotypeClipboardMembers(listOfMembers);
+		results.add(domain);
+		return results;
+	}
+
+	@Transactional	
+	public List<MGISetEmapaDomain> getEmapaBySetUser(SlimEmapaDomain searchDomain) {
+		// return 
+		// all set members of emapa/stage (_set_key = 1046) + user (searchDomain.getCreatedByKey())
+		// union
+		// all emapa for given specimen (searchDomain.getSpecimienKey())
+
+		List<MGISetEmapaDomain> results = new ArrayList<MGISetEmapaDomain>();		
+		List<MGISetMemberEmapaDomain> listOfMembers = new ArrayList<MGISetMemberEmapaDomain>();
+		MGISetEmapaDomain domain = new MGISetEmapaDomain();
+		
+		// search mgi_setmembers where _set_key = 1046 (emapa/stage)
+		String cmd = 
+				"\n(select distinct '*TS'||cast(t2.stage as varchar(5))||';'||t1.term as displayIt, t1.term, t2.stage," +
+				"\ns._setmember_key as setMemberKey, s._createdby_key as createdByKey" +
+				"\nfrom mgi_setmember s, mgi_setmember_emapa s2, voc_term t1, gxd_theilerstage t2, mgi_user u" +
+				"\nwhere not exists (select 1 from GXD_ISResultStructure_View v where s._Object_key = v._EMAPA_Term_key" +
+				"\nand s2._Stage_key = v._Stage_key" +
+				"\nand v._Specimen_key = " + searchDomain.getSpecimenKey() +
+				"\nand s._set_key = 1046" +
+				"\nand s._setmember_key = s2._setmember_key" +
+				"\nand s._object_key = t1._term_key" +
+				"\nand s2._Stage_key = t2._stage_key" +
+				"\nand s._CreatedBy_key = u._user_key" +
+				"\nand u.login = '" + searchDomain.getCreatedBy() + "'" +		
+				"\nunion all" +
+				"\nselect concat(i.displayIt||' ('||count(*)||')') as displayIt, term, stage,0 as setMemberKey,0 as createdByKey" +
+				"\nfrom GXD_ISResultStructure_View i, GXD_Specimen s" +
+				"\nwhere s._Specimen_key = i._Specimen_key" +
+				"\nand s._Specimen_key = " + searchDomain.getSpecimenKey() +
+				"\ngroup by _EMAPA_Term_key, _Stage_key, displayIt, term, stage" +
+				"\n) order by stage, term";
+
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				MGISetMemberEmapaDomain memberDomain = new MGISetMemberEmapaDomain();
+				memberDomain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
+				memberDomain.setSetMemberKey(rs.getString("setMemberKey"));
+				memberDomain.setSetKey("1055");
+				memberDomain.setObjectKey(rs.getString("_object_key"));
+				memberDomain.setLabel(rs.getString("displayIt"));
+				memberDomain.setCreatedByKey(rs.getString("createdByKey"));
+				assayDAO.clear();
+				listOfMembers.add(memberDomain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		//domain.setGenotypeClipboardMembers(listOfMembers);
 		results.add(domain);
 		return results;
 	}

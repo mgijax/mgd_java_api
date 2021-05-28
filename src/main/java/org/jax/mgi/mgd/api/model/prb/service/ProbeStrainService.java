@@ -142,6 +142,9 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		log.info("processStrain/needs review");
 		processNeedsReview(String.valueOf(entity.get_strain_key()), domain, user);
 
+		// process mgi accession ids
+		accessionService.process(String.valueOf(entity.get_strain_key()), domain.getMgiAccessionIds(), mgiTypeName, user);	
+		
 		// process other accession ids
 		accessionService.process(String.valueOf(entity.get_strain_key()), domain.getOtherAccIds(), mgiTypeName, user);
 		

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
-import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
@@ -37,7 +36,7 @@ public class ProbeStrainDomain extends BaseDomain {
 	private NoteDomain impcNote;
 	private NoteDomain nomenNote;
 	private NoteDomain mclNote;
-	private List<SlimAccessionDomain> mgiAccessionIds;	
+	private List<AccessionDomain> mgiAccessionIds;	
 	private List<AccessionDomain> otherAccIds;
 	private List<AnnotationDomain> attributes;
 	private List<AnnotationDomain> needsReview;

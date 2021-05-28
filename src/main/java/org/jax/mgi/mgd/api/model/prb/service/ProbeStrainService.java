@@ -141,7 +141,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		// strain needs review
 		log.info("processStrain/needs review");
 		processNeedsReview(String.valueOf(entity.get_strain_key()), domain, user);
-
+		
 		// process other accession ids
 		accessionService.process(String.valueOf(entity.get_strain_key()), domain.getOtherAccIds(), mgiTypeName, user);
 		
@@ -211,6 +211,13 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			modified = true;
 		}
 
+		// process mgi accession ids
+		if (domain.getMgiAccessionIds() != null && !domain.getMgiAccessionIds().isEmpty()) {
+			if (accessionService.process(domain.getStrainKey(), domain.getMgiAccessionIds(), mgiTypeName, user)) {
+				modified = true;
+			}
+		}
+		
 		// process other accession ids
 		if (domain.getOtherAccIds() != null && !domain.getOtherAccIds().isEmpty()) {
 			if (accessionService.process(domain.getStrainKey(), domain.getOtherAccIds(), mgiTypeName, user)) {

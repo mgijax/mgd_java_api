@@ -345,6 +345,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 						+ user.get_user_key().intValue()
 						+ "," + domain.get(i).getAccessionKey()
 						+ ",'" + domain.get(i).getAccID() + "'"
+						+ "," + isPrivate
 						+ "," + origRefsKey
 						+ "," + refsKey
 						+ ")";

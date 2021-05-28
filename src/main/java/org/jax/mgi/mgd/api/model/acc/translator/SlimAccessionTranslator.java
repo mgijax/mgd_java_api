@@ -21,6 +21,7 @@ public class SlimAccessionTranslator extends BaseEntityDomainTranslator<Accessio
 		domain.setAccID(entity.getAccID());
 		domain.setPrefixPart(entity.getPrefixPart());
 		domain.setNumericPart(String.valueOf(entity.getNumericPart()));	
+		domain.setIsPrivate(String.valueOf(entity.getIsPrivate()));
 		
 		return domain;
 	}

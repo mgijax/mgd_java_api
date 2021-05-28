@@ -22,6 +22,5 @@ public class SlimAccessionDomain extends BaseDomain {
 	private String accID;
 	private String prefixPart;
 	private String numericPart;
-	private String isPrivate;
 		
 }

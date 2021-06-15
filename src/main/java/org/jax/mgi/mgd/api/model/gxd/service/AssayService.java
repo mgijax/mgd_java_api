@@ -707,7 +707,6 @@ public class AssayService extends BaseService<AssayDomain> {
 		// all emapa for given specimen (searchDomain.getSpecimienKey())
 
 		List<MGISetMemberEmapaDomain> results = new ArrayList<MGISetMemberEmapaDomain>();		
-		MGISetMemberEmapaDomain domain = new MGISetMemberEmapaDomain();
 		
 		// search mgi_setmembers where _set_key = 1046 (emapa/stage)
 		String cmd = 
@@ -736,13 +735,14 @@ public class AssayService extends BaseService<AssayDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				MGISetMemberEmapaDomain memberDomain = new MGISetMemberEmapaDomain();
-				memberDomain.setSetKey(rs.getString("setKey"));
-				memberDomain.setSetMemberKey(rs.getString("setMemberKey"));
-				memberDomain.setDisplayIt(rs.getString("displayIt"));
-				memberDomain.setTerm(rs.getString("term"));
-				memberDomain.setStage(rs.getString("stage"));
-				memberDomain.setCreatedByKey(rs.getString("createdByKey"));
+				MGISetMemberEmapaDomain domain = new MGISetMemberEmapaDomain();
+				domain.setSetKey(rs.getString("setKey"));
+				domain.setSetMemberKey(rs.getString("setMemberKey"));
+				domain.setDisplayIt(rs.getString("displayIt"));
+				domain.setTerm(rs.getString("term"));
+				domain.setStage(rs.getString("stage"));
+				domain.setCreatedByKey(rs.getString("createdByKey"));
+				results.add(domain);				
 				assayDAO.clear();
 			}
 			sqlExecutor.cleanup();
@@ -751,7 +751,6 @@ public class AssayService extends BaseService<AssayDomain> {
 			e.printStackTrace();
 		}
 		
-		results.add(domain);
 		return results;
 	}
 	

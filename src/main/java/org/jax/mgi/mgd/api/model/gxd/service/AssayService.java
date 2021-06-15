@@ -718,7 +718,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nfrom mgi_setmember s, mgi_setmember_emapa s2, voc_term t1, gxd_theilerstage t2, mgi_user u" +
 				"\nwhere not exists (select 1 from GXD_ISResultStructure_View v where s._Object_key = v._EMAPA_Term_key" +
 				"\nand s2._Stage_key = v._Stage_key" +
-				"\nand v._Specimen_key = " + searchDomain.getSpecimenKey() +
+				"\nand v._Specimen_key = " + searchDomain.getSpecimenKey() + ")" +
 				"\nand s._set_key = 1046" +
 				"\nand s._setmember_key = s2._setmember_key" +
 				"\nand s._object_key = t1._term_key" +

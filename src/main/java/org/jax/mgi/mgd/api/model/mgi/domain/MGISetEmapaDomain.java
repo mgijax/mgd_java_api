@@ -1,7 +1,5 @@
 package org.jax.mgi.mgd.api.model.mgi.domain;
 
-import java.util.List;
-
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
 import lombok.Getter;
@@ -11,16 +9,10 @@ import lombok.Setter;
 public class MGISetEmapaDomain extends BaseDomain {
 
 	private String setKey;
-//	private String mgiTypeKey;
-//	private String setName;
-//	private String sequenceNum;
-//	private String createdByKey;
+	private String displayIt;
+	private String term;
+	private String stage;
+	private String setMemberKey;
 	private String createdBy;
-//	private String modifiedByKey;
-//	private String modifiedBy;
-//	private String creation_date;
-//	private String modification_date;
-	
-	private List<MGISetMemberEmapaDomain> emapaMembers;
-	
+		
 }   	

@@ -14,8 +14,10 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.AssayService;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISetEmapaDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -95,4 +97,21 @@ public class AssayController extends BaseController<AssayDomain> {
 		
 		return results;
 	}	
+	
+	@POST
+	@ApiOperation(value = "Get EMAPA Set Members by Specimen and Set/User")
+	@Path("/getEmapaBySetUser")
+	public List<MGISetEmapaDomain> getEmapaBySetUser(SlimEmapaDomain domain) {
+			
+		List<MGISetEmapaDomain> results = new ArrayList<MGISetEmapaDomain>();
+		
+		try {
+			results = assayService.getEmapaBySetUser(domain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

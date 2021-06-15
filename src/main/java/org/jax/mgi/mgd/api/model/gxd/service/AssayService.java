@@ -743,7 +743,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setTerm(rs.getString("term"));
 				domain.setStage(rs.getString("stage"));
 				domain.setCreatedByKey(rs.getString("createdByKey"));
-				domain.setCreatedBy(rs.getString("createdBy"));
+				domain.setCreatedBy(rs.getString("login"));
 				results.add(domain);				
 				assayDAO.clear();
 			}

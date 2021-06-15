@@ -8,18 +8,12 @@ import lombok.Setter;
 @Getter @Setter
 public class MGISetMemberEmapaDomain extends BaseDomain {
 
-	private String processStatus;
-	private String setMemberKey;
 	private String setKey;
-	private String objectKey;
-	private String label;
-	private Integer sequenceNum;
+	private String displayIt;
 	private String term;
 	private String stage;
+	private String setMemberKey;
 	private String createdByKey;
-	private String createdBy;
-	private String modifiedByKey;
-	private String modifiedBy;
-	private String creation_date;
-	private String modification_date;	
+	private String createdBy;	
+	
 }   	

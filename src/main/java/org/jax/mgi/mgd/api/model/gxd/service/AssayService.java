@@ -23,7 +23,6 @@ import org.jax.mgi.mgd.api.model.gxd.translator.AssayTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimAssayTranslator;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGISetEmapaDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberEmapaDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -701,15 +700,14 @@ public class AssayService extends BaseService<AssayDomain> {
 	}
 
 	@Transactional	
-	public List<MGISetEmapaDomain> getEmapaBySetUser(SlimEmapaDomain searchDomain) {
+	public List<MGISetMemberEmapaDomain> getEmapaBySetUser(SlimEmapaDomain searchDomain) {
 		// return 
 		// all set members of emapa/stage (_set_key = 1046) + user (searchDomain.getCreatedByKey())
 		// union
 		// all emapa for given specimen (searchDomain.getSpecimienKey())
 
-		List<MGISetEmapaDomain> results = new ArrayList<MGISetEmapaDomain>();		
-		List<MGISetMemberEmapaDomain> listOfMembers = new ArrayList<MGISetMemberEmapaDomain>();
-		MGISetEmapaDomain domain = new MGISetEmapaDomain();
+		List<MGISetMemberEmapaDomain> results = new ArrayList<MGISetMemberEmapaDomain>();		
+		MGISetMemberEmapaDomain domain = new MGISetMemberEmapaDomain();
 		
 		// search mgi_setmembers where _set_key = 1046 (emapa/stage)
 		String cmd = 
@@ -739,14 +737,13 @@ public class AssayService extends BaseService<AssayDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				MGISetMemberEmapaDomain memberDomain = new MGISetMemberEmapaDomain();
-				memberDomain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
+				memberDomain.setSetKey(rs.getString("setKey"));
+				memberDomain.setDisplayIt(rs.getString("displayIt"));
+				memberDomain.setTerm(rs.getString(""));
+				memberDomain.setStage(rs.getString(""));
 				memberDomain.setSetMemberKey(rs.getString("setMemberKey"));
-				memberDomain.setSetKey("1055");
-				memberDomain.setObjectKey(rs.getString("_object_key"));
-				memberDomain.setLabel(rs.getString("displayIt"));
 				memberDomain.setCreatedByKey(rs.getString("createdByKey"));
 				assayDAO.clear();
-				listOfMembers.add(memberDomain);
 			}
 			sqlExecutor.cleanup();
 		}
@@ -754,7 +751,6 @@ public class AssayService extends BaseService<AssayDomain> {
 			e.printStackTrace();
 		}
 		
-		//domain.setGenotypeClipboardMembers(listOfMembers);
 		results.add(domain);
 		return results;
 	}

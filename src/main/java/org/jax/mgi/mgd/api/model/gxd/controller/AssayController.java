@@ -17,7 +17,7 @@ import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.AssayService;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGISetEmapaDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberEmapaDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -101,9 +101,9 @@ public class AssayController extends BaseController<AssayDomain> {
 	@POST
 	@ApiOperation(value = "Get EMAPA Set Members by Specimen and Set/User")
 	@Path("/getEmapaBySetUser")
-	public List<MGISetEmapaDomain> getEmapaBySetUser(SlimEmapaDomain domain) {
+	public List<MGISetMemberEmapaDomain> getEmapaBySetUser(SlimEmapaDomain domain) {
 			
-		List<MGISetEmapaDomain> results = new ArrayList<MGISetEmapaDomain>();
+		List<MGISetMemberEmapaDomain> results = new ArrayList<MGISetMemberEmapaDomain>();
 		
 		try {
 			results = assayService.getEmapaBySetUser(domain);

@@ -712,7 +712,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		// search mgi_setmembers where _set_key = 1046 (emapa/stage)
 		String cmd = 
 				"\n(select distinct '*TS'||cast(t2.stage as varchar(5))||';'||t1.term as displayIt, t1.term, t2.stage," +
-				"\ns._setmember_key as setMemberKey, s._createdby_key as createdByKey" +
+				"\ns._setmember_key as setMemberKey, s._set_key as setKey, s._createdby_key as createdByKey" +
 				"\nfrom mgi_setmember s, mgi_setmember_emapa s2, voc_term t1, gxd_theilerstage t2, mgi_user u" +
 				"\nwhere not exists (select 1 from GXD_ISResultStructure_View v where s._Object_key = v._EMAPA_Term_key" +
 				"\nand s2._Stage_key = v._Stage_key" +
@@ -724,7 +724,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand s._CreatedBy_key = u._user_key" +
 				"\nand u.login = '" + searchDomain.getCreatedBy() + "'" +		
 				"\nunion all" +
-				"\nselect concat(i.displayIt||' ('||count(*)||')') as displayIt, term, stage,0 as setMemberKey,0 as createdByKey" +
+				"\nselect concat(i.displayIt||' ('||count(*)||')') as displayIt, term, stage, 0 as setMemberKey, 0 as setKey, 0 as createdByKey" +
 				"\nfrom GXD_ISResultStructure_View i, GXD_Specimen s" +
 				"\nwhere s._Specimen_key = i._Specimen_key" +
 				"\nand s._Specimen_key = " + searchDomain.getSpecimenKey() +
@@ -738,10 +738,10 @@ public class AssayService extends BaseService<AssayDomain> {
 			while (rs.next()) {
 				MGISetMemberEmapaDomain memberDomain = new MGISetMemberEmapaDomain();
 				memberDomain.setSetKey(rs.getString("setKey"));
+				memberDomain.setSetMemberKey(rs.getString("setMemberKey"));
 				memberDomain.setDisplayIt(rs.getString("displayIt"));
 				memberDomain.setTerm(rs.getString(""));
 				memberDomain.setStage(rs.getString(""));
-				memberDomain.setSetMemberKey(rs.getString("setMemberKey"));
 				memberDomain.setCreatedByKey(rs.getString("createdByKey"));
 				assayDAO.clear();
 			}

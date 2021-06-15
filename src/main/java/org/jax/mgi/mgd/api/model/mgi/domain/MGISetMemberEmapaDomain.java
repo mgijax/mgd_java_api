@@ -9,10 +9,10 @@ import lombok.Setter;
 public class MGISetMemberEmapaDomain extends BaseDomain {
 
 	private String setKey;
+	private String setMemberKey;
 	private String displayIt;
 	private String term;
 	private String stage;
-	private String setMemberKey;
 	private String createdByKey;
 	private String createdBy;	
 	

@@ -740,8 +740,8 @@ public class AssayService extends BaseService<AssayDomain> {
 				memberDomain.setSetKey(rs.getString("setKey"));
 				memberDomain.setSetMemberKey(rs.getString("setMemberKey"));
 				memberDomain.setDisplayIt(rs.getString("displayIt"));
-				memberDomain.setTerm(rs.getString(""));
-				memberDomain.setStage(rs.getString(""));
+				memberDomain.setTerm(rs.getString("term"));
+				memberDomain.setStage(rs.getString("stage"));
 				memberDomain.setCreatedByKey(rs.getString("createdByKey"));
 				assayDAO.clear();
 			}

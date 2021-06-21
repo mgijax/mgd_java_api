@@ -673,7 +673,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				MGISetMemberGenotypeDomain domain = new MGISetMemberGenotypeDomain();
 				domain.setSetKey(rs.getString("setKey"));
 				domain.setSetMemberKey(rs.getString("setMemberKey"));
-				domain.setObjectKey(rs.getString("_objecte_key"));
+				domain.setObjectKey(rs.getString("_object_key"));
 				domain.setDisplayIt(rs.getString("displayIt"));
 				domain.setCreatedByKey(rs.getString("createdByKey"));
 				domain.setCreatedBy(rs.getString("createdBy"));

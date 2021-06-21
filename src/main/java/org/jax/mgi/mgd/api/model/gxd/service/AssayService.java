@@ -624,9 +624,9 @@ public class AssayService extends BaseService<AssayDomain> {
 
 		// search mgi_setmembers where _set_key = 1055 (genotype)
 		String cmd = 
-				"\n(select distinct s._object_key," + 
+				"\n(select distinct s._object_key as objectKey," + 
 				"\n'*['||a.accID||'] '||s.label as displayIt," + 
-				"\ns._set_key as setKey, s._setmember_key as setMemberKey, s._createdby_key, u.login as createdBy" +
+				"\ns._set_key as setKey, s._setmember_key as setMemberKey, s._createdby_key as createdByKey, u.login as createdBy" +
 				"\nfrom mgi_setmember s, acc_accession a, mgi_user u" + 
 				"\nwhere s._set_key = 1055" + 
 				"\nand s._createdby_key = u._user_key" +
@@ -673,7 +673,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				MGISetMemberGenotypeDomain domain = new MGISetMemberGenotypeDomain();
 				domain.setSetKey(rs.getString("setKey"));
 				domain.setSetMemberKey(rs.getString("setMemberKey"));
-				domain.setObjectKey(rs.getString("_object_key"));
+				domain.setObjectKey(rs.getString("objectKey"));
 				domain.setDisplayIt(rs.getString("displayIt"));
 				domain.setCreatedByKey(rs.getString("createdByKey"));
 				domain.setCreatedBy(rs.getString("createdBy"));

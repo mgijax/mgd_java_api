@@ -624,7 +624,8 @@ public class AssayService extends BaseService<AssayDomain> {
 
 		// search mgi_setmembers where _set_key = 1055 (genotype)
 		String cmd = 
-				"\n(select distinct s._object_key as objectKey," + 
+				"\n(select distinct s._object_key as objectKey," +
+				"\na.accID as label," +
 				"\n'['||a.accID||'] '||s.label as displayIt," + 
 				"\ns._set_key as setKey, s._setmember_key as setMemberKey, s._createdby_key as createdByKey, u.login as createdBy" +
 				"\nfrom mgi_setmember s, acc_accession a, mgi_user u" + 
@@ -641,7 +642,8 @@ public class AssayService extends BaseService<AssayDomain> {
 			
 			// search gxd_specimen
 			cmd = cmd + "\nunion all" + 				
-				"\nselect distinct g._Genotype_key, " +
+				"\nselect distinct g._Genotype_key," +
+				"\ng.mgiid as label," +
 				"\nconcat(g.displayIt,',',a1.symbol,',',a2.symbol) as displayIt," +				
 				"\n0 as setKey, 0 as setMemberKey, g._createdby_key, g.createdBy" +
 				"\nfrom GXD_Genotype_View g" + 
@@ -654,6 +656,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			// search gxd_gellane
 			cmd = cmd + "\nunion all" + 				
 					"\nselect distinct g._Genotype_key, " +
+					"\ng.mgiid as label," +					
 					"\nconcat(g.displayIt,',',a1.symbol,',',a2.symbol) as displayIt," +				
 					"\n0 as setKey, 0 as setMemberKey, g._createdby_key, g.createdBy" +
 					"\nfrom GXD_Genotype_View g" + 
@@ -674,6 +677,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setSetKey(rs.getString("setKey"));
 				domain.setSetMemberKey(rs.getString("setMemberKey"));
 				domain.setObjectKey(rs.getString("objectKey"));
+				domain.setLabel(rs.getString("label"));
 				domain.setDisplayIt(rs.getString("displayIt"));
 				domain.setCreatedByKey(rs.getString("createdByKey"));
 				domain.setCreatedBy(rs.getString("createdBy"));

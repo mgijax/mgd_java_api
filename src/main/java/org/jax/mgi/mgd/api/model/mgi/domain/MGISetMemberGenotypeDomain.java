@@ -11,6 +11,7 @@ public class MGISetMemberGenotypeDomain extends BaseDomain {
 	private String setKey;
 	private String setMemberKey;
 	private String objectKey;
+	private String label;
 	private String displayIt;
 	private String createdByKey;
 	private String createdBy;	

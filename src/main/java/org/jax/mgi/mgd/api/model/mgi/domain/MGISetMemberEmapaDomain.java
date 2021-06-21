@@ -10,6 +10,7 @@ public class MGISetMemberEmapaDomain extends BaseDomain {
 
 	private String setKey;
 	private String setMemberKey;
+	private String objectKey;
 	private String displayIt;
 	private String term;
 	private String stage;

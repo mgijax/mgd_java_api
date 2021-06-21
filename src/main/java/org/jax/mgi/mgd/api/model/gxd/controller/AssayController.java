@@ -16,8 +16,8 @@ import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.AssayService;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGISetDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberEmapaDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberGenotypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -81,22 +81,22 @@ public class AssayController extends BaseController<AssayDomain> {
 		
 		return results;
 	}
-	
+
 	@POST
-	@ApiOperation(value = "Get Genotype Set Members by Assay and Set/User")
-	@Path("/getGenotypesBySetUser")
-	public List<MGISetDomain> getGenotypesBySetUser(SlimAssayDomain domain) {
+	@ApiOperation(value = "Get Genotype Set Members by Specimen and Set/User")
+	@Path("/getGenotypeBySetUser")	
+	public List<MGISetMemberGenotypeDomain> getGenotypeBySetUser(SlimAssayDomain domain) {
 			
-		List<MGISetDomain> results = new ArrayList<MGISetDomain>();
+		List<MGISetMemberGenotypeDomain> results = new ArrayList<MGISetMemberGenotypeDomain>();
 		
 		try {
-			results = assayService.getGenotypesBySetUser(domain);
+			results = assayService.getGenotypeBySetUser(domain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		return results;
-	}	
+	}
 	
 	@POST
 	@ApiOperation(value = "Get EMAPA Set Members by Specimen and Set/User")

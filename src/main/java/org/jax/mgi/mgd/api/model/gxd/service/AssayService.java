@@ -654,7 +654,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			// search gxd_gellane
 			cmd = cmd + "\nunion all" + 				
 					"\nselect distinct g._Genotype_key, " +
-					"\ng.displayIt||','||a1.symbol||','||a2.symbol as displayIt,\" +\r\n" + 
+					"\ng.displayIt||','||a1.symbol||','||a2.symbol as displayIt," +
 					"\n0 as setKey, 0 as setMemberKey, g._createdby_key, g.createdBy" +
 					"\nfrom GXD_Genotype_View g" + 
 					"\nINNER JOIN GXD_GelLane s on (g._Genotype_key = s._Genotype_key)" + 

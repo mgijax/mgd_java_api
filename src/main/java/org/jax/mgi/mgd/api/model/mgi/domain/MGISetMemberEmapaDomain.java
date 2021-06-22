@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class MGISetMemberEmapsDomain extends BaseDomain {
+public class MGISetMemberEmapaDomain extends BaseDomain {
 
 	private String setKey;
 	private String setMemberKey;

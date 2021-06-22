@@ -22,7 +22,7 @@ import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
 import org.jax.mgi.mgd.api.model.gxd.translator.AssayTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimAssayTranslator;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberEmapsDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberEmapaDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberGenotypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
@@ -710,13 +710,13 @@ public class AssayService extends BaseService<AssayDomain> {
 	}
 
 	@Transactional	
-	public List<MGISetMemberEmapsDomain> getEmapsBySetUser(SlimEmapaDomain searchDomain) {
+	public List<MGISetMemberEmapaDomain> getEmapaBySetUser(SlimEmapaDomain searchDomain) {
 		// return 
 		// all set members of emapa/stage (_set_key = 1046) + user (searchDomain.getCreatedByKey())
 		// union
 		// all emapa for given specimen (searchDomain.getSpecimienKey())
 
-		List<MGISetMemberEmapsDomain> results = new ArrayList<MGISetMemberEmapsDomain>();		
+		List<MGISetMemberEmapaDomain> results = new ArrayList<MGISetMemberEmapaDomain>();		
 		
 		// search mgi_setmembers where _set_key = 1046 (emapa/stage)
 		String cmd = 
@@ -746,7 +746,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				MGISetMemberEmapsDomain domain = new MGISetMemberEmapsDomain();
+				MGISetMemberEmapaDomain domain = new MGISetMemberEmapaDomain();
 				domain.setSetKey(rs.getString("setKey"));
 				domain.setSetMemberKey(rs.getString("setMemberKey"));
 				domain.setObjectKey(rs.getString("objectKey"));

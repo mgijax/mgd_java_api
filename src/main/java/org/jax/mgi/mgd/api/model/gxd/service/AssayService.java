@@ -303,6 +303,11 @@ public class AssayService extends BaseService<AssayDomain> {
 			where = where + cmResults[1];
 		}
 		
+		// just insitu for now
+		// 1,6,9,10,11 = insitu
+		// 2,3,4,5,8 = gel lane
+		where = where + "\nand a._assaytype_key not in (2,3,4,5,8)";
+		
 		value = searchDomain.getAssayTypeKey();
 		if (value != null && !value.isEmpty()) {
 			where = where + "\nand a._assaytype_key = " + value;		

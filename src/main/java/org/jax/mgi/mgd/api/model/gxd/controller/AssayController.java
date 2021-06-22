@@ -99,8 +99,8 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Get EMAPA Set Members by Specimen and Set/User")
-	@Path("/getEmapaBySetUser")
+	@ApiOperation(value = "Get EMAPS Set Members by Specimen and Set/User")
+	@Path("/getEmapsBySetUser")
 	public List<MGISetMemberEmapsDomain> getEmapaBySetUser(SlimEmapaDomain domain) {
 			
 		List<MGISetMemberEmapsDomain> results = new ArrayList<MGISetMemberEmapsDomain>();

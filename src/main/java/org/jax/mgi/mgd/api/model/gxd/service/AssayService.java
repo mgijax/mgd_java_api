@@ -626,7 +626,8 @@ public class AssayService extends BaseService<AssayDomain> {
 		// all genotypes for given assay (searchDomain.getAssayKey())
 
 		List<MGISetMemberGenotypeDomain> results = new ArrayList<MGISetMemberGenotypeDomain>();		
-
+		List<String> labelList = new ArrayList<String>();
+		
 		// search mgi_setmembers where _set_key = 1055 (genotype)
 		String cmd = 
 				"\n(select distinct s._object_key as objectKey," +
@@ -678,6 +679,16 @@ public class AssayService extends BaseService<AssayDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
+				
+				// only add at most one MGI:xxx (label) to results
+				String label = rs.getString("label");
+				if (labelList.contains(label)) {
+					continue;
+				}
+				else {
+					labelList.add(label);
+				}
+				
 				MGISetMemberGenotypeDomain domain = new MGISetMemberGenotypeDomain();
 				domain.setSetKey(rs.getString("setKey"));
 				domain.setSetMemberKey(rs.getString("setMemberKey"));

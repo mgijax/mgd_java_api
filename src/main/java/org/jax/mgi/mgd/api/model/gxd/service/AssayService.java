@@ -739,7 +739,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nwhere s._Specimen_key = i._Specimen_key" +
 				"\nand s._Specimen_key = " + searchDomain.getSpecimenKey() +
 				"\ngroup by _EMAPA_Term_key, _Stage_key, displayIt, term, stage" +
-				"\n) order by displayIt";
+				"\n) order by displayIt, stage, term";
 
 		log.info(cmd);
 

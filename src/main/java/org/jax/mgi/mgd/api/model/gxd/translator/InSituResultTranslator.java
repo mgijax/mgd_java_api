@@ -1,6 +1,8 @@
 package org.jax.mgi.mgd.api.model.gxd.translator;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
@@ -50,7 +52,12 @@ public class InSituResultTranslator extends BaseEntityDomainTranslator<InSituRes
 			Iterable<InSituResultImageViewDomain> i = imageTranslator.translateEntities(entity.getImagePanes());
 			domain.setImagePanes(IteratorUtils.toList(i.iterator()));
 			domain.getImagePanes().sort(Comparator.comparing(InSituResultImageViewDomain::getFigurepaneLabel));
-			domain.setImagePanesCount(domain.getImagePanes().size());			
+			domain.setImagePanesCount(domain.getImagePanes().size());
+			
+			List<String> imagePaneList = new ArrayList<String>();
+			for (int p = 0; p < domain.getImagePanes().size(); p++) {
+				imagePaneList.add(domain.getImagePanes().get(p).getFigurepaneLabel());
+			}
 		}
 		else {
 			domain.setImagePanesCount(0);			

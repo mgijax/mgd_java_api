@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyMarkerDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyMarkerDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.AntibodyMarker;

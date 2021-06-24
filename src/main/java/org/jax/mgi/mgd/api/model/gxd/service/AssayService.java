@@ -432,6 +432,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		}
 		
 		if (searchDomain.getSpecimens() != null) {
+			
 			value = searchDomain.getSpecimens().get(0).getSpecimenLabel();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand s.specimenLabel ilike '" + value + "'";				
@@ -487,14 +488,14 @@ public class AssayService extends BaseService<AssayDomain> {
 			// results
 			if (searchDomain.getSpecimens().get(0).getSresults() != null) {
 			
-				value = searchDomain.getSpecimens().get(0).getSresults().get(0).getPattern();
+				value = searchDomain.getSpecimens().get(0).getSresults().get(0).getPatternKey();
 				if (value != null && !value.isEmpty()) {
 					where = where + "\nand isresult._pattern_key = " + value;							
 					from_specimen = true;
 					from_isresults = true;
 				}
 				
-				value = searchDomain.getSpecimens().get(0).getSresults().get(0).getStrength();
+				value = searchDomain.getSpecimens().get(0).getSresults().get(0).getStrengthKey();
 				if (value != null && !value.isEmpty()) {
 					where = where + "\nand isresult._strength_key = " + value;							
 					from_specimen = true;

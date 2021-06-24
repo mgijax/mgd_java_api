@@ -490,14 +490,14 @@ public class AssayService extends BaseService<AssayDomain> {
 			
 				value = searchDomain.getSpecimens().get(0).getSresults().get(0).getPatternKey();
 				if (value != null && !value.isEmpty()) {
-					where = where + "\nand isresult._pattern_key = " + value;							
+					where = where + "\nand isresults._pattern_key = " + value;							
 					from_specimen = true;
 					from_isresults = true;
 				}
 				
 				value = searchDomain.getSpecimens().get(0).getSresults().get(0).getStrengthKey();
 				if (value != null && !value.isEmpty()) {
-					where = where + "\nand isresult._strength_key = " + value;							
+					where = where + "\nand isresults._strength_key = " + value;							
 					from_specimen = true;
 					from_isresults = true;
 				}

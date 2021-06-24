@@ -504,7 +504,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				
 				value = searchDomain.getSpecimens().get(0).getSresults().get(0).getResultNote();
 				if (value != null && !value.isEmpty()) {
-					where = where + "\nand isresult.resultnote ilike '" + value + "'";							
+					where = where + "\nand isresults.resultnote ilike '" + value + "'";							
 					from_specimen = true;
 					from_isresults = true;
 				}				

@@ -58,7 +58,9 @@ public class InSituResultTranslator extends BaseEntityDomainTranslator<InSituRes
 			for (int p = 0; p < domain.getImagePanes().size(); p++) {
 				imagePaneList.add(domain.getImagePanes().get(p).getFigurepaneLabel());
 			}
-			domain.setImagePaneList(imagePaneList);
+			String imagePaneString = String.join(",", imagePaneList);
+			domain.setImagePaneString(imagePaneString);
+			
 		}
 		else {
 			domain.setImagePanesCount(0);			

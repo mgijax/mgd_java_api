@@ -24,7 +24,7 @@ public class InSituResultDomain extends BaseDomain {
 	
 	private Integer structuresCount;
 	private Integer imagePanesCount;
-	private List<String> imagePaneList;
+	private String imagePaneString;
 
 	private List<InSituResultStructureDomain> structures;
 	private List<InSituResultImageViewDomain> imagePanes;

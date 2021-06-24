@@ -295,6 +295,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		Boolean from_specimen = false;
 		Boolean from_gellane = false;
 		Boolean from_genotype = false;
+		Boolean from_isresults = false;
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -481,8 +482,34 @@ public class AssayService extends BaseService<AssayDomain> {
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand s.specimenNote ilike '" + value + "'";				
 				from_specimen = true;
-			}			
+			}
+			
+			// results
+			if (searchDomain.getSpecimens().get(0).getSresults() != null) {
+			
+				value = searchDomain.getSpecimens().get(0).getSresults().get(0).getPattern();
+				if (value != null && !value.isEmpty()) {
+					where = where + "\nand isresult._pattern_key = " + value;							
+					from_specimen = true;
+					from_isresults = true;
+				}
+				
+				value = searchDomain.getSpecimens().get(0).getSresults().get(0).getStrength();
+				if (value != null && !value.isEmpty()) {
+					where = where + "\nand isresult._strength_key = " + value;							
+					from_specimen = true;
+					from_isresults = true;
+				}
+				
+				value = searchDomain.getSpecimens().get(0).getSresults().get(0).getResultNote();
+				if (value != null && !value.isEmpty()) {
+					where = where + "\nand isresult.resultnote ilike '" + value + "'";							
+					from_specimen = true;
+					from_isresults = true;
+				}				
+			}
 		}
+		
 		
 		if (searchDomain.getGelLanes() != null) {
 			value = searchDomain.getGelLanes().get(0).getLaneLabel();
@@ -594,6 +621,10 @@ public class AssayService extends BaseService<AssayDomain> {
 		if (from_genotype == true) {
 			from = from + ", gxd_genotype_acc_view g";
 			where = where + "\nand a._assay_key = g._object_key";
+		}
+		if (from_isresults == true) {
+			from = from + ", gxd_insituresult isresults";
+			where = where + "\nand s._specimen_key = isresults._specimen_key";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

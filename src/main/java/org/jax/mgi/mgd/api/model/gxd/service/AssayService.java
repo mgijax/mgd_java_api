@@ -665,7 +665,8 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\n(select distinct s._object_key as objectKey," +
 				"\na.accID as label," +
 				"\n'*['||a.accID||'] '||s.label as displayIt," + 
-				"\ns._set_key as setKey, s._setmember_key as setMemberKey, s._createdby_key as createdByKey, u.login as createdBy" +
+				"\ns._set_key as setKey, s._setmember_key as setMemberKey, s._createdby_key as createdByKey, u.login as createdBy, " +
+				"\n1 as orderBy" +
 				"\nfrom mgi_setmember s, acc_accession a, mgi_user u" + 
 				"\nwhere s._set_key = 1055" + 
 				"\nand s._createdby_key = u._user_key" +
@@ -683,7 +684,8 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nselect distinct g._Genotype_key," +
 				"\ng.mgiid as label," +
 				"\nconcat(g.displayIt,',',a1.symbol,',',a2.symbol) as displayIt," +				
-				"\n0 as setKey, 0 as setMemberKey, g._createdby_key, g.createdBy" +
+				"\n0 as setKey, 0 as setMemberKey, g._createdby_key, g.createdBy," +
+				"\n0 as orderBy" +
 				"\nfrom GXD_Genotype_View g" + 
 				"\nINNER JOIN GXD_Specimen s on (g._Genotype_key = s._Genotype_key)" + 
 				"\nLEFT OUTER JOIN GXD_AllelePair ap on (g._Genotype_key = ap._Genotype_key)" + 
@@ -696,7 +698,8 @@ public class AssayService extends BaseService<AssayDomain> {
 					"\nselect distinct g._Genotype_key, " +
 					"\ng.mgiid as label," +					
 					"\nconcat(g.displayIt,',',a1.symbol,',',a2.symbol) as displayIt," +				
-					"\n0 as setKey, 0 as setMemberKey, g._createdby_key, g.createdBy" +
+					"\n0 as setKey, 0 as setMemberKey, g._createdby_key, g.createdBy," +
+					"\n0 as orderBy" +
 					"\nfrom GXD_Genotype_View g" + 
 					"\nINNER JOIN GXD_GelLane s on (g._Genotype_key = s._Genotype_key)" + 
 					"\nLEFT OUTER JOIN GXD_AllelePair ap on (g._Genotype_key = ap._Genotype_key)" + 
@@ -705,7 +708,7 @@ public class AssayService extends BaseService<AssayDomain> {
 					"\nwhere s._Assay_key = " + searchDomain.getAssayKey();			
 			}
 		
-		cmd = cmd + "\norder by label\n)";
+		cmd = cmd + "\norder by orderBy, label\n)";
 		log.info(cmd);
 
 		try {

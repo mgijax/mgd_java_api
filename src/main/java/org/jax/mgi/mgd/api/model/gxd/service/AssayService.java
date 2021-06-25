@@ -705,7 +705,7 @@ public class AssayService extends BaseService<AssayDomain> {
 					"\nwhere s._Assay_key = " + searchDomain.getAssayKey();			
 			}
 		
-		cmd = cmd + "\n)";
+		cmd = cmd + "\norder by label\n)";
 		log.info(cmd);
 
 		try {

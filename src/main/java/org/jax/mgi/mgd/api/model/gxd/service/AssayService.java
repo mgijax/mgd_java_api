@@ -664,7 +664,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		String cmd = 
 				"\n(select distinct s._object_key as objectKey," +
 				"\na.accID as label," +
-				"\n'['||a.accID||'] '||s.label as displayIt," + 
+				"\n'*['||a.accID||'] '||s.label as displayIt," + 
 				"\ns._set_key as setKey, s._setmember_key as setMemberKey, s._createdby_key as createdByKey, u.login as createdBy" +
 				"\nfrom mgi_setmember s, acc_accession a, mgi_user u" + 
 				"\nwhere s._set_key = 1055" + 

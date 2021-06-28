@@ -443,17 +443,22 @@ public class AssayService extends BaseService<AssayDomain> {
 				where = where + "\nand g.accID ilike '" + value + "'";	
 				from_genotype = true;
 				from_specimen = true;
-			}			
-			value = searchDomain.getSpecimens().get(0).getAgePrefix();	
+			}	
+			
+			value = "";
+			String agePrefix = searchDomain.getSpecimens().get(0).getAgePrefix();	
+			String ageRange = searchDomain.getSpecimens().get(0).getAgeStage();
+			if (agePrefix != null && !agePrefix.isEmpty()) {
+				value = agePrefix + '%';
+			}	
+			if (ageRange != null && !ageRange.isEmpty()) {
+				value = value + ageRange + "%"; 
+			}
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand s.age ilike '" + value + "%'";				
+				where = where + "\nand s.age ilike '" + value + "'";				
 				from_specimen = true;
-			}			
-			value = searchDomain.getSpecimens().get(0).getAgeStage();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand s.age ilike '%" + value + "'";				
-				from_specimen = true;
-			}			
+			}
+			
 			value = searchDomain.getSpecimens().get(0).getAgeNote();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand s.ageNote ilike '" + value + "'";				

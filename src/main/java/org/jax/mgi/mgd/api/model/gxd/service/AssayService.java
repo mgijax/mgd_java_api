@@ -629,7 +629,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		}		
 		if (from_genotype == true) {
 			from = from + ", gxd_genotype_acc_view g";
-			where = where + "\nand a._assay_key = g._object_key";
+			where = where + "\nand s._genotype_key = g._object_key";
 		}
 		if (from_isresults == true) {
 			from = from + ", gxd_insituresult isresults";

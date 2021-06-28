@@ -434,6 +434,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		if (searchDomain.getSpecimens() != null) {
 			
 			value = searchDomain.getSpecimens().get(0).getSpecimenLabel();
+			value.replace("'",  "''");
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand s.specimenLabel ilike '" + value + "'";				
 				from_specimen = true;

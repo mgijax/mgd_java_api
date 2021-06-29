@@ -482,7 +482,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			}			
 			value = searchDomain.getSpecimens().get(0).getFixationKey();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand s.fixation_key = " + value;							
+				where = where + "\nand s._fixation_key = " + value;							
 				from_specimen = true;
 			}			
 			value = searchDomain.getSpecimens().get(0).getEmbeddingKey();

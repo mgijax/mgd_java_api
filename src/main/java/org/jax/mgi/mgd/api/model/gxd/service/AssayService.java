@@ -390,6 +390,9 @@ public class AssayService extends BaseService<AssayDomain> {
 			}
 			value = searchDomain.getProbePrep().getProbeAccID();
 			if (value != null && !value.isEmpty()) {
+				if (!value.contains("MGI:")) {
+					value = "MGI:" + value;
+				}
 				where = where + "\nand pacc.accID = '" + value + "'";
 				from_probeprep = true;
 				from_probeacc = true;
@@ -419,6 +422,9 @@ public class AssayService extends BaseService<AssayDomain> {
 			}
 			value = searchDomain.getAntibodyPrep().getAntibodyAccID();
 			if (value != null && !value.isEmpty()) {
+				if (!value.contains("MGI:")) {
+					value = "MGI:" + value;
+				}
 				where = where + "\nand aacc.accID = '" + value + "'";
 				from_antibodyprep = true;
 				from_antibodyacc = true;

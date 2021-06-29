@@ -111,30 +111,6 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 		// type = Full Size
 	
 		List<GXDImagePaneDomain> results = new ArrayList<GXDImagePaneDomain>();
-
-		// skip
-/*		 _refs_key |  jnumid  |                          short_citation
-		 -----------+----------+-------------------------------------------------------------------
-		      94290 | J:93300  | Blackshaw S, PLoS Biol 2004 Oct;2(9):E247
-		     102744 | J:101679 | Deltagen Inc, MGI Direct Data Submission 2005;():
-		     154591 | J:153498 | Diez-Roux G, PLoS Biol 2011;9(1):e1000582
-		      81462 | J:80501  | Gitton Y, Nature 2002 Dec 5;420(6915):586-90
-		      92242 | J:91257  | Gray PA, Science 2004 Dec 24;306(5705):2255-2257
-		     172505 | J:171409 | GUDMAP Consortium, www.gudmap.org 2004;():
-		     141558 | J:140465 | Guo G, Dev Cell 2010 Apr 20;18(4):675-85
-		     229658 | J:228563 | Koscielny G, Nucleic Acids Res 2014 Jan;42(Database issue):D802-9
-		     227123 | J:226028 | Lewandowski JP, Dev Biol 2015 Oct 1;406(1):92-103
-		     163316 | J:162220 | Magdaleno S, PLoS Biol 2006 Apr;4(4):e86
-		     372824 | J:279207 | Mager J, MGI Direct Data Submission 2019;():
-		      81463 | J:80502  | Reymond A, Nature 2002 Dec 5;420(6915):582-6
-		     158912 | J:157819 | Shimogori T, Nat Neurosci 2010;13(6):767-75
-		      86101 | J:85124  | Sousa-Nunes R, Genome Res 2003 Dec;13(12):2609-20
-		     142384 | J:141291 | Tamplin OJ, BMC Genomics 2008;9(1):511
-		     144871 | J:143778 | Tamplin OJ, Dev Biol 2011 Dec 15;360(2):415-25
-		     216584 | J:215487 | Thompson CL, Neuron 2014 Jul 16;83(2):309-23
-		     124081 | J:122989 | Visel A, Nucleic Acids Res 2004 Jan 1;32(Database issue):D552-6
-		 (18 rows)
-*/
 	
 		String cmd = "\nselect p._imagepane_key, concat(i.figureLabel,p.paneLabel) as figurePaneLabel"
 				+ "\nfrom img_imagepane p, img_image i"
@@ -142,9 +118,8 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				+ "\nand i._ImageClass_key = 6481781"
 				+ "\nand i._ImageType_key = 1072158"
 				+ "\nand i._image_key = p._image_key"	
-				+ "\nand i._refs_key not in (81462,81463,86101,92242,94290,102744,124081,141558,142384,144871,154591,158912,"
-			    + 		"163316,172505,216584,227123,229658,372824)"
-				+ "\norder by figurePaneLabel";
+				+ "\norder by figurePaneLabel"
+				+ "\nlimit 2500";
 		
 		log.info(cmd);
 

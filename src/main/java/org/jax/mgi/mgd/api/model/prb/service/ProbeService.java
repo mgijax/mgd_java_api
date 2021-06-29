@@ -740,8 +740,13 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		
 		List<SlimProbeDomain> results = new ArrayList<SlimProbeDomain>();
 		
+		String value = searchDomain.getAccID().toUpperCase();
+		if (!value.contains("MGI:")) {
+			value = "MGI:" + value;
+		}
+		
 		String cmd = "select accID, _object_key, description from PRB_Acc_View"
-					+ "\nwhere accID = '" + searchDomain.getAccID().toUpperCase() + "'";
+					+ "\nwhere accID = '" + value + "'";
 		log.info(cmd);
 		
 		try {

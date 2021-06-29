@@ -33,7 +33,7 @@ public class SpecimenDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	
-	private Integer sresultsCount;
+	private Integer sresultsCount = 0;
 	private List<InSituResultDomain> sresults;
 	
 }

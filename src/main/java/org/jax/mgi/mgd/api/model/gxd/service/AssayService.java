@@ -497,6 +497,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			}			
 			value = searchDomain.getSpecimens().get(0).getSpecimenNote();
 			if (value != null && !value.isEmpty()) {
+				value = value.replace("\\", "\\\\");
 				where = where + "\nand s.specimenNote ilike '" + value + "'";				
 				from_specimen = true;
 			}

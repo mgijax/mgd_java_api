@@ -773,7 +773,8 @@ public class AssayService extends BaseService<AssayDomain> {
 		// search mgi_setmembers where _set_key = 1046 (emapa/stage)
 		String cmd = 
 				"\n(select distinct '*TS'||cast(t2.stage as varchar(5))||';'||t1.term as displayIt, t1.term, t2.stage," +
-				"\ns._setmember_key as setMemberKey, s._set_key as setKey, s._object_key as objectKey, s._createdby_key as createdByKey, u.login" +
+				"\ns._setmember_key as setMemberKey, s._set_key as setKey, s._object_key as objectKey, s._createdby_key as createdByKey, u.login," +
+				"\ns.sequenceNum as sequenceNum, 1 as orderBy" +
 				"\nfrom mgi_setmember s, mgi_setmember_emapa s2, voc_term t1, gxd_theilerstage t2, mgi_user u" +
 				"\nwhere not exists (select 1 from GXD_ISResultStructure_View v where s._Object_key = v._EMAPA_Term_key" +
 				"\nand s2._Stage_key = v._Stage_key" +
@@ -786,7 +787,8 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand u.login = '" + searchDomain.getCreatedBy() + "'" +		
 				"\nunion all" +
 				"\nselect i.displayIt, term, stage," +
-				"\n0 as setMemberKey, 0 as setKey, i._emapa_term_key as objectKey, 0 as createdByKey, null as createdBy" +
+				"\n0 as setMemberKey, 0 as setKey, i._emapa_term_key as objectKey, 0 as createdByKey, null as createdBy," +
+				"\nmin(i.sequenceNum), 0 as orderBy" +				
 				"\nfrom GXD_ISResultStructure_View i, GXD_Specimen s" +
 				"\nwhere s._Specimen_key = i._Specimen_key" +
 				"\nand s._Specimen_key = " + searchDomain.getSpecimenKey() +

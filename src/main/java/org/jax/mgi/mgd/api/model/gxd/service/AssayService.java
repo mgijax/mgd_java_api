@@ -809,6 +809,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setStage(rs.getString("stage"));
 				domain.setCreatedByKey(rs.getString("createdByKey"));
 				domain.setCreatedBy(rs.getString("login"));
+				domain.setIsUsedByRow(false);
 				results.add(domain);				
 				assayDAO.clear();
 			}

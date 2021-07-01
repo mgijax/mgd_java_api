@@ -16,5 +16,6 @@ public class MGISetMemberEmapaDomain extends BaseDomain {
 	private String stage;
 	private String createdByKey;
 	private String createdBy;	
-	
+	private Boolean isUsedByRow = false;
+
 }   	

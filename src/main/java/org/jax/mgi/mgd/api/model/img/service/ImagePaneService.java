@@ -112,13 +112,13 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 	
 		List<GXDImagePaneDomain> results = new ArrayList<GXDImagePaneDomain>();
 	
-		String cmd = "\nselect p._imagepane_key, concat(i.figureLabel,p.paneLabel) as figurePaneLabel"
+		String cmd = "\nselect p._imagepane_key, concat(i.figureLabel,p.paneLabel) as figurepaneLabel"
 				+ "\nfrom img_imagepane p, img_image i"
 				+ "\nwhere i._refs_key = " + key
 				+ "\nand i._ImageClass_key = 6481781"
 				+ "\nand i._ImageType_key = 1072158"
 				+ "\nand i._image_key = p._image_key"	
-				+ "\norder by figurePaneLabel"
+				+ "\norder by figurepaneLabel"
 				+ "\nlimit 2500";
 		
 		log.info(cmd);
@@ -128,7 +128,7 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 			while (rs.next()) {
 				GXDImagePaneDomain domain = new GXDImagePaneDomain();
 				domain.setImagePaneKey(rs.getString("_imagepane_key"));
-				domain.setFigurePaneLabel(rs.getString("figurePaneLabel"));
+				domain.setFigurepaneLabel(rs.getString("figurepaneLabel"));
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

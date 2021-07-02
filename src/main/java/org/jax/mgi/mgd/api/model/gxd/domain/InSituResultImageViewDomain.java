@@ -12,7 +12,7 @@ public class InSituResultImageViewDomain extends BaseDomain {
 	private String resultImageKey;
 	private String resultKey;
 	private String imagePaneKey;
-	private String figurepaneLabel;
+	private String figurePaneLabel;
 	private String creation_date;
 	private String modification_date;	
 }

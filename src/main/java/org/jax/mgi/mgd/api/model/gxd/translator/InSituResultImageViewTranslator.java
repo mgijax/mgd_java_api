@@ -18,7 +18,7 @@ public class InSituResultImageViewTranslator extends BaseEntityDomainTranslator<
 		domain.setResultImageKey(String.valueOf(entity.get_resultimage_key()));
 		domain.setResultKey(String.valueOf(entity.get_result_key()));
 		domain.setImagePaneKey(String.valueOf(entity.get_imagepane_key()));
-		domain.setFigurePaneLabel(entity.getFigurePaneLabel());
+		domain.setFigurepaneLabel(entity.getFigurepaneLabel());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		

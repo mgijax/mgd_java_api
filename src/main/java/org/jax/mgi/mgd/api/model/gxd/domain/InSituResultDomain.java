@@ -22,6 +22,7 @@ public class InSituResultDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	
+	// used to display in pwi/assay
 	private Integer structuresCount;
 	private Integer imagePanesCount;
 	private String imagePaneString;

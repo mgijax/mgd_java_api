@@ -144,7 +144,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		// the set of fields in "update" is similar to set of fields in "create"
 		// creation user/date are only set in "create"
-
+				
 		SearchResults<AssayDomain> results = new SearchResults<AssayDomain>();
 		Assay entity = assayDAO.get(Integer.valueOf(domain.getAssayKey()));
 		Boolean modified = false;

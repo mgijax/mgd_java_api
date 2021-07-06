@@ -91,6 +91,14 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 						
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
+
+		//if specimenLabel == blank
+		// genotype = MGI:2166310
+		// age = embryonic day
+		// sex = not specified
+		// fixation = not specified
+		// embedding = not specified
+		// hybridization = not specified	
 		
 		for (int i = 0; i < domain.size(); i++) {
 				
@@ -119,7 +127,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				entity.setAgeMin(Integer.valueOf(domain.get(i).getAgeMin()));
 				entity.setAgeMax(Integer.valueOf(domain.get(i).getAgeMax()));
 
-				if (domain.get(i).getAgeNote() != null && domain.get(i).getAgeNote().isEmpty()) {
+				if (domain.get(i).getAgeNote() != null && !domain.get(i).getAgeNote().isEmpty()) {
 					entity.setAgeNote(domain.get(i).getAgeNote());
 				}
 				else {
@@ -172,7 +180,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				entity.setAgeMin(Integer.valueOf(domain.get(i).getAgeMin()));
 				entity.setAgeMax(Integer.valueOf(domain.get(i).getAgeMax()));		
 
-				if (domain.get(i).getAgeNote() != null && domain.get(i).getAgeNote().isEmpty()) {
+				if (domain.get(i).getAgeNote() != null && !domain.get(i).getAgeNote().isEmpty()) {
 					entity.setAgeNote(domain.get(i).getAgeNote());
 				}
 				else {

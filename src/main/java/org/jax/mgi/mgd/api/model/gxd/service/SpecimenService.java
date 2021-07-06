@@ -134,7 +134,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 					entity.setAgeNote(null);					
 				}
 				
-				if (domain.get(i).getSpecimenNote() != null && domain.get(i).getSpecimenNote().isEmpty()) {
+				if (domain.get(i).getSpecimenNote() != null && !domain.get(i).getSpecimenNote().isEmpty()) {
 					entity.setSpecimenNote(domain.get(i).getSpecimenNote());
 				}
 				else {
@@ -187,7 +187,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 					entity.setAgeNote(null);					
 				}
 				
-				if (domain.get(i).getSpecimenNote() != null && domain.get(i).getSpecimenNote().isEmpty()) {
+				if (domain.get(i).getSpecimenNote() != null && !domain.get(i).getSpecimenNote().isEmpty()) {
 					entity.setSpecimenNote(domain.get(i).getSpecimenNote());
 				}
 				else {

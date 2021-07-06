@@ -91,14 +91,6 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 						
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
-
-		//if specimenLabel == blank
-		// genotype = MGI:2166310
-		// age = embryonic day
-		// sex = not specified
-		// fixation = not specified
-		// embedding = not specified
-		// hybridization = not specified	
 		
 		for (int i = 0; i < domain.size(); i++) {
 				
@@ -115,17 +107,36 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				Specimen entity = new Specimen();
 
 				entity.set_assay_key(Integer.valueOf(domain.get(i).getAssayKey()));
-				entity.setEmbeddingMethod(embeddingDAO.get(Integer.valueOf(domain.get(i).getEmbeddingKey())));
-				entity.setFixationMethod(fixationDAO.get(Integer.valueOf(domain.get(i).getFixationKey())));
-				entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));
-				entity.setSequenceNum(domain.get(i).getSequenceNum());
-				entity.setSpecimenLabel(domain.get(i).getSpecimenLabel());
-				entity.setSex(domain.get(i).getSex());
-				entity.setHybridization(domain.get(i).getHybridization());
+				
+				// 1 RNA in situ	
+				// 6 Immunohistochemistry
+				
+				if ((domain.get(i).getAssayKey() == "1" || domain.get(i).getAssayKey() == "6")
+						&& (domain.get(i).getSpecimenLabel() == null || domain.get(i).getSpecimenLabel().isEmpty())) {
+					entity.setEmbeddingMethod(embeddingDAO.get(-1));
+					entity.setFixationMethod(fixationDAO.get(-1));
+					entity.setGenotype(genotypeDAO.get(-1));
+					entity.setSpecimenLabel(domain.get(i).getSpecimenLabel());
+					entity.setSex("Not Specified");
+					entity.setHybridization("Not Specified");
+					entity.setAge("embryonic day");
+					entity.setAgeMin(-1);
+					entity.setAgeMax(-1);						
+				}
+				else {
+					entity.setEmbeddingMethod(embeddingDAO.get(Integer.valueOf(domain.get(i).getEmbeddingKey())));
+					entity.setFixationMethod(fixationDAO.get(Integer.valueOf(domain.get(i).getFixationKey())));
+					entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));
+					entity.setSpecimenLabel(domain.get(i).getSpecimenLabel());
+					entity.setSex(domain.get(i).getSex());
+					entity.setHybridization(domain.get(i).getHybridization());
+					entity.setAge(domain.get(i).getAge());
+					entity.setAgeMin(-1);
+					entity.setAgeMax(-1);					
+				}
+				
+				entity.setSequenceNum(domain.get(i).getSequenceNum());				
 
-				entity.setAge(domain.get(i).getAge());
-				entity.setAgeMin(Integer.valueOf(domain.get(i).getAgeMin()));
-				entity.setAgeMax(Integer.valueOf(domain.get(i).getAgeMax()));
 
 				if (domain.get(i).getAgeNote() != null && !domain.get(i).getAgeNote().isEmpty()) {
 					entity.setAgeNote(domain.get(i).getAgeNote());

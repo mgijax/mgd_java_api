@@ -180,9 +180,9 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		log.info("processAssay/A");
 
-//		if (antibodyPrepService.process(entity.get_assay_key(), domain.getAntibodyPrep(), user)) {
-//			modified = true;
-//		}
+		if (antibodyPrepService.process(entity.get_assay_key(), domain.getAntibodyPrep(), user)) {
+			modified = true;
+		}
 
 //		if (probePrepService.process(entity.get_assay_key(), domain.getProbePrep(), user)) {
 //			modified = true;
@@ -190,19 +190,19 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		log.info("processAssay/B");
 		
-//		if (domain.getImagePaneKey() != null && !domain.getImagePaneKey().isEmpty()) {
-//			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePaneKey())));		
-//		}
-//		else {
-//			entity.setImagePane(null);
-//		}
-//			
-//		if (domain.getReporterGeneKey() != null && !domain.getReporterGeneKey().isEmpty()) {
-//			entity.setReporterGene(termDAO.get(Integer.valueOf(domain.getReporterGeneKey())));		
-//		}
-//		else {
-//			entity.setReference(null);
-//		}
+		if (domain.getImagePaneKey() != null && !domain.getImagePaneKey().isEmpty()) {
+			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePaneKey())));		
+		}
+		else {
+			entity.setImagePane(null);
+		}
+			
+		if (domain.getReporterGeneKey() != null && !domain.getReporterGeneKey().isEmpty()) {
+			entity.setReporterGene(termDAO.get(Integer.valueOf(domain.getReporterGeneKey())));		
+		}
+		else {
+			entity.setReporterGene(null);
+		}
 				
 		// process gxd_assaynote
 		if (domain.getAssayNote() != null) {

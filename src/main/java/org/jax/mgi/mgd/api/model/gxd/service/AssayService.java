@@ -69,8 +69,8 @@ public class AssayService extends BaseService<AssayDomain> {
 	private GelRowService gelRowService;
 	@Inject
 	private AntibodyPrepService antibodyPrepService;
-//	@Inject
-//	private ProbePrepService probePrepService;
+	@Inject
+	private ProbePrepService probePrepService;
 	
 	private AssayTranslator translator = new AssayTranslator();
 	private SlimAssayTranslator slimtranslator = new SlimAssayTranslator();
@@ -96,13 +96,13 @@ public class AssayService extends BaseService<AssayDomain> {
 		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));	
 		entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));
 		
-//		if (antibodyPrepService.process(entity.get_assay_key(), domain.getAntibodyPrep(), user)) {
-//			modified = true;
-//		}
+		if (antibodyPrepService.process(entity.get_assay_key(), domain.getAntibodyPrep(), user)) {
+			modified = true;
+		}
 
-//		if (probePrepService.process(entity.get_assay_key(), domain.getProbePrep(), user)) {
-//			modified = true;
-//		}
+		if (probePrepService.process(entity.get_assay_key(), domain.getProbePrep(), user)) {
+			modified = true;
+		}
 		
 		if (domain.getImagePaneKey() != null) {
 			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePaneKey())));		
@@ -184,9 +184,9 @@ public class AssayService extends BaseService<AssayDomain> {
 			modified = true;
 		}
 
-//		if (probePrepService.process(entity.get_assay_key(), domain.getProbePrep(), user)) {
-//			modified = true;
-//		}
+		if (probePrepService.process(entity.get_assay_key(), domain.getProbePrep(), user)) {
+			modified = true;
+		}
 		
 		log.info("processAssay/B");
 		

@@ -122,13 +122,9 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 		String orderBy = "order by a._ProbePrep_key";
 		
 		// if parameter exists, then add to where-clause
-		// antibodyName
-//		if(searchDomain.getAntibodyName() != null && ! searchDomain.getAntibodyName().isEmpty()) {
-//			where = where + "\n and a.antibodyName ilike '" + searchDomain.getAntibodyName() + "'";
-//		}
-//		if(searchDomain.getAntibodyKey() != null && ! searchDomain.getAntibodyKey().isEmpty()) {
-//			where = where + "\n and a._antibody_key = " + searchDomain.getAntibodyKey();
-//		}
+		if(searchDomain.getProbeKey() != null && ! searchDomain.getProbeKey().isEmpty()) {
+			where = where + "\n and a._probe_key = " + searchDomain.getProbeKey();
+		}
 		
 		// create/mod date (no 'by')
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", null, null, searchDomain.getCreation_date(), searchDomain.getModification_date());

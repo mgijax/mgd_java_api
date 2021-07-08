@@ -180,9 +180,9 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		log.info("processAssay/A");
 
-		if (antibodyPrepService.process(entity.get_assay_key(), domain.getAntibodyPrep(), user)) {
-			modified = true;
-		}
+//		if (antibodyPrepService.process(entity.get_assay_key(), domain.getAntibodyPrep(), user)) {
+//			modified = true;
+//		}
 
 //		if (probePrepService.process(entity.get_assay_key(), domain.getProbePrep(), user)) {
 //			modified = true;

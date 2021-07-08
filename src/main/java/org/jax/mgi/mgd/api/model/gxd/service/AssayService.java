@@ -180,12 +180,26 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		log.info("processAssay/A");
 
-		if (antibodyPrepService.process(entity.get_assay_key(), domain.getAntibodyPrep(), user)) {
-			modified = true;
-		}
+//        6 | Immunohistochemistry
+//        9 | In situ reporter (knock in)
+//       10 | In situ reporter (transgenic)
+//       11 | Recombinase reporter
 
-		if (probePrepService.process(entity.get_assay_key(), domain.getProbePrep(), user)) {
-			modified = true;
+		if (domain.getAssayTypeKey().equals("6")
+				|| domain.getAssayTypeKey().equals("9")
+				|| domain.getAssayTypeKey().equals("10")
+				|| domain.getAssayTypeKey().equals("11")) {
+				
+			if (antibodyPrepService.process(entity.get_assay_key(), domain.getAntibodyPrep(), user)) {
+				modified = true;
+			}
+			entity.setProbePrep(null);
+		}
+		else {
+			if (probePrepService.process(entity.get_assay_key(), domain.getProbePrep(), user)) {
+				modified = true;
+			}
+			entity.setAntibodyPrep(null);
 		}
 		
 		log.info("processAssay/B");

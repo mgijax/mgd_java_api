@@ -108,7 +108,8 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 
 				entity.set_assay_key(Integer.valueOf(domain.get(i).getAssayKey()));
 				entity.setSequenceNum(domain.get(i).getSequenceNum());				
-
+				entity.setSpecimenLabel(domain.get(i).getSpecimenLabel());
+				
 				//defaults
 				
 				if (domain.get(i).getEmbeddingKey() == null || domain.get(i).getEmbeddingKey().isEmpty()) {

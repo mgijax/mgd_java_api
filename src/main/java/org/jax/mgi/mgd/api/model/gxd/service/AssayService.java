@@ -187,6 +187,8 @@ public class AssayService extends BaseService<AssayDomain> {
 		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));	
 		entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));
 		
+		log.info("processAssay/A");
+		
 		if (domain.getAntibodyPrep() != null) {
 			entity.setAntibodyPrep(antibodyPrepDAO.get(Integer.valueOf(domain.getAntibodyPrep().getAntibodyPrepKey())));				
 		}
@@ -194,6 +196,8 @@ public class AssayService extends BaseService<AssayDomain> {
 			entity.setAntibodyPrep(null);
 		}
 
+		log.info("processAssay/B");
+		
 		if (domain.getProbePrep() != null) {
 			entity.setProbePrep(probePrepDAO.get(Integer.valueOf(domain.getProbePrep().getProbePrepKey())));				
 		}
@@ -201,6 +205,8 @@ public class AssayService extends BaseService<AssayDomain> {
 			entity.setProbePrep(null);
 		}
 
+		log.info("processAssay/C");
+		
 		if (domain.getImagePaneKey() != null) {
 			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePaneKey())));		
 		}
@@ -208,6 +214,8 @@ public class AssayService extends BaseService<AssayDomain> {
 			entity.setImagePane(null);
 		}
 
+		log.info("processAssay/D");
+		
 		if (domain.getReporterGeneKey() != null) {
 			entity.setReporterGene(termDAO.get(Integer.valueOf(domain.getReporterGeneKey())));		
 		}
@@ -215,6 +223,8 @@ public class AssayService extends BaseService<AssayDomain> {
 			entity.setReference(null);
 		}
 
+		log.info("processAssay/E");
+		
 		// process gxd_assaynote
 		if (domain.getAssayNote() != null) {
 			if (assayNoteService.process(Integer.valueOf(domain.getAssayKey()), domain.getAssayNote(), user)) {
@@ -222,6 +232,8 @@ public class AssayService extends BaseService<AssayDomain> {
 			}
 		}
 
+		log.info("processAssay/F");
+		
 		// process gxd_specimen		
 		// if assaytype in Specimen Assay Type
 		if (domain.getSpecimens() != null && !domain.getSpecimens().isEmpty()) {
@@ -229,6 +241,8 @@ public class AssayService extends BaseService<AssayDomain> {
 				modified = true;
 			}
 		}
+
+		log.info("processAssay/G");
 		
 		// process gxd_gellane
 		// if assaytype in Gel Assay Type
@@ -238,6 +252,8 @@ public class AssayService extends BaseService<AssayDomain> {
 			}
 		}
 
+		log.info("processAssay/H");
+		
 		// process gxd_gelrow
 		// if assaytype in Gel Assay Type
 		if (domain.getGelRows() != null && !domain.getGelRows().isEmpty()) {
@@ -245,6 +261,8 @@ public class AssayService extends BaseService<AssayDomain> {
 				modified = true;
 			}
 		}
+
+		log.info("processAssay/I");
 		
 		// only if modifications were actually made
 		if (modified == true) {

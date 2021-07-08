@@ -156,14 +156,12 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 	}
 
 	@Transactional
-	public Boolean process(Integer parentKey, AntibodyPrepDomain domain, User user) {
+	public Integer process(Integer parentKey, AntibodyPrepDomain domain, User user) {
 		// process antibodyprep (create, delete, update)
-		
-		Boolean modified = false;
-		
+				
 		if (domain == null) {
 			log.info("processAntibodyPrep/nothing to process");
-			return modified;
+			return(0);
 		}
 				
 		// iterate thru the list of rows in the domain
@@ -171,23 +169,22 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 						
 		if (domain.getProcessStatus().equals(Constants.PROCESS_CREATE)) {					
 			log.info("processAntibodyPrep create");							
-				AntibodyPrep entity = new AntibodyPrep();
-				entity.setAntibody(antibodyDAO.get(Integer.valueOf(domain.getAntibodyKey())));
-				entity.setSecondary(secondaryDAO.get(Integer.valueOf(domain.getSecondaryKey())));
-				entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
-				entity.setCreation_date(new Date());
-				entity.setModification_date(new Date());
-				// execute persist/insert/send to database
-				antibodyPrepDAO.persist(entity);
-				modified = true;
-				log.info("processAntibodyPrep/create processed: " + entity.get_antibodyprep_key());									
+			AntibodyPrep entity = new AntibodyPrep();
+			entity.setAntibody(antibodyDAO.get(Integer.valueOf(domain.getAntibodyKey())));
+			entity.setSecondary(secondaryDAO.get(Integer.valueOf(domain.getSecondaryKey())));
+			entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
+			entity.setCreation_date(new Date());
+			entity.setModification_date(new Date());
+			antibodyPrepDAO.persist(entity);
+			log.info("processAntibodyPrep/create processed: " + entity.get_antibodyprep_key());	
+			return(entity.get_antibodyprep_key());
 		}
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 			log.info("processAntibodyPrep delete");
 			AntibodyPrep entity = antibodyPrepDAO.get(Integer.valueOf(domain.getAntibodyPrepKey()));
 			antibodyPrepDAO.remove(entity);
-			modified = true;
 			log.info("processAntibodyPrep delete successful");
+			return(1);
 		}
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 			log.info("processAntibodyPrep update");
@@ -197,15 +194,13 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 			entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
 			entity.setModification_date(new Date());			
 			antibodyPrepDAO.update(entity);
-			modified = true;
-			log.info("processAntibodyPrep/changes processed: " + domain.getAntibodyPrepKey());	
+			log.info("processAntibodyPrep/changes processed: " + domain.getAntibodyPrepKey());
+			return(1);
 		}
 		else {
 			log.info("processAntibodyPrep/no changes processed: " + domain.getAntibodyPrepKey());
+			return(0);
 		}
-		
-		log.info("processAntibodyPrep/processing successful");
-		return modified;
 	}
 	
 }

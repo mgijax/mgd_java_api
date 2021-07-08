@@ -11,8 +11,10 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyPrepDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AssayDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AssayTypeDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.ProbePrepDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
@@ -56,6 +58,10 @@ public class AssayService extends BaseService<AssayDomain> {
 	@Inject
 	private MarkerDAO markerDAO;
 	@Inject
+	private AntibodyPrepDAO antibodyPrepDAO;
+	@Inject
+	private ProbePrepDAO probePrepDAO;
+	@Inject
 	private ImagePaneDAO imagePaneDAO;
 	@Inject
 	private TermDAO termDAO;
@@ -96,13 +102,13 @@ public class AssayService extends BaseService<AssayDomain> {
 		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));	
 		entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));
 		
-		if (antibodyPrepService.process(entity.get_assay_key(), domain.getAntibodyPrep(), user)) {
-			modified = true;
-		}
-
-		if (probePrepService.process(entity.get_assay_key(), domain.getProbePrep(), user)) {
-			modified = true;
-		}
+//		if (antibodyPrepService.process(entity.get_assay_key(), domain.getAntibodyPrep(), user)) {
+//			modified = true;
+//		}
+//
+//		if (probePrepService.process(entity.get_assay_key(), domain.getProbePrep(), user)) {
+//			modified = true;
+//		}
 		
 		if (domain.getImagePaneKey() != null) {
 			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePaneKey())));		
@@ -189,14 +195,24 @@ public class AssayService extends BaseService<AssayDomain> {
 				|| domain.getAssayTypeKey().equals("9")
 				|| domain.getAssayTypeKey().equals("10")
 				|| domain.getAssayTypeKey().equals("11")) {
-				
-			if (antibodyPrepService.process(entity.get_assay_key(), domain.getAntibodyPrep(), user)) {
+			
+			Integer antibodyPrepKey = antibodyPrepService.process(entity.get_assay_key(), domain.getAntibodyPrep(), user);
+			if (antibodyPrepKey > 1) {
+				entity.setAntibodyPrep(antibodyPrepDAO.get(antibodyPrepKey));
 				modified = true;
 			}
-			entity.setProbePrep(null);
+			else if (antibodyPrepKey == 1) {
+				modified = true;
+			}
+			entity.setProbePrep(null);			
 		}
 		else {
-			if (probePrepService.process(entity.get_assay_key(), domain.getProbePrep(), user)) {
+			Integer probePrepKey = probePrepService.process(entity.get_assay_key(), domain.getProbePrep(), user);
+			if (probePrepKey > 1) {
+				entity.setProbePrep(probePrepDAO.get(probePrepKey));
+				modified = true;
+			}
+			else if (probePrepKey == 1) {
 				modified = true;
 			}
 			entity.setAntibodyPrep(null);

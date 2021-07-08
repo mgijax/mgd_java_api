@@ -155,14 +155,12 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 	}
 
 	@Transactional
-	public Boolean process(Integer parentKey, ProbePrepDomain domain, User user) {
+	public Integer process(Integer parentKey, ProbePrepDomain domain, User user) {
 		// process probeprep (create, delete, update)
-		
-		Boolean modified = false;
-		
+				
 		if (domain == null) {
 			log.info("processProbePrep/nothing to process");
-			return modified;
+			return(0);
 		}
 				
 		// iterate thru the list of rows in the domain
@@ -180,15 +178,15 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 				entity.setModification_date(new Date());
 				// execute persist/insert/send to database
 				probePrepDAO.persist(entity);
-				modified = true;
-				log.info("processProbePrep create processed: " + entity.get_probeprep_key());									
+				log.info("processProbePrep create processed: " + entity.get_probeprep_key());													
+				return(entity.get_probeprep_key());
 		}
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 			log.info("processProbePrep delete");
 			ProbePrep entity = probePrepDAO.get(Integer.valueOf(domain.getProbePrepKey()));
 			probePrepDAO.remove(entity);
-			modified = true;
 			log.info("processProbePrep delete successful");
+			return(1);
 		}
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 			log.info("processProbePrep update");
@@ -200,15 +198,13 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 			entity.setVisualizationMethod(visualizationDAO.get(Integer.valueOf(domain.getVisualizationMethodKey())));
 			entity.setModification_date(new Date());			
 			probePrepDAO.update(entity);
-			modified = true;
 			log.info("processProbePrep/changes processed: " + domain.getProbePrepKey());	
+			return(1);
 		}
 		else {
 			log.info("processProbePrep/no changes processed: " + domain.getProbePrepKey());
+			return(0);
 		}
-		
-		log.info("processProbePrep/processing successful");
-		return modified;
 	}
 	
 }

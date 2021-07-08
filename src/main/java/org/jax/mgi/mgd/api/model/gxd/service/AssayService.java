@@ -93,6 +93,38 @@ public class AssayService extends BaseService<AssayDomain> {
 		Boolean modified = false;
 		
 		log.info("processAssay/create");
+
+		entity.setAssayType(assayTypeDAO.get(Integer.valueOf(domain.getAssayTypeKey())));	
+		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));	
+		entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));
+		
+		if (domain.getAntibodyPrep() != null) {
+			entity.setAntibodyPrep(antibodyPrepDAO.get(Integer.valueOf(domain.getAntibodyPrep().getAntibodyPrepKey())));				
+		}
+		else {
+			entity.setAntibodyPrep(null);
+		}
+
+		if (domain.getProbePrep() != null) {
+			entity.setProbePrep(probePrepDAO.get(Integer.valueOf(domain.getProbePrep().getProbePrepKey())));				
+		}
+		else {
+			entity.setProbePrep(null);
+		}
+
+		if (domain.getImagePaneKey() != null) {
+			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePaneKey())));		
+		}
+		else {
+			entity.setImagePane(null);
+		}
+
+		if (domain.getReporterGeneKey() != null) {
+			entity.setReporterGene(termDAO.get(Integer.valueOf(domain.getReporterGeneKey())));		
+		}
+		else {
+			entity.setReference(null);
+		}
 		
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
@@ -158,17 +190,29 @@ public class AssayService extends BaseService<AssayDomain> {
 		if (domain.getAntibodyPrep() != null) {
 			entity.setAntibodyPrep(antibodyPrepDAO.get(Integer.valueOf(domain.getAntibodyPrep().getAntibodyPrepKey())));				
 		}
+		else {
+			entity.setAntibodyPrep(null);
+		}
 
 		if (domain.getProbePrep() != null) {
 			entity.setProbePrep(probePrepDAO.get(Integer.valueOf(domain.getProbePrep().getProbePrepKey())));				
+		}
+		else {
+			entity.setProbePrep(null);
 		}
 
 		if (domain.getImagePaneKey() != null) {
 			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePaneKey())));		
 		}
+		else {
+			entity.setImagePane(null);
+		}
 
 		if (domain.getReporterGeneKey() != null) {
 			entity.setReporterGene(termDAO.get(Integer.valueOf(domain.getReporterGeneKey())));		
+		}
+		else {
+			entity.setReference(null);
 		}
 
 		// process gxd_assaynote

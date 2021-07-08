@@ -22,6 +22,11 @@ public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDoma
 		AssayDomain domain = new AssayDomain();
 
 		domain.setAssayKey(String.valueOf(entity.get_assay_key()));
+		
+		log.info(entity.getReference().getReferenceCitationCache().getJnumid());
+		log.info(entity.getAssayType().getAssayType());
+		log.info(entity.getMarker().getSymbol());
+		
 		domain.setAssayDisplay(entity.getReference().getReferenceCitationCache().getJnumid() + ";" + entity.getAssayType().getAssayType() + ";" + entity.getMarker().getSymbol());	
 		domain.setAssayTypeKey(String.valueOf(entity.getAssayType().get_assaytype_key()));
 		domain.setAssayType(entity.getAssayType().getAssayType());

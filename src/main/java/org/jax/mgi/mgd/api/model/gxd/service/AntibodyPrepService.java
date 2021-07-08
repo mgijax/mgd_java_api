@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.gxd.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -9,7 +10,10 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyPrepDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.GXDLabelDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.SecondaryDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyPrepDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.AntibodyPrep;
 import org.jax.mgi.mgd.api.model.gxd.translator.AntibodyPrepTranslator;
@@ -27,6 +31,12 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 
 	@Inject
 	private AntibodyPrepDAO antibodyPrepDAO;
+	@Inject
+	private AntibodyDAO antibodyDAO;
+	@Inject
+	private SecondaryDAO secondaryDAO;
+	@Inject
+	private GXDLabelDAO labelDAO;
 	
 	private AntibodyPrepTranslator translator = new AntibodyPrepTranslator();
 	
@@ -35,50 +45,27 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 	
 	@Transactional
 	public SearchResults<AntibodyPrepDomain> create(AntibodyPrepDomain domain, User user) {
-		// create new entity object from in-coming domain
-		// the Entities class handles the generation of the primary key
-		// database trigger will assign the MGI id/see pgmgddbschema/trigger for details
-
 		SearchResults<AntibodyPrepDomain> results = new SearchResults<AntibodyPrepDomain>();
-		
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
-		return results;
-		
+		return results;	
 	}
 
 	@Transactional
 	public SearchResults<AntibodyPrepDomain> update(AntibodyPrepDomain domain, User user) {
-		
-		// the set of fields in "update" is similar to set of fields in "create"
-		// creation user/date are only set in "create"
-
 		SearchResults<AntibodyPrepDomain> results = new SearchResults<AntibodyPrepDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
-		return results;
+		return results;	
 	}
 
 	@Transactional
 	public SearchResults<AntibodyPrepDomain> delete(Integer key, User user) {
-		// get the entity object and delete
-		
+		// get the entity object and delete		
 		SearchResults<AntibodyPrepDomain> results = new SearchResults<AntibodyPrepDomain>();
 		AntibodyPrep entity = antibodyPrepDAO.get(key);
-		
 		results.setItem(translator.translate(antibodyPrepDAO.get(key)));
 		antibodyPrepDAO.remove(entity);
-		return results;
-		
+		return results;	
 	}
-	
-/*	@Transactional
-	public List<AntibodyPrepDomain> getByAntibodyKey(Integer key) {
-		// get the DAO/entity and translate -> domain
-		AntibodyPrepDomain domain = new AntibodyPrepDomain();
-		if (antibodyPrepDAO.get(key) != null) {
-			domain = translator.translate(antibodyPrepDAO.get(key));
-		}
-		return domain;
-	}*/
 	
 	@Transactional
 	public AntibodyPrepDomain get(Integer key) {
@@ -145,8 +132,7 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 		if (cmResults.length > 0) {
 			from = from + cmResults[0];
 			where = where + cmResults[1];
-		}
-						
+		}					
 		
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
@@ -168,4 +154,58 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 		
 		return results;
 	}
+
+	@Transactional
+	public Boolean process(Integer parentKey, AntibodyPrepDomain domain, User user) {
+		// process antibodyprep (create, delete, update)
+		
+		Boolean modified = false;
+		
+		if (domain == null) {
+			log.info("processAntibodyPrep/nothing to process");
+			return modified;
+		}
+				
+		// iterate thru the list of rows in the domain
+		// for each row, determine whether to perform an insert, delete or update
+						
+		if (domain.getProcessStatus().equals(Constants.PROCESS_CREATE)) {					
+			log.info("processAntibodyPrep create");							
+				AntibodyPrep entity = new AntibodyPrep();
+				entity.setAntibody(antibodyDAO.get(Integer.valueOf(domain.getAntibodyKey())));
+				entity.setSecondary(secondaryDAO.get(Integer.valueOf(domain.getSecondaryKey())));
+				entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
+				entity.setCreation_date(new Date());
+				entity.setModification_date(new Date());
+				// execute persist/insert/send to database
+				antibodyPrepDAO.persist(entity);
+				modified = true;
+				log.info("processAntibodyPrep/create processed: " + entity.get_antibodyprep_key());									
+		}
+		else if (domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+			log.info("processAntibodyPrep delete");
+			AntibodyPrep entity = antibodyPrepDAO.get(Integer.valueOf(domain.getAntibodyPrepKey()));
+			antibodyPrepDAO.remove(entity);
+			modified = true;
+			log.info("processAntibodyPrep delete successful");
+		}
+		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+			log.info("processAntibodyPrep update");
+			AntibodyPrep entity = antibodyPrepDAO.get(Integer.valueOf(domain.getAntibodyPrepKey()));		
+			entity.setAntibody(antibodyDAO.get(Integer.valueOf(domain.getAntibodyKey())));
+			entity.setSecondary(secondaryDAO.get(Integer.valueOf(domain.getSecondaryKey())));
+			entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
+			entity.setModification_date(new Date());			
+			antibodyPrepDAO.update(entity);
+			modified = true;
+			log.info("processAntibodyPrep/changes processed: " + domain.getAntibodyPrepKey());	
+		}
+		else {
+			log.info("processAntibodyPrep/no changes processed: " + domain.getAntibodyPrepKey());
+		}
+		
+		log.info("processAntibodyPrep/processing successful");
+		return modified;
+	}
+	
 }

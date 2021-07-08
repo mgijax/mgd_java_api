@@ -11,10 +11,8 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
-import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyPrepDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AssayDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AssayTypeDAO;
-import org.jax.mgi.mgd.api.model.gxd.dao.ProbePrepDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
@@ -58,10 +56,6 @@ public class AssayService extends BaseService<AssayDomain> {
 	@Inject
 	private MarkerDAO markerDAO;
 	@Inject
-	private AntibodyPrepDAO antibodyPrepDAO;
-	@Inject
-	private ProbePrepDAO probePrepDAO;
-	@Inject
 	private ImagePaneDAO imagePaneDAO;
 	@Inject
 	private TermDAO termDAO;
@@ -73,6 +67,10 @@ public class AssayService extends BaseService<AssayDomain> {
 	private GelLaneService gelLaneService;
 	@Inject
 	private GelRowService gelRowService;
+	@Inject
+	private AntibodyPrepService antibodyPrepService;
+//	@Inject
+//	private ProbePrepService probePrepService;
 	
 	private AssayTranslator translator = new AssayTranslator();
 	private SlimAssayTranslator slimtranslator = new SlimAssayTranslator();
@@ -98,20 +96,14 @@ public class AssayService extends BaseService<AssayDomain> {
 		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));	
 		entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));
 		
-		if (domain.getAntibodyPrep() != null) {
-			entity.setAntibodyPrep(antibodyPrepDAO.get(Integer.valueOf(domain.getAntibodyPrep().getAntibodyPrepKey())));				
-		}
-		else {
-			entity.setAntibodyPrep(null);
+		if (antibodyPrepService.process(entity.get_assay_key(), domain.getAntibodyPrep(), user)) {
+			modified = true;
 		}
 
-		if (domain.getProbePrep() != null) {
-			entity.setProbePrep(probePrepDAO.get(Integer.valueOf(domain.getProbePrep().getProbePrepKey())));				
-		}
-		else {
-			entity.setProbePrep(null);
-		}
-
+//		if (probePrepService.process(entity.get_assay_key(), domain.getProbePrep(), user)) {
+//			modified = true;
+//		}
+		
 		if (domain.getImagePaneKey() != null) {
 			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePaneKey())));		
 		}
@@ -173,7 +165,6 @@ public class AssayService extends BaseService<AssayDomain> {
 
 	@Transactional
 	public SearchResults<AssayDomain> update(AssayDomain domain, User user) {
-		
 		// the set of fields in "update" is similar to set of fields in "create"
 		// creation user/date are only set in "create"
 				
@@ -187,25 +178,13 @@ public class AssayService extends BaseService<AssayDomain> {
 		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));	
 		entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));
 		
-		log.info("processAssay/A");
-		
-		if (domain.getAntibodyPrep() != null) {
-			entity.setAntibodyPrep(antibodyPrepDAO.get(Integer.valueOf(domain.getAntibodyPrep().getAntibodyPrepKey())));				
-		}
-		else {
-			entity.setAntibodyPrep(null);
+		if (antibodyPrepService.process(entity.get_assay_key(), domain.getAntibodyPrep(), user)) {
+			modified = true;
 		}
 
-		log.info("processAssay/B");
-		
-		if (domain.getProbePrep() != null) {
-			entity.setProbePrep(probePrepDAO.get(Integer.valueOf(domain.getProbePrep().getProbePrepKey())));				
-		}
-		else {
-			entity.setProbePrep(null);
-		}
-
-		log.info("processAssay/C");
+//		if (probePrepService.process(entity.get_assay_key(), domain.getProbePrep(), user)) {
+//			modified = true;
+//		}
 		
 		if (domain.getImagePaneKey() != null) {
 			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePaneKey())));		
@@ -213,8 +192,6 @@ public class AssayService extends BaseService<AssayDomain> {
 		else {
 			entity.setImagePane(null);
 		}
-
-		log.info("processAssay/D");
 		
 		if (domain.getReporterGeneKey() != null) {
 			entity.setReporterGene(termDAO.get(Integer.valueOf(domain.getReporterGeneKey())));		
@@ -222,8 +199,6 @@ public class AssayService extends BaseService<AssayDomain> {
 		else {
 			entity.setReference(null);
 		}
-
-		log.info("processAssay/E");
 		
 		// process gxd_assaynote
 		if (domain.getAssayNote() != null) {
@@ -231,8 +206,6 @@ public class AssayService extends BaseService<AssayDomain> {
 				modified = true;
 			}
 		}
-
-		log.info("processAssay/F");
 		
 		// process gxd_specimen		
 		// if assaytype in Specimen Assay Type
@@ -241,8 +214,6 @@ public class AssayService extends BaseService<AssayDomain> {
 				modified = true;
 			}
 		}
-
-		log.info("processAssay/G");
 		
 		// process gxd_gellane
 		// if assaytype in Gel Assay Type
@@ -251,8 +222,6 @@ public class AssayService extends BaseService<AssayDomain> {
 				modified = true;
 			}
 		}
-
-		log.info("processAssay/H");
 		
 		// process gxd_gelrow
 		// if assaytype in Gel Assay Type

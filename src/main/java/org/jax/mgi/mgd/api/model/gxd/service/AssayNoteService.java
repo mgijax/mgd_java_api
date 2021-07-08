@@ -98,7 +98,7 @@ public class AssayNoteService extends BaseService<AssayNoteDomain> {
 			AssayNote entity = assayNoteDAO.get(Integer.valueOf(domain.getAssayNoteKey()));
 			assayNoteDAO.remove(entity);
 			modified = true;
-			log.info("processSynonym delete successful");
+			log.info("processAssayNote delete successful");
 		}
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 			log.info("processAssayNote update");

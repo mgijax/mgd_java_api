@@ -96,9 +96,9 @@ public class AssayService extends BaseService<AssayDomain> {
 		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));	
 		entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));
 		
-		if (antibodyPrepService.process(entity.get_assay_key(), domain.getAntibodyPrep(), user)) {
-			modified = true;
-		}
+//		if (antibodyPrepService.process(entity.get_assay_key(), domain.getAntibodyPrep(), user)) {
+//			modified = true;
+//		}
 
 //		if (probePrepService.process(entity.get_assay_key(), domain.getProbePrep(), user)) {
 //			modified = true;
@@ -190,33 +190,27 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		log.info("processAssay/B");
 		
-		if (domain.getImagePaneKey() != null && !domain.getImagePaneKey().isEmpty()) {
-			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePaneKey())));		
-		}
-		else {
-			entity.setImagePane(null);
-		}
-	
-		log.info("processAssay/C");
-		
-		if (domain.getReporterGeneKey() != null && !domain.getReporterGeneKey().isEmpty()) {
-			entity.setReporterGene(termDAO.get(Integer.valueOf(domain.getReporterGeneKey())));		
-		}
-		else {
-			entity.setReference(null);
-		}
-		
-		log.info("processAssay/D");
-		
-		// process gxd_assaynote
-		if (domain.getAssayNote() != null) {
-			if (assayNoteService.process(Integer.valueOf(domain.getAssayKey()), domain.getAssayNote(), user)) {
-				modified = true;
-			}
-		}
-		
-		log.info("processAssay/E");
-		
+//		if (domain.getImagePaneKey() != null && !domain.getImagePaneKey().isEmpty()) {
+//			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePaneKey())));		
+//		}
+//		else {
+//			entity.setImagePane(null);
+//		}
+//			
+//		if (domain.getReporterGeneKey() != null && !domain.getReporterGeneKey().isEmpty()) {
+//			entity.setReporterGene(termDAO.get(Integer.valueOf(domain.getReporterGeneKey())));		
+//		}
+//		else {
+//			entity.setReference(null);
+//		}
+//				
+//		// process gxd_assaynote
+//		if (domain.getAssayNote() != null) {
+//			if (assayNoteService.process(Integer.valueOf(domain.getAssayKey()), domain.getAssayNote(), user)) {
+//				modified = true;
+//			}
+//		}
+				
 		// process gxd_specimen		
 		// if assaytype in Specimen Assay Type
 		if (domain.getSpecimens() != null && !domain.getSpecimens().isEmpty()) {
@@ -256,7 +250,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		log.info("processAssay/update/returning results");
 		results.setItem(translator.translate(entity));
 		log.info("processAssay/update/returned results succsssful");
-		return results;
+		return results;		
 	}
 	 
 	@Transactional

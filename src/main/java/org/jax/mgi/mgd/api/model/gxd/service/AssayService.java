@@ -203,13 +203,13 @@ public class AssayService extends BaseService<AssayDomain> {
 //		else {
 //			entity.setReference(null);
 //		}
-//				
-//		// process gxd_assaynote
-//		if (domain.getAssayNote() != null) {
-//			if (assayNoteService.process(Integer.valueOf(domain.getAssayKey()), domain.getAssayNote(), user)) {
-//				modified = true;
-//			}
-//		}
+				
+		// process gxd_assaynote
+		if (domain.getAssayNote() != null) {
+			if (assayNoteService.process(Integer.valueOf(domain.getAssayKey()), domain.getAssayNote(), user)) {
+				modified = true;
+			}
+		}
 				
 		// process gxd_specimen		
 		// if assaytype in Specimen Assay Type

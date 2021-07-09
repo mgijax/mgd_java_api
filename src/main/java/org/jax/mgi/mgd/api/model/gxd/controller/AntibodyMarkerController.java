@@ -77,5 +77,21 @@ public class AntibodyMarkerController extends BaseController<AntibodyMarkerDomai
 		
 		return results;
 	}	
+
+	@POST
+	@ApiOperation(value = "Validate Antibody/Marker, returns List of AntibodyMarkerDomain")
+	@Path("/validateAntibodyMarker")
+	public List<AntibodyMarkerDomain> validateAntibodyMarker(AntibodyMarkerDomain searchDomain) {
+	
+		List<AntibodyMarkerDomain> results = new ArrayList<AntibodyMarkerDomain>();
+
+		try {
+			results = antibodyMarkerService.validateAntibodyMarker(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
 }

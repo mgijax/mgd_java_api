@@ -33,28 +33,21 @@ public class AntibodyMarkerService extends BaseService<AntibodyMarkerDomain> {
 	private MarkerDAO markerDAO;
 	
 	private AntibodyMarkerTranslator translator = new AntibodyMarkerTranslator();
-	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
 	
 	@Transactional
 	public SearchResults<AntibodyMarkerDomain> create(AntibodyMarkerDomain domain, User user) {
 		// create new entity object from in-coming domain
 		// the Entities class handles the generation of the primary key
-
 		SearchResults<AntibodyMarkerDomain> results = new SearchResults<AntibodyMarkerDomain>();
-		
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
-		
 	}
 
 	@Transactional
-	public SearchResults<AntibodyMarkerDomain> update(AntibodyMarkerDomain domain, User user) {
-		
+	public SearchResults<AntibodyMarkerDomain> update(AntibodyMarkerDomain domain, User user) {	
 		// the set of fields in "update" is similar to set of fields in "create"
 		// creation user/date are only set in "create"
-
 		SearchResults<AntibodyMarkerDomain> results = new SearchResults<AntibodyMarkerDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
@@ -120,10 +113,6 @@ public class AntibodyMarkerService extends BaseService<AntibodyMarkerDomain> {
 		String where = "where a._AntibodyMarker_key is not null";
 		String orderBy = "order by a._Antibody_key";
 		
-		//
-		// IN PROGRESS, minimal search for now
-		//
-		
 		// if parameter exists, then add to where-clause
 		// antibodyName
 		if(searchDomain.getMarkerKey() != null && ! searchDomain.getMarkerKey().isEmpty()) {
@@ -135,8 +124,7 @@ public class AntibodyMarkerService extends BaseService<AntibodyMarkerDomain> {
 		if (cmResults.length > 0) {
 			from = from + cmResults[0];
 			where = where + cmResults[1];
-		}
-						
+		}				
 		
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
@@ -176,7 +164,7 @@ public class AntibodyMarkerService extends BaseService<AntibodyMarkerDomain> {
 		for (int i = 0; i < domain.size(); i++) {
 				
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
-				//IN PROGRESS _ START HERE.
+
 				// if markerKey null/empty, then skip
 				// pwi has sent a "c" that is empty/not being used
 				if (domain.get(i).getMarkerKey() == null || domain.get(i).getMarkerKey().isEmpty()) {
@@ -184,22 +172,16 @@ public class AntibodyMarkerService extends BaseService<AntibodyMarkerDomain> {
 				}
 				
 				log.info("processAntibodyMarker create");
-
 				AntibodyMarker entity = new AntibodyMarker();
-
 				entity.set_antibody_key(Integer.valueOf(parentKey));
-				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));
-				
-				
+				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));		
 				entity.setCreation_date(new Date());				
 				entity.setModification_date(new Date());				
-				antibodyMarkerDAO.persist(entity);
-				
+				antibodyMarkerDAO.persist(entity);				
 				modified = true;
 				log.info("process Marker/create processed: " + entity.get_antibodymarker_key());					
 			}
-			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-				
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {			
 				log.info("processAntibodyMarker delete");
 				AntibodyMarker entity = antibodyMarkerDAO.get(Integer.valueOf(domain.get(i).getAntibodyMarkerKey()));
 				antibodyMarkerDAO.remove(entity);
@@ -208,15 +190,11 @@ public class AntibodyMarkerService extends BaseService<AntibodyMarkerDomain> {
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processAntibodyMarker update");
-				// IN PROGRESS
 				AntibodyMarker entity = antibodyMarkerDAO.get(Integer.valueOf(domain.get(i).getAntibodyMarkerKey()));
-
 				entity.set_antibody_key(Integer.valueOf(parentKey));
-				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));
-								
+				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));			
 				entity.setModification_date(new Date());				
-				antibodyMarkerDAO.update(entity);
-				
+				antibodyMarkerDAO.update(entity);				
 				modified = true;
 				log.info("processAntibodyMarker update successful");
 			}
@@ -225,4 +203,34 @@ public class AntibodyMarkerService extends BaseService<AntibodyMarkerDomain> {
 		}	
 		return modified;
     }
+	
+	@Transactional
+	public List<AntibodyMarkerDomain> validateAntibodyMarker(AntibodyMarkerDomain searchDomain) {
+		
+		List<AntibodyMarkerDomain> results = new ArrayList<AntibodyMarkerDomain>();
+		
+		String cmd = "select * as from GXD_AntibodyMarker" +
+				"\nwhere _Antibody_key = " + searchDomain.getAntibodyKey() +
+				"\nand _Marker_key = " + searchDomain.getMarkerKey();
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			
+			while (rs.next()) {
+				AntibodyMarkerDomain domain = new AntibodyMarkerDomain();
+				domain.setAntibodyMarkerKey(rs.getString("_antibodymarker_key"));
+				domain.setAntibodyKey(rs.getString("_antibody_key"));
+				domain.setMarkerKey(rs.getString("_marker_key"));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

@@ -189,37 +189,36 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		log.info("processAssay/A");
 
-		Boolean isAntibodyPrep = false;
-		Boolean isProbePrep = false;
+//		Boolean isAntibodyPrep = false;
+//		Boolean isProbePrep = false;
+//		
+//		// will have either antibody or probe prep
+//		//        6 | Immunohistochemistry
+//
+//		if (domain.getAssayTypeKey().equals("6")) {
+//			isAntibodyPrep = true;
+//			isProbePrep = true;
+//		}
+//		
+//		// may have neither prep
+//		//      9 | In situ reporter (knock in) 
+//		//     10 | In situ reporter (transgenic) 
+//		//     11 | Recombinase reporter	
+//		
+//		else if (domain.getAssayTypeKey().equals("9")
+//				|| domain.getAssayTypeKey().equals("10")
+//				|| domain.getAssayTypeKey().equals("11")) {
+//
+//			if (!domain.getAntibodyPrep().getAntibodyKey().isEmpty()) {
+//				isAntibodyPrep = true;
+//			}
+//			
+//			if (!domain.getProbePrep().getProbeKey().isEmpty()) {
+//				isProbePrep = true;
+//			}	
+//		}
 		
-		// will have either antibody or probe prep
-		//        6 | Immunohistochemistry
-
-		if (domain.getAssayTypeKey().equals("6")) {
-			isAntibodyPrep = true;
-			isProbePrep = true;
-		}
-		
-		// may have neither prep
-		//      9 | In situ reporter (knock in) 
-		//     10 | In situ reporter (transgenic) 
-		//     11 | Recombinase reporter	
-		
-		else if (domain.getAssayTypeKey().equals("9")
-				|| domain.getAssayTypeKey().equals("10")
-				|| domain.getAssayTypeKey().equals("11")) {
-
-			if (!domain.getAntibodyPrep().getAntibodyKey().isEmpty()) {
-				isAntibodyPrep = true;
-			}
-			
-			if (!domain.getProbePrep().getProbeKey().isEmpty()) {
-				isProbePrep = true;
-			}	
-		}
-		
-		if (isAntibodyPrep == true)
-		{
+		if (domain.getDetectionKey().equals("2")) {
 			Integer antibodyPrepKey = antibodyPrepService.process(entity.get_assay_key(), domain.getAntibodyPrep(), user);
 			if (antibodyPrepKey > 1) {
 				entity.setAntibodyPrep(antibodyPrepDAO.get(antibodyPrepKey));
@@ -230,7 +229,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			}
 			entity.setProbePrep(null);			
 		}
-		else if (isProbePrep == true){
+		else if (domain.getDetectionKey().equals("1")) {
 			Integer probePrepKey = probePrepService.process(entity.get_assay_key(), domain.getProbePrep(), user);
 			if (probePrepKey > 1) {
 				entity.setProbePrep(probePrepDAO.get(probePrepKey));

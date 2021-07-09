@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
@@ -177,6 +178,8 @@ public class AssayService extends BaseService<AssayDomain> {
 		SearchResults<AssayDomain> results = new SearchResults<AssayDomain>();
 		Assay entity = assayDAO.get(Integer.valueOf(domain.getAssayKey()));
 		Boolean modified = false;
+		String cmd;
+		Query query;
 		
 		log.info("processAssay/update");
 		
@@ -275,7 +278,13 @@ public class AssayService extends BaseService<AssayDomain> {
 		else {
 			log.info("processAssay/no changes processed: " + domain.getAssayKey());
 		}
-			
+
+		// process order reset
+		cmd = "select count(*) from MGI_resetSequenceNum ('GXD_Assay'," + entity.get_assay_key() + "," + user.get_user_key() + ")";
+		log.info("processAssay/process order reset: " + cmd);
+		query = assayDAO.createNativeQuery(cmd);
+		query.getResultList();
+		
 		// return entity translated to domain
 		log.info("processAssay/update/returning results");
 		results.setItem(translator.translate(entity));

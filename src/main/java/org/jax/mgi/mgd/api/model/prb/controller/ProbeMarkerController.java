@@ -72,7 +72,7 @@ public class ProbeMarkerController extends BaseController<ProbeMarkerDomain> {
 
 	@POST
 	@ApiOperation(value = "Validate Probe/Marker, returns List of ProbeMarkerDomain")
-	@Path("/validateProbeyMarker")
+	@Path("/validateProbeMarker")
 	public List<ProbeMarkerDomain> validateProbeMarker(ProbeMarkerDomain searchDomain) {
 	
 		List<ProbeMarkerDomain> results = new ArrayList<ProbeMarkerDomain>();

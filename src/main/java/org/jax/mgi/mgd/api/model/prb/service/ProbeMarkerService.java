@@ -175,13 +175,14 @@ public class ProbeMarkerService extends BaseService<ProbeMarkerDomain> {
 		
 		List<ProbeMarkerDomain> results = new ArrayList<ProbeMarkerDomain>();
 		
-		String cmd = "select pm._assoc_key, pm._probe_key, pm._marker_key from PRB_Marker pm" +				"\nwhere exists (select 1 from PRB_Probe p, VOC_Term t" +
+		String cmd = "select pm._assoc_key, pm._probe_key, pm._marker_key from PRB_Marker pm" +	
+				"\nwhere exists (select 1 from PRB_Probe p, VOC_Term t" +
 				"\nwhere pm._Probe_key = p._Probe_key" +
 				"\nand p._SegmentType_key = t._Term_key" +
 				"\nand t.term != 'primer'" +
 				"\nand pm.relationship in ('E', 'H')" +
 				"\nand pm._Probe_key = " + searchDomain.getProbeKey() +
-				"\nand pm._Marker_key = " + searchDomain.getMarkerKey() +	
+				"\nand pm._Marker_key = " + searchDomain.getMarkerKey() + ")" +
 				"\nunion all" +
 				"\nselect pm._assoc_key, pm._probe_key, pm._marker_key from PRB_Marker pm" +
 				"\nwhere exists (select 1 from PRB_Probe p, VOC_Term t" +
@@ -190,7 +191,8 @@ public class ProbeMarkerService extends BaseService<ProbeMarkerDomain> {
 				"\nand t.term = 'primer'" +
 				"\nand pm.relationship = 'A'" +
 				"\nand pm._Probe_key = " + searchDomain.getProbeKey() +
-				"\nand pm._Marker_key = " + searchDomain.getMarkerKey();			
+				"\nand pm._Marker_key = " + searchDomain.getMarkerKey() + ")";			
+		
 		log.info(cmd);
 		
 		try {

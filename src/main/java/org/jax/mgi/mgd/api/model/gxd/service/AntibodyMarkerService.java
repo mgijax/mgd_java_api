@@ -209,7 +209,7 @@ public class AntibodyMarkerService extends BaseService<AntibodyMarkerDomain> {
 		
 		List<AntibodyMarkerDomain> results = new ArrayList<AntibodyMarkerDomain>();
 		
-		String cmd = "select * as from GXD_AntibodyMarker" +
+		String cmd = "select * from GXD_AntibodyMarker" +
 				"\nwhere _Antibody_key = " + searchDomain.getAntibodyKey() +
 				"\nand _Marker_key = " + searchDomain.getMarkerKey();
 		log.info(cmd);

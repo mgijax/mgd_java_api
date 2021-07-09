@@ -169,5 +169,47 @@ public class ProbeMarkerService extends BaseService<ProbeMarkerDomain> {
 		log.info("processProbeMarker/processing successful");
 		return modified;
 	}		
+
+	@Transactional
+	public List<ProbeMarkerDomain> validateProbeMarker(ProbeMarkerDomain searchDomain) {
+		
+		List<ProbeMarkerDomain> results = new ArrayList<ProbeMarkerDomain>();
+		
+		String cmd = "select pm._assoc_key, pm._probe_key, pm._marker_key from PRB_Marker pm" +				"\nwhere exists (select 1 from PRB_Probe p, VOC_Term t" +
+				"\nwhere pm._Probe_key = p._Probe_key" +
+				"\nand p._SegmentType_key = t._Term_key" +
+				"\nand t.term != 'primer'" +
+				"\nand pm.relationship in ('E', 'H')" +
+				"\nand pm._Probe_key = " + searchDomain.getProbeKey() +
+				"\nand pm._Marker_key = " + searchDomain.getMarkerKey() +	
+				"\nunion all" +
+				"\nselect pm._assoc_key, pm._probe_key, pm._marker_key from PRB_Marker pm" +
+				"\nwhere exists (select 1 from PRB_Probe p, VOC_Term t" +
+				"\nwhere pm._Probe_key = p._Probe_key" +
+				"\nand p._SegmentType_key = t._Term_key" +
+				"\nand t.term = 'primer'" +
+				"\nand pm.relationship = 'A'" +
+				"\nand pm._Probe_key = " + searchDomain.getProbeKey() +
+				"\nand pm._Marker_key = " + searchDomain.getMarkerKey();			
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			
+			while (rs.next()) {
+				ProbeMarkerDomain domain = new ProbeMarkerDomain();
+				domain.setAssocKey(rs.getString("_assoc_key"));
+				domain.setProbeKey(rs.getString("_probe_key"));
+				domain.setMarkerKey(rs.getString("_marker_key"));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
 }

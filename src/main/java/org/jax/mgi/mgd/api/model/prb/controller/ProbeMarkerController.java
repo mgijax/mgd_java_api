@@ -71,9 +71,9 @@ public class ProbeMarkerController extends BaseController<ProbeMarkerDomain> {
 	}	
 
 	@POST
-	@ApiOperation(value = "Validate Antibody/Marker, returns List of AntibodyMarkerDomain")
-	@Path("/validateAntibodyMarker")
-	public List<ProbeMarkerDomain> validateAntibodyMarker(ProbeMarkerDomain searchDomain) {
+	@ApiOperation(value = "Validate Probe/Marker, returns List of ProbeMarkerDomain")
+	@Path("/validateProbeyMarker")
+	public List<ProbeMarkerDomain> validateProbeMarker(ProbeMarkerDomain searchDomain) {
 	
 		List<ProbeMarkerDomain> results = new ArrayList<ProbeMarkerDomain>();
 

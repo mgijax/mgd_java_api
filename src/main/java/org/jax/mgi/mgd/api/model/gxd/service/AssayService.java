@@ -243,6 +243,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		else {
 			entity.setAntibodyPrep(null);
 			entity.setProbePrep(null);
+			modified = true;
 		}
 		
 		log.info("processAssay/B");

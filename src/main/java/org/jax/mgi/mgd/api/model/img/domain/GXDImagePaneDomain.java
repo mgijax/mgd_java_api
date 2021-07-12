@@ -13,7 +13,6 @@ public class GXDImagePaneDomain extends BaseDomain {
 	private String refsKey;
 	private String imagePaneKey;
 	private String figurepaneLabel;
-	private String originalProcessStatus;	
 	private Boolean isUsed = false;
 
 }

@@ -10,10 +10,11 @@ public class GXDImagePaneDomain extends BaseDomain {
 	// for gxd, list of image pane key, concatenated figure/pane label
 	// used by getGXDByJnum
 	
-	private String processStatus = "x";	
 	private String refsKey;
 	private String imagePaneKey;
 	private String figurepaneLabel;
+	private String originalProcessStatus = "x";	
+	private String newProcessStatus = "x";
 	private Boolean isUsed = false;
 
 }

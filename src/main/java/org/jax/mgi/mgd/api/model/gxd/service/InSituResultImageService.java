@@ -85,15 +85,14 @@ public class InSituResultImageService extends BaseService<InSituResultImageDomai
 		// for each row, determine whether to perform an insert, delete or update
 		
 		for (int i = 0; i < domain.size(); i++) {
-				
+			
+			// if result is null/empty, then skip
+			// pwi has sent a "c" that is empty/not being used
+			if (domain.get(i).getImagePaneKey() == null || domain.get(i).getImagePaneKey().isEmpty()) {
+				continue;
+			}
+			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
-	
-				// if result is null/empty, then skip
-				// pwi has sent a "c" that is empty/not being used
-				if (domain.get(i).getImagePaneKey() == null || domain.get(i).getImagePaneKey().isEmpty()) {
-					continue;
-				}
-				
 				log.info("processInSituResultsImage create");
 
 				InSituResultImage entity = new InSituResultImage();

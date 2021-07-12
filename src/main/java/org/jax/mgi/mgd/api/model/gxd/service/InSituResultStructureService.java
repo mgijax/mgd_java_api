@@ -88,15 +88,14 @@ public class InSituResultStructureService extends BaseService<InSituResultStruct
 		// for each row, determine whether to perform an insert, delete or update
 		
 		for (int i = 0; i < domain.size(); i++) {
-				
-			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
-	
-				// if result is null/empty, then skip
-				// pwi has sent a "c" that is empty/not being used
-				if (domain.get(i).getEmapaTerm() == null || domain.get(i).getEmapaTerm().isEmpty()) {
-					continue;
-				}
-				
+			
+			// if result is null/empty, then skip
+			// pwi has sent a "c" that is empty/not being used
+			if (domain.get(i).getEmapaTerm() == null || domain.get(i).getEmapaTerm().isEmpty()) {
+				continue;
+			}
+			
+			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {			
 				log.info("processInSituStructures create");
 
 				InSituResultStructure entity = new InSituResultStructure();

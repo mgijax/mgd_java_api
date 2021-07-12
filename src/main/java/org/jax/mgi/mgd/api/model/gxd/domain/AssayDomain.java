@@ -31,11 +31,11 @@ public class AssayDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	
+	/* 1 = nucleotide, 2 = antibody, 3 = direct detection */
+	private String detectionKey;	
 	private AntibodyPrepDomain antibodyPrep;
 	private ProbePrepDomain probePrep;
-	/* 1 = nucleotide, 2 = antibody, 3 = direct detection */
-	private String detectionKey;
-	
+
 	private AssayNoteDomain assayNote;	
 	private List<SpecimenDomain> specimens;
 	private List<GelLaneDomain> gelLanes;

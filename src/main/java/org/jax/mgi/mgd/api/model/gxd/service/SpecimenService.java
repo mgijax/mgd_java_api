@@ -184,7 +184,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 					}
 				}
 				
-				String cmd = "select count(*) from MGI_resetAgeMinMax ('GXD_Specimen'," + entity.get_assay_key() + ")";
+				String cmd = "select count(*) from MGI_resetAgeMinMax ('GXD_Specimen'," + entity.get_specimen_key() + ")";
 				log.info("cmd: " + cmd);
 				Query query = specimenDAO.createNativeQuery(cmd);
 				query.getResultList();
@@ -249,7 +249,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				
 				specimenDAO.update(entity);
 				
-				String cmd = "select count(*) from MGI_resetAgeMinMax ('GXD_Specimen'," + entity.get_assay_key() + ")";
+				String cmd = "select count(*) from MGI_resetAgeMinMax ('GXD_Specimen'," + entity.get_specimen_key() + ")";
 				log.info("cmd: " + cmd);
 				Query query = specimenDAO.createNativeQuery(cmd);
 				query.getResultList();

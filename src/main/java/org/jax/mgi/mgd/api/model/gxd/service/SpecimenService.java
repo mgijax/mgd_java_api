@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
@@ -183,6 +184,11 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 					}
 				}
 				
+				String cmd = "select count(*) from MGI_resetAgeMinMax ('GXD_Specimen'," + entity.get_assay_key() + ")";
+				log.info("cmd: " + cmd);
+				Query query = specimenDAO.createNativeQuery(cmd);
+				query.getResultList();
+				
 				modified = true;
 				log.info("processSpecimen/create processed: " + entity.get_specimen_key());					
 			}
@@ -242,6 +248,12 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				}
 				
 				specimenDAO.update(entity);
+				
+				String cmd = "select count(*) from MGI_resetAgeMinMax ('GXD_Specimen'," + entity.get_assay_key() + ")";
+				log.info("cmd: " + cmd);
+				Query query = specimenDAO.createNativeQuery(cmd);
+				query.getResultList();
+				
 				modified = true;
 				log.info("processSpecimen/changes processed: " + domain.get(i).getSpecimenKey());	
 			}

@@ -100,7 +100,7 @@ public class InSituResultStructureService extends BaseService<InSituResultStruct
 
 				InSituResultStructure entity = new InSituResultStructure();
 
-				entity.set_result_key(Integer.valueOf(domain.get(i).getResultKey()));
+				entity.set_result_key(parentKey);
 				entity.setEmapaTerm(termDAO.get(Integer.valueOf(domain.get(i).getEmapaTermKey())));
 				entity.setTheilerStage(theilerStageDAO.get(Integer.valueOf(domain.get(i).getTheilerStageKey())));				
 				entity.setCreation_date(new Date());				
@@ -122,7 +122,7 @@ public class InSituResultStructureService extends BaseService<InSituResultStruct
 
 				InSituResultStructure entity = insitustructureDAO.get(Integer.valueOf(domain.get(i).getResultStructureKey()));
 				
-				entity.set_result_key(Integer.valueOf(domain.get(i).getResultKey()));
+				entity.set_result_key(parentKey);
 				entity.setEmapaTerm(termDAO.get(Integer.valueOf(domain.get(i).getEmapaTermKey())));
 				entity.setTheilerStage(theilerStageDAO.get(Integer.valueOf(domain.get(i).getTheilerStageKey())));				
 				entity.setModification_date(new Date());

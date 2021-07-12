@@ -94,14 +94,14 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 		// for each row, determine whether to perform an insert, delete or update
 		
 		for (int i = 0; i < domain.size(); i++) {
-				
+			
+			// if specimenLabel is null/empty, then skip
+			// pwi has sent a "c" that is empty/not being used
+			if (domain.get(i).getSpecimenLabel() == null || domain.get(i).getSpecimenLabel().isEmpty()) {
+				continue;
+			}
+			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
-	
-				// if specimenLabel is null/empty, then skip
-				// pwi has sent a "c" that is empty/not being used
-				if (domain.get(i).getSpecimenLabel() == null || domain.get(i).getSpecimenLabel().isEmpty()) {
-					continue;
-				}
 				
 				log.info("processSpecimen create");
 
@@ -204,7 +204,6 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 
 				Specimen entity = specimenDAO.get(Integer.valueOf(domain.get(i).getSpecimenKey()));
 			
-				log.info("processSpecimen:A");
 				entity.set_assay_key(parentKey);
 				entity.setEmbeddingMethod(embeddingDAO.get(Integer.valueOf(domain.get(i).getEmbeddingKey())));
 				entity.setFixationMethod(fixationDAO.get(Integer.valueOf(domain.get(i).getFixationKey())));
@@ -214,8 +213,6 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				entity.setSex(domain.get(i).getSex());
 				entity.setHybridization(domain.get(i).getHybridization());
 				
-				log.info("processSpecimen:B");
-
 				String newAge;
 				if (domain.get(i).getAgeStage().isEmpty()) {
 					newAge = domain.get(i).getAgePrefix();
@@ -227,17 +224,13 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				entity.setAgeMin(Integer.valueOf(domain.get(i).getAgeMin()));
 				entity.setAgeMax(Integer.valueOf(domain.get(i).getAgeMax()));		
 
-				log.info("processSpecimen:C");
-
 				if (domain.get(i).getAgeNote() != null && !domain.get(i).getAgeNote().isEmpty()) {
 					entity.setAgeNote(domain.get(i).getAgeNote());
 				}
 				else {
 					entity.setAgeNote(null);					
 				}
-				
-				log.info("processSpecimen:D");
-				
+								
 				if (domain.get(i).getSpecimenNote() != null && !domain.get(i).getSpecimenNote().isEmpty()) {
 					entity.setSpecimenNote(domain.get(i).getSpecimenNote());
 				}
@@ -247,8 +240,6 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				
 				entity.setModification_date(new Date());
 
-				log.info("processSpecimen:F");
-
 				// process gxd_insituresult
 				if (domain.get(i).getSresults() != null && !domain.get(i).getSresults().isEmpty()) {
 					if (insituresultService.process(Integer.valueOf(domain.get(i).getSpecimenKey()), domain.get(i).getSresults(), user)) {
@@ -257,9 +248,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				}
 				
 				specimenDAO.update(entity);
-				
-				log.info("processSpecimen:G");
-				
+								
 				String cmd = "select count(*) from MGI_resetAgeMinMax ('GXD_Specimen'," + entity.get_specimen_key() + ")";
 				log.info("cmd: " + cmd);
 				Query query = specimenDAO.createNativeQuery(cmd);

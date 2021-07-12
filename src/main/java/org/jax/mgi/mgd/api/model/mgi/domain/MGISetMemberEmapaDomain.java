@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 public class MGISetMemberEmapaDomain extends BaseDomain {
 
+	private String processStatus = "x";
 	private String setKey;
 	private String setMemberKey;
 	private String objectKey;
@@ -16,6 +17,6 @@ public class MGISetMemberEmapaDomain extends BaseDomain {
 	private String stage;
 	private String createdByKey;
 	private String createdBy;	
-	private Boolean isUsedByRow = false;
+	private Boolean isUsed = false;
 
 }   	

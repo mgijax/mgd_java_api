@@ -14,6 +14,6 @@ public class GXDImagePaneDomain extends BaseDomain {
 	private String refsKey;
 	private String imagePaneKey;
 	private String figurepaneLabel;
-	private Boolean isUsedByRow = false;
+	private Boolean isUsed = false;
 
 }

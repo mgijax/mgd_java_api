@@ -207,7 +207,14 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				entity.setSex(domain.get(i).getSex());
 				entity.setHybridization(domain.get(i).getHybridization());
 				
-				entity.setAge(domain.get(i).getAge());
+				String newAge;
+				if (domain.get(i).getAgeStage().isEmpty()) {
+					newAge = domain.get(i).getAgePrefix();
+				} else {
+					newAge = domain.get(i).getAgePrefix() + " " + domain.get(i).getAgeStage();
+
+				}
+				entity.setAge(newAge);
 				entity.setAgeMin(Integer.valueOf(domain.get(i).getAgeMin()));
 				entity.setAgeMax(Integer.valueOf(domain.get(i).getAgeMax()));		
 

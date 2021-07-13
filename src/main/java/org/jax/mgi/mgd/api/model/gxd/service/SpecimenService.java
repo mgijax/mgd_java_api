@@ -148,11 +148,8 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 					entity.setHybridization(domain.get(i).getHybridization());
 				}
 				
-				String newAge;
-				if (domain.get(i).getAgePrefix().isEmpty()) {
-					newAge = "embryonic day";
-				}
-				else {
+				String newAge = null;
+				if (!domain.get(i).getAgePrefix().isEmpty()) {
 					newAge = domain.get(i).getAgePrefix();
 				}
 				if (!domain.get(i).getAgeStage().isEmpty()) {
@@ -216,11 +213,8 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				entity.setSex(domain.get(i).getSex());
 				entity.setHybridization(domain.get(i).getHybridization());
 				
-				String newAge;
-				if (domain.get(i).getAgePrefix().isEmpty()) {
-					newAge = "embryonic day";
-				}
-				else {
+				String newAge = null;
+				if (!domain.get(i).getAgePrefix().isEmpty()) {
 					newAge = domain.get(i).getAgePrefix();
 				}
 				if (!domain.get(i).getAgeStage().isEmpty()) {

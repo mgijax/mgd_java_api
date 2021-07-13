@@ -126,9 +126,9 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 					modified = structureService.process(entity.get_result_key(), domain.get(i).getStructures(), user);
 				}
 
-//				if (domain.get(i).getImagePanes() != null && !domain.get(i).getImagePanes().isEmpty()) {
-//					modified = imagePaneService.process(entity.get_result_key(), domain.get(i).getImagePanes(), user);
-//				}
+				if (domain.get(i).getImagePanes() != null && !domain.get(i).getImagePanes().isEmpty()) {
+					modified = imagePaneService.process(entity.get_result_key(), domain.get(i).getImagePanes(), user);
+				}
 				
 				modified = true;
 				log.info("processInSituResults/create processed: " + entity.get_result_key());					
@@ -156,9 +156,9 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 					modified = structureService.process(Integer.valueOf(domain.get(i).getResultKey()), domain.get(i).getStructures(), user);
 				}
 
-//				if (domain.get(i).getImagePanes() != null && !domain.get(i).getImagePanes().isEmpty()) {
-//					modified = imagePaneService.process(Integer.valueOf(domain.get(i).getResultKey()), domain.get(i).getImagePanes(), user);
-//				}
+				if (domain.get(i).getImagePanes() != null && !domain.get(i).getImagePanes().isEmpty()) {				
+					modified = imagePaneService.process(Integer.valueOf(domain.get(i).getResultKey()), domain.get(i).getImagePanes(), user);
+				}
 				
 				resultDAO.update(entity);
 				modified = true;

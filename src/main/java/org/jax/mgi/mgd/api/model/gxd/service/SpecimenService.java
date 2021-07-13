@@ -148,23 +148,25 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 					entity.setHybridization(domain.get(i).getHybridization());
 				}
 				
-				if (domain.get(i).getEmbeddingKey() == null || domain.get(i).getEmbeddingKey().isEmpty()) {
-					entity.setAge("embryonic day");
-					entity.setAgeMin(-1);
-					entity.setAgeMax(-1);
+				String newAge = null;
+				if (!domain.get(i).getAgePrefix().isEmpty() && domain.get(i).getAgeStage().isEmpty()) {
+					newAge = domain.get(i).getAgePrefix();
+				} else if (!domain.get(i).getAgePrefix().isEmpty()&& !domain.get(i).getAgeStage().isEmpty() ) {
+					newAge = domain.get(i).getAgePrefix() + " " + domain.get(i).getAgeStage();
 				}
 				else {
-					entity.setAge(domain.get(i).getAge());
-					entity.setAgeMin(-1);
-					entity.setAgeMax(-1);					
+					newAge = null;
 				}
-				
+				entity.setAge(newAge);
+				entity.setAgeMin(-1);
+				entity.setAgeMax(-1);		
+
 				if (domain.get(i).getAgeNote() != null && !domain.get(i).getAgeNote().isEmpty()) {
 					entity.setAgeNote(domain.get(i).getAgeNote());
 				}
 				else {
 					entity.setAgeNote(null);					
-				}
+				}	
 				
 				if (domain.get(i).getSpecimenNote() != null && !domain.get(i).getSpecimenNote().isEmpty()) {
 					entity.setSpecimenNote(domain.get(i).getSpecimenNote());
@@ -213,16 +215,18 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				entity.setSex(domain.get(i).getSex());
 				entity.setHybridization(domain.get(i).getHybridization());
 				
-				String newAge;
-				if (domain.get(i).getAgeStage().isEmpty()) {
+				String newAge = null;
+				if (!domain.get(i).getAgePrefix().isEmpty() && domain.get(i).getAgeStage().isEmpty()) {
 					newAge = domain.get(i).getAgePrefix();
-				} else {
+				} else if (!domain.get(i).getAgePrefix().isEmpty()&& !domain.get(i).getAgeStage().isEmpty() ) {
 					newAge = domain.get(i).getAgePrefix() + " " + domain.get(i).getAgeStage();
-
+				}
+				else {
+					newAge = null;
 				}
 				entity.setAge(newAge);
-				entity.setAgeMin(Integer.valueOf(domain.get(i).getAgeMin()));
-				entity.setAgeMax(Integer.valueOf(domain.get(i).getAgeMax()));		
+				entity.setAgeMin(-1);
+				entity.setAgeMax(-1);			
 
 				if (domain.get(i).getAgeNote() != null && !domain.get(i).getAgeNote().isEmpty()) {
 					entity.setAgeNote(domain.get(i).getAgeNote());

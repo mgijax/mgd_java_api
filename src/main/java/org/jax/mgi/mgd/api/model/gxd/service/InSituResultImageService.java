@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.InSituResultImageDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.InSituResultImageDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.InSituResultImageViewDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.InSituResultImage;
 import org.jax.mgi.mgd.api.model.gxd.translator.InSituResultImageTranslator;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
@@ -71,7 +72,7 @@ public class InSituResultImageService extends BaseService<InSituResultImageDomai
     }
 
 	@Transactional
-	public Boolean process(Integer parentKey, List<InSituResultImageDomain> domain, User user) {
+	public Boolean process(Integer parentKey, List<InSituResultImageViewDomain> domain, User user) {
 		// process in situ result image panes (create, delete, update)
 		
 		Boolean modified = false;

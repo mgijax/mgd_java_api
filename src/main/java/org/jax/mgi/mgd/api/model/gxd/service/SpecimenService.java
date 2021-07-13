@@ -149,13 +149,14 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				}
 				
 				String newAge;
-				if (!domain.get(i).getAgePrefix().isEmpty() && domain.get(i).getAgeStage().isEmpty()) {
-					newAge = domain.get(i).getAgePrefix();
-				} else if (!domain.get(i).getAgePrefix().isEmpty()&& !domain.get(i).getAgeStage().isEmpty() ) {
-					newAge = domain.get(i).getAgePrefix() + " " + domain.get(i).getAgeStage();
+				if (domain.get(i).getAgePrefix().isEmpty()) {
+					newAge = "embryonic day";
 				}
 				else {
-					newAge = "embryonic day";
+					newAge = domain.get(i).getAgePrefix();
+				}
+				if (!domain.get(i).getAgeStage().isEmpty()) {
+					newAge = newAge + " " + domain.get(i).getAgeStage();
 				}
 				entity.setAge(newAge);
 				entity.setAgeMin(-1);
@@ -215,18 +216,19 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				entity.setSex(domain.get(i).getSex());
 				entity.setHybridization(domain.get(i).getHybridization());
 				
-				String newAge = null;
-				if (!domain.get(i).getAgePrefix().isEmpty() && domain.get(i).getAgeStage().isEmpty()) {
-					newAge = domain.get(i).getAgePrefix();
-				} else if (!domain.get(i).getAgePrefix().isEmpty()&& !domain.get(i).getAgeStage().isEmpty() ) {
-					newAge = domain.get(i).getAgePrefix() + " " + domain.get(i).getAgeStage();
+				String newAge;
+				if (domain.get(i).getAgePrefix().isEmpty()) {
+					newAge = "embryonic day";
 				}
 				else {
-					newAge = null;
+					newAge = domain.get(i).getAgePrefix();
+				}
+				if (!domain.get(i).getAgeStage().isEmpty()) {
+					newAge = newAge + " " + domain.get(i).getAgeStage();
 				}
 				entity.setAge(newAge);
 				entity.setAgeMin(-1);
-				entity.setAgeMax(-1);			
+				entity.setAgeMax(-1);				
 
 				if (domain.get(i).getAgeNote() != null && !domain.get(i).getAgeNote().isEmpty()) {
 					entity.setAgeNote(domain.get(i).getAgeNote());

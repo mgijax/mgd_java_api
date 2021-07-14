@@ -193,7 +193,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				log.info("processSpecimen/create processed: " + entity.get_specimen_key());					
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-				log.info("processSpecimen delete");
+				log.info("processSpecimen delete");			
 				Specimen entity = specimenDAO.get(Integer.valueOf(domain.get(i).getSpecimenKey()));
 				specimenDAO.remove(entity);
 				modified = true;

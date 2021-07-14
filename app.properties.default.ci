@@ -13,6 +13,7 @@ swarm.ds.mrkLocationUtilities=/opt/python3.7/bin/python3 /usr/local/mgi/scrum-do
 swarm.ds.mrkrefByMarkerUtilities=/opt/python3.7/bin/python3 /usr/local/mgi/scrum-dog/dbutils/mrkcacheload/mrkrefByMarker.py
 swarm.ds.mrkrefByReferenceUtilities=/opt/python3.7/bin/python3 /usr/local/mgi/scrum-dog/dbutils/mrkcacheload/mrkrefByReference.py
 swarm.ds.mrkmcvUtilities=/opt/python3.7/bin/python3 /usr/local/mgi/scrum-dog/dbutils/mrkcacheload/mrkmcv.py
+swarm.ds.gxdexpressionUtilities=/opt/python3.7/bin/python3 /usr/local/mgi/scrum-dog/dbutils/mgicacheload/gxdexpression.py
 swarm.ds.gorefsUtilities=/opt/python3.7/bin/python3 /usr/local/mgi/scrum-dog/dbutils/pgdbutilities/bin/ei/GORefs.py
 swarm.ds.pixeldb=/data/pixeldb
 swarm.ds.pixeldbCounter=/data/pixeldb/accession/counter

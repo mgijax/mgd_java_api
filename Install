@@ -33,6 +33,7 @@ echo "swarm.ds.mrkLocationUtilities=${PYTHON} ${DBUTILS}/mrkcacheload/mrklocatio
 echo "swarm.ds.mrkrefByMarkerUtilities=${PYTHON} ${DBUTILS}/mrkcacheload/mrkrefByMarker.py" >> ${PROP_FILE}
 echo "swarm.ds.mrkrefByReferenceUtilities=${PYTHON} ${DBUTILS}/mrkcacheload/mrkrefByReference.py" >> ${PROP_FILE}
 echo "swarm.ds.mrkmcvUtilities=${PYTHON} ${DBUTILS}/mrkcacheload/mrkmcv.py" >> ${PROP_FILE}
+echo "swarm.ds.gxdexpressionUtilities=${PYTHON} ${DBUTILS}/mgicacheload/gxdexpression.py" >> ${PROP_FILE}
 echo "swarm.ds.gorefsUtilities=${PYTHON} ${DBUTILS}/pgdbutilities/bin/ei/GORefs.py" >> ${PROP_FILE}
 echo "swarm.ds.pixeldb=/data/pixeldb" >> ${PROP_FILE}
 echo "swarm.ds.pixeldbCounter=/data/pixeldb/accession/counter" >> ${PROP_FILE}

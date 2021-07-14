@@ -45,6 +45,16 @@ public class AssayController extends BaseController<AssayDomain> {
 	public SearchResults<AssayDomain> update(AssayDomain domain, User user) {
 		SearchResults<AssayDomain> results = new SearchResults<AssayDomain>();
 		results = assayService.update(domain, user);
+		
+		// to update the mgicacheload/gxdexpression table				
+		try {
+			log.info("processAssay/mrkmcvUtilities");
+			assayService.gxdexpressionUtilities(results.items.get(0).getAssayKey());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		results = assayService.getResults(Integer.valueOf(results.items.get(0).getAssayKey()));
 		return results;
 	}

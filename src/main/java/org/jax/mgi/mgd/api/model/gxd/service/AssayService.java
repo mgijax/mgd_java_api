@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.gxd.service;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,7 +29,9 @@ import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberGenotypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
+import org.jax.mgi.mgd.api.util.RunCommand;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -885,6 +888,46 @@ public class AssayService extends BaseService<AssayDomain> {
 		}
 		
 		return results;
+	}
+
+	@Transactional		
+	public Boolean gxdexpressionUtilities(String assayKey) throws IOException, InterruptedException {
+		// see mgicacheload/gxdexpression.py
+		
+		// these swarm variables are in 'app.properties'
+    	String utilitiesScript = System.getProperty("swarm.ds.gxdexpressionUtilities");
+    	String server = System.getProperty("swarm.ds.dbserver");
+        String db = System.getProperty("swarm.ds.dbname");
+        String username = System.getProperty("swarm.ds.username");
+        String pwd = System.getProperty("swarm.ds.dbpasswordfile");
+        
+        // input:  assayKey
+
+        // output: true/false
+        Boolean returnCode = false;
+        
+		String runCmd = utilitiesScript;
+        runCmd = runCmd + " -S" + server;
+        runCmd = runCmd + " -D" + db;
+        runCmd = runCmd + " -U" + username;
+        runCmd = runCmd + " -P" + pwd;             
+		runCmd = runCmd + " -K" + assayKey;
+		
+		// run the runCmd
+		log.info(Constants.LOG_INPROGRESS_EIUTILITIES + runCmd);
+		RunCommand runner = RunCommand.runCommand(runCmd);
+		
+		// check exit code from RunCommand
+		if (runner.getExitCode() == 0) {
+			log.info(Constants.LOG_SUCCESS_EIUTILITIES);
+			returnCode = true;
+		}
+		else {
+			log.info(Constants.LOG_FAIL_EIUTILITIES);
+			returnCode = false;
+		}			
+		
+		return returnCode;
 	}
 	
 }

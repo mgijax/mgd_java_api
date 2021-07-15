@@ -65,7 +65,7 @@ public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDoma
 			domain.setAssayTypeAbbrev("Recomb");
 		}
 		
-		domain.setAssayDisplay(entity.getReference().getReferenceCitationCache().getJnumid() + ";" + domain.getAssayTypeAbbrev() + ";" + entity.getMarker().getSymbol());	
+		domain.setAssayDisplay(entity.getReference().getReferenceCitationCache().getJnumid() + "; " + domain.getAssayTypeAbbrev() + "; " + entity.getMarker().getSymbol());	
 
 		domain.setAssayTypeKey(String.valueOf(entity.getAssayType().get_assaytype_key()));
 		domain.setAssayType(entity.getAssayType().getAssayType());

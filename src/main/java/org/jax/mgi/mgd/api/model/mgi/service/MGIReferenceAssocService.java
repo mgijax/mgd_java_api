@@ -312,6 +312,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 							+ "," + objectKey
 							+ "," + domain.get(i).getRefsKey()
 							+ "," + domain.get(i).getRefAssocTypeKey()
+							+ ",0," + domain.get(i).getJnum()
 							+ ")";
 				log.info("cmd: " + cmd);
 				Query query = referenceAssocDAO.createNativeQuery(cmd);
@@ -369,6 +370,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 			superDomain.setRefAssocType(domain.get(i).getRefAssocType());
 			superDomain.setRefAssocTypeKey(domain.get(i).getRefAssocTypeKey());
 			superDomain.setRefsKey(domain.get(i).getRefsKey());
+			superDomain.setJnum(domain.get(i).getJnum());						
 			listOfSuperDomains.add(superDomain);
 		}
 		
@@ -397,6 +399,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 			superDomain.setRefAssocType(domain.get(i).getRefAssocType());
 			superDomain.setRefAssocTypeKey(domain.get(i).getRefAssocTypeKey());
 			superDomain.setRefsKey(domain.get(i).getRefsKey());
+			superDomain.setJnum(domain.get(i).getJnum());			
 			listOfSuperDomains.add(superDomain);
 		}
 		
@@ -405,7 +408,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 
 	@Transactional
 	public Boolean processMarkerAssoc(List<MGIReferenceMarkerAssocDomain> domain, User user) {
-		// process reference/strain associations (create, delete, update)
+		// process reference/marker associations (create, delete, update)
 		// from sub-class (Marker), build super-class and pass to "process()"
 		
 		if (domain == null || domain.isEmpty()) {
@@ -425,6 +428,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 			superDomain.setRefAssocType(domain.get(i).getRefAssocType());
 			superDomain.setRefAssocTypeKey(domain.get(i).getRefAssocTypeKey());
 			superDomain.setRefsKey(domain.get(i).getRefsKey());
+			superDomain.setJnum(domain.get(i).getJnum());
 			listOfSuperDomains.add(superDomain);
 		}
 		

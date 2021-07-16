@@ -468,6 +468,11 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 				where = where + "\nand acc2.accID ilike '" + value + "'";
 				from_otheraccids = true;
 			}
+			value = searchDomain.getOtherAccIds().get(0).getIsPrivate();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand acc2.private = " + value;
+				from_otheraccids = true;
+			}			
 		}	
 		
 		if (searchDomain.getAttributes() != null) {		

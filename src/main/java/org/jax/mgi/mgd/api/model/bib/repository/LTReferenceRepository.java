@@ -925,6 +925,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 					try {
 						log.info("Assigning new J: number");
 						referenceDAO.assignNewJnumID(String.valueOf(entity.get_refs_key()), currentUser.get_user_key());
+						domain.setJnumid(entity.getJnumid());
 						log.info(" - finished");
 					} catch (Exception e) {
 						log.info("Caught exception: " + e.toString());

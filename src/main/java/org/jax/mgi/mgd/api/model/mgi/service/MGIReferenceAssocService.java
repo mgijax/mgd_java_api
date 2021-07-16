@@ -260,7 +260,6 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		}
 				
 		String cmd = "";
-		//String hasJnum = "";
 		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
@@ -305,15 +304,6 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 						domain.get(i).setRefAssocTypeKey("1009");
 					}
 				}
-				
-				// needed for store procedure
-//				if (domain.get(i).getJnumid() == null || domain.get(i).getJnumid().isEmpty()) {
-//					hasJnum = "0";
-//				}
-//				else {
-//					hasJnum = "1";
-//				}
-//				+ ",0," + hasJnum
 
 				// select count(*) from MGI_insertReferenceAssoc (1014,6,0,275403,1027)
 				cmd = "select count(*) from MGI_insertReferenceAssoc ("

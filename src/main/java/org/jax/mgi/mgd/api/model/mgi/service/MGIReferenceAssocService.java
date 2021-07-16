@@ -260,6 +260,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 		}
 				
 		String cmd = "";
+		//String hasJnum = "";
 		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
@@ -305,6 +306,15 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 					}
 				}
 				
+				// needed for store procedure
+//				if (domain.get(i).getJnumid() == null || domain.get(i).getJnumid().isEmpty()) {
+//					hasJnum = "0";
+//				}
+//				else {
+//					hasJnum = "1";
+//				}
+//				+ ",0," + hasJnum
+
 				// select count(*) from MGI_insertReferenceAssoc (1014,6,0,275403,1027)
 				cmd = "select count(*) from MGI_insertReferenceAssoc ("
 							+ user.get_user_key().intValue()
@@ -369,6 +379,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 			superDomain.setRefAssocType(domain.get(i).getRefAssocType());
 			superDomain.setRefAssocTypeKey(domain.get(i).getRefAssocTypeKey());
 			superDomain.setRefsKey(domain.get(i).getRefsKey());
+			superDomain.setJnumid(domain.get(i).getJnumid());						
 			listOfSuperDomains.add(superDomain);
 		}
 		
@@ -397,6 +408,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 			superDomain.setRefAssocType(domain.get(i).getRefAssocType());
 			superDomain.setRefAssocTypeKey(domain.get(i).getRefAssocTypeKey());
 			superDomain.setRefsKey(domain.get(i).getRefsKey());
+			superDomain.setJnumid(domain.get(i).getJnumid());			
 			listOfSuperDomains.add(superDomain);
 		}
 		
@@ -405,7 +417,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 
 	@Transactional
 	public Boolean processMarkerAssoc(List<MGIReferenceMarkerAssocDomain> domain, User user) {
-		// process reference/strain associations (create, delete, update)
+		// process reference/marker associations (create, delete, update)
 		// from sub-class (Marker), build super-class and pass to "process()"
 		
 		if (domain == null || domain.isEmpty()) {
@@ -425,6 +437,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 			superDomain.setRefAssocType(domain.get(i).getRefAssocType());
 			superDomain.setRefAssocTypeKey(domain.get(i).getRefAssocTypeKey());
 			superDomain.setRefsKey(domain.get(i).getRefsKey());
+			superDomain.setJnumid(domain.get(i).getJnumid());
 			listOfSuperDomains.add(superDomain);
 		}
 		

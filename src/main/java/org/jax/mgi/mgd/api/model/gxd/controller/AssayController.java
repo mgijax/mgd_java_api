@@ -40,7 +40,7 @@ public class AssayController extends BaseController<AssayDomain> {
 		
 		// to update the mgicacheload/gxdexpression table				
 		try {
-			log.info("processAssay/mrkmcvUtilities");
+			log.info("processAssay/gxdexpressionUtilities");
 			assayService.gxdexpressionUtilities(results.items.get(0).getAssayKey());
 		}
 		catch (Exception e) {
@@ -58,7 +58,7 @@ public class AssayController extends BaseController<AssayDomain> {
 		
 		// to update the mgicacheload/gxdexpression table				
 		try {
-			log.info("processAssay/mrkmcvUtilities");
+			log.info("processAssay/gxdexpressionUtilities");
 			assayService.gxdexpressionUtilities(results.items.get(0).getAssayKey());
 		}
 		catch (Exception e) {

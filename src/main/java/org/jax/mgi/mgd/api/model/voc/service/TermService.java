@@ -409,7 +409,6 @@ public class TermService extends BaseService<TermDomain> {
 		return results;
 	}
 	
-	
 	@Transactional
 	public SearchResults<SlimTermDomain> validWorkflowStatus(String status) {
 		// verify that the work flow status is valid

@@ -73,10 +73,10 @@ public class AssayService extends BaseService<AssayDomain> {
 	private AssayNoteService assayNoteService;
 	@Inject
 	private SpecimenService specimenService;
-	@Inject
-	private GelLaneService gelLaneService;
-	@Inject
-	private GelRowService gelRowService;
+//	@Inject
+//	private GelLaneService gelLaneService;
+//	@Inject
+//	private GelRowService gelRowService;
 	@Inject
 	private AntibodyPrepService antibodyPrepService;
 	@Inject
@@ -99,33 +99,54 @@ public class AssayService extends BaseService<AssayDomain> {
 		SearchResults<AssayDomain> results = new SearchResults<AssayDomain>();
 		Assay entity = new Assay();
 		Boolean modified = false;
-		
+		String cmd;
+		Query query;
 		log.info("processAssay/create");
 
 		entity.setAssayType(assayTypeDAO.get(Integer.valueOf(domain.getAssayTypeKey())));	
 		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));	
 		entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));
-		
-//		if (antibodyPrepService.process(entity.get_assay_key(), domain.getAntibodyPrep(), user)) {
-//			modified = true;
-//		}
-//
-//		if (probePrepService.process(entity.get_assay_key(), domain.getProbePrep(), user)) {
-//			modified = true;
-//		}
-		
-		if (domain.getImagePaneKey() != null) {
+				
+		if (domain.getDetectionKey().equals("2")) {
+			Integer antibodyPrepKey = antibodyPrepService.process(entity.get_assay_key(), domain.getAntibodyPrep(), user);
+			if (antibodyPrepKey > 1) {
+				entity.setAntibodyPrep(antibodyPrepDAO.get(antibodyPrepKey));
+				modified = true;
+			}
+			else if (antibodyPrepKey == 1) {
+				modified = true;
+			}
+			entity.setProbePrep(null);			
+		}
+		else if (domain.getDetectionKey().equals("1")) {
+			Integer probePrepKey = probePrepService.process(entity.get_assay_key(), domain.getProbePrep(), user);
+			if (probePrepKey > 1) {
+				entity.setProbePrep(probePrepDAO.get(probePrepKey));
+				modified = true;
+			}
+			else if (probePrepKey == 1) {
+				modified = true;
+			}
+			entity.setAntibodyPrep(null);
+		}
+		else {
+			entity.setAntibodyPrep(null);
+			entity.setProbePrep(null);
+			modified = true;
+		}
+				
+		if (domain.getImagePaneKey() != null && !domain.getImagePaneKey().isEmpty()) {
 			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePaneKey())));		
 		}
 		else {
 			entity.setImagePane(null);
 		}
-
-		if (domain.getReporterGeneKey() != null) {
+			
+		if (domain.getReporterGeneKey() != null && !domain.getReporterGeneKey().isEmpty()) {
 			entity.setReporterGene(termDAO.get(Integer.valueOf(domain.getReporterGeneKey())));		
 		}
 		else {
-			entity.setReference(null);
+			entity.setReporterGene(null);
 		}
 		
 		entity.setCreatedBy(user);
@@ -135,14 +156,14 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		// execute persist/insert/send to database
 		assayDAO.persist(entity);
-		
+
 		// process gxd_assaynote
 		if (domain.getAssayNote() != null) {
 			if (assayNoteService.process(entity.get_assay_key(), domain.getAssayNote(), user)) {
 				modified = true;
 			}
 		}
-
+				
 		// process gxd_specimen		
 		// if assaytype in Specimen Assay Type
 		if (domain.getSpecimens() != null && !domain.getSpecimens().isEmpty()) {
@@ -151,21 +172,27 @@ public class AssayService extends BaseService<AssayDomain> {
 			}
 		}
 		
-		// process gxd_gellane
-		// if assaytype in Gel Assay Type
-		if (domain.getGelLanes() != null && !domain.getGelLanes().isEmpty()) {
-			if (gelLaneService.process(entity.get_assay_key(), domain.getGelLanes(), user)) {
-				modified = true;
-			}
-		}
+//		// process gxd_gellane
+//		// if assaytype in Gel Assay Type
+//		if (domain.getGelLanes() != null && !domain.getGelLanes().isEmpty()) {
+//			if (gelLaneService.process(entity.get_assay_key(), domain.getGelLanes(), user)) {
+//				modified = true;
+//			}
+//		}
+//
+//		// process gxd_gelrow
+//		// if assaytype in Gel Assay Type
+//		if (domain.getGelRows() != null && !domain.getGelRows().isEmpty()) {
+//			if (gelRowService.process(entity.get_assay_key(), domain.getGelRows(), user)) {
+//				modified = true;
+//			}
+//		}
 
-		// process gxd_gelrow
-		// if assaytype in Gel Assay Type
-		if (domain.getGelRows() != null && !domain.getGelRows().isEmpty()) {
-			if (gelRowService.process(entity.get_assay_key(), domain.getGelRows(), user)) {
-				modified = true;
-			}
-		}
+		// process order reset
+		cmd = "select count(*) from MGI_resetSequenceNum ('GXD_Specimen'," + entity.get_assay_key() + "," + user.get_user_key() + ")";
+		log.info("processAssay/process order reset: " + cmd);
+		query = assayDAO.createNativeQuery(cmd);
+		query.getResultList();
 		
 		// return entity translated to domain
 		log.info("processAssay/create/returning results : " + modified);

@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.gxd.service;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +19,7 @@ import org.jax.mgi.mgd.api.model.gxd.dao.AssayDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AssayTypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.ProbePrepDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.DeleteAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
@@ -948,6 +950,31 @@ public class AssayService extends BaseService<AssayDomain> {
 		}			
 		
 		return returnCode;
+	}
+
+	@Transactional
+	public SearchResults<AssayDomain> duplicateAssay(DeleteAssayDomain domain, User user) {
+		// duplicate assay
+				
+		SearchResults<AssayDomain> results = new SearchResults<AssayDomain>();
+		String cmd;
+		Query query;
+		
+		log.info("duplicateAssay");
+
+		cmd = "select count(*) from GXD_duplicateAssay (" + user.get_user_key() + "," + domain.getAssayKey() + "," + domain.getDeleteType() + ")";
+		log.info("duplicateAssay/GXD_duplicateAssay: " + cmd);
+		
+		// stored procedure returns new assay key
+		query = assayDAO.createNativeQuery(cmd);
+		BigInteger newAssayKey = (BigInteger) query.getSingleResult();
+		Assay entity = assayDAO.get(newAssayKey.intValue());
+				
+		// return entity translated to domain
+		log.info("duplicateAssay/returning results");
+		results.setItem(translator.translate(entity));
+		log.info("duplicateAssay/returned results succsssful");
+		return results;		
 	}
 	
 }

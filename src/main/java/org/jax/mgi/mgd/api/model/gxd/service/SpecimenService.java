@@ -107,7 +107,9 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 
 				Specimen entity = new Specimen();
 
-				entity.set_assay_key(Integer.valueOf(domain.get(i).getAssayKey()));
+				log.info("processSpecimen/embedding");
+				log.info("processSpecimen/embedding: " + parentKey);
+				entity.set_assay_key(parentKey);
 				entity.setSequenceNum(domain.get(i).getSequenceNum());				
 				entity.setSpecimenLabel(domain.get(i).getSpecimenLabel());
 				

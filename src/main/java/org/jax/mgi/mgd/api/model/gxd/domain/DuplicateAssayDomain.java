@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class DeleteAssayDomain extends BaseDomain {
+public class DuplicateAssayDomain extends BaseDomain {
 
 	// 1 = All
 	// 2 = Patrial

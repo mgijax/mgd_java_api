@@ -19,7 +19,7 @@ import org.jax.mgi.mgd.api.model.gxd.dao.AssayDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AssayTypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.ProbePrepDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.DeleteAssayDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.DuplicateAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
@@ -953,7 +953,7 @@ public class AssayService extends BaseService<AssayDomain> {
 	}
 
 	@Transactional
-	public SearchResults<AssayDomain> duplicateAssay(DeleteAssayDomain domain, User user) {
+	public SearchResults<AssayDomain> duplicateAssay(DuplicateAssayDomain domain, User user) {
 		// duplicate assay
 				
 		SearchResults<AssayDomain> results = new SearchResults<AssayDomain>();

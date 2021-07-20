@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.DeleteAssayDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.DuplicateAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.AssayService;
@@ -138,7 +138,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	@POST
 	@ApiOperation(value = "Duplicate Assay")
 	@Path("/duplicateAssay")
-	public SearchResults<AssayDomain> duplicateAssay(DeleteAssayDomain domain, User user) {
+	public SearchResults<AssayDomain> duplicateAssay(DuplicateAssayDomain domain, User user) {
 		SearchResults<AssayDomain> results = new SearchResults<AssayDomain>();
 		results = assayService.duplicateAssay(domain, user);
 		

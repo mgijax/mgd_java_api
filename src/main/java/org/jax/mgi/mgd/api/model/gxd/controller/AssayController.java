@@ -138,9 +138,9 @@ public class AssayController extends BaseController<AssayDomain> {
 	@POST
 	@ApiOperation(value = "Duplicate Assay")
 	@Path("/duplicateAssay")
-	public SearchResults<AssayDomain> duplicateAssay(DuplicateAssayDomain domain, User user) {
+	public SearchResults<AssayDomain> duplicateAssay(DuplicateAssayDomain domain) {
 		SearchResults<AssayDomain> results = new SearchResults<AssayDomain>();
-		results = assayService.duplicateAssay(domain, user);
+		results = assayService.duplicateAssay(domain);
 		
 		// to update the mgicacheload/gxdexpression table				
 //		try {

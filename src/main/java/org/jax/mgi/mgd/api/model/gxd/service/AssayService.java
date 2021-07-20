@@ -953,7 +953,7 @@ public class AssayService extends BaseService<AssayDomain> {
 	}
 
 	@Transactional
-	public SearchResults<AssayDomain> duplicateAssay(DuplicateAssayDomain domain, User user) {
+	public SearchResults<AssayDomain> duplicateAssay(DuplicateAssayDomain domain) {
 		// duplicate assay
 				
 		SearchResults<AssayDomain> results = new SearchResults<AssayDomain>();
@@ -962,7 +962,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		log.info("duplicateAssay");
 
-		cmd = "select count(*) from GXD_duplicateAssay (" + user.get_user_key() + "," + domain.getAssayKey() + "," + domain.getDeleteType() + ")";
+		cmd = "select count(*) from GXD_duplicateAssay (" + domain.getCreatedByKey() + "," + domain.getAssayKey() + "," + domain.getDuplicateType() + ")";
 		log.info("duplicateAssay/GXD_duplicateAssay: " + cmd);
 		
 		// stored procedure returns new assay key

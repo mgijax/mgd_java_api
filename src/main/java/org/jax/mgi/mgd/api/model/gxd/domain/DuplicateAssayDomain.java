@@ -11,6 +11,7 @@ public class DuplicateAssayDomain extends BaseDomain {
 	// 1 = All
 	// 2 = Patrial
 	// 3 = Prep
-	private String deleteType;	
+	private String duplicateType;	
 	private String assayKey;
+	private String createdByKey;
 }

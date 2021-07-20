@@ -113,6 +113,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				
 				//defaults
 				
+				log.info("processSpecimen/embedding");
 				if (domain.get(i).getEmbeddingKey() == null || domain.get(i).getEmbeddingKey().isEmpty()) {
 					entity.setEmbeddingMethod(embeddingDAO.get(-1));
 				}
@@ -120,6 +121,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 					entity.setEmbeddingMethod(embeddingDAO.get(Integer.valueOf(domain.get(i).getEmbeddingKey())));
 				}
 
+				log.info("processSpecimen/fixation");			
 				if (domain.get(i).getFixationKey() == null || domain.get(i).getFixationKey().isEmpty()) {
 					entity.setFixationMethod(fixationDAO.get(-1));
 				}
@@ -127,13 +129,15 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 					entity.setFixationMethod(fixationDAO.get(Integer.valueOf(domain.get(i).getFixationKey())));
 				}
 				
+				log.info("processSpecimen/genotype");							
 				if (domain.get(i).getGenotypeKey() == null || domain.get(i).getGenotypeKey().isEmpty()) {
 					entity.setGenotype(genotypeDAO.get(-1));
 				}
 				else {
 					entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));
 				}
-							
+				
+				log.info("processSpecimen/sex");											
 				if (domain.get(i).getSex() == null || domain.get(i).getSex().isEmpty()) {
 					entity.setSex("Not Specified");
 				}
@@ -141,6 +145,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 					entity.setSex(domain.get(i).getSex());
 				}
 				
+				log.info("processSpecimen/hybridization");														
 				if (domain.get(i).getHybridization() == null || domain.get(i).getHybridization().isEmpty()) {
 					entity.setHybridization("Not Specified");
 				}
@@ -148,6 +153,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 					entity.setHybridization(domain.get(i).getHybridization());
 				}
 				
+				log.info("processSpecimen/age");																		
 				String newAge = null;
 				if (!domain.get(i).getAgePrefix().isEmpty()) {
 					newAge = domain.get(i).getAgePrefix();
@@ -159,6 +165,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				entity.setAgeMin(-1);
 				entity.setAgeMax(-1);		
 
+				log.info("processSpecimen/agenote");																						
 				if (domain.get(i).getAgeNote() != null && !domain.get(i).getAgeNote().isEmpty()) {
 					entity.setAgeNote(domain.get(i).getAgeNote());
 				}
@@ -166,6 +173,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 					entity.setAgeNote(null);					
 				}	
 				
+				log.info("processSpecimen/specimannote");																						
 				if (domain.get(i).getSpecimenNote() != null && !domain.get(i).getSpecimenNote().isEmpty()) {
 					entity.setSpecimenNote(domain.get(i).getSpecimenNote());
 				}
@@ -178,12 +186,14 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				specimenDAO.persist(entity);
 				
 				// process gxd_insituresult
+				log.info("processSpecimen/insitu results");																		
 				if (domain.get(i).getSresults() != null && !domain.get(i).getSresults().isEmpty()) {
 					if (insituresultService.process(entity.get_specimen_key(), domain.get(i).getSresults(), user)) {
 						modified = true;
 					}
 				}
 				
+				log.info("processSpecimen/MGI_resetAgeMinMax");																						
 				String cmd = "select count(*) from MGI_resetAgeMinMax ('GXD_Specimen'," + entity.get_specimen_key() + ")";
 				log.info("cmd: " + cmd);
 				Query query = specimenDAO.createNativeQuery(cmd);

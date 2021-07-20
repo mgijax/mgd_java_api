@@ -99,8 +99,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		SearchResults<AssayDomain> results = new SearchResults<AssayDomain>();
 		Assay entity = new Assay();
 		Boolean modified = false;
-		String cmd;
-		Query query;
+
 		log.info("processAssay/create");
 
 		entity.setAssayType(assayTypeDAO.get(Integer.valueOf(domain.getAssayTypeKey())));	
@@ -187,12 +186,6 @@ public class AssayService extends BaseService<AssayDomain> {
 //				modified = true;
 //			}
 //		}
-
-		// process order reset
-		cmd = "select count(*) from MGI_resetSequenceNum ('GXD_Specimen'," + entity.get_assay_key() + "," + user.get_user_key() + ")";
-		log.info("processAssay/process order reset: " + cmd);
-		query = assayDAO.createNativeQuery(cmd);
-		query.getResultList();
 		
 		// return entity translated to domain
 		log.info("processAssay/create/returning results : " + modified);

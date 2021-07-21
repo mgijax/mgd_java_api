@@ -13,7 +13,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.DuplicateAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.AssayService;
@@ -132,26 +131,6 @@ public class AssayController extends BaseController<AssayDomain> {
 			e.printStackTrace();
 		}
 		
-		return results;
-	}
-
-	@POST
-	@ApiOperation(value = "Duplicate Assay")
-	@Path("/duplicateAssay")
-	public SearchResults<AssayDomain> duplicateAssay(DuplicateAssayDomain domain) {
-		SearchResults<AssayDomain> results = new SearchResults<AssayDomain>();
-		results = assayService.duplicateAssay(domain);
-		
-		// to update the mgicacheload/gxdexpression table				
-//		try {
-//			log.info("processAssay/gxdexpressionUtilities");
-//			assayService.gxdexpressionUtilities(results.items.get(0).getAssayKey());
-//		}
-//		catch (Exception e) {
-//			e.printStackTrace();
-//		}
-				
-		results = assayService.getResults(Integer.valueOf(results.items.get(0).getAssayKey()));
 		return results;
 	}
 	

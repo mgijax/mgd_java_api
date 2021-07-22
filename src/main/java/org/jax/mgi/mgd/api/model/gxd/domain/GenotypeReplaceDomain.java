@@ -12,6 +12,7 @@ public class GenotypeReplaceDomain extends BaseDomain {
 	
 	private String createdBy;
 	private String refsKey;
+	private Integer jnum;
 	private String jnumid;
 	private String short_citation;	
     private String currentKey;

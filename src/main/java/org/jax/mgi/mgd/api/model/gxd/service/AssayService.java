@@ -957,7 +957,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		SearchResults<GenotypeReplaceDomain> results = new SearchResults<GenotypeReplaceDomain>();
 		
-	    String cmd = "select count(*) from GXD_replaceGenotype(" + domain.getCreatedBy() + "," 
+	    String cmd = "select count(*) from GXD_replaceGenotype('" + domain.getCreatedBy() + "'," 
 	    			+ domain.getRefsKey() + "," 
 	    			+ domain.getCurrentKey() + "," 
 	    			+ domain.getNewKey() + ")";

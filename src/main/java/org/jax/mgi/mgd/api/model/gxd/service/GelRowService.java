@@ -85,20 +85,20 @@ public class GelRowService extends BaseService<GelRowDomain> {
 		// for each row, determine whether to perform an insert, delete or update
 		
 		for (int i = 0; i < domain.size(); i++) {
-				
+			
+			// if gel row is null/empty, then skip
+			// pwi has sent a "c" that is empty/not being used
+			if (domain.get(i).getGelUnits() == null || domain.get(i).getGelUnits().isEmpty()) {
+				continue;
+			}
+			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
-	
-				// if gel row is null/empty, then skip
-				// pwi has sent a "c" that is empty/not being used
-				if (domain.get(i).getGelUnits() == null || domain.get(i).getGelUnits().isEmpty()) {
-					continue;
-				}
-				
+
 				log.info("processGelRow create");
 
 				GelRow entity = new GelRow();
 
-				entity.set_assay_key(Integer.valueOf(domain.get(i).getAssayKey()));
+				entity.set_assay_key(parentKey);
 				entity.setGelUnits(gelUnitDAO.get(Integer.valueOf(domain.get(i).getGelUnitsKey())));
 				entity.setSequenceNum(domain.get(i).getSequenceNum());
 				entity.setSize(domain.get(i).getSize());
@@ -129,7 +129,7 @@ public class GelRowService extends BaseService<GelRowDomain> {
 
 				GelRow entity = gelRowDAO.get(Integer.valueOf(domain.get(i).getGelRowKey()));
 			
-				entity.set_assay_key(Integer.valueOf(domain.get(i).getAssayKey()));
+				entity.set_assay_key(parentKey);
 				entity.setGelUnits(gelUnitDAO.get(Integer.valueOf(domain.get(i).getGelUnitsKey())));
 				entity.setSequenceNum(domain.get(i).getSequenceNum());
 				entity.setSize(domain.get(i).getSize());

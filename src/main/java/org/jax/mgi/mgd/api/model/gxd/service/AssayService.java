@@ -18,6 +18,7 @@ import org.jax.mgi.mgd.api.model.gxd.dao.AssayDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AssayTypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.ProbePrepDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeReplaceDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
@@ -948,6 +949,25 @@ public class AssayService extends BaseService<AssayDomain> {
 		}			
 		
 		return returnCode;
+	}
+
+	@Transactional
+	public SearchResults<GenotypeReplaceDomain> processReplaceGenotype(GenotypeReplaceDomain domain) {
+		// select * from GXD_replaceGenotype (userKey, refsKey, currentGenotypeKey, newGenotypeKey)
+		
+		SearchResults<GenotypeReplaceDomain> results = new SearchResults<GenotypeReplaceDomain>();
+		
+	    String cmd = "select count(*) from GXD_replaceGenotype(" + domain.getCreatedBy() + "," 
+	    			+ domain.getRefsKey() + "," 
+	    			+ domain.getCurrentKey() + "," 
+	    			+ domain.getNewKey() + ")";
+	    Query query;
+		
+	    log.info(cmd);
+	    query = assayDAO.createNativeQuery(cmd);
+	    query.getResultList();
+		
+		return results;
 	}
 	
 }

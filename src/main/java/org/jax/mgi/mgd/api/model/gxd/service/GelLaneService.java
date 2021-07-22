@@ -94,20 +94,20 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 		// for each row, determine whether to perform an insert, delete or update
 		
 		for (int i = 0; i < domain.size(); i++) {
-				
+
+			// if gel lane is null/empty, then skip
+			// pwi has sent a "c" that is empty/not being used
+			if (domain.get(i).getLaneLabel() == null || domain.get(i).getLaneLabel().isEmpty()) {
+				continue;
+			}
+			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 	
-				// if gel lane is null/empty, then skip
-				// pwi has sent a "c" that is empty/not being used
-				if (domain.get(i).getLaneLabel() == null || domain.get(i).getLaneLabel().isEmpty()) {
-					continue;
-				}
-				
 				log.info("processGelLane create");
 
 				GelLane entity = new GelLane();
 
-				entity.set_assay_key(Integer.valueOf(domain.get(i).getAssayKey()));
+				entity.set_assay_key(parentKey);
 				entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));
 				entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
 				entity.setGelControl(gelControlDAO.get(Integer.valueOf(domain.get(i).getGelControlKey())));
@@ -139,7 +139,7 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				gelLaneDAO.persist(entity);
 				
 				// process gxd_gelbands
-				if (domain.get(i).getGelBands() != null && !domain.get(i).getGelBands().isEmpty()) {
+				if (domain.get(i).getGelBands() != null && !domain.get(i).getGelBands().isEmpty()) {					
 					if (gelBandService.process(entity.get_gellane_key(), domain.get(i).getGelBands(), user)) {
 						modified = true;
 					}

@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeReplaceDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.AssayService;
@@ -133,5 +134,20 @@ public class AssayController extends BaseController<AssayDomain> {
 		
 		return results;
 	}
+
+	@POST
+	@ApiOperation(value = "Process Replace Genotype/returns GenotypeReplaceDomain")
+	@Path("/processReplaceGenotype")
+	public SearchResults<GenotypeReplaceDomain> processReplaceGenotype(GenotypeReplaceDomain domain) {
 	
+		SearchResults<GenotypeReplaceDomain> results = new SearchResults<GenotypeReplaceDomain>();
+
+		try {
+			results = assayService.processReplaceGenotype(domain);
+		} catch (Exception e) {
+			e.printStackTrace();				
+		}
+		
+		return results;
+	}
 }

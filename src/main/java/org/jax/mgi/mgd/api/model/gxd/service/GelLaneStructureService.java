@@ -88,20 +88,20 @@ public class GelLaneStructureService extends BaseService<GelLaneStructureDomain>
 		// for each row, determine whether to perform an insert, delete or update
 		
 		for (int i = 0; i < domain.size(); i++) {
-				
+
+			// if result is null/empty, then skip
+			// pwi has sent a "c" that is empty/not being used
+			if (domain.get(i).getEmapaTerm() == null || domain.get(i).getEmapaTerm().isEmpty()) {
+				continue;
+			}
+			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
-	
-				// if result is null/empty, then skip
-				// pwi has sent a "c" that is empty/not being used
-				if (domain.get(i).getEmapaTerm() == null || domain.get(i).getEmapaTerm().isEmpty()) {
-					continue;
-				}
-				
+			
 				log.info("processGelLaneStructures create");
 
 				GelLaneStructure entity = new GelLaneStructure();
 
-				entity.set_gellane_key(Integer.valueOf(domain.get(i).getGelLaneKey()));
+				entity.set_gellane_key(parentKey);
 				entity.setEmapaTerm(termDAO.get(Integer.valueOf(domain.get(i).getEmapaTermKey())));
 				entity.setTheilerStage(theilerStageDAO.get(Integer.valueOf(domain.get(i).getTheilerStageKey())));				
 				entity.setCreation_date(new Date());				
@@ -123,7 +123,7 @@ public class GelLaneStructureService extends BaseService<GelLaneStructureDomain>
 
 				GelLaneStructure entity = gelLaneStructureDAO.get(Integer.valueOf(domain.get(i).getGelLaneStructureKey()));
 				
-				entity.set_gellane_key(Integer.valueOf(domain.get(i).getGelLaneKey()));
+				entity.set_gellane_key(parentKey);
 				entity.setEmapaTerm(termDAO.get(Integer.valueOf(domain.get(i).getEmapaTermKey())));
 				entity.setTheilerStage(theilerStageDAO.get(Integer.valueOf(domain.get(i).getTheilerStageKey())));				
 				entity.setModification_date(new Date());

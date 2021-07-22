@@ -29,7 +29,7 @@ public class GelBandService extends BaseService<GelBandDomain> {
 	@Inject
 	private GelRowDAO gelRowDAO;
 	@Inject
-	private StrengthDAO gelStrengthDAO;
+	private StrengthDAO gelStrengthDAO;	
 	
 	private GelBandTranslator translator = new GelBandTranslator();				
 
@@ -88,20 +88,20 @@ public class GelBandService extends BaseService<GelBandDomain> {
 		// for each row, determine whether to perform an insert, delete or update
 		
 		for (int i = 0; i < domain.size(); i++) {
-				
+			
+			// if gel band is null/empty, then skip
+			// pwi has sent a "c" that is empty/not being used
+			if (domain.get(i).getStrengthKey() == null || domain.get(i).getStrengthKey().isEmpty()) {
+				continue;
+			}
+			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
-	
-				// if gel band is null/empty, then skip
-				// pwi has sent a "c" that is empty/not being used
-				if (domain.get(i).getStrengthKey() == null || domain.get(i).getStrengthKey().isEmpty()) {
-					continue;
-				}
-				
+
 				log.info("processGelBand create");
 
 				GelBand entity = new GelBand();
 
-				entity.set_gellane_key(Integer.valueOf(domain.get(i).getGelLaneKey()));
+				entity.set_gellane_key(parentKey);
 				entity.setStrength(gelStrengthDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
 				entity.setGelRow(gelRowDAO.get(Integer.valueOf(domain.get(i).getGelRowKey())));
 				
@@ -130,8 +130,8 @@ public class GelBandService extends BaseService<GelBandDomain> {
 				log.info("processGelBand update");
 
 				GelBand entity = gelBandDAO.get(Integer.valueOf(domain.get(i).getGelBandKey()));
-			
-				entity.set_gellane_key(Integer.valueOf(domain.get(i).getGelLaneKey()));
+				
+				entity.set_gellane_key(parentKey);
 				entity.setStrength(gelStrengthDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
 				entity.setGelRow(gelRowDAO.get(Integer.valueOf(domain.get(i).getGelRowKey())));
 				

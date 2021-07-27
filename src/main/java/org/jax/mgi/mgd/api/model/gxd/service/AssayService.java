@@ -959,7 +959,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		// select * from GXD_replaceGenotype (userKey, refsKey, currentGenotypeKey, newGenotypeKey)
 		
 		SearchResults<GenotypeReplaceDomain> results = new SearchResults<GenotypeReplaceDomain>();
-		
+
 	    String cmd = "select count(*) from GXD_replaceGenotype('" + domain.getCreatedBy() + "'," 
 	    			+ domain.getRefsKey() + "," 
 	    			+ domain.getCurrentKey() + "," 
@@ -970,7 +970,6 @@ public class AssayService extends BaseService<AssayDomain> {
 	    query = assayDAO.createNativeQuery(cmd);
 	    query.getResultList();
 		
-	    results.items.add(domain);
 		return results;
 	}
 	

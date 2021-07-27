@@ -674,6 +674,9 @@ public class AssayService extends BaseService<AssayDomain> {
 		// assay accession id 
 		value = searchDomain.getAccID();			
 		if (value != null && !value.isEmpty()) {	
+			if (!value.contains("MGI:")) {
+				value = "MGI:" + value;
+			}
 			where = where + "\nand acc.accID ilike '" + value + "'";
 			from_accession = true;
 		}

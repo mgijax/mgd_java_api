@@ -336,7 +336,10 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			cmd = "select _assaytype_key as termKey, assayType as term from gxd_assaytype order by term";
 		}
 		else if (vocabKey.equals("159") ) {
-			cmd = "select _sense_key as termKey, sense as term from gxd_probesense order by term";
+			cmd = "select _sense_key as termKey, sense as term, 1 as orderBy from gxd_probesense where _sense_key = -1" +
+					"\nunion" +
+					"\nselect _sense_key as termKey, sense as term, 2 as orderBy from gxd_probesense where _sense_key != -1" + 
+					"\norder by orderBy, term\n";			
 		}
 		else if (vocabKey.equals("160") ) {
 			cmd = "select _secondary_key as termKey, secondary as term, 1 as orderBy from gxd_secondary where _secondary_key = -1" +

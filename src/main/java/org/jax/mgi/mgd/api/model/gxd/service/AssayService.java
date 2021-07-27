@@ -536,7 +536,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			
 			value = searchDomain.getSpecimens().get(0).getGenotypeAccID();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand g.accID ilike '" + value + "'";	
+				where = where + "\nand g.accID = '" + value + "'";	
 				from_genotype = true;
 				from_specimen = true;
 			}	
@@ -625,7 +625,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			}
 			value = searchDomain.getGelLanes().get(0).getGenotypeID();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand g.accID ilike '" + value + "'";	
+				where = where + "\nand g.accID = '" + value + "'";	
 				from_genotype = true;
 				from_gellane = true;
 			}			
@@ -677,7 +677,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			if (!value.contains("MGI:")) {
 				value = "MGI:" + value;
 			}
-			where = where + "\nand acc.accID ilike '" + value + "'";
+			where = where + "\nand acc.accID = '" + value + "'";
 			from_accession = true;
 		}
 		

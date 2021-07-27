@@ -970,6 +970,7 @@ public class AssayService extends BaseService<AssayDomain> {
 	    query = assayDAO.createNativeQuery(cmd);
 	    query.getResultList();
 		
+	    results.items.add(domain);
 		return results;
 	}
 	

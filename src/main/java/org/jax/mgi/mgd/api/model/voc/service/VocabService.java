@@ -318,7 +318,10 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			cmd = "select _gelcontrol_key as termKey, gelLaneCountent as term from gxd_gelcontrol order by term";
 		}		
 		else if (vocabKey.equals("155")) {
-			cmd = "select _embedding_key as termKey, embeddingMethod as term from gxd_embeddingmethod order by term";
+			cmd = "select _embedding_key as termKey, embeddingMethod as term, 1 as orderBy from gxd_embeddingmethod where _embedding_key = -1" +
+					"\nunion" +
+					"\nselect _embedding_key as termKey, embeddingMethod as term, 2 as orderBy from gxd_embeddingmethod where _embedding_key != -1" + 
+					"\norder by orderBy, term\n";	
 		}
 		else if (vocabKey.equals("156") ) {
 			cmd = "select _fixation_key as termKey, fixation as term, 1 as orderBy from gxd_fixationmethod where _fixation_key = -1" +

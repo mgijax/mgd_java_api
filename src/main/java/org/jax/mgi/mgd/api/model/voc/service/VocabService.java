@@ -162,6 +162,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 					|| searchDomain.getVocabKey().equals("158")				
 					|| searchDomain.getVocabKey().equals("159")
 					|| searchDomain.getVocabKey().equals("160")
+					|| searchDomain.getVocabKey().equals("162")																																		
 					|| searchDomain.getVocabKey().equals("163")				
 					) {
 				
@@ -217,7 +218,6 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			// 24 = Vector Type (probe)
 			// 150 = Molecular Segment Note (probe)
 			// 161 = GXD Assay Age
-			// 162 = GXD Hybridization
 			if (searchDomain.getVocabKey().equals("39")
 					|| searchDomain.getVocabKey().equals("42")
 					|| searchDomain.getVocabKey().equals("37") 
@@ -227,7 +227,6 @@ public class VocabService extends BaseService<VocabularyDomain> {
 					|| searchDomain.getVocabKey().equals("24")
 					|| searchDomain.getVocabKey().equals("150")	
 					|| searchDomain.getVocabKey().equals("161")	
-					|| searchDomain.getVocabKey().equals("162")																				
 					) {
 				orderBy = "order by t.sequenceNum";
 			}
@@ -304,10 +303,16 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			cmd = "select _antibodyclass as termKey, class as term from gxd_antibodyclass order by term";
 		}
 		else if (vocabKey.equals("152")) {
-			cmd = "select _label_key as termKey, label as term from gxd_label order by term";
+			cmd = "select _label_key as termKey, label as term, 1 as orderBy from gxd_label where _label_key = -1" +
+				"\nunion" +
+				"\nselect _label_key as termKey, label as term, 2 as orderBy from gxd_label where _label_key != -1" + 
+				"\norder by orderBy, term\n";
 		}
 		else if (vocabKey.equals("153")) {
-			cmd = "select _pattern_key as termKey, pattern as term from gxd_pattern order by term";
+			cmd = "select _pattern_key as termKey, pattern as term, 1 as orderBy from gxd_pattern where _pattern_key = -1" +
+				"\nunion" +
+				"\nselect _pattern_key as termKey, pattern as term, 2 as orderBy from gxd_pattern where _pattern_key != -1" + 
+				"\norder by orderBy, term\n";
 		}
 		else if (vocabKey.equals("154") ) {
 			cmd = "select _gelcontrol_key as termKey, gelLaneCountent as term from gxd_gelcontrol order by term";
@@ -316,10 +321,16 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			cmd = "select _embedding_key as termKey, embeddingMethod as term from gxd_embeddingmethod order by term";
 		}
 		else if (vocabKey.equals("156") ) {
-			cmd = "select _fixation_key as termKey, fixation as term from gxd_fixationmethod order by term";
+			cmd = "select _fixation_key as termKey, fixation as term, 1 as orderBy from gxd_fixationmethod where _fixation_key = -1" +
+				"\nunion" +
+				"\nselect _fixation_key as termKey, fixation as term, 2 as orderBy from gxd_fixationmethod where _fixation_key != -1" + 
+				"\norder by orderBy, term\n";
 		}		
 		else if (vocabKey.equals("157")) {
-			cmd = "select _visualization_key as termKey, visualization as term from gxd_visualizationmethod order by term";
+			cmd = "select _visualization_key as termKey, visualization as term, 1 as orderBy from gxd_visualizationmethod where _visualization_key = -1" +
+				"\nunion" +
+				"\nselect _visualization_key as termKey, visualization as term, 2 as orderBy from gxd_visualizationmethod where _visualization_key != -1" + 
+				"\norder by orderBy, term\n";
 		}		
 		else if (vocabKey.equals("158")) {
 			cmd = "select _assaytype_key as termKey, assayType as term from gxd_assaytype order by term";
@@ -328,8 +339,17 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			cmd = "select _sense_key as termKey, sense as term from gxd_probesense order by term";
 		}
 		else if (vocabKey.equals("160") ) {
-			cmd = "select _secondary_key as termKey, secondary as term from gxd_secondary order by term";
+			cmd = "select _secondary_key as termKey, secondary as term, 1 as orderBy from gxd_secondary where _secondary_key = -1" +
+				"\nunion" +
+				"\nselect _secondary_key as termKey, secondary as term, 2 as orderBy from gxd_secondary where _secondary_key != -1" + 
+				"\norder by orderBy, term\n";
 		}
+		else if (vocabKey.equals("162") ) {
+			cmd = "select _term_key as termKey, term, 1 as orderBy from voc_term where _vocab_key = 162 and term = 'Not Specified'" +
+				"\nunion" +
+				"\nselect _term_key as termKey, term, 2 as orderBy from voc_term where _vocab_key = 162 and term != 'Not Specified'" + 
+				"\norder by orderBy, term\n";
+		}			
 		else if (vocabKey.equals("163") ) {
 			cmd = "select _strength_key as termKey, strength as term from gxd_strength order by term";
 		}			

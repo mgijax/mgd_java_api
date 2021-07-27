@@ -955,10 +955,10 @@ public class AssayService extends BaseService<AssayDomain> {
 	}
 
 	@Transactional
-	public SearchResults<GenotypeReplaceDomain> processReplaceGenotype(GenotypeReplaceDomain domain) {
+	public List<GenotypeReplaceDomain> processReplaceGenotype(GenotypeReplaceDomain domain) {
 		// select * from GXD_replaceGenotype (userKey, refsKey, currentGenotypeKey, newGenotypeKey)
 		
-		SearchResults<GenotypeReplaceDomain> results = new SearchResults<GenotypeReplaceDomain>();
+		List<GenotypeReplaceDomain> results = new ArrayList<GenotypeReplaceDomain>();		
 
 	    String cmd = "select count(*) from GXD_replaceGenotype('" + domain.getCreatedBy() + "'," 
 	    			+ domain.getRefsKey() + "," 

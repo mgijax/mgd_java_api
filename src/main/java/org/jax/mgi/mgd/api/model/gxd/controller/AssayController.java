@@ -138,9 +138,9 @@ public class AssayController extends BaseController<AssayDomain> {
 	@POST
 	@ApiOperation(value = "Process Replace Genotype/returns GenotypeReplaceDomain")
 	@Path("/processReplaceGenotype")
-	public SearchResults<GenotypeReplaceDomain> processReplaceGenotype(GenotypeReplaceDomain domain) {
+	public List<GenotypeReplaceDomain> processReplaceGenotype(GenotypeReplaceDomain domain) {
 	
-		SearchResults<GenotypeReplaceDomain> results = new SearchResults<GenotypeReplaceDomain>();
+		List<GenotypeReplaceDomain> results = new ArrayList<GenotypeReplaceDomain>();		
 
 		try {
 			results = assayService.processReplaceGenotype(domain);

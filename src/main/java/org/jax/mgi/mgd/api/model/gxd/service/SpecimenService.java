@@ -160,7 +160,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				if (!domain.get(i).getAgePrefix().isEmpty()) {
 					newAge = domain.get(i).getAgePrefix();
 				}
-				if (!domain.get(i).getAgeStage().isEmpty()) {
+				if (domain.get(i).getAgeStage() != null && !domain.get(i).getAgeStage().isEmpty()) {
 					newAge = newAge + " " + domain.get(i).getAgeStage();
 				}
 				entity.setAge(newAge);
@@ -229,7 +229,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				if (!domain.get(i).getAgePrefix().isEmpty()) {
 					newAge = domain.get(i).getAgePrefix();
 				}
-				if (!domain.get(i).getAgeStage().isEmpty()) {
+				if (domain.get(i).getAgeStage() != null && !domain.get(i).getAgeStage().isEmpty()) {
 					newAge = newAge + " " + domain.get(i).getAgeStage();
 				}
 				entity.setAge(newAge);

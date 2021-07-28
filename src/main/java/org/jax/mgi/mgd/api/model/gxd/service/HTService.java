@@ -13,6 +13,7 @@ import org.jax.mgi.mgd.api.model.BaseService;
 
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimHTDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTUserDomain;
 
 // DAOs, entities and translators
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -58,7 +59,9 @@ public class HTService extends BaseService<HTDomain> {
 		String cmd = "";
 		String select = "select acc.accid, hte._experiment_key, hte._curationstate_key ";
 		String from = "from gxd_htexperiment hte, acc_accession acc ";
-		String where = "where hte._experiment_key = acc._object_key ";
+		String where = "where hte._experiment_key = acc._object_key " 
+				+ "\nand acc._mgitype_key = 42"
+				+ "\nand acc._logicaldb_key = 189 ";
 		String orderBy = "order by acc.accid ";
 
 		// used to hold searchDomain values
@@ -71,9 +74,58 @@ public class HTService extends BaseService<HTDomain> {
 		value = searchDomain.getPrimaryid();			
 		if (value != null && !value.isEmpty()) {	
 			where = where + "\nand acc.accID ilike '" + value + "'";
-			from_accession = true;
+		}
+
+		// name 
+		value = searchDomain.getName();			
+		if (value != null && !value.isEmpty()) {	
+			where = where + "\nand hte.name ilike '" + value + "'";
 		}
 		
+		// name 
+		value = searchDomain.getDescription();			
+		if (value != null && !value.isEmpty()) {	
+			where = where + "\nand hte.description ilike '" + value + "'";
+		}
+
+		// evaluation state 
+		value = searchDomain.get_evaluationstate_key();			
+		if (value != null && !value.isEmpty()) {	
+			where = where + "\nand hte._evaluationstate_key = '" + value + "'";
+		}
+
+		// experiment type 
+		value = searchDomain.get_experimenttype_key();			
+		if (value != null && !value.isEmpty()) {	
+			where = where + "\nand hte._experimenttype_key = '" + value + "'";
+		}
+
+		// study type 
+		value = searchDomain.get_studytype_key();			
+		if (value != null && !value.isEmpty()) {	
+			where = where + "\nand hte._studytype_key = '" + value + "'";
+		}
+
+		// curationstate state 
+		value = searchDomain.get_curationstate_key();			
+		if (value != null && !value.isEmpty()) {	
+			where = where + "\nand hte._curationstate_key = '" + value + "'";
+		}
+
+		// created by
+		HTUserDomain userDom = searchDomain.getEvaluatedby_object();
+		value = userDom.getLogin();			
+		if (value != null && !value.isEmpty()) {	
+			where = where + "\nand hte._evaluatedby_key = u1._user_key";
+			where = where + "\nand u1.login ilike '" + value + "'";
+			from = from + ",mgi_user u1 ";
+		}
+
+
+
+
+
+
 		
 //		if (from_accession == true) {
 //			from = from + ", gxd_assay_acc_view acc";

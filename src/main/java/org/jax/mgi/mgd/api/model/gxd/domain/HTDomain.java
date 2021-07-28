@@ -14,9 +14,22 @@ public class HTDomain extends BaseDomain {
 	// not to be used when editing purposes
 	// to be used for returning search results
 	
-	private String _curationstate_key;
 	private String _experiment_key;	
 	private String primaryid;
+	private String name;
+	private String description;
+
+
+	private String _evaluationstate_key;
+	private String _experimenttype_key;
+	private String _studytype_key;
+	private String _curationstate_key;
+
+
+	private HTUserDomain evaluatedby_object;
+
+ 
+
 
 	private List<String> experiment_variables;
 }

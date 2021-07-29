@@ -18,6 +18,8 @@ public class AssayDomain extends BaseDomain {
 	private Boolean isInSitu = false;
 	private Boolean isReporer = false;
 	private Boolean isGel = false;
+	private Boolean isAntibodyPrep = false;
+	private Boolean isProbePrep = false;
 	private String markerKey;
 	private String markerSymbol;
 	private String refsKey;

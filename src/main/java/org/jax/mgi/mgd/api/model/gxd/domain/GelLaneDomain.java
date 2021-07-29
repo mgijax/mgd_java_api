@@ -24,7 +24,7 @@ public class GelLaneDomain extends BaseDomain {
 	private String sampleAmount;
 	private String sex;
 	private String agePrefix;
-	private String agePostfix;
+	private String ageStage;
 	private String age;
 	private String ageMin;
 	private String ageMax;

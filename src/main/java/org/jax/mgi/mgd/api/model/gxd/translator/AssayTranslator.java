@@ -36,33 +36,43 @@ public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDoma
 		
 		if (entity.getAssayType().get_assaytype_key() == 1) {
 			domain.setAssayTypeAbbrev("InSitu");
+			domain.setIsInSitu(true);
 		}
 		else if (entity.getAssayType().get_assaytype_key() == 2) {
 			domain.setAssayTypeAbbrev("North");
+			domain.setIsGel(true);
 		}
 		else if (entity.getAssayType().get_assaytype_key() == 3) {
 			domain.setAssayTypeAbbrev("S1Nuc");
+			domain.setIsGel(true);		
 		}
 		else if (entity.getAssayType().get_assaytype_key() == 4) {
 			domain.setAssayTypeAbbrev("RNAse");
+			domain.setIsGel(true);			
 		}
 		else if (entity.getAssayType().get_assaytype_key() == 5) {
 			domain.setAssayTypeAbbrev("RTPCR");
+			domain.setIsGel(true);			
 		}
 		else if (entity.getAssayType().get_assaytype_key() == 6) {
 			domain.setAssayTypeAbbrev("Immuno");
+			domain.setIsInSitu(true);		
 		}
 		else if (entity.getAssayType().get_assaytype_key() == 8) {
 			domain.setAssayTypeAbbrev("West");
+			domain.setIsGel(true);			
 		}
 		else if (entity.getAssayType().get_assaytype_key() == 9) {
 			domain.setAssayTypeAbbrev("Knock");
+			domain.setIsInSitu(true);			
 		}
 		else if (entity.getAssayType().get_assaytype_key() == 10) {
 			domain.setAssayTypeAbbrev("Transg");
+			domain.setIsInSitu(true);		
 		}
 		else if (entity.getAssayType().get_assaytype_key() == 11) {
 			domain.setAssayTypeAbbrev("Recomb");
+			domain.setIsInSitu(true);			
 		}
 		
 		domain.setAssayDisplay(entity.getReference().getReferenceCitationCache().getJnumid() + "; " + domain.getAssayTypeAbbrev() + "; " + entity.getMarker().getSymbol());	

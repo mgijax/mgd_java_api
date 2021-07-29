@@ -116,9 +116,16 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				entity.setSampleAmount(domain.get(i).getSampleAmount());
 				entity.setSex(domain.get(i).getSex());
 
-				entity.setAge(domain.get(i).getAge());
-				entity.setAgeMin(Integer.valueOf(domain.get(i).getAgeMin()));
-				entity.setAgeMax(Integer.valueOf(domain.get(i).getAgeMax()));
+				String newAge = null;
+				if (!domain.get(i).getAgePrefix().isEmpty()) {
+					newAge = domain.get(i).getAgePrefix();
+				}
+				if (domain.get(i).getAgeStage() != null && !domain.get(i).getAgeStage().isEmpty()) {
+					newAge = newAge + " " + domain.get(i).getAgeStage();
+				}
+				entity.setAge(newAge);
+				entity.setAgeMin(-1);
+				entity.setAgeMax(-1);		
 
 				if (domain.get(i).getAgeNote() != null && domain.get(i).getAgeNote().isEmpty()) {
 					entity.setAgeNote(domain.get(i).getAgeNote());
@@ -169,9 +176,16 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				entity.setSampleAmount(domain.get(i).getSampleAmount());
 				entity.setSex(domain.get(i).getSex());
 				
-				entity.setAge(domain.get(i).getAge());
-				entity.setAgeMin(Integer.valueOf(domain.get(i).getAgeMin()));
-				entity.setAgeMax(Integer.valueOf(domain.get(i).getAgeMax()));		
+				String newAge = null;
+				if (!domain.get(i).getAgePrefix().isEmpty()) {
+					newAge = domain.get(i).getAgePrefix();
+				}
+				if (domain.get(i).getAgeStage() != null && !domain.get(i).getAgeStage().isEmpty()) {
+					newAge = newAge + " " + domain.get(i).getAgeStage();
+				}
+				entity.setAge(newAge);
+				entity.setAgeMin(-1);
+				entity.setAgeMax(-1);
 
 				if (domain.get(i).getAgeNote() != null && domain.get(i).getAgeNote().isEmpty()) {
 					entity.setAgeNote(domain.get(i).getAgeNote());

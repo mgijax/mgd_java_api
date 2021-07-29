@@ -15,6 +15,8 @@ public class AssayDomain extends BaseDomain {
 	private String assayTypeKey;
 	private String assayType;
 	private String assayTypeAbbrev;
+	private Boolean isInSitu = false;
+	private Boolean isGel = false;
 	private String markerKey;
 	private String markerSymbol;
 	private String refsKey;

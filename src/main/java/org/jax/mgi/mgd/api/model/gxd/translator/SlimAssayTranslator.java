@@ -64,17 +64,17 @@ public class SlimAssayTranslator extends BaseEntityDomainTranslator<Assay, SlimA
 		else if (entity.getAssayType().get_assaytype_key() == 9) {
 			domain.setAssayTypeAbbrev("Knock");
 			domain.setIsInSitu(true);	
-			domain.setIsReporer(true);
+			domain.setIsReporter(true);
 		}
 		else if (entity.getAssayType().get_assaytype_key() == 10) {
 			domain.setAssayTypeAbbrev("Transg");
 			domain.setIsInSitu(true);	
-			domain.setIsReporer(true);			
+			domain.setIsReporter(true);			
 		}
 		else if (entity.getAssayType().get_assaytype_key() == 11) {
 			domain.setAssayTypeAbbrev("Recomb");
 			domain.setIsInSitu(true);
-			domain.setIsReporer(true);			
+			domain.setIsReporter(true);			
 		}
 		
 		domain.setAssayDisplay(entity.getReference().getReferenceCitationCache().getJnumid() + "; " + domain.getAssayTypeAbbrev() + "; " + entity.getMarker().getSymbol());	

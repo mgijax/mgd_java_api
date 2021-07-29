@@ -16,7 +16,7 @@ public class AssayDomain extends BaseDomain {
 	private String assayType;
 	private String assayTypeAbbrev;
 	private Boolean isInSitu = false;
-	private Boolean isReporer = false;
+	private Boolean isReporter = false;
 	private Boolean isGel = false;
 	private Boolean isAntibodyPrep = false;
 	private Boolean isProbePrep = false;

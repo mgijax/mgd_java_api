@@ -17,6 +17,11 @@ public class SlimAssayDomain extends BaseDomain {
 	private String assayTypeKey;
 	private String assayType;
 	private String assayTypeAbbrev;
+	private Boolean isInSitu = false;
+	private Boolean isReporer = false;
+	private Boolean isGel = false;
+	private Boolean isAntibodyPrep = false;
+	private Boolean isProbePrep = false;	
 	private String refsKey;
 	private String jnumid;
 	private String jnum;

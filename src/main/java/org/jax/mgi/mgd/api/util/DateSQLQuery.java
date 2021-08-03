@@ -81,4 +81,44 @@ public class DateSQLQuery {
 		
 		return new String[] {from, where};
 	}
+
+
+
+	public static String createDateWhereClause(String field, String value) {
+
+		String where = "";
+		
+
+		// construct where 
+
+
+		if (value.startsWith("<=") == true) {
+			where = where + "\nand " + field + "::date <= '" + value.replace("<=","") + "'";
+		}
+		else if (value.startsWith("<") == true) {
+			where = where + "\nand " + field + "::date < '" + value.replace("<",  "") + "'";
+		}
+		else if (value.startsWith(">=") == true) {
+			where = where + "\nand " + field + "::date >= '" + value.replace(">=","") + "'";
+		}
+		else if (value.startsWith(">") == true) {
+			where = where + "\nand " + field + "::date > '" + value.replace(">",  "") + "'";
+		}
+		else if (value.contains("..") == true) {
+			String[] tokens = value.split("\\.\\.");
+			where = where + "\nand (" + field + " between '" + tokens[0] 
+					+ "' and ('" + tokens[1] + "'::date + '1 day'::interval))";
+		}
+		else {
+			where = where + "\nand (" + field + " between '" + value 
+					+ "' and ('" + value + "'::date + '1 day'::interval))";
+		}
+		
+		return where;
+	}
+
+
+
+
+
 }

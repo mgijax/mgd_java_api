@@ -105,6 +105,10 @@ public class HTService extends BaseService<HTDomain> {
 			where = where + "\nand nc.note ilike '" + value + "'";
 		}
 
+		/*
+		// TYPES AND STATES
+		*/
+
 		// evaluation state 
 		value = searchDomain.get_evaluationstate_key();			
 		if (value != null && !value.isEmpty()) {	
@@ -129,6 +133,53 @@ public class HTService extends BaseService<HTDomain> {
 			where = where + "\nand hte._curationstate_key = '" + value + "'";
 		}
 
+
+		/*
+		// DATES
+		*/
+
+		// creation date 
+		value = searchDomain.getCreation_date();			
+		if (value != null && !value.isEmpty()) {	
+			String dateWhereClause = DateSQLQuery.createDateWhereClause( "hte.creation_date", value );
+			where = where + dateWhereClause;
+		}
+		// release date 
+		value = searchDomain.getRelease_date();			
+		if (value != null && !value.isEmpty()) {	
+			String dateWhereClause = DateSQLQuery.createDateWhereClause( "hte.release_date", value );
+			where = where + dateWhereClause;
+		}
+		// last update  
+		value = searchDomain.getLastupdate_date();			
+		if (value != null && !value.isEmpty()) {	
+			String dateWhereClause = DateSQLQuery.createDateWhereClause( "hte.lastupdate_date", value );
+			where = where + dateWhereClause;
+		}
+		// evaluated date  
+		value = searchDomain.getEvaluated_date();			
+		if (value != null && !value.isEmpty()) {	
+			String dateWhereClause = DateSQLQuery.createDateWhereClause( "hte.evaluated_date", value );
+			where = where + dateWhereClause;
+		}
+		// initial curated date
+		value = searchDomain.getInitial_curated_date();			
+		if (value != null && !value.isEmpty()) {	
+			String dateWhereClause = DateSQLQuery.createDateWhereClause( "hte.initial_curated_date", value );
+			where = where + dateWhereClause;
+		}
+		// last curated date
+		value = searchDomain.getLast_curated_date();			
+		if (value != null && !value.isEmpty()) {	
+			String dateWhereClause = DateSQLQuery.createDateWhereClause( "hte.last_curated_date", value );
+			where = where + dateWhereClause;
+		}
+
+
+		/*
+		// USERS
+		*/
+
 		// evaluated by
 		HTUserDomain evalUser = searchDomain.getEvaluatedby_object();
 		if (evalUser != null) {	
@@ -139,8 +190,7 @@ public class HTService extends BaseService<HTDomain> {
 				where = where + "\nand u1.login ilike '" + value + "'";
 			}
 		}
-
-		// initialcuratedby_object by
+		// Initial User 
 		HTUserDomain initUser = searchDomain.getInitialcuratedby_object();
 		if (initUser != null ) {	
 			value = initUser.getLogin();			
@@ -150,8 +200,7 @@ public class HTService extends BaseService<HTDomain> {
 				where = where + "\nand u2.login ilike '" + value + "'";
 			}
 		}
-
-		// initialcuratedby_object by
+		// Last User 
 		HTUserDomain lastUser = searchDomain.getLastcuratedby_object();
 		if (lastUser != null ) {	
 			value = lastUser.getLogin();	
@@ -162,11 +211,13 @@ public class HTService extends BaseService<HTDomain> {
 			}
 		}
 
+		/*
+		// EXPERIMENT VARIABLES
+		*/
+
 		List<HTVariableDomain> experiment_variables = searchDomain.getExperiment_variables();
-		log.info(experiment_variables.size());
 		int varJoinCount = 0;
         for (HTVariableDomain varDom : experiment_variables) {
-            log.info(varDom.getTermKey());
             //TODO --if for false checks
             varJoinCount++;
         	from = from + ", gxd_htexperimentvariable htev" + Integer.toString(varJoinCount);

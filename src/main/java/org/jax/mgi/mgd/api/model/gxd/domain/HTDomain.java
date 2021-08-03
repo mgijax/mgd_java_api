@@ -26,6 +26,13 @@ public class HTDomain extends BaseDomain {
 	private String _studytype_key;
 	private String _curationstate_key;
 
+	private String creation_date;
+	private String release_date;
+	private String lastupdate_date;
+	private String evaluated_date;
+	private String initial_curated_date;
+	private String last_curated_date;
+
 	private HTUserDomain evaluatedby_object;
 	private HTUserDomain initialcuratedby_object;
 	private HTUserDomain lastcuratedby_object;

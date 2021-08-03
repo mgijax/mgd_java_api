@@ -14,6 +14,7 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimHTDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTUserDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTVariableDomain;
 
 // DAOs, entities and translators
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -35,7 +36,7 @@ public class HTService extends BaseService<HTDomain> {
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 
-
+//-----TODO
 // future DAOs
 //	@Inject
 //	private HTDAO htDAO;
@@ -55,7 +56,6 @@ public class HTService extends BaseService<HTDomain> {
 		List<SlimHTDomain> results = new ArrayList<SlimHTDomain>();
 		
 		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
 		String select = "select acc.accid, hte._experiment_key, hte._curationstate_key ";
 		String from = "from gxd_htexperiment hte, acc_accession acc ";
@@ -64,16 +64,23 @@ public class HTService extends BaseService<HTDomain> {
 				+ "\nand acc._logicaldb_key = 189 ";
 		String orderBy = "order by acc.accid ";
 
-		// used to hold searchDomain values
+		// used to hold searchDomain values passed in web request
 		String value;
 
-		Boolean from_accession = false;
-
-		
-		// accession id 
+		// primary accession id 
 		value = searchDomain.getPrimaryid();			
 		if (value != null && !value.isEmpty()) {	
 			where = where + "\nand acc.accID ilike '" + value + "'";
+		}
+
+		// secondary accession id 
+		value = searchDomain.getSecondaryid();			
+		if (value != null && !value.isEmpty()) {
+			from = from + ", acc_accession acc2 ";	
+			where = where + "\nand hte._experiment_key = acc2._object_key ";
+			where = where + "\nand acc2._mgitype_key = 42 ";
+			where = where + "\nand acc2._logicaldb_key = 190 ";
+			where = where + "\nand acc2.accID ilike '" + value + "'";
 		}
 
 		// name 
@@ -82,10 +89,20 @@ public class HTService extends BaseService<HTDomain> {
 			where = where + "\nand hte.name ilike '" + value + "'";
 		}
 		
-		// name 
+		// description 
 		value = searchDomain.getDescription();			
 		if (value != null && !value.isEmpty()) {	
 			where = where + "\nand hte.description ilike '" + value + "'";
+		}
+
+		// exp note 
+		value = searchDomain.getNotetext();			
+		if (value != null && !value.isEmpty()) {	
+			from = from + ", mgi_notechunk nc, mgi_note n";	
+			where = where + "\nand hte._experiment_key = n._object_key ";
+			where = where + "\nand nc._note_key = n._note_key ";
+			where = where + "\nand n._notetype_key = 1047 ";
+			where = where + "\nand nc.note ilike '" + value + "'";
 		}
 
 		// evaluation state 
@@ -112,27 +129,52 @@ public class HTService extends BaseService<HTDomain> {
 			where = where + "\nand hte._curationstate_key = '" + value + "'";
 		}
 
-		// created by
-		HTUserDomain userDom = searchDomain.getEvaluatedby_object();
-		value = userDom.getLogin();			
-		if (value != null && !value.isEmpty()) {	
-			where = where + "\nand hte._evaluatedby_key = u1._user_key";
-			where = where + "\nand u1.login ilike '" + value + "'";
-			from = from + ",mgi_user u1 ";
+		// evaluated by
+		HTUserDomain evalUser = searchDomain.getEvaluatedby_object();
+		if (evalUser != null) {	
+			value = evalUser.getLogin();
+			if (!value.isEmpty()) {
+				from = from + ", mgi_user u1 ";
+				where = where + "\nand hte._evaluatedby_key = u1._user_key";
+				where = where + "\nand u1.login ilike '" + value + "'";
+			}
 		}
 
+		// initialcuratedby_object by
+		HTUserDomain initUser = searchDomain.getInitialcuratedby_object();
+		if (initUser != null ) {	
+			value = initUser.getLogin();			
+			if (!value.isEmpty()) {
+				from = from + ", mgi_user u2 ";
+				where = where + "\nand hte._initialcuratedby_key = u2._user_key";
+				where = where + "\nand u2.login ilike '" + value + "'";
+			}
+		}
+
+		// initialcuratedby_object by
+		HTUserDomain lastUser = searchDomain.getLastcuratedby_object();
+		if (lastUser != null ) {	
+			value = lastUser.getLogin();	
+			if (!value.isEmpty()) {
+				from = from + ", mgi_user u3 ";
+				where = where + "\nand hte._lastcuratedby_key = u3._user_key";
+				where = where + "\nand u3.login ilike '" + value + "'";
+			}
+		}
+
+		List<HTVariableDomain> experiment_variables = searchDomain.getExperiment_variables();
+		log.info(experiment_variables.size());
+		int varJoinCount = 0;
+        for (HTVariableDomain varDom : experiment_variables) {
+            log.info(varDom.getTermKey());
+            //TODO --if for false checks
+            varJoinCount++;
+        	from = from + ", gxd_htexperimentvariable htev" + Integer.toString(varJoinCount);
+        	where = where + "\nand hte._experiment_key = htev" + Integer.toString(varJoinCount) + "._experiment_key ";
+			where = where + "\nand htev" + Integer.toString(varJoinCount) + "._term_key = " + varDom.getTermKey();
+        }
 
 
-
-
-
-		
-//		if (from_accession == true) {
-//			from = from + ", gxd_assay_acc_view acc";
-//			where = where + "\nand a._assay_key = acc._object_key"; 
-//		}
-
-		
 		// log for easy copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info(cmd);

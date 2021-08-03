@@ -16,20 +16,21 @@ public class HTDomain extends BaseDomain {
 	
 	private String _experiment_key;	
 	private String primaryid;
+	private String secondaryid;
 	private String name;
 	private String description;
-
+	private String notetext;
 
 	private String _evaluationstate_key;
 	private String _experimenttype_key;
 	private String _studytype_key;
 	private String _curationstate_key;
 
-
 	private HTUserDomain evaluatedby_object;
-
+	private HTUserDomain initialcuratedby_object;
+	private HTUserDomain lastcuratedby_object;
  
 
 
-	private List<String> experiment_variables;
+	private List<HTVariableDomain> experiment_variables;
 }

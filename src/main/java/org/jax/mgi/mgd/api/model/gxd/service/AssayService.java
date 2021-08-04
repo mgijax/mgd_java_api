@@ -982,7 +982,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();		
 
-	    String cmd = "select count(*) from GXD_addEMAPSet('" + domain.getCreatedBy() + "'," 
+	    String cmd = "select count(*) from GXD_addEMAPASet('" + domain.getCreatedBy() + "'," 
 	    			+ domain.getAssayKey() + ")";
 	    Query query;
 		

@@ -150,4 +150,21 @@ public class AssayController extends BaseController<AssayDomain> {
 		
 		return results;
 	}
+	
+	@POST
+	@ApiOperation(value = "Add to EMAPA clipboard")
+	@Path("/addToEmapaClipboard")
+	public List<SlimAssayDomain> addToEmapaClipboard(SlimAssayDomain domain) {
+	
+		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();		
+
+		try {
+			results = assayService.addToEmapaClipboard(domain);
+		} catch (Exception e) {
+			e.printStackTrace();				
+		}
+		
+		return results;
+	}
+	
 }

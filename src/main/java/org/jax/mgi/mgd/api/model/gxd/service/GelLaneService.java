@@ -15,7 +15,6 @@ import org.jax.mgi.mgd.api.model.gxd.dao.GelLaneDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.GelLane;
 import org.jax.mgi.mgd.api.model.gxd.translator.GelLaneTranslator;
-import org.jax.mgi.mgd.api.model.gxd.service.GelBandService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -34,8 +33,6 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 	private GelRNATypeDAO gelRNATypeDAO;
 	@Inject
 	private GelControlDAO gelControlDAO;
-	@Inject
-	private GelBandService gelBandService;
 	
 	private GelLaneTranslator translator = new GelLaneTranslator();				
 
@@ -145,13 +142,6 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				entity.setModification_date(new Date());				
 				gelLaneDAO.persist(entity);
 				
-				// process gxd_gelbands
-				if (domain.get(i).getGelBands() != null && !domain.get(i).getGelBands().isEmpty()) {					
-					if (gelBandService.process(entity.get_gellane_key(), domain.get(i).getGelBands(), user)) {
-						modified = true;
-					}
-				}
-				
 				modified = true;
 				log.info("processGelLane/create processed: " + entity.get_gellane_key());					
 			}
@@ -202,13 +192,6 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				}
 				
 				entity.setModification_date(new Date());
-
-				// process gxd_gelband
-				if (domain.get(i).getGelBands() != null && !domain.get(i).getGelBands().isEmpty()) {
-					if (gelBandService.process(Integer.valueOf(domain.get(i).getGelLaneKey()), domain.get(i).getGelBands(), user)) {
-						modified = true;
-					}
-				}
 				
 				gelLaneDAO.update(entity);
 				modified = true;

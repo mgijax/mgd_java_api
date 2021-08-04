@@ -74,8 +74,8 @@ public class AssayService extends BaseService<AssayDomain> {
 	private AssayNoteService assayNoteService;
 	@Inject
 	private SpecimenService specimenService;
-//	@Inject
-//	private GelLaneService gelLaneService;
+	@Inject
+	private GelLaneService gelLaneService;
 //	@Inject
 //	private GelRowService gelRowService;
 	@Inject
@@ -275,11 +275,11 @@ public class AssayService extends BaseService<AssayDomain> {
 //				modified = true;
 //			}
 //		}
-//		
+		
 //		// process gxd_gelrow
 //		// if assaytype in Gel Assay Type
 //		if (domain.getGelRows() != null && !domain.getGelRows().isEmpty()) {
-//			if (gelRowService.process(Integer.valueOf(domain.getAssayKey()), domain.getGelRows(), user)) {
+//			if (gelRowService.process(Integer.valueOf(domain.getAssayKey()), domain.getGelRows(), domain.getLanes(), user)) {
 //				modified = true;
 //			}
 //		}
@@ -959,7 +959,7 @@ public class AssayService extends BaseService<AssayDomain> {
 
 	@Transactional
 	public List<GenotypeReplaceDomain> processReplaceGenotype(GenotypeReplaceDomain domain) {
-		// select * from GXD_replaceGenotype (userKey, refsKey, currentGenotypeKey, newGenotypeKey)
+		// select * from GXD_replaceGenotype (user, refsKey, currentGenotypeKey, newGenotypeKey)
 		
 		List<GenotypeReplaceDomain> results = new ArrayList<GenotypeReplaceDomain>();		
 
@@ -967,6 +967,23 @@ public class AssayService extends BaseService<AssayDomain> {
 	    			+ domain.getRefsKey() + "," 
 	    			+ domain.getCurrentKey() + "," 
 	    			+ domain.getNewKey() + ")";
+	    Query query;
+		
+	    log.info(cmd);
+	    query = assayDAO.createNativeQuery(cmd);
+	    query.getResultList();
+		
+		return results;
+	}
+
+	@Transactional
+	public List<SlimAssayDomain> addToEmapaClipboard(SlimAssayDomain domain) {
+		// select * from GXD_addEMAPSet (user, assayKey)
+		
+		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();		
+
+	    String cmd = "select count(*) from GXD_addEMAPSet('" + domain.getCreatedBy() + "'," 
+	    			+ domain.getAssayKey() + ")";
 	    Query query;
 		
 	    log.info(cmd);

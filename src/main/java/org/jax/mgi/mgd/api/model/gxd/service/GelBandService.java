@@ -101,9 +101,9 @@ public class GelBandService extends BaseService<GelBandDomain> {
 
 				GelBand entity = new GelBand();
 
-				entity.set_gellane_key(parentKey);
+				entity.setGelRow(gelRowDAO.get(parentKey));								
+				entity.set_gellane_key(Integer.valueOf(domain.get(i).getGelLaneKey()));
 				entity.setStrength(gelStrengthDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
-				entity.setGelRow(gelRowDAO.get(Integer.valueOf(domain.get(i).getGelRowKey())));
 				
 				if (domain.get(i).getBandNote() != null && domain.get(i).getBandNote().isEmpty()) {
 					entity.setBandNote(domain.get(i).getBandNote());
@@ -130,10 +130,10 @@ public class GelBandService extends BaseService<GelBandDomain> {
 				log.info("processGelBand update");
 
 				GelBand entity = gelBandDAO.get(Integer.valueOf(domain.get(i).getGelBandKey()));
-				
-				entity.set_gellane_key(parentKey);
+
+				entity.setGelRow(gelRowDAO.get(parentKey));				
+				entity.set_gellane_key(Integer.valueOf(domain.get(i).getGelLaneKey()));
 				entity.setStrength(gelStrengthDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
-				entity.setGelRow(gelRowDAO.get(Integer.valueOf(domain.get(i).getGelRowKey())));
 				
 				if (domain.get(i).getBandNote() != null && domain.get(i).getBandNote().isEmpty()) {
 					entity.setBandNote(domain.get(i).getBandNote());

@@ -14,7 +14,7 @@ public class GelLaneDomain extends BaseDomain {
 	private String gelLaneKey;
 	private String assayKey;
 	private String genotypeKey;
-	private String genotypeID;
+	private String genotypeAccID;
 	private String gelRNATypeKey;
 	private String gelRNAType;
 	private String gelControlKey;	

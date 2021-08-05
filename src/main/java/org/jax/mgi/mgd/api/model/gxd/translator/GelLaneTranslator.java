@@ -24,7 +24,7 @@ public class GelLaneTranslator extends BaseEntityDomainTranslator<GelLane, GelLa
 		domain.setGelLaneKey(String.valueOf(entity.get_gellane_key()));
 		domain.setAssayKey(String.valueOf(entity.get_assay_key()));
 		domain.setGenotypeKey(String.valueOf(entity.getGenotype().get_genotype_key()));
-		domain.setGenotypeID(entity.getGenotype().getMgiAccessionIds().get(0).getAccID());
+		domain.setGenotypeAccID(entity.getGenotype().getMgiAccessionIds().get(0).getAccID());
 		domain.setGelRNATypeKey(String.valueOf(entity.getGelRNAType().get_gelrnatype_key()));
 		domain.setGelRNAType(entity.getGelRNAType().getRnaType());
 		domain.setGelControlKey(String.valueOf(entity.getGelControl().get_gelcontrol_key()));

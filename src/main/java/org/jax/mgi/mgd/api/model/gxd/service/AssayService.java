@@ -626,7 +626,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				where = where + "\nand l.laneLabel ilike '" + value + "'";				
 				from_gellane = true;
 			}
-			value = searchDomain.getGelLanes().get(0).getGenotypeID();
+			value = searchDomain.getGelLanes().get(0).getGenotypeAccID();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand g.accID = '" + value + "'";	
 				from_genotype = true;

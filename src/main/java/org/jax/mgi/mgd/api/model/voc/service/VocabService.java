@@ -316,7 +316,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				"\norder by orderBy, term\n";
 		}
 		else if (vocabKey.equals("154") ) {
-			cmd = "select _gelcontrol_key as termKey, gelLaneCountent as term from gxd_gelcontrol order by term";
+			cmd = "select _gelcontrol_key as termKey, gelLaneContent as term from gxd_gelcontrol order by term";
 		}		
 		else if (vocabKey.equals("155")) {
 			cmd = "select _embedding_key as termKey, embeddingMethod as term, 1 as orderBy from gxd_embeddingmethod where _embedding_key = -1" +

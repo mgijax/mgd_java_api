@@ -900,7 +900,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setCreatedByKey(rs.getString("createdByKey"));
 				domain.setCreatedBy(rs.getString("login"));
 				
-				displayIt = rs.getString("displayIt").replaceAll(" (1)", "");
+				displayIt = rs.getString("displayIt").replaceAll("(1)", "");
 				domain.setDisplayIt(displayIt);
 
 				domain.setIsUsed(false);

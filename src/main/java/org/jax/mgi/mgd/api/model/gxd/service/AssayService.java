@@ -858,6 +858,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		// all emapa for given specimen (searchDomain.getSpecimienKey())
 
 		List<MGISetMemberEmapaDomain> results = new ArrayList<MGISetMemberEmapaDomain>();		
+		String displayIt = "";
 		
 		// search mgi_setmembers where _set_key = 1046 (emapa/stage)
 		String cmd = 
@@ -894,11 +895,15 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setSetKey(rs.getString("setKey"));
 				domain.setSetMemberKey(rs.getString("setMemberKey"));
 				domain.setObjectKey(rs.getString("objectKey"));
-				domain.setDisplayIt(rs.getString("displayIt"));
 				domain.setTerm(rs.getString("term"));
 				domain.setStage(rs.getString("stage"));
 				domain.setCreatedByKey(rs.getString("createdByKey"));
 				domain.setCreatedBy(rs.getString("login"));
+				
+				displayIt = rs.getString("displayIt");
+				displayIt = displayIt.replaceAll(" (1)", "");
+				domain.setDisplayIt(displayIt);
+
 				domain.setIsUsed(false);
 				results.add(domain);				
 				assayDAO.clear();

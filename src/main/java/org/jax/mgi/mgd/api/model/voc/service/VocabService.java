@@ -162,6 +162,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 					|| searchDomain.getVocabKey().equals("158")				
 					|| searchDomain.getVocabKey().equals("159")
 					|| searchDomain.getVocabKey().equals("160")
+					|| searchDomain.getVocabKey().equals("162")																																		
 					|| searchDomain.getVocabKey().equals("163")	
 					|| searchDomain.getVocabKey().equals("172")
 					) {
@@ -233,11 +234,8 @@ public class VocabService extends BaseService<VocabularyDomain> {
 
 			// 2 = Mammalian Phenotype Evidence Code
 			// 3 = GO Evidence Code
-			// 162 = GXD Hybridization
 			if (searchDomain.getVocabKey().equals("2")
-					|| searchDomain.getVocabKey().equals("3")
-					|| searchDomain.getVocabKey().equals("162")
-				) {
+					|| searchDomain.getVocabKey().equals("3")) {
 				orderBy = "order by t.abbreviation";
 			}
 			
@@ -354,9 +352,9 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				"\norder by orderBy, term\n";
 		}
 		else if (vocabKey.equals("162") ) {
-			cmd = "select _term_key as termKey, term, 1 as orderBy from voc_term where _vocab_key = 162 and term = 'Not Specified'" +
+			cmd = "select _term_key as termKey, abbreviation as term, 1 as orderBy from voc_term where _vocab_key = 162 and term = 'Not Specified'" +
 				"\nunion" +
-				"\nselect _term_key as termKey, term, 2 as orderBy from voc_term where _vocab_key = 162 and term != 'Not Specified'" + 
+				"\nselect _term_key as termKey, abbreviation as term, 2 as orderBy from voc_term where _vocab_key = 162 and term != 'Not Specified'" + 
 				"\norder by orderBy, term\n";
 		}			
 		else if (vocabKey.equals("163") ) {

@@ -162,7 +162,6 @@ public class VocabService extends BaseService<VocabularyDomain> {
 					|| searchDomain.getVocabKey().equals("158")				
 					|| searchDomain.getVocabKey().equals("159")
 					|| searchDomain.getVocabKey().equals("160")
-					|| searchDomain.getVocabKey().equals("162")																																		
 					|| searchDomain.getVocabKey().equals("163")	
 					|| searchDomain.getVocabKey().equals("172")
 					) {
@@ -234,8 +233,11 @@ public class VocabService extends BaseService<VocabularyDomain> {
 
 			// 2 = Mammalian Phenotype Evidence Code
 			// 3 = GO Evidence Code
+			// 162 = GXD Hybridization
 			if (searchDomain.getVocabKey().equals("2")
-					|| searchDomain.getVocabKey().equals("3")) {
+					|| searchDomain.getVocabKey().equals("3")
+					|| searchDomain.getVocabKey().equals("162")
+				) {
 				orderBy = "order by t.abbreviation";
 			}
 			

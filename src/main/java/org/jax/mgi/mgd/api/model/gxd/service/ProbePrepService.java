@@ -169,11 +169,36 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 		if (domain.getProcessStatus().equals(Constants.PROCESS_CREATE)) {					
 			log.info("processProbePrep/create");							
 				ProbePrep entity = new ProbePrep();
-				entity.setType(domain.getPrepType());
 				entity.setProbe(probeDAO.get(Integer.valueOf(domain.getProbeKey())));
-				entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
-				entity.setProbeSense(senseDAO.get(Integer.valueOf(domain.getProbeSenseKey())));
-				entity.setVisualizationMethod(visualizationDAO.get(Integer.valueOf(domain.getVisualizationMethodKey())));
+
+				if (domain.getPrepType() == null || domain.getPrepType().isEmpty()) {
+					entity.setType("Not Specified");
+				}
+				else {
+					entity.setType(domain.getPrepType());			
+				}
+				
+				if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
+					entity.setLabel(labelDAO.get(-1));					
+				}
+				else {
+					entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
+				}
+				
+				if (domain.getProbeSenseKey() == null || domain.getProbeSenseKey().isEmpty()) {
+					entity.setProbeSense(senseDAO.get(-1));
+				}
+				else {
+					entity.setProbeSense(senseDAO.get(Integer.valueOf(domain.getProbeSenseKey())));
+				}
+				
+				if (domain.getVisualizationMethodKey() == null || domain.getVisualizationMethodKey().isEmpty()) {
+					entity.setVisualizationMethod(visualizationDAO.get(-1));
+				}
+				else {
+					entity.setVisualizationMethod(visualizationDAO.get(Integer.valueOf(domain.getVisualizationMethodKey())));
+				}
+				
 				entity.setCreation_date(new Date());
 				entity.setModification_date(new Date());
 				// execute persist/insert/send to database
@@ -191,11 +216,36 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 			log.info("processProbePrep update");
 			ProbePrep entity = probePrepDAO.get(Integer.valueOf(domain.getProbePrepKey()));		
-			entity.setType(domain.getPrepType());
 			entity.setProbe(probeDAO.get(Integer.valueOf(domain.getProbeKey())));
-			entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
-			entity.setProbeSense(senseDAO.get(Integer.valueOf(domain.getProbeSenseKey())));
-			entity.setVisualizationMethod(visualizationDAO.get(Integer.valueOf(domain.getVisualizationMethodKey())));
+
+			if (domain.getPrepType() == null || domain.getPrepType().isEmpty()) {
+				entity.setType("Not Specified");
+			}
+			else {
+				entity.setType(domain.getPrepType());			
+			}
+			
+			if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
+				entity.setLabel(labelDAO.get(-1));					
+			}
+			else {
+				entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
+			}
+			
+			if (domain.getProbeSenseKey() == null || domain.getProbeSenseKey().isEmpty()) {
+				entity.setProbeSense(senseDAO.get(-1));
+			}
+			else {
+				entity.setProbeSense(senseDAO.get(Integer.valueOf(domain.getProbeSenseKey())));
+			}
+			
+			if (domain.getVisualizationMethodKey() == null || domain.getVisualizationMethodKey().isEmpty()) {
+				entity.setVisualizationMethod(visualizationDAO.get(-1));
+			}
+			else {
+				entity.setVisualizationMethod(visualizationDAO.get(Integer.valueOf(domain.getVisualizationMethodKey())));
+			}
+
 			entity.setModification_date(new Date());			
 			probePrepDAO.update(entity);
 			log.info("processProbePrep/changes processed: " + domain.getProbePrepKey());	

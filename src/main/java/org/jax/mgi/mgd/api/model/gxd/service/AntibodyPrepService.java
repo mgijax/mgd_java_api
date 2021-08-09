@@ -171,8 +171,21 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 			log.info("processAntibodyPrep create");							
 			AntibodyPrep entity = new AntibodyPrep();
 			entity.setAntibody(antibodyDAO.get(Integer.valueOf(domain.getAntibodyKey())));
-			entity.setSecondary(secondaryDAO.get(Integer.valueOf(domain.getSecondaryKey())));
-			entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
+			
+			if (domain.getSecondaryKey() == null || domain.getSecondaryKey().isEmpty()) {
+				entity.setSecondary(secondaryDAO.get(-1));
+			}
+			else {
+				entity.setSecondary(secondaryDAO.get(Integer.valueOf(domain.getSecondaryKey())));
+			}
+			
+			if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
+				entity.setLabel(labelDAO.get(-1));
+			}
+			else {
+				entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
+			}			
+			
 			entity.setCreation_date(new Date());
 			entity.setModification_date(new Date());
 			antibodyPrepDAO.persist(entity);
@@ -190,8 +203,21 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 			log.info("processAntibodyPrep update");
 			AntibodyPrep entity = antibodyPrepDAO.get(Integer.valueOf(domain.getAntibodyPrepKey()));		
 			entity.setAntibody(antibodyDAO.get(Integer.valueOf(domain.getAntibodyKey())));
-			entity.setSecondary(secondaryDAO.get(Integer.valueOf(domain.getSecondaryKey())));
-			entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
+
+			if (domain.getSecondaryKey() == null || domain.getSecondaryKey().isEmpty()) {
+				entity.setSecondary(secondaryDAO.get(-1));
+			}
+			else {
+				entity.setSecondary(secondaryDAO.get(Integer.valueOf(domain.getSecondaryKey())));
+			}
+			
+			if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
+				entity.setLabel(labelDAO.get(-1));
+			}
+			else {
+				entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
+			}	
+			
 			entity.setModification_date(new Date());			
 			antibodyPrepDAO.update(entity);
 			log.info("processAntibodyPrep/changes processed: " + domain.getAntibodyPrepKey());

@@ -210,7 +210,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		entity.setAssayType(assayTypeDAO.get(Integer.valueOf(domain.getAssayTypeKey())));	
 		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));	
 		entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));
-				
+	
 		if (domain.getDetectionKey().equals("2")) {
 			Integer antibodyPrepKey = antibodyPrepService.process(entity.get_assay_key(), domain.getAntibodyPrep(), user);
 			if (antibodyPrepKey > 1) {

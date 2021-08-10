@@ -7,6 +7,7 @@ import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelBandDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneStructureDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.InSituResultStructureDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.GelLane;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jboss.logging.Logger;
@@ -47,6 +48,10 @@ public class GelLaneTranslator extends BaseEntityDomainTranslator<GelLane, GelLa
 			Iterable<GelLaneStructureDomain> i = structureTranslator.translateEntities(entity.getStructures());
 			domain.setStructures(IteratorUtils.toList(i.iterator()));
 			domain.getStructures().sort(Comparator.comparing(GelLaneStructureDomain::getEmapaTerm));
+			domain.setStructuresCount(domain.getStructures().size());			
+		}
+		else {
+			domain.setStructuresCount(0);
 		}
 
 		// gel bands

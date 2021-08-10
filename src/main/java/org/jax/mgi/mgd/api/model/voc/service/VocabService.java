@@ -316,7 +316,10 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				"\norder by orderBy, term\n";
 		}
 		else if (vocabKey.equals("154") ) {
-			cmd = "select _gelcontrol_key as termKey, gelLaneContent as term from gxd_gelcontrol order by term";
+			cmd = "select _term_key as termKey, abbreviation as term, 1 as orderBy from voc_term where _vocab_key = 154 and term = 'Not Specified'" +
+				"\nunion" +
+				"\nselect _term_key as termKey, abbreviation as term, 2 as orderBy from voc_term where _vocab_key = 154 and term != 'Not Specified'" + 
+				"\norder by orderBy, term\n";
 		}		
 		else if (vocabKey.equals("155")) {
 			cmd = "select _embedding_key as termKey, embeddingMethod as term, 1 as orderBy from gxd_embeddingmethod where _embedding_key = -1" +

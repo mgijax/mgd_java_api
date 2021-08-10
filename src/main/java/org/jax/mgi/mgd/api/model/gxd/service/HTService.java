@@ -55,13 +55,15 @@ public class HTService extends BaseService<HTDomain> {
 
 		List<SlimHTDomain> results = new ArrayList<SlimHTDomain>();
 		
-		// building SQL command : select + from + where + orderBy
+		// Building SQL command : select + from + where + orderBy
+		// Other FROM/WHERE clauses will be added, determined by query parameters
 		String cmd = "";
 		String select = "select acc.accid, hte._experiment_key, hte._curationstate_key ";
 		String from = "from gxd_htexperiment hte, acc_accession acc ";
 		String where = "where hte._experiment_key = acc._object_key " 
 				+ "\nand acc._mgitype_key = 42"
-				+ "\nand acc._logicaldb_key = 189 ";
+//				+ "\nand acc._logicaldb_key = 189 ";
+				+ "\nand acc.preferred = 1 ";
 		String orderBy = "order by acc.accid ";
 
 		// used to hold searchDomain values passed in web request
@@ -70,7 +72,11 @@ public class HTService extends BaseService<HTDomain> {
 		// primary accession id 
 		value = searchDomain.getPrimaryid();			
 		if (value != null && !value.isEmpty()) {	
-			where = where + "\nand acc.accID ilike '" + value + "'";
+			from = from + ", acc_accession acc1 ";	
+			where = where + "\nand hte._experiment_key = acc1._object_key ";
+			where = where + "\nand acc1._mgitype_key = 42 ";
+			where = where + "\nand acc1._logicaldb_key = 189 ";
+			where = where + "\nand acc1.accID ilike '" + value + "'";
 		}
 
 		// secondary accession id 

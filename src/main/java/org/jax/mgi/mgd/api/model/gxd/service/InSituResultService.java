@@ -109,7 +109,7 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 				entity.setStrength(strengthDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
 				
 				// if EMAPA and Pattern = null, then Pattern = Not Specified
-				if (domain.get(i).getStructures() != null && domain.get(i).getStructures().size() > 0 && domain.get(i).getPatternKey() == null || domain.get(i).getPatternKey().isEmpty()) {
+				if (domain.get(i).getStructures() != null && domain.get(i).getStructures().size() > 0 && (domain.get(i).getPatternKey() == null || domain.get(i).getPatternKey().isEmpty())) {
 					entity.setPattern(patternDAO.get(-1));
 				}
 				else {
@@ -157,7 +157,7 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 				entity.setStrength(strengthDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
 
 				// if EMAPA and Pattern = null, then Pattern = Not Specified
-				if (domain.get(i).getStructures() != null && domain.get(i).getStructures().size() > 0 && domain.get(i).getPatternKey() == null || domain.get(i).getPatternKey().isEmpty()) {
+				if (domain.get(i).getStructures() != null && domain.get(i).getStructures().size() > 0 && (domain.get(i).getPatternKey() == null || domain.get(i).getPatternKey().isEmpty())) {
 					entity.setPattern(patternDAO.get(-1));
 				}
 				else {

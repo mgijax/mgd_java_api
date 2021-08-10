@@ -107,7 +107,15 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 				
 				entity.set_specimen_key(parentKey);
 				entity.setStrength(strengthDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
-				entity.setPattern(patternDAO.get(Integer.valueOf(domain.get(i).getPatternKey())));
+				
+				// if EMAPA and Pattern = null, then Pattern = Not Specified
+				if (domain.get(i).getStructures() != null && domain.get(i).getStructures().size() > 0 && domain.get(i).getPatternKey() == null || domain.get(i).getPatternKey().isEmpty()) {
+					entity.setPattern(patternDAO.get(-1));
+				}
+				else {
+					entity.setPattern(patternDAO.get(Integer.valueOf(domain.get(i).getPatternKey())));
+				}
+
 				entity.setSequenceNum(domain.get(i).getSequenceNum());
 				
 				if (domain.get(i).getResultNote() != null && !domain.get(i).getResultNote().isEmpty()) {
@@ -147,7 +155,15 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 				
 				entity.set_specimen_key(parentKey);
 				entity.setStrength(strengthDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
-				entity.setPattern(patternDAO.get(Integer.valueOf(domain.get(i).getPatternKey())));
+
+				// if EMAPA and Pattern = null, then Pattern = Not Specified
+				if (domain.get(i).getStructures() != null && domain.get(i).getStructures().size() > 0 && domain.get(i).getPatternKey() == null || domain.get(i).getPatternKey().isEmpty()) {
+					entity.setPattern(patternDAO.get(-1));
+				}
+				else {
+					entity.setPattern(patternDAO.get(Integer.valueOf(domain.get(i).getPatternKey())));
+				}
+				
 				entity.setSequenceNum(domain.get(i).getSequenceNum());
 				entity.setResultNote(domain.get(i).getResultNote());
 				entity.setModification_date(new Date());

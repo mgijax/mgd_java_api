@@ -1,6 +1,9 @@
 package org.jax.mgi.mgd.api.model.gxd.translator;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
@@ -33,7 +36,6 @@ public class GelLaneTranslator extends BaseEntityDomainTranslator<GelLane, GelLa
 		domain.setLaneLabel(entity.getLaneLabel());
 		domain.setSampleAmount(entity.getSampleAmount());
 		domain.setSex(entity.getSex());
-		domain.setAge(entity.getAge());
 		domain.setAgeMin(String.valueOf(entity.getAgeMin()));
 		domain.setAgeMax(String.valueOf(entity.getAgeMax()));
 		domain.setAgeNote(entity.getAgeNote());
@@ -41,6 +43,35 @@ public class GelLaneTranslator extends BaseEntityDomainTranslator<GelLane, GelLa
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
+		// age stuff
+		
+		domain.setAge(entity.getAge());
+		String age = domain.getAge();
+		
+		if (age.equals("Not Applicable")
+				|| age.equals("Not Loaded")
+				|| age.equals("Not Resolved")
+				|| age.equals("Not Specified")
+				|| age.equals("embryonic")
+				|| age.equals("embryonic brain")
+				|| age.equals("postnatal")
+				|| age.equals("postnatal adult")
+				|| age.equals("postnatal newborn")
+				) {
+			domain.setAgePrefix(age);
+		}
+		else {		
+			List<String> ageList = new ArrayList<String>(Arrays.asList(age.split(" ")));
+			domain.setAgePrefix(ageList.get(0) + " " + ageList.get(1));
+			String ageStage = "";
+			for (int i = 2; i < ageList.size(); i++) {
+				ageStage = ageStage + ageList.get(i);
+			}
+			domain.setAgeStage(ageStage);			
+		}
+		
+		// end age stuff
+		
 		// structures
 		if (entity.getStructures() != null && !entity.getStructures().isEmpty()) {
 			GelLaneStructureTranslator structureTranslator = new GelLaneStructureTranslator();

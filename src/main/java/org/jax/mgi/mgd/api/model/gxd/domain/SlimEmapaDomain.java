@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 public class SlimEmapaDomain extends BaseDomain {
 
-	// a slim version of AssayDomain, SpecimenDomain, EMAPA members
+	// a slim version of AssayDomain, SpecimenDomain, GelLaneDomain, EMAPA members
 	// not to be used when editing purposes
 	// to be used for returning search results
 	

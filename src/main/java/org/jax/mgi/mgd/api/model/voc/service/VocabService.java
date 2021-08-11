@@ -316,9 +316,13 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				"\norder by orderBy, term\n";
 		}
 		else if (vocabKey.equals("154") ) {
-			cmd = "select _term_key as termKey, abbreviation as term, 1 as orderBy from voc_term where _vocab_key = 154 and term = 'Not Specified'" +
-				"\nunion" +
-				"\nselect _term_key as termKey, abbreviation as term, 2 as orderBy from voc_term where _vocab_key = 154 and term != 'Not Specified'" + 
+			cmd = "select g._gelcontrol_key as termKey, v.abbreviation as term, 1 as orderBy from gxd_gelcontrol g, voc_term v" + 
+				"\nwhere v._vocab_key = 154 and v.term = 'Not Specified'" + 
+				"\nand g.gellanecontent = v.term" + 
+				"\nunion" + 
+				"\nselect g._gelcontrol_key as termKey, v.abbreviation as term, 2 as orderBy from gxd_gelcontrol g, voc_term v" + 
+				"\nwhere v._vocab_key = 154 and v.term != 'Not Specified'\r\n" + 
+				"\nand g.gellanecontent = v.term" + 
 				"\norder by orderBy, term\n";
 		}		
 		else if (vocabKey.equals("155")) {

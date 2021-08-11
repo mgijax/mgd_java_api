@@ -618,7 +618,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		if (searchDomain.getGelLanes() != null) {
 			value = searchDomain.getGelLanes().get(0).getLaneLabel();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand l.laneLabel ilike '" + value + "'";				
+				where = where + "\nand s.laneLabel ilike '" + value + "'";				
 				from_gellane = true;
 			}
 			value = searchDomain.getGelLanes().get(0).getGenotypeAccID();
@@ -629,42 +629,42 @@ public class AssayService extends BaseService<AssayDomain> {
 			}			
 			value = searchDomain.getGelLanes().get(0).getAgePrefix();	
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand l.age ilike '" + value + "%'";				
+				where = where + "\nand s.age ilike '" + value + "%'";				
 				from_gellane = true;
 			}			
 			value = searchDomain.getGelLanes().get(0).getAgeStage();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand l.age ilike '%" + value + "'";				
+				where = where + "\nand s.age ilike '%" + value + "'";				
 				from_gellane = true;
 			}			
 			value = searchDomain.getGelLanes().get(0).getAgeNote();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand l.ageNote ilike '" + value + "'";				
+				where = where + "\nand s.ageNote ilike '" + value + "'";				
 				from_gellane = true;
 			}			
 			value = searchDomain.getGelLanes().get(0).getSex();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand l.sex ilike '" + value + "'";				
+				where = where + "\nand s.sex ilike '" + value + "'";				
 				from_gellane = true;
 			}			
 			value = searchDomain.getGelLanes().get(0).getGelRNATypeKey();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand l._gelrnatype_key = " + value;				
+				where = where + "\nand s._gelrnatype_key = " + value;				
 				from_gellane = true;
 			}			
 			value = searchDomain.getGelLanes().get(0).getGelControlKey();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand l._gelcontrol_key = " + value;
+				where = where + "\nand s._gelcontrol_key = " + value;
 				from_gellane = true;
 			}			
 			value = searchDomain.getGelLanes().get(0).getSampleAmount();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand l.sampleAmount ilike '" + value + "'";			
+				where = where + "\nand s.sampleAmount ilike '" + value + "'";			
 				from_gellane = true;
 			}			
 			value = searchDomain.getGelLanes().get(0).getLaneNote();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand l.laneNote ilike '" + value + "'";				
+				where = where + "\nand s.laneNote ilike '" + value + "'";				
 				from_gellane = true;
 			}			
 		}
@@ -722,8 +722,8 @@ public class AssayService extends BaseService<AssayDomain> {
 			where = where + "\nand a._assay_key = s._assay_key";
 		}
 		if (from_gellane == true) {
-			from = from + ", gxd_gellane l";
-			where = where + "\nand a._assay_key = l._assay_key";
+			from = from + ", gxd_gellane s";
+			where = where + "\nand a._assay_key = s._assay_key";
 		}		
 		if (from_genotype == true) {
 			from = from + ", gxd_genotype_acc_view g";

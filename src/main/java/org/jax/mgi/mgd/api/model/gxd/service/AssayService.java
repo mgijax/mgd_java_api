@@ -74,8 +74,8 @@ public class AssayService extends BaseService<AssayDomain> {
 	private AssayNoteService assayNoteService;
 	@Inject
 	private SpecimenService specimenService;
-//	@Inject
-//	private GelLaneService gelLaneService;
+	@Inject
+	private GelLaneService gelLaneService;
 //	@Inject
 //	private GelRowService gelRowService;
 	@Inject
@@ -268,13 +268,13 @@ public class AssayService extends BaseService<AssayDomain> {
 			}
 		}
 		
-//		// process gxd_gellane
-//		// if assaytype in Gel Assay Type
-//		if (domain.getGelLanes() != null && !domain.getGelLanes().isEmpty()) {
-//			if (gelLaneService.process(Integer.valueOf(domain.getAssayKey()), domain.getGelLanes(), user)) {
-//				modified = true;
-//			}
-//		}
+		// process gxd_gellane
+		// if assaytype in Gel Assay Type
+		if (domain.getGelLanes() != null && !domain.getGelLanes().isEmpty()) {
+			if (gelLaneService.process(Integer.valueOf(domain.getAssayKey()), domain.getGelLanes(), user)) {
+				modified = true;
+			}
+		}
 		
 //		// process gxd_gelrow
 //		// if assaytype in Gel Assay Type

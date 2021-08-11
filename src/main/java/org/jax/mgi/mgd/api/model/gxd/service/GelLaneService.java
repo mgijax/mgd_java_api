@@ -124,14 +124,14 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				entity.setAgeMin(-1);
 				entity.setAgeMax(-1);		
 
-				if (domain.get(i).getAgeNote() != null && domain.get(i).getAgeNote().isEmpty()) {
+				if (domain.get(i).getAgeNote() != null && !domain.get(i).getAgeNote().isEmpty()) {
 					entity.setAgeNote(domain.get(i).getAgeNote());
 				}
 				else {
 					entity.setAgeNote(null);					
-				}
+				}	
 				
-				if (domain.get(i).getLaneNote() != null && domain.get(i).getLaneNote().isEmpty()) {
+				if (domain.get(i).getLaneNote() != null && !domain.get(i).getLaneNote().isEmpty()) {
 					entity.setLaneNote(domain.get(i).getLaneNote());
 				}
 				else {
@@ -177,14 +177,14 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				entity.setAgeMin(-1);
 				entity.setAgeMax(-1);
 
-				if (domain.get(i).getAgeNote() != null && domain.get(i).getAgeNote().isEmpty()) {
+				if (domain.get(i).getAgeNote() != null && !domain.get(i).getAgeNote().isEmpty()) {
 					entity.setAgeNote(domain.get(i).getAgeNote());
 				}
 				else {
 					entity.setAgeNote(null);					
-				}
+				}	
 				
-				if (domain.get(i).getLaneNote() != null && domain.get(i).getLaneNote().isEmpty()) {
+				if (domain.get(i).getLaneNote() != null && !domain.get(i).getLaneNote().isEmpty()) {
 					entity.setLaneNote(domain.get(i).getLaneNote());
 				}
 				else {

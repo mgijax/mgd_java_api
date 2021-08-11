@@ -14,7 +14,7 @@ public class SlimEmapaDomain extends BaseDomain {
 	
 	private String assayKey;
 	private String specimenKey;
-	private String resultKey;	
+	private String gelLaneKey;
 	private String createdByKey;
 	private String createdBy;
 }

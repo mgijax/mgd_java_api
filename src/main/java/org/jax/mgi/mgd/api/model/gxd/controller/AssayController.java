@@ -121,13 +121,13 @@ public class AssayController extends BaseController<AssayDomain> {
 	
 	@POST
 	@ApiOperation(value = "Get EMAPA Set Members by Specimen and Set/User")
-	@Path("/getEmapaBySetUser")
+	@Path("/getEmapaInSituBySetUser")
 	public List<MGISetMemberEmapaDomain> getEmapaBySetUser(SlimEmapaDomain domain) {
 			
 		List<MGISetMemberEmapaDomain> results = new ArrayList<MGISetMemberEmapaDomain>();
 		
 		try {
-			results = assayService.getEmapaBySetUser(domain);
+			results = assayService.getEmapaInSituBySetUser(domain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -135,6 +135,22 @@ public class AssayController extends BaseController<AssayDomain> {
 		return results;
 	}
 
+	@POST
+	@ApiOperation(value = "Get EMAPA Set Members by Specimen and Set/User")
+	@Path("/getEmapaGelBySetUser")
+	public List<MGISetMemberEmapaDomain> getEmapaGelBySetUser(SlimEmapaDomain domain) {
+			
+		List<MGISetMemberEmapaDomain> results = new ArrayList<MGISetMemberEmapaDomain>();
+		
+		try {
+			results = assayService.getEmapaGelBySetUser(domain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 	@POST
 	@ApiOperation(value = "Process Replace Genotype/returns GenotypeReplaceDomain")
 	@Path("/processReplaceGenotype")

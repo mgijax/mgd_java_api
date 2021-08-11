@@ -74,8 +74,8 @@ public class AssayService extends BaseService<AssayDomain> {
 	private AssayNoteService assayNoteService;
 	@Inject
 	private SpecimenService specimenService;
-	@Inject
-	private GelLaneService gelLaneService;
+//	@Inject
+//	private GelLaneService gelLaneService;
 //	@Inject
 //	private GelRowService gelRowService;
 	@Inject
@@ -851,7 +851,7 @@ public class AssayService extends BaseService<AssayDomain> {
 	}
 
 	@Transactional	
-	public List<MGISetMemberEmapaDomain> getEmapaBySetUser(SlimEmapaDomain searchDomain) {
+	public List<MGISetMemberEmapaDomain> getEmapaInSituBySetUser(SlimEmapaDomain searchDomain) {
 		// return 
 		// all set members of emapa/stage (_set_key = 1046) + user (searchDomain.getCreatedByKey())
 		// union
@@ -916,6 +916,72 @@ public class AssayService extends BaseService<AssayDomain> {
 		return results;
 	}
 
+	@Transactional	
+	public List<MGISetMemberEmapaDomain> getEmapaGelBySetUser(SlimEmapaDomain searchDomain) {
+		// return 
+		// all set members of emapa/stage (_set_key = 1046) + user (searchDomain.getCreatedByKey())
+		// union
+		// all emapa for given gel lanes (searchDomain.getGelLaneKey())
+
+		List<MGISetMemberEmapaDomain> results = new ArrayList<MGISetMemberEmapaDomain>();		
+		String displayIt = "";
+		
+		// search mgi_setmembers where _set_key = 1046 (emapa/stage)
+		String cmd = 
+				"\n(select distinct '*TS'||cast(t2.stage as varchar(5))||';'||t1.term as displayIt, t1.term, t2.stage," +
+				"\ns._setmember_key as setMemberKey, s._set_key as setKey, s._object_key as objectKey, s._createdby_key as createdByKey, u.login," +
+				"\ns.sequenceNum as sequenceNum, 1 as orderBy" +
+				"\nfrom mgi_setmember s, mgi_setmember_emapa s2, voc_term t1, gxd_theilerstage t2, mgi_user u" +
+				"\nwhere not exists (select 1 from GXD_GelLaneStructure_View v where s._Object_key = v._EMAPA_Term_key" +
+				"\nand s2._Stage_key = v._Stage_key" +
+				"\nand v._GelLane_key = " + searchDomain.getGelLaneKey() + ")" +
+				"\nand s._set_key = 1046" +
+				"\nand s._setmember_key = s2._setmember_key" +
+				"\nand s._object_key = t1._term_key" +
+				"\nand s2._Stage_key = t2._stage_key" +
+				"\nand s._CreatedBy_key = u._user_key" +
+				"\nand u.login = '" + searchDomain.getCreatedBy() + "'" +		
+				"\nunion all" +
+				"\nselect i.displayIt||' ('||count(*)||')' as displayIt, term, stage," +
+				"\n0 as setMemberKey, 0 as setKey, i._emapa_term_key as objectKey, 0 as createdByKey, null as createdBy," +
+				"\nmin(i.sequenceNum), 0 as orderBy" +				
+				"\nfrom GXD_GelLaneStructure_View i, GXD_GelLane s" +
+				"\nwhere s._GelLane_key = i._GelLane_key" +
+				"\nand s._GelLane_key = " + searchDomain.getGelLaneKey() +
+				"\ngroup by _EMAPA_Term_key, _Stage_key, displayIt, term, stage" +
+				"\n) order by orderBy, sequenceNum, stage, term";
+		
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				MGISetMemberEmapaDomain domain = new MGISetMemberEmapaDomain();
+				domain.setProcessStatus("x");
+				domain.setSetKey(rs.getString("setKey"));
+				domain.setSetMemberKey(rs.getString("setMemberKey"));
+				domain.setObjectKey(rs.getString("objectKey"));
+				domain.setTerm(rs.getString("term"));
+				domain.setStage(rs.getString("stage"));
+				domain.setCreatedByKey(rs.getString("createdByKey"));
+				domain.setCreatedBy(rs.getString("login"));
+				
+				displayIt = rs.getString("displayIt").replaceAll("\\(1\\)", "");
+				domain.setDisplayIt(displayIt);
+
+				domain.setIsUsed(false);
+				results.add(domain);				
+				assayDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 	@Transactional		
 	public Boolean gxdexpressionUtilities(String assayKey) throws IOException, InterruptedException {
 		// see mgicacheload/gxdexpression.py

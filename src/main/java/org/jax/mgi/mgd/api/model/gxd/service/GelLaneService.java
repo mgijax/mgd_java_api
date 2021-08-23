@@ -94,7 +94,7 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 
 			// if gel lane is null/empty, then skip
 			// pwi has sent a "c" that is empty/not being used
-			if (domain.get(i).getLaneLabel() == null || domain.get(i).getLaneLabel().isEmpty()) {
+			if (domain.get(i).getGelControlKey() == null || domain.get(i).getGelControlKey().isEmpty()) {
 				continue;
 			}
 			
@@ -109,10 +109,17 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
 				entity.setGelControl(gelControlDAO.get(Integer.valueOf(domain.get(i).getGelControlKey())));
 				entity.setSequenceNum(domain.get(i).getSequenceNum());
-				entity.setLaneLabel(domain.get(i).getLaneLabel());
 				entity.setSampleAmount(domain.get(i).getSampleAmount());
 				entity.setSex(domain.get(i).getSex());
 
+				if (domain.get(i).getLaneLabel() == null || domain.get(i).getLaneLabel().isEmpty()) {
+					entity.setLaneLabel(null);
+				}
+				else {
+					entity.setLaneLabel(domain.get(i).getLaneLabel());
+					
+				}
+				
 				String newAge = null;
 				if (!domain.get(i).getAgePrefix().isEmpty()) {
 					newAge = domain.get(i).getAgePrefix();
@@ -162,9 +169,16 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
 				entity.setGelControl(gelControlDAO.get(Integer.valueOf(domain.get(i).getGelControlKey())));
 				entity.setSequenceNum(domain.get(i).getSequenceNum());
-				entity.setLaneLabel(domain.get(i).getLaneLabel());
 				entity.setSampleAmount(domain.get(i).getSampleAmount());
 				entity.setSex(domain.get(i).getSex());
+
+				if (domain.get(i).getLaneLabel() == null || domain.get(i).getLaneLabel().isEmpty()) {
+					entity.setLaneLabel(null);
+				}
+				else {
+					entity.setLaneLabel(domain.get(i).getLaneLabel());
+					
+				}
 				
 				String newAge = null;
 				if (!domain.get(i).getAgePrefix().isEmpty()) {

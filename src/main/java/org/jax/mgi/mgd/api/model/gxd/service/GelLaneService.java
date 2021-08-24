@@ -205,9 +205,12 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 					if (assayTypeKey == 8) {
 						entity.setGelRNAType(gelRNATypeDAO.get(-2));
 					}
-					else {
+					else if (domain.get(i).getGelRNATypeKey() == null || domain.get(i).getGelRNATypeKey().isEmpty()) { 
 						entity.setGelRNAType(gelRNATypeDAO.get(-1));
-					}					
+					}
+					else {
+						entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
+					}
 				}
 				// else from domain
 				else {

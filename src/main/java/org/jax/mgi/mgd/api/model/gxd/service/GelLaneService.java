@@ -103,22 +103,26 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				log.info("processGelLane create");
 
 				GelLane entity = new GelLane();
-
+					
 				entity.set_assay_key(parentKey);
-				entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));
-				entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
-				entity.setGelControl(gelControlDAO.get(Integer.valueOf(domain.get(i).getGelControlKey())));
-				entity.setSequenceNum(domain.get(i).getSequenceNum());
-				entity.setSampleAmount(domain.get(i).getSampleAmount());
-				entity.setSex(domain.get(i).getSex());
 
 				if (domain.get(i).getLaneLabel() == null || domain.get(i).getLaneLabel().isEmpty()) {
 					entity.setLaneLabel(null);
+					entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));
+					entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
+					entity.setGelControl(gelControlDAO.get(Integer.valueOf(domain.get(i).getGelControlKey())));	
+					entity.setSex(domain.get(i).getSex());					
 				}
 				else {
 					entity.setLaneLabel(domain.get(i).getLaneLabel());
-					
+					entity.setGenotype(genotypeDAO.get(-1));
+					entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
+					entity.setGelControl(gelControlDAO.get(Integer.valueOf(domain.get(i).getGelControlKey())));	
+					entity.setSex(domain.get(i).getSex());							
 				}
+
+				entity.setSequenceNum(domain.get(i).getSequenceNum());
+				entity.setSampleAmount(domain.get(i).getSampleAmount());
 				
 				String newAge = null;
 				if (!domain.get(i).getAgePrefix().isEmpty()) {
@@ -165,19 +169,20 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				GelLane entity = gelLaneDAO.get(Integer.valueOf(domain.get(i).getGelLaneKey()));
 			
 				entity.set_assay_key(parentKey);
-				entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));
-				entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
-				entity.setGelControl(gelControlDAO.get(Integer.valueOf(domain.get(i).getGelControlKey())));
-				entity.setSequenceNum(domain.get(i).getSequenceNum());
-				entity.setSampleAmount(domain.get(i).getSampleAmount());
-				entity.setSex(domain.get(i).getSex());
 
 				if (domain.get(i).getLaneLabel() == null || domain.get(i).getLaneLabel().isEmpty()) {
 					entity.setLaneLabel(null);
+					entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));
+					entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
+					entity.setGelControl(gelControlDAO.get(Integer.valueOf(domain.get(i).getGelControlKey())));	
+					entity.setSex(domain.get(i).getSex());					
 				}
 				else {
 					entity.setLaneLabel(domain.get(i).getLaneLabel());
-					
+					entity.setGenotype(genotypeDAO.get(-1));
+					entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
+					entity.setGelControl(gelControlDAO.get(Integer.valueOf(domain.get(i).getGelControlKey())));	
+					entity.setSex(domain.get(i).getSex());							
 				}
 				
 				String newAge = null;

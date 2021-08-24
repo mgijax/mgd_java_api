@@ -921,7 +921,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		// return 
 		// all set members of emapa/stage (_set_key = 1046) + user (searchDomain.getCreatedByKey())
 		// union
-		// all emapa for given gel lanes (searchDomain.getGelLaneKey())
+		// all emapa for given assay (searchDomain.getAssayKey())
 
 		List<MGISetMemberEmapaDomain> results = new ArrayList<MGISetMemberEmapaDomain>();		
 		String displayIt = "";
@@ -934,7 +934,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nfrom mgi_setmember s, mgi_setmember_emapa s2, voc_term t1, gxd_theilerstage t2, mgi_user u" +
 				"\nwhere not exists (select 1 from GXD_GelLaneStructure_View v where s._Object_key = v._EMAPA_Term_key" +
 				"\nand s2._Stage_key = v._Stage_key" +
-				"\nand v._GelLane_key = " + searchDomain.getGelLaneKey() + ")" +
+				"\nand v._Assay_key = " + searchDomain.getAssayKey() + ")" +
 				"\nand s._set_key = 1046" +
 				"\nand s._setmember_key = s2._setmember_key" +
 				"\nand s._object_key = t1._term_key" +
@@ -947,7 +947,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nmin(i.sequenceNum), 0 as orderBy" +				
 				"\nfrom GXD_GelLaneStructure_View i, GXD_GelLane s" +
 				"\nwhere s._GelLane_key = i._GelLane_key" +
-				"\nand s._GelLane_key = " + searchDomain.getGelLaneKey() +
+				"\nand s._Assay_key = " + searchDomain.getAssayKey() +
 				"\ngroup by _EMAPA_Term_key, _Stage_key, displayIt, term, stage" +
 				"\n) order by orderBy, sequenceNum, stage, term";
 		

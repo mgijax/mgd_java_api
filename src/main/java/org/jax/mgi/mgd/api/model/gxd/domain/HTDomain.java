@@ -14,17 +14,17 @@ public class HTDomain extends BaseDomain {
 	// not to be used when editing purposes
 	// to be used for returning search results
 	
-	private String _experiment_key;	
+	private int _experiment_key;	
 	private String primaryid;
 	private String secondaryid;
 	private String name;
 	private String description;
 	private String notetext;
 
-	private String _evaluationstate_key;
-	private String _experimenttype_key;
-	private String _studytype_key;
-	private String _curationstate_key;
+	private int _evaluationstate_key;
+	private int _experimenttype_key;
+	private int _studytype_key;
+	private int _curationstate_key;
 
 	private String creation_date;
 	private String release_date;

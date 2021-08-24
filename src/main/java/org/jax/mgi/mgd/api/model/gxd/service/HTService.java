@@ -18,9 +18,10 @@ import org.jax.mgi.mgd.api.model.gxd.domain.HTVariableDomain;
 
 // DAOs, entities and translators
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-//import org.jax.mgi.mgd.api.model.gxd.dao.HTDAO;
-//import org.jax.mgi.mgd.api.model.gxd.entities.foo;
-//import org.jax.mgi.mgd.api.model.gxd.translator.foo;
+import org.jax.mgi.mgd.api.model.gxd.dao.HTExperimentDAO;
+import org.jax.mgi.mgd.api.model.gxd.entities.HTExperiment;
+
+import org.jax.mgi.mgd.api.model.gxd.translator.HTExperimentTranslator;
 
 
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
@@ -36,25 +37,34 @@ public class HTService extends BaseService<HTDomain> {
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 
-//-----TODO
-// future DAOs
-//	@Inject
-//	private HTDAO htDAO;
+	@Inject
+	private HTExperimentDAO htExperimentDAO;
 
 // future services
 //	@Inject
 //	private HTService htService;
 
-// ---WILL NEED A TRANSLATOR	
-//	private SlimAssayTranslator slimtranslator = new SlimAssayTranslator();
+	private HTExperimentTranslator translator = new HTExperimentTranslator();
 
-
+	@Transactional
+	public HTDomain get(Integer key) {
+		// get the DAO/entity and translate -> domain
+		HTDomain domain = new HTDomain();
+		HTExperiment entity = htExperimentDAO.get(key);
+		if ( entity != null) {
+			domain = translator.translate(entity);
+		}
+		return domain;
+	}
 	
 	@Transactional
 	public List<SlimHTDomain> search(HTDomain searchDomain) {
 
 		List<SlimHTDomain> results = new ArrayList<SlimHTDomain>();
 		
+		// used to hold searchDomain values passed in web request
+		String value;
+
 		// Building SQL command : select + from + where + orderBy
 		// Other FROM/WHERE clauses will be added, determined by query parameters
 		String cmd = "";
@@ -62,12 +72,8 @@ public class HTService extends BaseService<HTDomain> {
 		String from = "from gxd_htexperiment hte, acc_accession acc ";
 		String where = "where hte._experiment_key = acc._object_key " 
 				+ "\nand acc._mgitype_key = 42"
-//				+ "\nand acc._logicaldb_key = 189 ";
 				+ "\nand acc.preferred = 1 ";
 		String orderBy = "order by acc.accid ";
-
-		// used to hold searchDomain values passed in web request
-		String value;
 
 		// primary accession id 
 		value = searchDomain.getPrimaryid();			
@@ -112,35 +118,36 @@ public class HTService extends BaseService<HTDomain> {
 		}
 
 		/*
-		// TYPES AND STATES
+		// TYPES AND STATES;  Web passes these as ints (for some reason)
 		*/
 
 		// evaluation state 
-		value = searchDomain.get_evaluationstate_key();			
-		if (value != null && !value.isEmpty()) {	
-			where = where + "\nand hte._evaluationstate_key = '" + value + "'";
+		Integer ivalue;
+		ivalue = searchDomain.get_evaluationstate_key();			
+		if (ivalue != null && ivalue.intValue() != 0) {	
+			where = where + "\nand hte._evaluationstate_key = '" + ivalue + "'";
 		}
 
 		// experiment type 
-		value = searchDomain.get_experimenttype_key();			
-		if (value != null && !value.isEmpty()) {	
-			where = where + "\nand hte._experimenttype_key = '" + value + "'";
+		ivalue = searchDomain.get_experimenttype_key();			
+		if (ivalue != null && ivalue.intValue() != 0) {	
+			where = where + "\nand hte._experimenttype_key = '" + ivalue + "'";
 		}
 
 		// study type 
-		value = searchDomain.get_studytype_key();			
-		if (value != null && !value.isEmpty()) {	
-			where = where + "\nand hte._studytype_key = '" + value + "'";
+		ivalue = searchDomain.get_studytype_key();			
+		if (ivalue != null && ivalue.intValue() != 0) {	
+			where = where + "\nand hte._studytype_key = '" + ivalue + "'";
 		}
 
 		// curationstate state 
-		value = searchDomain.get_curationstate_key();			
-		if (value != null && !value.isEmpty()) {	
-			where = where + "\nand hte._curationstate_key = '" + value + "'";
+		ivalue = searchDomain.get_curationstate_key();			
+		if (ivalue != null && ivalue.intValue() != 0) {	
+			where = where + "\nand hte._curationstate_key = '" + ivalue + "'";
 		}
 
 
-		/*
+		/* 
 		// DATES
 		*/
 
@@ -272,15 +279,7 @@ public class HTService extends BaseService<HTDomain> {
         return results;
     } 
 
-	@Transactional
-	public HTDomain get(Integer key) {
-		// get the DAO/entity and translate -> domain
-		HTDomain domain = new HTDomain();
-//		if (assayDAO.get(key) != null) {
-//			domain = translator.translate(assayDAO.get(key));
-//		}
-		return domain;
-	}
+
 
 	@Transactional
 	public SearchResults<HTDomain> delete(Integer key, User user) {

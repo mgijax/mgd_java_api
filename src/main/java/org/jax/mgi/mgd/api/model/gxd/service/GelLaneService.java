@@ -122,18 +122,18 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				// control = No
 				if (domain.get(i).getGelControlKey().equals("1")) {
 					
-					if (domain.get(i).getGenotypeKey() == null || domain.get(i).getGenotypeKey().isEmpty()) {
-						entity.setGenotype(genotypeDAO.get(-1));
-					}
-					else {
+					if (domain.get(i).getGenotypeKey() != null && !domain.get(i).getGenotypeKey().isEmpty()) {
 						entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));	
 					}
+					else {
+						entity.setGenotype(genotypeDAO.get(-1));						
+					}
 					
-					if (domain.get(i).getSex() == null || domain.get(i).getSex().isEmpty()) {
-						entity.setSex("Not Specified");
+					if (domain.get(i).getSex() != null && !domain.get(i).getSex().isEmpty()) {
+						entity.setSex(domain.get(i).getSex());						
 					}
 					else {
-						entity.setSex(domain.get(i).getSex());						
+						entity.setSex("Not Specified");						
 					}
 					
 					if (domain.get(i).getAgePrefix() == null || domain.get(i).getAgePrefix().isEmpty()) {
@@ -144,11 +144,11 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 					if (assayTypeKey == 8) {
 						entity.setGelRNAType(gelRNATypeDAO.get(-2));
 					}
-					else if (domain.get(i).getGelRNATypeKey() == null || domain.get(i).getGelRNATypeKey().isEmpty()) { 
-						entity.setGelRNAType(gelRNATypeDAO.get(-1));
+					else if (domain.get(i).getGelRNATypeKey() != null && !domain.get(i).getGelRNATypeKey().isEmpty()) { 
+						entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
 					}
 					else {
-						entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
+						entity.setGelRNAType(gelRNATypeDAO.get(-1));					
 					}					
 				}
 				// else from domain
@@ -222,33 +222,33 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				// control = No
 				if (domain.get(i).getGelControlKey().equals("1")) {
 					
-					if (domain.get(i).getGenotypeKey() == null || domain.get(i).getGenotypeKey().isEmpty()) {
-						entity.setGenotype(genotypeDAO.get(-1));
-					}
-					else {
+					if (domain.get(i).getGenotypeKey() != null && !domain.get(i).getGenotypeKey().isEmpty()) {
 						entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));	
 					}
+					else {
+						entity.setGenotype(genotypeDAO.get(-1));						
+					}
 					
-					if (domain.get(i).getSex() == null || domain.get(i).getSex().isEmpty()) {
-						entity.setSex("Not Specified");
+					if (domain.get(i).getSex() != null && !domain.get(i).getSex().isEmpty()) {
+						entity.setSex(domain.get(i).getSex());						
 					}
 					else {
-						entity.setSex(domain.get(i).getSex());						
+						entity.setSex("Not Specified");						
 					}
 					
 					if (domain.get(i).getAgePrefix() == null || domain.get(i).getAgePrefix().isEmpty()) {
 						domain.get(i).setAgePrefix("embryonic day");
 					}
-					
+
 					// western blot
 					if (assayTypeKey == 8) {
 						entity.setGelRNAType(gelRNATypeDAO.get(-2));
 					}
-					else if (domain.get(i).getGelRNATypeKey() == null || domain.get(i).getGelRNATypeKey().isEmpty()) { 
-						entity.setGelRNAType(gelRNATypeDAO.get(-1));
+					else if (domain.get(i).getGelRNATypeKey() != null && !domain.get(i).getGelRNATypeKey().isEmpty()) { 
+						entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
 					}
 					else {
-						entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
+						entity.setGelRNAType(gelRNATypeDAO.get(-1));					
 					}
 				}
 				// else from domain

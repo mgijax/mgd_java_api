@@ -121,10 +121,25 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 
 				// control = No
 				if (domain.get(i).getGelControlKey().equals("1")) {
-					entity.setGenotype(genotypeDAO.get(-1));
-					entity.setSex("Not Specified");
-					domain.get(i).setAgePrefix("embryonic day");
 					
+					if (domain.get(i).getGenotypeKey() == null || domain.get(i).getGenotypeKey().isEmpty()) {
+						entity.setGenotype(genotypeDAO.get(-1));
+					}
+					else {
+						entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));	
+					}
+					
+					if (domain.get(i).getSex() == null || domain.get(i).getSex().isEmpty()) {
+						entity.setSex("Not Specified");
+					}
+					else {
+						entity.setSex(domain.get(i).getSex());						
+					}
+					
+					if (domain.get(i).getAgePrefix() == null || domain.get(i).getAgePrefix().isEmpty()) {
+						domain.get(i).setAgePrefix("embryonic day");
+					}
+
 					// western blot
 					if (assayTypeKey == 8) {
 						entity.setGelRNAType(gelRNATypeDAO.get(-2));
@@ -206,9 +221,24 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 
 				// control = No
 				if (domain.get(i).getGelControlKey().equals("1")) {
-					entity.setGenotype(genotypeDAO.get(-1));
-					entity.setSex("Not Specified");
-					domain.get(i).setAgePrefix("embryonic day");
+					
+					if (domain.get(i).getGenotypeKey() == null || domain.get(i).getGenotypeKey().isEmpty()) {
+						entity.setGenotype(genotypeDAO.get(-1));
+					}
+					else {
+						entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));	
+					}
+					
+					if (domain.get(i).getSex() == null || domain.get(i).getSex().isEmpty()) {
+						entity.setSex("Not Specified");
+					}
+					else {
+						entity.setSex(domain.get(i).getSex());						
+					}
+					
+					if (domain.get(i).getAgePrefix() == null || domain.get(i).getAgePrefix().isEmpty()) {
+						domain.get(i).setAgePrefix("embryonic day");
+					}
 					
 					// western blot
 					if (assayTypeKey == 8) {

@@ -33,6 +33,8 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 	private GelRNATypeDAO gelRNATypeDAO;
 	@Inject
 	private GelControlDAO gelControlDAO;
+	@Inject
+	private GelLaneStructureService structureService;
 	
 	private GelLaneTranslator translator = new GelLaneTranslator();				
 
@@ -169,6 +171,10 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				entity.setCreation_date(new Date());				
 				entity.setModification_date(new Date());				
 				gelLaneDAO.persist(entity);
+
+				if (domain.get(i).getStructures() != null && !domain.get(i).getStructures().isEmpty()) {
+					modified = structureService.process(entity.get_assay_key(), domain.get(i).getStructures(), user);
+				}
 				
 				modified = true;
 				log.info("processGelLane/create processed: " + entity.get_gellane_key());					
@@ -248,6 +254,10 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				}
 				
 				entity.setModification_date(new Date());
+	
+				if (domain.get(i).getStructures() != null && !domain.get(i).getStructures().isEmpty()) {
+					modified = structureService.process(Integer.valueOf(domain.get(i).getAssayKey()), domain.get(i).getStructures(), user);
+				}
 				
 				gelLaneDAO.update(entity);
 				modified = true;

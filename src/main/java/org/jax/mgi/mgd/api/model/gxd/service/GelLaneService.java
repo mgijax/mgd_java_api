@@ -173,7 +173,7 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				gelLaneDAO.persist(entity);
 
 				if (domain.get(i).getStructures() != null && !domain.get(i).getStructures().isEmpty()) {
-					modified = structureService.process(entity.get_assay_key(), domain.get(i).getStructures(), user);
+					modified = structureService.process(entity.get_gellane_key(), domain.get(i).getStructures(), user);
 				}
 				
 				modified = true;
@@ -256,7 +256,7 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				entity.setModification_date(new Date());
 	
 				if (domain.get(i).getStructures() != null && !domain.get(i).getStructures().isEmpty()) {
-					modified = structureService.process(Integer.valueOf(domain.get(i).getAssayKey()), domain.get(i).getStructures(), user);
+					modified = structureService.process(Integer.valueOf(domain.get(i).getGelLaneKey()), domain.get(i).getStructures(), user);
 				}
 				
 				gelLaneDAO.update(entity);

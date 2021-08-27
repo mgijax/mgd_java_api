@@ -644,7 +644,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			}
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand s.age ilike '" + value + "'";				
-				from_specimen = true;
+				from_gellane = true;
 			}
 			
 			value = searchDomain.getGelLanes().get(0).getAgeNote();

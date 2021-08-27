@@ -372,6 +372,8 @@ public class AssayService extends BaseService<AssayDomain> {
 		String orderBy = "order by r.jnumid, t.assayType, m.symbol";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
+		String agePrefix;	
+		String ageRange;
 		Boolean from_accession = false;
 		Boolean from_assaynote = false;
 		Boolean from_probeprep = false;
@@ -539,8 +541,8 @@ public class AssayService extends BaseService<AssayDomain> {
 			}	
 			
 			value = "";
-			String agePrefix = searchDomain.getSpecimens().get(0).getAgePrefix();	
-			String ageRange = searchDomain.getSpecimens().get(0).getAgeStage();
+			agePrefix = searchDomain.getSpecimens().get(0).getAgePrefix();	
+			ageRange = searchDomain.getSpecimens().get(0).getAgeStage();
 			if (agePrefix != null && !agePrefix.isEmpty() && ageRange != null && !ageRange.isEmpty()) {
 				value = agePrefix + " " + ageRange;
 			}
@@ -627,16 +629,24 @@ public class AssayService extends BaseService<AssayDomain> {
 				from_genotype = true;
 				from_gellane = true;
 			}			
-			value = searchDomain.getGelLanes().get(0).getAgePrefix();	
+
+			value = "";
+			agePrefix = searchDomain.getGelLanes().get(0).getAgePrefix();	
+			ageRange = searchDomain.getGelLanes().get(0).getAgeStage();
+			if (agePrefix != null && !agePrefix.isEmpty() && ageRange != null && !ageRange.isEmpty()) {
+				value = agePrefix + " " + ageRange;
+			}
+			else if (agePrefix != null && !agePrefix.isEmpty()) {
+				value = agePrefix + "%";
+			}
+			else if (ageRange != null && !ageRange.isEmpty()) {
+				value = value + "%" + ageRange; 
+			}
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand s.age ilike '" + value + "%'";				
-				from_gellane = true;
-			}			
-			value = searchDomain.getGelLanes().get(0).getAgeStage();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand s.age ilike '%" + value + "'";				
-				from_gellane = true;
-			}			
+				where = where + "\nand s.age ilike '" + value + "'";				
+				from_specimen = true;
+			}
+			
 			value = searchDomain.getGelLanes().get(0).getAgeNote();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand s.ageNote ilike '" + value + "'";				

@@ -172,14 +172,14 @@ public class AssayService extends BaseService<AssayDomain> {
 			}
 		}
 		
-//		// process gxd_gellane
-//		// if assaytype in Gel Assay Type
-//		if (domain.getGelLanes() != null && !domain.getGelLanes().isEmpty()) {
-//			if (gelLaneService.process(entity.get_assay_key(), domain.getGelLanes(), user)) {
-//				modified = true;
-//			}
-//		}
-//
+		// process gxd_gellane
+		// if assaytype in Gel Assay Type
+		if (domain.getGelLanes() != null && !domain.getGelLanes().isEmpty()) {
+			if (gelLaneService.process(entity.get_assay_key(), Integer.valueOf(domain.getAssayTypeKey()), domain.getGelLanes(), user)) {
+				modified = true;
+			}
+		}
+
 //		// process gxd_gelrow
 //		// if assaytype in Gel Assay Type
 //		if (domain.getGelRows() != null && !domain.getGelRows().isEmpty()) {
@@ -271,7 +271,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		// process gxd_gellane
 		// if assaytype in Gel Assay Type
 		if (domain.getGelLanes() != null && !domain.getGelLanes().isEmpty()) {
-			if (gelLaneService.process(Integer.valueOf(domain.getAssayKey()), domain.getGelLanes(), user)) {
+			if (gelLaneService.process(Integer.valueOf(domain.getAssayKey()), Integer.valueOf(domain.getAssayTypeKey()), domain.getGelLanes(), user)) {
 				modified = true;
 			}
 		}
@@ -372,6 +372,8 @@ public class AssayService extends BaseService<AssayDomain> {
 		String orderBy = "order by r.jnumid, t.assayType, m.symbol";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
+		String agePrefix;	
+		String ageRange;
 		Boolean from_accession = false;
 		Boolean from_assaynote = false;
 		Boolean from_probeprep = false;
@@ -405,19 +407,6 @@ public class AssayService extends BaseService<AssayDomain> {
 		value = searchDomain.getReporterGeneKey();
 		if (value != null && !value.isEmpty()) {
 			where = where + "\nand a._reportergene_key = " + value;		
-		}
-		
-		value = searchDomain.getDetectionKey();
-		if (value != null && !value.isEmpty()) {
-			if (value.equals("1")) {
-				where = where + "\nand a._ProbePrep_key is not null";
-			}
-			else if (value.equals("2")) {
-				where = where + "\nand a._AntibodyPrep_key is not null";
-			}
-			else {
-				where = where + "\nand a._ProbePrep_key is null and a._AntibodyPrep_key is null";				
-			}
 		}
 		
 		// reference
@@ -539,8 +528,8 @@ public class AssayService extends BaseService<AssayDomain> {
 			}	
 			
 			value = "";
-			String agePrefix = searchDomain.getSpecimens().get(0).getAgePrefix();	
-			String ageRange = searchDomain.getSpecimens().get(0).getAgeStage();
+			agePrefix = searchDomain.getSpecimens().get(0).getAgePrefix();	
+			ageRange = searchDomain.getSpecimens().get(0).getAgeStage();
 			if (agePrefix != null && !agePrefix.isEmpty() && ageRange != null && !ageRange.isEmpty()) {
 				value = agePrefix + " " + ageRange;
 			}
@@ -627,16 +616,24 @@ public class AssayService extends BaseService<AssayDomain> {
 				from_genotype = true;
 				from_gellane = true;
 			}			
-			value = searchDomain.getGelLanes().get(0).getAgePrefix();	
+
+			value = "";
+			agePrefix = searchDomain.getGelLanes().get(0).getAgePrefix();	
+			ageRange = searchDomain.getGelLanes().get(0).getAgeStage();
+			if (agePrefix != null && !agePrefix.isEmpty() && ageRange != null && !ageRange.isEmpty()) {
+				value = agePrefix + " " + ageRange;
+			}
+			else if (agePrefix != null && !agePrefix.isEmpty()) {
+				value = agePrefix + "%";
+			}
+			else if (ageRange != null && !ageRange.isEmpty()) {
+				value = value + "%" + ageRange; 
+			}
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand s.age ilike '" + value + "%'";				
+				where = where + "\nand s.age ilike '" + value + "'";				
 				from_gellane = true;
-			}			
-			value = searchDomain.getGelLanes().get(0).getAgeStage();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand s.age ilike '%" + value + "'";				
-				from_gellane = true;
-			}			
+			}
+			
 			value = searchDomain.getGelLanes().get(0).getAgeNote();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand s.ageNote ilike '" + value + "'";				

@@ -19,6 +19,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
+import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -48,7 +49,6 @@ public class HTExperiment extends BaseEntity {
 	private Integer _studytype_key;
 	private Integer _curationstate_key;
 
-	// mgi accession ids only
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_experiment_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 42 and `_logicaldb_key` = 189")
@@ -72,53 +72,21 @@ public class HTExperiment extends BaseEntity {
 	@JoinColumn(name="_lastcuratedby_key", referencedColumnName="_user_key")
 	private User lastcuratedBy; 
 
-/*	
 	@OneToOne
-	@JoinColumn(name="_source_key")
-	private ProbeSource source;
+	@JoinColumn(name="_source_key", referencedColumnName="_term_key")
+	private Term sourceTerm;
 	
-	@OneToOne
-	@JoinColumn(name="_evaluationstate_key", referencedColumnName="_term_key")
-	private Term evaluationState;
-	
-	@OneToOne
-	@JoinColumn(name="_curationstate_key", referencedColumnName="_term_key")
-	private Term curationState;
-	
-	@OneToOne
-	@JoinColumn(name="_studytype_key", referencedColumnName="_term_key")
-	private Term studyType;
-	
-	@OneToOne
-	@JoinColumn(name="_experimenttype_key", referencedColumnName="_term_key")
-	private Term experimentType;
-	
-	@OneToOne
-	@JoinColumn(name="_evaluatedby_key", referencedColumnName="_term_key")
-	private Term evaluatedBy;
-	
-	@OneToOne
-	@JoinColumn(name="_initialcuratedby_key", referencedColumnName="_term_key")
-	private Term initialCuratedBy;
-	
-	@OneToOne
-	@JoinColumn(name="_lastcuratedby_key", referencedColumnName="_term_key")
-	private Term lastCuratedBy;
-	
-	@OneToOne
-	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
-	private User createdBy;
+	// Editor/Coordinator
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_experiment_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 42 and `_notetype_key` = 1047")
+	private List<Note> notes;
 
-	@OneToOne
-	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
-	private User modifiedBy;
-	
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_experiment_key")
 	@Where(clause="`_mgitype_key` = 42")
-	private Set<MGIProperty> properties;
-*/
-
+	@OrderBy(clause="_propertyterm_key desc, sequenceNum")
+	private List<MGIProperty> properties;
 
 }
 

@@ -23,7 +23,9 @@ import lombok.Setter;
 @Table(name="mgi_property")
 public class MGIProperty extends BaseEntity {
 	@Id
+	private Integer _property_key;
 	private Integer _propertyType_key;
+	private Integer _object_key;
 	private String value;
 	private Integer sequenceNum;
 	private Date creation_date;

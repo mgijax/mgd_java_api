@@ -24,7 +24,7 @@ public class GelBandTranslator extends BaseEntityDomainTranslator<GelBand, GelBa
 		domain.setAssayKey(String.valueOf(entity.getGelRow().get_assay_key()));
 		domain.setGelUnitsKey(String.valueOf(entity.getGelRow().getGelUnits().get_gelunits_key()));
 		domain.setGelUnits(entity.getGelRow().getGelUnits().getUnits());
-		domain.setSequenceNum(String.valueOf(entity.getGelRow().getSequenceNum()));
+		domain.setSequenceNum(entity.getGelRow().getSequenceNum());
 		domain.setSize(String.valueOf(entity.getGelRow().getSize()));
 		domain.setRowNote(entity.getGelRow().getRowNote());
 		domain.setBandNote(entity.getBandNote());

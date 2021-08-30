@@ -89,6 +89,7 @@ public class GelLaneTranslator extends BaseEntityDomainTranslator<GelLane, GelLa
 			GelBandTranslator bandTranslator = new GelBandTranslator();
 			Iterable<GelBandDomain> i = bandTranslator.translateEntities(entity.getGelBands());
 			domain.setGelBands(IteratorUtils.toList(i.iterator()));
+			domain.getGelBands().sort(Comparator.comparingInt(GelBandDomain::getSequenceNum));			
 		}
 		
 		return domain;

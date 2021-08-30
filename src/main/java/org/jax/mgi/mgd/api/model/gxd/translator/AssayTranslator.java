@@ -166,7 +166,6 @@ public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDoma
 			domain.getGelRows().sort(Comparator.comparingInt(GelRowDomain::getSequenceNum));
 		}
 
-		
 		return domain;
 	}
 

@@ -9,7 +9,9 @@ import org.jax.mgi.mgd.api.model.gxd.domain.HTDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTUserDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTSourceDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTNoteDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTVariableDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTExperiment;
+import org.jax.mgi.mgd.api.model.gxd.entities.HTExperimentVariable;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIProperty;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
@@ -130,19 +132,25 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 
 		}
 
+		// experiment variables
+		if (entity.getExperiment_variables() != null) {
+			List<HTVariableDomain> experiment_variables = new ArrayList<HTVariableDomain>();
+			for (HTExperimentVariable expVar : entity.getExperiment_variables()) {
+				HTVariableDomain varDom = new HTVariableDomain(); 
+				varDom.setTerm(expVar.getTerm().getTerm());
+				varDom.setAbbreviation(expVar.getTerm().getTerm());
+				varDom.setVocabKey("122");
+				varDom.set_term_key(expVar.getTerm().get_term_key());
+				varDom.setChecked(true);
+				experiment_variables.add(varDom);
+			}
+			domain.setExperiment_variables(experiment_variables);
+		}
+
 		// notes
 		if (entity.getNotes() != null) {
 			String notetext = entity.getNotes().get(0).getNoteChunk().getNote();
 			domain.setNotetext(notetext);
-
-// -- OLD API also returned a list of note text objects; Not sure if it's still needed
-//			List<HTNoteDomain> notes = new ArrayList<HTNoteDomain>();
-//			for (Note note : entity.getNotes()) {
-//				HTNoteDomain noteDomain = new HTNoteDomain();
-//				noteDomain.setText(note.getNoteChunk().getNote());
-//				notes.add(noteDomain);
-//			}
-//			domain.setNotes(notes);
 		}
 
 		return domain;

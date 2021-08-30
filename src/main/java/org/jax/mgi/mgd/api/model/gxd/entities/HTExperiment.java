@@ -76,7 +76,7 @@ public class HTExperiment extends BaseEntity {
 	@JoinColumn(name="_source_key", referencedColumnName="_term_key")
 	private Term sourceTerm;
 	
-	// Editor/Coordinator
+	// Notes and properties
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_experiment_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 42 and `_notetype_key` = 1047")
@@ -87,6 +87,13 @@ public class HTExperiment extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 42")
 	@OrderBy(clause="_propertyterm_key desc, sequenceNum")
 	private List<MGIProperty> properties;
+
+	// Experiment variables
+	@OneToMany()
+	@JoinColumn(name="_experiment_key", referencedColumnName="_experiment_key")
+//	@Where(clause="`_mgitype_key` = 42 and `_notetype_key` = 1047")
+	private List<HTExperimentVariable> experiment_variables;
+
 
 }
 

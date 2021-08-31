@@ -104,9 +104,15 @@ public class GelRowService extends BaseService<GelRowDomain> {
 				entity.set_assay_key(parentKey);
 				entity.setGelUnits(gelUnitDAO.get(Integer.valueOf(rowDomain.get(i).getGelUnitsKey())));
 				entity.setSequenceNum(rowDomain.get(i).getSequenceNum());
-				entity.setSize(rowDomain.get(i).getSize());
 				
-				if (rowDomain.get(i).getRowNote() != null && rowDomain.get(i).getRowNote().isEmpty()) {
+				if (rowDomain.get(i).getSize() != null && !rowDomain.get(i).getSize().isEmpty()) {
+					entity.setSize(Integer.valueOf(rowDomain.get(i).getSize()));
+				}
+				else {
+					entity.setSize(null);
+				}
+				
+				if (rowDomain.get(i).getRowNote() != null && !rowDomain.get(i).getRowNote().isEmpty()) {
 					entity.setRowNote(rowDomain.get(i).getRowNote());
 				}
 				else {
@@ -142,7 +148,13 @@ public class GelRowService extends BaseService<GelRowDomain> {
 				entity.set_assay_key(parentKey);
 				entity.setGelUnits(gelUnitDAO.get(Integer.valueOf(rowDomain.get(i).getGelUnitsKey())));
 				entity.setSequenceNum(rowDomain.get(i).getSequenceNum());
-				entity.setSize(rowDomain.get(i).getSize());
+
+				if (rowDomain.get(i).getSize() != null && !rowDomain.get(i).getSize().isEmpty()) {
+					entity.setSize(Integer.valueOf(rowDomain.get(i).getSize()));
+				}
+				else {
+					entity.setSize(null);
+				}
 				
 				if (rowDomain.get(i).getRowNote() != null && rowDomain.get(i).getRowNote().isEmpty()) {
 					entity.setRowNote(rowDomain.get(i).getRowNote());

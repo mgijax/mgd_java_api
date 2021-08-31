@@ -165,6 +165,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 					|| searchDomain.getVocabKey().equals("162")																																		
 					|| searchDomain.getVocabKey().equals("163")	
 					|| searchDomain.getVocabKey().equals("172")
+					|| searchDomain.getVocabKey().equals("173")					
 					) {
 				
 				return searchGXDVocab(searchDomain.getVocabKey());		
@@ -371,6 +372,12 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			cmd = "select _gelrnatype_key as termKey, rnatype as term, 1 as orderBy from gxd_gelrnatype where _gelrnatype_key = -1" +
 				"\nunion" +
 				"\nselect _gelrnatype_key as termKey, rnatype as term, 2 as orderBy from gxd_gelrnatype where _gelrnatype_key != -1" + 
+				"\norder by orderBy, term\n";
+		}	
+		else if (vocabKey.equals("173") ) {
+			cmd = "select _gelunits_key as termKey, units as term, 1 as orderBy from gxd_gelunits where _gelunits_key = -1" +
+				"\nunion" +
+				"\nselect _gelunits_key as termKey, units as term, 2 as orderBy from gxd_gelunits where _gelunits_key != -1" + 
 				"\norder by orderBy, term\n";
 		}		
 		log.info(cmd);		

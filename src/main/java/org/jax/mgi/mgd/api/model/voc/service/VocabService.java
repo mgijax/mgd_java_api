@@ -378,7 +378,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			cmd = "select _gelunits_key as termKey, units as term, 1 as orderBy from gxd_gelunits where _gelunits_key = -1" +
 				"\nunion" +
 				"\nselect _gelunits_key as termKey, units as term, 2 as orderBy from gxd_gelunits where _gelunits_key != -1" + 
-				"\norder by orderBy, term\n";
+				"\norder by term\n";
 		}		
 		log.info(cmd);		
 		

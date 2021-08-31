@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.gxd.entities;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -32,7 +33,7 @@ public class GelRow extends BaseEntity {
 	private int _gelrow_key;
 	private int _assay_key;
 	private Integer sequenceNum;
-	private Integer size;
+	private BigDecimal size;
 	private String rowNote;
 	private Date creation_date;
 	private Date modification_date;

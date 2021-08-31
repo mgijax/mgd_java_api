@@ -14,7 +14,7 @@ public class GelRowDomain extends BaseDomain {
 	private String gelUnitsKey;
 	private String gelUnits;
 	private Integer sequenceNum;
-	private Integer size;
+	private String size;
 	private String rowNote;
 	private String creation_date;
 	private String modification_date;

@@ -384,6 +384,8 @@ public class AssayService extends BaseService<AssayDomain> {
 		Boolean from_antibody = false;
 		Boolean from_specimen = false;
 		Boolean from_gellane = false;
+		Boolean from_gelband = false;
+		Boolean from_gelrow = false;
 		Boolean from_genotype = false;
 		Boolean from_isresults = false;
 		
@@ -665,6 +667,24 @@ public class AssayService extends BaseService<AssayDomain> {
 				from_gellane = true;
 			}			
 		}
+
+		if (searchDomain.getGelRows() != null) {
+			value = searchDomain.getGelRows().get(0).getGelUnitsKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand gr._gelunits_key = " + value;				
+				from_gelrow = true;
+			}
+			value = searchDomain.getGelRows().get(0).getSize();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand gr.size = " + value;				
+				from_gelrow = true;
+			}
+			value = searchDomain.getGelRows().get(0).getRowNote();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand gr.rowNote ilike '" + value + "'";				
+				from_gelrow = true;
+			}			
+		}
 		
 		// assay accession id 
 		value = searchDomain.getAccID();			
@@ -721,7 +741,11 @@ public class AssayService extends BaseService<AssayDomain> {
 		if (from_gellane == true) {
 			from = from + ", gxd_gellane s";
 			where = where + "\nand a._assay_key = s._assay_key";
-		}		
+		}	
+		if (from_gelrow == true) {
+			from = from + ", gxd_gelrow gr";
+			where = where + "\nand a._assay_key = gr._assay_key";
+		}			
 		if (from_genotype == true) {
 			from = from + ", gxd_genotype_acc_view g";
 			where = where + "\nand s._genotype_key = g._object_key";

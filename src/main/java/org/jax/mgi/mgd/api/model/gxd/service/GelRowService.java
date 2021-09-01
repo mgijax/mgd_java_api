@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model.gxd.service;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -79,7 +78,6 @@ public class GelRowService extends BaseService<GelRowDomain> {
 		// process gel row (create, delete, update)
 		
 		Boolean modified = false;
-		BigDecimal bigDec;
 		
 		if (rowDomain == null || rowDomain.isEmpty()) {
 			log.info("processGelRow/nothing to process");
@@ -107,9 +105,7 @@ public class GelRowService extends BaseService<GelRowDomain> {
 				entity.setGelUnits(gelUnitDAO.get(Integer.valueOf(rowDomain.get(i).getGelUnitsKey())));
 				entity.setSequenceNum(rowDomain.get(i).getSequenceNum());
 				
-				if (rowDomain.get(i).getSize() != null) {
-					//bigDec = BigDecimal(rowDomain.get(i).getSize());
-					//entity.setSize(bigDec);	
+				if (rowDomain.get(i).getSize() != null) {	
 					entity.setSize(rowDomain.get(i).getSize());
 				}
 				else {
@@ -153,9 +149,7 @@ public class GelRowService extends BaseService<GelRowDomain> {
 				entity.setGelUnits(gelUnitDAO.get(Integer.valueOf(rowDomain.get(i).getGelUnitsKey())));
 				entity.setSequenceNum(rowDomain.get(i).getSequenceNum());
 
-				if (rowDomain.get(i).getSize() != null) {
-					//bigDec = BigDecimal(rowDomain.get(i).getSize());
-					//entity.setSize(bigDec);	
+				if (rowDomain.get(i).getSize() != null) {	
 					entity.setSize(rowDomain.get(i).getSize());
 				}
 				else {
@@ -189,11 +183,6 @@ public class GelRowService extends BaseService<GelRowDomain> {
 		
 		log.info("processGelRow/processing successful");
 		return modified;
-	}
-
-	private BigDecimal BigDecimal(String size) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	    
 }

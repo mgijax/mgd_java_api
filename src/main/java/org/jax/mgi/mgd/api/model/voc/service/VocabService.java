@@ -366,7 +366,10 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				"\norder by orderBy, term\n";
 		}			
 		else if (vocabKey.equals("163") ) {
-			cmd = "select _strength_key as termKey, strength as term from gxd_strength order by term";
+			cmd = "select _strength_key as termKey, strength as term, 1 as orderBy from gxd_strength where _strength_key = -1" +
+				"\nunion" +
+				"\nselect _strength_key as termKey, strength as term, 2 as orderBy from gxd_strength where _strength_key != -1" + 
+				"\norder by term\n";			
 		}
 		else if (vocabKey.equals("172") ) {
 			cmd = "select _gelrnatype_key as termKey, rnatype as term, 1 as orderBy from gxd_gelrnatype where _gelrnatype_key = -1" +

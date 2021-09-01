@@ -667,6 +667,21 @@ public class AssayService extends BaseService<AssayDomain> {
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand s.laneNote ilike '" + value + "'";				
 				from_gellane = true;
+			}	
+			
+			if (searchDomain.getGelLanes().get(0).getGelBands() != null) {
+				value = searchDomain.getGelLanes().get(0).getGelBands().get(0).getStrengthKey();
+				if (value != null && !value.isEmpty()) {
+					where = where + "\nand gb._strength_key = " + value;				
+					from_gelband = true;
+					from_gelrow = true;
+				}				
+				value = searchDomain.getGelLanes().get(0).getGelBands().get(0).getBandNote();
+				if (value != null && !value.isEmpty()) {
+					where = where + "\nand gb.bandNote ilike '" + value + "'";				
+					from_gelband = true;
+					from_gelrow = true;
+				}					
 			}			
 		}
 
@@ -744,6 +759,10 @@ public class AssayService extends BaseService<AssayDomain> {
 			from = from + ", gxd_gellane s";
 			where = where + "\nand a._assay_key = s._assay_key";
 		}	
+		if (from_gelband == true) {
+			from = from + ", gxd_gelband gb";
+			where = where + "\nand gr._gelrow_key = gb._gelrow_key";
+		}		
 		if (from_gelrow == true) {
 			from = from + ", gxd_gelrow gr";
 			where = where + "\nand a._assay_key = gr._assay_key";

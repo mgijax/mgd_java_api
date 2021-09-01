@@ -328,9 +328,9 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		}		
 		else if (vocabKey.equals("155")) {
 			cmd = "select _embedding_key as termKey, embeddingMethod as term, 1 as orderBy from gxd_embeddingmethod where _embedding_key = -1" +
-					"\nunion" +
-					"\nselect _embedding_key as termKey, embeddingMethod as term, 2 as orderBy from gxd_embeddingmethod where _embedding_key != -1" + 
-					"\norder by orderBy, term\n";	
+				"\nunion" +
+				"\nselect _embedding_key as termKey, embeddingMethod as term, 2 as orderBy from gxd_embeddingmethod where _embedding_key != -1" + 
+				"\norder by orderBy, term\n";	
 		}
 		else if (vocabKey.equals("156") ) {
 			cmd = "select _fixation_key as termKey, fixation as term, 1 as orderBy from gxd_fixationmethod where _fixation_key = -1" +
@@ -349,9 +349,9 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		}
 		else if (vocabKey.equals("159") ) {
 			cmd = "select _sense_key as termKey, sense as term, 1 as orderBy from gxd_probesense where _sense_key = -1" +
-					"\nunion" +
-					"\nselect _sense_key as termKey, sense as term, 2 as orderBy from gxd_probesense where _sense_key != -1" + 
-					"\norder by orderBy, term\n";			
+				"\nunion" +
+				"\nselect _sense_key as termKey, sense as term, 2 as orderBy from gxd_probesense where _sense_key != -1" + 
+				"\norder by orderBy, term\n";			
 		}
 		else if (vocabKey.equals("160") ) {
 			cmd = "select _secondary_key as termKey, secondary as term, 1 as orderBy from gxd_secondary where _secondary_key = -1" +
@@ -369,7 +369,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			cmd = "select _strength_key as termKey, strength as term, 1 as orderBy from gxd_strength where _strength_key = -1" +
 				"\nunion" +
 				"\nselect _strength_key as termKey, strength as term, 2 as orderBy from gxd_strength where _strength_key != -1" + 
-				"\norder by term\n";			
+				"\norder by orderBy, term\n";			
 		}
 		else if (vocabKey.equals("172") ) {
 			cmd = "select _gelrnatype_key as termKey, rnatype as term, 1 as orderBy from gxd_gelrnatype where _gelrnatype_key = -1" +
@@ -381,7 +381,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			cmd = "select _gelunits_key as termKey, units as term, 1 as orderBy from gxd_gelunits where _gelunits_key = -1" +
 				"\nunion" +
 				"\nselect _gelunits_key as termKey, units as term, 2 as orderBy from gxd_gelunits where _gelunits_key != -1" + 
-				"\norder by term\n";
+				"\norder by orderBy, term\n";
 		}		
 		log.info(cmd);		
 		

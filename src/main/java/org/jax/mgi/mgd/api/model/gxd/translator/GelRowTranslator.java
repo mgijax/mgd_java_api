@@ -21,7 +21,7 @@ public class GelRowTranslator extends BaseEntityDomainTranslator<GelRow, GelRowD
 		domain.setGelUnitsKey(String.valueOf(entity.getGelUnits().get_gelunits_key()));
 		domain.setGelUnits(entity.getGelUnits().getUnits());
 		domain.setSequenceNum(entity.getSequenceNum());
-		domain.setSize(String.valueOf(entity.getSize()));
+		domain.setSize(entity.getSize());
 		domain.setRowNote(entity.getRowNote());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));

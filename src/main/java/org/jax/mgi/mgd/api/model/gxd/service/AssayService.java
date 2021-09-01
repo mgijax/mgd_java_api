@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.gxd.service;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
@@ -372,6 +373,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		String orderBy = "order by r.jnumid, t.assayType, m.symbol";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
+		BigDecimal bigDec;
 		String agePrefix;	
 		String ageRange;
 		Boolean from_accession = false;
@@ -674,9 +676,9 @@ public class AssayService extends BaseService<AssayDomain> {
 				where = where + "\nand gr._gelunits_key = " + value;				
 				from_gelrow = true;
 			}
-			value = searchDomain.getGelRows().get(0).getSize();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand gr.size = " + value;				
+			bigDec = searchDomain.getGelRows().get(0).getSize();
+			if (bigDec != null) {
+				where = where + "\nand gr.size = " + bigDec;				
 				from_gelrow = true;
 			}
 			value = searchDomain.getGelRows().get(0).getRowNote();

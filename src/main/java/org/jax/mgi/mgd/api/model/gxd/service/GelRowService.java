@@ -9,8 +9,8 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.gxd.dao.GelUnitDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.GelRowDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.GelUnitDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelBandDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelRowDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.GelRow;
@@ -107,9 +107,10 @@ public class GelRowService extends BaseService<GelRowDomain> {
 				entity.setGelUnits(gelUnitDAO.get(Integer.valueOf(rowDomain.get(i).getGelUnitsKey())));
 				entity.setSequenceNum(rowDomain.get(i).getSequenceNum());
 				
-				if (rowDomain.get(i).getSize() != null && !rowDomain.get(i).getSize().isEmpty()) {
-					bigDec = BigDecimal(rowDomain.get(i).getSize());
-					entity.setSize(bigDec);
+				if (rowDomain.get(i).getSize() != null) {
+					//bigDec = BigDecimal(rowDomain.get(i).getSize());
+					//entity.setSize(bigDec);	
+					entity.setSize(rowDomain.get(i).getSize());
 				}
 				else {
 					entity.setSize(null);
@@ -152,9 +153,11 @@ public class GelRowService extends BaseService<GelRowDomain> {
 				entity.setGelUnits(gelUnitDAO.get(Integer.valueOf(rowDomain.get(i).getGelUnitsKey())));
 				entity.setSequenceNum(rowDomain.get(i).getSequenceNum());
 
-				if (rowDomain.get(i).getSize() != null && !rowDomain.get(i).getSize().isEmpty()) {
-					bigDec = BigDecimal(rowDomain.get(i).getSize());
-					entity.setSize(bigDec);				}
+				if (rowDomain.get(i).getSize() != null) {
+					//bigDec = BigDecimal(rowDomain.get(i).getSize());
+					//entity.setSize(bigDec);	
+					entity.setSize(rowDomain.get(i).getSize());
+				}
 				else {
 					entity.setSize(null);
 				}

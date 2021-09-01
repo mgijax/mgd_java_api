@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.gxd.domain;
 
+import java.math.BigDecimal;
+
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
 import lombok.Getter;
@@ -14,7 +16,7 @@ public class GelRowDomain extends BaseDomain {
 	private String gelUnitsKey;
 	private String gelUnits;
 	private Integer sequenceNum;
-	private String size;
+	private BigDecimal size;
 	private String rowNote;
 	private String creation_date;
 	private String modification_date;

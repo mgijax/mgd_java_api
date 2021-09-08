@@ -10,7 +10,7 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.GelRowDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.GelUnitDAO;
-import org.jax.mgi.mgd.api.model.gxd.domain.GelBandDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelRowDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.GelRow;
 import org.jax.mgi.mgd.api.model.gxd.translator.GelRowTranslator;
@@ -74,7 +74,7 @@ public class GelRowService extends BaseService<GelRowDomain> {
     }
 
 	@Transactional
-	public Boolean process(Integer parentKey, List<GelRowDomain> rowDomain, List<GelBandDomain> bandDomain, User user) {
+	public Boolean process(Integer parentKey, List<GelRowDomain> rowDomain, List<GelLaneDomain> laneDomain, User user) {
 		// process gel row (create, delete, update)
 		
 		Boolean modified = false;
@@ -123,10 +123,12 @@ public class GelRowService extends BaseService<GelRowDomain> {
 				entity.setModification_date(new Date());				
 				gelRowDAO.persist(entity);
 
-				// process gxd_gelband
-				if (bandDomain != null && !bandDomain.isEmpty()) {
-					if (gelBandService.process(entity.get_gelrow_key(), bandDomain, user)) {
-						modified = true;
+				// process gxd_gellane/gxd_gelband
+				if (laneDomain != null && !laneDomain.isEmpty()) {
+					for (int j = 0; j < laneDomain.size(); j++) {
+						if (gelBandService.process(entity.get_gelrow_key(), laneDomain.get(j).getGelBands(), user)) {
+							modified = true;
+						}
 					}
 				}
 				
@@ -165,10 +167,12 @@ public class GelRowService extends BaseService<GelRowDomain> {
 				
 				entity.setModification_date(new Date());
 
-				// process gxd_gelband
-				if (bandDomain != null && !bandDomain.isEmpty()) {
-					if (gelBandService.process(Integer.valueOf(rowDomain.get(i).getGelRowKey()), bandDomain, user)) {
-						modified = true;
+				// process gxd_gellane/gxd_gelband
+				if (laneDomain != null && !laneDomain.isEmpty()) {
+					for (int j = 0; j < laneDomain.size(); j++) {
+						if (gelBandService.process(entity.get_gelrow_key(), laneDomain.get(j).getGelBands(), user)) {
+							modified = true;
+						}
 					}
 				}
 				

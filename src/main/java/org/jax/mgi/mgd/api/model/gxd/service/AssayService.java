@@ -77,8 +77,8 @@ public class AssayService extends BaseService<AssayDomain> {
 	private SpecimenService specimenService;
 	@Inject
 	private GelLaneService gelLaneService;
-//	@Inject
-//	private GelRowService gelRowService;
+	@Inject
+	private GelRowService gelRowService;
 	@Inject
 	private AntibodyPrepService antibodyPrepService;
 	@Inject
@@ -181,13 +181,13 @@ public class AssayService extends BaseService<AssayDomain> {
 			}
 		}
 
-//		// process gxd_gelrow
-//		// if assaytype in Gel Assay Type
-//		if (domain.getGelRows() != null && !domain.getGelRows().isEmpty()) {
-//			if (gelRowService.process(entity.get_assay_key(), domain.getGelRows(), user)) {
-//				modified = true;
-//			}
-//		}
+		// process gxd_gelrow
+		// if assaytype in Gel Assay Type
+		if (domain.getGelRows() != null && !domain.getGelRows().isEmpty()) {			
+			if (gelRowService.process(Integer.valueOf(domain.getAssayKey()), domain.getGelRows(), domain.getGelLanes(), user)) {
+				modified = true;
+			}
+		}
 		
 		// return entity translated to domain
 		log.info("processAssay/create/returning results : " + modified);
@@ -277,13 +277,13 @@ public class AssayService extends BaseService<AssayDomain> {
 			}
 		}
 		
-//		// process gxd_gelrow
-//		// if assaytype in Gel Assay Type
-//		if (domain.getGelRows() != null && !domain.getGelRows().isEmpty()) {
-//			if (gelRowService.process(Integer.valueOf(domain.getAssayKey()), domain.getGelRows(), domain.getLanes(), user)) {
-//				modified = true;
-//			}
-//		}
+		// process gxd_gelrow
+		// if assaytype in Gel Assay Type
+		if (domain.getGelRows() != null && !domain.getGelRows().isEmpty()) {			
+			if (gelRowService.process(Integer.valueOf(domain.getAssayKey()), domain.getGelRows(), domain.getGelLanes(), user)) {
+				modified = true;
+			}
+		}
 		
 		// only if modifications were actually made
 		if (modified == true) {

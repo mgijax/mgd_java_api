@@ -105,7 +105,7 @@ public class GelBandService extends BaseService<GelBandDomain> {
 				entity.set_gellane_key(Integer.valueOf(domain.get(i).getGelLaneKey()));
 				entity.setStrength(gelStrengthDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
 				
-				if (domain.get(i).getBandNote() != null && domain.get(i).getBandNote().isEmpty()) {
+				if (domain.get(i).getBandNote() != null && !domain.get(i).getBandNote().isEmpty()) {
 					entity.setBandNote(domain.get(i).getBandNote());
 				}
 				else {
@@ -135,7 +135,7 @@ public class GelBandService extends BaseService<GelBandDomain> {
 				entity.set_gellane_key(Integer.valueOf(domain.get(i).getGelLaneKey()));
 				entity.setStrength(gelStrengthDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
 				
-				if (domain.get(i).getBandNote() != null && domain.get(i).getBandNote().isEmpty()) {
+				if (domain.get(i).getBandNote() != null && !domain.get(i).getBandNote().isEmpty()) {
 					entity.setBandNote(domain.get(i).getBandNote());
 				}
 				else {

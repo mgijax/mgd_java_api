@@ -89,12 +89,15 @@ public class GelBandService extends BaseService<GelBandDomain> {
 		
 		for (int i = 0; i < domain.size(); i++) {
 			
-			// gel band row must equal parentKey (gel row key), else skip
-//			if (!domain.get(i).getGelRowKey().equals(String.valueOf(parentKey))) {
-//				continue;
-//			}
 			log.info("PARENT ROW:" + parentKey);
 			log.info("BAND ROW:" + domain.get(i).getGelRowKey());
+			
+			// gel band row must equal parentKey (gel row key), else skip
+			if (!domain.get(i).getGelRowKey().equals(String.valueOf(parentKey))) {
+				log.info("SKIPPING BAND ROW:" + parentKey);
+				continue;
+			}
+			
 			continue;
 			
 //			// if gel band is null/empty, then skip

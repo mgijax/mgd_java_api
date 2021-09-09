@@ -89,11 +89,17 @@ public class GelBandService extends BaseService<GelBandDomain> {
 		
 		for (int i = 0; i < domain.size(); i++) {
 			
+			// gel band row must equal parentKey (gel row key), else skip
+			if (domain.get(i).getGelRowKey().equals(String.valueOf(parentKey))) {
+				continue;
+			}
+			
 			// if gel band is null/empty, then skip
 			// pwi has sent a "c" that is empty/not being used
 			if (domain.get(i).getStrengthKey() == null || domain.get(i).getStrengthKey().isEmpty()) {
 				continue;
 			}
+			
 			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 

@@ -98,68 +98,68 @@ public class GelBandService extends BaseService<GelBandDomain> {
 			log.info("PARENT ROW:" + parentKey);
 			log.info("BAND ROW:" + domain.get(i).getGelRowKey());
 			
-//			// if gel band is null/empty, then skip
-//			// pwi has sent a "c" that is empty/not being used
-//			if (domain.get(i).getStrengthKey() == null || domain.get(i).getStrengthKey().isEmpty()) {
-//				continue;
-//			}
-//			
-//			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
-//
-//				log.info("processGelBand create");
-//
-//				GelBand entity = new GelBand();
-//
-//				entity.setGelRow(gelRowDAO.get(parentKey));								
-//				entity.set_gellane_key(Integer.valueOf(domain.get(i).getGelLaneKey()));
-//				entity.setStrength(gelStrengthDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
-//				
-//				if (domain.get(i).getBandNote() != null && !domain.get(i).getBandNote().isEmpty()) {
-//					entity.setBandNote(domain.get(i).getBandNote());
-//				}
-//				else {
-//					entity.setBandNote(null);					
-//				}
-//				
-//				entity.setCreation_date(new Date());				
-//				entity.setModification_date(new Date());				
-//				gelBandDAO.persist(entity);
-//				
-//				modified = true;
-//				log.info("processGelBand/create processed: " + entity.get_gelband_key());					
-//			}
-//			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-//				log.info("processGelBand delete");
-//				GelBand entity = gelBandDAO.get(Integer.valueOf(domain.get(i).getGelBandKey()));
-//				gelBandDAO.remove(entity);
-//				modified = true;
-//				log.info("processGelBand delete successful");
-//			}
-//			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-//				log.info("processGelBand update");
-//
-//				GelBand entity = gelBandDAO.get(Integer.valueOf(domain.get(i).getGelBandKey()));
-//
-//				entity.setGelRow(gelRowDAO.get(parentKey));				
-//				entity.set_gellane_key(Integer.valueOf(domain.get(i).getGelLaneKey()));
-//				entity.setStrength(gelStrengthDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
-//				
-//				if (domain.get(i).getBandNote() != null && !domain.get(i).getBandNote().isEmpty()) {
-//					entity.setBandNote(domain.get(i).getBandNote());
-//				}
-//				else {
-//					entity.setBandNote(null);					
-//				}
-//				
-//				entity.setModification_date(new Date());
-//
-//				gelBandDAO.update(entity);
-//				modified = true;
-//				log.info("processGelBand/changes processed: " + domain.get(i).getGelBandKey());	
-//			}
-//			else {
-//				log.info("processGelBand/no changes processed: " + domain.get(i).getGelBandKey());
-//			}
+			// if gel band is null/empty, then skip
+			// pwi has sent a "c" that is empty/not being used
+			if (domain.get(i).getStrengthKey() == null || domain.get(i).getStrengthKey().isEmpty()) {
+				continue;
+			}
+			
+			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
+
+				log.info("processGelBand create");
+
+				GelBand entity = new GelBand();
+
+				entity.setGelRow(gelRowDAO.get(parentKey));								
+				entity.set_gellane_key(Integer.valueOf(domain.get(i).getGelLaneKey()));
+				entity.setStrength(gelStrengthDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
+				
+				if (domain.get(i).getBandNote() != null && !domain.get(i).getBandNote().isEmpty()) {
+					entity.setBandNote(domain.get(i).getBandNote());
+				}
+				else {
+					entity.setBandNote(null);					
+				}
+				
+				entity.setCreation_date(new Date());				
+				entity.setModification_date(new Date());				
+				gelBandDAO.persist(entity);
+				
+				modified = true;
+				log.info("processGelBand/create processed: " + entity.get_gelband_key());					
+			}
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+				log.info("processGelBand delete");
+				GelBand entity = gelBandDAO.get(Integer.valueOf(domain.get(i).getGelBandKey()));
+				gelBandDAO.remove(entity);
+				modified = true;
+				log.info("processGelBand delete successful");
+			}
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+				log.info("processGelBand update");
+
+				GelBand entity = gelBandDAO.get(Integer.valueOf(domain.get(i).getGelBandKey()));
+
+				entity.setGelRow(gelRowDAO.get(parentKey));				
+				entity.set_gellane_key(Integer.valueOf(domain.get(i).getGelLaneKey()));
+				entity.setStrength(gelStrengthDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
+				
+				if (domain.get(i).getBandNote() != null && !domain.get(i).getBandNote().isEmpty()) {
+					entity.setBandNote(domain.get(i).getBandNote());
+				}
+				else {
+					entity.setBandNote(null);					
+				}
+				
+				entity.setModification_date(new Date());
+
+				gelBandDAO.update(entity);
+				modified = true;
+				log.info("processGelBand/changes processed: " + domain.get(i).getGelBandKey());	
+			}
+			else {
+				log.info("processGelBand/no changes processed: " + domain.get(i).getGelBandKey());
+			}
 		}
 		
 		log.info("processGelBand/processing successful");

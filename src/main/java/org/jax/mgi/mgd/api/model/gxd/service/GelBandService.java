@@ -74,7 +74,7 @@ public class GelBandService extends BaseService<GelBandDomain> {
     }
 
 	@Transactional
-	public Boolean process(Integer parentKey, List<GelBandDomain> domain, User user) {
+	public Boolean process(Integer parentKey, Integer sequenceNum, List<GelBandDomain> domain, User user) {
 		// process gel band (create, delete, update)
 		
 		Boolean modified = false;
@@ -89,11 +89,6 @@ public class GelBandService extends BaseService<GelBandDomain> {
 		
 		for (int i = 0; i < domain.size(); i++) {
 			
-			// gel band row must equal parentKey (gel row key), else skip
-			if (!domain.get(i).getGelRowKey().equals(String.valueOf(parentKey))) {
-				continue;
-			}
-			
 //			log.info("PARENT ROW:" + parentKey);
 //			log.info("BAND ROW:" + domain.get(i).getGelRowKey());
 			
@@ -105,6 +100,11 @@ public class GelBandService extends BaseService<GelBandDomain> {
 			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 
+				// gel band row sequenceNum must equal gel row sequenceNum, else skip
+				if (domain.get(i).getSequenceNum() != sequenceNum) {
+					continue;
+				}
+				
 				log.info("processGelBand create");
 
 				GelBand entity = new GelBand();
@@ -128,6 +128,12 @@ public class GelBandService extends BaseService<GelBandDomain> {
 				log.info("processGelBand/create processed: " + entity.get_gelband_key());					
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+
+				// gel band row must equal parentKey (gel row key), else skip
+				if (!domain.get(i).getGelRowKey().equals(String.valueOf(parentKey))) {
+					continue;
+				}
+								
 				log.info("processGelBand delete");
 				GelBand entity = gelBandDAO.get(Integer.valueOf(domain.get(i).getGelBandKey()));
 				gelBandDAO.remove(entity);
@@ -135,6 +141,12 @@ public class GelBandService extends BaseService<GelBandDomain> {
 				log.info("processGelBand delete successful");
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+
+				// gel band row must equal parentKey (gel row key), else skip
+				if (!domain.get(i).getGelRowKey().equals(String.valueOf(parentKey))) {
+					continue;
+				}
+				
 				log.info("processGelBand update");
 
 				GelBand entity = gelBandDAO.get(Integer.valueOf(domain.get(i).getGelBandKey()));

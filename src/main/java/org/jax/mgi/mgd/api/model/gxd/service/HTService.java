@@ -73,7 +73,7 @@ public class HTService extends BaseService<HTDomain> {
 		String where = "where hte._experiment_key = acc._object_key " 
 				+ "\nand acc._mgitype_key = 42"
 				+ "\nand acc.preferred = 1 ";
-		String orderBy = "order by acc.accid ";
+		String orderBy = "order by acc.prefixpart, acc.numericPart ";
 
 		// primary accession id 
 		value = searchDomain.getPrimaryid();			

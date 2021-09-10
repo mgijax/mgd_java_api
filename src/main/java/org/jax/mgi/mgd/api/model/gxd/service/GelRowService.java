@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
@@ -78,6 +79,8 @@ public class GelRowService extends BaseService<GelRowDomain> {
 		// process gel row (create, delete, update)
 		
 		Boolean modified = false;
+		String cmd;
+		Query query;
 		
 		if (rowDomain == null || rowDomain.isEmpty()) {
 			log.info("processGelRow/nothing to process");
@@ -184,6 +187,12 @@ public class GelRowService extends BaseService<GelRowDomain> {
 				log.info("processGelRow/no changes processed: " + rowDomain.get(i).getGelRowKey());
 			}
 		}
+		
+		// process order reset
+		cmd = "select count(*) from MGI_resetSequenceNum ('GXD_GelRow'," + parentKey + "," + user.get_user_key() + ")";
+		log.info("processGelRow/process order reset: " + cmd);
+		query = gelRowDAO.createNativeQuery(cmd);
+		query.getResultList();
 		
 		log.info("processGelRow/processing successful");
 		return modified;

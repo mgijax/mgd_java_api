@@ -91,7 +91,7 @@ public class GelRowService extends BaseService<GelRowDomain> {
 			
 			// if gel row is null/empty, then skip
 			// pwi has sent a "c" that is empty/not being used
-			if (rowDomain.get(i).getGelUnits() == null || rowDomain.get(i).getGelUnits().isEmpty()) {
+			if (rowDomain.get(i).getGelUnitsKey() == null || rowDomain.get(i).getGelUnitsKey().isEmpty()) {
 				continue;
 			}
 			

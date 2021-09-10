@@ -109,12 +109,8 @@ public class GelBandService extends BaseService<GelBandDomain> {
 
 				GelBand entity = new GelBand();
 
-				log.info("processGelBand create:parentKey:" + parentKey);
 				entity.setGelRow(gelRowDAO.get(parentKey));	
-				
 				entity.set_gellane_key(Integer.valueOf(domain.get(i).getGelLaneKey()));
-				
-				log.info("processGelBand create:sequenceNum:" + domain.get(i).getStrengthKey());
 				entity.setStrength(gelStrengthDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
 				
 				if (domain.get(i).getBandNote() != null && !domain.get(i).getBandNote().isEmpty()) {

@@ -6,15 +6,19 @@ import java.util.ArrayList;
 
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTSampleDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTSampleWrapperDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTUserDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTSourceDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTNoteDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTVariableDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTExperiment;
+import org.jax.mgi.mgd.api.model.gxd.entities.HTSample;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTExperimentVariable;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIProperty;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
+import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 
 import org.jboss.logging.Logger;
 
@@ -150,9 +154,30 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 		// notes
 		if (entity.getNotes() != null && entity.getNotes().size() > 0) {
 			List<Note> notes = entity.getNotes();
-			log.info(notes.size());
+			//log.info(notes.size());
 			String notetext = entity.getNotes().get(0).getNoteChunk().getNote();
 			domain.setNotetext(notetext);
+		}
+
+		// experiment variables
+		if (entity.getSamples() != null) {
+log.info("--------IN----");
+			List<HTSampleDomain> samples = new ArrayList<HTSampleDomain>();
+			for (HTSample sample : entity.getSamples()) {
+
+				HTSampleDomain sampleDomain = new HTSampleDomain();
+
+				// Sample Info
+				sampleDomain.setName(sample.getName());
+				if (sample.getOrganism() != null) {
+					sampleDomain.set_organism_key(sample.getOrganism().get_organism_key());
+				}
+
+				samples.add(sampleDomain);
+			}
+
+			// add list of sample domains to output domain
+			domain.setSamples(samples);
 		}
 
 		return domain;

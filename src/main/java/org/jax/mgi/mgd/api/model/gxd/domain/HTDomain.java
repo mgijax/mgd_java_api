@@ -46,4 +46,6 @@ public class HTDomain extends BaseDomain {
 	private HTUserDomain initialcuratedby_object;
 	private HTUserDomain lastcuratedby_object;
 
+	private List<HTSampleDomain> samples;
+
 }

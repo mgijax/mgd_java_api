@@ -180,7 +180,12 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processSynonym update");
+                                String synonym = domain.get(i).getSynonym();
+                                if (synonym == null || synonym.isEmpty() || synonym == " ") {
+                                    log.info("cannot update synonym to empty, blank or null");
+                                    continue;
 
+                                }
 				MGISynonym entity = synonymDAO.get(Integer.valueOf(domain.get(i).getSynonymKey()));
 		
 				entity.setSynonymType(synonymTypeDAO.get(Integer.valueOf(domain.get(i).getSynonymTypeKey())));

@@ -101,13 +101,8 @@ public class GelRowService extends BaseService<GelRowDomain> {
 
 				GelRow entity = new GelRow();
 
-				log.info("processGelRow create:parentKey:" + parentKey);
 				entity.set_assay_key(parentKey);
-
-				log.info("processGelRow create:unitsKey:" + rowDomain.get(i).getGelUnitsKey());
 				entity.setGelUnits(gelUnitDAO.get(Integer.valueOf(rowDomain.get(i).getGelUnitsKey())));
-
-				log.info("processGelRow create:sequenceNum:" + rowDomain.get(i).getSequenceNum());
 				entity.setSequenceNum(rowDomain.get(i).getSequenceNum());
 				
 				if (rowDomain.get(i).getSize() != null) {	

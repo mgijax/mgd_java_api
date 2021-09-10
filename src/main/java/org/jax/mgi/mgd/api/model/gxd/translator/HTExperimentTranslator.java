@@ -7,8 +7,7 @@ import java.util.ArrayList;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTSampleDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.HTSampleWrapperDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.HTUserDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTUserDomain; 
 import org.jax.mgi.mgd.api.model.gxd.domain.HTSourceDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTNoteDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTVariableDomain;
@@ -159,9 +158,8 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 			domain.setNotetext(notetext);
 		}
 
-		// experiment variables
+		// experiment samples
 		if (entity.getSamples() != null) {
-log.info("--------IN----");
 			List<HTSampleDomain> samples = new ArrayList<HTSampleDomain>();
 			for (HTSample sample : entity.getSamples()) {
 

@@ -180,8 +180,9 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processSynonym update");
-                                String synonym = domain.get(i).getSynonym();
-                                if (synonym == null || synonym.isEmpty() || synonym == " ") {
+                                // trimming the synonym will create empty string if all spaces
+                                String synonym = domain.get(i).getSynonym().trim();
+                                if (synonym == null || synonym.isEmpty()) {
                                     log.info("cannot update synonym to empty, blank or null");
                                     continue;
 

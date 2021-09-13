@@ -184,7 +184,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		// process gxd_gelrow
 		// if assaytype in Gel Assay Type
 		if (domain.getGelRows() != null && !domain.getGelRows().isEmpty()) {			
-			if (gelRowService.process(Integer.valueOf(domain.getAssayKey()), domain.getGelRows(), domain.getGelLanes(), user)) {
+			if (gelRowService.process(entity.get_assay_key(), domain.getGelRows(), domain.getGelLanes(), user)) {
 				modified = true;
 			}
 		}

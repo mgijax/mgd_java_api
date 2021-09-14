@@ -186,7 +186,10 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				entity.setCreation_date(new Date());				
 				entity.setModification_date(new Date());				
 				gelLaneDAO.persist(entity);
-
+				
+				// set the domain/gellanekey; needed by AssayService/getGelRows
+				domain.get(i).setGelLaneKey(String.valueOf(entity.get_gellane_key()));
+				
 				if (domain.get(i).getStructures() != null && !domain.get(i).getStructures().isEmpty()) {
 					modified = structureService.process(entity.get_gellane_key(), domain.get(i).getStructures(), user);
 				}

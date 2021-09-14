@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.gxd.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -8,10 +9,10 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.gxd.dao.GelRNATypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.GelControlDAO;
-import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.GelLaneDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.GelRNATypeDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.GelLane;
 import org.jax.mgi.mgd.api.model.gxd.translator.GelLaneTranslator;
@@ -79,14 +80,14 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
     }
 
 	@Transactional
-	public Boolean process(Integer parentKey, Integer assayTypeKey, List<GelLaneDomain> domain, User user) {
+	public List<GelLaneDomain> process(Integer parentKey, Integer assayTypeKey, List<GelLaneDomain> domain, User user) {
 		// process gel lanes (create, delete, update)
 		
-		Boolean modified = false;
+		List<GelLaneDomain> laneResults = new ArrayList<GelLaneDomain>();
 		
 		if (domain == null || domain.isEmpty()) {
 			log.info("processGelLane/nothing to process");
-			return modified;
+			return laneResults;
 		}
 						
 		// iterate thru the list of rows in the domain
@@ -187,21 +188,19 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				entity.setModification_date(new Date());				
 				gelLaneDAO.persist(entity);
 				
-				// set the domain/gellanekey; needed by AssayService/getGelRows
+				// set the domain/gellanekey; needed by AssayService
 				domain.get(i).setGelLaneKey(String.valueOf(entity.get_gellane_key()));
 				
 				if (domain.get(i).getStructures() != null && !domain.get(i).getStructures().isEmpty()) {
-					modified = structureService.process(entity.get_gellane_key(), domain.get(i).getStructures(), user);
+					structureService.process(entity.get_gellane_key(), domain.get(i).getStructures(), user);
 				}
 				
-				modified = true;
 				log.info("processGelLane/create processed: " + entity.get_gellane_key());					
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processGelLane delete");
 				GelLane entity = gelLaneDAO.get(Integer.valueOf(domain.get(i).getGelLaneKey()));
 				gelLaneDAO.remove(entity);
-				modified = true;
 				log.info("processGelLane delete successful");
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
@@ -289,11 +288,10 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				entity.setModification_date(new Date());
 	
 				if (domain.get(i).getStructures() != null && !domain.get(i).getStructures().isEmpty()) {
-					modified = structureService.process(Integer.valueOf(domain.get(i).getGelLaneKey()), domain.get(i).getStructures(), user);
+					structureService.process(Integer.valueOf(domain.get(i).getGelLaneKey()), domain.get(i).getStructures(), user);
 				}
 				
 				gelLaneDAO.update(entity);
-				modified = true;
 				log.info("processGelLane/changes processed: " + domain.get(i).getGelLaneKey());	
 			}
 			else {
@@ -302,7 +300,7 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 		}
 		
 		log.info("processGelLane/processing successful");
-		return modified;
+		return domain;
 	}
 	    
 }

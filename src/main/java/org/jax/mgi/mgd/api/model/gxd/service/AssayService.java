@@ -19,6 +19,7 @@ import org.jax.mgi.mgd.api.model.gxd.dao.AssayDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AssayTypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.ProbePrepDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeReplaceDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
@@ -176,14 +177,14 @@ public class AssayService extends BaseService<AssayDomain> {
 		// process gxd_gellane
 		// if assaytype in Gel Assay Type
 		if (domain.getGelLanes() != null && !domain.getGelLanes().isEmpty()) {
-			if (gelLaneService.process(entity.get_assay_key(), Integer.valueOf(domain.getAssayTypeKey()), domain.getGelLanes(), user)) {
-				modified = true;
-			}
+			List<GelLaneDomain> laneResults = new ArrayList<GelLaneDomain>();
+			laneResults = gelLaneService.process(entity.get_assay_key(), Integer.valueOf(domain.getAssayTypeKey()), domain.getGelLanes(), user);
+			domain.setGelLanes(laneResults);			
 		}
 
 		// process gxd_gelrow
 		// if assaytype in Gel Assay Type
-		if (domain.getGelRows() != null && !domain.getGelRows().isEmpty()) {			
+		if (domain.getGelRows() != null && !domain.getGelRows().isEmpty()) {
 			if (gelRowService.process(entity.get_assay_key(), domain.getGelRows(), domain.getGelLanes(), user)) {
 				modified = true;
 			}
@@ -272,14 +273,14 @@ public class AssayService extends BaseService<AssayDomain> {
 		// process gxd_gellane
 		// if assaytype in Gel Assay Type
 		if (domain.getGelLanes() != null && !domain.getGelLanes().isEmpty()) {
-			if (gelLaneService.process(Integer.valueOf(domain.getAssayKey()), Integer.valueOf(domain.getAssayTypeKey()), domain.getGelLanes(), user)) {
-				modified = true;
-			}
+			List<GelLaneDomain> laneResults = new ArrayList<GelLaneDomain>();
+			laneResults = gelLaneService.process(Integer.valueOf(domain.getAssayKey()), Integer.valueOf(domain.getAssayTypeKey()), domain.getGelLanes(), user);
+			domain.setGelLanes(laneResults);
 		}
 		
 		// process gxd_gelrow
 		// if assaytype in Gel Assay Type
-		if (domain.getGelRows() != null && !domain.getGelRows().isEmpty()) {			
+		if (domain.getGelRows() != null && !domain.getGelRows().isEmpty()) {
 			if (gelRowService.process(Integer.valueOf(domain.getAssayKey()), domain.getGelRows(), domain.getGelLanes(), user)) {
 				modified = true;
 			}

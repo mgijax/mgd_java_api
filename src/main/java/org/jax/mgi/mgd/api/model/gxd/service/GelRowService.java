@@ -129,6 +129,7 @@ public class GelRowService extends BaseService<GelRowDomain> {
 				// process gxd_gellane/gxd_gelband
 				if (laneDomain != null && !laneDomain.isEmpty()) {
 					for (int j = 0; j < laneDomain.size(); j++) {
+						log.info("processGelRow/key: " + entity.get_gelrow_key());
 						if (gelBandService.process(entity.get_gelrow_key(), rowDomain.get(i).getSequenceNum(), laneDomain.get(j).getGelBands(), user)) {
 							modified = true;
 						}

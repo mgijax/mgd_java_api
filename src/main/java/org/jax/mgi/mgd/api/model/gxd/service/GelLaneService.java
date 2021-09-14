@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
@@ -194,6 +195,12 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				if (domain.get(i).getStructures() != null && !domain.get(i).getStructures().isEmpty()) {
 					structureService.process(entity.get_gellane_key(), domain.get(i).getStructures(), user);
 				}
+
+				log.info("processGelLane/MGI_resetAgeMinMax");																						
+				String cmd = "select count(*) from MGI_resetAgeMinMax ('GXD_GelLane'," + entity.get_gellane_key() + ")";
+				log.info("cmd: " + cmd);
+				Query query = gelLaneDAO.createNativeQuery(cmd);
+				query.getResultList();
 				
 				log.info("processGelLane/create processed: " + entity.get_gellane_key());					
 			}
@@ -292,6 +299,13 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				}
 				
 				gelLaneDAO.update(entity);
+				
+				log.info("processGelLane/MGI_resetAgeMinMax");																						
+				String cmd = "select count(*) from MGI_resetAgeMinMax ('GXD_GelLane'," + entity.get_gellane_key() + ")";
+				log.info("cmd: " + cmd);
+				Query query = gelLaneDAO.createNativeQuery(cmd);
+				query.getResultList();
+				
 				log.info("processGelLane/changes processed: " + domain.get(i).getGelLaneKey());	
 			}
 			else {

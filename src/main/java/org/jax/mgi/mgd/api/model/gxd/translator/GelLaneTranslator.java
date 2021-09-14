@@ -91,11 +91,11 @@ public class GelLaneTranslator extends BaseEntityDomainTranslator<GelLane, GelLa
 			domain.setGelBands(IteratorUtils.toList(i.iterator()));
 			domain.getGelBands().sort(Comparator.comparingInt(GelBandDomain::getSequenceNum));			
 		}
-		else {
-			List<GelBandDomain> gelBand = new ArrayList<GelBandDomain>();
-			gelBand.get(0).setProcessStatus(Constants.PROCESS_CREATE);
-			domain.setGelBands(gelBand);
-		}
+//		else {
+//			List<GelBandDomain> gelBand = new ArrayList<GelBandDomain>();
+//			gelBand.get(0).setProcessStatus(Constants.PROCESS_CREATE);
+//			domain.setGelBands(gelBand);
+//		}
 		
 		return domain;
 	}

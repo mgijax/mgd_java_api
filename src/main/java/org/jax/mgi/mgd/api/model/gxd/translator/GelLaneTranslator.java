@@ -99,9 +99,18 @@ public class GelLaneTranslator extends BaseEntityDomainTranslator<GelLane, GelLa
 			gelBand.setAssayKey(String.valueOf(entity.get_assay_key()));
 			gelBand.setGelRowKey("");
 			gelBand.setGelBandKey("");
-			gelBand.setStrengthKey("");
-			gelBand.setStrength("");
 			gelBand.setBandNote("");
+			
+			// if gel control != No, default = Not Applicable
+			if (!domain.getGelControlKey().equals("1")) {
+				gelBand.setStrengthKey("-2");
+				gelBand.setStrength("Not Applicable");				
+			}
+			else {
+				gelBand.setStrengthKey("");
+				gelBand.setStrength("");
+			}
+			
 			gelBands.add(gelBand);
 			domain.setGelBands(gelBands);
 		}

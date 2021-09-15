@@ -91,15 +91,15 @@ public class GelLaneTranslator extends BaseEntityDomainTranslator<GelLane, GelLa
 			domain.setGelBands(IteratorUtils.toList(i.iterator()));
 			domain.getGelBands().sort(Comparator.comparingInt(GelBandDomain::getSequenceNum));			
 		}
-//		else {
-//			List<GelBandDomain> gelBands = new ArrayList<GelBandDomain>();
-//			GelBandDomain gelBand = new GelBandDomain();
-//			gelBand.setProcessStatus(Constants.PROCESS_CREATE);
-//			gelBand.setGelLaneKey(String.valueOf(entity.get_gellane_key()));
-//			gelBand.setAssayKey(String.valueOf(entity.get_assay_key()));							
-//			gelBands.add(gelBand);
-//			domain.setGelBands(gelBands);
-//		}
+		else {
+			List<GelBandDomain> gelBands = new ArrayList<GelBandDomain>();
+			GelBandDomain gelBand = new GelBandDomain();
+			gelBand.setProcessStatus(Constants.PROCESS_CREATE);
+			gelBand.setGelLaneKey(String.valueOf(entity.get_gellane_key()));
+			gelBand.setAssayKey(String.valueOf(entity.get_assay_key()));							
+			gelBands.add(gelBand);
+			domain.setGelBands(gelBands);
+		}
 		
 		return domain;
 	}

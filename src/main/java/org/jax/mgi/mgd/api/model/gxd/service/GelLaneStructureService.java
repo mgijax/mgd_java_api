@@ -112,6 +112,9 @@ public class GelLaneStructureService extends BaseService<GelLaneStructureDomain>
 				log.info("processGelLaneStructures/create processed: " + entity.get_gellanestructure_key());					
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+				if (domain.get(i).getGelLaneStructureKey() == "" || domain.get(i).getGelLaneStructureKey().isEmpty()) {
+					continue;
+				}
 				log.info("processGelLaneStructures delete");
 				GelLaneStructure entity = gelLaneStructureDAO.get(Integer.valueOf(domain.get(i).getGelLaneStructureKey()));
 				gelLaneStructureDAO.remove(entity);

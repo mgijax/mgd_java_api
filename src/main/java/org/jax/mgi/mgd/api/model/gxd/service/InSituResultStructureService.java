@@ -111,6 +111,10 @@ public class InSituResultStructureService extends BaseService<InSituResultStruct
 				log.info("processInSituStructures/create processed: " + entity.get_resultstructure_key());					
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+				// ignore/do nothing
+				if (domain.get(i).getResultStructureKey() == "" || domain.get(i).getResultStructureKey().isEmpty()) {
+					continue;
+				}
 				log.info("processInSituStructures delete");
 				InSituResultStructure entity = insitustructureDAO.get(Integer.valueOf(domain.get(i).getResultStructureKey()));
 				insitustructureDAO.remove(entity);

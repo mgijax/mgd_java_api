@@ -11,8 +11,10 @@ import org.jax.mgi.mgd.api.model.gxd.domain.HTUserDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTSourceDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTNoteDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTVariableDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTGenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTExperiment;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTSample;
+import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTExperimentVariable;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIProperty;
@@ -167,8 +169,23 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 
 				// Sample Info
 				sampleDomain.setName(sample.getName());
-				if (sample.getOrganism() != null) {
-					sampleDomain.set_organism_key(sample.getOrganism().get_organism_key());
+				sampleDomain.set_organism_key(sample.get_organism_key());
+				sampleDomain.set_experiment_key(sample.get_experiment_key());
+				sampleDomain.set_organism_key(sample.get_organism_key());
+				sampleDomain.set_relevance_key(sample.get_relevance_key());
+				sampleDomain.set_sex_key(sample.get_sex_key());
+				sampleDomain.setAge(sample.getAge());
+
+				// Handling of genotype data
+				if (sample.getGenotype() != null) {
+					Genotype genotype = sample.getGenotype();
+					HTGenotypeDomain genotypeDomain = new HTGenotypeDomain();
+					genotypeDomain.set_genotype_key(genotype.get_genotype_key());
+					genotypeDomain.setGeneticbackground(genotype.getStrain().getStrain());
+					if (genotype.getMgiAccessionIds() != null && !genotype.getMgiAccessionIds().isEmpty()) {
+						genotypeDomain.setMgiid(genotype.getMgiAccessionIds().get(0).getAccID());
+					}
+					sampleDomain.setGenotype_object(genotypeDomain);
 				}
 
 				samples.add(sampleDomain);

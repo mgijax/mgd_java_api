@@ -25,26 +25,37 @@ public class HTSample extends BaseEntity {
 
 	@Id
 	private Integer _sample_key;
+	private Integer _experiment_key;
+	private Integer _organism_key;
+	private Integer _relevance_key;
+	private Integer _sex_key;
+//	private Integer _emapa_key;
+//	private Integer _genotype_key;
+
+
+
+
 	private String name;
 	private String age;
 	private Date creation_date;
 	private Date modification_date;
+
 	
-	@OneToOne
-	@JoinColumn(name="_experiment_key")
-	private HTExperiment experiment;
+//	@OneToOne
+//	@JoinColumn(name="_experiment_key", insertable=false, updatable=false)
+//	private HTExperiment experiment;
 	
-	@OneToOne
-	@JoinColumn(name="_organism_key")
-	private Organism organism;
+//	@OneToOne
+//	@JoinColumn(name="_organism_key")
+//	private Organism organism;
 	
-	@OneToOne
-	@JoinColumn(name="_relevance_key", referencedColumnName="_term_key")
-	private Term relevance;
+//	@OneToOne
+//	@JoinColumn(name="_relevance_key", referencedColumnName="_term_key")
+//	private Term relevance;
 	
-	@OneToOne
-	@JoinColumn(name="_sex_key", referencedColumnName="_term_key")
-	private Term sex;
+//	@OneToOne
+//	@JoinColumn(name="_sex_key", referencedColumnName="_term_key")
+//	private Term sex;
 	
 	@OneToOne
 	@JoinColumn(name="_emapa_key", referencedColumnName="_term_key")

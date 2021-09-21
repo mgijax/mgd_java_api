@@ -372,12 +372,12 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				"\norder by orderBy, term\n";			
 		}
 		else if (vocabKey.equals("172") ) {
-			cmd = "select g._gelrnatype_key as termKey, v.abbreviation as term, 1 as orderBy from gxd_gelrnatypeg, voc_term v" +
+			cmd = "select g._gelrnatype_key as termKey, v.abbreviation as term, 1 as orderBy from gxd_gelrnatype g, voc_term v" +
 				"\nwhere v._vocab_key = 172" + 
 				"\nand g.rnatype = v.term" + 
 				"\nand g._gelrnatype_key = -1" +
 				"\nunion" +
-				"\nselect g._gelrnatype_key as termKey, v.abbreviation as term, 2 as orderBy from gxd_gelrnatypeg, voc_term v" +				
+				"\nselect g._gelrnatype_key as termKey, v.abbreviation as term, 2 as orderBy from gxd_gelrnatype g, voc_term v" +				
 				"\nwhere v._vocab_key = 172" + 
 				"\nand g.rnatype = v.term" + 
 				"\nand g._gelrnatype_key != -1" +

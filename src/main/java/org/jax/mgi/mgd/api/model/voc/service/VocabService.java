@@ -333,10 +333,16 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				"\norder by orderBy, term\n";	
 		}
 		else if (vocabKey.equals("156") ) {
-			cmd = "select _fixation_key as termKey, fixation as term, 1 as orderBy from gxd_fixationmethod where _fixation_key = -1" +
-				"\nunion" +
-				"\nselect _fixation_key as termKey, fixation as term, 2 as orderBy from gxd_fixationmethod where _fixation_key != -1" + 
-				"\norder by orderBy, term\n";
+			cmd = "select g._fixation_key as termKey, v.abbreviation as term, 1 as orderBy from gxd_fixationmethod g, voc_term v" +
+					"\nwhere v._vocab_key = 156" + 
+					"\nand g.fixation = v.term" + 
+					"\nand g._fixation_key = -1" +
+					"\nunion" +
+					"\nselect g._fixation_key as termKey, v.abbreviation as term, 2 as orderBy from gxd_fixationmethod g, voc_term v" +				
+					"\nwhere v._vocab_key = 156" + 
+					"\nand g.fixation = v.term" + 
+					"\nand g._fixation_key != -1" +
+					"\norder by orderBy, term\n";			
 		}		
 		else if (vocabKey.equals("157")) {
 			cmd = "select _visualization_key as termKey, visualization as term, 1 as orderBy from gxd_visualizationmethod where _visualization_key = -1" +

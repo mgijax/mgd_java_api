@@ -327,10 +327,16 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				"\norder by orderBy, term\n";
 		}		
 		else if (vocabKey.equals("155")) {
-			cmd = "select _embedding_key as termKey, embeddingMethod as term, 1 as orderBy from gxd_embeddingmethod where _embedding_key = -1" +
-				"\nunion" +
-				"\nselect _embedding_key as termKey, embeddingMethod as term, 2 as orderBy from gxd_embeddingmethod where _embedding_key != -1" + 
-				"\norder by orderBy, term\n";	
+			cmd = "select g._embedding_key as termKey, v.abbreviation as term, 1 as orderBy from gxd_embeddingmethod g, voc_term v" +
+					"\nwhere v._vocab_key = 155" + 
+					"\nand g.embeddingmethod = v.term" + 
+					"\nand g._embedding_key = -1" +
+					"\nunion" +
+					"\nselect g._embedding_key as termKey, v.abbreviation as term, 2 as orderBy from gxd_embeddingmethod g, voc_term v" +				
+					"\nwhere v._vocab_key = 155" + 
+					"\nand g.embeddingmethod = v.term" + 
+					"\nand g._embedding_key != -1" +
+					"\norder by orderBy, term\n";				
 		}
 		else if (vocabKey.equals("156") ) {
 			cmd = "select g._fixation_key as termKey, v.abbreviation as term, 1 as orderBy from gxd_fixationmethod g, voc_term v" +

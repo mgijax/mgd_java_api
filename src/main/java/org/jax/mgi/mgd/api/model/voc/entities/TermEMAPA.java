@@ -1,12 +1,14 @@
 package org.jax.mgi.mgd.api.model.voc.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
@@ -40,4 +42,10 @@ public class TermEMAPA extends BaseEntity {
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
+
+	@OneToMany()
+//	@JoinColumn(name="_Term_key", referencedColumnName="_EMAPA_Term_key", insertable=false, updatable=false)
+	@JoinColumn(name="_EMAPA_Term_key", referencedColumnName="_Term_key", insertable=false, updatable=false)
+	private List<TermEMAPS> emapsTerms;
+
 }

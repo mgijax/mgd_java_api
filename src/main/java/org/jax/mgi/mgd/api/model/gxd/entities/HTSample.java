@@ -1,17 +1,22 @@
 package org.jax.mgi.mgd.api.model.gxd.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import org.hibernate.annotations.Where;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
+import org.jax.mgi.mgd.api.model.voc.entities.TermEMAPA;
+import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -29,7 +34,8 @@ public class HTSample extends BaseEntity {
 	private Integer _organism_key;
 	private Integer _relevance_key;
 	private Integer _sex_key;
-//	private Integer _emapa_key;
+	private Integer _emapa_key;
+	private Integer _stage_key;
 //	private Integer _genotype_key;
 
 
@@ -39,7 +45,7 @@ public class HTSample extends BaseEntity {
 	private String age;
 	private Date creation_date;
 	private Date modification_date;
-
+ 
 	
 //	@OneToOne
 //	@JoinColumn(name="_experiment_key", insertable=false, updatable=false)
@@ -56,14 +62,24 @@ public class HTSample extends BaseEntity {
 //	@OneToOne
 //	@JoinColumn(name="_sex_key", referencedColumnName="_term_key")
 //	private Term sex;
+
+	// notes
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_sample_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 43 and `_notetype_key` = 1048")
+	private List<Note> notes;
 	
 	@OneToOne
-	@JoinColumn(name="_emapa_key", referencedColumnName="_term_key")
-	private Term emapa;
-	
+	@JoinColumn(name="_emapa_key", referencedColumnName="_term_key", insertable=false, updatable=false)
+	private Term emapaTerm;
+
 	@OneToOne
-	@JoinColumn(name="_stage_key", referencedColumnName="_stage_key")
-	private TheilerStage stage;
+	@JoinColumn(name="_emapa_key", referencedColumnName="_term_key", insertable=false, updatable=false)
+	private TermEMAPA emapaObject;
+	
+//	@OneToOne
+//	@JoinColumn(name="_stage_key", referencedColumnName="_stage_key")
+//	private TheilerStage stage;
 	
 	@OneToOne
 	@JoinColumn(name="_genotype_key")

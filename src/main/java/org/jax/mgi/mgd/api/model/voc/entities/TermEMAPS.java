@@ -24,21 +24,27 @@ import lombok.Setter;
 public class TermEMAPS extends BaseEntity {
 
 	@Id
-	private int _Term_key;
+	private int _term_key;
+	private int _stage_key;
+	private int _EMAPA_Term_key;
 	private Date creation_date;
 	private Date modification_date;
 
+//	@OneToOne(fetch=FetchType.LAZY)
+//	@JoinColumn(name="_stage_key")
+//	private TheilerStage stage;
+
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_stage_key")
-	private TheilerStage stage;
+	@JoinColumn(name="_term_key", referencedColumnName="_term_key")
+	private Term term;
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_defaultparent_key", referencedColumnName="_term_key")
 	private Term defaultParent;
 
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_EMAPA_Term_key", referencedColumnName="_term_key")
-	private Term emapaTerm;
+//	@OneToOne(fetch=FetchType.LAZY)sz
+//	@JoinColumn(name="_EMAPA_Term_key", referencedColumnName="_term_key")
+//	private Term emapaTerm;
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

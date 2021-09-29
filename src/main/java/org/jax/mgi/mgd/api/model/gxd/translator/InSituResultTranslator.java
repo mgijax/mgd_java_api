@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.gxd.domain.InSituResultCellTypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.InSituResultDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.InSituResultImageViewDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.InSituResultStructureDomain;
@@ -46,6 +47,18 @@ public class InSituResultTranslator extends BaseEntityDomainTranslator<InSituRes
 			domain.setStructuresCount(0);
 		}
 
+		// cell types
+		if (entity.getCelltypes() != null && !entity.getCelltypes().isEmpty()) {
+			InSituResultCellTypeTranslator celltypeTranslator = new InSituResultCellTypeTranslator();
+			Iterable<InSituResultCellTypeDomain> i = celltypeTranslator.translateEntities(entity.getCelltypes());
+			domain.setCelltypes(IteratorUtils.toList(i.iterator()));
+			domain.getCelltypes().sort(Comparator.comparing(InSituResultCellTypeDomain::getCelltypeTerm));
+			domain.setCelltypeCount(domain.getCelltypes().size());			
+		}
+		else {
+			domain.setStructuresCount(0);
+		}		
+		
 		// images uses view that contains concatenated figureLabel plus paneLabel
 		if (entity.getImagePanes() != null && !entity.getImagePanes().isEmpty()) {
 			InSituResultImageViewTranslator imageTranslator = new InSituResultImageViewTranslator();
@@ -66,6 +79,7 @@ public class InSituResultTranslator extends BaseEntityDomainTranslator<InSituRes
 			domain.setImagePanesCount(0);			
 		}
 
+		
 		return domain;
 	}
 

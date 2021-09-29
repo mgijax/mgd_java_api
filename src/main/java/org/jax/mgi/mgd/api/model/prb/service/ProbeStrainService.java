@@ -269,6 +269,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		// process the attribute/annotation 
 		
 		List<AnnotationDomain> annotDomain = new ArrayList<AnnotationDomain>();
+        List<String> listOfTerms = new ArrayList<String>();
 
 		if (domain.getAttributes() == null) {
 			return(true);
@@ -279,6 +280,14 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			if (domain.getAttributes().get(i).getTermKey().isEmpty()) {
 				continue;
 			}
+
+            // check/skip if same/duplicate term
+            if (listOfTerms.contains(domain.getAttributes().get(i).getTermKey())) {
+                    continue;
+            }
+            else {
+                    listOfTerms.add(domain.getAttributes().get(i).getTermKey());
+            }
 			
 			AnnotationDomain adomain = new AnnotationDomain();
 

@@ -32,6 +32,8 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 	private PatternDAO patternDAO;
 	@Inject
 	private InSituResultStructureService structureService;
+	@Inject
+	private InSituResultCellTypeService celltypeService;	
 	@Inject 
 	private InSituResultImageService imagePaneService;
 	
@@ -134,6 +136,10 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 					modified = structureService.process(entity.get_result_key(), domain.get(i).getStructures(), user);
 				}
 
+//				if (domain.get(i).getCelltypes() != null && !domain.get(i).getCelltypes().isEmpty()) {
+//					modified = celltypeService.process(entity.get_result_key(), domain.get(i).getCelltypes(), user);
+//				}
+				
 				if (domain.get(i).getImagePanes() != null && !domain.get(i).getImagePanes().isEmpty()) {
 					modified = imagePaneService.process(entity.get_result_key(), domain.get(i).getImagePanes(), user);
 				}
@@ -172,6 +178,10 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 					modified = structureService.process(Integer.valueOf(domain.get(i).getResultKey()), domain.get(i).getStructures(), user);
 				}
 
+				if (domain.get(i).getCelltypes() != null && !domain.get(i).getCelltypes().isEmpty()) {
+					modified = celltypeService.process(Integer.valueOf(domain.get(i).getResultKey()), domain.get(i).getCelltypes(), user);
+				}
+				
 				if (domain.get(i).getImagePanes() != null && !domain.get(i).getImagePanes().isEmpty()) {				
 					modified = imagePaneService.process(Integer.valueOf(domain.get(i).getResultKey()), domain.get(i).getImagePanes(), user);
 				}

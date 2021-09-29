@@ -129,8 +129,9 @@ public class GelRowService extends BaseService<GelRowDomain> {
 				// process gxd_gellane/gxd_gelband
 				if (laneDomain != null && !laneDomain.isEmpty()) {
 					for (int j = 0; j < laneDomain.size(); j++) {
-						log.info("processGelRow/next lane: " + j);
-						modified = gelBandService.process(entity.get_gelrow_key(), Integer.valueOf(laneDomain.get(j).getGelLaneKey()), rowDomain.get(i).getSequenceNum(), laneDomain.get(j).getGelBands(), user);
+						if (laneDomain.get(j).getLaneLabel() != null && !laneDomain.get(j).getLaneLabel().isEmpty()) {
+							modified = gelBandService.process(entity.get_gelrow_key(), Integer.valueOf(laneDomain.get(j).getGelLaneKey()), rowDomain.get(i).getSequenceNum(), laneDomain.get(j).getGelBands(), user);
+						}
 					}
 				}
 				
@@ -172,8 +173,9 @@ public class GelRowService extends BaseService<GelRowDomain> {
 				// process gxd_gellane/gxd_gelband
 				if (laneDomain != null && !laneDomain.isEmpty()) {
 					for (int j = 0; j < laneDomain.size(); j++) {
-						log.info("processGelRow/next lane: " + j);
-						modified = gelBandService.process(Integer.valueOf(rowDomain.get(i).getGelRowKey()), Integer.valueOf(laneDomain.get(j).getGelLaneKey()), rowDomain.get(i).getSequenceNum(), laneDomain.get(j).getGelBands(), user);
+						if (laneDomain.get(j).getLaneLabel() != null && !laneDomain.get(j).getLaneLabel().isEmpty()) {
+							modified = gelBandService.process(Integer.valueOf(rowDomain.get(i).getGelRowKey()), Integer.valueOf(laneDomain.get(j).getGelLaneKey()), rowDomain.get(i).getSequenceNum(), laneDomain.get(j).getGelBands(), user);
+						}
 					}
 				}
 				

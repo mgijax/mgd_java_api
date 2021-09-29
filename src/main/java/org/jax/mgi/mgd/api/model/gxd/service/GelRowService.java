@@ -173,9 +173,8 @@ public class GelRowService extends BaseService<GelRowDomain> {
 				// process gxd_gellane/gxd_gelband
 				if (laneDomain != null && !laneDomain.isEmpty()) {
 					for (int j = 0; j < laneDomain.size(); j++) {
-						if (gelBandService.process(Integer.valueOf(rowDomain.get(i).getGelRowKey()), Integer.valueOf(laneDomain.get(j).getGelLaneKey()), rowDomain.get(i).getSequenceNum(), laneDomain.get(j).getGelBands(), user)) {
-							modified = true;
-						}
+						log.info("processGelRow/next lane: " + j);
+						modified = gelBandService.process(Integer.valueOf(rowDomain.get(i).getGelRowKey()), Integer.valueOf(laneDomain.get(j).getGelLaneKey()), rowDomain.get(i).getSequenceNum(), laneDomain.get(j).getGelBands(), user);
 					}
 				}
 				
@@ -189,8 +188,6 @@ public class GelRowService extends BaseService<GelRowDomain> {
 		}
 		
 		// process order reset
-		log.info("processGelRow/parentKey help1");
-		log.info("processGelRow/parentKey: " + parentKey);
 		cmd = "select count(*) from MGI_resetSequenceNum ('GXD_GelRow'," + parentKey + "," + user.get_user_key() + ")";
 		log.info("processGelRow/process order reset: " + cmd);
 		query = gelRowDAO.createNativeQuery(cmd);

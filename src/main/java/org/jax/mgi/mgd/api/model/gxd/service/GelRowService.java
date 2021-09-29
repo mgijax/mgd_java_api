@@ -189,6 +189,7 @@ public class GelRowService extends BaseService<GelRowDomain> {
 		}
 		
 		// process order reset
+		log.info("processGelRow/parentKey: " + parentKey);
 		cmd = "select count(*) from MGI_resetSequenceNum ('GXD_GelRow'," + parentKey + "," + user.get_user_key() + ")";
 		log.info("processGelRow/process order reset: " + cmd);
 		query = gelRowDAO.createNativeQuery(cmd);

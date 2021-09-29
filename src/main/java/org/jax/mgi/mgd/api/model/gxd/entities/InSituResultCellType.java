@@ -36,7 +36,7 @@ public class InSituResultCellType extends BaseEntity {
 	private Date modification_date;
 
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_celltype_key", referencedColumnName="_term_key")
+	@JoinColumn(name="_celltype_term_key", referencedColumnName="_term_key")
 	private Term celltypeTerm;
 
 }

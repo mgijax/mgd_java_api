@@ -24,7 +24,7 @@ public class InSituResultDomain extends BaseDomain {
 	
 	// used to display in pwi/assay
 	private Integer structuresCount;
-	private Integer celltypeCount;
+	private Integer celltypesCount;
 	private Integer imagePanesCount;
 	private String imagePanesString;
 

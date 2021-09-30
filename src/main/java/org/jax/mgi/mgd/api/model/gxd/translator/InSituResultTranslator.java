@@ -56,7 +56,7 @@ public class InSituResultTranslator extends BaseEntityDomainTranslator<InSituRes
 			domain.setCelltypesCount(domain.getCelltypes().size());			
 		}
 		else {
-			domain.setStructuresCount(0);
+			domain.setCelltypesCount(0);
 		}		
 		
 		// images uses view that contains concatenated figureLabel plus paneLabel

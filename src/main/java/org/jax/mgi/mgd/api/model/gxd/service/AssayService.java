@@ -1036,30 +1036,30 @@ public class AssayService extends BaseService<AssayDomain> {
 	@Transactional	
 	public List<MGISetMemberCellTypeDomain> getCellTypeInSituBySetUser(SlimCellTypeDomain searchDomain) {
 		// return 
-		// all set members of cell type (_set_key = ????) + user (searchDomain.getCreatedByKey())
+		// all set members of cell type (_set_key = 1059) + user (searchDomain.getCreatedByKey())
 		// union
 		// all cell types for given specimen (searchDomain.getSpecimienKey())
 
 		List<MGISetMemberCellTypeDomain> results = new ArrayList<MGISetMemberCellTypeDomain>();		
 		String displayIt = "";
 		
-		// search mgi_setmembers where _set_key = ???? (cell type)
+		// search mgi_setmembers where _set_key = 1059 (cell type)
 		String cmd = 
-				"\n(select distinct '*'||t1.term as displayIt, t1.term, " +
+				"\n(select distinct t.term as displayIt, t.term," +
 				"\ns._setmember_key as setMemberKey, s._set_key as setKey, s._object_key as objectKey, s._createdby_key as createdByKey, u.login," +
 				"\ns.sequenceNum as sequenceNum, 1 as orderBy" +
-				"\nfrom mgi_setmember s, voc_term t1, mgi_user u" +
-				"\nwhere not exists (select 1 from GXD_ISResultCellTypeView v where s._Object_key = v._CellType_Term_key" +
-				"\nand v._Specimen_key = 1059" + searchDomain.getSpecimenKey() + ")" +
-				"\nand s._set_key = 1" +
-				"\nand s._object_key = t1._term_key" +
+				"\nfrom mgi_setmember s, voc_term t, mgi_user u" +
+				"\nwhere not exists (select 1 from GXD_ISResultCellType_View v where s._Object_key = v._CellType_Term_key" +
+				"\nand v._Specimen_key = " + searchDomain.getSpecimenKey() + ")" +
+				"\nand s._set_key = 1059" +
+				"\nand s._object_key = t._term_key" +
 				"\nand s._CreatedBy_key = u._user_key" +
 				"\nand u.login = '" + searchDomain.getCreatedBy() + "'" +		
 				"\nunion all" +
-				"\nselect i.displayIt||' ('||count(*)||')' as displayIt, term," +
+				"\nselect i.displayIt||' ('||count(*)||')' as displayIt, term, stage," +
 				"\n0 as setMemberKey, 0 as setKey, i._emapa_term_key as objectKey, 0 as createdByKey, null as createdBy," +
 				"\nmin(i.sequenceNum), 0 as orderBy" +				
-				"\nfrom GXD_ISResultCellTypeView i, GXD_Specimen s" +
+				"\nfrom GXD_ISResultCellType_View i, GXD_Specimen s" +
 				"\nwhere s._Specimen_key = i._Specimen_key" +
 				"\nand s._Specimen_key = " + searchDomain.getSpecimenKey() +
 				"\ngroup by _CellType_Term_key, _Stage_key, displayIt, term" +

@@ -22,11 +22,13 @@ import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeReplaceDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimCellTypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
 import org.jax.mgi.mgd.api.model.gxd.translator.AssayTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimAssayTranslator;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberCellTypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberEmapaDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberGenotypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -1030,7 +1032,69 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		return results;
 	}
-	
+
+	@Transactional	
+	public List<MGISetMemberCellTypeDomain> getCellTypeInSituBySetUser(SlimCellTypeDomain searchDomain) {
+		// return 
+		// all set members of cell type (_set_key = ????) + user (searchDomain.getCreatedByKey())
+		// union
+		// all cell types for given specimen (searchDomain.getSpecimienKey())
+
+		List<MGISetMemberCellTypeDomain> results = new ArrayList<MGISetMemberCellTypeDomain>();		
+		String displayIt = "";
+		
+		// search mgi_setmembers where _set_key = ???? (cell type)
+		String cmd = 
+				"\n(select distinct '*'||t1.term as displayIt, t1.term, " +
+				"\ns._setmember_key as setMemberKey, s._set_key as setKey, s._object_key as objectKey, s._createdby_key as createdByKey, u.login," +
+				"\ns.sequenceNum as sequenceNum, 1 as orderBy" +
+				"\nfrom mgi_setmember s, voc_term t1, mgi_user u" +
+				"\nwhere not exists (select 1 from GXD_ISResultCellTypeView v where s._Object_key = v._CellType_Term_key" +
+				"\nand v._Specimen_key = " + searchDomain.getSpecimenKey() + ")" +
+				"\nand s._set_key = ????" +
+				"\nand s._object_key = t1._term_key" +
+				"\nand s._CreatedBy_key = u._user_key" +
+				"\nand u.login = '" + searchDomain.getCreatedBy() + "'" +		
+				"\nunion all" +
+				"\nselect i.displayIt||' ('||count(*)||')' as displayIt, term," +
+				"\n0 as setMemberKey, 0 as setKey, i._emapa_term_key as objectKey, 0 as createdByKey, null as createdBy," +
+				"\nmin(i.sequenceNum), 0 as orderBy" +				
+				"\nfrom GXD_ISResultCellTypeView i, GXD_Specimen s" +
+				"\nwhere s._Specimen_key = i._Specimen_key" +
+				"\nand s._Specimen_key = " + searchDomain.getSpecimenKey() +
+				"\ngroup by _CellType_Term_key, _Stage_key, displayIt, term" +
+				"\n) order by orderBy, sequenceNum, term";
+
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				MGISetMemberCellTypeDomain domain = new MGISetMemberCellTypeDomain();
+				domain.setProcessStatus("x");
+				domain.setSetKey(rs.getString("setKey"));
+				domain.setSetMemberKey(rs.getString("setMemberKey"));
+				domain.setObjectKey(rs.getString("objectKey"));
+				domain.setTerm(rs.getString("term"));
+				domain.setCreatedByKey(rs.getString("createdByKey"));
+				domain.setCreatedBy(rs.getString("login"));
+				
+				displayIt = rs.getString("displayIt").replaceAll("\\(1\\)", "");
+				domain.setDisplayIt(displayIt);
+
+				domain.setIsUsed(false);
+				results.add(domain);				
+				assayDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+
 	@Transactional		
 	public Boolean gxdexpressionUtilities(String assayKey) throws IOException, InterruptedException {
 		// see mgicacheload/gxdexpression.py
@@ -1097,6 +1161,23 @@ public class AssayService extends BaseService<AssayDomain> {
 		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();		
 
 	    String cmd = "select count(*) from GXD_addEMAPASet('" + domain.getCreatedBy() + "'," 
+	    			+ domain.getAssayKey() + ")";
+	    Query query;
+		
+	    log.info(cmd);
+	    query = assayDAO.createNativeQuery(cmd);
+	    query.getResultList();
+		
+		return results;
+	}
+
+	@Transactional
+	public List<SlimAssayDomain> addToCellTypeClipboard(SlimAssayDomain domain) {
+		// select * from GXD_addCellTypeSet (user, assayKey)
+		
+		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();		
+
+	    String cmd = "select count(*) from GXD_addCellTypeSet('" + domain.getCreatedBy() + "'," 
 	    			+ domain.getAssayKey() + ")";
 	    Query query;
 		

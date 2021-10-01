@@ -15,8 +15,10 @@ import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeReplaceDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimCellTypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.AssayService;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberCellTypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberEmapaDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberGenotypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -150,6 +152,22 @@ public class AssayController extends BaseController<AssayDomain> {
 		
 		return results;
 	}
+
+	@POST
+	@ApiOperation(value = "Get CellType Set Members by Specimen and Set/User")
+	@Path("/getCellTypeInSituBySetUser")
+	public List<MGISetMemberCellTypeDomain> getCellTypeBySetUser(SlimCellTypeDomain domain) {
+			
+		List<MGISetMemberCellTypeDomain> results = new ArrayList<MGISetMemberCellTypeDomain>();
+		
+		try {
+			results = assayService.getCellTypeInSituBySetUser(domain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
 	@POST
 	@ApiOperation(value = "Process Replace Genotype/returns GenotypeReplaceDomain")
@@ -182,5 +200,20 @@ public class AssayController extends BaseController<AssayDomain> {
 		
 		return results;
 	}
+
+	@POST
+	@ApiOperation(value = "Add to CellType clipboard")
+	@Path("/addToCellTypeClipboard")
+	public List<SlimAssayDomain> addToCellTypeClipboard(SlimAssayDomain domain) {
 	
+		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();		
+
+		try {
+			results = assayService.addToCellTypeClipboard(domain);
+		} catch (Exception e) {
+			e.printStackTrace();				
+		}
+		
+		return results;
+	}	
 }

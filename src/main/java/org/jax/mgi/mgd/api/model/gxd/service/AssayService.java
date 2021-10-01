@@ -1056,13 +1056,13 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand s._CreatedBy_key = u._user_key" +
 				"\nand u.login = '" + searchDomain.getCreatedBy() + "'" +		
 				"\nunion all" +
-				"\nselect i.displayIt||' ('||count(*)||')' as displayIt, term, stage," +
-				"\n0 as setMemberKey, 0 as setKey, i._emapa_term_key as objectKey, 0 as createdByKey, null as createdBy," +
+				"\nselect i.displayIt||' ('||count(*)||')' as displayIt, term," +
+				"\n0 as setMemberKey, 0 as setKey, i._CellType_term_key as objectKey, 0 as createdByKey, null as createdBy," +
 				"\nmin(i.sequenceNum), 0 as orderBy" +				
 				"\nfrom GXD_ISResultCellType_View i, GXD_Specimen s" +
 				"\nwhere s._Specimen_key = i._Specimen_key" +
 				"\nand s._Specimen_key = " + searchDomain.getSpecimenKey() +
-				"\ngroup by _CellType_Term_key, _Stage_key, displayIt, term" +
+				"\ngroup by _CellType_Term_key, displayIt, term" +
 				"\n) order by orderBy, sequenceNum, term";
 
 		log.info(cmd);

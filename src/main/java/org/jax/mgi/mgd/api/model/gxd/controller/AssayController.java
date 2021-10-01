@@ -170,22 +170,6 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Process Replace Genotype/returns GenotypeReplaceDomain")
-	@Path("/processReplaceGenotype")
-	public List<GenotypeReplaceDomain> processReplaceGenotype(GenotypeReplaceDomain domain) {
-	
-		List<GenotypeReplaceDomain> results = new ArrayList<GenotypeReplaceDomain>();		
-
-		try {
-			results = assayService.processReplaceGenotype(domain);
-		} catch (Exception e) {
-			e.printStackTrace();				
-		}
-		
-		return results;
-	}
-	
-	@POST
 	@ApiOperation(value = "Add to EMAPA clipboard")
 	@Path("/addToEmapaClipboard")
 	public List<SlimAssayDomain> addToEmapaClipboard(SlimAssayDomain domain) {
@@ -202,18 +186,19 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Add to CellType clipboard")
-	@Path("/addToCellTypeClipboard")
-	public List<SlimAssayDomain> addToCellTypeClipboard(SlimAssayDomain domain) {
+	@ApiOperation(value = "Process Replace Genotype/returns GenotypeReplaceDomain")
+	@Path("/processReplaceGenotype")
+	public List<GenotypeReplaceDomain> processReplaceGenotype(GenotypeReplaceDomain domain) {
 	
-		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();		
+		List<GenotypeReplaceDomain> results = new ArrayList<GenotypeReplaceDomain>();		
 
 		try {
-			results = assayService.addToCellTypeClipboard(domain);
+			results = assayService.processReplaceGenotype(domain);
 		} catch (Exception e) {
 			e.printStackTrace();				
 		}
 		
 		return results;
-	}	
+	}
+	
 }

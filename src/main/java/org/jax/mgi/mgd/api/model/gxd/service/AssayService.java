@@ -1050,8 +1050,8 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\ns.sequenceNum as sequenceNum, 1 as orderBy" +
 				"\nfrom mgi_setmember s, voc_term t1, mgi_user u" +
 				"\nwhere not exists (select 1 from GXD_ISResultCellTypeView v where s._Object_key = v._CellType_Term_key" +
-				"\nand v._Specimen_key = " + searchDomain.getSpecimenKey() + ")" +
-				"\nand s._set_key = ????" +
+				"\nand v._Specimen_key = 1059" + searchDomain.getSpecimenKey() + ")" +
+				"\nand s._set_key = 1" +
 				"\nand s._object_key = t1._term_key" +
 				"\nand s._CreatedBy_key = u._user_key" +
 				"\nand u.login = '" + searchDomain.getCreatedBy() + "'" +		
@@ -1136,25 +1136,6 @@ public class AssayService extends BaseService<AssayDomain> {
 	}
 
 	@Transactional
-	public List<GenotypeReplaceDomain> processReplaceGenotype(GenotypeReplaceDomain domain) {
-		// select * from GXD_replaceGenotype (user, refsKey, currentGenotypeKey, newGenotypeKey)
-		
-		List<GenotypeReplaceDomain> results = new ArrayList<GenotypeReplaceDomain>();		
-
-	    String cmd = "select count(*) from GXD_replaceGenotype('" + domain.getCreatedBy() + "'," 
-	    			+ domain.getRefsKey() + "," 
-	    			+ domain.getCurrentKey() + "," 
-	    			+ domain.getNewKey() + ")";
-	    Query query;
-		
-	    log.info(cmd);
-	    query = assayDAO.createNativeQuery(cmd);
-	    query.getResultList();
-		
-		return results;
-	}
-
-	@Transactional
 	public List<SlimAssayDomain> addToEmapaClipboard(SlimAssayDomain domain) {
 		// select * from GXD_addEMAPSet (user, assayKey)
 		
@@ -1172,13 +1153,15 @@ public class AssayService extends BaseService<AssayDomain> {
 	}
 
 	@Transactional
-	public List<SlimAssayDomain> addToCellTypeClipboard(SlimAssayDomain domain) {
-		// select * from GXD_addCellTypeSet (user, assayKey)
+	public List<GenotypeReplaceDomain> processReplaceGenotype(GenotypeReplaceDomain domain) {
+		// select * from GXD_replaceGenotype (user, refsKey, currentGenotypeKey, newGenotypeKey)
 		
-		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();		
+		List<GenotypeReplaceDomain> results = new ArrayList<GenotypeReplaceDomain>();		
 
-	    String cmd = "select count(*) from GXD_addCellTypeSet('" + domain.getCreatedBy() + "'," 
-	    			+ domain.getAssayKey() + ")";
+	    String cmd = "select count(*) from GXD_replaceGenotype('" + domain.getCreatedBy() + "'," 
+	    			+ domain.getRefsKey() + "," 
+	    			+ domain.getCurrentKey() + "," 
+	    			+ domain.getNewKey() + ")";
 	    Query query;
 		
 	    log.info(cmd);

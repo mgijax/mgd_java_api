@@ -21,6 +21,6 @@ public class MGISetDomain extends BaseDomain {
 //	private String creation_date;
 //	private String modification_date;
 	
-	private List<MGISetMemberDomain> genotypeClipboardMembers;	
+	private List<MGISetMemberDomain> genotypeClipboardMembers;		
 	
 }   	

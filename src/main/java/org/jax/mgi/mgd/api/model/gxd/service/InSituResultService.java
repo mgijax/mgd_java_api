@@ -136,9 +136,9 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 					modified = structureService.process(entity.get_result_key(), domain.get(i).getStructures(), user);
 				}
 
-//				if (domain.get(i).getCelltypes() != null && !domain.get(i).getCelltypes().isEmpty()) {
-//					modified = celltypeService.process(entity.get_result_key(), domain.get(i).getCelltypes(), user);
-//				}
+				if (domain.get(i).getCelltypes() != null && !domain.get(i).getCelltypes().isEmpty()) {
+					modified = celltypeService.process(entity.get_result_key(), domain.get(i).getCelltypes(), user);
+				}
 				
 				if (domain.get(i).getImagePanes() != null && !domain.get(i).getImagePanes().isEmpty()) {
 					modified = imagePaneService.process(entity.get_result_key(), domain.get(i).getImagePanes(), user);

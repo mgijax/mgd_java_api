@@ -273,6 +273,10 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		// for each row, determine whether to perform an insert, delete or update
 		
 		for (int i = 0; i < domain.size(); i++) {
+	
+			if (domain.get(i).getAccID() == null || domain.get(i).getAccID().isEmpty()) {
+				continue;
+			}
 			
 			if (domain.get(i).getIsPrivate() == null || domain.get(i).getIsPrivate().isEmpty()) {
 				isPrivate = "0";

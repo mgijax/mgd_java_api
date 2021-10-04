@@ -292,12 +292,6 @@ public class AccessionService extends BaseService<AccessionDomain> {
 
 				log.info("processAccession create");
 				
-				// accID cannot be null/empty
-				if (domain.get(i).getAccID().isEmpty()) {
-					log.info("processAccession: accID is empty/skip");
-					return modified;
-				}
-				
 				// refsKey can be null; set to -1
 				String refsKey = "-1";
 				if (domain.get(i).getReferences() != null) {
@@ -331,12 +325,6 @@ public class AccessionService extends BaseService<AccessionDomain> {
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processAccession update");
 				Accession entity = accessionDAO.get(Integer.valueOf(domain.get(i).getAccessionKey()));
-				
-				// accID cannot be null/empty
-				if (domain.get(i).getAccID().isEmpty()) {
-					log.info("processAccession: accID is empty/skip");
-					return modified;
-				}
 				
 				// origRefsKey can be null; default = -1
 				String origRefsKey = "-1";

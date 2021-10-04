@@ -1,3 +1,8 @@
+TAG: mgd_java_api-6-0-17-13
+DATE: 10/04/2021
+STAFF: lec
+wts2-709/java api/do not add row to acc_accession if accid = empty
+
 TAG: mgd_java_api-6-0-17-12
 TAG: mgd_java_api-6-0-17-11
 TAG: mgd_java_api-6-0-17-10

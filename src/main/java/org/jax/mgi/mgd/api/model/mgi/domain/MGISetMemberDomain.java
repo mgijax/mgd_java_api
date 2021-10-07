@@ -22,5 +22,6 @@ public class MGISetMemberDomain extends BaseDomain {
 	private String modification_date;
 	
 	private String genotypeID;
+	private String celltypeID;
 	
 }   	

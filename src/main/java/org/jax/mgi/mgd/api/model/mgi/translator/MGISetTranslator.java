@@ -18,7 +18,7 @@ public class MGISetTranslator extends BaseEntityDomainTranslator<MGISet, MGISetD
 		
 		domain.setSetKey(String.valueOf(entity.get_set_key()));
 		//domain.setMgiTypeKey(String.valueOf(entity.getMgiType().get_mgitype_key()));
-		//domain.setSetName(entity.getName());
+		domain.setSetName(entity.getName());
 		//domain.setSequenceNum(String.valueOf(entity.getSequenceNum()));
 		//domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());

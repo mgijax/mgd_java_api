@@ -12,7 +12,7 @@ public class MGISetDomain extends BaseDomain {
 
 	private String setKey;
 //	private String mgiTypeKey;
-//	private String setName;
+	private String setName;
 //	private String sequenceNum;
 //	private String createdByKey;
 	private String createdBy;
@@ -22,5 +22,6 @@ public class MGISetDomain extends BaseDomain {
 //	private String modification_date;
 	
 	private List<MGISetMemberDomain> genotypeClipboardMembers;		
+	private List<MGISetMemberDomain> celltypeClipboardMembers;
 	
 }   	

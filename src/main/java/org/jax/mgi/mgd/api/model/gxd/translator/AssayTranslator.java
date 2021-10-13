@@ -123,18 +123,21 @@ public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDoma
 		// neither prep
 		if (entity.getAntibodyPrep() == null && entity.getProbePrep() == null) {
 			domain.setDetectionKey("3");
+			domain.setDetectionMethod("direct detection");
 		}		
 		// antibody prep
 		else if (entity.getAntibodyPrep() != null) {
 			AntibodyPrepTranslator i = new AntibodyPrepTranslator();
 			domain.setAntibodyPrep(i.translate(entity.getAntibodyPrep()));
 			domain.setDetectionKey("2");
+			domain.setDetectionMethod("antibody");
 		}
 		// probe prep
 		else if (entity.getProbePrep() != null) {
 			ProbePrepTranslator i = new ProbePrepTranslator();
 			domain.setProbePrep(i.translate(entity.getProbePrep()));
-			domain.setDetectionKey("1");			
+			domain.setDetectionKey("1");
+			domain.setDetectionMethod("nucleotide");			
 		}
 			
 		// assay note

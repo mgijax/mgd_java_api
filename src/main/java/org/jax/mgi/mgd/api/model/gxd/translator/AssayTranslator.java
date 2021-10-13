@@ -95,6 +95,8 @@ public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDoma
 		domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());
 		domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 		domain.setMarkerSymbol(entity.getMarker().getSymbol());	
+		domain.setMarkerName(entity.getMarker().getName());	
+		domain.setMarkerAccID(entity.getMarker().getMgiAccessionIds().get(0).getAccID());			
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());

@@ -22,6 +22,8 @@ public class AssayDomain extends BaseDomain {
 	private Boolean isProbePrep = false;
 	private String markerKey;
 	private String markerSymbol;
+	private String markerName;
+	private String markerAccID;
 	private String refsKey;
 	private String jnumid;
 	private String jnum;

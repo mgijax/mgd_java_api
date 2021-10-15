@@ -447,14 +447,6 @@ public class AssayService extends BaseService<AssayDomain> {
 				where = where + "\nand m.symbol ilike '" + value + "'";
 			}
 		}
-
-		// check detectionKey
-		if (searchDomain.getDetectionKey().equals("1")) {
-			from_probeprep = true;
-		}
-		else if (searchDomain.getDetectionKey().equals("2")) {
-			from_antibodyprep = true;
-		}
 		
 		if (searchDomain.getProbePrep() != null) {
 			value = searchDomain.getProbePrep().getProbePrepKey();
@@ -736,6 +728,18 @@ public class AssayService extends BaseService<AssayDomain> {
 				where = where + "\nand n.assaynote ilike '" + value + "'";
 				from_assaynote = true;
 			}
+		}
+		
+		// check detectionKey
+		if (searchDomain.getDetectionKey().equals("1")) {
+			from_probeprep = true;
+		}
+		else if (searchDomain.getDetectionKey().equals("2")) {
+			from_antibodyprep = true;
+		}
+		else if (searchDomain.getDetectionKey().equals("3")) {
+			where = where + "\nand a._probeprep_key is null";
+			where = where + "\nand a._antibodyprep_key is null";			
 		}
 		
 		if (from_accession == true) {

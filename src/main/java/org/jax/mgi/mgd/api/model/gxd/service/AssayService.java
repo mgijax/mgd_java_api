@@ -448,6 +448,14 @@ public class AssayService extends BaseService<AssayDomain> {
 			}
 		}
 
+		// check detectionKey
+		if (searchDomain.getDetectionKey().equals("1")) {
+			from_probeprep = true;
+		}
+		else if (searchDomain.getDetectionKey().equals("2")) {
+			from_antibodyprep = true;
+		}
+		
 		if (searchDomain.getProbePrep() != null) {
 			value = searchDomain.getProbePrep().getProbePrepKey();
 			if (value != null && !value.isEmpty()) {

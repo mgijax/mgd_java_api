@@ -29,9 +29,6 @@ public class SpecimenTranslator extends BaseEntityDomainTranslator<Specimen, Spe
 		domain.setEmbeddingMethod(entity.getEmbeddingMethod().getEmbeddingMethod());
 		domain.setFixationKey(String.valueOf(entity.getFixationMethod().get_fixation_key()));
 		domain.setFixationMethod(entity.getFixationMethod().getFixation());
-		domain.setGenotypeKey(String.valueOf(entity.getGenotype().get_genotype_key()));
-		domain.setGenotypeAccID(entity.getGenotype().getMgiAccessionIds().get(0).getAccID());
-		domain.setGenotypeBackground(entity.getGenotype().getStrain().getStrain());
 		domain.setSequenceNum(entity.getSequenceNum());
 		domain.setSpecimenLabel(entity.getSpecimenLabel());
 		domain.setSex(entity.getSex());
@@ -43,6 +40,23 @@ public class SpecimenTranslator extends BaseEntityDomainTranslator<Specimen, Spe
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
+		// genotype stuff 
+		
+		domain.setGenotypeKey(String.valueOf(entity.getGenotype().get_genotype_key()));
+		domain.setGenotypeAccID(entity.getGenotype().getMgiAccessionIds().get(0).getAccID());
+		domain.setGenotypeBackground(entity.getGenotype().getStrain().getStrain());
+
+		List<String> allelePairList = new ArrayList<String>();
+		for (int p = 0; p < entity.getGenotype().getAllelePairs().size(); p++) {
+			if (!allelePairList.contains(entity.getGenotype().getAllelePairs().get(p).getAllele1().getSymbol())) {
+				allelePairList.add(entity.getGenotype().getAllelePairs().get(p).getAllele1().getSymbol());
+			}
+		}
+		String genotypeAllelePairs = String.join(",", allelePairList);
+		domain.setGenotypeAllelePairs(genotypeAllelePairs);
+		
+		// end genotype stuff
+		
 		// age stuff
 		
 		domain.setAge(entity.getAge());

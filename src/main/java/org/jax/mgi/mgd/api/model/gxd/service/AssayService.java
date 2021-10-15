@@ -823,36 +823,6 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		return results;
 	}
-
-	@Transactional
-	public List<AssayDetailDomain> searchDetail(AssayDetailDomain searchDomain) {
-
-		List<AssayDetailDomain> results = new ArrayList<AssayDetailDomain>();
-		
-		String value = searchDomain.getAccID();			
-		if (!value.contains("MGI:")) {
-			value = "MGI:" + value;
-		}
-		
-		String cmd = "select * from gxd_assay_acc_view where accID = '" + value + "'";
-		log.info(cmd);
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				AssayDetailDomain domain = new AssayDetailDomain();
-				domain = detailtranslator.translate(assayDAO.get(rs.getInt("_object_key")));				
-				assayDAO.clear();
-				results.add(domain);
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
 	
 	@Transactional	
 	public List<MGISetMemberGenotypeDomain> getGenotypeBySetUser(SlimAssayDomain searchDomain) {

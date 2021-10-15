@@ -22,6 +22,8 @@ import lombok.Setter;
 public class HTExperimentVariable extends BaseEntity {
 
 	@Id
+	private Integer _experimentvariable_key;
+
 	private Integer _experiment_key;
 
 	@OneToOne

@@ -190,8 +190,6 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 					HTNoteDomain hTNoteDomain = new HTNoteDomain();
 
 					String notetext = sample.getNotes().get(0).getNoteChunk().getNote();
-					log.info("------");
-					log.info(notetext);
 					hTNoteDomain.setText(notetext);
 					noteList.add(hTNoteDomain);
 					sampleDomain.setNotes(noteList);

@@ -25,6 +25,7 @@ public class InSituResultImageView extends BaseEntity {
 	private int _result_key;
 	private int _imagepane_key;
 	private String figurepaneLabel;
+	private String accID;
 	private Date creation_date;
 	private Date modification_date;
 	
@@ -33,9 +34,7 @@ public class InSituResultImageView extends BaseEntity {
 //	private String sequenceNum; 
 //	private int _Image_key;
 //	private String paneLabel;
-//	private String figureLabel;
 //	private int xDim;
 //	private int yDim;
 
-	
 }

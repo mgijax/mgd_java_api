@@ -21,14 +21,14 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Path("/ht")
-@Api(value = "HT Experiment Endpoints")
+@Path("/htexperimentvariable")
+@Api(value = "HT Experiment Variable Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class HTController extends BaseController<HTDomain> {
+public class HTExperimentVariableController extends BaseController<HTDomain> {
 
 	@Inject
-	private HTService HTService;
+	private HTService HTService; 
 
 	@Override
 	public SearchResults<HTDomain> create(HTDomain domain, User user) {
@@ -55,23 +55,5 @@ public class HTController extends BaseController<HTDomain> {
 	public HTDomain get(Integer key) {
 		return HTService.get(key);
 	}
-
-	
-	@POST
-	@ApiOperation(value = "Search returns HT domain")
-	@Path("/search")
-	public List<SlimHTDomain> search(HTDomain searchDomain) {
-	
-		List<SlimHTDomain> results = new ArrayList<SlimHTDomain>();
-
-		try {
-			results = HTService.search(searchDomain);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
-
 	
 }

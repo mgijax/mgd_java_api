@@ -18,6 +18,7 @@ import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyPrepDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AssayDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AssayTypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.ProbePrepDAO;
+import org.jax.mgi.mgd.api.model.gxd.domain.AssayDetailDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeReplaceDomain;
@@ -25,6 +26,7 @@ import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimCellTypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
+import org.jax.mgi.mgd.api.model.gxd.translator.AssayDetailTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.AssayTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimAssayTranslator;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
@@ -89,7 +91,8 @@ public class AssayService extends BaseService<AssayDomain> {
 	
 	private AssayTranslator translator = new AssayTranslator();
 	private SlimAssayTranslator slimtranslator = new SlimAssayTranslator();
-
+	private AssayDetailTranslator detailtranslator = new AssayDetailTranslator();
+	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	String mgiTypeKey = "8";
@@ -821,6 +824,36 @@ public class AssayService extends BaseService<AssayDomain> {
 		return results;
 	}
 
+	@Transactional
+	public List<AssayDetailDomain> searchDetail(AssayDetailDomain searchDomain) {
+
+		List<AssayDetailDomain> results = new ArrayList<AssayDetailDomain>();
+		
+		String value = searchDomain.getAccID();			
+		if (!value.contains("MGI:")) {
+			value = "MGI:" + value;
+		}
+		
+		String cmd = "select * from gxd_assay_acc_view where accID = '" + value + "'";
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				AssayDetailDomain domain = new AssayDetailDomain();
+				domain = detailtranslator.translate(assayDAO.get(rs.getInt("_assay_key")));				
+				assayDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 	@Transactional	
 	public List<MGISetMemberGenotypeDomain> getGenotypeBySetUser(SlimAssayDomain searchDomain) {
 		// return 

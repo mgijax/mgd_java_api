@@ -31,6 +31,7 @@ public class SpecimenTranslator extends BaseEntityDomainTranslator<Specimen, Spe
 		domain.setFixationMethod(entity.getFixationMethod().getFixation());
 		domain.setGenotypeKey(String.valueOf(entity.getGenotype().get_genotype_key()));
 		domain.setGenotypeAccID(entity.getGenotype().getMgiAccessionIds().get(0).getAccID());
+		domain.setGenotypeBackground(entity.getGenotype().getStrain().getStrain());
 		domain.setSequenceNum(entity.getSequenceNum());
 		domain.setSpecimenLabel(entity.getSpecimenLabel());
 		domain.setSex(entity.getSex());

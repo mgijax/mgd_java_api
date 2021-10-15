@@ -24,9 +24,11 @@ public class InSituResultDomain extends BaseDomain {
 	
 	// used to display in pwi/assay
 	private Integer structuresCount;
+	private Integer celltypesCount;
 	private Integer imagePanesCount;
 	private String imagePanesString;
 
 	private List<InSituResultStructureDomain> structures;
+	private List<InSituResultCellTypeDomain> celltypes;	
 	private List<InSituResultImageViewDomain> imagePanes;
 }

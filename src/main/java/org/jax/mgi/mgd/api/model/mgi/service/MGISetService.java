@@ -49,7 +49,7 @@ public class MGISetService extends BaseService<MGISetDomain> {
 	public SearchResults<MGISetDomain> update(MGISetDomain domain, User user) {
 		// the set of fields in "update" is similar to set of fields in "create"
 		// creation user/date are only set in "create"
-
+		log.info("domain: " + domain.getSetName());
 		SearchResults<MGISetDomain> results = new SearchResults<MGISetDomain>();
 		MGISet entity = setDAO.get(Integer.valueOf(domain.getSetKey()));
 		Boolean modified = false;
@@ -57,6 +57,11 @@ public class MGISetService extends BaseService<MGISetDomain> {
 		// process genotype clipboard set member
 		if (domain.getGenotypeClipboardMembers() != null || !domain.getGenotypeClipboardMembers().isEmpty()) {		
 			if (setMemberService.process(domain.getSetKey(), domain.getGenotypeClipboardMembers(), user)) {
+				modified = true;
+			}
+		}
+		else if(domain.getCelltypeClipboardMembers() != null || !domain.getCelltypeClipboardMembers().isEmpty()) {
+			if (setMemberService.process(domain.getSetKey(),  domain.getCelltypeClipboardMembers(), user)) {
 				modified = true;
 			}
 		}

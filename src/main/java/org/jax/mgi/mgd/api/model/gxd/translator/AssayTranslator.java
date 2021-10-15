@@ -95,6 +95,8 @@ public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDoma
 		domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());
 		domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 		domain.setMarkerSymbol(entity.getMarker().getSymbol());	
+		domain.setMarkerName(entity.getMarker().getName());	
+		domain.setMarkerAccID(entity.getMarker().getMgiAccessionIds().get(0).getAccID());			
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
@@ -121,18 +123,21 @@ public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDoma
 		// neither prep
 		if (entity.getAntibodyPrep() == null && entity.getProbePrep() == null) {
 			domain.setDetectionKey("3");
+			domain.setDetectionMethod("direct detection");
 		}		
 		// antibody prep
 		else if (entity.getAntibodyPrep() != null) {
 			AntibodyPrepTranslator i = new AntibodyPrepTranslator();
 			domain.setAntibodyPrep(i.translate(entity.getAntibodyPrep()));
 			domain.setDetectionKey("2");
+			domain.setDetectionMethod("antibody");
 		}
 		// probe prep
 		else if (entity.getProbePrep() != null) {
 			ProbePrepTranslator i = new ProbePrepTranslator();
 			domain.setProbePrep(i.translate(entity.getProbePrep()));
-			domain.setDetectionKey("1");			
+			domain.setDetectionKey("1");
+			domain.setDetectionMethod("nucleotide");			
 		}
 			
 		// assay note

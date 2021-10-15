@@ -15,8 +15,10 @@ import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeReplaceDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimCellTypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.AssayService;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberCellTypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberEmapaDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberGenotypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -150,18 +152,18 @@ public class AssayController extends BaseController<AssayDomain> {
 		
 		return results;
 	}
-	
-	@POST
-	@ApiOperation(value = "Process Replace Genotype/returns GenotypeReplaceDomain")
-	@Path("/processReplaceGenotype")
-	public List<GenotypeReplaceDomain> processReplaceGenotype(GenotypeReplaceDomain domain) {
-	
-		List<GenotypeReplaceDomain> results = new ArrayList<GenotypeReplaceDomain>();		
 
+	@POST
+	@ApiOperation(value = "Get CellType Set Members by Specimen and Set/User")
+	@Path("/getCellTypeInSituBySetUser")
+	public List<MGISetMemberCellTypeDomain> getCellTypeBySetUser(SlimCellTypeDomain domain) {
+			
+		List<MGISetMemberCellTypeDomain> results = new ArrayList<MGISetMemberCellTypeDomain>();
+		
 		try {
-			results = assayService.processReplaceGenotype(domain);
+			results = assayService.getCellTypeInSituBySetUser(domain);
 		} catch (Exception e) {
-			e.printStackTrace();				
+			e.printStackTrace();
 		}
 		
 		return results;
@@ -176,6 +178,22 @@ public class AssayController extends BaseController<AssayDomain> {
 
 		try {
 			results = assayService.addToEmapaClipboard(domain);
+		} catch (Exception e) {
+			e.printStackTrace();				
+		}
+		
+		return results;
+	}
+
+	@POST
+	@ApiOperation(value = "Process Replace Genotype/returns GenotypeReplaceDomain")
+	@Path("/processReplaceGenotype")
+	public List<GenotypeReplaceDomain> processReplaceGenotype(GenotypeReplaceDomain domain) {
+	
+		List<GenotypeReplaceDomain> results = new ArrayList<GenotypeReplaceDomain>();		
+
+		try {
+			results = assayService.processReplaceGenotype(domain);
 		} catch (Exception e) {
 			e.printStackTrace();				
 		}

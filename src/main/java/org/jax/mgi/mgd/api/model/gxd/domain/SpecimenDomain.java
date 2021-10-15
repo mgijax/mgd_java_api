@@ -19,6 +19,7 @@ public class SpecimenDomain extends BaseDomain {
 	private String fixationMethod;
 	private String genotypeKey;
 	private String genotypeAccID;
+	private String genotypeBackground;
 	private Integer sequenceNum;
 	private String specimenLabel;
 	private String sex;

@@ -372,9 +372,9 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				"\norder by orderBy, term\n";
 		}
 		else if (vocabKey.equals("162") ) {
-			cmd = "select _term_key as termKey, abbreviation as term, 1 as orderBy from voc_term where _vocab_key = 162 and term = 'Not Specified'" +
+			cmd = "select _term_key as termKey, term, 1 as orderBy from voc_term where _vocab_key = 162 and term = 'Not Specified'" +
 				"\nunion" +
-				"\nselect _term_key as termKey, abbreviation as term, 2 as orderBy from voc_term where _vocab_key = 162 and term != 'Not Specified'" + 
+				"\nselect _term_key as termKey, term, 2 as orderBy from voc_term where _vocab_key = 162 and term != 'Not Specified'" + 
 				"\norder by orderBy, term\n";
 		}			
 		else if (vocabKey.equals("163") ) {

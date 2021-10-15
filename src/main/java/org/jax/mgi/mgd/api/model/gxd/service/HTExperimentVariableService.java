@@ -279,7 +279,7 @@ public class HTExperimentVariableService extends BaseService<HTDomain> {
         return results;
     } 
 
-
+ 
 
 	@Transactional
 	public SearchResults<HTDomain> delete(Integer key, User user) {

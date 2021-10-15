@@ -38,7 +38,7 @@ public class HTSampleService extends BaseService<HTDomain> {
 	private HTExperimentDAO htExperimentDAO;
 
 // future services
-//	@Inject
+//	@Inject 
 //	private HTService htService;
 
 	private HTExperimentTranslator translator = new HTExperimentTranslator();

@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiOperation;
 public class HTExperimentVariableController extends BaseController<HTDomain> {
 
 	@Inject
-	private HTService HTService;
+	private HTService HTService; 
 
 	@Override
 	public SearchResults<HTDomain> create(HTDomain domain, User user) {

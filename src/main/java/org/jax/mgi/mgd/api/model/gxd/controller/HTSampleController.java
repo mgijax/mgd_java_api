@@ -29,7 +29,7 @@ public class HTSampleController extends BaseController<HTDomain> {
 
 	@Inject
 	private HTService HTService;
-
+ 
 	@Override
 	public SearchResults<HTDomain> create(HTDomain domain, User user) {
 		SearchResults<HTDomain> results = new SearchResults<HTDomain>();

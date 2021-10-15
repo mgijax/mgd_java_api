@@ -49,18 +49,19 @@ public class MGISetService extends BaseService<MGISetDomain> {
 	public SearchResults<MGISetDomain> update(MGISetDomain domain, User user) {
 		// the set of fields in "update" is similar to set of fields in "create"
 		// creation user/date are only set in "create"
-		log.info("domain: " + domain.getSetName());
+		log.info("domain: " + domain.getSetKey());
 		SearchResults<MGISetDomain> results = new SearchResults<MGISetDomain>();
 		MGISet entity = setDAO.get(Integer.valueOf(domain.getSetKey()));
 		Boolean modified = false;
 
 		// process genotype clipboard set member
-		if (domain.getGenotypeClipboardMembers() != null || !domain.getGenotypeClipboardMembers().isEmpty()) {		
+		if (domain.getGenotypeClipboardMembers() != null ) {		
 			if (setMemberService.process(domain.getSetKey(), domain.getGenotypeClipboardMembers(), user)) {
 				modified = true;
 			}
 		}
-		else if(domain.getCelltypeClipboardMembers() != null || !domain.getCelltypeClipboardMembers().isEmpty()) {
+		// process celltype clipboard set member
+		else if(domain.getCelltypeClipboardMembers() != null ) {
 			if (setMemberService.process(domain.getSetKey(),  domain.getCelltypeClipboardMembers(), user)) {
 				modified = true;
 			}
@@ -144,7 +145,12 @@ public class MGISetService extends BaseService<MGISetDomain> {
 			e.printStackTrace();
 		}
 		
-		domain.setGenotypeClipboardMembers(listOfMembers);
+		if (domain.getSetKey().equals("1055")) {
+			domain.setGenotypeClipboardMembers(listOfMembers);
+		}
+		else if (domain.getSetKey().equals("1059")) {
+			domain.setCelltypeClipboardMembers(listOfMembers);
+		}
 		results.add(domain);
 		return results;
 	}

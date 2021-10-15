@@ -841,7 +841,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				AssayDetailDomain domain = new AssayDetailDomain();
-				domain = detailtranslator.translate(assayDAO.get(rs.getInt("_assay_key")));				
+				domain = detailtranslator.translate(assayDAO.get(rs.getInt("_object_key")));				
 				assayDAO.clear();
 				results.add(domain);
 			}

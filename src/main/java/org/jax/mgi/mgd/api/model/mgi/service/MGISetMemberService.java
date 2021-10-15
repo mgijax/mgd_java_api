@@ -73,7 +73,6 @@ public class MGISetMemberService extends BaseService<MGISetMemberDomain> {
 	@Transactional
 	public Boolean process(String parentKey, List<MGISetMemberDomain> domain, User user) {
 		// process set member (create, delete, update)
-		
 		Boolean modified = false;
 		
 		if (domain == null || domain.isEmpty()) {
@@ -93,9 +92,9 @@ public class MGISetMemberService extends BaseService<MGISetMemberDomain> {
 	
 				// if synonym is null/empty, then skip
 				// pwi has sent a "c" that is empty/not being used
-				if (domain.get(i).getLabel() == null || domain.get(i).getLabel().isEmpty()) {
-					continue;
-				}
+				//if (domain.get(i).getLabel() == null || domain.get(i).getLabel().isEmpty()) {
+				//	continue;
+				//}
 				
 				log.info("processSetMember create");
 				

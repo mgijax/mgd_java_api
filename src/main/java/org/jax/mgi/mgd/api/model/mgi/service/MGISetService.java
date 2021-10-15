@@ -55,7 +55,9 @@ public class MGISetService extends BaseService<MGISetDomain> {
 		Boolean modified = false;
 
 		// process genotype clipboard set member
-		if (domain.getGenotypeClipboardMembers() != null || !domain.getGenotypeClipboardMembers().isEmpty()) {		
+		//if (domain.getGenotypeClipboardMembers() != null || !domain.getGenotypeClipboardMembers().isEmpty()) {	
+		if (domain.getGenotypeClipboardMembers() != null) {		
+			
 			if (setMemberService.process(domain.getSetKey(), domain.getGenotypeClipboardMembers(), user)) {
 				modified = true;
 			}

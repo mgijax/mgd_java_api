@@ -12,9 +12,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.gxd.domain.HTDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.SlimHTDomain;
-import org.jax.mgi.mgd.api.model.gxd.service.HTService;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTSampleDomain;
+import org.jax.mgi.mgd.api.model.gxd.service.HTSampleService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -25,35 +24,35 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "HT Sample Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class HTSampleController extends BaseController<HTDomain> {
+public class HTSampleController extends BaseController<HTSampleDomain> {
 
 	@Inject
-	private HTService HTService;
+	private HTSampleService htSampleService;
  
 	@Override
-	public SearchResults<HTDomain> create(HTDomain domain, User user) {
-		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
-//		results = HTService.create(domain, user);
-//		results = HTService.getResults(Integer.valueOf(results.items.get(0).getHTKey()));
+	public SearchResults<HTSampleDomain> create(HTSampleDomain domain, User user) {
+		SearchResults<HTSampleDomain> results = new SearchResults<HTSampleDomain>();
+//		results = htSampleService.create(domain, user);
+//		results = htSampleService.getResults(Integer.valueOf(results.items.get(0).getHTKey()));
 		return results;
 	}
 
 	@Override
-	public SearchResults<HTDomain> update(HTDomain domain, User user) {
-		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
-//		results = HTService.update(domain, user);
-//		results = HTService.getResults(Integer.valueOf(results.items.get(0).getHTKey()));
+	public SearchResults<HTSampleDomain> update(HTSampleDomain domain, User user) {
+		SearchResults<HTSampleDomain> results = new SearchResults<HTSampleDomain>();
+//		results = htSampleService.update(domain, user);
+//		results = htSampleService.getResults(Integer.valueOf(results.items.get(0).getHTKey()));
 		return results;
 	}
 
 	@Override
-	public SearchResults<HTDomain> delete(Integer key, User user) {
-		return HTService.delete(key, user);
+	public SearchResults<HTSampleDomain> delete(Integer key, User user) {
+		return htSampleService.delete(key, user);
 	}
 	
 	@Override
-	public HTDomain get(Integer key) {
-		return HTService.get(key);
+	public HTSampleDomain get(Integer key) {
+		return htSampleService.get(key);
 	}
 	
 }

@@ -11,14 +11,14 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 
-import org.jax.mgi.mgd.api.model.gxd.domain.HTDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTSampleDomain;
 
 // DAOs, entities and translators
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.gxd.dao.HTExperimentDAO;
-import org.jax.mgi.mgd.api.model.gxd.entities.HTExperiment;
+import org.jax.mgi.mgd.api.model.gxd.dao.HTSampleDAO;
+import org.jax.mgi.mgd.api.model.gxd.entities.HTSample;
 
-import org.jax.mgi.mgd.api.model.gxd.translator.HTExperimentTranslator;
+import org.jax.mgi.mgd.api.model.gxd.translator.HTSampleTranslator;
 
 
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
@@ -28,26 +28,22 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
 @RequestScoped
-public class HTSampleService extends BaseService<HTDomain> {
+public class HTSampleService extends BaseService<HTSampleDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 
 	@Inject
-	private HTExperimentDAO htExperimentDAO;
+	private HTSampleDAO htSampleDAO;
 
-// future services
-//	@Inject 
-//	private HTService htService;
-
-	private HTExperimentTranslator translator = new HTExperimentTranslator();
+	private HTSampleTranslator translator = new HTSampleTranslator();
 
 	@Transactional
-	public HTDomain get(Integer key) {
+	public HTSampleDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain
-		HTDomain domain = new HTDomain();
-		HTExperiment entity = htExperimentDAO.get(key);
+		HTSampleDomain domain = new HTSampleDomain();
+		HTSample entity = htSampleDAO.get(key);
 		if ( entity != null) {
 			domain = translator.translate(entity);
 		}
@@ -55,38 +51,38 @@ public class HTSampleService extends BaseService<HTDomain> {
 	}
 
     @Transactional
-    public SearchResults<HTDomain> getResults(Integer key) {
-        SearchResults<HTDomain> results = new SearchResults<HTDomain>();
-//        results.setItem(translator.translate(htExperimentDAO.get(key)));
+    public SearchResults<HTSampleDomain> getResults(Integer key) {
+        SearchResults<HTSampleDomain> results = new SearchResults<HTSampleDomain>();
+//        results.setItem(translator.translate(htSampleDAO.get(key)));
         return results;
     } 
 
 
 
 	@Transactional
-	public SearchResults<HTDomain> delete(Integer key, User user) {
+	public SearchResults<HTSampleDomain> delete(Integer key, User user) {
 		log.info("HT Sample delete");
 		// get the entity object and delete
-		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
-//		Assay entity = assayDAO.get(key);
-//		results.setItem(translator.translate(htExperimentDAO.get(key)));
-//		assayDAO.remove(entity);
+		SearchResults<HTSampleDomain> results = new SearchResults<HTSampleDomain>();
+//		HTSample entity = htSampleDAO.get(key);
+//		results.setItem(translator.translate(htSampleDAO.get(key)));
+//		htSampleDAO.remove(entity);
 		return results;
 	}  
 
 
 	@Transactional
-	public SearchResults<HTDomain> update(HTDomain domain, User user) {				
+	public SearchResults<HTSampleDomain> update(HTSampleDomain domain, User user) {				
 		log.info("HT Sample update");
-		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
+		SearchResults<HTSampleDomain> results = new SearchResults<HTSampleDomain>();
 		return results;		
 	}
 
 
 	@Transactional
-	public SearchResults<HTDomain> create(HTDomain domain, User user) {
+	public SearchResults<HTSampleDomain> create(HTSampleDomain domain, User user) {
 		log.info("HT Sample create");
-		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
+		SearchResults<HTSampleDomain> results = new SearchResults<HTSampleDomain>();
 		return results;
 	}
 

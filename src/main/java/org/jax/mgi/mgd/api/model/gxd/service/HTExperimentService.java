@@ -10,41 +10,31 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimHTDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTUserDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.HTVariableDomain;
-
-// DAOs, entities and translators
+import org.jax.mgi.mgd.api.model.gxd.domain.HTExperimentVariableDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.gxd.dao.HTExperimentDAO;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTExperiment;
-
 import org.jax.mgi.mgd.api.model.gxd.translator.HTExperimentTranslator;
-
 
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
+import org.jax.mgi.mgd.api.util.Constants;
 
 import org.jboss.logging.Logger;
 
 @RequestScoped
-public class HTService extends BaseService<HTDomain> {
+public class HTExperimentService extends BaseService<HTDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
 	private SQLExecutor sqlExecutor = new SQLExecutor();
-
+	private HTExperimentTranslator translator = new HTExperimentTranslator();
 
 	@Inject
 	private HTExperimentDAO htExperimentDAO;
-
-// future services
-//	@Inject
-//	private HTService htService;
-
-	private HTExperimentTranslator translator = new HTExperimentTranslator();
 
 	@Transactional
 	public HTDomain get(Integer key) {
@@ -55,6 +45,38 @@ public class HTService extends BaseService<HTDomain> {
 			domain = translator.translate(entity);
 		}
 		return domain;
+	}
+
+    @Transactional
+    public SearchResults<HTDomain> getResults(Integer key) {
+        SearchResults<HTDomain> results = new SearchResults<HTDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+        return results;
+    } 
+
+
+
+	@Transactional
+	public SearchResults<HTDomain> delete(Integer key, User user) {
+		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
+	}  
+
+
+	@Transactional
+	public SearchResults<HTDomain> update(HTDomain domain, User user) {
+		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;		
+	}
+
+
+	@Transactional
+	public SearchResults<HTDomain> create(HTDomain domain, User user) {
+		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
 	}
 	
 	@Transactional
@@ -228,9 +250,9 @@ public class HTService extends BaseService<HTDomain> {
 		// EXPERIMENT VARIABLES
 		*/
 
-		List<HTVariableDomain> experiment_variables = searchDomain.getExperiment_variables();
+		List<HTExperimentVariableDomain> experiment_variables = searchDomain.getExperiment_variables();
 		int varJoinCount = 0;
-        for (HTVariableDomain varDom : experiment_variables) {
+        for (HTExperimentVariableDomain varDom : experiment_variables) {
             //TODO --if for false checks
             varJoinCount++;
         	from = from + ", gxd_htexperimentvariable htev" + Integer.toString(varJoinCount);
@@ -261,71 +283,6 @@ public class HTService extends BaseService<HTDomain> {
 		
 		return results;
 	}
-
-
-
-/*
-*  TODO - SHELLED OUT OVER-RIDES OF BASE CLASS'S METHODS
-*
-*/
-
-
-
-
-    @Transactional
-    public SearchResults<HTDomain> getResults(Integer key) {
-        SearchResults<HTDomain> results = new SearchResults<HTDomain>();
-//        results.setItem(translator.translate(assayDAO.get(key)));
-        return results;
-    } 
-
-
-
-	@Transactional
-	public SearchResults<HTDomain> delete(Integer key, User user) {
-		// get the entity object and delete
-		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
-//		Assay entity = assayDAO.get(key);
-//		results.setItem(translator.translate(assayDAO.get(key)));
-//		assayDAO.remove(entity);
-		return results;
-	}  
-
-
-	@Transactional
-	public SearchResults<HTDomain> update(HTDomain domain, User user) {
-		// the set of fields in "update" is similar to set of fields in "create"
-		// creation user/date are only set in "create"
-				
-		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
-		log.info("HT update");
-		
-
-		return results;		
-	}
-
-
-	@Transactional
-	public SearchResults<HTDomain> create(HTDomain domain, User user) {
-		// create new entity object from in-coming domain
-		// the Entities class handles the generation of the primary key
-		// database trigger will assign the MGI id/see pgmgddbschema/trigger for details
-
-		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
-		log.info("HT create");
-
-		return results;
-	}
-
-
-
-
-
-
-
-
-
-
 
 	
 }

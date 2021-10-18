@@ -24,7 +24,7 @@ public class HTDomain extends BaseDomain {
 	private List<String> pubmed_ids;
 	private List<String> experiment_types;
 	private List<String> provider_contact_names;
-	private List<HTVariableDomain> experiment_variables;
+	private List<HTExperimentVariableDomain> experiment_variables;
 	private List<HTNoteDomain> notes;
 
 	// types and states

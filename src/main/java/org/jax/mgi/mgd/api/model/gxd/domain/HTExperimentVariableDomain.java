@@ -6,8 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class HTVariableDomain extends BaseDomain {
+public class HTExperimentVariableDomain extends BaseDomain {
 	
+	private Integer _experimentvariable_key;
 	private String vocabKey;
 	private String termKey;
 	private int _term_key;

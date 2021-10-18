@@ -27,6 +27,7 @@ public class InSituResultImageView extends BaseEntity {
 	private int _image_key;
 	private String figurepaneLabel;
 	private String accID;
+	private String pixID;
 	private Date creation_date;
 	private Date modification_date;
 	

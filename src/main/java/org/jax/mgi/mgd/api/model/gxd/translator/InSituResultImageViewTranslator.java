@@ -21,13 +21,17 @@ public class InSituResultImageViewTranslator extends BaseEntityDomainTranslator<
 		domain.setImageKey(String.valueOf(entity.get_image_key()));
 		domain.setFigurepaneLabel(entity.getFigurepaneLabel());
 		domain.setAccID(entity.getAccID());
-		domain.setPixID(entity.getPixID());
-		domain.setXDim(String.valueOf(entity.getXDim()));
-		domain.setYDim(String.valueOf(entity.getYDim()));
-		domain.setX(String.valueOf(entity.getX()));
-		domain.setY(String.valueOf(entity.getY()));
-		domain.setWidth(String.valueOf(entity.getWidth()));
-		domain.setHeight(String.valueOf(entity.getHeight()));
+		
+		if (entity.getPixID() != null && !entity.getPixID().isEmpty()) {
+			domain.setPixID(entity.getPixID());
+			domain.setXDim(String.valueOf(entity.getXDim()));
+			domain.setYDim(String.valueOf(entity.getYDim()));
+			domain.setX(String.valueOf(entity.getX()));
+			domain.setY(String.valueOf(entity.getY()));
+			domain.setWidth(String.valueOf(entity.getWidth()));
+			domain.setHeight(String.valueOf(entity.getHeight()));
+		}
+		
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		

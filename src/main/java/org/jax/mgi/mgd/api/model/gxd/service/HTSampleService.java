@@ -10,20 +10,16 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-
 import org.jax.mgi.mgd.api.model.gxd.domain.HTSampleDomain;
-
-// DAOs, entities and translators
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.gxd.dao.HTSampleDAO;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTSample;
-
 import org.jax.mgi.mgd.api.model.gxd.translator.HTSampleTranslator;
-
 
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
+import org.jax.mgi.mgd.api.util.Constants;
 
 import org.jboss.logging.Logger;
 
@@ -41,6 +37,7 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 
 	@Transactional
 	public HTSampleDomain get(Integer key) {
+		log.info("HT Sample get");
 		// get the DAO/entity and translate -> domain
 		HTSampleDomain domain = new HTSampleDomain();
 		HTSample entity = htSampleDAO.get(key);
@@ -52,8 +49,9 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 
     @Transactional
     public SearchResults<HTSampleDomain> getResults(Integer key) {
+		log.info("HT Sample getResults");
         SearchResults<HTSampleDomain> results = new SearchResults<HTSampleDomain>();
-//        results.setItem(translator.translate(htSampleDAO.get(key)));
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
         return results;
     } 
 
@@ -62,11 +60,8 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 	@Transactional
 	public SearchResults<HTSampleDomain> delete(Integer key, User user) {
 		log.info("HT Sample delete");
-		// get the entity object and delete
 		SearchResults<HTSampleDomain> results = new SearchResults<HTSampleDomain>();
-//		HTSample entity = htSampleDAO.get(key);
-//		results.setItem(translator.translate(htSampleDAO.get(key)));
-//		htSampleDAO.remove(entity);
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
 	}  
 
@@ -75,6 +70,7 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 	public SearchResults<HTSampleDomain> update(HTSampleDomain domain, User user) {				
 		log.info("HT Sample update");
 		SearchResults<HTSampleDomain> results = new SearchResults<HTSampleDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;		
 	}
 
@@ -83,18 +79,9 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 	public SearchResults<HTSampleDomain> create(HTSampleDomain domain, User user) {
 		log.info("HT Sample create");
 		SearchResults<HTSampleDomain> results = new SearchResults<HTSampleDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
 	}
-
-
-
-
-
-
-
-
-
-
 
 	
 }

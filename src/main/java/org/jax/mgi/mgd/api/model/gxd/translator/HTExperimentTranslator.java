@@ -12,7 +12,7 @@ import org.jax.mgi.mgd.api.model.gxd.domain.HTSourceDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTNoteDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTEmapaDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTEmapsDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.HTVariableDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTExperimentVariableDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTGenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTExperiment;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTSample;
@@ -141,21 +141,6 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 
 		}
 
-		// experiment variables
-		if (entity.getExperiment_variables() != null) {
-			List<HTVariableDomain> experiment_variables = new ArrayList<HTVariableDomain>();
-			for (HTExperimentVariable expVar : entity.getExperiment_variables()) {
-				HTVariableDomain varDom = new HTVariableDomain(); 
-				varDom.setTerm(expVar.getTerm().getTerm());
-				varDom.setAbbreviation(expVar.getTerm().getTerm());
-				varDom.setVocabKey("122");
-				varDom.set_term_key(expVar.getTerm().get_term_key());
-				varDom.setChecked(true);
-				experiment_variables.add(varDom);
-			}
-			domain.setExperiment_variables(experiment_variables);
-		}
-
 		// notes
 		if (entity.getNotes() != null && entity.getNotes().size() > 0) {
 			List<Note> notes = entity.getNotes();
@@ -164,77 +149,27 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 			domain.setNotetext(notetext);
 		}
 
+		// experiment variables
+		if (entity.getExperiment_variables() != null) {
+			List<HTExperimentVariableDomain> experiment_variables = new ArrayList<HTExperimentVariableDomain>();
+			for (HTExperimentVariable experimentVariable : entity.getExperiment_variables()) {
+				HTExperimentVariableDomain variableDomain = new HTExperimentVariableDomain();
+				HTExperimentVariableTranslator variableTranslator = new HTExperimentVariableTranslator();
+				variableDomain = variableTranslator.translate(experimentVariable);
+				experiment_variables.add(variableDomain);
+			}
+			domain.setExperiment_variables(experiment_variables);
+		}
+
 		// experiment samples
 		if (entity.getSamples() != null) {
 			List<HTSampleDomain> samples = new ArrayList<HTSampleDomain>();
 			for (HTSample sample : entity.getSamples()) {
-
 				HTSampleDomain sampleDomain = new HTSampleDomain();
-
-				// Sample Info
-				sampleDomain.setName(sample.getName());
-				sampleDomain.set_sample_key(sample.get_sample_key());
-				sampleDomain.set_organism_key(sample.get_organism_key());
-				sampleDomain.set_experiment_key(sample.get_experiment_key());
-				sampleDomain.set_relevance_key(sample.get_relevance_key());
-				sampleDomain.set_emapa_key(sample.get_emapa_key());
-				sampleDomain.set_sex_key(sample.get_sex_key());
-				sampleDomain.set_stage_key(sample.get_stage_key());
-				sampleDomain.setAge(sample.getAge());
-
-
-
-				// notes
-				if (sample.getNotes() != null && sample.getNotes().size() > 0) {
-					List<HTNoteDomain> noteList = new ArrayList<HTNoteDomain>();
-					HTNoteDomain hTNoteDomain = new HTNoteDomain();
-
-					String notetext = sample.getNotes().get(0).getNoteChunk().getNote();
-					hTNoteDomain.setText(notetext);
-					noteList.add(hTNoteDomain);
-					sampleDomain.setNotes(noteList);
-				}
-
-				// Handling of genotype data
-				if (sample.getGenotype() != null) {
-					Genotype genotype = sample.getGenotype();
-					HTGenotypeDomain genotypeDomain = new HTGenotypeDomain();
-					genotypeDomain.set_genotype_key(genotype.get_genotype_key());
-					genotypeDomain.setGeneticbackground(genotype.getStrain().getStrain());
-					if (genotype.getMgiAccessionIds() != null && !genotype.getMgiAccessionIds().isEmpty()) {
-						genotypeDomain.setMgiid(genotype.getMgiAccessionIds().get(0).getAccID());
-					}
-					sampleDomain.setGenotype_object(genotypeDomain);
-				}
-
-				// Handling of EMAPS / EMAPS terms
-				if (sample.getEmapaObject() != null) {
-
-					HTEmapaDomain hTEmapaDomain = new HTEmapaDomain();
-					HTEmapsDomain hTEmapsDomain = new HTEmapsDomain();
-					Term emapaTerm = sample.getEmapaTerm();
-					TermEMAPA emapaObject = sample.getEmapaObject();
-
-					hTEmapaDomain.set_term_key(emapaTerm.get_term_key());
-					hTEmapaDomain.setTerm(emapaTerm.getTerm());
-					hTEmapsDomain.set_stage_key(sample.get_stage_key());
-					hTEmapsDomain.set_emapa_term_key(emapaTerm.get_term_key());
-					// find emaps as for given emapa & stage
-					for (TermEMAPS  termEMAPS: emapaObject.getEmapsTerms()) {
-						if (termEMAPS.get_stage_key() == sample.get_stage_key()) {
-							hTEmapsDomain.setPrimaryid(termEMAPS.getTerm().getAccessionIds().get(0).getAccID());
-							hTEmapsDomain.set_term_key(termEMAPS.getTerm().get_term_key());
-						}
-
-					}
-					hTEmapsDomain.setEmapa_term(hTEmapaDomain);
-					sampleDomain.setEmaps_object(hTEmapsDomain);
-				}
-
+				HTSampleTranslator htSampleTranslator = new HTSampleTranslator();
+				sampleDomain = htSampleTranslator.translate(sample);
 				samples.add(sampleDomain);
 			}
-
-			// add list of sample domains to output domain
 			domain.setSamples(samples);
 		}
 

@@ -30,18 +30,23 @@ public class HTSampleController extends BaseController<HTSampleDomain> {
 	private HTSampleService htSampleService;
  
 	@Override
+	public HTSampleDomain get(Integer key) {
+		return htSampleService.get(key);
+	}
+
+	@Override
 	public SearchResults<HTSampleDomain> create(HTSampleDomain domain, User user) {
 		SearchResults<HTSampleDomain> results = new SearchResults<HTSampleDomain>();
-//		results = htSampleService.create(domain, user);
-//		results = htSampleService.getResults(Integer.valueOf(results.items.get(0).getHTKey()));
+		results = htSampleService.create(domain, user);
+		results = htSampleService.getResults(Integer.valueOf(results.items.get(0).get_sample_key()));
 		return results;
 	}
 
 	@Override
 	public SearchResults<HTSampleDomain> update(HTSampleDomain domain, User user) {
 		SearchResults<HTSampleDomain> results = new SearchResults<HTSampleDomain>();
-//		results = htSampleService.update(domain, user);
-//		results = htSampleService.getResults(Integer.valueOf(results.items.get(0).getHTKey()));
+		results = htSampleService.update(domain, user);
+		results = htSampleService.getResults(Integer.valueOf(results.items.get(0).get_sample_key()));
 		return results;
 	}
 
@@ -49,10 +54,5 @@ public class HTSampleController extends BaseController<HTSampleDomain> {
 	public SearchResults<HTSampleDomain> delete(Integer key, User user) {
 		return htSampleService.delete(key, user);
 	}
-	
-	@Override
-	public HTSampleDomain get(Integer key) {
-		return htSampleService.get(key);
-	}
-	
+		
 }

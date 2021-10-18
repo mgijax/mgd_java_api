@@ -45,15 +45,7 @@ public class SpecimenTranslator extends BaseEntityDomainTranslator<Specimen, Spe
 		domain.setGenotypeKey(String.valueOf(entity.getGenotype().get_genotype_key()));
 		domain.setGenotypeAccID(entity.getGenotype().getMgiAccessionIds().get(0).getAccID());
 		domain.setGenotypeBackground(entity.getGenotype().getStrain().getStrain());
-
-		List<String> allelePairList = new ArrayList<String>();
-		for (int p = 0; p < entity.getGenotype().getAllelePairs().size(); p++) {
-			if (!allelePairList.contains(entity.getGenotype().getAllelePairs().get(p).getAllele1().getSymbol())) {
-				allelePairList.add(entity.getGenotype().getAllelePairs().get(p).getAllele1().getSymbol());
-			}
-		}
-		String genotypeAllelePairs = String.join(",", allelePairList);
-		domain.setGenotypeAllelePairs(genotypeAllelePairs);
+		domain.setGenotypeAllelePairs(entity.getGenotype().getAlleleDetailNote().get(0).getNoteChunk().getNote());
 		
 		// end genotype stuff
 		

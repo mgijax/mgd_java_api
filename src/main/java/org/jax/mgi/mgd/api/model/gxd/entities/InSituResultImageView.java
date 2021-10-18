@@ -28,12 +28,12 @@ public class InSituResultImageView extends BaseEntity {
 	private String figurepaneLabel;
 	private String accID;
 	private String pixID;
-	private int xDim;
-	private int yDim;
-	private int x;
-	private int y;
-	private int width;
-	private int height;
+	private String xDim;
+	private String yDim;
+	private String x;
+	private String y;
+	private String width;
+	private String height;
 	private Date creation_date;
 	private Date modification_date;
 	

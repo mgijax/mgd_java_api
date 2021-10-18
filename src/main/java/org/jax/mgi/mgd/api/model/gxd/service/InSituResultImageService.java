@@ -136,5 +136,5 @@ public class InSituResultImageService extends BaseService<InSituResultImageDomai
 		log.info("processInSituResultsImage/processing successful");
 		return modified;
 	}
-	    
+
 }

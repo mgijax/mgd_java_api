@@ -16,6 +16,12 @@ public class InSituResultImageViewDomain extends BaseDomain {
 	private String figurepaneLabel;
 	private String accID;
 	private String pixID;
+	private String xDim;
+	private String yDim;
+	private String x;
+	private String y;
+	private String width;
+	private String height;		
 	private String creation_date;
 	private String modification_date;	
 }

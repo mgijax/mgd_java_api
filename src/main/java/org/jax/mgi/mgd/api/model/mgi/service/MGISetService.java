@@ -120,16 +120,22 @@ public class MGISetService extends BaseService<MGISetDomain> {
 		List<MGISetDomain> results = new ArrayList<MGISetDomain>();
 		List<MGISetMemberDomain> listOfMembers = new ArrayList<MGISetMemberDomain>();
 		
+		String orderBy = "s.label";
+				
 		MGISetDomain domain = new MGISetDomain();
 		domain.setSetKey(searchDomain.getSetKey());
 		domain.setCreatedBy(searchDomain.getCreatedBy());
+		
+		if (domain.getSetKey().equals("1059")) {
+			orderBy = "s.sequenceNum";
+		}
 		
 		String cmd = "\nselect s.* from mgi_setmember s, mgi_user u"
 				+ "\nwhere s._createdby_key = u._user_key" 
 				+ "\nand s._set_key = " + searchDomain.getSetKey()
 				+ "\nand s._createdby_key = u._user_key"
 				+ "\nand u.login = '" + searchDomain.getCreatedBy() + "'"
-				+ "\norder by s.label";
+				+ "\norder by " + orderBy;
 		log.info(cmd);
 
 		try {

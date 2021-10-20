@@ -52,7 +52,7 @@ public class SpecimenTranslator extends BaseEntityDomainTranslator<Specimen, Spe
 			allelePairs = allelePairs.replaceAll(">", "sup2");
 			allelePairs = allelePairs.replaceAll("sup1", "<sup>");
 			allelePairs = allelePairs.replaceAll("sup2",  "</sup>");
-			domain.setGenotypeAllelePairs(entity.getGenotype().getAlleleDetailNote().get(0).getNoteChunk().getNote());
+			domain.setGenotypeAllelePairs(allelePairs);
 		}
 		
 		// end genotype stuff

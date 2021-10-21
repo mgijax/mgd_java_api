@@ -21,6 +21,7 @@ public class SpecimenDomain extends BaseDomain {
 	private String genotypeAccID;
 	private String genotypeBackground;
 	private String genotypeAllelePairs;
+	private String genotypeIsConditional;
 	private Integer sequenceNum;
 	private String specimenLabel;
 	private String sex;

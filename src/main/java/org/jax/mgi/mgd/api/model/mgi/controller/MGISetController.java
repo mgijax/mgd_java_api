@@ -65,5 +65,20 @@ public class MGISetController extends BaseController<MGISetDomain> {
 		
 		return results;
 	}
-	
+
+	@POST
+	@ApiOperation(value = "Get Set Members by Set/User")
+	@Path("/getBySetUser")
+	public List<MGISetDomain> getBySetUserBySeqNum(MGISetDomain domain) {
+			
+		List<MGISetDomain> results = new ArrayList<MGISetDomain>();
+		
+		try {
+			results = setService.getBySetUserBySeqNum(domain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 }

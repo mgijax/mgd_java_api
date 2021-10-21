@@ -42,7 +42,7 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		HTDomain domain = new HTDomain();
 		HTExperiment entity = htExperimentDAO.get(key);
 		if ( entity != null) {
-			domain = translator.translate(entity);
+			domain = translator.translate(entity); 
 		}
 		return domain;
 	}

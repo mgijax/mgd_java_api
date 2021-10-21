@@ -8,3 +8,5 @@ app.properties
 .classpath
 audit.log
 /bin/
+/.apt_generated/
+/.apt_generated_tests/

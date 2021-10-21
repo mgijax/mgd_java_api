@@ -139,11 +139,12 @@ public class AssayService extends BaseService<AssayDomain> {
 			modified = true;
 		}
 				
-		if (domain.getImagePaneKey() != null && !domain.getImagePaneKey().isEmpty()) {
-			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePaneKey())));		
+		if (domain.getIsInSitu() && domain.getImagePane() != null) {
+			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePaneKey())));
+			//entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePane().getImagePaneKey())));		
 		}
 		else {
-			entity.setImagePane(null);
+			entity.setImagePane(null);		
 		}
 			
 		if (domain.getReporterGeneKey() != null && !domain.getReporterGeneKey().isEmpty()) {
@@ -243,11 +244,12 @@ public class AssayService extends BaseService<AssayDomain> {
 			modified = true;
 		}
 				
-		if (domain.getImagePaneKey() != null && !domain.getImagePaneKey().isEmpty()) {
-			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePaneKey())));		
+		if (domain.getIsInSitu() && domain.getImagePane() != null) {
+			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePaneKey())));			
+			//entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePane().getImagePaneKey())));		
 		}
 		else {
-			entity.setImagePane(null);
+			entity.setImagePane(null);		
 		}
 			
 		if (domain.getReporterGeneKey() != null && !domain.getReporterGeneKey().isEmpty()) {

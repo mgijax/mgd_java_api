@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.gxd.domain;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
+import org.jax.mgi.mgd.api.model.img.domain.ImagePaneDomain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -40,7 +41,7 @@ public class AssayDomain extends BaseDomain {
 	
 	// don't remove imagePaneKey until PWI is changed to use imagePanes
 	private String imagePaneKey;
-	private List<AssayImageViewDomain> imagePanes;
+	private ImagePaneDomain imagePane;
 
 	/* 1 = nucleotide, 2 = antibody, 3 = direct detection */
 	private String detectionKey;

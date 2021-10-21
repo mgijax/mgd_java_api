@@ -66,10 +66,6 @@ public class Assay extends BaseEntity {
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_imagepane_key")
 	private ImagePane imagePane;
-
-	@OneToMany()
-	@JoinColumn(name="_assay_key", insertable=false, updatable=false)
-	private List<AssayImageView> imagePanes;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_reportergene_key", referencedColumnName="_term_key")

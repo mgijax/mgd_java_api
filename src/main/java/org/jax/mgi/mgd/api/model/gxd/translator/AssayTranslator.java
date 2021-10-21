@@ -5,12 +5,12 @@ import java.util.Comparator;
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.AssayImageViewDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayNoteDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelRowDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SpecimenDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
+import org.jax.mgi.mgd.api.model.img.translator.ImagePaneTranslator;
 import org.jboss.logging.Logger;
 
 public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDomain> {
@@ -110,10 +110,8 @@ public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDoma
 
 		// image pane
 		if (entity.getImagePane() != null) {
-			domain.setImagePaneKey(String.valueOf(entity.getImagePane().get_imagepane_key()));
-			AssayImageViewTranslator imageTranslator = new AssayImageViewTranslator();
-			Iterable<AssayImageViewDomain> i = imageTranslator.translateEntities(entity.getImagePanes());
-			domain.setImagePanes(IteratorUtils.toList(i.iterator()));
+			ImagePaneTranslator i = new ImagePaneTranslator();
+			domain.setImagePane(i.translate(entity.getImagePane()));
 		}
 		
 		// reporter gene

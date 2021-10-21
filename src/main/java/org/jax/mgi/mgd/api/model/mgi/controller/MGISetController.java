@@ -51,7 +51,7 @@ public class MGISetController extends BaseController<MGISetDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Get Set Members by Set/User")
+	@ApiOperation(value = "Get Set Members by Set/User ordered by label")
 	@Path("/getBySetUser")
 	public List<MGISetDomain> getBySetUser(MGISetDomain domain) {
 			
@@ -67,8 +67,8 @@ public class MGISetController extends BaseController<MGISetDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Get Set Members by Set/User")
-	@Path("/getBySetUser")
+	@ApiOperation(value = "Get Set Members by Set/User ordered by seqNum")
+	@Path("/getBySetUserBySeqNum")
 	public List<MGISetDomain> getBySetUserBySeqNum(MGISetDomain domain) {
 			
 		List<MGISetDomain> results = new ArrayList<MGISetDomain>();

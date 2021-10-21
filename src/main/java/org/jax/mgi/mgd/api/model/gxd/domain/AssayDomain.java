@@ -29,7 +29,6 @@ public class AssayDomain extends BaseDomain {
 	private String jnum;
 	private String short_citation;
 	private String accID;	
-	private String imagePaneKey;
 	private String reporterGeneKey;
 	private String reporterGeneTerm;
 	private String createdByKey;
@@ -39,6 +38,10 @@ public class AssayDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	
+	// don't remove imagePaneKey until PWI is changed to use imagePanes
+	private String imagePaneKey;
+	private List<AssayImageViewDomain> imagePanes;
+
 	/* 1 = nucleotide, 2 = antibody, 3 = direct detection */
 	private String detectionKey;
 	private String detectionMethod;
@@ -46,7 +49,6 @@ public class AssayDomain extends BaseDomain {
 	private ProbePrepDomain probePrep;
 
 	private AssayNoteDomain assayNote;	
-	private List<AssayImageViewDomain> imagePanes;
 	private List<SpecimenDomain> specimens;
 	private List<GelLaneDomain> gelLanes;
 	private List<GelRowDomain> gelRows;

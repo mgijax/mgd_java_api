@@ -5,6 +5,7 @@ import java.util.Comparator;
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.AssayImageViewDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayNoteDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelRowDomain;
@@ -110,12 +111,15 @@ public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDoma
 		// image pane
 		if (entity.getImagePane() != null) {
 			domain.setImagePaneKey(String.valueOf(entity.getImagePane().get_imagepane_key()));
+			AssayImageViewTranslator imageTranslator = new AssayImageViewTranslator();
+			Iterable<AssayImageViewDomain> i = imageTranslator.translateEntities(entity.getImagePanes());
+			domain.setImagePanes(IteratorUtils.toList(i.iterator()));
 		}
 		
 		// reporter gene
 		if (entity.getReporterGene() != null) {
 			domain.setReporterGeneKey(String.valueOf(entity.getReporterGene().get_term_key()));
-			domain.setReporterGeneTerm(entity.getReporterGene().getTerm());
+			domain.setReporterGeneTerm(entity.getReporterGene().getTerm());			
 		}
 
 		// neither prep

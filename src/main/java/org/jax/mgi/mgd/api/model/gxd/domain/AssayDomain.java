@@ -39,7 +39,6 @@ public class AssayDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	
-	// don't remove imagePaneKey until PWI is changed to use imagePanes
 	private String imagePaneKey;
 	private ImagePaneDomain imagePane;
 

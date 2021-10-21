@@ -112,6 +112,7 @@ public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDoma
 		if (entity.getImagePane() != null) {
 			ImagePaneTranslator i = new ImagePaneTranslator();
 			domain.setImagePane(i.translate(entity.getImagePane()));
+			domain.setImagePaneKey(domain.getImagePane().getImageKey());
 		}
 		
 		// reporter gene

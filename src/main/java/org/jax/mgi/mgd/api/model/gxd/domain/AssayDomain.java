@@ -46,6 +46,7 @@ public class AssayDomain extends BaseDomain {
 	private ProbePrepDomain probePrep;
 
 	private AssayNoteDomain assayNote;	
+	private List<AssayImageViewDomain> imagePanes;
 	private List<SpecimenDomain> specimens;
 	private List<GelLaneDomain> gelLanes;
 	private List<GelRowDomain> gelRows;

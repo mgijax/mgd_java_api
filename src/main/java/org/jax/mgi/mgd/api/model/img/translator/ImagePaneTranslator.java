@@ -46,7 +46,7 @@ public class ImagePaneTranslator extends BaseEntityDomainTranslator<ImagePane, I
 			Iterable<ImagePaneAssocDomain> i = assocTranslator.translateEntities(entity.getPaneAssocs());
 			domain.setPaneAssocs(IteratorUtils.toList(i.iterator()));
 		}
-			
+		
 		return domain;
 	}
 

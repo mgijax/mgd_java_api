@@ -79,7 +79,6 @@ public class InSituResultTranslator extends BaseEntityDomainTranslator<InSituRes
 			domain.setImagePanesCount(0);			
 		}
 
-		
 		return domain;
 	}
 

@@ -4,13 +4,11 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -43,9 +41,9 @@ public class ImagePane extends BaseEntity {
 	private Date modification_date;
 	
 	// image summary
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToMany()
 	@JoinColumn(name="_image_key", referencedColumnName="_object_key", insertable=false, updatable=false)
-	private ImageSummary imageSummary;
+	private List<ImageSummary> imageSummary;
 	
 	// image pane associations
 	@OneToMany()
@@ -53,6 +51,5 @@ public class ImagePane extends BaseEntity {
 	//@Where(clause="`_mgitype_key` in (11, 12)")
 	@OrderBy(clause="isPrimary desc")
 	private List<ImagePaneAssoc> paneAssocs;
-
 
 }

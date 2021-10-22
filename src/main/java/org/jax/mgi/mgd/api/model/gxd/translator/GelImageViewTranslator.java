@@ -15,7 +15,6 @@ public class GelImageViewTranslator extends BaseEntityDomainTranslator<GelImageV
 		GelImageViewDomain domain = new GelImageViewDomain();
 		
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
-		domain.setAssayKey(String.valueOf(entity.get_assay_key()));
 		domain.setImagePaneKey(String.valueOf(entity.get_imagepane_key()));
 		domain.setImageKey(String.valueOf(entity.get_image_key()));
 		domain.setFigurepaneLabel(entity.getFigurepaneLabel());

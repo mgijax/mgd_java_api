@@ -21,7 +21,6 @@ public class GelImageView extends BaseEntity {
 	// this view contain a concatenated "figureLabel" + "paneLabel"
 	
 	@Id
-	private int _assay_key;
 	private int _imagepane_key;
 	private int _image_key;
 	private String figurepaneLabel;

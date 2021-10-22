@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Where;
@@ -64,6 +65,7 @@ public class Assay extends BaseEntity {
 	@JoinColumn(name="_probeprep_key")
 	private ProbePrep probePrep;
 
+	@NotNull
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_imagepane_key", insertable=false, updatable=false)
 	private ImagePane imagePane;

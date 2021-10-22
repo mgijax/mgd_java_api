@@ -66,7 +66,7 @@ public class Assay extends BaseEntity {
 
 	// for DAO
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_imagepane_key")
+	@JoinColumn(name="_imagepane_key", insertable=false, updatable=false)
 	private ImagePane imagePane;
 	
 	// for display purposes only

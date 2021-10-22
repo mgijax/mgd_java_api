@@ -4,6 +4,7 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneDomain;
+import org.jax.mgi.mgd.api.model.img.domain.ImageSummaryDomain;
 import org.jax.mgi.mgd.api.model.img.entities.ImagePane;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jboss.logging.Logger;
@@ -40,10 +41,10 @@ public class ImagePaneTranslator extends BaseEntityDomainTranslator<ImagePane, I
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
-//		// one-to-many (but really just one) image info
-//		ImageSummaryTranslator imageTranslator = new ImageSummaryTranslator();
-//		Iterable<ImageSummaryDomain> is = imageTranslator.translateEntities(entity.getImageSummary());
-//		domain.setImageSummary(IteratorUtils.toList(is.iterator()));
+		// one-to-many (but really just one) image info
+		ImageSummaryTranslator imageTranslator = new ImageSummaryTranslator();
+		Iterable<ImageSummaryDomain> is = imageTranslator.translateEntities(entity.getImageSummary());
+		domain.setImageSummary(IteratorUtils.toList(is.iterator()));
 		
 		// one-to-many associations
 		if (entity.getPaneAssocs() != null && !entity.getPaneAssocs().isEmpty()) {

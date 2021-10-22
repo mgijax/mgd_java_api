@@ -10,7 +10,6 @@ import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelRowDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SpecimenDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
-import org.jax.mgi.mgd.api.model.img.domain.ImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.translator.ImagePaneTranslator;
 import org.jboss.logging.Logger;
 
@@ -111,11 +110,10 @@ public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDoma
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}
 
-		// image pane/one only
+		// image pane
 		if (entity.getImagePane() != null) {
-			ImagePaneTranslator imagePaneTranslator = new ImagePaneTranslator();
-			Iterable<ImagePaneDomain> i = imagePaneTranslator.translateEntities(entity.getImagePane());
-			domain.setImagePane(i.iterator().next());			
+			ImagePaneTranslator i = new ImagePaneTranslator();
+			domain.setImagePane(i.translate(entity.getImagePane()));			
 		}
 		
 		// reporter gene

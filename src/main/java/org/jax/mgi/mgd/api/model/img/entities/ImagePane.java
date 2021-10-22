@@ -49,7 +49,7 @@ public class ImagePane extends BaseEntity {
 	
 	// image pane associations
 	@OneToMany()
-	@JoinColumn(name="_imagepane_key", insertable=false, updatable=false)
+	@JoinColumn(name="_imagepane_key", referencedColumnName="_object_key", insertable=false, updatable=false)
 	//@Where(clause="`_mgitype_key` in (11, 12)")
 	@OrderBy(clause="isPrimary desc")
 	private List<ImagePaneAssoc> paneAssocs;

@@ -42,7 +42,7 @@ public class ImagePane extends BaseEntity {
 	
 	// image summary
 	@OneToMany()
-	@JoinColumn(name="_object_key", referencedColumnName="_image_key", insertable=false, updatable=false)
+	@JoinColumn(name="_object_key", referencedColumnName="_image_key", insertable=false, updatable=false)	
 	private List<ImageSummary> imageSummary;
 	
 	// image pane associations

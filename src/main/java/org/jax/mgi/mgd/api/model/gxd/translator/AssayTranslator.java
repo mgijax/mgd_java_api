@@ -6,6 +6,7 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayNoteDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.GelImageViewDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelRowDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SpecimenDomain;
@@ -116,6 +117,13 @@ public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDoma
 			domain.setImagePane(i.translate(entity.getImagePane()));
 		}
 		
+		// images uses view that contains concatenated figureLabel plus paneLabel
+		if (entity.getImagePanes() != null && !entity.getImagePanes().isEmpty()) {
+			GelImageViewTranslator imageTranslator = new GelImageViewTranslator();
+			Iterable<GelImageViewDomain> i = imageTranslator.translateEntities(entity.getImagePanes());
+			domain.setImagePanes(IteratorUtils.toList(i.iterator()));
+		}
+	
 		// reporter gene
 		if (entity.getReporterGene() != null) {
 			domain.setReporterGeneKey(String.valueOf(entity.getReporterGene().get_term_key()));

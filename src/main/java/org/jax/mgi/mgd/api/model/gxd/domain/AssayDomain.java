@@ -40,7 +40,8 @@ public class AssayDomain extends BaseDomain {
 	private String modification_date;
 	
 	private ImagePaneDomain imagePane;
-
+	private List<GelImageViewDomain> imagePanes;
+	
 	/* 1 = nucleotide, 2 = antibody, 3 = direct detection */
 	private String detectionKey;
 	private String detectionMethod;

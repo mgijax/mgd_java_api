@@ -20,13 +20,12 @@ import lombok.Setter;
 public class ImageSummary extends BaseEntity {
 
 	@Id
-	private int _image_key;
+	private int _object_key;
 	private Integer _accession_key;
 	private String accID;
 	private String prefixPart;
 	private String numericPart;
 	private Integer _logicaldb_key;
-	private Integer _object_key;
 	private Integer _mgitype_key;
 	@Column(name="private")		// just "private" is a Java reserved word
 	private Integer isPrivate;	

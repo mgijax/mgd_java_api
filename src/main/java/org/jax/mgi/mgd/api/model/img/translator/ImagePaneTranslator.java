@@ -43,10 +43,6 @@ public class ImagePaneTranslator extends BaseEntityDomainTranslator<ImagePane, I
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
 		// one-to-many (but really just one) image info
-//		ImageSummaryTranslator imageTranslator = new ImageSummaryTranslator();
-//		Iterable<ImageSummaryDomain> is = imageTranslator.translateEntities(entity.getImageSummary());
-//		domain.setImageSummary(IteratorUtils.toList(is.iterator()));
-		
 		GelImageViewTranslator imageTranslator = new GelImageViewTranslator();
 		Iterable<GelImageViewDomain> i = imageTranslator.translateEntities(entity.getImageSummary());
 		domain.setAccID((i.iterator().next().getAccID()));

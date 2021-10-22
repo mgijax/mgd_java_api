@@ -64,16 +64,9 @@ public class Assay extends BaseEntity {
 	@JoinColumn(name="_probeprep_key")
 	private ProbePrep probePrep;
 
-	// for DAO
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_imagepane_key", insertable=false, updatable=false)
 	private ImagePane imagePane;
-	
-	// for display purposes only
-	// repeated column must be mapped to insertable/updatable
-//	@OneToOne(fetch=FetchType.LAZY)
-//	@JoinColumn(name="_imagepane_key", insertable=false, updatable=false)
-//	private GelImageView imagePaneDisplay;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_reportergene_key", referencedColumnName="_term_key")

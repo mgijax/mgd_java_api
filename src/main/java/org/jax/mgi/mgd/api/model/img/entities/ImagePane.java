@@ -42,10 +42,6 @@ public class ImagePane extends BaseEntity {
 	private Date modification_date;
 	
 	// image summary
-//	@OneToMany()
-//	@JoinColumn(name="_object_key", referencedColumnName="_image_key", insertable=false, updatable=false)	
-//	private List<ImageSummary> imageSummary;
-
 	@OneToMany()
 	@JoinColumn(name="_imagepane_key", insertable=false, updatable=false)	
 	private List<GelImageView> imageSummary;

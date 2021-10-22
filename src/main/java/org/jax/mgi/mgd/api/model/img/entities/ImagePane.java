@@ -42,16 +42,17 @@ public class ImagePane extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 	
+	// image summary
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_image_key", insertable=false, updatable=false)
+	private ImageSummary imageSummary;
+	
 	// image pane associations
 	@OneToMany()
 	@JoinColumn(name="_imagepane_key", insertable=false, updatable=false)
 	//@Where(clause="`_mgitype_key` in (11, 12)")
 	@OrderBy(clause="isPrimary desc")
 	private List<ImagePaneAssoc> paneAssocs;
-	
-	// image summary
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_image_key", insertable=false, updatable=false)
-	private ImageSummary imageSummary;
+
 
 }

@@ -1,4 +1,4 @@
-package org.jax.mgi.mgd.api.model.gxd.domain;
+package org.jax.mgi.mgd.api.model.img.domain;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class GelImageViewDomain extends BaseDomain {
+public class ImageSummaryViewDomain extends BaseDomain {
 
 	private String processStatus;
 	private String assayKey;

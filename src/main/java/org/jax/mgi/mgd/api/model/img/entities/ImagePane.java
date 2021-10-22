@@ -14,7 +14,6 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.OrderBy;
 import org.jax.mgi.mgd.api.model.BaseEntity;
-import org.jax.mgi.mgd.api.model.gxd.entities.GelImageView;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -44,7 +43,7 @@ public class ImagePane extends BaseEntity {
 	// image summary
 	@OneToMany()
 	@JoinColumn(name="_imagepane_key", insertable=false, updatable=false)	
-	private List<GelImageView> imageSummary;
+	private List<ImageSummaryView> imageSummary;
 	
 	// image pane associations
 	@OneToMany()

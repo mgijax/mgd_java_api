@@ -1,4 +1,4 @@
-package org.jax.mgi.mgd.api.model.gxd.entities;
+package org.jax.mgi.mgd.api.model.img.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,9 +12,9 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Gel Image View Entity Object")
-@Table(name="gxd_gelimage_view")
-public class GelImageView extends BaseEntity {
+@ApiModel(value = "Image Summary View Entity Object")
+@Table(name="img_image_summary2_view")
+public class ImageSummaryView extends BaseEntity {
 	
 	// this view contain a concatenated "figureLabel" + "paneLabel"
 	

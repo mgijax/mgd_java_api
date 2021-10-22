@@ -1,18 +1,18 @@
-package org.jax.mgi.mgd.api.model.gxd.translator;
+package org.jax.mgi.mgd.api.model.img.translator;
 
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.gxd.domain.GelImageViewDomain;
-import org.jax.mgi.mgd.api.model.gxd.entities.GelImageView;
+import org.jax.mgi.mgd.api.model.img.domain.ImageSummaryViewDomain;
+import org.jax.mgi.mgd.api.model.img.entities.ImageSummaryView;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jboss.logging.Logger;
 
-public class GelImageViewTranslator extends BaseEntityDomainTranslator<GelImageView, GelImageViewDomain> {
+public class ImageSummaryViewTranslator extends BaseEntityDomainTranslator<ImageSummaryView, ImageSummaryViewDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
 
 	@Override
-	protected GelImageViewDomain entityToDomain(GelImageView entity) {
-		GelImageViewDomain domain = new GelImageViewDomain();
+	protected ImageSummaryViewDomain entityToDomain(ImageSummaryView entity) {
+		ImageSummaryViewDomain domain = new ImageSummaryViewDomain();
 		
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setImagePaneKey(String.valueOf(entity.get_imagepane_key()));

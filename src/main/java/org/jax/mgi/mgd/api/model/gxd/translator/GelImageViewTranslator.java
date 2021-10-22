@@ -26,8 +26,6 @@ public class GelImageViewTranslator extends BaseEntityDomainTranslator<GelImageV
 		domain.setY(entity.getY());
 		domain.setWidth(entity.getWidth());
 		domain.setHeight(entity.getHeight());
-		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
-		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
 		return domain;
 	}

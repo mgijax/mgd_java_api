@@ -19,7 +19,6 @@ import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
-import org.jax.mgi.mgd.api.model.img.entities.ImagePane;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
@@ -65,11 +64,7 @@ public class Assay extends BaseEntity {
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_imagepane_key")
-	private ImagePane imagePane;
-	
-	@OneToMany()
-	@JoinColumn(name="_imagepane_key", insertable=false, updatable=false)
-	private List<GelImageView> imagePanes;
+	private GelImageView imagePane;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_reportergene_key", referencedColumnName="_term_key")

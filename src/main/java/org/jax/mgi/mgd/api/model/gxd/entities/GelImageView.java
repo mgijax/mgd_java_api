@@ -1,7 +1,5 @@
 package org.jax.mgi.mgd.api.model.gxd.entities;
 
-import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -32,7 +30,5 @@ public class GelImageView extends BaseEntity {
 	private String y;
 	private String width;
 	private String height;
-	private Date creation_date;
-	private Date modification_date;
 
 }

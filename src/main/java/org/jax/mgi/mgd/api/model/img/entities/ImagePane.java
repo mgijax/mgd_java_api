@@ -40,10 +40,10 @@ public class ImagePane extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 	
-	// image summary
-	@OneToMany()
-	@JoinColumn(name="_object_key", referencedColumnName="_image_key", insertable=false, updatable=false)	
-	private List<ImageSummary> imageSummary;
+//	// image summary
+//	@OneToMany()
+//	@JoinColumn(name="_object_key", referencedColumnName="_image_key", insertable=false, updatable=false)	
+//	private List<ImageSummary> imageSummary;
 	
 	// image pane associations
 	@OneToMany()

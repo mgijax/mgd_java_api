@@ -65,7 +65,7 @@ public class Assay extends BaseEntity {
 	private ProbePrep probePrep;
 
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_imagepane_key", insertable=false, updatable=false)
+	@JoinColumn(name="_imagepane_key")
 	private ImagePane imagePane;
 	
 	@OneToOne(fetch=FetchType.LAZY)

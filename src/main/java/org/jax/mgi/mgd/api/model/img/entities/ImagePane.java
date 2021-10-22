@@ -51,7 +51,7 @@ public class ImagePane extends BaseEntity {
 	
 	// image summary
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_image_key")
+	@JoinColumn(name="_image_key", insertable=false, updatable=false)
 	private ImageSummary imageSummary;
 
 }

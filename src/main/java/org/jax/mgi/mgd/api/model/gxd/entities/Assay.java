@@ -71,7 +71,7 @@ public class Assay extends BaseEntity {
 	
 	// for display purposes only
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_imagepane_key")
+	@JoinColumn(name="_imagepane_key", insertable=false, updatable=false)
 	private GelImageView imagePaneDisplay;
 	
 	@OneToOne(fetch=FetchType.LAZY)

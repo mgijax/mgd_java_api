@@ -412,9 +412,11 @@ public class AssayService extends BaseService<AssayDomain> {
 			where = where + "\nand a._assaytype_key = " + value;		
 		}
 		
-		value = searchDomain.getImagePane().getImagePaneKey();
-		if (value != null && !value.isEmpty()) {
-			where = where + "\nand a._imagepane_key = " + value;		
+		if (searchDomain.getImagePane() != null) {
+			value = searchDomain.getImagePane().getImagePaneKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand a._imagepane_key = " + value;		
+			}
 		}
 		
 		value = searchDomain.getReporterGeneKey();

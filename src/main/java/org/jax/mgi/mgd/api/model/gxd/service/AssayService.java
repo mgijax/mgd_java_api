@@ -140,8 +140,8 @@ public class AssayService extends BaseService<AssayDomain> {
 		}
 				
 		if (domain.getIsInSitu() && domain.getImagePane() != null) {
-			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePaneKey())));
-			//entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePane().getImagePaneKey())));		
+			//entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePaneKey())));
+			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePane().getImagePaneKey())));		
 		}
 		else {
 			entity.setImagePane(null);		
@@ -245,8 +245,8 @@ public class AssayService extends BaseService<AssayDomain> {
 		}
 				
 		if (domain.getIsInSitu() && domain.getImagePane() != null) {
-			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePaneKey())));			
-			//entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePane().getImagePaneKey())));		
+			//entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePaneKey())));			
+			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePane().getImagePaneKey())));		
 		}
 		else {
 			entity.setImagePane(null);		
@@ -414,7 +414,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			where = where + "\nand a._assaytype_key = " + value;		
 		}
 		
-		value = searchDomain.getImagePaneKey();
+		value = searchDomain.getImagePane().getImagePaneKey();
 		if (value != null && !value.isEmpty()) {
 			where = where + "\nand a._imagepane_key = " + value;		
 		}

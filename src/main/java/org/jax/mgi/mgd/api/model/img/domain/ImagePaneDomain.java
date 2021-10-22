@@ -18,9 +18,12 @@ public class ImagePaneDomain extends BaseDomain {
 	private String y;
 	private String width;
 	private String height;	
+	private String accID;
+	private String pixID;
+	private String figurepaneLabel;
 	private String creation_date;
 	private String modification_date;
 	
-	private List<ImageSummaryDomain> imageSummary;
+//	private List<ImageSummaryDomain> imageSummary;
 	private List<ImagePaneAssocDomain> paneAssocs;
 }

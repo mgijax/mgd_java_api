@@ -10,7 +10,7 @@ public class ImageSummaryDomain extends BaseDomain {
 	
 	private String imageKey;
 	private String accID;
-	private String figurePaneLabel;
+	private String figurepaneLabel;
 
 //	add to domain as needed
 //	private String _accession_key;	

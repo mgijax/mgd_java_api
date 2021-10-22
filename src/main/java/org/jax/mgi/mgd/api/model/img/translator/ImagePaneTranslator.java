@@ -2,9 +2,10 @@ package org.jax.mgi.mgd.api.model.img.translator;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.gxd.domain.GelImageViewDomain;
+import org.jax.mgi.mgd.api.model.gxd.translator.GelImageViewTranslator;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneDomain;
-import org.jax.mgi.mgd.api.model.img.domain.ImageSummaryDomain;
 import org.jax.mgi.mgd.api.model.img.entities.ImagePane;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jboss.logging.Logger;
@@ -42,10 +43,16 @@ public class ImagePaneTranslator extends BaseEntityDomainTranslator<ImagePane, I
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
 		// one-to-many (but really just one) image info
-		ImageSummaryTranslator imageTranslator = new ImageSummaryTranslator();
-		Iterable<ImageSummaryDomain> is = imageTranslator.translateEntities(entity.getImageSummary());
-		domain.setImageSummary(IteratorUtils.toList(is.iterator()));
+//		ImageSummaryTranslator imageTranslator = new ImageSummaryTranslator();
+//		Iterable<ImageSummaryDomain> is = imageTranslator.translateEntities(entity.getImageSummary());
+//		domain.setImageSummary(IteratorUtils.toList(is.iterator()));
 		
+		GelImageViewTranslator imageTranslator = new GelImageViewTranslator();
+		Iterable<GelImageViewDomain> i = imageTranslator.translateEntities(entity.getImageSummary());
+		domain.setAccID((i.iterator().next().getAccID()));
+		domain.setPixID(i.iterator().next().getPixID());
+		domain.setFigurepaneLabel(i.iterator().next().getFigurepaneLabel());
+
 		// one-to-many associations
 		if (entity.getPaneAssocs() != null && !entity.getPaneAssocs().isEmpty()) {
 			ImagePaneAssocTranslator assocTranslator = new ImagePaneAssocTranslator();

@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter @Setter
 @Entity
 @ApiModel(value = "Image Summary Entity Object")
-@Table(name="img_image_summmary_view")
+@Table(name="img_image_summary_view")
 public class ImageSummary extends BaseEntity {
 
 	@Id

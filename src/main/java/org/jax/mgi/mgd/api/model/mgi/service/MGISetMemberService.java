@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.mgi.service;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -117,7 +118,20 @@ public class MGISetMemberService extends BaseService<MGISetMemberDomain> {
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processSetMember update");
-				// not implemented
+				MGISetMember entity = setMemberDAO.get(Integer.valueOf(domain.get(i).getSetMemberKey()));
+				if(domain.get(i).getLabel() == null || domain.get(i).getLabel().isEmpty()) {
+					entity.setLabel(null);
+				}
+				else  {
+					entity.setLabel(domain.get(i).getLabel());
+				}
+				entity.setSequenceNum(domain.get(i).getSequenceNum());
+				entity.setModification_date(new Date());
+				entity.setModifiedBy(user);
+				setMemberDAO.update(entity);
+				
+				log.info("processSetMember/changes processed: " + domain.get(i).getSetMemberKey());
+			
 			}
 			else {
 				log.info("processSetMember/no changes processed: " + domain.get(i).getSetMemberKey());

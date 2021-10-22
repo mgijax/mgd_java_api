@@ -111,10 +111,8 @@ public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDoma
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}
 
-		// image pane
+		// image pane/one only
 		if (entity.getImagePane() != null) {
-			//ImagePaneTranslator i = new ImagePaneTranslator();
-			//domain.setImagePane(i.translate(entity.getImagePane()));
 			ImagePaneTranslator imagePaneTranslator = new ImagePaneTranslator();
 			Iterable<ImagePaneDomain> i = imagePaneTranslator.translateEntities(entity.getImagePane());
 			domain.setImagePane(i.iterator().next());			

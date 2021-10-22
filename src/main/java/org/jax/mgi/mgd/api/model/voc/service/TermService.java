@@ -140,7 +140,9 @@ public class TermService extends BaseService<TermDomain> {
 		String orderBy = "order by t.term";
 
 		Boolean from_accession = false;
-		
+	
+                String value;
+	
 		// if parameter exists, then add to where-clause
 		
 		String cmResults[] = DateSQLQuery.queryByCreationModification("t", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -150,13 +152,18 @@ public class TermService extends BaseService<TermDomain> {
 		}
 		
 		if (searchDomain.getTermKey() != null && !searchDomain.getTermKey().isEmpty()) {
-			where = where + "\nand t._term_key = " + searchDomain.getTermKey();
+                        where = where + "\nand t._term_key = " + searchDomain.getTermKey();
+
 		}
 		if (searchDomain.getTerm() != null && !searchDomain.getTerm().isEmpty()) {
-			where = where + "\nand t.term ilike '" + searchDomain.getTerm() + "'";
+			value = searchDomain.getTerm().replace("'",  "''");
+                        where = where + "\nand t.term ilike '" + value + "'";
+
 		}
 		if (searchDomain.getAbbreviation() != null && !searchDomain.getAbbreviation().isEmpty()) {
-			where = where + "\nand t.abbreviation ilike '" + searchDomain.getAbbreviation() + "'";
+                        value = searchDomain.getAbbreviation().replace("'",  "''");
+                        where = where + "\nand t.abbreviation ilike '" + value + "'";
+
 		}		
 		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty()) {
 			where = where + "\nand t._vocab_key = " + searchDomain.getVocabKey();

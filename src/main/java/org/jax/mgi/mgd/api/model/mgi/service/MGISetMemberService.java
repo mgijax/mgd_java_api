@@ -83,6 +83,7 @@ public class MGISetMemberService extends BaseService<MGISetMemberDomain> {
 				
 		String cmd = "";
 		Query query;
+                String value; // for escaping of the set label
 
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
@@ -98,12 +99,12 @@ public class MGISetMemberService extends BaseService<MGISetMemberDomain> {
 				//}
 				
 				log.info("processSetMember create");
-				
+                                value = domain.get(i).getLabel().replace("'",  "''");				
 				cmd = "select count(*) from MGI_addSetMember ("
 						+ domain.get(i).getSetKey()
 						+ "," + domain.get(i).getObjectKey()
 						+ "," + user.get_user_key() 
-						+ ", '" + domain.get(i).getLabel() + "'"
+						+ ", '" + value + "'"
 						+")";
 				query = setMemberDAO.createNativeQuery(cmd);
 				query.getResultList();

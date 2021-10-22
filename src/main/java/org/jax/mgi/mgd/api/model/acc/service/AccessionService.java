@@ -274,10 +274,6 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		
 		for (int i = 0; i < domain.size(); i++) {
 	
-			if (domain.get(i).getAccID() == null || domain.get(i).getAccID().isEmpty()) {
-				continue;
-			}
-			
 			if (domain.get(i).getIsPrivate() == null || domain.get(i).getIsPrivate().isEmpty()) {
 				isPrivate = "0";
 			}
@@ -317,9 +313,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processAccession delete");
-				cmd = "select count(*) from ACC_delete_byAccKey ("
-						+ domain.get(i).getAccessionKey()
-						+ ")";
+				cmd = "select count(*) from ACC_delete_byAccKey (" + domain.get(i).getAccessionKey() + ")";
 				log.info("cmd: " + cmd);
 				Query query = accessionDAO.createNativeQuery(cmd);
 				query.getResultList();
@@ -327,6 +321,11 @@ public class AccessionService extends BaseService<AccessionDomain> {
 				log.info("processAccession delete successful");
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+
+				if (domain.get(i).getAccID() == null || domain.get(i).getAccID().isEmpty()) {
+					continue;
+				}
+
 				log.info("processAccession update");
 				Accession entity = accessionDAO.get(Integer.valueOf(domain.get(i).getAccessionKey()));
 				

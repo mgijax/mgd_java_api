@@ -19,6 +19,7 @@ import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.img.entities.ImagePane;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
@@ -39,6 +40,7 @@ public class Assay extends BaseEntity {
 	@SequenceGenerator(name="gxd_assay_generator", sequenceName = "gxd_assay_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")	
 	private int _assay_key;
+	private int _imagepane_key;
 	private Date creation_date;
 	private Date modification_date;
 	
@@ -62,9 +64,15 @@ public class Assay extends BaseEntity {
 	@JoinColumn(name="_probeprep_key")
 	private ProbePrep probePrep;
 
+	// for DAO
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_imagepane_key")
-	private GelImageView imagePane;
+	private ImagePane imagePane;
+	
+	// for display purposes only
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_imagepane_key")
+	private GelImageView imagePaneDisplay;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_reportergene_key", referencedColumnName="_term_key")

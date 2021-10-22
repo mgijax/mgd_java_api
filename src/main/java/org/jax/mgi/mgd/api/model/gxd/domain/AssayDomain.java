@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.gxd.domain;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
+import org.jax.mgi.mgd.api.model.img.domain.ImagePaneDomain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -38,7 +39,8 @@ public class AssayDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	
-	private GelImageViewDomain imagePane;
+	private ImagePaneDomain imagePane;
+	private GelImageViewDomain imagePaneDisplay;
 	
 	/* 1 = nucleotide, 2 = antibody, 3 = direct detection */
 	private String detectionKey;

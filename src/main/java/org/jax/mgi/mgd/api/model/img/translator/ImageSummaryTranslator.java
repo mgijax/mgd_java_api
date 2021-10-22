@@ -14,7 +14,7 @@ public class ImageSummaryTranslator extends BaseEntityDomainTranslator<ImageSumm
 		
 		ImageSummaryDomain domain = new ImageSummaryDomain();
 
-		domain.setImageKey(String.valueOf(entity.get_image_key()));
+		domain.setImageKey(String.valueOf(entity.get_object_key()));
 		domain.setAccID(entity.getAccID());
 		domain.setFigurePaneLabel(entity.getShort_description());
 		

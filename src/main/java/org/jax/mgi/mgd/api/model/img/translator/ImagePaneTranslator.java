@@ -46,11 +46,6 @@ public class ImagePaneTranslator extends BaseEntityDomainTranslator<ImagePane, I
 			Iterable<ImagePaneAssocDomain> i = assocTranslator.translateEntities(entity.getPaneAssocs());
 			domain.setPaneAssocs(IteratorUtils.toList(i.iterator()));
 		}
-
-		// mgi accession ids only
-		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
-			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
-		}
 		
 		return domain;
 	}

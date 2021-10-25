@@ -140,7 +140,12 @@ public class AssayService extends BaseService<AssayDomain> {
 		}
 				
 		if (domain.getIsGel()) {
-			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePane().getImagePaneKey())));		
+			if (domain.getImagePane().getImagePaneKey() == null) {
+				entity.setImagePane(null);		
+			}
+			else {
+				entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePane().getImagePaneKey())));	
+			}
 		}
 		else {
 			entity.setImagePane(null);		
@@ -244,7 +249,12 @@ public class AssayService extends BaseService<AssayDomain> {
 		}
 				
 		if (domain.getIsGel()) {
-		entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePane().getImagePaneKey())));		
+			if (domain.getImagePane().getImagePaneKey() == null) {
+				entity.setImagePane(null);		
+			}
+			else {
+				entity.setImagePane(imagePaneDAO.get(Integer.valueOf(domain.getImagePane().getImagePaneKey())));	
+			}
 		}
 		else {
 			entity.setImagePane(null);		

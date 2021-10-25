@@ -1,13 +1,8 @@
 package org.jax.mgi.mgd.api.model.gxd.translator;
 
-import java.util.Set;
-import java.util.List;
-import java.util.ArrayList;
-
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 
 import org.jax.mgi.mgd.api.model.gxd.domain.HTExperimentVariableDomain;
-import org.jax.mgi.mgd.api.model.gxd.entities.HTExperiment;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTExperimentVariable;
 
 import org.jboss.logging.Logger;

@@ -1,7 +1,6 @@
 package org.jax.mgi.mgd.api.model.gxd.entities;
 
 import java.util.Date;
-import java.util.Set;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -16,7 +15,6 @@ import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIProperty;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;

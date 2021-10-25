@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model.gxd.translator;
 
-import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -9,21 +8,13 @@ import org.jax.mgi.mgd.api.model.gxd.domain.HTDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTSampleDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTUserDomain; 
 import org.jax.mgi.mgd.api.model.gxd.domain.HTSourceDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.HTNoteDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.HTEmapaDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.HTEmapsDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTExperimentVariableDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.HTGenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTExperiment;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTSample;
-import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTExperimentVariable;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
-import org.jax.mgi.mgd.api.model.voc.entities.TermEMAPA;
-import org.jax.mgi.mgd.api.model.voc.entities.TermEMAPS;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIProperty;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
-import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 
 import org.jboss.logging.Logger;
 

@@ -52,7 +52,7 @@ public class InSituResultTranslator extends BaseEntityDomainTranslator<InSituRes
 			InSituResultCellTypeTranslator celltypeTranslator = new InSituResultCellTypeTranslator();
 			Iterable<InSituResultCellTypeDomain> i = celltypeTranslator.translateEntities(entity.getCelltypes());
 			domain.setCelltypes(IteratorUtils.toList(i.iterator()));
-			domain.getCelltypes().sort(Comparator.comparing(InSituResultCellTypeDomain::getCelltypeTerm));
+			domain.getCelltypes().sort(Comparator.comparing(InSituResultCellTypeDomain::getCelltypeTerm));			
 			domain.setCelltypesCount(domain.getCelltypes().size());			
 		}
 		else {

@@ -1071,7 +1071,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		// search mgi_setmembers where _set_key = 1059 (cell type)
 		String cmd = 
-				"\n(select distinct t.term as displayIt, t.term," +
+				"\n(select distinct '*'||t.term as displayIt, t.term," +
 				"\ns._setmember_key as setMemberKey, s._set_key as setKey, s._object_key as objectKey, s._createdby_key as createdByKey, u.login," +
 				"\ns.sequenceNum as sequenceNum, 1 as orderBy" +
 				"\nfrom mgi_setmember s, voc_term t, mgi_user u" +

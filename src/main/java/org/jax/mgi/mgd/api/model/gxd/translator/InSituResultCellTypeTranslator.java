@@ -17,7 +17,7 @@ public class InSituResultCellTypeTranslator extends BaseEntityDomainTranslator<I
 
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setResultCelltypeKey(String.valueOf(entity.get_resultcelltype_key()));				
-		domain.setResultKey(String.valueOf(entity.get_result_key()));				
+		domain.setResultKey(String.valueOf(entity.get_result_key()));	
 		domain.setCelltypeTermKey(String.valueOf(entity.getCelltypeTerm().get_term_key()));
 		domain.setCelltypeTerm(entity.getCelltypeTerm().getTerm());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));

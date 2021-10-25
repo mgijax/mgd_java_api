@@ -17,16 +17,16 @@ public class ImageSummaryViewTranslator extends BaseEntityDomainTranslator<Image
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setImagePaneKey(String.valueOf(entity.get_imagepane_key()));
 		domain.setImageKey(String.valueOf(entity.get_image_key()));
-		domain.setFigurepaneLabel(entity.getFigurepaneLabel());
-		domain.setAccID(entity.getAccID());
-		domain.setPixID(entity.getPixID());
-		domain.setXDim(entity.getXDim());
-		domain.setYDim(entity.getYDim());
 		domain.setX(entity.getX());
 		domain.setY(entity.getY());
 		domain.setWidth(entity.getWidth());
 		domain.setHeight(entity.getHeight());
-		
+		domain.setAccID(entity.getAccID());
+		domain.setPixID(entity.getPixID());
+		domain.setXDim(entity.getXDim());
+		domain.setYDim(entity.getYDim());
+		domain.setFigurepaneLabel(entity.getFigurepaneLabel());
+
 		return domain;
 	}
 

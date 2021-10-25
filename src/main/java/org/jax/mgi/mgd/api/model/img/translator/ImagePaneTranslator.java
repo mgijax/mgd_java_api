@@ -46,6 +46,8 @@ public class ImagePaneTranslator extends BaseEntityDomainTranslator<ImagePane, I
 		Iterable<ImageSummaryViewDomain> i = imageTranslator.translateEntities(entity.getImageSummary());
 		domain.setAccID((i.iterator().next().getAccID()));
 		domain.setPixID(i.iterator().next().getPixID());
+		domain.setXDim(i.iterator().next().getXDim());
+		domain.setYDim(i.iterator().next().getYDim());		
 		domain.setFigurepaneLabel(i.iterator().next().getFigurepaneLabel());
 
 		// one-to-many associations

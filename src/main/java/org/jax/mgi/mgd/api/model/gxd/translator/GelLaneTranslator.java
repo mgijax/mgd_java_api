@@ -26,8 +26,6 @@ public class GelLaneTranslator extends BaseEntityDomainTranslator<GelLane, GelLa
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setGelLaneKey(String.valueOf(entity.get_gellane_key()));
 		domain.setAssayKey(String.valueOf(entity.get_assay_key()));
-		domain.setGenotypeKey(String.valueOf(entity.getGenotype().get_genotype_key()));
-		domain.setGenotypeAccID(entity.getGenotype().getMgiAccessionIds().get(0).getAccID());
 		domain.setGelRNATypeKey(String.valueOf(entity.getGelRNAType().get_gelrnatype_key()));
 		domain.setGelRNAType(entity.getGelRNAType().getRnaType());
 		domain.setGelControlKey(String.valueOf(entity.getGelControl().get_gelcontrol_key()));
@@ -43,6 +41,16 @@ public class GelLaneTranslator extends BaseEntityDomainTranslator<GelLane, GelLa
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
+		// genotype stuff 
+		
+		domain.setGenotypeKey(String.valueOf(entity.getGenotype().get_genotype_key()));
+		domain.setGenotypeAccID(entity.getGenotype().getMgiAccessionIds().get(0).getAccID());
+		domain.setGenotypeBackground(entity.getGenotype().getStrain().getStrain());
+		domain.setGenotypeIsConditional(String.valueOf(entity.getGenotype().getIsConditional()));
+		if (entity.getGenotype().getAlleleDetailNote() != null && !entity.getGenotype().getAlleleDetailNote().isEmpty()) {
+			domain.setGenotypeAllelePairs(entity.getGenotype().getAlleleDetailNote().get(0).getNoteChunk().getNote());
+		}
+		
 		// age stuff
 		
 		domain.setAge(entity.getAge());

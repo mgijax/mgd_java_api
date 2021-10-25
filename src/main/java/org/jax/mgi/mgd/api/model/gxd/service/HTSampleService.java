@@ -29,7 +29,6 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 	protected Logger log = Logger.getLogger(getClass());
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
-
 	@Inject
 	private HTSampleDAO htSampleDAO;
 
@@ -55,8 +54,6 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
         return results;
     } 
 
-
-
 	@Transactional
 	public SearchResults<HTSampleDomain> delete(Integer key, User user) {
 		log.info("HT Sample delete");
@@ -64,7 +61,6 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
 	}  
-
 
 	@Transactional
 	public SearchResults<HTSampleDomain> update(HTSampleDomain domain, User user) {				
@@ -74,7 +70,6 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 		return results;		
 	}
 
-
 	@Transactional
 	public SearchResults<HTSampleDomain> create(HTSampleDomain domain, User user) {
 		log.info("HT Sample create");
@@ -83,5 +78,4 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 		return results;
 	}
 
-	
 }

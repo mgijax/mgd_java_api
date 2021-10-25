@@ -40,12 +40,15 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 		domain.set_experiment_key(entity.get_experiment_key());
 		domain.setName(entity.getName());
 		domain.setDescription(entity.getDescription());
+
 		if (entity.getPrimaryIDs() != null && !entity.getPrimaryIDs().isEmpty()) {
 			domain.setPrimaryid(entity.getPrimaryIDs().get(0).getAccID());
 		}
+
 		if (entity.getSecondaryIDs() != null && !entity.getSecondaryIDs().isEmpty()) {
 			domain.setSecondaryid(entity.getSecondaryIDs().get(0).getAccID());
 		}
+
 		if (entity.getSourceTerm() != null) {
 			Term sourceTerm = entity.getSourceTerm();
 			HTSourceDomain sourceDomain = new HTSourceDomain();
@@ -56,10 +59,18 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 		}
 
 		//types and states
-		domain.set_evaluationstate_key(entity.get_evaluationstate_key());
-		domain.set_studytype_key(entity.get_studytype_key());
-		domain.set_experimenttype_key(entity.get_experimenttype_key());
-		domain.set_curationstate_key(entity.get_curationstate_key());
+		if (entity.getEvaluationState() != null) {
+			domain.set_evaluationstate_key(entity.getEvaluationState().get_term_key());
+		}
+		if (entity.getStudyType() != null) {
+			domain.set_studytype_key(entity.getStudyType().get_term_key());
+		}
+		if (entity.getExperimentType() != null) {
+			domain.set_experimenttype_key(entity.getExperimentType().get_term_key());
+		}
+		if (entity.getCurationState() != null) {
+			domain.set_curationstate_key(entity.getCurationState().get_term_key());
+		}
 
 		// dates
 		if (entity.getRelease_date() != null) {

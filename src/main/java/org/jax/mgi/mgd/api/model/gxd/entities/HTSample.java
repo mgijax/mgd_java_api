@@ -31,26 +31,31 @@ public class HTSample extends BaseEntity {
 	@Id
 	private Integer _sample_key;
 	private Integer _experiment_key;
-	private Integer _organism_key;
-	private Integer _relevance_key;
-	private Integer _sex_key;
-	private Integer _emapa_key;
-	private Integer _stage_key;
  	private String name;
 	private String age;
 	private Date creation_date;
 	private Date modification_date;
- 
-	// notes
-	@OneToMany()
-	@JoinColumn(name="_object_key", referencedColumnName="_sample_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 43 and `_notetype_key` = 1048")
-	private List<Note> notes;
-	
+
+	@OneToOne
+	@JoinColumn(name="_organism_key")
+	private Organism organism;
+
+	@OneToOne
+	@JoinColumn(name="_stage_key")
+	private TheilerStage theilerStage;
+
+	@OneToOne
+	@JoinColumn(name="_relevance_key", referencedColumnName="_term_key")
+	private Term relevance;
+
+	@OneToOne
+	@JoinColumn(name="_sex_key", referencedColumnName="_term_key")
+	private Term sex;
+ 	
+	// _emapa_key is mapped to two objects, and must be insert/update false
 	@OneToOne
 	@JoinColumn(name="_emapa_key", referencedColumnName="_term_key", insertable=false, updatable=false)
 	private Term emapaTerm;
-
 	@OneToOne
 	@JoinColumn(name="_emapa_key", referencedColumnName="_term_key", insertable=false, updatable=false)
 	private TermEMAPA emapaObject;
@@ -66,4 +71,11 @@ public class HTSample extends BaseEntity {
 	@OneToOne
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
+
+	// notes
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_sample_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 43 and `_notetype_key` = 1048")
+	private List<Note> notes;
+
 }

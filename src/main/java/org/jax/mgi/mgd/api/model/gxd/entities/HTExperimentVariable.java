@@ -24,10 +24,9 @@ public class HTExperimentVariable extends BaseEntity {
 	@Id
 	private Integer _experimentvariable_key;
 	private Integer _experiment_key;
-	private Integer _term_key;
 
 	@OneToOne
-	@JoinColumn(name="_term_key", referencedColumnName="_term_key", insertable=false, updatable=false)
+	@JoinColumn(name="_term_key", referencedColumnName="_term_key")
 	private Term term;
 
 }

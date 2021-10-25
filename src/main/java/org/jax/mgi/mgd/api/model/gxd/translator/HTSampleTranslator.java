@@ -35,13 +35,22 @@ public class HTSampleTranslator extends BaseEntityDomainTranslator<HTSample, HTS
 		// Sample Info
 		sampleDomain.setName(entity.getName());
 		sampleDomain.set_sample_key(entity.get_sample_key());
-		sampleDomain.set_organism_key(entity.get_organism_key());
 		sampleDomain.set_experiment_key(entity.get_experiment_key());
-		sampleDomain.set_relevance_key(entity.get_relevance_key());
-		sampleDomain.set_emapa_key(entity.get_emapa_key());
-		sampleDomain.set_sex_key(entity.get_sex_key());
-		sampleDomain.set_stage_key(entity.get_stage_key());
 		sampleDomain.setAge(entity.getAge());
+
+		if (entity.getOrganism() != null) {
+			sampleDomain.set_organism_key(entity.getOrganism().get_organism_key());
+		}
+
+		if (entity.getTheilerStage() != null) {
+			sampleDomain.set_stage_key(entity.getTheilerStage().get_stage_key());
+		}
+		if (entity.getRelevance() != null) {
+			sampleDomain.set_relevance_key(entity.getRelevance().get_term_key());
+		}
+		if (entity.getSex() != null) {
+			sampleDomain.set_sex_key(entity.getSex().get_term_key());
+		}
 
 		// notes
 		if (entity.getNotes() != null && entity.getNotes().size() > 0) {
@@ -75,13 +84,14 @@ public class HTSampleTranslator extends BaseEntityDomainTranslator<HTSample, HTS
 			Term emapaTerm = entity.getEmapaTerm();
 			TermEMAPA emapaObject = entity.getEmapaObject();
 
+			sampleDomain.set_emapa_key(emapaTerm.get_term_key());
 			hTEmapaDomain.set_term_key(emapaTerm.get_term_key());
 			hTEmapaDomain.setTerm(emapaTerm.getTerm());
-			hTEmapsDomain.set_stage_key(entity.get_stage_key());
+			hTEmapsDomain.set_stage_key(sampleDomain.get_stage_key());
 			hTEmapsDomain.set_emapa_term_key(emapaTerm.get_term_key());
 			// find emaps as for given emapa & stage
 			for (TermEMAPS  termEMAPS: emapaObject.getEmapsTerms()) {
-				if (termEMAPS.get_stage_key() == entity.get_stage_key()) {
+				if (termEMAPS.get_stage_key() == sampleDomain.get_stage_key()) {
 					hTEmapsDomain.setPrimaryid(termEMAPS.getTerm().getAccessionIds().get(0).getAccID());
 					hTEmapsDomain.set_term_key(termEMAPS.getTerm().get_term_key());
 				}

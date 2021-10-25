@@ -44,16 +44,12 @@ public class HTExperiment extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 
-	private Integer _evaluationstate_key;
-	private Integer _experimenttype_key;
-	private Integer _studytype_key;
-	private Integer _curationstate_key;
-
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_experiment_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 42 and `_logicaldb_key` = 189")
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> primaryIDs;
+	
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_experiment_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 42 and `_logicaldb_key` = 190")
@@ -76,6 +72,22 @@ public class HTExperiment extends BaseEntity {
 	@JoinColumn(name="_source_key", referencedColumnName="_term_key")
 	private Term sourceTerm;
 	
+	@OneToOne
+	@JoinColumn(name="_evaluationstate_key", referencedColumnName="_term_key")
+	private Term evaluationState;
+
+	@OneToOne
+	@JoinColumn(name="_experimenttype_key", referencedColumnName="_term_key")
+	private Term experimentType;
+
+	@OneToOne
+	@JoinColumn(name="_studytype_key", referencedColumnName="_term_key")
+	private Term studyType;
+
+	@OneToOne
+	@JoinColumn(name="_curationstate_key", referencedColumnName="_term_key")
+	private Term curationState;
+
 	// notes
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_experiment_key", insertable=false, updatable=false)
@@ -84,23 +96,24 @@ public class HTExperiment extends BaseEntity {
 
 	// properties
 	@OneToMany
-	@JoinColumn(name="_object_key", referencedColumnName="_experiment_key")
+	@JoinColumn(name="_object_key", referencedColumnName="_experiment_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 42")
 	@OrderBy(clause="_propertyterm_key desc, sequenceNum")
 	private List<MGIProperty> properties;
 
 	// experiment variables
 	@OneToMany()
-	@JoinColumn(name="_experiment_key", referencedColumnName="_experiment_key")
+	@JoinColumn(name="_experiment_key", referencedColumnName="_experiment_key", insertable=false, updatable=false)
 	private List<HTExperimentVariable> experiment_variables;
 
 	// samples
 	@OneToMany()
-	@JoinColumn(name="_experiment_key", referencedColumnName="_experiment_key")
+	@JoinColumn(name="_experiment_key", referencedColumnName="_experiment_key", insertable=false, updatable=false)
 	@OrderBy(clause="name")
-
 	private List<HTSample> samples;
+
 }
+
 
 
 

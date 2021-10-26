@@ -110,35 +110,36 @@ public class UserService extends BaseService<UserDomain> {
 		}
 	}
 
-	/* check EI module permissions
-	 * if permissions valid, then user key returned from SP = user key
-	 * else, user key returned from SP = 0
-	 */
-	@Transactional
-	public List<SlimUserDomain> validEIPermissions(String eiModule, User user) {
-
-		List<SlimUserDomain> results = new ArrayList<SlimUserDomain>();
-		
-		String cmd = "select * from MGI_checkUserRole("
-				+ "'" + eiModule + "'"
-				+ ",'" + user.getLogin() + "'"
-				+ ")";		log.info(cmd);
-		log.info(cmd);
-
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {	
-				SlimUserDomain domain = new SlimUserDomain();
-				domain.setUserKey(rs.getString(1));
-				domain.setUserLogin(user.getLogin());
-				results.add(domain);
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-	
-		return results;		
-	}
+//  obsolete; remove
+//	/* check EI module permissions
+//	 * if permissions valid, then user key returned from SP = user key
+//	 * else, user key returned from SP = 0
+//	 */
+//	@Transactional
+//	public List<SlimUserDomain> validEIPermissions(String eiModule, User user) {
+//
+//		List<SlimUserDomain> results = new ArrayList<SlimUserDomain>();
+//		
+//		String cmd = "select * from MGI_checkUserRole("
+//				+ "'" + eiModule + "'"
+//				+ ",'" + user.getLogin() + "'"
+//				+ ")";		log.info(cmd);
+//		log.info(cmd);
+//
+//		try {
+//			ResultSet rs = sqlExecutor.executeProto(cmd);
+//			while (rs.next()) {	
+//				SlimUserDomain domain = new SlimUserDomain();
+//				domain.setUserKey(rs.getString(1));
+//				domain.setUserLogin(user.getLogin());
+//				results.add(domain);
+//			}
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	
+//		return results;		
+//	}
 	
 }

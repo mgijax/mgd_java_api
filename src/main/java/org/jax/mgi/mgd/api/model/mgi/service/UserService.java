@@ -113,10 +113,6 @@ public class UserService extends BaseService<UserDomain> {
 	/* check EI module permissions
 	 * if permissions valid, then user key returned from SP = user key
 	 * else, user key returned from SP = 0
-	 * 
-	 * select login, userrole from mgi_userrole_view order by login
-	 * 
-	 * PWI and TeleUSE/EI use this stored procedure
 	 */
 	@Transactional
 	public List<SlimUserDomain> validEIPermissions(String eiModule, User user) {

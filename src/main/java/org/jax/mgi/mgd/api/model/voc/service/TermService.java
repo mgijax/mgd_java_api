@@ -133,15 +133,28 @@ public class TermService extends BaseService<TermDomain> {
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
 		String select = "select t.*, v.name, u1.login as createdby, u2.login as modifiedby";
-		String from = "from voc_term t, voc_vocab v, mgi_user u1, mgi_user u2";
+		String from = "from voc_vocab v, mgi_user u1, mgi_user u2, voc_term t";
 		String where = "where t._vocab_key = v._vocab_key"
 				+ "\nand t._createdby_key = u1._user_key"
 				+ "\nand t._modifiedby_key = u2._user_key";
 		String orderBy = "order by t.term";
-
+		
+		// building SQL command for querying for exact synonyms with same string as term
+		// right now just used by vocabKey = 102 celltype
+		String synonymFrom = from + ", mgi_synonym s" ;
+		String synonymJoin = "left outer join MGI_synonym s on "
+				+ "\n(t._term_key = s._object_key " 
+				+ "\nand s._mgitype_key = 13 "
+				+ "\nand s._synonymtype_key = 1017)";
+		String synonymWhere = where;
+		String synonymUnion = "";
+		String synonymOrderBy = "order by term";
+		
 		Boolean from_accession = false;
-	
-                String value;
+		//Boolean from_synonym = false;
+		
+		// value after escaping apostrophe in term
+        String value;
 	
 		// if parameter exists, then add to where-clause
 		
@@ -177,7 +190,23 @@ public class TermService extends BaseService<TermDomain> {
 			where = where + "\nand lower(a.accID) = lower('" + searchDomain.getAccessionIds().get(0).getAccID() + "')";
 			from_accession = true;
 		}
-
+		
+		// for cell types we want to query the term synonyms by the passed in term string
+		// we create a union of the term search and the synonym search
+		if (searchDomain.getVocabKey().equals("102")) {
+			select = select + ", s.synonym";
+			synonymWhere = synonymWhere + "\nand s.synonym ilike '" + searchDomain.getTerm().replace("'",  "''") + "'"
+					+ "\nand s._mgitype_key = 13"
+					+ "\nand s._synonymtype_key = 1017"
+					+ "\nand t._term_key = s._object_key"
+					+ "\nand t._vocab_key = 102";
+			synonymUnion = "\nunion\n";
+			synonymUnion = synonymUnion 
+					+ select + "\n"
+					+ synonymFrom + "\n"
+					+ synonymWhere; 
+		}
+		
 		if (from_accession == true) {
 			select = select + ", a.*";
 			from = from + ", acc_accession a";
@@ -185,12 +214,18 @@ public class TermService extends BaseService<TermDomain> {
 					+ "\nand a._mgitype_key = 13 and a.preferred = 1";
 		}
 		
+		
 		// include obsolete terms?
 		if(searchDomain.getIncludeObsolete().equals(Boolean.FALSE)) {
 			where = where + "\nand isObsolete != 1";
 		}
 		// make this easy to copy/paste for troubleshooting
-		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
+		if (searchDomain.getVocabKey().equals("102")) {
+			cmd = "\n" + select + "\n" + from + "\n" + synonymJoin + "\n" + where + "\n" + synonymUnion + "\n" + synonymOrderBy;
+		}
+		else {
+			cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
+		}
 		log.info(cmd);
 
 		try {
@@ -209,7 +244,7 @@ public class TermService extends BaseService<TermDomain> {
 		
 		return results;
 	}	
-
+ 
 	@Transactional
 	public Boolean process(String vocabKey, List<TermDomain> domain, User user) {
 		// process term associations (create, delete, update)

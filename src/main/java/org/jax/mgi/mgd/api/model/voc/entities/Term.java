@@ -71,4 +71,10 @@ public class Term extends BaseEntity {
 	@OrderBy(clause ="_synonymtype_key, synonym")
 	private List<MGISynonym> goRelSynonyms;
 	
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
+	@Where(clause ="`_mgitype_key` = 13 and `_synonymtype_key` = 1017")
+	@OrderBy(clause ="_synonymtype_key, synonym")
+	private List<MGISynonym> celltypeSynonyms;
+	
 }

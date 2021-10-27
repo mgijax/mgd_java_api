@@ -42,4 +42,7 @@ public class TermDomain extends BaseDomain {
 	// for GORel synonyms only
 	private List<MGISynonymDomain> goRelSynonyms;
 	
+	// for cell type term synonyms only
+	private List<MGISynonymDomain> celltypeSynonyms;
+	
 }

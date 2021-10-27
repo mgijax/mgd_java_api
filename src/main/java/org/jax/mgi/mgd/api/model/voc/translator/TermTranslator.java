@@ -54,6 +54,11 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
                domain.setGoRelSynonyms(IteratorUtils.toList(i.iterator()));
                domain.getGoRelSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
        }
+       else if (entity.getCelltypeSynonyms() != null && !entity.getCelltypeSynonyms().isEmpty()) {
+    	   		Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getCelltypeSynonyms());
+    	   		domain.setCelltypeSynonyms(IteratorUtils.toList(i.iterator()));
+    	   		domain.getCelltypeSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
+       }
 		return domain;
 	}
 

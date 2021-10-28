@@ -194,12 +194,11 @@ public class TermService extends BaseService<TermDomain> {
 		// for cell types we want to query the term synonyms by the passed in term string
 		// we create a union of the term search and the synonym search
 		if (searchDomain.getVocabKey().equals("102")) {
-			select = select + ", s.synonym";
 			synonymWhere = synonymWhere + "\nand s.synonym ilike '" + searchDomain.getTerm().replace("'",  "''") + "'"
 					+ "\nand s._mgitype_key = 13"
 					+ "\nand s._synonymtype_key = 1017"
 					+ "\nand t._term_key = s._object_key"
-					+ "\nand t._vocab_key = 102";
+					+ "\nand t._vocab_key = " + searchDomain.getVocabKey();
 			synonymUnion = "\nunion\n";
 			synonymUnion = synonymUnion 
 					+ select + "\n"

@@ -131,9 +131,11 @@ public class TermService extends BaseService<TermDomain> {
 
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
+		// Note that the initial from clause does not include voc_term. The from/voc_term needs
+		// to be at the end of the from clause due to the outer join to synonyms for cell type
 		String cmd = "";
-		String select = "select t.*, v.name, u1.login as createdby, u2.login as modifiedby";
-		String from = "from voc_vocab v, mgi_user u1, mgi_user u2, voc_term t";
+		String select = "select distinct t.*, v.name, u1.login as createdby, u2.login as modifiedby";
+		String from = "from voc_vocab v, mgi_user u1, mgi_user u2";
 		String where = "where t._vocab_key = v._vocab_key"
 				+ "\nand t._createdby_key = u1._user_key"
 				+ "\nand t._modifiedby_key = u2._user_key";
@@ -141,7 +143,7 @@ public class TermService extends BaseService<TermDomain> {
 		
 		// building SQL command for querying for exact synonyms with same string as term
 		// right now just used by vocabKey = 102 celltype
-		String synonymFrom = from + ", mgi_synonym s" ;
+		String synonymFrom = from + ", mgi_synonym s, voc_term t" ;
 		String synonymJoin = "left outer join MGI_synonym s on "
 				+ "\n(t._term_key = s._object_key " 
 				+ "\nand s._mgitype_key = 13 "
@@ -192,8 +194,8 @@ public class TermService extends BaseService<TermDomain> {
 		}
 		
 		// for cell types we want to query the term synonyms by the passed in term string
-		// we create a union of the term search and the synonym search
-		if (searchDomain.getVocabKey().equals("102")) {
+		// we create a union of the term search and the synonym search, exact syn only
+		if (searchDomain.getVocabKey().equals("102") && searchDomain.getTerm() != null) {
 			synonymWhere = synonymWhere + "\nand s.synonym ilike '" + searchDomain.getTerm().replace("'",  "''") + "'"
 					+ "\nand s._mgitype_key = 13"
 					+ "\nand s._synonymtype_key = 1017"
@@ -213,6 +215,10 @@ public class TermService extends BaseService<TermDomain> {
 					+ "\nand a._mgitype_key = 13 and a.preferred = 1";
 		}
 		
+		
+		// now add voc_term to from - this has to be the last table because of the outer join
+		// to mgi_synonym
+		from = from + ", voc_term t";
 		
 		// include obsolete terms?
 		if(searchDomain.getIncludeObsolete().equals(Boolean.FALSE)) {

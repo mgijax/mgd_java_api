@@ -156,7 +156,7 @@ public class TermService extends BaseService<TermDomain> {
 		//Boolean from_synonym = false;
 		
 		// value after escaping apostrophe in term
-        String value;
+        String value = null;
 	
 		// if parameter exists, then add to where-clause
 		
@@ -172,8 +172,8 @@ public class TermService extends BaseService<TermDomain> {
 		}
 		if (searchDomain.getTerm() != null && !searchDomain.getTerm().isEmpty()) {
 					value = searchDomain.getTerm().replace("'",  "''");
-					value = value.replace("(",  "((");
-					value = value.replace(")", "))");
+					value = value.replace("(",  "\\(");
+					value = value.replace(")", "\\)");
                 	where = where + "\nand t.term ilike '" + value + "'";
 
 		}
@@ -197,8 +197,8 @@ public class TermService extends BaseService<TermDomain> {
 		
 		// for cell types we want to query the term synonyms by the passed in term string
 		// we create a union of the term search and the synonym search, exact syn only
-		if (searchDomain.getVocabKey().equals("102") && searchDomain.getTerm() != null) {
-			synonymWhere = synonymWhere + "\nand s.synonym ilike '" + searchDomain.getTerm().replace("'",  "''") + "'"
+		if (searchDomain.getVocabKey().equals("102") && value != null) {
+			synonymWhere = synonymWhere + "\nand s.synonym ilike '" + value + "'"
 					+ "\nand s._mgitype_key = 13"
 					+ "\nand s._synonymtype_key = 1017"
 					+ "\nand t._term_key = s._object_key"

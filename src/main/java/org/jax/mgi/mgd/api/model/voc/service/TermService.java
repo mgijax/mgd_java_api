@@ -171,8 +171,10 @@ public class TermService extends BaseService<TermDomain> {
 
 		}
 		if (searchDomain.getTerm() != null && !searchDomain.getTerm().isEmpty()) {
-			value = searchDomain.getTerm().replace("'",  "''");
-                        where = where + "\nand t.term ilike '" + value + "'";
+					value = searchDomain.getTerm().replace("'",  "''");
+					value = value.replace("(",  "((");
+					value = value.replace(")", "))");
+                	where = where + "\nand t.term ilike '" + value + "'";
 
 		}
 		if (searchDomain.getAbbreviation() != null && !searchDomain.getAbbreviation().isEmpty()) {

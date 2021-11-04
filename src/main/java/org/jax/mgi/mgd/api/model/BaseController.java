@@ -185,7 +185,7 @@ public abstract class BaseController<T extends BaseDomain> {
 			Throwable t = getRootException(e);
 			//StackTraceElement[] ste = t.getStackTrace();
 			//String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";		
-			String message = "\n\nDELETE FAILED because it record is used elsewhere in the database.\n\n" + t.toString();
+			String message = "\n\nDELETE FAILED because this record is used elsewhere in the database.\n\n" + t.toString();
 			results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);
 		}
 	

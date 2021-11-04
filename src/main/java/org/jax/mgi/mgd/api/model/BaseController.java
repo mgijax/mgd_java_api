@@ -105,7 +105,7 @@ public abstract class BaseController<T extends BaseDomain> {
 			}
 		} catch (Exception e) {
 			Throwable t = getRootException(e);
-			String message = "\n\nCannot add this record.  More details are below.\n\n" + t.toString();
+			String message = "\n\nADD FAILED.\n\n" + t.toString();
 			results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);	
 		}
 	
@@ -148,7 +148,7 @@ public abstract class BaseController<T extends BaseDomain> {
 			Throwable t = getRootException(e);
 			//StackTraceElement[] ste = t.getStackTrace();
 			//String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";
-			String message = "\n\nCannot modify this record.  More details are below.\n\n" + t.toString();
+			String message = "\n\nMODIFY FAILED.\n\n" + t.toString();
 			results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);
 		}
 		
@@ -185,7 +185,7 @@ public abstract class BaseController<T extends BaseDomain> {
 			Throwable t = getRootException(e);
 			//StackTraceElement[] ste = t.getStackTrace();
 			//String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";		
-			String message = "\n\nCannot delete this record because it is used elsewhere in the database.  More details are below.\n\n" + t.toString();
+			String message = "\n\nDELETE FAILED because it record is used elsewhere in the database.\n\n" + t.toString();
 			results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);
 		}
 	

@@ -105,7 +105,7 @@ public abstract class BaseController<T extends BaseDomain> {
 			}
 		} catch (Exception e) {
 			Throwable t = getRootException(e);
-			String message = "\n\n" + t.toString();		
+			String message = "\n\nCannot add this record.  More details are below.\n\n" + t.toString();
 			results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);	
 		}
 	
@@ -148,7 +148,7 @@ public abstract class BaseController<T extends BaseDomain> {
 			Throwable t = getRootException(e);
 			//StackTraceElement[] ste = t.getStackTrace();
 			//String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";
-			String message = "\n\nCannot add this record.  More details are below.\n\n" + t.toString();
+			String message = "\n\nCannot modify this record.  More details are below.\n\n" + t.toString();
 			results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);
 		}
 		

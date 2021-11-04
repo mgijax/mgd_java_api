@@ -107,6 +107,11 @@ public abstract class BaseController<T extends BaseDomain> {
 			Throwable t = getRootException(e);
 			//StackTraceElement[] ste = t.getStackTrace();
 			String message = "\n\n" + t.toString();
+			
+			if (message.contains("violates foreign key constraint")) {
+				message = "\n\nCannot delete this record because it is used elsewhere in the database\n\n";
+			}
+			
 			results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);	
 		}
 	

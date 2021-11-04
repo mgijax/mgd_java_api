@@ -105,15 +105,7 @@ public abstract class BaseController<T extends BaseDomain> {
 			}
 		} catch (Exception e) {
 			Throwable t = getRootException(e);
-			//StackTraceElement[] ste = t.getStackTrace();
-			String message = "\n\n";
-			
-			if (t.toString().contains("violates foreign key constraint")) {
-				log.info("FOUND VIOLATION");
-				message = "Cannot delete this record because it is used elsewhere in the database.  See below for more details.\n\n";
-			}
-			
-			message += t.toString();
+			String message = "\n\n" + t.toString();		
 			results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);	
 		}
 	
@@ -154,8 +146,9 @@ public abstract class BaseController<T extends BaseDomain> {
 			}
 		} catch (Exception e) {
 			Throwable t = getRootException(e);
-			StackTraceElement[] ste = t.getStackTrace();
-			String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";
+			//StackTraceElement[] ste = t.getStackTrace();
+			//String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";
+			String message = "\n\n" + t.toString();		
 			results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);
 		}
 		
@@ -192,6 +185,9 @@ public abstract class BaseController<T extends BaseDomain> {
 			Throwable t = getRootException(e);
 			StackTraceElement[] ste = t.getStackTrace();
 			String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";		
+			if (t.toString().contains("violates foreign key constraint")) {
+				message = "Cannot delete this record because it is used elsewhere in the database.  See below for more details.\n\n";
+			}
 			results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);
 		}
 	

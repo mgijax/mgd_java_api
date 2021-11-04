@@ -106,7 +106,10 @@ public abstract class BaseController<T extends BaseDomain> {
 		} catch (Exception e) {
 			Throwable t = getRootException(e);
 			StackTraceElement[] ste = t.getStackTrace();
-			String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";
+			String message = "toString: " + t.toString() +
+					"\n\ngetFileName:" + ste[0].getFileName() + 
+					"\n\ngetLineNumber:" + ste[0].getLineNumber() + 
+					"\n\ngetMessage:" + t.getMessage();
 			results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);	
 		}
 	

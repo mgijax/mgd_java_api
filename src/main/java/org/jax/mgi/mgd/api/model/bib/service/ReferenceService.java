@@ -346,7 +346,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		Boolean from_note = false;
 		Boolean from_book = false;
 		Boolean from_accession = false;
-		Boolean from_editAccession = false;
 		
 		//Boolean from_allele = false;
 		//Boolean from_marker = false;
@@ -429,29 +428,14 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			where = where + "\nand n.note ilike '" + searchDomain.getReferenceNote() + "'";
 			from_note = true;
 		}
-		
-		// accession id
-//		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {
-//			String mgiid = searchDomain.getMgiAccessionIds().get(0).getAccID().toUpperCase();
-//			if (!mgiid.contains("MGI:")) {
-//				mgiid = "MGI:" + mgiid;
-//			}
-//			where = where + "\nand a.accID ilike '" + mgiid + "'";
-//			from_accession = true;
-//		}
-//		
-//		// editable accession ids
-//		if (searchDomain.getEditAccessionIds() != null) {
-//			if (searchDomain.getEditAccessionIds().get(0).getAccID() != null 
-//					&& !searchDomain.getEditAccessionIds().get(0).getAccID().isEmpty()) {
-//				where = where + "\nand acc1.accID ilike '" +  searchDomain.getEditAccessionIds().get(0).getAccID() + "'";
-//				from_editAccession = true;
-//			}
-//			if (searchDomain.getEditAccessionIds().get(0).getLogicaldbKey() != null && !searchDomain.getEditAccessionIds().get(0).getLogicaldbKey().isEmpty()) {
-//				where = where + "\nand acc1._logicaldb_key = " + searchDomain.getEditAccessionIds().get(0).getLogicaldbKey();
-//				from_editAccession = true;
-//			}
-//		}
+				
+		// pubmed accession ids
+		if (searchDomain.getPubmedid() != null) {
+			if (!searchDomain.getPubmedid().isEmpty()) {
+				where = where + "\nand a._logicaldb_key = 29 and a.accID ilike '" +  searchDomain.getPubmedid() + "'";
+				from_accession = true;
+			}
+		}
 										
 		if (from_book == true) {
 			from = from + ", bib_books k";
@@ -465,11 +449,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			from = from + ", bib_acc_view a";
 			where = where + "\nand c._refs_key = a._object_key" 
 					+ "\nand a._mgitype_key = 1";
-		}
-		if (from_editAccession == true) {
-			from = from + ", bib_acc_view acc1";
-			where = where + "\nand acc1._logicaldb_key in (29, 65, 185)" +
-					"\nand c._refs_key = acc1._object_key";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

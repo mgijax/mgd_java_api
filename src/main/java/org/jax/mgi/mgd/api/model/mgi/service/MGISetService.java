@@ -64,6 +64,7 @@ public class MGISetService extends BaseService<MGISetDomain> {
 		// process celltype clipboard set member
 		else if(domain.getCelltypeClipboardMembers() != null ) {
 			if (setMemberService.process(domain.getSetKey(),  domain.getCelltypeClipboardMembers(), user)) {
+				log.info("Called setMemberService");
 				modified = true;
 			}
 		}

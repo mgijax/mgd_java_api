@@ -18,6 +18,7 @@ import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
+import org.jax.mgi.mgd.api.model.dag.entities.DagEdge;
 import org.jax.mgi.mgd.api.model.dag.entities.DagNode;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -52,8 +53,7 @@ public class Term extends BaseEntity {
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key", insertable=false, updatable=false)
 	private User modifiedBy;
-
-
+	
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 13 and preferred = 1")
@@ -76,5 +76,9 @@ public class Term extends BaseEntity {
 	@Where(clause ="`_mgitype_key` = 13 and `_synonymtype_key` = 1017")
 	@OrderBy(clause ="_synonymtype_key, synonym")
 	private List<MGISynonym> celltypeSynonyms;
-	
+
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
+	@Where(clause="`_dag_key` = 52")
+	private List<DagNode> celltypeNodes;	
 }

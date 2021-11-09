@@ -19,6 +19,7 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	private MGISynonymTranslator synonymTranslator = new MGISynonymTranslator();
+	//private DagNodeTranslator nodeTranslator = new DagNodeTranslator();
 	
 	@Override
 	protected TermDomain entityToDomain(Term entity) {
@@ -47,6 +48,9 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		// GO-DAG-abbreviation
 		if (entity.getGoDagNodes() != null && !entity.getGoDagNodes().isEmpty()) {
 			domain.setGoDagAbbrev(entity.getGoDagNodes().get(0).getDag().getAbbreviation().trim());
+		}
+		else if (entity.getCelltypeNodes() != null && !entity.getCelltypeNodes().isEmpty()) {
+			// what do we do here?
 		}
        // one-to-many term synonyms
        if (entity.getGoRelSynonyms() != null && !entity.getGoRelSynonyms().isEmpty()) {

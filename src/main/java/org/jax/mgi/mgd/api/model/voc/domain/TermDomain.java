@@ -2,9 +2,14 @@ package org.jax.mgi.mgd.api.model.voc.domain;
 
 import java.util.List;
 
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -44,5 +49,8 @@ public class TermDomain extends BaseDomain {
 	
 	// for cell type term synonyms only
 	private List<MGISynonymDomain> celltypeSynonyms;
+	
+	// parents of a cell type term
+	private List<String> celltypeParents;
 	
 }

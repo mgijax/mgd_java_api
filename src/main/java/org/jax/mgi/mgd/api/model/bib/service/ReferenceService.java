@@ -345,7 +345,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		Boolean from_note = false;
 		Boolean from_book = false;
-		Boolean from_accession = false;
+		Boolean from_mgiid = false;
+		Boolean from_pubmedid = false;
+		Boolean from_doiid = false;
 		
 		//Boolean from_allele = false;
 		//Boolean from_marker = false;
@@ -428,15 +430,29 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			where = where + "\nand n.note ilike '" + searchDomain.getReferenceNote() + "'";
 			from_note = true;
 		}
-				
+
+		// mgiid accession ids
+		if (searchDomain.getMgiid() != null) {
+			if (!searchDomain.getMgiid().isEmpty()) {
+				where = where + "\nand mid.accID ilike '" +  searchDomain.getMgiid() + "'";
+				from_mgiid = true;
+			}
+		}		
+		// doiid accession ids
+		if (searchDomain.getDoiid() != null) {
+			if (!searchDomain.getDoiid().isEmpty()) {
+				where = where + "\nand did.accID ilike '" +  searchDomain.getDoiid() + "'";
+				from_doiid = true;
+			}
+		}		
 		// pubmed accession ids
 		if (searchDomain.getPubmedid() != null) {
 			if (!searchDomain.getPubmedid().isEmpty()) {
-				where = where + "\nand a._logicaldb_key = 29 and a.accID ilike '" +  searchDomain.getPubmedid() + "'";
-				from_accession = true;
+				where = where + "\nand pid.accID ilike '" +  searchDomain.getPubmedid() + "'";
+				from_pubmedid = true;
 			}
 		}
-										
+
 		if (from_book == true) {
 			from = from + ", bib_books k";
 			where = where + "\nand c._refs_key = k._refs_key";
@@ -445,10 +461,23 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			from = from + ", bib_notes n";
 			where = where + "\nand c._refs_key = n._refs_key";
 		}
-		if (from_accession == true) {
-			from = from + ", bib_acc_view a";
-			where = where + "\nand c._refs_key = a._object_key" 
-					+ "\nand a._mgitype_key = 1";
+		if (from_mgiid == true) {
+			from = from + ", bib_acc_view mid";
+			where = where + "\nand c._refs_key = mid._object_key" 
+					+ "\nand mid._mgitype_key = 1"
+					+ "\nand mid._logicaldb_key = 1";
+		}
+		if (from_doiid == true) {
+			from = from + ", bib_acc_view did";
+			where = where + "\nand c._refs_key = did._object_key" 
+					+ "\nand did._mgitype_key = 1" 
+					+ "\nand did._logicaldb_key = 65";
+		}		
+		if (from_pubmedid == true) {
+			from = from + ", bib_acc_view pid";
+			where = where + "\nand c._refs_key = pid._object_key" 
+					+ "\nand pid._mgitype_key = 1"
+					+ "\nand pid._logicaldb_key = 29";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

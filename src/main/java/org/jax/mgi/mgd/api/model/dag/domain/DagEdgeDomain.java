@@ -17,8 +17,8 @@ public class DagEdgeDomain extends BaseDomain {
 	@Id
 	private String edgeKey;
 	private String sequenceNum;
-	private Date creation_date;
-	private Date modification_date;
+	private String creation_date;
+	private String modification_date;
 
 	private DagDomain dagDomain;
 

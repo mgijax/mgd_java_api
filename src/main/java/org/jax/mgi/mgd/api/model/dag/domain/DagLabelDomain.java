@@ -11,13 +11,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@ApiModel(value = "DagNode Domain")
+@ApiModel(value = "DagLabel Domain")
 public class DagLabelDomain extends BaseDomain {
 
 	@Id
 	private String labelKey;
 	private String label;
 	
-	private Date creation_date;
-	private Date modification_date;
+	private String creation_date;
+	private String modification_date;
 }

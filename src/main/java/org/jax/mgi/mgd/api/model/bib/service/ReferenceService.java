@@ -337,7 +337,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
-		String select = "select distinct c._refs_key, c.jnumid, c.numericPart, c.short_citation";
+		String select = "select distinct c.*";
 		String from = "from bib_citation_cache c, bib_refs r";
 		String where = "where c._refs_key = r._refs_key";
 		String 	orderBy = "order by c.short_citation";			
@@ -491,7 +491,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setRefsKey(rs.getString("_refs_key"));
 				domain.setJnumid(rs.getString("jnumid"));
 				domain.setJnum(rs.getString("numericPart"));			
-				domain.setShort_citation(rs.getString("short_citation"));			
+				domain.setShort_citation(rs.getString("short_citation"));	
+				domain.setMgiid(rs.getString("mgiid"));							
+				domain.setDoiid(rs.getString("doiid"));				
+				domain.setPubmedid(rs.getString("pubmedid"));
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

@@ -105,8 +105,7 @@ public abstract class BaseController<T extends BaseDomain> {
 			}
 		} catch (Exception e) {
 			Throwable t = getRootException(e);
-			StackTraceElement[] ste = t.getStackTrace();
-			String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";
+			String message = "\n\nADD FAILED.\n\n" + t.toString();
 			results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);	
 		}
 	
@@ -147,8 +146,9 @@ public abstract class BaseController<T extends BaseDomain> {
 			}
 		} catch (Exception e) {
 			Throwable t = getRootException(e);
-			StackTraceElement[] ste = t.getStackTrace();
-			String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";
+			//StackTraceElement[] ste = t.getStackTrace();
+			//String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";
+			String message = "\n\nMODIFY FAILED.\n\n" + t.toString();
 			results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);
 		}
 		
@@ -183,8 +183,9 @@ public abstract class BaseController<T extends BaseDomain> {
 			}
 		} catch (Exception e) {
 			Throwable t = getRootException(e);
-			StackTraceElement[] ste = t.getStackTrace();
-			String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";		
+			//StackTraceElement[] ste = t.getStackTrace();
+			//String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";		
+			String message = "\n\nDELETE FAILED because this record is used elsewhere in the database.\n\n" + t.toString();
 			results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);
 		}
 	

@@ -337,7 +337,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
-		String select = "select distinct c._refs_key, c.jnumid, c.numericPart, c.short_citation";
+		String select = "select distinct c.*";
 		String from = "from bib_citation_cache c, bib_refs r";
 		String where = "where c._refs_key = r._refs_key";
 		String 	orderBy = "order by c.short_citation";			
@@ -345,8 +345,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		Boolean from_note = false;
 		Boolean from_book = false;
-		Boolean from_accession = false;
-		Boolean from_editAccession = false;
+		Boolean from_mgiid = false;
+		Boolean from_pubmedid = false;
+		Boolean from_doiid = false;
 		
 		//Boolean from_allele = false;
 		//Boolean from_marker = false;
@@ -429,30 +430,29 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			where = where + "\nand n.note ilike '" + searchDomain.getReferenceNote() + "'";
 			from_note = true;
 		}
-		
-		// accession id
-//		if (searchDomain.getMgiAccessionIds() != null && !searchDomain.getMgiAccessionIds().get(0).getAccID().isEmpty()) {
-//			String mgiid = searchDomain.getMgiAccessionIds().get(0).getAccID().toUpperCase();
-//			if (!mgiid.contains("MGI:")) {
-//				mgiid = "MGI:" + mgiid;
-//			}
-//			where = where + "\nand a.accID ilike '" + mgiid + "'";
-//			from_accession = true;
-//		}
-//		
-//		// editable accession ids
-//		if (searchDomain.getEditAccessionIds() != null) {
-//			if (searchDomain.getEditAccessionIds().get(0).getAccID() != null 
-//					&& !searchDomain.getEditAccessionIds().get(0).getAccID().isEmpty()) {
-//				where = where + "\nand acc1.accID ilike '" +  searchDomain.getEditAccessionIds().get(0).getAccID() + "'";
-//				from_editAccession = true;
-//			}
-//			if (searchDomain.getEditAccessionIds().get(0).getLogicaldbKey() != null && !searchDomain.getEditAccessionIds().get(0).getLogicaldbKey().isEmpty()) {
-//				where = where + "\nand acc1._logicaldb_key = " + searchDomain.getEditAccessionIds().get(0).getLogicaldbKey();
-//				from_editAccession = true;
-//			}
-//		}
-										
+
+		// mgiid accession ids
+		if (searchDomain.getMgiid() != null) {
+			if (!searchDomain.getMgiid().isEmpty()) {
+				where = where + "\nand mid.accID ilike '" +  searchDomain.getMgiid() + "'";
+				from_mgiid = true;
+			}
+		}		
+		// doiid accession ids
+		if (searchDomain.getDoiid() != null) {
+			if (!searchDomain.getDoiid().isEmpty()) {
+				where = where + "\nand did.accID ilike '" +  searchDomain.getDoiid() + "'";
+				from_doiid = true;
+			}
+		}		
+		// pubmed accession ids
+		if (searchDomain.getPubmedid() != null) {
+			if (!searchDomain.getPubmedid().isEmpty()) {
+				where = where + "\nand pid.accID ilike '" +  searchDomain.getPubmedid() + "'";
+				from_pubmedid = true;
+			}
+		}
+
 		if (from_book == true) {
 			from = from + ", bib_books k";
 			where = where + "\nand c._refs_key = k._refs_key";
@@ -461,15 +461,23 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			from = from + ", bib_notes n";
 			where = where + "\nand c._refs_key = n._refs_key";
 		}
-		if (from_accession == true) {
-			from = from + ", bib_acc_view a";
-			where = where + "\nand c._refs_key = a._object_key" 
-					+ "\nand a._mgitype_key = 1";
+		if (from_mgiid == true) {
+			from = from + ", bib_acc_view mid";
+			where = where + "\nand c._refs_key = mid._object_key" 
+					+ "\nand mid._mgitype_key = 1"
+					+ "\nand mid._logicaldb_key = 1";
 		}
-		if (from_editAccession == true) {
-			from = from + ", bib_acc_view acc1";
-			where = where + "\nand acc1._logicaldb_key in (29, 65, 185)" +
-					"\nand c._refs_key = acc1._object_key";
+		if (from_doiid == true) {
+			from = from + ", bib_acc_view did";
+			where = where + "\nand c._refs_key = did._object_key" 
+					+ "\nand did._mgitype_key = 1" 
+					+ "\nand did._logicaldb_key = 65";
+		}		
+		if (from_pubmedid == true) {
+			from = from + ", bib_acc_view pid";
+			where = where + "\nand c._refs_key = pid._object_key" 
+					+ "\nand pid._mgitype_key = 1"
+					+ "\nand pid._logicaldb_key = 29";
 		}
 		
 		// make this easy to copy/paste for troubleshooting
@@ -483,7 +491,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setRefsKey(rs.getString("_refs_key"));
 				domain.setJnumid(rs.getString("jnumid"));
 				domain.setJnum(rs.getString("numericPart"));			
-				domain.setShort_citation(rs.getString("short_citation"));			
+				domain.setShort_citation(rs.getString("short_citation"));
+				domain.setJournal(rs.getString("journal"));
+				domain.setMgiid(rs.getString("mgiid"));							
+				domain.setDoiid(rs.getString("doiid"));				
+				domain.setPubmedid(rs.getString("pubmedid"));
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

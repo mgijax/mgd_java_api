@@ -491,7 +491,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setRefsKey(rs.getString("_refs_key"));
 				domain.setJnumid(rs.getString("jnumid"));
 				domain.setJnum(rs.getString("numericPart"));			
-				domain.setShort_citation(rs.getString("short_citation"));	
+				domain.setShort_citation(rs.getString("short_citation"));
+				domain.setJournal(rs.getString("journal"));
 				domain.setMgiid(rs.getString("mgiid"));							
 				domain.setDoiid(rs.getString("doiid"));				
 				domain.setPubmedid(rs.getString("pubmedid"));

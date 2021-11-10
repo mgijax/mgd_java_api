@@ -12,11 +12,11 @@ public class DagTranslator extends BaseEntityDomainTranslator<Dag, DagDomain> {
 		
 		domain.setDagKey(String.valueOf(entity.get_dag_key()));
 		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
+		domain.setMgiTypeKey(String.valueOf(entity.getMgiType().get_mgitype_key()));
 		domain.setName(entity.getName());
 		domain.setAbbreviation(entity.getAbbreviation());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-		domain.setMgiType(entity.getMgiType());
 		
 		return domain;
 	}

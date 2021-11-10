@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.dag.entities;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -25,8 +27,8 @@ public class DagEdge extends BaseEntity {
 	private Integer _parent_key;
 	private Integer _child_key;
 	private Integer sequenceNum;	
-	private String creation_date;
-	private String modification_date;
+	private Date creation_date;
+	private Date modification_date;
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_label_key")

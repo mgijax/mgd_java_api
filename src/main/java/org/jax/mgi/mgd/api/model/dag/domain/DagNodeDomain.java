@@ -23,4 +23,3 @@ public class DagNodeDomain extends BaseDomain {
 	private DagLabelDomain label;
 	private List<DagEdgeDomain> dagEdges;
 }
-

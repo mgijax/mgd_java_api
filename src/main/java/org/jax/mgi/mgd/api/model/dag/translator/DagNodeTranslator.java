@@ -36,5 +36,4 @@ public class DagNodeTranslator extends BaseEntityDomainTranslator<DagNode, DagNo
 		
 		return domain;
 	}
-
 }

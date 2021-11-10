@@ -561,11 +561,11 @@ public class TermService extends BaseService<TermDomain> {
 	
 	@Transactional	
 	public List<TermDagParentDomain> getDagParents(Integer termKey) {
-		// return list of parent terms of a given child
+		// return list of parent terms of a term's children (e1._child_key)
 
 		List<TermDagParentDomain> results = new ArrayList<TermDagParentDomain>();
 		
-		String cmd = "select t1._term_key, t1.term , t2._term_key as parentKey, t2.term as parentTerm" + 
+		String cmd = "select t2._term_key as parentKey, t2.term as parentTerm" + 
 				"\nfrom voc_term t1, dag_node n1 , dag_edge e1, dag_node n2, voc_term t2" + 
 				"\nwhere n1._object_key = " + termKey +
 				"\nand n1._object_key = t1._term_key" + 
@@ -578,8 +578,6 @@ public class TermService extends BaseService<TermDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				TermDagParentDomain domain = new TermDagParentDomain();
-				domain.setTermKey(rs.getString("_term_key"));
-				domain.setTerm(rs.getString("term"));
 				domain.setParentKey(rs.getString("parentKey"));
 				domain.setParentTerm(rs.getString("parentTerm"));
 				results.add(domain);				

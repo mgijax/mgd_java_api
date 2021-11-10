@@ -12,8 +12,6 @@ public class TermDagParentDomain extends BaseDomain {
 	// see TermService/getDagParents
 	// represents the parent terms of a given child
 
-	private String termKey;
-	private String term;
 	private String parentKey;
 	private String parentTerm;
 	

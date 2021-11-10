@@ -45,6 +45,7 @@ public class TermDomain extends BaseDomain {
 	// for cell type term synonyms only
 	private List<MGISynonymDomain> celltypeSynonyms;
 	
+	// translated at end of GET
 	private List<TermDagParentDomain> dagParents;
 
 }

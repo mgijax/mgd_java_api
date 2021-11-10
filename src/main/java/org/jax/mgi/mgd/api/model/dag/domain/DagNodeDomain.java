@@ -21,5 +21,6 @@ public class DagNodeDomain extends BaseDomain {
 	private String modification_date;
 	private DagDomain dagDomain;
 	private DagLabelDomain label;
-	private List<DagEdgeDomain> dagEdges;
+	private List<DagEdgeDomain> parentEdges;
+	private List<DagEdgeDomain> childEdges;
 }

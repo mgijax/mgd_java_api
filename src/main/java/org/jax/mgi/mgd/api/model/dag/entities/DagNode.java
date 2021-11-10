@@ -38,7 +38,11 @@ public class DagNode extends BaseEntity {
 	private DagLabel label;
 
 	@OneToMany()
-	@JoinColumn(name="_node_key", insertable=false, updatable=false)
-	private List<DagEdge> dagEdges;	
+	@JoinColumn(name="_parent_key", referencedColumnName="_node_key", insertable=false, updatable=false)
+	private List<DagEdge> parentEdges;	
+	
+	@OneToMany()
+	@JoinColumn(name="_child_key", referencedColumnName="_node_key", insertable=false, updatable=false)
+	private List<DagEdge> childEdges;		
 }
 

@@ -33,13 +33,13 @@ public class DagNodeTranslator extends BaseEntityDomainTranslator<DagNode, DagNo
 			Iterable<DagEdgeDomain> p = pedgeTranslator.translateEntities(entity.getParentEdges());
 			domain.setParentEdges(IteratorUtils.toList(p.iterator()));
 		}
-//
-//		// child edges
-//		if (entity.getChildEdges() != null && !entity.getChildEdges().isEmpty()) {
-//			DagEdgeTranslator cedgeTranslator = new DagEdgeTranslator();
-//			Iterable<DagEdgeDomain> c = cedgeTranslator.translateEntities(entity.getChildEdges());
-//			domain.setChildEdges(IteratorUtils.toList(c.iterator()));
-//		}
+
+		// child edges
+		if (entity.getChildEdges() != null && !entity.getChildEdges().isEmpty()) {
+			DagEdgeTranslator cedgeTranslator = new DagEdgeTranslator();
+			Iterable<DagEdgeDomain> c = cedgeTranslator.translateEntities(entity.getChildEdges());
+			domain.setChildEdges(IteratorUtils.toList(c.iterator()));
+		}
 		
 		return domain;
 	}

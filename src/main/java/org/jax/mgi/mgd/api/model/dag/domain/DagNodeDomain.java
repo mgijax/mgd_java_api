@@ -2,8 +2,6 @@ package org.jax.mgi.mgd.api.model.dag.domain;
 
 import java.util.List;
 
-import javax.persistence.Id;
-
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
 import io.swagger.annotations.ApiModel;
@@ -14,7 +12,6 @@ import lombok.Setter;
 @ApiModel(value = "DagNode Domain")
 public class DagNodeDomain extends BaseDomain {
 	
-	@Id
 	private String nodeKey;
 	private String objectKey;	
 	private String creation_date;

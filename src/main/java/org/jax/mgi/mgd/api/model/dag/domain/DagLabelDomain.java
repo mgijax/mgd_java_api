@@ -1,9 +1,5 @@
 package org.jax.mgi.mgd.api.model.dag.domain;
 
-import java.util.Date;
-
-import javax.persistence.Id;
-
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
 import io.swagger.annotations.ApiModel;
@@ -14,10 +10,8 @@ import lombok.Setter;
 @ApiModel(value = "DagLabel Domain")
 public class DagLabelDomain extends BaseDomain {
 
-	@Id
 	private String labelKey;
 	private String label;
-	
 	private String creation_date;
 	private String modification_date;
 }

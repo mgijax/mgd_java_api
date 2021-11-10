@@ -23,6 +23,7 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 	@Override
 	protected TermDomain entityToDomain(Term entity) {
 		TermDomain domain = new TermDomain();
+		
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setTermKey(String.valueOf(entity.get_term_key()));
 		domain.setVocabKey(String.valueOf(entity.get_vocab_key()));
@@ -44,6 +45,7 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 				domain.setAccessionIds(IteratorUtils.toList(acc.iterator()));
 			}
 		}
+		
 		// GO-DAG-abbreviation
 		if (entity.getGoDagNodes() != null && !entity.getGoDagNodes().isEmpty()) {
 			domain.setGoDagAbbrev(entity.getGoDagNodes().get(0).getDag().getAbbreviation().trim());
@@ -60,7 +62,8 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
     	   		domain.setCelltypeSynonyms(IteratorUtils.toList(i.iterator()));
     	   		domain.getCelltypeSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
        }
-		return domain;
+       
+       return domain;
 	}
 
 }

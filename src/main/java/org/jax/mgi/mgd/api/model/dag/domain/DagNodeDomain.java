@@ -1,6 +1,6 @@
 package org.jax.mgi.mgd.api.model.dag.domain;
 
-import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Id;
 
@@ -17,13 +17,10 @@ public class DagNodeDomain extends BaseDomain {
 	@Id
 	private String nodeKey;
 	private String objectKey;	
-	
 	private String creation_date;
 	private String modification_date;
-	
 	private DagDomain dagDomain;
-
 	private DagLabelDomain label;
-	
+	private List<DagEdgeDomain> dagEdges;
 }
 

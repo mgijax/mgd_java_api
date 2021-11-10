@@ -1,11 +1,13 @@
 package org.jax.mgi.mgd.api.model.dag.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -34,6 +36,9 @@ public class DagNode extends BaseEntity {
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_label_key")
 	private DagLabel label;
-	
+
+	@OneToMany()
+	@JoinColumn(name="_node_key", insertable=false, updatable=false)
+	private List<DagEdge> dagEdges;	
 }
 

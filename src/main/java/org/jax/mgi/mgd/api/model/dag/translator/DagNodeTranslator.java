@@ -1,19 +1,10 @@
 package org.jax.mgi.mgd.api.model.dag.translator;
 
-import java.util.Comparator;
-
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.dag.domain.DagDomain;
-import org.jax.mgi.mgd.api.model.dag.domain.DagLabelDomain;
+import org.jax.mgi.mgd.api.model.dag.domain.DagEdgeDomain;
 import org.jax.mgi.mgd.api.model.dag.domain.DagNodeDomain;
-import org.jax.mgi.mgd.api.model.dag.entities.Dag;
-import org.jax.mgi.mgd.api.model.dag.entities.DagLabel;
 import org.jax.mgi.mgd.api.model.dag.entities.DagNode;
-import org.jax.mgi.mgd.api.model.gxd.domain.SpecimenDomain;
-import org.jax.mgi.mgd.api.model.gxd.translator.SpecimenTranslator;
-import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
-import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 public class DagNodeTranslator extends BaseEntityDomainTranslator<DagNode, DagNodeDomain> {
 	
@@ -35,7 +26,14 @@ public class DagNodeTranslator extends BaseEntityDomainTranslator<DagNode, DagNo
 			DagLabelTranslator labelTranslator = new DagLabelTranslator();
 			domain.setLabel(labelTranslator.translate(entity.getLabel()));
 		}
-			
+
+		// dag edges
+		if (entity.getDagEdges() != null && !entity.getDagEdges().isEmpty()) {
+			DagEdgeTranslator edgeTranslator = new DagEdgeTranslator();
+			Iterable<DagEdgeDomain> i = edgeTranslator.translateEntities(entity.getDagEdges());
+			domain.setDagEdges(IteratorUtils.toList(i.iterator()));
+		}
+		
 		return domain;
 	}
 

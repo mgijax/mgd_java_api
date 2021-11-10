@@ -247,7 +247,13 @@ public class TermService extends BaseService<TermDomain> {
 			while (rs.next()) {
 				TermDomain domain = new TermDomain();
 				domain = translator.translate(termDAO.get(rs.getInt("_term_key")));
-				termDAO.clear();		
+				termDAO.clear();
+				
+				// use SQL query to load list of DAG/Parents
+				List<TermDagParentDomain> dagParents = new ArrayList<TermDagParentDomain>();
+				dagParents = getDagParents(rs.getInt("_term_key"));
+				domain.setDagParents(dagParents);
+				
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

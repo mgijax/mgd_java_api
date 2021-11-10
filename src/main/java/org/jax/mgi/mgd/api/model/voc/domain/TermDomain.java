@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
-import org.jax.mgi.mgd.api.model.dag.domain.DagNodeDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 
 import io.swagger.annotations.ApiModel;
@@ -46,7 +45,7 @@ public class TermDomain extends BaseDomain {
 	// for cell type term synonyms only
 	private List<MGISynonymDomain> celltypeSynonyms;
 	
-	// parents of a cell type term
-	private DagNodeDomain celltypeNode;
-	
+	private List<TermDagParentDomain> dagParents;
+
 }
+

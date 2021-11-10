@@ -6,8 +6,6 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
-import org.jax.mgi.mgd.api.model.dag.domain.DagNodeDomain;
-import org.jax.mgi.mgd.api.model.dag.translator.DagNodeTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
@@ -21,7 +19,6 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	private MGISynonymTranslator synonymTranslator = new MGISynonymTranslator();
-	private DagNodeTranslator nodeTranslator = new DagNodeTranslator();
 	
 	@Override
 	protected TermDomain entityToDomain(Term entity) {
@@ -50,11 +47,6 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		// GO-DAG-abbreviation
 		if (entity.getGoDagNodes() != null && !entity.getGoDagNodes().isEmpty()) {
 			domain.setGoDagAbbrev(entity.getGoDagNodes().get(0).getDag().getAbbreviation().trim());
-		}
-		// CellType DAG Node
-		else if (entity.getCelltypeNodes() != null && !entity.getCelltypeNodes().isEmpty()) {
-            Iterable<DagNodeDomain> i = nodeTranslator.translateEntities(entity.getCelltypeNodes());
-			domain.setCelltypeNode(i.iterator().next());
 		}
 		
        // one-to-many term synonyms

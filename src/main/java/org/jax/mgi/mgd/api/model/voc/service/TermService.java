@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.TermDagParentDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.voc.translator.SlimTermTranslator;
@@ -113,6 +114,12 @@ public class TermService extends BaseService<TermDomain> {
 			domain = translator.translate(termDAO.get(key));
 		}
 		termDAO.clear();
+		
+		// use SQL query to load list of DAG/Parents
+		List<TermDagParentDomain> dagParents = new ArrayList<TermDagParentDomain>();
+		dagParents = getDagParents(key);
+		domain.setDagParents(dagParents);
+		
 		return domain;
 	}
 	
@@ -552,4 +559,37 @@ public class TermService extends BaseService<TermDomain> {
 		return results;
 	}
 	
+	@Transactional	
+	public List<TermDagParentDomain> getDagParents(Integer termKey) {
+		// return list of parent terms of a given child
+
+		List<TermDagParentDomain> results = new ArrayList<TermDagParentDomain>();
+		
+		String cmd = "select t1._term_key, t1.term , t2._term_key as parentKey, t2.term as parentTerm" + 
+				"\nfrom voc_term t1, dag_node n1 , dag_edge e1, dag_node n2, voc_term t2" + 
+				"\nwhere n1._object_key = " + termKey +
+				"\nand n1._object_key = t1._term_key" + 
+				"\nand n1._node_key = e1._child_key" + 
+				"\nand e1._parent_key = n2._node_key" + 
+				"\nand n2._object_key = t2._term_key";
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				TermDagParentDomain domain = new TermDagParentDomain();
+				domain.setTermKey(rs.getString("_term_key"));
+				domain.setTerm(rs.getString("term"));
+				domain.setParentKey(rs.getString("parentKey"));
+				domain.setParentTerm(rs.getString("parentTerm"));
+				results.add(domain);				
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
 }

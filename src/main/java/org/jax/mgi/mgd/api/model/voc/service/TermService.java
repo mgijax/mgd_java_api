@@ -588,7 +588,6 @@ public class TermService extends BaseService<TermDomain> {
 				domain.setParentTerm(rs.getString("parentTerm"));
 				results.add(domain);				
 			}
-			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();

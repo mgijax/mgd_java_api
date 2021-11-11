@@ -120,6 +120,10 @@ public class TermService extends BaseService<TermDomain> {
 		dagParents = getDagParents(key);
 		domain.setDagParents(dagParents);
 		
+		// use SQL query to load cell type annotation count
+		if(domain.getVocabKey().equals("102")) {
+			domain.setCellTypeAnnotCount(getCelltypeAnnotCount(key));
+		}
 		return domain;
 	}
 	
@@ -253,6 +257,11 @@ public class TermService extends BaseService<TermDomain> {
 				List<TermDagParentDomain> dagParents = new ArrayList<TermDagParentDomain>();
 				dagParents = getDagParents(rs.getInt("_term_key"));
 				domain.setDagParents(dagParents);
+				
+				// use SQL query to load cell type annotation count
+				if(searchDomain.getVocabKey().equals("102")) {
+					domain.setCellTypeAnnotCount(getCelltypeAnnotCount(rs.getInt("_term_key")));
+				}
 				
 				results.add(domain);
 			}
@@ -594,5 +603,28 @@ public class TermService extends BaseService<TermDomain> {
 		}
 		
 		return results;
-	}	
+	}
+	
+	@Transactional	
+	public String getCelltypeAnnotCount(Integer termKey) {
+		String cmd = "select count(*) as annotCt" + 
+				"\nfrom gxd_isresultcelltype" +
+				"\nwhere _celltype_term_key = " + termKey;
+		log.info(cmd);
+		
+		String count = "";
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				count = rs.getString("annotCt");			
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return count;
+		
+	}
+	
 }

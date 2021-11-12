@@ -601,11 +601,13 @@ public class TermService extends BaseService<TermDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				//TermDagParentDomain domain = new TermDagParentDomain();
-				TermDomain parentDomain = translator.translate(termDAO.get(Integer.valueOf(rs.getString("parentKey"))));
+				Integer key = Integer.valueOf(rs.getString("parentKey"));
+				TermDomain parentDomain = translator.translate(termDAO.get(key));
 				termDAO.clear();		
 				//TermDomain parentDomain = get(Integer.valueOf(rs.getString("parentKey")));
 				//domain.setParentKey(rs.getString("parentKey"));
 				//domain.setParentTerm(rs.getString("parentTerm"));
+				parentDomain.setCellTypeAnnotCount(getCelltypeAnnotCount(key));
 				results.add(parentDomain);				
 			}
 		}

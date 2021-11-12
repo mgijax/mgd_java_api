@@ -594,7 +594,8 @@ public class TermService extends BaseService<TermDomain> {
 				"\nand n1._object_key = t1._term_key" + 
 				"\nand n1._node_key = e1._child_key" + 
 				"\nand e1._parent_key = n2._node_key" + 
-				"\nand n2._object_key = t2._term_key";
+				"\nand n2._object_key = t2._term_key" +
+				"\norder by t2.term";
 		log.info(cmd);
 		
 		try {

@@ -113,17 +113,25 @@ public class TermService extends BaseService<TermDomain> {
 		if (termDAO.get(key) != null) {
 			domain = translator.translate(termDAO.get(key));
 		}
+		else {
+			return domain;
+		}
 		termDAO.clear();
 		
 		// use SQL query to load list of DAG/Parents
-		List<TermDagParentDomain> dagParents = new ArrayList<TermDagParentDomain>();
+		List<TermDomain> dagParents = new ArrayList<TermDomain>();
 		dagParents = getDagParents(key);
 		domain.setDagParents(dagParents);
+		log.info("get Domain term: " + domain.getTerm());
 		
 		// use SQL query to load cell type annotation count
-		if(domain.getVocabKey().equals("102")) {
-			domain.setCellTypeAnnotCount(getCelltypeAnnotCount(key));
-		}
+		if(domain != null ) {
+			if (domain.getVocabKey().equals("102")) {
+		
+				domain.setCellTypeAnnotCount(getCelltypeAnnotCount(key));
+		
+			}
+		}	
 		return domain;
 	}
 	
@@ -254,7 +262,7 @@ public class TermService extends BaseService<TermDomain> {
 				termDAO.clear();
 				
 				// use SQL query to load list of DAG/Parents
-				List<TermDagParentDomain> dagParents = new ArrayList<TermDagParentDomain>();
+				List<TermDomain> dagParents = new ArrayList<TermDomain>();
 				dagParents = getDagParents(rs.getInt("_term_key"));
 				domain.setDagParents(dagParents);
 				
@@ -575,10 +583,10 @@ public class TermService extends BaseService<TermDomain> {
 	}
 	
 	@Transactional	
-	public List<TermDagParentDomain> getDagParents(Integer termKey) {
+	public List<TermDomain> getDagParents(Integer termKey) {
 		// return list of parent terms of a term's children (e1._child_key)
 
-		List<TermDagParentDomain> results = new ArrayList<TermDagParentDomain>();
+		List<TermDomain> results = new ArrayList<TermDomain>();
 		
 		String cmd = "select t2._term_key as parentKey, t2.term as parentTerm" + 
 				"\nfrom voc_term t1, dag_node n1 , dag_edge e1, dag_node n2, voc_term t2" + 
@@ -592,10 +600,13 @@ public class TermService extends BaseService<TermDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				TermDagParentDomain domain = new TermDagParentDomain();
-				domain.setParentKey(rs.getString("parentKey"));
-				domain.setParentTerm(rs.getString("parentTerm"));
-				results.add(domain);				
+				//TermDagParentDomain domain = new TermDagParentDomain();
+				TermDomain parentDomain = translator.translate(termDAO.get(Integer.valueOf(rs.getString("parentKey"))));
+				termDAO.clear();		
+				//TermDomain parentDomain = get(Integer.valueOf(rs.getString("parentKey")));
+				//domain.setParentKey(rs.getString("parentKey"));
+				//domain.setParentTerm(rs.getString("parentTerm"));
+				results.add(parentDomain);				
 			}
 		}
 		catch (Exception e) {

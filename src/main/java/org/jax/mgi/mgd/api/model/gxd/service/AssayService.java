@@ -140,7 +140,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		}
 				
 		if (domain.getIsGel()) {
-			if (domain.getImagePane().getImagePaneKey() == null) {
+			if (domain.getImagePane().getImagePaneKey() == null || domain.getImagePane().getImagePaneKey().isEmpty() ) {
 				entity.setImagePane(null);		
 			}
 			else {

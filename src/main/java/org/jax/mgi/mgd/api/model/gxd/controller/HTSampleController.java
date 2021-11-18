@@ -7,6 +7,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
+import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTSampleDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.HTSampleService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -40,7 +41,7 @@ public class HTSampleController extends BaseController<HTSampleDomain> {
 	public SearchResults<HTSampleDomain> update(HTSampleDomain domain, User user) {
 		SearchResults<HTSampleDomain> results = new SearchResults<HTSampleDomain>();
 		results = htSampleService.update(domain, user);
-		results = htSampleService.getResults(Integer.valueOf(results.items.get(0).get_sample_key()));
+		results = htSampleService.getResults(results.items.get(0).get_sample_key());
 		return results;
 	}
 

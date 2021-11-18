@@ -40,20 +40,18 @@ public class HTSample extends BaseEntity {
 	private Integer _experiment_key;
  	private String name;
 	private String age;
+	private Integer ageMin;
+	private Integer ageMax;	
 	private Date creation_date;
 	private Date modification_date;
 
 	@OneToOne
-	@JoinColumn(name="_organism_key")
-	private Organism organism;
-
-	@OneToOne
-	@JoinColumn(name="_stage_key")
-	private TheilerStage theilerStage;
-
-	@OneToOne
 	@JoinColumn(name="_relevance_key", referencedColumnName="_term_key")
 	private Term relevance;
+	
+	@OneToOne
+	@JoinColumn(name="_organism_key")
+	private Organism organism;
 
 	@OneToOne
 	@JoinColumn(name="_sex_key", referencedColumnName="_term_key")
@@ -63,10 +61,15 @@ public class HTSample extends BaseEntity {
 	@OneToOne
 	@JoinColumn(name="_emapa_key", referencedColumnName="_term_key", insertable=false, updatable=false)
 	private Term emapaTerm;
+	
 	@OneToOne
 	@JoinColumn(name="_emapa_key", referencedColumnName="_term_key", insertable=false, updatable=false)
 	private TermEMAPA emapaObject;
-		
+
+	@OneToOne
+	@JoinColumn(name="_stage_key")
+	private TheilerStage theilerStage;
+	
 	@OneToOne
 	@JoinColumn(name="_genotype_key")
 	private Genotype genotype;

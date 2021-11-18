@@ -11,14 +11,15 @@ import lombok.Setter;
 @Getter @Setter
 public class HTSampleDomain extends BaseDomain {
 	
+	private String processStatus;
 	private Integer _sample_key;
 	private Integer _experiment_key;
 	private Integer _organism_key;
 	private Integer _relevance_key;
 	private Integer _sex_key;	
-	private Integer _stage_key;	
-	private Integer _emapa_key;
-	private Integer _genotype_key;
+	private Integer _stage_key;			// also in emapas_object; duplicated due to pwi
+	private Integer _emapa_key;			// also in emapas_object; duplicated due to pwi
+	private Integer _genotype_key;		// also in genotype_object; duplicated due to pwi
 	private String name;	
 	private String age;
 	private List<HTNoteDomain> notes; 	// old version : used by pwi

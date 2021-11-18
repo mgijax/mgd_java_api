@@ -88,7 +88,6 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 		
 		entity.set_experiment_key(domain.get_experiment_key());
 		entity.setName(domain.getName());
-		entity.setAge(domain.getAge());
 		entity.setOrganism(organismDAO.get(domain.get_organism_key()));
 		entity.setRelevance(termDAO.get(domain.get_relevance_key()));
 		entity.setSex(termDAO.get(domain.get_sex_key()));
@@ -96,6 +95,10 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 		entity.setEmapaTerm(termDAO.get(domain.get_emapa_key()));
 		entity.setEmapaObject(termEmapaDAO.get(domain.get_emapa_key()));
 		entity.setGenotype(genotypeDAO.get(domain.get_genotype_key()));
+		
+		entity.setAge(domain.getAge());
+		entity.setAgeMin(-1);
+		entity.setAgeMax(-1);	
 		
 		// copy getNotes().get(0).getText() into htNotes an duse this for processing changes
 		domain.getHtNotes().setNoteChunk(domain.getNotes().get(0).getText());

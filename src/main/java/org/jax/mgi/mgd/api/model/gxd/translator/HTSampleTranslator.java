@@ -1,20 +1,21 @@
 package org.jax.mgi.mgd.api.model.gxd.translator;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.gxd.domain.HTSampleDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.HTNoteDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTEmapaDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTEmapsDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTGenotypeDomain;
-import org.jax.mgi.mgd.api.model.gxd.entities.HTSample;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTNoteDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTSampleDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
+import org.jax.mgi.mgd.api.model.gxd.entities.HTSample;
+import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
+import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.voc.entities.TermEMAPA;
 import org.jax.mgi.mgd.api.model.voc.entities.TermEMAPS;
-
 import org.jboss.logging.Logger;
 
 public class HTSampleTranslator extends BaseEntityDomainTranslator<HTSample, HTSampleDomain> {
@@ -46,7 +47,7 @@ public class HTSampleTranslator extends BaseEntityDomainTranslator<HTSample, HTS
 			sampleDomain.set_sex_key(entity.getSex().get_term_key());
 		}
 
-		// notes
+		// notes using HTNoteDomain
 		if (entity.getNotes() != null && entity.getNotes().size() > 0) {
 
 			List<HTNoteDomain> noteList = new ArrayList<HTNoteDomain>();
@@ -58,6 +59,13 @@ public class HTSampleTranslator extends BaseEntityDomainTranslator<HTSample, HTS
 			sampleDomain.setNotes(noteList);
 		}
 
+		// notes using NoteDomain due to API processing
+		if (entity.getNotes() != null && !entity.getNotes().isEmpty()) {
+			NoteTranslator noteTranslator = new NoteTranslator();
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getNotes());
+			sampleDomain.setHtNotes(note.iterator().next());
+		}
+		
 		// Handling of genotype data
 		if (entity.getGenotype() != null) {
 			Genotype genotype = entity.getGenotype();

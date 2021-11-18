@@ -151,7 +151,8 @@ public class AssayService extends BaseService<AssayDomain> {
 		else {
 			entity.setImagePane(null);		
 		}
-			
+		
+		log.info("process reporter");	
 		if (domain.getReporterGeneKey() != null && !domain.getReporterGeneKey().isEmpty()) {
 			entity.setReporterGene(termDAO.get(Integer.valueOf(domain.getReporterGeneKey())));		
 		}

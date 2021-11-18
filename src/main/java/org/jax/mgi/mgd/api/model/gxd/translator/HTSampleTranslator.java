@@ -109,6 +109,15 @@ public class HTSampleTranslator extends BaseEntityDomainTranslator<HTSample, HTS
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getNotes());
 			sampleDomain.setHtNotes(note.iterator().next());
 		}
+		else {
+			NoteDomain newNoteDomain = new NoteDomain();
+			newNoteDomain.setProcessStatus(Constants.PROCESS_CREATE);
+			newNoteDomain.setNoteKey("");
+			newNoteDomain.setObjectKey(String.valueOf(entity.get_sample_key()));
+			newNoteDomain.setMgiTypeKey("43");
+			newNoteDomain.setNoteTypeKey("1048");	
+			newNoteDomain.setNoteChunk("");
+		}
 		
 		return sampleDomain;
 	}

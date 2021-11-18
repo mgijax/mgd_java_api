@@ -101,8 +101,16 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 		entity.setAgeMax(-1);	
 		
 		// copy getNotes().get(0).getText() into htNotes an duse this for processing changes
-		domain.getHtNotes().setNoteChunk(domain.getNotes().get(0).getText());
-		noteService.process(String.valueOf(entity.get_sample_key()), domain.getHtNotes(), "1048", user);
+		if (domain.getNotes() != null) {
+			if (domain.getNotes().get(0).getText().isEmpty()) {
+				domain.getHtNotes().setProcessStatus(Constants.PROCESS_DELETE);
+			}
+			else {
+				domain.getHtNotes().setProcessStatus(Constants.PROCESS_UPDATE);
+				domain.getHtNotes().setNoteChunk(domain.getNotes().get(0).getText());
+			}
+			noteService.process(String.valueOf(entity.get_sample_key()), domain.getHtNotes(), "43", user);			
+		}
 		
 		// only if modifications were actually made
 		if (modified == true) {

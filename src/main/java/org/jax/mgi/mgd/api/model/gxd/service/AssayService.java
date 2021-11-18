@@ -138,7 +138,8 @@ public class AssayService extends BaseService<AssayDomain> {
 			entity.setProbePrep(null);
 			modified = true;
 		}
-				
+			
+		log.info("process gel/image");
 		if (domain.getIsGel()) {
 			if (domain.getImagePane().getImagePaneKey() == null || domain.getImagePane().getImagePaneKey().isEmpty() ) {
 				entity.setImagePane(null);		

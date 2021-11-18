@@ -57,6 +57,7 @@ public class HTSampleTranslator extends BaseEntityDomainTranslator<HTSample, HTS
 			HTGenotypeDomain genotypeDomain = new HTGenotypeDomain();
 			sampleDomain.set_genotype_key(genotype.get_genotype_key());
 			genotypeDomain.set_genotype_key(genotype.get_genotype_key());
+			genotypeDomain.set_strain_key(genotype.getStrain().get_strain_key());
 			genotypeDomain.setGeneticbackground(genotype.getStrain().getStrain());
 			if (genotype.getMgiAccessionIds() != null && !genotype.getMgiAccessionIds().isEmpty()) {
 				genotypeDomain.setMgiid(genotype.getMgiAccessionIds().get(0).getAccID());

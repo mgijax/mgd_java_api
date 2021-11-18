@@ -389,7 +389,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		String where = "where a._assaytype_key = t._assaytype_key"
 				+ "\nand a._refs_key = r._refs_key"
 				+ "\nand a._marker_key = m._marker_key";
-		String orderBy = "order by r.jnumid, t.assayType, m.symbol";
+		String orderBy = "order by r.numericpart, t.assayType, m.symbol";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
 		BigDecimal bigDec;

@@ -139,7 +139,6 @@ public class AssayService extends BaseService<AssayDomain> {
 			modified = true;
 		}
 			
-		log.info("process gel/image");
 		if (domain.getIsGel()) {
 			if (domain.getImagePane().getImagePaneKey() == null || domain.getImagePane().getImagePaneKey().isEmpty() ) {
 				entity.setImagePane(null);		
@@ -152,7 +151,6 @@ public class AssayService extends BaseService<AssayDomain> {
 			entity.setImagePane(null);		
 		}
 		
-		log.info("process reporter");	
 		if (domain.getReporterGeneKey() != null && !domain.getReporterGeneKey().isEmpty()) {
 			entity.setReporterGene(termDAO.get(Integer.valueOf(domain.getReporterGeneKey())));		
 		}
@@ -249,9 +247,9 @@ public class AssayService extends BaseService<AssayDomain> {
 			entity.setProbePrep(null);
 			modified = true;
 		}
-				
+
 		if (domain.getIsGel()) {
-			if (domain.getImagePane().getImagePaneKey() == null) {
+			if (domain.getImagePane().getImagePaneKey() == null || domain.getImagePane().getImagePaneKey().isEmpty() ) {
 				entity.setImagePane(null);		
 			}
 			else {
@@ -260,7 +258,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		}
 		else {
 			entity.setImagePane(null);		
-		}
+		}		
 			
 		if (domain.getReporterGeneKey() != null && !domain.getReporterGeneKey().isEmpty()) {
 			entity.setReporterGene(termDAO.get(Integer.valueOf(domain.getReporterGeneKey())));		

@@ -93,6 +93,18 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 						
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
+
+		//	If new Gel Lane row and Control = No, then set these defaults:
+		//		Genotype = MGI:2166310
+		//		Westerns only set RNA = Not Applicable; All other blots set RNA = Not Specified
+		//		Age = embryonic day
+		//		Sex = Not Specified
+		//
+		//	If new Gel Lane row and Control = anything other than ‘No’, then set these defaults (after tabbing from Control):
+		//		Genotype = MGI:2166309
+		//		RNA=Not Applicable
+		//		Age=Not Applicable
+		//		Sex=Not Applicable
 		
 		for (int i = 0; i < domain.size(); i++) {
 
@@ -144,13 +156,13 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 
 					// western blot
 					if (assayTypeKey == 8) {
-						entity.setGelRNAType(gelRNATypeDAO.get(-2));
+						entity.setGelRNAType(gelRNATypeDAO.get(-1));
 					}
 					else if (domain.get(i).getGelRNATypeKey() != null && !domain.get(i).getGelRNATypeKey().isEmpty()) { 
 						entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
 					}
 					else {
-						entity.setGelRNAType(gelRNATypeDAO.get(-1));					
+						entity.setGelRNAType(gelRNATypeDAO.get(-2));					
 					}					
 				}
 				// else from domain
@@ -251,13 +263,13 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 
 					// western blot
 					if (assayTypeKey == 8) {
-						entity.setGelRNAType(gelRNATypeDAO.get(-2));
+						entity.setGelRNAType(gelRNATypeDAO.get(-1));
 					}
 					else if (domain.get(i).getGelRNATypeKey() != null && !domain.get(i).getGelRNATypeKey().isEmpty()) { 
 						entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
 					}
 					else {
-						entity.setGelRNAType(gelRNATypeDAO.get(-1));					
+						entity.setGelRNAType(gelRNATypeDAO.get(-2));					
 					}
 				}
 				// else from domain

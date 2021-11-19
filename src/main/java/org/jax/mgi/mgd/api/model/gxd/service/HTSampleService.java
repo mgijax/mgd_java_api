@@ -10,7 +10,6 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.HTSampleDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.TheilerStageDAO;
-import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTSampleDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTSample;
 import org.jax.mgi.mgd.api.model.gxd.translator.HTSampleTranslator;
@@ -66,18 +65,41 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 		log.info("processHTSample/update");
 		
 		entity.set_experiment_key(domain.get_experiment_key());
-		entity.setName(domain.getName());
 		entity.setOrganism(organismDAO.get(domain.get_organism_key()));
 		entity.setRelevance(termDAO.get(domain.get_relevance_key()));
 		entity.setSex(termDAO.get(domain.get_sex_key()));
-		entity.setTheilerStage(theilerStageDAO.get(domain.get_stage_key()));
-		entity.setEmapaTerm(termDAO.get(domain.get_emapa_key()));
-		entity.setEmapaObject(termEmapaDAO.get(domain.get_emapa_key()));
 		entity.setGenotype(genotypeDAO.get(domain.get_genotype_key()));
+
+		// not required/may be null
 		
-		entity.setAge(domain.getAge());
-		entity.setAgeMin(-1);
-		entity.setAgeMax(-1);	
+		if (domain.getName() == null || domain.getName().isEmpty()) {
+			entity.setName(null);
+		} else {
+			entity.setName(domain.getName());
+		}
+		
+		if (domain.get_stage_key() == null) {
+			entity.setTheilerStage(null);
+		} else {
+			entity.setTheilerStage(theilerStageDAO.get(domain.get_stage_key()));
+		}
+		
+		if (domain.get_emapa_key() == null) {
+			entity.setEmapaTerm(null);
+		} else {
+			entity.setEmapaTerm(termDAO.get(domain.get_emapa_key()));
+			entity.setEmapaObject(termEmapaDAO.get(domain.get_emapa_key()));			
+		}
+		
+		if (domain.getAge() == null || domain.getAge().isEmpty()) {
+			entity.setAge(null);
+			entity.setAgeMin(null);
+			entity.setAgeMax(null);				
+		} else {
+			entity.setAge(domain.getAge());
+			entity.setAgeMin(-1);
+			entity.setAgeMax(-1);	
+		}
 		
 		// copy getNotes().get(0).getText() into htNotes an duse this for processing changes
 		if (domain.getNotes() != null) {

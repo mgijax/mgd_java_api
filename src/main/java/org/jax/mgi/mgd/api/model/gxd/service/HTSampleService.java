@@ -93,14 +93,15 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 		if (domain.getEmaps_object().get_stage_key() == null) {
 			entity.setTheilerStage(null);
 		} else {
+			log.info("stage:" + domain.getEmaps_object().get_stage_key());
 			entity.setTheilerStage(theilerStageDAO.get(domain.getEmaps_object().get_stage_key()));
 		}
 		
 		if (domain.getEmaps_object().get_emapa_term_key() == null) {
 			entity.setEmapaTerm(null);
 		} else {
+			log.info("emapa-term:" + domain.getEmaps_object().get_emapa_term_key());
 			entity.setEmapaTerm(termDAO.get(domain.getEmaps_object().get_emapa_term_key()));
-			entity.setEmapaObject(termEmapaDAO.get(domain.getEmaps_object().get_emapa_term_key()));			
 		}
 		
 		// copy getNotes().get(0).getText() -> getHtNotes to use noteService correctly
@@ -124,7 +125,6 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				newNoteDomain.setNoteChunk(domain.getNotes().get(0).getText());
 				domain.setHtNotes(newNoteDomain);
 			}
-			log.info("noteService: " + domain.getHtNotes().getProcessStatus());			
 			noteService.process(String.valueOf(entity.get_sample_key()), domain.getHtNotes(), "43", user);			
 		}
 		

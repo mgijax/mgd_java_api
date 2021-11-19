@@ -46,33 +46,13 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 	private HTSampleTranslator translator = new HTSampleTranslator();
 
 	@Transactional
-	public HTSampleDomain get(Integer key) {
-		log.info("HT Sample get");
-		// get the DAO/entity and translate -> domain
-		HTSampleDomain domain = new HTSampleDomain();
-		HTSample entity = htSampleDAO.get(key);
-		if ( entity != null) {
-			domain = translator.translate(entity);
-		}
-		return domain;
-	}
-
-    @Transactional
-    public SearchResults<HTSampleDomain> getResults(Integer key) {
-		log.info("HT Sample getResults");
-        SearchResults<HTSampleDomain> results = new SearchResults<HTSampleDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
-        return results;
-    } 
-
-	@Transactional
-	public SearchResults<HTSampleDomain> delete(Integer key, User user) {
-		log.info("HT Sample delete");
+	public SearchResults<HTSampleDomain> create(HTSampleDomain domain, User user) {
+		log.info("processHTSample/create");
 		SearchResults<HTSampleDomain> results = new SearchResults<HTSampleDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
-	}  
-
+	}
+		
 	@Transactional
 	public SearchResults<HTSampleDomain> update(HTSampleDomain domain, User user) {	
 		
@@ -129,11 +109,31 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 	}
 
 	@Transactional
-	public SearchResults<HTSampleDomain> create(HTSampleDomain domain, User user) {
-		log.info("HT Sample create");
+	public HTSampleDomain get(Integer key) {
+		log.info("processHTSample/get");
+		// get the DAO/entity and translate -> domain
+		HTSampleDomain domain = new HTSampleDomain();
+		HTSample entity = htSampleDAO.get(key);
+		if ( entity != null) {
+			domain = translator.translate(entity);
+		}
+		return domain;
+	}
+
+    @Transactional
+    public SearchResults<HTSampleDomain> getResults(Integer key) {
+		log.info("processHTSample/getResults");
+        SearchResults<HTSampleDomain> results = new SearchResults<HTSampleDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+        return results;
+    } 
+
+	@Transactional
+	public SearchResults<HTSampleDomain> delete(Integer key, User user) {
+		log.info("processHTSample/delete");
 		SearchResults<HTSampleDomain> results = new SearchResults<HTSampleDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
-	}
-	
+	}  
+
 }

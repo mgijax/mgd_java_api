@@ -105,11 +105,14 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 		if (domain.getNotes() != null) {
 			if (domain.getNotes().get(0).getText() == null || domain.getNotes().get(0).getText().isEmpty()) {
 				domain.getHtNotes().setProcessStatus(Constants.PROCESS_DELETE);
+				domain.getHtNotes().setNoteChunk(null);				
 			}
 			else {
 				domain.getHtNotes().setProcessStatus(Constants.PROCESS_UPDATE);
 				domain.getHtNotes().setNoteChunk(domain.getNotes().get(0).getText());
 			}
+			log.info("noteService: " + domain.getHtNotes().getProcessStatus());
+			log.info("noteService: " + domain.getHtNotes().getProcessStatus());			
 			noteService.process(String.valueOf(entity.get_sample_key()), domain.getHtNotes(), "43", user);			
 		}
 		

@@ -103,7 +103,7 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 		
 		// copy getNotes().get(0).getText() into htNotes an duse this for processing changes
 		if (domain.getNotes() != null) {
-			if (domain.getNotes().get(0).getText().isEmpty()) {
+			if (domain.getNotes().get(0).getText() == null || domain.getNotes().get(0).getText().isEmpty()) {
 				domain.getHtNotes().setProcessStatus(Constants.PROCESS_DELETE);
 			}
 			else {

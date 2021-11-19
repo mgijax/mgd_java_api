@@ -30,17 +30,14 @@ public class HTSampleTranslator extends BaseEntityDomainTranslator<HTSample, HTS
 
 		// Sample Info
 		sampleDomain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
-		sampleDomain.setName(entity.getName());
 		sampleDomain.set_sample_key(entity.get_sample_key());
 		sampleDomain.set_experiment_key(entity.get_experiment_key());
+		sampleDomain.setName(entity.getName());	
 		sampleDomain.setAge(entity.getAge());
 
+		// null not allowed
 		if (entity.getOrganism() != null) {
 			sampleDomain.set_organism_key(entity.getOrganism().get_organism_key());
-		}
-
-		if (entity.getTheilerStage() != null) {
-			sampleDomain.set_stage_key(entity.getTheilerStage().get_stage_key());
 		}
 		
 		if (entity.getRelevance() != null) {
@@ -51,7 +48,12 @@ public class HTSampleTranslator extends BaseEntityDomainTranslator<HTSample, HTS
 			sampleDomain.set_sex_key(entity.getSex().get_term_key());
 		}
 		
-		// Handling of genotype data
+		// null allowed
+		if (entity.getTheilerStage() != null) {
+			sampleDomain.set_stage_key(entity.getTheilerStage().get_stage_key());
+		}
+		
+		// Handling of genotype data/should not be null
 		if (entity.getGenotype() != null) {
 			Genotype genotype = entity.getGenotype();
 			HTGenotypeDomain genotypeDomain = new HTGenotypeDomain();
@@ -65,7 +67,7 @@ public class HTSampleTranslator extends BaseEntityDomainTranslator<HTSample, HTS
 			sampleDomain.setGenotype_object(genotypeDomain);
 		}
 
-		// Handling of EMAPS / EMAPS terms
+		// Handling of EMAPS / EMAPS terms/may be null
 		if (entity.getEmapaObject() != null) {
 
 			HTEmapaDomain hTEmapaDomain = new HTEmapaDomain();

@@ -119,6 +119,7 @@ public class HTSampleTranslator extends BaseEntityDomainTranslator<HTSample, HTS
 			newNoteDomain.setMgiTypeKey("43");
 			newNoteDomain.setNoteTypeKey("1048");	
 			newNoteDomain.setNoteChunk("");
+			sampleDomain.setHtNotes(newNoteDomain);
 		}
 		
 		return sampleDomain;

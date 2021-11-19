@@ -14,6 +14,7 @@ import org.jax.mgi.mgd.api.model.gxd.domain.HTSampleDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTSample;
 import org.jax.mgi.mgd.api.model.gxd.translator.HTSampleTranslator;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
+import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
@@ -107,11 +108,20 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				domain.getHtNotes().setProcessStatus(Constants.PROCESS_DELETE);
 				domain.getHtNotes().setNoteChunk(null);				
 			}
-			else {
+			else if (domain.getHtNotes() != null) {
 				domain.getHtNotes().setProcessStatus(Constants.PROCESS_UPDATE);
 				domain.getHtNotes().setNoteChunk(domain.getNotes().get(0).getText());
 			}
-			log.info("noteService: " + domain.getHtNotes().getProcessStatus());
+			else {
+				NoteDomain newNoteDomain = new NoteDomain();
+				newNoteDomain.setProcessStatus(Constants.PROCESS_CREATE);
+				newNoteDomain.setNoteKey("");
+				newNoteDomain.setObjectKey(String.valueOf(entity.get_sample_key()));
+				newNoteDomain.setMgiTypeKey("43");
+				newNoteDomain.setNoteTypeKey("1048");	
+				newNoteDomain.setNoteChunk(domain.getNotes().get(0).getText());
+				domain.setHtNotes(newNoteDomain);
+			}
 			log.info("noteService: " + domain.getHtNotes().getProcessStatus());			
 			noteService.process(String.valueOf(entity.get_sample_key()), domain.getHtNotes(), "43", user);			
 		}

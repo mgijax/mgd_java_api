@@ -59,7 +59,7 @@ public class HTSample extends BaseEntity {
  	
 	// _emapa_key is mapped to two objects, and must be insert/update false
 	@OneToOne
-	@JoinColumn(name="_emapa_key", referencedColumnName="_term_key", insertable=false, updatable=false)
+	@JoinColumn(name="_emapa_key", referencedColumnName="_term_key")
 	private Term emapaTerm;
 	
 	@OneToOne

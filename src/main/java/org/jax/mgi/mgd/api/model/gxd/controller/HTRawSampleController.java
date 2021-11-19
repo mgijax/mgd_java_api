@@ -29,11 +29,6 @@ public class HTRawSampleController extends BaseController<HTRawSampleDomain> {
 
 	@Inject
 	private HTRawSampleService htSampleService;
- 
-	@Override
-	public HTRawSampleDomain get(Integer key) {
-		return htSampleService.get(key);
-	}
 
 	@Override
 	public SearchResults<HTRawSampleDomain> create(HTRawSampleDomain domain, User user) {
@@ -56,6 +51,11 @@ public class HTRawSampleController extends BaseController<HTRawSampleDomain> {
 		return htSampleService.delete(key, user);
 	}
 
+	@Override
+	public HTRawSampleDomain get(Integer key) {
+		return htSampleService.get(key);
+	}
+	
 	@POST
 	@ApiOperation(value = "Search returns list of raw sample domains")
 	@Path("/search")

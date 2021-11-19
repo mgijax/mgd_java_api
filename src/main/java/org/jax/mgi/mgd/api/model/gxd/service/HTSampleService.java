@@ -26,7 +26,6 @@ import org.jboss.logging.Logger;
 public class HTSampleService extends BaseService<HTSampleDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
-	//private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Inject
 	private HTSampleDAO htSampleDAO;
@@ -45,10 +44,87 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 
 	@Transactional
 	public SearchResults<HTSampleDomain> create(HTSampleDomain domain, User user) {
-		log.info("processHTSample/create");
+		
 		SearchResults<HTSampleDomain> results = new SearchResults<HTSampleDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
-		return results;
+		HTSample entity = new HTSample();
+		
+		log.info("processHTSample/create");
+		
+		entity.set_experiment_key(domain.get_experiment_key());
+		entity.setOrganism(organismDAO.get(domain.get_organism_key()));
+		entity.setRelevance(termDAO.get(domain.get_relevance_key()));
+		entity.setSex(termDAO.get(domain.get_sex_key()));
+		entity.setGenotype(genotypeDAO.get(domain.getGenotype_object().get_genotype_key()));
+
+		// not required/may be null
+		
+		if (domain.getName() == null || domain.getName().isEmpty()) {
+			entity.setName(null);
+		} else {
+			entity.setName(domain.getName());
+		}
+				
+		if (domain.getAge() == null || domain.getAge().isEmpty()) {
+			entity.setAge(null);
+			entity.setAgeMin(null);
+			entity.setAgeMax(null);				
+		} else {
+			entity.setAge(domain.getAge());
+			entity.setAgeMin(-1);
+			entity.setAgeMax(-1);	
+		}
+		
+		// use HTEmapsDomain
+		if (domain.getEmaps_object().get_stage_key() == null) {
+			entity.setTheilerStage(null);
+		} else {
+			log.info("stage:" + domain.getEmaps_object().get_stage_key());
+			entity.setTheilerStage(theilerStageDAO.get(domain.getEmaps_object().get_stage_key()));
+		}
+		
+		if (domain.getEmaps_object().get_emapa_term_key() == null) {
+			entity.setEmapaTerm(null);
+		} else {
+			log.info("emapa-term:" + domain.getEmaps_object().get_emapa_term_key());
+			entity.setEmapaTerm(termDAO.get(domain.getEmaps_object().get_emapa_term_key()));
+		}
+		
+		// copy getNotes().get(0).getText() -> getHtNotes to use noteService correctly
+		// at some point, convert pwi to use getHtNotes format
+		if (domain.getNotes() != null) {
+			if (domain.getNotes().get(0).getText() == null || domain.getNotes().get(0).getText().isEmpty()) {
+				domain.getHtNotes().setProcessStatus(Constants.PROCESS_DELETE);
+				domain.getHtNotes().setNoteChunk(null);				
+			}
+			else if (domain.getHtNotes() != null) {
+				domain.getHtNotes().setProcessStatus(Constants.PROCESS_UPDATE);
+				domain.getHtNotes().setNoteChunk(domain.getNotes().get(0).getText());
+			}
+			else {
+				NoteDomain newNoteDomain = new NoteDomain();
+				newNoteDomain.setProcessStatus(Constants.PROCESS_CREATE);
+				newNoteDomain.setNoteKey("");
+				newNoteDomain.setObjectKey(String.valueOf(entity.get_sample_key()));
+				newNoteDomain.setMgiTypeKey("43");
+				newNoteDomain.setNoteTypeKey("1048");	
+				newNoteDomain.setNoteChunk(domain.getNotes().get(0).getText());
+				domain.setHtNotes(newNoteDomain);
+			}
+			noteService.process(String.valueOf(entity.get_sample_key()), domain.getHtNotes(), "43", user);			
+		}
+		
+		entity.setCreatedBy(user);
+		entity.setCreation_date(new Date());
+		entity.setModifiedBy(user);
+		entity.setModification_date(new Date());
+		
+		htSampleDAO.persist(entity);
+		
+		// return entity translated to domain
+		log.info("processHTSample/create/returning results");
+		results.setItem(translator.translate(entity));
+		log.info("processHTSample/create/returned results succsssful");
+		return results;	
 	}
 		
 	@Transactional

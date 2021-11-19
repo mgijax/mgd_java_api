@@ -35,6 +35,30 @@ public class HTRawSampleService extends BaseService<HTRawSampleDomain> {
 	private HTRawSampleTranslator translator = new HTRawSampleTranslator();
 
 	@Transactional
+	public SearchResults<HTRawSampleDomain> create(HTRawSampleDomain domain, User user) {
+		log.info("HT Raw Sample create");
+		SearchResults<HTRawSampleDomain> results = new SearchResults<HTRawSampleDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
+	}
+	
+	@Transactional
+	public SearchResults<HTRawSampleDomain> update(HTRawSampleDomain domain, User user) {				
+		log.info("HT Raw Sample update");
+		SearchResults<HTRawSampleDomain> results = new SearchResults<HTRawSampleDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;		
+	}
+	
+	@Transactional
+	public SearchResults<HTRawSampleDomain> delete(Integer key, User user) {
+		log.info("HT Raw Sample delete");
+		SearchResults<HTRawSampleDomain> results = new SearchResults<HTRawSampleDomain>();
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		return results;
+	}  
+
+	@Transactional
 	public HTRawSampleDomain get(Integer key) {
 		log.info("HT Raw Sample get");
 		// get the DAO/entity and translate -> domain
@@ -53,30 +77,6 @@ public class HTRawSampleService extends BaseService<HTRawSampleDomain> {
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
         return results;
     } 
-
-	@Transactional
-	public SearchResults<HTRawSampleDomain> delete(Integer key, User user) {
-		log.info("HT Raw Sample delete");
-		SearchResults<HTRawSampleDomain> results = new SearchResults<HTRawSampleDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
-		return results;
-	}  
-
-	@Transactional
-	public SearchResults<HTRawSampleDomain> update(HTRawSampleDomain domain, User user) {				
-		log.info("HT Raw Sample update");
-		SearchResults<HTRawSampleDomain> results = new SearchResults<HTRawSampleDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
-		return results;		
-	}
-
-	@Transactional
-	public SearchResults<HTRawSampleDomain> create(HTRawSampleDomain domain, User user) {
-		log.info("HT Raw Sample create");
-		SearchResults<HTRawSampleDomain> results = new SearchResults<HTRawSampleDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
-		return results;
-	}
 
 	@Transactional
 	public List<SlimHTRawSampleDomain> search(HTDomain searchDomain) {

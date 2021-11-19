@@ -18,7 +18,6 @@ import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
-import org.jax.mgi.mgd.api.model.voc.dao.TermEMAPADAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -35,8 +34,6 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 	private OrganismDAO organismDAO;
 	@Inject
 	private TermDAO termDAO;
-	@Inject
-	private TermEMAPADAO termEmapaDAO;	
 	@Inject
 	private TheilerStageDAO theilerStageDAO;
 	@Inject
@@ -59,9 +56,7 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 		
 		SearchResults<HTSampleDomain> results = new SearchResults<HTSampleDomain>();
 		HTSample entity = htSampleDAO.get(Integer.valueOf(domain.get_sample_key()));
-		Boolean modified = true;
-//		String cmd;
-//		Query query;		
+		Boolean modified = true;		
 		
 		log.info("processHTSample/update");
 		

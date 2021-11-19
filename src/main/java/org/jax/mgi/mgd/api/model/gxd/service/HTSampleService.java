@@ -19,7 +19,6 @@ import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermEMAPADAO;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -27,7 +26,7 @@ import org.jboss.logging.Logger;
 public class HTSampleService extends BaseService<HTSampleDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
-	private SQLExecutor sqlExecutor = new SQLExecutor();
+	//private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Inject
 	private HTSampleDAO htSampleDAO;
@@ -75,9 +74,8 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 	}  
 
 	@Transactional
-	public SearchResults<HTSampleDomain> update(HTSampleDomain domain, User user) {				
-		log.info("HT Sample update");
-
+	public SearchResults<HTSampleDomain> update(HTSampleDomain domain, User user) {	
+		
 		SearchResults<HTSampleDomain> results = new SearchResults<HTSampleDomain>();
 		HTSample entity = htSampleDAO.get(Integer.valueOf(domain.get_sample_key()));
 		Boolean modified = true;

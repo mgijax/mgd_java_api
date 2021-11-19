@@ -10,6 +10,7 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.HTSampleDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.TheilerStageDAO;
+import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTSampleDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTSample;
 import org.jax.mgi.mgd.api.model.gxd.translator.HTSampleTranslator;
@@ -122,9 +123,8 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 
     @Transactional
     public SearchResults<HTSampleDomain> getResults(Integer key) {
-		log.info("processHTSample/getResults");
         SearchResults<HTSampleDomain> results = new SearchResults<HTSampleDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+        results.setItem(translator.translate(htSampleDAO.get(key)));
         return results;
     } 
 

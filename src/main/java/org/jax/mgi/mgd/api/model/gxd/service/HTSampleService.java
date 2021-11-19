@@ -78,20 +78,7 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 		} else {
 			entity.setName(domain.getName());
 		}
-		
-		if (domain.get_stage_key() == null) {
-			entity.setTheilerStage(null);
-		} else {
-			entity.setTheilerStage(theilerStageDAO.get(domain.getEmaps_object().get_stage_key()));
-		}
-		
-		if (domain.get_emapa_key() == null) {
-			entity.setEmapaTerm(null);
-		} else {
-			entity.setEmapaTerm(termDAO.get(domain.getEmaps_object().get_emapa_term_key()));
-			entity.setEmapaObject(termEmapaDAO.get(domain.getEmaps_object().get_emapa_term_key()));			
-		}
-		
+				
 		if (domain.getAge() == null || domain.getAge().isEmpty()) {
 			entity.setAge(null);
 			entity.setAgeMin(null);
@@ -102,7 +89,22 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 			entity.setAgeMax(-1);	
 		}
 		
-		// copy getNotes().get(0).getText() into htNotes an duse this for processing changes
+		// use HTEmapsDomain
+		if (domain.getEmaps_object().get_stage_key() == null) {
+			entity.setTheilerStage(null);
+		} else {
+			entity.setTheilerStage(theilerStageDAO.get(domain.getEmaps_object().get_stage_key()));
+		}
+		
+		if (domain.getEmaps_object().get_emapa_term_key() == null) {
+			entity.setEmapaTerm(null);
+		} else {
+			entity.setEmapaTerm(termDAO.get(domain.getEmaps_object().get_emapa_term_key()));
+			entity.setEmapaObject(termEmapaDAO.get(domain.getEmaps_object().get_emapa_term_key()));			
+		}
+		
+		// copy getNotes().get(0).getText() -> getHtNotes to use noteService correctly
+		// at some point, convert pwi to use getHtNotes format
 		if (domain.getNotes() != null) {
 			if (domain.getNotes().get(0).getText() == null || domain.getNotes().get(0).getText().isEmpty()) {
 				domain.getHtNotes().setProcessStatus(Constants.PROCESS_DELETE);

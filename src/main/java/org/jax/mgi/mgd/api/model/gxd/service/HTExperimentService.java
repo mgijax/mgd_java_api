@@ -9,20 +9,18 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.gxd.domain.SlimHTDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.HTDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.HTUserDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.HTExperimentVariableDomain;
-import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.gxd.dao.HTExperimentDAO;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTExperimentVariableDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTUserDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimHTDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTExperiment;
 import org.jax.mgi.mgd.api.model.gxd.translator.HTExperimentTranslator;
-
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
-import org.jax.mgi.mgd.api.util.Constants;
-
 import org.jboss.logging.Logger;
 
 @RequestScoped
@@ -34,7 +32,9 @@ public class HTExperimentService extends BaseService<HTDomain> {
 
 	@Inject
 	private HTExperimentDAO htExperimentDAO;
-
+	@Inject
+	private HTSampleService htSampleService;
+	
 	@Transactional
 	public SearchResults<HTDomain> create(HTDomain domain, User user) {
 		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
@@ -44,8 +44,25 @@ public class HTExperimentService extends BaseService<HTDomain> {
 
 	@Transactional
 	public SearchResults<HTDomain> update(HTDomain domain, User user) {
+		// the set of fields in "update" is similar to set of fields in "create"
+		// creation user/date are only set in "create"
+				
 		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+		HTExperiment entity = htExperimentDAO.get(domain.get_experiment_key());
+		
+		log.info("processHTExperiment/update");
+		
+		// no changes to experiment
+				
+		// process ht sample
+		if (domain.getSamples() != null) {
+			htSampleService.process(domain.get_evaluationstate_key(), domain.getSamples(), user);
+		}
+		
+		// return entity translated to domain
+		log.info("processHTExperiment/update/returning results");
+		results.setItem(translator.translate(entity));
+		log.info("processHTExperiment/update/returned results succsssful");
 		return results;		
 	}
 

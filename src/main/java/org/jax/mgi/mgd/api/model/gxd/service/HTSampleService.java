@@ -130,14 +130,12 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				if (domain.get(i).getEmaps_object().get_stage_key() == null) {
 					entity.setTheilerStage(null);
 				} else {
-					log.info("stage:" + domain.get(i).getEmaps_object().get_stage_key());
 					entity.setTheilerStage(theilerStageDAO.get(domain.get(i).getEmaps_object().get_stage_key()));
 				}
 				
 				if (domain.get(i).getEmaps_object().get_emapa_term_key() == null) {
 					entity.setEmapaTerm(null);
 				} else {
-					log.info("emapa-term:" + domain.get(i).getEmaps_object().get_emapa_term_key());
 					entity.setEmapaTerm(termDAO.get(domain.get(i).getEmaps_object().get_emapa_term_key()));
 				}
 				
@@ -205,14 +203,12 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				if (domain.get(i).getEmaps_object().get_stage_key() == null) {
 					entity.setTheilerStage(null);
 				} else {
-					log.info("stage:" + domain.get(i).getEmaps_object().get_stage_key());
 					entity.setTheilerStage(theilerStageDAO.get(domain.get(i).getEmaps_object().get_stage_key()));
 				}
 				
 				if (domain.get(i).getEmaps_object().get_emapa_term_key() == null) {
 					entity.setEmapaTerm(null);
 				} else {
-					log.info("emapa-term:" + domain.get(i).getEmaps_object().get_emapa_term_key());
 					entity.setEmapaTerm(termDAO.get(domain.get(i).getEmaps_object().get_emapa_term_key()));
 				}
 				

@@ -52,7 +52,7 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		
 		log.info("processHTExperiment/update");
 		
-		// add changes to experiment 
+		// only a subset of fields are modified by pwi
 
 		if (domain.getName() == null || domain.getDescription().isEmpty()) {
 			entity.setName(null);

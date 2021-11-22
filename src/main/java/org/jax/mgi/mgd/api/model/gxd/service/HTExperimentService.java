@@ -70,7 +70,7 @@ public class HTExperimentService extends BaseService<HTDomain> {
 	
 		// process ht sample
 		if (domain.getSamples() != null) {
-			htSampleService.process(domain.get_evaluationstate_key(), domain.getSamples(), user);
+			htSampleService.process(domain.get_experiment_key(), domain.getSamples(), user);
 		}
 		
 		// return entity translated to domain

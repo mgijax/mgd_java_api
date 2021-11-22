@@ -93,34 +93,44 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 						
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
+
+		//	If new Gel Lane row and Control = No, then set these defaults:
+		//		Genotype = MGI:2166310
+		//		Westerns only set RNA = Not Applicable; All other blots set RNA = Not Specified
+		//		Age = embryonic day
+		//		Sex = Not Specified
+		//
+		//	If new Gel Lane row and Control = anything other than ‘No’, then set these defaults (after tabbing from Control):
+		//		Genotype = MGI:2166309
+		//		RNA=Not Applicable
+		//		Age=Not Applicable
+		//		Sex=Not Applicable
 		
 		for (int i = 0; i < domain.size(); i++) {
-
-			// if gel lane is null/empty, then skip
-			// pwi has sent a "c" that is empty/not being used
-			if (domain.get(i).getGelControlKey() == null || domain.get(i).getGelControlKey().isEmpty()) {
-				continue;
-			}
 			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 	
+				// if gel lane is null/empty, then skip
+				// pwi has sent a "c" that is empty/not being used			
+				if (domain.get(i).getLaneLabel() == null || domain.get(i).getLaneLabel().isEmpty()) {
+					continue;
+				}
+				
 				log.info("processGelLane create");
 
 				GelLane entity = new GelLane();
 					
 				entity.set_assay_key(parentKey);
-				
-				if (domain.get(i).getLaneLabel() == null || domain.get(i).getLaneLabel().isEmpty()) {
-					entity.setLaneLabel(null);
-				}
-				else {
-					entity.setLaneLabel(domain.get(i).getLaneLabel());						
-				}
-
+				entity.setLaneLabel(domain.get(i).getLaneLabel());						
 				entity.setSequenceNum(domain.get(i).getSequenceNum());
-				entity.setGelControl(gelControlDAO.get(Integer.valueOf(domain.get(i).getGelControlKey())));	
 				entity.setSampleAmount(domain.get(i).getSampleAmount());					
 
+				// default control if domain/control is empty
+				if (domain.get(i).getGelControlKey() == null || domain.get(i).getGelControlKey().isEmpty()) {
+					domain.get(i).setGelControlKey("1");
+				}
+				entity.setGelControl(gelControlDAO.get(Integer.valueOf(domain.get(i).getGelControlKey())));	
+				
 				// control = No
 				if (domain.get(i).getGelControlKey().equals("1")) {
 					
@@ -144,13 +154,13 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 
 					// western blot
 					if (assayTypeKey == 8) {
-						entity.setGelRNAType(gelRNATypeDAO.get(-2));
+						entity.setGelRNAType(gelRNATypeDAO.get(-1));
 					}
 					else if (domain.get(i).getGelRNATypeKey() != null && !domain.get(i).getGelRNATypeKey().isEmpty()) { 
 						entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
 					}
 					else {
-						entity.setGelRNAType(gelRNATypeDAO.get(-1));					
+						entity.setGelRNAType(gelRNATypeDAO.get(-2));					
 					}					
 				}
 				// else from domain
@@ -251,13 +261,13 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 
 					// western blot
 					if (assayTypeKey == 8) {
-						entity.setGelRNAType(gelRNATypeDAO.get(-2));
+						entity.setGelRNAType(gelRNATypeDAO.get(-1));
 					}
 					else if (domain.get(i).getGelRNATypeKey() != null && !domain.get(i).getGelRNATypeKey().isEmpty()) { 
 						entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
 					}
 					else {
-						entity.setGelRNAType(gelRNATypeDAO.get(-1));					
+						entity.setGelRNAType(gelRNATypeDAO.get(-2));					
 					}
 				}
 				// else from domain

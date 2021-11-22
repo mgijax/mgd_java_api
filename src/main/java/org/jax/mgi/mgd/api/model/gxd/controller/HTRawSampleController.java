@@ -1,18 +1,25 @@
 package org.jax.mgi.mgd.api.model.gxd.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
+import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTRawSampleDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimHTRawSampleDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.HTRawSampleService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Path("/htrawsample")
 @Api(value = "HT Raw Sample Endpoints")
@@ -22,11 +29,6 @@ public class HTRawSampleController extends BaseController<HTRawSampleDomain> {
 
 	@Inject
 	private HTRawSampleService htSampleService;
- 
-	@Override
-	public HTRawSampleDomain get(Integer key) {
-		return htSampleService.get(key);
-	}
 
 	@Override
 	public SearchResults<HTRawSampleDomain> create(HTRawSampleDomain domain, User user) {
@@ -47,6 +49,28 @@ public class HTRawSampleController extends BaseController<HTRawSampleDomain> {
 	@Override
 	public SearchResults<HTRawSampleDomain> delete(Integer key, User user) {
 		return htSampleService.delete(key, user);
+	}
+
+	@Override
+	public HTRawSampleDomain get(Integer key) {
+		return htSampleService.get(key);
+	}
+	
+	@POST
+	@ApiOperation(value = "Search returns list of raw sample domains")
+	@Path("/search")
+	public List<SlimHTRawSampleDomain> search(HTDomain searchDomain) {
+		log.info("HT Raw Sample search controller");
+
+		List<SlimHTRawSampleDomain> results = new ArrayList<SlimHTRawSampleDomain>();
+
+		try {
+			results = htSampleService.search(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
 	}
 		
 }

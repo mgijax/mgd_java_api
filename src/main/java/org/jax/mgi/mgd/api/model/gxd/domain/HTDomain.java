@@ -14,6 +14,7 @@ public class HTDomain extends BaseDomain {
 	
 	// basic info
 	private int _experiment_key;	
+	private String noteCount;	
 	private String primaryid;
 	private String secondaryid;
 	private String name;
@@ -47,5 +48,8 @@ public class HTDomain extends BaseDomain {
 	private HTUserDomain lastcuratedby_object;
 
 	private List<HTSampleDomain> samples;
+
+	// used in submission of modify/update
+	private HTSampleDomain sample_domain; 
 
 }

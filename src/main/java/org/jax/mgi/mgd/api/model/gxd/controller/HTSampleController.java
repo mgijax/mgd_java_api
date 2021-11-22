@@ -22,11 +22,6 @@ public class HTSampleController extends BaseController<HTSampleDomain> {
 
 	@Inject
 	private HTSampleService htSampleService;
- 
-	@Override
-	public HTSampleDomain get(Integer key) {
-		return htSampleService.get(key);
-	}
 
 	@Override
 	public SearchResults<HTSampleDomain> create(HTSampleDomain domain, User user) {
@@ -48,5 +43,17 @@ public class HTSampleController extends BaseController<HTSampleDomain> {
 	public SearchResults<HTSampleDomain> delete(Integer key, User user) {
 		return htSampleService.delete(key, user);
 	}
+	
+	@Override
+	public HTSampleDomain get(Integer key) {
+		return htSampleService.get(key);
+	}
+
+//	@GET
+//	@ApiOperation(value = "Get the object count from gxd_antibody table")
+//	@Path("/getObjectCount")
+//	public SearchResults<HTSampleDomain> getObjectCount() {
+//		return htSampleService.getObjectCount();
+//	}
 		
 }

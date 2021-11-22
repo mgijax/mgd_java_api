@@ -30,11 +30,6 @@ public class HTExperimentController extends BaseController<HTDomain> {
 	private HTExperimentService htExperimentService;
 
 	@Override
-	public HTDomain get(Integer key) {
-		return htExperimentService.get(key);
-	}
-
-	@Override
 	public SearchResults<HTDomain> create(HTDomain domain, User user) {
 		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
 		results = htExperimentService.create(domain, user);
@@ -49,12 +44,17 @@ public class HTExperimentController extends BaseController<HTDomain> {
 		results = htExperimentService.getResults(Integer.valueOf(results.items.get(0).get_experiment_key()));
 		return results;
 	}
-
+	
 	@Override
 	public SearchResults<HTDomain> delete(Integer key, User user) {
 		return htExperimentService.delete(key, user);
+	}	
+
+	@Override
+	public HTDomain get(Integer key) {
+		return htExperimentService.get(key);
 	}
-		
+	
 	@POST
 	@ApiOperation(value = "Search returns HT domain")
 	@Path("/search")

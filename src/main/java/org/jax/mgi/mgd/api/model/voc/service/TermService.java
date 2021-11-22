@@ -622,8 +622,9 @@ public class TermService extends BaseService<TermDomain> {
 	@Transactional	
 	public String getCelltypeAnnotCount(Integer termKey) {
 		String cmd = "select count(*) as annotCt" + 
-				"\nfrom gxd_isresultcelltype" +
-				"\nwhere _celltype_term_key = " + termKey;
+				"\nfrom gxd_isresultcelltype irc, gxd_isresultstructure irs" +
+				"\nwhere irc._result_key = irs._result_key" +
+				"\nand irc._celltype_term_key = " + termKey;
 		log.info(cmd);
 		
 		String count = "";

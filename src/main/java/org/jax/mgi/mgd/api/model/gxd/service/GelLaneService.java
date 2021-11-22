@@ -107,15 +107,15 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 		//		Sex=Not Applicable
 		
 		for (int i = 0; i < domain.size(); i++) {
-
-			// if gel lane is null/empty, then skip
-			// pwi has sent a "c" that is empty/not being used
-			if (domain.get(i).getGelControlKey() == null || domain.get(i).getGelControlKey().isEmpty()) {
-				continue;
-			}
 			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 	
+				// if gel lane is null/empty, then skip
+				// pwi has sent a "c" that is empty/not being used			
+				if (domain.get(i).getLaneLabel() == null || domain.get(i).getLaneLabel().isEmpty()) {
+					continue;
+				}
+				
 				log.info("processGelLane create");
 
 				GelLane entity = new GelLane();
@@ -130,9 +130,16 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				}
 
 				entity.setSequenceNum(domain.get(i).getSequenceNum());
-				entity.setGelControl(gelControlDAO.get(Integer.valueOf(domain.get(i).getGelControlKey())));	
 				entity.setSampleAmount(domain.get(i).getSampleAmount());					
 
+				// default control if domain/control is empty
+				if (domain.get(i).getGelControlKey() == null || domain.get(i).getGelControlKey().isEmpty()) {
+					entity.setGelControl(gelControlDAO.get(1));	
+				}
+				else {
+					entity.setGelControl(gelControlDAO.get(Integer.valueOf(domain.get(i).getGelControlKey())));	
+				}
+				
 				// control = No
 				if (domain.get(i).getGelControlKey().equals("1")) {
 					

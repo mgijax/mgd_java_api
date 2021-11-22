@@ -44,7 +44,7 @@ public class HTExperimentController extends BaseController<HTDomain> {
 		results = htExperimentService.getResults(Integer.valueOf(results.items.get(0).get_experiment_key()));
 		return results;
 	}
-
+	
 	@Override
 	public SearchResults<HTDomain> delete(Integer key, User user) {
 		return htExperimentService.delete(key, user);

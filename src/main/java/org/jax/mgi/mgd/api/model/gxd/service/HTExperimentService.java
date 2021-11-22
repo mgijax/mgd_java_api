@@ -52,7 +52,7 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		
 		log.info("processHTExperiment/update");
 		
-		// no changes to experiment
+		// add changes to experiment 
 				
 		// process ht sample
 		if (domain.getSamples() != null) {

@@ -121,14 +121,7 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				GelLane entity = new GelLane();
 					
 				entity.set_assay_key(parentKey);
-				
-				if (domain.get(i).getLaneLabel() == null || domain.get(i).getLaneLabel().isEmpty()) {
-					continue;
-				}
-				else {
-					entity.setLaneLabel(domain.get(i).getLaneLabel());						
-				}
-
+				entity.setLaneLabel(domain.get(i).getLaneLabel());						
 				entity.setSequenceNum(domain.get(i).getSequenceNum());
 				entity.setSampleAmount(domain.get(i).getSampleAmount());					
 

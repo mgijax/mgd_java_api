@@ -53,7 +53,21 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		log.info("processHTExperiment/update");
 		
 		// add changes to experiment 
-				
+
+		if (domain.getName() == null || domain.getDescription().isEmpty()) {
+			entity.setName(null);
+		}
+		else {
+			entity.setName(domain.getName());
+		}
+		
+		if (domain.getDescription() == null || domain.getDescription().isEmpty()) {
+			entity.setDescription(null);
+		}
+		else {
+			entity.setDescription(domain.getDescription());
+		}
+	
 		// process ht sample
 		if (domain.getSamples() != null) {
 			htSampleService.process(domain.get_evaluationstate_key(), domain.getSamples(), user);

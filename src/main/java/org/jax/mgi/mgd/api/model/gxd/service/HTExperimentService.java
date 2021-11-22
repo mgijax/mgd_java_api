@@ -87,10 +87,10 @@ public class HTExperimentService extends BaseService<HTDomain> {
     @Transactional
     public SearchResults<HTDomain> getResults(Integer key) {
         SearchResults<HTDomain> results = new SearchResults<HTDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+        results.setItem(translator.translate(htExperimentDAO.get(key)));
         return results;
     } 
-  
+
 	@Transactional
 	public List<SlimHTDomain> search(HTDomain searchDomain) {
 

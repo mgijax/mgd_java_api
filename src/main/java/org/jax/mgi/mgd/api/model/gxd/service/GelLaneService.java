@@ -123,7 +123,7 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				entity.set_assay_key(parentKey);
 				
 				if (domain.get(i).getLaneLabel() == null || domain.get(i).getLaneLabel().isEmpty()) {
-					entity.setLaneLabel(null);
+					continue;
 				}
 				else {
 					entity.setLaneLabel(domain.get(i).getLaneLabel());						

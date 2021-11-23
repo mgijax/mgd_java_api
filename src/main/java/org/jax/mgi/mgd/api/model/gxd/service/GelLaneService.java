@@ -129,7 +129,6 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				if (domain.get(i).getGelControlKey() == null || domain.get(i).getGelControlKey().isEmpty()) {
 					domain.get(i).setGelControlKey("1");
 				}
-				entity.setGelControl(gelControlDAO.get(Integer.valueOf(domain.get(i).getGelControlKey())));	
 				
 				// control = No
 				if (domain.get(i).getGelControlKey().equals("1")) {

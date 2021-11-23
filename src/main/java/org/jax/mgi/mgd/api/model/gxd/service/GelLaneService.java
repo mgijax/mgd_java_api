@@ -125,13 +125,17 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				entity.setSequenceNum(domain.get(i).getSequenceNum());
 				entity.setSampleAmount(domain.get(i).getSampleAmount());					
 
+				String gelControlKey = "";
 				// default control if domain/control is empty
 				if (domain.get(i).getGelControlKey() == null || domain.get(i).getGelControlKey().isEmpty()) {
-					domain.get(i).setGelControlKey("1");
+					gelControlKey = "1";
+				}
+				else {
+					gelControlKey = domain.get(i).getGelControlKey();
 				}
 				
 				// control = No
-				if (domain.get(i).getGelControlKey().equals("1")) {
+				if (gelControlKey.equals("1")) {
 					
 					if (domain.get(i).getGenotypeKey() != null && !domain.get(i).getGenotypeKey().isEmpty()) {
 						entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));	

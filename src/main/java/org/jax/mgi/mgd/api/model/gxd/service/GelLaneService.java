@@ -204,7 +204,7 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				gelLaneDAO.persist(entity);
 				
 				// set the domain/gellanekey; needed by AssayService
-				domain.get(i).setGelLaneKey(String.valueOf(entity.get_gellane_key()));
+				//domain.get(i).setGelLaneKey(String.valueOf(entity.get_gellane_key()));
 				
 				if (domain.get(i).getStructures() != null && !domain.get(i).getStructures().isEmpty()) {
 					structureService.process(entity.get_gellane_key(), domain.get(i).getStructures(), user);

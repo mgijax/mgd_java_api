@@ -207,11 +207,11 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 					structureService.process(entity.get_gellane_key(), domain.get(i).getStructures(), user);
 				}
 
-//				log.info("processGelLane/MGI_resetAgeMinMax");																						
-//				String cmd = "select count(*) from MGI_resetAgeMinMax ('GXD_GelLane'," + entity.get_gellane_key() + ")";
-//				log.info("cmd: " + cmd);
-//				Query query = gelLaneDAO.createNativeQuery(cmd);
-//				query.getResultList();
+				log.info("processGelLane/MGI_resetAgeMinMax");																						
+				String cmd = "select count(*) from MGI_resetAgeMinMax ('GXD_GelLane'," + entity.get_gellane_key() + ")";
+				log.info("cmd: " + cmd);
+				Query query = gelLaneDAO.createNativeQuery(cmd);
+				query.getResultList();
 				
 				log.info("processGelLane/create processed: " + entity.get_gellane_key());					
 			}

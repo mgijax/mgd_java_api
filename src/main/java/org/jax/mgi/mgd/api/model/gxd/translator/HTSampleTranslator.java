@@ -60,6 +60,7 @@ public class HTSampleTranslator extends BaseEntityDomainTranslator<HTSample, HTS
 			sampleDomain.set_genotype_key(genotype.get_genotype_key());
 			genotypeDomain.set_genotype_key(genotype.get_genotype_key());
 			genotypeDomain.set_strain_key(genotype.getStrain().get_strain_key());
+			genotypeDomain.setIsConditional(genotype.getIsConditional());
 			genotypeDomain.setGeneticbackground(genotype.getStrain().getStrain());
 			if (genotype.getAlleleDetailNote() != null && !genotype.getAlleleDetailNote().isEmpty()) {
 				genotypeDomain.setCombination1_cache(genotype.getAlleleDetailNote().get(0).getNoteChunk().getNote());

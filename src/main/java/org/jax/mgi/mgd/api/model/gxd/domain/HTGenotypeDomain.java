@@ -10,6 +10,7 @@ public class HTGenotypeDomain extends BaseDomain {
 	
 	private int _genotype_key;
 	private int _strain_key;
+	private Integer isConditional;
 	private String mgiid;
 	private String combination1_cache;
 	private String geneticbackground;

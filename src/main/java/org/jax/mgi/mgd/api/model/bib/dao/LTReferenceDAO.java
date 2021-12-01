@@ -704,17 +704,32 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 			restrictions.add(builder.exists(rwdSubquery));
 		}
 
-		// enforce sorting: 1. J: number (descending), 2. journal (ascending), 3. author (ascending)
-
 		List<Order> orderList = new ArrayList<Order>();
 		Join<LTReference,ReferenceCitationCache> citationData = root.join("citationData");
 
-		// using coalesce to push nulls (no J#) to bottom
-		orderList.add(builder.desc(builder.coalesce(citationData.get("numericPart"), Integer.MIN_VALUE)));
-		// then sort those at the bottom by ascending MGI ID (any without MGI ID go to bottom)
-		orderList.add(builder.asc(builder.coalesce(citationData.get("mgiid"), "ZZZ")));
-		query.orderBy(orderList);
-
+		if (params.containsKey("orderBy") && (params.get("orderBy") != null)) {
+			// enforce sorting: 1. J: number (descending), 2. journal (ascending), 3. author (ascending)					
+			if (params.get("orderBY").equals("1")) {
+				// using coalesce to push nulls (no J#) to bottom
+				orderList.add(builder.desc(builder.coalesce(citationData.get("numericPart"), Integer.MIN_VALUE)));
+				// then sort those at the bottom by ascending MGI ID (any without MGI ID go to bottom)
+				orderList.add(builder.asc(builder.coalesce(citationData.get("mgiid"), "ZZZ")));				
+			}
+			else {
+				// enforce sorting: 1. MGI: (ascending)					
+				orderList.add(builder.asc(builder.coalesce(citationData.get("mgiid"), "ZZZ")));				
+			}
+			query.orderBy(orderList);			
+		}
+		else {
+			// enforce sorting: 1. J: number (descending), 2. journal (ascending), 3. author (ascending)	
+			// using coalesce to push nulls (no J#) to bottom			
+			orderList.add(builder.desc(builder.coalesce(citationData.get("numericPart"), Integer.MIN_VALUE)));
+			// then sort those at the bottom by ascending MGI ID (any without MGI ID go to bottom)
+			orderList.add(builder.asc(builder.coalesce(citationData.get("mgiid"), "ZZZ")));
+			query.orderBy(orderList);
+		}
+		
 		// pick up the row limit, if there is one specified.  If none specified, set default.
 
 		int rowLimit = 1001;

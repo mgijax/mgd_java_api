@@ -709,7 +709,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 
 		if (params.containsKey("orderBy") && (params.get("orderBy") != null)) {
 			// enforce sorting: 1. J: number (descending), 2. journal (ascending), 3. author (ascending)					
-			if (params.get("orderBY").equals("1")) {
+			if (params.get("orderBy").equals("1")) {
 				// using coalesce to push nulls (no J#) to bottom
 				orderList.add(builder.desc(builder.coalesce(citationData.get("numericPart"), Integer.MIN_VALUE)));
 				// then sort those at the bottom by ascending MGI ID (any without MGI ID go to bottom)

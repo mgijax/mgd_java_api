@@ -727,45 +727,46 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		String status_operator = "AND";
 		
-		String statusWhereAP = "\n" + status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+		String statusWhereAP = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
 					" and ss.isCurrent = 1 and ss._group_key = 31576664" + " and ss._status_key = ";
-		String statusWhereGO = "\n" + status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+		String statusWhereGO = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
 				" and ss.isCurrent = 1 and ss._group_key = 31576666" + " and ss._status_key = ";		
-		String statusWhereGXD = "\n" + status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+		String statusWhereGXD = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
 				" and ss.isCurrent = 1 and ss._group_key = 31576665" + " and ss._status_key = ";
-		String statusWherePRO = "\n" + status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+		String statusWherePRO = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
 				" and ss.isCurrent = 1 and ss._group_key = 78678148" + " and ss._status_key = ";
-		String statusWhereQTL = "\n" + status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+		String statusWhereQTL = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
 				" and ss.isCurrent = 1 and ss._group_key = 31576668" + " and ss._status_key = ";
-		String statusWhereTumor = "\n" + status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+		String statusWhereTumor = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
 				" and ss.isCurrent = 1 and ss._group_key = 31576667" + " and ss._status_key = ";
 		
 		if (searchDomain.getStatus_operator() != null && !searchDomain.getStatus_operator().isEmpty()) {
 			where = where + "\nand (";
 		
 			if (searchDomain.getStatus_AP_Chosen() != null && searchDomain.getStatus_AP_Chosen().equals(1)) {	
-				where = where + statusWhereAP + "31576671";
+				where = where + statusWhereAP + "31576671" + ")\n";
 			}
 			if (searchDomain.getStatus_AP_Full_coded() != null && searchDomain.getStatus_AP_Full_coded().equals(1)) {	
-				where = where + statusWhereAP + "31576674";
+				where = where + statusWhereAP + "31576674" + ")\n";
 			}
 			if (searchDomain.getStatus_AP_Indexed() != null && searchDomain.getStatus_AP_Indexed().equals(1)) {	
-				where = where + statusWhereAP + "31576673";
+				where = where + statusWhereAP + "31576673" + ")\n";
 			}
 			if (searchDomain.getStatus_AP_New() != null && searchDomain.getStatus_AP_New().equals(1)) {	
-				where = where + statusWhereAP + "71027551";
+				where = where + statusWhereAP + "71027551" + ")\n";
 			}		
 			if (searchDomain.getStatus_AP_Not_Routed()!= null && searchDomain.getStatus_AP_Not_Routed().equals(1)) {	
-				where = where + statusWhereAP + "31576669";
+				where = where + statusWhereAP + "31576669" + ")\n";
 			}
 			if (searchDomain.getStatus_AP_Rejected() != null && searchDomain.getStatus_AP_Rejected().equals(1)) {	
-				where = where + statusWhereAP + "31576672";
+				where = where + statusWhereAP + "31576672" + ")\n";
 			}
 			if (searchDomain.getStatus_AP_Routed() != null && searchDomain.getStatus_AP_Routed().equals(1)) {	
-				where = where + statusWhereAP + "31576670";
+				where = where + statusWhereAP + "31576670" + ")\n";
 			}
 			
-			where = where + "\n)";
+			where.replaceAll("and (and",  "and (");
+			where = where + ")\n)";
 		}
 		 
 		// DO THE SAME FOR THE bib_workflow_tags

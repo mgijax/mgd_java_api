@@ -765,7 +765,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				where = where + statusWhereAP + "31576670" + ")\n";
 			}
 			
-			where.replaceAll("and (and",  "and (");
+			where = where.replaceAll("and (and",  "and (");
 			where = where + ")\n)";
 		}
 		 

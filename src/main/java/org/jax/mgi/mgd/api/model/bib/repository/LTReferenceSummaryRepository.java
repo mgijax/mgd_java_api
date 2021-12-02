@@ -10,6 +10,7 @@ import org.jax.mgi.mgd.api.model.BaseRepository;
 import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
+import org.jax.mgi.mgd.api.model.bib.service.ReferenceService;
 import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceSummaryTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -25,6 +26,8 @@ public class LTReferenceSummaryRepository extends BaseRepository<LTReferenceSumm
 
 	@Inject
 	private LTReferenceDAO referenceDAO;
+	@Inject
+	private ReferenceService referenceService;
 
 	LTReferenceSummaryTranslator translator = new LTReferenceSummaryTranslator();
 
@@ -37,7 +40,10 @@ public class LTReferenceSummaryRepository extends BaseRepository<LTReferenceSumm
 
 	@Override
 	public SearchResults<LTReferenceSummaryDomain> search(Map<String,Object> params) {
-		SearchResults<LTReference> refs = referenceDAO.search(params);
+		
+		//SearchResults<LTReference> refs = referenceDAO.search(params);
+		SearchResults<LTReference> refs = referenceService.searchLT(params);
+		
 		SearchResults<LTReferenceSummaryDomain> domains = new SearchResults<LTReferenceSummaryDomain>();
 
 		domains.elapsed_ms = refs.elapsed_ms;

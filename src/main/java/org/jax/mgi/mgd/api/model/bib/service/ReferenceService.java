@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,12 +19,14 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
+import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceWorkflowDataDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceBookDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceNoteDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
@@ -47,6 +51,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 	@Inject
 	private ReferenceDAO referenceDAO;
+	@Inject
+	private LTReferenceDAO ltReferenceDAO;
 	@Inject
 	private ReferenceBookDAO bookDAO;
 	@Inject
@@ -327,7 +333,238 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		Collections.sort(results);
 		return new SearchResults<String>(results);
 	}	
-	   
+	
+	@Transactional
+	public SearchResults<LTReference> searchLT(Map<String, Object> params) {
+		// 1st step in trying to merge LT search to Reference search
+				
+		// try to copy the input params to the ReferenceDomain
+		ReferenceDomain searchDomain = new ReferenceDomain();
+		
+		if (params.containsKey("currentRelevance")) {
+			searchDomain.setCurrentRelevance((String) params.get("currentRelevance"));
+		}
+
+		if (params.containsKey("workflow_tag_operator")) {
+			searchDomain.setWorkflow_tag_operator((String) params.get("workflow_tag_operator"));
+		}
+		
+		if (params.containsKey("status_operator")) {
+			searchDomain.setStatus_operator((String) params.get("status_operator"));
+		}
+		
+		if (params.containsKey("orderBy")) {
+			searchDomain.setOrderBy((String) params.get("orderBy"));
+		}
+		
+		if (params.containsKey("accids")) {
+			searchDomain.setAccids((String) params.get("accids"));
+		}
+		
+		if (params.containsKey("supplementalTerm")) {
+			searchDomain.setSupplementalTerm((String) params.get("supplementalTerm"));
+		}
+
+		if (params.containsKey("_refs_key")) {
+			searchDomain.setRefsKey((String) params.get("_refs_key"));
+		}
+		
+		if (params.containsKey("primaryAuthor")) {
+			searchDomain.setPrimaryAuthor((String) params.get("primaryAuthor"));
+		}	
+		
+		if (params.containsKey("authors")) {
+			searchDomain.setAuthors((String) params.get("authors"));
+		}
+		
+		if (params.containsKey("title")) {
+			searchDomain.setTitle((String) params.get("title"));
+		}
+		
+		if (params.containsKey("journal")) {
+			searchDomain.setJournal((String) params.get("journal"));
+		}
+		
+		if (params.containsKey("vol")) {
+			searchDomain.setVol((String) params.get("vol"));
+		}
+		
+		if (params.containsKey("issue")) {
+			searchDomain.setIssue((String) params.get("issue"));
+		}
+		
+		if (params.containsKey("date")) {
+			searchDomain.setDate((String) params.get("date"));
+		}
+		
+		if (params.containsKey("year")) {
+			searchDomain.setYear((String) params.get("year"));
+		}
+		
+		if (params.containsKey("pgs")) {
+			searchDomain.setPgs((String) params.get("pgs"));
+		}
+		
+		if (params.containsKey("referenceAbstract")) {
+			searchDomain.setReferenceAbstract((String) params.get("referenceAbstract"));
+		}
+		
+		if (params.containsKey("isReviewArticle")) {
+			if (params.get("isReviewArticle").equals("no")) {
+				searchDomain.setIsReviewArticle("0");
+			}
+			else {
+				searchDomain.setIsReviewArticle("1");				
+			}
+		}		
+		
+		if (params.containsKey("status_AP_New")) {
+			searchDomain.setStatus_AP_New((Integer) params.get("status_AP_New"));
+		}
+		if (params.containsKey("status_AP_Not_Routed")) {
+			searchDomain.setStatus_AP_Not_Routed((Integer) params.get("status_AP_Not_Routed"));
+		}	
+		if (params.containsKey("status_AP_Routed")) {
+			searchDomain.setStatus_AP_Routed((Integer) params.get("status_AP_Routed"));
+		}	
+		if (params.containsKey("status_AP_Chosen")) {
+			searchDomain.setStatus_AP_Chosen((Integer) params.get("status_AP_Chosen"));
+		}	
+		if (params.containsKey("status_AP_indexed")) {
+			searchDomain.setStatus_AP_Indexed((Integer) params.get("status_AP_Indexed"));
+		}	
+		if (params.containsKey("status_AP_Full_coded")) {
+			searchDomain.setStatus_AP_Full_coded((Integer) params.get("status_AP_Full_coded"));
+		}	
+		if (params.containsKey("status_AP_Rejected")) {
+			searchDomain.setStatus_AP_Rejected((Integer) params.get("status_AP_Rejected"));
+		}			
+
+		if (params.containsKey("status_GO_New")) {
+			searchDomain.setStatus_GO_New((Integer) params.get("status_GO_New"));
+		}
+		if (params.containsKey("status_GO_Not_Routed")) {
+			searchDomain.setStatus_GO_Not_Routed((Integer) params.get("status_GO_Not_Routed"));
+		}	
+		if (params.containsKey("status_GO_Routed")) {
+			searchDomain.setStatus_GO_Routed((Integer) params.get("status_GO_Routed"));
+		}	
+		if (params.containsKey("status_GO_Chosen")) {
+			searchDomain.setStatus_GO_Chosen((Integer) params.get("status_GO_Chosen"));
+		}	
+		if (params.containsKey("status_GO_indexed")) {
+			searchDomain.setStatus_GO_Indexed((Integer) params.get("status_GO_Indexed"));
+		}	
+		if (params.containsKey("status_GO_Full_coded")) {
+			searchDomain.setStatus_GO_Full_coded((Integer) params.get("status_GO_Full_coded"));
+		}	
+		if (params.containsKey("status_GO_Rejected")) {
+			searchDomain.setStatus_GO_Rejected((Integer) params.get("status_GO_Rejected"));
+		}			
+		
+		if (params.containsKey("status_GXD_New")) {
+			searchDomain.setStatus_GXD_New((Integer) params.get("status_GXD_New"));
+		}
+		if (params.containsKey("status_GXD_Not_Routed")) {
+			searchDomain.setStatus_GXD_Not_Routed((Integer) params.get("status_GXD_Not_Routed"));
+		}	
+		if (params.containsKey("status_GXD_Routed")) {
+			searchDomain.setStatus_GXD_Routed((Integer) params.get("status_GXD_Routed"));
+		}	
+		if (params.containsKey("status_GXD_Chosen")) {
+			searchDomain.setStatus_GXD_Chosen((Integer) params.get("status_GXD_Chosen"));
+		}	
+		if (params.containsKey("status_GXD_indexed")) {
+			searchDomain.setStatus_GXD_Indexed((Integer) params.get("status_GXD_Indexed"));
+		}	
+		if (params.containsKey("status_GXD_Full_coded")) {
+			searchDomain.setStatus_GXD_Full_coded((Integer) params.get("status_GXD_Full_coded"));
+		}	
+		if (params.containsKey("status_GXD_Rejected")) {
+			searchDomain.setStatus_GXD_Rejected((Integer) params.get("status_GXD_Rejected"));
+		}			
+			
+		if (params.containsKey("status_PRO_New")) {
+			searchDomain.setStatus_PRO_New((Integer) params.get("status_PRO_New"));
+		}
+		if (params.containsKey("status_PRO_Not_Routed")) {
+			searchDomain.setStatus_PRO_Not_Routed((Integer) params.get("status_PRO_Not_Routed"));
+		}	
+		if (params.containsKey("status_PRO_Routed")) {
+			searchDomain.setStatus_PRO_Routed((Integer) params.get("status_PRO_Routed"));
+		}	
+		if (params.containsKey("status_PRO_Chosen")) {
+			searchDomain.setStatus_PRO_Chosen((Integer) params.get("status_PRO_Chosen"));
+		}	
+		if (params.containsKey("status_PRO_indexed")) {
+			searchDomain.setStatus_PRO_Indexed((Integer) params.get("status_PRO_Indexed"));
+		}	
+		if (params.containsKey("status_PRO_Full_coded")) {
+			searchDomain.setStatus_PRO_Full_coded((Integer) params.get("status_PRO_Full_coded"));
+		}	
+		if (params.containsKey("status_PRO_Rejected")) {
+			searchDomain.setStatus_PRO_Rejected((Integer) params.get("status_PRO_Rejected"));
+		}			
+			
+		if (params.containsKey("status_QTL_New")) {
+			searchDomain.setStatus_QTL_New((Integer) params.get("status_QTL_New"));
+		}
+		if (params.containsKey("status_QTL_Not_Routed")) {
+			searchDomain.setStatus_QTL_Not_Routed((Integer) params.get("status_QTL_Not_Routed"));
+		}	
+		if (params.containsKey("status_QTL_Routed")) {
+			searchDomain.setStatus_QTL_Routed((Integer) params.get("status_QTL_Routed"));
+		}	
+		if (params.containsKey("status_QTL_Chosen")) {
+			searchDomain.setStatus_QTL_Chosen((Integer) params.get("status_QTL_Chosen"));
+		}	
+		if (params.containsKey("status_QTL_indexed")) {
+			searchDomain.setStatus_QTL_Indexed((Integer) params.get("status_QTL_Indexed"));
+		}	
+		if (params.containsKey("status_QTL_Full_coded")) {
+			searchDomain.setStatus_QTL_Full_coded((Integer) params.get("status_QTL_Full_coded"));
+		}	
+		if (params.containsKey("status_QTL_Rejected")) {
+			searchDomain.setStatus_QTL_Rejected((Integer) params.get("status_QTL_Rejected"));
+		}		
+		
+		if (params.containsKey("status_Tumor_New")) {
+			searchDomain.setStatus_Tumor_New((Integer) params.get("status_Tumor_New"));
+		}
+		if (params.containsKey("status_Tumor_Not_Routed")) {
+			searchDomain.setStatus_Tumor_Not_Routed((Integer) params.get("status_Tumor_Not_Routed"));
+		}	
+		if (params.containsKey("status_Tumor_Routed")) {
+			searchDomain.setStatus_Tumor_Routed((Integer) params.get("status_Tumor_Routed"));
+		}	
+		if (params.containsKey("status_Tumor_Chosen")) {
+			searchDomain.setStatus_Tumor_Chosen((Integer) params.get("status_Tumor_Chosen"));
+		}	
+		if (params.containsKey("status_Tumor_indexed")) {
+			searchDomain.setStatus_Tumor_Indexed((Integer) params.get("status_Tumor_Indexed"));
+		}	
+		if (params.containsKey("status_Tumor_Full_coded")) {
+			searchDomain.setStatus_Tumor_Full_coded((Integer) params.get("status_Tumor_Full_coded"));
+		}	
+		if (params.containsKey("status_Tumor_Rejected")) {
+			searchDomain.setStatus_Tumor_Rejected((Integer) params.get("status_Tumor_Rejected"));
+		}
+
+		// send this domain to the search()
+		List<SlimReferenceDomain> returnDomain = new ArrayList<SlimReferenceDomain>();
+		returnDomain = search(searchDomain);
+		
+		SearchResults<LTReference> results = new SearchResults<LTReference>();
+		
+		// return the LTReference results
+		for (int i = 0; i < returnDomain.size(); i++) {
+			LTReference entity = ltReferenceDAO.get(Integer.valueOf(returnDomain.get(i).getRefsKey()));
+			results.items.add(entity);
+		}
+		
+		return results;		
+	}
+	
 	@Transactional	
 	public List<SlimReferenceDomain> search(ReferenceDomain searchDomain) {
 		// using searchDomain fields, generate SQL command
@@ -342,12 +579,32 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		String where = "where c._refs_key = r._refs_key";
 		String 	orderBy = "order by c.short_citation";			
 		String limit = Constants.SEARCH_RETURN_LIMIT;
+		String value;
 		
+		Boolean from_accession = false;
 		Boolean from_note = false;
 		Boolean from_book = false;
 		Boolean from_mgiid = false;
 		Boolean from_pubmedid = false;
 		Boolean from_doiid = false;
+		
+		Boolean from_wkfrelevance = false;
+		
+		// may be a different order
+		if (searchDomain.getOrderBy() != null && !searchDomain.getOrderBy().isEmpty()) {
+			if (searchDomain.getOrderBy().equals("1")) {
+				orderBy = "order by c.numericpart desc, c.mgiid asc";
+			}
+			else {
+				orderBy = "order by c.mgiid";
+			}
+		}
+		
+		if (searchDomain.getAccids() != null && !searchDomain.getAccids().isEmpty()) {
+			value = searchDomain.getAccids().toLowerCase().replaceAll(" ", ",");
+			where = where + "\nand lower(c.accid) in ('" + value + ")";
+			from_accession = true;
+		}
 		
 		String cmResults[] = DateSQLQuery.queryByCreationModification("r", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {
@@ -447,6 +704,76 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 		}
 
+		// relevance
+		if (searchDomain.getCurrentRelevance() != null && !searchDomain.getCurrentRelevance().isEmpty()) {
+			where = where + "\nand rt.term = '" + searchDomain.getCurrentRelevance() + "'";
+			from_wkfrelevance = true;
+		}
+		
+//		  31576664 | Alleles & Phenotypes
+//		  31576665 | Expression
+//		  31576666 | Gene Ontology
+//		  31576667 | Tumor
+//		  31576668 | QTL
+//		  78678148 | PRO
+//		
+//		  31576671 | Chosen
+//		  31576674 | Full-coded
+//		  31576673 | Indexed
+//		  71027551 | New
+//		  31576669 | Not Routed
+//		  31576672 | Rejected
+//		  31576670 | Routed
+		
+		String status_operator = "AND";
+		
+		String statusWhereAP = "\n" + status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+					" and ss.isCurrent = 1 and ss._group_key = 31576664" + " and ss._status_key = ";
+		String statusWhereGO = "\n" + status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+				" and ss.isCurrent = 1 and ss._group_key = 31576666" + " and ss._status_key = ";		
+		String statusWhereGXD = "\n" + status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+				" and ss.isCurrent = 1 and ss._group_key = 31576665" + " and ss._status_key = ";
+		String statusWherePRO = "\n" + status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+				" and ss.isCurrent = 1 and ss._group_key = 78678148" + " and ss._status_key = ";
+		String statusWhereQTL = "\n" + status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+				" and ss.isCurrent = 1 and ss._group_key = 31576668" + " and ss._status_key = ";
+		String statusWhereTumor = "\n" + status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+				" and ss.isCurrent = 1 and ss._group_key = 31576667" + " and ss._status_key = ";
+		
+		if (searchDomain.getStatus_operator() != null && !searchDomain.getStatus_operator().isEmpty()) {
+			where = where + "\nand (";
+		
+			if (searchDomain.getStatus_AP_Chosen() != null && searchDomain.getStatus_AP_Chosen().equals(1)) {	
+				where = where + statusWhereAP + "31576671";
+			}
+			if (searchDomain.getStatus_AP_Full_coded() != null && searchDomain.getStatus_AP_Full_coded().equals(1)) {	
+				where = where + statusWhereAP + "31576674";
+			}
+			if (searchDomain.getStatus_AP_Indexed() != null && searchDomain.getStatus_AP_Indexed().equals(1)) {	
+				where = where + statusWhereAP + "31576673";
+			}
+			if (searchDomain.getStatus_AP_New() != null && searchDomain.getStatus_AP_New().equals(1)) {	
+				where = where + statusWhereAP + "71027551";
+			}		
+			if (searchDomain.getStatus_AP_Not_Routed()!= null && searchDomain.getStatus_AP_Not_Routed().equals(1)) {	
+				where = where + statusWhereAP + "31576669";
+			}
+			if (searchDomain.getStatus_AP_Rejected() != null && searchDomain.getStatus_AP_Rejected().equals(1)) {	
+				where = where + statusWhereAP + "31576672";
+			}
+			if (searchDomain.getStatus_AP_Routed() != null && searchDomain.getStatus_AP_Routed().equals(1)) {	
+				where = where + statusWhereAP + "31576670";
+			}
+			
+			where = where + "\n)";
+		}
+		 
+		// DO THE SAME FOR THE bib_workflow_tags
+		
+		if (from_accession == true) {
+			from = from + ", acc_accession a";
+			where = where + "\nand c._refs_key = a._object_key and a._mgitype_key = 1";
+		}
 		if (from_book == true) {
 			from = from + ", bib_books k";
 			where = where + "\nand c._refs_key = k._refs_key";
@@ -472,6 +799,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			where = where + "\nand c._refs_key = pid._object_key" 
 					+ "\nand pid._mgitype_key = 1"
 					+ "\nand pid._logicaldb_key = 29";
+		}
+		if (from_wkfrelevance == true) {
+			from = from + ", bib_workflow_relevance wkfr, voc_term rt";
+			where = where + "\nand c._refs_key = r._refs_key"
+					+ "\nand r.isCurrent = 1"
+					+ "\nand r._relevance_key = rt._term_key"
+					+ "\nand rt._vocab_key = 149";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

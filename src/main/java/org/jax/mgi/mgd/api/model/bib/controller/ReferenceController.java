@@ -55,7 +55,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	public SearchResults<ReferenceDomain> delete(Integer key, User user) {
 		return referenceService.delete(key, user);
 	}
-
+	
 	@POST
 	@ApiOperation(value = "Search/returns slim reference domain")
 	@Path("/search")

@@ -767,7 +767,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 			
 			addToWhere = addToWhere + "\n)";
-			where = where + addToWhere.replaceAll("and (and", "and(");
+			where = where + addToWhere.replaceAll("and \\(and", "and(");
 		}
 		 
 		// DO THE SAME FOR THE bib_workflow_tags

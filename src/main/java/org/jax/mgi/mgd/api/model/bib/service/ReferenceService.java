@@ -767,8 +767,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 			
 			addToWhere = addToWhere + "\n)";
-			where = where + addToWhere.replaceAll("and \\(AND", "and(");
-			where = where + addToWhere.replaceAll("and \\(OR", "and(");
+			addToWhere = addToWhere + addToWhere.replaceAll("and \\(AND", "and(");
+			addToWhere = addToWhere + addToWhere.replaceAll("and \\(OR", "and(");
+			
+			where = where + addToWhere;
 
 		}
 		 

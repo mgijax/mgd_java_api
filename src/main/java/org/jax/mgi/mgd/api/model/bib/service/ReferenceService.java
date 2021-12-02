@@ -767,7 +767,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 			
 			addToWhere = addToWhere + "\n)";
-			where = where + addToWhere.replaceAll("and \\(and", "and(");
+			where = where + addToWhere.replaceAll("and \\(AND", "and(");
+			where = where + addToWhere.replaceAll("and \\(OR", "and(");
+
 		}
 		 
 		// DO THE SAME FOR THE bib_workflow_tags
@@ -804,9 +806,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		if (from_wkfrelevance == true) {
 			from = from + ", bib_workflow_relevance wkfr, voc_term rt";
-			where = where + "\nand c._refs_key = r._refs_key"
-					+ "\nand r.isCurrent = 1"
-					+ "\nand r._relevance_key = rt._term_key"
+			where = where + "\nand c._refs_key = wkfr._refs_key"
+					+ "\nand wkfr.isCurrent = 1"
+					+ "\nand wkfr._relevance_key = rt._term_key"
 					+ "\nand rt._vocab_key = 149";
 		}
 		

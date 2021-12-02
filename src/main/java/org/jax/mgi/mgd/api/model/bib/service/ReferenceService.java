@@ -726,6 +726,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 //		  31576670 | Routed
 		
 		String status_operator = "AND";
+		String addToWhere = "";
 		
 		String statusWhereAP = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
 					" and ss.isCurrent = 1 and ss._group_key = 31576664" + " and ss._status_key = ";
@@ -741,32 +742,32 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				" and ss.isCurrent = 1 and ss._group_key = 31576667" + " and ss._status_key = ";
 		
 		if (searchDomain.getStatus_operator() != null && !searchDomain.getStatus_operator().isEmpty()) {
-			where = where + "\nand (";
-		
+			addToWhere =  "\nand (";
+			
 			if (searchDomain.getStatus_AP_Chosen() != null && searchDomain.getStatus_AP_Chosen().equals(1)) {	
-				where = where + statusWhereAP + "31576671" + ")\n";
+				addToWhere = addToWhere + statusWhereAP + "31576671" + ")\n";
 			}
 			if (searchDomain.getStatus_AP_Full_coded() != null && searchDomain.getStatus_AP_Full_coded().equals(1)) {	
-				where = where + statusWhereAP + "31576674" + ")\n";
+				addToWhere = addToWhere + statusWhereAP + "31576674" + ")\n";
 			}
 			if (searchDomain.getStatus_AP_Indexed() != null && searchDomain.getStatus_AP_Indexed().equals(1)) {	
-				where = where + statusWhereAP + "31576673" + ")\n";
+				addToWhere = addToWhere + statusWhereAP + "31576673" + ")\n";
 			}
 			if (searchDomain.getStatus_AP_New() != null && searchDomain.getStatus_AP_New().equals(1)) {	
-				where = where + statusWhereAP + "71027551" + ")\n";
+				addToWhere = addToWhere + statusWhereAP + "71027551" + ")\n";
 			}		
 			if (searchDomain.getStatus_AP_Not_Routed()!= null && searchDomain.getStatus_AP_Not_Routed().equals(1)) {	
-				where = where + statusWhereAP + "31576669" + ")\n";
+				addToWhere = addToWhere + statusWhereAP + "31576669" + ")\n";
 			}
 			if (searchDomain.getStatus_AP_Rejected() != null && searchDomain.getStatus_AP_Rejected().equals(1)) {	
-				where = where + statusWhereAP + "31576672" + ")\n";
+				addToWhere = addToWhere + statusWhereAP + "31576672" + ")\n";
 			}
 			if (searchDomain.getStatus_AP_Routed() != null && searchDomain.getStatus_AP_Routed().equals(1)) {	
-				where = where + statusWhereAP + "31576670" + ")\n";
+				addToWhere = addToWhere + statusWhereAP + "31576670" + ")\n";
 			}
 			
-			where = where.replaceAll("and (and",  "and (");
-			where = where + ")\n)";
+			addToWhere = addToWhere + "\n)";
+			where = where + addToWhere.replaceAll("and (and", "and(");
 		}
 		 
 		// DO THE SAME FOR THE bib_workflow_tags

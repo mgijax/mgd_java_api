@@ -39,7 +39,6 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		domain.setReferenceAbstract(DecodeString.getDecodeToUTF8(entity.getReferenceAbstract()));
 		domain.setDate(entity.getDate());
 		domain.setIsReviewArticle(String.valueOf(entity.getIsReviewArticle()));
-		//domain.setIsDiscard(String.valueOf(entity.getIsDiscard()));
 		domain.setReferenceTypeKey(String.valueOf(entity.getReferenceType().get_term_key()));
 		domain.setReferenceType(entity.getReferenceType().getTerm());
 		
@@ -79,7 +78,6 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		// reference note
 		if (entity.getReferenceNote() != null && !entity.getReferenceNote().isEmpty()) {
 			Iterable<ReferenceNoteDomain> note = noteTranslator.translateEntities(entity.getReferenceNote());
-			//domain.setReferenceNote(note.iterator().next());
 			domain.setReferenceNote(note.iterator().next().getNote());
 		}
 		
@@ -110,6 +108,12 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 			//domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
 	
+		// need to create ReferenceWorkflowDataDomain, service, translator
+//		if (entity.getWorkflowData() != null && entity.getWorkflowData().isEmpty()) {
+//			Iterable<LTReferenceWorkflowData> wfData = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
+//			domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));			
+//		}
+		
 		return domain;
 	}
 

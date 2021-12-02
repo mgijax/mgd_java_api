@@ -96,9 +96,10 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	@Override
 	public SearchResults<LTReferenceDomain> search(Map<String,Object> params) {
+		
 		SearchResults<LTReference> refs = referenceDAO.search(params);
 		SearchResults<LTReferenceDomain> domains = new SearchResults<LTReferenceDomain>();
-
+		
 		domains.elapsed_ms = refs.elapsed_ms;
 		domains.error = refs.error;
 		domains.message = refs.message;
@@ -689,10 +690,10 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			// Compare fields and update if needed.  We do not update the extracted text and the
 			// has-PDF flag, as those are updated by other processes.
 
-			if (!smartEqual(myWD.getSupplemental(), domain.has_supplemental)
+			if (!smartEqual(myWD.getSupplemental(), domain.supplementalTerm)
 					|| !smartEqual(myWD.getLink_supplemental(), domain.link_to_supplemental)) {
 
-				myWD.setSupplementalTerm(getTermByTerm(Constants.VOC_SUPPLEMENTAL, domain.has_supplemental));
+				myWD.setSupplementalTerm(getTermByTerm(Constants.VOC_SUPPLEMENTAL, domain.supplementalTerm));
 				myWD.setLink_supplemental(domain.link_to_supplemental);
 				myWD.setModifiedByUser(currentUser);
 				myWD.setModification_date(new Date());
@@ -705,7 +706,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			myWD = new LTReferenceWorkflowData();
 			myWD.set_refs_key(Integer.valueOf(domain.refsKey));
 			myWD.setHas_pdf(0);
-			myWD.setSupplementalTerm(getTermByTerm(Constants.VOC_SUPPLEMENTAL, domain.has_supplemental));
+			myWD.setSupplementalTerm(getTermByTerm(Constants.VOC_SUPPLEMENTAL, domain.supplementalTerm));
 			myWD.setLink_supplemental(domain.link_to_supplemental);
 			myWD.setExtracted_text(null);
 			myWD.setCreatedByUser(currentUser);

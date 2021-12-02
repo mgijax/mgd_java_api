@@ -193,15 +193,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 			disSubquery.where(disPredicates.toArray(new Predicate[]{}));
 			restrictions.add(builder.exists(disSubquery));
 		}
-
-
-
-
-
-
-
-
-		
+	
 		// Need to handle the workflow relevance history searching...  AND multiple fields within a single
 		// subquery.  Includes:  relevance, relevance_user, relevance_date, relevance_version, and
 		// relevance_confidence.
@@ -302,13 +294,6 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 				restrictions.add(builder.exists(wfrSubquery));
 			}
 		}
-
-
-
-
-
-
-
 
 		// Handle list of (workflow) status parameters.  The status fields are always OR-ed within a group.
 		// The status_operator field tells us whether to OR or AND them across groups (and defaults to OR).
@@ -521,9 +506,9 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 
 
 		// third handle list of external parameters, including:
-		//		"notes", "referenceType", "marker_id", "allele_id", "accids", "workflow_tag", "supplementalTerm"
+		//		"referenceNote", "referenceType", "marker_id", "allele_id", "accids", "workflow_tag", "supplementalTerm"
 
-		if (params.containsKey("notes")) {
+		if (params.containsKey("referenceNote")) {
 			Subquery<ReferenceNote> noteSubquery = query.subquery(ReferenceNote.class);
 			Root<ReferenceNote> noteRoot = noteSubquery.from(ReferenceNote.class);
 			noteSubquery.select(noteRoot);
@@ -531,7 +516,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 			List<Predicate> notePredicates = new ArrayList<Predicate>();
 			notePredicates.add(builder.equal(root.get("_refs_key"), noteRoot.get("_refs_key")));
 			Path<String> column = noteRoot.get("note");
-			notePredicates.add(builder.like(builder.lower(column), ((String) params.get("notes")).toLowerCase()));
+			notePredicates.add(builder.like(builder.lower(column), ((String) params.get("referenceNote")).toLowerCase()));
 
 			noteSubquery.where(notePredicates.toArray(new Predicate[]{}));
 			restrictions.add(builder.exists(noteSubquery));

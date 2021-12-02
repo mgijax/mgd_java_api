@@ -22,7 +22,8 @@ public class ReferenceDomain extends BaseDomain {
 	private String year;
 	private String pgs;
 	private String referenceAbstract;
-	private String isReviewArticle;
+	private String isReviewArticle; /// 0 = no, 1 = yes
+//	  "isReviewArticle": "no",	
 	private String referenceTypeKey;
 	private String referenceType;
 
@@ -57,15 +58,68 @@ public class ReferenceDomain extends BaseDomain {
 	public String qtl_status;
 	public String tumor_status;
 	
-	//private ReferenceBookDomain referenceBook;
-	//private ReferenceNoteDomain referenceNote;
-	//private List<AccessionDomain> mgiAccessionIds;
-	//private List<AccessionDomain> editAccessionIds;
-	
 	// these lists are loaded by the pwi at runtime
 	private List<MGIReferenceAssocDomain> alleleAssocs;
 	private List<MGIReferenceAssocDomain> markerAssocs;
 	private List<MGIReferenceAssocDomain> strainAssocs;
 
 	// ReferenceCitationCache not included in domain at this time 
+	
+	// to handle current searching parameters (will replace LTReferenceDAO.java/search())
+	
+	private String currentRelevance;
+	private String workflow_tag_operator = "AND";
+	private String status_operator = "OR";
+	private String orderBy = "1";
+	private String accids;
+	private String supplementalTerm;	
+	
+	private Integer status_AP_New;
+	private Integer status_AP_Not_Routed;
+	private Integer status_AP_Routed;
+	private Integer status_AP_Chosen;
+	private Integer status_AP_Indexed;
+	private Integer status_AP_Full_coded;
+	private Integer status_AP_Rejected;
+	
+	private Integer status_GO_New;
+	private Integer status_GO_Not_Routed;
+	private Integer status_GO_Routed;
+	private Integer status_GO_Chosen;
+	private Integer status_GO_Indexed;
+	private Integer status_GO_Full_coded;
+	private Integer status_GO_Rejected;	
+	
+	private Integer status_GXD_New;
+	private Integer status_GXD_Not_Routed;
+	private Integer status_GXD_Routed;
+	private Integer status_GXD_Chosen;
+	private Integer status_GXD_Indexed;
+	private Integer status_GXD_Full_coded;
+	private Integer status_GXD_Rejected;	
+	
+	private Integer status_PRO_New;
+	private Integer status_PRO_Not_Routed;
+	private Integer status_PRO_Routed;
+	private Integer status_PRO_Chosen;
+	private Integer status_PRO_Indexed;
+	private Integer status_PRO_Full_coded;
+	private Integer status_PRO_Rejected;	
+	
+	private Integer status_QTL_New;
+	private Integer status_QTL_Not_Routed;
+	private Integer status_QTL_Routed;
+	private Integer status_QTL_Chosen;
+	private Integer status_QTL_Indexed;
+	private Integer status_QTL_Full_coded;
+	private Integer status_QTL_Rejected;		
+	
+	private Integer status_Tumor_New;
+	private Integer status_Tumor_Not_Routed;
+	private Integer status_Tumor_Routed;
+	private Integer status_Tumor_Chosen;
+	private Integer status_Tumor_Indexed;
+	private Integer status_Tumor_Full_coded;
+	private Integer status_Tumor_Rejected;		
+	
 }

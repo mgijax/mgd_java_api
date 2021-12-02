@@ -349,12 +349,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		Boolean from_pubmedid = false;
 		Boolean from_doiid = false;
 		
-		//Boolean from_allele = false;
-		//Boolean from_marker = false;
-		//Boolean from_strain = false;
-
-		// if parameter exists, then add to where-clause
-		
 		String cmResults[] = DateSQLQuery.queryByCreationModification("r", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {
 			from = from + cmResults[0];

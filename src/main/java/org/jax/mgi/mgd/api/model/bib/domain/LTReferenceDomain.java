@@ -68,7 +68,7 @@ public class LTReferenceDomain extends BaseDomain {
 	
 	// workflow data
 	public String has_pdf;
-	public String has_supplemental;
+	public String supplementalTerm;
 	public String link_to_supplemental;
 	public String has_extracted_text;
 	

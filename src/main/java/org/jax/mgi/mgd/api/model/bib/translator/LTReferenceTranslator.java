@@ -114,7 +114,7 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		// data specific to workflows: has supplemental data?, link to supplemental data, has PDF?, has extracted text?
 		LTReferenceWorkflowData workflowData = entity.getWorkflowData();
 		if (workflowData != null) {
-			domain.has_supplemental = workflowData.getSupplemental();
+			domain.supplementalTerm = workflowData.getSupplemental();
 			domain.link_to_supplemental = workflowData.getLink_supplemental();
 			if (workflowData.getHas_pdf() == 0) {
 				domain.has_pdf = "No";

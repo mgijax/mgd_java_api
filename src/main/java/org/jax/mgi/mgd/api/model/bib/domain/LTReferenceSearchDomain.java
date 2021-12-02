@@ -51,7 +51,7 @@ public class LTReferenceSearchDomain extends BaseDomain {
 	public String publisher;
 	public String series_ed;
 	public String has_pdf;
-	public String has_supplemental;
+	public String supplementalTerm;
 	public String link_to_supplemental;
 	public String has_extracted_text;
 	public String created_by;

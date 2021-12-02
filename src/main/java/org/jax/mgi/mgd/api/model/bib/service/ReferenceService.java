@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -767,8 +766,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 			
 			addToWhere = addToWhere + "\n)";
-			addToWhere = addToWhere + addToWhere.replaceAll("and \\(AND", "and(");
-			addToWhere = addToWhere + addToWhere.replaceAll("and \\(OR", "and(");
+			addToWhere = addToWhere.replaceAll("and \\(AND", "and(");
+			addToWhere = addToWhere.replaceAll("and \\(OR", "and(");
 			
 			where = where + addToWhere;
 

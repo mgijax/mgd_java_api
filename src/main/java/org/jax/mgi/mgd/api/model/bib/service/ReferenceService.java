@@ -1040,7 +1040,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					+ "\nand wkfs.isCurrent = 1"
 					+ "\nand wkfs._status_key = st._term_key"
 					+ "\nand st._vocab_key = 128"
-					+ "\nand wtfs._group_key = gt._term_key"
+					+ "\nand wkfs._group_key = gt._term_key"
 					+ "\nand gt._vocab_key = 127";
 		}
 		

@@ -777,60 +777,134 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			log.info(searchDomain.getStatus_AP_Indexed());
 			
 			if (searchDomain.getStatus_AP_Chosen() != null && searchDomain.getStatus_AP_Chosen() == 1) {
-				log.info("searchDomain.getStatus_AP_Chosen()");
 				addToWhere = addToWhere + statusWhereAP + "31576671" + ")\n";
 			}
 			if (searchDomain.getStatus_AP_Full_coded() != null && searchDomain.getStatus_AP_Full_coded() == 1) {	
-				log.info("searchDomain.getStatus_AP_Full_coded()");				
 				addToWhere = addToWhere + statusWhereAP + "31576674" + ")\n";
 			}
 			if (searchDomain.getStatus_AP_Indexed() != null && searchDomain.getStatus_AP_Indexed() == 1) {	
-				log.info("searchDomain.getStatus_AP_Indexed()");
 				addToWhere = addToWhere + statusWhereAP + "31576673" + ")\n";			
 			}
 			if (searchDomain.getStatus_AP_New() != null && searchDomain.getStatus_AP_New() == 1) {	
-				log.info("searchDomain.getStatus_AP_New()");
 				addToWhere = addToWhere + statusWhereAP + "71027551" + ")\n";	
 			}		
 			if (searchDomain.getStatus_AP_Not_Routed()!= null && searchDomain.getStatus_AP_Not_Routed() == 1) {
-				log.info("searchDomain.getStatus_AP_Not_Routed()");
 				addToWhere = addToWhere + statusWhereAP + "31576669" + ")\n";
 			}
 			if (searchDomain.getStatus_AP_Rejected() != null && searchDomain.getStatus_AP_Rejected() == 1) {	
-				log.info("searchDomain.getStatus_AP_Rejected()");
 				addToWhere = addToWhere + statusWhereAP + "31576672" + ")\n";
 			}
 			if (searchDomain.getStatus_AP_Routed() != null && searchDomain.getStatus_AP_Routed() == 1) {	
-				log.info("searchDomain.getStatus_AP_Routed()");
 				addToWhere = addToWhere + statusWhereAP + "31576670" + ")\n";
 			}
 
 			if (searchDomain.getStatus_GO_Chosen() != null && searchDomain.getStatus_GO_Chosen() == 1) {
-				log.info("searchDomain.getStatus_GO_Chosen()");
 				addToWhere = addToWhere + statusWhereGO + "31576671" + ")\n";
 			}
 			if (searchDomain.getStatus_GO_Full_coded() != null && searchDomain.getStatus_GO_Full_coded() == 1) {	
-				log.info("searchDomain.getStatusGO_Full_coded()");				
 				addToWhere = addToWhere + statusWhereGO + "31576674" + ")\n";
 			}
 			if (searchDomain.getStatus_GO_Indexed() != null && searchDomain.getStatus_GO_Indexed() == 1) {	
-				log.info("searchDomain.getStatus_GO_Indexed()");
 				addToWhere = addToWhere + statusWhereGO + "31576673" + ")\n";
 			}
 			if (searchDomain.getStatus_GO_New() != null && searchDomain.getStatus_GO_New() == 1) {	
-				log.info("searchDomain.getStatus_GO_New()");
 				addToWhere = addToWhere + statusWhereGO + "71027551" + ")\n";
 			}		
 			if (searchDomain.getStatus_GO_Not_Routed()!= null && searchDomain.getStatus_GO_Not_Routed() == 1) {
-				log.info("searchDomain.getStatus_GO_Not_Routed()");
 				addToWhere = addToWhere + statusWhereGO + "31576669" + ")\n";
 			}
 			if (searchDomain.getStatus_GO_Rejected() != null && searchDomain.getStatus_GO_Rejected() == 1) {	
-				log.info("searchDomain.getStatus_GO_Rejected()");
 				addToWhere = addToWhere + statusWhereGO + "31576672" + ")\n";
 			}
 			if (searchDomain.getStatus_GO_Routed() != null && searchDomain.getStatus_GO_Routed() == 1) {	
-				log.info("searchDomain.getStatus_GO_Routed()");
+				addToWhere = addToWhere + statusWhereGO + "31576670" + ")\n";
+			}
+
+			if (searchDomain.getStatus_GXD_Chosen() != null && searchDomain.getStatus_GXD_Chosen() == 1) {
+				addToWhere = addToWhere + statusWhereGXD + "31576671" + ")\n";
+			}
+			if (searchDomain.getStatus_GXD_Full_coded() != null && searchDomain.getStatus_GXD_Full_coded() == 1) {	
+				addToWhere = addToWhere + statusWhereGXD + "31576674" + ")\n";
+			}
+			if (searchDomain.getStatus_GXD_Indexed() != null && searchDomain.getStatus_GXD_Indexed() == 1) {	
+				addToWhere = addToWhere + statusWhereGXD + "31576673" + ")\n";
+			}
+			if (searchDomain.getStatus_GXD_New() != null && searchDomain.getStatus_GXD_New() == 1) {	
+				addToWhere = addToWhere + statusWhereGXD + "71027551" + ")\n";
+			}		
+			if (searchDomain.getStatus_GXD_Not_Routed()!= null && searchDomain.getStatus_GXD_Not_Routed() == 1) {
+				addToWhere = addToWhere + statusWhereGXD + "31576669" + ")\n";
+			}
+			if (searchDomain.getStatus_GXD_Rejected() != null && searchDomain.getStatus_GXD_Rejected() == 1) {	
+				addToWhere = addToWhere + statusWhereGXD + "31576672" + ")\n";
+			}
+			if (searchDomain.getStatus_GXD_Routed() != null && searchDomain.getStatus_GXD_Routed() == 1) {	
+				addToWhere = addToWhere + statusWhereGXD + "31576670" + ")\n";
+			}
+			
+			if (searchDomain.getStatus_PRO_Chosen() != null && searchDomain.getStatus_PRO_Chosen() == 1) {
+				addToWhere = addToWhere + statusWherePRO + "31576671" + ")\n";
+			}
+			if (searchDomain.getStatus_PRO_Full_coded() != null && searchDomain.getStatus_PRO_Full_coded() == 1) {	
+				addToWhere = addToWhere + statusWherePRO + "31576674" + ")\n";
+			}
+			if (searchDomain.getStatus_PRO_Indexed() != null && searchDomain.getStatus_PRO_Indexed() == 1) {	
+				addToWhere = addToWhere + statusWherePRO + "31576673" + ")\n";
+			}
+			if (searchDomain.getStatus_PRO_New() != null && searchDomain.getStatus_PRO_New() == 1) {	
+				addToWhere = addToWhere + statusWherePRO + "71027551" + ")\n";
+			}		
+			if (searchDomain.getStatus_PRO_Not_Routed()!= null && searchDomain.getStatus_PRO_Not_Routed() == 1) {
+				addToWhere = addToWhere + statusWherePRO + "31576669" + ")\n";
+			}
+			if (searchDomain.getStatus_PRO_Rejected() != null && searchDomain.getStatus_PRO_Rejected() == 1) {	
+				addToWhere = addToWhere + statusWherePRO + "31576672" + ")\n";
+			}
+			if (searchDomain.getStatus_PRO_Routed() != null && searchDomain.getStatus_PRO_Routed() == 1) {	
+				addToWhere = addToWhere + statusWherePRO + "31576670" + ")\n";
+			}
+			
+			if (searchDomain.getStatus_QTL_Chosen() != null && searchDomain.getStatus_QTL_Chosen() == 1) {
+				addToWhere = addToWhere + statusWhereQTL + "31576671" + ")\n";
+			}
+			if (searchDomain.getStatus_QTL_Full_coded() != null && searchDomain.getStatus_QTL_Full_coded() == 1) {	
+				addToWhere = addToWhere + statusWhereQTL + "31576674" + ")\n";
+			}
+			if (searchDomain.getStatus_QTL_Indexed() != null && searchDomain.getStatus_QTL_Indexed() == 1) {	
+				addToWhere = addToWhere + statusWhereQTL + "31576673" + ")\n";
+			}
+			if (searchDomain.getStatus_QTL_New() != null && searchDomain.getStatus_QTL_New() == 1) {	
+				addToWhere = addToWhere + statusWhereQTL + "71027551" + ")\n";
+			}		
+			if (searchDomain.getStatus_QTL_Not_Routed()!= null && searchDomain.getStatus_QTL_Not_Routed() == 1) {
+				addToWhere = addToWhere + statusWhereQTL + "31576669" + ")\n";
+			}
+			if (searchDomain.getStatus_QTL_Rejected() != null && searchDomain.getStatus_QTL_Rejected() == 1) {	
+				addToWhere = addToWhere + statusWhereQTL + "31576672" + ")\n";
+			}
+			if (searchDomain.getStatus_QTL_Routed() != null && searchDomain.getStatus_QTL_Routed() == 1) {	
+				addToWhere = addToWhere + statusWhereQTL + "31576670" + ")\n";
+			}
+			
+			if (searchDomain.getStatus_Tumor_Chosen() != null && searchDomain.getStatus_Tumor_Chosen() == 1) {
+				addToWhere = addToWhere + statusWhereGO + "31576671" + ")\n";
+			}
+			if (searchDomain.getStatus_Tumor_Full_coded() != null && searchDomain.getStatus_Tumor_Full_coded() == 1) {	
+				addToWhere = addToWhere + statusWhereGO + "31576674" + ")\n";
+			}
+			if (searchDomain.getStatus_Tumor_Indexed() != null && searchDomain.getStatus_Tumor_Indexed() == 1) {	
+				addToWhere = addToWhere + statusWhereGO + "31576673" + ")\n";
+			}
+			if (searchDomain.getStatus_Tumor_New() != null && searchDomain.getStatus_Tumor_New() == 1) {	
+				addToWhere = addToWhere + statusWhereGO + "71027551" + ")\n";
+			}		
+			if (searchDomain.getStatus_Tumor_Not_Routed()!= null && searchDomain.getStatus_Tumor_Not_Routed() == 1) {
+				addToWhere = addToWhere + statusWhereGO + "31576669" + ")\n";
+			}
+			if (searchDomain.getStatus_Tumor_Rejected() != null && searchDomain.getStatus_Tumor_Rejected() == 1) {	
+				addToWhere = addToWhere + statusWhereGO + "31576672" + ")\n";
+			}
+			if (searchDomain.getStatus_Tumor_Routed() != null && searchDomain.getStatus_Tumor_Routed() == 1) {	
 				addToWhere = addToWhere + statusWhereGO + "31576670" + ")\n";
 			}
 			

@@ -757,7 +757,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 			addToWhere =  "\nand (";
 			
-			if (searchDomain.getStatus_AP_Chosen() != null && searchDomain.getStatus_AP_Chosen().equals(1)) {
+			log.info(searchDomain.getStatus_AP_Indexed());
+			
+			if (searchDomain.getStatus_AP_Chosen() != null && searchDomain.getStatus_AP_Chosen() == 1) {
 				log.info("searchDomain.getStatus_AP_Chosen()");
 				addToWhere = addToWhere + statusWhereAP + "31576671" + ")\n";
 			}

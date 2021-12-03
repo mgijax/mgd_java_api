@@ -772,7 +772,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			String statusWhereTumor = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
 					" and ss.isCurrent = 1 and ss._group_key = 31576667" + " and ss._status_key = ";
 		
-			addToWhere =  "\nand (";
+			addToWhere =  "";
 			
 			log.info(searchDomain.getStatus_AP_Indexed());
 			
@@ -786,11 +786,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 			if (searchDomain.getStatus_AP_Indexed() != null && searchDomain.getStatus_AP_Indexed() == 1) {	
 				log.info("searchDomain.getStatus_AP_Indexed()");
-				addToWhere = addToWhere + statusWhereAP + "31576673" + ")\n";
+				addToWhere = addToWhere + statusWhereAP + "31576673" + ")\n";			
 			}
 			if (searchDomain.getStatus_AP_New() != null && searchDomain.getStatus_AP_New() == 1) {	
 				log.info("searchDomain.getStatus_AP_New()");
-				addToWhere = addToWhere + statusWhereAP + "71027551" + ")\n";
+				addToWhere = addToWhere + statusWhereAP + "71027551" + ")\n";	
 			}		
 			if (searchDomain.getStatus_AP_Not_Routed()!= null && searchDomain.getStatus_AP_Not_Routed() == 1) {
 				log.info("searchDomain.getStatus_AP_Not_Routed()");
@@ -833,13 +833,14 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				log.info("searchDomain.getStatus_GO_Routed()");
 				addToWhere = addToWhere + statusWhereGO + "31576670" + ")\n";
 			}
-						
-			addToWhere = addToWhere + "\n)";
-			addToWhere = addToWhere.replaceAll("and \\(AND", "and(");
-			addToWhere = addToWhere.replaceAll("and \\(OR", "and(");
 			
-			where = where + addToWhere;
-
+			if (!addToWhere.isEmpty()) {
+				addToWhere =  "\nand (" + addToWhere;
+				addToWhere = addToWhere + "\n)";
+				addToWhere = addToWhere.replaceAll("and \\(AND", "and(");
+				addToWhere = addToWhere.replaceAll("and \\(OR", "and(");
+				where = where + addToWhere;
+			}
 		}
 		 
 		// DO THE SAME FOR THE bib_workflow_tags

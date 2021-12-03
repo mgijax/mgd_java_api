@@ -62,6 +62,14 @@ public class HTExperiment extends BaseEntity {
 	private List<Accession> secondaryIDs;
 
 	@OneToOne
+	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
+	private User createdBy;
+
+	@OneToOne
+	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
+	private User modifiedBy;
+
+	@OneToOne
 	@JoinColumn(name="_evaluatedby_key", referencedColumnName="_user_key")
 	private User evaluatedBy; 
 

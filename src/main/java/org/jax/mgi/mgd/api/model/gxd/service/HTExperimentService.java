@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.gxd.service;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -16,7 +17,10 @@ import org.jax.mgi.mgd.api.model.gxd.domain.HTUserDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimHTDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTExperiment;
 import org.jax.mgi.mgd.api.model.gxd.translator.HTExperimentTranslator;
+import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
+import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -34,7 +38,11 @@ public class HTExperimentService extends BaseService<HTDomain> {
 	private HTExperimentDAO htExperimentDAO;
 	@Inject
 	private HTSampleService htSampleService;
-	
+	@Inject
+	private NoteService noteService;
+	@Inject
+	private TermDAO termDAO;
+
 	@Transactional
 	public SearchResults<HTDomain> create(HTDomain domain, User user) {
 		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
@@ -44,16 +52,14 @@ public class HTExperimentService extends BaseService<HTDomain> {
 
 	@Transactional
 	public SearchResults<HTDomain> update(HTDomain domain, User user) {
-		// the set of fields in "update" is similar to set of fields in "create"
-		// creation user/date are only set in "create"
 				
+		Boolean modified = false;
 		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
 		HTExperiment entity = htExperimentDAO.get(domain.get_experiment_key());
 		
 		log.info("processHTExperiment/update");
 		
-		// only a subset of fields are modified by pwi
-
+		// name
 		if (domain.getName() == null || domain.getDescription().isEmpty()) {
 			entity.setName(null);
 		}
@@ -61,17 +67,42 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			entity.setName(domain.getName());
 		}
 		
+		// description
 		if (domain.getDescription() == null || domain.getDescription().isEmpty()) {
 			entity.setDescription(null);
 		}
 		else {
 			entity.setDescription(domain.getDescription());
 		}
+
+		// evaluation state
+		entity.setEvaluationState(termDAO.get(Integer.valueOf(domain.get_evaluationstate_key())));	
+		// experiment type
+		entity.setExperimentType(termDAO.get(Integer.valueOf(domain.get_experimenttype_key())));	
+		// study type
+		entity.setStudyType(termDAO.get(Integer.valueOf(domain.get_studytype_key())));	
+
+		// experiment note 
+		if (domain.getNotetext() != null){
+			NoteDomain noteDomain = new NoteDomain();
+			noteDomain.setNoteChunk(domain.getNotetext());
+			noteDomain.setNoteTypeKey("1047");
+			noteDomain.setNoteKey(domain.get_note_key());
+			noteService.process(String.valueOf(entity.get_experiment_key()), noteDomain, "42", user);
+		}
+
+		// experiment variables
 	
 		// process ht sample
-		if (domain.getSamples() != null) {
-			htSampleService.process(domain.get_experiment_key(), domain.getSamples(), user);
-		}
+// TODO
+//		if (domain.getSamples() != null) {
+//			htSampleService.process(domain.get_experiment_key(), domain.getSamples(), user);
+//		}
+
+		// persist entity
+		entity.setModification_date(new Date());
+		entity.setModifiedBy(user);
+		htExperimentDAO.update(entity);
 		
 		// return entity translated to domain
 		log.info("processHTExperiment/update/returning results");

@@ -878,7 +878,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			addToWhere = "";
 			
 			if (searchDomain.getWorkflow_tag1() != null && !searchDomain.getWorkflow_tag1().isEmpty()) {
-				if (searchDomain.getNot_workflow_tag1() != null && searchDomain.getNot_workflow_tag1() == false) {
+				if (searchDomain.getNot_workflow_tag1() != null && searchDomain.getNot_workflow_tag1() == true) {
 					useExists_operator = " not" + exists_operator;
 				}
 				else {

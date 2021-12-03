@@ -497,6 +497,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			searchDomain.setNot_workflow_tag5((Boolean) params.get("not_workflow_tag5"));
 		}
 		
+		// it would be nice to convert these individual fields to a list so we can iterate thru them easier
+		
 		if (params.containsKey("status_AP_New")) {
 			searchDomain.setStatus_AP_New((Integer) params.get("status_AP_New"));
 		}
@@ -834,12 +836,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			where = where + "\nand wkfr.confidence = " + searchDomain.getRelevance_confidence();
 			from_wkfrelevance = true;
 		}
-		String cmResultsRelevance[] = DateSQLQuery.queryByCreationModification("wkfr", null, searchDomain.getRelevance_user(), null, searchDomain.getRelevance_date());
-		if (cmResultsRelevance.length > 0) {
-			from = from + cmResultsRelevance[0];
-			where = where + cmResultsRelevance[1];
-			from_wkfrelevance = true;
-		}
+//		String cmResultsRelevance[] = DateSQLQuery.queryByCreationModification("wkfr", null, searchDomain.getRelevance_user(), null, searchDomain.getRelevance_date());
+//		if (cmResultsRelevance.length > 0) {
+//			from = from + cmResultsRelevance[0];
+//			where = where + cmResultsRelevance[1];
+//			from_wkfrelevance = true;
+//		}
 		
 		// status history
 		if (searchDomain.getSh_status() != null && !searchDomain.getSh_status().isEmpty()) {
@@ -849,13 +851,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (searchDomain.getSh_group() != null && !searchDomain.getSh_group().isEmpty()) {
 			where = where + "\nand gt.term = '" + searchDomain.getSh_group() + "'";
 			from_wkfstatus = true;
-		}
-		String cmResultsStatus[] = DateSQLQuery.queryByCreationModification("wkfs", null, searchDomain.getSh_username(), null, searchDomain.getSh_date());
-		if (cmResultsStatus.length > 0) {
-			from = from + cmResultsStatus[0];
-			where = where + cmResultsStatus[1];
-			from_wkfstatus = true;
-		}
+		}		
+//		String cmResultsStatus[] = DateSQLQuery.queryByCreationModification("wkfs", null, searchDomain.getSh_username(), null, searchDomain.getSh_date());
+//		if (cmResultsStatus.length > 0) {
+//			from = from + cmResultsStatus[0];
+//			where = where + cmResultsStatus[1];
+//			from_wkfstatus = true;
+//		}
 			
 		if (searchDomain.getWorkflow_tag_operator() != null && !searchDomain.getWorkflow_tag_operator().isEmpty()) {
 			

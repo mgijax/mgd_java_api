@@ -557,6 +557,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		// return the LTReference results
 		for (int i = 0; i < returnDomain.size(); i++) {
+			log.info("returnDomain.get(i).getRefsKey():" + returnDomain.get(i).getRefsKey());
 			LTReference entity = ltReferenceDAO.get(Integer.valueOf(returnDomain.get(i).getRefsKey()));
 			results.items.add(entity);
 		}

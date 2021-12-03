@@ -971,7 +971,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			where = where + "\nand c._refs_key = wkfd._refs_key"
 					+ "\nand wkfd._extractedtext_key = 48804490"
 					+ "\nand wkfd._supplemental_key = dt._term_key"
-					+ "\nand rd._vocab_key = 130";
+					+ "\nand dt._vocab_key = 130";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

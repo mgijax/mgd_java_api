@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model.bib.repository;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -39,13 +38,12 @@ public class LTReferenceSummaryRepository extends BaseRepository<LTReferenceSumm
 	}
 
 	@Override
-	public SearchResults<LTReferenceSummaryDomain> search(Map<String,Object> params) {
-		
-		//SearchResults<LTReference> refs = referenceDAO.search(params);
+	public SearchResults<LTReferenceSummaryDomain> search(Map<String,Object> params) {	
 		SearchResults<LTReferenceSummaryDomain> domains = referenceService.searchLT(params);
-		
-		//SearchResults<LTReferenceSummaryDomain> domains = new SearchResults<LTReferenceSummaryDomain>();
+		return domains;
 
+		//SearchResults<LTReference> refs = referenceDAO.search(params);
+		//SearchResults<LTReferenceSummaryDomain> domains = new SearchResults<LTReferenceSummaryDomain>();
 //		domains.elapsed_ms = refs.elapsed_ms;
 //		domains.error = refs.error;
 //		domains.message = refs.message;
@@ -62,7 +60,6 @@ public class LTReferenceSummaryRepository extends BaseRepository<LTReferenceSumm
 //				domains.items.add(translator.translate(ref));
 //			}
 //		}
-		return domains;
 	}
 
 	@Override

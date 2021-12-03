@@ -737,23 +737,24 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 //		  31576672 | Rejected
 //		  31576670 | Routed
 		
-		String status_operator = "AND";
-		String addToWhere = "";
-		
-		String statusWhereAP = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
-					" and ss.isCurrent = 1 and ss._group_key = 31576664" + " and ss._status_key = ";
-		String statusWhereGO = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
-				" and ss.isCurrent = 1 and ss._group_key = 31576666" + " and ss._status_key = ";		
-		String statusWhereGXD = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
-				" and ss.isCurrent = 1 and ss._group_key = 31576665" + " and ss._status_key = ";
-		String statusWherePRO = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
-				" and ss.isCurrent = 1 and ss._group_key = 78678148" + " and ss._status_key = ";
-		String statusWhereQTL = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
-				" and ss.isCurrent = 1 and ss._group_key = 31576668" + " and ss._status_key = ";
-		String statusWhereTumor = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
-				" and ss.isCurrent = 1 and ss._group_key = 31576667" + " and ss._status_key = ";
-		
 		if (searchDomain.getStatus_operator() != null && !searchDomain.getStatus_operator().isEmpty()) {
+		
+			String status_operator = searchDomain.getStatus_operator();
+			String addToWhere = "";
+			
+			String statusWhereAP = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+						" and ss.isCurrent = 1 and ss._group_key = 31576664" + " and ss._status_key = ";
+			String statusWhereGO = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+					" and ss.isCurrent = 1 and ss._group_key = 31576666" + " and ss._status_key = ";		
+			String statusWhereGXD = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+					" and ss.isCurrent = 1 and ss._group_key = 31576665" + " and ss._status_key = ";
+			String statusWherePRO = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+					" and ss.isCurrent = 1 and ss._group_key = 78678148" + " and ss._status_key = ";
+			String statusWhereQTL = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+					" and ss.isCurrent = 1 and ss._group_key = 31576668" + " and ss._status_key = ";
+			String statusWhereTumor = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+					" and ss.isCurrent = 1 and ss._group_key = 31576667" + " and ss._status_key = ";
+		
 			addToWhere =  "\nand (";
 			
 			if (searchDomain.getStatus_AP_Chosen() != null && searchDomain.getStatus_AP_Chosen().equals(1)) {	

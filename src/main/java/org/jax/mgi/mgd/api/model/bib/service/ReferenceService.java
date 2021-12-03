@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -618,11 +617,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		Boolean from_doiid = false;
 		
 		Boolean from_wkfrelevance = false;
+		Boolean from_wkfdata = false;
 		
 		// may be a different order
 		if (searchDomain.getOrderBy() != null && !searchDomain.getOrderBy().isEmpty()) {
 			if (searchDomain.getOrderBy().equals("1")) {
-				orderBy = "order by c.numericpart desc, c.mgiid asc";
+				orderBy = "order by c.numericpart desc nulls last, c.mgiid asc";
 			}
 			else {
 				orderBy = "order by c.mgiid";
@@ -635,12 +635,16 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			from_accession = true;
 		}
 		
+		// reference history
 		String cmResults[] = DateSQLQuery.queryByCreationModification("r", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {
 			from = from + cmResults[0];
 			where = where + cmResults[1];
 		}
 
+		// status history
+		// relevance history; version; confidence
+		
 		if (searchDomain.getJnumid() != null && !searchDomain.getJnumid().isEmpty()) {
 			String jnumid = searchDomain.getJnumid().toUpperCase();
 			if (!jnumid.contains("J:")) {
@@ -737,6 +741,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (searchDomain.getCurrentRelevance() != null && !searchDomain.getCurrentRelevance().isEmpty()) {
 			where = where + "\nand rt.term = '" + searchDomain.getCurrentRelevance() + "'";
 			from_wkfrelevance = true;
+		}
+		
+		// supplmenetal term
+		if (searchDomain.getSupplementalTerm() != null && !searchDomain.getSupplementalTerm().isEmpty()) {
+			where = where + "\nand dt.term = '" + searchDomain.getSupplementalTerm() + "'";
+			from_wkfdata = true;
 		}
 		
 //		  31576664 | Alleles & Phenotypes
@@ -955,6 +965,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					+ "\nand wkfr.isCurrent = 1"
 					+ "\nand wkfr._relevance_key = rt._term_key"
 					+ "\nand rt._vocab_key = 149";
+		}
+		if (from_wkfdata == true) {
+			from = from + ", bib_workflow_data wkfd, voc_term dt";
+			where = where + "\nand c._refs_key = wkfd._refs_key"
+					+ "\nand wkfd.isCurrent = 1"
+					+ "\nand wkfd._relevance_key = dt._term_key"
+					+ "\nand rd._vocab_key = 130";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

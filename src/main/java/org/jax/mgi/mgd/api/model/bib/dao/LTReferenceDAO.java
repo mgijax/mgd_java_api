@@ -2,45 +2,24 @@ package org.jax.mgi.mgd.api.model.bib.dao;
 
 import java.math.BigInteger;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
 import javax.transaction.Transactional;
 
 import org.hibernate.Hibernate;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
-import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
-import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.DateParser;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
-import org.jax.mgi.mgd.api.util.NumberParser;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -748,154 +727,63 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 //		return results;
 //	}
 
-	/* get a list of the workflow status records for a reference
-	 */
-	public List<LTReferenceWorkflowStatus> getStatusHistory (String refsKey) {
-		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<LTReferenceWorkflowStatus> query = builder.createQuery(LTReferenceWorkflowStatus.class);
-		Root<LTReferenceWorkflowStatus> root = query.from(LTReferenceWorkflowStatus.class);
-
-		query.where(builder.equal(root.get("_refs_key"), refsKey));
-		query.orderBy(builder.desc(root.get("modification_date")));
-
-		return entityManager.createQuery(query).getResultList();
-	}
-
-	/* get a list of the workflow relevance records for a reference
-	 */
-	public List<LTReferenceWorkflowRelevance> getRelevanceHistory (String refsKey) {
-		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<LTReferenceWorkflowRelevance> query = builder.createQuery(LTReferenceWorkflowRelevance.class);
-		Root<LTReferenceWorkflowRelevance> root = query.from(LTReferenceWorkflowRelevance.class);
-
-		query.where(builder.equal(root.get("_refs_key"), refsKey));
-		query.orderBy(builder.desc(root.get("modification_date")));
-
-		return entityManager.createQuery(query).getResultList();
-	}
-
-	/* return a single reference for the given reference key with all needed lazy-loaded fields already loaded
-	 */
-	@Transactional
-	public LTReference getReference(String refsKey) throws APIException {
-		LTReference ref =  entityManager.find(LTReference.class, Integer.valueOf(refsKey));
-		if (ref == null) { return null; }
-		Hibernate.initialize(ref.getWorkflowTags().size());
-		Hibernate.initialize(ref.getReferenceTypeTerm());
-		Hibernate.initialize(ref.getNotes());
-		Hibernate.initialize(ref.getReferenceBook());
-		Hibernate.initialize(ref.getCreatedByUser());
-		Hibernate.initialize(ref.getModifiedByUser());
-		Hibernate.initialize(ref.getAssociatedData());
-		Hibernate.initialize(ref.getAccessionIDs());
-		Hibernate.initialize(ref.getWorkflowData());
-		Hibernate.initialize(ref.getWorkflowStatuses());
-		return ref;
-	}
-
-	/* get the next available primary key for a workflow status record
-	 */
-	public synchronized int getNextWorkflowStatusKey() throws FatalAPIException {
-		// returns an integer rather than *, as the void return was causing a mapping exception
-		Query query = entityManager.createNativeQuery("select nextval('bib_workflow_status_seq')");
-		BigInteger results = (BigInteger) query.getSingleResult();
-		return results.intValue();
-	}
-
-	/* get the next available primary key for a workflow tag record
-	 */
-	public synchronized int getNextWorkflowTagKey() {
-		// returns an integer rather than *, as the void return was causing a mapping exception
-		Query query = entityManager.createNativeQuery("select nextval('bib_workflow_tag_seq')");
-		BigInteger results = (BigInteger) query.getSingleResult();
-		return results.intValue();
-	}
-
-	/* get the next available primary key for a workflow relevance record
-	 */
-	public synchronized int getNextWorkflowRelevanceKey() {
-		// returns an integer rather than *, as the void return was causing a mapping exception
-		Query query = entityManager.createNativeQuery("select nextval('bib_workflow_relevance_seq')");
-		BigInteger results = (BigInteger) query.getSingleResult();
-		return results.intValue();
-	}
-
-	/* update the bib_citation_cache table for the given reference key
-	 */
-	public void updateCitationCache(String refsKey) {
-		// returns an integer rather than *, as the void return was causing a mapping exception
-		Query query = entityManager.createNativeQuery("select count(1) from BIB_reloadCache(" + refsKey + ")");
-		query.getResultList();		
-		return;
-	}
-
-	/* add a new J: number for the given reference key and user key
-	 */
-	public void assignNewJnumID(String refsKey, int userKey) throws Exception {
-		// returns an integer rather than *, as the void return was causing a mapping exception
-		log.info("select count(1) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
-		Query query = entityManager.createNativeQuery("select count(1) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
-		query.getResultList();
-		return;
-	}
-
-	// get an integer version of the given (String) year
-	private Integer getInteger(String year) throws FatalAPIException {
-		try {
-			return Integer.parseInt(year.trim());
-		} catch (Exception e) {
-			throw new FatalAPIException ("Non-integer year: " + year);
-		}
-	}
-
-	// produce and return a JPA predicate that provides searching of 'year' field as either:
-	//	1. a single integer
-	//	2. a comma-delimited list of integers
-	//	3. a range of two integers delimited by '..' (inclusive of the boundary years)
-	//	4. an integer preceded by a relational operator:  >, <, >=, <=, =
-	private Predicate yearPredicate(CriteriaBuilder builder, Expression<Integer> field, String year) throws FatalAPIException {
-		if (year.startsWith("=")) {
-			return builder.equal(field, year.substring(1));
-		}
-
-		if (year.startsWith(">=")) {
-			return builder.greaterThanOrEqualTo(field, getInteger(year.substring(2)));
-		}
-
-		if (year.startsWith(">")) {
-			return builder.greaterThan(field, getInteger(year.substring(1)));
-		}
-
-		if (year.startsWith("<=")) {
-			return builder.lessThanOrEqualTo(field, getInteger(year.substring(2)));
-		}
-
-		if (year.startsWith("<")) {
-			return builder.lessThan(field, getInteger(year.substring(1)));
-		}
-
-		// range of two years
-		if (year.indexOf("..") >= 0) {
-			String[] years = year.split("\\.\\.");
-			if (years.length != 2) {
-				throw new FatalAPIException("Expected format startYear..endYear");
-			}
-			return builder.between(field, getInteger(years[0]), getInteger(years[1]));
-		}
-
-		// comma-delimited list of integers
-
-		if (year.indexOf(",") >= 0) {
-			List<Integer> years = new ArrayList<Integer>();
-			for (String yearStr : year.split(",")) {
-				years.add(getInteger(yearStr));
-			}
-			return field.in(years);
-		}
-
-		// equals (implicit)
-		return builder.equal(field, getInteger(year));
-	}
+//	// get an integer version of the given (String) year
+//	private Integer getInteger(String year) throws FatalAPIException {
+//		try {
+//			return Integer.parseInt(year.trim());
+//		} catch (Exception e) {
+//			throw new FatalAPIException ("Non-integer year: " + year);
+//		}
+//	}
+//
+//	// produce and return a JPA predicate that provides searching of 'year' field as either:
+//	//	1. a single integer
+//	//	2. a comma-delimited list of integers
+//	//	3. a range of two integers delimited by '..' (inclusive of the boundary years)
+//	//	4. an integer preceded by a relational operator:  >, <, >=, <=, =
+//	private Predicate yearPredicate(CriteriaBuilder builder, Expression<Integer> field, String year) throws FatalAPIException {
+//		if (year.startsWith("=")) {
+//			return builder.equal(field, year.substring(1));
+//		}
+//
+//		if (year.startsWith(">=")) {
+//			return builder.greaterThanOrEqualTo(field, getInteger(year.substring(2)));
+//		}
+//
+//		if (year.startsWith(">")) {
+//			return builder.greaterThan(field, getInteger(year.substring(1)));
+//		}
+//
+//		if (year.startsWith("<=")) {
+//			return builder.lessThanOrEqualTo(field, getInteger(year.substring(2)));
+//		}
+//
+//		if (year.startsWith("<")) {
+//			return builder.lessThan(field, getInteger(year.substring(1)));
+//		}
+//
+//		// range of two years
+//		if (year.indexOf("..") >= 0) {
+//			String[] years = year.split("\\.\\.");
+//			if (years.length != 2) {
+//				throw new FatalAPIException("Expected format startYear..endYear");
+//			}
+//			return builder.between(field, getInteger(years[0]), getInteger(years[1]));
+//		}
+//
+//		// comma-delimited list of integers
+//
+//		if (year.indexOf(",") >= 0) {
+//			List<Integer> years = new ArrayList<Integer>();
+//			for (String yearStr : year.split(",")) {
+//				years.add(getInteger(yearStr));
+//			}
+//			return field.in(years);
+//		}
+//
+//		// equals (implicit)
+//		return builder.equal(field, getInteger(year));
+//	}
 	
 	// Note: This method appears to be a no-op, as a query is generated and run, but no results
 	// from it are collected.  (It will always return an empty set of search results.) -- jsb
@@ -1059,4 +947,96 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		
 		return results;
 	}	
+
+/* get a list of the workflow status records for a reference
+ */
+public List<LTReferenceWorkflowStatus> getStatusHistory (String refsKey) {
+	CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+	CriteriaQuery<LTReferenceWorkflowStatus> query = builder.createQuery(LTReferenceWorkflowStatus.class);
+	Root<LTReferenceWorkflowStatus> root = query.from(LTReferenceWorkflowStatus.class);
+
+	query.where(builder.equal(root.get("_refs_key"), refsKey));
+	query.orderBy(builder.desc(root.get("modification_date")));
+
+	return entityManager.createQuery(query).getResultList();
+}
+
+/* get a list of the workflow relevance records for a reference
+ */
+public List<LTReferenceWorkflowRelevance> getRelevanceHistory (String refsKey) {
+	CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+	CriteriaQuery<LTReferenceWorkflowRelevance> query = builder.createQuery(LTReferenceWorkflowRelevance.class);
+	Root<LTReferenceWorkflowRelevance> root = query.from(LTReferenceWorkflowRelevance.class);
+
+	query.where(builder.equal(root.get("_refs_key"), refsKey));
+	query.orderBy(builder.desc(root.get("modification_date")));
+
+	return entityManager.createQuery(query).getResultList();
+}
+
+/* return a single reference for the given reference key with all needed lazy-loaded fields already loaded
+ */
+@Transactional
+public LTReference getReference(String refsKey) throws APIException {
+	LTReference ref =  entityManager.find(LTReference.class, Integer.valueOf(refsKey));
+	if (ref == null) { return null; }
+	Hibernate.initialize(ref.getWorkflowTags().size());
+	Hibernate.initialize(ref.getReferenceTypeTerm());
+	Hibernate.initialize(ref.getNotes());
+	Hibernate.initialize(ref.getReferenceBook());
+	Hibernate.initialize(ref.getCreatedByUser());
+	Hibernate.initialize(ref.getModifiedByUser());
+	Hibernate.initialize(ref.getAssociatedData());
+	Hibernate.initialize(ref.getAccessionIDs());
+	Hibernate.initialize(ref.getWorkflowData());
+	Hibernate.initialize(ref.getWorkflowStatuses());
+	return ref;
+}
+
+/* get the next available primary key for a workflow status record
+ */
+public synchronized int getNextWorkflowStatusKey() throws FatalAPIException {
+	// returns an integer rather than *, as the void return was causing a mapping exception
+	Query query = entityManager.createNativeQuery("select nextval('bib_workflow_status_seq')");
+	BigInteger results = (BigInteger) query.getSingleResult();
+	return results.intValue();
+}
+
+/* get the next available primary key for a workflow tag record
+ */
+public synchronized int getNextWorkflowTagKey() {
+	// returns an integer rather than *, as the void return was causing a mapping exception
+	Query query = entityManager.createNativeQuery("select nextval('bib_workflow_tag_seq')");
+	BigInteger results = (BigInteger) query.getSingleResult();
+	return results.intValue();
+}
+
+/* get the next available primary key for a workflow relevance record
+ */
+public synchronized int getNextWorkflowRelevanceKey() {
+	// returns an integer rather than *, as the void return was causing a mapping exception
+	Query query = entityManager.createNativeQuery("select nextval('bib_workflow_relevance_seq')");
+	BigInteger results = (BigInteger) query.getSingleResult();
+	return results.intValue();
+}
+
+/* update the bib_citation_cache table for the given reference key
+ */
+public void updateCitationCache(String refsKey) {
+	// returns an integer rather than *, as the void return was causing a mapping exception
+	Query query = entityManager.createNativeQuery("select count(1) from BIB_reloadCache(" + refsKey + ")");
+	query.getResultList();		
+	return;
+}
+
+/* add a new J: number for the given reference key and user key
+ */
+public void assignNewJnumID(String refsKey, int userKey) throws Exception {
+	// returns an integer rather than *, as the void return was causing a mapping exception
+	log.info("select count(1) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
+	Query query = entityManager.createNativeQuery("select count(1) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
+	query.getResultList();
+	return;
+}
+
 }

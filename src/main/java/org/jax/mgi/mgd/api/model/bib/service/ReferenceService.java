@@ -836,12 +836,16 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			where = where + "\nand wkfr.confidence = " + searchDomain.getRelevance_confidence();
 			from_wkfrelevance = true;
 		}
-//		String cmResultsRelevance[] = DateSQLQuery.queryByCreationModification("wkfr", null, searchDomain.getRelevance_user(), null, searchDomain.getRelevance_date());
-//		if (cmResultsRelevance.length > 0) {
-//			from = from + cmResultsRelevance[0];
-//			where = where + cmResultsRelevance[1];
-//			from_wkfrelevance = true;
-//		}
+		if ((searchDomain.getRelevance_user() != null && !searchDomain.getRelevance_user().isEmpty())
+				|| (searchDomain.getRelevance_date() != null && !searchDomain.getRelevance_date().isEmpty())
+			) {
+			String cmResultsStatus[] = DateSQLQuery.queryByCreationModification("wkfr", null, searchDomain.getRelevance_user(), null, searchDomain.getRelevance_date());
+			if (cmResultsStatus.length > 0) {
+				from = from + cmResultsStatus[0];
+				where = where + cmResultsStatus[1];
+				from_wkfrelevance = true;
+			}
+		}
 		
 		// status history
 		if (searchDomain.getSh_status() != null && !searchDomain.getSh_status().isEmpty()) {
@@ -851,13 +855,17 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (searchDomain.getSh_group() != null && !searchDomain.getSh_group().isEmpty()) {
 			where = where + "\nand gt.term = '" + searchDomain.getSh_group() + "'";
 			from_wkfstatus = true;
-		}		
-//		String cmResultsStatus[] = DateSQLQuery.queryByCreationModification("wkfs", null, searchDomain.getSh_username(), null, searchDomain.getSh_date());
-//		if (cmResultsStatus.length > 0) {
-//			from = from + cmResultsStatus[0];
-//			where = where + cmResultsStatus[1];
-//			from_wkfstatus = true;
-//		}
+		}	
+		if ((searchDomain.getSh_username() != null && !searchDomain.getSh_username().isEmpty())
+				|| (searchDomain.getSh_date() != null && !searchDomain.getSh_date().isEmpty())
+			) {
+			String cmResultsStatus[] = DateSQLQuery.queryByCreationModification("wkfs", null, searchDomain.getSh_username(), null, searchDomain.getSh_date());
+			if (cmResultsStatus.length > 0) {
+				from = from + cmResultsStatus[0];
+				where = where + cmResultsStatus[1];
+				from_wkfstatus = true;
+			}
+		}
 			
 		if (searchDomain.getWorkflow_tag_operator() != null && !searchDomain.getWorkflow_tag_operator().isEmpty()) {
 			

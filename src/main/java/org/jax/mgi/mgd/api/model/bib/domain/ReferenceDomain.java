@@ -22,8 +22,7 @@ public class ReferenceDomain extends BaseDomain {
 	private String year;
 	private String pgs;
 	private String referenceAbstract;
-	private String isReviewArticle; /// 0 = no, 1 = yes
-//	  "isReviewArticle": "no",	
+	private String isReviewArticle;
 	private String referenceTypeKey;
 	private String referenceType;
 
@@ -65,7 +64,7 @@ public class ReferenceDomain extends BaseDomain {
 
 	// ReferenceCitationCache not included in domain at this time 
 	
-	// to handle current searching parameters (will replace LTReferenceDAO.java/search())
+	// to handle current searching parameters (replaces LTReferenceDAO.java/search())
 	
 	private String currentRelevance;
 	private String workflow_tag_operator = "AND";

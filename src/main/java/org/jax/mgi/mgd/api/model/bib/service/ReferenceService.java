@@ -344,7 +344,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// try to copy the input params to the ReferenceDomain
 		ReferenceDomain searchDomain = new ReferenceDomain();
 		
-		if (params.containsKey("currentRelevance")) {
+		if (params.containsKey("currentRelevance") && !params.get("currentRelevance").equals("Search All")) {
 			searchDomain.setCurrentRelevance((String) params.get("currentRelevance"));
 		}
 

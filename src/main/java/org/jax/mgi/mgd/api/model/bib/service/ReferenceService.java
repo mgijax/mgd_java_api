@@ -552,6 +552,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// send this domain to the search()
 		List<SlimReferenceDomain> returnDomain = new ArrayList<SlimReferenceDomain>();
 		returnDomain = search(searchDomain);
+
+//		List<LTReference> refs = entityManager.createQuery(query).setMaxResults(rowLimit).getResultList();
+//		log.info("got " + refs.size() + " basic references");
+//		results.setItems(refs);
 		
 		SearchResults<LTReference> results = new SearchResults<LTReference>();
 		
@@ -559,6 +563,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		for (int i = 0; i < returnDomain.size(); i++) {
 			log.info("returnDomain.get(i).getRefsKey():" + returnDomain.get(i).getRefsKey());
 			LTReference entity = ltReferenceDAO.get(Integer.valueOf(returnDomain.get(i).getRefsKey()));
+			log.info("LTReference:" + entity);
 			results.items.add(entity);
 		}
 		

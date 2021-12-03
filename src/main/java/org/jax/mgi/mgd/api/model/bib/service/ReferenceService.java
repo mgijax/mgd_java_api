@@ -642,8 +642,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			where = where + cmResults[1];
 		}
 
-		// status history
-		// relevance history; version; confidence
+		// TODO status history
+		// TODI relevance history; version; confidence
 		
 		if (searchDomain.getJnumid() != null && !searchDomain.getJnumid().isEmpty()) {
 			String jnumid = searchDomain.getJnumid().toUpperCase();
@@ -970,7 +970,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			from = from + ", bib_workflow_data wkfd, voc_term dt";
 			where = where + "\nand c._refs_key = wkfd._refs_key"
 					+ "\nand wkfd._extractedtext_key = 48804490"
-					+ "\nand wkfd._supplmental_key = dt._term_key"
+					+ "\nand wkfd._supplemental_key = dt._term_key"
 					+ "\nand rd._vocab_key = 130";
 		}
 		

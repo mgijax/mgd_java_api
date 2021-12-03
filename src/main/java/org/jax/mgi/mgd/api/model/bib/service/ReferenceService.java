@@ -887,25 +887,25 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 			
 			if (searchDomain.getStatus_Tumor_Chosen() != null && searchDomain.getStatus_Tumor_Chosen() == 1) {
-				addToWhere = addToWhere + statusWhereGO + "31576671" + ")\n";
+				addToWhere = addToWhere + statusWhereTumor + "31576671" + ")\n";
 			}
 			if (searchDomain.getStatus_Tumor_Full_coded() != null && searchDomain.getStatus_Tumor_Full_coded() == 1) {	
-				addToWhere = addToWhere + statusWhereGO + "31576674" + ")\n";
+				addToWhere = addToWhere + statusWhereTumor + "31576674" + ")\n";
 			}
 			if (searchDomain.getStatus_Tumor_Indexed() != null && searchDomain.getStatus_Tumor_Indexed() == 1) {	
-				addToWhere = addToWhere + statusWhereGO + "31576673" + ")\n";
+				addToWhere = addToWhere + statusWhereTumor + "31576673" + ")\n";
 			}
 			if (searchDomain.getStatus_Tumor_New() != null && searchDomain.getStatus_Tumor_New() == 1) {	
-				addToWhere = addToWhere + statusWhereGO + "71027551" + ")\n";
+				addToWhere = addToWhere + statusWhereTumor + "71027551" + ")\n";
 			}		
 			if (searchDomain.getStatus_Tumor_Not_Routed()!= null && searchDomain.getStatus_Tumor_Not_Routed() == 1) {
-				addToWhere = addToWhere + statusWhereGO + "31576669" + ")\n";
+				addToWhere = addToWhere + statusWhereTumor + "31576669" + ")\n";
 			}
 			if (searchDomain.getStatus_Tumor_Rejected() != null && searchDomain.getStatus_Tumor_Rejected() == 1) {	
-				addToWhere = addToWhere + statusWhereGO + "31576672" + ")\n";
+				addToWhere = addToWhere + statusWhereTumor + "31576672" + ")\n";
 			}
 			if (searchDomain.getStatus_Tumor_Routed() != null && searchDomain.getStatus_Tumor_Routed() == 1) {	
-				addToWhere = addToWhere + statusWhereGO + "31576670" + ")\n";
+				addToWhere = addToWhere + statusWhereTumor + "31576670" + ")\n";
 			}
 			
 			if (!addToWhere.isEmpty()) {

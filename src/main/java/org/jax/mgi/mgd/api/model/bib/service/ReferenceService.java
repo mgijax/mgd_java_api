@@ -867,6 +867,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 		}
 			
+		// process workflow tags
 		if (searchDomain.getWorkflow_tag_operator() != null && !searchDomain.getWorkflow_tag_operator().isEmpty()) {
 			
 			String workflow_tag_operator = searchDomain.getWorkflow_tag_operator();
@@ -887,6 +888,46 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				addToWhere = addToWhere + workflow_tag_operator + useExists_operator + select_operator + searchDomain.getWorkflow_tag1() + "')\n";
 			}
 			
+			if (searchDomain.getWorkflow_tag2() != null && !searchDomain.getWorkflow_tag2().isEmpty()) {
+				if (searchDomain.getNot_workflow_tag2() != null && searchDomain.getNot_workflow_tag2() == true) {
+					useExists_operator = " not" + exists_operator;
+				}
+				else {
+					useExists_operator = exists_operator;	
+				}
+				addToWhere = addToWhere + workflow_tag_operator + useExists_operator + select_operator + searchDomain.getWorkflow_tag2() + "')\n";
+			}
+			
+			if (searchDomain.getWorkflow_tag3() != null && !searchDomain.getWorkflow_tag3().isEmpty()) {
+				if (searchDomain.getNot_workflow_tag3() != null && searchDomain.getNot_workflow_tag3() == true) {
+					useExists_operator = " not" + exists_operator;
+				}
+				else {
+					useExists_operator = exists_operator;	
+				}
+				addToWhere = addToWhere + workflow_tag_operator + useExists_operator + select_operator + searchDomain.getWorkflow_tag3() + "')\n";
+			}
+			
+			if (searchDomain.getWorkflow_tag4() != null && !searchDomain.getWorkflow_tag4().isEmpty()) {
+				if (searchDomain.getNot_workflow_tag4() != null && searchDomain.getNot_workflow_tag4() == true) {
+					useExists_operator = " not" + exists_operator;
+				}
+				else {
+					useExists_operator = exists_operator;	
+				}
+				addToWhere = addToWhere + workflow_tag_operator + useExists_operator + select_operator + searchDomain.getWorkflow_tag4() + "')\n";
+			}
+			
+			if (searchDomain.getWorkflow_tag5() != null && !searchDomain.getWorkflow_tag5().isEmpty()) {
+				if (searchDomain.getNot_workflow_tag5() != null && searchDomain.getNot_workflow_tag5() == true) {
+					useExists_operator = " not" + exists_operator;
+				}
+				else {
+					useExists_operator = exists_operator;	
+				}
+				addToWhere = addToWhere + workflow_tag_operator + useExists_operator + select_operator + searchDomain.getWorkflow_tag5() + "')\n";
+			}
+			
 			if (!addToWhere.isEmpty()) {
 				addToWhere =  "\nand (" + addToWhere;
 				addToWhere = addToWhere + "\n)";
@@ -896,20 +937,22 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 		}
 		
-//		  31576664 | Alleles & Phenotypes
-//		  31576665 | Expression
-//		  31576666 | Gene Ontology
-//		  31576667 | Tumor
-//		  31576668 | QTL
-//		  78678148 | PRO
-//		
-//		  31576671 | Chosen
-//		  31576674 | Full-coded
-//		  31576673 | Indexed
-//		  71027551 | New
-//		  31576669 | Not Routed
-//		  31576672 | Rejected
-//		  31576670 | Routed
+		// process workflow status
+		
+		//	31576664 | Alleles & Phenotypes
+		//	31576665 | Expression
+		//	31576666 | Gene Ontology
+		//	31576667 | Tumor
+		//	31576668 | QTL
+		//	78678148 | PRO
+		//		
+		//	31576671 | Chosen
+		//	31576674 | Full-coded
+		//	31576673 | Indexed
+		//	71027551 | New
+		//	31576669 | Not Routed
+		//	31576672 | Rejected
+		//	31576670 | Routed
 		
 		if (searchDomain.getStatus_operator() != null && !searchDomain.getStatus_operator().isEmpty()) {
 		

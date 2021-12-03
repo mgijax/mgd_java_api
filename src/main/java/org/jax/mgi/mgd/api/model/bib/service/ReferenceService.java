@@ -838,7 +838,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (cmResultsRelevance.length > 0) {
 			from = from + cmResultsRelevance[0];
 			where = where + cmResultsRelevance[1];
-			from_wkfstatus = true;
+			from_wkfrelevance = true;
 		}
 		
 		// status history

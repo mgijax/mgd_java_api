@@ -437,6 +437,35 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 		}		
 		
+		if (params.containsKey("sh_status")) {
+			searchDomain.setSh_status((String) params.get("sh_status"));
+		}
+		if (params.containsKey("sh_group")) {
+			searchDomain.setSh_group((String) params.get("sh_group"));
+		}
+		if (params.containsKey("sh_username")) {
+			searchDomain.setSh_username((String) params.get("sh_username"));
+		}
+		if (params.containsKey("sh_date")) {
+			searchDomain.setSh_date((String) params.get("sh_date"));
+		}	
+		
+		if (params.containsKey("relevance")) {
+			searchDomain.setRelevance((String) params.get("relevance"));
+		}
+		if (params.containsKey("relevance_date")) {
+			searchDomain.setRelevance_date((String) params.get("relevance_date"));
+		}
+		if (params.containsKey("relevance_user")) {
+			searchDomain.setRelevance_user((String) params.get("relevance_user"));
+		}
+		if (params.containsKey("relevance_version")) {
+			searchDomain.setRelevance_version((String) params.get("relevance_version"));
+		}
+		if (params.containsKey("relevance_confidence")) {
+			searchDomain.setRelevance_confidence((String) params.get("relevance_confidence"));
+		}
+		
 		if (params.containsKey("status_AP_New")) {
 			searchDomain.setStatus_AP_New((Integer) params.get("status_AP_New"));
 		}
@@ -618,6 +647,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		Boolean from_wkfrelevance = false;
 		Boolean from_wkfdata = false;
+		Boolean from_wkfstatus = false;
 		
 		// may be a different order
 		if (searchDomain.getOrderBy() != null && !searchDomain.getOrderBy().isEmpty()) {
@@ -641,9 +671,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			from = from + cmResults[0];
 			where = where + cmResults[1];
 		}
-
-		// TODO status history
-		// TODI relevance history; version; confidence
 		
 		if (searchDomain.getJnumid() != null && !searchDomain.getJnumid().isEmpty()) {
 			String jnumid = searchDomain.getJnumid().toUpperCase();
@@ -736,19 +763,53 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				from_pubmedid = true;
 			}
 		}
-
-		// relevance
-		if (searchDomain.getCurrentRelevance() != null && !searchDomain.getCurrentRelevance().isEmpty()) {
-			where = where + "\nand rt.term = '" + searchDomain.getCurrentRelevance() + "'";
-			from_wkfrelevance = true;
-		}
-		
-		// supplmenetal term
+	
+		// supplemental term
 		if (searchDomain.getSupplementalTerm() != null && !searchDomain.getSupplementalTerm().isEmpty()) {
 			where = where + "\nand dt.term = '" + searchDomain.getSupplementalTerm() + "'";
 			from_wkfdata = true;
 		}
 		
+		// relevance history
+		if (searchDomain.getCurrentRelevance() != null && !searchDomain.getCurrentRelevance().isEmpty()) {
+			where = where + "\nand rt.term = '" + searchDomain.getCurrentRelevance() + "'";
+			from_wkfrelevance = true;
+		}
+		else if (searchDomain.getRelevance() != null && !searchDomain.getRelevance().isEmpty()) {
+			where = where + "\nand rt.term = '" + searchDomain.getRelevance() + "'";
+			from_wkfrelevance = true;
+		}
+		if (searchDomain.getRelevance_version() != null && !searchDomain.getRelevance_version().isEmpty()) {
+			where = where + "\nand wkfr.version = '" + searchDomain.getRelevance_version() + "'";
+			from_wkfrelevance = true;
+		}
+		if (searchDomain.getRelevance_confidence() != null && !searchDomain.getRelevance_confidence().isEmpty()) {
+			where = where + "\nand wkfr.confidence = " + searchDomain.getRelevance_confidence();
+			from_wkfrelevance = true;
+		}
+		String cmResultsRelevance[] = DateSQLQuery.queryByCreationModification("wkfr", null, searchDomain.getRelevance_user(), null, searchDomain.getRelevance_date());
+		if (cmResultsRelevance.length > 0) {
+			from = from + cmResultsRelevance[0];
+			where = where + cmResultsRelevance[1];
+			from_wkfstatus = true;
+		}
+		
+		// status history
+		if (searchDomain.getSh_status() != null && !searchDomain.getSh_status().isEmpty()) {
+			where = where + "\nand st.term = '" + searchDomain.getSh_status() + "'";
+			from_wkfstatus = true;
+		}
+		if (searchDomain.getSh_group() != null && !searchDomain.getSh_group().isEmpty()) {
+			where = where + "\nand gt.term = '" + searchDomain.getSh_group() + "'";
+			from_wkfstatus = true;
+		}
+		String cmResultsStatus[] = DateSQLQuery.queryByCreationModification("wkfs", null, searchDomain.getSh_username(), null, searchDomain.getSh_date());
+		if (cmResultsStatus.length > 0) {
+			from = from + cmResultsStatus[0];
+			where = where + cmResultsStatus[1];
+			from_wkfstatus = true;
+		}
+				
 //		  31576664 | Alleles & Phenotypes
 //		  31576665 | Expression
 //		  31576666 | Gene Ontology
@@ -927,7 +988,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 		}
 		 
-		// DO THE SAME FOR THE bib_workflow_tags
+		// TODO bib_workflow_tags
 		
 		if (from_accession == true) {
 			from = from + ", acc_accession a";
@@ -959,6 +1020,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					+ "\nand pid._mgitype_key = 1"
 					+ "\nand pid._logicaldb_key = 29";
 		}
+		if (from_wkfdata == true) {
+			from = from + ", bib_workflow_data wkfd, voc_term dt";
+			where = where + "\nand c._refs_key = wkfd._refs_key"
+					+ "\nand wkfd._extractedtext_key = 48804490"
+					+ "\nand wkfd._supplemental_key = dt._term_key"
+					+ "\nand dt._vocab_key = 130";
+		}		
 		if (from_wkfrelevance == true) {
 			from = from + ", bib_workflow_relevance wkfr, voc_term rt";
 			where = where + "\nand c._refs_key = wkfr._refs_key"
@@ -966,12 +1034,14 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					+ "\nand wkfr._relevance_key = rt._term_key"
 					+ "\nand rt._vocab_key = 149";
 		}
-		if (from_wkfdata == true) {
-			from = from + ", bib_workflow_data wkfd, voc_term dt";
-			where = where + "\nand c._refs_key = wkfd._refs_key"
-					+ "\nand wkfd._extractedtext_key = 48804490"
-					+ "\nand wkfd._supplemental_key = dt._term_key"
-					+ "\nand dt._vocab_key = 130";
+		if (from_wkfstatus == true) {
+			from = from + ", bib_workflow_status wkfs, voc_term st, voc_term gt";
+			where = where + "\nand c._refs_key = wkfs._refs_key"
+					+ "\nand wkfs.isCurrent = 1"
+					+ "\nand wkfs._status_key = st._term_key"
+					+ "\nand st._vocab_key = 128"
+					+ "\nand wtfs._group_key = gt._term_key"
+					+ "\nand gt._vocab_key = 127";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

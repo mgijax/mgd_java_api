@@ -72,7 +72,18 @@ public class ReferenceDomain extends BaseDomain {
 	private String status_operator = "OR";
 	private String orderBy = "1";
 	private String accids;
-	private String supplementalTerm;	
+	private String supplementalTerm;
+	
+	private String sh_status;
+	private String sh_group;
+	private String sh_username;
+	private String sh_date;
+	
+	private String relevance;
+	private String relevance_date;
+	private String relevance_user;
+	private String relevance_version;
+	private String relevance_confidence;
 	
 	private Integer status_AP_New;
 	private Integer status_AP_Not_Routed;

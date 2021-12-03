@@ -969,8 +969,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (from_wkfdata == true) {
 			from = from + ", bib_workflow_data wkfd, voc_term dt";
 			where = where + "\nand c._refs_key = wkfd._refs_key"
-					+ "\nand wkfd.isCurrent = 1"
-					+ "\nand wkfd._relevance_key = dt._term_key"
+					+ "\nand wkfd._extractedtext_key = 48804490"
+					+ "\nand wkfd._supplmental_key = dt._term_key"
 					+ "\nand rd._vocab_key = 130";
 		}
 		

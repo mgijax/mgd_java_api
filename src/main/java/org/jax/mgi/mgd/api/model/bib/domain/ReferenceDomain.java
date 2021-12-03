@@ -85,6 +85,17 @@ public class ReferenceDomain extends BaseDomain {
 	private String relevance_version;
 	private String relevance_confidence;
 	
+	private String workflow_tag1;
+	private String workflow_tag2;
+	private String workflow_tag3;
+	private String workflow_tag4;
+	private String workflow_tag5;
+	private Boolean not_workflow_tag1;
+	private Boolean not_workflow_tag2;
+	private Boolean not_workflow_tag3;
+	private Boolean not_workflow_tag4;
+	private Boolean not_workflow_tag5;
+	
 	private Integer status_AP_New;
 	private Integer status_AP_Not_Routed;
 	private Integer status_AP_Routed;

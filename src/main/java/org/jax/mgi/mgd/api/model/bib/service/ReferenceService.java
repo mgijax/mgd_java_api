@@ -466,6 +466,37 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			searchDomain.setRelevance_confidence((String) params.get("relevance_confidence"));
 		}
 		
+		if (params.containsKey("workflow_tag1")) {
+			searchDomain.setWorkflow_tag1((String) params.get("workflow_tag1"));
+		}
+		if (params.containsKey("workflow_tag2")) {
+			searchDomain.setWorkflow_tag2((String) params.get("workflow_tag2"));
+		}
+		if (params.containsKey("workflow_tag3")) {
+			searchDomain.setWorkflow_tag3((String) params.get("workflow_tag3"));
+		}
+		if (params.containsKey("workflow_tag4")) {
+			searchDomain.setWorkflow_tag4((String) params.get("workflow_tag4"));
+		}
+		if (params.containsKey("workflow_tag5")) {
+			searchDomain.setWorkflow_tag5((String) params.get("workflow_tag5"));
+		}
+		if (params.containsKey("not_workflow_tag1")) {
+			searchDomain.setNot_workflow_tag1((Boolean) params.get("not_workflow_tag1"));
+		}
+		if (params.containsKey("not_workflow_tag2")) {
+			searchDomain.setNot_workflow_tag2((Boolean) params.get("not_workflow_tag2"));
+		}
+		if (params.containsKey("not_workflow_tag3")) {
+			searchDomain.setNot_workflow_tag3((Boolean) params.get("not_workflow_tag3"));
+		}
+		if (params.containsKey("not_workflow_tag4")) {
+			searchDomain.setNot_workflow_tag4((Boolean) params.get("not_workflow_tag4"));
+		}
+		if (params.containsKey("not_workflow_tag5")) {
+			searchDomain.setNot_workflow_tag5((Boolean) params.get("not_workflow_tag5"));
+		}
+		
 		if (params.containsKey("status_AP_New")) {
 			searchDomain.setStatus_AP_New((Integer) params.get("status_AP_New"));
 		}
@@ -637,7 +668,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		String 	orderBy = "order by c.short_citation";			
 		String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
-		
+		String addToWhere = "";
+
 		Boolean from_accession = false;
 		Boolean from_note = false;
 		Boolean from_book = false;
@@ -703,15 +735,30 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		if (searchDomain.getDate() != null && !searchDomain.getDate().isEmpty()) {
 			where = where + "\nand r.date ilike '" + searchDomain.getDate() + "'";
-		}
-		if (searchDomain.getYear() != null && !searchDomain.getYear().isEmpty()) {
-			where = where + "\nand r.year = " + searchDomain.getYear();
 		}		
 		if (searchDomain.getIsReviewArticle() != null && !searchDomain.getIsReviewArticle().isEmpty()) {
 			where = where + "\nand r.isReviewArticle = " + searchDomain.getIsReviewArticle();
 		}
 		if (searchDomain.getReferenceAbstract() != null && !searchDomain.getReferenceAbstract().isEmpty()) {
 			where = where + "\nand r.abstract ilike '" + searchDomain.getReferenceAbstract() + "'";
+		}
+		
+		// add some logic to allow >=, <=, >, <, =, between xxx and zzz, or just the year
+		if (searchDomain.getYear() != null && !searchDomain.getYear().isEmpty()) {
+			value = searchDomain.getYear();
+			if (value.startsWith("=")
+					|| value.startsWith(">=")
+					|| value.startsWith(">")
+					|| value.startsWith("<=")
+					|| value.startsWith("<")
+					|| value.startsWith("between")				
+					)
+			{
+				where = where + "\nand r.year " + value;
+			}
+			else {		
+				where = where + "\nand r.year = " + value;
+			}
 		}
 		
 		// bib_books
@@ -809,7 +856,36 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			where = where + cmResultsStatus[1];
 			from_wkfstatus = true;
 		}
-				
+			
+		if (searchDomain.getWorkflow_tag_operator() != null && !searchDomain.getWorkflow_tag_operator().isEmpty()) {
+			
+			String workflow_tag_operator = searchDomain.getWorkflow_tag_operator();
+			String exists_operator = " exists";
+			String select_operator = " (select 1 from bib_workflow_tag tg, voc_term tagt"
+					+ " where r._refs_key = tg._refs_key and tg._tag_key = tagt._term_key and tagt.term = '";
+			String useExists_operator = "";
+			
+			addToWhere = "";
+			
+			if (searchDomain.getWorkflow_tag1() != null && !searchDomain.getWorkflow_tag1().isEmpty()) {
+				if (searchDomain.getNot_workflow_tag1() != null && searchDomain.getNot_workflow_tag1() == false) {
+					useExists_operator = " not" + exists_operator;
+				}
+				else {
+					useExists_operator = exists_operator;	
+				}
+				addToWhere = addToWhere + workflow_tag_operator + useExists_operator + select_operator + searchDomain.getWorkflow_tag1() + "')\n";
+			}
+			
+			if (!addToWhere.isEmpty()) {
+				addToWhere =  "\nand (" + addToWhere;
+				addToWhere = addToWhere + "\n)";
+				addToWhere = addToWhere.replaceAll("and \\(AND", "and(");
+				addToWhere = addToWhere.replaceAll("and \\(OR", "and(");
+				where = where + addToWhere;
+			}
+		}
+		
 //		  31576664 | Alleles & Phenotypes
 //		  31576665 | Expression
 //		  31576666 | Gene Ontology
@@ -828,7 +904,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (searchDomain.getStatus_operator() != null && !searchDomain.getStatus_operator().isEmpty()) {
 		
 			String status_operator = searchDomain.getStatus_operator();
-			String addToWhere = "";
+			addToWhere = "";
 			
 			String statusWhereAP = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
 						" and ss.isCurrent = 1 and ss._group_key = 31576664" + " and ss._status_key = ";
@@ -842,11 +918,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					" and ss.isCurrent = 1 and ss._group_key = 31576668" + " and ss._status_key = ";
 			String statusWhereTumor = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
 					" and ss.isCurrent = 1 and ss._group_key = 31576667" + " and ss._status_key = ";
-		
-			addToWhere =  "";
-			
-			log.info(searchDomain.getStatus_AP_Indexed());
-			
+						
 			if (searchDomain.getStatus_AP_Chosen() != null && searchDomain.getStatus_AP_Chosen() == 1) {
 				addToWhere = addToWhere + statusWhereAP + "31576671" + ")\n";
 			}

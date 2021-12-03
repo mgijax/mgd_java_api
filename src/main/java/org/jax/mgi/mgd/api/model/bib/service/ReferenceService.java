@@ -757,27 +757,36 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 			addToWhere =  "\nand (";
 			
-			if (searchDomain.getStatus_AP_Chosen() != null && searchDomain.getStatus_AP_Chosen().equals(1)) {	
+			if (searchDomain.getStatus_AP_Chosen() != null && searchDomain.getStatus_AP_Chosen().equals(1)) {
+				log.info("searchDomain.getStatus_AP_Chosen()");
 				addToWhere = addToWhere + statusWhereAP + "31576671" + ")\n";
 			}
 			if (searchDomain.getStatus_AP_Full_coded() != null && searchDomain.getStatus_AP_Full_coded().equals(1)) {	
+				log.info("searchDomain.getStatus_AP_Full_coded()");				
 				addToWhere = addToWhere + statusWhereAP + "31576674" + ")\n";
 			}
 			if (searchDomain.getStatus_AP_Indexed() != null && searchDomain.getStatus_AP_Indexed().equals(1)) {	
+				log.info("searchDomain.getStatus_AP_Indexed()");
 				addToWhere = addToWhere + statusWhereAP + "31576673" + ")\n";
 			}
 			if (searchDomain.getStatus_AP_New() != null && searchDomain.getStatus_AP_New().equals(1)) {	
+				log.info("searchDomain.getStatus_AP_New()");
 				addToWhere = addToWhere + statusWhereAP + "71027551" + ")\n";
 			}		
-			if (searchDomain.getStatus_AP_Not_Routed()!= null && searchDomain.getStatus_AP_Not_Routed().equals(1)) {	
+			if (searchDomain.getStatus_AP_Not_Routed()!= null && searchDomain.getStatus_AP_Not_Routed().equals(1)) {
+				log.info("searchDomain.getStatus_AP_Not_Routed()");
 				addToWhere = addToWhere + statusWhereAP + "31576669" + ")\n";
 			}
 			if (searchDomain.getStatus_AP_Rejected() != null && searchDomain.getStatus_AP_Rejected().equals(1)) {	
+				log.info("searchDomain.getStatus_AP_Rejected()");
 				addToWhere = addToWhere + statusWhereAP + "31576672" + ")\n";
 			}
 			if (searchDomain.getStatus_AP_Routed() != null && searchDomain.getStatus_AP_Routed().equals(1)) {	
+				log.info("searchDomain.getStatus_AP_Routed()");
 				addToWhere = addToWhere + statusWhereAP + "31576670" + ")\n";
 			}
+			
+			
 			
 			addToWhere = addToWhere + "\n)";
 			addToWhere = addToWhere.replaceAll("and \\(AND", "and(");

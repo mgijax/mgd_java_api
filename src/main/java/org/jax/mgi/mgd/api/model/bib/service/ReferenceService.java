@@ -23,6 +23,7 @@ import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceWorkflowDataDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceBookDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceNoteDAO;
+import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
@@ -30,6 +31,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
+import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceSummaryTranslator;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
 import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -66,6 +68,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	private TermService termService;
 	
 	private ReferenceTranslator translator = new ReferenceTranslator();
+	private LTReferenceSummaryTranslator lttranslator = new LTReferenceSummaryTranslator();
+	
 	private SlimReferenceTranslator slimtranslator = new SlimReferenceTranslator();	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
@@ -334,7 +338,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}	
 	
 	@Transactional
-	public SearchResults<LTReference> searchLT(Map<String, Object> params) {
+	public SearchResults<LTReferenceSummaryDomain> searchLT(Map<String, Object> params) {
 		// 1st step in trying to merge LT search to Reference search
 				
 		// try to copy the input params to the ReferenceDomain
@@ -552,22 +556,25 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// send this domain to the search()
 		List<SlimReferenceDomain> returnDomain = new ArrayList<SlimReferenceDomain>();
 		returnDomain = search(searchDomain);
+		
+		// return the LTReference results		
+		SearchResults<LTReferenceSummaryDomain> summaryResults = new SearchResults<LTReferenceSummaryDomain>();
+		summaryResults.items = new ArrayList<LTReferenceSummaryDomain>();
 
-//		List<LTReference> refs = entityManager.createQuery(query).setMaxResults(rowLimit).getResultList();
-//		log.info("got " + refs.size() + " basic references");
-//		results.setItems(refs);
-		
-		SearchResults<LTReference> results = new SearchResults<LTReference>();
-		
-		// return the LTReference results
 		for (int i = 0; i < returnDomain.size(); i++) {
 			log.info("returnDomain.get(i).getRefsKey():" + returnDomain.get(i).getRefsKey());
 			LTReference entity = ltReferenceDAO.get(Integer.valueOf(returnDomain.get(i).getRefsKey()));
-			log.info("LTReference:" + entity);
-			results.items.add(entity);
+			summaryResults.items.add(lttranslator.translate(entity));			
 		}
+
+//		results.elapsed_ms = refs.elapsed_ms;
+//		results.error = refs.error;
+//		results.message = refs.message;
+//		results.status_code = refs.status_code;
+		summaryResults.total_count = returnDomain.size();
+//		results.all_match_count = refs.all_match_count;
 		
-		return results;		
+		return summaryResults;		
 	}
 	
 	@Transactional	

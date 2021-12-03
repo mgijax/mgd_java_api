@@ -42,26 +42,26 @@ public class LTReferenceSummaryRepository extends BaseRepository<LTReferenceSumm
 	public SearchResults<LTReferenceSummaryDomain> search(Map<String,Object> params) {
 		
 		//SearchResults<LTReference> refs = referenceDAO.search(params);
-		SearchResults<LTReference> refs = referenceService.searchLT(params);
+		SearchResults<LTReferenceSummaryDomain> domains = referenceService.searchLT(params);
 		
-		SearchResults<LTReferenceSummaryDomain> domains = new SearchResults<LTReferenceSummaryDomain>();
+		//SearchResults<LTReferenceSummaryDomain> domains = new SearchResults<LTReferenceSummaryDomain>();
 
-		domains.elapsed_ms = refs.elapsed_ms;
-		domains.error = refs.error;
-		domains.message = refs.message;
-		domains.status_code = refs.status_code;
-		domains.total_count = refs.total_count;
-		domains.all_match_count = refs.all_match_count;
-
-		if (refs.items != null) {
-			// walking the references to do the translations individually, because I want a List,
-			// not an Iterable
-			
-			domains.items = new ArrayList<LTReferenceSummaryDomain>();
-			for (LTReference ref : refs.items) {
-				domains.items.add(translator.translate(ref));
-			}
-		}
+//		domains.elapsed_ms = refs.elapsed_ms;
+//		domains.error = refs.error;
+//		domains.message = refs.message;
+//		domains.status_code = refs.status_code;
+//		domains.total_count = refs.total_count;
+//		domains.all_match_count = refs.all_match_count;
+//
+//		if (refs.items != null) {
+//			// walking the references to do the translations individually, because I want a List,
+//			// not an Iterable
+//			
+//			domains.items = new ArrayList<LTReferenceSummaryDomain>();
+//			for (LTReference ref : refs.items) {
+//				domains.items.add(translator.translate(ref));
+//			}
+//		}
 		return domains;
 	}
 

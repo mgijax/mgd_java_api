@@ -450,7 +450,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (params.containsKey("status_AP_Chosen")) {
 			searchDomain.setStatus_AP_Chosen((Integer) params.get("status_AP_Chosen"));
 		}	
-		if (params.containsKey("status_AP_indexed")) {
+		if (params.containsKey("status_AP_Indexed")) {
 			searchDomain.setStatus_AP_Indexed((Integer) params.get("status_AP_Indexed"));
 		}	
 		if (params.containsKey("status_AP_Full_coded")) {
@@ -472,7 +472,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (params.containsKey("status_GO_Chosen")) {
 			searchDomain.setStatus_GO_Chosen((Integer) params.get("status_GO_Chosen"));
 		}	
-		if (params.containsKey("status_GO_indexed")) {
+		if (params.containsKey("status_GO_Indexed")) {
 			searchDomain.setStatus_GO_Indexed((Integer) params.get("status_GO_Indexed"));
 		}	
 		if (params.containsKey("status_GO_Full_coded")) {
@@ -494,7 +494,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (params.containsKey("status_GXD_Chosen")) {
 			searchDomain.setStatus_GXD_Chosen((Integer) params.get("status_GXD_Chosen"));
 		}	
-		if (params.containsKey("status_GXD_indexed")) {
+		if (params.containsKey("status_GXD_Indexed")) {
 			searchDomain.setStatus_GXD_Indexed((Integer) params.get("status_GXD_Indexed"));
 		}	
 		if (params.containsKey("status_GXD_Full_coded")) {
@@ -516,7 +516,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (params.containsKey("status_PRO_Chosen")) {
 			searchDomain.setStatus_PRO_Chosen((Integer) params.get("status_PRO_Chosen"));
 		}	
-		if (params.containsKey("status_PRO_indexed")) {
+		if (params.containsKey("status_PRO_Indexed")) {
 			searchDomain.setStatus_PRO_Indexed((Integer) params.get("status_PRO_Indexed"));
 		}	
 		if (params.containsKey("status_PRO_Full_coded")) {
@@ -538,7 +538,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (params.containsKey("status_QTL_Chosen")) {
 			searchDomain.setStatus_QTL_Chosen((Integer) params.get("status_QTL_Chosen"));
 		}	
-		if (params.containsKey("status_QTL_indexed")) {
+		if (params.containsKey("status_QTL_Indexed")) {
 			searchDomain.setStatus_QTL_Indexed((Integer) params.get("status_QTL_Indexed"));
 		}	
 		if (params.containsKey("status_QTL_Full_coded")) {
@@ -560,7 +560,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (params.containsKey("status_Tumor_Chosen")) {
 			searchDomain.setStatus_Tumor_Chosen((Integer) params.get("status_Tumor_Chosen"));
 		}	
-		if (params.containsKey("status_Tumor_indexed")) {
+		if (params.containsKey("status_Tumor_Indexed")) {
 			searchDomain.setStatus_Tumor_Indexed((Integer) params.get("status_Tumor_Indexed"));
 		}	
 		if (params.containsKey("status_Tumor_Full_coded")) {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -371,6 +372,22 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (params.containsKey("_refs_key")) {
 			searchDomain.setRefsKey((String) params.get("_refs_key"));
 		}
+		
+		if (params.containsKey("created_by")) {
+			searchDomain.setCreatedBy((String) params.get("created_by"));
+		}
+		
+		if (params.containsKey("modified_by")) {
+			searchDomain.setModifiedBy((String) params.get("modified_by"));
+		}	
+		
+		if (params.containsKey("creation_date")) {
+			searchDomain.setCreation_date((String) params.get("creation_date"));
+		}
+		
+		if (params.containsKey("modification_date")) {
+			searchDomain.setModification_date((String) params.get("modification_date"));	
+		}		
 		
 		if (params.containsKey("primaryAuthor")) {
 			searchDomain.setPrimaryAuthor((String) params.get("primaryAuthor"));

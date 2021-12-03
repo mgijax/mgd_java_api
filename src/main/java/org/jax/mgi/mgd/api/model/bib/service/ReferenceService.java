@@ -562,7 +562,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		summaryResults.items = new ArrayList<LTReferenceSummaryDomain>();
 
 		for (int i = 0; i < returnDomain.size(); i++) {
-			log.info("returnDomain.get(i).getRefsKey():" + returnDomain.get(i).getRefsKey());
+			//log.info("returnDomain.get(i).getRefsKey():" + returnDomain.get(i).getRefsKey());
 			LTReference entity = ltReferenceDAO.get(Integer.valueOf(returnDomain.get(i).getRefsKey()));
 			summaryResults.items.add(lttranslator.translate(entity));			
 		}
@@ -763,56 +763,56 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				log.info("searchDomain.getStatus_AP_Chosen()");
 				addToWhere = addToWhere + statusWhereAP + "31576671" + ")\n";
 			}
-			if (searchDomain.getStatus_AP_Full_coded() != null && searchDomain.getStatus_AP_Full_coded().equals(1)) {	
+			if (searchDomain.getStatus_AP_Full_coded() != null && searchDomain.getStatus_AP_Full_coded() == 1) {	
 				log.info("searchDomain.getStatus_AP_Full_coded()");				
 				addToWhere = addToWhere + statusWhereAP + "31576674" + ")\n";
 			}
-			if (searchDomain.getStatus_AP_Indexed() != null && searchDomain.getStatus_AP_Indexed().equals(1)) {	
+			if (searchDomain.getStatus_AP_Indexed() != null && searchDomain.getStatus_AP_Indexed() == 1) {	
 				log.info("searchDomain.getStatus_AP_Indexed()");
 				addToWhere = addToWhere + statusWhereAP + "31576673" + ")\n";
 			}
-			if (searchDomain.getStatus_AP_New() != null && searchDomain.getStatus_AP_New().equals(1)) {	
+			if (searchDomain.getStatus_AP_New() != null && searchDomain.getStatus_AP_New() == 1) {	
 				log.info("searchDomain.getStatus_AP_New()");
 				addToWhere = addToWhere + statusWhereAP + "71027551" + ")\n";
 			}		
-			if (searchDomain.getStatus_AP_Not_Routed()!= null && searchDomain.getStatus_AP_Not_Routed().equals(1)) {
+			if (searchDomain.getStatus_AP_Not_Routed()!= null && searchDomain.getStatus_AP_Not_Routed() == 1) {
 				log.info("searchDomain.getStatus_AP_Not_Routed()");
 				addToWhere = addToWhere + statusWhereAP + "31576669" + ")\n";
 			}
-			if (searchDomain.getStatus_AP_Rejected() != null && searchDomain.getStatus_AP_Rejected().equals(1)) {	
+			if (searchDomain.getStatus_AP_Rejected() != null && searchDomain.getStatus_AP_Rejected() == 1) {	
 				log.info("searchDomain.getStatus_AP_Rejected()");
 				addToWhere = addToWhere + statusWhereAP + "31576672" + ")\n";
 			}
-			if (searchDomain.getStatus_AP_Routed() != null && searchDomain.getStatus_AP_Routed().equals(1)) {	
+			if (searchDomain.getStatus_AP_Routed() != null && searchDomain.getStatus_AP_Routed() == 1) {	
 				log.info("searchDomain.getStatus_AP_Routed()");
 				addToWhere = addToWhere + statusWhereAP + "31576670" + ")\n";
 			}
 
-			if (searchDomain.getStatus_GO_Chosen() != null && searchDomain.getStatus_GO_Chosen().equals(1)) {
+			if (searchDomain.getStatus_GO_Chosen() != null && searchDomain.getStatus_GO_Chosen() == 1) {
 				log.info("searchDomain.getStatus_GO_Chosen()");
 				addToWhere = addToWhere + statusWhereGO + "31576671" + ")\n";
 			}
-			if (searchDomain.getStatus_GO_Full_coded() != null && searchDomain.getStatus_GO_Full_coded().equals(1)) {	
+			if (searchDomain.getStatus_GO_Full_coded() != null && searchDomain.getStatus_GO_Full_coded() == 1) {	
 				log.info("searchDomain.getStatusGO_Full_coded()");				
 				addToWhere = addToWhere + statusWhereGO + "31576674" + ")\n";
 			}
-			if (searchDomain.getStatus_GO_Indexed() != null && searchDomain.getStatus_GO_Indexed().equals(1)) {	
+			if (searchDomain.getStatus_GO_Indexed() != null && searchDomain.getStatus_GO_Indexed() == 1) {	
 				log.info("searchDomain.getStatus_GO_Indexed()");
 				addToWhere = addToWhere + statusWhereGO + "31576673" + ")\n";
 			}
-			if (searchDomain.getStatus_GO_New() != null && searchDomain.getStatus_GO_New().equals(1)) {	
+			if (searchDomain.getStatus_GO_New() != null && searchDomain.getStatus_GO_New() == 1) {	
 				log.info("searchDomain.getStatus_GO_New()");
 				addToWhere = addToWhere + statusWhereGO + "71027551" + ")\n";
 			}		
-			if (searchDomain.getStatus_GO_Not_Routed()!= null && searchDomain.getStatus_GO_Not_Routed().equals(1)) {
+			if (searchDomain.getStatus_GO_Not_Routed()!= null && searchDomain.getStatus_GO_Not_Routed() == 1) {
 				log.info("searchDomain.getStatus_GO_Not_Routed()");
 				addToWhere = addToWhere + statusWhereGO + "31576669" + ")\n";
 			}
-			if (searchDomain.getStatus_GO_Rejected() != null && searchDomain.getStatus_GO_Rejected().equals(1)) {	
+			if (searchDomain.getStatus_GO_Rejected() != null && searchDomain.getStatus_GO_Rejected() == 1) {	
 				log.info("searchDomain.getStatus_GO_Rejected()");
 				addToWhere = addToWhere + statusWhereGO + "31576672" + ")\n";
 			}
-			if (searchDomain.getStatus_GO_Routed() != null && searchDomain.getStatus_GO_Routed().equals(1)) {	
+			if (searchDomain.getStatus_GO_Routed() != null && searchDomain.getStatus_GO_Routed() == 1) {	
 				log.info("searchDomain.getStatus_GO_Routed()");
 				addToWhere = addToWhere + statusWhereGO + "31576670" + ")\n";
 			}

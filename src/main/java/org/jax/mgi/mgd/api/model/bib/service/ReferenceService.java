@@ -388,6 +388,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			searchDomain.setModification_date((String) params.get("modification_date"));	
 		}		
 		
+		if (params.containsKey("referenceType")) {
+			searchDomain.setReferenceType((String) params.get("referenceType"));
+		}
+		
 		if (params.containsKey("primaryAuthor")) {
 			searchDomain.setPrimaryAuthor((String) params.get("primaryAuthor"));
 		}	
@@ -496,9 +500,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (params.containsKey("not_workflow_tag5")) {
 			searchDomain.setNot_workflow_tag5((Boolean) params.get("not_workflow_tag5"));
 		}
-		
-		// it would be nice to convert these individual fields to a list so we can iterate thru them easier
-		
+				
 		if (params.containsKey("status_AP_New")) {
 			searchDomain.setStatus_AP_New((Integer) params.get("status_AP_New"));
 		}
@@ -678,7 +680,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		Boolean from_mgiid = false;
 		Boolean from_pubmedid = false;
 		Boolean from_doiid = false;
-		
+		Boolean from_referenceType = false;
 		Boolean from_wkfrelevance = false;
 		Boolean from_wkfdata = false;
 		Boolean from_wkfstatus = false;
@@ -717,6 +719,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (searchDomain.getReferenceTypeKey() != null && !searchDomain.getReferenceTypeKey().isEmpty()) {
 			where = where + "\nand r._ReferenceType_key = " + searchDomain.getReferenceTypeKey();
 		}
+		else if (searchDomain.getReferenceType() != null && !searchDomain.getReferenceType().isEmpty()) {
+			where = where + "\nand rtype.term = '" + searchDomain.getReferenceType() + "'";
+			from_referenceType = true;
+		}		
 		if (searchDomain.getAuthors() != null && !searchDomain.getAuthors().isEmpty()) {
 			where = where + "\nand r.authors ilike '" + searchDomain.getAuthors() + "'";
 		}
@@ -1144,6 +1150,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			where = where + "\nand c._refs_key = pid._object_key" 
 					+ "\nand pid._mgitype_key = 1"
 					+ "\nand pid._logicaldb_key = 29";
+		}
+		if (from_referenceType == true) {
+			from = from + ", voc_term rtype";
+			where = where + "\nand r._referencetype_key = rtype._term_key"
+					+ "\nand rtype._vocab_key = 131";			
 		}
 		if (from_wkfdata == true) {
 			from = from + ", bib_workflow_data wkfd, voc_term dt";

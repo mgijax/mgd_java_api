@@ -646,6 +646,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			ltdomain.setRefsKey(returnDomain.get(i).getRefsKey());
 			ltdomain.setJnumid(returnDomain.get(i).getJnumid());
 			ltdomain.setShort_citation(returnDomain.get(i).getShort_citation());
+			ltdomain.setTitle(returnDomain.get(i).getTitle());
 			ltdomain.setMgiid(returnDomain.get(i).getMgiid());							
 			ltdomain.setDoiid(returnDomain.get(i).getDoiid());				
 			ltdomain.setPubmedid(returnDomain.get(i).getPubmedid());
@@ -684,7 +685,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
 		
-		String select = "select distinct c.*"
+		String select = "select distinct c.*, r.title"
 				+ "\n, wkfd.hasPdf as has_pdf"
 				+ "\n, apt.term as ap_status, got.term as go_status, gxdt.term as gxd_status"
 				+ "\n, prot.term as pro_status, qtlt.term as qtl_status, tumort.term as tumor_status";
@@ -1240,6 +1241,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setJnumid(rs.getString("jnumid"));
 				domain.setJnum(rs.getString("numericPart"));			
 				domain.setShort_citation(rs.getString("short_citation"));
+				domain.setTitle(rs.getString("title"));
 				domain.setJournal(rs.getString("journal"));
 				domain.setMgiid(rs.getString("mgiid"));							
 				domain.setDoiid(rs.getString("doiid"));				

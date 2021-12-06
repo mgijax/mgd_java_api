@@ -18,6 +18,8 @@ import org.jax.mgi.mgd.api.util.SearchResults;
  * Has: one or more DAOs to facilitate storage/retrieval of the entities from which the
  *    ReferenceSummaryDomain object has its data drawn
  * Does: (from the outside, this appears to) retrieve domain objects, store them, search for them
+ * 
+ * I THINK THIS CAN BE REMOVED/DELETED; NOT USED
  */
 public class LTReferenceSummaryRepository extends BaseRepository<LTReferenceSummaryDomain> {
 

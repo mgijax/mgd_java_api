@@ -94,21 +94,21 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		log.info("LTReferenceRepository/search");
 		SearchResults<LTReferenceDomain> domains = new SearchResults<LTReferenceDomain>();
 		
-//		SearchResults<LTReference> refs = referenceDAO.search(params);		
-//		domains.elapsed_ms = refs.elapsed_ms;
-//		domains.error = refs.error;
-//		domains.message = refs.message;
-//		domains.status_code = refs.status_code;
-//		domains.total_count = refs.total_count;
-//		domains.all_match_count = refs.all_match_count;
-//
-//		if (refs.items != null) {
-//			// walking the references to do the translations individually, because I want a List,
-//			domains.items = new ArrayList<LTReferenceDomain>();
-//			for (LTReference ref : refs.items) {
-//				domains.items.add(translator.translate(ref));
-//			}
-//		}
+		SearchResults<LTReference> refs = referenceDAO.search(params);		
+		domains.elapsed_ms = refs.elapsed_ms;
+		domains.error = refs.error;
+		domains.message = refs.message;
+		domains.status_code = refs.status_code;
+		domains.total_count = refs.total_count;
+		domains.all_match_count = refs.all_match_count;
+
+		if (refs.items != null) {
+			// walking the references to do the translations individually, because I want a List,
+			domains.items = new ArrayList<LTReferenceDomain>();
+			for (LTReference ref : refs.items) {
+				domains.items.add(translator.translate(ref));
+			}
+		}
 		
 		return domains;
 	}

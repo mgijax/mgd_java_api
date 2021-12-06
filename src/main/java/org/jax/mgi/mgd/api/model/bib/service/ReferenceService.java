@@ -334,6 +334,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	public SearchResults<LTReferenceSummaryDomain> searchLT(Map<String, Object> params) {
 		// 1st step in trying to merge LT search to Reference search
 				
+		log.info("ReferenceService/searchLT");
+		
 		// try to copy the input params to the ReferenceDomain
 		ReferenceDomain searchDomain = new ReferenceDomain();
 		
@@ -667,6 +669,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	@Transactional	
 	public List<SlimReferenceDomain> search(ReferenceDomain searchDomain) {
 		// using searchDomain fields, generate SQL command
+		
+		log.info("ReferenceService/search");
 		
 		List<SlimReferenceDomain> results = new ArrayList<SlimReferenceDomain>();
 

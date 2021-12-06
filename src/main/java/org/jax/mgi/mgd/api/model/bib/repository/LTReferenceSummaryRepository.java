@@ -40,6 +40,7 @@ public class LTReferenceSummaryRepository extends BaseRepository<LTReferenceSumm
 
 	@Override
 	public SearchResults<LTReferenceSummaryDomain> search(Map<String,Object> params) {	
+		log.info("LTReferenceSummaryRepository/search");
 		SearchResults<LTReferenceSummaryDomain> domains = referenceService.searchLT(params);
 		return domains;
 	}

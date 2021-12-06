@@ -643,7 +643,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		// change this to take the refs key and translate the summary by the refs key not the entity
 		for (int i = 0; i < returnDomain.size(); i++) {
-			//log.info("returnDomain.get(i).getRefsKey():" + returnDomain.get(i).getRefsKey());
+			log.info("returnDomain.get(i).getRefsKey():" + returnDomain.get(i).getRefsKey());
 			LTReference entity = ltReferenceDAO.get(Integer.valueOf(returnDomain.get(i).getRefsKey()));
 			summaryResults.items.add(lttranslator.translate(entity));	
 		}

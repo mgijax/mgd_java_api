@@ -766,8 +766,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 			else if (value.contains("..")) {
 				String[] tokens = value.split("\\.\\.");
-				where = where + "\nand (year between '" + tokens[0] 
-						+ "' and ('" + tokens[1] + "'::date + '1 day'::interval))";
+				where = where + "\nand year >= " + tokens[0] + " and year <= " + tokens[1];
 			}
 			else {		
 				where = where + "\nand r.year = " + value;

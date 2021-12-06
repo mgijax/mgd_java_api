@@ -669,7 +669,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		String cmd = "";
 		
 		String select = "select distinct c.*"
-				+ "\n, has_pdf"
+				+ "\n, wkfd.has_pdf"
 				+ "\n, apt.term as ap_status, got.term as go_status, gxdt.term as gxd_status"
 				+ "\n, prot.term as pro_status, qtlt.term as qtl_status, tumort as tumor_status";
 		

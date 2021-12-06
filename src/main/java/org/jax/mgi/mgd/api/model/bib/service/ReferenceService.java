@@ -869,11 +869,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		// relevance history
 		if (searchDomain.getCurrentRelevance() != null && !searchDomain.getCurrentRelevance().isEmpty()) {
-			where = where + "\nand rt.term = '" + searchDomain.getCurrentRelevance() + "'";
+			where = where + "\nand wkfr._relevance_key = " + searchDomain.getCurrentRelevance();
 			from_wkfrelevance = true;
 		}
 		else if (searchDomain.getRelevance() != null && !searchDomain.getRelevance().isEmpty()) {
-			where = where + "\nand rt.term = '" + searchDomain.getRelevance() + "'";
+			where = where + "\nand wkff._relevance_key = " + searchDomain.getRelevance();
 			from_wkfrelevance = true;
 		}
 		if (searchDomain.getRelevance_version() != null && !searchDomain.getRelevance_version().isEmpty()) {
@@ -1213,11 +1213,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					+ "\nand dt._vocab_key = 130";
 		}		
 		if (from_wkfrelevance == true) {
-			from = from + ", bib_workflow_relevance wkfr, voc_term rt";
+			from = from + ", bib_workflow_relevance wkfr";
 			where = where + "\nand c._refs_key = wkfr._refs_key"
-					+ "\nand wkfr.isCurrent = 1"
-					+ "\nand wkfr._relevance_key = rt._term_key"
-					+ "\nand rt._vocab_key = 149";
+					+ "\nand wkfr.isCurrent = 1";
 		}
 		if (from_wkfstatus == true) {
 			from = from + ", bib_workflow_status wkfs, voc_term st, voc_term gt";

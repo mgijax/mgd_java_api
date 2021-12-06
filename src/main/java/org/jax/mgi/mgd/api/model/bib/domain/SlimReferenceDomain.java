@@ -34,6 +34,7 @@ public class SlimReferenceDomain extends BaseDomain {
 	public String qtl_status;
 	public String tumor_status;
 	public String has_pdf;
+	public String has_supplemental;
 	
 	// used by validateJnumImage
 	private List<TermDomain> journalLicenses;

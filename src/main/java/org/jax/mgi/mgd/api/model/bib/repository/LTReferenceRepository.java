@@ -94,7 +94,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		log.info("LTReferenceRepository/search");
 		SearchResults<LTReferenceDomain> domains = new SearchResults<LTReferenceDomain>();
 		
-		log.info("calling: SearchResults<LTReference> refs = referenceDAO.search(params)");
+		log.info("calling: referenceDAO");
 		SearchResults<LTReference> refs = referenceDAO.search(params);	
 		
 		domains.elapsed_ms = refs.elapsed_ms;
@@ -112,7 +112,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			}
 		}
 		
-		log.info("returning: SearchResults<LTReference> refs = referenceDAO.search(params)");
+		log.info("returning: referenceDAO");
 		
 		return domains;
 	}

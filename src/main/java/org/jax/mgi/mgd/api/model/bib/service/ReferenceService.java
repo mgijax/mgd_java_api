@@ -641,10 +641,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		SearchResults<LTReferenceSummaryDomain> summaryResults = new SearchResults<LTReferenceSummaryDomain>();
 		summaryResults.items = new ArrayList<LTReferenceSummaryDomain>();
 
+		// change this to take the refs key and translate the summary by the refs key not the entity
 		for (int i = 0; i < returnDomain.size(); i++) {
 			//log.info("returnDomain.get(i).getRefsKey():" + returnDomain.get(i).getRefsKey());
 			LTReference entity = ltReferenceDAO.get(Integer.valueOf(returnDomain.get(i).getRefsKey()));
-			summaryResults.items.add(lttranslator.translate(entity));			
+			summaryResults.items.add(lttranslator.translate(entity));	
 		}
 
 //		results.elapsed_ms = refs.elapsed_ms;
@@ -759,10 +760,14 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					|| value.startsWith(">")
 					|| value.startsWith("<=")
 					|| value.startsWith("<")
-					|| value.startsWith("between")				
 					)
 			{
 				where = where + "\nand r.year " + value;
+			}
+			else if (value.contains("..")) {
+				String[] tokens = value.split("\\.\\.");
+				where = where + "\nand (year between '" + tokens[0] 
+						+ "' and ('" + tokens[1] + "'::date + '1 day'::interval))";
 			}
 			else {		
 				where = where + "\nand r.year = " + value;
@@ -847,6 +852,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			) {
 			String cmResultsStatus[] = DateSQLQuery.queryByCreationModification("wkfr", null, searchDomain.getRelevance_user(), null, searchDomain.getRelevance_date());
 			if (cmResultsStatus.length > 0) {
+				cmResultsStatus[0] = cmResultsStatus[0].replaceAll("u1", "u3");
+				cmResultsStatus[1] = cmResultsStatus[0].replaceAll("u1", "u3");
+				cmResultsStatus[0] = cmResultsStatus[0].replaceAll("u2", "u4");
+				cmResultsStatus[1] = cmResultsStatus[0].replaceAll("u2", "u4");				
 				from = from + cmResultsStatus[0];
 				where = where + cmResultsStatus[1];
 				from_wkfrelevance = true;
@@ -867,6 +876,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			) {
 			String cmResultsStatus[] = DateSQLQuery.queryByCreationModification("wkfs", null, searchDomain.getSh_username(), null, searchDomain.getSh_date());
 			if (cmResultsStatus.length > 0) {
+				cmResultsStatus[0] = cmResultsStatus[0].replaceAll("u1", "u5");
+				cmResultsStatus[1] = cmResultsStatus[0].replaceAll("u1", "u5");
+				cmResultsStatus[0] = cmResultsStatus[0].replaceAll("u2", "u6");
+				cmResultsStatus[1] = cmResultsStatus[0].replaceAll("u2", "u6");					
 				from = from + cmResultsStatus[0];
 				where = where + cmResultsStatus[1];
 				from_wkfstatus = true;
@@ -1118,9 +1131,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				where = where + addToWhere;
 			}
 		}
-		 
-		// TODO bib_workflow_tags
-		
+		 		
 		if (from_accession == true) {
 			from = from + ", acc_accession a";
 			where = where + "\nand c._refs_key = a._object_key and a._mgitype_key = 1";

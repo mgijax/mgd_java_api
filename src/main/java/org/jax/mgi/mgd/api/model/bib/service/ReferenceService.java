@@ -700,7 +700,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				+ "\n, bib_workflow_status tumor, voc_term tumort";
 		
 		String where = "where c._refs_key = r._refs_key"
-				+ "\nand c._refs_key = wkfd._refs_key and wkfd._extractedtext_key = 48804490 and wkfd._supplemental_key = dt._term_key and dt._vocab_key = 130"			
+				+ "\nand c._refs_key = wkfd._refs_key and wkfd._extractedtext_key = 48804490"			
 				+ "\nand c._refs_key = ap._refs_key and ap.isCurrent = 1 and ap._group_key = 31576664 and ap._status_key = apt._term_key"
 				+ "\nand c._refs_key = go._refs_key and go.isCurrent = 1 and go._group_key = 31576666 and go._status_key = got._term_key"
 				+ "\nand c._refs_key = gxd._refs_key and gxd.isCurrent = 1 and gxd._group_key = 31576665 and gxd._status_key = gxdt._term_key"
@@ -721,7 +721,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		Boolean from_doiid = false;
 		Boolean from_referenceType = false;
 		Boolean from_wkfrelevance = false;
-		Boolean from_wkfdata = false;
 		Boolean from_wkfstatus = false;
 		
 		// may be a different order
@@ -863,8 +862,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	
 		// supplemental term
 		if (searchDomain.getSupplementalTerm() != null && !searchDomain.getSupplementalTerm().isEmpty()) {
-			where = where + "\nand dt.term = '" + searchDomain.getSupplementalTerm() + "'";
-			from_wkfdata = true;
+			where = where + "\nand wkfd" + searchDomain.getSupplementalTerm();
 		}
 		
 		// relevance history
@@ -1204,13 +1202,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			from = from + ", voc_term rtype";
 			where = where + "\nand r._referencetype_key = rtype._term_key"
 					+ "\nand rtype._vocab_key = 131";			
-		}
-		if (from_wkfdata == true) {
-			from = from + ", voc_term dt";
-//			where = where + "\nand c._refs_key = wkfd._refs_key"
-//					+ "\nand wkfd._extractedtext_key = 48804490"
-			where = where + "\nand wkfd._supplemental_key = dt._term_key"
-					+ "\nand dt._vocab_key = 130";
 		}		
 		if (from_wkfrelevance == true) {
 			from = from + ", bib_workflow_relevance wkfr";

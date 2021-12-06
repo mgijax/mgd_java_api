@@ -687,7 +687,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		String select = "select distinct c.*"
 				+ "\n, wkfd.hasPdf as has_pdf"
 				+ "\n, apt.term as ap_status, got.term as go_status, gxdt.term as gxd_status"
-				+ "\n, prot.term as pro_status, qtlt.term as qtl_status, tumort as tumor_status";
+				+ "\n, prot.term as pro_status, qtlt.term as qtl_status, tumort.term as tumor_status";
 		
 		String from = "from bib_citation_cache c, bib_refs r"
 				+ "\n, bib_workflow_data wkfd, voc_term dt"
@@ -720,7 +720,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		Boolean from_doiid = false;
 		Boolean from_referenceType = false;
 		Boolean from_wkfrelevance = false;
-		//Boolean from_wkfdata = false;
+		Boolean from_wkfdata = false;
 		Boolean from_wkfstatus = false;
 		
 		// may be a different order
@@ -863,7 +863,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// supplemental term
 		if (searchDomain.getSupplementalTerm() != null && !searchDomain.getSupplementalTerm().isEmpty()) {
 			where = where + "\nand dt.term = '" + searchDomain.getSupplementalTerm() + "'";
-			//from_wkfdata = true;
+			from_wkfdata = true;
 		}
 		
 		// relevance history
@@ -1204,13 +1204,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			where = where + "\nand r._referencetype_key = rtype._term_key"
 					+ "\nand rtype._vocab_key = 131";			
 		}
-//		if (from_wkfdata == true) {
-//			from = from + ", bib_workflow_data wkfd, voc_term dt";
+		if (from_wkfdata == true) {
+			from = from + ", voc_term dt";
 //			where = where + "\nand c._refs_key = wkfd._refs_key"
 //					+ "\nand wkfd._extractedtext_key = 48804490"
-//					+ "\nand wkfd._supplemental_key = dt._term_key"
-//					+ "\nand dt._vocab_key = 130";
-//		}		
+			where = where + "\nand wkfd._supplemental_key = dt._term_key"
+					+ "\nand dt._vocab_key = 130";
+		}		
 		if (from_wkfrelevance == true) {
 			from = from + ", bib_workflow_relevance wkfr, voc_term rt";
 			where = where + "\nand c._refs_key = wkfr._refs_key"

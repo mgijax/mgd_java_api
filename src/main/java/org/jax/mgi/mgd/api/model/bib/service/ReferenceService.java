@@ -850,12 +850,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if ((searchDomain.getRelevance_user() != null && !searchDomain.getRelevance_user().isEmpty())
 				|| (searchDomain.getRelevance_date() != null && !searchDomain.getRelevance_date().isEmpty())
 			) {
+			
 			String cmResultsStatus[] = DateSQLQuery.queryByCreationModification("wkfr", null, searchDomain.getRelevance_user(), null, searchDomain.getRelevance_date());
 			if (cmResultsStatus.length > 0) {
 				cmResultsStatus[0] = cmResultsStatus[0].replaceAll("u1", "u3");
-				cmResultsStatus[1] = cmResultsStatus[0].replaceAll("u1", "u3");
+				cmResultsStatus[1] = cmResultsStatus[1].replaceAll("u1", "u3");
 				cmResultsStatus[0] = cmResultsStatus[0].replaceAll("u2", "u4");
-				cmResultsStatus[1] = cmResultsStatus[0].replaceAll("u2", "u4");				
+				cmResultsStatus[1] = cmResultsStatus[1].replaceAll("u2", "u4");				
 				from = from + cmResultsStatus[0];
 				where = where + cmResultsStatus[1];
 				from_wkfrelevance = true;
@@ -877,9 +878,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			String cmResultsStatus[] = DateSQLQuery.queryByCreationModification("wkfs", null, searchDomain.getSh_username(), null, searchDomain.getSh_date());
 			if (cmResultsStatus.length > 0) {
 				cmResultsStatus[0] = cmResultsStatus[0].replaceAll("u1", "u5");
-				cmResultsStatus[1] = cmResultsStatus[0].replaceAll("u1", "u5");
+				cmResultsStatus[1] = cmResultsStatus[1].replaceAll("u1", "u5");
 				cmResultsStatus[0] = cmResultsStatus[0].replaceAll("u2", "u6");
-				cmResultsStatus[1] = cmResultsStatus[0].replaceAll("u2", "u6");					
+				cmResultsStatus[1] = cmResultsStatus[1].replaceAll("u2", "u6");					
 				from = from + cmResultsStatus[0];
 				where = where + cmResultsStatus[1];
 				from_wkfstatus = true;

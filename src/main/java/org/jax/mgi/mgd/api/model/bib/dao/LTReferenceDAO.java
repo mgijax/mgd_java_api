@@ -83,6 +83,9 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 	@Override
 	@Transactional
 	public SearchResults<LTReference> search(Map<String, Object> params) {
+		
+		log.info("LTReferenceDAO/search");
+		
 		// query parameters existing in main reference table
 		List<String> internalParameters = new ArrayList<String>(Arrays.asList(
 			new String[] { "issue", "pgs", "date", "referenceAbstract", "isReviewArticle", "title",

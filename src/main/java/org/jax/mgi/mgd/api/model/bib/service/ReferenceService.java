@@ -667,9 +667,27 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
-		String select = "select distinct c.*";
-		String from = "from bib_citation_cache c, bib_refs r";
-		String where = "where c._refs_key = r._refs_key";
+		
+		String select = "select distinct c.*"
+				+ "\n, apt.term as ap_status, got.term as go_status, gxdt.term as gxd_status"
+				+ "\n, prot.term as pro_status, qtlt.term as qtl_status, tumort as tumor_status";
+		
+		String from = "from bib_citation_cache c, bib_refs r"
+				+ "\n, bib_workflow_status ap, voc_term apt"
+				+ "\n, bib_workflow_status go, voc_term got"
+				+ "\n, bib_workflow_status gxd, voc_term gxdt"
+				+ "\n, bib_workflow_status pro, voc_term prot"
+				+ "\n, bib_workflow_status qtl, voc_term qtl"
+				+ "\n, bib_workflow_status tumor, voc_term tumort";
+		
+		String where = "where c._refs_key = r._refs_key"
+				+ "\nand c._refs_key = ap._refs_key and ap.isCurrent = 1 and ap._group_key = 31576664 and ap._status_key = apt._term_key"
+				+ "\nand c._refs_key = go._refs_key and go.isCurrent = 1 and go._group_key = 31576666 and ap._status_key = apt._term_key"
+				+ "\nand c._refs_key = gxd._refs_key and gxd.isCurrent = 1 and gxd._group_key = 31576665 and ap._status_key = apt._term_key"
+				+ "\nand c._refs_key = pro._refs_key and pro.isCurrent = 1 and pro._group_key = 78678148 and ap._status_key = apt._term_key"
+				+ "\nand c._refs_key = qtl._refs_key and qtl.isCurrent = 1 and qtl._group_key = 31576668 and ap._status_key = apt._term_key"	
+				+ "\nand c._refs_key = tumor._refs_key and tumor.isCurrent = 1 and tumor._group_key = 31576667 and ap._status_key = apt._term_key";
+				
 		String 	orderBy = "order by c.short_citation";			
 		String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;

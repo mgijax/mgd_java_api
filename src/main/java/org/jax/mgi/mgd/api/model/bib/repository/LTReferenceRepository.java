@@ -57,24 +57,18 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	@Inject
 	private LTReferenceDAO referenceDAO;
-
 	@Inject
 	private TermDAO termDAO;
-	
 	@Inject
 	private AccessionDAO accessionDAO;
-
 	@Inject
-	private LogicalDBDAO logicaldbDAO;
-	
+	private LogicalDBDAO logicaldbDAO;	
 	@Inject
 	private MGITypeDAO mgiTypeDAO;
-
 	@Inject
 	private MGIReferenceAssocService referenceAssocService;	
 	
 	LTReferenceTranslator translator = new LTReferenceTranslator();
-
 	private Logger log = Logger.getLogger(getClass());
 
 	/* These work together to allow for a maximum delay of two seconds for retries: */
@@ -110,7 +104,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		if (refs.items != null) {
 			// walking the references to do the translations individually, because I want a List,
 			// not an Iterable
-
 			domains.items = new ArrayList<LTReferenceDomain>();
 			for (LTReference ref : refs.items) {
 				domains.items.add(translator.translate(ref));

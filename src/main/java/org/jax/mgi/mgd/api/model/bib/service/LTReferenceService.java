@@ -14,7 +14,9 @@ import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.exception.NonFatalAPIException;
 import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.model.bib.repository.LTReferenceRepository;
+import org.jax.mgi.mgd.api.model.bib.repository.LTReferenceSummaryRepository;
 import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -31,9 +33,8 @@ public class LTReferenceService {
 	 */
 	@Inject
 	private LTReferenceRepository repo;
-	
-//	@Inject
-//	private LTReferenceSummaryRepository summaryRepo;
+	@Inject
+	private LTReferenceSummaryRepository summaryRepo;
 
 	// for searchSQL
 	@Inject
@@ -74,9 +75,9 @@ public class LTReferenceService {
 		return results;
 	}
 	
-//	public SearchResults<LTReferenceSummaryDomain> getReferenceSummaries(Map<String, Object> searchFields) throws APIException {
-//		return summaryRepo.search(searchFields);
-//	}
+	public SearchResults<LTReferenceSummaryDomain> getReferenceSummaries(Map<String, Object> searchFields) throws APIException {
+		return summaryRepo.search(searchFields);
+	}
 
 	public SearchResults<LTReferenceDomain> getReferences(Map<String, Object> searchFields) throws APIException {
 		return repo.search(searchFields);

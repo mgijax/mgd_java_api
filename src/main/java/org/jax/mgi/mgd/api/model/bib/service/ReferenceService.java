@@ -52,8 +52,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	@Inject
 	private ReferenceDAO referenceDAO;
 	@Inject
-	private LTReferenceDAO ltReferenceDAO;
-	@Inject
 	private ReferenceBookDAO bookDAO;
 	@Inject
 	private ReferenceNoteDAO noteDAO;
@@ -67,8 +65,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	private TermService termService;
 	
 	private ReferenceTranslator translator = new ReferenceTranslator();
-	private LTReferenceSummaryTranslator lttranslator = new LTReferenceSummaryTranslator();
-	
 	private SlimReferenceTranslator slimtranslator = new SlimReferenceTranslator();	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
@@ -657,11 +653,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			ltdomain.setQtl_status(returnDomain.get(i).getQtl_status());
 			ltdomain.setTumor_status(returnDomain.get(i).getTumor_status());	
 			ltdomain.setHas_pdf(returnDomain.get(i).getHas_pdf());
-			//public LTReferenceSummaryDomain() {}
-
-//			log.info("returnDomain.get(i).getRefsKey():" + returnDomain.get(i).getRefsKey());
-//			LTReference entity = ltReferenceDAO.get(Integer.valueOf(returnDomain.get(i).getRefsKey()));
-//			summaryResults.items.add(lttranslator.translate(entity));	
+			//public LTReferenceSummaryDomain() {}	
 			summaryResults.items.add(ltdomain);
 		}
 
@@ -719,7 +711,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		Boolean from_mgiid = false;
 		Boolean from_pubmedid = false;
 		Boolean from_doiid = false;
-		Boolean from_referenceType = false;
 		Boolean from_wkfrelevance = false;
 		Boolean from_wkfstatus = false;
 		
@@ -758,8 +749,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			where = where + "\nand r._ReferenceType_key = " + searchDomain.getReferenceTypeKey();
 		}
 		else if (searchDomain.getReferenceType() != null && !searchDomain.getReferenceType().isEmpty()) {
-			where = where + "\nand rtype.term = '" + searchDomain.getReferenceType() + "'";
-			from_referenceType = true;
+			where = where + "\nand r._referencetype_key =" + searchDomain.getReferenceType();
 		}		
 		if (searchDomain.getAuthors() != null && !searchDomain.getAuthors().isEmpty()) {
 			where = where + "\nand r.authors ilike '" + searchDomain.getAuthors() + "'";
@@ -1197,12 +1187,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			where = where + "\nand c._refs_key = pid._object_key" 
 					+ "\nand pid._mgitype_key = 1"
 					+ "\nand pid._logicaldb_key = 29";
-		}
-		if (from_referenceType == true) {
-			from = from + ", voc_term rtype";
-			where = where + "\nand r._referencetype_key = rtype._term_key"
-					+ "\nand rtype._vocab_key = 131";			
-		}		
+		}	
 		if (from_wkfrelevance == true) {
 			from = from + ", bib_workflow_relevance wkfr";
 			where = where + "\nand c._refs_key = wkfr._refs_key"

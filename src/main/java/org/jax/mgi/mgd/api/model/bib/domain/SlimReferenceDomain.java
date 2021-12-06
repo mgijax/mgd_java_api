@@ -25,9 +25,20 @@ public class SlimReferenceDomain extends BaseDomain {
 	public String doiid;
 	public String pubmedid;
 	
+	// used by lit triage
+	public String ap_status;
+	public String go_status;
+	public String gxd_status;
+	public String pro_status;
+	public String qtl_status;
+	public String tumor_status;
+	public String has_pdf;
+	
 	// used by validateJnumImage
 	private List<TermDomain> journalLicenses;
 	private String copyright;
 	private String selectedJournalLicense;
 	private Boolean needsDXDOIid = false;
+	
+	
 }

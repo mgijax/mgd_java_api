@@ -669,18 +669,21 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		String cmd = "";
 		
 		String select = "select distinct c.*"
+				+ "\n, has_pdf"
 				+ "\n, apt.term as ap_status, got.term as go_status, gxdt.term as gxd_status"
 				+ "\n, prot.term as pro_status, qtlt.term as qtl_status, tumort as tumor_status";
 		
 		String from = "from bib_citation_cache c, bib_refs r"
+				+ "\n, bib_workflow_data wkfd, voc_term dt"
 				+ "\n, bib_workflow_status ap, voc_term apt"
 				+ "\n, bib_workflow_status go, voc_term got"
 				+ "\n, bib_workflow_status gxd, voc_term gxdt"
 				+ "\n, bib_workflow_status pro, voc_term prot"
-				+ "\n, bib_workflow_status qtl, voc_term qtl"
+				+ "\n, bib_workflow_status qtl, voc_term qtlt"
 				+ "\n, bib_workflow_status tumor, voc_term tumort";
 		
 		String where = "where c._refs_key = r._refs_key"
+				+ "\nand c._refs_key = wkfd._refs_key and wkfd._extractedtext_key = 48804490 and wkfd._supplemental_key = dt._term_key and dt._vocab_key = 130"			
 				+ "\nand c._refs_key = ap._refs_key and ap.isCurrent = 1 and ap._group_key = 31576664 and ap._status_key = apt._term_key"
 				+ "\nand c._refs_key = go._refs_key and go.isCurrent = 1 and go._group_key = 31576666 and ap._status_key = apt._term_key"
 				+ "\nand c._refs_key = gxd._refs_key and gxd.isCurrent = 1 and gxd._group_key = 31576665 and ap._status_key = apt._term_key"
@@ -701,7 +704,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		Boolean from_doiid = false;
 		Boolean from_referenceType = false;
 		Boolean from_wkfrelevance = false;
-		Boolean from_wkfdata = false;
+		//Boolean from_wkfdata = false;
 		Boolean from_wkfstatus = false;
 		
 		// may be a different order
@@ -844,7 +847,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// supplemental term
 		if (searchDomain.getSupplementalTerm() != null && !searchDomain.getSupplementalTerm().isEmpty()) {
 			where = where + "\nand dt.term = '" + searchDomain.getSupplementalTerm() + "'";
-			from_wkfdata = true;
+			//from_wkfdata = true;
 		}
 		
 		// relevance history
@@ -1185,13 +1188,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			where = where + "\nand r._referencetype_key = rtype._term_key"
 					+ "\nand rtype._vocab_key = 131";			
 		}
-		if (from_wkfdata == true) {
-			from = from + ", bib_workflow_data wkfd, voc_term dt";
-			where = where + "\nand c._refs_key = wkfd._refs_key"
-					+ "\nand wkfd._extractedtext_key = 48804490"
-					+ "\nand wkfd._supplemental_key = dt._term_key"
-					+ "\nand dt._vocab_key = 130";
-		}		
+//		if (from_wkfdata == true) {
+//			from = from + ", bib_workflow_data wkfd, voc_term dt";
+//			where = where + "\nand c._refs_key = wkfd._refs_key"
+//					+ "\nand wkfd._extractedtext_key = 48804490"
+//					+ "\nand wkfd._supplemental_key = dt._term_key"
+//					+ "\nand dt._vocab_key = 130";
+//		}		
 		if (from_wkfrelevance == true) {
 			from = from + ", bib_workflow_relevance wkfr, voc_term rt";
 			where = where + "\nand c._refs_key = wkfr._refs_key"
@@ -1225,6 +1228,19 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setMgiid(rs.getString("mgiid"));							
 				domain.setDoiid(rs.getString("doiid"));				
 				domain.setPubmedid(rs.getString("pubmedid"));
+				domain.setAp_status(rs.getString("ap_status"));
+				domain.setGo_status(rs.getString("go_status"));
+				domain.setGxd_status(rs.getString("gxd_status"));
+				domain.setPro_status(rs.getString("pro_status"));
+				domain.setQtl_status(rs.getString("qtl_status"));
+				domain.setTumor_status(rs.getString("tumor_status"));
+				
+				if (rs.getInt("has_pdf") == 0) {
+					domain.setHas_pdf("no");
+				}
+				else {
+					domain.setHas_pdf("yes");	
+				}
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

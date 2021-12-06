@@ -32,10 +32,13 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	
 	@Inject
 	private LTReferenceService referenceService;
+	
 	@Inject
 	private TermService termService;
+	
 	@Inject
 	private UserService userService;
+
 	@Inject
 	private MarkerService markerService;
 	

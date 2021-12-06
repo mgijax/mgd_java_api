@@ -20,6 +20,7 @@ import org.jax.mgi.mgd.api.model.acc.dao.LogicalDBDAO;
 import org.jax.mgi.mgd.api.model.acc.dao.MGITypeDAO;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceDAO;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowStatusDomain;
@@ -91,10 +92,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	@Override
 	public SearchResults<LTReferenceDomain> search(Map<String,Object> params) {
 		
-		log.info("LTReferenceRepository/search");
+		log.info("LTReferenceRepository/referenceDAO/search");
 		SearchResults<LTReferenceDomain> domains = new SearchResults<LTReferenceDomain>();
 		
-		log.info("calling: referenceDAO");
 		SearchResults<LTReference> refs = referenceDAO.search(params);	
 		
 		domains.elapsed_ms = refs.elapsed_ms;

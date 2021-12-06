@@ -32,13 +32,10 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	
 	@Inject
 	private LTReferenceService referenceService;
-	
 	@Inject
 	private TermService termService;
-	
 	@Inject
 	private UserService userService;
-
 	@Inject
 	private MarkerService markerService;
 	
@@ -256,9 +253,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	@Override
 	public SearchResults<LTReferenceSummaryDomain> search(Map<String,Object> params) {
 		
-		log.info("LTReferenceRepository/search");
-		SearchResults<LTReferenceSummaryDomain> domains = new SearchResults<LTReferenceSummaryDomain>();
-		return domains;
+		log.info("LTReferenceContoller/search");
 		
 //		if (params.containsKey("isReviewArticle")) {
 //			String isReviewArticle = (String) params.get("isReviewArticle");
@@ -268,17 +263,18 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 //				params.put("isReviewArticle", 1);
 //			}
 //		}
-//
-//		params = filterEmptyParameters(params);
-//		log.info("Search Params: " + params);
-//		
-//		try {
-//			return referenceService.getReferenceSummaries(params);
-//		} catch (APIException e) {
-//			SearchResults<LTReferenceSummaryDomain> out = new SearchResults<LTReferenceSummaryDomain>();
-//			out.setError("Failed", "search failed: " + e.toString(), Constants.HTTP_SERVER_ERROR);
-//			return out;
-//		}
+
+		params = filterEmptyParameters(params);
+		log.info("Search Params: " + params);
+		
+		try {
+			log.info("LTReferenceController/getReferenceSummaries");			
+			return referenceService.getReferenceSummaries(params);
+		} catch (APIException e) {
+			SearchResults<LTReferenceSummaryDomain> out = new SearchResults<LTReferenceSummaryDomain>();
+			out.setError("Failed", "search failed: " + e.toString(), Constants.HTTP_SERVER_ERROR);
+			return out;
+		}
 	}
 
 

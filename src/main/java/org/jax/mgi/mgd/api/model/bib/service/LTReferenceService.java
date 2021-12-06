@@ -41,7 +41,8 @@ public class LTReferenceService {
 	private LTReferenceDAO ltrefDAO;	
 	private LTReferenceTranslator translator = new LTReferenceTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+	private Logger log = Logger.getLogger(getClass());
+
 	/* Update the reference entity corresponding to the given domain object (and updates citation cache).  Returns
 	 * domain object if successful or throws APIException if not.
 	 */
@@ -76,6 +77,7 @@ public class LTReferenceService {
 	}
 	
 	public SearchResults<LTReferenceSummaryDomain> getReferenceSummaries(Map<String, Object> searchFields) throws APIException {
+		log.info("LTReferenceService/getReferenceSummaries/summaryRepo.search()");
 		return summaryRepo.search(searchFields);
 	}
 

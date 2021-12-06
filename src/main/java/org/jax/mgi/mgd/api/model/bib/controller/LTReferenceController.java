@@ -254,21 +254,12 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	public SearchResults<LTReferenceSummaryDomain> search(Map<String,Object> params) {
 		
 		log.info("LTReferenceContoller/search");
-		
-//		if (params.containsKey("isReviewArticle")) {
-//			String isReviewArticle = (String) params.get("isReviewArticle");
-//			if ("No".equalsIgnoreCase(isReviewArticle) || "0".equals(isReviewArticle)) {
-//				params.put("isReviewArticle", 0);
-//			} else if ("Yes".equalsIgnoreCase(isReviewArticle) || "1".equals(isReviewArticle)) {
-//				params.put("isReviewArticle", 1);
-//			}
-//		}
 
 		params = filterEmptyParameters(params);
-		log.info("Search Params: " + params);
+		log.info("LTReferenceController/params:" + params);
 		
 		try {
-			log.info("LTReferenceController/getReferenceSummaries");			
+			log.info("from LTReferenceController/call LTReferenceService/getReferenceSummaries");			
 			return referenceService.getReferenceSummaries(params);
 		} catch (APIException e) {
 			SearchResults<LTReferenceSummaryDomain> out = new SearchResults<LTReferenceSummaryDomain>();

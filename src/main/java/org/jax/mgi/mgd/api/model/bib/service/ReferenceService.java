@@ -26,7 +26,6 @@ import org.jax.mgi.mgd.api.model.bib.dao.ReferenceNoteDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
@@ -643,10 +642,26 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		// change this to take the refs key and translate the summary by the refs key not the entity
 		for (int i = 0; i < returnDomain.size(); i++) {
-			//summaryResults.items.add(returnDomain.get(i));
-			log.info("returnDomain.get(i).getRefsKey():" + returnDomain.get(i).getRefsKey());
-			LTReference entity = ltReferenceDAO.get(Integer.valueOf(returnDomain.get(i).getRefsKey()));
-			summaryResults.items.add(lttranslator.translate(entity));	
+			LTReferenceSummaryDomain ltdomain = new LTReferenceSummaryDomain();
+			ltdomain.setRefsKey(returnDomain.get(i).getRefsKey());
+			ltdomain.setJnumid(returnDomain.get(i).getJnumid());
+			ltdomain.setShort_citation(returnDomain.get(i).getShort_citation());
+			ltdomain.setMgiid(returnDomain.get(i).getMgiid());							
+			ltdomain.setDoiid(returnDomain.get(i).getDoiid());				
+			ltdomain.setPubmedid(returnDomain.get(i).getPubmedid());
+			ltdomain.setAp_status(returnDomain.get(i).getAp_status());
+			ltdomain.setGo_status(returnDomain.get(i).getGo_status());
+			ltdomain.setGxd_status(returnDomain.get(i).getGxd_status());
+			ltdomain.setPro_status(returnDomain.get(i).getPro_status());
+			ltdomain.setQtl_status(returnDomain.get(i).getQtl_status());
+			ltdomain.setTumor_status(returnDomain.get(i).getTumor_status());	
+			ltdomain.setHas_pdf(returnDomain.get(i).getHas_pdf());
+			//public LTReferenceSummaryDomain() {}
+
+//			log.info("returnDomain.get(i).getRefsKey():" + returnDomain.get(i).getRefsKey());
+//			LTReference entity = ltReferenceDAO.get(Integer.valueOf(returnDomain.get(i).getRefsKey()));
+//			summaryResults.items.add(lttranslator.translate(entity));	
+			summaryResults.items.add(ltdomain);
 		}
 
 //		results.elapsed_ms = refs.elapsed_ms;
@@ -686,11 +701,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		String where = "where c._refs_key = r._refs_key"
 				+ "\nand c._refs_key = wkfd._refs_key and wkfd._extractedtext_key = 48804490 and wkfd._supplemental_key = dt._term_key and dt._vocab_key = 130"			
 				+ "\nand c._refs_key = ap._refs_key and ap.isCurrent = 1 and ap._group_key = 31576664 and ap._status_key = apt._term_key"
-				+ "\nand c._refs_key = go._refs_key and go.isCurrent = 1 and go._group_key = 31576666 and ap._status_key = apt._term_key"
-				+ "\nand c._refs_key = gxd._refs_key and gxd.isCurrent = 1 and gxd._group_key = 31576665 and ap._status_key = apt._term_key"
-				+ "\nand c._refs_key = pro._refs_key and pro.isCurrent = 1 and pro._group_key = 78678148 and ap._status_key = apt._term_key"
-				+ "\nand c._refs_key = qtl._refs_key and qtl.isCurrent = 1 and qtl._group_key = 31576668 and ap._status_key = apt._term_key"	
-				+ "\nand c._refs_key = tumor._refs_key and tumor.isCurrent = 1 and tumor._group_key = 31576667 and ap._status_key = apt._term_key";
+				+ "\nand c._refs_key = go._refs_key and go.isCurrent = 1 and go._group_key = 31576666 and go._status_key = got._term_key"
+				+ "\nand c._refs_key = gxd._refs_key and gxd.isCurrent = 1 and gxd._group_key = 31576665 and gxd._status_key = gxdt._term_key"
+				+ "\nand c._refs_key = pro._refs_key and pro.isCurrent = 1 and pro._group_key = 78678148 and pro._status_key = prot._term_key"
+				+ "\nand c._refs_key = qtl._refs_key and qtl.isCurrent = 1 and qtl._group_key = 31576668 and qtl._status_key = qtlt._term_key"	
+				+ "\nand c._refs_key = tumor._refs_key and tumor.isCurrent = 1 and tumor._group_key = 31576667 and tumor._status_key = tumort._term_key";
 				
 		String 	orderBy = "order by c.short_citation";			
 		String limit = Constants.SEARCH_RETURN_LIMIT;

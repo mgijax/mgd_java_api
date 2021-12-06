@@ -18,7 +18,6 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
-import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceWorkflowDataDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceBookDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
@@ -30,7 +29,6 @@ import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
-import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceSummaryTranslator;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
 import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -683,7 +681,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				+ "\n, prot.term as pro_status, qtlt.term as qtl_status, tumort.term as tumor_status";
 		
 		String from = "from bib_citation_cache c, bib_refs r"
-				+ "\n, bib_workflow_data wkfd, voc_term dt"
+				+ "\n, bib_workflow_data wkfd"
 				+ "\n, bib_workflow_status ap, voc_term apt"
 				+ "\n, bib_workflow_status go, voc_term got"
 				+ "\n, bib_workflow_status gxd, voc_term gxdt"

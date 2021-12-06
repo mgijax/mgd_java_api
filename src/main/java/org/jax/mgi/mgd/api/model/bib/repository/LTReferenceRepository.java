@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -88,29 +87,28 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		return domain;	
 	}
 
-	@Override
-	public SearchResults<LTReferenceDomain> search(Map<String,Object> params) {
-		
-		SearchResults<LTReference> refs = referenceDAO.search(params);
-		SearchResults<LTReferenceDomain> domains = new SearchResults<LTReferenceDomain>();
-		
-		domains.elapsed_ms = refs.elapsed_ms;
-		domains.error = refs.error;
-		domains.message = refs.message;
-		domains.status_code = refs.status_code;
-		domains.total_count = refs.total_count;
-		domains.all_match_count = refs.all_match_count;
-
-		if (refs.items != null) {
-			// walking the references to do the translations individually, because I want a List,
-			// not an Iterable
-			domains.items = new ArrayList<LTReferenceDomain>();
-			for (LTReference ref : refs.items) {
-				domains.items.add(translator.translate(ref));
-			}
-		}
-		return domains;
-	}
+//	@Override
+//	public SearchResults<LTReferenceDomain> search(Map<String,Object> params) {
+//		
+//		SearchResults<LTReference> refs = referenceDAO.search(params);
+//		SearchResults<LTReferenceDomain> domains = new SearchResults<LTReferenceDomain>();
+//		
+//		domains.elapsed_ms = refs.elapsed_ms;
+//		domains.error = refs.error;
+//		domains.message = refs.message;
+//		domains.status_code = refs.status_code;
+//		domains.total_count = refs.total_count;
+//		domains.all_match_count = refs.all_match_count;
+//
+//		if (refs.items != null) {
+//			// walking the references to do the translations individually, because I want a List,
+//			domains.items = new ArrayList<LTReferenceDomain>();
+//			for (LTReference ref : refs.items) {
+//				domains.items.add(translator.translate(ref));
+//			}
+//		}
+//		return domains;
+//	}
 
 	@Override
 	public LTReferenceDomain update(LTReferenceDomain domain, User user) throws FatalAPIException, NonFatalAPIException, APIException {

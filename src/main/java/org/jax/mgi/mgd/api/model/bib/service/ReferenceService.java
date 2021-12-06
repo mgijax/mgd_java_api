@@ -651,7 +651,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			ltdomain.setQtl_status(returnDomain.get(i).getQtl_status());
 			ltdomain.setTumor_status(returnDomain.get(i).getTumor_status());	
 			ltdomain.setHas_pdf(returnDomain.get(i).getHas_pdf());
-			//public LTReferenceSummaryDomain() {}	
 			summaryResults.items.add(ltdomain);
 		}
 

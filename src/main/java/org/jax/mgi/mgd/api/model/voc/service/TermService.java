@@ -15,7 +15,6 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
-import org.jax.mgi.mgd.api.model.voc.domain.TermDagParentDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.voc.translator.SlimTermTranslator;
@@ -384,7 +383,7 @@ public class TermService extends BaseService<TermDomain> {
 				log.info("processTerm/no changes processed: " + domain.get(i).getTermKey());
 			} 
 		}
-		
+	    
 		log.info("processTerm/processing successful");
 		return modified;
 	}

@@ -65,16 +65,23 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			log.info("processVocabulary/no changes processed: " + domain.getVocabKey());
 		}
 
-		// 48 = Journal
-		if (domain.getVocabKey().equals("48")) {
-			String cmd;
-			Query query;
-			
-		    cmd = "select count(*) from VOC_resetTerms(" + domain.getVocabKey() + ")";
-		    log.info("cmd: " + cmd);
-		    query = vocabularyDAO.createNativeQuery(cmd);
-		    query.getResultList();	
-		}
+//		// 48 = Journal
+//		if (domain.getVocabKey().equals("48")) {
+//			String cmd;
+//			Query query;
+//			
+//		    cmd = "select count(*) from VOC_resetTerms(" + domain.getVocabKey() + ")";
+//		    log.info("cmd: " + cmd);
+//		    query = vocabularyDAO.createNativeQuery(cmd);
+//		    query.getResultList();	
+//		}
+		
+		String cmd;
+		Query query;
+		cmd = "select count(*) from VOC_resetTerms(" + domain.getVocabKey() + ")";
+		log.info("cmd: " + cmd);
+		query = vocabularyDAO.createNativeQuery(cmd);
+		query.getResultList();		
 		
 		// return entity translated to domain
 		log.info("processVocabulary/update/returning results");

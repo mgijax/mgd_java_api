@@ -39,6 +39,8 @@ public class HTExperimentService extends BaseService<HTDomain> {
 	@Inject
 	private HTSampleService htSampleService;
 	@Inject
+	private HTExperimentVariableService hTExperimentVariableService;
+	@Inject
 	private NoteService noteService;
 	@Inject
 	private TermDAO termDAO;
@@ -91,8 +93,13 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			noteService.process(String.valueOf(entity.get_experiment_key()), noteDomain, "42", user);
 		}
 
+log.info("--before exp var handling");
 		// experiment variables
-	
+		if (domain.getExperiment_variables() != null) {
+			hTExperimentVariableService.process(domain.get_experiment_key(), domain.getExperiment_variables(), user);
+		}
+log.info("--after exp var handling");
+
 		// process ht sample
 // TODO
 //		if (domain.getSamples() != null) {

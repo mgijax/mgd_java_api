@@ -214,8 +214,6 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 
 		if (failures.size() > 0) {
 			results.setError("Partial Failure", "Status changes failed to save for: " + String.join(",", failures), Constants.HTTP_SERVER_ERROR);
-		//} else {
-		//	String json = "{\"group\":\"" + group + "\", \"status\":\"" + status + "\"}";
 		}
 
 		return results;
@@ -239,8 +237,6 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 				results.items = null;	// okay result
 			} catch (APIException t) {
 				results.setError("Failed", "Failed to save changes: " + t.toString(), Constants.HTTP_SERVER_ERROR);
-			//} catch (JsonProcessingException t) {
-			//	results.setError("Log Failure", "Changes saved, but failed to log them in API log: " + t.toString(), Constants.HTTP_SERVER_ERROR);
 			}
 		} else {
 			results.setError("FailedAuthentication", "Failed - invalid username", Constants.HTTP_PERMISSION_DENIED);

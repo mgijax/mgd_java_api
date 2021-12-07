@@ -316,18 +316,11 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				|| !smartEqual(entity.getPgs(), domain.pgs)
 				|| !smartEqual(entity.getReferenceAbstract(), domain.referenceAbstract)
 				) {
-//
-//			if (domain.authors != null) {
-//				Pattern pattern = Pattern.compile("([^;]+).*");		// any characters up to the first semicolon are the primary author
-//				Matcher matcher = pattern.matcher(domain.authors);
-//				if (matcher.find()) {
-//					entity.setPrimary_author(matcher.group(1));
-//				}
-//			}
-//
-		
+
 			entity.setIsReviewArticle(rdReview);
 			entity.setAuthors(domain.authors);
+			String[] authors = domain.getAuthors().split(";");
+			entity.setPrimary_author(authors[0]);
 			entity.setJournal(domain.journal);
 			entity.setTitle(domain.title);
 			entity.setVol(domain.vol);

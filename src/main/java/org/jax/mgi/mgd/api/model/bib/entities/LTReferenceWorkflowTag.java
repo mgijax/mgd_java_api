@@ -4,9 +4,12 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -23,7 +26,10 @@ import lombok.Setter;
 @ApiModel(value = "Reference Workflow Tag Model Object")
 @Table(name="bib_workflow_tag")
 public class LTReferenceWorkflowTag extends BaseEntity {
+
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="bib_workflow_tag_generator")
+	@SequenceGenerator(name="bib_workflow_tag_generator", sequenceName = "bib_workflow_tag_seq", allocationSize=1)	
 	@Column(name="_assoc_key")
 	private int _assoc_key;
 

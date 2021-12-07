@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model.bib.dao;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -790,33 +789,6 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		Hibernate.initialize(ref.getWorkflowData());
 		Hibernate.initialize(ref.getWorkflowStatuses());
 		return ref;
-	}
-
-	/* get the next available primary key for a workflow status record
-	 */
-	public synchronized int getNextWorkflowStatusKey() throws FatalAPIException {
-		// returns an integer rather than *, as the void return was causing a mapping exception
-		Query query = entityManager.createNativeQuery("select nextval('bib_workflow_status_seq')");
-		BigInteger results = (BigInteger) query.getSingleResult();
-		return results.intValue();
-	}
-
-	/* get the next available primary key for a workflow tag record
-	 */
-	public synchronized int getNextWorkflowTagKey() {
-		// returns an integer rather than *, as the void return was causing a mapping exception
-		Query query = entityManager.createNativeQuery("select nextval('bib_workflow_tag_seq')");
-		BigInteger results = (BigInteger) query.getSingleResult();
-		return results.intValue();
-	}
-
-	/* get the next available primary key for a workflow relevance record
-	 */
-	public synchronized int getNextWorkflowRelevanceKey() {
-		// returns an integer rather than *, as the void return was causing a mapping exception
-		Query query = entityManager.createNativeQuery("select nextval('bib_workflow_relevance_seq')");
-		BigInteger results = (BigInteger) query.getSingleResult();
-		return results.intValue();
 	}
 
 	/* update the bib_citation_cache table for the given reference key

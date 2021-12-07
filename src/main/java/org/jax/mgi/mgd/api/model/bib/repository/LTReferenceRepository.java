@@ -315,18 +315,11 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				|| !smartEqual(entity.getPgs(), domain.pgs)
 				|| !smartEqual(entity.getReferenceAbstract(), domain.referenceAbstract)
 				) {
-//
-//			if (domain.authors != null) {
-//				Pattern pattern = Pattern.compile("([^;]+).*");		// any characters up to the first semicolon are the primary author
-//				Matcher matcher = pattern.matcher(domain.authors);
-//				if (matcher.find()) {
-//					entity.setPrimary_author(matcher.group(1));
-//				}
-//			}
-//
 		
 			entity.setIsReviewArticle(rdReview);
 			entity.setAuthors(domain.authors);
+			String[] authors = domain.getAuthors().split(";");
+			entity.setPrimary_author(authors[0]);
 			entity.setJournal(domain.journal);
 			entity.setTitle(domain.title);
 			entity.setVol(domain.vol);
@@ -659,14 +652,10 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				rel.set_refs_key(Integer.valueOf(domain.refsKey));
 				rel.setIsCurrent(1);
 				rel.setRelevance(getTermByTerm(Constants.VOC_RELEVANCE, domain.relevance));
-
 				rel.setCreatedByUser(currentUser);
 				rel.setModifiedByUser(currentUser);
 				rel.setCreation_date(new Date());
 				rel.setModification_date(new Date());
-
-				rel.set_assoc_key(referenceDAO.getNextWorkflowRelevanceKey());
-
 				referenceDAO.persist(rel);
 				entity.addWorkflowRelevance(rel);
 				anyChanges = true;
@@ -792,13 +781,13 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		if (tagTerm != null) {
 
 			LTReferenceWorkflowTag rwTag = new LTReferenceWorkflowTag();
-			rwTag.set_assoc_key(referenceDAO.getNextWorkflowTagKey());
 			rwTag.set_refs_key(entity.get_refs_key());
 			rwTag.setTag(tagTerm);
 			rwTag.setCreatedByUser(currentUser);
 			rwTag.setModifiedByUser(rwTag.getCreatedByUser());
 			rwTag.setCreation_date(new Date());
 			rwTag.setModification_date(rwTag.getCreation_date());
+			
 			try {
 				referenceDAO.persist(rwTag);
 			} catch (Exception e) {
@@ -853,7 +842,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		// database explicitly, before the whole reference gets persisted later on.
 
 		LTReferenceWorkflowStatus newRws = new LTReferenceWorkflowStatus();
-		newRws.set_assoc_key(referenceDAO.getNextWorkflowStatusKey());
 		newRws.set_refs_key(entity.get_refs_key());
 		newRws.setIsCurrent(1);
 		newRws.setGroupTerm(getTermByAbbreviation(Constants.VOC_WORKFLOW_GROUP, groupAbbrev));

@@ -120,6 +120,6 @@ public class Reference extends BaseEntity {
 //	// workflow tags
 //	@OneToMany()
 //	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-//	private List<LTReferenceWorkflowTag> workflowTag;	
+//	private List<ReferenceWorkflowTag> workflowTag;	
 	
 }

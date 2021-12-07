@@ -22,14 +22,14 @@ import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowRelevanceDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowStatusDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceMarkerAssocDomain;
@@ -132,10 +132,10 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	/* get a list of events in the status history of the reference with the specified key
 	 */
-	public List<LTReferenceWorkflowStatusDomain> getStatusHistory(LTReferenceDomain domain) throws APIException {
-		List<LTReferenceWorkflowStatusDomain> history = new ArrayList<LTReferenceWorkflowStatusDomain>();
-		for (LTReferenceWorkflowStatus event : referenceDAO.getStatusHistory(domain.refsKey)) {
-			history.add(new LTReferenceWorkflowStatusDomain(event));
+	public List<ReferenceWorkflowStatusDomain> getStatusHistory(LTReferenceDomain domain) throws APIException {
+		List<ReferenceWorkflowStatusDomain> history = new ArrayList<ReferenceWorkflowStatusDomain>();
+		for (ReferenceWorkflowStatus event : referenceDAO.getStatusHistory(domain.refsKey)) {
+			history.add(new ReferenceWorkflowStatusDomain(event));
 		}
 		return history;
 	}
@@ -726,12 +726,12 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		}
 
 		// list of tags that need to be removed from this object
-		List<LTReferenceWorkflowTag> toDelete = new ArrayList<LTReferenceWorkflowTag>();
+		List<ReferenceWorkflowTag> toDelete = new ArrayList<ReferenceWorkflowTag>();
 
 		// Now we need to diff the set of tags we already have and the set of tags to potentially add. Anything
 		// left in toAdd will need to be added as a new tag, and anything in toDelete will need to be removed.
 
-		for (LTReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
+		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
 			String myTag = refTag.getTag().getTerm();
 
 			// matching tags
@@ -746,7 +746,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 		// remove defunct tags
 
-		for (LTReferenceWorkflowTag rwTag : toDelete) {
+		for (ReferenceWorkflowTag rwTag : toDelete) {
 			// would like to do this here, but it fails due to a null _refs_key in the table:
 			//		this.workflowTags.remove(rwTag);
 			referenceDAO.remove(rwTag);
@@ -768,7 +768,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		// adding duplicates)
 
 		String trimTag = rdTag.trim();
-		for (LTReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
+		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
 			if (trimTag.equals(refTag.getTag().getTerm()) ) {
 				return;
 			}
@@ -780,11 +780,11 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		Term tagTerm = getTermByTerm(Constants.VOC_WORKFLOW_TAGS, rdTag);
 		if (tagTerm != null) {
 
-			LTReferenceWorkflowTag rwTag = new LTReferenceWorkflowTag();
+			ReferenceWorkflowTag rwTag = new ReferenceWorkflowTag();
 			rwTag.set_refs_key(entity.get_refs_key());
 			rwTag.setTag(tagTerm);
-			rwTag.setCreatedByUser(currentUser);
-			rwTag.setModifiedByUser(rwTag.getCreatedByUser());
+			rwTag.setCreatedBy(currentUser);
+			rwTag.setModifiedBy(rwTag.getCreatedBy());
 			rwTag.setCreation_date(new Date());
 			rwTag.setModification_date(rwTag.getCreation_date());
 			
@@ -806,7 +806,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		if (entity.getWorkflowTags() == null) { return; }
 
 		String lowerTag = rdTag.toLowerCase().trim();
-		for (LTReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
+		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
 			if (lowerTag.equals(refTag.getTag().getTerm().toLowerCase()) ) {
 				referenceDAO.remove(refTag);
 				entity.setModificationInfo(currentUser);
@@ -830,8 +830,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		// At this point, we know we have a status update.  If there was an existing record, we need
 		// to flag it as not current.
 		if (currentStatus != null) {
-			for (LTReferenceWorkflowStatus rws : entity.getWorkflowStatuses()) {
-				if ( (rws.getIsCurrent() == 1) && groupAbbrev.equals(rws.getGroupAbbreviation()) ) {
+			for (ReferenceWorkflowStatus rws : entity.getWorkflowStatuses()) {
+				if ( (rws.getIsCurrent() == 1) && groupAbbrev.equals(rws.getGroupTerm().getAbbreviation()) ) {
 					rws.setIsCurrent(0);
 					break;				// no more can match, so exit the loop
 				}
@@ -841,13 +841,13 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		// Now we need to add a new status record for this change -- and need to persist this new object to the
 		// database explicitly, before the whole reference gets persisted later on.
 
-		LTReferenceWorkflowStatus newRws = new LTReferenceWorkflowStatus();
+		ReferenceWorkflowStatus newRws = new ReferenceWorkflowStatus();
 		newRws.set_refs_key(entity.get_refs_key());
 		newRws.setIsCurrent(1);
 		newRws.setGroupTerm(getTermByAbbreviation(Constants.VOC_WORKFLOW_GROUP, groupAbbrev));
 		newRws.setStatusTerm(getTermByTerm(Constants.VOC_WORKFLOW_STATUS, newStatus));
-		newRws.setCreatedByUser(currentUser);
-		newRws.setModifiedByUser(newRws.getCreatedByUser());
+		newRws.setCreatedBy(currentUser);
+		newRws.setModifiedBy(newRws.getCreatedBy());
 		newRws.setCreation_date(new Date());
 		newRws.setModification_date(newRws.getCreation_date());
 		entity.getWorkflowStatuses().add(newRws);

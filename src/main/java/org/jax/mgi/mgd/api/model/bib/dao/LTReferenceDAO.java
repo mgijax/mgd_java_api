@@ -27,8 +27,8 @@ import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
@@ -322,8 +322,8 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		// compose one Exists subquery for each group
 
 		for (String groupAbbrev : statusByGroup.keySet()) {
-			Subquery<LTReferenceWorkflowStatus> wfsSubquery = query.subquery(LTReferenceWorkflowStatus.class);
-			Root<LTReferenceWorkflowStatus> wfsRoot = wfsSubquery.from(LTReferenceWorkflowStatus.class);
+			Subquery<ReferenceWorkflowStatus> wfsSubquery = query.subquery(ReferenceWorkflowStatus.class);
+			Root<ReferenceWorkflowStatus> wfsRoot = wfsSubquery.from(ReferenceWorkflowStatus.class);
 			wfsSubquery.select(wfsRoot);
 
 			List<Predicate> wfsPredicates = new ArrayList<Predicate>();
@@ -406,8 +406,8 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 			String shStatus = (String) params.get("sh_status");
 			String shDate = (String) params.get("sh_date");
 
-			Subquery<LTReferenceWorkflowStatus> shSubquery = query.subquery(LTReferenceWorkflowStatus.class);
-			Root<LTReferenceWorkflowStatus> shRoot = shSubquery.from(LTReferenceWorkflowStatus.class);
+			Subquery<ReferenceWorkflowStatus> shSubquery = query.subquery(ReferenceWorkflowStatus.class);
+			Root<ReferenceWorkflowStatus> shRoot = shSubquery.from(ReferenceWorkflowStatus.class);
 			shSubquery.select(shRoot);
 
 			List<Predicate> shPredicates = new ArrayList<Predicate>();
@@ -594,8 +594,8 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 				 *   2. a separate subquery with NOT EXISTS for each term in 'notTags'
 				 */
 				for (String tag : tags) {
-					Subquery<LTReferenceWorkflowTag> tagSubquery = query.subquery(LTReferenceWorkflowTag.class);
-					Root<LTReferenceWorkflowTag> tagRoot = tagSubquery.from(LTReferenceWorkflowTag.class);
+					Subquery<ReferenceWorkflowTag> tagSubquery = query.subquery(ReferenceWorkflowTag.class);
+					Root<ReferenceWorkflowTag> tagRoot = tagSubquery.from(ReferenceWorkflowTag.class);
 					tagSubquery.select(tagRoot);
 
 					List<Predicate> inTags = new ArrayList<Predicate>();
@@ -608,8 +608,8 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 				}
 
 				for (String tag : notTags) {
-					Subquery<LTReferenceWorkflowTag> tagSubquery = query.subquery(LTReferenceWorkflowTag.class);
-					Root<LTReferenceWorkflowTag> tagRoot = tagSubquery.from(LTReferenceWorkflowTag.class);
+					Subquery<ReferenceWorkflowTag> tagSubquery = query.subquery(ReferenceWorkflowTag.class);
+					Root<ReferenceWorkflowTag> tagRoot = tagSubquery.from(ReferenceWorkflowTag.class);
 					tagSubquery.select(tagRoot);
 
 					List<Predicate> inTags = new ArrayList<Predicate>();
@@ -630,8 +630,8 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 				 *   2. a NOT EXISTS subquery for each term in 'notTags' (see below when constructed)
 				 */
 				if (tags.size() > 0) {
-					Subquery<LTReferenceWorkflowTag> tagSubquery = query.subquery(LTReferenceWorkflowTag.class);
-					Root<LTReferenceWorkflowTag> tagRoot = tagSubquery.from(LTReferenceWorkflowTag.class);
+					Subquery<ReferenceWorkflowTag> tagSubquery = query.subquery(ReferenceWorkflowTag.class);
+					Root<ReferenceWorkflowTag> tagRoot = tagSubquery.from(ReferenceWorkflowTag.class);
 					tagSubquery.select(tagRoot);
 
 					List<Predicate> inTags = new ArrayList<Predicate>();
@@ -648,8 +648,8 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 				 * them like an AND.  Instead we need to have separate Exists queries, to be later OR-ed together.
 				 */
 				for (String notTag : notTags) {
-					Subquery<LTReferenceWorkflowTag> tagSubquery = query.subquery(LTReferenceWorkflowTag.class);
-					Root<LTReferenceWorkflowTag> tagRoot = tagSubquery.from(LTReferenceWorkflowTag.class);
+					Subquery<ReferenceWorkflowTag> tagSubquery = query.subquery(ReferenceWorkflowTag.class);
+					Root<ReferenceWorkflowTag> tagRoot = tagSubquery.from(ReferenceWorkflowTag.class);
 					tagSubquery.select(tagRoot);
 
 					List<Predicate> notInTags = new ArrayList<Predicate>();
@@ -748,10 +748,10 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 
 	/* get a list of the workflow status records for a reference
 	 */
-	public List<LTReferenceWorkflowStatus> getStatusHistory (String refsKey) {
+	public List<ReferenceWorkflowStatus> getStatusHistory (String refsKey) {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<LTReferenceWorkflowStatus> query = builder.createQuery(LTReferenceWorkflowStatus.class);
-		Root<LTReferenceWorkflowStatus> root = query.from(LTReferenceWorkflowStatus.class);
+		CriteriaQuery<ReferenceWorkflowStatus> query = builder.createQuery(ReferenceWorkflowStatus.class);
+		Root<ReferenceWorkflowStatus> root = query.from(ReferenceWorkflowStatus.class);
 
 		query.where(builder.equal(root.get("_refs_key"), refsKey));
 		query.orderBy(builder.desc(root.get("modification_date")));

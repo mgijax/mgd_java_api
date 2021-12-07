@@ -101,7 +101,7 @@ public class LTReference extends BaseEntity {
 	 */
 	@OneToMany()
 	@JoinColumn(name="_refs_key")
-	private List<LTReferenceWorkflowStatus> workflowStatuses;
+	private List<ReferenceWorkflowStatus> workflowStatuses;
 
 	@OneToMany()
 	@JoinColumn(name="_refs_key")
@@ -110,7 +110,7 @@ public class LTReference extends BaseEntity {
 
 	@OneToMany()
 	@JoinColumn(name="_refs_key")
-	private List<LTReferenceWorkflowTag> workflowTags;
+	private List<ReferenceWorkflowTag> workflowTags;
 
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_refs_key")
@@ -214,7 +214,7 @@ public class LTReference extends BaseEntity {
 	@Transient
 	public List<String> getWorkflowTagsAsStrings() {
 		List<String> tags = new ArrayList<String>();
-		for (LTReferenceWorkflowTag rwTag : workflowTags) {
+		for (ReferenceWorkflowTag rwTag : workflowTags) {
 			tags.add(rwTag.getTag().getTerm());
 		}
 		Collections.sort(tags);
@@ -229,7 +229,7 @@ public class LTReference extends BaseEntity {
 	@Transient
 	private void buildWorkflowStatusCache() {
 		workflowStatusCache = new HashMap<String,String>();
-		for (LTReferenceWorkflowStatus rws : workflowStatuses) {
+		for (ReferenceWorkflowStatus rws : workflowStatuses) {
 			if (rws.getIsCurrent() == 1) {
 				workflowStatusCache.put(rws.getGroupAbbreviation(), rws.getStatus());
 			}

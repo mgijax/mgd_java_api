@@ -73,8 +73,8 @@ public class LTReferenceService {
 		return referenceService.searchLT(params);
 	}
 
-	public SearchResults<LTReferenceDomain> getReferences(Map<String, Object> searchFields) throws APIException {
-		return repo.search(searchFields);
+	public SearchResults<LTReferenceDomain> getReferences(Map<String, Object> params) throws APIException {
+		return repo.search(params);
 	}	
 	
 	/* Get a list of valid relevance versions for use in a search pick list in the pwi.

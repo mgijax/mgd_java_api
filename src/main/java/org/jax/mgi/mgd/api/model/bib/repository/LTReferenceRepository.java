@@ -23,6 +23,7 @@ import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowStatusDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;
@@ -30,6 +31,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowTag;
+import org.jax.mgi.mgd.api.model.bib.service.ReferenceWorkflowDataService;
 import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceMarkerAssocDomain;
@@ -67,6 +69,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	private MGITypeDAO mgiTypeDAO;
 	@Inject
 	private MGIReferenceAssocService referenceAssocService;	
+	@Inject
+	private ReferenceWorkflowDataService dataService;
 	
 	LTReferenceTranslator translator = new LTReferenceTranslator();
 	private Logger log = Logger.getLogger(getClass());
@@ -706,6 +710,18 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			anyChanges = true;
 		}
 
+		// replace with this
+//		List<ReferenceWorkflowDataDomain> dataList = new ArrayList<ReferenceWorkflowDataDomain>();
+//		ReferenceWorkflowDataDomain dataDomain = new ReferenceWorkflowDataDomain();
+//		dataDomain.setProcessStatus(Constants.PROCESS_CREATE);
+//		dataDomain.setRefsKey(String.valueOf(entity.get_refs_key()));
+//		dataDomain.setExtractedTextKey("48804490");
+//		dataDomain.setSupplementalKey("31576677");
+//		dataDomain.setExtractedText(null);
+//		dataDomain.setHasPDF(false);
+//		dataDomain.setLinkSupplemental(null);
+//		anyChanges = dataService.process(Integer.valueOf(domain.getRefsKey()), dataList, currentUser);	
+		
 		return anyChanges;
 	}
 

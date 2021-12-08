@@ -10,7 +10,9 @@ import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBookDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceNoteDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowData;
 import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jboss.logging.Logger;
 
@@ -20,7 +22,8 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 	
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 	private ReferenceNoteTranslator noteTranslator = new ReferenceNoteTranslator();
-
+	private ReferenceWorkflowDataTranslator wfDataTranslator = new ReferenceWorkflowDataTranslator();
+	
 	@Override
 	protected ReferenceDomain entityToDomain(Reference entity) {
 
@@ -108,11 +111,11 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 			//domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
 	
-		// need to create ReferenceWorkflowDataDomain, service, translator
-//		if (entity.getWorkflowData() != null && entity.getWorkflowData().isEmpty()) {
-//			Iterable<LTReferenceWorkflowData> wfData = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
-//			domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));			
-//		}
+		// workflow data
+		if (entity.getWorkflowData() != null && entity.getWorkflowData().isEmpty()) {
+			Iterable<ReferenceWorkflowDataDomain> wfData = wfDataTranslator.translateEntities(entity.getWorkflowData());
+			domain.setWorkflowData(IteratorUtils.toList(wfData.iterator()));			
+		}
 		
 		return domain;
 	}

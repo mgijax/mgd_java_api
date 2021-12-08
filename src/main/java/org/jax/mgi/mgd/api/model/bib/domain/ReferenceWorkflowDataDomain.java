@@ -13,9 +13,11 @@ public class ReferenceWorkflowDataDomain extends BaseDomain {
 	private String refsKey;
 	private Boolean hasPDF;
 	private String linkSupplemental;
-	private String extractedText;
+	private String extractedTextKey;
+	private String extractedTextTerm;
 	private String supplementalKey;
 	private String supplementalTerm;
+	private String extractedText;	
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

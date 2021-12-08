@@ -18,10 +18,12 @@ public class ReferenceWorkflowDataTranslator extends BaseEntityDomainTranslator<
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setRefsKey(String.valueOf(entity.get_refs_key()));
 		domain.setLinkSupplemental(entity.getLinkSupplemental());
-		domain.setExtractedText(entity.getExtractedText());
+		domain.setExtractedTextKey(String.valueOf(entity.getExtractedTextTerm().get_term_key()));
+		domain.setExtractedTextTerm(entity.getExtractedTextTerm().getTerm());		
 		domain.setSupplementalKey(String.valueOf(entity.getSupplementalTerm().get_term_key()));
 		domain.setSupplementalTerm(entity.getSupplementalTerm().getTerm());
-		
+		domain.setExtractedText(entity.getExtractedText());
+
 		if (entity.getHasPDF() == 1) {
 			domain.setHasPDF(true);
 		}

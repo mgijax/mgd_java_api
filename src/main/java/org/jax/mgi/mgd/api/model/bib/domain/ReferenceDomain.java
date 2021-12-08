@@ -57,6 +57,9 @@ public class ReferenceDomain extends BaseDomain {
 	public String qtl_status;
 	public String tumor_status;
 	
+	// workflow data
+	private List<ReferenceWorkflowDataDomain> workflowData;
+	
 	// these lists are loaded by the pwi at runtime
 	private List<MGIReferenceAssocDomain> alleleAssocs;
 	private List<MGIReferenceAssocDomain> markerAssocs;
@@ -72,6 +75,7 @@ public class ReferenceDomain extends BaseDomain {
 	private String orderBy = "1";
 	private String accids;
 	private String supplementalTerm;
+	private String supplementalKey;
 	
 	private String sh_status;
 	private String sh_group;

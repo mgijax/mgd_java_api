@@ -18,19 +18,19 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
-import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceWorkflowDataDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceBookDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceNoteDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
 import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceTranslator;
+import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
@@ -53,14 +53,16 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	private ReferenceBookDAO bookDAO;
 	@Inject
 	private ReferenceNoteDAO noteDAO;
-	@Inject
-	private LTReferenceWorkflowDataDAO wfDataDAO;
+//	@Inject
+//	private LTReferenceWorkflowDataDAO wfDataDAO;
 	@Inject
 	private TermDAO termDAO;
 	@Inject
 	private AccessionService accessionService;
 	@Inject
 	private TermService termService;
+	@Inject
+	private ReferenceWorkflowDataService dataService;
 	
 	private ReferenceTranslator translator = new ReferenceTranslator();
 	private SlimReferenceTranslator slimtranslator = new SlimReferenceTranslator();	
@@ -221,19 +223,30 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 				
 		// supplement = Not checked (31576677)
-		LTReferenceWorkflowData wfDataEntity = new LTReferenceWorkflowData();
-		wfDataEntity.set_refs_key(entity.get_refs_key());
-		wfDataEntity.setSupplementalTerm(termDAO.get(31576677));
-		wfDataEntity.setExtractedTextTerm(termDAO.get(48804490));			
-		wfDataEntity.setExtracted_text(null);
-		wfDataEntity.setHas_pdf(0);
-		wfDataEntity.setLink_supplemental(null);
-		wfDataEntity.setCreatedByUser(user);
-		wfDataEntity.setCreation_date(new Date());
-		wfDataEntity.setModifiedByUser(user);
-		wfDataEntity.setModification_date(new Date());
-		wfDataDAO.persist(wfDataEntity);			
+//		LTReferenceWorkflowData wfDataEntity = new LTReferenceWorkflowData();
+//		wfDataEntity.set_refs_key(entity.get_refs_key());
+//		wfDataEntity.setSupplementalTerm(termDAO.get(31576677));
+//		wfDataEntity.setExtractedTextTerm(termDAO.get(48804490));			
+//		wfDataEntity.setExtracted_text(null);
+//		wfDataEntity.setHas_pdf(0);
+//		wfDataEntity.setLink_supplemental(null);
+//		wfDataEntity.setCreatedByUser(user);
+//		wfDataEntity.setCreation_date(new Date());
+//		wfDataEntity.setModifiedByUser(user);
+//		wfDataEntity.setModification_date(new Date());
+//		wfDataDAO.persist(wfDataEntity);			
 		
+		List<ReferenceWorkflowDataDomain> dataList = new ArrayList<ReferenceWorkflowDataDomain>();
+		ReferenceWorkflowDataDomain dataDomain = new ReferenceWorkflowDataDomain();
+		dataDomain.setProcessStatus(Constants.PROCESS_CREATE);
+		dataDomain.setRefsKey(String.valueOf(entity.get_refs_key()));
+		dataDomain.setExtractedTextKey("48804490");
+		dataDomain.setSupplementalKey("31576677");
+		dataDomain.setExtractedText(null);
+		dataDomain.setHasPDF(false);
+		dataDomain.setLinkSupplemental(null);
+		dataService.process(Integer.valueOf(domain.getRefsKey()), dataList, user);		
+
 		// process pubmed accession ids
 		if (domain.getPubmedid() != null && !domain.getPubmedid().isEmpty()) {
 			AccessionDomain accessionDomain = new AccessionDomain();
@@ -269,10 +282,215 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}
 
 	@Transactional
-	public SearchResults<ReferenceDomain> update(ReferenceDomain object, User user) {
+	public SearchResults<ReferenceDomain> update(ReferenceDomain domain, User user) {
+		// update existing entity object from in-coming domain
+		// the Entities class handles the generation of the primary key
+		// database trigger will assign the MGI id/see pgmgddbschema/trigger for details
+
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
-		return results;
+		Reference entity = referenceDAO.get(Integer.valueOf(domain.getRefsKey()));
+		Boolean modified = true;
+		
+		// default reference type = ?
+		if (domain.getReferenceTypeKey() == null || domain.getReferenceTypeKey().isEmpty()) {
+			domain.setReferenceTypeKey("31576687");
+		}
+		entity.setReferenceType(termDAO.get(Integer.valueOf(domain.getReferenceTypeKey())));			
+
+		if (domain.getAuthors() == null || domain.getAuthors().isEmpty()) {
+			entity.setAuthors(null);
+			entity.setPrimaryAuthor(null);
+		}
+		else {
+			entity.setAuthors(domain.getAuthors());
+			String[] authors = domain.getAuthors().split(";");
+			entity.setPrimaryAuthor(authors[0]);
+		}
+		
+		if (domain.getTitle() == null || domain.getTitle().isEmpty()) {
+			entity.setTitle(null);
+		}
+		else {
+			entity.setTitle(domain.getTitle());
+		}
+		
+		if (domain.getJournal() == null || domain.getJournal().isEmpty()) {
+			entity.setJournal(null);
+		}
+		else {
+			entity.setJournal(domain.getJournal());
+		}
+		
+		if (domain.getVol() == null || domain.getVol().isEmpty()) {
+			entity.setVol(null);
+		}
+		else {
+			entity.setVol(domain.getVol());
+		}
+		
+		if (domain.getIssue() == null || domain.getIssue().isEmpty()) {
+			entity.setIssue(null);
+		}
+		else {
+			entity.setIssue(domain.getIssue());
+		}
+		
+		if (domain.getPgs() == null || domain.getPgs().isEmpty()) {
+			entity.setPgs(null);
+		}
+		else {
+			entity.setPgs(domain.getPgs());
+		}
+				
+		if (domain.getReferenceAbstract() == null || domain.getReferenceAbstract().isEmpty()) {
+			entity.setReferenceAbstract(null);
+		}
+		else {
+			entity.setReferenceAbstract(DecodeString.setDecodeToLatin9(domain.getReferenceAbstract()));
+		}
+		
+		int theYear;
+		if (domain.getYear() == null || domain.getYear().isEmpty()) {
+			theYear = Calendar.getInstance().get(Calendar.YEAR);
+		}
+		else {
+			theYear = Integer.valueOf(domain.getYear());
+		}
+		entity.setYear(theYear);
+		
+		if (domain.getDate() == null || domain.getDate().isEmpty()) {
+			entity.setDate(String.valueOf(theYear));
+		}
+		else {
+			entity.setDate(domain.getDate());
+		}
+		
+		if (domain.getIsReviewArticle().equals("No")) {
+			entity.setIsReviewArticle(0);
+		}
+		else {
+			entity.setIsReviewArticle(1);
+		}
+				
+		// for books
+		if (domain.getReferenceTypeKey().equals("31576679")) {
+			ReferenceBook bookEntity = new ReferenceBook();
+			bookEntity.set_refs_key(entity.get_refs_key());
+			
+			if (domain.book_author.isEmpty()) {
+				bookEntity.setBook_author(null);
+			}
+			else {
+				bookEntity.setBook_author(domain.book_author);
+			}
+	
+			if (domain.book_author.isEmpty()) {
+				bookEntity.setBook_title(null);
+			}
+			else {
+				bookEntity.setBook_title(domain.book_title);
+			}
+			
+			if (domain.book_author.isEmpty()) {
+				bookEntity.setPlace(null);
+			}
+			else {
+				bookEntity.setPlace(domain.place);
+			}
+			
+			if (domain.book_author.isEmpty()) {
+				bookEntity.setPublisher(null);
+			}
+			else {
+				bookEntity.setPublisher(domain.publisher);
+			}
+									
+			if (domain.book_author.isEmpty()) {
+				bookEntity.setSeries_ed(null);
+			}
+			else {
+				bookEntity.setSeries_ed(domain.series_ed);
+			}
+			
+			bookEntity.setCreation_date(new Date());
+			bookEntity.setModification_date(new Date());
+			bookDAO.persist(bookEntity);
+		}
+
+		// notes
+		if (domain.getReferenceNote() != null && !domain.getReferenceNote().isEmpty()) {
+			ReferenceNote noteEntity = new ReferenceNote();
+			noteEntity.set_refs_key(entity.get_refs_key());
+			noteEntity.setNote(domain.referenceNote);			
+			noteEntity.setCreation_date(new Date());
+			noteEntity.setModification_date(new Date());
+			noteDAO.persist(noteEntity);			
+		}
+
+		// process pubmed accession ids
+		if (domain.getPubmedid() != null && !domain.getPubmedid().isEmpty()) {
+			AccessionDomain accessionDomain = new AccessionDomain();
+			List<AccessionDomain> aresults = new ArrayList<AccessionDomain>();
+			accessionDomain.setProcessStatus("c");
+			accessionDomain.setAccID(domain.getPubmedid());
+			accessionDomain.setLogicaldbKey("29");
+			aresults.add(accessionDomain);
+			accessionService.process(String.valueOf(entity.get_refs_key()), aresults, "Reference", user);
+		}
+
+		// process doiid accession ids
+		if (domain.getDoiid() != null && !domain.getDoiid().isEmpty()) {
+			AccessionDomain accessionDomain = new AccessionDomain();
+			List<AccessionDomain> aresults = new ArrayList<AccessionDomain>();
+			accessionDomain.setProcessStatus("c");
+			accessionDomain.setAccID(domain.getDoiid());
+			accessionDomain.setLogicaldbKey("65");
+			aresults.add(accessionDomain);
+			accessionService.process(String.valueOf(entity.get_refs_key()), aresults, "Reference", user);
+		}
+
+		// workflow data
+		List<ReferenceWorkflowDataDomain> dataList = new ArrayList<ReferenceWorkflowDataDomain>();
+		ReferenceWorkflowDataDomain dataDomain = new ReferenceWorkflowDataDomain();
+		dataDomain.setProcessStatus(Constants.PROCESS_UPDATE);
+		dataDomain.setRefsKey(String.valueOf(entity.get_refs_key()));
+//		dataDomain.setExtractedTextKey("48804490");
+//		dataDomain.setSupplementalKey(domain.getSupplementalKey());
+//		dataDomain.setExtractedText(null);
+//		dataDomain.setHasPDF(false);
+		dataList.add(dataDomain);
+		dataDomain.setLinkSupplemental(null);
+		if (dataService.process(Integer.valueOf(domain.getRefsKey()), dataList, user)) {
+			modified = true;
+		}
+
+		// workflow relevance	
+		
+		// workflow status
+		
+		// workflow tag
+		
+		// only if modifications were actually made
+		if (modified == true) {
+			entity.setModification_date(new Date());
+			entity.setModifiedBy(user);
+			referenceDAO.update(entity);
+			log.info("processReference/changes processed: " + domain.getRefsKey());
+		}
+		else {
+			log.info("processReference/no changes processed: " + domain.getRefsKey());
+		}
+		
+		// reload bib_citation_cache
+		String cmd = "select count(*) from BIB_reloadCache (" + entity.get_refs_key() + ")";
+		log.info("cmd: " + cmd);
+		Query query = referenceDAO.createNativeQuery(cmd);
+		query.getResultList();
+		
+		// return entity translated to domain
+		log.info("processReference/create/returning results");
+		results.setItem(translator.translate(entity));
+		return results;		
 	}
 
 	@Transactional

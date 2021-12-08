@@ -21,25 +21,23 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Reference Workflow Status Model")
-public class ReferenceWorkflowStatus extends BaseEntity {
+@ApiModel(value = "Reference Workflow Relevance")
+public class ReferenceWorkflowRelevance extends BaseEntity {
 
 	@Id
-//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="bib_workflow_status_generator")
-//	@SequenceGenerator(name="bib_workflow_status_generator", sequenceName = "bib_workflow_status_seq", allocationSize=1)	
+//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="bib_workflow_relevance_generator")
+//	@SequenceGenerator(name="bib_workflow_relevance_generator", sequenceName = "bib_workflow_relevance_seq", allocationSize=1)	
 	private int _assoc_key;
 	private int _refs_key;
 	private int isCurrent;
+	private Double confidence;
+	private String version;
 	private Date creation_date;
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_group_key", referencedColumnName="_term_key")
-	private Term groupTerm;
-	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_status_key", referencedColumnName="_term_key")
-	private Term statusTerm;
+	@JoinColumn(name="_relevance_key", referencedColumnName="_term_key")
+	private Term relevanceTerm;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

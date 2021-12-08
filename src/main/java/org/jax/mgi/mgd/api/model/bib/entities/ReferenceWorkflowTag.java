@@ -22,7 +22,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Reference Workflow Tag Model Object")
+@ApiModel(value = "Reference Workflow Tag Model")
 @Table(name="bib_workflow_tag")
 public class ReferenceWorkflowTag extends BaseEntity {
 
@@ -36,7 +36,7 @@ public class ReferenceWorkflowTag extends BaseEntity {
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_tag_key", referencedColumnName="_term_key")
-	private Term tag;
+	private Term tagTerm;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

@@ -148,6 +148,7 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 			List<Note> notes = entity.getNotes();
 			//log.info(notes.size());
 			String notetext = entity.getNotes().get(0).getNoteChunk().getNote();
+			domain.set_note_key(String.valueOf(entity.getNotes().get(0).get_note_key()));
 			domain.setNotetext(notetext);
 		}
 

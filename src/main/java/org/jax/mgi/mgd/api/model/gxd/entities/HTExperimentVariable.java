@@ -28,6 +28,7 @@ public class HTExperimentVariable extends BaseEntity {
 	@SequenceGenerator(name="gxd_htexperimentvariable_generator", sequenceName = "gxd_htexperimentvariable_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")	
 	private Integer _experimentvariable_key;
+
 	private Integer _experiment_key;
 
 	@OneToOne

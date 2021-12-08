@@ -11,7 +11,7 @@ public class HTExperimentVariableDomain extends BaseDomain {
 	private Integer _experimentvariable_key;
 	private String vocabKey;
 	private String termKey;
-	private int _term_key;
+	private Integer _term_key;
 	private String term;
 	private String abbreviation;
 	private boolean checked;

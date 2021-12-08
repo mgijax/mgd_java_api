@@ -65,6 +65,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			log.info("processVocabulary/no changes processed: " + domain.getVocabKey());
 		}
 
+		// re-setting terms order should happen for specific vocabularies only
 		// 48 = Journal
 		if (domain.getVocabKey().equals("48")) {
 			String cmd;

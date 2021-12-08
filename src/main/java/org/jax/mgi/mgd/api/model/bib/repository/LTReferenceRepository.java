@@ -22,13 +22,13 @@ import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowRelevanceDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowStatusDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;
+import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
@@ -132,10 +132,10 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	/* get a list of events in the status history of the reference with the specified key
 	 */
-	public List<ReferenceWorkflowStatusDomain> getStatusHistory(LTReferenceDomain domain) throws APIException {
-		List<ReferenceWorkflowStatusDomain> history = new ArrayList<ReferenceWorkflowStatusDomain>();
-		for (ReferenceWorkflowStatus event : referenceDAO.getStatusHistory(domain.refsKey)) {
-			history.add(new ReferenceWorkflowStatusDomain(event));
+	public List<LTReferenceWorkflowStatusDomain> getStatusHistory(LTReferenceDomain domain) throws APIException {
+		List<LTReferenceWorkflowStatusDomain> history = new ArrayList<LTReferenceWorkflowStatusDomain>();
+		for (LTReferenceWorkflowStatus event : referenceDAO.getStatusHistory(domain.refsKey)) {
+			history.add(new LTReferenceWorkflowStatusDomain(event));
 		}
 		return history;
 	}
@@ -732,7 +732,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		// left in toAdd will need to be added as a new tag, and anything in toDelete will need to be removed.
 
 		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
-			String myTag = refTag.getTag().getTerm();
+			String myTag = refTag.getTagTerm().getTerm();
 
 			// matching tags
 			if (toAdd.contains(myTag)) {
@@ -769,7 +769,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 		String trimTag = rdTag.trim();
 		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
-			if (trimTag.equals(refTag.getTag().getTerm()) ) {
+			if (trimTag.equals(refTag.getTagTerm().getTerm()) ) {
 				return;
 			}
 		}
@@ -782,7 +782,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 			ReferenceWorkflowTag rwTag = new ReferenceWorkflowTag();
 			rwTag.set_refs_key(entity.get_refs_key());
-			rwTag.setTag(tagTerm);
+			rwTag.setTagTerm(tagTerm);
 			rwTag.setCreatedBy(currentUser);
 			rwTag.setModifiedBy(rwTag.getCreatedBy());
 			rwTag.setCreation_date(new Date());
@@ -807,7 +807,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 		String lowerTag = rdTag.toLowerCase().trim();
 		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
-			if (lowerTag.equals(refTag.getTag().getTerm().toLowerCase()) ) {
+			if (lowerTag.equals(refTag.getTagTerm().getTerm().toLowerCase()) ) {
 				referenceDAO.remove(refTag);
 				entity.setModificationInfo(currentUser);
 				return;
@@ -830,7 +830,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		// At this point, we know we have a status update.  If there was an existing record, we need
 		// to flag it as not current.
 		if (currentStatus != null) {
-			for (ReferenceWorkflowStatus rws : entity.getWorkflowStatuses()) {
+			for (LTReferenceWorkflowStatus rws : entity.getWorkflowStatuses()) {
 				if ( (rws.getIsCurrent() == 1) && groupAbbrev.equals(rws.getGroupTerm().getAbbreviation()) ) {
 					rws.setIsCurrent(0);
 					break;				// no more can match, so exit the loop
@@ -841,13 +841,13 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		// Now we need to add a new status record for this change -- and need to persist this new object to the
 		// database explicitly, before the whole reference gets persisted later on.
 
-		ReferenceWorkflowStatus newRws = new ReferenceWorkflowStatus();
+		LTReferenceWorkflowStatus newRws = new LTReferenceWorkflowStatus();
 		newRws.set_refs_key(entity.get_refs_key());
 		newRws.setIsCurrent(1);
 		newRws.setGroupTerm(getTermByAbbreviation(Constants.VOC_WORKFLOW_GROUP, groupAbbrev));
 		newRws.setStatusTerm(getTermByTerm(Constants.VOC_WORKFLOW_STATUS, newStatus));
-		newRws.setCreatedBy(currentUser);
-		newRws.setModifiedBy(newRws.getCreatedBy());
+		newRws.setCreatedByUser(currentUser);
+		newRws.setModifiedByUser(newRws.getCreatedByUser());
 		newRws.setCreation_date(new Date());
 		newRws.setModification_date(newRws.getCreation_date());
 		entity.getWorkflowStatuses().add(newRws);

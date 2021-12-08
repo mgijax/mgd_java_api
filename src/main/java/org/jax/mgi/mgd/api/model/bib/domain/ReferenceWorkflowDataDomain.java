@@ -6,16 +6,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class ReferenceWorkflowStatusDomain extends BaseDomain {
+public class ReferenceWorkflowDataDomain extends BaseDomain {
 	
 	private String processStatus;
 	private String assocKey;
 	private String refsKey;
-	private Boolean isCurrent;
-	private String groupKey;
-	private String groupTerm;
-	private String statusKey;
-	private String statusTerm;
+	private Boolean hasPDF;
+	private String linkSupplemental;
+	private String extractedText;
+	private String supplementalKey;
+	private String supplementalTerm;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

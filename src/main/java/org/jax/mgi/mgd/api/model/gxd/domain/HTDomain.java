@@ -20,6 +20,7 @@ public class HTDomain extends BaseDomain {
 	private String name;
 	private String description;
 	private String notetext;
+	private String _note_key;
  	private HTSourceDomain source_object;
 	private List<String> experimental_factors;
 	private List<String> pubmed_ids;

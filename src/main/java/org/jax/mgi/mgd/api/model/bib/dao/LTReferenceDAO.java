@@ -27,6 +27,7 @@ import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;
+import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
@@ -748,10 +749,10 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 
 	/* get a list of the workflow status records for a reference
 	 */
-	public List<ReferenceWorkflowStatus> getStatusHistory (String refsKey) {
+	public List<LTReferenceWorkflowStatus> getStatusHistory (String refsKey) {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<ReferenceWorkflowStatus> query = builder.createQuery(ReferenceWorkflowStatus.class);
-		Root<ReferenceWorkflowStatus> root = query.from(ReferenceWorkflowStatus.class);
+		CriteriaQuery<LTReferenceWorkflowStatus> query = builder.createQuery(LTReferenceWorkflowStatus.class);
+		Root<LTReferenceWorkflowStatus> root = query.from(LTReferenceWorkflowStatus.class);
 
 		query.where(builder.equal(root.get("_refs_key"), refsKey));
 		query.orderBy(builder.desc(root.get("modification_date")));

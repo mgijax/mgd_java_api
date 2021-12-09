@@ -67,6 +67,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			log.info("processVocabulary/no changes processed: " + domain.getVocabKey());
 		}
 
+		// reset of the terms is vocabulary-specific
 		// 48 = Journal
 		if (domain.getVocabKey().equals("48")) {
 		    cmd = "select count(*) from VOC_resetTerms(" + domain.getVocabKey() + ")";

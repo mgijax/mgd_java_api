@@ -182,7 +182,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		Marker entity = markerDAO.get(Integer.valueOf(domain.getMarkerKey()));
-		Boolean modified = false;
+		Boolean modified = true;
 		String mgiTypeKey = "2";
 		String mgiTypeName = "Marker";
 		Boolean setStrainNeedsReview = false;

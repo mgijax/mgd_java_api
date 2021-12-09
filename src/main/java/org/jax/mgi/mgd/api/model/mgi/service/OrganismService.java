@@ -313,10 +313,19 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		// for antigen module organism pick list
 		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
 
-		String cmd ="select s.*\n" + 
-				"from MGI_Organism s, MGI_Organism_MGIType t\n" + 
-				"where s._Organism_key = t._Organism_key\n" +
-				"and t._MGIType_key = 6";
+//        1 | mouse, laboratory
+//       76 | Not Specified
+//       79 | rabbit
+		
+		String cmd ="select s.*, 1 as orderBy" + 
+				"\nfrom MGI_Organism s, MGI_Organism_MGIType t" +
+				"\nwhere s._Organism_key = t._Organism_key and t._MGIType_key = 6" +
+				"\nand s._Organism_key in (1,76,79)" +
+				"\nselect s.*, 2 as orderBy" + 
+				"\nfrom MGI_Organism s, MGI_Organism_MGIType t" +
+				"\nwhere s._Organism_key = t._Organism_key and t._MGIType_key = 6" +
+				"\nand s._Organism_key not in (1,76,79)" +
+				"\norder by orderBy, s.commonname";
 		log.info(cmd);
 
 		try {

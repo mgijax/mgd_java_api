@@ -49,6 +49,8 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		SearchResults<VocabularyDomain> results = new SearchResults<VocabularyDomain>();
 		Vocabulary entity = vocabularyDAO.get(Integer.valueOf(domain.getVocabKey()));
 		Boolean modified = false;
+		String cmd;
+		Query query;
 		
 		log.info("processVocabuary/update");
 		if (termService.process(domain.getVocabKey(), domain.getTerms(), user)) {
@@ -65,17 +67,19 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			log.info("processVocabulary/no changes processed: " + domain.getVocabKey());
 		}
 
-		// re-setting terms order should happen for specific vocabularies only
 		// 48 = Journal
 		if (domain.getVocabKey().equals("48")) {
-			String cmd;
-			Query query;
-			
 		    cmd = "select count(*) from VOC_resetTerms(" + domain.getVocabKey() + ")";
 		    log.info("cmd: " + cmd);
 		    query = vocabularyDAO.createNativeQuery(cmd);
 		    query.getResultList();	
 		}
+		
+		// reset the sequence numbers so there are no caps
+		cmd = "select count(*) from MGI_resetSequenceNum ('VOC_Term'," + domain.getVocabKey() + "," + user.get_user_key() + ")";		    
+		log.info("cmd: " + cmd);
+		query = vocabularyDAO.createNativeQuery(cmd);
+		query.getResultList();	
 		
 		// return entity translated to domain
 		log.info("processVocabulary/update/returning results");

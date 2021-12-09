@@ -75,7 +75,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		    query.getResultList();	
 		}
 		
-		// reset the sequence numbers so there are no caps
+		// reset the sequence numbers so there are no gaps
 		cmd = "select count(*) from MGI_resetSequenceNum ('VOC_Term'," + domain.getVocabKey() + "," + user.get_user_key() + ")";		    
 		log.info("cmd: " + cmd);
 		query = vocabularyDAO.createNativeQuery(cmd);

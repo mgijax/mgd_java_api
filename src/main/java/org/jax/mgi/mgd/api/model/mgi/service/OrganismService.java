@@ -326,7 +326,7 @@ public class OrganismService extends BaseService<OrganismDomain> {
 				"\nfrom MGI_Organism s, MGI_Organism_MGIType t" +
 				"\nwhere s._Organism_key = t._Organism_key and t._MGIType_key = 6" +
 				"\nand s._Organism_key not in (1,76,79)" +
-				"\norder by orderBy, s.commonname";
+				"\norder by orderBy, commonname";
 		log.info(cmd);
 
 		try {

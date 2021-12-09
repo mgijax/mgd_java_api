@@ -108,18 +108,18 @@ public class Reference extends BaseEntity {
 	private List<ReferenceWorkflowData> workflowData;
 	
 	// workflow relevance
-//	@OneToMany()
-//	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-//	private List<LTReferenceWorkflowRelevance> workflowRelevance;
+	@OneToMany()
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+	private List<ReferenceWorkflowRelevance> workflowRelevance;
 	
 	// workflow status
-//	@OneToMany()
-//	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-//	private List<LTReferenceWorkflowStatus> workflowStatus;
+	@OneToMany()
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+	private List<ReferenceWorkflowStatus> workflowStatus;
 
 	// workflow tags
-//	@OneToMany()
-//	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-//	private List<ReferenceWorkflowTag> workflowTag;	
+	@OneToMany()
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+	private List<ReferenceWorkflowTag> workflowTag;	
 	
 }

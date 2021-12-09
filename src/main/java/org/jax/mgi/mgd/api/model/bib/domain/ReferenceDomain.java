@@ -59,6 +59,12 @@ public class ReferenceDomain extends BaseDomain {
 	
 	// workflow data
 	private List<ReferenceWorkflowDataDomain> workflowData;
+	// workflow relevance
+	private List<ReferenceWorkflowRelevanceDomain> workflowRelevance;
+	// workflow status
+	private List<ReferenceWorkflowStatusDomain> workflowStatus;
+	// workflow tag
+	private List<ReferenceWorkflowTagDomain> workflowTag;
 	
 	// these lists are loaded by the pwi at runtime
 	private List<MGIReferenceAssocDomain> alleleAssocs;

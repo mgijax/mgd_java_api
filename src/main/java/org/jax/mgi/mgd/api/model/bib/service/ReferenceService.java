@@ -30,7 +30,6 @@ import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
 import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceTranslator;
-import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
@@ -63,6 +62,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	private TermService termService;
 	@Inject
 	private ReferenceWorkflowDataService dataService;
+	@Inject
+	private ReferenceWorkflowRelevanceService relevanceService;
+	@Inject
+	private ReferenceWorkflowStatusService statusService;
+	@Inject
+	private ReferenceWorkflowTagService tagService;
 	
 	private ReferenceTranslator translator = new ReferenceTranslator();
 	private SlimReferenceTranslator slimtranslator = new SlimReferenceTranslator();	
@@ -453,22 +458,34 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		List<ReferenceWorkflowDataDomain> dataList = new ArrayList<ReferenceWorkflowDataDomain>();
 		ReferenceWorkflowDataDomain dataDomain = new ReferenceWorkflowDataDomain();
 		dataDomain.setProcessStatus(Constants.PROCESS_UPDATE);
-		dataDomain.setRefsKey(String.valueOf(entity.get_refs_key()));
-//		dataDomain.setExtractedTextKey("48804490");
-//		dataDomain.setSupplementalKey(domain.getSupplementalKey());
-//		dataDomain.setExtractedText(null);
-//		dataDomain.setHasPDF(false);
+		dataDomain.setAssocKey(domain.getWorkflowData().get(0).getAssocKey());	
+		dataDomain.setRefsKey(domain.getWorkflowData().get(0).getRefsKey());
+		dataDomain.setSupplementalKey(domain.getSupplementalKey());
+		dataDomain.setHasPDF(domain.getWorkflowData().get(0).getHasPDF());
+		dataDomain.setExtractedText(entity.getWorkflowData().get(0).getExtractedText());
+		dataDomain.setExtractedTextKey(String.valueOf(entity.getWorkflowData().get(0).getExtractedTextTerm().get_term_key()));
 		dataList.add(dataDomain);
 		dataDomain.setLinkSupplemental(null);
 		if (dataService.process(Integer.valueOf(domain.getRefsKey()), dataList, user)) {
 			modified = true;
 		}
+		
+		// these will need new rows added which means possible PWI changes
 
-		// workflow relevance	
+		// workflow relevance		
+		if (relevanceService.process(Integer.valueOf(domain.getRefsKey()), domain.getWorkflowRelevance(), user)) {
+			modified = true;
+		}
 		
 		// workflow status
+		if (statusService.process(Integer.valueOf(domain.getRefsKey()), domain.getWorkflowStatus(), user)) {
+			modified = true;
+		}
 		
 		// workflow tag
+		if (tagService.process(Integer.valueOf(domain.getRefsKey()), domain.getWorkflowTag(), user)) {
+			modified = true;
+		}
 		
 		// only if modifications were actually made
 		if (modified == true) {

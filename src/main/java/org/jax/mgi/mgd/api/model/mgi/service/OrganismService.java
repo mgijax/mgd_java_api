@@ -316,6 +316,7 @@ public class OrganismService extends BaseService<OrganismDomain> {
 //        1 | mouse, laboratory
 //       76 | Not Specified
 //       79 | rabbit
+//       74 | Not Applicable  : do not include
 		
 		String cmd ="select s.*, 1 as orderBy" + 
 				"\nfrom MGI_Organism s, MGI_Organism_MGIType t" +
@@ -325,7 +326,7 @@ public class OrganismService extends BaseService<OrganismDomain> {
 				"\nselect s.*, 2 as orderBy" + 
 				"\nfrom MGI_Organism s, MGI_Organism_MGIType t" +
 				"\nwhere s._Organism_key = t._Organism_key and t._MGIType_key = 6" +
-				"\nand s._Organism_key not in (1,76,79)" +
+				"\nand s._Organism_key not in (1,76,79,74)" +
 				"\norder by orderBy, commonname";
 		log.info(cmd);
 

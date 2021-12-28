@@ -1180,11 +1180,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				//				  15406205 | CpG island
 				//				  15406207 | promoter
 				//				  36700088 | TSS region
-				//				  97015607	enhancer
-				//				  97015608	promoter flanking region
-				//				  97015609	CTCF binding site
-				//				  97015610	transcription factor binding site
-				//				  97015611	open chromatin region
+				//				  97015607 | enhancer
+				//				  97015608 | promoter flanking region
+				//				  97015609 | CTCF binding site
+				//				  97015610 | transcription factor binding site
+				//				  97015611 | open chromatin region
 				else if (!markerTypeKey.equals("9")
 						&& (termKey.equals("15406205")
 							|| termKey.equals("9272146")

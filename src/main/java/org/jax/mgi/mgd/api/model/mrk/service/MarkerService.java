@@ -1116,7 +1116,16 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			
 				String termKey = terms.get(i).getTermKey();
 								
-				// 3:Cytogenetic Marker
+				// 3:Cytogenetic Marker; the only valid terms are:
+				//				   7196768 | chromosomal deletion
+				//				   7196769 | insertion
+				//				   7196770 | chromosomal inversion
+				//				   7196771 | Robertsonian fusion
+				//				   7196772 | reciprocal chromosomal translocation
+				//				   7196773 | chromosomal translocation
+				//				   7196774 | chromosomal duplication
+				//				   7196775 | chromosomal transposition
+				//				   7222413 | unclassified cytogenetic marker
 				if (!markerTypeKey.equals("3")
 						&& (termKey.equals("7196768")
 						|| termKey.equals("7196774")
@@ -1141,7 +1150,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 						&& !termKey.equals("7222413")) {
 					validation = false;
 				}				
-				// 7:Pseudogene
+				// 7:Pseudogene; the only valid terms are:
+				//				   6967235 | pseudogenic gene segment
+				//				   7288448 | pseudogenic region
+				//				   7288449 | polymorphic pseudogene
+				//				   7313348 | pseudogene
 				else if (!markerTypeKey.equals("7") 
 						&& (termKey.equals("7288449")
 						|| termKey.equals("7313348")
@@ -1155,8 +1168,26 @@ public class MarkerService extends BaseService<MarkerDomain> {
 						&& !termKey.equals("6967235")
 						&& !termKey.equals("7288448")) {
 					validation = false;
-				}				
-				// 9:Other Genome Feature
+				}		
+				
+				// 9:Other Genome Feature; the only valid terms are:
+				//				   7648966 | retrotransposon
+				//				   7648967 | telomere
+				//				   7648968 | minisatellite
+				//				   7648969 | unclassified other genome feature
+				//				   9272146 | endogenous retroviral region
+				//				  11928467 | mutation defined region
+				//				  15406205 | CpG island
+				//				  15406207 | promoter
+				//				  36700088 | TSS region
+				//				  97015675 | CTCF binding site
+				//				  47638438 | enhancer
+				//				  84207983 | enhancer
+				//				  97015673 | enhancer
+				//				  97015677 | open chromatin region
+				//				  97015674 | promoter flanking region
+				//				  97015676 | transcription factor binding site
+				
 				else if (!markerTypeKey.equals("9")
 						&& (termKey.equals("15406205")
 							|| termKey.equals("9272146")
@@ -1166,7 +1197,15 @@ public class MarkerService extends BaseService<MarkerDomain> {
 							|| termKey.equals("7648966")
 							|| termKey.equals("7648967")
 							|| termKey.equals("36700088")							
-							|| termKey.equals("7648969"))) {
+							|| termKey.equals("7648969")
+							|| termKey.equals("97015675")
+							|| termKey.equals("47638438")
+							|| termKey.equals("84207983")
+							|| termKey.equals("97015673")
+							|| termKey.equals("97015677")
+							|| termKey.equals("97015674")
+							|| termKey.equals("97015676")
+							)) {
 					validation = false;
 				}
 				// 9:Other Genome Feature
@@ -1179,9 +1218,17 @@ public class MarkerService extends BaseService<MarkerDomain> {
 						 && !termKey.equals("7648966")
 						 && !termKey.equals("7648967")
 						 && !termKey.equals("36700088")							
-						 && !termKey.equals("7648969")) {
+						 && !termKey.equals("7648969")
+						 && !termKey.equals("97015675")
+						 && !termKey.equals("47638438")
+						 && !termKey.equals("84207983")
+						 && !termKey.equals("97015673")
+						 && !termKey.equals("97015677")
+						 && !termKey.equals("97015674")
+						 && !termKey.equals("97015676")						 
+						 ) {
 					validation = false;
-				}				
+				}					
 			}
 		}
 		

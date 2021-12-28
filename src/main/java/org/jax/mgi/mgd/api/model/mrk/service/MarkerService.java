@@ -1180,6 +1180,13 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				//				  15406205 | CpG island
 				//				  15406207 | promoter
 				//				  36700088 | TSS region
+				//				  97015675 | CTCF binding site
+				//				  47638438 | enhancer
+				//				  84207983 | enhancer
+				//				  97015673 | enhancer
+				//				  97015677 | open chromatin region
+				//				  97015674 | promoter flanking region
+				//				  97015676 | transcription factor binding site		
 				else if (!markerTypeKey.equals("9")
 						&& (termKey.equals("15406205")
 							|| termKey.equals("9272146")
@@ -1189,7 +1196,15 @@ public class MarkerService extends BaseService<MarkerDomain> {
 							|| termKey.equals("7648966")
 							|| termKey.equals("7648967")
 							|| termKey.equals("36700088")							
-							|| termKey.equals("7648969"))) {
+							|| termKey.equals("7648969")
+							|| termKey.equals("97015675")
+							|| termKey.equals("47638438")
+							|| termKey.equals("84207983")
+							|| termKey.equals("97015673")
+							|| termKey.equals("97015677")
+							|| termKey.equals("97015674")
+							|| termKey.equals("97015676")
+							)) {
 					validation = false;
 				}
 				// 9:Other Genome Feature
@@ -1202,9 +1217,17 @@ public class MarkerService extends BaseService<MarkerDomain> {
 						 && !termKey.equals("7648966")
 						 && !termKey.equals("7648967")
 						 && !termKey.equals("36700088")							
-						 && !termKey.equals("7648969")) {
+						 && !termKey.equals("7648969")
+						 && !termKey.equals("97015675")
+						 && !termKey.equals("47638438")
+						 && !termKey.equals("84207983")
+						 && !termKey.equals("97015673")
+						 && !termKey.equals("97015677")
+						 && !termKey.equals("97015674")
+						 && !termKey.equals("97015676")						 
+						 ) {
 					validation = false;
-				}				
+				}					
 			}
 		}
 		

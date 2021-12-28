@@ -1186,11 +1186,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				//				  97015673 | enhancer
 				//				  97015677 | open chromatin region
 				//				  97015674 | promoter flanking region
-<<<<<<< HEAD
 				//				  97015676 | transcription factor binding site		
-=======
 				//				  97015676 | transcription factor binding site
->>>>>>> 3c8762ae766aa4f483f84302b1bb6803f838d1b5
 				else if (!markerTypeKey.equals("9")
 						&& (termKey.equals("15406205")
 							|| termKey.equals("9272146")

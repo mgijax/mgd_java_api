@@ -1180,14 +1180,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				//				  15406205 | CpG island
 				//				  15406207 | promoter
 				//				  36700088 | TSS region
-				//				  97015675 | CTCF binding site
-				//				  47638438 | enhancer
-				//				  84207983 | enhancer
-				//				  97015673 | enhancer
-				//				  97015677 | open chromatin region
-				//				  97015674 | promoter flanking region
-				//				  97015676 | transcription factor binding site		
-				//				  97015676 | transcription factor binding site
+				//				  97015607	enhancer
+				//				  97015608	promoter flanking region
+				//				  97015609	CTCF binding site
+				//				  97015610	transcription factor binding site
+				//				  97015611	open chromatin region
 				else if (!markerTypeKey.equals("9")
 						&& (termKey.equals("15406205")
 							|| termKey.equals("9272146")
@@ -1198,13 +1195,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 							|| termKey.equals("7648967")
 							|| termKey.equals("7648969")
 							|| termKey.equals("36700088")							
-                                                        || termKey.equals("97015609")
-                                                        || termKey.equals("47638438")
-                                                        || termKey.equals("84207983")
-                                                        || termKey.equals("97015607")
-                                                        || termKey.equals("97015611")
-                                                        || termKey.equals("97015608")
-                                                        || termKey.equals("97015610")
+                            || termKey.equals("97015607")
+                            || termKey.equals("97015608")
+                            || termKey.equals("97015609")
+                            || termKey.equals("97015610")
+                            || termKey.equals("97015611")
 							)) {
 					validation = false;
 				}
@@ -1218,13 +1213,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 						 && !termKey.equals("7648966")
 						 && !termKey.equals("7648967")
 						 && !termKey.equals("36700088")							
-                                                 && !termKey.equals("97015609")
-                                                 && !termKey.equals("47638438")
-                                                 && !termKey.equals("84207983")
-                                                 && !termKey.equals("97015607")
-                                                 && !termKey.equals("97015611")
-                                                 && !termKey.equals("97015608")
-                                                 && !termKey.equals("97015610")
+                         && !termKey.equals("97015607")
+                         && !termKey.equals("97015608")
+                         && !termKey.equals("97015609")
+                         && !termKey.equals("97015610")
+                         && !termKey.equals("97015611")
 						 ) {
 					validation = false;
 				}					

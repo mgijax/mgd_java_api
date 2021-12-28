@@ -1197,13 +1197,14 @@ public class MarkerService extends BaseService<MarkerDomain> {
 							|| termKey.equals("7648966")
 							|| termKey.equals("7648967")
 							|| termKey.equals("7648969")
-							|| termKey.equals("97015675")
-							|| termKey.equals("47638438")
-							|| termKey.equals("84207983")
-							|| termKey.equals("97015673")
-							|| termKey.equals("97015677")
-							|| termKey.equals("97015674")
-							|| termKey.equals("97015676")
+							|| termKey.equals("36700088")							
+                                                        || termKey.equals("97015609")
+                                                        || termKey.equals("47638438")
+                                                        || termKey.equals("84207983")
+                                                        || termKey.equals("97015607")
+                                                        || termKey.equals("97015611")
+                                                        || termKey.equals("97015608")
+                                                        || termKey.equals("97015610")
 							)) {
 					validation = false;
 				}
@@ -1217,14 +1218,13 @@ public class MarkerService extends BaseService<MarkerDomain> {
 						 && !termKey.equals("7648966")
 						 && !termKey.equals("7648967")
 						 && !termKey.equals("36700088")							
-						 && !termKey.equals("7648969")
-						 && !termKey.equals("97015675")
-						 && !termKey.equals("47638438")
-						 && !termKey.equals("84207983")
-						 && !termKey.equals("97015673")
-						 && !termKey.equals("97015677")
-						 && !termKey.equals("97015674")
-						 && !termKey.equals("97015676")						 
+                                                 && !termKey.equals("97015609")
+                                                 && !termKey.equals("47638438")
+                                                 && !termKey.equals("84207983")
+                                                 && !termKey.equals("97015607")
+                                                 && !termKey.equals("97015611")
+                                                 && !termKey.equals("97015608")
+                                                 && !termKey.equals("97015610")
 						 ) {
 					validation = false;
 				}					

@@ -1271,12 +1271,12 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 	@Transactional
 	public Boolean validateAlleleConditional(List<SlimAlleleDomain> searchDomain) {
-		// validate list of alleles meet conditional rules
+		// validate list of alleles meet conditionally targeted rules
 		// 
 		// finds alleles where attribute = 'recombinase' (11025588)
 		// finds alleles where attribute = 'conditional ready' (11025588)
 		// 
-		// return query results
+		// returns true/false
 		//
 		
 		Boolean results = true;

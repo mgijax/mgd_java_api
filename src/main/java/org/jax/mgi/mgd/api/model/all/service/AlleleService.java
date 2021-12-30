@@ -1270,6 +1270,69 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	}
 
 	@Transactional
+	public Boolean validateAlleleConditional(List<SlimAlleleDomain> searchDomain) {
+		// validate list of alleles meet conditional rules
+		// 
+		// finds alleles where attribute = 'recombinase' (11025588)
+		// finds alleles where attribute = 'conditional ready' (11025588)
+		// 
+		// return query results
+		//
+		
+		Boolean results = true;
+		List<String> alleleList = new ArrayList<String>();
+		
+		for (int i = 0; i < searchDomain.size(); i++) {
+			alleleList.add(searchDomain.get(i).getAlleleKey());
+		}
+		
+		// finds alleles where attribute = 'recombinase' (11025588)		
+		String cmd = "\nselect a._Allele_key" + 
+				"\nfrom ALL_Allele a, VOC_Annot va" + 
+				"\nwhere a._Allele_key in (" + String.join(",",  alleleList) + ")" +
+				"\nand a._Allele_key = va._Object_key" + 
+				"\nand va._AnnotType_key = 1014" + 
+				"\nand va._Term_key = 11025587";		
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);			
+			if (rs.next() == false) {
+				results = false;
+			}
+			else {
+				results = true;
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// finds alleles where attribute = 'conditional ready' (11025588)		
+		cmd = "\nselect a._Allele_key, va._Term_key" + 
+				"\nfrom ALL_Allele a, VOC_Annot va" + 
+				"\nwhere a._Allele_key in (" + String.join(",",  alleleList) + ")" +
+				"\nand a._Allele_key = va._Object_key" + 
+				"\nand va._AnnotType_key = 1014" + 
+				"\nand va._Term_key = 11025588";	
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);		
+			if (rs.next() == false) {
+				results = false;
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;		
+	}
+
+	@Transactional
 	public List<SlimAlleleDomain> getSlimByMCL(Integer key) {
 		// return SlimAlleleDoman list of mutant cell line key
 

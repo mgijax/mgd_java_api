@@ -159,7 +159,7 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		
 		return results;
 	}
-
+	
 	@POST
 	@ApiOperation(value = "Validate allele symbol (all statuses) OR accID, returns List of SlimAlleleDomains")
 	@Path("/validateAlleleAnyStatus")
@@ -169,6 +169,22 @@ public class AlleleController extends BaseController<AlleleDomain> {
 
 		try {
 			results = alleleService.validateAlleleAnyStatus(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@POST
+	@ApiOperation(value = "Validate allele & conditional rules, returns List of SlimAlleleDomains")
+	@Path("/validateAlleleConditional")
+	public Boolean validateAlleleConditional(List<SlimAlleleDomain> searchDomain) {
+	
+		Boolean results = false;
+
+		try {
+			results = alleleService.validateAlleleConditional(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

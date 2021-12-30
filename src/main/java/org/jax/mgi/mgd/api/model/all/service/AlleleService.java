@@ -1303,7 +1303,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			else {
 				results = true;
 			}
-			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();

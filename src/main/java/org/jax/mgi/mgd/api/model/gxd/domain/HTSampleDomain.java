@@ -22,6 +22,9 @@ public class HTSampleDomain extends BaseDomain {
 	private Integer _genotype_key;		// also in genotype_object; duplicated due to pwi
 	private String name;	
 	private String age;
+	private String ageunit;
+	private String agerange;
+	private String notesort;
 	private List<HTNoteDomain> notes; 	// old version : used by pwi
 	private NoteDomain htNotes;			// new version : at some point, change pwi to use this version
 	private HTGenotypeDomain genotype_object;

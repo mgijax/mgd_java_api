@@ -55,11 +55,12 @@ public class HTExperimentService extends BaseService<HTDomain> {
 	@Transactional
 	public SearchResults<HTDomain> update(HTDomain domain, User user) {
 				
+		log.info("processHTExperiment/update");
+
 		Boolean modified = false;
+		Boolean hasPriorSamples = false; // does this experiment already have samples?
 		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
 		HTExperiment entity = htExperimentDAO.get(domain.get_experiment_key());
-		
-		log.info("processHTExperiment/update");
 		
 		// name
 		if (domain.getName() == null || domain.getDescription().isEmpty()) {
@@ -78,6 +79,10 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		}
 
 		// evaluation state
+//TODO - set evaluation date on state change
+		if (entity.getEvaluationState().get_term_key() != domain.get_evaluationstate_key()){
+			log.info("---Found a change; set date");			
+		}
 		entity.setEvaluationState(termDAO.get(Integer.valueOf(domain.get_evaluationstate_key())));	
 		// experiment type
 		entity.setExperimentType(termDAO.get(Integer.valueOf(domain.get_experimenttype_key())));	
@@ -93,18 +98,16 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			noteService.process(String.valueOf(entity.get_experiment_key()), noteDomain, "42", user);
 		}
 
-log.info("--before exp var handling");
 		// experiment variables
 		if (domain.getExperiment_variables() != null) {
 			hTExperimentVariableService.process(domain.get_experiment_key(), domain.getExperiment_variables(), user);
 		}
-log.info("--after exp var handling");
 
-		// process ht sample
-// TODO
-//		if (domain.getSamples() != null) {
-//			htSampleService.process(domain.get_experiment_key(), domain.getSamples(), user);
-//		}
+		// process ht samples
+		//log.info("---domain.getSamples(): " + domain.getSamples().size());		
+		if (domain.getSamples() != null) {
+			htSampleService.process(domain.get_experiment_key(), domain.getSamples(), user);
+		}
 
 		// persist entity
 		entity.setModification_date(new Date());

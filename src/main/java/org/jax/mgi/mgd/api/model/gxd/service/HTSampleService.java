@@ -94,8 +94,9 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 			log.info("processHTSample/nothing to process");
 			return modified;
 		}
-		
+	
 		for (int i = 0; i < domain.size(); i++) {
+			log.info("--- :" + domain.get(i).getProcessStatus());
 			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 	

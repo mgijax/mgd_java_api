@@ -20,6 +20,7 @@ import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleRefAssocTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.gxd.domain.AllelePairDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImageDomain;
 import org.jax.mgi.mgd.api.model.img.service.ImagePaneAssocService;
@@ -1270,7 +1271,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	}
 
 	@Transactional
-	public List<SlimAlleleDomain> validateAlleleConditional(List<SlimAlleleDomain> searchDomain) {
+	public List<SlimAlleleDomain> validateAlleleConditional(List<AllelePairDomain> searchDomain) {
 		// validate list of alleles meet conditionally targeted rules
 		// 
 		// finds alleles where attribute = 'recombinase' (11025588)
@@ -1283,7 +1284,10 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		List<String> alleleList = new ArrayList<String>();
 		
 		for (int i = 0; i < searchDomain.size(); i++) {
-			alleleList.add(searchDomain.get(i).getAlleleKey());
+			alleleList.add(searchDomain.get(i).getAlleleKey1());
+			if (searchDomain.get(i).getAlleleKey2() != null && !searchDomain.get(i).getAlleleKey2().isEmpty()) {
+				alleleList.add(searchDomain.get(i).getAlleleKey2());
+			}
 		}
 		
 		// finds alleles where attribute = 'recombinase' (11025588)		

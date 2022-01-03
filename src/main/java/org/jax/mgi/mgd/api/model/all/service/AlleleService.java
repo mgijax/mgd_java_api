@@ -1270,16 +1270,16 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	}
 
 	@Transactional
-	public Boolean validateAlleleConditional(List<SlimAlleleDomain> searchDomain) {
+	public List<SlimAlleleDomain> validateAlleleConditional(List<SlimAlleleDomain> searchDomain) {
 		// validate list of alleles meet conditionally targeted rules
 		// 
 		// finds alleles where attribute = 'recombinase' (11025588)
 		// finds alleles where attribute = 'conditional ready' (11025588)
 		// 
-		// returns true/false
+		// if both attributes are found, then return true, else return false
 		//
 		
-		Boolean results = true;
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();		
 		List<String> alleleList = new ArrayList<String>();
 		
 		for (int i = 0; i < searchDomain.size(); i++) {
@@ -1297,11 +1297,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);			
-			if (rs.next() == false) {
-				results = false;
-			}
-			else {
-				results = true;
+			while (rs.next()) {
+				SlimAlleleDomain alleleDomain = new SlimAlleleDomain();
+				alleleDomain = slimtranslator.translate(alleleDAO.get(rs.getInt("_allele_key")));				
+				alleleDAO.clear();
+				results.add(alleleDomain);
 			}
 		}
 		catch (Exception e) {
@@ -1319,8 +1319,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);		
-			if (rs.next() == false) {
-				results = false;
+			while (rs.next()) {
+				SlimAlleleDomain alleleDomain = new SlimAlleleDomain();
+				alleleDomain = slimtranslator.translate(alleleDAO.get(rs.getInt("_allele_key")));				
+				alleleDAO.clear();
+				results.add(alleleDomain);
 			}
 			sqlExecutor.cleanup();
 		}

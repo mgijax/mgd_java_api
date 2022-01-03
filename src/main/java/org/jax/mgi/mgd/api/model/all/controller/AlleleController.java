@@ -179,9 +179,9 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	@POST
 	@ApiOperation(value = "Validate allele & conditional rules, returns List of SlimAlleleDomains")
 	@Path("/validateAlleleConditional")
-	public Boolean validateAlleleConditional(List<SlimAlleleDomain> searchDomain) {
+	public List<SlimAlleleDomain> validateAlleleConditional(List<SlimAlleleDomain> searchDomain) {
 	
-		Boolean results = false;
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();		
 
 		try {
 			results = alleleService.validateAlleleConditional(searchDomain);

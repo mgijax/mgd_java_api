@@ -1284,7 +1284,9 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		List<String> alleleList = new ArrayList<String>();
 		
 		for (int i = 0; i < searchDomain.size(); i++) {
-			alleleList.add(searchDomain.get(i).getAlleleKey1());
+			if (searchDomain.get(i).getAlleleKey1() != null && !searchDomain.get(i).getAlleleKey1().isEmpty()) {
+				alleleList.add(searchDomain.get(i).getAlleleKey1());
+			}
 			if (searchDomain.get(i).getAlleleKey2() != null && !searchDomain.get(i).getAlleleKey2().isEmpty()) {
 				alleleList.add(searchDomain.get(i).getAlleleKey2());
 			}

@@ -104,12 +104,12 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				// pwi has sent a "c" that is empty/not being used			
 				if (domain.get(i).getName() == null || domain.get(i).getName().isEmpty()) {
 					continue;
-				}
+				} 
 				
 				log.info("processHTSample create");
 
 				HTSample entity = new HTSample();
-					
+				
 				entity.set_experiment_key(parentKey);
 				entity.setOrganism(organismDAO.get(domain.get(i).get_organism_key()));
 				entity.setRelevance(termDAO.get(domain.get(i).get_relevance_key()));
@@ -117,6 +117,7 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				entity.setGenotype(genotypeDAO.get(domain.get(i).getGenotype_object().get_genotype_key()));
 				entity.setName(domain.get(i).getName());
 						
+				
 				if (domain.get(i).getAge() == null || domain.get(i).getAge().isEmpty()) {
 					entity.setAge(null);
 					entity.setAgeMin(null);
@@ -126,7 +127,7 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 					entity.setAgeMin(-1);
 					entity.setAgeMax(-1);	
 				}
-				
+
 				// use HTEmapsDomain
 				if (domain.get(i).getEmaps_object().get_stage_key() == null) {
 					entity.setTheilerStage(null);
@@ -139,7 +140,8 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				} else {
 					entity.setEmapaTerm(termDAO.get(domain.get(i).getEmaps_object().get_emapa_term_key()));
 				}
-				
+
+/*				
 				// copy getNotes().get(0).getText() -> getHtNotes to use noteService correctly
 				// at some point, convert pwi to use getHtNotes format
 				if (domain.get(i).getNotes() != null) {
@@ -163,7 +165,7 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 					}
 					noteService.process(String.valueOf(entity.get_sample_key()), domain.get(i).getHtNotes(), "43", user);			
 				}
-	
+*/
 				entity.setCreation_date(new Date());
 				entity.setCreatedBy(user);				
 				entity.setModification_date(new Date());

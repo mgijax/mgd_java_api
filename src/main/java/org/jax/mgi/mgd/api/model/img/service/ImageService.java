@@ -641,16 +641,14 @@ public class ImageService extends BaseService<ImageDomain> {
 					domain.setPaneLabel(rs.getString("panelabel"));
 				}
 				
-				assayDomain = assayTranslator.translate(assayDAO.get(rs.getInt("_assay_key")));
-				domain.getAssays().sort(Comparator.comparing(SlimAssayDomain::getAccID));
-				
+				assayDomain = assayTranslator.translate(assayDAO.get(rs.getInt("_assay_key")));				
 				assays.add(assayDomain);
+				domain.getAssays().sort(Comparator.comparing(SlimAssayDomain::getAccID));				
 				domain.setAssays(assays);
-
 				prevPaneLabel = newPaneLabel;
-				
 			}
 			if (domain.getAssays() != null) {
+				domain.getAssays().sort(Comparator.comparing(SlimAssayDomain::getAccID));								
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

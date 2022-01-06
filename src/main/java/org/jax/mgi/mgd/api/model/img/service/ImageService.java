@@ -591,7 +591,7 @@ public class ImageService extends BaseService<ImageDomain> {
 		
 		List<ImagePaneAssayDomain> results = new ArrayList<ImagePaneAssayDomain>();
  
-		String cmd = "select i._image_key, i._imagepane_key, i.panelabel, a.accid as assayaccid, m.symbol, ma.accid as markeraccid" + 
+		String cmd = "select i._image_key, i._imagepane_key, i.panelabel, a.accid as assayaccid, m._marker_key, m.symbol, ma.accid as markeraccid" + 
 				"\nfrom img_imagepane i, gxd_assay g, acc_accession a, mrk_marker m, acc_accession ma" + 
 				"\nwhere i._image_key = " + imageKey + 
 				"\nand i._imagepane_key = g._imagepane_key" + 
@@ -603,7 +603,7 @@ public class ImageService extends BaseService<ImageDomain> {
 				"\nand ma._logicaldb_key = 1" + 
 				"\nand ma.preferred = 1" + 
 				"\nunion" + 
-				"\nselect i._image_key, i._imagepane_key, i.panelabel, a.accid, m.symbol, ma.accid" + 
+				"\nselect i._image_key, i._imagepane_key, i.panelabel, a.accid, m._marker_key, m.symbol, ma.accid" + 
 				"\nfrom img_imagepane i, gxd_assay g, gxd_specimen s, gxd_insituresult ir, gxd_insituresultimage irg, acc_accession a, mrk_marker m, acc_accession ma" + 
 				"\nwhere i._image_key = " + imageKey + 
 				"\nand i._imagepane_key = irg._imagepane_key" + 

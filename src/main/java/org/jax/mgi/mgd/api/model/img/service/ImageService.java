@@ -643,8 +643,8 @@ public class ImageService extends BaseService<ImageDomain> {
 				
 				assayDomain = assayTranslator.translate(assayDAO.get(rs.getInt("_assay_key")));				
 				assays.add(assayDomain);
-				domain.getAssays().sort(Comparator.comparing(SlimAssayDomain::getAccID));				
 				domain.setAssays(assays);
+				domain.getAssays().sort(Comparator.comparing(SlimAssayDomain::getAccID));				
 				prevPaneLabel = newPaneLabel;
 			}
 			if (domain.getAssays() != null) {

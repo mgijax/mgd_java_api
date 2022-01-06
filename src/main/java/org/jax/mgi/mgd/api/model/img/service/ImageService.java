@@ -628,7 +628,7 @@ public class ImageService extends BaseService<ImageDomain> {
 		String cmd = "select i._image_key, i._imagepane_key, i.panelabel, s._assay_key" + 
 				"\nfrom img_imagepane i, gxd_assay s" + 
 				"\nwhere i._image_key = " + imageKey + 
-				"\nand i._imagepane_key = g._imagepane_key" + 
+				"\nand i._imagepane_key = s._imagepane_key" + 
 				"\nunion" + 
 				"\nselect i._image_key, i._imagepane_key, i.panelabel, s._assay_key" + 
 				"\nfrom img_imagepane i, gxd_specimen s, gxd_insituresult ir, gxd_insituresultimage irg" + 

@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.img.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -607,7 +608,7 @@ public class ImageService extends BaseService<ImageDomain> {
 				"\nwhere i._image_key = " + imageKey + 
 				"\nand i._imagepane_key = irg._imagepane_key" + 
 				"\nand irg._result_key = ir._result_key" + 
-				"\nand ir._specimen_key = s._specimen_key" + 
+				"\nand ir._specimen_key = s._specimen_key" + 			
 				"\norder by panelabel";
 		
 		// make this easy to copy/paste for troubleshooting
@@ -640,7 +641,9 @@ public class ImageService extends BaseService<ImageDomain> {
 					domain.setPaneLabel(rs.getString("panelabel"));
 				}
 				
-				assayDomain = assayTranslator.translate(assayDAO.get(rs.getInt("_assay_key")));	
+				assayDomain = assayTranslator.translate(assayDAO.get(rs.getInt("_assay_key")));
+				domain.getAssays().sort(Comparator.comparing(SlimAssayDomain::getAccID));
+				
 				assays.add(assayDomain);
 				domain.setAssays(assays);
 

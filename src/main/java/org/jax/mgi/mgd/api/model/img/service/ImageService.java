@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.img.dao.ImageDAO;
 import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssayDomain;
@@ -624,15 +625,39 @@ public class ImageService extends BaseService<ImageDomain> {
 
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
+			ImagePaneAssayDomain domain = new ImagePaneAssayDomain();
+			List<SlimAssayDomain> assays = new ArrayList<SlimAssayDomain>();
+			String newPaneLabel = "";
+			String prevPaneLabel = "";
+			
 			while (rs.next()) {
-				ImagePaneAssayDomain domain = new ImagePaneAssayDomain();
-				domain.setImageKey(rs.getString("_image_key"));
-				domain.setImagePaneKey(rs.getString("_imagepane_key"));
-				domain.setPaneLabel(rs.getString("panelabel"));
-				domain.setAssayAccID(rs.getString("assayaccid"));
-				domain.setMarkerKey(rs.getString("_marker_key"));
-				domain.setMarkerSymbol(rs.getString("symbol"));
-				domain.setMarkerAccID(rs.getString("markeraccid"));
+				SlimAssayDomain assayDomain = new SlimAssayDomain();
+
+				newPaneLabel = rs.getString("panelabel");	
+
+				if (!newPaneLabel.equals(prevPaneLabel)) {		
+					domain.setImageKey(rs.getString("_image_key"));
+					domain.setImagePaneKey(rs.getString("_imagepane_key"));
+					domain.setPaneLabel(rs.getString("panelabel"));	
+					assayDomain.setAccID(rs.getString("assayaccid"));
+					assayDomain.setMarkerKey(rs.getString("_marker_key"));
+					assayDomain.setMarkerSymbol(rs.getString("symbol"));
+					assayDomain.setMarkerAccID(rs.getString("markeraccid"));
+					assays.add(assayDomain);
+					domain.setAssays(assays);
+					prevPaneLabel = newPaneLabel;
+				}
+				else {
+					// use existing domain; add new assay domaon
+					assayDomain.setAccID(rs.getString("assayaccid"));
+					assayDomain.setMarkerKey(rs.getString("_marker_key"));
+					assayDomain.setMarkerSymbol(rs.getString("symbol"));
+					assayDomain.setMarkerAccID(rs.getString("markeraccid"));
+					assays.add(assayDomain);
+					domain.setAssays(assays);
+					prevPaneLabel = newPaneLabel;					
+				}
+
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

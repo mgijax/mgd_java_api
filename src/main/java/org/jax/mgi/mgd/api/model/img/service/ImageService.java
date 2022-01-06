@@ -635,31 +635,32 @@ public class ImageService extends BaseService<ImageDomain> {
 
 				newPaneLabel = rs.getString("panelabel");	
 
+				// new domain, new assays
 				if (!newPaneLabel.equals(prevPaneLabel)) {
+					
+					// if previous domain contains assays, then save this domain
+					if (domain.getAssays().size() > 0) {
+						results.add(domain);
+					}
+					
 					domain = new ImagePaneAssayDomain();
 					assays = new ArrayList<SlimAssayDomain>();					
 					domain.setImageKey(rs.getString("_image_key"));
 					domain.setImagePaneKey(rs.getString("_imagepane_key"));
-					domain.setPaneLabel(rs.getString("panelabel"));	
-					assayDomain.setAccID(rs.getString("assayaccid"));
-					assayDomain.setMarkerKey(rs.getString("_marker_key"));
-					assayDomain.setMarkerSymbol(rs.getString("symbol"));
-					assayDomain.setMarkerAccID(rs.getString("markeraccid"));
-					assays.add(assayDomain);
-					domain.setAssays(assays);
-					prevPaneLabel = newPaneLabel;
+					domain.setPaneLabel(rs.getString("panelabel"));
 				}
-				else {
-					// use existing domain; add new assay domaon
-					assayDomain.setAccID(rs.getString("assayaccid"));
-					assayDomain.setMarkerKey(rs.getString("_marker_key"));
-					assayDomain.setMarkerSymbol(rs.getString("symbol"));
-					assayDomain.setMarkerAccID(rs.getString("markeraccid"));
-					assays.add(assayDomain);
-					domain.setAssays(assays);
-					prevPaneLabel = newPaneLabel;					
-				}
+				
+				assayDomain.setAccID(rs.getString("assayaccid"));
+				assayDomain.setMarkerKey(rs.getString("_marker_key"));
+				assayDomain.setMarkerSymbol(rs.getString("symbol"));
+				assayDomain.setMarkerAccID(rs.getString("markeraccid"));
+				assays.add(assayDomain);
+				domain.setAssays(assays);
 
+				prevPaneLabel = newPaneLabel;
+				
+			}
+			if (domain.getAssays().size() > 0) {
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

@@ -625,6 +625,9 @@ public class ImageService extends BaseService<ImageDomain> {
 				SlimAssayDomain assayDomain = new SlimAssayDomain();
 
 				newPaneLabel = rs.getString("panelabel");	
+				if (newPaneLabel == null || newPaneLabel.isEmpty()) {
+					newPaneLabel = "";
+				}
 
 				// new domain, new assays
 				if (!newPaneLabel.equals(prevPaneLabel)) {

@@ -596,34 +596,6 @@ public class ImageService extends BaseService<ImageDomain> {
 		// search for all assays/image panes by image key
 		
 		List<ImagePaneAssayDomain> results = new ArrayList<ImagePaneAssayDomain>();
- 
-//		String cmd = "select i._image_key, i._imagepane_key, i.panelabel, a.accid as assayaccid, m._marker_key, m.symbol, ma.accid as markeraccid" + 
-//				"\nfrom img_imagepane i, gxd_assay g, acc_accession a, mrk_marker m, acc_accession ma" + 
-//				"\nwhere i._image_key = " + imageKey + 
-//				"\nand i._imagepane_key = g._imagepane_key" + 
-//				"\nand g._assay_key = a._object_key" + 
-//				"\nand a._mgitype_key = 8" + 
-//				"\nand g._marker_key = m._marker_key" + 
-//				"\nand m._marker_key = ma._object_key" + 
-//				"\nand ma._mgitype_key = 2" + 
-//				"\nand ma._logicaldb_key = 1" + 
-//				"\nand ma.preferred = 1" + 
-//				"\nunion" + 
-//				"\nselect i._image_key, i._imagepane_key, i.panelabel, a.accid, m._marker_key, m.symbol, ma.accid" + 
-//				"\nfrom img_imagepane i, gxd_assay g, gxd_specimen s, gxd_insituresult ir, gxd_insituresultimage irg, acc_accession a, mrk_marker m, acc_accession ma" + 
-//				"\nwhere i._image_key = " + imageKey + 
-//				"\nand i._imagepane_key = irg._imagepane_key" + 
-//				"\nand irg._result_key = ir._result_key" + 
-//				"\nand ir._specimen_key = s._specimen_key" + 
-//				"\nand s._assay_key = g._assay_key" + 
-//				"\nand g._assay_key = a._object_key" + 
-//				"\nand a._mgitype_key = 8" + 
-//				"\nand g._marker_key = m._marker_key" + 
-//				"\nand m._marker_key = ma._object_key" + 
-//				"\nand ma._mgitype_key = 2" + 
-//				"\nand ma._logicaldb_key = 1" + 
-//				"\nand ma.preferred = 1" + 
-//				"\norder by panelabel";
 
 		String cmd = "select i._image_key, i._imagepane_key, i.panelabel, s._assay_key" + 
 				"\nfrom img_imagepane i, gxd_assay s" + 
@@ -669,10 +641,6 @@ public class ImageService extends BaseService<ImageDomain> {
 				}
 				
 				assayDomain = assayTranslator.translate(assayDAO.get(rs.getInt("_assay_key")));	
-//				assayDomain.setAccID(rs.getString("assayaccid"));
-//				assayDomain.setMarkerKey(rs.getString("_marker_key"));
-//				assayDomain.setMarkerSymbol(rs.getString("symbol"));
-//				assayDomain.setMarkerAccID(rs.getString("markeraccid"));
 				assays.add(assayDomain);
 				domain.setAssays(assays);
 

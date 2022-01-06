@@ -14,6 +14,7 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
+import org.jax.mgi.mgd.api.model.gxd.translator.SlimAssayTranslator;
 import org.jax.mgi.mgd.api.model.img.dao.ImageDAO;
 import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssayDomain;
@@ -636,7 +637,8 @@ public class ImageService extends BaseService<ImageDomain> {
 				newPaneLabel = rs.getString("panelabel");	
 
 				if (!newPaneLabel.equals(prevPaneLabel)) {
-					domain = new ImagePaneAssayDomain();					
+					domain = new ImagePaneAssayDomain();
+					assays = new ArrayList<SlimAssayDomain>();					
 					domain.setImageKey(rs.getString("_image_key"));
 					domain.setImagePaneKey(rs.getString("_imagepane_key"));
 					domain.setPaneLabel(rs.getString("panelabel"));	

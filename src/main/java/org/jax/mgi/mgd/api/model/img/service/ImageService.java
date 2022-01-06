@@ -625,7 +625,7 @@ public class ImageService extends BaseService<ImageDomain> {
 
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
-			ImagePaneAssayDomain domain = new ImagePaneAssayDomain();
+			ImagePaneAssayDomain domain = new ImagePaneAssayDomain();								
 			List<SlimAssayDomain> assays = new ArrayList<SlimAssayDomain>();
 			String newPaneLabel = "";
 			String prevPaneLabel = "";
@@ -635,7 +635,8 @@ public class ImageService extends BaseService<ImageDomain> {
 
 				newPaneLabel = rs.getString("panelabel");	
 
-				if (!newPaneLabel.equals(prevPaneLabel)) {		
+				if (!newPaneLabel.equals(prevPaneLabel)) {
+					domain = new ImagePaneAssayDomain();					
 					domain.setImageKey(rs.getString("_image_key"));
 					domain.setImagePaneKey(rs.getString("_imagepane_key"));
 					domain.setPaneLabel(rs.getString("panelabel"));	

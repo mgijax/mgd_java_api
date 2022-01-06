@@ -8,6 +8,8 @@ import lombok.Setter;
 @Getter @Setter
 public class ImagePaneAssayDomain extends BaseDomain {
 
+	// used by pwi/static/app/edit/imagedetail page
+	
 	private String imageKey;
 	private String imagePaneKey;	
 	private String paneLabel;	

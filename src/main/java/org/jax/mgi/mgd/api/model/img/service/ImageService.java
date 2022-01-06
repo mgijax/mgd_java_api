@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.img.dao.ImageDAO;
 import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
+import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssayDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImageSubmissionDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImageDomain;
 import org.jax.mgi.mgd.api.model.img.entities.Image;
@@ -583,5 +584,63 @@ public class ImageService extends BaseService<ImageDomain> {
 		results = getResults(Integer.valueOf(results.items.get(0).getImageKey()));
 		return results;		
 	}
-	
+
+	@Transactional	
+	public List<ImagePaneAssayDomain> searchAssayPanesByImage(Integer imageKey) {
+		// search for all assays/image panes by image key
+		
+		List<ImagePaneAssayDomain> results = new ArrayList<ImagePaneAssayDomain>();
+ 
+		String cmd = "select i._image_key, i._imagepane_key, i.panelabel, a.accid as assayaccid, m.symbol, ma.accid as markeraccid" + 
+				"\nfrom img_imagepane i, gxd_assay g, acc_accession a, mrk_marker m, acc_accession ma" + 
+				"\nwhere i._image_key = " + imageKey + 
+				"\nand i._imagepane_key = g._imagepane_key" + 
+				"\nand g._assay_key = a._object_key" + 
+				"\nand a._mgitype_key = 8" + 
+				"\nand g._marker_key = m._marker_key" + 
+				"\nand m._marker_key = ma._object_key" + 
+				"\nand ma._mgitype_key = 2" + 
+				"\nand ma._logicaldb_key = 1" + 
+				"\nand ma.preferred = 1" + 
+				"\nunion" + 
+				"\nselect i._image_key, i._imagepane_key, i.panelabel, a.accid, m.symbol, ma.accid" + 
+				"\nfrom img_imagepane i, gxd_assay g, gxd_specimen s, gxd_insituresult ir, gxd_insituresultimage irg, acc_accession a, mrk_marker m, acc_accession ma" + 
+				"\nwhere i._image_key = " + imageKey + 
+				"\nand i._imagepane_key = irg._imagepane_key" + 
+				"\nand irg._result_key = ir._result_key" + 
+				"\nand ir._specimen_key = s._specimen_key" + 
+				"\nand s._assay_key = g._assay_key" + 
+				"\nand g._assay_key = a._object_key" + 
+				"\nand a._mgitype_key = 8" + 
+				"\nand g._marker_key = m._marker_key" + 
+				"\nand m._marker_key = ma._object_key" + 
+				"\nand ma._mgitype_key = 2" + 
+				"\nand ma._logicaldb_key = 1" + 
+				"\nand ma.preferred = 1" + 
+				"\norder by panelabel";
+						
+		// make this easy to copy/paste for troubleshooting
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				ImagePaneAssayDomain domain = new ImagePaneAssayDomain();
+				domain.setImageKey(rs.getString("_image_key"));
+				domain.setImagePaneKey(rs.getString("_imagepane_key"));
+				domain.setPaneLabel(rs.getString("panelabel"));
+				domain.setAssayAccID(rs.getString("assayaccid"));
+				domain.setMarkerKey(rs.getString("_marker_key"));
+				domain.setMarkerSymbol(rs.getString("symbol"));
+				domain.setMarkerAccID(rs.getString("markeraccid"));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
 }

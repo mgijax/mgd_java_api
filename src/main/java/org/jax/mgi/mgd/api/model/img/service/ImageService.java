@@ -638,8 +638,8 @@ public class ImageService extends BaseService<ImageDomain> {
 				// new domain, new assays
 				if (!newPaneLabel.equals(prevPaneLabel)) {
 					
-					// if previous domain contains assays, then save this domain
-					if (domain != null) {
+					// if previous assays != null, then save this domain
+					if (domain.getAssays() != null) {
 						results.add(domain);
 					}
 					
@@ -660,7 +660,7 @@ public class ImageService extends BaseService<ImageDomain> {
 				prevPaneLabel = newPaneLabel;
 				
 			}
-			if (domain != null) {
+			if (domain.getAssays() != null) {
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

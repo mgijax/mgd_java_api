@@ -53,4 +53,7 @@ public class HTDomain extends BaseDomain {
 	// used in submission of modify/update
 	private HTSampleDomain sample_domain; 
 
+	// flag indicating samples are to be deleted
+	private int deleteSamples;
+
 }

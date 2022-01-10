@@ -31,6 +31,7 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 		domain.set_experiment_key(entity.get_experiment_key());
 		domain.setName(entity.getName());
 		domain.setDescription(entity.getDescription());
+		domain.setDeleteSamples(0); // setting display default 
 
 		if (entity.getPrimaryIDs() != null && !entity.getPrimaryIDs().isEmpty()) {
 			domain.setPrimaryid(entity.getPrimaryIDs().get(0).getAccID());

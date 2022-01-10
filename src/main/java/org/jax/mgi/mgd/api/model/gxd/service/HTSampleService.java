@@ -217,6 +217,7 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				
 				// copy getNotes().get(0).getText() -> getHtNotes to use noteService correctly
 				// at some point, convert pwi to use getHtNotes format
+/*
 				if (domain.get(i).getNotes() != null) {
 					if (domain.get(i).getNotes().get(0).getText() == null || domain.get(i).getNotes().get(0).getText().isEmpty()) {
 						domain.get(i).getHtNotes().setProcessStatus(Constants.PROCESS_DELETE);
@@ -238,7 +239,7 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 					}
 					noteService.process(String.valueOf(entity.get_sample_key()), domain.get(i).getHtNotes(), "43", user);			
 				}
-	
+*/	
 				entity.setModification_date(new Date());
 				entity.setModifiedBy(user);
 				htSampleDAO.update(entity);

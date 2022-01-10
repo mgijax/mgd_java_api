@@ -17,7 +17,7 @@ public class SlimAssayTranslator extends BaseEntityDomainTranslator<Assay, SlimA
 		domain.setAssayType(entity.getAssayType().getAssayType());
 		domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 		domain.setMarkerSymbol(entity.getMarker().getSymbol());
-		domain.setMarkerAccID(entity.getMgiAccessionIds().get(0).getAccID());
+		domain.setMarkerAccID(entity.getMarker().getMgiAccessionIds().get(0).getAccID());
 		
 //        1 InSitu | RNA in situ                    
 //        2 North  | Northern blot              

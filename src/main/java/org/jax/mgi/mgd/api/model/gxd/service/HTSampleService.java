@@ -119,9 +119,9 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 						
 				
 				if (domain.get(i).getAge() == null || domain.get(i).getAge().isEmpty()) {
-					entity.setAge(null);
-					entity.setAgeMin(null);
-					entity.setAgeMax(null);				
+					entity.setAge(" ");
+					entity.setAgeMin(-1);
+					entity.setAgeMax(-1);				
 				} else {
 					entity.setAge(domain.get(i).getAge());
 					entity.setAgeMin(-1);
@@ -129,57 +129,49 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				}
 
 				// use HTEmapsDomain
-				if (domain.get(i).getEmaps_object().get_stage_key() == null) {
+				if (domain.get(i).getEmaps_object() == null) {
 					entity.setTheilerStage(null);
 				} else {
 					entity.setTheilerStage(theilerStageDAO.get(domain.get(i).getEmaps_object().get_stage_key()));
 				}
 				
-				if (domain.get(i).getEmaps_object().get_emapa_term_key() == null) {
+				if (domain.get(i).getEmaps_object() == null) {
 					entity.setEmapaTerm(null);
 				} else {
 					entity.setEmapaTerm(termDAO.get(domain.get(i).getEmaps_object().get_emapa_term_key()));
 				}
 
-/*				
-				// copy getNotes().get(0).getText() -> getHtNotes to use noteService correctly
-				// at some point, convert pwi to use getHtNotes format
-				if (domain.get(i).getNotes() != null) {
-					if (domain.get(i).getNotes().get(0).getText() == null || domain.get(i).getNotes().get(0).getText().isEmpty()) {
-						domain.get(i).getHtNotes().setProcessStatus(Constants.PROCESS_DELETE);
-						domain.get(i).getHtNotes().setNoteChunk(null);				
-					}
-					else if (domain.get(i).getHtNotes() != null) {
-						domain.get(i).getHtNotes().setProcessStatus(Constants.PROCESS_UPDATE);
-						domain.get(i).getHtNotes().setNoteChunk(domain.get(i).getNotes().get(0).getText());
-					}
-					else {
-						NoteDomain newNoteDomain = new NoteDomain();
-						newNoteDomain.setProcessStatus(Constants.PROCESS_CREATE);
-						newNoteDomain.setNoteKey("");
-						newNoteDomain.setObjectKey(String.valueOf(entity.get_sample_key()));
-						newNoteDomain.setMgiTypeKey("43");
-						newNoteDomain.setNoteTypeKey("1048");	
-						newNoteDomain.setNoteChunk(domain.get(i).getNotes().get(0).getText());
-						domain.get(i).setHtNotes(newNoteDomain);
-					}
-					noteService.process(String.valueOf(entity.get_sample_key()), domain.get(i).getHtNotes(), "43", user);			
-				}
-*/
 				entity.setCreation_date(new Date());
 				entity.setCreatedBy(user);				
 				entity.setModification_date(new Date());
 				entity.setModifiedBy(user);
-				htSampleDAO.update(entity);
-			
+				log.info("processHTSample/ updating entity");					
+				//htSampleDAO.update(entity);
+				htSampleDAO.persist(entity);
 				log.info("processHTSample/create processed: " + entity.get_sample_key());					
+
+				// notes handling; runs after sample is created (need sample key)
+				// at some point, convert pwi to use getHtNotes format
+				if (domain.get(i).getNotes() != null && !domain.get(i).getNotes().isEmpty()) {
+					NoteDomain newNoteDomain = new NoteDomain();
+					newNoteDomain.setProcessStatus(Constants.PROCESS_CREATE);
+					newNoteDomain.setNoteKey("");
+					newNoteDomain.setObjectKey(String.valueOf(entity.get_sample_key()));
+					newNoteDomain.setMgiTypeKey("43");
+					newNoteDomain.setNoteTypeKey("1048");	
+					newNoteDomain.setNoteChunk(domain.get(i).getNotes().get(0).getText());
+					domain.get(i).setHtNotes(newNoteDomain);
+					noteService.process(String.valueOf(entity.get_sample_key()), domain.get(i).getHtNotes(), "43", user);			
+				}
 			}
+
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 				log.info("processHTSample delete");
 				HTSample entity = htSampleDAO.get(domain.get(i).get_sample_key());
 				htSampleDAO.remove(entity);
 				log.info("processHTSample delete successful");
 			}
+
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processHTSample update");
 
@@ -193,9 +185,9 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				entity.setName(domain.get(i).getName());
 						
 				if (domain.get(i).getAge() == null || domain.get(i).getAge().isEmpty()) {
-					entity.setAge(null);
-					entity.setAgeMin(null);
-					entity.setAgeMax(null);				
+					entity.setAge(" ");
+					entity.setAgeMin(-1);
+					entity.setAgeMax(-1);				
 				} else {
 					entity.setAge(domain.get(i).getAge());
 					entity.setAgeMin(-1);
@@ -203,21 +195,20 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				}
 				
 				// use HTEmapsDomain
-				if (domain.get(i).getEmaps_object().get_stage_key() == null) {
+				if (domain.get(i).getEmaps_object() == null) {
 					entity.setTheilerStage(null);
 				} else {
 					entity.setTheilerStage(theilerStageDAO.get(domain.get(i).getEmaps_object().get_stage_key()));
 				}
 				
-				if (domain.get(i).getEmaps_object().get_emapa_term_key() == null) {
+				if (domain.get(i).getEmaps_object() == null) {
 					entity.setEmapaTerm(null);
 				} else {
 					entity.setEmapaTerm(termDAO.get(domain.get(i).getEmaps_object().get_emapa_term_key()));
 				}
-				
+			
 				// copy getNotes().get(0).getText() -> getHtNotes to use noteService correctly
 				// at some point, convert pwi to use getHtNotes format
-/*
 				if (domain.get(i).getNotes() != null) {
 					if (domain.get(i).getNotes().get(0).getText() == null || domain.get(i).getNotes().get(0).getText().isEmpty()) {
 						domain.get(i).getHtNotes().setProcessStatus(Constants.PROCESS_DELETE);
@@ -239,7 +230,7 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 					}
 					noteService.process(String.valueOf(entity.get_sample_key()), domain.get(i).getHtNotes(), "43", user);			
 				}
-*/	
+
 				entity.setModification_date(new Date());
 				entity.setModifiedBy(user);
 				htSampleDAO.update(entity);

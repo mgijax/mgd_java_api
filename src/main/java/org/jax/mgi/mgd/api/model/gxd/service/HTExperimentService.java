@@ -103,16 +103,15 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			hTExperimentVariableService.process(domain.get_experiment_key(), domain.getExperiment_variables(), user);
 		}
 
-		// process ht samples
-		//log.info("---domain.getSamples(): " + domain.getSamples().size());		
-		if (domain.getSamples() != null) {
-			htSampleService.process(domain.get_experiment_key(), domain.getSamples(), user);
-		}
-
 		// persist entity
 		entity.setModification_date(new Date());
 		entity.setModifiedBy(user);
 		htExperimentDAO.update(entity);
+
+		// process ht samples
+		if (domain.getSamples() != null) {
+			htSampleService.process(domain.get_experiment_key(), domain.getSamples(), user);
+		}
 		
 		// return entity translated to domain
 		log.info("processHTExperiment/update/returning results");

@@ -72,13 +72,12 @@ public class HTSampleTranslator extends BaseEntityDomainTranslator<HTSample, HTS
 		}
 
 		// Handling of EMAPS / EMAPS terms/may be null
-		if (entity.getEmapaObject() != null) {
+		if (entity.getEmapaObject() != null && entity.getEmapaTerm() != null) {
 
 			HTEmapaDomain hTEmapaDomain = new HTEmapaDomain();
 			HTEmapsDomain hTEmapsDomain = new HTEmapsDomain();
 			Term emapaTerm = entity.getEmapaTerm();
 			TermEMAPA emapaObject = entity.getEmapaObject();
-
 			sampleDomain.set_emapa_key(emapaTerm.get_term_key());
 			hTEmapaDomain.set_term_key(emapaTerm.get_term_key());
 			hTEmapaDomain.setTerm(emapaTerm.getTerm());

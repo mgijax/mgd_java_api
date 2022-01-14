@@ -183,7 +183,6 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				entity.setSex(termDAO.get(domain.get(i).get_sex_key()));
 				entity.setGenotype(genotypeDAO.get(domain.get(i).getGenotype_object().get_genotype_key()));
 				entity.setName(domain.get(i).getName());
-						
 				if (domain.get(i).getAge() == null || domain.get(i).getAge().isEmpty()) {
 					entity.setAge(" ");
 					entity.setAgeMin(-1);
@@ -193,7 +192,6 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 					entity.setAgeMin(-1);
 					entity.setAgeMax(-1);	
 				}
-				
 				// use HTEmapsDomain
 				if (domain.get(i).getEmaps_object() == null) {
 					entity.setTheilerStage(null);

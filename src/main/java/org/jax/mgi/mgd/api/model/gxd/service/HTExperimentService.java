@@ -78,11 +78,12 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			entity.setDescription(domain.getDescription());
 		}
 
-		// evaluation state
-//TODO - set evaluation date on state change
+		// set evaluation date on state change
 		if (entity.getEvaluationState().get_term_key() != domain.get_evaluationstate_key()){
 			log.info("---Found a change; set date");			
 		}
+
+		// evaluation state
 		entity.setEvaluationState(termDAO.get(Integer.valueOf(domain.get_evaluationstate_key())));	
 		// experiment type
 		entity.setExperimentType(termDAO.get(Integer.valueOf(domain.get_experimenttype_key())));	

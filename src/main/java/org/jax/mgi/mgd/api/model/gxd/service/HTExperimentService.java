@@ -78,9 +78,16 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			entity.setDescription(domain.getDescription());
 		}
 
-		// set evaluation date on state change
+		// set eval date and curation state on eval state change
 		if (entity.getEvaluationState().get_term_key() != domain.get_evaluationstate_key()){
-			log.info("---Found a change; set date");			
+			entity.setEvaluated_date(new Date());
+			entity.setEvaluatedBy(user);
+			if (domain.get_evaluationstate_key() == 20225942 ||  domain.get_evaluationstate_key() == 20225944) {
+				entity.setCurationState(termDAO.get(20475422)); 
+			}
+			if (domain.get_evaluationstate_key() == 20225943) {
+				entity.setCurationState(termDAO.get(20475420)); 
+			}
 		}
 
 		// evaluation state

@@ -78,6 +78,21 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			entity.setDescription(domain.getDescription());
 		}
 
+		// set curation state to "Not Done" if we're deleting the samples
+		if (domain.getDeletingSamples() == 1){
+			entity.setCurationState(termDAO.get(20475422)); 
+		}
+		// curation user/date set when samples 
+		if (domain.getDeletingSamples() == 1 || domain.getModifyingSamples() == 1 || domain.getCreatingSamples() == 1){
+			entity.setLast_curated_date(new Date());
+			entity.setLastcuratedBy(user);
+		}
+		if (domain.getCreatingSamples() == 1){
+			entity.setInitial_curated_date(new Date());
+			entity.setInitialcuratedBy(user);
+		}
+
+
 		// set eval date and curation state on eval state change
 		if (entity.getEvaluationState().get_term_key() != domain.get_evaluationstate_key()){
 			entity.setEvaluated_date(new Date());
@@ -89,6 +104,11 @@ public class HTExperimentService extends BaseService<HTDomain> {
 				entity.setCurationState(termDAO.get(20475420)); 
 			}
 		}
+
+		if (domain.getHasSamples() == 1){
+			entity.setCurationState(termDAO.get(20475421)); 
+		}
+
 
 		// evaluation state
 		entity.setEvaluationState(termDAO.get(Integer.valueOf(domain.get_evaluationstate_key())));	

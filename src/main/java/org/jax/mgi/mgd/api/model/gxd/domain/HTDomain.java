@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.gxd.domain;
 
 import java.util.List;
+import java.math.BigDecimal;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
@@ -21,6 +22,8 @@ public class HTDomain extends BaseDomain {
 	private String description;
 	private String notetext;
 	private String _note_key;
+	private BigDecimal confidence;
+	
  	private HTSourceDomain source_object;
 	private List<String> experimental_factors;
 	private List<String> pubmed_ids;

@@ -38,6 +38,10 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 		domain.setModifyingSamples(0); 
 		domain.setHasSamples(0); // may be over-ridden below
 
+		if (entity.getConfidence() != null) {
+			domain.setConfidence(entity.getConfidence());
+		}
+
 		if (entity.getPrimaryIDs() != null && !entity.getPrimaryIDs().isEmpty()) {
 			domain.setPrimaryid(entity.getPrimaryIDs().get(0).getAccID());
 		}

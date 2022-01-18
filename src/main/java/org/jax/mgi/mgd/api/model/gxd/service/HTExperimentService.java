@@ -78,18 +78,19 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			entity.setDescription(domain.getDescription());
 		}
 
+		// set initial curation user/dates when samples are created
+		if (domain.getCreatingSamples() == 1){
+			entity.setInitial_curated_date(new Date());
+			entity.setInitialcuratedBy(user);
+		}
 		// set curation state to "Not Done" if we're deleting the samples
 		if (domain.getDeletingSamples() == 1){
 			entity.setCurationState(termDAO.get(20475422)); 
 		}
-		// curation user/date set when samples 
+		// last curation user/date set when samples created / updated / deleted
 		if (domain.getDeletingSamples() == 1 || domain.getModifyingSamples() == 1 || domain.getCreatingSamples() == 1){
 			entity.setLast_curated_date(new Date());
 			entity.setLastcuratedBy(user);
-		}
-		if (domain.getCreatingSamples() == 1){
-			entity.setInitial_curated_date(new Date());
-			entity.setInitialcuratedBy(user);
 		}
 
 
@@ -367,6 +368,9 @@ public class HTExperimentService extends BaseService<HTDomain> {
 				domain.set_experiment_key(rs.getString("_experiment_key"));
 				domain.setPrimaryid(rs.getString("accid"));
 				domain.set_curationstate_key(rs.getString("_curationstate_key"));
+//				if (rs.getString("_curationstate_key").equals("20475421")){
+//					domain.setPrimaryid(rs.getString("accid") + "*");
+//				}
 				results.add(domain);		
 			}
 			sqlExecutor.cleanup();

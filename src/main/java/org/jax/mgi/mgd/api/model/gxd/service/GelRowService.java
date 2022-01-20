@@ -131,8 +131,6 @@ public class GelRowService extends BaseService<GelRowDomain> {
 					log.info("processGelRow/call getBandService");
 					for (int j = 0; j < laneDomain.size(); j++) {
 						if (laneDomain.get(j).getGelControlKey() != null && !laneDomain.get(j).getGelControlKey().isEmpty()) {
-							log.info("laneDomain.getGelLaneKey:" + laneDomain.get(j).getGelLaneKey());
-							log.info("laneDomain.getSequence:" + laneDomain.get(j).getSequenceNum());
 							modified = gelBandService.process(entity.get_gelrow_key(), Integer.valueOf(laneDomain.get(j).getGelLaneKey()), rowDomain.get(i).getSequenceNum(), laneDomain.get(j).getGelBands(), user);
 						}
 					}

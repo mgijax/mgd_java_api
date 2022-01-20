@@ -104,14 +104,10 @@ public class GelRowService extends BaseService<GelRowDomain> {
 
 				GelRow entity = new GelRow();
 
-				log.info("parentKey:" + parentKey);
-				log.info("gel units:" + rowDomain.get(i).getGelUnitsKey());
-				log.info("sequenceNum:" + rowDomain.get(i).getSequenceNum());
 				entity.set_assay_key(parentKey);
 				entity.setGelUnits(gelUnitDAO.get(Integer.valueOf(rowDomain.get(i).getGelUnitsKey())));
 				entity.setSequenceNum(rowDomain.get(i).getSequenceNum());
 				
-				log.info("size:" + rowDomain.get(i).getSize());
 				if (rowDomain.get(i).getSize() != null) {	
 					entity.setSize(rowDomain.get(i).getSize());
 				}
@@ -119,7 +115,6 @@ public class GelRowService extends BaseService<GelRowDomain> {
 					entity.setSize(null);
 				}
 				
-				log.info("row note:" + rowDomain.get(i).getRowNote());
 				if (rowDomain.get(i).getRowNote() != null && !rowDomain.get(i).getRowNote().isEmpty()) {
 					entity.setRowNote(rowDomain.get(i).getRowNote());
 				}
@@ -136,6 +131,8 @@ public class GelRowService extends BaseService<GelRowDomain> {
 					log.info("processGelRow/call getBandService");
 					for (int j = 0; j < laneDomain.size(); j++) {
 						if (laneDomain.get(j).getGelControlKey() != null && !laneDomain.get(j).getGelControlKey().isEmpty()) {
+							log.info("laneDomain.getGelLaneKey:" + laneDomain.get(j).getGelLaneKey());
+							log.info("laneDomain.getSequence:" + laneDomain.get(j).getSequenceNum());
 							modified = gelBandService.process(entity.get_gelrow_key(), Integer.valueOf(laneDomain.get(j).getGelLaneKey()), rowDomain.get(i).getSequenceNum(), laneDomain.get(j).getGelBands(), user);
 						}
 					}

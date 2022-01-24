@@ -288,6 +288,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			List<GelLaneDomain> laneResults = new ArrayList<GelLaneDomain>();
 			laneResults = gelLaneService.process(Integer.valueOf(domain.getAssayKey()), Integer.valueOf(domain.getAssayTypeKey()), domain.getGelLanes(), user);
 			domain.setGelLanes(laneResults);
+			modified = true;
 		}
 		
 		// process gxd_gelrow

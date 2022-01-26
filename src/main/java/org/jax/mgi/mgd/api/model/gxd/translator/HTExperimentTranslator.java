@@ -1,21 +1,19 @@
 package org.jax.mgi.mgd.api.model.gxd.translator;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.HTSampleDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.HTUserDomain; 
-import org.jax.mgi.mgd.api.model.gxd.domain.HTSourceDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTExperimentVariableDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTSampleDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTSourceDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTUserDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTExperiment;
-import org.jax.mgi.mgd.api.model.gxd.entities.HTSample;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTExperimentVariable;
-import org.jax.mgi.mgd.api.model.voc.entities.Term;
+import org.jax.mgi.mgd.api.model.gxd.entities.HTSample;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIProperty;
-import org.jax.mgi.mgd.api.model.mgi.entities.Note;
-
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jboss.logging.Logger;
 
 public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperiment, HTDomain> {
@@ -155,9 +153,7 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 
 		// notes
 		if (entity.getNotes() != null && entity.getNotes().size() > 0) {
-			List<Note> notes = entity.getNotes();
-			//log.info(notes.size());
-			String notetext = entity.getNotes().get(0).getNoteChunk().getNote();
+			String notetext = entity.getNotes().get(0).getNote();
 			domain.set_note_key(String.valueOf(entity.getNotes().get(0).get_note_key()));
 			domain.setNotetext(notetext);
 		}

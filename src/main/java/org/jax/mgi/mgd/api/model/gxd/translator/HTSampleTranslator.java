@@ -63,7 +63,7 @@ public class HTSampleTranslator extends BaseEntityDomainTranslator<HTSample, HTS
 			genotypeDomain.setIsConditional(genotype.getIsConditional());
 			genotypeDomain.setGeneticbackground(genotype.getStrain().getStrain());
 			if (genotype.getAlleleDetailNote() != null && !genotype.getAlleleDetailNote().isEmpty()) {
-				genotypeDomain.setCombination1_cache(genotype.getAlleleDetailNote().get(0).getNoteChunk().getNote());
+				genotypeDomain.setCombination1_cache(genotype.getAlleleDetailNote().get(0).getNote());
 			}
 			if (genotype.getMgiAccessionIds() != null && !genotype.getMgiAccessionIds().isEmpty()) {
 				genotypeDomain.setMgiid(genotype.getMgiAccessionIds().get(0).getAccID());
@@ -102,7 +102,7 @@ public class HTSampleTranslator extends BaseEntityDomainTranslator<HTSample, HTS
 			List<HTNoteDomain> noteList = new ArrayList<HTNoteDomain>();
 			HTNoteDomain hTNoteDomain = new HTNoteDomain();
 
-			String notetext = entity.getNotes().get(0).getNoteChunk().getNote();
+			String notetext = entity.getNotes().get(0).getNote();
 			hTNoteDomain.setText(notetext);
 			noteList.add(hTNoteDomain);
 			sampleDomain.setNotes(noteList);

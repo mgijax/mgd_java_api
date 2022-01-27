@@ -3,9 +3,12 @@ package org.jax.mgi.mgd.api.model.mgi.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
@@ -20,10 +23,13 @@ import lombok.Setter;
 @ApiModel(value = "Relationship Property Object")
 @Table(name="mgi_relationship_property")
 public class RelationshipProperty extends BaseEntity {
+	
 	@Id
-	private Integer _relationship_Property_key;
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="mgi_relationship_property_generator")
+	@SequenceGenerator(name="mgi_relationship_property_generator", sequenceName = "mgi_relationship_property_seq", allocationSize=1)		
+	private int _relationship_Property_key;
 	private String value;
-	private Integer sequenceNum;
+	private int sequenceNum;
 	private Date creation_date;
 	private Date modification_date;
 

@@ -31,9 +31,11 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 		domain.setDescription(entity.getDescription());
 
 		// setting display default 
+		domain.setDeletingPubmedIds(0);  
 		domain.setDeletingSamples(0);  
 		domain.setCreatingSamples(0);  
 		domain.setModifyingSamples(0); 
+
 		domain.setHasSamples(0); // may be over-ridden below
 
 		if (entity.getConfidence() != null) {
@@ -113,16 +115,17 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 		if (entity.getProperties() != null) {
 
 			List<String> pubmed_ids = new ArrayList<String>();
+			List<String> pubmed_property_keys = new ArrayList<String>();
 			List<String> experimental_factors = new ArrayList<String>(); 
 			List<String> experiment_types = new ArrayList<String>();
 			List<String> provider_contact_names = new ArrayList<String>();
 
 			List<MGIProperty> properties = entity.getProperties();
 			for (MGIProperty prop : properties) {
-				//log.info(prop.getValue());
 
 				if (prop.getPropertyTerm().get_term_key() == 20475430) {
 					pubmed_ids.add(prop.getValue());
+					pubmed_property_keys.add(prop.get_property_key().toString());
 				}
 				if (prop.getPropertyTerm().get_term_key() == 20475423) {
 					experimental_factors.add(prop.getValue());
@@ -138,6 +141,7 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 			// send them if we got them...
 			if (pubmed_ids.size() > 0) {
 				domain.setPubmed_ids(pubmed_ids);
+				domain.setPubmed_property_keys(pubmed_property_keys);
 			}
 			if (experimental_factors.size() > 0) {
 				domain.setExperimental_factors(experimental_factors);

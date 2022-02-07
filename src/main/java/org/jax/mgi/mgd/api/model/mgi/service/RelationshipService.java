@@ -9,6 +9,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
+import org.hibernate.cache.spi.support.DomainDataStorageAccess;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.RelationshipCategoryDAO;
@@ -155,7 +156,9 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				entity.setModifiedBy(user);
 				relationshipDAO.persist(entity);
 				
-				relationshipPropertyService.process(domain.get(i).getProperties(), String.valueOf(entity.get_relationship_key()), user);
+				if (domain.get(i).getProperties() != null) {
+					relationshipPropertyService.process(domain.get(i).getProperties(), String.valueOf(entity.get_relationship_key()), user);
+				}
 				
 				modified = true;
 				log.info("processRelationships create successful");
@@ -180,7 +183,11 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				entity.setModification_date(new Date());
 				entity.setModifiedBy(user);
 				relationshipDAO.update(entity);
-				relationshipPropertyService.process(domain.get(i).getProperties(), domain.get(i).getRelationshipKey(), user);
+				
+				if (domain.get(i).getProperties() != null) {
+					relationshipPropertyService.process(domain.get(i).getProperties(), domain.get(i).getRelationshipKey(), user);
+				}
+				
 				modified = true;
 				log.info("processRelationships/changes processed: " + domain.get(i).getRelationshipKey());
 			}

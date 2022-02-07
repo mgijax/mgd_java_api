@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.mgi.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -52,15 +54,20 @@ public class Relationship extends BaseEntity {
 	private Term evidenceTerm;
 	
 	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_refs_key")
+	private Reference reference;
+	
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
+
+	// relationship/property
+	@OneToMany()
+	@JoinColumn(name="_relationship_key", insertable=false, updatable=false)
+	private List<RelationshipProperty> properties;
 	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_refs_key")
-	private Reference reference;
-	  
 }

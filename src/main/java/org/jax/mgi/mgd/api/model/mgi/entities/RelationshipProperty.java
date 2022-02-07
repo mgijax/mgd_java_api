@@ -27,15 +27,12 @@ public class RelationshipProperty extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="mgi_relationship_property_generator")
 	@SequenceGenerator(name="mgi_relationship_property_generator", sequenceName = "mgi_relationship_property_seq", allocationSize=1)		
-	private int _relationship_Property_key;
+	private int _relationship_property_key;
+	private int _relationship_key;
 	private String value;
 	private int sequenceNum;
 	private Date creation_date;
 	private Date modification_date;
-
-	@OneToOne
-	@JoinColumn(name="_relationship_key")
-	private Relationship relationship;
 	
 	@OneToOne
 	@JoinColumn(name="_propertyname_key", referencedColumnName="_term_key")

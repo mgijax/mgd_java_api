@@ -1,7 +1,9 @@
 package org.jax.mgi.mgd.api.model.mgi.translator;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipPropertyDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.Relationship;
 import org.jax.mgi.mgd.api.util.Constants;
 
@@ -43,7 +45,14 @@ public class RelationshipTranslator extends BaseEntityDomainTranslator<Relations
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-						
+		
+		// properties
+		if (entity.getProperties() != null) {
+			RelationshipPropertyTranslator propertyTranslator = new RelationshipPropertyTranslator();
+			Iterable<RelationshipPropertyDomain> i = propertyTranslator.translateEntities(entity.getProperties());
+			domain.setProperties(IteratorUtils.toList(i.iterator()));
+		}
+		
 		return domain;
 	}
 

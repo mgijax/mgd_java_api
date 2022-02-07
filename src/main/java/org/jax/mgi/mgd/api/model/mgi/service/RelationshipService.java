@@ -36,10 +36,11 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 	private TermDAO termDAO;
 	@Inject
 	private ReferenceDAO referenceDAO;
+	@Inject
+	private RelationshipPropertyService relationshipPropertyService;
 	
 	private RelationshipTranslator translator = new RelationshipTranslator();
 	
-	//private RelationshipTranslator translator = new RelationshipTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
@@ -152,7 +153,10 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				entity.setCreatedBy(user);
 		        entity.setModification_date(new Date());
 				entity.setModifiedBy(user);
-				relationshipDAO.persist(entity);				
+				relationshipDAO.persist(entity);
+				
+				relationshipPropertyService.process(domain.get(i).getProperties(), String.valueOf(entity.get_relationship_key()), user);
+				
 				modified = true;
 				log.info("processRelationships create successful");
 			}
@@ -176,6 +180,7 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				entity.setModification_date(new Date());
 				entity.setModifiedBy(user);
 				relationshipDAO.update(entity);
+				relationshipPropertyService.process(domain.get(i).getProperties(), domain.get(i).getRelationshipKey(), user);
 				modified = true;
 				log.info("processRelationships/changes processed: " + domain.get(i).getRelationshipKey());
 			}

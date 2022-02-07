@@ -12,7 +12,7 @@ public class RelationshipPropertyTranslator extends BaseEntityDomainTranslator<R
 		RelationshipPropertyDomain domain = new RelationshipPropertyDomain();
 
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
-		domain.setRelationshipPropertyKey(String.valueOf(entity.get_relationship_property_key()));
+		domain.setRelationshipPropertyKey(String.valueOf(entity.get_relationshipproperty_key()));
 		domain.setRelationshipKey(String.valueOf(entity.get_relationship_key()));
 		domain.setPropertyNameKey(String.valueOf(entity.getPropertyName().get_term_key()));
 		domain.setPropertyName(entity.getPropertyName().getTerm());

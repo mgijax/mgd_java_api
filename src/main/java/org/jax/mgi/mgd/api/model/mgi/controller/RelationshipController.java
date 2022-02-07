@@ -63,12 +63,5 @@ public class RelationshipController extends BaseController<RelationshipDomain> {
 		
 		return results;
 	}
-	
-	@POST
-	@ApiOperation(value = "Process")
-	@Path("/process")
-	public Boolean process(String parentKey, List<RelationshipDomain> domain, String mgiTypeKey, User user) {
-		return relationshipService.process(domain, mgiTypeKey, user);
-	}
 		
 }

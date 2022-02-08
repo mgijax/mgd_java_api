@@ -1,11 +1,14 @@
 package org.jax.mgi.mgd.api.model.mgi.entities;
 
+import java.util.List;
+
 import javax.annotation.concurrent.Immutable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipPropertyDomain;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -14,13 +17,11 @@ import lombok.Setter;
 @Getter @Setter
 @Entity
 @Immutable
-@ApiModel(value = "Relationship Allele/Marker FEAR")
+@ApiModel(value = "Relationship Allele/Marker")
 @Table(name="all_relationship_fear_view")
-public class RelationshipFEAR extends BaseEntity {
+public class RelationshipAlleleMarker extends BaseEntity {
 	
 	@Id
-//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="mgi_relationship_fear_generator")
-//	@SequenceGenerator(name="mgi_relationship_fear_generator", sequenceName = "mgi_relationship_seq", allocationSize=1)	
 	private int _relationship_key;
 	private int _allele_key;
 	private int _marker_key;
@@ -28,4 +29,5 @@ public class RelationshipFEAR extends BaseEntity {
 	private String symbol;
 	private String commonname;
   
+	private List<RelationshipPropertyDomain> properties;
 }

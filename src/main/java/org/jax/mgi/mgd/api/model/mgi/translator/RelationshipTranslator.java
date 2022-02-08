@@ -20,8 +20,8 @@ public class RelationshipTranslator extends BaseEntityDomainTranslator<Relations
 		domain.setObjectKey2(String.valueOf(entity.get_object_key_2()));
 
 		// these are specific to the category/mgi-types
-		// so a specific service is needed to map the category/mgi-type to its specific master.
-		// for example, see mgi/service/RelationshpService.java/markerTss.
+		// so a specific entity/view is needed to map the category/mgi-type to its specific master.
+		// for example, see mgi/entities/RelationshipAlleleDriverGene, RelationshipMarkerTSS
 		//domain.setObject1();
 		//domain.setObject2();
 		

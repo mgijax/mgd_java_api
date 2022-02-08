@@ -29,5 +29,5 @@ public class RelationshipAlleleMarker extends BaseEntity {
 	private String symbol;
 	private String commonname;
   
-	private List<RelationshipPropertyDomain> properties;
+	//private List<RelationshipPropertyDomain> properties;
 }

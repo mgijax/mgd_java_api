@@ -91,42 +91,9 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 		RelationshipTranslator translator = new RelationshipTranslator();
 		List<RelationshipDomain> results = new ArrayList<RelationshipDomain>();
 		
-		String cmd = "select * from mgi_relationship_markertss_view "
+		String cmd = "select _relationship_key from mgi_relationship_markertss_view "
 				+ "\nwhere _object_key_1 = " + key
 				+ "\nor _object_key_2 = " + key;
-		log.info(cmd);
-
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				RelationshipDomain domain = new RelationshipDomain();
-				domain = translator.translate(relationshipDAO.get(rs.getInt("_relationship_key")));
-				relationshipDAO.clear();
-				
-				results.add(domain);
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
-
-	@Transactional	
-	public List<RelationshipDomain> getAlleleMarker(Integer key) {
-		// return all allele/marker relationships by specified allele key
-		// 1003 | mutation_involves
-		// 1004 | expresses_component
-		
-		RelationshipTranslator translator = new RelationshipTranslator();
-		List<RelationshipDomain> results = new ArrayList<RelationshipDomain>();
-		
-		String cmd = "select _relationship_key from mgi_relationship "
-				+ "\nwhere _category_key in (1003, 1004)"			
-				+ "\nand _object_key_1 = " + key;
-
 		log.info(cmd);
 
 		try {

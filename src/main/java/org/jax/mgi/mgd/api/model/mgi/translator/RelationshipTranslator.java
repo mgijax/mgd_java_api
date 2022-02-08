@@ -21,7 +21,7 @@ public class RelationshipTranslator extends BaseEntityDomainTranslator<Relations
 
 		// these are specific to the category/mgi-types
 		// so a specific service is needed to map the category/mgi-type to its specific master.
-		// for example, see mgi/serivce/RelationshpService.java/markerTss.
+		// for example, see mgi/service/RelationshpService.java/markerTss.
 		//domain.setObject1();
 		//domain.setObject2();
 		

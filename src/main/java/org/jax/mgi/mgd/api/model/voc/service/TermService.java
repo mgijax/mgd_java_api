@@ -125,7 +125,7 @@ public class TermService extends BaseService<TermDomain> {
 		
 		// use SQL query to load cell type annotation count
 		if(domain != null ) {
-			if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty() && domain.getVocabKey().equals("102")) {
+			if (domain.getVocabKey() != null && !domain.getVocabKey().isEmpty() && domain.getVocabKey().equals("102")) {
 		
 				domain.setCellTypeAnnotCount(getCelltypeAnnotCount(key));
 		

@@ -215,7 +215,7 @@ public class TermService extends BaseService<TermDomain> {
 		
 		// for cell types we want to query the term synonyms by the passed in term string
 		// we create a union of the term search and the synonym search, exact syn only
-		if (searchDomain.getVocabKey().equals("102") && value != null) {
+		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty() && searchDomain.getVocabKey().equals("102") && value != null) {
 			synonymWhere = synonymWhere + "\nand s.synonym ilike '" + value + "'"
 					+ "\nand s._mgitype_key = 13"
 					+ "\nand s._synonymtype_key = 1017"

@@ -86,6 +86,8 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 	@Transactional	
 	public List<RelationshipDomain> getMarkerTSS(Integer key) {
 		// return all tss-marker relationships by specified marker key
+		// 1008 | tss_to_gene
+		
 		RelationshipTranslator translator = new RelationshipTranslator();
 		List<RelationshipDomain> results = new ArrayList<RelationshipDomain>();
 		
@@ -97,15 +99,42 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				
-				// we could create a RelationshipMarkerTSSDomain
-				// if we want more specific marker/object info
-				// for now, we are just using the generic RelationshipDomain
-				
 				RelationshipDomain domain = new RelationshipDomain();
 				domain = translator.translate(relationshipDAO.get(rs.getInt("_relationship_key")));
 				relationshipDAO.clear();
 				
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+
+	@Transactional	
+	public List<RelationshipDomain> getAlleleMarker(Integer key) {
+		// return all allele/marker relationships by specified allele key
+		// 1003 | mutation_involves
+		// 1004 | expresses_component
+		
+		RelationshipTranslator translator = new RelationshipTranslator();
+		List<RelationshipDomain> results = new ArrayList<RelationshipDomain>();
+		
+		String cmd = "select _relationship_key from mgi_relationship "
+				+ "\nwhere _category_key in (1003, 1004)"			
+				+ "\nand _object_key_1 = " + key;
+
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				RelationshipDomain domain = new RelationshipDomain();
+				domain = translator.translate(relationshipDAO.get(rs.getInt("_relationship_key")));
+				relationshipDAO.clear();
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

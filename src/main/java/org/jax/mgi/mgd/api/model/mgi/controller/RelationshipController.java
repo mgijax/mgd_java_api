@@ -63,5 +63,20 @@ public class RelationshipController extends BaseController<RelationshipDomain> {
 		
 		return results;
 	}
+
+	@POST
+	@ApiOperation(value = "Get Allele/Marker by Allele")
+	@Path("/allelemarker")
+	public List<RelationshipDomain> getAlleleMarker(Integer key) {
+			
+		List<RelationshipDomain> results = new ArrayList<RelationshipDomain>();
 		
+		try {
+			results = relationshipService.getAlleleMarker(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
 }

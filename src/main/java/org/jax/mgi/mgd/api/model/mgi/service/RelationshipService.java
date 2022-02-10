@@ -13,9 +13,12 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.RelationshipCategoryDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.RelationshipDAO;
+import org.jax.mgi.mgd.api.model.mgi.dao.RelationshipFEARDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFEARDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.Relationship;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipFEARTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipTranslator;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -30,6 +33,8 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 	
 	@Inject
 	private RelationshipDAO relationshipDAO;
+	@Inject
+	private RelationshipFEARDAO relationshipFEARDAO;
 	@Inject
 	private RelationshipCategoryDAO categoryDAO;
 	@Inject
@@ -102,6 +107,36 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				RelationshipDomain domain = new RelationshipDomain();
 				domain = translator.translate(relationshipDAO.get(rs.getInt("_relationship_key")));
 				relationshipDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+
+	@Transactional	
+	public List<RelationshipFEARDomain> getAlleleFEAR(Integer key) {
+		// return all allele-marker relationships by specified allele key
+		// 1003 | mutation_involves
+		// 1004 | expresses_component
+		
+		RelationshipFEARTranslator translator = new RelationshipFEARTranslator();
+		List<RelationshipFEARDomain> results = new ArrayList<RelationshipFEARDomain>();
+		
+		String cmd = "select _relationship_key from mgi_relationship_fear_view "
+				+ "\nwhere _category_key in (1003, 1004) and _object_key_1 = " + key;
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				RelationshipFEARDomain domain = new RelationshipFEARDomain();
+				domain = translator.translate(relationshipFEARDAO.get(rs.getInt("_relationship_key")));
+				relationshipFEARDAO.clear();
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

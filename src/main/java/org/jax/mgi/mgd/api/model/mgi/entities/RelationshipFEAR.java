@@ -20,7 +20,7 @@ public class RelationshipFEAR extends BaseEntity {
 	
 	@Id	
 	private int _relationship_key;
-	private int _categtory_key;
+	private int _category_key;
 	private String categoryTerm;
 	private int _object_key_1;
 	private String alleleSymbol;

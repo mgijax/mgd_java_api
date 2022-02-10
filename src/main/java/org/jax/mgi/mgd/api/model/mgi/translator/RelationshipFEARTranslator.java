@@ -13,7 +13,7 @@ public class RelationshipFEARTranslator extends BaseEntityDomainTranslator<Relat
 
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setRelationshipKey(String.valueOf(entity.get_relationship_key()));
-		domain.setCategtoryKey(String.valueOf(entity.get_categtory_key()));
+		domain.setCategoryKey(String.valueOf(entity.get_category_key()));
 		domain.setCategoryTerm(entity.getCategoryTerm());
 		domain.setAlleleKey(String.valueOf(entity.get_object_key_1()));
 		domain.setAlleleSymbol(entity.getAlleleSymbol());

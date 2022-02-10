@@ -12,7 +12,7 @@ public class RelationshipFEARDomain extends BaseDomain {
 
 	private String processStatus;
 	private String relationshipKey;
-	private String categtoryKey;
+	private String categoryKey;
 	private String categoryTerm;
 	private String alleleKey;
 	private String alleleSymbol;

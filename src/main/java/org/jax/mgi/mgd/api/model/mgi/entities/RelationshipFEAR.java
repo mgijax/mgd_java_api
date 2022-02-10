@@ -1,8 +1,12 @@
 package org.jax.mgi.mgd.api.model.mgi.entities;
 
+import java.util.List;
+
 import javax.annotation.concurrent.Immutable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
@@ -44,4 +48,9 @@ public class RelationshipFEAR extends BaseEntity {
 	private String creation_date;
 	private String modification_date; 
 
+	// relationship/property
+	@OneToMany()
+	@JoinColumn(name="_relationship_key", insertable=false, updatable=false)
+	private List<RelationshipProperty> properties;
+	
 }

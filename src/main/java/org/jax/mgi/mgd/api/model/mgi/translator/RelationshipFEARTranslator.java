@@ -1,7 +1,9 @@
 package org.jax.mgi.mgd.api.model.mgi.translator;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFEARDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipPropertyDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipFEAR;
 import org.jax.mgi.mgd.api.util.Constants;
 
@@ -38,11 +40,11 @@ public class RelationshipFEARTranslator extends BaseEntityDomainTranslator<Relat
 		domain.setModification_date(entity.getModification_date()); 
 		
 		// properties
-//		if (entity.getProperties() != null) {
-//			RelationshipPropertyTranslator propertyTranslator = new RelationshipPropertyTranslator();
-//			Iterable<RelationshipPropertyDomain> i = propertyTranslator.translateEntities(entity.getProperties());
-//			domain.setProperties(IteratorUtils.toList(i.iterator()));
-//		}
+		if (entity.getProperties() != null) {
+			RelationshipPropertyTranslator propertyTranslator = new RelationshipPropertyTranslator();
+			Iterable<RelationshipPropertyDomain> i = propertyTranslator.translateEntities(entity.getProperties());
+			domain.setProperties(IteratorUtils.toList(i.iterator()));
+		}
 		
 		return domain;
 	}

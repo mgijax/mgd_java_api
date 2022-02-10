@@ -22,10 +22,10 @@ public class RelationshipFEAR extends BaseEntity {
 	private int _relationship_key;
 	private int _categtory_key;
 	private String categoryTerm;
-	private int _allele_key;
+	private int _object_key_1;
 	private String alleleSymbol;
 	private String accID;
-	private int _marker_key;
+	private int _object_key_2;
 	private String markerSymbol;
 	private int _relationshipterm_key;
 	private String relationshipTerm;

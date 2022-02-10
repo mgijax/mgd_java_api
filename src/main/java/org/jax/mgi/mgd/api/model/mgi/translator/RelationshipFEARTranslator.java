@@ -11,14 +11,31 @@ public class RelationshipFEARTranslator extends BaseEntityDomainTranslator<Relat
 	protected RelationshipFEARDomain entityToDomain(RelationshipFEAR entity) {	
 		RelationshipFEARDomain domain = new RelationshipFEARDomain();
 
-		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);		
+		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setRelationshipKey(String.valueOf(entity.get_relationship_key()));
+		domain.setCategtoryKey(String.valueOf(entity.get_categtory_key()));
+		domain.setCategoryTerm(entity.getCategoryTerm());
 		domain.setAlleleKey(String.valueOf(entity.get_allele_key()));
-		domain.setMarkerKey(String.valueOf(entity.get_marker_key()));
-		domain.setOrganismKey(String.valueOf(entity.get_organism_key()));
-		domain.setMarkerSymbol(entity.getSymbol());	
-		domain.setCommonname(entity.getCommonname());
+		domain.setAlleleSymbol(entity.getAlleleSymbol());
 		domain.setAccID(entity.getAccID());
+		domain.setMarkerKey(String.valueOf(entity.get_marker_key()));
+		domain.setMarkerSymbol(entity.getMarkerSymbol());
+		domain.setRelationshipterm_key(String.valueOf(entity.get_relationshipterm_key()));
+		domain.setRelationshipTerm(entity.getRelationshipTerm());
+		domain.setQualifierKey(String.valueOf(entity.get_qualifier_key()));
+		domain.setQualifierTerm(entity.getQualifierTerm());
+		domain.setEvidence_key(String.valueOf(entity.get_evidence_key()));
+		domain.setEvidenceTerm(entity.getEvidenceTerm());
+		domain.setRefsKey(String.valueOf(entity.get_refs_key()));
+		domain.setJnumid(entity.getJnumid());
+		domain.setJnum(String.valueOf(entity.getJnum()));
+		domain.setShort_citation(entity.getShort_citation());
+		domain.setCreatedByKey(entity.getCreatedByKey());
+		domain.setCreatedBy(entity.getCreatedBy());
+		domain.setModifiedByKey(entity.getModifiedByKey());
+		domain.setModifiedBy(entity.getModifiedBy());
+		domain.setCreation_date(entity.getCreation_date());
+		domain.setModification_date(entity.getModification_date()); 
 		
 		// properties
 //		if (entity.getProperties() != null) {

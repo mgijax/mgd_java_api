@@ -1,7 +1,5 @@
 package org.jax.mgi.mgd.api.model.mgi.entities;
 
-import java.util.List;
-
 import javax.annotation.concurrent.Immutable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -16,9 +14,9 @@ import lombok.Setter;
 @Getter @Setter
 @Entity
 @Immutable
-@ApiModel(value = "Relationship Allele/Marker")
-@Table(name="all_allele_fear_view")
-public class RelationshipAlleleMarker extends BaseEntity {
+@ApiModel(value = "Relationship FEAR (Allele/Marker)")
+@Table(name="mgi_relationship_fear_view")
+public class RelationshipFEAR extends BaseEntity {
 	
 	@Id	
 	private int _relationship_key;
@@ -28,6 +26,7 @@ public class RelationshipAlleleMarker extends BaseEntity {
 	private String symbol;
 	private String markerSymbol;
 	private String commonname;
+	private String accID;
 	
 	// add to view
 	//private String accID;

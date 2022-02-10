@@ -1,17 +1,15 @@
 package org.jax.mgi.mgd.api.model.mgi.translator;
 
-import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipAlleleMarkerDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipPropertyDomain;
-import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipAlleleMarker;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFEARDomain;
+import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipFEAR;
 import org.jax.mgi.mgd.api.util.Constants;
 
-public class RelationshipAlleleMarkerTranslator extends BaseEntityDomainTranslator<RelationshipAlleleMarker, RelationshipAlleleMarkerDomain> {
+public class RelationshipFEARTranslator extends BaseEntityDomainTranslator<RelationshipFEAR, RelationshipFEARDomain> {
 		
 	@Override
-	protected RelationshipAlleleMarkerDomain entityToDomain(RelationshipAlleleMarker entity) {	
-		RelationshipAlleleMarkerDomain domain = new RelationshipAlleleMarkerDomain();
+	protected RelationshipFEARDomain entityToDomain(RelationshipFEAR entity) {	
+		RelationshipFEARDomain domain = new RelationshipFEARDomain();
 
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);		
 		domain.setRelationshipKey(String.valueOf(entity.get_relationship_key()));
@@ -20,7 +18,7 @@ public class RelationshipAlleleMarkerTranslator extends BaseEntityDomainTranslat
 		domain.setOrganismKey(String.valueOf(entity.get_organism_key()));
 		domain.setMarkerSymbol(entity.getSymbol());	
 		domain.setCommonname(entity.getCommonname());
-		//domain.setAccID(entity.getAccID());
+		domain.setAccID(entity.getAccID());
 		
 		// properties
 //		if (entity.getProperties() != null) {

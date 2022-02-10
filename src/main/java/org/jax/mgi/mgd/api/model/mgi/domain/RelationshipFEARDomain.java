@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class RelationshipAlleleMarkerDomain extends BaseDomain {
+public class RelationshipFEARDomain extends BaseDomain {
 
 	private String processStatus;
 	private String relationshipKey;

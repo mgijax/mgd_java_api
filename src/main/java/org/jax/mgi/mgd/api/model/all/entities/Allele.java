@@ -24,6 +24,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipAlleleDriverGene;
+import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipFEAR;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
@@ -205,4 +206,9 @@ public class Allele extends BaseEntity {
 	@Where(clause="`_annottype_key` = 1021")
 	private List<Annotation> doAnnots;
 
+	// FEAR relationships
+//	@OneToMany()
+//	@JoinColumn(name="_object_key_1", referencedColumnName="_allele_key", insertable=false, updatable=false)
+//	// shouldn't need this/part of the RelationshipFEAR entity  @Where(clause="`_category_key` in (1003, 1004)")
+//	private List<RelationshipFEAR> relationships;	
 }

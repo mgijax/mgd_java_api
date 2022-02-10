@@ -16,7 +16,6 @@ public class RelationshipFEARDomain extends BaseDomain {
 	private String categoryTerm;
 	private String alleleKey;
 	private String alleleSymbol;
-	private String accID;
 	private String markerKey;
 	private String markerSymbol;
 	private String relationshipterm_key;

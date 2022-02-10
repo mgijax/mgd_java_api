@@ -19,7 +19,6 @@ public class RelationshipFEARTranslator extends BaseEntityDomainTranslator<Relat
 		domain.setCategoryTerm(entity.getCategoryTerm());
 		domain.setAlleleKey(String.valueOf(entity.get_object_key_1()));
 		domain.setAlleleSymbol(entity.getAlleleSymbol());
-		domain.setAccID(entity.getAccID());
 		domain.setMarkerKey(String.valueOf(entity.get_object_key_2()));
 		domain.setMarkerSymbol(entity.getMarkerSymbol());
 		domain.setRelationshipterm_key(String.valueOf(entity.get_relationshipterm_key()));

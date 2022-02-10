@@ -28,7 +28,6 @@ public class RelationshipFEAR extends BaseEntity {
 	private String categoryTerm;
 	private int _object_key_1;
 	private String alleleSymbol;
-	private String accID;
 	private int _object_key_2;
 	private String markerSymbol;
 	private int _relationshipterm_key;

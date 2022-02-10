@@ -121,14 +121,15 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 	@Transactional	
 	public List<RelationshipFEARDomain> getAlleleFEAR(Integer key) {
 		// return all allele-marker relationships by specified allele key
-		// 1003 | mutation_involves
-		// 1004 | expresses_component
+		// see MGI_Relationship_FEAR_View:
+		// 			1003 | mutation_involves
+		// 			1004 | expresses_component
 		
 		RelationshipFEARTranslator translator = new RelationshipFEARTranslator();
 		List<RelationshipFEARDomain> results = new ArrayList<RelationshipFEARDomain>();
 		
 		String cmd = "select _relationship_key from mgi_relationship_fear_view "
-				+ "\nwhere _category_key in (1003, 1004) and _object_key_1 = " + key;
+				+ "\nwhere _object_key_1 = " + key;
 		log.info(cmd);
 
 		try {

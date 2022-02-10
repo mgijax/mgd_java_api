@@ -37,9 +37,9 @@ public class RelationshipFEAR extends BaseEntity {
 	private String jnumid;
 	private int jnum;
 	private String short_citation;
-	private String createdByKey;
-	private String createdBy;
-	private String modifiedByKey;
+	private String _createdby_key;
+	private String createdBy;	
+	private String _modifiedby_key;
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date; 

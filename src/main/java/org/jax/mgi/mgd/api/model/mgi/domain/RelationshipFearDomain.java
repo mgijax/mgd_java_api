@@ -9,7 +9,11 @@ import lombok.Setter;
 
 @Getter @Setter
 public class RelationshipFearDomain extends BaseDomain {
-
+	// similar to RelationshipDomain
+	// except...
+	// 			objectKey1 = alleleKey, alleleSymbol
+	// 			objectKey2 = markerKey, markerSymbol
+	
 	private String processStatus;
 	private String relationshipKey;
 	private String categoryKey;

@@ -67,10 +67,10 @@ public class AlleleFearController extends BaseController<AlleleFearDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "Get the object count from mgi_relationship_Fear_view by allele key")
+	@ApiOperation(value = "Get the object count from mgi_relationship_Fear_view")
 	@Path("/getObjectCount")
-	public SearchResults<AlleleFearDomain> getObjectCount(Integer key) {
-		return alleleFearService.getObjectCount(key);
+	public SearchResults<AlleleFearDomain> getObjectCount() {
+		return alleleFearService.getObjectCount();
 	}
 		
 	@POST

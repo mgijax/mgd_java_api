@@ -134,11 +134,11 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 	}
 
 	@Transactional	
-	public SearchResults<AlleleFearDomain> getObjectCount(Integer key) {
+	public SearchResults<AlleleFearDomain> getObjectCount() {
 		// return the object count from the database
 		
 		SearchResults<AlleleFearDomain> results = new SearchResults<AlleleFearDomain>();
-		String cmd = "select count(*) as objectCount from mgi_relationship_Fear_view where _object_key_1 = " + key;
+		String cmd = "select count(*) as objectCount from mgi_relationship_fear_view";
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);

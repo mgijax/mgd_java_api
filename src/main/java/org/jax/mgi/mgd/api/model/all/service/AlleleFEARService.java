@@ -167,8 +167,8 @@ public class AlleleFEARService extends BaseService<AlleleFEARDomain> {
 
 		String cmd = "";
 		String select = "select distinct v._object_key_1";
-		String from = "from mgi_relationship_fear_view va";		
-		String where = "where va._object_key_1 is not null";
+		String from = "from mgi_relationship_fear_view v";		
+		String where = "where v._object_key_1 is not null";
 		String orderBy = "order by v.allelesymbol, v.markersymbol";
 		
 		String value;
@@ -179,12 +179,12 @@ public class AlleleFEARService extends BaseService<AlleleFEARDomain> {
 		
 		value = searchDomain.getAlleleKey();
 		if (value != null && !value.isEmpty()) {
-			where = where + "\nand va._object_key_1 = " + value;
+			where = where + "\nand v._object_key_1 = " + value;
 		}
 		
 		value = searchDomain.getSymbol();
 		if (value != null && !value.isEmpty()) {
-			where = where + "\nand va.allelesymbol ilike '" + searchDomain.getSymbol() + "'";
+			where = where + "\nand v.allelesymbol ilike '" + searchDomain.getSymbol() + "'";
 		}
 		
 		// accession id
@@ -201,7 +201,7 @@ public class AlleleFEARService extends BaseService<AlleleFEARDomain> {
 						
 			RelationshipFEARDomain relationshipDomain = searchDomain.getRelationships().get(0);
 		
-			String cmResults[] = DateSQLQuery.queryByCreationModification("va", 
+			String cmResults[] = DateSQLQuery.queryByCreationModification("v", 
 				relationshipDomain.getCreatedBy(), 
 				relationshipDomain.getModifiedBy(), 
 				relationshipDomain.getCreation_date(), 
@@ -216,40 +216,40 @@ public class AlleleFEARService extends BaseService<AlleleFEARDomain> {
 			
 			value = relationshipDomain.getMarkerKey();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand va._object_key_2 = " + value;
+				where = where + "\nand v._object_key_2 = " + value;
 			}
 			
 			value = relationshipDomain.getCategoryKey();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand va._category_key = " + value;
+				where = where + "\nand v._category_key = " + value;
 			}
 			
 			value = relationshipDomain.getRelationshipTerm_key();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand va._relationshipterm_key = " + value;
+				where = where + "\nand v._relationshipterm_key = " + value;
 			}
 			
 			value = relationshipDomain.getQualifierKey();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand va._qualifier_key = " + value;
+				where = where + "\nand v._qualifier_key = " + value;
 			}
 			
 			value = relationshipDomain.getEvidenceKey();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand va._evidence_key = " + value;
+				where = where + "\nand v._evidence_key = " + value;
 			}
 									
 			value = relationshipDomain.getRefsKey();
 			String jnumid = relationshipDomain.getJnumid();		
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand va._Refs_key = " + value;
+				where = where + "\nand v._Refs_key = " + value;
 			}
 			else if (jnumid != null && !jnumid.isEmpty()) {
 				jnumid = jnumid.toUpperCase();
 				if (!jnumid.contains("J:")) {
 						jnumid = "J:" + jnumid;
 				}
-				where = where + "\nand va.jnumid = '" + jnumid + "'";
+				where = where + "\nand v.jnumid = '" + jnumid + "'";
 			}
 			
 			if (relationshipDomain.getProperties() != null) {
@@ -272,7 +272,7 @@ public class AlleleFEARService extends BaseService<AlleleFEARDomain> {
 		
 		if (from_property == true) {
 			from = from + ", mgi_relationship_property p";
-			where = where + "\nand va._relationship_key = p._relationship_key";
+			where = where + "\nand v._relationship_key = p._relationship_key";
 		}
 
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;

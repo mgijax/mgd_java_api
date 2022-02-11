@@ -18,11 +18,11 @@ public class RelationshipFEARDomain extends BaseDomain {
 	private String alleleSymbol;
 	private String markerKey;
 	private String markerSymbol;
-	private String relationshipterm_key;
+	private String relationshipTerm_key;
 	private String relationshipTerm;
 	private String qualifierKey;
 	private String qualifierTerm;
-	private String evidence_key;
+	private String evidenceKey;
 	private String evidenceTerm;
 	private String refsKey;
 	private String jnumid;

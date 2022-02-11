@@ -30,6 +30,7 @@ public class AlleleFEARTranslator extends BaseEntityDomainTranslator<Allele, All
 		// and only 1 master domain record is processed by the create/update endpoint
 		
 		domain.setAlleleKey(String.valueOf(entity.get_allele_key()));
+		domain.setAlleleDisplay(entity.getSymbol() + ", " + entity.getName());
 		domain.setSymbol(entity.getSymbol());
 		
 		// mgi accession ids only

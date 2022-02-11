@@ -207,8 +207,9 @@ public class Allele extends BaseEntity {
 	private List<Annotation> doAnnots;
 
 	// Fear relationships
-//	@OneToMany()
-//	@JoinColumn(name="_object_key_1", referencedColumnName="_allele_key", insertable=false, updatable=false)
-//	// shouldn't need this/part of the RelationshipFear entity  @Where(clause="`_category_key` in (1003, 1004)")
-//	private List<RelationshipFear> relationships;	
+	@OneToMany()
+	@JoinColumn(name="_object_key_1", referencedColumnName="_allele_key", insertable=false, updatable=false)
+	// shouldn't need this/part of the RelationshipFear entity  @Where(clause="`_category_key` in (1003, 1004)")
+	private List<RelationshipFear> relationships;	
+	
 }

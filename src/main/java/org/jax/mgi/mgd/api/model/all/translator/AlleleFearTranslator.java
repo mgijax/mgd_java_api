@@ -1,8 +1,13 @@
 package org.jax.mgi.mgd.api.model.all.translator;
 
+import java.util.Comparator;
+
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleFearDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearDomain;
+import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipFearTranslator;
 import org.jboss.logging.Logger;
 
 public class AlleleFearTranslator extends BaseEntityDomainTranslator<Allele, AlleleFearDomain> {
@@ -27,13 +32,12 @@ public class AlleleFearTranslator extends BaseEntityDomainTranslator<Allele, All
 		}
 		
 		// relationship domain by allele
-		// TO-DO/add List<RelationshipFear> to entity/Allele
-//		if (entity.getRelationships() != null && !entity.getRelationships().isEmpty()) {
-//			RelationshipFearTranslator fearTranslator = new RelationshipFearTranslator();	
-//			Iterable<RelationshipFearDomain> t = fearTranslator.translateEntities(entity.getRelationships());			
-//			domain.setRelationships(IteratorUtils.toList(t.iterator()));
-//			domain.getRelationships().sort(Comparator.comparing(RelationshipFearDomain::getMarkerSymbol, String.CASE_INSENSITIVE_ORDER));	
-//		}
+		if (entity.getRelationships() != null && !entity.getRelationships().isEmpty()) {
+			RelationshipFearTranslator fearTranslator = new RelationshipFearTranslator();	
+			Iterable<RelationshipFearDomain> t = fearTranslator.translateEntities(entity.getRelationships());			
+			domain.setRelationships(IteratorUtils.toList(t.iterator()));
+			domain.getRelationships().sort(Comparator.comparing(RelationshipFearDomain::getMarkerSymbol, String.CASE_INSENSITIVE_ORDER));	
+		}
 		
 		return domain;
 	}

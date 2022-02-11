@@ -13,7 +13,7 @@ public class AlleleFearDomain extends BaseDomain {
 
 	private String alleleKey;
 	private String alleleDisplay;
-	private String symbol;
+	private String alleleSymbol;
 	private String accID;
 	private List<RelationshipFearDomain> relationships;
 }

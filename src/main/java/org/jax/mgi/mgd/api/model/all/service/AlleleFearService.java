@@ -164,10 +164,10 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 
 		String cmd = "";
-		String select = "select distinct v._object_key_1, v.allelesymbol, v.markersymbol";
+		String select = "select distinct v._object_key_1, v.allelesymbol";
 		String from = "from mgi_relationship_Fear_view v";		
 		String where = "where v._object_key_1 is not null";
-		String orderBy = "order by v.allelesymbol, v.markersymbol";
+		String orderBy = "order by v.allelesymbol";
 		
 		String value;
 

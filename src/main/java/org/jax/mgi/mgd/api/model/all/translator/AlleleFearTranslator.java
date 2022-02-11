@@ -18,9 +18,6 @@ public class AlleleFearTranslator extends BaseEntityDomainTranslator<Allele, All
 	protected AlleleFearDomain entityToDomain(Allele entity) {
 		
 		AlleleFearDomain domain = new AlleleFearDomain();
-
-		// do not use 'processStatus' because this is a master domain
-		// and only 1 master domain record is processed by the create/update endpoint
 		
 		domain.setAlleleKey(String.valueOf(entity.get_allele_key()));
 		domain.setAlleleDisplay(entity.getSymbol() + ", " + entity.getName());

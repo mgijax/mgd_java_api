@@ -184,7 +184,7 @@ public class AlleleFEARService extends BaseService<AlleleFEARDomain> {
 		
 		value = searchDomain.getSymbol();
 		if (value != null && !value.isEmpty()) {
-			where = where + "\nand v.allelesymbol ilike '" + searchDomain.getSymbol() + "'";
+			where = where + "\nand v.allelesymbol ilike '" + value + "'";
 		}
 		
 		// accession id
@@ -217,6 +217,11 @@ public class AlleleFEARService extends BaseService<AlleleFEARDomain> {
 			value = relationshipDomain.getMarkerKey();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand v._object_key_2 = " + value;
+			}
+			
+			relationshipDomain.getMarkerSymbol();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand v.markersymbol ilike '" + value + "'";
 			}
 			
 			value = relationshipDomain.getCategoryKey();

@@ -10,12 +10,12 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
-import org.jax.mgi.mgd.api.model.all.domain.AlleleFEARDomain;
-import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleFEARDomain;
-import org.jax.mgi.mgd.api.model.all.translator.AlleleFEARTranslator;
-import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleFEARTranslator;
+import org.jax.mgi.mgd.api.model.all.domain.AlleleFearDomain;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleFearDomain;
+import org.jax.mgi.mgd.api.model.all.translator.AlleleFearTranslator;
+import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleFearTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFEARDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.RelationshipService;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -25,39 +25,39 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
 @RequestScoped
-public class AlleleFEARService extends BaseService<AlleleFEARDomain> {
+public class AlleleFearService extends BaseService<AlleleFearDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
 
 	@Inject
-	private AlleleDAO allelefearDAO;
+	private AlleleDAO alleleFearDAO;
 	@Inject
 	private RelationshipService relationshipService;
 	
-	private AlleleFEARTranslator translator = new AlleleFEARTranslator();
-	private SlimAlleleFEARTranslator slimtranslator = new SlimAlleleFEARTranslator();
+	private AlleleFearTranslator translator = new AlleleFearTranslator();
+	private SlimAlleleFearTranslator slimtranslator = new SlimAlleleFearTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
-	private String mgiTypeKey = "11";
+	private String mgiTypeKey = "";
 
 	@Transactional
-	public SearchResults<AlleleFEARDomain> create(AlleleFEARDomain domain, User user) {	
-		SearchResults<AlleleFEARDomain> results = new SearchResults<AlleleFEARDomain>();
+	public SearchResults<AlleleFearDomain> create(AlleleFearDomain domain, User user) {	
+		SearchResults<AlleleFearDomain> results = new SearchResults<AlleleFearDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);	
 		return results;
 	}
 	
 	@Transactional
-	public SearchResults<AlleleFEARDomain> update(AlleleFEARDomain domain, User user) {
-		// translate pwi/incoming AlleleFEARDomain json domain to list of RelationshipDomain
+	public SearchResults<AlleleFearDomain> update(AlleleFearDomain domain, User user) {
+		// translate pwi/incoming AlleleFearDomain json domain to list of RelationshipDomain
 		// use this list of domain to process hibernate entities
 		
-		log.info("AlleleFEARService.update");
+		log.info("AlleleFearService.update");
 		
 		List<RelationshipDomain> relationshipList = new ArrayList<RelationshipDomain>();
 		Boolean modified = false;
 
-    	// Iterate thru incoming allele FEAR relationship domain
+    	// Iterate thru incoming allele Fear relationship domain
 		for (int i = 0; i < domain.getRelationships().size(); i++) {
 			
 			// if processStatus == "x", then continue; no need to create domain/process anything
@@ -95,14 +95,14 @@ public class AlleleFEARService extends BaseService<AlleleFEARDomain> {
 		}
 		
 		if (modified) {
-			log.info("processAlleleFEAR/changes processed: " + domain.getAlleleKey());
+			log.info("processAlleleFear/changes processed: " + domain.getAlleleKey());
 		}
 		else {
-			log.info("processAlleleFEAR/no changes processed: " + domain.getAlleleKey());
+			log.info("processAlleleFear/no changes processed: " + domain.getAlleleKey());
 		}
 		
 		log.info("repackage incoming domain as results");		
-		SearchResults<AlleleFEARDomain> results = new SearchResults<AlleleFEARDomain>();
+		SearchResults<AlleleFearDomain> results = new SearchResults<AlleleFearDomain>();
 		results = getResults(Integer.valueOf(domain.getAlleleKey()));
 		results.setItem(domain);
 		log.info("results: " + results);
@@ -110,37 +110,37 @@ public class AlleleFEARService extends BaseService<AlleleFEARDomain> {
 	}
 
 	@Transactional
-	public AlleleFEARDomain get(Integer key) {
+	public AlleleFearDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain	
-		AlleleFEARDomain domain = new AlleleFEARDomain();
-		if (allelefearDAO.get(key) != null) {
-			domain = translator.translate(allelefearDAO.get(key));
+		AlleleFearDomain domain = new AlleleFearDomain();
+		if (alleleFearDAO.get(key) != null) {
+			domain = translator.translate(alleleFearDAO.get(key));
 		}
-		allelefearDAO.clear();
+		alleleFearDAO.clear();
 		return domain;	
 	}
 
 	@Transactional
-	public SearchResults<AlleleFEARDomain> delete(Integer key, User user) {
-		SearchResults<AlleleFEARDomain> results = new SearchResults<AlleleFEARDomain>();
+	public SearchResults<AlleleFearDomain> delete(Integer key, User user) {
+		SearchResults<AlleleFearDomain> results = new SearchResults<AlleleFearDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
 	}
 	
 	@Transactional
-	public SearchResults<AlleleFEARDomain> getResults(Integer key) {
+	public SearchResults<AlleleFearDomain> getResults(Integer key) {
 		// get the domain -> results
-		SearchResults<AlleleFEARDomain> results = new SearchResults<AlleleFEARDomain>();
+		SearchResults<AlleleFearDomain> results = new SearchResults<AlleleFearDomain>();
 		results.setItem(get(key));
 		return results;
 	}
 
 	@Transactional	
-	public SearchResults<AlleleFEARDomain> getObjectCount(Integer key) {
+	public SearchResults<AlleleFearDomain> getObjectCount(Integer key) {
 		// return the object count from the database
 		
-		SearchResults<AlleleFEARDomain> results = new SearchResults<AlleleFEARDomain>();
-		String cmd = "select count(*) as objectCount from mgi_relationship_fear_view where _object_key_1 = " + key;
+		SearchResults<AlleleFearDomain> results = new SearchResults<AlleleFearDomain>();
+		String cmd = "select count(*) as objectCount from mgi_relationship_Fear_view where _object_key_1 = " + key;
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
@@ -157,17 +157,17 @@ public class AlleleFEARService extends BaseService<AlleleFEARDomain> {
 	}
 	
 	@Transactional	
-	public List<SlimAlleleFEARDomain> search(AlleleFEARDomain searchDomain) {
+	public List<SlimAlleleFearDomain> search(AlleleFearDomain searchDomain) {
 		// using searchDomain fields, generate SQL command
 		
-		List<SlimAlleleFEARDomain> results = new ArrayList<SlimAlleleFEARDomain>();
+		List<SlimAlleleFearDomain> results = new ArrayList<SlimAlleleFearDomain>();
 
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 
 		String cmd = "";
 		String select = "select distinct v._object_key_1, v.allelesymbol, v.markersymbol";
-		String from = "from mgi_relationship_fear_view v";		
+		String from = "from mgi_relationship_Fear_view v";		
 		String where = "where v._object_key_1 is not null";
 		String orderBy = "order by v.allelesymbol, v.markersymbol";
 		
@@ -199,7 +199,7 @@ public class AlleleFEARService extends BaseService<AlleleFEARDomain> {
 
 		if (searchDomain.getRelationships() != null) {
 						
-			RelationshipFEARDomain relationshipDomain = searchDomain.getRelationships().get(0);
+			RelationshipFearDomain relationshipDomain = searchDomain.getRelationships().get(0);
 		
 			String cmResults[] = DateSQLQuery.queryByCreationModification("v", 
 				relationshipDomain.getCreatedBy(), 
@@ -287,9 +287,9 @@ public class AlleleFEARService extends BaseService<AlleleFEARDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 						
 			while (rs.next())  {
-				SlimAlleleFEARDomain domain = new SlimAlleleFEARDomain();
-				domain = slimtranslator.translate(allelefearDAO.get(rs.getInt("_object_key_1")));
-				allelefearDAO.clear();				
+				SlimAlleleFearDomain domain = new SlimAlleleFearDomain();
+				domain = slimtranslator.translate(alleleFearDAO.get(rs.getInt("_object_key_1")));
+				alleleFearDAO.clear();				
 				results.add(domain);					
 			}
 			sqlExecutor.cleanup();

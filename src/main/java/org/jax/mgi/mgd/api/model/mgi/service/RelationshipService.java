@@ -13,12 +13,12 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.RelationshipCategoryDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.RelationshipDAO;
-import org.jax.mgi.mgd.api.model.mgi.dao.RelationshipFEARDAO;
+import org.jax.mgi.mgd.api.model.mgi.dao.RelationshipFearDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFEARDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.Relationship;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipFEARTranslator;
+import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipFearTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipTranslator;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -34,7 +34,7 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 	@Inject
 	private RelationshipDAO relationshipDAO;
 	@Inject
-	private RelationshipFEARDAO relationshipFEARDAO;
+	private RelationshipFearDAO relationshipFearDAO;
 	@Inject
 	private RelationshipCategoryDAO categoryDAO;
 	@Inject
@@ -119,14 +119,14 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 	}
 
 	@Transactional	
-	public List<RelationshipFEARDomain> getAlleleFEAR(Integer key) {
+	public List<RelationshipFearDomain> getAlleleFear(Integer key) {
 		// return all allele-marker relationships by specified allele key
 		// see MGI_Relationship_FEAR_View:
 		// 			1003 | mutation_involves
 		// 			1004 | expresses_component
 		
-		RelationshipFEARTranslator translator = new RelationshipFEARTranslator();
-		List<RelationshipFEARDomain> results = new ArrayList<RelationshipFEARDomain>();
+		RelationshipFearTranslator translator = new RelationshipFearTranslator();
+		List<RelationshipFearDomain> results = new ArrayList<RelationshipFearDomain>();
 		
 		String cmd = "select _relationship_key from mgi_relationship_fear_view "
 				+ "\nwhere _object_key_1 = " + key;
@@ -135,9 +135,9 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				RelationshipFEARDomain domain = new RelationshipFEARDomain();
-				domain = translator.translate(relationshipFEARDAO.get(rs.getInt("_relationship_key")));
-				relationshipFEARDAO.clear();
+				RelationshipFearDomain domain = new RelationshipFearDomain();
+				domain = translator.translate(relationshipFearDAO.get(rs.getInt("_relationship_key")));
+				relationshipFearDAO.clear();
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

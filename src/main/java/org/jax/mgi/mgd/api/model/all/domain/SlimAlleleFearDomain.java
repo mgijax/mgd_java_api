@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class SlimAlleleFEARDomain extends BaseDomain {
+public class SlimAlleleFearDomain extends BaseDomain {
 
 	private String alleleKey;
 	private String symbol;

@@ -2,16 +2,16 @@ package org.jax.mgi.mgd.api.model.mgi.translator;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFEARDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipPropertyDomain;
-import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipFEAR;
+import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipFear;
 import org.jax.mgi.mgd.api.util.Constants;
 
-public class RelationshipFEARTranslator extends BaseEntityDomainTranslator<RelationshipFEAR, RelationshipFEARDomain> {
+public class RelationshipFearTranslator extends BaseEntityDomainTranslator<RelationshipFear, RelationshipFearDomain> {
 		
 	@Override
-	protected RelationshipFEARDomain entityToDomain(RelationshipFEAR entity) {	
-		RelationshipFEARDomain domain = new RelationshipFEARDomain();
+	protected RelationshipFearDomain entityToDomain(RelationshipFear entity) {	
+		RelationshipFearDomain domain = new RelationshipFearDomain();
 
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setRelationshipKey(String.valueOf(entity.get_relationship_key()));

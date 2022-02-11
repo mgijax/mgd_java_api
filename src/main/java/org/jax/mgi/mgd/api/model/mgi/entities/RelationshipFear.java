@@ -18,9 +18,9 @@ import lombok.Setter;
 @Getter @Setter
 @Entity
 @Immutable
-@ApiModel(value = "Relationship FEAR (Allele/Marker)")
+@ApiModel(value = "Relationship Fear (Allele/Marker)")
 @Table(name="mgi_relationship_fear_view")
-public class RelationshipFEAR extends BaseEntity {
+public class RelationshipFear extends BaseEntity {
 	
 	@Id	
 	private int _relationship_key;

@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFEARDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.RelationshipService;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -66,14 +66,14 @@ public class RelationshipController extends BaseController<RelationshipDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Get FEAR (Allele/Marker)")
+	@ApiOperation(value = "Get Allele/Marker (Fear)")
 	@Path("/allelefear")
-	public List<RelationshipFEARDomain> getAlleleFEAR(Integer key) {
+	public List<RelationshipFearDomain> getAlleleFear(Integer key) {
 			
-		List<RelationshipFEARDomain> results = new ArrayList<RelationshipFEARDomain>();
+		List<RelationshipFearDomain> results = new ArrayList<RelationshipFearDomain>();
 		
 		try {
-			results = relationshipService.getAlleleFEAR(key);
+			results = relationshipService.getAlleleFear(key);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -12,9 +12,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.all.domain.AlleleFEARDomain;
-import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleFEARDomain;
-import org.jax.mgi.mgd.api.model.all.service.AlleleFEARService;
+import org.jax.mgi.mgd.api.model.all.domain.AlleleFearDomain;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleFearDomain;
+import org.jax.mgi.mgd.api.model.all.service.AlleleFearService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -25,63 +25,63 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Path("/allelefear")
-@Api(value = "Allele FEAR Endpoints")
+@Path("/alleleFear")
+@Api(value = "Allele Fear Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class AlleleFEARController extends BaseController<AlleleFEARDomain> {
+public class AlleleFearController extends BaseController<AlleleFearDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
 	ObjectMapper mapper = new ObjectMapper();
 	
 	@Inject
-	private AlleleFEARService allelefearService;
+	private AlleleFearService alleleFearService;
 
 	// refresh/resync the results due to database triggers
 	// for example, the mgi accession id is created by a database trigger
 	
 	@Override
-	public SearchResults<AlleleFEARDomain> create(AlleleFEARDomain domain, User user) {	
-		SearchResults<AlleleFEARDomain> results = new SearchResults<AlleleFEARDomain>();
+	public SearchResults<AlleleFearDomain> create(AlleleFearDomain domain, User user) {	
+		SearchResults<AlleleFearDomain> results = new SearchResults<AlleleFearDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);	
 		return results;
 	}
 
 	@Override
-	public SearchResults<AlleleFEARDomain> update(AlleleFEARDomain domain, User user) {
-		SearchResults<AlleleFEARDomain> results = new SearchResults<AlleleFEARDomain>();
-		results = allelefearService.update(domain, user);
+	public SearchResults<AlleleFearDomain> update(AlleleFearDomain domain, User user) {
+		SearchResults<AlleleFearDomain> results = new SearchResults<AlleleFearDomain>();
+		results = alleleFearService.update(domain, user);
 		return results;	
 	}
 
 	@Override
-	public AlleleFEARDomain get(Integer key) {
-		return allelefearService.get(Integer.valueOf(key));
+	public AlleleFearDomain get(Integer key) {
+		return alleleFearService.get(Integer.valueOf(key));
 	}
 
 	@Override
-	public SearchResults<AlleleFEARDomain> delete(Integer key, User user) {
-		SearchResults<AlleleFEARDomain> results = new SearchResults<AlleleFEARDomain>();
+	public SearchResults<AlleleFearDomain> delete(Integer key, User user) {
+		SearchResults<AlleleFearDomain> results = new SearchResults<AlleleFearDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
 	}
 
 	@GET
-	@ApiOperation(value = "Get the object count from mgi_relationship_fear_view by allele key")
+	@ApiOperation(value = "Get the object count from mgi_relationship_Fear_view by allele key")
 	@Path("/getObjectCount")
-	public SearchResults<AlleleFEARDomain> getObjectCount(Integer key) {
-		return allelefearService.getObjectCount(key);
+	public SearchResults<AlleleFearDomain> getObjectCount(Integer key) {
+		return alleleFearService.getObjectCount(key);
 	}
 		
 	@POST
 	@ApiOperation(value = "Search/returns slim marker domain")
 	@Path("/search")
-	public List<SlimAlleleFEARDomain> search(AlleleFEARDomain searchDomain) {
+	public List<SlimAlleleFearDomain> search(AlleleFearDomain searchDomain) {
 	
-		List<SlimAlleleFEARDomain> results = new ArrayList<SlimAlleleFEARDomain>();
+		List<SlimAlleleFearDomain> results = new ArrayList<SlimAlleleFearDomain>();
 
 		try {
-			results = allelefearService.search(searchDomain);
+			results = alleleFearService.search(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

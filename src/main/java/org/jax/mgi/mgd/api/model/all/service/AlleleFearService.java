@@ -180,7 +180,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			where = where + "\nand v._object_key_1 = " + value;
 		}
 		
-		value = searchDomain.getAlleleSymbol();
+		value = searchDomain.getAlleleDisplay();
 		if (value != null && !value.isEmpty()) {
 			where = where + "\nand v.allelesymbol ilike '" + value + "'";
 		}

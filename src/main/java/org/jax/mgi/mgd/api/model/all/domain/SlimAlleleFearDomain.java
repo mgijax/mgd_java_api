@@ -9,6 +9,7 @@ import lombok.Setter;
 public class SlimAlleleFearDomain extends BaseDomain {
 
 	private String alleleKey;
-	private String symbol;
+	private String alleleDisplay;
+	private String alleleSymbol;
 	private String accID;
 }

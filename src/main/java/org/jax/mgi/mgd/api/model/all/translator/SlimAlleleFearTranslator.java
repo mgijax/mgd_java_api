@@ -18,7 +18,8 @@ public class SlimAlleleFearTranslator extends BaseEntityDomainTranslator<Allele,
 		// and only 1 master domain record is processed by the create/update endpoint
 		
 		domain.setAlleleKey(String.valueOf(entity.get_allele_key()));
-		domain.setSymbol(entity.getSymbol());
+		domain.setAlleleDisplay(entity.getSymbol() + ", " + entity.getName());		
+		domain.setAlleleSymbol(entity.getSymbol());
 		
 		// mgi accession ids only
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {

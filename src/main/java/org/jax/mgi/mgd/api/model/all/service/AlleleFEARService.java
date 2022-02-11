@@ -174,7 +174,6 @@ public class AlleleFEARService extends BaseService<AlleleFEARDomain> {
 		String value;
 
 		Boolean from_property = false;
-		Boolean executeQuery = false;
 		
 		// if parameter exists, then add to where-clause
 		
@@ -186,7 +185,6 @@ public class AlleleFEARService extends BaseService<AlleleFEARDomain> {
 		value = searchDomain.getSymbol();
 		if (value != null && !value.isEmpty()) {
 			where = where + "\nand va.allelesymbol ilike '" + searchDomain.getSymbol() + "'";
-			executeQuery = true;
 		}
 		
 		// accession id
@@ -197,7 +195,6 @@ public class AlleleFEARService extends BaseService<AlleleFEARDomain> {
 				mgiid = "MGI:" + mgiid;
 			}
 			where = where + "\nand lower(v.accID) = '" + mgiid.toLowerCase() + "'";
-			executeQuery = true;
 		}
 
 		if (searchDomain.getRelationships() != null) {
@@ -276,12 +273,6 @@ public class AlleleFEARService extends BaseService<AlleleFEARDomain> {
 		if (from_property == true) {
 			from = from + ", mgi_relationship_property p";
 			where = where + "\nand va._relationship_key = p._relationship_key";
-			executeQuery = true;
-		}
-		
-		if (executeQuery == false) {
-			log.info("executeQuery = false; not enough parameters in search");
-			return results;
 		}
 
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;

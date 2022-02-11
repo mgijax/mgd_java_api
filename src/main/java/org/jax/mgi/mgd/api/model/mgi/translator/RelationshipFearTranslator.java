@@ -43,6 +43,7 @@ public class RelationshipFearTranslator extends BaseEntityDomainTranslator<Relat
 			RelationshipPropertyTranslator propertyTranslator = new RelationshipPropertyTranslator();
 			Iterable<RelationshipPropertyDomain> i = propertyTranslator.translateEntities(entity.getProperties());
 			domain.setProperties(IteratorUtils.toList(i.iterator()));
+			domain.setHasProperties(true);		
 		}
 		
 		return domain;

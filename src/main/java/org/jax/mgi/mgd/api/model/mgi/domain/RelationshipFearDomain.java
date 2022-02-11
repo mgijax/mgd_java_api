@@ -22,7 +22,7 @@ public class RelationshipFearDomain extends BaseDomain {
 	private String alleleSymbol;
 	private String markerKey;
 	private String markerSymbol;
-	private String relationshipTerm_key;
+	private String relationshipTermKey;
 	private String relationshipTerm;
 	private String qualifierKey;
 	private String qualifierTerm;

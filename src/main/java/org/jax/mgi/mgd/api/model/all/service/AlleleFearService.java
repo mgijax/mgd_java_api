@@ -70,7 +70,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			relationshipDomain.setProcessStatus(domain.getRelationships().get(i).getProcessStatus());
 			relationshipDomain.setRelationshipKey(domain.getRelationships().get(i).getRelationshipKey());
 			relationshipDomain.setCategoryKey(domain.getRelationships().get(i).getCategoryKey());
-			relationshipDomain.setRelationshipTermKey(domain.getRelationships().get(i).getRelationshipTerm_key());
+			relationshipDomain.setRelationshipTermKey(domain.getRelationships().get(i).getRelationshipTermKey());
 			relationshipDomain.setQualifierKey(domain.getRelationships().get(i).getQualifierKey());
 			relationshipDomain.setEvidenceKey(domain.getRelationships().get(i).getEvidenceKey());
 			relationshipDomain.setRefsKey(domain.getRelationships().get(i).getRefsKey());
@@ -227,7 +227,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				where = where + "\nand v._category_key = " + value;
 			}
 			
-			value = relationshipDomain.getRelationshipTerm_key();
+			value = relationshipDomain.getRelationshipTermKey();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand v._relationshipterm_key = " + value;
 			}

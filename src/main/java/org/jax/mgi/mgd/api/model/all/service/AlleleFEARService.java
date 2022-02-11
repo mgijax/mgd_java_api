@@ -164,13 +164,12 @@ public class AlleleFEARService extends BaseService<AlleleFEARDomain> {
 
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
-		// + "\nand m._marker_status_key = 1";
 
 		String cmd = "";
-		String select = "select distinct v._object_key, v.description";
-		String from = "from mgi_relationship_fear_view va, all_summary_view v";		
-		String where = "where va._object_key_1 = v._object_key";
-		String orderBy = "order by v._object_key, v.description";
+		String select = "select distinct v._object_key_1";
+		String from = "from mgi_relationship_fear_view va";		
+		String where = "where va._object_key_1 is not null";
+		String orderBy = "order by v.allelesymbol, v.markersymbol";
 		
 		String value;
 
@@ -179,14 +178,21 @@ public class AlleleFEARService extends BaseService<AlleleFEARDomain> {
 		
 		// if parameter exists, then add to where-clause
 		
-		if (searchDomain.getSymbol() != null && !searchDomain.getSymbol().isEmpty()) {
-			where = where + "\nand v.short_description ilike '" + searchDomain.getSymbol() + "'";
+		value = searchDomain.getAlleleKey();
+		if (value != null && !value.isEmpty()) {
+			where = where + "\nand va._object_key_1 = " + value;
+		}
+		
+		value = searchDomain.getSymbol();
+		if (value != null && !value.isEmpty()) {
+			where = where + "\nand va.allelesymbol ilike '" + searchDomain.getSymbol() + "'";
 			executeQuery = true;
 		}
 		
 		// accession id
-		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {
-			String mgiid = searchDomain.getAccID().toUpperCase();
+		value = searchDomain.getAccID();
+		if (value != null && !value.isEmpty()) {
+			String mgiid = value.toUpperCase();
 			if (!mgiid.contains("MGI:")) {
 				mgiid = "MGI:" + mgiid;
 			}
@@ -287,7 +293,6 @@ public class AlleleFEARService extends BaseService<AlleleFEARDomain> {
 			while (rs.next())  {
 				SlimAlleleFEARDomain domain = new SlimAlleleFEARDomain();
 				domain = slimtranslator.translate(allelefearDAO.get(rs.getInt("_object_key_1")));
-				domain.setSymbol(rs.getString("alleleSymbol"));
 				allelefearDAO.clear();				
 				results.add(domain);					
 			}

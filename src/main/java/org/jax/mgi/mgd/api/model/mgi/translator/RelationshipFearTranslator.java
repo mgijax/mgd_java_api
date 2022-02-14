@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.mgi.translator;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipPropertyDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipFear;
@@ -46,6 +47,13 @@ public class RelationshipFearTranslator extends BaseEntityDomainTranslator<Relat
 			domain.setHasProperties(true);		
 		}
 		
+		// at most one note
+		if (entity.getNote() != null && !entity.getNote().isEmpty()) {
+			NoteTranslator noteTranslator = new NoteTranslator();
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getNote());
+			domain.setNote(note.iterator().next());
+		}
+				
 		return domain;
 	}
 

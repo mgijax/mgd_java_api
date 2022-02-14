@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
 import io.swagger.annotations.ApiModel;
@@ -51,5 +52,10 @@ public class RelationshipFear extends BaseEntity {
 	@OneToMany()
 	@JoinColumn(name="_relationship_key", insertable=false, updatable=false)
 	private List<RelationshipProperty> properties;
-	
+
+	//  1042 | Relationship
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_relationship_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 40 and `_notetype_key` = 1042")
+	private List<Note> note;		
 }

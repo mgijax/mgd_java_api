@@ -41,5 +41,6 @@ public class RelationshipFearDomain extends BaseDomain {
 
 	List<RelationshipPropertyDomain> properties;
 	private Boolean hasProperties = false;
+	private NoteDomain note;
 
 }

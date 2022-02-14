@@ -43,6 +43,8 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 	private ReferenceDAO referenceDAO;
 	@Inject
 	private RelationshipPropertyService relationshipPropertyService;
+	@Inject
+	private NoteService noteService;
 	
 	private RelationshipTranslator translator = new RelationshipTranslator();
 	
@@ -191,6 +193,8 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 					relationshipPropertyService.process(domain.get(i).getProperties(), String.valueOf(entity.get_relationship_key()), user);
 				}
 				
+				noteService.process(String.valueOf(entity.get_relationship_key()), domain.get(i).getNote(), "40", user);
+				
 				modified = true;
 				log.info("processRelationships create successful");
 			}
@@ -218,6 +222,8 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				if (domain.get(i).getProperties() != null) {
 					relationshipPropertyService.process(domain.get(i).getProperties(), domain.get(i).getRelationshipKey(), user);
 				}
+				
+				noteService.process(domain.get(i).getRelationshipKey(), domain.get(i).getNote(), "40", user);
 				
 				modified = true;
 				log.info("processRelationships/changes processed: " + domain.get(i).getRelationshipKey());

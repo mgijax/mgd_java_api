@@ -35,7 +35,7 @@ public class AlleleFearTranslator extends BaseEntityDomainTranslator<Allele, All
 			domain.setRelationships(IteratorUtils.toList(t.iterator()));
 			domain.getRelationships().sort(Comparator.comparing(RelationshipFearDomain::getMarkerSymbol, String.CASE_INSENSITIVE_ORDER));	
 		}
-		
+			
 		return domain;
 	}
 

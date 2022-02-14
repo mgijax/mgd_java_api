@@ -209,13 +209,13 @@ public class Allele extends BaseEntity {
 	// Fear relationships
 	@OneToMany()
 	@JoinColumn(name="_object_key_1", referencedColumnName="_allele_key", insertable=false, updatable=false)
-	// shouldn't need this/part of the RelationshipFear entity  @Where(clause="`_category_key` in (1003)")
+	@Where(clause="`_category_key` in (1003)")
 	private List<RelationshipFear> mutationInvolves;	
 
 	// Fear relationships
 	@OneToMany()
 	@JoinColumn(name="_object_key_1", referencedColumnName="_allele_key", insertable=false, updatable=false)
-	// shouldn't need this/part of the RelationshipFear entity  @Where(clause="`_category_key` in (1004)")
+	@Where(clause="`_category_key` in (1004)")
 	private List<RelationshipFear> expressesComponents;	
 	
 }

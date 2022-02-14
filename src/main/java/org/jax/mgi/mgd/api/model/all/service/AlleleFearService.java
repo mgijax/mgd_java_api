@@ -138,7 +138,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		// return the object count from the database
 		
 		SearchResults<AlleleFearDomain> results = new SearchResults<AlleleFearDomain>();
-		String cmd = "select count(*) as objectCount from mgi_relationship_fear_view";
+		String cmd = "select count(distinct _object_key_1) as objectCount from mgi_relationship_fear_view";
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);

@@ -219,7 +219,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			if (!mgiid.contains("MGI:")) {
 				mgiid = "MGI:" + mgiid;
 			}
-			where = where + "\nand lower(v.accID) = '" + mgiid.toLowerCase() + "'";
+			where = where + "\nand lower(v.alleleId) = '" + mgiid.toLowerCase() + "'";
 		}
 
 		RelationshipFearDomain relationshipDomain;

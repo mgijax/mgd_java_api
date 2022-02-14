@@ -227,9 +227,11 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 						
 			if (searchDomain.getMutationInvolves() != null) {
 				relationshipDomain = searchDomain.getMutationInvolves().get(0);
+				where = where + "\nand v._category_key = 1003";
 			}
 			else {
 				relationshipDomain = searchDomain.getExpressesComponents().get(0);
+				where = where + "\nand v._category_key = 1004";				
 			}
 			
 			String cmResults[] = DateSQLQuery.queryByCreationModification("v", 

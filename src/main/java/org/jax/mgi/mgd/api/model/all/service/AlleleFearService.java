@@ -58,27 +58,54 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		Boolean modified = false;
 
     	// Iterate thru incoming allele Fear relationship domain
-		for (int i = 0; i < domain.getRelationships().size(); i++) {
+		for (int i = 0; i < domain.getMutationInvolves().size(); i++) {
 			
 			// if processStatus == "x", then continue; no need to create domain/process anything
-			if (domain.getRelationships().get(i).getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
+			if (domain.getMutationInvolves().get(i).getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
 				continue;
 			}
 			
 			RelationshipDomain relationshipDomain = new RelationshipDomain();
 		
-			relationshipDomain.setProcessStatus(domain.getRelationships().get(i).getProcessStatus());
-			relationshipDomain.setRelationshipKey(domain.getRelationships().get(i).getRelationshipKey());
-			relationshipDomain.setCategoryKey(domain.getRelationships().get(i).getCategoryKey());
-			relationshipDomain.setRelationshipTermKey(domain.getRelationships().get(i).getRelationshipTermKey());
-			relationshipDomain.setQualifierKey(domain.getRelationships().get(i).getQualifierKey());
-			relationshipDomain.setEvidenceKey(domain.getRelationships().get(i).getEvidenceKey());
-			relationshipDomain.setRefsKey(domain.getRelationships().get(i).getRefsKey());
-			relationshipDomain.setCreatedByKey(domain.getRelationships().get(i).getCreatedByKey());
-			relationshipDomain.setModifiedByKey(domain.getRelationships().get(i).getModifiedByKey());
+			relationshipDomain.setProcessStatus(domain.getMutationInvolves().get(i).getProcessStatus());
+			relationshipDomain.setRelationshipKey(domain.getMutationInvolves().get(i).getRelationshipKey());
+			relationshipDomain.setCategoryKey(domain.getMutationInvolves().get(i).getCategoryKey());
+			relationshipDomain.setRelationshipTermKey(domain.getMutationInvolves().get(i).getRelationshipTermKey());
+			relationshipDomain.setQualifierKey(domain.getMutationInvolves().get(i).getQualifierKey());
+			relationshipDomain.setEvidenceKey(domain.getMutationInvolves().get(i).getEvidenceKey());
+			relationshipDomain.setRefsKey(domain.getMutationInvolves().get(i).getRefsKey());
+			relationshipDomain.setCreatedByKey(domain.getMutationInvolves().get(i).getCreatedByKey());
+			relationshipDomain.setModifiedByKey(domain.getMutationInvolves().get(i).getModifiedByKey());
 			
 			// add properties to this relationship
-			relationshipDomain.setProperties(domain.getRelationships().get(i).getProperties());
+			relationshipDomain.setProperties(domain.getMutationInvolves().get(i).getProperties());
+            
+			// add relationshipDomain to relationshipList
+			relationshipList.add(relationshipDomain);         
+		}
+		
+    	// Iterate thru incoming allele Fear relationship domain
+		for (int i = 0; i < domain.getMutationInvolves().size(); i++) {
+			
+			// if processStatus == "x", then continue; no need to create domain/process anything
+			if (domain.getExpressesComponents().get(i).getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
+				continue;
+			}
+			
+			RelationshipDomain relationshipDomain = new RelationshipDomain();
+		
+			relationshipDomain.setProcessStatus(domain.getExpressesComponents().get(i).getProcessStatus());
+			relationshipDomain.setRelationshipKey(domain.getExpressesComponents().get(i).getRelationshipKey());
+			relationshipDomain.setCategoryKey(domain.getExpressesComponents().get(i).getCategoryKey());
+			relationshipDomain.setRelationshipTermKey(domain.getExpressesComponents().get(i).getRelationshipTermKey());
+			relationshipDomain.setQualifierKey(domain.getExpressesComponents().get(i).getQualifierKey());
+			relationshipDomain.setEvidenceKey(domain.getExpressesComponents().get(i).getEvidenceKey());
+			relationshipDomain.setRefsKey(domain.getExpressesComponents().get(i).getRefsKey());
+			relationshipDomain.setCreatedByKey(domain.getExpressesComponents().get(i).getCreatedByKey());
+			relationshipDomain.setModifiedByKey(domain.getExpressesComponents().get(i).getModifiedByKey());
+			
+			// add properties to this relationship
+			relationshipDomain.setProperties(domain.getExpressesComponents().get(i).getProperties());
             
 			// add relationshipDomain to relationshipList
 			relationshipList.add(relationshipDomain);         
@@ -195,10 +222,16 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			where = where + "\nand lower(v.accID) = '" + mgiid.toLowerCase() + "'";
 		}
 
-		if (searchDomain.getRelationships() != null) {
+		RelationshipFearDomain relationshipDomain;
+		if (searchDomain.getMutationInvolves() != null || searchDomain.getExpressesComponents() != null) {
 						
-			RelationshipFearDomain relationshipDomain = searchDomain.getRelationships().get(0);
-		
+			if (searchDomain.getMutationInvolves() != null) {
+				relationshipDomain = searchDomain.getMutationInvolves().get(0);
+			}
+			else {
+				relationshipDomain = searchDomain.getExpressesComponents().get(0);
+			}
+			
 			String cmResults[] = DateSQLQuery.queryByCreationModification("v", 
 				relationshipDomain.getCreatedBy(), 
 				relationshipDomain.getModifiedBy(), 
@@ -269,8 +302,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 					from_property = true;
 				}
 				
-			}
-			
+			}	
 		}
 		
 		if (from_property == true) {

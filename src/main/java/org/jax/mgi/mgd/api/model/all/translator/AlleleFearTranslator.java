@@ -28,14 +28,22 @@ public class AlleleFearTranslator extends BaseEntityDomainTranslator<Allele, All
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}
 		
-		// relationship domain by allele
-		if (entity.getRelationships() != null && !entity.getRelationships().isEmpty()) {
+		// relationship domain by allele/mutation_involves
+		if (entity.getMutationInvolves() != null && !entity.getMutationInvolves().isEmpty()) {
 			RelationshipFearTranslator fearTranslator = new RelationshipFearTranslator();	
-			Iterable<RelationshipFearDomain> t = fearTranslator.translateEntities(entity.getRelationships());			
-			domain.setRelationships(IteratorUtils.toList(t.iterator()));
-			domain.getRelationships().sort(Comparator.comparing(RelationshipFearDomain::getMarkerSymbol, String.CASE_INSENSITIVE_ORDER));	
+			Iterable<RelationshipFearDomain> t = fearTranslator.translateEntities(entity.getMutationInvolves());			
+			domain.setMutationInvolves(IteratorUtils.toList(t.iterator()));
+			domain.getMutationInvolves().sort(Comparator.comparing(RelationshipFearDomain::getMarkerSymbol, String.CASE_INSENSITIVE_ORDER));	
 		}
-			
+		
+		// relationship domain by allele/expresses_component
+		if (entity.getMutationInvolves() != null && !entity.getExpressesComponents().isEmpty()) {
+			RelationshipFearTranslator fearTranslator = new RelationshipFearTranslator();	
+			Iterable<RelationshipFearDomain> t = fearTranslator.translateEntities(entity.getExpressesComponents());			
+			domain.setExpressesComponents(IteratorUtils.toList(t.iterator()));
+			domain.getExpressesComponents().sort(Comparator.comparing(RelationshipFearDomain::getMarkerSymbol, String.CASE_INSENSITIVE_ORDER));	
+		}
+		
 		return domain;
 	}
 

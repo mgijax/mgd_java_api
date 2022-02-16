@@ -104,7 +104,9 @@ public class AssayService extends BaseService<AssayDomain> {
 		SearchResults<AssayDomain> results = new SearchResults<AssayDomain>();
 		Assay entity = new Assay();
 		Boolean modified = false;
-
+		String cmd;
+		Query query;
+		
 		log.info("processAssay/create");
 
 		entity.setAssayType(assayTypeDAO.get(Integer.valueOf(domain.getAssayTypeKey())));	
@@ -195,6 +197,20 @@ public class AssayService extends BaseService<AssayDomain> {
 			if (gelRowService.process(entity.get_assay_key(), domain.getGelRows(), domain.getGelLanes(), user)) {
 				modified = true;
 			}
+		}
+
+		if (domain.getDetectionKey().equals("2")) {
+			// add antibody/reference
+			cmd = "select count(*) from MGI_insertReferenceAssoc (" + user.get_user_key() + ",6," + entity.getAntibodyPrep().getAntibody().get_antibody_key() + "," + domain.getRefsKey() + ",1027)";
+			log.info("processAssay/process MGI_insertReferenceAssoc(): " + cmd);
+			query = assayDAO.createNativeQuery(cmd);
+			query.getResultList();			
+		}
+		else if (domain.getDetectionKey().equals("1")) {
+			cmd = "select count(*) from PRB_insertReference (" + user.get_user_key() + "," + domain.getRefsKey() + "," + entity.getProbePrep().getProbe().get_probe_key() + ")";
+			log.info("processAssay/process PRB_insertReference(): " + cmd);
+			query = assayDAO.createNativeQuery(cmd);
+			query.getResultList();
 		}
 		
 		// return entity translated to domain
@@ -322,7 +338,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		query = assayDAO.createNativeQuery(cmd);
 		query.getResultList();
 		
-		if (domain.getDetectionKey().equals("0")) {
+		if (domain.getDetectionKey().equals("2")) {
 			// add antibody/reference
 			cmd = "select count(*) from MGI_insertReferenceAssoc (" + user.get_user_key() + ",6," + entity.getAntibodyPrep().getAntibody().get_antibody_key() + "," + domain.getRefsKey() + ",1027)";
 			log.info("processAssay/process MGI_insertReferenceAssoc(): " + cmd);

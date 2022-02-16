@@ -324,13 +324,13 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		if (domain.getDetectionKey().equals("0")) {
 			// add antibody/reference
-			cmd = "select count(*) from MGI_insertReferenceAssoc (" + user.get_user_key() + "," + entity.getAntibodyPrep().getAntibody().get_antibody_key() + "," + domain.getRefsKey() + ",1027)";
+			cmd = "select count(*) from MGI_insertReferenceAssoc (" + user.get_user_key() + ",6," + entity.getAntibodyPrep().getAntibody().get_antibody_key() + "," + domain.getRefsKey() + ",1027)";
 			log.info("processAssay/process MGI_insertReferenceAssoc(): " + cmd);
 			query = assayDAO.createNativeQuery(cmd);
 			query.getResultList();			
 		}
 		else if (domain.getDetectionKey().equals("1")) {
-			cmd = "select count(*) from PRB_insertReference (" + user.get_user_key() + ",6" + domain.getRefsKey() + "," + entity.getProbePrep().getProbe().get_probe_key() + ")";
+			cmd = "select count(*) from PRB_insertReference (" + user.get_user_key() + "," + domain.getRefsKey() + "," + entity.getProbePrep().getProbe().get_probe_key() + ")";
 			log.info("processAssay/process PRB_insertReference(): " + cmd);
 			query = assayDAO.createNativeQuery(cmd);
 			query.getResultList();

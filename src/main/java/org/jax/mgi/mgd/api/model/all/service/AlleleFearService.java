@@ -227,11 +227,11 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 						
 			if (searchDomain.getMutationInvolves() != null) {
 				relationshipDomain = searchDomain.getMutationInvolves().get(0);
-				where = where + "\nand v._category_key = 1003";
+				//where = where + "\nand v._category_key = 1003";
 			}
 			else {
 				relationshipDomain = searchDomain.getExpressesComponents().get(0);
-				where = where + "\nand v._category_key = 1004";				
+				//where = where + "\nand v._category_key = 1004";				
 			}
 			
 			String cmResults[] = DateSQLQuery.queryByCreationModification("v", 
@@ -256,6 +256,11 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand v.markersymbol ilike '" + value + "'";
 			}
+			
+//			value = relationshipDomain.getCategoryKey();
+//			if (value != null && !value.isEmpty()) {
+//				where = where + "\nand v._category_key = " + value;
+//			}
 			
 			value = relationshipDomain.getRelationshipTermKey();
 			if (value != null && !value.isEmpty()) {

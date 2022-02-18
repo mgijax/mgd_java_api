@@ -257,11 +257,6 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				where = where + "\nand v.markersymbol ilike '" + value + "'";
 			}
 			
-			value = relationshipDomain.getCategoryKey();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v._category_key = " + value;
-			}
-			
 			value = relationshipDomain.getRelationshipTermKey();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand v._relationshipterm_key = " + value;

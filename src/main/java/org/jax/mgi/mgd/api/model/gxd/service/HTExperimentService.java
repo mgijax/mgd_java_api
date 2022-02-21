@@ -61,8 +61,8 @@ public class HTExperimentService extends BaseService<HTDomain> {
 				
 		log.info("processHTExperiment/update");
 
-		Boolean modified = false;
-		Boolean hasPriorSamples = false; // does this experiment already have samples?
+//		Boolean modified = false;
+//		Boolean hasPriorSamples = false; // does this experiment already have samples?
 		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
 		HTExperiment entity = htExperimentDAO.get(domain.get_experiment_key());
 		
@@ -271,11 +271,10 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		// exp note 
 		value = searchDomain.getNotetext();			
 		if (value != null && !value.isEmpty()) {	
-			from = from + ", mgi_notechunk nc, mgi_note n";	
+			from = from + ", mgi_note n";	
 			where = where + "\nand hte._experiment_key = n._object_key ";
-			where = where + "\nand nc._note_key = n._note_key ";
 			where = where + "\nand n._notetype_key = 1047 ";
-			where = where + "\nand nc.note ilike '" + value + "'";
+			where = where + "\nand n.note ilike '" + value + "'";
 		}
 
 		/*

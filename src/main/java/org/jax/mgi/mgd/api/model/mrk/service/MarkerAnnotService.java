@@ -80,8 +80,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		
 		MarkerAnnotDomain markerAnnotDomain = new MarkerAnnotDomain();
 		List<AnnotationDomain> annotList = new ArrayList<AnnotationDomain>();
-		Boolean modified = false;
-
+		
 		// assuming the pwi will always pass in the annotTypeKey
 		
 		markerAnnotDomain.setMarkerKey(domain.getMarkerKey());
@@ -89,6 +88,44 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
     	markerAnnotDomain.setGoNote(domain.getGoNote());
     	markerAnnotDomain.setGoTracking(domain.getGoTracking());
 
+		// go-marker note
+		noteService.process(domain.getMarkerKey(), domain.getGoNote().get(0), mgiTypeKey, user);
+		
+		// go-tracking/updating 
+		if (domain.getGoTracking() != null) {
+			if (domain.getGoTracking().get(0).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+				try {
+					GOTracking goTrackingEntity = goTrackingDAO.get(Integer.valueOf(domain.getMarkerKey()));				
+					
+					String newCompletionStr = domain.getGoTracking().get(0).getCompletion_date();
+					Date newCompletion = new Date();						
+					
+					if (newCompletionStr != null && !newCompletionStr.isEmpty()) {						
+						newCompletion = new SimpleDateFormat("MM/dd/yyyy").parse(newCompletionStr);
+						goTrackingEntity.setCompletedBy(user);							
+					}
+					else {
+						newCompletion = null;
+						goTrackingEntity.setCompletedBy(null);							
+					}						
+					
+					goTrackingEntity.setCompletion_date(newCompletion);	
+					goTrackingEntity.setModification_date(new Date());
+					goTrackingEntity.setModifiedBy(user);						
+					//goTrackingEntity.setIsReferenceGene(0);
+					goTrackingDAO.update(goTrackingEntity);
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+    	//
+    	// TODO
+    	// remove all of the Annotation stuff; no longer used
+    	//
+    	
     	// Iterate thru incoming denormalized markerAnnot domain
 		for (int i = 0; i < domain.getAnnots().size(); i++) {
 			
@@ -164,58 +201,13 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		
 		// add annotList to the MarkerAnnotDomain and process annotations
 		if (annotList.size() > 0) {
-
 			log.info("send json normalized domain to services");			
 			markerAnnotDomain.setAnnots(annotList);
-
 			// go-marker annotations
-			if (annotationService.process(markerAnnotDomain.getAnnots(), user)) {
-				modified = true;
-			}
-
-			// go-marker note
-			if (noteService.process(domain.getMarkerKey(), domain.getGoNote().get(0), mgiTypeKey, user)) {
-				modified = true;
-			}
-			
-			// go-tracking/updating 
-			if (domain.getGoTracking() != null) {
-				if (domain.getGoTracking().get(0).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-					try {
-						GOTracking goTrackingEntity = goTrackingDAO.get(Integer.valueOf(domain.getMarkerKey()));				
-						
-						String newCompletionStr = domain.getGoTracking().get(0).getCompletion_date();
-						Date newCompletion = new Date();						
-						
-						if (newCompletionStr != null && !newCompletionStr.isEmpty()) {						
-							newCompletion = new SimpleDateFormat("MM/dd/yyyy").parse(newCompletionStr);
-							goTrackingEntity.setCompletedBy(user);							
-						}
-						else {
-							newCompletion = null;
-							goTrackingEntity.setCompletedBy(null);							
-						}						
-						
-						goTrackingEntity.setCompletion_date(newCompletion);	
-						goTrackingEntity.setModification_date(new Date());
-						goTrackingEntity.setModifiedBy(user);						
-						//goTrackingEntity.setIsReferenceGene(0);
-						goTrackingDAO.update(goTrackingEntity);
-					}
-					catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
+			annotationService.process(markerAnnotDomain.getAnnots(), user);
 		}
 		
-		if (modified) {
-			log.info("processMarkerAnnot/changes processed: " + domain.getMarkerKey());
-		}
-		else {
-			log.info("processMarkerAnnot/no changes processed: " + domain.getMarkerKey());
-		}
-		
+		log.info("processMarkerAnnot/changes processed: " + domain.getMarkerKey());
 		log.info("repackage incoming domain as results");		
 		SearchResults<DenormMarkerAnnotDomain> results = new SearchResults<DenormMarkerAnnotDomain>();
 		results = getResults(Integer.valueOf(domain.getMarkerKey()));

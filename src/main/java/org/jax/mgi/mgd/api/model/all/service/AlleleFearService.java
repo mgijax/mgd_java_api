@@ -197,7 +197,10 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		String orderBy = "order by v.allelesymbol";
 		
 		String value;
-
+		String cmResults[];
+		String jnumid;
+		
+		Boolean from_relationship = false;
 		Boolean from_property = false;
 		
 		// if parameter exists, then add to where-clause
@@ -221,91 +224,142 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			}
 			where = where + "\nand lower(v.alleleId) = '" + mgiid.toLowerCase() + "'";
 		}
+		
+//		value = relationshipDomain.getCategoryKey();
+//		if (value != null && !value.isEmpty()) {
+//			where = where + "\nand v._category_key = " + value;
+//		}
+		
+//		value = relationshipDomain.getQualifierKey();
+//		if (value != null && !value.isEmpty()) {
+//			where = where + "\nand v._qualifier_key = " + value;
+//		}
 
-		RelationshipFearDomain relationshipDomain;
-		if (searchDomain.getMutationInvolves() != null || searchDomain.getExpressesComponents() != null) {
-						
-			if (searchDomain.getMutationInvolves() != null) {
-				relationshipDomain = searchDomain.getMutationInvolves().get(0);
-				//where = where + "\nand v._category_key = 1003";
-			}
-			else {
-				relationshipDomain = searchDomain.getExpressesComponents().get(0);
-				//where = where + "\nand v._category_key = 1004";				
-			}
+		RelationshipFearDomain relationshipDomain = searchDomain.getMutationInvolves().get(0);
 			
-			String cmResults[] = DateSQLQuery.queryByCreationModification("v", 
-				relationshipDomain.getCreatedBy(), 
-				relationshipDomain.getModifiedBy(), 
-				relationshipDomain.getCreation_date(), 
-				relationshipDomain.getModification_date());
+		cmResults = DateSQLQuery.queryByCreationModification("v", 
+			relationshipDomain.getCreatedBy(), 
+			relationshipDomain.getModifiedBy(), 
+			relationshipDomain.getCreation_date(), 
+			relationshipDomain.getModification_date());
 	
-			if (cmResults.length > 0) {
-				if (cmResults[0].length() > 0 || cmResults[1].length() > 0) {
-					from = from + cmResults[0];
-					where = where + cmResults[1];
-				}
+		if (cmResults.length > 0) {
+			if (cmResults[0].length() > 0 || cmResults[1].length() > 0) {
+				from = from + cmResults[0];
+				where = where + cmResults[1];
+				from_relationship = true;			
 			}
+		}
 			
-			value = relationshipDomain.getMarkerKey();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v._object_key_2 = " + value;
-			}
+		value = relationshipDomain.getMarkerKey();
+		if (value != null && !value.isEmpty()) {
+			where = where + "\nand v._object_key_2 = " + value;
+			from_relationship = true;			
+		}
 			
-			relationshipDomain.getMarkerSymbol();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v.markersymbol ilike '" + value + "'";
-			}
+		relationshipDomain.getMarkerSymbol();
+		if (value != null && !value.isEmpty()) {
+			where = where + "\nand v.markersymbol ilike '" + value + "'";
+			from_relationship = true;			
+		}
+
+		value = relationshipDomain.getRelationshipTermKey();
+		if (value != null && !value.isEmpty()) {
+			where = where + "\nand v._relationshipterm_key = " + value;
+			from_relationship = true;			
+		}
 			
-//			value = relationshipDomain.getCategoryKey();
-//			if (value != null && !value.isEmpty()) {
-//				where = where + "\nand v._category_key = " + value;
-//			}
-			
-			value = relationshipDomain.getRelationshipTermKey();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v._relationshipterm_key = " + value;
-			}
-			
-			value = relationshipDomain.getQualifierKey();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v._qualifier_key = " + value;
-			}
-			
-			value = relationshipDomain.getEvidenceKey();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v._evidence_key = " + value;
-			}
+		value = relationshipDomain.getEvidenceKey();
+		if (value != null && !value.isEmpty()) {
+			where = where + "\nand v._evidence_key = " + value;
+			from_relationship = true;			
+		}
 									
-			value = relationshipDomain.getRefsKey();
-			String jnumid = relationshipDomain.getJnumid();		
-			if (value != null && !value.isEmpty()) {
+		value = relationshipDomain.getRefsKey();
+		jnumid = relationshipDomain.getJnumid();		
+		if (value != null && !value.isEmpty()) {
 				where = where + "\nand v._Refs_key = " + value;
-			}
-			else if (jnumid != null && !jnumid.isEmpty()) {
+				from_relationship = true;				
+		}
+		else if (jnumid != null && !jnumid.isEmpty()) {
 				jnumid = jnumid.toUpperCase();
 				if (!jnumid.contains("J:")) {
 						jnumid = "J:" + jnumid;
 				}
 				where = where + "\nand v.jnumid = '" + jnumid + "'";
-			}
-			
-			if (relationshipDomain.getProperties() != null) {
-				
-				value = relationshipDomain.getProperties().get(0).getPropertyNameKey();
-				if (value != null && !value.isEmpty()) {
-					where = where + "\nand p._propertyname_key = " + value;
-					from_property = true;
-				}
+				from_relationship = true;				
+		}
 
-				value = relationshipDomain.getProperties().get(0).getValue();
-				if (value != null && !value.isEmpty()) {
-					where = where + "\nand p.value ilike '" + value + "'";
-					from_property = true;
-				}
+		if (from_relationship == true) {
+			where = where + "\nand v._category_key = " + relationshipDomain.getCategoryKey();
+		}
+		
+		// if not searching the mutation involves, then check expresses components
+		// that is, only search by one or the other...not both
+		
+		relationshipDomain = searchDomain.getExpressesComponents().get(0);		
+		if (from_relationship == false) {
+			
+			value = relationshipDomain.getMarkerKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand v._object_key_2 = " + value;
+				from_relationship = true;								
+			}
 				
+			relationshipDomain.getMarkerSymbol();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand v.markersymbol ilike '" + value + "'";
+				from_relationship = true;								
+			}
+	
+			value = relationshipDomain.getRelationshipTermKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand v._relationshipterm_key = " + value;
+				from_relationship = true;							
+			}
+				
+			value = relationshipDomain.getEvidenceKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand v._evidence_key = " + value;
+				from_relationship = true;							
+			}
+										
+			value = relationshipDomain.getRefsKey();
+			jnumid = relationshipDomain.getJnumid();		
+			if (value != null && !value.isEmpty()) {
+					where = where + "\nand v._Refs_key = " + value;
+					from_relationship = true;									
+			}
+			else if (jnumid != null && !jnumid.isEmpty()) {
+					jnumid = jnumid.toUpperCase();
+					if (!jnumid.contains("J:")) {
+							jnumid = "J:" + jnumid;
+					}
+					where = where + "\nand v.jnumid = '" + jnumid + "'";
+					from_relationship = true;									
 			}	
 		}
+		
+		if (from_relationship == true) {
+			where = where + "\nand v._category_key = " + relationshipDomain.getCategoryKey();
+		}
+		
+		// only expresses component contains properties
+		if (relationshipDomain.getProperties() != null) {
+				
+			value = relationshipDomain.getProperties().get(0).getPropertyNameKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand p._propertyname_key = " + value;
+				from_property = true;
+			}
+
+			value = relationshipDomain.getProperties().get(0).getValue();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand p.value ilike '" + value + "'";
+				from_property = true;
+			}
+				
+		}	
 		
 		if (from_property == true) {
 			from = from + ", mgi_relationship_property p";

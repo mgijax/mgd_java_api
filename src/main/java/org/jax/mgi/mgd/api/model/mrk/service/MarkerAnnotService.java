@@ -79,7 +79,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		log.info("MarkerAnnotService.update");
 		
 		MarkerAnnotDomain markerAnnotDomain = new MarkerAnnotDomain();
-		List<AnnotationDomain> annotList = new ArrayList<AnnotationDomain>();
+		//List<AnnotationDomain> annotList = new ArrayList<AnnotationDomain>();
 		
 		// assuming the pwi will always pass in the annotTypeKey
 		
@@ -127,85 +127,85 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
     	//
     	
     	// Iterate thru incoming denormalized markerAnnot domain
-		for (int i = 0; i < domain.getAnnots().size(); i++) {
-			
-			// if processStatus == "x", then continue; no need to create domain/process anything
-			if (domain.getAnnots().get(i).getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
-				continue;
-			}
-			
-			//log.info("domain index: " + i);
-			
-			DenormAnnotationDomain denormAnnotDomain = domain.getAnnots().get(i);
-		
-			// annotation (term, qualifier)
-			AnnotationDomain annotDomain = new AnnotationDomain();
-			
-			//
-			// if processStatus == "d", then process as "u"
-			// 1 annotation may have >= 1 evidence
-			// 1 evidence may be a "d", but other evidences may be "x", "u" or "c"
-			//
-			if (domain.getAnnots().get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-				annotDomain.setProcessStatus(Constants.PROCESS_UPDATE);
-			}
-			else {
-				annotDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
-			}
-					
-            annotDomain.setAnnotKey(denormAnnotDomain.getAnnotKey());
-            annotDomain.setAnnotTypeKey(denormAnnotDomain.getAnnotTypeKey());
-            annotDomain.setAnnotType(denormAnnotDomain.getAnnotType());
-            annotDomain.setObjectKey(denormAnnotDomain.getObjectKey());
-            annotDomain.setTermKey(denormAnnotDomain.getTermKey());
-            annotDomain.setTerm(denormAnnotDomain.getTerm());           
-            annotDomain.setQualifierKey(denormAnnotDomain.getQualifierKey());
-            annotDomain.setQualifierAbbreviation(denormAnnotDomain.getQualifierAbbreviation());
-            annotDomain.setQualifier(denormAnnotDomain.getQualifier());
-            annotDomain.setAllowEditTerm(domain.getAllowEditTerm());
-            
-            // evidence : create evidence list of 1 result
-            //log.info("add evidence list");
-			EvidenceDomain evidenceDomain = new EvidenceDomain();
-            List<EvidenceDomain> evidenceList = new ArrayList<EvidenceDomain>();
-            evidenceDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
-                      
-            // if term or qualifier has been changed...
-            if (denormAnnotDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-				//log.info("GenotypeAnnotService.update : check for changes");
-            	Annotation entity = annotationDAO.get(Integer.valueOf(denormAnnotDomain.getAnnotKey()));
-				if (!denormAnnotDomain.getTermKey().equals(String.valueOf(entity.getTerm().get_term_key()))
-	            		|| !denormAnnotDomain.getQualifierKey().equals(String.valueOf(entity.getQualifier().get_term_key()))) {
-	            	annotDomain.setProcessStatus(Constants.PROCESS_SPLIT); 
-	            	evidenceDomain.setProcessStatus(Constants.PROCESS_SPLIT);           	
-	            }				
-            }
-            
-            evidenceDomain.setAnnotEvidenceKey(denormAnnotDomain.getAnnotEvidenceKey());
-            evidenceDomain.setEvidenceTermKey(denormAnnotDomain.getEvidenceTermKey());
-            evidenceDomain.setInferredFrom(denormAnnotDomain.getInferredFrom());
-            evidenceDomain.setRefsKey(denormAnnotDomain.getRefsKey());
-            evidenceDomain.setCreatedByKey(denormAnnotDomain.getCreatedByKey());
-            evidenceDomain.setModifiedByKey(denormAnnotDomain.getModifiedByKey());
-            evidenceDomain.setProperties(denormAnnotDomain.getProperties());
-			
-			// add evidenceDomain to evidenceList
-			evidenceList.add(evidenceDomain);
-
-			// add evidenceList to annotDomain
-			annotDomain.setEvidence(evidenceList);
-            
-			// add annotDomain to annotList
-			annotList.add(annotDomain);         
-		}
-		
-		// add annotList to the MarkerAnnotDomain and process annotations
-		if (annotList.size() > 0) {
-			log.info("send json normalized domain to services");			
-			markerAnnotDomain.setAnnots(annotList);
-			// go-marker annotations
-			annotationService.process(markerAnnotDomain.getAnnots(), user);
-		}
+//		for (int i = 0; i < domain.getAnnots().size(); i++) {
+//			
+//			// if processStatus == "x", then continue; no need to create domain/process anything
+//			if (domain.getAnnots().get(i).getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
+//				continue;
+//			}
+//			
+//			//log.info("domain index: " + i);
+//			
+//			DenormAnnotationDomain denormAnnotDomain = domain.getAnnots().get(i);
+//		
+//			// annotation (term, qualifier)
+//			AnnotationDomain annotDomain = new AnnotationDomain();
+//			
+//			//
+//			// if processStatus == "d", then process as "u"
+//			// 1 annotation may have >= 1 evidence
+//			// 1 evidence may be a "d", but other evidences may be "x", "u" or "c"
+//			//
+//			if (domain.getAnnots().get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+//				annotDomain.setProcessStatus(Constants.PROCESS_UPDATE);
+//			}
+//			else {
+//				annotDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
+//			}
+//					
+//            annotDomain.setAnnotKey(denormAnnotDomain.getAnnotKey());
+//            annotDomain.setAnnotTypeKey(denormAnnotDomain.getAnnotTypeKey());
+//            annotDomain.setAnnotType(denormAnnotDomain.getAnnotType());
+//            annotDomain.setObjectKey(denormAnnotDomain.getObjectKey());
+//            annotDomain.setTermKey(denormAnnotDomain.getTermKey());
+//            annotDomain.setTerm(denormAnnotDomain.getTerm());           
+//            annotDomain.setQualifierKey(denormAnnotDomain.getQualifierKey());
+//            annotDomain.setQualifierAbbreviation(denormAnnotDomain.getQualifierAbbreviation());
+//            annotDomain.setQualifier(denormAnnotDomain.getQualifier());
+//            annotDomain.setAllowEditTerm(domain.getAllowEditTerm());
+//            
+//            // evidence : create evidence list of 1 result
+//            //log.info("add evidence list");
+//			EvidenceDomain evidenceDomain = new EvidenceDomain();
+//            List<EvidenceDomain> evidenceList = new ArrayList<EvidenceDomain>();
+//            evidenceDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
+//                      
+//            // if term or qualifier has been changed...
+//            if (denormAnnotDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+//				//log.info("GenotypeAnnotService.update : check for changes");
+//            	Annotation entity = annotationDAO.get(Integer.valueOf(denormAnnotDomain.getAnnotKey()));
+//				if (!denormAnnotDomain.getTermKey().equals(String.valueOf(entity.getTerm().get_term_key()))
+//	            		|| !denormAnnotDomain.getQualifierKey().equals(String.valueOf(entity.getQualifier().get_term_key()))) {
+//	            	annotDomain.setProcessStatus(Constants.PROCESS_SPLIT); 
+//	            	evidenceDomain.setProcessStatus(Constants.PROCESS_SPLIT);           	
+//	            }				
+//            }
+//            
+//            evidenceDomain.setAnnotEvidenceKey(denormAnnotDomain.getAnnotEvidenceKey());
+//            evidenceDomain.setEvidenceTermKey(denormAnnotDomain.getEvidenceTermKey());
+//            evidenceDomain.setInferredFrom(denormAnnotDomain.getInferredFrom());
+//            evidenceDomain.setRefsKey(denormAnnotDomain.getRefsKey());
+//            evidenceDomain.setCreatedByKey(denormAnnotDomain.getCreatedByKey());
+//            evidenceDomain.setModifiedByKey(denormAnnotDomain.getModifiedByKey());
+//            evidenceDomain.setProperties(denormAnnotDomain.getProperties());
+//			
+//			// add evidenceDomain to evidenceList
+//			evidenceList.add(evidenceDomain);
+//
+//			// add evidenceList to annotDomain
+//			annotDomain.setEvidence(evidenceList);
+//            
+//			// add annotDomain to annotList
+//			annotList.add(annotDomain);         
+//		}
+//		
+//		// add annotList to the MarkerAnnotDomain and process annotations
+//		if (annotList.size() > 0) {
+//			log.info("send json normalized domain to services");			
+//			markerAnnotDomain.setAnnots(annotList);
+//			// go-marker annotations
+//			annotationService.process(markerAnnotDomain.getAnnots(), user);
+//		}
 		
 		log.info("processMarkerAnnot/changes processed: " + domain.getMarkerKey());
 		log.info("repackage incoming domain as results");		

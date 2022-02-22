@@ -26,13 +26,10 @@ import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.GOTracking;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerAnnotTranslator;
 import org.jax.mgi.mgd.api.model.mrk.translator.SlimMarkerAnnotTranslator;
-import org.jax.mgi.mgd.api.model.voc.dao.AnnotationDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.DenormAnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidenceDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidencePropertyDomain;
-import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
-import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.RunCommand;
@@ -47,10 +44,10 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 
 	@Inject
 	private MarkerDAO markerDAO;
-	@Inject
-	private AnnotationDAO annotationDAO;
-	@Inject
-	private AnnotationService annotationService;
+//	@Inject
+//	private AnnotationDAO annotationDAO;
+//	@Inject
+//	private AnnotationService annotationService;
 	@Inject
 	private GOTrackingDAO goTrackingDAO;
 	@Inject
@@ -79,7 +76,6 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		log.info("MarkerAnnotService.update");
 		
 		MarkerAnnotDomain markerAnnotDomain = new MarkerAnnotDomain();
-		//List<AnnotationDomain> annotList = new ArrayList<AnnotationDomain>();
 		
 		// assuming the pwi will always pass in the annotTypeKey
 		
@@ -122,10 +118,11 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		}
 		
     	//
-    	// TODO
+		// 02/22/2022
     	// remove all of the Annotation stuff; no longer used
     	//
-    	
+		//List<AnnotationDomain> annotList = new ArrayList<AnnotationDomain>();		
+    	//
     	// Iterate thru incoming denormalized markerAnnot domain
 //		for (int i = 0; i < domain.getAnnots().size(); i++) {
 //			

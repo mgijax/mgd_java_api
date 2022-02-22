@@ -178,6 +178,13 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			}
 		}
 		
+		// for _vocab_key = 96 (used by mgi_relationship)	
+		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty() && searchDomain.getVocabKey().equals("96")) {
+			if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
+					return searchRelationshipVocab(searchDomain.getVocabKey(), searchDomain.getName());		
+			}
+		}
+		
 		// for UIs that use getName()
 		// for ordering by sequenceNum, add specific vocab to this list		
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
@@ -419,6 +426,50 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			while (rs.next()) {					
 				SlimTermDomain termDomain = new SlimTermDomain();				
 				domain.setVocabKey(vocabKey);						
+				domain.setName(rs.getString("term"));
+				termDomain.setTermKey(rs.getString("termKey"));
+				termDomain.set_term_key(rs.getInt("termKey"));
+				termDomain.setTerm(rs.getString("term"));
+				termDomain.setVocabKey(rs.getString("termKey"));
+				termList.add(termDomain);
+			}
+			
+			domain.setTerms(termList);
+			results.setItem(domain);		
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;			
+	}
+
+	@Transactional
+	public SearchResults<SlimVocabularyTermDomain> searchRelationshipVocab(String vocabKey, String vocabName) {	
+		// returns list of relationship vocabulary into SlimVocabularyTermDomain format
+		
+		SearchResults<SlimVocabularyTermDomain> results = new SearchResults<SlimVocabularyTermDomain>();
+		
+		String cmd = "";
+
+		if (vocabName.equals("mutationInvolves")) {
+			cmd = "select _term_key as termKey, term from voc_term where _vocab_key = 96 and term not like 'expresses%' order by term";
+		}
+		else if (vocabName.equals("expressesComponents")) {		
+			cmd = "select _term_key as termKey, term from voc_term where _vocab_key = 96 and term like 'expresses%' order by term";
+		}
+		
+		log.info(cmd);		
+		
+		try {
+			SlimVocabularyTermDomain domain = new SlimVocabularyTermDomain();						
+			List<SlimTermDomain> termList = new ArrayList<SlimTermDomain>();
+			
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {					
+				SlimTermDomain termDomain = new SlimTermDomain();				
+				domain.setVocabKey(vocabKey);
 				domain.setName(rs.getString("term"));
 				termDomain.setTermKey(rs.getString("termKey"));
 				termDomain.set_term_key(rs.getInt("termKey"));

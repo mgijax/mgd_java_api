@@ -22,7 +22,7 @@ public class RelationshipFearTranslator extends BaseEntityDomainTranslator<Relat
 		domain.setAlleleSymbol(entity.getAlleleSymbol());
 		domain.setMarkerKey(String.valueOf(entity.get_object_key_2()));
 		domain.setMarkerSymbol(entity.getMarkerSymbol());
-		domain.setMarkerAccId(entity.getMarkerAccId());
+		domain.setMarkerAccId(entity.getMarkerAccID());
 		domain.setRelationshipTermKey(String.valueOf(entity.get_relationshipTerm_key()));
 		domain.setRelationshipTerm(entity.getRelationshipTerm());
 		domain.setQualifierKey(String.valueOf(entity.get_qualifier_key()));

@@ -454,12 +454,12 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		String cmd = "";
 
 		if (vocabName.equals("mutationInvolves")) {
-			cmd = "select _term_key as termKey, term from voc_term where _vocab_key = 96"
+			cmd = "select _term_key as termKey, term from voc_term where _vocab_key = " + vocabKey
 					+ "\nand _term_key in (12438350, 12438354, 12438355, 12438356, 12438357, 12438358, 12438359, 12438360, 12438361, 12438362, 31401216, 95815138)" 
 					+ "\norder by term";
 		}
 		else if (vocabName.equals("expressesComponents")) {		
-			cmd = "select _term_key as termKey, term from voc_term where _vocab_key = 96"
+			cmd = "select _term_key as termKey, term from voc_term where _vocab_key = " + vocabKey
 					+ "\nand _term_key in (12948293,12965808)"
 					+ "\norder by term";
 		}

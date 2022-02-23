@@ -38,7 +38,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 	private SlimAlleleFearTranslator slimtranslator = new SlimAlleleFearTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
-	private String mgiTypeKey = "";
+	private String mgiTypeKey = "40";
 
 	@Transactional
 	public SearchResults<AlleleFearDomain> create(AlleleFearDomain domain, User user) {	

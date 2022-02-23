@@ -225,16 +225,6 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			}
 			where = where + "\nand lower(v.alleleId) = '" + mgiid.toLowerCase() + "'";
 		}
-		
-//		value = relationshipDomain.getCategoryKey();
-//		if (value != null && !value.isEmpty()) {
-//			where = where + "\nand v._category_key = " + value;
-//		}
-		
-//		value = relationshipDomain.getQualifierKey();
-//		if (value != null && !value.isEmpty()) {
-//			where = where + "\nand v._qualifier_key = " + value;
-//		}
 
 		RelationshipFearDomain relationshipDomain = searchDomain.getMutationInvolves().get(0);
 			

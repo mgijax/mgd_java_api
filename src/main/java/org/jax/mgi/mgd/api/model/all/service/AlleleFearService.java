@@ -200,7 +200,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		String cmResults[];
 		String jnumid;
 		
-		Boolean from_relationship = false;
+		Boolean from_mi = false;
+		Boolean from_ec = false;
 		Boolean from_property = false;
 		
 		// if parameter exists, then add to where-clause
@@ -247,39 +248,39 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			if (cmResults[0].length() > 0 || cmResults[1].length() > 0) {
 				from = from + cmResults[0];
 				where = where + cmResults[1];
-				from_relationship = true;			
+				from_mi = true;			
 			}
 		}
 			
 		value = relationshipDomain.getMarkerKey();
 		if (value != null && !value.isEmpty()) {
 			where = where + "\nand v._object_key_2 = " + value;
-			from_relationship = true;			
+			from_mi = true;			
 		}
 			
 		relationshipDomain.getMarkerSymbol();
 		if (value != null && !value.isEmpty()) {
 			where = where + "\nand v.markersymbol ilike '" + value + "'";
-			from_relationship = true;			
+			from_mi = true;			
 		}
 
 		value = relationshipDomain.getRelationshipTermKey();
 		if (value != null && !value.isEmpty()) {
 			where = where + "\nand v._relationshipterm_key = " + value;
-			from_relationship = true;			
+			from_mi = true;			
 		}
 			
 		value = relationshipDomain.getEvidenceKey();
 		if (value != null && !value.isEmpty()) {
 			where = where + "\nand v._evidence_key = " + value;
-			from_relationship = true;			
+			from_mi = true;			
 		}
 									
 		value = relationshipDomain.getRefsKey();
 		jnumid = relationshipDomain.getJnumid();		
 		if (value != null && !value.isEmpty()) {
 				where = where + "\nand v._Refs_key = " + value;
-				from_relationship = true;				
+				from_mi = true;				
 		}
 		else if (jnumid != null && !jnumid.isEmpty()) {
 				jnumid = jnumid.toUpperCase();
@@ -287,10 +288,10 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 						jnumid = "J:" + jnumid;
 				}
 				where = where + "\nand v.jnumid = '" + jnumid + "'";
-				from_relationship = true;				
+				from_mi = true;				
 		}
 
-		if (from_relationship == true) {
+		if (from_mi == true) {
 			where = where + "\nand v._category_key = " + relationshipDomain.getCategoryKey();
 		}
 		
@@ -298,37 +299,37 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		// that is, only search by one or the other...not both
 		
 		relationshipDomain = searchDomain.getExpressesComponents().get(0);		
-		if (from_relationship == false) {
+		if (from_mi == false) {
 			
 			value = relationshipDomain.getMarkerKey();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand v._object_key_2 = " + value;
-				from_relationship = true;								
+				from_ec = true;								
 			}
 				
 			relationshipDomain.getMarkerSymbol();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand v.markersymbol ilike '" + value + "'";
-				from_relationship = true;								
+				from_ec = true;								
 			}
 	
 			value = relationshipDomain.getRelationshipTermKey();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand v._relationshipterm_key = " + value;
-				from_relationship = true;							
+				from_ec = true;							
 			}
 				
 			value = relationshipDomain.getEvidenceKey();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand v._evidence_key = " + value;
-				from_relationship = true;							
+				from_ec = true;							
 			}
 										
 			value = relationshipDomain.getRefsKey();
 			jnumid = relationshipDomain.getJnumid();		
 			if (value != null && !value.isEmpty()) {
 					where = where + "\nand v._Refs_key = " + value;
-					from_relationship = true;									
+					from_ec = true;									
 			}
 			else if (jnumid != null && !jnumid.isEmpty()) {
 					jnumid = jnumid.toUpperCase();
@@ -336,11 +337,11 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 							jnumid = "J:" + jnumid;
 					}
 					where = where + "\nand v.jnumid = '" + jnumid + "'";
-					from_relationship = true;									
+					from_ec = true;									
 			}	
 		}
 		
-		if (from_relationship == true) {
+		if (from_ec == true) {
 			where = where + "\nand v._category_key = " + relationshipDomain.getCategoryKey();
 		}
 		

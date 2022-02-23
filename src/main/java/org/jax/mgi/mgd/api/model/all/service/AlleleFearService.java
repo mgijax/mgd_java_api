@@ -96,22 +96,14 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				
 				RelationshipDomain relationshipDomain = new RelationshipDomain();
 			
-				log.info("relationshipkey: " + domain.getExpressesComponents().get(i).getRelationshipKey());
 				relationshipDomain.setProcessStatus(domain.getExpressesComponents().get(i).getProcessStatus());
 				relationshipDomain.setRelationshipKey(domain.getExpressesComponents().get(i).getRelationshipKey());
-				log.info("allelekey: " + domain.getAlleleKey());
 				relationshipDomain.setObjectKey1(domain.getAlleleKey());
-				log.info("markerkey: " + domain.getMutationInvolves().get(i).getMarkerKey());
-				relationshipDomain.setObjectKey2(domain.getMutationInvolves().get(i).getMarkerKey());				
-				log.info("categorykey: " + domain.getMutationInvolves().get(i).getCategoryKey());
+				relationshipDomain.setObjectKey2(domain.getExpressesComponents().get(i).getMarkerKey());				
 				relationshipDomain.setCategoryKey(domain.getExpressesComponents().get(i).getCategoryKey());
-				log.info("relationshiptermkey: " + domain.getMutationInvolves().get(i).getRelationshipTermKey());
 				relationshipDomain.setRelationshipTermKey(domain.getExpressesComponents().get(i).getRelationshipTermKey());
-				log.info("qualifierkey: " + domain.getMutationInvolves().get(i).getQualifierKey());
 				relationshipDomain.setQualifierKey(domain.getExpressesComponents().get(i).getQualifierKey());
-				log.info("evidencekey: " + domain.getMutationInvolves().get(i).getEvidenceKey());
 				relationshipDomain.setEvidenceKey(domain.getExpressesComponents().get(i).getEvidenceKey());
-				log.info("refskey: " + domain.getMutationInvolves().get(i).getRefsKey());
 				relationshipDomain.setRefsKey(domain.getExpressesComponents().get(i).getRefsKey());
 				
 				relationshipDomain.setCreatedByKey(domain.getExpressesComponents().get(i).getCreatedByKey());

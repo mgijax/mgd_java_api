@@ -70,6 +70,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			
 				relationshipDomain.setProcessStatus(domain.getMutationInvolves().get(i).getProcessStatus());
 				relationshipDomain.setRelationshipKey(domain.getMutationInvolves().get(i).getRelationshipKey());
+				relationshipDomain.setObjectKey1(domain.getAlleleKey());
+				relationshipDomain.setObjectKey2(domain.getMutationInvolves().get(i).getMarkerKey());
 				relationshipDomain.setCategoryKey(domain.getMutationInvolves().get(i).getCategoryKey());
 				relationshipDomain.setRelationshipTermKey(domain.getMutationInvolves().get(i).getRelationshipTermKey());
 				relationshipDomain.setQualifierKey(domain.getMutationInvolves().get(i).getQualifierKey());
@@ -96,6 +98,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			
 				relationshipDomain.setProcessStatus(domain.getExpressesComponents().get(i).getProcessStatus());
 				relationshipDomain.setRelationshipKey(domain.getExpressesComponents().get(i).getRelationshipKey());
+				relationshipDomain.setObjectKey1(domain.getAlleleKey());
+				relationshipDomain.setObjectKey2(domain.getMutationInvolves().get(i).getMarkerKey());				
 				relationshipDomain.setCategoryKey(domain.getExpressesComponents().get(i).getCategoryKey());
 				relationshipDomain.setRelationshipTermKey(domain.getExpressesComponents().get(i).getRelationshipTermKey());
 				relationshipDomain.setQualifierKey(domain.getExpressesComponents().get(i).getQualifierKey());

@@ -248,7 +248,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			from_mi = true;			
 		}
 			
-		relationshipDomain.getMarkerSymbol();
+		value = relationshipDomain.getMarkerSymbol();
 		if (value != null && !value.isEmpty()) {
 			where = where + "\nand v.markersymbol ilike '" + value + "'";
 			from_mi = true;			
@@ -297,7 +297,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				from_ec = true;								
 			}
 				
-			relationshipDomain.getMarkerSymbol();
+			value = relationshipDomain.getMarkerSymbol();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand v.markersymbol ilike '" + value + "'";
 				from_ec = true;								

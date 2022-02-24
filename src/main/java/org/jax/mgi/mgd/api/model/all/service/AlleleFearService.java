@@ -300,7 +300,6 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			if (from_mi == true) {
 				where = where + "\nand v._category_key = " + relationshipDomain.getCategoryKey();			
 				cmd = "\n" + select + "\n" + from + "\n" + where;
-				log.info(cmd);
 				where = "where v._object_key_1 is not null";
 			}
 		}
@@ -372,16 +371,19 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 //			}			
 //		}
 		
-		if (from_mi == true && from_ec == true) {
-			cmd = cmd + "\nunion\n";
-		}
-		
 		if (from_property == true) {
 			from = from + ", mgi_relationship_property p";
 			where = where + "\nand v._relationship_key = p._relationship_key";
 		}
 		
-		cmd = "\n(" + cmd + select + "\n" + from + "\n" + where + "\n" + orderBy;
+		if (from_mi == true && from_ec == true) {
+			cmd = cmd + "\nunion\n" + select + "\n" + from + "\n" + where;
+		}
+		else {
+			cmd = select + "\n" + from + "\n" + where;			
+		}
+		
+		cmd = "\n(" + cmd + "\n" + orderBy;
 		log.info("searchCmd: " + cmd);
 
 //		try {

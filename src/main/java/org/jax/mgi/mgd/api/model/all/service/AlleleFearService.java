@@ -376,20 +376,20 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		cmd = "\n(" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info("searchCmd: " + cmd);
 
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-						
-			while (rs.next())  {
-				SlimAlleleFearDomain domain = new SlimAlleleFearDomain();
-				domain = slimtranslator.translate(alleleFearDAO.get(rs.getInt("_object_key_1")));
-				alleleFearDAO.clear();				
-				results.add(domain);					
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			ResultSet rs = sqlExecutor.executeProto(cmd);
+//						
+//			while (rs.next())  {
+//				SlimAlleleFearDomain domain = new SlimAlleleFearDomain();
+//				domain = slimtranslator.translate(alleleFearDAO.get(rs.getInt("_object_key_1")));
+//				alleleFearDAO.clear();				
+//				results.add(domain);					
+//			}
+//			sqlExecutor.cleanup();
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		
 		return results;
 	}

@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
+import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleFearDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleFearDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
@@ -55,6 +56,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		
 		log.info("AlleleFearService.update");
 		
+		SearchResults<AlleleFearDomain> results = new SearchResults<AlleleFearDomain>();
 		Allele entity = alleleFearDAO.get(Integer.valueOf(domain.getAlleleKey()));
 		List<RelationshipDomain> relationshipDomain = new ArrayList<RelationshipDomain>();		
 		Boolean modified = false;
@@ -135,9 +137,9 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		}
 				
 		log.info("repackage incoming domain as results");		
-		SearchResults<AlleleFearDomain> results = new SearchResults<AlleleFearDomain>();
-		results = getResults(entity.get_allele_key());
-		results.setItem(domain);
+//		results = getResults(entity.get_allele_key());
+//		results.setItem(domain);
+		results.setItem(translator.translate(entity));		
 		log.info("results: " + results);
 		return results;
 	}

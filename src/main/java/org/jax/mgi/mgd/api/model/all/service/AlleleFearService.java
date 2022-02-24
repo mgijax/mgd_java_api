@@ -14,7 +14,6 @@ import org.jax.mgi.mgd.api.model.all.domain.AlleleFearDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleFearDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleFearTranslator;
-import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleFearTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -35,7 +34,6 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 	private RelationshipService relationshipService;
 	
 	private AlleleFearTranslator translator = new AlleleFearTranslator();
-	private SlimAlleleFearTranslator slimtranslator = new SlimAlleleFearTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	private String mgiTypeKey = "40";
@@ -300,72 +298,73 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			if (from_mi == true) {
 				where = where + "\nand v._category_key = " + relationshipDomain.getCategoryKey();			
 				cmd = "\n" + select + "\n" + from + "\n" + where;
-				where = "where v._object_key_1 is not null";
 			}
 		}
 		
 		// expresses components
 		
 //		if (searchDomain.getExpressesComponents() != null) {
+//		
+//			relationshipDomain = searchDomain.getExpressesComponents().get(0);
 		
-	//		relationshipDomain = searchDomain.getExpressesComponents().get(0);		
-	//			
-	//		value = relationshipDomain.getMarkerKey();
-	//		if (value != null && !value.isEmpty()) {
-	//			where = where + "\nand v._object_key_2 = " + value;
-	//			from_ec = true;								
-	//		}
-	//				
-	//		value = relationshipDomain.getMarkerSymbol();
-	//		if (value != null && !value.isEmpty()) {
-	//			where = where + "\nand v.markersymbol ilike '" + value + "'";
-	//			from_ec = true;								
-	//		}
-	//	
-	//		value = relationshipDomain.getRelationshipTermKey();
-	//		if (value != null && !value.isEmpty()) {
-	//			where = where + "\nand v._relationshipterm_key = " + value;
-	//			from_ec = true;							
-	//		}
-	//				
-	//		value = relationshipDomain.getEvidenceKey();
-	//		if (value != null && !value.isEmpty()) {
-	//			where = where + "\nand v._evidence_key = " + value;
-	//			from_ec = true;							
-	//		}
-	//										
-	//		value = relationshipDomain.getRefsKey();
-	//		jnumid = relationshipDomain.getJnumid();		
-	//		if (value != null && !value.isEmpty()) {
-	//				where = where + "\nand v._Refs_key = " + value;
-	//				from_ec = true;									
-	//		}
-	//			else if (jnumid != null && !jnumid.isEmpty()) {
-	//				jnumid = jnumid.toUpperCase();
-	//				if (!jnumid.contains("J:")) {
-	//						jnumid = "J:" + jnumid;
-	//				}
-	//				where = where + "\nand v.jnumid = '" + jnumid + "'";
-	//				from_ec = true;									
-	//		}	
-	//		
-	//		// only expresses component contains properties
-	//		if (relationshipDomain.getProperties() != null) {
-	//				
-	//			value = relationshipDomain.getProperties().get(0).getPropertyNameKey();
-	//			if (value != null && !value.isEmpty()) {
-	//				where = where + "\nand p._propertyname_key = " + value;
-	//				from_property = true;
-	//			}
-	//
-	//			value = relationshipDomain.getProperties().get(0).getValue();
-	//			if (value != null && !value.isEmpty()) {
-	//				where = where + "\nand p.value ilike '" + value + "'";
-	//				from_property = true;
-	//			}
-	//				
-	//		}
-			
+//			where = "where v._object_key_1 is not null";
+
+//			value = relationshipDomain.getMarkerKey();
+//			if (value != null && !value.isEmpty()) {
+//				where = where + "\nand v._object_key_2 = " + value;
+//				from_ec = true;								
+//			}
+//					
+//			value = relationshipDomain.getMarkerSymbol();
+//			if (value != null && !value.isEmpty()) {
+//				where = where + "\nand v.markersymbol ilike '" + value + "'";
+//				from_ec = true;								
+//			}
+//		
+//			value = relationshipDomain.getRelationshipTermKey();
+//			if (value != null && !value.isEmpty()) {
+//				where = where + "\nand v._relationshipterm_key = " + value;
+//				from_ec = true;							
+//			}
+//					
+//			value = relationshipDomain.getEvidenceKey();
+//			if (value != null && !value.isEmpty()) {
+//				where = where + "\nand v._evidence_key = " + value;
+//				from_ec = true;							
+//			}
+//											
+//			value = relationshipDomain.getRefsKey();
+//			jnumid = relationshipDomain.getJnumid();		
+//			if (value != null && !value.isEmpty()) {
+//					where = where + "\nand v._Refs_key = " + value;
+//					from_ec = true;									
+//			}
+//				else if (jnumid != null && !jnumid.isEmpty()) {
+//					jnumid = jnumid.toUpperCase();
+//					if (!jnumid.contains("J:")) {
+//							jnumid = "J:" + jnumid;
+//					}
+//					where = where + "\nand v.jnumid = '" + jnumid + "'";
+//					from_ec = true;									
+//			}	
+//			
+//			// only expresses component contains properties
+//			if (relationshipDomain.getProperties() != null) {
+//					
+//				value = relationshipDomain.getProperties().get(0).getPropertyNameKey();
+//				if (value != null && !value.isEmpty()) {
+//					where = where + "\nand p._propertyname_key = " + value;
+//					from_property = true;
+//				}
+//	
+//				value = relationshipDomain.getProperties().get(0).getValue();
+//				if (value != null && !value.isEmpty()) {
+//					where = where + "\nand p.value ilike '" + value + "'";
+//					from_property = true;
+//				}
+//					
+//			}
+//			
 //			if (from_ec == true || from_property == true) {
 //				where = where + "\nand v._category_key = " + relationshipDomain.getCategoryKey();
 //			}			
@@ -379,7 +378,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		if (from_mi == true && from_ec == true) {
 			cmd = cmd + "\nunion\n" + select + "\n" + from + "\n" + where;
 		}
-		else {
+		else if (from_ec == true) {
 			cmd = select + "\n" + from + "\n" + where;			
 		}
 		

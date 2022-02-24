@@ -175,14 +175,7 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 					continue;
 				}
 				
-				Relationship entity = new Relationship();
-		        log.info("category: " + domain.get(i).getCategoryKey());
-		        log.info("objectKey1: " + domain.get(i).getObjectKey1());
-		        log.info("objectKey2: " + domain.get(i).getObjectKey2());
-		        log.info("relationshipTermKey: " + domain.get(i).getRelationshipTermKey());
-		        log.info("qualifierKey: " + domain.get(i).getQualifierKey());
-		        log.info("evidenceKey: " + domain.get(i).getEvidenceKey());
-		        log.info("refsKey: " + domain.get(i).getRefsKey());					
+				Relationship entity = new Relationship();			
 		        entity.setCategory(categoryDAO.get(Integer.valueOf(domain.get(i).getCategoryKey())));
 		        entity.set_object_key_1(Integer.valueOf(domain.get(i).getObjectKey1()));
 		        entity.set_object_key_2(Integer.valueOf(domain.get(i).getObjectKey2()));
@@ -200,7 +193,7 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 					relationshipPropertyService.process(domain.get(i).getProperties(), String.valueOf(entity.get_relationship_key()), user);
 				}
 				
-				noteService.process(String.valueOf(entity.get_relationship_key()), domain.get(i).getNote(), "40", user);
+				noteService.process(String.valueOf(entity.get_relationship_key()), domain.get(i).getNote(), mgiTypeKey, user);
 				
 				modified = true;
 				log.info("processRelationships create successful");
@@ -230,7 +223,7 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 					relationshipPropertyService.process(domain.get(i).getProperties(), domain.get(i).getRelationshipKey(), user);
 				}
 				
-				noteService.process(domain.get(i).getRelationshipKey(), domain.get(i).getNote(), "40", user);
+				noteService.process(domain.get(i).getRelationshipKey(), domain.get(i).getNote(), mgiTypeKey, user);
 				
 				modified = true;
 				log.info("processRelationships/changes processed: " + domain.get(i).getRelationshipKey());

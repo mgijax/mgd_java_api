@@ -223,7 +223,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		}
 		
 		value = searchDomain.getAlleleDisplay();
-		if (value != null && !value.isEmpty()) {
+		if (value != null && !value.isEmpty() && value.contains("%")) {
 			where = where + "\nand v.allelesymbol ilike '" + value + "'";
 		}
 		
@@ -234,7 +234,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			if (!mgiid.contains("MGI:")) {
 				mgiid = "MGI:" + mgiid;
 			}
-			where = where + "\nand lower(v.alleleId) = '" + mgiid.toLowerCase() + "'";
+			where = where + "\nand lower(v.alleleAccID) = '" + mgiid.toLowerCase() + "'";
 		}
 
 		// mutation involves
@@ -295,6 +295,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 					from_mi = true;				
 			}
 			
+			// save search cmd for mutation involves
 			if (from_mi == true) {
 				where = where + "\nand v._category_key = " + relationshipDomain.getCategoryKey();			
 				cmd = "\n" + select + "\n" + from + "\n" + where;
@@ -374,6 +375,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			from = from + ", mgi_relationship_property p";
 			where = where + "\nand v._relationship_key = p._relationship_key";
 		}
+		
+		// if searching both tables, that add "union" + expresses component part
 		
 		if (from_mi == true && from_ec == true) {
 			cmd = cmd + "\nunion\n" + select + "\n" + from + "\n" + where;

@@ -302,63 +302,63 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		
 		// expresses components
 		
-		relationshipDomain = searchDomain.getExpressesComponents().get(0);		
-			
-		value = relationshipDomain.getMarkerKey();
-		if (value != null && !value.isEmpty()) {
-			where = where + "\nand v._object_key_2 = " + value;
-			from_ec = true;								
-		}
-				
-		value = relationshipDomain.getMarkerSymbol();
-		if (value != null && !value.isEmpty()) {
-			where = where + "\nand v.markersymbol ilike '" + value + "'";
-			from_ec = true;								
-		}
-	
-		value = relationshipDomain.getRelationshipTermKey();
-		if (value != null && !value.isEmpty()) {
-			where = where + "\nand v._relationshipterm_key = " + value;
-			from_ec = true;							
-		}
-				
-		value = relationshipDomain.getEvidenceKey();
-		if (value != null && !value.isEmpty()) {
-			where = where + "\nand v._evidence_key = " + value;
-			from_ec = true;							
-		}
-										
-		value = relationshipDomain.getRefsKey();
-		jnumid = relationshipDomain.getJnumid();		
-		if (value != null && !value.isEmpty()) {
-				where = where + "\nand v._Refs_key = " + value;
-				from_ec = true;									
-		}
-			else if (jnumid != null && !jnumid.isEmpty()) {
-				jnumid = jnumid.toUpperCase();
-				if (!jnumid.contains("J:")) {
-						jnumid = "J:" + jnumid;
-				}
-				where = where + "\nand v.jnumid = '" + jnumid + "'";
-				from_ec = true;									
-		}	
-		
-		// only expresses component contains properties
-		if (relationshipDomain.getProperties() != null) {
-				
-			value = relationshipDomain.getProperties().get(0).getPropertyNameKey();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand p._propertyname_key = " + value;
-				from_property = true;
-			}
-
-			value = relationshipDomain.getProperties().get(0).getValue();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand p.value ilike '" + value + "'";
-				from_property = true;
-			}
-				
-		}	
+//		relationshipDomain = searchDomain.getExpressesComponents().get(0);		
+//			
+//		value = relationshipDomain.getMarkerKey();
+//		if (value != null && !value.isEmpty()) {
+//			where = where + "\nand v._object_key_2 = " + value;
+//			from_ec = true;								
+//		}
+//				
+//		value = relationshipDomain.getMarkerSymbol();
+//		if (value != null && !value.isEmpty()) {
+//			where = where + "\nand v.markersymbol ilike '" + value + "'";
+//			from_ec = true;								
+//		}
+//	
+//		value = relationshipDomain.getRelationshipTermKey();
+//		if (value != null && !value.isEmpty()) {
+//			where = where + "\nand v._relationshipterm_key = " + value;
+//			from_ec = true;							
+//		}
+//				
+//		value = relationshipDomain.getEvidenceKey();
+//		if (value != null && !value.isEmpty()) {
+//			where = where + "\nand v._evidence_key = " + value;
+//			from_ec = true;							
+//		}
+//										
+//		value = relationshipDomain.getRefsKey();
+//		jnumid = relationshipDomain.getJnumid();		
+//		if (value != null && !value.isEmpty()) {
+//				where = where + "\nand v._Refs_key = " + value;
+//				from_ec = true;									
+//		}
+//			else if (jnumid != null && !jnumid.isEmpty()) {
+//				jnumid = jnumid.toUpperCase();
+//				if (!jnumid.contains("J:")) {
+//						jnumid = "J:" + jnumid;
+//				}
+//				where = where + "\nand v.jnumid = '" + jnumid + "'";
+//				from_ec = true;									
+//		}	
+//		
+//		// only expresses component contains properties
+//		if (relationshipDomain.getProperties() != null) {
+//				
+//			value = relationshipDomain.getProperties().get(0).getPropertyNameKey();
+//			if (value != null && !value.isEmpty()) {
+//				where = where + "\nand p._propertyname_key = " + value;
+//				from_property = true;
+//			}
+//
+//			value = relationshipDomain.getProperties().get(0).getValue();
+//			if (value != null && !value.isEmpty()) {
+//				where = where + "\nand p.value ilike '" + value + "'";
+//				from_property = true;
+//			}
+//				
+//		}	
 		
 		if (from_mi == true && from_ec == true) {
 			cmd = cmd + "\nunion\n";

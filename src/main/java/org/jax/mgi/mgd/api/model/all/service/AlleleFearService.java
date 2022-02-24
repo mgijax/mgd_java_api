@@ -12,6 +12,7 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleFearDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleFearDomain;
+import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleFearTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleFearTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
@@ -54,7 +55,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		
 		log.info("AlleleFearService.update");
 		
-		List<RelationshipDomain> relationshipList = new ArrayList<RelationshipDomain>();
+		Allele entity = alleleFearDAO.get(Integer.valueOf(domain.getAlleleKey()));
+		List<RelationshipDomain> relationshipDomain = new ArrayList<RelationshipDomain>();		
 		Boolean modified = false;
 
 		if (domain.getMutationInvolves() != null) {
@@ -66,22 +68,22 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 					continue;
 				}
 				
-				RelationshipDomain relationshipDomain = new RelationshipDomain();
+				RelationshipDomain rdomain = new RelationshipDomain();
 			
-				relationshipDomain.setProcessStatus(domain.getMutationInvolves().get(i).getProcessStatus());
-				relationshipDomain.setRelationshipKey(domain.getMutationInvolves().get(i).getRelationshipKey());
-				relationshipDomain.setObjectKey1(domain.getAlleleKey());
-				relationshipDomain.setObjectKey2(domain.getMutationInvolves().get(i).getMarkerKey());
-				relationshipDomain.setCategoryKey(domain.getMutationInvolves().get(i).getCategoryKey());
-				relationshipDomain.setRelationshipTermKey(domain.getMutationInvolves().get(i).getRelationshipTermKey());
-				relationshipDomain.setQualifierKey(domain.getMutationInvolves().get(i).getQualifierKey());
-				relationshipDomain.setEvidenceKey(domain.getMutationInvolves().get(i).getEvidenceKey());
-				relationshipDomain.setRefsKey(domain.getMutationInvolves().get(i).getRefsKey());
-				relationshipDomain.setCreatedByKey(domain.getMutationInvolves().get(i).getCreatedByKey());
-				relationshipDomain.setModifiedByKey(domain.getMutationInvolves().get(i).getModifiedByKey());
+				rdomain.setProcessStatus(domain.getMutationInvolves().get(i).getProcessStatus());
+				rdomain.setRelationshipKey(domain.getMutationInvolves().get(i).getRelationshipKey());
+				rdomain.setObjectKey1(domain.getAlleleKey());
+				rdomain.setObjectKey2(domain.getMutationInvolves().get(i).getMarkerKey());
+				rdomain.setCategoryKey(domain.getMutationInvolves().get(i).getCategoryKey());
+				rdomain.setRelationshipTermKey(domain.getMutationInvolves().get(i).getRelationshipTermKey());
+				rdomain.setQualifierKey(domain.getMutationInvolves().get(i).getQualifierKey());
+				rdomain.setEvidenceKey(domain.getMutationInvolves().get(i).getEvidenceKey());
+				rdomain.setRefsKey(domain.getMutationInvolves().get(i).getRefsKey());
+				rdomain.setCreatedByKey(domain.getMutationInvolves().get(i).getCreatedByKey());
+				rdomain.setModifiedByKey(domain.getMutationInvolves().get(i).getModifiedByKey());
 				
 				// add relationshipDomain to relationshipList
-				relationshipList.add(relationshipDomain);         
+				relationshipDomain.add(rdomain);         
 			}
 		}
 
@@ -94,33 +96,33 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 					continue;
 				}
 				
-				RelationshipDomain relationshipDomain = new RelationshipDomain();
+				RelationshipDomain rdomain = new RelationshipDomain();
 			
-				relationshipDomain.setProcessStatus(domain.getExpressesComponents().get(i).getProcessStatus());
-				relationshipDomain.setRelationshipKey(domain.getExpressesComponents().get(i).getRelationshipKey());
-				relationshipDomain.setObjectKey1(domain.getAlleleKey());
-				relationshipDomain.setObjectKey2(domain.getExpressesComponents().get(i).getMarkerKey());				
-				relationshipDomain.setCategoryKey(domain.getExpressesComponents().get(i).getCategoryKey());
-				relationshipDomain.setRelationshipTermKey(domain.getExpressesComponents().get(i).getRelationshipTermKey());
-				relationshipDomain.setQualifierKey(domain.getExpressesComponents().get(i).getQualifierKey());
-				relationshipDomain.setEvidenceKey(domain.getExpressesComponents().get(i).getEvidenceKey());
-				relationshipDomain.setRefsKey(domain.getExpressesComponents().get(i).getRefsKey());
+				rdomain.setProcessStatus(domain.getExpressesComponents().get(i).getProcessStatus());
+				rdomain.setRelationshipKey(domain.getExpressesComponents().get(i).getRelationshipKey());
+				rdomain.setObjectKey1(domain.getAlleleKey());
+				rdomain.setObjectKey2(domain.getExpressesComponents().get(i).getMarkerKey());				
+				rdomain.setCategoryKey(domain.getExpressesComponents().get(i).getCategoryKey());
+				rdomain.setRelationshipTermKey(domain.getExpressesComponents().get(i).getRelationshipTermKey());
+				rdomain.setQualifierKey(domain.getExpressesComponents().get(i).getQualifierKey());
+				rdomain.setEvidenceKey(domain.getExpressesComponents().get(i).getEvidenceKey());
+				rdomain.setRefsKey(domain.getExpressesComponents().get(i).getRefsKey());
 				
-				relationshipDomain.setCreatedByKey(domain.getExpressesComponents().get(i).getCreatedByKey());
-				relationshipDomain.setModifiedByKey(domain.getExpressesComponents().get(i).getModifiedByKey());
+				rdomain.setCreatedByKey(domain.getExpressesComponents().get(i).getCreatedByKey());
+				rdomain.setModifiedByKey(domain.getExpressesComponents().get(i).getModifiedByKey());
 				
 				// add properties to this relationship
-				relationshipDomain.setProperties(domain.getExpressesComponents().get(i).getProperties());
+				rdomain.setProperties(domain.getExpressesComponents().get(i).getProperties());
 
 				// add relationshipDomain to relationshipList
-				relationshipList.add(relationshipDomain);         
+				relationshipDomain.add(rdomain);         
 			}
 		}
 		
 		// process relationships
-		if (relationshipList.size() > 0) {
+		if (relationshipDomain.size() > 0) {
 			log.info("send json normalized domain to services");			
-			if (relationshipService.process(relationshipList, mgiTypeKey, user)) {
+			if (relationshipService.process(relationshipDomain, mgiTypeKey, user)) {
 				modified = true;
 			}
 		}
@@ -131,10 +133,10 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		else {
 			log.info("processAlleleFear/no changes processed: " + domain.getAlleleKey());
 		}
-		
+				
 		log.info("repackage incoming domain as results");		
 		SearchResults<AlleleFearDomain> results = new SearchResults<AlleleFearDomain>();
-		results = getResults(Integer.valueOf(domain.getAlleleKey()));
+		results = getResults(entity.get_allele_key());
 		results.setItem(domain);
 		log.info("results: " + results);
 		return results;

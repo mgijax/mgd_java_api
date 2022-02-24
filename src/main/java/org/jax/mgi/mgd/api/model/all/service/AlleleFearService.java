@@ -373,7 +373,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			where = where + "\nand v._relationship_key = p._relationship_key";
 		}
 		
-		cmd = cmd + "\n(" + select + "\n" + from + "\n" + where + "\n" + orderBy;
+		cmd = "\n(" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info("searchCmd: " + cmd);
 
 		try {

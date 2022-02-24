@@ -300,6 +300,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			if (from_mi == true) {
 				where = where + "\nand v._category_key = " + relationshipDomain.getCategoryKey();			
 				cmd = "\n" + select + "\n" + from + "\n" + where;
+				log.info(cmd);
 				where = "where v._object_key_1 is not null";
 			}
 		}

@@ -215,6 +215,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		Boolean from_ec = false;
 		Boolean from_property = false;
 		
+		RelationshipFearDomain relationshipDomain;
+
 		// if parameter exists, then add to where-clause
 		
 		value = searchDomain.getAlleleKey();
@@ -239,133 +241,138 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 
 		// mutation involves
 		
-		RelationshipFearDomain relationshipDomain = searchDomain.getMutationInvolves().get(0);
+		if (searchDomain.getMutationInvolves() != null) {
+			relationshipDomain = searchDomain.getMutationInvolves().get(0);
 			
-//		cmResults = DateSQLQuery.queryByCreationModification("v", 
-//			relationshipDomain.getCreatedBy(), 
-//			relationshipDomain.getModifiedBy(), 
-//			relationshipDomain.getCreation_date(), 
-//			relationshipDomain.getModification_date());
-//	
-//		if (cmResults.length > 0) {
-//			if (cmResults[0].length() > 0 || cmResults[1].length() > 0) {
-//				from = from + cmResults[0];
-//				where = where + cmResults[1];
-//				from_mi = true;			
-//			}
-//		}
-		
-		value = relationshipDomain.getMarkerKey();
-		if (value != null && !value.isEmpty()) {
-			where = where + "\nand v._object_key_2 = " + value;
-			from_mi = true;			
-		}
+	//		cmResults = DateSQLQuery.queryByCreationModification("v", 
+	//			relationshipDomain.getCreatedBy(), 
+	//			relationshipDomain.getModifiedBy(), 
+	//			relationshipDomain.getCreation_date(), 
+	//			relationshipDomain.getModification_date());
+	//	
+	//		if (cmResults.length > 0) {
+	//			if (cmResults[0].length() > 0 || cmResults[1].length() > 0) {
+	//				from = from + cmResults[0];
+	//				where = where + cmResults[1];
+	//				from_mi = true;			
+	//			}
+	//		}
 			
-		value = relationshipDomain.getMarkerSymbol();
-		if (value != null && !value.isEmpty()) {
-			where = where + "\nand v.markersymbol ilike '" + value + "'";
-			from_mi = true;			
-		}
-
-		value = relationshipDomain.getRelationshipTermKey();
-		if (value != null && !value.isEmpty()) {
-			where = where + "\nand v._relationshipterm_key = " + value;
-			from_mi = true;			
-		}
+			value = relationshipDomain.getMarkerKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand v._object_key_2 = " + value;
+				from_mi = true;			
+			}
+				
+			value = relationshipDomain.getMarkerSymbol();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand v.markersymbol ilike '" + value + "'";
+				from_mi = true;			
+			}
+	
+			value = relationshipDomain.getRelationshipTermKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand v._relationshipterm_key = " + value;
+				from_mi = true;			
+			}
+				
+			value = relationshipDomain.getEvidenceKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand v._evidence_key = " + value;
+				from_mi = true;			
+			}
+										
+			value = relationshipDomain.getRefsKey();
+			jnumid = relationshipDomain.getJnumid();		
+			if (value != null && !value.isEmpty()) {
+					where = where + "\nand v._Refs_key = " + value;
+					from_mi = true;				
+			}
+			else if (jnumid != null && !jnumid.isEmpty()) {
+					jnumid = jnumid.toUpperCase();
+					if (!jnumid.contains("J:")) {
+							jnumid = "J:" + jnumid;
+					}
+					where = where + "\nand v.jnumid = '" + jnumid + "'";
+					from_mi = true;				
+			}
 			
-		value = relationshipDomain.getEvidenceKey();
-		if (value != null && !value.isEmpty()) {
-			where = where + "\nand v._evidence_key = " + value;
-			from_mi = true;			
-		}
-									
-		value = relationshipDomain.getRefsKey();
-		jnumid = relationshipDomain.getJnumid();		
-		if (value != null && !value.isEmpty()) {
-				where = where + "\nand v._Refs_key = " + value;
-				from_mi = true;				
-		}
-		else if (jnumid != null && !jnumid.isEmpty()) {
-				jnumid = jnumid.toUpperCase();
-				if (!jnumid.contains("J:")) {
-						jnumid = "J:" + jnumid;
-				}
-				where = where + "\nand v.jnumid = '" + jnumid + "'";
-				from_mi = true;				
-		}
-		
-		if (from_mi == true) {
-			where = where + "\nand v._category_key = " + relationshipDomain.getCategoryKey();			
-			cmd = "\n" + select + "\n" + from + "\n" + where;
-			where = "where v._object_key_1 is not null";
+			if (from_mi == true) {
+				where = where + "\nand v._category_key = " + relationshipDomain.getCategoryKey();			
+				cmd = "\n" + select + "\n" + from + "\n" + where;
+				where = "where v._object_key_1 is not null";
+			}
 		}
 		
 		// expresses components
 		
-//		relationshipDomain = searchDomain.getExpressesComponents().get(0);		
-//			
-//		value = relationshipDomain.getMarkerKey();
-//		if (value != null && !value.isEmpty()) {
-//			where = where + "\nand v._object_key_2 = " + value;
-//			from_ec = true;								
+//		if (searchDomain.getExpressesComponents() != null) {
+		
+	//		relationshipDomain = searchDomain.getExpressesComponents().get(0);		
+	//			
+	//		value = relationshipDomain.getMarkerKey();
+	//		if (value != null && !value.isEmpty()) {
+	//			where = where + "\nand v._object_key_2 = " + value;
+	//			from_ec = true;								
+	//		}
+	//				
+	//		value = relationshipDomain.getMarkerSymbol();
+	//		if (value != null && !value.isEmpty()) {
+	//			where = where + "\nand v.markersymbol ilike '" + value + "'";
+	//			from_ec = true;								
+	//		}
+	//	
+	//		value = relationshipDomain.getRelationshipTermKey();
+	//		if (value != null && !value.isEmpty()) {
+	//			where = where + "\nand v._relationshipterm_key = " + value;
+	//			from_ec = true;							
+	//		}
+	//				
+	//		value = relationshipDomain.getEvidenceKey();
+	//		if (value != null && !value.isEmpty()) {
+	//			where = where + "\nand v._evidence_key = " + value;
+	//			from_ec = true;							
+	//		}
+	//										
+	//		value = relationshipDomain.getRefsKey();
+	//		jnumid = relationshipDomain.getJnumid();		
+	//		if (value != null && !value.isEmpty()) {
+	//				where = where + "\nand v._Refs_key = " + value;
+	//				from_ec = true;									
+	//		}
+	//			else if (jnumid != null && !jnumid.isEmpty()) {
+	//				jnumid = jnumid.toUpperCase();
+	//				if (!jnumid.contains("J:")) {
+	//						jnumid = "J:" + jnumid;
+	//				}
+	//				where = where + "\nand v.jnumid = '" + jnumid + "'";
+	//				from_ec = true;									
+	//		}	
+	//		
+	//		// only expresses component contains properties
+	//		if (relationshipDomain.getProperties() != null) {
+	//				
+	//			value = relationshipDomain.getProperties().get(0).getPropertyNameKey();
+	//			if (value != null && !value.isEmpty()) {
+	//				where = where + "\nand p._propertyname_key = " + value;
+	//				from_property = true;
+	//			}
+	//
+	//			value = relationshipDomain.getProperties().get(0).getValue();
+	//			if (value != null && !value.isEmpty()) {
+	//				where = where + "\nand p.value ilike '" + value + "'";
+	//				from_property = true;
+	//			}
+	//				
+	//		}
+			
+//			if (from_ec == true || from_property == true) {
+//				where = where + "\nand v._category_key = " + relationshipDomain.getCategoryKey();
+//			}			
 //		}
-//				
-//		value = relationshipDomain.getMarkerSymbol();
-//		if (value != null && !value.isEmpty()) {
-//			where = where + "\nand v.markersymbol ilike '" + value + "'";
-//			from_ec = true;								
-//		}
-//	
-//		value = relationshipDomain.getRelationshipTermKey();
-//		if (value != null && !value.isEmpty()) {
-//			where = where + "\nand v._relationshipterm_key = " + value;
-//			from_ec = true;							
-//		}
-//				
-//		value = relationshipDomain.getEvidenceKey();
-//		if (value != null && !value.isEmpty()) {
-//			where = where + "\nand v._evidence_key = " + value;
-//			from_ec = true;							
-//		}
-//										
-//		value = relationshipDomain.getRefsKey();
-//		jnumid = relationshipDomain.getJnumid();		
-//		if (value != null && !value.isEmpty()) {
-//				where = where + "\nand v._Refs_key = " + value;
-//				from_ec = true;									
-//		}
-//			else if (jnumid != null && !jnumid.isEmpty()) {
-//				jnumid = jnumid.toUpperCase();
-//				if (!jnumid.contains("J:")) {
-//						jnumid = "J:" + jnumid;
-//				}
-//				where = where + "\nand v.jnumid = '" + jnumid + "'";
-//				from_ec = true;									
-//		}	
-//		
-//		// only expresses component contains properties
-//		if (relationshipDomain.getProperties() != null) {
-//				
-//			value = relationshipDomain.getProperties().get(0).getPropertyNameKey();
-//			if (value != null && !value.isEmpty()) {
-//				where = where + "\nand p._propertyname_key = " + value;
-//				from_property = true;
-//			}
-//
-//			value = relationshipDomain.getProperties().get(0).getValue();
-//			if (value != null && !value.isEmpty()) {
-//				where = where + "\nand p.value ilike '" + value + "'";
-//				from_property = true;
-//			}
-//				
-//		}	
 		
 		if (from_mi == true && from_ec == true) {
 			cmd = cmd + "\nunion\n";
-		}
-		
-		if (from_ec == true || from_property == true) {
-			where = where + "\nand v._category_key = " + relationshipDomain.getCategoryKey();
 		}
 		
 		if (from_property == true) {

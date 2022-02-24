@@ -20,7 +20,6 @@ import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.RelationshipService;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -61,11 +60,16 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		Boolean modified = false;
 
 		if (domain.getMutationInvolves() != null) {
-	    	// Iterate thru incoming allele Fear relationship domain
+	    	// Iterate thru incoming allele fear relationship domain
 			for (int i = 0; i < domain.getMutationInvolves().size(); i++) {
 				
 				// if processStatus == "x", then continue; no need to create domain/process anything
 				if (domain.getMutationInvolves().get(i).getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
+					continue;
+				}
+				
+				// if no marker, continue
+				if (domain.getMutationInvolves().get(i).getMarkerKey().isEmpty()) {
 					continue;
 				}
 				
@@ -198,10 +202,10 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 
 		String cmd = "";
-		String select = "select distinct v._object_key_1, v.allelesymbol";
+		String select = "(select distinct v._object_key_1, v.allelesymbol";
 		String from = "from mgi_relationship_Fear_view v";		
 		String where = "where v._object_key_1 is not null";
-		String orderBy = "order by v.allelesymbol";
+		String orderBy = ") order by v.allelesymbol";
 		
 		String value;
 		String cmResults[];
@@ -233,22 +237,24 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			where = where + "\nand lower(v.alleleId) = '" + mgiid.toLowerCase() + "'";
 		}
 
+		// mutation involves
+		
 		RelationshipFearDomain relationshipDomain = searchDomain.getMutationInvolves().get(0);
 			
-		cmResults = DateSQLQuery.queryByCreationModification("v", 
-			relationshipDomain.getCreatedBy(), 
-			relationshipDomain.getModifiedBy(), 
-			relationshipDomain.getCreation_date(), 
-			relationshipDomain.getModification_date());
-	
-		if (cmResults.length > 0) {
-			if (cmResults[0].length() > 0 || cmResults[1].length() > 0) {
-				from = from + cmResults[0];
-				where = where + cmResults[1];
-				from_mi = true;			
-			}
-		}
-			
+//		cmResults = DateSQLQuery.queryByCreationModification("v", 
+//			relationshipDomain.getCreatedBy(), 
+//			relationshipDomain.getModifiedBy(), 
+//			relationshipDomain.getCreation_date(), 
+//			relationshipDomain.getModification_date());
+//	
+//		if (cmResults.length > 0) {
+//			if (cmResults[0].length() > 0 || cmResults[1].length() > 0) {
+//				from = from + cmResults[0];
+//				where = where + cmResults[1];
+//				from_mi = true;			
+//			}
+//		}
+		
 		value = relationshipDomain.getMarkerKey();
 		if (value != null && !value.isEmpty()) {
 			where = where + "\nand v._object_key_2 = " + value;
@@ -287,60 +293,55 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				where = where + "\nand v.jnumid = '" + jnumid + "'";
 				from_mi = true;				
 		}
-
+		
 		if (from_mi == true) {
-			where = where + "\nand v._category_key = " + relationshipDomain.getCategoryKey();
+			where = where + "\nand v._category_key = " + relationshipDomain.getCategoryKey();			
+			cmd = "\n" + select + "\n" + from + "\n" + where + "\nunion\n";
+			where = "where v._object_key_1 is not null";
 		}
 		
-		// if not searching the mutation involves, then check expresses components
-		// that is, only search by one or the other...not both
+		// expresses components
 		
 		relationshipDomain = searchDomain.getExpressesComponents().get(0);		
-		if (from_mi == false) {
 			
-			value = relationshipDomain.getMarkerKey();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v._object_key_2 = " + value;
-				from_ec = true;								
-			}
+		value = relationshipDomain.getMarkerKey();
+		if (value != null && !value.isEmpty()) {
+			where = where + "\nand v._object_key_2 = " + value;
+			from_ec = true;								
+		}
 				
-			value = relationshipDomain.getMarkerSymbol();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v.markersymbol ilike '" + value + "'";
-				from_ec = true;								
-			}
+		value = relationshipDomain.getMarkerSymbol();
+		if (value != null && !value.isEmpty()) {
+			where = where + "\nand v.markersymbol ilike '" + value + "'";
+			from_ec = true;								
+		}
 	
-			value = relationshipDomain.getRelationshipTermKey();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v._relationshipterm_key = " + value;
-				from_ec = true;							
-			}
+		value = relationshipDomain.getRelationshipTermKey();
+		if (value != null && !value.isEmpty()) {
+			where = where + "\nand v._relationshipterm_key = " + value;
+			from_ec = true;							
+		}
 				
-			value = relationshipDomain.getEvidenceKey();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v._evidence_key = " + value;
-				from_ec = true;							
-			}
+		value = relationshipDomain.getEvidenceKey();
+		if (value != null && !value.isEmpty()) {
+			where = where + "\nand v._evidence_key = " + value;
+			from_ec = true;							
+		}
 										
-			value = relationshipDomain.getRefsKey();
-			jnumid = relationshipDomain.getJnumid();		
-			if (value != null && !value.isEmpty()) {
-					where = where + "\nand v._Refs_key = " + value;
-					from_ec = true;									
-			}
+		value = relationshipDomain.getRefsKey();
+		jnumid = relationshipDomain.getJnumid();		
+		if (value != null && !value.isEmpty()) {
+				where = where + "\nand v._Refs_key = " + value;
+				from_ec = true;									
+		}
 			else if (jnumid != null && !jnumid.isEmpty()) {
-					jnumid = jnumid.toUpperCase();
-					if (!jnumid.contains("J:")) {
-							jnumid = "J:" + jnumid;
-					}
-					where = where + "\nand v.jnumid = '" + jnumid + "'";
-					from_ec = true;									
-			}	
-		}
-		
-		if (from_ec == true) {
-			where = where + "\nand v._category_key = " + relationshipDomain.getCategoryKey();
-		}
+				jnumid = jnumid.toUpperCase();
+				if (!jnumid.contains("J:")) {
+						jnumid = "J:" + jnumid;
+				}
+				where = where + "\nand v.jnumid = '" + jnumid + "'";
+				from_ec = true;									
+		}	
 		
 		// only expresses component contains properties
 		if (relationshipDomain.getProperties() != null) {
@@ -359,12 +360,16 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				
 		}	
 		
+		if (from_ec == true || from_property == true) {
+			where = where + "\nand v._category_key = " + relationshipDomain.getCategoryKey();
+		}
+		
 		if (from_property == true) {
 			from = from + ", mgi_relationship_property p";
 			where = where + "\nand v._relationship_key = p._relationship_key";
 		}
-
-		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
+		
+		cmd = cmd + "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info("searchCmd: " + cmd);
 
 		try {

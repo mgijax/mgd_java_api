@@ -75,7 +75,7 @@ public class AlleleFearController extends BaseController<AlleleFearDomain> {
 	}
 		
 	@POST
-	@ApiOperation(value = "Search/returns slim marker domain")
+	@ApiOperation(value = "Search/returns slim allele fear domain")
 	@Path("/search")
 	public List<SlimAlleleFearDomain> search(AlleleFearDomain searchDomain) {
 	

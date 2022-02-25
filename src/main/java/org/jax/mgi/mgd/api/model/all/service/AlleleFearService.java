@@ -437,14 +437,6 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 //		  12948291 | Non-mouse_Gene_Symbol
 //		  12948292 | Non-mouse_NCBI_Gene_ID
 	
-		String cmd = "select a.accid, m.symbol, o.commonname"
-						+ "\nfrom acc_accession a, mrk_marker m, mgi_organism o"
-						+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
-						+ "\nand a._object_key = m._marker_key"
-						+ "\nand m._organism_key = o._organism_key";
-	
-		String organismPropertyKey = "12948290";
-		String symbolPropertyKey = "12948291";
 		String ldbKey;
 		String organismKey;
 		
@@ -456,8 +448,20 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			return results;
 		}
 		
-		cmd = cmd + "\nand a._logicaldb_key = "	+ ldbKey;
-		cmd = cmd + "\nand m._organism_key = " + organismKey;
+		String cmd = "select o.commonname as value, propertyNameKey = '12948290' "
+						+ "\nfrom acc_accession a, mrk_marker m, mgi_organism o"
+						+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
+						+ "\nand a._object_key = m._marker_key"
+						+ "\nand m._organism_key = o._organism_key"
+						+ "\nand a._logicaldb_key = "	+ ldbKey
+						+ "\nand m._organism_key = " + organismKey						
+						+ "\nunion"
+						+ "\nselect m.symbol as value, propertyNameKey = '12948291' "
+						+ "\nfrom acc_accession a, mrk_marker m"
+						+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
+						+ "\nand a._object_key = m._marker_key"
+						+ "\nand a._logicaldb_key = "	+ ldbKey
+						+ "\nand m._organism_key = " + organismKey;						;
 
 		log.info("cmd: " + cmd);
 
@@ -466,14 +470,9 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 						
 			while (rs.next())  {
 				RelationshipPropertyDomain domain = new RelationshipPropertyDomain();
-				// organism
-				domain.setPropertyNameKey(organismPropertyKey);
-				domain.setValue(rs.getString("commonname"));
-				results.add(domain);	
-				// symbol
-				domain.setPropertyNameKey(symbolPropertyKey);
-				domain.setValue(rs.getString("symbol"));
-				results.add(domain);					
+				domain.setPropertyNameKey(rs.getString("propertyNameKey"));
+				domain.setValue(rs.getString("value"));
+				results.add(domain);						
 			}
 			sqlExecutor.cleanup();
 		}

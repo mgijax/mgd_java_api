@@ -439,12 +439,10 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 	
 		String ldbKey;
 		String organismKey;
-		Integer sequenceNum = 0;
 		
 		if (searchDomain.getPropertyNameKey().equals("12948292")) {
 			ldbKey = "55";
 			organismKey = "2";
-			sequenceNum = searchDomain.getSequenceNum();
 		}
 		else {
 			return results;
@@ -472,10 +470,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 						
 			while (rs.next())  {
 				RelationshipPropertyDomain domain = new RelationshipPropertyDomain();
-				sequenceNum = sequenceNum + 1;
 				domain.setProcessStatus(Constants.PROCESS_CREATE);
 				domain.setRelationshipKey(searchDomain.getRelationshipKey());
-				domain.setSequenceNum(sequenceNum);
 				domain.setPropertyNameKey(rs.getString("propertyNameKey"));
 				domain.setValue(rs.getString("value"));
 				results.add(domain);						

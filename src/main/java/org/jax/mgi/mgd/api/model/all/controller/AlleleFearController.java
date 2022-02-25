@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleFearDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleFearDomain;
 import org.jax.mgi.mgd.api.model.all.service.AlleleFearService;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipPropertyDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -89,4 +90,19 @@ public class AlleleFearController extends BaseController<AlleleFearDomain> {
 		return results;
 	}
 
+	@POST
+	@ApiOperation(value = "Search/returns relationship/property by acc id")
+	@Path("/search")
+	public List<RelationshipPropertyDomain> searchPropertyAccID(RelationshipPropertyDomain searchDomain) {
+	
+		List<RelationshipPropertyDomain> results = new ArrayList<RelationshipPropertyDomain>();
+
+		try {
+			results = alleleFearService.searchPropertyAccID(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
 }

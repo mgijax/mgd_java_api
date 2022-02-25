@@ -17,6 +17,7 @@ import org.jax.mgi.mgd.api.model.all.translator.AlleleFearTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleFearTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipPropertyDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.RelationshipService;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -311,6 +312,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		
 			relationshipDomain = searchDomain.getExpressesComponents().get(0);
 		
+			// reset from & where
 			from = "from mgi_relationship_Fear_view v";		
 			where = "where v._object_key_1 is not null";
 
@@ -373,12 +375,14 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				value = relationshipDomain.getProperties().get(0).getPropertyNameKey();
 				if (value != null && !value.isEmpty()) {
 					where = where + "\nand p._propertyname_key = " + value;
+					from_ec = true;
 					from_property = true;
 				}
 	
 				value = relationshipDomain.getProperties().get(0).getValue();
 				if (value != null && !value.isEmpty()) {
 					where = where + "\nand p.value ilike '" + value + "'";
+					from_ec = true;
 					from_property = true;
 				}
 					
@@ -422,5 +426,62 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		
 		return results;
 	}
+
+	@Transactional	
+	public List<RelationshipPropertyDomain> searchPropertyAccID(RelationshipPropertyDomain searchDomain) {
+		// using propertyName/propertyNameKey Acc ID, search & return 
 		
+		List<RelationshipPropertyDomain> results = new ArrayList<RelationshipPropertyDomain>();
+
+//		  12948290 | Non-mouse_Organism
+//		  12948291 | Non-mouse_Gene_Symbol
+//		  12948292 | Non-mouse_NCBI_Gene_ID
+	
+		String cmd = "select a.accid, m.symbol, o.commonname"
+						+ "from acc_accession a, mrk_marker m, mgi_organism o"
+						+ "where a.accid = '" + searchDomain.getValue() + "'"
+						+ "and a._object_key = m._marker_key"
+						+ "and m._organism_key = o._organism_key";
+	
+		String organismPropertyKey = "12948290";
+		String symbolPropertyKey = "12948291";
+		String ldbKey;
+		String organismKey;
+		
+		if (searchDomain.getPropertyNameKey().equals("12948292")) {
+			ldbKey = "55";
+			organismKey = "2";
+		}
+		else {
+			return results;
+		}
+		
+		cmd = cmd + "\nand a._logicaldb_key = "	+ ldbKey;
+		cmd = cmd + "\nand m._organism_key = " + organismKey;
+
+		log.info("cmd: " + cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+						
+			while (rs.next())  {
+				RelationshipPropertyDomain domain = new RelationshipPropertyDomain();
+				// organism
+				domain.setPropertyNameKey(organismPropertyKey);
+				domain.setValue(rs.getString("commonname"));
+				results.add(domain);	
+				// symbol
+				domain.setPropertyNameKey(symbolPropertyKey);
+				domain.setValue(rs.getString("symbol"));
+				results.add(domain);					
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

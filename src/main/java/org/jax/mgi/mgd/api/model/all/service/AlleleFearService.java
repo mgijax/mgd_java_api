@@ -448,19 +448,19 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			return results;
 		}
 		
-		String cmd = "select o.commonname as value, propertyNameKey = '12948290' "
+		String cmd = "select o.commonname as value, '12948290' as propertyNameKey"
 						+ "\nfrom acc_accession a, mrk_marker m, mgi_organism o"
 						+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
+						+ "\nand a._logicaldb_key = " + ldbKey
 						+ "\nand a._object_key = m._marker_key"
 						+ "\nand m._organism_key = o._organism_key"
-						+ "\nand a._logicaldb_key = "	+ ldbKey
 						+ "\nand m._organism_key = " + organismKey						
 						+ "\nunion"
-						+ "\nselect m.symbol as value, propertyNameKey = '12948291' "
+						+ "\nselect m.symbol, '12948291'"
 						+ "\nfrom acc_accession a, mrk_marker m"
 						+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
+						+ "\nand a._logicaldb_key = " + ldbKey						
 						+ "\nand a._object_key = m._marker_key"
-						+ "\nand a._logicaldb_key = "	+ ldbKey
 						+ "\nand m._organism_key = " + organismKey;						;
 
 		log.info("cmd: " + cmd);

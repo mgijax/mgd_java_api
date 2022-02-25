@@ -92,7 +92,7 @@ public class AlleleFearController extends BaseController<AlleleFearDomain> {
 
 	@POST
 	@ApiOperation(value = "Search/returns relationship/property by acc id")
-	@Path("/search")
+	@Path("/searchPropertyAccID")
 	public List<RelationshipPropertyDomain> searchPropertyAccID(RelationshipPropertyDomain searchDomain) {
 	
 		List<RelationshipPropertyDomain> results = new ArrayList<RelationshipPropertyDomain>();

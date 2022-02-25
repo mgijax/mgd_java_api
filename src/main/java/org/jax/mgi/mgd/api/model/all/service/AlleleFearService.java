@@ -428,7 +428,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 	}
 
 	@Transactional	
-	public List<RelationshipPropertyDomain> searchPropertyAccID(RelationshipPropertyDomain searchDomain) {
+	public List<RelationshipPropertyDomain> searchPropertyAccId(RelationshipPropertyDomain searchDomain) {
 		// using propertyName/propertyNameKey Acc ID, search & return 
 		
 		List<RelationshipPropertyDomain> results = new ArrayList<RelationshipPropertyDomain>();

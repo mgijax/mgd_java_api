@@ -311,6 +311,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		
 			relationshipDomain = searchDomain.getExpressesComponents().get(0);
 		
+			from = "from mgi_relationship_Fear_view v";		
 			where = "where v._object_key_1 is not null";
 
 			cmResults = DateSQLQuery.queryByCreationModification("v", 
@@ -321,7 +322,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			
 			if (cmResults.length > 0) {
 				if (cmResults[0].length() > 0 || cmResults[1].length() > 0) {
-					//from = from + cmResults[0];
+					from = from + cmResults[0];
 					where = where + cmResults[1];
 					from_ec = true;			
 				}

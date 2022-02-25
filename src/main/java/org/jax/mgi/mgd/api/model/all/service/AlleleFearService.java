@@ -438,10 +438,10 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 //		  12948292 | Non-mouse_NCBI_Gene_ID
 	
 		String cmd = "select a.accid, m.symbol, o.commonname"
-						+ "from acc_accession a, mrk_marker m, mgi_organism o"
-						+ "where a.accid = '" + searchDomain.getValue() + "'"
-						+ "and a._object_key = m._marker_key"
-						+ "and m._organism_key = o._organism_key";
+						+ "\nfrom acc_accession a, mrk_marker m, mgi_organism o"
+						+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
+						+ "\nand a._object_key = m._marker_key"
+						+ "\nand m._organism_key = o._organism_key";
 	
 		String organismPropertyKey = "12948290";
 		String symbolPropertyKey = "12948291";

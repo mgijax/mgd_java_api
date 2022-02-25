@@ -20,6 +20,7 @@ import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.RelationshipService;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -244,19 +245,19 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		if (searchDomain.getMutationInvolves() != null) {
 			relationshipDomain = searchDomain.getMutationInvolves().get(0);
 			
-	//		cmResults = DateSQLQuery.queryByCreationModification("v", 
-	//			relationshipDomain.getCreatedBy(), 
-	//			relationshipDomain.getModifiedBy(), 
-	//			relationshipDomain.getCreation_date(), 
-	//			relationshipDomain.getModification_date());
-	//	
-	//		if (cmResults.length > 0) {
-	//			if (cmResults[0].length() > 0 || cmResults[1].length() > 0) {
-	//				from = from + cmResults[0];
-	//				where = where + cmResults[1];
-	//				from_mi = true;			
-	//			}
-	//		}
+			cmResults = DateSQLQuery.queryByCreationModification("v", 
+				relationshipDomain.getCreatedBy(), 
+				relationshipDomain.getModifiedBy(), 
+				relationshipDomain.getCreation_date(), 
+				relationshipDomain.getModification_date());
+		
+			if (cmResults.length > 0) {
+				if (cmResults[0].length() > 0 || cmResults[1].length() > 0) {
+					from = from + cmResults[0];
+					where = where + cmResults[1];
+					from_mi = true;			
+				}
+			}
 			
 			value = relationshipDomain.getMarkerKey();
 			if (value != null && !value.isEmpty()) {
@@ -312,6 +313,20 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		
 			where = "where v._object_key_1 is not null";
 
+			cmResults = DateSQLQuery.queryByCreationModification("v", 
+					relationshipDomain.getCreatedBy(), 
+					relationshipDomain.getModifiedBy(), 
+					relationshipDomain.getCreation_date(), 
+					relationshipDomain.getModification_date());
+			
+			if (cmResults.length > 0) {
+				if (cmResults[0].length() > 0 || cmResults[1].length() > 0) {
+					from = from + cmResults[0];
+					where = where + cmResults[1];
+					from_ec = true;			
+				}
+			}
+				
 			value = relationshipDomain.getMarkerKey();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand v._object_key_2 = " + value;

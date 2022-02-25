@@ -472,9 +472,10 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 						
 			while (rs.next())  {
 				RelationshipPropertyDomain domain = new RelationshipPropertyDomain();
+				sequenceNum += 1;
 				domain.setProcessStatus(Constants.PROCESS_CREATE);
 				domain.setRelationshipKey(searchDomain.getRelationshipKey());
-				domain.setSequenceNum(sequenceNum + 1);
+				domain.setSequenceNum(sequenceNum);
 				domain.setPropertyNameKey(rs.getString("propertyNameKey"));
 				domain.setValue(rs.getString("value"));
 				results.add(domain);						

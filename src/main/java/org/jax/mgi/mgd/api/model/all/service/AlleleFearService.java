@@ -433,9 +433,15 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		
 		List<RelationshipPropertyDomain> results = new ArrayList<RelationshipPropertyDomain>();
 
-//		  12948290 | Non-mouse_Organism
-//		  12948291 | Non-mouse_Gene_Symbol
-//		  12948292 | Non-mouse_NCBI_Gene_ID
+		// 12948290  | Non-mouse_Organism
+		// 12948291  | Non-mouse_Gene_Symbol
+        // 12948292  | Non-mouse_NCBI_Gene_ID
+        // 100691411 | Non-mouse_HGNC_Gene_ID
+        // 100691412 | Non-mouse_RGD_Gene_ID
+        // 100691413 | Non-mouse_ZFIN_Gene_ID
+        // 100691414 | Non-mouse_WB_Gene_ID
+        // 100691415 | Non-mouse_FB_Gene_ID
+        // 100691416 | Non-mouse_SGD_Gene_ID
 	
 		String ldbKey;
 		String organismKey;
@@ -444,6 +450,30 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			ldbKey = "55";
 			organismKey = "2";
 		}
+		else if (searchDomain.getPropertyNameKey().equals("100691411")) {
+			ldbKey = "64";
+			organismKey = "2";
+		}	
+		else if (searchDomain.getPropertyNameKey().equals("100691412")) {
+			ldbKey = "47";
+			organismKey = "40";
+		}
+		else if (searchDomain.getPropertyNameKey().equals("100691413")) {
+			ldbKey = "172";
+			organismKey = "84";
+		}	
+//		else if (searchDomain.getPropertyNameKey().equals("100691414")) {
+//			ldbKey = "??";
+//			organismKey = "?";
+//		}		
+//		else if (searchDomain.getPropertyNameKey().equals("100691415")) {
+//			ldbKey = "??";
+//			organismKey = "?";
+//		}	
+//		else if (searchDomain.getPropertyNameKey().equals("100691416")) {
+//			ldbKey = "??";
+//			organismKey = "?";
+//		}		
 		else {
 			return results;
 		}

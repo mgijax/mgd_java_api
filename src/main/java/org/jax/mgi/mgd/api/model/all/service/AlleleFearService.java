@@ -341,12 +341,6 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				where = where + "\nand v._relationshipterm_key = " + value;
 				from_ec = true;							
 			}
-					
-			value = relationshipDomain.getEvidenceKey();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v._evidence_key = " + value;
-				from_ec = true;							
-			}
 											
 			value = relationshipDomain.getRefsKey();
 			jnumid = relationshipDomain.getJnumid();		

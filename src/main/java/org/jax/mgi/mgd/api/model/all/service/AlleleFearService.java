@@ -299,7 +299,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			// save search cmd for mutation involves
 			if (from_mi == true) {
 				from = from + ",mgi_relationship_Fear_view v";						
-				where = alleleWhere + where + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey();			
+				where = alleleWhere + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey() + where;			
 				cmd = "\n" + select + "\n" + from + where;
 			}
 		}
@@ -378,7 +378,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			
 			if (from_ec == true || from_property == true) {
 				from = from + ",mgi_relationship_Fear_view v";		
-				where = alleleWhere + where + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey();							
+				where = alleleWhere + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey() + where;							
 			}			
 		}
 		
@@ -398,7 +398,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			cmd = select + "\n" + from + "\n" + where;			
 		}
 		else if (from_mi == false){
-			cmd = select + "\n" + from + "\n" + where;
+			cmd = select + "\n" + from + "\n" + alleleWhere;
 		}
 		
 		cmd = "\n(" + cmd + "\n" + orderBy;

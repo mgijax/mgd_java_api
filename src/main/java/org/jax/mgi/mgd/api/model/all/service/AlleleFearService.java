@@ -218,6 +218,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		Boolean from_mi = false;
 		Boolean from_ec = false;
 		Boolean from_property = false;
+		Boolean from_note = false;
 		
 		RelationshipFearDomain relationshipDomain;
 
@@ -296,6 +297,16 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 					}
 					where = where + "\nand v.jnumid = '" + jnumid + "'";
 					from_mi = true;									
+			}
+			
+			value = relationshipDomain.getNote().getNoteChunk();
+			if (value != null && !value.isEmpty()) {
+				from = from + ",mgi_note n";
+				where = where + "\nand v._relationship_key = n._object_key"
+						+ "\nand n._mgitype_key = 40"
+						+ "\nand n._notetype_ke = 1042"
+						+ "\n.noteChunk ilike '" + value + "'";
+				from_mi = true;	
 			}
 			
 			// save search cmd for mutation involves
@@ -377,6 +388,16 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 					from_ec = true;
 					from_property = true;
 				}
+			}
+			
+			value = relationshipDomain.getNote().getNoteChunk();
+			if (value != null && !value.isEmpty()) {
+				from = from + ",mgi_note n";
+				where = where + "\nand v._relationship_key = n._object_key"
+						+ "\nand n._mgitype_key = 40"
+						+ "\nand n._notetype_ke = 1042"
+						+ "\n.noteChunk ilike '" + value + "'";
+				from_ec = true;	
 			}
 			
 			if (from_ec == true || from_property == true) {

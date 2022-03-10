@@ -431,15 +431,14 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		
 		List<RelationshipPropertyDomain> results = new ArrayList<RelationshipPropertyDomain>();
 
-		// 12948290  | Non-mouse_Organism
-		// 12948291  | Non-mouse_Gene_Symbol
-        // 12948292  | Non-mouse_NCBI_Gene_ID
-        // 100691411 | Non-mouse_HGNC_Gene_ID
-        // 100691412 | Non-mouse_RGD_Gene_ID
-        // 100691413 | Non-mouse_ZFIN_Gene_ID
-        // 100691414 | Non-mouse_WB_Gene_ID
-        // 100691415 | Non-mouse_FB_Gene_ID
-        // 100691416 | Non-mouse_SGD_Gene_ID
+		//  12948292 | Non-mouse_NCBI_Gene_ID
+		//	100655557 | Non-mouse_HGNC_Gene_ID
+		//	100655558 | Non-mouse_RGD_Gene_ID
+		//	100655559 | Non-mouse_ZFIN_Gene_ID
+		//	100655560 | Non-mouse_WB_Gene_ID
+		//	100655561 | Non-mouse_FB_Gene_ID
+		//  100655562 | Non-mouse_SGD_Gene_ID
+
 	
 		String ldbKey;
 		String organismKey;
@@ -448,27 +447,27 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			ldbKey = "55";
 			organismKey = "2";
 		}
-		else if (searchDomain.getPropertyNameKey().equals("100691411")) {
+		else if (searchDomain.getPropertyNameKey().equals("100655557")) {
 			ldbKey = "64";
 			organismKey = "2";
 		}	
-		else if (searchDomain.getPropertyNameKey().equals("100691412")) {
+		else if (searchDomain.getPropertyNameKey().equals("100655558")) {
 			ldbKey = "47";
 			organismKey = "40";
 		}
-		else if (searchDomain.getPropertyNameKey().equals("100691413")) {
+		else if (searchDomain.getPropertyNameKey().equals("100655559")) {
 			ldbKey = "172";
 			organismKey = "84";
 		}	
-//		else if (searchDomain.getPropertyNameKey().equals("100691414")) {
+//		else if (searchDomain.getPropertyNameKey().equals("100655560")) {
 //			ldbKey = "??";
 //			organismKey = "?";
 //		}		
-//		else if (searchDomain.getPropertyNameKey().equals("100691415")) {
+//		else if (searchDomain.getPropertyNameKey().equals("100655561")) {
 //			ldbKey = "??";
 //			organismKey = "?";
 //		}	
-//		else if (searchDomain.getPropertyNameKey().equals("100691416")) {
+//		else if (searchDomain.getPropertyNameKey().equals("100655562")) {
 //			ldbKey = "??";
 //			organismKey = "?";
 //		}		

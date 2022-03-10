@@ -218,7 +218,6 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		Boolean from_mi = false;
 		Boolean from_ec = false;
 		Boolean from_property = false;
-		Boolean from_note = false;
 		
 		RelationshipFearDomain relationshipDomain;
 

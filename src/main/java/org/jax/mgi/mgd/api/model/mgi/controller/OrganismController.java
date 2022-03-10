@@ -110,4 +110,11 @@ public class OrganismController extends BaseController<OrganismDomain> {
 	public List<SlimOrganismDomain> searchGXDHTSample() {
 		return organismService.searchGXDHTSample();
 	}	
+	
+	@POST
+	@ApiOperation(value = "Search for organisms Allele Relationship module")
+	@Path("/searchAlleleRelationship")
+	public List<SlimOrganismDomain> searchAlleleRelationship() {
+		return organismService.searchAlleleRelationship();
+	}	
 }

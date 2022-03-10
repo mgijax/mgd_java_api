@@ -282,15 +282,15 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			jnumid = relationshipDomain.getJnumid();		
 			if (value != null && !value.isEmpty()) {
 					where = where + "\nand v._Refs_key = " + value;
-					from_mi = true;				
+				from_ec = true;									
 			}
-			else if (jnumid != null && !jnumid.isEmpty()) {
+				else if (jnumid != null && !jnumid.isEmpty()) {
 					jnumid = jnumid.toUpperCase();
 					if (!jnumid.contains("J:")) {
 							jnumid = "J:" + jnumid;
 					}
 					where = where + "\nand v.jnumid = '" + jnumid + "'";
-					from_mi = true;				
+					from_ec = true;									
 			}
 			
 			// save search cmd for mutation involves

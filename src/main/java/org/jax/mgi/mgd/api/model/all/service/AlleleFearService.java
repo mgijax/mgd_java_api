@@ -90,7 +90,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				rdomain.setModifiedByKey(domain.getMutationInvolves().get(i).getModifiedByKey());
 				
 				// add notes to this relationship
-				rdomain.setNote(domain.getExpressesComponents().get(i).getNote());
+				rdomain.setNote(domain.getMutationInvolves().get(i).getNote());
 				
 				// add relationshipDomain to relationshipList
 				relationshipDomain.add(rdomain);         

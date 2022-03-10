@@ -282,7 +282,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			jnumid = relationshipDomain.getJnumid();		
 			if (value != null && !value.isEmpty()) {
 					where = where + "\nand v._Refs_key = " + value;
-				from_ec = true;									
+				from_mi = true;									
 			}
 				else if (jnumid != null && !jnumid.isEmpty()) {
 					jnumid = jnumid.toUpperCase();
@@ -290,7 +290,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 							jnumid = "J:" + jnumid;
 					}
 					where = where + "\nand v.jnumid = '" + jnumid + "'";
-					from_ec = true;									
+					from_mi = true;									
 			}
 			
 			// save search cmd for mutation involves

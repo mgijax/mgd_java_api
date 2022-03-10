@@ -205,8 +205,9 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 
 		String cmd = "";
 		String select = "select distinct a._allele_key, a.symbol";
-		String from = "from all_allele a, acc_accession aa";		
+		String alleleFrom = "from all_allele a, acc_accession aa";		
 		String alleleWhere = "where a._allele_key = aa._object_key and aa._mgitype_key = 11";
+		String from = "";
 		String where = "";
 		String orderBy = ") order by symbol";
 		
@@ -298,7 +299,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			
 			// save search cmd for mutation involves
 			if (from_mi == true) {
-				from = from + ",mgi_relationship_Fear_view v";						
+				from = alleleFrom + ",mgi_relationship_fear_view v";						
 				where = alleleWhere + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey() + where;			
 				cmd = "\n" + select + "\n" + from +"\n" + where;
 			}
@@ -377,7 +378,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			}
 			
 			if (from_ec == true || from_property == true) {
-				from = from + ",mgi_relationship_Fear_view v";		
+				from = alleleFrom + ",mgi_relationship_fear_view v";		
 				where = alleleWhere + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey() + where;							
 			}			
 		}
@@ -398,7 +399,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			cmd = select + "\n" + from + "\n" + where;			
 		}
 		else if (from_mi == false){
-			cmd = select + "\n" + from + "\n" + alleleWhere;
+			cmd = select + "\n" + alleleFrom + "\n" + alleleWhere;
 		}
 		
 		cmd = "\n(" + cmd + "\n" + orderBy;

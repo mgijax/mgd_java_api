@@ -304,7 +304,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				from = from + ",mgi_note n";
 				where = where + "\nand v._relationship_key = n._object_key"
 						+ "\nand n._mgitype_key = 40"
-						+ "\nand n._notetype_ke = 1042"
+						+ "\nand n._notetype_key = 1042"
 						+ "\n.noteChunk ilike '" + value + "'";
 				from_mi = true;	
 			}
@@ -395,7 +395,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				from = from + ",mgi_note n";
 				where = where + "\nand v._relationship_key = n._object_key"
 						+ "\nand n._mgitype_key = 40"
-						+ "\nand n._notetype_ke = 1042"
+						+ "\nand n._notetype_key = 1042"
 						+ "\n.noteChunk ilike '" + value + "'";
 				from_ec = true;	
 			}

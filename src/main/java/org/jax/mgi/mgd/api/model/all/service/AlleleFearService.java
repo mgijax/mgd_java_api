@@ -204,11 +204,11 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 
 		String cmd = "";
-		String select = "select distinct v._object_key_1, v.allelesymbol";
-		String from = "from mgi_relationship_Fear_view v";		
-		String mainWhere = "where v._object_key_1 is not null";
+		String select = "select distinct a._allele_key, a.symbol";
+		String from = "from all_allele a, acc_accession aa";		
+		String alleleWhere = "where a._allele_key = aa._object_key and aa._mgitype_key = 11";
 		String where = "";
-		String orderBy = ") order by allelesymbol";
+		String orderBy = ") order by symbol";
 		
 		String value;
 		String cmResults[];
@@ -224,13 +224,12 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		
 		value = searchDomain.getAlleleKey();
 		if (value != null && !value.isEmpty()) {
-			mainWhere = mainWhere + "\nand v._object_key_1 in (" + value + ")";
-			log.info("found allele keys:" + value);
+			alleleWhere = alleleWhere + "\nand a._allele_key in (" + value + ")";
 		}
 		
 		value = searchDomain.getAlleleDisplay();
 		if (value != null && !value.isEmpty() && value.contains("%")) {
-			mainWhere = mainWhere + "\nand v.allelesymbol ilike '" + value + "'";
+			alleleWhere = alleleWhere + "\nand a.symbol ilike '" + value + "'";
 		}
 		
 		// accession id
@@ -240,7 +239,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			if (!mgiid.contains("MGI:")) {
 				mgiid = "MGI:" + mgiid;
 			}
-			mainWhere = mainWhere + "\nand lower(v.alleleAccID) = '" + mgiid.toLowerCase() + "'";
+			alleleWhere = alleleWhere + "\nand lower(v.alleleAccID) = '" + mgiid.toLowerCase() + "'";
 		}
 
 		// mutation involves
@@ -297,8 +296,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			
 			// save search cmd for mutation involves
 			if (from_mi == true) {
-				where = mainWhere + where + "\nand v._category_key = " + relationshipDomain.getCategoryKey();			
-				cmd = "\n" + select + "\n" + from + "\n" + where;
+				where = alleleWhere + where + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey();			
+				cmd = "\n" + select + "\n" + from + ",mgi_relationship_Fear_view v\n" + where;
 			}
 		}
 		
@@ -309,8 +308,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			relationshipDomain = searchDomain.getExpressesComponents().get(0);
 		
 			// reset from & where
-			from = "from mgi_relationship_Fear_view v";		
-			where = mainWhere;
+			from = from + ",mgi_relationship_Fear_view v";		
+			where = alleleWhere;
 
 			cmResults = DateSQLQuery.queryByCreationModification("v", 
 					relationshipDomain.getCreatedBy(), 
@@ -378,7 +377,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			}
 			
 			if (from_ec == true || from_property == true) {
-				where = where + "\nand v._category_key = " + relationshipDomain.getCategoryKey();
+				where = where + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey();
 			}			
 		}
 		
@@ -402,14 +401,14 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		}
 		
 		cmd = "\n(" + cmd + "\n" + orderBy;
-		log.info("searchCmd: " + cmd);
+		log.info(cmd);
 
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 						
 			while (rs.next())  {
 				SlimAlleleFearDomain domain = new SlimAlleleFearDomain();
-				domain = slimtranslator.translate(alleleFearDAO.get(rs.getInt("_object_key_1")));
+				domain = slimtranslator.translate(alleleFearDAO.get(rs.getInt("_allele_key")));
 				alleleFearDAO.clear();				
 				results.add(domain);					
 			}

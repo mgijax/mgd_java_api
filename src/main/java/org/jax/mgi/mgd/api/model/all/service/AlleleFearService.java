@@ -240,7 +240,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			if (!mgiid.contains("MGI:")) {
 				mgiid = "MGI:" + mgiid;
 			}
-			alleleWhere = alleleWhere + "\nand lower(v.alleleAccID) = '" + mgiid.toLowerCase() + "'";
+			alleleWhere = alleleWhere + "\nand lower(aa.accID) = '" + mgiid.toLowerCase() + "'";
 		}
 
 		// mutation involves

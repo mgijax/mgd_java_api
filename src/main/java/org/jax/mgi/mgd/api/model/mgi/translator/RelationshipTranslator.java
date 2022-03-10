@@ -46,18 +46,25 @@ public class RelationshipTranslator extends BaseEntityDomainTranslator<Relations
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
-		// properties
-		if (entity.getProperties() != null) {
-			RelationshipPropertyTranslator propertyTranslator = new RelationshipPropertyTranslator();
-			Iterable<RelationshipPropertyDomain> i = propertyTranslator.translateEntities(entity.getProperties());
-			domain.setProperties(IteratorUtils.toList(i.iterator()));
-		}
-		
 		// at most one note
 		if (entity.getNote() != null && !entity.getNote().isEmpty()) {
 			NoteTranslator noteTranslator = new NoteTranslator();
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getNote());
 			domain.setNote(note.iterator().next());
+		}
+		// create blank note
+		else {
+			NoteDomain noteDomain = new NoteDomain();
+			noteDomain.setMgiTypeKey("40");
+			noteDomain.setNoteTypeKey("1042");
+			domain.setNote(noteDomain);
+		}
+		
+		// properties
+		if (entity.getProperties() != null) {
+			RelationshipPropertyTranslator propertyTranslator = new RelationshipPropertyTranslator();
+			Iterable<RelationshipPropertyDomain> i = propertyTranslator.translateEntities(entity.getProperties());
+			domain.setProperties(IteratorUtils.toList(i.iterator()));
 		}
 		
 		return domain;

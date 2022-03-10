@@ -40,6 +40,20 @@ public class RelationshipFearTranslator extends BaseEntityDomainTranslator<Relat
 		domain.setCreation_date(entity.getCreation_date());
 		domain.setModification_date(entity.getModification_date()); 
 		
+		// at most one note
+		if (entity.getNote() != null && !entity.getNote().isEmpty()) {
+			NoteTranslator noteTranslator = new NoteTranslator();
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getNote());
+			domain.setNote(note.iterator().next());
+		}
+		// create blank note
+		else {
+			NoteDomain noteDomain = new NoteDomain();
+			noteDomain.setMgiTypeKey("40");
+			noteDomain.setNoteTypeKey("1042");
+			domain.setNote(noteDomain);
+		}
+		
 		// properties
 		if (entity.getProperties() != null) {
 			RelationshipPropertyTranslator propertyTranslator = new RelationshipPropertyTranslator();
@@ -47,13 +61,6 @@ public class RelationshipFearTranslator extends BaseEntityDomainTranslator<Relat
 			domain.setProperties(IteratorUtils.toList(i.iterator()));
 		}
 		
-		// at most one note
-		if (entity.getNote() != null && !entity.getNote().isEmpty()) {
-			NoteTranslator noteTranslator = new NoteTranslator();
-			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getNote());
-			domain.setNote(note.iterator().next());
-		}
-				
 		return domain;
 	}
 

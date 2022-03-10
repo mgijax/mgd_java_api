@@ -39,8 +39,6 @@ public class RelationshipFearDomain extends BaseDomain {
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;  
-
-	List<RelationshipPropertyDomain> properties;
 	private NoteDomain note;
-
+	List<RelationshipPropertyDomain> properties;
 }

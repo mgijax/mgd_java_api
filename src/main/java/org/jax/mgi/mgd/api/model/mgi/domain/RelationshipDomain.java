@@ -39,7 +39,6 @@ public class RelationshipDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	
-	private List<RelationshipPropertyDomain> properties;
 	private NoteDomain note;
-
+	private List<RelationshipPropertyDomain> properties;
 }   	

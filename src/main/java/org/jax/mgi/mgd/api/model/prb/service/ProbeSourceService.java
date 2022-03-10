@@ -133,8 +133,8 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 			domain.setCellLineKey("316336");
 		}
 
-		// if cell line is specified (NOT Not Specified), age is Not Applicable
-		if (!domain.getCellLineKey().equals("316335") ) {
+		// if cell line is specified (NOT Not Specified), and agePrefix is null/empty, then set age is Not Applicable
+		if (!domain.getCellLineKey().equals("316335") && (domain.getAgePrefix() == null || domain.getAgePrefix().isEmpty()) ) {
 			log.info("setting age to not applicable");
 			domain.setAgePrefix("Not Applicable");
 		}

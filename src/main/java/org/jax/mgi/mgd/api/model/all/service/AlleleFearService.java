@@ -245,7 +245,9 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		// mutation involves
 		
 		if (searchDomain.getMutationInvolves() != null) {
+
 			relationshipDomain = searchDomain.getMutationInvolves().get(0);
+			where = "";
 			
 			cmResults = DateSQLQuery.queryByCreationModification("v", 
 				relationshipDomain.getCreatedBy(), 
@@ -282,7 +284,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			value = relationshipDomain.getRefsKey();
 			jnumid = relationshipDomain.getJnumid();		
 			if (value != null && !value.isEmpty()) {
-					where = where + "\nand v._Refs_key = " + value;
+				where = where + "\nand v._Refs_key = " + value;
 				from_mi = true;									
 			}
 				else if (jnumid != null && !jnumid.isEmpty()) {
@@ -296,8 +298,9 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			
 			// save search cmd for mutation involves
 			if (from_mi == true) {
+				from = from + ",mgi_relationship_Fear_view v";						
 				where = alleleWhere + where + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey();			
-				cmd = "\n" + select + "\n" + from + ",mgi_relationship_Fear_view v\n" + where;
+				cmd = "\n" + select + "\n" + from + where;
 			}
 		}
 		
@@ -306,10 +309,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		if (searchDomain.getExpressesComponents() != null) {
 		
 			relationshipDomain = searchDomain.getExpressesComponents().get(0);
-		
-			// reset from & where
-			from = from + ",mgi_relationship_Fear_view v";		
-			where = alleleWhere;
+			where = "";
 
 			cmResults = DateSQLQuery.queryByCreationModification("v", 
 					relationshipDomain.getCreatedBy(), 
@@ -346,7 +346,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			value = relationshipDomain.getRefsKey();
 			jnumid = relationshipDomain.getJnumid();		
 			if (value != null && !value.isEmpty()) {
-					where = where + "\nand v._Refs_key = " + value;
+				where = where + "\nand v._Refs_key = " + value;
 				from_ec = true;									
 			}
 				else if (jnumid != null && !jnumid.isEmpty()) {
@@ -377,7 +377,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			}
 			
 			if (from_ec == true || from_property == true) {
-				where = where + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey();
+				from = from + ",mgi_relationship_Fear_view v";		
+				where = alleleWhere + where + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey();							
 			}			
 		}
 		

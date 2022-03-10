@@ -223,7 +223,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		
 		value = searchDomain.getAlleleKey();
 		if (value != null && !value.isEmpty()) {
-			where = where + "\nand v._object_key_1 = " + value;
+			where = where + "\nand v._object_key_1 in (" + value + ")";
 		}
 		
 		value = searchDomain.getAlleleDisplay();
@@ -373,7 +373,6 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 					from_ec = true;
 					from_property = true;
 				}
-					
 			}
 			
 			if (from_ec == true || from_property == true) {

@@ -89,6 +89,9 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				rdomain.setCreatedByKey(domain.getMutationInvolves().get(i).getCreatedByKey());
 				rdomain.setModifiedByKey(domain.getMutationInvolves().get(i).getModifiedByKey());
 				
+				// add notes to this relationship
+				rdomain.setNote(domain.getExpressesComponents().get(i).getNote());
+				
 				// add relationshipDomain to relationshipList
 				relationshipDomain.add(rdomain);         
 			}
@@ -117,6 +120,9 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				
 				rdomain.setCreatedByKey(domain.getExpressesComponents().get(i).getCreatedByKey());
 				rdomain.setModifiedByKey(domain.getExpressesComponents().get(i).getModifiedByKey());
+				
+				// add notes to this relationship
+				rdomain.setNote(domain.getExpressesComponents().get(i).getNote());
 				
 				// add properties to this relationship
 				rdomain.setProperties(domain.getExpressesComponents().get(i).getProperties());

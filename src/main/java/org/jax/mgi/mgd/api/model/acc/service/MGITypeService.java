@@ -82,12 +82,9 @@ public class MGITypeService extends BaseService<MGITypeDomain> {
 		// Antigen : 7
 		// GXD HT Sample : 43
 		// Allele : 11
-<<<<<<< HEAD
 		// Relationship : 40
-=======
 		// MGI Relationship : 40
->>>>>>> master
-			
+
 		List<SlimMGITypeDomain> results = new ArrayList<SlimMGITypeDomain>();
 
 		String cmd = "select * from acc_mgitype"

@@ -248,6 +248,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		if (searchDomain.getMutationInvolves() != null) {
 
 			relationshipDomain = searchDomain.getMutationInvolves().get(0);
+			from = "";
 			where = "";
 			
 			cmResults = DateSQLQuery.queryByCreationModification("v", 
@@ -299,7 +300,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			
 			// save search cmd for mutation involves
 			if (from_mi == true) {
-				from = alleleFrom + ",mgi_relationship_fear_view v";						
+				from = alleleFrom + ",mgi_relationship_fear_view v" + from;						
 				where = alleleWhere + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey() + where;			
 				cmd = "\n" + select + "\n" + from +"\n" + where;
 			}
@@ -310,6 +311,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		if (searchDomain.getExpressesComponents() != null) {
 		
 			relationshipDomain = searchDomain.getExpressesComponents().get(0);
+			from = "";
 			where = "";
 
 			cmResults = DateSQLQuery.queryByCreationModification("v", 
@@ -378,7 +380,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			}
 			
 			if (from_ec == true || from_property == true) {
-				from = alleleFrom + ",mgi_relationship_fear_view v";		
+				from = alleleFrom + ",mgi_relationship_fear_view v" + from;		
 				where = alleleWhere + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey() + where;							
 			}			
 		}

@@ -206,7 +206,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		String cmd = "";
 		String select = "select distinct v._object_key_1, v.allelesymbol";
 		String from = "from mgi_relationship_Fear_view v";		
-		String where = "where v._object_key_1 is not null";
+		String mainWhere = "where v._object_key_1 is not null";
+		String where = "";
 		String orderBy = ") order by allelesymbol";
 		
 		String value;
@@ -223,13 +224,13 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		
 		value = searchDomain.getAlleleKey();
 		if (value != null && !value.isEmpty()) {
-			where = where + "\nand v._object_key_1 in (" + value + ")";
+			mainWhere = mainWhere + "\nand v._object_key_1 in (" + value + ")";
 			log.info("found allele keys:" + value);
 		}
 		
 		value = searchDomain.getAlleleDisplay();
 		if (value != null && !value.isEmpty() && value.contains("%")) {
-			where = where + "\nand v.allelesymbol ilike '" + value + "'";
+			mainWhere = mainWhere + "\nand v.allelesymbol ilike '" + value + "'";
 		}
 		
 		// accession id
@@ -239,7 +240,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			if (!mgiid.contains("MGI:")) {
 				mgiid = "MGI:" + mgiid;
 			}
-			where = where + "\nand lower(v.alleleAccID) = '" + mgiid.toLowerCase() + "'";
+			mainWhere = mainWhere + "\nand lower(v.alleleAccID) = '" + mgiid.toLowerCase() + "'";
 		}
 
 		// mutation involves
@@ -296,7 +297,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			
 			// save search cmd for mutation involves
 			if (from_mi == true) {
-				where = where + "\nand v._category_key = " + relationshipDomain.getCategoryKey();			
+				where = mainWhere + where + "\nand v._category_key = " + relationshipDomain.getCategoryKey();			
 				cmd = "\n" + select + "\n" + from + "\n" + where;
 			}
 		}
@@ -309,7 +310,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		
 			// reset from & where
 			from = "from mgi_relationship_Fear_view v";		
-			where = "where v._object_key_1 is not null";
+			where = mainWhere;
 
 			cmResults = DateSQLQuery.queryByCreationModification("v", 
 					relationshipDomain.getCreatedBy(), 

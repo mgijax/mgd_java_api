@@ -390,7 +390,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		if (from_mi == true && from_ec == true) {
 			cmd = cmd + "\nunion\n" + select + "\n" + from + "\n" + where;
 		}
-		else {
+		else if (from_ec == true) {
 			cmd = select + "\n" + from + "\n" + where;			
 		}
 		

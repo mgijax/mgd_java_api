@@ -224,6 +224,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		value = searchDomain.getAlleleKey();
 		if (value != null && !value.isEmpty()) {
 			where = where + "\nand v._object_key_1 in (" + value + ")";
+			log.info("found allele keys:" + value);
 		}
 		
 		value = searchDomain.getAlleleDisplay();
@@ -384,6 +385,9 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			from = from + ", mgi_relationship_property p";
 			where = where + "\nand v._relationship_key = p._relationship_key";
 		}
+		
+		log.info("from_mi:" + from_mi);
+		log.info("from_ec:" + from_ec);
 		
 		// if searching both tables, that add "union" + expresses component part
 		if (from_mi == true && from_ec == true) {

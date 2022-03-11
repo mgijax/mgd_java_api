@@ -519,7 +519,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				+ "\nunion"
 				+ "\nselect aa.accid, aa._logicaldb_key, 3 as orderBy"
 				+ "\nfrom acc_accession a, acc_accession aa"
-				+ "\nwhere a.accid = '" + searchDomain.getValue() + ","
+				+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
 				+ "\nand a._logicaldb_key = " + ldbKey1
 				+ "\nand a._object_key = aa._object_key"
 				+ "\nand aa._logicaldb_key in (" + ldbKey2 + ")"

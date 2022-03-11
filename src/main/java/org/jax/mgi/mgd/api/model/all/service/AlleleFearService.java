@@ -502,14 +502,14 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			return results;
 		}
 		
-		String cmd = "\nselect m.symbol as value, " + symbol + " as propertyNameKey, 1 as orderBy"
+		String cmd = "\nselect m.symbol as value, " + symbol + " as propertyNameKey, 2 as orderBy"
 				+ "\nfrom acc_accession a, mrk_marker m"
 				+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
 				+ "\nand a._logicaldb_key = " + ldbKey1					
 				+ "\nand a._object_key = m._marker_key"
 				+ "\nand m._organism_key in (" + organismKey + ")"
 				+ "\nunion"
-				+ "\nselect o.commonname as value, " + organism + " as propertyNameKey, 2 as orderBy"
+				+ "\nselect o.commonname as value, " + organism + " as propertyNameKey, 1 as orderBy"
 				+ "\nfrom acc_accession a, mrk_marker m, mgi_organism o"
 				+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
 				+ "\nand a._logicaldb_key = " + ldbKey1

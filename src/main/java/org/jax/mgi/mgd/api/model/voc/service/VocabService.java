@@ -178,8 +178,10 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			}
 		}
 		
-		// for _vocab_key = 97 (used by mgi_relationship)	
-		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty() && searchDomain.getVocabKey().equals("97")) {
+		// for _vocab_key = 96, 97 (used by mgi_relationship)	
+		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty() &&
+					(searchDomain.getVocabKey().equals("96")
+					|| searchDomain.getVocabKey().equals("97"))) {
 			if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
 					return searchRelationshipVocab(searchDomain.getVocabKey(), searchDomain.getName());		
 			}
@@ -461,6 +463,11 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		else if (vocabName.equals("expressesComponents")) {		
 			cmd = "select _term_key as termKey, term from voc_term where _vocab_key = " + vocabKey
 					+ "\nand _term_key in (12948293,12965808)"
+					+ "\norder by term";
+		}
+		else if (vocabName.equals("properties")) {		
+			cmd = "select _term_key as termKey, term from voc_term where _vocab_key = " + vocabKey
+					+ "\nand _vocab_key = 97 and term like 'Non_mouse%' "
 					+ "\norder by term";
 		}
 		

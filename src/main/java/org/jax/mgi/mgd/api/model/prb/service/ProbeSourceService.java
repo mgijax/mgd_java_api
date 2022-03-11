@@ -90,10 +90,11 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 				
 		// Not Applicable/Not Specified
 		if(domain.getCellLineKey() == null || domain.getCellLineKey().isEmpty()) {
-			// cell line is not entered, tissue = Not Applicable
+			// cell line is not entered and tissue = Not Applicable, then cell line = Not Applicable
 			if (domain.getTissueKey().equals("-2")) {
 				domain.setCellLineKey("316336");
 			}
+			// else cell line = Not Specified
 			else {
 				domain.setCellLineKey("316335");
 			}

@@ -127,11 +127,16 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 			domain.setStrainKey("-2");
 		}
 		
-		//if tissue is specified (NOT Not Specified), cell line default is Not Applicable
-		if (!domain.getTissueKey().equals("-1")) {
-			log.info("setting cell line to not applicable");
-			domain.setCellLineKey("316336");
-		}
+//		// if tissue is (NOT ‘Not Specified’) 
+//		// and cell line is (NOT ‘Not Specified’) and (NOT ‘Not Applicable’)
+//		// then Cell Line = Not Applicable		
+//		if (!domain.getTissueKey().equals("-1")
+//				&& !domain.getCellLineKey().equals("316335") 
+//				&& !domain.getCellLineKey().equals("316336")
+//				) {
+//			log.info("setting cell line to not applicable");
+//			domain.setCellLineKey("316336");
+//		}
 
 		// if cell line is NOT Not Specified and NOT Not Applicable and agePrefix is null/empty, then set agePrefix is Not Applicable
 		if (!domain.getCellLineKey().equals("316335") && !domain.getCellLineKey().equals("316336") && (domain.getAgePrefix() == null || domain.getAgePrefix().isEmpty()) ) {

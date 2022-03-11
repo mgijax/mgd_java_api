@@ -505,7 +505,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		String cmd = "\nselect m.symbol, " + symbol + " as propertyName, 1 as orderBy"
 				+ "\nfrom acc_accession a, mrk_marker m"
 				+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
-				+ "\nand a._logicaldb_key = " + ldbKey1 + ")"					
+				+ "\nand a._logicaldb_key = " + ldbKey1					
 				+ "\nand a._object_key = m._marker_key"
 				+ "\nand m._organism_key in (" + organismKey + ")"
 				+ "\nunion"
@@ -513,7 +513,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				+ "\nfrom acc_accession a, mrk_marker m, mgi_organism o"
 				+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
 				+ "\nand a._logicaldb_key = " + ldbKey1
-				+ "\nd a._object_key = m._marker_key"
+				+ "\nand a._object_key = m._marker_key"
 				+ "\nand m._organism_key = o._organism_key"
 				+ "\nand m._organism_key in (" + organismKey + ")"						
 				+ "\nunion"
@@ -522,7 +522,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				+ "\nwhere a.accid = '" + searchDomain.getValue() + ","
 				+ "\nand a._logicaldb_key = " + ldbKey1
 				+ "\nand a._object_key = aa._object_key"
-				+ "\nand aa._logicaldb_key = " + ldbKey2
+				+ "\nand aa._logicaldb_key in (" + ldbKey2 + ")"
 				+ "\norder by orderBy";
 
 		log.info("cmd: " + cmd);

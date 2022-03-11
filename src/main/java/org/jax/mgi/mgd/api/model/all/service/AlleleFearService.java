@@ -462,45 +462,68 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		//	100655558 | Non-mouse_RGD_Gene_ID
 		//	100655559 | Non-mouse_ZFIN_Gene_ID
 	
-		String ldbKey;
+		String ncbi = "12948292";
+		String hgnc = "100655557";
+		String rgd = "100655558";
+		String zfin = "100655559";
+		String organism = "12948290";
+		String symbol = "12948291";
+		
+		String ldbKey1;
+		String ldbKey2;
 		String organismKey;
 		
-		// NCBI is used by > 1 organism
-		if (searchDomain.getPropertyNameKey().equals("12948292")) {
-			ldbKey = "55,64";
+		// NCBI is used by > 1 organism; but the NCBI ids are unique
+		// a search by NCBI id should still return at most one symbol
+		if (searchDomain.getPropertyNameKey().equals(ncbi)) {
+			ldbKey1 = "55";
+			ldbKey2 = "47,64,172";
 			organismKey = "2,10,11,13,40,63,84,94,95";
 		}
-		else if (searchDomain.getPropertyNameKey().equals("100655557")) {
-			ldbKey = "55,64";
+		// a search by HGNC id may also return an NCBI id
+		else if (searchDomain.getPropertyNameKey().equals(hgnc)) {
+			ldbKey1 = "64";
+			ldbKey2 = "55";
 			organismKey = "2";
 		}	
-		else if (searchDomain.getPropertyNameKey().equals("100655558")) {
-			ldbKey = "47,55";
+		// a search by RGD id may also return an NCBI id
+		else if (searchDomain.getPropertyNameKey().equals(rgd)) {
+			ldbKey1 = "47";
+			ldbKey2 = "55";
 			organismKey = "40";
 		}
-		else if (searchDomain.getPropertyNameKey().equals("100655559")) {
-			ldbKey = "172,55";
+		// a search by ZFIN id may also return an NCBI id
+		else if (searchDomain.getPropertyNameKey().equals(zfin)) {
+			ldbKey1 = "172";
+			ldbKey2 = "55";			
 			organismKey = "84";
 		}		
 		else {
 			return results;
 		}
 		
-		String cmd = "\nselect o.commonname as value, '12948290' as propertyNameKey, 2 as orderBy"
-						+ "\nfrom acc_accession a, mrk_marker m, mgi_organism o"
-						+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
-						+ "\nand a._logicaldb_key in (" + ldbKey + ")"
-						+ "\nand a._object_key = m._marker_key"
-						+ "\nand m._organism_key = o._organism_key"
-						+ "\nand m._organism_key in (" + organismKey + ")"						
-						+ "\nunion"
-						+ "\nselect m.symbol, '12948291', 1 as orderBy"
-						+ "\nfrom acc_accession a, mrk_marker m"
-						+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
-						+ "\nand a._logicaldb_key in (" + ldbKey + ")"					
-						+ "\nand a._object_key = m._marker_key"
-						+ "\nand m._organism_key in (" + organismKey + ")"
-						+ "\norder by orderBy";
+		String cmd = "\nselect m.symbol, " + symbol + " as propertyName, 1 as orderBy"
+				+ "\nfrom acc_accession a, mrk_marker m"
+				+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
+				+ "\nand a._logicaldb_key = " + ldbKey1 + ")"					
+				+ "\nand a._object_key = m._marker_key"
+				+ "\nand m._organism_key in (" + organismKey + ")"
+				+ "\nunion"
+				+ "\nselect o.commonname as value, " + organism + ", 2 as orderBy"
+				+ "\nfrom acc_accession a, mrk_marker m, mgi_organism o"
+				+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
+				+ "\nand a._logicaldb_key = " + ldbKey1
+				+ "\nd a._object_key = m._marker_key"
+				+ "\nand m._organism_key = o._organism_key"
+				+ "\nand m._organism_key in (" + organismKey + ")"						
+				+ "\nunion"
+				+ "\nselect aa.accid as value, aa._logicaldb_key, 3 as orderBy"
+				+ "\nfrom acc_accession a, acc_accession aa"
+				+ "\nwhere a.accid = '" + searchDomain.getValue() + ","
+				+ "\nand a._logicaldb_key = " + ldbKey1
+				+ "\nand a._object_key = aa._object_key"
+				+ "\nand aa._logicaldb_key = " + ldbKey2
+				+ "\norder by orderBy";
 
 		log.info("cmd: " + cmd);
 
@@ -511,8 +534,24 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				RelationshipPropertyDomain domain = new RelationshipPropertyDomain();
 				domain.setProcessStatus(Constants.PROCESS_CREATE);
 				domain.setRelationshipKey(searchDomain.getRelationshipKey());
-				domain.setPropertyNameKey(rs.getString("propertyNameKey"));
 				domain.setValue(rs.getString("value"));
+				
+				if (rs.getInt("propertyNameKey") == 47) {
+					domain.setPropertyNameKey(rgd);
+				}
+				else if (rs.getInt("propertyNameKey") == 55) {
+					domain.setPropertyNameKey(ncbi);
+				}
+				else if (rs.getInt("propertyNameKey") == 64) {
+					domain.setPropertyNameKey(hgnc);
+				}
+				else if (rs.getInt("propertyNameKey") == 172) {
+					domain.setPropertyNameKey(zfin);
+				}				
+				else {
+					domain.setPropertyNameKey(String.valueOf(rs.getInt("propertyNameKey")));	
+				}
+				
 				results.add(domain);						
 			}
 			sqlExecutor.cleanup();

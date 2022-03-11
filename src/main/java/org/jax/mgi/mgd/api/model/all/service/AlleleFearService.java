@@ -467,7 +467,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		
 		if (searchDomain.getPropertyNameKey().equals("12948292")) {
 			ldbKey = "55";
-			organismKey = "2";
+			organismKey = "2,40,84";
 		}
 		else if (searchDomain.getPropertyNameKey().equals("100655557")) {
 			ldbKey = "64";
@@ -491,15 +491,15 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 						+ "\nand a._logicaldb_key = " + ldbKey
 						+ "\nand a._object_key = m._marker_key"
 						+ "\nand m._organism_key = o._organism_key"
-						+ "\nand m._organism_key = " + organismKey						
+						+ "\nand m._organism_key in (" + organismKey + ")"						
 						+ "\nunion"
 						+ "\nselect m.symbol, '12948291', 1 as orderBy"
 						+ "\nfrom acc_accession a, mrk_marker m"
 						+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
 						+ "\nand a._logicaldb_key = " + ldbKey						
 						+ "\nand a._object_key = m._marker_key"
-						+ "\nand m._organism_key = " + organismKey
-						+ "order by orderBy";
+						+ "\nand m._organism_key in (" + organismKey + ")"
+						+ "\norder by orderBy";
 
 		log.info("cmd: " + cmd);
 

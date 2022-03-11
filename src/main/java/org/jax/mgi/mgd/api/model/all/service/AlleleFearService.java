@@ -465,9 +465,10 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		String ldbKey;
 		String organismKey;
 		
+		// NCBI is used by > 1 organism
 		if (searchDomain.getPropertyNameKey().equals("12948292")) {
 			ldbKey = "55";
-			organismKey = "2,40,84";
+			organismKey = "2,10,11,13,40,63,84,94,95";
 		}
 		else if (searchDomain.getPropertyNameKey().equals("100655557")) {
 			ldbKey = "64";

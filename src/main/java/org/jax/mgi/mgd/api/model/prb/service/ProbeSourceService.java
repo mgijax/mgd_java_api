@@ -126,23 +126,12 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 			log.info("setting strain key to not applicable not mouse not not resolved");
 			domain.setStrainKey("-2");
 		}
-		
-//		// if tissue is (NOT ‘Not Specified’) 
-//		// and cell line is (NOT ‘Not Specified’) and (NOT ‘Not Applicable’)
-//		// then Cell Line = Not Applicable		
-//		if (!domain.getTissueKey().equals("-1")
-//				&& !domain.getCellLineKey().equals("316335") 
-//				&& !domain.getCellLineKey().equals("316336")
-//				) {
-//			log.info("setting cell line to not applicable");
-//			domain.setCellLineKey("316336");
-//		}
 
-		// if cell line is NOT Not Specified and NOT Not Applicable and agePrefix is null/empty, then set agePrefix is Not Applicable
-		if (!domain.getCellLineKey().equals("316335") && !domain.getCellLineKey().equals("316336") && (domain.getAgePrefix() == null || domain.getAgePrefix().isEmpty()) ) {
-			log.info("setting ageprefix to not applicable");
-			domain.setAgePrefix("Not Applicable");
-		}
+//		// if cell line is NOT Not Specified and NOT Not Applicable and agePrefix is null/empty, then set agePrefix is Not Applicable
+//		if (!domain.getCellLineKey().equals("316335") && !domain.getCellLineKey().equals("316336") && (domain.getAgePrefix() == null || domain.getAgePrefix().isEmpty()) ) {
+//			log.info("setting ageprefix to not applicable");
+//			domain.setAgePrefix("Not Applicable");
+//		}
 		
 		entity.setSegmentType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));
 		entity.setVector(termDAO.get(Integer.valueOf(domain.getVectorKey())));

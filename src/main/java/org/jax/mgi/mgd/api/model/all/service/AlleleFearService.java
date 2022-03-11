@@ -478,11 +478,11 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			organismKey = "2";
 		}	
 		else if (searchDomain.getPropertyNameKey().equals("100655558")) {
-			ldbKey = "47";
+			ldbKey = "47,55";
 			organismKey = "40";
 		}
 		else if (searchDomain.getPropertyNameKey().equals("100655559")) {
-			ldbKey = "172";
+			ldbKey = "172,55";
 			organismKey = "84";
 		}	
 //		else if (searchDomain.getPropertyNameKey().equals("100655560")) {
@@ -504,7 +504,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		String cmd = "\nselect o.commonname as value, '12948290' as propertyNameKey, 2 as orderBy"
 						+ "\nfrom acc_accession a, mrk_marker m, mgi_organism o"
 						+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
-						+ "\nand a._logicaldb_key = " + ldbKey
+						+ "\nand a._logicaldb_key in (" + ldbKey + ")"
 						+ "\nand a._object_key = m._marker_key"
 						+ "\nand m._organism_key = o._organism_key"
 						+ "\nand m._organism_key = " + organismKey						
@@ -512,7 +512,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 						+ "\nselect m.symbol, '12948291', 1 as orderBy"
 						+ "\nfrom acc_accession a, mrk_marker m"
 						+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
-						+ "\nand a._logicaldb_key = " + ldbKey						
+						+ "\nand a._logicaldb_key in (" + ldbKey + ")"						
 						+ "\nand a._object_key = m._marker_key"
 						+ "\nand m._organism_key = " + organismKey
 						+ "order by orderBy";

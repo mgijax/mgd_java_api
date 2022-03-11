@@ -178,8 +178,8 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			}
 		}
 		
-		// for _vocab_key = 96 (used by mgi_relationship)	
-		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty() && searchDomain.getVocabKey().equals("96")) {
+		// for _vocab_key = 97 (used by mgi_relationship)	
+		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty() && searchDomain.getVocabKey().equals("97")) {
 			if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
 					return searchRelationshipVocab(searchDomain.getVocabKey(), searchDomain.getName());		
 			}

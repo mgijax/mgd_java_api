@@ -475,11 +475,11 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			organismKey = "2";
 		}	
 		else if (searchDomain.getPropertyNameKey().equals("100655558")) {
-			ldbKey = "47";
+			ldbKey = "47,55";
 			organismKey = "40";
 		}
 		else if (searchDomain.getPropertyNameKey().equals("100655559")) {
-			ldbKey = "172";
+			ldbKey = "172,55";
 			organismKey = "84";
 		}		
 		else {

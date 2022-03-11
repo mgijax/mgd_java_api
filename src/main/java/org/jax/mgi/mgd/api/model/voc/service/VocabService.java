@@ -468,7 +468,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		else if (vocabName.equals("properties")) {		
 			cmd = "select _term_key as termKey, term from voc_term where _vocab_key = " + vocabKey
 					+ "\nand _vocab_key = 97 and term like 'Non_mouse%' "
-					+ "\norder by term";
+					+ "\norder by sequenceNum";
 		}
 		
 		log.info(cmd);		

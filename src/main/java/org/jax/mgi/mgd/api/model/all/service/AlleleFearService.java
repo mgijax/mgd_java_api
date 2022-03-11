@@ -461,10 +461,6 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		//	100655557 | Non-mouse_HGNC_Gene_ID
 		//	100655558 | Non-mouse_RGD_Gene_ID
 		//	100655559 | Non-mouse_ZFIN_Gene_ID
-		//	100655560 | Non-mouse_WB_Gene_ID
-		//	100655561 | Non-mouse_FB_Gene_ID
-		//  100655562 | Non-mouse_SGD_Gene_ID
-
 	
 		String ldbKey;
 		String organismKey;
@@ -478,25 +474,13 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			organismKey = "2";
 		}	
 		else if (searchDomain.getPropertyNameKey().equals("100655558")) {
-			ldbKey = "47,55";
+			ldbKey = "47";
 			organismKey = "40";
 		}
 		else if (searchDomain.getPropertyNameKey().equals("100655559")) {
-			ldbKey = "172,55";
+			ldbKey = "172";
 			organismKey = "84";
-		}	
-//		else if (searchDomain.getPropertyNameKey().equals("100655560")) {
-//			ldbKey = "??";
-//			organismKey = "?";
-//		}		
-//		else if (searchDomain.getPropertyNameKey().equals("100655561")) {
-//			ldbKey = "??";
-//			organismKey = "?";
-//		}	
-//		else if (searchDomain.getPropertyNameKey().equals("100655562")) {
-//			ldbKey = "??";
-//			organismKey = "?";
-//		}		
+		}		
 		else {
 			return results;
 		}
@@ -504,7 +488,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		String cmd = "\nselect o.commonname as value, '12948290' as propertyNameKey, 2 as orderBy"
 						+ "\nfrom acc_accession a, mrk_marker m, mgi_organism o"
 						+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
-						+ "\nand a._logicaldb_key in (" + ldbKey + ")"
+						+ "\nand a._logicaldb_key = " + ldbKey
 						+ "\nand a._object_key = m._marker_key"
 						+ "\nand m._organism_key = o._organism_key"
 						+ "\nand m._organism_key = " + organismKey						
@@ -512,7 +496,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 						+ "\nselect m.symbol, '12948291', 1 as orderBy"
 						+ "\nfrom acc_accession a, mrk_marker m"
 						+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
-						+ "\nand a._logicaldb_key in (" + ldbKey + ")"						
+						+ "\nand a._logicaldb_key = " + ldbKey						
 						+ "\nand a._object_key = m._marker_key"
 						+ "\nand m._organism_key = " + organismKey
 						+ "order by orderBy";

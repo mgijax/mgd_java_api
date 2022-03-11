@@ -1,3 +1,10 @@
+TAG: mgd_java_age-6-0-18-12
+DATE: 03/11/2022
+STAFF: lec
+CHANGES:
+wts2-817/P-WI Probes Module Bug
+#       modified:   src/main/java/org/jax/mgi/mgd/api/model/prb/service/ProbeSourceService.java
+
 TAG: mgd_java_age-6-0-18-11
 DATE: 03/10/2022
 STAFF: lec

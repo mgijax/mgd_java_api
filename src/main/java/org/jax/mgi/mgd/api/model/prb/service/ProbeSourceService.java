@@ -83,14 +83,14 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 			domain.setStrainKey("-1");
 		}
 
-		// If key is empty we either set to default or check tissue
+		// Not Specified
 		if(domain.getTissueKey() == null || domain.getTissueKey().isEmpty()) {
-			// Not Specified
 			domain.setTissueKey("-1");
 		}
 				
 		// Not Applicable/Not Specified
 		if(domain.getCellLineKey() == null || domain.getCellLineKey().isEmpty()) {
+			// cell line is not entered, tissue = Not Applicable
 			if (domain.getTissueKey().equals("-2")) {
 				domain.setCellLineKey("316336");
 			}

@@ -51,8 +51,12 @@ public class RelationshipFearTranslator extends BaseEntityDomainTranslator<Relat
 		// create blank note
 		else {
 			NoteDomain noteDomain = new NoteDomain();
+			noteDomain.setProcessStatus(Constants.PROCESS_CREATE);
 			noteDomain.setMgiTypeKey("40");
 			noteDomain.setNoteTypeKey("1042");
+			noteDomain.setNoteKey("");
+			noteDomain.setObjectKey("");			
+			noteDomain.setNoteChunk("");
 			domain.setNote(noteDomain);
 		}
 		

@@ -38,6 +38,12 @@ public class SlimMarkerTranslator extends BaseEntityDomainTranslator<Marker, Sli
 			domain.setDetailClip(note.iterator().next());
 		}
 		
+		// marker location cache
+		if (entity.getLocationCache() != null) {
+			domain.setStartCoordinate(String.valueOf(entity.getLocationCache().getStartCoordinate()));
+			domain.setEndCoordinate(String.valueOf(entity.getLocationCache().getEndCoordinate()));
+		}
+		
 		return domain;
 	}
 

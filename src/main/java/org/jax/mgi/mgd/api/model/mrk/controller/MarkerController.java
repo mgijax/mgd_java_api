@@ -16,7 +16,6 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
-import org.jax.mgi.mgd.api.model.mrk.domain.MarkerLocationCacheDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerOfficialChromDomain;
@@ -232,9 +231,9 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	@POST
 	@ApiOperation(value = "Get Marker Location Cache by Chr, Start Coord, End Coord")
 	@Path("/getMarkerByRegion")
-	public List<MarkerLocationCacheDomain> getMarkerByRegion(MarkerLocationCacheDomain searchDomain) {
+	public List<SlimMarkerDomain> getMarkerByRegion(SlimMarkerDomain searchDomain) {
 		
-		List<MarkerLocationCacheDomain> results = new ArrayList<MarkerLocationCacheDomain>();
+		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
 
 		try {
 			results = markerService.getMarkerByRegion(searchDomain);

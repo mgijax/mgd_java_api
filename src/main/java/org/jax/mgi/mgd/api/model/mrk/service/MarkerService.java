@@ -1258,7 +1258,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				"\nand a._annottype_key = 1011" +
 				"\nand a._term_key in (6238171, 6238162,6238161,7288448,6238184)" + 
 				"\nand m.chromosome = '" + searchDomain.getChromosome() + "'" + 
-				"\nand m.startCoorindate >= " + searchDomain.getStartCoordinate() +
+				"\nand m.startCoordinate >= " + searchDomain.getStartCoordinate() +
 				"\nand m.endCoordinate <= " + searchDomain.getEndCoordinate();
 
 		log.info("cmd: " + cmd);

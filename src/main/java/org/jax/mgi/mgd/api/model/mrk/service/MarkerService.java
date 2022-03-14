@@ -20,14 +20,17 @@ import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
+import org.jax.mgi.mgd.api.model.mrk.dao.MarkerLocationCacheDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerStatusDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerTypeDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.MarkerLocationCacheDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerOfficialChromDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
+import org.jax.mgi.mgd.api.model.mrk.translator.MarkerLocationCacheTranslator;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
 import org.jax.mgi.mgd.api.model.mrk.translator.SlimMarkerTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
@@ -52,6 +55,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private MarkerStatusDAO markerStatusDAO;
 	@Inject
 	private MarkerTypeDAO markerTypeDAO;
+	@Inject
+	private MarkerLocationCacheDAO markerLocationDAO;
 	
 	@Inject
 	private NoteService noteService;
@@ -68,6 +73,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 	private MarkerTranslator translator = new MarkerTranslator();
 	private SlimMarkerTranslator slimtranslator = new SlimMarkerTranslator();
+	private MarkerLocationCacheTranslator markerlocationtranslator = new MarkerLocationCacheTranslator();	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -1233,7 +1239,38 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		return results;
 	}	
+
+	@Transactional	
+	public List<MarkerLocationCacheDomain> getMarkerByRegion(MarkerLocationCacheDomain searchDomain) {
+		// using MarkerLocationCacheDomain, search chromosome, startCoordinate, endCoordainte & return 
 		
+		List<MarkerLocationCacheDomain> results = new ArrayList<MarkerLocationCacheDomain>();
+		
+		String cmd = "\nselect _marker_key from mrk_location_cache" +
+				"where chromosome = " + searchDomain.getChromosome() + "'" + 
+				"\nand startCoorindate >= " + searchDomain.getStrand() +
+				"\nand endCoordinate <= " + searchDomain.getEndCoordinate();
+
+		log.info("cmd: " + cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+						
+			while (rs.next())  {
+				MarkerLocationCacheDomain domain = new MarkerLocationCacheDomain();
+				domain = markerlocationtranslator.translate(markerLocationDAO.get(rs.getInt("_marker_key")));
+				markerLocationDAO.clear();				
+				results.add(domain);					
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 	@Transactional		
 	public SearchResults<SlimMarkerDomain> eiUtilities(MarkerUtilitiesForm searchForm, User user) throws IOException, InterruptedException {
 	
@@ -1422,8 +1459,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// note that any run command errors have already been attached
 		results.setItems(listOfResults);
 		return results;
-	}
-
+	}	
+	
 	@Transactional		
 	public Boolean mrklocationUtilities(String markerKey) throws IOException, InterruptedException {
 		// see mrkcacheload/mrklocation.py

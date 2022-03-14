@@ -412,7 +412,8 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		String cmd ="select s.*\n" + 
 				"from MGI_Organism s, MGI_Organism_MGIType t\n" + 
 				"where s._Organism_key = t._Organism_key\n" +
-				"and t._MGIType_key = 40";
+				"and t._MGIType_key = 40" +
+				"order by s.commonname";
 		log.info(cmd);
 
 		try {

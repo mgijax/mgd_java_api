@@ -1244,12 +1244,22 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	public List<MarkerLocationCacheDomain> getMarkerByRegion(MarkerLocationCacheDomain searchDomain) {
 		// using MarkerLocationCacheDomain, search chromosome, startCoordinate, endCoordainte & return 
 		
+		//		protein coding gene
+		//		non-coding RNA gene
+		//		unclassified gene
+		//		gene segment
+		//		pseudogenic region
+		
 		List<MarkerLocationCacheDomain> results = new ArrayList<MarkerLocationCacheDomain>();
 		
-		String cmd = "\nselect _marker_key from mrk_location_cache" +
-				"where chromosome = " + searchDomain.getChromosome() + "'" + 
-				"\nand startCoorindate >= " + searchDomain.getStrand() +
-				"\nand endCoordinate <= " + searchDomain.getEndCoordinate();
+		String cmd = "\nselect m._marker_key" +
+				"\nfrom mrk_location_cache m, voc_annot a" +
+				"\nwhere m._marker_key = a._object_key" +
+				"\nand a._annottype_key = 1011" +
+				"\nand a._term_key in (6238171, 6238162,6238161,7288448,6238184)" + 
+				"\nand m.chromosome = " + searchDomain.getChromosome() + "'" + 
+				"\nand m.startCoorindate >= " + searchDomain.getStrand() +
+				"\nand m.endCoordinate <= " + searchDomain.getEndCoordinate();
 
 		log.info("cmd: " + cmd);
 

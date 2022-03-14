@@ -104,5 +104,5 @@ public class AlleleFearController extends BaseController<AlleleFearDomain> {
 		}
 		
 		return results;
-	}	
+	}
 }

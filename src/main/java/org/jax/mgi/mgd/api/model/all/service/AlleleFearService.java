@@ -33,6 +33,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 
 	@Inject
 	private AlleleDAO alleleFearDAO;
+
 	@Inject
 	private RelationshipService relationshipService;
 	
@@ -562,5 +563,5 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		
 		return results;
 	}
-	
+		
 }

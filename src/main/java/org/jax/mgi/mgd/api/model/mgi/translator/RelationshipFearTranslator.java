@@ -1,7 +1,10 @@
 package org.jax.mgi.mgd.api.model.mgi.translator;
 
+import java.util.Comparator;
+
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipPropertyDomain;
@@ -59,6 +62,7 @@ public class RelationshipFearTranslator extends BaseEntityDomainTranslator<Relat
 			RelationshipPropertyTranslator propertyTranslator = new RelationshipPropertyTranslator();
 			Iterable<RelationshipPropertyDomain> i = propertyTranslator.translateEntities(entity.getProperties());
 			domain.setProperties(IteratorUtils.toList(i.iterator()));
+			domain.getProperties().sort(Comparator.comparingInt(RelationshipPropertyDomain::getSequenceNum));
 		}
 		
 		return domain;

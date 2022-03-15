@@ -1238,6 +1238,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	public List<SlimMarkerDomain> getMarkerByRegion(SlimMarkerDomain searchDomain) {
 		// using MarkerLocationCacheDomain, search chromosome, startCoordinate, endCoordainte & return 
 		
+		// use mrk_mcv_cache
 		//		protein coding gene
 		//		non-coding RNA gene
 		//		unclassified gene
@@ -1247,11 +1248,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
 		
 		String cmd = "\nselect m._marker_key, m.chromosome, mm.symbol" +
-				"\nfrom mrk_location_cache m, mrk_marker mm, voc_annot a" +
+				"\nfrom mrk_location_cache m, mrk_marker mm, mrk_mcv_cache c" +
 				"\nwhere m._marker_key = mm._marker_key" +
-				"\nand m._marker_key = a._object_key" +
-				"\nand a._annottype_key = 1011" +
-				"\nand a._term_key in (6238171, 6238162,6238161,7288448,6238184)" + 
+				"\nand m._marker_key = c._marker_key" +
+				"\nand c._mcvterm_key in (6238171, 6238162,6238161,7288448,6238184)" + 
 				"\nand m.chromosome = '" + searchDomain.getChromosome() + "'" + 
 				"\nand m.startCoordinate >= " + searchDomain.getStartCoordinate() +
 				"\nand m.endCoordinate <= " + searchDomain.getEndCoordinate() +

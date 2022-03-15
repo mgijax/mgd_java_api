@@ -1255,7 +1255,9 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				"\nand m.chromosome = '" + searchDomain.getChromosome() + "'" + 
 				"\nand m.startCoordinate >= " + searchDomain.getStartCoordinate() +
 				"\nand m.endCoordinate <= " + searchDomain.getEndCoordinate() +
-				"\nand not exists (select 1 from mgi_relationship p where p._category_key in (1003,1004) and m._marker_key = p._object_key_2" +
+				"\nand not exists (select 1 from mgi_relationship p" +
+				"\nwhere p._category_key in (1003) and m._marker_key = p._object_key_2" +
+				"\nand p._relationshipterm_key = " + searchDomain.getRelationshipTermKey() +
 				"\norder by m.chromosome, mm.symbol";
 		log.info("cmd: " + cmd);
 

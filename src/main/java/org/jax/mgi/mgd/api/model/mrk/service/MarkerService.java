@@ -1246,15 +1246,16 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
 		
-		String cmd = "\nselect m._marker_key" +
-				"\nfrom mrk_location_cache m, voc_annot a" +
-				"\nwhere m._marker_key = a._object_key" +
+		String cmd = "\nselect m._marker_key, mm.symol" +
+				"\nfrom mrk_location_cache m, mrk_marker mm, voc_annot a" +
+				"\nwhere m._marker_key = mm._marker_key" +
+				"\nm._marker_key = a._object_key" +
 				"\nand a._annottype_key = 1011" +
 				"\nand a._term_key in (6238171, 6238162,6238161,7288448,6238184)" + 
 				"\nand m.chromosome = '" + searchDomain.getChromosome() + "'" + 
 				"\nand m.startCoordinate >= " + searchDomain.getStartCoordinate() +
-				"\nand m.endCoordinate <= " + searchDomain.getEndCoordinate();
-
+				"\nand m.endCoordinate <= " + searchDomain.getEndCoordinate() +
+				"\norder by mm.symbol";
 		log.info("cmd: " + cmd);
 
 		try {

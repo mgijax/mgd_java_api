@@ -12,7 +12,6 @@ import lombok.Setter;
 public class AlleleFearDomain extends BaseDomain {
 
 	private String alleleKey;
-	private String alleleDisplay;
 	private String alleleSymbol;
 	private String accID;
 	private List<RelationshipFearDomain> mutationInvolves;

@@ -20,7 +20,6 @@ public class AlleleFearTranslator extends BaseEntityDomainTranslator<Allele, All
 		AlleleFearDomain domain = new AlleleFearDomain();
 		
 		domain.setAlleleKey(String.valueOf(entity.get_allele_key()));
-		domain.setAlleleDisplay(entity.getSymbol() + ", " + entity.getName());
 		domain.setAlleleSymbol(entity.getSymbol());
 		
 		// mgi accession ids only

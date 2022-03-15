@@ -474,6 +474,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		String ldbKey2;
 		String organismKey;
 		
+		String value = searchDomain.getValue();
+				
 		// NCBI is used by > 1 organism; but the NCBI ids are unique
 		// a search by NCBI id should still return at most one symbol
 		if (searchDomain.getPropertyNameKey().equals(ncbi)) {
@@ -486,12 +488,18 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			ldbKey1 = "64";
 			ldbKey2 = "55";
 			organismKey = "2";
+			if (!value.contains("HGNC:")) {
+				value = "HGNC:" + value;
+			}
 		}	
 		// a search by RGD id may also return an NCBI id
 		else if (searchDomain.getPropertyNameKey().equals(rgd)) {
 			ldbKey1 = "47";
 			ldbKey2 = "55";
 			organismKey = "40";
+			if (!value.contains("RGD:")) {
+				value = "RGD:" + value;
+			}			
 		}
 		// a search by ZFIN id may also return an NCBI id
 		else if (searchDomain.getPropertyNameKey().equals(zfin)) {
@@ -505,14 +513,14 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		
 		String cmd = "\nselect m.symbol as value, " + symbol + " as propertyNameKey, 2 as orderBy"
 				+ "\nfrom acc_accession a, mrk_marker m"
-				+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
+				+ "\nwhere a.accid = '" + value + "'"
 				+ "\nand a._logicaldb_key = " + ldbKey1					
 				+ "\nand a._object_key = m._marker_key"
 				+ "\nand m._organism_key in (" + organismKey + ")"
 				+ "\nunion"
 				+ "\nselect o.commonname as value, " + organism + " as propertyNameKey, 1 as orderBy"
 				+ "\nfrom acc_accession a, mrk_marker m, mgi_organism o"
-				+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
+				+ "\nwhere a.accid = '" + value + "'"
 				+ "\nand a._logicaldb_key = " + ldbKey1
 				+ "\nand a._object_key = m._marker_key"
 				+ "\nand m._organism_key = o._organism_key"
@@ -520,7 +528,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				+ "\nunion"
 				+ "\nselect aa.accid as value, aa._logicaldb_key as propertyNameKey, 3 as orderBy"
 				+ "\nfrom acc_accession a, acc_accession aa"
-				+ "\nwhere a.accid = '" + searchDomain.getValue() + "'"
+				+ "\nwhere a.accid = '" + value + "'"
 				+ "\nand a._logicaldb_key = " + ldbKey1
 				+ "\nand a._object_key = aa._object_key"
 				+ "\nand aa._logicaldb_key in (" + ldbKey2 + ")"

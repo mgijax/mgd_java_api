@@ -213,7 +213,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		String cmd = "";
 		String select = "select distinct a._allele_key, a.symbol";
 		String alleleFrom = "from all_allele a, acc_accession aa";		
-		String alleleWhere = "where a._allele_key = aa._object_key and aa._mgitype_key = 11";
+		String alleleWhere = "where a.isWildType = 0 and a._allele_key = aa._object_key and aa._mgitype_key = 11";
 		String from = "";
 		String where = "";
 		String orderBy = ") order by symbol";
@@ -235,8 +235,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			alleleWhere = alleleWhere + "\nand a._allele_key in (" + value + ")";
 		}
 		
-		value = searchDomain.getAlleleDisplay();
-		if (value != null && !value.isEmpty() && value.contains("%")) {
+		value = searchDomain.getAlleleSymbol();
+		if (value != null && !value.isEmpty()) {
 			alleleWhere = alleleWhere + "\nand a.symbol ilike '" + value + "'";
 		}
 		

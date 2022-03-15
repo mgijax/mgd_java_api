@@ -26,6 +26,7 @@ import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerOfficialChromDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerRelationshipDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
@@ -1235,7 +1236,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}	
 
 	@Transactional	
-	public List<SlimMarkerDomain> getMarkerByRegion(SlimMarkerDomain searchDomain) {
+	public List<SlimMarkerDomain> getMarkerByRegion(SlimMarkerRelationshipDomain searchDomain) {
 		// using MarkerLocationCacheDomain, search chromosome, startCoordinate, endCoordainte & return 
 		
 		// use mrk_mcv_cache
@@ -1256,7 +1257,9 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				"\nand m.startCoordinate >= " + searchDomain.getStartCoordinate() +
 				"\nand m.endCoordinate <= " + searchDomain.getEndCoordinate() +
 				"\nand not exists (select 1 from mgi_relationship p" +
-				"\nwhere p._category_key in (1003) and m._marker_key = p._object_key_2" +
+				"\nwhere p._category_key in (1003)" +
+				"\nand p._object_key_1 = " + searchDomain.getAlleleKey() +
+				"\nand m._marker_key = p._object_key_2" +				
 				"\nand p._relationshipterm_key = " + searchDomain.getRelationshipTermKey() +
 				"\norder by m.chromosome, mm.symbol";
 		log.info("cmd: " + cmd);

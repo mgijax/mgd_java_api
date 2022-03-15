@@ -7,10 +7,8 @@ import lombok.Setter;
 
 @Getter @Setter
 public class SlimMarkerRelationshipDomain extends BaseDomain {
-
-	// a slim version of MarkerDomain 
-	// not to be used when editing purposes
-	// to be used for returning search results
+	
+	// used by service/getMarkerByRegion()
 	
 	private String markerKey;
 	private String alleleKey;

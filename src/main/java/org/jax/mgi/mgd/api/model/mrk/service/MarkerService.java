@@ -1260,7 +1260,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				"\nwhere p._category_key in (1003)" +
 				"\nand p._object_key_1 = " + searchDomain.getAlleleKey() +
 				"\nand m._marker_key = p._object_key_2" +				
-				"\nand p._relationshipterm_key = " + searchDomain.getRelationshipTermKey() +
+				"\nand p._relationshipterm_key = " + searchDomain.getRelationshipTermKey() + ")" +
 				"\norder by m.chromosome, mm.symbol";
 		log.info("cmd: " + cmd);
 

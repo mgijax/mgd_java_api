@@ -1,4 +1,4 @@
-package org.jax.mgi.mgd.api.model.mrk.domain;
+package org.jax.mgi.mgd.api.model.all.domain;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class SlimMarkerRelationshipDomain extends BaseDomain {
+public class SlimAlleleFearRegionDomain extends BaseDomain {
 	
 	// used by service/getMarkerByRegion()
 	

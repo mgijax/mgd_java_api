@@ -26,7 +26,6 @@ import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerOfficialChromDomain;
-import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerRelationshipDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
@@ -1234,53 +1233,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		return results;
 	}	
-
-	@Transactional	
-	public List<SlimMarkerDomain> getMarkerByRegion(SlimMarkerRelationshipDomain searchDomain) {
-		// using MarkerLocationCacheDomain, search chromosome, startCoordinate, endCoordainte & return 
-		
-		// use mrk_mcv_cache
-		//		protein coding gene
-		//		non-coding RNA gene
-		//		unclassified gene
-		//		gene segment
-		//		pseudogenic region
-		
-		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
-		
-		String cmd = "\nselect m._marker_key, m.chromosome, mm.symbol" +
-				"\nfrom mrk_location_cache m, mrk_marker mm, mrk_mcv_cache c" +
-				"\nwhere m._marker_key = mm._marker_key" +
-				"\nand m._marker_key = c._marker_key" +
-				"\nand c._mcvterm_key in (6238171, 6238162,6238161,7288448,6238184)" + 
-				"\nand m.chromosome = '" + searchDomain.getChromosome() + "'" + 
-				"\nand m.startCoordinate >= " + searchDomain.getStartCoordinate() +
-				"\nand m.endCoordinate <= " + searchDomain.getEndCoordinate() +
-				"\nand not exists (select 1 from mgi_relationship p" +
-				"\nwhere p._category_key in (1003)" +
-				"\nand p._object_key_1 = " + searchDomain.getAlleleKey() +
-				"\nand m._marker_key = p._object_key_2" +				
-				"\nand p._relationshipterm_key = " + searchDomain.getRelationshipTermKey() + ")" +
-				"\norder by m.chromosome, mm.symbol";
-		log.info("cmd: " + cmd);
-
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-						
-			while (rs.next())  {
-				SlimMarkerDomain domain = new SlimMarkerDomain();
-				domain = slimtranslator.translate(markerDAO.get(rs.getInt("_marker_key")));
-				markerDAO.clear();				
-				results.add(domain);					
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
 	
 	@Transactional		
 	public SearchResults<SlimMarkerDomain> eiUtilities(MarkerUtilitiesForm searchForm, User user) throws IOException, InterruptedException {

@@ -12,6 +12,7 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleFearDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleFearDomain;
+import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleFearRegionDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleFearTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleFearTranslator;
@@ -20,6 +21,9 @@ import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipPropertyDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.RelationshipService;
+import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
+import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
+import org.jax.mgi.mgd.api.model.mrk.translator.SlimMarkerTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -33,12 +37,15 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 
 	@Inject
 	private AlleleDAO alleleFearDAO;
-
+	@Inject
+	private MarkerDAO markerDAO;
+	
 	@Inject
 	private RelationshipService relationshipService;
 	
 	private AlleleFearTranslator translator = new AlleleFearTranslator();
 	private SlimAlleleFearTranslator slimtranslator = new SlimAlleleFearTranslator();
+	private SlimMarkerTranslator slimmarkertranslator = new SlimMarkerTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	private String mgiTypeKey = "40";
@@ -571,5 +578,52 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		
 		return results;
 	}
+
+	@Transactional	
+	public List<SlimMarkerDomain> getMarkerByRegion(SlimAlleleFearRegionDomain searchDomain) {
+		// using MarkerLocationCacheDomain, search chromosome, startCoordinate, endCoordainte & return 
 		
+		// use mrk_mcv_cache
+		//		protein coding gene
+		//		non-coding RNA gene
+		//		unclassified gene
+		//		gene segment
+		//		pseudogenic region
+		
+		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
+		
+		String cmd = "\nselect m._marker_key, m.chromosome, mm.symbol" +
+				"\nfrom mrk_location_cache m, mrk_marker mm, mrk_mcv_cache c" +
+				"\nwhere m._marker_key = mm._marker_key" +
+				"\nand m._marker_key = c._marker_key" +
+				"\nand c._mcvterm_key in (6238171, 6238162,6238161,7288448,6238184)" + 
+				"\nand m.chromosome = '" + searchDomain.getChromosome() + "'" + 
+				"\nand m.startCoordinate <= " + searchDomain.getEndCoordinate() +
+				"\nand m.endCoordinate >= " + searchDomain.getStartCoordinate() +
+				"\nand not exists (select 1 from mgi_relationship p" +
+				"\nwhere p._category_key in (1003)" +
+				"\nand p._object_key_1 = " + searchDomain.getAlleleKey() +
+				"\nand m._marker_key = p._object_key_2" +				
+				"\nand p._relationshipterm_key = " + searchDomain.getRelationshipTermKey() + ")" +
+				"\norder by m.chromosome, mm.symbol";
+		log.info("cmd: " + cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+						
+			while (rs.next())  {
+				SlimMarkerDomain domain = new SlimMarkerDomain();
+				domain = slimmarkertranslator.translate(markerDAO.get(rs.getInt("_marker_key")));
+				markerDAO.clear();				
+				results.add(domain);					
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

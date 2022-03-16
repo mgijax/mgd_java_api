@@ -19,7 +19,6 @@ import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerOfficialChromDomain;
-import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerRelationshipDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -222,22 +221,6 @@ public class MarkerController extends BaseController<MarkerDomain> {
 
 		try {
 			results = markerService.validateFeatureTypes(searchDomain);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
-
-	@POST
-	@ApiOperation(value = "Get Marker Location Cache by Chr, Start Coord, End Coord")
-	@Path("/getMarkerByRegion")
-	public List<SlimMarkerDomain> getMarkerByRegion(SlimMarkerRelationshipDomain searchDomain) {
-		
-		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
-
-		try {
-			results = markerService.getMarkerByRegion(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

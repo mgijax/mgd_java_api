@@ -590,6 +590,16 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		//		gene segment
 		//		pseudogenic region
 		
+		// note:  this users overlapping logic
+		// startCoordinate <= endCoordinate
+		// endCoordinate >= startCoordiate
+		
+		// find Markers that are descendants of MCV Term
+		// for given chromosome
+		// with overlapping coordiates
+		// relationship category = mutation involves (1003)
+		// and allele does not already contains a relationship to the marker and relationship type
+		
 		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
 		
 		String cmd = "\nselect m._marker_key, m.chromosome, mm.symbol" +

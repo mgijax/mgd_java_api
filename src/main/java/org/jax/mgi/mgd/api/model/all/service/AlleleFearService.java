@@ -581,24 +581,29 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 
 	@Transactional	
 	public List<SlimMarkerDomain> getMarkerByRegion(SlimAlleleFearRegionDomain searchDomain) {
-		// using MarkerLocationCacheDomain, search chromosome, startCoordinate, endCoordainte & return 
-		
-		// use mrk_mcv_cache
+		// returns SlimMarkerDomain (list of Markers) which match SQL criteria/parameters
+		//
+		// criteria/parameters:
+		//
+		// allele
+		// chromosome
+		//
+		// with overlapping coordinates SQL logic
+		// db startCoordinate <= endCoordinate parameter
+		// db endCoordinate >= startCoordiate parameter
+		//
+		// relationship type
+		// relationship category = MI/mutation involves (1003)
+		//
+		// allele does not contain an existing MI relationship with marker/relationship type
+		//
+		// mrk_mcv_cache contains:
 		//		protein coding gene
 		//		non-coding RNA gene
 		//		unclassified gene
 		//		gene segment
 		//		pseudogenic region
-		
-		// note:  this users overlapping logic
-		// startCoordinate <= endCoordinate
-		// endCoordinate >= startCoordiate
-		
-		// find Markers that are descendants of MCV Term
-		// for given chromosome
-		// with overlapping coordiates
-		// relationship category = mutation involves (1003)
-		// and allele does not already contains a relationship to the marker and relationship type
+		//
 		
 		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
 		

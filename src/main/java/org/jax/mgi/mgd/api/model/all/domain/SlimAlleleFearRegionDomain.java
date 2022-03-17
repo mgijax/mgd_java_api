@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 public class SlimAlleleFearRegionDomain extends BaseDomain {
 	
-	// used by service/getMarkerByRegion()
+	// used by service/allelefear/getMarkerByRegion()
 	
 	private String markerKey;
 	private String alleleKey;

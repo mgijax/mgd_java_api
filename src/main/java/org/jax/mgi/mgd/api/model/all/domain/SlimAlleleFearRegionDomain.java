@@ -16,9 +16,6 @@ public class SlimAlleleFearRegionDomain extends BaseDomain {
 	private String name;
     private String chromosome;
     private String accID;
-	private String organismKey;
-	private String organism;
-	private String organismLatin;
 	private String startCoordinate;
 	private String endCoordinate;	
 	private String relationshipTermKey;

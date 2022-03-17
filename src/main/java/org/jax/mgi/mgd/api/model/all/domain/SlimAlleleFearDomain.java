@@ -8,6 +8,8 @@ import lombok.Setter;
 @Getter @Setter
 public class SlimAlleleFearDomain extends BaseDomain {
 
+	// used by service/allelefear/search()
+	
 	private String alleleKey;
 	private String alleleDisplay;
 	private String alleleSymbol;

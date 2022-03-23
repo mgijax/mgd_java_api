@@ -377,6 +377,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
+		
+		// for alphanumeric sorting
+		// order by (substring(m.symbol, '^[0-9]+'))::int,coalesce(substring(m.symbol, '[^0-9_].*$'),'')
+
 		String cmd = "";
 		String select = "select distinct m._marker_key, m._marker_type_key, m.symbol";
 		String from = "from mrk_marker m";

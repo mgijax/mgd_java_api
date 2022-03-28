@@ -1,8 +1,10 @@
+TAG: mgd_java_api-6-0-18-14
 TAG: mgd_java_api-6-0-18-13
-DATE: 03/23/2022
+DATE: 03/23/2022, 03/28/2022
 STAFF: lec
 CHANGES:
 cre2022/PWI/Allele Relationship/allelefear
+wts2-829/Marker Type/Feature Type combination PWI bug
 
 TAG: mgd_java_api-6-0-18-12
 DATE: 03/11/2022

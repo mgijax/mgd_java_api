@@ -1130,6 +1130,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				//				   7196774 | chromosomal duplication
 				//				   7196775 | chromosomal transposition
 				//				   7222413 | unclassified cytogenetic marker
+				
 				if (!markerTypeKey.equals("3")
 						&& (termKey.equals("7196768")
 						|| termKey.equals("7196774")
@@ -1189,6 +1190,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				//				  97015609 | CTCF binding site
 				//				  97015610 | transcription factor binding site
 				//				  97015611 | open chromatin region
+				//				   7648969 | unclassified other genome feature
+				
 				else if (!markerTypeKey.equals("9")
 						&& (termKey.equals("15406205")
 							|| termKey.equals("9272146")
@@ -1216,6 +1219,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 						 && !termKey.equals("15406207")
 						 && !termKey.equals("7648966")
 						 && !termKey.equals("7648967")
+						 && !termKey.equals("7648969")
 						 && !termKey.equals("36700088")							
                          && !termKey.equals("97015607")
                          && !termKey.equals("97015608")

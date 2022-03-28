@@ -1190,7 +1190,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				//				  97015609 | CTCF binding site
 				//				  97015610 | transcription factor binding site
 				//				  97015611 | open chromatin region
-				//				   7648969 | unclassified other genome feature
 				
 				else if (!markerTypeKey.equals("9")
 						&& (termKey.equals("15406205")

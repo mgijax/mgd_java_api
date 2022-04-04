@@ -17,14 +17,13 @@ import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.voc.entities.TermEMAPA;
 import org.jax.mgi.mgd.api.model.voc.entities.TermEMAPS;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jboss.logging.Logger;
 
 public class HTSampleTranslator extends BaseEntityDomainTranslator<HTSample, HTSampleDomain> {
 	
 	@Override
 	protected HTSampleDomain entityToDomain(HTSample entity) {
 
-		Logger log = Logger.getLogger(getClass());
+		//Logger log = Logger.getLogger(getClass());
 		
 		HTSampleDomain sampleDomain = new HTSampleDomain();
 
@@ -46,6 +45,10 @@ public class HTSampleTranslator extends BaseEntityDomainTranslator<HTSample, HTS
 		
 		if (entity.getSex() != null) {
 			sampleDomain.set_sex_key(entity.getSex().get_term_key());
+		}
+
+		if (entity.getCellTypeTerm() != null) {
+			sampleDomain.set_celltype_term_key(entity.getCellTypeTerm().get_term_key());
 		}
 		
 		// null allowed

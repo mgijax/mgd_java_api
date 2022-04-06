@@ -269,12 +269,14 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		}
 
 		// exp note 
-		value = searchDomain.getNotetext();			
-		if (value != null && !value.isEmpty()) {	
-			from = from + ", mgi_note n";	
-			where = where + "\nand hte._experiment_key = n._object_key ";
-			where = where + "\nand n._notetype_key = 1047 ";
-			where = where + "\nand n.note ilike '" + value + "'";
+		if (searchDomain.getNotetext() != null && !searchDomain.getNotetext().isEmpty()) {
+			value = searchDomain.getNotetext().replaceAll("'", "''");		
+			if (value != null && !value.isEmpty()) {	
+				from = from + ", mgi_note n";	
+				where = where + "\nand hte._experiment_key = n._object_key ";
+				where = where + "\nand n._notetype_key = 1047 ";
+				where = where + "\nand n.note ilike '" + value + "'";
+			}
 		}
 
 		/*

@@ -1,3 +1,16 @@
+TAG: mgd_java_api-6-0-18-16
+DATE: 04/06/2022
+STAFF: lec
+CHANGES:
+wts2-787/HT indexing module: issue with searching for notes that include '
+
+TAG: mgd_java_api-6-0-18-15
+DATE: 04/06/2022
+STAFF: dbm
+CHANGES: wts2-772
+1) startApi.sh: Use $JAVA instead of hardcode path that doesn't exist on
+                the PWI server where the API is moving to
+
 TAG: mgd_java_api-6-0-18-14
 TAG: mgd_java_api-6-0-18-13
 DATE: 03/23/2022, 03/28/2022

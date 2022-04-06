@@ -438,7 +438,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		for (int i = 0; i < domain.getSubtypeAnnots().size(); i++) {
 
-			if (domain.getSubtypeAnnots().get(i).getTermKey().isEmpty()) {
+			if (domain.getSubtypeAnnots().get(i).getTermKey() == null || domain.getSubtypeAnnots().get(i).getTermKey().isEmpty()) {
 				continue;
 			}
 			

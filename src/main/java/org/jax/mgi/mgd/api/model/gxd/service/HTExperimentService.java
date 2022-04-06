@@ -269,7 +269,7 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		}
 
 		// exp note 
-		value = searchDomain.getNotetext();			
+		value = searchDomain.getNotetext().replaceAll("'", "''");		
 		if (value != null && !value.isEmpty()) {	
 			from = from + ", mgi_note n";	
 			where = where + "\nand hte._experiment_key = n._object_key ";

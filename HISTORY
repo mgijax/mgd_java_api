@@ -1,3 +1,9 @@
+TAG: mgd_java_api-6-0-18-16
+DATE: 04/06/2022
+STAFF: lec
+CHANGES:
+wts2-787/HT indexing module: issue with searching for notes that include '
+
 TAG: mgd_java_api-6-0-18-15
 DATE: 04/06/2022
 STAFF: dbm

@@ -1,18 +1,25 @@
 package org.jax.mgi.mgd.api.model.gxd.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTSampleDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimHTDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.HTSampleService;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberCellTypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Path("/htsample")
 @Api(value = "HT Sample Endpoints")
@@ -55,5 +62,21 @@ public class HTSampleController extends BaseController<HTSampleDomain> {
 //	public SearchResults<HTSampleDomain> getObjectCount() {
 //		return htSampleService.getObjectCount();
 //	}
+
+	@POST
+	@ApiOperation(value = "Get CellType Set Members by HT Sample and Set/User")
+	@Path("/getCellTypeHTSampleBySetUser")
+	public List<MGISetMemberCellTypeDomain> getCellTypeHTSampleBySetUser(SlimHTDomain domain) {
+			
+		List<MGISetMemberCellTypeDomain> results = new ArrayList<MGISetMemberCellTypeDomain>();
 		
+		try {
+			results = htSampleService.getCellTypeHTSampleBySetUser(domain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

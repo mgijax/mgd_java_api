@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.gxd.service;
 
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,14 +14,17 @@ import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.HTSampleDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.TheilerStageDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTSampleDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimHTDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTSample;
 import org.jax.mgi.mgd.api.model.gxd.translator.HTSampleTranslator;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberCellTypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -42,6 +47,8 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 	private NoteService noteService;
 	
 	private HTSampleTranslator translator = new HTSampleTranslator();
+
+	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
 	public SearchResults<HTSampleDomain> create(HTSampleDomain domain, User user) {
@@ -253,5 +260,59 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 		log.info("processHTSample/processing successful");
 		return modified;
 	}
+
+	@Transactional	
+	public List<MGISetMemberCellTypeDomain> getCellTypeHTSampleBySetUser(SlimHTDomain searchDomain) {
+		// return 
+		// all set members of cell type (_set_key = 1059) + user (searchDomain.getCreatedByKey())
+		// union
+		// all cell types for given gxd_htsample (searchDomain.getExperimentKey())
+
+		List<MGISetMemberCellTypeDomain> results = new ArrayList<MGISetMemberCellTypeDomain>();		
 		
+		// search mgi_setmembers where _set_key = 1059 (cell type)
+		String cmd = 
+				"\n(select distinct t.term, s._setmember_key as setMemberKey, s._set_key as setKey, s._object_key as objectKey, s._createdby_key as createdByKey, u.login" +
+				"\nfrom mgi_setmember s, voc_term t, mgi_user u" +
+				"\nwhere not exists (select 1 from gxd_htsample ht where s._Object_key = ht._CellType_Term_key" +
+				"\nand ht._experiment_key = " + searchDomain.get_experiment_key() + ")" +
+				"\nand s._set_key = 1059" +
+				"\nand s._object_key = t._term_key" +
+				"\nand s._createdby_key = u._user_key" +
+				"\nand u.login = '" + searchDomain.getCreatedBy() + "'" +		
+				"\nunion all" +
+				"\nselect distinct t.term, 0 as setMemberKey, 0 as setKey, ht._CellType_term_key as objectKey, 0 as createdByKey, null as createdBy" +
+				"\nfrom gxd_htsample ht, voc_term t" +
+				"\nwhere ht._celltype_term_key = t._term_key" +
+				"\nand ht._experiment_key = " + searchDomain.get_experiment_key() +
+				"\ngroup by _celltype_term_key, term" +
+				"\n) order by term";
+
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				MGISetMemberCellTypeDomain domain = new MGISetMemberCellTypeDomain();
+				domain.setProcessStatus("x");
+				domain.setSetKey(rs.getString("setKey"));
+				domain.setSetMemberKey(rs.getString("setMemberKey"));
+				domain.setObjectKey(rs.getString("objectKey"));
+				domain.setTerm(rs.getString("term"));
+				domain.setDisplayIt(rs.getString("term"));				
+				domain.setCreatedByKey(rs.getString("createdByKey"));
+				domain.setCreatedBy(rs.getString("login"));
+				domain.setIsUsed(false);
+				results.add(domain);				
+				htSampleDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

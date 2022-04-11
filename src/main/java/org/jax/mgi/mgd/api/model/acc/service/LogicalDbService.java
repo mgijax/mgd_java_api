@@ -77,7 +77,6 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 			for (int i = 0; i < adbList.size(); i++) {
 				ActualDbDomain adbDomain = adbList.get(i);
 				
-				//**********
 				// if name and url are empty, skip - this is a blank line we want to ignore
 				if ((adbDomain.getName() == null || adbDomain.getName().isEmpty()) && (adbDomain.getUrl()== null || adbDomain.getUrl().isEmpty())) {
 					continue;
@@ -92,9 +91,7 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 					results.setError("Failed : ActualDB error", "Missing Url", Constants.HTTP_SERVER_ERROR);
 				    return results;
 			    }
-				    
-				//****************
-				
+				    				
 				ActualDB adbEntity = new ActualDB();
 				adbEntity.set_logicaldb_key(logicalDBKey);
 				adbEntity.setName(adbDomain.getName());
@@ -124,14 +121,13 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 				actualDBDAO.persist(adbEntity);
 				
 				log.info("Service create persisted actualDB attributes: ");
-				log.info("Service create actualDbKey: " + adbEntity.get_actualdb_key()); //XXX185
-				log.info("name: " + adbEntity.getName()); //XXX A new ADB
-				log.info("url: " + adbEntity.getUrl()); //XXX A new ADB url
-				log.info("ldbKey: " + adbEntity.get_logicaldb_key()); //XXX 276
-				log.info("active: " + adbEntity.getActive()); //XXX 1
-				log.info("multiple: " + adbEntity.getAllowsMultiple()); //XXX 0
-				log.info("delimiter: "+ adbEntity.getDelimiter()); //XXX null
-				
+				log.info("Service create actualDbKey: " + adbEntity.get_actualdb_key());
+				log.info("name: " + adbEntity.getName());
+				log.info("url: " + adbEntity.getUrl());
+				log.info("ldbKey: " + adbEntity.get_logicaldb_key());
+				log.info("active: " + adbEntity.getActive());
+				log.info("multiple: " + adbEntity.getAllowsMultiple());
+				log.info("delimiter: "+ adbEntity.getDelimiter());
 			}
 			
 		}
@@ -260,7 +256,6 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 					log.info("active: " + adbEntity.getActive());
 					log.info("multiple: " + adbEntity.getAllowsMultiple());
 					log.info("delimiter: "+ adbEntity.getDelimiter());
-					
 				}
 				else { // has adb key so do an update
 		
@@ -534,7 +529,7 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 		//       48 | RPCI-23
 		//       52 | RPCI-24
 		//       80 | UniSTS
-		//       16 | WashU		
+		//       16 | WashU	
 		
 		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
 
@@ -617,7 +612,7 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 				+ "\nunion"
 				+ "\nselect _logicaldb_key, name, 2 as org"
 				+ "\nfrom acc_logicaldb"
-				+ "\nwhere _logicaldb_key in (37,39,40,54,56,57,58,70,71,83,87,90,91,92,93,94,154,161,177,184,188,200,206,207,208,213,215,216,217,219,220)"
+				+ "\nwhere _logicaldb_key in (37,39,40,54,56,57,58,70,71,83,87,90,91,92,93,94,154,161,177,184,188,200,206,207,208,213,215,216,217,219,220,224)"
 				+ "\norder by org, name";
 		log.info(cmd);
 		

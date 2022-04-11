@@ -124,9 +124,8 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				entity.setGenotype(genotypeDAO.get(domain.get(i).getGenotype_object().get_genotype_key()));
 				entity.setName(domain.get(i).getName());
 				
-				// default 99536377/cell
 				if (domain.get(i).get_celltype_term_key() == null) {
-					entity.setCellTypeTerm(termDAO.get(99536377));
+					entity.setCellTypeTerm(null);
 				}
 				else {
 					entity.setCellTypeTerm(termDAO.get(domain.get(i).get_celltype_term_key()));					
@@ -195,10 +194,16 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				entity.setOrganism(organismDAO.get(domain.get(i).get_organism_key()));
 				entity.setRelevance(termDAO.get(domain.get(i).get_relevance_key()));
 				entity.setSex(termDAO.get(domain.get(i).get_sex_key()));
-				entity.setCellTypeTerm(termDAO.get(domain.get(i).get_celltype_term_key()));
 				entity.setGenotype(genotypeDAO.get(domain.get(i).getGenotype_object().get_genotype_key()));
 				entity.setName(domain.get(i).getName());
 
+				if (domain.get(i).get_celltype_term_key() == null) {
+					entity.setCellTypeTerm(null);
+				}
+				else {
+					entity.setCellTypeTerm(termDAO.get(domain.get(i).get_celltype_term_key()));					
+				}
+				
 				if (domain.get(i).getAge() == null || domain.get(i).getAge().isEmpty()) {
 					entity.setAge(" ");
 					entity.setAgeMin(-1);

@@ -1,3 +1,15 @@
+TAG: mgd_java_api-6-0-18-18
+DATE: 04/11/2022
+STAFF: lec
+CHANGES:
+wts2-801/pwi/littriage/Add Relevance= "Not Specified" to the Discard? options in the upper left.
+
+TAG: mgd_java_api-6-0-18-17
+DATE: 04/11/2022
+STAFF: lec
+CHANGES:
+wts2-852/Add ITL repository to the Logical DB & EI
+
 TAG: mgd_java_api-6-0-18-16
 DATE: 04/06/2022
 STAFF: lec

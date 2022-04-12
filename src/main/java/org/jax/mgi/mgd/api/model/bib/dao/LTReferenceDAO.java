@@ -174,7 +174,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		String relevanceTerm = null;		
 		if (params.containsKey("currentRelevance")) {
 			String desiredValue = ((String) params.get("currentRelevance")).toLowerCase();
-			if (!desiredValue.equals("SearchAll")) {
+			if (!desiredValue.isEmpty()) {
 				relevanceTerm = desiredValue;
 			}
 		}

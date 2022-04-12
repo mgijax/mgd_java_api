@@ -30,4 +30,5 @@ public class HTSampleDomain extends BaseDomain {
 	private NoteDomain htNotes;			// new version : at some point, change pwi to use this version
 	private HTGenotypeDomain genotype_object;
 	private HTEmapsDomain emaps_object;
+	private HTCellTypeDomain cl_object;
 }

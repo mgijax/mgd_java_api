@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTCellTypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTEmapaDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTEmapsDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTGenotypeDomain;
@@ -99,6 +100,20 @@ public class HTSampleTranslator extends BaseEntityDomainTranslator<HTSample, HTS
 			sampleDomain.setEmaps_object(hTEmapsDomain);
 		}
 
+		// Handling of Cell Type terms/may be null
+		if (entity.getCellTypeTerm() != null && entity.getCellTypeTerm() != null) {
+			HTCellTypeDomain clDomain = new HTCellTypeDomain();
+			sampleDomain.set_celltype_term_key(entity.getCellTypeTerm().get_term_key());
+			clDomain.set_term_key(entity.getCellTypeTerm().get_term_key());
+			clDomain.setTerm(entity.getCellTypeTerm().getTerm());
+			clDomain.setAbbreviation(entity.getCellTypeTerm().getAbbreviation());
+			sampleDomain.setCl_object(clDomain);
+		}
+		else {
+			sampleDomain.setCl_object(null);
+		}
+
+		
 		// notes using HTNoteDomain
 		if (entity.getNotes() != null && entity.getNotes().size() > 0) {
 

@@ -19,11 +19,22 @@ public class SlimReferenceDomain extends BaseDomain {
 	private String jnumid;
 	private String jnum;
 	private String short_citation;
+	private String title;	
 	private String journal;
 	private String year;
 	public String mgiid;	
 	public String doiid;
 	public String pubmedid;
+
+	// used by lit triage
+	public String ap_status;
+	public String go_status;
+	public String gxd_status;
+	public String pro_status;
+	public String qtl_status;
+	public String tumor_status;
+	public String has_pdf;
+	public String has_supplemental;
 	
 	// used by validateJnumImage
 	private List<TermDomain> journalLicenses;

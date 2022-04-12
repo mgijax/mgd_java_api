@@ -327,40 +327,79 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		Collections.sort(results);
 		return new SearchResults<String>(results);
 	}	
-	   
+
 	@Transactional	
 	public List<SlimReferenceDomain> search(ReferenceDomain searchDomain) {
 		// using searchDomain fields, generate SQL command
+		
+		log.info("ReferenceService/search");
 		
 		List<SlimReferenceDomain> results = new ArrayList<SlimReferenceDomain>();
 
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
-		String select = "select distinct c.*";
-		String from = "from bib_citation_cache c, bib_refs r";
-		String where = "where c._refs_key = r._refs_key";
+		
+		String select = "select distinct c.*, r.title"
+				+ "\n, wkfd.hasPdf as has_pdf"
+				+ "\n, apt.term as ap_status, got.term as go_status, gxdt.term as gxd_status"
+				+ "\n, prot.term as pro_status, qtlt.term as qtl_status, tumort.term as tumor_status";
+		
+		String from = "from bib_citation_cache c, bib_refs r"
+				+ "\n, bib_workflow_data wkfd"
+				+ "\n, bib_workflow_status ap, voc_term apt"
+				+ "\n, bib_workflow_status go, voc_term got"
+				+ "\n, bib_workflow_status gxd, voc_term gxdt"
+				+ "\n, bib_workflow_status pro, voc_term prot"
+				+ "\n, bib_workflow_status qtl, voc_term qtlt"
+				+ "\n, bib_workflow_status tumor, voc_term tumort";
+		
+		String where = "where c._refs_key = r._refs_key"
+				+ "\nand c._refs_key = wkfd._refs_key and wkfd._extractedtext_key = 48804490"			
+				+ "\nand c._refs_key = ap._refs_key and ap.isCurrent = 1 and ap._group_key = 31576664 and ap._status_key = apt._term_key"
+				+ "\nand c._refs_key = go._refs_key and go.isCurrent = 1 and go._group_key = 31576666 and go._status_key = got._term_key"
+				+ "\nand c._refs_key = gxd._refs_key and gxd.isCurrent = 1 and gxd._group_key = 31576665 and gxd._status_key = gxdt._term_key"
+				+ "\nand c._refs_key = pro._refs_key and pro.isCurrent = 1 and pro._group_key = 78678148 and pro._status_key = prot._term_key"
+				+ "\nand c._refs_key = qtl._refs_key and qtl.isCurrent = 1 and qtl._group_key = 31576668 and qtl._status_key = qtlt._term_key"	
+				+ "\nand c._refs_key = tumor._refs_key and tumor.isCurrent = 1 and tumor._group_key = 31576667 and tumor._status_key = tumort._term_key";
+				
 		String 	orderBy = "order by c.short_citation";			
 		String limit = Constants.SEARCH_RETURN_LIMIT;
-		
+		String value;
+		String addToWhere = "";
+
+		Boolean from_accession = false;
 		Boolean from_note = false;
 		Boolean from_book = false;
 		Boolean from_mgiid = false;
 		Boolean from_pubmedid = false;
 		Boolean from_doiid = false;
+		Boolean from_wkfrelevance = false;
+		Boolean from_wkfstatus = false;
 		
-		//Boolean from_allele = false;
-		//Boolean from_marker = false;
-		//Boolean from_strain = false;
-
-		// if parameter exists, then add to where-clause
+		// may be a different order
+		if (searchDomain.getOrderBy() != null && !searchDomain.getOrderBy().isEmpty()) {
+			if (searchDomain.getOrderBy().equals("1")) {
+				orderBy = "order by c.numericpart desc nulls last, c.mgiid asc";
+			}
+			else {
+				orderBy = "order by c.mgiid";
+			}
+		}
 		
+		if (searchDomain.getAccids() != null && !searchDomain.getAccids().isEmpty()) {
+			value = searchDomain.getAccids().trim().toLowerCase().replaceAll(" ",",").replaceAll(",", "','");
+			where = where + "\nand lower(a.accid) in ('" + value + "')";
+			from_accession = true;
+		}
+		
+		// reference history
 		String cmResults[] = DateSQLQuery.queryByCreationModification("r", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {
 			from = from + cmResults[0];
 			where = where + cmResults[1];
 		}
-
+		
 		if (searchDomain.getJnumid() != null && !searchDomain.getJnumid().isEmpty()) {
 			String jnumid = searchDomain.getJnumid().toUpperCase();
 			if (!jnumid.contains("J:")) {
@@ -372,6 +411,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (searchDomain.getReferenceTypeKey() != null && !searchDomain.getReferenceTypeKey().isEmpty()) {
 			where = where + "\nand r._ReferenceType_key = " + searchDomain.getReferenceTypeKey();
 		}
+		else if (searchDomain.getReferenceType() != null && !searchDomain.getReferenceType().isEmpty()) {
+			where = where + "\nand r._referencetype_key =" + searchDomain.getReferenceType();
+		}		
 		if (searchDomain.getAuthors() != null && !searchDomain.getAuthors().isEmpty()) {
 			where = where + "\nand r.authors ilike '" + searchDomain.getAuthors() + "'";
 		}
@@ -392,15 +434,33 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		if (searchDomain.getDate() != null && !searchDomain.getDate().isEmpty()) {
 			where = where + "\nand r.date ilike '" + searchDomain.getDate() + "'";
-		}
-		if (searchDomain.getYear() != null && !searchDomain.getYear().isEmpty()) {
-			where = where + "\nand r.year = " + searchDomain.getYear();
 		}		
 		if (searchDomain.getIsReviewArticle() != null && !searchDomain.getIsReviewArticle().isEmpty()) {
 			where = where + "\nand r.isReviewArticle = " + searchDomain.getIsReviewArticle();
 		}
 		if (searchDomain.getReferenceAbstract() != null && !searchDomain.getReferenceAbstract().isEmpty()) {
 			where = where + "\nand r.abstract ilike '" + searchDomain.getReferenceAbstract() + "'";
+		}
+		
+		// add some logic to allow >=, <=, >, <, =, between xxx and zzz, or just the year
+		if (searchDomain.getYear() != null && !searchDomain.getYear().isEmpty()) {
+			value = searchDomain.getYear();
+			if (value.startsWith("=")
+					|| value.startsWith(">=")
+					|| value.startsWith(">")
+					|| value.startsWith("<=")
+					|| value.startsWith("<")
+					)
+			{
+				where = where + "\nand r.year " + value;
+			}
+			else if (value.contains("..")) {
+				String[] tokens = value.split("\\.\\.");
+				where = where + "\nand year >= " + tokens[0] + " and year <= " + tokens[1];
+			}
+			else {		
+				where = where + "\nand r.year = " + value;
+			}
 		}
 		
 		// bib_books
@@ -452,7 +512,319 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				from_pubmedid = true;
 			}
 		}
+	
+		// supplemental term
+		if (searchDomain.getSupplementalTerm() != null && !searchDomain.getSupplementalTerm().isEmpty()) {
+			where = where + "\nand wkfd" + searchDomain.getSupplementalTerm();
+		}
+		
+		// relevance history
+		if (searchDomain.getCurrentRelevance() != null && !searchDomain.getCurrentRelevance().isEmpty()) {
+			where = where + "\nand wkfr._relevance_key = " + searchDomain.getCurrentRelevance();
+			from_wkfrelevance = true;
+		}
+		else if (searchDomain.getRelevance() != null && !searchDomain.getRelevance().isEmpty()) {
+			where = where + "\nand wkff._relevance_key = " + searchDomain.getRelevance();
+			from_wkfrelevance = true;
+		}
+		if (searchDomain.getRelevance_version() != null && !searchDomain.getRelevance_version().isEmpty()) {
+			where = where + "\nand wkfr.version = '" + searchDomain.getRelevance_version() + "'";
+			from_wkfrelevance = true;
+		}
+		if (searchDomain.getRelevance_confidence() != null && !searchDomain.getRelevance_confidence().isEmpty()) {
+			where = where + "\nand wkfr.confidence = " + searchDomain.getRelevance_confidence();
+			from_wkfrelevance = true;
+		}
+		if ((searchDomain.getRelevance_user() != null && !searchDomain.getRelevance_user().isEmpty())
+				|| (searchDomain.getRelevance_date() != null && !searchDomain.getRelevance_date().isEmpty())
+			) {
+			
+			String cmResultsStatus[] = DateSQLQuery.queryByCreationModification("wkfr", null, searchDomain.getRelevance_user(), null, searchDomain.getRelevance_date());
+			if (cmResultsStatus.length > 0) {
+				cmResultsStatus[0] = cmResultsStatus[0].replaceAll("u1", "u3");
+				cmResultsStatus[1] = cmResultsStatus[1].replaceAll("u1", "u3");
+				cmResultsStatus[0] = cmResultsStatus[0].replaceAll("u2", "u4");
+				cmResultsStatus[1] = cmResultsStatus[1].replaceAll("u2", "u4");				
+				from = from + cmResultsStatus[0];
+				where = where + cmResultsStatus[1];
+				from_wkfrelevance = true;
+			}
+		}
+		
+		// status history
+		if (searchDomain.getSh_status() != null && !searchDomain.getSh_status().isEmpty()) {
+			where = where + "\nand st.term = '" + searchDomain.getSh_status() + "'";
+			from_wkfstatus = true;
+		}
+		if (searchDomain.getSh_group() != null && !searchDomain.getSh_group().isEmpty()) {
+			where = where + "\nand gt.term = '" + searchDomain.getSh_group() + "'";
+			from_wkfstatus = true;
+		}	
+		if ((searchDomain.getSh_username() != null && !searchDomain.getSh_username().isEmpty())
+				|| (searchDomain.getSh_date() != null && !searchDomain.getSh_date().isEmpty())
+			) {
+			String cmResultsStatus[] = DateSQLQuery.queryByCreationModification("wkfs", null, searchDomain.getSh_username(), null, searchDomain.getSh_date());
+			if (cmResultsStatus.length > 0) {
+				cmResultsStatus[0] = cmResultsStatus[0].replaceAll("u1", "u5");
+				cmResultsStatus[1] = cmResultsStatus[1].replaceAll("u1", "u5");
+				cmResultsStatus[0] = cmResultsStatus[0].replaceAll("u2", "u6");
+				cmResultsStatus[1] = cmResultsStatus[1].replaceAll("u2", "u6");					
+				from = from + cmResultsStatus[0];
+				where = where + cmResultsStatus[1];
+				from_wkfstatus = true;
+			}
+		}
+			
+		// process workflow tags
+		if (searchDomain.getWorkflow_tag_operator() != null && !searchDomain.getWorkflow_tag_operator().isEmpty()) {
+			
+			String workflow_tag_operator = searchDomain.getWorkflow_tag_operator();
+			String exists_operator = " exists";
+			String select_operator = " (select 1 from bib_workflow_tag tg, voc_term tagt"
+					+ " where r._refs_key = tg._refs_key and tg._tag_key = tagt._term_key and tagt.term = '";
+			String useExists_operator = "";
+			
+			addToWhere = "";
+			
+			if (searchDomain.getWorkflow_tag1() != null && !searchDomain.getWorkflow_tag1().isEmpty()) {
+				if (searchDomain.getNot_workflow_tag1() != null && searchDomain.getNot_workflow_tag1() == true) {
+					useExists_operator = " not" + exists_operator;
+				}
+				else {
+					useExists_operator = exists_operator;	
+				}
+				addToWhere = addToWhere + workflow_tag_operator + useExists_operator + select_operator + searchDomain.getWorkflow_tag1() + "')\n";
+			}
+			
+			if (searchDomain.getWorkflow_tag2() != null && !searchDomain.getWorkflow_tag2().isEmpty()) {
+				if (searchDomain.getNot_workflow_tag2() != null && searchDomain.getNot_workflow_tag2() == true) {
+					useExists_operator = " not" + exists_operator;
+				}
+				else {
+					useExists_operator = exists_operator;	
+				}
+				addToWhere = addToWhere + workflow_tag_operator + useExists_operator + select_operator + searchDomain.getWorkflow_tag2() + "')\n";
+			}
+			
+			if (searchDomain.getWorkflow_tag3() != null && !searchDomain.getWorkflow_tag3().isEmpty()) {
+				if (searchDomain.getNot_workflow_tag3() != null && searchDomain.getNot_workflow_tag3() == true) {
+					useExists_operator = " not" + exists_operator;
+				}
+				else {
+					useExists_operator = exists_operator;	
+				}
+				addToWhere = addToWhere + workflow_tag_operator + useExists_operator + select_operator + searchDomain.getWorkflow_tag3() + "')\n";
+			}
+			
+			if (searchDomain.getWorkflow_tag4() != null && !searchDomain.getWorkflow_tag4().isEmpty()) {
+				if (searchDomain.getNot_workflow_tag4() != null && searchDomain.getNot_workflow_tag4() == true) {
+					useExists_operator = " not" + exists_operator;
+				}
+				else {
+					useExists_operator = exists_operator;	
+				}
+				addToWhere = addToWhere + workflow_tag_operator + useExists_operator + select_operator + searchDomain.getWorkflow_tag4() + "')\n";
+			}
+			
+			if (searchDomain.getWorkflow_tag5() != null && !searchDomain.getWorkflow_tag5().isEmpty()) {
+				if (searchDomain.getNot_workflow_tag5() != null && searchDomain.getNot_workflow_tag5() == true) {
+					useExists_operator = " not" + exists_operator;
+				}
+				else {
+					useExists_operator = exists_operator;	
+				}
+				addToWhere = addToWhere + workflow_tag_operator + useExists_operator + select_operator + searchDomain.getWorkflow_tag5() + "')\n";
+			}
+			
+			if (!addToWhere.isEmpty()) {
+				addToWhere =  "\nand (" + addToWhere;
+				addToWhere = addToWhere + "\n)";
+				addToWhere = addToWhere.replaceAll("and \\(AND", "and(");
+				addToWhere = addToWhere.replaceAll("and \\(OR", "and(");
+				where = where + addToWhere;
+			}
+		}
+		
+		// process workflow status
+		
+		//	31576664 | Alleles & Phenotypes
+		//	31576665 | Expression
+		//	31576666 | Gene Ontology
+		//	31576667 | Tumor
+		//	31576668 | QTL
+		//	78678148 | PRO
+		//		
+		//	31576671 | Chosen
+		//	31576674 | Full-coded
+		//	31576673 | Indexed
+		//	71027551 | New
+		//	31576669 | Not Routed
+		//	31576672 | Rejected
+		//	31576670 | Routed
+		
+		if (searchDomain.getStatus_operator() != null && !searchDomain.getStatus_operator().isEmpty()) {
+		
+			String status_operator = searchDomain.getStatus_operator();
+			addToWhere = "";
+			
+			String statusWhereAP = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+						" and ss.isCurrent = 1 and ss._group_key = 31576664" + " and ss._status_key = ";
+			String statusWhereGO = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+					" and ss.isCurrent = 1 and ss._group_key = 31576666" + " and ss._status_key = ";		
+			String statusWhereGXD = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+					" and ss.isCurrent = 1 and ss._group_key = 31576665" + " and ss._status_key = ";
+			String statusWherePRO = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+					" and ss.isCurrent = 1 and ss._group_key = 78678148" + " and ss._status_key = ";
+			String statusWhereQTL = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+					" and ss.isCurrent = 1 and ss._group_key = 31576668" + " and ss._status_key = ";
+			String statusWhereTumor = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+					" and ss.isCurrent = 1 and ss._group_key = 31576667" + " and ss._status_key = ";
+						
+			if (searchDomain.getStatus_AP_Chosen() != null && searchDomain.getStatus_AP_Chosen() == 1) {
+				addToWhere = addToWhere + statusWhereAP + "31576671" + ")\n";
+			}
+			if (searchDomain.getStatus_AP_Full_coded() != null && searchDomain.getStatus_AP_Full_coded() == 1) {	
+				addToWhere = addToWhere + statusWhereAP + "31576674" + ")\n";
+			}
+			if (searchDomain.getStatus_AP_Indexed() != null && searchDomain.getStatus_AP_Indexed() == 1) {	
+				addToWhere = addToWhere + statusWhereAP + "31576673" + ")\n";			
+			}
+			if (searchDomain.getStatus_AP_New() != null && searchDomain.getStatus_AP_New() == 1) {	
+				addToWhere = addToWhere + statusWhereAP + "71027551" + ")\n";	
+			}		
+			if (searchDomain.getStatus_AP_Not_Routed()!= null && searchDomain.getStatus_AP_Not_Routed() == 1) {
+				addToWhere = addToWhere + statusWhereAP + "31576669" + ")\n";
+			}
+			if (searchDomain.getStatus_AP_Rejected() != null && searchDomain.getStatus_AP_Rejected() == 1) {	
+				addToWhere = addToWhere + statusWhereAP + "31576672" + ")\n";
+			}
+			if (searchDomain.getStatus_AP_Routed() != null && searchDomain.getStatus_AP_Routed() == 1) {	
+				addToWhere = addToWhere + statusWhereAP + "31576670" + ")\n";
+			}
 
+			if (searchDomain.getStatus_GO_Chosen() != null && searchDomain.getStatus_GO_Chosen() == 1) {
+				addToWhere = addToWhere + statusWhereGO + "31576671" + ")\n";
+			}
+			if (searchDomain.getStatus_GO_Full_coded() != null && searchDomain.getStatus_GO_Full_coded() == 1) {	
+				addToWhere = addToWhere + statusWhereGO + "31576674" + ")\n";
+			}
+			if (searchDomain.getStatus_GO_Indexed() != null && searchDomain.getStatus_GO_Indexed() == 1) {	
+				addToWhere = addToWhere + statusWhereGO + "31576673" + ")\n";
+			}
+			if (searchDomain.getStatus_GO_New() != null && searchDomain.getStatus_GO_New() == 1) {	
+				addToWhere = addToWhere + statusWhereGO + "71027551" + ")\n";
+			}		
+			if (searchDomain.getStatus_GO_Not_Routed()!= null && searchDomain.getStatus_GO_Not_Routed() == 1) {
+				addToWhere = addToWhere + statusWhereGO + "31576669" + ")\n";
+			}
+			if (searchDomain.getStatus_GO_Rejected() != null && searchDomain.getStatus_GO_Rejected() == 1) {	
+				addToWhere = addToWhere + statusWhereGO + "31576672" + ")\n";
+			}
+			if (searchDomain.getStatus_GO_Routed() != null && searchDomain.getStatus_GO_Routed() == 1) {	
+				addToWhere = addToWhere + statusWhereGO + "31576670" + ")\n";
+			}
+
+			if (searchDomain.getStatus_GXD_Chosen() != null && searchDomain.getStatus_GXD_Chosen() == 1) {
+				addToWhere = addToWhere + statusWhereGXD + "31576671" + ")\n";
+			}
+			if (searchDomain.getStatus_GXD_Full_coded() != null && searchDomain.getStatus_GXD_Full_coded() == 1) {	
+				addToWhere = addToWhere + statusWhereGXD + "31576674" + ")\n";
+			}
+			if (searchDomain.getStatus_GXD_Indexed() != null && searchDomain.getStatus_GXD_Indexed() == 1) {	
+				addToWhere = addToWhere + statusWhereGXD + "31576673" + ")\n";
+			}
+			if (searchDomain.getStatus_GXD_New() != null && searchDomain.getStatus_GXD_New() == 1) {	
+				addToWhere = addToWhere + statusWhereGXD + "71027551" + ")\n";
+			}		
+			if (searchDomain.getStatus_GXD_Not_Routed()!= null && searchDomain.getStatus_GXD_Not_Routed() == 1) {
+				addToWhere = addToWhere + statusWhereGXD + "31576669" + ")\n";
+			}
+			if (searchDomain.getStatus_GXD_Rejected() != null && searchDomain.getStatus_GXD_Rejected() == 1) {	
+				addToWhere = addToWhere + statusWhereGXD + "31576672" + ")\n";
+			}
+			if (searchDomain.getStatus_GXD_Routed() != null && searchDomain.getStatus_GXD_Routed() == 1) {	
+				addToWhere = addToWhere + statusWhereGXD + "31576670" + ")\n";
+			}
+			
+			if (searchDomain.getStatus_PRO_Chosen() != null && searchDomain.getStatus_PRO_Chosen() == 1) {
+				addToWhere = addToWhere + statusWherePRO + "31576671" + ")\n";
+			}
+			if (searchDomain.getStatus_PRO_Full_coded() != null && searchDomain.getStatus_PRO_Full_coded() == 1) {	
+				addToWhere = addToWhere + statusWherePRO + "31576674" + ")\n";
+			}
+			if (searchDomain.getStatus_PRO_Indexed() != null && searchDomain.getStatus_PRO_Indexed() == 1) {	
+				addToWhere = addToWhere + statusWherePRO + "31576673" + ")\n";
+			}
+			if (searchDomain.getStatus_PRO_New() != null && searchDomain.getStatus_PRO_New() == 1) {	
+				addToWhere = addToWhere + statusWherePRO + "71027551" + ")\n";
+			}		
+			if (searchDomain.getStatus_PRO_Not_Routed()!= null && searchDomain.getStatus_PRO_Not_Routed() == 1) {
+				addToWhere = addToWhere + statusWherePRO + "31576669" + ")\n";
+			}
+			if (searchDomain.getStatus_PRO_Rejected() != null && searchDomain.getStatus_PRO_Rejected() == 1) {	
+				addToWhere = addToWhere + statusWherePRO + "31576672" + ")\n";
+			}
+			if (searchDomain.getStatus_PRO_Routed() != null && searchDomain.getStatus_PRO_Routed() == 1) {	
+				addToWhere = addToWhere + statusWherePRO + "31576670" + ")\n";
+			}
+			
+			if (searchDomain.getStatus_QTL_Chosen() != null && searchDomain.getStatus_QTL_Chosen() == 1) {
+				addToWhere = addToWhere + statusWhereQTL + "31576671" + ")\n";
+			}
+			if (searchDomain.getStatus_QTL_Full_coded() != null && searchDomain.getStatus_QTL_Full_coded() == 1) {	
+				addToWhere = addToWhere + statusWhereQTL + "31576674" + ")\n";
+			}
+			if (searchDomain.getStatus_QTL_Indexed() != null && searchDomain.getStatus_QTL_Indexed() == 1) {	
+				addToWhere = addToWhere + statusWhereQTL + "31576673" + ")\n";
+			}
+			if (searchDomain.getStatus_QTL_New() != null && searchDomain.getStatus_QTL_New() == 1) {	
+				addToWhere = addToWhere + statusWhereQTL + "71027551" + ")\n";
+			}		
+			if (searchDomain.getStatus_QTL_Not_Routed()!= null && searchDomain.getStatus_QTL_Not_Routed() == 1) {
+				addToWhere = addToWhere + statusWhereQTL + "31576669" + ")\n";
+			}
+			if (searchDomain.getStatus_QTL_Rejected() != null && searchDomain.getStatus_QTL_Rejected() == 1) {	
+				addToWhere = addToWhere + statusWhereQTL + "31576672" + ")\n";
+			}
+			if (searchDomain.getStatus_QTL_Routed() != null && searchDomain.getStatus_QTL_Routed() == 1) {	
+				addToWhere = addToWhere + statusWhereQTL + "31576670" + ")\n";
+			}
+			
+			if (searchDomain.getStatus_Tumor_Chosen() != null && searchDomain.getStatus_Tumor_Chosen() == 1) {
+				addToWhere = addToWhere + statusWhereTumor + "31576671" + ")\n";
+			}
+			if (searchDomain.getStatus_Tumor_Full_coded() != null && searchDomain.getStatus_Tumor_Full_coded() == 1) {	
+				addToWhere = addToWhere + statusWhereTumor + "31576674" + ")\n";
+			}
+			if (searchDomain.getStatus_Tumor_Indexed() != null && searchDomain.getStatus_Tumor_Indexed() == 1) {	
+				addToWhere = addToWhere + statusWhereTumor + "31576673" + ")\n";
+			}
+			if (searchDomain.getStatus_Tumor_New() != null && searchDomain.getStatus_Tumor_New() == 1) {	
+				addToWhere = addToWhere + statusWhereTumor + "71027551" + ")\n";
+			}		
+			if (searchDomain.getStatus_Tumor_Not_Routed()!= null && searchDomain.getStatus_Tumor_Not_Routed() == 1) {
+				addToWhere = addToWhere + statusWhereTumor + "31576669" + ")\n";
+			}
+			if (searchDomain.getStatus_Tumor_Rejected() != null && searchDomain.getStatus_Tumor_Rejected() == 1) {	
+				addToWhere = addToWhere + statusWhereTumor + "31576672" + ")\n";
+			}
+			if (searchDomain.getStatus_Tumor_Routed() != null && searchDomain.getStatus_Tumor_Routed() == 1) {	
+				addToWhere = addToWhere + statusWhereTumor + "31576670" + ")\n";
+			}
+			
+			if (!addToWhere.isEmpty()) {
+				addToWhere =  "\nand (" + addToWhere;
+				addToWhere = addToWhere + "\n)";
+				addToWhere = addToWhere.replaceAll("and \\(AND", "and(");
+				addToWhere = addToWhere.replaceAll("and \\(OR", "and(");
+				where = where + addToWhere;
+			}
+		}
+		 		
+		if (from_accession == true) {
+			from = from + ", acc_accession a";
+			where = where + "\nand c._refs_key = a._object_key and a._mgitype_key = 1";
+		}
 		if (from_book == true) {
 			from = from + ", bib_books k";
 			where = where + "\nand c._refs_key = k._refs_key";
@@ -478,6 +850,20 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			where = where + "\nand c._refs_key = pid._object_key" 
 					+ "\nand pid._mgitype_key = 1"
 					+ "\nand pid._logicaldb_key = 29";
+		}	
+		if (from_wkfrelevance == true) {
+			from = from + ", bib_workflow_relevance wkfr";
+			where = where + "\nand c._refs_key = wkfr._refs_key"
+					+ "\nand wkfr.isCurrent = 1";
+		}
+		if (from_wkfstatus == true) {
+			from = from + ", bib_workflow_status wkfs, voc_term st, voc_term gt";
+			where = where + "\nand c._refs_key = wkfs._refs_key"
+					+ "\nand wkfs.isCurrent = 1"
+					+ "\nand wkfs._status_key = st._term_key"
+					+ "\nand st._vocab_key = 128"
+					+ "\nand wkfs._group_key = gt._term_key"
+					+ "\nand gt._vocab_key = 127";
 		}
 		
 		// make this easy to copy/paste for troubleshooting
@@ -492,10 +878,24 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setJnumid(rs.getString("jnumid"));
 				domain.setJnum(rs.getString("numericPart"));			
 				domain.setShort_citation(rs.getString("short_citation"));
+				domain.setTitle(rs.getString("title"));
 				domain.setJournal(rs.getString("journal"));
 				domain.setMgiid(rs.getString("mgiid"));							
 				domain.setDoiid(rs.getString("doiid"));				
 				domain.setPubmedid(rs.getString("pubmedid"));
+				domain.setAp_status(rs.getString("ap_status"));
+				domain.setGo_status(rs.getString("go_status"));
+				domain.setGxd_status(rs.getString("gxd_status"));
+				domain.setPro_status(rs.getString("pro_status"));
+				domain.setQtl_status(rs.getString("qtl_status"));
+				domain.setTumor_status(rs.getString("tumor_status"));
+				
+				if (rs.getInt("has_pdf") == 0) {
+					domain.setHas_pdf("no");
+				}
+				else {
+					domain.setHas_pdf("yes");	
+				}
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();
@@ -506,6 +906,185 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		return results;
 	}	
+	
+//	@Transactional	
+//	public List<SlimReferenceDomain> search(ReferenceDomain searchDomain) {
+//		// using searchDomain fields, generate SQL command
+//		
+//		List<SlimReferenceDomain> results = new ArrayList<SlimReferenceDomain>();
+//
+//		// building SQL command : select + from + where + orderBy
+//		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
+//		String cmd = "";
+//		String select = "select distinct c.*";
+//		String from = "from bib_citation_cache c, bib_refs r";
+//		String where = "where c._refs_key = r._refs_key";
+//		String 	orderBy = "order by c.short_citation";			
+//		String limit = Constants.SEARCH_RETURN_LIMIT;
+//		
+//		Boolean from_note = false;
+//		Boolean from_book = false;
+//		Boolean from_mgiid = false;
+//		Boolean from_pubmedid = false;
+//		Boolean from_doiid = false;
+//		
+//		//Boolean from_allele = false;
+//		//Boolean from_marker = false;
+//		//Boolean from_strain = false;
+//
+//		// if parameter exists, then add to where-clause
+//		
+//		String cmResults[] = DateSQLQuery.queryByCreationModification("r", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
+//		if (cmResults.length > 0) {
+//			from = from + cmResults[0];
+//			where = where + cmResults[1];
+//		}
+//
+//		if (searchDomain.getJnumid() != null && !searchDomain.getJnumid().isEmpty()) {
+//			String jnumid = searchDomain.getJnumid().toUpperCase();
+//			if (!jnumid.contains("J:")) {
+//				jnumid = "J:" + jnumid;
+//			}
+//			where = where + "\nand c.jnumid = '" + jnumid + "'";
+//		}
+//		
+//		if (searchDomain.getReferenceTypeKey() != null && !searchDomain.getReferenceTypeKey().isEmpty()) {
+//			where = where + "\nand r._ReferenceType_key = " + searchDomain.getReferenceTypeKey();
+//		}
+//		if (searchDomain.getAuthors() != null && !searchDomain.getAuthors().isEmpty()) {
+//			where = where + "\nand r.authors ilike '" + searchDomain.getAuthors() + "'";
+//		}
+//		if (searchDomain.getTitle() != null && !searchDomain.getTitle().isEmpty()) {
+//			where = where + "\nand r.title ilike '" + searchDomain.getTitle() + "'";
+//		}
+//		if (searchDomain.getJournal() != null && !searchDomain.getJournal().isEmpty()) {
+//			where = where + "\nand r.journal ilike '" + searchDomain.getJournal() + "'";
+//		}
+//		if (searchDomain.getVol() != null && !searchDomain.getVol().isEmpty()) {
+//			where = where + "\nand r.vol ilike '" + searchDomain.getVol() + "'";
+//		}
+//		if (searchDomain.getIssue() != null && !searchDomain.getIssue().isEmpty()) {
+//			where = where + "\nand r.issue ilike '" + searchDomain.getIssue() + "'";
+//		}
+//		if (searchDomain.getPgs() != null && !searchDomain.getPgs().isEmpty()) {
+//			where = where + "\nand r.pgs ilike '" + searchDomain.getPgs() + "'";
+//		}
+//		if (searchDomain.getDate() != null && !searchDomain.getDate().isEmpty()) {
+//			where = where + "\nand r.date ilike '" + searchDomain.getDate() + "'";
+//		}
+//		if (searchDomain.getYear() != null && !searchDomain.getYear().isEmpty()) {
+//			where = where + "\nand r.year = " + searchDomain.getYear();
+//		}		
+//		if (searchDomain.getIsReviewArticle() != null && !searchDomain.getIsReviewArticle().isEmpty()) {
+//			where = where + "\nand r.isReviewArticle = " + searchDomain.getIsReviewArticle();
+//		}
+//		if (searchDomain.getReferenceAbstract() != null && !searchDomain.getReferenceAbstract().isEmpty()) {
+//			where = where + "\nand r.abstract ilike '" + searchDomain.getReferenceAbstract() + "'";
+//		}
+//		
+//		// bib_books
+//		if (searchDomain.getBook_author() != null && !searchDomain.getBook_author().isEmpty()) {
+//			where = where + "\nand k.book_au ilike '" + searchDomain.getBook_author() + "'";
+//			from_book = true;
+//		}
+//		if (searchDomain.getBook_title() != null && !searchDomain.getBook_title().isEmpty()) {
+//			where = where + "\nand k.book_title ilike '" + searchDomain.getBook_title() + "'";
+//			from_book = true;
+//		}
+//		if (searchDomain.getPlace() != null && !searchDomain.getPlace().isEmpty()) {
+//			where = where + "\nand k.place ilike '" + searchDomain.getPlace() + "'";
+//			from_book = true;
+//		}
+//		if (searchDomain.getPublisher() != null && !searchDomain.getPublisher().isEmpty()) {
+//			where = where + "\nand k.publisher ilike '" + searchDomain.getPublisher() + "'";
+//			from_book = true;
+//		}
+//		if (searchDomain.getSeries_ed() != null && !searchDomain.getSeries_ed().isEmpty()) {
+//			where = where + "\nand k.series_ed ilike '" + searchDomain.getSeries_ed() + "'";
+//			from_book = true;
+//		}			
+//		
+//		// bib_notes
+//		if (searchDomain.getReferenceNote() != null && !searchDomain.getReferenceNote().isEmpty()) {
+//			where = where + "\nand n.note ilike '" + searchDomain.getReferenceNote() + "'";
+//			from_note = true;
+//		}
+//
+//		// mgiid accession ids
+//		if (searchDomain.getMgiid() != null) {
+//			if (!searchDomain.getMgiid().isEmpty()) {
+//				where = where + "\nand mid.accID ilike '" +  searchDomain.getMgiid() + "'";
+//				from_mgiid = true;
+//			}
+//		}		
+//		// doiid accession ids
+//		if (searchDomain.getDoiid() != null) {
+//			if (!searchDomain.getDoiid().isEmpty()) {
+//				where = where + "\nand did.accID ilike '" +  searchDomain.getDoiid() + "'";
+//				from_doiid = true;
+//			}
+//		}		
+//		// pubmed accession ids
+//		if (searchDomain.getPubmedid() != null) {
+//			if (!searchDomain.getPubmedid().isEmpty()) {
+//				where = where + "\nand pid.accID ilike '" +  searchDomain.getPubmedid() + "'";
+//				from_pubmedid = true;
+//			}
+//		}
+//
+//		if (from_book == true) {
+//			from = from + ", bib_books k";
+//			where = where + "\nand c._refs_key = k._refs_key";
+//		}
+//		if (from_note == true) {
+//			from = from + ", bib_notes n";
+//			where = where + "\nand c._refs_key = n._refs_key";
+//		}
+//		if (from_mgiid == true) {
+//			from = from + ", bib_acc_view mid";
+//			where = where + "\nand c._refs_key = mid._object_key" 
+//					+ "\nand mid._mgitype_key = 1"
+//					+ "\nand mid._logicaldb_key = 1";
+//		}
+//		if (from_doiid == true) {
+//			from = from + ", bib_acc_view did";
+//			where = where + "\nand c._refs_key = did._object_key" 
+//					+ "\nand did._mgitype_key = 1" 
+//					+ "\nand did._logicaldb_key = 65";
+//		}		
+//		if (from_pubmedid == true) {
+//			from = from + ", bib_acc_view pid";
+//			where = where + "\nand c._refs_key = pid._object_key" 
+//					+ "\nand pid._mgitype_key = 1"
+//					+ "\nand pid._logicaldb_key = 29";
+//		}
+//		
+//		// make this easy to copy/paste for troubleshooting
+//		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
+//		log.info(cmd);
+//
+//		try {
+//			ResultSet rs = sqlExecutor.executeProto(cmd);
+//			while (rs.next()) {
+//				SlimReferenceDomain domain = new SlimReferenceDomain();
+//				domain.setRefsKey(rs.getString("_refs_key"));
+//				domain.setJnumid(rs.getString("jnumid"));
+//				domain.setJnum(rs.getString("numericPart"));			
+//				domain.setShort_citation(rs.getString("short_citation"));
+//				domain.setJournal(rs.getString("journal"));
+//				domain.setMgiid(rs.getString("mgiid"));							
+//				domain.setDoiid(rs.getString("doiid"));				
+//				domain.setPubmedid(rs.getString("pubmedid"));
+//				results.add(domain);
+//			}
+//			sqlExecutor.cleanup();
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return results;
+//	}	
 		
 	@Transactional	
 	public List<SlimReferenceDomain> validJnum(String value) {

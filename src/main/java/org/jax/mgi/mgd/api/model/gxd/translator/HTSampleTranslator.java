@@ -101,7 +101,7 @@ public class HTSampleTranslator extends BaseEntityDomainTranslator<HTSample, HTS
 		}
 
 		// Handling of Cell Type terms/may be null
-		if (entity.getCellTypeTerm() != null && entity.getCellTypeTerm() != null) {
+		if (entity.getCellTypeTerm() != null) {
 			HTCellTypeDomain clDomain = new HTCellTypeDomain();
 			sampleDomain.set_celltype_term_key(entity.getCellTypeTerm().get_term_key());
 			clDomain.set_term_key(entity.getCellTypeTerm().get_term_key());

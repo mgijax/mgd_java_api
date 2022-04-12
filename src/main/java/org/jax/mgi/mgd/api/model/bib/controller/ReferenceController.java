@@ -74,8 +74,8 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 
 	@POST
 	@ApiOperation(value = "Search/returns slim reference domain")
-	@Path("/search2")
-	public List<SlimReferenceDomain> search2(ReferenceDomain searchDomain) {
+	@Path("/lecsearch")
+	public List<SlimReferenceDomain> lecsearch(ReferenceDomain searchDomain) {
 	
 		List<SlimReferenceDomain> results = new ArrayList<SlimReferenceDomain>();
 

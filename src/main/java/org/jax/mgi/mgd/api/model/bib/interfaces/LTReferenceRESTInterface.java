@@ -72,19 +72,6 @@ public interface LTReferenceRESTInterface {
 			@QueryParam("status") String status
 	);
 
-//	@GET
-//	@Path("/valid")
-//	@ApiOperation(value = "Value: Check to see if a reference is valid by doing a key-based lookup")
-//	public SearchResults<LTReferenceDomain> getValidReferenceCheck(
-//			@ApiParam(value = "Value: This is for searching by reference key")
-//			@QueryParam("refsKey") String refsKey
-//	);
-//
-//	@GET
-//	@Path("/versions")
-//	@ApiOperation(value = "Value: Get a list of valid choices for relevance version")
-//	public List<String> getRelevanceVersions();
-
 	@GET
 	@Path("/{key}")
 	@ApiOperation(value = "Value: Retrieve a single Reference by reference key")

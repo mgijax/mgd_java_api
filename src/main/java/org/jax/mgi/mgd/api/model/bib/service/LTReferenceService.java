@@ -23,9 +23,7 @@ public class LTReferenceService {
 
 	@Inject
 	private LTReferenceRepository repo;	
-	
-//	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+		
 	/* Update the reference entity corresponding to the given domain object (and updates citation cache).  Returns
 	 * domain object if successful or throws APIException if not.
 	 */
@@ -63,24 +61,4 @@ public class LTReferenceService {
 		return repo.search(searchFields);
 	}	
 	
-//	/* Get a list of valid relevance versions for use in a search pick list in the pwi.
-//	 */
-//	public List<String> getRelevanceVersions() {
-//		List<String> versions = new ArrayList<String>();
-//
-//		String cmd = "select distinct version " + 
-//				"from bib_workflow_relevance " + 
-//				"where version is not null " +
-//				"order by version";
-//		try {
-//			ResultSet rs = sqlExecutor.executeProto(cmd);
-//			while (rs.next()) {
-//				versions.add(rs.getString("version"));
-//			}
-//			sqlExecutor.cleanup();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return versions;
-//	}
 }

@@ -57,19 +57,14 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	@Inject
 	private LTReferenceDAO referenceDAO;
-
 	@Inject
 	private TermDAO termDAO;
-	
 	@Inject
 	private AccessionDAO accessionDAO;
-
 	@Inject
 	private LogicalDBDAO logicaldbDAO;
-	
 	@Inject
 	private MGITypeDAO mgiTypeDAO;
-
 	@Inject
 	private MGIReferenceAssocService referenceAssocService;	
 	

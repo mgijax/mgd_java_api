@@ -246,13 +246,6 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 		return results;
 	}
 
-	/* return domain object for single reference with given key
-	 */
-	@Transactional
-	@Override
-	public SearchResults<LTReferenceDomain> getValidReferenceCheck (String refsKey) {
-		return this.getReferenceByKey(refsKey);
-	}
 
 	/* return domain object for single reference with given key
 	 * Note: added Transactional annotation to ensure that the session stays open for the duration of
@@ -275,11 +268,19 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 		return results;
 	}
 
-	/* return a list of valid values for the version field (for relevance data), for use in a search pick list
-	 */
-	public List<String> getRelevanceVersions() {
-		return referenceService.getRelevanceVersions();
-	}
+//	/* return domain object for single reference with given key
+//	 */
+//	@Transactional
+//	@Override
+//	public SearchResults<LTReferenceDomain> getValidReferenceCheck (String refsKey) {
+//		return this.getReferenceByKey(refsKey);
+//	}
+	
+//	/* return a list of valid values for the version field (for relevance data), for use in a search pick list
+//	 */
+//	public List<String> getRelevanceVersions() {
+//		return referenceService.getRelevanceVersions();
+//	}
 	
 	// never used/always use the ReferenceController/create
 	@Override

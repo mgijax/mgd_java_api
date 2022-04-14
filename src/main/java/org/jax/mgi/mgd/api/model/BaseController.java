@@ -44,25 +44,6 @@ public abstract class BaseController<T extends BaseDomain> {
 		return user;
 	}
 
-//	/* convenience method to remove any String parameters that have an empty string as the value
-//	 */
-//	protected Map<String, Object> filterEmptyParameters(Map<String, Object> params) {
-//		HashMap<String, Object> filtered = new HashMap<String, Object>();
-//		for (String key : params.keySet()) {
-//			boolean skipIt = false;
-//			Object value = params.get(key);
-//			if (value instanceof String) {
-//				if (((String) value).trim().length() == 0) {
-//					skipIt = true;
-//				}
-//			}
-//			if (!skipIt) {
-//				filtered.put(key, value);
-//			}
-//		}
-//		return filtered;
-//	}
-
 	// get root exception of an exception
 	protected static Throwable getRootException(Throwable exception) {
 		Throwable rootException = exception;

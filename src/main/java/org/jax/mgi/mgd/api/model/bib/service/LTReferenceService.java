@@ -31,9 +31,6 @@ public class LTReferenceService {
 	 */
 	@Inject
 	private LTReferenceRepository repo;
-	
-//	@Inject
-//	private LTReferenceSummaryRepository summaryRepo;
 
 	// for searchSQL
 	@Inject

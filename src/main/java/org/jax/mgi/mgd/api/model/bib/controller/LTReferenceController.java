@@ -2,7 +2,6 @@ package org.jax.mgi.mgd.api.model.bib.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -12,7 +11,6 @@ import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceBulkDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.model.bib.interfaces.LTReferenceRESTInterface;
 import org.jax.mgi.mgd.api.model.bib.service.LTReferenceService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -251,31 +249,31 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 		return results;
 	}
 	
-	/* search method - retrieves references based on query form parameters
-	 */
-	@Override
-	public SearchResults<LTReferenceSummaryDomain> search(Map<String,Object> params) {
-		return null;
-//		if (params.containsKey("isReviewArticle")) {
-//			String isReviewArticle = (String) params.get("isReviewArticle");
-//			if ("0".equals(isReviewArticle)) {
-//				params.put("isReviewArticle", 0);
-//			} else if ("1".equals(isReviewArticle)) {
-//				params.put("isReviewArticle", 1);
-//			}
-//		}
-//
-//		params = filterEmptyParameters(params);
-//		log.info("Search Params: " + params);
-//		
-//		try {
-//			return referenceService.getReferenceSummaries(params);
-//		} catch (APIException e) {
-//			SearchResults<LTReferenceSummaryDomain> out = new SearchResults<LTReferenceSummaryDomain>();
-//			out.setError("Failed", "search failed: " + e.toString(), Constants.HTTP_SERVER_ERROR);
-//			return out;
-//		}
-	}
+//	/* search method - retrieves references based on query form parameters
+//	 */
+//	@Override
+//	public SearchResults<LTReferenceSummaryDomain> search(Map<String,Object> params) {
+//		return null;
+////		if (params.containsKey("isReviewArticle")) {
+////			String isReviewArticle = (String) params.get("isReviewArticle");
+////			if ("0".equals(isReviewArticle)) {
+////				params.put("isReviewArticle", 0);
+////			} else if ("1".equals(isReviewArticle)) {
+////				params.put("isReviewArticle", 1);
+////			}
+////		}
+////
+////		params = filterEmptyParameters(params);
+////		log.info("Search Params: " + params);
+////		
+////		try {
+////			return referenceService.getReferenceSummaries(params);
+////		} catch (APIException e) {
+////			SearchResults<LTReferenceSummaryDomain> out = new SearchResults<LTReferenceSummaryDomain>();
+////			out.setError("Failed", "search failed: " + e.toString(), Constants.HTTP_SERVER_ERROR);
+////			return out;
+////		}
+//	}
 
 
 	/* return domain object for single reference with given key

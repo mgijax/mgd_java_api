@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model.bib.repository;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -37,26 +36,27 @@ public class LTReferenceSummaryRepository extends BaseRepository<LTReferenceSumm
 
 	@Override
 	public SearchResults<LTReferenceSummaryDomain> search(Map<String,Object> params) {
-		SearchResults<LTReference> refs = referenceDAO.search(params);
-		SearchResults<LTReferenceSummaryDomain> domains = new SearchResults<LTReferenceSummaryDomain>();
-
-		domains.elapsed_ms = refs.elapsed_ms;
-		domains.error = refs.error;
-		domains.message = refs.message;
-		domains.status_code = refs.status_code;
-		domains.total_count = refs.total_count;
-		domains.all_match_count = refs.all_match_count;
-
-		if (refs.items != null) {
-			// walking the references to do the translations individually, because I want a List,
-			// not an Iterable
-			
-			domains.items = new ArrayList<LTReferenceSummaryDomain>();
-			for (LTReference ref : refs.items) {
-				domains.items.add(translator.translate(ref));
-			}
-		}
-		return domains;
+//		SearchResults<LTReference> refs = referenceDAO.search(params);
+//		SearchResults<LTReferenceSummaryDomain> domains = new SearchResults<LTReferenceSummaryDomain>();
+//
+//		domains.elapsed_ms = refs.elapsed_ms;
+//		domains.error = refs.error;
+//		domains.message = refs.message;
+//		domains.status_code = refs.status_code;
+//		domains.total_count = refs.total_count;
+//		domains.all_match_count = refs.all_match_count;
+//
+//		if (refs.items != null) {
+//			// walking the references to do the translations individually, because I want a List,
+//			// not an Iterable
+//			
+//			domains.items = new ArrayList<LTReferenceSummaryDomain>();
+//			for (LTReference ref : refs.items) {
+//				domains.items.add(translator.translate(ref));
+//			}
+//		}
+//		return domains;
+		return null;
 	}
 
 	@Override

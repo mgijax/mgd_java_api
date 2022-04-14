@@ -257,9 +257,9 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	public SearchResults<LTReferenceSummaryDomain> search(Map<String,Object> params) {
 		if (params.containsKey("isReviewArticle")) {
 			String isReviewArticle = (String) params.get("isReviewArticle");
-			if ("No".equalsIgnoreCase(isReviewArticle) || "0".equals(isReviewArticle)) {
+			if ("0".equals(isReviewArticle)) {
 				params.put("isReviewArticle", 0);
-			} else if ("Yes".equalsIgnoreCase(isReviewArticle) || "1".equals(isReviewArticle)) {
+			} else if ("1".equals(isReviewArticle)) {
 				params.put("isReviewArticle", 1);
 			}
 		}

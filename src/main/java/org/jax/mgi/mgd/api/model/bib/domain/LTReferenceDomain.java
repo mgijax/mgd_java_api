@@ -32,7 +32,8 @@ public class LTReferenceDomain extends BaseDomain {
 	public String date;
 	public String year;
 	public String pgs;
-	
+	public String isReviewArticle;	
+
 	// books
 	public String book_author;
 	public String book_title;
@@ -52,8 +53,6 @@ public class LTReferenceDomain extends BaseDomain {
 	public String referenceAbstract;
 	public String referenceNote;
 	public String short_citation;
-
-	public String isReviewArticle;	
 
 	// workflow status
 	public String ap_status;

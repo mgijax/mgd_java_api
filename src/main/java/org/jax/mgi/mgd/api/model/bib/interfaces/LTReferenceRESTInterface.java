@@ -1,12 +1,10 @@
 package org.jax.mgi.mgd.api.model.bib.interfaces;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -16,7 +14,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceBulkDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
@@ -90,13 +87,13 @@ public interface LTReferenceRESTInterface {
 	@ApiOperation(value = "Value: Get a list of valid choices for relevance version")
 	public List<String> getRelevanceVersions();
 	
-	@POST
-	@Path("/search")
-	@ApiOperation(value = "Value: Searches Reference by Fields", notes="Notes: Searches Reference Fields")
-	public SearchResults<LTReferenceSummaryDomain> search(
-		@ApiParam(value = "This is a map of the form parameters")
-		Map<String, Object> params								// see below for valid parameters
-	);
+//	@POST
+//	@Path("/search")
+//	@ApiOperation(value = "Value: Searches Reference by Fields", notes="Notes: Searches Reference Fields")
+//	public SearchResults<LTReferenceSummaryDomain> search(
+//		@ApiParam(value = "This is a map of the form parameters")
+//		Map<String, Object> params								// see below for valid parameters
+//	);
 	
 	/* Acceptable reference search parameters:
 	 *	accids : searches by any reference ID, case-insensitive, no wildcards

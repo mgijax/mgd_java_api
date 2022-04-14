@@ -156,6 +156,11 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		// for vocab specific ordering, reset orderBy based on _vocab_key or name
 		String orderBy = "order by t.term";		
 		
+		String celltypeSelect = select + ", acc_accession a";
+		String celltypeFrom = from + ", acc_accession a";
+		String celltypeWhere = where + "and t._term_key = a._object_key and a._logicaldb_key = 173";
+		Boolean isCellType = false;
+		
 		// for non-vocab tables that are acting like voc_vocab/voc_term		
 		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty()) {
 			if (searchDomain.getVocabKey().equals("151")
@@ -202,6 +207,14 @@ public class VocabService extends BaseService<VocabularyDomain> {
 					|| searchDomain.getName().equals("GXD Index Stages")
 					) {
 				orderBy = "order by t.sequencenum";
+			}
+			
+			// cell ontology (_vocab_key = 102)/get priimary id
+			if (searchDomain.getName().equals("Cell Ontology")) {
+				select = select + celltypeSelect;
+				from = from + celltypeFrom;
+				where = where + celltypeWhere;
+				isCellType = true;
 			}
 		}
 		
@@ -257,7 +270,15 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				orderBy = "order by t.abbreviation";
 			}
 			
+			// cell ontology (_vocab_key = 102)/get priimary id
+			if (searchDomain.getVocabKey().equals("102")) {
+				select = select + celltypeSelect;
+				from = from + celltypeFrom;
+				where = where + celltypeWhere;
+				isCellType = true;
+			}			
 		}
+		
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
 			where = where + "\nand v.name ilike '" + searchDomain.getName() + "'";
 		}
@@ -296,6 +317,11 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				termDomain.setTerm(rs.getString("term"));
 				termDomain.setAbbreviation(rs.getString("abbreviation"));
 				termDomain.setVocabKey(rs.getString("_vocab_key"));
+				
+				if (isCellType == true) {
+					termDomain.setPrimaryid(rs.getString("accid"));
+				}
+				
 				termList.add(termDomain);
 			}
 			

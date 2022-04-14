@@ -106,7 +106,7 @@ public class LTReferenceService {
 		
 		// if parameter exists, then add to where-clause
 		
-		String cmResults[] = DateSQLQuery.queryByCreationModification("r", searchDomain.getCreated_by(), searchDomain.getModified_by(), searchDomain.getCreation_date(), searchDomain.getModification_date());
+		String cmResults[] = DateSQLQuery.queryByCreationModification("r", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {
 			from = from + cmResults[0];
 			where = where + cmResults[1];

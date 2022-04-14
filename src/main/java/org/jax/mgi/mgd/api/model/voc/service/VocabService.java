@@ -158,7 +158,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		
 		String celltypeSelect = select + ", a.accid";
 		String celltypeFrom = from + ", acc_accession a";
-		String celltypeWhere = where + "and t._term_key = a._object_key and a._logicaldb_key = 173";
+		String celltypeWhere = where + "\nand t._term_key = a._object_key and a._logicaldb_key = 173";
 		Boolean isCellType = false;
 		
 		// for non-vocab tables that are acting like voc_vocab/voc_term		
@@ -211,9 +211,9 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			
 			// cell ontology (_vocab_key = 102)/get priimary id
 			if (searchDomain.getName().equals("Cell Ontology")) {
-				select = select + celltypeSelect;
-				from = from + celltypeFrom;
-				where = where + celltypeWhere;
+				select = celltypeSelect;
+				from = celltypeFrom;
+				where = celltypeWhere;
 				isCellType = true;
 			}
 		}
@@ -272,9 +272,9 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			
 			// cell ontology (_vocab_key = 102)/get priimary id
 			if (searchDomain.getVocabKey().equals("102")) {
-				select = select + celltypeSelect;
-				from = from + celltypeFrom;
-				where = where + celltypeWhere;
+				select = celltypeSelect;
+				from = celltypeFrom;
+				where = celltypeWhere;
 				isCellType = true;
 			}			
 		}

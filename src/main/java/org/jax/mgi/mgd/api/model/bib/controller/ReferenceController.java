@@ -71,22 +71,6 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		
 		return results;
 	}
-
-	@POST
-	@ApiOperation(value = "Search/returns slim reference domain")
-	@Path("/lecsearch")
-	public List<SlimReferenceDomain> lecsearch(ReferenceDomain searchDomain) {
-	
-		List<SlimReferenceDomain> results = new ArrayList<SlimReferenceDomain>();
-
-		try {
-			results = referenceService.search2(searchDomain);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
 	
 	@GET
 	@ApiOperation(value = "get list of journals")

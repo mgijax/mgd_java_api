@@ -156,7 +156,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		// for vocab specific ordering, reset orderBy based on _vocab_key or name
 		String orderBy = "order by t.term";		
 		
-		String celltypeSelect = select + ", acc_accession a";
+		String celltypeSelect = select + ", a.accid";
 		String celltypeFrom = from + ", acc_accession a";
 		String celltypeWhere = where + "and t._term_key = a._object_key and a._logicaldb_key = 173";
 		Boolean isCellType = false;

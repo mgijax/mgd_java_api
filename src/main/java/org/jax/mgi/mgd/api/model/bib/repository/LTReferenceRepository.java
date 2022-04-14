@@ -290,7 +290,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 		// determine if the isReviewArticle flag is set in the ReferenceDomain object
 		int rdReview = 0;
-		if ("1".equals(domain.isReviewArticle) || ("Yes".equalsIgnoreCase(domain.isReviewArticle))) {
+		if ("1".equals(domain.isReviewArticle)) {
 			rdReview = 1;
 		}
 

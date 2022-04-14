@@ -268,7 +268,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		anyChanges = applyNoteChanges(entity, domain, currentUser) | anyChanges;
 		anyChanges = applyAccessionIDChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyWorkflowDataChanges(entity, domain, currentUser) || anyChanges;
-		// TODO : must handle relevance changes here, create new relevance record if needed
 		anyChanges = applyWorkflowRelevanceChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyAlleleAssocChanges(entity, domain.getAlleleAssocs(), currentUser) || anyChanges;		
 		anyChanges = applyStrainAssocChanges(entity, domain.getStrainAssocs(), currentUser) || anyChanges;		

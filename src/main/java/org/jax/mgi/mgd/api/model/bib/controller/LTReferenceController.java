@@ -248,33 +248,6 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 		}
 		return results;
 	}
-	
-//	/* search method - retrieves references based on query form parameters
-//	 */
-//	@Override
-//	public SearchResults<LTReferenceSummaryDomain> search(Map<String,Object> params) {
-//		return null;
-////		if (params.containsKey("isReviewArticle")) {
-////			String isReviewArticle = (String) params.get("isReviewArticle");
-////			if ("0".equals(isReviewArticle)) {
-////				params.put("isReviewArticle", 0);
-////			} else if ("1".equals(isReviewArticle)) {
-////				params.put("isReviewArticle", 1);
-////			}
-////		}
-////
-////		params = filterEmptyParameters(params);
-////		log.info("Search Params: " + params);
-////		
-////		try {
-////			return referenceService.getReferenceSummaries(params);
-////		} catch (APIException e) {
-////			SearchResults<LTReferenceSummaryDomain> out = new SearchResults<LTReferenceSummaryDomain>();
-////			out.setError("Failed", "search failed: " + e.toString(), Constants.HTTP_SERVER_ERROR);
-////			return out;
-////		}
-//	}
-
 
 	/* return domain object for single reference with given key
 	 */

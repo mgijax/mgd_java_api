@@ -119,8 +119,8 @@ public interface LTReferenceRESTInterface {
 	 *	volume : search by volume field, case-insensitive, wildcards allowed
 	 *	year : (integer) search by year field
 	 *
-	 *	created_by : user who created the reference record (case-insensitive, no wildcards)
-	 *	modified_by : user who most recently modified the reference record (case-insensitive, no wildcards)
+	 *	createdBy : user who created the reference record (case-insensitive, no wildcards)
+	 *	modifiedBy : user who most recently modified the reference record (case-insensitive, no wildcards)
 	 *  creation_date : date on which reference was created, using the given date criteria:
 	 *  	date formats may be: mm/dd/yyyy, mm/dd/yy, or yyyy/mm/dd
 	 *  	operators may be: =, <, >, <=, >=, or ..

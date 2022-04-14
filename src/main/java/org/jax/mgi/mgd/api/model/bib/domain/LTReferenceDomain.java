@@ -72,8 +72,8 @@ public class LTReferenceDomain extends BaseDomain {
 	public String link_to_supplemental;
 	public String has_extracted_text;
 	
-	public String created_by;
-	public String modified_by;
+	public String createdBy;
+	public String modifiedBy;
 	public String creation_date;
 	public String modification_date;
 	

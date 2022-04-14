@@ -737,7 +737,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			from_wkfstatus = true;
 		}
 		if (searchDomain.getSh_group() != null && !searchDomain.getSh_group().isEmpty()) {
-			where = where + "\nand gt.term = '" + searchDomain.getSh_group() + "'";
+			where = where + "\nand gt.abbreviation = '" + searchDomain.getSh_group() + "'";
 			from_wkfstatus = true;
 		}	
 		if ((searchDomain.getSh_username() != null && !searchDomain.getSh_username().isEmpty())

@@ -63,8 +63,8 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		
 		domain.creation_date = dateFormatter.format(entity.getCreation_date());
 		domain.modification_date = dateFormatter.format(entity.getModification_date());
-		domain.created_by = entity.getCreatedByUser().getLogin();
-		domain.modified_by = entity.getModifiedByUser().getLogin();
+		domain.createdBy = entity.getCreatedByUser().getLogin();
+		domain.modifiedBy = entity.getModifiedByUser().getLogin();
 		
 		// is this a review article?
 		if (entity.getIsReviewArticle() == 0) {

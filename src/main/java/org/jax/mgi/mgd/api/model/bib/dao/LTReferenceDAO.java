@@ -57,7 +57,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 	// maps from search field name to workflow group status
 	private static Map<String,String> statuses = null;
 
-	// maps from search field name to database key name (for created-by / modified-by fields)
+	// maps from search field name to database key name (for createdBy / modifiedBy fields)
 	private static Map<String,String> users = null;
 
 	// maps from search field name to creatition/modification date database field name
@@ -118,8 +118,8 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		// user fields that exist within the Reference object itself (in BIB_Refs)
 		if (users == null) {
 			users = new HashMap<String,String>();
-			users.put("created_by", "createdByUser");
-			users.put("modified_by", "modifiedByUser");
+			users.put("createdBy", "createdByUser");
+			users.put("modifiedBy", "modifiedByUser");
 		}
 
 		// date fields that exist within the Reference object itself (in BIB_Refs)
@@ -373,7 +373,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 			}
 		}
 
-		// created_by and modified_by parameters
+		// createdBy and modifiedBy parameters
 
 		for (String fieldname : users.keySet()) {
 			if (params.containsKey(fieldname)) {
@@ -938,7 +938,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 
 		// if parameter exists, then add to where-clause
 		
-		String cmResults[] = DateSQLQuery.queryByCreationModification("r", searchDomain.getCreated_by(), searchDomain.getModified_by(), searchDomain.getCreation_date(), searchDomain.getModification_date());
+		String cmResults[] = DateSQLQuery.queryByCreationModification("r", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {
 			from = from + cmResults[0];
 			where = where + cmResults[1];

@@ -58,16 +58,26 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 	public LTReference getReference(String refsKey) throws APIException {
 		LTReference ref =  entityManager.find(LTReference.class, Integer.valueOf(refsKey));
 		if (ref == null) { return null; }
-		log.info("LTReferenceDAO:getReference(String refsKey)");
+		log.info("LTReferenceDAO:getReference(String refsKey):" + refsKey);
+		log.info("getWorkflowTags()");
 		Hibernate.initialize(ref.getWorkflowTags().size());
+		log.info("getReferenceTypeTerm()");
 		Hibernate.initialize(ref.getReferenceTypeTerm());
+		log.info("getNotes()");
 		Hibernate.initialize(ref.getNotes());
+		log.info("getReferenceBook()");
 		Hibernate.initialize(ref.getReferenceBook());
+		log.info("getCreatedByUser()");
 		Hibernate.initialize(ref.getCreatedByUser());
+		log.info("getModifiedByUser()");
 		Hibernate.initialize(ref.getModifiedByUser());
+		log.info("getAssociatedData()");
 		Hibernate.initialize(ref.getAssociatedData());
+		log.info("getAccessionIDs()");
 		Hibernate.initialize(ref.getAccessionIDs());
+		log.info("getWorkflowData()");
 		Hibernate.initialize(ref.getWorkflowData());
+		log.info("getWorkflowStatuses()");
 		Hibernate.initialize(ref.getWorkflowStatuses());
 		return ref;
 	}

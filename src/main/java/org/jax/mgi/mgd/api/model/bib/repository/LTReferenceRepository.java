@@ -149,6 +149,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	/* set the given workflow_tag for all references identified in the list of keys
 	 */
 	public void updateInBulk(List<String> refsKey2, String workflow_tag, String workflow_tag_operation, User currentUser) throws FatalAPIException, APIException {
+
 		// if no references or no tags, just bail out as a no-op
 		if ((refsKey2 == null) || (refsKey2.size() == 0) || (workflow_tag == null) || (workflow_tag.length() == 0)) {
 			return; 

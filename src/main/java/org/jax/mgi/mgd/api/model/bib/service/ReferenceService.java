@@ -580,7 +580,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		// process allele associations
-		if (searchDomain.getAlleleAssocs() != null) {
+		if (searchDomain.getAlleleAssocs() != null && searchDomain.getAlleleAssocs().size() > 0 ) {
 			value = searchDomain.getAlleleAssocs().get(0).getObjectKey();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand mra._object_key = " + value;
@@ -588,7 +588,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 		}
 		// process marker associations
-		if (searchDomain.getMarkerAssocs() != null) {
+		if (searchDomain.getMarkerAssocs() != null && searchDomain.getMarkerAssocs().size() > 0) {
 			value = searchDomain.getMarkerAssocs().get(0).getObjectKey();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand mrm._object_key = " + value;
@@ -596,7 +596,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 		}
 		// process strain associations
-		if (searchDomain.getStrainAssocs() != null) {
+		if (searchDomain.getStrainAssocs() != null && searchDomain.getStrainAssocs().size() > 0) {
 			value = searchDomain.getStrainAssocs().get(0).getObjectKey();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand mrs._object_key = " + value;

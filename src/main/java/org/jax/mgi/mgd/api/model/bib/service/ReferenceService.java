@@ -553,6 +553,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		Boolean from_doiid = false;
 		Boolean from_wkfrelevance = false;
 		Boolean from_wkfstatus = false;
+		Boolean from_alleleassoc = false;
 		
 		// may be a different order
 		if (searchDomain.getOrderBy() != null && !searchDomain.getOrderBy().isEmpty()) {
@@ -754,7 +755,16 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				from_wkfstatus = true;
 			}
 		}
-			
+		
+		// process allele associations
+		if (searchDomain.getAlleleAssocs() != null) {
+			value = searchDomain.getAlleleAssocs().get(0).getObjectKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand mra._object_key = " + value;
+				from_alleleassoc = true;
+			}
+		}
+		
 		// process workflow tags
 		if (searchDomain.getWorkflow_tag_operator() != null && !searchDomain.getWorkflow_tag_operator().isEmpty()) {
 			
@@ -1044,6 +1054,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					+ "\nand st._vocab_key = 128"
 					+ "\nand wkfs._group_key = gt._term_key"
 					+ "\nand gt._vocab_key = 127";
+		}
+		if (from_alleleassoc == true) {
+			where = where + "\nand c._refs_key = mra._refs_key and mra._mgitype_key = 11";
+			from = from + ", mgi_reference_assoc mra";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

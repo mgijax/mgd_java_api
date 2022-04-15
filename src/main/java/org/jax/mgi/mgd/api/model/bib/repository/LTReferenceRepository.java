@@ -241,6 +241,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		if (primaryKey == null) {
 			throw new FatalAPIException("ReferenceRepository.getReference() : reference key is null");
 		}
+		log.info("referenceDAO.getReference(primaryKey)");
 		LTReference reference = referenceDAO.getReference(primaryKey);
 		if (reference == null) {
 			throw new FatalAPIException("ReferenceRepository.getReference(): Unknown reference key: " + primaryKey);

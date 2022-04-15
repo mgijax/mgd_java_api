@@ -903,7 +903,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			from = from + ", mgi_reference_assoc mrm";
 		}
 		if (from_strainassoc == true) {
-			where = where + "\nand c._refs_key = mrs._refs_key and mra._mgitype_key = 10";
+			where = where + "\nand c._refs_key = mrs._refs_key and mrs._mgitype_key = 10";
 			from = from + ", mgi_reference_assoc mrs";
 		}
 		

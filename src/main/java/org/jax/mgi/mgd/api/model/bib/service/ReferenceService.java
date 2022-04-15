@@ -886,7 +886,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					+ "\nand wkfr.isCurrent = 1";
 		}
 		if (from_wkfstatus == true) {
-			//+ "\nand wkfs.isCurrent = 1"
+			// search for any status; not just isCurrent
 			from = from + ", bib_workflow_status wkfs, voc_term st, voc_term gt";
 			where = where + "\nand c._refs_key = wkfs._refs_key"
 					+ "\nand wkfs._status_key = st._term_key"

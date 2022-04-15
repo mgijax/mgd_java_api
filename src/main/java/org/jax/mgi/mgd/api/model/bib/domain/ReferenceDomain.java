@@ -3,7 +3,9 @@ package org.jax.mgi.mgd.api.model.bib.domain;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceMarkerAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceStrainAssocDomain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -63,9 +65,9 @@ public class ReferenceDomain extends BaseDomain {
 	//private List<AccessionDomain> editAccessionIds;
 	
 	// these lists are loaded by the pwi at runtime
-	private List<MGIReferenceAssocDomain> alleleAssocs;
-	private List<MGIReferenceAssocDomain> markerAssocs;
-	private List<MGIReferenceAssocDomain> strainAssocs;
+	private List<MGIReferenceAlleleAssocDomain> alleleAssocs;
+	private List<MGIReferenceMarkerAssocDomain> markerAssocs;
+	private List<MGIReferenceStrainAssocDomain> strainAssocs;
 
 	// ReferenceCitationCache not included in domain at this time 
 	

@@ -1,7 +1,97 @@
+TAG: mgd_java_api-6-0-18-22
+TAG: mgd_java_api-6-0-18-21
+DATE: 04/15/2022
+STAFF: lec
+CHANGES:
+wts2-743/Add new terms to MCV/TDC
+
+TAG: mgd_java_api-6-0-18-20
+TAG: mgd_java_api-6-0-18-19
+TAG: mgd_java_api-6-0-18-18
+DATE: 04/11/2022
+STAFF: lec
+CHANGES:
+wts2-801/pwi/littriage/Add Relevance= "Not Specified" to the Discard? options in the upper left.
+
+TAG: mgd_java_api-6-0-18-17
+DATE: 04/11/2022
+STAFF: lec
+CHANGES:
+wts2-852/Add ITL repository to the Logical DB & EI
+
+TAG: mgd_java_api-6-0-18-16
+DATE: 04/06/2022
+STAFF: lec
+CHANGES:
+wts2-787/HT indexing module: issue with searching for notes that include '
+
+TAG: mgd_java_api-6-0-18-15
+DATE: 04/06/2022
+STAFF: dbm
+CHANGES: wts2-772
+1) startApi.sh: Use $JAVA instead of hardcode path that doesn't exist on
+                the PWI server where the API is moving to
+
+TAG: mgd_java_api-6-0-18-14
+TAG: mgd_java_api-6-0-18-13
+DATE: 03/23/2022, 03/28/2022
+STAFF: lec
+CHANGES:
+cre2022/PWI/Allele Relationship/allelefear
+wts2-829/Marker Type/Feature Type combination PWI bug
+
+TAG: mgd_java_api-6-0-18-12
+DATE: 03/11/2022
+STAFF: lec
+CHANGES:
+wts2-817/P-WI Probes Module Bug
+#       modified:   src/main/java/org/jax/mgi/mgd/api/model/prb/service/ProbeSourceService.java
+
+TAG: mgd_java_api-6-0-18-11
+DATE: 03/10/2022
+STAFF: lec
+CHANGES:
+cre2022/crm-55/Rel_EI: add new Organisms to PWI Production
+
+TAG: mgd_java_api-6-0-18-10
+DATE: 03/07/2022
+STAFF: lec
+CHANGES:
+wts2-703/new Noctua -> GO Annotation pipeline
+
+TAG: mgd_java_api-6-0-18-9
+TAG: mgd_java_api-6-0-18-8
+TAG: mgd_java_api-6-0-18-7
+DATE: 01/26/2022 - 2/21/2022
+STAFF: lec, pf
+CHANGES:
+wts2-767/mgi_notechunk/mgi_note merge
+
+TAG: mgd_java_api-6-0-18-7
+DATE: 02/09/2022
+STAFF: lec
+wts2-781/pwi/Allele Variant/Types & Effects Popup
+
+TAG: mgd_java_api-6-0-18-6
+TAG: mgd_java_api-6-0-18-5
+TAG: mgd_java_api-6-0-18-4
+TAG: mgd_java_api-6-0-18-3
+TAG: mgd_java_api-6-0-18-2
+TAG: mgd_java_api-6-0-18-1
+DATE: 01/10/2022, 01/19/2022, 01/20/2022, 01/24/2022
+STAFF: lec
+Yet Another Kitchen Sink (YAKS)
+
+TAG: mgd_java_api-6-0-17-16
+TAG: mgd_java_api-6-0-17-15
+DATE: 12/28/2021
+STAFF: lec
+wts2-743/Add new terms to MCV/TDC
+
 TAG: mgd_java_api-6-0-17-14
 DATE: 10/22/2021
 STAFF: lec
-wts2-718/Can't remove Pix ID from image record in P-WI
+wts2-718/Can't remove Pix ID from imapi record in P-WI
 
 TAG: mgd_java_api-6-0-17-13
 DATE: 10/04/2021
@@ -74,7 +164,7 @@ TAG: mgd_java_api-6-0-16-19
 DATE: 10/15/2020
 STAFF: lec
 CHANGES:
-TR13412/ltlo: lit triage reference type problem
+TR13412/ltlo: lit triapi reference type problem
 
 TAG: mgd_java_api-6-0-16-18
 TAG: mgd_java_api-6-0-16-17
@@ -82,7 +172,7 @@ DATE: 10/05/2020, 10/06/2020
 STAFF: lec
 CHANGES:
 TR13404/PWI:Allele problems (SOO and Strain review flag)
-TR13405/apostrophes being added in the PWI Lit Triage module
+TR13405/apostrophes being added in the PWI Lit Triapi module
 
 TAG: mgd_java_api-6-0-16-16
 TAG: mgd_java_api-6-0-16-15
@@ -110,7 +200,7 @@ TAG: mgd_java_api-6-0-16-11
 DATE: 09/21/2020
 STAFF: lec
 CHANGES:
-imagepane assoc, allele, genotype entities
+imapipane assoc, allele, genotype entities
 one directional only
 
 TAG: mgd_java_api-6-0-16-10
@@ -175,7 +265,7 @@ CHANGES: TR13326/statusUpdate/getTerm fix
 TAG: mgd_java_api-6-0-15-27
 DATE: 06/03/2020
 STAFF: lec
-CHANGES: TR13315/P-WI Bug: Can't change lit triage reference type
+CHANGES: TR13315/P-WI Bug: Can't change lit triapi reference type
 
 TAG: mgd_java_api-6-0-15-26
 TAG: mgd_java_api-6-0-15-25
@@ -197,7 +287,7 @@ CHANGES: TR13230/marker/remove limit
 TAG: mgd_java_api-6-0-15-17
 DATE: 12/31/2019
 STAFF: lec
-CHANGES: TR13216/PWI/Lit Triage/Bulk Apply Tag
+CHANGES: TR13216/PWI/Lit Triapi/Bulk Apply Tag
 "refsKey" -> "refsKeys"
 
 TAG: mgd_java_api-6-0-15-16

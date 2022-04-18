@@ -16,6 +16,7 @@ public class MGISetMemberCellTypeDomain extends BaseDomain {
 	private String term;
 	private String createdByKey;
 	private String createdBy;	
+	private String primaryid;
 	private Boolean isUsed = false;
 
 }   	

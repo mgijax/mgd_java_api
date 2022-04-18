@@ -57,6 +57,10 @@ public class HTSample extends BaseEntity {
 	@JoinColumn(name="_sex_key", referencedColumnName="_term_key")
 	private Term sex;
  	
+	@OneToOne
+	@JoinColumn(name="_celltype_term_key", referencedColumnName="_term_key")
+	private Term cellTypeTerm;
+	
 	// _emapa_key is mapped to two objects, and one must be insert/update false
 	@OneToOne
 	@JoinColumn(name="_emapa_key", referencedColumnName="_term_key")

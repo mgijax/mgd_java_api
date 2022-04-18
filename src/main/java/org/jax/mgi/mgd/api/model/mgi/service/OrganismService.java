@@ -313,10 +313,21 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		// for antigen module organism pick list
 		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
 
-		String cmd ="select s.*\n" + 
-				"from MGI_Organism s, MGI_Organism_MGIType t\n" + 
-				"where s._Organism_key = t._Organism_key\n" +
-				"and t._MGIType_key = 6";
+//        1 | mouse, laboratory
+//       76 | Not Specified
+//       79 | rabbit
+//       74 | Not Applicable  : do not include
+		
+		String cmd ="select s.*, 1 as orderBy" + 
+				"\nfrom MGI_Organism s, MGI_Organism_MGIType t" +
+				"\nwhere s._Organism_key = t._Organism_key and t._MGIType_key = 6" +
+				"\nand s._Organism_key in (1,76,79)" +
+				"\nunion" +
+				"\nselect s.*, 2 as orderBy" + 
+				"\nfrom MGI_Organism s, MGI_Organism_MGIType t" +
+				"\nwhere s._Organism_key = t._Organism_key and t._MGIType_key = 6" +
+				"\nand s._Organism_key not in (1,76,79,74)" +
+				"\norder by orderBy, commonname";
 		log.info(cmd);
 
 		try {
@@ -393,4 +404,29 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		return results;
 	}
 	
+	@Transactional	
+	public List<SlimOrganismDomain> searchAlleleRelationship() {
+		// for allele relationship module organism pick list
+		List<SlimOrganismDomain> results = new ArrayList<SlimOrganismDomain>();
+
+		String cmd ="select s.*\n" + 
+				"from MGI_Organism s, MGI_Organism_MGIType t\n" + 
+				"where s._Organism_key = t._Organism_key\n" +
+				"and t._MGIType_key = 40\n" +
+				"order by s.commonname";
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimOrganismDomain domain = new SlimOrganismDomain();
+				domain = slimtranslator.translate(organismDAO.get(rs.getInt("_organism_key")));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {e.printStackTrace();}
+		
+		return results;
+	}	
 }

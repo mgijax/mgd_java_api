@@ -49,6 +49,8 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		SearchResults<VocabularyDomain> results = new SearchResults<VocabularyDomain>();
 		Vocabulary entity = vocabularyDAO.get(Integer.valueOf(domain.getVocabKey()));
 		Boolean modified = false;
+		String cmd;
+		Query query;
 		
 		log.info("processVocabuary/update");
 		if (termService.process(domain.getVocabKey(), domain.getTerms(), user)) {
@@ -65,17 +67,20 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			log.info("processVocabulary/no changes processed: " + domain.getVocabKey());
 		}
 
-		// re-setting terms order should happen for specific vocabularies only
+		// reset of the terms is vocabulary-specific
 		// 48 = Journal
 		if (domain.getVocabKey().equals("48")) {
-			String cmd;
-			Query query;
-			
 		    cmd = "select count(*) from VOC_resetTerms(" + domain.getVocabKey() + ")";
 		    log.info("cmd: " + cmd);
 		    query = vocabularyDAO.createNativeQuery(cmd);
 		    query.getResultList();	
 		}
+		
+		// reset the sequence numbers so there are no gaps
+		cmd = "select count(*) from MGI_resetSequenceNum ('VOC_Term'," + domain.getVocabKey() + "," + user.get_user_key() + ")";		    
+		log.info("cmd: " + cmd);
+		query = vocabularyDAO.createNativeQuery(cmd);
+		query.getResultList();	
 		
 		// return entity translated to domain
 		log.info("processVocabulary/update/returning results");
@@ -151,6 +156,11 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		// for vocab specific ordering, reset orderBy based on _vocab_key or name
 		String orderBy = "order by t.term";		
 		
+		String celltypeSelect = select + ", a.accid";
+		String celltypeFrom = from + ", acc_accession a";
+		String celltypeWhere = where + "\nand t._term_key = a._object_key and a._logicaldb_key = 173";
+		Boolean isCellType = false;
+		
 		// for non-vocab tables that are acting like voc_vocab/voc_term		
 		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty()) {
 			if (searchDomain.getVocabKey().equals("151")
@@ -173,6 +183,15 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			}
 		}
 		
+		// for _vocab_key = 96, 97 (used by mgi_relationship)	
+		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty() &&
+					(searchDomain.getVocabKey().equals("96")
+					|| searchDomain.getVocabKey().equals("97"))) {
+			if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
+					return searchRelationshipVocab(searchDomain.getVocabKey(), searchDomain.getName());		
+			}
+		}
+		
 		// for UIs that use getName()
 		// for ordering by sequenceNum, add specific vocab to this list		
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
@@ -188,6 +207,14 @@ public class VocabService extends BaseService<VocabularyDomain> {
 					|| searchDomain.getName().equals("GXD Index Stages")
 					) {
 				orderBy = "order by t.sequencenum";
+			}
+			
+			// cell ontology (_vocab_key = 102)/get priimary id
+			if (searchDomain.getName().equals("Cell Ontology")) {
+				select = celltypeSelect;
+				from = celltypeFrom;
+				where = celltypeWhere;
+				isCellType = true;
 			}
 		}
 		
@@ -221,6 +248,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			// 24 = Vector Type (probe)
 			// 150 = Molecular Segment Note (probe)
 			// 161 = GXD Assay Age
+			// 174 = Allele Inducible
 			if (searchDomain.getVocabKey().equals("39")
 					|| searchDomain.getVocabKey().equals("42")
 					|| searchDomain.getVocabKey().equals("37") 
@@ -230,6 +258,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 					|| searchDomain.getVocabKey().equals("24")
 					|| searchDomain.getVocabKey().equals("150")	
 					|| searchDomain.getVocabKey().equals("161")	
+					|| searchDomain.getVocabKey().equals("174")						
 					) {
 				orderBy = "order by t.sequenceNum";
 			}
@@ -241,7 +270,15 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				orderBy = "order by t.abbreviation";
 			}
 			
+			// cell ontology (_vocab_key = 102)/get priimary id
+			if (searchDomain.getVocabKey().equals("102")) {
+				select = celltypeSelect;
+				from = celltypeFrom;
+				where = celltypeWhere;
+				isCellType = true;
+			}			
 		}
+		
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
 			where = where + "\nand v.name ilike '" + searchDomain.getName() + "'";
 		}
@@ -280,6 +317,11 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				termDomain.setTerm(rs.getString("term"));
 				termDomain.setAbbreviation(rs.getString("abbreviation"));
 				termDomain.setVocabKey(rs.getString("_vocab_key"));
+				
+				if (isCellType == true) {
+					termDomain.setPrimaryid(rs.getString("accid"));
+				}
+				
 				termList.add(termDomain);
 			}
 			
@@ -412,6 +454,59 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			while (rs.next()) {					
 				SlimTermDomain termDomain = new SlimTermDomain();				
 				domain.setVocabKey(vocabKey);						
+				domain.setName(rs.getString("term"));
+				termDomain.setTermKey(rs.getString("termKey"));
+				termDomain.set_term_key(rs.getInt("termKey"));
+				termDomain.setTerm(rs.getString("term"));
+				termDomain.setVocabKey(rs.getString("termKey"));
+				termList.add(termDomain);
+			}
+			
+			domain.setTerms(termList);
+			results.setItem(domain);		
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;			
+	}
+
+	@Transactional
+	public SearchResults<SlimVocabularyTermDomain> searchRelationshipVocab(String vocabKey, String vocabName) {	
+		// returns list of relationship vocabulary into SlimVocabularyTermDomain format
+		
+		SearchResults<SlimVocabularyTermDomain> results = new SearchResults<SlimVocabularyTermDomain>();
+		
+		String cmd = "";
+
+		if (vocabName.equals("mutationInvolves")) {
+			cmd = "select _term_key as termKey, term from voc_term where _vocab_key = " + vocabKey
+					+ "\nand _term_key in (12438350, 12438354, 12438355, 12438356, 12438357, 12438358, 12438359, 12438360, 12438361, 12438362, 31401216, 95815138)" 
+					+ "\norder by term";
+		}
+		else if (vocabName.equals("expressesComponents")) {		
+			cmd = "select _term_key as termKey, term from voc_term where _vocab_key = " + vocabKey
+					+ "\nand _term_key in (12948293,12965808)"
+					+ "\norder by term";
+		}
+		else if (vocabName.equals("properties")) {		
+			cmd = "select _term_key as termKey, term from voc_term where _vocab_key = " + vocabKey
+					+ "\nand _vocab_key = 97 and term like 'Non_mouse%' "
+					+ "\norder by sequenceNum";
+		}
+		
+		log.info(cmd);		
+		
+		try {
+			SlimVocabularyTermDomain domain = new SlimVocabularyTermDomain();						
+			List<SlimTermDomain> termList = new ArrayList<SlimTermDomain>();
+			
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {					
+				SlimTermDomain termDomain = new SlimTermDomain();				
+				domain.setVocabKey(vocabKey);
 				domain.setName(rs.getString("term"));
 				termDomain.setTermKey(rs.getString("termKey"));
 				termDomain.set_term_key(rs.getInt("termKey"));

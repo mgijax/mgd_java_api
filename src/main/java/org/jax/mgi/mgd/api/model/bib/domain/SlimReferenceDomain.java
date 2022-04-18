@@ -19,13 +19,13 @@ public class SlimReferenceDomain extends BaseDomain {
 	private String jnumid;
 	private String jnum;
 	private String short_citation;
-	private String title;
+	private String title;	
 	private String journal;
 	private String year;
 	public String mgiid;	
 	public String doiid;
 	public String pubmedid;
-	
+
 	// used by lit triage
 	public String ap_status;
 	public String go_status;
@@ -41,6 +41,4 @@ public class SlimReferenceDomain extends BaseDomain {
 	private String copyright;
 	private String selectedJournalLicense;
 	private Boolean needsDXDOIid = false;
-	
-	
 }

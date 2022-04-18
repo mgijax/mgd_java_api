@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
+import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssayDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImageSubmissionDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImageDomain;
 import org.jax.mgi.mgd.api.model.img.service.ImagePaneAssocService;
@@ -138,5 +139,20 @@ public class ImageController extends BaseController<ImageDomain> {
 		
 		return results;		
 	}
+
+	@POST
+	@ApiOperation(value = "Search Assay Image Panes by image key/returns image pane assay domain")
+	@Path("/searchAssayPanesByImage")
+	public List<ImagePaneAssayDomain> searchAssayPanesByImage(Integer imageKey) {
+	
+		List<ImagePaneAssayDomain> results = new ArrayList<ImagePaneAssayDomain>();
+
+		try {
+			results = imageService.searchAssayPanesByImage(imageKey);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
+		return results;
+	}	
 }

@@ -80,14 +80,15 @@ public class MGITypeService extends BaseService<MGITypeDomain> {
 		// Segment : 3
 		// Antibody : 6
 		// Antigen : 7
-
 		// GXD HT Sample : 43
 		// Allele : 11
-			
+		// Relationship : 40
+		// MGI Relationship : 40
+
 		List<SlimMGITypeDomain> results = new ArrayList<SlimMGITypeDomain>();
 
 		String cmd = "select * from acc_mgitype"
-				+ "\nwhere _mgitype_key in (2, 3, 6, 7, 11, 43)"
+				+ "\nwhere _mgitype_key in (2, 3, 6, 7, 11, 40, 43)"
 				+ "\norder by name";
 		log.info(cmd);		
 

@@ -3,7 +3,9 @@ package org.jax.mgi.mgd.api.model.bib.domain;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceMarkerAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceStrainAssocDomain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -57,19 +59,15 @@ public class ReferenceDomain extends BaseDomain {
 	public String qtl_status;
 	public String tumor_status;
 	
-	// workflow data
-	private List<ReferenceWorkflowDataDomain> workflowData;
-	// workflow relevance
-	private List<ReferenceWorkflowRelevanceDomain> workflowRelevance;
-	// workflow status
-	private List<ReferenceWorkflowStatusDomain> workflowStatus;
-	// workflow tag
-	private List<ReferenceWorkflowTagDomain> workflowTag;
+	//private ReferenceBookDomain referenceBook;
+	//private ReferenceNoteDomain referenceNote;
+	//private List<AccessionDomain> mgiAccessionIds;
+	//private List<AccessionDomain> editAccessionIds;
 	
 	// these lists are loaded by the pwi at runtime
-	private List<MGIReferenceAssocDomain> alleleAssocs;
-	private List<MGIReferenceAssocDomain> markerAssocs;
-	private List<MGIReferenceAssocDomain> strainAssocs;
+	private List<MGIReferenceAlleleAssocDomain> alleleAssocs;
+	private List<MGIReferenceMarkerAssocDomain> markerAssocs;
+	private List<MGIReferenceStrainAssocDomain> strainAssocs;
 
 	// ReferenceCitationCache not included in domain at this time 
 	
@@ -151,6 +149,5 @@ public class ReferenceDomain extends BaseDomain {
 	private Integer status_Tumor_Chosen;
 	private Integer status_Tumor_Indexed;
 	private Integer status_Tumor_Full_coded;
-	private Integer status_Tumor_Rejected;		
-	
+	private Integer status_Tumor_Rejected;	
 }

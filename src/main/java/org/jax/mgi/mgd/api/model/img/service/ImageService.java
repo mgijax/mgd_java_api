@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.img.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -13,8 +14,12 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.AssayDAO;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
+import org.jax.mgi.mgd.api.model.gxd.translator.SlimAssayTranslator;
 import org.jax.mgi.mgd.api.model.img.dao.ImageDAO;
 import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
+import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssayDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImageSubmissionDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImageDomain;
 import org.jax.mgi.mgd.api.model.img.entities.Image;
@@ -42,6 +47,8 @@ public class ImageService extends BaseService<ImageDomain> {
 	private TermDAO termDAO;
 	@Inject
 	private ReferenceDAO referenceDAO;
+	@Inject
+	private AssayDAO assayDAO;
 	
 	@Inject
 	private NoteService noteService;
@@ -52,6 +59,7 @@ public class ImageService extends BaseService<ImageDomain> {
 	
 	private ImageTranslator translator = new ImageTranslator();
 	private ImageSubmissionTranslator submissionTranslator = new ImageSubmissionTranslator();
+	private SlimAssayTranslator assayTranslator = new SlimAssayTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	private String mgiTypeKey = "9";
@@ -583,5 +591,75 @@ public class ImageService extends BaseService<ImageDomain> {
 		results = getResults(Integer.valueOf(results.items.get(0).getImageKey()));
 		return results;		
 	}
-	
+
+	@Transactional	
+	public List<ImagePaneAssayDomain> searchAssayPanesByImage(Integer imageKey) {
+		// search for all assays/image panes by image key
+		
+		List<ImagePaneAssayDomain> results = new ArrayList<ImagePaneAssayDomain>();
+
+		String cmd = "select i._image_key, i._imagepane_key, i.panelabel, s._assay_key" + 
+				"\nfrom img_imagepane i, gxd_assay s" + 
+				"\nwhere i._image_key = " + imageKey + 
+				"\nand i._imagepane_key = s._imagepane_key" + 
+				"\nunion" + 
+				"\nselect i._image_key, i._imagepane_key, i.panelabel, s._assay_key" + 
+				"\nfrom img_imagepane i, gxd_specimen s, gxd_insituresult ir, gxd_insituresultimage irg" + 
+				"\nwhere i._image_key = " + imageKey + 
+				"\nand i._imagepane_key = irg._imagepane_key" + 
+				"\nand irg._result_key = ir._result_key" + 
+				"\nand ir._specimen_key = s._specimen_key" + 			
+				"\norder by panelabel";
+		
+		// make this easy to copy/paste for troubleshooting
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			ImagePaneAssayDomain domain = new ImagePaneAssayDomain();								
+			List<SlimAssayDomain> assays = new ArrayList<SlimAssayDomain>();
+			String newPaneLabel = "";
+			String prevPaneLabel = "";
+			
+			while (rs.next()) {
+				SlimAssayDomain assayDomain = new SlimAssayDomain();
+
+				newPaneLabel = rs.getString("panelabel");	
+				if (newPaneLabel == null || newPaneLabel.isEmpty()) {
+					newPaneLabel = "";
+				}
+
+				// new domain, new assays
+				if (!newPaneLabel.equals(prevPaneLabel)) {
+					
+					// if previous assays != null, then save this domain
+					if (domain.getAssays() != null) {
+						results.add(domain);
+					}
+					
+					domain = new ImagePaneAssayDomain();
+					assays = new ArrayList<SlimAssayDomain>();					
+					domain.setImageKey(rs.getString("_image_key"));
+					domain.setImagePaneKey(rs.getString("_imagepane_key"));
+					domain.setPaneLabel(rs.getString("panelabel"));
+				}
+				
+				assayDomain = assayTranslator.translate(assayDAO.get(rs.getInt("_assay_key")));				
+				assays.add(assayDomain);
+				domain.setAssays(assays);
+				domain.getAssays().sort(Comparator.comparing(SlimAssayDomain::getAccID));				
+				prevPaneLabel = newPaneLabel;
+			}
+			if (domain.getAssays() != null) {
+				domain.getAssays().sort(Comparator.comparing(SlimAssayDomain::getAccID));								
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
 }

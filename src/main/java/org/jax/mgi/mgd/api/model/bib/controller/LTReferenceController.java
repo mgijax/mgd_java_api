@@ -2,7 +2,6 @@ package org.jax.mgi.mgd.api.model.bib.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -12,7 +11,6 @@ import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceBulkDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.model.bib.interfaces.LTReferenceRESTInterface;
 import org.jax.mgi.mgd.api.model.bib.service.LTReferenceService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -214,6 +212,8 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 
 		if (failures.size() > 0) {
 			results.setError("Partial Failure", "Status changes failed to save for: " + String.join(",", failures), Constants.HTTP_SERVER_ERROR);
+		//} else {
+		//	String json = "{\"group\":\"" + group + "\", \"status\":\"" + status + "\"}";
 		}
 
 		return results;
@@ -237,41 +237,15 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 				results.items = null;	// okay result
 			} catch (APIException t) {
 				results.setError("Failed", "Failed to save changes: " + t.toString(), Constants.HTTP_SERVER_ERROR);
+			//} catch (JsonProcessingException t) {
+			//	results.setError("Log Failure", "Changes saved, but failed to log them in API log: " + t.toString(), Constants.HTTP_SERVER_ERROR);
 			}
 		} else {
 			results.setError("FailedAuthentication", "Failed - invalid username", Constants.HTTP_PERMISSION_DENIED);
 		}
 		return results;
 	}
-	
-	/* search method - retrieves references based on query form parameters
-	 */
-	@Override
-	public SearchResults<LTReferenceSummaryDomain> search(Map<String,Object> params) {
-		
-		log.info("LTReferenceContoller/search");
 
-		params = filterEmptyParameters(params);
-		log.info("LTReferenceController/params:" + params);
-		
-		try {
-			log.info("from LTReferenceController/call LTReferenceService/getReferenceSummaries");			
-			return referenceService.getReferenceSummaries(params);
-		} catch (APIException e) {
-			SearchResults<LTReferenceSummaryDomain> out = new SearchResults<LTReferenceSummaryDomain>();
-			out.setError("Failed", "search failed: " + e.toString(), Constants.HTTP_SERVER_ERROR);
-			return out;
-		}
-	}
-
-
-	/* return domain object for single reference with given key
-	 */
-	@Transactional
-	@Override
-	public SearchResults<LTReferenceDomain> getValidReferenceCheck (String refsKey) {
-		return this.getReferenceByKey(refsKey);
-	}
 
 	/* return domain object for single reference with given key
 	 * Note: added Transactional annotation to ensure that the session stays open for the duration of
@@ -292,12 +266,6 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 			results.setError("InvalidParameter", "No reference key was specified", Constants.HTTP_BAD_REQUEST);
 		}
 		return results;
-	}
-
-	/* return a list of valid values for the version field (for relevance data), for use in a search pick list
-	 */
-	public List<String> getRelevanceVersions() {
-		return referenceService.getRelevanceVersions();
 	}
 	
 	// never used/always use the ReferenceController/create

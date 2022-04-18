@@ -207,6 +207,9 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 					structureService.process(entity.get_gellane_key(), domain.get(i).getStructures(), user);
 				}
 
+				// set domain's gel lane key
+				domain.get(i).setGelLaneKey(String.valueOf(entity.get_gellane_key()));
+				
 				log.info("processGelLane/MGI_resetAgeMinMax");																						
 				String cmd = "select count(*) from MGI_resetAgeMinMax ('GXD_GelLane'," + entity.get_gellane_key() + ")";
 				log.info("cmd: " + cmd);

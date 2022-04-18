@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.gxd.entities;
 
 import java.util.Date;
 import java.util.List;
+import java.math.BigDecimal;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -48,7 +49,8 @@ public class HTExperiment extends BaseEntity {
 	private Date last_curated_date;
 	private Date creation_date;
 	private Date modification_date;
-
+	private BigDecimal confidence;
+	
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_experiment_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 42 and `_logicaldb_key` = 189")

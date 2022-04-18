@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.mgi.domain;
 
+import java.util.List;
+
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
 import lombok.Getter;
@@ -13,9 +15,13 @@ public class RelationshipDomain extends BaseDomain {
 	private String categoryKey;
 	private String categoryTerm;
 	private String objectKey1;
-	private String object1;
 	private String objectKey2;
-	private String object2;
+	
+	// these are specific to the category/mgi-types
+	// so a specific entity/domain is needed to map the category/mgi-type to its specific master.
+	//private String object1;
+	//private String object2;
+	
 	private String relationshipTermKey;
 	private String relationshipTerm;
 	private String qualifierKey;
@@ -32,5 +38,7 @@ public class RelationshipDomain extends BaseDomain {
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;
-
+	
+	private NoteDomain note;
+	private List<RelationshipPropertyDomain> properties;
 }   	

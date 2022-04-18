@@ -18,7 +18,9 @@ import org.jax.mgi.mgd.api.model.gxd.domain.SlimHTDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTExperiment;
 import org.jax.mgi.mgd.api.model.gxd.translator.HTExperimentTranslator;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
+import org.jax.mgi.mgd.api.model.mgi.service.MGIPropertyService;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIPropertyDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -43,6 +45,8 @@ public class HTExperimentService extends BaseService<HTDomain> {
 	@Inject
 	private NoteService noteService;
 	@Inject
+	private MGIPropertyService mgiPropertyService;
+	@Inject
 	private TermDAO termDAO;
 
 	@Transactional
@@ -55,11 +59,12 @@ public class HTExperimentService extends BaseService<HTDomain> {
 	@Transactional
 	public SearchResults<HTDomain> update(HTDomain domain, User user) {
 				
-		Boolean modified = false;
+		log.info("processHTExperiment/update");
+
+//		Boolean modified = false;
+//		Boolean hasPriorSamples = false; // does this experiment already have samples?
 		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
 		HTExperiment entity = htExperimentDAO.get(domain.get_experiment_key());
-		
-		log.info("processHTExperiment/update");
 		
 		// name
 		if (domain.getName() == null || domain.getDescription().isEmpty()) {
@@ -77,6 +82,39 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			entity.setDescription(domain.getDescription());
 		}
 
+		// set initial curation user/dates when samples are created
+		if (domain.getCreatingSamples() == 1){
+			entity.setInitial_curated_date(new Date());
+			entity.setInitialcuratedBy(user);
+		}
+		// set curation state to "Not Done" if we're deleting the samples
+		if (domain.getDeletingSamples() == 1){
+			entity.setCurationState(termDAO.get(20475422)); 
+		}
+		// last curation user/date set when samples created / updated / deleted
+		if (domain.getDeletingSamples() == 1 || domain.getModifyingSamples() == 1 || domain.getCreatingSamples() == 1){
+			entity.setLast_curated_date(new Date());
+			entity.setLastcuratedBy(user);
+		}
+
+
+		// set eval date and curation state on eval state change
+		if (entity.getEvaluationState().get_term_key() != domain.get_evaluationstate_key()){
+			entity.setEvaluated_date(new Date());
+			entity.setEvaluatedBy(user);
+			if (domain.get_evaluationstate_key() == 20225942 ||  domain.get_evaluationstate_key() == 20225944) {
+				entity.setCurationState(termDAO.get(20475422)); 
+			}
+			if (domain.get_evaluationstate_key() == 20225943) {
+				entity.setCurationState(termDAO.get(20475420)); 
+			}
+		}
+
+		if (domain.getHasSamples() == 1){
+			entity.setCurationState(termDAO.get(20475421)); 
+		}
+
+
 		// evaluation state
 		entity.setEvaluationState(termDAO.get(Integer.valueOf(domain.get_evaluationstate_key())));	
 		// experiment type
@@ -93,23 +131,60 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			noteService.process(String.valueOf(entity.get_experiment_key()), noteDomain, "42", user);
 		}
 
-log.info("--before exp var handling");
 		// experiment variables
 		if (domain.getExperiment_variables() != null) {
 			hTExperimentVariableService.process(domain.get_experiment_key(), domain.getExperiment_variables(), user);
 		}
-log.info("--after exp var handling");
 
-		// process ht sample
-// TODO
-//		if (domain.getSamples() != null) {
-//			htSampleService.process(domain.get_experiment_key(), domain.getSamples(), user);
-//		}
+		// pubmed IDs
+		if (domain.getDeletingPubmedIds() == 1) { //delete all associated
+
+			List<MGIPropertyDomain> removedPubmedIds = new ArrayList<MGIPropertyDomain>();
+
+			if (domain.getPubmed_property_keys() != null) {
+				for (int i = 0; i < domain.getPubmed_property_keys().size(); i++) {
+					MGIPropertyDomain remPropertyDomain = new MGIPropertyDomain();
+					remPropertyDomain.setProcessStatus(Constants.PROCESS_DELETE);
+					remPropertyDomain.setPropertyKey(domain.getPubmed_property_keys().get(i));
+					removedPubmedIds.add(remPropertyDomain);
+				}
+				mgiPropertyService.process(removedPubmedIds, user);
+			}
+
+		}
+		if (domain.getNewPubmedIds() != null) {
+
+			// This value comes through as a single white-space separated string, so
+			// it must be broken down to loop over individual string IDs
+			List<MGIPropertyDomain> newPubmedIds = new ArrayList<MGIPropertyDomain>();
+			String[] newPubmedIdsArray = domain.getNewPubmedIds().trim().split("\\s++");
+			for( int i = 0; i < newPubmedIdsArray.length; i++)
+			{
+    			String thisID = newPubmedIdsArray[i];
+				MGIPropertyDomain propertyDomain = new MGIPropertyDomain();
+				propertyDomain.setProcessStatus(Constants.PROCESS_CREATE);
+				propertyDomain.setPropertyTermKey("20475430");
+				propertyDomain.setPropertyTypeKey("1002");
+				propertyDomain.setObjectKey(Integer.toString(domain.get_experiment_key()));
+				propertyDomain.setMgiTypeKey("42");
+				propertyDomain.setValue(thisID);
+				propertyDomain.setSequenceNum(String.valueOf(i + 1));
+				newPubmedIds.add(propertyDomain);
+			}
+
+			mgiPropertyService.process(newPubmedIds, user);
+		}
+
 
 		// persist entity
 		entity.setModification_date(new Date());
 		entity.setModifiedBy(user);
 		htExperimentDAO.update(entity);
+
+		// process ht samples
+		if (domain.getSamples() != null) {
+			htSampleService.process(domain.get_experiment_key(), domain.getSamples(), user);
+		}
 		
 		// return entity translated to domain
 		log.info("processHTExperiment/update/returning results");
@@ -194,13 +269,14 @@ log.info("--after exp var handling");
 		}
 
 		// exp note 
-		value = searchDomain.getNotetext();			
-		if (value != null && !value.isEmpty()) {	
-			from = from + ", mgi_notechunk nc, mgi_note n";	
-			where = where + "\nand hte._experiment_key = n._object_key ";
-			where = where + "\nand nc._note_key = n._note_key ";
-			where = where + "\nand n._notetype_key = 1047 ";
-			where = where + "\nand nc.note ilike '" + value + "'";
+		if (searchDomain.getNotetext() != null && !searchDomain.getNotetext().isEmpty()) {
+			value = searchDomain.getNotetext().replaceAll("'", "''");		
+			if (value != null && !value.isEmpty()) {	
+				from = from + ", mgi_note n";	
+				where = where + "\nand hte._experiment_key = n._object_key ";
+				where = where + "\nand n._notetype_key = 1047 ";
+				where = where + "\nand n.note ilike '" + value + "'";
+			}
 		}
 
 		/*
@@ -337,6 +413,9 @@ log.info("--after exp var handling");
 				domain.set_experiment_key(rs.getString("_experiment_key"));
 				domain.setPrimaryid(rs.getString("accid"));
 				domain.set_curationstate_key(rs.getString("_curationstate_key"));
+//				if (rs.getString("_curationstate_key").equals("20475421")){
+//					domain.setPrimaryid(rs.getString("accid") + "*");
+//				}
 				results.add(domain);		
 			}
 			sqlExecutor.cleanup();

@@ -37,7 +37,7 @@ public class SlimMarkerTranslator extends BaseEntityDomainTranslator<Marker, Sli
 			Iterable<MarkerNoteDomain> note = noteTranslator.translateEntities(entity.getDetailClipNote());
 			domain.setDetailClip(note.iterator().next());
 		}
-		
+				
 		return domain;
 	}
 

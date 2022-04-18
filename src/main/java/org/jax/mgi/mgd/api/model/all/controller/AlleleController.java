@@ -18,6 +18,7 @@ import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleRefAssocDomain;
 import org.jax.mgi.mgd.api.model.all.service.AlleleService;
 import org.jax.mgi.mgd.api.model.all.service.CellLineService;
+import org.jax.mgi.mgd.api.model.gxd.domain.AllelePairDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImageDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -159,7 +160,7 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		
 		return results;
 	}
-
+	
 	@POST
 	@ApiOperation(value = "Validate allele symbol (all statuses) OR accID, returns List of SlimAlleleDomains")
 	@Path("/validateAlleleAnyStatus")
@@ -169,6 +170,22 @@ public class AlleleController extends BaseController<AlleleDomain> {
 
 		try {
 			results = alleleService.validateAlleleAnyStatus(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@POST
+	@ApiOperation(value = "Validate allele & conditional rules, returns List of AllelePairDomain")
+	@Path("/validateAlleleConditional")
+	public List<SlimAlleleDomain> validateAlleleConditional(List<AllelePairDomain> searchDomain) {
+	
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();		
+
+		try {
+			results = alleleService.validateAlleleConditional(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

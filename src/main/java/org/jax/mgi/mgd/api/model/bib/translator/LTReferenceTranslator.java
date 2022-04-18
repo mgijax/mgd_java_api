@@ -34,6 +34,7 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		domain.issue = entity.getIssue();
 		domain.pgs = entity.getPgs();
 		domain.date = entity.getDate();
+		domain.isReviewArticle = String.valueOf(entity.getIsReviewArticle());
 
 		if (entity.getYear() != null) {
 			domain.year = entity.getYear().toString();
@@ -63,15 +64,8 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		
 		domain.creation_date = dateFormatter.format(entity.getCreation_date());
 		domain.modification_date = dateFormatter.format(entity.getModification_date());
-		domain.created_by = entity.getCreatedByUser().getLogin();
-		domain.modified_by = entity.getModifiedByUser().getLogin();
-		
-		// is this a review article?
-		if (entity.getIsReviewArticle() == 0) {
-			domain.isReviewArticle = "No";
-		} else {
-			domain.isReviewArticle = "Yes";
-		}
+		domain.createdBy = entity.getCreatedByUser().getLogin();
+		domain.modifiedBy = entity.getModifiedByUser().getLogin();
 		
 		// list of strings, each of which indicates a type of data associated with the reference
 		domain.associated_data = new ArrayList<String>();

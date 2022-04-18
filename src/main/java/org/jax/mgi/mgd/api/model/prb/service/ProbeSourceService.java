@@ -83,17 +83,18 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 			domain.setStrainKey("-1");
 		}
 
-		// If key is empty we either set to default or check tissue
+		// Not Specified
 		if(domain.getTissueKey() == null || domain.getTissueKey().isEmpty()) {
-			// Not Specified
 			domain.setTissueKey("-1");
 		}
 				
 		// Not Applicable/Not Specified
 		if(domain.getCellLineKey() == null || domain.getCellLineKey().isEmpty()) {
-			if (domain.getTissueKey().equals("-2")) {
+			// cell line is not entered and tissue != Not Applicable, != Not Specified, then cell line = Not Applicable
+			if (!domain.getTissueKey().equals("-1") && !domain.getTissueKey().equals("-2")) {
 				domain.setCellLineKey("316336");
 			}
+			// else cell line = Not Specified
 			else {
 				domain.setCellLineKey("316335");
 			}
@@ -104,15 +105,15 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 				domain.setAgePrefix("Not Applicable");
 			}
 		}
-		
-		// Not Specified
-		if(domain.getGenderKey() == null || domain.getGenderKey().isEmpty()) {
-			domain.setGenderKey("315167");
-		}
 
 		// Not Specified
 		if(domain.getAgePrefix() == null || domain.getAgePrefix().isEmpty()) {
 			domain.setAgePrefix("Not Specified");
+		}
+		
+		// Not Specified
+		if(domain.getGenderKey() == null || domain.getGenderKey().isEmpty()) {
+			domain.setGenderKey("315167");
 		}
 
 		// true/1
@@ -125,18 +126,6 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 		if (!domain.getOrganismKey().equals("1") && ! domain.getOrganismKey().equals("76") ) {
 			log.info("setting strain key to not applicable not mouse not not resolved");
 			domain.setStrainKey("-2");
-		}
-		
-		//if tissue is specified (NOT Not Specified), cell line default is Not Applicable
-		if (!domain.getTissueKey().equals("-1")) {
-			log.info("setting cell line to not applicable");
-			domain.setCellLineKey("316336");
-		}
-
-		// if cell line is specified (NOT Not Specified), age is Not Applicable
-		if (!domain.getCellLineKey().equals("316335") ) {
-			log.info("setting age to not applicable");
-			domain.setAgePrefix("Not Applicable");
 		}
 		
 		entity.setSegmentType(termDAO.get(Integer.valueOf(domain.getSegmentTypeKey())));

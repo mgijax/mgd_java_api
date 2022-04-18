@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model.bib.service;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,28 +12,18 @@ import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.exception.NonFatalAPIException;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.model.bib.repository.LTReferenceRepository;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
 @RequestScoped
 public class LTReferenceService {
 
-	/* Using a repository rather than hitting the DAO directly, as the repo layer handles some of the complexity 
-	 * of mapping from domains to entities.
-	 */
 	@Inject
-	private LTReferenceRepository repo;
-	@Inject
-	private ReferenceService referenceService;
-	
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	private Logger log = Logger.getLogger(getClass());
-
+	private LTReferenceRepository repo;	
+		
 	/* Update the reference entity corresponding to the given domain object (and updates citation cache).  Returns
 	 * domain object if successful or throws APIException if not.
 	 */
@@ -67,34 +56,9 @@ public class LTReferenceService {
 		}
 		return results;
 	}
-	
-	public SearchResults<LTReferenceSummaryDomain> getReferenceSummaries(Map<String, Object> params) throws APIException {
-		log.info("from LTReferenceService/call ReferenceService/searchLT()");
-		return referenceService.searchLT(params);
-	}
 
-	public SearchResults<LTReferenceDomain> getReferences(Map<String, Object> params) throws APIException {
-		return repo.search(params);
+	public SearchResults<LTReferenceDomain> getReferences(Map<String, Object> searchFields) throws APIException {
+		return repo.search(searchFields);
 	}	
 	
-	/* Get a list of valid relevance versions for use in a search pick list in the pwi.
-	 */
-	public List<String> getRelevanceVersions() {
-		List<String> versions = new ArrayList<String>();
-
-		String cmd = "select distinct version " + 
-				"from bib_workflow_relevance " + 
-				"where version is not null " +
-				"order by version";
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				versions.add(rs.getString("version"));
-			}
-			sqlExecutor.cleanup();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return versions;
-	}
 }

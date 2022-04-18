@@ -174,7 +174,7 @@ public class NoteService extends BaseService<NoteDomain> {
 		// update
 		else {	
 			Note entity = noteDAO.get(Integer.valueOf(noteDomain.getNoteKey()));
-			if (!entity.getNoteChunk().getNote().equals(noteDomain.getNoteChunk())) {
+			if (!entity.getNote().equals(noteDomain.getNoteChunk())) {
 				log.info("NoteService update");
 				noteKey = noteDomain.getNoteKey().toString();
 				modified = true;

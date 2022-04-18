@@ -45,11 +45,6 @@ public class ReferenceDomain extends BaseDomain {
 	public String pubmedid;
 	public String gorefid;
 	
-//	public String book_author;
-//	public String book_title;
-//	public String place;
-//	public String publisher;
-//	public String series_ed;
 	public String referenceNote;
 	
 	private ReferenceBookDomain referenceBook;

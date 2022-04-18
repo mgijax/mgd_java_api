@@ -347,9 +347,24 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		referenceDAO.persist(entity);
 				
 		// for books
-		if (domain.getReferenceTypeKey().equals("31576679")) {
+		ReferenceBook bookEntity;			
+		
+		// if !book but a book exists, then delete book
+		if (!domain.getReferenceTypeKey().equals("31576679") && domain.getReferenceBook() != null) {
+			bookEntity = bookDAO.get(Integer.valueOf(domain.getRefsKey()));
+			bookDAO.remove(entity);
+		}
+		// if book, and book does not exists, the create new book, else, update existing book
+		else if (domain.getReferenceTypeKey().equals("31576679")) {
+						
+			if (domain.getReferenceBook() == null) {
+				bookEntity = new ReferenceBook();
+				bookEntity.setCreation_date(new Date());				
+			}
+			else {
+				bookEntity = bookDAO.get(Integer.valueOf(domain.getRefsKey()));
+			}
 			
-			ReferenceBook bookEntity = new ReferenceBook();
 			bookEntity.set_refs_key(entity.get_refs_key());
 			
 			if (domain.book_author.isEmpty()) {
@@ -387,7 +402,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				bookEntity.setSeries_ed(domain.series_ed);
 			}
 			
-			bookEntity.setCreation_date(new Date());
 			bookEntity.setModification_date(new Date());
 			bookDAO.persist(bookEntity);
 		}

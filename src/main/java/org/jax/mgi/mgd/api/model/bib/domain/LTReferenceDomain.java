@@ -35,11 +35,11 @@ public class LTReferenceDomain extends BaseDomain {
 	public String isReviewArticle;	
 
 	// books
-	public String book_author;
-	public String book_title;
-	public String place;
-	public String publisher;
-	public String series_ed;
+//	public String book_author;
+//	public String book_title;
+//	public String place;
+//	public String publisher;
+//	public String series_ed;
 	private ReferenceBookDomain referenceBook;
 
 	// accession ids

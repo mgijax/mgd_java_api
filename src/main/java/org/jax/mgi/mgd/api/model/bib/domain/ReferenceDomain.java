@@ -45,24 +45,24 @@ public class ReferenceDomain extends BaseDomain {
 	public String pubmedid;
 	public String gorefid;
 	
-	public String book_author;
-	public String book_title;
-	public String place;
-	public String publisher;
-	public String series_ed;
+//	public String book_author;
+//	public String book_title;
+//	public String place;
+//	public String publisher;
+//	public String series_ed;
 	public String referenceNote;
+	
 	private ReferenceBookDomain referenceBook;
-
+	private ReferenceNoteDomain referenceNoteD;
+	//private List<AccessionDomain> mgiAccessionIds;
+	//private List<AccessionDomain> editAccessionIds;
+	
 	// workflow status
 	public String ap_status;
 	public String go_status;
 	public String gxd_status;
 	public String qtl_status;
 	public String tumor_status;
-	
-	//private ReferenceNoteDomain referenceNote;
-	//private List<AccessionDomain> mgiAccessionIds;
-	//private List<AccessionDomain> editAccessionIds;
 	
 	// these lists are loaded by the pwi at runtime
 	private List<MGIReferenceAlleleAssocDomain> alleleAssocs;

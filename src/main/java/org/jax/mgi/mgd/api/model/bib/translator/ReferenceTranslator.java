@@ -62,11 +62,11 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 			ReferenceBookTranslator bookTranslator = new ReferenceBookTranslator();
 			Iterable<ReferenceBookDomain> book = bookTranslator.translateEntities(entity.getReferenceBook());
 			domain.setReferenceBook(book.iterator().next());
-			domain.setBook_author(domain.getReferenceBook().getBook_author());
-			domain.setBook_title(domain.getReferenceBook().getBook_title());
-			domain.setPlace(domain.getReferenceBook().getPlace());
-			domain.setPublisher(domain.getReferenceBook().getPublisher());
-			domain.setSeries_ed(domain.getReferenceBook().getSeries_ed());		
+//			domain.setBook_author(domain.getReferenceBook().getBook_author());
+//			domain.setBook_title(domain.getReferenceBook().getBook_title());
+//			domain.setPlace(domain.getReferenceBook().getPlace());
+//			domain.setPublisher(domain.getReferenceBook().getPublisher());
+//			domain.setSeries_ed(domain.getReferenceBook().getSeries_ed());		
 		}
 		
 		// reference note

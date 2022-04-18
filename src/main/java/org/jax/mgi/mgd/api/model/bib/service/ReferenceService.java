@@ -30,6 +30,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
 import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.service.TermService;
@@ -59,6 +60,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	private AccessionService accessionService;
 	@Inject
 	private TermService termService;
+	@Inject
+	private NoteService noteService;
 	
 	private ReferenceTranslator translator = new ReferenceTranslator();
 	private SlimReferenceTranslator slimtranslator = new SlimReferenceTranslator();	
@@ -163,39 +166,39 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			ReferenceBook bookEntity = new ReferenceBook();
 			bookEntity.set_refs_key(entity.get_refs_key());
 			
-			if (domain.book_author.isEmpty()) {
+			if (domain.getReferenceBook().getBook_author().isEmpty()) {
 				bookEntity.setBook_author(null);
 			}
 			else {
-				bookEntity.setBook_author(domain.book_author);
+				bookEntity.setBook_author(domain.getReferenceBook().getBook_author());
 			}
 	
-			if (domain.book_author.isEmpty()) {
+			if (domain.getReferenceBook().getBook_author().isEmpty()) {
 				bookEntity.setBook_title(null);
 			}
 			else {
-				bookEntity.setBook_title(domain.book_title);
+				bookEntity.setBook_title(domain.getReferenceBook().getBook_author());
 			}
 			
-			if (domain.book_author.isEmpty()) {
+			if (domain.getReferenceBook().getPlace().isEmpty()) {
 				bookEntity.setPlace(null);
 			}
 			else {
-				bookEntity.setPlace(domain.place);
+				bookEntity.setPlace(domain.getReferenceBook().getPlace());
 			}
 			
-			if (domain.book_author.isEmpty()) {
+			if (domain.getReferenceBook().getPublisher().isEmpty()) {
 				bookEntity.setPublisher(null);
 			}
 			else {
-				bookEntity.setPublisher(domain.publisher);
+				bookEntity.setPublisher(domain.getReferenceBook().getPublisher());
 			}
 									
-			if (domain.book_author.isEmpty()) {
+			if (domain.getReferenceBook().getSeries_ed().isEmpty()) {
 				bookEntity.setSeries_ed(null);
 			}
 			else {
-				bookEntity.setSeries_ed(domain.series_ed);
+				bookEntity.setSeries_ed(domain.getReferenceBook().getSeries_ed());
 			}
 			
 			bookEntity.setCreation_date(new Date());
@@ -205,6 +208,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		// notes
 		if (domain.getReferenceNote() != null && !domain.getReferenceNote().isEmpty()) {
+			//noteService.process(String.valueOf(entity.get_refs_key()), domain.referenceNote(), "1", user);
 			ReferenceNote noteEntity = new ReferenceNote();
 			noteEntity.set_refs_key(entity.get_refs_key());
 			noteEntity.setNote(domain.referenceNote);			
@@ -263,7 +267,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 	@Transactional
 	public SearchResults<ReferenceDomain> update(ReferenceDomain domain, User user) {
-
+		// in progress
+		// to replace LTReferenceRepository/update()/applyDomainChanges() etc.
+		
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
 		Reference entity = referenceDAO.get(Integer.valueOf(domain.getRefsKey()));
 		
@@ -346,6 +352,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// execute persist/insert/send to database
 		referenceDAO.persist(entity);
 				
+		// replaces LTReferenceRepository/applyBookChanges()
 		// for books
 		ReferenceBook bookEntity;			
 		
@@ -367,39 +374,39 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			
 			bookEntity.set_refs_key(entity.get_refs_key());
 			
-			if (domain.book_author.isEmpty()) {
+			if (domain.getReferenceBook().getBook_author().isEmpty()) {
 				bookEntity.setBook_author(null);
 			}
 			else {
-				bookEntity.setBook_author(domain.book_author);
+				bookEntity.setBook_author(domain.getReferenceBook().getBook_author());
 			}
 	
-			if (domain.book_author.isEmpty()) {
+			if (domain.getReferenceBook().getBook_author().isEmpty()) {
 				bookEntity.setBook_title(null);
 			}
 			else {
-				bookEntity.setBook_title(domain.book_title);
+				bookEntity.setBook_title(domain.getReferenceBook().getBook_author());
 			}
 			
-			if (domain.book_author.isEmpty()) {
+			if (domain.getReferenceBook().getPlace().isEmpty()) {
 				bookEntity.setPlace(null);
 			}
 			else {
-				bookEntity.setPlace(domain.place);
+				bookEntity.setPlace(domain.getReferenceBook().getPlace());
 			}
 			
-			if (domain.book_author.isEmpty()) {
+			if (domain.getReferenceBook().getPublisher().isEmpty()) {
 				bookEntity.setPublisher(null);
 			}
 			else {
-				bookEntity.setPublisher(domain.publisher);
+				bookEntity.setPublisher(domain.getReferenceBook().getPublisher());
 			}
 									
-			if (domain.book_author.isEmpty()) {
+			if (domain.getReferenceBook().getSeries_ed().isEmpty()) {
 				bookEntity.setSeries_ed(null);
 			}
 			else {
-				bookEntity.setSeries_ed(domain.series_ed);
+				bookEntity.setSeries_ed(domain.getReferenceBook().getSeries_ed());
 			}
 			
 			bookEntity.setModification_date(new Date());
@@ -407,14 +414,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 
 		// notes
-//		if (domain.getReferenceNote() != null && !domain.getReferenceNote().isEmpty()) {
-//			ReferenceNote noteEntity = new ReferenceNote();
-//			noteEntity.set_refs_key(entity.get_refs_key());
-//			noteEntity.setNote(domain.referenceNote);			
-//			noteEntity.setCreation_date(new Date());
-//			noteEntity.setModification_date(new Date());
-//			noteDAO.persist(noteEntity);			
-//		}
+		//noteService.process(String.valueOf(entity.get_refs_key()), domain.referenceNote(), "1", user);
 				
 		// supplemental
 //		LTReferenceWorkflowData wfDataEntity = new LTReferenceWorkflowData();
@@ -656,24 +656,24 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		// bib_books
-		if (searchDomain.getBook_author() != null && !searchDomain.getBook_author().isEmpty()) {
-			where = where + "\nand k.book_au ilike '" + searchDomain.getBook_author() + "'";
+		if (searchDomain.getReferenceBook().getBook_author() != null && !searchDomain.getReferenceBook().getBook_author().isEmpty()) {
+			where = where + "\nand k.book_au ilike '" + searchDomain.getReferenceBook().getBook_author() + "'";
 			from_book = true;
 		}
-		if (searchDomain.getBook_title() != null && !searchDomain.getBook_title().isEmpty()) {
-			where = where + "\nand k.book_title ilike '" + searchDomain.getBook_title() + "'";
+		if (searchDomain.getReferenceBook().getBook_title() != null && !searchDomain.getReferenceBook().getBook_title().isEmpty()) {
+			where = where + "\nand k.book_title ilike '" + searchDomain.getReferenceBook().getBook_title() + "'";
 			from_book = true;
 		}
-		if (searchDomain.getPlace() != null && !searchDomain.getPlace().isEmpty()) {
-			where = where + "\nand k.place ilike '" + searchDomain.getPlace() + "'";
+		if (searchDomain.getReferenceBook().getPlace() != null && !searchDomain.getReferenceBook().getPlace().isEmpty()) {
+			where = where + "\nand k.place ilike '" + searchDomain.getReferenceBook().getPlace() + "'";
 			from_book = true;
 		}
-		if (searchDomain.getPublisher() != null && !searchDomain.getPublisher().isEmpty()) {
-			where = where + "\nand k.publisher ilike '" + searchDomain.getPublisher() + "'";
+		if (searchDomain.getReferenceBook().getPublisher() != null && !searchDomain.getReferenceBook().getPublisher().isEmpty()) {
+			where = where + "\nand k.publisher ilike '" + searchDomain.getReferenceBook().getPublisher() + "'";
 			from_book = true;
 		}
-		if (searchDomain.getSeries_ed() != null && !searchDomain.getSeries_ed().isEmpty()) {
-			where = where + "\nand k.series_ed ilike '" + searchDomain.getSeries_ed() + "'";
+		if (searchDomain.getReferenceBook().getSeries_ed() != null && !searchDomain.getReferenceBook().getSeries_ed().isEmpty()) {
+			where = where + "\nand k.series_ed ilike '" + searchDomain.getReferenceBook().getSeries_ed() + "'";
 			from_book = true;
 		}			
 		

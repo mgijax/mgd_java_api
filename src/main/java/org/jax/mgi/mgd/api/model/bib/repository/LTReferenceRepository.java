@@ -586,15 +586,17 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		if (wasBook && willBeBook && (entity.getReferenceBook().size() > 0)) {
 			ReferenceBook book = entity.getReferenceBook().get(0);
 
-			if (!smartEqual(book.getBook_author(), domain.book_author) || !smartEqual(book.getBook_title(), domain.book_title) || 
-					!smartEqual(book.getPlace(), domain.place) || !smartEqual(book.getPublisher(), domain.publisher) ||
-					!smartEqual(book.getSeries_ed(), domain.series_ed)) {
+			if (!smartEqual(book.getBook_author(), domain.getReferenceBook().getBook_author()) || 
+					!smartEqual(book.getBook_title(), domain.getReferenceBook().getBook_title()) || 
+					!smartEqual(book.getPlace(), domain.getReferenceBook().getPlace()) || 
+					!smartEqual(book.getPublisher(), domain.getReferenceBook().getPublisher()) ||
+					!smartEqual(book.getSeries_ed(), domain.getReferenceBook().getSeries_ed())) {
 
-				book.setBook_author(domain.book_author);
-				book.setBook_title(domain.book_title);
-				book.setPlace(domain.place);
-				book.setPublisher(domain.publisher);
-				book.setSeries_ed(domain.series_ed);
+				book.setBook_author(domain.getReferenceBook().getBook_author());
+				book.setBook_title(domain.getReferenceBook().getBook_title());
+				book.setPlace(domain.getReferenceBook().getPlace());
+				book.setPublisher(domain.getReferenceBook().getPublisher());
+				book.setSeries_ed(domain.getReferenceBook().getSeries_ed());
 				book.setModification_date(new Date());
 				anyChanges = true;
 			}
@@ -610,11 +612,11 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 			ReferenceBook book = new ReferenceBook();			
 			book.set_refs_key(entity.get_refs_key());
-			book.setBook_author(domain.book_author);
-			book.setBook_title(domain.book_title);
-			book.setPlace(domain.place);
-			book.setPublisher(domain.publisher);
-			book.setSeries_ed(domain.series_ed);			
+			book.setBook_author(domain.getReferenceBook().getBook_author());
+			book.setBook_title(domain.getReferenceBook().getBook_title());
+			book.setPlace(domain.getReferenceBook().getPlace());
+			book.setPublisher(domain.getReferenceBook().getPublisher());
+			book.setSeries_ed(domain.getReferenceBook().getSeries_ed());			
 			book.setCreation_date(new Date());
 			book.setModification_date(book.getCreation_date()); 
 

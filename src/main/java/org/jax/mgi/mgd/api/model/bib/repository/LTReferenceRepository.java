@@ -82,6 +82,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	 */
 	@Override
 	public LTReferenceDomain get(String key) throws FatalAPIException, APIException {
+		log.info("LTReferenceDomain get(String key)");
 		LTReference ref = getReference(key);
 		LTReferenceDomain domain = translator.translate(ref);
 		domain.setStatusHistory(getStatusHistory(domain));
@@ -115,6 +116,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	@Override
 	public LTReferenceDomain update(LTReferenceDomain domain, User user) throws FatalAPIException, NonFatalAPIException, APIException {
+		log.info("LTReferenceDomain update(LTReferenceDomain domain, User user)");
 		LTReference entity = getReference(domain.refsKey);
 		log.info("found LTReference/entity");
 		applyDomainChanges(entity, domain, user);

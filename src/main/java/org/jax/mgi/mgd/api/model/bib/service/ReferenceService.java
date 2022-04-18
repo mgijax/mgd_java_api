@@ -267,10 +267,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
 		Reference entity = referenceDAO.get(Integer.valueOf(domain.getRefsKey()));
 		
-		// default reference type = ?
-		if (domain.getReferenceTypeKey() == null || domain.getReferenceTypeKey().isEmpty()) {
-			domain.setReferenceTypeKey("31576687");
-		}
 		entity.setReferenceType(termDAO.get(Integer.valueOf(domain.getReferenceTypeKey())));			
 
 		if (domain.getAuthors() == null || domain.getAuthors().isEmpty()) {
@@ -351,49 +347,50 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		referenceDAO.persist(entity);
 				
 		// for books
-//		if (domain.getReferenceTypeKey().equals("31576679")) {
-//			ReferenceBook bookEntity = new ReferenceBook();
-//			bookEntity.set_refs_key(entity.get_refs_key());
-//			
-//			if (domain.book_author.isEmpty()) {
-//				bookEntity.setBook_author(null);
-//			}
-//			else {
-//				bookEntity.setBook_author(domain.book_author);
-//			}
-//	
-//			if (domain.book_author.isEmpty()) {
-//				bookEntity.setBook_title(null);
-//			}
-//			else {
-//				bookEntity.setBook_title(domain.book_title);
-//			}
-//			
-//			if (domain.book_author.isEmpty()) {
-//				bookEntity.setPlace(null);
-//			}
-//			else {
-//				bookEntity.setPlace(domain.place);
-//			}
-//			
-//			if (domain.book_author.isEmpty()) {
-//				bookEntity.setPublisher(null);
-//			}
-//			else {
-//				bookEntity.setPublisher(domain.publisher);
-//			}
-//									
-//			if (domain.book_author.isEmpty()) {
-//				bookEntity.setSeries_ed(null);
-//			}
-//			else {
-//				bookEntity.setSeries_ed(domain.series_ed);
-//			}
-//			
-//			bookEntity.setCreation_date(new Date());
-//			bookEntity.setModification_date(new Date());
-//			bookDAO.persist(bookEntity);
-//		}
+		if (domain.getReferenceTypeKey().equals("31576679")) {
+			
+			ReferenceBook bookEntity = new ReferenceBook();
+			bookEntity.set_refs_key(entity.get_refs_key());
+			
+			if (domain.book_author.isEmpty()) {
+				bookEntity.setBook_author(null);
+			}
+			else {
+				bookEntity.setBook_author(domain.book_author);
+			}
+	
+			if (domain.book_author.isEmpty()) {
+				bookEntity.setBook_title(null);
+			}
+			else {
+				bookEntity.setBook_title(domain.book_title);
+			}
+			
+			if (domain.book_author.isEmpty()) {
+				bookEntity.setPlace(null);
+			}
+			else {
+				bookEntity.setPlace(domain.place);
+			}
+			
+			if (domain.book_author.isEmpty()) {
+				bookEntity.setPublisher(null);
+			}
+			else {
+				bookEntity.setPublisher(domain.publisher);
+			}
+									
+			if (domain.book_author.isEmpty()) {
+				bookEntity.setSeries_ed(null);
+			}
+			else {
+				bookEntity.setSeries_ed(domain.series_ed);
+			}
+			
+			bookEntity.setCreation_date(new Date());
+			bookEntity.setModification_date(new Date());
+			bookDAO.persist(bookEntity);
+		}
 
 		// notes
 //		if (domain.getReferenceNote() != null && !domain.getReferenceNote().isEmpty()) {

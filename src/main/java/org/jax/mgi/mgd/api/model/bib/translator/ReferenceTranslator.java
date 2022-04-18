@@ -61,12 +61,19 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		if (entity.getReferenceBook() != null && !entity.getReferenceBook().isEmpty()) {
 			ReferenceBookTranslator bookTranslator = new ReferenceBookTranslator();
 			Iterable<ReferenceBookDomain> book = bookTranslator.translateEntities(entity.getReferenceBook());
-			List<ReferenceBookDomain> bookList = IteratorUtils.toList(book.iterator());
-			domain.setBook_author(bookList.get(0).getBook_author());
-			domain.setBook_title(bookList.get(0).getBook_title());
-			domain.setPlace(bookList.get(0).getPlace());
-			domain.setPublisher(bookList.get(0).getPublisher());
-			domain.setSeries_ed(bookList.get(0).getSeries_ed());			
+			domain.setReferenceBook(book.iterator().next());
+			domain.setBook_author(domain.getReferenceBook().getBook_author());
+			domain.setBook_title(domain.getReferenceBook().getBook_title());
+			domain.setPlace(domain.getReferenceBook().getPlace());
+			domain.setPublisher(domain.getReferenceBook().getPublisher());
+			domain.setSeries_ed(domain.getReferenceBook().getSeries_ed());	
+			
+//			List<ReferenceBookDomain> bookList = IteratorUtils.toList(book.iterator());
+//			domain.setBook_author(bookList.get(0).getBook_author());
+//			domain.setBook_title(bookList.get(0).getBook_title());
+//			domain.setPlace(bookList.get(0).getPlace());
+//			domain.setPublisher(bookList.get(0).getPublisher());
+//			domain.setSeries_ed(bookList.get(0).getSeries_ed());	
 		}
 		
 		// reference book

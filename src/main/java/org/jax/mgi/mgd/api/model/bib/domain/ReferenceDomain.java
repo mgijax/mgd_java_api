@@ -51,6 +51,7 @@ public class ReferenceDomain extends BaseDomain {
 	public String publisher;
 	public String series_ed;
 	public String referenceNote;
+	private ReferenceBookDomain referenceBook;
 
 	// workflow status
 	public String ap_status;
@@ -59,7 +60,6 @@ public class ReferenceDomain extends BaseDomain {
 	public String qtl_status;
 	public String tumor_status;
 	
-	private ReferenceBookDomain referenceBook;
 	//private ReferenceNoteDomain referenceNote;
 	//private List<AccessionDomain> mgiAccessionIds;
 	//private List<AccessionDomain> editAccessionIds;

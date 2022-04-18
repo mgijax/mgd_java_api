@@ -40,7 +40,8 @@ public class LTReferenceDomain extends BaseDomain {
 	public String place;
 	public String publisher;
 	public String series_ed;
-	
+	private ReferenceBookDomain referenceBook;
+
 	// accession ids
 	public String mgiid;	
 	public String jnumid;

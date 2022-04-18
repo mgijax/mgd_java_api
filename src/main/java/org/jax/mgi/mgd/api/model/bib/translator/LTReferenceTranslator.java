@@ -97,12 +97,12 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		if (entity.getReferenceBook() != null && !entity.getReferenceBook().isEmpty()) {
 			ReferenceBookTranslator bookTranslator = new ReferenceBookTranslator();
 			Iterable<ReferenceBookDomain> book = bookTranslator.translateEntities(entity.getReferenceBook());
-			List<ReferenceBookDomain> bookList = IteratorUtils.toList(book.iterator());
-			domain.book_author = bookList.get(0).getBook_author();
-			domain.book_title = bookList.get(0).getBook_title();
-			domain.place = bookList.get(0).getPlace();
-			domain.publisher = bookList.get(0).getPublisher();
-			domain.series_ed = bookList.get(0).getSeries_ed();			
+			domain.setReferenceBook(book.iterator().next());
+			domain.setBook_author(domain.getReferenceBook().getBook_author());
+			domain.setBook_title(domain.getReferenceBook().getBook_title());
+			domain.setPlace(domain.getReferenceBook().getPlace());
+			domain.setPublisher(domain.getReferenceBook().getPublisher());
+			domain.setSeries_ed(domain.getReferenceBook().getSeries_ed());				
 		}
 
 		// data specific to workflows: has supplemental data?, link to supplemental data, has PDF?, has extracted text?

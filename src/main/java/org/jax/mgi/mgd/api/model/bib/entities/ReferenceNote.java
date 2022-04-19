@@ -19,7 +19,7 @@ import lombok.Setter;
 public class ReferenceNote extends BaseEntity {
 	
 	@Id
-	private int _refs_key;
+	private Integer _refs_key;
 	private String note;
 	private Date creation_date;
 	private Date modification_date;

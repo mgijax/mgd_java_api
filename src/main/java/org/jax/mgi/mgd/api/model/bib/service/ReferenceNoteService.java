@@ -115,7 +115,7 @@ public class ReferenceNoteService extends BaseService<ReferenceNoteDomain> {
 		if (domain.getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 			log.info("processReferenceNote create");
 			ReferenceNote entity = new ReferenceNote();
-			entity.set_refs_key(Integer.valueOf(domain.getRefsKey()));
+			entity.set_refs_key(Integer.valueOf(parentKey));
 			entity.setNote(domain.getNote());
 			entity.setCreation_date(new Date());				
 			entity.setModification_date(new Date());
@@ -130,7 +130,8 @@ public class ReferenceNoteService extends BaseService<ReferenceNoteDomain> {
 		}
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 			log.info("processReferenceNote update");								
-			ReferenceNote entity = noteDAO.get(Integer.valueOf(domain.getRefsKey()));				
+			ReferenceNote entity = noteDAO.get(Integer.valueOf(parentKey));				
+			entity.set_refs_key(Integer.valueOf(parentKey));
 			entity.setNote(domain.getNote());
 			entity.setModification_date(new Date());
 			noteDAO.update(entity);

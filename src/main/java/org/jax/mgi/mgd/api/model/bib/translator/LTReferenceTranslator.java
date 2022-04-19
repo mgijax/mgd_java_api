@@ -85,7 +85,7 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		}
 			
 		// at most one reference note
-		if (entity.getReferenceNote() != null) {
+		if (entity.getReferenceNote() != null && !entity.getReferenceNote().isEmpty()) {
 			ReferenceNoteTranslator noteTranslator = new ReferenceNoteTranslator();
 			Iterable<ReferenceNoteDomain> note = noteTranslator.translateEntities(entity.getReferenceNote());
 			domain.setReferenceNote(note.iterator().next());

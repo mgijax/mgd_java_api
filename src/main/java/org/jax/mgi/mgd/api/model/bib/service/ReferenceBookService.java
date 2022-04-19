@@ -119,8 +119,8 @@ public class ReferenceBookService extends BaseService<ReferenceBookDomain> {
 		if (domain.getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 			log.info("processReferenceBook create");
 			ReferenceBook entity = new ReferenceBook();
-			entity.set_refs_key(Integer.valueOf(domain.getRefsKey()));
-
+			entity.set_refs_key(Integer.valueOf(parentKey));
+			
 			if (domain.getBook_author().isEmpty()) {
 				entity.setBook_author(null);
 			}
@@ -169,7 +169,7 @@ public class ReferenceBookService extends BaseService<ReferenceBookDomain> {
 		}
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 			log.info("processReferenceBook update");								
-			ReferenceBook entity = bookDAO.get(Integer.valueOf(domain.getRefsKey()));				
+			ReferenceBook entity = bookDAO.get(Integer.valueOf(parentKey));				
 
 			if (domain.getBook_author().isEmpty()) {
 				entity.setBook_author(null);

@@ -28,13 +28,8 @@ import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
-<<<<<<< HEAD
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceBookService;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceNoteService;
-=======
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
->>>>>>> ac5b4b90e632dc2c68fd324a6404daf5346d4105
 import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceMarkerAssocDomain;
@@ -72,13 +67,10 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	private MGITypeDAO mgiTypeDAO;
 	@Inject
 	private MGIReferenceAssocService referenceAssocService;	
-<<<<<<< HEAD
 	@Inject
 	private ReferenceBookService bookService;
 	@Inject
 	private ReferenceNoteService noteService;
-=======
->>>>>>> ac5b4b90e632dc2c68fd324a6404daf5346d4105
 	
 	LTReferenceTranslator translator = new LTReferenceTranslator();
 
@@ -546,7 +538,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	 */
 	private boolean applyNoteChanges(LTReference entity, LTReferenceDomain domain, User user) {
 		// uses noteService()
-		
+		log.info("applyNoteChanges()");
+
 		if (domain.getReferenceNote().getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
 			if (domain.getReferenceNote().getNote().isEmpty()) {
 				domain.getReferenceNote().setProcessStatus(Constants.PROCESS_DELETE);
@@ -559,13 +552,14 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			domain.getReferenceNote().setProcessStatus(Constants.PROCESS_CREATE);							
 		}
 		
-		return(noteService.process(domain.getRefsKey(), domain.getReferenceNote(), user));		
+		return(noteService.process(String.valueOf(entity.get_refs_key()), domain.getReferenceNote(), user));		
 	}
 
 	/* apply changes to book data fields from domain to entity
 	 */
 	private boolean applyBookChanges(LTReference entity, LTReferenceDomain domain, User user) {
 		// uses bookService()
+		log.info("applyBookChanges()");
 			
 		if (domain.getReferenceBook().getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
 			// from book to not-a-book
@@ -584,7 +578,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			domain.getReferenceBook().setProcessStatus(Constants.PROCESS_CREATE);							
 		}
 			
-		return(bookService.process(domain.getRefsKey(), domain.getReferenceBook(), user));		
+		return(bookService.process(String.valueOf(entity.get_refs_key()), domain.getReferenceBook(), user));		
 	}
 
 	/* apply changes in workflow relevance from domain to entity

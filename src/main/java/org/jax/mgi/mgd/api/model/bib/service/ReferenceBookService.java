@@ -171,6 +171,8 @@ public class ReferenceBookService extends BaseService<ReferenceBookDomain> {
 			log.info("processReferenceBook update");								
 			ReferenceBook entity = bookDAO.get(Integer.valueOf(parentKey));				
 
+			entity.set_refs_key(Integer.valueOf(parentKey));
+
 			if (domain.getBook_author().isEmpty()) {
 				entity.setBook_author(null);
 			}

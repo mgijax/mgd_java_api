@@ -413,9 +413,26 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			bookDAO.persist(bookEntity);
 		}
 
-		// notes
-		//noteService.process(String.valueOf(entity.get_refs_key()), domain.referenceNote(), "1", user);
-				
+//		// notes
+//		// replaces LTReferenceRepository/applyBookChanges()
+//		// for books
+//		ReferenceNote noteEntity;			
+//		
+//		// if !note but a note exists, then delete note
+//		if (domain.getReferenceNote != null) {
+//			bookEntity = bookDAO.get(Integer.valueOf(domain.getRefsKey()));
+//			bookDAO.remove(entity);
+//		}		
+//		if (domain.getReferenceNote() != null && !domain.getReferenceNote().isEmpty()) {
+//			//noteService.process(String.valueOf(entity.get_refs_key()), domain.referenceNote(), "1", user);
+//			ReferenceNote noteEntity = new ReferenceNote();
+//			noteEntity.set_refs_key(entity.get_refs_key());
+//			noteEntity.setNote(domain.referenceNote);			
+//			noteEntity.setCreation_date(new Date());
+//			noteEntity.setModification_date(new Date());
+//			noteDAO.persist(noteEntity);			
+//		}
+		
 		// supplemental
 //		LTReferenceWorkflowData wfDataEntity = new LTReferenceWorkflowData();
 //		wfDataEntity.set_refs_key(entity.get_refs_key());

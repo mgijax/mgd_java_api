@@ -19,7 +19,6 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 	protected Logger log = Logger.getLogger(getClass());
 	
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
-	private ReferenceNoteTranslator noteTranslator = new ReferenceNoteTranslator();
 
 	@Override
 	protected ReferenceDomain entityToDomain(Reference entity) {
@@ -66,9 +65,10 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		
 		// reference note
 		if (entity.getReferenceNote() != null && !entity.getReferenceNote().isEmpty()) {
+			ReferenceNoteTranslator noteTranslator = new ReferenceNoteTranslator();
 			Iterable<ReferenceNoteDomain> note = noteTranslator.translateEntities(entity.getReferenceNote());
-			//domain.setReferenceNote(note.iterator().next());
 			domain.setReferenceNote(note.iterator().next().getNote());
+			domain.setReferenceNoteD(note.iterator().next());			
 		}
 		
 		// first mgi accession id only

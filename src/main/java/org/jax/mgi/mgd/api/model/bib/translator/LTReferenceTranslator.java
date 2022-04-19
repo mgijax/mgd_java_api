@@ -3,7 +3,6 @@ package org.jax.mgi.mgd.api.model.bib.translator;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowRelevanceDomain;
@@ -85,12 +84,12 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 			if (flags.getHas_strain() != 0) { domain.associated_data.add("Strain"); }			
 		}
 			
-		// at most one reference note
+		// reference note
 		if (entity.getNotes() != null && !entity.getNotes().isEmpty()) {
-			ReferenceNoteTranslator noteTranslator = new ReferenceNoteTranslator();
+			ReferenceNoteTranslator noteTranslator = new ReferenceNoteTranslator();			
 			Iterable<ReferenceNoteDomain> note = noteTranslator.translateEntities(entity.getNotes());
-			List<ReferenceNoteDomain> noteList = IteratorUtils.toList(note.iterator());			
-			domain.referenceNote = noteList.get(0).getNote();
+			domain.setReferenceNote(note.iterator().next().getNote());
+			domain.setReferenceNoteD(note.iterator().next());			
 		}
 		
 		// at most one reference book

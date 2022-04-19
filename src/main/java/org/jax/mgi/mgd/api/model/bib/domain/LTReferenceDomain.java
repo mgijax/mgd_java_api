@@ -47,8 +47,9 @@ public class LTReferenceDomain extends BaseDomain {
 	public String referenceType;
 	public String referenceTypeKey;
 	public String referenceAbstract;
-	public String referenceNote;
 	public String short_citation;
+	public String referenceNote;	
+	private ReferenceNoteDomain referenceNoteD;
 
 	// workflow status
 	public String ap_status;

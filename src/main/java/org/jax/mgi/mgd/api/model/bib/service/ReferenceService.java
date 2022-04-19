@@ -18,13 +18,10 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceWorkflowDataDAO;
-<<<<<<< HEAD
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
-=======
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceBookDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceNoteDAO;
->>>>>>> ac5b4b90e632dc2c68fd324a6404daf5346d4105
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
@@ -50,13 +47,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	@Inject
 	private ReferenceDAO referenceDAO;
 	@Inject
-<<<<<<< HEAD
-=======
 	private ReferenceBookDAO bookDAO;
 	@Inject
 	private ReferenceNoteDAO noteDAO;
 	@Inject
->>>>>>> ac5b4b90e632dc2c68fd324a6404daf5346d4105
 	private LTReferenceWorkflowDataDAO wfDataDAO;
 	@Inject
 	private TermDAO termDAO;
@@ -64,13 +58,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	private AccessionService accessionService;
 	@Inject
 	private TermService termService;
-<<<<<<< HEAD
 	@Inject
 	private ReferenceBookService bookService;
 	@Inject
 	private ReferenceNoteService noteService;
-=======
->>>>>>> ac5b4b90e632dc2c68fd324a6404daf5346d4105
 	
 	private ReferenceTranslator translator = new ReferenceTranslator();
 	private SlimReferenceTranslator slimtranslator = new SlimReferenceTranslator();	
@@ -225,7 +216,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}
 
 	@Transactional
-<<<<<<< HEAD
 	public SearchResults<ReferenceDomain> update(ReferenceDomain domain, User user) {
 		// in progress
 		// to replace LTReferenceRepository/update()/applyDomainChanges() etc.
@@ -363,11 +353,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// return entity translated to domain
 		log.info("processReference/update/returning results");
 		results.setItem(translator.translate(entity));
-=======
-	public SearchResults<ReferenceDomain> update(ReferenceDomain object, User user) {
-		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
-		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
->>>>>>> ac5b4b90e632dc2c68fd324a6404daf5346d4105
 		return results;
 	}
 

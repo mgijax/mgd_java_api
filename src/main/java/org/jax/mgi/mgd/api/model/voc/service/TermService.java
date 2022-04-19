@@ -125,7 +125,7 @@ public class TermService extends BaseService<TermDomain> {
 		
 		// use SQL query to load cell type annotation count
 		if(domain != null ) {
-			if (domain.getVocabKey().equals("102")) {
+			if (domain.getVocabKey() != null && !domain.getVocabKey().isEmpty() && domain.getVocabKey().equals("102")) {
 		
 				domain.setCellTypeAnnotCount(getCelltypeAnnotCount(key));
 		
@@ -215,7 +215,7 @@ public class TermService extends BaseService<TermDomain> {
 		
 		// for cell types we want to query the term synonyms by the passed in term string
 		// we create a union of the term search and the synonym search, exact syn only
-		if (searchDomain.getVocabKey().equals("102") && value != null) {
+		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty() && searchDomain.getVocabKey().equals("102") && value != null) {
 			synonymWhere = synonymWhere + "\nand s.synonym ilike '" + value + "'"
 					+ "\nand s._mgitype_key = 13"
 					+ "\nand s._synonymtype_key = 1017"
@@ -245,7 +245,7 @@ public class TermService extends BaseService<TermDomain> {
 			where = where + "\nand isObsolete != 1";
 		}
 		// make this easy to copy/paste for troubleshooting
-		if (searchDomain.getVocabKey().equals("102")) {
+		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty() && searchDomain.getVocabKey().equals("102")) {
 			cmd = "\n" + select + "\n" + from + "\n" + synonymJoin + "\n" + where + "\n" + synonymUnion + "\n" + synonymOrderBy;
 		}
 		else {
@@ -266,7 +266,7 @@ public class TermService extends BaseService<TermDomain> {
 				domain.setDagParents(dagParents);
 				
 				// use SQL query to load cell type annotation count
-				if(searchDomain.getVocabKey().equals("102")) {
+				if(searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty() && searchDomain.getVocabKey().equals("102")) {
 					domain.setCellTypeAnnotCount(getCelltypeAnnotCount(rs.getInt("_term_key")));
 				}
 				

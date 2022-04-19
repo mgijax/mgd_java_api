@@ -13,9 +13,12 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.RelationshipCategoryDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.RelationshipDAO;
+import org.jax.mgi.mgd.api.model.mgi.dao.RelationshipFearDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.Relationship;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipFearTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipTranslator;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -31,15 +34,20 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 	@Inject
 	private RelationshipDAO relationshipDAO;
 	@Inject
+	private RelationshipFearDAO relationshipFearDAO;
+	@Inject
 	private RelationshipCategoryDAO categoryDAO;
 	@Inject
 	private TermDAO termDAO;
 	@Inject
 	private ReferenceDAO referenceDAO;
+	@Inject
+	private RelationshipPropertyService relationshipPropertyService;
+	@Inject
+	private NoteService noteService;
 	
 	private RelationshipTranslator translator = new RelationshipTranslator();
 	
-	//private RelationshipTranslator translator = new RelationshipTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
@@ -85,10 +93,12 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 	@Transactional	
 	public List<RelationshipDomain> getMarkerTSS(Integer key) {
 		// return all tss-marker relationships by specified marker key
+		// 1008 | tss_to_gene
+		
 		RelationshipTranslator translator = new RelationshipTranslator();
 		List<RelationshipDomain> results = new ArrayList<RelationshipDomain>();
 		
-		String cmd = "select * from mgi_relationship_markertss_view "
+		String cmd = "select _relationship_key from mgi_relationship_markertss_view "
 				+ "\nwhere _object_key_1 = " + key
 				+ "\nor _object_key_2 = " + key;
 		log.info(cmd);
@@ -96,15 +106,40 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				
-				// we could create a RelationshipMarkerTSSDomain
-				// if we want more specific marker/object info
-				// for now, we are just using the generic RelationshipDomain
-				
 				RelationshipDomain domain = new RelationshipDomain();
 				domain = translator.translate(relationshipDAO.get(rs.getInt("_relationship_key")));
 				relationshipDAO.clear();
-				
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+
+	@Transactional	
+	public List<RelationshipFearDomain> getAlleleFear(Integer key) {
+		// return all allele-marker relationships by specified allele key
+		// see MGI_Relationship_FEAR_View:
+		// 			1003 | mutation_involves
+		// 			1004 | expresses_component
+		
+		RelationshipFearTranslator translator = new RelationshipFearTranslator();
+		List<RelationshipFearDomain> results = new ArrayList<RelationshipFearDomain>();
+		
+		String cmd = "select _relationship_key from mgi_relationship_fear_view "
+				+ "\nwhere _object_key_1 = " + key;
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				RelationshipFearDomain domain = new RelationshipFearDomain();
+				domain = translator.translate(relationshipFearDAO.get(rs.getInt("_relationship_key")));
+				relationshipFearDAO.clear();
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();
@@ -140,19 +175,26 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 					continue;
 				}
 				
-				Relationship entity = new Relationship();
+				Relationship entity = new Relationship();			
 		        entity.setCategory(categoryDAO.get(Integer.valueOf(domain.get(i).getCategoryKey())));
 		        entity.set_object_key_1(Integer.valueOf(domain.get(i).getObjectKey1()));
 		        entity.set_object_key_2(Integer.valueOf(domain.get(i).getObjectKey2()));
 		        entity.setRelationshipTerm(termDAO.get(Integer.valueOf(domain.get(i).getRelationshipTermKey())));
-		        entity.setQualifierTerm(termDAO.get(Integer.valueOf(domain.get(0).getQualifierKey())));
-		        entity.setEvidenceTerm(termDAO.get(Integer.valueOf(domain.get(0).getEvidenceKey())));
+		        entity.setQualifierTerm(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
+		        entity.setEvidenceTerm(termDAO.get(Integer.valueOf(domain.get(i).getEvidenceKey())));
 		        entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));				
 				entity.setCreation_date(new Date());
 				entity.setCreatedBy(user);
 		        entity.setModification_date(new Date());
 				entity.setModifiedBy(user);
-				relationshipDAO.persist(entity);				
+				relationshipDAO.persist(entity);
+				
+				if (domain.get(i).getProperties() != null) {
+					relationshipPropertyService.process(domain.get(i).getProperties(), String.valueOf(entity.get_relationship_key()), user);
+				}
+				
+				noteService.process(String.valueOf(entity.get_relationship_key()), domain.get(i).getNote(), mgiTypeKey, user);
+				
 				modified = true;
 				log.info("processRelationships create successful");
 			}
@@ -170,12 +212,19 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 				entity.set_object_key_1(Integer.valueOf(domain.get(i).getObjectKey1()));
 				entity.set_object_key_2(Integer.valueOf(domain.get(i).getObjectKey2()));
 				entity.setRelationshipTerm(termDAO.get(Integer.valueOf(domain.get(i).getRelationshipTermKey())));
-				entity.setQualifierTerm(termDAO.get(Integer.valueOf(domain.get(0).getQualifierKey())));
-				entity.setEvidenceTerm(termDAO.get(Integer.valueOf(domain.get(0).getEvidenceKey())));
+				entity.setQualifierTerm(termDAO.get(Integer.valueOf(domain.get(i).getQualifierKey())));
+				entity.setEvidenceTerm(termDAO.get(Integer.valueOf(domain.get(i).getEvidenceKey())));
 				entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
 				entity.setModification_date(new Date());
 				entity.setModifiedBy(user);
 				relationshipDAO.update(entity);
+				
+				if (domain.get(i).getProperties() != null) {
+					relationshipPropertyService.process(domain.get(i).getProperties(), domain.get(i).getRelationshipKey(), user);
+				}
+				
+				noteService.process(domain.get(i).getRelationshipKey(), domain.get(i).getNote(), mgiTypeKey, user);
+				
 				modified = true;
 				log.info("processRelationships/changes processed: " + domain.get(i).getRelationshipKey());
 			}

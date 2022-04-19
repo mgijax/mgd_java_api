@@ -12,9 +12,13 @@ public class SlimAssayTranslator extends BaseEntityDomainTranslator<Assay, SlimA
 		SlimAssayDomain domain = new SlimAssayDomain();
 		
 		domain.setAssayKey(String.valueOf(entity.get_assay_key()));
+		domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		domain.setAssayTypeKey(String.valueOf(entity.getAssayType().get_assaytype_key()));
 		domain.setAssayType(entity.getAssayType().getAssayType());
-
+		domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
+		domain.setMarkerSymbol(entity.getMarker().getSymbol());
+		domain.setMarkerAccID(entity.getMarker().getMgiAccessionIds().get(0).getAccID());
+		
 //        1 InSitu | RNA in situ                    
 //        2 North  | Northern blot              
 //        3 S1Nuc  | Nuclease S1                 

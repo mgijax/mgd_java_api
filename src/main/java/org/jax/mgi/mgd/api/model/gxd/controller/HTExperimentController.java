@@ -32,16 +32,24 @@ public class HTExperimentController extends BaseController<HTDomain> {
 	@Override
 	public SearchResults<HTDomain> create(HTDomain domain, User user) {
 		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
-		results = htExperimentService.create(domain, user);
-		results = htExperimentService.getResults(Integer.valueOf(results.items.get(0).get_experiment_key()));
+		try {
+			results = htExperimentService.create(domain, user);
+			results = htExperimentService.getResults(Integer.valueOf(results.items.get(0).get_experiment_key()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return results;
 	}
 
 	@Override
 	public SearchResults<HTDomain> update(HTDomain domain, User user) {
 		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
-		results = htExperimentService.update(domain, user);
-		results = htExperimentService.getResults(Integer.valueOf(results.items.get(0).get_experiment_key()));
+		try {
+			results = htExperimentService.update(domain, user);
+			results = htExperimentService.getResults(Integer.valueOf(results.items.get(0).get_experiment_key()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return results;
 	}
 	

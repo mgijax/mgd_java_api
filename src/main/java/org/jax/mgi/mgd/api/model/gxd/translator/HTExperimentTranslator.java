@@ -1,21 +1,19 @@
 package org.jax.mgi.mgd.api.model.gxd.translator;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.HTSampleDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.HTUserDomain; 
-import org.jax.mgi.mgd.api.model.gxd.domain.HTSourceDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTExperimentVariableDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTSampleDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTSourceDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTUserDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTExperiment;
-import org.jax.mgi.mgd.api.model.gxd.entities.HTSample;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTExperimentVariable;
-import org.jax.mgi.mgd.api.model.voc.entities.Term;
+import org.jax.mgi.mgd.api.model.gxd.entities.HTSample;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIProperty;
-import org.jax.mgi.mgd.api.model.mgi.entities.Note;
-
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jboss.logging.Logger;
 
 public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperiment, HTDomain> {
@@ -31,6 +29,18 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 		domain.set_experiment_key(entity.get_experiment_key());
 		domain.setName(entity.getName());
 		domain.setDescription(entity.getDescription());
+
+		// setting display default 
+		domain.setDeletingPubmedIds(0);  
+		domain.setDeletingSamples(0);  
+		domain.setCreatingSamples(0);  
+		domain.setModifyingSamples(0); 
+
+		domain.setHasSamples(0); // may be over-ridden below
+
+		if (entity.getConfidence() != null) {
+			domain.setConfidence(entity.getConfidence());
+		}
 
 		if (entity.getPrimaryIDs() != null && !entity.getPrimaryIDs().isEmpty()) {
 			domain.setPrimaryid(entity.getPrimaryIDs().get(0).getAccID());
@@ -105,16 +115,17 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 		if (entity.getProperties() != null) {
 
 			List<String> pubmed_ids = new ArrayList<String>();
+			List<String> pubmed_property_keys = new ArrayList<String>();
 			List<String> experimental_factors = new ArrayList<String>(); 
 			List<String> experiment_types = new ArrayList<String>();
 			List<String> provider_contact_names = new ArrayList<String>();
 
 			List<MGIProperty> properties = entity.getProperties();
 			for (MGIProperty prop : properties) {
-				//log.info(prop.getValue());
 
 				if (prop.getPropertyTerm().get_term_key() == 20475430) {
 					pubmed_ids.add(prop.getValue());
+					pubmed_property_keys.add(prop.get_property_key().toString());
 				}
 				if (prop.getPropertyTerm().get_term_key() == 20475423) {
 					experimental_factors.add(prop.getValue());
@@ -130,6 +141,7 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 			// send them if we got them...
 			if (pubmed_ids.size() > 0) {
 				domain.setPubmed_ids(pubmed_ids);
+				domain.setPubmed_property_keys(pubmed_property_keys);
 			}
 			if (experimental_factors.size() > 0) {
 				domain.setExperimental_factors(experimental_factors);
@@ -145,9 +157,7 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 
 		// notes
 		if (entity.getNotes() != null && entity.getNotes().size() > 0) {
-			List<Note> notes = entity.getNotes();
-			//log.info(notes.size());
-			String notetext = entity.getNotes().get(0).getNoteChunk().getNote();
+			String notetext = entity.getNotes().get(0).getNote();
 			domain.set_note_key(String.valueOf(entity.getNotes().get(0).get_note_key()));
 			domain.setNotetext(notetext);
 		}
@@ -166,6 +176,7 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 
 		// experiment samples
 		if (entity.getSamples() != null) {
+			domain.setHasSamples(1); // setting display default 
 			List<HTSampleDomain> samples = new ArrayList<HTSampleDomain>();
 			for (HTSample sample : entity.getSamples()) {
 				HTSampleDomain sampleDomain = new HTSampleDomain();

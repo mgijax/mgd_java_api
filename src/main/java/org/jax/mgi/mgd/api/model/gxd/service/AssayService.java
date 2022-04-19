@@ -104,7 +104,9 @@ public class AssayService extends BaseService<AssayDomain> {
 		SearchResults<AssayDomain> results = new SearchResults<AssayDomain>();
 		Assay entity = new Assay();
 		Boolean modified = false;
-
+		String cmd;
+		Query query;
+		
 		log.info("processAssay/create");
 
 		entity.setAssayType(assayTypeDAO.get(Integer.valueOf(domain.getAssayTypeKey())));	
@@ -195,6 +197,20 @@ public class AssayService extends BaseService<AssayDomain> {
 			if (gelRowService.process(entity.get_assay_key(), domain.getGelRows(), domain.getGelLanes(), user)) {
 				modified = true;
 			}
+		}
+
+		if (domain.getDetectionKey().equals("2")) {
+			// add antibody/reference
+			cmd = "select count(*) from MGI_insertReferenceAssoc (" + user.get_user_key() + ",6," + entity.getAntibodyPrep().getAntibody().get_antibody_key() + "," + domain.getRefsKey() + ",1027)";
+			log.info("processAssay/process MGI_insertReferenceAssoc(): " + cmd);
+			query = assayDAO.createNativeQuery(cmd);
+			query.getResultList();			
+		}
+		else if (domain.getDetectionKey().equals("1")) {
+			cmd = "select count(*) from PRB_insertReference (" + user.get_user_key() + "," + domain.getRefsKey() + "," + entity.getProbePrep().getProbe().get_probe_key() + ")";
+			log.info("processAssay/process PRB_insertReference(): " + cmd);
+			query = assayDAO.createNativeQuery(cmd);
+			query.getResultList();
 		}
 		
 		// return entity translated to domain
@@ -288,6 +304,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			List<GelLaneDomain> laneResults = new ArrayList<GelLaneDomain>();
 			laneResults = gelLaneService.process(Integer.valueOf(domain.getAssayKey()), Integer.valueOf(domain.getAssayTypeKey()), domain.getGelLanes(), user);
 			domain.setGelLanes(laneResults);
+			modified = true;
 		}
 		
 		// process gxd_gelrow
@@ -311,15 +328,29 @@ public class AssayService extends BaseService<AssayDomain> {
 
 		// process order reset
 		cmd = "select count(*) from MGI_resetSequenceNum ('GXD_Specimen'," + entity.get_assay_key() + "," + user.get_user_key() + ")";
-		log.info("processAssay/process order reset: " + cmd);
+		log.info("processAssay/process MGI_resetSequenceNum: " + cmd);
 		query = assayDAO.createNativeQuery(cmd);
 		query.getResultList();
 
 		// process order reset
 		cmd = "select count(*) from MGI_resetSequenceNum ('GXD_GelLane'," + entity.get_assay_key() + "," + user.get_user_key() + ")";
-		log.info("processAssay/process order reset: " + cmd);
+		log.info("processAssay/process MGI_resetSequenceNum: " + cmd);
 		query = assayDAO.createNativeQuery(cmd);
 		query.getResultList();
+		
+		if (domain.getDetectionKey().equals("2")) {
+			// add antibody/reference
+			cmd = "select count(*) from MGI_insertReferenceAssoc (" + user.get_user_key() + ",6," + entity.getAntibodyPrep().getAntibody().get_antibody_key() + "," + domain.getRefsKey() + ",1027)";
+			log.info("processAssay/process MGI_insertReferenceAssoc(): " + cmd);
+			query = assayDAO.createNativeQuery(cmd);
+			query.getResultList();			
+		}
+		else if (domain.getDetectionKey().equals("1")) {
+			cmd = "select count(*) from PRB_insertReference (" + user.get_user_key() + "," + domain.getRefsKey() + "," + entity.getProbePrep().getProbe().get_probe_key() + ")";
+			log.info("processAssay/process PRB_insertReference(): " + cmd);
+			query = assayDAO.createNativeQuery(cmd);
+			query.getResultList();
+		}
 		
 		// return entity translated to domain
 		log.info("processAssay/update/returning results");

@@ -20,6 +20,7 @@ import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleRefAssocTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleTranslator;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.gxd.domain.AllelePairDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImageDomain;
 import org.jax.mgi.mgd.api.model.img.service.ImagePaneAssocService;
@@ -437,7 +438,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		for (int i = 0; i < domain.getSubtypeAnnots().size(); i++) {
 
-			if (domain.getSubtypeAnnots().get(i).getTermKey().isEmpty()) {
+			if (domain.getSubtypeAnnots().get(i).getTermKey() == null || domain.getSubtypeAnnots().get(i).getTermKey().isEmpty()) {
 				continue;
 			}
 			
@@ -1267,6 +1268,76 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}
 	
 		return results;
+	}
+
+	@Transactional
+	public List<SlimAlleleDomain> validateAlleleConditional(List<AllelePairDomain> searchDomain) {
+		// validate list of alleles meet conditionally targeted rules
+		// 
+		// finds alleles where attribute = 'recombinase' (11025588)
+		// finds alleles where attribute = 'conditional ready' (11025588)
+		// 
+		// if both attributes are found, then return true, else return false
+		//
+		
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();		
+		List<String> alleleList = new ArrayList<String>();
+		
+		for (int i = 0; i < searchDomain.size(); i++) {
+			if (searchDomain.get(i).getAlleleKey1() != null && !searchDomain.get(i).getAlleleKey1().isEmpty()) {
+				alleleList.add(searchDomain.get(i).getAlleleKey1());
+			}
+			if (searchDomain.get(i).getAlleleKey2() != null && !searchDomain.get(i).getAlleleKey2().isEmpty()) {
+				alleleList.add(searchDomain.get(i).getAlleleKey2());
+			}
+		}
+		
+		// finds alleles where attribute = 'recombinase' (11025588)		
+		String cmd = "\nselect a._Allele_key" + 
+				"\nfrom ALL_Allele a, VOC_Annot va" + 
+				"\nwhere a._Allele_key in (" + String.join(",",  alleleList) + ")" +
+				"\nand a._Allele_key = va._Object_key" + 
+				"\nand va._AnnotType_key = 1014" + 
+				"\nand va._Term_key = 11025587";		
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);			
+			while (rs.next()) {
+				SlimAlleleDomain alleleDomain = new SlimAlleleDomain();
+				alleleDomain = slimtranslator.translate(alleleDAO.get(rs.getInt("_allele_key")));				
+				alleleDAO.clear();
+				results.add(alleleDomain);
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// finds alleles where attribute = 'conditional ready' (11025588)		
+		cmd = "\nselect a._Allele_key, va._Term_key" + 
+				"\nfrom ALL_Allele a, VOC_Annot va" + 
+				"\nwhere a._Allele_key in (" + String.join(",",  alleleList) + ")" +
+				"\nand a._Allele_key = va._Object_key" + 
+				"\nand va._AnnotType_key = 1014" + 
+				"\nand va._Term_key = 11025588";	
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);		
+			while (rs.next()) {
+				SlimAlleleDomain alleleDomain = new SlimAlleleDomain();
+				alleleDomain = slimtranslator.translate(alleleDAO.get(rs.getInt("_allele_key")));				
+				alleleDAO.clear();
+				results.add(alleleDomain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;		
 	}
 
 	@Transactional

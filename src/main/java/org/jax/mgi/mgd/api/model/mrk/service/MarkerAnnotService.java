@@ -26,13 +26,10 @@ import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.GOTracking;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerAnnotTranslator;
 import org.jax.mgi.mgd.api.model.mrk.translator.SlimMarkerAnnotTranslator;
-import org.jax.mgi.mgd.api.model.voc.dao.AnnotationDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.DenormAnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidenceDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidencePropertyDomain;
-import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
-import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.RunCommand;
@@ -47,10 +44,10 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 
 	@Inject
 	private MarkerDAO markerDAO;
-	@Inject
-	private AnnotationDAO annotationDAO;
-	@Inject
-	private AnnotationService annotationService;
+//	@Inject
+//	private AnnotationDAO annotationDAO;
+//	@Inject
+//	private AnnotationService annotationService;
 	@Inject
 	private GOTrackingDAO goTrackingDAO;
 	@Inject
@@ -79,9 +76,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		log.info("MarkerAnnotService.update");
 		
 		MarkerAnnotDomain markerAnnotDomain = new MarkerAnnotDomain();
-		List<AnnotationDomain> annotList = new ArrayList<AnnotationDomain>();
-		Boolean modified = false;
-
+		
 		// assuming the pwi will always pass in the annotTypeKey
 		
 		markerAnnotDomain.setMarkerKey(domain.getMarkerKey());
@@ -89,133 +84,127 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
     	markerAnnotDomain.setGoNote(domain.getGoNote());
     	markerAnnotDomain.setGoTracking(domain.getGoTracking());
 
-    	// Iterate thru incoming denormalized markerAnnot domain
-		for (int i = 0; i < domain.getAnnots().size(); i++) {
-			
-			// if processStatus == "x", then continue; no need to create domain/process anything
-			if (domain.getAnnots().get(i).getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
-				continue;
-			}
-			
-			//log.info("domain index: " + i);
-			
-			DenormAnnotationDomain denormAnnotDomain = domain.getAnnots().get(i);
+		// go-marker note
+		noteService.process(domain.getMarkerKey(), domain.getGoNote().get(0), mgiTypeKey, user);
 		
-			// annotation (term, qualifier)
-			AnnotationDomain annotDomain = new AnnotationDomain();
-			
-			//
-			// if processStatus == "d", then process as "u"
-			// 1 annotation may have >= 1 evidence
-			// 1 evidence may be a "d", but other evidences may be "x", "u" or "c"
-			//
-			if (domain.getAnnots().get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-				annotDomain.setProcessStatus(Constants.PROCESS_UPDATE);
-			}
-			else {
-				annotDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
-			}
+		// go-tracking/updating 
+		if (domain.getGoTracking() != null) {
+			if (domain.getGoTracking().get(0).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+				try {
+					GOTracking goTrackingEntity = goTrackingDAO.get(Integer.valueOf(domain.getMarkerKey()));				
 					
-            annotDomain.setAnnotKey(denormAnnotDomain.getAnnotKey());
-            annotDomain.setAnnotTypeKey(denormAnnotDomain.getAnnotTypeKey());
-            annotDomain.setAnnotType(denormAnnotDomain.getAnnotType());
-            annotDomain.setObjectKey(denormAnnotDomain.getObjectKey());
-            annotDomain.setTermKey(denormAnnotDomain.getTermKey());
-            annotDomain.setTerm(denormAnnotDomain.getTerm());           
-            annotDomain.setQualifierKey(denormAnnotDomain.getQualifierKey());
-            annotDomain.setQualifierAbbreviation(denormAnnotDomain.getQualifierAbbreviation());
-            annotDomain.setQualifier(denormAnnotDomain.getQualifier());
-            annotDomain.setAllowEditTerm(domain.getAllowEditTerm());
-            
-            // evidence : create evidence list of 1 result
-            //log.info("add evidence list");
-			EvidenceDomain evidenceDomain = new EvidenceDomain();
-            List<EvidenceDomain> evidenceList = new ArrayList<EvidenceDomain>();
-            evidenceDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
-                      
-            // if term or qualifier has been changed...
-            if (denormAnnotDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-				//log.info("GenotypeAnnotService.update : check for changes");
-            	Annotation entity = annotationDAO.get(Integer.valueOf(denormAnnotDomain.getAnnotKey()));
-				if (!denormAnnotDomain.getTermKey().equals(String.valueOf(entity.getTerm().get_term_key()))
-	            		|| !denormAnnotDomain.getQualifierKey().equals(String.valueOf(entity.getQualifier().get_term_key()))) {
-	            	annotDomain.setProcessStatus(Constants.PROCESS_SPLIT); 
-	            	evidenceDomain.setProcessStatus(Constants.PROCESS_SPLIT);           	
-	            }				
-            }
-            
-            evidenceDomain.setAnnotEvidenceKey(denormAnnotDomain.getAnnotEvidenceKey());
-            evidenceDomain.setEvidenceTermKey(denormAnnotDomain.getEvidenceTermKey());
-            evidenceDomain.setInferredFrom(denormAnnotDomain.getInferredFrom());
-            evidenceDomain.setRefsKey(denormAnnotDomain.getRefsKey());
-            evidenceDomain.setCreatedByKey(denormAnnotDomain.getCreatedByKey());
-            evidenceDomain.setModifiedByKey(denormAnnotDomain.getModifiedByKey());
-            evidenceDomain.setProperties(denormAnnotDomain.getProperties());
-			
-			// add evidenceDomain to evidenceList
-			evidenceList.add(evidenceDomain);
-
-			// add evidenceList to annotDomain
-			annotDomain.setEvidence(evidenceList);
-            
-			// add annotDomain to annotList
-			annotList.add(annotDomain);         
-		}
-		
-		// add annotList to the MarkerAnnotDomain and process annotations
-		if (annotList.size() > 0) {
-
-			log.info("send json normalized domain to services");			
-			markerAnnotDomain.setAnnots(annotList);
-
-			// go-marker annotations
-			if (annotationService.process(markerAnnotDomain.getAnnots(), user)) {
-				modified = true;
-			}
-
-			// go-marker note
-			if (noteService.process(domain.getMarkerKey(), domain.getGoNote().get(0), mgiTypeKey, user)) {
-				modified = true;
-			}
-			
-			// go-tracking/updating 
-			if (domain.getGoTracking() != null) {
-				if (domain.getGoTracking().get(0).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-					try {
-						GOTracking goTrackingEntity = goTrackingDAO.get(Integer.valueOf(domain.getMarkerKey()));				
-						
-						String newCompletionStr = domain.getGoTracking().get(0).getCompletion_date();
-						Date newCompletion = new Date();						
-						
-						if (newCompletionStr != null && !newCompletionStr.isEmpty()) {						
-							newCompletion = new SimpleDateFormat("MM/dd/yyyy").parse(newCompletionStr);
-							goTrackingEntity.setCompletedBy(user);							
-						}
-						else {
-							newCompletion = null;
-							goTrackingEntity.setCompletedBy(null);							
-						}						
-						
-						goTrackingEntity.setCompletion_date(newCompletion);	
-						goTrackingEntity.setModification_date(new Date());
-						goTrackingEntity.setModifiedBy(user);						
-						//goTrackingEntity.setIsReferenceGene(0);
-						goTrackingDAO.update(goTrackingEntity);
+					String newCompletionStr = domain.getGoTracking().get(0).getCompletion_date();
+					Date newCompletion = new Date();						
+					
+					if (newCompletionStr != null && !newCompletionStr.isEmpty()) {						
+						newCompletion = new SimpleDateFormat("MM/dd/yyyy").parse(newCompletionStr);
+						goTrackingEntity.setCompletedBy(user);							
 					}
-					catch (Exception e) {
-						e.printStackTrace();
-					}
+					else {
+						newCompletion = null;
+						goTrackingEntity.setCompletedBy(null);							
+					}						
+					
+					goTrackingEntity.setCompletion_date(newCompletion);	
+					goTrackingEntity.setModification_date(new Date());
+					goTrackingEntity.setModifiedBy(user);						
+					//goTrackingEntity.setIsReferenceGene(0);
+					goTrackingDAO.update(goTrackingEntity);
+				}
+				catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		}
 		
-		if (modified) {
-			log.info("processMarkerAnnot/changes processed: " + domain.getMarkerKey());
-		}
-		else {
-			log.info("processMarkerAnnot/no changes processed: " + domain.getMarkerKey());
-		}
+    	//
+		// 02/22/2022
+    	// remove all of the Annotation stuff; no longer used
+    	//
+		//List<AnnotationDomain> annotList = new ArrayList<AnnotationDomain>();		
+    	//
+    	// Iterate thru incoming denormalized markerAnnot domain
+//		for (int i = 0; i < domain.getAnnots().size(); i++) {
+//			
+//			// if processStatus == "x", then continue; no need to create domain/process anything
+//			if (domain.getAnnots().get(i).getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
+//				continue;
+//			}
+//			
+//			//log.info("domain index: " + i);
+//			
+//			DenormAnnotationDomain denormAnnotDomain = domain.getAnnots().get(i);
+//		
+//			// annotation (term, qualifier)
+//			AnnotationDomain annotDomain = new AnnotationDomain();
+//			
+//			//
+//			// if processStatus == "d", then process as "u"
+//			// 1 annotation may have >= 1 evidence
+//			// 1 evidence may be a "d", but other evidences may be "x", "u" or "c"
+//			//
+//			if (domain.getAnnots().get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+//				annotDomain.setProcessStatus(Constants.PROCESS_UPDATE);
+//			}
+//			else {
+//				annotDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
+//			}
+//					
+//            annotDomain.setAnnotKey(denormAnnotDomain.getAnnotKey());
+//            annotDomain.setAnnotTypeKey(denormAnnotDomain.getAnnotTypeKey());
+//            annotDomain.setAnnotType(denormAnnotDomain.getAnnotType());
+//            annotDomain.setObjectKey(denormAnnotDomain.getObjectKey());
+//            annotDomain.setTermKey(denormAnnotDomain.getTermKey());
+//            annotDomain.setTerm(denormAnnotDomain.getTerm());           
+//            annotDomain.setQualifierKey(denormAnnotDomain.getQualifierKey());
+//            annotDomain.setQualifierAbbreviation(denormAnnotDomain.getQualifierAbbreviation());
+//            annotDomain.setQualifier(denormAnnotDomain.getQualifier());
+//            annotDomain.setAllowEditTerm(domain.getAllowEditTerm());
+//            
+//            // evidence : create evidence list of 1 result
+//            //log.info("add evidence list");
+//			EvidenceDomain evidenceDomain = new EvidenceDomain();
+//            List<EvidenceDomain> evidenceList = new ArrayList<EvidenceDomain>();
+//            evidenceDomain.setProcessStatus(denormAnnotDomain.getProcessStatus());
+//                      
+//            // if term or qualifier has been changed...
+//            if (denormAnnotDomain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
+//				//log.info("GenotypeAnnotService.update : check for changes");
+//            	Annotation entity = annotationDAO.get(Integer.valueOf(denormAnnotDomain.getAnnotKey()));
+//				if (!denormAnnotDomain.getTermKey().equals(String.valueOf(entity.getTerm().get_term_key()))
+//	            		|| !denormAnnotDomain.getQualifierKey().equals(String.valueOf(entity.getQualifier().get_term_key()))) {
+//	            	annotDomain.setProcessStatus(Constants.PROCESS_SPLIT); 
+//	            	evidenceDomain.setProcessStatus(Constants.PROCESS_SPLIT);           	
+//	            }				
+//            }
+//            
+//            evidenceDomain.setAnnotEvidenceKey(denormAnnotDomain.getAnnotEvidenceKey());
+//            evidenceDomain.setEvidenceTermKey(denormAnnotDomain.getEvidenceTermKey());
+//            evidenceDomain.setInferredFrom(denormAnnotDomain.getInferredFrom());
+//            evidenceDomain.setRefsKey(denormAnnotDomain.getRefsKey());
+//            evidenceDomain.setCreatedByKey(denormAnnotDomain.getCreatedByKey());
+//            evidenceDomain.setModifiedByKey(denormAnnotDomain.getModifiedByKey());
+//            evidenceDomain.setProperties(denormAnnotDomain.getProperties());
+//			
+//			// add evidenceDomain to evidenceList
+//			evidenceList.add(evidenceDomain);
+//
+//			// add evidenceList to annotDomain
+//			annotDomain.setEvidence(evidenceList);
+//            
+//			// add annotDomain to annotList
+//			annotList.add(annotDomain);         
+//		}
+//		
+//		// add annotList to the MarkerAnnotDomain and process annotations
+//		if (annotList.size() > 0) {
+//			log.info("send json normalized domain to services");			
+//			markerAnnotDomain.setAnnots(annotList);
+//			// go-marker annotations
+//			annotationService.process(markerAnnotDomain.getAnnots(), user);
+//		}
 		
+		log.info("processMarkerAnnot/changes processed: " + domain.getMarkerKey());
 		log.info("repackage incoming domain as results");		
 		SearchResults<DenormMarkerAnnotDomain> results = new SearchResults<DenormMarkerAnnotDomain>();
 		results = getResults(Integer.valueOf(domain.getMarkerKey()));

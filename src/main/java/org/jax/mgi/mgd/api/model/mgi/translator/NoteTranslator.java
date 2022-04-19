@@ -22,7 +22,7 @@ public class NoteTranslator extends BaseEntityDomainTranslator<Note, NoteDomain>
 		domain.setMgiType(entity.getMgiType().getName());
 		domain.setNoteTypeKey(String.valueOf(entity.getNoteType().get_noteType_key()));
 		domain.setNoteType(entity.getNoteType().getNoteType());
-		domain.setNoteChunk(DecodeString.getDecodeToUTF8(entity.getNoteChunk().getNote()));
+		domain.setNoteChunk(DecodeString.getDecodeToUTF8(entity.getNote()));
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());

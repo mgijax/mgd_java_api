@@ -28,8 +28,13 @@ import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
+<<<<<<< HEAD
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceBookService;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceNoteService;
+=======
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
+>>>>>>> ac5b4b90e632dc2c68fd324a6404daf5346d4105
 import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceMarkerAssocDomain;
@@ -67,10 +72,13 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	private MGITypeDAO mgiTypeDAO;
 	@Inject
 	private MGIReferenceAssocService referenceAssocService;	
+<<<<<<< HEAD
 	@Inject
 	private ReferenceBookService bookService;
 	@Inject
 	private ReferenceNoteService noteService;
+=======
+>>>>>>> ac5b4b90e632dc2c68fd324a6404daf5346d4105
 	
 	LTReferenceTranslator translator = new LTReferenceTranslator();
 

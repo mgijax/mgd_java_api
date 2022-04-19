@@ -286,6 +286,10 @@ public class AccessionService extends BaseService<AccessionDomain> {
 				// minimum domain info for create:
 				// processStatus (‘c’ for create) , logicaldbKey, mgitypekey, objectKey, accid
 
+				if (domain.get(i).getAccID() == null || domain.get(i).getAccID().isEmpty()) {
+					continue;
+				}
+				
 				log.info("processAccession create");
 				
 				// refsKey can be null; set to -1

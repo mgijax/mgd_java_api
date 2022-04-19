@@ -182,7 +182,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		Marker entity = markerDAO.get(Integer.valueOf(domain.getMarkerKey()));
-		Boolean modified = false;
+		Boolean modified = true;
 		String mgiTypeKey = "2";
 		String mgiTypeName = "Marker";
 		Boolean setStrainNeedsReview = false;
@@ -377,6 +377,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
+		
+		// for alphanumeric sorting
+		// order by (substring(m.symbol, '^[0-9]+'))::int,coalesce(substring(m.symbol, '[^0-9_].*$'),'')
+
 		String cmd = "";
 		String select = "select distinct m._marker_key, m._marker_type_key, m.symbol";
 		String from = "from mrk_marker m";
@@ -1116,7 +1120,17 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			
 				String termKey = terms.get(i).getTermKey();
 								
-				// 3:Cytogenetic Marker
+				// 3:Cytogenetic Marker; the only valid terms are:
+				//				   7196768 | chromosomal deletion
+				//				   7196769 | insertion
+				//				   7196770 | chromosomal inversion
+				//				   7196771 | Robertsonian fusion
+				//				   7196772 | reciprocal chromosomal translocation
+				//				   7196773 | chromosomal translocation
+				//				   7196774 | chromosomal duplication
+				//				   7196775 | chromosomal transposition
+				//				   7222413 | unclassified cytogenetic marker
+				
 				if (!markerTypeKey.equals("3")
 						&& (termKey.equals("7196768")
 						|| termKey.equals("7196774")
@@ -1141,7 +1155,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 						&& !termKey.equals("7222413")) {
 					validation = false;
 				}				
-				// 7:Pseudogene
+				// 7:Pseudogene; the only valid terms are:
+				//				   6967235 | pseudogenic gene segment
+				//				   7288448 | pseudogenic region
+				//				   7288449 | polymorphic pseudogene
+				//				   7313348 | pseudogene
 				else if (!markerTypeKey.equals("7") 
 						&& (termKey.equals("7288449")
 						|| termKey.equals("7313348")
@@ -1155,8 +1173,34 @@ public class MarkerService extends BaseService<MarkerDomain> {
 						&& !termKey.equals("6967235")
 						&& !termKey.equals("7288448")) {
 					validation = false;
-				}				
-				// 9:Other Genome Feature
+				}		
+				
+				// 9:Other Genome Feature; the only valid terms are:
+				//				   7648966 | retrotransposon
+				//				   7648967 | telomere
+				//				   7648968 | minisatellite
+				//				   7648969 | unclassified other genome feature
+				//				   9272146 | endogenous retroviral region
+				//				  11928467 | mutation defined region
+				//				  15406205 | CpG island
+				//				  15406207 | promoter
+				//				  36700088 | TSS region
+				//				  97015607 | enhancer
+				//				  97015608 | promoter flanking region
+				//				  97015609 | CTCF binding site
+				//				  97015610 | transcription factor binding site
+				//				  97015611 | open chromatin region
+				// 				  103059155 | silencer
+				//                103059156 | insulator
+				//                103059157 | imprinting control region
+				//                103059158 | locus control region
+				//                103059159 | response element
+				//                103059160 | histone modification
+				//                103059161 | intronic regulatory region
+				//                103059162 | splice enhancer
+				//                103059163 | insulator binding site
+
+				
 				else if (!markerTypeKey.equals("9")
 						&& (termKey.equals("15406205")
 							|| termKey.equals("9272146")
@@ -1165,8 +1209,23 @@ public class MarkerService extends BaseService<MarkerDomain> {
 							|| termKey.equals("15406207")
 							|| termKey.equals("7648966")
 							|| termKey.equals("7648967")
+							|| termKey.equals("7648969")
 							|| termKey.equals("36700088")							
-							|| termKey.equals("7648969"))) {
+                            || termKey.equals("97015607")
+                            || termKey.equals("97015608")
+                            || termKey.equals("97015609")
+                            || termKey.equals("97015610")
+                            || termKey.equals("97015611")
+                            || termKey.equals("103059155")
+                            || termKey.equals("103059156")
+                            || termKey.equals("103059157")
+                            || termKey.equals("103059158")
+                            || termKey.equals("103059159")
+                            || termKey.equals("103059160")
+                            || termKey.equals("103059161")
+                            || termKey.equals("103059162")                 												
+                            || termKey.equals("103059163")                          
+							)) {
 					validation = false;
 				}
 				// 9:Other Genome Feature
@@ -1178,10 +1237,25 @@ public class MarkerService extends BaseService<MarkerDomain> {
 						 && !termKey.equals("15406207")
 						 && !termKey.equals("7648966")
 						 && !termKey.equals("7648967")
+						 && !termKey.equals("7648969")
 						 && !termKey.equals("36700088")							
-						 && !termKey.equals("7648969")) {
+                         && !termKey.equals("97015607")
+                         && !termKey.equals("97015608")
+                         && !termKey.equals("97015609")
+                         && !termKey.equals("97015610")
+                         && !termKey.equals("97015611")
+                         && !termKey.equals("103059155")
+                         && !termKey.equals("103059156")
+                         && !termKey.equals("103059157")
+                         && !termKey.equals("103059158")
+                         && !termKey.equals("103059159")
+                         && !termKey.equals("103059160")
+                         && !termKey.equals("103059161")
+                         && !termKey.equals("103059162")
+                         && !termKey.equals("103059163")
+						 ) {
 					validation = false;
-				}				
+				}					
 			}
 		}
 		
@@ -1194,7 +1268,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		return results;
 	}	
-		
+	
 	@Transactional		
 	public SearchResults<SlimMarkerDomain> eiUtilities(MarkerUtilitiesForm searchForm, User user) throws IOException, InterruptedException {
 	
@@ -1383,8 +1457,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// note that any run command errors have already been attached
 		results.setItems(listOfResults);
 		return results;
-	}
-
+	}	
+	
 	@Transactional		
 	public Boolean mrklocationUtilities(String markerKey) throws IOException, InterruptedException {
 		// see mrkcacheload/mrklocation.py

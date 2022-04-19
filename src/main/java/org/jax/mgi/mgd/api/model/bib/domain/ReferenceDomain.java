@@ -58,6 +58,14 @@ public class ReferenceDomain extends BaseDomain {
 	public String qtl_status;
 	public String tumor_status;
 	
+<<<<<<< HEAD
+=======
+	//private ReferenceBookDomain referenceBook;
+	//private ReferenceNoteDomain referenceNote;
+	//private List<AccessionDomain> mgiAccessionIds;
+	//private List<AccessionDomain> editAccessionIds;
+	
+>>>>>>> ac5b4b90e632dc2c68fd324a6404daf5346d4105
 	// these lists are loaded by the pwi at runtime
 	private List<MGIReferenceAlleleAssocDomain> alleleAssocs;
 	private List<MGIReferenceMarkerAssocDomain> markerAssocs;

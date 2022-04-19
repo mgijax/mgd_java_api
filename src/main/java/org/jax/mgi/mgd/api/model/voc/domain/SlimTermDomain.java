@@ -15,5 +15,5 @@ public class SlimTermDomain extends BaseDomain {
 	private Integer _term_key;
 	private String term;
 	private String abbreviation;
-	
+	private String primaryid;
 }

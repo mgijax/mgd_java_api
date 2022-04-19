@@ -20,24 +20,15 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Reference Workflow Relevance Model Object")
-@Table(name="bib_workflow_relevance")
-public class LTReferenceWorkflowRelevance extends BaseEntity {
+@ApiModel(value = "Reference Workflow Tag Model Object")
+@Table(name="bib_workflow_tag")
+public class LTReferenceWorkflowTag extends BaseEntity {
 	@Id
 	@Column(name="_assoc_key")
 	private int _assoc_key;
 
 	@Column(name="_refs_key")
 	private int _refs_key;
-
-	@Column(name="isCurrent")
-	private int isCurrent;
-
-	@Column(name="confidence")
-	private Double confidence;
-
-	@Column(name="version")
-	private String version;
 
 	@Column(name="creation_date")
 	private Date creation_date;
@@ -46,8 +37,8 @@ public class LTReferenceWorkflowRelevance extends BaseEntity {
 	private Date modification_date;
 	
 	@OneToOne
-	@JoinColumn(name="_relevance_key", referencedColumnName="_term_key")
-	private Term relevance;
+	@JoinColumn(name="_tag_key", referencedColumnName="_term_key")
+	private Term tag;
 	
 	@OneToOne
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
@@ -60,20 +51,9 @@ public class LTReferenceWorkflowRelevance extends BaseEntity {
 	/***--- transient methods ---***/
 	
 	@Transient
-	public void setIsCurrent(Integer isCurrent) {
-		this.isCurrent = isCurrent;
-	}
-	
-	@Transient
-	public String getRelevance() {
-		if (this.relevance == null) { return null; }
-		return this.relevance.getTerm();
-	}
-	
-	@Transient
-	public String getRelevanceAbbreviation() {
-		if (this.relevance == null) { return null; }
-		return this.relevance.getAbbreviation();
+	public String getTagTerm() {
+		if (this.tag == null) { return null; }
+		return this.tag.getTerm();
 	}
 	
 	@Transient
@@ -96,9 +76,5 @@ public class LTReferenceWorkflowRelevance extends BaseEntity {
 	@Transient
 	public String getModificationDate() {
 		return formatter.format(this.modification_date);
-	}
-
-	public String getRefsKey() {
-		return Integer.toString(this._refs_key);
 	}
 }

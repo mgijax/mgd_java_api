@@ -23,10 +23,7 @@ import lombok.Setter;
 @ApiModel(value = "Reference Workflow Status Model Object")
 @Table(name="bib_workflow_status")
 public class LTReferenceWorkflowStatus extends BaseEntity {
-
 	@Id
-//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="bib_workflow_status_generator")
-//	@SequenceGenerator(name="bib_workflow_status_generator", sequenceName = "bib_workflow_status_seq", allocationSize=1)	
 	@Column(name="_assoc_key")
 	private int _assoc_key;
 

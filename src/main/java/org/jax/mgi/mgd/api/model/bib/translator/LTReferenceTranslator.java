@@ -3,7 +3,6 @@ package org.jax.mgi.mgd.api.model.bib.translator;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowRelevanceDomain;
@@ -34,6 +33,7 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		domain.issue = entity.getIssue();
 		domain.pgs = entity.getPgs();
 		domain.date = entity.getDate();
+		domain.isReviewArticle = String.valueOf(entity.getIsReviewArticle());
 
 		if (entity.getYear() != null) {
 			domain.year = entity.getYear().toString();
@@ -63,15 +63,8 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		
 		domain.creation_date = dateFormatter.format(entity.getCreation_date());
 		domain.modification_date = dateFormatter.format(entity.getModification_date());
-		domain.created_by = entity.getCreatedByUser().getLogin();
-		domain.modified_by = entity.getModifiedByUser().getLogin();
-		
-		// is this a review article?
-		if (entity.getIsReviewArticle() == 0) {
-			domain.isReviewArticle = "No";
-		} else {
-			domain.isReviewArticle = "Yes";
-		}
+		domain.createdBy = entity.getCreatedByUser().getLogin();
+		domain.modifiedBy = entity.getModifiedByUser().getLogin();
 		
 		// list of strings, each of which indicates a type of data associated with the reference
 		domain.associated_data = new ArrayList<String>();
@@ -92,29 +85,23 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		}
 			
 		// at most one reference note
-		if (entity.getNotes() != null && !entity.getNotes().isEmpty()) {
+		if (entity.getReferenceNote() != null) {
 			ReferenceNoteTranslator noteTranslator = new ReferenceNoteTranslator();
-			Iterable<ReferenceNoteDomain> note = noteTranslator.translateEntities(entity.getNotes());
-			List<ReferenceNoteDomain> noteList = IteratorUtils.toList(note.iterator());			
-			domain.referenceNote = noteList.get(0).getNote();
+			Iterable<ReferenceNoteDomain> note = noteTranslator.translateEntities(entity.getReferenceNote());
+			domain.setReferenceNote(note.iterator().next());
 		}
 		
 		// at most one reference book
 		if (entity.getReferenceBook() != null && !entity.getReferenceBook().isEmpty()) {
 			ReferenceBookTranslator bookTranslator = new ReferenceBookTranslator();
 			Iterable<ReferenceBookDomain> book = bookTranslator.translateEntities(entity.getReferenceBook());
-			List<ReferenceBookDomain> bookList = IteratorUtils.toList(book.iterator());
-			domain.book_author = bookList.get(0).getBook_author();
-			domain.book_title = bookList.get(0).getBook_title();
-			domain.place = bookList.get(0).getPlace();
-			domain.publisher = bookList.get(0).getPublisher();
-			domain.series_ed = bookList.get(0).getSeries_ed();			
+			domain.setReferenceBook(book.iterator().next());			
 		}
 
 		// data specific to workflows: has supplemental data?, link to supplemental data, has PDF?, has extracted text?
 		LTReferenceWorkflowData workflowData = entity.getWorkflowData();
 		if (workflowData != null) {
-			domain.supplementalTerm = workflowData.getSupplemental();
+			domain.has_supplemental = workflowData.getSupplemental();
 			domain.link_to_supplemental = workflowData.getLink_supplemental();
 			if (workflowData.getHas_pdf() == 0) {
 				domain.has_pdf = "No";

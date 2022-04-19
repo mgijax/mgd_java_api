@@ -566,13 +566,16 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			if (entity.getReferenceTypeTerm().get_term_key() == 31576679 && !domain.getReferenceTypeKey().equals("31576679")) {
 				domain.getReferenceBook().setProcessStatus(Constants.PROCESS_DELETE);
 			}
-			else if (!smartEqual(entity.getReferenceBook().get(0).getBook_author(), domain.getReferenceBook().getBook_author()) || 
-						!smartEqual(entity.getReferenceBook().get(0).getBook_title(), domain.getReferenceBook().getBook_title()) || 
-						!smartEqual(entity.getReferenceBook().get(0).getPlace(), domain.getReferenceBook().getPlace()) || 
-						!smartEqual(entity.getReferenceBook().get(0).getPublisher(), domain.getReferenceBook().getPublisher()) ||
-						!smartEqual(entity.getReferenceBook().get(0).getSeries_ed(), domain.getReferenceBook().getSeries_ed())) {					
-				domain.getReferenceNote().setProcessStatus(Constants.PROCESS_UPDATE);
+			else {
+				domain.getReferenceNote().setProcessStatus(Constants.PROCESS_UPDATE);				
 			}
+//			else if (!smartEqual(entity.getReferenceBook().get(0).getBook_author(), domain.getReferenceBook().getBook_author()) || 
+//						!smartEqual(entity.getReferenceBook().get(0).getBook_title(), domain.getReferenceBook().getBook_title()) || 
+//						!smartEqual(entity.getReferenceBook().get(0).getPlace(), domain.getReferenceBook().getPlace()) || 
+//						!smartEqual(entity.getReferenceBook().get(0).getPublisher(), domain.getReferenceBook().getPublisher()) ||
+//						!smartEqual(entity.getReferenceBook().get(0).getSeries_ed(), domain.getReferenceBook().getSeries_ed())) {					
+//				domain.getReferenceNote().setProcessStatus(Constants.PROCESS_UPDATE);
+//			}
 		}
 		else {
 			domain.getReferenceBook().setProcessStatus(Constants.PROCESS_CREATE);							

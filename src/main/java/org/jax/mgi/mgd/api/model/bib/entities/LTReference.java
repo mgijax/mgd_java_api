@@ -110,7 +110,7 @@ public class LTReference extends BaseEntity {
 
 	@OneToMany()
 	@JoinColumn(name="_refs_key")
-	private List<ReferenceWorkflowTag> workflowTags;
+	private List<LTReferenceWorkflowTag> workflowTags;
 
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_refs_key")
@@ -122,11 +122,11 @@ public class LTReference extends BaseEntity {
 	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")
 	private Term referenceTypeTerm;
 
-	// one to many, because notes might not exist (leaving it 1-0)
+	// at most one note
 	@OneToMany()
-	@JoinColumn(name="_refs_key")
-	private List<ReferenceNote> notes;
-
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+	private List<ReferenceNote> referenceNote;
+	
 	// one to many, because row in citation cache might not exist (leaving it 1-0)
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key")
@@ -214,8 +214,8 @@ public class LTReference extends BaseEntity {
 	@Transient
 	public List<String> getWorkflowTagsAsStrings() {
 		List<String> tags = new ArrayList<String>();
-		for (ReferenceWorkflowTag rwTag : workflowTags) {
-			tags.add(rwTag.getTagTerm().getTerm());
+		for (LTReferenceWorkflowTag rwTag : workflowTags) {
+			tags.add(rwTag.getTag().getTerm());
 		}
 		Collections.sort(tags);
 		return tags;

@@ -18,15 +18,17 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceWorkflowDataDAO;
+<<<<<<< HEAD
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+=======
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceBookDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceNoteDAO;
+>>>>>>> ac5b4b90e632dc2c68fd324a6404daf5346d4105
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
 import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -48,10 +50,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	@Inject
 	private ReferenceDAO referenceDAO;
 	@Inject
+<<<<<<< HEAD
+=======
 	private ReferenceBookDAO bookDAO;
 	@Inject
 	private ReferenceNoteDAO noteDAO;
 	@Inject
+>>>>>>> ac5b4b90e632dc2c68fd324a6404daf5346d4105
 	private LTReferenceWorkflowDataDAO wfDataDAO;
 	@Inject
 	private TermDAO termDAO;
@@ -59,6 +64,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	private AccessionService accessionService;
 	@Inject
 	private TermService termService;
+<<<<<<< HEAD
+	@Inject
+	private ReferenceBookService bookService;
+	@Inject
+	private ReferenceNoteService noteService;
+=======
+>>>>>>> ac5b4b90e632dc2c68fd324a6404daf5346d4105
 	
 	private ReferenceTranslator translator = new ReferenceTranslator();
 	private SlimReferenceTranslator slimtranslator = new SlimReferenceTranslator();	
@@ -147,12 +159,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			entity.setDate(domain.getDate());
 		}
 		
-		if (domain.getIsReviewArticle().equals("No")) {
-			entity.setIsReviewArticle(0);
-		}
-		else {
-			entity.setIsReviewArticle(1);
-		}
+		entity.setIsReviewArticle(Integer.valueOf(domain.getIsReviewArticle()));
 
 		// add creation/modification 
 		entity.setCreatedBy(user);
@@ -163,60 +170,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// execute persist/insert/send to database
 		referenceDAO.persist(entity);
 				
-		// for books
-		if (domain.getReferenceTypeKey().equals("31576679")) {
-			ReferenceBook bookEntity = new ReferenceBook();
-			bookEntity.set_refs_key(entity.get_refs_key());
-			
-			if (domain.book_author.isEmpty()) {
-				bookEntity.setBook_author(null);
-			}
-			else {
-				bookEntity.setBook_author(domain.book_author);
-			}
-	
-			if (domain.book_author.isEmpty()) {
-				bookEntity.setBook_title(null);
-			}
-			else {
-				bookEntity.setBook_title(domain.book_title);
-			}
-			
-			if (domain.book_author.isEmpty()) {
-				bookEntity.setPlace(null);
-			}
-			else {
-				bookEntity.setPlace(domain.place);
-			}
-			
-			if (domain.book_author.isEmpty()) {
-				bookEntity.setPublisher(null);
-			}
-			else {
-				bookEntity.setPublisher(domain.publisher);
-			}
-									
-			if (domain.book_author.isEmpty()) {
-				bookEntity.setSeries_ed(null);
-			}
-			else {
-				bookEntity.setSeries_ed(domain.series_ed);
-			}
-			
-			bookEntity.setCreation_date(new Date());
-			bookEntity.setModification_date(new Date());
-			bookDAO.persist(bookEntity);
-		}
+		// books
+		bookService.process(String.valueOf(entity.get_refs_key()), domain.getReferenceBook(), user);
 
 		// notes
-		if (domain.getReferenceNote() != null && !domain.getReferenceNote().isEmpty()) {
-			ReferenceNote noteEntity = new ReferenceNote();
-			noteEntity.set_refs_key(entity.get_refs_key());
-			noteEntity.setNote(domain.referenceNote);			
-			noteEntity.setCreation_date(new Date());
-			noteEntity.setModification_date(new Date());
-			noteDAO.persist(noteEntity);			
-		}
+		noteService.process(String.valueOf(entity.get_refs_key()), domain.getReferenceNote(), user);
 				
 		// supplement = Not checked (31576677)
 		LTReferenceWorkflowData wfDataEntity = new LTReferenceWorkflowData();
@@ -267,9 +225,149 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}
 
 	@Transactional
+<<<<<<< HEAD
+	public SearchResults<ReferenceDomain> update(ReferenceDomain domain, User user) {
+		// in progress
+		// to replace LTReferenceRepository/update()/applyDomainChanges() etc.
+		
+		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
+		Reference entity = referenceDAO.get(Integer.valueOf(domain.getRefsKey()));
+		
+		entity.setReferenceType(termDAO.get(Integer.valueOf(domain.getReferenceTypeKey())));			
+
+		if (domain.getAuthors() == null || domain.getAuthors().isEmpty()) {
+			entity.setAuthors(null);
+			entity.setPrimaryAuthor(null);
+		}
+		else {
+			entity.setAuthors(domain.getAuthors());
+			String[] authors = domain.getAuthors().split(";");
+			entity.setPrimaryAuthor(authors[0]);
+		}
+		
+		if (domain.getTitle() == null || domain.getTitle().isEmpty()) {
+			entity.setTitle(null);
+		}
+		else {
+			entity.setTitle(domain.getTitle());
+		}
+		
+		if (domain.getJournal() == null || domain.getJournal().isEmpty()) {
+			entity.setJournal(null);
+		}
+		else {
+			entity.setJournal(domain.getJournal());
+		}
+		
+		if (domain.getVol() == null || domain.getVol().isEmpty()) {
+			entity.setVol(null);
+		}
+		else {
+			entity.setVol(domain.getVol());
+		}
+		
+		if (domain.getIssue() == null || domain.getIssue().isEmpty()) {
+			entity.setIssue(null);
+		}
+		else {
+			entity.setIssue(domain.getIssue());
+		}
+		
+		if (domain.getPgs() == null || domain.getPgs().isEmpty()) {
+			entity.setPgs(null);
+		}
+		else {
+			entity.setPgs(domain.getPgs());
+		}
+				
+		if (domain.getReferenceAbstract() == null || domain.getReferenceAbstract().isEmpty()) {
+			entity.setReferenceAbstract(null);
+		}
+		else {
+			entity.setReferenceAbstract(DecodeString.setDecodeToLatin9(domain.getReferenceAbstract()));
+		}
+		
+		int theYear;
+		if (domain.getYear() == null || domain.getYear().isEmpty()) {
+			theYear = Calendar.getInstance().get(Calendar.YEAR);
+		}
+		else {
+			theYear = Integer.valueOf(domain.getYear());
+		}
+		entity.setYear(theYear);
+		
+		if (domain.getDate() == null || domain.getDate().isEmpty()) {
+			entity.setDate(String.valueOf(theYear));
+		}
+		else {
+			entity.setDate(domain.getDate());
+		}
+		
+		entity.setIsReviewArticle(Integer.valueOf(domain.getIsReviewArticle()));
+
+		// add modification 
+		entity.setModifiedBy(user);
+		entity.setModification_date(new Date());
+
+		// execute persist/insert/send to database
+		referenceDAO.persist(entity);
+		
+		// books
+		bookService.process(String.valueOf(entity.get_refs_key()), domain.getReferenceBook(), user);	
+		
+		// notes
+		noteService.process(domain.getRefsKey(), domain.getReferenceNote(), user);
+		
+		// supplemental
+//		LTReferenceWorkflowData wfDataEntity = new LTReferenceWorkflowData();
+//		wfDataEntity.set_refs_key(entity.get_refs_key());
+//		wfDataEntity.setSupplementalTerm(termDAO.get(31576677));
+//		wfDataEntity.setExtractedTextTerm(termDAO.get(48804490));			
+//		wfDataEntity.setExtracted_text(null);
+//		wfDataEntity.setHas_pdf(0);
+//		wfDataEntity.setLink_supplemental(null);
+//		wfDataEntity.setCreatedByUser(user);
+//		wfDataEntity.setCreation_date(new Date());
+//		wfDataEntity.setModifiedByUser(user);
+//		wfDataEntity.setModification_date(new Date());
+//		wfDataDAO.persist(wfDataEntity);			
+		
+		// process pubmed accession ids
+//		if (domain.getPubmedid() != null && !domain.getPubmedid().isEmpty()) {
+//			AccessionDomain accessionDomain = new AccessionDomain();
+//			List<AccessionDomain> aresults = new ArrayList<AccessionDomain>();
+//			accessionDomain.setProcessStatus("c");
+//			accessionDomain.setAccID(domain.getPubmedid());
+//			accessionDomain.setLogicaldbKey("29");
+//			aresults.add(accessionDomain);
+//			accessionService.process(String.valueOf(entity.get_refs_key()), aresults, "Reference", user);
+//		}
+//
+//		// process doiid accession ids
+//		if (domain.getDoiid() != null && !domain.getDoiid().isEmpty()) {
+//			AccessionDomain accessionDomain = new AccessionDomain();
+//			List<AccessionDomain> aresults = new ArrayList<AccessionDomain>();
+//			accessionDomain.setProcessStatus("c");
+//			accessionDomain.setAccID(domain.getDoiid());
+//			accessionDomain.setLogicaldbKey("65");
+//			aresults.add(accessionDomain);
+//			accessionService.process(String.valueOf(entity.get_refs_key()), aresults, "Reference", user);
+//		}
+
+		// reload bib_citation_cache
+		String cmd = "select count(*) from BIB_reloadCache (" + entity.get_refs_key() + ")";
+		log.info("cmd: " + cmd);
+		Query query = referenceDAO.createNativeQuery(cmd);
+		query.getResultList();
+		
+		// return entity translated to domain
+		log.info("processReference/update/returning results");
+		results.setItem(translator.translate(entity));
+=======
 	public SearchResults<ReferenceDomain> update(ReferenceDomain object, User user) {
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+>>>>>>> ac5b4b90e632dc2c68fd324a6404daf5346d4105
 		return results;
 	}
 
@@ -465,30 +563,30 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		// bib_books
-		if (searchDomain.getBook_author() != null && !searchDomain.getBook_author().isEmpty()) {
-			where = where + "\nand k.book_au ilike '" + searchDomain.getBook_author() + "'";
+		if (searchDomain.getReferenceBook().getBook_author() != null && !searchDomain.getReferenceBook().getBook_author().isEmpty()) {
+			where = where + "\nand k.book_au ilike '" + searchDomain.getReferenceBook().getBook_author() + "'";
 			from_book = true;
 		}
-		if (searchDomain.getBook_title() != null && !searchDomain.getBook_title().isEmpty()) {
-			where = where + "\nand k.book_title ilike '" + searchDomain.getBook_title() + "'";
+		if (searchDomain.getReferenceBook().getBook_title() != null && !searchDomain.getReferenceBook().getBook_title().isEmpty()) {
+			where = where + "\nand k.book_title ilike '" + searchDomain.getReferenceBook().getBook_title() + "'";
 			from_book = true;
 		}
-		if (searchDomain.getPlace() != null && !searchDomain.getPlace().isEmpty()) {
-			where = where + "\nand k.place ilike '" + searchDomain.getPlace() + "'";
+		if (searchDomain.getReferenceBook().getPlace() != null && !searchDomain.getReferenceBook().getPlace().isEmpty()) {
+			where = where + "\nand k.place ilike '" + searchDomain.getReferenceBook().getPlace() + "'";
 			from_book = true;
 		}
-		if (searchDomain.getPublisher() != null && !searchDomain.getPublisher().isEmpty()) {
-			where = where + "\nand k.publisher ilike '" + searchDomain.getPublisher() + "'";
+		if (searchDomain.getReferenceBook().getPublisher() != null && !searchDomain.getReferenceBook().getPublisher().isEmpty()) {
+			where = where + "\nand k.publisher ilike '" + searchDomain.getReferenceBook().getPublisher() + "'";
 			from_book = true;
 		}
-		if (searchDomain.getSeries_ed() != null && !searchDomain.getSeries_ed().isEmpty()) {
-			where = where + "\nand k.series_ed ilike '" + searchDomain.getSeries_ed() + "'";
+		if (searchDomain.getReferenceBook().getSeries_ed() != null && !searchDomain.getReferenceBook().getSeries_ed().isEmpty()) {
+			where = where + "\nand k.series_ed ilike '" + searchDomain.getReferenceBook().getSeries_ed() + "'";
 			from_book = true;
 		}			
 		
 		// bib_notes
-		if (searchDomain.getReferenceNote() != null && !searchDomain.getReferenceNote().isEmpty()) {
-			where = where + "\nand n.note ilike '" + searchDomain.getReferenceNote() + "'";
+		if (searchDomain.getReferenceNote().getNote() != null && !searchDomain.getReferenceNote().getNote().isEmpty()) {
+			where = where + "\nand n.note ilike '" + searchDomain.getReferenceNote().getNote() + "'";
 			from_note = true;
 		}
 

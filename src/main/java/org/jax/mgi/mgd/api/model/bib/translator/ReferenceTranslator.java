@@ -10,10 +10,6 @@ import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBookDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceNoteDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowRelevanceDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowStatusDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowTagDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jboss.logging.Logger;
@@ -23,11 +19,6 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 	protected Logger log = Logger.getLogger(getClass());
 	
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
-	private ReferenceNoteTranslator noteTranslator = new ReferenceNoteTranslator();
-	private ReferenceWorkflowDataTranslator wfDataTranslator = new ReferenceWorkflowDataTranslator();
-	private ReferenceWorkflowRelevanceTranslator wfRelevanceTranslator = new ReferenceWorkflowRelevanceTranslator();
-	private ReferenceWorkflowStatusTranslator wfStatusTranslator = new ReferenceWorkflowStatusTranslator();
-	private ReferenceWorkflowTagTranslator wfTagTranslator = new ReferenceWorkflowTagTranslator();
 
 	@Override
 	protected ReferenceDomain entityToDomain(Reference entity) {
@@ -69,24 +60,14 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		if (entity.getReferenceBook() != null && !entity.getReferenceBook().isEmpty()) {
 			ReferenceBookTranslator bookTranslator = new ReferenceBookTranslator();
 			Iterable<ReferenceBookDomain> book = bookTranslator.translateEntities(entity.getReferenceBook());
-			List<ReferenceBookDomain> bookList = IteratorUtils.toList(book.iterator());
-			domain.setBook_author(bookList.get(0).getBook_author());
-			domain.setBook_title(bookList.get(0).getBook_title());
-			domain.setPlace(bookList.get(0).getPlace());
-			domain.setPublisher(bookList.get(0).getPublisher());
-			domain.setSeries_ed(bookList.get(0).getSeries_ed());			
+			domain.setReferenceBook(book.iterator().next());		
 		}
-		
-		// reference book
-//		if (entity.getReferenceBook() != null && !entity.getReferenceBook().isEmpty()) {
-//			Iterable<ReferenceBookDomain> book = bookTranslator.translateEntities(entity.getReferenceBook());
-//			domain.setReferenceBook(book.iterator().next());		
-//		}
 		
 		// reference note
 		if (entity.getReferenceNote() != null && !entity.getReferenceNote().isEmpty()) {
+			ReferenceNoteTranslator noteTranslator = new ReferenceNoteTranslator();
 			Iterable<ReferenceNoteDomain> note = noteTranslator.translateEntities(entity.getReferenceNote());
-			domain.setReferenceNote(note.iterator().next().getNote());
+			domain.setReferenceNote(note.iterator().next());			
 		}
 		
 		// first mgi accession id only
@@ -116,30 +97,6 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 			//domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
 	
-		// workflow data
-		if (entity.getWorkflowData() != null && entity.getWorkflowData().isEmpty()) {
-			Iterable<ReferenceWorkflowDataDomain> wfData = wfDataTranslator.translateEntities(entity.getWorkflowData());
-			domain.setWorkflowData(IteratorUtils.toList(wfData.iterator()));			
-		}
-		
-		// workflow relevance
-		if (entity.getWorkflowRelevance() != null && entity.getWorkflowRelevance().isEmpty()) {
-			Iterable<ReferenceWorkflowRelevanceDomain> wfRelevance = wfRelevanceTranslator.translateEntities(entity.getWorkflowRelevance());
-			domain.setWorkflowRelevance(IteratorUtils.toList(wfRelevance.iterator()));			
-		}
-		
-		// workflow status
-		if (entity.getWorkflowStatus() != null && entity.getWorkflowStatus().isEmpty()) {
-			Iterable<ReferenceWorkflowStatusDomain> wfStatus = wfStatusTranslator.translateEntities(entity.getWorkflowStatus());
-			domain.setWorkflowStatus(IteratorUtils.toList(wfStatus.iterator()));			
-		}
-		
-		// workflow tag
-		if (entity.getWorkflowTag() != null && entity.getWorkflowTag().isEmpty()) {
-			Iterable<ReferenceWorkflowTagDomain> wfTag = wfTagTranslator.translateEntities(entity.getWorkflowTag());
-			domain.setWorkflowTag(IteratorUtils.toList(wfTag.iterator()));			
-		}
-		
 		return domain;
 	}
 

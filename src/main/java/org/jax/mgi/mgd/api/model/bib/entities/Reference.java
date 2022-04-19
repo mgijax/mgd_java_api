@@ -78,7 +78,7 @@ public class Reference extends BaseEntity {
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	private List<ReferenceBook> referenceBook;
 	
-	// at most one book note
+	// at most one note
 	@OneToMany()
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	private List<ReferenceNote> referenceNote;
@@ -101,25 +101,5 @@ public class Reference extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 1 and `_logicaldb_key` in (29, 65, 185)")
 	@OrderBy(clause ="accid")
 	private List<Accession> editAccessionIds;
-
-	// workflow data
-	@OneToMany()
-	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-	private List<ReferenceWorkflowData> workflowData;
-	
-	// workflow relevance
-	@OneToMany()
-	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-	private List<ReferenceWorkflowRelevance> workflowRelevance;
-	
-	// workflow status
-	@OneToMany()
-	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-	private List<ReferenceWorkflowStatus> workflowStatus;
-
-	// workflow tags
-	@OneToMany()
-	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-	private List<ReferenceWorkflowTag> workflowTag;	
 	
 }

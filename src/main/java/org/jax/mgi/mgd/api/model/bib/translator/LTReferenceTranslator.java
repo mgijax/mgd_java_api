@@ -108,7 +108,7 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 			} else {
 				domain.has_pdf = "Yes";
 			}
-			if ((workflowData.getExtracted_text() != null) && (workflowData.getExtractedtext().length() > 0)) {
+			if ((workflowData.getExtractedtext() != null) && (workflowData.getExtractedtext().length() > 0)) {
 				domain.has_extracted_text = "Yes";
 			} else {
 				domain.has_extracted_text = "No";

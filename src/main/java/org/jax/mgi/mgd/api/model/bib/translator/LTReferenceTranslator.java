@@ -26,7 +26,7 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		// basic 1-for-1 fields
 		domain.refsKey = String.valueOf(entity.get_refs_key());
 		domain.authors = entity.getAuthors();
-		domain.primary_author = entity.getPrimary_author();
+		domain.primary_author = entity.getPrimaryAuthor();
 		domain.title = entity.getTitle();
 		domain.journal = entity.getJournal();
 		domain.vol = entity.getVol();
@@ -102,13 +102,13 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		LTReferenceWorkflowData workflowData = entity.getWorkflowData();
 		if (workflowData != null) {
 			domain.has_supplemental = workflowData.getSupplemental();
-			domain.link_to_supplemental = workflowData.getLink_supplemental();
-			if (workflowData.getHas_pdf() == 0) {
+			domain.link_to_supplemental = workflowData.getLinksupplemental();
+			if (workflowData.getHaspdf() == 0) {
 				domain.has_pdf = "No";
 			} else {
 				domain.has_pdf = "Yes";
 			}
-			if ((workflowData.getExtracted_text() != null) && (workflowData.getExtracted_text().length() > 0)) {
+			if ((workflowData.getExtractedtext() != null) && (workflowData.getExtractedtext().length() > 0)) {
 				domain.has_extracted_text = "Yes";
 			} else {
 				domain.has_extracted_text = "No";

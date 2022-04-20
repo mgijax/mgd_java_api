@@ -38,48 +38,24 @@ import lombok.Setter;
 public class LTReference extends BaseEntity {
 
 	@Id
-	@Column(name="_Refs_key")
 	private Integer _refs_key;
-
-	@Column(name="authors")
 	private String authors;
-
-	@Column(name="_primary")
-	private String primary_author;
-
-	@Column(name="title")
 	private String title;
-
-	@Column(name="journal")
 	private String journal;
-
-	@Column(name="vol")
 	private String vol;
-
-	@Column(name="issue")
 	private String issue;
-
-	@Column(name="date")
 	private String date;
-
-	@Column(name="year")
 	private Integer year;
-
-	@Column(name="pgs")
 	private String pgs;
-
-	@Column(name="abstract")
-	private String referenceAbstract;		// just "abstract" is a Java reserved word, so need a prefix
-
-	@Column(name="isReviewArticle")
 	private int isReviewArticle;
-
-	@Column(name="creation_date")
 	private Date creation_date;
-
-	@Column(name="modification_date")
 	private Date modification_date;
 
+	@Column(name="_primary")
+	private String primaryAuthor;	
+	@Column(name="abstract")
+	private String referenceAbstract;		// just "abstract" is a Java reserved word, so need a prefix
+	
 	@OneToOne()
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
 	private LTReferenceStatusView statusView;
@@ -134,7 +110,7 @@ public class LTReference extends BaseEntity {
 
 	// one to many, because book data most often does not exist (leaving it 1-0)
 	@OneToMany()
-	@JoinColumn(name="_refs_key")
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	private List<ReferenceBook> referenceBook;
 
 	// one to one, because counts will always exist

@@ -17,7 +17,7 @@ public class ReferenceBookTranslator extends BaseEntityDomainTranslator<Referenc
 		
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);		
 		domain.setRefsKey(String.valueOf(entity.get_refs_key()));
-		domain.setBook_author(entity.getBook_author());
+		domain.setBook_author(entity.getBook_au());
 		domain.setBook_title(entity.getBook_title());
 		domain.setPlace(entity.getPlace());
 		domain.setPublisher(entity.getPublisher());

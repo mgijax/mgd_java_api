@@ -10,6 +10,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
  *	as possible
  */
 public class LTReferenceWorkflowStatusDomain extends BaseDomain {
+
 	public String refsKey;
 	public boolean is_current;
 	public String creation_date;

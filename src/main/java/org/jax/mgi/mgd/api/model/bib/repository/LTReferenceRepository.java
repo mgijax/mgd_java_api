@@ -71,6 +71,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	private ReferenceBookService bookService;
 	@Inject
 	private ReferenceNoteService noteService;
+//	@Inject
+//	private AccessionService accessionService;
 	
 	LTReferenceTranslator translator = new LTReferenceTranslator();
 
@@ -267,14 +269,14 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		boolean anyChanges = applyStatusChanges(entity, domain, currentUser);
 		anyChanges = applyTagChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyBasicFieldChanges(entity, domain, currentUser) || anyChanges;
-		anyChanges = applyBookChanges(entity, domain, currentUser) || anyChanges;       // now uses ReferenceBookService()
-		anyChanges = applyNoteChanges(entity, domain, currentUser) | anyChanges;        // now uses ReferenceNoteService()
+		anyChanges = applyBookChanges(entity, domain, currentUser) || anyChanges;       // uses ReferenceBookService()
+		anyChanges = applyNoteChanges(entity, domain, currentUser) | anyChanges;        // uses ReferenceNoteService()
 		anyChanges = applyAccessionIDChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyWorkflowDataChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyWorkflowRelevanceChanges(entity, domain, currentUser) || anyChanges;
-		anyChanges = applyAlleleAssocChanges(entity, domain.getAlleleAssocs(), currentUser) || anyChanges;		
-		anyChanges = applyStrainAssocChanges(entity, domain.getStrainAssocs(), currentUser) || anyChanges;		
-		anyChanges = applyMarkerAssocChanges(entity, domain.getMarkerAssocs(), currentUser) || anyChanges;
+		anyChanges = applyAlleleAssocChanges(entity, domain.getAlleleAssocs(), currentUser) || anyChanges;	// uses referenceAssocService	
+		anyChanges = applyStrainAssocChanges(entity, domain.getStrainAssocs(), currentUser) || anyChanges;	// uses referenceAssocService	
+		anyChanges = applyMarkerAssocChanges(entity, domain.getMarkerAssocs(), currentUser) || anyChanges;  // uses referenceAssocService
 
 		if (anyChanges) {
 			entity.setModificationInfo(currentUser);
@@ -322,7 +324,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			entity.setIsReviewArticle(rdReview);
 			entity.setAuthors(domain.authors);
 			String[] authors = domain.getAuthors().split(";");
-			entity.setPrimary_author(authors[0]);
+			entity.setPrimaryAuthor(authors[0]);
 			entity.setJournal(domain.journal);
 			entity.setTitle(domain.title);
 			entity.setVol(domain.vol);
@@ -493,6 +495,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				break;	}
 		}
 
+		// convert to:
+		//if (accessionService.process(domain.getRefsKey(), domain.getEditAccessionIds(), "1", currentUser)) {
+		
 		// If we had a previous ID for this logical database, we either need to modify it or delete it.
 		if (idPos >= 0) {
 			// Passing in a null ID indicates that any existing ID should be removed.
@@ -534,12 +539,15 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		return true;
 	}
 
-	/* apply any changes from domain to entity for the reference notes field
+	/* apply any changes from domain to entity for the reference notes 
 	 */
 	private boolean applyNoteChanges(LTReference entity, LTReferenceDomain domain, User user) {
-		// uses noteService()
 		log.info("applyNoteChanges()");
 
+		if (domain.getReferenceNote() == null) {
+			return(false);
+		}
+		
 		if (domain.getReferenceNote().getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
 			if (domain.getReferenceNote().getNote().isEmpty()) {
 				domain.getReferenceNote().setProcessStatus(Constants.PROCESS_DELETE);
@@ -555,18 +563,21 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		return(noteService.process(String.valueOf(entity.get_refs_key()), domain.getReferenceNote(), user));		
 	}
 
-	/* apply changes to book data fields from domain to entity
+	/* apply any changes from domain to entity for the reference book 
 	 */
 	private boolean applyBookChanges(LTReference entity, LTReferenceDomain domain, User user) {
-		// uses bookService()
 		log.info("applyBookChanges()");
-			
+		
+		if (domain.getReferenceBook() == null) {
+			return(false);
+		}
+	
 		if (domain.getReferenceBook().getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
 			// from book to not-a-book
 			if (entity.getReferenceTypeTerm().get_term_key() == 31576679 && !domain.getReferenceTypeKey().equals("31576679")) {
 				domain.getReferenceBook().setProcessStatus(Constants.PROCESS_DELETE);
 			}
-			else if (!smartEqual(entity.getReferenceBook().get(0).getBook_author(), domain.getReferenceBook().getBook_author()) || 
+			else if (!smartEqual(entity.getReferenceBook().get(0).getBook_au(), domain.getReferenceBook().getBook_author()) || 
 						!smartEqual(entity.getReferenceBook().get(0).getBook_title(), domain.getReferenceBook().getBook_title()) || 
 						!smartEqual(entity.getReferenceBook().get(0).getPlace(), domain.getReferenceBook().getPlace()) || 
 						!smartEqual(entity.getReferenceBook().get(0).getPublisher(), domain.getReferenceBook().getPublisher()) ||
@@ -637,10 +648,10 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			// has-PDF flag, as those are updated by other processes.
 
 			if (!smartEqual(myWD.getSupplemental(), domain.has_supplemental)
-					|| !smartEqual(myWD.getLink_supplemental(), domain.link_to_supplemental)) {
+					|| !smartEqual(myWD.getLinksupplemental(), domain.link_to_supplemental)) {
 
 				myWD.setSupplementalTerm(getTermByTerm(Constants.VOC_SUPPLEMENTAL, domain.has_supplemental));
-				myWD.setLink_supplemental(domain.link_to_supplemental);
+				myWD.setLinksupplemental(domain.link_to_supplemental);
 				myWD.setModifiedByUser(currentUser);
 				myWD.setModification_date(new Date());
 				anyChanges = true;
@@ -648,13 +659,12 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 		} else {
 			// For some reason, no workflow data record exists.  So, create one.
-
 			myWD = new LTReferenceWorkflowData();
 			myWD.set_refs_key(Integer.valueOf(domain.refsKey));
-			myWD.setHas_pdf(0);
+			myWD.setHaspdf(0);
 			myWD.setSupplementalTerm(getTermByTerm(Constants.VOC_SUPPLEMENTAL, domain.has_supplemental));
-			myWD.setLink_supplemental(domain.link_to_supplemental);
-			myWD.setExtracted_text(null);
+			myWD.setLinksupplemental(domain.link_to_supplemental);
+			myWD.setExtractedtext(null);
 			myWD.setCreatedByUser(currentUser);
 			myWD.setModifiedByUser(currentUser);
 			myWD.setCreation_date(new Date());

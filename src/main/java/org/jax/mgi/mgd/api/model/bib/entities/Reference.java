@@ -50,12 +50,11 @@ public class Reference extends BaseEntity {
 	private int isReviewArticle;
 	private Date creation_date;
 	private Date modification_date;
-
+	
+	@Column(name="_primary")
+	private String primaryAuthor;	
 	@Column(name="abstract")
 	private String referenceAbstract;
-
-	@Column(name="_primary")
-	private String primaryAuthor;
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")

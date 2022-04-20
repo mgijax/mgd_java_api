@@ -2,7 +2,6 @@ package org.jax.mgi.mgd.api.model.bib.entities;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -23,20 +22,12 @@ import lombok.Setter;
 @ApiModel(value = "Reference Workflow Status Model Object")
 @Table(name="bib_workflow_status")
 public class LTReferenceWorkflowStatus extends BaseEntity {
-	@Id
-	@Column(name="_assoc_key")
-	private int _assoc_key;
-
-	@Column(name="_refs_key")
-	private int _refs_key;
-
-	@Column(name="isCurrent")
-	private int isCurrent;
-
-	@Column(name="creation_date")
-	private Date creation_date;
 	
-	@Column(name="modification_date")
+	@Id
+	private int _assoc_key;
+	private int _refs_key;
+	private int isCurrent;
+	private Date creation_date;
 	private Date modification_date;
 	
 	@OneToOne

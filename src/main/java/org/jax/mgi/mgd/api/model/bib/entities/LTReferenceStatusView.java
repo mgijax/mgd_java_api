@@ -15,6 +15,7 @@ import lombok.Setter;
 @ApiModel(value = "Reference Status View Model Object")
 @Table(name="bib_status_view")
 public class LTReferenceStatusView extends BaseEntity {
+
 	@Id
 	private int _refs_key;
 	private String ap_status;

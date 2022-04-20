@@ -12,7 +12,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
 public class LTReferenceWorkflowStatusDomain extends BaseDomain {
 
 	public String refsKey;
-	public boolean is_current;
+	public boolean isCurrent;
 	public String creation_date;
 	public String modification_date;
 	public String group;
@@ -32,9 +32,9 @@ public class LTReferenceWorkflowStatusDomain extends BaseDomain {
 		this.group = rws.getGroup();
 		this.group_abbreviation = rws.getGroupAbbreviation();
 		this.status = rws.getStatus();
-		this.is_current = true;
+		this.isCurrent = true;
 		if (rws.getIsCurrent() == 0) {
-			this.is_current = false;
+			this.isCurrent = false;
 		}
 	}
 }

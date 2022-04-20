@@ -33,7 +33,7 @@ public class LTReferenceWorkflowData extends BaseEntity {
 	private int _refs_key;
 	private int has_pdf;
 	private String link_supplemental;
-	private String extracted_text;
+	private String extractedtext;
 	private Date creation_date;
 	private Date modification_date;
 	

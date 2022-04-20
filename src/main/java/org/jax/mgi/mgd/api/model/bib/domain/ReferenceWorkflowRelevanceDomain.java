@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class ReferenceWorkflowStatusDomain extends BaseDomain {
+public class ReferenceWorkflowRelevanceDomain extends BaseDomain {
 
 	private String processStatus;
 	private String assocKey;
@@ -15,8 +15,10 @@ public class ReferenceWorkflowStatusDomain extends BaseDomain {
 	private String groupKey;
 	private String group;
 	private String groupAbbrev;
-	private String statusKey;
-	private String status;
+	private String relevanceKey;
+	private String relevance;
+	private String confidence;
+	private String version;	
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

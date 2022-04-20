@@ -101,10 +101,21 @@ public class Reference extends BaseEntity {
 	@OrderBy(clause ="accid")
 	private List<Accession> editAccessionIds;
 	
-//	// workflow status
+	// workflow status
 //	@OneToMany()
 //	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 //	@OrderBy(clause="_group_key, isCurrent desc, modification_date")
 //	private List<ReferenceWorkflowStatus> workflowStatus;	
 	
+	// workflow relevance
+//	@OneToMany()
+//	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+//	@OrderBy(clause="_group_key, isCurrent desc, modification_date")
+//	private List<ReferenceWorkflowRelevance> workflowRelevance;	
+
+	// workflow tag
+//	@OneToMany()
+//	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+//	private List<ReferenceWorkflowTag> workflowTag;	
+		
 }

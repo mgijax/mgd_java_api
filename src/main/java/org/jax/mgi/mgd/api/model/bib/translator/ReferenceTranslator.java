@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.bib.translator;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.collections4.IteratorUtils;
@@ -104,6 +105,22 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 //			Iterable<ReferenceWorkflowStatusDomain> i = statusTranslator.translateEntities(entity.getWorkflowStatus());
 //			domain.setWorkflowStatus(IteratorUtils.toList(i.iterator()));
 //			//ordered in entity
+//		}
+
+		// one-to-many workflow relevance
+//		if (entity.getWorkflowRelevance() != null && !entity.getWorkflowRelevance().isEmpty()) {
+//			ReferenceWorkflowRelevanceTranslator statusTranslator = new ReferenceWorkflowRelevanceTranslator();
+//			Iterable<ReferenceWorkflowRelevanceDomain> i = relevanceTranslator.translateEntities(entity.getWorkflowRelevance());
+//			domain.setWorkflowRelevance(IteratorUtils.toList(i.iterator()));
+//			//ordered in entity
+//		}
+
+		// one-to-many workflow tag
+//		if (entity.getWorkflowTag() != null && !entity.getWorkflowTag().isEmpty()) {
+//			ReferenceWorkflowTagTranslator statusTranslator = new ReferenceWorkflowTagTranslator();
+//			Iterable<ReferenceWorkflowTagDomain> i = relevanceTranslator.translateEntities(entity.getWorkflowTag());
+//			domain.setWorkflowTag(IteratorUtils.toList(i.iterator()));
+//			domain.getWorkflowTag().sort(Comparator.comparing(ReferenceWorkflowTagDomain::getTag));
 //		}
 		
 		return domain;

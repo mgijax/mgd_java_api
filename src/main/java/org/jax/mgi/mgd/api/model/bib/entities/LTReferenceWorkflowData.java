@@ -2,7 +2,6 @@ package org.jax.mgi.mgd.api.model.bib.entities;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,23 +30,11 @@ public class LTReferenceWorkflowData extends BaseEntity {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="bib_workflow_data_generator")
 	@SequenceGenerator(name="bib_workflow_data_generator", sequenceName = "bib_workflow_data_seq", allocationSize=1)
 	private int _assoc_key;
-	
-	@Column(name="_refs_key")
 	private int _refs_key;
-
-	@Column(name="hasPDF")
 	private int has_pdf;
-
-	@Column(name="linkSupplemental")
 	private String link_supplemental;
-
-	@Column(name="extractedText")
 	private String extracted_text;
-
-	@Column(name="creation_date")
 	private Date creation_date;
-	
-	@Column(name="modification_date")
 	private Date modification_date;
 	
 	@OneToOne

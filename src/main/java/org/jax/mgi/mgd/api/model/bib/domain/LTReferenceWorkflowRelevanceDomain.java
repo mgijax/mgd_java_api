@@ -2,7 +2,6 @@ package org.jax.mgi.mgd.api.model.bib.domain;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
 
 /* Is: a domain object that represents data for a single workflow group relevance setting via the API
  * Has: data relating to a single workflow relevance status change for a single reference
@@ -11,6 +10,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
  *	as possible
  */
 public class LTReferenceWorkflowRelevanceDomain extends BaseDomain {
+
 	public String refsKey;
 	public boolean is_current;
 	public String creation_date;

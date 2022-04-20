@@ -2,7 +2,6 @@ package org.jax.mgi.mgd.api.model.bib.entities;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -23,8 +22,7 @@ public class ReferenceBook extends BaseEntity {
 	
 	@Id
 	private int _refs_key;
-	@Column(name="book_au")
-	private String book_author;
+	private String book_au;
 	private String book_title;
 	private String place;
 	private String publisher;

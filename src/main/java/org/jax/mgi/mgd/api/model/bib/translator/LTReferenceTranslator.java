@@ -26,7 +26,7 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		// basic 1-for-1 fields
 		domain.refsKey = String.valueOf(entity.get_refs_key());
 		domain.authors = entity.getAuthors();
-		domain.primary_author = entity.getPrimary_author();
+		domain.primary_author = entity.getPrimaryAuthor();
 		domain.title = entity.getTitle();
 		domain.journal = entity.getJournal();
 		domain.vol = entity.getVol();

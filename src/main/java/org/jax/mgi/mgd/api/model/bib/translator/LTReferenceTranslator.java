@@ -102,8 +102,8 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		LTReferenceWorkflowData workflowData = entity.getWorkflowData();
 		if (workflowData != null) {
 			domain.has_supplemental = workflowData.getSupplemental();
-			domain.link_to_supplemental = workflowData.getLink_supplemental();
-			if (workflowData.getHas_pdf() == 0) {
+			domain.link_to_supplemental = workflowData.getLinksupplemental();
+			if (workflowData.getHaspdf() == 0) {
 				domain.has_pdf = "No";
 			} else {
 				domain.has_pdf = "Yes";

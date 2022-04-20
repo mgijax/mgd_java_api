@@ -648,10 +648,10 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			// has-PDF flag, as those are updated by other processes.
 
 			if (!smartEqual(myWD.getSupplemental(), domain.has_supplemental)
-					|| !smartEqual(myWD.getLink_supplemental(), domain.link_to_supplemental)) {
+					|| !smartEqual(myWD.getLinksupplemental(), domain.link_to_supplemental)) {
 
 				myWD.setSupplementalTerm(getTermByTerm(Constants.VOC_SUPPLEMENTAL, domain.has_supplemental));
-				myWD.setLink_supplemental(domain.link_to_supplemental);
+				myWD.setLinksupplemental(domain.link_to_supplemental);
 				myWD.setModifiedByUser(currentUser);
 				myWD.setModification_date(new Date());
 				anyChanges = true;
@@ -661,9 +661,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			// For some reason, no workflow data record exists.  So, create one.
 			myWD = new LTReferenceWorkflowData();
 			myWD.set_refs_key(Integer.valueOf(domain.refsKey));
-			myWD.setHas_pdf(0);
+			myWD.setHaspdf(0);
 			myWD.setSupplementalTerm(getTermByTerm(Constants.VOC_SUPPLEMENTAL, domain.has_supplemental));
-			myWD.setLink_supplemental(domain.link_to_supplemental);
+			myWD.setLinksupplemental(domain.link_to_supplemental);
 			myWD.setExtractedtext(null);
 			myWD.setCreatedByUser(currentUser);
 			myWD.setModifiedByUser(currentUser);

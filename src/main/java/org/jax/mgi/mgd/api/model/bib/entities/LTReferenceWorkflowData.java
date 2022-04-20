@@ -31,8 +31,8 @@ public class LTReferenceWorkflowData extends BaseEntity {
 	@SequenceGenerator(name="bib_workflow_data_generator", sequenceName = "bib_workflow_data_seq", allocationSize=1)
 	private int _assoc_key;
 	private int _refs_key;
-	private int has_pdf;
-	private String link_supplemental;
+	private int haspdf;
+	private String linksupplemental;
 	private String extractedtext;
 	private Date creation_date;
 	private Date modification_date;

@@ -122,7 +122,6 @@ public class ReferenceBookService extends BaseService<ReferenceBookDomain> {
 			entity.set_refs_key(Integer.valueOf(parentKey));
 			
 			if (domain.getBook_author().isEmpty()) {
-			else {
 				entity.setBook_au(null);
 			}
 			else {

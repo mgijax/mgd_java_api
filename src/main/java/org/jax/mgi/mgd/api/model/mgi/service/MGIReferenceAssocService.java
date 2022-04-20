@@ -273,6 +273,11 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 			else {
 				objectKey = parentKey;
 			}
+			
+			// still no object...break
+			if (objectKey == null || objectKey.isEmpty()) {
+				break;
+			}
 
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 				// minimum domain info for create:

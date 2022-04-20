@@ -274,9 +274,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		anyChanges = applyAccessionIDChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyWorkflowDataChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyWorkflowRelevanceChanges(entity, domain, currentUser) || anyChanges;
-//		anyChanges = applyAlleleAssocChanges(entity, domain.getAlleleAssocs(), currentUser) || anyChanges;	// uses referenceAssocService	
-//		anyChanges = applyStrainAssocChanges(entity, domain.getStrainAssocs(), currentUser) || anyChanges;	// uses referenceAssocService	
-//		anyChanges = applyMarkerAssocChanges(entity, domain.getMarkerAssocs(), currentUser) || anyChanges;  // uses referenceAssocService
+		anyChanges = applyAlleleAssocChanges(entity, domain.getAlleleAssocs(), currentUser) || anyChanges;	// uses referenceAssocService	
+		anyChanges = applyStrainAssocChanges(entity, domain.getStrainAssocs(), currentUser) || anyChanges;	// uses referenceAssocService	
+		anyChanges = applyMarkerAssocChanges(entity, domain.getMarkerAssocs(), currentUser) || anyChanges;  // uses referenceAssocService
 
 		if (anyChanges) {
 			entity.setModificationInfo(currentUser);

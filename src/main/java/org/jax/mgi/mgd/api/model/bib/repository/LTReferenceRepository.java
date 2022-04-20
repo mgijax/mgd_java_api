@@ -71,6 +71,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	private ReferenceBookService bookService;
 	@Inject
 	private ReferenceNoteService noteService;
+//	@Inject
+//	private AccessionService accessionService;
 	
 	LTReferenceTranslator translator = new LTReferenceTranslator();
 
@@ -272,9 +274,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		anyChanges = applyAccessionIDChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyWorkflowDataChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyWorkflowRelevanceChanges(entity, domain, currentUser) || anyChanges;
-		anyChanges = applyAlleleAssocChanges(entity, domain.getAlleleAssocs(), currentUser) || anyChanges;		
-		anyChanges = applyStrainAssocChanges(entity, domain.getStrainAssocs(), currentUser) || anyChanges;		
-		anyChanges = applyMarkerAssocChanges(entity, domain.getMarkerAssocs(), currentUser) || anyChanges;
+		anyChanges = applyAlleleAssocChanges(entity, domain.getAlleleAssocs(), currentUser) || anyChanges;	// uses referenceAssocService	
+		anyChanges = applyStrainAssocChanges(entity, domain.getStrainAssocs(), currentUser) || anyChanges;	// uses referenceAssocService	
+		anyChanges = applyMarkerAssocChanges(entity, domain.getMarkerAssocs(), currentUser) || anyChanges;  // uses referenceAssocService
 
 		if (anyChanges) {
 			entity.setModificationInfo(currentUser);
@@ -493,6 +495,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				break;	}
 		}
 
+		// convert to:
+		//if (accessionService.process(domain.getRefsKey(), domain.getEditAccessionIds(), "1", currentUser)) {
+		
 		// If we had a previous ID for this logical database, we either need to modify it or delete it.
 		if (idPos >= 0) {
 			// Passing in a null ID indicates that any existing ID should be removed.
@@ -654,7 +659,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 		} else {
 			// For some reason, no workflow data record exists.  So, create one.
-
 			myWD = new LTReferenceWorkflowData();
 			myWD.set_refs_key(Integer.valueOf(domain.refsKey));
 			myWD.setHas_pdf(0);

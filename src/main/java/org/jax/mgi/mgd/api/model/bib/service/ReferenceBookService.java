@@ -122,10 +122,10 @@ public class ReferenceBookService extends BaseService<ReferenceBookDomain> {
 			entity.set_refs_key(Integer.valueOf(parentKey));
 			
 			if (domain.getBook_author().isEmpty()) {
-				entity.setBook_author(null);
+				entity.setBook_au(null);
 			}
 			else {
-				entity.setBook_author(domain.getBook_author());
+				entity.setBook_au(domain.getBook_author());
 			}
 	
 			if (domain.getBook_title().isEmpty()) {
@@ -173,10 +173,10 @@ public class ReferenceBookService extends BaseService<ReferenceBookDomain> {
 			entity.set_refs_key(Integer.valueOf(parentKey));
 
 			if (domain.getBook_author().isEmpty()) {
-				entity.setBook_author(null);
+				entity.setBook_au(null);
 			}
 			else {
-				entity.setBook_author(domain.getBook_author());
+				entity.setBook_au(domain.getBook_author());
 			}
 	
 			if (domain.getBook_author().isEmpty()) {

@@ -18,19 +18,14 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceWorkflowDataDAO;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceBookDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceNoteDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
 import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.service.TermService;
@@ -49,10 +44,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	@Inject
 	private ReferenceDAO referenceDAO;
 	@Inject
-	private ReferenceBookDAO bookDAO;
-	@Inject
-	private ReferenceNoteDAO noteDAO;
-	@Inject
 	private LTReferenceWorkflowDataDAO wfDataDAO;
 	@Inject
 	private TermDAO termDAO;
@@ -61,7 +52,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	@Inject
 	private TermService termService;
 	@Inject
-	private NoteService noteService;
+	private ReferenceBookService bookService;
+	@Inject
+	private ReferenceNoteService noteService;
 	
 	private ReferenceTranslator translator = new ReferenceTranslator();
 	private SlimReferenceTranslator slimtranslator = new SlimReferenceTranslator();	
@@ -161,61 +154,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// execute persist/insert/send to database
 		referenceDAO.persist(entity);
 				
-		// for books
-		if (domain.getReferenceTypeKey().equals("31576679")) {
-			ReferenceBook bookEntity = new ReferenceBook();
-			bookEntity.set_refs_key(entity.get_refs_key());
-			
-			if (domain.getReferenceBook().getBook_author().isEmpty()) {
-				bookEntity.setBook_author(null);
-			}
-			else {
-				bookEntity.setBook_author(domain.getReferenceBook().getBook_author());
-			}
-	
-			if (domain.getReferenceBook().getBook_author().isEmpty()) {
-				bookEntity.setBook_title(null);
-			}
-			else {
-				bookEntity.setBook_title(domain.getReferenceBook().getBook_author());
-			}
-			
-			if (domain.getReferenceBook().getPlace().isEmpty()) {
-				bookEntity.setPlace(null);
-			}
-			else {
-				bookEntity.setPlace(domain.getReferenceBook().getPlace());
-			}
-			
-			if (domain.getReferenceBook().getPublisher().isEmpty()) {
-				bookEntity.setPublisher(null);
-			}
-			else {
-				bookEntity.setPublisher(domain.getReferenceBook().getPublisher());
-			}
-									
-			if (domain.getReferenceBook().getSeries_ed().isEmpty()) {
-				bookEntity.setSeries_ed(null);
-			}
-			else {
-				bookEntity.setSeries_ed(domain.getReferenceBook().getSeries_ed());
-			}
-			
-			bookEntity.setCreation_date(new Date());
-			bookEntity.setModification_date(new Date());
-			bookDAO.persist(bookEntity);
-		}
+		// books
+		bookService.process(String.valueOf(entity.get_refs_key()), domain.getReferenceBook(), user);
 
 		// notes
-		if (domain.getReferenceNote() != null && !domain.getReferenceNote().isEmpty()) {
-			//noteService.process(String.valueOf(entity.get_refs_key()), domain.referenceNote(), "1", user);
-			ReferenceNote noteEntity = new ReferenceNote();
-			noteEntity.set_refs_key(entity.get_refs_key());
-			noteEntity.setNote(domain.referenceNote);			
-			noteEntity.setCreation_date(new Date());
-			noteEntity.setModification_date(new Date());
-			noteDAO.persist(noteEntity);			
-		}
+		noteService.process(String.valueOf(entity.get_refs_key()), domain.getReferenceNote(), user);
 				
 		// supplement = Not checked (31576677)
 		LTReferenceWorkflowData wfDataEntity = new LTReferenceWorkflowData();
@@ -348,90 +291,15 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// add modification 
 		entity.setModifiedBy(user);
 		entity.setModification_date(new Date());
-		
+
 		// execute persist/insert/send to database
 		referenceDAO.persist(entity);
-				
-		// replaces LTReferenceRepository/applyBookChanges()
-		// for books
-		ReferenceBook bookEntity;			
 		
-		// if !book but a book exists, then delete book
-		if (!domain.getReferenceTypeKey().equals("31576679") && domain.getReferenceBook() != null) {
-			bookEntity = bookDAO.get(Integer.valueOf(domain.getRefsKey()));
-			bookDAO.remove(entity);
-		}
-		// if book, and book does not exists, the create new book, else, update existing book
-		else if (domain.getReferenceTypeKey().equals("31576679")) {
-						
-			if (domain.getReferenceBook() == null) {
-				bookEntity = new ReferenceBook();
-				bookEntity.setCreation_date(new Date());				
-			}
-			else {
-				bookEntity = bookDAO.get(Integer.valueOf(domain.getRefsKey()));
-			}
-			
-			bookEntity.set_refs_key(entity.get_refs_key());
-			
-			if (domain.getReferenceBook().getBook_author().isEmpty()) {
-				bookEntity.setBook_author(null);
-			}
-			else {
-				bookEntity.setBook_author(domain.getReferenceBook().getBook_author());
-			}
-	
-			if (domain.getReferenceBook().getBook_author().isEmpty()) {
-				bookEntity.setBook_title(null);
-			}
-			else {
-				bookEntity.setBook_title(domain.getReferenceBook().getBook_author());
-			}
-			
-			if (domain.getReferenceBook().getPlace().isEmpty()) {
-				bookEntity.setPlace(null);
-			}
-			else {
-				bookEntity.setPlace(domain.getReferenceBook().getPlace());
-			}
-			
-			if (domain.getReferenceBook().getPublisher().isEmpty()) {
-				bookEntity.setPublisher(null);
-			}
-			else {
-				bookEntity.setPublisher(domain.getReferenceBook().getPublisher());
-			}
-									
-			if (domain.getReferenceBook().getSeries_ed().isEmpty()) {
-				bookEntity.setSeries_ed(null);
-			}
-			else {
-				bookEntity.setSeries_ed(domain.getReferenceBook().getSeries_ed());
-			}
-			
-			bookEntity.setModification_date(new Date());
-			bookDAO.persist(bookEntity);
-		}
-
-//		// notes
-//		// replaces LTReferenceRepository/applyBookChanges()
-//		// for books
-//		ReferenceNote noteEntity;			
-//		
-//		// if !note but a note exists, then delete note
-//		if (domain.getReferenceNote != null) {
-//			bookEntity = bookDAO.get(Integer.valueOf(domain.getRefsKey()));
-//			bookDAO.remove(entity);
-//		}		
-//		if (domain.getReferenceNote() != null && !domain.getReferenceNote().isEmpty()) {
-//			//noteService.process(String.valueOf(entity.get_refs_key()), domain.referenceNote(), "1", user);
-//			ReferenceNote noteEntity = new ReferenceNote();
-//			noteEntity.set_refs_key(entity.get_refs_key());
-//			noteEntity.setNote(domain.referenceNote);			
-//			noteEntity.setCreation_date(new Date());
-//			noteEntity.setModification_date(new Date());
-//			noteDAO.persist(noteEntity);			
-//		}
+		// books
+		bookService.process(domain.getRefsKey(), domain.getReferenceBook(), user);	
+		
+		// notes
+		noteService.process(domain.getRefsKey(), domain.getReferenceNote(), user);
 		
 		// supplemental
 //		LTReferenceWorkflowData wfDataEntity = new LTReferenceWorkflowData();
@@ -468,7 +336,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 //			aresults.add(accessionDomain);
 //			accessionService.process(String.valueOf(entity.get_refs_key()), aresults, "Reference", user);
 //		}
-				
+
 		// reload bib_citation_cache
 		String cmd = "select count(*) from BIB_reloadCache (" + entity.get_refs_key() + ")";
 		log.info("cmd: " + cmd);
@@ -695,8 +563,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}			
 		
 		// bib_notes
-		if (searchDomain.getReferenceNote() != null && !searchDomain.getReferenceNote().isEmpty()) {
-			where = where + "\nand n.note ilike '" + searchDomain.getReferenceNote() + "'";
+		if (searchDomain.getReferenceNote().getNote() != null && !searchDomain.getReferenceNote().getNote().isEmpty()) {
+			where = where + "\nand n.note ilike '" + searchDomain.getReferenceNote().getNote() + "'";
 			from_note = true;
 		}
 

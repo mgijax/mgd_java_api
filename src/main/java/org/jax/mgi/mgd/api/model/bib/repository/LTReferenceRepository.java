@@ -28,8 +28,8 @@ import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
+import org.jax.mgi.mgd.api.model.bib.service.ReferenceBookService;
+import org.jax.mgi.mgd.api.model.bib.service.ReferenceNoteService;
 import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceMarkerAssocDomain;
@@ -67,6 +67,10 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	private MGITypeDAO mgiTypeDAO;
 	@Inject
 	private MGIReferenceAssocService referenceAssocService;	
+	@Inject
+	private ReferenceBookService bookService;
+	@Inject
+	private ReferenceNoteService noteService;
 	
 	LTReferenceTranslator translator = new LTReferenceTranslator();
 
@@ -263,8 +267,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		boolean anyChanges = applyStatusChanges(entity, domain, currentUser);
 		anyChanges = applyTagChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyBasicFieldChanges(entity, domain, currentUser) || anyChanges;
-		anyChanges = applyBookChanges(entity, domain, currentUser) || anyChanges;
-		anyChanges = applyNoteChanges(entity, domain, currentUser) | anyChanges;
+		anyChanges = applyBookChanges(entity, domain, currentUser) || anyChanges;       // now uses ReferenceBookService()
+		anyChanges = applyNoteChanges(entity, domain, currentUser) | anyChanges;        // now uses ReferenceNoteService()
 		anyChanges = applyAccessionIDChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyWorkflowDataChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyWorkflowRelevanceChanges(entity, domain, currentUser) || anyChanges;
@@ -532,99 +536,49 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	/* apply any changes from domain to entity for the reference notes field
 	 */
-	private boolean applyNoteChanges(LTReference entity, LTReferenceDomain domain, User currentUser) {
-		// at most one note per reference
-		// need to handle:  new note, updated note, deleted note
+	private boolean applyNoteChanges(LTReference entity, LTReferenceDomain domain, User user) {
+		// uses noteService()
+		log.info("applyNoteChanges()");
 
-		boolean anyChanges = false;
-		boolean hadNote = entity.getNotes().size() > 0;
-		boolean willHaveNote = (domain.referenceNote != null) && (domain.referenceNote.length() > 0);
-		
-		if (hadNote && willHaveNote) {
-			// already have a note and will continue to have a note; just need to apply any difference
-
-			ReferenceNote note = entity.getNotes().get(0);
-			if (!smartEqual(note.getNote(), domain.referenceNote)) {
-				note.setNote(DecodeString.setDecodeToLatin9(domain.referenceNote).replace("''",  "'"));
-				anyChanges = true;
+		if (domain.getReferenceNote().getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
+			if (domain.getReferenceNote().getNote().isEmpty()) {
+				domain.getReferenceNote().setProcessStatus(Constants.PROCESS_DELETE);
 			}
-
-		} else if (hadNote) {
-			// had a note previously, but it needs to be deleted, because reference now has no note
-
-			referenceDAO.remove(entity.getNotes().get(0));
-			anyChanges = true;
-
-		} else if (willHaveNote) {
-			// did not have a note previously, but now need to create one
-
-			ReferenceNote note = new ReferenceNote();
-			note.set_refs_key(entity.get_refs_key());
-			note.setNote(DecodeString.setDecodeToLatin9(domain.referenceNote).replace("''",  "'"));			
-			note.setCreation_date(new Date());
-			note.setModification_date(note.getCreation_date()); 
-			referenceDAO.persist(note);
-			entity.getNotes().add(note);
-			anyChanges = true;
+			else if (!smartEqual(entity.getReferenceNote().get(0).getNote(), domain.getReferenceNote().getNote())) {
+				domain.getReferenceNote().setProcessStatus(Constants.PROCESS_UPDATE);				
+			}
 		}
-			
-		return anyChanges;
+		else {
+			domain.getReferenceNote().setProcessStatus(Constants.PROCESS_CREATE);							
+		}
+		
+		return(noteService.process(String.valueOf(entity.get_refs_key()), domain.getReferenceNote(), user));		
 	}
 
 	/* apply changes to book data fields from domain to entity
 	 */
-	private boolean applyBookChanges(LTReference entity, LTReferenceDomain domain, User currentUser) {
-		// at most one set of book data per reference
-		// need to handle:  deleted book data, updated book data, new book data
-
-		boolean anyChanges = false;
-		boolean wasBook = "Book".equalsIgnoreCase(entity.getReferenceType());
-		boolean willBeBook = "Book".equalsIgnoreCase(domain.referenceType);
-
-		// If this reference is already a book and will continue to be a book, need to apply
-		// any changes to the fields of the existing book data.
-		if (wasBook && willBeBook && (entity.getReferenceBook().size() > 0)) {
-			ReferenceBook book = entity.getReferenceBook().get(0);
-
-			if (!smartEqual(book.getBook_author(), domain.getReferenceBook().getBook_author()) || 
-					!smartEqual(book.getBook_title(), domain.getReferenceBook().getBook_title()) || 
-					!smartEqual(book.getPlace(), domain.getReferenceBook().getPlace()) || 
-					!smartEqual(book.getPublisher(), domain.getReferenceBook().getPublisher()) ||
-					!smartEqual(book.getSeries_ed(), domain.getReferenceBook().getSeries_ed())) {
-
-				book.setBook_author(domain.getReferenceBook().getBook_author());
-				book.setBook_title(domain.getReferenceBook().getBook_title());
-				book.setPlace(domain.getReferenceBook().getPlace());
-				book.setPublisher(domain.getReferenceBook().getPublisher());
-				book.setSeries_ed(domain.getReferenceBook().getSeries_ed());
-				book.setModification_date(new Date());
-				anyChanges = true;
+	private boolean applyBookChanges(LTReference entity, LTReferenceDomain domain, User user) {
+		// uses bookService()
+		log.info("applyBookChanges()");
+			
+		if (domain.getReferenceBook().getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
+			// from book to not-a-book
+			if (entity.getReferenceTypeTerm().get_term_key() == 31576679 && !domain.getReferenceTypeKey().equals("31576679")) {
+				domain.getReferenceBook().setProcessStatus(Constants.PROCESS_DELETE);
 			}
-
-		} else if (wasBook && (entity.getReferenceBook().size() > 0)) {
-			// This reference was a book previously, but its type has changed, so need to delete book-specific data.
-
-			referenceDAO.remove(entity.getReferenceBook().get(0));
-			anyChanges = true;
-
-		} else if (willBeBook) {
-			// This reference was not a book previously, but now will be, so we need to add book-specific data.
-
-			ReferenceBook book = new ReferenceBook();			
-			book.set_refs_key(entity.get_refs_key());
-			book.setBook_author(domain.getReferenceBook().getBook_author());
-			book.setBook_title(domain.getReferenceBook().getBook_title());
-			book.setPlace(domain.getReferenceBook().getPlace());
-			book.setPublisher(domain.getReferenceBook().getPublisher());
-			book.setSeries_ed(domain.getReferenceBook().getSeries_ed());			
-			book.setCreation_date(new Date());
-			book.setModification_date(book.getCreation_date()); 
-
-			referenceDAO.persist(book);
-			entity.getReferenceBook().add(book);
-			anyChanges = true;
+			else if (!smartEqual(entity.getReferenceBook().get(0).getBook_author(), domain.getReferenceBook().getBook_author()) || 
+						!smartEqual(entity.getReferenceBook().get(0).getBook_title(), domain.getReferenceBook().getBook_title()) || 
+						!smartEqual(entity.getReferenceBook().get(0).getPlace(), domain.getReferenceBook().getPlace()) || 
+						!smartEqual(entity.getReferenceBook().get(0).getPublisher(), domain.getReferenceBook().getPublisher()) ||
+						!smartEqual(entity.getReferenceBook().get(0).getSeries_ed(), domain.getReferenceBook().getSeries_ed())) {					
+				domain.getReferenceBook().setProcessStatus(Constants.PROCESS_UPDATE);
+			}
 		}
-		return anyChanges;
+		else {
+			domain.getReferenceBook().setProcessStatus(Constants.PROCESS_CREATE);							
+		}
+					
+		return(bookService.process(String.valueOf(entity.get_refs_key()), domain.getReferenceBook(), user));		
 	}
 
 	/* apply changes in workflow relevance from domain to entity

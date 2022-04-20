@@ -44,11 +44,10 @@ public class ReferenceDomain extends BaseDomain {
 	public String doiid;
 	public String pubmedid;
 	public String gorefid;
-	
-	public String referenceNote;
-	
+		
 	private ReferenceBookDomain referenceBook;
-	private ReferenceNoteDomain referenceNoteD;
+	private ReferenceNoteDomain referenceNote;
+	
 	//private List<AccessionDomain> mgiAccessionIds;
 	//private List<AccessionDomain> editAccessionIds;
 	

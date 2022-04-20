@@ -84,12 +84,11 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 			if (flags.getHas_strain() != 0) { domain.associated_data.add("Strain"); }			
 		}
 			
-		// reference note
-		if (entity.getNotes() != null && !entity.getNotes().isEmpty()) {
-			ReferenceNoteTranslator noteTranslator = new ReferenceNoteTranslator();			
-			Iterable<ReferenceNoteDomain> note = noteTranslator.translateEntities(entity.getNotes());
-			domain.setReferenceNote(note.iterator().next().getNote());
-			domain.setReferenceNoteD(note.iterator().next());			
+		// at most one reference note
+		if (entity.getReferenceNote() != null && !entity.getReferenceNote().isEmpty()) {
+			ReferenceNoteTranslator noteTranslator = new ReferenceNoteTranslator();
+			Iterable<ReferenceNoteDomain> note = noteTranslator.translateEntities(entity.getReferenceNote());
+			domain.setReferenceNote(note.iterator().next());
 		}
 		
 		// at most one reference book

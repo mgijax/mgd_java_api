@@ -67,8 +67,7 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		if (entity.getReferenceNote() != null && !entity.getReferenceNote().isEmpty()) {
 			ReferenceNoteTranslator noteTranslator = new ReferenceNoteTranslator();
 			Iterable<ReferenceNoteDomain> note = noteTranslator.translateEntities(entity.getReferenceNote());
-			domain.setReferenceNote(note.iterator().next().getNote());
-			domain.setReferenceNoteD(note.iterator().next());			
+			domain.setReferenceNote(note.iterator().next());			
 		}
 		
 		// first mgi accession id only

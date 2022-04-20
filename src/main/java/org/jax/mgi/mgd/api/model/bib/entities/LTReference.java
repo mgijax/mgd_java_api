@@ -122,11 +122,11 @@ public class LTReference extends BaseEntity {
 	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")
 	private Term referenceTypeTerm;
 
-	// one to many, because notes might not exist (leaving it 1-0)
+	// at most one note
 	@OneToMany()
-	@JoinColumn(name="_refs_key")
-	private List<ReferenceNote> notes;
-
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+	private List<ReferenceNote> referenceNote;
+	
 	// one to many, because row in citation cache might not exist (leaving it 1-0)
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key")
@@ -134,7 +134,7 @@ public class LTReference extends BaseEntity {
 
 	// one to many, because book data most often does not exist (leaving it 1-0)
 	@OneToMany()
-	@JoinColumn(name="_refs_key")
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	private List<ReferenceBook> referenceBook;
 
 	// one to one, because counts will always exist

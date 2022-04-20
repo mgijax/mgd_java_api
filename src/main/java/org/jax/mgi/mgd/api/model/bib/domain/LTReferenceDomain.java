@@ -32,10 +32,11 @@ public class LTReferenceDomain extends BaseDomain {
 	public String date;
 	public String year;
 	public String pgs;
-	public String isReviewArticle;	
-
-	// books
-	private ReferenceBookDomain referenceBook;
+	public String referenceAbstract;
+	public String isReviewArticle;
+	public String referenceTypeKey;
+	public String referenceType;
+	public String short_citation;
 
 	// accession ids
 	public String mgiid;	
@@ -44,12 +45,8 @@ public class LTReferenceDomain extends BaseDomain {
 	public String pubmedid;
 	public String gorefid;
 	
-	public String referenceType;
-	public String referenceTypeKey;
-	public String referenceAbstract;
-	public String short_citation;
-	public String referenceNote;	
-	private ReferenceNoteDomain referenceNoteD;
+	private ReferenceBookDomain referenceBook;
+	private ReferenceNoteDomain referenceNote;
 
 	// workflow status
 	public String ap_status;

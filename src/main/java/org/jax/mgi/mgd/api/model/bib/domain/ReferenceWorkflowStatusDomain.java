@@ -8,11 +8,13 @@ import lombok.Setter;
 @Getter @Setter
 public class ReferenceWorkflowStatusDomain extends BaseDomain {
 
+	private String processStatus;
+	private String assocKey;
 	private String refsKey;
-	private boolean isCurrent;
+	private String isCurrent;
 	private String groupKey;
 	private String group;
-	private String group_abbreviation;
+	private String groupAbbrev;
 	private String statusKey;
 	private String status;
 	private String createdByKey;

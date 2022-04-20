@@ -63,6 +63,8 @@ public class ReferenceDomain extends BaseDomain {
 	private List<MGIReferenceMarkerAssocDomain> markerAssocs;
 	private List<MGIReferenceStrainAssocDomain> strainAssocs;
 
+	//private List<ReferenceWorkflowStatusDomain> workflowStatus;
+	
 	// ReferenceCitationCache not included in domain at this time 
 	
 	// to handle current searching parameters (replaces LTReferenceDAO.java/search())

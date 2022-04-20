@@ -10,6 +10,7 @@ import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBookDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceNoteDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jboss.logging.Logger;
@@ -96,7 +97,15 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 			//domain.getEditAccessionIds(IteratorUtils.toList(acc.iterator()));
 			//domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
-	
+
+		// one-to-many workflow status
+//		if (entity.getWorkflowStatus() != null && !entity.getWorkflowStatus().isEmpty()) {
+//			ReferenceWorkflowStatusTranslator statusTranslator = new ReferenceWorkflowStatusTranslator();
+//			Iterable<ReferenceWorkflowStatusDomain> i = statusTranslator.translateEntities(entity.getWorkflowStatus());
+//			domain.setWorkflowStatus(IteratorUtils.toList(i.iterator()));
+//			//ordered in entity
+//		}
+		
 		return domain;
 	}
 

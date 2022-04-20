@@ -276,7 +276,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 			
 			// still no object...break
 			if (objectKey == null || objectKey.isEmpty()) {
-				break;
+				continue;
 			}
 
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {

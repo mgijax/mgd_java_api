@@ -10,82 +10,85 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceBookDAO;
-import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBookDomain;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
-import org.jax.mgi.mgd.api.model.bib.translator.ReferenceBookTranslator;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceWorkflowStatusDAO;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowStatusDomain;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
+import org.jax.mgi.mgd.api.model.bib.translator.ReferenceWorkflowStatusTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
 @RequestScoped
-public class ReferenceWorkflowStatusService extends BaseService<ReferenceBookDomain> {
+public class ReferenceWorkflowStatusService extends BaseService<ReferenceWorkflowStatusDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
 
 	@Inject
-	private ReferenceBookDAO bookDAO;
-
-	private ReferenceBookTranslator translator = new ReferenceBookTranslator();						
+	private ReferenceWorkflowStatusDAO statusDAO;
+	@Inject
+	private TermDAO termDAO;
+	
+	private ReferenceWorkflowStatusTranslator translator = new ReferenceWorkflowStatusTranslator();						
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
-	public SearchResults<ReferenceBookDomain> create(ReferenceBookDomain domain, User user) {
-		SearchResults<ReferenceBookDomain> results = new SearchResults<ReferenceBookDomain>();
+	public SearchResults<ReferenceWorkflowStatusDomain> create(ReferenceWorkflowStatusDomain domain, User user) {
+		SearchResults<ReferenceWorkflowStatusDomain> results = new SearchResults<ReferenceWorkflowStatusDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
 	}
 
 	@Transactional
-	public SearchResults<ReferenceBookDomain> update(ReferenceBookDomain domain, User user) {
-		SearchResults<ReferenceBookDomain> results = new SearchResults<ReferenceBookDomain>();
+	public SearchResults<ReferenceWorkflowStatusDomain> update(ReferenceWorkflowStatusDomain domain, User user) {
+		SearchResults<ReferenceWorkflowStatusDomain> results = new SearchResults<ReferenceWorkflowStatusDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
 	}
 
 	@Transactional
-	public ReferenceBookDomain get(Integer key) {
+	public ReferenceWorkflowStatusDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain
-		ReferenceBookDomain domain = new ReferenceBookDomain();
-		if (bookDAO.get(key) != null) {
-			domain = translator.translate(bookDAO.get(key));
+		ReferenceWorkflowStatusDomain domain = new ReferenceWorkflowStatusDomain();
+		if (statusDAO.get(key) != null) {
+			domain = translator.translate(statusDAO.get(key));
 		}
-		bookDAO.clear();
+		statusDAO.clear();
 		return domain;
 	}
 
     @Transactional
-    public SearchResults<ReferenceBookDomain> getResults(Integer key) {
-        SearchResults<ReferenceBookDomain> results = new SearchResults<ReferenceBookDomain>();
-        results.setItem(translator.translate(bookDAO.get(key)));
-        bookDAO.clear();
+    public SearchResults<ReferenceWorkflowStatusDomain> getResults(Integer key) {
+        SearchResults<ReferenceWorkflowStatusDomain> results = new SearchResults<ReferenceWorkflowStatusDomain>();
+        results.setItem(translator.translate(statusDAO.get(key)));
+        statusDAO.clear();
         return results;
     }
 
 	@Transactional
-	public SearchResults<ReferenceBookDomain> delete(Integer key, User user) {
-		SearchResults<ReferenceBookDomain> results = new SearchResults<ReferenceBookDomain>();
+	public SearchResults<ReferenceWorkflowStatusDomain> delete(Integer key, User user) {
+		SearchResults<ReferenceWorkflowStatusDomain> results = new SearchResults<ReferenceWorkflowStatusDomain>();
 		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
 		return results;
 	}
 	
 	@Transactional	
-	public List<ReferenceBookDomain> search(Integer key) {
+	public List<ReferenceWorkflowStatusDomain> search(Integer key) {
 
-		List<ReferenceBookDomain> results = new ArrayList<ReferenceBookDomain>();
+		List<ReferenceWorkflowStatusDomain> results = new ArrayList<ReferenceWorkflowStatusDomain>();
 
-		String cmd = "\nselect _refs_key from bib_book where _refs_key = " + key;
+		String cmd = "\nselect _refs_key from bib_workflow_statu where _refs_key = " + key;
 		
 		log.info(cmd);
 
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				ReferenceBookDomain domain = new ReferenceBookDomain();	
-				domain = translator.translate(bookDAO.get(rs.getInt("_refs_key")));
-				bookDAO.clear();
+				ReferenceWorkflowStatusDomain domain = new ReferenceWorkflowStatusDomain();	
+				domain = translator.translate(statusDAO.get(rs.getInt("_refs_key")));
+				statusDAO.clear();
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();
@@ -98,125 +101,66 @@ public class ReferenceWorkflowStatusService extends BaseService<ReferenceBookDom
 	}	
 	
 	@Transactional
-	public Boolean process(String parentKey, ReferenceBookDomain domain, User user) {
-		// process reference notes (create, delete, update)
+	public Boolean process(String parentKey, List<ReferenceWorkflowStatusDomain> domain, User user) {
+		// process workflow status (create, delete, update)
 		
 		Boolean modified = false;
 		
-		log.info("processReferenceBook");
+		if (domain == null || domain.isEmpty()) {
+			log.info("processWorkflowStatus/nothing to process");
+			return modified;
+		}
+						
+		// iterate thru the list of rows in the domain
+		// for each row, determine whether to perform an insert, delete or update
 		
-		if (!domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-			if (domain.getBook_author().isEmpty()
-				&& domain.getBook_title().isEmpty()
-				&& domain.getPlace().isEmpty()
-				&& domain.getPublisher().isEmpty()
-				&& domain.getSeries_ed().isEmpty()) {
-				log.info("processReferenceBook/nothing to process");
-				return modified;
+		for (int i = 0; i < domain.size(); i++) {
+			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {				
+				log.info("processWorkflowStatus create");				
+				
+				// if status is empty, then skip
+				// pwi has sent a "c" that is empty/not being used
+				if (domain.get(i).getStatusKey().isEmpty()) {
+					continue;
+				}
+				
+				ReferenceWorkflowStatus entity = new ReferenceWorkflowStatus();						
+				entity.setGroupTerm(termDAO.get(Integer.valueOf(domain.get(i).getGroupKey())));		
+				entity.setStatusTerm(termDAO.get(Integer.valueOf(domain.get(i).getStatusKey())));
+				entity.setIsCurrent(1);
+				entity.setCreation_date(new Date());
+				entity.setCreatedBy(user);
+		        entity.setModification_date(new Date());
+				entity.setModifiedBy(user);
+				statusDAO.persist(entity);				
+				modified = true;
+				log.info("processWorkflowStatus create successful");
 			}
-		}
-										
-		if (domain.getProcessStatus().equals(Constants.PROCESS_CREATE)) {
-			log.info("processReferenceBook create");
-			ReferenceBook entity = new ReferenceBook();
-			entity.set_refs_key(Integer.valueOf(parentKey));
-			
-			if (domain.getBook_author().isEmpty()) {
-				entity.setBook_au(null);
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+				log.info("processWorkflowStatus delete");
+				ReferenceWorkflowStatus entity = statusDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
+				statusDAO.remove(entity);
+				modified = true;
+				log.info("processWorkflowStatus delete successful");
 			}
-			else {
-				entity.setBook_au(domain.getBook_author());
-			}
-	
-			if (domain.getBook_title().isEmpty()) {
-				entity.setBook_title(null);
-			}
-			else {
-				entity.setBook_title(domain.getBook_author());
-			}
-			
-			if (domain.getPlace().isEmpty()) {
-				entity.setPlace(null);
-			}
-			else {
-				entity.setPlace(domain.getPlace());
-			}
-			
-			if (domain.getPublisher().isEmpty()) {
-				entity.setPublisher(null);
-			}
-			else {
-				entity.setPublisher(domain.getPublisher());
-			}
-									
-			if (domain.getSeries_ed().isEmpty()) {
-				entity.setSeries_ed(null);
+			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {								
+				log.info("processWorkflowStatus update");			
+				ReferenceWorkflowStatus entity = statusDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
+				entity.setGroupTerm(termDAO.get(Integer.valueOf(domain.get(i).getGroupKey())));		
+				entity.setStatusTerm(termDAO.get(Integer.valueOf(domain.get(i).getStatusKey())));
+				entity.setIsCurrent(0);
+				entity.setModification_date(new Date());
+				entity.setModifiedBy(user);
+				statusDAO.update(entity);				
+				modified = true;
+				log.info("processWorkflowStatus/changes processed: " + domain.get(i).getAssocKey());
 			}
 			else {
-				entity.setSeries_ed(domain.getSeries_ed());
+				log.info("processWorkflowStatus/no changes processed: " + domain.get(i).getAssocKey());
 			}
-			
-			entity.setCreation_date(new Date());				
-			entity.setModification_date(new Date());
-			bookDAO.persist(entity);				
-			modified = true;
-		}
-		else if (domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-			log.info("processReferenceBook delete");				
-			ReferenceBook entity = bookDAO.get(Integer.valueOf(domain.getRefsKey()));
-			bookDAO.remove(entity);
-			modified = true;
-		}
-		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-			log.info("processReferenceBook update");								
-			ReferenceBook entity = bookDAO.get(Integer.valueOf(parentKey));				
-			entity.set_refs_key(Integer.valueOf(parentKey));
-
-			if (domain.getBook_author().isEmpty()) {
-				entity.setBook_au(null);
-			}
-			else {
-				entity.setBook_au(domain.getBook_author());
-			}
-	
-			if (domain.getBook_author().isEmpty()) {
-				entity.setBook_title(null);
-			}
-			else {
-				entity.setBook_title(domain.getBook_author());
-			}
-			
-			if (domain.getPlace().isEmpty()) {
-				entity.setPlace(null);
-			}
-			else {
-				entity.setPlace(domain.getPlace());
-			}
-			
-			if (domain.getPublisher().isEmpty()) {
-				entity.setPublisher(null);
-			}
-			else {
-				entity.setPublisher(domain.getPublisher());
-			}
-									
-			if (domain.getSeries_ed().isEmpty()) {
-				entity.setSeries_ed(null);
-			}
-			else {
-				entity.setSeries_ed(domain.getSeries_ed());
-			}
-			
-			entity.setModification_date(new Date());
-			bookDAO.update(entity);
-			modified = true;
-			log.info("processReferenceBook/changes processed: " + domain.getRefsKey());
-		}
-		else {
-			log.info("processReferenceBook/no changes processed: " + domain.getRefsKey());
 		}
 		
-		log.info("processReferenceBook/processing successful");
+		log.info("processWorkflowStatus/processing successful");
 		return modified;
 	}
 	

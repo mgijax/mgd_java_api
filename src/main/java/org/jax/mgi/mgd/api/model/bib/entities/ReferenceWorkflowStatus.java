@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.bib.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,6 +31,8 @@ public class ReferenceWorkflowStatus extends BaseEntity {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="bib_workflow_status_generator")
 	@SequenceGenerator(name="bib_workflow_status_generator", sequenceName = "bib_workflow_status_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")	
+	private int _assoc_key;
+
 	private int _refs_key;
 	private int isCurrent;
 	private Date creation_date;
@@ -43,12 +46,12 @@ public class ReferenceWorkflowStatus extends BaseEntity {
 	@JoinColumn(name="_status_key", referencedColumnName="_term_key")
 	private Term statusTerm;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
-	private User createdByUser;
-	
-	@OneToOne
+	private User createdBy;
+
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
-	private User modifiedByUser;
+	private User modifiedBy;
 
 }

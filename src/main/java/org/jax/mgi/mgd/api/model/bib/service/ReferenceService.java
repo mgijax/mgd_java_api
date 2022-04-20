@@ -165,7 +165,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		wfDataEntity.set_refs_key(entity.get_refs_key());
 		wfDataEntity.setSupplementalTerm(termDAO.get(31576677));
 		wfDataEntity.setExtractedTextTerm(termDAO.get(48804490));			
-		wfDataEntity.setExtracted_text(null);
+		wfDataEntity.setExtractedtext(null);
 		wfDataEntity.setHas_pdf(0);
 		wfDataEntity.setLink_supplemental(null);
 		wfDataEntity.setCreatedByUser(user);

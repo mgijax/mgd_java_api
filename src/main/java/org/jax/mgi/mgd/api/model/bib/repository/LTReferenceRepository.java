@@ -664,7 +664,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			myWD.setHas_pdf(0);
 			myWD.setSupplementalTerm(getTermByTerm(Constants.VOC_SUPPLEMENTAL, domain.has_supplemental));
 			myWD.setLink_supplemental(domain.link_to_supplemental);
-			myWD.setExtracted_text(null);
+			myWD.setExtractedtext(null);
 			myWD.setCreatedByUser(currentUser);
 			myWD.setModifiedByUser(currentUser);
 			myWD.setCreation_date(new Date());

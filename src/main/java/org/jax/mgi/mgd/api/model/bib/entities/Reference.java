@@ -117,5 +117,10 @@ public class Reference extends BaseEntity {
 //	@OneToMany()
 //	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 //	private List<ReferenceWorkflowTag> workflowTag;	
-		
+
+	// workflow data
+//	@OneToMany()
+//	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+//	private List<ReferenceWorkflowData> workflowData;	
+
 }

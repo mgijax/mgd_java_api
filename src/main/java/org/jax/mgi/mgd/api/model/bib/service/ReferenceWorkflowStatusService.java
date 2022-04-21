@@ -79,7 +79,7 @@ public class ReferenceWorkflowStatusService extends BaseService<ReferenceWorkflo
 
 		List<ReferenceWorkflowStatusDomain> results = new ArrayList<ReferenceWorkflowStatusDomain>();
 
-		String cmd = "\nselect _refs_key from bib_workflow_statu where _refs_key = " + key;
+		String cmd = "\nselect _refs_key from bib_workflow_status where _refs_key = " + key;
 		
 		log.info(cmd);
 

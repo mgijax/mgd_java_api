@@ -105,7 +105,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 	 */
 	public void updateCitationCache(String refsKey) {
 		// returns an integer rather than *, as the void return was causing a mapping exception
-		Query query = entityManager.createNativeQuery("select count(1) from BIB_reloadCache(" + refsKey + ")");
+		Query query = entityManager.createNativeQuery("select count(*) from BIB_reloadCache(" + refsKey + ")");
 		query.getResultList();		
 		return;
 	}
@@ -115,7 +115,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 	public void assignNewJnumID(String refsKey, int userKey) throws Exception {
 		// returns an integer rather than *, as the void return was causing a mapping exception
 		log.info("select count(1) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
-		Query query = entityManager.createNativeQuery("select count(1) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
+		Query query = entityManager.createNativeQuery("select count(*) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
 		query.getResultList();
 		return;
 	}

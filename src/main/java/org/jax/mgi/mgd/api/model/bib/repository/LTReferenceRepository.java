@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
+import javax.persistence.Query;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.exception.FatalAPIException;
@@ -129,7 +130,12 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		log.info("applied domain changes");
 //		referenceDAO.persist(entity);
 //		log.info("presisted entity");
-		referenceDAO.updateCitationCache(domain.refsKey);		
+		
+		Query query = referenceDAO.createNativeQuery("select count(*) from BIB_reloadCache(" + domain.getRefsKey() + ")");
+		query.getResultList();
+		
+//		referenceDAO.updateCitationCache(domain.refsKey);	
+		
 		log.info("updated citation cache");
 		return null;	// just return null, will look up later on
 	}

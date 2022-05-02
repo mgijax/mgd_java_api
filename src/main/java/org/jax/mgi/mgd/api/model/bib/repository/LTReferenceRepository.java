@@ -127,8 +127,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		log.info("found LTReference/entity");
 		applyDomainChanges(entity, domain, user);
 		log.info("applied domain changes");
-		referenceDAO.persist(entity);
-		log.info("presisted entity");
+//		referenceDAO.persist(entity);
+//		log.info("presisted entity");
 		referenceDAO.updateCitationCache(domain.refsKey);		
 		log.info("updated citation cache");
 		return null;	// just return null, will look up later on
@@ -266,9 +266,11 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		// Note that we must have 'anyChanges' after the OR, otherwise short-circuit evaluation will only save
 		// the first section changed.
 
-		boolean anyChanges = applyStatusChanges(entity, domain, currentUser);
+		boolean anyChanges;
+		
+		anyChanges = applyBasicFieldChanges(entity, domain, currentUser);
+		anyChanges = applyStatusChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyTagChanges(entity, domain, currentUser) || anyChanges;
-		anyChanges = applyBasicFieldChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyBookChanges(entity, domain, currentUser) || anyChanges;       // uses ReferenceBookService()
 		anyChanges = applyNoteChanges(entity, domain, currentUser) | anyChanges;        // uses ReferenceNoteService()
 		anyChanges = applyAccessionIDChanges(entity, domain, currentUser) || anyChanges;
@@ -346,6 +348,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			anyChanges = true;
 		}
 
+		referenceDAO.persist(entity);		
 		return anyChanges;
 	}
 

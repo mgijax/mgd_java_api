@@ -162,13 +162,13 @@ public class ReferenceBookService extends BaseService<ReferenceBookDomain> {
 			modified = true;
 		}
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-			log.info("processReferenceBook delete");				
+			log.info("processReferenceBook delete:" + parentKey);				
 			ReferenceBook entity = bookDAO.get(Integer.valueOf(parentKey));				
 			bookDAO.remove(entity);
 			modified = true;
 		}
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-			log.info("processReferenceBook update");								
+			log.info("processReferenceBook update:" + parentKey);								
 			ReferenceBook entity = bookDAO.get(Integer.valueOf(parentKey));				
 			entity.set_refs_key(Integer.valueOf(parentKey));
 

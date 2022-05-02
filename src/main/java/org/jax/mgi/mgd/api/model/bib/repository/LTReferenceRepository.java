@@ -295,6 +295,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		// author, primary author (derived), journal, title, volume, issue, date, year, pages, 
 		// abstract, and isReviewArticle flag
 
+		log.info("applyBasicFieldChanges()");
+		
 		boolean anyChanges = false;
 
 		// determine if the isReviewArticle flag is set in the ReferenceDomain object
@@ -351,7 +353,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			anyChanges = true;
 		}
 
-		referenceDAO.update(entity);		
+		referenceDAO.persist(entity);		
 		return anyChanges;
 	}
 
@@ -403,6 +405,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 		// do any cleanup of DOI ID and PubMed ID first
 
+		log.info("applyAccessionIDChanges()");
+		
 		domain.doiid = cleanDoiID(domain.doiid);
 		domain.pubmedid = cleanPubMedID(domain.pubmedid);
 
@@ -603,6 +607,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	private boolean applyWorkflowRelevanceChanges(LTReference entity, LTReferenceDomain domain, User currentUser) throws APIException {
 		// need to handle:  updated workflow relevance, new workflow relevance -- (no deletions)
 
+		log.info("applyWorkflowRelevanceChanges()");
+
 		boolean anyChanges = false;
 		LTReferenceWorkflowRelevance oldRel = entity.getWorkflowRelevance();
 
@@ -646,6 +652,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		// at most one set of workflow data per reference
 		// need to handle:  updated workflow data, new workflow data -- (no deletions)
 
+		log.info("applyWorkflowDataChanges()");
+		
 		boolean anyChanges = false;
 		LTReferenceWorkflowData myWD = entity.getWorkflowData();
 
@@ -689,6 +697,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	 * false otherwise.
 	 */
 	private boolean applyTagChanges(LTReference entity, LTReferenceDomain domain, User currentUser) throws NonFatalAPIException, APIException {
+
+		log.info("applyTagChanges()");
+		
 		// short-circuit method if no tags in Reference or in ReferenceDomain
 		if ((entity.getWorkflowTagsAsStrings().size() == 0) && (domain.workflow_tags.size() == 0)) {
 			return false;

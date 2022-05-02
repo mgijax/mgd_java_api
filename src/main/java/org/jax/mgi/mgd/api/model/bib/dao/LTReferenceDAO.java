@@ -103,12 +103,12 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 
 	/* update the bib_citation_cache table for the given reference key
 	 */
-	public void updateCitationCache(String refsKey) {
-		// returns an integer rather than *, as the void return was causing a mapping exception
-		Query query = entityManager.createNativeQuery("select count(*) from BIB_reloadCache(" + refsKey + ")");
-		query.getResultList();		
-		return;
-	}
+//	public void updateCitationCache(String refsKey) {
+//		// returns an integer rather than *, as the void return was causing a mapping exception
+//		Query query = entityManager.createNativeQuery("select count(*) from BIB_reloadCache(" + refsKey + ")");
+//		query.getResultList();		
+//		return;
+//	}
 
 	/* add a new J: number for the given reference key and user key
 	 */

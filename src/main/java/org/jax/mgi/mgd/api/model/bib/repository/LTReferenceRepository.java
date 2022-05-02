@@ -574,7 +574,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	
 		if (domain.getReferenceBook().getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
 			// from book to not-a-book
-			if (entity.getReferenceTypeTerm().get_term_key() == 31576679 && !domain.getReferenceTypeKey().equals("31576679")) {
+			if (domain.getReferenceType().equals("Book") && !domain.getReferenceTypeKey().equals("31576679")) {
 				domain.getReferenceBook().setProcessStatus(Constants.PROCESS_DELETE);
 			}
 			else if (!smartEqual(entity.getReferenceBook().get(0).getBook_au(), domain.getReferenceBook().getBook_author()) || 

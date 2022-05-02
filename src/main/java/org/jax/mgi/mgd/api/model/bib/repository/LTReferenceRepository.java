@@ -128,6 +128,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		log.info("found LTReference/entity");
 		applyDomainChanges(entity, domain, user);
 		log.info("applied domain changes");
+		referenceDAO.persist(entity);		
+		log.info("dao/persis");;
 		
 		Query query = referenceDAO.createNativeQuery("select count(*) from BIB_reloadCache(" + domain.getRefsKey() + ")");
 		query.getResultList();
@@ -353,7 +355,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			anyChanges = true;
 		}
 
-		referenceDAO.persist(entity);		
 		return anyChanges;
 	}
 

@@ -131,10 +131,10 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 //		referenceDAO.persist(entity);
 //		log.info("presisted entity");
 		
-//		Query query = referenceDAO.createNativeQuery("select count(*) from BIB_reloadCache(" + domain.getRefsKey() + ")");
-//		query.getResultList();
-////		referenceDAO.updateCitationCache(domain.refsKey);	
-//		log.info("updated citation cache");
+		Query query = referenceDAO.createNativeQuery("select count(*) from BIB_reloadCache(" + domain.getRefsKey() + ")");
+		query.getResultList();
+//		referenceDAO.updateCitationCache(domain.refsKey);	
+		log.info("updated citation cache");
 		
 		return null;	// just return null, will look up later on
 	}

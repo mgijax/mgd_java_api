@@ -161,26 +161,16 @@ public class ReferenceBookService extends BaseService<ReferenceBookDomain> {
 			bookDAO.persist(entity);				
 			modified = true;
 		}
-//		else if (domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-//			log.info("processReferenceBook delete:" + parentKey);				
-//			ReferenceBook entity = bookDAO.get(Integer.valueOf(parentKey));				
-//			bookDAO.remove(entity);
-//			modified = true;
-//		}
+		else if (domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+			log.info("processReferenceBook delete:" + parentKey);				
+			ReferenceBook entity = bookDAO.get(Integer.valueOf(parentKey));				
+			bookDAO.remove(entity);
+			modified = true;
+		}
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE) || domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
 			log.info("processReferenceBook update:" + parentKey);								
 			ReferenceBook entity = bookDAO.get(Integer.valueOf(parentKey));				
 			entity.set_refs_key(Integer.valueOf(parentKey));
-
-			// for some reason, cannot process delete until LTReference is totally replaced by ReferenceService
-			if (domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-				entity.setBook_au(null);
-				entity.setBook_title(null);
-				entity.setPlace(null);
-				entity.setPublisher(null);
-				entity.setSeries_ed(null);
-				return modified;
-			}
 			
 			if (domain.getBook_author() == null || domain.getBook_author().isEmpty()) {
 				entity.setBook_au(null);

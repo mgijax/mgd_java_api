@@ -589,9 +589,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		boolean anyChanges = false;
 		boolean wasBook = "Book".equalsIgnoreCase(entity.getReferenceTypeTerm().getTerm());
 		boolean willBeBook = "31576679".equals(String.valueOf(entity.getReferenceTypeTerm().get_term_key()));
-		
-		log.info("applyBookChange/wasBook:" + wasBook);
-		log.info("applyBookChange/willBeBook:" + willBeBook);
 
 		// If this reference is already a book and will continue to be a book, need to apply
 		// any changes to the fields of the existing book data.

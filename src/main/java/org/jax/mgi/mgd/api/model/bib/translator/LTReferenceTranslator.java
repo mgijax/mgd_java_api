@@ -49,7 +49,7 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		domain.pubmedid = entity.getPubmedid();
 		domain.gorefid = entity.getGorefid();	
 		
-		domain.referenceType = entity.getReferenceType();
+		domain.referenceType = entity.getReferenceTypeTerm().getTerm();
 		domain.referenceTypeKey = String.valueOf(entity.getReferenceTypeTerm().get_term_key());
 		domain.short_citation = entity.getShort_citation();
 		

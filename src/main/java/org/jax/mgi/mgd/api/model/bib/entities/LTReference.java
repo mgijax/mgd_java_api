@@ -181,12 +181,6 @@ public class LTReference extends BaseEntity {
 		return findFirstID(Constants.LDB_GOREF, null, null, null);
 	}
 
-//	@Transient
-//	public String getReferenceType() {
-//		if (referenceTypeTerm == null) { return null; }
-//		return referenceTypeTerm.getTerm();
-//	}
-
 	@Transient
 	public List<String> getWorkflowTagsAsStrings() {
 		List<String> tags = new ArrayList<String>();

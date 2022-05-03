@@ -21,7 +21,6 @@ import org.jax.mgi.mgd.api.model.acc.dao.LogicalDBDAO;
 import org.jax.mgi.mgd.api.model.acc.dao.MGITypeDAO;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceDAO;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceBookDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowStatusDomain;
@@ -60,8 +59,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	@Inject
 	private LTReferenceDAO referenceDAO;
-	@Inject
-	private ReferenceBookDAO bookDAO;
 	@Inject
 	private TermDAO termDAO;
 	@Inject
@@ -281,7 +278,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		anyChanges = applyBasicFieldChanges(entity, domain, currentUser);
 		anyChanges = applyStatusChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyTagChanges(entity, domain, currentUser) || anyChanges;
-		anyChanges = applyBookChangesNew(entity, domain, currentUser) || anyChanges;
+		anyChanges = applyBookChanges(entity, domain, currentUser) || anyChanges;		// uses ReferenceDomainService()
 		anyChanges = applyNoteChanges(entity, domain, currentUser) | anyChanges;        // uses ReferenceNoteService()
 		anyChanges = applyAccessionIDChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyWorkflowDataChanges(entity, domain, currentUser) || anyChanges;
@@ -579,71 +576,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		return(noteService.process(String.valueOf(entity.get_refs_key()), domain.getReferenceNote(), user));		
 	}
 
-	/* apply changes to book data fields from domain to entity
-	 */
-	private boolean applyBookChanges(LTReference entity, LTReferenceDomain domain, User currentUser) {
-		// at most one set of book data per reference
-		// need to handle:  deleted book data, updated book data, new book data
-
-		log.info("applyBookChanges()");
-		
-		boolean anyChanges = false;
-		boolean wasBook = "Book".equalsIgnoreCase(entity.getReferenceTypeTerm().getTerm());
-		boolean willBeBook = "31576679".equals(String.valueOf(entity.getReferenceTypeTerm().get_term_key()));
-
-		// If this reference is already a book and will continue to be a book, need to apply
-		// any changes to the fields of the existing book data.
-		if (wasBook && willBeBook && (entity.getReferenceBook().size() > 0)) {
-			log.info("applyBookChange/remain book");
-			ReferenceBook book = entity.getReferenceBook().get(0);
-
-			if (!smartEqual(book.getBook_au(), domain.getReferenceBook().getBook_author()) 
-					|| !smartEqual(book.getBook_title(), domain.getReferenceBook().getBook_title()) 
-					|| !smartEqual(book.getPlace(), domain.getReferenceBook().getPlace()) 
-					|| !smartEqual(book.getPublisher(), domain.getReferenceBook().getPublisher()) 
-					|| !smartEqual(book.getSeries_ed(), domain.getReferenceBook().getSeries_ed())) {
-
-				book.setBook_au(domain.getReferenceBook().getBook_author());
-				book.setBook_title(domain.getReferenceBook().getBook_title());
-				book.setPlace(domain.getReferenceBook().getPlace());
-				book.setPublisher(domain.getReferenceBook().getPublisher());
-				book.setSeries_ed(domain.getReferenceBook().getSeries_ed());
-				book.setModification_date(new Date());
-				referenceDAO.persist(book);
-				anyChanges = true;
-			}
-
-		} else if (wasBook && (entity.getReferenceBook().size() > 0)) {
-			// This reference was a book previously, but its type has changed, so need to delete book-specific data.
-			log.info("applyBookChange/change from book to non-book");
-			ReferenceBook book = entity.getReferenceBook().get(0);
-			bookDAO.remove(book);				
-			referenceDAO.persist(book);			
-			anyChanges = true;
-
-		} else if (willBeBook) {
-			// This reference was not a book previously, but now will be, so we need to add book-specific data.
-			log.info("applyBookChange/create book");
-			ReferenceBook book = new ReferenceBook();			
-			book.set_refs_key(entity.get_refs_key());
-			book.setBook_au(domain.getReferenceBook().getBook_author());
-			book.setBook_title(domain.getReferenceBook().getBook_title());
-			book.setPlace(domain.getReferenceBook().getPlace());
-			book.setPublisher(domain.getReferenceBook().getPublisher());
-			book.setSeries_ed(domain.getReferenceBook().getSeries_ed());			
-			book.setCreation_date(new Date());
-			book.setModification_date(book.getCreation_date()); 
-			referenceDAO.persist(book);
-			entity.getReferenceBook().add(book);
-			anyChanges = true;
-		}
-		
-		return anyChanges;
-	}
-	
 	/* apply any changes from domain to entity for the reference book 
 	 */
-	private boolean applyBookChangesNew(LTReference entity, LTReferenceDomain domain, User user) {
+	private boolean applyBookChanges(LTReference entity, LTReferenceDomain domain, User user) {
 		log.info("applyBookChanges()");
 		
 		boolean isBookTerm = "Book".equalsIgnoreCase(entity.getReferenceTypeTerm().getTerm());

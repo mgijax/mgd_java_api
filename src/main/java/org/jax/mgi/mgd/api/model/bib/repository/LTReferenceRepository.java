@@ -587,12 +587,13 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		log.info("applyBookChanges()");
 		
 		boolean anyChanges = false;
-		boolean wasBook = "Book".equalsIgnoreCase(entity.getReferenceType());
+		boolean wasBook = "Book".equalsIgnoreCase(entity.getReferenceTypeTerm().getTerm());
 		boolean willBeBook = "Book".equalsIgnoreCase(domain.referenceType);
 
 		// If this reference is already a book and will continue to be a book, need to apply
 		// any changes to the fields of the existing book data.
 		if (wasBook && willBeBook && (entity.getReferenceBook().size() > 0)) {
+			log.info("applyBookChange/remain book");
 			ReferenceBook book = entity.getReferenceBook().get(0);
 
 			if (!smartEqual(book.getBook_au(), domain.getReferenceBook().getBook_author()) 
@@ -607,11 +608,13 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				book.setPublisher(domain.getReferenceBook().getPublisher());
 				book.setSeries_ed(domain.getReferenceBook().getSeries_ed());
 				book.setModification_date(new Date());
+				referenceDAO.persist(book);
 				anyChanges = true;
 			}
 
 		} else if (wasBook && (entity.getReferenceBook().size() > 0)) {
 			// This reference was a book previously, but its type has changed, so need to delete book-specific data.
+			log.info("applyBookChange/change from book to non-book");
 			ReferenceBook book = entity.getReferenceBook().get(0);
 			//bookDAO.remove(book);			
 			//referenceDAO.remove(entity.getReferenceBook().get(0));
@@ -620,12 +623,13 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			book.setPlace(null);
 			book.setPublisher(null);
 			book.setSeries_ed(null);
-			book.setModification_date(new Date());			
+			book.setModification_date(new Date());	
+			referenceDAO.persist(book);			
 			anyChanges = true;
 
 		} else if (willBeBook) {
 			// This reference was not a book previously, but now will be, so we need to add book-specific data.
-
+			log.info("applyBookChange/create book");
 			ReferenceBook book = new ReferenceBook();			
 			book.set_refs_key(entity.get_refs_key());
 			book.setBook_au(domain.getReferenceBook().getBook_author());
@@ -635,7 +639,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			book.setSeries_ed(domain.getReferenceBook().getSeries_ed());			
 			book.setCreation_date(new Date());
 			book.setModification_date(book.getCreation_date()); 
-
 			referenceDAO.persist(book);
 			entity.getReferenceBook().add(book);
 			anyChanges = true;

@@ -588,7 +588,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		
 		boolean anyChanges = false;
 		boolean wasBook = "Book".equalsIgnoreCase(entity.getReferenceTypeTerm().getTerm());
-		//boolean willBeBook = "Book".equalsIgnoreCase(domain.referenceType);
 		boolean willBeBook = "31576679".equals(String.valueOf(entity.getReferenceTypeTerm().get_term_key()));
 		
 		log.info("applyBookChange/wasBook:" + wasBook);
@@ -620,14 +619,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			// This reference was a book previously, but its type has changed, so need to delete book-specific data.
 			log.info("applyBookChange/change from book to non-book");
 			ReferenceBook book = entity.getReferenceBook().get(0);
-			//bookDAO.remove(book);			
-			//referenceDAO.remove(entity.getReferenceBook().get(0));
-			book.setBook_au(null);
-			book.setBook_title(null);
-			book.setPlace(null);
-			book.setPublisher(null);
-			book.setSeries_ed(null);
-			book.setModification_date(new Date());	
+			bookDAO.remove(book);				
 			referenceDAO.persist(book);			
 			anyChanges = true;
 

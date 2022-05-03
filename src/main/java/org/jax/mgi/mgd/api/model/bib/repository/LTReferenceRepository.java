@@ -613,8 +613,14 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		} else if (wasBook && (entity.getReferenceBook().size() > 0)) {
 			// This reference was a book previously, but its type has changed, so need to delete book-specific data.
 			ReferenceBook book = entity.getReferenceBook().get(0);
-			bookDAO.remove(book);			
+			//bookDAO.remove(book);			
 			//referenceDAO.remove(entity.getReferenceBook().get(0));
+			book.setBook_au(null);
+			book.setBook_title(null);
+			book.setPlace(null);
+			book.setPublisher(null);
+			book.setSeries_ed(null);
+			book.setModification_date(new Date());			
 			anyChanges = true;
 
 		} else if (willBeBook) {

@@ -31,6 +31,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
+import org.jax.mgi.mgd.api.model.bib.service.ReferenceBookService;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceNoteService;
 import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
@@ -71,8 +72,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	private MGITypeDAO mgiTypeDAO;
 	@Inject
 	private MGIReferenceAssocService referenceAssocService;	
-//	@Inject
-//	private ReferenceBookService bookService;
+	@Inject
+	private ReferenceBookService bookService;
 	@Inject
 	private ReferenceNoteService noteService;
 //	@Inject
@@ -280,7 +281,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		anyChanges = applyBasicFieldChanges(entity, domain, currentUser);
 		anyChanges = applyStatusChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyTagChanges(entity, domain, currentUser) || anyChanges;
-		anyChanges = applyBookChanges(entity, domain, currentUser) || anyChanges;
+		anyChanges = applyBookChangesNew(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyNoteChanges(entity, domain, currentUser) | anyChanges;        // uses ReferenceNoteService()
 		anyChanges = applyAccessionIDChanges(entity, domain, currentUser) || anyChanges;
 		anyChanges = applyWorkflowDataChanges(entity, domain, currentUser) || anyChanges;
@@ -640,34 +641,38 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		return anyChanges;
 	}
 	
-//	/* apply any changes from domain to entity for the reference book 
-//	 */
-//	private boolean applyBookChanges(LTReference entity, LTReferenceDomain domain, User user) {
-//		log.info("applyBookChanges()");
-//		
-//		if (domain.getReferenceBook() == null) {
-//			return(false);
-//		}
-//	
-//		if (domain.getReferenceBook().getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
-//			// from book to not-a-book
-//			if (domain.getReferenceType().equals("Book") && !domain.getReferenceTypeKey().equals("31576679")) {
-//				domain.getReferenceBook().setProcessStatus(Constants.PROCESS_DELETE);
-//			}
-//			else if (!smartEqual(entity.getReferenceBook().get(0).getBook_au(), domain.getReferenceBook().getBook_author()) || 
-//						!smartEqual(entity.getReferenceBook().get(0).getBook_title(), domain.getReferenceBook().getBook_title()) || 
-//						!smartEqual(entity.getReferenceBook().get(0).getPlace(), domain.getReferenceBook().getPlace()) || 
-//						!smartEqual(entity.getReferenceBook().get(0).getPublisher(), domain.getReferenceBook().getPublisher()) ||
-//						!smartEqual(entity.getReferenceBook().get(0).getSeries_ed(), domain.getReferenceBook().getSeries_ed())) {					
-//				domain.getReferenceBook().setProcessStatus(Constants.PROCESS_UPDATE);
-//			}
-//		}
-//		else {
-//			domain.getReferenceBook().setProcessStatus(Constants.PROCESS_CREATE);							
-//		}
-//					
-//		return(bookService.process(String.valueOf(entity.get_refs_key()), domain.getReferenceBook(), user));		
-//	}
+	/* apply any changes from domain to entity for the reference book 
+	 */
+	private boolean applyBookChangesNew(LTReference entity, LTReferenceDomain domain, User user) {
+		log.info("applyBookChanges()");
+		
+		boolean isBookTerm = "Book".equalsIgnoreCase(entity.getReferenceTypeTerm().getTerm());
+		boolean isBookKey = "31576679".equals(String.valueOf(entity.getReferenceTypeTerm().get_term_key()));
+	
+		if (isBookTerm && isBookKey && (entity.getReferenceBook().size() > 0)) {
+			// reference is a book; still a book
+			log.info("applyBookChange/remain book");
+			ReferenceBook book = entity.getReferenceBook().get(0);
+			if (!smartEqual(book.getBook_au(), domain.getReferenceBook().getBook_author()) 
+					|| !smartEqual(book.getBook_title(), domain.getReferenceBook().getBook_title()) 
+					|| !smartEqual(book.getPlace(), domain.getReferenceBook().getPlace()) 
+					|| !smartEqual(book.getPublisher(), domain.getReferenceBook().getPublisher()) 
+					|| !smartEqual(book.getSeries_ed(), domain.getReferenceBook().getSeries_ed())) {
+				domain.getReferenceBook().setProcessStatus(Constants.PROCESS_UPDATE);
+			}
+
+		} else if (isBookTerm && (entity.getReferenceBook().size() > 0)) {
+			// reference was a book
+			log.info("applyBookChange/change from book to non-book");
+			domain.getReferenceBook().setProcessStatus(Constants.PROCESS_DELETE);		
+		} else if (isBookKey) {
+			// reference was not a book
+			log.info("applyBookChange/create book");
+			domain.getReferenceBook().setProcessStatus(Constants.PROCESS_CREATE);
+		}
+					
+		return(bookService.process(String.valueOf(entity.get_refs_key()), domain.getReferenceBook(), user));		
+	}
 
 	/* apply changes in workflow relevance from domain to entity
 	 */

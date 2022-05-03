@@ -21,6 +21,7 @@ import org.jax.mgi.mgd.api.model.acc.dao.LogicalDBDAO;
 import org.jax.mgi.mgd.api.model.acc.dao.MGITypeDAO;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceDAO;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceBookDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowStatusDomain;
@@ -30,7 +31,6 @@ import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
-import org.jax.mgi.mgd.api.model.bib.service.ReferenceBookService;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceNoteService;
 import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
@@ -60,6 +60,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	@Inject
 	private LTReferenceDAO referenceDAO;
 	@Inject
+	private ReferenceBookDAO bookDAO;
+	@Inject
 	private TermDAO termDAO;
 	@Inject
 	private AccessionDAO accessionDAO;
@@ -69,8 +71,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	private MGITypeDAO mgiTypeDAO;
 	@Inject
 	private MGIReferenceAssocService referenceAssocService;	
-	@Inject
-	private ReferenceBookService bookService;
+//	@Inject
+//	private ReferenceBookService bookService;
 	@Inject
 	private ReferenceNoteService noteService;
 //	@Inject
@@ -127,9 +129,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		log.info("LTReferenceDomain update(LTReferenceDomain domain, User user)");
 		LTReference entity = getReference(domain.refsKey);
 
-		log.info("start: applyDomainChanges()");
-		applyDomainChanges(entity, domain, user);
-		log.info("stop: applyDomainChanges()");
+		log.info("start: Changes()");
+		Changes(entity, domain, user);
+		log.info("stop: Changes()");
 		referenceDAO.persist(entity);		
 		log.info("stop: referenceDAO.persist()");;
 		
@@ -269,7 +271,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	 * (assumes we are working in a transaction and persists any sub-objects into the database, but does
 	 * not persist this Reference object itself, as other changes could be coming)
 	 */
-	private void applyDomainChanges(LTReference entity, LTReferenceDomain domain, User currentUser) throws NonFatalAPIException, APIException {
+	private void Changes(LTReference entity, LTReferenceDomain domain, User currentUser) throws NonFatalAPIException, APIException {
 		// Note that we must have 'anyChanges' after the OR, otherwise short-circuit evaluation will only save
 		// the first section changed.
 
@@ -582,6 +584,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		// at most one set of book data per reference
 		// need to handle:  deleted book data, updated book data, new book data
 
+		log.info("applyBookChanges()");
+		
 		boolean anyChanges = false;
 		boolean wasBook = "Book".equalsIgnoreCase(entity.getReferenceType());
 		boolean willBeBook = "Book".equalsIgnoreCase(domain.referenceType);
@@ -608,8 +612,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 		} else if (wasBook && (entity.getReferenceBook().size() > 0)) {
 			// This reference was a book previously, but its type has changed, so need to delete book-specific data.
-
-			referenceDAO.remove(entity.getReferenceBook().get(0));
+			ReferenceBook book = entity.getReferenceBook().get(0);
+			bookDAO.remove(book);			
+			//referenceDAO.remove(entity.getReferenceBook().get(0));
 			anyChanges = true;
 
 		} else if (willBeBook) {

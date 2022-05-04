@@ -77,8 +77,8 @@ public class LTReferenceDomain extends BaseDomain {
 
 	/***--- constructors ---***/
 	
-	/* empty constructor - ready for population from JSON */
-	public LTReferenceDomain() {}
+//	/* empty constructor - ready for population from JSON */
+//	public LTReferenceDomain() {}
 	
 	/* update the status for the given workflow group within this domain object (This method does not persist the
 	 * change to the database.)

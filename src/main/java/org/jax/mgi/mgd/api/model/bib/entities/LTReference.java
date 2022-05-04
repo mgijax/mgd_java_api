@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -62,19 +61,16 @@ public class LTReference extends BaseEntity {
 
 	@OneToOne()
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
-	private User createdByUser;
+	private User createdBy;
 
 	@OneToOne()
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
-	private User modifiedByUser;
+	private User modifiedBy;
 
 	// maps workflow group abbrev to current status for that group, cached in memory for efficiency - not persisted
 	@Transient
 	private Map<String,String> workflowStatusCache;
 
-	/* The @Fetch annotation (below) allows us to specify multiple EAGER-loaded collections, which would
-	 * otherwise throw an error.
-	 */
 	@OneToMany()
 	@JoinColumn(name="_refs_key")
 	private List<LTReferenceWorkflowStatus> workflowStatuses;
@@ -122,7 +118,7 @@ public class LTReference extends BaseEntity {
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="_refs_key")
 	@Where(clause="`_extractedtext_key` = 48804490")
-	private Set<LTReferenceWorkflowData> workflowData;
+	private List<ReferenceWorkflowData> workflowData;
 
 	// reference allele associations : alleles (11)
 	@OneToMany()
@@ -182,12 +178,6 @@ public class LTReference extends BaseEntity {
 	}
 
 	@Transient
-	public String getReferenceType() {
-		if (referenceTypeTerm == null) { return null; }
-		return referenceTypeTerm.getTerm();
-	}
-
-	@Transient
 	public List<String> getWorkflowTagsAsStrings() {
 		List<String> tags = new ArrayList<String>();
 		for (LTReferenceWorkflowTag rwTag : workflowTags) {
@@ -234,15 +224,6 @@ public class LTReference extends BaseEntity {
 	}
 
 	@Transient
-	public String getShort_citation() {
-		citationData.size(); // loads it
-		if ((citationData != null) && (citationData.size() > 0)) {
-			return citationData.get(0).getShort_citation();
-		}
-		return null;
-	}
-
-	@Transient
 	public String getCachedID(String provider) {
 		citationData.size(); // loads it
 		if ((citationData == null) || (citationData.size() == 0)) { return null; }
@@ -255,37 +236,6 @@ public class LTReference extends BaseEntity {
 		} else {
 			return citationData.get(0).getPubmedid();
 		}
-	}
-
-	/* set the reference's modification date to be 'now' and modified-by user to be 'currentUser'
-	 */
-	public void setModificationInfo(User currentUser) {
-		modification_date = new Date();
-		modifiedByUser = currentUser;
-	}
-
-	/* set the given workflow data object to be the one for this reference
-	 */
-	@Transient
-	public void setWorkflowData(LTReferenceWorkflowData rwd) {
-		workflowData.size(); // Loads it
-		for(LTReferenceWorkflowData r: workflowData) {
-			workflowData.remove(r);
-			break;
-		}
-		workflowData.add(rwd);
-	}
-
-	/* If this reference has workflow data, return an object with the extra workflow data;
-	 * otherwise return null.
-	 */
-	@Transient
-	public LTReferenceWorkflowData getWorkflowData() {
-		workflowData.size(); // Loads it
-		for(LTReferenceWorkflowData data: workflowData) {
-			return data;
-		}
-		return null;
 	}
 	
 	@Transient

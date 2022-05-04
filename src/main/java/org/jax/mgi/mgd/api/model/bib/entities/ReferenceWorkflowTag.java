@@ -17,24 +17,27 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Reference Workflow Tag Model")
+@ApiModel(value = "Reference Workflow Tag Model Object")
 @Table(name="bib_workflow_tag")
 public class ReferenceWorkflowTag extends BaseEntity {
-
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="bib_workflow_tag_generator")
-	@SequenceGenerator(name="bib_workflow_tag_generator", sequenceName = "bib_workflow_tag_seq", allocationSize=1)	
+	@SequenceGenerator(name="bib_workflow_tag_generator", sequenceName = "bib_workflow_tag_seq", allocationSize=1)
+	@ApiModelProperty(value="primary key")	
 	private int _assoc_key;
+
 	private int _refs_key;
 	private Date creation_date;
 	private Date modification_date;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="_tag_key", referencedColumnName="_term_key")
 	private Term tagTerm;
 	

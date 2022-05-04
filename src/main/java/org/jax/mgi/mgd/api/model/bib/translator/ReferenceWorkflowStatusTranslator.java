@@ -9,26 +9,21 @@ import org.jboss.logging.Logger;
 public class ReferenceWorkflowStatusTranslator extends BaseEntityDomainTranslator<ReferenceWorkflowStatus, ReferenceWorkflowStatusDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
-
+		
 	@Override
 	protected ReferenceWorkflowStatusDomain entityToDomain(ReferenceWorkflowStatus entity) {
 
 		ReferenceWorkflowStatusDomain domain = new ReferenceWorkflowStatusDomain();
 		
-		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
+		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);	
+		domain.setAssocKey(String.valueOf(entity.get_assoc_key()));		
 		domain.setRefsKey(String.valueOf(entity.get_refs_key()));
+		domain.setIsCurrent(String.valueOf(entity.getIsCurrent()));
 		domain.setGroupKey(String.valueOf(entity.getGroupTerm().get_term_key()));
-		domain.setGroupTerm(entity.getGroupTerm().getTerm());
+		domain.setGroup(entity.getGroupTerm().getTerm());
+		domain.setGroupAbbrev(entity.getGroupTerm().getAbbreviation());
 		domain.setStatusKey(String.valueOf(entity.getStatusTerm().get_term_key()));
-		domain.setStatusTerm(entity.getStatusTerm().getTerm());
-		
-		if (entity.getIsCurrent() == 1) {
-			domain.setIsCurrent(true);
-		}
-		else {
-			domain.setIsCurrent(false);
-		}
-		
+		domain.setStatus(entity.getStatusTerm().getTerm());
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());

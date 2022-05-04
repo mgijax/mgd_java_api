@@ -3,12 +3,9 @@ package org.jax.mgi.mgd.api.model.bib.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -27,8 +24,6 @@ import lombok.Setter;
 public class LTReferenceWorkflowData extends BaseEntity {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="bib_workflow_data_generator")
-	@SequenceGenerator(name="bib_workflow_data_generator", sequenceName = "bib_workflow_data_seq", allocationSize=1)
 	private int _assoc_key;
 	private int _refs_key;
 	private int haspdf;
@@ -47,11 +42,11 @@ public class LTReferenceWorkflowData extends BaseEntity {
 	
 	@OneToOne
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
-	private User createdByUser;
+	private User createdBy;
 	
 	@OneToOne
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
-	private User modifiedByUser;
+	private User modifiedBy;
 	
 	/***--- transient methods ---***/
 	
@@ -63,14 +58,14 @@ public class LTReferenceWorkflowData extends BaseEntity {
 	
 	@Transient
 	public String getCreatedBy() {
-		if (this.createdByUser == null) { return null; }
-		return this.createdByUser.getLogin();
+		if (this.createdBy == null) { return null; }
+		return this.createdBy.getLogin();
 	}
 	
 	@Transient
 	public String getModifidBy() {
-		if (this.modifiedByUser == null) { return null; }
-		return this.modifiedByUser.getLogin();
+		if (this.modifiedBy == null) { return null; }
+		return this.modifiedBy.getLogin();
 	}
 	
 	@Transient

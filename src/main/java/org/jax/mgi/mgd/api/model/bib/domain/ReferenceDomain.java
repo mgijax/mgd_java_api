@@ -40,14 +40,15 @@ public class ReferenceDomain extends BaseDomain {
 	private String modification_date;
 
 	// has to match the LTReferenceDomain
-	public String mgiid;	
-	public String doiid;
-	public String pubmedid;
-	public String gorefid;
+	private String mgiid;	
+	private String doiid;
+	private String pubmedid;
+	private String gorefid;
 		
 	private ReferenceBookDomain referenceBook;
 	private ReferenceNoteDomain referenceNote;
-	
+	//private ReferenceWorkflowDataDomain workflowData;
+
 	//private List<AccessionDomain> mgiAccessionIds;
 	//private List<AccessionDomain> editAccessionIds;
 	
@@ -62,6 +63,10 @@ public class ReferenceDomain extends BaseDomain {
 	private List<MGIReferenceAlleleAssocDomain> alleleAssocs;
 	private List<MGIReferenceMarkerAssocDomain> markerAssocs;
 	private List<MGIReferenceStrainAssocDomain> strainAssocs;
+
+	//private List<ReferenceWorkflowStatusDomain> workflowStatus;
+	//private List<ReferenceWorkflowRelevanceDomain> workflowRelevance;
+	//private List<ReferenceWorkflowTagDomain> workflowTag;
 
 	// ReferenceCitationCache not included in domain at this time 
 	

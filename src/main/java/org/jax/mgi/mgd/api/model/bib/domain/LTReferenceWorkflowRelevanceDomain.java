@@ -12,15 +12,15 @@ import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;
 public class LTReferenceWorkflowRelevanceDomain extends BaseDomain {
 
 	public String refsKey;
-	public boolean is_current;
+	public boolean isCurrent;
 	public String creation_date;
 	public String modification_date;
 	public String relevance;
 	public String relevance_abbreviation;
 	public String confidence;
 	public String version;
-	public String createdby_user;
-	public String modifiedby_user;
+	public String createdby;
+	public String modifiedby;
 	
 	public LTReferenceWorkflowRelevanceDomain() {}
 
@@ -28,8 +28,8 @@ public class LTReferenceWorkflowRelevanceDomain extends BaseDomain {
 		this.refsKey = rws.getRefsKey();
 		this.creation_date = rws.getCreationDate();
 		this.modification_date = rws.getModificationDate();
-		this.createdby_user = rws.getCreatedByUser().getLogin();
-		this.modifiedby_user = this.createdby_user;
+		this.createdby = rws.getCreatedBy();
+		this.modifiedby = this.createdby;
 		this.relevance = rws.getRelevance();
 		this.version = rws.getVersion();
 		this.relevance_abbreviation = rws.getRelevanceAbbreviation();
@@ -38,9 +38,9 @@ public class LTReferenceWorkflowRelevanceDomain extends BaseDomain {
 			this.confidence = rws.getConfidence().toString();
 		}
 
-		this.is_current = true;
+		this.isCurrent = true;
 		if (rws.getIsCurrent() == 0) {
-			this.is_current = false;
+			this.isCurrent = false;
 		}
 	}
 }

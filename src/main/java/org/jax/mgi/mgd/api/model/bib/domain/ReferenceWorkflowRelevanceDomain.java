@@ -7,20 +7,19 @@ import lombok.Setter;
 
 @Getter @Setter
 public class ReferenceWorkflowRelevanceDomain extends BaseDomain {
-	
+
 	private String processStatus;
 	private String assocKey;
 	private String refsKey;
-	private Boolean isCurrent;
-	private Double confidence;
-	private String version;
+	private String isCurrent;
 	private String relevanceKey;
-	private String relevanceTerm;
+	private String relevance;
+	private String confidence;
+	private String version;	
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;
 	private String modifiedBy;
 	private String creation_date;
-	private String modification_date;
-	
+	private String modification_date; 
 }

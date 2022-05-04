@@ -65,8 +65,8 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		Hibernate.initialize(ref.getReferenceTypeTerm());
 		Hibernate.initialize(ref.getReferenceNote());
 		Hibernate.initialize(ref.getReferenceBook());
-		Hibernate.initialize(ref.getCreatedByUser());
-		Hibernate.initialize(ref.getModifiedByUser());
+		Hibernate.initialize(ref.getCreatedBy());
+		Hibernate.initialize(ref.getModifiedBy());
 		Hibernate.initialize(ref.getAssociatedData());
 		Hibernate.initialize(ref.getAccessionIDs());
 		Hibernate.initialize(ref.getWorkflowData());
@@ -103,19 +103,19 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 
 	/* update the bib_citation_cache table for the given reference key
 	 */
-	public void updateCitationCache(String refsKey) {
-		// returns an integer rather than *, as the void return was causing a mapping exception
-		Query query = entityManager.createNativeQuery("select count(1) from BIB_reloadCache(" + refsKey + ")");
-		query.getResultList();		
-		return;
-	}
+//	public void updateCitationCache(String refsKey) {
+//		// returns an integer rather than *, as the void return was causing a mapping exception
+//		Query query = entityManager.createNativeQuery("select count(*) from BIB_reloadCache(" + refsKey + ")");
+//		query.getResultList();		
+//		return;
+//	}
 
 	/* add a new J: number for the given reference key and user key
 	 */
 	public void assignNewJnumID(String refsKey, int userKey) throws Exception {
 		// returns an integer rather than *, as the void return was causing a mapping exception
 		log.info("select count(1) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
-		Query query = entityManager.createNativeQuery("select count(1) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
+		Query query = entityManager.createNativeQuery("select count(*) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
 		query.getResultList();
 		return;
 	}

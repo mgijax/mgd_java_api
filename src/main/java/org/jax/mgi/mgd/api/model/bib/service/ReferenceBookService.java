@@ -106,11 +106,11 @@ public class ReferenceBookService extends BaseService<ReferenceBookDomain> {
 		log.info("processReferenceBook");
 		
 		if (!domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-			if (domain.getBook_author().isEmpty()
-				&& domain.getBook_title().isEmpty()
-				&& domain.getPlace().isEmpty()
-				&& domain.getPublisher().isEmpty()
-				&& domain.getSeries_ed().isEmpty()) {
+			if ((domain.getBook_author() == null || domain.getBook_author().isEmpty())
+				&& (domain.getBook_title() == null || domain.getBook_title().isEmpty())
+				&& (domain.getPlace() == null || domain.getPlace().isEmpty())
+				&& (domain.getPublisher() == null || domain.getPublisher().isEmpty())
+				&& (domain.getSeries_ed() == null || domain.getSeries_ed().isEmpty())) {
 				log.info("processReferenceBook/nothing to process");
 				return modified;
 			}
@@ -121,35 +121,35 @@ public class ReferenceBookService extends BaseService<ReferenceBookDomain> {
 			ReferenceBook entity = new ReferenceBook();
 			entity.set_refs_key(Integer.valueOf(parentKey));
 			
-			if (domain.getBook_author().isEmpty()) {
+			if (domain.getBook_author() == null || domain.getBook_author().isEmpty()) {
 				entity.setBook_au(null);
 			}
 			else {
 				entity.setBook_au(domain.getBook_author());
 			}
 	
-			if (domain.getBook_title().isEmpty()) {
+			if (domain.getBook_title() == null || domain.getBook_title().isEmpty()) {
 				entity.setBook_title(null);
 			}
 			else {
-				entity.setBook_title(domain.getBook_author());
+				entity.setBook_title(domain.getBook_title());
 			}
 			
-			if (domain.getPlace().isEmpty()) {
+			if (domain.getPlace() == null || domain.getPlace().isEmpty()) {
 				entity.setPlace(null);
 			}
 			else {
 				entity.setPlace(domain.getPlace());
 			}
 			
-			if (domain.getPublisher().isEmpty()) {
+			if (domain.getPublisher() == null || domain.getPublisher().isEmpty()) {
 				entity.setPublisher(null);
 			}
 			else {
 				entity.setPublisher(domain.getPublisher());
 			}
 									
-			if (domain.getSeries_ed().isEmpty()) {
+			if (domain.getSeries_ed() == null || domain.getSeries_ed().isEmpty()) {
 				entity.setSeries_ed(null);
 			}
 			else {
@@ -162,45 +162,45 @@ public class ReferenceBookService extends BaseService<ReferenceBookDomain> {
 			modified = true;
 		}
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-			log.info("processReferenceBook delete");				
-			ReferenceBook entity = bookDAO.get(Integer.valueOf(domain.getRefsKey()));
+			log.info("processReferenceBook delete:" + parentKey);				
+			ReferenceBook entity = bookDAO.get(Integer.valueOf(parentKey));				
 			bookDAO.remove(entity);
 			modified = true;
 		}
-		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-			log.info("processReferenceBook update");								
+		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE) || domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+			log.info("processReferenceBook update:" + parentKey);								
 			ReferenceBook entity = bookDAO.get(Integer.valueOf(parentKey));				
 			entity.set_refs_key(Integer.valueOf(parentKey));
-
-			if (domain.getBook_author().isEmpty()) {
+			
+			if (domain.getBook_author() == null || domain.getBook_author().isEmpty()) {
 				entity.setBook_au(null);
 			}
 			else {
 				entity.setBook_au(domain.getBook_author());
 			}
 	
-			if (domain.getBook_author().isEmpty()) {
+			if (domain.getBook_title() == null || domain.getBook_title().isEmpty()) {
 				entity.setBook_title(null);
 			}
 			else {
-				entity.setBook_title(domain.getBook_author());
+				entity.setBook_title(domain.getBook_title());
 			}
 			
-			if (domain.getPlace().isEmpty()) {
+			if (domain.getPlace() == null || domain.getPlace().isEmpty()) {
 				entity.setPlace(null);
 			}
 			else {
 				entity.setPlace(domain.getPlace());
 			}
 			
-			if (domain.getPublisher().isEmpty()) {
+			if (domain.getPublisher() == null || domain.getPublisher().isEmpty()) {
 				entity.setPublisher(null);
 			}
 			else {
 				entity.setPublisher(domain.getPublisher());
 			}
 									
-			if (domain.getSeries_ed().isEmpty()) {
+			if (domain.getSeries_ed() == null || domain.getSeries_ed().isEmpty()) {
 				entity.setSeries_ed(null);
 			}
 			else {

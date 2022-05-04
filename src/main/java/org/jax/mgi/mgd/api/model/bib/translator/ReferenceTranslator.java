@@ -96,7 +96,39 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 			//domain.getEditAccessionIds(IteratorUtils.toList(acc.iterator()));
 			//domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
-	
+
+		// data specific to workflows: has supplemental data?, link to supplemental data, has PDF?, has extracted text?
+		// only grabs the extracted text "body" (done in the entity)
+//		if (entity.getWorkflowData() != null) {
+//			ReferenceWorkflowDataTranslator dataTranslator = new ReferenceWorkflowDataTranslator();
+//			Iterable<ReferenceWorkflowDataDomain> i = dataTranslator.translateEntities(entity.getWorkflowData());
+//			domain.setWorkflowData(i.iterator().next());	
+//		}
+		
+		// one-to-many workflow status
+//		if (entity.getWorkflowStatus() != null && !entity.getWorkflowStatus().isEmpty()) {
+//			ReferenceWorkflowStatusTranslator statusTranslator = new ReferenceWorkflowStatusTranslator();
+//			Iterable<ReferenceWorkflowStatusDomain> i = statusTranslator.translateEntities(entity.getWorkflowStatus());
+//			domain.setWorkflowStatus(IteratorUtils.toList(i.iterator()));
+//			//ordered in entity
+//		}
+
+		// one-to-many workflow relevance
+//		if (entity.getWorkflowRelevance() != null && !entity.getWorkflowRelevance().isEmpty()) {
+//			ReferenceWorkflowRelevanceTranslator statusTranslator = new ReferenceWorkflowRelevanceTranslator();
+//			Iterable<ReferenceWorkflowRelevanceDomain> i = relevanceTranslator.translateEntities(entity.getWorkflowRelevance());
+//			domain.setWorkflowRelevance(IteratorUtils.toList(i.iterator()));
+//			//ordered in entity
+//		}
+
+		// one-to-many workflow tag
+//		if (entity.getWorkflowTag() != null && !entity.getWorkflowTag().isEmpty()) {
+//			ReferenceWorkflowTagTranslator statusTranslator = new ReferenceWorkflowTagTranslator();
+//			Iterable<ReferenceWorkflowTagDomain> i = relevanceTranslator.translateEntities(entity.getWorkflowTag());
+//			domain.setWorkflowTag(IteratorUtils.toList(i.iterator()));
+//			domain.getWorkflowTag().sort(Comparator.comparing(ReferenceWorkflowTagDomain::getTag));
+//		}
+		
 		return domain;
 	}
 

@@ -7,17 +7,14 @@ import lombok.Setter;
 
 @Getter @Setter
 public class ReferenceWorkflowDataDomain extends BaseDomain {
-	
+
 	private String processStatus;
 	private String assocKey;
 	private String refsKey;
-	private Boolean hasPDF;
-	private String linkSupplemental;
-	private String extractedTextKey;
-	private String extractedTextTerm;
+	private String haspdf;
 	private String supplementalKey;
 	private String supplementalTerm;
-	private String extractedText;	
+
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;
@@ -25,4 +22,8 @@ public class ReferenceWorkflowDataDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	
+//	private String linksupplemental;
+//	private String extractedtext;	
+//	private String extractedTextKey;
+//	private String extractedTextTerm;		
 }

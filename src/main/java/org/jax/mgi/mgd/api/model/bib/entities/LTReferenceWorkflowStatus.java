@@ -40,11 +40,11 @@ public class LTReferenceWorkflowStatus extends BaseEntity {
 	
 	@OneToOne
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
-	private User createdByUser;
+	private User createdBy;
 	
 	@OneToOne
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
-	private User modifiedByUser;
+	private User modifiedBy;
 	
 	/***--- transient methods ---***/
 	
@@ -74,14 +74,14 @@ public class LTReferenceWorkflowStatus extends BaseEntity {
 	
 	@Transient
 	public String getCreatedBy() {
-		if (this.createdByUser == null) { return null; }
-		return this.createdByUser.getLogin();
+		if (this.createdBy == null) { return null; }
+		return this.createdBy.getLogin();
 	}
 	
 	@Transient
 	public String getModifidBy() {
-		if (this.modifiedByUser == null) { return null; }
-		return this.modifiedByUser.getLogin();
+		if (this.modifiedBy == null) { return null; }
+		return this.modifiedBy.getLogin();
 	}
 	
 	@Transient

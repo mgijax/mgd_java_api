@@ -47,7 +47,8 @@ public class LTReferenceDomain extends BaseDomain {
 	
 	private ReferenceBookDomain referenceBook;
 	private ReferenceNoteDomain referenceNote;
-
+	private ReferenceWorkflowDataDomain workflowData;
+	
 	// workflow status
 	public String ap_status;
 	public String go_status;
@@ -58,13 +59,7 @@ public class LTReferenceDomain extends BaseDomain {
 	
 	// workflow relevance
 	public String relevance;
-	
-	// workflow data
-	public String has_pdf;
-	public String has_supplemental;
-	public String link_to_supplemental;
-	public String has_extracted_text;
-	
+
 	public String createdBy;
 	public String modifiedBy;
 	public String creation_date;

@@ -13,27 +13,27 @@ public class LTReferenceWorkflowRelevanceDomain extends BaseDomain {
 
 	public String refsKey;
 	public boolean isCurrent;
-	public String creation_date;
-	public String modification_date;
 	public String relevance;
 	public String relevance_abbreviation;
 	public String confidence;
 	public String version;
-	public String createdby;
-	public String modifiedby;
+	public String createdBy;
+	public String modifiedBy;
+	public String creation_date;
+	public String modification_date;
 	
 	public LTReferenceWorkflowRelevanceDomain() {}
 
 	public LTReferenceWorkflowRelevanceDomain(LTReferenceWorkflowRelevance rws) {
 		this.refsKey = rws.getRefsKey();
-		this.creation_date = rws.getCreationDate();
-		this.modification_date = rws.getModificationDate();
-		this.createdby = rws.getCreatedBy();
-		this.modifiedby = this.createdby;
 		this.relevance = rws.getRelevance();
 		this.version = rws.getVersion();
 		this.relevance_abbreviation = rws.getRelevanceAbbreviation();
-
+		this.creation_date = rws.getCreationDate();
+		this.modification_date = rws.getModificationDate();
+		this.createdBy = rws.getCreatedBy();
+		this.modifiedBy = rws.getModifiedBy();
+		
 		if (rws.getConfidence() != null) {
 			this.confidence = rws.getConfidence().toString();
 		}

@@ -13,25 +13,26 @@ public class LTReferenceWorkflowStatusDomain extends BaseDomain {
 
 	public String refsKey;
 	public boolean isCurrent;
-	public String creation_date;
-	public String modification_date;
 	public String group;
 	public String group_abbreviation;
 	public String status;
-	public String createdby;
-	public String modifiedby;
+	public String createdBy;
+	public String modifiedBy;
+	public String creation_date;
+	public String modification_date;
 	
 	public LTReferenceWorkflowStatusDomain() {}
 
 	public LTReferenceWorkflowStatusDomain(LTReferenceWorkflowStatus rws) {
 		this.refsKey = rws.getRefsKey();
-		this.creation_date = rws.getCreationDate();
-		this.modification_date = rws.getModificationDate();
-		this.createdby = rws.getCreatedBy();
-		this.modifiedby = this.createdby;
 		this.group = rws.getGroup();
 		this.group_abbreviation = rws.getGroupAbbreviation();
 		this.status = rws.getStatus();
+		this.creation_date = rws.getCreationDate();
+		this.modification_date = rws.getModificationDate();
+		this.createdBy = rws.getCreatedBy();
+		this.modifiedBy = rws.getModifiedBy();
+		
 		this.isCurrent = true;
 		if (rws.getIsCurrent() == 0) {
 			this.isCurrent = false;

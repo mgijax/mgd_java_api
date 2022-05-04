@@ -77,23 +77,22 @@ public class LTReference extends BaseEntity {
 	private Term referenceTypeTerm;
 
 	@OneToMany()
-	@JoinColumn(name="_refs_key")
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	private List<LTReferenceWorkflowStatus> workflowStatuses;
 	
 	// workflow relevance
 	@OneToMany()
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-	@Where(clause="`isCurrent` = 1")
 	@OrderBy("isCurrent desc")
-	private List<ReferenceWorkflowRelevance> workflowRelevances;	
+	private List<ReferenceWorkflowRelevance> workflowRelevance;	
 	
 	@OneToMany()
-	@JoinColumn(name="_refs_key")
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	private List<LTReferenceWorkflowTag> workflowTags;
 	
 	// only interested in workflow data where extracted text section = 'body' (48804490)
 	@OneToMany()
-	@JoinColumn(name="_refs_key")
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	@Where(clause="`_extractedtext_key` = 48804490")
 	private List<ReferenceWorkflowData> workflowData;
 	

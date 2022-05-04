@@ -151,16 +151,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		return history;
 	}
 
-//	/* get a list of events in the status history of the reference with the specified key
-//	 */
-//	public List<LTReferenceWorkflowRelevanceDomain> setRelevanceHistory(LTReferenceDomain domain) throws APIException {
-//		List<LTReferenceWorkflowRelevanceDomain> history = new ArrayList<LTReferenceWorkflowRelevanceDomain>();
-//		for (LTReferenceWorkflowRelevance event : referenceDAO.getRelevanceHistory(domain.refsKey)) {
-//			history.add(new LTReferenceWorkflowRelevanceDomain(event));
-//		}
-//		return history;
-//	}
-
 	/* set the given workflow_tag for all references identified in the list of keys
 	 */
 	public void updateInBulk(List<String> refsKey2, String workflow_tag, String workflow_tag_operation, User user) throws FatalAPIException, APIException {
@@ -360,16 +350,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		}
 
 		return anyChanges;
-	}
-
-	/* comparison function that handles null values well
-	 */
-	private boolean smartEqual(Object a, Object b) {
-		if (a == null) {
-			if (b == null) { return true; }
-			else { return false; }
-		}		
-		return a.equals(b);
 	}
 
 	// remove any (optional) prefix from DOI ID
@@ -614,8 +594,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		log.info("applyWorkflowRelevanceChanges()");
 
 		// if relevance term has changed or user has changed
-		if (!smartEqual(String.valueOf(entity.getWorkflowRelevances().get(0).getRelevanceTerm().get_term_key()), domain.getRelevanceHistory().get(0).getRelevanceKey())
-			|| !smartEqual(entity.getWorkflowRelevances().get(0).getModifiedBy(), user.getLogin())
+		if (!smartEqual(String.valueOf(entity.getWorkflowRelevance().get(0).getRelevanceTerm().get_term_key()), domain.getRelevanceHistory().get(0).getRelevanceKey())
+			|| !smartEqual(entity.getWorkflowRelevance().get(0).getModifiedBy(), user.getLogin())
 			) {
 
 			// for each relevanceHistory, set processStatus = PROCESS_UPDATE, isCurrent = 0
@@ -931,5 +911,15 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		
 		return anyChanges;
 	}
-		
+
+	/* comparison function that handles null values well
+	 */
+	private boolean smartEqual(Object a, Object b) {
+		if (a == null) {
+			if (b == null) { return true; }
+			else { return false; }
+		}		
+		return a.equals(b);
+	}
+	
 }

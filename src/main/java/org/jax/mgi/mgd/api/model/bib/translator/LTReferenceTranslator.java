@@ -106,25 +106,11 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		}
 		
 		// bib_workflow_relevance
-		if (entity.getWorkflowRelevances() != null) {
+		if (entity.getWorkflowRelevance() != null) {
 			ReferenceWorkflowRelevanceTranslator relevanceTranslator = new ReferenceWorkflowRelevanceTranslator();
-			Iterable<ReferenceWorkflowRelevanceDomain> i = relevanceTranslator.translateEntities(entity.getWorkflowRelevances());
+			Iterable<ReferenceWorkflowRelevanceDomain> i = relevanceTranslator.translateEntities(entity.getWorkflowRelevance());
 			domain.setRelevanceHistory(IteratorUtils.toList(i.iterator()));
 		}
-		
-//		// Data for workflow relevance settings
-//		List<LTReferenceWorkflowRelevance> relevanceHistory = entity.getWorkflowRelevances();
-//		if ((relevanceHistory != null) && (relevanceHistory.size() > 0)) {
-//			domain.relevanceHistory = new ArrayList<ReferenceWorkflowRelevanceDomain>();
-//			String current = null;
-//			for (LTReferenceWorkflowRelevance wr : relevanceHistory) {
-//				domain.relevanceHistory.add(new LTReferenceWorkflowRelevanceDomain(wr));
-//				if (wr.getIsCurrent() == 1) {
-//					current = wr.getRelevance();
-//				}
-//			}
-//			domain.relevance = current;
-//		}
 		
 		// turning this on causes a LazyINitializationExpception; no idea why
 		// one-to-many allele associations

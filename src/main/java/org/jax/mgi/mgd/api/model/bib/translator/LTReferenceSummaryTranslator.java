@@ -18,14 +18,6 @@ public class LTReferenceSummaryTranslator extends BaseEntityDomainTranslator<LTR
 		domain.pubmedid = entity.getCachedID("PubMed");
 		domain.mgiid = entity.getCachedID("MGI");
 		domain.short_citation = entity.getCitationData().get(0).getShort_citation();
-		
-//		domain.ap_status = entity.getStatusView().getAp_status();
-//		domain.go_status = entity.getStatusView().getGo_status();
-//		domain.gxd_status = entity.getStatusView().getGxd_status();
-//		domain.pro_status = entity.getStatusView().getPro_status();
-//		domain.qtl_status = entity.getStatusView().getQtl_status();
-//		domain.tumor_status = entity.getStatusView().getTumor_status();
-		
 		domain.haspdf = String.valueOf(entity.getWorkflowData().get(0).getHaspdf());
 
 		for (int i = 0; i < entity.getWorkflowStatus().size(); i++) {

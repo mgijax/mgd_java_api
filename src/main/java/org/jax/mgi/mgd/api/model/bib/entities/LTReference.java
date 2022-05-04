@@ -9,7 +9,6 @@ import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -67,9 +66,15 @@ public class LTReference extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
-	// maps workflow group abbrev to current status for that group, cached in memory for efficiency - not persisted
-	@Transient
-	private Map<String,String> workflowStatusCache;
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_refs_key")
+	@Where(clause="`_mgitype_key` = 1")
+	@OrderBy("_logicaldb_key, preferred desc")
+	private List<Accession> accessionIDs;
+
+	@OneToOne()
+	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")
+	private Term referenceTypeTerm;
 
 	@OneToMany()
 	@JoinColumn(name="_refs_key")
@@ -83,42 +88,33 @@ public class LTReference extends BaseEntity {
 	@OneToMany()
 	@JoinColumn(name="_refs_key")
 	private List<LTReferenceWorkflowTag> workflowTags;
-
+	
+	// only interested in workflow data where extracted text section = 'body' (48804490)
 	@OneToMany()
-	@JoinColumn(name="_object_key", referencedColumnName="_refs_key")
-	@Where(clause="`_mgitype_key` = 1")
-	@OrderBy("_logicaldb_key, preferred desc")
-	private List<Accession> accessionIDs;
-
-	@OneToOne()
-	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")
-	private Term referenceTypeTerm;
-
+	@JoinColumn(name="_refs_key")
+	@Where(clause="`_extractedtext_key` = 48804490")
+	private List<ReferenceWorkflowData> workflowData;
+	
 	// at most one note
 	@OneToMany()
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	private List<ReferenceNote> referenceNote;
-	
-	// one to many, because row in citation cache might not exist (leaving it 1-0)
-	@OneToMany()
-	@JoinColumn(name="_refs_key")
-	private List<ReferenceCitationCache> citationData;
 
 	// one to many, because book data most often does not exist (leaving it 1-0)
 	@OneToMany()
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	private List<ReferenceBook> referenceBook;
 
+	
+	// one to many, because row in citation cache might not exist (leaving it 1-0)
+	@OneToMany()
+	@JoinColumn(name="_refs_key")
+	private List<ReferenceCitationCache> citationData;
+	
 	// one to one, because counts will always exist
 	@OneToOne()
 	@JoinColumn(name="_refs_key")
 	private LTReferenceAssociatedData associatedData;
-
-	// only interested in workflow data where extracted text section = 'body' (48804490)
-	@OneToMany()
-	@JoinColumn(name="_refs_key")
-	@Where(clause="`_extractedtext_key` = 48804490")
-	private List<ReferenceWorkflowData> workflowData;
 
 	// reference allele associations : alleles (11)
 	@OneToMany()
@@ -127,11 +123,7 @@ public class LTReference extends BaseEntity {
 	@OrderBy("_refassoctype_key")
 	private List<MGIReferenceAssoc> alleleAssocs;
 	
-	@Transient
-	public void addWorkflowRelevance(LTReferenceWorkflowRelevance rel) {
-		this.workflowRelevances.add(rel);
-	}
-	
+
 	/* Find and return the first accession ID matching any specified logical database, prefix,
 	 * is-preferred, and is-private settings.
 	 */
@@ -177,6 +169,25 @@ public class LTReference extends BaseEntity {
 		return findFirstID(Constants.LDB_GOREF, null, null, null);
 	}
 
+	// bib_citation_cache
+	
+	@Transient
+	public String getCachedID(String provider) {
+		citationData.size(); // loads it
+		if ((citationData == null) || (citationData.size() == 0)) { return null; }
+		if ("MGI".equals(provider)) {
+			return citationData.get(0).getMgiid();
+		} else if ("J:".equals(provider)) {
+			return citationData.get(0).getJnumid();
+		} else if ("DOI".equals(provider)) {
+			return citationData.get(0).getDoiid();
+		} else {
+			return citationData.get(0).getPubmedid();
+		}
+	}
+	
+	// bib_workflow_tag
+
 	@Transient
 	public List<String> getWorkflowTagsAsStrings() {
 		List<String> tags = new ArrayList<String>();
@@ -186,7 +197,13 @@ public class LTReference extends BaseEntity {
 		Collections.sort(tags);
 		return tags;
 	}
-
+	
+	// bib_workflowStatus
+	
+	// maps workflow group abbrev to current status for that group, cached in memory for efficiency - not persisted
+	@Transient
+	private Map<String,String> workflowStatusCache;
+	
 	@Transient
 	public void clearWorkflowStatusCache() {
 		workflowStatusCache = null;
@@ -211,6 +228,13 @@ public class LTReference extends BaseEntity {
 		return null;
 	}
 
+	// bib_workflowRelevance
+	
+	@Transient
+	public void addWorkflowRelevance(LTReferenceWorkflowRelevance rel) {
+		this.workflowRelevances.add(rel);
+	}
+	
 	@Transient
 	public String getRelevance() {
 		if (workflowRelevances != null) {
@@ -221,21 +245,6 @@ public class LTReference extends BaseEntity {
 			}
 		}
 		return null;
-	}
-
-	@Transient
-	public String getCachedID(String provider) {
-		citationData.size(); // loads it
-		if ((citationData == null) || (citationData.size() == 0)) { return null; }
-		if ("MGI".equals(provider)) {
-			return citationData.get(0).getMgiid();
-		} else if ("J:".equals(provider)) {
-			return citationData.get(0).getJnumid();
-		} else if ("DOI".equals(provider)) {
-			return citationData.get(0).getDoiid();
-		} else {
-			return citationData.get(0).getPubmedid();
-		}
 	}
 	
 	@Transient

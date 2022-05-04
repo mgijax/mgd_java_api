@@ -41,10 +41,6 @@ public class ReferenceWorkflowRelevance extends BaseEntity {
 	private Date modification_date;
 	
 	@OneToOne
-	@JoinColumn(name="_group_key", referencedColumnName="_term_key")
-	private Term groupTerm;
-	
-	@OneToOne
 	@JoinColumn(name="_relevance_key", referencedColumnName="_term_key")
 	private Term relevanceTerm;
 	

@@ -125,10 +125,25 @@ public class ReferenceWorkflowRelevanceService extends BaseService<ReferenceWork
 				}
 				
 				ReferenceWorkflowRelevance entity = new ReferenceWorkflowRelevance();						
+
+				entity.set_refs_key(Integer.valueOf(parentKey));
 				entity.setRelevanceTerm(termDAO.get(Integer.valueOf(domain.get(i).getRelevanceKey())));
 				entity.setIsCurrent(1);
-				entity.setConfidence(Double.valueOf(domain.get(i).getConfidence()));
-				entity.setVersion(domain.get(i).getVersion());
+				
+				if (domain.get(i).getConfidence() == null || domain.get(i).getConfidence().isEmpty()) {
+					entity.setConfidence(null);
+				}
+				else {
+					entity.setConfidence(Double.valueOf(domain.get(i).getConfidence()));					
+				}
+				
+				if (domain.get(i).getVersion() == null || domain.get(i).getVersion().isEmpty()) {
+					entity.setVersion(null);
+				}
+				else {
+					entity.setVersion(domain.get(i).getVersion());
+				}
+				
 				entity.setCreation_date(new Date());
 				entity.setCreatedBy(user);
 		        entity.setModification_date(new Date());
@@ -147,12 +162,28 @@ public class ReferenceWorkflowRelevanceService extends BaseService<ReferenceWork
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {								
 				log.info("processWorkflowRelevance update");			
 				ReferenceWorkflowRelevance entity = relevanceDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
+				entity.set_refs_key(Integer.valueOf(parentKey));
 				entity.setRelevanceTerm(termDAO.get(Integer.valueOf(domain.get(i).getRelevanceKey())));
-				entity.setIsCurrent(0);
-				entity.setConfidence(Double.valueOf(domain.get(i).getConfidence()));
-				entity.setVersion(domain.get(i).getVersion());				
-				entity.setModification_date(new Date());
-				entity.setModifiedBy(user);
+				entity.setIsCurrent(Integer.valueOf(domain.get(i).getIsCurrent()));
+
+				if (domain.get(i).getConfidence() == null || domain.get(i).getConfidence().isEmpty()) {
+					entity.setConfidence(null);
+				}
+				else {
+					entity.setConfidence(Double.valueOf(domain.get(i).getConfidence()));					
+				}
+				
+				if (domain.get(i).getVersion() == null || domain.get(i).getVersion().isEmpty()) {
+					entity.setVersion(null);
+				}
+				else {
+					entity.setVersion(domain.get(i).getVersion());
+				}
+				
+				// updates of isCurrent does *not* change the modificaton information; so comment this out
+//				entity.setModification_date(new Date());
+//				entity.setModifiedBy(user);
+				
 				relevanceDAO.update(entity);				
 				modified = true;
 				log.info("processWorkflowRelevance/changes processed: " + domain.get(i).getAssocKey());

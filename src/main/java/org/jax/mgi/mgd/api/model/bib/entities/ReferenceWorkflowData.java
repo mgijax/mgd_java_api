@@ -4,9 +4,12 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
@@ -14,6 +17,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,14 +28,14 @@ import lombok.Setter;
 public class ReferenceWorkflowData extends BaseEntity {
 	
 	@Id
-//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="bib_workflow_data_generator")
-//	@SequenceGenerator(name="bib_workflow_data_generator", sequenceName = "bib_workflow_data_seq", allocationSize=1)
-//	@ApiModelProperty(value="primary key")	
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="bib_workflow_data_generator")
+	@SequenceGenerator(name="bib_workflow_data_generator", sequenceName = "bib_workflow_data_seq", allocationSize=1)
+	@ApiModelProperty(value="primary key")	
 	private int _assoc_key;
 
 	private int _refs_key;
 	private int haspdf;
-	private String linksupplemental;
+	private String linksupplemental; // never used in schema/obsolete/should be removed from schema 05/2022
 	private String extractedtext;
 	private Date creation_date;
 	private Date modification_date;

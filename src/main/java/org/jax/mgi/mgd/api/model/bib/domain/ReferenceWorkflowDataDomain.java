@@ -12,16 +12,18 @@ public class ReferenceWorkflowDataDomain extends BaseDomain {
 	private String assocKey;
 	private String refsKey;
 	private String haspdf;
-	private String linksupplemental;
-	private String extractedtext;	
 	private String supplementalKey;
 	private String supplementalTerm;
-	private String extractedTextKey;
-	private String extractedTextTerm;	
+
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;
 	private String modifiedBy;
 	private String creation_date;
-	private String modification_date; 
+	private String modification_date;
+	
+//	private String linksupplemental;
+//	private String extractedtext;	
+//	private String extractedTextKey;
+//	private String extractedTextTerm;		
 }

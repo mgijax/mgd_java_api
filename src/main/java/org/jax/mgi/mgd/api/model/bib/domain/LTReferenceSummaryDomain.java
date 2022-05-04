@@ -22,7 +22,7 @@ public class LTReferenceSummaryDomain extends BaseDomain {
 	public String pro_status;
 	public String qtl_status;
 	public String tumor_status;
-	public String has_pdf;
+	public String haspdf;
 
 	/***--- constructors ---***/
 

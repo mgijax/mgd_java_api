@@ -47,7 +47,8 @@ public class LTReferenceDomain extends BaseDomain {
 	
 	private ReferenceBookDomain referenceBook;
 	private ReferenceNoteDomain referenceNote;
-
+	private ReferenceWorkflowDataDomain workflowData;
+	
 	// workflow status
 	public String ap_status;
 	public String go_status;
@@ -58,13 +59,7 @@ public class LTReferenceDomain extends BaseDomain {
 	
 	// workflow relevance
 	public String relevance;
-	
-	// workflow data
-	public String has_pdf;
-	public String has_supplemental;
-	public String link_to_supplemental;
-	public String has_extracted_text;
-	
+
 	public String createdBy;
 	public String modifiedBy;
 	public String creation_date;
@@ -72,8 +67,8 @@ public class LTReferenceDomain extends BaseDomain {
 	
 	public List<String> workflow_tags;	
 	public List<String> associated_data;
-	public List<LTReferenceWorkflowStatusDomain> statusHistory;
-	public List<LTReferenceWorkflowRelevanceDomain> relevanceHistory;
+	public List<ReferenceWorkflowStatusDomain> statusHistory;
+	public List<ReferenceWorkflowRelevanceDomain> relevanceHistory;
 	
 	// PWI loads this data via calls to MGIReferenceAssocService/getXXX()
 	public List<MGIReferenceAlleleAssocDomain> alleleAssocs;
@@ -84,12 +79,6 @@ public class LTReferenceDomain extends BaseDomain {
 	
 	/* empty constructor - ready for population from JSON */
 	public LTReferenceDomain() {}
-	
-	/* add the given status history to this domain object (not here by default, but added for detail pages)
-	 */
-	public void setStatusHistory (List<LTReferenceWorkflowStatusDomain> history) {
-		this.statusHistory = history;
-	}
 	
 	/* update the status for the given workflow group within this domain object (This method does not persist the
 	 * change to the database.)
@@ -114,7 +103,7 @@ public class LTReferenceDomain extends BaseDomain {
 
 	/* add the given relevance history to this domain object (not here by default, but added for detail pages)
 	 */
-	public void setRelevanceHistory (List<LTReferenceWorkflowRelevanceDomain> history) {
+	public void setRelevanceHistory (List<ReferenceWorkflowRelevanceDomain> history) {
 		this.relevanceHistory = history;
 	}
 	

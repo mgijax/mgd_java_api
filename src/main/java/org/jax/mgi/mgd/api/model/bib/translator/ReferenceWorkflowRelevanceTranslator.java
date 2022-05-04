@@ -21,14 +21,28 @@ public class ReferenceWorkflowRelevanceTranslator extends BaseEntityDomainTransl
 		domain.setIsCurrent(String.valueOf(entity.getIsCurrent()));
 		domain.setRelevanceKey(String.valueOf(entity.getRelevanceTerm().get_term_key()));
 		domain.setRelevance(entity.getRelevanceTerm().getTerm());
-		domain.setConfidence(String.valueOf(entity.getConfidence()));
-		domain.setVersion(entity.getVersion());
+		domain.setRelevanceAbbreviation(entity.getRelevanceTerm().getAbbreviation());
+		
+		if (entity.getConfidence() == null) {
+			domain.setConfidence("");
+		}
+		else {
+			domain.setConfidence(String.valueOf(entity.getConfidence()));
+		}
+		
+		if (entity.getVersion() == null) {
+			domain.setVersion("");
+		}
+		else {
+			domain.setVersion(entity.getVersion());
+		}
+		
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
-		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
-		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
+		domain.setCreation_date(dateFormatter.format(entity.getCreation_date()));
+		domain.setModification_date(dateFormatter.format(entity.getModification_date()));
 		
 		return domain;
 	}

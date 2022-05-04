@@ -6,11 +6,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -62,31 +60,11 @@ public class LTReference extends BaseEntity {
 
 	@OneToOne()
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
-	private User createdByUser;
+	private User createdBy;
 
 	@OneToOne()
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
-	private User modifiedByUser;
-
-	// maps workflow group abbrev to current status for that group, cached in memory for efficiency - not persisted
-	@Transient
-	private Map<String,String> workflowStatusCache;
-
-	/* The @Fetch annotation (below) allows us to specify multiple EAGER-loaded collections, which would
-	 * otherwise throw an error.
-	 */
-	@OneToMany()
-	@JoinColumn(name="_refs_key")
-	private List<LTReferenceWorkflowStatus> workflowStatuses;
-
-	@OneToMany()
-	@JoinColumn(name="_refs_key")
-	@OrderBy("isCurrent desc")
-	private List<LTReferenceWorkflowRelevance> workflowRelevances;
-
-	@OneToMany()
-	@JoinColumn(name="_refs_key")
-	private List<LTReferenceWorkflowTag> workflowTags;
+	private User modifiedBy;
 
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_refs_key")
@@ -98,31 +76,46 @@ public class LTReference extends BaseEntity {
 	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")
 	private Term referenceTypeTerm;
 
+	@OneToMany()
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+	@OrderBy("modification_date desc, isCurrent desc, _group_key")	
+	private List<ReferenceWorkflowStatus> workflowStatus;
+	
+	// workflow relevance
+	@OneToMany()
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+	@OrderBy("modification_date desc, isCurrent desc")
+	private List<ReferenceWorkflowRelevance> workflowRelevance;	
+	
+	@OneToMany()
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+	private List<LTReferenceWorkflowTag> workflowTags;
+	
+	// only interested in workflow data where extracted text section = 'body' (48804490)
+	@OneToMany()
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+	@Where(clause="`_extractedtext_key` = 48804490")
+	private List<ReferenceWorkflowData> workflowData;
+	
 	// at most one note
 	@OneToMany()
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	private List<ReferenceNote> referenceNote;
-	
-	// one to many, because row in citation cache might not exist (leaving it 1-0)
-	@OneToMany(fetch=FetchType.EAGER)
-	@JoinColumn(name="_refs_key")
-	private List<ReferenceCitationCache> citationData;
 
 	// one to many, because book data most often does not exist (leaving it 1-0)
 	@OneToMany()
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	private List<ReferenceBook> referenceBook;
-
+	
+	// one to many, because row in citation cache might not exist (leaving it 1-0)
+	@OneToMany()
+	@JoinColumn(name="_refs_key")
+	private List<ReferenceCitationCache> citationData;
+	
 	// one to one, because counts will always exist
 	@OneToOne()
 	@JoinColumn(name="_refs_key")
 	private LTReferenceAssociatedData associatedData;
-
-	// only interested in workflow data where extracted text section = 'body' (48804490)
-	@OneToMany(fetch=FetchType.EAGER)
-	@JoinColumn(name="_refs_key")
-	@Where(clause="`_extractedtext_key` = 48804490")
-	private Set<LTReferenceWorkflowData> workflowData;
 
 	// reference allele associations : alleles (11)
 	@OneToMany()
@@ -131,11 +124,7 @@ public class LTReference extends BaseEntity {
 	@OrderBy("_refassoctype_key")
 	private List<MGIReferenceAssoc> alleleAssocs;
 	
-	@Transient
-	public void addWorkflowRelevance(LTReferenceWorkflowRelevance rel) {
-		this.workflowRelevances.add(rel);
-	}
-	
+
 	/* Find and return the first accession ID matching any specified logical database, prefix,
 	 * is-preferred, and is-private settings.
 	 */
@@ -181,61 +170,8 @@ public class LTReference extends BaseEntity {
 		return findFirstID(Constants.LDB_GOREF, null, null, null);
 	}
 
-	@Transient
-	public List<String> getWorkflowTagsAsStrings() {
-		List<String> tags = new ArrayList<String>();
-		for (LTReferenceWorkflowTag rwTag : workflowTags) {
-			tags.add(rwTag.getTag().getTerm());
-		}
-		Collections.sort(tags);
-		return tags;
-	}
-
-	@Transient
-	public void clearWorkflowStatusCache() {
-		workflowStatusCache = null;
-	}
-
-	@Transient
-	private void buildWorkflowStatusCache() {
-		workflowStatusCache = new HashMap<String,String>();
-		for (LTReferenceWorkflowStatus rws : workflowStatuses) {
-			if (rws.getIsCurrent() == 1) {
-				workflowStatusCache.put(rws.getGroupAbbreviation(), rws.getStatus());
-			}
-		}
-	}
-
-	@Transient
-	public String getStatus(String groupAbbrev) {
-		if (workflowStatusCache == null) { buildWorkflowStatusCache(); }
-		if (workflowStatusCache.containsKey(groupAbbrev)) {
-			return workflowStatusCache.get(groupAbbrev);
-		}
-		return null;
-	}
-
-	@Transient
-	public String getRelevance() {
-		if (workflowRelevances != null) {
-			for (LTReferenceWorkflowRelevance rel : workflowRelevances) {
-				if (rel.getIsCurrent() == 1) {
-					return rel.getRelevance();
-				}
-			}
-		}
-		return null;
-	}
-
-	@Transient
-	public String getShort_citation() {
-		citationData.size(); // loads it
-		if ((citationData != null) && (citationData.size() > 0)) {
-			return citationData.get(0).getShort_citation();
-		}
-		return null;
-	}
-
+	// bib_citation_cache
+	
 	@Transient
 	public String getCachedID(String provider) {
 		citationData.size(); // loads it
@@ -250,44 +186,46 @@ public class LTReference extends BaseEntity {
 			return citationData.get(0).getPubmedid();
 		}
 	}
+	
+	// bib_workflow_tag
 
-	/* set the reference's modification date to be 'now' and modified-by user to be 'currentUser'
-	 */
-	public void setModificationInfo(User currentUser) {
-		modification_date = new Date();
-		modifiedByUser = currentUser;
-	}
-
-	/* set the given workflow data object to be the one for this reference
-	 */
 	@Transient
-	public void setWorkflowData(LTReferenceWorkflowData rwd) {
-		workflowData.size(); // Loads it
-		for(LTReferenceWorkflowData r: workflowData) {
-			workflowData.remove(r);
-			break;
+	public List<String> getWorkflowTagsAsStrings() {
+		List<String> tags = new ArrayList<String>();
+		for (LTReferenceWorkflowTag rwTag : workflowTags) {
+			tags.add(rwTag.getTag().getTerm());
 		}
-		workflowData.add(rwd);
-	}
-
-	/* If this reference has workflow data, return an object with the extra workflow data;
-	 * otherwise return null.
-	 */
-	@Transient
-	public LTReferenceWorkflowData getWorkflowData() {
-		workflowData.size(); // Loads it
-		for(LTReferenceWorkflowData data: workflowData) {
-			return data;
-		}
-		return null;
+		Collections.sort(tags);
+		return tags;
 	}
 	
+	// bib_workflowStatus
+	
+	// maps workflow group abbrev to current status for that group, cached in memory for efficiency - not persisted
 	@Transient
-	public LTReferenceWorkflowRelevance getWorkflowRelevance() {
-		if ((this.workflowRelevances != null) && (this.workflowRelevances.size() > 0)) {
-			// first one should be the active one
-			return this.workflowRelevances.get(0);
+	private Map<String,String> workflowStatusCache;
+	
+	@Transient
+	public void clearWorkflowStatusCache() {
+		workflowStatusCache = null;
+	}
+
+	@Transient
+	private void buildWorkflowStatusCache() {
+		workflowStatusCache = new HashMap<String,String>();
+		for (ReferenceWorkflowStatus rws : workflowStatus) {
+			if (rws.getIsCurrent() == 1) {
+				workflowStatusCache.put(rws.getGroupTerm().getAbbreviation(), rws.getStatusTerm().getTerm());			}
+		}
+	}
+
+	@Transient
+	public String getStatus(String groupAbbrev) {
+		if (workflowStatusCache == null) { buildWorkflowStatusCache(); }
+		if (workflowStatusCache.containsKey(groupAbbrev)) {
+			return workflowStatusCache.get(groupAbbrev);
 		}
 		return null;
 	}
+
 }

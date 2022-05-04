@@ -110,7 +110,7 @@ public class Reference extends BaseEntity {
 	// workflow relevance
 //	@OneToMany()
 //	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-//	@OrderBy(clause="_group_key, isCurrent desc, modification_date")
+//	@OrderBy(clause="isCurrent desc, modification_date")
 //	private List<ReferenceWorkflowRelevance> workflowRelevance;	
 
 	// workflow tag
@@ -119,8 +119,9 @@ public class Reference extends BaseEntity {
 //	private List<ReferenceWorkflowTag> workflowTag;	
 
 	// workflow data
-//	@OneToMany()
-//	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-//	private List<ReferenceWorkflowData> workflowData;	
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+	@Where(clause="`_extractedtext_key` = 48804490")
+	private List<ReferenceWorkflowData> workflowData;
 
 }

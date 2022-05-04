@@ -1,7 +1,6 @@
 package org.jax.mgi.mgd.api.model.bib.translator;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.collections4.IteratorUtils;
@@ -11,7 +10,6 @@ import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBookDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceNoteDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jboss.logging.Logger;
@@ -99,6 +97,14 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 			//domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
 
+		// data specific to workflows: has supplemental data?, link to supplemental data, has PDF?, has extracted text?
+		// only grabs the extracted text "body" (done in the entity)
+//		if (entity.getWorkflowData() != null) {
+//			ReferenceWorkflowDataTranslator dataTranslator = new ReferenceWorkflowDataTranslator();
+//			Iterable<ReferenceWorkflowDataDomain> i = dataTranslator.translateEntities(entity.getWorkflowData());
+//			domain.setWorkflowData(i.iterator().next());	
+//		}
+		
 		// one-to-many workflow status
 //		if (entity.getWorkflowStatus() != null && !entity.getWorkflowStatus().isEmpty()) {
 //			ReferenceWorkflowStatusTranslator statusTranslator = new ReferenceWorkflowStatusTranslator();

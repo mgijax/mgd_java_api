@@ -1,17 +1,17 @@
 package org.jax.mgi.mgd.api.model.bib.translator;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBookDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceNoteDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowRelevanceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceAssociatedData;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DecodeString;
 
@@ -51,7 +51,7 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		
 		domain.referenceType = entity.getReferenceTypeTerm().getTerm();
 		domain.referenceTypeKey = String.valueOf(entity.getReferenceTypeTerm().get_term_key());
-		domain.short_citation = entity.getShort_citation();
+		domain.short_citation = entity.getCitationData().get(0).getShort_citation();
 		
 		domain.ap_status = entity.getStatus(Constants.WG_AP);
 		domain.go_status = entity.getStatus(Constants.WG_GO);
@@ -59,12 +59,19 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		domain.pro_status = entity.getStatus(Constants.WG_PRO);
 		domain.qtl_status = entity.getStatus(Constants.WG_QTL);
 		domain.tumor_status = entity.getStatus(Constants.WG_TUMOR);
+
+//		workflowStatusCache = new HashMap<String,String>();
+//		for (ReferenceWorkflowStatus rws : workflowStatus) {
+//			if (rws.getIsCurrent() == 1) {
+//				workflowStatusCache.put(rws.getGroupTerm().getAbbreviation(), rws.getStatusTerm().getTerm());			}
+//		}
+		
 		domain.workflow_tags = entity.getWorkflowTagsAsStrings();
 		
 		domain.creation_date = dateFormatter.format(entity.getCreation_date());
 		domain.modification_date = dateFormatter.format(entity.getModification_date());
-		domain.createdBy = entity.getCreatedByUser().getLogin();
-		domain.modifiedBy = entity.getModifiedByUser().getLogin();
+		domain.createdBy = entity.getCreatedBy().getLogin();
+		domain.modifiedBy = entity.getModifiedBy().getLogin();
 		
 		// list of strings, each of which indicates a type of data associated with the reference
 		domain.associated_data = new ArrayList<String>();
@@ -83,7 +90,7 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 			if (flags.getHas_probes() != 0) { domain.associated_data.add("Probes"); }
 			if (flags.getHas_strain() != 0) { domain.associated_data.add("Strain"); }			
 		}
-			
+		
 		// at most one reference note
 		if (entity.getReferenceNote() != null && !entity.getReferenceNote().isEmpty()) {
 			ReferenceNoteTranslator noteTranslator = new ReferenceNoteTranslator();
@@ -99,34 +106,25 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		}
 
 		// data specific to workflows: has supplemental data?, link to supplemental data, has PDF?, has extracted text?
-		LTReferenceWorkflowData workflowData = entity.getWorkflowData();
-		if (workflowData != null) {
-			domain.has_supplemental = workflowData.getSupplemental();
-			domain.link_to_supplemental = workflowData.getLinksupplemental();
-			if (workflowData.getHaspdf() == 0) {
-				domain.has_pdf = "No";
-			} else {
-				domain.has_pdf = "Yes";
-			}
-			if ((workflowData.getExtractedtext() != null) && (workflowData.getExtractedtext().length() > 0)) {
-				domain.has_extracted_text = "Yes";
-			} else {
-				domain.has_extracted_text = "No";
-			}
+		// only grabs the extracted text "body" (done in the entity)
+		if (entity.getWorkflowData() != null) {
+			ReferenceWorkflowDataTranslator dataTranslator = new ReferenceWorkflowDataTranslator();
+			Iterable<ReferenceWorkflowDataDomain> i = dataTranslator.translateEntities(entity.getWorkflowData());
+			domain.setWorkflowData(i.iterator().next());	
 		}
 
-		// Data for workflow relevance settings
-		List<LTReferenceWorkflowRelevance> relevanceHistory = entity.getWorkflowRelevances();
-		if ((relevanceHistory != null) && (relevanceHistory.size() > 0)) {
-			domain.relevanceHistory = new ArrayList<LTReferenceWorkflowRelevanceDomain>();
-			String current = null;
-			for (LTReferenceWorkflowRelevance wr : relevanceHistory) {
-				domain.relevanceHistory.add(new LTReferenceWorkflowRelevanceDomain(wr));
-				if (wr.getIsCurrent() == 1) {
-					current = wr.getRelevance();
-				}
-			}
-			domain.relevance = current;
+		// bib_workflow_status
+		if (entity.getWorkflowStatus() != null) {
+			ReferenceWorkflowStatusTranslator statusTranslator = new ReferenceWorkflowStatusTranslator();
+			Iterable<ReferenceWorkflowStatusDomain> i = statusTranslator.translateEntities(entity.getWorkflowStatus());
+			domain.setStatusHistory(IteratorUtils.toList(i.iterator()));
+		}
+		
+		// bib_workflow_relevance
+		if (entity.getWorkflowRelevance() != null) {
+			ReferenceWorkflowRelevanceTranslator relevanceTranslator = new ReferenceWorkflowRelevanceTranslator();
+			Iterable<ReferenceWorkflowRelevanceDomain> i = relevanceTranslator.translateEntities(entity.getWorkflowRelevance());
+			domain.setRelevanceHistory(IteratorUtils.toList(i.iterator()));
 		}
 		
 		// turning this on causes a LazyINitializationExpception; no idea why

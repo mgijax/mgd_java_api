@@ -17,12 +17,12 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
-import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceWorkflowDataDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceWorkflowDataDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
 import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -44,7 +44,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	@Inject
 	private ReferenceDAO referenceDAO;
 	@Inject
-	private LTReferenceWorkflowDataDAO wfDataDAO;
+	private ReferenceWorkflowDataDAO wfDataDAO;
 	@Inject
 	private TermDAO termDAO;
 	@Inject
@@ -161,16 +161,17 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		noteService.process(String.valueOf(entity.get_refs_key()), domain.getReferenceNote(), user);
 				
 		// supplement = Not checked (31576677)
-		LTReferenceWorkflowData wfDataEntity = new LTReferenceWorkflowData();
+		// extracted text type = body (48804490)
+		ReferenceWorkflowData wfDataEntity = new ReferenceWorkflowData();
 		wfDataEntity.set_refs_key(entity.get_refs_key());
 		wfDataEntity.setSupplementalTerm(termDAO.get(31576677));
 		wfDataEntity.setExtractedTextTerm(termDAO.get(48804490));			
 		wfDataEntity.setExtractedtext(null);
 		wfDataEntity.setHaspdf(0);
 		wfDataEntity.setLinksupplemental(null);
-		wfDataEntity.setCreatedByUser(user);
+		wfDataEntity.setCreatedBy(user);
 		wfDataEntity.setCreation_date(new Date());
-		wfDataEntity.setModifiedByUser(user);
+		wfDataEntity.setModifiedBy(user);
 		wfDataEntity.setModification_date(new Date());
 		wfDataDAO.persist(wfDataEntity);			
 		
@@ -302,7 +303,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		noteService.process(domain.getRefsKey(), domain.getReferenceNote(), user);
 		
 		// supplemental
-//		LTReferenceWorkflowData wfDataEntity = new LTReferenceWorkflowData();
+//		ReferenceWorkflowData wfDataEntity = new ReferenceWorkflowData();
 //		wfDataEntity.set_refs_key(entity.get_refs_key());
 //		wfDataEntity.setSupplementalTerm(termDAO.get(31576677));
 //		wfDataEntity.setExtractedTextTerm(termDAO.get(48804490));			
@@ -1006,13 +1007,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setPro_status(rs.getString("pro_status"));
 				domain.setQtl_status(rs.getString("qtl_status"));
 				domain.setTumor_status(rs.getString("tumor_status"));
-				
-				if (rs.getInt("has_pdf") == 0) {
-					domain.setHas_pdf("no");
-				}
-				else {
-					domain.setHas_pdf("yes");	
-				}
+				domain.setHaspdf(String.valueOf("haspdf"));
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

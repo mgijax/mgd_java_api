@@ -19,12 +19,8 @@ public class ReferenceWorkflowDataTranslator extends BaseEntityDomainTranslator<
 		domain.setAssocKey(String.valueOf(entity.get_assoc_key()));		
 		domain.setRefsKey(String.valueOf(entity.get_refs_key()));
 		domain.setHaspdf(String.valueOf(entity.getHaspdf()));
-		domain.setLinksupplemental(entity.getLinksupplemental());
-		domain.setExtractedtext(entity.getExtractedtext());
 		domain.setSupplementalKey(String.valueOf(entity.getSupplementalTerm().get_term_key()));
 		domain.setSupplementalTerm(entity.getSupplementalTerm().getTerm());
-		domain.setExtractedTextKey(String.valueOf(entity.getExtractedTextTerm().get_term_key()));
-		domain.setExtractedTextTerm(entity.getExtractedTextTerm().getTerm());		
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());

@@ -47,7 +47,8 @@ public class ReferenceDomain extends BaseDomain {
 		
 	private ReferenceBookDomain referenceBook;
 	private ReferenceNoteDomain referenceNote;
-	
+	//private ReferenceWorkflowDataDomain workflowData;
+
 	//private List<AccessionDomain> mgiAccessionIds;
 	//private List<AccessionDomain> editAccessionIds;
 	

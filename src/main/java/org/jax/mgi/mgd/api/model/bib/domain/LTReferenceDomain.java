@@ -83,23 +83,23 @@ public class LTReferenceDomain extends BaseDomain {
 	/* update the status for the given workflow group within this domain object (This method does not persist the
 	 * change to the database.)
 	 */
-	public void setStatus (String group, String status) throws APIException {
-		if (group.equalsIgnoreCase("AP")) {
-			this.ap_status = status;
-		} else if (group.equalsIgnoreCase("GO")) {
-			this.go_status = status;
-		} else if (group.equalsIgnoreCase("GXD")) {
-			this.gxd_status = status;
-		} else if (group.equalsIgnoreCase("PRO")) {
-			this.pro_status = status;
-		} else if (group.equalsIgnoreCase("QTL")) {
-			this.qtl_status = status;
-		} else if (group.equalsIgnoreCase("Tumor")) {
-			this.tumor_status = status;
-		} else {
-			throw new APIException("Unknown workflow group: " + group);
-		}
-	}
+//	public void setStatus (String group, String status) throws APIException {
+//		if (group.equalsIgnoreCase("AP")) {
+//			this.ap_status = status;
+//		} else if (group.equalsIgnoreCase("GO")) {
+//			this.go_status = status;
+//		} else if (group.equalsIgnoreCase("GXD")) {
+//			this.gxd_status = status;
+//		} else if (group.equalsIgnoreCase("PRO")) {
+//			this.pro_status = status;
+//		} else if (group.equalsIgnoreCase("QTL")) {
+//			this.qtl_status = status;
+//		} else if (group.equalsIgnoreCase("Tumor")) {
+//			this.tumor_status = status;
+//		} else {
+//			throw new APIException("Unknown workflow group: " + group);
+//		}
+//	}
 
 	/* add the given relevance history to this domain object (not here by default, but added for detail pages)
 	 */

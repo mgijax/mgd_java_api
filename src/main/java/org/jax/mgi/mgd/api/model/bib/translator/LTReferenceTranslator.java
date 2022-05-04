@@ -9,6 +9,7 @@ import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBookDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceNoteDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowRelevanceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceAssociatedData;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -103,6 +104,13 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 			ReferenceWorkflowDataTranslator dataTranslator = new ReferenceWorkflowDataTranslator();
 			Iterable<ReferenceWorkflowDataDomain> i = dataTranslator.translateEntities(entity.getWorkflowData());
 			domain.setWorkflowData(i.iterator().next());	
+		}
+
+		// bib_workflow_status
+		if (entity.getWorkflowStatus() != null) {
+			ReferenceWorkflowStatusTranslator statusTranslator = new ReferenceWorkflowStatusTranslator();
+			Iterable<ReferenceWorkflowStatusDomain> i = statusTranslator.translateEntities(entity.getWorkflowStatus());
+			domain.setStatusHistory(IteratorUtils.toList(i.iterator()));
 		}
 		
 		// bib_workflow_relevance

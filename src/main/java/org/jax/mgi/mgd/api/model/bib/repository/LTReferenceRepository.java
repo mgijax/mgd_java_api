@@ -22,16 +22,17 @@ import org.jax.mgi.mgd.api.model.acc.dao.MGITypeDAO;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowStatusDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowData;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceBookService;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceNoteService;
+import org.jax.mgi.mgd.api.model.bib.service.ReferenceWorkflowDataService;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceWorkflowRelevanceService;
+import org.jax.mgi.mgd.api.model.bib.service.ReferenceWorkflowStatusService;
 import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceMarkerAssocDomain;
@@ -74,7 +75,11 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	@Inject
 	private ReferenceNoteService noteService;
 	@Inject
+	private ReferenceWorkflowStatusService statusService;	
+	@Inject
 	private ReferenceWorkflowRelevanceService relevanceService;
+	@Inject
+	private ReferenceWorkflowDataService dataService;
 //	@Inject
 //	private AccessionService accessionService;
 	
@@ -95,8 +100,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		log.info("LTReferenceDomain get(String key)");
 		LTReference ref = getReference(key);
 		LTReferenceDomain domain = translator.translate(ref);
-		domain.setStatusHistory(getStatusHistory(domain));
-		//domain.setRelevanceHistory(setRelevanceHistory(domain));
 		return domain;	
 	}
 
@@ -130,7 +133,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		LTReference entity = getReference(domain.refsKey);
 
 		log.info("start: Changes()");
-		Changes(entity, domain, user);
+		applyChanges(entity, domain, user);
 		log.info("stop: Changes()");
 		referenceDAO.persist(entity);		
 		log.info("stop: referenceDAO.persist()");;
@@ -139,16 +142,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		query.getResultList();
 		
 		return null;	// just return null, will look up later on
-	}
-
-	/* get a list of events in the status history of the reference with the specified key
-	 */
-	public List<LTReferenceWorkflowStatusDomain> getStatusHistory(LTReferenceDomain domain) throws APIException {
-		List<LTReferenceWorkflowStatusDomain> history = new ArrayList<LTReferenceWorkflowStatusDomain>();
-		for (LTReferenceWorkflowStatus event : referenceDAO.getStatusHistory(domain.refsKey)) {
-			history.add(new LTReferenceWorkflowStatusDomain(event));
-		}
-		return history;
 	}
 
 	/* set the given workflow_tag for all references identified in the list of keys
@@ -206,7 +199,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		}
 	}
 
-
 	/***--- (private) instance methods ---***/
 
 	/* return a single Term matching the parameters encoded as a Map in the given JSON string
@@ -259,23 +251,23 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	 * (assumes we are working in a transaction and persists any sub-objects into the database, but does
 	 * not persist this Reference object itself, as other changes could be coming)
 	 */
-	private void Changes(LTReference entity, LTReferenceDomain domain, User user) throws NonFatalAPIException, APIException {
+	private void applyChanges(LTReference entity, LTReferenceDomain domain, User user) throws NonFatalAPIException, APIException {
 		// Note that we must have 'anyChanges' after the OR, otherwise short-circuit evaluation will only save
 		// the first section changed.
 
 		boolean anyChanges;
 		
 		anyChanges = applyBasicFieldChanges(entity, domain, user);
-		anyChanges = applyStatusChanges(entity, domain, user) || anyChanges;
+		anyChanges = applyWorkflowStatusChanges(entity, domain, user) || anyChanges;
 		anyChanges = applyTagChanges(entity, domain, user) || anyChanges;
 		anyChanges = applyBookChanges(entity, domain, user) || anyChanges;		// uses ReferenceDomainService()
-		anyChanges = applyNoteChanges(entity, domain, user) | anyChanges;        // uses ReferenceNoteService()
+		anyChanges = applyNoteChanges(entity, domain, user) | anyChanges;		// uses ReferenceNoteService()
 		anyChanges = applyAccessionIDChanges(entity, domain, user) || anyChanges;
 		anyChanges = applyWorkflowDataChanges(entity, domain, user) || anyChanges;
-		anyChanges = applyWorkflowRelevanceChanges(entity, domain, user) || anyChanges;
+		anyChanges = applyWorkflowRelevanceChanges(entity, domain, user) || anyChanges;   			// uses relevanceService
 		anyChanges = applyAlleleAssocChanges(entity, domain.getAlleleAssocs(), user) || anyChanges;	// uses referenceAssocService	
 		anyChanges = applyStrainAssocChanges(entity, domain.getStrainAssocs(), user) || anyChanges;	// uses referenceAssocService	
-		anyChanges = applyMarkerAssocChanges(entity, domain.getMarkerAssocs(), user) || anyChanges;  // uses referenceAssocService
+		anyChanges = applyMarkerAssocChanges(entity, domain.getMarkerAssocs(), user) || anyChanges;	// uses referenceAssocService
 
 		if (anyChanges) {
 			entity.setModifiedBy(user);
@@ -627,35 +619,20 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		
 		log.info("applyWorkflowDataChanges()");
 		
-		boolean anyChanges = false;
-		ReferenceWorkflowData myWD = entity.getWorkflowData().get(0);
-
-		if (myWD != null) {
-			if (!smartEqual(String.valueOf(myWD.getSupplementalTerm().get_term_key()), domain.getWorkflowData().getSupplementalKey())) {
-				myWD.setSupplementalTerm(termDAO.get(Integer.valueOf(domain.getWorkflowData().getSupplementalKey())));
-				myWD.setModifiedBy(user);
-				myWD.setModification_date(new Date());
-				anyChanges = true;
+		if (entity.getWorkflowData().get(0) != null) {
+			if (!smartEqual(String.valueOf(entity.getWorkflowData().get(0).getSupplementalTerm().get_term_key()), domain.getWorkflowData().getSupplementalKey())) {
+				domain.getWorkflowData().setProcessStatus(Constants.PROCESS_UPDATE);
 			}
 		} else {
-			// this should not happen, but if it does...
-			myWD = new ReferenceWorkflowData();
-			myWD.set_refs_key(Integer.valueOf(domain.refsKey));
-			myWD.setHaspdf(0);
-			myWD.setSupplementalTerm(termDAO.get(Integer.valueOf(domain.getWorkflowData().getSupplementalKey())));
-			myWD.setExtractedTextTerm(termDAO.get(48804490)); // "body"
-			myWD.setExtractedtext(null);
-			myWD.setLinksupplemental(null);
-			myWD.setCreatedBy(user);
-			myWD.setModifiedBy(user);
-			myWD.setCreation_date(new Date());
-			myWD.setModification_date(new Date()); 
-			referenceDAO.persist(myWD);
-			//entity.setWorkflowData(myWD);
-			anyChanges = true;
+			// this should not happen, but if it does...create new "body"
+			ReferenceWorkflowDataDomain newData = new ReferenceWorkflowDataDomain();
+			newData.setProcessStatus(Constants.PROCESS_CREATE);
+			newData.setRefsKey(domain.getRefsKey());
+			newData.setSupplementalKey(domain.getWorkflowData().getSupplementalKey());
+			domain.setWorkflowData(newData);
 		}
 
-		return anyChanges;
+		return(dataService.process(domain.getRefsKey(), domain.getWorkflowData(), user));
 	}
 
 	/* handle removing/adding any workflow tags that have changed between the Reference and the passed-in
@@ -764,11 +741,11 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		}
 	}
 
-	/* convenience method, used by applyStatusChanges() to reduce redundant code in setting workflow
+	/* convenience method, used by applyWorkflowStatusChanges() to reduce redundant code in setting workflow
 	 * group statuses.  returns true if an update was made, false if no change.  persists any changes
 	 * to the database.
 	 */
-	private boolean updateStatus(LTReference entity, String groupAbbrev, String currentStatus, String newStatus, User user) throws NonFatalAPIException, APIException {
+	private boolean updateWorkflowStatus(LTReference entity, String groupAbbrev, String currentStatus, String newStatus, User user) throws NonFatalAPIException, APIException {
 
 		// no update if new status matches old status (or if no group is specified)
 		if ( ((currentStatus != null) && currentStatus.equals(newStatus)) || (groupAbbrev == null) ||
@@ -779,8 +756,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		// At this point, we know we have a status update.  If there was an existing record, we need
 		// to flag it as not current.
 		if (currentStatus != null) {
-			for (LTReferenceWorkflowStatus rws : entity.getWorkflowStatuses()) {
-				if ( (rws.getIsCurrent() == 1) && groupAbbrev.equals(rws.getGroupAbbreviation()) ) {
+			for (ReferenceWorkflowStatus rws : entity.getWorkflowStatus()) {
+				if ( (rws.getIsCurrent() == 1) && groupAbbrev.equals(rws.getGroupTerm().getAbbreviation()) ) {
 					rws.setIsCurrent(0);
 					break;				// no more can match, so exit the loop
 				}
@@ -790,17 +767,22 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		// Now we need to add a new status record for this change -- and need to persist this new object to the
 		// database explicitly, before the whole reference gets persisted later on.
 
-		LTReferenceWorkflowStatus newRws = new LTReferenceWorkflowStatus();
-		newRws.set_assoc_key(referenceDAO.getNextWorkflowStatusKey());
+		ReferenceWorkflowStatus newRws = new ReferenceWorkflowStatus();
+		//newRws.set_assoc_key(referenceDAO.getNextWorkflowStatusKey());
 		newRws.set_refs_key(entity.get_refs_key());
 		newRws.setIsCurrent(1);
+
+		//newRws.setGroutTerm(termDAO.get());
 		newRws.setGroupTerm(getTermByAbbreviation(Constants.VOC_WORKFLOW_GROUP, groupAbbrev));
+		
+		//newRws.setStatusTerm(termDAO.get());
 		newRws.setStatusTerm(getTermByTerm(Constants.VOC_WORKFLOW_STATUS, newStatus));
+		
 		newRws.setCreatedBy(user);
 		newRws.setModifiedBy(user);
 		newRws.setCreation_date(new Date());
 		newRws.setModification_date(new Date());
-		entity.getWorkflowStatuses().add(newRws);
+		entity.getWorkflowStatus().add(newRws);
 
 		try {
 			referenceDAO.persist(newRws);
@@ -818,21 +800,21 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	 * As well, if this Reference has no J: number and we just assigned a status other than "Not Routed", 
 	 * then we assign the next available J: number to this reference.
 	 */
-	private boolean applyStatusChanges(LTReference entity, LTReferenceDomain domain, User user) throws NonFatalAPIException, APIException {
+	private boolean applyWorkflowStatusChanges(LTReference entity, LTReferenceDomain domain, User user) throws NonFatalAPIException, APIException {
 		// note that we need to put 'anyChanges' last for each OR pair, otherwise short-circuit evaluation
 		// will only let the first change go through and the rest will not execute.
 
-		boolean anyChanges = updateStatus(entity, Constants.WG_AP, entity.getStatus(Constants.WG_AP), domain.ap_status, user);
-		anyChanges = updateStatus(entity, Constants.WG_GO, entity.getStatus(Constants.WG_GO), domain.go_status, user) || anyChanges;
-		anyChanges = updateStatus(entity, Constants.WG_GXD, entity.getStatus(Constants.WG_GXD), domain.gxd_status, user) || anyChanges;
-		anyChanges = updateStatus(entity, Constants.WG_PRO, entity.getStatus(Constants.WG_PRO), domain.pro_status, user) || anyChanges;
-		anyChanges = updateStatus(entity, Constants.WG_QTL, entity.getStatus(Constants.WG_QTL), domain.qtl_status, user) || anyChanges;
-		anyChanges = updateStatus(entity, Constants.WG_TUMOR, entity.getStatus(Constants.WG_TUMOR), domain.tumor_status, user) || anyChanges;
+		boolean anyChanges = updateWorkflowStatus(entity, Constants.WG_AP, entity.getStatus(Constants.WG_AP), domain.ap_status, user);
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_GO, entity.getStatus(Constants.WG_GO), domain.go_status, user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_GXD, entity.getStatus(Constants.WG_GXD), domain.gxd_status, user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_PRO, entity.getStatus(Constants.WG_PRO), domain.pro_status, user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_QTL, entity.getStatus(Constants.WG_QTL), domain.qtl_status, user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_TUMOR, entity.getStatus(Constants.WG_TUMOR), domain.tumor_status, user) || anyChanges;
 
 		if (anyChanges) {
 			entity.clearWorkflowStatusCache();
 
-			// if no J#  and Status in (Chosen, INdexed, Full-coded), then add J#
+			// if no J# and Status in (Chosen, INdexed, Full-coded), then add J#
 
 			if (entity.getJnumid() == null) {
 

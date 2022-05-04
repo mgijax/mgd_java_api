@@ -101,12 +101,12 @@ public class ReferenceWorkflowDataService extends BaseService<ReferenceWorkflowD
 	}	
 	
 	@Transactional
-	public Boolean process(String parentKey, List<ReferenceWorkflowDataDomain> domain, User user) {
+	public Boolean process(String parentKey, ReferenceWorkflowDataDomain domain, User user) {
 		// process workflow status (create, delete, update)
 		
 		Boolean modified = false;
 		
-		if (domain == null || domain.isEmpty()) {
+		if (domain == null) {
 			log.info("processWorkflowData/nothing to process");
 			return modified;
 		}
@@ -114,55 +114,53 @@ public class ReferenceWorkflowDataService extends BaseService<ReferenceWorkflowD
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
 		
-		for (int i = 0; i < domain.size(); i++) {
-			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {				
-				log.info("processWorkflowData create");				
+		if (domain.getProcessStatus().equals(Constants.PROCESS_CREATE)) {				
+			log.info("processWorkflowData create");				
 				
-				// if extractedtext is empty, then skip
-				// pwi has sent a "c" that is empty/not being used
-//				if (domain.get(i).getExtractedTextKey().isEmpty()) {
-//					continue;
-//				}
+			// if extractedtext is empty, then skip
+			// pwi has sent a "c" that is empty/not being used
+//			if (domain.get(i).getExtractedTextKey().isEmpty()) {
+//				continue;
+//			}
 				
-				ReferenceWorkflowData entity = new ReferenceWorkflowData();				
-				entity.setHaspdf(0);
-				entity.setSupplementalTerm(termDAO.get(Integer.valueOf(domain.get(i).getSupplementalKey())));
-				entity.setExtractedTextTerm(termDAO.get(48804490)); // "body"
-				entity.setExtractedtext(null);				
-				entity.setLinksupplemental(null);
-				entity.setCreation_date(new Date());
-				entity.setCreatedBy(user);
-		        entity.setModification_date(new Date());
-				entity.setModifiedBy(user);
-				dataDAO.persist(entity);				
-				modified = true;
-				log.info("processWorkflowData create successful");
-			}
-			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-				log.info("processWorkflowData delete");
-				ReferenceWorkflowData entity = dataDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
-				dataDAO.remove(entity);
-				modified = true;
-				log.info("processWorkflowData delete successful");
-			}
-			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {								
-				log.info("processWorkflowData update");			
-				ReferenceWorkflowData entity = dataDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
-				entity.setSupplementalTerm(termDAO.get(Integer.valueOf(domain.get(i).getSupplementalKey())));
-				entity.setModifiedBy(user);
-		        entity.setModification_date(new Date());
-				// don't update these fields from API
-//				entity.setHaspdf(0);
-//				entity.setExtractedtext(domain.get(i).getExtractedtext());
-//				entity.setExtractedTextTerm(termDAO.get(Integer.valueOf(domain.get(i).getExtractedTextKey())));
-//				entity.setLinksupplemental(null);
-				dataDAO.update(entity);				
-				modified = true;
-				log.info("processWorkflowData/changes processed: " + domain.get(i).getAssocKey());
-			}
-			else {
-				log.info("processWorkflowData/no changes processed: " + domain.get(i).getAssocKey());
-			}
+			ReferenceWorkflowData entity = new ReferenceWorkflowData();				
+			entity.setHaspdf(0);
+			entity.setSupplementalTerm(termDAO.get(Integer.valueOf(domain.getSupplementalKey())));
+			entity.setExtractedTextTerm(termDAO.get(48804490)); // "body"
+			entity.setExtractedtext(null);				
+			entity.setLinksupplemental(null);
+			entity.setCreation_date(new Date());
+			entity.setCreatedBy(user);
+		    entity.setModification_date(new Date());
+			entity.setModifiedBy(user);
+			dataDAO.persist(entity);				
+			modified = true;
+			log.info("processWorkflowData create successful");
+		}
+		else if (domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
+			log.info("processWorkflowData delete");
+			ReferenceWorkflowData entity = dataDAO.get(Integer.valueOf(domain.getAssocKey()));
+			dataDAO.remove(entity);
+			modified = true;
+			log.info("processWorkflowData delete successful");
+		}
+		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {								
+			log.info("processWorkflowData update");			
+			ReferenceWorkflowData entity = dataDAO.get(Integer.valueOf(domain.getAssocKey()));
+			entity.setSupplementalTerm(termDAO.get(Integer.valueOf(domain.getSupplementalKey())));
+			entity.setModifiedBy(user);
+		    entity.setModification_date(new Date());
+			// don't update these fields from API
+//			entity.setHaspdf(0);
+//			entity.setExtractedtext(domain.get(i).getExtractedtext());
+//			entity.setExtractedTextTerm(termDAO.get(Integer.valueOf(domain.get(i).getExtractedTextKey())));
+//			entity.setLinksupplemental(null);
+			dataDAO.update(entity);				
+			modified = true;
+			log.info("processWorkflowData/changes processed: " + domain.getAssocKey());
+		}
+		else {
+			log.info("processWorkflowData/no changes processed: " + domain.getAssocKey());
 		}
 		
 		log.info("processWorkflowData/processing successful");

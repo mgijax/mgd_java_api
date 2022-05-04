@@ -78,7 +78,8 @@ public class LTReference extends BaseEntity {
 
 	@OneToMany()
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-	private List<LTReferenceWorkflowStatus> workflowStatuses;
+	@OrderBy("isCurrent desc, _group_key, modification_date")	
+	private List<ReferenceWorkflowStatus> workflowStatus;
 	
 	// workflow relevance
 	@OneToMany()
@@ -212,9 +213,9 @@ public class LTReference extends BaseEntity {
 	@Transient
 	private void buildWorkflowStatusCache() {
 		workflowStatusCache = new HashMap<String,String>();
-		for (LTReferenceWorkflowStatus rws : workflowStatuses) {
+		for (ReferenceWorkflowStatus rws : workflowStatus) {
 			if (rws.getIsCurrent() == 1) {
-				workflowStatusCache.put(rws.getGroupAbbreviation(), rws.getStatus());
+				workflowStatusCache.put(rws.getStatusTerm().getAbbreviation(), rws.getStatusTerm().getAbbreviation());
 			}
 		}
 	}

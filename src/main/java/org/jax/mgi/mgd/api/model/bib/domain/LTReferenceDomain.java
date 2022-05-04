@@ -103,14 +103,14 @@ public class LTReferenceDomain extends BaseDomain {
 
 	/* add the given relevance history to this domain object (not here by default, but added for detail pages)
 	 */
-	public void setRelevanceHistory (List<ReferenceWorkflowRelevanceDomain> history) {
-		this.relevanceHistory = history;
-	}
+//	public void setRelevanceHistory (List<ReferenceWorkflowRelevanceDomain> history) {
+//		this.relevanceHistory = history;
+//	}
 	
 	/* update the relevance data for this domain object (This method does not persist the
 	 * change to the database.)
 	 */
-	public void setRelevance (String relevance) throws APIException {
-		this.relevance = relevance;
-	}
+//	public void setRelevance (String relevance) throws APIException {
+//		this.relevance = relevance;
+//	}
 }

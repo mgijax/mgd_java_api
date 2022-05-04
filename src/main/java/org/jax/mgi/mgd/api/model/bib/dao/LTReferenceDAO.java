@@ -19,32 +19,6 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 
 	private Logger log = Logger.getLogger(getClass());
 
-//	/* get a list of the workflow status records for a reference
-//	 */
-//	public List<LTReferenceWorkflowStatus> getStatusHistory (String refsKey) {
-//		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-//		CriteriaQuery<LTReferenceWorkflowStatus> query = builder.createQuery(LTReferenceWorkflowStatus.class);
-//		Root<LTReferenceWorkflowStatus> root = query.from(LTReferenceWorkflowStatus.class);
-//
-//		query.where(builder.equal(root.get("_refs_key"), refsKey));
-//		query.orderBy(builder.desc(root.get("modification_date")));
-//
-//		return entityManager.createQuery(query).getResultList();
-//	}
-
-//	/* get a list of the workflow relevance records for a reference
-//	 */
-//	public List<LTReferenceWorkflowRelevance> getRelevanceHistory (String refsKey) {
-//		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-//		CriteriaQuery<LTReferenceWorkflowRelevance> query = builder.createQuery(LTReferenceWorkflowRelevance.class);
-//		Root<LTReferenceWorkflowRelevance> root = query.from(LTReferenceWorkflowRelevance.class);
-//
-//		query.where(builder.equal(root.get("_refs_key"), refsKey));
-//		query.orderBy(builder.desc(root.get("modification_date")));
-//
-//		return entityManager.createQuery(query).getResultList();
-//	}
-
 	/* return a single reference for the given reference key with all needed lazy-loaded fields already loaded
 	 */
 	@Transactional

@@ -84,7 +84,7 @@ public class LTReference extends BaseEntity {
 	// workflow relevance
 	@OneToMany()
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-	@OrderBy("isCurrent desc")
+	@OrderBy("modification_date desc, isCurrent desc")
 	private List<ReferenceWorkflowRelevance> workflowRelevance;	
 	
 	@OneToMany()

@@ -100,7 +100,7 @@ public class LTReference extends BaseEntity {
 	private List<ReferenceNote> referenceNote;
 	
 	// one to many, because row in citation cache might not exist (leaving it 1-0)
-	@OneToMany(fetch=FetchType.EAGER)
+	@OneToMany()
 	@JoinColumn(name="_refs_key")
 	private List<ReferenceCitationCache> citationData;
 
@@ -115,7 +115,7 @@ public class LTReference extends BaseEntity {
 	private LTReferenceAssociatedData associatedData;
 
 	// only interested in workflow data where extracted text section = 'body' (48804490)
-	@OneToMany(fetch=FetchType.EAGER)
+	@OneToMany()
 	@JoinColumn(name="_refs_key")
 	@Where(clause="`_extractedtext_key` = 48804490")
 	private List<ReferenceWorkflowData> workflowData;

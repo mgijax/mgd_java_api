@@ -303,7 +303,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		noteService.process(domain.getRefsKey(), domain.getReferenceNote(), user);
 		
 		// supplemental
-//		LTReferenceWorkflowData wfDataEntity = new LTReferenceWorkflowData();
+//		ReferenceWorkflowData wfDataEntity = new ReferenceWorkflowData();
 //		wfDataEntity.set_refs_key(entity.get_refs_key());
 //		wfDataEntity.setSupplementalTerm(termDAO.get(31576677));
 //		wfDataEntity.setExtractedTextTerm(termDAO.get(48804490));			

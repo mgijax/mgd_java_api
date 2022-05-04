@@ -53,10 +53,6 @@ public class LTReference extends BaseEntity {
 	private String primaryAuthor;	
 	@Column(name="abstract")
 	private String referenceAbstract;		// just "abstract" is a Java reserved word, so need a prefix
-	
-	@OneToOne()
-	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
-	private LTReferenceStatusView statusView;
 
 	@OneToOne()
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

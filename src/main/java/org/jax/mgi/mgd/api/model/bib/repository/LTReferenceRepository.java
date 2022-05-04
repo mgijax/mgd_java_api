@@ -609,7 +609,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			// add new relevance row
 			ReferenceWorkflowRelevanceDomain newRelevance = new ReferenceWorkflowRelevanceDomain();
 			newRelevance.setProcessStatus(Constants.PROCESS_CREATE);
-			newRelevance.setRefsKey(domain.refsKey);
+			newRelevance.setRefsKey(domain.getRelevanceHistory().get(0).getRefsKey());
 			newRelevance.setIsCurrent("1");
 			newRelevance.setConfidence(null);
 			newRelevance.setVersion(null);

@@ -180,8 +180,10 @@ public class ReferenceWorkflowRelevanceService extends BaseService<ReferenceWork
 					entity.setVersion(domain.get(i).getVersion());
 				}
 				
-				entity.setModification_date(new Date());
-				entity.setModifiedBy(user);
+				// updates of isCurrent does *not* change the modificaton information; so comment this out
+//				entity.setModification_date(new Date());
+//				entity.setModifiedBy(user);
+				
 				relevanceDAO.update(entity);				
 				modified = true;
 				log.info("processWorkflowRelevance/changes processed: " + domain.get(i).getAssocKey());

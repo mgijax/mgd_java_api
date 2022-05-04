@@ -1,17 +1,16 @@
 package org.jax.mgi.mgd.api.model.bib.translator;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBookDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceNoteDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceAssociatedData;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DecodeString;
 
@@ -106,19 +105,26 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 			domain.setWorkflowData(i.iterator().next());	
 		}
 		
-		// Data for workflow relevance settings
-		List<LTReferenceWorkflowRelevance> relevanceHistory = entity.getWorkflowRelevances();
-		if ((relevanceHistory != null) && (relevanceHistory.size() > 0)) {
-			domain.relevanceHistory = new ArrayList<LTReferenceWorkflowRelevanceDomain>();
-			String current = null;
-			for (LTReferenceWorkflowRelevance wr : relevanceHistory) {
-				domain.relevanceHistory.add(new LTReferenceWorkflowRelevanceDomain(wr));
-				if (wr.getIsCurrent() == 1) {
-					current = wr.getRelevance();
-				}
-			}
-			domain.relevance = current;
+		// bib_workflow_relevance
+		if (entity.getWorkflowRelevances() != null) {
+			ReferenceWorkflowRelevanceTranslator relevanceTranslator = new ReferenceWorkflowRelevanceTranslator();
+			Iterable<ReferenceWorkflowRelevanceDomain> i = relevanceTranslator.translateEntities(entity.getWorkflowRelevances());
+			domain.setRelevanceHistory(IteratorUtils.toList(i.iterator()));
 		}
+		
+//		// Data for workflow relevance settings
+//		List<LTReferenceWorkflowRelevance> relevanceHistory = entity.getWorkflowRelevances();
+//		if ((relevanceHistory != null) && (relevanceHistory.size() > 0)) {
+//			domain.relevanceHistory = new ArrayList<ReferenceWorkflowRelevanceDomain>();
+//			String current = null;
+//			for (LTReferenceWorkflowRelevance wr : relevanceHistory) {
+//				domain.relevanceHistory.add(new LTReferenceWorkflowRelevanceDomain(wr));
+//				if (wr.getIsCurrent() == 1) {
+//					current = wr.getRelevance();
+//				}
+//			}
+//			domain.relevance = current;
+//		}
 		
 		// turning this on causes a LazyINitializationExpception; no idea why
 		// one-to-many allele associations

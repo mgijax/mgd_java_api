@@ -70,7 +70,7 @@ public class LTReferenceWorkflowRelevance extends BaseEntity {
 	}
 	
 	@Transient
-	public String getModifidBy() {
+	public String getModifiedBy() {
 		if (this.modifiedBy == null) { return null; }
 		return this.modifiedBy.getLogin();
 	}

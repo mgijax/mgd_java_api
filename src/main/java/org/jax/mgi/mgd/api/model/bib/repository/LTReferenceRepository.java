@@ -619,7 +619,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			// relevance record, and need to mark any old one as no longer current.
 
 			if ( !smartEqual(oldRel.getRelevance(), domain.relevance) || 
-				 !smartEqual(oldRel.getModifidBy(), currentUser.getLogin())
+				 !smartEqual(oldRel.getModifiedBy(), currentUser.getLogin())
 				) {
 
 				if (oldRel != null) {

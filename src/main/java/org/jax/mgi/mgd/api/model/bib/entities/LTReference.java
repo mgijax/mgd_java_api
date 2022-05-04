@@ -215,8 +215,7 @@ public class LTReference extends BaseEntity {
 		workflowStatusCache = new HashMap<String,String>();
 		for (ReferenceWorkflowStatus rws : workflowStatus) {
 			if (rws.getIsCurrent() == 1) {
-				workflowStatusCache.put(rws.getStatusTerm().getAbbreviation(), rws.getStatusTerm().getAbbreviation());
-			}
+				workflowStatusCache.put(rws.getGroupTerm().getAbbreviation(), rws.getStatusTerm().getTerm());			}
 		}
 	}
 

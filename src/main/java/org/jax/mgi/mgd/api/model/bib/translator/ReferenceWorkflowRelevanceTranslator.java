@@ -41,8 +41,8 @@ public class ReferenceWorkflowRelevanceTranslator extends BaseEntityDomainTransl
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
-		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
-		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
+		domain.setCreation_date(dateFormatter.format(entity.getCreation_date()));
+		domain.setModification_date(dateFormatter.format(entity.getModification_date()));
 		
 		return domain;
 	}

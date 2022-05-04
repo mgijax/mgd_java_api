@@ -26,6 +26,6 @@ public class LTReferenceSummaryDomain extends BaseDomain {
 
 	/***--- constructors ---***/
 
-	/* empty constructor - ready for population from JSON */
-	public LTReferenceSummaryDomain() {}
+//	/* empty constructor - ready for population from JSON */
+//	public LTReferenceSummaryDomain() {}
 }

@@ -22,8 +22,21 @@ public class ReferenceWorkflowRelevanceTranslator extends BaseEntityDomainTransl
 		domain.setRelevanceKey(String.valueOf(entity.getRelevanceTerm().get_term_key()));
 		domain.setRelevance(entity.getRelevanceTerm().getTerm());
 		domain.setRelevanceAbbreviation(entity.getRelevanceTerm().getAbbreviation());
-		domain.setConfidence(String.valueOf(entity.getConfidence()));
-		domain.setVersion(entity.getVersion());
+		
+		if (entity.getConfidence() == null) {
+			domain.setConfidence("");
+		}
+		else {
+			domain.setConfidence(String.valueOf(entity.getConfidence()));
+		}
+		
+		if (entity.getVersion() == null) {
+			domain.setVersion("");
+		}
+		else {
+			domain.setVersion(entity.getVersion());
+		}
+		
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());

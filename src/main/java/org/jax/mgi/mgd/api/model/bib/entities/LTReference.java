@@ -79,11 +79,6 @@ public class LTReference extends BaseEntity {
 	@OneToMany()
 	@JoinColumn(name="_refs_key")
 	private List<LTReferenceWorkflowStatus> workflowStatuses;
-
-//	@OneToMany()
-//	@JoinColumn(name="_refs_key")
-//	@OrderBy("isCurrent desc")
-//	private List<LTReferenceWorkflowRelevance> workflowRelevances;
 	
 	// workflow relevance
 	@OneToMany()
@@ -234,31 +229,4 @@ public class LTReference extends BaseEntity {
 		return null;
 	}
 
-	// bib_workflowRelevance
-	
-//	@Transient
-//	public void addWorkflowRelevance(LTReferenceWorkflowRelevance rel) {
-//		this.workflowRelevances.add(rel);
-//	}
-//	
-//	@Transient
-//	public String getRelevance() {
-//		if (workflowRelevances != null) {
-//			for (LTReferenceWorkflowRelevance rel : workflowRelevances) {
-//				if (rel.getIsCurrent() == 1) {
-//					return rel.getRelevance();
-//				}
-//			}
-//		}
-//		return null;
-//	}
-	
-//	@Transient
-//	public LTReferenceWorkflowRelevance getWorkflowRelevance() {
-//		if ((this.workflowRelevances != null) && (this.workflowRelevances.size() > 0)) {
-//			// first one should be the active one
-//			return this.workflowRelevances.get(0);
-//		}
-//		return null;
-//	}
 }

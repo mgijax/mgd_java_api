@@ -126,6 +126,7 @@ public class ReferenceWorkflowRelevanceService extends BaseService<ReferenceWork
 				
 				ReferenceWorkflowRelevance entity = new ReferenceWorkflowRelevance();						
 
+				entity.set_refs_key(Integer.valueOf(parentKey));
 				entity.setRelevanceTerm(termDAO.get(Integer.valueOf(domain.get(i).getRelevanceKey())));
 				entity.setIsCurrent(1);
 				
@@ -161,6 +162,7 @@ public class ReferenceWorkflowRelevanceService extends BaseService<ReferenceWork
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {								
 				log.info("processWorkflowRelevance update");			
 				ReferenceWorkflowRelevance entity = relevanceDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
+				entity.set_refs_key(Integer.valueOf(parentKey));
 				entity.setRelevanceTerm(termDAO.get(Integer.valueOf(domain.get(i).getRelevanceKey())));
 				entity.setIsCurrent(Integer.valueOf(domain.get(i).getIsCurrent()));
 

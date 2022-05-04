@@ -14,6 +14,7 @@ public class ReferenceWorkflowRelevanceDomain extends BaseDomain {
 	private String isCurrent;
 	private String relevanceKey;
 	private String relevance;
+	private String relevanceAbbreviation;	
 	private String confidence;
 	private String version;	
 	private String createdByKey;

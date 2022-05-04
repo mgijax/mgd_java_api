@@ -80,11 +80,18 @@ public class LTReference extends BaseEntity {
 	@JoinColumn(name="_refs_key")
 	private List<LTReferenceWorkflowStatus> workflowStatuses;
 
+//	@OneToMany()
+//	@JoinColumn(name="_refs_key")
+//	@OrderBy("isCurrent desc")
+//	private List<LTReferenceWorkflowRelevance> workflowRelevances;
+	
+	// workflow relevance
 	@OneToMany()
-	@JoinColumn(name="_refs_key")
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+	@Where(clause="`isCurrent` = 1")
 	@OrderBy("isCurrent desc")
-	private List<LTReferenceWorkflowRelevance> workflowRelevances;
-
+	private List<ReferenceWorkflowRelevance> workflowRelevances;	
+	
 	@OneToMany()
 	@JoinColumn(name="_refs_key")
 	private List<LTReferenceWorkflowTag> workflowTags;
@@ -104,7 +111,6 @@ public class LTReference extends BaseEntity {
 	@OneToMany()
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	private List<ReferenceBook> referenceBook;
-
 	
 	// one to many, because row in citation cache might not exist (leaving it 1-0)
 	@OneToMany()
@@ -230,29 +236,29 @@ public class LTReference extends BaseEntity {
 
 	// bib_workflowRelevance
 	
-	@Transient
-	public void addWorkflowRelevance(LTReferenceWorkflowRelevance rel) {
-		this.workflowRelevances.add(rel);
-	}
+//	@Transient
+//	public void addWorkflowRelevance(LTReferenceWorkflowRelevance rel) {
+//		this.workflowRelevances.add(rel);
+//	}
+//	
+//	@Transient
+//	public String getRelevance() {
+//		if (workflowRelevances != null) {
+//			for (LTReferenceWorkflowRelevance rel : workflowRelevances) {
+//				if (rel.getIsCurrent() == 1) {
+//					return rel.getRelevance();
+//				}
+//			}
+//		}
+//		return null;
+//	}
 	
-	@Transient
-	public String getRelevance() {
-		if (workflowRelevances != null) {
-			for (LTReferenceWorkflowRelevance rel : workflowRelevances) {
-				if (rel.getIsCurrent() == 1) {
-					return rel.getRelevance();
-				}
-			}
-		}
-		return null;
-	}
-	
-	@Transient
-	public LTReferenceWorkflowRelevance getWorkflowRelevance() {
-		if ((this.workflowRelevances != null) && (this.workflowRelevances.size() > 0)) {
-			// first one should be the active one
-			return this.workflowRelevances.get(0);
-		}
-		return null;
-	}
+//	@Transient
+//	public LTReferenceWorkflowRelevance getWorkflowRelevance() {
+//		if ((this.workflowRelevances != null) && (this.workflowRelevances.size() > 0)) {
+//			// first one should be the active one
+//			return this.workflowRelevances.get(0);
+//		}
+//		return null;
+//	}
 }

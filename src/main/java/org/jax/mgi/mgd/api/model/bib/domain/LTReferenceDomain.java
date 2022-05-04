@@ -68,7 +68,7 @@ public class LTReferenceDomain extends BaseDomain {
 	public List<String> workflow_tags;	
 	public List<String> associated_data;
 	public List<LTReferenceWorkflowStatusDomain> statusHistory;
-	public List<LTReferenceWorkflowRelevanceDomain> relevanceHistory;
+	public List<ReferenceWorkflowRelevanceDomain> relevanceHistory;
 	
 	// PWI loads this data via calls to MGIReferenceAssocService/getXXX()
 	public List<MGIReferenceAlleleAssocDomain> alleleAssocs;
@@ -109,7 +109,7 @@ public class LTReferenceDomain extends BaseDomain {
 
 	/* add the given relevance history to this domain object (not here by default, but added for detail pages)
 	 */
-	public void setRelevanceHistory (List<LTReferenceWorkflowRelevanceDomain> history) {
+	public void setRelevanceHistory (List<ReferenceWorkflowRelevanceDomain> history) {
 		this.relevanceHistory = history;
 	}
 	

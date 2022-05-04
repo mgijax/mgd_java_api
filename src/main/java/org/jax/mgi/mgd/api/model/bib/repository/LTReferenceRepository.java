@@ -22,16 +22,16 @@ import org.jax.mgi.mgd.api.model.acc.dao.MGITypeDAO;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceWorkflowStatusDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowRelevance;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceBookService;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceNoteService;
+import org.jax.mgi.mgd.api.model.bib.service.ReferenceWorkflowRelevanceService;
 import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceMarkerAssocDomain;
@@ -73,6 +73,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	private ReferenceBookService bookService;
 	@Inject
 	private ReferenceNoteService noteService;
+	@Inject
+	private ReferenceWorkflowRelevanceService relevanceService;
 //	@Inject
 //	private AccessionService accessionService;
 	
@@ -94,7 +96,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		LTReference ref = getReference(key);
 		LTReferenceDomain domain = translator.translate(ref);
 		domain.setStatusHistory(getStatusHistory(domain));
-		domain.setRelevanceHistory(setRelevanceHistory(domain));
+		//domain.setRelevanceHistory(setRelevanceHistory(domain));
 		return domain;	
 	}
 
@@ -149,19 +151,19 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		return history;
 	}
 
-	/* get a list of events in the status history of the reference with the specified key
-	 */
-	public List<LTReferenceWorkflowRelevanceDomain> setRelevanceHistory(LTReferenceDomain domain) throws APIException {
-		List<LTReferenceWorkflowRelevanceDomain> history = new ArrayList<LTReferenceWorkflowRelevanceDomain>();
-		for (LTReferenceWorkflowRelevance event : referenceDAO.getRelevanceHistory(domain.refsKey)) {
-			history.add(new LTReferenceWorkflowRelevanceDomain(event));
-		}
-		return history;
-	}
+//	/* get a list of events in the status history of the reference with the specified key
+//	 */
+//	public List<LTReferenceWorkflowRelevanceDomain> setRelevanceHistory(LTReferenceDomain domain) throws APIException {
+//		List<LTReferenceWorkflowRelevanceDomain> history = new ArrayList<LTReferenceWorkflowRelevanceDomain>();
+//		for (LTReferenceWorkflowRelevance event : referenceDAO.getRelevanceHistory(domain.refsKey)) {
+//			history.add(new LTReferenceWorkflowRelevanceDomain(event));
+//		}
+//		return history;
+//	}
 
 	/* set the given workflow_tag for all references identified in the list of keys
 	 */
-	public void updateInBulk(List<String> refsKey2, String workflow_tag, String workflow_tag_operation, User currentUser) throws FatalAPIException, APIException {
+	public void updateInBulk(List<String> refsKey2, String workflow_tag, String workflow_tag_operation, User user) throws FatalAPIException, APIException {
 
 		// if no references or no tags, just bail out as a no-op
 		if ((refsKey2 == null) || (refsKey2.size() == 0) || (workflow_tag == null) || (workflow_tag.length() == 0)) {
@@ -188,9 +190,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				while (!succeeded) {
 					try {
 						if (workflow_tag_operation.equals(Constants.OP_ADD_WORKFLOW)) {
-							addTag(reference, workflow_tag, currentUser);
+							addTag(reference, workflow_tag, user);
 						} else {
-							removeTag(reference, workflow_tag, currentUser);
+							removeTag(reference, workflow_tag, user);
 						}
 						succeeded = true;
 					} catch (FatalAPIException fe) {
@@ -267,33 +269,33 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	 * (assumes we are working in a transaction and persists any sub-objects into the database, but does
 	 * not persist this Reference object itself, as other changes could be coming)
 	 */
-	private void Changes(LTReference entity, LTReferenceDomain domain, User currentUser) throws NonFatalAPIException, APIException {
+	private void Changes(LTReference entity, LTReferenceDomain domain, User user) throws NonFatalAPIException, APIException {
 		// Note that we must have 'anyChanges' after the OR, otherwise short-circuit evaluation will only save
 		// the first section changed.
 
 		boolean anyChanges;
 		
-		anyChanges = applyBasicFieldChanges(entity, domain, currentUser);
-		anyChanges = applyStatusChanges(entity, domain, currentUser) || anyChanges;
-		anyChanges = applyTagChanges(entity, domain, currentUser) || anyChanges;
-		anyChanges = applyBookChanges(entity, domain, currentUser) || anyChanges;		// uses ReferenceDomainService()
-		anyChanges = applyNoteChanges(entity, domain, currentUser) | anyChanges;        // uses ReferenceNoteService()
-		anyChanges = applyAccessionIDChanges(entity, domain, currentUser) || anyChanges;
-		anyChanges = applyWorkflowDataChanges(entity, domain, currentUser) || anyChanges;
-		anyChanges = applyWorkflowRelevanceChanges(entity, domain, currentUser) || anyChanges;
-		anyChanges = applyAlleleAssocChanges(entity, domain.getAlleleAssocs(), currentUser) || anyChanges;	// uses referenceAssocService	
-		anyChanges = applyStrainAssocChanges(entity, domain.getStrainAssocs(), currentUser) || anyChanges;	// uses referenceAssocService	
-		anyChanges = applyMarkerAssocChanges(entity, domain.getMarkerAssocs(), currentUser) || anyChanges;  // uses referenceAssocService
+		anyChanges = applyBasicFieldChanges(entity, domain, user);
+		anyChanges = applyStatusChanges(entity, domain, user) || anyChanges;
+		anyChanges = applyTagChanges(entity, domain, user) || anyChanges;
+		anyChanges = applyBookChanges(entity, domain, user) || anyChanges;		// uses ReferenceDomainService()
+		anyChanges = applyNoteChanges(entity, domain, user) | anyChanges;        // uses ReferenceNoteService()
+		anyChanges = applyAccessionIDChanges(entity, domain, user) || anyChanges;
+		anyChanges = applyWorkflowDataChanges(entity, domain, user) || anyChanges;
+		anyChanges = applyWorkflowRelevanceChanges(entity, domain, user) || anyChanges;
+		anyChanges = applyAlleleAssocChanges(entity, domain.getAlleleAssocs(), user) || anyChanges;	// uses referenceAssocService	
+		anyChanges = applyStrainAssocChanges(entity, domain.getStrainAssocs(), user) || anyChanges;	// uses referenceAssocService	
+		anyChanges = applyMarkerAssocChanges(entity, domain.getMarkerAssocs(), user) || anyChanges;  // uses referenceAssocService
 
 		if (anyChanges) {
-			entity.setModifiedBy(currentUser);
+			entity.setModifiedBy(user);
 			entity.setModification_date(new Date());
 		}
 	}
 
 	/* handle the basic fields that have changed between this Reference and the given ReferenceDomain
 	 */
-	private boolean applyBasicFieldChanges(LTReference entity, LTReferenceDomain domain, User currentUser) throws FatalAPIException {
+	private boolean applyBasicFieldChanges(LTReference entity, LTReferenceDomain domain, User user) throws FatalAPIException {
 		// exactly one set of basic data per reference, including:  reference type,
 		// author, primary author (derived), journal, title, volume, issue, date, year, pages, 
 		// abstract, and isReviewArticle flag
@@ -351,7 +353,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				entity.setReferenceAbstract(DecodeString.setDecodeToLatin9(domain.referenceAbstract).replace("''",  "'"));			
 			}
 			
-			entity.setModifiedBy(currentUser);
+			entity.setModifiedBy(user);
 			entity.setModification_date(new Date());
 			
 			anyChanges = true;
@@ -402,7 +404,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	/* apply ID changes from domain to entity for PubMed, DOI, and GO REF IDs
 	 */
-	private boolean applyAccessionIDChanges(LTReference entity, LTReferenceDomain domain, User currentUser) {
+	private boolean applyAccessionIDChanges(LTReference entity, LTReferenceDomain domain, User user) {
 		// assumes only one ID per reference for each logical database (valid assumption, August 2017)
 		// need to handle:  new ID for logical db, updated ID for logical db, deleted ID for logical db
 
@@ -428,7 +430,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				}
 			}
 
-			anyChanges = applyOneIDChange(entity, Constants.LDB_DOI, domain.doiid, prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, currentUser) || anyChanges;
+			anyChanges = applyOneIDChange(entity, Constants.LDB_DOI, domain.doiid, prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, user) || anyChanges;
 		}
 
 		if (!smartEqual(entity.getPubmedid(), domain.pubmedid)) {
@@ -443,7 +445,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				}
 			}
 
-			anyChanges = applyOneIDChange(entity, Constants.LDB_PUBMED, domain.pubmedid, prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, currentUser) || anyChanges;
+			anyChanges = applyOneIDChange(entity, Constants.LDB_PUBMED, domain.pubmedid, prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, user) || anyChanges;
 		}
 
 		if (!smartEqual(entity.getGorefid(), domain.gorefid)) {
@@ -458,7 +460,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				}
 			}
 
-			anyChanges = applyOneIDChange(entity, Constants.LDB_GOREF, domain.gorefid, prefixPart, numericPart, Constants.SECONDARY, Constants.PRIVATE, currentUser) || anyChanges;
+			anyChanges = applyOneIDChange(entity, Constants.LDB_GOREF, domain.gorefid, prefixPart, numericPart, Constants.SECONDARY, Constants.PRIVATE, user) || anyChanges;
 		}
 		
 		// if entity contains a jnum and domain does not, ok to try and delete it
@@ -476,7 +478,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				}
 			}
 
-			anyChanges = applyOneIDChange(entity, Constants.LDB_JNUM, domain.jnumid, prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, currentUser) || anyChanges;
+			anyChanges = applyOneIDChange(entity, Constants.LDB_JNUM, domain.jnumid, prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, user) || anyChanges;
 		}
 		
 		return anyChanges;
@@ -485,7 +487,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	/* Apply a single ID change to this reference.  If there already is an ID for this logical database, replace it.  If there wasn't
 	 * one, add one.  And, if there was one previously, but there's not now, then delete it.
 	 */
-	private boolean applyOneIDChange(LTReference entity, Integer ldb, String accID, String prefixPart, Integer numericPart, Integer preferred, Integer isPrivate, User currentUser) {
+	private boolean applyOneIDChange(LTReference entity, Integer ldb, String accID, String prefixPart, Integer numericPart, Integer preferred, Integer isPrivate, User user) {
 		// first parameter is required; bail out if it is null
 		if (ldb == null) { return false; }
 		
@@ -509,7 +511,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		}
 
 		// convert to:
-		//if (accessionService.process(domain.getRefsKey(), domain.getEditAccessionIds(), "1", currentUser)) {
+		//if (accessionService.process(domain.getRefsKey(), domain.getEditAccessionIds(), "1", user)) {
 		
 		// If we had a previous ID for this logical database, we either need to modify it or delete it.
 		if (idPos >= 0) {
@@ -525,7 +527,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				myID.setPrefixPart(prefixPart);
 				myID.setNumericPart(numericPart);
 				myID.setModification_date(new Date());
-				myID.setModifiedBy(currentUser);
+				myID.setModifiedBy(user);
 			}
 		} else {
 			// We didn't find an existing ID for this logical database, so we need to add one.
@@ -541,8 +543,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			myID.setNumericPart(numericPart);
 			myID.setCreation_date(new Date());
 			myID.setModification_date(new Date());
-			myID.setCreatedBy(currentUser);
-			myID.setModifiedBy(currentUser);
+			myID.setCreatedBy(user);
+			myID.setModifiedBy(user);
 			referenceDAO.persist(myID);
 		}
 		return true;
@@ -606,51 +608,41 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	/* apply changes in workflow relevance from domain to entity
 	 */
-	private boolean applyWorkflowRelevanceChanges(LTReference entity, LTReferenceDomain domain, User currentUser) throws APIException {
-		// need to handle:  updated workflow relevance, new workflow relevance -- (no deletions)
+	private boolean applyWorkflowRelevanceChanges(LTReference entity, LTReferenceDomain domain, User user) throws APIException {
+		// updated workflow relevance, new workflow relevance -- (no deletions)
 
 		log.info("applyWorkflowRelevanceChanges()");
 
-		boolean anyChanges = false;
-		LTReferenceWorkflowRelevance oldRel = entity.getWorkflowRelevance();
+		// if relevance term has changed or user has changed
+		if (!smartEqual(String.valueOf(entity.getWorkflowRelevances().get(0).getRelevanceTerm().get_term_key()), domain.getRelevanceHistory().get(0).getRelevanceKey())
+			|| !smartEqual(entity.getWorkflowRelevances().get(0).getModifiedBy(), user.getLogin())
+			) {
 
-		if (oldRel != null) {
-			// Compare with old relevance.  If matches, no change.  If does not match, need to create a new
-			// relevance record, and need to mark any old one as no longer current.
-
-			if ( !smartEqual(oldRel.getRelevance(), domain.relevance) || 
-				 !smartEqual(oldRel.getModifiedBy(), currentUser.getLogin())
-				) {
-
-				if (oldRel != null) {
-					// need to mark old as no longer current
-					oldRel.setIsCurrent(0);
-					referenceDAO.persist(oldRel);
+			// for each relevanceHistory, set processStatus = PROCESS_UPDATE, isCurrent = 0
+			for (int i = 0; i < domain.getRelevanceHistory().size(); i++) {
+				if (domain.getRelevanceHistory().get(i).getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
+					domain.getRelevanceHistory().get(i).setProcessStatus(Constants.PROCESS_UPDATE);
+					domain.getRelevanceHistory().get(i).setIsCurrent("0");
 				}
-
-				LTReferenceWorkflowRelevance rel = new LTReferenceWorkflowRelevance();
-				rel.set_refs_key(Integer.valueOf(domain.refsKey));
-				rel.setIsCurrent(1);
-				rel.setRelevance(getTermByTerm(Constants.VOC_RELEVANCE, domain.relevance));
-
-				rel.setCreatedBy(currentUser);
-				rel.setModifiedBy(currentUser);
-				rel.setCreation_date(new Date());
-				rel.setModification_date(new Date());
-
-				rel.set_assoc_key(referenceDAO.getNextWorkflowRelevanceKey());
-
-				referenceDAO.persist(rel);
-				entity.addWorkflowRelevance(rel);
-				anyChanges = true;
 			}
+				
+			// add new relevance row
+			ReferenceWorkflowRelevanceDomain newRelevance = new ReferenceWorkflowRelevanceDomain();
+			newRelevance.setProcessStatus(Constants.PROCESS_CREATE);
+			newRelevance.setRefsKey(domain.refsKey);
+			newRelevance.setIsCurrent("1");
+			newRelevance.setConfidence(null);
+			newRelevance.setVersion(null);
+			newRelevance.setRelevanceKey(domain.getRelevanceHistory().get(0).getRelevanceKey());
+			domain.getRelevanceHistory().add(newRelevance);
 		}
-		return anyChanges;
+		return(relevanceService.process(domain.getRefsKey(), domain.getRelevanceHistory(), user));
 	}
+	
 
 	/* apply changes in workflow data fields (not status, though) from domain to entity
 	 */
-	private boolean applyWorkflowDataChanges(LTReference entity, LTReferenceDomain domain, User currentUser) throws APIException {
+	private boolean applyWorkflowDataChanges(LTReference entity, LTReferenceDomain domain, User user) throws APIException {
 		// updates supplemental key which is stored in workflow data "body"
 		
 		log.info("applyWorkflowDataChanges()");
@@ -661,7 +653,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		if (myWD != null) {
 			if (!smartEqual(String.valueOf(myWD.getSupplementalTerm().get_term_key()), domain.getWorkflowData().getSupplementalKey())) {
 				myWD.setSupplementalTerm(termDAO.get(Integer.valueOf(domain.getWorkflowData().getSupplementalKey())));
-				myWD.setModifiedBy(currentUser);
+				myWD.setModifiedBy(user);
 				myWD.setModification_date(new Date());
 				anyChanges = true;
 			}
@@ -674,8 +666,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			myWD.setExtractedTextTerm(termDAO.get(48804490)); // "body"
 			myWD.setExtractedtext(null);
 			myWD.setLinksupplemental(null);
-			myWD.setCreatedBy(currentUser);
-			myWD.setModifiedBy(currentUser);
+			myWD.setCreatedBy(user);
+			myWD.setModifiedBy(user);
 			myWD.setCreation_date(new Date());
 			myWD.setModification_date(new Date()); 
 			referenceDAO.persist(myWD);
@@ -690,7 +682,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	 * ReferenceDomain.  Persists any tag changes to the database.  Returns true if any changes were made,
 	 * false otherwise.
 	 */
-	private boolean applyTagChanges(LTReference entity, LTReferenceDomain domain, User currentUser) throws NonFatalAPIException, APIException {
+	private boolean applyTagChanges(LTReference entity, LTReferenceDomain domain, User user) throws NonFatalAPIException, APIException {
 
 		log.info("applyTagChanges()");
 		
@@ -731,7 +723,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 		// add new tags (use shared method, as this will be useful when adding tags to batches of references)
 		for (String rdTag : toAdd) {
-			addTag(entity, rdTag, currentUser);
+			addTag(entity, rdTag, user);
 		}
 
 		return (toDelete.size() > 0) || (toAdd.size() > 0);
@@ -739,7 +731,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	/* shared method for adding a workflow tag to a Reference
 	 */
-	public void addTag(LTReference entity, String rdTag, User currentUser) throws NonFatalAPIException, APIException {
+	public void addTag(LTReference entity, String rdTag, User user) throws NonFatalAPIException, APIException {
 		// if we already have this tag applied, skip it (extra check needed for batch additions to avoid
 		// adding duplicates)
 
@@ -759,8 +751,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			rwTag.set_assoc_key(referenceDAO.getNextWorkflowTagKey());
 			rwTag.set_refs_key(entity.get_refs_key());
 			rwTag.setTag(tagTerm);
-			rwTag.setCreatedBy(currentUser);
-			rwTag.setModifiedBy(currentUser);
+			rwTag.setCreatedBy(user);
+			rwTag.setModifiedBy(user);
 			rwTag.setCreation_date(new Date());
 			rwTag.setModification_date(new Date());
 			try {
@@ -770,7 +762,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			}
 
 			entity.getWorkflowTags().add(rwTag);
-			entity.setModifiedBy(currentUser);
+			entity.setModifiedBy(user);
 			entity.setModification_date(new Date());
 
 		}
@@ -778,14 +770,14 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	/* shared method for removing a workflow tag from a Reference (no-op if this ref doesn't have the tag)
 	 */
-	public void removeTag(LTReference entity, String rdTag, User currentUser) throws APIException {
+	public void removeTag(LTReference entity, String rdTag, User user) throws APIException {
 		if (entity.getWorkflowTags() == null) { return; }
 
 		String lowerTag = rdTag.toLowerCase().trim();
 		for (LTReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
 			if (lowerTag.equals(refTag.getTag().getTerm().toLowerCase()) ) {
 				referenceDAO.remove(refTag);
-				entity.setModifiedBy(currentUser);
+				entity.setModifiedBy(user);
 				entity.setModification_date(new Date());
 				return;
 			}
@@ -796,7 +788,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	 * group statuses.  returns true if an update was made, false if no change.  persists any changes
 	 * to the database.
 	 */
-	private boolean updateStatus(LTReference entity, String groupAbbrev, String currentStatus, String newStatus, User currentUser) throws NonFatalAPIException, APIException {
+	private boolean updateStatus(LTReference entity, String groupAbbrev, String currentStatus, String newStatus, User user) throws NonFatalAPIException, APIException {
 
 		// no update if new status matches old status (or if no group is specified)
 		if ( ((currentStatus != null) && currentStatus.equals(newStatus)) || (groupAbbrev == null) ||
@@ -824,8 +816,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		newRws.setIsCurrent(1);
 		newRws.setGroupTerm(getTermByAbbreviation(Constants.VOC_WORKFLOW_GROUP, groupAbbrev));
 		newRws.setStatusTerm(getTermByTerm(Constants.VOC_WORKFLOW_STATUS, newStatus));
-		newRws.setCreatedBy(currentUser);
-		newRws.setModifiedBy(currentUser);
+		newRws.setCreatedBy(user);
+		newRws.setModifiedBy(user);
 		newRws.setCreation_date(new Date());
 		newRws.setModification_date(new Date());
 		entity.getWorkflowStatuses().add(newRws);
@@ -846,16 +838,16 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	 * As well, if this Reference has no J: number and we just assigned a status other than "Not Routed", 
 	 * then we assign the next available J: number to this reference.
 	 */
-	private boolean applyStatusChanges(LTReference entity, LTReferenceDomain domain, User currentUser) throws NonFatalAPIException, APIException {
+	private boolean applyStatusChanges(LTReference entity, LTReferenceDomain domain, User user) throws NonFatalAPIException, APIException {
 		// note that we need to put 'anyChanges' last for each OR pair, otherwise short-circuit evaluation
 		// will only let the first change go through and the rest will not execute.
 
-		boolean anyChanges = updateStatus(entity, Constants.WG_AP, entity.getStatus(Constants.WG_AP), domain.ap_status, currentUser);
-		anyChanges = updateStatus(entity, Constants.WG_GO, entity.getStatus(Constants.WG_GO), domain.go_status, currentUser) || anyChanges;
-		anyChanges = updateStatus(entity, Constants.WG_GXD, entity.getStatus(Constants.WG_GXD), domain.gxd_status, currentUser) || anyChanges;
-		anyChanges = updateStatus(entity, Constants.WG_PRO, entity.getStatus(Constants.WG_PRO), domain.pro_status, currentUser) || anyChanges;
-		anyChanges = updateStatus(entity, Constants.WG_QTL, entity.getStatus(Constants.WG_QTL), domain.qtl_status, currentUser) || anyChanges;
-		anyChanges = updateStatus(entity, Constants.WG_TUMOR, entity.getStatus(Constants.WG_TUMOR), domain.tumor_status, currentUser) || anyChanges;
+		boolean anyChanges = updateStatus(entity, Constants.WG_AP, entity.getStatus(Constants.WG_AP), domain.ap_status, user);
+		anyChanges = updateStatus(entity, Constants.WG_GO, entity.getStatus(Constants.WG_GO), domain.go_status, user) || anyChanges;
+		anyChanges = updateStatus(entity, Constants.WG_GXD, entity.getStatus(Constants.WG_GXD), domain.gxd_status, user) || anyChanges;
+		anyChanges = updateStatus(entity, Constants.WG_PRO, entity.getStatus(Constants.WG_PRO), domain.pro_status, user) || anyChanges;
+		anyChanges = updateStatus(entity, Constants.WG_QTL, entity.getStatus(Constants.WG_QTL), domain.qtl_status, user) || anyChanges;
+		anyChanges = updateStatus(entity, Constants.WG_TUMOR, entity.getStatus(Constants.WG_TUMOR), domain.tumor_status, user) || anyChanges;
 
 		if (anyChanges) {
 			entity.clearWorkflowStatusCache();
@@ -880,7 +872,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				if (addJnumid) {
 					try {
 						log.info("Assigning new J: number");
-						referenceDAO.assignNewJnumID(String.valueOf(entity.get_refs_key()), currentUser.get_user_key());
+						referenceDAO.assignNewJnumID(String.valueOf(entity.get_refs_key()), user.get_user_key());
 						log.info(" - finished");
 					} catch (Exception e) {
 						log.info("Caught exception: " + e.toString());
@@ -894,13 +886,13 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	/* apply any changes from domain to entity for the reference/allele associations
 	 */
-	private boolean applyAlleleAssocChanges(LTReference entity, List<MGIReferenceAlleleAssocDomain> domain, User currentUser) {
+	private boolean applyAlleleAssocChanges(LTReference entity, List<MGIReferenceAlleleAssocDomain> domain, User user) {
 		// referenceAssocService will handle add (c), delete (d)
 
 		boolean anyChanges = false;
 
 		if (domain != null) {
-			if (referenceAssocService.processAlleleAssoc(domain, currentUser)) {
+			if (referenceAssocService.processAlleleAssoc(domain, user)) {
 				anyChanges = true;
 			}
 		}
@@ -910,13 +902,13 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	/* apply any changes from domain to entity for the reference/strain associations
 	 */
-	private boolean applyStrainAssocChanges(LTReference entity, List<MGIReferenceStrainAssocDomain> domain, User currentUser) {
+	private boolean applyStrainAssocChanges(LTReference entity, List<MGIReferenceStrainAssocDomain> domain, User user) {
 		// referenceAssocService will handle add (c), delete (d)
 
 		boolean anyChanges = false;
 
 		if (domain != null) {
-			if (referenceAssocService.processStrainAssoc(domain, currentUser)) {
+			if (referenceAssocService.processStrainAssoc(domain, user)) {
 				anyChanges = true;
 			}
 		}
@@ -926,13 +918,13 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	/* apply any changes from domain to entity for the reference/marker associations
 	 */
-	private boolean applyMarkerAssocChanges(LTReference entity, List<MGIReferenceMarkerAssocDomain> domain, User currentUser) {
+	private boolean applyMarkerAssocChanges(LTReference entity, List<MGIReferenceMarkerAssocDomain> domain, User user) {
 		// referenceAssocService will handle add (c), delete (d)
 
 		boolean anyChanges = false;
 
 		if (domain != null) {
-			if (referenceAssocService.processMarkerAssoc(domain, currentUser)) {
+			if (referenceAssocService.processMarkerAssoc(domain, user)) {
 				anyChanges = true;
 			}
 		}

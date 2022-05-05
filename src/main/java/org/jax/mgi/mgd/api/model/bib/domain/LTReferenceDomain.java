@@ -69,6 +69,7 @@ public class LTReferenceDomain extends BaseDomain {
 	public List<String> associated_data;
 	public List<ReferenceWorkflowStatusDomain> statusHistory;
 	public List<ReferenceWorkflowRelevanceDomain> relevanceHistory;
+	public List<ReferenceWorkflowTagDomain> tagHistory;
 	
 	// PWI loads this data via calls to MGIReferenceAssocService/getXXX()
 	public List<MGIReferenceAlleleAssocDomain> alleleAssocs;
@@ -77,8 +78,8 @@ public class LTReferenceDomain extends BaseDomain {
 
 	/***--- constructors ---***/
 	
-	/* empty constructor - ready for population from JSON */
-	public LTReferenceDomain() {}
+//	/* empty constructor - ready for population from JSON */
+//	public LTReferenceDomain() {}
 	
 	/* update the status for the given workflow group within this domain object (This method does not persist the
 	 * change to the database.)
@@ -99,18 +100,5 @@ public class LTReferenceDomain extends BaseDomain {
 		} else {
 			throw new APIException("Unknown workflow group: " + group);
 		}
-	}
-
-	/* add the given relevance history to this domain object (not here by default, but added for detail pages)
-	 */
-	public void setRelevanceHistory (List<ReferenceWorkflowRelevanceDomain> history) {
-		this.relevanceHistory = history;
-	}
-	
-	/* update the relevance data for this domain object (This method does not persist the
-	 * change to the database.)
-	 */
-	public void setRelevance (String relevance) throws APIException {
-		this.relevance = relevance;
 	}
 }

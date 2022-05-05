@@ -85,7 +85,7 @@ public class LTReference extends BaseEntity {
 	
 	@OneToMany()
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-	private List<LTReferenceWorkflowTag> workflowTags;
+	private List<ReferenceWorkflowTag> workflowTag;
 	
 	// only interested in workflow data where extracted text section = 'body' (48804490)
 	@OneToMany()
@@ -188,8 +188,8 @@ public class LTReference extends BaseEntity {
 	@Transient
 	public List<String> getWorkflowTagsAsStrings() {
 		List<String> tags = new ArrayList<String>();
-		for (LTReferenceWorkflowTag rwTag : workflowTags) {
-			tags.add(rwTag.getTag().getTerm());
+		for (ReferenceWorkflowTag rwTag : workflowTag) {
+			tags.add(rwTag.getTagTerm().getTerm());
 		}
 		Collections.sort(tags);
 		return tags;

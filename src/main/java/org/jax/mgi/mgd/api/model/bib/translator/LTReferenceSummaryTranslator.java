@@ -8,7 +8,9 @@ import org.jax.mgi.mgd.api.util.Constants;
 public class LTReferenceSummaryTranslator extends BaseEntityDomainTranslator<LTReference, LTReferenceSummaryDomain>{
 	@Override
 	protected LTReferenceSummaryDomain entityToDomain(LTReference entity) {
+
 		if (entity == null) { return null; }
+
 		LTReferenceSummaryDomain domain = new LTReferenceSummaryDomain();
 
 		domain.refsKey = String.valueOf(entity.get_refs_key());

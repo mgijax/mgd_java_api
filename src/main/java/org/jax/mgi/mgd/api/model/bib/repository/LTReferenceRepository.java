@@ -25,9 +25,9 @@ import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceBookService;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceNoteService;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceWorkflowDataService;
@@ -655,13 +655,13 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		}
 
 		// list of tags that need to be removed from this object
-		List<LTReferenceWorkflowTag> toDelete = new ArrayList<LTReferenceWorkflowTag>();
+		List<ReferenceWorkflowTag> toDelete = new ArrayList<ReferenceWorkflowTag>();
 
 		// Now we need to diff the set of tags we already have and the set of tags to potentially add. Anything
 		// left in toAdd will need to be added as a new tag, and anything in toDelete will need to be removed.
 
-		for (LTReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
-			String myTag = refTag.getTag().getTerm();
+		for (ReferenceWorkflowTag refTag : entity.getWorkflowTag()) {
+			String myTag = refTag.getTagTerm().getTerm();
 
 			// matching tags
 			if (toAdd.contains(myTag)) {
@@ -674,7 +674,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		}
 
 		// remove defunct tags
-		for (LTReferenceWorkflowTag rwTag : toDelete) {
+		for (ReferenceWorkflowTag rwTag : toDelete) {
 			referenceDAO.remove(rwTag);
 		}
 
@@ -693,8 +693,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		// adding duplicates)
 
 		String trimTag = rdTag.trim();
-		for (LTReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
-			if (trimTag.equals(refTag.getTag().getTerm()) ) {
+		for (ReferenceWorkflowTag refTag : entity.getWorkflowTag()) {
+			if (trimTag.equals(refTag.getTagTerm().getTerm()) ) {
 				return;
 			}
 		}
@@ -704,10 +704,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 		Term tagTerm = getTermByTerm(Constants.VOC_WORKFLOW_TAGS, rdTag);
 		if (tagTerm != null) {
-			LTReferenceWorkflowTag rwTag = new LTReferenceWorkflowTag();
-			rwTag.set_assoc_key(referenceDAO.getNextWorkflowTagKey());
+			ReferenceWorkflowTag rwTag = new ReferenceWorkflowTag();
 			rwTag.set_refs_key(entity.get_refs_key());
-			rwTag.setTag(tagTerm);
+			rwTag.setTagTerm(tagTerm);
 			rwTag.setCreatedBy(user);
 			rwTag.setModifiedBy(user);
 			rwTag.setCreation_date(new Date());
@@ -718,7 +717,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				throw new NonFatalAPIException("Cannot add tag: " + e.toString());
 			}
 
-			entity.getWorkflowTags().add(rwTag);
+			entity.getWorkflowTag().add(rwTag);
 			entity.setModifiedBy(user);
 			entity.setModification_date(new Date());
 
@@ -728,11 +727,11 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	/* shared method for removing a workflow tag from a Reference (no-op if this ref doesn't have the tag)
 	 */
 	public void removeTag(LTReference entity, String rdTag, User user) throws APIException {
-		if (entity.getWorkflowTags() == null) { return; }
+		if (entity.getWorkflowTag() == null) { return; }
 
 		String lowerTag = rdTag.toLowerCase().trim();
-		for (LTReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
-			if (lowerTag.equals(refTag.getTag().getTerm().toLowerCase()) ) {
+		for (ReferenceWorkflowTag refTag : entity.getWorkflowTag()) {
+			if (lowerTag.equals(refTag.getTagTerm().getTerm().toLowerCase()) ) {
 				referenceDAO.remove(refTag);
 				entity.setModifiedBy(user);
 				entity.setModification_date(new Date());

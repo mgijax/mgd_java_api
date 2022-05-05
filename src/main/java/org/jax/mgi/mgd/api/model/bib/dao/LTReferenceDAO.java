@@ -1,7 +1,5 @@
 package org.jax.mgi.mgd.api.model.bib.dao;
 
-import java.math.BigInteger;
-
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
@@ -28,7 +26,7 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		LTReference ref =  entityManager.find(LTReference.class, Integer.valueOf(refsKey));
 		if (ref == null) { return null; }
 		
-		Hibernate.initialize(ref.getWorkflowTags().size());
+		Hibernate.initialize(ref.getWorkflowTag().size());
 		Hibernate.initialize(ref.getReferenceTypeTerm());
 		Hibernate.initialize(ref.getReferenceNote());
 		Hibernate.initialize(ref.getReferenceBook());
@@ -39,15 +37,6 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		Hibernate.initialize(ref.getWorkflowData());
 		Hibernate.initialize(ref.getWorkflowStatus());
 		return ref;
-	}
-
-	/* get the next available primary key for a workflow tag record
-	 */
-	public synchronized int getNextWorkflowTagKey() {
-		// returns an integer rather than *, as the void return was causing a mapping exception
-		Query query = entityManager.createNativeQuery("select nextval('bib_workflow_tag_seq')");
-		BigInteger results = (BigInteger) query.getSingleResult();
-		return results.intValue();
 	}
 
 	/* add a new J: number for the given reference key and user key

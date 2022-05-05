@@ -7,7 +7,7 @@ import org.jax.mgi.mgd.api.model.BaseDomain;
  * Has: fields needed to display a reference in the PWI's reference summary table
  * Does: serves as a data-transfer object between the API and the PWI
  */
-// has-pdf flag, status for each of five groups
+
 public class LTReferenceSummaryDomain extends BaseDomain {
 	public String refsKey;
 	public String title;
@@ -23,9 +23,4 @@ public class LTReferenceSummaryDomain extends BaseDomain {
 	public String qtl_status;
 	public String tumor_status;
 	public String haspdf;
-
-	/***--- constructors ---***/
-
-	/* empty constructor - ready for population from JSON */
-	public LTReferenceSummaryDomain() {}
 }

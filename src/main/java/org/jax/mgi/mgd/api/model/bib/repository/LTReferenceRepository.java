@@ -315,12 +315,36 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				entity.setJournal(domain.journal);
 			}
 			
-			entity.setTitle(domain.title);
-			entity.setVol(domain.vol);
-			entity.setIssue(domain.issue);
+			if (domain.getTitle() == null || domain.getTitle().isEmpty()) {
+				entity.setTitle(null);
+			}
+			else {
+				entity.setTitle(domain.journal);
+			}			
+
+			if (domain.getVol() == null || domain.getVol().isEmpty()) {
+				entity.setVol(null);
+			}
+			else {
+				entity.setVol(domain.journal);
+			}			
+			
+			if (domain.getIssue() == null || domain.getIssue().isEmpty()) {
+				entity.setIssue(null);
+			}
+			else {
+				entity.setIssue(domain.journal);
+			}			
+			
+			if (domain.getPgs() == null || domain.getPgs().isEmpty()) {
+				entity.setPgs(null);
+			}
+			else {
+				entity.setPgs(domain.journal);
+			}			
+						
 			entity.setDate(domain.date);
 			entity.setYear(year);
-			entity.setPgs(domain.pgs);
 			entity.setReferenceTypeTerm(termDAO.get(Integer.valueOf(domain.getReferenceTypeKey())));
 			
 			if (domain.getReferenceAbstract() == null || domain.getReferenceAbstract().isEmpty()) {
@@ -549,6 +573,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		boolean isBookTerm = "Book".equalsIgnoreCase(entity.getReferenceTypeTerm().getTerm());
 		boolean isBookKey = "31576679".equals(String.valueOf(entity.getReferenceTypeTerm().get_term_key()));
 	
+		log.info("isBookTerm:" + isBookTerm);
+		log.info("isBookKey:" + isBookKey);
+		
 		if (isBookTerm && isBookKey) {
 			// reference is a book; still a book
 			log.info("applyBookChange/remain book");

@@ -570,15 +570,19 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	private boolean applyBookChanges(LTReference entity, LTReferenceDomain domain, User user) {
 		log.info("applyBookChanges()");
 		
+		String bookKey = "31576679";
 		boolean entityBook = false;
 		boolean domainBook = false;
 		
-		if (entity.getReferenceTypeTerm().get_term_key() == 31576679) {
+		if (entity.getReferenceTypeTerm().get_term_key() == Integer.valueOf(bookKey)) {
 			entityBook = true;
 		}
-		if (domain.getReferenceTypeKey().equals("31576679")) {
+		if (domain.getReferenceTypeKey().equals(bookKey)) {
 			domainBook = true;
 		}
+		
+		log.info("entityBook:" + entityBook);
+		log.info("domainBook:" + domainBook);
 		
 		if (entityBook && domainBook) {
 			// reference is a book; still a book
@@ -590,15 +594,18 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 					|| !smartEqual(book.getPublisher(), domain.getReferenceBook().getPublisher()) 
 					|| !smartEqual(book.getSeries_ed(), domain.getReferenceBook().getSeries_ed())) {
 				domain.getReferenceBook().setProcessStatus(Constants.PROCESS_UPDATE);
+				domain.getReferenceBook().setRefsKey(domain.getRefsKey());
 			}
 		} else if (entityBook) {
 			// reference was a book
 			log.info("applyBookChange/change from book to non-book");
-			domain.getReferenceBook().setProcessStatus(Constants.PROCESS_DELETE);		
+			domain.getReferenceBook().setProcessStatus(Constants.PROCESS_DELETE);
+			domain.getReferenceBook().setRefsKey(domain.getRefsKey());						
 		} else if (domainBook) {
 			// reference was not a book
 			log.info("applyBookChange/create book");
 			domain.getReferenceBook().setProcessStatus(Constants.PROCESS_CREATE);
+			domain.getReferenceBook().setRefsKey(domain.getRefsKey());			
 		}
 					
 		return(bookService.process(String.valueOf(entity.get_refs_key()), domain.getReferenceBook(), user));		

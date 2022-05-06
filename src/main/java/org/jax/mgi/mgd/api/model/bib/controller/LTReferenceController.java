@@ -171,7 +171,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 									"Indexed".equals(status) ||
 									"Chosen".equals(status)) 
 								{
-									ref.setRelevance("keep");
+									ref.setEditRelevance("keep");
 								}
 
 								referenceService.updateReference(ref, currentUser);

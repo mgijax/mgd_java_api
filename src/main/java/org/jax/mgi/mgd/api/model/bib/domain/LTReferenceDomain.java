@@ -57,8 +57,8 @@ public class LTReferenceDomain extends BaseDomain {
 	public String qtl_status;
 	public String tumor_status;
 	
-	// workflow relevance
-	public String relevance;
+	// workflow relevance/current relevance
+	public String editRelevance;
 
 	public String createdBy;
 	public String modifiedBy;

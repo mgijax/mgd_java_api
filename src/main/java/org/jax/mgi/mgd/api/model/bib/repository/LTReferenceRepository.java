@@ -584,9 +584,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		// updated workflow relevance, new workflow relevance -- (no deletions)
 
 		log.info("applyWorkflowRelevanceChanges()");
-
+		
 		// if relevance term has changed or user has changed
-		if (!smartEqual(String.valueOf(entity.getWorkflowRelevance().get(0).getRelevanceTerm().get_term_key()), domain.getRelevanceHistory().get(0).getRelevanceKey())
+		if (!smartEqual(entity.getWorkflowRelevance().get(0).getRelevanceTerm().getTerm(), domain.getEditRelevance())
 			|| !smartEqual(entity.getWorkflowRelevance().get(0).getModifiedBy(), user.getLogin())
 			) {
 
@@ -601,7 +601,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			// add new relevance row
 			ReferenceWorkflowRelevanceDomain newRelevance = new ReferenceWorkflowRelevanceDomain();
 			newRelevance.setProcessStatus(Constants.PROCESS_CREATE);
-			newRelevance.setRefsKey(domain.getRelevanceHistory().get(0).getRefsKey());
+			newRelevance.setRefsKey(domain.getEditRelevance());
 			newRelevance.setIsCurrent("1");
 			newRelevance.setConfidence(null);
 			newRelevance.setVersion(null);

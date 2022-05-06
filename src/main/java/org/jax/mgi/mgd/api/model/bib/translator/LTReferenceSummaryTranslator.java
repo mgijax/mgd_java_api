@@ -8,7 +8,9 @@ import org.jax.mgi.mgd.api.util.Constants;
 public class LTReferenceSummaryTranslator extends BaseEntityDomainTranslator<LTReference, LTReferenceSummaryDomain>{
 	@Override
 	protected LTReferenceSummaryDomain entityToDomain(LTReference entity) {
+
 		if (entity == null) { return null; }
+
 		LTReferenceSummaryDomain domain = new LTReferenceSummaryDomain();
 
 		domain.refsKey = String.valueOf(entity.get_refs_key());
@@ -19,7 +21,7 @@ public class LTReferenceSummaryTranslator extends BaseEntityDomainTranslator<LTR
 		domain.mgiid = entity.getCachedID("MGI");
 		domain.short_citation = entity.getCitationData().get(0).getShort_citation();
 		domain.haspdf = String.valueOf(entity.getWorkflowData().get(0).getHaspdf());
-
+		
 		for (int i = 0; i < entity.getWorkflowStatus().size(); i++) {
 			if (entity.getWorkflowStatus().get(i).getIsCurrent() == 1) {
 				if (entity.getWorkflowStatus().get(i).getGroupTerm().getAbbreviation().equals(Constants.WG_AP)) {

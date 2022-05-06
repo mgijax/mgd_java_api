@@ -59,12 +59,6 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		domain.pro_status = entity.getStatus(Constants.WG_PRO);
 		domain.qtl_status = entity.getStatus(Constants.WG_QTL);
 		domain.tumor_status = entity.getStatus(Constants.WG_TUMOR);
-
-//		workflowStatusCache = new HashMap<String,String>();
-//		for (ReferenceWorkflowStatus rws : workflowStatus) {
-//			if (rws.getIsCurrent() == 1) {
-//				workflowStatusCache.put(rws.getGroupTerm().getAbbreviation(), rws.getStatusTerm().getTerm());			}
-//		}
 		
 		domain.workflow_tags = entity.getWorkflowTagsAsStrings();
 		
@@ -125,6 +119,8 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 			ReferenceWorkflowRelevanceTranslator relevanceTranslator = new ReferenceWorkflowRelevanceTranslator();
 			Iterable<ReferenceWorkflowRelevanceDomain> i = relevanceTranslator.translateEntities(entity.getWorkflowRelevance());
 			domain.setRelevanceHistory(IteratorUtils.toList(i.iterator()));
+			domain.setEditRelevance(domain.getRelevanceHistory().get(0).getRelevance());
+			domain.setEditRelevanceKey(domain.getRelevanceHistory().get(0).getRelevanceKey());			
 		}
 		
 		// turning this on causes a LazyINitializationExpception; no idea why

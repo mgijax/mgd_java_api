@@ -31,6 +31,7 @@ public class LTReferenceSummaryRepository extends BaseRepository<LTReferenceSumm
 
 	@Override
 	public LTReferenceSummaryDomain get(String key) throws APIException {
+		log.info("LTReferenceSummaryRepository/get()");
 		return translator.translate(getReference(key));
 	}
 
@@ -49,6 +50,7 @@ public class LTReferenceSummaryRepository extends BaseRepository<LTReferenceSumm
 	/* retrieve the Reference object with the given primaryKey
 	 */
 	private LTReference getReference(String primaryKey) throws APIException {
+		log.info("LTReferenceSummaryRepository/getReference()");
 		if (primaryKey == null) {
 			throw new APIException("ReferenceRepository.getReference() : reference key is null");
 		}

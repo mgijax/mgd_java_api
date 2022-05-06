@@ -416,7 +416,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		String cmd = "";
 		
 		String select = "select distinct c.*, r.title"
-				+ "\n, wkfd.hasPdf as has_pdf"
+				+ "\n, wkfd.haspdf"
 				+ "\n, apt.term as ap_status, got.term as go_status, gxdt.term as gxd_status"
 				+ "\n, prot.term as pro_status, qtlt.term as qtl_status, tumort.term as tumor_status";
 		
@@ -1007,7 +1007,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setPro_status(rs.getString("pro_status"));
 				domain.setQtl_status(rs.getString("qtl_status"));
 				domain.setTumor_status(rs.getString("tumor_status"));
-				domain.setHaspdf(String.valueOf("haspdf"));
+				domain.setHaspdf(rs.getString("haspdf"));
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

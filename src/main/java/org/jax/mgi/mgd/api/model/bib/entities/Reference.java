@@ -119,7 +119,7 @@ public class Reference extends BaseEntity {
 //	private List<ReferenceWorkflowTag> workflowTag;	
 
 	// workflow data
-	@OneToMany(fetch=FetchType.EAGER)
+	@OneToMany()
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	@Where(clause="`_extractedtext_key` = 48804490")
 	private List<ReferenceWorkflowData> workflowData;

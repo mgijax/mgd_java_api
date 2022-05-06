@@ -21,7 +21,8 @@ public class LTReferenceSummaryTranslator extends BaseEntityDomainTranslator<LTR
 		domain.mgiid = entity.getCachedID("MGI");
 		domain.short_citation = entity.getCitationData().get(0).getShort_citation();
 		domain.haspdf = String.valueOf(entity.getWorkflowData().get(0).getHaspdf());
-
+		domain.haspdf = "lori";
+		
 		for (int i = 0; i < entity.getWorkflowStatus().size(); i++) {
 			if (entity.getWorkflowStatus().get(i).getIsCurrent() == 1) {
 				if (entity.getWorkflowStatus().get(i).getGroupTerm().getAbbreviation().equals(Constants.WG_AP)) {

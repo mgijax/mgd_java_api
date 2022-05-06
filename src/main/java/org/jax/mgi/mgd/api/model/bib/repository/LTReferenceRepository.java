@@ -130,16 +130,10 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	public LTReferenceDomain update(LTReferenceDomain domain, User user) throws FatalAPIException, NonFatalAPIException, APIException {
 		log.info("LTReferenceDomain update(LTReferenceDomain domain, User user)");
 		LTReference entity = getReference(domain.refsKey);
-
-		log.info("start: Changes()");
 		applyChanges(entity, domain, user);
-		log.info("stop: Changes()");
-		referenceDAO.persist(entity);		
-		log.info("stop: referenceDAO.persist()");;
-		
+		referenceDAO.persist(entity);				
 		Query query = referenceDAO.createNativeQuery("select count(*) from BIB_reloadCache(" + domain.getRefsKey() + ")");
 		query.getResultList();
-		
 		return null;	// just return null, will look up later on
 	}
 

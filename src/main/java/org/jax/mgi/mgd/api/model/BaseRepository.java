@@ -28,6 +28,6 @@ public abstract class BaseRepository<D extends BaseDomain> {
 
 	public abstract D update(D domain, User user) throws APIException;
 
-	//public abstract SearchResults<D> search(Map<String,Object> params) throws APIException;
+	public abstract SearchResults<D> search(Map<String,Object> params) throws APIException;
 
 }

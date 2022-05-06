@@ -18,7 +18,7 @@ import org.jax.mgi.mgd.api.util.SearchResults;
  *    ReferenceSummaryDomain object has its data drawn
  * Does: (from the outside, this appears to) retrieve domain objects, store them, search for them
  */
-public class LTReferenceSummaryRepository2 extends BaseRepository<LTReferenceSummaryDomain> {
+public class LTReferenceSummaryRepository extends BaseRepository<LTReferenceSummaryDomain> {
 
 	/***--- instance variables ---***/
 
@@ -31,6 +31,7 @@ public class LTReferenceSummaryRepository2 extends BaseRepository<LTReferenceSum
 
 	@Override
 	public LTReferenceSummaryDomain get(String key) throws APIException {
+		log.info("LTReferenceSummaryRepository/get()");
 		return translator.translate(getReference(key));
 	}
 
@@ -49,6 +50,7 @@ public class LTReferenceSummaryRepository2 extends BaseRepository<LTReferenceSum
 	/* retrieve the Reference object with the given primaryKey
 	 */
 	private LTReference getReference(String primaryKey) throws APIException {
+		log.info("LTReferenceSummaryRepository/getReference()");
 		if (primaryKey == null) {
 			throw new APIException("ReferenceRepository.getReference() : reference key is null");
 		}

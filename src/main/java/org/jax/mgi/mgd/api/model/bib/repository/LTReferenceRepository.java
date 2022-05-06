@@ -586,7 +586,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		log.info("applyWorkflowRelevanceChanges()");
 		
 		// if relevance term has changed or user has changed
-		if (!smartEqual(entity.getWorkflowRelevance().get(0).getRelevanceTerm().getTerm(), domain.getEditRelevance())
+		if (!smartEqual(String.valueOf(entity.getWorkflowRelevance().get(0).getRelevanceTerm().get_term_key()), domain.getEditRelevanceKey())
 			|| !smartEqual(entity.getWorkflowRelevance().get(0).getModifiedBy(), user.getLogin())
 			) {
 
@@ -599,17 +599,11 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			}
 			
 			// add new relevance row
-			
-			// set to "keep"
-			String relevanceKey = "70594667";
-			if (domain.getEditRelevance().equals("discard")) {
-				relevanceKey = "70594666";
-			}
 			ReferenceWorkflowRelevanceDomain newRelevance = new ReferenceWorkflowRelevanceDomain();
 			newRelevance.setProcessStatus(Constants.PROCESS_CREATE);
 			newRelevance.setRefsKey(domain.getRefsKey());
 			newRelevance.setIsCurrent("1");
-			newRelevance.setRelevanceKey(relevanceKey);
+			newRelevance.setRelevanceKey(domain.getEditRelevanceKey());
 			newRelevance.setConfidence(null);
 			newRelevance.setVersion(null);
 			domain.getRelevanceHistory().add(newRelevance);

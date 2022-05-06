@@ -25,7 +25,6 @@ import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
-import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowTag;
@@ -98,9 +97,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	@Override
 	public LTReferenceDomain get(String key) throws FatalAPIException, APIException {
 		log.info("LTReferenceDomain get(String key)");
-		//LTReference ref = getReference(key);
-		LTReference ref = referenceDAO.get(Integer.valueOf(key));
-		LTReferenceDomain domain = translator.translate(ref);
+		LTReference entity = referenceDAO.get(Integer.valueOf(key));
+		LTReferenceDomain domain = translator.translate(entity);
 		return domain;	
 	}
 
@@ -131,7 +129,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	@Override
 	public LTReferenceDomain update(LTReferenceDomain domain, User user) throws FatalAPIException, NonFatalAPIException, APIException {
 		log.info("LTReferenceDomain update(LTReferenceDomain domain, User user)");
-		LTReference entity = getReference(domain.refsKey);
+		LTReference entity = referenceDAO.get(Integer.valueOf(domain.getRefsKey()));
 		applyChanges(entity, domain, user);
 		referenceDAO.persist(entity);				
 		Query query = referenceDAO.createNativeQuery("select count(*) from BIB_reloadCache(" + domain.getRefsKey() + ")");
@@ -160,17 +158,18 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		 * 2. if the operation fails in a non-fatal manner, wait briefly and try again up to maxRetries times.
 		 */
 		for (String refsKey : refsKey2) {
-			LTReference reference = referenceDAO.getReference(refsKey);
-			if (reference != null) {
+			LTReference entity = referenceDAO.get(Integer.valueOf(refsKey));
+
+			if (entity != null) {
 				int retries = 0;
 				boolean succeeded = false;
 
 				while (!succeeded) {
 					try {
 						if (workflow_tag_operation.equals(Constants.OP_ADD_WORKFLOW)) {
-							addTag(reference, workflow_tag, user);
+							addTag(entity, workflow_tag, user);
 						} else {
-							removeTag(reference, workflow_tag, user);
+							removeTag(entity, workflow_tag, user);
 						}
 						succeeded = true;
 					} catch (FatalAPIException fe) {
@@ -182,7 +181,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 						}
 						try {
 							Thread.sleep(retryDelay);
-							log.info("UpdateBulk: Retry #" + retries + " for " + reference.getMgiid());
+							log.info("UpdateBulk: Retry #" + retries + " for " + entity.getMgiid());
 						} catch (InterruptedException ie) {
 							throw new FatalAPIException("Operation cancelled - system interrupted");
 						}
@@ -228,19 +227,19 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		return getTerm("{\"_vocab_key\" : " + vocabKey + ", \"abbreviation\" : \"" + abbreviation + "\"}");
 	}
 
-	/* retrieve the Reference object with the given primaryKey
-	 */
-	private LTReference getReference(String primaryKey) throws FatalAPIException, APIException {
-		if (primaryKey == null) {
-			throw new FatalAPIException("ReferenceRepository.getReference() : reference key is null");
-		}
-		log.info("referenceDAO.getReference(primaryKey)");
-		LTReference reference = referenceDAO.getReference(primaryKey);
-		if (reference == null) {
-			throw new FatalAPIException("ReferenceRepository.getReference(): Unknown reference key: " + primaryKey);
-		}
-		return reference;
-	}
+//	/* retrieve the Reference object with the given primaryKey
+//	 */
+//	private LTReference getReference(String primaryKey) throws FatalAPIException, APIException {
+//		if (primaryKey == null) {
+//			throw new FatalAPIException("ReferenceRepository.getReference() : reference key is null");
+//		}
+//		log.info("referenceDAO.getReference(primaryKey)");
+//		LTReference entity = referenceDAO.get(Integer.valueOf(primaryKey));
+//		if (entity == null) {
+//			throw new FatalAPIException("ReferenceRepository.getReference(): Unknown reference key: " + primaryKey);
+//		}
+//		return reference;
+//	}
 
 	/* take the data from the domain object and overwrite any changed data into the entity object
 	 * (assumes we are working in a transaction and persists any sub-objects into the database, but does

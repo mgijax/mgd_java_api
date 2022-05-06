@@ -227,20 +227,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		return getTerm("{\"_vocab_key\" : " + vocabKey + ", \"abbreviation\" : \"" + abbreviation + "\"}");
 	}
 
-//	/* retrieve the Reference object with the given primaryKey
-//	 */
-//	private LTReference getReference(String primaryKey) throws FatalAPIException, APIException {
-//		if (primaryKey == null) {
-//			throw new FatalAPIException("ReferenceRepository.getReference() : reference key is null");
-//		}
-//		log.info("referenceDAO.getReference(primaryKey)");
-//		LTReference entity = referenceDAO.get(Integer.valueOf(primaryKey));
-//		if (entity == null) {
-//			throw new FatalAPIException("ReferenceRepository.getReference(): Unknown reference key: " + primaryKey);
-//		}
-//		return reference;
-//	}
-
 	/* take the data from the domain object and overwrite any changed data into the entity object
 	 * (assumes we are working in a transaction and persists any sub-objects into the database, but does
 	 * not persist this Reference object itself, as other changes could be coming)
@@ -714,7 +700,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			entity.getWorkflowTag().add(rwTag);
 			entity.setModifiedBy(user);
 			entity.setModification_date(new Date());
-
 		}
 	}
 

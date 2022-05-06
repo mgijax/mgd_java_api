@@ -106,11 +106,7 @@ public class ReferenceBookService extends BaseService<ReferenceBookDomain> {
 		log.info("processReferenceBook");
 		
 		if (!domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
-			if ((domain.getBook_author() == null || domain.getBook_author().isEmpty())
-				&& (domain.getBook_title() == null || domain.getBook_title().isEmpty())
-				&& (domain.getPlace() == null || domain.getPlace().isEmpty())
-				&& (domain.getPublisher() == null || domain.getPublisher().isEmpty())
-				&& (domain.getSeries_ed() == null || domain.getSeries_ed().isEmpty())) {
+			if (domain.getRefsKey() == "" || domain.getRefsKey().isEmpty()) {
 				log.info("processReferenceBook/nothing to process");
 				return modified;
 			}

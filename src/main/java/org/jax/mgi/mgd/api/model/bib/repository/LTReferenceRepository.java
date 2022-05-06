@@ -603,7 +603,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			domain.getReferenceBook().setProcessStatus(Constants.PROCESS_CREATE);
 			domain.getReferenceBook().setRefsKey(domain.getRefsKey());			
 		}
-					
+		
 		return(bookService.process(String.valueOf(entity.get_refs_key()), domain.getReferenceBook(), user));		
 	}
 

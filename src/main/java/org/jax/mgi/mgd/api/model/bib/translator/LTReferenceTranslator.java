@@ -11,7 +11,7 @@ import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
-import org.jax.mgi.mgd.api.model.bib.entities.LTReferenceAssociatedData;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceAssociatedData;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DecodeString;
 
@@ -69,7 +69,7 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		
 		// list of strings, each of which indicates a type of data associated with the reference
 		domain.associated_data = new ArrayList<String>();
-		LTReferenceAssociatedData flags = entity.getAssociatedData();
+		ReferenceAssociatedData flags = entity.getAssociatedData();
 		if (flags != null) {
 			if (flags.getHas_alleles() != 0) { domain.associated_data.add("Alleles"); }
 			if (flags.getHas_antibodies() != 0) { domain.associated_data.add("Antibodies"); }

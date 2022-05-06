@@ -111,7 +111,7 @@ public class LTReference extends BaseEntity {
 	// one to one, because counts will always exist
 	@OneToOne()
 	@JoinColumn(name="_refs_key")
-	private LTReferenceAssociatedData associatedData;
+	private ReferenceAssociatedData associatedData;
 
 	// reference allele associations : alleles (11)
 	@OneToMany()

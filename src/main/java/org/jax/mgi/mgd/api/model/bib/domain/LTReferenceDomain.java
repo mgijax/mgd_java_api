@@ -37,7 +37,11 @@ public class LTReferenceDomain extends BaseDomain {
 	public String referenceTypeKey;
 	public String referenceType;
 	public String short_citation;
-
+	public String createdBy;
+	public String modifiedBy;
+	public String creation_date;
+	public String modification_date;
+	
 	// accession ids
 	public String mgiid;	
 	public String jnumid;
@@ -56,21 +60,17 @@ public class LTReferenceDomain extends BaseDomain {
 	public String pro_status;
 	public String qtl_status;
 	public String tumor_status;
-	
+	public List<ReferenceWorkflowStatusDomain> statusHistory;
+
 	// workflow relevance/current relevance
 	public String editRelevance;
 	public String editRelevanceKey;
-
-	public String createdBy;
-	public String modifiedBy;
-	public String creation_date;
-	public String modification_date;
-	
-	public List<String> workflow_tags;	
-	public List<String> associated_data;
-	public List<ReferenceWorkflowStatusDomain> statusHistory;
 	public List<ReferenceWorkflowRelevanceDomain> relevanceHistory;
-	public List<ReferenceWorkflowTagDomain> tagHistory;
+
+	public List<String> workflow_tags;	
+	public List<ReferenceWorkflowTagDomain> tagHistory;	
+	
+	public List<String> associated_data;
 	
 	// PWI loads this data via calls to MGIReferenceAssocService/getXXX()
 	public List<MGIReferenceAlleleAssocDomain> alleleAssocs;

@@ -18,7 +18,7 @@ import org.jax.mgi.mgd.api.util.SearchResults;
  *    ReferenceSummaryDomain object has its data drawn
  * Does: (from the outside, this appears to) retrieve domain objects, store them, search for them
  */
-public class LTReferenceSummaryRepository extends BaseRepository<LTReferenceSummaryDomain> {
+public class LTReferenceSummaryRepository2 extends BaseRepository<LTReferenceSummaryDomain> {
 
 	/***--- instance variables ---***/
 

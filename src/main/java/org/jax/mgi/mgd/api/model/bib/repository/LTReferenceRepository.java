@@ -25,6 +25,7 @@ import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
+import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowTag;
@@ -97,7 +98,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	@Override
 	public LTReferenceDomain get(String key) throws FatalAPIException, APIException {
 		log.info("LTReferenceDomain get(String key)");
-		LTReference ref = getReference(key);
+		//LTReference ref = getReference(key);
+		LTReference ref = referenceDAO.get(Integer.valueOf(key));
 		LTReferenceDomain domain = translator.translate(ref);
 		return domain;	
 	}

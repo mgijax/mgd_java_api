@@ -1,21 +1,17 @@
 package org.jax.mgi.mgd.api.model.bib.dao;
 
-import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.hibernate.Hibernate;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.PostgresSQLDAO;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
-import org.jboss.logging.Logger;
 
 public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 
 	protected LTReferenceDAO() {
 		super(LTReference.class);
 	}
-
-	private Logger log = Logger.getLogger(getClass());
 
 	/* return a single reference for the given reference key with all needed lazy-loaded fields already loaded
 	 */
@@ -37,16 +33,6 @@ public class LTReferenceDAO extends PostgresSQLDAO<LTReference> {
 		Hibernate.initialize(ref.getWorkflowData());
 		Hibernate.initialize(ref.getWorkflowStatus());
 		return ref;
-	}
-
-	/* add a new J: number for the given reference key and user key
-	 */
-	public void assignNewJnumID(String refsKey, int userKey) throws Exception {
-		// returns an integer rather than *, as the void return was causing a mapping exception
-		log.info("select count(1) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
-		Query query = entityManager.createNativeQuery("select count(*) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
-		query.getResultList();
-		return;
 	}
 	
 }

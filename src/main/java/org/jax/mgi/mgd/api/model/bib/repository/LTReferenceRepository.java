@@ -104,7 +104,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	@Override
 	public SearchResults<LTReferenceDomain> search(Map<String,Object> params) {
-
+		log.info("search(Map<String,Object> params");
+		
 		SearchResults<LTReference> refs = referenceDAO.search(params);
 		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
 
@@ -296,10 +297,24 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				) {
 
 			entity.setIsReviewArticle(rdReview);
-			entity.setAuthors(domain.authors);
-			String[] authors = domain.getAuthors().split(";");
-			entity.setPrimaryAuthor(authors[0]);
-			entity.setJournal(domain.journal);
+			
+			if (domain.getAuthors() == null || domain.getAuthors().isEmpty()) {
+				entity.setAuthors(null);
+				entity.setPrimaryAuthor(null);
+			}
+			else {
+				entity.setAuthors(domain.authors);
+				String[] authors = domain.getAuthors().split(";");
+				entity.setPrimaryAuthor(authors[0]);				
+			}
+
+			if (domain.getJournal() == null || domain.getJournal().isEmpty()) {
+				entity.setJournal(null);
+			}
+			else {
+				entity.setJournal(domain.journal);
+			}
+			
 			entity.setTitle(domain.title);
 			entity.setVol(domain.vol);
 			entity.setIssue(domain.issue);
@@ -534,7 +549,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		boolean isBookTerm = "Book".equalsIgnoreCase(entity.getReferenceTypeTerm().getTerm());
 		boolean isBookKey = "31576679".equals(String.valueOf(entity.getReferenceTypeTerm().get_term_key()));
 	
-		if (isBookTerm && isBookKey && (entity.getReferenceBook().size() > 0)) {
+		if (isBookTerm && isBookKey) {
 			// reference is a book; still a book
 			log.info("applyBookChange/remain book");
 			ReferenceBook book = entity.getReferenceBook().get(0);

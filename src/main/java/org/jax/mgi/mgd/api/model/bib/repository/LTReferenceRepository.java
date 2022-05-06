@@ -32,7 +32,6 @@ import org.jax.mgi.mgd.api.model.bib.service.ReferenceBookService;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceNoteService;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceWorkflowDataService;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceWorkflowRelevanceService;
-import org.jax.mgi.mgd.api.model.bib.service.ReferenceWorkflowStatusService;
 import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceMarkerAssocDomain;
@@ -74,8 +73,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	private ReferenceBookService bookService;
 	@Inject
 	private ReferenceNoteService noteService;
-	@Inject
-	private ReferenceWorkflowStatusService statusService;	
+//	@Inject
+//	private ReferenceWorkflowStatusService statusService;	
 	@Inject
 	private ReferenceWorkflowRelevanceService relevanceService;
 	@Inject
@@ -105,26 +104,26 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	@Override
 	public SearchResults<LTReferenceDomain> search(Map<String,Object> params) {
+
 		SearchResults<LTReference> refs = referenceDAO.search(params);
-		SearchResults<LTReferenceDomain> domains = new SearchResults<LTReferenceDomain>();
+		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
 
-		domains.elapsed_ms = refs.elapsed_ms;
-		domains.error = refs.error;
-		domains.message = refs.message;
-		domains.status_code = refs.status_code;
-		domains.total_count = refs.total_count;
-		domains.all_match_count = refs.all_match_count;
-
-		if (refs.items != null) {
-			// walking the references to do the translations individually, because I want a List,
-			// not an Iterable
-
-			domains.items = new ArrayList<LTReferenceDomain>();
-			for (LTReference ref : refs.items) {
-				domains.items.add(translator.translate(ref));
-			}
-		}
-		return domains;
+//		results.elapsed_ms = refs.elapsed_ms;
+//		results.error = refs.error;
+//		results.message = refs.message;
+//		results.status_code = refs.status_code;
+//		results.total_count = refs.total_count;
+//		results.all_match_count = refs.all_match_count;
+//
+//		if (refs.items != null) {
+//			// translate each search results into domain
+//			results.items = new ArrayList<LTReferenceDomain>();
+//			for (LTReference ref : refs.items) {
+//				results.items.add(translator.translate(ref));
+//			}
+//		}
+		
+		return results;
 	}
 
 	@Override
@@ -259,7 +258,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		
 		anyChanges = applyBasicFieldChanges(entity, domain, user);
 		anyChanges = applyWorkflowStatusChanges(entity, domain, user) || anyChanges;
-		anyChanges = applyTagChanges(entity, domain, user) || anyChanges;
+		anyChanges = applyWorkflowTagChanges(entity, domain, user) || anyChanges;
 		anyChanges = applyBookChanges(entity, domain, user) || anyChanges;		// uses ReferenceDomainService()
 		anyChanges = applyNoteChanges(entity, domain, user) | anyChanges;		// uses ReferenceNoteService()
 		anyChanges = applyAccessionIDChanges(entity, domain, user) || anyChanges;
@@ -639,9 +638,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	 * ReferenceDomain.  Persists any tag changes to the database.  Returns true if any changes were made,
 	 * false otherwise.
 	 */
-	private boolean applyTagChanges(LTReference entity, LTReferenceDomain domain, User user) throws NonFatalAPIException, APIException {
+	private boolean applyWorkflowTagChanges(LTReference entity, LTReferenceDomain domain, User user) throws NonFatalAPIException, APIException {
 
-		log.info("applyTagChanges()");
+		log.info("applyWorkflowTagChanges()");
 		
 		// short-circuit method if no tags in Reference or in ReferenceDomain
 		if ((entity.getWorkflowTagsAsStrings().size() == 0) && (domain.workflow_tags.size() == 0)) {
@@ -752,8 +751,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			return false;
 		}
 
-		// At this point, we know we have a status update.  If there was an existing record, we need
-		// to flag it as not current.
+		// At this point, we know we have a status update.  
+		// If there was an existing record, we need to flag it as not current.
 		if (currentStatus != null) {
 			for (ReferenceWorkflowStatus rws : entity.getWorkflowStatus()) {
 				if ( (rws.getIsCurrent() == 1) && groupAbbrev.equals(rws.getGroupTerm().getAbbreviation()) ) {
@@ -763,11 +762,10 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			}
 		}
 
-		// Now we need to add a new status record for this change -- and need to persist this new object to the
+		// add a new status record for this change -- and need to persist this new object to the
 		// database explicitly, before the whole reference gets persisted later on.
 
 		ReferenceWorkflowStatus newRws = new ReferenceWorkflowStatus();
-		//newRws.set_assoc_key(referenceDAO.getNextWorkflowStatusKey());
 		newRws.set_refs_key(entity.get_refs_key());
 		newRws.setIsCurrent(1);
 		//newRws.setGroutTerm(termDAO.get());
@@ -808,6 +806,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		anyChanges = updateWorkflowStatus(entity, Constants.WG_TUMOR, entity.getStatus(Constants.WG_TUMOR), domain.tumor_status, user) || anyChanges;
 
 		if (anyChanges) {
+			
 			entity.clearWorkflowStatusCache();
 
 			// if no J# and Status in (Chosen, INdexed, Full-coded), then add J#

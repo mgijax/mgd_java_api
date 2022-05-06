@@ -49,13 +49,13 @@ public class SlimReferenceTranslator extends BaseEntityDomainTranslator<Referenc
 			}
 		}
 		
-		// workflow data contains haspdf true/false
-		if (entity.getWorkflowData() != null || !entity.getWorkflowData().isEmpty()) {
-			domain.setHaspdf(String.valueOf(entity.getWorkflowData().get(0).getHaspdf()));
-		}
-		else {
-			domain.setHaspdf("");
-		}
+//		// workflow data contains haspdf true/false
+//		if (entity.getWorkflowData() != null || !entity.getWorkflowData().isEmpty()) {
+//			domain.setHaspdf(String.valueOf(entity.getWorkflowData().get(0).getHaspdf()));
+//		}
+//		else {
+//			domain.setHaspdf("0");
+//		}
 		
 		// used by validateJnumImage
 		domain.setJournalLicenses(null);

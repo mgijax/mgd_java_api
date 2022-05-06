@@ -597,15 +597,21 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 					domain.getRelevanceHistory().get(i).setIsCurrent("0");
 				}
 			}
-				
+			
 			// add new relevance row
+			
+			// set to "keep"
+			String relevanceKey = "70594667";
+			if (domain.getEditRelevance().equals("discard")) {
+				relevanceKey = "70594666";
+			}
 			ReferenceWorkflowRelevanceDomain newRelevance = new ReferenceWorkflowRelevanceDomain();
 			newRelevance.setProcessStatus(Constants.PROCESS_CREATE);
-			newRelevance.setRefsKey(domain.getEditRelevance());
+			newRelevance.setRefsKey(domain.getRefsKey());
 			newRelevance.setIsCurrent("1");
+			newRelevance.setRelevanceKey(relevanceKey);
 			newRelevance.setConfidence(null);
 			newRelevance.setVersion(null);
-			newRelevance.setRelevanceKey(domain.getRelevanceHistory().get(0).getRelevanceKey());
 			domain.getRelevanceHistory().add(newRelevance);
 		}
 		return(relevanceService.process(domain.getRefsKey(), domain.getRelevanceHistory(), user));

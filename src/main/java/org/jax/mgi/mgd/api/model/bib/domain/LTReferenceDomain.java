@@ -59,6 +59,7 @@ public class LTReferenceDomain extends BaseDomain {
 	
 	// workflow relevance/current relevance
 	public String editRelevance;
+	public String editRelevanceKey;
 
 	public String createdBy;
 	public String modifiedBy;

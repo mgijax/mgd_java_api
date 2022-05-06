@@ -120,6 +120,7 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 			Iterable<ReferenceWorkflowRelevanceDomain> i = relevanceTranslator.translateEntities(entity.getWorkflowRelevance());
 			domain.setRelevanceHistory(IteratorUtils.toList(i.iterator()));
 			domain.setEditRelevance(domain.getRelevanceHistory().get(0).getRelevance());
+			domain.setEditRelevanceKey(domain.getRelevanceHistory().get(0).getRelevanceKey());			
 		}
 		
 		// turning this on causes a LazyINitializationExpception; no idea why

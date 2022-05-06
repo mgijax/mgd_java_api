@@ -57,8 +57,8 @@ public class LTReferenceService {
 		return results;
 	}
 
-	public SearchResults<LTReferenceDomain> getReferences(Map<String, Object> searchFields) throws APIException {
-		return repo.search(searchFields);
-	}	
+//	public SearchResults<LTReferenceDomain> getReferences(Map<String, Object> searchFields) throws APIException {
+//		return repo.search(searchFields);
+//	}	
 	
 }

@@ -1007,7 +1007,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setPro_status(rs.getString("pro_status"));
 				domain.setQtl_status(rs.getString("qtl_status"));
 				domain.setTumor_status(rs.getString("tumor_status"));
-				domain.setHaspdf(String.valueOf("haspdf"));
+				domain.setHaspdf(rs.getString("haspdf"));
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

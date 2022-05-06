@@ -822,9 +822,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 				if (addJnumid) {
 					try {
-						log.info("Assigning new J: number");
-						referenceDAO.assignNewJnumID(String.valueOf(entity.get_refs_key()), user.get_user_key());
-						log.info(" - finished");
+						log.info("assigning new J: number");
+						assignNewJnumID(String.valueOf(entity.get_refs_key()), user.get_user_key());
 					} catch (Exception e) {
 						log.info("Caught exception: " + e.toString());
 						throw new NonFatalAPIException("Failed to assign J: number");
@@ -892,5 +891,14 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		}		
 		return a.equals(b);
 	}
-	
+
+	/* add a new J: number for the given reference key and user key
+	 */
+	private void assignNewJnumID(String refsKey, int userKey) throws Exception {
+		log.info("select count(1) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
+		Query query = referenceDAO.createNativeQuery("select count(*) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
+		query.getResultList();	
+		return;
+	}
+
 }

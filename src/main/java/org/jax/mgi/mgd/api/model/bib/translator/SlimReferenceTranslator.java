@@ -56,7 +56,8 @@ public class SlimReferenceTranslator extends BaseEntityDomainTranslator<Referenc
 		else {
 			domain.setHaspdf("0");
 		}
-		
+		domain.haspdf = "lori";
+
 		// used by validateJnumImage
 		domain.setJournalLicenses(null);
 		domain.setCopyright("");

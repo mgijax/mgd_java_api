@@ -102,29 +102,12 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		return domain;	
 	}
 
-	@Override
-	public SearchResults<LTReferenceDomain> search(Map<String,Object> params) {
-
-		SearchResults<LTReference> refs = referenceDAO.search(params);
-		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
-
-//		results.elapsed_ms = refs.elapsed_ms;
-//		results.error = refs.error;
-//		results.message = refs.message;
-//		results.status_code = refs.status_code;
-//		results.total_count = refs.total_count;
-//		results.all_match_count = refs.all_match_count;
-//
-//		if (refs.items != null) {
-//			// translate each search results into domain
-//			results.items = new ArrayList<LTReferenceDomain>();
-//			for (LTReference ref : refs.items) {
-//				results.items.add(translator.translate(ref));
-//			}
-//		}
-		
-		return results;
-	}
+//	@Override
+//	public SearchResults<LTReferenceDomain> search(Map<String,Object> params) {
+//		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
+//		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
+//		return results;
+//	}
 
 	@Override
 	public LTReferenceDomain update(LTReferenceDomain domain, User user) throws FatalAPIException, NonFatalAPIException, APIException {

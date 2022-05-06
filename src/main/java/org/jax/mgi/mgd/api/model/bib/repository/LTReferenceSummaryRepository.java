@@ -1,7 +1,5 @@
 package org.jax.mgi.mgd.api.model.bib.repository;
 
-import java.util.Map;
-
 import javax.inject.Inject;
 
 import org.jax.mgi.mgd.api.exception.APIException;
@@ -11,7 +9,6 @@ import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceSummaryDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceSummaryTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.util.SearchResults;
 
 /* Is: a repository that deals with searching for ReferenceSummaryDomain objects
  * Has: one or more DAOs to facilitate storage/retrieval of the entities from which the
@@ -34,10 +31,10 @@ public class LTReferenceSummaryRepository extends BaseRepository<LTReferenceSumm
 		return translator.translate(getReference(key));
 	}
 
-	@Override
-	public SearchResults<LTReferenceSummaryDomain> search(Map<String,Object> params) {
-		return null;
-	}
+//	@Override
+//	public SearchResults<LTReferenceSummaryDomain> search(Map<String,Object> params) {
+//		return null;
+//	}
 
 	@Override
 	public LTReferenceSummaryDomain update(LTReferenceSummaryDomain domain, User user) throws APIException {

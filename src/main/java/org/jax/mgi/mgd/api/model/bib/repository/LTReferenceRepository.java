@@ -562,7 +562,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			domain.getReferenceNote().setProcessStatus(Constants.PROCESS_CREATE);							
 		}
 		
-		return(noteService.process(String.valueOf(entity.get_refs_key()), domain.getReferenceNote(), user));		
+		return(noteService.process(domain.getRefsKey(), domain.getReferenceNote(), user));		
 	}
 
 	/* apply any changes from domain to entity for the reference book 
@@ -592,19 +592,17 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 					|| !smartEqual(book.getPublisher(), domain.getReferenceBook().getPublisher()) 
 					|| !smartEqual(book.getSeries_ed(), domain.getReferenceBook().getSeries_ed())) {
 				domain.getReferenceBook().setProcessStatus(Constants.PROCESS_UPDATE);
-				domain.getReferenceBook().setRefsKey(domain.getRefsKey());
 			}
 		} else if (isBookTerm) {
 			log.info("applyBookChange/change from book to non-book");
 			domain.getReferenceBook().setProcessStatus(Constants.PROCESS_DELETE);
-			domain.getReferenceBook().setRefsKey(domain.getRefsKey());						
 		} else if (isBookKey) {
 			log.info("applyBookChange/create book");
 			domain.getReferenceBook().setProcessStatus(Constants.PROCESS_CREATE);
 			domain.getReferenceBook().setRefsKey(domain.getRefsKey());			
 		}
 		
-		return(bookService.process(String.valueOf(entity.get_refs_key()), domain.getReferenceBook(), user));		
+		return(bookService.process(domain.getRefsKey(), domain.getReferenceBook(), user));		
 	}
 
 	/* apply changes in workflow relevance from domain to entity

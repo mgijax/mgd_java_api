@@ -99,7 +99,7 @@ public class ReferenceBookService extends BaseService<ReferenceBookDomain> {
 	
 	@Transactional
 	public Boolean process(String parentKey, ReferenceBookDomain domain, User user) {
-		// process reference notes (create, delete, update)
+		// process reference book (create, delete, update)
 		
 		Boolean modified = false;
 		

@@ -279,8 +279,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		} catch (NumberFormatException p) {
 			throw new FatalAPIException("Year is not an integer: " + domain.year);
 		}
-
-		String refTypeKey = String.valueOf(entity.getReferenceTypeTerm().get_term_key());
 		
 		// update this object's data to match what was passed in		
 		if ((rdReview != entity.getIsReviewArticle())
@@ -291,7 +289,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				|| !smartEqual(entity.getIssue(), domain.issue)
 				|| !smartEqual(entity.getDate(), domain.date)
 				|| !smartEqual(entity.getYear(), year)
-				|| !smartEqual(refTypeKey, domain.referenceTypeKey)
+				|| !smartEqual(String.valueOf(entity.getReferenceTypeTerm().get_term_key()), domain.referenceTypeKey)
 				|| !smartEqual(entity.getPgs(), domain.pgs)
 				|| !smartEqual(entity.getReferenceAbstract(), domain.referenceAbstract)
 				) {
@@ -360,6 +358,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			anyChanges = true;
 		}
 
+		referenceDAO.persist(entity);
 		return anyChanges;
 	}
 

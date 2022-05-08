@@ -593,13 +593,13 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 					|| !smartEqual(book.getSeries_ed(), domain.getReferenceBook().getSeries_ed())) {
 				domain.getReferenceBook().setProcessStatus(Constants.PROCESS_UPDATE);
 			}
-		} else if (isBookTerm) {
-			log.info("applyBookChange/change from book to non-book");
-			domain.getReferenceBook().setProcessStatus(Constants.PROCESS_DELETE);
-		} else if (isBookKey) {
-			log.info("applyBookChange/create book");
-			domain.getReferenceBook().setProcessStatus(Constants.PROCESS_CREATE);
-			domain.getReferenceBook().setRefsKey(domain.getRefsKey());			
+//		} else if (isBookTerm) {
+//			log.info("applyBookChange/change from book to non-book");
+//			domain.getReferenceBook().setProcessStatus(Constants.PROCESS_DELETE);
+//		} else if (isBookKey) {
+//			log.info("applyBookChange/create book");
+//			domain.getReferenceBook().setProcessStatus(Constants.PROCESS_CREATE);
+//			domain.getReferenceBook().setRefsKey(domain.getRefsKey());			
 		}
 		
 		return(bookService.process(domain.getRefsKey(), domain.getReferenceBook(), user));		

@@ -674,7 +674,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		log.info("applyWorkflowTagChanges()");
 		
 		// short-circuit method if no tags in Reference or in ReferenceDomain
-		if ((entity.getWorkflowTag().size() == 0) && (domain.workflowTag.size() == 0)) {
+		if ((entity.getWorkflowTags().size() == 0) && (domain.workflowTags.size() == 0)) {
 			return false;
 		}
 
@@ -690,7 +690,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		// Now we need to diff the set of tags we already have and the set of tags to potentially add. Anything
 		// left in toAdd will need to be added as a new tag, and anything in toDelete will need to be removed.
 
-		for (ReferenceWorkflowTag refTag : entity.getWorkflowTag()) {
+		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
 			String myTag = refTag.getTagTerm().getTerm();
 
 			// matching tags
@@ -723,7 +723,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		// adding duplicates)
 
 		String trimTag = rdTag.trim();
-		for (ReferenceWorkflowTag refTag : entity.getWorkflowTag()) {
+		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
 			if (trimTag.equals(refTag.getTagTerm().getTerm()) ) {
 				return;
 			}
@@ -749,7 +749,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				throw new NonFatalAPIException("Cannot add tag: " + e.toString());
 			}
 
-			entity.getWorkflowTag().add(rwTag);
+			entity.getWorkflowTags().add(rwTag);
 			entity.setModifiedBy(user);
 			entity.setModification_date(new Date());
 		}
@@ -758,10 +758,10 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	/* shared method for removing a workflow tag from a Reference (no-op if this ref doesn't have the tag)
 	 */
 	public void removeTag(LTReference entity, String rdTag, User user) throws APIException {
-		if (entity.getWorkflowTag() == null) { return; }
+		if (entity.getWorkflowTags() == null) { return; }
 
 		String lowerTag = rdTag.toLowerCase().trim();
-		for (ReferenceWorkflowTag refTag : entity.getWorkflowTag()) {
+		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
 			if (lowerTag.equals(refTag.getTagTerm().getTerm().toLowerCase()) ) {
 				referenceDAO.remove(refTag);
 				entity.setModifiedBy(user);

@@ -81,12 +81,12 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		}
 		
 		// bib_workflow_tag
-		if (entity.getWorkflowTag() != null) {
+		if (entity.getWorkflowTags() != null) {
 			ReferenceWorkflowTagTranslator tagTranslator = new ReferenceWorkflowTagTranslator();
-			Iterable<ReferenceWorkflowTagDomain> i = tagTranslator.translateEntities(entity.getWorkflowTag());
-			domain.setWorkflowTag(IteratorUtils.toList(i.iterator()));
-			for (int t = 0; t < domain.getWorkflowTag().size(); t++) {
-				domain.workflowTagString.add(domain.getWorkflowTag().get(t).getTag());
+			Iterable<ReferenceWorkflowTagDomain> i = tagTranslator.translateEntities(entity.getWorkflowTags());
+			domain.setWorkflowTags(IteratorUtils.toList(i.iterator()));
+			for (int t = 0; t < domain.getWorkflowTags().size(); t++) {
+				domain.workflowTagString.add(domain.getWorkflowTags().get(t).getTag());
 			}
 		}		
 		

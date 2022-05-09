@@ -86,7 +86,7 @@ public class LTReference extends BaseEntity {
 	
 	@OneToMany()
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-	private List<ReferenceWorkflowTag> workflowTag;
+	private List<ReferenceWorkflowTag> workflowTags;
 	
 	// only interested in workflow data where extracted text section = 'body' (48804490)
 	@OneToMany()

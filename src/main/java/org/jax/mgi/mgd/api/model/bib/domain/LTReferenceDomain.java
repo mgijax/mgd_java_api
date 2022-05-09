@@ -60,12 +60,6 @@ public class LTReferenceDomain extends BaseDomain {
 	public String pro_status;
 	public String qtl_status;
 	public String tumor_status;
-	public String ap_statusKey;
-	public String go_statusKey;
-	public String gxd_statusKey;
-	public String pro_statusKey;
-	public String qtl_statusKey;
-	public String tumor_statusKey;	
 	public List<ReferenceWorkflowStatusDomain> statusCurrent;
 	public List<ReferenceWorkflowStatusDomain> statusHistory;
 

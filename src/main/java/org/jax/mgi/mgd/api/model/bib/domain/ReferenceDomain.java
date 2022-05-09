@@ -54,17 +54,11 @@ public class ReferenceDomain extends BaseDomain {
 	
 	// workflow status
 	public String ap_status;
-	public String ap_statusKey;
 	public String go_status;
-	public String go_statusKey;
 	public String gxd_status;
-	public String gxd_statusKey;
 	public String pro_status;
-	public String pro_statusKey;
 	public String qtl_status;
-	public String qtl_statusKey;
 	public String tumor_status;
-	public String tumor_statusKey;
 	
 	// these lists are loaded by the pwi at runtime
 	private List<MGIReferenceAlleleAssocDomain> alleleAssocs;

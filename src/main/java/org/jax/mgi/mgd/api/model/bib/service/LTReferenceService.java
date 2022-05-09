@@ -40,8 +40,8 @@ public class LTReferenceService {
 	 * only workflow tags are processed currently
 	 */
 	@Transactional
-	public void updateReferencesInBulk(List<String> refsKey, String workflow_tag, String workflow_tag_operation, User currentUser) throws APIException {
-		repo.updateInBulk(refsKey, workflow_tag, workflow_tag_operation, currentUser);
+	public void updateReferencesInBulk(List<String> refsKey, String workflowTags, String workflow_tag_operation, User currentUser) throws APIException {
+		repo.updateInBulk(refsKey, workflowTags, workflow_tag_operation, currentUser);
 	}
 
 	public SearchResults<LTReferenceDomain> getReference(String refsKey) throws APIException {

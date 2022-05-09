@@ -775,8 +775,16 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	 * group statuses.  returns true if an update was made, false if no change.  persists any changes
 	 * to the database.
 	 */
-	private boolean updateWorkflowStatus(LTReference entity, String groupAbbrev, String currentStatus, String newStatus, User user) throws NonFatalAPIException, APIException {
+	private boolean updateWorkflowStatus(LTReference entity, String groupAbbrev, String newStatus, User user) throws NonFatalAPIException, APIException {
 
+		String currentStatus = null;
+		
+		for (int i = 0; i < entity.getWorkflowStatusCurrent().size(); i++) {
+			if (entity.getWorkflowStatusCurrent().get(i).getGroupTerm().getAbbreviation().equals(groupAbbrev)) {
+				currentStatus = entity.getWorkflowStatusCurrent().get(i).getStatusTerm().getTerm();
+			}
+		}
+		
 		// no update if new status matches old status (or if no group is specified)
 		if ( ((currentStatus != null) && currentStatus.equals(newStatus)) || (groupAbbrev == null) ||
 				((currentStatus == null) && (newStatus == null)) ) {
@@ -830,12 +838,12 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		// note that we need to put 'anyChanges' last for each OR pair, otherwise short-circuit evaluation
 		// will only let the first change go through and the rest will not execute.
 
-		boolean anyChanges = updateWorkflowStatus(entity, Constants.WG_AP, entity.getStatus(Constants.WG_AP), domain.ap_status, user);
-		anyChanges = updateWorkflowStatus(entity, Constants.WG_GO, entity.getStatus(Constants.WG_GO), domain.go_status, user) || anyChanges;
-		anyChanges = updateWorkflowStatus(entity, Constants.WG_GXD, entity.getStatus(Constants.WG_GXD), domain.gxd_status, user) || anyChanges;
-		anyChanges = updateWorkflowStatus(entity, Constants.WG_PRO, entity.getStatus(Constants.WG_PRO), domain.pro_status, user) || anyChanges;
-		anyChanges = updateWorkflowStatus(entity, Constants.WG_QTL, entity.getStatus(Constants.WG_QTL), domain.qtl_status, user) || anyChanges;
-		anyChanges = updateWorkflowStatus(entity, Constants.WG_TUMOR, entity.getStatus(Constants.WG_TUMOR), domain.tumor_status, user) || anyChanges;
+		boolean anyChanges = updateWorkflowStatus(entity, Constants.WG_AP, domain.ap_status, user);
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_GO, domain.go_status, user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_GXD, domain.gxd_status, user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_PRO, domain.pro_status, user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_QTL, domain.qtl_status, user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_TUMOR, domain.tumor_status, user) || anyChanges;
 
 		if (anyChanges) {
 			

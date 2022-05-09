@@ -66,7 +66,7 @@ public class ReferenceDomain extends BaseDomain {
 	private List<MGIReferenceStrainAssocDomain> strainAssocs;
 
 	//private List<ReferenceWorkflowStatusDomain> workflowStatus;
-	//private List<ReferenceWorkflowRelevanceDomain> workflowRelevance;
+	//private List<ReferenceWorkflowRelevanceDomain> workflowRelevanc;
 	//private List<ReferenceWorkflowTagDomain> workflowTag;
 
 	// ReferenceCitationCache not included in domain at this time 

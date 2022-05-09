@@ -68,8 +68,8 @@ public class LTReferenceDomain extends BaseDomain {
 	public String editRelevanceKey;
 	public List<ReferenceWorkflowRelevanceDomain> relevanceHistory;
 
-	public List<String> workflow_tags;	
-	public List<ReferenceWorkflowTagDomain> tagHistory;	
+	public List<String> workflowTagString;	
+	public List<ReferenceWorkflowTagDomain> workflowTag;	
 	
 	public List<String> associated_data;
 	

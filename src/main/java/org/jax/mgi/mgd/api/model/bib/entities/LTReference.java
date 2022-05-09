@@ -1,7 +1,5 @@
 package org.jax.mgi.mgd.api.model.bib.entities;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -168,34 +166,17 @@ public class LTReference extends BaseEntity {
 	public String getGorefid() {
 		return findFirstID(Constants.LDB_GOREF, null, null, null);
 	}
-
-	// bib_citation_cache
 	
+//	// bib_workflow_tag
+//
 //	@Transient
-//	public String getCachedID(String provider) {
-//		citationData.size(); // loads it
-//		if ((citationData == null) || (citationData.size() == 0)) { return null; }
-//		if ("MGI".equals(provider)) {
-//			return citationData.get(0).getMgiid();
-//		} else if ("J:".equals(provider)) {
-//			return citationData.get(0).getJnumid();
-//		} else if ("DOI".equals(provider)) {
-//			return citationData.get(0).getDoiid();
-//		} else {
-//			return citationData.get(0).getPubmedid();
+//	public List<String> getWorkflowTagsAsStrings() {
+//		List<String> tags = new ArrayList<String>();
+//		for (ReferenceWorkflowTag rwTag : workflowTag) {
+//			tags.add(rwTag.getTagTerm().getTerm());
 //		}
+//		Collections.sort(tags);
+//		return tags;
 //	}
-	
-	// bib_workflow_tag
-
-	@Transient
-	public List<String> getWorkflowTagsAsStrings() {
-		List<String> tags = new ArrayList<String>();
-		for (ReferenceWorkflowTag rwTag : workflowTag) {
-			tags.add(rwTag.getTagTerm().getTerm());
-		}
-		Collections.sort(tags);
-		return tags;
-	}
 
 }

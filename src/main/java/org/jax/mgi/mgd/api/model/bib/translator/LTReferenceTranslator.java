@@ -10,6 +10,7 @@ import org.jax.mgi.mgd.api.model.bib.domain.ReferenceNoteDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowStatusDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowTagDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceAssociatedData;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -57,8 +58,6 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		domain.createdBy = entity.getCreatedBy().getLogin();
 		domain.modifiedBy = entity.getModifiedBy().getLogin();
 		
-		domain.workflow_tags = entity.getWorkflowTagsAsStrings();
-
 		// at most one reference note
 		if (entity.getReferenceNote() != null && !entity.getReferenceNote().isEmpty()) {
 			ReferenceNoteTranslator noteTranslator = new ReferenceNoteTranslator();
@@ -81,6 +80,16 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 			domain.setWorkflowData(i.iterator().next());	
 		}
 		
+		// bib_workflow_tag
+		if (entity.getWorkflowTag() != null) {
+			ReferenceWorkflowTagTranslator tagTranslator = new ReferenceWorkflowTagTranslator();
+			Iterable<ReferenceWorkflowTagDomain> i = tagTranslator.translateEntities(entity.getWorkflowTag());
+			domain.setWorkflowTag(IteratorUtils.toList(i.iterator()));
+			for (int t = 0; t < domain.getWorkflowTag().size(); t++) {
+				domain.workflowTagString.add(domain.getWorkflowTag().get(t).getTag());
+			}
+		}		
+		
 		// bib_workflow_status
 		if (entity.getWorkflowStatus() != null) {
 			ReferenceWorkflowStatusTranslator statusTranslator = new ReferenceWorkflowStatusTranslator();
@@ -93,33 +102,33 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 			ReferenceWorkflowStatusTranslator statusTranslator = new ReferenceWorkflowStatusTranslator();
 			Iterable<ReferenceWorkflowStatusDomain> i = statusTranslator.translateEntities(entity.getWorkflowStatusCurrent());
 			domain.setStatusCurrent(IteratorUtils.toList(i.iterator()));
-		}
 
-		for (int i = 0; i < domain.getStatusCurrent().size(); i++) {
-			if (domain.getStatusCurrent().get(i).getGroupAbbrev().equals(Constants.WG_AP)) {
-				domain.setAp_status(domain.getStatusCurrent().get(i).getStatus());
-				//domain.setAp_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+			for (int s = 0; s < domain.getStatusCurrent().size(); s++) {
+				if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_AP)) {
+					domain.setAp_status(domain.getStatusCurrent().get(s).getStatus());
+					//domain.setAp_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+				}
+				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_GO)) {
+					domain.setGo_status(domain.getStatusCurrent().get(s).getStatus());
+					//domain.setGo_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+				}	
+				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_GXD)) {
+					domain.setGxd_status(domain.getStatusCurrent().get(s).getStatus());
+					//domain.setGxd_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+				}
+				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_PRO)) {
+					domain.setPro_status(domain.getStatusCurrent().get(s).getStatus());
+					//domain.setPro_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+				}	
+				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_QTL)) {
+					domain.setQtl_status(domain.getStatusCurrent().get(s).getStatus());
+					//domain.setQtl_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+				}	
+				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_TUMOR)) {
+					domain.setTumor_status(domain.getStatusCurrent().get(s).getStatus());
+					//domain.setTumor_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+				}			
 			}
-			else if (domain.getStatusCurrent().get(i).getGroupAbbrev().equals(Constants.WG_GO)) {
-				domain.setGo_status(domain.getStatusCurrent().get(i).getStatus());
-				//domain.setGo_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
-			}	
-			else if (domain.getStatusCurrent().get(i).getGroupAbbrev().equals(Constants.WG_GXD)) {
-				domain.setGxd_status(domain.getStatusCurrent().get(i).getStatus());
-				//domain.setGxd_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
-			}
-			else if (domain.getStatusCurrent().get(i).getGroupAbbrev().equals(Constants.WG_PRO)) {
-				domain.setPro_status(domain.getStatusCurrent().get(i).getStatus());
-				//domain.setPro_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
-			}	
-			else if (domain.getStatusCurrent().get(i).getGroupAbbrev().equals(Constants.WG_QTL)) {
-				domain.setQtl_status(domain.getStatusCurrent().get(i).getStatus());
-				//domain.setQtl_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
-			}	
-			else if (domain.getStatusCurrent().get(i).getGroupAbbrev().equals(Constants.WG_TUMOR)) {
-				domain.setTumor_status(domain.getStatusCurrent().get(i).getStatus());
-				//domain.setTumor_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
-			}			
 		}
 		
 		// bib_workflow_relevance

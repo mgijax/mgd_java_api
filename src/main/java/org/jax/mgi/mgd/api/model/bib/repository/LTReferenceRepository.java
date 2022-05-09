@@ -674,13 +674,13 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		log.info("applyWorkflowTagChanges()");
 		
 		// short-circuit method if no tags in Reference or in ReferenceDomain
-		if ((entity.getWorkflowTagsAsStrings().size() == 0) && (domain.workflow_tags.size() == 0)) {
+		if ((entity.getWorkflowTag().size() == 0) && (domain.workflowTag.size() == 0)) {
 			return false;
 		}
 
 		// set of tags specified in domain object -- potentially to add to object
 		Set<String> toAdd = new HashSet<String>();
-		for (String rdTag : domain.workflow_tags) {
+		for (String rdTag : domain.workflowTagString) {
 			toAdd.add(rdTag.trim());
 		}
 

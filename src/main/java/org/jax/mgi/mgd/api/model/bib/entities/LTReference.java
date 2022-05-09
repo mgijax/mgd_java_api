@@ -79,7 +79,7 @@ public class LTReference extends BaseEntity {
 	
 	@OneToMany()
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-	@Where(clause="`isCurrent` = 1")	
+	@Where(clause="`iscurrent` = 1")	
 	private List<ReferenceWorkflowStatus> workflowStatusCurrent;
 	
 	// workflow relevance

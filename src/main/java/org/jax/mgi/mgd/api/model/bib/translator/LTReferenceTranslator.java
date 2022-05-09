@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
-import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBookDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceNoteDomain;
@@ -54,37 +52,12 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		domain.modification_date = dateFormatter.format(entity.getModification_date());
 		domain.createdBy = entity.getCreatedBy().getLogin();
 		domain.modifiedBy = entity.getModifiedBy().getLogin();
-		
-		// accession ids
-		
-//		domain.mgiid = entity.getMgiid();
-//		domain.jnumid = entity.getJnumid();
-//		domain.doiid = entity.getDoiid();
-//		domain.pubmedid = entity.getPubmedid();
-//		domain.gorefid = entity.getGorefid();
-		if (entity.getAccessionIDs() != null) {
-			List<AccessionDomain> accids = new ArrayList<AccessionDomain>();
-			AccessionTranslator accessionTranslator = new AccessionTranslator();
-			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getAccessionIDs());
-			accids(IteratorUtils.toList(acc.iterator()));
-			for (int a = 0; a < accids.size(); a++) {
-				if (accids.get(a).getLogicaldbKey().equals("1") && accids.get(a).getMgiTypeKey().equals("2") && accids.get(a).getPreferred().equals("1")) {
-					domain.setMgiid(accids.get(a).getAccID());
-				}
-				else if (accids.get(a).getLogicaldbKey().equals("1") && accids.get(a).getMgiTypeKey().equals("1") && accids.get(a).getPreferred().equals("1")) {
-					domain.setJnumid(accids.get(a).getAccID());
-				}	
-				else if (accids.get(a).getLogicaldbKey().equals("29") && accids.get(a).getMgiTypeKey().equals("1")) {
-					domain.setPubmedid(accids.get(a).getAccID());
-				}	
-				else if (accids.get(a).getLogicaldbKey().equals("65") && accids.get(a).getMgiTypeKey().equals("1")) {
-					domain.setDoiid(accids.get(a).getAccID());
-				}	
-				else if (accids.get(a).getLogicaldbKey().equals("185") && accids.get(a).getMgiTypeKey().equals("1")) {
-					domain.setGorefid(accids.get(a).getAccID());
-				}					
-			}
-		}
+				
+		domain.mgiid = entity.getMgiid();
+		domain.jnumid = entity.getJnumid();
+		domain.doiid = entity.getDoiid();
+		domain.pubmedid = entity.getPubmedid();
+		domain.gorefid = entity.getGorefid();
 		
 		// at most one reference note
 		if (entity.getReferenceNote() != null && !entity.getReferenceNote().isEmpty()) {
@@ -198,11 +171,6 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 
 		
 		return domain;
-	}
-
-	private void accids(List<AccessionDomain> list) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

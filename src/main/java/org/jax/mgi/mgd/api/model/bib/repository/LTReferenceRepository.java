@@ -950,6 +950,5 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		Query query = referenceDAO.createNativeQuery("select count(*) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
 		query.getResultList();	
 		return;
-	}
-
+	}	
 }

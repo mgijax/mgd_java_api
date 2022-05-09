@@ -343,7 +343,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				entity.setReferenceAbstract(null);
 			}
 			else {
-				entity.setReferenceAbstract(DecodeString.setDecodeToLatin9(domain.referenceAbstract).replace("''",  "'"));			
+				entity.setReferenceAbstract(DecodeString.setDecodeToLatin9(domain.getReferenceAbstract()).replace("''",  "'"));			
 			}
 			
 			entity.setModifiedBy(user);

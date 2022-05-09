@@ -171,20 +171,20 @@ public class LTReference extends BaseEntity {
 
 	// bib_citation_cache
 	
-	@Transient
-	public String getCachedID(String provider) {
-		citationData.size(); // loads it
-		if ((citationData == null) || (citationData.size() == 0)) { return null; }
-		if ("MGI".equals(provider)) {
-			return citationData.get(0).getMgiid();
-		} else if ("J:".equals(provider)) {
-			return citationData.get(0).getJnumid();
-		} else if ("DOI".equals(provider)) {
-			return citationData.get(0).getDoiid();
-		} else {
-			return citationData.get(0).getPubmedid();
-		}
-	}
+//	@Transient
+//	public String getCachedID(String provider) {
+//		citationData.size(); // loads it
+//		if ((citationData == null) || (citationData.size() == 0)) { return null; }
+//		if ("MGI".equals(provider)) {
+//			return citationData.get(0).getMgiid();
+//		} else if ("J:".equals(provider)) {
+//			return citationData.get(0).getJnumid();
+//		} else if ("DOI".equals(provider)) {
+//			return citationData.get(0).getDoiid();
+//		} else {
+//			return citationData.get(0).getPubmedid();
+//		}
+//	}
 	
 	// bib_workflow_tag
 

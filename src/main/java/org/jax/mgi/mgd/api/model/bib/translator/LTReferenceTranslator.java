@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.bib.translator;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
@@ -85,9 +86,11 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 			ReferenceWorkflowTagTranslator tagTranslator = new ReferenceWorkflowTagTranslator();
 			Iterable<ReferenceWorkflowTagDomain> i = tagTranslator.translateEntities(entity.getWorkflowTags());
 			domain.setWorkflowTags(IteratorUtils.toList(i.iterator()));
+			List<String> workflowTagString = new ArrayList<>();
 			for (int t = 0; t < domain.getWorkflowTags().size(); t++) {
-				domain.workflowTagString.add(domain.getWorkflowTags().get(t).getTag());
+				workflowTagString.add(domain.getWorkflowTags().get(t).getTag());
 			}
+			domain.setWorkflowTagString(workflowTagString);
 		}		
 		
 		// bib_workflow_status

@@ -140,10 +140,10 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	/* set the given workflow_tag for all references identified in the list of keys
 	 */
-	public void updateInBulk(List<String> refsKey2, String workflow_tag, String workflow_tag_operation, User user) throws FatalAPIException, APIException {
+	public void updateInBulk(List<String> refsKey2, String workflowTag, String workflow_tag_operation, User user) throws FatalAPIException, APIException {
 
 		// if no references or no tags, just bail out as a no-op
-		if ((refsKey2 == null) || (refsKey2.size() == 0) || (workflow_tag == null) || (workflow_tag.length() == 0)) {
+		if ((refsKey2 == null) || (refsKey2.size() == 0) || (workflowTag == null) || (workflowTag.length() == 0)) {
 			return; 
 		}
 
@@ -168,9 +168,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				while (!succeeded) {
 					try {
 						if (workflow_tag_operation.equals(Constants.OP_ADD_WORKFLOW)) {
-							addTag(entity, workflow_tag, user);
+							addTag(entity, workflowTag, user);
 						} else {
-							removeTag(entity, workflow_tag, user);
+							removeTag(entity, workflowTag, user);
 						}
 						succeeded = true;
 					} catch (FatalAPIException fe) {

@@ -80,13 +80,6 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 			Iterable<ReferenceWorkflowDataDomain> i = dataTranslator.translateEntities(entity.getWorkflowData());
 			domain.setWorkflowData(i.iterator().next());	
 		}
-
-		domain.ap_status = entity.getStatus(Constants.WG_AP);
-		domain.go_status = entity.getStatus(Constants.WG_GO);
-		domain.gxd_status = entity.getStatus(Constants.WG_GXD);
-		domain.pro_status = entity.getStatus(Constants.WG_PRO);
-		domain.qtl_status = entity.getStatus(Constants.WG_QTL);
-		domain.tumor_status = entity.getStatus(Constants.WG_TUMOR);
 		
 		// bib_workflow_status
 		if (entity.getWorkflowStatus() != null) {
@@ -101,6 +94,40 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 			Iterable<ReferenceWorkflowStatusDomain> i = statusTranslator.translateEntities(entity.getWorkflowStatusCurrent());
 			domain.setStatusCurrent(IteratorUtils.toList(i.iterator()));
 		}
+
+		for (int i = 0; i < domain.getStatusCurrent().size(); i++) {
+			if (domain.getStatusCurrent().get(i).getGroupAbbrev().equals(Constants.WG_AP)) {
+				domain.setAp_status(domain.getStatusCurrent().get(i).getStatus());
+				domain.setAp_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+			}
+			else if (domain.getStatusCurrent().get(i).getGroupAbbrev().equals(Constants.WG_GO)) {
+				domain.setGo_status(domain.getStatusCurrent().get(i).getStatus());
+				domain.setGo_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+			}	
+			else if (domain.getStatusCurrent().get(i).getGroupAbbrev().equals(Constants.WG_GXD)) {
+				domain.setGxd_status(domain.getStatusCurrent().get(i).getStatus());
+				domain.setGxd_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+			}
+			else if (domain.getStatusCurrent().get(i).getGroupAbbrev().equals(Constants.WG_PRO)) {
+				domain.setPro_status(domain.getStatusCurrent().get(i).getStatus());
+				domain.setPro_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+			}	
+			else if (domain.getStatusCurrent().get(i).getGroupAbbrev().equals(Constants.WG_QTL)) {
+				domain.setQtl_status(domain.getStatusCurrent().get(i).getStatus());
+				domain.setQtl_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+			}	
+			else if (domain.getStatusCurrent().get(i).getGroupAbbrev().equals(Constants.WG_TUMOR)) {
+				domain.setTumor_status(domain.getStatusCurrent().get(i).getStatus());
+				domain.setTumor_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+			}			
+		}
+		
+//		domain.ap_status = entity.getStatus(Constants.WG_AP);
+//		domain.go_status = entity.getStatus(Constants.WG_GO);
+//		domain.gxd_status = entity.getStatus(Constants.WG_GXD);
+//		domain.pro_status = entity.getStatus(Constants.WG_PRO);
+//		domain.qtl_status = entity.getStatus(Constants.WG_QTL);
+//		domain.tumor_status = entity.getStatus(Constants.WG_TUMOR);
 		
 		// bib_workflow_relevance
 		if (entity.getWorkflowRelevance() != null) {

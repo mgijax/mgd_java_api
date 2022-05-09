@@ -510,6 +510,10 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	private boolean applyBookChanges(LTReference entity, LTReferenceDomain domain, User user) {
 		log.info("applyBookChanges()");
 
+		if (domain.getReferenceBook() == null) {
+			return (false);
+		}
+		
 		boolean isBookTerm = false;
 		boolean isBookKey = false;
 		

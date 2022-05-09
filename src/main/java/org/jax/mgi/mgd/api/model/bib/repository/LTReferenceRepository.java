@@ -771,12 +771,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		}
 	}
 
-	/* convenience method, used by applyWorkflowStatusChanges() to reduce redundant code in setting workflow
-	 * group statuses.  returns true if an update was made, false if no change.  persists any changes
-	 * to the database.
-	 */
-	private boolean updateWorkflowStatus(LTReference entity, String groupAbbrev, String newStatus, User user) throws NonFatalAPIException, APIException {
-
+	private String getWorkflowStatus(LTReference entity, String groupAbbrev) {
+		// find current status for groupAbbrev in the entity.getWorkflowStatusCurrent()
+		
 		String currentStatus = null;
 		
 		for (int i = 0; i < entity.getWorkflowStatusCurrent().size(); i++) {
@@ -784,6 +781,17 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				currentStatus = entity.getWorkflowStatusCurrent().get(i).getStatusTerm().getTerm();
 			}
 		}
+		
+		return (currentStatus);
+	}
+	
+	/* convenience method, used by applyWorkflowStatusChanges() to reduce redundant code in setting workflow
+	 * group statuses.  returns true if an update was made, false if no change.  persists any changes
+	 * to the database.
+	 */
+	private boolean updateWorkflowStatus(LTReference entity, String groupAbbrev, String newStatus, User user) throws NonFatalAPIException, APIException {
+
+		String currentStatus = getWorkflowStatus(entity, groupAbbrev);
 		
 		// no update if new status matches old status (or if no group is specified)
 		if ( ((currentStatus != null) && currentStatus.equals(newStatus)) || (groupAbbrev == null) ||
@@ -847,7 +855,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 		if (anyChanges) {
 			
-			entity.clearWorkflowStatusCache();
+//			entity.clearWorkflowStatusCache();
 
 			// if no J# and Status in (Chosen, INdexed, Full-coded), then add J#
 
@@ -856,7 +864,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				boolean addJnumid = false;
 
 				for (String workgroup : Constants.WG_ALL) {
-					String wgStatus = entity.getStatus(workgroup);
+					String wgStatus = getWorkflowStatus(entity, workgroup);
 					if ((wgStatus != null) && (
 							wgStatus.equals(Constants.WS_CHOSEN) ||
 							wgStatus.equals(Constants.WS_INDEXED) ||

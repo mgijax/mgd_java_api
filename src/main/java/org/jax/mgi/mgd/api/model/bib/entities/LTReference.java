@@ -200,33 +200,33 @@ public class LTReference extends BaseEntity {
 		return tags;
 	}
 	
-	// bib_workflowStatus
-	
-	// maps workflow group abbrev to current status for that group, cached in memory for efficiency - not persisted
-	@Transient
-	private Map<String,String> workflowStatusCache;
-	
-	@Transient
-	public void clearWorkflowStatusCache() {
-		workflowStatusCache = null;
-	}
-
-	@Transient
-	private void buildWorkflowStatusCache() {
-		workflowStatusCache = new HashMap<String,String>();
-		for (ReferenceWorkflowStatus rws : workflowStatus) {
-			if (rws.getIsCurrent() == 1) {
-				workflowStatusCache.put(rws.getGroupTerm().getAbbreviation(), rws.getStatusTerm().getTerm());			}
-		}
-	}
-
-	@Transient
-	public String getStatus(String groupAbbrev) {
-		if (workflowStatusCache == null) { buildWorkflowStatusCache(); }
-		if (workflowStatusCache.containsKey(groupAbbrev)) {
-			return workflowStatusCache.get(groupAbbrev);
-		}
-		return null;
-	}
+//	// bib_workflowStatus
+//	
+//	// maps workflow group abbrev to current status for that group, cached in memory for efficiency - not persisted
+//	@Transient
+//	private Map<String,String> workflowStatusCache;
+//	
+//	@Transient
+//	public void clearWorkflowStatusCache() {
+//		workflowStatusCache = null;
+//	}
+//
+//	@Transient
+//	private void buildWorkflowStatusCache() {
+//		workflowStatusCache = new HashMap<String,String>();
+//		for (ReferenceWorkflowStatus rws : workflowStatus) {
+//			if (rws.getIsCurrent() == 1) {
+//				workflowStatusCache.put(rws.getGroupTerm().getAbbreviation(), rws.getStatusTerm().getTerm());			}
+//		}
+//	}
+//
+//	@Transient
+//	public String getStatus(String groupAbbrev) {
+//		if (workflowStatusCache == null) { buildWorkflowStatusCache(); }
+//		if (workflowStatusCache.containsKey(groupAbbrev)) {
+//			return workflowStatusCache.get(groupAbbrev);
+//		}
+//		return null;
+//	}
 
 }

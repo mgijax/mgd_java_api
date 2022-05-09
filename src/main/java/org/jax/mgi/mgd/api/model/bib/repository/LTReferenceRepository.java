@@ -86,10 +86,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	private Logger log = Logger.getLogger(getClass());
 
-	/* These work together to allow for a maximum delay of two seconds for retries: */
-	private static int maxRetries = 10;		// maximum number of retries for non-fatal exceptions on update operations
-	private static int retryDelay = 200;	// number of ms to wait before retrying update operation after non-fatal exception
-
 	/***--- (public) instance methods ---***/
 
 	/* gets a ReferenceDomain object that is fully fleshed out from a Reference
@@ -138,62 +134,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		return null;	// just return null, will look up later on
 	}
 
-//	/* set the given workflow_tag for all references identified in the list of keys
-//	 */
-//	public void updateReferenceInBulk(List<String> listOfRefsKey, String workflowTag, String workflow_tag_operation, User user) throws FatalAPIException, APIException {
-//
-//		// if no references or no tags, just bail out as a no-op
-//		if ((listOfRefsKey == null) || (listOfRefsKey.size() == 0) || (workflowTag == null) || (workflowTag.length() == 0)) {
-//			return; 
-//		}
-//
-//		// if no workflow tag operation is specified, default to 'add'
-//		if ((workflow_tag_operation == null) || workflow_tag_operation.equals("")) {
-//			workflow_tag_operation = Constants.OP_ADD_WORKFLOW;
-//		} else if (!workflow_tag_operation.equals(Constants.OP_ADD_WORKFLOW) && !workflow_tag_operation.equals(Constants.OP_REMOVE_WORKFLOW)) {
-//			throw new FatalAPIException("Invalid workflow_tag_operation: " + workflow_tag_operation);
-//		}
-//
-//		/* for each reference:
-//		 * 1. if the operation fails in a fatal manner, rethrow that exception immediately.
-//		 * 2. if the operation fails in a non-fatal manner, wait briefly and try again up to maxRetries times.
-//		 */
-//		for (String refsKey : listOfRefsKey) {
-//			LTReference entity = referenceDAO.get(Integer.valueOf(refsKey));
-//
-//			if (entity != null) {
-//				int retries = 0;
-//				boolean succeeded = false;
-//
-//				while (!succeeded) {
-//					try {
-//						if (workflow_tag_operation.equals(Constants.OP_ADD_WORKFLOW)) {
-//							addTag(entity, workflowTag, user);
-//						} else {
-//							removeTag(entity, workflowTag, user);
-//						}
-//						succeeded = true;
-//					} catch (FatalAPIException fe) {
-//						throw fe;
-//					} catch (APIException ae) {
-//						retries++;
-//						if (retries > maxRetries) {
-//							throw ae;
-//						}
-//						try {
-//							Thread.sleep(retryDelay);
-//							log.info("UpdateBulk: Retry #" + retries + " for " + entity.getMgiid());
-//						} catch (InterruptedException ie) {
-//							throw new FatalAPIException("Operation cancelled - system interrupted");
-//						}
-//					}
-//				}
-//			} else {
-//				throw new FatalAPIException("Unknown reference key: " + refsKey);
-//			}
-//		}
-//	}
-
 	/***--- (private) instance methods ---***/
 
 	/* return a single Term matching the parameters encoded as a Map in the given JSON string
@@ -232,7 +172,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	 * (assumes we are working in a transaction and persists any sub-objects into the database, but does
 	 * not persist this Reference object itself, as other changes could be coming)
 	 */
-	private void applyChanges(LTReference entity, LTReferenceDomain domain, User user) throws NonFatalAPIException, APIException {
+	public void applyChanges(LTReference entity, LTReferenceDomain domain, User user) throws NonFatalAPIException, APIException {
 		// Note that we must have 'anyChanges' after the OR, otherwise short-circuit evaluation will only save
 		// the first section changed.
 

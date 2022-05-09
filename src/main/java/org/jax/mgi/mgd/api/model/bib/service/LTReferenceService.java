@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.exception.APIException;
@@ -37,11 +38,18 @@ public class LTReferenceService {
 	 * domain object if successful or throws APIException if not.
 	 */
 	@Transactional
-	public LTReferenceDomain updateReference(LTReferenceDomain domain, User currentUser) throws FatalAPIException, NonFatalAPIException, APIException {
-		Logger log = Logger.getLogger(getClass());
-		log.info("in LTReferenceService");
-		repo.update(domain, currentUser);
-		log.info("back in LTReferenceService");
+	public LTReferenceDomain updateReference(LTReferenceDomain domain, User user) throws FatalAPIException, NonFatalAPIException, APIException {
+		log.info("LTReferenceService:updateReference()");
+		
+		//repo.update(domain, currentUser);
+		
+		LTReference entity = referenceDAO.get(Integer.valueOf(domain.getRefsKey()));
+		repo.applyChanges(entity, domain, user);
+		referenceDAO.persist(entity);				
+
+		Query query = referenceDAO.createNativeQuery("select count(*) from BIB_reloadCache(" + domain.getRefsKey() + ")");
+		query.getResultList();
+		
 		return repo.get(domain.refsKey);
 	}
 

@@ -140,10 +140,10 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	/* set the given workflow_tag for all references identified in the list of keys
 	 */
-	public void updateInBulk(List<String> refsKey2, String workflowTag, String workflow_tag_operation, User user) throws FatalAPIException, APIException {
+	public void updateReferenceInBulk(List<String> listOfRefsKey, String workflowTag, String workflow_tag_operation, User user) throws FatalAPIException, APIException {
 
 		// if no references or no tags, just bail out as a no-op
-		if ((refsKey2 == null) || (refsKey2.size() == 0) || (workflowTag == null) || (workflowTag.length() == 0)) {
+		if ((listOfRefsKey == null) || (listOfRefsKey.size() == 0) || (workflowTag == null) || (workflowTag.length() == 0)) {
 			return; 
 		}
 
@@ -158,7 +158,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		 * 1. if the operation fails in a fatal manner, rethrow that exception immediately.
 		 * 2. if the operation fails in a non-fatal manner, wait briefly and try again up to maxRetries times.
 		 */
-		for (String refsKey : refsKey2) {
+		for (String refsKey : listOfRefsKey) {
 			LTReference entity = referenceDAO.get(Integer.valueOf(refsKey));
 
 			if (entity != null) {

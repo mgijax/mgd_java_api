@@ -612,6 +612,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 		log.info("applyWorkflowRelevanceChanges()");
 		
+		log.info("domain.getEditRelevanceKey();" + domain.getEditRelevanceKey());
+		log.info("user.getLogin();:" + entity.getWorkflowRelevance().get(0).getModifiedBy() + "," + user.getLogin());
+		
 		// if relevance term has changed or user has changed
 		if (!smartEqual(String.valueOf(entity.getWorkflowRelevance().get(0).getRelevanceTerm().get_term_key()), domain.getEditRelevanceKey())
 			|| !smartEqual(entity.getWorkflowRelevance().get(0).getModifiedBy(), user.getLogin())

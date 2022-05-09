@@ -276,16 +276,16 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		
 		// update this object's data to match what was passed in		
 		if ((Integer.valueOf(domain.getIsReviewArticle()) != entity.getIsReviewArticle())
-				|| !smartEqual(entity.getAuthors(), domain.authors)
-				|| !smartEqual(entity.getJournal(), domain.journal)
-				|| !smartEqual(entity.getTitle(), domain.title)
-				|| !smartEqual(entity.getVol(), domain.vol)
-				|| !smartEqual(entity.getIssue(), domain.issue)
-				|| !smartEqual(entity.getDate(), domain.date)
-				|| !smartEqual(entity.getYear(), year)
+				|| !smartEqual(entity.getAuthors(), domain.getAuthors())
+				|| !smartEqual(entity.getJournal(), domain.getJournal())
+				|| !smartEqual(entity.getTitle(), domain.getTitle())
+				|| !smartEqual(entity.getVol(), domain.getVol())
+				|| !smartEqual(entity.getIssue(), domain.getIssue())
+				|| !smartEqual(entity.getDate(), domain.getDate())
+				|| !smartEqual(entity.getYear(), domain.getYear())
 				|| !smartEqual(String.valueOf(entity.getReferenceTypeTerm().get_term_key()), domain.referenceTypeKey)
-				|| !smartEqual(entity.getPgs(), domain.pgs)
-				|| !smartEqual(entity.getReferenceAbstract(), domain.referenceAbstract)
+				|| !smartEqual(entity.getPgs(), domain.getPgs())
+				|| !smartEqual(entity.getReferenceAbstract(), domain.getReferenceAbstract())
 				) {
 
 			entity.setIsReviewArticle(Integer.valueOf(domain.getIsReviewArticle()));

@@ -358,6 +358,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	// remove any (optional) prefix from DOI ID
 	private String cleanDoiID(String doiID) {
 		// all DOI IDs must begin with "10.", but if not, just trust the user
+		
+		log.info("clearDoiID():" + doiID);
+		
 		if ((doiID != null) && (!doiID.startsWith("10."))) {
 			int tenPosition = doiID.indexOf("10.");
 			if (tenPosition < 0) {
@@ -371,6 +374,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	// remove any (optional) prefix from PubMed ID
 	private String cleanPubMedID(String pubmedID) {
 		// all PubMed IDs are purely numeric, so strip off anything to the left of the first non-numeric character
+		
+		log.info("clearPubMedID():" + pubmedID);
+		
 		if ((pubmedID != null) && (pubmedID.trim().length() > 0) && (!pubmedID.matches("^[0-9]+$"))) {
 			// anything up to the final non-digit, followed by the digits that are the PubMed ID
 			Pattern p = Pattern.compile("^.*[^0-9]+([0-9]+)$");
@@ -391,10 +397,9 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		// assumes only one ID per reference for each logical database (valid assumption, August 2017)
 		// need to handle:  new ID for logical db, updated ID for logical db, deleted ID for logical db
 
-		// do any cleanup of DOI ID and PubMed ID first
-
 		log.info("applyAccessionIDChanges()");
 		
+		// do any cleanup of DOI ID and PubMed ID first
 		domain.doiid = cleanDoiID(domain.doiid);
 		domain.pubmedid = cleanPubMedID(domain.pubmedid);
 
@@ -472,7 +477,10 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 	 */
 	private boolean applyOneIDChange(LTReference entity, Integer ldb, String accID, String prefixPart, Integer numericPart, Integer preferred, Integer isPrivate, User user) {
 		// first parameter is required; bail out if it is null
+		
 		if (ldb == null) { return false; }
+		
+		log.info("applyOneIDChange():" + ldb + "," + accID + "," + prefixPart + "," + numericPart + "," + preferred + "," + isPrivate);
 		
 		// First, need to find any existing AccessionID object for this logical database.
 

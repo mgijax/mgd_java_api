@@ -169,7 +169,6 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 //			domain.setAlleleAssocs(IteratorUtils.toList(i.iterator()));
 //		}
 
-		
 		return domain;
 	}
 

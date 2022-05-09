@@ -358,7 +358,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			anyChanges = true;
 		}
 
-		referenceDAO.persist(entity);
 		return anyChanges;
 	}
 

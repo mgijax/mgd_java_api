@@ -854,9 +854,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		anyChanges = updateWorkflowStatus(entity, Constants.WG_TUMOR, domain.tumor_status, user) || anyChanges;
 
 		if (anyChanges) {
-			
-//			entity.clearWorkflowStatusCache();
-
 			// if no J# and Status in (Chosen, INdexed, Full-coded), then add J#
 
 			if (entity.getJnumid() == null) {

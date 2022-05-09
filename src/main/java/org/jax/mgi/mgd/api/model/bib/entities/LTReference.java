@@ -3,9 +3,7 @@ package org.jax.mgi.mgd.api.model.bib.entities;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -199,34 +197,5 @@ public class LTReference extends BaseEntity {
 		Collections.sort(tags);
 		return tags;
 	}
-	
-//	// bib_workflowStatus
-//	
-//	// maps workflow group abbrev to current status for that group, cached in memory for efficiency - not persisted
-//	@Transient
-//	private Map<String,String> workflowStatusCache;
-//	
-//	@Transient
-//	public void clearWorkflowStatusCache() {
-//		workflowStatusCache = null;
-//	}
-//
-//	@Transient
-//	private void buildWorkflowStatusCache() {
-//		workflowStatusCache = new HashMap<String,String>();
-//		for (ReferenceWorkflowStatus rws : workflowStatus) {
-//			if (rws.getIsCurrent() == 1) {
-//				workflowStatusCache.put(rws.getGroupTerm().getAbbreviation(), rws.getStatusTerm().getTerm());			}
-//		}
-//	}
-//
-//	@Transient
-//	public String getStatus(String groupAbbrev) {
-//		if (workflowStatusCache == null) { buildWorkflowStatusCache(); }
-//		if (workflowStatusCache.containsKey(groupAbbrev)) {
-//			return workflowStatusCache.get(groupAbbrev);
-//		}
-//		return null;
-//	}
 
 }

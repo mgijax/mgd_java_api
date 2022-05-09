@@ -122,61 +122,49 @@ public class LTReference extends BaseEntity {
 	private List<MGIReferenceAssoc> alleleAssocs;
 	
 
-	/* Find and return the first accession ID matching any specified logical database, prefix,
-	 * is-preferred, and is-private settings.
-	 */
-	@Transient
-	private String findFirstID(Integer ldb, String prefix, Integer preferred, Integer isPrivate) {
-		for (int i = 0; i < accessionIDs.size(); i++) {
-			Accession accID = accessionIDs.get(i);
-			if ((ldb == null) || (ldb.equals(accID.getLogicaldb().get_logicaldb_key()))) {
-				if ((prefix == null) || prefix.equals(accID.getPrefixPart())) {
-					if ((preferred == null) || (preferred.equals(accID.getPreferred()))) {
-						if ((isPrivate == null) || (isPrivate.equals(accID.getIsPrivate()))) {
-							return accID.getAccID();
-						}
-					}
-				}
-			}
-		}
-		return null;
-	}
-
-	@Transient
-	public String getJnumid() {
-		return findFirstID(Constants.LDB_MGI, "J:", Constants.PREFERRED, Constants.PUBLIC);
-	}
-
-	@Transient
-	public String getDoiid() {
-		return findFirstID(Constants.LDB_DOI, null, null, null);
-	}
-
-	@Transient
-	public String getPubmedid() {
-		return findFirstID(Constants.LDB_PUBMED, null, null, null);
-	}
-
-	@Transient
-	public String getMgiid() {
-		return findFirstID(Constants.LDB_MGI, "MGI:", null, null);
-	}
-
-	@Transient
-	public String getGorefid() {
-		return findFirstID(Constants.LDB_GOREF, null, null, null);
-	}
-	
-//	// bib_workflow_tag
+//	/* Find and return the first accession ID matching any specified logical database, prefix,
+//	 * is-preferred, and is-private settings.
+//	 */
+//	@Transient
+//	private String findFirstID(Integer ldb, String prefix, Integer preferred, Integer isPrivate) {
+//		for (int i = 0; i < accessionIDs.size(); i++) {
+//			Accession accID = accessionIDs.get(i);
+//			if ((ldb == null) || (ldb.equals(accID.getLogicaldb().get_logicaldb_key()))) {
+//				if ((prefix == null) || prefix.equals(accID.getPrefixPart())) {
+//					if ((preferred == null) || (preferred.equals(accID.getPreferred()))) {
+//						if ((isPrivate == null) || (isPrivate.equals(accID.getIsPrivate()))) {
+//							return accID.getAccID();
+//						}
+//					}
+//				}
+//			}
+//		}
+//		return null;
+//	}
 //
 //	@Transient
-//	public List<String> getWorkflowTagsAsStrings() {
-//		List<String> tags = new ArrayList<String>();
-//		for (ReferenceWorkflowTag rwTag : workflowTag) {
-//			tags.add(rwTag.getTagTerm().getTerm());
-//		}
-//		Collections.sort(tags);
-//		return tags;
+//	public String getJnumid() {
+//		return findFirstID(Constants.LDB_MGI, "J:", Constants.PREFERRED, Constants.PUBLIC);
+//	}
+//
+//	@Transient
+//	public String getDoiid() {
+//		return findFirstID(Constants.LDB_DOI, null, null, null);
+//	}
+//
+//	@Transient
+//	public String getPubmedid() {
+//		return findFirstID(Constants.LDB_PUBMED, null, null, null);
+//	}
+//
+//	@Transient
+//	public String getMgiid() {
+//		return findFirstID(Constants.LDB_MGI, "MGI:", null, null);
+//	}
+//
+//	@Transient
+//	public String getGorefid() {
+//		return findFirstID(Constants.LDB_GOREF, null, null, null);
 //	}
 
 }

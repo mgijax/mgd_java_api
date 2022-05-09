@@ -60,6 +60,7 @@ public class LTReferenceDomain extends BaseDomain {
 	public String pro_status;
 	public String qtl_status;
 	public String tumor_status;
+	public List<ReferenceWorkflowStatusDomain> statusCurrent;
 	public List<ReferenceWorkflowStatusDomain> statusHistory;
 
 	// workflow relevance/current relevance

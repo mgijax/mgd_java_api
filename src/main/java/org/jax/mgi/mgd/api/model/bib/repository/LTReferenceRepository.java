@@ -580,8 +580,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			isBookKey = true;
 		}
 		
-		log.info("isBookTerm:" + isBookTerm);
-		log.info("isBookKey:" + isBookKey);
+//		log.info("isBookTerm:" + isBookTerm);
+//		log.info("isBookKey:" + isBookKey);
 		
 		if (isBookTerm && isBookKey) {
 			log.info("applyBookChange/remain book");
@@ -611,9 +611,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		// updated workflow relevance, new workflow relevance -- (no deletions)
 
 		log.info("applyWorkflowRelevanceChanges()");
-		
-		log.info("domain.getEditRelevanceKey():" + domain.getEditRelevanceKey());
-		log.info("user.getLogin();:" + entity.getWorkflowRelevance().get(0).getModifiedBy().getLogin() + "," + user.getLogin());
+//		log.info("domain.getEditRelevanceKey():" + domain.getEditRelevanceKey());
+//		log.info("user.getLogin();:" + entity.getWorkflowRelevance().get(0).getModifiedBy().getLogin() + "," + user.getLogin());
 		
 		// if relevance term has changed or user has changed
 		if (!smartEqual(String.valueOf(entity.getWorkflowRelevance().get(0).getRelevanceTerm().get_term_key()), domain.getEditRelevanceKey())
@@ -638,6 +637,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			newRelevance.setVersion(null);
 			domain.getRelevanceHistory().add(newRelevance);
 		}
+		
 		return(relevanceService.process(domain.getRefsKey(), domain.getRelevanceHistory(), user));
 	}
 	
@@ -729,6 +729,8 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			}
 		}
 
+		log.info("addTag();" + rdTag);
+		
 		// need to find the term of the tag, wrap it in an association, persist the association, and
 		// add it to the workflow tags for this Reference
 

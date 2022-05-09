@@ -125,12 +125,12 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	@Override
 	public LTReferenceDomain update(LTReferenceDomain domain, User user) throws FatalAPIException, NonFatalAPIException, APIException {
-		log.info("LTReferenceDomain update(LTReferenceDomain domain, User user)");
-		LTReference entity = referenceDAO.get(Integer.valueOf(domain.getRefsKey()));
-		applyChanges(entity, domain, user);
-		referenceDAO.persist(entity);				
-		Query query = referenceDAO.createNativeQuery("select count(*) from BIB_reloadCache(" + domain.getRefsKey() + ")");
-		query.getResultList();
+//		log.info("LTReferenceDomain update(LTReferenceDomain domain, User user)");
+//		LTReference entity = referenceDAO.get(Integer.valueOf(domain.getRefsKey()));
+//		applyChanges(entity, domain, user);
+//		referenceDAO.persist(entity);				
+//		Query query = referenceDAO.createNativeQuery("select count(*) from BIB_reloadCache(" + domain.getRefsKey() + ")");
+//		query.getResultList();
 		return null;	// just return null, will look up later on
 	}
 

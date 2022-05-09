@@ -11,16 +11,18 @@ import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceBulkDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.interfaces.LTReferenceRESTInterface;
+import org.jax.mgi.mgd.api.model.bib.repository.LTReferenceRepository;
 import org.jax.mgi.mgd.api.model.bib.service.LTReferenceService;
+import org.jax.mgi.mgd.api.model.bib.service.ReferenceService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.UserService;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.service.TermService;
-import org.jax.mgi.mgd.api.util.CommaSplitter;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.MapMaker;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -29,14 +31,18 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	/***--- instance variables ---***/
 	
 	@Inject
+	private LTReferenceRepository repo;
+	@Inject
 	private LTReferenceService referenceService;
+	@Inject
+	private ReferenceService referenceServiceNew;
 	@Inject
 	private TermService termService;
 	@Inject
 	private UserService userService;
 	@Inject
 	private MarkerService markerService;
-	
+
 	private Logger log = Logger.getLogger(getClass());
 
 	/* These work together to allow for a maximum delay of two seconds for retries: */
@@ -103,6 +109,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 		} else {
 			results.setError("FailedAuthentication", "Failed - invalid username", Constants.HTTP_PERMISSION_DENIED);
 		}
+		
 		return results;
 	}
 
@@ -135,79 +142,74 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 			}
 		}
 		
-		User currentUser = userService.getUserByUsername(username);
-		if (currentUser == null) {
+		User user = userService.getUserByUsername(username);
+		if (user == null) {
 			results.setError("FailedAuthentication", "Failed - invalid username", Constants.HTTP_PERMISSION_DENIED); 
 			return results;
 
-		} else if (!currentUser.getLogin().equalsIgnoreCase(username)) {
+		} else if (!user.getLogin().equalsIgnoreCase(username)) {
 				// We don't want to just fall back on a default user here, so this is an error case.
 				results.setError("Failed", "Unknown user: " + username, Constants.HTTP_BAD_REQUEST);
 				return results;
 		}
 
-		MapMaker mapMaker = new MapMaker();
-		CommaSplitter splitter = new CommaSplitter();
 		List<String> failures = new ArrayList<String>();
-		String currentID = null;
 		List<String> referenceKeys = new ArrayList<String>();
 		
-		for (String myIDs : splitter.split(accid, 100)) {
-			try {
-				SearchResults<LTReferenceDomain> refs = referenceService.getReferences(mapMaker.toMap("{\"accids\" : \"" + myIDs + "\"}"));
-
-				if (refs.total_count > 0) {
-					for (LTReferenceDomain ref : refs.items) {
-						int retries = 0;
-						boolean moveOn = false;
+		try {
+			ReferenceDomain searchDomain = new ReferenceDomain();
+			searchDomain.setAccids(accid);
+			List<SlimReferenceDomain> refs = referenceServiceNew.search(searchDomain);
+			
+			for (int i = 0; i < refs.size(); i++) {
+				LTReferenceDomain ref = repo.get(refs.get(i).getRefsKey());
+				int retries = 0;
+				boolean moveOn = false;
 						
-						while (!moveOn) {
-							try {
-								currentID = ref.jnumid;
-								ref.setStatus(group, status);
-								// ensure we keep the relevance status in sync
-								if ("Full-coded".equals(status) ||
-									"Routed".equals(status) ||
-									"Indexed".equals(status) ||
-									"Chosen".equals(status)) 
-								{
-									ref.setEditRelevance("keep");
-								}
+				while (!moveOn) {
+					try {
+						ref.setStatus(group, status);
+						// ensure we keep the relevance status in sync
+						if ("Full-coded".equals(status) ||
+							"Routed".equals(status) ||
+							"Indexed".equals(status) ||
+							"Chosen".equals(status)) 
+						{
+							ref.setEditRelevance("keep");
+						}
 
-								referenceService.updateReference(ref, currentUser);
-								referenceKeys.add(ref.refsKey);
+						referenceService.updateReference(ref, user);
+						referenceKeys.add(ref.refsKey);
+						moveOn = true;
+					} catch (FatalAPIException fe) {
+						log.error("Could not save status for:" + ref.getJnumid() + " (" + fe.toString() + ")");
+						fe.printStackTrace();
+						failures.add(ref.getJnumid());
+						moveOn = true;
+					} catch (APIException e) {
+						retries++;
+						if (retries > maxRetries) {
+							log.error("Could not save status for:" + ref.getJnumid() + " (" + e.toString() + ")");
+							e.printStackTrace();
+							failures.add(ref.getJnumid());
+							moveOn = true;
+						} else {
+							try {
+								Thread.sleep(retryDelay);
+								log.info("UpdateStatus: Retry #" + retries + " for: (" + ref.getMgiid() + "," + ref.getJnumid() + ")");
+							} catch (InterruptedException e1) {
+								log.error("Could not save status for:" + ref.getJnumid() + " (" + e1.toString() + ")");
+								e1.printStackTrace();
+								failures.add(ref.getJnumid());
 								moveOn = true;
-							} catch (FatalAPIException fe) {
-								log.error("Could not save status for " + currentID + " (" + fe.toString() + ")");
-								fe.printStackTrace();
-								failures.add(currentID);
-								moveOn = true;
-							} catch (APIException e) {
-								retries++;
-								if (retries > maxRetries) {
-									log.error("Could not save status for " + currentID + " (" + e.toString() + ")");
-									e.printStackTrace();
-									failures.add(currentID);
-									moveOn = true;
-								} else {
-									try {
-										Thread.sleep(retryDelay);
-										log.info("UpdateStatus: Retry #" + retries + " for " + currentID);
-									} catch (InterruptedException e1) {
-										log.error("Could not save status for " + currentID + " (" + e1.toString() + ")");
-										e1.printStackTrace();
-										failures.add(currentID);
-										moveOn = true;
-									}
-								}
 							}
 						}
 					}
 				}
-			} catch (APIException t) {
-				log.error("Failed to search for set of IDs" + t.toString());
-				t.printStackTrace();
 			}
+		} catch (APIException t) {
+			log.error("Failed to search for set of IDs" + t.toString());
+			t.printStackTrace();
 		}
 
 		if (failures.size() > 0) {

@@ -16,6 +16,7 @@ import org.jax.mgi.mgd.api.model.bib.dao.LTReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.LTReference;
 import org.jax.mgi.mgd.api.model.bib.repository.LTReferenceRepository;
+import org.jax.mgi.mgd.api.model.bib.translator.LTReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -29,6 +30,8 @@ public class LTReferenceService {
 	@Inject
 	private LTReferenceRepository repo;	
 	
+	LTReferenceTranslator translator = new LTReferenceTranslator();
+
 	private Logger log = Logger.getLogger(getClass());
 	
 	private static int maxRetries = 10;		// maximum number of retries for non-fatal exceptions on update operations
@@ -40,9 +43,7 @@ public class LTReferenceService {
 	@Transactional
 	public LTReferenceDomain updateReference(LTReferenceDomain domain, User user) throws FatalAPIException, NonFatalAPIException, APIException {
 		log.info("LTReferenceService:updateReference()");
-		
-		//repo.update(domain, currentUser);
-		
+				
 		LTReference entity = referenceDAO.get(Integer.valueOf(domain.getRefsKey()));
 		repo.applyChanges(entity, domain, user);
 		referenceDAO.persist(entity);				
@@ -114,19 +115,33 @@ public class LTReferenceService {
 
 	public SearchResults<LTReferenceDomain> getReference(String refsKey) throws APIException {
 		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
-		try {
-			LTReferenceDomain domain = repo.get(refsKey);
-			results.total_count = 1;
-			results.items = new ArrayList<LTReferenceDomain>();
-			results.items.add(domain); 
-		} catch (APIException e) {
-			results.setError("Failure", "Failed to retrieve reference with key " + refsKey + ": " + e.toString(), Constants.HTTP_SERVER_ERROR);
-		}
+		results.setItem(translator.translate(referenceDAO.get(Integer.valueOf(refsKey))));
+		referenceDAO.clear();
 		return results;
 	}
 
-	public SearchResults<LTReferenceDomain> getReferences(Map<String, Object> searchFields) throws APIException {
-		return repo.search(searchFields);
+	public SearchResults<LTReferenceDomain> getReferences(Map<String, Object> params) throws APIException {
+		//return repo.search(searchFields);
+
+		SearchResults<LTReference> refs = referenceDAO.search(params);
+		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
+
+		results.elapsed_ms = refs.elapsed_ms;
+		results.error = refs.error;
+		results.message = refs.message;
+		results.status_code = refs.status_code;
+		results.total_count = refs.total_count;
+		results.all_match_count = refs.all_match_count;
+
+		if (refs.items != null) {
+			// translate each search results into domain
+			results.items = new ArrayList<LTReferenceDomain>();
+			for (LTReference ref : refs.items) {
+				results.items.add(translator.translate(ref));
+			}
+		}
+		
+		return results;		
 	}	
 	
 }

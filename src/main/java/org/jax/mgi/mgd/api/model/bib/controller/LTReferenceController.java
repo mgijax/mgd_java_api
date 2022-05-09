@@ -165,7 +165,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 				LTReferenceDomain ref = repo.get(refs.get(i).getRefsKey());
 				int retries = 0;
 				boolean moveOn = false;
-						
+										
 				while (!moveOn) {
 					try {
 						ref.setStatus(group, status);
@@ -177,6 +177,14 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 						{
 							ref.setEditRelevance("keep");
 						}
+
+						log.info(ref.getRefsKey());
+						log.info(ref.ap_status);
+						log.info(ref.gxd_status);
+						log.info(ref.go_status);
+						log.info(ref.pro_status);
+						log.info(ref.qtl_status);
+						log.info(ref.tumor_status);
 
 						referenceService.updateReference(ref, user);
 						referenceKeys.add(ref.refsKey);

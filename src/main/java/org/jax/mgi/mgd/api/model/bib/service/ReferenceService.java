@@ -566,9 +566,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		// bib_notes
-		if (searchDomain.getReferenceNote().getNote() != null && !searchDomain.getReferenceNote().getNote().isEmpty()) {
-			where = where + "\nand n.note ilike '" + searchDomain.getReferenceNote().getNote() + "'";
-			from_note = true;
+		if (searchDomain.getReferenceNote() != null) {
+			if (searchDomain.getReferenceNote().getNote() != null && !searchDomain.getReferenceNote().getNote().isEmpty()) {
+				where = where + "\nand n.note ilike '" + searchDomain.getReferenceNote().getNote() + "'";
+				from_note = true;
+			}
 		}
 
 		// mgiid accession ids

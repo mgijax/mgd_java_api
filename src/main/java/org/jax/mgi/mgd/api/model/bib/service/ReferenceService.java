@@ -542,26 +542,28 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		// bib_books
-		if (searchDomain.getReferenceBook().getBook_author() != null && !searchDomain.getReferenceBook().getBook_author().isEmpty()) {
-			where = where + "\nand k.book_au ilike '" + searchDomain.getReferenceBook().getBook_author() + "'";
-			from_book = true;
+		if (searchDomain.getReferenceBook() != null) {
+			if (searchDomain.getReferenceBook().getBook_author() != null && !searchDomain.getReferenceBook().getBook_author().isEmpty()) {
+				where = where + "\nand k.book_au ilike '" + searchDomain.getReferenceBook().getBook_author() + "'";
+				from_book = true;
+			}
+			if (searchDomain.getReferenceBook().getBook_title() != null && !searchDomain.getReferenceBook().getBook_title().isEmpty()) {
+				where = where + "\nand k.book_title ilike '" + searchDomain.getReferenceBook().getBook_title() + "'";
+				from_book = true;
+			}
+			if (searchDomain.getReferenceBook().getPlace() != null && !searchDomain.getReferenceBook().getPlace().isEmpty()) {
+				where = where + "\nand k.place ilike '" + searchDomain.getReferenceBook().getPlace() + "'";
+				from_book = true;
+			}
+			if (searchDomain.getReferenceBook().getPublisher() != null && !searchDomain.getReferenceBook().getPublisher().isEmpty()) {
+				where = where + "\nand k.publisher ilike '" + searchDomain.getReferenceBook().getPublisher() + "'";
+				from_book = true;
+			}
+			if (searchDomain.getReferenceBook().getSeries_ed() != null && !searchDomain.getReferenceBook().getSeries_ed().isEmpty()) {
+				where = where + "\nand k.series_ed ilike '" + searchDomain.getReferenceBook().getSeries_ed() + "'";
+				from_book = true;
+			}			
 		}
-		if (searchDomain.getReferenceBook().getBook_title() != null && !searchDomain.getReferenceBook().getBook_title().isEmpty()) {
-			where = where + "\nand k.book_title ilike '" + searchDomain.getReferenceBook().getBook_title() + "'";
-			from_book = true;
-		}
-		if (searchDomain.getReferenceBook().getPlace() != null && !searchDomain.getReferenceBook().getPlace().isEmpty()) {
-			where = where + "\nand k.place ilike '" + searchDomain.getReferenceBook().getPlace() + "'";
-			from_book = true;
-		}
-		if (searchDomain.getReferenceBook().getPublisher() != null && !searchDomain.getReferenceBook().getPublisher().isEmpty()) {
-			where = where + "\nand k.publisher ilike '" + searchDomain.getReferenceBook().getPublisher() + "'";
-			from_book = true;
-		}
-		if (searchDomain.getReferenceBook().getSeries_ed() != null && !searchDomain.getReferenceBook().getSeries_ed().isEmpty()) {
-			where = where + "\nand k.series_ed ilike '" + searchDomain.getReferenceBook().getSeries_ed() + "'";
-			from_book = true;
-		}			
 		
 		// bib_notes
 		if (searchDomain.getReferenceNote().getNote() != null && !searchDomain.getReferenceNote().getNote().isEmpty()) {

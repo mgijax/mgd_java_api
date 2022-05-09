@@ -310,35 +310,35 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				entity.setJournal(null);
 			}
 			else {
-				entity.setJournal(domain.journal);
+				entity.setJournal(domain.getJournal());
 			}
 			
 			if (domain.getTitle() == null || domain.getTitle().isEmpty()) {
 				entity.setTitle(null);
 			}
 			else {
-				entity.setTitle(domain.journal);
+				entity.setTitle(domain.getTitle());
 			}			
 
 			if (domain.getVol() == null || domain.getVol().isEmpty()) {
 				entity.setVol(null);
 			}
 			else {
-				entity.setVol(domain.journal);
+				entity.setVol(domain.getVol());
 			}			
 			
 			if (domain.getIssue() == null || domain.getIssue().isEmpty()) {
 				entity.setIssue(null);
 			}
 			else {
-				entity.setIssue(domain.journal);
+				entity.setIssue(domain.getIssue());
 			}			
 			
 			if (domain.getPgs() == null || domain.getPgs().isEmpty()) {
 				entity.setPgs(null);
 			}
 			else {
-				entity.setPgs(domain.journal);
+				entity.setPgs(domain.getPgs());
 			}			
 						
 			entity.setDate(domain.date);

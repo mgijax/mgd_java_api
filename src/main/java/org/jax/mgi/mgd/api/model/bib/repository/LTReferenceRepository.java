@@ -267,12 +267,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		
 		boolean anyChanges = false;
 
-		// determine if the isReviewArticle flag is set in the ReferenceDomain object
-		int rdReview = 0;
-		if ("1".equals(domain.isReviewArticle)) {
-			rdReview = 1;
-		}
-
 		Integer year = null;
 		try {
 			year = Integer.parseInt(domain.year);
@@ -281,7 +275,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		}
 		
 		// update this object's data to match what was passed in		
-		if ((rdReview != entity.getIsReviewArticle())
+		if ((Integer.valueOf(domain.getIsReviewArticle()) != entity.getIsReviewArticle())
 				|| !smartEqual(entity.getAuthors(), domain.authors)
 				|| !smartEqual(entity.getJournal(), domain.journal)
 				|| !smartEqual(entity.getTitle(), domain.title)
@@ -294,7 +288,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 				|| !smartEqual(entity.getReferenceAbstract(), domain.referenceAbstract)
 				) {
 
-			entity.setIsReviewArticle(rdReview);
+			entity.setIsReviewArticle(Integer.valueOf(domain.getIsReviewArticle()));
 			
 			if (domain.getAuthors() == null || domain.getAuthors().isEmpty()) {
 				entity.setAuthors(null);

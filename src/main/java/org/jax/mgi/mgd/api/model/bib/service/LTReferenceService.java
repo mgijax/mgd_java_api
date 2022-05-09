@@ -50,9 +50,8 @@ public class LTReferenceService {
 	 */
 	@Transactional
 	public void updateReferencesInBulk(List<String> listOfRefsKey, String workflowTag, String workflow_tag_operation, User user) throws APIException {
-
-		//repo.updateReferenceInBulk(listOfRefsKey, workflowTag, workflow_tag_operation, user);
-
+		log.info("updateReferenceInBulk()");
+		
 		// if no references or no tags, just bail out as a no-op
 		if ((listOfRefsKey == null) || (listOfRefsKey.size() == 0) || (workflowTag == null) || (workflowTag.length() == 0)) {
 			return; 

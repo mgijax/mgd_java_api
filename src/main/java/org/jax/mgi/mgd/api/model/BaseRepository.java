@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model;
 
-import org.jax.mgi.mgd.api.exception.APIException;
 import org.jboss.logging.Logger;
 
 /* Is: a repository that deals with domain objects and handles their translation to entity objects
@@ -17,9 +16,5 @@ public abstract class BaseRepository<D extends BaseDomain> {
 	/***--- instance variables ---***/
 	
 	protected Logger log = Logger.getLogger(getClass());
-	
-	/***--- (public) instance methods ---***/
-	
-	public abstract D get(String key) throws APIException;
-
+		
 }

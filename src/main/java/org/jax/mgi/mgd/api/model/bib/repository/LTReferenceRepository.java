@@ -85,18 +85,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 
 	private Logger log = Logger.getLogger(getClass());
 
-	/***--- (public) instance methods ---***/
-
-	/* gets a ReferenceDomain object that is fully fleshed out from a Reference
-	 */
-	@Override
-	public LTReferenceDomain get(String key) throws FatalAPIException, APIException {
-		log.info("LTReferenceDomain get(String key)");
-		LTReference entity = referenceDAO.get(Integer.valueOf(key));
-		LTReferenceDomain domain = translator.translate(entity);
-		return domain;	
-	}
-
 	/***--- (private) instance methods ---***/
 
 	/* return a single Term matching the parameters encoded as a Map in the given JSON string

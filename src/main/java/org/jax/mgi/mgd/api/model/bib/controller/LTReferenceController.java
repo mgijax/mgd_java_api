@@ -14,7 +14,6 @@ import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.interfaces.LTReferenceRESTInterface;
-import org.jax.mgi.mgd.api.model.bib.repository.LTReferenceRepository;
 import org.jax.mgi.mgd.api.model.bib.service.LTReferenceService;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -30,8 +29,6 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 
 	/***--- instance variables ---***/
 	
-	@Inject
-	private LTReferenceRepository repo;
 	@Inject
 	private LTReferenceService referenceService;
 	@Inject
@@ -176,74 +173,67 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 		List<String> failures = new ArrayList<String>();
 		List<String> referenceKeys = new ArrayList<String>();
 		
-		try {
-			ReferenceDomain searchDomain = new ReferenceDomain();
-			searchDomain.setAccids(accid);
-			List<SlimReferenceDomain> refs = referenceServiceNew.search(searchDomain);
+		ReferenceDomain searchDomain = new ReferenceDomain();
+		searchDomain.setAccids(accid);
+		List<SlimReferenceDomain> refs = referenceServiceNew.search(searchDomain);
 			
-			for (int i = 0; i < refs.size(); i++) {
-				LTReferenceDomain ref = repo.get(refs.get(i).getRefsKey());
-				int retries = 0;
-				boolean moveOn = false;
+		for (int i = 0; i < refs.size(); i++) {
+			LTReferenceDomain ref = referenceService.get(Integer.valueOf(refs.get(i).getRefsKey()));
+			int retries = 0;
+			boolean moveOn = false;
 										
-				while (!moveOn) {
-					try {
-						ref.setStatus(group, status);
-						// ensure we keep the relevance status in sync
-						if ("Full-coded".equals(status) ||
-							"Routed".equals(status) ||
-							"Indexed".equals(status) ||
-							"Chosen".equals(status)) 
-						{
-							ref.setEditRelevance("keep");
-						}
+			while (!moveOn) {
+				try {
+					ref.setStatus(group, status);
+					// ensure we keep the relevance status in sync
+					if ("Full-coded".equals(status) ||
+						"Routed".equals(status) ||
+						"Indexed".equals(status) ||
+						"Chosen".equals(status)) 
+					{
+						ref.setEditRelevance("keep");
+					}
 
-						log.info(ref.getRefsKey());
-						log.info(ref.ap_status);
-						log.info(ref.gxd_status);
-						log.info(ref.go_status);
-						log.info(ref.pro_status);
-						log.info(ref.qtl_status);
-						log.info(ref.tumor_status);
+//					log.info(ref.getRefsKey());
+//					log.info(ref.ap_status);
+//					log.info(ref.gxd_status);
+//					log.info(ref.go_status);
+//					log.info(ref.pro_status);
+//					log.info(ref.qtl_status);
+//					log.info(ref.tumor_status);
 
-						referenceService.updateReference(ref, user);
-						referenceKeys.add(ref.refsKey);
-						moveOn = true;
-					} catch (FatalAPIException fe) {
-						log.error("Could not save status for:" + ref.getJnumid() + " (" + fe.toString() + ")");
-						fe.printStackTrace();
+					referenceService.updateReference(ref, user);
+					referenceKeys.add(ref.refsKey);
+					moveOn = true;
+				} catch (FatalAPIException fe) {
+					log.error("Could not save status for:" + ref.getJnumid() + " (" + fe.toString() + ")");
+					fe.printStackTrace();
+					failures.add(ref.getJnumid());
+					moveOn = true;
+				} catch (APIException e) {
+					retries++;
+					if (retries > maxRetries) {
+						log.error("Could not save status for:" + ref.getJnumid() + " (" + e.toString() + ")");
+						e.printStackTrace();
 						failures.add(ref.getJnumid());
 						moveOn = true;
-					} catch (APIException e) {
-						retries++;
-						if (retries > maxRetries) {
-							log.error("Could not save status for:" + ref.getJnumid() + " (" + e.toString() + ")");
-							e.printStackTrace();
+					} else {
+						try {
+							Thread.sleep(retryDelay);
+							log.info("UpdateStatus: Retry #" + retries + " for: (" + ref.getMgiid() + "," + ref.getJnumid() + ")");
+						} catch (InterruptedException e1) {
+							log.error("Could not save status for:" + ref.getJnumid() + " (" + e1.toString() + ")");
+							e1.printStackTrace();
 							failures.add(ref.getJnumid());
 							moveOn = true;
-						} else {
-							try {
-								Thread.sleep(retryDelay);
-								log.info("UpdateStatus: Retry #" + retries + " for: (" + ref.getMgiid() + "," + ref.getJnumid() + ")");
-							} catch (InterruptedException e1) {
-								log.error("Could not save status for:" + ref.getJnumid() + " (" + e1.toString() + ")");
-								e1.printStackTrace();
-								failures.add(ref.getJnumid());
-								moveOn = true;
-							}
 						}
 					}
 				}
 			}
-		} catch (APIException t) {
-			log.error("Failed to search for set of IDs" + t.toString());
-			t.printStackTrace();
 		}
-
+		
 		if (failures.size() > 0) {
 			results.setError("Partial Failure", "Status changes failed to save for: " + String.join(",", failures), Constants.HTTP_SERVER_ERROR);
-		//} else {
-		//	String json = "{\"group\":\"" + group + "\", \"status\":\"" + status + "\"}";
 		}
 
 		return results;
@@ -282,12 +272,11 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 		return null;
 	}
 
-	// never used
 	@Override
 	public LTReferenceDomain get(Integer key) {
-		return null;
+		return referenceService.get(key);
 	}
-
+	
 	// never used
 	@Override
 	public SearchResults<LTReferenceDomain> update(LTReferenceDomain object, User user) {

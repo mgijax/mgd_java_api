@@ -35,6 +35,13 @@ public class LTReferenceService {
 	private static int maxRetries = 10;		// maximum number of retries for non-fatal exceptions on update operations
 	private static int retryDelay = 200;	// number of ms to wait before retrying update operation after non-fatal exception
 
+	public SearchResults<LTReferenceDomain> getReference(String refsKey) throws APIException {
+		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
+		results.setItem(translator.translate(referenceDAO.get(Integer.valueOf(refsKey))));
+		referenceDAO.clear();
+		return results;
+	}
+	
 	/* Update the reference entity corresponding to the given domain object (and updates citation cache).  Returns
 	 * domain object if successful or throws APIException if not.
 	 */
@@ -111,35 +118,4 @@ public class LTReferenceService {
 		}
 	}
 
-	public SearchResults<LTReferenceDomain> getReference(String refsKey) throws APIException {
-		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
-		results.setItem(translator.translate(referenceDAO.get(Integer.valueOf(refsKey))));
-		referenceDAO.clear();
-		return results;
-	}
-
-//	public SearchResults<LTReferenceDomain> getReferences(Map<String, Object> params) throws APIException {
-//		//return repo.search(searchFields);
-//
-//		SearchResults<LTReference> refs = referenceDAO.search(params);
-//		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
-//
-//		results.elapsed_ms = refs.elapsed_ms;
-//		results.error = refs.error;
-//		results.message = refs.message;
-//		results.status_code = refs.status_code;
-//		results.total_count = refs.total_count;
-//		results.all_match_count = refs.all_match_count;
-//
-//		if (refs.items != null) {
-//			// translate each search results into domain
-//			results.items = new ArrayList<LTReferenceDomain>();
-//			for (LTReference ref : refs.items) {
-//				results.items.add(translator.translate(ref));
-//			}
-//		}
-//		
-//		return results;		
-//	}	
-//	
 }

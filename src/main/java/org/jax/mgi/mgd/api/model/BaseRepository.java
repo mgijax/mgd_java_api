@@ -24,9 +24,6 @@ public abstract class BaseRepository<D extends BaseDomain> {
 	/***--- (public) instance methods ---***/
 	
 	public abstract D get(String key) throws APIException;
-
-	//public abstract D update(D domain, User user) throws APIException;
-
 	public abstract SearchResults<D> search(Map<String,Object> params) throws APIException;
 
 }

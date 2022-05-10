@@ -1,8 +1,6 @@
 package org.jax.mgi.mgd.api.model.bib.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -120,28 +118,28 @@ public class LTReferenceService {
 		return results;
 	}
 
-	public SearchResults<LTReferenceDomain> getReferences(Map<String, Object> params) throws APIException {
-		//return repo.search(searchFields);
-
-		SearchResults<LTReference> refs = referenceDAO.search(params);
-		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
-
-		results.elapsed_ms = refs.elapsed_ms;
-		results.error = refs.error;
-		results.message = refs.message;
-		results.status_code = refs.status_code;
-		results.total_count = refs.total_count;
-		results.all_match_count = refs.all_match_count;
-
-		if (refs.items != null) {
-			// translate each search results into domain
-			results.items = new ArrayList<LTReferenceDomain>();
-			for (LTReference ref : refs.items) {
-				results.items.add(translator.translate(ref));
-			}
-		}
-		
-		return results;		
-	}	
-	
+//	public SearchResults<LTReferenceDomain> getReferences(Map<String, Object> params) throws APIException {
+//		//return repo.search(searchFields);
+//
+//		SearchResults<LTReference> refs = referenceDAO.search(params);
+//		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
+//
+//		results.elapsed_ms = refs.elapsed_ms;
+//		results.error = refs.error;
+//		results.message = refs.message;
+//		results.status_code = refs.status_code;
+//		results.total_count = refs.total_count;
+//		results.all_match_count = refs.all_match_count;
+//
+//		if (refs.items != null) {
+//			// translate each search results into domain
+//			results.items = new ArrayList<LTReferenceDomain>();
+//			for (LTReference ref : refs.items) {
+//				results.items.add(translator.translate(ref));
+//			}
+//		}
+//		
+//		return results;		
+//	}	
+//	
 }

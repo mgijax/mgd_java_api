@@ -3,7 +3,6 @@ package org.jax.mgi.mgd.api.model;
 import java.util.Map;
 
 import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -26,7 +25,7 @@ public abstract class BaseRepository<D extends BaseDomain> {
 	
 	public abstract D get(String key) throws APIException;
 
-	public abstract D update(D domain, User user) throws APIException;
+	//public abstract D update(D domain, User user) throws APIException;
 
 	public abstract SearchResults<D> search(Map<String,Object> params) throws APIException;
 

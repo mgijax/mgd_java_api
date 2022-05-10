@@ -123,16 +123,10 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		return results;
 	}
 
-	@Override
-	public LTReferenceDomain update(LTReferenceDomain domain, User user) throws FatalAPIException, NonFatalAPIException, APIException {
-//		log.info("LTReferenceDomain update(LTReferenceDomain domain, User user)");
-//		LTReference entity = referenceDAO.get(Integer.valueOf(domain.getRefsKey()));
-//		applyChanges(entity, domain, user);
-//		referenceDAO.persist(entity);				
-//		Query query = referenceDAO.createNativeQuery("select count(*) from BIB_reloadCache(" + domain.getRefsKey() + ")");
-//		query.getResultList();
-		return null;	// just return null, will look up later on
-	}
+//	@Override
+//	public LTReferenceDomain update(LTReferenceDomain domain, User user) throws FatalAPIException, NonFatalAPIException, APIException {
+//		return null;
+//	}
 
 	/***--- (private) instance methods ---***/
 
@@ -487,7 +481,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		log.info("applyNoteChanges()");
 
 		if (domain.getReferenceNote() == null) {
-			return(false);
+			return false;
 		}
 		
 		if (domain.getReferenceNote().getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
@@ -502,7 +496,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			domain.getReferenceNote().setProcessStatus(Constants.PROCESS_CREATE);							
 		}
 		
-		return(noteService.process(domain.getRefsKey(), domain.getReferenceNote(), user));		
+		return noteService.process(domain.getRefsKey(), domain.getReferenceNote(), user);		
 	}
 
 	/* apply any changes from domain to entity for the reference book 
@@ -511,7 +505,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		log.info("applyBookChanges()");
 
 		if (domain.getReferenceBook() == null) {
-			return (false);
+			return false;
 		}
 		
 		boolean isBookTerm = false;
@@ -546,7 +540,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			domain.getReferenceBook().setRefsKey(domain.getRefsKey());			
 		}
 		
-		return(bookService.process(domain.getRefsKey(), domain.getReferenceBook(), user));		
+		return bookService.process(domain.getRefsKey(), domain.getReferenceBook(), user);		
 	}
 
 	/* apply changes in workflow relevance from domain to entity
@@ -582,7 +576,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			domain.getRelevanceHistory().add(newRelevance);
 		}
 		
-		return(relevanceService.process(domain.getRefsKey(), domain.getRelevanceHistory(), user));
+		return relevanceService.process(domain.getRefsKey(), domain.getRelevanceHistory(), user);
 	}
 	
 
@@ -606,7 +600,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			domain.setWorkflowData(newData);
 		}
 
-		return(dataService.process(domain.getRefsKey(), domain.getWorkflowData(), user));
+		return dataService.process(domain.getRefsKey(), domain.getWorkflowData(), user);
 	}
 
 	/* handle removing/adding any workflow tags that have changed between the Reference and the passed-in
@@ -726,7 +720,7 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 			}
 		}
 		
-		return (currentStatus);
+		return currentStatus;
 	}
 	
 	/* convenience method, used by applyWorkflowStatusChanges() to reduce redundant code in setting workflow

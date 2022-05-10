@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -97,36 +96,6 @@ public class LTReferenceRepository extends BaseRepository<LTReferenceDomain> {
 		LTReferenceDomain domain = translator.translate(entity);
 		return domain;	
 	}
-
-	@Override
-	public SearchResults<LTReferenceDomain> search(Map<String,Object> params) {
-		log.info("search(Map<String,Object> params");
-		
-//		SearchResults<LTReference> refs = referenceDAO.search(params);
-		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
-
-//		results.elapsed_ms = refs.elapsed_ms;
-//		results.error = refs.error;
-//		results.message = refs.message;
-//		results.status_code = refs.status_code;
-//		results.total_count = refs.total_count;
-//		results.all_match_count = refs.all_match_count;
-//
-//		if (refs.items != null) {
-//			// translate each search results into domain
-//			results.items = new ArrayList<LTReferenceDomain>();
-//			for (LTReference ref : refs.items) {
-//				results.items.add(translator.translate(ref));
-//			}
-//		}
-		
-		return results;
-	}
-
-//	@Override
-//	public LTReferenceDomain update(LTReferenceDomain domain, User user) throws FatalAPIException, NonFatalAPIException, APIException {
-//		return null;
-//	}
 
 	/***--- (private) instance methods ---***/
 

@@ -1,9 +1,6 @@
 package org.jax.mgi.mgd.api.model;
 
-import java.util.Map;
-
 import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
 /* Is: a repository that deals with domain objects and handles their translation to entity objects
@@ -24,6 +21,5 @@ public abstract class BaseRepository<D extends BaseDomain> {
 	/***--- (public) instance methods ---***/
 	
 	public abstract D get(String key) throws APIException;
-	public abstract SearchResults<D> search(Map<String,Object> params) throws APIException;
 
 }

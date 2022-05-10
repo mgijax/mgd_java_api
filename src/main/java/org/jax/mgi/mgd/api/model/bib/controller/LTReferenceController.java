@@ -51,6 +51,26 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	
 	/***--- methods ---***/
 	
+	/* return domain object for single reference with given key
+	 * Note: added Transactional annotation to ensure that the session stays open for the duration of
+	 * this method, allowing for collection of the workflow relevance data.
+	 */
+	@Transactional
+	@Override
+	public SearchResults<LTReferenceDomain> getReference(String key) {
+		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
+		if (key != null) {
+			try {
+				return referenceService.getReference(key);
+			} catch (APIException e) {
+				results.setError("Failed", "Failed to get reference by key " + key + ", exception: " + e.toString(), Constants.HTTP_NOT_FOUND);
+			}
+		} else {
+			results.setError("InvalidParameter", "No reference key was specified", Constants.HTTP_BAD_REQUEST);
+		}
+		return results;
+	}
+	
 	/* update the given reference in the database, then return a revised version of it in the SearchResults
 	 */
 	@Override
@@ -68,7 +88,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 			try {
 				// The updateReference method does not return the updated reference, as the method must finish
 				// before the updates are persisted to the database.  So, we issue the update, then we use the
-				// getReferenceByKey() method to re-fetch and return the updated object.
+				// getReference() method to re-fetch and return the updated object.
 				
 				boolean succeeded = false;
 				int retries = 0;
@@ -98,7 +118,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 					}
 				}
 
-				return this.getReferenceByKey(reference.refsKey);
+				return this.getReference(reference.refsKey);
 			} catch (Exception e) {
 				Throwable t = getRootException(e);
 				StackTraceElement[] ste = t.getStackTrace();
@@ -252,28 +272,6 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 			}
 		} else {
 			results.setError("FailedAuthentication", "Failed - invalid username", Constants.HTTP_PERMISSION_DENIED);
-		}
-		return results;
-	}
-
-
-	/* return domain object for single reference with given key
-	 * Note: added Transactional annotation to ensure that the session stays open for the duration of
-	 * this method, allowing for collection of the workflow relevance data.
-	 */
-	@Transactional
-	@Override
-	public SearchResults<LTReferenceDomain> getReferenceByKey (String key) {
-		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
-		if (key != null) {
-			try {
-				return referenceService.getReference(key);
-			} catch (APIException e) {
-					results.setError("Failed", "Failed to get reference by key " + key + ", exception: " + e.toString(),
-						Constants.HTTP_NOT_FOUND);
-			}
-		} else {
-			results.setError("InvalidParameter", "No reference key was specified", Constants.HTTP_BAD_REQUEST);
 		}
 		return results;
 	}

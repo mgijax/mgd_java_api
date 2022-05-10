@@ -36,6 +36,7 @@ public class LTReferenceService {
 	private static int retryDelay = 200;	// number of ms to wait before retrying update operation after non-fatal exception
 
 	public SearchResults<LTReferenceDomain> getReference(String refsKey) throws APIException {
+		// called from LTReferenceController/getReference()
 		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
 		results.setItem(translator.translate(referenceDAO.get(Integer.valueOf(refsKey))));
 		referenceDAO.clear();
@@ -47,15 +48,12 @@ public class LTReferenceService {
 	 */
 	@Transactional
 	public LTReferenceDomain updateReference(LTReferenceDomain domain, User user) throws FatalAPIException, NonFatalAPIException, APIException {
-		log.info("LTReferenceService:updateReference()");
-				
+		log.info("LTReferenceService:updateReference()");	
 		LTReference entity = referenceDAO.get(Integer.valueOf(domain.getRefsKey()));
 		repo.applyChanges(entity, domain, user);
-		referenceDAO.persist(entity);				
-
+		referenceDAO.persist(entity);
 		Query query = referenceDAO.createNativeQuery("select count(*) from BIB_reloadCache(" + domain.getRefsKey() + ")");
 		query.getResultList();
-		
 		return repo.get(domain.refsKey);
 	}
 

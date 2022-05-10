@@ -78,5 +78,5 @@ public interface LTReferenceRESTInterface {
 	public SearchResults<LTReferenceDomain> getReference(
 			@ApiParam(value = "Value: This is for searching by reference key")
 			@PathParam("key") String key);
-
+	
 }

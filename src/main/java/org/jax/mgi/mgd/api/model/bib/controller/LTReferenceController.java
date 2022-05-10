@@ -5,6 +5,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.exception.FatalAPIException;
@@ -25,6 +29,12 @@ import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
+import io.swagger.annotations.Api;
+
+@Path("/littriageNew")
+@Api(value = "Lit Triage Endpoints for References")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class LTReferenceController extends BaseController<LTReferenceDomain> implements LTReferenceRESTInterface {
 
 	/***--- instance variables ---***/
@@ -47,7 +57,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	private static int retryDelay = 200;	// number of ms to wait before retrying update operation after non-fatal exception
 	
 	/***--- methods ---***/
-	
+		
 	/* return domain object for single reference with given key
 	 * Note: added Transactional annotation to ensure that the session stays open for the duration of
 	 * this method, allowing for collection of the workflow relevance data.

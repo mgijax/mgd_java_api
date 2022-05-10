@@ -31,10 +31,10 @@ import org.jboss.logging.Logger;
 
 import io.swagger.annotations.Api;
 
-@Path("/littriageNew")
-@Api(value = "Lit Triage Endpoints for References")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
+//@Path("/littriageNew")
+//@Api(value = "Lit Triage Endpoints for References")
+//@Produces(MediaType.APPLICATION_JSON)
+//@Consumes(MediaType.APPLICATION_JSON)
 public class LTReferenceController extends BaseController<LTReferenceDomain> implements LTReferenceRESTInterface {
 
 	/***--- instance variables ---***/

@@ -17,6 +17,7 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.exception.APIException;
+import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.dao.AccessionDAO;
 import org.jax.mgi.mgd.api.model.acc.dao.LogicalDBDAO;
@@ -26,6 +27,7 @@ import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceWorkflowDataDAO;
+import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowRelevanceDomain;
@@ -43,6 +45,7 @@ import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceStrainAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.voc.service.TermService;
@@ -1240,6 +1243,57 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		return;
+	}
+
+	@Transactional
+	public SearchResults<String> updateReferenceStatus (String api_access_token, String username, String accid, String group, String status, User user) {
+		log.info("updateReferenceStatus()");
+		
+		SearchResults<String> results = new SearchResults<String>();
+
+		// check that we have a legitimate status value
+
+		if (status == null) {
+			results.setError("Failed", "Unknown status value: null", Constants.HTTP_BAD_REQUEST);
+			return results;
+		} else {
+			SearchResults<SlimTermDomain> terms = termService.validWorkflowStatus(status);
+			if (terms.total_count == 0) {
+				results.setError("Failed", "Unknown status term: " + status, Constants.HTTP_NOT_FOUND);
+				return results;
+			} else if (terms.total_count > 1) {
+				results.setError("Failed", "Duplicate status terms: " + status, Constants.HTTP_BAD_REQUEST);
+				return results;
+			}
+		}
+		
+		ReferenceDomain searchDomain = new ReferenceDomain();
+		searchDomain.setAccids(accid);
+		List<SlimReferenceDomain> refs = search(searchDomain);
+			
+		for (int i = 0; i < refs.size(); i++) {
+			ReferenceDomain ref = get(Integer.valueOf(refs.get(i).getRefsKey()));
+										
+			try {
+				ref.setStatus(group, status);
+			} catch (APIException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			// ensure we keep the relevance status in sync
+			if ("Full-coded".equals(status) ||
+				"Routed".equals(status) ||
+				"Indexed".equals(status) ||
+				"Chosen".equals(status)) 
+			{
+				ref.setEditRelevance("keep");
+			}
+
+			update(ref, user);
+		}
+		
+		return results;
 	}
 	
 	/* return a single Term matching the parameters encoded as a Map in the given JSON string

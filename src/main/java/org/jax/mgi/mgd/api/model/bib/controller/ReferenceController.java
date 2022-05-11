@@ -12,6 +12,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
@@ -83,13 +84,50 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 			return results;
 		}
 
-		User currentUser = userService.getUserByUsername(username);
-		if (currentUser != null) {
+		User user = userService.getUserByUsername(username);
+		if (user != null) {
 			try {
-				referenceService.updateReferencesBulk(input.refsKeys, input.workflowTag, input.workflow_tag_operation, currentUser);
+				referenceService.updateReferencesBulk(input.refsKeys, input.workflowTag, input.workflow_tag_operation, user);
 			} catch (Exception e) {
 				Throwable t = getRootException(e);
 				String message = "\n\nBULK UPDATE FAILED.\n\n" + t.toString();
+				results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);	
+			}
+		} else {
+			results.setError("FailedAuthentication", "Failed - invalid username", Constants.HTTP_PERMISSION_DENIED);
+		}
+		return results;
+	}
+
+	@PUT
+	@Path("/statusUpdate")
+	@ApiOperation(value = "Value: Update the status of a reference/workflow group pair")
+	public SearchResults<String> updateReferenceStatus(
+			@ApiParam(value = "Name: Token for accessing this API")
+			@HeaderParam("api_access_token") String api_access_token,
+			@ApiParam(value = "Name: Logged-in User")
+			@HeaderParam("username") String username,
+			@ApiParam(value = "Value: comma-delimited list of accession IDs of references for which to set the status")
+			@QueryParam("accid") String accid,
+			@ApiParam(value = "Value: abbreviation of workflow group for which to set the status")
+			@QueryParam("group") String group,
+			@ApiParam(value = "Value: status term to set for the given reference/workflow group pair")
+			@QueryParam("status") String status
+	) {
+		SearchResults<String> results = new SearchResults<String>();
+
+		if (!authenticateToken(api_access_token)) {
+			results.setError("FailedAuthentication", "Failed - invalid api_access_token", Constants.HTTP_PERMISSION_DENIED);
+			return results;
+		}
+
+		User user = userService.getUserByUsername(username);
+		if (user != null) {
+			try {
+				referenceService.updateReferenceStatus(api_access_token, username, accid, group, status, user);
+			} catch (Exception e) {
+				Throwable t = getRootException(e);
+				String message = "\n\nUPDATE STATUS UPDATE FAILED.\n\n" + t.toString();
 				results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);	
 			}
 		} else {

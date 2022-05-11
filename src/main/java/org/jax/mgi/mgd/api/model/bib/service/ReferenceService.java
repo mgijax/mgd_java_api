@@ -1205,6 +1205,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 	@Transactional
 	public void updateReferencesBulk(List<String> listOfRefsKey, String workflowTag, String workflow_tag_operation, User user) {
+		// add or delete workflowTag for list of references based on workflow_tag_operation
+		
 		log.info("updateReferenceInBulk()");
 
 		// if no references or no tags, return null
@@ -1230,13 +1232,16 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}
 
 	@Transactional
-	public SearchResults<String> updateReferenceStatus (String api_access_token, String username, String accid, String group, String status, User user) {
+	public SearchResults<String> updateReferenceStatus(String api_access_token, String username, String accid, String group, String status, User user) {
+		// update status for list of accession ids (MGI:xxx)
+		// add new status
+		// add new relevance
+		
 		log.info("updateReferenceStatus()");
 		
 		SearchResults<String> results = new SearchResults<String>();
 
 		// check that we have a legitimate status value
-
 		if (status == null) {
 			results.setError("Failed", "Unknown status value: null", Constants.HTTP_BAD_REQUEST);
 			return results;
@@ -1294,13 +1299,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return results;
 	}
 
-	/* take the data from the domain object and overwrite any changed data into the entity object
-	 * (assumes we are working in a transaction and persists any sub-objects into the database, but does
-	 * not persist this Reference object itself, as other changes could be coming)
-	 */
 	public void applyChanges(Reference entity, ReferenceDomain domain, User user) {
-		// Note that we must have 'anyChanges' after the OR, otherwise short-circuit evaluation will only save
-		// the first section changed.
+		// check changes for each section.
+		// if any change is made, update entity modification user/date
 
 		boolean anyChanges;
 		
@@ -1322,12 +1323,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 	}
 
-	/* handle the basic fields that have changed between this Reference and the given ReferenceDomain
-	 */
 	private boolean applyBasicFieldChanges(Reference entity, ReferenceDomain domain, User user) {
-		// exactly one set of basic data per reference, including:  reference type,
-		// author, primary author (derived), journal, title, volume, issue, date, year, pages, 
-		// abstract, and isReviewArticle flag
+		// check changes to basic bib_refs fields
+		// return true if any changes made, else false
 
 		log.info("applyBasicFieldChanges()");
 		
@@ -1413,8 +1411,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return anyChanges;
 	}
 
-	// remove any (optional) prefix from DOI ID
 	private String cleanDoiID(String doiID) {
+		// clear DOI IDs
 		// all DOI IDs must begin with "10.", but if not, just trust the user
 		
 		log.info("clearDoiID():" + doiID);
@@ -1429,8 +1427,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return doiID;
 	}
 
-	// remove any (optional) prefix from PubMed ID
 	private String cleanPubMedID(String pubmedID) {
+		// clear pubmed IDs
 		// all PubMed IDs are purely numeric, so strip off anything to the left of the first non-numeric character
 		
 		log.info("clearPubMedID():" + pubmedID);
@@ -1449,15 +1447,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return pubmedID;
 	}
 
-	/* apply ID changes from domain to entity for PubMed, DOI, and GO REF IDs
-	 */
 	private boolean applyAccessionIDChanges(Reference entity, ReferenceDomain domain, User user) {
 		// assumes only one ID per reference for each logical database (valid assumption, August 2017)
 		// need to handle:  new ID for logical db, updated ID for logical db, deleted ID for logical db
 
 		log.info("applyAccessionIDChanges()");
 		
-		// do any cleanup of DOI ID and PubMed ID first
+		// cleanup of DOI ID and PubMed ID
 		domain.setDoiid(cleanDoiID(domain.getDoiid()));
 		domain.setPubmedid(cleanPubMedID(domain.getPubmedid()));
 
@@ -1509,10 +1505,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			anyChanges = applyOneIDChange(entity, Constants.LDB_GOREF, domain.getGorefid(), prefixPart, numericPart, Constants.SECONDARY, Constants.PRIVATE, user) || anyChanges;
 		}
 		
-		// if entity contains a jnum and domain does not, ok to try and delete it
-		if (entity.getJnumid() != null && 
-				(domain.getJnumid() == null || domain.getJnumid().isEmpty())) {
-			
+		if (entity.getJnumid() != null && (domain.getJnumid() == null || domain.getJnumid().isEmpty())) {
 			String prefixPart = domain.getJnumid();				// defaults
 			Integer numericPart = null;
 
@@ -1540,7 +1533,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		log.info("applyOneIDChange():" + ldb + "," + accID + "," + prefixPart + "," + numericPart + "," + preferred + "," + isPrivate);
 		
-		// First, need to find any existing AccessionID object for this logical database.
+		// find any existing AccessionID object for this logical database.
 
 		List<Accession> ids = entity.getAccessionIDs();
 		int idPos = -1;			// position of correct ID in list of IDs
@@ -1623,8 +1616,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return noteService.process(domain.getRefsKey(), domain.getReferenceNote(), user);		
 	}
 
-	/* apply any changes from domain to entity for the reference book 
-	 */
 	private boolean applyBookChanges(Reference entity, ReferenceDomain domain, User user) {
 		log.info("applyBookChanges()");
 
@@ -1667,8 +1658,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return bookService.process(domain.getRefsKey(), domain.getReferenceBook(), user);		
 	}
 
-	/* apply changes in workflow relevance from domain to entity
-	 */
 	private boolean applyWorkflowRelevanceChanges(Reference entity, ReferenceDomain domain, User user) {
 		// updated workflow relevance, new workflow relevance -- (no deletions)
 
@@ -1703,9 +1692,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return relevanceService.process(domain.getRefsKey(), domain.getRelevanceHistory(), user);
 	}
 	
-
-	/* apply changes in workflow data fields (not status, though) from domain to entity
-	 */
 	private boolean applyWorkflowDataChanges(Reference entity, ReferenceDomain domain, User user) {
 		// updates supplemental key which is stored in workflow data "body"
 		
@@ -1727,12 +1713,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return dataService.process(domain.getRefsKey(), domain.getWorkflowData(), user);
 	}
 
-	/* handle removing/adding any workflow tags that have changed between the Reference and the passed-in
-	 * ReferenceDomain.  Persists any tag changes to the database.  Returns true if any changes were made,
-	 * false otherwise.
-	 */
 	private boolean applyWorkflowTagChanges(Reference entity, ReferenceDomain domain, User user) {
-
 		log.info("applyWorkflowTagChanges()");
 		
 		// short-circuit method if no tags in Reference or in ReferenceDomain
@@ -1778,11 +1759,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return (toDelete.size() > 0) || (toAdd.size() > 0);
 	}
 
-	/* shared method for adding a workflow tag to a Reference
-	 */
 	public void addTag(Reference entity, String rdTag, User user) {
-		// if we already have this tag applied, skip it (extra check needed for batch additions to avoid
-		// adding duplicates)
+		// add new tags to bib_workflow_tag
+		// do not add duplicate tags
 
 		String trimTag = rdTag.trim();
 		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
@@ -1812,11 +1791,15 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 	}
 
-	/* shared method for removing a workflow tag from a Reference (no-op if this ref doesn't have the tag)
-	 */
 	public void removeTag(Reference entity, String rdTag, User user) {
-		if (entity.getWorkflowTags() == null) { return; }
+		// remove existing tags from bib_workflow_tag
+		
+		if (entity.getWorkflowTags() == null) { 
+			return; 
+		}
 
+		log.info("removeTag():" + rdTag);
+		
 		String lowerTag = rdTag.toLowerCase().trim();
 		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
 			if (lowerTag.equals(refTag.getTagTerm().getTerm().toLowerCase()) ) {
@@ -1842,11 +1825,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return currentStatus;
 	}
 	
-	/* convenience method, used by applyWorkflowStatusChanges() to reduce redundant code in setting workflow
-	 * group statuses.  returns true if an update was made, false if no change.  persists any changes
-	 * to the database.
-	 */
 	private boolean updateWorkflowStatus(Reference entity, String groupAbbrev, String newStatus, User user) {
+		// set existing bib_workflow_status.isCurrent = 0
+		// add new bib_workflow_status
 
 		String currentStatus = getWorkflowStatus(entity, groupAbbrev);
 		
@@ -1906,8 +1887,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		anyChanges = updateWorkflowStatus(entity, Constants.WG_TUMOR, domain.getTumor_status(), user) || anyChanges;
 
 		if (anyChanges) {
-			// if no J# and Status in (Chosen, INdexed, Full-coded), then add J#
-
+			
+			// if no J# and Status in (Chosen, Indexed, Full-coded), then add J#
 			if (entity.getJnumid() == null) {
 
 				boolean addJnumid = false;
@@ -1927,15 +1908,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					log.info("assigning new J: number");
 					assignNewJnumID(String.valueOf(entity.get_refs_key()), user.get_user_key());
 				}
-			} // if no J#
+			} 
 		}
 		return anyChanges;
 	}
 
-	/* apply any changes from domain to entity for the reference/allele associations
-	 */
 	private boolean applyAlleleAssocChanges(Reference entity, List<MGIReferenceAlleleAssocDomain> domain, User user) {
-		// referenceAssocService will handle add (c), delete (d)
+		// referenceAssocService will handle add (c), modify (u), delete (d)
 
 		boolean anyChanges = false;
 
@@ -1948,10 +1927,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return anyChanges;
 	}
 
-	/* apply any changes from domain to entity for the reference/strain associations
-	 */
 	private boolean applyStrainAssocChanges(Reference entity, List<MGIReferenceStrainAssocDomain> domain, User user) {
-		// referenceAssocService will handle add (c), delete (d)
+		// referenceAssocService will handle add (c), modify (u), delete (d)
 
 		boolean anyChanges = false;
 
@@ -1964,10 +1941,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return anyChanges;
 	}
 
-	/* apply any changes from domain to entity for the reference/marker associations
-	 */
 	private boolean applyMarkerAssocChanges(Reference entity, List<MGIReferenceMarkerAssocDomain> domain, User user) {
-		// referenceAssocService will handle add (c), delete (d)
+		// referenceAssocService will handle add (c), modify (u), delete (d)
 
 		boolean anyChanges = false;
 
@@ -1980,9 +1955,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return anyChanges;
 	}
 
-	/* comparison function that handles null values well
-	 */
 	private boolean smartEqual(Object a, Object b) {
+		// comparison function that handles null values well
+		
 		if (a == null) {
 			if (b == null) { return true; }
 			else { return false; }
@@ -1990,18 +1965,19 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return a.equals(b);
 	}
 
-	/* add a new J: number for the given reference key and user key
-	 */
 	private void assignNewJnumID(String refsKey, int userKey) {
+		// add a new J: number for the given reference key and user key
+			
 		log.info("select count(1) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
 		Query query = referenceDAO.createNativeQuery("select count(*) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
 		query.getResultList();	
 		return;
 	}	
 
-	/* return a single Term matching the parameters encoded as a Map in the given JSON string
-	 */
 	private Term getTerm (String json) {
+		// return single Term matching the parameters encoded as a Map
+		// TODO:  change to use keys
+		
 		MapMaker mapMaker = new MapMaker();
 		SearchResults<Term> terms = null;
 		try {
@@ -2014,15 +1990,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 	}
 
-	/* return a single Term matching the given vocabulary / term pair
-	 */
 	private Term getTermByTerm (Integer vocabKey, String term) {
+		// return a single Term matching the given vocabulary / term pair
 		return getTerm("{\"_vocab_key\" : " + vocabKey + ", \"term\" : \"" + term + "\"}");
 	}
 
-	/* return a single Term matching the given vocabulary / abbreviation pair
-	 */
 	private Term getTermByAbbreviation (Integer vocabKey, String abbreviation)  {
+		// return a single Term matching the given vocabulary / abbreviation pair
 		return getTerm("{\"_vocab_key\" : " + vocabKey + ", \"abbreviation\" : \"" + abbreviation + "\"}");
 	}
 	

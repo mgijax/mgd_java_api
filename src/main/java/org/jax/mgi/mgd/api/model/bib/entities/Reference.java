@@ -136,11 +136,6 @@ public class Reference extends BaseEntity {
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	private List<ReferenceBook> referenceBook;
 	
-	// one to many, because row in citation cache might not exist (leaving it 1-0)
-	@OneToMany()
-	@JoinColumn(name="_refs_key")
-	private List<ReferenceCitationCache> citationData;
-	
 	// one to one, because counts will always exist
 	@OneToOne()
 	@JoinColumn(name="_refs_key")

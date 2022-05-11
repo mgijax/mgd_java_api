@@ -10,7 +10,7 @@ import org.jax.mgi.mgd.api.model.BaseDomain;
  * 	the entities package) to be closer to the database and keeping the PWI's interactions as simple
  *	as possible
  */
-public class LTReferenceBulkDomain extends BaseDomain {
+public class ReferenceBulkDomain extends BaseDomain {
 	public List<String> refsKeys;
 	public String workflowTag;
 	public String workflow_tag_operation;	// "add" or "remove"; "add" is the default

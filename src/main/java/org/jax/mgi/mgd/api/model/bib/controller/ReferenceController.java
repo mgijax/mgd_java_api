@@ -16,7 +16,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceBulkDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceService;
@@ -75,7 +75,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 			@ApiParam(value = "Name: Logged-in User")
 			@HeaderParam("username") String username,
 			@ApiParam(value = "Value: reference keys and data to be updated")
-			LTReferenceBulkDomain input
+			ReferenceBulkDomain input
 	) {
 		SearchResults<String> results = new SearchResults<String>();
 

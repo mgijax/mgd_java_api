@@ -17,7 +17,6 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.mgd.api.exception.FatalAPIException;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.dao.AccessionDAO;
 import org.jax.mgi.mgd.api.model.acc.dao.LogicalDBDAO;
@@ -27,7 +26,6 @@ import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceWorkflowDataDAO;
-import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowRelevanceDomain;

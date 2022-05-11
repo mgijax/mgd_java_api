@@ -95,7 +95,7 @@ public class Reference extends BaseEntity {
 	private List<Accession> editAccessionIds;
 
 	@OneToMany()
-	@JoinColumn(name="_object_key", referencedColumnName="_refs_key")
+	@JoinColumn(name="_object_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 1")
 	@OrderBy("_logicaldb_key, preferred desc")
 	private List<Accession> accessionIDs;

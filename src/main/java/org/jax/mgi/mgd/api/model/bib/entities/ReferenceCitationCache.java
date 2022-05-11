@@ -15,6 +15,7 @@ import lombok.Setter;
 @ApiModel(value = "Reference Citation Cache Model Object")
 @Table(name="bib_citation_cache")
 public class ReferenceCitationCache extends BaseEntity {
+ 
 	@Id
 	private int _refs_key;
 	private Integer numericPart; // must be Integer or LT will fail

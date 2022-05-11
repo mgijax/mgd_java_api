@@ -77,15 +77,6 @@ public class LTReferenceService {
 	private static int maxRetries = 10;		// maximum number of retries for non-fatal exceptions on update operations
 	private static int retryDelay = 200;	// number of ms to wait before retrying update operation after non-fatal exception
 	
-	public SearchResults<LTReferenceDomain> getReference(String refsKey) throws APIException {
-		// called from LTReferenceController/getReference()
-		// in other services, this is known as "getResults()"
-		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
-		results.setItem(translator.translate(referenceDAO.get(Integer.valueOf(refsKey))));
-		referenceDAO.clear();
-		return results;
-	}
-	
 	@Transactional
 	public LTReferenceDomain get(Integer key) {
 		// get the DAO/entity and translate -> domain		
@@ -96,6 +87,14 @@ public class LTReferenceService {
 		referenceDAO.clear();
 		return domain;
 	}
+	
+	public SearchResults<LTReferenceDomain> getResults(Integer key) throws APIException {
+		// get the DAO/entity and translate -> domain -> results
+		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
+		results.setItem(translator.translate(referenceDAO.get(key)));
+		referenceDAO.clear();
+		return results;
+	}	
     
 	/* Update the reference entity corresponding to the given domain object (and updates citation cache).  Returns
 	 * domain object if successful or throws APIException if not.

@@ -1,11 +1,9 @@
 package org.jax.mgi.mgd.api.model.bib.interfaces;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -71,12 +69,5 @@ public interface LTReferenceRESTInterface {
 			@ApiParam(value = "Value: status term to set for the given reference/workflow group pair")
 			@QueryParam("status") String status
 	);
-
-//	@GET
-//	@Path("/{key}")
-//	@ApiOperation(value = "Value: Retrieve a single Reference by reference key")
-//	public SearchResults<LTReferenceDomain> getReference(
-//			@ApiParam(value = "Value: This is for searching by reference key")
-//			@PathParam("key") String key);
 	
 }

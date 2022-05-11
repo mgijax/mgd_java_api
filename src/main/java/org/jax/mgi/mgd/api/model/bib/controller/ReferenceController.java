@@ -37,14 +37,16 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
 		results = referenceService.create(domain, user);
 		results = referenceService.getResults(Integer.valueOf(results.items.get(0).getRefsKey()));
-		return results;	}
+		return results;	
+	}
 
 	@Override
 	public SearchResults<ReferenceDomain> update(ReferenceDomain domain, User user) {
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
 		results = referenceService.update(domain, user);
 		results = referenceService.getResults(Integer.valueOf(results.items.get(0).getRefsKey()));
-		return results;		}
+		return results;		
+	}
 
 	@Override
 	public ReferenceDomain get(Integer key) {

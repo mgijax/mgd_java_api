@@ -47,26 +47,6 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	private static int retryDelay = 200;	// number of ms to wait before retrying update operation after non-fatal exception
 	
 	/***--- methods ---***/
-		
-	/* return domain object for single reference with given key
-	 * Note: added Transactional annotation to ensure that the session stays open for the duration of
-	 * this method, allowing for collection of the workflow relevance data.
-	 */
-//	@Transactional
-//	@Override
-//	public SearchResults<LTReferenceDomain> getReference(String key) {
-//		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
-//		if (key != null) {
-//			try {
-//				return referenceService.getReference(key);
-//			} catch (APIException e) {
-//				results.setError("Failed", "Failed to get reference by key " + key + ", exception: " + e.toString(), Constants.HTTP_NOT_FOUND);
-//			}
-//		} else {
-//			results.setError("InvalidParameter", "No reference key was specified", Constants.HTTP_BAD_REQUEST);
-//		}
-//		return results;
-//	}
 	
 	/* update the given reference in the database, then return a revised version of it in the SearchResults
 	 */
@@ -115,7 +95,7 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 					}
 				}
 
-				results = referenceService.getReference(reference.getRefsKey());				
+				results = referenceService.getResults(Integer.valueOf(reference.getRefsKey()));				
 			} catch (Exception e) {
 				Throwable t = getRootException(e);
 				StackTraceElement[] ste = t.getStackTrace();

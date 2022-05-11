@@ -1208,16 +1208,40 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		Reference entity = referenceDAO.get(Integer.valueOf(domain.getRefsKey()));
 		applyChanges(entity, domain, user);
 		referenceDAO.persist(entity);
-		
-//		Query query = referenceDAO.createNativeQuery("select count(*) from BIB_reloadCache(" + domain.getRefsKey() + ")");
-//		query.getResultList();
-		
+		Query query = referenceDAO.createNativeQuery("select count(*) from BIB_reloadCache(" + domain.getRefsKey() + ")");
+		query.getResultList();
 		// return entity translated to domain
 		log.info("processReference/update/returning results");
 		results.setItem(translator.translate(entity));
 		return results;
 	}
 
+	@Transactional
+	public void updateReferencesBulk(List<String> listOfRefsKey, String workflowTag, String workflow_tag_operation, User user) {
+		log.info("updateReferenceInBulk()");
+
+		// if no references or no tags, return null
+		if ((listOfRefsKey == null) || (listOfRefsKey.size() == 0) || (workflowTag == null) || (workflowTag.length() == 0)) {
+			return; 
+		}
+
+		// if no workflow tag operation is specified, default to 'add'
+		if ((workflow_tag_operation == null) || workflow_tag_operation.equals("")) {
+			workflow_tag_operation = Constants.OP_ADD_WORKFLOW;
+		}
+
+		for (String refsKey : listOfRefsKey) {
+			Reference entity = referenceDAO.get(Integer.valueOf(refsKey));
+			if (workflow_tag_operation.equals(Constants.OP_ADD_WORKFLOW)) {
+				addTag(entity, workflowTag, user);
+			} else {
+				removeTag(entity, workflowTag, user);
+			}
+		}
+		
+		return;
+	}
+	
 	/* return a single Term matching the parameters encoded as a Map in the given JSON string
 	 */
 	private Term getTerm (String json) {

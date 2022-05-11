@@ -59,6 +59,14 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	}
 
 	@POST
+	@ApiOperation(value = "update references in bulk")
+	@Path("/bulkUpdate")	
+	public SearchResults<String> updateReferencesBulk(List<String> listOfRefsKey, String workflowTag, String workflow_tag_operation, User user) {
+		referenceService.updateReferencesBulk(listOfRefsKey, workflowTag, workflow_tag_operation, user);
+		return null;		
+	}
+	
+	@POST
 	@ApiOperation(value = "Search/returns slim reference domain")
 	@Path("/search")
 	public List<SlimReferenceDomain> search(ReferenceDomain searchDomain) {

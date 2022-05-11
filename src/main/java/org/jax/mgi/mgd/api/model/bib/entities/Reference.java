@@ -12,16 +12,19 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
-import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
+import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mld.entities.MappingNote;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
+import org.jax.mgi.mgd.api.util.Constants;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -56,10 +59,10 @@ public class Reference extends BaseEntity {
 	@Column(name="abstract")
 	private String referenceAbstract;
 
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne()
 	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")
-	private Term referenceType;
-
+	private Term referenceTypeTerm;
+	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
@@ -72,16 +75,6 @@ public class Reference extends BaseEntity {
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	private ReferenceCitationCache referenceCitationCache;
 
-	// at most one reference book
-	@OneToMany()
-	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-	private List<ReferenceBook> referenceBook;
-	
-	// at most one note
-	@OneToMany()
-	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-	private List<ReferenceNote> referenceNote;
-
 	// at most one mapping note
 	@OneToMany()
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
@@ -91,37 +84,117 @@ public class Reference extends BaseEntity {
 	@OneToMany()	
 	@JoinColumn(name="_object_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 1 and `_logicaldb_key` = 1")
-	@OrderBy(clause="prefixPart desc, preferred desc, accID")
+	@OrderBy("prefixPart desc, preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 	
 	// editable only accession ids
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 1 and `_logicaldb_key` in (29, 65, 185)")
-	@OrderBy(clause ="accid")
+	@OrderBy("accid")
 	private List<Accession> editAccessionIds;
+
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_refs_key")
+	@Where(clause="`_mgitype_key` = 1")
+	@OrderBy("_logicaldb_key, preferred desc")
+	private List<Accession> accessionIDs;
+
+	@OneToMany()
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+	@OrderBy("modification_date desc, isCurrent desc, _group_key")	
+	private List<ReferenceWorkflowStatus> workflowStatus;
 	
-	// workflow status
-//	@OneToMany()
-//	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-//	@OrderBy(clause="_group_key, isCurrent desc, modification_date")
-//	private List<ReferenceWorkflowStatus> workflowStatus;	
+	@OneToMany()
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+	@Where(clause="`iscurrent` = 1")	
+	private List<ReferenceWorkflowStatus> workflowStatusCurrent;
 	
 	// workflow relevance
-//	@OneToMany()
-//	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-//	@OrderBy(clause="isCurrent desc, modification_date")
-//	private List<ReferenceWorkflowRelevance> workflowRelevance;	
-
-	// workflow tag
-//	@OneToMany()
-//	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-//	private List<ReferenceWorkflowTag> workflowTag;	
-
-	// workflow data
+	@OneToMany()
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+	@OrderBy("modification_date desc, isCurrent desc")
+	private List<ReferenceWorkflowRelevance> workflowRelevance;	
+	
+	@OneToMany()
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+	private List<ReferenceWorkflowTag> workflowTags;
+	
+	// only interested in workflow data where extracted text section = 'body' (48804490)
 	@OneToMany()
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	@Where(clause="`_extractedtext_key` = 48804490")
 	private List<ReferenceWorkflowData> workflowData;
+	
+	// at most one note
+	@OneToMany()
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+	private List<ReferenceNote> referenceNote;
 
+	// one to many, because book data most often does not exist (leaving it 1-0)
+	@OneToMany()
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+	private List<ReferenceBook> referenceBook;
+	
+	// one to many, because row in citation cache might not exist (leaving it 1-0)
+	@OneToMany()
+	@JoinColumn(name="_refs_key")
+	private List<ReferenceCitationCache> citationData;
+	
+	// one to one, because counts will always exist
+	@OneToOne()
+	@JoinColumn(name="_refs_key")
+	private ReferenceAssociatedData associatedData;
+
+	// reference allele associations : alleles (11)
+	@OneToMany()
+	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` in (11)")
+	@OrderBy("_refassoctype_key")
+	private List<MGIReferenceAssoc> alleleAssocs;
+
+	/* Find and return the first accession ID matching any specified logical database, prefix,
+	 * is-preferred, and is-private settings.
+	 */
+	@Transient
+	private String findFirstID(Integer ldb, String prefix, Integer preferred, Integer isPrivate) {
+		for (int i = 0; i < accessionIDs.size(); i++) {
+			Accession accID = accessionIDs.get(i);
+			if ((ldb == null) || (ldb.equals(accID.getLogicaldb().get_logicaldb_key()))) {
+				if ((prefix == null) || prefix.equals(accID.getPrefixPart())) {
+					if ((preferred == null) || (preferred.equals(accID.getPreferred()))) {
+						if ((isPrivate == null) || (isPrivate.equals(accID.getIsPrivate()))) {
+							return accID.getAccID();
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	@Transient
+	public String getJnumid() {
+		return findFirstID(Constants.LDB_MGI, "J:", Constants.PREFERRED, Constants.PUBLIC);
+	}
+
+	@Transient
+	public String getDoiid() {
+		return findFirstID(Constants.LDB_DOI, null, null, null);
+	}
+
+	@Transient
+	public String getPubmedid() {
+		return findFirstID(Constants.LDB_PUBMED, null, null, null);
+	}
+
+	@Transient
+	public String getMgiid() {
+		return findFirstID(Constants.LDB_MGI, "MGI:", null, null);
+	}
+
+	@Transient
+	public String getGorefid() {
+		return findFirstID(Constants.LDB_GOREF, null, null, null);
+	}	
 }

@@ -5,10 +5,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.exception.FatalAPIException;
@@ -29,12 +25,6 @@ import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
-import io.swagger.annotations.Api;
-
-//@Path("/littriageNew")
-//@Api(value = "Lit Triage Endpoints for References")
-//@Produces(MediaType.APPLICATION_JSON)
-//@Consumes(MediaType.APPLICATION_JSON)
 public class LTReferenceController extends BaseController<LTReferenceDomain> implements LTReferenceRESTInterface {
 
 	/***--- instance variables ---***/

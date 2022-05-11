@@ -58,15 +58,15 @@ public class LTReference extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
+	@OneToOne()
+	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")
+	private Term referenceTypeTerm;
+	
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_refs_key")
 	@Where(clause="`_mgitype_key` = 1")
 	@OrderBy("_logicaldb_key, preferred desc")
 	private List<Accession> accessionIDs;
-
-	@OneToOne()
-	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")
-	private Term referenceTypeTerm;
 
 	@OneToMany()
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
@@ -120,7 +120,6 @@ public class LTReference extends BaseEntity {
 	@Where(clause="`_mgitype_key` in (11)")
 	@OrderBy("_refassoctype_key")
 	private List<MGIReferenceAssoc> alleleAssocs;
-	
 
 	/* Find and return the first accession ID matching any specified logical database, prefix,
 	 * is-preferred, and is-private settings.

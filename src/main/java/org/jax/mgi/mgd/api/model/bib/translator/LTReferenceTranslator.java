@@ -36,14 +36,6 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		domain.pgs = entity.getPgs();
 		domain.date = entity.getDate();
 		domain.isReviewArticle = String.valueOf(entity.getIsReviewArticle());
-
-		if (entity.getYear() != null) {
-			domain.year = entity.getYear().toString();
-		}
-		else {
-			domain.year = null;
-		}
-		
 		domain.referenceAbstract = DecodeString.getDecodeToUTF8(entity.getReferenceAbstract());
 		domain.referenceType = entity.getReferenceTypeTerm().getTerm();
 		domain.referenceTypeKey = String.valueOf(entity.getReferenceTypeTerm().get_term_key());
@@ -52,6 +44,13 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		domain.modification_date = dateFormatter.format(entity.getModification_date());
 		domain.createdBy = entity.getCreatedBy().getLogin();
 		domain.modifiedBy = entity.getModifiedBy().getLogin();
+		
+		if (entity.getYear() != null) {
+			domain.year = entity.getYear().toString();
+		}
+		else {
+			domain.year = null;
+		}
 				
 		domain.mgiid = entity.getMgiid();
 		domain.jnumid = entity.getJnumid();

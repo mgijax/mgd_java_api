@@ -73,7 +73,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (domain.getReferenceTypeKey() == null || domain.getReferenceTypeKey().isEmpty()) {
 			domain.setReferenceTypeKey("31576687");
 		}
-		entity.setReferenceType(termDAO.get(Integer.valueOf(domain.getReferenceTypeKey())));			
+		entity.setReferenceTypeTerm(termDAO.get(Integer.valueOf(domain.getReferenceTypeKey())));			
 
 		if (domain.getAuthors() == null || domain.getAuthors().isEmpty()) {
 			entity.setAuthors(null);

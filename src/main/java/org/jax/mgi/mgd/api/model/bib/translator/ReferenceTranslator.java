@@ -10,7 +10,13 @@ import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBookDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceNoteDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowRelevanceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowStatusDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowTagDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceAssociatedData;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jboss.logging.Logger;
 
@@ -38,15 +44,15 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		domain.setReferenceAbstract(DecodeString.getDecodeToUTF8(entity.getReferenceAbstract()));
 		domain.setDate(entity.getDate());
 		domain.setIsReviewArticle(String.valueOf(entity.getIsReviewArticle()));
-		domain.setReferenceTypeKey(String.valueOf(entity.getReferenceType().get_term_key()));
-		domain.setReferenceType(entity.getReferenceType().getTerm());
+		domain.setReferenceTypeKey(String.valueOf(entity.getReferenceTypeTerm().get_term_key()));
+		domain.setReferenceType(entity.getReferenceTypeTerm().getTerm());
 		
 		if (entity.getReferenceCitationCache() != null) {
 			domain.setJnumid(entity.getReferenceCitationCache().getJnumid());
 			domain.setJnum(String.valueOf(entity.getReferenceCitationCache().getNumericPart()));		
 			domain.setShort_citation(entity.getReferenceCitationCache().getShort_citation());
 		}
-		
+					
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
@@ -55,20 +61,6 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
 		// ReferenceDomain must agree with what is coming from PWI/LitTriage
-		
-		// reference book
-		if (entity.getReferenceBook() != null && !entity.getReferenceBook().isEmpty()) {
-			ReferenceBookTranslator bookTranslator = new ReferenceBookTranslator();
-			Iterable<ReferenceBookDomain> book = bookTranslator.translateEntities(entity.getReferenceBook());
-			domain.setReferenceBook(book.iterator().next());		
-		}
-		
-		// reference note
-		if (entity.getReferenceNote() != null && !entity.getReferenceNote().isEmpty()) {
-			ReferenceNoteTranslator noteTranslator = new ReferenceNoteTranslator();
-			Iterable<ReferenceNoteDomain> note = noteTranslator.translateEntities(entity.getReferenceNote());
-			domain.setReferenceNote(note.iterator().next());			
-		}
 		
 		// first mgi accession id only
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
@@ -97,38 +89,109 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 			//domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
 
+		// at most one reference note
+		if (entity.getReferenceNote() != null && !entity.getReferenceNote().isEmpty()) {
+			ReferenceNoteTranslator noteTranslator = new ReferenceNoteTranslator();
+			Iterable<ReferenceNoteDomain> note = noteTranslator.translateEntities(entity.getReferenceNote());
+			domain.setReferenceNote(note.iterator().next());
+		}
+		
+		// at most one reference book
+		if (entity.getReferenceBook() != null && !entity.getReferenceBook().isEmpty()) {
+			ReferenceBookTranslator bookTranslator = new ReferenceBookTranslator();
+			Iterable<ReferenceBookDomain> book = bookTranslator.translateEntities(entity.getReferenceBook());
+			domain.setReferenceBook(book.iterator().next());			
+		}
+
 		// data specific to workflows: has supplemental data?, link to supplemental data, has PDF?, has extracted text?
 		// only grabs the extracted text "body" (done in the entity)
-//		if (entity.getWorkflowData() != null) {
-//			ReferenceWorkflowDataTranslator dataTranslator = new ReferenceWorkflowDataTranslator();
-//			Iterable<ReferenceWorkflowDataDomain> i = dataTranslator.translateEntities(entity.getWorkflowData());
-//			domain.setWorkflowData(i.iterator().next());	
-//		}
+		if (entity.getWorkflowData() != null) {
+			ReferenceWorkflowDataTranslator dataTranslator = new ReferenceWorkflowDataTranslator();
+			Iterable<ReferenceWorkflowDataDomain> i = dataTranslator.translateEntities(entity.getWorkflowData());
+			domain.setWorkflowData(i.iterator().next());	
+		}
 		
-		// one-to-many workflow status
-//		if (entity.getWorkflowStatus() != null && !entity.getWorkflowStatus().isEmpty()) {
-//			ReferenceWorkflowStatusTranslator statusTranslator = new ReferenceWorkflowStatusTranslator();
-//			Iterable<ReferenceWorkflowStatusDomain> i = statusTranslator.translateEntities(entity.getWorkflowStatus());
-//			domain.setWorkflowStatus(IteratorUtils.toList(i.iterator()));
-//			//ordered in entity
-//		}
-
-		// one-to-many workflow relevance
-//		if (entity.getWorkflowRelevance() != null && !entity.getWorkflowRelevance().isEmpty()) {
-//			ReferenceWorkflowRelevanceTranslator statusTranslator = new ReferenceWorkflowRelevanceTranslator();
-//			Iterable<ReferenceWorkflowRelevanceDomain> i = relevanceTranslator.translateEntities(entity.getWorkflowRelevance());
-//			domain.setWorkflowRelevance(IteratorUtils.toList(i.iterator()));
-//			//ordered in entity
-//		}
-
-		// one-to-many workflow tag
-//		if (entity.getWorkflowTag() != null && !entity.getWorkflowTag().isEmpty()) {
-//			ReferenceWorkflowTagTranslator statusTranslator = new ReferenceWorkflowTagTranslator();
-//			Iterable<ReferenceWorkflowTagDomain> i = relevanceTranslator.translateEntities(entity.getWorkflowTag());
-//			domain.setWorkflowTag(IteratorUtils.toList(i.iterator()));
-//			domain.getWorkflowTag().sort(Comparator.comparing(ReferenceWorkflowTagDomain::getTag));
-//		}
+		// bib_workflow_tag
+		if (entity.getWorkflowTags() != null) {
+			ReferenceWorkflowTagTranslator tagTranslator = new ReferenceWorkflowTagTranslator();
+			Iterable<ReferenceWorkflowTagDomain> i = tagTranslator.translateEntities(entity.getWorkflowTags());
+			domain.setWorkflowTags(IteratorUtils.toList(i.iterator()));
+			List<String> workflowTagString = new ArrayList<>();
+			for (int t = 0; t < domain.getWorkflowTags().size(); t++) {
+				workflowTagString.add(domain.getWorkflowTags().get(t).getTag());
+			}
+			domain.setWorkflowTagString(workflowTagString);
+		}		
 		
+		// bib_workflow_status
+		if (entity.getWorkflowStatus() != null) {
+			ReferenceWorkflowStatusTranslator statusTranslator = new ReferenceWorkflowStatusTranslator();
+			Iterable<ReferenceWorkflowStatusDomain> i = statusTranslator.translateEntities(entity.getWorkflowStatus());
+			domain.setStatusHistory(IteratorUtils.toList(i.iterator()));
+		}
+
+		// bib_workflow_status where isCurrent = 1
+		if (entity.getWorkflowStatusCurrent() != null) {
+			ReferenceWorkflowStatusTranslator statusTranslator = new ReferenceWorkflowStatusTranslator();
+			Iterable<ReferenceWorkflowStatusDomain> i = statusTranslator.translateEntities(entity.getWorkflowStatusCurrent());
+			domain.setStatusCurrent(IteratorUtils.toList(i.iterator()));
+
+			for (int s = 0; s < domain.getStatusCurrent().size(); s++) {
+				if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_AP)) {
+					domain.setAp_status(domain.getStatusCurrent().get(s).getStatus());
+					//domain.setAp_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+				}
+				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_GO)) {
+					domain.setGo_status(domain.getStatusCurrent().get(s).getStatus());
+					//domain.setGo_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+				}	
+				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_GXD)) {
+					domain.setGxd_status(domain.getStatusCurrent().get(s).getStatus());
+					//domain.setGxd_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+				}
+				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_PRO)) {
+					domain.setPro_status(domain.getStatusCurrent().get(s).getStatus());
+					//domain.setPro_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+				}	
+				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_QTL)) {
+					domain.setQtl_status(domain.getStatusCurrent().get(s).getStatus());
+					//domain.setQtl_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+				}	
+				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_TUMOR)) {
+					domain.setTumor_status(domain.getStatusCurrent().get(s).getStatus());
+					//domain.setTumor_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+				}			
+			}
+		}
+		
+		// bib_workflow_relevance
+		if (entity.getWorkflowRelevance() != null) {
+			ReferenceWorkflowRelevanceTranslator relevanceTranslator = new ReferenceWorkflowRelevanceTranslator();
+			Iterable<ReferenceWorkflowRelevanceDomain> i = relevanceTranslator.translateEntities(entity.getWorkflowRelevance());
+			domain.setRelevanceHistory(IteratorUtils.toList(i.iterator()));
+			domain.setEditRelevance(domain.getRelevanceHistory().get(0).getRelevance());
+			domain.setEditRelevanceKey(domain.getRelevanceHistory().get(0).getRelevanceKey());			
+		}
+
+		// list of strings, each of which indicates a type of data associated with the reference
+		List<String> assocDomain = new ArrayList<String>();
+		ReferenceAssociatedData flags = entity.getAssociatedData();
+		if (flags != null) {
+			if (flags.getHas_alleles() != 0) { assocDomain.add("Alleles"); }
+			if (flags.getHas_antibodies() != 0) { assocDomain.add("Antibodies"); }
+			if (flags.getHas_go() != 0) { assocDomain.add("GO"); }
+			if (flags.getHas_gxdindex() != 0) { assocDomain.add("GXD Index"); }
+			if (flags.getHas_gxdimages() != 0) { assocDomain.add("GXD/CRE Images"); }
+			if (flags.getHas_gxdspecimens() != 0) { assocDomain.add("GXD/CRE Specimens"); }
+			if (flags.getHas_gxdresults() != 0) { assocDomain.add("GXD/CRE Assays"); }
+			if (flags.getHas_gxdresults() != 0) { assocDomain.add("GXD/CRE Results"); }
+			if (flags.getHas_mapping() != 0) { assocDomain.add("Mapping"); }
+			if (flags.getHas_markers() != 0) { assocDomain.add("Markers"); }
+			if (flags.getHas_probes() != 0) { assocDomain.add("Probes"); }
+			if (flags.getHas_strain() != 0) { assocDomain.add("Strain"); }	
+			domain.setAssociated_data(assocDomain);
+		}
+				
 		return domain;
 	}
 

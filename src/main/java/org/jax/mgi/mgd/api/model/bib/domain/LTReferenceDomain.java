@@ -78,6 +78,86 @@ public class LTReferenceDomain extends BaseDomain {
 	public List<MGIReferenceStrainAssocDomain> strainAssocs;
 	public List<MGIReferenceMarkerAssocDomain> markerAssocs;
 
+	// to handle current searching parameters (replaces LTReferenceDAO.java/search())
+	
+	private String currentRelevance;
+	private String workflow_tag_operator = "AND";
+	private String status_operator = "OR";
+	private String orderBy = "1";
+	private String accids;
+	private String supplementalTerm;
+	private String supplementalKey;
+	
+	private String sh_status;
+	private String sh_group;
+	private String sh_username;
+	private String sh_date;
+	
+	private String relevance;
+	private String relevance_date;
+	private String relevance_user;
+	private String relevance_version;
+	private String relevance_confidence;
+	
+	private String workflow_tag1;
+	private String workflow_tag2;
+	private String workflow_tag3;
+	private String workflow_tag4;
+	private String workflow_tag5;
+	private Boolean not_workflow_tag1;
+	private Boolean not_workflow_tag2;
+	private Boolean not_workflow_tag3;
+	private Boolean not_workflow_tag4;
+	private Boolean not_workflow_tag5;
+	
+	private Integer status_AP_New;
+	private Integer status_AP_Not_Routed;
+	private Integer status_AP_Routed;
+	private Integer status_AP_Chosen;
+	private Integer status_AP_Indexed;
+	private Integer status_AP_Full_coded;
+	private Integer status_AP_Rejected;
+	
+	private Integer status_GO_New;
+	private Integer status_GO_Not_Routed;
+	private Integer status_GO_Routed;
+	private Integer status_GO_Chosen;
+	private Integer status_GO_Indexed;
+	private Integer status_GO_Full_coded;
+	private Integer status_GO_Rejected;	
+	
+	private Integer status_GXD_New;
+	private Integer status_GXD_Not_Routed;
+	private Integer status_GXD_Routed;
+	private Integer status_GXD_Chosen;
+	private Integer status_GXD_Indexed;
+	private Integer status_GXD_Full_coded;
+	private Integer status_GXD_Rejected;	
+	
+	private Integer status_PRO_New;
+	private Integer status_PRO_Not_Routed;
+	private Integer status_PRO_Routed;
+	private Integer status_PRO_Chosen;
+	private Integer status_PRO_Indexed;
+	private Integer status_PRO_Full_coded;
+	private Integer status_PRO_Rejected;	
+	
+	private Integer status_QTL_New;
+	private Integer status_QTL_Not_Routed;
+	private Integer status_QTL_Routed;
+	private Integer status_QTL_Chosen;
+	private Integer status_QTL_Indexed;
+	private Integer status_QTL_Full_coded;
+	private Integer status_QTL_Rejected;		
+	
+	private Integer status_Tumor_New;
+	private Integer status_Tumor_Not_Routed;
+	private Integer status_Tumor_Routed;
+	private Integer status_Tumor_Chosen;
+	private Integer status_Tumor_Indexed;
+	private Integer status_Tumor_Full_coded;
+	private Integer status_Tumor_Rejected;	
+	
 	/***--- constructors ---***/
 	
 //	/* empty constructor - ready for population from JSON */

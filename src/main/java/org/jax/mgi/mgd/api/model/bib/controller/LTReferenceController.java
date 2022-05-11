@@ -52,21 +52,21 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 	 * Note: added Transactional annotation to ensure that the session stays open for the duration of
 	 * this method, allowing for collection of the workflow relevance data.
 	 */
-	@Transactional
-	@Override
-	public SearchResults<LTReferenceDomain> getReference(String key) {
-		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
-		if (key != null) {
-			try {
-				return referenceService.getReference(key);
-			} catch (APIException e) {
-				results.setError("Failed", "Failed to get reference by key " + key + ", exception: " + e.toString(), Constants.HTTP_NOT_FOUND);
-			}
-		} else {
-			results.setError("InvalidParameter", "No reference key was specified", Constants.HTTP_BAD_REQUEST);
-		}
-		return results;
-	}
+//	@Transactional
+//	@Override
+//	public SearchResults<LTReferenceDomain> getReference(String key) {
+//		SearchResults<LTReferenceDomain> results = new SearchResults<LTReferenceDomain>();
+//		if (key != null) {
+//			try {
+//				return referenceService.getReference(key);
+//			} catch (APIException e) {
+//				results.setError("Failed", "Failed to get reference by key " + key + ", exception: " + e.toString(), Constants.HTTP_NOT_FOUND);
+//			}
+//		} else {
+//			results.setError("InvalidParameter", "No reference key was specified", Constants.HTTP_BAD_REQUEST);
+//		}
+//		return results;
+//	}
 	
 	/* update the given reference in the database, then return a revised version of it in the SearchResults
 	 */
@@ -115,12 +115,11 @@ public class LTReferenceController extends BaseController<LTReferenceDomain> imp
 					}
 				}
 
-				return this.getReference(reference.refsKey);
+				results = referenceService.getReference(reference.getRefsKey());				
 			} catch (Exception e) {
 				Throwable t = getRootException(e);
 				StackTraceElement[] ste = t.getStackTrace();
 				String message = t.toString() + " [" + ste[0].getFileName() + ":" + ste[0].getLineNumber() + "]" + " (" + t.getMessage() + ")";
-				
 				results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);
 			}
 		} else {

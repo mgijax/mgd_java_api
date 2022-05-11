@@ -76,7 +76,6 @@ public class LTReferenceService {
 	
 	private static int maxRetries = 10;		// maximum number of retries for non-fatal exceptions on update operations
 	private static int retryDelay = 200;	// number of ms to wait before retrying update operation after non-fatal exception
-
 	
 	public SearchResults<LTReferenceDomain> getReference(String refsKey) throws APIException {
 		// called from LTReferenceController/getReference()

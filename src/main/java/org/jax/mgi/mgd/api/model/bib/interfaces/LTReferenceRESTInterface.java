@@ -72,11 +72,11 @@ public interface LTReferenceRESTInterface {
 			@QueryParam("status") String status
 	);
 
-	@GET
-	@Path("/{key}")
-	@ApiOperation(value = "Value: Retrieve a single Reference by reference key")
-	public SearchResults<LTReferenceDomain> getReference(
-			@ApiParam(value = "Value: This is for searching by reference key")
-			@PathParam("key") String key);
+//	@GET
+//	@Path("/{key}")
+//	@ApiOperation(value = "Value: Retrieve a single Reference by reference key")
+//	public SearchResults<LTReferenceDomain> getReference(
+//			@ApiParam(value = "Value: This is for searching by reference key")
+//			@PathParam("key") String key);
 	
 }

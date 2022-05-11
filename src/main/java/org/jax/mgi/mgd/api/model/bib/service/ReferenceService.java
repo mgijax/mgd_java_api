@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,24 +16,40 @@ import javax.inject.Inject;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
+import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.acc.dao.AccessionDAO;
+import org.jax.mgi.mgd.api.model.acc.dao.LogicalDBDAO;
+import org.jax.mgi.mgd.api.model.acc.dao.MGITypeDAO;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
+import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceWorkflowDataDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowData;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
 import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceTranslator;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceMarkerAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceStrainAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.DecodeString;
+import org.jax.mgi.mgd.api.util.MapMaker;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -48,6 +66,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	@Inject
 	private TermDAO termDAO;
 	@Inject
+	private AccessionDAO accessionDAO;
+	@Inject
+	private LogicalDBDAO logicaldbDAO;
+	@Inject
+	private MGITypeDAO mgiTypeDAO;
+	@Inject
 	private AccessionService accessionService;
 	@Inject
 	private TermService termService;
@@ -55,6 +79,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	private ReferenceBookService bookService;
 	@Inject
 	private ReferenceNoteService noteService;
+	@Inject
+	private ReferenceWorkflowRelevanceService relevanceService;
+	@Inject
+	private ReferenceWorkflowDataService dataService;	
+	@Inject
+	private MGIReferenceAssocService referenceAssocService;	
 	
 	private ReferenceTranslator translator = new ReferenceTranslator();
 	private SlimReferenceTranslator slimtranslator = new SlimReferenceTranslator();	
@@ -205,20 +235,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		// return entity translated to domain
 		log.info("processReference/create/returning results");
-		results.setItem(translator.translate(entity));
-		return results;
-	}
-
-	@Transactional
-	public SearchResults<ReferenceDomain> update(ReferenceDomain domain, User user) {
-		// in progress
-		// to replace LTReferenceRepository/update()/applyDomainChanges() etc.
-		
-		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
-		Reference entity = referenceDAO.get(Integer.valueOf(domain.getRefsKey()));
-		
-		// return entity translated to domain
-		log.info("processReference/update/returning results");
 		results.setItem(translator.translate(entity));
 		return results;
 	}
@@ -1185,5 +1201,753 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		log.info("validateJnumImage/end");
 		return results;
 	}
+
+	@Transactional
+	public SearchResults<ReferenceDomain> update(ReferenceDomain domain, User user) {
+		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
+		Reference entity = referenceDAO.get(Integer.valueOf(domain.getRefsKey()));
+		applyChanges(entity, domain, user);
+		referenceDAO.persist(entity);
+		
+//		Query query = referenceDAO.createNativeQuery("select count(*) from BIB_reloadCache(" + domain.getRefsKey() + ")");
+//		query.getResultList();
+		
+		// return entity translated to domain
+		log.info("processReference/update/returning results");
+		results.setItem(translator.translate(entity));
+		return results;
+	}
+
+	/* return a single Term matching the parameters encoded as a Map in the given JSON string
+	 */
+	private Term getTerm (String json) {
+		MapMaker mapMaker = new MapMaker();
+		SearchResults<Term> terms = null;
+		try {
+			terms = termDAO.search(mapMaker.toMap(json));
+			return terms.items.get(0);			
+		} catch (APIException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/* return a single Term matching the given vocabulary / term pair
+	 */
+	private Term getTermByTerm (Integer vocabKey, String term) {
+		return getTerm("{\"_vocab_key\" : " + vocabKey + ", \"term\" : \"" + term + "\"}");
+	}
+
+	/* return a single Term matching the given vocabulary / abbreviation pair
+	 */
+	private Term getTermByAbbreviation (Integer vocabKey, String abbreviation)  {
+		return getTerm("{\"_vocab_key\" : " + vocabKey + ", \"abbreviation\" : \"" + abbreviation + "\"}");
+	}
+
+	/* take the data from the domain object and overwrite any changed data into the entity object
+	 * (assumes we are working in a transaction and persists any sub-objects into the database, but does
+	 * not persist this Reference object itself, as other changes could be coming)
+	 */
+	public void applyChanges(Reference entity, ReferenceDomain domain, User user) {
+		// Note that we must have 'anyChanges' after the OR, otherwise short-circuit evaluation will only save
+		// the first section changed.
+
+		boolean anyChanges;
+		
+		anyChanges = applyBasicFieldChanges(entity, domain, user);
+		anyChanges = applyWorkflowStatusChanges(entity, domain, user) || anyChanges;
+		anyChanges = applyWorkflowTagChanges(entity, domain, user) || anyChanges;
+		anyChanges = applyBookChanges(entity, domain, user) || anyChanges;		// uses ReferenceDomainService()
+		anyChanges = applyNoteChanges(entity, domain, user) | anyChanges;		// uses ReferenceNoteService()
+		anyChanges = applyAccessionIDChanges(entity, domain, user) || anyChanges;
+		anyChanges = applyWorkflowDataChanges(entity, domain, user) || anyChanges;
+		anyChanges = applyWorkflowRelevanceChanges(entity, domain, user) || anyChanges;   			// uses relevanceService
+		anyChanges = applyAlleleAssocChanges(entity, domain.getAlleleAssocs(), user) || anyChanges;	// uses referenceAssocService	
+		anyChanges = applyStrainAssocChanges(entity, domain.getStrainAssocs(), user) || anyChanges;	// uses referenceAssocService	
+		anyChanges = applyMarkerAssocChanges(entity, domain.getMarkerAssocs(), user) || anyChanges;	// uses referenceAssocService
+
+		if (anyChanges) {
+			entity.setModifiedBy(user);
+			entity.setModification_date(new Date());
+		}
+	}
+
+	/* handle the basic fields that have changed between this Reference and the given ReferenceDomain
+	 */
+	private boolean applyBasicFieldChanges(Reference entity, ReferenceDomain domain, User user) {
+		// exactly one set of basic data per reference, including:  reference type,
+		// author, primary author (derived), journal, title, volume, issue, date, year, pages, 
+		// abstract, and isReviewArticle flag
+
+		log.info("applyBasicFieldChanges()");
+		
+		boolean anyChanges = false;
+		
+		// update this object's data to match what was passed in		
+		if ((Integer.valueOf(domain.getIsReviewArticle()) != entity.getIsReviewArticle())
+				|| !smartEqual(entity.getAuthors(), domain.getAuthors())
+				|| !smartEqual(entity.getJournal(), domain.getJournal())
+				|| !smartEqual(entity.getTitle(), domain.getTitle())
+				|| !smartEqual(entity.getVol(), domain.getVol())
+				|| !smartEqual(entity.getIssue(), domain.getIssue())
+				|| !smartEqual(entity.getDate(), domain.getDate())
+				|| !smartEqual(entity.getYear(), domain.getYear())
+				|| !smartEqual(String.valueOf(entity.getReferenceTypeTerm().get_term_key()), domain.getReferenceTypeKey())
+				|| !smartEqual(entity.getPgs(), domain.getPgs())
+				|| !smartEqual(entity.getReferenceAbstract(), domain.getReferenceAbstract())
+				) {
+
+			entity.setIsReviewArticle(Integer.valueOf(domain.getIsReviewArticle()));
+			
+			if (domain.getAuthors() == null || domain.getAuthors().isEmpty()) {
+				entity.setAuthors(null);
+				entity.setPrimaryAuthor(null);
+			}
+			else {
+				entity.setAuthors(domain.getAuthors());
+				String[] authors = domain.getAuthors().split(";");
+				entity.setPrimaryAuthor(authors[0]);				
+			}
+
+			if (domain.getJournal() == null || domain.getJournal().isEmpty()) {
+				entity.setJournal(null);
+			}
+			else {
+				entity.setJournal(domain.getJournal());
+			}
+			
+			if (domain.getTitle() == null || domain.getTitle().isEmpty()) {
+				entity.setTitle(null);
+			}
+			else {
+				entity.setTitle(domain.getTitle());
+			}			
+
+			if (domain.getVol() == null || domain.getVol().isEmpty()) {
+				entity.setVol(null);
+			}
+			else {
+				entity.setVol(domain.getVol());
+			}			
+			
+			if (domain.getIssue() == null || domain.getIssue().isEmpty()) {
+				entity.setIssue(null);
+			}
+			else {
+				entity.setIssue(domain.getIssue());
+			}			
+			
+			if (domain.getPgs() == null || domain.getPgs().isEmpty()) {
+				entity.setPgs(null);
+			}
+			else {
+				entity.setPgs(domain.getPgs());
+			}			
+					
+			entity.setYear(Integer.parseInt(domain.getYear()));
+			entity.setReferenceTypeTerm(termDAO.get(Integer.valueOf(domain.getReferenceTypeKey())));
+		
+			if (domain.getReferenceAbstract() == null || domain.getReferenceAbstract().isEmpty()) {
+				entity.setReferenceAbstract(null);
+			}
+			else {
+				entity.setReferenceAbstract(DecodeString.setDecodeToLatin9(domain.getReferenceAbstract()).replace("''",  "'"));			
+			}
+			
+			entity.setModifiedBy(user);
+			entity.setModification_date(new Date());
+			
+			anyChanges = true;
+		}
+
+		return anyChanges;
+	}
+
+	// remove any (optional) prefix from DOI ID
+	private String cleanDoiID(String doiID) {
+		// all DOI IDs must begin with "10.", but if not, just trust the user
+		
+		log.info("clearDoiID():" + doiID);
+		
+		if ((doiID != null) && (!doiID.startsWith("10."))) {
+			int tenPosition = doiID.indexOf("10.");
+			if (tenPosition < 0) {
+				return doiID;
+			}
+			doiID = doiID.substring(tenPosition);
+		}
+		return doiID;
+	}
+
+	// remove any (optional) prefix from PubMed ID
+	private String cleanPubMedID(String pubmedID) {
+		// all PubMed IDs are purely numeric, so strip off anything to the left of the first non-numeric character
+		
+		log.info("clearPubMedID():" + pubmedID);
+		
+		if ((pubmedID != null) && (pubmedID.trim().length() > 0) && (!pubmedID.matches("^[0-9]+$"))) {
+			// anything up to the final non-digit, followed by the digits that are the PubMed ID
+			Pattern p = Pattern.compile("^.*[^0-9]+([0-9]+)$");
+			Matcher m = p.matcher(pubmedID.trim());
+			if (m.find()) {
+				pubmedID = m.group(1);
+			} else {
+				// if there are letters after the digits, just keep the original ID (don't throw an exception)
+				return pubmedID;
+			}
+		}
+		return pubmedID;
+	}
+
+	/* apply ID changes from domain to entity for PubMed, DOI, and GO REF IDs
+	 */
+	private boolean applyAccessionIDChanges(Reference entity, ReferenceDomain domain, User user) {
+		// assumes only one ID per reference for each logical database (valid assumption, August 2017)
+		// need to handle:  new ID for logical db, updated ID for logical db, deleted ID for logical db
+
+		log.info("applyAccessionIDChanges()");
+		
+		// do any cleanup of DOI ID and PubMed ID first
+		domain.setDoiid(cleanDoiID(domain.getDoiid()));
+		domain.setPubmedid(cleanPubMedID(domain.getPubmedid()));
+
+		boolean anyChanges = false;
+		Pattern pattern = Pattern.compile("(.*?)([0-9]+)");		// any characters as a prefix (reluctant group), followed by one or more digits
+
+		if (!smartEqual(entity.getDoiid(), domain.getDoiid())) {
+			String prefixPart = domain.getDoiid();					// defaults
+			Integer numericPart = null;
+
+			if (domain.getDoiid() != null) {
+				Matcher m = pattern.matcher(domain.getDoiid());
+				if (m.find()) {
+					prefixPart = m.group(1);					// ID fit pattern, so use more accurate prefix / numeric parts
+					numericPart = Integer.parseInt(m.group(2));
+				}
+			}
+
+			anyChanges = applyOneIDChange(entity, Constants.LDB_DOI, domain.getDoiid(), prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, user) || anyChanges;
+		}
+
+		if (!smartEqual(entity.getPubmedid(), domain.getPubmedid())) {
+			String prefixPart = domain.getPubmedid();				// defaults
+			Integer numericPart = null;
+
+			if (domain.getPubmedid() != null) {
+				Matcher m = pattern.matcher(domain.getPubmedid());
+				if (m.find()) {
+					prefixPart = m.group(1);					// ID fit pattern, so use more accurate prefix / numeric parts
+					numericPart = Integer.parseInt(m.group(2));
+				}
+			}
+
+			anyChanges = applyOneIDChange(entity, Constants.LDB_PUBMED, domain.getPubmedid(), prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, user) || anyChanges;
+		}
+
+		if (!smartEqual(entity.getGorefid(), domain.getGorefid())) {
+			String prefixPart = domain.getGorefid();					// defaults
+			Integer numericPart = null;
+
+			if (domain.getGorefid() != null) {
+				Matcher m = pattern.matcher(domain.getGorefid());
+				if (m.find()) {
+					prefixPart = m.group(1);					// ID fit pattern, so use more accurate prefix / numeric parts
+					numericPart = Integer.parseInt(m.group(2));
+				}
+			}
+
+			anyChanges = applyOneIDChange(entity, Constants.LDB_GOREF, domain.getGorefid(), prefixPart, numericPart, Constants.SECONDARY, Constants.PRIVATE, user) || anyChanges;
+		}
+		
+		// if entity contains a jnum and domain does not, ok to try and delete it
+		if (entity.getJnumid() != null && 
+				(domain.getJnumid() == null || domain.getJnumid().isEmpty())) {
+			
+			String prefixPart = domain.getJnumid();				// defaults
+			Integer numericPart = null;
+
+			if (domain.getJnumid() != null) {
+				Matcher m = pattern.matcher(domain.getJnumid());
+				if (m.find()) {
+					prefixPart = m.group(1);					// ID fit pattern, so use more accurate prefix / numeric parts
+					numericPart = Integer.parseInt(m.group(2));
+				}
+			}
+
+			anyChanges = applyOneIDChange(entity, Constants.LDB_JNUM, domain.getJnumid(), prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, user) || anyChanges;
+		}
+		
+		return anyChanges;
+	}
+
+	/* Apply a single ID change to this reference.  If there already is an ID for this logical database, replace it.  If there wasn't
+	 * one, add one.  And, if there was one previously, but there's not now, then delete it.
+	 */
+	private boolean applyOneIDChange(Reference entity, Integer ldb, String accID, String prefixPart, Integer numericPart, Integer preferred, Integer isPrivate, User user) {
+		// first parameter is required; bail out if it is null
+		
+		if (ldb == null) { return false; }
+		
+		log.info("applyOneIDChange():" + ldb + "," + accID + "," + prefixPart + "," + numericPart + "," + preferred + "," + isPrivate);
+		
+		// First, need to find any existing AccessionID object for this logical database.
+
+		List<Accession> ids = entity.getAccessionIDs();
+		int idPos = -1;			// position of correct ID in list of IDs
+		for (int i = 0; i < ids.size(); i++) {
+			Accession myID = ids.get(i);
+			
+			// skip if MGI:xxxx; J:xxxx is OK
+			if (ldb.equals(1)) {
+				if (myID.getPrefixPart().equals("MGI:")) {
+					continue;
+				}
+			}
+			
+			if (ldb.equals(myID.getLogicaldb().get_logicaldb_key())) {
+				idPos = i;
+				break;	}
+		}
+
+		// convert to:
+		//if (accessionService.process(domain.getRefsKey(), domain.getEditAccessionIds(), "1", user)) {
+		
+		// If we had a previous ID for this logical database, we either need to modify it or delete it.
+		if (idPos >= 0) {
+			// Passing in a null ID indicates that any existing ID should be removed.
+			if ( (accID == null) || (accID.trim().length() == 0))  {
+				referenceDAO.remove(ids.get(idPos));
+			} else {
+				// Otherwise, we can update the ID and other data for this logical database.
+				Accession myID = ids.get(idPos);
+				myID.setAccID(accID);
+				myID.setIsPrivate(isPrivate);
+				myID.setPreferred(preferred);
+				myID.setPrefixPart(prefixPart);
+				myID.setNumericPart(numericPart);
+				myID.setModification_date(new Date());
+				myID.setModifiedBy(user);
+			}
+		} else {
+			// We didn't find an existing ID for this logical database, so we need to add one.
+			Accession myID = new Accession();
+			myID.set_accession_key(accessionDAO.getNextKey());
+			myID.setAccID(accID);
+			myID.setPreferred(preferred);
+			myID.setIsPrivate(isPrivate);
+			myID.setLogicaldb(logicaldbDAO.get(ldb));
+			myID.set_object_key(entity.get_refs_key());
+			myID.setMgiType(mgiTypeDAO.get(Constants.TYPE_REFERENCE));
+			myID.setPrefixPart(prefixPart);
+			myID.setNumericPart(numericPart);
+			myID.setCreation_date(new Date());
+			myID.setModification_date(new Date());
+			myID.setCreatedBy(user);
+			myID.setModifiedBy(user);
+			referenceDAO.persist(myID);
+		}
+		return true;
+	}
+
+	/* apply any changes from domain to entity for the reference notes 
+	 */
+	private boolean applyNoteChanges(Reference entity, ReferenceDomain domain, User user) {
+		log.info("applyNoteChanges()");
+
+		if (domain.getReferenceNote() == null) {
+			return false;
+		}
+		
+		if (domain.getReferenceNote().getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
+			if (domain.getReferenceNote().getNote().isEmpty()) {
+				domain.getReferenceNote().setProcessStatus(Constants.PROCESS_DELETE);
+			}
+			else if (!smartEqual(entity.getReferenceNote().get(0).getNote(), domain.getReferenceNote().getNote())) {
+				domain.getReferenceNote().setProcessStatus(Constants.PROCESS_UPDATE);				
+			}
+		}
+		else {
+			domain.getReferenceNote().setProcessStatus(Constants.PROCESS_CREATE);							
+		}
+		
+		return noteService.process(domain.getRefsKey(), domain.getReferenceNote(), user);		
+	}
+
+	/* apply any changes from domain to entity for the reference book 
+	 */
+	private boolean applyBookChanges(Reference entity, ReferenceDomain domain, User user) {
+		log.info("applyBookChanges()");
+
+		if (domain.getReferenceBook() == null) {
+			return false;
+		}
+		
+		boolean isBookTerm = false;
+		boolean isBookKey = false;
+		
+		if (domain.getReferenceType().equals("Book")) {
+			isBookTerm = true;
+		}
+		if (domain.getReferenceTypeKey().equals("31576679")) {
+			isBookKey = true;
+		}
+		
+//		log.info("isBookTerm:" + isBookTerm);
+//		log.info("isBookKey:" + isBookKey);
+		
+		if (isBookTerm && isBookKey) {
+			log.info("applyBookChange/remain book");
+			ReferenceBook book = entity.getReferenceBook().get(0);
+			if (!smartEqual(book.getBook_au(), domain.getReferenceBook().getBook_author()) 
+					|| !smartEqual(book.getBook_title(), domain.getReferenceBook().getBook_title()) 
+					|| !smartEqual(book.getPlace(), domain.getReferenceBook().getPlace()) 
+					|| !smartEqual(book.getPublisher(), domain.getReferenceBook().getPublisher()) 
+					|| !smartEqual(book.getSeries_ed(), domain.getReferenceBook().getSeries_ed())) {
+				domain.getReferenceBook().setProcessStatus(Constants.PROCESS_UPDATE);
+			}
+		} else if (isBookTerm) {
+			log.info("applyBookChange/change from book to non-book");
+			domain.getReferenceBook().setProcessStatus(Constants.PROCESS_DELETE);
+		} else if (isBookKey) {
+			log.info("applyBookChange/create book");
+			domain.getReferenceBook().setProcessStatus(Constants.PROCESS_CREATE);
+			domain.getReferenceBook().setRefsKey(domain.getRefsKey());			
+		}
+		
+		return bookService.process(domain.getRefsKey(), domain.getReferenceBook(), user);		
+	}
+
+	/* apply changes in workflow relevance from domain to entity
+	 */
+	private boolean applyWorkflowRelevanceChanges(Reference entity, ReferenceDomain domain, User user) {
+		// updated workflow relevance, new workflow relevance -- (no deletions)
+
+		log.info("applyWorkflowRelevanceChanges()");
+//		log.info("domain.getEditRelevanceKey():" + domain.getEditRelevanceKey());
+//		log.info("user.getLogin();:" + entity.getWorkflowRelevance().get(0).getModifiedBy().getLogin() + "," + user.getLogin());
+		
+		// if relevance term has changed or user has changed
+		if (!smartEqual(String.valueOf(entity.getWorkflowRelevance().get(0).getRelevanceTerm().get_term_key()), domain.getEditRelevanceKey())
+			|| !smartEqual(entity.getWorkflowRelevance().get(0).getModifiedBy().getLogin(), user.getLogin())
+			) {
+
+			// for each relevanceHistory, set processStatus = PROCESS_UPDATE, isCurrent = 0
+			for (int i = 0; i < domain.getRelevanceHistory().size(); i++) {
+				if (domain.getRelevanceHistory().get(i).getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
+					domain.getRelevanceHistory().get(i).setProcessStatus(Constants.PROCESS_UPDATE);
+					domain.getRelevanceHistory().get(i).setIsCurrent("0");
+				}
+			}
+			
+			// add new relevance row
+			ReferenceWorkflowRelevanceDomain newRelevance = new ReferenceWorkflowRelevanceDomain();
+			newRelevance.setProcessStatus(Constants.PROCESS_CREATE);
+			newRelevance.setRefsKey(domain.getRefsKey());
+			newRelevance.setIsCurrent("1");
+			newRelevance.setRelevanceKey(domain.getEditRelevanceKey());
+			newRelevance.setConfidence(null);
+			newRelevance.setVersion(null);
+			domain.getRelevanceHistory().add(newRelevance);
+		}
+		
+		return relevanceService.process(domain.getRefsKey(), domain.getRelevanceHistory(), user);
+	}
+	
+
+	/* apply changes in workflow data fields (not status, though) from domain to entity
+	 */
+	private boolean applyWorkflowDataChanges(Reference entity, ReferenceDomain domain, User user) {
+		// updates supplemental key which is stored in workflow data "body"
+		
+		log.info("applyWorkflowDataChanges()");
+		
+		if (entity.getWorkflowData().get(0) != null) {
+			if (!smartEqual(String.valueOf(entity.getWorkflowData().get(0).getSupplementalTerm().get_term_key()), domain.getWorkflowData().getSupplementalKey())) {
+				domain.getWorkflowData().setProcessStatus(Constants.PROCESS_UPDATE);
+			}
+		} else {
+			// this should not happen, but if it does...create new "body"
+			ReferenceWorkflowDataDomain newData = new ReferenceWorkflowDataDomain();
+			newData.setProcessStatus(Constants.PROCESS_CREATE);
+			newData.setRefsKey(domain.getRefsKey());
+			newData.setSupplementalKey(domain.getWorkflowData().getSupplementalKey());
+			domain.setWorkflowData(newData);
+		}
+
+		return dataService.process(domain.getRefsKey(), domain.getWorkflowData(), user);
+	}
+
+	/* handle removing/adding any workflow tags that have changed between the Reference and the passed-in
+	 * ReferenceDomain.  Persists any tag changes to the database.  Returns true if any changes were made,
+	 * false otherwise.
+	 */
+	private boolean applyWorkflowTagChanges(Reference entity, ReferenceDomain domain, User user) {
+
+		log.info("applyWorkflowTagChanges()");
+		
+		// short-circuit method if no tags in Reference or in ReferenceDomain
+		if ((entity.getWorkflowTags().size() == 0) && (domain.getWorkflowTags().size() == 0)) {
+			return false;
+		}
+
+		// set of tags specified in domain object -- potentially to add to object
+		Set<String> toAdd = new HashSet<String>();
+		for (String rdTag : domain.getWorkflowTagString()) {
+			toAdd.add(rdTag.trim());
+		}
+
+		// list of tags that need to be removed from this object
+		List<ReferenceWorkflowTag> toDelete = new ArrayList<ReferenceWorkflowTag>();
+
+		// Now we need to diff the set of tags we already have and the set of tags to potentially add. Anything
+		// left in toAdd will need to be added as a new tag, and anything in toDelete will need to be removed.
+
+		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
+			String myTag = refTag.getTagTerm().getTerm();
+
+			// matching tags
+			if (toAdd.contains(myTag)) {
+				// already have this one, don't need to add it
+				toAdd.remove(myTag);
+			} else {
+				// current one isn't in the new list from domain object, so need to remove it
+				toDelete.add(refTag);
+			}
+		}
+
+		// remove defunct tags
+		for (ReferenceWorkflowTag rwTag : toDelete) {
+			referenceDAO.remove(rwTag);
+		}
+
+		// add new tags (use shared method, as this will be useful when adding tags to batches of references)
+		for (String rdTag : toAdd) {
+			addTag(entity, rdTag, user);
+		}
+
+		return (toDelete.size() > 0) || (toAdd.size() > 0);
+	}
+
+	/* shared method for adding a workflow tag to a Reference
+	 */
+	public void addTag(Reference entity, String rdTag, User user) {
+		// if we already have this tag applied, skip it (extra check needed for batch additions to avoid
+		// adding duplicates)
+
+		String trimTag = rdTag.trim();
+		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
+			if (trimTag.equals(refTag.getTagTerm().getTerm()) ) {
+				return;
+			}
+		}
+
+		log.info("addTag();" + rdTag);
+		
+		// need to find the term of the tag, wrap it in an association, persist the association, and
+		// add it to the workflow tags for this Reference
+
+		Term tagTerm = getTermByTerm(Constants.VOC_WORKFLOW_TAGS, rdTag);
+		if (tagTerm != null) {
+			ReferenceWorkflowTag rwTag = new ReferenceWorkflowTag();
+			rwTag.set_refs_key(entity.get_refs_key());
+			rwTag.setTagTerm(tagTerm);
+			rwTag.setCreatedBy(user);
+			rwTag.setModifiedBy(user);
+			rwTag.setCreation_date(new Date());
+			rwTag.setModification_date(new Date());
+			referenceDAO.persist(rwTag);
+			entity.getWorkflowTags().add(rwTag);
+			entity.setModifiedBy(user);
+			entity.setModification_date(new Date());
+		}
+	}
+
+	/* shared method for removing a workflow tag from a Reference (no-op if this ref doesn't have the tag)
+	 */
+	public void removeTag(Reference entity, String rdTag, User user) {
+		if (entity.getWorkflowTags() == null) { return; }
+
+		String lowerTag = rdTag.toLowerCase().trim();
+		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
+			if (lowerTag.equals(refTag.getTagTerm().getTerm().toLowerCase()) ) {
+				referenceDAO.remove(refTag);
+				entity.setModifiedBy(user);
+				entity.setModification_date(new Date());
+				return;
+			}
+		}
+	}
+
+	private String getWorkflowStatus(Reference entity, String groupAbbrev) {
+		// find current status for groupAbbrev in the entity.getWorkflowStatusCurrent()
+		
+		String currentStatus = null;
+		
+		for (int i = 0; i < entity.getWorkflowStatusCurrent().size(); i++) {
+			if (entity.getWorkflowStatusCurrent().get(i).getGroupTerm().getAbbreviation().equals(groupAbbrev)) {
+				currentStatus = entity.getWorkflowStatusCurrent().get(i).getStatusTerm().getTerm();
+			}
+		}
+		
+		return currentStatus;
+	}
+	
+	/* convenience method, used by applyWorkflowStatusChanges() to reduce redundant code in setting workflow
+	 * group statuses.  returns true if an update was made, false if no change.  persists any changes
+	 * to the database.
+	 */
+	private boolean updateWorkflowStatus(Reference entity, String groupAbbrev, String newStatus, User user) {
+
+		String currentStatus = getWorkflowStatus(entity, groupAbbrev);
+		
+		// no update if new status matches old status (or if no group is specified)
+		if ( ((currentStatus != null) && currentStatus.equals(newStatus)) || (groupAbbrev == null) ||
+				((currentStatus == null) && (newStatus == null)) ) {
+			return false;
+		}
+
+		// At this point, we know we have a status update.  
+		// If there was an existing record, we need to flag it as not current.
+		if (currentStatus != null) {
+			for (ReferenceWorkflowStatus rws : entity.getWorkflowStatus()) {
+				if ( (rws.getIsCurrent() == 1) && groupAbbrev.equals(rws.getGroupTerm().getAbbreviation()) ) {
+					rws.setIsCurrent(0);
+					break;				// no more can match, so exit the loop
+				}
+			}
+		}
+
+		// add a new status record for this change -- and need to persist this new object to the
+		// database explicitly, before the whole reference gets persisted later on.
+
+		ReferenceWorkflowStatus newRws = new ReferenceWorkflowStatus();
+		newRws.set_refs_key(entity.get_refs_key());
+		newRws.setIsCurrent(1);
+		//newRws.setGroutTerm(termDAO.get());
+		newRws.setGroupTerm(getTermByAbbreviation(Constants.VOC_WORKFLOW_GROUP, groupAbbrev));
+		//newRws.setStatusTerm(termDAO.get());
+		newRws.setStatusTerm(getTermByTerm(Constants.VOC_WORKFLOW_STATUS, newStatus));
+		newRws.setCreatedBy(user);
+		newRws.setModifiedBy(user);
+		newRws.setCreation_date(new Date());
+		newRws.setModification_date(new Date());
+		entity.getWorkflowStatus().add(newRws);
+		referenceDAO.persist(newRws);
+
+		return true;
+	}
+
+	/* handle applying any status changes for workflow groups.  If a group in 'domain' has a different status
+	 * from what's in the entity, we need:
+	 * 		a. the old status to be changed so isCurrent = 0, and
+	 * 		b. a new ReferenceWorkflowStatus object created and set to be current
+	 * As well, if this Reference has no J: number and we just assigned a status other than "Not Routed", 
+	 * then we assign the next available J: number to this reference.
+	 */
+	private boolean applyWorkflowStatusChanges(Reference entity, ReferenceDomain domain, User user) {
+		// note that we need to put 'anyChanges' last for each OR pair, otherwise short-circuit evaluation
+		// will only let the first change go through and the rest will not execute.
+
+		boolean anyChanges = updateWorkflowStatus(entity, Constants.WG_AP, domain.getAp_status(), user);
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_GO, domain.getGo_status(), user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_GXD, domain.getGxd_status(), user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_PRO, domain.getPro_status(), user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_QTL, domain.getQtl_status(), user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_TUMOR, domain.getTumor_status(), user) || anyChanges;
+
+		if (anyChanges) {
+			// if no J# and Status in (Chosen, INdexed, Full-coded), then add J#
+
+			if (entity.getJnumid() == null) {
+
+				boolean addJnumid = false;
+
+				for (String workgroup : Constants.WG_ALL) {
+					String wgStatus = getWorkflowStatus(entity, workgroup);
+					if ((wgStatus != null) && (
+							wgStatus.equals(Constants.WS_CHOSEN) ||
+							wgStatus.equals(Constants.WS_INDEXED) ||
+							wgStatus.equals(Constants.WS_CURATED))) {
+						addJnumid = true;
+						break;
+					}
+				}
+
+				if (addJnumid) {
+					log.info("assigning new J: number");
+					assignNewJnumID(String.valueOf(entity.get_refs_key()), user.get_user_key());
+				}
+			} // if no J#
+		}
+		return anyChanges;
+	}
+
+	/* apply any changes from domain to entity for the reference/allele associations
+	 */
+	private boolean applyAlleleAssocChanges(Reference entity, List<MGIReferenceAlleleAssocDomain> domain, User user) {
+		// referenceAssocService will handle add (c), delete (d)
+
+		boolean anyChanges = false;
+
+		if (domain != null) {
+			if (referenceAssocService.processAlleleAssoc(domain, user)) {
+				anyChanges = true;
+			}
+		}
+		
+		return anyChanges;
+	}
+
+	/* apply any changes from domain to entity for the reference/strain associations
+	 */
+	private boolean applyStrainAssocChanges(Reference entity, List<MGIReferenceStrainAssocDomain> domain, User user) {
+		// referenceAssocService will handle add (c), delete (d)
+
+		boolean anyChanges = false;
+
+		if (domain != null) {
+			if (referenceAssocService.processStrainAssoc(domain, user)) {
+				anyChanges = true;
+			}
+		}
+		
+		return anyChanges;
+	}
+
+	/* apply any changes from domain to entity for the reference/marker associations
+	 */
+	private boolean applyMarkerAssocChanges(Reference entity, List<MGIReferenceMarkerAssocDomain> domain, User user) {
+		// referenceAssocService will handle add (c), delete (d)
+
+		boolean anyChanges = false;
+
+		if (domain != null) {
+			if (referenceAssocService.processMarkerAssoc(domain, user)) {
+				anyChanges = true;
+			}
+		}
+		
+		return anyChanges;
+	}
+
+	/* comparison function that handles null values well
+	 */
+	private boolean smartEqual(Object a, Object b) {
+		if (a == null) {
+			if (b == null) { return true; }
+			else { return false; }
+		}		
+		return a.equals(b);
+	}
+
+	/* add a new J: number for the given reference key and user key
+	 */
+	private void assignNewJnumID(String refsKey, int userKey) {
+		log.info("select count(1) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
+		Query query = referenceDAO.createNativeQuery("select count(*) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
+		query.getResultList();	
+		return;
+	}	
 	
 }

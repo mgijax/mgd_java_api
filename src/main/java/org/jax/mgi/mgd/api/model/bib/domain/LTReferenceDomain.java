@@ -23,8 +23,8 @@ import lombok.Setter;
 public class LTReferenceDomain extends BaseDomain {
 	
 	public String refsKey;
-	public String authors;
-	public String primary_author;
+	public String primaryAuthor;
+	public String authors;	
 	public String title;
 	public String journal;
 	public String vol;

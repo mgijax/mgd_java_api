@@ -1204,20 +1204,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}
 
 	@Transactional
-	public SearchResults<ReferenceDomain> update(ReferenceDomain domain, User user) {
-		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
-		Reference entity = referenceDAO.get(Integer.valueOf(domain.getRefsKey()));
-		applyChanges(entity, domain, user);
-		referenceDAO.persist(entity);
-		Query query = referenceDAO.createNativeQuery("select count(*) from BIB_reloadCache(" + domain.getRefsKey() + ")");
-		query.getResultList();
-		// return entity translated to domain
-		log.info("processReference/update/returning results");
-		results.setItem(translator.translate(entity));
-		return results;
-	}
-
-	@Transactional
 	public void updateReferencesBulk(List<String> listOfRefsKey, String workflowTag, String workflow_tag_operation, User user) {
 		log.info("updateReferenceInBulk()");
 
@@ -1294,31 +1280,18 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return results;
 	}
 	
-	/* return a single Term matching the parameters encoded as a Map in the given JSON string
-	 */
-	private Term getTerm (String json) {
-		MapMaker mapMaker = new MapMaker();
-		SearchResults<Term> terms = null;
-		try {
-			terms = termDAO.search(mapMaker.toMap(json));
-			return terms.items.get(0);			
-		} catch (APIException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	/* return a single Term matching the given vocabulary / term pair
-	 */
-	private Term getTermByTerm (Integer vocabKey, String term) {
-		return getTerm("{\"_vocab_key\" : " + vocabKey + ", \"term\" : \"" + term + "\"}");
-	}
-
-	/* return a single Term matching the given vocabulary / abbreviation pair
-	 */
-	private Term getTermByAbbreviation (Integer vocabKey, String abbreviation)  {
-		return getTerm("{\"_vocab_key\" : " + vocabKey + ", \"abbreviation\" : \"" + abbreviation + "\"}");
+	@Transactional
+	public SearchResults<ReferenceDomain> update(ReferenceDomain domain, User user) {
+		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
+		Reference entity = referenceDAO.get(Integer.valueOf(domain.getRefsKey()));
+		applyChanges(entity, domain, user);
+		referenceDAO.persist(entity);
+		Query query = referenceDAO.createNativeQuery("select count(*) from BIB_reloadCache(" + domain.getRefsKey() + ")");
+		query.getResultList();
+		// return entity translated to domain
+		log.info("processReference/update/returning results");
+		results.setItem(translator.translate(entity));
+		return results;
 	}
 
 	/* take the data from the domain object and overwrite any changed data into the entity object
@@ -2025,5 +1998,32 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		query.getResultList();	
 		return;
 	}	
+
+	/* return a single Term matching the parameters encoded as a Map in the given JSON string
+	 */
+	private Term getTerm (String json) {
+		MapMaker mapMaker = new MapMaker();
+		SearchResults<Term> terms = null;
+		try {
+			terms = termDAO.search(mapMaker.toMap(json));
+			return terms.items.get(0);			
+		} catch (APIException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/* return a single Term matching the given vocabulary / term pair
+	 */
+	private Term getTermByTerm (Integer vocabKey, String term) {
+		return getTerm("{\"_vocab_key\" : " + vocabKey + ", \"term\" : \"" + term + "\"}");
+	}
+
+	/* return a single Term matching the given vocabulary / abbreviation pair
+	 */
+	private Term getTermByAbbreviation (Integer vocabKey, String abbreviation)  {
+		return getTerm("{\"_vocab_key\" : " + vocabKey + ", \"abbreviation\" : \"" + abbreviation + "\"}");
+	}
 	
 }

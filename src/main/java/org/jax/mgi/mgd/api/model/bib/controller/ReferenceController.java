@@ -6,17 +6,22 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
+import org.jax.mgi.mgd.api.model.bib.domain.LTReferenceBulkDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.UserService;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
@@ -31,7 +36,9 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 
 	@Inject
 	private ReferenceService referenceService;
-
+	@Inject
+	private UserService userService;
+	
 	@Override
 	public SearchResults<ReferenceDomain> create(ReferenceDomain domain, User user) {
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
@@ -57,20 +64,44 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	public SearchResults<ReferenceDomain> delete(Integer key, User user) {
 		return referenceService.delete(key, user);
 	}
+	
+	@PUT
+	@Path("/bulkUpdate")
+	@ApiOperation(value = "Value: Update list of References en masse")
+	public SearchResults<String> updateReferencesBulk(
+			@ApiParam(value = "Name: Token for accessing this API")
+			@HeaderParam("api_access_token") String api_access_token,
+			@ApiParam(value = "Name: Logged-in User")
+			@HeaderParam("username") String username,
+			@ApiParam(value = "Value: reference keys and data to be updated")
+			LTReferenceBulkDomain input
+	) {
+		SearchResults<String> results = new SearchResults<String>();
 
-	@POST
-	@ApiOperation(value = "update references in bulk")
-	@Path("/bulkUpdate")	
-	public SearchResults<String> updateReferencesBulk(List<String> listOfRefsKey, String workflowTag, String workflow_tag_operation, User user) {
-		referenceService.updateReferencesBulk(listOfRefsKey, workflowTag, workflow_tag_operation, user);
-		return null;		
+		if (!authenticateToken(api_access_token)) {
+			results.setError("FailedAuthentication", "Failed - invalid api_access_token", Constants.HTTP_PERMISSION_DENIED);
+			return results;
+		}
+
+		User currentUser = userService.getUserByUsername(username);
+		if (currentUser != null) {
+			try {
+				referenceService.updateReferencesBulk(input.refsKeys, input.workflowTag, input.workflow_tag_operation, currentUser);
+			} catch (Exception e) {
+				Throwable t = getRootException(e);
+				String message = "\n\nBULK UPDATE FAILED.\n\n" + t.toString();
+				results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);	
+			}
+		} else {
+			results.setError("FailedAuthentication", "Failed - invalid username", Constants.HTTP_PERMISSION_DENIED);
+		}
+		return results;
 	}
 	
 	@POST
 	@ApiOperation(value = "Search/returns slim reference domain")
 	@Path("/search")
 	public List<SlimReferenceDomain> search(ReferenceDomain searchDomain) {
-	
 		List<SlimReferenceDomain> results = new ArrayList<SlimReferenceDomain>();
 
 		try {
@@ -86,7 +117,6 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	@ApiOperation(value = "get list of journals")
 	@Path("/getJournalList")
 	public SearchResults<String> getJournalList() {
-	
 		SearchResults<String> results = null;
 
 		try {

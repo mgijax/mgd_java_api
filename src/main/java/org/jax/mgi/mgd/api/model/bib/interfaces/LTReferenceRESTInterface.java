@@ -42,10 +42,8 @@ public interface LTReferenceRESTInterface {
 	public SearchResults<String> updateReferencesInBulk(
 			@ApiParam(value = "Name: Token for accessing this API")
 			@HeaderParam("api_access_token") String api_access_token,
-			
 			@ApiParam(value = "Name: Logged-in User")
 			@HeaderParam("username") String username,
-			
 			@ApiParam(value = "Value: reference keys and data to be updated")
 			LTReferenceBulkDomain input
 	);

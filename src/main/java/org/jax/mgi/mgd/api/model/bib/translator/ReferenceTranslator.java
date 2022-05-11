@@ -53,12 +53,12 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 			domain.setShort_citation(entity.getReferenceCitationCache().getShort_citation());
 		}
 					
-		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
+		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
-		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
-		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
+		domain.setCreation_date(dateFormatter.format(entity.getCreation_date()));
+		domain.setModification_date(dateFormatter.format(entity.getModification_date()));
 
 		// ReferenceDomain must agree with what is coming from PWI/LitTriage
 		

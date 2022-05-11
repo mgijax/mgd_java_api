@@ -40,16 +40,20 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		domain.referenceAbstract = DecodeString.getDecodeToUTF8(entity.getReferenceAbstract());
 		domain.referenceType = entity.getReferenceTypeTerm().getTerm();
 		domain.referenceTypeKey = String.valueOf(entity.getReferenceTypeTerm().get_term_key());
-		domain.creation_date = dateFormatter.format(entity.getCreation_date());
-		domain.modification_date = dateFormatter.format(entity.getModification_date());
-		domain.createdBy = entity.getCreatedBy().getLogin();
-		domain.modifiedBy = entity.getModifiedBy().getLogin();
+
 			
 		if (entity.getReferenceCitationCache() != null) {
 			domain.setJnumid(entity.getReferenceCitationCache().getJnumid());
 			domain.setJnum(String.valueOf(entity.getReferenceCitationCache().getNumericPart()));		
 			domain.setShort_citation(entity.getReferenceCitationCache().getShort_citation());
 		}
+		
+		domain.setCreatedBy(entity.getCreatedBy().getLogin());
+		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
+		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
+		domain.setModifiedBy(entity.getModifiedBy().getLogin());
+		domain.setCreation_date(dateFormatter.format(entity.getCreation_date()));
+		domain.setModification_date(dateFormatter.format(entity.getModification_date()));
 		
 		domain.mgiid = entity.getMgiid();
 		domain.doiid = entity.getDoiid();

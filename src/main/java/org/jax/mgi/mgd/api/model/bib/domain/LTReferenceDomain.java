@@ -35,15 +35,18 @@ public class LTReferenceDomain extends BaseDomain {
 	public String referenceAbstract;
 	public String isReviewArticle;
 	public String referenceTypeKey;
-	public String referenceType;
+	public String referenceType;	
+	
+	public String jnumid;
+	public String jnum;
+	public String short_citation;
+	
+	public String createdByKey;
 	public String createdBy;
+	public String modifiedByKey;
 	public String modifiedBy;
 	public String creation_date;
 	public String modification_date;
-	
-	private String jnumid;
-	private String jnum;
-	private String short_citation;
 	
 	// accession ids
 	public String mgiid;	

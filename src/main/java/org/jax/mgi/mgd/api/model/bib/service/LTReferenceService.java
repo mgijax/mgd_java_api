@@ -428,20 +428,20 @@ public class LTReferenceService {
 		
 		// if entity contains a jnum and domain does not, ok to try and delete it
 		if (entity.getJnumid() != null && 
-				(domain.jnumid == null || domain.jnumid.isEmpty())) {
+				(domain.getJnumid() == null || domain.getJnumid().isEmpty())) {
 			
-			String prefixPart = domain.jnumid;				// defaults
+			String prefixPart = domain.getJnumid();				// defaults
 			Integer numericPart = null;
 
-			if (domain.jnumid != null) {
-				Matcher m = pattern.matcher(domain.jnumid);
+			if (domain.getJnumid() != null) {
+				Matcher m = pattern.matcher(domain.getJnumid());
 				if (m.find()) {
 					prefixPart = m.group(1);					// ID fit pattern, so use more accurate prefix / numeric parts
 					numericPart = Integer.parseInt(m.group(2));
 				}
 			}
 
-			anyChanges = applyOneIDChange(entity, Constants.LDB_JNUM, domain.jnumid, prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, user) || anyChanges;
+			anyChanges = applyOneIDChange(entity, Constants.LDB_JNUM, domain.getJnumid(), prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, user) || anyChanges;
 		}
 		
 		return anyChanges;

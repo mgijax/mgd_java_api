@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -62,6 +63,10 @@ public class LTReference extends BaseEntity {
 	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")
 	private Term referenceTypeTerm;
 	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+	private ReferenceCitationCache referenceCitationCache;
+	
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_refs_key")
 	@Where(clause="`_mgitype_key` = 1")
@@ -103,11 +108,6 @@ public class LTReference extends BaseEntity {
 	@OneToMany()
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	private List<ReferenceBook> referenceBook;
-	
-	// one to many, because row in citation cache might not exist (leaving it 1-0)
-	@OneToMany()
-	@JoinColumn(name="_refs_key")
-	private List<ReferenceCitationCache> citationData;
 	
 	// one to one, because counts will always exist
 	@OneToOne()

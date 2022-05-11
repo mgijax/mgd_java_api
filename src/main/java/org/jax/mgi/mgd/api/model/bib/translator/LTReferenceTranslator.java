@@ -35,25 +35,23 @@ public class LTReferenceTranslator extends BaseEntityDomainTranslator<LTReferenc
 		domain.issue = entity.getIssue();
 		domain.pgs = entity.getPgs();
 		domain.date = entity.getDate();
+		domain.setYear(String.valueOf(entity.getYear()));		
 		domain.isReviewArticle = String.valueOf(entity.getIsReviewArticle());
 		domain.referenceAbstract = DecodeString.getDecodeToUTF8(entity.getReferenceAbstract());
 		domain.referenceType = entity.getReferenceTypeTerm().getTerm();
 		domain.referenceTypeKey = String.valueOf(entity.getReferenceTypeTerm().get_term_key());
-		domain.short_citation = entity.getCitationData().get(0).getShort_citation();
 		domain.creation_date = dateFormatter.format(entity.getCreation_date());
 		domain.modification_date = dateFormatter.format(entity.getModification_date());
 		domain.createdBy = entity.getCreatedBy().getLogin();
 		domain.modifiedBy = entity.getModifiedBy().getLogin();
+			
+		if (entity.getReferenceCitationCache() != null) {
+			domain.setJnumid(entity.getReferenceCitationCache().getJnumid());
+			domain.setJnum(String.valueOf(entity.getReferenceCitationCache().getNumericPart()));		
+			domain.setShort_citation(entity.getReferenceCitationCache().getShort_citation());
+		}
 		
-		if (entity.getYear() != null) {
-			domain.year = entity.getYear().toString();
-		}
-		else {
-			domain.year = null;
-		}
-				
 		domain.mgiid = entity.getMgiid();
-		domain.jnumid = entity.getJnumid();
 		domain.doiid = entity.getDoiid();
 		domain.pubmedid = entity.getPubmedid();
 		domain.gorefid = entity.getGorefid();

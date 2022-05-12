@@ -1319,6 +1319,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			entity.setModification_date(new Date());
 		}
 		
+		referenceDAO.persist(entity);
+		
 		Query query = referenceDAO.createNativeQuery("select count(*) from BIB_reloadCache(" + domain.getRefsKey() + ")");
 		query.getResultList();
 

@@ -1626,8 +1626,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			rwTag.setModification_date(new Date());
 			referenceDAO.persist(rwTag);
 			entity.getWorkflowTags().add(rwTag);
-			entity.setModifiedBy(user);
-			entity.setModification_date(new Date());
 		}
 	}
 
@@ -1855,7 +1853,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				}
 			}
 
-			anyChanges = applyOneIDChange(entity, Constants.LDB_DOI, domain.getDoiid(), prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, user) || anyChanges;
+			anyChanges = applyOneIDChange(entity, 65, domain.getDoiid(), prefixPart, numericPart, 1, 0, user) || anyChanges;
 		}
 
 		if (!smartEqual(entity.getPubmedid(), domain.getPubmedid())) {
@@ -1870,7 +1868,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				}
 			}
 
-			anyChanges = applyOneIDChange(entity, Constants.LDB_PUBMED, domain.getPubmedid(), prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, user) || anyChanges;
+			anyChanges = applyOneIDChange(entity, 29, domain.getPubmedid(), prefixPart, numericPart, 1, 0, user) || anyChanges;
 		}
 
 		if (!smartEqual(entity.getGorefid(), domain.getGorefid())) {
@@ -1885,7 +1883,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				}
 			}
 
-			anyChanges = applyOneIDChange(entity, Constants.LDB_GOREF, domain.getGorefid(), prefixPart, numericPart, Constants.SECONDARY, Constants.PRIVATE, user) || anyChanges;
+			anyChanges = applyOneIDChange(entity, 185, domain.getGorefid(), prefixPart, numericPart, 0, 1, user) || anyChanges;
 		}
 		
 		if (entity.getJnumid() != null && (domain.getJnumid() == null || domain.getJnumid().isEmpty())) {
@@ -1900,7 +1898,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				}
 			}
 
-			anyChanges = applyOneIDChange(entity, Constants.LDB_JNUM, domain.getJnumid(), prefixPart, numericPart, Constants.PREFERRED, Constants.PUBLIC, user) || anyChanges;
+			anyChanges = applyOneIDChange(entity, 1, domain.getJnumid(), prefixPart, numericPart, 1, 0, user) || anyChanges;
 		}
 		
 		return anyChanges;
@@ -1964,7 +1962,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			myID.setIsPrivate(isPrivate);
 			myID.setLogicaldb(logicaldbDAO.get(ldb));
 			myID.set_object_key(entity.get_refs_key());
-			myID.setMgiType(mgiTypeDAO.get(Constants.TYPE_REFERENCE));
+			myID.setMgiType(mgiTypeDAO.get(1));
 			myID.setPrefixPart(prefixPart);
 			myID.setNumericPart(numericPart);
 			myID.setCreation_date(new Date());

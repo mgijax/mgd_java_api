@@ -170,26 +170,26 @@ public class Reference extends BaseEntity {
 
 	@Transient
 	public String getJnumid() {
-		return findFirstID(Constants.LDB_MGI, "J:", Constants.PREFERRED, Constants.PUBLIC);
+		return findFirstID(1, "J:", Constants.PREFERRED, Constants.PUBLIC);
 	}
 
 	@Transient
 	public String getDoiid() {
-		return findFirstID(Constants.LDB_DOI, null, null, null);
+		return findFirstID(65, null, null, null);
 	}
 
 	@Transient
 	public String getPubmedid() {
-		return findFirstID(Constants.LDB_PUBMED, null, null, null);
+		return findFirstID(29, null, null, null);
 	}
 
 	@Transient
 	public String getMgiid() {
-		return findFirstID(Constants.LDB_MGI, "MGI:", null, null);
+		return findFirstID(1, "MGI:", null, null);
 	}
 
 	@Transient
 	public String getGorefid() {
-		return findFirstID(Constants.LDB_GOREF, null, null, null);
+		return findFirstID(185, null, null, null);
 	}	
 }

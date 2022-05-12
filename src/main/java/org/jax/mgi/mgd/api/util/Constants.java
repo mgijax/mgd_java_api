@@ -1,24 +1,6 @@
 package org.jax.mgi.mgd.api.util;
 
 public class Constants {
-	// logical databases
-	public static int LDB_MGI = 1;			// MGI
-	public static int LDB_JNUM = 1;			// Jnumid
-	public static int LDB_PUBMED = 29;		// PubMed
-	public static int LDB_DOI = 65;			// DOI / Journal Link
-	public static int LDB_GOREF = 185;		// GO_Ref
-	
-	// MGI types
-	public static int TYPE_REFERENCE = 1;	// reference
-	public static int TYPE_MARKER = 2;		// marker
-	
-	public static String MGITYPE_REFERENCE = "Reference";
-	
-	// flags
-	public static int PREFERRED = 1;
-	public static int SECONDARY = 0;
-	public static int PRIVATE = 1;
-	public static int PUBLIC = 0;
 	
 	// reference workflow group abbreviations
 	public static String WG_GO = "GO";
@@ -56,9 +38,6 @@ public class Constants {
 	// voc_term where _vocab_key = 53
 	// qualifier 'Generic Annotation Qualifier', value = null	
 	public static String VOC_GENERIC_ANNOTATION_QUALIFIER = "1614158";
-	
-	// accession ID prefixes
-	public static String PREFIX_JNUM = "J:";
 	
 	// operations for bulk reference operations
 	public static String OP_ADD_WORKFLOW = "add";

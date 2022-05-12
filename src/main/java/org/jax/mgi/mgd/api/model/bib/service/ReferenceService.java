@@ -1287,21 +1287,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	
 	@Transactional
 	public SearchResults<ReferenceDomain> update(ReferenceDomain domain, User user) {
+		// check for updates on all entities
+		// update bib_reloadcache
+		
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
 		Reference entity = referenceDAO.get(Integer.valueOf(domain.getRefsKey()));
-		applyChanges(entity, domain, user);
-		referenceDAO.persist(entity);
-		Query query = referenceDAO.createNativeQuery("select count(*) from BIB_reloadCache(" + domain.getRefsKey() + ")");
-		query.getResultList();
-		// return entity translated to domain
-		log.info("processReference/update/returning results");
-		results.setItem(translator.translate(entity));
-		return results;
-	}
-
-	public void applyChanges(Reference entity, ReferenceDomain domain, User user) {
-		// check changes for each section.
-		// if any change is made, update entity modification user/date
 
 		boolean anyChanges;
 		
@@ -1321,6 +1311,14 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			entity.setModifiedBy(user);
 			entity.setModification_date(new Date());
 		}
+		
+		Query query = referenceDAO.createNativeQuery("select count(*) from BIB_reloadCache(" + domain.getRefsKey() + ")");
+		query.getResultList();
+
+		// return entity translated to domain
+		log.info("processReference/update/returning results");
+		results.setItem(translator.translate(entity));
+		return results;
 	}
 
 	private boolean applyBasicFieldChanges(Reference entity, ReferenceDomain domain, User user) {
@@ -1523,10 +1521,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return anyChanges;
 	}
 
-	/* Apply a single ID change to this reference.  If there already is an ID for this logical database, replace it.  If there wasn't
-	 * one, add one.  And, if there was one previously, but there's not now, then delete it.
-	 */
 	private boolean applyOneIDChange(Reference entity, Integer ldb, String accID, String prefixPart, Integer numericPart, Integer preferred, Integer isPrivate, User user) {
+		// Apply a single ID change to this reference.  
+		// If there already is an ID for this logical database, replace it.  
+		// If there wasn't one, add one.  
+		// if there was one previously, but there's not now, then delete it.
 		// first parameter is required; bail out if it is null
 		
 		if (ldb == null) { return false; }
@@ -1552,7 +1551,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				break;	}
 		}
 
-		// convert to:
+		// TODO: convert to:
 		//if (accessionService.process(domain.getRefsKey(), domain.getEditAccessionIds(), "1", user)) {
 		
 		// If we had a previous ID for this logical database, we either need to modify it or delete it.
@@ -1589,12 +1588,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			myID.setModifiedBy(user);
 			referenceDAO.persist(myID);
 		}
+		
 		return true;
 	}
 
-	/* apply any changes from domain to entity for the reference notes 
-	 */
 	private boolean applyNoteChanges(Reference entity, ReferenceDomain domain, User user) {
+		// apply any changes from domain to entity for the reference notes 
+		
 		log.info("applyNoteChanges()");
 
 		if (domain.getReferenceNote() == null) {
@@ -1617,6 +1617,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}
 
 	private boolean applyBookChanges(Reference entity, ReferenceDomain domain, User user) {
+		// apply any changes from domain to entity for the bib books
+		
 		log.info("applyBookChanges()");
 
 		if (domain.getReferenceBook() == null) {
@@ -1659,7 +1661,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}
 
 	private boolean applyWorkflowRelevanceChanges(Reference entity, ReferenceDomain domain, User user) {
-		// updated workflow relevance, new workflow relevance -- (no deletions)
+		// apply any changes from domain to entity for the workflow relevance
 
 		log.info("applyWorkflowRelevanceChanges()");
 //		log.info("domain.getEditRelevanceKey():" + domain.getEditRelevanceKey());
@@ -1693,7 +1695,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}
 	
 	private boolean applyWorkflowDataChanges(Reference entity, ReferenceDomain domain, User user) {
-		// updates supplemental key which is stored in workflow data "body"
+		// apply any changes to supplemental from domain to entity for the workflow data (body only)
 		
 		log.info("applyWorkflowDataChanges()");
 		
@@ -1714,6 +1716,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}
 
 	private boolean applyWorkflowTagChanges(Reference entity, ReferenceDomain domain, User user) {
+		// apply any changes from domain to entity for the workflow tag
+
 		log.info("applyWorkflowTagChanges()");
 		
 		// short-circuit method if no tags in Reference or in ReferenceDomain
@@ -1824,6 +1828,48 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		return currentStatus;
 	}
+
+	private boolean applyWorkflowStatusChanges(Reference entity, ReferenceDomain domain, User user) {
+		// apply any changes from domain to entity for the workflow status
+
+		// process add/modify for each group
+		boolean anyChanges = updateWorkflowStatus(entity, Constants.WG_AP, domain.getAp_status(), user);
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_GO, domain.getGo_status(), user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_GXD, domain.getGxd_status(), user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_PRO, domain.getPro_status(), user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_QTL, domain.getQtl_status(), user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_TUMOR, domain.getTumor_status(), user) || anyChanges;
+
+		// if any changes were made...
+		if (anyChanges) {
+			
+			// if no J# and Status in (Chosen, Indexed, Full-coded), then add J#
+			if (entity.getJnumid() == null) {
+
+				boolean addJnumid = false;
+
+				for (String workgroup : Constants.WG_ALL) {
+					String wgStatus = getWorkflowStatus(entity, workgroup);
+					if ((wgStatus != null) && (
+							wgStatus.equals(Constants.WS_CHOSEN) ||
+							wgStatus.equals(Constants.WS_INDEXED) ||
+							wgStatus.equals(Constants.WS_CURATED))) {
+						addJnumid = true;
+						break;
+					}
+				}
+
+				if (addJnumid) {
+					log.info("assign new J: number");
+					log.info("select count(1) from ACC_assignJ(" + user.get_user_key() + "," + String.valueOf(entity.get_refs_key()) + ",-1)");
+					Query query = referenceDAO.createNativeQuery("select count(*) from ACC_assignJ(" + user.get_user_key() + "," + String.valueOf(entity.get_refs_key()) + ",-1)");
+					query.getResultList();	
+				}
+			} 
+		}
+		
+		return anyChanges;
+	}
 	
 	private boolean updateWorkflowStatus(Reference entity, String groupAbbrev, String newStatus, User user) {
 		// set existing bib_workflow_status.isCurrent = 0
@@ -1868,53 +1914,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return true;
 	}
 
-	/* handle applying any status changes for workflow groups.  If a group in 'domain' has a different status
-	 * from what's in the entity, we need:
-	 * 		a. the old status to be changed so isCurrent = 0, and
-	 * 		b. a new ReferenceWorkflowStatus object created and set to be current
-	 * As well, if this Reference has no J: number and we just assigned a status other than "Not Routed", 
-	 * then we assign the next available J: number to this reference.
-	 */
-	private boolean applyWorkflowStatusChanges(Reference entity, ReferenceDomain domain, User user) {
-		// note that we need to put 'anyChanges' last for each OR pair, otherwise short-circuit evaluation
-		// will only let the first change go through and the rest will not execute.
-
-		boolean anyChanges = updateWorkflowStatus(entity, Constants.WG_AP, domain.getAp_status(), user);
-		anyChanges = updateWorkflowStatus(entity, Constants.WG_GO, domain.getGo_status(), user) || anyChanges;
-		anyChanges = updateWorkflowStatus(entity, Constants.WG_GXD, domain.getGxd_status(), user) || anyChanges;
-		anyChanges = updateWorkflowStatus(entity, Constants.WG_PRO, domain.getPro_status(), user) || anyChanges;
-		anyChanges = updateWorkflowStatus(entity, Constants.WG_QTL, domain.getQtl_status(), user) || anyChanges;
-		anyChanges = updateWorkflowStatus(entity, Constants.WG_TUMOR, domain.getTumor_status(), user) || anyChanges;
-
-		if (anyChanges) {
-			
-			// if no J# and Status in (Chosen, Indexed, Full-coded), then add J#
-			if (entity.getJnumid() == null) {
-
-				boolean addJnumid = false;
-
-				for (String workgroup : Constants.WG_ALL) {
-					String wgStatus = getWorkflowStatus(entity, workgroup);
-					if ((wgStatus != null) && (
-							wgStatus.equals(Constants.WS_CHOSEN) ||
-							wgStatus.equals(Constants.WS_INDEXED) ||
-							wgStatus.equals(Constants.WS_CURATED))) {
-						addJnumid = true;
-						break;
-					}
-				}
-
-				if (addJnumid) {
-					log.info("assigning new J: number");
-					assignNewJnumID(String.valueOf(entity.get_refs_key()), user.get_user_key());
-				}
-			} 
-		}
-		return anyChanges;
-	}
-
 	private boolean applyAlleleAssocChanges(Reference entity, List<MGIReferenceAlleleAssocDomain> domain, User user) {
-		// referenceAssocService will handle add (c), modify (u), delete (d)
+		// apply any changes from domain to entity for the allele association
 
 		boolean anyChanges = false;
 
@@ -1928,7 +1929,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}
 
 	private boolean applyStrainAssocChanges(Reference entity, List<MGIReferenceStrainAssocDomain> domain, User user) {
-		// referenceAssocService will handle add (c), modify (u), delete (d)
+		// apply any changes from domain to entity for the strain association
 
 		boolean anyChanges = false;
 
@@ -1942,7 +1943,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}
 
 	private boolean applyMarkerAssocChanges(Reference entity, List<MGIReferenceMarkerAssocDomain> domain, User user) {
-		// referenceAssocService will handle add (c), modify (u), delete (d)
+		// apply any changes from domain to entity for the marker association
 
 		boolean anyChanges = false;
 
@@ -1963,15 +1964,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			else { return false; }
 		}		
 		return a.equals(b);
-	}
-
-	private void assignNewJnumID(String refsKey, int userKey) {
-		// add a new J: number for the given reference key and user key
-			
-		log.info("select count(1) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
-		Query query = referenceDAO.createNativeQuery("select count(*) from ACC_assignJ(" + userKey + "," + refsKey + ",-1)");
-		query.getResultList();	
-		return;
 	}	
 
 	private Term getTerm (String json) {

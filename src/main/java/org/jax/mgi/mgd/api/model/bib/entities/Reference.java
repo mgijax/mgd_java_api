@@ -24,7 +24,6 @@ import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mld.entities.MappingNote;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
-import org.jax.mgi.mgd.api.util.Constants;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

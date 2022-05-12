@@ -1285,9 +1285,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return results;
 	}
 	
+	//
+	// main update()
+	//
+	
 	@Transactional
 	public SearchResults<ReferenceDomain> update(ReferenceDomain domain, User user) {
-		// check for updates on all entities
+		// check for updates on all reference entities
 		// update bib_reloadcache
 		
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
@@ -1321,6 +1325,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return results;
 	}
 
+	//
+	// basic bib_refs
+	//
+	
 	private boolean applyBasicFieldChanges(Reference entity, ReferenceDomain domain, User user) {
 		// check changes to basic bib_refs fields
 		// return true if any changes made, else false
@@ -1408,7 +1416,316 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		return anyChanges;
 	}
+	
+	//
+	// bib_workflow_status
+	//
+		
+	private boolean applyWorkflowStatusChanges(Reference entity, ReferenceDomain domain, User user) {
+		// apply any changes from domain to entity for the workflow status
 
+		log.info("applyWorkflowStatusChanges()");
+		
+		// process add/modify for each group
+		boolean anyChanges = updateWorkflowStatus(entity, Constants.WG_AP, domain.getAp_status(), user);
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_GO, domain.getGo_status(), user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_GXD, domain.getGxd_status(), user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_PRO, domain.getPro_status(), user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_QTL, domain.getQtl_status(), user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, Constants.WG_TUMOR, domain.getTumor_status(), user) || anyChanges;
+
+		// if any changes were made...
+		if (anyChanges) {
+			
+			log.info("applyWorkflowStatusChanges/anyChanges = true");
+			
+			// if entity J# is null/empty and domain workflow status in (Chosen, Indexed, Full-coded), then add J#
+			if (entity.getJnumid() == null || entity.getJnumid().isEmpty()) {
+
+				log.info("entity J# is null/empty; checking domain workflow status in (Chosen, Indexed, Full-coded)");
+				
+				boolean addJnumid = false;
+
+				if (domain.getAp_status().equals(Constants.WS_CHOSEN)
+					|| domain.getAp_status().equals(Constants.WS_INDEXED)
+					|| domain.getAp_status().equals(Constants.WS_CURATED)
+
+					|| domain.getGo_status().equals(Constants.WS_CHOSEN)
+					|| domain.getGo_status().equals(Constants.WS_INDEXED)
+					|| domain.getGo_status().equals(Constants.WS_CURATED)
+					
+					|| domain.getGxd_status().equals(Constants.WS_CHOSEN)
+					|| domain.getGxd_status().equals(Constants.WS_INDEXED)
+					|| domain.getGxd_status().equals(Constants.WS_CURATED)
+				
+					|| domain.getPro_status().equals(Constants.WS_CHOSEN)
+					|| domain.getPro_status().equals(Constants.WS_INDEXED)
+					|| domain.getPro_status().equals(Constants.WS_CURATED)
+
+					|| domain.getQtl_status().equals(Constants.WS_CHOSEN)
+					|| domain.getQtl_status().equals(Constants.WS_INDEXED)
+					|| domain.getQtl_status().equals(Constants.WS_CURATED)
+	
+					|| domain.getTumor_status().equals(Constants.WS_CHOSEN)
+					|| domain.getTumor_status().equals(Constants.WS_INDEXED)
+					|| domain.getTumor_status().equals(Constants.WS_CURATED)
+					) {
+						addJnumid = true;
+				}
+				
+				if (addJnumid) {
+					log.info("applyWorkflowStatusChanges/addJnumid = true");
+					log.info("select count(1) from ACC_assignJ(" + user.get_user_key() + "," + String.valueOf(entity.get_refs_key()) + ",-1)");
+					Query query = referenceDAO.createNativeQuery("select count(*) from ACC_assignJ(" + user.get_user_key() + "," + String.valueOf(entity.get_refs_key()) + ",-1)");
+					query.getResultList();	
+				}
+			} 
+		}
+		
+		return anyChanges;
+	}
+	
+	private boolean updateWorkflowStatus(Reference entity, String groupAbbrev, String newStatus, User user) {
+		// set existing bib_workflow_status.isCurrent = 0
+		// add new bib_workflow_status
+
+		String currentStatus = getWorkflowStatusByEntity(entity, groupAbbrev);
+		
+		// no update if new status matches old status (or if no group is specified)
+		if ( ((currentStatus != null) && currentStatus.equals(newStatus)) || (groupAbbrev == null) ||
+				((currentStatus == null) && (newStatus == null)) ) {
+			return false;
+		}
+
+		// At this point, we know we have a status update.  
+		// If there was an existing record, we need to flag it as not current.
+		if (currentStatus != null) {
+			for (ReferenceWorkflowStatus rws : entity.getWorkflowStatus()) {
+				if ( (rws.getIsCurrent() == 1) && groupAbbrev.equals(rws.getGroupTerm().getAbbreviation()) ) {
+					rws.setIsCurrent(0);
+					break;				// no more can match, so exit the loop
+				}
+			}
+		}
+
+		// add a new status record for this change -- and need to persist this new object to the
+		// database explicitly, before the whole reference gets persisted later on.
+
+		ReferenceWorkflowStatus newRws = new ReferenceWorkflowStatus();
+		newRws.set_refs_key(entity.get_refs_key());
+		newRws.setIsCurrent(1);
+		//newRws.setGroutTerm(termDAO.get());
+		newRws.setGroupTerm(getTermByAbbreviation(Constants.VOC_WORKFLOW_GROUP, groupAbbrev));
+		//newRws.setStatusTerm(termDAO.get());
+		newRws.setStatusTerm(getTermByTerm(Constants.VOC_WORKFLOW_STATUS, newStatus));
+		newRws.setCreatedBy(user);
+		newRws.setModifiedBy(user);
+		newRws.setCreation_date(new Date());
+		newRws.setModification_date(new Date());
+		entity.getWorkflowStatus().add(newRws);
+		referenceDAO.persist(newRws);
+
+		return true;
+	}
+
+	private String getWorkflowStatusByEntity(Reference entity, String groupAbbrev) {
+		// find current status for groupAbbrev in the entity.getWorkflowStatusCurrent()
+		
+		String currentStatus = null;
+		
+		for (int i = 0; i < entity.getWorkflowStatusCurrent().size(); i++) {
+			if (entity.getWorkflowStatusCurrent().get(i).getGroupTerm().getAbbreviation().equals(groupAbbrev)) {
+				currentStatus = entity.getWorkflowStatusCurrent().get(i).getStatusTerm().getTerm();
+			}
+		}
+		
+		return currentStatus;
+	}
+	
+	//
+	// bib_workflow_tag
+	//
+	
+	private boolean applyWorkflowTagChanges(Reference entity, ReferenceDomain domain, User user) {
+		// apply any changes from domain to entity for the workflow tag
+
+		log.info("applyWorkflowTagChanges()");
+		
+		// short-circuit method if no tags in Reference or in ReferenceDomain
+		if ((entity.getWorkflowTags().size() == 0) && (domain.getWorkflowTags().size() == 0)) {
+			return false;
+		}
+
+		// set of tags specified in domain object -- potentially to add to object
+		Set<String> toAdd = new HashSet<String>();
+		for (String rdTag : domain.getWorkflowTagString()) {
+			toAdd.add(rdTag.trim());
+		}
+
+		// list of tags that need to be removed from this object
+		List<ReferenceWorkflowTag> toDelete = new ArrayList<ReferenceWorkflowTag>();
+
+		// Now we need to diff the set of tags we already have and the set of tags to potentially add. Anything
+		// left in toAdd will need to be added as a new tag, and anything in toDelete will need to be removed.
+
+		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
+			String myTag = refTag.getTagTerm().getTerm();
+
+			// matching tags
+			if (toAdd.contains(myTag)) {
+				// already have this one, don't need to add it
+				toAdd.remove(myTag);
+			} else {
+				// current one isn't in the new list from domain object, so need to remove it
+				toDelete.add(refTag);
+			}
+		}
+
+		// remove defunct tags
+		for (ReferenceWorkflowTag rwTag : toDelete) {
+			referenceDAO.remove(rwTag);
+		}
+
+		// add new tags (use shared method, as this will be useful when adding tags to batches of references)
+		for (String rdTag : toAdd) {
+			addTag(entity, rdTag, user);
+		}
+
+		return (toDelete.size() > 0) || (toAdd.size() > 0);
+	}
+
+	public void addTag(Reference entity, String rdTag, User user) {
+		// add new tags to bib_workflow_tag
+		// do not add duplicate tags
+
+		String trimTag = rdTag.trim();
+		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
+			if (trimTag.equals(refTag.getTagTerm().getTerm()) ) {
+				return;
+			}
+		}
+
+		log.info("addTag();" + rdTag);
+		
+		// need to find the term of the tag, wrap it in an association, persist the association, and
+		// add it to the workflow tags for this Reference
+
+		Term tagTerm = getTermByTerm(Constants.VOC_WORKFLOW_TAGS, rdTag);
+		if (tagTerm != null) {
+			ReferenceWorkflowTag rwTag = new ReferenceWorkflowTag();
+			rwTag.set_refs_key(entity.get_refs_key());
+			rwTag.setTagTerm(tagTerm);
+			rwTag.setCreatedBy(user);
+			rwTag.setModifiedBy(user);
+			rwTag.setCreation_date(new Date());
+			rwTag.setModification_date(new Date());
+			referenceDAO.persist(rwTag);
+			entity.getWorkflowTags().add(rwTag);
+			entity.setModifiedBy(user);
+			entity.setModification_date(new Date());
+		}
+	}
+
+	public void removeTag(Reference entity, String rdTag, User user) {
+		// remove existing tags from bib_workflow_tag
+		
+		if (entity.getWorkflowTags() == null) { 
+			return; 
+		}
+
+		log.info("removeTag():" + rdTag);
+		
+		String lowerTag = rdTag.toLowerCase().trim();
+		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
+			if (lowerTag.equals(refTag.getTagTerm().getTerm().toLowerCase()) ) {
+				referenceDAO.remove(refTag);
+				entity.setModifiedBy(user);
+				entity.setModification_date(new Date());
+				return;
+			}
+		}
+	}
+	
+	//
+	// bib_books
+	//
+	
+	private boolean applyBookChanges(Reference entity, ReferenceDomain domain, User user) {
+		// apply any changes from domain to entity for the bib books
+		
+		log.info("applyBookChanges()");
+
+		if (domain.getReferenceBook() == null) {
+			return false;
+		}
+		
+		boolean isBookTerm = false;
+		boolean isBookKey = false;
+		
+		if (domain.getReferenceType().equals("Book")) {
+			isBookTerm = true;
+		}
+		if (domain.getReferenceTypeKey().equals("31576679")) {
+			isBookKey = true;
+		}
+		
+//		log.info("isBookTerm:" + isBookTerm);
+//		log.info("isBookKey:" + isBookKey);
+		
+		if (isBookTerm && isBookKey) {
+			log.info("applyBookChange/remain book");
+			ReferenceBook book = entity.getReferenceBook().get(0);
+			if (!smartEqual(book.getBook_au(), domain.getReferenceBook().getBook_author()) 
+					|| !smartEqual(book.getBook_title(), domain.getReferenceBook().getBook_title()) 
+					|| !smartEqual(book.getPlace(), domain.getReferenceBook().getPlace()) 
+					|| !smartEqual(book.getPublisher(), domain.getReferenceBook().getPublisher()) 
+					|| !smartEqual(book.getSeries_ed(), domain.getReferenceBook().getSeries_ed())) {
+				domain.getReferenceBook().setProcessStatus(Constants.PROCESS_UPDATE);
+			}
+		} else if (isBookTerm) {
+			log.info("applyBookChange/change from book to non-book");
+			domain.getReferenceBook().setProcessStatus(Constants.PROCESS_DELETE);
+		} else if (isBookKey) {
+			log.info("applyBookChange/create book");
+			domain.getReferenceBook().setProcessStatus(Constants.PROCESS_CREATE);
+			domain.getReferenceBook().setRefsKey(domain.getRefsKey());			
+		}
+		
+		return bookService.process(domain.getRefsKey(), domain.getReferenceBook(), user);		
+	}
+	
+	//
+	// bib_notes
+	//
+	
+	private boolean applyNoteChanges(Reference entity, ReferenceDomain domain, User user) {
+		// apply any changes from domain to entity for the reference notes 
+		
+		log.info("applyNoteChanges()");
+
+		if (domain.getReferenceNote() == null) {
+			return false;
+		}
+		
+		if (domain.getReferenceNote().getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
+			if (domain.getReferenceNote().getNote().isEmpty()) {
+				domain.getReferenceNote().setProcessStatus(Constants.PROCESS_DELETE);
+			}
+			else if (!smartEqual(entity.getReferenceNote().get(0).getNote(), domain.getReferenceNote().getNote())) {
+				domain.getReferenceNote().setProcessStatus(Constants.PROCESS_UPDATE);				
+			}
+		}
+		else {
+			domain.getReferenceNote().setProcessStatus(Constants.PROCESS_CREATE);							
+		}
+		
+		return noteService.process(domain.getRefsKey(), domain.getReferenceNote(), user);		
+	}
+	
+	//
+	// acc_accession : doiID, pubmedID, jnumID
+	//
+	
 	private String cleanDoiID(String doiID) {
 		// clear DOI IDs
 		// all DOI IDs must begin with "10.", but if not, just trust the user
@@ -1591,75 +1908,36 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		return true;
 	}
-
-	private boolean applyNoteChanges(Reference entity, ReferenceDomain domain, User user) {
-		// apply any changes from domain to entity for the reference notes 
+	
+	//
+	// bib_workflow_data
+	//
+	
+	private boolean applyWorkflowDataChanges(Reference entity, ReferenceDomain domain, User user) {
+		// apply any changes to supplemental from domain to entity for the workflow data (body only)
 		
-		log.info("applyNoteChanges()");
-
-		if (domain.getReferenceNote() == null) {
-			return false;
-		}
+		log.info("applyWorkflowDataChanges()");
 		
-		if (domain.getReferenceNote().getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
-			if (domain.getReferenceNote().getNote().isEmpty()) {
-				domain.getReferenceNote().setProcessStatus(Constants.PROCESS_DELETE);
+		if (entity.getWorkflowData().get(0) != null) {
+			if (!smartEqual(String.valueOf(entity.getWorkflowData().get(0).getSupplementalTerm().get_term_key()), domain.getWorkflowData().getSupplementalKey())) {
+				domain.getWorkflowData().setProcessStatus(Constants.PROCESS_UPDATE);
 			}
-			else if (!smartEqual(entity.getReferenceNote().get(0).getNote(), domain.getReferenceNote().getNote())) {
-				domain.getReferenceNote().setProcessStatus(Constants.PROCESS_UPDATE);				
-			}
+		} else {
+			// this should not happen, but if it does...create new "body"
+			ReferenceWorkflowDataDomain newData = new ReferenceWorkflowDataDomain();
+			newData.setProcessStatus(Constants.PROCESS_CREATE);
+			newData.setRefsKey(domain.getRefsKey());
+			newData.setSupplementalKey(domain.getWorkflowData().getSupplementalKey());
+			domain.setWorkflowData(newData);
 		}
-		else {
-			domain.getReferenceNote().setProcessStatus(Constants.PROCESS_CREATE);							
-		}
-		
-		return noteService.process(domain.getRefsKey(), domain.getReferenceNote(), user);		
+
+		return dataService.process(domain.getRefsKey(), domain.getWorkflowData(), user);
 	}
-
-	private boolean applyBookChanges(Reference entity, ReferenceDomain domain, User user) {
-		// apply any changes from domain to entity for the bib books
-		
-		log.info("applyBookChanges()");
-
-		if (domain.getReferenceBook() == null) {
-			return false;
-		}
-		
-		boolean isBookTerm = false;
-		boolean isBookKey = false;
-		
-		if (domain.getReferenceType().equals("Book")) {
-			isBookTerm = true;
-		}
-		if (domain.getReferenceTypeKey().equals("31576679")) {
-			isBookKey = true;
-		}
-		
-//		log.info("isBookTerm:" + isBookTerm);
-//		log.info("isBookKey:" + isBookKey);
-		
-		if (isBookTerm && isBookKey) {
-			log.info("applyBookChange/remain book");
-			ReferenceBook book = entity.getReferenceBook().get(0);
-			if (!smartEqual(book.getBook_au(), domain.getReferenceBook().getBook_author()) 
-					|| !smartEqual(book.getBook_title(), domain.getReferenceBook().getBook_title()) 
-					|| !smartEqual(book.getPlace(), domain.getReferenceBook().getPlace()) 
-					|| !smartEqual(book.getPublisher(), domain.getReferenceBook().getPublisher()) 
-					|| !smartEqual(book.getSeries_ed(), domain.getReferenceBook().getSeries_ed())) {
-				domain.getReferenceBook().setProcessStatus(Constants.PROCESS_UPDATE);
-			}
-		} else if (isBookTerm) {
-			log.info("applyBookChange/change from book to non-book");
-			domain.getReferenceBook().setProcessStatus(Constants.PROCESS_DELETE);
-		} else if (isBookKey) {
-			log.info("applyBookChange/create book");
-			domain.getReferenceBook().setProcessStatus(Constants.PROCESS_CREATE);
-			domain.getReferenceBook().setRefsKey(domain.getRefsKey());			
-		}
-		
-		return bookService.process(domain.getRefsKey(), domain.getReferenceBook(), user);		
-	}
-
+	
+	//
+	// bib_workflow_relevance
+	//
+	
 	private boolean applyWorkflowRelevanceChanges(Reference entity, ReferenceDomain domain, User user) {
 		// apply any changes from domain to entity for the workflow relevance
 
@@ -1694,247 +1972,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return relevanceService.process(domain.getRefsKey(), domain.getRelevanceHistory(), user);
 	}
 	
-	private boolean applyWorkflowDataChanges(Reference entity, ReferenceDomain domain, User user) {
-		// apply any changes to supplemental from domain to entity for the workflow data (body only)
-		
-		log.info("applyWorkflowDataChanges()");
-		
-		if (entity.getWorkflowData().get(0) != null) {
-			if (!smartEqual(String.valueOf(entity.getWorkflowData().get(0).getSupplementalTerm().get_term_key()), domain.getWorkflowData().getSupplementalKey())) {
-				domain.getWorkflowData().setProcessStatus(Constants.PROCESS_UPDATE);
-			}
-		} else {
-			// this should not happen, but if it does...create new "body"
-			ReferenceWorkflowDataDomain newData = new ReferenceWorkflowDataDomain();
-			newData.setProcessStatus(Constants.PROCESS_CREATE);
-			newData.setRefsKey(domain.getRefsKey());
-			newData.setSupplementalKey(domain.getWorkflowData().getSupplementalKey());
-			domain.setWorkflowData(newData);
-		}
-
-		return dataService.process(domain.getRefsKey(), domain.getWorkflowData(), user);
-	}
-
-	private boolean applyWorkflowTagChanges(Reference entity, ReferenceDomain domain, User user) {
-		// apply any changes from domain to entity for the workflow tag
-
-		log.info("applyWorkflowTagChanges()");
-		
-		// short-circuit method if no tags in Reference or in ReferenceDomain
-		if ((entity.getWorkflowTags().size() == 0) && (domain.getWorkflowTags().size() == 0)) {
-			return false;
-		}
-
-		// set of tags specified in domain object -- potentially to add to object
-		Set<String> toAdd = new HashSet<String>();
-		for (String rdTag : domain.getWorkflowTagString()) {
-			toAdd.add(rdTag.trim());
-		}
-
-		// list of tags that need to be removed from this object
-		List<ReferenceWorkflowTag> toDelete = new ArrayList<ReferenceWorkflowTag>();
-
-		// Now we need to diff the set of tags we already have and the set of tags to potentially add. Anything
-		// left in toAdd will need to be added as a new tag, and anything in toDelete will need to be removed.
-
-		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
-			String myTag = refTag.getTagTerm().getTerm();
-
-			// matching tags
-			if (toAdd.contains(myTag)) {
-				// already have this one, don't need to add it
-				toAdd.remove(myTag);
-			} else {
-				// current one isn't in the new list from domain object, so need to remove it
-				toDelete.add(refTag);
-			}
-		}
-
-		// remove defunct tags
-		for (ReferenceWorkflowTag rwTag : toDelete) {
-			referenceDAO.remove(rwTag);
-		}
-
-		// add new tags (use shared method, as this will be useful when adding tags to batches of references)
-		for (String rdTag : toAdd) {
-			addTag(entity, rdTag, user);
-		}
-
-		return (toDelete.size() > 0) || (toAdd.size() > 0);
-	}
-
-	public void addTag(Reference entity, String rdTag, User user) {
-		// add new tags to bib_workflow_tag
-		// do not add duplicate tags
-
-		String trimTag = rdTag.trim();
-		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
-			if (trimTag.equals(refTag.getTagTerm().getTerm()) ) {
-				return;
-			}
-		}
-
-		log.info("addTag();" + rdTag);
-		
-		// need to find the term of the tag, wrap it in an association, persist the association, and
-		// add it to the workflow tags for this Reference
-
-		Term tagTerm = getTermByTerm(Constants.VOC_WORKFLOW_TAGS, rdTag);
-		if (tagTerm != null) {
-			ReferenceWorkflowTag rwTag = new ReferenceWorkflowTag();
-			rwTag.set_refs_key(entity.get_refs_key());
-			rwTag.setTagTerm(tagTerm);
-			rwTag.setCreatedBy(user);
-			rwTag.setModifiedBy(user);
-			rwTag.setCreation_date(new Date());
-			rwTag.setModification_date(new Date());
-			referenceDAO.persist(rwTag);
-			entity.getWorkflowTags().add(rwTag);
-			entity.setModifiedBy(user);
-			entity.setModification_date(new Date());
-		}
-	}
-
-	public void removeTag(Reference entity, String rdTag, User user) {
-		// remove existing tags from bib_workflow_tag
-		
-		if (entity.getWorkflowTags() == null) { 
-			return; 
-		}
-
-		log.info("removeTag():" + rdTag);
-		
-		String lowerTag = rdTag.toLowerCase().trim();
-		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
-			if (lowerTag.equals(refTag.getTagTerm().getTerm().toLowerCase()) ) {
-				referenceDAO.remove(refTag);
-				entity.setModifiedBy(user);
-				entity.setModification_date(new Date());
-				return;
-			}
-		}
-	}
-	
-	private boolean applyWorkflowStatusChanges(Reference entity, ReferenceDomain domain, User user) {
-		// apply any changes from domain to entity for the workflow status
-
-		log.info("applyWorkflowStatusChanges()");
-		
-		// process add/modify for each group
-		boolean anyChanges = updateWorkflowStatus(entity, Constants.WG_AP, domain.getAp_status(), user);
-		anyChanges = updateWorkflowStatus(entity, Constants.WG_GO, domain.getGo_status(), user) || anyChanges;
-		anyChanges = updateWorkflowStatus(entity, Constants.WG_GXD, domain.getGxd_status(), user) || anyChanges;
-		anyChanges = updateWorkflowStatus(entity, Constants.WG_PRO, domain.getPro_status(), user) || anyChanges;
-		anyChanges = updateWorkflowStatus(entity, Constants.WG_QTL, domain.getQtl_status(), user) || anyChanges;
-		anyChanges = updateWorkflowStatus(entity, Constants.WG_TUMOR, domain.getTumor_status(), user) || anyChanges;
-
-		// if any changes were made...
-		if (anyChanges) {
-			
-			log.info("applyWorkflowStatusChanges/anyChanges = true");
-			
-			// if entity J# is null/empty and domain workflow status in (Chosen, Indexed, Full-coded), then add J#
-			if (entity.getJnumid() == null || entity.getJnumid().isEmpty()) {
-
-				log.info("entity J# is null/empty; checking domain workflow status in (Chosen, Indexed, Full-coded)");
-				
-				boolean addJnumid = false;
-
-				if (domain.getAp_status().equals(Constants.WS_CHOSEN)
-					|| domain.getAp_status().equals(Constants.WS_INDEXED)
-					|| domain.getAp_status().equals(Constants.WS_CURATED)
-
-					|| domain.getGo_status().equals(Constants.WS_CHOSEN)
-					|| domain.getGo_status().equals(Constants.WS_INDEXED)
-					|| domain.getGo_status().equals(Constants.WS_CURATED)
-					
-					|| domain.getGxd_status().equals(Constants.WS_CHOSEN)
-					|| domain.getGxd_status().equals(Constants.WS_INDEXED)
-					|| domain.getGxd_status().equals(Constants.WS_CURATED)
-				
-					|| domain.getPro_status().equals(Constants.WS_CHOSEN)
-					|| domain.getPro_status().equals(Constants.WS_INDEXED)
-					|| domain.getPro_status().equals(Constants.WS_CURATED)
-
-					|| domain.getQtl_status().equals(Constants.WS_CHOSEN)
-					|| domain.getQtl_status().equals(Constants.WS_INDEXED)
-					|| domain.getQtl_status().equals(Constants.WS_CURATED)
-	
-					|| domain.getTumor_status().equals(Constants.WS_CHOSEN)
-					|| domain.getTumor_status().equals(Constants.WS_INDEXED)
-					|| domain.getTumor_status().equals(Constants.WS_CURATED)
-					) {
-						addJnumid = true;
-				}
-				
-				if (addJnumid) {
-					log.info("applyWorkflowStatusChanges/addJnumid = true");
-					log.info("select count(1) from ACC_assignJ(" + user.get_user_key() + "," + String.valueOf(entity.get_refs_key()) + ",-1)");
-					Query query = referenceDAO.createNativeQuery("select count(*) from ACC_assignJ(" + user.get_user_key() + "," + String.valueOf(entity.get_refs_key()) + ",-1)");
-					query.getResultList();	
-				}
-			} 
-		}
-		
-		return anyChanges;
-	}
-	
-	private boolean updateWorkflowStatus(Reference entity, String groupAbbrev, String newStatus, User user) {
-		// set existing bib_workflow_status.isCurrent = 0
-		// add new bib_workflow_status
-
-		String currentStatus = getWorkflowStatusByEntity(entity, groupAbbrev);
-		
-		// no update if new status matches old status (or if no group is specified)
-		if ( ((currentStatus != null) && currentStatus.equals(newStatus)) || (groupAbbrev == null) ||
-				((currentStatus == null) && (newStatus == null)) ) {
-			return false;
-		}
-
-		// At this point, we know we have a status update.  
-		// If there was an existing record, we need to flag it as not current.
-		if (currentStatus != null) {
-			for (ReferenceWorkflowStatus rws : entity.getWorkflowStatus()) {
-				if ( (rws.getIsCurrent() == 1) && groupAbbrev.equals(rws.getGroupTerm().getAbbreviation()) ) {
-					rws.setIsCurrent(0);
-					break;				// no more can match, so exit the loop
-				}
-			}
-		}
-
-		// add a new status record for this change -- and need to persist this new object to the
-		// database explicitly, before the whole reference gets persisted later on.
-
-		ReferenceWorkflowStatus newRws = new ReferenceWorkflowStatus();
-		newRws.set_refs_key(entity.get_refs_key());
-		newRws.setIsCurrent(1);
-		//newRws.setGroutTerm(termDAO.get());
-		newRws.setGroupTerm(getTermByAbbreviation(Constants.VOC_WORKFLOW_GROUP, groupAbbrev));
-		//newRws.setStatusTerm(termDAO.get());
-		newRws.setStatusTerm(getTermByTerm(Constants.VOC_WORKFLOW_STATUS, newStatus));
-		newRws.setCreatedBy(user);
-		newRws.setModifiedBy(user);
-		newRws.setCreation_date(new Date());
-		newRws.setModification_date(new Date());
-		entity.getWorkflowStatus().add(newRws);
-		referenceDAO.persist(newRws);
-
-		return true;
-	}
-
-	private String getWorkflowStatusByEntity(Reference entity, String groupAbbrev) {
-		// find current status for groupAbbrev in the entity.getWorkflowStatusCurrent()
-		
-		String currentStatus = null;
-		
-		for (int i = 0; i < entity.getWorkflowStatusCurrent().size(); i++) {
-			if (entity.getWorkflowStatusCurrent().get(i).getGroupTerm().getAbbreviation().equals(groupAbbrev)) {
-				currentStatus = entity.getWorkflowStatusCurrent().get(i).getStatusTerm().getTerm();
-			}
-		}
-		
-		return currentStatus;
-	}
+	//
+	// allele association
+	// strain association
+	// marker association
+	//
 	
 	private boolean applyAlleleAssocChanges(Reference entity, List<MGIReferenceAlleleAssocDomain> domain, User user) {
 		// apply any changes from domain to entity for the allele association
@@ -1978,6 +2020,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return anyChanges;
 	}
 
+	//
+	// other helpful private methods
+	//
+	
 	private boolean smartEqual(Object a, Object b) {
 		// comparison function that handles null values well
 		

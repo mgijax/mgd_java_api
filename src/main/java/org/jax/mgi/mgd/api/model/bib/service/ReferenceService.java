@@ -1303,7 +1303,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		anyChanges = applyWorkflowStatusChanges(entity, domain, user) || anyChanges;
 		anyChanges = applyWorkflowTagChanges(entity, domain, user) || anyChanges;
-		anyChanges = applyWorkflowRelevanceChanges(entity, domain, user) || anyChanges;   			// uses relevanceService
+		anyChanges = applyWorkflowRelevanceChanges(entity, domain, user) || anyChanges;   	// uses relevanceService
 		anyChanges = applyWorkflowDataChanges(entity, domain, user) || anyChanges;
 
 		anyChanges = applyBookChanges(entity, domain, user) || anyChanges;		// uses ReferenceDomainService()
@@ -1649,7 +1649,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 	}
 
-	
 	//
 	// bib_workflow_relevance
 	//

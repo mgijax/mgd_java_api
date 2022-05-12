@@ -170,7 +170,7 @@ public class Reference extends BaseEntity {
 
 	@Transient
 	public String getJnumid() {
-		return findFirstID(1, "J:", Constants.PREFERRED, Constants.PUBLIC);
+		return findFirstID(1, "J:", 1, 0);
 	}
 
 	@Transient

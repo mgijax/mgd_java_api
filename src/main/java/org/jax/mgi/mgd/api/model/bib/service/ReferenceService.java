@@ -1832,6 +1832,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	private boolean applyWorkflowStatusChanges(Reference entity, ReferenceDomain domain, User user) {
 		// apply any changes from domain to entity for the workflow status
 
+		log.info("applyWorkflowStatusChanges()");
+		
 		// process add/modify for each group
 		boolean anyChanges = updateWorkflowStatus(entity, Constants.WG_AP, domain.getAp_status(), user);
 		anyChanges = updateWorkflowStatus(entity, Constants.WG_GO, domain.getGo_status(), user) || anyChanges;
@@ -1843,9 +1845,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// if any changes were made...
 		if (anyChanges) {
 			
+			log.info("applyWorkflowStatusChanges/anyChanges = true");
+			
 			// if no J# and Status in (Chosen, Indexed, Full-coded), then add J#
 			if (entity.getJnumid() == null) {
 
+				log.info("no J# and Status in (Chosen, Indexed, Full-coded)");
+				
 				boolean addJnumid = false;
 
 				for (String workgroup : Constants.WG_ALL) {
@@ -1860,7 +1866,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				}
 
 				if (addJnumid) {
-					log.info("assign new J: number");
+					log.info("applyWorkflowStatusChanges/assign new J: number");
 					log.info("select count(1) from ACC_assignJ(" + user.get_user_key() + "," + String.valueOf(entity.get_refs_key()) + ",-1)");
 					Query query = referenceDAO.createNativeQuery("select count(*) from ACC_assignJ(" + user.get_user_key() + "," + String.valueOf(entity.get_refs_key()) + ",-1)");
 					query.getResultList();	

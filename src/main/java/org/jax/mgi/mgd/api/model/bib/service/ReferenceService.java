@@ -1815,7 +1815,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 	}
 
-	private String getWorkflowStatus(Reference entity, String groupAbbrev) {
+	private String getWorkflowStatusByEntity(Reference entity, String groupAbbrev) {
 		// find current status for groupAbbrev in the entity.getWorkflowStatusCurrent()
 		
 		String currentStatus = null;
@@ -1828,7 +1828,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		return currentStatus;
 	}
-
+	
 	private boolean applyWorkflowStatusChanges(Reference entity, ReferenceDomain domain, User user) {
 		// apply any changes from domain to entity for the workflow status
 
@@ -1846,24 +1846,58 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (anyChanges) {
 			
 			log.info("applyWorkflowStatusChanges/anyChanges = true");
-			entity = referenceDAO.get(Integer.valueOf(domain.getRefsKey()));
 			
 			// if no J# and Status in (Chosen, Indexed, Full-coded), then add J#
 			if (entity.getJnumid() == null) {
+
 				log.info("no J# and Status in (Chosen, Indexed, Full-coded)");
 
+				// check statuses from domain
+				
 				boolean addJnumid = false;
-				for (String workgroup : Constants.WG_ALL) {
-					String wgStatus = getWorkflowStatus(entity, workgroup);
-					if ((wgStatus != null) && (
-							wgStatus.equals(Constants.WS_CHOSEN) ||
-							wgStatus.equals(Constants.WS_INDEXED) ||
-							wgStatus.equals(Constants.WS_CURATED))) {
-						addJnumid = true;
-						break;
-					}
+
+				if (domain.getAp_status().equals(Constants.WS_CHOSEN)
+					|| domain.getAp_status().equals(Constants.WS_INDEXED)
+					|| domain.getAp_status().equals(Constants.WS_CURATED)
+					) {
+					addJnumid = true;
 				}
 
+				if (domain.getGo_status().equals(Constants.WS_CHOSEN)
+						|| domain.getGo_status().equals(Constants.WS_INDEXED)
+						|| domain.getGo_status().equals(Constants.WS_CURATED)
+						) {
+						addJnumid = true;
+				}
+
+				if (domain.getGxd_status().equals(Constants.WS_CHOSEN)
+						|| domain.getGxd_status().equals(Constants.WS_INDEXED)
+						|| domain.getGxd_status().equals(Constants.WS_CURATED)
+						) {
+						addJnumid = true;
+				}
+				
+				if (domain.getPro_status().equals(Constants.WS_CHOSEN)
+						|| domain.getPro_status().equals(Constants.WS_INDEXED)
+						|| domain.getPro_status().equals(Constants.WS_CURATED)
+						) {
+						addJnumid = true;
+				}
+
+				if (domain.getQtl_status().equals(Constants.WS_CHOSEN)
+						|| domain.getQtl_status().equals(Constants.WS_INDEXED)
+						|| domain.getQtl_status().equals(Constants.WS_CURATED)
+						) {
+						addJnumid = true;
+				}
+	
+				if (domain.getTumor_status().equals(Constants.WS_CHOSEN)
+						|| domain.getTumor_status().equals(Constants.WS_INDEXED)
+						|| domain.getTumor_status().equals(Constants.WS_CURATED)
+						) {
+						addJnumid = true;
+				}
+				
 				if (addJnumid) {
 					log.info("applyWorkflowStatusChanges/assign new J: number");
 					log.info("select count(1) from ACC_assignJ(" + user.get_user_key() + "," + String.valueOf(entity.get_refs_key()) + ",-1)");
@@ -1880,7 +1914,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// set existing bib_workflow_status.isCurrent = 0
 		// add new bib_workflow_status
 
-		String currentStatus = getWorkflowStatus(entity, groupAbbrev);
+		String currentStatus = getWorkflowStatusByEntity(entity, groupAbbrev);
 		
 		// no update if new status matches old status (or if no group is specified)
 		if ( ((currentStatus != null) && currentStatus.equals(newStatus)) || (groupAbbrev == null) ||

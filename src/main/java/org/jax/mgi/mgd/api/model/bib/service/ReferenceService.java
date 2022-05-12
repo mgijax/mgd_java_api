@@ -1300,13 +1300,16 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		boolean anyChanges;
 		
 		anyChanges = applyBasicFieldChanges(entity, domain, user);
+
 		anyChanges = applyWorkflowStatusChanges(entity, domain, user) || anyChanges;
 		anyChanges = applyWorkflowTagChanges(entity, domain, user) || anyChanges;
+		anyChanges = applyWorkflowRelevanceChanges(entity, domain, user) || anyChanges;   			// uses relevanceService
+		anyChanges = applyWorkflowDataChanges(entity, domain, user) || anyChanges;
+
 		anyChanges = applyBookChanges(entity, domain, user) || anyChanges;		// uses ReferenceDomainService()
 		anyChanges = applyNoteChanges(entity, domain, user) | anyChanges;		// uses ReferenceNoteService()
 		anyChanges = applyAccessionIDChanges(entity, domain, user) || anyChanges;
-		anyChanges = applyWorkflowDataChanges(entity, domain, user) || anyChanges;
-		anyChanges = applyWorkflowRelevanceChanges(entity, domain, user) || anyChanges;   			// uses relevanceService
+
 		anyChanges = applyAlleleAssocChanges(entity, domain.getAlleleAssocs(), user) || anyChanges;	// uses referenceAssocService	
 		anyChanges = applyStrainAssocChanges(entity, domain.getStrainAssocs(), user) || anyChanges;	// uses referenceAssocService	
 		anyChanges = applyMarkerAssocChanges(entity, domain.getMarkerAssocs(), user) || anyChanges;	// uses referenceAssocService
@@ -1645,6 +1648,70 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 		}
 	}
+
+	
+	//
+	// bib_workflow_relevance
+	//
+	
+	private boolean applyWorkflowRelevanceChanges(Reference entity, ReferenceDomain domain, User user) {
+		// apply any changes from domain to entity for the workflow relevance
+
+		log.info("applyWorkflowRelevanceChanges()");
+//		log.info("domain.getEditRelevanceKey():" + domain.getEditRelevanceKey());
+//		log.info("user.getLogin();:" + entity.getWorkflowRelevance().get(0).getModifiedBy().getLogin() + "," + user.getLogin());
+		
+		// if relevance term has changed or user has changed
+		if (!smartEqual(String.valueOf(entity.getWorkflowRelevance().get(0).getRelevanceTerm().get_term_key()), domain.getEditRelevanceKey())
+			|| !smartEqual(entity.getWorkflowRelevance().get(0).getModifiedBy().getLogin(), user.getLogin())
+			) {
+
+			// for each relevanceHistory, set processStatus = PROCESS_UPDATE, isCurrent = 0
+			for (int i = 0; i < domain.getRelevanceHistory().size(); i++) {
+				if (domain.getRelevanceHistory().get(i).getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
+					domain.getRelevanceHistory().get(i).setProcessStatus(Constants.PROCESS_UPDATE);
+					domain.getRelevanceHistory().get(i).setIsCurrent("0");
+				}
+			}
+			
+			// add new relevance row
+			ReferenceWorkflowRelevanceDomain newRelevance = new ReferenceWorkflowRelevanceDomain();
+			newRelevance.setProcessStatus(Constants.PROCESS_CREATE);
+			newRelevance.setRefsKey(domain.getRefsKey());
+			newRelevance.setIsCurrent("1");
+			newRelevance.setRelevanceKey(domain.getEditRelevanceKey());
+			newRelevance.setConfidence(null);
+			newRelevance.setVersion(null);
+			domain.getRelevanceHistory().add(newRelevance);
+		}
+		
+		return relevanceService.process(domain.getRefsKey(), domain.getRelevanceHistory(), user);
+	}
+	
+	//
+	// bib_workflow_data
+	//
+	
+	private boolean applyWorkflowDataChanges(Reference entity, ReferenceDomain domain, User user) {
+		// apply any changes to supplemental from domain to entity for the workflow data (body only)
+		
+		log.info("applyWorkflowDataChanges()");
+		
+		if (entity.getWorkflowData().get(0) != null) {
+			if (!smartEqual(String.valueOf(entity.getWorkflowData().get(0).getSupplementalTerm().get_term_key()), domain.getWorkflowData().getSupplementalKey())) {
+				domain.getWorkflowData().setProcessStatus(Constants.PROCESS_UPDATE);
+			}
+		} else {
+			// this should not happen, but if it does...create new "body"
+			ReferenceWorkflowDataDomain newData = new ReferenceWorkflowDataDomain();
+			newData.setProcessStatus(Constants.PROCESS_CREATE);
+			newData.setRefsKey(domain.getRefsKey());
+			newData.setSupplementalKey(domain.getWorkflowData().getSupplementalKey());
+			domain.setWorkflowData(newData);
+		}
+
+		return dataService.process(domain.getRefsKey(), domain.getWorkflowData(), user);
+	}
 	
 	//
 	// bib_books
@@ -1907,69 +1974,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		return true;
-	}
-	
-	//
-	// bib_workflow_data
-	//
-	
-	private boolean applyWorkflowDataChanges(Reference entity, ReferenceDomain domain, User user) {
-		// apply any changes to supplemental from domain to entity for the workflow data (body only)
-		
-		log.info("applyWorkflowDataChanges()");
-		
-		if (entity.getWorkflowData().get(0) != null) {
-			if (!smartEqual(String.valueOf(entity.getWorkflowData().get(0).getSupplementalTerm().get_term_key()), domain.getWorkflowData().getSupplementalKey())) {
-				domain.getWorkflowData().setProcessStatus(Constants.PROCESS_UPDATE);
-			}
-		} else {
-			// this should not happen, but if it does...create new "body"
-			ReferenceWorkflowDataDomain newData = new ReferenceWorkflowDataDomain();
-			newData.setProcessStatus(Constants.PROCESS_CREATE);
-			newData.setRefsKey(domain.getRefsKey());
-			newData.setSupplementalKey(domain.getWorkflowData().getSupplementalKey());
-			domain.setWorkflowData(newData);
-		}
-
-		return dataService.process(domain.getRefsKey(), domain.getWorkflowData(), user);
-	}
-	
-	//
-	// bib_workflow_relevance
-	//
-	
-	private boolean applyWorkflowRelevanceChanges(Reference entity, ReferenceDomain domain, User user) {
-		// apply any changes from domain to entity for the workflow relevance
-
-		log.info("applyWorkflowRelevanceChanges()");
-//		log.info("domain.getEditRelevanceKey():" + domain.getEditRelevanceKey());
-//		log.info("user.getLogin();:" + entity.getWorkflowRelevance().get(0).getModifiedBy().getLogin() + "," + user.getLogin());
-		
-		// if relevance term has changed or user has changed
-		if (!smartEqual(String.valueOf(entity.getWorkflowRelevance().get(0).getRelevanceTerm().get_term_key()), domain.getEditRelevanceKey())
-			|| !smartEqual(entity.getWorkflowRelevance().get(0).getModifiedBy().getLogin(), user.getLogin())
-			) {
-
-			// for each relevanceHistory, set processStatus = PROCESS_UPDATE, isCurrent = 0
-			for (int i = 0; i < domain.getRelevanceHistory().size(); i++) {
-				if (domain.getRelevanceHistory().get(i).getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
-					domain.getRelevanceHistory().get(i).setProcessStatus(Constants.PROCESS_UPDATE);
-					domain.getRelevanceHistory().get(i).setIsCurrent("0");
-				}
-			}
-			
-			// add new relevance row
-			ReferenceWorkflowRelevanceDomain newRelevance = new ReferenceWorkflowRelevanceDomain();
-			newRelevance.setProcessStatus(Constants.PROCESS_CREATE);
-			newRelevance.setRefsKey(domain.getRefsKey());
-			newRelevance.setIsCurrent("1");
-			newRelevance.setRelevanceKey(domain.getEditRelevanceKey());
-			newRelevance.setConfidence(null);
-			newRelevance.setVersion(null);
-			domain.getRelevanceHistory().add(newRelevance);
-		}
-		
-		return relevanceService.process(domain.getRefsKey(), domain.getRelevanceHistory(), user);
 	}
 	
 	//

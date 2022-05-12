@@ -1846,14 +1846,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (anyChanges) {
 			
 			log.info("applyWorkflowStatusChanges/anyChanges = true");
+			entity = referenceDAO.get(Integer.valueOf(domain.getRefsKey()));
 			
 			// if no J# and Status in (Chosen, Indexed, Full-coded), then add J#
 			if (entity.getJnumid() == null) {
-
 				log.info("no J# and Status in (Chosen, Indexed, Full-coded)");
-				
-				boolean addJnumid = false;
 
+				boolean addJnumid = false;
 				for (String workgroup : Constants.WG_ALL) {
 					String wgStatus = getWorkflowStatus(entity, workgroup);
 					if ((wgStatus != null) && (

@@ -1833,12 +1833,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			
 			log.info("applyWorkflowStatusChanges/anyChanges = true");
 			
-			// if no J# and Status in (Chosen, Indexed, Full-coded), then add J#
-			if (entity.getJnumid() == null) {
+			// if entity J# is null/empty and domain workflow status in (Chosen, Indexed, Full-coded), then add J#
+			if (entity.getJnumid() == null || entity.getJnumid().isEmpty()) {
 
-				log.info("no J# and Status in (Chosen, Indexed, Full-coded)");
-
-				// check statuses from domain
+				log.info("entity J# is null/empt; checking domain workflow status in (Chosen, Indexed, Full-coded)");
 				
 				boolean addJnumid = false;
 
@@ -1870,7 +1868,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				}
 				
 				if (addJnumid) {
-					log.info("applyWorkflowStatusChanges/assign new J: number");
+					log.info("applyWorkflowStatusChanges/addJnumid = true");
 					log.info("select count(1) from ACC_assignJ(" + user.get_user_key() + "," + String.valueOf(entity.get_refs_key()) + ",-1)");
 					Query query = referenceDAO.createNativeQuery("select count(*) from ACC_assignJ(" + user.get_user_key() + "," + String.valueOf(entity.get_refs_key()) + ",-1)");
 					query.getResultList();	

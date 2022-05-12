@@ -1814,20 +1814,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 		}
 	}
-
-	private String getWorkflowStatusByEntity(Reference entity, String groupAbbrev) {
-		// find current status for groupAbbrev in the entity.getWorkflowStatusCurrent()
-		
-		String currentStatus = null;
-		
-		for (int i = 0; i < entity.getWorkflowStatusCurrent().size(); i++) {
-			if (entity.getWorkflowStatusCurrent().get(i).getGroupTerm().getAbbreviation().equals(groupAbbrev)) {
-				currentStatus = entity.getWorkflowStatusCurrent().get(i).getStatusTerm().getTerm();
-			}
-		}
-		
-		return currentStatus;
-	}
 	
 	private boolean applyWorkflowStatusChanges(Reference entity, ReferenceDomain domain, User user) {
 		// apply any changes from domain to entity for the workflow status
@@ -1859,42 +1845,27 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				if (domain.getAp_status().equals(Constants.WS_CHOSEN)
 					|| domain.getAp_status().equals(Constants.WS_INDEXED)
 					|| domain.getAp_status().equals(Constants.WS_CURATED)
-					) {
-					addJnumid = true;
-				}
 
-				if (domain.getGo_status().equals(Constants.WS_CHOSEN)
-						|| domain.getGo_status().equals(Constants.WS_INDEXED)
-						|| domain.getGo_status().equals(Constants.WS_CURATED)
-						) {
-						addJnumid = true;
-				}
-
-				if (domain.getGxd_status().equals(Constants.WS_CHOSEN)
-						|| domain.getGxd_status().equals(Constants.WS_INDEXED)
-						|| domain.getGxd_status().equals(Constants.WS_CURATED)
-						) {
-						addJnumid = true;
-				}
+					|| domain.getGo_status().equals(Constants.WS_CHOSEN)
+					|| domain.getGo_status().equals(Constants.WS_INDEXED)
+					|| domain.getGo_status().equals(Constants.WS_CURATED)
+					
+					|| domain.getGxd_status().equals(Constants.WS_CHOSEN)
+					|| domain.getGxd_status().equals(Constants.WS_INDEXED)
+					|| domain.getGxd_status().equals(Constants.WS_CURATED)
 				
-				if (domain.getPro_status().equals(Constants.WS_CHOSEN)
-						|| domain.getPro_status().equals(Constants.WS_INDEXED)
-						|| domain.getPro_status().equals(Constants.WS_CURATED)
-						) {
-						addJnumid = true;
-				}
+					|| domain.getPro_status().equals(Constants.WS_CHOSEN)
+					|| domain.getPro_status().equals(Constants.WS_INDEXED)
+					|| domain.getPro_status().equals(Constants.WS_CURATED)
 
-				if (domain.getQtl_status().equals(Constants.WS_CHOSEN)
-						|| domain.getQtl_status().equals(Constants.WS_INDEXED)
-						|| domain.getQtl_status().equals(Constants.WS_CURATED)
-						) {
-						addJnumid = true;
-				}
+					|| domain.getQtl_status().equals(Constants.WS_CHOSEN)
+					|| domain.getQtl_status().equals(Constants.WS_INDEXED)
+					|| domain.getQtl_status().equals(Constants.WS_CURATED)
 	
-				if (domain.getTumor_status().equals(Constants.WS_CHOSEN)
-						|| domain.getTumor_status().equals(Constants.WS_INDEXED)
-						|| domain.getTumor_status().equals(Constants.WS_CURATED)
-						) {
+					|| domain.getTumor_status().equals(Constants.WS_CHOSEN)
+					|| domain.getTumor_status().equals(Constants.WS_INDEXED)
+					|| domain.getTumor_status().equals(Constants.WS_CURATED)
+					) {
 						addJnumid = true;
 				}
 				
@@ -1953,6 +1924,20 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return true;
 	}
 
+	private String getWorkflowStatusByEntity(Reference entity, String groupAbbrev) {
+		// find current status for groupAbbrev in the entity.getWorkflowStatusCurrent()
+		
+		String currentStatus = null;
+		
+		for (int i = 0; i < entity.getWorkflowStatusCurrent().size(); i++) {
+			if (entity.getWorkflowStatusCurrent().get(i).getGroupTerm().getAbbreviation().equals(groupAbbrev)) {
+				currentStatus = entity.getWorkflowStatusCurrent().get(i).getStatusTerm().getTerm();
+			}
+		}
+		
+		return currentStatus;
+	}
+	
 	private boolean applyAlleleAssocChanges(Reference entity, List<MGIReferenceAlleleAssocDomain> domain, User user) {
 		// apply any changes from domain to entity for the allele association
 

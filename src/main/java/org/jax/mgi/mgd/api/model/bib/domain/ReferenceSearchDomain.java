@@ -54,7 +54,7 @@ public class ReferenceSearchDomain extends BaseDomain {
 	private List<MGIReferenceStrainAssocDomain> strainAssocs;
 	private List<MGIReferenceMarkerAssocDomain> markerAssocs;
 	
-	// to handle current searching parameters (replaces LTReferenceDAO.java/search())
+	// other searching parameters
 	
 	private String currentRelevance;
 	private String workflow_tag_operator = "AND";

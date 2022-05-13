@@ -1226,6 +1226,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			} else {
 				removeTag(entity, workflowTag, user);
 			}
+			referenceDAO.persist(entity);
 		}
 		
 		return;
@@ -1578,20 +1579,20 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 			// matching tags
 			if (toAdd.contains(myTag)) {
-				// already have this one, don't need to add it
+				// remove duplicate
 				toAdd.remove(myTag);
 			} else {
-				// current one isn't in the new list from domain object, so need to remove it
+				// remove existing tag that is no longer in the list
 				toDelete.add(refTag);
 			}
 		}
 
-		// remove defunct tags
+		// remove existing tag that is no longer in the list
 		for (ReferenceWorkflowTag rwTag : toDelete) {
 			referenceDAO.remove(rwTag);
 		}
 
-		// add new tags (use shared method, as this will be useful when adding tags to batches of references)
+		// add new tags
 		for (String rdTag : toAdd) {
 			addTag(entity, rdTag, user);
 		}
@@ -1612,7 +1613,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		log.info("addTag();" + rdTag);
 		
-		// need to find the term of the tag, wrap it in an association, persist the association, and
+		// find the term of the tag
+		// wrap it in an association
+		// persist the association
 		// add it to the workflow tags for this Reference
 
 		Term tagTerm = getTermByTerm(Constants.VOC_WORKFLOW_TAGS, rdTag);
@@ -1644,6 +1647,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				referenceDAO.remove(refTag);
 				entity.setModifiedBy(user);
 				entity.setModification_date(new Date());
+				referenceDAO.persist(entity);
 				return;
 			}
 		}
@@ -1688,7 +1692,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}
 	
 	//
-	// bib_workflow_data
+	// bib_workflow_data/_supplemental_key
 	//
 	
 	private boolean applyWorkflowDataChanges(Reference entity, ReferenceDomain domain, User user) {
@@ -1945,6 +1949,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			} else {
 				// Otherwise, we can update the ID and other data for this logical database.
 				Accession myID = ids.get(idPos);
+//				AccessionDomain accessionDomain = new AccessionDomain();
+//				List<AccessionDomain> aresults = new ArrayList<AccessionDomain>();
+//				accessionDomain.setProcessStatus("u");
+//				aresults.add(accessionDomain);
+//				accessionService.process(String.valueOf(entity.get_refs_key()), aresults, "Reference", user);					
 				myID.setAccID(accID);
 				myID.setIsPrivate(isPrivate);
 				myID.setPreferred(preferred);
@@ -1955,6 +1964,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 		} else {
 			// We didn't find an existing ID for this logical database, so we need to add one.
+//			AccessionDomain accessionDomain = new AccessionDomain();
+//			List<AccessionDomain> aresults = new ArrayList<AccessionDomain>();
+//			accessionDomain.setProcessStatus("c");
+//			aresults.add(accessionDomain);
+//			accessionService.process(String.valueOf(entity.get_refs_key()), aresults, "Reference", user);			
 			Accession myID = new Accession();
 			myID.set_accession_key(accessionDAO.getNextKey());
 			myID.setAccID(accID);

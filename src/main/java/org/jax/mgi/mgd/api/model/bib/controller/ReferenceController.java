@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceSearchDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -139,7 +140,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	@POST
 	@ApiOperation(value = "Search/returns slim reference domain")
 	@Path("/search")
-	public List<SlimReferenceDomain> search(ReferenceDomain searchDomain) {
+	public List<SlimReferenceDomain> search(ReferenceSearchDomain searchDomain) {
 		List<SlimReferenceDomain> results = new ArrayList<SlimReferenceDomain>();
 
 		try {

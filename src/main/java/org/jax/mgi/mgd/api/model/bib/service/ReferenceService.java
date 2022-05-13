@@ -1604,6 +1604,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// add new tags to bib_workflow_tag
 		// do not add duplicate tags
 
+		log.info("addTag:" + rdTag);;
+		
 		String trimTag = rdTag.trim();
 		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
 			if (trimTag.equals(refTag.getTagTerm().getTerm()) ) {

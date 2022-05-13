@@ -27,6 +27,7 @@ import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceWorkflowDataDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceSearchDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
@@ -296,7 +297,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}		
 		
 	@Transactional	
-	public List<SlimReferenceDomain> search(ReferenceDomain searchDomain) {
+	public List<SlimReferenceDomain> search(ReferenceSearchDomain searchDomain) {
 		// using searchDomain fields, generate SQL command
 		
 		log.info("ReferenceService/search");
@@ -1257,7 +1258,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 		}
 		
-		ReferenceDomain searchDomain = new ReferenceDomain();
+		ReferenceSearchDomain searchDomain = new ReferenceSearchDomain();
 		searchDomain.setAccids(accid);
 		List<SlimReferenceDomain> refs = search(searchDomain);
 			

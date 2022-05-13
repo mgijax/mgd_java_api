@@ -1558,7 +1558,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		log.info("applyWorkflowTagChanges()");
 		
 		// short-circuit method if no tags in Reference or in ReferenceDomain
-		if ((entity.getWorkflowTags().size() == 0) && (domain.getWorkflowTags().size() == 0)) {
+		if ((entity.getWorkflowTags().size() == 0) && (domain.getWorkflowTagString().size() == 0)) {
 			return false;
 		}
 
@@ -1613,7 +1613,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 		}
 
-		log.info("addTag();" + rdTag);
+		log.info("addTag()/new tag:" + rdTag);
 		
 		// find the term of the tag
 		// wrap it in an association
@@ -1622,6 +1622,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		Term tagTerm = getTermByTerm(Constants.VOC_WORKFLOW_TAGS, rdTag);
 		if (tagTerm != null) {
+			log.info("addTag:" + tagTerm);
 			ReferenceWorkflowTag rwTag = new ReferenceWorkflowTag();
 			rwTag.set_refs_key(entity.get_refs_key());
 			rwTag.setTagTerm(tagTerm);

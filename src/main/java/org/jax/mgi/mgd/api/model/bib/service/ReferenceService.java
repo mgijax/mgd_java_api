@@ -1632,7 +1632,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			rwTag.setModification_date(new Date());
 			referenceDAO.persist(rwTag);
 			entity.getWorkflowTags().add(rwTag);
-			referenceDAO.persist(entity);
 		}
 	}
 

@@ -13,6 +13,9 @@ import lombok.Setter;
 @Getter @Setter
 public class ReferenceSearchDomain extends BaseDomain {
 	
+	// used by ReferenceController/ReferenceService/search() method
+	// similar to but not exactly the same as ReferenceDomain/get() method
+	
 	private String refsKey;
 	private String primaryAuthor;
 	private String authors;

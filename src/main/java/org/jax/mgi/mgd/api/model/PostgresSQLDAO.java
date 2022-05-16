@@ -33,18 +33,18 @@ public abstract class PostgresSQLDAO<T> {
 
 	protected Logger log = Logger.getLogger(getClass());
 
+	protected String idFieldName = null;
+	
 	// ONLY USED BY bib/LT (LitTriage)
 	
 	/* how long can we cache keys without refreshing from database? (in milliseconds) */
-	protected static long expirationTime = 2 * 60 * 1000;
+//	protected static long expirationTime = 2 * 60 * 1000;
 
-	/* maps from table name to time (in milliseconds) when we should search for a new key */
-	protected static Map<String, Long> keyExpiration = new HashMap<String, Long>();
-
-	/* maps from table name to the next value that should be assigned as primary key for the table */
-	protected static Map<String, Integer> nextKeyValue = new HashMap<String, Integer>();
-	
-	protected String idFieldName = null;
+//	/* maps from table name to time (in milliseconds) when we should search for a new key */
+//	protected static Map<String, Long> keyExpiration = new HashMap<String, Long>();
+//
+//	/* maps from table name to the next value that should be assigned as primary key for the table */
+//	protected static Map<String, Integer> nextKeyValue = new HashMap<String, Integer>();
 
 	// END ONLY USED BY bib/LT (LitTriage)
 	

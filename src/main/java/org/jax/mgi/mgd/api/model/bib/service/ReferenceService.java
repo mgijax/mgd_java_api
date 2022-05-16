@@ -1436,7 +1436,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			
 			log.info("applyWorkflowStatusChanges/anyChanges = true");
 			
-			// if entity J# is null/empty and domain workflow status in (Chosen, Indexed, Full-coded), then add J#
+			// if J# is null and domain workflow status in (Chosen, Indexed, Full-coded), then add J#
 			if (domain.getJnumidEdit() == null) {
 
 				log.info("entity J# is null/empty; checking domain workflow status in (Chosen, Indexed, Full-coded)");

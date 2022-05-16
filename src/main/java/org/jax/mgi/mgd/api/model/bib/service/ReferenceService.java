@@ -1512,12 +1512,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		newRws.set_refs_key(entity.get_refs_key());
 		newRws.setIsCurrent(1);
 		
-		TermDomain searchDomain = new TermDomain();
-		searchDomain.setVocabKey("127");
-		searchDomain.setAbbreviation(groupAbbrev);
-		List<TermDomain> t = termService.search(searchDomain);
-		log.info(t.get(0).getAbbreviation());
-		log.info(t.get(0).getTermKey());
+//		TermDomain searchDomain = new TermDomain();
+//		searchDomain.setVocabKey("127");
+//		searchDomain.setAbbreviation(groupAbbrev);
+//		List<TermDomain> t = termService.search(searchDomain);
+//		log.info(t.get(0).getAbbreviation());
+//		log.info(t.get(0).getTermKey());
 //		newRws.setGroupTerm(termDAO.get(Integer.valueOf(t.get(0).getTermKey())));
 
 		newRws.setGroupTerm(getTermByAbbreviation(127, groupAbbrev));	
@@ -1556,6 +1556,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		log.info("applyWorkflowTagChanges()");
 		
+		
 		// short-circuit method if no tags in Reference or in ReferenceDomain
 		if ((entity.getWorkflowTags().size() == 0) && (domain.getWorkflowTagString().size() == 0)) {
 			return false;
@@ -1570,8 +1571,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// list of tags that need to be removed from this object
 		List<ReferenceWorkflowTag> toDelete = new ArrayList<ReferenceWorkflowTag>();
 
-		// Now we need to diff the set of tags we already have and the set of tags to potentially add. Anything
-		// left in toAdd will need to be added as a new tag, and anything in toDelete will need to be removed.
+		// Now we need to diff the set of tags we already have and the set of tags to potentially add. 
+		// Anything left in toAdd will need to be added as a new tag, and anything in toDelete will need to be removed.
 
 		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
 			String myTag = refTag.getTagTerm().getTerm();

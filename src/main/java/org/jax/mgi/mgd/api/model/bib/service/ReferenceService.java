@@ -1791,7 +1791,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	//
 
 	private boolean applyAccessionIDChanges(Reference entity, ReferenceDomain domain, User user) {
-		// assumes only one ID per reference for each logical database (valid assumption, August 2017)
+		// assumes only one ID per reference for each logical database
 		// need to handle:  new ID for logical db, updated ID for logical db, deleted ID for logical db
 
 		log.info("applyAccessionIDChanges()");
@@ -1809,6 +1809,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				accessionDomain.setIsPrivate("0");
 				domain.setDoiidEdit(accessionDomain);
 				aresults.add(domain.getDoiidEdit());
+			}
+			else if (domain.getDoiid().isEmpty()) {
+				domain.getDoiidEdit().setProcessStatus("d");
+				aresults.add(domain.getDoiidEdit());					
 			}
 			else {
 				domain.getDoiidEdit().setProcessStatus("u");

@@ -32,25 +32,25 @@ public class ReferenceDomain extends BaseDomain {
 	private String isReviewArticle;
 	private String referenceTypeKey;
 	private String referenceType;
-
-	private String jnumid;
-	private String jnum;
-	private String short_citation;
-	
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;
-
-	// has to match the LTReferenceDomain
+	
+	private String jnumid;
+	private String jnum;
+	private String short_citation;
+	
 	private String mgiid;	
+	private String gorefid;
 	private String doiid;
 	private String pubmedid;
-	private String gorefid;
-	private List<AccessionDomain> accIds;
-	
+	private AccessionDomain jnumidEdit;
+	private AccessionDomain doiidEdit;
+	private AccessionDomain pubmedidEdit;
+
 	private ReferenceBookDomain referenceBook;
 	private ReferenceNoteDomain referenceNote;
 	private ReferenceWorkflowDataDomain workflowData;

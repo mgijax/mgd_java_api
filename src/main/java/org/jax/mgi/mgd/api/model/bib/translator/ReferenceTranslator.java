@@ -45,14 +45,7 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		domain.setDate(entity.getDate());
 		domain.setIsReviewArticle(String.valueOf(entity.getIsReviewArticle()));
 		domain.setReferenceTypeKey(String.valueOf(entity.getReferenceTypeTerm().get_term_key()));
-		domain.setReferenceType(entity.getReferenceTypeTerm().getTerm());
-		
-		if (entity.getReferenceCitationCache() != null) {
-			domain.setJnumid(entity.getReferenceCitationCache().getJnumid());
-			domain.setJnum(String.valueOf(entity.getReferenceCitationCache().getNumericPart()));		
-			domain.setShort_citation(entity.getReferenceCitationCache().getShort_citation());
-		}
-					
+		domain.setReferenceType(entity.getReferenceTypeTerm().getTerm());		
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
@@ -60,8 +53,12 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		domain.setCreation_date(dateFormatter.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatter.format(entity.getModification_date()));
 
-		// ReferenceDomain must agree with what is coming from PWI/LitTriage
-		
+		if (entity.getReferenceCitationCache() != null) {
+			domain.setJnumid(entity.getReferenceCitationCache().getJnumid());
+			domain.setJnum(String.valueOf(entity.getReferenceCitationCache().getNumericPart()));		
+			domain.setShort_citation(entity.getReferenceCitationCache().getShort_citation());
+		}
+					
 		// first mgi accession id only
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
@@ -71,18 +68,24 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 
 		// non-mgi accession ids
 		if (entity.getEditAccessionIds() != null && !entity.getEditAccessionIds().isEmpty()) {
-			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIds());
-			domain.setAccIds(IteratorUtils.toList(acc.iterator()));
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIds());			
+			List<AccessionDomain> editAccessionIds = new ArrayList<AccessionDomain>();
+			editAccessionIds.addAll(IteratorUtils.toList(acc.iterator()));
 			
-			for (int i = 0; i < domain.getAccIds().size(); i++) {
-				if (domain.getAccIds().get(i).getLogicaldbKey().equals("29")) {
-					domain.setPubmedid(domain.getAccIds().get(i).getAccID());
+			for (int i = 0; i < editAccessionIds.size(); i++) {
+				if (editAccessionIds.get(i).getLogicaldbKey().equals("1") && editAccessionIds.get(i).getPrefixPart().equals("J")) {
+					domain.setJnumidEdit(editAccessionIds.get(i));
 				}
-				else if (domain.getAccIds().get(i).getLogicaldbKey().equals("65")) {
-					domain.setDoiid(domain.getAccIds().get(i).getAccID());
+				else if (editAccessionIds.get(i).getLogicaldbKey().equals("29")) {
+					domain.setPubmedid(editAccessionIds.get(i).getAccID());
+					domain.setPubmedidEdit(editAccessionIds.get(i));
+				}
+				else if (editAccessionIds.get(i).getLogicaldbKey().equals("65")) {
+					domain.setDoiid(editAccessionIds.get(i).getAccID());
+					domain.setDoiidEdit(editAccessionIds.get(i));	
 				}				
-				else if (domain.getAccIds().get(i).getLogicaldbKey().equals("185")) {
-					domain.setGorefid(domain.getAccIds().get(i).getAccID());
+				else if (editAccessionIds.get(i).getLogicaldbKey().equals("185")) {
+					domain.setGorefid(editAccessionIds.get(i).getAccID());
 				}				
 			}
 		}

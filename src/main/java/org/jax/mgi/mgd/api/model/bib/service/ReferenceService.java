@@ -1906,10 +1906,14 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				}
 			}
 
+//			accessionDomain.setProcessStatus("c");
+//			accessionDomain.setAccID(domain.getPubmedid());
+//			accessionDomain.setLogicaldbKey("29");
 			anyChanges = applyOneIDChange(entity, 1, domain.getJnumid(), prefixPart, numericPart, 1, 0, user) || anyChanges;
 		}
 		
 		return anyChanges;
+		//return 	accessionService.process(String.valueOf(entity.get_refs_key()), domain.getAccIds(), "Reference", user);				
 	}
 
 	private boolean applyOneIDChange(Reference entity, Integer ldb, String accID, String prefixPart, Integer numericPart, Integer preferred, Integer isPrivate, User user) {
@@ -1951,13 +1955,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			if ( (accID == null) || (accID.trim().length() == 0))  {
 				referenceDAO.remove(ids.get(idPos));
 			} else {
-				// Otherwise, we can update the ID and other data for this logical database.
+				// Otherwise, we can update the ID and other data for this logical database.			
 				Accession myID = ids.get(idPos);
-//				AccessionDomain accessionDomain = new AccessionDomain();
-//				List<AccessionDomain> aresults = new ArrayList<AccessionDomain>();
-//				accessionDomain.setProcessStatus("u");
-//				aresults.add(accessionDomain);
-//				accessionService.process(String.valueOf(entity.get_refs_key()), aresults, "Reference", user);					
 				myID.setAccID(accID);
 				myID.setIsPrivate(isPrivate);
 				myID.setPreferred(preferred);
@@ -1968,12 +1967,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 		} else {
 			// We didn't find an existing ID for this logical database, so we need to add one.
-//			AccessionDomain accessionDomain = new AccessionDomain();
-//			List<AccessionDomain> aresults = new ArrayList<AccessionDomain>();
-//			accessionDomain.setProcessStatus("c");
-//			accessionDomain.setAccID(domain.getPubmedid());
-//			accessionDomain.setLogicaldbKey("29");
-//			aresults.add(accessionDomain);
 			Accession myID = new Accession();
 			myID.set_accession_key(accessionDAO.getNextKey());
 			myID.setAccID(accID);
@@ -1992,8 +1985,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		return true;
-		//return 	accessionService.process(String.valueOf(entity.get_refs_key()), aresults, "Reference", user);		
-
 	}
 	
 	//

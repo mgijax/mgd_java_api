@@ -1787,7 +1787,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}
 	
 	//
-	// acc_accession : doiID, pubmedID, gorefd, jnumID
+	// acc_accession : doiID, pubmedID, gorefid, jnumID
 	//
 
 	private boolean applyAccessionIDChanges(Reference entity, ReferenceDomain domain, User user) {
@@ -1882,12 +1882,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			if (domain.getJnumid().isEmpty()) {
 				domain.getJnumidEdit().setProcessStatus("d");
 				aresults.add(domain.getJnumidEdit());					
-			}			
-			else {
-				domain.getJnumidEdit().setProcessStatus("u");
-				domain.getJnumidEdit().setAccID(domain.getJnumid());
-				aresults.add(domain.getJnumidEdit());			
 			}
+			// cannot update a J:
+//			else {
+//				domain.getJnumidEdit().setProcessStatus("u");
+//				domain.getJnumidEdit().setAccID(domain.getJnumid());
+//				aresults.add(domain.getJnumidEdit());			
+//			}
 		}
 		
 		return accessionService.process(String.valueOf(entity.get_refs_key()), aresults, "Reference", user);							

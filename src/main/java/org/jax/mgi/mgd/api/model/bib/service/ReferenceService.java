@@ -1559,11 +1559,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		List<ReferenceWorkflowTag> toDelete = new ArrayList<ReferenceWorkflowTag>();
 
 		// Now we need to diff the set of tags we already have and the set of tags to potentially add. Anything
-		// left in toAdd will need to be added as a new tag, and anything in toDelete will need to be removed.
-
+		// left in toAdd will need to be added as a new tag, and anything in toDelete will need to be removed.		
+		
 		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
 			String myTag = refTag.getTagTerm().getTerm();
-
 			// matching tags
 			if (toAdd.contains(myTag)) {
 				// remove duplicate
@@ -1953,9 +1952,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 	private Integer getTerm (TermDomain termDomain) {
 		// return single Term matching the domain		
-		List<TermDomain> terms = null;
-		terms = termService.search(termDomain);
-		return Integer.valueOf(terms.get(0).getTermKey());		
+		return Integer.valueOf(termService.search(termDomain).get(0).getTermKey());		
 	}
 
 	private Integer getTermByTerm (String vocabKey, String term) {

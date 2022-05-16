@@ -42,10 +42,12 @@ import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.DecodeString;
+import org.jax.mgi.mgd.api.util.MapMaker;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -1509,8 +1511,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		ReferenceWorkflowStatus newRws = new ReferenceWorkflowStatus();
 		newRws.set_refs_key(entity.get_refs_key());
 		newRws.setIsCurrent(1);
-		newRws.setGroupTerm(termDAO.get(getTermByAbbreviation("127", groupAbbrev)));
-		newRws.setStatusTerm(termDAO.get(Integer.valueOf(getTermByTerm("128", newStatus))));
+		newRws.setGroupTerm(getTermByAbbreviation(127, groupAbbrev));
+		newRws.setStatusTerm(getTermByTerm(128, newStatus));
 		newRws.setCreatedBy(user);
 		newRws.setModifiedBy(user);
 		newRws.setCreation_date(new Date());
@@ -1559,10 +1561,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		List<ReferenceWorkflowTag> toDelete = new ArrayList<ReferenceWorkflowTag>();
 
 		// Now we need to diff the set of tags we already have and the set of tags to potentially add. Anything
-		// left in toAdd will need to be added as a new tag, and anything in toDelete will need to be removed.		
-		
+		// left in toAdd will need to be added as a new tag, and anything in toDelete will need to be removed.
+
 		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
 			String myTag = refTag.getTagTerm().getTerm();
+
 			// matching tags
 			if (toAdd.contains(myTag)) {
 				// remove duplicate
@@ -1606,12 +1609,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// persist the association
 		// add it to the workflow tags for this Reference
 
-		Integer tagTermKey = getTermByTerm("129", rdTag);
-		if (tagTermKey != null) {
-			log.info("addTag:" + rdTag + "," + tagTermKey);
+		Term tagTerm = getTermByTerm(129, rdTag);
+		if (tagTerm != null) {
+			log.info("addTag:" + tagTerm);
 			ReferenceWorkflowTag rwTag = new ReferenceWorkflowTag();
 			rwTag.set_refs_key(entity.get_refs_key());
-			rwTag.setTagTerm(termDAO.get(tagTermKey));
+			rwTag.setTagTerm(tagTerm);
 			rwTag.setCreatedBy(user);
 			rwTag.setModifiedBy(user);
 			rwTag.setCreation_date(new Date());
@@ -1950,25 +1953,27 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return a.equals(b);
 	}	
 
-	private Integer getTerm (TermDomain termDomain) {
-		// return single Term matching the domain		
-		return Integer.valueOf(termService.search(termDomain).get(0).getTermKey());		
+	private Term getTerm (String params) {
+		// return single Term matching the parameters encoded as a Map	
+		MapMaker mapMaker = new MapMaker();
+		SearchResults<Term> terms = null;
+		try {
+			terms = termDAO.search(mapMaker.toMap(params));
+		} catch (APIException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return terms.items.get(0);
 	}
 
-	private Integer getTermByTerm (String vocabKey, String term) {
+	private Term getTermByTerm (Integer vocabKey, String term) {
 		// return a single Term matching the given vocabulary / term pair
-		TermDomain termDomain = new TermDomain();
-		termDomain.setVocabKey(vocabKey);
-		termDomain.setTerm(term);
-		return getTerm(termDomain);
+		return getTerm("{\"_vocab_key\" : " + vocabKey + ", \"term\" : \"" + term + "\"}");
 	}
 
-	private Integer getTermByAbbreviation (String vocabKey, String abbreviation)  {
+	private Term getTermByAbbreviation (Integer vocabKey, String abbreviation)  {
 		// return a single Term matching the given vocabulary / abbreviation pair
-		TermDomain termDomain = new TermDomain();
-		termDomain.setVocabKey(vocabKey);
-		termDomain.setAbbreviation(abbreviation);		
-		return getTerm(termDomain);
+		return getTerm("{\"_vocab_key\" : " + vocabKey + ", \"abbreviation\" : \"" + abbreviation + "\"}");
 	}
 	
 }

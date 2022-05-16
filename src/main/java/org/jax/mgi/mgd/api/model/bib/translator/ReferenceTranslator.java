@@ -53,36 +53,36 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		domain.setCreation_date(dateFormatter.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatter.format(entity.getModification_date()));
 
+		// first mgi accession id only
+		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
+			domain.setMgiid(acc.iterator().next().getAccID());		
+		}
+		
+		// jnum info
 		if (entity.getReferenceCitationCache() != null) {
 			domain.setJnumid(entity.getReferenceCitationCache().getJnumid());
 			domain.setJnum(String.valueOf(entity.getReferenceCitationCache().getNumericPart()));		
 			domain.setShort_citation(entity.getReferenceCitationCache().getShort_citation());
 		}
 					
-		// first mgi accession id only
-		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
-			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getMgiAccessionIds());
-			//domain.setMgiAccessionIds(IteratorUtils.toList(acc.iterator()));
-			domain.setMgiid(acc.iterator().next().getAccID());		
-		}
-
-		// non-mgi accession ids
+		// non-mgi accession ids that will be edited
 		if (entity.getEditAccessionIds() != null && !entity.getEditAccessionIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIds());			
 			List<AccessionDomain> editAccessionIds = new ArrayList<AccessionDomain>();
 			editAccessionIds.addAll(IteratorUtils.toList(acc.iterator()));
-			
 			for (int i = 0; i < editAccessionIds.size(); i++) {
 				if (editAccessionIds.get(i).getLogicaldbKey().equals("1") && editAccessionIds.get(i).getPrefixPart().equals("J:")) {
+					// other jnum info is handled above
 					domain.setJnumidEdit(editAccessionIds.get(i));
-				}
-				else if (editAccessionIds.get(i).getLogicaldbKey().equals("29")) {
-					domain.setPubmedid(editAccessionIds.get(i).getAccID());
-					domain.setPubmedidEdit(editAccessionIds.get(i));
 				}
 				else if (editAccessionIds.get(i).getLogicaldbKey().equals("65")) {
 					domain.setDoiid(editAccessionIds.get(i).getAccID());
 					domain.setDoiidEdit(editAccessionIds.get(i));	
+				}	
+				else if (editAccessionIds.get(i).getLogicaldbKey().equals("29")) {
+					domain.setPubmedid(editAccessionIds.get(i).getAccID());
+					domain.setPubmedidEdit(editAccessionIds.get(i));
 				}				
 				else if (editAccessionIds.get(i).getLogicaldbKey().equals("185")) {
 					domain.setGorefid(editAccessionIds.get(i).getAccID());

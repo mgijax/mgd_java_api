@@ -180,37 +180,4 @@ public abstract class PostgresSQLDAO<T> {
 		results.setItems(entityManager.createQuery(query).getResultList());
 		return results;
 	}
-
-	/* method to get the next available key for the specified 'fieldName' in the given 'tableName'.  Any methods
-	 * that wrap this method should be synchronized to ensure thread-safety.  (We do not synchronize this method
-	 * itself, as we want key requests for different tables to be able to proceed in parallel.)
-	 */
-	public int getNextKey() {
-		Long currentTime = System.currentTimeMillis();
-
-		if(idFieldName == null) {
-			log.error("idField was not found or multiple fields exist please use another method for getting max key");
-			return 0;
-		}
-		/* To save hitting the database for every request (and to avoid the same key being given to two users
-		 * who are curating at the same time), we cache the latest key assigned for a given table for a certain
-		 * period of time.  If we pass that period of time without requesting another key for that table, then
-		 * we will query the database when the next key is requested.  (This lets loads handle their own key
-		 * assignments overnight and on weekends, without getting out of sync with an in-memory cached value here.)
-		 */
-
-		if (!keyExpiration.containsKey(idFieldName) || (currentTime > keyExpiration.get(idFieldName))) {
-			TypedQuery<Integer> q1 = entityManager.createQuery("select max(" + idFieldName + ") from " + myClass.getSimpleName(), Integer.class);
-			Integer maxKey = q1.getSingleResult();
-			if (maxKey == null) {
-				maxKey = 0;
-			}
-			nextKeyValue.put(idFieldName, ++maxKey);
-		}
-		Integer nextKey = nextKeyValue.get(idFieldName);
-		nextKeyValue.put(idFieldName, nextKey + 1);
-		keyExpiration.put(idFieldName, currentTime + expirationTime);
-		return nextKey;
-	}
-
 }

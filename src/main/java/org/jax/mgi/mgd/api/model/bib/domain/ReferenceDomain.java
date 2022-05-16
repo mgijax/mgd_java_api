@@ -43,6 +43,7 @@ public class ReferenceDomain extends BaseDomain {
 	private String jnum;
 	private String short_citation;
 	
+	// added AccessionDomain for help in ReferenceService
 	private String mgiid;	
 	private String doiid;
 	private String pubmedid;

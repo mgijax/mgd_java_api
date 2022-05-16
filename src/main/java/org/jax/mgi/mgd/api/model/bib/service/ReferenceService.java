@@ -1971,8 +1971,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 //			AccessionDomain accessionDomain = new AccessionDomain();
 //			List<AccessionDomain> aresults = new ArrayList<AccessionDomain>();
 //			accessionDomain.setProcessStatus("c");
+//			accessionDomain.setAccID(domain.getPubmedid());
+//			accessionDomain.setLogicaldbKey("29");
 //			aresults.add(accessionDomain);
-//			accessionService.process(String.valueOf(entity.get_refs_key()), aresults, "Reference", user);			
 			Accession myID = new Accession();
 			myID.set_accession_key(accessionDAO.getNextKey());
 			myID.setAccID(accID);
@@ -1991,6 +1992,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		return true;
+		//return 	accessionService.process(String.valueOf(entity.get_refs_key()), aresults, "Reference", user);		
+
 	}
 	
 	//

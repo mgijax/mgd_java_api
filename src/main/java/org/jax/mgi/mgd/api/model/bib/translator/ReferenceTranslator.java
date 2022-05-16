@@ -72,21 +72,19 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 		// non-mgi accession ids
 		if (entity.getEditAccessionIds() != null && !entity.getEditAccessionIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIds());
-			List<AccessionDomain> editAccessionIds = new ArrayList<AccessionDomain>();
-			editAccessionIds.addAll(IteratorUtils.toList(acc.iterator()));
-			for (int i = 0; i < editAccessionIds.size(); i++) {
-				if (editAccessionIds.get(i).getLogicaldbKey().equals("29")) {
-					domain.setPubmedid(editAccessionIds.get(i).getAccID());
+			domain.setAccIds(IteratorUtils.toList(acc.iterator()));
+			
+			for (int i = 0; i < domain.getAccIds().size(); i++) {
+				if (domain.getAccIds().get(i).getLogicaldbKey().equals("29")) {
+					domain.setPubmedid(domain.getAccIds().get(i).getAccID());
 				}
-				else if (editAccessionIds.get(i).getLogicaldbKey().equals("65")) {
-					domain.setDoiid(editAccessionIds.get(i).getAccID());
+				else if (domain.getAccIds().get(i).getLogicaldbKey().equals("65")) {
+					domain.setDoiid(domain.getAccIds().get(i).getAccID());
 				}				
-				else if (editAccessionIds.get(i).getLogicaldbKey().equals("185")) {
-					domain.setGorefid(editAccessionIds.get(i).getAccID());
+				else if (domain.getAccIds().get(i).getLogicaldbKey().equals("185")) {
+					domain.setGorefid(domain.getAccIds().get(i).getAccID());
 				}				
 			}
-			//domain.getEditAccessionIds(IteratorUtils.toList(acc.iterator()));
-			//domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
 
 		// at most one reference note

@@ -42,12 +42,10 @@ import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
-import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.DecodeString;
-import org.jax.mgi.mgd.api.util.MapMaker;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -1511,10 +1509,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		ReferenceWorkflowStatus newRws = new ReferenceWorkflowStatus();
 		newRws.set_refs_key(entity.get_refs_key());
 		newRws.setIsCurrent(1);
-		//newRws.setGroutTerm(termDAO.get());
-		newRws.setGroupTerm(getTermByAbbreviation(Constants.VOC_WORKFLOW_GROUP, groupAbbrev));
-		//newRws.setStatusTerm(termDAO.get());
-		newRws.setStatusTerm(getTermByTerm(Constants.VOC_WORKFLOW_STATUS, newStatus));
+		newRws.setGroupTerm(termDAO.get(Integer.valueOf(getTermByAbbreviation(Constants.VOC_WORKFLOW_GROUP, groupAbbrev).getTermKey())));
+		newRws.setStatusTerm(termDAO.get(Integer.valueOf(getTermByTerm(Constants.VOC_WORKFLOW_STATUS, newStatus).getTermKey())));
 		newRws.setCreatedBy(user);
 		newRws.setModifiedBy(user);
 		newRws.setCreation_date(new Date());
@@ -1611,12 +1607,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// persist the association
 		// add it to the workflow tags for this Reference
 
-		Term tagTerm = getTermByTerm(Constants.VOC_WORKFLOW_TAGS, rdTag);
-		if (tagTerm != null) {
-			log.info("addTag:" + tagTerm);
+		String tagTermKey = getTermByTerm(Constants.VOC_WORKFLOW_TAGS, rdTag).getTermKey();
+		if (tagTermKey != null) {
+			log.info("addTag:" + rdTag + "," + tagTermKey);
 			ReferenceWorkflowTag rwTag = new ReferenceWorkflowTag();
 			rwTag.set_refs_key(entity.get_refs_key());
-			rwTag.setTagTerm(tagTerm);
+			rwTag.setTagTerm(termDAO.get(Integer.valueOf(tagTermKey)));
 			rwTag.setCreatedBy(user);
 			rwTag.setModifiedBy(user);
 			rwTag.setCreation_date(new Date());
@@ -1948,7 +1944,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	
 	private boolean smartEqual(Object a, Object b) {
 		// comparison function that handles null values well
-		
 		if (a == null) {
 			if (b == null) { return true; }
 			else { return false; }
@@ -1956,28 +1951,20 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return a.equals(b);
 	}	
 
-	private Term getTerm (String json) {
-		// return single Term matching the parameters encoded as a Map
-		// TODO:  change to use keys
-		
-		MapMaker mapMaker = new MapMaker();
-		SearchResults<Term> terms = null;
-		try {
-			terms = termDAO.search(mapMaker.toMap(json));
-			return terms.items.get(0);			
-		} catch (APIException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
+	private TermDomain getTerm (String json) {
+		// return single Term matching the parameters encoded as a Map		
+		TermDomain termDomain = new TermDomain();
+		List<TermDomain> terms = null;
+		terms = termService.search(termDomain);
+		return terms.get(0);		
 	}
 
-	private Term getTermByTerm (Integer vocabKey, String term) {
+	private TermDomain getTermByTerm (Integer vocabKey, String term) {
 		// return a single Term matching the given vocabulary / term pair
 		return getTerm("{\"_vocab_key\" : " + vocabKey + ", \"term\" : \"" + term + "\"}");
 	}
 
-	private Term getTermByAbbreviation (Integer vocabKey, String abbreviation)  {
+	private TermDomain getTermByAbbreviation (Integer vocabKey, String abbreviation)  {
 		// return a single Term matching the given vocabulary / abbreviation pair
 		return getTerm("{\"_vocab_key\" : " + vocabKey + ", \"abbreviation\" : \"" + abbreviation + "\"}");
 	}

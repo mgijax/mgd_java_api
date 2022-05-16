@@ -1798,7 +1798,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		List<AccessionDomain> aresults = new ArrayList<AccessionDomain>();
 
-		if (!smartEqual(entity.getDoiid(), domain.getDoiid())) {
+		if (!smartEqual(domain.getDoiid(), domain.getDoiidEdit().getAccID())) {
 			if (domain.getDoiidEdit() == null) {
 				AccessionDomain accessionDomain = new AccessionDomain();
 				accessionDomain.setProcessStatus("c");
@@ -1817,7 +1817,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}			
 		}
 
-		if (!smartEqual(entity.getPubmedid(), domain.getPubmedid())) {
+		if (!smartEqual(domain.getPubmedid(), domain.getPubmedidEdit().getAccID())) {
 			if (domain.getPubmedidEdit() == null) {
 				AccessionDomain accessionDomain = new AccessionDomain();
 				accessionDomain.setProcessStatus("c");
@@ -1836,7 +1836,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}			
 		}
 
-		if (!smartEqual(entity.getGorefid(), domain.getGorefid())) {
+		if (!smartEqual(domain.getGorefid(), domain.getGorefidEdit().getAccID())) {
 			if (domain.getGorefidEdit() == null) {
 				AccessionDomain accessionDomain = new AccessionDomain();
 				accessionDomain.setProcessStatus("c");
@@ -1855,7 +1855,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}			
 		}
 		
-		if (!smartEqual(entity.getJnumid(), domain.getJnumid())) {
+		if (!smartEqual(domain.getJnumid(), domain.getJnumidEdit().getAccessionKey())) {
 			if (domain.getJnumidEdit() == null) {
 				AccessionDomain accessionDomain = new AccessionDomain();
 				accessionDomain.setProcessStatus("c");

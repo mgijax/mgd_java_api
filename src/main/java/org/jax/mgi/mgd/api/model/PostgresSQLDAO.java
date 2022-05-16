@@ -132,13 +132,6 @@ public abstract class PostgresSQLDAO<T> {
 	//
 	// ONLY USED BY bib/LT (LitTriage)
 	//
-		
-	/*
-	 * builds query for LTReference search
-	 */
-	public Query createQuery(String cmd) {
-		return entityManager.createQuery(cmd);
-	}
 
 	/* default query handling; good for fields directly in the table backing model class T
 	 */

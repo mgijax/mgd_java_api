@@ -52,16 +52,13 @@ public class TermController extends BaseController<TermDomain> {
 	@POST
 	@ApiOperation(value = "Search")
 	@Path("/search")
-	public List<TermDomain> search(TermDomain searchDomain) {
-			
+	public List<TermDomain> search(TermDomain searchDomain) {		
 		List<TermDomain> results = new ArrayList<TermDomain>();
-		
 		try {
 			results = termService.search(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		return results;
 	}
 

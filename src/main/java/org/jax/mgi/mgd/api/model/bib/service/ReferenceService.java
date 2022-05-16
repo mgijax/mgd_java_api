@@ -1511,7 +1511,14 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		ReferenceWorkflowStatus newRws = new ReferenceWorkflowStatus();
 		newRws.set_refs_key(entity.get_refs_key());
 		newRws.setIsCurrent(1);
-		newRws.setGroupTerm(getTermByAbbreviation(127, groupAbbrev));
+		
+		TermDomain searchDomain = new TermDomain();
+		searchDomain.setVocabKey("127");
+		searchDomain.setAbbreviation(groupAbbrev);
+		List<TermDomain> t = termService.search(searchDomain);
+		newRws.setGroupTerm(termDAO.get(Integer.valueOf(t.get(0).getTermKey())));
+
+		//newRws.setGroupTerm(getTermByAbbreviation(127, groupAbbrev));	
 		newRws.setStatusTerm(getTermByTerm(128, newStatus));
 		newRws.setCreatedBy(user);
 		newRws.setModifiedBy(user);

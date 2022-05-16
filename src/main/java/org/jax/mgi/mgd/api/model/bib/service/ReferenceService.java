@@ -1512,10 +1512,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		newRws.set_refs_key(entity.get_refs_key());
 		newRws.setIsCurrent(1);
 		
-//		TermDomain searchDomain = new TermDomain();
-//		searchDomain.setVocabKey("127");
-//		searchDomain.setAbbreviation(groupAbbrev);
-//		List<TermDomain> t = termService.search(searchDomain);
+		TermDomain searchDomain = new TermDomain();
+		searchDomain.setVocabKey("127");
+		searchDomain.setAbbreviation(groupAbbrev);
+		List<TermDomain> t = termService.search(searchDomain);
+		log.info(t.get(0).getAbbreviation());
+		log.info(t.get(0).getTermKey());
 //		newRws.setGroupTerm(termDAO.get(Integer.valueOf(t.get(0).getTermKey())));
 
 		newRws.setGroupTerm(getTermByAbbreviation(127, groupAbbrev));	

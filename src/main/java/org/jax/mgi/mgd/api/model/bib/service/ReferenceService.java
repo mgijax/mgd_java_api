@@ -1509,8 +1509,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		ReferenceWorkflowStatus newRws = new ReferenceWorkflowStatus();
 		newRws.set_refs_key(entity.get_refs_key());
 		newRws.setIsCurrent(1);
-		newRws.setGroupTerm(termDAO.get(Integer.valueOf(getTermByAbbreviation(Constants.VOC_WORKFLOW_GROUP, groupAbbrev).getTermKey())));
-		newRws.setStatusTerm(termDAO.get(Integer.valueOf(getTermByTerm(Constants.VOC_WORKFLOW_STATUS, newStatus).getTermKey())));
+		newRws.setGroupTerm(termDAO.get(getTermByAbbreviation("127", groupAbbrev)));
+		newRws.setStatusTerm(termDAO.get(Integer.valueOf(getTermByTerm("128", newStatus))));
 		newRws.setCreatedBy(user);
 		newRws.setModifiedBy(user);
 		newRws.setCreation_date(new Date());
@@ -1607,12 +1607,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// persist the association
 		// add it to the workflow tags for this Reference
 
-		String tagTermKey = getTermByTerm(Constants.VOC_WORKFLOW_TAGS, rdTag).getTermKey();
+		Integer tagTermKey = getTermByTerm("129", rdTag);
 		if (tagTermKey != null) {
 			log.info("addTag:" + rdTag + "," + tagTermKey);
 			ReferenceWorkflowTag rwTag = new ReferenceWorkflowTag();
 			rwTag.set_refs_key(entity.get_refs_key());
-			rwTag.setTagTerm(termDAO.get(Integer.valueOf(tagTermKey)));
+			rwTag.setTagTerm(termDAO.get(tagTermKey));
 			rwTag.setCreatedBy(user);
 			rwTag.setModifiedBy(user);
 			rwTag.setCreation_date(new Date());
@@ -1951,22 +1951,27 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return a.equals(b);
 	}	
 
-	private TermDomain getTerm (String json) {
-		// return single Term matching the parameters encoded as a Map		
-		TermDomain termDomain = new TermDomain();
+	private Integer getTerm (TermDomain termDomain) {
+		// return single Term matching the domain		
 		List<TermDomain> terms = null;
 		terms = termService.search(termDomain);
-		return terms.get(0);		
+		return Integer.valueOf(terms.get(0).getTermKey());		
 	}
 
-	private TermDomain getTermByTerm (Integer vocabKey, String term) {
+	private Integer getTermByTerm (String vocabKey, String term) {
 		// return a single Term matching the given vocabulary / term pair
-		return getTerm("{\"_vocab_key\" : " + vocabKey + ", \"term\" : \"" + term + "\"}");
+		TermDomain termDomain = new TermDomain();
+		termDomain.setVocabKey(vocabKey);
+		termDomain.setTerm(term);
+		return getTerm(termDomain);
 	}
 
-	private TermDomain getTermByAbbreviation (Integer vocabKey, String abbreviation)  {
+	private Integer getTermByAbbreviation (String vocabKey, String abbreviation)  {
 		// return a single Term matching the given vocabulary / abbreviation pair
-		return getTerm("{\"_vocab_key\" : " + vocabKey + ", \"abbreviation\" : \"" + abbreviation + "\"}");
+		TermDomain termDomain = new TermDomain();
+		termDomain.setVocabKey(vocabKey);
+		termDomain.setAbbreviation(abbreviation);		
+		return getTerm(termDomain);
 	}
 	
 }

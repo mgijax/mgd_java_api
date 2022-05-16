@@ -1833,6 +1833,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setPubmedidEdit(accessionDomain);
 				aresults.add(domain.getPubmedidEdit());
 			}
+			else if (domain.getPubmedid().isEmpty()) {
+				domain.getPubmedidEdit().setProcessStatus("d");
+				aresults.add(domain.getPubmedidEdit());					
+			}			
 			else {
 				domain.getPubmedidEdit().setProcessStatus("u");
 				domain.getPubmedidEdit().setAccID(domain.getPubmedid());
@@ -1852,6 +1856,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setGorefidEdit(accessionDomain);
 				aresults.add(domain.getGorefidEdit());
 			}
+			else if (domain.getGorefid().isEmpty()) {
+				domain.getGorefidEdit().setProcessStatus("d");
+				aresults.add(domain.getGorefidEdit());					
+			}			
 			else {
 				domain.getGorefidEdit().setProcessStatus("u");
 				domain.getGorefidEdit().setAccID(domain.getGorefid());
@@ -1871,6 +1879,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setJnumidEdit(accessionDomain);
 				aresults.add(domain.getJnumidEdit());
 			}
+			else if (domain.getJnumid().isEmpty()) {
+				domain.getJnumidEdit().setProcessStatus("d");
+				aresults.add(domain.getJnumidEdit());					
+			}			
 			else {
 				domain.getJnumidEdit().setProcessStatus("u");
 				domain.getJnumidEdit().setAccID(domain.getJnumid());

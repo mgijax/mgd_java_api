@@ -1437,7 +1437,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			log.info("applyWorkflowStatusChanges/anyChanges = true");
 			
 			// if entity J# is null/empty and domain workflow status in (Chosen, Indexed, Full-coded), then add J#
-			if (entity.getJnumid() == null || entity.getJnumid().isEmpty()) {
+			if (domain.getJnumidEdit() == null) {
 
 				log.info("entity J# is null/empty; checking domain workflow status in (Chosen, Indexed, Full-coded)");
 				
@@ -1527,6 +1527,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		newRws.setCreation_date(new Date());
 		newRws.setModification_date(new Date());
 		entity.getWorkflowStatus().add(newRws);
+		
 		referenceDAO.persist(newRws);
 
 		return true;

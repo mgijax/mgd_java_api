@@ -147,48 +147,48 @@ public class Reference extends BaseEntity {
 	@OrderBy("_refassoctype_key")
 	private List<MGIReferenceAssoc> alleleAssocs;
 
-	/* Find and return the first accession ID matching any specified logical database, prefix,
-	 * is-preferred, and is-private settings.
-	 */
-	@Transient
-	private String findFirstID(Integer ldb, String prefix, Integer preferred, Integer isPrivate) {
-		for (int i = 0; i < accessionIDs.size(); i++) {
-			Accession accID = accessionIDs.get(i);
-			if ((ldb == null) || (ldb.equals(accID.getLogicaldb().get_logicaldb_key()))) {
-				if ((prefix == null) || prefix.equals(accID.getPrefixPart())) {
-					if ((preferred == null) || (preferred.equals(accID.getPreferred()))) {
-						if ((isPrivate == null) || (isPrivate.equals(accID.getIsPrivate()))) {
-							return accID.getAccID();
-						}
-					}
-				}
-			}
-		}
-		return null;
-	}
-
-	@Transient
-	public String getJnumid() {
-		return findFirstID(1, "J:", 1, 0);
-	}
-
-	@Transient
-	public String getDoiid() {
-		return findFirstID(65, null, null, null);
-	}
-
-	@Transient
-	public String getPubmedid() {
-		return findFirstID(29, null, null, null);
-	}
-
-	@Transient
-	public String getMgiid() {
-		return findFirstID(1, "MGI:", null, null);
-	}
-
-	@Transient
-	public String getGorefid() {
-		return findFirstID(185, null, null, null);
-	}	
+//	/* Find and return the first accession ID matching any specified logical database, prefix,
+//	 * is-preferred, and is-private settings.
+//	 */
+//	@Transient
+//	private String findFirstID(Integer ldb, String prefix, Integer preferred, Integer isPrivate) {
+//		for (int i = 0; i < accessionIDs.size(); i++) {
+//			Accession accID = accessionIDs.get(i);
+//			if ((ldb == null) || (ldb.equals(accID.getLogicaldb().get_logicaldb_key()))) {
+//				if ((prefix == null) || prefix.equals(accID.getPrefixPart())) {
+//					if ((preferred == null) || (preferred.equals(accID.getPreferred()))) {
+//						if ((isPrivate == null) || (isPrivate.equals(accID.getIsPrivate()))) {
+//							return accID.getAccID();
+//						}
+//					}
+//				}
+//			}
+//		}
+//		return null;
+//	}
+//
+//	@Transient
+//	public String getJnumid() {
+//		return findFirstID(1, "J:", 1, 0);
+//	}
+//
+//	@Transient
+//	public String getDoiid() {
+//		return findFirstID(65, null, null, null);
+//	}
+//
+//	@Transient
+//	public String getPubmedid() {
+//		return findFirstID(29, null, null, null);
+//	}
+//
+//	@Transient
+//	public String getMgiid() {
+//		return findFirstID(1, "MGI:", null, null);
+//	}
+//
+//	@Transient
+//	public String getGorefid() {
+//		return findFirstID(185, null, null, null);
+//	}	
 }

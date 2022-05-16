@@ -1508,20 +1508,61 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// add a new status record for this change -- and need to persist this new object to the
 		// database explicitly, before the whole reference gets persisted later on.
 
+//		  31576664 | AP
+//		  31576665 | GXD
+//		  31576666 | GO
+//		  78678148 | PRO
+//		  31576668 | QTL
+//		  31576667 | Tumor
+
+		Integer groupTermKey = 0;
+		if (groupAbbrev.equals(Constants.WG_AP)) {
+			groupTermKey = 31576664;
+		}		
+		else if (groupAbbrev.equals(Constants.WG_GXD)) {
+			groupTermKey = 31576665;
+		}
+		else if (groupAbbrev.equals(Constants.WG_GO)) {
+			groupTermKey = 31576666;
+		}
+		else if (groupAbbrev.equals(Constants.WG_PRO)) {
+			groupTermKey = 78678148;
+		}
+		else if (groupAbbrev.equals(Constants.WG_QTL)) {
+			groupTermKey = 31576668;
+		}		
+		else if (groupAbbrev.equals(Constants.WG_TUMOR)) {
+			groupTermKey = 31576667;
+		}	
+		
+//		  31576671 | Chosen
+//		  31576674 | Full-coded
+//		  31576673 | Indexed
+//		  31576672 | Rejected
+//		  31576670 | Routed
+		
+		Integer newStatusKey = 0;
+		if (newStatus.equals(Constants.WS_CHOSEN)) {
+			newStatusKey = 31576671;
+		}
+		else if (newStatus.equals(Constants.WS_CURATED)) {
+			newStatusKey = 31576674;
+		}
+		else if (newStatus.equals(Constants.WS_INDEXED)) {
+			newStatusKey = 31576673;
+		}
+		else if (newStatus.equals(Constants.WS_REJECTED)) {
+			newStatusKey = 31576672;
+		}
+		else if (newStatus.equals(Constants.WS_ROUTED)) {
+			newStatusKey = 31576670;
+		}
+		
 		ReferenceWorkflowStatus newRws = new ReferenceWorkflowStatus();
 		newRws.set_refs_key(entity.get_refs_key());
 		newRws.setIsCurrent(1);
-		
-//		TermDomain searchDomain = new TermDomain();
-//		searchDomain.setVocabKey("127");
-//		searchDomain.setAbbreviation(groupAbbrev);
-//		List<TermDomain> t = termService.search(searchDomain);
-//		log.info(t.get(0).getAbbreviation());
-//		log.info(t.get(0).getTermKey());
-//		newRws.setGroupTerm(termDAO.get(Integer.valueOf(t.get(0).getTermKey())));
-
-		newRws.setGroupTerm(getTermByAbbreviation(127, groupAbbrev));	
-		newRws.setStatusTerm(getTermByTerm(128, newStatus));
+		newRws.setGroupTerm(termDAO.get(groupTermKey));
+		newRws.setStatusTerm(termDAO.get(newStatusKey));
 		newRws.setCreatedBy(user);
 		newRws.setModifiedBy(user);
 		newRws.setCreation_date(new Date());

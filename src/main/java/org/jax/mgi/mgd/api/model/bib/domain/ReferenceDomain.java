@@ -59,11 +59,17 @@ public class ReferenceDomain extends BaseDomain {
 	
 	// workflow status
 	private String ap_status;
+	private String ap_statusKey;	
 	private String go_status;
+	private String go_statusKey;	
 	private String gxd_status;
+	private String gxd_statusKey;
 	private String pro_status;
+	private String pro_statusKey;
 	private String qtl_status;
+	private String qtl_statusKey;
 	private String tumor_status;
+	private String tumor_statusKey;
 	private List<ReferenceWorkflowStatusDomain> statusCurrent;
 	private List<ReferenceWorkflowStatusDomain> statusHistory;
 

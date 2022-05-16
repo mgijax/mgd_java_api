@@ -141,27 +141,27 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 			for (int s = 0; s < domain.getStatusCurrent().size(); s++) {
 				if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_AP)) {
 					domain.setAp_status(domain.getStatusCurrent().get(s).getStatus());
-					//domain.setAp_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+					domain.setAp_statusKey(domain.getStatusCurrent().get(s).getStatusKey());
 				}
 				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_GO)) {
 					domain.setGo_status(domain.getStatusCurrent().get(s).getStatus());
-					//domain.setGo_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+					domain.setGo_statusKey(domain.getStatusCurrent().get(s).getStatusKey());
 				}	
 				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_GXD)) {
 					domain.setGxd_status(domain.getStatusCurrent().get(s).getStatus());
-					//domain.setGxd_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+					domain.setGxd_statusKey(domain.getStatusCurrent().get(s).getStatusKey());
 				}
 				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_PRO)) {
 					domain.setPro_status(domain.getStatusCurrent().get(s).getStatus());
-					//domain.setPro_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+					domain.setPro_statusKey(domain.getStatusCurrent().get(s).getStatusKey());
 				}	
 				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_QTL)) {
 					domain.setQtl_status(domain.getStatusCurrent().get(s).getStatus());
-					//domain.setQtl_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+					domain.setQtl_statusKey(domain.getStatusCurrent().get(s).getStatusKey());
 				}	
 				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_TUMOR)) {
 					domain.setTumor_status(domain.getStatusCurrent().get(s).getStatus());
-					//domain.setTumor_statusKey(domain.getStatusCurrent().get(i).getStatusKey());
+					domain.setTumor_statusKey(domain.getStatusCurrent().get(s).getStatusKey());
 				}			
 			}
 		}

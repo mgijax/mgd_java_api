@@ -2,7 +2,6 @@ package org.jax.mgi.mgd.api.model;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,21 +31,7 @@ public abstract class PostgresSQLDAO<T> {
 	protected EntityManager entityManager;
 
 	protected Logger log = Logger.getLogger(getClass());
-
 	protected String idFieldName = null;
-	
-	// ONLY USED BY bib/LT (LitTriage)
-	
-	/* how long can we cache keys without refreshing from database? (in milliseconds) */
-//	protected static long expirationTime = 2 * 60 * 1000;
-
-//	/* maps from table name to time (in milliseconds) when we should search for a new key */
-//	protected static Map<String, Long> keyExpiration = new HashMap<String, Long>();
-//
-//	/* maps from table name to the next value that should be assigned as primary key for the table */
-//	protected static Map<String, Integer> nextKeyValue = new HashMap<String, Integer>();
-
-	// END ONLY USED BY bib/LT (LitTriage)
 	
 	protected PostgresSQLDAO(Class<T> myClass) {
 		this.myClass = myClass;

@@ -18,11 +18,7 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.acc.dao.AccessionDAO;
-import org.jax.mgi.mgd.api.model.acc.dao.LogicalDBDAO;
-import org.jax.mgi.mgd.api.model.acc.dao.MGITypeDAO;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
-import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceWorkflowDataDAO;
@@ -67,12 +63,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	private ReferenceWorkflowDataDAO wfDataDAO;
 	@Inject
 	private TermDAO termDAO;
-	@Inject
-	private AccessionDAO accessionDAO;
-	@Inject
-	private LogicalDBDAO logicaldbDAO;
-	@Inject
-	private MGITypeDAO mgiTypeDAO;
 	@Inject
 	private AccessionService accessionService;
 	@Inject
@@ -1797,201 +1787,94 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}
 	
 	//
-	// acc_accession : doiID, pubmedID, jnumID
+	// acc_accession : doiID, pubmedID, gorefd, jnumID
 	//
-	
-	private String cleanDoiID(String doiID) {
-		// clear DOI IDs
-		// all DOI IDs must begin with "10.", but if not, just trust the user
-		
-		log.info("clearDoiID():" + doiID);
-		
-		if ((doiID != null) && (!doiID.startsWith("10."))) {
-			int tenPosition = doiID.indexOf("10.");
-			if (tenPosition < 0) {
-				return doiID;
-			}
-			doiID = doiID.substring(tenPosition);
-		}
-		return doiID;
-	}
-
-	private String cleanPubMedID(String pubmedID) {
-		// clear pubmed IDs
-		// all PubMed IDs are purely numeric, so strip off anything to the left of the first non-numeric character
-		
-		log.info("clearPubMedID():" + pubmedID);
-		
-		if ((pubmedID != null) && (pubmedID.trim().length() > 0) && (!pubmedID.matches("^[0-9]+$"))) {
-			// anything up to the final non-digit, followed by the digits that are the PubMed ID
-			Pattern p = Pattern.compile("^.*[^0-9]+([0-9]+)$");
-			Matcher m = p.matcher(pubmedID.trim());
-			if (m.find()) {
-				pubmedID = m.group(1);
-			} else {
-				// if there are letters after the digits, just keep the original ID (don't throw an exception)
-				return pubmedID;
-			}
-		}
-		return pubmedID;
-	}
 
 	private boolean applyAccessionIDChanges(Reference entity, ReferenceDomain domain, User user) {
 		// assumes only one ID per reference for each logical database (valid assumption, August 2017)
 		// need to handle:  new ID for logical db, updated ID for logical db, deleted ID for logical db
 
 		log.info("applyAccessionIDChanges()");
-		
-		// cleanup of DOI ID and PubMed ID
-		domain.setDoiid(cleanDoiID(domain.getDoiid()));
-		domain.setPubmedid(cleanPubMedID(domain.getPubmedid()));
 
-		boolean anyChanges = false;
-		Pattern pattern = Pattern.compile("(.*?)([0-9]+)");		// any characters as a prefix (reluctant group), followed by one or more digits
+		List<AccessionDomain> aresults = new ArrayList<AccessionDomain>();
 
 		if (!smartEqual(entity.getDoiid(), domain.getDoiid())) {
-			String prefixPart = domain.getDoiid();					// defaults
-			Integer numericPart = null;
-
-			if (domain.getDoiid() != null) {
-				Matcher m = pattern.matcher(domain.getDoiid());
-				if (m.find()) {
-					prefixPart = m.group(1);					// ID fit pattern, so use more accurate prefix / numeric parts
-					numericPart = Integer.parseInt(m.group(2));
-				}
+			if (domain.getDoiidEdit() == null) {
+				AccessionDomain accessionDomain = new AccessionDomain();
+				accessionDomain.setProcessStatus("c");
+				accessionDomain.setAccID(domain.getDoiid());
+				accessionDomain.setLogicaldbKey("65");
+				accessionDomain.setMgiTypeKey("1");
+				accessionDomain.setPreferred("1");
+				accessionDomain.setIsPrivate("0");
+				domain.setDoiidEdit(accessionDomain);
+				aresults.add(domain.getDoiidEdit());
 			}
-
-			anyChanges = applyOneIDChange(entity, 65, domain.getDoiid(), prefixPart, numericPart, 1, 0, user) || anyChanges;
+			else {
+				domain.getDoiidEdit().setProcessStatus("u");
+				domain.getDoiidEdit().setAccID(domain.getDoiid());
+				aresults.add(domain.getDoiidEdit());			
+			}			
 		}
 
 		if (!smartEqual(entity.getPubmedid(), domain.getPubmedid())) {
-			String prefixPart = domain.getPubmedid();				// defaults
-			Integer numericPart = null;
-
-			if (domain.getPubmedid() != null) {
-				Matcher m = pattern.matcher(domain.getPubmedid());
-				if (m.find()) {
-					prefixPart = m.group(1);					// ID fit pattern, so use more accurate prefix / numeric parts
-					numericPart = Integer.parseInt(m.group(2));
-				}
+			if (domain.getPubmedidEdit() == null) {
+				AccessionDomain accessionDomain = new AccessionDomain();
+				accessionDomain.setProcessStatus("c");
+				accessionDomain.setAccID(domain.getPubmedid());
+				accessionDomain.setLogicaldbKey("29");
+				accessionDomain.setMgiTypeKey("1");
+				accessionDomain.setPreferred("1");				
+				accessionDomain.setIsPrivate("0");
+				domain.setPubmedidEdit(accessionDomain);
+				aresults.add(domain.getPubmedidEdit());
 			}
-
-			anyChanges = applyOneIDChange(entity, 29, domain.getPubmedid(), prefixPart, numericPart, 1, 0, user) || anyChanges;
+			else {
+				domain.getPubmedidEdit().setProcessStatus("u");
+				domain.getPubmedidEdit().setAccID(domain.getPubmedid());
+				aresults.add(domain.getPubmedidEdit());			
+			}			
 		}
 
 		if (!smartEqual(entity.getGorefid(), domain.getGorefid())) {
-			String prefixPart = domain.getGorefid();					// defaults
-			Integer numericPart = null;
-
-			if (domain.getGorefid() != null) {
-				Matcher m = pattern.matcher(domain.getGorefid());
-				if (m.find()) {
-					prefixPart = m.group(1);					// ID fit pattern, so use more accurate prefix / numeric parts
-					numericPart = Integer.parseInt(m.group(2));
-				}
+			if (domain.getGorefidEdit() == null) {
+				AccessionDomain accessionDomain = new AccessionDomain();
+				accessionDomain.setProcessStatus("c");
+				accessionDomain.setAccID(domain.getGorefid());
+				accessionDomain.setLogicaldbKey("185");
+				accessionDomain.setMgiTypeKey("1");
+				accessionDomain.setPreferred("0");
+				accessionDomain.setIsPrivate("1");
+				domain.setGorefidEdit(accessionDomain);
+				aresults.add(domain.getGorefidEdit());
 			}
-
-			anyChanges = applyOneIDChange(entity, 185, domain.getGorefid(), prefixPart, numericPart, 0, 1, user) || anyChanges;
+			else {
+				domain.getGorefidEdit().setProcessStatus("u");
+				domain.getGorefidEdit().setAccID(domain.getGorefid());
+				aresults.add(domain.getGorefidEdit());			
+			}			
 		}
 		
-		if (domain.getJnumidEdit() == null) {
-			AccessionDomain accessionDomain = new AccessionDomain();
-			accessionDomain.setProcessStatus("c");
-			accessionDomain.setAccID(domain.getJnumid());
-			accessionDomain.setLogicaldbKey("1");
-			domain.setJnumidEdit(accessionDomain);
-		}
-		if (entity.getJnumid() != null && (domain.getJnumid() == null || domain.getJnumid().isEmpty())) {
-			String prefixPart = domain.getJnumid();				// defaults
-			Integer numericPart = null;
-
-			if (domain.getJnumid() != null) {
-				Matcher m = pattern.matcher(domain.getJnumid());
-				if (m.find()) {
-					prefixPart = m.group(1);					// ID fit pattern, so use more accurate prefix / numeric parts
-					numericPart = Integer.parseInt(m.group(2));
-				}
+		if (!smartEqual(entity.getJnumid(), domain.getJnumid())) {
+			if (domain.getJnumidEdit() == null) {
+				AccessionDomain accessionDomain = new AccessionDomain();
+				accessionDomain.setProcessStatus("c");
+				accessionDomain.setAccID(domain.getJnumid());
+				accessionDomain.setLogicaldbKey("1");
+				accessionDomain.setMgiTypeKey("1");
+				accessionDomain.setPreferred("1");			
+				accessionDomain.setIsPrivate("0");
+				domain.setJnumidEdit(accessionDomain);
+				aresults.add(domain.getJnumidEdit());
 			}
-
-//			accessionDomain.setProcessStatus("c");
-//			accessionDomain.setAccID(domain.getPubmedid());
-//			accessionDomain.setLogicaldbKey("29");
-			anyChanges = applyOneIDChange(entity, 1, domain.getJnumid(), prefixPart, numericPart, 1, 0, user) || anyChanges;
-		}
-		
-		return anyChanges;
-		//return 	accessionService.process(String.valueOf(entity.get_refs_key()), domain.getAccIds(), "Reference", user);				
-	}
-
-	private boolean applyOneIDChange(Reference entity, Integer ldb, String accID, String prefixPart, Integer numericPart, Integer preferred, Integer isPrivate, User user) {
-		// Apply a single ID change to this reference.  
-		// If there already is an ID for this logical database, replace it.  
-		// If there wasn't one, add one.  
-		// if there was one previously, but there's not now, then delete it.
-		// first parameter is required; bail out if it is null
-		
-		if (ldb == null) { return false; }
-		
-		log.info("applyOneIDChange():" + ldb + "," + accID + "," + prefixPart + "," + numericPart + "," + preferred + "," + isPrivate);
-		
-		// find any existing AccessionID object for this logical database.
-
-		List<Accession> ids = entity.getAccessionIDs();
-		int idPos = -1;			// position of correct ID in list of IDs
-		for (int i = 0; i < ids.size(); i++) {
-			Accession myID = ids.get(i);
-			
-			// skip if MGI:xxxx; J:xxxx is OK
-			if (ldb.equals(1)) {
-				if (myID.getPrefixPart().equals("MGI:")) {
-					continue;
-				}
+			else {
+				domain.getJnumidEdit().setProcessStatus("u");
+				domain.getJnumidEdit().setAccID(domain.getJnumid());
+				aresults.add(domain.getJnumidEdit());			
 			}
-			
-			if (ldb.equals(myID.getLogicaldb().get_logicaldb_key())) {
-				idPos = i;
-				break;	}
-		}
-
-		// TODO: convert to:
-		//if (accessionService.process(domain.getRefsKey(), domain.getEditAccessionIds(), "1", user)) {
-		
-		// If we had a previous ID for this logical database, we either need to modify it or delete it.
-		if (idPos >= 0) {
-			// Passing in a null ID indicates that any existing ID should be removed.
-			if ( (accID == null) || (accID.trim().length() == 0))  {
-				referenceDAO.remove(ids.get(idPos));
-			} else {
-				// Otherwise, we can update the ID and other data for this logical database.			
-				Accession myID = ids.get(idPos);
-				myID.setAccID(accID);
-				myID.setIsPrivate(isPrivate);
-				myID.setPreferred(preferred);
-				myID.setPrefixPart(prefixPart);
-				myID.setNumericPart(numericPart);
-				myID.setModification_date(new Date());
-				myID.setModifiedBy(user);
-			}
-		} else {
-			// We didn't find an existing ID for this logical database, so we need to add one.
-			Accession myID = new Accession();
-			myID.set_accession_key(accessionDAO.getNextKey());
-			myID.setAccID(accID);
-			myID.setPreferred(preferred);
-			myID.setIsPrivate(isPrivate);
-			myID.setLogicaldb(logicaldbDAO.get(ldb));
-			myID.set_object_key(entity.get_refs_key());
-			myID.setMgiType(mgiTypeDAO.get(1));
-			myID.setPrefixPart(prefixPart);
-			myID.setNumericPart(numericPart);
-			myID.setCreation_date(new Date());
-			myID.setModification_date(new Date());
-			myID.setCreatedBy(user);
-			myID.setModifiedBy(user);
-			referenceDAO.persist(myID);
 		}
 		
-		return true;
+		return accessionService.process(String.valueOf(entity.get_refs_key()), aresults, "Reference", user);							
 	}
 	
 	//

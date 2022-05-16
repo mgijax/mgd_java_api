@@ -260,6 +260,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		// but not using entity to handle actual create/delete/update processing
 		
 		Boolean modified = false;
+		String isPreferred = "1";
 		String isPrivate = "0";
 		
 		if (domain == null || domain.isEmpty()) {
@@ -274,6 +275,14 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		
 		for (int i = 0; i < domain.size(); i++) {
 
+			
+			if (domain.get(i).getPreferred() == null || domain.get(i).getPreferred().isEmpty()) {
+				isPreferred = "1";
+			}
+			else {
+				isPreferred = domain.get(i).getPreferred();
+			}
+			
 			if (domain.get(i).getIsPrivate() == null || domain.get(i).getIsPrivate().isEmpty()) {
 				isPrivate = "0";
 			}
@@ -297,15 +306,16 @@ public class AccessionService extends BaseService<AccessionDomain> {
 				if (domain.get(i).getReferences() != null) {
 				    refsKey = domain.get(i).getReferences().get(0).getRefsKey();
 				}
-
+				
 				cmd = "select count(*) from ACC_insert ("
 							+ user.get_user_key().intValue()
 							+ "," + parentKey
 							+ ",'" + domain.get(i).getAccID() + "'"
 							+ "," + domain.get(i).getLogicaldbKey()
 							+ ",'" + mgiTypeName + "'"
-							+ "," + refsKey + ","
-							+ "1," + isPrivate + ",1)";
+							+ "," + refsKey
+							+ "," + isPreferred
+							+ "," + isPrivate + ",1)";
 				log.info("cmd: " + cmd);
 				Query query = accessionDAO.createNativeQuery(cmd);
 				query.getResultList();

@@ -44,12 +44,13 @@ public class ReferenceDomain extends BaseDomain {
 	private String short_citation;
 	
 	private String mgiid;	
-	private String gorefid;
 	private String doiid;
 	private String pubmedid;
+	private String gorefid;
 	private AccessionDomain jnumidEdit;
 	private AccessionDomain doiidEdit;
 	private AccessionDomain pubmedidEdit;
+	private AccessionDomain gorefidEdit;
 
 	private ReferenceBookDomain referenceBook;
 	private ReferenceNoteDomain referenceNote;

@@ -73,7 +73,7 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 			editAccessionIds.addAll(IteratorUtils.toList(acc.iterator()));
 			
 			for (int i = 0; i < editAccessionIds.size(); i++) {
-				if (editAccessionIds.get(i).getLogicaldbKey().equals("1") && editAccessionIds.get(i).getPrefixPart().equals("J")) {
+				if (editAccessionIds.get(i).getLogicaldbKey().equals("1") && editAccessionIds.get(i).getPrefixPart().equals("J:")) {
 					domain.setJnumidEdit(editAccessionIds.get(i));
 				}
 				else if (editAccessionIds.get(i).getLogicaldbKey().equals("29")) {
@@ -86,6 +86,7 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 				}				
 				else if (editAccessionIds.get(i).getLogicaldbKey().equals("185")) {
 					domain.setGorefid(editAccessionIds.get(i).getAccID());
+					domain.setGorefidEdit(editAccessionIds.get(i));
 				}				
 			}
 		}

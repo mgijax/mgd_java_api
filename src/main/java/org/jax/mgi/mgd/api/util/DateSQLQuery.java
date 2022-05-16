@@ -82,15 +82,11 @@ public class DateSQLQuery {
 		return new String[] {from, where};
 	}
 
-
-
 	public static String createDateWhereClause(String field, String value) {
 
 		String where = "";
-		
 
 		// construct where 
-
 
 		if (value.startsWith("<=") == true) {
 			where = where + "\nand " + field + "::date <= '" + value.replace("<=","") + "'";
@@ -116,9 +112,5 @@ public class DateSQLQuery {
 		
 		return where;
 	}
-
-
-
-
 
 }

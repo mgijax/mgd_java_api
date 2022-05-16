@@ -1798,19 +1798,19 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		List<AccessionDomain> aresults = new ArrayList<AccessionDomain>();
 
-		if (!smartEqual(domain.getDoiid(), domain.getDoiidEdit().getAccID())) {
-			if (domain.getDoiidEdit() == null) {
-				AccessionDomain accessionDomain = new AccessionDomain();
-				accessionDomain.setProcessStatus("c");
-				accessionDomain.setAccID(domain.getDoiid());
-				accessionDomain.setLogicaldbKey("65");
-				accessionDomain.setMgiTypeKey("1");
-				accessionDomain.setPreferred("1");
-				accessionDomain.setIsPrivate("0");
-				domain.setDoiidEdit(accessionDomain);
-				aresults.add(domain.getDoiidEdit());
-			}
-			else if (domain.getDoiid().isEmpty()) {
+		if (domain.getDoiidEdit() == null) {
+			AccessionDomain accessionDomain = new AccessionDomain();
+			accessionDomain.setProcessStatus("c");
+			accessionDomain.setAccID(domain.getDoiid());
+			accessionDomain.setLogicaldbKey("65");
+			accessionDomain.setMgiTypeKey("1");
+			accessionDomain.setPreferred("1");
+			accessionDomain.setIsPrivate("0");
+			domain.setDoiidEdit(accessionDomain);
+			aresults.add(domain.getDoiidEdit());
+		}
+		else if (!smartEqual(domain.getDoiid(), domain.getDoiidEdit().getAccID())) {
+			if (domain.getDoiid().isEmpty()) {
 				domain.getDoiidEdit().setProcessStatus("d");
 				aresults.add(domain.getDoiidEdit());					
 			}
@@ -1821,19 +1821,19 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}			
 		}
 
-		if (!smartEqual(domain.getPubmedid(), domain.getPubmedidEdit().getAccID())) {
-			if (domain.getPubmedidEdit() == null) {
-				AccessionDomain accessionDomain = new AccessionDomain();
-				accessionDomain.setProcessStatus("c");
-				accessionDomain.setAccID(domain.getPubmedid());
-				accessionDomain.setLogicaldbKey("29");
-				accessionDomain.setMgiTypeKey("1");
-				accessionDomain.setPreferred("1");				
-				accessionDomain.setIsPrivate("0");
-				domain.setPubmedidEdit(accessionDomain);
-				aresults.add(domain.getPubmedidEdit());
-			}
-			else if (domain.getPubmedid().isEmpty()) {
+		if (domain.getPubmedidEdit() == null) {
+			AccessionDomain accessionDomain = new AccessionDomain();
+			accessionDomain.setProcessStatus("c");
+			accessionDomain.setAccID(domain.getPubmedid());
+			accessionDomain.setLogicaldbKey("29");
+			accessionDomain.setMgiTypeKey("1");
+			accessionDomain.setPreferred("1");				
+			accessionDomain.setIsPrivate("0");
+			domain.setPubmedidEdit(accessionDomain);
+			aresults.add(domain.getPubmedidEdit());
+		}		
+		else if (!smartEqual(domain.getPubmedid(), domain.getPubmedidEdit().getAccID())) {
+			if (domain.getPubmedid().isEmpty()) {
 				domain.getPubmedidEdit().setProcessStatus("d");
 				aresults.add(domain.getPubmedidEdit());					
 			}			
@@ -1844,19 +1844,19 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}			
 		}
 
-		if (!smartEqual(domain.getGorefid(), domain.getGorefidEdit().getAccID())) {
-			if (domain.getGorefidEdit() == null) {
-				AccessionDomain accessionDomain = new AccessionDomain();
-				accessionDomain.setProcessStatus("c");
-				accessionDomain.setAccID(domain.getGorefid());
-				accessionDomain.setLogicaldbKey("185");
-				accessionDomain.setMgiTypeKey("1");
-				accessionDomain.setPreferred("0");
-				accessionDomain.setIsPrivate("1");
-				domain.setGorefidEdit(accessionDomain);
-				aresults.add(domain.getGorefidEdit());
-			}
-			else if (domain.getGorefid().isEmpty()) {
+		if (domain.getGorefidEdit() == null) {
+			AccessionDomain accessionDomain = new AccessionDomain();
+			accessionDomain.setProcessStatus("c");
+			accessionDomain.setAccID(domain.getGorefid());
+			accessionDomain.setLogicaldbKey("185");
+			accessionDomain.setMgiTypeKey("1");
+			accessionDomain.setPreferred("0");
+			accessionDomain.setIsPrivate("1");
+			domain.setGorefidEdit(accessionDomain);
+			aresults.add(domain.getGorefidEdit());
+		}		
+		else if (!smartEqual(domain.getGorefid(), domain.getGorefidEdit().getAccID())) {
+			if (domain.getGorefid().isEmpty()) {
 				domain.getGorefidEdit().setProcessStatus("d");
 				aresults.add(domain.getGorefidEdit());					
 			}			
@@ -1867,19 +1867,19 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}			
 		}
 		
-		if (!smartEqual(domain.getJnumid(), domain.getJnumidEdit().getAccessionKey())) {
-			if (domain.getJnumidEdit() == null) {
-				AccessionDomain accessionDomain = new AccessionDomain();
-				accessionDomain.setProcessStatus("c");
-				accessionDomain.setAccID(domain.getJnumid());
-				accessionDomain.setLogicaldbKey("1");
-				accessionDomain.setMgiTypeKey("1");
-				accessionDomain.setPreferred("1");			
-				accessionDomain.setIsPrivate("0");
-				domain.setJnumidEdit(accessionDomain);
-				aresults.add(domain.getJnumidEdit());
-			}
-			else if (domain.getJnumid().isEmpty()) {
+		if (domain.getJnumidEdit() == null) {
+			AccessionDomain accessionDomain = new AccessionDomain();
+			accessionDomain.setProcessStatus("c");
+			accessionDomain.setAccID(domain.getJnumid());
+			accessionDomain.setLogicaldbKey("1");
+			accessionDomain.setMgiTypeKey("1");
+			accessionDomain.setPreferred("1");			
+			accessionDomain.setIsPrivate("0");
+			domain.setJnumidEdit(accessionDomain);
+			aresults.add(domain.getJnumidEdit());
+		}		
+		else if (!smartEqual(domain.getJnumid(), domain.getJnumidEdit().getAccessionKey())) {
+			if (domain.getJnumid().isEmpty()) {
 				domain.getJnumidEdit().setProcessStatus("d");
 				aresults.add(domain.getJnumidEdit());					
 			}			

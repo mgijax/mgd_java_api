@@ -58,7 +58,7 @@ public class Reference extends BaseEntity {
 	@Column(name="abstract")
 	private String referenceAbstract;
 
-	@OneToOne()
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_referencetype_key", referencedColumnName="_term_key")
 	private Term referenceTypeTerm;
 	
@@ -71,7 +71,7 @@ public class Reference extends BaseEntity {
 	private User modifiedBy;
 
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+	@JoinColumn(name="_refs_key")
 	private ReferenceCitationCache referenceCitationCache;
 
 	// at most one mapping note

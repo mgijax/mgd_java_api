@@ -1894,6 +1894,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			anyChanges = applyOneIDChange(entity, 185, domain.getGorefid(), prefixPart, numericPart, 0, 1, user) || anyChanges;
 		}
 		
+		if (domain.getJnumidEdit() == null) {
+			AccessionDomain accessionDomain = new AccessionDomain();
+			accessionDomain.setProcessStatus("c");
+			accessionDomain.setAccID(domain.getJnumid());
+			accessionDomain.setLogicaldbKey("1");
+			domain.setJnumidEdit(accessionDomain);
+		}
 		if (entity.getJnumid() != null && (domain.getJnumid() == null || domain.getJnumid().isEmpty())) {
 			String prefixPart = domain.getJnumid();				// defaults
 			Integer numericPart = null;

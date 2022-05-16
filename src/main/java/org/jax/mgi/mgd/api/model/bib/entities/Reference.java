@@ -89,7 +89,7 @@ public class Reference extends BaseEntity {
 	// editable only accession ids
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 1 and `_logicaldb_key` in (1. 29, 65, 185)")
+	@Where(clause="`_mgitype_key` = 1 and `_logicaldb_key` in (1, 29, 65, 185)")
 	@OrderBy("accid")
 	private List<Accession> editAccessionIds;
 

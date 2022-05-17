@@ -105,7 +105,7 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 			domain.setReferenceBook(book.iterator().next());			
 		}
 
-		// data specific to workflows: has supplemental data?, link to supplemental data, has PDF?, has extracted text?
+		// data specific to workflows: has supplemental data, link to supplemental data, has PDF, has extracted text
 		// only grabs the extracted text "body" (done in the entity)
 		if (entity.getWorkflowData() != null) {
 			ReferenceWorkflowDataTranslator dataTranslator = new ReferenceWorkflowDataTranslator();

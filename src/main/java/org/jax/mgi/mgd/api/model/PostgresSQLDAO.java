@@ -52,10 +52,6 @@ public abstract class PostgresSQLDAO<T> {
 		return model;
 	}
 
-//	public T get(Map<String, Object> params) {
-//		return search(params).items.get(0);
-//	}
-
 	public T get(Integer key) {
 		return entityManager.find(myClass, key);
 	}
@@ -103,56 +99,4 @@ public abstract class PostgresSQLDAO<T> {
 		Query query = entityManager.createNativeQuery(cmd);
 		return query;
 	}
-
-	//
-	// ONLY USED BY bib/LT (LitTriage)
-	//
-
-	/* default query handling; good for fields directly in the table backing model class T
-	 */
-//	public SearchResults<T> search(Map<String, Object> params) {
-//		return search(params, null);
-//	}
-//
-//	public SearchResults<T> search(Map<String, Object> params, String orderByField) {
-//		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-//		CriteriaQuery<T> query = builder.createQuery(myClass);
-//		Root<T> root = query.from(myClass);
-//
-//		List<Predicate> restrictions = new ArrayList<Predicate>();
-//
-//		for(String key: params.keySet()) {
-//			Path<Object> column = null;
-//			if(key.contains(".")) {
-//				String[] objects = key.split("\\.");
-//				for(String s: objects) {
-//					if(column != null) {
-//						column = column.get(s);
-//					} else {
-//						column = root.get(s);
-//					}
-//				}
-//			} else {
-//				column = root.get(key);
-//			}
-//
-//			Object value = params.get(key);
-//			if (value instanceof Integer) {
-//				Integer desiredValue = (Integer) value;
-//				restrictions.add(builder.equal(column, desiredValue));
-//			} else {
-//				String desiredValue = (String) value;
-//				restrictions.add(builder.equal(column, desiredValue));
-//			}
-//		}
-//		if(orderByField != null) {
-//			query.orderBy(builder.asc(root.get(orderByField)));
-//		}
-//
-//		query.where(builder.and(restrictions.toArray(new Predicate[0])));
-//
-//		SearchResults<T> results = new SearchResults<T>();
-//		results.setItems(entityManager.createQuery(query).getResultList());
-//		return results;
-//	}
 }

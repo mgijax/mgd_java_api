@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.bib.translator;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.collections4.IteratorUtils;
@@ -16,6 +17,7 @@ import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowTagDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceAssociatedData;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jboss.logging.Logger;
@@ -123,6 +125,7 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 				workflowTagString.add(domain.getWorkflowTags().get(t).getTag());
 			}
 			domain.setWorkflowTagString(workflowTagString);
+			domain.getWorkflowTags().sort(Comparator.comparing(ReferenceWorkflowTagDomain::getTag));
 		}		
 		
 		// bib_workflow_status

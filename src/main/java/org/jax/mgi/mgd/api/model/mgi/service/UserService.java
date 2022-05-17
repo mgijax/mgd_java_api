@@ -71,7 +71,6 @@ public class UserService extends BaseService<UserDomain> {
 
 	@Transactional
 	public List<UserDomain> search() {
-
 		List<UserDomain> results = new ArrayList<UserDomain>();
 
 		String cmd = "select * from mgi_user_active_view order by login";
@@ -96,18 +95,8 @@ public class UserService extends BaseService<UserDomain> {
 	
 	/* get the User object corresponding to the given username (Linux login) */
 	public User getUserByUsername(String username) {
-//		Map<String, Object> map = new HashMap<String, Object>();
-//		map.put("login", username);
-//		if(userDAO.search(map).total_count > 0) {
-//			log.info(Constants.LOG_SUCCESS_USERLOGIN + username);
-//			return userDAO.search(map).items.get(0);
-//		} else {
-//			log.info(Constants.LOG_FAIL_USERLOGIN + username);
-//			return null;
-//		}
-		
 		User user = null;
-		String cmd = "select * from mgi_user where login = '" + username + "'";	
+		String cmd = "select _user_key from mgi_user where login = '" + username + "'";	
 		log.info(cmd);
 
 		try {

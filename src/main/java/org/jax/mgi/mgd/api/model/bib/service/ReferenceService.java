@@ -1545,7 +1545,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (newStatus.equals(Constants.WS_CHOSEN)) {
 			newStatusKey = 31576671;
 		}
-		else if (newStatus.equals(Constants.WS_CURATED)) {
+		else if (newStatus.equals(Constants.WS_FULLCODED)) {
 			newStatusKey = 31576674;
 		}
 		else if (newStatus.equals(Constants.WS_INDEXED)) {
@@ -2023,9 +2023,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return getTerm("{\"_vocab_key\" : " + vocabKey + ", \"term\" : \"" + term + "\"}");
 	}
 
-	private Term getTermByAbbreviation (Integer vocabKey, String abbreviation)  {
-		// return a single Term matching the given vocabulary / abbreviation pair
-		return getTerm("{\"_vocab_key\" : " + vocabKey + ", \"abbreviation\" : \"" + abbreviation + "\"}");
-	}
+//	private Term getTermByAbbreviation (Integer vocabKey, String abbreviation)  {
+//		// return a single Term matching the given vocabulary / abbreviation pair
+//		return getTerm("{\"_vocab_key\" : " + vocabKey + ", \"abbreviation\" : \"" + abbreviation + "\"}");
+//	}
 	
 }

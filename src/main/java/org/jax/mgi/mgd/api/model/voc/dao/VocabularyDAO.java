@@ -12,13 +12,13 @@ public class VocabularyDAO extends PostgresSQLDAO<Vocabulary> {
 		super(Vocabulary.class);
 	}
 	
-	public Vocabulary getByName(String vocabName) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("name", vocabName);
-		if(search(map).total_count > 0) {
-			return search(map).items.get(0);
-		}
-		return null;
-	}
+//	public Vocabulary getByName(String vocabName) {
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		map.put("name", vocabName);
+//		if(search(map).total_count > 0) {
+//			return search(map).items.get(0);
+//		}
+//		return null;
+//	}
 
 }

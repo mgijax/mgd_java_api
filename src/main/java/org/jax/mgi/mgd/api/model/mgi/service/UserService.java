@@ -95,7 +95,7 @@ public class UserService extends BaseService<UserDomain> {
 	}
 	
 	/* get the User object corresponding to the given username (Linux login) */
-	public User getUserByUserName(String username) {
+	public User getUserByUsername(String username) {
 //		Map<String, Object> map = new HashMap<String, Object>();
 //		map.put("login", username);
 //		if(userDAO.search(map).total_count > 0) {

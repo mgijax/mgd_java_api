@@ -281,6 +281,49 @@ public class TermService extends BaseService<TermDomain> {
 		return results;
 	}	
  
+	@Transactional	
+	public Integer searchByTerm(TermDomain searchDomain) {
+		// using searchDomain fields, generate SQL command
+		List<TermDomain> results = new ArrayList<TermDomain>();
+
+		String cmd = "";
+		String select = "select distinct t._term_key from voc_term t";
+		String where = "where t._vocab_key = " + searchDomain.getVocabKey();
+		
+		String value;
+		if (searchDomain.getTerm() != null && !searchDomain.getTerm().isEmpty()) {
+					value = searchDomain.getTerm().replace("'",  "''");
+					value = value.replace("(",  "\\(");
+					value = value.replace(")", "\\)");
+                	where = where + "\nand t.term ilike '" + value + "'";
+
+		}
+		if (searchDomain.getAbbreviation() != null && !searchDomain.getAbbreviation().isEmpty()) {
+                        value = searchDomain.getAbbreviation().replace("'",  "''");
+                        where = where + "\nand t.abbreviation ilike '" + value + "'";
+
+		}		
+
+		cmd = "\n" + select + "\n" + where;
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				TermDomain domain = new TermDomain();
+				domain = translator.translate(termDAO.get(rs.getInt("_term_key")));
+				termDAO.clear();
+				results.add(domain);
+			}
+			//sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return Integer.valueOf(results.get(0).getTermKey());
+	}
+	
 	@Transactional
 	public Boolean process(String vocabKey, List<TermDomain> domain, User user) {
 		// process term associations (create, delete, update)

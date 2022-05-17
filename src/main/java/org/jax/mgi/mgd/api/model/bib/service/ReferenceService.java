@@ -1661,19 +1661,26 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// persist the association
 		// add it to the workflow tags for this Reference
 
-		Term tagTerm = getTermByTerm(129, rdTag);
-		if (tagTerm != null) {
-			log.info("addTag:" + tagTerm);
-			ReferenceWorkflowTag rwTag = new ReferenceWorkflowTag();
-			rwTag.set_refs_key(entity.get_refs_key());
-			rwTag.setTagTerm(tagTerm);
-			rwTag.setCreatedBy(user);
-			rwTag.setModifiedBy(user);
-			rwTag.setCreation_date(new Date());
-			rwTag.setModification_date(new Date());
-			referenceDAO.persist(rwTag);
-			entity.getWorkflowTags().add(rwTag);
-		}
+		//Term tagTerm = getTermByTerm(129, rdTag);
+		
+		TermDomain termDomain = new TermDomain();
+		termDomain.setVocabKey("129");
+		termDomain.setTerm(rdTag);
+		Integer tagTermKey = termService.searchByTerm(termDomain);
+		
+		//if (tagTerm != null) {
+		log.info("addTag:" + rdTag + "," + tagTermKey);
+		ReferenceWorkflowTag rwTag = new ReferenceWorkflowTag();
+		rwTag.set_refs_key(entity.get_refs_key());
+		rwTag.setTagTerm(termDAO.get(tagTermKey));
+		//rwTag.setTagTerm(tagTerm);
+		rwTag.setCreatedBy(user);
+		rwTag.setModifiedBy(user);
+		rwTag.setCreation_date(new Date());
+		rwTag.setModification_date(new Date());
+		referenceDAO.persist(rwTag);
+		entity.getWorkflowTags().add(rwTag);
+		//}
 	}
 
 	public void removeTag(Reference entity, String rdTag, User user) {

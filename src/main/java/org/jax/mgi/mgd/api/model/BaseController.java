@@ -40,7 +40,7 @@ public abstract class BaseController<T extends BaseDomain> {
 	}
 	
 	protected User authenticateUser(String username) {
-		User user = userService.getUserByUsername(username);
+		User user = userService.getUserByUserName(username);
 		return user;
 	}
 

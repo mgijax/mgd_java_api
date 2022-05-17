@@ -2,9 +2,7 @@ package org.jax.mgi.mgd.api.model.mgi.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -12,7 +10,6 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.dao.UserDAO;
-import org.jax.mgi.mgd.api.model.mgi.domain.SlimUserDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.UserDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.UserTranslator;
@@ -98,16 +95,32 @@ public class UserService extends BaseService<UserDomain> {
 	}
 	
 	/* get the User object corresponding to the given username (Linux login) */
-	public User getUserByUsername(String username) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("login", username);
-		if(userDAO.search(map).total_count > 0) {
-			log.info(Constants.LOG_SUCCESS_USERLOGIN + username);
-			return userDAO.search(map).items.get(0);
-		} else {
-			log.info(Constants.LOG_FAIL_USERLOGIN + username);
-			return null;
+	public User getUserByUserName(String username) {
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		map.put("login", username);
+//		if(userDAO.search(map).total_count > 0) {
+//			log.info(Constants.LOG_SUCCESS_USERLOGIN + username);
+//			return userDAO.search(map).items.get(0);
+//		} else {
+//			log.info(Constants.LOG_FAIL_USERLOGIN + username);
+//			return null;
+//		}
+		
+		User user = null;
+		String cmd = "select * from mgi_user where login = '" + username + "'";	
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				user = userDAO.get(rs.getInt("_user_key"));
+			}
 		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return user;
 	}
 
 //  obsolete; remove

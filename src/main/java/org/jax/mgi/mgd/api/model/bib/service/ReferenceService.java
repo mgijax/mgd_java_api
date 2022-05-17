@@ -1666,7 +1666,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		TermDomain termDomain = new TermDomain();
 		termDomain.setVocabKey("129");
 		termDomain.setTerm(rdTag);
-		Integer tagTermKey = termService.searchByTerm(termDomain);
+		int tagTermKey = termService.searchByTerm(termDomain);
 		
 		//if (tagTerm != null) {
 		log.info("addTag:" + rdTag + "," + tagTermKey);

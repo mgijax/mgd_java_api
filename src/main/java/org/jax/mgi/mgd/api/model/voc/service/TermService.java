@@ -282,10 +282,11 @@ public class TermService extends BaseService<TermDomain> {
 	}	
  
 	@Transactional	
-	public Integer searchByTerm(TermDomain searchDomain) {
+	public int searchByTerm(TermDomain searchDomain) {
 		// using searchDomain fields, generate SQL command
-		List<TermDomain> results = new ArrayList<TermDomain>();
 
+		int key = 0;
+		
 		String cmd = "";
 		String select = "select distinct t._term_key from voc_term t";
 		String where = "where t._vocab_key = " + searchDomain.getVocabKey();
@@ -310,18 +311,14 @@ public class TermService extends BaseService<TermDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				TermDomain domain = new TermDomain();
-				domain = translator.translate(termDAO.get(rs.getInt("_term_key")));
-				termDAO.clear();
-				results.add(domain);
+				key = rs.getInt("_term_key");
 			}
-			//sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return Integer.valueOf(results.get(0).getTermKey());
+		return key;
 	}
 	
 	@Transactional

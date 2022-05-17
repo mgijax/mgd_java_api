@@ -1645,25 +1645,22 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		log.info("addTag:" + rdTag);;
 		
+		// if rdTag already exists in entity, return/do nothing
 		String trimTag = rdTag.trim();
 		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
-			if (trimTag.equals(refTag.getTagTerm().getTerm()) ) {
+			if (trimTag.equals(refTag.getTagTerm().getTerm())) {
 				return;
 			}
 		}
-
-		log.info("addTag()/new tag:" + rdTag);
 		
-		// find the term of the tag
-		// wrap it in an association
-		// persist the association
-		// add it to the workflow tags for this Reference
-		
+		// get tagTermKey by termService.searchByTerm()
 		TermDomain termDomain = new TermDomain();
 		termDomain.setVocabKey("129");
 		termDomain.setTerm(rdTag);
 		int tagTermKey = termService.searchByTerm(termDomain);
-		log.info("addTag:" + rdTag + "," + tagTermKey);
+		log.info("addTag/new tag:" + rdTag + "," + tagTermKey);
+		
+		// add new ReferenceWorkflowTag
 		ReferenceWorkflowTag rwTag = new ReferenceWorkflowTag();
 		rwTag.set_refs_key(entity.get_refs_key());
 		rwTag.setTagTerm(termDAO.get(tagTermKey));
@@ -1673,6 +1670,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		rwTag.setModification_date(new Date());
 		referenceDAO.persist(rwTag);
 		entity.getWorkflowTags().add(rwTag);
+		return;
 	}
 
 	public void removeTag(Reference entity, String rdTag, User user) {

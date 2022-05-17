@@ -42,12 +42,10 @@ import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
-import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.DecodeString;
-import org.jax.mgi.mgd.api.util.MapMaker;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -1660,27 +1658,21 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// wrap it in an association
 		// persist the association
 		// add it to the workflow tags for this Reference
-
-		//Term tagTerm = getTermByTerm(129, rdTag);
 		
 		TermDomain termDomain = new TermDomain();
 		termDomain.setVocabKey("129");
 		termDomain.setTerm(rdTag);
 		int tagTermKey = termService.searchByTerm(termDomain);
-		
-		//if (tagTerm != null) {
 		log.info("addTag:" + rdTag + "," + tagTermKey);
 		ReferenceWorkflowTag rwTag = new ReferenceWorkflowTag();
 		rwTag.set_refs_key(entity.get_refs_key());
 		rwTag.setTagTerm(termDAO.get(tagTermKey));
-		//rwTag.setTagTerm(tagTerm);
 		rwTag.setCreatedBy(user);
 		rwTag.setModifiedBy(user);
 		rwTag.setCreation_date(new Date());
 		rwTag.setModification_date(new Date());
 		referenceDAO.persist(rwTag);
 		entity.getWorkflowTags().add(rwTag);
-		//}
 	}
 
 	public void removeTag(Reference entity, String rdTag, User user) {
@@ -2010,29 +2002,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			else { return false; }
 		}		
 		return a.equals(b);
-	}	
-
-	private Term getTerm (String params) {
-		// return single Term matching the parameters encoded as a Map	
-		MapMaker mapMaker = new MapMaker();
-		SearchResults<Term> terms = null;
-		try {
-			terms = termDAO.search(mapMaker.toMap(params));
-		} catch (APIException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return terms.items.get(0);
 	}
-
-	private Term getTermByTerm (Integer vocabKey, String term) {
-		// return a single Term matching the given vocabulary / term pair
-		return getTerm("{\"_vocab_key\" : " + vocabKey + ", \"term\" : \"" + term + "\"}");
-	}
-
-//	private Term getTermByAbbreviation (Integer vocabKey, String abbreviation)  {
-//		// return a single Term matching the given vocabulary / abbreviation pair
-//		return getTerm("{\"_vocab_key\" : " + vocabKey + ", \"abbreviation\" : \"" + abbreviation + "\"}");
-//	}
 	
 }

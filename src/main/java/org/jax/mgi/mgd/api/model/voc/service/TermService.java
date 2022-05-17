@@ -284,6 +284,8 @@ public class TermService extends BaseService<TermDomain> {
 	@Transactional	
 	public int searchByTerm(TermDomain searchDomain) {
 		// using searchDomain fields, generate SQL command
+		// search by _vocab_key and (term or abbreviation)
+		// return term key (int)
 
 		int key = 0;
 		

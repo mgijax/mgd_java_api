@@ -1445,27 +1445,27 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 				if (domain.getAp_status().equals(Constants.WS_CHOSEN)
 					|| domain.getAp_status().equals(Constants.WS_INDEXED)
-					|| domain.getAp_status().equals(Constants.WS_CURATED)
+					|| domain.getAp_status().equals(Constants.WS_FULLCODED)
 
 					|| domain.getGo_status().equals(Constants.WS_CHOSEN)
 					|| domain.getGo_status().equals(Constants.WS_INDEXED)
-					|| domain.getGo_status().equals(Constants.WS_CURATED)
+					|| domain.getGo_status().equals(Constants.WS_FULLCODED)
 					
 					|| domain.getGxd_status().equals(Constants.WS_CHOSEN)
 					|| domain.getGxd_status().equals(Constants.WS_INDEXED)
-					|| domain.getGxd_status().equals(Constants.WS_CURATED)
+					|| domain.getGxd_status().equals(Constants.WS_FULLCODED)
 				
 					|| domain.getPro_status().equals(Constants.WS_CHOSEN)
 					|| domain.getPro_status().equals(Constants.WS_INDEXED)
-					|| domain.getPro_status().equals(Constants.WS_CURATED)
+					|| domain.getPro_status().equals(Constants.WS_FULLCODED)
 
 					|| domain.getQtl_status().equals(Constants.WS_CHOSEN)
 					|| domain.getQtl_status().equals(Constants.WS_INDEXED)
-					|| domain.getQtl_status().equals(Constants.WS_CURATED)
+					|| domain.getQtl_status().equals(Constants.WS_FULLCODED)
 	
 					|| domain.getTumor_status().equals(Constants.WS_CHOSEN)
 					|| domain.getTumor_status().equals(Constants.WS_INDEXED)
-					|| domain.getTumor_status().equals(Constants.WS_CURATED)
+					|| domain.getTumor_status().equals(Constants.WS_FULLCODED)
 					) {
 						addJnumid = true;
 				}

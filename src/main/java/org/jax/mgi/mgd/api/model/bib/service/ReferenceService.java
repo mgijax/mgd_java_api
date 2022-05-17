@@ -1492,8 +1492,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			return false;
 		}
 
-		// At this point, we know we have a status update.  
-		// If there was an existing record, we need to flag it as not current.
+		// status update; flag existing record isCurrent = 0
 		if (currentStatus != null) {
 			for (ReferenceWorkflowStatus rws : entity.getWorkflowStatus()) {
 				if ( (rws.getIsCurrent() == 1) && groupAbbrev.equals(rws.getGroupTerm().getAbbreviation()) ) {

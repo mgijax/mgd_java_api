@@ -1207,12 +1207,19 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if ((workflow_tag_operation == null) || workflow_tag_operation.equals("")) {
 			workflow_tag_operation = Constants.OP_ADD_WORKFLOW;
 		}
-
+		
+		// get tagTermKey by termService.searchByTerm()
+		TermDomain termDomain = new TermDomain();
+		termDomain.setVocabKey("129");
+		termDomain.setTerm(workflowTag);
+		int tagTermKey = termService.searchByTerm(termDomain);
+		log.info("addTag/new tag:" + workflowTag + "," + tagTermKey);
+		
 		for (String refsKey : listOfRefsKey) {
 			Reference entity = referenceDAO.get(Integer.valueOf(refsKey));
 			if (workflow_tag_operation.equals(Constants.OP_ADD_WORKFLOW)) {
 				if (!workflowTag.isEmpty()) {
-					addTag(entity, workflowTag, user);
+					addTag(entity, tagTermKey, user);
 				}
 			} else {
 				removeTag(entity, workflowTag, user);
@@ -1634,36 +1641,34 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		// add new tags
 		for (String rdTag : toAdd) {
-			addTag(entity, rdTag, user);
+			// get tagTermKey by termService.searchByTerm()
+			TermDomain termDomain = new TermDomain();
+			termDomain.setVocabKey("129");
+			termDomain.setTerm(rdTag);
+			int tagTermKey = termService.searchByTerm(termDomain);
+			log.info("addTag/new tag:" + rdTag + "," + tagTermKey);			
+			addTag(entity, tagTermKey, user);
 		}
 
 		return (toDelete.size() > 0) || (toAdd.size() > 0);
 	}
 
-	public void addTag(Reference entity, String rdTag, User user) {
+	public void addTag(Reference entity, int tagTermKey, User user) {
 		// add new tags to bib_workflow_tag
 		// do not add duplicate tags
 
-		log.info("addTag:" + rdTag);;
+		log.info("addTag:" + tagTermKey);;
 		
-		// if rdTag already exists in entity, return/do nothing
-		String trimTag = rdTag.trim();
+		// if tagTermKey already exists in entity, return/do nothing
 		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
-			if (trimTag.equals(refTag.getTagTerm().getTerm())) {
+			if (tagTermKey == refTag.getTagTerm().get_term_key()) {
 				return;
 			}
 		}
 		
-		if (rdTag.isEmpty()) {
+		if (tagTermKey == 0) {
 			return;
 		}
-		
-		// get tagTermKey by termService.searchByTerm()
-		TermDomain termDomain = new TermDomain();
-		termDomain.setVocabKey("129");
-		termDomain.setTerm(rdTag);
-		int tagTermKey = termService.searchByTerm(termDomain);
-		log.info("addTag/new tag:" + rdTag + "," + tagTermKey);
 		
 		// add new ReferenceWorkflowTag
 		ReferenceWorkflowTag rwTag = new ReferenceWorkflowTag();

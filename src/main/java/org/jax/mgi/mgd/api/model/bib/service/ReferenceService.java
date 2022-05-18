@@ -1211,7 +1211,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		for (String refsKey : listOfRefsKey) {
 			Reference entity = referenceDAO.get(Integer.valueOf(refsKey));
 			if (workflow_tag_operation.equals(Constants.OP_ADD_WORKFLOW)) {
-				addTag(entity, workflowTag, user);
+				if (!workflowTag.isEmpty()) {
+					addTag(entity, workflowTag, user);
+				}
 			} else {
 				removeTag(entity, workflowTag, user);
 			}

@@ -1657,7 +1657,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// add new tags to bib_workflow_tag
 		// do not add duplicate tags
 
-		log.info("addTag:" + tagTermKey);;
+		log.info("addTag:" + entity.get_refs_key() + "," + tagTermKey);
 		
 		// if tagTermKey already exists in entity, return/do nothing
 		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {

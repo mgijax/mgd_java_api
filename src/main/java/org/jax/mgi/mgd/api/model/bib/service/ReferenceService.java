@@ -1652,6 +1652,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 		}
 		
+		if (rdTag.isEmpty()) {
+			return;
+		}
+		
 		// get tagTermKey by termService.searchByTerm()
 		TermDomain termDomain = new TermDomain();
 		termDomain.setVocabKey("129");

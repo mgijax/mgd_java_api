@@ -15,13 +15,13 @@ public class SlimReferenceDomain extends BaseDomain {
 	// not to be used when editing purposes
 	// to be used for returning search results
 	
-	private String refsKey;
-	private String jnumid;
-	private String jnum;
-	private String short_citation;
-	private String title;	
-	private String journal;
-	private String year;
+	public String refsKey;
+	public String jnumid;
+	public String jnum;
+	public String short_citation;
+	public String title;	
+	public String journal;
+	public String year;
 	public String mgiid;	
 	public String doiid;
 	public String pubmedid;
@@ -34,11 +34,10 @@ public class SlimReferenceDomain extends BaseDomain {
 	public String qtl_status;
 	public String tumor_status;
 	public String haspdf;
-	public Boolean has_new_tag = false;
 	
 	// used by validateJnumImage
-	private List<TermDomain> journalLicenses;
-	private String copyright;
-	private String selectedJournalLicense;
-	private Boolean needsDXDOIid = false;
+	public List<TermDomain> journalLicenses;
+	public String copyright;
+	public String selectedJournalLicense;
+	public Boolean needsDXDOIid = false;
 }

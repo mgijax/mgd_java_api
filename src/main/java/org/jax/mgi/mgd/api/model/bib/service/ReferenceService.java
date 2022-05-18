@@ -318,7 +318,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				+ "\nand c._refs_key = tumor._refs_key and tumor.isCurrent = 1 and tumor._group_key = 31576667 and tumor._status_key = tumort._term_key";
 				
 		String 	orderBy = "order by c.short_citation";			
-		String limit = Constants.SEARCH_RETURN_LIMIT;
+		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
 		String addToWhere = "";
 
@@ -868,7 +868,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		// make this easy to copy/paste for troubleshooting
-		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
+		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n";
 		log.info(cmd);
 
 		try {

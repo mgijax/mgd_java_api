@@ -168,8 +168,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 				+ "\nand _mgitype_key = 10"
 				+ "\nand lower(accid) = '" + domain.getAccID().toLowerCase() + "'";
 			
-		// if also sent an objectKey, then ignore this object in query
-		// that is, don't return the record if the accession id exists for this object already
+		// ignore the accession id for an existing strain...
 		if (domain.getObjectKey() != null && !domain.getObjectKey().isEmpty()) {
 			cmd = cmd + "\nand _object_key != " + domain.getObjectKey();
 		}

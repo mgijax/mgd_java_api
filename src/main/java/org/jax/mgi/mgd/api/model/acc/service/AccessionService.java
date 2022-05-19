@@ -149,7 +149,44 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		
 		return results;
 	}	
+
+	@Transactional	
+	public List<SlimAccessionDomain> validStrainAccessionId(SlimAccessionDomain domain) {
+		// use SlimAccessionDomain to return list of validated strain accession id for logicaldbKey
+		// expects full accID (prefixPart + numericPart)
+		// returns empty list if value contains "%"
+		// returns empty list if value does not exist
+
+		List<SlimAccessionDomain> results = new ArrayList<SlimAccessionDomain>();
 		
+		if (domain.getAccID().contains("%")) {
+			return results;
+		}
+
+		String cmd = "\nselect * from acc_accession"
+				+ "\nwhere _logicaldb_key = " + domain.getLogicaldbKey()
+				+ "\nand _mgitype_key = 10"
+				+ "\nand lower(accid) = '" + domain.getAccID().toLowerCase() + "'";
+			
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {	
+				SlimAccessionDomain sdomain = new SlimAccessionDomain();	
+				sdomain = slimtranslator.translate(accessionDAO.get(rs.getInt("_accession_key")));
+				accessionDAO.clear();									
+				results.add(sdomain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
+	
 	//
 	// get list of accession id domains by using sqlExecutor
 	//

@@ -72,7 +72,23 @@ public class AccessionController extends BaseController<AccessionDomain> {
 			@HeaderParam("mgiTypeKey") String mgiTypeKey) {
 		return accessionService.validIsDuplicate(key, accid, logicaldbKey, mgiTypeKey);
 	}
+	
+	@POST
+	@ApiOperation(value = "Validate Strain Accession Id")
+	@Path("/validStrainAccessionId")
+	public List<SlimAccessionDomain> validStrainAccessionId(SlimAccessionDomain domain) {
+			
+		List<SlimAccessionDomain> results = new ArrayList<SlimAccessionDomain>();
 		
+		try {
+			results = accessionService.validStrainAccessionId(domain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 	@POST
 	@ApiOperation(value = "Get Marker Edit Accession Ids")
 	@Path("/markerEditAccessionIds")

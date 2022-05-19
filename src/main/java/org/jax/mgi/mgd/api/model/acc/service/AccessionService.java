@@ -170,7 +170,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 			
 		// if also sent an objectKey, then ignore this object in query
 		// that is, don't return the record if the accession id exists for this object already
-		if (domain.getObjectKey() != null || !domain.getObjectKey().isEmpty()) {
+		if (domain.getObjectKey() != null && !domain.getObjectKey().isEmpty()) {
 			cmd = cmd + "\nand _object_key != " + domain.getObjectKey();
 		}
 		

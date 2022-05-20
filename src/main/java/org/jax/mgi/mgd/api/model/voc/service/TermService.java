@@ -279,48 +279,6 @@ public class TermService extends BaseService<TermDomain> {
 		}
 		
 		return results;
-	}	
- 
-	@Transactional	
-	public int searchByTerm(TermDomain searchDomain) {
-		// using searchDomain fields, generate SQL command
-		// search by _vocab_key and (term or abbreviation)
-		// return term key (int)
-
-		int key = 0;
-		
-		String cmd = "";
-		String select = "select distinct t._term_key from voc_term t";
-		String where = "where t._vocab_key = " + searchDomain.getVocabKey();
-		
-		String value;
-		if (searchDomain.getTerm() != null && !searchDomain.getTerm().isEmpty()) {
-					value = searchDomain.getTerm().replace("'",  "''");
-					value = value.replace("(",  "\\(");
-					value = value.replace(")", "\\)");
-                	where = where + "\nand t.term ilike '" + value + "'";
-
-		}
-		if (searchDomain.getAbbreviation() != null && !searchDomain.getAbbreviation().isEmpty()) {
-                        value = searchDomain.getAbbreviation().replace("'",  "''");
-                        where = where + "\nand t.abbreviation ilike '" + value + "'";
-
-		}		
-
-		cmd = "\n" + select + "\n" + where;
-		log.info(cmd);
-
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				key = rs.getInt("_term_key");
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return key;
 	}
 	
 	@Transactional

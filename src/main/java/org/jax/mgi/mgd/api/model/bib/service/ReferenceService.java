@@ -1645,10 +1645,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// add new tags
 		for (String rdTag : toAdd) {
 			// get tagTermKey by termService.searchByTerm()
-			TermDomain termDomain = new TermDomain();
-			termDomain.setVocabKey("129");
-			termDomain.setTerm(rdTag);
-			int tagTermKey = termService.searchByTerm(termDomain);
+			SearchResults<SlimTermDomain> termDomain = termService.validateTermSlim(129, rdTag);
+			int tagTermKey = termDomain.items.get(0).get_term_key();			
+//			TermDomain termDomain = new TermDomain();
+//			termDomain.setVocabKey("129");
+//			termDomain.setTerm(rdTag);
+//			int tagTermKey = termService.searchByTerm(termDomain);
 			log.info("addTag/new tag:" + rdTag + "," + tagTermKey);			
 			addTag(entity, tagTermKey, user);
 		}

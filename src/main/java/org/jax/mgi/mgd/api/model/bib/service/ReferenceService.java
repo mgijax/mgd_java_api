@@ -1276,8 +1276,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			log.info("updateReferenceStatus/return from update()");
 			updateResults.total_count = updateResults.items.size();
 			log.info(updateResults.items.size());
-			results.items.add(updateResults.toString());
-			log.info(results.toString());
+			results.items.add(updateResults.items.toString());
 		}
 		
 		log.info("results:" + results);

@@ -1243,9 +1243,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			
 		for (int i = 0; i < refs.size(); i++) {
 			ReferenceDomain ref = get(Integer.valueOf(refs.get(i).getRefsKey()));
-										
-			//ref.setStatus(group, status);
-			
+													
 			if (group.equalsIgnoreCase("AP")) {
 				ref.setAp_status(status);
 			} else if (group.equalsIgnoreCase("GO")) {

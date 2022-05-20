@@ -1231,8 +1231,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	@Transactional
 	public SearchResults<String> updateReferenceStatus(String api_access_token, String username, String accid, String group, String status, User user) {
 		// update status for list of accession ids (MGI:xxx)
-		// add new status
-		// add new relevance
+		// add new status (example: GO)
+		// add new relevance (example: Indexed
 		
 		log.info("updateReferenceStatus()");
 		
@@ -1270,10 +1270,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			log.info("ref.getRefsKey():" + ref.getRefsKey());
 			log.info("ref.getGo_status():" + ref.getGo_status());
 			log.info("ref.getEditRelevance();" + ref.getEditRelevance());
+			
 			SearchResults<ReferenceDomain>	updateResults = new SearchResults<ReferenceDomain> ();
 			updateResults = update(ref, user);
-			log.info("updateReferenceStatus/return from update()");
-			updateResults.total_count = updateResults.items.size();
 			results.total_count = updateResults.items.size();
 		}
 		

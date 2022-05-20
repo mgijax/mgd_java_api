@@ -530,14 +530,6 @@ public class TermService extends BaseService<TermDomain> {
 	}
 	
 	@Transactional
-	public SearchResults<SlimTermDomain> validWorkflowStatus(String status) {
-		// verify that the work flow status is valid
-		// returns empty result items if workflow status does not exist
-		// _vocab_key = 128 ("Workflow Status")
-		return validateTermSlim(128, status);
-	}
-	
-	@Transactional
 	public List<SlimTermDomain> getTermSet(String setName) {
 		// get the set of terms for a given MGI_Set
 		// returns empty result items if setName does not exist

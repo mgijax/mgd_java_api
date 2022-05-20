@@ -1209,10 +1209,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		// get tagTermKey by termService.searchByTerm()
-		TermDomain termDomain = new TermDomain();
-		termDomain.setVocabKey("129");
-		termDomain.setTerm(workflowTag);
-		int tagTermKey = termService.searchByTerm(termDomain);
+//		TermDomain termDomain = new TermDomain();
+//		termDomain.setVocabKey("129");
+//		termDomain.setTerm(workflowTag);
+//		int tagTermKey = termService.searchByTerm(termDomain);
+		
+		SearchResults<SlimTermDomain> termDomain = termService.validateTermSlim(129, workflowTag);
+		int tagTermKey = termDomain.items.get(0).get_term_key();
 		log.info("addTag/new tag:" + workflowTag + "," + tagTermKey);
 		
 		for (String refsKey : listOfRefsKey) {
@@ -1245,7 +1248,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			results.setError("Failed", "Unknown status value: null", Constants.HTTP_BAD_REQUEST);
 			return results;
 		} else {
-			SearchResults<SlimTermDomain> terms = termService.validWorkflowStatus(status);
+			SearchResults<SlimTermDomain> terms = termService.validateTermSlim(128, status);
 			if (terms.total_count == 0) {
 				results.setError("Failed", "Unknown status term: " + status, Constants.HTTP_NOT_FOUND);
 				return results;

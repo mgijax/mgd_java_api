@@ -82,13 +82,6 @@ public class TermController extends BaseController<TermDomain> {
 	public List<SlimTermDomain> validateMPHeaderTerm(SlimTermDomain domain) {
 		return termService.validateMPHeaderTerm(domain);
 	}
-	
-	@POST
-	@ApiOperation(value = "Valid Workflow Status")
-	@Path("/validWorkflowStatus")
-	public SearchResults<SlimTermDomain> validWorkflowStatus(String status) {
-		return termService.validWorkflowStatus(status);
-	}
 		
 	@POST
 	@ApiOperation(value = "Get Terms by Set Name")

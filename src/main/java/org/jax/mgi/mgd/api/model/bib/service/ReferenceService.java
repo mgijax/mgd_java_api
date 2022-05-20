@@ -16,7 +16,6 @@ import javax.inject.Inject;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
-import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
@@ -1261,13 +1260,22 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		for (int i = 0; i < refs.size(); i++) {
 			ReferenceDomain ref = get(Integer.valueOf(refs.get(i).getRefsKey()));
 										
-			try {
-				ref.setStatus(group, status);
-			} catch (APIException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			//ref.setStatus(group, status);
 			
+			if (group.equalsIgnoreCase("AP")) {
+				ref.setAp_status(status);
+			} else if (group.equalsIgnoreCase("GO")) {
+				ref.setGo_status(status);
+			} else if (group.equalsIgnoreCase("GXD")) {
+				ref.setGxd_status(status);
+			} else if (group.equalsIgnoreCase("PRO")) {
+				ref.setPro_status(status);
+			} else if (group.equalsIgnoreCase("QTL")) {
+				ref.setQtl_status(status);
+			} else if (group.equalsIgnoreCase("Tumor")) {
+				ref.setTumor_status(status);
+			}
+
 			// ensure we keep the relevance status in sync
 			if ("Full-coded".equals(status) ||
 				"Routed".equals(status) ||

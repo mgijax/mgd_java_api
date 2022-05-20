@@ -1270,13 +1270,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			log.info("ref.getRefsKey():" + ref.getRefsKey());
 			log.info("ref.getGo_status():" + ref.getGo_status());
 			log.info("ref.getEditRelevance();" + ref.getEditRelevance());
-			
 			SearchResults<ReferenceDomain>	updateResults = new SearchResults<ReferenceDomain> ();
 			updateResults = update(ref, user);
 			log.info("updateReferenceStatus/return from update()");
 			updateResults.total_count = updateResults.items.size();
-			log.info(updateResults.items.size());
-			results.items.add(updateResults.items.toString());
+			results.total_count = updateResults.items.size();
 		}
 		
 		log.info("results:" + results);

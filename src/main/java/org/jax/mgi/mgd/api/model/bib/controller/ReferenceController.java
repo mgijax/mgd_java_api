@@ -124,13 +124,14 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 
 		User user = userService.getUserByUsername(username);
 		if (user != null) {
-			try {
-				referenceService.updateReferenceStatus(api_access_token, username, accid, group, status, user);
-			} catch (Exception e) {
-				Throwable t = getRootException(e);
-				String message = "\n\nUPDATE STATUS UPDATE FAILED.\n\n" + t.toString();
-				results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);	
-			}
+			referenceService.updateReferenceStatus(api_access_token, username, accid, group, status, user);
+//			try {
+//				referenceService.updateReferenceStatus(api_access_token, username, accid, group, status, user);
+//			} catch (Exception e) {
+//				Throwable t = getRootException(e);
+//				String message = "\n\nUPDATE STATUS UPDATE FAILED.\n\n" + t.toString();
+//				results.setError(Constants.LOG_FAIL_DOMAIN, message, Constants.HTTP_SERVER_ERROR);	
+//			}
 		} else {
 			results.setError("FailedAuthentication", "Failed - invalid username", Constants.HTTP_PERMISSION_DENIED);
 		}

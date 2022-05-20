@@ -1271,14 +1271,15 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			log.info("ref.getGo_status():" + ref.getGo_status());
 			log.info("ref.getEditRelevance();" + ref.getEditRelevance());
 			
-			SearchResults<ReferenceDomain>	updateResult = new SearchResults<ReferenceDomain> ();
-			updateResult = update(ref, user);
+			SearchResults<ReferenceDomain>	updateResults = new SearchResults<ReferenceDomain> ();
+			updateResults = update(ref, user);
 			log.info("updateReferenceStatus/return from update()");
-
-			updateResult.total_count = updateResult.items.size();
-			results.items.add(updateResult.toString());
+			updateResults.total_count = updateResults.items.size();
+			log.info(updateResults.items.size());
+			results.items.add(updateResults.toString());
 		}
 		
+		log.info("results:" + results);
 		return results;
 	}
 	

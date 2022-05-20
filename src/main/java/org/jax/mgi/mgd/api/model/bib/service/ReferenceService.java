@@ -1237,22 +1237,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		log.info("updateReferenceStatus()");
 		
 		SearchResults<String> results = new SearchResults<String>();
-
-		// check that we have a legitimate status value
-//		if (status == null) {
-//			results.setError("Failed", "Unknown status value: null", Constants.HTTP_BAD_REQUEST);
-//			return results;
-//		} else {
-//			SearchResults<SlimTermDomain> terms = termService.validateTermSlim(128, status);
-//			if (terms.total_count == 0) {
-//				results.setError("Failed", "Unknown status term: " + status, Constants.HTTP_NOT_FOUND);
-//				return results;
-//			} else if (terms.total_count > 1) {
-//				results.setError("Failed", "Duplicate status terms: " + status, Constants.HTTP_BAD_REQUEST);
-//				return results;
-//			}
-//		}
-		
 		ReferenceSearchDomain searchDomain = new ReferenceSearchDomain();
 		searchDomain.setAccids(accid);
 		List<SlimReferenceDomain> refs = search(searchDomain);
@@ -1284,8 +1268,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			{
 				ref.setEditRelevance("keep");
 			}
-
-			update(ref, user);
+			
+			results.items.add(update(ref, user).toString());
 		}
 		
 		return results;

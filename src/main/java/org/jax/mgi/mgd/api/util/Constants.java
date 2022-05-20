@@ -17,7 +17,8 @@ public class Constants {
 	public static String WS_NOT_ROUTED = "Not Routed";
 	public static String WS_REJECTED = "Rejected";
 	public static String WS_ROUTED = "Routed";
-	
+	public static String WS_NEW = "New";
+
 	// HTTP status codes
 	public static Integer HTTP_OK = 200;
 	public static Integer HTTP_BAD_REQUEST = 400;

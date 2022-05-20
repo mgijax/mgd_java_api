@@ -1267,7 +1267,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				ref.setEditRelevance("keep");
 			}
 			
-			results.items.add(update(ref, user).toString());
+			SearchResults<ReferenceDomain>	updateResult = new SearchResults<ReferenceDomain> ();
+			updateResult = update(ref, user);
+			results.items.add(updateResult.toString());
 		}
 		
 		return results;

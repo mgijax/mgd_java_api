@@ -1208,12 +1208,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			workflow_tag_operation = Constants.OP_ADD_WORKFLOW;
 		}
 		
-		// get tagTermKey by termService.searchByTerm()
-//		TermDomain termDomain = new TermDomain();
-//		termDomain.setVocabKey("129");
-//		termDomain.setTerm(workflowTag);
-//		int tagTermKey = termService.searchByTerm(termDomain);
-		
 		SearchResults<SlimTermDomain> termDomain = termService.validateTermSlim(129, workflowTag);
 		int tagTermKey = termDomain.items.get(0).get_term_key();
 		log.info("addTag/new tag:" + workflowTag + "," + tagTermKey);
@@ -1243,20 +1237,20 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		SearchResults<String> results = new SearchResults<String>();
 
-		// check that we have a legitimate status value
-		if (status == null) {
-			results.setError("Failed", "Unknown status value: null", Constants.HTTP_BAD_REQUEST);
-			return results;
-		} else {
-			SearchResults<SlimTermDomain> terms = termService.validateTermSlim(128, status);
-			if (terms.total_count == 0) {
-				results.setError("Failed", "Unknown status term: " + status, Constants.HTTP_NOT_FOUND);
-				return results;
-			} else if (terms.total_count > 1) {
-				results.setError("Failed", "Duplicate status terms: " + status, Constants.HTTP_BAD_REQUEST);
-				return results;
-			}
-		}
+//		// check that we have a legitimate status value
+//		if (status == null) {
+//			results.setError("Failed", "Unknown status value: null", Constants.HTTP_BAD_REQUEST);
+//			return results;
+//		} else {
+//			SearchResults<SlimTermDomain> termDomain = termService.validateTermSlim(128, status);
+//			if (termDomain.total_count == 0) {
+//				results.setError("Failed", "Unknown status term: " + status, Constants.HTTP_NOT_FOUND);
+//				return results;
+//			} else if (termDomain.total_count > 1) {
+//				results.setError("Failed", "Duplicate status terms: " + status, Constants.HTTP_BAD_REQUEST);
+//				return results;
+//			}
+//		}
 		
 		ReferenceSearchDomain searchDomain = new ReferenceSearchDomain();
 		searchDomain.setAccids(accid);
@@ -1524,25 +1518,28 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 //		  31576668 | QTL
 //		  31576667 | Tumor
 
-		Integer groupTermKey = 0;
-		if (groupAbbrev.equals(Constants.WG_AP)) {
-			groupTermKey = 31576664;
-		}		
-		else if (groupAbbrev.equals(Constants.WG_GXD)) {
-			groupTermKey = 31576665;
-		}
-		else if (groupAbbrev.equals(Constants.WG_GO)) {
-			groupTermKey = 31576666;
-		}
-		else if (groupAbbrev.equals(Constants.WG_PRO)) {
-			groupTermKey = 78678148;
-		}
-		else if (groupAbbrev.equals(Constants.WG_QTL)) {
-			groupTermKey = 31576668;
-		}		
-		else if (groupAbbrev.equals(Constants.WG_TUMOR)) {
-			groupTermKey = 31576667;
-		}	
+		SearchResults<SlimTermDomain> termDomain = termService.validateTermSlim(127, groupAbbrev);
+		int groupTermKey = termDomain.items.get(0).get_term_key();
+
+//		Integer groupTermKey = 0;
+//		if (groupAbbrev.equals(Constants.WG_AP)) {
+//			groupTermKey = 31576664;
+//		}		
+//		else if (groupAbbrev.equals(Constants.WG_GXD)) {
+//			groupTermKey = 31576665;
+//		}
+//		else if (groupAbbrev.equals(Constants.WG_GO)) {
+//			groupTermKey = 31576666;
+//		}
+//		else if (groupAbbrev.equals(Constants.WG_PRO)) {
+//			groupTermKey = 78678148;
+//		}
+//		else if (groupAbbrev.equals(Constants.WG_QTL)) {
+//			groupTermKey = 31576668;
+//		}		
+//		else if (groupAbbrev.equals(Constants.WG_TUMOR)) {
+//			groupTermKey = 31576667;
+//		}	
 		
 //		  31576671 | Chosen
 //		  31576674 | Full-coded

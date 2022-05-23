@@ -1194,7 +1194,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	public void updateReferencesBulk(List<String> listOfRefsKey, String workflowTag, String workflow_tag_operation, User user) {
 		// add or delete workflowTag for list of references based on workflow_tag_operation
 		
-		log.info("updateReferenceInBulk()");
+		log.info("updateReferenceBulk()");
 
 		// if no references or no tags, return null
 		if ((listOfRefsKey == null) || (listOfRefsKey.size() == 0) || (workflowTag == null) || (workflowTag.length() == 0)) {
@@ -1297,11 +1297,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		anyChanges = applyWorkflowStatusChanges(entity, domain, user) || anyChanges;
 		anyChanges = applyWorkflowTagChanges(entity, domain, user) || anyChanges;
-		anyChanges = applyWorkflowRelevanceChanges(entity, domain, user) || anyChanges;   	// uses relevanceService
-		anyChanges = applyWorkflowDataChanges(entity, domain, user) || anyChanges;
+		anyChanges = applyWorkflowRelevanceChanges(entity, domain, user) || anyChanges;   	// uses service/ReferenceWorkflowRelevance
+		anyChanges = applyWorkflowDataChanges(entity, domain, user) || anyChanges;			// uses service/ReferenceWorflowData
 
-		anyChanges = applyBookChanges(entity, domain, user) || anyChanges;		// uses ReferenceDomainService()
-		anyChanges = applyNoteChanges(entity, domain, user) | anyChanges;		// uses ReferenceNoteService()
+		anyChanges = applyBookChanges(entity, domain, user) || anyChanges;					// uses service/ReferenceBook
+		anyChanges = applyNoteChanges(entity, domain, user) | anyChanges;					// uses service/ReferenceNote
 		anyChanges = applyAccessionIDChanges(entity, domain, user) || anyChanges;
 
 		anyChanges = applyAlleleAssocChanges(entity, domain.getAlleleAssocs(), user) || anyChanges;	// uses referenceAssocService	
@@ -1498,10 +1498,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		// status update; flag existing record isCurrent = 0
 		if (currentStatus != null) {
-			for (ReferenceWorkflowStatus rws : entity.getWorkflowStatus()) {
+			for (ReferenceWorkflowStatus rws : entity.getWorkflowStatusCurrent()) {
 				if ( (rws.getIsCurrent() == 1) && groupAbbrev.equals(rws.getGroupTerm().getAbbreviation()) ) {
 					rws.setIsCurrent(0);
-					break;				// no more can match, so exit the loop
+					//break;				// no more can match, so exit the loop
 				}
 			}
 		}
@@ -1573,7 +1573,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		newRws.setCreation_date(new Date());
 		newRws.setModification_date(new Date());
 		entity.getWorkflowStatus().add(newRws);
-		
 		referenceDAO.persist(newRws);
 
 		return true;

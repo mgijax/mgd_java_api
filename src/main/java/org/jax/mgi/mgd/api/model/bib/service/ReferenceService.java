@@ -1496,12 +1496,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			return false;
 		}
 
-		// status update; flag existing record isCurrent = 0
+		// status update; flag existing workflowStatusCurrent.isCurrent = 0
 		if (currentStatus != null) {
 			for (ReferenceWorkflowStatus rws : entity.getWorkflowStatusCurrent()) {
 				if ( (rws.getIsCurrent() == 1) && groupAbbrev.equals(rws.getGroupTerm().getAbbreviation()) ) {
 					rws.setIsCurrent(0);
-					//break;				// no more can match, so exit the loop
 				}
 			}
 		}

@@ -366,13 +366,13 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				"\nunion" + 
 				"\nselect g._gelcontrol_key as termKey, v.abbreviation as term, 2 as orderBy from gxd_gelcontrol g, voc_term v" + 
 				"\nwhere v._vocab_key = 154 and v.term != 'Not Specified'\r\n" + 
-				"\nand g.gellanecontent = v.term" + 
+				"\nand lower(g.gellanecontent) = lower(v.term)" + 
 				"\norder by orderBy, term\n";
 		}		
 		else if (vocabKey.equals("155")) {
 			cmd = "select g._embedding_key as termKey, v.abbreviation as term, 1 as orderBy from gxd_embeddingmethod g, voc_term v" +
 					"\nwhere v._vocab_key = 155" + 
-					"\nand g.lower(embeddingmethod) = lower(v.term)" + 
+					"\nand lower(g.embeddingmethod) = lower(v.term)" + 
 					"\nand g._embedding_key = -1" +
 					"\nunion" +
 					"\nselect g._embedding_key as termKey, v.abbreviation as term, 2 as orderBy from gxd_embeddingmethod g, voc_term v" +				

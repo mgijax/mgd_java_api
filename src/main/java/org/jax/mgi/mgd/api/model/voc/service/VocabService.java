@@ -362,7 +362,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		else if (vocabKey.equals("154") ) {
 			cmd = "select g._gelcontrol_key as termKey, v.abbreviation as term, 1 as orderBy from gxd_gelcontrol g, voc_term v" + 
 				"\nwhere v._vocab_key = 154 and v.term = 'Not Specified'" + 
-				"\nand g.gellanecontent = v.term" + 
+				"\nand lower(g.gellanecontent) = lower(v.term)" + 
 				"\nunion" + 
 				"\nselect g._gelcontrol_key as termKey, v.abbreviation as term, 2 as orderBy from gxd_gelcontrol g, voc_term v" + 
 				"\nwhere v._vocab_key = 154 and v.term != 'Not Specified'\r\n" + 
@@ -372,24 +372,24 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		else if (vocabKey.equals("155")) {
 			cmd = "select g._embedding_key as termKey, v.abbreviation as term, 1 as orderBy from gxd_embeddingmethod g, voc_term v" +
 					"\nwhere v._vocab_key = 155" + 
-					"\nand g.embeddingmethod = v.term" + 
+					"\nand g.lower(embeddingmethod) = lower(v.term)" + 
 					"\nand g._embedding_key = -1" +
 					"\nunion" +
 					"\nselect g._embedding_key as termKey, v.abbreviation as term, 2 as orderBy from gxd_embeddingmethod g, voc_term v" +				
 					"\nwhere v._vocab_key = 155" + 
-					"\nand g.embeddingmethod = v.term" + 
+					"\nand lower(g.embeddingmethod) = lower(v.term)" + 
 					"\nand g._embedding_key != -1" +
 					"\norder by orderBy, term\n";				
 		}
 		else if (vocabKey.equals("156") ) {
 			cmd = "select g._fixation_key as termKey, v.abbreviation as term, 1 as orderBy from gxd_fixationmethod g, voc_term v" +
 					"\nwhere v._vocab_key = 156" + 
-					"\nand g.fixation = v.term" + 
+					"\nand lower(g.fixation) = lower(v.term)" + 
 					"\nand g._fixation_key = -1" +
 					"\nunion" +
 					"\nselect g._fixation_key as termKey, v.abbreviation as term, 2 as orderBy from gxd_fixationmethod g, voc_term v" +				
 					"\nwhere v._vocab_key = 156" + 
-					"\nand g.fixation = v.term" + 
+					"\nand lower(g.fixation) = lower(v.term)" + 
 					"\nand g._fixation_key != -1" +
 					"\norder by orderBy, term\n";			
 		}		
@@ -429,12 +429,12 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		else if (vocabKey.equals("172") ) {
 			cmd = "select g._gelrnatype_key as termKey, v.abbreviation as term, 1 as orderBy from gxd_gelrnatype g, voc_term v" +
 				"\nwhere v._vocab_key = 172" + 
-				"\nand g.rnatype = v.term" + 
+				"\nand lower(g.rnatype) = lower(v.term)" + 
 				"\nand g._gelrnatype_key = -1" +
 				"\nunion" +
 				"\nselect g._gelrnatype_key as termKey, v.abbreviation as term, 2 as orderBy from gxd_gelrnatype g, voc_term v" +				
 				"\nwhere v._vocab_key = 172" + 
-				"\nand g.rnatype = v.term" + 
+				"\nand lower(g.rnatype) = lower(v.term)" + 
 				"\nand g._gelrnatype_key != -1" +
 				"\norder by orderBy, term\n";
 		}	

@@ -339,6 +339,14 @@ public class VocabService extends BaseService<VocabularyDomain> {
 	@Transactional
 	public SearchResults<SlimVocabularyTermDomain> searchGXDVocab(String vocabKey) {	
 		// returns list of gxd vocabulary into SlimVocabularyTermDomain format
+		//
+		// for those using abbreviations (control (154), embedding (155), fixation (156), gel rna type (172))
+		//		voc_term.abbreviation is used
+		//		which means any crud change to GXD term tables will also require manual crud change to VOC_Term
+		//		that is, the GXD term (GXD_GelControl, GXD_EmbeddingMethod, etc) and VOC_Term tables must be synced up
+		//
+		// for those vocabs that are *not* using abbreviations, all crud changes are using GXD term tables only
+		//
 		
 		SearchResults<SlimVocabularyTermDomain> results = new SearchResults<SlimVocabularyTermDomain>();
 		

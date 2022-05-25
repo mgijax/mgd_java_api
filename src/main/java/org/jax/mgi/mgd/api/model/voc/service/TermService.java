@@ -11,6 +11,8 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.gxd.domain.GXDLabelDomain;
+import org.jax.mgi.mgd.api.model.gxd.service.GXDLabelService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
@@ -35,6 +37,8 @@ public class TermService extends BaseService<TermDomain> {
 	
 	@Inject
 	private MGISynonymService synonymService;
+	@Inject
+	private GXDLabelService gxdLabelService;
 	
 	private TermTranslator translator = new TermTranslator();
 	private SlimTermTranslator slimtranslator = new SlimTermTranslator();
@@ -42,9 +46,7 @@ public class TermService extends BaseService<TermDomain> {
 	
 	@Transactional
 	public SearchResults<TermDomain> create(TermDomain domain, User user) {
-		SearchResults<TermDomain> results = new SearchResults<TermDomain>();
-		//results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
-		
+		SearchResults<TermDomain> results = new SearchResults<TermDomain>();		
 		Term entity = new Term();	
 		String vocabKey = domain.getVocabKey();
 		
@@ -85,8 +87,22 @@ public class TermService extends BaseService<TermDomain> {
 		entity.setModification_date(new Date());
 		termDAO.persist(entity);
 		
+		// once these tables are merged into VOC_Vocab/VOC_Term properly, these can be removed
+		if (domain.getVocabKey().equals("152")) {
+			SearchResults<GXDLabelDomain> gxdresults = new SearchResults<GXDLabelDomain>();
+			GXDLabelDomain labelDomain = new GXDLabelDomain();
+			List<TermDomain> listOfTerms = new ArrayList<TermDomain>();
+			TermDomain termDomain = new TermDomain();
+			termDomain.setProcessStatus(Constants.PROCESS_CREATE);
+			termDomain.setVocabKey(domain.getVocabKey());
+			termDomain.setTerm(domain.getTerm());
+			listOfTerms.add(termDomain);
+			labelDomain.setTerms(listOfTerms);
+			// do nothing with return
+			gxdresults = gxdLabelService.create(labelDomain, user);
+		}
+		
 		results.setItem(translator.translate(entity));
-	
 		log.info("processTerm/create processed");												
 		return results;
 	}

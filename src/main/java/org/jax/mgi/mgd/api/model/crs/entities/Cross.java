@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -41,19 +42,19 @@ public class Cross extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_femalestrain_key", referencedColumnName="_strain_key")
 	private ProbeStrain femaleStrain;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_malestrain_key", referencedColumnName="_strain_key")
 	private ProbeStrain maleStrain;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_strainho_key", referencedColumnName="_strain_key")
 	private ProbeStrain homozygousStrain;
 	 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_strainht_key", referencedColumnName="_strain_key")
 	private ProbeStrain heterozygousStrain;
 	

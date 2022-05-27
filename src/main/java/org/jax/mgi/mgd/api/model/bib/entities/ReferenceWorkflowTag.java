@@ -37,7 +37,7 @@ public class ReferenceWorkflowTag extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_tag_key", referencedColumnName="_term_key")
 	private Term tagTerm;
 	

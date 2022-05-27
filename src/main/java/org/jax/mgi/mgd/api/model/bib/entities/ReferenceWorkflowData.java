@@ -40,11 +40,11 @@ public class ReferenceWorkflowData extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_supplemental_key", referencedColumnName="_term_key")
 	private Term supplementalTerm;	
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_extractedtext_key", referencedColumnName="_term_key")
 	private Term extractedTextTerm;
 	

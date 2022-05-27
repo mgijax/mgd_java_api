@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.seq.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -29,23 +30,23 @@ public class GeneTrap extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_tagmethod_key", referencedColumnName="_term_key")
 	private Term tagMethod;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_vectorend_key", referencedColumnName="_term_key")
 	private Term vectorEnd;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_reversecomp_key", referencedColumnName="_term_key")
 	private Term reverseComp;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 }

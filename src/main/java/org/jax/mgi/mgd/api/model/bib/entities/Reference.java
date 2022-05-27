@@ -135,7 +135,7 @@ public class Reference extends BaseEntity {
 	private List<ReferenceBook> referenceBook;
 	
 	// one to one, because counts will always exist
-	@OneToOne()
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key")
 	private ReferenceAssociatedData associatedData;
 

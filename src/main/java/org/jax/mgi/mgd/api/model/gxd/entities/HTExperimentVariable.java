@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.gxd.entities;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,10 +29,9 @@ public class HTExperimentVariable extends BaseEntity {
 	@SequenceGenerator(name="gxd_htexperimentvariable_generator", sequenceName = "gxd_htexperimentvariable_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")	
 	private Integer _experimentvariable_key;
-
 	private Integer _experiment_key;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_term_key", referencedColumnName="_term_key")
 	private Term term;
 

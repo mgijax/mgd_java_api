@@ -5,6 +5,7 @@ import java.util.List;
 import java.math.BigDecimal;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -63,43 +64,43 @@ public class HTExperiment extends BaseEntity {
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> secondaryIDs;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_evaluatedby_key", referencedColumnName="_user_key")
 	private User evaluatedBy; 
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_initialcuratedby_key", referencedColumnName="_user_key")
 	private User initialcuratedBy; 
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_lastcuratedby_key", referencedColumnName="_user_key")
 	private User lastcuratedBy; 
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_source_key", referencedColumnName="_term_key")
 	private Term sourceTerm;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_evaluationstate_key", referencedColumnName="_term_key")
 	private Term evaluationState;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_experimenttype_key", referencedColumnName="_term_key")
 	private Term experimentType;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_studytype_key", referencedColumnName="_term_key")
 	private Term studyType;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_curationstate_key", referencedColumnName="_term_key")
 	private Term curationState;
 

@@ -42,7 +42,6 @@ public class HTExperiment extends BaseEntity {
 	private Integer _experiment_key;
 	private String name;
 	private String description;
-
 	private Date release_date;
 	private Date lastupdate_date;
 	private Date evaluated_date;

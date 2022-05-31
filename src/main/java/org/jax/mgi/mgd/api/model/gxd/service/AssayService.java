@@ -415,7 +415,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		// building SQL command : select + from + where + orderBy
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
-		String select = "select distinct a._assay_key, r.jnumid, r.numericpart, t.assayType, m.symbol";
+		String select = "select distinct a._assay_key, r._refs_key, r.jnumid, r.numericpart, t.assayType, m.symbol";
 		String from = "from gxd_assay a, gxd_assaytype t, bib_citation_cache r, mrk_marker m";
 		String where = "where a._assaytype_key = t._assaytype_key"
 				+ "\nand a._refs_key = r._refs_key"
@@ -851,7 +851,11 @@ public class AssayService extends BaseService<AssayDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SlimAssayDomain domain = new SlimAssayDomain();
-				domain = slimtranslator.translate(assayDAO.get(rs.getInt("_assay_key")));				
+				domain = slimtranslator.translate(assayDAO.get(rs.getInt("_assay_key")));	
+				domain.setAssayDisplay(rs.getString("jnumid") + "; " + domain.getAssayTypeAbbrev() + "; " + rs.getString("symbol"));	
+				domain.setRefsKey(rs.getString("_refs_key"));
+				domain.setJnumid(rs.getString("jnumid"));
+				domain.setJnum(rs.getString("numericpart"));				
 				assayDAO.clear();
 				results.add(domain);
 			}

@@ -1541,7 +1541,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 //		  31576672 | Rejected
 //		  31576670 | Routed
 //		  71027551 | New
-		
+//		  31576669 | Not Routed |              |      |           1 |          0 |           1001 |            1001 | 2017-06-07 06:01:39.07133  | 2017-06-07 06:01:39.07133
+	
 		Integer newStatusKey = 0;
 		if (newStatus.equals(Constants.WS_CHOSEN)) {
 			newStatusKey = 31576671;
@@ -1560,6 +1561,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		else if (newStatus.equals(Constants.WS_NEW)) {
 			newStatusKey = 71027551;
+		}
+		else if (newStatus.equals(Constants.WS_NOT_ROUTED)) {
+			newStatusKey = 31576669;
 		}
 		
 		ReferenceWorkflowStatus newRws = new ReferenceWorkflowStatus();

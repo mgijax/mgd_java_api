@@ -10,7 +10,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
-import org.jax.mgi.mgd.api.model.gxd.entities.TheilerStage;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
 import io.swagger.annotations.ApiModel;
@@ -42,7 +41,7 @@ public class TermEMAPS extends BaseEntity {
 	@JoinColumn(name="_defaultparent_key", referencedColumnName="_term_key")
 	private Term defaultParent;
 
-//	@OneToOne(fetch=FetchType.LAZY)sz
+//	@OneToOne(fetch=FetchType.LAZY)
 //	@JoinColumn(name="_EMAPA_Term_key", referencedColumnName="_term_key")
 //	private Term emapaTerm;
 

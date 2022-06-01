@@ -106,6 +106,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				domain.setRefAssocType(rs.getString("assoctype"));
 				domain.setRefsKey(rs.getString("_refs_key"));
 				domain.setShort_citation(rs.getString("short_citation"));
+				domain.setAllowOnlyOne(rs.getInt("allowonlyone"));
 				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 				results.add(domain);
 			}

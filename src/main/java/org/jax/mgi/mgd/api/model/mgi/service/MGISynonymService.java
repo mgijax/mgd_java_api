@@ -11,7 +11,7 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceCitationCacheDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGISynonymDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGISynonymTypeDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
@@ -33,7 +33,7 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 	@Inject
 	private MGISynonymTypeDAO synonymTypeDAO;
 	@Inject
-	private ReferenceDAO referenceDAO;
+	private ReferenceCitationCacheDAO referenceDAO;
 
 	private MGISynonymTranslator translator = new MGISynonymTranslator();				
 	private SQLExecutor sqlExecutor = new SQLExecutor();

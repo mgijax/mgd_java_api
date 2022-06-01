@@ -29,8 +29,8 @@ public class MarkerHistoryTranslator extends BaseEntityDomainTranslator<MarkerHi
 		// reference can be null
 		if (entity.getReference() != null) {
 			domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
-			domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());
-			domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());
+			domain.setJnumid(entity.getReference().getJnumid());
+			domain.setShort_citation(entity.getReference().getShort_citation());
 		}
 		
 		if (entity.getEvent_date() != null) {

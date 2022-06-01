@@ -28,9 +28,9 @@ public class MGISynonymTranslator extends BaseEntityDomainTranslator<MGISynonym,
 		// reference can be null
 		if (entity.getReference() != null) {
 			domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
-			domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());
-			domain.setJnum(String.valueOf(entity.getReference().getReferenceCitationCache().getNumericPart()));
-			domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());
+			domain.setJnumid(entity.getReference().getJnumid());
+			domain.setJnum(String.valueOf(entity.getReference().getNumericPart()));
+			domain.setShort_citation(entity.getReference().getShort_citation());
 		}
 		
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());

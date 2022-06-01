@@ -107,8 +107,6 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				domain.setRefsKey(rs.getString("_refs_key"));
 				domain.setShort_citation(rs.getString("short_citation"));
 				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
-				//domain = translator.translate(referenceAssocDAO.get(rs.getInt("_assoc_key")));
-				//referenceAssocDAO.clear();
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

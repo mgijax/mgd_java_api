@@ -82,7 +82,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 
 		List<MGIReferenceAssocDomain> results = new ArrayList<MGIReferenceAssocDomain>();
 
-		String cmd = "\nselect _assoc_key from mgi_reference_marker_view " 
+		String cmd = "\nselect * from mgi_reference_marker_view " 
 				+ "\nwhere _object_key = " + key
 				+ "\norder by _refassoctype_key, jnum";
 		log.info(cmd);
@@ -91,8 +91,24 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				MGIReferenceAssocDomain domain = new MGIReferenceAssocDomain();
-				domain = translator.translate(referenceAssocDAO.get(rs.getInt("_assoc_key")));
-				referenceAssocDAO.clear();
+				domain.setAssocKey(rs.getString("_assoc_key"));
+				domain.setJnum(rs.getInt("jnum"));
+				domain.setJnumid(rs.getString("jnumid"));
+				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
+				domain.setCreatedBy(rs.getString("createdby"));
+				domain.setCreatedByKey(rs.getString("_createdby_key"));
+				domain.setCreation_date(rs.getString("creation_date"));
+				domain.setModifiedBy(rs.getString("modifiedby"));
+				domain.setModifiedByKey(rs.getString("_modifiedby_key"));
+				domain.setModification_date(rs.getString("modification_date"));
+				domain.setObjectKey(rs.getString("_object_key"));
+				domain.setRefAssocTypeKey(rs.getString("_refassoctype_key"));
+				domain.setRefAssocType(rs.getString("assoctype"));
+				domain.setRefsKey(rs.getString("_refs_key"));
+				domain.setShort_citation(rs.getString("short_citation"));
+				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
+				//domain = translator.translate(referenceAssocDAO.get(rs.getInt("_assoc_key")));
+				//referenceAssocDAO.clear();
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

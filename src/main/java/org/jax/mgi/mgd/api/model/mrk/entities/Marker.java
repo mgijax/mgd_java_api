@@ -56,7 +56,7 @@ public class Marker extends BaseEntity {
 	@JoinColumn(name="_organism_key")
 	private Organism organism;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_marker_status_key")
 	private MarkerStatus markerStatus;
 

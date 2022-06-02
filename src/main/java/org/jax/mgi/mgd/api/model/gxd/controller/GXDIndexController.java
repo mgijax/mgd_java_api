@@ -15,7 +15,7 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 import io.swagger.annotations.Api;
 
 @Path("/gxdindex")
-@Api(value = "GXDIndex Endpoints")
+@Api(value = "GXD Index Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class GXDIndexController extends BaseController<GXDIndexDomain> {

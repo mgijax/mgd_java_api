@@ -44,7 +44,6 @@ public class GXDIndexTranslator extends BaseEntityDomainTranslator<GXDIndex, GXD
 			GXDIndexStageTranslator stageTranslator = new GXDIndexStageTranslator();
 			Iterable<GXDIndexStageDomain> i = stageTranslator.translateEntities(entity.getIimageStages());
 			domain.setIndexStages(IteratorUtils.toList(i.iterator()));
-			//domain.getStructures().sort(Comparator.comparing(InSituResultStructureDomain::getEmapaTerm));
 		}
 
 		return domain;

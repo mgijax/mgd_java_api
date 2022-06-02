@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceCitationCacheDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyAliasDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyAliasDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.AntibodyAlias;
@@ -30,7 +30,7 @@ public class AntibodyAliasService extends BaseService<AntibodyAliasDomain> {
 	@Inject
 	private AntibodyAliasDAO aliasDAO;
 	@Inject
-	private ReferenceDAO referenceDAO;
+	private ReferenceCitationCacheDAO referenceDAO;
 	
 	private AntibodyAliasTranslator translator = new AntibodyAliasTranslator();
 	

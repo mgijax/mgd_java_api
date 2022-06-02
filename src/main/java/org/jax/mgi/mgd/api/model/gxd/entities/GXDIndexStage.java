@@ -25,7 +25,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Index Stage Model Object")
 @Table(name="gxd_index_stages")
-public class IndexStage extends BaseEntity {
+public class GXDIndexStage extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="gxd_indexstage_generator")
@@ -33,6 +33,7 @@ public class IndexStage extends BaseEntity {
 	@ApiModelProperty(value="primary key")		
 	private int _indexstage_key;
 	private int _index_key;
+	private int _indexassay_key;
 	private Date creation_date;
 	private Date modification_date;
 	
@@ -46,6 +47,6 @@ public class IndexStage extends BaseEntity {
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_stageid_key", referencedColumnName="_term_key")
-	private Term indexStage;
+	private Term stageid;
 
 }

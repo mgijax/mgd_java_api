@@ -29,7 +29,7 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "GXD Index Model Object")
 @Table(name="gxd_index")
-public class Index extends BaseEntity {
+public class GXDIndex extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="gxd_index_generator")
@@ -66,6 +66,6 @@ public class Index extends BaseEntity {
 	
 	@OneToMany()
 	@JoinColumn(name="_index_key", insertable=false, updatable=false)
-	private List<IndexStage> iimageStages;
+	private List<GXDIndexStage> iimageStages;
 	
 }

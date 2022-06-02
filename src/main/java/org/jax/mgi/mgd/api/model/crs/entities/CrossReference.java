@@ -22,14 +22,4 @@ public class CrossReference extends BaseEntity {
 	private CrossReferenceKey key;
 	private Date creation_date;
 	private Date modification_date;
-
-	// runtime error: column : _marker_key (should be mapped with insert="false" update = "false"
-	//@OneToOne
-	//@JoinColumn(name="_marker_key")
-	//private Marker marker;
-
-	//@OneToOne
-	//@JoinColumn(name="_refs_key")
-	//private Reference reference;
-
 }

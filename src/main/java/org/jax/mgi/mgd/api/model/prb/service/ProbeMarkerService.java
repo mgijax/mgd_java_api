@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceCitationCacheDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeMarkerDAO;
@@ -32,7 +32,7 @@ public class ProbeMarkerService extends BaseService<ProbeMarkerDomain> {
 	@Inject
 	private MarkerDAO markerDAO;
 	@Inject
-	private ReferenceDAO referenceDAO;
+	private ReferenceCitationCacheDAO referenceDAO;
 
 	private ProbeMarkerTranslator translator = new ProbeMarkerTranslator();						
 	private SQLExecutor sqlExecutor = new SQLExecutor();

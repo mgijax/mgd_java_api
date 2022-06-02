@@ -1,7 +1,7 @@
 package org.jax.mgi.mgd.api.model.gxd.entities;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +12,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
-import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
@@ -28,14 +28,17 @@ import lombok.Setter;
 public class Index extends BaseEntity {
 
 	@Id
-	private Integer _index_key;
+//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="gxd_index_generator")
+//	@SequenceGenerator(name="gxd_index_generator", sequenceName = "gxd_index_seq", allocationSize=1)
+//	@ApiModelProperty(value="primary key")	
+	private int _index_key;
 	private String comments;
 	private Date creation_date;
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key")
-	private Reference reference;
+	private ReferenceCitationCache reference;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_marker_key")
@@ -57,7 +60,8 @@ public class Index extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	@OneToMany
-	@JoinColumn(name="_index_key")
-	private Set<TheilerStage> stages;
+	@OneToMany()
+	@JoinColumn(name="_index_key", insertable=false, updatable=false)
+	private List<IndexStage> iimageStages;
+	
 }

@@ -17,7 +17,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
-import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
@@ -78,7 +78,7 @@ public class ProbeSource extends BaseEntity {
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key")
-	private Reference reference;
+	private ReferenceCitationCache reference;
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

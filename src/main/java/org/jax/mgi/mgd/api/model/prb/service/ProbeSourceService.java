@@ -12,7 +12,7 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceCitationCacheDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeSourceDAO;
@@ -43,7 +43,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 	@Inject
 	private OrganismDAO organismDAO;
 	@Inject
-	private ReferenceDAO referenceDAO;
+	private ReferenceCitationCacheDAO referenceDAO;
 	@Inject
 	private TermDAO termDAO;
 	@Inject

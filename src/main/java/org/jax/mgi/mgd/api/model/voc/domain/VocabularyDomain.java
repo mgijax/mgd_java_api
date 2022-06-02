@@ -3,7 +3,7 @@ package org.jax.mgi.mgd.api.model.voc.domain;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.ReferenceCitationCacheDomain;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -19,7 +19,7 @@ public class VocabularyDomain extends BaseDomain {
 	private int isSimple;
 	private int isPrivate;
 	private String name;
-	private SlimReferenceDomain reference; 
+	private ReferenceCitationCacheDomain reference; 
 	private String creation_date;
 	private String modification_date;
 	private List<TermDomain> terms;

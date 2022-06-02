@@ -10,7 +10,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
-import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -29,6 +29,6 @@ public class RISummaryExptRef extends BaseEntity {
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key")
-	private Reference reference;
+	private ReferenceCitationCache reference;
 
 }

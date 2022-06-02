@@ -16,7 +16,7 @@ import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLineDerivation;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleCellLineDerivationTranslator;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceCitationCacheDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
@@ -37,7 +37,7 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 	@Inject
 	private CellLineDAO cellLineDAO;
 	@Inject
-	private ReferenceDAO referenceDAO;
+	private ReferenceCitationCacheDAO referenceDAO;
 	@Inject
 	private NoteService noteService;
 	

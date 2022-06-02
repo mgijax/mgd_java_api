@@ -37,7 +37,7 @@ public class ExpressionCache extends BaseEntity {
 	
 	//@OneToOne(fetch=FetchType.LAZY)
 	//@JoinColumn(name="_refs_key")
-	//private Reference reference;
+	//private ReferenceCitationCache reference;
 	
 	//@OneToOne(fetch=FetchType.LAZY)
 	//@JoinColumn(name="_assaytype_key")

@@ -21,6 +21,7 @@ public class SlimGXDIndexTranslator extends BaseEntityDomainTranslator<GXDIndex,
 		domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 		domain.setMarkerSymbol(entity.getMarker().getSymbol());		
 		domain.setMarkerName(entity.getMarker().getName());
+		domain.setMarkerChromosome(entity.getMarker().getChromosome());
 		domain.setMarkerAccID(entity.getMarker().getMgiAccessionIds().get(0).getAccID());
 
 		return domain;

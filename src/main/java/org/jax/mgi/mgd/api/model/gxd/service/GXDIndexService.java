@@ -253,8 +253,8 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 				value = searchDomain.getIndexStages().get(i).getStageidKey();
 				if (value != null && !value.isEmpty()) {
 					where = where + "\nand exists (select 1 from gxd_index_stages s where i._index_key = s._index_key"
-							+ "\nand s._indexassay_key = " + searchDomain.getIndexStages().get(i).getIndexAssayKey() + 
-							"\nand s._stageid_key = " + value + ")";				
+							+ " and s._indexassay_key = " + searchDomain.getIndexStages().get(i).getIndexAssayKey()
+							+ " and s._stageid_key = " + value + ")";				
 				}
 			}
 		}

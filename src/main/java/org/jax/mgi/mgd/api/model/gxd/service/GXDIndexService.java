@@ -232,6 +232,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 			}
 		}
 
+		// other attributes
 		value = searchDomain.getPriorityKey();
 		if (value != null && !value.isEmpty()) {
 			where = where + "\nand i._priority_key = " + value;

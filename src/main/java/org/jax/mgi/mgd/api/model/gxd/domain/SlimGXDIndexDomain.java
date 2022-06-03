@@ -9,6 +9,7 @@ import lombok.Setter;
 public class SlimGXDIndexDomain extends BaseDomain {
 
 	private String indexKey;
+	private String indexDisplay;
 	private String markerKey;
 	private String markerSymbol;
 	private String markerName;

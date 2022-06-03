@@ -33,7 +33,6 @@ public class GXDIndexStage extends BaseEntity {
 	@ApiModelProperty(value="primary key")		
 	private int _indexstage_key;
 	private int _index_key;
-	private int _indexassay_key;
 	private Date creation_date;
 	private Date modification_date;
 	
@@ -44,6 +43,10 @@ public class GXDIndexStage extends BaseEntity {
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
+	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_indexassay_key", referencedColumnName="_term_key")
+	private Term indexassay;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_stageid_key", referencedColumnName="_term_key")

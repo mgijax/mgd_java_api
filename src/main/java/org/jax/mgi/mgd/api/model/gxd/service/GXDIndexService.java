@@ -198,7 +198,6 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 				+ "\nand i._marker_key = m._marker_key";
 		String orderBy = "order by r.numericpart, m.symbol";
 		String value;
-		Boolean from_stage = false;
 
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("i", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -249,24 +248,15 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		}
 
 		// image stages
-		
 		if (searchDomain.getIndexStages() != null) {
-			List<String> stageKeys = new ArrayList<String>();
 			for (int i = 0; i < searchDomain.getIndexStages().size(); i++) {
 				value = searchDomain.getIndexStages().get(i).getStageidKey();
 				if (value != null && !value.isEmpty()) {
-					stageKeys.add(value);
+					where = where + "\nand exists (select 1 from gxd_index_stages s where i._index_key = s._index_key"
+							+ "\nand s._imageassay_key = " + searchDomain.getIndexStages().get(i).getIndexAssayKey() + 
+							"\nand s._stageid_key = " + searchDomain.getIndexStages().get(i).getStageidKey() + ")";				
 				}
 			}
-			if (stageKeys.size() > 0) {
-				where = where + "\nand s._stageid_key in (" + String.join(",",  stageKeys) + ")";				
-				from_stage = true;
-			}
-		}
-				
-		if (from_stage == true) {
-			from = from + ", gxd_index_stages s";
-			where = where + "\nand a._index_key = s._index_key";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

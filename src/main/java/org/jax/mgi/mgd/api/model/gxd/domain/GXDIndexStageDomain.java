@@ -12,6 +12,7 @@ public class GXDIndexStageDomain extends BaseDomain {
 	private String indexStageKey;
 	private String indexKey;
 	private String indexAssayKey;
+	private String indexAssay;
 	private String stageidKey;
 	private String stageid;
 	private String createdByKey;

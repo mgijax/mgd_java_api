@@ -95,7 +95,7 @@ public class GXDIndexStageService extends BaseService<GXDIndexStageDomain> {
 				log.info("processGXDIndexStage create");
 				GXDIndexStage entity = new GXDIndexStage();
 				entity.set_index_key(parentKey);
-				entity.set_indexassay_key(Integer.valueOf(domain.get(i).getIndexAssayKey()));
+				entity.setIndexassay(termDAO.get(Integer.valueOf(domain.get(i).getIndexAssayKey())));
 				entity.setStageid(termDAO.get(Integer.valueOf(domain.get(i).getStageidKey())));
 				entity.setCreation_date(new Date());				
 				entity.setModification_date(new Date());
@@ -114,7 +114,7 @@ public class GXDIndexStageService extends BaseService<GXDIndexStageDomain> {
 				log.info("processGXDIndexStage update");
 				GXDIndexStage entity = stageDAO.get(Integer.valueOf(domain.get(i).getIndexStageKey()));
 				entity.set_index_key(Integer.valueOf(domain.get(i).getIndexKey()));
-				entity.set_indexassay_key(Integer.valueOf(domain.get(i).getIndexAssayKey()));
+				entity.setIndexassay(termDAO.get(Integer.valueOf(domain.get(i).getIndexAssayKey())));
 				entity.setStageid(termDAO.get(Integer.valueOf(domain.get(i).getStageidKey())));
 				entity.setModification_date(new Date());
 				stageDAO.update(entity);

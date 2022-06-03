@@ -18,7 +18,8 @@ public class GXDIndexStageTranslator extends BaseEntityDomainTranslator<GXDIndex
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setIndexStageKey(String.valueOf(entity.get_indexstage_key()));
 		domain.setIndexKey(String.valueOf(entity.get_index_key()));
-		domain.setIndexAssayKey(String.valueOf(entity.get_indexassay_key()));
+		domain.setIndexAssayKey(String.valueOf(entity.getIndexassay().get_term_key()));
+		domain.setIndexAssay(entity.getIndexassay().getTerm());
 		domain.setStageidKey(String.valueOf(entity.getStageid().get_term_key()));
 		domain.setStageid(entity.getStageid().getTerm());
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());

@@ -83,7 +83,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "Get the object count from gxd_antigen table")
+	@ApiOperation(value = "Get the object count from gxd_assay table")
 	@Path("/getObjectCount")
 	public SearchResults<AssayDomain> getObjectCount() {
 		return assayService.getObjectCount();

@@ -13,8 +13,10 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceCitationCacheDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.GXDIndexDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.GXDIndexDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimGXDIndexDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.GXDIndex;
 import org.jax.mgi.mgd.api.model.gxd.translator.GXDIndexTranslator;
+import org.jax.mgi.mgd.api.model.gxd.translator.SlimGXDIndexTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
@@ -40,10 +42,8 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 	private GXDIndexStageService stageService;
 	
 	private GXDIndexTranslator translator = new GXDIndexTranslator();
+	private SlimGXDIndexTranslator slimtranslator = new SlimGXDIndexTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
-
-	String mgiTypeKey = "8";
-	String mgiTypeName = "Assay";
 	
 	@Transactional
 	public SearchResults<GXDIndexDomain> create(GXDIndexDomain domain, User user) {
@@ -61,6 +61,14 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));
 		entity.setPriority(termDAO.get(Integer.valueOf(domain.getPriorityKey())));
 		entity.setConditionalMutants(termDAO.get(Integer.valueOf(domain.getConditionalMutantsKey())));
+		
+		if (domain.getComments() == null || domain.getComments().isEmpty()) {
+			entity.setComments(null);
+		}
+		else {
+			entity.setComments(domain.getComments());
+		}
+		
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
 		entity.setModifiedBy(user);
@@ -70,11 +78,11 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		indexDAO.persist(entity);
 				
 		// process gxd_indexstages
-//		if (domain.getSpecimens() != null && !domain.getSpecimens().isEmpty()) {
-//			if (specimenService.process(entity.get_assay_key(), domain.getSpecimens(), user)) {
-//				modified = true;
-//			}
-//		}
+		if (domain.getIndexStages() != null && !domain.getIndexStages().isEmpty()) {
+			if (stageService.process(entity.get_index_key(), domain.getIndexStages(), user)) {
+				modified = true;
+			}
+		}
 		
 		// return entity translated to domain
 		log.info("processGXDIndex/create/returning results : " + modified);
@@ -98,12 +106,19 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		entity.setPriority(termDAO.get(Integer.valueOf(domain.getPriorityKey())));
 		entity.setConditionalMutants(termDAO.get(Integer.valueOf(domain.getConditionalMutantsKey())));
 		
+		if (domain.getComments() == null || domain.getComments().isEmpty()) {
+			entity.setComments(null);
+		}
+		else {
+			entity.setComments(domain.getComments());
+		}
+		
 		// process gxd_indexstages
-//		if (domain.getSpecimens() != null && !domain.getSpecimens().isEmpty()) {
-//			if (specimenService.process(Integer.valueOf(domain.getAssayKey()), domain.getSpecimens(), user)) {
-//				modified = true;
-//			}
-//		}
+		if (domain.getIndexStages() != null && !domain.getIndexStages().isEmpty()) {
+			if (stageService.process(entity.get_index_key(), domain.getIndexStages(), user)) {
+				modified = true;
+			}
+		}
 		
 		// only if modifications were actually made
 		if (modified == true) {
@@ -155,7 +170,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		// return the object count from the database
 		
 		SearchResults<GXDIndexDomain> results = new SearchResults<GXDIndexDomain>();
-		String cmd = "select count(*) as objectCount from gxd_assay";
+		String cmd = "select count(*) as objectCount from gxd_index";
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
@@ -172,24 +187,21 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 	}
 	
 	@Transactional
-	public List<GXDIndexDomain> search(GXDIndexDomain searchDomain) {
+	public List<SlimGXDIndexDomain> search(GXDIndexDomain searchDomain) {
 
-		List<GXDIndexDomain> results = new ArrayList<GXDIndexDomain>();
+		List<SlimGXDIndexDomain> results = new ArrayList<SlimGXDIndexDomain>();
 		
 		String cmd = "";
-		String select = "select distinct a._assay_key, r._refs_key, r.jnumid, r.numericpart, t.assayType, m.symbol";
-		String from = "from gxd_assay a, gxd_assaytype t, bib_citation_cache r, mrk_marker m";
-		String where = "where a._assaytype_key = t._assaytype_key"
-				+ "\nand a._refs_key = r._refs_key"
-				+ "\nand a._marker_key = m._marker_key";
-		String orderBy = "order by r.numericpart, t.assayType, m.symbol";
-		//String limit = Constants.SEARCH_RETURN_LIMIT;
+		String select = "select distinct i._index_key, r._refs_key, r.jnumid, r.numericpart, m.symbol";
+		String from = "from gxd_index i, bib_citation_cache r, mrk_marker m";
+		String where = "where i._refs_key = r._refs_key"
+				+ "\nand i._marker_key = m._marker_key";
+		String orderBy = "order by r.numericpart, m.symbol";
 		String value;
-		Boolean from_accession = false;
-		Boolean from_specimen = false;
+		Boolean from_stage = false;
 
 		// if parameter exists, then add to where-clause
-		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
+		String cmResults[] = DateSQLQuery.queryByCreationModification("i", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {
 			from = from + cmResults[0];
 			where = where + cmResults[1];
@@ -212,7 +224,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		// marker
 		value = searchDomain.getMarkerKey();
 		if (value != null && !value.isEmpty()) {
-			where = where + "\nand a._marker_key = " + value;					
+			where = where + "\nand i._marker_key = " + value;					
 		}
 		else {
 			value = searchDomain.getMarkerSymbol();
@@ -220,7 +232,22 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 				where = where + "\nand m.symbol ilike '" + value + "'";
 			}
 		}
+
+		value = searchDomain.getPriorityKey();
+		if (value != null && !value.isEmpty()) {
+			where = where + "\nand i._priority_key = " + value;
+		}
 		
+		value = searchDomain.getConditionalMutantsKey();
+		if (value != null && !value.isEmpty()) {
+			where = where + "\nand i._conditionalmutants_key = " + value;
+		}
+		
+		value = searchDomain.getComments();
+		if (value != null && !value.isEmpty()) {
+			where = where + "\nand i.comments ilike '" + value + "'";
+		}
+
 		// image stages
 		
 //		if (searchDomain.getSpecimens() != null) {
@@ -232,48 +259,29 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 //				from_specimen = true;
 //			}
 //		}
-		
-		// assay accession id 
-//		value = searchDomain.getAccID();			
-//		if (value != null && !value.isEmpty()) {	
-//			if (!value.contains("MGI:")) {
-//				value = "MGI:" + value;
-//			}
-//			where = where + "\nand acc.accID = '" + value + "'";
-//			from_accession = true;
-//		}
 				
-		if (from_accession == true) {
-			from = from + ", gxd_assay_acc_view acc";
-			where = where + "\nand a._assay_key = acc._object_key"; 
-		}
-		if (from_specimen == true) {
-			from = from + ", gxd_specimen s";
-			where = where + "\nand a._assay_key = s._assay_key";
+		if (from_stage == true) {
+			from = from + ", gxd_index_stages s";
+			where = where + "\nand a._index_key = s._index_key";
 		}
 		
 		// make this easy to copy/paste for troubleshooting
-		//cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info(cmd);
 		
-//		try {
-//			ResultSet rs = sqlExecutor.executeProto(cmd);
-//			while (rs.next()) {
-//				GXDIndexDomain domain = new GXDIndexDomain();
-//				domain = translator.translate(GXDIndexDAO.get(rs.getInt("_assay_key")));	
-//				domain.setAssayDisplay(rs.getString("jnumid") + "; " + domain.getAssayTypeAbbrev() + "; " + rs.getString("symbol"));	
-//				domain.setRefsKey(rs.getString("_refs_key"));
-//				domain.setJnumid(rs.getString("jnumid"));
-//				domain.setJnum(rs.getString("numericpart"));				
-//				GXDIndexDAO.clear();
-//				results.add(domain);
-//			}
-//			sqlExecutor.cleanup();
-//		}
-//		catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimGXDIndexDomain domain = new SlimGXDIndexDomain();
+				domain = slimtranslator.translate(indexDAO.get(rs.getInt("_index_key")));					
+				indexDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		return results;
 	}

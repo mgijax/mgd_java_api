@@ -250,15 +250,19 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 
 		// image stages
 		
-//		if (searchDomain.getSpecimens() != null) {
-//			
-//			value = searchDomain.getSpecimens().get(0).getSpecimenLabel();
-//			value = value.replace("'",  "''");
-//			if (value != null && !value.isEmpty()) {
-//				where = where + "\nand s.specimenLabel ilike '" + value + "'";				
-//				from_specimen = true;
-//			}
-//		}
+		if (searchDomain.getIndexStages() != null) {
+			List<String> stageKeys = new ArrayList<String>();
+			for (int i = 0; i < searchDomain.getIndexStages().size(); i++) {
+				value = searchDomain.getIndexStages().get(i).getStageidKey();
+				if (value != null && !value.isEmpty()) {
+					stageKeys.add(value);
+				}
+			}
+			if (stageKeys.size() > 0) {
+				where = where + "\nand s._stageid_key in (" + String.join(",",  stageKeys) + ")";				
+				from_stage = true;
+			}
+		}
 				
 		if (from_stage == true) {
 			from = from + ", gxd_index_stages s";

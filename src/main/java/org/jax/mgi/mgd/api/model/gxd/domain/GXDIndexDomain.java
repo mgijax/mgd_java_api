@@ -20,6 +20,7 @@ public class GXDIndexDomain extends BaseDomain {
 	private String markerKey;
 	private String markerSymbol;
 	private String markerName;
+	private String markerChromosome;
 	private String markerAccID;
 	private String refsKey;
 	private String jnumid;

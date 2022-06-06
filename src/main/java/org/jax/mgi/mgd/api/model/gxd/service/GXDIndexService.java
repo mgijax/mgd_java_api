@@ -262,7 +262,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		
 		// full coded
 		if (searchDomain.getIsFullCoded().equals("1")) {
-			where = where + "\nand exists (select 1 from gxd_expression_cache e where i._refs_key = e._refs_key)";
+			where = where + "\nand exists (select 1 from gxd_expression e where i._refs_key = e._refs_key)";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

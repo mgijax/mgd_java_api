@@ -10,7 +10,6 @@ import lombok.Setter;
 @Getter @Setter
 public class GXDIndexDomain extends BaseDomain {
 
-	private String processStatus;
 	private String indexKey;
 	private String comments;	
 	private String priorityKey;

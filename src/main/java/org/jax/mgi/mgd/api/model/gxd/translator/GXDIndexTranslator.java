@@ -5,7 +5,6 @@ import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.GXDIndexDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GXDIndexStageDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.GXDIndex;
-import org.jax.mgi.mgd.api.util.Constants;
 import org.jboss.logging.Logger;
 
 public class GXDIndexTranslator extends BaseEntityDomainTranslator<GXDIndex, GXDIndexDomain> {
@@ -17,7 +16,6 @@ public class GXDIndexTranslator extends BaseEntityDomainTranslator<GXDIndex, GXD
 
 		GXDIndexDomain domain = new GXDIndexDomain();
 
-		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setIndexKey(String.valueOf(entity.get_index_key()));
 		domain.setComments(entity.getComments());
 		domain.setPriorityKey(String.valueOf(entity.getPriority().get_term_key()));

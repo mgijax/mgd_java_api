@@ -31,6 +31,6 @@ public class GXDIndexDomain extends BaseDomain {
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;
-
+	private Boolean isFullCoded;
 	private List<GXDIndexStageDomain> indexStages;
 }

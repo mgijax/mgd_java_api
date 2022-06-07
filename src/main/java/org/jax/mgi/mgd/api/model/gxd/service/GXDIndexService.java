@@ -192,12 +192,11 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		List<SlimGXDIndexDomain> results = new ArrayList<SlimGXDIndexDomain>();
 		
 		String cmd = "";
-		String select = "select distinct i._index_key, r._refs_key, r.jnumid, m.symbol, r.short_citation, rr._primary";
-		String from = "from gxd_index i, bib_citation_cache r, mrk_marker m, bib_refs rr";
+		String select = "select distinct i._index_key, r._refs_key, r.jnumid, m.symbol, r.short_citation";
+		String from = "from gxd_index i, bib_citation_cache r, mrk_marker m";
 		String where = "where i._refs_key = r._refs_key"
-				+ "\nand r._refs_key = rr._refs_key"				
 				+ "\nand i._marker_key = m._marker_key";
-		String orderBy = "order by m.symbol, rr._primary, r.short_citation";
+		String orderBy = "order by m.symbol, r.short_citation";
 		String value;
 
 		// if parameter exists, then add to where-clause

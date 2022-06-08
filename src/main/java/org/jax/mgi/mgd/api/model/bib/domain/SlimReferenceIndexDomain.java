@@ -15,7 +15,5 @@ public class SlimReferenceIndexDomain extends BaseDomain {
 	public String jnum;
 	public String short_citation;
 	private String priorityKey;
-	private String priority;
 	private String conditionalMutantsKey;
-	private String conditionalMutants;
 }

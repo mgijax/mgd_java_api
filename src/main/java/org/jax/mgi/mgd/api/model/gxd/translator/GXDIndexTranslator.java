@@ -41,6 +41,7 @@ public class GXDIndexTranslator extends BaseEntityDomainTranslator<GXDIndex, GXD
 		// stages
 		log.info("start stages");
 		if (entity.getIndexStages() != null || !entity.getIndexStages().isEmpty()) {
+			log.info("stages not empty");
 			GXDIndexStageTranslator stageTranslator = new GXDIndexStageTranslator();
 			Iterable<GXDIndexStageDomain> i = stageTranslator.translateEntities(entity.getIndexStages());
 			domain.setIndexStages(IteratorUtils.toList(i.iterator()));

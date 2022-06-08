@@ -88,7 +88,6 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		// return entity translated to domain
 		log.info("processGXDIndex/create/returning results");
 		results.setItem(translator.translate(entity));
-		log.info("processGXDIndex/entity translated:" + entity.get_index_key());
 		return results;
 	}
 

@@ -19,8 +19,8 @@ public class GXDIndexTranslator extends BaseEntityDomainTranslator<GXDIndex, GXD
 		log.info("inside translator");
 		domain.setIndexKey(String.valueOf(entity.get_index_key()));
 		domain.setComments(entity.getComments());
-//		domain.setPriorityKey(String.valueOf(entity.getPriority().get_term_key()));
-//		domain.setPriority(entity.getPriority().getTerm());
+		domain.setPriorityKey(String.valueOf(entity.getPriority().get_term_key()));
+		domain.setPriority(entity.getPriority().getTerm());
 //		domain.setConditionalMutantsKey(String.valueOf(entity.getConditionalMutants().get_term_key()));
 //		domain.setConditionalMutants(entity.getConditionalMutants().getTerm());
 //		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));

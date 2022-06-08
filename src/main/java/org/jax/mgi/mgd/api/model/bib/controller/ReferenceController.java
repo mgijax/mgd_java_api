@@ -20,6 +20,7 @@ import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceSearchDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceIndexDomain;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.UserService;
@@ -178,6 +179,16 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		return referenceService.validJnum(jnum);
 	}
 
+	@GET
+	@ApiOperation(value = "Validate reference by J:/returns slim reference index domain")
+	@Path("/validJnumGxdIndex/{jnum}")
+	public List<SlimReferenceIndexDomain> validJnumGxdIndex(
+			@PathParam("jnum") 
+			@ApiParam(value = "Validating jnum/index") 
+			String jnum) {
+		return referenceService.validJnumGxdIndex(jnum);
+	}
+	
 	@POST
 	@ApiOperation(value = "Validate reference, copyright, creative commons")
 	@Path("/validateJnumImage")

@@ -26,6 +26,7 @@ import org.jax.mgi.mgd.api.model.bib.domain.ReferenceSearchDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceIndexDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowData;
@@ -932,6 +933,55 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				SlimReferenceDomain domain = new SlimReferenceDomain();						
 				domain = slimtranslator.translate(referenceDAO.get(rs.getInt("_refs_key")));			
 				referenceDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
+
+	@Transactional	
+	public List<SlimReferenceIndexDomain> validJnumGxdIndex(String value) {
+		// use SlimReferenceIndexDomain to return list of validated reference, gxd_index/priority, gxd_index/conditional mutation
+		// one value is expected
+		// accepts value :  J:xxx or xxxx
+		// returns empty list if value contains "%"
+		// returns empty list if value does not exist
+
+		List<SlimReferenceIndexDomain> results = new ArrayList<SlimReferenceIndexDomain>();
+		
+		if (value.contains("%") || value == null || value.isEmpty()) {
+			return results;
+		}
+
+		String cmd = "\nselect distinct c._refs_key, c.numericpart, c.jnumid, c.short_citation, 0, 0 from bib_citation_cache c";
+		String includeUnion = "\nunion\nselect c._refs_key, c.numericpart, c.jnumid, c.short_citation, x._priority_key, x._conditionalmutants_key";
+		String notExists = "\nand not exists (select 1 from gxd_index x where c._refs_key = x._refs_key)";
+		String doesExist = "\nand c._refs_key = x._refs_key";
+		
+		value = value.toUpperCase();
+		if (!value.contains("J:")) {
+			value = "J:" + value;
+		}
+		String where = "\nwhere c.jnumid = '" + value + "'";
+		
+		cmd = cmd + where + notExists + includeUnion + where + doesExist;
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {	
+				SlimReferenceIndexDomain domain = new SlimReferenceIndexDomain();						
+				domain.setRefsKey(rs.getString("_refs_key"));
+				domain.setJnumid(rs.getString("jnumid"));
+				domain.setJnum(rs.getString("numericpart"));
+				domain.setShort_citation(rs.getString("short_citation"));
+				domain.setPriorityKey(rs.getString("_priority_key"));
+				domain.setConditionalMutantsKey(rs.getString("_conditionalmutants_key"));
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

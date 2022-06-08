@@ -958,10 +958,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			return results;
 		}
 
-		String cmd = "\nselect distinct c._refs_key, c.numericpart, c.jnumid, c.short_citation, 0, 0 from bib_citation_cache c";
-		String includeUnion = "\nunion\nselect c._refs_key, c.numericpart, c.jnumid, c.short_citation, x._priority_key, x._conditionalmutants_key";
-		String notExists = "\nand not exists (select 1 from gxd_index x where c._refs_key = x._refs_key)";
-		String doesExist = "\nand c._refs_key = x._refs_key";
+		String cmd = "\nselect distinct c._refs_key, c.numericpart, c.jnumid, c.short_citation, 0 as _priority_key, 0 as _conditionalmutants_key"
+				+ "\nfrom bib_citation_cache c";
+		String includeUnion = "\nunion\nselect c._refs_key, c.numericpart, c.jnumid, c.short_citation, i._priority_key, i._conditionalmutants_key"
+				+ "\nfrom bib_citation_cache c, gxd_index i";
+		String notExists = "\nand not exists (select 1 from gxd_index i where c._refs_key = i._refs_key)";
+		String doesExist = "\nand c._refs_key = i._refs_key";
 		
 		value = value.toUpperCase();
 		if (!value.contains("J:")) {

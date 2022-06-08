@@ -53,7 +53,6 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 
 		SearchResults<GXDIndexDomain> results = new SearchResults<GXDIndexDomain>();
 		GXDIndex entity = new GXDIndex();
-		Boolean modified = false;
 		
 		log.info("processGXDIndex/create");
 
@@ -68,7 +67,6 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		else {
 			entity.setComments(domain.getComments());
 		}
-		log.info("entity.setComments();:" + entity.getComments());
 		
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
@@ -76,7 +74,9 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		entity.setModification_date(new Date());
 		
 		// execute persist/insert/send to database
+		log.info("entity.getIndexKey():" + entity.get_index_key());
 		indexDAO.persist(entity);
+		log.info("entity.getIndexKey():" + entity.get_index_key());
 				
 //		// process gxd_indexstages
 //		if (domain.getIndexStages() != null && !domain.getIndexStages().isEmpty()) {
@@ -86,8 +86,9 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 //		}
 		
 		// return entity translated to domain
-		log.info("processGXDIndex/create/returning results : " + modified);
+		log.info("processGXDIndex/create/returning results");
 		results.setItem(translator.translate(entity));
+		log.info("processGXDIndex/entity translated:" + entity.get_index_key());
 		return results;
 	}
 

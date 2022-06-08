@@ -24,6 +24,8 @@ public class SlimMarkerTranslator extends BaseEntityDomainTranslator<Marker, Sli
 		domain.setOrganismLatin(entity.getOrganism().getLatinname());
 		domain.setMarkerStatusKey(entity.getMarkerStatus().get_marker_status_key().toString());
 		domain.setMarkerStatus(entity.getMarkerStatus().getStatus());
+		domain.setMarkerTypeKey(entity.getMarkerType().get_marker_type_key().toString());
+		domain.setMarkerType(entity.getMarkerType().getName());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 

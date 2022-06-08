@@ -39,14 +39,11 @@ public class GXDIndexTranslator extends BaseEntityDomainTranslator<GXDIndex, GXD
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
 		// stages
-		log.info("start stages");
 		if (entity.getIndexStages() != null) {
-			log.info("stages not empty");
 			GXDIndexStageTranslator stageTranslator = new GXDIndexStageTranslator();
 			Iterable<GXDIndexStageDomain> i = stageTranslator.translateEntities(entity.getIndexStages());
 			domain.setIndexStages(IteratorUtils.toList(i.iterator()));
 		}
-		log.info("end stages");
 
 		// is the reference full-code/exists in expression cache
 		if (entity.getExpressionCache() != null) {

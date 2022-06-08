@@ -40,7 +40,7 @@ public class GXDIndexTranslator extends BaseEntityDomainTranslator<GXDIndex, GXD
 
 		// stages
 		log.info("start stages");
-		if (entity.getIndexStages() != null || !entity.getIndexStages().isEmpty()) {
+		if (entity.getIndexStages() != null) {
 			log.info("stages not empty");
 			GXDIndexStageTranslator stageTranslator = new GXDIndexStageTranslator();
 			Iterable<GXDIndexStageDomain> i = stageTranslator.translateEntities(entity.getIndexStages());
@@ -49,12 +49,12 @@ public class GXDIndexTranslator extends BaseEntityDomainTranslator<GXDIndex, GXD
 		log.info("end stages");
 
 		// is the reference full-code/exists in expression cache
-//		if (entity.getExpressionCache() != null || !entity.getExpressionCache().isEmpty()) {
-//			domain.setIsFullCoded("1");
-//		}
-//		else {
-//			domain.setIsFullCoded("0");
-//		}
+		if (entity.getExpressionCache() != null) {
+			domain.setIsFullCoded("1");
+		}
+		else {
+			domain.setIsFullCoded("0");
+		}
 		
 		return domain;
 	}

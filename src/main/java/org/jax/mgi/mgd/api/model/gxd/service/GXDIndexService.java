@@ -97,7 +97,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 				
 		SearchResults<GXDIndexDomain> results = new SearchResults<GXDIndexDomain>();
 		GXDIndex entity = indexDAO.get(Integer.valueOf(domain.getIndexKey()));
-		Boolean modified = false;
+		Boolean modified = true; 
 		
 		log.info("processGXDIndex/update");
 		
@@ -120,7 +120,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 			}
 		}
 		
-		// only if modifications were actually made
+		// always true
 		if (modified == true) {
 			entity.setModification_date(new Date());
 			entity.setModifiedBy(user);

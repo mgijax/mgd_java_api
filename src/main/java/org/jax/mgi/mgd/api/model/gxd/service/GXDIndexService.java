@@ -57,10 +57,14 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		
 		log.info("processGXDIndex/create");
 
-		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));	
+		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));
+		log.info("entity.setReference():" + entity.getReference().get_refs_key());
 		entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));
+		log.info("entity.setMarker():" + entity.getMarker().get_marker_key());
 		entity.setPriority(termDAO.get(Integer.valueOf(domain.getPriorityKey())));
+		log.info("entity.setPriority():" + entity.getPriority().get_term_key());
 		entity.setConditionalMutants(termDAO.get(Integer.valueOf(domain.getConditionalMutantsKey())));
+		log.info("entity.setConditionalMutatns():" + entity.getConditionalMutants().get_term_key());
 		
 		if (domain.getComments() == null || domain.getComments().isEmpty()) {
 			entity.setComments(null);
@@ -68,6 +72,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		else {
 			entity.setComments(domain.getComments());
 		}
+		log.info("entity.setComments();:" + entity.getComments());
 		
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());

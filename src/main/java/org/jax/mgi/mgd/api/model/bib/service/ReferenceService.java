@@ -985,6 +985,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setPriorityKey(rs.getString("_priority_key"));
 				domain.setConditionalMutantsKey(rs.getString("_conditionalmutants_key"));
 				
+				// default = empty
 				if (domain.getPriorityKey().equals("0")) {
 					domain.setPriorityKey("");
 				}

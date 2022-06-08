@@ -46,12 +46,12 @@ public class GXDIndexTranslator extends BaseEntityDomainTranslator<GXDIndex, GXD
 		}
 
 		// is the reference full-code/exists in expression cache
-		if (entity.getExpressionCache() != null || !entity.getExpressionCache().isEmpty()) {
-			domain.setIsFullCoded("1");
-		}
-		else {
-			domain.setIsFullCoded("0");
-		}
+//		if (entity.getExpressionCache() != null || !entity.getExpressionCache().isEmpty()) {
+//			domain.setIsFullCoded("1");
+//		}
+//		else {
+//			domain.setIsFullCoded("0");
+//		}
 		
 		return domain;
 	}

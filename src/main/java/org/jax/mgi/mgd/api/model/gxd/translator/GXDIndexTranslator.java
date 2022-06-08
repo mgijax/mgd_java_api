@@ -16,6 +16,7 @@ public class GXDIndexTranslator extends BaseEntityDomainTranslator<GXDIndex, GXD
 
 		GXDIndexDomain domain = new GXDIndexDomain();
 
+		log.info("inside translator");
 		domain.setIndexKey(String.valueOf(entity.get_index_key()));
 //		domain.setComments(entity.getComments());
 //		domain.setPriorityKey(String.valueOf(entity.getPriority().get_term_key()));
@@ -39,11 +40,11 @@ public class GXDIndexTranslator extends BaseEntityDomainTranslator<GXDIndex, GXD
 //		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
 		// stages
-		if (entity.getImageStages() != null || !entity.getImageStages().isEmpty()) {
-			GXDIndexStageTranslator stageTranslator = new GXDIndexStageTranslator();
-			Iterable<GXDIndexStageDomain> i = stageTranslator.translateEntities(entity.getImageStages());
-			domain.setIndexStages(IteratorUtils.toList(i.iterator()));
-		}
+//		if (entity.getImageStages() != null || !entity.getImageStages().isEmpty()) {
+//			GXDIndexStageTranslator stageTranslator = new GXDIndexStageTranslator();
+//			Iterable<GXDIndexStageDomain> i = stageTranslator.translateEntities(entity.getImageStages());
+//			domain.setIndexStages(IteratorUtils.toList(i.iterator()));
+//		}
 
 		// is the reference full-code/exists in expression cache
 //		if (entity.getExpressionCache() != null || !entity.getExpressionCache().isEmpty()) {
@@ -53,6 +54,7 @@ public class GXDIndexTranslator extends BaseEntityDomainTranslator<GXDIndex, GXD
 //			domain.setIsFullCoded("0");
 //		}
 		
+		log.info("returning from translator");
 		return domain;
 	}
 

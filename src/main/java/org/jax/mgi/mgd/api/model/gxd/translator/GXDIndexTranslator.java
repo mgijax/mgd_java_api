@@ -19,25 +19,31 @@ public class GXDIndexTranslator extends BaseEntityDomainTranslator<GXDIndex, GXD
 		log.info("inside translator");
 		domain.setIndexKey(String.valueOf(entity.get_index_key()));
 		domain.setComments(entity.getComments());
+		log.info("priority");
 		domain.setPriorityKey(String.valueOf(entity.getPriority().get_term_key()));
 		domain.setPriority(entity.getPriority().getTerm());
-//		domain.setConditionalMutantsKey(String.valueOf(entity.getConditionalMutants().get_term_key()));
-//		domain.setConditionalMutants(entity.getConditionalMutants().getTerm());
-//		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
-//		domain.setJnumid(entity.getReference().getJnumid());
-//		domain.setJnum(String.valueOf(entity.getReference().getNumericPart()));
-//		domain.setShort_citation(entity.getReference().getShort_citation());
-//		domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
-//		domain.setMarkerSymbol(entity.getMarker().getSymbol());		
-//		domain.setMarkerName(entity.getMarker().getName());
-//		domain.setMarkerChromosome(entity.getMarker().getChromosome());
-//		domain.setMarkerAccID(entity.getMarker().getMgiAccessionIds().get(0).getAccID());
-//		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
-//		domain.setCreatedBy(entity.getCreatedBy().getLogin());
-//		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
-//		domain.setModifiedBy(entity.getModifiedBy().getLogin());
-//		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
-//		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
+		log.info("conditional");
+		domain.setConditionalMutantsKey(String.valueOf(entity.getConditionalMutants().get_term_key()));
+		domain.setConditionalMutants(entity.getConditionalMutants().getTerm());
+		log.info("reference");
+		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
+		domain.setJnumid(entity.getReference().getJnumid());
+		domain.setJnum(String.valueOf(entity.getReference().getNumericPart()));
+		domain.setShort_citation(entity.getReference().getShort_citation());
+		log.info("marker");
+		domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
+		domain.setMarkerSymbol(entity.getMarker().getSymbol());		
+		domain.setMarkerName(entity.getMarker().getName());
+		domain.setMarkerChromosome(entity.getMarker().getChromosome());
+		domain.setMarkerAccID(entity.getMarker().getMgiAccessionIds().get(0).getAccID());
+		log.info("creation");
+		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
+		domain.setCreatedBy(entity.getCreatedBy().getLogin());
+		log.info("modifiation");
+		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
+		domain.setModifiedBy(entity.getModifiedBy().getLogin());
+		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
+		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
 		// stages
 //		if (entity.getImageStages() != null || !entity.getImageStages().isEmpty()) {

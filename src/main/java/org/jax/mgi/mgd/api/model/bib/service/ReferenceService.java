@@ -984,6 +984,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setShort_citation(rs.getString("short_citation"));
 				domain.setPriorityKey(rs.getString("_priority_key"));
 				domain.setConditionalMutantsKey(rs.getString("_conditionalmutants_key"));
+				
+				// default = "Not Applicable"
+				if (domain.getConditionalMutantsKey().equals("0")) {
+					domain.setConditionalMutantsKey("4834242");
+				}
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

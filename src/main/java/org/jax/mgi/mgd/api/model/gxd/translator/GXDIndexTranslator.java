@@ -37,6 +37,7 @@ public class GXDIndexTranslator extends BaseEntityDomainTranslator<GXDIndex, GXD
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
+		domain.setIndexDisplay(domain.getMarkerSymbol() + ", " + domain.getJnumid() + ", " + domain.getShort_citation());
 
 		// stages
 		if (entity.getIndexStages() != null) {
@@ -45,7 +46,7 @@ public class GXDIndexTranslator extends BaseEntityDomainTranslator<GXDIndex, GXD
 			domain.setIndexStages(IteratorUtils.toList(i.iterator()));
 		}
 
-		// is the reference full-code/exists in expression cache
+		// if the reference exists in expression cache
 		if (entity.getExpressionCache() != null) {
 			domain.setIsFullCoded("1");
 		}

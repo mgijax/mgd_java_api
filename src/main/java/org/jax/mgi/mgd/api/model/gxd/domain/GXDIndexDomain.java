@@ -11,6 +11,7 @@ import lombok.Setter;
 public class GXDIndexDomain extends BaseDomain {
 
 	private String indexKey;
+	private String indexDisplay;
 	private String comments;	
 	private String priorityKey;
 	private String priority;

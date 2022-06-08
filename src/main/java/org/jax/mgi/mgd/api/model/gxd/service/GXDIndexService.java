@@ -78,12 +78,12 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		// execute persist/insert/send to database
 		indexDAO.persist(entity);
 				
-		// process gxd_indexstages
-		if (domain.getIndexStages() != null && !domain.getIndexStages().isEmpty()) {
-			if (stageService.process(entity.get_index_key(), domain.getIndexStages(), user)) {
-				modified = true;
-			}
-		}
+//		// process gxd_indexstages
+//		if (domain.getIndexStages() != null && !domain.getIndexStages().isEmpty()) {
+//			if (stageService.process(entity.get_index_key(), domain.getIndexStages(), user)) {
+//				modified = true;
+//			}
+//		}
 		
 		// return entity translated to domain
 		log.info("processGXDIndex/create/returning results : " + modified);

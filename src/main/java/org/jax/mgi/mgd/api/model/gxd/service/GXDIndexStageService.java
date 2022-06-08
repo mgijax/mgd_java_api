@@ -115,7 +115,7 @@ public class GXDIndexStageService extends BaseService<GXDIndexStageDomain> {
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processGXDIndexStage update");
 				GXDIndexStage entity = stageDAO.get(Integer.valueOf(domain.get(i).getIndexStageKey()));
-				entity.set_index_key(Integer.valueOf(domain.get(i).getIndexKey()));
+				entity.set_index_key(parentKey);
 				entity.setIndexassay(termDAO.get(Integer.valueOf(domain.get(i).getIndexAssayKey())));
 				entity.setStageid(termDAO.get(Integer.valueOf(domain.get(i).getStageidKey())));
 				entity.setModifiedBy(user);

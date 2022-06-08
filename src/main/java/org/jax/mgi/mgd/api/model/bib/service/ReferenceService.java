@@ -985,10 +985,15 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setPriorityKey(rs.getString("_priority_key"));
 				domain.setConditionalMutantsKey(rs.getString("_conditionalmutants_key"));
 				
+				if (domain.getPriorityKey().equals("0")) {
+					domain.setPriorityKey("");
+				}
+				
 				// default = "Not Applicable"
 				if (domain.getConditionalMutantsKey().equals("0")) {
 					domain.setConditionalMutantsKey("4834242");
 				}
+				
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

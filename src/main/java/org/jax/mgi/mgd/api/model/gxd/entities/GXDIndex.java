@@ -66,7 +66,7 @@ public class GXDIndex extends BaseEntity {
 	
 	@OneToMany()
 	@JoinColumn(name="_index_key", insertable=false, updatable=false)
-	private List<GXDIndexStage> imageStages;
+	private List<GXDIndexStage> indexStages;
 	
 	@OneToMany()
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)

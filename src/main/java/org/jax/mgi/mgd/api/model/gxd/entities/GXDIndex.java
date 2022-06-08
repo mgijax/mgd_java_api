@@ -66,10 +66,10 @@ public class GXDIndex extends BaseEntity {
 	
 	@OneToMany()
 	@JoinColumn(name="_index_key", insertable=false, updatable=false)
-	private List<GXDIndexStage> iimageStages;
+	private List<GXDIndexStage> imageStages;
 	
 	@OneToMany()
-	@JoinColumn(name="_refs_key")
+	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	private List<ExpressionCache> expressionCache;
 	
 }

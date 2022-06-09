@@ -150,6 +150,18 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		GXDIndexDomain domain = new GXDIndexDomain();
 		if (indexDAO.get(key) != null) {
 			domain = translator.translate(indexDAO.get(key));
+			
+			String cmd = "select * as from gxd_expression where _refs_key = " + key + " limit 1";
+			try {
+				ResultSet rs = sqlExecutor.executeProto(cmd);
+				while (rs.next()) {
+					domain.setIsFullCoded("1");
+				}
+				sqlExecutor.cleanup();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}			
 		}
 		return domain;
 	}

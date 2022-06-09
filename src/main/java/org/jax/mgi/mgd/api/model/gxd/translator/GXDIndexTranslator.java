@@ -38,7 +38,8 @@ public class GXDIndexTranslator extends BaseEntityDomainTranslator<GXDIndex, GXD
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		domain.setIndexDisplay(domain.getMarkerSymbol() + ", " + domain.getJnumid() + ", " + domain.getShort_citation());
-
+		domain.setIsFullCoded("0");
+		
 		// stages
 		if (entity.getIndexStages() != null) {
 			GXDIndexStageTranslator stageTranslator = new GXDIndexStageTranslator();
@@ -46,20 +47,20 @@ public class GXDIndexTranslator extends BaseEntityDomainTranslator<GXDIndex, GXD
 			domain.setIndexStages(IteratorUtils.toList(i.iterator()));
 		}
 
-		// if the reference exists in expression cache
-		if (entity.getExpressionCache() != null) {
-			log.info(entity.getReference().get_refs_key());
-			log.info(entity.getExpressionCache().size());
-			if (entity.getExpressionCache().size() > 0) {
-				domain.setIsFullCoded("1");
-			}
-			else {
-				domain.setIsFullCoded("0");
-			}
-		}
-		else {
-			domain.setIsFullCoded("0");
-		}
+//		// if the reference exists in expression cache
+//		if (entity.getExpressionCache() != null) {
+//			log.info(entity.getReference().get_refs_key());
+//			log.info(entity.getExpressionCache().size());
+//			if (entity.getExpressionCache().size() > 0) {
+//				domain.setIsFullCoded("1");
+//			}
+//			else {
+//				domain.setIsFullCoded("0");
+//			}
+//		}
+//		else {
+//			domain.setIsFullCoded("0");
+//		}
 		
 		return domain;
 	}

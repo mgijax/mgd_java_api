@@ -940,6 +940,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		if (searchDomain.getMarkerStatusKey() != null && !searchDomain.getMarkerStatusKey().isEmpty()) {
 			where = where + "\nand m._marker_status_key in (" + searchDomain.getMarkerStatusKey() + ")";
 		}
+
+		if (searchDomain.getMarkerTypeKey() != null && !searchDomain.getMarkerTypeKey().isEmpty()) {
+			where = where + "\nand m._marker_type_key in (" + searchDomain.getMarkerTypeKey() + ")";
+		}
 		
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	
 			String mgiid = searchDomain.getAccID().toUpperCase();

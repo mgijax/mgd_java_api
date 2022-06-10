@@ -28,9 +28,8 @@ public class GXDIndexTranslator extends BaseEntityDomainTranslator<GXDIndex, GXD
 		domain.setShort_citation(entity.getReference().getShort_citation());
 		domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 		domain.setMarkerSymbol(entity.getMarker().getSymbol());		
-		domain.setMarkerName(entity.getMarker().getName());
-		domain.setMarkerChromosome(entity.getMarker().getChromosome());
-		domain.setMarkerAccID(entity.getMarker().getMgiAccessionIds().get(0).getAccID());
+		domain.setMarkerTypeKey(String.valueOf(entity.getMarker().getMarkerType().get_marker_type_key()));
+		domain.setMarkerType(entity.getMarker().getMarkerType().getName());
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());

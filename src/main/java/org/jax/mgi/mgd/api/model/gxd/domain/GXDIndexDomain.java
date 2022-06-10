@@ -19,9 +19,8 @@ public class GXDIndexDomain extends BaseDomain {
 	private String conditionalMutants;
 	private String markerKey;
 	private String markerSymbol;
-	private String markerName;
-	private String markerChromosome;
-	private String markerAccID;
+	private String markerTypeKey;
+	private String markerType;
 	private String refsKey;
 	private String jnumid;
 	private String jnum;

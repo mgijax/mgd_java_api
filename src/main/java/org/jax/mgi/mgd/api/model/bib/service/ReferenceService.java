@@ -345,6 +345,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		if (searchDomain.getAccids() != null && !searchDomain.getAccids().isEmpty()) {
 			// replace all spaces
+			log.info(searchDomain.getAccids());
 			value = searchDomain.getAccids().replaceAll("\\s+", " ");
 			value = value.trim().toLowerCase().replaceAll(" ",",").replaceAll(",", "','");
 			where = where + "\nand lower(a.accid) in ('" + value + "')";

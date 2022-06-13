@@ -86,10 +86,14 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		// marker stuff
 		if (entity.getMarker() != null && !entity.getMarker().getSymbol().isEmpty()) {
 			domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
-			domain.setMarkerSymbol(entity.getMarker().getSymbol());			
+			domain.setMarkerSymbol(entity.getMarker().getSymbol());	
+			domain.setMarkerName(entity.getMarker().getName());
 			domain.setChromosome(entity.getMarker().getChromosome());
 			domain.setMarkerStatusKey(String.valueOf(entity.getMarker().getMarkerStatus().get_marker_status_key()));
 			domain.setMarkerStatus(entity.getMarker().getMarkerStatus().getStatus());
+			domain.setStartCoordinate(String.valueOf(entity.getMarker().getLocationCache().getStartCoordinate()));
+			domain.setEndCoordinate(String.valueOf(entity.getMarker().getLocationCache().getEndCoordinate()));
+			domain.setStrand(String.valueOf(entity.getMarker().getLocationCache().getStrand()));
 			
 			// reference can be null
 			if (entity.getMarkerReference() != null) {

@@ -94,9 +94,9 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			// reference can be null
 			if (entity.getMarkerReference() != null) {
 				domain.setRefsKey(String.valueOf(entity.getMarkerReference().get_refs_key()));
-				domain.setJnumid(entity.getMarkerReference().getReferenceCitationCache().getJnumid());
-				domain.setJnum(entity.getMarkerReference().getReferenceCitationCache().getNumericPart());
-				domain.setShort_citation(entity.getMarkerReference().getReferenceCitationCache().getShort_citation());
+				domain.setJnumid(entity.getMarkerReference().getJnumid());
+				domain.setJnum(entity.getMarkerReference().getNumericPart());
+				domain.setShort_citation(entity.getMarkerReference().getShort_citation());
 			}
 			
 			// marker detail clip

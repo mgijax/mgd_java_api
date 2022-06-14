@@ -139,6 +139,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				}
 			}
 			
+			// process marker synonym
+			if (domain.getSynonyms() != null) {
+				synonymService.process(String.valueOf(entity.get_marker_key()), domain.getSynonyms(), mgiTypeKey, user);
+			}
+			
 			// create marker history assignment
 			// create 1 marker history row to track the initial marker assignment		
 			// event = assigned (1)
@@ -157,12 +162,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			log.info("cmd: " + cmd);
 			Query query = markerDAO.createNativeQuery(cmd);
 			query.getResultList();
-			
-			// process marker synonym
-			if (domain.getSynonyms() != null) {
-				synonymService.process(String.valueOf(entity.get_marker_key()), domain.getSynonyms(), mgiTypeKey, user);
-			}
-			
+
 			// to update the mrk_location_cache table				
 			try {
 				log.info("processMarker/mrkLocationUtilities");

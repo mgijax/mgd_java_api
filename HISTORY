@@ -1,8 +1,10 @@
+TAG: mgd_java_api-6-0-20-7
 TAG: mgd_java_api-6-0-20-6
 TAG: mgd_java_api-6-0-20-5
 DATE: 06/13/2022
 STAFF: lec
 wts2-883/Move PWI/GXD Index page from SQLAlchemy to Java API
+referenceservice/update/add "bib_refs.date"
 
 TAG: mgd_java_api-6-0-20-4
 TAG: mgd_java_api-6-0-20-3

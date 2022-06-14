@@ -1466,6 +1466,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}			
 					
 			entity.setYear(Integer.parseInt(domain.getYear()));
+			entity.setDate(domain.getDate());
 			entity.setReferenceTypeTerm(termDAO.get(Integer.valueOf(domain.getReferenceTypeKey())));
 		
 			if (domain.getReferenceAbstract() == null || domain.getReferenceAbstract().isEmpty()) {

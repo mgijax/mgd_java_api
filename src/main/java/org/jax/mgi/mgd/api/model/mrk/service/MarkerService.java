@@ -70,6 +70,9 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private SlimMarkerTranslator slimtranslator = new SlimMarkerTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
+	String mgiTypeKey = "2";
+	String mgiTypeName = "Marker";
+	
 	@Transactional
 	public SearchResults<MarkerDomain> create(MarkerDomain domain, User user) {
 		
@@ -155,8 +158,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			Query query = markerDAO.createNativeQuery(cmd);
 			query.getResultList();
 			
-			// to-add/create marker synonyms, if provided
-	
+			// process marker synonym
+			if (domain.getSynonyms() != null) {
+				synonymService.process(String.valueOf(entity.get_marker_key()), domain.getSynonyms(), mgiTypeKey, user);
+			}
+			
 			// to update the mrk_location_cache table				
 			try {
 				log.info("processMarker/mrkLocationUtilities");
@@ -183,8 +189,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		Marker entity = markerDAO.get(Integer.valueOf(domain.getMarkerKey()));
 		Boolean modified = true;
-		String mgiTypeKey = "2";
-		String mgiTypeName = "Marker";
 		Boolean setStrainNeedsReview = false;
 		
 		log.info("processMarker/update");

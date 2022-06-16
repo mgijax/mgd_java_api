@@ -119,12 +119,12 @@ public class Genotype extends BaseEntity {
     @Where(clause="`_annottype_key` = 1002")
     private List<Annotation> mpAnnots;
 	
-	// MP Header
+	// MP Header by Genotype
 	@OneToMany()
     @JoinColumn(name="_object_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
     @Where(clause="`_annottype_key` = 1002")
     private List<AnnotationHeader> mpHeaders;
-	
+		
 	// DO term annotations
 	@OneToMany()
     @JoinColumn(name="_object_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)

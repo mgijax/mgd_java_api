@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.voc.domain;
 import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeAnnotHeaderViewDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 
 import io.swagger.annotations.ApiModel;
@@ -53,4 +54,7 @@ public class DenormAnnotationDomain extends BaseDomain {
 	// is annotation a duplicate?
 	Boolean isDuplicate = false;
 	
+	// for genotype/mp only
+	private List<GenotypeAnnotHeaderViewDomain> headersByAnnot;	
+
 }

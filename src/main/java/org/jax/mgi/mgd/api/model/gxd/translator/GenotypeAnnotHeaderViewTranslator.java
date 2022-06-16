@@ -14,6 +14,7 @@ public class GenotypeAnnotHeaderViewTranslator extends BaseEntityDomainTranslato
 		
 		GenotypeAnnotHeaderViewDomain domain = new GenotypeAnnotHeaderViewDomain();
 		
+		domain.setPkey(String.valueOf(entity.getPkey()));
 		domain.setGenotypeKey(String.valueOf(entity.getGenotypeKey()));
 		domain.setAnnotKey(String.valueOf(entity.getAnnotKey()));
 		domain.setTermKey(String.valueOf(entity.getTermKey()));

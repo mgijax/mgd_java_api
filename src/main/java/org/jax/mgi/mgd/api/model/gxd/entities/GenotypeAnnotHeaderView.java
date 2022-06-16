@@ -17,12 +17,11 @@ import lombok.Setter;
 public class GenotypeAnnotHeaderView extends BaseEntity {
 		
 	@Id
-	private int pkey;
+	private int headerTermKey;
 	private int annotKey;	
 	private int genotypeKey;
 	private int termKey;
 	private String term;
-	private int headerTermKey;
 	private String headerTerm;
 
 }

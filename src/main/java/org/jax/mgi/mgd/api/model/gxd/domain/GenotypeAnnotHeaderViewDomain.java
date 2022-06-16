@@ -8,11 +8,10 @@ import lombok.Setter;
 @Getter @Setter
 public class GenotypeAnnotHeaderViewDomain extends BaseDomain {
 
-	private String pkey;
+	private String headerTermKey;
 	private String genotypeKey;
 	private String annotKey;
 	private String termKey;
 	private String term;
-	private String headerTermKey;
 	private String headerTerm;
 }

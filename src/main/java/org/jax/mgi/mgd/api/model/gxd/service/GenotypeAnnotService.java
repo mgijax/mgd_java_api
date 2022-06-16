@@ -305,6 +305,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 	                    if (controllerAnnotTypeKey.equals("1002")) {
 	                    	denormAnnotDomain.setTermid(annotDomain.getMpIds().get(0).getAccID());
 	                    	//log.info("Adding MP IDs: " + annotDomain.getMpIds().get(0).getAccID());
+						    denormAnnotDomain.setHeadersByAnnot(annotDomain.getHeadersByAnnot());							                    	
 	                    }
 	                    else if (controllerAnnotTypeKey.equals("1020")) {
 	                    	denormAnnotDomain.setTermid(annotDomain.getDoIds().get(0).getAccID());
@@ -339,6 +340,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 						if (domainAnnotTypeKey.equals("1002")) {
 							denormAnnotDomain.setProperties(evidenceDomain.getProperties());
 						}
+						
 						
 						annotList.add(denormAnnotDomain);
 					}

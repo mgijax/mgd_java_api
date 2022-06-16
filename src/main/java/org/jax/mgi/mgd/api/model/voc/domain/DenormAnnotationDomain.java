@@ -54,6 +54,7 @@ public class DenormAnnotationDomain extends BaseDomain {
 	// is annotation a duplicate?
 	Boolean isDuplicate = false;
 	
+	// for genotype/mp only
 	private List<GenotypeAnnotHeaderViewDomain> headersByAnnot;	
 
 }

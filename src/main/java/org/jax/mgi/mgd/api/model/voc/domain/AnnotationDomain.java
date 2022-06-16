@@ -35,7 +35,8 @@ public class AnnotationDomain extends BaseDomain {
 	private List<SlimAccessionDomain> mpIds;
 	private List<SlimAccessionDomain> doIds;
 	private List<SlimAccessionDomain> goIds;
-
+	
+	// for genotype/mp only
 	private List<GenotypeAnnotHeaderViewDomain> headersByAnnot;
 
 	private Boolean allowEditTerm = true;

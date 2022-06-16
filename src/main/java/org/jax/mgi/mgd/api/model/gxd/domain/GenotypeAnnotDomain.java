@@ -17,7 +17,6 @@ public class GenotypeAnnotDomain extends BaseDomain {
 	private String accID;
 	private List<AnnotationDomain> annots;
 	private List<AnnotationHeaderDomain> headers;
-	//private List<GenotypeAnnotHeaderViewDomain> headersByAnnot;
 	private Boolean allowEditTerm = false;	
 	
 	public void setAnnot(AnnotationDomain domain) {

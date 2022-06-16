@@ -7,7 +7,6 @@ import java.util.List;
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeAnnotDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeAnnotHeaderViewDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationHeaderDomain;
@@ -67,13 +66,6 @@ public class GenotypeAnnotTranslator extends BaseEntityDomainTranslator<Genotype
 			domain.setHeaders(IteratorUtils.toList(t2.iterator()));
 			domain.getHeaders().sort(Comparator.comparingInt(AnnotationHeaderDomain::getSequenceNum));
 		}
-		
-		// mp headerByAnnot by annotations
-//		if (entity.getMpHeadersByAnnot() != null && !entity.getMpHeadersByAnnot().isEmpty()) {
-//			GenotypeAnnotHeaderViewTranslator genotypeHeaderTransltor = new GenotypeAnnotHeaderViewTranslator();
-//			Iterable<GenotypeAnnotHeaderViewDomain> t3 = genotypeHeaderTransltor.translateEntities(entity.getMpHeadersByAnnot());
-//			domain.setHeadersByAnnot(IteratorUtils.toList(t3.iterator()));
-//		}
 		
 		// Note: do annotations have no header
 		

@@ -17,5 +17,6 @@ public class DenormGenotypeAnnotDomain extends BaseDomain {
 	private String accID;
 	private List<DenormAnnotationDomain> annots;
 	private List<AnnotationHeaderDomain> headers;
+	private List<GenotypeAnnotHeaderViewDomain> headersByAnnot;	
 	private Boolean allowEditTerm = false;	
 }

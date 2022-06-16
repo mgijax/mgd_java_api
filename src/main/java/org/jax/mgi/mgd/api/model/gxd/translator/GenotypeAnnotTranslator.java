@@ -23,7 +23,6 @@ public class GenotypeAnnotTranslator extends BaseEntityDomainTranslator<Genotype
 	// have a list of AnnotationDomains instead of GenotypeMPAnnotationDomains
 	private AnnotationTranslator annotTranslator = new AnnotationTranslator();
 	private AnnotationHeaderTranslator annotHeaderTranslator = new AnnotationHeaderTranslator();
-	private GenotypeAnnotHeaderViewTranslator genotypeHeaderTransltor = new GenotypeAnnotHeaderViewTranslator();
 	
 	@Override
 	protected GenotypeAnnotDomain entityToDomain(Genotype entity) {
@@ -70,10 +69,11 @@ public class GenotypeAnnotTranslator extends BaseEntityDomainTranslator<Genotype
 		}
 		
 		// mp headerByAnnot by annotations
-		if (entity.getMpHeadersByAnnot() != null && !entity.getMpHeadersByAnnot().isEmpty()) {
-			Iterable<GenotypeAnnotHeaderViewDomain> t3 = genotypeHeaderTransltor.translateEntities(entity.getMpHeadersByAnnot());
-			domain.setHeadersByAnnot(IteratorUtils.toList(t3.iterator()));
-		}
+//		if (entity.getMpHeadersByAnnot() != null && !entity.getMpHeadersByAnnot().isEmpty()) {
+//			GenotypeAnnotHeaderViewTranslator genotypeHeaderTransltor = new GenotypeAnnotHeaderViewTranslator();
+//			Iterable<GenotypeAnnotHeaderViewDomain> t3 = genotypeHeaderTransltor.translateEntities(entity.getMpHeadersByAnnot());
+//			domain.setHeadersByAnnot(IteratorUtils.toList(t3.iterator()));
+//		}
 		
 		// Note: do annotations have no header
 		

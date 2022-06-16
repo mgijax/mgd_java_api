@@ -125,10 +125,10 @@ public class Genotype extends BaseEntity {
     @Where(clause="`_annottype_key` = 1002")
     private List<AnnotationHeader> mpHeaders;
 	
-	// MP Header by Annotation
-	@OneToMany()
-    @JoinColumn(name="genotypeKey", referencedColumnName="_genotype_key", insertable=false, updatable=false)
-    private List<GenotypeAnnotHeaderView> mpHeadersByAnnot;
+//	// MP Header by Annotation
+//	@OneToMany()
+//    @JoinColumn(name="genotypeKey", referencedColumnName="_genotype_key", insertable=false, updatable=false)
+//    private List<GenotypeAnnotHeaderView> mpHeadersByAnnot;
 	
 	// DO term annotations
 	@OneToMany()

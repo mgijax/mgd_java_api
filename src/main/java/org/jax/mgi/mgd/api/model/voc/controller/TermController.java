@@ -89,4 +89,17 @@ public class TermController extends BaseController<TermDomain> {
 	public List<SlimTermDomain> getTermSet(String setName) {
 		return termService.getTermSet(setName);
 	}
+	
+	@POST
+	@ApiOperation(value = "Return list of Ancestor Terms/input string = 'xxx,xxx,xxx'")
+	@Path("/getAncestorKeys")
+	public List<SlimTermDomain> getAncestorKeys(String keys) {
+		List<SlimTermDomain> results = new ArrayList<SlimTermDomain>();
+		try {
+			results = termService.getAncestorKeys(keys);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return results;	}
+	
 }

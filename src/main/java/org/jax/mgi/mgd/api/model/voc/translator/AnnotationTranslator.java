@@ -72,6 +72,7 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
  		
 		// mp headerByAnnot by annotations
 		if (entity.getMpHeadersByAnnot() != null && !entity.getMpHeadersByAnnot().isEmpty()) {
+			log.info(entity.get_annot_key());
 			GenotypeAnnotHeaderViewTranslator headerTransltor = new GenotypeAnnotHeaderViewTranslator();			
 			Iterable<GenotypeAnnotHeaderViewDomain> i = headerTransltor.translateEntities(entity.getMpHeadersByAnnot());
 			domain.setHeadersByAnnot(IteratorUtils.toList(i.iterator()));

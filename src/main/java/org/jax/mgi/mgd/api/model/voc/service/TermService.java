@@ -125,7 +125,6 @@ public class TermService extends BaseService<TermDomain> {
 			if (domain.getVocabKey() != null && !domain.getVocabKey().isEmpty() && domain.getVocabKey().equals("102")) {
 		
 				domain.setCellTypeAnnotCount(getCelltypeAnnotCount(key));
-		
 			}
 		}	
 		return domain;
@@ -638,6 +637,42 @@ public class TermService extends BaseService<TermDomain> {
 				//domain.setParentTerm(rs.getString("parentTerm"));
 				parentDomain.setCellTypeAnnotCount(getCelltypeAnnotCount(key));
 				results.add(parentDomain);				
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@Transactional	
+	public List<SlimTermDomain> getAncestorKeys(String keys) {
+		// return list of ancestors fro string of termKeys in format "xxxx,xxxx"
+
+		List<SlimTermDomain> results = new ArrayList<SlimTermDomain>();
+		
+		String cmd = "select t._term_key, t.term, ancestor._term_key, ancestor.term" +
+				"\nfrom VOC_Term t, VOC_VocabDAG vd, DAG_Node d, DAG_Closure dc, DAG_Node dh, VOC_Term ancestor" +
+				"\nwhere t._Term_key in (" + keys + ")" +
+				"\nand t._Vocab_key = vd._Vocab_key" +
+				"\nand vd._DAG_key = d._DAG_key" +
+				"\nand d._label_key = -1" +
+				"\nand t._Term_key = d._Object_key" +
+				"\nand d._Node_key = dc._Descendent_key" +
+				"\nand dc._Ancestor_key = dh._Node_key" +
+				"\nand dh._Object_key = ancestor._Term_key" +
+				"\n order by _term_key";
+
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimTermDomain domain = new SlimTermDomain();						
+				domain = slimtranslator.translate(termDAO.get(rs.getInt("_term_key")));
+				termDAO.clear();					
+				results.add(domain);				
 			}
 		}
 		catch (Exception e) {

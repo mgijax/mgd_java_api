@@ -21,7 +21,7 @@ public class GenotypeAnnotHeaderView extends BaseEntity {
 	private int annotKey;
 	private int termKey;
 	private String term;
-	private int headerTernKey;
+	private int headerTermKey;
 	private String headerTerm;
 
 }

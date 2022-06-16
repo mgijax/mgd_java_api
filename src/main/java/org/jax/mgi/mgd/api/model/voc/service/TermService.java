@@ -123,7 +123,6 @@ public class TermService extends BaseService<TermDomain> {
 		// use SQL query to load cell type annotation count
 		if(domain != null ) {
 			if (domain.getVocabKey() != null && !domain.getVocabKey().isEmpty() && domain.getVocabKey().equals("102")) {
-		
 				domain.setCellTypeAnnotCount(getCelltypeAnnotCount(key));
 			}
 		}	
@@ -628,13 +627,9 @@ public class TermService extends BaseService<TermDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				//TermDagParentDomain domain = new TermDagParentDomain();
 				Integer key = Integer.valueOf(rs.getString("parentKey"));
 				TermDomain parentDomain = translator.translate(termDAO.get(key));
 				termDAO.clear();		
-				//TermDomain parentDomain = get(Integer.valueOf(rs.getString("parentKey")));
-				//domain.setParentKey(rs.getString("parentKey"));
-				//domain.setParentTerm(rs.getString("parentTerm"));
 				parentDomain.setCellTypeAnnotCount(getCelltypeAnnotCount(key));
 				results.add(parentDomain);				
 			}
@@ -647,8 +642,30 @@ public class TermService extends BaseService<TermDomain> {
 	}
 	
 	@Transactional	
+	public String getCelltypeAnnotCount(Integer termKey) {
+		String cmd = "select count(*) as annotCt" + 
+				"\nfrom gxd_isresultcelltype irc, gxd_isresultstructure irs" +
+				"\nwhere irc._result_key = irs._result_key" +
+				"\nand irc._celltype_term_key = " + termKey;
+		log.info(cmd);
+		
+		String count = "";
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				count = rs.getString("annotCt");			
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return count;	
+	}
+	
+	@Transactional	
 	public List<SlimTermDomain> getAncestorKeys(String keys) {
-		// return list of ancestors fro string of termKeys in format "xxxx,xxxx"
+		// return list of ancestors from string of termKeys in format xxx,yyy,zzz
 
 		List<SlimTermDomain> results = new ArrayList<SlimTermDomain>();
 		
@@ -680,29 +697,6 @@ public class TermService extends BaseService<TermDomain> {
 		}
 		
 		return results;
-	}
-	
-	@Transactional	
-	public String getCelltypeAnnotCount(Integer termKey) {
-		String cmd = "select count(*) as annotCt" + 
-				"\nfrom gxd_isresultcelltype irc, gxd_isresultstructure irs" +
-				"\nwhere irc._result_key = irs._result_key" +
-				"\nand irc._celltype_term_key = " + termKey;
-		log.info(cmd);
-		
-		String count = "";
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				count = rs.getString("annotCt");			
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return count;
-		
 	}
 	
 }

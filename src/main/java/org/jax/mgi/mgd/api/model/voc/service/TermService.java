@@ -652,7 +652,7 @@ public class TermService extends BaseService<TermDomain> {
 
 		List<SlimTermDomain> results = new ArrayList<SlimTermDomain>();
 		
-		String cmd = "select ancestor._term_key" +
+		String cmd = "\nselect ancestor._term_key" +
 				"\nfrom VOC_Term t, VOC_VocabDAG vd, DAG_Node d, DAG_Closure dc, DAG_Node dh, VOC_Term ancestor" +
 				"\nwhere t._Term_key in (" + keys + ")" +
 				"\nand t._Vocab_key = vd._Vocab_key" +

@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
+import org.jax.mgi.mgd.api.model.gxd.entities.GenotypeAnnotHeaderView;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -88,4 +89,9 @@ public class Annotation extends BaseEntity {
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 13 and `_logicaldb_key` = 31 and preferred = 1")
 	private List<Accession> goIds;
+	
+	// MP Header by Annotation
+	@OneToMany()
+    @JoinColumn(name="annotKey", referencedColumnName="_annot_key", insertable=false, updatable=false)
+    private List<GenotypeAnnotHeaderView> mpHeadersByAnnot;	
 }

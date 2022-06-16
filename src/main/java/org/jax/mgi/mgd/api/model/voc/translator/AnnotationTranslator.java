@@ -4,6 +4,8 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.SlimAccessionTranslator;
+import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeAnnotHeaderViewDomain;
+import org.jax.mgi.mgd.api.model.gxd.translator.GenotypeAnnotHeaderViewTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.EvidenceDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
@@ -67,7 +69,14 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
  				domain.setGoDagAbbrev(entity.getTerm().getGoDagNodes().get(0).getDag().getAbbreviation());	
  			}
  		}
- 			
+ 		
+		// mp headerByAnnot by annotations
+		if (entity.getMpHeadersByAnnot() != null && !entity.getMpHeadersByAnnot().isEmpty()) {
+			GenotypeAnnotHeaderViewTranslator headerTransltor = new GenotypeAnnotHeaderViewTranslator();			
+			Iterable<GenotypeAnnotHeaderViewDomain> i = headerTransltor.translateEntities(entity.getMpHeadersByAnnot());
+			domain.setHeadersByAnnot(IteratorUtils.toList(i.iterator()));
+		}
+		
 		return domain;
 	}
 

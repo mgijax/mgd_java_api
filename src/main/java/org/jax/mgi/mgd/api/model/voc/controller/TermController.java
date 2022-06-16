@@ -91,7 +91,7 @@ public class TermController extends BaseController<TermDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Return list of Ancestor Terms/input string = xxx,yyy,zzz")
+	@ApiOperation(value = "Get list of Ancestor Terms/input string = xxx,yyy,zzz")
 	@Path("/getAncestorKeys")
 	public List<SlimTermDomain> getAncestorKeys(String keys) {
 		List<SlimTermDomain> results = new ArrayList<SlimTermDomain>();

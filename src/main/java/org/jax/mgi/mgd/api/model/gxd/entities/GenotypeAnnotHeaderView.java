@@ -18,6 +18,7 @@ public class GenotypeAnnotHeaderView extends BaseEntity {
 		
 	@Id
 	private int headerTermKey;
+	private int annotKey;
 	private String headerTerm;
 	private int termKey;
 	private String term;

@@ -88,5 +88,4 @@ public class Annotation extends BaseEntity {
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 13 and `_logicaldb_key` = 31 and preferred = 1")
 	private List<Accession> goIds;
-		
 }

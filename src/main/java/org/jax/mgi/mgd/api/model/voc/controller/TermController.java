@@ -100,6 +100,7 @@ public class TermController extends BaseController<TermDomain> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return results;	}
+		return results;	
+	}
 	
 }

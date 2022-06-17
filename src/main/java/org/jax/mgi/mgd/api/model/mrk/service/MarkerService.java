@@ -832,10 +832,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}	
 
 	@Transactional	
-	public String getNextGmSequence() {
+	public List<SlimMarkerDomain> getNextGmSequence() {
 		// return next Gm symbol that is available in the sequence
 		
-		String nextSequence = null;
+		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
 		
 		String cmd = "\nselect 'Gm' || (max(substring(symbol from 3)::int) + 1) as nextSequence from mrk_marker where symbol ~ '^Gm[\\d]+$'";	
 		log.info(cmd);
@@ -843,15 +843,16 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {				
-				nextSequence = rs.getString("nextSequence");
-			}
+				SlimMarkerDomain domain = new SlimMarkerDomain();				
+				domain.setSymbol(rs.getString("nextSequence"));				
+				results.add(domain);			}
 			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return nextSequence;
+		return results;
 	}	
 	
 	@Transactional	

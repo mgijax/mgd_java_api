@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@ApiModel(value = "Term/Ancestor Domain")
+@ApiModel(value = "Term Ancestor Domain")
 public class TermAncestorDomain extends BaseDomain {
 
 	// specifically for the pwi/genotype detail page

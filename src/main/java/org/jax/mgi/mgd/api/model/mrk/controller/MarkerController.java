@@ -160,7 +160,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		return markerService.getAlias(key);
 	}
 
-	@GET
+	@POST
 	@ApiOperation(value = "Get next Gm symbol that is available in the sequence")
 	@Path("/getNextGmSequence")
 	public List<SlimMarkerDomain> getNextGmSequence() {

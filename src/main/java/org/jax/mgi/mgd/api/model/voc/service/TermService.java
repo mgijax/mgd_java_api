@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.TermAncestorDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.voc.translator.SlimTermTranslator;
@@ -664,12 +665,12 @@ public class TermService extends BaseService<TermDomain> {
 	}
 	
 	@Transactional	
-	public List<SlimTermDomain> getAncestorKeys(String keys) {
+	public List<TermAncestorDomain> getAncestorKeys(String keys) {
 		// return list of ancestors from string of termKeys in format xxx,yyy,zzz
 
-		List<SlimTermDomain> results = new ArrayList<SlimTermDomain>();
+		List<TermAncestorDomain> results = new ArrayList<TermAncestorDomain>();
 		
-		String cmd = "\nselect ancestor._term_key" +
+		String cmd = "\nselect t._term_key as termKey, ancestor._term_key as ancestoryKey" +
 				"\nfrom VOC_Term t, VOC_VocabDAG vd, DAG_Node d, DAG_Closure dc, DAG_Node dh, VOC_Term ancestor" +
 				"\nwhere t._Term_key in (" + keys + ")" +
 				"\nand t._Vocab_key = vd._Vocab_key" +
@@ -682,14 +683,36 @@ public class TermService extends BaseService<TermDomain> {
 				"\n order by _term_key";
 
 		log.info(cmd);
-		
+
+		Integer prevTermKey = 0;
+		TermAncestorDomain domain = null;
+		List<Integer> ancestors = null;
+
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				SlimTermDomain domain = new SlimTermDomain();						
-				domain = slimtranslator.translate(termDAO.get(rs.getInt("_term_key")));
-				termDAO.clear();					
-				results.add(domain);				
+				
+				int termKey = rs.getInt("termKey");
+				
+				if (!prevTermKey.equals(termKey)) {
+					
+					if (!prevTermKey.equals(0)) {
+						domain.setAncestors(ancestors);
+						results.add(domain);
+					}
+					
+					domain = new TermAncestorDomain();
+					domain.setTermKey(rs.getInt("ternKey"));
+					ancestors = new ArrayList<Integer>();
+				}
+	
+				ancestors.add(rs.getInt("ancestorKey"));
+				prevTermKey = termKey;
+				
+				if (rs.isLast()) {
+					domain.setAncestors(ancestors);
+					results.add(domain);				
+				}
 			}
 		}
 		catch (Exception e) {

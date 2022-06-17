@@ -271,8 +271,6 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 			if (controllerAnnotTypeKey.equals("1002")) {
 			    denormGenoAnnotDomain.setHeaders(genoAnnotDomain.getHeaders());
 			    //log.info("adding MP annot");  
-//			    denormGenoAnnotDomain.setHeadersByAnnot(genoAnnotDomain.getHeadersByAnnot());
-//			    log.info("adding MP annot headers");
 			}
 			
 			if (genoAnnotDomain.getAnnots() != null) {

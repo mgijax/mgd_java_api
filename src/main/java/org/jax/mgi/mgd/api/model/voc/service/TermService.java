@@ -670,7 +670,7 @@ public class TermService extends BaseService<TermDomain> {
 
 		List<TermAncestorDomain> results = new ArrayList<TermAncestorDomain>();
 		
-		String cmd = "\nselect t._term_key as termKey, ancestor._term_key as ancestoryKey" +
+		String cmd = "\nselect t._term_key as termKey, ancestor._term_key as ancestorKey" +
 				"\nfrom VOC_Term t, VOC_VocabDAG vd, DAG_Node d, DAG_Closure dc, DAG_Node dh, VOC_Term ancestor" +
 				"\nwhere t._Term_key in (" + keys + ")" +
 				"\nand t._Vocab_key = vd._Vocab_key" +
@@ -693,6 +693,10 @@ public class TermService extends BaseService<TermDomain> {
 			while (rs.next()) {
 				
 				int termKey = rs.getInt("termKey");
+				int ancestorKey = rs.getInt("ancestorKey");
+				
+				log.info(termKey);
+				log.info(ancestorKey);
 				
 				if (!prevTermKey.equals(termKey)) {
 					
@@ -702,11 +706,11 @@ public class TermService extends BaseService<TermDomain> {
 					}
 					
 					domain = new TermAncestorDomain();
-					domain.setTermKey(rs.getInt("ternKey"));
+					domain.setTermKey(termKey);
 					ancestors = new ArrayList<Integer>();
 				}
 	
-				ancestors.add(rs.getInt("ancestorKey"));
+				ancestors.add(ancestorKey);
 				prevTermKey = termKey;
 				
 				if (rs.isLast()) {

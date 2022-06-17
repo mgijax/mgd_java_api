@@ -680,7 +680,7 @@ public class TermService extends BaseService<TermDomain> {
 				"\nand d._Node_key = dc._Descendent_key" +
 				"\nand dc._Ancestor_key = dh._Node_key" +
 				"\nand dh._Object_key = ancestor._Term_key" +
-				"\norder by termKey";
+				"\norder by termKey, ancestorKey";
 
 		log.info(cmd);
 

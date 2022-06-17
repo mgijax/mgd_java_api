@@ -828,6 +828,29 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}	
 
 	@Transactional	
+	public String getNextGmSequence() {
+		// return next Gm symbol that is available in the sequence
+		
+		String nextSequence = null;
+		
+		String cmd = "\nselect 'Gm' || (max(substring(symbol from 3)::int) + 1) as nextSequence from mrk_marker where symbol ~ '^Gm[\\d]+$'";	
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {				
+				nextSequence = rs.getString("nextSequence");
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return nextSequence;
+	}	
+	
+	@Transactional	
 	public List<SlimMarkerDomain> validate(String value, Boolean allowWithdrawn, Boolean allowReserved) {
 		// use SlimMarkerDomain to return list of validated marker
 		// one value is expected

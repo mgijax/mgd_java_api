@@ -675,7 +675,6 @@ public class TermService extends BaseService<TermDomain> {
 				"\nwhere t._Term_key in (" + keys + ")" +
 				"\nand t._Vocab_key = vd._Vocab_key" +
 				"\nand vd._DAG_key = d._DAG_key" +
-				"\nand d._label_key = -1" +
 				"\nand t._Term_key = d._Object_key" +
 				"\nand d._Node_key = dc._Descendent_key" +
 				"\nand dc._Ancestor_key = dh._Node_key" +

@@ -162,7 +162,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 
 	@GET
 	@ApiOperation(value = "Get next Gm symbol that is available in the sequence")
-	@Path("/nextGmSequence")
+	@Path("/getNextGmSequence")
 	public List<SlimMarkerDomain> getNextGmSequence() {
 		return markerService.getNextGmSequence();
 	}

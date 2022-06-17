@@ -680,7 +680,7 @@ public class TermService extends BaseService<TermDomain> {
 				"\nand d._Node_key = dc._Descendent_key" +
 				"\nand dc._Ancestor_key = dh._Node_key" +
 				"\nand dh._Object_key = ancestor._Term_key" +
-				"\n order by _term_key";
+				"\n order by termKey";
 
 		log.info(cmd);
 
@@ -700,7 +700,8 @@ public class TermService extends BaseService<TermDomain> {
 				
 				if (!prevTermKey.equals(termKey)) {
 					
-					if (!prevTermKey.equals(0)) {
+					//if (!prevTermKey.equals(0)) {
+					if (!rs.isFirst()) {
 						domain.setAncestors(ancestors);
 						results.add(domain);
 					}

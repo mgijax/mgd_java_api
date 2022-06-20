@@ -152,4 +152,11 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 		return results;
 	}
 	
+	@GET
+	@ApiOperation(value = "Get list of genotype domains by genotype keys (xxx,yyy,zzz)")
+	@Path("/getListOfGenotypes/{key}")
+	public List<GenotypeDomain> getListOfGenotypes(String keys) {
+		return genotypeService.getListOfGenotypes(keys);
+	}
+	
 }

@@ -23,6 +23,7 @@ import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocDomain;
 import org.jax.mgi.mgd.api.model.img.service.ImagePaneAssocService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
+import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
@@ -806,7 +807,8 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		for (String s: genotypeList) {
 			log.info("getListOfGenotypes():" + s);
 			GenotypeDomain domain = new GenotypeDomain();
-			domain = translator.translate(genotypeDAO.get(Integer.getInteger(s)));
+			domain = translator.translate(genotypeDAO.get(Integer.valueOf(s)));				
+			genotypeDAO.clear();
 			results.add(domain);
 			genotypeDAO.clear();						
 		}

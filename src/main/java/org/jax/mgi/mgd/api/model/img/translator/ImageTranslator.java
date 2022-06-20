@@ -52,8 +52,8 @@ public class ImageTranslator extends BaseEntityDomainTranslator<Image, ImageDoma
 				
 		// reference
 		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
-		domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());
-		domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());
+		domain.setJnumid(entity.getReference().getJnumid());
+		domain.setShort_citation(entity.getReference().getShort_citation());
 
 		// at most one captionNote
 		if (entity.getCaptionNote() != null && !entity.getCaptionNote().isEmpty()) {

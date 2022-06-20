@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceCitationCacheDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.RelationshipCategoryDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.RelationshipDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.RelationshipFearDAO;
@@ -40,7 +40,7 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 	@Inject
 	private TermDAO termDAO;
 	@Inject
-	private ReferenceDAO referenceDAO;
+	private ReferenceCitationCacheDAO referenceDAO;
 	@Inject
 	private RelationshipPropertyService relationshipPropertyService;
 	@Inject

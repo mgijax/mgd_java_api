@@ -2,7 +2,7 @@ package org.jax.mgi.mgd.api.model.voc.translator;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceTranslator;
+import org.jax.mgi.mgd.api.model.bib.translator.ReferenceCitationCacheTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.VocabularyDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Vocabulary;
@@ -10,14 +10,13 @@ import org.jax.mgi.mgd.api.model.voc.entities.Vocabulary;
 public class VocabularyTranslator extends BaseEntityDomainTranslator<Vocabulary, VocabularyDomain> {
 
 	private TermTranslator termTranslator = new TermTranslator();
-	private SlimReferenceTranslator referenceTranslator = new SlimReferenceTranslator();
+	private ReferenceCitationCacheTranslator referenceTranslator = new ReferenceCitationCacheTranslator();
+
 	@Override
 	protected VocabularyDomain entityToDomain(Vocabulary entity) {
 		VocabularyDomain domain = new VocabularyDomain();
 		
 		domain.setVocabKey(String.valueOf(entity.get_vocab_key()));
-		// for backward compatibilty with gxd/ht
-		//domain.set_vocab_key(entity.get_vocab_key());
 		domain.setIsSimple(entity.getIsSimple());
 		domain.setIsPrivate(entity.getIsPrivate());
 		domain.setName(entity.getName());
@@ -30,5 +29,4 @@ public class VocabularyTranslator extends BaseEntityDomainTranslator<Vocabulary,
 		
 		return domain;
 	}
-
 }

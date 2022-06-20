@@ -83,38 +83,38 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		}
 
 		// set initial curation user/dates when samples are created
-		if (domain.getCreatingSamples() == 1){
+		if (domain.getCreatingSamples() == 1) {
 			entity.setInitial_curated_date(new Date());
 			entity.setInitialcuratedBy(user);
 		}
-		// set curation state to "Not Done" if we're deleting the samples
-		if (domain.getDeletingSamples() == 1){
-			entity.setCurationState(termDAO.get(20475422)); 
-		}
+		
 		// last curation user/date set when samples created / updated / deleted
-		if (domain.getDeletingSamples() == 1 || domain.getModifyingSamples() == 1 || domain.getCreatingSamples() == 1){
+		if (domain.getDeletingSamples() == 1 || domain.getModifyingSamples() == 1 || domain.getCreatingSamples() == 1) {
 			entity.setLast_curated_date(new Date());
 			entity.setLastcuratedBy(user);
 		}
+		
+//		// set curation state to "Not Done" if we're deleting the samples
+//		if (domain.getDeletingSamples() == 1){
+//			entity.setCurationState(termDAO.get(20475422)); 
+//		}
+//		// set eval date and curation state on eval state change
+//		if (entity.getEvaluationState().get_term_key() != domain.get_evaluationstate_key()){
+//			entity.setEvaluated_date(new Date());
+//			entity.setEvaluatedBy(user);
+//			if (domain.get_evaluationstate_key() == 20225942 ||  domain.get_evaluationstate_key() == 20225944) {
+//				entity.setCurationState(termDAO.get(20475422)); 
+//			}
+//			if (domain.get_evaluationstate_key() == 20225943) {
+//				entity.setCurationState(termDAO.get(20475420)); 
+//			}
+//		}
+//		if (domain.getHasSamples() == 1){
+//			entity.setCurationState(termDAO.get(20475421)); 
+//		}
 
-
-		// set eval date and curation state on eval state change
-		if (entity.getEvaluationState().get_term_key() != domain.get_evaluationstate_key()){
-			entity.setEvaluated_date(new Date());
-			entity.setEvaluatedBy(user);
-			if (domain.get_evaluationstate_key() == 20225942 ||  domain.get_evaluationstate_key() == 20225944) {
-				entity.setCurationState(termDAO.get(20475422)); 
-			}
-			if (domain.get_evaluationstate_key() == 20225943) {
-				entity.setCurationState(termDAO.get(20475420)); 
-			}
-		}
-
-		if (domain.getHasSamples() == 1){
-			entity.setCurationState(termDAO.get(20475421)); 
-		}
-
-
+		// curation state
+		entity.setCurationState(termDAO.get(Integer.valueOf(domain.get_curationstate_key())));	
 		// evaluation state
 		entity.setEvaluationState(termDAO.get(Integer.valueOf(domain.get_evaluationstate_key())));	
 		// experiment type

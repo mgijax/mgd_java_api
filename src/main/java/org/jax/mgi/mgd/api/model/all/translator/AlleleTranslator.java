@@ -86,17 +86,24 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		// marker stuff
 		if (entity.getMarker() != null && !entity.getMarker().getSymbol().isEmpty()) {
 			domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
-			domain.setMarkerSymbol(entity.getMarker().getSymbol());			
+			domain.setMarkerSymbol(entity.getMarker().getSymbol());	
+			domain.setMarkerName(entity.getMarker().getName());
 			domain.setChromosome(entity.getMarker().getChromosome());
 			domain.setMarkerStatusKey(String.valueOf(entity.getMarker().getMarkerStatus().get_marker_status_key()));
 			domain.setMarkerStatus(entity.getMarker().getMarkerStatus().getStatus());
 			
+			if (entity.getMarker().getLocationCache() != null ) {
+				domain.setStartCoordinate(String.valueOf(entity.getMarker().getLocationCache().getStartCoordinate()));
+				domain.setEndCoordinate(String.valueOf(entity.getMarker().getLocationCache().getEndCoordinate()));
+				domain.setStrand(String.valueOf(entity.getMarker().getLocationCache().getStrand()));
+			}
+			
 			// reference can be null
 			if (entity.getMarkerReference() != null) {
 				domain.setRefsKey(String.valueOf(entity.getMarkerReference().get_refs_key()));
-				domain.setJnumid(entity.getMarkerReference().getReferenceCitationCache().getJnumid());
-				domain.setJnum(entity.getMarkerReference().getReferenceCitationCache().getNumericPart());
-				domain.setShort_citation(entity.getMarkerReference().getReferenceCitationCache().getShort_citation());
+				domain.setJnumid(entity.getMarkerReference().getJnumid());
+				domain.setJnum(entity.getMarkerReference().getNumericPart());
+				domain.setShort_citation(entity.getMarkerReference().getShort_citation());
 			}
 			
 			// marker detail clip

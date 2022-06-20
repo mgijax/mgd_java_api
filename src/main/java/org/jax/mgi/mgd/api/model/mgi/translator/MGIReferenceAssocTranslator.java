@@ -25,9 +25,9 @@ public class MGIReferenceAssocTranslator extends BaseEntityDomainTranslator<MGIR
 	    domain.setAllowOnlyOne(entity.getRefAssocType().getAllowOnlyOne());
 
 		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
-		domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());
-		domain.setJnum(entity.getReference().getReferenceCitationCache().getNumericPart());
-		domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());
+		domain.setJnumid(entity.getReference().getJnumid());
+		domain.setJnum(entity.getReference().getNumericPart());
+		domain.setShort_citation(entity.getReference().getShort_citation());
 		
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());

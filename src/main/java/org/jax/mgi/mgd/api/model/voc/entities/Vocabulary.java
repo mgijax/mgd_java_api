@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.OrderBy;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
-import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -36,7 +36,7 @@ public class Vocabulary extends BaseEntity {
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key")
-	private Reference reference;
+	private ReferenceCitationCache reference;
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_logicaldb_key")

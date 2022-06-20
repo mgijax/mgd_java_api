@@ -16,7 +16,7 @@ public class SlimImageTranslator extends BaseEntityDomainTranslator<Image, SlimI
 
 		domain.setImageKey(String.valueOf(entity.get_image_key()));
 		domain.setImageDisplay(
-					entity.getReference().getReferenceCitationCache().getJnumid() + ";" +
+					entity.getReference().getJnumid() + ";" +
 					entity.getImageType().getTerm() + ";" +
 					entity.getFigureLabel());
 		

@@ -11,7 +11,7 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceCitationCacheDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeReferenceDAO;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeReferenceDomain;
@@ -30,7 +30,7 @@ public class ProbeReferenceService extends BaseService<ProbeReferenceDomain> {
 	@Inject
 	private ProbeReferenceDAO probeDAO;
 	@Inject
-	private ReferenceDAO referenceDAO;
+	private ReferenceCitationCacheDAO referenceDAO;
 	@Inject
 	private AccessionService accessionService;
 	@Inject

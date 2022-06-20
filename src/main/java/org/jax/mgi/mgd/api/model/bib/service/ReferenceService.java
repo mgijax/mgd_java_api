@@ -26,6 +26,7 @@ import org.jax.mgi.mgd.api.model.bib.domain.ReferenceSearchDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowRelevanceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceIndexDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowData;
@@ -343,7 +344,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		if (searchDomain.getAccids() != null && !searchDomain.getAccids().isEmpty()) {
-			value = searchDomain.getAccids().trim().toLowerCase().replaceAll(" ",",").replaceAll(",", "','");
+			// replace all spaces
+			log.info(searchDomain.getAccids());
+			value = searchDomain.getAccids().replaceAll("\\s+", " ");
+			value = value.replaceAll(", ",  ",");
+			value = value.replaceAll(" ", ",");
+			value = value.trim().toLowerCase().replaceAll(",", "','");
 			where = where + "\nand lower(a.accid) in ('" + value + "')";
 			from_accession = true;
 		}
@@ -942,6 +948,68 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		return results;
 	}	
+
+	@Transactional	
+	public List<SlimReferenceIndexDomain> validJnumGxdIndex(String value) {
+		// use SlimReferenceIndexDomain to return list of validated reference, gxd_index/priority, gxd_index/conditional mutation
+		// one value is expected
+		// accepts value :  J:xxx or xxxx
+		// returns empty list if value contains "%"
+		// returns empty list if value does not exist
+
+		List<SlimReferenceIndexDomain> results = new ArrayList<SlimReferenceIndexDomain>();
+		
+		if (value.contains("%") || value == null || value.isEmpty()) {
+			return results;
+		}
+
+		String cmd = "\nselect distinct c._refs_key, c.numericpart, c.jnumid, c.short_citation, 0 as _priority_key, 0 as _conditionalmutants_key"
+				+ "\nfrom bib_citation_cache c";
+		String includeUnion = "\nunion\nselect c._refs_key, c.numericpart, c.jnumid, c.short_citation, i._priority_key, i._conditionalmutants_key"
+				+ "\nfrom bib_citation_cache c, gxd_index i";
+		String notExists = "\nand not exists (select 1 from gxd_index i where c._refs_key = i._refs_key)";
+		String doesExist = "\nand c._refs_key = i._refs_key";
+		
+		value = value.toUpperCase();
+		if (!value.contains("J:")) {
+			value = "J:" + value;
+		}
+		String where = "\nwhere c.jnumid = '" + value + "'";
+		
+		cmd = cmd + where + notExists + includeUnion + where + doesExist;
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {	
+				SlimReferenceIndexDomain domain = new SlimReferenceIndexDomain();						
+				domain.setRefsKey(rs.getString("_refs_key"));
+				domain.setJnumid(rs.getString("jnumid"));
+				domain.setJnum(rs.getString("numericpart"));
+				domain.setShort_citation(rs.getString("short_citation"));
+				domain.setPriorityKey(rs.getString("_priority_key"));
+				domain.setConditionalMutantsKey(rs.getString("_conditionalmutants_key"));
+				
+				// default = empty
+				if (domain.getPriorityKey().equals("0")) {
+					domain.setPriorityKey("");
+				}
+				
+				// default = "Not Applicable"
+				if (domain.getConditionalMutantsKey().equals("0")) {
+					domain.setConditionalMutantsKey("4834242");
+				}
+				
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
 	
 	@Transactional	
 	public List<SlimReferenceDomain> validateJnumImage(SlimReferenceDomain domain) {
@@ -1397,7 +1465,22 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				entity.setPgs(domain.getPgs());
 			}			
 					
-			entity.setYear(Integer.parseInt(domain.getYear()));
+			int theYear;
+			if (domain.getYear() == null || domain.getYear().isEmpty()) {
+				theYear = Calendar.getInstance().get(Calendar.YEAR);
+			}
+			else {
+				theYear = Integer.valueOf(domain.getYear());
+			}
+			entity.setYear(theYear);
+			
+			if (domain.getDate() == null || domain.getDate().isEmpty()) {
+				entity.setDate(String.valueOf(theYear));
+			}
+			else {
+				entity.setDate(domain.getDate());
+			}
+			
 			entity.setReferenceTypeTerm(termDAO.get(Integer.valueOf(domain.getReferenceTypeKey())));
 		
 			if (domain.getReferenceAbstract() == null || domain.getReferenceAbstract().isEmpty()) {

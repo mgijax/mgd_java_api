@@ -86,14 +86,13 @@ public class AssayTranslator extends BaseEntityDomainTranslator<Assay, AssayDoma
 			domain.setIsReporter(true);			
 		}
 		
-		domain.setAssayDisplay(entity.getReference().getReferenceCitationCache().getJnumid() + "; " + domain.getAssayTypeAbbrev() + "; " + entity.getMarker().getSymbol());	
-
+		domain.setAssayDisplay(entity.getReference().getJnumid() + "; " + domain.getAssayTypeAbbrev() + "; " + entity.getMarker().getSymbol());	
 		domain.setAssayTypeKey(String.valueOf(entity.getAssayType().get_assaytype_key()));
 		domain.setAssayType(entity.getAssayType().getAssayType());
 		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
-		domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());
-		domain.setJnum(String.valueOf(entity.getReference().getReferenceCitationCache().getNumericPart()));
-		domain.setShort_citation(entity.getReference().getReferenceCitationCache().getShort_citation());
+		domain.setJnumid(entity.getReference().getJnumid());
+		domain.setJnum(String.valueOf(entity.getReference().getNumericPart()));
+		domain.setShort_citation(entity.getReference().getShort_citation());
 		domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 		domain.setMarkerSymbol(entity.getMarker().getSymbol());		
 		domain.setMarkerName(entity.getMarker().getName());

@@ -2,17 +2,22 @@ package org.jax.mgi.mgd.api.model.gxd.entities;
 
 import java.util.Date;
 
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,10 +25,14 @@ import lombok.Setter;
 @Entity
 @ApiModel(value = "Index Stage Model Object")
 @Table(name="gxd_index_stages")
-public class IndexStage extends BaseEntity {
+public class GXDIndexStage extends BaseEntity {
 
-	@EmbeddedId
-	private IndexStageKey key;
+	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="gxd_indexstage_generator")
+	@SequenceGenerator(name="gxd_indexstage_generator", sequenceName = "gxd_indexstage_seq", allocationSize=1)
+	@ApiModelProperty(value="primary key")		
+	private int _indexstage_key;
+	private int _index_key;
 	private Date creation_date;
 	private Date modification_date;
 	
@@ -35,20 +44,12 @@ public class IndexStage extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-
-//	 Repeated column in mapping for entity: org.jax.mgi.mgd.api.model.gxd.entities.IndexStage column: _index_key 
-//	 (should be mapped with insert=\"false\" update=\"false\
-//	@OneToOne
-//	@JoinColumn(name="_index_key")
-//	private Index index;
-//
-//	@OneToOne
-//	@JoinColumn(name="_indexassay_key", referencedColumnName="_term_key")
-//	private Term indexAssay;
-//	
-//	@OneToOne
-//	@JoinColumn(name="_stageid_key", referencedColumnName="_term_key")
-//	private Term indexStage;
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_indexassay_key", referencedColumnName="_term_key")
+	private Term indexassay;
 	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_stageid_key", referencedColumnName="_term_key")
+	private Term stageid;
 
 }

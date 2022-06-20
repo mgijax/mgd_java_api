@@ -42,9 +42,12 @@ public class AlleleDomain extends BaseDomain {
 
 	private String markerKey;
 	private String markerSymbol;
+	private String markerName;
 	private String markerStatusKey;
 	private String markerStatus;
 	private String chromosome;
+	private String startCoordinate;
+	private String endCoordinate;
 	private String strand;
 	private String refsKey;
 	private String jnumid;

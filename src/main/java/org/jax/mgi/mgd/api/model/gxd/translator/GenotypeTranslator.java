@@ -1,6 +1,8 @@
 package org.jax.mgi.mgd.api.model.gxd.translator;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
@@ -11,6 +13,8 @@ import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocViewDomain;
 import org.jax.mgi.mgd.api.model.img.translator.ImagePaneAssocViewTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
+import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
+import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
 import org.jboss.logging.Logger;
 
 public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, GenotypeDomain> {
@@ -20,7 +24,8 @@ public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, Gen
 	private NoteTranslator noteTranslator = new NoteTranslator();		
 	private AllelePairTranslator allelePairsTranslator = new AllelePairTranslator();
 	private ImagePaneAssocViewTranslator imagePaneTranslator = new ImagePaneAssocViewTranslator();
-
+	private AnnotationTranslator annotTranslator = new AnnotationTranslator();
+	
 	@Override
 	protected GenotypeDomain entityToDomain(Genotype entity) {
 		
@@ -86,6 +91,17 @@ public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, Gen
 			domain.setImagePaneAssocs(IteratorUtils.toList(t.iterator()));
 		}
 
+		List<AnnotationDomain> newList  = new ArrayList<AnnotationDomain>();
+
+		// mp annotations by genotype
+		if (entity.getMpAnnots() != null && !entity.getMpAnnots().isEmpty()) {
+			Iterable<AnnotationDomain> t = annotTranslator.translateEntities(entity.getMpAnnots());
+			newList.addAll(IteratorUtils.toList(t.iterator()));		
+		}
+		
+		// now set the joined list in the domain
+		domain.setMpAnnots(newList);
+		
 		return domain;
 	}
 

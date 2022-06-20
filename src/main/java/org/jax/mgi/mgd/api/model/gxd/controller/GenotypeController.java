@@ -156,7 +156,16 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 	@ApiOperation(value = "Get list of genotype domains by genotype keys (xxx,yyy,zzz)")
 	@Path("/getListOfGenotypes")
 	public List<GenotypeDomain> getListOfGenotypes(String keys) {
-		return genotypeService.getListOfGenotypes(keys);
+		
+		List<GenotypeDomain> results = new ArrayList<GenotypeDomain>();
+
+		try {
+			results = genotypeService.getListOfGenotypes(keys);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
 	}
 	
 }

@@ -91,16 +91,23 @@ public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, Gen
 			domain.setImagePaneAssocs(IteratorUtils.toList(t.iterator()));
 		}
 
-		List<AnnotationDomain> newList  = new ArrayList<AnnotationDomain>();
-
+		// do annotations by genotype
+		List<AnnotationDomain> newDoList  = new ArrayList<AnnotationDomain>();
+		if (entity.getDoAnnots() != null && !entity.getDoAnnots().isEmpty()) {
+			Iterable<AnnotationDomain> t = annotTranslator.translateEntities(entity.getDoAnnots());			
+			newDoList.addAll(IteratorUtils.toList(t.iterator()));
+		}
+		domain.setDoAnnots(newDoList);
+		domain.getDoAnnots().sort(Comparator.comparing(AnnotationDomain::getTerm, String.CASE_INSENSITIVE_ORDER));
+		
 		// mp annotations by genotype
+		List<AnnotationDomain> newMpList  = new ArrayList<AnnotationDomain>();		
 		if (entity.getMpAnnots() != null && !entity.getMpAnnots().isEmpty()) {
 			Iterable<AnnotationDomain> t = annotTranslator.translateEntities(entity.getMpAnnots());
-			newList.addAll(IteratorUtils.toList(t.iterator()));		
+			newMpList.addAll(IteratorUtils.toList(t.iterator()));		
 		}
-		
-		// now set the joined list in the domain
-		domain.setMpAnnots(newList);
+		domain.setMpAnnots(newMpList);
+		domain.getMpAnnots().sort(Comparator.comparing(AnnotationDomain::getTerm, String.CASE_INSENSITIVE_ORDER));
 		
 		return domain;
 	}

@@ -804,7 +804,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		keys = keys.replaceAll(" ", "");
 		String[] genotypeList = keys.split(",");
 		for (String s: genotypeList) {
-			log.info("getListOfGenotypes():" + s);
+			//log.info("getListOfGenotypes():" + s);
 			GenotypeDomain domain = new GenotypeDomain();
 			domain = translator.translate(genotypeDAO.get(Integer.valueOf(s)));				
 			genotypeDAO.clear();

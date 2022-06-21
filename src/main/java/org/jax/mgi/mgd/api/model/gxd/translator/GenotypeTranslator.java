@@ -91,6 +91,7 @@ public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, Gen
 			domain.setImagePaneAssocs(IteratorUtils.toList(t.iterator()));
 		}
 
+		// genotypes have both do annot and mp annot
 		List<AnnotationDomain> newList  = new ArrayList<AnnotationDomain>();
 
 		// mp annotations by genotype

@@ -795,5 +795,24 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		
 		return results;
 	}
+
+	@Transactional	
+	public List<GenotypeDomain> getListOfGenotypes(String keys) {
+		// return list of genotype domains from string of genotypeKeys in format xxx,yyy,zzz
+
+		List<GenotypeDomain> results = new ArrayList<GenotypeDomain>();
+		keys = keys.replaceAll(" ", "");
+		String[] genotypeList = keys.split(",");
+		for (String s: genotypeList) {
+			log.info("getListOfGenotypes():" + s);
+			GenotypeDomain domain = new GenotypeDomain();
+			domain = translator.translate(genotypeDAO.get(Integer.valueOf(s)));				
+			genotypeDAO.clear();
+			results.add(domain);
+			genotypeDAO.clear();						
+		}
+		
+		return results;
+	}
 	
 }

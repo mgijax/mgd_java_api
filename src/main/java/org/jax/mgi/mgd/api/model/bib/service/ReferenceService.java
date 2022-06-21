@@ -345,8 +345,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		if (searchDomain.getAccids() != null && !searchDomain.getAccids().isEmpty()) {
 			// replace all spaces
+			log.info(searchDomain.getAccids());
 			value = searchDomain.getAccids().replaceAll("\\s+", " ");
-			value = value.trim().toLowerCase().replaceAll(" ",",").replaceAll(",", "','");
+			value = value.replaceAll(", ",  ",");
+			value = value.replaceAll(" ", ",");
+			value = value.trim().toLowerCase().replaceAll(",", "','");
 			where = where + "\nand lower(a.accid) in ('" + value + "')";
 			from_accession = true;
 		}
@@ -1462,7 +1465,22 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				entity.setPgs(domain.getPgs());
 			}			
 					
-			entity.setYear(Integer.parseInt(domain.getYear()));
+			int theYear;
+			if (domain.getYear() == null || domain.getYear().isEmpty()) {
+				theYear = Calendar.getInstance().get(Calendar.YEAR);
+			}
+			else {
+				theYear = Integer.valueOf(domain.getYear());
+			}
+			entity.setYear(theYear);
+			
+			if (domain.getDate() == null || domain.getDate().isEmpty()) {
+				entity.setDate(String.valueOf(theYear));
+			}
+			else {
+				entity.setDate(domain.getDate());
+			}
+			
 			entity.setReferenceTypeTerm(termDAO.get(Integer.valueOf(domain.getReferenceTypeKey())));
 		
 			if (domain.getReferenceAbstract() == null || domain.getReferenceAbstract().isEmpty()) {

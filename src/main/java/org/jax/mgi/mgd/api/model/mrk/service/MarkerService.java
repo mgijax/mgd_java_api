@@ -70,6 +70,9 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	private SlimMarkerTranslator slimtranslator = new SlimMarkerTranslator();
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
+	String mgiTypeKey = "2";
+	String mgiTypeName = "Marker";
+	
 	@Transactional
 	public SearchResults<MarkerDomain> create(MarkerDomain domain, User user) {
 		
@@ -136,6 +139,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				}
 			}
 			
+			// process marker synonym
+			if (domain.getSynonyms() != null) {
+				synonymService.process(String.valueOf(entity.get_marker_key()), domain.getSynonyms(), mgiTypeKey, user);
+			}
+			
 			// create marker history assignment
 			// create 1 marker history row to track the initial marker assignment		
 			// event = assigned (1)
@@ -154,9 +162,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			log.info("cmd: " + cmd);
 			Query query = markerDAO.createNativeQuery(cmd);
 			query.getResultList();
-			
-			// to-add/create marker synonyms, if provided
-	
+
 			// to update the mrk_location_cache table				
 			try {
 				log.info("processMarker/mrkLocationUtilities");
@@ -183,8 +189,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		Marker entity = markerDAO.get(Integer.valueOf(domain.getMarkerKey()));
 		Boolean modified = true;
-		String mgiTypeKey = "2";
-		String mgiTypeName = "Marker";
 		Boolean setStrainNeedsReview = false;
 		
 		log.info("processMarker/update");
@@ -828,10 +832,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}	
 
 	@Transactional	
-	public String getNextGmSequence() {
+	public List<SlimMarkerDomain> getNextGmSequence() {
 		// return next Gm symbol that is available in the sequence
 		
-		String nextSequence = null;
+		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
 		
 		String cmd = "\nselect 'Gm' || (max(substring(symbol from 3)::int) + 1) as nextSequence from mrk_marker where symbol ~ '^Gm[\\d]+$'";	
 		log.info(cmd);
@@ -839,15 +843,16 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {				
-				nextSequence = rs.getString("nextSequence");
-			}
+				SlimMarkerDomain domain = new SlimMarkerDomain();				
+				domain.setSymbol(rs.getString("nextSequence"));				
+				results.add(domain);			}
 			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return nextSequence;
+		return results;
 	}	
 	
 	@Transactional	

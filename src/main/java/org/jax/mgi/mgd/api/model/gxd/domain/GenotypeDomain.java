@@ -36,6 +36,7 @@ public class GenotypeDomain extends BaseDomain {
 	private List<AllelePairDomain> allelePairs;
 	private List<ImagePaneAssocViewDomain> imagePaneAssocs;
 
-	private List<AnnotationDomain> annots;
+	private List<AnnotationDomain> doAnnots;	
+	private List<AnnotationDomain> mpAnnots;
 
 }

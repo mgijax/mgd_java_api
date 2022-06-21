@@ -92,6 +92,12 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			entity.setLastcuratedBy(user);
 		}
 
+		// evaluation user/date set when evaluation state has changed
+		if (entity.getEvaluationState().get_term_key() != domain.get_evaluationstate_key()){
+			entity.setEvaluated_date(new Date());
+			entity.setEvaluatedBy(user);
+		}
+		
 		// curation state
 		entity.setCurationState(termDAO.get(Integer.valueOf(domain.get_curationstate_key())));	
 		// evaluation state

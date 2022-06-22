@@ -117,9 +117,9 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		}
 
 		// experiment variables
-		if (domain.getExperiment_variables() != null) {
-			hTExperimentVariableService.process(domain.get_experiment_key(), domain.getExperiment_variables(), user);
-		}
+//		if (domain.getExperiment_variables() != null) {
+//			hTExperimentVariableService.process(domain.get_experiment_key(), domain.getExperiment_variables(), user);
+//		}
 
 		// pubmed IDs
 //		if (domain.getDeletingPubmedIds() == 1) { //delete all associated

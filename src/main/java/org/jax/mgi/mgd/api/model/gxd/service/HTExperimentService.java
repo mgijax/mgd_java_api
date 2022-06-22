@@ -172,9 +172,8 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		}
 		
 		// return entity translated to domain
-		log.info("processHTExperiment/update/returning results");
 		results.setItem(translator.translate(entity));
-		log.info("processHTExperiment/update/returned results succsssful");
+		log.info("processHTExperiment/update/returning results");
 		return results;		
 	}
 

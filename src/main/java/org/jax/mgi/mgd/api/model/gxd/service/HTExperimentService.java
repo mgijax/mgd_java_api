@@ -2,16 +2,14 @@ package org.jax.mgi.mgd.api.model.gxd.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
-import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.gxd.dao.HTExperimentDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTExperimentVariableDomain;
@@ -19,11 +17,11 @@ import org.jax.mgi.mgd.api.model.gxd.domain.HTUserDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimHTDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTExperiment;
 import org.jax.mgi.mgd.api.model.gxd.translator.HTExperimentTranslator;
-import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
-import org.jax.mgi.mgd.api.model.mgi.service.MGIPropertyService;
-import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIPropertyDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.MGIPropertyService;
+import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;

@@ -10,6 +10,8 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
+import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.gxd.dao.HTExperimentDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTExperimentVariableDomain;
@@ -107,58 +109,58 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		// study type
 		entity.setStudyType(termDAO.get(Integer.valueOf(domain.get_studytype_key())));	
 
-		// experiment note 
-		if (domain.getNotetext() != null){
-			NoteDomain noteDomain = new NoteDomain();
-			noteDomain.setNoteChunk(domain.getNotetext());
-			noteDomain.setNoteTypeKey("1047");
-			noteDomain.setNoteKey(domain.get_note_key());
-			noteService.process(String.valueOf(entity.get_experiment_key()), noteDomain, "42", user);
-		}
-
-		// experiment variables
-		if (domain.getExperiment_variables() != null) {
-			hTExperimentVariableService.process(domain.get_experiment_key(), domain.getExperiment_variables(), user);
-		}
-
-		// pubmed IDs
-		if (domain.getDeletingPubmedIds() == 1) { //delete all associated
-
-			List<MGIPropertyDomain> removedPubmedIds = new ArrayList<MGIPropertyDomain>();
-
-			if (domain.getPubmed_property_keys() != null) {
-				for (int i = 0; i < domain.getPubmed_property_keys().size(); i++) {
-					MGIPropertyDomain remPropertyDomain = new MGIPropertyDomain();
-					remPropertyDomain.setProcessStatus(Constants.PROCESS_DELETE);
-					remPropertyDomain.setPropertyKey(domain.getPubmed_property_keys().get(i));
-					removedPubmedIds.add(remPropertyDomain);
-				}
-				mgiPropertyService.process(removedPubmedIds, user);
-			}
-
-		}
-		if (domain.getNewPubmedIds() != null) {
-
-			// This value comes through as a single white-space separated string, so
-			// it must be broken down to loop over individual string IDs
-			List<MGIPropertyDomain> newPubmedIds = new ArrayList<MGIPropertyDomain>();
-			String[] newPubmedIdsArray = domain.getNewPubmedIds().trim().split("\\s++");
-			for( int i = 0; i < newPubmedIdsArray.length; i++)
-			{
-    			String thisID = newPubmedIdsArray[i];
-				MGIPropertyDomain propertyDomain = new MGIPropertyDomain();
-				propertyDomain.setProcessStatus(Constants.PROCESS_CREATE);
-				propertyDomain.setPropertyTermKey("20475430");
-				propertyDomain.setPropertyTypeKey("1002");
-				propertyDomain.setObjectKey(Integer.toString(domain.get_experiment_key()));
-				propertyDomain.setMgiTypeKey("42");
-				propertyDomain.setValue(thisID);
-				propertyDomain.setSequenceNum(String.valueOf(i + 1));
-				newPubmedIds.add(propertyDomain);
-			}
-
-			mgiPropertyService.process(newPubmedIds, user);
-		}
+//		// experiment note 
+//		if (domain.getNotetext() != null){
+//			NoteDomain noteDomain = new NoteDomain();
+//			noteDomain.setNoteChunk(domain.getNotetext());
+//			noteDomain.setNoteTypeKey("1047");
+//			noteDomain.setNoteKey(domain.get_note_key());
+//			noteService.process(String.valueOf(entity.get_experiment_key()), noteDomain, "42", user);
+//		}
+//
+//		// experiment variables
+//		if (domain.getExperiment_variables() != null) {
+//			hTExperimentVariableService.process(domain.get_experiment_key(), domain.getExperiment_variables(), user);
+//		}
+//
+//		// pubmed IDs
+//		if (domain.getDeletingPubmedIds() == 1) { //delete all associated
+//
+//			List<MGIPropertyDomain> removedPubmedIds = new ArrayList<MGIPropertyDomain>();
+//
+//			if (domain.getPubmed_property_keys() != null) {
+//				for (int i = 0; i < domain.getPubmed_property_keys().size(); i++) {
+//					MGIPropertyDomain remPropertyDomain = new MGIPropertyDomain();
+//					remPropertyDomain.setProcessStatus(Constants.PROCESS_DELETE);
+//					remPropertyDomain.setPropertyKey(domain.getPubmed_property_keys().get(i));
+//					removedPubmedIds.add(remPropertyDomain);
+//				}
+//				mgiPropertyService.process(removedPubmedIds, user);
+//			}
+//
+//		}
+//		if (domain.getNewPubmedIds() != null) {
+//
+//			// This value comes through as a single white-space separated string, so
+//			// it must be broken down to loop over individual string IDs
+//			List<MGIPropertyDomain> newPubmedIds = new ArrayList<MGIPropertyDomain>();
+//			String[] newPubmedIdsArray = domain.getNewPubmedIds().trim().split("\\s++");
+//			for( int i = 0; i < newPubmedIdsArray.length; i++)
+//			{
+//    			String thisID = newPubmedIdsArray[i];
+//				MGIPropertyDomain propertyDomain = new MGIPropertyDomain();
+//				propertyDomain.setProcessStatus(Constants.PROCESS_CREATE);
+//				propertyDomain.setPropertyTermKey("20475430");
+//				propertyDomain.setPropertyTypeKey("1002");
+//				propertyDomain.setObjectKey(Integer.toString(domain.get_experiment_key()));
+//				propertyDomain.setMgiTypeKey("42");
+//				propertyDomain.setValue(thisID);
+//				propertyDomain.setSequenceNum(String.valueOf(i + 1));
+//				newPubmedIds.add(propertyDomain);
+//			}
+//
+//			mgiPropertyService.process(newPubmedIds, user);
+//		}
 
 
 		// persist entity
@@ -166,10 +168,10 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		entity.setModifiedBy(user);
 		htExperimentDAO.update(entity);
 
-		// process ht samples
-		if (domain.getSamples() != null) {
-			htSampleService.process(domain.get_experiment_key(), domain.getSamples(), user);
-		}
+//		// process ht samples
+//		if (domain.getSamples() != null) {
+//			htSampleService.process(domain.get_experiment_key(), domain.getSamples(), user);
+//		}
 		
 		// return entity translated to domain
 		results.setItem(translator.translate(entity));

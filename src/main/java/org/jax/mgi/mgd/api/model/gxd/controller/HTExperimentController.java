@@ -32,13 +32,7 @@ public class HTExperimentController extends BaseController<HTDomain> {
 	@Override
 	public SearchResults<HTDomain> create(HTDomain domain, User user) {
 		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
-
-		try {
-			results = htExperimentService.create(domain, user);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
+		results = htExperimentService.create(domain, user);
 		results = htExperimentService.getResults(results.items.get(0).get_experiment_key());		
 		return results;
 	}
@@ -46,13 +40,7 @@ public class HTExperimentController extends BaseController<HTDomain> {
 	@Override
 	public SearchResults<HTDomain> update(HTDomain domain, User user) {
 		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
-
-		try {
-			results = htExperimentService.update(domain, user);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
+		results = htExperimentService.update(domain, user);
 		results = htExperimentService.getResults(results.items.get(0).get_experiment_key());		
 		return results;
 	}

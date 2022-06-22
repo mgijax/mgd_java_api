@@ -137,28 +137,29 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			}
 
 		}
-		if (domain.getNewPubmedIds() != null) {
-
-			// This value comes through as a single white-space separated string, so
-			// it must be broken down to loop over individual string IDs
-			List<MGIPropertyDomain> newPubmedIds = new ArrayList<MGIPropertyDomain>();
-			String[] newPubmedIdsArray = domain.getNewPubmedIds().trim().split("\\s++");
-			for( int i = 0; i < newPubmedIdsArray.length; i++)
-			{
-    			String thisID = newPubmedIdsArray[i];
-				MGIPropertyDomain propertyDomain = new MGIPropertyDomain();
-				propertyDomain.setProcessStatus(Constants.PROCESS_CREATE);
-				propertyDomain.setPropertyTermKey("20475430");
-				propertyDomain.setPropertyTypeKey("1002");
-				propertyDomain.setObjectKey(Integer.toString(domain.get_experiment_key()));
-				propertyDomain.setMgiTypeKey("42");
-				propertyDomain.setValue(thisID);
-				propertyDomain.setSequenceNum(String.valueOf(i + 1));
-				newPubmedIds.add(propertyDomain);
-			}
-
-			mgiPropertyService.process(newPubmedIds, user);
-		}
+		
+//		if (domain.getNewPubmedIds() != null) {
+//
+//			// This value comes through as a single white-space separated string, so
+//			// it must be broken down to loop over individual string IDs
+//			List<MGIPropertyDomain> newPubmedIds = new ArrayList<MGIPropertyDomain>();
+//			String[] newPubmedIdsArray = domain.getNewPubmedIds().trim().split("\\s++");
+//			for( int i = 0; i < newPubmedIdsArray.length; i++)
+//			{
+//    			String thisID = newPubmedIdsArray[i];
+//				MGIPropertyDomain propertyDomain = new MGIPropertyDomain();
+//				propertyDomain.setProcessStatus(Constants.PROCESS_CREATE);
+//				propertyDomain.setPropertyTermKey("20475430");
+//				propertyDomain.setPropertyTypeKey("1002");
+//				propertyDomain.setObjectKey(Integer.toString(domain.get_experiment_key()));
+//				propertyDomain.setMgiTypeKey("42");
+//				propertyDomain.setValue(thisID);
+//				propertyDomain.setSequenceNum(String.valueOf(i + 1));
+//				newPubmedIds.add(propertyDomain);
+//			}
+//
+//			mgiPropertyService.process(newPubmedIds, user);
+//		}
 
 		// process ht samples
 //		if (domain.getSamples() != null) {

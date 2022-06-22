@@ -122,21 +122,21 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		}
 
 		// pubmed IDs
-		if (domain.getDeletingPubmedIds() == 1) { //delete all associated
-
-			List<MGIPropertyDomain> removedPubmedIds = new ArrayList<MGIPropertyDomain>();
-
-			if (domain.getPubmed_property_keys() != null) {
-				for (int i = 0; i < domain.getPubmed_property_keys().size(); i++) {
-					MGIPropertyDomain remPropertyDomain = new MGIPropertyDomain();
-					remPropertyDomain.setProcessStatus(Constants.PROCESS_DELETE);
-					remPropertyDomain.setPropertyKey(domain.getPubmed_property_keys().get(i));
-					removedPubmedIds.add(remPropertyDomain);
-				}
-				mgiPropertyService.process(removedPubmedIds, user);
-			}
-
-		}
+//		if (domain.getDeletingPubmedIds() == 1) { //delete all associated
+//
+//			List<MGIPropertyDomain> removedPubmedIds = new ArrayList<MGIPropertyDomain>();
+//
+//			if (domain.getPubmed_property_keys() != null) {
+//				for (int i = 0; i < domain.getPubmed_property_keys().size(); i++) {
+//					MGIPropertyDomain remPropertyDomain = new MGIPropertyDomain();
+//					remPropertyDomain.setProcessStatus(Constants.PROCESS_DELETE);
+//					remPropertyDomain.setPropertyKey(domain.getPubmed_property_keys().get(i));
+//					removedPubmedIds.add(remPropertyDomain);
+//				}
+//				mgiPropertyService.process(removedPubmedIds, user);
+//			}
+//
+//		}
 		
 //		if (domain.getNewPubmedIds() != null) {
 //

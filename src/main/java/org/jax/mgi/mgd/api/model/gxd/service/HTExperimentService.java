@@ -108,13 +108,13 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		entity.setStudyType(termDAO.get(Integer.valueOf(domain.get_studytype_key())));	
 
 		// experiment note 
-		if (domain.getNotetext() != null){
-			NoteDomain noteDomain = new NoteDomain();
-			noteDomain.setNoteChunk(domain.getNotetext());
-			noteDomain.setNoteTypeKey("1047");
-			noteDomain.setNoteKey(domain.get_note_key());
-			noteService.process(String.valueOf(entity.get_experiment_key()), noteDomain, "42", user);
-		}
+//		if (domain.getNotetext() != null){
+//			NoteDomain noteDomain = new NoteDomain();
+//			noteDomain.setNoteChunk(domain.getNotetext());
+//			noteDomain.setNoteTypeKey("1047");
+//			noteDomain.setNoteKey(domain.get_note_key());
+//			noteService.process(String.valueOf(entity.get_experiment_key()), noteDomain, "42", user);
+//		}
 
 		// experiment variables
 //		if (domain.getExperiment_variables() != null) {

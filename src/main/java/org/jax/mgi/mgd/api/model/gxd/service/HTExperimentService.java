@@ -161,9 +161,9 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		}
 
 		// process ht samples
-		if (domain.getSamples() != null) {
-			htSampleService.process(domain.get_experiment_key(), domain.getSamples(), user);
-		}
+//		if (domain.getSamples() != null) {
+//			htSampleService.process(domain.get_experiment_key(), domain.getSamples(), user);
+//		}
 		
 		// persist entity
 		entity.setModification_date(new Date());
@@ -194,6 +194,27 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		return domain;
 	}
 
+	@Transactional	
+	public SearchResults<HTDomain> getObjectCount() {
+		// return the object count from the database
+		
+		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
+		String cmd = "select count(*) as objectCount from gxd_htexperiment";
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getInt("objectCount");
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;		
+	}
+	
     @Transactional
     public SearchResults<HTDomain> getResults(Integer key) {
         SearchResults<HTDomain> results = new SearchResults<HTDomain>();

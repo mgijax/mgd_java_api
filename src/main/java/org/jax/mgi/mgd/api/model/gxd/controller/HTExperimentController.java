@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -53,6 +54,13 @@ public class HTExperimentController extends BaseController<HTDomain> {
 	@Override
 	public HTDomain get(Integer key) {
 		return htExperimentService.get(key);
+	}
+	
+	@GET
+	@ApiOperation(value = "Get the object count from gxd_assay table")
+	@Path("/getObjectCount")
+	public SearchResults<HTDomain> getObjectCount() {
+		return htExperimentService.getObjectCount();
 	}
 	
 	@POST

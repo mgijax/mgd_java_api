@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -32,24 +33,16 @@ public class HTExperimentController extends BaseController<HTDomain> {
 	@Override
 	public SearchResults<HTDomain> create(HTDomain domain, User user) {
 		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
-		try {
-			results = htExperimentService.create(domain, user);
-			results = htExperimentService.getResults(Integer.valueOf(results.items.get(0).get_experiment_key()));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		results = htExperimentService.create(domain, user);
+		results = htExperimentService.getResults(results.items.get(0).get_experiment_key());		
 		return results;
 	}
 
 	@Override
 	public SearchResults<HTDomain> update(HTDomain domain, User user) {
 		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
-		try {
-			results = htExperimentService.update(domain, user);
-			results = htExperimentService.getResults(Integer.valueOf(results.items.get(0).get_experiment_key()));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		results = htExperimentService.update(domain, user);
+		results = htExperimentService.getResults(results.items.get(0).get_experiment_key());		
 		return results;
 	}
 	
@@ -61,6 +54,13 @@ public class HTExperimentController extends BaseController<HTDomain> {
 	@Override
 	public HTDomain get(Integer key) {
 		return htExperimentService.get(key);
+	}
+	
+	@GET
+	@ApiOperation(value = "Get the object count from gxd_assay table")
+	@Path("/getObjectCount")
+	public SearchResults<HTDomain> getObjectCount() {
+		return htExperimentService.getObjectCount();
 	}
 	
 	@POST

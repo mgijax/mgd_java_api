@@ -2,8 +2,8 @@ package org.jax.mgi.mgd.api.model.gxd.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -17,11 +17,11 @@ import org.jax.mgi.mgd.api.model.gxd.domain.HTUserDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimHTDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTExperiment;
 import org.jax.mgi.mgd.api.model.gxd.translator.HTExperimentTranslator;
-import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
-import org.jax.mgi.mgd.api.model.mgi.service.MGIPropertyService;
-import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIPropertyDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mgi.service.MGIPropertyService;
+import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
@@ -137,8 +137,8 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			}
 
 		}
+		
 		if (domain.getNewPubmedIds() != null) {
-
 			// This value comes through as a single white-space separated string, so
 			// it must be broken down to loop over individual string IDs
 			List<MGIPropertyDomain> newPubmedIds = new ArrayList<MGIPropertyDomain>();
@@ -160,21 +160,19 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			mgiPropertyService.process(newPubmedIds, user);
 		}
 
-
-		// persist entity
-		entity.setModification_date(new Date());
-		entity.setModifiedBy(user);
-		htExperimentDAO.update(entity);
-
 		// process ht samples
 		if (domain.getSamples() != null) {
 			htSampleService.process(domain.get_experiment_key(), domain.getSamples(), user);
 		}
 		
+		// persist entity
+		entity.setModification_date(new Date());
+		entity.setModifiedBy(user);
+		htExperimentDAO.update(entity);
+
 		// return entity translated to domain
-		log.info("processHTExperiment/update/returning results");
 		results.setItem(translator.translate(entity));
-		log.info("processHTExperiment/update/returned results succsssful");
+		log.info("processHTExperiment/update/returning results");
 		return results;		
 	}
 
@@ -196,6 +194,27 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		return domain;
 	}
 
+	@Transactional	
+	public SearchResults<HTDomain> getObjectCount() {
+		// return the object count from the database
+		
+		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
+		String cmd = "select count(*) as objectCount from gxd_htexperiment";
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getInt("objectCount");
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;		
+	}
+	
     @Transactional
     public SearchResults<HTDomain> getResults(Integer key) {
         SearchResults<HTDomain> results = new SearchResults<HTDomain>();

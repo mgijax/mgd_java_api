@@ -104,6 +104,7 @@ public class UserService extends BaseService<UserDomain> {
 			while (rs.next()) {
 				user = userDAO.get(rs.getInt("_user_key"));
 			}
+			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();

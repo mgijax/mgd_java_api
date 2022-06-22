@@ -162,17 +162,16 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			mgiPropertyService.process(newPubmedIds, user);
 		}
 
-
+		// process ht samples
+		if (domain.getSamples() != null) {
+			htSampleService.process(domain.get_experiment_key(), domain.getSamples(), user);
+		}
+		
 		// persist entity
 		entity.setModification_date(new Date());
 		entity.setModifiedBy(user);
 		htExperimentDAO.update(entity);
 
-//		// process ht samples
-//		if (domain.getSamples() != null) {
-//			htSampleService.process(domain.get_experiment_key(), domain.getSamples(), user);
-//		}
-		
 		// return entity translated to domain
 		results.setItem(translator.translate(entity));
 		log.info("processHTExperiment/update/returning results");

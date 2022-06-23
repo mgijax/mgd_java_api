@@ -499,7 +499,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		if (searchDomain.getRelevance_confidence() != null && !searchDomain.getRelevance_confidence().isEmpty()) {
-			where = where + "\nand wkfr.confidence = " + searchDomain.getRelevance_confidence();
+			where = where + "\n" + DateSQLQuery.createDateWhereClause("wkfr.confidence", searchDomain.getRelevance_confidence());
 			from_wkfrelevance = true;
 		}
 		

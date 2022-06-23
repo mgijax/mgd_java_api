@@ -693,7 +693,6 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		List<GenotypeDataSetDomain> results = new ArrayList<GenotypeDataSetDomain>();
 
 		String cmd = "select distinct * from gxd_getgenotypesdatasets(" + key + ")";
-
 		log.info(cmd);
 
 		try {
@@ -738,9 +737,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		
 		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
 
-		String cmd = 
-				"select distinct * from gxd_genotype_dataset_view where _Refs_key = " + key;
-
+		String cmd = "select distinct * from gxd_genotype_dataset_view where _Refs_key = " + key;
 		log.info(cmd);
 
 		try {
@@ -773,13 +770,11 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			mgiID = "MGI:" + mgiID;
 		}
 		
-		String cmd = "select mgiID, _object_key, description from GXD_Genotype_Summary_View"
-					+ "\nwhere mgiID = '" + mgiID + "'";
+		String cmd = "select mgiID, _object_key, description from GXD_Genotype_Summary_View where mgiID = '" + mgiID + "'";
 		log.info(cmd);
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
-			
 			while (rs.next()) {
 				SlimGenotypeDomain slimdomain = new SlimGenotypeDomain();
 				slimdomain.setAccID(rs.getString("mgiID"));
@@ -807,7 +802,6 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
-
 			while (rs.next()) {
 				GenotypeDomain domain = new GenotypeDomain();
 				domain = translator.translate(genotypeDAO.get(rs.getInt("_genotype_key")));				

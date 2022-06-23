@@ -927,7 +927,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		else if (value.contains("..") == true) {
 			String[] tokens = value.split("\\.\\.");
-			where = where + "\nand (" + field + " between " + tokens[0] + " and " + tokens[1];
+			where = where + "\nand " + field + " between " + tokens[0] + " and " + tokens[1];
 		}
 		else {
 			where = where + "\nand " + field + " = " + value;

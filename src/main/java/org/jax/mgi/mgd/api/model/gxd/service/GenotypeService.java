@@ -797,21 +797,30 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 	}
 
 	@Transactional	
-	public List<GenotypeDomain> getListOfGenotypes(String keys) {
-		// return list of genotype domains from string of genotypeKeys in format xxx,yyy,zzz
+	public List<GenotypeDomain> getGenotypesByAllele(String key) {
+		// return list of genotype domains by allele key
 
 		List<GenotypeDomain> results = new ArrayList<GenotypeDomain>();
-		keys = keys.replaceAll(" ", "");
-		String[] genotypeList = keys.split(",");
-		for (String s: genotypeList) {
-			log.info("getListOfGenotypes():" + s);
-			GenotypeDomain domain = new GenotypeDomain();
-			domain = translator.translate(genotypeDAO.get(Integer.valueOf(s)));				
-			genotypeDAO.clear();
-			results.add(domain);
-			genotypeDAO.clear();						
-		}
 		
+		String cmd = "select _genotype_key from gxd_allelegenotype where _allele_key = " + key;
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+
+			while (rs.next()) {
+				GenotypeDomain domain = new GenotypeDomain();
+				domain = translator.translate(genotypeDAO.get(rs.getInt("_genotype_key")));				
+				genotypeDAO.clear();
+				results.add(domain);
+				genotypeDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
 		return results;
 	}
 	

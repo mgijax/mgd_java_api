@@ -914,16 +914,16 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		// construct where 
 
 		if (value.startsWith("<=") == true) {
-			where = where + "\nand " + field + "<= " + value.replace("<=","");
+			where = where + "\nand " + field + " <= " + value.replace("<=","");
 		}
 		else if (value.startsWith("<") == true) {
-			where = where + "\nand " + field + "< " + value.replace("<",  "");
+			where = where + "\nand " + field + " < " + value.replace("<",  "");
 		}
 		else if (value.startsWith(">=") == true) {
-			where = where + "\nand " + field + ">= '" + value.replace(">=","");
+			where = where + "\nand " + field + " >= '" + value.replace(">=","");
 		}
 		else if (value.startsWith(">") == true) {
-			where = where + "\nand " + field + "> " + value.replace(">",  "");
+			where = where + "\nand " + field + " > " + value.replace(">",  "");
 		}
 		else if (value.contains("..") == true) {
 			String[] tokens = value.split("\\.\\.");

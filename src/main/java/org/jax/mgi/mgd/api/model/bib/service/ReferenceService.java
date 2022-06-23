@@ -846,8 +846,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}	
 		if (from_wkfrelevance == true) {
 			from = from + ", bib_workflow_relevance wkfr";
-			where = where + "\nand c._refs_key = wkfr._refs_key"
-					+ "\nand wkfr.isCurrent = 1";
+			where = where + "\nand c._refs_key = wkfr._refs_key";
+					//+ "\nand wkfr.isCurrent = 1";
 		}
 		if (from_wkfstatus == true) {
 			// search for any status; not just isCurrent

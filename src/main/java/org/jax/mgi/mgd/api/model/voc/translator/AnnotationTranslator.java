@@ -30,6 +30,7 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
 		domain.setObjectKey(String.valueOf(entity.get_object_key()));
 		domain.setTermKey(String.valueOf(entity.getTerm().get_term_key()));
 		domain.setTerm(entity.getTerm().getTerm());
+		domain.setTermSequenceNum(entity.getTerm().getSequenceNum());
 		domain.setQualifierKey(String.valueOf(entity.getQualifier().get_term_key()));
 		domain.setQualifierAbbreviation(String.valueOf(entity.getQualifier().getAbbreviation()));
 		domain.setQualifier(entity.getQualifier().getTerm());

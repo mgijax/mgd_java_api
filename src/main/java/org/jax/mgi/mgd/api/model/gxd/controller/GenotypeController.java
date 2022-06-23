@@ -153,14 +153,14 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Get list of genotype domains by genotype keys (xxx,yyy,zzz)")
-	@Path("/getListOfGenotypes")
-	public List<GenotypeDomain> getListOfGenotypes(String keys) {
+	@ApiOperation(value = "Get list of genotype domains by allele key")
+	@Path("/getGenotypesByAllele")
+	public List<GenotypeDomain> getGenotypesByAllele(String key) {
 		
 		List<GenotypeDomain> results = new ArrayList<GenotypeDomain>();
 
 		try {
-			results = genotypeService.getListOfGenotypes(keys);
+			results = genotypeService.getGenotypesByAllele(key);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

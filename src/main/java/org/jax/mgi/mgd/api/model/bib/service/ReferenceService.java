@@ -920,7 +920,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			where = where + "\nand " + field + " < " + value.replace("<",  "");
 		}
 		else if (value.startsWith(">=") == true) {
-			where = where + "\nand " + field + " >= '" + value.replace(">=","");
+			where = where + "\nand " + field + " >= " + value.replace(">=","");
 		}
 		else if (value.startsWith(">") == true) {
 			where = where + "\nand " + field + " > " + value.replace(">",  "");

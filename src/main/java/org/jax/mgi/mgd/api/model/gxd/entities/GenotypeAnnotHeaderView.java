@@ -22,4 +22,5 @@ public class GenotypeAnnotHeaderView extends BaseEntity {
 	private String headerTerm;
 	private int termKey;
 	private String term;
+	private int termSequenceNum;
 }

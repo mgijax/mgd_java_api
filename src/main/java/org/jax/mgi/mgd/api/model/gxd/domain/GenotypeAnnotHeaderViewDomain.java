@@ -13,4 +13,5 @@ public class GenotypeAnnotHeaderViewDomain extends BaseDomain {
 	private String headerTerm;
 	private String termKey;
 	private String term;
+	private Integer termSequenceNum;
 }

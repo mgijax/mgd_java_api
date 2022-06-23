@@ -21,6 +21,7 @@ public class DenormAnnotationDomain extends BaseDomain {
 	private String objectKey;
 	private String termKey;
 	private String term;
+	private Integer termSequenceNum;	
 	private String goDagAbbrev;
 	private String qualifierKey;
 	private String qualifierAbbreviation;

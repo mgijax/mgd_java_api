@@ -797,7 +797,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 
 		List<GenotypeDomain> results = new ArrayList<GenotypeDomain>();
 		
-		String cmd = "select _genotype_key from gxd_allelegenotype where _allele_key = " + key;
+		String cmd = "select _genotype_key from gxd_allelegenotype where _allele_key = " + key + " order by sequencenum";
 		log.info(cmd);	
 		
 		try {

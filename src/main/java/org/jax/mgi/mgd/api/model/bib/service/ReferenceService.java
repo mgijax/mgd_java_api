@@ -530,6 +530,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		// status history
+		// status history
+        //		private String sh_status;
+		//		private String sh_group;
+		//		private String sh_username;
+		//		private String sh_date;	
+		
 		if (searchDomain.getSh_status() != null && !searchDomain.getSh_status().isEmpty()) {
 			where = where + "\nand gth.term = '" + searchDomain.getSh_status() + "'";
 			from_wkfstatushistory = true;

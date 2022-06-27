@@ -67,11 +67,13 @@ public class ReferenceSearchDomain extends BaseDomain {
 	private String supplementalTerm;
 	private String supplementalKey;
 	
+	// status history
 	private String sh_status;
 	private String sh_group;
 	private String sh_username;
 	private String sh_date;
 	
+	// relevance history
 	private String relevance;
 	private String relevance_date;
 	private String relevance_user;

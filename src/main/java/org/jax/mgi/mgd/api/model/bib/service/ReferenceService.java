@@ -531,7 +531,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		// status history
 		if (searchDomain.getSh_status() != null && !searchDomain.getSh_status().isEmpty()) {
-			where = where + "\nand wkfsh.term = '" + searchDomain.getSh_status() + "'";
+			where = where + "\nand gth.term = '" + searchDomain.getSh_status() + "'";
 			from_wkfstatushistory = true;
 		}
 		if (searchDomain.getSh_group() != null && !searchDomain.getSh_group().isEmpty()) {
@@ -877,7 +877,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			where = where + "\nand c._refs_key = wkfsh._refs_key"
 					+ "\nand wkfsh._status_key = sth._term_key"
 					+ "\nand sth._vocab_key = 128"
-					+ "\nand wkfsh._group_key = gt._term_key"
+					+ "\nand wkfsh._group_key = gth._term_key"
 					+ "\nand gth._vocab_key = 127";
 		}		
 		if (from_alleleassoc == true) {

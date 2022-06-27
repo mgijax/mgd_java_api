@@ -330,6 +330,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		Boolean from_wkfrelevance = false;
 		Boolean from_wkfrelevancehistory = false;
 		Boolean from_wkfstatus = false;
+		Boolean from_wkfstatushistory = false;
 		Boolean from_alleleassoc = false;
 		Boolean from_markerassoc = false;
 		Boolean from_strainassoc = false;
@@ -530,17 +531,17 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		// status history
 		if (searchDomain.getSh_status() != null && !searchDomain.getSh_status().isEmpty()) {
-			where = where + "\nand st.term = '" + searchDomain.getSh_status() + "'";
-			from_wkfstatus = true;
+			where = where + "\nand wkfsh.term = '" + searchDomain.getSh_status() + "'";
+			from_wkfstatushistory = true;
 		}
 		if (searchDomain.getSh_group() != null && !searchDomain.getSh_group().isEmpty()) {
-			where = where + "\nand gt.abbreviation = '" + searchDomain.getSh_group() + "'";
-			from_wkfstatus = true;
+			where = where + "\nand gth.abbreviation = '" + searchDomain.getSh_group() + "'";
+			from_wkfstatushistory = true;
 		}	
 		if ((searchDomain.getSh_username() != null && !searchDomain.getSh_username().isEmpty())
 				|| (searchDomain.getSh_date() != null && !searchDomain.getSh_date().isEmpty())
 			) {
-			String cmResultsStatus[] = DateSQLQuery.queryByCreationModification("wkfs", null, searchDomain.getSh_username(), null, searchDomain.getSh_date());
+			String cmResultsStatus[] = DateSQLQuery.queryByCreationModification("wkfsh", null, searchDomain.getSh_username(), null, searchDomain.getSh_date());
 			if (cmResultsStatus.length > 0) {
 				cmResultsStatus[0] = cmResultsStatus[0].replaceAll("u1", "u5");
 				cmResultsStatus[1] = cmResultsStatus[1].replaceAll("u1", "u5");
@@ -548,7 +549,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				cmResultsStatus[1] = cmResultsStatus[1].replaceAll("u2", "u6");					
 				from = from + cmResultsStatus[0];
 				where = where + cmResultsStatus[1];
-				from_wkfstatus = true;
+				from_wkfstatushistory = true;
 			}
 		}
 		
@@ -870,6 +871,15 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					+ "\nand wkfs._group_key = gt._term_key"
 					+ "\nand gt._vocab_key = 127";
 		}
+		if (from_wkfstatushistory == true) {
+			// search for any status; not just isCurrent
+			from = from + ", bib_workflow_status wkfsh, voc_term sth, voc_term gth";
+			where = where + "\nand c._refs_key = wkfsh._refs_key"
+					+ "\nand wkfsh._status_key = sth._term_key"
+					+ "\nand sth._vocab_key = 128"
+					+ "\nand wkfsh._group_key = gt._term_key"
+					+ "\nand gth._vocab_key = 127";
+		}		
 		if (from_alleleassoc == true) {
 			where = where + "\nand c._refs_key = mra._refs_key and mra._mgitype_key = 11";
 			from = from + ", mgi_reference_assoc mra";

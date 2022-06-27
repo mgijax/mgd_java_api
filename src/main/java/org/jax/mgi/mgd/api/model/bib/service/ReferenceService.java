@@ -536,7 +536,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		//		private String sh_date;	
 		
 		if (searchDomain.getSh_status() != null && !searchDomain.getSh_status().isEmpty()) {
-			where = where + "\nand gth.term = '" + searchDomain.getSh_status() + "'";
+			where = where + "\nand sth.term = '" + searchDomain.getSh_status() + "'";
 			from_wkfstatushistory = true;
 		}
 		if (searchDomain.getSh_group() != null && !searchDomain.getSh_group().isEmpty()) {

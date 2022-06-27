@@ -329,7 +329,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		Boolean from_doiid = false;
 		Boolean from_wkfrelevance = false;
 		Boolean from_wkfrelevancehistory = false;
-		Boolean from_wkfstatus = false;
 		Boolean from_wkfstatushistory = false;
 		Boolean from_alleleassoc = false;
 		Boolean from_markerassoc = false;
@@ -868,17 +867,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			from = from + ", bib_workflow_relevance wkfrh";
 			where = where + "\nand c._refs_key = wkfrh._refs_key";
 		}		
-		if (from_wkfstatus == true) {
-			// search for any status; not just isCurrent
-			from = from + ", bib_workflow_status wkfs, voc_term st, voc_term gt";
-			where = where + "\nand c._refs_key = wkfs._refs_key"
-					+ "\nand wkfs._status_key = st._term_key"
-					+ "\nand st._vocab_key = 128"
-					+ "\nand wkfs._group_key = gt._term_key"
-					+ "\nand gt._vocab_key = 127";
-		}
 		if (from_wkfstatushistory == true) {
-			// search for any status; not just isCurrent
 			from = from + ", bib_workflow_status wkfsh, voc_term sth, voc_term gth";
 			where = where + "\nand c._refs_key = wkfsh._refs_key"
 					+ "\nand wkfsh._status_key = sth._term_key"

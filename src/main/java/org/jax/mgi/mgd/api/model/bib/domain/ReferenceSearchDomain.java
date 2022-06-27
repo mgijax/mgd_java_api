@@ -74,6 +74,7 @@ public class ReferenceSearchDomain extends BaseDomain {
 	private String sh_date;
 	
 	// relevance history
+	// TBD : rename as "rh" to match "sh" above
 	private String relevance;
 	private String relevance_date;
 	private String relevance_user;

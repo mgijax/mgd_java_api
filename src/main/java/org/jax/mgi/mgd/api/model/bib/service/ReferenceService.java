@@ -499,7 +499,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		if (searchDomain.getRelevance_confidence() != null && !searchDomain.getRelevance_confidence().isEmpty()) {
-			where = where + "\nand wkfr.confidence = " + searchDomain.getRelevance_confidence();
+			where = where + "\n" + numericWhereClause("wkfr.confidence", searchDomain.getRelevance_confidence());
 			from_wkfrelevance = true;
 		}
 		
@@ -846,8 +846,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}	
 		if (from_wkfrelevance == true) {
 			from = from + ", bib_workflow_relevance wkfr";
-			where = where + "\nand c._refs_key = wkfr._refs_key"
-					+ "\nand wkfr.isCurrent = 1";
+			where = where + "\nand c._refs_key = wkfr._refs_key";
+					//+ "\nand wkfr.isCurrent = 1";
 		}
 		if (from_wkfstatus == true) {
 			// search for any status; not just isCurrent
@@ -904,6 +904,36 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		return results;
+	}
+	
+	@Transactional	
+	public String numericWhereClause(String field, String value) {
+
+		String where = "";
+
+		// construct where 
+
+		if (value.startsWith("<=") == true) {
+			where = where + "\nand " + field + " <= " + value.replace("<=","");
+		}
+		else if (value.startsWith("<") == true) {
+			where = where + "\nand " + field + " < " + value.replace("<",  "");
+		}
+		else if (value.startsWith(">=") == true) {
+			where = where + "\nand " + field + " >= " + value.replace(">=","");
+		}
+		else if (value.startsWith(">") == true) {
+			where = where + "\nand " + field + " > " + value.replace(">",  "");
+		}
+		else if (value.contains("..") == true) {
+			String[] tokens = value.split("\\.\\.");
+			where = where + "\nand " + field + " between " + tokens[0] + " and " + tokens[1];
+		}
+		else {
+			where = where + "\nand " + field + " = " + value;
+		}
+		
+		return where;
 	}
 	
 	@Transactional	

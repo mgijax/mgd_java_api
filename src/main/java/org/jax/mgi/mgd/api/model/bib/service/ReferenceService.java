@@ -328,7 +328,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		Boolean from_pubmedid = false;
 		Boolean from_doiid = false;
 		Boolean from_wkfrelevance = false;
-		Boolean from_wkfstatus = false;
+		Boolean from_wkfrelevancehistory = false;
+		Boolean from_wkfstatushistory = false;
 		Boolean from_alleleassoc = false;
 		Boolean from_markerassoc = false;
 		Boolean from_strainassoc = false;
@@ -483,31 +484,39 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			where = where + "\nand wkfd._supplemental_key = " + searchDomain.getSupplementalKey();
 		}
 		
-		// relevance history
+		// relevance current
 		if (searchDomain.getCurrentRelevance() != null && !searchDomain.getCurrentRelevance().isEmpty()) {
 			where = where + "\nand wkfr._relevance_key = " + searchDomain.getCurrentRelevance();
 			from_wkfrelevance = true;
 		}
-		else if (searchDomain.getRelevance() != null && !searchDomain.getRelevance().isEmpty()) {
-			where = where + "\nand wkff._relevance_key = " + searchDomain.getRelevance();
-			from_wkfrelevance = true;
-		}
+		
+		// relevance history
+		//		private String relevance;
+		//		private String relevance_date;
+		//		private String relevance_user;
+		//		private String relevance_version;
+		//		private String relevance_confidence;	
+		
+		if (searchDomain.getRelevance() != null && !searchDomain.getRelevance().isEmpty()) {
+			where = where + "\nand wkfrh._relevance_key = " + searchDomain.getRelevance();
+			from_wkfrelevancehistory = true;
+		}		
 		
 		if (searchDomain.getRelevance_version() != null && !searchDomain.getRelevance_version().isEmpty()) {
-			where = where + "\nand wkfr.version = '" + searchDomain.getRelevance_version() + "'";
-			from_wkfrelevance = true;
+			where = where + "\nand wkfrh.version = '" + searchDomain.getRelevance_version() + "'";
+			from_wkfrelevancehistory = true;
 		}
 		
 		if (searchDomain.getRelevance_confidence() != null && !searchDomain.getRelevance_confidence().isEmpty()) {
-			where = where + "\n" + numericWhereClause("wkfr.confidence", searchDomain.getRelevance_confidence());
-			from_wkfrelevance = true;
+			where = where + "\n" + numericWhereClause("wkfrh.confidence", searchDomain.getRelevance_confidence());
+			from_wkfrelevancehistory = true;
 		}
 		
 		if ((searchDomain.getRelevance_user() != null && !searchDomain.getRelevance_user().isEmpty())
 				|| (searchDomain.getRelevance_date() != null && !searchDomain.getRelevance_date().isEmpty())
 			) {
 			
-			String cmResultsStatus[] = DateSQLQuery.queryByCreationModification("wkfr", null, searchDomain.getRelevance_user(), null, searchDomain.getRelevance_date());
+			String cmResultsStatus[] = DateSQLQuery.queryByCreationModification("wkfrh", null, searchDomain.getRelevance_user(), null, searchDomain.getRelevance_date());
 			if (cmResultsStatus.length > 0) {
 				cmResultsStatus[0] = cmResultsStatus[0].replaceAll("u1", "u3");
 				cmResultsStatus[1] = cmResultsStatus[1].replaceAll("u1", "u3");
@@ -515,23 +524,29 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				cmResultsStatus[1] = cmResultsStatus[1].replaceAll("u2", "u4");				
 				from = from + cmResultsStatus[0];
 				where = where + cmResultsStatus[1];
-				from_wkfrelevance = true;
+				from_wkfrelevancehistory = true;
 			}
 		}
 		
 		// status history
+		// status history
+        //		private String sh_status;
+		//		private String sh_group;
+		//		private String sh_username;
+		//		private String sh_date;	
+		
 		if (searchDomain.getSh_status() != null && !searchDomain.getSh_status().isEmpty()) {
-			where = where + "\nand st.term = '" + searchDomain.getSh_status() + "'";
-			from_wkfstatus = true;
+			where = where + "\nand sth.term = '" + searchDomain.getSh_status() + "'";
+			from_wkfstatushistory = true;
 		}
 		if (searchDomain.getSh_group() != null && !searchDomain.getSh_group().isEmpty()) {
-			where = where + "\nand gt.abbreviation = '" + searchDomain.getSh_group() + "'";
-			from_wkfstatus = true;
+			where = where + "\nand gth.abbreviation = '" + searchDomain.getSh_group() + "'";
+			from_wkfstatushistory = true;
 		}	
 		if ((searchDomain.getSh_username() != null && !searchDomain.getSh_username().isEmpty())
 				|| (searchDomain.getSh_date() != null && !searchDomain.getSh_date().isEmpty())
 			) {
-			String cmResultsStatus[] = DateSQLQuery.queryByCreationModification("wkfs", null, searchDomain.getSh_username(), null, searchDomain.getSh_date());
+			String cmResultsStatus[] = DateSQLQuery.queryByCreationModification("wkfsh", null, searchDomain.getSh_username(), null, searchDomain.getSh_date());
 			if (cmResultsStatus.length > 0) {
 				cmResultsStatus[0] = cmResultsStatus[0].replaceAll("u1", "u5");
 				cmResultsStatus[1] = cmResultsStatus[1].replaceAll("u1", "u5");
@@ -539,7 +554,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				cmResultsStatus[1] = cmResultsStatus[1].replaceAll("u2", "u6");					
 				from = from + cmResultsStatus[0];
 				where = where + cmResultsStatus[1];
-				from_wkfstatus = true;
+				from_wkfstatushistory = true;
 			}
 		}
 		
@@ -846,18 +861,20 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}	
 		if (from_wkfrelevance == true) {
 			from = from + ", bib_workflow_relevance wkfr";
-			where = where + "\nand c._refs_key = wkfr._refs_key";
-					//+ "\nand wkfr.isCurrent = 1";
+			where = where + "\nand c._refs_key = wkfr._refs_key and wkfr.isCurrent = 1";
 		}
-		if (from_wkfstatus == true) {
-			// search for any status; not just isCurrent
-			from = from + ", bib_workflow_status wkfs, voc_term st, voc_term gt";
-			where = where + "\nand c._refs_key = wkfs._refs_key"
-					+ "\nand wkfs._status_key = st._term_key"
-					+ "\nand st._vocab_key = 128"
-					+ "\nand wkfs._group_key = gt._term_key"
-					+ "\nand gt._vocab_key = 127";
-		}
+		if (from_wkfrelevancehistory == true) {
+			from = from + ", bib_workflow_relevance wkfrh";
+			where = where + "\nand c._refs_key = wkfrh._refs_key";
+		}		
+		if (from_wkfstatushistory == true) {
+			from = from + ", bib_workflow_status wkfsh, voc_term sth, voc_term gth";
+			where = where + "\nand c._refs_key = wkfsh._refs_key"
+					+ "\nand wkfsh._status_key = sth._term_key"
+					+ "\nand sth._vocab_key = 128"
+					+ "\nand wkfsh._group_key = gth._term_key"
+					+ "\nand gth._vocab_key = 127";
+		}		
 		if (from_alleleassoc == true) {
 			where = where + "\nand c._refs_key = mra._refs_key and mra._mgitype_key = 11";
 			from = from + ", mgi_reference_assoc mra";

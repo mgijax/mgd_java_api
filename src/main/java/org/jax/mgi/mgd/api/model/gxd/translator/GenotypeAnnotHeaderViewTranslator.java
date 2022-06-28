@@ -20,7 +20,7 @@ public class GenotypeAnnotHeaderViewTranslator extends BaseEntityDomainTranslato
 		domain.setTerm(entity.getTerm());
 		domain.setTermSequenceNum(entity.getTermSequenceNum());
 		domain.setHeaderTerm(entity.getHeaderTerm());
-		
+		domain.setHeaderSequenceNum(entity.getHeaderSequenceNum());
 		return domain;
 	}
 

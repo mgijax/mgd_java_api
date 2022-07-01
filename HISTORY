@@ -1,7 +1,7 @@
 TAG: mgd_java_api-6-0-21-1
 DATE: 07/01/2022
 STAFF: lec
-wts2-883/Move PWI/Allele Detail page from SQLAlchemy to Java API
+wts2-888/PWI: Move Allele Detail Pages from Flask+SQLAlchemy to Angular+Java API
 
 TAG: mgd_java_api-6-0-20-13
 DATE: 06/28/2022

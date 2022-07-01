@@ -14,9 +14,10 @@ public class AnnotationHeaderDomain extends BaseDomain {
 	private String annotHeaderKey;
 	private String annotTypeKey;
 	private String annotType;
+	private String objectKey;
 	private String termKey;
 	private String term;
-	private String objectKey;
+	private Integer termSequenceNum;
 	private Integer sequenceNum;
 	private String isNormal;
 	private String approvedByKey;

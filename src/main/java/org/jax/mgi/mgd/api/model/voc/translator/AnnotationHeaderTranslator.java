@@ -21,6 +21,7 @@ public class AnnotationHeaderTranslator extends BaseEntityDomainTranslator<Annot
 		domain.setObjectKey(String.valueOf(entity.get_object_key()));
 		domain.setTermKey(String.valueOf(entity.getTerm().get_term_key()));
 		domain.setTerm(entity.getTerm().getTerm());
+		domain.setTermSequenceNum(entity.getTerm().getSequenceNum());
 		domain.setSequenceNum(entity.getSequenceNum());
 		domain.setIsNormal(String.valueOf(entity.getIsNormal()));
 		

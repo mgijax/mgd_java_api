@@ -54,14 +54,4 @@ public class UserController extends BaseController<UserDomain> {
 		return userService.search();
 	}
 	
-//  obsolete : remove
-//	@POST
-//	@ApiOperation(value = "Valid EI Permissions")
-//	@Path("/validEIPermissions")
-//	public  List<SlimUserDomain> checkUserPermissions(
-//			@ApiParam(value = "the module name (see stored procedure MGI_checkUserRole")
-//			@HeaderParam("eiModule") String eiModule, 	
-//			User user) {
-//		return userService.validEIPermissions(eiModule, user);
-//	}
 }

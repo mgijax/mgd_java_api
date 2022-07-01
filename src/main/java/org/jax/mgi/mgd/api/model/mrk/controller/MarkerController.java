@@ -160,6 +160,13 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		return markerService.getAlias(key);
 	}
 
+	@POST
+	@ApiOperation(value = "Get next Gm symbol that is available in the sequence")
+	@Path("/getNextGmSequence")
+	public List<SlimMarkerDomain> getNextGmSequence() {
+		return markerService.getNextGmSequence();
+	}
+	
 	@GET
 	@ApiOperation(value = "Validate marker symbol/any status is valid/returns slim marker domain")
 	@Path("/validateAnyStatus/{symbol}")

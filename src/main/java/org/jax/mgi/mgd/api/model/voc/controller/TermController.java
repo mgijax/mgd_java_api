@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.TermAncestorDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -89,4 +90,18 @@ public class TermController extends BaseController<TermDomain> {
 	public List<SlimTermDomain> getTermSet(String setName) {
 		return termService.getTermSet(setName);
 	}
+	
+	@POST
+	@ApiOperation(value = "Get list of Ancestor Terms/input string = xxx,yyy,zzz")
+	@Path("/getAncestorKeys")
+	public List<TermAncestorDomain> getAncestorKeys(String keys) {
+		List<TermAncestorDomain> results = new ArrayList<TermAncestorDomain>();
+		try {
+			results = termService.getAncestorKeys(keys);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return results;	
+	}
+	
 }

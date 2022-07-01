@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeAnnotHeaderViewDomain;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -20,6 +21,7 @@ public class AnnotationDomain extends BaseDomain {
 	private String objectKey;
 	private String termKey;
 	private String term;
+	private Integer termSequenceNum;
 	private String goDagAbbrev;
 	private String qualifierKey;
 	private String qualifierAbbreviation;
@@ -34,6 +36,9 @@ public class AnnotationDomain extends BaseDomain {
 	private List<SlimAccessionDomain> mpIds;
 	private List<SlimAccessionDomain> doIds;
 	private List<SlimAccessionDomain> goIds;
+	
+	// for genotype/mp only
+	private List<GenotypeAnnotHeaderViewDomain> headersByAnnot;
 
 	private Boolean allowEditTerm = true;
 	

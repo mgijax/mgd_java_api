@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.TermAncestorDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.voc.translator.SlimTermTranslator;
@@ -123,9 +124,7 @@ public class TermService extends BaseService<TermDomain> {
 		// use SQL query to load cell type annotation count
 		if(domain != null ) {
 			if (domain.getVocabKey() != null && !domain.getVocabKey().isEmpty() && domain.getVocabKey().equals("102")) {
-		
 				domain.setCellTypeAnnotCount(getCelltypeAnnotCount(key));
-		
 			}
 		}	
 		return domain;
@@ -629,13 +628,9 @@ public class TermService extends BaseService<TermDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				//TermDagParentDomain domain = new TermDagParentDomain();
 				Integer key = Integer.valueOf(rs.getString("parentKey"));
 				TermDomain parentDomain = translator.translate(termDAO.get(key));
 				termDAO.clear();		
-				//TermDomain parentDomain = get(Integer.valueOf(rs.getString("parentKey")));
-				//domain.setParentKey(rs.getString("parentKey"));
-				//domain.setParentTerm(rs.getString("parentTerm"));
 				parentDomain.setCellTypeAnnotCount(getCelltypeAnnotCount(key));
 				results.add(parentDomain);				
 			}
@@ -666,8 +661,65 @@ public class TermService extends BaseService<TermDomain> {
 			e.printStackTrace();
 		}
 		
-		return count;
+		return count;	
+	}
+	
+	@Transactional	
+	public List<TermAncestorDomain> getAncestorKeys(String keys) {
+		// return list of ancestors from string of termKeys in format xxx,yyy,zzz
+
+		List<TermAncestorDomain> results = new ArrayList<TermAncestorDomain>();
 		
+		String cmd = "\nselect t._term_key as termKey, ancestor._term_key as ancestorKey" +
+				"\nfrom VOC_Term t, VOC_VocabDAG vd, DAG_Node d, DAG_Closure dc, DAG_Node dh, VOC_Term ancestor" +
+				"\nwhere t._Term_key in (" + keys + ")" +
+				"\nand t._Vocab_key = vd._Vocab_key" +
+				"\nand vd._DAG_key = d._DAG_key" +
+				"\nand t._Term_key = d._Object_key" +
+				"\nand d._Node_key = dc._Descendent_key" +
+				"\nand dc._Ancestor_key = dh._Node_key" +
+				"\nand dh._Object_key = ancestor._Term_key" +
+				"\norder by termKey, ancestorKey";
+
+		log.info(cmd);
+
+		Integer prevTermKey = 0;
+		TermAncestorDomain domain = null;
+		List<Integer> ancestors = null;
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				
+				int termKey = rs.getInt("termKey");
+				int ancestorKey = rs.getInt("ancestorKey");
+				
+				if (!prevTermKey.equals(termKey)) {
+					
+					if (!rs.isFirst()) {
+						domain.setAncestors(ancestors);
+						results.add(domain);
+					}
+					
+					domain = new TermAncestorDomain();
+					domain.setTermKey(termKey);
+					ancestors = new ArrayList<Integer>();
+				}
+	
+				ancestors.add(ancestorKey);
+				prevTermKey = termKey;
+				
+				if (rs.isLast()) {
+					domain.setAncestors(ancestors);
+					results.add(domain);				
+				}
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
 	}
 	
 }

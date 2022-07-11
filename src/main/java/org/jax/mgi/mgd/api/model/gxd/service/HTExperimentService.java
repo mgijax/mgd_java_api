@@ -115,12 +115,7 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			noteDomain.setNoteKey(domain.get_note_key());
 			noteService.process(String.valueOf(entity.get_experiment_key()), noteDomain, "42", user);
 		}
-
-		// experiment variables
-		if (domain.getExperiment_variables() != null) {
-			hTExperimentVariableService.process(domain.get_experiment_key(), domain.getExperiment_variables(), user);
-		}
-
+		
 		// pubmed IDs
 		if (domain.getDeletingPubmedIds() == 1) { //delete all associated
 
@@ -163,6 +158,11 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		// process ht samples
 		if (domain.getSamples() != null) {
 			htSampleService.process(domain.get_experiment_key(), domain.getSamples(), user);
+		}
+		
+		// experiment variables
+		if (domain.getExperiment_variables() != null) {
+			hTExperimentVariableService.process(domain.get_experiment_key(), domain.getExperiment_variables(), user);
 		}
 		
 		// persist entity

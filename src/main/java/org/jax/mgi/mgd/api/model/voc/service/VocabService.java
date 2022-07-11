@@ -158,7 +158,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		
 		String celltypeSelect = select + ", a.accid";
 		String celltypeFrom = from + ", acc_accession a";
-		String celltypeWhere = where + "\nand t._term_key = a._object_key and a._logicaldb_key = 173";
+		String celltypeWhere = where + "\nt._term_key = a._object_key and a.preferred =1 and a._logicaldb_key = 173";
 		Boolean isCellType = false;
 		
 		// for non-vocab tables that are acting like voc_vocab/voc_term		

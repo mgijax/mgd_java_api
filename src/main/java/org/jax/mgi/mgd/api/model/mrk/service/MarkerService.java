@@ -1216,7 +1216,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				//				  11928467 | mutation defined region
 				//				  15406205 | CpG island
 				//				  15406207 | promoter
-				//				  36700088 | TSS region
+				//				  36700088 | TSS cluster
 				//				  97015607 | enhancer
 				//				  97015608 | promoter flanking region
 				//				  97015609 | CTCF binding site

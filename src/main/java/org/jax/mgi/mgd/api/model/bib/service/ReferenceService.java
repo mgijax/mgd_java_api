@@ -1884,10 +1884,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		if (entity.getWorkflowData().get(0) != null) {
 			if (!smartEqual(String.valueOf(entity.getWorkflowData().get(0).getSupplementalTerm().get_term_key()), domain.getWorkflowData().getSupplementalKey())) {
+				log.info("applyWorkflowData: updating body/supplemental key");
 				domain.getWorkflowData().setProcessStatus(Constants.PROCESS_UPDATE);
 			}
 		} else {
 			// this should not happen, but if it does...create new "body"
+			log.info("applyWorkflowData: add body for supplemental key");
 			ReferenceWorkflowDataDomain newData = new ReferenceWorkflowDataDomain();
 			newData.setProcessStatus(Constants.PROCESS_CREATE);
 			newData.setRefsKey(domain.getRefsKey());

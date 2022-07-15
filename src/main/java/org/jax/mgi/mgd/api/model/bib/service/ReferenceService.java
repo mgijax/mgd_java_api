@@ -178,21 +178,22 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		// notes
 		noteService.process(String.valueOf(entity.get_refs_key()), domain.getReferenceNote(), user);
-				
+			
+		// this is done via the bib_refs/trigger so commenting this out
 		// supplement = Not checked (31576677)
 		// extracted text type = body (48804490)
-		ReferenceWorkflowData wfDataEntity = new ReferenceWorkflowData();
-		wfDataEntity.set_refs_key(entity.get_refs_key());
-		wfDataEntity.setSupplementalTerm(termDAO.get(31576677));
-		wfDataEntity.setExtractedTextTerm(termDAO.get(48804490));			
-		wfDataEntity.setExtractedtext(null);
-		wfDataEntity.setHaspdf(0);
-		wfDataEntity.setLinksupplemental(null);
-		wfDataEntity.setCreatedBy(user);
-		wfDataEntity.setCreation_date(new Date());
-		wfDataEntity.setModifiedBy(user);
-		wfDataEntity.setModification_date(new Date());
-		wfDataDAO.persist(wfDataEntity);			
+//		ReferenceWorkflowData wfDataEntity = new ReferenceWorkflowData();
+//		wfDataEntity.set_refs_key(entity.get_refs_key());
+//		wfDataEntity.setSupplementalTerm(termDAO.get(31576677));
+//		wfDataEntity.setExtractedTextTerm(termDAO.get(48804490));			
+//		wfDataEntity.setExtractedtext(null);
+//		wfDataEntity.setHaspdf(0);
+//		wfDataEntity.setLinksupplemental(null);
+//		wfDataEntity.setCreatedBy(user);
+//		wfDataEntity.setCreation_date(new Date());
+//		wfDataEntity.setModifiedBy(user);
+//		wfDataEntity.setModification_date(new Date());
+//		wfDataDAO.persist(wfDataEntity);			
 		
 		// process pubmed accession ids
 		if (domain.getPubmedid() != null && !domain.getPubmedid().isEmpty()) {

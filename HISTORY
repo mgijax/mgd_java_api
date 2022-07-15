@@ -1,7 +1,7 @@
 TAG: mgd_java_api-6-0-21-4
 DATE: 07/15/2022
 STAFF: lec
-littriage/reference/create/comment out bib_workflow_data/trigger handles this logic
+wts2-934/pwi/littriage/create new reference is creating duplicate bib_workflow_data row
 
 TAG: mgd_java_api-6-0-21-3
 TAG: mgd_java_api-6-0-21-2

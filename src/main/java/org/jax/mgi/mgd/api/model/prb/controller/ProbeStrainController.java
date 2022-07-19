@@ -108,7 +108,7 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 		List<SlimProbeStrainDomain> results = new ArrayList<SlimProbeStrainDomain>();
 
 		try {
-			results = probeStrainService.validateStrain(searchDomain);
+			results = probeStrainService.validateStrainPrivate(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

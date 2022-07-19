@@ -1,7 +1,12 @@
+TAG: mgd_java_api-6-0-21-5
+DATE: 07/19/2022
+STAFF: lec
+wts2-940/PWI/Strain : add Private = Yes validation
+
 TAG: mgd_java_api-6-0-21-4
 DATE: 07/15/2022
 STAFF: lec
-wts2-934/pwi/littriage/create new reference is creating duplicate bib_workflow_data row
+wts2-934/pwi/littriage/create new reference is creating duplicate bib_workflow_data rowt commit -m"wts2-940/PWI/Strain : add Private = Yes validation" ; git push
 
 TAG: mgd_java_api-6-0-21-3
 TAG: mgd_java_api-6-0-21-2

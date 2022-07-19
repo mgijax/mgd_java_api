@@ -100,6 +100,22 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 		return results;
 	}
 	
+	@POST
+	@ApiOperation(value = "Validate Strain/Private can be changed")
+	@Path("/validateStrainPrivate")
+	public List<SlimProbeStrainDomain> validateStrainPrivate(SlimProbeStrainDomain searchDomain) {
+		
+		List<SlimProbeStrainDomain> results = new ArrayList<SlimProbeStrainDomain>();
+
+		try {
+			results = probeStrainService.validateStrain(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 	@GET
 	@ApiOperation(value = "get list of strains")
 	@Path("/getStrainList")

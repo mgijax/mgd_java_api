@@ -20,7 +20,6 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceWorkflowDataDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceSearchDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
@@ -29,7 +28,6 @@ import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceIndexDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
@@ -56,8 +54,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 	@Inject
 	private ReferenceDAO referenceDAO;
-	@Inject
-	private ReferenceWorkflowDataDAO wfDataDAO;
+//	@Inject
+//	private ReferenceWorkflowDataDAO wfDataDAO;
 	@Inject
 	private TermDAO termDAO;
 	@Inject

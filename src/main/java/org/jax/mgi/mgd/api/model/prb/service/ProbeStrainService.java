@@ -804,7 +804,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
    
 		List<SlimProbeStrainDomain> results = new ArrayList<SlimProbeStrainDomain>();
 
-		String cmd = "select s.* from prb_train s" +
+		String cmd = "select s.* from prb_strain s" +
 				"\nwhere s.private = 0" +
 				"\nand not exists (select 1 from PRB_Strain_Genotype a where s._Strain_key = a._Strain_key)" +
 				"\nand not exists (select 1 from PRB_Strain_Marker a where s._Strain_key = a._Strain_key)" +

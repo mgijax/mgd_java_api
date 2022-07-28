@@ -1363,14 +1363,14 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		String key = (String) params.get("oldKey");
 
 		// mrk_event = rename
-		if (params.get("eventKey").equals("2")) {
+		if (params.get("eventKey").equals("106563605")) {
 			runCmd = runCmd + " --newName=\"" + 
 						((String) params.get("newName")).replaceAll("'",  "''") + "\"";
 			runCmd = runCmd + " --newSymbols=\"" + (String) params.get("newSymbol") + "\"";
 		}
 		
 		// mrk_event = merge
-		if (params.get("eventKey").equals("3") || params.get("eventKey").equals("4")) {
+		if (params.get("eventKey").equals("106563606") || params.get("eventKey").equals("106563607")) {
 			runCmd = runCmd + " --newKey=" + (String) params.get("newKey");
 			key = (String) params.get("newKey");
 		}

@@ -17,6 +17,7 @@ import javax.persistence.TemporalType;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -47,12 +48,12 @@ public class MarkerHistory extends BaseEntity {
 	private Date modification_date;
 
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_marker_event_key")
-	private Event markerEvent;
+	@JoinColumn(name="_marker_event_key", referencedColumnName="_term_key")
+	private Term markerEvent;
 
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_marker_eventreason_key")
-	private EventReason markerEventReason;
+	@JoinColumn(name="_marker_eventreason_key", referencedColumnName="_term_key")
+	private Term markerEventReason;
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_history_key", referencedColumnName="_marker_key")

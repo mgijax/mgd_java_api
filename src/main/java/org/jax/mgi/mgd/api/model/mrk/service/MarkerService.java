@@ -146,8 +146,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			
 			// create marker history assignment
 			// create 1 marker history row to track the initial marker assignment		
-			// event = assigned (1)
-			// event reason = Not Specified (-1)
+			// event = assigned (106563604)
+			// event reason = Not Specified (106563610)
 			// default reference is J:23000 (22864); sent by UI
 			
 			String cmd = "select count(*) from MRK_insertHistory ("
@@ -155,7 +155,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 					+ "," + entity.get_marker_key()
 					+ "," + entity.get_marker_key()
 					+ "," + domain.getHistory().get(0).getRefsKey().toString()
-					+ ",1,-1"
+					+ ",106563604,106563610"
 					+ ",'" + entity.getName().replaceAll("'", "''") + "'"
 					+ ")";
 	

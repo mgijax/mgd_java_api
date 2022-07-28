@@ -16,10 +16,10 @@ public class MarkerHistoryTranslator extends BaseEntityDomainTranslator<MarkerHi
 		domain.setMarkerKey(String.valueOf(entity.get_marker_key()));
 		domain.setSequenceNum(String.valueOf(entity.getSequenceNum()));
 		
-		domain.setMarkerEventKey(String.valueOf(entity.getMarkerEvent().get_marker_event_key()));
-		domain.setMarkerEvent(String.valueOf(entity.getMarkerEvent().getEvent()));
-		domain.setMarkerEventReasonKey(String.valueOf(entity.getMarkerEventReason().get_marker_eventreason_key()));
-		domain.setMarkerEventReason(entity.getMarkerEventReason().getEventReason());
+		domain.setMarkerEventKey(String.valueOf(entity.getMarkerEvent().get_term_key()));
+		domain.setMarkerEvent(String.valueOf(entity.getMarkerEvent().getTerm()));
+		domain.setMarkerEventReasonKey(String.valueOf(entity.getMarkerEventReason().get_term_key()));
+		domain.setMarkerEventReason(entity.getMarkerEventReason().getTerm());
 		
 		// int -> Integer -> String
 		domain.setMarkerHistorySymbolKey(Integer.valueOf(entity.getMarkerHistory().get_marker_key()).toString());

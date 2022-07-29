@@ -15,6 +15,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -43,8 +44,8 @@ public class InSituResult extends BaseEntity {
 	private Strength strength;
 
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_pattern_key")
-	private Pattern pattern;
+	@JoinColumn(name="_pattern_key", referencedColumnName="_term_key")
+	private Term pattern;
 
 	@OneToMany()
 	@JoinColumn(name="_result_key", insertable=false, updatable=false)

@@ -15,6 +15,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -50,12 +51,12 @@ public class GelLane extends BaseEntity {
 	private Genotype genotype;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_gelrnatype_key")
-	private GelRNAType gelRNAType;
+	@JoinColumn(name="_gelrnatype_key", referencedColumnName="_term_key")
+	private Term gelRNAType;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_gelcontrol_key")
-	private GelControl gelControl;
+	@JoinColumn(name="_gelcontrol_key", referencedColumnName="_term_key")
+	private Term gelControl;
 	
 	@OneToMany()
 	@JoinColumn(name="_gellane_key", insertable=false, updatable=false)

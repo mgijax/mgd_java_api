@@ -25,10 +25,10 @@ public class SpecimenTranslator extends BaseEntityDomainTranslator<Specimen, Spe
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setSpecimenKey(String.valueOf(entity.get_specimen_key()));		
 		domain.setAssayKey(String.valueOf(entity.get_assay_key()));
-		domain.setEmbeddingKey(String.valueOf(entity.getEmbeddingMethod().get_embedding_key()));
-		domain.setEmbeddingMethod(entity.getEmbeddingMethod().getEmbeddingMethod());
-		domain.setFixationKey(String.valueOf(entity.getFixationMethod().get_fixation_key()));
-		domain.setFixationMethod(entity.getFixationMethod().getFixation());
+		domain.setEmbeddingKey(String.valueOf(entity.getEmbeddingMethod().get_term_key()));
+		domain.setEmbeddingMethod(entity.getEmbeddingMethod().getTerm());
+		domain.setFixationKey(String.valueOf(entity.getFixationMethod().get_term_key()));
+		domain.setFixationMethod(entity.getFixationMethod().getTerm());
 		domain.setSequenceNum(entity.getSequenceNum());
 		domain.setSpecimenLabel(entity.getSpecimenLabel());
 		domain.setSex(entity.getSex());

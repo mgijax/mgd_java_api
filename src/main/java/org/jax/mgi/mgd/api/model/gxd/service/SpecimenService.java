@@ -9,14 +9,13 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.gxd.dao.EmbeddingMethodDAO;
-import org.jax.mgi.mgd.api.model.gxd.dao.FixationMethodDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.SpecimenDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.SpecimenDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Specimen;
 import org.jax.mgi.mgd.api.model.gxd.translator.SpecimenTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -29,9 +28,9 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 	@Inject
 	private SpecimenDAO specimenDAO;
 	@Inject
-	private EmbeddingMethodDAO embeddingDAO;
+	private TermDAO embeddingDAO;
 	@Inject
-	private FixationMethodDAO fixationDAO;
+	private TermDAO fixationDAO;
 	@Inject
 	private GenotypeDAO genotypeDAO;
 	@Inject

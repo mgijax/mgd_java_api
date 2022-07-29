@@ -12,12 +12,11 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyPrepDAO;
-import org.jax.mgi.mgd.api.model.gxd.dao.GXDLabelDAO;
-import org.jax.mgi.mgd.api.model.gxd.dao.SecondaryDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyPrepDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.AntibodyPrep;
 import org.jax.mgi.mgd.api.model.gxd.translator.AntibodyPrepTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -34,9 +33,9 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 	@Inject
 	private AntibodyDAO antibodyDAO;
 	@Inject
-	private SecondaryDAO secondaryDAO;
+	private TermDAO secondaryDAO;
 	@Inject
-	private GXDLabelDAO labelDAO;
+	private TermDAO labelDAO;
 	
 	private AntibodyPrepTranslator translator = new AntibodyPrepTranslator();
 	

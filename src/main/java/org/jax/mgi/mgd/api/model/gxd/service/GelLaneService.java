@@ -10,14 +10,13 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.gxd.dao.GelControlDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.GelLaneDAO;
-import org.jax.mgi.mgd.api.model.gxd.dao.GelRNATypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.GelLane;
 import org.jax.mgi.mgd.api.model.gxd.translator.GelLaneTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -32,9 +31,9 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 	@Inject
 	private GenotypeDAO genotypeDAO;
 	@Inject
-	private GelRNATypeDAO gelRNATypeDAO;
+	private TermDAO gelRNATypeDAO;
 	@Inject
-	private GelControlDAO gelControlDAO;
+	private TermDAO gelControlDAO;
 	@Inject
 	private GelLaneStructureService structureService;
 	

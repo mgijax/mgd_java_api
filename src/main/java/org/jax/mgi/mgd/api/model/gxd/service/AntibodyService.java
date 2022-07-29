@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyClassDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyTypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntigenDAO;
@@ -23,6 +22,7 @@ import org.jax.mgi.mgd.api.model.gxd.translator.SlimAntibodyTranslator;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -36,7 +36,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 	@Inject
 	private AntibodyDAO antibodyDAO;
 	@Inject 
-	private AntibodyClassDAO classDAO;
+	private TermDAO classDAO;
 	@Inject
 	private AntibodyTypeDAO typeDAO;
 	@Inject

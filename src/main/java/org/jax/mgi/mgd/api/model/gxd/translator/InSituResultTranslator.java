@@ -29,8 +29,8 @@ public class InSituResultTranslator extends BaseEntityDomainTranslator<InSituRes
 		domain.setSequenceNum(entity.getSequenceNum());
 		domain.setStrengthKey(String.valueOf(entity.getStrength().get_strength_key()));
 		domain.setStrength(entity.getStrength().getStrength());
-		domain.setPatternKey(String.valueOf(entity.getPattern().get_pattern_key()));
-		domain.setPattern(entity.getPattern().getPattern());
+		domain.setPatternKey(String.valueOf(entity.getPattern().get_term_key()));
+		domain.setPattern(entity.getPattern().getTerm());
 		domain.setResultNote(entity.getResultNote());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));

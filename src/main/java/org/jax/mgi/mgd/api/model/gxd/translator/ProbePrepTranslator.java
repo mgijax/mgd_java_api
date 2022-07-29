@@ -20,12 +20,12 @@ public class ProbePrepTranslator extends BaseEntityDomainTranslator<ProbePrep, P
 		domain.setProbeKey(String.valueOf(entity.getProbe().get_probe_key()));
 		domain.setProbeName(entity.getProbe().getName());
 		domain.setProbeAccID(entity.getProbe().getMgiAccessionIds().get(0).getAccID());
-		domain.setProbeSenseKey(String.valueOf(entity.getProbeSense().get_sense_key()));
-		domain.setProbeSenseName(entity.getProbeSense().getSense());
-		domain.setLabelKey(String.valueOf(entity.getLabel().get_label_key()));
-		domain.setLabelName(entity.getLabel().getLabel());
-		domain.setVisualizationMethodKey(String.valueOf(entity.getVisualizationMethod().get_visualization_key()));
-		domain.setVisualiationMethod(entity.getVisualizationMethod().getVisualization());
+		domain.setProbeSenseKey(String.valueOf(entity.getProbeSense().get_term_key()));
+		domain.setProbeSenseName(entity.getProbeSense().getTerm());
+		domain.setLabelKey(String.valueOf(entity.getLabel().get_term_key()));
+		domain.setLabelName(entity.getLabel().getTerm());
+		domain.setVisualizationMethodKey(String.valueOf(entity.getVisualizationMethod().get_term_key()));
+		domain.setVisualiationMethod(entity.getVisualizationMethod().getTerm());
 		domain.setPrepType(entity.getType());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));

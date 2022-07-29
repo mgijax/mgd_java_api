@@ -18,8 +18,8 @@ public class GelRowTranslator extends BaseEntityDomainTranslator<GelRow, GelRowD
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setGelRowKey(String.valueOf(entity.get_gelrow_key()));
 		domain.setAssayKey(String.valueOf(entity.get_assay_key()));
-		domain.setGelUnitsKey(String.valueOf(entity.getGelUnits().get_gelunits_key()));
-		domain.setGelUnits(entity.getGelUnits().getUnits());
+		domain.setGelUnitsKey(String.valueOf(entity.getGelUnits().get_term_key()));
+		domain.setGelUnits(entity.getGelUnits().getTerm());
 		domain.setSequenceNum(entity.getSequenceNum());
 		domain.setSize(entity.getSize());
 		domain.setRowNote(entity.getRowNote());

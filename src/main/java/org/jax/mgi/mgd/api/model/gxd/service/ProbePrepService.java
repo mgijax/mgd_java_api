@@ -10,15 +10,13 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.gxd.dao.GXDLabelDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.ProbePrepDAO;
-import org.jax.mgi.mgd.api.model.gxd.dao.ProbeSenseDAO;
-import org.jax.mgi.mgd.api.model.gxd.dao.VisualizationMethodDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.ProbePrepDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.ProbePrep;
 import org.jax.mgi.mgd.api.model.gxd.translator.ProbePrepTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeDAO;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -35,11 +33,11 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 	@Inject
 	private ProbeDAO probeDAO;
 	@Inject
-	private GXDLabelDAO labelDAO;
+	private TermDAO labelDAO;
 	@Inject
-	private ProbeSenseDAO senseDAO;
+	private TermDAO senseDAO;
 	@Inject
-	private VisualizationMethodDAO visualizationDAO;
+	private TermDAO visualizationDAO;
 	
 	private ProbePrepTranslator translator = new ProbePrepTranslator();
 	

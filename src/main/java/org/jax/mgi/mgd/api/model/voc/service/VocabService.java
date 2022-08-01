@@ -162,26 +162,26 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		Boolean isCellType = false;
 		
 		// for non-vocab tables that are acting like voc_vocab/voc_term		
-		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty()) {
-			if (searchDomain.getVocabKey().equals("151")
-					|| searchDomain.getVocabKey().equals("152")
-					|| searchDomain.getVocabKey().equals("153")
-					|| searchDomain.getVocabKey().equals("154")
-					|| searchDomain.getVocabKey().equals("155")
-					|| searchDomain.getVocabKey().equals("156")
-					|| searchDomain.getVocabKey().equals("157")
-					|| searchDomain.getVocabKey().equals("158")				
-					|| searchDomain.getVocabKey().equals("159")
-					|| searchDomain.getVocabKey().equals("160")
-					|| searchDomain.getVocabKey().equals("162")																																		
-					|| searchDomain.getVocabKey().equals("163")	
-					|| searchDomain.getVocabKey().equals("172")
-					|| searchDomain.getVocabKey().equals("173")					
-					) {
-				
-				return searchGXDVocab(searchDomain.getVocabKey());		
-			}
-		}
+//		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty()) {
+//			if (searchDomain.getVocabKey().equals("151")
+//					|| searchDomain.getVocabKey().equals("152")
+//					|| searchDomain.getVocabKey().equals("153")
+//					|| searchDomain.getVocabKey().equals("154")
+//					|| searchDomain.getVocabKey().equals("155")
+//					|| searchDomain.getVocabKey().equals("156")
+//					|| searchDomain.getVocabKey().equals("157")
+//					|| searchDomain.getVocabKey().equals("158")				
+//					|| searchDomain.getVocabKey().equals("159")
+//					|| searchDomain.getVocabKey().equals("160")
+//					|| searchDomain.getVocabKey().equals("162")																																		
+//					|| searchDomain.getVocabKey().equals("163")	
+//					|| searchDomain.getVocabKey().equals("172")
+//					|| searchDomain.getVocabKey().equals("173")					
+//					) {
+//				
+//				return searchGXDVocab(searchDomain.getVocabKey());		
+//			}
+//		}
 		
 		// for _vocab_key = 96, 97 (used by mgi_relationship)	
 		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty() &&

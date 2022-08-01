@@ -370,7 +370,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			cmd = "select v._term_key as termKey, v.abbreviation as term, 1 as orderBy from voc_term v where v._vocab_key = " + vocabKey +
 				"\nand v.term = 'Not Specified'" + 
 				"\nunion" + 
-				"\nselect v.__term_key as termKey, v.abbreviation as term, 2 as orderBy from voc_term v where v._vocab_key = " + vocabKey +
+				"\nselect v._term_key as termKey, v.abbreviation as term, 2 as orderBy from voc_term v where v._vocab_key = " + vocabKey +
 				"\nand v.term != 'Not Specified'" + 
 				"\norder by orderBy, term\n";
 		}			

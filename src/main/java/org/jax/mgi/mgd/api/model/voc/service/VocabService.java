@@ -173,8 +173,6 @@ public class VocabService extends BaseService<VocabularyDomain> {
 //					|| searchDomain.getVocabKey().equals("158")				
 //					|| searchDomain.getVocabKey().equals("159")
 //					|| searchDomain.getVocabKey().equals("160")
-//					|| searchDomain.getVocabKey().equals("162")																																		
-//					|| searchDomain.getVocabKey().equals("163")	
 //					|| searchDomain.getVocabKey().equals("172")
 //					|| searchDomain.getVocabKey().equals("173")					
 //					) {
@@ -182,6 +180,15 @@ public class VocabService extends BaseService<VocabularyDomain> {
 //				return searchGXDVocab(searchDomain.getVocabKey());		
 //			}
 //		}
+
+		// 162 = GXD_Strength
+		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty()) {
+		if (searchDomain.getVocabKey().equals("162")																																		
+				) {
+			
+			return searchGXDVocab(searchDomain.getVocabKey());		
+		}
+	}
 		
 		// for _vocab_key = 96, 97 (used by mgi_relationship)	
 		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty() &&

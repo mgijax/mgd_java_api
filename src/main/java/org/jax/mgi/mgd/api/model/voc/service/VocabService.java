@@ -355,31 +355,26 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		if (vocabKey.equals("158")) {
 			cmd = "select _assaytype_key as termKey, assayType as term from gxd_assaytype order by term";
 		}	
-		else if (vocabKey.equals("163") ) {
-			cmd = "select v._strength_key as termKey, v.strength as term, 1 as orderBy from gxd_strength v where v.strength = 'Not Specified'" +
-				"\nunion" +
-				"\nselect v._strength_key as termKey, v.strength as term, 2 as orderBy from gxd_strength v where v.strength != 'Not Specified'" +
-				"\norder by orderBy, term\n";
-		}
 		else if (vocabKey.equals("151")) {
 			cmd = "select _term_key as termKey, term as term from voc_term where _vocab_key = 151 order by term";
 		}		
 		else if (vocabKey.equals("154")
 				 || vocabKey.equals("155")
+				 || vocabKey.equals("163")
 				 || vocabKey.equals("172")) {
 			cmd = "select v._term_key as termKey, v.abbreviation as term, 1 as orderBy from voc_term v where v._vocab_key = " + vocabKey +
-				"\nand v.term = 'Not Specified'" + 
+					"\nand v.term = 'Not Specified'" + 
 				"\nunion" + 
 				"\nselect v._term_key as termKey, v.abbreviation as term, 2 as orderBy from voc_term v where v._vocab_key = " + vocabKey +
-				"\nand v.term != 'Not Specified'" + 
+					"\nand v.term != 'Not Specified'" + 
 				"\norder by orderBy, term\n";
 		}			
 		else {
 			cmd = "select _term_key as termKey, term as term, 1 as orderBy from voc_term where _vocab_key = " + vocabKey +
-				"\nand term = 'Not Specified'" +
+					"\nand term = 'Not Specified'" +
 				"\nunion" +
 				"\nselect _term_key as termKey, term as term, 2 as orderBy from voc_term where _vocab_key = " + vocabKey +
-				"\nand term != 'Not Specified'" + 
+					"\nand term != 'Not Specified'" + 
 				"\norder by orderBy, term\n";
 		}		
 		log.info(cmd);		

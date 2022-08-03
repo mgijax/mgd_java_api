@@ -40,8 +40,8 @@ public class InSituResult extends BaseEntity {
 	private Date modification_date;
 
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_strength_key")
-	private Strength strength;
+	@JoinColumn(name="_strength_key", referencedColumnName="_term_key")
+	private Term strength;
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_pattern_key", referencedColumnName="_term_key")

@@ -151,7 +151,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		if (indexDAO.get(key) != null) {
 			domain = translator.translate(indexDAO.get(key));
 			
-			String cmd = "select * from gxd_expression where _assaytype_key not in (9,10,11) and _refs_key = " + domain.getRefsKey() + " limit 1";
+			String cmd = "select * from gxd_expression where _assaytype_key not in (10,11) and _refs_key = " + domain.getRefsKey() + " limit 1";
 			try {
 				ResultSet rs = sqlExecutor.executeProto(cmd);
 				while (rs.next()) {

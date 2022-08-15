@@ -107,9 +107,9 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 				entity.set_specimen_key(parentKey);
 				entity.setStrength(termDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
 				
-				// if EMAPA and Pattern = null, then Pattern = Not Specified
+				// if EMAPA and Pattern = null, then Pattern = Not Specified (106849834)
 				if (domain.get(i).getStructures() != null && domain.get(i).getStructures().size() > 0 && (domain.get(i).getPatternKey() == null || domain.get(i).getPatternKey().isEmpty())) {
-					entity.setPattern(termDAO.get(-1));
+					entity.setPattern(termDAO.get(106849834));
 				}
 				else {
 					entity.setPattern(termDAO.get(Integer.valueOf(domain.get(i).getPatternKey())));
@@ -161,7 +161,7 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 
 				// if EMAPA and Pattern = null, then Pattern = Not Specified
 				if (domain.get(i).getStructures() != null && domain.get(i).getStructures().size() > 0 && (domain.get(i).getPatternKey() == null || domain.get(i).getPatternKey().isEmpty())) {
-					entity.setPattern(termDAO.get(-1));
+					entity.setPattern(termDAO.get(106849834));
 				}
 				else {
 					entity.setPattern(termDAO.get(Integer.valueOf(domain.get(i).getPatternKey())));

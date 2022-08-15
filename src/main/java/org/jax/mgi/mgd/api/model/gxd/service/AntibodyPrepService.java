@@ -171,15 +171,17 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 			AntibodyPrep entity = new AntibodyPrep();
 			entity.setAntibody(antibodyDAO.get(Integer.valueOf(domain.getAntibodyKey())));
 			
+			// Not Specified = 106849912
 			if (domain.getSecondaryKey() == null || domain.getSecondaryKey().isEmpty()) {
-				entity.setSecondary(secondaryDAO.get(-1));
+				entity.setSecondary(secondaryDAO.get(106849912));
 			}
 			else {
 				entity.setSecondary(secondaryDAO.get(Integer.valueOf(domain.getSecondaryKey())));
 			}
 			
+			// Not Specified = 106849790
 			if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
-				entity.setLabel(labelDAO.get(-1));
+				entity.setLabel(labelDAO.get(106849790));
 			}
 			else {
 				entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
@@ -203,15 +205,17 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 			AntibodyPrep entity = antibodyPrepDAO.get(Integer.valueOf(domain.getAntibodyPrepKey()));		
 			entity.setAntibody(antibodyDAO.get(Integer.valueOf(domain.getAntibodyKey())));
 
+			// Not Specified = 106849912
 			if (domain.getSecondaryKey() == null || domain.getSecondaryKey().isEmpty()) {
-				entity.setSecondary(secondaryDAO.get(-1));
+				entity.setSecondary(secondaryDAO.get(106849912));
 			}
 			else {
 				entity.setSecondary(secondaryDAO.get(Integer.valueOf(domain.getSecondaryKey())));
 			}
 			
+			// Not Specified = 106849790
 			if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
-				entity.setLabel(labelDAO.get(-1));
+				entity.setLabel(labelDAO.get(106849790));
 			}
 			else {
 				entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));

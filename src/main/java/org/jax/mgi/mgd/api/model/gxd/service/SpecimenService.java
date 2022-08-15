@@ -112,15 +112,17 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				
 				//defaults
 				
+				// Not Specified = 106849865
 				if (domain.get(i).getEmbeddingKey() == null || domain.get(i).getEmbeddingKey().isEmpty()) {
-					entity.setEmbeddingMethod(embeddingDAO.get(-1));
+					entity.setEmbeddingMethod(embeddingDAO.get(106849865));
 				}
 				else {
 					entity.setEmbeddingMethod(embeddingDAO.get(Integer.valueOf(domain.get(i).getEmbeddingKey())));
 				}
 
+				// Not Specified = 106849873
 				if (domain.get(i).getFixationKey() == null || domain.get(i).getFixationKey().isEmpty()) {
-					entity.setFixationMethod(fixationDAO.get(-1));
+					entity.setFixationMethod(fixationDAO.get(106849873));
 				}
 				else {
 					entity.setFixationMethod(fixationDAO.get(Integer.valueOf(domain.get(i).getFixationKey())));

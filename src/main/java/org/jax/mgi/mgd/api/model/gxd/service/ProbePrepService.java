@@ -176,22 +176,25 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 					entity.setType(domain.getPrepType());			
 				}
 				
+				// Not Specified = 106849790
 				if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
-					entity.setLabel(labelDAO.get(-1));					
+					entity.setLabel(labelDAO.get(106849790));					
 				}
 				else {
 					entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
 				}
 				
+				// Not Specified = 106849908
 				if (domain.getProbeSenseKey() == null || domain.getProbeSenseKey().isEmpty()) {
-					entity.setProbeSense(senseDAO.get(-1));
+					entity.setProbeSense(senseDAO.get(106849908));
 				}
 				else {
 					entity.setProbeSense(senseDAO.get(Integer.valueOf(domain.getProbeSenseKey())));
 				}
 				
+				// Not Specified = 106849892
 				if (domain.getVisualizationMethodKey() == null || domain.getVisualizationMethodKey().isEmpty()) {
-					entity.setVisualizationMethod(visualizationDAO.get(-1));
+					entity.setVisualizationMethod(visualizationDAO.get(106849892));
 				}
 				else {
 					entity.setVisualizationMethod(visualizationDAO.get(Integer.valueOf(domain.getVisualizationMethodKey())));
@@ -222,23 +225,25 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 			else {
 				entity.setType(domain.getPrepType());			
 			}
-			
+			// Not Specified = 106849790
 			if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
-				entity.setLabel(labelDAO.get(-1));					
+				entity.setLabel(labelDAO.get(106849790));					
 			}
 			else {
 				entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
 			}
 			
+			// Not Specified = 106849908
 			if (domain.getProbeSenseKey() == null || domain.getProbeSenseKey().isEmpty()) {
-				entity.setProbeSense(senseDAO.get(-1));
+				entity.setProbeSense(senseDAO.get(106849908));
 			}
 			else {
 				entity.setProbeSense(senseDAO.get(Integer.valueOf(domain.getProbeSenseKey())));
 			}
 			
+			// Not Specified = 106849892
 			if (domain.getVisualizationMethodKey() == null || domain.getVisualizationMethodKey().isEmpty()) {
-				entity.setVisualizationMethod(visualizationDAO.get(-1));
+				entity.setVisualizationMethod(visualizationDAO.get(106849892));
 			}
 			else {
 				entity.setVisualizationMethod(visualizationDAO.get(Integer.valueOf(domain.getVisualizationMethodKey())));

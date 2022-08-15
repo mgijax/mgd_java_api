@@ -156,14 +156,15 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 					}
 
 					// western blot
+					// Not Applicable = 106849916
+					// Not Specified = 106849917
 					if (assayTypeKey == 8) {
-						entity.setGelRNAType(gelRNATypeDAO.get(-2));
+						entity.setGelRNAType(gelRNATypeDAO.get(106849917));
 					}
 					else if (domain.get(i).getGelRNATypeKey() != null && !domain.get(i).getGelRNATypeKey().isEmpty()) { 
 						entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
 					}
 					else {
-						entity.setGelRNAType(gelRNATypeDAO.get(-1));					
 					}					
 				}
 				// else from domain
@@ -263,14 +264,16 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 					}
 
 					// western blot
+					// Not Applicable = 106849916
+					// Not Specified = 106849917					
 					if (assayTypeKey == 8) {
-						entity.setGelRNAType(gelRNATypeDAO.get(-2));
+						entity.setGelRNAType(gelRNATypeDAO.get(106849916));
 					}
 					else if (domain.get(i).getGelRNATypeKey() != null && !domain.get(i).getGelRNATypeKey().isEmpty()) { 
 						entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
 					}
 					else {
-						entity.setGelRNAType(gelRNATypeDAO.get(-1));					
+						entity.setGelRNAType(gelRNATypeDAO.get(106849917));					
 					}
 				}
 				// else from domain

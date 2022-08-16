@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyClassDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyTypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntigenDAO;
@@ -22,7 +23,6 @@ import org.jax.mgi.mgd.api.model.gxd.translator.SlimAntibodyTranslator;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
-import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -36,7 +36,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 	@Inject
 	private AntibodyDAO antibodyDAO;
 	@Inject 
-	private TermDAO classDAO;
+	private AntibodyClassDAO classDAO;
 	@Inject
 	private AntibodyTypeDAO typeDAO;
 	@Inject
@@ -92,10 +92,10 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 	    entity.setAntibodyType(typeDAO.get(Integer.valueOf(domain.getAntibodyTypeKey())));
 		
 		log.info("antibody class");
-		// has default if not set//
+		// has default if not set
 		if(domain.getAntibodyClassKey() ==  null || domain.getAntibodyClassKey().isEmpty()){
-			// 'Not Specified' = 106849777
-			domain.setAntibodyClassKey("106849777");
+			// 'Not Specified'
+			domain.setAntibodyClassKey("-1");
 			
 		}
 		entity.setAntibodyClass(classDAO.get(Integer.valueOf(domain.getAntibodyClassKey())));
@@ -190,8 +190,8 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		log.info("antibody class: " + domain.getAntibodyClassKey());
 		// has default if not set
 		if(domain.getAntibodyClassKey() ==  null || domain.getAntibodyClassKey().isEmpty()){
-			// 'Not Specified' = 106849777
-			domain.setAntibodyClassKey("106849777");
+			// 'Not Specified'
+			domain.setAntibodyClassKey("-1");
 			
 		}
 		entity.setAntibodyClass(classDAO.get(Integer.valueOf(domain.getAntibodyClassKey())));

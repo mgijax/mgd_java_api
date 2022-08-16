@@ -10,11 +10,11 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.GelBandDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.GelRowDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.StrengthDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelBandDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.GelBand;
 import org.jax.mgi.mgd.api.model.gxd.translator.GelBandTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -29,7 +29,7 @@ public class GelBandService extends BaseService<GelBandDomain> {
 	@Inject
 	private GelRowDAO gelRowDAO;
 	@Inject
-	private TermDAO termDAO;	
+	private StrengthDAO gelStrengthDAO;	
 	
 	private GelBandTranslator translator = new GelBandTranslator();				
 
@@ -111,7 +111,7 @@ public class GelBandService extends BaseService<GelBandDomain> {
 
 				entity.setGelRow(gelRowDAO.get(rowKey));	
 				entity.set_gellane_key(laneKey);
-				entity.setStrength(termDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
+				entity.setStrength(gelStrengthDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
 				
 				if (domain.get(i).getBandNote() != null && !domain.get(i).getBandNote().isEmpty()) {
 					entity.setBandNote(domain.get(i).getBandNote());
@@ -153,7 +153,7 @@ public class GelBandService extends BaseService<GelBandDomain> {
 
 				entity.setGelRow(gelRowDAO.get(rowKey));				
 				entity.set_gellane_key(Integer.valueOf(laneKey));
-				entity.setStrength(termDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
+				entity.setStrength(gelStrengthDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
 				
 				if (domain.get(i).getBandNote() != null && !domain.get(i).getBandNote().isEmpty()) {
 					entity.setBandNote(domain.get(i).getBandNote());

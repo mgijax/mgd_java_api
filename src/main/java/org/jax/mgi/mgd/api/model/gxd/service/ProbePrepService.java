@@ -10,13 +10,15 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.gxd.dao.GXDLabelDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.ProbePrepDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.ProbeSenseDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.VisualizationMethodDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.ProbePrepDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.ProbePrep;
 import org.jax.mgi.mgd.api.model.gxd.translator.ProbePrepTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeDAO;
-import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -33,11 +35,11 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 	@Inject
 	private ProbeDAO probeDAO;
 	@Inject
-	private TermDAO labelDAO;
+	private GXDLabelDAO labelDAO;
 	@Inject
-	private TermDAO senseDAO;
+	private ProbeSenseDAO senseDAO;
 	@Inject
-	private TermDAO visualizationDAO;
+	private VisualizationMethodDAO visualizationDAO;
 	
 	private ProbePrepTranslator translator = new ProbePrepTranslator();
 	
@@ -176,25 +178,22 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 					entity.setType(domain.getPrepType());			
 				}
 				
-				// Not Specified = 106849790
 				if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
-					entity.setLabel(labelDAO.get(106849790));					
+					entity.setLabel(labelDAO.get(-1));					
 				}
 				else {
 					entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
 				}
 				
-				// Not Specified = 106849908
 				if (domain.getProbeSenseKey() == null || domain.getProbeSenseKey().isEmpty()) {
-					entity.setProbeSense(senseDAO.get(106849908));
+					entity.setProbeSense(senseDAO.get(-1));
 				}
 				else {
 					entity.setProbeSense(senseDAO.get(Integer.valueOf(domain.getProbeSenseKey())));
 				}
 				
-				// Not Specified = 106849892
 				if (domain.getVisualizationMethodKey() == null || domain.getVisualizationMethodKey().isEmpty()) {
-					entity.setVisualizationMethod(visualizationDAO.get(106849892));
+					entity.setVisualizationMethod(visualizationDAO.get(-1));
 				}
 				else {
 					entity.setVisualizationMethod(visualizationDAO.get(Integer.valueOf(domain.getVisualizationMethodKey())));
@@ -225,25 +224,23 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 			else {
 				entity.setType(domain.getPrepType());			
 			}
-			// Not Specified = 106849790
+			
 			if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
-				entity.setLabel(labelDAO.get(106849790));					
+				entity.setLabel(labelDAO.get(-1));					
 			}
 			else {
 				entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
 			}
 			
-			// Not Specified = 106849908
 			if (domain.getProbeSenseKey() == null || domain.getProbeSenseKey().isEmpty()) {
-				entity.setProbeSense(senseDAO.get(106849908));
+				entity.setProbeSense(senseDAO.get(-1));
 			}
 			else {
 				entity.setProbeSense(senseDAO.get(Integer.valueOf(domain.getProbeSenseKey())));
 			}
 			
-			// Not Specified = 106849892
 			if (domain.getVisualizationMethodKey() == null || domain.getVisualizationMethodKey().isEmpty()) {
-				entity.setVisualizationMethod(visualizationDAO.get(106849892));
+				entity.setVisualizationMethod(visualizationDAO.get(-1));
 			}
 			else {
 				entity.setVisualizationMethod(visualizationDAO.get(Integer.valueOf(domain.getVisualizationMethodKey())));

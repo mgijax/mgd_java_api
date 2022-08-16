@@ -9,11 +9,12 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.InSituResultDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.PatternDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.StrengthDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.InSituResultDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.InSituResult;
 import org.jax.mgi.mgd.api.model.gxd.translator.InSituResultTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -25,8 +26,10 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 	
 	@Inject
 	private InSituResultDAO resultDAO;
+	@Inject
+	private StrengthDAO strengthDAO;
 	@Inject 
-	private TermDAO termDAO;
+	private PatternDAO patternDAO;
 	@Inject
 	private InSituResultStructureService structureService;
 	@Inject
@@ -105,14 +108,14 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 				InSituResult entity = new InSituResult();
 				
 				entity.set_specimen_key(parentKey);
-				entity.setStrength(termDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
+				entity.setStrength(strengthDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
 				
-				// if EMAPA and Pattern = null, then Pattern = Not Specified (106849834)
+				// if EMAPA and Pattern = null, then Pattern = Not Specified
 				if (domain.get(i).getStructures() != null && domain.get(i).getStructures().size() > 0 && (domain.get(i).getPatternKey() == null || domain.get(i).getPatternKey().isEmpty())) {
-					entity.setPattern(termDAO.get(106849834));
+					entity.setPattern(patternDAO.get(-1));
 				}
 				else {
-					entity.setPattern(termDAO.get(Integer.valueOf(domain.get(i).getPatternKey())));
+					entity.setPattern(patternDAO.get(Integer.valueOf(domain.get(i).getPatternKey())));
 				}
 
 				entity.setSequenceNum(domain.get(i).getSequenceNum());
@@ -157,14 +160,14 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 				InSituResult entity = resultDAO.get(Integer.valueOf(domain.get(i).getResultKey()));
 				
 				entity.set_specimen_key(parentKey);
-				entity.setStrength(termDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
+				entity.setStrength(strengthDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
 
 				// if EMAPA and Pattern = null, then Pattern = Not Specified
 				if (domain.get(i).getStructures() != null && domain.get(i).getStructures().size() > 0 && (domain.get(i).getPatternKey() == null || domain.get(i).getPatternKey().isEmpty())) {
-					entity.setPattern(termDAO.get(106849834));
+					entity.setPattern(patternDAO.get(-1));
 				}
 				else {
-					entity.setPattern(termDAO.get(Integer.valueOf(domain.get(i).getPatternKey())));
+					entity.setPattern(patternDAO.get(Integer.valueOf(domain.get(i).getPatternKey())));
 				}
 				
 				entity.setSequenceNum(domain.get(i).getSequenceNum());

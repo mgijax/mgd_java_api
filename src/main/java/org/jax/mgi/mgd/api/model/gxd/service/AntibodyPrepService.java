@@ -12,11 +12,12 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyPrepDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.GXDLabelDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.SecondaryDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyPrepDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.AntibodyPrep;
 import org.jax.mgi.mgd.api.model.gxd.translator.AntibodyPrepTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -33,9 +34,9 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 	@Inject
 	private AntibodyDAO antibodyDAO;
 	@Inject
-	private TermDAO secondaryDAO;
+	private SecondaryDAO secondaryDAO;
 	@Inject
-	private TermDAO labelDAO;
+	private GXDLabelDAO labelDAO;
 	
 	private AntibodyPrepTranslator translator = new AntibodyPrepTranslator();
 	
@@ -171,17 +172,15 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 			AntibodyPrep entity = new AntibodyPrep();
 			entity.setAntibody(antibodyDAO.get(Integer.valueOf(domain.getAntibodyKey())));
 			
-			// Not Specified = 106849912
 			if (domain.getSecondaryKey() == null || domain.getSecondaryKey().isEmpty()) {
-				entity.setSecondary(secondaryDAO.get(106849912));
+				entity.setSecondary(secondaryDAO.get(-1));
 			}
 			else {
 				entity.setSecondary(secondaryDAO.get(Integer.valueOf(domain.getSecondaryKey())));
 			}
 			
-			// Not Specified = 106849790
 			if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
-				entity.setLabel(labelDAO.get(106849790));
+				entity.setLabel(labelDAO.get(-1));
 			}
 			else {
 				entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
@@ -205,17 +204,15 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 			AntibodyPrep entity = antibodyPrepDAO.get(Integer.valueOf(domain.getAntibodyPrepKey()));		
 			entity.setAntibody(antibodyDAO.get(Integer.valueOf(domain.getAntibodyKey())));
 
-			// Not Specified = 106849912
 			if (domain.getSecondaryKey() == null || domain.getSecondaryKey().isEmpty()) {
-				entity.setSecondary(secondaryDAO.get(106849912));
+				entity.setSecondary(secondaryDAO.get(-1));
 			}
 			else {
 				entity.setSecondary(secondaryDAO.get(Integer.valueOf(domain.getSecondaryKey())));
 			}
 			
-			// Not Specified = 106849790
 			if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
-				entity.setLabel(labelDAO.get(106849790));
+				entity.setLabel(labelDAO.get(-1));
 			}
 			else {
 				entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));

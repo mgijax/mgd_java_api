@@ -30,9 +30,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 	@Inject
 	private SpecimenDAO specimenDAO;
 	@Inject
-	private TermDAO embeddingDAO;
-	@Inject
-	private TermDAO fixationDAO;
+	private TermDAO termDAO;
 	@Inject
 	private GenotypeDAO genotypeDAO;
 	@Inject
@@ -130,18 +128,18 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				
 				// Not Specified = 106849865
 				if (domain.get(i).getEmbeddingKey() == null || domain.get(i).getEmbeddingKey().isEmpty()) {
-					entity.setEmbeddingMethod(embeddingDAO.get(embeddingNS));
+					entity.setEmbeddingMethod(termDAO.get(embeddingNS));
 				}
 				else {
-					entity.setEmbeddingMethod(embeddingDAO.get(Integer.valueOf(domain.get(i).getEmbeddingKey())));
+					entity.setEmbeddingMethod(termDAO.get(Integer.valueOf(domain.get(i).getEmbeddingKey())));
 				}
 
 				// Not Specified = 106849873
 				if (domain.get(i).getFixationKey() == null || domain.get(i).getFixationKey().isEmpty()) {
-					entity.setFixationMethod(fixationDAO.get(fixationNS));
+					entity.setFixationMethod(termDAO.get(fixationNS));
 				}
 				else {
-					entity.setFixationMethod(fixationDAO.get(Integer.valueOf(domain.get(i).getFixationKey())));
+					entity.setFixationMethod(termDAO.get(Integer.valueOf(domain.get(i).getFixationKey())));
 				}
 				
 				if (domain.get(i).getGenotypeKey() == null || domain.get(i).getGenotypeKey().isEmpty()) {
@@ -224,8 +222,8 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				Specimen entity = specimenDAO.get(Integer.valueOf(domain.get(i).getSpecimenKey()));
 			
 				entity.set_assay_key(parentKey);
-				entity.setEmbeddingMethod(embeddingDAO.get(Integer.valueOf(domain.get(i).getEmbeddingKey())));
-				entity.setFixationMethod(fixationDAO.get(Integer.valueOf(domain.get(i).getFixationKey())));
+				entity.setEmbeddingMethod(termDAO.get(Integer.valueOf(domain.get(i).getEmbeddingKey())));
+				entity.setFixationMethod(termDAO.get(Integer.valueOf(domain.get(i).getFixationKey())));
 				entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));
 				entity.setSequenceNum(domain.get(i).getSequenceNum());
 				entity.setSpecimenLabel(domain.get(i).getSpecimenLabel());

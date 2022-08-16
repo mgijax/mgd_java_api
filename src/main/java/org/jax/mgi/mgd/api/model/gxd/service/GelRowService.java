@@ -10,12 +10,12 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.GelRowDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.GelUnitDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelRowDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.GelRow;
 import org.jax.mgi.mgd.api.model.gxd.translator.GelRowTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -28,7 +28,7 @@ public class GelRowService extends BaseService<GelRowDomain> {
 	@Inject
 	private GelRowDAO gelRowDAO;
 	@Inject
-	private TermDAO gelUnitDAO;
+	private GelUnitDAO gelUnitDAO;
 	@Inject
 	private GelBandService gelBandService;
 	

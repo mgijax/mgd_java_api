@@ -27,7 +27,7 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 	
 	@Inject
 	private InSituResultDAO resultDAO;
-	@Inject 
+	@Inject
 	private TermDAO termDAO;
 	@Inject
 	private InSituResultStructureService structureService;

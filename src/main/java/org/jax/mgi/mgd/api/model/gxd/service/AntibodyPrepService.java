@@ -35,9 +35,7 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 	@Inject
 	private AntibodyDAO antibodyDAO;
 	@Inject
-	private TermDAO secondaryDAO;
-	@Inject
-	private TermDAO labelDAO;
+	private TermDAO termDAO;
 	@Inject
 	private TermService termService;
 	
@@ -189,18 +187,18 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 			
 			// Not Specified
 			if (domain.getSecondaryKey() == null || domain.getSecondaryKey().isEmpty()) {
-				entity.setSecondary(secondaryDAO.get(secondaryNS));
+				entity.setSecondary(termDAO.get(secondaryNS));
 			}
 			else {
-				entity.setSecondary(secondaryDAO.get(Integer.valueOf(domain.getSecondaryKey())));
+				entity.setSecondary(termDAO.get(Integer.valueOf(domain.getSecondaryKey())));
 			}
 			
 			// Not Specified
 			if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
-				entity.setLabel(labelDAO.get(labelNS));
+				entity.setLabel(termDAO.get(labelNS));
 			}
 			else {
-				entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
+				entity.setLabel(termDAO.get(Integer.valueOf(domain.getLabelKey())));
 			}			
 			
 			entity.setCreation_date(new Date());
@@ -223,18 +221,18 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 
 			// Not Specified
 			if (domain.getSecondaryKey() == null || domain.getSecondaryKey().isEmpty()) {
-				entity.setSecondary(secondaryDAO.get(secondaryNS));
+				entity.setSecondary(termDAO.get(secondaryNS));
 			}
 			else {
-				entity.setSecondary(secondaryDAO.get(Integer.valueOf(domain.getSecondaryKey())));
+				entity.setSecondary(termDAO.get(Integer.valueOf(domain.getSecondaryKey())));
 			}
 			
 			// Not Specified
 			if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
-				entity.setLabel(labelDAO.get(labelNS));
+				entity.setLabel(termDAO.get(labelNS));
 			}
 			else {
-				entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
+				entity.setLabel(termDAO.get(Integer.valueOf(domain.getLabelKey())));
 			}	
 			
 			entity.setModification_date(new Date());			

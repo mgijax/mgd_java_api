@@ -35,18 +35,13 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 	@Inject
 	private ProbeDAO probeDAO;
 	@Inject
-	private TermDAO labelDAO;
-	@Inject
-	private TermDAO senseDAO;
-	@Inject
-	private TermDAO visualizationDAO;
+	private TermDAO termDAO;
 	@Inject
 	private TermService termService;
 	
 	private ProbePrepTranslator translator = new ProbePrepTranslator();
 	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
 	
 	@Transactional
 	public SearchResults<ProbePrepDomain> create(ProbePrepDomain domain, User user) {
@@ -199,26 +194,26 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 				
 				// Not Specified
 				if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
-					entity.setLabel(labelDAO.get(labelNS));					
+					entity.setLabel(termDAO.get(labelNS));					
 				}
 				else {
-					entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
+					entity.setLabel(termDAO.get(Integer.valueOf(domain.getLabelKey())));
 				}
 				
 				// Not Specified
 				if (domain.getProbeSenseKey() == null || domain.getProbeSenseKey().isEmpty()) {
-					entity.setProbeSense(senseDAO.get(senseNS));
+					entity.setProbeSense(termDAO.get(senseNS));
 				}
 				else {
-					entity.setProbeSense(senseDAO.get(Integer.valueOf(domain.getProbeSenseKey())));
+					entity.setProbeSense(termDAO.get(Integer.valueOf(domain.getProbeSenseKey())));
 				}
 				
 				// Not Specified
 				if (domain.getVisualizationMethodKey() == null || domain.getVisualizationMethodKey().isEmpty()) {
-					entity.setVisualizationMethod(visualizationDAO.get(visualizationNS));
+					entity.setVisualizationMethod(termDAO.get(visualizationNS));
 				}
 				else {
-					entity.setVisualizationMethod(visualizationDAO.get(Integer.valueOf(domain.getVisualizationMethodKey())));
+					entity.setVisualizationMethod(termDAO.get(Integer.valueOf(domain.getVisualizationMethodKey())));
 				}
 				
 				entity.setCreation_date(new Date());
@@ -248,26 +243,26 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 			}
 			// Not Specified
 			if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
-				entity.setLabel(labelDAO.get(labelNS));					
+				entity.setLabel(termDAO.get(labelNS));
 			}
 			else {
-				entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
+				entity.setLabel(termDAO.get(Integer.valueOf(domain.getLabelKey())));
 			}
 			
 			// Not Specified
 			if (domain.getProbeSenseKey() == null || domain.getProbeSenseKey().isEmpty()) {
-				entity.setProbeSense(senseDAO.get(senseNS));
+				entity.setProbeSense(termDAO.get(senseNS));
 			}
 			else {
-				entity.setProbeSense(senseDAO.get(Integer.valueOf(domain.getProbeSenseKey())));
+				entity.setProbeSense(termDAO.get(Integer.valueOf(domain.getProbeSenseKey())));
 			}
 			
 			// Not Specified
 			if (domain.getVisualizationMethodKey() == null || domain.getVisualizationMethodKey().isEmpty()) {
-				entity.setVisualizationMethod(visualizationDAO.get(visualizationNS));
+				entity.setVisualizationMethod(termDAO.get(visualizationNS));
 			}
 			else {
-				entity.setVisualizationMethod(visualizationDAO.get(Integer.valueOf(domain.getVisualizationMethodKey())));
+				entity.setVisualizationMethod(termDAO.get(Integer.valueOf(domain.getVisualizationMethodKey())));
 			}
 
 			entity.setModification_date(new Date());			

@@ -33,9 +33,7 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 	@Inject
 	private GenotypeDAO genotypeDAO;
 	@Inject
-	private TermDAO gelRNATypeDAO;
-	@Inject
-	private TermDAO gelControlDAO;
+	private TermDAO termDAO;
 	@Inject
 	private GelLaneStructureService structureService;
 	@Inject
@@ -150,7 +148,7 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				else {
 					gelControlKey = domain.get(i).getGelControlKey();
 				}
-				entity.setGelControl(gelControlDAO.get(Integer.valueOf(gelControlKey)));
+				entity.setGelControl(termDAO.get(Integer.valueOf(gelControlKey)));
 				
 				// control = No
 				if (gelControlKey.equals(gelControlNo)) {
@@ -175,19 +173,19 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 
 					// western blot
 					if (assayTypeKey == 8) {
-						entity.setGelRNAType(gelRNATypeDAO.get(gelRNATypeNA));
+						entity.setGelRNAType(termDAO.get(gelRNATypeNA));
 					}
 					else if (domain.get(i).getGelRNATypeKey() != null && !domain.get(i).getGelRNATypeKey().isEmpty()) { 
-						entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
+						entity.setGelRNAType(termDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
 					}
 					else {
-						entity.setGelRNAType(gelRNATypeDAO.get(gelRNATypeNS));						
+						entity.setGelRNAType(termDAO.get(gelRNATypeNS));						
 					}					
 				}
 				// else from domain
 				else {
 					entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));
-					entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
+					entity.setGelRNAType(termDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
 					entity.setSex(domain.get(i).getSex());						
 				}
 
@@ -256,7 +254,7 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				}
 
 				entity.setSequenceNum(domain.get(i).getSequenceNum());
-				entity.setGelControl(gelControlDAO.get(Integer.valueOf(domain.get(i).getGelControlKey())));	
+				entity.setGelControl(termDAO.get(Integer.valueOf(domain.get(i).getGelControlKey())));	
 				entity.setSampleAmount(domain.get(i).getSampleAmount());					
 
 				// control = No
@@ -282,19 +280,19 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 
 					// western blot
 					if (assayTypeKey == 8) {
-						entity.setGelRNAType(gelRNATypeDAO.get(gelRNATypeNA));
+						entity.setGelRNAType(termDAO.get(gelRNATypeNA));
 					}
 					else if (domain.get(i).getGelRNATypeKey() != null && !domain.get(i).getGelRNATypeKey().isEmpty()) { 
-						entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
+						entity.setGelRNAType(termDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
 					}
 					else {
-						entity.setGelRNAType(gelRNATypeDAO.get(gelRNATypeNS));						
+						entity.setGelRNAType(termDAO.get(gelRNATypeNS));						
 					}
 				}
 				// else from domain
 				else {
 					entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));
-					entity.setGelRNAType(gelRNATypeDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
+					entity.setGelRNAType(termDAO.get(Integer.valueOf(domain.get(i).getGelRNATypeKey())));
 					entity.setSex(domain.get(i).getSex());						
 				}
 				

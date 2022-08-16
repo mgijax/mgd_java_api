@@ -38,7 +38,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 	@Inject
 	private AntibodyDAO antibodyDAO;
 	@Inject 
-	private TermDAO classDAO;
+	private TermDAO termDAO;
 	@Inject
 	private AntibodyTypeDAO typeDAO;
 	@Inject
@@ -102,13 +102,12 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 	    entity.setAntibodyType(typeDAO.get(Integer.valueOf(domain.getAntibodyTypeKey())));
 		
 		log.info("antibody class");
-		// has default if not set//
+		// has default if not set
 		if(domain.getAntibodyClassKey() ==  null || domain.getAntibodyClassKey().isEmpty()){
 			// 'Not Specified'
-			domain.setAntibodyClassKey(antibodyClassNS);
-			
+			domain.setAntibodyClassKey(antibodyClassNS);			
 		}
-		entity.setAntibodyClass(classDAO.get(Integer.valueOf(domain.getAntibodyClassKey())));
+		entity.setAntibodyClass(termDAO.get(Integer.valueOf(domain.getAntibodyClassKey())));
 		
 	    // has default if not set
 	    log.info("antibody organism");
@@ -206,10 +205,9 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		// has default if not set
 		if(domain.getAntibodyClassKey() ==  null || domain.getAntibodyClassKey().isEmpty()){
 			// 'Not Specified'
-			domain.setAntibodyClassKey(antibodyClassNS);
-			
+			domain.setAntibodyClassKey(antibodyClassNS);		
 		}
-		entity.setAntibodyClass(classDAO.get(Integer.valueOf(domain.getAntibodyClassKey())));
+		entity.setAntibodyClass(termDAO.get(Integer.valueOf(domain.getAntibodyClassKey())));
 		
 		log.info("antibody type");
 		// has default if not set

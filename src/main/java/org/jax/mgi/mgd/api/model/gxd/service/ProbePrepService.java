@@ -17,6 +17,8 @@ import org.jax.mgi.mgd.api.model.gxd.translator.ProbePrepTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
+import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -38,6 +40,8 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 	private TermDAO senseDAO;
 	@Inject
 	private TermDAO visualizationDAO;
+	@Inject
+	private TermService termService;
 	
 	private ProbePrepTranslator translator = new ProbePrepTranslator();
 	
@@ -160,7 +164,24 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 			log.info("processProbePrep/nothing to process");
 			return(0);
 		}
-				
+		
+		TermDomain termDomain = new TermDomain();
+		
+		// vocabulary keys/probe sense		
+		termDomain.setVocabKey("159");
+		termDomain.setTerm("Not Specified");
+		int senseNS = termService.searchByTerm(termDomain);
+		
+		// vocabulary keys/secondary		
+		termDomain.setVocabKey("152");
+		termDomain.setTerm("Not Specified");
+		int labelNS = termService.searchByTerm(termDomain);
+		
+		// vocabulary keys/visualization		
+		termDomain.setVocabKey("157");
+		termDomain.setTerm("Not Specified");
+		int visualizationNS = termService.searchByTerm(termDomain);
+		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
 		
@@ -176,25 +197,25 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 					entity.setType(domain.getPrepType());			
 				}
 				
-				// Not Specified = 106849790
+				// Not Specified
 				if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
-					entity.setLabel(labelDAO.get(106849790));					
+					entity.setLabel(labelDAO.get(labelNS));					
 				}
 				else {
 					entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
 				}
 				
-				// Not Specified = 106849908
+				// Not Specified
 				if (domain.getProbeSenseKey() == null || domain.getProbeSenseKey().isEmpty()) {
-					entity.setProbeSense(senseDAO.get(106849908));
+					entity.setProbeSense(senseDAO.get(senseNS));
 				}
 				else {
 					entity.setProbeSense(senseDAO.get(Integer.valueOf(domain.getProbeSenseKey())));
 				}
 				
-				// Not Specified = 106849892
+				// Not Specified
 				if (domain.getVisualizationMethodKey() == null || domain.getVisualizationMethodKey().isEmpty()) {
-					entity.setVisualizationMethod(visualizationDAO.get(106849892));
+					entity.setVisualizationMethod(visualizationDAO.get(visualizationNS));
 				}
 				else {
 					entity.setVisualizationMethod(visualizationDAO.get(Integer.valueOf(domain.getVisualizationMethodKey())));
@@ -225,25 +246,25 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 			else {
 				entity.setType(domain.getPrepType());			
 			}
-			// Not Specified = 106849790
+			// Not Specified
 			if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
-				entity.setLabel(labelDAO.get(106849790));					
+				entity.setLabel(labelDAO.get(labelNS));					
 			}
 			else {
 				entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
 			}
 			
-			// Not Specified = 106849908
+			// Not Specified
 			if (domain.getProbeSenseKey() == null || domain.getProbeSenseKey().isEmpty()) {
-				entity.setProbeSense(senseDAO.get(106849908));
+				entity.setProbeSense(senseDAO.get(senseNS));
 			}
 			else {
 				entity.setProbeSense(senseDAO.get(Integer.valueOf(domain.getProbeSenseKey())));
 			}
 			
-			// Not Specified = 106849892
+			// Not Specified
 			if (domain.getVisualizationMethodKey() == null || domain.getVisualizationMethodKey().isEmpty()) {
-				entity.setVisualizationMethod(visualizationDAO.get(106849892));
+				entity.setVisualizationMethod(visualizationDAO.get(visualizationNS));
 			}
 			else {
 				entity.setVisualizationMethod(visualizationDAO.get(Integer.valueOf(domain.getVisualizationMethodKey())));

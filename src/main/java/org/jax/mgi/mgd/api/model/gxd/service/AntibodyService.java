@@ -23,6 +23,8 @@ import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
+import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -43,14 +45,16 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 	private OrganismDAO organismDAO;
 	@Inject
 	private AntigenDAO antigenDAO;
-	
 	@Inject
 	private MGIReferenceAssocService referenceAssocService;
 	@Inject
 	private AntibodyAliasService aliasService;
 	@Inject
 	private AntibodyMarkerService antibodyMarkerService;
-	@Inject AntibodyPrepService antibodyPrepService;
+	@Inject 
+	private AntibodyPrepService antibodyPrepService;
+	@Inject
+	private TermService termService;
 	
 	private AntibodyTranslator translator = new AntibodyTranslator();
 	private SlimAntibodyTranslator slimtranslator = new SlimAntibodyTranslator();
@@ -68,8 +72,14 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		SearchResults<AntibodyDomain> results = new SearchResults<AntibodyDomain>();
 		Antibody entity = new Antibody();
 		
-		log.info("Antibody/create");
+		TermDomain termDomain = new TermDomain();
 		
+		// vocabulary keys/embedding		
+		termDomain.setVocabKey("151");
+		termDomain.setTerm("Not Specified");
+		String antibodyClassNS = String.valueOf(termService.searchByTerm(termDomain));
+		
+		log.info("Antibody/create");
 		
 		// may not be null
 		entity.setAntibodyName(domain.getAntibodyName());
@@ -94,12 +104,11 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		log.info("antibody class");
 		// has default if not set//
 		if(domain.getAntibodyClassKey() ==  null || domain.getAntibodyClassKey().isEmpty()){
-			// 'Not Specified' = 106849777
-			domain.setAntibodyClassKey("106849777");
+			// 'Not Specified'
+			domain.setAntibodyClassKey(antibodyClassNS);
 			
 		}
 		entity.setAntibodyClass(classDAO.get(Integer.valueOf(domain.getAntibodyClassKey())));
-		
 		
 	    // has default if not set
 	    log.info("antibody organism");
@@ -113,7 +122,6 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		if (domain.getAntigen().getAntigenKey() != null && !domain.getAntigen().getAntigenKey().isEmpty()) {
 			entity.setAntigen(antigenDAO.get(Integer.valueOf(domain.getAntigen().getAntigenKey())));
 		}
-		
 		
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
@@ -168,6 +176,13 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		//		String mgiTypeKey = "6";
 		//		String mgiTypeName = "Antibody";
 		
+		TermDomain termDomain = new TermDomain();
+		
+		// vocabulary keys/embedding		
+		termDomain.setVocabKey("151");
+		termDomain.setTerm("Not Specified");
+		String antibodyClassNS = String.valueOf(termService.searchByTerm(termDomain));
+		
 		log.info("Antibody/update");
 		
 		//
@@ -190,8 +205,8 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		log.info("antibody class: " + domain.getAntibodyClassKey());
 		// has default if not set
 		if(domain.getAntibodyClassKey() ==  null || domain.getAntibodyClassKey().isEmpty()){
-			// 'Not Specified' = 106849777
-			domain.setAntibodyClassKey("106849777");
+			// 'Not Specified'
+			domain.setAntibodyClassKey(antibodyClassNS);
 			
 		}
 		entity.setAntibodyClass(classDAO.get(Integer.valueOf(domain.getAntibodyClassKey())));

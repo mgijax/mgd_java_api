@@ -17,6 +17,8 @@ import org.jax.mgi.mgd.api.model.gxd.entities.AntibodyPrep;
 import org.jax.mgi.mgd.api.model.gxd.translator.AntibodyPrepTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
+import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -36,6 +38,8 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 	private TermDAO secondaryDAO;
 	@Inject
 	private TermDAO labelDAO;
+	@Inject
+	private TermService termService;
 	
 	private AntibodyPrepTranslator translator = new AntibodyPrepTranslator();
 	
@@ -162,7 +166,19 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 			log.info("processAntibodyPrep/nothing to process");
 			return(0);
 		}
-				
+		
+		TermDomain termDomain = new TermDomain();
+		
+		// vocabulary keys/secondary		
+		termDomain.setVocabKey("160");
+		termDomain.setTerm("Not Specified");
+		int secondaryNS = termService.searchByTerm(termDomain);
+		
+		// vocabulary keys/secondary		
+		termDomain.setVocabKey("152");
+		termDomain.setTerm("Not Specified");
+		int labelNS = termService.searchByTerm(termDomain);
+		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
 						
@@ -171,17 +187,17 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 			AntibodyPrep entity = new AntibodyPrep();
 			entity.setAntibody(antibodyDAO.get(Integer.valueOf(domain.getAntibodyKey())));
 			
-			// Not Specified = 106849912
+			// Not Specified
 			if (domain.getSecondaryKey() == null || domain.getSecondaryKey().isEmpty()) {
-				entity.setSecondary(secondaryDAO.get(106849912));
+				entity.setSecondary(secondaryDAO.get(secondaryNS));
 			}
 			else {
 				entity.setSecondary(secondaryDAO.get(Integer.valueOf(domain.getSecondaryKey())));
 			}
 			
-			// Not Specified = 106849790
+			// Not Specified
 			if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
-				entity.setLabel(labelDAO.get(106849790));
+				entity.setLabel(labelDAO.get(labelNS));
 			}
 			else {
 				entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
@@ -205,17 +221,17 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 			AntibodyPrep entity = antibodyPrepDAO.get(Integer.valueOf(domain.getAntibodyPrepKey()));		
 			entity.setAntibody(antibodyDAO.get(Integer.valueOf(domain.getAntibodyKey())));
 
-			// Not Specified = 106849912
+			// Not Specified
 			if (domain.getSecondaryKey() == null || domain.getSecondaryKey().isEmpty()) {
-				entity.setSecondary(secondaryDAO.get(106849912));
+				entity.setSecondary(secondaryDAO.get(secondaryNS));
 			}
 			else {
 				entity.setSecondary(secondaryDAO.get(Integer.valueOf(domain.getSecondaryKey())));
 			}
 			
-			// Not Specified = 106849790
+			// Not Specified
 			if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
-				entity.setLabel(labelDAO.get(106849790));
+				entity.setLabel(labelDAO.get(labelNS));
 			}
 			else {
 				entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));

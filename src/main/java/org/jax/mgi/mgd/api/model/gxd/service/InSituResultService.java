@@ -14,6 +14,8 @@ import org.jax.mgi.mgd.api.model.gxd.entities.InSituResult;
 import org.jax.mgi.mgd.api.model.gxd.translator.InSituResultTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
+import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -33,6 +35,8 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 	private InSituResultCellTypeService celltypeService;	
 	@Inject 
 	private InSituResultImageService imagePaneService;
+	@Inject
+	private TermService termService;
 	
 	private InSituResultTranslator translator = new InSituResultTranslator();				
 
@@ -86,7 +90,14 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 			log.info("processInSituResults/nothing to process");
 			return modified;
 		}
-						
+		
+		TermDomain termDomain = new TermDomain();
+
+		// vocabulary keys/pattern
+		termDomain.setVocabKey("153");
+		termDomain.setTerm("Not Specified");
+		int patternNS = termService.searchByTerm(termDomain);
+		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
 		
@@ -107,9 +118,9 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 				entity.set_specimen_key(parentKey);
 				entity.setStrength(termDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
 				
-				// if EMAPA and Pattern = null, then Pattern = Not Specified (106849834)
+				// if EMAPA and Pattern = null, then Pattern = Not Specified
 				if (domain.get(i).getStructures() != null && domain.get(i).getStructures().size() > 0 && (domain.get(i).getPatternKey() == null || domain.get(i).getPatternKey().isEmpty())) {
-					entity.setPattern(termDAO.get(106849834));
+					entity.setPattern(termDAO.get(patternNS));
 				}
 				else {
 					entity.setPattern(termDAO.get(Integer.valueOf(domain.get(i).getPatternKey())));
@@ -161,7 +172,7 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 
 				// if EMAPA and Pattern = null, then Pattern = Not Specified
 				if (domain.get(i).getStructures() != null && domain.get(i).getStructures().size() > 0 && (domain.get(i).getPatternKey() == null || domain.get(i).getPatternKey().isEmpty())) {
-					entity.setPattern(termDAO.get(106849834));
+					entity.setPattern(termDAO.get(patternNS));
 				}
 				else {
 					entity.setPattern(termDAO.get(Integer.valueOf(domain.get(i).getPatternKey())));

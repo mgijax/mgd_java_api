@@ -16,6 +16,8 @@ import org.jax.mgi.mgd.api.model.gxd.entities.Specimen;
 import org.jax.mgi.mgd.api.model.gxd.translator.SpecimenTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
+import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -35,6 +37,8 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 	private GenotypeDAO genotypeDAO;
 	@Inject
 	private InSituResultService insituresultService;
+	@Inject
+	private TermService termService;
 	
 	private SpecimenTranslator translator = new SpecimenTranslator();				
 
@@ -88,7 +92,19 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 			log.info("processSpecimen/nothing to process");
 			return modified;
 		}
-						
+			
+		TermDomain termDomain = new TermDomain();
+		
+		// vocabulary keys/embedding		
+		termDomain.setVocabKey("155");
+		termDomain.setTerm("Not Specified");
+		int embeddingNS = termService.searchByTerm(termDomain);
+		
+		// vocabulary keys/fixation		
+		termDomain.setVocabKey("156");
+		termDomain.setTerm("Not Specified");
+		int fixationNS = termService.searchByTerm(termDomain);
+		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
 		
@@ -114,7 +130,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				
 				// Not Specified = 106849865
 				if (domain.get(i).getEmbeddingKey() == null || domain.get(i).getEmbeddingKey().isEmpty()) {
-					entity.setEmbeddingMethod(embeddingDAO.get(106849865));
+					entity.setEmbeddingMethod(embeddingDAO.get(embeddingNS));
 				}
 				else {
 					entity.setEmbeddingMethod(embeddingDAO.get(Integer.valueOf(domain.get(i).getEmbeddingKey())));
@@ -122,7 +138,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 
 				// Not Specified = 106849873
 				if (domain.get(i).getFixationKey() == null || domain.get(i).getFixationKey().isEmpty()) {
-					entity.setFixationMethod(fixationDAO.get(106849873));
+					entity.setFixationMethod(fixationDAO.get(fixationNS));
 				}
 				else {
 					entity.setFixationMethod(fixationDAO.get(Integer.valueOf(domain.get(i).getFixationKey())));

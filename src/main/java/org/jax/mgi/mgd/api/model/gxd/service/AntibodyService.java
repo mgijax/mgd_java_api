@@ -74,8 +74,8 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		
 		TermDomain termDomain = new TermDomain();
 		
-		// vocabulary keys/embedding		
-		termDomain.setVocabKey("151");
+		// vocabulary keys		
+		termDomain.setVocabKey("151");	// antibody class
 		termDomain.setTerm("Not Specified");
 		String antibodyClassNS = String.valueOf(termService.searchByTerm(termDomain));
 		
@@ -177,8 +177,8 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		
 		TermDomain termDomain = new TermDomain();
 		
-		// vocabulary keys/embedding		
-		termDomain.setVocabKey("151");
+		// vocabulary keys		
+		termDomain.setVocabKey("151");	// antibody class
 		termDomain.setTerm("Not Specified");
 		String antibodyClassNS = String.valueOf(termService.searchByTerm(termDomain));
 		

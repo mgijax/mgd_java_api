@@ -109,13 +109,13 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 		
 		TermDomain termDomain = new TermDomain();
 
-		// vocabulary keys/gel control
-		termDomain.setVocabKey("154");
+		// vocabulary keys
+		termDomain.setVocabKey("154");	// gel control
 		termDomain.setTerm("No");
 		String gelControlNo = String.valueOf(termService.searchByTerm(termDomain));
 		
-		// vocabulary keys/gel rna type
-		termDomain.setVocabKey("172");
+		// vocabulary keys
+		termDomain.setVocabKey("172");	// gel rna type
 		termDomain.setTerm("Not Applicable");
 		int gelRNATypeNA = termService.searchByTerm(termDomain);
 		termDomain.setTerm("Not Specified");

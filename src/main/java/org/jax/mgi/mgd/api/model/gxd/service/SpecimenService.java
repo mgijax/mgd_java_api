@@ -93,13 +93,13 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 			
 		TermDomain termDomain = new TermDomain();
 		
-		// vocabulary keys/embedding		
-		termDomain.setVocabKey("155");
+		// vocabulary keys		
+		termDomain.setVocabKey("155");	// embedding
 		termDomain.setTerm("Not Specified");
 		int embeddingNS = termService.searchByTerm(termDomain);
 		
-		// vocabulary keys/fixation		
-		termDomain.setVocabKey("156");
+		// vocabulary keys		
+		termDomain.setVocabKey("156");	// fixation
 		termDomain.setTerm("Not Specified");
 		int fixationNS = termService.searchByTerm(termDomain);
 		

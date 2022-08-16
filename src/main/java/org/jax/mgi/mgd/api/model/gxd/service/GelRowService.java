@@ -16,6 +16,7 @@ import org.jax.mgi.mgd.api.model.gxd.domain.GelRowDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.GelRow;
 import org.jax.mgi.mgd.api.model.gxd.translator.GelRowTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -28,7 +29,7 @@ public class GelRowService extends BaseService<GelRowDomain> {
 	@Inject
 	private GelRowDAO gelRowDAO;
 	@Inject
-	private GelUnitDAO gelUnitDAO;
+	private TermDAO termDAO;
 	@Inject
 	private GelBandService gelBandService;
 	
@@ -105,7 +106,7 @@ public class GelRowService extends BaseService<GelRowDomain> {
 				GelRow entity = new GelRow();
 
 				entity.set_assay_key(parentKey);
-				entity.setGelUnits(gelUnitDAO.get(Integer.valueOf(rowDomain.get(i).getGelUnitsKey())));
+				entity.setGelUnits(termDAO.get(Integer.valueOf(rowDomain.get(i).getGelUnitsKey())));
 				entity.setSequenceNum(rowDomain.get(i).getSequenceNum());
 				
 				if (rowDomain.get(i).getSize() != null) {	
@@ -152,7 +153,7 @@ public class GelRowService extends BaseService<GelRowDomain> {
 				GelRow entity = gelRowDAO.get(Integer.valueOf(rowDomain.get(i).getGelRowKey()));
 			
 				entity.set_assay_key(parentKey);
-				entity.setGelUnits(gelUnitDAO.get(Integer.valueOf(rowDomain.get(i).getGelUnitsKey())));
+				entity.setGelUnits(termDAO.get(Integer.valueOf(rowDomain.get(i).getGelUnitsKey())));
 				entity.setSequenceNum(rowDomain.get(i).getSequenceNum());
 
 				if (rowDomain.get(i).getSize() != null) {	

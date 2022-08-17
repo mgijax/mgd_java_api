@@ -797,8 +797,8 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 
 		List<GenotypeDomain> results = new ArrayList<GenotypeDomain>();
 		
-		String cmd = "select g_genotype_key, " +
-				"\ncase when exists (select 1 from gxd_expression e where g._genotype_key = e._genotype_key) then 1 else 0 end as hasExpression\r\n" + 
+		String cmd = "select g._genotype_key, " +
+				"\ncase when exists (select 1 from gxd_expression e where g._genotype_key = e._genotype_key) then 1 else 0 end as hasExpression" + 
 				"\nfrom gxd_allelegenotype g where g._allele_key = " + key + " order by g.sequencenum";
 		
 		log.info(cmd);	

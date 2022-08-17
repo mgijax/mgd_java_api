@@ -49,8 +49,8 @@ public class Antibody extends BaseEntity {
 	private Term antibodyClass;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_antibodytype_key")
-	private AntibodyType antibodyType;
+	@JoinColumn(name="_antibodytype_key", referencedColumnName="_term_key")
+	private Term antibodyType;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_organism_key")

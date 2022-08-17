@@ -11,7 +11,6 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyDAO;
-import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyTypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntigenDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyPrepDomain;
@@ -39,8 +38,6 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 	private AntibodyDAO antibodyDAO;
 	@Inject 
 	private TermDAO termDAO;
-	@Inject
-	private AntibodyTypeDAO typeDAO;
 	@Inject
 	private OrganismDAO organismDAO;
 	@Inject
@@ -99,7 +96,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 			// 'Not Specified'
 			domain.setAntibodyTypeKey("-1");
 		}
-	    entity.setAntibodyType(typeDAO.get(Integer.valueOf(domain.getAntibodyTypeKey())));
+	    entity.setAntibodyType(termDAO.get(Integer.valueOf(domain.getAntibodyTypeKey())));
 		
 		log.info("antibody class");
 		// has default if not set
@@ -208,7 +205,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 			// 'Not Specified'
 			domain.setAntibodyTypeKey("-1");
 		}
-	    entity.setAntibodyType(typeDAO.get(Integer.valueOf(domain.getAntibodyTypeKey()))); 
+	    entity.setAntibodyType(termDAO.get(Integer.valueOf(domain.getAntibodyTypeKey()))); 
 		
 	    // has default if not set
 	    log.info("antibody organism");

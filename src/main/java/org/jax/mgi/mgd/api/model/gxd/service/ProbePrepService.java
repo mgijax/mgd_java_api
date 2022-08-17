@@ -218,6 +218,7 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 				
 				entity.setCreation_date(new Date());
 				entity.setModification_date(new Date());
+				
 				// execute persist/insert/send to database
 				probePrepDAO.persist(entity);
 				log.info("processProbePrep create processed: " + entity.get_probeprep_key());													
@@ -241,6 +242,7 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 			else {
 				entity.setType(domain.getPrepType());			
 			}
+			
 			// Not Specified
 			if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
 				entity.setLabel(termDAO.get(labelNS));

@@ -72,14 +72,14 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		SearchResults<AntibodyDomain> results = new SearchResults<AntibodyDomain>();
 		Antibody entity = new Antibody();
 		
+		log.info("Antibody/create");
+
 		TermDomain termDomain = new TermDomain();
 		
 		// vocabulary keys		
 		termDomain.setVocabKey("151");	// antibody class
 		termDomain.setTerm("Not Specified");
 		String antibodyClassNS = String.valueOf(termService.searchByTerm(termDomain));
-		
-		log.info("Antibody/create");
 		
 		// may not be null
 		entity.setAntibodyName(domain.getAntibodyName());
@@ -172,23 +172,16 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 
 		SearchResults<AntibodyDomain> results = new SearchResults<AntibodyDomain>();
 		Antibody entity = antibodyDAO.get(Integer.valueOf(domain.getAntibodyKey()));
-		//		String mgiTypeKey = "6";
-		//		String mgiTypeName = "Antibody";
 		
+		log.info("Antibody/update");
+
 		TermDomain termDomain = new TermDomain();
 		
-		// vocabulary keys		
+		// vocabulary keys
 		termDomain.setVocabKey("151");	// antibody class
 		termDomain.setTerm("Not Specified");
 		String antibodyClassNS = String.valueOf(termService.searchByTerm(termDomain));
-		
-		log.info("Antibody/update");
-		
-		//
-		// IN PROGRESS
-		//
-		log.info("update antibody name: " + domain.getAntibodyName());
-		
+				
 		entity.setAntibodyName(domain.getAntibodyName());
 		
 		log.info("antibody note: " + domain.getAntibodyNote());
@@ -215,8 +208,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 			// 'Not Specified'
 			domain.setAntibodyTypeKey("-1");
 		}
-	    entity.setAntibodyType(typeDAO.get(Integer.valueOf(domain.getAntibodyTypeKey())));
-	    
+	    entity.setAntibodyType(typeDAO.get(Integer.valueOf(domain.getAntibodyTypeKey()))); 
 		
 	    // has default if not set
 	    log.info("antibody organism");
@@ -230,8 +222,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		if (domain.getAntigen().getAntigenKey() != null && !domain.getAntigen().getAntigenKey().isEmpty()) {
 			entity.setAntigen(antigenDAO.get(Integer.valueOf(domain.getAntigen().getAntigenKey())));
 		}
-		
-		
+			
 		// process antibody aliases, can be null
 		if (domain.getAliases() != null && !domain.getAliases().isEmpty()) {
 			log.info("Antibody/update aliases");
@@ -248,6 +239,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 			log.info("antibodyMarkerDomain markerKey: " + domain.getMarkers().get(0).getMarkerKey());
 			antibodyMarkerService.process(String.valueOf(entity.get_antibody_key()), domain.getMarkers(), user);
 		}
+		
 		// process antibody references, can be null
 		if (domain.getRefAssocs() != null && ! domain.getRefAssocs().isEmpty()) {
 			log.info("Antibody/update references");
@@ -277,14 +269,10 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		AntibodyPrepDomain inPrepDomain = new AntibodyPrepDomain();
 		inPrepDomain.setAntibodyKey(String.valueOf(key));
 		
-		
-		//SearchResults<AntibodyPrepDomain> outDomain = new SearchResults<AntibodyPrepDomain> ();
-		
 		List<AntibodyPrepDomain> prepDomainList =  antibodyPrepService.search(inPrepDomain);
 		for (int i = 0; i < prepDomainList.size(); i++) {
 			String prepKey = prepDomainList.get(i).getAntibodyPrepKey();
 			log.info(" deleting antibody prep key: " + prepKey);
-			//outDomain = antibodyPrepService.delete(Integer.valueOf(prepKey), user);
 			antibodyPrepService.delete(Integer.valueOf(prepKey), user);
 			log.info("done deleting antibody prep key: " + prepKey);
 		}
@@ -292,7 +280,6 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		// now delete the antibody.
 		SearchResults<AntibodyDomain> results = new SearchResults<AntibodyDomain>();
 		Antibody entity = antibodyDAO.get(key);
-		
 		
 		results.setItem(translator.translate(antibodyDAO.get(key)));
 		antibodyDAO.remove(entity);
@@ -595,7 +582,6 @@ and a._antibody_key = aa._antibody_key
 			where = where + "\nand a._antigen_key = av._antigen_key";
 			where = where + "\nand av._source_key = sv._source_key";
 		}
-		
 		if (from_marker == true) {
 			from = from + ", gxd_antibodymarker_view mv";
 			where = where + "\nand a._antibody_key = mv._antibody_key";

@@ -28,6 +28,7 @@ public class GenotypeDomain extends BaseDomain {
 	private String accID;
 	private String resourceIdentifierID;
 	private Boolean editAllelePairOrder;
+	private Boolean hasExpression;
 	
 	private NoteDomain alleleDetailNote;	
 	private NoteDomain generalNote;

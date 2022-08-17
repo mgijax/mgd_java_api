@@ -109,12 +109,12 @@ public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, Gen
 		domain.setMpAnnots(newMpList);
 		domain.getMpAnnots().sort(Comparator.comparing(AnnotationDomain::getTerm, String.CASE_INSENSITIVE_ORDER));
 		
-		if (entity.getExistsAs() != null && !entity.getExpressionCache().isEmpty()) {
-			domain.setHasExpression(true);
-		}
-		else {
-			domain.setHasExpression(false);
-		}
+//		if (entity.getExistsAs() != null && !entity.getExpressionCache().isEmpty()) {
+//			domain.setHasExpression(true);
+//		}
+//		else {
+//			domain.setHasExpression(false);
+//		}
 		
 		return domain;
 	}

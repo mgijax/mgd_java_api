@@ -132,8 +132,8 @@ public class Genotype extends BaseEntity {
     private List<Annotation> doAnnots;
 	
 	// expression cache
-	@OneToMany()
-    @JoinColumn(name="_genotype_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
-    private List<ExpressionCache> expressionCache;	
+//	@OneToMany()
+//    @JoinColumn(name="_genotype_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
+//    private List<ExpressionCache> expressionCache;	
 	
 }

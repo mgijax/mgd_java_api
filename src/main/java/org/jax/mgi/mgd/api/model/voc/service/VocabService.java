@@ -360,7 +360,8 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		}		
 		else if (vocabKey.equals("154")
 				 || vocabKey.equals("155")
-				 || vocabKey.equals("156")				 
+				 || vocabKey.equals("156")	
+				 || vocabKey.equals("162")				 			 
 				 || vocabKey.equals("172")) {
 			cmd = "select v._term_key as termKey, v.abbreviation as term, 1 as orderBy from voc_term v where v._vocab_key = " + vocabKey +
 					"\nand v.term = 'Not Specified'" + 

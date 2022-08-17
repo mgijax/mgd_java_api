@@ -110,7 +110,7 @@ public class GelLaneTranslator extends BaseEntityDomainTranslator<GelLane, GelLa
 			gelBand.setBandNote("");
 			
 			// if gel control != No, default = Not Applicable
-			if (!domain.getGelControlKey().equals("1")) {
+			if (!domain.getGelControl().equals("No")) {
 				gelBand.setStrengthKey("107080651");
 				gelBand.setStrength("Not Applicable");				
 			}

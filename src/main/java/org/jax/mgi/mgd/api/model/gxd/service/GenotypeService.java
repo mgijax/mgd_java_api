@@ -797,14 +797,18 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 
 		List<GenotypeDomain> results = new ArrayList<GenotypeDomain>();
 		
-		String cmd = "select _genotype_key from gxd_allelegenotype where _allele_key = " + key + " order by sequencenum";
+		String cmd = "select g_genotype_key, " +
+				"\ncase when exists (select 1 from gxd_expression e where g._genotype_key = e._genotype_key) then 1 else 0 end as hasExpression\r\n" + 
+				"\nfrom gxd_allelegenotype g where g._allele_key = " + key + " order by g.sequencenum";
+		
 		log.info(cmd);	
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				GenotypeDomain domain = new GenotypeDomain();
-				domain = translator.translate(genotypeDAO.get(rs.getInt("_genotype_key")));				
+				domain = translator.translate(genotypeDAO.get(rs.getInt("_genotype_key")));
+				domain.setHasExpression(rs.getInt("hasExpression"));
 				genotypeDAO.clear();
 				results.add(domain);
 				genotypeDAO.clear();

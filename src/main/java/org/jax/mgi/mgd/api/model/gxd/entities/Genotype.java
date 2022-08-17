@@ -131,9 +131,4 @@ public class Genotype extends BaseEntity {
     @Where(clause="`_annottype_key` = 1020")
     private List<Annotation> doAnnots;
 	
-	// expression cache
-//	@OneToMany()
-//    @JoinColumn(name="_genotype_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
-//    private List<ExpressionCache> expressionCache;	
-	
 }

@@ -361,7 +361,6 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		else if (vocabKey.equals("154")
 				 || vocabKey.equals("155")
 				 || vocabKey.equals("156")	
-				 || vocabKey.equals("162")				 			 
 				 || vocabKey.equals("172")) {
 			cmd = "select v._term_key as termKey, v.abbreviation as term, 1 as orderBy from voc_term v where v._vocab_key = " + vocabKey +
 					"\nand v.term = 'Not Specified'" + 
@@ -369,7 +368,15 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				"\nselect v._term_key as termKey, v.abbreviation as term, 2 as orderBy from voc_term v where v._vocab_key = " + vocabKey +
 					"\nand v.term != 'Not Specified'" + 
 				"\norder by orderBy, term\n";
-		}			
+		}	
+		else if (vocabKey.equals("162")) {
+			cmd = "select v._term_key as termKey, v.term as term, v.abbreviation, 1 as orderBy from voc_term v where v._vocab_key = " + vocabKey +
+					"\nand v.term = 'Not Specified'" + 
+				"\nunion" + 
+				"\nselect v._term_key as termKey, v.term as term, v.abbreviation, 2 as orderBy from voc_term v where v._vocab_key = " + vocabKey +
+					"\nand v.term != 'Not Specified'" + 
+				"\norder by orderBy, term\n";
+		}		
 		else {
 			cmd = "select _term_key as termKey, term as term, 1 as orderBy from voc_term where _vocab_key = " + vocabKey +
 					"\nand term = 'Not Specified'" +
@@ -393,6 +400,11 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				termDomain.set_term_key(rs.getInt("termKey"));
 				termDomain.setTerm(rs.getString("term"));
 				termDomain.setVocabKey(rs.getString("termKey"));
+				
+				if (vocabKey.equals("162")) {
+					termDomain.setAbbreviation(rs.getString("abbreviation"));
+				}
+				
 				termList.add(termDomain);
 			}
 			

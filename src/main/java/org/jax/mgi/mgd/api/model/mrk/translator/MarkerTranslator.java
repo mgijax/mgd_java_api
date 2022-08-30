@@ -19,6 +19,8 @@ import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerNoteDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
+import org.jax.mgi.mgd.api.model.seq.domain.SeqMarkerBiotypeDomain;
+import org.jax.mgi.mgd.api.model.seq.translator.SeqMarkerBiotypeTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.voc.translator.MarkerFeatureTypeTranslator;
 import org.jboss.logging.Logger;
@@ -34,7 +36,8 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private MarkerFeatureTypeTranslator featureTypeTranslator = new MarkerFeatureTypeTranslator();
 	private SlimMarkerTranslator slimMarkerTranslator = new SlimMarkerTranslator();
 	private RelationshipMarkerTSSTranslator markerTSSTranslator = new RelationshipMarkerTSSTranslator();
-	
+	private SeqMarkerBiotypeTranslator biotypeTranslator = new SeqMarkerBiotypeTranslator();
+
 	@Override
 	protected MarkerDomain entityToDomain(Marker entity) {
 		
@@ -185,6 +188,13 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			domain.setNonEditAccessionIds(IteratorUtils.toList(acc.iterator()));
 			domain.getNonEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
+		
+		// biotypes 
+		if (entity.getBiotypes() != null && !entity.getBiotypes().isEmpty()) {
+			Iterable<SeqMarkerBiotypeDomain> bio = biotypeTranslator.translateEntities(entity.getBiotypes());
+			domain.setBiotypes(IteratorUtils.toList(bio.iterator()));
+			domain.getBiotypes().sort(Comparator.comparing(SeqMarkerBiotypeDomain::getRawbiotype, String.CASE_INSENSITIVE_ORDER));
+		}		
 		
 		// these domains are only set by individual object endpoints
 		// that is, see acc/service/AccessionService:getMarkerEditAccessionIds

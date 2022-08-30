@@ -190,9 +190,9 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		}
 		
 		// at most one locationCache
-		if (entity.getLocationCache() != null) {
-			domain.setLocationCache(entity.getLocationCache());
-		}
+//		if (entity.getLocationCache() != null) {
+//			domain.setLocationCache(entity.getLocationCache());
+//		}
 		
 		// biotypes 
 		if (entity.getBiotypes() != null && !entity.getBiotypes().isEmpty()) {

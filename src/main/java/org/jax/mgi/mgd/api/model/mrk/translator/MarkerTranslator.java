@@ -16,6 +16,7 @@ import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipMarkerTSSTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.MarkerLocationCacheDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerNoteDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
@@ -37,6 +38,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private SlimMarkerTranslator slimMarkerTranslator = new SlimMarkerTranslator();
 	private RelationshipMarkerTSSTranslator markerTSSTranslator = new RelationshipMarkerTSSTranslator();
 	private SeqMarkerBiotypeTranslator biotypeTranslator = new SeqMarkerBiotypeTranslator();
+	private MarkerLocationCacheTranslator locationTranslator = new MarkerLocationCacheTranslator(); 
 
 	@Override
 	protected MarkerDomain entityToDomain(Marker entity) {
@@ -189,10 +191,11 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			domain.getNonEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
 		
-		// at most one locationCache
-//		if (entity.getLocationCache() != null) {
-//			domain.setLocationCache(entity.getLocationCache());
-//		}
+		// at most one location cache
+		if (entity.getLocationCache() != null) {
+			Iterable<MarkerLocationCacheDomain> locationCache = locationTranslator.translateEntities(entity.getLocationCache());
+			domain.setLocationCache(locationCache.iterator().next());
+		}
 		
 		// biotypes 
 		if (entity.getBiotypes() != null && !entity.getBiotypes().isEmpty()) {

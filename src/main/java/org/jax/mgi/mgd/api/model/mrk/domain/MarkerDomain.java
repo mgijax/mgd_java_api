@@ -32,6 +32,11 @@ public class MarkerDomain extends BaseDomain {
 	private String markerStatus;
 	private String markerTypeKey;
 	private String markerType;
+	private String startCoordinate;
+	private String endCoordinate;
+	private String strand;
+	private String provider;
+	private String mapUnits;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;
@@ -61,9 +66,6 @@ public class MarkerDomain extends BaseDomain {
 	// exists in domain, but not populated by marker translator
 	// instead will be populated by call to specific domain service	
 	private List<AccessionDomain> nonEditAccessionIds;
-
-	// location cache
-	private MarkerLocationCacheDomain locationCache;
 	
 	// biotypes
 	private List<SeqMarkerBiotypeDomain> biotypes;

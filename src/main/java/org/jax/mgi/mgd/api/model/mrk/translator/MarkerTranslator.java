@@ -16,7 +16,6 @@ import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipMarkerTSSTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
-import org.jax.mgi.mgd.api.model.mrk.domain.MarkerLocationCacheDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerNoteDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
@@ -38,7 +37,6 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private SlimMarkerTranslator slimMarkerTranslator = new SlimMarkerTranslator();
 	private RelationshipMarkerTSSTranslator markerTSSTranslator = new RelationshipMarkerTSSTranslator();
 	private SeqMarkerBiotypeTranslator biotypeTranslator = new SeqMarkerBiotypeTranslator();
-	private MarkerLocationCacheTranslator locationTranslator = new MarkerLocationCacheTranslator(); 
 
 	@Override
 	protected MarkerDomain entityToDomain(Marker entity) {
@@ -74,6 +72,15 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
+		
+		// location cache
+		if (entity.getLocationCache() != null ) {
+			domain.setStartCoordinate(String.valueOf(entity.getLocationCache().getStartCoordinate()));
+			domain.setEndCoordinate(String.valueOf(entity.getLocationCache().getEndCoordinate()));
+			domain.setStrand(String.valueOf(entity.getLocationCache().getStrand()));
+			domain.setProvider(entity.getLocationCache().getProvider());
+			domain.setMapUnits(entity.getLocationCache().getMapUnits());
+		}
 		
 		// at most one editorNote
 		if (entity.getEditorNote() != null && !entity.getEditorNote().isEmpty()) {
@@ -190,12 +197,6 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			domain.setNonEditAccessionIds(IteratorUtils.toList(acc.iterator()));
 			domain.getNonEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
-		
-		// at most one location cache
-//		if (entity.getLocationCache() != null) {
-//			Iterable<MarkerLocationCacheDomain> locationCache = locationTranslator.translateEntities(entity.getLocationCache());
-//			domain.setLocationCache(locationCache.iterator().next());
-//		}
 		
 		// biotypes 
 		if (entity.getBiotypes() != null && !entity.getBiotypes().isEmpty()) {

@@ -189,6 +189,11 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			domain.getNonEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
 		
+		// at most one locationCache
+		if (entity.getLocationCache() != null) {
+			domain.setLocationCache(entity.getLocationCache());
+		}
+		
 		// biotypes 
 		if (entity.getBiotypes() != null && !entity.getBiotypes().isEmpty()) {
 			Iterable<SeqMarkerBiotypeDomain> bio = biotypeTranslator.translateEntities(entity.getBiotypes());

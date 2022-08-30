@@ -7,6 +7,7 @@ import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
+import org.jax.mgi.mgd.api.model.mrk.entities.MarkerLocationCache;
 import org.jax.mgi.mgd.api.model.seq.domain.SeqMarkerBiotypeDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 
@@ -62,6 +63,9 @@ public class MarkerDomain extends BaseDomain {
 	// instead will be populated by call to specific domain service	
 	private List<AccessionDomain> nonEditAccessionIds;
 
+	// location cache
+	private MarkerLocationCache locationCache;
+	
 	// biotypes
 	private List<SeqMarkerBiotypeDomain> biotypes;
 	

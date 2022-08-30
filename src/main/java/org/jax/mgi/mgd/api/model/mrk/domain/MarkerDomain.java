@@ -32,11 +32,15 @@ public class MarkerDomain extends BaseDomain {
 	private String markerStatus;
 	private String markerTypeKey;
 	private String markerType;
+	
+	// location cache
 	private String startCoordinate;
 	private String endCoordinate;
 	private String strand;
-	private String provider;
 	private String mapUnits;
+	private String provider;
+	private String version;
+
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;

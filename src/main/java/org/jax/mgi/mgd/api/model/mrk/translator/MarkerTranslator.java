@@ -73,13 +73,14 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
-		// location cache
+		// at most one location cache
 		if (entity.getLocationCache() != null ) {
 			domain.setStartCoordinate(String.valueOf(entity.getLocationCache().getStartCoordinate()));
 			domain.setEndCoordinate(String.valueOf(entity.getLocationCache().getEndCoordinate()));
 			domain.setStrand(String.valueOf(entity.getLocationCache().getStrand()));
-			domain.setProvider(entity.getLocationCache().getProvider());
 			domain.setMapUnits(entity.getLocationCache().getMapUnits());
+			domain.setProvider(entity.getLocationCache().getProvider());
+			domain.setVersion(entity.getLocationCache().getVersion());
 		}
 		
 		// at most one editorNote

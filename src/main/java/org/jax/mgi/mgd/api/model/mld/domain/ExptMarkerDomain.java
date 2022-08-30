@@ -22,7 +22,7 @@ public class ExptMarkerDomain extends BaseDomain {
 	private Integer sequenceNum;
 	private String gene;
 	private String description;
-	//private Integer matrixData;
+	private Integer matrixData;
 	private String creation_date;
 	private String modification_date;
 

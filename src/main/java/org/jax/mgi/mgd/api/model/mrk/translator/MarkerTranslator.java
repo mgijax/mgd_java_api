@@ -192,10 +192,10 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		}
 		
 		// at most one location cache
-		if (entity.getLocationCache() != null) {
-			Iterable<MarkerLocationCacheDomain> locationCache = locationTranslator.translateEntities(entity.getLocationCache());
-			domain.setLocationCache(locationCache.iterator().next());
-		}
+//		if (entity.getLocationCache() != null) {
+//			Iterable<MarkerLocationCacheDomain> locationCache = locationTranslator.translateEntities(entity.getLocationCache());
+//			domain.setLocationCache(locationCache.iterator().next());
+//		}
 		
 		// biotypes 
 		if (entity.getBiotypes() != null && !entity.getBiotypes().isEmpty()) {

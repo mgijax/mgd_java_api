@@ -16,6 +16,8 @@ public class SeqMarkerBiotypeTranslator extends BaseEntityDomainTranslator<SeqMa
 		
 		domain.setCacheKey(String.valueOf(entity.get_cache_key()));	
 		domain.setBiotypeConflictKey(String.valueOf(entity.get_biotypeConflict_key()));
+		domain.setSequenceProviderKey(String.valueOf(entity.getSequenceProvider().get_term_key()));
+		domain.setSequenceProvider(entity.getSequenceProvider().getTerm());
 		domain.setAccID(entity.getAccID());
 		domain.setRawbiotype(entity.getRawbiotype());
 		

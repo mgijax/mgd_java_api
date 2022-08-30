@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -31,7 +32,6 @@ public class SeqMarkerCache extends BaseEntity {
     private int _organism_key;   
     private int _refs_key; 
     private int _qualifier_key;
-    private int _sequenceProvider_key;
     private int _sequenceType_key;
     private int _logicalDB_key;
     private int _marker_Type_key;
@@ -40,6 +40,10 @@ public class SeqMarkerCache extends BaseEntity {
     private String rawbiotype;    
 	private Date creation_date;
 	private Date modification_date;
+	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_sequenceprovider_key", referencedColumnName="_term_key")
+	private Term sequenceProvider;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")

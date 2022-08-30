@@ -14,7 +14,8 @@ public class SeqMarkerBiotypeDomain extends BaseDomain {
     //private String organismKey;
     //private String refsKey; 
     //private String qualifierKkey;
-    //private String sequenceProviderKey;
+    private String sequenceProviderKey;
+    private String sequenceProvider;
     //private String sequenceTypeKey;
     //private String logicalDBKey;
     //private String markerTypeKey;

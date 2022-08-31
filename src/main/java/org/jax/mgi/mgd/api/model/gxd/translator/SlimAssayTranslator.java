@@ -82,10 +82,10 @@ public class SlimAssayTranslator extends BaseEntityDomainTranslator<Assay, SlimA
 		}
 		
 		// too slow; use service/return for references
-//		domain.setAssayDisplay(entity.getReference().getReferenceCitationCache().getJnumid() + "; " + domain.getAssayTypeAbbrev() + "; " + entity.getMarker().getSymbol());	
-//		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
-//		domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());
-//		domain.setJnum(String.valueOf(entity.getReference().getReferenceCitationCache().getNumericPart()));
+		domain.setAssayDisplay(entity.getReference().getJnumid() + "; " + domain.getAssayTypeAbbrev() + "; " + entity.getMarker().getSymbol());	
+		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
+		domain.setJnumid(entity.getReference().getJnumid());
+		domain.setJnum(String.valueOf(entity.getReference().getNumericPart()));
 
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());

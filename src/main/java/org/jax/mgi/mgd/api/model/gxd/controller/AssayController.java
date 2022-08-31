@@ -200,5 +200,21 @@ public class AssayController extends BaseController<AssayDomain> {
 		
 		return results;
 	}
+
+	@POST
+	@ApiOperation(value = "Get list of assay domains by allele accession id")
+	@Path("/getAssayByAllele")
+	public List<AssayDomain> getAssayByAllele(String accid) {
+		
+		List<AssayDomain> results = new ArrayList<AssayDomain>();
+
+		try {
+			results = assayService.getAssayByAllele(accid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
 }

@@ -1231,5 +1231,51 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		return results;
 	}
+
+	@Transactional	
+	public List<AssayDomain> getAssayByAllele(String accid) {
+		// return list of assay domains by allele acc id
+
+		List<AssayDomain> results = new ArrayList<AssayDomain>();
+		
+		String cmd = "\n(select distinct s._assay_key, m._marker_key, m.symbol" + 
+				"\nfrom all_allele a, acc_accession aa, gxd_allelegenotype g, gxd_gellane s, gxd_assay ga, mrk_marker m" + 
+				"\nwhere a._allele_key = aa._object_key" + 
+				"\nand aa.accid = '" + accid + "'" +
+				"\nand a._allele_key = g._allele_key" +
+				"\nand g._genotype_key = s._genotype_key" +
+				"\nand s._assay_key = ga._assay_key" +
+				"\nand ga._marker_key = m._marker_key" +
+				"\nunion" +
+				"\nselect distinct s._assay_key, m._marker_key, m.symbol" +
+				"\nfrom all_allele a, acc_accession aa, gxd_allelegenotype g, gxd_specimen s, gxd_assay ga, mrk_marker m" + 
+				"\nwhere a._allele_key = aa._object_key" + 
+				"\nand aa.accid = '" + accid + "'" +
+				"\nand a._allele_key = g._allele_key" +
+				"\nand g._genotype_key = s._genotype_key" +
+				"\nand s._assay_key = ga._assay_key" +
+				"\nand ga._marker_key = m._marker_key" +				
+				"\n)" +
+				"\norder by symbol";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				AssayDomain domain = new AssayDomain();
+				domain = translator.translate(assayDAO.get(rs.getInt("_allele_key")));
+				assayDAO.clear();
+				results.add(domain);
+				assayDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}
 	
 }

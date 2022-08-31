@@ -300,7 +300,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 	    	try {
 	    		ResultSet rs = sqlExecutor.executeProto(cmd);
 	    		while (rs.next()) {
-	    			domain.setHasExpression(rs.getInt("hasExpression"));
+	    			domain.setHasExpression(rs.getString("hasExpression"));
 	    		}
 	    		sqlExecutor.cleanup();
 	    	}

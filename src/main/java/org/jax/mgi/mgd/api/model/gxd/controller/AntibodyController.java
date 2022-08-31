@@ -96,7 +96,7 @@ public class AntibodyController extends BaseController<AntibodyDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Get list of antibody domains by marker key")
+	@ApiOperation(value = "Get list of antibody domains by marker accession id")
 	@Path("/getAntbodyByMarker")
 	public List<AntibodyDomain> getAntibodyByMarker(String key) {
 		

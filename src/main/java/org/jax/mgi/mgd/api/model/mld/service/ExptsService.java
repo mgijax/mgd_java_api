@@ -315,10 +315,10 @@ public class ExptsService extends BaseService<ExptsDomain> {
 	}
 
 	@Transactional	
-	public List<SlimExptsDomain> getExptsByMarker(String accid) {
+	public List<ExptsDomain> getExptsByMarker(String accid) {
 		// return list of assay domains by marker acc id
 
-		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
+		List<ExptsDomain> results = new ArrayList<ExptsDomain>();
 		
 		String cmd = "\nselect distinct e._expt_key, e.expttype, c.numericpart" + 
 				"\nfrom mrk_marker m, acc_accession aa, mld_expts e, mld_expt_marker em, bib_citation_cache c" + 
@@ -336,8 +336,8 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				SlimExptsDomain domain = new SlimExptsDomain();
-				domain = slimtranslator.translate(exptsDAO.get(rs.getInt("_expt_key")));
+				ExptsDomain domain = new ExptsDomain();
+				domain = translator.translate(exptsDAO.get(rs.getInt("_expt_key")));
 				exptsDAO.clear();
 				results.add(domain);
 				exptsDAO.clear();
@@ -352,10 +352,10 @@ public class ExptsService extends BaseService<ExptsDomain> {
 	}
 
 	@Transactional	
-	public List<SlimExptsDomain> getExptsByRef(String jnumid) {
+	public List<ExptsDomain> getExptsByRef(String jnumid) {
 		// return list of assay domains by reference jnum id
 
-		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
+		List<ExptsDomain> results = new ArrayList<ExptsDomain>();
 		
 		String cmd = "\nselect distinct e._expt_key, e.expttype, aa.numericpart" + 
 				"\nfrom bib_citation_cache aa, mld_expts e" + 
@@ -369,8 +369,8 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				SlimExptsDomain domain = new SlimExptsDomain();
-				domain = slimtranslator.translate(exptsDAO.get(rs.getInt("_expt_key")));
+				ExptsDomain domain = new ExptsDomain();
+				domain = translator.translate(exptsDAO.get(rs.getInt("_expt_key")));
 				exptsDAO.clear();
 				results.add(domain);
 				exptsDAO.clear();

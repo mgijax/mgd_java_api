@@ -241,7 +241,7 @@ public class AssayController extends BaseController<AssayDomain> {
 		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
 
 		try {
-			results = assayService.getAssayByMarker(jnumid);
+			results = assayService.getAssayByRef(jnumid);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

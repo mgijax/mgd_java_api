@@ -82,9 +82,9 @@ public class ExptsController extends BaseController<ExptsDomain> {
 	@POST
 	@ApiOperation(value = "Get list of experiments domains by marker accession id")
 	@Path("/getExptsByMarker")
-	public List<ExptsDomain> getExptsByMarker(String accid) {
+	public List<SlimExptsDomain> getExptsByMarker(String accid) {
 		
-		List<ExptsDomain> results = new ArrayList<ExptsDomain>();
+		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
 
 		try {
 			results = exptsService.getExptsByMarker(accid);
@@ -98,9 +98,9 @@ public class ExptsController extends BaseController<ExptsDomain> {
 	@POST
 	@ApiOperation(value = "Get list of experiments domains by reference jnumid")
 	@Path("/getExptsByRef")
-	public List<ExptsDomain> getExptsByRef(String jnumid) {
+	public List<SlimExptsDomain> getExptsByRef(String jnumid) {
 		
-		List<ExptsDomain> results = new ArrayList<ExptsDomain>();
+		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
 
 		try {
 			results = exptsService.getExptsByRef(jnumid);

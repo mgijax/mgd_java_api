@@ -794,9 +794,44 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		String cmd = "select distinct a._probe_key, a.name," + 
 				"\ncase when exists (select 1 from gxd_probeprep p, gxd_assay e where a._probe_key = p._probe_key and p._probeprep_key = e._probeprep_key) then 1 else 0 end as hasExpression" + 
 				"\nfrom prb_probe a, prb_marker m, acc_accession aa" + 
-				"\nwhere m._probe_key = a._probe_key" + 
+				"\nwhere a._probe_key = m._probe_key" + 
 				"\nand m._marker_key = aa._object_key" + 
 				"\nand aa.accid = '" + accid + "'" +
+				"\norder by a.name";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				ProbeDomain domain = new ProbeDomain();
+				domain = translator.translate(probeDAO.get(rs.getInt("_probe_key")));
+				domain.setHasExpression(rs.getString("hasExpression"));
+				probeDAO.clear();
+				results.add(domain);
+				probeDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}
+	
+	@Transactional	
+	public List<ProbeDomain> getProbeByRef(String jnumid) {
+		// return list of probe domains by reference jnumid
+
+		List<ProbeDomain> results = new ArrayList<ProbeDomain>();
+		
+		String cmd = "select distinct a._probe_key, a.name," +
+				"\ncase when exists (select 1 from gxd_probeprep p, gxd_assay e where a._probe_key = p._probe_key and p._probeprep_key = e._probeprep_key) then 1 else 0 end as hasExpression" + 
+				"\nfrom prb_probe a, prb_reference r, bib_citation_cache aa" + 
+				"\nwhere a._probe_key = r._probe_key" + 
+				"\nand r._refs_key = aa._refs_key" + 
+				"\nand aa.jnumid = '" + jnumid + "'" +
 				"\norder by a.name";
 		
 		log.info(cmd);	

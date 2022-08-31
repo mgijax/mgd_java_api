@@ -18,5 +18,4 @@ public class SlimExptsDomain extends BaseDomain {
 	private String short_citation;
 	private String creation_date;
 	private String modification_date;
-	private String accID;
 }

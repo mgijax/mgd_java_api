@@ -21,7 +21,6 @@ import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mld.entities.MappingNote;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
@@ -73,10 +72,10 @@ public class Reference extends BaseEntity {
 	@JoinColumn(name="_refs_key")
 	private ReferenceCitationCache referenceCitationCache;
 
-	// at most one mapping note
-	@OneToMany()
-	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-	private List<MappingNote> mappingNote;
+//	// at most one mapping note
+//	@OneToMany()
+//	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
+//	private List<MappingNote> mappingNote;
 	
 	// mgi accession ids only
 	@OneToMany()	

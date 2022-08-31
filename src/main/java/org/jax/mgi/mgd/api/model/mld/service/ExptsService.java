@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceCitationCacheDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mld.dao.ExptsDAO;
 import org.jax.mgi.mgd.api.model.mld.domain.ExptsDomain;
@@ -31,7 +31,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 	@Inject
 	private ExptsDAO exptsDAO;
 	@Inject
-	private ReferenceDAO referenceDAO;
+	private ReferenceCitationCacheDAO referenceDAO;
 	@Inject
 	private MappingNoteService mappingNoteService;
 	@Inject
@@ -94,7 +94,6 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		
 		log.info("processExpt/update");				
 
-		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));		
 		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));		
 		entity.setExptType(domain.getExptType());
 		entity.setTag(1);

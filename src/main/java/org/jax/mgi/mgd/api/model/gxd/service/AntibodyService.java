@@ -665,7 +665,7 @@ and a._antibody_key = aa._antibody_key
 
 		List<AntibodyDomain> results = new ArrayList<AntibodyDomain>();
 		
-		String cmd = "select distinct a._antibody_key," + 
+		String cmd = "select distinct a._antibody_key, a.antibodyname," + 
 				"\ncase when exists (select 1 from gxd_antibodyprep p, gxd_assay e where a._antibody_key = p._antibody_key and p._antibodyprep_key = e._antibodyprep_key) then 1 else 0 end as hasExpression" + 
 				"\nfrom gxd_antibody a, gxd_antibodymarker m, acc_accession aa" + 
 				"\nwhere m._antibody_key = a._antibody_key" + 

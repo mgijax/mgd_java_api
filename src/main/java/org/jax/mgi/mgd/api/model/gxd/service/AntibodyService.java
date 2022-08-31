@@ -14,6 +14,7 @@ import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntigenDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyPrepDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Antibody;
 import org.jax.mgi.mgd.api.model.gxd.translator.AntibodyTranslator;
@@ -297,6 +298,23 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
     public SearchResults<AntibodyDomain> getResults(Integer key) {
         SearchResults<AntibodyDomain> results = new SearchResults<AntibodyDomain>();
         results.setItem(translator.translate(antibodyDAO.get(key)));
+        
+        // determine hasExpression
+    	String cmd = "select case when exists (select 1 from gxd_antibodyprep p, gxd_assay e" +
+    				"\nwhere a._antibody_key = p._antibody_key and p._antibodyprep_key = e._antibodyprep_key)" +  				"\nthen 1 else 0 end as hasExpression" + 
+    				"\nfrom gxd_antibody a where a._antibody_key = " + key;	
+    	log.info(cmd);	
+    	try {
+    		ResultSet rs = sqlExecutor.executeProto(cmd);
+    		while (rs.next()) {
+    			results.items.get(0).setHasExpression(rs.getInt("hasExpression"));
+    		}
+    		sqlExecutor.cleanup();
+    	}
+    	catch (Exception e) {
+    		e.printStackTrace();
+    	}		
+    
         return results;
     } 
 	
@@ -641,5 +659,5 @@ and a._antibody_key = aa._antibody_key
 		
 		return results;
 	}
-	
+
 }

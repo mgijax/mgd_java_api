@@ -317,13 +317,14 @@ public class ExptsService extends BaseService<ExptsDomain> {
 
 		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
 		
-		String cmd = "\nselect distinct e._expt_key, e.expttype, c.jnum" + 
-				"\nfrom mrk_marker m, acc_accession aa, mld_expt e, mld_expt_marker m, bib_citation_cache c" + 
+		String cmd = "\nselect distinct e._expt_key, e.expttype, c.numericpart" + 
+				"\nfrom mrk_marker m, acc_accession aa, mld_expts e, mld_expt_marker em, bib_citation_cache c" + 
 				"\nwhere m._marker_key = aa._object_key" + 
 				"\nand aa.accid = '" + accid + "'" +
-				"\nand m._marker_key = e._marker_key" +
+				"\nand m._marker_key = em._marker_key" +
+				"\nand em._expt_key = e._expt_key" +
 				"\nand e._refs_key = c._refs_key" +
-				"\norder by expttype, jnum";
+				"\norder by expttype, numericpart";
 		
 		log.info(cmd);	
 		
@@ -351,11 +352,11 @@ public class ExptsService extends BaseService<ExptsDomain> {
 
 		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
 		
-		String cmd = "\nselect distinct e._expt_key, e.expttype, aa.jnum" + 
+		String cmd = "\nselect distinct e._expt_key, e.expttype, aa.numericpart" + 
 				"\nfrom bib_citation_cache aa, mld_expts e" + 
 				"\nwhere aa.jnumid = '" + jnumid + "'" +
 				"\nand aa._refs_key = e._refs_key" +
-				"\norder by expttype, jnum";
+				"\norder by expttype, numericpart";
 		
 		log.info(cmd);	
 		

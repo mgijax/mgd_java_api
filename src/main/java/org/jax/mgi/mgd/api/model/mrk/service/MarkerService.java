@@ -14,7 +14,6 @@ import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
-import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
@@ -862,12 +861,12 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
 		
-		String cmd = "\nselect distinct g._marker_key, m._marker_key, m.symbol" + 
+		String cmd = "\nselect distinct m._marker_key, m._marker_key, m.symbol" + 
 				"\nfrom bib_citation_cache aa, mgi_reference_assoc r, mrk_marker m" + 
 				"\nwhere aa.jnumid = '" + jnumid + "'" +
 				"\nand aa._refs_key = r._refs_key" +
 				"\nand r._mgitype_key = 2" +
-				"\nand r._marker_key = m._marker_key" +
+				"\nand r._object_key = m._marker_key" +
 				"\norder by symbol";
 		
 		log.info(cmd);	

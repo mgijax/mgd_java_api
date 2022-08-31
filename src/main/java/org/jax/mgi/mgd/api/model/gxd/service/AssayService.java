@@ -1233,10 +1233,10 @@ public class AssayService extends BaseService<AssayDomain> {
 	}
 
 	@Transactional	
-	public List<AssayDomain> getAssayByAllele(String accid) {
+	public List<SlimAssayDomain> getAssayByAllele(String accid) {
 		// return list of assay domains by allele acc id
 
-		List<AssayDomain> results = new ArrayList<AssayDomain>();
+		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
 		
 		String cmd = "\n(select distinct s._assay_key, m._marker_key, m.symbol" + 
 				"\nfrom all_allele a, acc_accession aa, gxd_allelegenotype g, gxd_gellane s, gxd_assay ga, mrk_marker m" + 
@@ -1263,8 +1263,8 @@ public class AssayService extends BaseService<AssayDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				AssayDomain domain = new AssayDomain();
-				domain = translator.translate(assayDAO.get(rs.getInt("_assay_key")));
+				SlimAssayDomain domain = new SlimAssayDomain();
+				domain = slimtranslator.translate(assayDAO.get(rs.getInt("_assay_key")));
 				assayDAO.clear();
 				results.add(domain);
 				assayDAO.clear();

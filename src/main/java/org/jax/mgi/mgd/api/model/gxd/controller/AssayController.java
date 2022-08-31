@@ -204,9 +204,9 @@ public class AssayController extends BaseController<AssayDomain> {
 	@POST
 	@ApiOperation(value = "Get list of assay domains by allele accession id")
 	@Path("/getAssayByAllele")
-	public List<AssayDomain> getAssayByAllele(String accid) {
+	public List<SlimAssayDomain> getAssayByAllele(String accid) {
 		
-		List<AssayDomain> results = new ArrayList<AssayDomain>();
+		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
 
 		try {
 			results = assayService.getAssayByAllele(accid);

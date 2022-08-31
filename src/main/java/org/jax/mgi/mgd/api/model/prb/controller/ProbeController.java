@@ -94,5 +94,21 @@ public class ProbeController extends BaseController<ProbeDomain> {
 		
 		return results;
 	}
+
+	@POST
+	@ApiOperation(value = "Get list of probe domains by marker accession id")
+	@Path("/getProbeByMarker")
+	public List<ProbeDomain> getProbeByMarker(String key) {
+		
+		List<ProbeDomain> results = new ArrayList<ProbeDomain>();
+
+		try {
+			results = probeService.getProbeByMarker(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
 }

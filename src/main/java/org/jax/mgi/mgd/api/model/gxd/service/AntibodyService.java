@@ -661,7 +661,7 @@ and a._antibody_key = aa._antibody_key
 
 	@Transactional	
 	public List<AntibodyDomain> getAntibodyByMarker(String key) {
-		// return list of antibody domains by marker key
+		// return list of antibody domains by marker acc id
 
 		List<AntibodyDomain> results = new ArrayList<AntibodyDomain>();
 		

@@ -324,6 +324,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 				"\nand m._marker_key = em._marker_key" +
 				"\nand em._expt_key = e._expt_key" +
 				"\nand e._refs_key = c._refs_key" +
+				"\nand e.exptType in ('TEXT-QTL', 'TEXT-Physical Mapping', 'TEXT-Congenic', 'TEXT-QTL-Candidate Genes', 'TEXT-Meta Analysis')" +
 				"\norder by expttype, numericpart";
 		
 		log.info(cmd);	
@@ -356,6 +357,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 				"\nfrom bib_citation_cache aa, mld_expts e" + 
 				"\nwhere aa.jnumid = '" + jnumid + "'" +
 				"\nand aa._refs_key = e._refs_key" +
+				"\nand e.exptType in ('TEXT-QTL', 'TEXT-Physical Mapping', 'TEXT-Congenic', 'TEXT-QTL-Candidate Genes', 'TEXT-Meta Analysis')" +
 				"\norder by expttype, numericpart";
 		
 		log.info(cmd);	

@@ -659,4 +659,39 @@ and a._antibody_key = aa._antibody_key
 		return results;
 	}
 
+	@Transactional	
+	public List<AntibodyDomain> getAntibodyByMarker(String key) {
+		// return list of antibody domains by marker key
+
+		List<AntibodyDomain> results = new ArrayList<AntibodyDomain>();
+		
+		String cmd = "select a._antibody_key," + 
+				"case when exists (select 1 from gxd_antibodyprep p, gxd_assay e where a._antibody_key = p._antibody_key and p._antibodyprep_key = e._antibodyprep_key) then 1 else 0 end as hasExpression" + 
+				"from gxd_antibody a, gxd_antibodymarker m, acc_accession aa" + 
+				"where m._antibody_key = a._antibody_key" + 
+				"and m._marker_key = aa._object_key" + 
+				"and aa.accid = '" + key + "'" +
+				"order by a.antibodyname";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				AntibodyDomain domain = new AntibodyDomain();
+				domain = translator.translate(antibodyDAO.get(rs.getInt("_antibody_key")));
+				domain.setHasExpression(rs.getString("hasExpression"));
+				antibodyDAO.clear();
+				results.add(domain);
+				antibodyDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}
+	
 }

@@ -217,4 +217,19 @@ public class AssayController extends BaseController<AssayDomain> {
 		return results;
 	}
 	
+	@POST
+	@ApiOperation(value = "Get list of assay domains by marker accession id")
+	@Path("/getAssayByMarker")
+	public List<SlimAssayDomain> getAssayByMarker(String accid) {
+		
+		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
+
+		try {
+			results = assayService.getAssayByMarker(accid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
 }

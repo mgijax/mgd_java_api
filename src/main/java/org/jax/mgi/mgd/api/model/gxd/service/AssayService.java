@@ -1277,5 +1277,38 @@ public class AssayService extends BaseService<AssayDomain> {
 
 		return results;
 	}
+
+	@Transactional	
+	public List<SlimAssayDomain> getAssayByMarker(String accid) {
+		// return list of assay domains by marker acc id
+
+		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
+		
+		String cmd = "\nselect distinct g._assay_key, m._marker_key, m.symbol" + 
+				"\nfrom mrk_marker m, acc_accession aa, gxd_assay g" + 
+				"\nwhere m._marker_key = aa._object_key" + 
+				"\nand aa.accid = '" + accid + "'" +
+				"\nand m._marker_key = g._marker_key" +
+				"\norder by symbol";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimAssayDomain domain = new SlimAssayDomain();
+				domain = slimtranslator.translate(assayDAO.get(rs.getInt("_assay_key")));
+				assayDAO.clear();
+				results.add(domain);
+				assayDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}
 	
 }

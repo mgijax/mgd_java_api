@@ -14,6 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
@@ -165,6 +166,22 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	@Path("/getNextGmSequence")
 	public List<SlimMarkerDomain> getNextGmSequence() {
 		return markerService.getNextGmSequence();
+	}
+	
+	@POST
+	@ApiOperation(value = "Get list of marker domains by reference jnumid")
+	@Path("/getMarkerByRef")
+	public List<SlimMarkerDomain> getMarkerByRef(String jnumid) {
+		
+		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
+
+		try {
+			results = markerService.getMarkerByRef(jnumid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
 	}
 	
 	@GET

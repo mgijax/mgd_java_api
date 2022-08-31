@@ -660,7 +660,7 @@ and a._antibody_key = aa._antibody_key
 	}
 
 	@Transactional	
-	public List<AntibodyDomain> getAntibodyByMarker(String key) {
+	public List<AntibodyDomain> getAntibodyByMarker(String accid) {
 		// return list of antibody domains by marker acc id
 
 		List<AntibodyDomain> results = new ArrayList<AntibodyDomain>();
@@ -670,7 +670,7 @@ and a._antibody_key = aa._antibody_key
 				"\nfrom gxd_antibody a, gxd_antibodymarker m, acc_accession aa" + 
 				"\nwhere m._antibody_key = a._antibody_key" + 
 				"\nand m._marker_key = aa._object_key" + 
-				"\nand aa.accid = '" + key + "'" +
+				"\nand aa.accid = '" + accid + "'" +
 				"\norder by a.antibodyname";
 		
 		log.info(cmd);	

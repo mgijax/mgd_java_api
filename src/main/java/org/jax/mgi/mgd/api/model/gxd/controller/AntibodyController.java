@@ -98,12 +98,12 @@ public class AntibodyController extends BaseController<AntibodyDomain> {
 	@POST
 	@ApiOperation(value = "Get list of antibody domains by marker accession id")
 	@Path("/getAntbodyByMarker")
-	public List<AntibodyDomain> getAntibodyByMarker(String key) {
+	public List<AntibodyDomain> getAntibodyByMarker(String accid) {
 		
 		List<AntibodyDomain> results = new ArrayList<AntibodyDomain>();
 
 		try {
-			results = antibodyService.getAntibodyByMarker(key);
+			results = antibodyService.getAntibodyByMarker(accid);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

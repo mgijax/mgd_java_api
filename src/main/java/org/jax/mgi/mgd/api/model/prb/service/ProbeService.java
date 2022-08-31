@@ -786,7 +786,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 	}
 
 	@Transactional	
-	public List<ProbeDomain> getProbeByMarker(String key) {
+	public List<ProbeDomain> getProbeByMarker(String accid) {
 		// return list of probe domains by marker acc id
 
 		List<ProbeDomain> results = new ArrayList<ProbeDomain>();
@@ -796,7 +796,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				"\nfrom prb_probe a, prb_marker m, acc_accession aa" + 
 				"\nwhere m._probe_key = a._probe_key" + 
 				"\nand m._marker_key = aa._object_key" + 
-				"\nand aa.accid = '" + key + "'" +
+				"\nand aa.accid = '" + accid + "'" +
 				"\norder by a.name";
 		
 		log.info(cmd);	

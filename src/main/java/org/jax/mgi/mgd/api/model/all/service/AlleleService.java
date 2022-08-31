@@ -1417,7 +1417,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				AlleleDomain domain = new AlleleDomain();
-				domain = translator.translate(alleleDAO.get(rs.getInt("_probe_key")));
+				domain = translator.translate(alleleDAO.get(rs.getInt("_allele_key")));
 				alleleDAO.clear();
 				results.add(domain);
 				alleleDAO.clear();
@@ -1449,7 +1449,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				AlleleDomain domain = new AlleleDomain();
-				domain = translator.translate(alleleDAO.get(rs.getInt("_probe_key")));
+				domain = translator.translate(alleleDAO.get(rs.getInt("_allele_key")));
 				alleleDAO.clear();
 				results.add(domain);
 				alleleDAO.clear();

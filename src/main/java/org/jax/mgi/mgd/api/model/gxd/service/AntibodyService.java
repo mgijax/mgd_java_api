@@ -293,7 +293,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 	        
 	        // determine hasExpression
 	    	String cmd = "select case when exists (select 1 from gxd_antibodyprep p, gxd_assay e" +
-	    				"\nwhere where p._antibody_key = " + key +
+	    				"\nwhere p._antibody_key = " + key +
 	    				"\nand p._antibodyprep_key = e._antibodyprep_key)" +
 	    				"\nthen 1 else 0 end as hasExpression";
 	    	log.info(cmd);	

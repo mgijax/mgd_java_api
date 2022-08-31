@@ -78,5 +78,36 @@ public class ExptsController extends BaseController<ExptsDomain> {
 		
 		return results;
 	}
+
+	@POST
+	@ApiOperation(value = "Get list of experiments domains by marker accession id")
+	@Path("/getExptsByMarker")
+	public List<SlimExptsDomain> getExptsByMarker(String accid) {
+		
+		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
+
+		try {
+			results = exptsService.getExptsByMarker(accid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
+	@POST
+	@ApiOperation(value = "Get list of experiments domains by reference jnumid")
+	@Path("/getExptsByRef")
+	public List<SlimExptsDomain> getExptsByRef(String jnumid) {
+		
+		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
+
+		try {
+			results = exptsService.getExptsByRef(jnumid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
 }

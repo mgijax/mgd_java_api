@@ -311,4 +311,70 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		return results;
 	}
 
+	@Transactional	
+	public List<SlimExptsDomain> getExptsByMarker(String accid) {
+		// return list of assay domains by marker acc id
+
+		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
+		
+		String cmd = "\nselect distinct e._expt_key, e.expttype, c.jnum" + 
+				"\nfrom mrk_marker m, acc_accession aa, mld_expt e, mld_expt_marker m, bib_citation_cache c" + 
+				"\nwhere m._marker_key = aa._object_key" + 
+				"\nand aa.accid = '" + accid + "'" +
+				"\nand m._marker_key = e._marker_key" +
+				"\nand e._refs_key = c._refs_key" +
+				"\norder by expttype, jnum";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimExptsDomain domain = new SlimExptsDomain();
+				domain = slimtranslator.translate(exptsDAO.get(rs.getInt("_expt_key")));
+				exptsDAO.clear();
+				results.add(domain);
+				exptsDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}
+
+	@Transactional	
+	public List<SlimExptsDomain> getExptsByRef(String jnumid) {
+		// return list of assay domains by reference jnum id
+
+		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
+		
+		String cmd = "\nselect distinct e._expt_key, e.expttype, aa.jnum" + 
+				"\nfrom bib_citation_cache aa, mld_expts e" + 
+				"\nwhere aa.jnumid = '" + jnumid + "'" +
+				"\nand aa._refs_key = e._refs_key" +
+				"\norder by expttype, jnum";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimExptsDomain domain = new SlimExptsDomain();
+				domain = slimtranslator.translate(exptsDAO.get(rs.getInt("_expt_key")));
+				exptsDAO.clear();
+				results.add(domain);
+				exptsDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}
+	
 }

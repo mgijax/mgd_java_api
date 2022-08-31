@@ -702,10 +702,9 @@ and a._antibody_key = aa._antibody_key
 		
 		String cmd = "select distinct a._antibody_key, a.antibodyname," +
 				"\ncase when exists (select 1 from gxd_antibodyprep p, gxd_assay e where a._antibody_key = p._antibody_key and p._antibodyprep_key = e._antibodyprep_key) then 1 else 0 end as hasExpression" + 
-				"\nfrom prb_probe a, prb_reference r, bib_citation_cache aa" + 
-				"\nwhere a._antibody_key = r._antibody_key" + 
-				"\nand r._refs_key = aa._refs_key" + 
-				"\nand aa.jnumid = '" + jnumid + "'" +
+				"\nfrom gxd_antibody a, mgi_reference_antibody_view r" + 
+				"\nwhere a._antibody_key = r._object_key" + 
+				"\nand r.jnumid = '" + jnumid + "'" +
 				"\norder by a.antibodyname";
 		
 		log.info(cmd);	

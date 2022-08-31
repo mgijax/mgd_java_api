@@ -13,7 +13,6 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.dao.AccessionDAO;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
-import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeDAO;
@@ -793,7 +792,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		List<ProbeDomain> results = new ArrayList<ProbeDomain>();
 		
 		String cmd = "select distinct a._probe_key, a.name," + 
-				"\ncase when exists (select 1 from gxd_probeprep p, gxd_assay e where a._antibody_key = p._antibody_key and p._antibodyprep_key = e._antibodyprep_key) then 1 else 0 end as hasExpression" + 
+				"\ncase when exists (select 1 from gxd_probeprep p, gxd_assay e where a._probe_key = p._probe_key and p._probeprep_key = e._probeprep_key) then 1 else 0 end as hasExpression" + 
 				"\nfrom prb_probe a, prb_marker m, acc_accession aa" + 
 				"\nwhere m._probe_key = a._probe_key" + 
 				"\nand m._marker_key = aa._object_key" + 

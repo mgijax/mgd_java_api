@@ -43,6 +43,8 @@ public class ExptsService extends BaseService<ExptsDomain> {
 	private SlimExptsTranslator slimtranslator = new SlimExptsTranslator();		
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
+	private String exptType = "('TEXT-QTL', 'TEXT-Physical Mapping', 'TEXT-Congenic', 'TEXT-QTL-Candidate Genes', 'TEXT-Meta Analysis')"; 
+			
 	//private String mgiTypeKey = "4";
 	
 	@Transactional
@@ -162,7 +164,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		// return the object count from the database
 		
 		SearchResults<ExptsDomain> results = new SearchResults<ExptsDomain>();
-		String cmd = "select count(*) as objectCount from mld_expts where exptType in ('TEXT-QTL','TEXT-Physical Mapping','TEXT-Congenic','TEXT-QTL-Candidate Genes','TEXT-Meta Analysis')";
+		String cmd = "select count(*) as objectCount from mld_expts where exptType in " + exptType;
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
@@ -188,7 +190,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		String cmd = "";
 		String select = "select distinct e._expt_key, e.jnum, e.expttype, e.chromosome";
 		String from = "from mld_expt_view e";
-		String where = "where e.exptType in ('TEXT-QTL','TEXT-Physical Mapping','TEXT-Congenic','TEXT-QTL-Candidate Genes','TEXT-Meta Analysis')";
+		String where = "where e.exptType in " + exptType;
 		String orderBy = "order by e.jnum";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		Boolean from_accession = false;
@@ -324,7 +326,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 				"\nand m._marker_key = em._marker_key" +
 				"\nand em._expt_key = e._expt_key" +
 				"\nand e._refs_key = c._refs_key" +
-				"\nand e.exptType in ('TEXT-QTL', 'TEXT-Physical Mapping', 'TEXT-Congenic', 'TEXT-QTL-Candidate Genes', 'TEXT-Meta Analysis')" +
+				"\nand e.exptType in " + exptType +
 				"\norder by expttype, numericpart";
 		
 		log.info(cmd);	
@@ -357,7 +359,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 				"\nfrom bib_citation_cache aa, mld_expts e" + 
 				"\nwhere aa.jnumid = '" + jnumid + "'" +
 				"\nand aa._refs_key = e._refs_key" +
-				"\nand e.exptType in ('TEXT-QTL', 'TEXT-Physical Mapping', 'TEXT-Congenic', 'TEXT-QTL-Candidate Genes', 'TEXT-Meta Analysis')" +
+				"\nand e.exptType in " + exptType +
 				"\norder by expttype, numericpart";
 		
 		log.info(cmd);	

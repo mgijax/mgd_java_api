@@ -343,6 +343,23 @@ public class ProbeService extends BaseService<ProbeDomain> {
 					e.printStackTrace();
 				}				
 			}
+			
+	        // determine hasExpression
+	    	String cmd = "select case when exists (select 1 from gxd_probeprep p, gxd_assay e" +
+	    				"\nwhere p._probe_key = " + key +
+	    				"\nand p._probeprep_key = e._antibodyprep_key)" +
+	    				"\nthen 1 else 0 end as hasExpression";
+	    	log.info(cmd);	
+	    	try {
+	    		ResultSet rs = sqlExecutor.executeProto(cmd);
+	    		while (rs.next()) {
+	    			domain.setHasExpression(rs.getString("hasExpression"));
+	    		}
+	    		sqlExecutor.cleanup();
+	    	}
+	    	catch (Exception e) {
+	    		e.printStackTrace();
+	    	}				
 		}
 		
 		return domain;

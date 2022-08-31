@@ -1398,5 +1398,69 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		
 		return results;	
 	}
+
+	@Transactional	
+	public List<AlleleDomain> getAlleleByMarker(String accid) {
+		// return list of allele domains by marker acc id
+
+		List<AlleleDomain> results = new ArrayList<AlleleDomain>();
+		
+		String cmd = "select distinct a._allele_key, a.symbol" + 
+				"\nfrom all_allele a, acc_accession aa" + 
+				"\nwhere a._marker_key = aa._object_key" + 
+				"\nand aa.accid = '" + accid + "'" +
+				"\norder by a.symbol";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				AlleleDomain domain = new AlleleDomain();
+				domain = translator.translate(alleleDAO.get(rs.getInt("_probe_key")));
+				alleleDAO.clear();
+				results.add(domain);
+				alleleDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}
+	
+	@Transactional	
+	public List<AlleleDomain> getAlleleByRef(String jnumid) {
+		// return list of allele domains by reference jnumid
+
+		List<AlleleDomain> results = new ArrayList<AlleleDomain>();
+		
+		String cmd = "select distinct a._allele_key, a.symbol" +
+				"\nfrom all_allele a, mgi_reference_allele_view aa" + 
+				"\nwhere a._allele_key = aa._object_key" + 
+				"\nand aa.jnumid = '" + jnumid + "'" +
+				"\norder by a.symbol";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				AlleleDomain domain = new AlleleDomain();
+				domain = translator.translate(alleleDAO.get(rs.getInt("_probe_key")));
+				alleleDAO.clear();
+				results.add(domain);
+				alleleDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}	
 	
 }	

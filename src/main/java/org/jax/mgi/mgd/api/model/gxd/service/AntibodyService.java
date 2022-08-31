@@ -290,6 +290,23 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		AntibodyDomain domain = new AntibodyDomain();
 		if (antibodyDAO.get(key) != null) {
 			domain = translator.translate(antibodyDAO.get(key));
+	        
+	        // determine hasExpression
+	    	String cmd = "select case when exists (select 1 from gxd_antibodyprep p, gxd_assay e" +
+	    				"\nwhere a._antibody_key = p._antibody_key and p._antibodyprep_key = e._antibodyprep_key)" +  				
+	    				"\nthen 1 else 0 end as hasExpression" + 
+	    				"\nfrom gxd_antibody a where a._antibody_key = " + key;	
+	    	log.info(cmd);	
+	    	try {
+	    		ResultSet rs = sqlExecutor.executeProto(cmd);
+	    		while (rs.next()) {
+	    			domain.setHasExpression(rs.getInt("hasExpression"));
+	    		}
+	    		sqlExecutor.cleanup();
+	    	}
+	    	catch (Exception e) {
+	    		e.printStackTrace();
+	    	}				
 		}
 		return domain;
 	}
@@ -298,24 +315,6 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
     public SearchResults<AntibodyDomain> getResults(Integer key) {
         SearchResults<AntibodyDomain> results = new SearchResults<AntibodyDomain>();
         results.setItem(translator.translate(antibodyDAO.get(key)));
-        
-        // determine hasExpression
-    	String cmd = "select case when exists (select 1 from gxd_antibodyprep p, gxd_assay e" +
-    				"\nwhere a._antibody_key = p._antibody_key and p._antibodyprep_key = e._antibodyprep_key)" +  				
-    				"\nthen 1 else 0 end as hasExpression" + 
-    				"\nfrom gxd_antibody a where a._antibody_key = " + key;	
-    	log.info(cmd);	
-    	try {
-    		ResultSet rs = sqlExecutor.executeProto(cmd);
-    		while (rs.next()) {
-    			results.items.get(0).setHasExpression(rs.getInt("hasExpression"));
-    		}
-    		sqlExecutor.cleanup();
-    	}
-    	catch (Exception e) {
-    		e.printStackTrace();
-    	}		
-    
         return results;
     } 
 	

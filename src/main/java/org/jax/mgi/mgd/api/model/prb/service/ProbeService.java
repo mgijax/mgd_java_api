@@ -326,7 +326,24 @@ public class ProbeService extends BaseService<ProbeDomain> {
 
 		if (probeDAO.get(key) != null) {
 			domain = translator.translate(probeDAO.get(key));
-
+			
+	        // determine hasExpression
+	    	String cmd = "select case when exists (select 1 from gxd_probeprep p, gxd_assay e" +
+	    				"\nwhere p._probe_key = " + key +
+	    				"\nand p._probeprep_key = e._probeprep_key)" +
+	    				"\nthen 1 else 0 end as hasExpression";
+	    	log.info(cmd);	
+	    	try {
+	    		ResultSet rs = sqlExecutor.executeProto(cmd);
+	    		while (rs.next()) {
+	    			domain.setHasExpression(rs.getString("hasExpression"));
+	    		}
+	    		//sqlExecutor.cleanup();
+	    	}
+	    	catch (Exception e) {
+	    		e.printStackTrace();
+	    	}	
+	    	
 			// attach accession ids for each prb_reference
 			if (domain.getReferences() != null && !domain.getReferences().isEmpty()) {
 				for (int i = 0; i < domain.getReferences().size(); i++) {
@@ -342,24 +359,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				catch (Exception e) {
 					e.printStackTrace();
 				}				
-			}
-			
-	        // determine hasExpression
-	    	String cmd = "select case when exists (select 1 from gxd_probeprep p, gxd_assay e" +
-	    				"\nwhere p._probe_key = " + key +
-	    				"\nand p._probeprep_key = e._antibodyprep_key)" +
-	    				"\nthen 1 else 0 end as hasExpression";
-	    	log.info(cmd);	
-	    	try {
-	    		ResultSet rs = sqlExecutor.executeProto(cmd);
-	    		while (rs.next()) {
-	    			domain.setHasExpression(rs.getString("hasExpression"));
-	    		}
-	    		sqlExecutor.cleanup();
-	    	}
-	    	catch (Exception e) {
-	    		e.printStackTrace();
-	    	}				
+			}	    	
 		}
 		
 		return domain;

@@ -231,5 +231,22 @@ public class AssayController extends BaseController<AssayDomain> {
 		}
 		
 		return results;
-	}	
+	}
+	
+	@POST
+	@ApiOperation(value = "Get list of assay domains by reference jnumid")
+	@Path("/getAssayByRef")
+	public List<SlimAssayDomain> getAssayByRef(String jnumid) {
+		
+		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
+
+		try {
+			results = assayService.getAssayByMarker(jnumid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

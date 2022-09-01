@@ -2154,9 +2154,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		String cmd = "\nselect distinct c.*, r.*" + 
 				"\nfrom mrk_reference mr, acc_accession aa, bib_citation_cache c, bib_refs r" + 
-				"\nwhere aa.accid = '" + accid + "'" + 
+				"\nwhere mr._marker_key = aa._object_key" + 
 				"\nand aa._mgitype_key = 2" + 
-				"\nand aa._object_key = mr._marker_key" + 
+				"\nand aa.accid = '" + accid + "'" + 
 				"\nand mr._refs_key = c._refs_key" + 
 				"\nand c._refs_key = r._refs_key" + 				
 				"\norder by numericpart desc";

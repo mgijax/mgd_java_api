@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.gxd.service;
 
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +21,7 @@ import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -39,6 +42,8 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 	private TermService termService;
 	
 	private SpecimenTranslator translator = new SpecimenTranslator();				
+
+	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
 	public SearchResults<SpecimenDomain> create(SpecimenDomain domain, User user) {
@@ -282,5 +287,39 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 		log.info("processSpecimen/processing successful");
 		return modified;
 	}
-	    
+
+	@Transactional	
+	public List<SpecimenDomain> getSpecimenByRef(String jnumid) {
+		// return list of specimen domains by reference jnum id
+
+		List<SpecimenDomain> results = new ArrayList<SpecimenDomain>();
+		
+		String cmd = "\nselect distinct g._assay_key, s.specimenLabel, m._marker_key, m.symbol" + 
+				"\nfrom bib_citation_cache aa, gxd_assay g, gxd_specimen s, mrk_marker m" + 
+				"\nwhere aa.jnumid = '" + jnumid + "'" +
+				"\nand aa._refs_key = g._refs_key" +
+				"\nand m._marker_key = g._marker_key" +
+				"\nand g._assay_key = s._assay_key" +
+				"\norder by symbol";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SpecimenDomain domain = new SpecimenDomain();
+				domain = translator.translate(specimenDAO.get(rs.getInt("_assay_key")));
+				specimenDAO.clear();
+				results.add(domain);
+				specimenDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}
+	
 }

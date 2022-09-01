@@ -227,5 +227,5 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		}
 		
 		return results;
-	}	
+	}
 }

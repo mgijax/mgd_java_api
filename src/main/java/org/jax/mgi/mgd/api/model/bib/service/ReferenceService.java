@@ -24,6 +24,7 @@ import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceSearchDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowRelevanceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceByMarkerDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceIndexDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
@@ -31,6 +32,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
+import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceByMarkerTranslator;
 import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceMarkerAssocDomain;
@@ -75,6 +77,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	
 	private ReferenceTranslator translator = new ReferenceTranslator();
 	private SlimReferenceTranslator slimtranslator = new SlimReferenceTranslator();	
+	private SlimReferenceByMarkerTranslator slimbymarkertranslator = new SlimReferenceByMarkerTranslator();	
+
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -2145,27 +2149,26 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}
 
 	@Transactional	
-	public List<SlimReferenceDomain> getRefByMarker(String accid) {
+	public List<SlimReferenceByMarkerDomain> getRefByMarker(String accid) {
 		// return list of reference domains by marker acc id
 
-		List<SlimReferenceDomain> results = new ArrayList<SlimReferenceDomain>();
+		List<SlimReferenceByMarkerDomain> results = new ArrayList<SlimReferenceByMarkerDomain>();
 		
-		String cmd = "\nselect distinct r._refs_key, m._marker_key, m.symbol" + 
-				"\nfrom mgi_reference_assoc r, acc_accession aa, mrk_marker m" + 
-				"\nwhere aa.accid = '" + accid + "'" +
-				"\nand aa._mgitype_key = 2" +
-				"\nand aa._object_key = m._marker_key" +
-				"\nand m._marker_key = r._object_key" +
-				"\nand r._mgitype_key = 2" +
-				"\norder by symbol";
+		String cmd = "\nselect distinct c._refs_key, c.numericpart" + 
+				"\nfrom mrk_reference r, acc_accession aa, bib_citation_cache c" + 
+				"\nwhere aa.accid = '" + accid + "'" + 
+				"\nand aa._mgitype_key = 2" + 
+				"\nand aa._object_key = r._marker_key" + 
+				"\nand r._refs_key = c._refs_key" + 
+				"\norder by numericpart desc";
 		
 		log.info(cmd);	
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				SlimReferenceDomain domain = new SlimReferenceDomain();
-				domain = slimtranslator.translate(referenceDAO.get(rs.getInt("_refs_key")));
+				SlimReferenceByMarkerDomain domain = new SlimReferenceByMarkerDomain();
+				domain = slimbymarkertranslator.translate(referenceDAO.get(rs.getInt("_refs_key")));
 				referenceDAO.clear();
 				results.add(domain);
 				referenceDAO.clear();

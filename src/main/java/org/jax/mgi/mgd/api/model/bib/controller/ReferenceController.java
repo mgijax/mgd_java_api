@@ -19,6 +19,7 @@ import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceSearchDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceByMarkerDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceIndexDomain;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceService;
@@ -199,9 +200,9 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	@POST
 	@ApiOperation(value = "Get list of reference domains by marker accession id")
 	@Path("/getRefByMarker")
-	public List<SlimReferenceDomain> getRefByMarker(String accid) {
+	public List<SlimReferenceByMarkerDomain> getRefByMarker(String accid) {
 		
-		List<SlimReferenceDomain> results = new ArrayList<SlimReferenceDomain>();
+		List<SlimReferenceByMarkerDomain> results = new ArrayList<SlimReferenceByMarkerDomain>();
 
 		try {
 			results = referenceService.getRefByMarker(accid);

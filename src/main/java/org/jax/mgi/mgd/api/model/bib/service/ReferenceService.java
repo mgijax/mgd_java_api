@@ -2152,7 +2152,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		List<SlimReferenceByMarkerDomain> results = new ArrayList<SlimReferenceByMarkerDomain>();
 		
-		String cmd = "\nselect distinct c.* r.*" + 
+		String cmd = "\nselect distinct c.*, r.*" + 
 				"\nfrom mrk_reference mr, acc_accession aa, bib_citation_cache c, bib_refs r" + 
 				"\nwhere aa.accid = '" + accid + "'" + 
 				"\nand aa._mgitype_key = 2" + 

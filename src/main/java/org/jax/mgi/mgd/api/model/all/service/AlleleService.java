@@ -1407,7 +1407,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		
 		String cmd = "select distinct a._allele_key, a.symbol" + 
 				"\nfrom all_allele a, acc_accession aa" + 
-				"\nwhere a._marker_key = aa._object_key" + 
+				"\nwhere a._marker_key = aa._object_key" +
+				"\nand aa._mgitype_key = 2" +
 				"\nand aa.accid = '" + accid + "'" +
 				"\norder by a.symbol";
 		

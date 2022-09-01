@@ -322,6 +322,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		String cmd = "\nselect distinct e._expt_key, e.expttype, c.numericpart" + 
 				"\nfrom mrk_marker m, acc_accession aa, mld_expts e, mld_expt_marker em, bib_citation_cache c" + 
 				"\nwhere m._marker_key = aa._object_key" + 
+				"\nand aa._mgitype_key = 2" +
 				"\nand aa.accid = '" + accid + "'" +
 				"\nand m._marker_key = em._marker_key" +
 				"\nand em._expt_key = e._expt_key" +

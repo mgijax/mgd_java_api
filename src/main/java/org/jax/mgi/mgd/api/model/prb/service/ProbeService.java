@@ -796,6 +796,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				"\nfrom prb_probe a, prb_marker m, acc_accession aa" + 
 				"\nwhere a._probe_key = m._probe_key" + 
 				"\nand m._marker_key = aa._object_key" + 
+				"\nand aa._mgitype_key = 2" +
 				"\nand aa.accid = '" + accid + "'" +
 				"\norder by a.name";
 		

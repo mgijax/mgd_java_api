@@ -1241,6 +1241,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		String cmd = "\n(select distinct s._assay_key, m._marker_key, m.symbol" + 
 				"\nfrom all_allele a, acc_accession aa, gxd_allelegenotype g, gxd_gellane s, gxd_assay ga, mrk_marker m" + 
 				"\nwhere a._allele_key = aa._object_key" + 
+				"\nand aa._mgitype_key = 11" +
 				"\nand aa.accid = '" + accid + "'" +
 				"\nand a._allele_key = g._allele_key" +
 				"\nand g._genotype_key = s._genotype_key" +
@@ -1250,6 +1251,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nselect distinct s._assay_key, m._marker_key, m.symbol" +
 				"\nfrom all_allele a, acc_accession aa, gxd_allelegenotype g, gxd_specimen s, gxd_assay ga, mrk_marker m" + 
 				"\nwhere a._allele_key = aa._object_key" + 
+				"\nand aa._mgitype_key = 11" +
 				"\nand aa.accid = '" + accid + "'" +
 				"\nand a._allele_key = g._allele_key" +
 				"\nand g._genotype_key = s._genotype_key" +
@@ -1287,6 +1289,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		String cmd = "\nselect distinct g._assay_key, m._marker_key, m.symbol" + 
 				"\nfrom mrk_marker m, acc_accession aa, gxd_assay g" + 
 				"\nwhere m._marker_key = aa._object_key" + 
+				"\nand aa._mgitype_key = 2" +
 				"\nand aa.accid = '" + accid + "'" +
 				"\nand m._marker_key = g._marker_key" +
 				"\norder by symbol";

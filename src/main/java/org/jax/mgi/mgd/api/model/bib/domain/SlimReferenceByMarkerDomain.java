@@ -20,7 +20,9 @@ public class SlimReferenceByMarkerDomain extends BaseDomain {
 	public String journal;
 	public String year;
 	public String mgiid;	
-	public String doiid;
 	public String pubmedid;
+	public String vol;
+	public String referencetype;
+	public String referenceAbstract;
 
 }

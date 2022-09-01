@@ -32,7 +32,6 @@ import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
-import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceByMarkerTranslator;
 import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceMarkerAssocDomain;
@@ -77,7 +76,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	
 	private ReferenceTranslator translator = new ReferenceTranslator();
 	private SlimReferenceTranslator slimtranslator = new SlimReferenceTranslator();	
-	private SlimReferenceByMarkerTranslator slimbymarkertranslator = new SlimReferenceByMarkerTranslator();	
 
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
@@ -2170,11 +2168,17 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			while (rs.next()) {
 				SlimReferenceByMarkerDomain domain = new SlimReferenceByMarkerDomain();
 				domain.setRefsKey(rs.getString("_refs_key"));
+				domain.setJnum(rs.getString("numericpart"));
 				domain.setJnumid(rs.getString("jnumid"));
+				domain.setShort_citation(rs.getString("short_citation"));
+				domain.setTitle(rs.getString("title"));	
+				domain.setJournal(rs.getString("journal"));
+				domain.setYear(rs.getString("year"));
+				domain.setMgiid(rs.getString("mgiid"));	
 				domain.setPubmedid(rs.getString("pubmedid"));
-				
-				//domain = slimbymarkertranslator.translate(referenceDAO.get(rs.getInt("_refs_key")));
-				//referenceDAO.clear();
+				domain.setVol(rs.getString("vol"));
+				domain.setReferencetype(rs.getString("referencetype"));
+				domain.setReferenceAbstract(rs.getString("abstract"));				
 				results.add(domain);
 				referenceDAO.clear();
 			}

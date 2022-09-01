@@ -892,7 +892,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	
 	@Transactional	
 	public List<SeqSummaryDomain> getSequenceByMarker(String accid) {
-		// return list of sequence domains by marker accid
+		// return list of sequence summary domains by marker accid
 
 		List<SeqSummaryDomain> results = new ArrayList<SeqSummaryDomain>();
 		
@@ -919,7 +919,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				domain.setAccID(rs.getString("accid"));
 				domain.setSequenceType(rs.getString("sequenceType"));
 				domain.setLength(rs.getString("length"));
-				domain.setRawStrain(rs.getString("rawStrain"));
+				domain.setRawStrain(rs.getString("strain"));
 				domain.setMarkerSymbol(rs.getString("symbol"));
 				domain.setDescription(rs.getString("description"));
 				results.add(domain);

@@ -2143,5 +2143,39 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}		
 		return a.equals(b);
 	}
-	
+
+	@Transactional	
+	public List<SlimReferenceDomain> getRefByMarker(String accid) {
+		// return list of reference domains by marker acc id
+
+		List<SlimReferenceDomain> results = new ArrayList<SlimReferenceDomain>();
+		
+		String cmd = "\nselect distinct r._refs_key, m._marker_key, m.symbol" + 
+				"\nfrom mgi_reference_assoc r, acc_accession aa, mrk_marker m" + 
+				"\nwhere aa.accid = '" + accid + "'" +
+				"\nand aa._mgitype_key = 2" +
+				"\nand aa._object_key = m._marker_key" +
+				"\nand m._marker_key = r._object_key" +
+				"\nand r._mgitype_key = 2" +
+				"\norder by symbol";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimReferenceDomain domain = new SlimReferenceDomain();
+				domain = slimtranslator.translate(referenceDAO.get(rs.getInt("_refs_key")));
+				referenceDAO.clear();
+				results.add(domain);
+				referenceDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}	
 }

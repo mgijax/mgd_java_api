@@ -196,4 +196,20 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		return referenceService.validateJnumImage(domain);
 	}
 
+	@POST
+	@ApiOperation(value = "Get list of reference domains by marker accession id")
+	@Path("/getRefByMarker")
+	public List<SlimReferenceDomain> getRefByMarker(String accid) {
+		
+		List<SlimReferenceDomain> results = new ArrayList<SlimReferenceDomain>();
+
+		try {
+			results = referenceService.getRefByMarker(accid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

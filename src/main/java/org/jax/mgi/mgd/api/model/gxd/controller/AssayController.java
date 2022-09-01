@@ -248,5 +248,21 @@ public class AssayController extends BaseController<AssayDomain> {
 		
 		return results;
 	}
+
+	@POST
+	@ApiOperation(value = "Get list of specimen domains by reference jnumid")
+	@Path("/getSpecimenByRef")
+	public List<AssayDomain> getSpecimenByRef(String jnumid) {
+		
+		List<AssayDomain> results = new ArrayList<AssayDomain>();
+
+		try {
+			results = assayService.getSpecimenByRef(jnumid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
 }

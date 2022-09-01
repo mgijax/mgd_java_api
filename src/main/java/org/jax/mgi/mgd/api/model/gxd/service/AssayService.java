@@ -1347,14 +1347,13 @@ public class AssayService extends BaseService<AssayDomain> {
 		return results;
 	}	
 	
-
 	@Transactional	
 	public List<AssayDomain> getSpecimenByRef(String jnumid) {
 		// return list of specimen domains by reference jnum id
 
 		List<AssayDomain> results = new ArrayList<AssayDomain>();
 		
-		String cmd = "\nselect distinct g._assay_key, s.specimenLabel, m._marker_key, m.symbol" + 
+		String cmd = "\nselect distinct g._assay_key, s.specimenLabel, m._marker_key, m.symbol" +
 				"\nfrom bib_citation_cache aa, gxd_assay g, gxd_specimen s, mrk_marker m" + 
 				"\nwhere aa.jnumid = '" + jnumid + "'" +
 				"\nand aa._refs_key = g._refs_key" +

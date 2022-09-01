@@ -2154,12 +2154,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		List<SlimReferenceByMarkerDomain> results = new ArrayList<SlimReferenceByMarkerDomain>();
 		
-		String cmd = "\nselect distinct c._refs_key, c.numericpart" + 
-				"\nfrom mrk_reference r, acc_accession aa, bib_citation_cache c" + 
+		String cmd = "\nselect distinct c._refs_key, c.numericpart, c.jnumid, c.pubmedid, r.*" + 
+				"\nfrom mrk_reference mr, acc_accession aa, bib_citation_cache c, bib_refs r" + 
 				"\nwhere aa.accid = '" + accid + "'" + 
 				"\nand aa._mgitype_key = 2" + 
-				"\nand aa._object_key = r._marker_key" + 
-				"\nand r._refs_key = c._refs_key" + 
+				"\nand aa._object_key = mr._marker_key" + 
+				"\nand mr._refs_key = c._refs_key" + 
+				"\nand mr._refs_key = r._refs_key" + 				
 				"\norder by numericpart desc";
 		
 		log.info(cmd);	
@@ -2168,8 +2169,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SlimReferenceByMarkerDomain domain = new SlimReferenceByMarkerDomain();
-				domain = slimbymarkertranslator.translate(referenceDAO.get(rs.getInt("_refs_key")));
-				referenceDAO.clear();
+				domain.setRefsKey(rs.getString("_refs_key"));
+				domain.setJnumid(rs.getString("jnumid"));
+				domain.setPubmedid(rs.getString("pubmedid"));
+				
+				//domain = slimbymarkertranslator.translate(referenceDAO.get(rs.getInt("_refs_key")));
+				//referenceDAO.clear();
 				results.add(domain);
 				referenceDAO.clear();
 			}

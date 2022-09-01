@@ -896,13 +896,15 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		List<SeqSummaryDomain> results = new ArrayList<SeqSummaryDomain>();
 		
-		String cmd = "\nselect distinct s.accid, t1.term as sequenceType, ss.length, ss.description, m.symbol, sr.rawStrain" + 
-				"\nfrom seq_marker_cache s, voc_term t1, seq_sequence ss, mrk_marker m, seq_sequence_raw sr, acc_accession aa" + 
+		String cmd = "\nselect distinct s.accid, t1.term as sequenceType, ss.length, ss.description, m.symbol, pss.strain" + 
+				"\nfrom seq_marker_cache s, voc_term t1, seq_sequence ss, mrk_marker m, seq_source_assoc sr, prb_source pso, prb_strain pss, acc_accession aa" + 
 				"\nwhere s._sequencetype_key = t1._term_key" + 
 				"\nand s._sequence_key = ss._sequence_key" + 
 				"\nand s._marker_key = m._marker_key" + 
 				"\nand s._organism_key = 1" + 
-				"and s._sequence_key = sr._sequence_key" + 
+				"\nand s._sequence_key = sr._sequence_key" + 
+				"\nand sr._source_key = pso._source_key" +
+				"\nand pso._strain_key = pss._strain_key" +
 				"\nand m._marker_key = aa._object_key" + 
 				"\nand aa._mgitype_key = 2" + 
 				"\nand aa.accid = '" + accid + "'" + 

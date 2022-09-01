@@ -221,7 +221,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		List<SlimReferenceByDomain> results = new ArrayList<SlimReferenceByDomain>();
 
 		try {
-			results = referenceService.getRefByMarker(accid);
+			results = referenceService.getRefByAllele(accid);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

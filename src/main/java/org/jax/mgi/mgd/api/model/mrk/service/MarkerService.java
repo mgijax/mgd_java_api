@@ -919,7 +919,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				domain.setAccID(rs.getString("accid"));
 				domain.setSequenceType(rs.getString("sequenceType"));
 				domain.setLength(rs.getString("length"));
-				domain.setRawStrain(rs.getString("strain"));
+				domain.setStrain(rs.getString("strain"));
 				domain.setMarkerSymbol(rs.getString("symbol"));
 				domain.setDescription(rs.getString("description"));
 				results.add(domain);

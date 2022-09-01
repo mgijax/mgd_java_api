@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class SlimReferenceByMarkerDomain extends BaseDomain {
+public class SlimReferenceByDomain extends BaseDomain {
 
 	// a slim version of ReferenceDomain 
 	// not to be used when editing purposes

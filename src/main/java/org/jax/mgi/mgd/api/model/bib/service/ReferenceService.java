@@ -24,7 +24,7 @@ import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceSearchDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowRelevanceDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceByMarkerDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceByDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceIndexDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
@@ -2147,10 +2147,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}
 
 	@Transactional	
-	public List<SlimReferenceByMarkerDomain> getRefByMarker(String accid) {
+	public List<SlimReferenceByDomain> getRefByMarker(String accid) {
 		// return list of reference domains by marker acc id
 
-		List<SlimReferenceByMarkerDomain> results = new ArrayList<SlimReferenceByMarkerDomain>();
+		List<SlimReferenceByDomain> results = new ArrayList<SlimReferenceByDomain>();
 		
 		String cmd = "\nselect distinct c.*, r.*" + 
 				"\nfrom mrk_reference mr, acc_accession aa, bib_citation_cache c, bib_refs r" + 
@@ -2166,7 +2166,53 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				SlimReferenceByMarkerDomain domain = new SlimReferenceByMarkerDomain();
+				SlimReferenceByDomain domain = new SlimReferenceByDomain();
+				domain.setRefsKey(rs.getString("_refs_key"));
+				domain.setJnum(rs.getString("numericpart"));
+				domain.setJnumid(rs.getString("jnumid"));
+				domain.setShort_citation(rs.getString("short_citation"));
+				domain.setTitle(rs.getString("title"));	
+				domain.setJournal(rs.getString("journal"));
+				domain.setYear(rs.getString("year"));
+				domain.setMgiid(rs.getString("mgiid"));	
+				domain.setPubmedid(rs.getString("pubmedid"));
+				domain.setVol(rs.getString("vol"));
+				domain.setReferencetype(rs.getString("referencetype"));
+				domain.setReferenceAbstract(rs.getString("abstract"));				
+				results.add(domain);
+				referenceDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}
+	
+	@Transactional	
+	public List<SlimReferenceByDomain> getRefByAllele(String accid) {
+		// return list of reference domains by allele acc id
+
+		List<SlimReferenceByDomain> results = new ArrayList<SlimReferenceByDomain>();
+		
+		String cmd = "\nselect distinct c.*, r.*" + 
+				"\nfrom mgi_reference_assoc ar, acc_accession aa, bib_citation_cache c, bib_refs r" + 
+				"\nwhere aa.accid = '" + accid + "'" + 
+				"\nand aa._mgitype_key = 11" + 
+				"\nand aa._object_key = ar._object_key" + 
+				"\nand ar._mgitype_key = 11" + 				
+				"\nand ar._refs_key = c._refs_key" + 
+				"\nand c._refs_key = r._refs_key" + 				
+				"\norder by numericpart desc";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimReferenceByDomain domain = new SlimReferenceByDomain();
 				domain.setRefsKey(rs.getString("_refs_key"));
 				domain.setJnum(rs.getString("numericpart"));
 				domain.setJnumid(rs.getString("jnumid"));

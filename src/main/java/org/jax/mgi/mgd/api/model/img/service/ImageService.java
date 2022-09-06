@@ -704,11 +704,11 @@ public class ImageService extends BaseService<ImageDomain> {
 
 		List<ImageDomain> results = new ArrayList<ImageDomain>();
 		
-		String cmd = "select distinct a._allele_key, a.symbol" +
-				"\nfrom all_allele a, mgi_reference_allele_view aa" + 
-				"\nwhere a._allele_key = aa._object_key" + 
-				"\nand aa.jnumid = '" + jnumid + "'" +
-				"\norder by a.symbol";
+		String cmd = "\nselect distinct i._image_key" + 
+				"\nfrom img_image i, acc_accession aa" + 
+				"\nwhere aa.accid = '" + jnumid + "'" + 
+				"\nand aa._mgitype_key = 1" + 
+				"\nand aa._object_key = i._refs_key";
 		
 		log.info(cmd);	
 		
@@ -716,7 +716,7 @@ public class ImageService extends BaseService<ImageDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				ImageDomain domain = new ImageDomain();
-				domain = translator.translate(imageDAO.get(rs.getInt("_allele_key")));
+				domain = translator.translate(imageDAO.get(rs.getInt("_image_key")));
 				imageDAO.clear();
 				results.add(domain);
 				imageDAO.clear();

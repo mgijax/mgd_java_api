@@ -244,7 +244,7 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	@POST
 	@ApiOperation(value = "Get list of allele domains by reference jnumid")
 	@Path("/getAlleleByRef")
-	public List<AlleleDomain> getProbeByRef(String jnumid) {
+	public List<AlleleDomain> getAlleleByRef(String jnumid) {
 		
 		List<AlleleDomain> results = new ArrayList<AlleleDomain>();
 

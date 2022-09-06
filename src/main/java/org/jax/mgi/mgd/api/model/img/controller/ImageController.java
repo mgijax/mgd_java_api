@@ -171,5 +171,20 @@ public class ImageController extends BaseController<ImageDomain> {
 		
 		return results;
 	}
-	
+
+	@POST
+	@ApiOperation(value = "Get list of image domains by reference jnumid")
+	@Path("/getImageByRef")
+	public List<ImageDomain> getImageByRef(String jnumid) {
+		
+		List<ImageDomain> results = new ArrayList<ImageDomain>();
+
+		try {
+			results = imageService.getImageByRef(jnumid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
 }

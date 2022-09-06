@@ -697,5 +697,36 @@ public class ImageService extends BaseService<ImageDomain> {
 
 		return results;
 	}
-	
+
+	@Transactional	
+	public List<ImageDomain> getImageByRef(String jnumid) {
+		// return list of image domains by reference jnumid
+
+		List<ImageDomain> results = new ArrayList<ImageDomain>();
+		
+		String cmd = "select distinct a._allele_key, a.symbol" +
+				"\nfrom all_allele a, mgi_reference_allele_view aa" + 
+				"\nwhere a._allele_key = aa._object_key" + 
+				"\nand aa.jnumid = '" + jnumid + "'" +
+				"\norder by a.symbol";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				ImageDomain domain = new ImageDomain();
+				domain = translator.translate(imageDAO.get(rs.getInt("_allele_key")));
+				imageDAO.clear();
+				results.add(domain);
+				imageDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}		
 }

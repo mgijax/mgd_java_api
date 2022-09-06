@@ -155,4 +155,21 @@ public class ImageController extends BaseController<ImageDomain> {
 		
 		return results;
 	}	
+
+	@POST
+	@ApiOperation(value = "Get list of image domains by allele accession id")
+	@Path("/getImageByAllele")
+	public List<ImageDomain> getImageByAllele(String accid) {
+		
+		List<ImageDomain> results = new ArrayList<ImageDomain>();
+
+		try {
+			results = imageService.getImageByAllele(accid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

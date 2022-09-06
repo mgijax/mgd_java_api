@@ -672,7 +672,7 @@ public class ImageService extends BaseService<ImageDomain> {
 		String cmd = "\nselect distinct i._image_key"
 				+ "\nfrom img_image i, img_imagepane ip, img_imagepane_assoc ipa, acc_accession aa" 
 				+ "\nwhere aa.accid = '" + accid + "'"
-				+ "\nand a._mgitype_key = 11"
+				+ "\nand aa._mgitype_key = 11"
 				+ "\nand aa._object_key = ipa._object_key"
 				+ "\nand i._image_key = ip._image_key" 
 				+ "\nand ip._imagepane_key = ipa._imagepane_key" 

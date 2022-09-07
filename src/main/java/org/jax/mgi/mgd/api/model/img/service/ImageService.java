@@ -669,15 +669,16 @@ public class ImageService extends BaseService<ImageDomain> {
 
 		List<ImageDomain> results = new ArrayList<ImageDomain>();
 		
-		String cmd = "\nselect distinct i._image_key, i.figureLabel, ip.paneLabel" +
-				"\nfrom img_image i, img_imagepane ip, img_imagepane_assoc ipa, acc_accession aa" +
+		String cmd = "\nselect distinct i._image_key, t1.term" +
+				"\nfrom img_image i, img_imagepane ip, img_imagepane_assoc ipa, acc_accession aa, voc_term t1" +
 				"\nwhere aa.accid = '" + accid + "'" +
 				"\nand aa._mgitype_key = 11" +
 				"\nand aa._object_key = ipa._object_key" +
 				"\nand i._image_key = ip._image_key" +
 				"\nand ip._imagepane_key = ipa._imagepane_key" +
 				"\nand ipa._mgitype_key = 11" +
-				"\norder by i.figureLabel, ip.paneLabel";
+				"\nand i._imageclass_key = t1._term_key" +
+				"\norder by t1.term. ipa.isprimary asc, ipa._mgitype_key";
 		
 		log.info(cmd);	
 		

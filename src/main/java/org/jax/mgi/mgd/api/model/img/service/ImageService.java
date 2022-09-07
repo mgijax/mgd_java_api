@@ -678,7 +678,7 @@ public class ImageService extends BaseService<ImageDomain> {
 				"\nand ip._imagepane_key = ipa._imagepane_key" +
 				"\nand ipa._mgitype_key = 11" +
 				"\nand i._imageclass_key = t1._term_key" +
-				"\norder by t1.term, ipa.isprimary asc, ipa._mgitype_key";
+				"\norder by t1.term, ipa.isprimary desc, ipa._mgitype_key";
 		
 		log.info(cmd);	
 		

@@ -1238,8 +1238,8 @@ public class AssayService extends BaseService<AssayDomain> {
 
 		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
 		
-		String cmd = "\n(select distinct s._assay_key, m._marker_key, m.symbol" + 
-				"\nfrom all_allele a, acc_accession aa, gxd_allelegenotype g, gxd_gellane s, gxd_assay ga, mrk_marker m" + 
+		String cmd = "\n(select distinct s._assay_key, m._marker_key, m.symbol, t1.assaytype, b.short_citation" + 
+				"\nfrom all_allele a, acc_accession aa, gxd_allelegenotype g, gxd_gellane s, gxd_assay ga, mrk_marker m, gxd_assaytype t1, bib_citation_cache b" + 
 				"\nwhere a._allele_key = aa._object_key" + 
 				"\nand aa._mgitype_key = 11" +
 				"\nand aa.accid = '" + accid + "'" +
@@ -1247,18 +1247,22 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand g._genotype_key = s._genotype_key" +
 				"\nand s._assay_key = ga._assay_key" +
 				"\nand ga._marker_key = m._marker_key" +
+				"\nand g._assaytype_key = t1._assaytype_key" +
+				"\nand g._refs_key = b._refs_key" +
 				"\nunion" +
-				"\nselect distinct s._assay_key, m._marker_key, m.symbol" +
-				"\nfrom all_allele a, acc_accession aa, gxd_allelegenotype g, gxd_specimen s, gxd_assay ga, mrk_marker m" + 
+				"\nselect distinct s._assay_key, m._marker_key, m.symbol, t1.assaytype, b.short_citation" +
+				"\nfrom all_allele a, acc_accession aa, gxd_allelegenotype g, gxd_specimen s, gxd_assay ga, mrk_marker m, gxd_assaytype t1, bib_citation_cache b" + 
 				"\nwhere a._allele_key = aa._object_key" + 
 				"\nand aa._mgitype_key = 11" +
 				"\nand aa.accid = '" + accid + "'" +
 				"\nand a._allele_key = g._allele_key" +
 				"\nand g._genotype_key = s._genotype_key" +
 				"\nand s._assay_key = ga._assay_key" +
-				"\nand ga._marker_key = m._marker_key" +				
+				"\nand ga._marker_key = m._marker_key" +	
+				"\nand g._assaytype_key = t1._assaytype_key" +
+				"\nand g._refs_key = b._refs_key" +				
 				"\n)" +
-				"\norder by symbol";
+				"\norder by symbol, assaytype, short_citation";
 		
 		log.info(cmd);	
 		

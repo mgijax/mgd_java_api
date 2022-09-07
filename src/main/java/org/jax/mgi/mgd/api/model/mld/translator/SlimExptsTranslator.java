@@ -25,6 +25,11 @@ public class SlimExptsTranslator extends BaseEntityDomainTranslator<Expts, SlimE
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
+		// mgi accession ids only
+		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
+			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
+		}
+		
 		return domain;
 	}
 

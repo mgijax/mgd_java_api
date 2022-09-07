@@ -1238,8 +1238,8 @@ public class AssayService extends BaseService<AssayDomain> {
 
 		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
 		
-		String cmd = "\n(select distinct s._assay_key, m._marker_key, m.symbol, t1.assaytype, b.short_citation" + 
-				"\nfrom all_allele a, acc_accession aa, gxd_allelegenotype g, gxd_gellane s, gxd_assay ga, mrk_marker m, gxd_assaytype t1, bib_citation_cache b" + 
+		String cmd = "\n(select distinct s._assay_key, m._marker_key, m.symbol, t1.assaytype, b.short_citation, ag.accid" + 
+				"\nfrom all_allele a, acc_accession aa, gxd_allelegenotype g, gxd_gellane s, gxd_assay ga, mrk_marker m, gxd_assaytype t1, bib_citation_cache b, acc_accession ag" + 
 				"\nwhere a._allele_key = aa._object_key" + 
 				"\nand aa._mgitype_key = 11" +
 				"\nand aa.accid = '" + accid + "'" +
@@ -1249,9 +1249,11 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand ga._marker_key = m._marker_key" +
 				"\nand g._assaytype_key = t1._assaytype_key" +
 				"\nand g._refs_key = b._refs_key" +
+				"\nand g._assay_key = ag._object_key" +
+				"\nand ag._mgitype_key = 8" +
 				"\nunion" +
 				"\nselect distinct s._assay_key, m._marker_key, m.symbol, t1.assaytype, b.short_citation" +
-				"\nfrom all_allele a, acc_accession aa, gxd_allelegenotype g, gxd_specimen s, gxd_assay ga, mrk_marker m, gxd_assaytype t1, bib_citation_cache b" + 
+				"\nfrom all_allele a, acc_accession aa, gxd_allelegenotype g, gxd_specimen s, gxd_assay ga, mrk_marker m, gxd_assaytype t1, bib_citation_cache b, acc_accession ag" + 
 				"\nwhere a._allele_key = aa._object_key" + 
 				"\nand aa._mgitype_key = 11" +
 				"\nand aa.accid = '" + accid + "'" +
@@ -1260,9 +1262,11 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand s._assay_key = ga._assay_key" +
 				"\nand ga._marker_key = m._marker_key" +	
 				"\nand g._assaytype_key = t1._assaytype_key" +
-				"\nand g._refs_key = b._refs_key" +				
+				"\nand g._refs_key = b._refs_key" +	
+				"\nand g._assay_key = ag._object_key" +
+				"\nand ag._mgitype_key = 8" +				
 				"\n)" +
-				"\norder by symbol, assaytype, short_citation";
+				"\norder by symbol, assaytype, short_citation, ag.accid";
 		
 		log.info(cmd);	
 		
@@ -1290,13 +1294,15 @@ public class AssayService extends BaseService<AssayDomain> {
 
 		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
 		
-		String cmd = "\nselect distinct g._assay_key, m._marker_key, m.symbol" + 
-				"\nfrom mrk_marker m, acc_accession aa, gxd_assay g" + 
+		String cmd = "\nselect distinct g._assay_key, m._marker_key, m.symbol, m.symbol, t1.assaytype, b.short_citation" + 
+				"\nfrom mrk_marker m, acc_accession aa, gxd_assay g, gxd_assaytype t1, bib_citation_cache b" + 
 				"\nwhere m._marker_key = aa._object_key" + 
 				"\nand aa._mgitype_key = 2" +
 				"\nand aa.accid = '" + accid + "'" +
 				"\nand m._marker_key = g._marker_key" +
-				"\norder by symbol";
+				"\nand g._assaytype_key = t1._assaytype_key" +
+				"\nand g._refs_key = b._refs_key" +
+				"\norder by symbol, t1.assaytype, b.short_citation";
 		
 		log.info(cmd);	
 		
@@ -1357,15 +1363,13 @@ public class AssayService extends BaseService<AssayDomain> {
 
 		List<AssayDomain> results = new ArrayList<AssayDomain>();
 		
-		String cmd = "\nselect distinct g._assay_key, s.specimenLabel, m._marker_key, m.symbol, t1.assaytype, b.short_citation" +
-				"\nfrom bib_citation_cache aa, gxd_assay g, gxd_specimen s, mrk_marker m, gxd_assaytype t1, bib_citation_cache b" + 
+		String cmd = "\nselect distinct g._assay_key, s.specimenLabel, m._marker_key" +
+				"\nfrom bib_citation_cache aa, gxd_assay g, gxd_specimen s, mrk_marker m" + 
 				"\nwhere aa.jnumid = '" + jnumid + "'" +
 				"\nand aa._refs_key = g._refs_key" +
 				"\nand m._marker_key = g._marker_key" +
 				"\nand g._assay_key = s._assay_key" +
-				"\nand g._assaytype_key = t1._assaytype_key" +
-				"\nand g._refs_key = b._refs_key" +
-				"\norder by symbol, t1.assaytype, b.short_citation";
+				"\norder by symbol";
 		
 		log.info(cmd);	
 		

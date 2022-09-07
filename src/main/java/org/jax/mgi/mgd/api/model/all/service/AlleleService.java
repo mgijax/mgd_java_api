@@ -1405,12 +1405,14 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		List<AlleleDomain> results = new ArrayList<AlleleDomain>();
 		
-		String cmd = "select distinct a._allele_key, a.symbol" + 
-				"\nfrom all_allele a, acc_accession aa" + 
+		String cmd = "select distinct a._allele_key, a.symbol, t1.term, t2.term" + 
+				"\nfrom all_allele a, acc_accession aa, voc_term t1, voc_term t2" + 
 				"\nwhere a._marker_key = aa._object_key" +
 				"\nand aa._mgitype_key = 2" +
+				"\nand a._transmission_key = t1._term_key" +
+				"\nand a._allele_status_key = t2._term_key" +
 				"\nand aa.accid = '" + accid + "'" +
-				"\norder by a.symbol";
+				"\norder by t1.term desc, t2.term, a.symbol";
 		
 		log.info(cmd);	
 		

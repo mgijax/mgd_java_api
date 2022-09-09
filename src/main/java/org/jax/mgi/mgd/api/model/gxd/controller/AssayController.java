@@ -248,6 +248,22 @@ public class AssayController extends BaseController<AssayDomain> {
 		
 		return results;
 	}
+	
+	@POST
+	@ApiOperation(value = "Get list of assay domains with images by reference jnumid")
+	@Path("/getAssayImageByRef")
+	public List<AssayDomain> getAssayImageByRef(String jnumid) {
+		
+		List<AssayDomain> results = new ArrayList<AssayDomain>();
+
+		try {
+			results = assayService.getAssayImageByRef(jnumid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
 
 	@POST
 	@ApiOperation(value = "Get list of specimen domains by reference jnumid")

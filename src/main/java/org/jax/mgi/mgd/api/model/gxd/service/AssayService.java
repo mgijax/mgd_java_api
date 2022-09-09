@@ -1358,6 +1358,39 @@ public class AssayService extends BaseService<AssayDomain> {
 	}	
 	
 	@Transactional	
+	public List<AssayDomain> getAssayImageByRef(String jnumid) {
+		// return list of assay domains with images by reference jnum id
+
+		List<AssayDomain> results = new ArrayList<AssayDomain>();
+		
+		String cmd = "\nselect distinct g._assay_key, m._marker_key, m.symbol" + 
+				"\nfrom bib_citation_cache aa, gxd_assay g, mrk_marker m" + 
+				"\nwhere aa.jnumid = '" + jnumid + "'" +
+				"\nand aa._refs_key = g._refs_key" +
+				"\nand m._marker_key = g._marker_key" +
+				"\norder by symbol";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				AssayDomain domain = new AssayDomain();
+				domain = translator.translate(assayDAO.get(rs.getInt("_assay_key")));
+				assayDAO.clear();
+				results.add(domain);
+				assayDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}
+	
+	@Transactional	
 	public List<AssayDomain> getSpecimenByRef(String jnumid) {
 		// return list of specimen domains by reference jnum id
 

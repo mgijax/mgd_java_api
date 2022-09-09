@@ -104,20 +104,5 @@ public class ImagePaneController extends BaseController<ImagePaneDomain> {
 		
 		return results;
 	}
-
-	@POST
-	@ApiOperation(value = "Get list of image pane domains by reference jnumid")
-	@Path("/getImagePaneByRef")
-	public List<ImagePaneDomain> getImagePaneByRef(String jnumid) {
-		
-		List<ImagePaneDomain> results = new ArrayList<ImagePaneDomain>();
-
-		try {
-			results = imagePaneService.getImagePaneByRef(jnumid);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}	
+	
 }

@@ -12,6 +12,7 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
 import org.jax.mgi.mgd.api.model.img.domain.GXDImagePaneDomain;
+import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.entities.ImagePane;
@@ -258,4 +259,40 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 		
 		return results;
 	}	
+	
+	@Transactional	
+	public List<ImagePaneDomain> getImagePaneByRef(String jnumid) {
+		// return list of image pane domains by reference jnumid
+
+		List<ImagePaneDomain> results = new ArrayList<ImagePaneDomain>();
+		
+		String cmd = "\nselect distinct i._image_key, ip._imagepane_key, i.figureLabel, ip.paneLabel" + 
+				"\nfrom img_image i, img_imagepane ip, acc_accession aa" + 
+				"\nwhere aa.accid = '" + jnumid + "'" + 
+				"\nand aa._mgitype_key = 1" + 
+				"\nand aa._object_key = i._refs_key" +
+				"\nand i._image_key = ip._image_key" +
+				"\norder by i.figureLabel, ip.paneLabel";
+
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				ImagePaneDomain domain = new ImagePaneDomain();
+				domain = translator.translate(imagePaneDAO.get(rs.getInt("_imagepane_key")));
+				imagePaneDAO.clear();
+				results.add(domain);
+				imagePaneDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}	
+	
 }

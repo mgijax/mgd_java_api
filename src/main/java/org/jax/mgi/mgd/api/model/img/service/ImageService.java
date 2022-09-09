@@ -699,39 +699,5 @@ public class ImageService extends BaseService<ImageDomain> {
 
 		return results;
 	}
-
-	@Transactional	
-	public List<ImageDomain> getImageByRef(String jnumid) {
-		// return list of image domains by reference jnumid
-
-		List<ImageDomain> results = new ArrayList<ImageDomain>();
-		
-		String cmd = "\nselect distinct i._image_key, i.figureLabel, ip.paneLabel" + 
-				"\nfrom img_image i, img_imagepane ip, acc_accession aa" + 
-				"\nwhere aa.accid = '" + jnumid + "'" + 
-				"\nand aa._mgitype_key = 1" + 
-				"\nand aa._object_key = i._refs_key" +
-				"\nand i._image_key = ip._image_key" +
-				"\norder by i.figureLabel, ip.paneLabel";
-
-		
-		log.info(cmd);	
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				ImageDomain domain = new ImageDomain();
-				domain = translator.translate(imageDAO.get(rs.getInt("_image_key")));
-				imageDAO.clear();
-				results.add(domain);
-				imageDAO.clear();
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}		
-
-		return results;
-	}		
+	
 }

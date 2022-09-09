@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.img.domain.GXDImagePaneDomain;
+import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.service.ImagePaneService;
@@ -104,5 +105,20 @@ public class ImagePaneController extends BaseController<ImagePaneDomain> {
 		
 		return results;
 	}
-	
+
+	@POST
+	@ApiOperation(value = "Get list of image pane domains by reference jnumid")
+	@Path("/getImagePaneByRef")
+	public List<ImagePaneDomain> getImagePaneByRef(String jnumid) {
+		
+		List<ImagePaneDomain> results = new ArrayList<ImagePaneDomain>();
+
+		try {
+			results = imagePaneService.getImageImagePaneByRef(jnumid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
 }

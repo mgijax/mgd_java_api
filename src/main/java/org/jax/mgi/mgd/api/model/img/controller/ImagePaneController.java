@@ -12,7 +12,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.img.domain.GXDImagePaneDomain;
-import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssayDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.service.ImagePaneService;
@@ -82,23 +81,6 @@ public class ImagePaneController extends BaseController<ImagePaneDomain> {
 		
 		return results;
 	}
-	
-	@POST
-	@ApiOperation(value = "Get Image Panes with Assay by reference accession id")
-	@Path("/getImageAssayByRef")
-	public List<ImagePaneAssayDomain> getImageAssayByRef(String accid) {
-	
-		List<ImagePaneAssayDomain> results = new ArrayList<ImagePaneAssayDomain>();
-
-		try {
-			results = imagePaneService.getImageAssayByRef(accid);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
-	
 	
 	@POST
 	@ApiOperation(value = "Process")

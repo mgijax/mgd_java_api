@@ -664,6 +664,80 @@ public class ImageService extends BaseService<ImageDomain> {
 	}
 
 	@Transactional	
+	public List<ImagePaneAssayDomain> getImagePanesAssayByRef(String accid) {
+		// search for all assays/image panes by reference
+		
+		List<ImagePaneAssayDomain> results = new ArrayList<ImagePaneAssayDomain>();
+
+		String cmd = "select i._image_key, i._imagepane_key, i.panelabel, s._assay_key" + 
+				"\nfrom img_imagepane i, gxd_assay s, bib_citation_cache c" + 
+				"\nwhere c.jnumid = '" + accid + "'" +
+				"\nand c._refs_key = s._refs_key" +
+				"\nand s._imagepane_key = i._imagepane_key" + 
+				"\nunion" + 
+				"\nselect i._image_key, i._imagepane_key, i.panelabel, s._assay_key" + 
+				"\nfrom img_imagepane i, gxd_specimen s, gxd_insituresult ir, gxd_insituresultimage irg" + 
+				"\nwhere c.jnumid = '" + accid + "'" +
+				"\nand c._refs_key = s._refs_key" +
+				"\nand s._imagepane_key = i._imagepane_key" + 
+				"\nand i._imagepane_key = irg._imagepane_key" + 
+				"\nand irg._result_key = ir._result_key" + 
+				"\nand ir._specimen_key = s._specimen_key" + 			
+				"\norder by panelabel";
+		
+		// make this easy to copy/paste for troubleshooting
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			ImagePaneAssayDomain domain = new ImagePaneAssayDomain();								
+			List<SlimAssayDomain> assays = new ArrayList<SlimAssayDomain>();
+			String newPaneLabel = "";
+			String prevPaneLabel = "";
+			
+			while (rs.next()) {
+				SlimAssayDomain assayDomain = new SlimAssayDomain();
+
+				newPaneLabel = rs.getString("panelabel");	
+				if (newPaneLabel == null || newPaneLabel.isEmpty()) {
+					newPaneLabel = "";
+				}
+
+				// new domain, new assays
+				if (!newPaneLabel.equals(prevPaneLabel)) {
+					
+					// if previous assays != null, then save this domain
+					if (domain.getAssays() != null) {
+						results.add(domain);
+					}
+					
+					domain = new ImagePaneAssayDomain();
+					assays = new ArrayList<SlimAssayDomain>();					
+					domain.setImageKey(rs.getString("_image_key"));
+					domain.setImagePaneKey(rs.getString("_imagepane_key"));
+					domain.setPaneLabel(rs.getString("panelabel"));
+				}
+				
+				assayDomain = assayTranslator.translate(assayDAO.get(rs.getInt("_assay_key")));				
+				assays.add(assayDomain);
+				domain.setAssays(assays);
+				domain.getAssays().sort(Comparator.comparing(SlimAssayDomain::getAccID));				
+				prevPaneLabel = newPaneLabel;
+			}
+			if (domain.getAssays() != null) {
+				domain.getAssays().sort(Comparator.comparing(SlimAssayDomain::getAccID));								
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@Transactional	
 	public List<ImageDomain> getImageByAllele(String accid) {
 		// return list of assay domains by allele acc id
 

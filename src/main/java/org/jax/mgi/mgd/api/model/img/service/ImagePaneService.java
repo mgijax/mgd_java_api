@@ -12,7 +12,6 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
 import org.jax.mgi.mgd.api.model.img.domain.GXDImagePaneDomain;
-import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssayDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.entities.ImagePane;
@@ -140,48 +139,6 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 		}
 		
 		return results;	
-	}
-	
-	@Transactional	
-	public List<ImagePaneAssayDomain> getImageAssayByRef(String accid) {
-		// return list of assay domains by allele acc id
-
-		List<ImagePaneAssayDomain> results = new ArrayList<ImagePaneAssayDomain>();
-		
-		String cmd = "\nelect ia.accid, i.*, m.symbol, ma.accid, aa.accid, t.assaytype"
-				+ "\nfrom IMG_ImagePaneGXD_View i, acc_accession ia, gxd_assay a, mrk_marker m, acc_accession ma, acc_accession aa, gxd_assaytype t" 
-				+ "\nwhere i.jnumid in ('J:311212', 'J:12563')"
-				+ "\nand i._image_key = ia._object_key"
-				+ "\nand ia._mgitype_key = 9" 
-				+ "\nand ia._logicaldb_key = 1" 
-				+ "\nand i._imagepane_key = a._imagepane_key" 
-				+ "and a._marker_key = m._marker_key" 
-				+ "and m._marker_key = ma._object_key" 
-				+ "and ma._logicaldb_key = 1" 
-				+ "and ma._mgitype_key = 2" 
-				+ "and ma.preferred = 1" 
-				+ "and a._assay_key = aa._object_key" 
-				+ "and aa._logicaldb_key = 1" 
-				+ "and aa._mgitype_key = 8" 
-				+ "and a._assaytype_key = t._assaytype_key" 
-				+ "order by i.paneLabel";
-		
-		log.info(cmd);	
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				ImagePaneAssayDomain domain = new ImagePaneAssayDomain();
-				results.add(domain);
-				imagePaneDAO.clear();
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}		
-
-		return results;
 	}
 	
 	@Transactional

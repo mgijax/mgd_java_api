@@ -172,4 +172,20 @@ public class ImageController extends BaseController<ImageDomain> {
 		return results;
 	}
 	
+	@POST
+	@ApiOperation(value = "Get Assay Image Panes by reference accession id/returns image pane assay domain")
+	@Path("/getImagePanesAssayByRef")
+	public List<ImagePaneAssayDomain> getImagePanesAssayByRef(String accid) {
+	
+		List<ImagePaneAssayDomain> results = new ArrayList<ImagePaneAssayDomain>();
+
+		try {
+			results = imageService.getImagePanesAssayByRef(accid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
+	
 }

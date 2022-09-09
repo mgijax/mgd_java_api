@@ -669,21 +669,23 @@ public class ImageService extends BaseService<ImageDomain> {
 		
 		List<ImagePaneAssayDomain> results = new ArrayList<ImagePaneAssayDomain>();
 
-		String cmd = "select i._image_key, i._imagepane_key, i.panelabel, s._assay_key" + 
-				"\nfrom img_imagepane i, gxd_assay s, bib_citation_cache c" + 
+		String cmd = "select i._image_key, i._imagepane_key, i.panelabel, ii.figurelabel, s._assay_key" + 
+				"\nfrom img_imagepane i, img_image ii, gxd_assay s, bib_citation_cache c" + 
 				"\nwhere c.jnumid = '" + accid + "'" +
 				"\nand c._refs_key = s._refs_key" +
-				"\nand s._imagepane_key = i._imagepane_key" + 
+				"\nand s._imagepane_key = i._imagepane_key" +
+				"\nand i._image_key = ii._image_key" +
 				"\nunion" + 
-				"\nselect i._image_key, i._imagepane_key, i.panelabel, s._assay_key" + 
-				"\nfrom img_imagepane i, gxd_assay s, bib_citation_cache c, gxd_specimen ss, gxd_insituresult ir, gxd_insituresultimage irg" + 
+				"\nselect i._image_key, i._imagepane_key, i.panelabel, ii.figurelabel, s._assay_key" + 
+				"\nfrom img_imagepane i, img_image ii, gxd_assay s, bib_citation_cache c, gxd_specimen ss, gxd_insituresult ir, gxd_insituresultimage irg" + 
 				"\nwhere c.jnumid = '" + accid + "'" +
 				"\nand c._refs_key = s._refs_key" +
 				"\nand s._assay_key = ss._assay_key" +
 				"\nand i._imagepane_key = irg._imagepane_key" + 
 				"\nand irg._result_key = ir._result_key" + 
-				"\nand ir._specimen_key = ss._specimen_key" + 			
-				"\norder by panelabel";
+				"\nand ir._specimen_key = ss._specimen_key" + 	
+				"\nand i._image_key = ii._image_key" +				
+				"\norder by figurelabel, panelabel";
 		
 		// make this easy to copy/paste for troubleshooting
 		log.info(cmd);

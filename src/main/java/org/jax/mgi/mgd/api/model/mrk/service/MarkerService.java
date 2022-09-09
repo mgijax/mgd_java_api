@@ -896,7 +896,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		List<SeqSummaryDomain> results = new ArrayList<SeqSummaryDomain>();
 		
-		String cmd = "\nselect distinct s._sequence_key, s.accid, t1.term as sequenceType, ss.length, ss.description, m.symbol, pss.strain" + 
+		String cmd = "\nselect distinct s._sequence_key, s.accid, t1.term as sequenceType, ss.length, ss.description, m.symbol, pss.strain, aa.accid as markerAccid" + 
 				"\nfrom seq_marker_cache s, voc_term t1, seq_sequence ss, mrk_marker m, seq_source_assoc sr, prb_source pso, prb_strain pss, acc_accession aa" + 
 				"\nwhere s._sequencetype_key = t1._term_key" + 
 				"\nand s._sequence_key = ss._sequence_key" + 
@@ -922,6 +922,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				domain.setLength(rs.getString("length"));
 				domain.setStrain(rs.getString("strain"));
 				domain.setMarkerSymbol(rs.getString("symbol"));
+				domain.setMarkerAccID(rs.getString("markerAccid"));				
 				domain.setDescription(rs.getString("description"));
 				results.add(domain);
 				markerDAO.clear();

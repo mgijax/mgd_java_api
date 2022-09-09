@@ -13,5 +13,6 @@ public class SeqSummaryDomain extends BaseDomain {
 	private String length;
 	private String strain;
 	private String markerSymbol;
+	private String markerAccID;
 	private String description;
 }

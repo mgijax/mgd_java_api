@@ -221,13 +221,13 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		}
 		
 		// reference note
-		if (searchDomain.getReferenceNote().getNote() != null && !searchDomain.getReferenceNote().getNote().isEmpty()) {
+		if (searchDomain.getReferenceNote() != null && searchDomain.getReferenceNote().getNote() != null && !searchDomain.getReferenceNote().getNote().isEmpty()) {
 			where = where + "\nand rnote.note ilike '" + searchDomain.getReferenceNote().getNote() + "'";
 			from_rnote = true;
 		}
 		
 		// expt note
-		if (searchDomain.getExptNote().getNote() != null && !searchDomain.getExptNote().getNote().isEmpty()) {
+		if (searchDomain.getExptNote() != null && searchDomain.getExptNote().getNote() != null && !searchDomain.getExptNote().getNote().isEmpty()) {
 			where = where + "\nand enote.note ilike '" + searchDomain.getExptNote().getNote() + "'";
 			from_enote = true;			
 		}

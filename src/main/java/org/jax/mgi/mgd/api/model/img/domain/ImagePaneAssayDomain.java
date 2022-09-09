@@ -15,6 +15,7 @@ public class ImagePaneAssayDomain extends BaseDomain {
 	
 	private String imageKey;
 	private String imagePaneKey;	
+	private String figureLabel;
 	private String paneLabel;
 	private List<SlimAssayDomain> assays;
 }

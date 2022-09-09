@@ -598,17 +598,19 @@ public class ImageService extends BaseService<ImageDomain> {
 		
 		List<ImagePaneAssayDomain> results = new ArrayList<ImagePaneAssayDomain>();
 
-		String cmd = "select i._image_key, i._imagepane_key, i.panelabel, s._assay_key" + 
-				"\nfrom img_imagepane i, gxd_assay s" + 
+		String cmd = "select i._image_key, i._imagepane_key, i.panelabel, ii.figureLabel, s._assay_key" + 
+				"\nfrom img_imagepane i, img_image ii, gxd_assay s" + 
 				"\nwhere i._image_key = " + imageKey + 
-				"\nand i._imagepane_key = s._imagepane_key" + 
+				"\nand i._imagepane_key = s._imagepane_key" +
+				"\nand i._image_key = ii._image_key" +
 				"\nunion" + 
-				"\nselect i._image_key, i._imagepane_key, i.panelabel, s._assay_key" + 
+				"\nselect i._image_key, i._imagepane_key, i.panelabel, ii.figureLabel, s._assay_key" + 
 				"\nfrom img_imagepane i, gxd_specimen s, gxd_insituresult ir, gxd_insituresultimage irg" + 
 				"\nwhere i._image_key = " + imageKey + 
 				"\nand i._imagepane_key = irg._imagepane_key" + 
 				"\nand irg._result_key = ir._result_key" + 
 				"\nand ir._specimen_key = s._specimen_key" + 			
+				"\nand i._image_key = ii._image_key" +
 				"\norder by panelabel";
 		
 		// make this easy to copy/paste for troubleshooting
@@ -642,6 +644,7 @@ public class ImageService extends BaseService<ImageDomain> {
 					domain.setImageKey(rs.getString("_image_key"));
 					domain.setImagePaneKey(rs.getString("_imagepane_key"));
 					domain.setPaneLabel(rs.getString("panelabel"));
+					domain.setFigureLabel(rs.getString("figureLabel"));				
 				}
 				
 				assayDomain = assayTranslator.translate(assayDAO.get(rs.getInt("_assay_key")));				
@@ -718,6 +721,7 @@ public class ImageService extends BaseService<ImageDomain> {
 					domain.setImageKey(rs.getString("_image_key"));
 					domain.setImagePaneKey(rs.getString("_imagepane_key"));
 					domain.setPaneLabel(rs.getString("panelabel"));
+					domain.setFigureLabel(rs.getString("figureLabel"));
 				}
 				
 				assayDomain = assayTranslator.translate(assayDAO.get(rs.getInt("_assay_key")));				

@@ -12,7 +12,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.img.domain.GXDImagePaneDomain;
-import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.service.ImagePaneService;
@@ -114,7 +113,7 @@ public class ImagePaneController extends BaseController<ImagePaneDomain> {
 		List<ImagePaneDomain> results = new ArrayList<ImagePaneDomain>();
 
 		try {
-			results = imagePaneService.getImageImagePaneByRef(jnumid);
+			results = imagePaneService.getImagePaneByRef(jnumid);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -676,13 +676,13 @@ public class ImageService extends BaseService<ImageDomain> {
 				"\nand s._imagepane_key = i._imagepane_key" + 
 				"\nunion" + 
 				"\nselect i._image_key, i._imagepane_key, i.panelabel, s._assay_key" + 
-				"\nfrom img_imagepane i, gxd_specimen s, gxd_insituresult ir, gxd_insituresultimage irg" + 
+				"\nfrom img_imagepane i, gxd_assay s, bib_citation_cache c, gxd_specimen ss, gxd_insituresult ir, gxd_insituresultimage irg" + 
 				"\nwhere c.jnumid = '" + accid + "'" +
 				"\nand c._refs_key = s._refs_key" +
-				"\nand s._imagepane_key = i._imagepane_key" + 
+				"\nand s._assay_key = ss._assay_key" +
 				"\nand i._imagepane_key = irg._imagepane_key" + 
 				"\nand irg._result_key = ir._result_key" + 
-				"\nand ir._specimen_key = s._specimen_key" + 			
+				"\nand ir._specimen_key = ss._specimen_key" + 			
 				"\norder by panelabel";
 		
 		// make this easy to copy/paste for troubleshooting

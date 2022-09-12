@@ -43,6 +43,6 @@ public class DagNode extends BaseEntity {
 	
 	@OneToMany()
 	@JoinColumn(name="_child_key", referencedColumnName="_node_key", insertable=false, updatable=false)
-	private List<DagEdge> childEdges;		
+	private List<DagEdge> childEdges;
 }
 

@@ -891,33 +891,28 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}
 	
 	@Transactional	
-	public MarkerDomain getSummaryLinkByMarker(String accid) {
-		// return marker domains with summary info by marker accid
-
-		MarkerDomain domain = new MarkerDomain();
+	public MarkerDomain getSummaryLinks(MarkerDomain domain) {
+		// return marker domains with summary info by marker key attached
 		
-		String cmd = "\nselect a._object_key, a.accid," 
-				+ "\ncase when exists (select 1 from gxd_allelegenotype s where a._object_key = _marker_key) then 1 else 0 end as hasAllele," 
-				+ "\ncase when exists (select 1 from mrk_reference s where a._object_key = _marker_key) then 1 else 0 end as hasReference," 
-				+ "\ncase when exists (select 1 from gxd_index s where a._object_key = _marker_key) then 1 else 0 end as hasGxdIndex," 
-				+ "\ncase when exists (select 1 from gxd_assay s where a._object_key = _marker_key) then 1 else 0 end as hasGxdAssay," 
-				+ "\ncase when exists (select 1 from gxd_expression s where a._object_key = _marker_key) then 1 else 0 end as hasGxdResult," 
-				+ "\ncase when exists (select 1 from prb_marker s where a._object_key = _marker_key) then 1 else 0 end as hasProbe," 
-				+ "case when exists (select 1 from gxd_antibodymarker s where a._object_key = _marker_key) then 1 else 0 end as hasAntibody," 
-				+ "\ncase when exists (select 1 from mld_expt_marker s where a._object_key = _marker_key) then 1 else 0 end as hasMapping,"
-				+ "\ncase when exists (select 1 from seq_marker_cache s where a._object_key = _marker_key) then 1 else 0 end as hasSequence"
-				+ "\nfrom acc_accession a" 
-				+ "\nwhere a.accid = '" + accid + "'"
-				+ "\nand a._mgitype_key = 2" 
-				+ "\nand a._logicaldb_key = 1" 
-				+ "\nand a.preferred = 1";
+		String cmd = "\nselect m._marker_key," 
+				+ "\ncase when exists (select 1 from gxd_allelegenotype s where m._marker_key = s._marker_key) then 1 else 0 end as hasAllele," 
+				+ "\ncase when exists (select 1 from mrk_reference s where m._marker_key = s._marker_key) then 1 else 0 end as hasReference," 
+				+ "\ncase when exists (select 1 from gxd_index s where m._marker_key = s._marker_key) then 1 else 0 end as hasGxdIndex," 
+				+ "\ncase when exists (select 1 from gxd_assay s where m._marker_key = s._marker_key) then 1 else 0 end as hasGxdAssay," 
+				+ "\ncase when exists (select 1 from gxd_expression s where m._marker_key = s._marker_key) then 1 else 0 end as hasGxdResult," 
+				+ "\ncase when exists (select 1 from prb_marker s where m._marker_key = s._marker_key) then 1 else 0 end as hasProbe," 
+				+ "case when exists (select 1 from gxd_antibodymarker s where m._marker_key = s._marker_key) then 1 else 0 end as hasAntibody," 
+				+ "\ncase when exists (select 1 from mld_expt_marker s where m._marker_key = s._marker_key) then 1 else 0 end as hasMapping,"
+				+ "\ncase when exists (select 1 from seq_marker_cache s where m._marker_key = s._marker_key) then 1 else 0 end as hasSequence"
+				+ "\nfrom mrk_marker m" 
+				+ "\nwhere m._marker_key = " + domain.getMarkerKey();
 		
 		log.info(cmd);	
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				domain = translator.translate(markerDAO.get(rs.getInt("_object_key")));
+				//domain = translator.translate(markerDAO.get(rs.getInt("_marker_key")));
 				domain.setHasAllele(rs.getBoolean("hasAllele"));
 				domain.setHasAntibody(rs.getBoolean("hasAntibody"));
 				domain.setHasGxdAssay(rs.getBoolean("hasGxdAssay"));

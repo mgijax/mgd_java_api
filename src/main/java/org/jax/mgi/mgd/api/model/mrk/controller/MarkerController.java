@@ -123,7 +123,19 @@ public class MarkerController extends BaseController<MarkerDomain> {
 
 	@Override
 	public MarkerDomain get(Integer markerKey) {
-		return markerService.get(markerKey);
+		
+		MarkerDomain results = new MarkerDomain();
+		
+		results = markerService.get(markerKey);
+		
+		// attach summary links
+		try {
+			results = markerService.getSummaryLinks(results);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
 	}
 
 	@Override
@@ -184,21 +196,21 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		return results;
 	}
 	
-	@POST
-	@ApiOperation(value = "Get summary link info for marker domains by marker acc id")
-	@Path("/getSummaryLinkByMarker")
-	public MarkerDomain getSummaryLinkByMarker(String accid) {
-		
-		MarkerDomain results = new MarkerDomain();
-
-		try {
-			results = markerService.getSummaryLinkByMarker(accid);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
+//	@POST
+//	@ApiOperation(value = "Get summary link info for marker domains by marker acc id")
+//	@Path("/getSummaryLinkByMarker")
+//	public MarkerDomain getSummaryLinkByMarker(String accid) {
+//		
+//		MarkerDomain results = new MarkerDomain();
+//
+//		try {
+//			results = markerService.getSummaryLinkByMarker(accid);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return results;
+//	}
 	
 	@POST
 	@ApiOperation(value = "Get list of sequence domains by marker acc id")

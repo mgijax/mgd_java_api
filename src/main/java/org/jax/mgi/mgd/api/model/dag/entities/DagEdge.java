@@ -32,11 +32,11 @@ public class DagEdge extends BaseEntity {
 	private Date modification_date;
 
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_term_key", referencedColumnName="_parent_key")
+	@JoinColumn(name="_parent_key", referencedColumnName="_term_key")
 	private Term parentTerm;	
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_term_key", referencedColumnName="_child_key")
+	@JoinColumn(name="_child_key", referencedColumnName="_term_key")
 	private Term childTerm;
 	
 	@OneToOne(fetch=FetchType.LAZY)

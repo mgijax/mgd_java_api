@@ -14,7 +14,6 @@ public class DagNodeDomain extends BaseDomain {
 	
 	private String nodeKey;
 	private String objectKey;	
-	private String term;
 	private String creation_date;
 	private String modification_date;
 	private DagDomain dagDomain;

@@ -49,9 +49,8 @@ public class DagNodeController extends BaseController<DagNodeDomain> {
 		
 		results = dagNodeService.get(key);		
 		
-		// attach summary links
+		// return list of sibling dag edges based on parent key
 		try {
-			// if childEdge has parent, then go find other sibling of parent
 			if (results.getChildEdges().size() > 0) {
 				List<DagEdgeDomain> siblingdomain = new ArrayList<DagEdgeDomain>();
 				siblingdomain = dagEdgeService.getSiblingsByParent(results);

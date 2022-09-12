@@ -98,12 +98,12 @@ public class DagEdgeService extends BaseService<DagEdgeDomain> {
 		log.info(cmd);
 		
 		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			
+			ResultSet rs = sqlExecutor.executeProto(cmd);			
 			while (rs.next()) {
 				DagEdgeDomain domain = new DagEdgeDomain();
 				domain = translator.translate(dagEdgeDAO.get(rs.getInt("_edge_key")));	
-				results.add(domain);
+				dagEdgeDAO.clear();		
+				results.add(domain);				
 			}
 			sqlExecutor.cleanup();
 		}

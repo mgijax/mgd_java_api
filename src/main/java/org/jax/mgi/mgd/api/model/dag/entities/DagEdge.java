@@ -24,8 +24,6 @@ public class DagEdge extends BaseEntity {
 	@Id
 	private int _edge_key;
 	private Integer _dag_key;
-//	private Integer _parent_key;
-//	private Integer _child_key;
 	private Integer sequenceNum;	
 	private Date creation_date;
 	private Date modification_date;

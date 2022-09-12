@@ -11,7 +11,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
+import org.jax.mgi.mgd.api.model.dag.domain.DagEdgeDomain;
 import org.jax.mgi.mgd.api.model.dag.domain.DagNodeDomain;
+import org.jax.mgi.mgd.api.model.dag.service.DagEdgeService;
 import org.jax.mgi.mgd.api.model.dag.service.DagNodeService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -27,7 +29,9 @@ public class DagNodeController extends BaseController<DagNodeDomain> {
 
 	@Inject
 	private DagNodeService dagNodeService;
-
+	@Inject
+	private DagEdgeService dagEdgeService;
+	
 	@Override
 	public SearchResults<DagNodeDomain> create(DagNodeDomain term, User user) {
 		return dagNodeService.create(term, user);
@@ -40,7 +44,27 @@ public class DagNodeController extends BaseController<DagNodeDomain> {
 
 	@Override
 	public DagNodeDomain get(Integer key) {
-		return dagNodeService.get(key);
+		
+		DagNodeDomain results = new DagNodeDomain();
+		
+		results = dagNodeService.get(key);		
+		
+		// attach summary links
+		try {
+			// if childEdge has parent, then go find other sibling of parent
+			if (results.getChildEdges().size() > 0) {
+				List<DagEdgeDomain> siblingdomain = new ArrayList<DagEdgeDomain>();
+				siblingdomain = dagEdgeService.getSiblingsByParent(results);
+				if (siblingdomain.size() > 0) {
+					results.setSiblingEdges(siblingdomain);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+
 	}
 
 	@Override

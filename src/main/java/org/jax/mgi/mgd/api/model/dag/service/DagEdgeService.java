@@ -13,6 +13,7 @@ import javax.ws.rs.Path;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.dag.dao.DagEdgeDAO;
 import org.jax.mgi.mgd.api.model.dag.domain.DagEdgeDomain;
+import org.jax.mgi.mgd.api.model.dag.domain.DagNodeDomain;
 import org.jax.mgi.mgd.api.model.dag.translator.DagEdgeTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -87,11 +88,13 @@ public class DagEdgeService extends BaseService<DagEdgeDomain> {
 	@POST
 	@ApiOperation(value = "Get Edge Siblings by Parent key")
 	@Path("/getSiblingsByParent")
-	public List<DagEdgeDomain> getSiblingsByParent(Integer parentKey) {
+	public List<DagEdgeDomain> getSiblingsByParent(DagNodeDomain parentdomain) {
+		// return list of sibling dag edges based on parent key
 			
 		List<DagEdgeDomain> results = new ArrayList<DagEdgeDomain>();
 		
-		String cmd = "select * from dag_edge where _parent_key = " + parentKey;
+		String cmd = "select * from dag_edge where _parent_key = " + parentdomain.getChildEdges().get(0).getParentKey()
+				+ "\nand _child_key != " + parentdomain.getChildEdges().get(0).getChildKey();
 		log.info(cmd);
 		
 		try {
@@ -99,7 +102,7 @@ public class DagEdgeService extends BaseService<DagEdgeDomain> {
 			
 			while (rs.next()) {
 				DagEdgeDomain domain = new DagEdgeDomain();
-				domain = translator.translate(dagEdgeDAO.get(rs.getInt("_edge_key")));				
+				domain = translator.translate(dagEdgeDAO.get(rs.getInt("_edge_key")));	
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

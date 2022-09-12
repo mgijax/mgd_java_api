@@ -103,5 +103,18 @@ public class TermController extends BaseController<TermDomain> {
 		}
 		return results;	
 	}
+
+	@POST
+	@ApiOperation(value = "Get DAG Parents by term key")
+	@Path("/getDagParents")
+	public List<TermDomain> getDagParents(Integer termKey) {
+		List<TermDomain> results = new ArrayList<TermDomain>();
+		try {
+			results = termService.getDagParents(termKey);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return results;	
+	}
 	
 }

@@ -893,6 +893,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	@Transactional	
 	public MarkerDomain getSummaryLinks(MarkerDomain domain) {
 		// return marker domains with summary info by marker key attached
+		// called from MarkerController/get()
 		
 		String cmd = "\nselect m._marker_key," 
 				+ "\ncase when exists (select 1 from gxd_allelegenotype s where m._marker_key = s._marker_key) then 1 else 0 end as hasAllele," 

@@ -722,6 +722,7 @@ public class ImageService extends BaseService<ImageDomain> {
 					domain.setImagePaneKey(rs.getString("_imagepane_key"));
 					domain.setPaneLabel(rs.getString("panelabel"));
 					domain.setFigureLabel(rs.getString("figureLabel"));
+					domain.setSpecimenLabel(rs.getString("specimenLabel"));
 				}
 				
 				assayDomain = assayTranslator.translate(assayDAO.get(rs.getInt("_assay_key")));				

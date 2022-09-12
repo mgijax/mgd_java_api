@@ -13,7 +13,9 @@ public class DagEdgeDomain extends BaseDomain {
 	private String edgeKey;
 	private String dagKey;
 	private String parentKey;
+	private String parentTerm;
 	private String childKey;
+	private String childTerm;
 	private String sequenceNum;
 	private String creation_date;
 	private String modification_date;

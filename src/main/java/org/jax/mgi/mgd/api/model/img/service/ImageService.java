@@ -598,17 +598,19 @@ public class ImageService extends BaseService<ImageDomain> {
 		
 		List<ImagePaneAssayDomain> results = new ArrayList<ImagePaneAssayDomain>();
 
-		String cmd = "select i._image_key, i._imagepane_key, i.panelabel, s._assay_key" + 
-				"\nfrom img_imagepane i, gxd_assay s" + 
+		String cmd = "select i._image_key, i._imagepane_key, i.panelabel, ii.figureLabel, s._assay_key" + 
+				"\nfrom img_imagepane i, img_image ii, gxd_assay s" + 
 				"\nwhere i._image_key = " + imageKey + 
-				"\nand i._imagepane_key = s._imagepane_key" + 
+				"\nand i._imagepane_key = s._imagepane_key" +
+				"\nand i._image_key = ii._image_key" +
 				"\nunion" + 
-				"\nselect i._image_key, i._imagepane_key, i.panelabel, s._assay_key" + 
-				"\nfrom img_imagepane i, gxd_specimen s, gxd_insituresult ir, gxd_insituresultimage irg" + 
+				"\nselect i._image_key, i._imagepane_key, i.panelabel, ii.figureLabel, s._assay_key" + 
+				"\nfrom img_imagepane i, img_image ii, gxd_specimen s, gxd_insituresult ir, gxd_insituresultimage irg" + 
 				"\nwhere i._image_key = " + imageKey + 
 				"\nand i._imagepane_key = irg._imagepane_key" + 
 				"\nand irg._result_key = ir._result_key" + 
 				"\nand ir._specimen_key = s._specimen_key" + 			
+				"\nand i._image_key = ii._image_key" +
 				"\norder by panelabel";
 		
 		// make this easy to copy/paste for troubleshooting
@@ -642,6 +644,7 @@ public class ImageService extends BaseService<ImageDomain> {
 					domain.setImageKey(rs.getString("_image_key"));
 					domain.setImagePaneKey(rs.getString("_imagepane_key"));
 					domain.setPaneLabel(rs.getString("panelabel"));
+					domain.setFigureLabel(rs.getString("figureLabel"));				
 				}
 				
 				assayDomain = assayTranslator.translate(assayDAO.get(rs.getInt("_assay_key")));				
@@ -661,5 +664,121 @@ public class ImageService extends BaseService<ImageDomain> {
 		}
 		
 		return results;
-	}	
+	}
+
+	@Transactional	
+	public List<ImagePaneAssayDomain> getImagePanesAssayByRef(String accid) {
+		// search for all assays/image panes by reference
+		
+		List<ImagePaneAssayDomain> results = new ArrayList<ImagePaneAssayDomain>();
+
+		String cmd = "select i._image_key, i._imagepane_key, i.panelabel, ii.figurelabel, s._assay_key, null as specimenLabel" + 
+				"\nfrom img_imagepane i, img_image ii, gxd_assay s, bib_citation_cache c" + 
+				"\nwhere c.jnumid = '" + accid + "'" +
+				"\nand c._refs_key = s._refs_key" +
+				"\nand s._imagepane_key = i._imagepane_key" +
+				"\nand i._image_key = ii._image_key" +
+				"\nunion" + 
+				"\nselect i._image_key, i._imagepane_key, i.panelabel, ii.figurelabel, s._assay_key, ss.specimenLabel" + 
+				"\nfrom img_imagepane i, img_image ii, gxd_assay s, bib_citation_cache c, gxd_specimen ss, gxd_insituresult ir, gxd_insituresultimage irg" + 
+				"\nwhere c.jnumid = '" + accid + "'" +
+				"\nand c._refs_key = s._refs_key" +
+				"\nand s._assay_key = ss._assay_key" +
+				"\nand i._imagepane_key = irg._imagepane_key" + 
+				"\nand irg._result_key = ir._result_key" + 
+				"\nand ir._specimen_key = ss._specimen_key" + 	
+				"\nand i._image_key = ii._image_key" +				
+				"\norder by figurelabel, panelabel";
+		
+		// make this easy to copy/paste for troubleshooting
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			ImagePaneAssayDomain domain = new ImagePaneAssayDomain();								
+			List<SlimAssayDomain> assays = new ArrayList<SlimAssayDomain>();
+			String newPaneLabel = "";
+			String prevPaneLabel = "";
+			
+			while (rs.next()) {
+				SlimAssayDomain assayDomain = new SlimAssayDomain();
+
+				newPaneLabel = rs.getString("panelabel");	
+				if (newPaneLabel == null || newPaneLabel.isEmpty()) {
+					newPaneLabel = "";
+				}
+
+				// new domain, new assays
+				if (!newPaneLabel.equals(prevPaneLabel)) {
+					
+					// if previous assays != null, then save this domain
+					if (domain.getAssays() != null) {
+						results.add(domain);
+					}
+					
+					domain = new ImagePaneAssayDomain();
+					assays = new ArrayList<SlimAssayDomain>();					
+					domain.setImageKey(rs.getString("_image_key"));
+					domain.setImagePaneKey(rs.getString("_imagepane_key"));
+					domain.setPaneLabel(rs.getString("panelabel"));
+					domain.setFigureLabel(rs.getString("figureLabel"));
+					domain.setSpecimenLabel(rs.getString("specimenLabel"));
+				}
+				
+				assayDomain = assayTranslator.translate(assayDAO.get(rs.getInt("_assay_key")));				
+				assays.add(assayDomain);
+				domain.setAssays(assays);
+				domain.getAssays().sort(Comparator.comparing(SlimAssayDomain::getAccID));				
+				prevPaneLabel = newPaneLabel;
+			}
+			if (domain.getAssays() != null) {
+				domain.getAssays().sort(Comparator.comparing(SlimAssayDomain::getAccID));								
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@Transactional	
+	public List<ImageDomain> getImageByAllele(String accid) {
+		// return list of assay domains by allele acc id
+
+		List<ImageDomain> results = new ArrayList<ImageDomain>();
+		
+		String cmd = "\nselect distinct i._image_key, t1.term, ipa.isprimary, ipa._mgitype_key" +
+				"\nfrom img_image i, img_imagepane ip, img_imagepane_assoc ipa, acc_accession aa, voc_term t1" +
+				"\nwhere aa.accid = '" + accid + "'" +
+				"\nand aa._mgitype_key = 11" +
+				"\nand aa._object_key = ipa._object_key" +
+				"\nand i._image_key = ip._image_key" +
+				"\nand ip._imagepane_key = ipa._imagepane_key" +
+				"\nand ipa._mgitype_key = 11" +
+				"\nand i._imageclass_key = t1._term_key" +
+				"\norder by t1.term, ipa.isprimary desc, ipa._mgitype_key";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				ImageDomain domain = new ImageDomain();
+				domain = translator.translate(imageDAO.get(rs.getInt("_image_key")));
+				imageDAO.clear();
+				results.add(domain);
+				imageDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}
+	
 }

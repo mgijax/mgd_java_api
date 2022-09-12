@@ -9,14 +9,15 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.gxd.dao.EmbeddingMethodDAO;
-import org.jax.mgi.mgd.api.model.gxd.dao.FixationMethodDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.SpecimenDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.SpecimenDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Specimen;
 import org.jax.mgi.mgd.api.model.gxd.translator.SpecimenTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
+import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -29,13 +30,13 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 	@Inject
 	private SpecimenDAO specimenDAO;
 	@Inject
-	private EmbeddingMethodDAO embeddingDAO;
-	@Inject
-	private FixationMethodDAO fixationDAO;
+	private TermDAO termDAO;
 	@Inject
 	private GenotypeDAO genotypeDAO;
 	@Inject
 	private InSituResultService insituresultService;
+	@Inject
+	private TermService termService;
 	
 	private SpecimenTranslator translator = new SpecimenTranslator();				
 
@@ -89,7 +90,19 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 			log.info("processSpecimen/nothing to process");
 			return modified;
 		}
-						
+			
+		TermDomain termDomain = new TermDomain();
+		
+		// vocabulary keys		
+		termDomain.setVocabKey("155");	// embedding
+		termDomain.setTerm("Not Specified");
+		int embeddingNS = termService.searchByTerm(termDomain);
+		
+		// vocabulary keys		
+		termDomain.setVocabKey("156");	// fixation
+		termDomain.setTerm("Not Specified");
+		int fixationNS = termService.searchByTerm(termDomain);
+		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
 		
@@ -113,18 +126,20 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				
 				//defaults
 				
+				// Not Specified = 106849865
 				if (domain.get(i).getEmbeddingKey() == null || domain.get(i).getEmbeddingKey().isEmpty()) {
-					entity.setEmbeddingMethod(embeddingDAO.get(-1));
+					entity.setEmbeddingMethod(termDAO.get(embeddingNS));
 				}
 				else {
-					entity.setEmbeddingMethod(embeddingDAO.get(Integer.valueOf(domain.get(i).getEmbeddingKey())));
+					entity.setEmbeddingMethod(termDAO.get(Integer.valueOf(domain.get(i).getEmbeddingKey())));
 				}
 
+				// Not Specified = 106849873
 				if (domain.get(i).getFixationKey() == null || domain.get(i).getFixationKey().isEmpty()) {
-					entity.setFixationMethod(fixationDAO.get(-1));
+					entity.setFixationMethod(termDAO.get(fixationNS));
 				}
 				else {
-					entity.setFixationMethod(fixationDAO.get(Integer.valueOf(domain.get(i).getFixationKey())));
+					entity.setFixationMethod(termDAO.get(Integer.valueOf(domain.get(i).getFixationKey())));
 				}
 				
 				if (domain.get(i).getGenotypeKey() == null || domain.get(i).getGenotypeKey().isEmpty()) {
@@ -207,8 +222,8 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				Specimen entity = specimenDAO.get(Integer.valueOf(domain.get(i).getSpecimenKey()));
 			
 				entity.set_assay_key(parentKey);
-				entity.setEmbeddingMethod(embeddingDAO.get(Integer.valueOf(domain.get(i).getEmbeddingKey())));
-				entity.setFixationMethod(fixationDAO.get(Integer.valueOf(domain.get(i).getFixationKey())));
+				entity.setEmbeddingMethod(termDAO.get(Integer.valueOf(domain.get(i).getEmbeddingKey())));
+				entity.setFixationMethod(termDAO.get(Integer.valueOf(domain.get(i).getFixationKey())));
 				entity.setGenotype(genotypeDAO.get(Integer.valueOf(domain.get(i).getGenotypeKey())));
 				entity.setSequenceNum(domain.get(i).getSequenceNum());
 				entity.setSpecimenLabel(domain.get(i).getSpecimenLabel());
@@ -267,5 +282,5 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 		log.info("processSpecimen/processing successful");
 		return modified;
 	}
-	    
+	
 }

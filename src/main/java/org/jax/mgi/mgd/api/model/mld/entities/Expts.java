@@ -18,7 +18,7 @@ import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
-import org.jax.mgi.mgd.api.model.bib.entities.Reference;
+import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -44,7 +44,7 @@ public class Expts extends BaseEntity {
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key")
-	private Reference reference;
+	private ReferenceCitationCache reference;
 	
 	// mgi accession ids only
 	@OneToMany()

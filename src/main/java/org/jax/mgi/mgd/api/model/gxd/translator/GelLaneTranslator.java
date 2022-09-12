@@ -26,10 +26,10 @@ public class GelLaneTranslator extends BaseEntityDomainTranslator<GelLane, GelLa
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setGelLaneKey(String.valueOf(entity.get_gellane_key()));
 		domain.setAssayKey(String.valueOf(entity.get_assay_key()));
-		domain.setGelRNATypeKey(String.valueOf(entity.getGelRNAType().get_gelrnatype_key()));
-		domain.setGelRNAType(entity.getGelRNAType().getRnaType());
-		domain.setGelControlKey(String.valueOf(entity.getGelControl().get_gelcontrol_key()));
-		domain.setGelControl(entity.getGelControl().getGelLaneContent());
+		domain.setGelRNATypeKey(String.valueOf(entity.getGelRNAType().get_term_key()));
+		domain.setGelRNAType(entity.getGelRNAType().getTerm());
+		domain.setGelControlKey(String.valueOf(entity.getGelControl().get_term_key()));
+		domain.setGelControl(entity.getGelControl().getTerm());
 		domain.setSequenceNum(entity.getSequenceNum());
 		domain.setLaneLabel(entity.getLaneLabel());
 		domain.setSampleAmount(entity.getSampleAmount());
@@ -110,8 +110,8 @@ public class GelLaneTranslator extends BaseEntityDomainTranslator<GelLane, GelLa
 			gelBand.setBandNote("");
 			
 			// if gel control != No, default = Not Applicable
-			if (!domain.getGelControlKey().equals("1")) {
-				gelBand.setStrengthKey("-2");
+			if (!domain.getGelControl().equals("No")) {
+				gelBand.setStrengthKey("107080651");
 				gelBand.setStrength("Not Applicable");				
 			}
 			else {

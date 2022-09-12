@@ -25,6 +25,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipMarkerTSS;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.seq.entities.SeqMarkerCache;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 
 import io.swagger.annotations.ApiModel;
@@ -73,7 +74,7 @@ public class Marker extends BaseEntity {
 	private User modifiedBy;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key")
+	@JoinColumn(name="_marker_key", insertable=false, updatable=false)
 	private MarkerLocationCache locationCache;
 	
 	// insertable/updatable=false will ignore dereferencing these objects
@@ -190,4 +191,10 @@ public class Marker extends BaseEntity {
 	@OneToMany()
 	@JoinColumn(name="_marker_key", insertable=false, updatable=false)
 	private List<GOTracking> goTracking;	
+	
+	// Biotypes
+	@OneToMany()
+	@JoinColumn(name="_marker_key", insertable=false, updatable=false)
+	@Where(clause="rawbiotype is not null")
+	private List<SeqMarkerCache> biotypes;
 }

@@ -1,3 +1,48 @@
+TAG: mgd_java_api-6-0-22-6
+TAG: mgd_java_api-6-0-22-5
+DATE: 09/09/2022, 09/12/2022
+STAFF: lec
+wts2-888/crm-405/PWI: Move Remaining Pages from Flask+SQLAlchemy to Angular+Java API
+crm-395, crm-396, crm-402, crm-406
+
+TAG: mgd_java_api-6-0-22-4
+TAG: mgd_java_api-6-0-22-3
+DATE: 08/22/2022
+STAFF: lec
+wts2-761/MGD db cleanup - gxd vocabs -> voc_vocab/voc_term
+
+TAG: mgd_java_api-6-0-22-2
+DATE: 08/12/2022
+STAFF: lec
+wts2-953/Recombinase reporter assays making GXD status full coded
+
+TAG: mgd_java_api-6-0-22-1
+DATE: 07/28/2022
+STAFF: lec
+wts2-761/MGD db cleanup - MRK_Event/MRK_EventReason
+
+TAG: mgd_java_api-6-0-21-5
+DATE: 07/19/2022
+STAFF: lec
+wts2-940/PWI/Strain : add Private = Yes validation
+
+TAG: mgd_java_api-6-0-21-4
+DATE: 07/15/2022
+STAFF: lec
+wts2-934/pwi/littriage/create new reference is creating duplicate bib_workflow_data rowt commit -m"wts2-940/PWI/Strain : add Private = Yes validation" ; git push
+
+TAG: mgd_java_api-6-0-21-3
+TAG: mgd_java_api-6-0-21-2
+DATE: 07/11/2022
+STAFF: lec
+wts2-929/HT index module: unable to add Notes
+wts2-931/CL clipboard in HT index module:  ameloblast appearing 3x
+
+TAG: mgd_java_api-6-0-21-1
+DATE: 07/01/2022
+STAFF: lec
+wts2-888/PWI: Move Allele Detail Pages from Flask+SQLAlchemy to Angular+Java API
+
 TAG: mgd_java_api-6-0-20-13
 DATE: 06/28/2022
 STAFF: lec

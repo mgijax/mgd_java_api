@@ -15,13 +15,12 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceCitationCacheDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mrk.dao.EventDAO;
-import org.jax.mgi.mgd.api.model.mrk.dao.EventReasonDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerHistoryDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.MarkerHistory;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerHistoryTranslator;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -35,9 +34,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 	@Inject
 	private MarkerHistoryDAO historyDAO;
 	@Inject
-	private EventDAO eventDAO;
-	@Inject
-	private EventReasonDAO eventReasonDAO;
+	private TermDAO termDAO;
 	@Inject
 	private ReferenceCitationCacheDAO referenceDAO;
 	@Inject
@@ -144,8 +141,9 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 				
 				log.info("processHistory create");
 				
+				// Marker Event Reason default = Not Specified
 				if (domain.get(i).getMarkerEventReasonKey().isEmpty()) {
-					domain.get(i).setMarkerEventReasonKey("-1");
+					domain.get(i).setMarkerEventReasonKey("106563610");
 				}
 				
 				cmd = "select count(*) from MRK_insertHistory ("
@@ -183,9 +181,9 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 								
 				MarkerHistory entity = historyDAO.get(Integer.valueOf(domain.get(i).getAssocKey()));
 
-				entity.setMarkerHistory(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerHistorySymbolKey())));
-				entity.setMarkerEvent(eventDAO.get((Integer.valueOf(domain.get(i).getMarkerEventKey()))));
-				entity.setMarkerEventReason(eventReasonDAO.get(Integer.valueOf(domain.get(i).getMarkerEventReasonKey())));
+				entity.setMarkerHistory(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerHistorySymbolKey())));				
+				entity.setMarkerEvent(termDAO.get(Integer.valueOf(domain.get(i).getMarkerEventKey())));
+				entity.setMarkerEventReason(termDAO.get(Integer.valueOf(domain.get(i).getMarkerEventReasonKey())));
 				entity.setSequenceNum(Integer.valueOf(domain.get(i).getSequenceNum()));
 				
 				// can be null

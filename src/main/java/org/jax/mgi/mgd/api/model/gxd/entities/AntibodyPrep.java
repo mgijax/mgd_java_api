@@ -13,6 +13,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -38,11 +39,11 @@ public class AntibodyPrep extends BaseEntity {
 	private Antibody antibody;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_secondary_key")
-	private Secondary secondary;
+	@JoinColumn(name="_secondary_key", referencedColumnName="_term_key")
+	private Term secondary;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_label_key")
-	private GXDLabel label;
+	@JoinColumn(name="_label_key", referencedColumnName="_term_key")
+	private Term label;
 	
 }

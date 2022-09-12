@@ -10,15 +10,15 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.gxd.dao.GXDLabelDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.ProbePrepDAO;
-import org.jax.mgi.mgd.api.model.gxd.dao.ProbeSenseDAO;
-import org.jax.mgi.mgd.api.model.gxd.dao.VisualizationMethodDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.ProbePrepDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.ProbePrep;
 import org.jax.mgi.mgd.api.model.gxd.translator.ProbePrepTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeDAO;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
+import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -35,16 +35,13 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 	@Inject
 	private ProbeDAO probeDAO;
 	@Inject
-	private GXDLabelDAO labelDAO;
+	private TermDAO termDAO;
 	@Inject
-	private ProbeSenseDAO senseDAO;
-	@Inject
-	private VisualizationMethodDAO visualizationDAO;
+	private TermService termService;
 	
 	private ProbePrepTranslator translator = new ProbePrepTranslator();
 	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
 	
 	@Transactional
 	public SearchResults<ProbePrepDomain> create(ProbePrepDomain domain, User user) {
@@ -162,7 +159,24 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 			log.info("processProbePrep/nothing to process");
 			return(0);
 		}
-				
+		
+		TermDomain termDomain = new TermDomain();
+		
+		// vocabulary keys		
+		termDomain.setVocabKey("159");	// probe sense
+		termDomain.setTerm("Not Specified");
+		int senseNS = termService.searchByTerm(termDomain);
+		
+		// vocabulary keys		
+		termDomain.setVocabKey("152");	// label
+		termDomain.setTerm("Not Specified");
+		int labelNS = termService.searchByTerm(termDomain);
+		
+		// vocabulary keys		
+		termDomain.setVocabKey("157");	// visualization
+		termDomain.setTerm("Not Specified");
+		int visualizationNS = termService.searchByTerm(termDomain);
+		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
 		
@@ -178,29 +192,33 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 					entity.setType(domain.getPrepType());			
 				}
 				
+				// Not Specified
 				if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
-					entity.setLabel(labelDAO.get(-1));					
+					entity.setLabel(termDAO.get(labelNS));					
 				}
 				else {
-					entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
+					entity.setLabel(termDAO.get(Integer.valueOf(domain.getLabelKey())));
 				}
 				
+				// Not Specified
 				if (domain.getProbeSenseKey() == null || domain.getProbeSenseKey().isEmpty()) {
-					entity.setProbeSense(senseDAO.get(-1));
+					entity.setProbeSense(termDAO.get(senseNS));
 				}
 				else {
-					entity.setProbeSense(senseDAO.get(Integer.valueOf(domain.getProbeSenseKey())));
+					entity.setProbeSense(termDAO.get(Integer.valueOf(domain.getProbeSenseKey())));
 				}
 				
+				// Not Specified
 				if (domain.getVisualizationMethodKey() == null || domain.getVisualizationMethodKey().isEmpty()) {
-					entity.setVisualizationMethod(visualizationDAO.get(-1));
+					entity.setVisualizationMethod(termDAO.get(visualizationNS));
 				}
 				else {
-					entity.setVisualizationMethod(visualizationDAO.get(Integer.valueOf(domain.getVisualizationMethodKey())));
+					entity.setVisualizationMethod(termDAO.get(Integer.valueOf(domain.getVisualizationMethodKey())));
 				}
 				
 				entity.setCreation_date(new Date());
 				entity.setModification_date(new Date());
+				
 				// execute persist/insert/send to database
 				probePrepDAO.persist(entity);
 				log.info("processProbePrep create processed: " + entity.get_probeprep_key());													
@@ -225,25 +243,28 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 				entity.setType(domain.getPrepType());			
 			}
 			
+			// Not Specified
 			if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
-				entity.setLabel(labelDAO.get(-1));					
+				entity.setLabel(termDAO.get(labelNS));
 			}
 			else {
-				entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
+				entity.setLabel(termDAO.get(Integer.valueOf(domain.getLabelKey())));
 			}
 			
+			// Not Specified
 			if (domain.getProbeSenseKey() == null || domain.getProbeSenseKey().isEmpty()) {
-				entity.setProbeSense(senseDAO.get(-1));
+				entity.setProbeSense(termDAO.get(senseNS));
 			}
 			else {
-				entity.setProbeSense(senseDAO.get(Integer.valueOf(domain.getProbeSenseKey())));
+				entity.setProbeSense(termDAO.get(Integer.valueOf(domain.getProbeSenseKey())));
 			}
 			
+			// Not Specified
 			if (domain.getVisualizationMethodKey() == null || domain.getVisualizationMethodKey().isEmpty()) {
-				entity.setVisualizationMethod(visualizationDAO.get(-1));
+				entity.setVisualizationMethod(termDAO.get(visualizationNS));
 			}
 			else {
-				entity.setVisualizationMethod(visualizationDAO.get(Integer.valueOf(domain.getVisualizationMethodKey())));
+				entity.setVisualizationMethod(termDAO.get(Integer.valueOf(domain.getVisualizationMethodKey())));
 			}
 
 			entity.setModification_date(new Date());			

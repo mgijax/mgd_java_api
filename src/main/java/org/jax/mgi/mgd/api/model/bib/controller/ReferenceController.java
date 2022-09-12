@@ -19,6 +19,7 @@ import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceSearchDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceByDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceIndexDomain;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceService;
@@ -196,4 +197,35 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		return referenceService.validateJnumImage(domain);
 	}
 
+	@POST
+	@ApiOperation(value = "Get list of reference domains by marker accession id")
+	@Path("/getRefByMarker")
+	public List<SlimReferenceByDomain> getRefByMarker(String accid) {
+		
+		List<SlimReferenceByDomain> results = new ArrayList<SlimReferenceByDomain>();
+
+		try {
+			results = referenceService.getRefByMarker(accid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@POST
+	@ApiOperation(value = "Get list of reference domains by allele accession id")
+	@Path("/getRefByAllele")
+	public List<SlimReferenceByDomain> getRefByAllele(String accid) {
+		
+		List<SlimReferenceByDomain> results = new ArrayList<SlimReferenceByDomain>();
+
+		try {
+			results = referenceService.getRefByAllele(accid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 }

@@ -14,6 +14,7 @@ import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.prb.entities.Probe;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -40,15 +41,15 @@ public class ProbePrep extends BaseEntity {
 	private Probe probe;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_sense_key")
-	private ProbeSense probeSense;
+	@JoinColumn(name="_sense_key", referencedColumnName="_term_key")
+	private Term probeSense;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_label_key")
-	private GXDLabel label;
+	@JoinColumn(name="_label_key", referencedColumnName="_term_key")
+	private Term label;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_visualization_key")
-	private VisualizationMethod visualizationMethod;
+	@JoinColumn(name="_visualization_key", referencedColumnName="_term_key")
+	private Term visualizationMethod;
 	
 }

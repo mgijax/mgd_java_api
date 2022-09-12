@@ -158,7 +158,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		
 		String celltypeSelect = select + ", a.accid";
 		String celltypeFrom = from + ", acc_accession a";
-		String celltypeWhere = where + "\nand t._term_key = a._object_key and a._logicaldb_key = 173";
+		String celltypeWhere = where + "\nand t._term_key = a._object_key and a.preferred = 1 and a._logicaldb_key = 173";
 		Boolean isCellType = false;
 		
 		// for non-vocab tables that are acting like voc_vocab/voc_term		
@@ -173,8 +173,8 @@ public class VocabService extends BaseService<VocabularyDomain> {
 					|| searchDomain.getVocabKey().equals("158")				
 					|| searchDomain.getVocabKey().equals("159")
 					|| searchDomain.getVocabKey().equals("160")
-					|| searchDomain.getVocabKey().equals("162")																																		
-					|| searchDomain.getVocabKey().equals("163")	
+					|| searchDomain.getVocabKey().equals("162")
+					|| searchDomain.getVocabKey().equals("163")
 					|| searchDomain.getVocabKey().equals("172")
 					|| searchDomain.getVocabKey().equals("173")					
 					) {
@@ -352,104 +352,37 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		
 		String cmd = "";
 		
-		if (vocabKey.equals("151")) {
-			cmd = "select _antibodyclass as termKey, class as term from gxd_antibodyclass order by term";
-		}
-		else if (vocabKey.equals("152")) {
-			cmd = "select _label_key as termKey, label as term, 1 as orderBy from gxd_label where _label_key = -1" +
-				"\nunion" +
-				"\nselect _label_key as termKey, label as term, 2 as orderBy from gxd_label where _label_key != -1" + 
-				"\norder by orderBy, term\n";
-		}
-		else if (vocabKey.equals("153")) {
-			cmd = "select _pattern_key as termKey, pattern as term, 1 as orderBy from gxd_pattern where _pattern_key = -1" +
-				"\nunion" +
-				"\nselect _pattern_key as termKey, pattern as term, 2 as orderBy from gxd_pattern where _pattern_key != -1" + 
-				"\norder by orderBy, term\n";
-		}
-		else if (vocabKey.equals("154") ) {
-			cmd = "select g._gelcontrol_key as termKey, v.abbreviation as term, 1 as orderBy from gxd_gelcontrol g, voc_term v" + 
-				"\nwhere v._vocab_key = 154 and v.term = 'Not Specified'" + 
-				"\nand lower(g.gellanecontent) = lower(v.term)" + 
-				"\nunion" + 
-				"\nselect g._gelcontrol_key as termKey, v.abbreviation as term, 2 as orderBy from gxd_gelcontrol g, voc_term v" + 
-				"\nwhere v._vocab_key = 154 and v.term != 'Not Specified'\r\n" + 
-				"\nand lower(g.gellanecontent) = lower(v.term)" + 
-				"\norder by orderBy, term\n";
-		}		
-		else if (vocabKey.equals("155")) {
-			cmd = "select g._embedding_key as termKey, v.abbreviation as term, 1 as orderBy from gxd_embeddingmethod g, voc_term v" +
-					"\nwhere v._vocab_key = 155" + 
-					"\nand lower(g.embeddingmethod) = lower(v.term)" + 
-					"\nand g._embedding_key = -1" +
-					"\nunion" +
-					"\nselect g._embedding_key as termKey, v.abbreviation as term, 2 as orderBy from gxd_embeddingmethod g, voc_term v" +				
-					"\nwhere v._vocab_key = 155" + 
-					"\nand lower(g.embeddingmethod) = lower(v.term)" + 
-					"\nand g._embedding_key != -1" +
-					"\norder by orderBy, term\n";				
-		}
-		else if (vocabKey.equals("156") ) {
-			cmd = "select g._fixation_key as termKey, v.abbreviation as term, 1 as orderBy from gxd_fixationmethod g, voc_term v" +
-					"\nwhere v._vocab_key = 156" + 
-					"\nand lower(g.fixation) = lower(v.term)" + 
-					"\nand g._fixation_key = -1" +
-					"\nunion" +
-					"\nselect g._fixation_key as termKey, v.abbreviation as term, 2 as orderBy from gxd_fixationmethod g, voc_term v" +				
-					"\nwhere v._vocab_key = 156" + 
-					"\nand lower(g.fixation) = lower(v.term)" + 
-					"\nand g._fixation_key != -1" +
-					"\norder by orderBy, term\n";			
-		}		
-		else if (vocabKey.equals("157")) {
-			cmd = "select _visualization_key as termKey, visualization as term, 1 as orderBy from gxd_visualizationmethod where _visualization_key = -1" +
-				"\nunion" +
-				"\nselect _visualization_key as termKey, visualization as term, 2 as orderBy from gxd_visualizationmethod where _visualization_key != -1" + 
-				"\norder by orderBy, term\n";
-		}		
-		else if (vocabKey.equals("158")) {
+		if (vocabKey.equals("158")) {
 			cmd = "select _assaytype_key as termKey, assayType as term from gxd_assaytype order by term";
-		}
-		else if (vocabKey.equals("159") ) {
-			cmd = "select _sense_key as termKey, sense as term, 1 as orderBy from gxd_probesense where _sense_key = -1" +
-				"\nunion" +
-				"\nselect _sense_key as termKey, sense as term, 2 as orderBy from gxd_probesense where _sense_key != -1" + 
-				"\norder by orderBy, term\n";			
-		}
-		else if (vocabKey.equals("160") ) {
-			cmd = "select _secondary_key as termKey, secondary as term, 1 as orderBy from gxd_secondary where _secondary_key = -1" +
-				"\nunion" +
-				"\nselect _secondary_key as termKey, secondary as term, 2 as orderBy from gxd_secondary where _secondary_key != -1" + 
-				"\norder by orderBy, term\n";
-		}
-		else if (vocabKey.equals("162") ) {
-			cmd = "select _term_key as termKey, term, 1 as orderBy from voc_term where _vocab_key = 162 and term = 'Not Specified'" +
-				"\nunion" +
-				"\nselect _term_key as termKey, term, 2 as orderBy from voc_term where _vocab_key = 162 and term != 'Not Specified'" + 
-				"\norder by orderBy, term\n";
-		}			
-		else if (vocabKey.equals("163") ) {
-			cmd = "select _strength_key as termKey, strength as term, 1 as orderBy from gxd_strength where _strength_key = 2" +
-				"\nunion" +
-				"\nselect _strength_key as termKey, strength as term, 2 as orderBy from gxd_strength where _strength_key != 2" + 
-				"\norder by orderBy, term\n";			
-		}
-		else if (vocabKey.equals("172") ) {
-			cmd = "select g._gelrnatype_key as termKey, v.abbreviation as term, 1 as orderBy from gxd_gelrnatype g, voc_term v" +
-				"\nwhere v._vocab_key = 172" + 
-				"\nand lower(g.rnatype) = lower(v.term)" + 
-				"\nand g._gelrnatype_key = -1" +
-				"\nunion" +
-				"\nselect g._gelrnatype_key as termKey, v.abbreviation as term, 2 as orderBy from gxd_gelrnatype g, voc_term v" +				
-				"\nwhere v._vocab_key = 172" + 
-				"\nand lower(g.rnatype) = lower(v.term)" + 
-				"\nand g._gelrnatype_key != -1" +
+		}	
+		else if (vocabKey.equals("151")) {
+			cmd = "select _term_key as termKey, term as term from voc_term where _vocab_key = 151 order by term";
+		}		
+		else if (vocabKey.equals("154")
+				 || vocabKey.equals("155")
+				 || vocabKey.equals("156")	
+				 || vocabKey.equals("172")) {
+			cmd = "select v._term_key as termKey, v.abbreviation as term, 1 as orderBy from voc_term v where v._vocab_key = " + vocabKey +
+					"\nand v.term = 'Not Specified'" + 
+				"\nunion" + 
+				"\nselect v._term_key as termKey, v.abbreviation as term, 2 as orderBy from voc_term v where v._vocab_key = " + vocabKey +
+					"\nand v.term != 'Not Specified'" + 
 				"\norder by orderBy, term\n";
 		}	
-		else if (vocabKey.equals("173") ) {
-			cmd = "select _gelunits_key as termKey, units as term, 1 as orderBy from gxd_gelunits where _gelunits_key = -1" +
+		else if (vocabKey.equals("162")) {
+			cmd = "select v._term_key as termKey, v.term as term, v.abbreviation, 1 as orderBy from voc_term v where v._vocab_key = " + vocabKey +
+					"\nand v.term = 'Not Specified'" + 
+				"\nunion" + 
+				"\nselect v._term_key as termKey, v.term as term, v.abbreviation, 2 as orderBy from voc_term v where v._vocab_key = " + vocabKey +
+					"\nand v.term != 'Not Specified'" + 
+				"\norder by orderBy, term\n";
+		}		
+		else {
+			cmd = "select _term_key as termKey, term as term, 1 as orderBy from voc_term where _vocab_key = " + vocabKey +
+					"\nand term = 'Not Specified'" +
 				"\nunion" +
-				"\nselect _gelunits_key as termKey, units as term, 2 as orderBy from gxd_gelunits where _gelunits_key != -1" + 
+				"\nselect _term_key as termKey, term as term, 2 as orderBy from voc_term where _vocab_key = " + vocabKey +
+					"\nand term != 'Not Specified'" + 
 				"\norder by orderBy, term\n";
 		}		
 		log.info(cmd);		
@@ -467,6 +400,11 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				termDomain.set_term_key(rs.getInt("termKey"));
 				termDomain.setTerm(rs.getString("term"));
 				termDomain.setVocabKey(rs.getString("termKey"));
+				
+				if (vocabKey.equals("162")) {
+					termDomain.setAbbreviation(rs.getString("abbreviation"));
+				}
+				
 				termList.add(termDomain);
 			}
 			

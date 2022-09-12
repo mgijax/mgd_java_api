@@ -13,6 +13,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -36,8 +37,8 @@ public class GelBand extends BaseEntity {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_strength_key")
-	private Strength strength;
+	@JoinColumn(name="_strength_key", referencedColumnName="_term_key")
+	private Term strength;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_gelrow_key")

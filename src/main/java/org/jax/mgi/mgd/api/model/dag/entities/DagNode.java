@@ -12,6 +12,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -25,9 +26,12 @@ public class DagNode extends BaseEntity {
 
 	@Id
 	private int _node_key;
-	private int _object_key;	
 	private Date creation_date;
 	private Date modification_date;
+	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_object_key")
+	private Term term;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_dag_key")
@@ -35,7 +39,7 @@ public class DagNode extends BaseEntity {
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_label_key")
-	private DagLabel label;
+	private DagLabel label;	
 
 	@OneToMany()
 	@JoinColumn(name="_parent_key", referencedColumnName="_node_key", insertable=false, updatable=false)

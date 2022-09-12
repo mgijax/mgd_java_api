@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.gxd.translator;
 
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
+import org.jax.mgi.mgd.api.model.gxd.domain.AssayNoteDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
 
@@ -81,14 +82,21 @@ public class SlimAssayTranslator extends BaseEntityDomainTranslator<Assay, SlimA
 			domain.setIsReporter(true);			
 		}
 		
-		// too slow; use service/return for references
-//		domain.setAssayDisplay(entity.getReference().getReferenceCitationCache().getJnumid() + "; " + domain.getAssayTypeAbbrev() + "; " + entity.getMarker().getSymbol());	
-//		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
-//		domain.setJnumid(entity.getReference().getReferenceCitationCache().getJnumid());
-//		domain.setJnum(String.valueOf(entity.getReference().getReferenceCitationCache().getNumericPart()));
+		domain.setAssayDisplay(entity.getReference().getJnumid() + "; " + domain.getAssayTypeAbbrev() + "; " + entity.getMarker().getSymbol());	
+		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
+		domain.setJnumid(entity.getReference().getJnumid());
+		domain.setJnum(String.valueOf(entity.getReference().getNumericPart()));
+		domain.setShort_citation(entity.getReference().getShort_citation());
 
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
+		
+		// assay note
+		if (entity.getAssayNote() != null && !entity.getAssayNote().isEmpty()) {
+			AssayNoteTranslator assayNoteTranslator = new AssayNoteTranslator();
+			Iterable<AssayNoteDomain> i = assayNoteTranslator.translateEntities(entity.getAssayNote());
+			domain.setAssayNote(i.iterator().next());
+		}
 		
 		return domain;
 	}

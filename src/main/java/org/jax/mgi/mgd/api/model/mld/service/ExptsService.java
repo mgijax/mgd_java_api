@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceCitationCacheDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mld.dao.ExptsDAO;
 import org.jax.mgi.mgd.api.model.mld.domain.ExptsDomain;
@@ -31,7 +31,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 	@Inject
 	private ExptsDAO exptsDAO;
 	@Inject
-	private ReferenceDAO referenceDAO;
+	private ReferenceCitationCacheDAO referenceDAO;
 	@Inject
 	private MappingNoteService mappingNoteService;
 	@Inject
@@ -43,6 +43,8 @@ public class ExptsService extends BaseService<ExptsDomain> {
 	private SlimExptsTranslator slimtranslator = new SlimExptsTranslator();		
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
+	private String exptTypes = "('TEXT-QTL', 'TEXT-Physical Mapping', 'TEXT-Congenic', 'TEXT-QTL-Candidate Genes', 'TEXT-Meta Analysis', 'TEXT', 'TEXT-Genetic Cross')"; 
+
 	//private String mgiTypeKey = "4";
 	
 	@Transactional
@@ -91,7 +93,6 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		
 		log.info("processExpt/update");				
 
-		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));		
 		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));		
 		entity.setExptType(domain.getExptType());
 		entity.setTag(1);
@@ -162,7 +163,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		// return the object count from the database
 		
 		SearchResults<ExptsDomain> results = new SearchResults<ExptsDomain>();
-		String cmd = "select count(*) as objectCount from mld_expts where exptType in ('TEXT-QTL','TEXT-Physical Mapping','TEXT-Congenic','TEXT-QTL-Candidate Genes','TEXT-Meta Analysis')";
+		String cmd = "select count(*) as objectCount from mld_expts where exptType in " + exptTypes;
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
@@ -188,7 +189,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		String cmd = "";
 		String select = "select distinct e._expt_key, e.jnum, e.expttype, e.chromosome";
 		String from = "from mld_expt_view e";
-		String where = "where e.exptType in ('TEXT-QTL','TEXT-Physical Mapping','TEXT-Congenic','TEXT-QTL-Candidate Genes','TEXT-Meta Analysis')";
+		String where = "where e.exptType in " + exptTypes;
 		String orderBy = "order by e.jnum";
 		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		Boolean from_accession = false;
@@ -219,13 +220,13 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		}
 		
 		// reference note
-		if (searchDomain.getReferenceNote().getNote() != null && !searchDomain.getReferenceNote().getNote().isEmpty()) {
+		if (searchDomain.getReferenceNote() != null && searchDomain.getReferenceNote().getNote() != null && !searchDomain.getReferenceNote().getNote().isEmpty()) {
 			where = where + "\nand rnote.note ilike '" + searchDomain.getReferenceNote().getNote() + "'";
 			from_rnote = true;
 		}
 		
 		// expt note
-		if (searchDomain.getExptNote().getNote() != null && !searchDomain.getExptNote().getNote().isEmpty()) {
+		if (searchDomain.getExptNote() != null && searchDomain.getExptNote().getNote() != null && !searchDomain.getExptNote().getNote().isEmpty()) {
 			where = where + "\nand enote.note ilike '" + searchDomain.getExptNote().getNote() + "'";
 			from_enote = true;			
 		}
@@ -311,4 +312,75 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		return results;
 	}
 
+	@Transactional	
+	public List<SlimExptsDomain> getExptsByMarker(String accid) {
+		// return list of assay domains by marker acc id
+
+		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
+		
+		String cmd = "\nselect distinct e._expt_key, e.expttype, c.numericpart" + 
+				"\nfrom mrk_marker m, acc_accession aa, mld_expts e, mld_expt_marker em, bib_citation_cache c" + 
+				"\nwhere m._marker_key = aa._object_key" + 
+				"\nand aa._mgitype_key = 2" +
+				"\nand aa.accid = '" + accid + "'" +
+				"\nand m._marker_key = em._marker_key" +
+				"\nand em._expt_key = e._expt_key" +
+				"\nand e._refs_key = c._refs_key" +
+				"\nand e.exptType in " + exptTypes + 
+				"" +
+				"\norder by expttype, numericpart";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimExptsDomain domain = new SlimExptsDomain();
+				domain = slimtranslator.translate(exptsDAO.get(rs.getInt("_expt_key")));
+				exptsDAO.clear();
+				results.add(domain);
+				exptsDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}
+
+	@Transactional	
+	public List<SlimExptsDomain> getExptsByRef(String jnumid) {
+		// return list of assay domains by reference jnum id
+
+		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
+		
+		String cmd = "\nselect distinct e._expt_key, e.expttype, aa.numericpart" + 
+				"\nfrom bib_citation_cache aa, mld_expts e" + 
+				"\nwhere aa.jnumid = '" + jnumid + "'" +
+				"\nand aa._refs_key = e._refs_key" +
+				"\nand e.exptType in " + exptTypes + 
+				"\norder by expttype, numericpart";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimExptsDomain domain = new SlimExptsDomain();
+				domain = slimtranslator.translate(exptsDAO.get(rs.getInt("_expt_key")));
+				exptsDAO.clear();
+				results.add(domain);
+				exptsDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}
+	
 }

@@ -21,6 +21,7 @@ import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerOfficialChromDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
+import org.jax.mgi.mgd.api.model.seq.domain.SeqSummaryDomain;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -122,7 +123,19 @@ public class MarkerController extends BaseController<MarkerDomain> {
 
 	@Override
 	public MarkerDomain get(Integer markerKey) {
-		return markerService.get(markerKey);
+		
+		MarkerDomain results = new MarkerDomain();
+		
+		results = markerService.get(markerKey);
+		
+		// attach summary links
+		try {
+			results = markerService.getSummaryLinks(results);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
 	}
 
 	@Override
@@ -165,6 +178,54 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	@Path("/getNextGmSequence")
 	public List<SlimMarkerDomain> getNextGmSequence() {
 		return markerService.getNextGmSequence();
+	}
+	
+	@POST
+	@ApiOperation(value = "Get list of marker domains by reference jnumid")
+	@Path("/getMarkerByRef")
+	public List<SlimMarkerDomain> getMarkerByRef(String jnumid) {
+		
+		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
+
+		try {
+			results = markerService.getMarkerByRef(jnumid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+//	@POST
+//	@ApiOperation(value = "Get summary link info for marker domains by marker acc id")
+//	@Path("/getSummaryLinkByMarker")
+//	public MarkerDomain getSummaryLinkByMarker(String accid) {
+//		
+//		MarkerDomain results = new MarkerDomain();
+//
+//		try {
+//			results = markerService.getSummaryLinkByMarker(accid);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return results;
+//	}
+	
+	@POST
+	@ApiOperation(value = "Get list of sequence domains by marker acc id")
+	@Path("/getSequenceByMarker")
+	public List<SeqSummaryDomain> getSequenceByMarker(String accid) {
+		
+		List<SeqSummaryDomain> results = new ArrayList<SeqSummaryDomain>();
+
+		try {
+			results = markerService.getSequenceByMarker(accid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
 	}
 	
 	@GET

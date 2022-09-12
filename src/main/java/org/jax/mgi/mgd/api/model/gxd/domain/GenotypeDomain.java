@@ -28,6 +28,7 @@ public class GenotypeDomain extends BaseDomain {
 	private String accID;
 	private String resourceIdentifierID;
 	private Boolean editAllelePairOrder;
+	private Integer hasExpression;	// will be set by service/getGenotypesByAllele()
 	
 	private NoteDomain alleleDetailNote;	
 	private NoteDomain generalNote;

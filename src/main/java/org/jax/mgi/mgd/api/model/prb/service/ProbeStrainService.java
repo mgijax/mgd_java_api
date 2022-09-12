@@ -796,6 +796,54 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		return results;
 	}
 	
+	@Transactional
+	public List<SlimProbeStrainDomain> validateStrainPrivate(SlimProbeStrainDomain searchDomain) {
+		// validate the Strain can have its Private value set to Yes
+		// if Strain contains no other associations, then return Strain
+		// else return empty; setting Private = Yes is not allowed
+   
+		List<SlimProbeStrainDomain> results = new ArrayList<SlimProbeStrainDomain>();
+
+		String cmd = "select s.* from prb_strain s" +
+				"\nwhere s.private = 0" +
+				"\nand not exists (select 1 from PRB_Strain_Genotype a where s._Strain_key = a._Strain_key)" +
+				"\nand not exists (select 1 from PRB_Strain_Marker a where s._Strain_key = a._Strain_key)" +
+				"\nand not exists (select 1 from ALL_CellLine a where s._Strain_key = a._Strain_key)" +
+				"\nand not exists (select 1 from ALL_Allele a where s._Strain_key = a._Strain_key)" +
+				"\nand not exists (select 1 from ALL_Variant a where s._Strain_key = a._Strain_key)" +
+				"\nand not exists (select 1 from GXD_Genotype a where s._Strain_key = a._Strain_key)" +
+				"\nand not exists (select 1 from MRK_StrainMarker a where s._Strain_key = a._Strain_key)" +	
+				"\nand not exists (select 1 from PRB_Allele_Strain a where s._Strain_key = a._Strain_key)" +				
+				"\nand not exists (select 1 from PRB_Source a where s._Strain_key = a._Strain_key)" +
+				"\nand not exists (select 1 from CRS_Cross a where s._Strain_key = a._StrainHT_key)" +
+				"\nand not exists (select 1 from CRS_Cross a where s._Strain_key = a._StrainHO_key)" +
+				"\nand not exists (select 1 from CRS_Cross a where s._Strain_key = a._femaleStrain_key)" +
+				"\nand not exists (select 1 from CRS_Cross a where s._Strain_key = a._maleStrain_key)" +
+				"\nand not exists (select 1 from MLD_FISH a where s._Strain_key = a._Strain_key)" +
+				"\nand not exists (select 1 from MLD_InSitu a where s._Strain_key = a._Strain_key)" +
+				"\nand not exists (select 1 from RI_RISet a where s._Strain_key = a._Strain_key_1)" +
+				"\nand not exists (select 1 from RI_RISet a where s._Strain_key = a._Strain_key_2)" +
+				"\nand s._strain_key = " + searchDomain.getStrainKey();
+		
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimProbeStrainDomain slimdomain = new SlimProbeStrainDomain();
+				slimdomain = slimtranslator.translate(probeStrainDAO.get(rs.getInt("_strain_key")));				
+				probeStrainDAO.clear();
+				results.add(slimdomain);
+			}
+			sqlExecutor.cleanup();			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 	@Transactional	
 	public SearchResults<String> getStrainList() {
 		// generate SQL command to return a list of distinct strains

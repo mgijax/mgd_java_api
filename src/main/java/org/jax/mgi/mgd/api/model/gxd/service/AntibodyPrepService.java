@@ -12,12 +12,13 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyPrepDAO;
-import org.jax.mgi.mgd.api.model.gxd.dao.GXDLabelDAO;
-import org.jax.mgi.mgd.api.model.gxd.dao.SecondaryDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyPrepDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.AntibodyPrep;
 import org.jax.mgi.mgd.api.model.gxd.translator.AntibodyPrepTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
+import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -34,9 +35,9 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 	@Inject
 	private AntibodyDAO antibodyDAO;
 	@Inject
-	private SecondaryDAO secondaryDAO;
+	private TermDAO termDAO;
 	@Inject
-	private GXDLabelDAO labelDAO;
+	private TermService termService;
 	
 	private AntibodyPrepTranslator translator = new AntibodyPrepTranslator();
 	
@@ -163,7 +164,19 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 			log.info("processAntibodyPrep/nothing to process");
 			return(0);
 		}
-				
+		
+		TermDomain termDomain = new TermDomain();
+		
+		// vocabulary keys		
+		termDomain.setVocabKey("160");	// secondary
+		termDomain.setTerm("Not Specified");
+		int secondaryNS = termService.searchByTerm(termDomain);
+		
+		// vocabulary keys		
+		termDomain.setVocabKey("152");	// label
+		termDomain.setTerm("Not Specified");
+		int labelNS = termService.searchByTerm(termDomain);
+		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
 						
@@ -172,18 +185,20 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 			AntibodyPrep entity = new AntibodyPrep();
 			entity.setAntibody(antibodyDAO.get(Integer.valueOf(domain.getAntibodyKey())));
 			
+			// Not Specified
 			if (domain.getSecondaryKey() == null || domain.getSecondaryKey().isEmpty()) {
-				entity.setSecondary(secondaryDAO.get(-1));
+				entity.setSecondary(termDAO.get(secondaryNS));
 			}
 			else {
-				entity.setSecondary(secondaryDAO.get(Integer.valueOf(domain.getSecondaryKey())));
+				entity.setSecondary(termDAO.get(Integer.valueOf(domain.getSecondaryKey())));
 			}
 			
+			// Not Specified
 			if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
-				entity.setLabel(labelDAO.get(-1));
+				entity.setLabel(termDAO.get(labelNS));
 			}
 			else {
-				entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
+				entity.setLabel(termDAO.get(Integer.valueOf(domain.getLabelKey())));
 			}			
 			
 			entity.setCreation_date(new Date());
@@ -204,18 +219,20 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 			AntibodyPrep entity = antibodyPrepDAO.get(Integer.valueOf(domain.getAntibodyPrepKey()));		
 			entity.setAntibody(antibodyDAO.get(Integer.valueOf(domain.getAntibodyKey())));
 
+			// Not Specified
 			if (domain.getSecondaryKey() == null || domain.getSecondaryKey().isEmpty()) {
-				entity.setSecondary(secondaryDAO.get(-1));
+				entity.setSecondary(termDAO.get(secondaryNS));
 			}
 			else {
-				entity.setSecondary(secondaryDAO.get(Integer.valueOf(domain.getSecondaryKey())));
+				entity.setSecondary(termDAO.get(Integer.valueOf(domain.getSecondaryKey())));
 			}
 			
+			// Not Specified
 			if (domain.getLabelKey() == null || domain.getLabelKey().isEmpty()) {
-				entity.setLabel(labelDAO.get(-1));
+				entity.setLabel(termDAO.get(labelNS));
 			}
 			else {
-				entity.setLabel(labelDAO.get(Integer.valueOf(domain.getLabelKey())));
+				entity.setLabel(termDAO.get(Integer.valueOf(domain.getLabelKey())));
 			}	
 			
 			entity.setModification_date(new Date());			

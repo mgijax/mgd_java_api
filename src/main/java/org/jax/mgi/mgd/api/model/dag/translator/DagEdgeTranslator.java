@@ -19,10 +19,10 @@ public class DagEdgeTranslator extends BaseEntityDomainTranslator<DagEdge, DagEd
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
-		domain.setParentKey(String.valueOf(entity.getParentTerm().get_term_key()));
-		domain.setParentTerm(entity.getParentTerm().getTerm());
-		domain.setChildKey(String.valueOf(entity.getChildTerm().get_term_key()));
-		domain.setChildTerm(entity.getChildTerm().getTerm());
+		domain.setParentKey(String.valueOf(entity.getParentNode().get_node_key()));
+		domain.setParentTerm(entity.getParentNode().getTerm().getTerm());
+		domain.setChildKey(String.valueOf(entity.getChildNode().get_node_key()));
+		domain.setChildTerm(entity.getChildNode().getTerm().getTerm());
 		
 		if (entity.getLabel() !=  null) {
 			DagLabelTranslator labelTranslator = new DagLabelTranslator();

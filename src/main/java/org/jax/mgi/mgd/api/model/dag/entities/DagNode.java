@@ -26,7 +26,6 @@ public class DagNode extends BaseEntity {
 
 	@Id
 	private int _node_key;
-	private int _object_key;	
 	private Date creation_date;
 	private Date modification_date;
 	

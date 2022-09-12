@@ -13,7 +13,7 @@ public class DagNodeTranslator extends BaseEntityDomainTranslator<DagNode, DagNo
 		DagNodeDomain domain = new DagNodeDomain();
 		
 		domain.setNodeKey(String.valueOf(entity.get_node_key()));
-		domain.setObjectKey(String.valueOf(entity.get_object_key()));
+		domain.setObjectKey(String.valueOf(entity.getTerm().get_term_key()));
 		domain.setObjectTerm(entity.getTerm().getTerm());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));

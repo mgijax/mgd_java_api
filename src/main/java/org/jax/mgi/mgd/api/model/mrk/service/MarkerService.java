@@ -913,7 +913,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				//domain = translator.translate(markerDAO.get(rs.getInt("_marker_key")));
 				domain.setHasAllele(rs.getBoolean("hasAllele"));
 				domain.setHasAntibody(rs.getBoolean("hasAntibody"));
 				domain.setHasGxdAssay(rs.getBoolean("hasGxdAssay"));

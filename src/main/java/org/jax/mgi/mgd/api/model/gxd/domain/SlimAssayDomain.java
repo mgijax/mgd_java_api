@@ -26,9 +26,11 @@ public class SlimAssayDomain extends BaseDomain {
 	private String refsKey;
 	private String jnumid;
 	private String jnum;
+	private String short_citation;	
 	private String markerKey;
 	private String markerAccID;
 	private String markerSymbol;
 	private String createdByKey;
 	private String createdBy;
+	private AssayNoteDomain assayNote;	
 }

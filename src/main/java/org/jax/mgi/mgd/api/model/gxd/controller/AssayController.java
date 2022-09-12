@@ -200,5 +200,69 @@ public class AssayController extends BaseController<AssayDomain> {
 		
 		return results;
 	}
+
+	@POST
+	@ApiOperation(value = "Get list of assay domains by allele accession id")
+	@Path("/getAssayByAllele")
+	public List<SlimAssayDomain> getAssayByAllele(String accid) {
+		
+		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
+
+		try {
+			results = assayService.getAssayByAllele(accid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@POST
+	@ApiOperation(value = "Get list of assay domains by marker accession id")
+	@Path("/getAssayByMarker")
+	public List<SlimAssayDomain> getAssayByMarker(String accid) {
+		
+		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
+
+		try {
+			results = assayService.getAssayByMarker(accid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@POST
+	@ApiOperation(value = "Get list of assay domains by reference jnumid")
+	@Path("/getAssayByRef")
+	public List<SlimAssayDomain> getAssayByRef(String jnumid) {
+		
+		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
+
+		try {
+			results = assayService.getAssayByRef(jnumid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
+
+	@POST
+	@ApiOperation(value = "Get list of specimen domains by reference jnumid")
+	@Path("/getSpecimenByRef")
+	public List<AssayDomain> getSpecimenByRef(String jnumid) {
+		
+		List<AssayDomain> results = new ArrayList<AssayDomain>();
+
+		try {
+			results = assayService.getSpecimenByRef(jnumid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
 }

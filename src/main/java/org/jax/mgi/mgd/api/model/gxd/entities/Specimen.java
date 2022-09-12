@@ -15,6 +15,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -46,12 +47,12 @@ public class Specimen extends BaseEntity {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_embedding_key")
-	private EmbeddingMethod embeddingMethod;
+	@JoinColumn(name="_embedding_key", referencedColumnName="_term_key")
+	private Term embeddingMethod;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_fixation_key")
-	private FixationMethod fixationMethod;
+	@JoinColumn(name="_fixation_key", referencedColumnName="_term_key")
+	private Term fixationMethod;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_genotype_key")

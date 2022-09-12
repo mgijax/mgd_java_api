@@ -285,6 +285,7 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				"\nand s._object_key = t._term_key" +
 				"\nand t._term_key = a._object_key" +
 				"\nand a._logicaldb_key = 173" +
+				"\nand a.preferred = 1" +
 				"\nand s._createdby_key = u._user_key" +
 				"\nand u.login = '" + searchDomain.getCreatedBy() + "'" +		
 				"\nunion all" +
@@ -292,7 +293,8 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				"\nfrom gxd_htsample ht, voc_term t, acc_accession a" +
 				"\nwhere ht._celltype_term_key = t._term_key" +
 				"\nand t._term_key = a._object_key" +
-				"\nand a._logicaldb_key = 173" +				
+				"\nand a._logicaldb_key = 173" +	
+				"\nand a.preferred = 1" +				
 				"\nand ht._experiment_key = " + searchDomain.get_experiment_key() +
 				"\ngroup by _celltype_term_key, term, accid" +
 				"\n) order by sequenceNum, term";

@@ -20,16 +20,15 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
-import org.jax.mgi.mgd.api.model.bib.dao.ReferenceWorkflowDataDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceSearchDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowRelevanceDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceByDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceIndexDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
-import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowData;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
@@ -56,8 +55,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 	@Inject
 	private ReferenceDAO referenceDAO;
-	@Inject
-	private ReferenceWorkflowDataDAO wfDataDAO;
+//	@Inject
+//	private ReferenceWorkflowDataDAO wfDataDAO;
 	@Inject
 	private TermDAO termDAO;
 	@Inject
@@ -77,6 +76,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	
 	private ReferenceTranslator translator = new ReferenceTranslator();
 	private SlimReferenceTranslator slimtranslator = new SlimReferenceTranslator();	
+
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	@Transactional
@@ -178,21 +178,22 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		// notes
 		noteService.process(String.valueOf(entity.get_refs_key()), domain.getReferenceNote(), user);
-				
+			
+		// this is done via the bib_refs/trigger so commenting this out
 		// supplement = Not checked (31576677)
 		// extracted text type = body (48804490)
-		ReferenceWorkflowData wfDataEntity = new ReferenceWorkflowData();
-		wfDataEntity.set_refs_key(entity.get_refs_key());
-		wfDataEntity.setSupplementalTerm(termDAO.get(31576677));
-		wfDataEntity.setExtractedTextTerm(termDAO.get(48804490));			
-		wfDataEntity.setExtractedtext(null);
-		wfDataEntity.setHaspdf(0);
-		wfDataEntity.setLinksupplemental(null);
-		wfDataEntity.setCreatedBy(user);
-		wfDataEntity.setCreation_date(new Date());
-		wfDataEntity.setModifiedBy(user);
-		wfDataEntity.setModification_date(new Date());
-		wfDataDAO.persist(wfDataEntity);			
+//		ReferenceWorkflowData wfDataEntity = new ReferenceWorkflowData();
+//		wfDataEntity.set_refs_key(entity.get_refs_key());
+//		wfDataEntity.setSupplementalTerm(termDAO.get(31576677));
+//		wfDataEntity.setExtractedTextTerm(termDAO.get(48804490));			
+//		wfDataEntity.setExtractedtext(null);
+//		wfDataEntity.setHaspdf(0);
+//		wfDataEntity.setLinksupplemental(null);
+//		wfDataEntity.setCreatedBy(user);
+//		wfDataEntity.setCreation_date(new Date());
+//		wfDataEntity.setModifiedBy(user);
+//		wfDataEntity.setModification_date(new Date());
+//		wfDataDAO.persist(wfDataEntity);			
 		
 		// process pubmed accession ids
 		if (domain.getPubmedid() != null && !domain.getPubmedid().isEmpty()) {
@@ -1884,10 +1885,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		if (entity.getWorkflowData().get(0) != null) {
 			if (!smartEqual(String.valueOf(entity.getWorkflowData().get(0).getSupplementalTerm().get_term_key()), domain.getWorkflowData().getSupplementalKey())) {
+				log.info("applyWorkflowData: updating body/supplemental key");
 				domain.getWorkflowData().setProcessStatus(Constants.PROCESS_UPDATE);
 			}
 		} else {
 			// this should not happen, but if it does...create new "body"
+			log.info("applyWorkflowData: add body for supplemental key");
 			ReferenceWorkflowDataDomain newData = new ReferenceWorkflowDataDomain();
 			newData.setProcessStatus(Constants.PROCESS_CREATE);
 			newData.setRefsKey(domain.getRefsKey());
@@ -2142,5 +2145,95 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}		
 		return a.equals(b);
 	}
+
+	@Transactional	
+	public List<SlimReferenceByDomain> getRefByMarker(String accid) {
+		// return list of reference domains by marker acc id
+
+		List<SlimReferenceByDomain> results = new ArrayList<SlimReferenceByDomain>();
+		
+		String cmd = "\nselect distinct c.*, r.*" + 
+				"\nfrom mrk_reference mr, acc_accession aa, bib_citation_cache c, bib_refs r" + 
+				"\nwhere mr._marker_key = aa._object_key" + 
+				"\nand aa._mgitype_key = 2" + 
+				"\nand aa.accid = '" + accid + "'" + 
+				"\nand mr._refs_key = c._refs_key" + 
+				"\nand c._refs_key = r._refs_key" + 				
+				"\norder by numericpart desc";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimReferenceByDomain domain = new SlimReferenceByDomain();
+				domain.setRefsKey(rs.getString("_refs_key"));
+				domain.setJnum(rs.getString("numericpart"));
+				domain.setJnumid(rs.getString("jnumid"));
+				domain.setShort_citation(rs.getString("short_citation"));
+				domain.setTitle(rs.getString("title"));	
+				domain.setJournal(rs.getString("journal"));
+				domain.setYear(rs.getString("year"));
+				domain.setMgiid(rs.getString("mgiid"));	
+				domain.setPubmedid(rs.getString("pubmedid"));
+				domain.setVol(rs.getString("vol"));
+				domain.setReferencetype(rs.getString("referencetype"));
+				domain.setReferenceAbstract(rs.getString("abstract"));				
+				results.add(domain);
+				referenceDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}
 	
+	@Transactional	
+	public List<SlimReferenceByDomain> getRefByAllele(String accid) {
+		// return list of reference domains by allele acc id
+
+		List<SlimReferenceByDomain> results = new ArrayList<SlimReferenceByDomain>();
+		
+		String cmd = "\nselect distinct c.*, r.*" + 
+				"\nfrom mgi_reference_assoc ar, acc_accession aa, bib_citation_cache c, bib_refs r" + 
+				"\nwhere aa.accid = '" + accid + "'" + 
+				"\nand aa._mgitype_key = 11" + 
+				"\nand aa._object_key = ar._object_key" + 
+				"\nand ar._mgitype_key = 11" + 				
+				"\nand ar._refs_key = c._refs_key" + 
+				"\nand c._refs_key = r._refs_key" + 				
+				"\norder by numericpart desc";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimReferenceByDomain domain = new SlimReferenceByDomain();
+				domain.setRefsKey(rs.getString("_refs_key"));
+				domain.setJnum(rs.getString("numericpart"));
+				domain.setJnumid(rs.getString("jnumid"));
+				domain.setShort_citation(rs.getString("short_citation"));
+				domain.setTitle(rs.getString("title"));	
+				domain.setJournal(rs.getString("journal"));
+				domain.setYear(rs.getString("year"));
+				domain.setMgiid(rs.getString("mgiid"));	
+				domain.setPubmedid(rs.getString("pubmedid"));
+				domain.setVol(rs.getString("vol"));
+				domain.setReferencetype(rs.getString("referencetype"));
+				domain.setReferenceAbstract(rs.getString("abstract"));				
+				results.add(domain);
+				referenceDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}	
 }

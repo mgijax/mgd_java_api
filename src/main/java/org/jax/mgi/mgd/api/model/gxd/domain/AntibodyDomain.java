@@ -27,6 +27,7 @@ public class AntibodyDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	private String accID;
+	private String hasExpression = "0";
 
 	private AntigenDomain antigen;
 	private List<AntibodyAliasDomain> aliases;

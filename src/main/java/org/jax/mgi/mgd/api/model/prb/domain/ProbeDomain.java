@@ -34,6 +34,7 @@ public class ProbeDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	private String accID;
+	private String hasExpression = "0";
 
 	private List<SlimAccessionDomain> mgiAccessionIds;
 	private ProbeSourceDomain probeSource;

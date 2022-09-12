@@ -224,5 +224,36 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		
 		return results;
 	}
+
+	@POST
+	@ApiOperation(value = "Get list of allele domains by marker accession id")
+	@Path("/getAlleleByMarker")
+	public List<AlleleDomain> getAlleleByMarker(String accid) {
+		
+		List<AlleleDomain> results = new ArrayList<AlleleDomain>();
+
+		try {
+			results = alleleService.getAlleleByMarker(accid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
+	@POST
+	@ApiOperation(value = "Get list of allele domains by reference jnumid")
+	@Path("/getAlleleByRef")
+	public List<AlleleDomain> getAlleleByRef(String jnumid) {
+		
+		List<AlleleDomain> results = new ArrayList<AlleleDomain>();
+
+		try {
+			results = alleleService.getAlleleByRef(jnumid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
 }

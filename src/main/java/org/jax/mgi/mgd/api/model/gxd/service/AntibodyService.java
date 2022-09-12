@@ -10,9 +10,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyClassDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyDAO;
-import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyTypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntigenDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyPrepDomain;
@@ -23,6 +21,9 @@ import org.jax.mgi.mgd.api.model.gxd.translator.SlimAntibodyTranslator;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
+import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
+import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -36,21 +37,21 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 	@Inject
 	private AntibodyDAO antibodyDAO;
 	@Inject 
-	private AntibodyClassDAO classDAO;
-	@Inject
-	private AntibodyTypeDAO typeDAO;
+	private TermDAO termDAO;
 	@Inject
 	private OrganismDAO organismDAO;
 	@Inject
 	private AntigenDAO antigenDAO;
-	
 	@Inject
 	private MGIReferenceAssocService referenceAssocService;
 	@Inject
 	private AntibodyAliasService aliasService;
 	@Inject
 	private AntibodyMarkerService antibodyMarkerService;
-	@Inject AntibodyPrepService antibodyPrepService;
+	@Inject 
+	private AntibodyPrepService antibodyPrepService;
+	@Inject
+	private TermService termService;
 	
 	private AntibodyTranslator translator = new AntibodyTranslator();
 	private SlimAntibodyTranslator slimtranslator = new SlimAntibodyTranslator();
@@ -69,7 +70,13 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		Antibody entity = new Antibody();
 		
 		log.info("Antibody/create");
+
+		TermDomain termDomain = new TermDomain();
 		
+		// vocabulary keys		
+		termDomain.setVocabKey("151");	// antibody class
+		termDomain.setTerm("Not Specified");
+		String antibodyClassNS = String.valueOf(termService.searchByTerm(termDomain));
 		
 		// may not be null
 		entity.setAntibodyName(domain.getAntibodyName());
@@ -89,17 +96,15 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 			// 'Not Specified'
 			domain.setAntibodyTypeKey("-1");
 		}
-	    entity.setAntibodyType(typeDAO.get(Integer.valueOf(domain.getAntibodyTypeKey())));
+	    entity.setAntibodyType(termDAO.get(Integer.valueOf(domain.getAntibodyTypeKey())));
 		
 		log.info("antibody class");
 		// has default if not set
 		if(domain.getAntibodyClassKey() ==  null || domain.getAntibodyClassKey().isEmpty()){
 			// 'Not Specified'
-			domain.setAntibodyClassKey("-1");
-			
+			domain.setAntibodyClassKey(antibodyClassNS);			
 		}
-		entity.setAntibodyClass(classDAO.get(Integer.valueOf(domain.getAntibodyClassKey())));
-		
+		entity.setAntibodyClass(termDAO.get(Integer.valueOf(domain.getAntibodyClassKey())));
 		
 	    // has default if not set
 	    log.info("antibody organism");
@@ -113,7 +118,6 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		if (domain.getAntigen().getAntigenKey() != null && !domain.getAntigen().getAntigenKey().isEmpty()) {
 			entity.setAntigen(antigenDAO.get(Integer.valueOf(domain.getAntigen().getAntigenKey())));
 		}
-		
 		
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
@@ -165,16 +169,16 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 
 		SearchResults<AntibodyDomain> results = new SearchResults<AntibodyDomain>();
 		Antibody entity = antibodyDAO.get(Integer.valueOf(domain.getAntibodyKey()));
-		//		String mgiTypeKey = "6";
-		//		String mgiTypeName = "Antibody";
 		
 		log.info("Antibody/update");
+
+		TermDomain termDomain = new TermDomain();
 		
-		//
-		// IN PROGRESS
-		//
-		log.info("update antibody name: " + domain.getAntibodyName());
-		
+		// vocabulary keys
+		termDomain.setVocabKey("151");	// antibody class
+		termDomain.setTerm("Not Specified");
+		String antibodyClassNS = String.valueOf(termService.searchByTerm(termDomain));
+				
 		entity.setAntibodyName(domain.getAntibodyName());
 		
 		log.info("antibody note: " + domain.getAntibodyNote());
@@ -191,10 +195,9 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		// has default if not set
 		if(domain.getAntibodyClassKey() ==  null || domain.getAntibodyClassKey().isEmpty()){
 			// 'Not Specified'
-			domain.setAntibodyClassKey("-1");
-			
+			domain.setAntibodyClassKey(antibodyClassNS);		
 		}
-		entity.setAntibodyClass(classDAO.get(Integer.valueOf(domain.getAntibodyClassKey())));
+		entity.setAntibodyClass(termDAO.get(Integer.valueOf(domain.getAntibodyClassKey())));
 		
 		log.info("antibody type");
 		// has default if not set
@@ -202,8 +205,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 			// 'Not Specified'
 			domain.setAntibodyTypeKey("-1");
 		}
-	    entity.setAntibodyType(typeDAO.get(Integer.valueOf(domain.getAntibodyTypeKey())));
-	    
+	    entity.setAntibodyType(termDAO.get(Integer.valueOf(domain.getAntibodyTypeKey()))); 
 		
 	    // has default if not set
 	    log.info("antibody organism");
@@ -217,8 +219,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		if (domain.getAntigen().getAntigenKey() != null && !domain.getAntigen().getAntigenKey().isEmpty()) {
 			entity.setAntigen(antigenDAO.get(Integer.valueOf(domain.getAntigen().getAntigenKey())));
 		}
-		
-		
+			
 		// process antibody aliases, can be null
 		if (domain.getAliases() != null && !domain.getAliases().isEmpty()) {
 			log.info("Antibody/update aliases");
@@ -235,6 +236,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 			log.info("antibodyMarkerDomain markerKey: " + domain.getMarkers().get(0).getMarkerKey());
 			antibodyMarkerService.process(String.valueOf(entity.get_antibody_key()), domain.getMarkers(), user);
 		}
+		
 		// process antibody references, can be null
 		if (domain.getRefAssocs() != null && ! domain.getRefAssocs().isEmpty()) {
 			log.info("Antibody/update references");
@@ -264,14 +266,10 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		AntibodyPrepDomain inPrepDomain = new AntibodyPrepDomain();
 		inPrepDomain.setAntibodyKey(String.valueOf(key));
 		
-		
-		//SearchResults<AntibodyPrepDomain> outDomain = new SearchResults<AntibodyPrepDomain> ();
-		
 		List<AntibodyPrepDomain> prepDomainList =  antibodyPrepService.search(inPrepDomain);
 		for (int i = 0; i < prepDomainList.size(); i++) {
 			String prepKey = prepDomainList.get(i).getAntibodyPrepKey();
 			log.info(" deleting antibody prep key: " + prepKey);
-			//outDomain = antibodyPrepService.delete(Integer.valueOf(prepKey), user);
 			antibodyPrepService.delete(Integer.valueOf(prepKey), user);
 			log.info("done deleting antibody prep key: " + prepKey);
 		}
@@ -279,7 +277,6 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		// now delete the antibody.
 		SearchResults<AntibodyDomain> results = new SearchResults<AntibodyDomain>();
 		Antibody entity = antibodyDAO.get(key);
-		
 		
 		results.setItem(translator.translate(antibodyDAO.get(key)));
 		antibodyDAO.remove(entity);
@@ -292,6 +289,23 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		AntibodyDomain domain = new AntibodyDomain();
 		if (antibodyDAO.get(key) != null) {
 			domain = translator.translate(antibodyDAO.get(key));
+	        
+	        // determine hasExpression
+	    	String cmd = "select case when exists (select 1 from gxd_antibodyprep p, gxd_assay e" +
+	    				"\nwhere p._antibody_key = " + key +
+	    				"\nand p._antibodyprep_key = e._antibodyprep_key)" +
+	    				"\nthen 1 else 0 end as hasExpression";
+	    	log.info(cmd);	
+	    	try {
+	    		ResultSet rs = sqlExecutor.executeProto(cmd);
+	    		while (rs.next()) {
+	    			domain.setHasExpression(rs.getString("hasExpression"));
+	    		}
+	    		sqlExecutor.cleanup();
+	    	}
+	    	catch (Exception e) {
+	    		e.printStackTrace();
+	    	}				
 		}
 		return domain;
 	}
@@ -582,7 +596,6 @@ and a._antibody_key = aa._antibody_key
 			where = where + "\nand a._antigen_key = av._antigen_key";
 			where = where + "\nand av._source_key = sv._source_key";
 		}
-		
 		if (from_marker == true) {
 			from = from + ", gxd_antibodymarker_view mv";
 			where = where + "\nand a._antibody_key = mv._antibody_key";
@@ -645,5 +658,74 @@ and a._antibody_key = aa._antibody_key
 		
 		return results;
 	}
-	
+
+	@Transactional	
+	public List<AntibodyDomain> getAntibodyByMarker(String accid) {
+		// return list of antibody domains by marker acc id
+
+		List<AntibodyDomain> results = new ArrayList<AntibodyDomain>();
+		
+		String cmd = "select distinct a._antibody_key, a.antibodyname," + 
+				"\ncase when exists (select 1 from gxd_antibodyprep p, gxd_assay e where a._antibody_key = p._antibody_key and p._antibodyprep_key = e._antibodyprep_key) then 1 else 0 end as hasExpression" + 
+				"\nfrom gxd_antibody a, gxd_antibodymarker m, acc_accession aa" + 
+				"\nwhere m._antibody_key = a._antibody_key" + 
+				"\nand m._marker_key = aa._object_key" + 
+				"\nand aa._mgitype_key = 2" +
+				"\nand aa.accid = '" + accid + "'" +
+				"\norder by a.antibodyname";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				AntibodyDomain domain = new AntibodyDomain();
+				domain = translator.translate(antibodyDAO.get(rs.getInt("_antibody_key")));
+				domain.setHasExpression(rs.getString("hasExpression"));
+				antibodyDAO.clear();
+				results.add(domain);
+				antibodyDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}
+
+	@Transactional	
+	public List<AntibodyDomain> getAntibodyByRef(String jnumid) {
+		// return list of probe domains by reference jnumid
+
+		List<AntibodyDomain> results = new ArrayList<AntibodyDomain>();
+		
+		String cmd = "select distinct a._antibody_key, a.antibodyname," +
+				"\ncase when exists (select 1 from gxd_antibodyprep p, gxd_assay e where a._antibody_key = p._antibody_key and p._antibodyprep_key = e._antibodyprep_key) then 1 else 0 end as hasExpression" + 
+				"\nfrom gxd_antibody a, mgi_reference_antibody_view r" + 
+				"\nwhere a._antibody_key = r._object_key" + 
+				"\nand r.jnumid = '" + jnumid + "'" +
+				"\norder by a.antibodyname";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				AntibodyDomain domain = new AntibodyDomain();
+				domain = translator.translate(antibodyDAO.get(rs.getInt("_antibody_key")));
+				domain.setHasExpression(rs.getString("hasExpression"));
+				antibodyDAO.clear();
+				results.add(domain);
+				antibodyDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}	
 }

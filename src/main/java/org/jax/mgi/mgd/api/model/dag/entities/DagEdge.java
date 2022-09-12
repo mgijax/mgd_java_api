@@ -24,12 +24,20 @@ public class DagEdge extends BaseEntity {
 	@Id
 	private int _edge_key;
 	private Integer _dag_key;
-	private Integer _parent_key;
-	private Integer _child_key;
+//	private Integer _parent_key;
+//	private Integer _child_key;
 	private Integer sequenceNum;	
 	private Date creation_date;
 	private Date modification_date;
 
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_parent_key")
+	private DagNode parentNode;	
+	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_child_key")
+	private DagNode childNode;
+	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_label_key")
 	private DagLabel label;

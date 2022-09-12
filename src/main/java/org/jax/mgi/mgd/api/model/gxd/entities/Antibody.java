@@ -21,6 +21,7 @@ import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -44,12 +45,12 @@ public class Antibody extends BaseEntity {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_antibodyclass_key")
-	private AntibodyClass antibodyClass;
+	@JoinColumn(name="_antibodyclass_key", referencedColumnName="_term_key")
+	private Term antibodyClass;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_antibodytype_key")
-	private AntibodyType antibodyType;
+	@JoinColumn(name="_antibodytype_key", referencedColumnName="_term_key")
+	private Term antibodyType;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_organism_key")

@@ -326,7 +326,24 @@ public class ProbeService extends BaseService<ProbeDomain> {
 
 		if (probeDAO.get(key) != null) {
 			domain = translator.translate(probeDAO.get(key));
-
+			
+	        // determine hasExpression
+	    	String cmd = "select case when exists (select 1 from gxd_probeprep p, gxd_assay e" +
+	    				"\nwhere p._probe_key = " + key +
+	    				"\nand p._probeprep_key = e._probeprep_key)" +
+	    				"\nthen 1 else 0 end as hasExpression";
+	    	log.info(cmd);	
+	    	try {
+	    		ResultSet rs = sqlExecutor.executeProto(cmd);
+	    		while (rs.next()) {
+	    			domain.setHasExpression(rs.getString("hasExpression"));
+	    		}
+	    		//sqlExecutor.cleanup();
+	    	}
+	    	catch (Exception e) {
+	    		e.printStackTrace();
+	    	}	
+	    	
 			// attach accession ids for each prb_reference
 			if (domain.getReferences() != null && !domain.getReferences().isEmpty()) {
 				for (int i = 0; i < domain.getReferences().size(); i++) {
@@ -342,7 +359,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				catch (Exception e) {
 					e.printStackTrace();
 				}				
-			}
+			}	    	
 		}
 		
 		return domain;
@@ -402,12 +419,14 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		Boolean from_alias = false;
 		Boolean from_generalNote = false;
 		Boolean from_rawsequenceNote = false;
+		Boolean usedCM = false;
 		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("p", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {
 			from = from + cmResults[0];
 			where = where + cmResults[1];
+			usedCM = true;
 		}
 
 		if (searchDomain.getSegmentTypeKey() != null && !searchDomain.getSegmentTypeKey().isEmpty()) {
@@ -561,19 +580,22 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				from_marker = true;
 			}
 			
-			String markercmResults[] = DateSQLQuery.queryByCreationModification("m", 
-					searchDomain.getMarkers().get(0).getCreatedBy(), 
-					searchDomain.getMarkers().get(0).getModifiedBy(), 
-					searchDomain.getMarkers().get(0).getCreation_date(), 
-					searchDomain.getMarkers().get(0).getModification_date());
-		
-			if (markercmResults.length > 0) {
-				if (markercmResults[0].length() > 0 || markercmResults[1].length() > 0) {
-					from = from + markercmResults[0];
-					where = where + markercmResults[1];
-					from_marker = true;
+			if (usedCM == false) {
+				String markercmResults[] = DateSQLQuery.queryByCreationModification("m", 
+						searchDomain.getMarkers().get(0).getCreatedBy(), 
+						searchDomain.getMarkers().get(0).getModifiedBy(), 
+						searchDomain.getMarkers().get(0).getCreation_date(), 
+						searchDomain.getMarkers().get(0).getModification_date());
+			
+				if (markercmResults.length > 0) {
+					if (markercmResults[0].length() > 0 || markercmResults[1].length() > 0) {
+						from = from + markercmResults[0];
+						where = where + markercmResults[1];
+						from_marker = true;
+						usedCM = true;
+					}
 				}
-			}			
+			}
 		}
 
 		// references
@@ -767,5 +789,75 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		
 		return results;
 	}
+
+	@Transactional	
+	public List<ProbeDomain> getProbeByMarker(String accid) {
+		// return list of probe domains by marker acc id
+
+		List<ProbeDomain> results = new ArrayList<ProbeDomain>();
+		
+		String cmd = "select distinct a._probe_key, a.name," + 
+				"\ncase when exists (select 1 from gxd_probeprep p, gxd_assay e where a._probe_key = p._probe_key and p._probeprep_key = e._probeprep_key) then 1 else 0 end as hasExpression" + 
+				"\nfrom prb_probe a, prb_marker m, acc_accession aa" + 
+				"\nwhere a._probe_key = m._probe_key" + 
+				"\nand m._marker_key = aa._object_key" + 
+				"\nand aa._mgitype_key = 2" +
+				"\nand aa.accid = '" + accid + "'" +
+				"\norder by a.name";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				ProbeDomain domain = new ProbeDomain();
+				domain = translator.translate(probeDAO.get(rs.getInt("_probe_key")));
+				domain.setHasExpression(rs.getString("hasExpression"));
+				probeDAO.clear();
+				results.add(domain);
+				probeDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}
 	
+	@Transactional	
+	public List<ProbeDomain> getProbeByRef(String jnumid) {
+		// return list of probe domains by reference jnumid
+
+		List<ProbeDomain> results = new ArrayList<ProbeDomain>();
+		
+		String cmd = "select distinct a._probe_key, a.name," +
+				"\ncase when exists (select 1 from gxd_probeprep p, gxd_assay e where a._probe_key = p._probe_key and p._probeprep_key = e._probeprep_key) then 1 else 0 end as hasExpression" + 
+				"\nfrom prb_probe a, prb_reference r, bib_citation_cache aa" + 
+				"\nwhere a._probe_key = r._probe_key" + 
+				"\nand r._refs_key = aa._refs_key" + 
+				"\nand aa.jnumid = '" + jnumid + "'" +
+				"\norder by a.name";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				ProbeDomain domain = new ProbeDomain();
+				domain = translator.translate(probeDAO.get(rs.getInt("_probe_key")));
+				domain.setHasExpression(rs.getString("hasExpression"));
+				probeDAO.clear();
+				results.add(domain);
+				probeDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}	
 }

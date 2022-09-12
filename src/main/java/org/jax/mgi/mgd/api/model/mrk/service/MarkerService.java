@@ -30,6 +30,7 @@ import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
 import org.jax.mgi.mgd.api.model.mrk.translator.SlimMarkerTranslator;
+import org.jax.mgi.mgd.api.model.seq.domain.SeqSummaryDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -146,8 +147,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			
 			// create marker history assignment
 			// create 1 marker history row to track the initial marker assignment		
-			// event = assigned (1)
-			// event reason = Not Specified (-1)
+			// event = assigned (106563604)
+			// event reason = Not Specified (106563610)
 			// default reference is J:23000 (22864); sent by UI
 			
 			String cmd = "select count(*) from MRK_insertHistory ("
@@ -155,7 +156,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 					+ "," + entity.get_marker_key()
 					+ "," + entity.get_marker_key()
 					+ "," + domain.getHistory().get(0).getRefsKey().toString()
-					+ ",1,-1"
+					+ ",106563604,106563610"
 					+ ",'" + entity.getName().replaceAll("'", "''") + "'"
 					+ ")";
 	
@@ -856,6 +857,129 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}	
 	
 	@Transactional	
+	public List<SlimMarkerDomain> getMarkerByRef(String jnumid) {
+		// return list of marker domains by reference jnum id
+
+		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
+		
+		String cmd = "\nselect distinct m._marker_key, m._marker_key, m.symbol" + 
+				"\nfrom bib_citation_cache aa, mgi_reference_assoc r, mrk_marker m" + 
+				"\nwhere aa.jnumid = '" + jnumid + "'" +
+				"\nand aa._refs_key = r._refs_key" +
+				"\nand r._mgitype_key = 2" +
+				"\nand r._object_key = m._marker_key" +
+				"\norder by symbol";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimMarkerDomain domain = new SlimMarkerDomain();
+				domain = slimtranslator.translate(markerDAO.get(rs.getInt("_marker_key")));
+				markerDAO.clear();
+				results.add(domain);
+				markerDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}
+	
+	@Transactional	
+	public MarkerDomain getSummaryLinks(MarkerDomain domain) {
+		// return marker domains with summary info by marker key attached
+		
+		String cmd = "\nselect m._marker_key," 
+				+ "\ncase when exists (select 1 from gxd_allelegenotype s where m._marker_key = s._marker_key) then 1 else 0 end as hasAllele," 
+				+ "\ncase when exists (select 1 from mrk_reference s where m._marker_key = s._marker_key) then 1 else 0 end as hasReference," 
+				+ "\ncase when exists (select 1 from gxd_index s where m._marker_key = s._marker_key) then 1 else 0 end as hasGxdIndex," 
+				+ "\ncase when exists (select 1 from gxd_assay s where m._marker_key = s._marker_key) then 1 else 0 end as hasGxdAssay," 
+				+ "\ncase when exists (select 1 from gxd_expression s where m._marker_key = s._marker_key) then 1 else 0 end as hasGxdResult," 
+				+ "\ncase when exists (select 1 from prb_marker s where m._marker_key = s._marker_key) then 1 else 0 end as hasProbe," 
+				+ "case when exists (select 1 from gxd_antibodymarker s where m._marker_key = s._marker_key) then 1 else 0 end as hasAntibody," 
+				+ "\ncase when exists (select 1 from mld_expt_marker s where m._marker_key = s._marker_key) then 1 else 0 end as hasMapping,"
+				+ "\ncase when exists (select 1 from seq_marker_cache s where m._marker_key = s._marker_key) then 1 else 0 end as hasSequence"
+				+ "\nfrom mrk_marker m" 
+				+ "\nwhere m._marker_key = " + domain.getMarkerKey();
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				//domain = translator.translate(markerDAO.get(rs.getInt("_marker_key")));
+				domain.setHasAllele(rs.getBoolean("hasAllele"));
+				domain.setHasAntibody(rs.getBoolean("hasAntibody"));
+				domain.setHasGxdAssay(rs.getBoolean("hasGxdAssay"));
+				domain.setHasGxdIndex(rs.getBoolean("hasGxdIndex"));
+				domain.setHasGxdResult(rs.getBoolean("hasGxdResult"));
+				domain.setHasMapping(rs.getBoolean("hasMapping"));
+				domain.setHasProbe(rs.getBoolean("hasProbe"));
+				domain.setHasReference(rs.getBoolean("hasReference"));
+				domain.setHasSequence(rs.getBoolean("hasSequence"));
+				markerDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return domain;
+	}
+	
+	@Transactional	
+	public List<SeqSummaryDomain> getSequenceByMarker(String accid) {
+		// return list of sequence summary domains by marker accid
+
+		List<SeqSummaryDomain> results = new ArrayList<SeqSummaryDomain>();
+		
+		String cmd = "\nselect distinct s._sequence_key, s.accid, t1.term as sequenceType, ss.length, ss.description, m.symbol, pss.strain, aa.accid as markerAccid" + 
+				"\nfrom seq_marker_cache s, voc_term t1, seq_sequence ss, mrk_marker m, seq_source_assoc sr, prb_source pso, prb_strain pss, acc_accession aa" + 
+				"\nwhere s._sequencetype_key = t1._term_key" + 
+				"\nand s._sequence_key = ss._sequence_key" + 
+				"\nand s._marker_key = m._marker_key" + 
+				"\nand s._organism_key = 1" + 
+				"\nand s._sequence_key = sr._sequence_key" + 
+				"\nand sr._source_key = pso._source_key" +
+				"\nand pso._strain_key = pss._strain_key" +
+				"\nand m._marker_key = aa._object_key" + 
+				"\nand aa._mgitype_key = 2" + 
+				"\nand aa.accid = '" + accid + "'" + 
+				"\norder by s._sequence_key";
+				//"\norder by s.accid";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SeqSummaryDomain domain = new SeqSummaryDomain();
+				domain.setAccID(rs.getString("accid"));
+				domain.setSequenceType(rs.getString("sequenceType"));
+				domain.setLength(rs.getString("length"));
+				domain.setStrain(rs.getString("strain"));
+				domain.setMarkerSymbol(rs.getString("symbol"));
+				domain.setMarkerAccID(rs.getString("markerAccid"));				
+				domain.setDescription(rs.getString("description"));
+				results.add(domain);
+				markerDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}
+	
+	@Transactional	
 	public List<SlimMarkerDomain> validate(String value, Boolean allowWithdrawn, Boolean allowReserved) {
 		// use SlimMarkerDomain to return list of validated marker
 		// one value is expected
@@ -1216,7 +1340,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				//				  11928467 | mutation defined region
 				//				  15406205 | CpG island
 				//				  15406207 | promoter
-				//				  36700088 | TSS region
+				//				  36700088 | TSS cluster
 				//				  97015607 | enhancer
 				//				  97015608 | promoter flanking region
 				//				  97015609 | CTCF binding site
@@ -1363,14 +1487,14 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		String key = (String) params.get("oldKey");
 
 		// mrk_event = rename
-		if (params.get("eventKey").equals("2")) {
+		if (params.get("eventKey").equals("106563605")) {
 			runCmd = runCmd + " --newName=\"" + 
 						((String) params.get("newName")).replaceAll("'",  "''") + "\"";
 			runCmd = runCmd + " --newSymbols=\"" + (String) params.get("newSymbol") + "\"";
 		}
 		
 		// mrk_event = merge
-		if (params.get("eventKey").equals("3") || params.get("eventKey").equals("4")) {
+		if (params.get("eventKey").equals("106563606") || params.get("eventKey").equals("106563607")) {
 			runCmd = runCmd + " --newKey=" + (String) params.get("newKey");
 			key = (String) params.get("newKey");
 		}

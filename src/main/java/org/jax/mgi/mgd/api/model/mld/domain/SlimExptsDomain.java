@@ -11,6 +11,12 @@ public class SlimExptsDomain extends BaseDomain {
 	private String exptKey;
 	private String exptDisplay;
 	private String exptType;
-	private Integer tag;
-
+	private String chromosome;
+	private String refsKey;
+	private String jnumid;
+	private Integer jnum;
+	private String short_citation;
+	private String creation_date;
+	private String modification_date;
+	private String accID;	
 }

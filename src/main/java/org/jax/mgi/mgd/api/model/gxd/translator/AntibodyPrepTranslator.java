@@ -20,10 +20,10 @@ public class AntibodyPrepTranslator extends BaseEntityDomainTranslator<AntibodyP
 		domain.setAntibodyKey(String.valueOf(entity.getAntibody().get_antibody_key()));
 		domain.setAntibodyName(entity.getAntibody().getAntibodyName());
 		domain.setAntibodyAccID(entity.getAntibody().getMgiAccessionIds().get(0).getAccID());
-		domain.setSecondaryKey(String.valueOf(entity.getSecondary().get_secondary_key()));
-		domain.setSecondaryName(entity.getSecondary().getSecondary());
-		domain.setLabelKey(String.valueOf(entity.getLabel().get_label_key()));
-		domain.setLabelName(entity.getLabel().getLabel());
+		domain.setSecondaryKey(String.valueOf(entity.getSecondary().get_term_key()));
+		domain.setSecondaryName(entity.getSecondary().getTerm());
+		domain.setLabelKey(String.valueOf(entity.getLabel().get_term_key()));
+		domain.setLabelName(entity.getLabel().getTerm());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));		
 

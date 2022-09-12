@@ -13,8 +13,6 @@ public class DagEdgeTranslator extends BaseEntityDomainTranslator<DagEdge, DagEd
 		
 		domain.setEdgeKey(String.valueOf(entity.get_edge_key()));
 		domain.setDagKey(String.valueOf(entity.get_dag_key()));
-//		domain.setParentKey(String.valueOf(entity.get_parent_key()));
-//		domain.setChildKey(String.valueOf(entity.get_child_key()));
 		domain.setSequenceNum(String.valueOf(entity.getSequenceNum()));
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));

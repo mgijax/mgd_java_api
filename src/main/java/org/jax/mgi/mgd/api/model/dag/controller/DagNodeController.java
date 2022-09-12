@@ -32,6 +32,7 @@ public class DagNodeController extends BaseController<DagNodeDomain> {
 	@Inject
 	private DagEdgeService dagEdgeService;
 	
+	
 	@Override
 	public SearchResults<DagNodeDomain> create(DagNodeDomain term, User user) {
 		return dagNodeService.create(term, user);

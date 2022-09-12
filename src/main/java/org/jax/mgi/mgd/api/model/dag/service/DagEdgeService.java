@@ -103,7 +103,8 @@ public class DagEdgeService extends BaseService<DagEdgeDomain> {
 				DagEdgeDomain domain = new DagEdgeDomain();
 				domain = translator.translate(dagEdgeDAO.get(rs.getInt("_edge_key")));	
 				dagEdgeDAO.clear();		
-				results.add(domain);				
+				results.add(domain);
+				log.info("getSiblingsByParent():domain added to results");
 			}
 			sqlExecutor.cleanup();
 		}
@@ -111,6 +112,7 @@ public class DagEdgeService extends BaseService<DagEdgeDomain> {
 			e.printStackTrace();
 		}
 		
+		log.info("getSiblingsByParent():returning results");
 		return results;
 	}	
 	

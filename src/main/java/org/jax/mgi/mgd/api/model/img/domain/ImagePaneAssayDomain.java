@@ -14,7 +14,8 @@ public class ImagePaneAssayDomain extends BaseDomain {
 	// used by pwi/static/app/edit/imagedetail page
 	
 	private String imageKey;
-	private String imagePaneKey;	
+	private String imagePaneKey;
+	private String specimenLabel;
 	private String figureLabel;
 	private String paneLabel;
 	private List<SlimAssayDomain> assays;

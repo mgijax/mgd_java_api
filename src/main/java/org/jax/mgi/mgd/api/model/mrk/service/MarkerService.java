@@ -891,6 +891,54 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}
 	
 	@Transactional	
+	public MarkerDomain getSummaryLinkByMarker(String accid) {
+		// return marker domains with summary info by marker accid
+
+		MarkerDomain domain = new MarkerDomain();
+		
+		String cmd = "\nselect a.accid," 
+				+ "\ncase when exists (select 1 from gxd_allelegenotype s where a._object_key = _marker_key) then 1 else 0 end as hasAllele," 
+				+ "\ncase when exists (select 1 from mrk_reference s where a._object_key = _marker_key) then 1 else 0 end as hasReference," 
+				+ "\ncase when exists (select 1 from gxd_index s where a._object_key = _marker_key) then 1 else 0 end as hasGxdIndex," 
+				+ "\ncase when exists (select 1 from gxd_assay s where a._object_key = _marker_key) then 1 else 0 end as hasGxdAssay," 
+				+ "\ncase when exists (select 1 from gxd_expression s where a._object_key = _marker_key) then 1 else 0 end as hasGxdResult," 
+				+ "\ncase when exists (select 1 from prb_marker s where a._object_key = _marker_key) then 1 else 0 end as hasProbe," 
+				+ "case when exists (select 1 from gxd_antibodymarker s where a._object_key = _marker_key) then 1 else 0 end as hasAntibody," 
+				+ "\ncase when exists (select 1 from mld_expt_marker s where a._object_key = _marker_key) then 1 else 0 end as hasMapping,"
+				+ "\ncase when exists (select 1 from seq_marker_cache s where a._object_key = _marker_key) then 1 else 0 end as hasSequence"
+				+ "\nfrom acc_accession a" 
+				+ "\nwhere a.accid = '" + accid + "'"
+				+ "\nand a._mgitype_key = 2" 
+				+ "\nand a._logicaldb_key = 1" 
+				+ "\nand a.preferred = 1";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				domain = translator.translate(markerDAO.get(rs.getInt("_marker_key")));
+				domain.setHasAllele(rs.getBoolean("hasAllele"));
+				domain.setHasAntibody(rs.getBoolean("hasAntibody"));
+				domain.setHasGxdAssay(rs.getBoolean("hasGxdAssay"));
+				domain.setHasGxdIndex(rs.getBoolean("hasGxdIndex"));
+				domain.setHasGxdResult(rs.getBoolean("hasGxdResult"));
+				domain.setHasMapping(rs.getBoolean("hasMapping"));
+				domain.setHasProbe(rs.getBoolean("hasProbe"));
+				domain.setHasReference(rs.getBoolean("hasReference"));
+				domain.setHasSequence(rs.getBoolean("hasSequence"));
+				markerDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return domain;
+	}
+	
+	@Transactional	
 	public List<SeqSummaryDomain> getSequenceByMarker(String accid) {
 		// return list of sequence summary domains by marker accid
 

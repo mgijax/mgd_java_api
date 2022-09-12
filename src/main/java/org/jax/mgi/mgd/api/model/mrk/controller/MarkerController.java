@@ -185,6 +185,22 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	}
 	
 	@POST
+	@ApiOperation(value = "Get summary link info for marker domains by marker acc id")
+	@Path("/getSummaryLinkByMarker")
+	public MarkerDomain getSummaryLinkByMarker(String accid) {
+		
+		MarkerDomain results = new MarkerDomain();
+
+		try {
+			results = markerService.getSummaryLinkByMarker(accid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@POST
 	@ApiOperation(value = "Get list of sequence domains by marker acc id")
 	@Path("/getSequenceByMarker")
 	public List<SeqSummaryDomain> getSequenceByMarker(String accid) {

@@ -74,4 +74,15 @@ public class MarkerDomain extends BaseDomain {
 	// biotypes
 	private List<SeqMarkerBiotypeDomain> biotypes;
 	
+	// used by MarkerService/getSummaryLinkByMarker()
+	private Boolean hasAllele = false;
+	private Boolean hasAntibody = false;	
+	private Boolean hasGxdAssay = false;
+	private Boolean hasGxdIndex = false;
+	private Boolean hasGxdResult = false;
+	private Boolean hasMapping = false;
+	private Boolean hasProbe = false;
+	private Boolean hasReference = false;
+	private Boolean hasSequence = false;
+	
 }

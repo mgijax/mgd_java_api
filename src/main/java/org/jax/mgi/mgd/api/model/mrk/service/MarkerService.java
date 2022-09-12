@@ -896,7 +896,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		MarkerDomain domain = new MarkerDomain();
 		
-		String cmd = "\nselect a.accid," 
+		String cmd = "\nselect a._object_key, a.accid," 
 				+ "\ncase when exists (select 1 from gxd_allelegenotype s where a._object_key = _marker_key) then 1 else 0 end as hasAllele," 
 				+ "\ncase when exists (select 1 from mrk_reference s where a._object_key = _marker_key) then 1 else 0 end as hasReference," 
 				+ "\ncase when exists (select 1 from gxd_index s where a._object_key = _marker_key) then 1 else 0 end as hasGxdIndex," 
@@ -917,7 +917,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				domain = translator.translate(markerDAO.get(rs.getInt("_marker_key")));
+				domain = translator.translate(markerDAO.get(rs.getInt("_object_key")));
 				domain.setHasAllele(rs.getBoolean("hasAllele"));
 				domain.setHasAntibody(rs.getBoolean("hasAntibody"));
 				domain.setHasGxdAssay(rs.getBoolean("hasGxdAssay"));

@@ -28,7 +28,7 @@ public class DagEdgeService extends BaseService<DagEdgeDomain> {
 
 	@Inject
 	private DagEdgeDAO dagEdgeDAO;
-	@Inject
+
 	private DagEdgeTranslator translator = new DagEdgeTranslator();
 	
 	private SQLExecutor sqlExecutor = new SQLExecutor();

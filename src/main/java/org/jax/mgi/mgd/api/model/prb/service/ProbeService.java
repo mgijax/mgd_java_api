@@ -875,12 +875,12 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SlimProbeDomain slimdomain = new SlimProbeDomain();
+				log.info("slimtranslator: " + rs.getInt("_probe_key"));
 				slimdomain = slimtranslator.translate(probeDAO.get(rs.getInt("_probe_key")));
 				probeDAO.clear();	
 				results.add(slimdomain);
-				probeDAO.clear();				
 			}
-			//sqlExecutor.cleanup();
+			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();

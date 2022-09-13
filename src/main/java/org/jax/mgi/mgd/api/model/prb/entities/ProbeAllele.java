@@ -13,7 +13,6 @@ import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -22,23 +21,20 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Probe/RFLV Model Object")
-@Table(name="prb_rflv")
-public class ProbeRFLV extends BaseEntity {
+@ApiModel(value = "Probe/Allele Model Object")
+@Table(name="prb_allele")
+public class ProbeAllele extends BaseEntity {
 
 	@Id
-//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="prb_rflv_generator")
-//	@SequenceGenerator(name="prb_rflv_generator", sequenceName = "prb_rflv_seq", allocationSize=1)
+//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="prb_allele_generator")
+//	@SequenceGenerator(name="prb_allele_generator", sequenceName = "prb_allele_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")
+	private int _allele_key;
 	private int _rflv_key;
-	private int _reference_key;
-	private String endonuclease;
+	private String allele;
+	private String fragments;
 	private Date creation_date;
 	private Date modification_date;
-
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_marker_key")
-	private Marker marker;
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
@@ -48,8 +44,9 @@ public class ProbeRFLV extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	// rflv/allele
+	// strains
 	@OneToMany()
-	@JoinColumn(name="_rflv_key", referencedColumnName="_rflv_key", insertable=false, updatable=false)
-	private List<ProbeAllele> rflvAlleles;
+	@JoinColumn(name="_allele_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
+	private List<ProbeAlleleStrain> alleleStrains;
+	
 }

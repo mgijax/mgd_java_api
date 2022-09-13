@@ -8,14 +8,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class ProbeRFLVDomain extends BaseDomain {
+public class ProbeAlleleDomain extends BaseDomain {
 
 	private String processStatus;
+	private String alleleKey;
 	private String rflvKey;
-	private String referenceKey;
-	private String markerKey;
-	private String symbol;
-	private String endonuclease;
+	private String allele;
+	private String fragments;
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;
@@ -23,5 +22,5 @@ public class ProbeRFLVDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;
 	
-	List<ProbeAlleleDomain> rflvAlleles;
-} 
+	List<ProbeAlleleStrainDomain> alleleStrains;
+}

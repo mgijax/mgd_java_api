@@ -862,22 +862,22 @@ public class ProbeService extends BaseService<ProbeDomain> {
 	}
 	
 	@Transactional	
-	public List<SlimProbeDomain> getChildClones(Integer probeKey) {
+	public ProbeDomain getChildClones(ProbeDomain domain) {
 		// return list of child clones (SlimProbeDomain) of probe key
 
-		List<SlimProbeDomain> results = new ArrayList<SlimProbeDomain>();
+		List<SlimProbeDomain> childClones = new ArrayList<SlimProbeDomain>();
 		
-		String cmd = "\nselect _probe_key, name from prb_probe where derivedfrom = " + probeKey + "\norder by name";
+		String cmd = "\nselect _probe_key, name from prb_probe where derivedfrom = " + domain.getProbeKey() + "\norder by name";
 		
 		log.info(cmd);	
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				SlimProbeDomain domain = new SlimProbeDomain();
-				domain = slimtranslator.translate(probeDAO.get(rs.getInt("_probe_key")));
-				results.add(domain);
-				probeDAO.clear();
+				SlimProbeDomain slimdomain = new SlimProbeDomain();
+				slimdomain = slimtranslator.translate(probeDAO.get(rs.getInt("_probe_key")));
+				childClones.add(slimdomain);
+				//probeDAO.clear();
 			}
 			sqlExecutor.cleanup();
 		}
@@ -885,6 +885,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			e.printStackTrace();
 		}		
 
-		return results;
+		domain.setChildClones(childClones);
+		return domain;
 	}	
 }

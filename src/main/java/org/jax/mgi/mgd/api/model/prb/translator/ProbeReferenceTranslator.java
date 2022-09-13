@@ -5,6 +5,7 @@ import java.util.Comparator;
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeAliasDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.ProbeRFLVDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeReferenceDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeReferenceNoteDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeReference;
@@ -32,6 +33,13 @@ public class ProbeReferenceTranslator extends BaseEntityDomainTranslator<ProbeRe
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
+				
+		// at most one sequenceNote
+		if (entity.getReferenceNote() != null && !entity.getReferenceNote().isEmpty()) {
+			ProbeReferenceNoteTranslator noteTranslator = new ProbeReferenceNoteTranslator();
+			Iterable<ProbeReferenceNoteDomain> referenceNote = noteTranslator.translateEntities(entity.getReferenceNote());
+			domain.setReferenceNote(referenceNote.iterator().next());
+		}
 		
 		// aliases
 		if (entity.getAliases() != null && !entity.getAliases().isEmpty()) {
@@ -40,12 +48,13 @@ public class ProbeReferenceTranslator extends BaseEntityDomainTranslator<ProbeRe
 			domain.setAliases(IteratorUtils.toList(alias.iterator()));
 			domain.getAliases().sort(Comparator.comparing(ProbeAliasDomain::getAlias));						
 		}
-		
-		// at most one sequenceNote
-		if (entity.getReferenceNote() != null && !entity.getReferenceNote().isEmpty()) {
-			ProbeReferenceNoteTranslator noteTranslator = new ProbeReferenceNoteTranslator();
-			Iterable<ProbeReferenceNoteDomain> referenceNote = noteTranslator.translateEntities(entity.getReferenceNote());
-			domain.setReferenceNote(referenceNote.iterator().next());
+
+		// rflvs
+		if (entity.getRflvs() != null && !entity.getRflvs().isEmpty()) {
+			ProbeRFLVTranslator rflvTranslator = new ProbeRFLVTranslator();
+			Iterable<ProbeRFLVDomain> rflv = rflvTranslator.translateEntities(entity.getRflvs());
+			domain.setRflvs(IteratorUtils.toList(rflv.iterator()));
+			domain.getRflvs().sort(Comparator.comparing(ProbeRFLVDomain::getEndonuclease));						
 		}
 		
 		return domain;

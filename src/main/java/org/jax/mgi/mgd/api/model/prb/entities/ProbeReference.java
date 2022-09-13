@@ -52,14 +52,20 @@ public class ProbeReference extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 	
-	// aliases
-	@OneToMany()
-	@JoinColumn(name="_reference_key", referencedColumnName="_reference_key", insertable=false, updatable=false)
-	private List<ProbeAlias> aliases;
-	
 	// notes
 	@OneToMany()
 	@JoinColumn(name="_reference_key", referencedColumnName="_reference_key", insertable=false, updatable=false)
 	private List<ProbeReferenceNote> referenceNote;	
+	
+	// aliases
+	@OneToMany()
+	@JoinColumn(name="_reference_key", referencedColumnName="_reference_key", insertable=false, updatable=false)
+	private List<ProbeAlias> aliases;
+
+	
+	// rflvs
+	@OneToMany()
+	@JoinColumn(name="_reference_key", referencedColumnName="_reference_key", insertable=false, updatable=false)
+	private List<ProbeRFLV> rflvs;
 	
 }

@@ -878,6 +878,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				slimdomain = slimtranslator.translate(probeDAO.get(rs.getInt("_probe_key")));
 				probeDAO.clear();	
 				results.add(slimdomain);
+				probeDAO.clear();				
 			}
 			sqlExecutor.cleanup();
 		}

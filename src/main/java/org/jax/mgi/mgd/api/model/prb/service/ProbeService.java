@@ -344,23 +344,6 @@ public class ProbeService extends BaseService<ProbeDomain> {
 	    		e.printStackTrace();
 	    	}	
 	    	
-			// attach accession ids for each prb_reference
-			if (domain.getReferences() != null && !domain.getReferences().isEmpty()) {
-				for (int i = 0; i < domain.getReferences().size(); i++) {
-					List<AccessionDomain> accessionIds = new ArrayList<AccessionDomain>();
-					accessionIds = searchReferences(domain.getProbeKey(), domain.getReferences().get(i).getReferenceKey());
-					if (!accessionIds.isEmpty()) {
-						domain.getReferences().get(i).setAccessionIds(accessionIds);
-					}
-				}
-//				try {
-//					sqlExecutor.cleanup();
-//				}
-//				catch (Exception e) {
-//					e.printStackTrace();
-//				}				
-			}	
-			
 			// attach childClones
 			try {
 				List<SlimProbeDomain> childClones = new ArrayList<SlimProbeDomain>();
@@ -371,6 +354,24 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			
+			// attach accession ids for each prb_reference
+			if (domain.getReferences() != null && !domain.getReferences().isEmpty()) {
+				for (int i = 0; i < domain.getReferences().size(); i++) {
+					List<AccessionDomain> accessionIds = new ArrayList<AccessionDomain>();
+					accessionIds = searchReferences(domain.getProbeKey(), domain.getReferences().get(i).getReferenceKey());
+					if (!accessionIds.isEmpty()) {
+						domain.getReferences().get(i).setAccessionIds(accessionIds);
+					}
+				}
+				try {
+					sqlExecutor.cleanup();
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}				
+			}	
+			
 		}			
 		
 		return domain;
@@ -891,7 +892,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				probeDAO.clear();	
 				results.add(slimdomain);
 			}
-			sqlExecutor.cleanup();
+			//sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();

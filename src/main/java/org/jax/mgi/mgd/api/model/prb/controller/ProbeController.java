@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeSummaryDomain;
 import org.jax.mgi.mgd.api.model.prb.service.ProbeService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -130,9 +131,9 @@ public class ProbeController extends BaseController<ProbeDomain> {
 	@POST
 	@ApiOperation(value = "Get list of child clones of probe key")
 	@Path("/getChildClones")
-	public List<SlimProbeDomain> getChildClones(Integer key) {
+	public List<SlimProbeSummaryDomain> getChildClones(Integer key) {
 		
-		List<SlimProbeDomain> results = new ArrayList<SlimProbeDomain>();
+		List<SlimProbeSummaryDomain> results = new ArrayList<SlimProbeSummaryDomain>();
 
 		try {
 			results = probeService.getChildClones(key);

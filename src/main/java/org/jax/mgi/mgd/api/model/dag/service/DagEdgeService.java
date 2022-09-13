@@ -93,7 +93,7 @@ public class DagEdgeService extends BaseService<DagEdgeDomain> {
 			
 		List<DagEdgeDomain> results = new ArrayList<DagEdgeDomain>();
 		
-		String cmd = "select * from dag_edge where _parent_key = " + parentdomain.getChildEdges().get(0).getParentKey()
+		String cmd = "select _edge_key from dag_edge where _parent_key = " + parentdomain.getChildEdges().get(0).getParentKey()
 				+ "\nand _child_key != " + parentdomain.getChildEdges().get(0).getChildKey();
 		log.info(cmd);
 		
@@ -101,13 +101,13 @@ public class DagEdgeService extends BaseService<DagEdgeDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);			
 			while (rs.next()) {
 				DagEdgeDomain domain = new DagEdgeDomain();
-				log.info("getSiblingsByParent():translate sql");
+				log.info("getSiblingsByParent():translate sql:" + rs.getInt("_edge_key"));
 				domain = translator.translate(dagEdgeDAO.get(rs.getInt("_edge_key")));	
 				log.info("getSiblingsByParent():clear()");
 				dagEdgeDAO.clear();	
 				log.info("getSiblingsByParent():results.add()");				
 				results.add(domain);
-				log.info("getSiblingsByParent():domain added to results");
+				log.info("getSiblingsByParent():domain added to results");			
 			}
 			sqlExecutor.cleanup();
 		}

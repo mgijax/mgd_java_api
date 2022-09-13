@@ -98,7 +98,7 @@ public class DagEdgeService extends BaseService<DagEdgeDomain> {
 				dagEdgeDAO.clear();	
 				results.add(domain);
 			}
-			//sqlExecutor.cleanup();
+			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();

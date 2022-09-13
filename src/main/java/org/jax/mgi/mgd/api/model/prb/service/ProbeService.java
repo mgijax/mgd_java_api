@@ -876,7 +876,6 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			while (rs.next()) {
 				SlimProbeDomain domain = new SlimProbeDomain();
 				domain = slimtranslator.translate(probeDAO.get(rs.getInt("_probe_key")));
-				probeDAO.clear();
 				results.add(domain);
 				probeDAO.clear();
 			}

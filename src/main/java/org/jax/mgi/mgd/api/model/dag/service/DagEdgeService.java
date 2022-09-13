@@ -26,15 +26,15 @@ import io.swagger.annotations.ApiOperation;
 @RequestScoped
 public class DagEdgeService extends BaseService<DagEdgeDomain> {
 
-	protected Logger log = Logger.getLogger(getClass());
-
 	@Inject
 	private DagEdgeDAO dagEdgeDAO;
-
+	@Inject
 	private DagEdgeTranslator translator = new DagEdgeTranslator();
 	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
+	protected Logger log = Logger.getLogger(getClass());
+
 	@Transactional
 	public SearchResults<DagEdgeDomain> create(DagEdgeDomain object, User user) {
 		SearchResults<DagEdgeDomain> results = new SearchResults<DagEdgeDomain>();

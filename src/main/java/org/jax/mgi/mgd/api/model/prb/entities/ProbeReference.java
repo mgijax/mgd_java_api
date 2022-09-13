@@ -57,4 +57,9 @@ public class ProbeReference extends BaseEntity {
 	@JoinColumn(name="_reference_key", referencedColumnName="_reference_key", insertable=false, updatable=false)
 	private List<ProbeAlias> aliases;
 	
+	// notes
+	@OneToMany()
+	@JoinColumn(name="_reference_key", referencedColumnName="_reference_key", insertable=false, updatable=false)
+	private List<ProbeReferenceNote> referenceNote;	
+	
 }

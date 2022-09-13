@@ -6,6 +6,7 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeAliasDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeReferenceDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.ProbeReferenceNoteDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeReference;
 import org.jax.mgi.mgd.api.util.Constants;
 
@@ -38,6 +39,13 @@ public class ProbeReferenceTranslator extends BaseEntityDomainTranslator<ProbeRe
 			Iterable<ProbeAliasDomain> alias = aliasTranslator.translateEntities(entity.getAliases());
 			domain.setAliases(IteratorUtils.toList(alias.iterator()));
 			domain.getAliases().sort(Comparator.comparing(ProbeAliasDomain::getAlias));						
+		}
+		
+		// at most one sequenceNote
+		if (entity.getReferenceNote() != null && !entity.getReferenceNote().isEmpty()) {
+			ProbeReferenceNoteTranslator noteTranslator = new ProbeReferenceNoteTranslator();
+			Iterable<ProbeReferenceNoteDomain> referenceNote = noteTranslator.translateEntities(entity.getReferenceNote());
+			domain.setReferenceNote(referenceNote.iterator().next());
 		}
 		
 		return domain;

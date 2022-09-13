@@ -29,5 +29,5 @@ public class ProbeReferenceDomain extends BaseDomain {
 	
 	private List<AccessionDomain> accessionIds;
 	private List<ProbeAliasDomain> aliases;
-	
+	private ProbeReferenceNoteDomain referenceNote;
 }

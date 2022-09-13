@@ -5,10 +5,13 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
@@ -26,8 +29,8 @@ import lombok.Setter;
 public class ProbeAllele extends BaseEntity {
 
 	@Id
-//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="prb_allele_generator")
-//	@SequenceGenerator(name="prb_allele_generator", sequenceName = "prb_allele_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="prb_allele_generator")
+	@SequenceGenerator(name="prb_allele_generator", sequenceName = "prb_allele_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")
 	private int _allele_key;
 	private int _rflv_key;

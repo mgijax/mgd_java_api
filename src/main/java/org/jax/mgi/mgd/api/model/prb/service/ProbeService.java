@@ -20,8 +20,10 @@ import org.jax.mgi.mgd.api.model.prb.dao.ProbeSourceDAO;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeSummaryDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.Probe;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeTranslator;
+import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeSummaryTranslator;
 import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeTranslator;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
@@ -56,6 +58,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 	
 	private ProbeTranslator translator = new ProbeTranslator();
 	private SlimProbeTranslator slimtranslator = new SlimProbeTranslator();
+	private SlimProbeSummaryTranslator slimsummarytranslator = new SlimProbeSummaryTranslator();
 	private AccessionTranslator acctranslator = new AccessionTranslator();
 	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
@@ -346,7 +349,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 	    	
 			// attach childClones
 			try {
-				List<SlimProbeDomain> childClones = new ArrayList<SlimProbeDomain>();
+				List<SlimProbeSummaryDomain> childClones = new ArrayList<SlimProbeSummaryDomain>();
 				childClones = getChildClones(key);
 				if (!childClones.isEmpty()) {
 					domain.setChildClones(childClones);
@@ -874,10 +877,10 @@ public class ProbeService extends BaseService<ProbeDomain> {
 	}
 	
 	@Transactional	
-	public List<SlimProbeDomain> getChildClones(Integer probeKey) {
+	public List<SlimProbeSummaryDomain> getChildClones(Integer probeKey) {
 		// return domain with list of child clones of probe key
 
-		List<SlimProbeDomain> results = new ArrayList<SlimProbeDomain>();
+		List<SlimProbeSummaryDomain> results = new ArrayList<SlimProbeSummaryDomain>();
 		
 		String cmd = "\nselect _probe_key, name from prb_probe where derivedfrom = " + probeKey + "\norder by name";
 		
@@ -886,9 +889,8 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				SlimProbeDomain slimdomain = new SlimProbeDomain();
-				log.info("slimtranslator: " + rs.getInt("_probe_key"));
-				slimdomain = slimtranslator.translate(probeDAO.get(rs.getInt("_probe_key")));
+				SlimProbeSummaryDomain slimdomain = new SlimProbeSummaryDomain();
+				slimdomain = slimsummarytranslator.translate(probeDAO.get(rs.getInt("_probe_key")));
 				probeDAO.clear();	
 				results.add(slimdomain);
 			}

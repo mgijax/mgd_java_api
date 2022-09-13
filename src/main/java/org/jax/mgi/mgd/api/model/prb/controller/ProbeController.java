@@ -140,4 +140,19 @@ public class ProbeController extends BaseController<ProbeDomain> {
 		return results;
 	}
 	
+	@POST
+	@ApiOperation(value = "Get list of child clones of probe key")
+	@Path("/getChildClones")
+	public List<SlimProbeDomain> getChildClones(Integer key) {
+		
+		List<SlimProbeDomain> results = new ArrayList<SlimProbeDomain>();
+
+		try {
+			results = probeService.getChildClones(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
 }

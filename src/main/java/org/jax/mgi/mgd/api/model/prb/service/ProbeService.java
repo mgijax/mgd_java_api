@@ -859,5 +859,33 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		}		
 
 		return results;
+	}
+	
+	@Transactional	
+	public List<SlimProbeDomain> getChildClones(Integer probeKey) {
+		// return list of child clones (SlimProbeDomain) of probe key
+
+		List<SlimProbeDomain> results = new ArrayList<SlimProbeDomain>();
+		
+		String cmd = "\nselect _probe_key, name from prb_probe where derivedfrom = " + probeKey + "\norder by name";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimProbeDomain domain = new SlimProbeDomain();
+				domain = slimtranslator.translate(probeDAO.get(rs.getInt("_probe_key")));
+				probeDAO.clear();
+				results.add(domain);
+				probeDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
 	}	
 }

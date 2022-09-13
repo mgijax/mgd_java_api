@@ -42,5 +42,6 @@ public class ProbeDomain extends BaseDomain {
 	private List<ProbeReferenceDomain> references;
 	private ProbeNoteDomain generalNote;
 	private NoteDomain rawsequenceNote;
+	private List<SlimProbeDomain> childClones;
 
 }

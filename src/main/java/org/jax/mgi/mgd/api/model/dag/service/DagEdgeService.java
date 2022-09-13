@@ -7,8 +7,6 @@ import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.dag.dao.DagEdgeDAO;
@@ -19,8 +17,6 @@ import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
-
-import io.swagger.annotations.ApiOperation;
 
 @RequestScoped
 public class DagEdgeService extends BaseService<DagEdgeDomain> {
@@ -84,9 +80,7 @@ public class DagEdgeService extends BaseService<DagEdgeDomain> {
 		return results;
 	}	
 
-	@POST
-	@ApiOperation(value = "Get Edge Siblings by Parent key")
-	@Path("/getSiblingsByParent")
+	@Transactional
 	public List<DagEdgeDomain> getSiblingsByParent(String parentKey, String childKey) {
 		// return list of sibling dag edges based on parent key, child key
 			

@@ -10,7 +10,6 @@ import lombok.Setter;
 @Getter @Setter
 public class ProbeRFLVDomain extends BaseDomain {
 
-	private String processStatus;
 	private String rflvKey;
 	private String referenceKey;
 	private String markerKey;

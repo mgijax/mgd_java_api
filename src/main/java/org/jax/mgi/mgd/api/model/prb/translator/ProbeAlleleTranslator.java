@@ -7,7 +7,6 @@ import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeAlleleDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeAlleleStrainDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeAllele;
-import org.jax.mgi.mgd.api.util.Constants;
 
 public class ProbeAlleleTranslator extends BaseEntityDomainTranslator<ProbeAllele, ProbeAlleleDomain> {
 
@@ -16,7 +15,6 @@ public class ProbeAlleleTranslator extends BaseEntityDomainTranslator<ProbeAllel
 		
 		ProbeAlleleDomain domain = new ProbeAlleleDomain();
 		
-		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);	
 		domain.setAlleleKey(String.valueOf(entity.get_allele_key()));				
 		domain.setRflvKey(String.valueOf(entity.get_rflv_key()));	
 		domain.setAllele(entity.getAllele());

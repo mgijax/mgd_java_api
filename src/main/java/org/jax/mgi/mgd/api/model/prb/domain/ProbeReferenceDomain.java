@@ -29,5 +29,8 @@ public class ProbeReferenceDomain extends BaseDomain {
 	
 	private List<AccessionDomain> accessionIds;
 	private List<ProbeAliasDomain> aliases;
+	
+	// note:  these notes are no longer being edited, 
+	// but are included in the domain for display purposes (the probe summary page)
 	private ProbeReferenceNoteDomain referenceNote;
 }

@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.dag.domain.DagEdgeDomain;
+import org.jax.mgi.mgd.api.model.dag.domain.DagNodeDomain;
 import org.jax.mgi.mgd.api.model.dag.service.DagEdgeService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -64,4 +65,20 @@ public class DagEdgeController extends BaseController<DagEdgeDomain> {
 		return results;
 	}
 
+	@POST
+	@ApiOperation(value = "Get Edge Siblings by Parent key")
+	@Path("/getSiblingsByParent")
+	public List<DagEdgeDomain> getSiblingsByParent(DagNodeDomain parentdomain) {
+			
+		List<DagEdgeDomain> results = new ArrayList<DagEdgeDomain>();
+		
+		try {
+			results = dagEdgeService.getSiblingsByParent(parentdomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

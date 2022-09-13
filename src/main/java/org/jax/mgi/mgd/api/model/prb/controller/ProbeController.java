@@ -59,9 +59,7 @@ public class ProbeController extends BaseController<ProbeDomain> {
 		
 		// attach childClones
 		try {
-			List<SlimProbeDomain> childClones = new ArrayList<SlimProbeDomain>();
-			childClones = probeService.getChildClones(key);
-			results.setChildClones(childClones);
+			results = probeService.getChildClones(results);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

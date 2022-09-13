@@ -20,7 +20,7 @@ import lombok.Setter;
 @Getter @Setter
 @Entity
 @ApiModel(value = "Probe/Allele/Strain Model Object")
-@Table(name="prb_allele")
+@Table(name="prb_allele_strain")
 public class ProbeAlleleStrain extends BaseEntity {
 
 	@Id

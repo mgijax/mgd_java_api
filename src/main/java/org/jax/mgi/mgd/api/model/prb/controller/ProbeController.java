@@ -53,20 +53,7 @@ public class ProbeController extends BaseController<ProbeDomain> {
 	
 	@Override
 	public ProbeDomain get(Integer key) {
-		ProbeDomain results = new ProbeDomain();
-		
-		results = probeService.get(key);
-		
-		// attach childClones
-		try {
-			List<SlimProbeDomain> childClones = new ArrayList<SlimProbeDomain>();
-			childClones = probeService.getChildClones(key);
-			results.setChildClones(childClones);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
+		return probeService.get(key);
 	}
 
 	@GET

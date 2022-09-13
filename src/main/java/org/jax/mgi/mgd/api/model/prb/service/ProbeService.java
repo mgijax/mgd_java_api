@@ -359,8 +359,19 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				catch (Exception e) {
 					e.printStackTrace();
 				}				
-			}	    	
-		}
+			}	
+			
+			// attach childClones
+			try {
+				List<SlimProbeDomain> childClones = new ArrayList<SlimProbeDomain>();
+				childClones = getChildClones(key);
+				if (!childClones.isEmpty()) {
+					domain.setChildClones(childClones);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}			
 		
 		return domain;
 	}

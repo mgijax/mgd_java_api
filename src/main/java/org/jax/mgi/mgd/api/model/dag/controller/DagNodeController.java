@@ -53,7 +53,7 @@ public class DagNodeController extends BaseController<DagNodeDomain> {
 		try {
 			if (results.getChildEdges().size() > 0) {
 				List<DagEdgeDomain> siblingdomain = new ArrayList<DagEdgeDomain>();
-				siblingdomain = dagEdgeService.getSiblingsByParent(results);
+				siblingdomain = dagEdgeService.getSiblingsByParent(results.getParentEdges().get(0).getParentKey(), results.getChildEdges().get(0).getChildKey());
 				if (siblingdomain.size() > 0) {
 					results.setSiblingEdges(siblingdomain);
 				}

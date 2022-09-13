@@ -880,7 +880,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				results.add(slimdomain);
 				probeDAO.clear();				
 			}
-			sqlExecutor.cleanup();
+			//sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();

@@ -7,7 +7,6 @@ import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeAlleleDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeRFLVDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeRFLV;
-import org.jax.mgi.mgd.api.util.Constants;
 
 public class ProbeRFLVTranslator extends BaseEntityDomainTranslator<ProbeRFLV, ProbeRFLVDomain> {
 
@@ -16,7 +15,6 @@ public class ProbeRFLVTranslator extends BaseEntityDomainTranslator<ProbeRFLV, P
 		
 		ProbeRFLVDomain domain = new ProbeRFLVDomain();
 		
-		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);	
 		domain.setRflvKey(String.valueOf(entity.get_rflv_key()));		
 		domain.setReferenceKey(String.valueOf(entity.get_reference_key()));
 		domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));

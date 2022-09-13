@@ -10,7 +10,6 @@ import lombok.Setter;
 @Getter @Setter
 public class ProbeAlleleDomain extends BaseDomain {
 
-	private String processStatus;
 	private String alleleKey;
 	private String rflvKey;
 	private String allele;

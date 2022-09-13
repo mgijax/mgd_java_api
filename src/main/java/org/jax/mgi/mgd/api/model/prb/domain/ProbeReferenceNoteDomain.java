@@ -8,7 +8,6 @@ import lombok.Setter;
 @Getter @Setter
 public class ProbeReferenceNoteDomain extends BaseDomain {
 
-	private String processStatus;
 	private String referenceKey;
 	private String note;
 	private String creation_date;

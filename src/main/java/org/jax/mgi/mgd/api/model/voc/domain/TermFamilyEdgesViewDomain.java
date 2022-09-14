@@ -11,6 +11,7 @@ import lombok.Setter;
 public class TermFamilyEdgesViewDomain extends BaseDomain {
 
 	private String edgeKey;
+	private String termKey;
 	private String childKey;
 	private String parentKey;
 	private String accid;	

@@ -18,6 +18,7 @@ public class TermFamilyEdgesView extends BaseEntity {
 	@Id
     @ApiModelProperty(value="primary key")
 	private int _edge_key;
+	private int _term_key;
 	private int _child_key;
 	private int _parent_key;
 	private String accid;

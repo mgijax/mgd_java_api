@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model.dag.service;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +13,6 @@ import org.jax.mgi.mgd.api.model.dag.domain.DagEdgeDomain;
 import org.jax.mgi.mgd.api.model.dag.translator.DagEdgeTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -26,7 +24,7 @@ public class DagEdgeService extends BaseService<DagEdgeDomain> {
 
 	private DagEdgeTranslator translator = new DagEdgeTranslator();
 
-	private SQLExecutor sqlExecutor = new SQLExecutor();
+	//private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	protected Logger log = Logger.getLogger(getClass());
 
@@ -76,33 +74,6 @@ public class DagEdgeService extends BaseService<DagEdgeDomain> {
 		
 		// not implemented
 		List<DagEdgeDomain> results = new ArrayList<DagEdgeDomain>();
-		
-		return results;
-	}	
-
-	@Transactional
-	public List<DagEdgeDomain> getSiblingsByParent(String parentKey, String childKey) {
-		// return list of sibling dag edges based on parent key, child key
-			
-		List<DagEdgeDomain> results = new ArrayList<DagEdgeDomain>();
-		
-		String cmd = "select _edge_key from dag_edge where _parent_key = " + parentKey
-				+ "\nand _child_key != " + childKey;
-		log.info(cmd);
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);			
-			while (rs.next()) {
-				DagEdgeDomain domain = new DagEdgeDomain();
-				domain = translator.translate(dagEdgeDAO.get(rs.getInt("_edge_key")));
-				dagEdgeDAO.clear();	
-				results.add(domain);
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
 		
 		return results;
 	}	

@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermAncestorDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.TermFamilyViewDomain;
 import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -117,4 +118,16 @@ public class TermController extends BaseController<TermDomain> {
 		return results;	
 	}
 	
+	@POST
+	@ApiOperation(value = "Get TermFamilyView by accid")
+	@Path("/getTermFamilyByAccId")
+	public List<TermFamilyViewDomain> getTermFamilyByAccId(String accid) {
+		List<TermFamilyViewDomain> results = new ArrayList<TermFamilyViewDomain>();
+		try {
+			results = termService.getTermFamilyByAccId(accid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return results;	
+	}	
 }

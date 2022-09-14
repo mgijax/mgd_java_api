@@ -17,6 +17,7 @@ import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermAncestorDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.TermFamilyViewDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.voc.translator.SlimTermTranslator;
 import org.jax.mgi.mgd.api.model.voc.translator.TermTranslator;
@@ -713,6 +714,42 @@ public class TermService extends BaseService<TermDomain> {
 					domain.setAncestors(ancestors);
 					results.add(domain);				
 				}
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+
+	@Transactional	
+	public List<TermFamilyViewDomain> getTermFamilyByAccId(String accid) {
+		// return TermFamilyViewDomain by term accid
+		
+		List<TermFamilyViewDomain> results = new ArrayList<TermFamilyViewDomain>();
+		
+		String cmd = "select * from VOC_TermFamily_View where accid = '" + accid + "'";
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				TermFamilyViewDomain domain = new TermFamilyViewDomain();	
+				domain.setTermKey(rs.getString("_term_key"));
+				domain.setAccid(rs.getString("accid"));
+				domain.setTerm(rs.getString("term"));
+				domain.setVocabKey(rs.getString("_vocab_key"));
+				domain.setAbbreviation(rs.getString("abbreviation"));
+				domain.setNote(rs.getString("note"));
+				domain.setSequenceNum(rs.getString("sequencenum"));
+				domain.setIsObsolete(rs.getString("isobsolete"));
+				domain.setCreatedByKey(rs.getString("_createdby_key"));
+				domain.setModifiedByKey(rs.getString("_modifiedby_key"));
+				domain.setCreation_date(rs.getString("creation_date"));
+				domain.setModification_date(rs.getString("modification_date"));
+				termDAO.clear();		
+				results.add(domain);				
 			}
 		}
 		catch (Exception e) {

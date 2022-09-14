@@ -17,6 +17,7 @@ import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermAncestorDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.TermFamilyEdgesViewDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermFamilyViewDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.voc.translator.SlimTermTranslator;
@@ -748,6 +749,35 @@ public class TermService extends BaseService<TermDomain> {
 				domain.setModifiedByKey(rs.getString("_modifiedby_key"));
 				domain.setCreation_date(rs.getString("creation_date"));
 				domain.setModification_date(rs.getString("modification_date"));
+				termDAO.clear();		
+				results.add(domain);				
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+
+	@Transactional	
+	public List<TermFamilyEdgesViewDomain> getTermFamilyEdgesByAccId(String accid) {
+		// return TermFamilyEdgesViewDomain by term accid
+		
+		List<TermFamilyEdgesViewDomain> results = new ArrayList<TermFamilyEdgesViewDomain>();
+		
+		String cmd = "select * from VOC_TermFamily_View where accid = '" + accid + "'";
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				TermFamilyEdgesViewDomain domain = new TermFamilyEdgesViewDomain();	
+				domain.setEdgeKey(rs.getString("_edge_key"));
+				domain.setChildKey(rs.getString("_child_key"));
+				domain.setParentKey(rs.getString("_parent_key"));				
+				domain.setAccid(rs.getString("accid"));
+				domain.setLabel(rs.getString("label"));
 				termDAO.clear();		
 				results.add(domain);				
 			}

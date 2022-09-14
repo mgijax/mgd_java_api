@@ -63,21 +63,5 @@ public class DagEdgeController extends BaseController<DagEdgeDomain> {
 		
 		return results;
 	}
-
-	@POST
-	@ApiOperation(value = "Get Edge Siblings by Parent key")
-	@Path("/getSiblingsByParent")
-	public List<DagEdgeDomain> getSiblingsByParent(String parentKey, String childKey) {
-			
-		List<DagEdgeDomain> results = new ArrayList<DagEdgeDomain>();
-		
-		try {
-			results = dagEdgeService.getSiblingsByParent(parentKey, childKey);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
 	
 }

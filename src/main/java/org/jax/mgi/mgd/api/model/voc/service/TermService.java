@@ -775,7 +775,6 @@ public class TermService extends BaseService<TermDomain> {
 			while (rs.next()) {
 				TermFamilyEdgesViewDomain domain = new TermFamilyEdgesViewDomain();	
 				domain.setEdgeKey(rs.getString("_edge_key"));
-				domain.setTermKey(rs.getString("_term_key"));				
 				domain.setChildKey(rs.getString("_child_key"));
 				domain.setParentKey(rs.getString("_parent_key"));				
 				domain.setAccid(rs.getString("accid"));

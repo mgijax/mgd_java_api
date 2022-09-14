@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -119,7 +120,7 @@ public class TermController extends BaseController<TermDomain> {
 		return results;	
 	}
 	
-	@POST
+	@GET
 	@ApiOperation(value = "Get TermFamilyView by accid")
 	@Path("/getTermFamilyByAccId")
 	public List<TermFamilyViewDomain> getTermFamilyByAccId(String accid) {
@@ -132,7 +133,7 @@ public class TermController extends BaseController<TermDomain> {
 		return results;	
 	}	
 	
-	@POST
+	@GET
 	@ApiOperation(value = "Get TermFamilyEdgesView by accid")
 	@Path("/getTermFamilyEdgesByAccId")
 	public List<TermFamilyEdgesViewDomain> getTermFamilyEdgesByAccId(String accid) {

@@ -752,6 +752,7 @@ public class TermService extends BaseService<TermDomain> {
 				termDAO.clear();		
 				results.add(domain);				
 			}
+			sqlExecutor.cleanup();			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -781,6 +782,7 @@ public class TermService extends BaseService<TermDomain> {
 				termDAO.clear();		
 				results.add(domain);				
 			}
+			sqlExecutor.cleanup();			
 		}
 		catch (Exception e) {
 			e.printStackTrace();

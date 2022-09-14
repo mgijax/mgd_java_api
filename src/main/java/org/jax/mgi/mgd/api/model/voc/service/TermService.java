@@ -766,7 +766,7 @@ public class TermService extends BaseService<TermDomain> {
 		
 		List<TermFamilyEdgesViewDomain> results = new ArrayList<TermFamilyEdgesViewDomain>();
 		
-		String cmd = "select * from VOC_TermFamily_View where accid = '" + accid + "'";
+		String cmd = "select * from VOC_TermFamilyEdges_View where accid = '" + accid + "'";
 		log.info(cmd);
 		
 		try {

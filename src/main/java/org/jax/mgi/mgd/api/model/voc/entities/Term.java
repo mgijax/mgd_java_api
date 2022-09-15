@@ -44,7 +44,7 @@ public class Term extends BaseEntity {
 	private Integer isObsolete = 0;
 	private Date creation_date;
 	private Date modification_date;
-
+	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key", insertable=false, updatable=false)
 	private User createdBy;

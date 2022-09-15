@@ -48,7 +48,7 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		
 		// one-to-many secondary accession ids
 		if (entity.getAccessionSecondaryIds() != null && !entity.getAccessionSecondaryIds().isEmpty()) {
-			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getAccessionIds());		
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getAccessionSecondaryIds());		
 			domain.setAccessionSecondaryIds(IteratorUtils.toList(acc.iterator()));
 		}
 		

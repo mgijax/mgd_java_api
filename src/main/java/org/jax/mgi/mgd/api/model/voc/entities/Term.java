@@ -46,6 +46,10 @@ public class Term extends BaseEntity {
 	private Date modification_date;
 	
 	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key", insertable=false, updatable=false)
+	private Vocabulary vocab;
+	
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key", insertable=false, updatable=false)
 	private User createdBy;
 

@@ -18,6 +18,7 @@ public class TermDomain extends BaseDomain {
 	private String termKey;
 	private String term;
 	private String vocabKey;
+	private String vocabName;
 	private String abbreviation;
 	private String note;
 	private String sequenceNum;

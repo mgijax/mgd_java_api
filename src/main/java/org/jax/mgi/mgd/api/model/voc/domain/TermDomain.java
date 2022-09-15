@@ -41,6 +41,9 @@ public class TermDomain extends BaseDomain {
 	// for GO-terms only
 	private String goDagAbbrev;
 	
+	// for all synonyms
+	private List<MGISynonymDomain> synonyms;
+	
 	// for GORel synonyms only
 	private List<MGISynonymDomain> goRelSynonyms;
 	

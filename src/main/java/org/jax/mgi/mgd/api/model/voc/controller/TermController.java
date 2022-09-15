@@ -120,7 +120,7 @@ public class TermController extends BaseController<TermDomain> {
 		return results;	
 	}
 	
-	@GET
+	@POST
 	@ApiOperation(value = "Get TermFamilyView by accid")
 	@Path("/getTermFamilyByAccId")
 	public List<TermFamilyViewDomain> getTermFamilyByAccId(String accid) {
@@ -133,7 +133,7 @@ public class TermController extends BaseController<TermDomain> {
 		return results;	
 	}	
 	
-	@GET
+	@POST
 	@ApiOperation(value = "Get TermFamilyEdgesView by accid")
 	@Path("/getTermFamilyEdgesByAccId")
 	public List<TermFamilyEdgesViewDomain> getTermFamilyEdgesByAccId(String accid) {

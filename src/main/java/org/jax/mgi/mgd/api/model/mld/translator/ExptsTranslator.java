@@ -1,5 +1,7 @@
 package org.jax.mgi.mgd.api.model.mld.translator;
 
+import java.util.Comparator;
+
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
@@ -51,6 +53,7 @@ public class ExptsTranslator extends BaseEntityDomainTranslator<Expts, ExptsDoma
 			ExptMarkerTranslator markerTranslator = new ExptMarkerTranslator();			
 			Iterable<ExptMarkerDomain> m = markerTranslator.translateEntities(entity.getMarkers());
 			domain.setMarkers(IteratorUtils.toList(m.iterator()));
+			domain.getMarkers().sort(Comparator.comparing(ExptMarkerDomain::getMarkerSymbol, String.CASE_INSENSITIVE_ORDER));		
 		}
 		
 		// at most one exptNote

@@ -6,7 +6,6 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.SlimAccessionTranslator;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mld.domain.ExptMarkerDomain;
 import org.jax.mgi.mgd.api.model.mld.domain.ExptNoteDomain;
 import org.jax.mgi.mgd.api.model.mld.domain.ExptsDomain;

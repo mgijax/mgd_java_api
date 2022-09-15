@@ -65,22 +65,24 @@ public class Term extends BaseEntity {
 	
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
+	@Where(clause="`_dag_key` in (1,2,3)")
+	private List<DagNode> goDagNodes;
+
+	// all synonyms
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
 	@Where(clause ="`_mgitype_key` = 13")
 	@OrderBy(clause ="_synonymtype_key, synonym")
 	private List<MGISynonym> synonyms;
 	
-	@OneToMany()
-	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
-	@Where(clause="`_dag_key` in (1,2,3)")
-	private List<DagNode> goDagNodes;
-
+	// for 'MGI-GORel'
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
 	@Where(clause ="`_mgitype_key` = 13 and `_synonymtype_key` = 1034")
 	@OrderBy(clause ="_synonymtype_key, synonym")
 	private List<MGISynonym> goRelSynonyms;
 
-	
+	// for cell types, use 'exact' synonyms only
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
 	@Where(clause ="`_mgitype_key` = 13 and `_synonymtype_key` = 1017")

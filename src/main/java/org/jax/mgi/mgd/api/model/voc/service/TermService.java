@@ -636,6 +636,7 @@ public class TermService extends BaseService<TermDomain> {
 				parentDomain.setCellTypeAnnotCount(getCelltypeAnnotCount(key));
 				results.add(parentDomain);				
 			}
+			sqlExecutor.cleanup();			
 		}
 		catch (Exception e) {
 			e.printStackTrace();

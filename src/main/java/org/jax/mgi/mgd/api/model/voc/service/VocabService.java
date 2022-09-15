@@ -484,8 +484,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		
 		log.info(cmd);
 		
-		try {						
-			
+		try {								
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SlimVocabularyDomain domain = new SlimVocabularyDomain();

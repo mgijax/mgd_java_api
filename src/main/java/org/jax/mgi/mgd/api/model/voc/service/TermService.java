@@ -311,6 +311,7 @@ public class TermService extends BaseService<TermDomain> {
             while (rs.next()) {
                 key = rs.getInt("_term_key");
             }
+			sqlExecutor.cleanup();						
         }
         catch (Exception e) {
         	e.printStackTrace();

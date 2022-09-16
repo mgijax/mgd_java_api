@@ -47,4 +47,8 @@ public class Vocabulary extends BaseEntity {
 	@OrderBy(clause ="sequenceNum")
 	private List<Term> terms;
 	
+	@OneToMany()
+	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
+	private List<VocabularyDAG> vocabDAG;	
+	
 }

@@ -29,6 +29,7 @@ public class TermDomain extends BaseDomain {
 	private String modifiedBy;
 	private String creation_date;
 	private String modification_date;
+	private Boolean hasDAG;
 	
 	private List<AccessionDomain> accessionIds;
 	private List<AccessionDomain> accessionSecondaryIds;

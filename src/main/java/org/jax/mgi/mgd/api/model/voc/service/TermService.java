@@ -782,7 +782,7 @@ public class TermService extends BaseService<TermDomain> {
 				domain.setEdgeKey(rs.getString("_edge_key"));
 				domain.setChildKey(rs.getString("_child_key"));
 				domain.setParentKey(rs.getString("_parent_key"));				
-				domain.setSearchid(rs.getString("parentid"));
+				domain.setSearchid(rs.getString("searchid"));
 				domain.setLabel(rs.getString("label"));
 				termDAO.clear();		
 				results.add(domain);				

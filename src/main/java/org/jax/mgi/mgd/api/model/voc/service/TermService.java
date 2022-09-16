@@ -734,7 +734,7 @@ public class TermService extends BaseService<TermDomain> {
 		
 		List<TermFamilyViewDomain> results = new ArrayList<TermFamilyViewDomain>();
 		
-		String cmd = "select * from VOC_TermFamily_View where accid = '" + accid + "'";
+		String cmd = "select * from VOC_TermFamily_View where parentaccid = '" + accid + "'";
 		log.info(cmd);
 		
 		try {
@@ -742,6 +742,7 @@ public class TermService extends BaseService<TermDomain> {
 			while (rs.next()) {
 				TermFamilyViewDomain domain = new TermFamilyViewDomain();	
 				domain.setTermKey(rs.getString("_term_key"));
+				domain.setParentid(rs.getString("parentid"));
 				domain.setAccid(rs.getString("accid"));
 				domain.setTerm(rs.getString("term"));
 				domain.setVocabKey(rs.getString("_vocab_key"));

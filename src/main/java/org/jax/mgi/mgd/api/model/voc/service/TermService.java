@@ -734,7 +734,7 @@ public class TermService extends BaseService<TermDomain> {
 		
 		List<TermFamilyViewDomain> results = new ArrayList<TermFamilyViewDomain>();
 		
-		String cmd = "select * from VOC_TermFamily_View where parentid = '" + accid + "'";
+		String cmd = "select * from VOC_TermFamily_View where searchid = '" + accid + "'";
 		log.info(cmd);
 		
 		try {
@@ -772,7 +772,7 @@ public class TermService extends BaseService<TermDomain> {
 		
 		List<TermFamilyEdgesViewDomain> results = new ArrayList<TermFamilyEdgesViewDomain>();
 		
-		String cmd = "select * from VOC_TermFamilyEdges_View where parentid = '" + accid + "'";
+		String cmd = "select * from VOC_TermFamilyEdges_View where searchid = '" + accid + "'";
 		log.info(cmd);
 		
 		try {

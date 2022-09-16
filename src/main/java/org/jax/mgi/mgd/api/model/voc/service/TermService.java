@@ -637,6 +637,7 @@ public class TermService extends BaseService<TermDomain> {
 				parentDomain.setCellTypeAnnotCount(getCelltypeAnnotCount(key));
 				results.add(parentDomain);				
 			}
+			// turned off on purpose
 			//sqlExecutor.cleanup();			
 		}
 		catch (Exception e) {
@@ -660,6 +661,7 @@ public class TermService extends BaseService<TermDomain> {
 			while (rs.next()) {
 				count = rs.getString("annotCt");			
 			}
+			// turned off on purpose
 			//sqlExecutor.cleanup();						
 		}
 		catch (Exception e) {

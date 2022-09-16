@@ -660,7 +660,7 @@ public class TermService extends BaseService<TermDomain> {
 			while (rs.next()) {
 				count = rs.getString("annotCt");			
 			}
-			sqlExecutor.cleanup();						
+			//sqlExecutor.cleanup();						
 		}
 		catch (Exception e) {
 			e.printStackTrace();

@@ -21,6 +21,7 @@ public class TermFamilyView extends BaseEntity {
     @ApiModelProperty(value="primary key")
 	private int _term_key;
 	private int _vocab_key;
+	private String parentid;
 	private String accid;
 	private String term;
 	private String abbreviation;

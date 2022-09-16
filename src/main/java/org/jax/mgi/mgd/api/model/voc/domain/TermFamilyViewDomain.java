@@ -11,6 +11,7 @@ import lombok.Setter;
 public class TermFamilyViewDomain extends BaseDomain {
 
 	private String termKey;
+	private String parentid;
 	private String accid;
 	private String term;
 	private String vocabKey;

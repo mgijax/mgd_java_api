@@ -1309,6 +1309,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				alleleDAO.clear();
 				results.add(alleleDomain);
 			}
+			//sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();

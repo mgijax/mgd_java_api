@@ -13,8 +13,7 @@ public class TermFamilyEdgesViewDomain extends BaseDomain {
 	private String edgeKey;
 	private String childKey;
 	private String parentKey;
-	private String parentid;
-	private String accid;	
+	private String searchid;
 	private String label;
 	
 }

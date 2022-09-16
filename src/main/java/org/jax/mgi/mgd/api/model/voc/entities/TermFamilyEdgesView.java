@@ -20,7 +20,6 @@ public class TermFamilyEdgesView extends BaseEntity {
 	private int _edge_key;
 	private int _child_key;
 	private int _parent_key;
-	private String parentid;
-	private String accid;
+	private String searchid;
 	private String label;
 }

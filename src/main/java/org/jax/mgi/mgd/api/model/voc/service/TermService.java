@@ -783,6 +783,7 @@ public class TermService extends BaseService<TermDomain> {
 				domain.setChildKey(rs.getString("_child_key"));
 				domain.setParentKey(rs.getString("_parent_key"));				
 				domain.setSearchid(rs.getString("searchid"));
+				domain.setAccid(rs.getString("accid"));
 				domain.setLabel(rs.getString("label"));
 				termDAO.clear();		
 				results.add(domain);				

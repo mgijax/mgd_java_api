@@ -772,7 +772,7 @@ public class TermService extends BaseService<TermDomain> {
 		
 		List<TermFamilyEdgesViewDomain> results = new ArrayList<TermFamilyEdgesViewDomain>();
 		
-		String cmd = "select * from VOC_TermFamilyEdges_View where accid = '" + accid + "'";
+		String cmd = "select * from VOC_TermFamilyEdges_View where parentid = '" + accid + "'";
 		log.info(cmd);
 		
 		try {
@@ -782,6 +782,7 @@ public class TermService extends BaseService<TermDomain> {
 				domain.setEdgeKey(rs.getString("_edge_key"));
 				domain.setChildKey(rs.getString("_child_key"));
 				domain.setParentKey(rs.getString("_parent_key"));				
+				domain.setParentid(rs.getString("parentid"));
 				domain.setAccid(rs.getString("accid"));
 				domain.setLabel(rs.getString("label"));
 				termDAO.clear();		

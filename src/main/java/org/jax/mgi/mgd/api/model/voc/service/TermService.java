@@ -742,7 +742,7 @@ public class TermService extends BaseService<TermDomain> {
 			while (rs.next()) {
 				TermFamilyViewDomain domain = new TermFamilyViewDomain();	
 				domain.setTermKey(rs.getString("_term_key"));
-				domain.setSearchid(rs.getString("parentid"));
+				domain.setSearchid(rs.getString("searchid"));
 				domain.setAccid(rs.getString("accid"));
 				domain.setTerm(rs.getString("term"));
 				domain.setVocabKey(rs.getString("_vocab_key"));

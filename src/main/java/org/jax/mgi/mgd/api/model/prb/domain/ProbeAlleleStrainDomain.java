@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 public class ProbeAlleleStrainDomain extends BaseDomain {
 
+	private String alleleStrainKey;
 	private String alleleKey;
 	private String strainKey;
 	private String strain;

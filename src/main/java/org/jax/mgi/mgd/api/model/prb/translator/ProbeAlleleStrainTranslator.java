@@ -11,6 +11,7 @@ public class ProbeAlleleStrainTranslator extends BaseEntityDomainTranslator<Prob
 		
 		ProbeAlleleStrainDomain domain = new ProbeAlleleStrainDomain();
 		
+		domain.setAlleleStrainKey(String.valueOf(entity.get_allelestrain_key()));
 		domain.setAlleleKey(String.valueOf(entity.get_allele_key()));
 		domain.setStrainKey(String.valueOf(entity.getStrain().get_strain_key()));		
 		domain.setStrain(entity.getStrain().getStrain());

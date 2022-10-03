@@ -896,7 +896,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// called from MarkerController/get()
 		
 		String cmd = "\nselect m._marker_key," 
-				+ "\ncase when exists (select 1 from gxd_allelegenotype s where m._marker_key = s._marker_key) then 1 else 0 end as hasAllele," 
+				+ "\ncase when exists (select 1 from all_allele s where m._marker_key = s._marker_key) then 1 else 0 end as hasAllele," 
 				+ "\ncase when exists (select 1 from mrk_reference s where m._marker_key = s._marker_key) then 1 else 0 end as hasReference," 
 				+ "\ncase when exists (select 1 from gxd_index s where m._marker_key = s._marker_key) then 1 else 0 end as hasGxdIndex," 
 				+ "\ncase when exists (select 1 from gxd_assay s where m._marker_key = s._marker_key) then 1 else 0 end as hasGxdAssay," 

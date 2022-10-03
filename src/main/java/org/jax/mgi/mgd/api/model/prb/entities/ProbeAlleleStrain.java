@@ -4,9 +4,12 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
@@ -28,7 +31,10 @@ public class ProbeAlleleStrain extends BaseEntity {
 	// if editing needs to be turned back on, them this will need to be converted to a single primary key
 	
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="prb_allele_strain_generator")
+	@SequenceGenerator(name="prb_allele_strain_generator", sequenceName = "prb_allele_strain_seq", allocationSize=1)
 	@ApiModelProperty(value="primary key")
+	private int _allelestrain_key;
 	private int _allele_key;
 	private Date creation_date;
 	private Date modification_date;

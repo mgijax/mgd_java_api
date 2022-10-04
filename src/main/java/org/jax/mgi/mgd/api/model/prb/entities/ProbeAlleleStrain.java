@@ -25,10 +25,6 @@ import lombok.Setter;
 @ApiModel(value = "Probe/Allele/Strain Model Object")
 @Table(name="prb_allele_strain")
 public class ProbeAlleleStrain extends BaseEntity {
-
-	// the primary key for this is _allele_key, _strain_key
-	// since we are not editing this data anymore, we are leaving this as-is in the schema
-	// if editing needs to be turned back on, them this will need to be converted to a single primary key
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="prb_allele_strain_generator")

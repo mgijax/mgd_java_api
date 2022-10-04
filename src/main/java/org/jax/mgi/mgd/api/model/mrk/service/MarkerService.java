@@ -902,7 +902,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				+ "\ncase when exists (select 1 from gxd_assay s where m._marker_key = s._marker_key) then 1 else 0 end as hasGxdAssay," 
 				+ "\ncase when exists (select 1 from gxd_expression s where m._marker_key = s._marker_key) then 1 else 0 end as hasGxdResult," 
 				+ "\ncase when exists (select 1 from prb_marker s where m._marker_key = s._marker_key) then 1 else 0 end as hasProbe," 
-				+ "case when exists (select 1 from gxd_antibodymarker s where m._marker_key = s._marker_key) then 1 else 0 end as hasAntibody," 
+				+ "\ncase when exists (select 1 from gxd_antibodymarker s where m._marker_key = s._marker_key) then 1 else 0 end as hasAntibody," 
 				+ "\ncase when exists (select 1 from mld_expt_marker s where m._marker_key = s._marker_key) then 1 else 0 end as hasMapping,"
 				+ "\ncase when exists (select 1 from seq_marker_cache s where m._marker_key = s._marker_key) then 1 else 0 end as hasSequence"
 				+ "\nfrom mrk_marker m" 

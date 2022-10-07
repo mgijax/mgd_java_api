@@ -50,8 +50,6 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 	private AntibodyMarkerService antibodyMarkerService;
 	@Inject 
 	private AntibodyPrepService antibodyPrepService;
-	@Inject
-	private TermService termService;
 	
 	private AntibodyTranslator translator = new AntibodyTranslator();
 	private SlimAntibodyTranslator slimtranslator = new SlimAntibodyTranslator();
@@ -59,6 +57,10 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	String mgiTypeKey = "6";
+	
+	// vocabulary keys
+	String antibodyClassNS = "107080501";
+	String antibodyTypeNS = "107367160";
 	
 	@Transactional
 	public SearchResults<AntibodyDomain> create(AntibodyDomain domain, User user) {
@@ -70,16 +72,6 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		Antibody entity = new Antibody();
 		
 		log.info("Antibody/create");
-
-		TermDomain termDomain = new TermDomain();
-		
-		// vocabulary keys		
-		termDomain.setVocabKey("151");	// antibody class
-		termDomain.setTerm("Not Specified");
-		String antibodyClassNS = String.valueOf(termService.searchByTerm(termDomain));
-		termDomain.setVocabKey("180");	// antibody class
-		termDomain.setTerm("Not Specified");
-		String antibodyTypeNS = String.valueOf(termService.searchByTerm(termDomain));
 		
 		// may not be null
 		entity.setAntibodyName(domain.getAntibodyName());
@@ -174,16 +166,6 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		Antibody entity = antibodyDAO.get(Integer.valueOf(domain.getAntibodyKey()));
 		
 		log.info("Antibody/update");
-
-		TermDomain termDomain = new TermDomain();
-		
-		// vocabulary keys
-		termDomain.setVocabKey("151");	// antibody class
-		termDomain.setTerm("Not Specified");
-		String antibodyClassNS = String.valueOf(termService.searchByTerm(termDomain));
-		termDomain.setVocabKey("180");	// antibody type
-		termDomain.setTerm("Not Specified");
-		String antibodyTypeNS = String.valueOf(termService.searchByTerm(termDomain));
 
 		entity.setAntibodyName(domain.getAntibodyName());
 		

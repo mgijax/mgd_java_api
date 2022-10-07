@@ -54,6 +54,10 @@ public class Probe extends BaseEntity {
 	private Probe derivedFrom;
 
 	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="ampPrimer")
+	private Probe ampPrimer;
+	
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_segmenttype_key", referencedColumnName="_term_key")
 	private Term segmentType;
 

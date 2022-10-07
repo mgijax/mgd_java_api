@@ -62,6 +62,13 @@ public class ProbeTranslator extends BaseEntityDomainTranslator<Probe, ProbeDoma
 			domain.setDerivedFromAccID(entity.getDerivedFrom().getMgiAccessionIds().get(0).getAccID());
 		}
 		
+		// at most one amp-primer
+		if (entity.getAmpPrimer() != null && !entity.getAmpPrimer().getName().isEmpty()) {
+			domain.setAmpPrimerKey(String.valueOf(entity.getAmpPrimer().get_probe_key()));
+			domain.setAmpPrimerName(entity.getAmpPrimer().getName());
+			domain.setAmpPrimerAccID(entity.getAmpPrimer().getMgiAccessionIds().get(0).getAccID());
+		}
+		
 		// markers
 		if (entity.getMarkers() != null && !entity.getMarkers().isEmpty()) {
 			ProbeMarkerTranslator markerTranslator = new ProbeMarkerTranslator();

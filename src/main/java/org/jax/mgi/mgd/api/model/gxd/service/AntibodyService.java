@@ -77,6 +77,9 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		termDomain.setVocabKey("151");	// antibody class
 		termDomain.setTerm("Not Specified");
 		String antibodyClassNS = String.valueOf(termService.searchByTerm(termDomain));
+		termDomain.setVocabKey("180");	// antibody class
+		termDomain.setTerm("Not Specified");
+		String antibodyTypeNS = String.valueOf(termService.searchByTerm(termDomain));
 		
 		// may not be null
 		entity.setAntibodyName(domain.getAntibodyName());
@@ -90,14 +93,6 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 			entity.setAntibodyNote(null);
 		}
 		
-		log.info("antibody type");
-		// has default if not set
-		if(domain.getAntibodyTypeKey() ==  null || domain.getAntibodyTypeKey().isEmpty()) {
-			// 'Not Specified'
-			domain.setAntibodyTypeKey("-1");
-		}
-	    entity.setAntibodyType(termDAO.get(Integer.valueOf(domain.getAntibodyTypeKey())));
-		
 		log.info("antibody class");
 		// has default if not set
 		if(domain.getAntibodyClassKey() ==  null || domain.getAntibodyClassKey().isEmpty()){
@@ -106,6 +101,14 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		}
 		entity.setAntibodyClass(termDAO.get(Integer.valueOf(domain.getAntibodyClassKey())));
 		
+		log.info("antibody type");
+		// has default if not set
+		if(domain.getAntibodyTypeKey() ==  null || domain.getAntibodyTypeKey().isEmpty()) {
+			// 'Not Specified'
+			domain.setAntibodyTypeKey(antibodyTypeNS);
+		}
+	    entity.setAntibodyType(termDAO.get(Integer.valueOf(domain.getAntibodyTypeKey())));
+	    
 	    // has default if not set
 	    log.info("antibody organism");
 		if(domain.getOrganismKey() == null || domain.getOrganismKey().isEmpty()) {
@@ -178,7 +181,10 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		termDomain.setVocabKey("151");	// antibody class
 		termDomain.setTerm("Not Specified");
 		String antibodyClassNS = String.valueOf(termService.searchByTerm(termDomain));
-				
+		termDomain.setVocabKey("180");	// antibody type
+		termDomain.setTerm("Not Specified");
+		String antibodyTypeNS = String.valueOf(termService.searchByTerm(termDomain));
+
 		entity.setAntibodyName(domain.getAntibodyName());
 		
 		log.info("antibody note: " + domain.getAntibodyNote());
@@ -190,7 +196,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 			entity.setAntibodyNote(domain.getAntibodyNote());
 			
 		}
-		
+	    
 		log.info("antibody class: " + domain.getAntibodyClassKey());
 		// has default if not set
 		if(domain.getAntibodyClassKey() ==  null || domain.getAntibodyClassKey().isEmpty()){
@@ -203,10 +209,10 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		// has default if not set
 		if(domain.getAntibodyTypeKey() ==  null || domain.getAntibodyTypeKey().isEmpty()) {
 			// 'Not Specified'
-			domain.setAntibodyTypeKey("-1");
+			domain.setAntibodyTypeKey(antibodyTypeNS);
 		}
 	    entity.setAntibodyType(termDAO.get(Integer.valueOf(domain.getAntibodyTypeKey()))); 
-		
+	    
 	    // has default if not set
 	    log.info("antibody organism");
 		if(domain.getOrganismKey() == null ||  domain.getOrganismKey().isEmpty()) {

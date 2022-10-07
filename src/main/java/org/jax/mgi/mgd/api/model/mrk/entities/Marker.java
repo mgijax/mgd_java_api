@@ -25,7 +25,6 @@ import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipMarkerTSS;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mrk.domain.MarkerMCVDirectDomain;
 import org.jax.mgi.mgd.api.model.seq.entities.SeqMarkerCache;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 

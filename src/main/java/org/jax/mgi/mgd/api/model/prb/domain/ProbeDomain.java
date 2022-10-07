@@ -19,6 +19,9 @@ public class ProbeDomain extends BaseDomain {
 	private String derivedFromKey;
 	private String derivedFromName;
 	private String derivedFromAccID;
+	private String ampPrimerKey;
+	private String ampPrimerName;
+	private String ampPrimerAccID;	
 	private String vectorTypeKey;
 	private String vectorType;
 	private String primer1sequence;

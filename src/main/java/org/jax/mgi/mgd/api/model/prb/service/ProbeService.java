@@ -92,6 +92,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			entity.setInsertSite(null);
 			entity.setInsertSize(null);
 			entity.setDerivedFrom(null);
+			entity.setAmpPrimer(null);
 			
 			if (domain.getPrimer1sequence() == null || domain.getPrimer1sequence().isEmpty()) {
 				entity.setPrimer1sequence(null);
@@ -132,6 +133,13 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			}
 			else {
 				entity.setDerivedFrom(probeDAO.get(Integer.valueOf(domain.getDerivedFromKey())));
+			}
+			
+			if (domain.getAmpPrimerAccID() == null || domain.getAmpPrimerAccID().isEmpty()) {
+				entity.setAmpPrimer(null);
+			}
+			else {
+				entity.setAmpPrimer(probeDAO.get(Integer.valueOf(domain.getAmpPrimerKey())));
 			}
 			
 			if (domain.getInsertSite() == null || domain.getInsertSite().isEmpty()) {
@@ -225,6 +233,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			entity.setInsertSite(null);
 			entity.setInsertSize(null);
 			entity.setDerivedFrom(null);
+			entity.setAmpPrimer(null);
 			
 			if (domain.getPrimer1sequence() == null || domain.getPrimer1sequence().isEmpty()) {
 				entity.setPrimer1sequence(null);
@@ -260,6 +269,13 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			}
 			else {
 				entity.setDerivedFrom(probeDAO.get(Integer.valueOf(domain.getDerivedFromKey())));
+			}
+			
+			if (domain.getAmpPrimerAccID() == null || domain.getAmpPrimerAccID().isEmpty()) {
+				entity.setAmpPrimer(null);
+			}
+			else {
+				entity.setAmpPrimer(probeDAO.get(Integer.valueOf(domain.getAmpPrimerKey())));
 			}
 			
 			if (domain.getInsertSite() == null || domain.getInsertSite().isEmpty()) {
@@ -425,6 +441,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		Boolean from_accession = false;
 		Boolean from_raccession = false;
 		Boolean from_parentclone = false;
+		Boolean from_ampprimer = false;
 		Boolean from_source = false;
 		Boolean from_strain = false;
 		Boolean from_tissue = false;
@@ -497,6 +514,12 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		if (searchDomain.getDerivedFromAccID() != null && !searchDomain.getDerivedFromAccID().isEmpty()) {
 			where = where + "\nand pc.accID ilike '" + searchDomain.getDerivedFromAccID() + "'";
 			from_parentclone = true;			
+		}
+		
+		// amp primer
+		if (searchDomain.getAmpPrimerAccID() != null && !searchDomain.getAmpPrimerAccID().isEmpty()) {
+			where = where + "\nand pamp.accID ilike '" + searchDomain.getAmpPrimerAccID() + "'";
+			from_ampprimer = true;			
 		}
 		
 		// probe source
@@ -663,6 +686,11 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		if (from_parentclone == true) {
 			from = from + ", acc_accession pc";
 			where = where + "\nand pc._mgitype_key = 3 and p.derivedfrom = pc._object_key"; 
+		}
+		
+		if (from_ampprimer == true) {
+			from = from + ", acc_accession pamp";
+			where = where + "\nand pamp._mgitype_key = 3 and p.ampprimer = pamp._object_key"; 
 		}
 		
 		if (from_source == true) {

@@ -25,6 +25,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipMarkerTSS;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mrk.domain.MarkerMCVDirectDomain;
 import org.jax.mgi.mgd.api.model.seq.entities.SeqMarkerCache;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 
@@ -181,6 +182,11 @@ public class Marker extends BaseEntity {
 	@Where(clause="`_annottype_key` = 1011")	
 	private List<Annotation> featureTypes;
 
+	@OneToMany()
+	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	@Where(clause="qualifier = 'D'")	
+	private List<MarkerMCVCache> featureTypesDirect;
+	
 	// GO term annotations
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)

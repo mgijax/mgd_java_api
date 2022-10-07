@@ -64,6 +64,7 @@ public class MarkerDomain extends BaseDomain {
 	
 	// display only, see individual object/service to methods that set these values
 	private List<MarkerFeatureTypeDomain> featureTypes;
+	private List<MarkerMCVDirectDomain> featureTypesDirect;
 	private List<SlimMarkerDomain> tssToGene;
 	private List<SlimMarkerDomain> aliases;
 	 

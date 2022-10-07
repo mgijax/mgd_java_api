@@ -16,6 +16,7 @@ import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipMarkerTSSTranslator;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerHistoryDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.MarkerMCVDirectDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerNoteDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
@@ -34,6 +35,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private MarkerHistoryTranslator historyTranslator = new MarkerHistoryTranslator();
 	private MGISynonymTranslator synonymTranslator = new MGISynonymTranslator();
 	private MarkerFeatureTypeTranslator featureTypeTranslator = new MarkerFeatureTypeTranslator();
+	private MarkerMCVDirectTranslator featureTypeDirectTranslator = new MarkerMCVDirectTranslator();
 	private SlimMarkerTranslator slimMarkerTranslator = new SlimMarkerTranslator();
 	private RelationshipMarkerTSSTranslator markerTSSTranslator = new RelationshipMarkerTSSTranslator();
 	private SeqMarkerBiotypeTranslator biotypeTranslator = new SeqMarkerBiotypeTranslator();
@@ -147,6 +149,12 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			Iterable<MarkerFeatureTypeDomain> i = featureTypeTranslator.translateEntities(entity.getFeatureTypes());
 			domain.setFeatureTypes(IteratorUtils.toList(i.iterator()));
 			domain.getFeatureTypes().sort(Comparator.comparing(MarkerFeatureTypeDomain::getTerm));
+		}
+		
+		// one-to-many marker feature types direct/should be only one
+		if (entity.getFeatureTypesDirect() != null && !entity.getFeatureTypesDirect().isEmpty()) {
+			Iterable<MarkerMCVDirectDomain> i = featureTypeDirectTranslator.translateEntities(entity.getFeatureTypesDirect());
+			domain.setFeatureTypesDirect(IteratorUtils.toList(i.iterator()));
 		}
 		
 		// one-to-many tss-to-gene relationships

@@ -685,7 +685,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 
 		if (from_parentclone == true) {
 			from = from + ", acc_accession pc";
-			where = where + "\nand pc._mgitype_key = 3 and p.derivedfrom = pc._object_key"; 
+			where = where + "\nand p.derivedfrom is not null and p.derivedfrom = pc._object_key and pc._mgitype_key = 3"; 
 		}
 		
 		if (from_ampprimer == true) {

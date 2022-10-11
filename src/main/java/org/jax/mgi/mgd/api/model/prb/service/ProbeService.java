@@ -691,7 +691,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		if (from_ampprimer == true) {
 			// must be a probe of segment type = primer
 			from = from + ", acc_accession pamp";
-			where = where + "\nand pamp._mgitype_key = 3 and p._segmenttype_key = 63473 and p.ampprimer = pamp._object_key"; 
+			where = where + "\nand pamp._mgitype_key = 3 and p._segmenttype_key = 63473 and p._probe_key = pamp._object_key"; 
 		}
 		
 		if (from_source == true) {

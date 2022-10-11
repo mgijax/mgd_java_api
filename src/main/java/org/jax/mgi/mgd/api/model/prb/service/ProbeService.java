@@ -691,7 +691,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		if (from_ampprimer == true) {
 			// must be a probe of segment type = primer
 			from = from + ", acc_accession pamp";
-			where = where + "\nand pamp._mgitype_key = 3 and p._segmenttype_key = 63473 and p._probe_key = pamp._object_key"; 
+			where = where + "\nand pamp._mgitype_key = 3 and p._probe_key = pamp._object_key"; 
 		}
 		
 		if (from_source == true) {
@@ -812,7 +812,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		}
 		
 		String cmd = "select accID, _object_key, description from PRB_Acc_View"
-					+ "\nwhere accID = '" + value + "'";
+				+ "\nwhere accID = '" + value + "'";
 		log.info(cmd);
 		
 		try {
@@ -834,6 +834,42 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		return results;
 	}
 
+	@Transactional
+	public List<SlimProbeDomain> validateAmpPrimer(SlimProbeDomain searchDomain) {
+		
+		List<SlimProbeDomain> results = new ArrayList<SlimProbeDomain>();
+		
+		String value = searchDomain.getAccID().toUpperCase();
+		if (!value.contains("MGI:")) {
+			value = "MGI:" + value;
+		}
+		
+		String cmd = "select a.accID, a._object_key, a.description"
+				+ "\nfrom PRB_Acc_View a, PRB_Probe p"
+				+ "\nwhere a.accID = '" + value + "'"
+				+ "\nand a._object_key = p._probe_key"
+				+ "\nand p._segmenttype_key = 63473";		
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			
+			while (rs.next()) {
+				SlimProbeDomain slimdomain = new SlimProbeDomain();
+				slimdomain.setAccID(rs.getString("accID"));
+				slimdomain.setProbeKey(rs.getString("_object_key"));
+				slimdomain.setName(rs.getString("description"));
+				results.add(slimdomain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 	@Transactional	
 	public List<ProbeDomain> getProbeByMarker(String accid) {
 		// return list of probe domains by marker acc id

@@ -83,7 +83,7 @@ public class ProbeController extends BaseController<ProbeDomain> {
 	@POST
 	@ApiOperation(value = "Validate Probe by accID, returns List of SlimProbeDomain")
 	@Path("/validateProbe")
-	public List<SlimProbeDomain> validateAllele(SlimProbeDomain searchDomain) {
+	public List<SlimProbeDomain> validateProbe(SlimProbeDomain searchDomain) {
 	
 		List<SlimProbeDomain> results = new ArrayList<SlimProbeDomain>();
 
@@ -96,6 +96,22 @@ public class ProbeController extends BaseController<ProbeDomain> {
 		return results;
 	}
 
+	@POST
+	@ApiOperation(value = "Validate Amp Primer by accID, returns List of SlimProbeDomain")
+	@Path("/validateAmpPrimer")
+	public List<SlimProbeDomain> validateAmpPrimer(SlimProbeDomain searchDomain) {
+	
+		List<SlimProbeDomain> results = new ArrayList<SlimProbeDomain>();
+
+		try {
+			results = probeService.validateAmpPrimer(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 	@POST
 	@ApiOperation(value = "Get list of probe domains by marker accession id")
 	@Path("/getProbeByMarker")

@@ -690,7 +690,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		
 		if (from_ampprimer == true) {
 			from = from + ", acc_accession pamp";
-			where = where + "\nand pamp._mgitype_key = 3 and p.ampprimer = pamp._object_key"; 
+			where = where + "\nand p.ampprimer is not null and p.ampprimer = pamp._object_key and pamp._mgitype_key = 3 "; 
 		}
 		
 		if (from_source == true) {

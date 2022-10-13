@@ -837,7 +837,6 @@ public class ProbeService extends BaseService<ProbeDomain> {
 	public List<SlimProbeDomain> validateAmpPrimer(SlimProbeDomain searchDomain) {
 		// validate the amp primer 
 		// segmentype of amp primer = "primer" (63473)
-		// marker of probe must equal marker of amp primer
 		
 		List<SlimProbeDomain> results = new ArrayList<SlimProbeDomain>();
 		
@@ -847,14 +846,10 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		}
 		
 		String cmd = "select a.accID, a._object_key, a.description"
-				+ "\nfrom PRB_Acc_View a, PRB_Probe p1, PRB_Marker pm1, PRB_Marker p2, PRB_Marker pm2"
+				+ "\nfrom PRB_Acc_View a, PRB_Probe p"
 				+ "\nwhere a.accID = '" + value + "'"
-				+ "\nand a._object_key = p1._probe_key"
-				+ "\nand p1._segmenttype_key = 63473"
-				+ "\nand p1._probe_key = pm1._probe_key"
-				+ "\nand p2._probe_key = " + searchDomain.getProbeKey()
-				+ "\nand p2._probe_key = pm2._probe_key"
-				+ "\nand pm1._marker_key = pm2._marker_key";
+				+ "\nand a._object_key = p._probe_key"
+				+ "\nand p._segmenttype_key = 63473";
 		
 		log.info(cmd);
 		

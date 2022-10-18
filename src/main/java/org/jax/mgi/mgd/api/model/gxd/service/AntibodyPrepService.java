@@ -36,9 +36,7 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 	private TermDAO termDAO;
 	
 	private AntibodyPrepTranslator translator = new AntibodyPrepTranslator();
-	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
 	
 	@Transactional
 	public SearchResults<AntibodyPrepDomain> create(AntibodyPrepDomain domain, User user) {

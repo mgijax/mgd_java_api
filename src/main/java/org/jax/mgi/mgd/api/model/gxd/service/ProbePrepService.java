@@ -159,23 +159,11 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 			log.info("processProbePrep/nothing to process");
 			return(0);
 		}
-		
-		TermDomain termDomain = new TermDomain();
-		
+				
 		// vocabulary keys		
-		termDomain.setVocabKey("159");	// probe sense
-		termDomain.setTerm("Not Specified");
-		int senseNS = termService.searchByTerm(termDomain);
-		
-		// vocabulary keys		
-		termDomain.setVocabKey("152");	// label
-		termDomain.setTerm("Not Specified");
-		int labelNS = termService.searchByTerm(termDomain);
-		
-		// vocabulary keys		
-		termDomain.setVocabKey("157");	// visualization
-		termDomain.setTerm("Not Specified");
-		int visualizationNS = termService.searchByTerm(termDomain);
+		int senseNS = 107080632;
+		int labelNS = 107080514;
+		int visualizationNS = 107080616;
 		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update

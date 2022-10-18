@@ -17,8 +17,6 @@ import org.jax.mgi.mgd.api.model.gxd.translator.ProbePrepTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
-import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
-import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -36,8 +34,6 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 	private ProbeDAO probeDAO;
 	@Inject
 	private TermDAO termDAO;
-	@Inject
-	private TermService termService;
 	
 	private ProbePrepTranslator translator = new ProbePrepTranslator();
 	

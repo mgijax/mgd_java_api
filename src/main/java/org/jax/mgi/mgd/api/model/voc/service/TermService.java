@@ -270,7 +270,7 @@ public class TermService extends BaseService<TermDomain> {
 				
 				results.add(domain);
 			}
-			//sqlExecutor.cleanup();
+			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -311,7 +311,7 @@ public class TermService extends BaseService<TermDomain> {
             while (rs.next()) {
                 key = rs.getInt("_term_key");
             }
-			sqlExecutor.cleanup();						
+			//sqlExecutor.cleanup();						
         }
         catch (Exception e) {
         	e.printStackTrace();

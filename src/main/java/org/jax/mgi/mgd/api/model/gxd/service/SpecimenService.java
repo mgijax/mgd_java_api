@@ -16,8 +16,6 @@ import org.jax.mgi.mgd.api.model.gxd.entities.Specimen;
 import org.jax.mgi.mgd.api.model.gxd.translator.SpecimenTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
-import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
-import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -35,8 +33,6 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 	private GenotypeDAO genotypeDAO;
 	@Inject
 	private InSituResultService insituresultService;
-	@Inject
-	private TermService termService;
 	
 	private SpecimenTranslator translator = new SpecimenTranslator();				
 
@@ -90,18 +86,10 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 			log.info("processSpecimen/nothing to process");
 			return modified;
 		}
-			
-		TermDomain termDomain = new TermDomain();
-		
+					
 		// vocabulary keys		
-		termDomain.setVocabKey("155");	// embedding
-		termDomain.setTerm("Not Specified");
-		int embeddingNS = termService.searchByTerm(termDomain);
-		
-		// vocabulary keys		
-		termDomain.setVocabKey("156");	// fixation
-		termDomain.setTerm("Not Specified");
-		int fixationNS = termService.searchByTerm(termDomain);
+		int embeddingNS = 107080589;
+		int fixationNS = 107080597;
 		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update

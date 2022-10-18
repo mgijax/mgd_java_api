@@ -270,7 +270,7 @@ public class TermService extends BaseService<TermDomain> {
 				
 				results.add(domain);
 			}
-			sqlExecutor.cleanup();
+			//sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();

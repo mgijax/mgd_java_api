@@ -14,8 +14,6 @@ import org.jax.mgi.mgd.api.model.gxd.entities.InSituResult;
 import org.jax.mgi.mgd.api.model.gxd.translator.InSituResultTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
-import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
-import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -35,8 +33,8 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 	private InSituResultCellTypeService celltypeService;	
 	@Inject 
 	private InSituResultImageService imagePaneService;
-	@Inject
-	private TermService termService;
+//	@Inject
+//	private TermService termService;
 	
 	private InSituResultTranslator translator = new InSituResultTranslator();				
 
@@ -91,12 +89,15 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 			return modified;
 		}
 		
-		TermDomain termDomain = new TermDomain();
-
+//		TermDomain termDomain = new TermDomain();
+//
+//		// vocabulary keys
+//		termDomain.setVocabKey("153");	// pattern
+//		termDomain.setTerm("Not Specified");
+//		int patternNS = termService.searchByTerm(termDomain, false);
+		
 		// vocabulary keys
-		termDomain.setVocabKey("153");	// pattern
-		termDomain.setTerm("Not Specified");
-		int patternNS = termService.searchByTerm(termDomain, false);
+		int patternNS = 107080558;
 		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update

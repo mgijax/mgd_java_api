@@ -283,6 +283,7 @@ public class TermService extends BaseService<TermDomain> {
     public int searchByTerm(TermDomain searchDomain, Boolean clearSQL) {
         // using searchDomain fields, generate SQL command
         // search by _vocab_key and (term or abbreviation)
+    	// clearSQL (true/false) determines if the sqlExecutor will be called (or not)
         // return term key (int)
 
     	int key = 0;

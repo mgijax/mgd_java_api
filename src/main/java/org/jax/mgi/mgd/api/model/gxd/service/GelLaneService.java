@@ -17,8 +17,6 @@ import org.jax.mgi.mgd.api.model.gxd.entities.GelLane;
 import org.jax.mgi.mgd.api.model.gxd.translator.GelLaneTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
-import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
-import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -36,8 +34,8 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 	private TermDAO termDAO;
 	@Inject
 	private GelLaneStructureService structureService;
-	@Inject
-	private TermService termService;
+//	@Inject
+//	private TermService termService;
 	
 	private GelLaneTranslator translator = new GelLaneTranslator();				
 
@@ -107,19 +105,22 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 		//		Age=Not Applicable
 		//		Sex=Not Applicable
 		
-		TermDomain termDomain = new TermDomain();
-
-		// vocabulary keys
-		termDomain.setVocabKey("154");	// gel control
-		termDomain.setTerm("No");
-		String gelControlNo = String.valueOf(termService.searchByTerm(termDomain, false));
+//		TermDomain termDomain = new TermDomain();
+//
+//		// vocabulary keys
+//		termDomain.setVocabKey("154");	// gel control
+//		termDomain.setTerm("No");
+//		String gelControlNo = String.valueOf(termService.searchByTerm(termDomain, false));
+//		termDomain.setVocabKey("172");	// gel rna type
+//		termDomain.setTerm("Not Applicable");
+//		int gelRNATypeNA = termService.searchByTerm(termDomain, false);
+//		termDomain.setTerm("Not Specified");
+//		int gelRNATypeNS = termService.searchByTerm(termDomain, false);
 		
 		// vocabulary keys
-		termDomain.setVocabKey("172");	// gel rna type
-		termDomain.setTerm("Not Applicable");
-		int gelRNATypeNA = termService.searchByTerm(termDomain, false);
-		termDomain.setTerm("Not Specified");
-		int gelRNATypeNS = termService.searchByTerm(termDomain, false);
+		String gelControlNo = "107080580";
+		int gelRNATypeNA = 107080640;
+		int gelRNATypeNS = 107080641;
 		
 		for (int i = 0; i < domain.size(); i++) {
 			

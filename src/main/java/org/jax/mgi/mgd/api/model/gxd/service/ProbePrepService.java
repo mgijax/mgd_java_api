@@ -17,8 +17,6 @@ import org.jax.mgi.mgd.api.model.gxd.translator.ProbePrepTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
-import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
-import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -36,8 +34,8 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 	private ProbeDAO probeDAO;
 	@Inject
 	private TermDAO termDAO;
-	@Inject
-	private TermService termService;
+//	@Inject
+//	private TermService termService;
 	
 	private ProbePrepTranslator translator = new ProbePrepTranslator();
 	
@@ -160,22 +158,27 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 			return(0);
 		}
 		
-		TermDomain termDomain = new TermDomain();
+//		TermDomain termDomain = new TermDomain();
+//		
+//		// vocabulary keys		
+//		termDomain.setVocabKey("159");	// probe sense
+//		termDomain.setTerm("Not Specified");
+//		int senseNS = termService.searchByTerm(termDomain, false);
+//		
+//		// vocabulary keys		
+//		termDomain.setVocabKey("152");	// label
+//		termDomain.setTerm("Not Specified");
+//		int labelNS = termService.searchByTerm(termDomain, false);
+//		
+//		// vocabulary keys		
+//		termDomain.setVocabKey("157");	// visualization
+//		termDomain.setTerm("Not Specified");
+//		int visualizationNS = termService.searchByTerm(termDomain, false);
 		
 		// vocabulary keys		
-		termDomain.setVocabKey("159");	// probe sense
-		termDomain.setTerm("Not Specified");
-		int senseNS = termService.searchByTerm(termDomain, false);
-		
-		// vocabulary keys		
-		termDomain.setVocabKey("152");	// label
-		termDomain.setTerm("Not Specified");
-		int labelNS = termService.searchByTerm(termDomain, false);
-		
-		// vocabulary keys		
-		termDomain.setVocabKey("157");	// visualization
-		termDomain.setTerm("Not Specified");
-		int visualizationNS = termService.searchByTerm(termDomain, false);
+		int senseNS = 107080632;
+		int labelNS = 107080514;
+		int visualizationNS = 107080616;
 		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update

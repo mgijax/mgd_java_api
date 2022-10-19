@@ -17,8 +17,6 @@ import org.jax.mgi.mgd.api.model.gxd.entities.AntibodyPrep;
 import org.jax.mgi.mgd.api.model.gxd.translator.AntibodyPrepTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
-import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
-import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -36,8 +34,8 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 	private AntibodyDAO antibodyDAO;
 	@Inject
 	private TermDAO termDAO;
-	@Inject
-	private TermService termService;
+//	@Inject
+//	private TermService termService;
 	
 	private AntibodyPrepTranslator translator = new AntibodyPrepTranslator();
 	
@@ -165,17 +163,21 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 			return(0);
 		}
 		
-		TermDomain termDomain = new TermDomain();
+//		TermDomain termDomain = new TermDomain();
+//		
+//		// vocabulary keys		
+//		termDomain.setVocabKey("160");	// secondary
+//		termDomain.setTerm("Not Specified");
+//		int secondaryNS = termService.searchByTerm(termDomain, false);
+//		
+//		// vocabulary keys		
+//		termDomain.setVocabKey("152");	// label
+//		termDomain.setTerm("Not Specified");
+//		int labelNS = termService.searchByTerm(termDomain, false);
 		
-		// vocabulary keys		
-		termDomain.setVocabKey("160");	// secondary
-		termDomain.setTerm("Not Specified");
-		int secondaryNS = termService.searchByTerm(termDomain, false);
-		
-		// vocabulary keys		
-		termDomain.setVocabKey("152");	// label
-		termDomain.setTerm("Not Specified");
-		int labelNS = termService.searchByTerm(termDomain, false);
+		// vocabulary keys
+		int secondaryNS = 107080636;
+		int labelNS = 107080514; 	
 		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update

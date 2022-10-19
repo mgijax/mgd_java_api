@@ -96,12 +96,12 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 		// vocabulary keys		
 		termDomain.setVocabKey("155");	// embedding
 		termDomain.setTerm("Not Specified");
-		int embeddingNS = termService.searchByTerm(termDomain);
+		int embeddingNS = termService.searchByTerm(termDomain, false);
 		
 		// vocabulary keys		
 		termDomain.setVocabKey("156");	// fixation
 		termDomain.setTerm("Not Specified");
-		int fixationNS = termService.searchByTerm(termDomain);
+		int fixationNS = termService.searchByTerm(termDomain, false);
 		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update

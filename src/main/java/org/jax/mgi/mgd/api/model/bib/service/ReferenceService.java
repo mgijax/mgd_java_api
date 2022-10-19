@@ -1326,7 +1326,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		TermDomain termDomain = new TermDomain();
 		termDomain.setVocabKey("129");
 		termDomain.setTerm(workflowTag);
-		int tagTermKey = termService.searchByTerm(termDomain);
+		int tagTermKey = termService.searchByTerm(termDomain, true);
 		log.info("addTag/new tag:" + workflowTag + "," + tagTermKey);
 		
 		for (String refsKey : listOfRefsKey) {
@@ -1341,6 +1341,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			referenceDAO.persist(entity);
 		}
 		
+        try {         
+			sqlExecutor.cleanup();						
+        }
+        catch (Exception e) {
+        	e.printStackTrace();
+        }
+        
 		return;
 	}
 
@@ -1777,7 +1784,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			TermDomain termDomain = new TermDomain();
 			termDomain.setVocabKey("129");
 			termDomain.setTerm(rdTag);
-			int tagTermKey = termService.searchByTerm(termDomain);
+			int tagTermKey = termService.searchByTerm(termDomain, true);
 			log.info("addTag/new tag:" + rdTag + "," + tagTermKey);			
 			addTag(entity, tagTermKey, user);
 		}

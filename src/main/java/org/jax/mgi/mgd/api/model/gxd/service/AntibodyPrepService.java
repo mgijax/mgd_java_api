@@ -170,12 +170,12 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 		// vocabulary keys		
 		termDomain.setVocabKey("160");	// secondary
 		termDomain.setTerm("Not Specified");
-		int secondaryNS = termService.searchByTerm(termDomain);
+		int secondaryNS = termService.searchByTerm(termDomain, false);
 		
 		// vocabulary keys		
 		termDomain.setVocabKey("152");	// label
 		termDomain.setTerm("Not Specified");
-		int labelNS = termService.searchByTerm(termDomain);
+		int labelNS = termService.searchByTerm(termDomain, false);
 		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update

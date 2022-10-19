@@ -96,7 +96,7 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 		// vocabulary keys
 		termDomain.setVocabKey("153");	// pattern
 		termDomain.setTerm("Not Specified");
-		int patternNS = termService.searchByTerm(termDomain);
+		int patternNS = termService.searchByTerm(termDomain, false);
 		
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update

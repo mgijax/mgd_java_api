@@ -105,18 +105,6 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 		//		Age=Not Applicable
 		//		Sex=Not Applicable
 		
-//		TermDomain termDomain = new TermDomain();
-//
-//		// vocabulary keys
-//		termDomain.setVocabKey("154");	// gel control
-//		termDomain.setTerm("No");
-//		String gelControlNo = String.valueOf(termService.searchByTerm(termDomain, false));
-//		termDomain.setVocabKey("172");	// gel rna type
-//		termDomain.setTerm("Not Applicable");
-//		int gelRNATypeNA = termService.searchByTerm(termDomain, false);
-//		termDomain.setTerm("Not Specified");
-//		int gelRNATypeNS = termService.searchByTerm(termDomain, false);
-		
 		// vocabulary keys
 		String gelControlNo = "107080580";
 		int gelRNATypeNA = 107080640;

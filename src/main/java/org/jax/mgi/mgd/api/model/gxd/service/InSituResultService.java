@@ -89,13 +89,6 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 			return modified;
 		}
 		
-//		TermDomain termDomain = new TermDomain();
-//
-//		// vocabulary keys
-//		termDomain.setVocabKey("153");	// pattern
-//		termDomain.setTerm("Not Specified");
-//		int patternNS = termService.searchByTerm(termDomain, false);
-		
 		// vocabulary keys
 		int patternNS = 107080558;
 		

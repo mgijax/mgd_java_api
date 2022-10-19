@@ -163,18 +163,6 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 			return(0);
 		}
 		
-//		TermDomain termDomain = new TermDomain();
-//		
-//		// vocabulary keys		
-//		termDomain.setVocabKey("160");	// secondary
-//		termDomain.setTerm("Not Specified");
-//		int secondaryNS = termService.searchByTerm(termDomain, false);
-//		
-//		// vocabulary keys		
-//		termDomain.setVocabKey("152");	// label
-//		termDomain.setTerm("Not Specified");
-//		int labelNS = termService.searchByTerm(termDomain, false);
-		
 		// vocabulary keys
 		int secondaryNS = 107080636;
 		int labelNS = 107080514; 	

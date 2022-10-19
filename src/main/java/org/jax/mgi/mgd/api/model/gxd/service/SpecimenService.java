@@ -88,18 +88,6 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 			log.info("processSpecimen/nothing to process");
 			return modified;
 		}
-			
-//		TermDomain termDomain = new TermDomain();
-//		
-//		// vocabulary keys		
-//		termDomain.setVocabKey("155");	// embedding
-//		termDomain.setTerm("Not Specified");
-//		int embeddingNS = termService.searchByTerm(termDomain, false);
-//		
-//		// vocabulary keys		
-//		termDomain.setVocabKey("156");	// fixation
-//		termDomain.setTerm("Not Specified");
-//		int fixationNS = termService.searchByTerm(termDomain, false);
 		
 		// vocabulary keys		
 		int embeddingNS = 107080589;

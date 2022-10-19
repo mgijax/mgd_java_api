@@ -158,23 +158,6 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 			return(0);
 		}
 		
-//		TermDomain termDomain = new TermDomain();
-//		
-//		// vocabulary keys		
-//		termDomain.setVocabKey("159");	// probe sense
-//		termDomain.setTerm("Not Specified");
-//		int senseNS = termService.searchByTerm(termDomain, false);
-//		
-//		// vocabulary keys		
-//		termDomain.setVocabKey("152");	// label
-//		termDomain.setTerm("Not Specified");
-//		int labelNS = termService.searchByTerm(termDomain, false);
-//		
-//		// vocabulary keys		
-//		termDomain.setVocabKey("157");	// visualization
-//		termDomain.setTerm("Not Specified");
-//		int visualizationNS = termService.searchByTerm(termDomain, false);
-		
 		// vocabulary keys		
 		int senseNS = 107080632;
 		int labelNS = 107080514;

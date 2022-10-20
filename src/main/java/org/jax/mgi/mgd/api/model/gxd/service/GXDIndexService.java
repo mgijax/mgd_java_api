@@ -105,16 +105,15 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		entity.setConditionalMutants(termDAO.get(Integer.valueOf(domain.getConditionalMutantsKey())));
 		
 		log.info("original domain comments: " + domain.getComments());
-
+		for (int index = 0; index < domain.getComments().length(); index++) {
+		    log.info(domain.getComments().charAt(index));
+		}	
+		
 		if (domain.getComments() == null || domain.getComments().isEmpty()) {
 			entity.setComments(null);
 		}
 		else {
-			String note = DecodeString.setDecodeToLatin9(domain.getComments());
-			for (int index = 0; index < note.length(); index++) {
-			    log.info(note.charAt(index));
-			}			
-			note.replaceAll("\u0001", "");
+			String note = DecodeString.setDecodeToLatin9(domain.getComments()).trim();
 			domain.setComments(note);
 			entity.setComments(domain.getComments());
 		}

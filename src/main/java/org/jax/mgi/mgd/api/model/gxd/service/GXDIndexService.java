@@ -109,8 +109,13 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		}
 		else {
 			String note = DecodeString.setDecodeToLatin9(domain.getComments());
-			domain.setComments(note);
-			entity.setComments(domain.getComments());
+			if (note.isEmpty()) {
+				entity.setComments(null);
+			}
+			else {
+				entity.setComments(note);
+		
+			}
 		}
 		
 		// process gxd_indexstages

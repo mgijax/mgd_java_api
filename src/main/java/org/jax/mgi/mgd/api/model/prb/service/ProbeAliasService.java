@@ -112,6 +112,11 @@ public class ProbeAliasService extends BaseService<ProbeAliasDomain> {
 				return modified;
 			}
 			
+			// if alias is set to empty, then process as a delete
+			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE) && domain.get(i).getAlias().length() == 0) {
+				domain.get(i).setProcessStatus(Constants.PROCESS_DELETE);
+			}
+			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {								
 
 	        	if (domain.get(i).getAlias() == null || domain.get(i).getAlias().isEmpty()) {

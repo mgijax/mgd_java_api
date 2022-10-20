@@ -1,3 +1,9 @@
+TAG: mgd_java_api-6-0-22-12
+DATE: 10/20/2022
+STAFF: lec
+wts2-1022/probe alias field: treat "blanking out" field as delete not update
+wts2-1023/ GXD index module comments/notes field: manage unprintable characters
+
 TAG: mgd_java_api-6-0-22-11
 DATE: 10/20/2022
 STAFF: lec

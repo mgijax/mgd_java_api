@@ -111,8 +111,6 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 			String note = DecodeString.setDecodeToLatin9(domain.getComments());
 			domain.setComments(note);
 			entity.setComments(domain.getComments());
-			log.info("domain comments: " + domain.getComments());
-			log.info("entity comments: " + entity.getComments());
 		}
 		
 		// process gxd_indexstages
@@ -124,6 +122,8 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		
 		// always true
 		if (modified == true) {
+			log.info("domain comments: " + domain.getComments());
+			log.info("entity comments: " + entity.getComments());
 			entity.setModification_date(new Date());
 			entity.setModifiedBy(user);
 			indexDAO.update(entity);

@@ -111,6 +111,9 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		}
 		else {
 			String note = DecodeString.setDecodeToLatin9(domain.getComments());
+			for (int index = 0; index < note.length(); index++) {
+			    log.info(note.charAt(index));
+			}			
 			note.replaceAll("\u0001", "");
 			domain.setComments(note);
 			entity.setComments(domain.getComments());

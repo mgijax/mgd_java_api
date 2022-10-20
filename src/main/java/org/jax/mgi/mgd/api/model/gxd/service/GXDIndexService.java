@@ -110,6 +110,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		else {
 			String note = DecodeString.setDecodeToLatin9(domain.getComments());
 			//entity.setComments(domain.getComments());
+			log.info("comments:" + note);
 			entity.setComments(note);
 		}
 		

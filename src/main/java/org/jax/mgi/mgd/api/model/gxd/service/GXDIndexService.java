@@ -111,7 +111,8 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 			String note = DecodeString.setDecodeToLatin9(domain.getComments());
 			domain.setComments(note);
 			entity.setComments(domain.getComments());
-			log.info("comments:" + note);
+			log.info("comments: " + domain.getComments());
+			log.info("entity comments: " + entity.getComments());
 		}
 		
 		// process gxd_indexstages

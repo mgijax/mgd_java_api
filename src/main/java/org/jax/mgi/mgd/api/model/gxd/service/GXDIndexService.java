@@ -102,24 +102,16 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));	
 		entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));
 		entity.setPriority(termDAO.get(Integer.valueOf(domain.getPriorityKey())));
-		entity.setConditionalMutants(termDAO.get(Integer.valueOf(domain.getConditionalMutantsKey())));
-		
-		log.info("original domain comments: " + domain.getComments());
-		for (int index = 0; index < domain.getComments().length(); index++) {
-		    log.info(domain.getComments().charAt(index));
-		}	
+		entity.setConditionalMutants(termDAO.get(Integer.valueOf(domain.getConditionalMutantsKey())));			
 		
 		if (domain.getComments() == null || domain.getComments().isEmpty()) {
 			entity.setComments(null);
 		}
 		else {
-			String note = DecodeString.setDecodeToLatin9(domain.getComments()).trim();
+			String note = DecodeString.setDecodeToLatin9(domain.getComments());
 			domain.setComments(note);
 			entity.setComments(domain.getComments());
 		}
-		
-		log.info("domain comments: " + domain.getComments());
-		log.info("entity comments: " + entity.getComments());
 		
 		// process gxd_indexstages
 		if (domain.getIndexStages() != null && !domain.getIndexStages().isEmpty()) {

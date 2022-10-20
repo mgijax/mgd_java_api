@@ -55,7 +55,7 @@ public class DecodeString {
 		
 		String sDecoded = "";
 		try {
-			sDecoded = new String(s.replace("'", "''").getBytes("UTF-8"), "ISO-8859-15");
+			sDecoded = new String(s.replace("'", "''").getBytes("UTF-8"), "ISO-8859-15").trim();
 			return(sDecoded);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();

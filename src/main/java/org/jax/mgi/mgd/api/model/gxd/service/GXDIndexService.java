@@ -21,6 +21,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
+import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -107,7 +108,9 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 			entity.setComments(null);
 		}
 		else {
-			entity.setComments(domain.getComments());
+			String note = DecodeString.setDecodeToLatin9(domain.getComments());
+			//entity.setComments(domain.getComments());
+			entity.setComments(note);
 		}
 		
 		// process gxd_indexstages

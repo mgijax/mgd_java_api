@@ -13,6 +13,7 @@ public class SummaryResultDomain extends BaseDomain {
 	
 	private String assayKey;
 	private String accID;
+	private String newassaType;
 	private String assayTypeKey;
 	private String assayType;
 	private String markerKey;

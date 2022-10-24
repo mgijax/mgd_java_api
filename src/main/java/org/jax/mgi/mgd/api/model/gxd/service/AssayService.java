@@ -1399,9 +1399,9 @@ public class AssayService extends BaseService<AssayDomain> {
 		List<SummaryResultDomain> results = new ArrayList<SummaryResultDomain>();
 		
 		String cmd = "\nselect a.accid, ga._assay_key, ga._refs_key, ga._assaytype_key, ga._marker_key, ga._celltype_term_key," +
-				"\nga.age, ga.stength, ga.expressed, ga.resultnote," +
+				"\nga.age, ga.strength, ga.expressed, ga.resultnote," +
 				"\ngat.assaytype," +
-				"\nm.symbol" +
+				"\nm.symbol," +
 				"\nct.term as celltype," +
 				"\n'TS' || ga._stage_key || ':' || t1.term as structure," +
 				"\ngs.specimenLabel," +
@@ -1409,12 +1409,13 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\ngga._Allele_key_1 as alleleKey1, as1.symbol as asymbol1," +
 				"\ngga._Allele_key_2 as alleleKey2, as2.symbol as asymbol2" +
 				"\nfrom gxd_expression ga" +
-		        	"\nleft outer join voc_term ct on (ga._celltype_term_key = ct._term_key" +
+		        	"\nleft outer join voc_term ct on (ga._celltype_term_key = ct._term_key)" +
 		        	"\nleft outer join gxd_specimen gs on (ga._specimen_key = gs._specimen_key)" +
 		        	"\nleft outer join gxd_genotype gg on (ga._genotype_key = gg._genotype_key)" +
 		        	"\nleft outer join gxd_allelepair gga on (ga._genotype_key = gga._genotype_key)" +
 		        	"\nleft outer join all_allele as1 on (gga._allele_key_1 = as1._allele_key)" +
 		        	"\nleft outer join all_allele as2 on (gga._allele_key_2 = as2._allele_key)" +
+		        	"\n," +
 		        "\nbib_citation_cache aa," +
 		        "\nacc_accession a," +
 		        "\ngxd_assaytype gat," +

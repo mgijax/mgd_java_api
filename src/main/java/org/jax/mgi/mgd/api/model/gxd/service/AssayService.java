@@ -1402,25 +1402,14 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nga.age, ga.strength, ga.expressed, ga.resultnote," +
 				"\naa.jnumid," +
 				"\ngat.assaytype," +
+				"\ngat.sequenceNum," +
 				"\nm.symbol as markerSymbol," +
 				"\nct.term as celltype," +
 				"\n'TS' || ga._stage_key || ':' || t1.term as structure," +
 				"\ngs.specimenLabel," +
 				"\ngg.isconditional," +
 				"\ngga._allele_key_1, as1.symbol as alleleSymbol1," +
-				"\ngga._allele_key_2, as2.symbol as alleleSymbol2," +
-				"\ncase" +
-				"\nwhen (ga._assaytype_key = 6) then 1" +
-				"\nwhen (ga._assaytype_key = 1) then 2" +
-				"\nwhen (ga._assaytype_key = 9) then 3" +
-				"\nwhen (ga._assaytype_key = 2) then 4" +
-				"\nwhen (ga._assaytype_key = 8) then 5" +
-				"\nwhen (ga._assaytype_key = 5) then 6" +
-				"\nwhen (ga._assaytype_key = 4) then 7" +
-				"\nwhen (ga._assaytype_key = 3) then 8" +
-				"\nwhen (ga._assaytype_key = 10) then 9" +
-				"\nwhen (ga._assaytype_key = 11) then 10" +
-				"\nend as assayTypeOrder" +
+				"\ngga._allele_key_2, as2.symbol as alleleSymbol2" +
 				"\nfrom gxd_expression ga" +
 		        	"\nleft outer join voc_term ct on (ga._celltype_term_key = ct._term_key)" +
 		        	"\nleft outer join gxd_specimen gs on (ga._specimen_key = gs._specimen_key)" +
@@ -1442,7 +1431,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		        "\nand ga._marker_key = m._marker_key" +
 		        "\nand ga._assaytype_key = gat._assaytype_key" +
 		        "\nand ga._emapa_term_key = t1._term_key" +		        
-		        "\norder by _stage_key, t1.term, celltype, markerSymbol, assayTypeOrder, accid, specimenLabel";
+		        "\norder by _stage_key, t1.term, celltype, markerSymbol, sequenceNum, accid, specimenLabel";
 		
 		log.info(cmd);	
 		
@@ -1455,6 +1444,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setAssayKey(rs.getString("_assay_key"));
 				domain.setAssayTypeKey(rs.getString("_assaytype_key"));
 				domain.setAssayType(rs.getString("assaytype"));
+				domain.setAssayTypeSequenceNum(rs.getString("sequenceNum"));
 				domain.setCellTypeKey(rs.getString("_celltype_term_key"));
 				domain.setCellType(rs.getString("celltype"));
 				domain.setExpressed(rs.getString("expressed"));

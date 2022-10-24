@@ -1442,7 +1442,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		        "\nand ga._marker_key = m._marker_key" +
 		        "\nand ga._assaytype_key = gat._assaytype_key" +
 		        "\nand ga._emapa_term_key = t1._term_key" +		        
-		        "\norder by _stage_key, term, celltype, symbol, assayTypeOrder, accid, specimenLabel";
+		        "\norder by _stage_key, t1.term, celltype, symbol, assayTypeOrder, accid, specimenLabel";
 		
 		log.info(cmd);	
 		

@@ -66,7 +66,13 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 			entity.setComments(null);
 		}
 		else {
-			entity.setComments(domain.getComments());
+			String note = DecodeString.setDecodeToLatin9(domain.getComments());
+			if (note.isEmpty()) {
+				entity.setComments(null);
+			}
+			else {
+				entity.setComments(note);
+			}
 		}
 		
 		entity.setCreatedBy(user);
@@ -114,7 +120,6 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 			}
 			else {
 				entity.setComments(note);
-		
 			}
 		}
 		

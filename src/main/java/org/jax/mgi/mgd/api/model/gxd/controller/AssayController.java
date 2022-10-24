@@ -17,6 +17,7 @@ import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeReplaceDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimCellTypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SummaryResultDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.AssayService;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberCellTypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberEmapaDomain;
@@ -265,4 +266,19 @@ public class AssayController extends BaseController<AssayDomain> {
 		return results;
 	}
 	
+	@POST
+	@ApiOperation(value = "Get list of summary result domains by reference jnumid")
+	@Path("/getSummaryResultByRef")
+	public List<SummaryResultDomain> getSummaryResultByRef(String jnumid) {
+		
+		List<SummaryResultDomain> results = new ArrayList<SummaryResultDomain>();
+
+		try {
+			results = assayService.getSummaryResultByRef(jnumid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
 }

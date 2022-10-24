@@ -1402,7 +1402,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nga.age, ga.strength, ga.expressed, ga.resultnote," +
 				"\naa.jnumid," +
 				"\ngat.assaytype," +
-				"\nm.symbol," +
+				"\nm.symbol as markerSymbol," +
 				"\nct.term as celltype," +
 				"\n'TS' || ga._stage_key || ':' || t1.term as structure," +
 				"\ngs.specimenLabel," +

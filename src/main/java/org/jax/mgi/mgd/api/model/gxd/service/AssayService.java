@@ -1407,8 +1407,8 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\n'TS' || ga._stage_key || ':' || t1.term as structure," +
 				"\ngs.specimenLabel," +
 				"\ngg.isconditional," +
-				"\ngga._Allele_key_1 as alleleKey1, as1.symbol as asymbol1," +
-				"\ngga._Allele_key_2 as alleleKey2, as2.symbol as asymbol2" +
+				"\ngga._allele_key_1, as1.symbol as alleleSymbol1," +
+				"\ngga._allele_key_2, as2.symbol as alleleSymbol2" +
 				"\nfrom gxd_expression ga" +
 		        	"\nleft outer join voc_term ct on (ga._celltype_term_key = ct._term_key)" +
 		        	"\nleft outer join gxd_specimen gs on (ga._specimen_key = gs._specimen_key)" +
@@ -1449,8 +1449,8 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setJnumid(rs.getString("jnumid"));
 				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setMarkerSymbol(rs.getString("markerSymbol"));
-				domain.setAlleleKey1(rs.getString("alleleKey1"));
-				domain.setAlleleKey2(rs.getString("alleleKey2"));
+				domain.setAlleleKey1(rs.getString("_allele_key_1"));
+				domain.setAlleleKey2(rs.getString("_allele_key_2"));
 				domain.setAlleleSymbol1(rs.getString("alleleSymbol1"));
 				domain.setAlleleSymbol2(rs.getString("alleleSymbol2"));			
 				domain.setRefsKey(rs.getString("_refs_key"));

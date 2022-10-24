@@ -1400,6 +1400,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		String cmd = "\nselect a.accid, ga._assay_key, ga._refs_key, ga._assaytype_key, ga._marker_key, ga._celltype_term_key," +
 				"\nga.age, ga.strength, ga.expressed, ga.resultnote," +
+				"\naa.jnumid," +
 				"\ngat.assaytype," +
 				"\nm.symbol," +
 				"\nct.term as celltype," +

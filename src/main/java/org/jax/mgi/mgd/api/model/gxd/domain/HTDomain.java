@@ -64,6 +64,8 @@ public class HTDomain extends BaseDomain {
 	private int deletingSamples;
 	private int modifyingSamples;
 	private int hasSamples;
-	private String hasBioreplicate;
+	
+	// indicates the experiment has samples that are used to create bioreplicates for the RNA-Seq load.
+	private String hasBioreplicate;		
 
 }

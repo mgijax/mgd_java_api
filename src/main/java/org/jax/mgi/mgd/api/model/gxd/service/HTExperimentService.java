@@ -191,7 +191,7 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		if ( entity != null) {
 			domain = translator.translate(entity); 
 			
-	        // determine isBioreplicate
+	        // indicates the experiment has samples that are used to create bioreplicates for the RNA-Seq load.
 			String cmd = "select case when exists (select 1 from mgi_setmember s, acc_accession a" + 
 					"\nwhere s._set_key = 1057" + 
 					"\nand s._object_key = a._object_key" + 

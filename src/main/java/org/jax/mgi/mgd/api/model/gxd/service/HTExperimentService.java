@@ -190,6 +190,27 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		HTExperiment entity = htExperimentDAO.get(key);
 		if ( entity != null) {
 			domain = translator.translate(entity); 
+			
+	        // determine isBioreplicate
+			String cmd = "select case when exists (select 1 from mgi_setmember s, acc_accession a" + 
+					"\nwhere s._set_key = 1057" + 
+					"\nand s._object_key = a._object_key" + 
+					"\nand a._mgitype_key = 42" + 
+					"\nand a._logicaldb_key = 189" +
+					"\nand s._object_key = " + key + ")" +
+					"\nthen 1 else 0 end as isBioreplicate";
+					
+	    	log.info(cmd);	
+	    	try {
+	    		ResultSet rs = sqlExecutor.executeProto(cmd);
+	    		while (rs.next()) {
+	    			domain.setIsBioreplicate(rs.getInt("isBioreplicate"));
+	    		}
+	    		sqlExecutor.cleanup();
+	    	}
+	    	catch (Exception e) {
+	    		e.printStackTrace();
+	    	}			
 		}
 		return domain;
 	}

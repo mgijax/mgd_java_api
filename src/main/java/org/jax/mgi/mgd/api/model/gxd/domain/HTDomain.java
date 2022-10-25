@@ -64,6 +64,6 @@ public class HTDomain extends BaseDomain {
 	private int deletingSamples;
 	private int modifyingSamples;
 	private int hasSamples;
-	private int hasBioreplicate;
+	private String hasBioreplicate;
 
 }

@@ -204,7 +204,7 @@ public class HTExperimentService extends BaseService<HTDomain> {
 	    	try {
 	    		ResultSet rs = sqlExecutor.executeProto(cmd);
 	    		while (rs.next()) {
-	    			domain.setHasBioreplicate(rs.getInt("hasBioreplicate"));
+	    			domain.setHasBioreplicate(rs.getString("hasBioreplicate"));
 	    		}
 	    		sqlExecutor.cleanup();
 	    	}

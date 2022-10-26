@@ -1312,6 +1312,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		log.info("updateReferenceBulk()");
 
+		// operations for bulk reference
+		String OP_ADD_WORKFLOW = "add";
+		// created but not used
+		//String OP_REMOVE_WORKFLOW = "remove";
+		
 		// if no references or no tags, return null
 		if ((listOfRefsKey == null) || (listOfRefsKey.size() == 0) || (workflowTag == null) || (workflowTag.length() == 0)) {
 			return; 
@@ -1319,7 +1324,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		// if no workflow tag operation is specified, default to 'add'
 		if ((workflow_tag_operation == null) || workflow_tag_operation.equals("")) {
-			workflow_tag_operation = Constants.OP_ADD_WORKFLOW;
+			workflow_tag_operation = OP_ADD_WORKFLOW;
 		}
 		
 		// get tagTermKey by termService.searchByTerm()
@@ -1331,7 +1336,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		for (String refsKey : listOfRefsKey) {
 			Reference entity = referenceDAO.get(Integer.valueOf(refsKey));
-			if (workflow_tag_operation.equals(Constants.OP_ADD_WORKFLOW)) {
+			if (workflow_tag_operation.equals(OP_ADD_WORKFLOW)) {
 				if (!workflowTag.isEmpty()) {
 					addTag(entity, tagTermKey, user);
 				}

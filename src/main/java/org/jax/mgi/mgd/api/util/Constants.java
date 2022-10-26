@@ -30,10 +30,6 @@ public class Constants {
 	// qualifier 'Generic Annotation Qualifier', value = null	
 	public static String VOC_GENERIC_ANNOTATION_QUALIFIER = "1614158";
 	
-	// operations for bulk reference operations
-	public static String OP_ADD_WORKFLOW = "add";
-	public static String OP_REMOVE_WORKFLOW = "remove";
-	
 	// default database user, if no other is specified
 	public static String DEFAULT_USER = "mgd_dbo";
 	

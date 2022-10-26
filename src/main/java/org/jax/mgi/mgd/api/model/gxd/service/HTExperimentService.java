@@ -425,7 +425,6 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			where = where + "\nand htev" + Integer.toString(varJoinCount) + "._term_key = " + varDom.getTermKey();
         }
 
-
 		// log for easy copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info(cmd);
@@ -434,10 +433,10 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SlimHTDomain domain = new SlimHTDomain();
-
 				domain.set_experiment_key(rs.getString("_experiment_key"));
 				domain.setPrimaryid(rs.getString("accid"));
 				domain.set_curationstate_key(rs.getString("_curationstate_key"));
+//				this is now handled in the PWI
 //				if (rs.getString("_curationstate_key").equals("20475421")){
 //					domain.setPrimaryid(rs.getString("accid") + "*");
 //				}

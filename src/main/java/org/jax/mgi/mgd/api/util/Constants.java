@@ -1,23 +1,6 @@
 package org.jax.mgi.mgd.api.util;
 
 public class Constants {
-	
-	// reference workflow group abbreviations
-	public static String WG_GO = "GO";
-	public static String WG_GXD = "GXD";
-	public static String WG_AP = "AP";
-	public static String WG_TUMOR = "Tumor";
-	public static String WG_PRO = "PRO";
-	public static String WG_QTL = "QTL";
-		
-	// reference workflow statuses
-	public static String WS_CHOSEN = "Chosen";
-	public static String WS_FULLCODED = "Full-coded";
-	public static String WS_INDEXED = "Indexed";
-	public static String WS_NOT_ROUTED = "Not Routed";
-	public static String WS_REJECTED = "Rejected";
-	public static String WS_ROUTED = "Routed";
-	public static String WS_NEW = "New";
 
 	// HTTP status codes
 	public static Integer HTTP_OK = 200;

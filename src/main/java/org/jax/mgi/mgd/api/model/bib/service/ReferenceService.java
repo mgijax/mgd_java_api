@@ -79,6 +79,23 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
+	// reference workflow statuses
+	private String WS_CHOSEN = "Chosen";
+	private String WS_FULLCODED = "Full-coded";
+	private String WS_INDEXED = "Indexed";
+	private String WS_NOT_ROUTED = "Not Routed";
+	private String WS_REJECTED = "Rejected";
+	private String WS_ROUTED = "Routed";
+	private String WS_NEW = "New";
+	
+	// reference workflow group abbreviations
+	private String WG_GO = "GO";
+	private String WG_GXD = "GXD";
+	private String WG_AP = "AP";
+	private String WG_TUMOR = "Tumor";
+	private String WG_PRO = "PRO";
+	private String WG_QTL = "QTL";
+	
 	@Transactional
 	public SearchResults<ReferenceDomain> create(ReferenceDomain domain, User user) {
 		// create new entity object from in-coming domain
@@ -1569,12 +1586,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		log.info("applyWorkflowStatusChanges()");
 		
 		// process add/modify for each group
-		boolean anyChanges = updateWorkflowStatus(entity, Constants.WG_AP, domain.getAp_status(), user);
-		anyChanges = updateWorkflowStatus(entity, Constants.WG_GO, domain.getGo_status(), user) || anyChanges;
-		anyChanges = updateWorkflowStatus(entity, Constants.WG_GXD, domain.getGxd_status(), user) || anyChanges;
-		anyChanges = updateWorkflowStatus(entity, Constants.WG_PRO, domain.getPro_status(), user) || anyChanges;
-		anyChanges = updateWorkflowStatus(entity, Constants.WG_QTL, domain.getQtl_status(), user) || anyChanges;
-		anyChanges = updateWorkflowStatus(entity, Constants.WG_TUMOR, domain.getTumor_status(), user) || anyChanges;
+		boolean anyChanges = updateWorkflowStatus(entity, WG_AP, domain.getAp_status(), user);
+		anyChanges = updateWorkflowStatus(entity, WG_GO, domain.getGo_status(), user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, WG_GXD, domain.getGxd_status(), user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, WG_PRO, domain.getPro_status(), user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, WG_QTL, domain.getQtl_status(), user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, WG_TUMOR, domain.getTumor_status(), user) || anyChanges;
 
 		// if any changes were made...
 		if (anyChanges) {
@@ -1588,29 +1605,29 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				
 				boolean addJnumid = false;
 
-				if (domain.getAp_status().equals(Constants.WS_CHOSEN)
-					|| domain.getAp_status().equals(Constants.WS_INDEXED)
-					|| domain.getAp_status().equals(Constants.WS_FULLCODED)
+				if (domain.getAp_status().equals(WS_CHOSEN)
+					|| domain.getAp_status().equals(WS_INDEXED)
+					|| domain.getAp_status().equals(WS_FULLCODED)
 
-					|| domain.getGo_status().equals(Constants.WS_CHOSEN)
-					|| domain.getGo_status().equals(Constants.WS_INDEXED)
-					|| domain.getGo_status().equals(Constants.WS_FULLCODED)
+					|| domain.getGo_status().equals(WS_CHOSEN)
+					|| domain.getGo_status().equals(WS_INDEXED)
+					|| domain.getGo_status().equals(WS_FULLCODED)
 					
-					|| domain.getGxd_status().equals(Constants.WS_CHOSEN)
-					|| domain.getGxd_status().equals(Constants.WS_INDEXED)
-					|| domain.getGxd_status().equals(Constants.WS_FULLCODED)
+					|| domain.getGxd_status().equals(WS_CHOSEN)
+					|| domain.getGxd_status().equals(WS_INDEXED)
+					|| domain.getGxd_status().equals(WS_FULLCODED)
 				
-					|| domain.getPro_status().equals(Constants.WS_CHOSEN)
-					|| domain.getPro_status().equals(Constants.WS_INDEXED)
-					|| domain.getPro_status().equals(Constants.WS_FULLCODED)
+					|| domain.getPro_status().equals(WS_CHOSEN)
+					|| domain.getPro_status().equals(WS_INDEXED)
+					|| domain.getPro_status().equals(WS_FULLCODED)
 
-					|| domain.getQtl_status().equals(Constants.WS_CHOSEN)
-					|| domain.getQtl_status().equals(Constants.WS_INDEXED)
-					|| domain.getQtl_status().equals(Constants.WS_FULLCODED)
+					|| domain.getQtl_status().equals(WS_CHOSEN)
+					|| domain.getQtl_status().equals(WS_INDEXED)
+					|| domain.getQtl_status().equals(WS_FULLCODED)
 	
-					|| domain.getTumor_status().equals(Constants.WS_CHOSEN)
-					|| domain.getTumor_status().equals(Constants.WS_INDEXED)
-					|| domain.getTumor_status().equals(Constants.WS_FULLCODED)
+					|| domain.getTumor_status().equals(WS_CHOSEN)
+					|| domain.getTumor_status().equals(WS_INDEXED)
+					|| domain.getTumor_status().equals(WS_FULLCODED)
 					) {
 						addJnumid = true;
 				}
@@ -1659,22 +1676,22 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 //		  31576667 | Tumor
 
 		Integer groupTermKey = 0;
-		if (groupAbbrev.equals(Constants.WG_AP)) {
+		if (groupAbbrev.equals(WG_AP)) {
 			groupTermKey = 31576664;
 		}		
-		else if (groupAbbrev.equals(Constants.WG_GXD)) {
+		else if (groupAbbrev.equals(WG_GXD)) {
 			groupTermKey = 31576665;
 		}
-		else if (groupAbbrev.equals(Constants.WG_GO)) {
+		else if (groupAbbrev.equals(WG_GO)) {
 			groupTermKey = 31576666;
 		}
-		else if (groupAbbrev.equals(Constants.WG_PRO)) {
+		else if (groupAbbrev.equals(WG_PRO)) {
 			groupTermKey = 78678148;
 		}
-		else if (groupAbbrev.equals(Constants.WG_QTL)) {
+		else if (groupAbbrev.equals(WG_QTL)) {
 			groupTermKey = 31576668;
 		}		
-		else if (groupAbbrev.equals(Constants.WG_TUMOR)) {
+		else if (groupAbbrev.equals(WG_TUMOR)) {
 			groupTermKey = 31576667;
 		}	
 		
@@ -1687,25 +1704,25 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 //		  31576669 | Not Routed
 	
 		Integer newStatusKey = 0;
-		if (newStatus.equals(Constants.WS_CHOSEN)) {
+		if (newStatus.equals(WS_CHOSEN)) {
 			newStatusKey = 31576671;
 		}
-		else if (newStatus.equals(Constants.WS_FULLCODED)) {
+		else if (newStatus.equals(WS_FULLCODED)) {
 			newStatusKey = 31576674;
 		}
-		else if (newStatus.equals(Constants.WS_INDEXED)) {
+		else if (newStatus.equals(WS_INDEXED)) {
 			newStatusKey = 31576673;
 		}
-		else if (newStatus.equals(Constants.WS_REJECTED)) {
+		else if (newStatus.equals(WS_REJECTED)) {
 			newStatusKey = 31576672;
 		}
-		else if (newStatus.equals(Constants.WS_ROUTED)) {
+		else if (newStatus.equals(WS_ROUTED)) {
 			newStatusKey = 31576670;
 		}
-		else if (newStatus.equals(Constants.WS_NEW)) {
+		else if (newStatus.equals(WS_NEW)) {
 			newStatusKey = 71027551;
 		}
-		else if (newStatus.equals(Constants.WS_NOT_ROUTED)) {
+		else if (newStatus.equals(WS_NOT_ROUTED)) {
 			newStatusKey = 31576669;
 		}
 		

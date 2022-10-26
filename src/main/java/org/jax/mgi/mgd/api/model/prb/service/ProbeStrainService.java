@@ -806,11 +806,11 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 
 		//per wts2-1025, remove Allele from this check
 		//"\nand not exists (select 1 from ALL_Allele a where s._Strain_key = a._Strain_key)" +
+		//"\nand not exists (select 1 from PRB_Strain_Marker a where s._Strain_key = a._Strain_key)" +
 
 		String cmd = "select s.* from prb_strain s" +
 				"\nwhere s.private = 0" +
 				"\nand not exists (select 1 from PRB_Strain_Genotype a where s._Strain_key = a._Strain_key)" +
-				"\nand not exists (select 1 from PRB_Strain_Marker a where s._Strain_key = a._Strain_key)" +
 				"\nand not exists (select 1 from ALL_CellLine a where s._Strain_key = a._Strain_key)" +
 				"\nand not exists (select 1 from ALL_Variant a where s._Strain_key = a._Strain_key)" +
 				"\nand not exists (select 1 from GXD_Genotype a where s._Strain_key = a._Strain_key)" +

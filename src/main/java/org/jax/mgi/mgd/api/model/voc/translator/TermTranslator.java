@@ -27,7 +27,6 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setTermKey(String.valueOf(entity.get_term_key()));
 		domain.setVocabKey(String.valueOf(entity.get_vocab_key()));
-		domain.setVocabName(entity.getVocab().getName());
 		domain.setTerm(entity.getTerm());
 		domain.setAbbreviation(entity.getAbbreviation());
 		domain.setNote(entity.getNote());
@@ -42,6 +41,8 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		
 		// set hasDAG (select distinct v.* from VOC_VocabDAG d, VOC_Vocab v where d._vocab_key = v._vocab_key)
 		if (entity.getVocab() != null) {
+			domain.setVocabName(entity.getVocab().getName());
+
 			if (entity.getVocab().getVocabDAG() != null && !entity.getVocab().getVocabDAG().isEmpty()) {
 				domain.setHasDAG(true);
 			}

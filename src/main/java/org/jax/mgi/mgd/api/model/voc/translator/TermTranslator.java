@@ -41,11 +41,13 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
 		// set hasDAG (select distinct v.* from VOC_VocabDAG d, VOC_Vocab v where d._vocab_key = v._vocab_key)
-		if (entity.getVocab().getVocabDAG() != null && !entity.getVocab().getVocabDAG().isEmpty()) {
-			domain.setHasDAG(true);
-		}
-		else {
-			domain.setHasDAG(false);
+		if (entity.getVocab() != null) {
+			if (entity.getVocab().getVocabDAG() != null && !entity.getVocab().getVocabDAG().isEmpty()) {
+				domain.setHasDAG(true);
+			}
+			else {
+				domain.setHasDAG(false);
+			}
 		}
 		
 		if (entity.getAccessionIds() != null && !entity.getAccessionIds().isEmpty()) {

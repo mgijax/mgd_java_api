@@ -37,11 +37,7 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		domain.setAbbreviation(entity.getAbbreviation());
 		domain.setNote(entity.getNote());
 		domain.setSequenceNum(String.valueOf(entity.getSequenceNum()));
-		
-		log.info("isobsolete");
 		domain.setIsObsolete(String.valueOf(entity.getIsObsolete()));
-		
-		log.info("creation/modification");
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());
@@ -51,11 +47,13 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		
 		log.info("hasdag");
 		// set hasDAG (select distinct v.* from VOC_VocabDAG d, VOC_Vocab v where d._vocab_key = v._vocab_key)
-		if (entity.getVocab().getVocabDAG() != null && !entity.getVocab().getVocabDAG().isEmpty()) {
-			domain.setHasDAG(true);
-		}
-		else {
-			domain.setHasDAG(false);
+		if (entity.getVocab() != null) {
+			if (entity.getVocab().getVocabDAG() != null && !entity.getVocab().getVocabDAG().isEmpty()) {
+				domain.setHasDAG(true);
+			}
+			else {
+				domain.setHasDAG(false);
+			}
 		}
 		
 		log.info("accession ids");

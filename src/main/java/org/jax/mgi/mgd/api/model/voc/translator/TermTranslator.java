@@ -29,12 +29,14 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		
 		log.info("term key");
 		domain.setTermKey(String.valueOf(entity.get_term_key()));
-		log.info("vocabkey");
+		log.info("vocabkey 1" + entity.get_vocab_key());
+		log.info("vocabkey 2" + entity.getVocab().get_vocab_key());
 		domain.setVocabKey(String.valueOf(entity.get_vocab_key()));
 		log.info("name");
 		domain.setVocabName(entity.getVocab().getName());
 		log.info("term");
 		domain.setTerm(entity.getTerm());
+		
 		log.info("abbrev");
 		domain.setAbbreviation(entity.getAbbreviation());
 		log.info("note");
@@ -43,6 +45,7 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		domain.setSequenceNum(String.valueOf(entity.getSequenceNum()));
 		log.info("isobsolete");
 		domain.setIsObsolete(String.valueOf(entity.getIsObsolete()));
+		
 		
 		log.info("creation/modification");
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());

@@ -26,24 +26,18 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setTermKey(String.valueOf(entity.get_term_key()));
-		log.info("vocabkey 1" + entity.get_vocab_key());
-		log.info("vocabkey 2" + entity.getVocab().get_vocab_key());
 		domain.setVocabKey(String.valueOf(entity.get_vocab_key()));
-		log.info("name");
-		domain.setVocabName(entity.getVocab().getName());
-		log.info("term");
+		
+		if (entity.getVocab() != null) {
+			log.info("name");
+			domain.setVocabName(entity.getVocab().getName());
+		}
+		
 		domain.setTerm(entity.getTerm());
-		log.info("abbrev");
 		domain.setAbbreviation(entity.getAbbreviation());
-		log.info("note");
 		domain.setNote(entity.getNote());
-		log.info("sequencenum");
 		domain.setSequenceNum(String.valueOf(entity.getSequenceNum()));
-		log.info("isobsolete");
 		domain.setIsObsolete(String.valueOf(entity.getIsObsolete()));
-		
-		
-		log.info("creation/modification");
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy().getLogin());
 		domain.setModifiedByKey(entity.getModifiedBy().get_user_key().toString());

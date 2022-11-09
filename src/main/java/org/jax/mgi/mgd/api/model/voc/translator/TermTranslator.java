@@ -45,7 +45,6 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
-		log.info("hasdag");
 		// set hasDAG (select distinct v.* from VOC_VocabDAG d, VOC_Vocab v where d._vocab_key = v._vocab_key)
 		if (entity.getVocab() != null) {
 			if (entity.getVocab().getVocabDAG() != null && !entity.getVocab().getVocabDAG().isEmpty()) {
@@ -56,7 +55,6 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 			}
 		}
 		
-		log.info("accession ids");
 		if (entity.getAccessionIds() != null && !entity.getAccessionIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getAccessionIds());		
 			if (acc.iterator().hasNext() == true) {			
@@ -64,14 +62,12 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 			}
 		}
 		
-		log.info("secondary acc");
 		// one-to-many secondary accession ids
 		if (entity.getAccessionSecondaryIds() != null && !entity.getAccessionSecondaryIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getAccessionSecondaryIds());		
 			domain.setAccessionSecondaryIds(IteratorUtils.toList(acc.iterator()));
 		}
 		
-		log.info("godag");
 		// GO-DAG-abbreviation
 		if (entity.getGoDagNodes() != null && !entity.getGoDagNodes().isEmpty()) {
 			domain.setGoDagAbbrev(entity.getGoDagNodes().get(0).getDag().getAbbreviation().trim());
@@ -79,19 +75,16 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		
         // one-to-many term synonyms
 	
-		log.info("synonym");
 	    if (entity.getSynonyms() != null && !entity.getSynonyms().isEmpty()) {
             Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getSynonyms());
             domain.setSynonyms(IteratorUtils.toList(i.iterator()));
             domain.getSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
         }
-	    log.info("gorelsyn");
         if (entity.getGoRelSynonyms() != null && !entity.getGoRelSynonyms().isEmpty()) {
             Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getGoRelSynonyms());
             domain.setGoRelSynonyms(IteratorUtils.toList(i.iterator()));
             domain.getGoRelSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
         }
-        log.info("celltypesyn");
         if (entity.getCelltypeSynonyms() != null && !entity.getCelltypeSynonyms().isEmpty()) {
     	   	Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getCelltypeSynonyms());
     	   	domain.setCelltypeSynonyms(IteratorUtils.toList(i.iterator()));

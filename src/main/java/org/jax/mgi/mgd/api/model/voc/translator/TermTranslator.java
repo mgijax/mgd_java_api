@@ -29,10 +29,13 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		domain.setVocabKey(String.valueOf(entity.get_vocab_key()));
 		
 		if (entity.getVocab() != null) {
-			log.info("name");
+			log.info("vocab 1 :" + entity.get_vocab_key());
+			log.info("vocab 2: " + entity.getVocab().get_vocab_key());
+			log.info("name 2:" + entity.getVocab().getName());
 			domain.setVocabName(entity.getVocab().getName());
 		}
 		
+		log.info("term");
 		domain.setTerm(entity.getTerm());
 		domain.setAbbreviation(entity.getAbbreviation());
 		domain.setNote(entity.getNote());

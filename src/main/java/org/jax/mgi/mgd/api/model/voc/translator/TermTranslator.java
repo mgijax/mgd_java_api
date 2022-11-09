@@ -40,6 +40,7 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
+		log.info("term vocabDAG");
 		// set hasDAG (select distinct v.* from VOC_VocabDAG d, VOC_Vocab v where d._vocab_key = v._vocab_key)
 		if (entity.getVocab().getVocabDAG() != null && !entity.getVocab().getVocabDAG().isEmpty()) {
 			domain.setHasDAG(true);
@@ -48,6 +49,7 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 			domain.setHasDAG(false);
 		}
 		
+		log.info("term accession ids");
 		if (entity.getAccessionIds() != null && !entity.getAccessionIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getAccessionIds());		
 			if (acc.iterator().hasNext() == true) {			

@@ -61,7 +61,6 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 			domain.setAccessionSecondaryIds(IteratorUtils.toList(acc.iterator()));
 		}
 		
-		log.info("GO-DAG");
 		// GO-DAG-abbreviation
 		if (entity.getGoDagNodes() != null && !entity.getGoDagNodes().isEmpty()) {
 			domain.setGoDagAbbrev(entity.getGoDagNodes().get(0).getDag().getAbbreviation().trim());
@@ -69,27 +68,22 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		
         // one-to-many term synonyms
 	
-		log.info("getSynonyms");
 	    if (entity.getSynonyms() != null && !entity.getSynonyms().isEmpty()) {
             Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getSynonyms());
             domain.setSynonyms(IteratorUtils.toList(i.iterator()));
             domain.getSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
         }
-	    log.info("getGoRelSynonyns");
         if (entity.getGoRelSynonyms() != null && !entity.getGoRelSynonyms().isEmpty()) {
             Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getGoRelSynonyms());
             domain.setGoRelSynonyms(IteratorUtils.toList(i.iterator()));
             domain.getGoRelSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
         }
-        log.info("getCelltypeSynonyms");
         if (entity.getCelltypeSynonyms() != null && !entity.getCelltypeSynonyms().isEmpty()) {
     	   	Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getCelltypeSynonyms());
     	   	domain.setCelltypeSynonyms(IteratorUtils.toList(i.iterator()));
     	   	domain.getCelltypeSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
         }
-       
-        log.info("returning term domain");
-       
+              
         return domain;
 	}
 

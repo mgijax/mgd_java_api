@@ -29,6 +29,7 @@ public class VocabularyTranslator extends BaseEntityDomainTranslator<Vocabulary,
 		Iterable<TermDomain> terms = termTranslator.translateEntities(entity.getTerms());
 		domain.setTerms(IteratorUtils.toList(terms.iterator()));
 		
+		log.info("returning vocabulary domain");
 		return domain;
 	}
 }

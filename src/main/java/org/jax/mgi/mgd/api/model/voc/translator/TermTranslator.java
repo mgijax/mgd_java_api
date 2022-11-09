@@ -40,7 +40,6 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
-		log.info("term vocabDAG");
 		// set hasDAG (select distinct v.* from VOC_VocabDAG d, VOC_Vocab v where d._vocab_key = v._vocab_key)
 		if (entity.getVocab().getVocabDAG() != null && !entity.getVocab().getVocabDAG().isEmpty()) {
 			domain.setHasDAG(true);
@@ -49,7 +48,6 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 			domain.setHasDAG(false);
 		}
 		
-		log.info("term accession ids");
 		if (entity.getAccessionIds() != null && !entity.getAccessionIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getAccessionIds());		
 			if (acc.iterator().hasNext() == true) {			
@@ -63,30 +61,36 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 			domain.setAccessionSecondaryIds(IteratorUtils.toList(acc.iterator()));
 		}
 		
+		log.info("GO-DAG");
 		// GO-DAG-abbreviation
 		if (entity.getGoDagNodes() != null && !entity.getGoDagNodes().isEmpty()) {
 			domain.setGoDagAbbrev(entity.getGoDagNodes().get(0).getDag().getAbbreviation().trim());
 		}
 		
-       // one-to-many term synonyms
-		
-	   if (entity.getSynonyms() != null && !entity.getSynonyms().isEmpty()) {
+        // one-to-many term synonyms
+	
+		log.info("getSynonyms");
+	    if (entity.getSynonyms() != null && !entity.getSynonyms().isEmpty()) {
             Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getSynonyms());
             domain.setSynonyms(IteratorUtils.toList(i.iterator()));
             domain.getSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
-       }
-       if (entity.getGoRelSynonyms() != null && !entity.getGoRelSynonyms().isEmpty()) {
+        }
+	    log.info("getGoRelSynonyns");
+        if (entity.getGoRelSynonyms() != null && !entity.getGoRelSynonyms().isEmpty()) {
             Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getGoRelSynonyms());
             domain.setGoRelSynonyms(IteratorUtils.toList(i.iterator()));
             domain.getGoRelSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
-       }
-       if (entity.getCelltypeSynonyms() != null && !entity.getCelltypeSynonyms().isEmpty()) {
+        }
+        log.info("getCelltypeSynonyms");
+        if (entity.getCelltypeSynonyms() != null && !entity.getCelltypeSynonyms().isEmpty()) {
     	   	Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getCelltypeSynonyms());
     	   	domain.setCelltypeSynonyms(IteratorUtils.toList(i.iterator()));
     	   	domain.getCelltypeSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
-       }
+        }
        
-       return domain;
+        log.info("returning term domain");
+       
+        return domain;
 	}
 
 }

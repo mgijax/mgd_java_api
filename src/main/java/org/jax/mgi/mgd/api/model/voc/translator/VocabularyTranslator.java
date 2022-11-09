@@ -19,22 +19,27 @@ public class VocabularyTranslator extends BaseEntityDomainTranslator<Vocabulary,
 		VocabularyDomain domain = new VocabularyDomain();
 		
 		log.info(entity.get_vocab_key());
-		log.info(entity.getLogicalDB());
-		log.info(entity.getName());
-		log.info(entity.getCreation_date());
-		log.info(entity.getIsPrivate());
-		log.info(entity.getIsSimple());
-		log.info(entity.getModification_date());
-		log.info(entity.getReference());
-		log.info(entity.getTerms());
 		domain.setVocabKey(String.valueOf(entity.get_vocab_key()));
+
+		log.info(entity.getIsSimple());
 		domain.setIsSimple(entity.getIsSimple());
+
+		log.info(entity.getIsPrivate());		
 		domain.setIsPrivate(entity.getIsPrivate());
+
+		log.info(entity.getName());
 		domain.setName(entity.getName());
+
+		log.info(entity.getReference());
 		domain.setReference(referenceTranslator.translate(entity.getReference()));
+
+		log.info(entity.getCreation_date());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
+
+		log.info(entity.getModification_date());		
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 			
+		log.info(entity.getTerms());	
 		Iterable<TermDomain> terms = termTranslator.translateEntities(entity.getTerms());
 		domain.setTerms(IteratorUtils.toList(terms.iterator()));
 		

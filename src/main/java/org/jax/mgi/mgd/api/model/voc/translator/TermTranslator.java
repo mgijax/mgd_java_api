@@ -24,10 +24,7 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 	protected TermDomain entityToDomain(Term entity) {
 		TermDomain domain = new TermDomain();
 		
-		log.info("term:" + entity.get_term_key());
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
-		
-		log.info("term key");
 		domain.setTermKey(String.valueOf(entity.get_term_key()));
 		log.info("vocabkey 1" + entity.get_vocab_key());
 		log.info("vocabkey 2" + entity.getVocab().get_vocab_key());
@@ -36,7 +33,6 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 		domain.setVocabName(entity.getVocab().getName());
 		log.info("term");
 		domain.setTerm(entity.getTerm());
-		
 		log.info("abbrev");
 		domain.setAbbreviation(entity.getAbbreviation());
 		log.info("note");

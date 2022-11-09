@@ -2,7 +2,6 @@ package org.jax.mgi.mgd.api.model.voc.translator;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceCitationCacheTranslator;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.VocabularyDomain;
@@ -27,12 +26,9 @@ public class VocabularyTranslator extends BaseEntityDomainTranslator<Vocabulary,
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 		
-		log.info("iterating thru terms");
 		Iterable<TermDomain> terms = termTranslator.translateEntities(entity.getTerms());
-		log.info("iteration complete");
 		domain.setTerms(IteratorUtils.toList(terms.iterator()));
 		
-		log.info("returning vocabulary domain");
 		return domain;
 	}
 }

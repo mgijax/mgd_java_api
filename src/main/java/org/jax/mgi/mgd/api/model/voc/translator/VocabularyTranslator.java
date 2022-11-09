@@ -26,11 +26,9 @@ public class VocabularyTranslator extends BaseEntityDomainTranslator<Vocabulary,
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 			
-		log.info("translate term");
 		Iterable<TermDomain> terms = termTranslator.translateEntities(entity.getTerms());
 		domain.setTerms(IteratorUtils.toList(terms.iterator()));
 		
-		log.info("return domain");
 		return domain;
 	}
 }

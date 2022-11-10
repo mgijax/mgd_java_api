@@ -24,6 +24,7 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 	protected TermDomain entityToDomain(Term entity) {
 		TermDomain domain = new TermDomain();
 		
+		log.info("vocab key:" + entity.get_term_key());
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setTermKey(String.valueOf(entity.get_term_key()));
 		domain.setVocabKey(String.valueOf(entity.get_vocab_key()));
@@ -69,25 +70,25 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 			domain.setGoDagAbbrev(entity.getGoDagNodes().get(0).getDag().getAbbreviation().trim());
 		}
 		
-       // one-to-many term synonyms
-		
-	   if (entity.getSynonyms() != null && !entity.getSynonyms().isEmpty()) {
+        // one-to-many term synonyms
+	
+	    if (entity.getSynonyms() != null && !entity.getSynonyms().isEmpty()) {
             Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getSynonyms());
             domain.setSynonyms(IteratorUtils.toList(i.iterator()));
             domain.getSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
-       }
-       if (entity.getGoRelSynonyms() != null && !entity.getGoRelSynonyms().isEmpty()) {
+        }
+        if (entity.getGoRelSynonyms() != null && !entity.getGoRelSynonyms().isEmpty()) {
             Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getGoRelSynonyms());
             domain.setGoRelSynonyms(IteratorUtils.toList(i.iterator()));
             domain.getGoRelSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
-       }
-       if (entity.getCelltypeSynonyms() != null && !entity.getCelltypeSynonyms().isEmpty()) {
+        }
+        if (entity.getCelltypeSynonyms() != null && !entity.getCelltypeSynonyms().isEmpty()) {
     	   	Iterable<MGISynonymDomain> i = synonymTranslator.translateEntities(entity.getCelltypeSynonyms());
     	   	domain.setCelltypeSynonyms(IteratorUtils.toList(i.iterator()));
     	   	domain.getCelltypeSynonyms().sort(Comparator.comparing(MGISynonymDomain::getSynonymTypeKey).thenComparing(MGISynonymDomain::getSynonym, String.CASE_INSENSITIVE_ORDER));
-       }
-       
-       return domain;
+        }
+              
+        return domain;
 	}
 
 }

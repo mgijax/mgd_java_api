@@ -6,9 +6,11 @@ import org.jax.mgi.mgd.api.model.bib.translator.ReferenceCitationCacheTranslator
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.VocabularyDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Vocabulary;
+import org.jboss.logging.Logger;
 
 public class VocabularyTranslator extends BaseEntityDomainTranslator<Vocabulary, VocabularyDomain> {
 
+	protected Logger log = Logger.getLogger(getClass());
 	private TermTranslator termTranslator = new TermTranslator();
 	private ReferenceCitationCacheTranslator referenceTranslator = new ReferenceCitationCacheTranslator();
 
@@ -23,7 +25,7 @@ public class VocabularyTranslator extends BaseEntityDomainTranslator<Vocabulary,
 		domain.setReference(referenceTranslator.translate(entity.getReference()));
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-			
+		
 		Iterable<TermDomain> terms = termTranslator.translateEntities(entity.getTerms());
 		domain.setTerms(IteratorUtils.toList(terms.iterator()));
 		

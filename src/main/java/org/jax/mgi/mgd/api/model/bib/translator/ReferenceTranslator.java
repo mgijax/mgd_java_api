@@ -17,7 +17,6 @@ import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowStatusDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowTagDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceAssociatedData;
-import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jboss.logging.Logger;
 
@@ -27,6 +26,14 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 	
 	private AccessionTranslator accessionTranslator = new AccessionTranslator();
 
+	// reference workflow group abbreviations
+	private String WG_GO = "GO";
+	private String WG_GXD = "GXD";
+	private String WG_AP = "AP";
+	private String WG_TUMOR = "Tumor";
+	private String WG_PRO = "PRO";
+	private String WG_QTL = "QTL";
+	
 	@Override
 	protected ReferenceDomain entityToDomain(Reference entity) {
 
@@ -141,27 +148,27 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 			domain.setStatusCurrent(IteratorUtils.toList(i.iterator()));
 
 			for (int s = 0; s < domain.getStatusCurrent().size(); s++) {
-				if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_AP)) {
+				if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(WG_AP)) {
 					domain.setAp_status(domain.getStatusCurrent().get(s).getStatus());
 					domain.setAp_statusKey(domain.getStatusCurrent().get(s).getStatusKey());
 				}
-				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_GO)) {
+				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(WG_GO)) {
 					domain.setGo_status(domain.getStatusCurrent().get(s).getStatus());
 					domain.setGo_statusKey(domain.getStatusCurrent().get(s).getStatusKey());
 				}	
-				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_GXD)) {
+				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(WG_GXD)) {
 					domain.setGxd_status(domain.getStatusCurrent().get(s).getStatus());
 					domain.setGxd_statusKey(domain.getStatusCurrent().get(s).getStatusKey());
 				}
-				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_PRO)) {
+				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(WG_PRO)) {
 					domain.setPro_status(domain.getStatusCurrent().get(s).getStatus());
 					domain.setPro_statusKey(domain.getStatusCurrent().get(s).getStatusKey());
 				}	
-				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_QTL)) {
+				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(WG_QTL)) {
 					domain.setQtl_status(domain.getStatusCurrent().get(s).getStatus());
 					domain.setQtl_statusKey(domain.getStatusCurrent().get(s).getStatusKey());
 				}	
-				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(Constants.WG_TUMOR)) {
+				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(WG_TUMOR)) {
 					domain.setTumor_status(domain.getStatusCurrent().get(s).getStatus());
 					domain.setTumor_statusKey(domain.getStatusCurrent().get(s).getStatusKey());
 				}			

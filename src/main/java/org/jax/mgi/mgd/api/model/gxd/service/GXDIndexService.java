@@ -21,6 +21,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
+import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -65,7 +66,13 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 			entity.setComments(null);
 		}
 		else {
-			entity.setComments(domain.getComments());
+			String note = DecodeString.setDecodeToLatin9(domain.getComments());
+			if (note.isEmpty()) {
+				entity.setComments(null);
+			}
+			else {
+				entity.setComments(note);
+			}
 		}
 		
 		entity.setCreatedBy(user);
@@ -101,13 +108,19 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		entity.setReference(referenceDAO.get(Integer.valueOf(domain.getRefsKey())));	
 		entity.setMarker(markerDAO.get(Integer.valueOf(domain.getMarkerKey())));
 		entity.setPriority(termDAO.get(Integer.valueOf(domain.getPriorityKey())));
-		entity.setConditionalMutants(termDAO.get(Integer.valueOf(domain.getConditionalMutantsKey())));
+		entity.setConditionalMutants(termDAO.get(Integer.valueOf(domain.getConditionalMutantsKey())));			
 		
 		if (domain.getComments() == null || domain.getComments().isEmpty()) {
 			entity.setComments(null);
 		}
 		else {
-			entity.setComments(domain.getComments());
+			String note = DecodeString.setDecodeToLatin9(domain.getComments());
+			if (note.isEmpty()) {
+				entity.setComments(null);
+			}
+			else {
+				entity.setComments(note);
+			}
 		}
 		
 		// process gxd_indexstages

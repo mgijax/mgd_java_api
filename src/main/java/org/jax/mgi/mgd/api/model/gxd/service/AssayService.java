@@ -24,6 +24,7 @@ import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeReplaceDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimCellTypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SummaryResultDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
 import org.jax.mgi.mgd.api.model.gxd.translator.AssayTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimAssayTranslator;
@@ -1139,7 +1140,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setTerm(rs.getString("term"));
 				domain.setCreatedByKey(rs.getString("createdByKey"));
 				domain.setCreatedBy(rs.getString("login"));
-				
+	
 				displayIt = rs.getString("displayIt").replaceAll("\\(1\\)", "");
 				domain.setDisplayIt(displayIt);
 
@@ -1381,6 +1382,86 @@ public class AssayService extends BaseService<AssayDomain> {
 				assayDAO.clear();
 				results.add(domain);
 				assayDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}	
+	
+	@Transactional	
+	public List<SummaryResultDomain> getSummaryResultByRef(String jnumid) {
+		// return list of summary results domains by reference jnum id
+
+		List<SummaryResultDomain> results = new ArrayList<SummaryResultDomain>();
+		
+		String cmd = "\nselect a.accid, ga._assay_key, ga._refs_key, ga._assaytype_key, ga._marker_key, ga._celltype_term_key," +
+				"\nga.age, ga.strength, ga.expressed, ga.resultnote," +
+				"\naa.jnumid," +
+				"\ngat.assaytype," +
+				"\ngat.sequenceNum," +
+				"\nm.symbol as markerSymbol," +
+				"\nct.term as celltype," +
+				"\n'TS' || ga._stage_key || ':' || t1.term as structure," +
+				"\ngs.specimenLabel," +
+				"\ngg.isconditional," +
+				"\ngga._allele_key_1, as1.symbol as alleleSymbol1," +
+				"\ngga._allele_key_2, as2.symbol as alleleSymbol2" +
+				"\nfrom gxd_expression ga" +
+		        	"\nleft outer join voc_term ct on (ga._celltype_term_key = ct._term_key)" +
+		        	"\nleft outer join gxd_specimen gs on (ga._specimen_key = gs._specimen_key)" +
+		        	"\nleft outer join gxd_genotype gg on (ga._genotype_key = gg._genotype_key)" +
+		        	"\nleft outer join gxd_allelepair gga on (ga._genotype_key = gga._genotype_key)" +
+		        	"\nleft outer join all_allele as1 on (gga._allele_key_1 = as1._allele_key)" +
+		        	"\nleft outer join all_allele as2 on (gga._allele_key_2 = as2._allele_key)" +
+		        	"\n," +
+		        "\nbib_citation_cache aa," +
+		        "\nacc_accession a," +
+		        "\ngxd_assaytype gat," +
+		        "\nmrk_marker m," +
+		        "\nvoc_term t1" +
+		        "\nwhere aa.jnumid = '" + jnumid + "'" +
+		        "\nand aa._refs_key = ga._refs_key" +
+		        "\nand ga._assay_key = a._object_key" +
+		        "\nand a._mgitype_key = 8" +
+		        "\nand a._logicaldb_key = 1" +
+		        "\nand ga._marker_key = m._marker_key" +
+		        "\nand ga._assaytype_key = gat._assaytype_key" +
+		        "\nand ga._emapa_term_key = t1._term_key" +		        
+		        "\norder by _stage_key, t1.term, celltype, markerSymbol, sequenceNum, accid, specimenLabel";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SummaryResultDomain domain = new SummaryResultDomain();
+				domain.setAccID(rs.getString("accid"));
+				domain.setAge(rs.getString("age"));
+				domain.setAssayKey(rs.getString("_assay_key"));
+				domain.setAssayTypeKey(rs.getString("_assaytype_key"));
+				domain.setAssayType(rs.getString("assaytype"));
+				domain.setAssayTypeSequenceNum(rs.getString("sequenceNum"));
+				domain.setCellTypeKey(rs.getString("_celltype_term_key"));
+				domain.setCellType(rs.getString("celltype"));
+				domain.setExpressed(rs.getString("expressed"));
+				domain.setJnumid(rs.getString("jnumid"));
+				domain.setMarkerKey(rs.getString("_marker_key"));
+				domain.setMarkerSymbol(rs.getString("markerSymbol"));
+				domain.setAlleleKey1(rs.getString("_allele_key_1"));
+				domain.setAlleleKey2(rs.getString("_allele_key_2"));
+				domain.setAlleleSymbol1(rs.getString("alleleSymbol1"));
+				domain.setAlleleSymbol2(rs.getString("alleleSymbol2"));			
+				domain.setRefsKey(rs.getString("_refs_key"));
+				domain.setResultNote(rs.getString("resultnote"));
+				domain.setSpecimenLabel(rs.getString("specimenLabel"));
+				domain.setStructure(rs.getString("structure"));
+				domain.setStrength(rs.getString("strength"));
+				results.add(domain);
+				assayDAO.clear();				
 			}
 			sqlExecutor.cleanup();
 		}

@@ -190,6 +190,27 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		HTExperiment entity = htExperimentDAO.get(key);
 		if ( entity != null) {
 			domain = translator.translate(entity); 
+			
+	        // indicates the experiment has samples that are used to create bioreplicates for the RNA-Seq load.
+			String cmd = "select case when exists (select 1 from mgi_setmember s, acc_accession a" + 
+					"\nwhere s._set_key = 1057" + 
+					"\nand s._object_key = a._object_key" + 
+					"\nand a._mgitype_key = 42" + 
+					"\nand a._logicaldb_key = 189" +
+					"\nand s._object_key = " + key + ")" +
+					"\nthen 1 else 0 end as hasBioreplicate";
+					
+	    	log.info(cmd);	
+	    	try {
+	    		ResultSet rs = sqlExecutor.executeProto(cmd);
+	    		while (rs.next()) {
+	    			domain.setHasBioreplicate(rs.getString("hasBioreplicate"));
+	    		}
+	    		sqlExecutor.cleanup();
+	    	}
+	    	catch (Exception e) {
+	    		e.printStackTrace();
+	    	}			
 		}
 		return domain;
 	}
@@ -404,7 +425,6 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			where = where + "\nand htev" + Integer.toString(varJoinCount) + "._term_key = " + varDom.getTermKey();
         }
 
-
 		// log for easy copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info(cmd);
@@ -413,10 +433,10 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SlimHTDomain domain = new SlimHTDomain();
-
 				domain.set_experiment_key(rs.getString("_experiment_key"));
 				domain.setPrimaryid(rs.getString("accid"));
 				domain.set_curationstate_key(rs.getString("_curationstate_key"));
+//				this is now handled in the PWI
 //				if (rs.getString("_curationstate_key").equals("20475421")){
 //					domain.setPrimaryid(rs.getString("accid") + "*");
 //				}

@@ -47,7 +47,8 @@ public class DecodeString {
 	
 	public static String setDecodeToLatin9(String s) {
 		// set any string to UTF-8
-		// also set the single quote to double quote for postgres
+		// trim leading & trailing spaces
+		// set the single quote to double quote for postgres
 
 		if (s == null) {
 			return(s);
@@ -55,7 +56,7 @@ public class DecodeString {
 		
 		String sDecoded = "";
 		try {
-			sDecoded = new String(s.replace("'", "''").getBytes("UTF-8"), "ISO-8859-15");
+			sDecoded = new String(s.replace("'", "''").getBytes("UTF-8"), "ISO-8859-15").trim();
 			return(sDecoded);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();

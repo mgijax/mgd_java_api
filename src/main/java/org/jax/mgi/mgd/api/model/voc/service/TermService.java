@@ -280,9 +280,10 @@ public class TermService extends BaseService<TermDomain> {
 	}
 
     @Transactional
-    public int searchByTerm(TermDomain searchDomain) {
+    public int searchByTerm(TermDomain searchDomain, Boolean clearSQL) {
         // using searchDomain fields, generate SQL command
         // search by _vocab_key and (term or abbreviation)
+    	// clearSQL (true/false) determines if the sqlExecutor will be called (or not)
         // return term key (int)
 
     	int key = 0;
@@ -311,7 +312,9 @@ public class TermService extends BaseService<TermDomain> {
             while (rs.next()) {
                 key = rs.getInt("_term_key");
             }
-			sqlExecutor.cleanup();						
+			if (clearSQL) {            
+				sqlExecutor.cleanup();
+			}
         }
         catch (Exception e) {
         	e.printStackTrace();

@@ -835,6 +835,8 @@ public class ProbeService extends BaseService<ProbeDomain> {
 
 	@Transactional
 	public List<SlimProbeDomain> validateAmpPrimer(SlimProbeDomain searchDomain) {
+		// validate the amp primer 
+		// segmentype of amp primer = "primer" (63473)
 		
 		List<SlimProbeDomain> results = new ArrayList<SlimProbeDomain>();
 		
@@ -847,7 +849,8 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				+ "\nfrom PRB_Acc_View a, PRB_Probe p"
 				+ "\nwhere a.accID = '" + value + "'"
 				+ "\nand a._object_key = p._probe_key"
-				+ "\nand p._segmenttype_key = 63473";		
+				+ "\nand p._segmenttype_key = 63473";
+		
 		log.info(cmd);
 		
 		try {

@@ -394,10 +394,10 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 		// accession id
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {
 			if (!searchDomain.getAccID().startsWith("MGI:")) {
-				where = where + "\nand acc.numericPart = '" + searchDomain.getAccID() + "'";
+				where = where + "\nand a.numericPart = '" + searchDomain.getAccID() + "'";
 			}
 			else {
-				where = where + "\nand acc.accID = '" + searchDomain.getAccID().toUpperCase() + "'";
+				where = where + "\nand a.accID = '" + searchDomain.getAccID().toUpperCase() + "'";
 			}
 			from_accession = true;
 			executeQuery = true;

@@ -1,7 +1,42 @@
+TAG: mgd_java_api-6-0-22-16
+DATE: 11/09/2022
+STAFF: lec
+wts2-1036/Simple Vocab Module - error when adding term to a vocab
+
+TAG: mgd_java_api-6-0-22-15
+TAG: mgd_java_api-6-0-22-14
+DATE: 10/26/2022
+STAFF: lec
+wts2-1025/remove Allele from validateStrainPrivate check
+
+TAG: mgd_java_api-6-0-22-13
+DATE: 10/25/2022
+STAFF: lec
+wts2-1018/HT index: flag on experiments associated with RNA seq data
+
+TAG: mgd_java_api-6-0-22-12
+DATE: 10/20/2022
+STAFF: lec
+wts2-1022/probe alias field: treat "blanking out" field as delete not update
+wts2-1023/ GXD index module comments/notes field: manage unprintable characters
+
+TAG: mgd_java_api-6-0-22-11
+DATE: 10/20/2022
+STAFF: lec
+wts2-1019/PWI: Allele-DO module allele lookup broken
+
+TAG: mgd_java_api-6-0-22-10
+DATE: 10/18/2022
+STAFF: lec
+wts2-1014/problem with defaults in GXD assay module
+
+TAG: mgd_java_api-6-0-22-9
+TAG: mgd_java_api-6-0-22-8
 TAG: mgd_java_api-6-0-22-7
-DATE: 10/12/2022
+DATE: 10/13/2022
 STAFF: lec
 wts2-888/PWI: Move Remaining Pages from Flask+SQLAlchemy to Angular+Java API
+wts2-336/Add field to probes table (TR11933) - back end
 
 TAG: mgd_java_api-6-0-22-6
 TAG: mgd_java_api-6-0-22-5

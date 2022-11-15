@@ -51,6 +51,9 @@ public class TermTranslator extends BaseEntityDomainTranslator<Term, TermDomain>
 				domain.setHasDAG(false);
 			}
 		}
+		else {
+			domain.setHasDAG(false);
+		}
 		
 		if (entity.getAccessionIds() != null && !entity.getAccessionIds().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getAccessionIds());		

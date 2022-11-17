@@ -233,7 +233,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 					markerqtli.add(markerDomain);
 				}
     		}
-    		domain.setQtlInteractionToGene(markerqtlc);
+    		domain.setQtlInteractionToGene(markerqtli);
 			domain.getQtlInteractionToGene().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}
 		if (entity.getGeneToQtlInteraction() != null && !entity.getGeneToQtlInteraction().isEmpty()) {
@@ -246,7 +246,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 					markerqtli.add(markerDomain);
 				}
     		}
-    		domain.setQtlInteractionToGene(markerqtlc);
+    		domain.setQtlInteractionToGene(markerqtli);
 			domain.getQtlInteractionToGene().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}
 		

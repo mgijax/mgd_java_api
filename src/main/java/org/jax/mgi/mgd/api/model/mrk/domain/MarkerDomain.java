@@ -66,6 +66,8 @@ public class MarkerDomain extends BaseDomain {
 	private List<MarkerFeatureTypeDomain> featureTypes;
 	private List<MarkerMCVDirectDomain> featureTypesDirect;
 	private List<SlimMarkerDomain> tssToGene;
+	private List<SlimMarkerDomain> qtlCandidateToGene;
+	private List<SlimMarkerDomain> qtlInteractionToGene;
 	private List<SlimMarkerDomain> aliases;
 	 
 	// exists in domain, but not populated by marker translator

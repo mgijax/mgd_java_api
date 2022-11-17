@@ -23,6 +23,8 @@ import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
+import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipMarkerQTLCandidate;
+import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipMarkerQTLInteraction;
 import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipMarkerTSS;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.seq.entities.SeqMarkerCache;
@@ -169,6 +171,22 @@ public class Marker extends BaseEntity {
 	@JoinColumn(name="_object_key_2", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	private List<RelationshipMarkerTSS> geneToTss;
 
+	@OneToMany()
+	@JoinColumn(name="_object_key_1", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	private List<RelationshipMarkerQTLCandidate> qtlCandidateToGene;
+	
+	@OneToMany()
+	@JoinColumn(name="_object_key_2", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	private List<RelationshipMarkerQTLCandidate> geneToQtlCandidate;
+	
+	@OneToMany()
+	@JoinColumn(name="_object_key_1", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	private List<RelationshipMarkerQTLInteraction> qtlInteractionToGene;
+	
+	@OneToMany()
+	@JoinColumn(name="_object_key_2", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	private List<RelationshipMarkerQTLInteraction> geneToQtlInteraction;
+	
 	@OneToMany()
 	@JoinTable(name = "mrk_alias",	
 		joinColumns = @JoinColumn(name="_alias_key", referencedColumnName="_marker_key", insertable=false, updatable=false),

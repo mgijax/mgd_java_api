@@ -15,7 +15,7 @@ import lombok.Setter;
 @Entity
 @Immutable
 @ApiModel(value = "Relationship Marker QTL Interaction Object")
-@Table(name="mgi_relationship_markertss_view")
+@Table(name="mgi_relationship_markerqtlinteraction_view")
 public class RelationshipMarkerQTLInteraction extends BaseEntity {
 	
 	@Id

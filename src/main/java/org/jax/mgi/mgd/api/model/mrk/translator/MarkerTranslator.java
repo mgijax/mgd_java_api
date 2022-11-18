@@ -217,7 +217,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 					markerqtlc.add(markerDomain);
 				}
     		}
-    		domain.setQtlCandidateToGene(markertss);
+    		domain.setQtlCandidateToGene(markerqtlc);
 			domain.getQtlCandidateToGene().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}
 		

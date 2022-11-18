@@ -207,19 +207,19 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
     		domain.setQtlCandidateToGene(markerqtlc);
 			domain.getQtlCandidateToGene().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}
-		if (entity.getGeneToQtlCandidate() != null && !entity.getGeneToQtlCandidate().isEmpty()) {
-    		Iterable<RelationshipMarkerQTLCandidateDomain> relationships = markerQTLCandidateTranslator.translateEntities(entity.getGeneToQtlCandidate());
-			for (RelationshipMarkerQTLCandidateDomain i : relationships) {
-				if (domain.getMarkerKey().equals(i.getObjectKey2())) {
-					SlimMarkerDomain markerDomain = new SlimMarkerDomain();				
-					markerDomain.setMarkerKey(i.getObjectKey1());
-					markerDomain.setSymbol(i.getSymbol1());
-					markerqtlc.add(markerDomain);
-				}
-    		}
-    		domain.setQtlCandidateToGene(markerqtlc);
-			domain.getQtlCandidateToGene().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
-		}
+//		if (entity.getGeneToQtlCandidate() != null && !entity.getGeneToQtlCandidate().isEmpty()) {
+//    		Iterable<RelationshipMarkerQTLCandidateDomain> relationships = markerQTLCandidateTranslator.translateEntities(entity.getGeneToQtlCandidate());
+//			for (RelationshipMarkerQTLCandidateDomain i : relationships) {
+//				if (domain.getMarkerKey().equals(i.getObjectKey2())) {
+//					SlimMarkerDomain markerDomain = new SlimMarkerDomain();				
+//					markerDomain.setMarkerKey(i.getObjectKey1());
+//					markerDomain.setSymbol(i.getSymbol1());
+//					markerqtlc.add(markerDomain);
+//				}
+//    		}
+//    		domain.setQtlCandidateToGene(markerqtlc);
+//			domain.getQtlCandidateToGene().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
+//		}
 		
 		// one-to-many qtl-interaction-to-gene relationships
 		List<SlimMarkerDomain> markerqtli = new ArrayList<SlimMarkerDomain>();
@@ -233,29 +233,12 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 					log.info(markerDomain.getMarkerKey());
 					log.info(markerDomain.getSymbol());
 					log.info(markerqtli.contains(markerDomain));
-					if (!markerqtli.contains(markerDomain)) {
-						markerqtli.add(markerDomain);
-					}
+					markerqtli.add(markerDomain);
 				}
     		}
     		domain.setQtlInteractionToGene(markerqtli);
 			domain.getQtlInteractionToGene().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}
-//		if (entity.getGeneToQtlInteraction() != null && !entity.getGeneToQtlInteraction().isEmpty()) {
-//    		Iterable<RelationshipMarkerQTLInteractionDomain> relationships = markerQTLInteractionTranslator.translateEntities(entity.getGeneToQtlInteraction());
-//			for (RelationshipMarkerQTLInteractionDomain i : relationships) {
-//				if (domain.getMarkerKey().equals(i.getObjectKey2())) {
-//					SlimMarkerDomain markerDomain = new SlimMarkerDomain();				
-//					markerDomain.setMarkerKey(i.getObjectKey1());
-//					markerDomain.setSymbol(i.getSymbol1());
-//					if (!markerqtli.contains(markerDomain)) {
-//						markerqtli.add(markerDomain);
-//					}
-//				}
-//    		}
-//    		domain.setQtlInteractionToGene(markerqtli);
-//			domain.getQtlInteractionToGene().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
-//		}
 		
 		// one-to-many marker aliases
 		if (entity.getAliases() != null && !entity.getAliases().isEmpty()) {

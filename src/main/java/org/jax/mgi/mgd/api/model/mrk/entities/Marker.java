@@ -181,10 +181,12 @@ public class Marker extends BaseEntity {
 	
 	@OneToMany()
 	@JoinColumn(name="_object_key_1", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	@OrderBy(clause="marker1")
 	private List<RelationshipMarkerQTLInteraction> qtlInteractionToGene;
 	
 	@OneToMany()
 	@JoinColumn(name="_object_key_2", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	@OrderBy(clause="marker2")
 	private List<RelationshipMarkerQTLInteraction> geneToQtlInteraction;
 	
 	@OneToMany()

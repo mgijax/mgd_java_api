@@ -241,21 +241,21 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
     		domain.setQtlInteractionToGene(markerqtli);
 			domain.getQtlInteractionToGene().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}
-		if (entity.getGeneToQtlInteraction() != null && !entity.getGeneToQtlInteraction().isEmpty()) {
-    		Iterable<RelationshipMarkerQTLInteractionDomain> relationships = markerQTLInteractionTranslator.translateEntities(entity.getGeneToQtlInteraction());
-			for (RelationshipMarkerQTLInteractionDomain i : relationships) {
-				if (domain.getMarkerKey().equals(i.getObjectKey2())) {
-					SlimMarkerDomain markerDomain = new SlimMarkerDomain();				
-					markerDomain.setMarkerKey(i.getObjectKey1());
-					markerDomain.setSymbol(i.getSymbol1());
-					if (!markerqtli.contains(markerDomain)) {
-						markerqtli.add(markerDomain);
-					}
-				}
-    		}
-    		domain.setQtlInteractionToGene(markerqtli);
-			domain.getQtlInteractionToGene().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
-		}
+//		if (entity.getGeneToQtlInteraction() != null && !entity.getGeneToQtlInteraction().isEmpty()) {
+//    		Iterable<RelationshipMarkerQTLInteractionDomain> relationships = markerQTLInteractionTranslator.translateEntities(entity.getGeneToQtlInteraction());
+//			for (RelationshipMarkerQTLInteractionDomain i : relationships) {
+//				if (domain.getMarkerKey().equals(i.getObjectKey2())) {
+//					SlimMarkerDomain markerDomain = new SlimMarkerDomain();				
+//					markerDomain.setMarkerKey(i.getObjectKey1());
+//					markerDomain.setSymbol(i.getSymbol1());
+//					if (!markerqtli.contains(markerDomain)) {
+//						markerqtli.add(markerDomain);
+//					}
+//				}
+//    		}
+//    		domain.setQtlInteractionToGene(markerqtli);
+//			domain.getQtlInteractionToGene().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
+//		}
 		
 		// one-to-many marker aliases
 		if (entity.getAliases() != null && !entity.getAliases().isEmpty()) {

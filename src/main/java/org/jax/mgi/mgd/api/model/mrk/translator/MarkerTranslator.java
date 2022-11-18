@@ -207,19 +207,6 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
     		domain.setQtlCandidateToGene(markerqtlc);
 			domain.getQtlCandidateToGene().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}
-//		if (entity.getGeneToQtlCandidate() != null && !entity.getGeneToQtlCandidate().isEmpty()) {
-//    		Iterable<RelationshipMarkerQTLCandidateDomain> relationships = markerQTLCandidateTranslator.translateEntities(entity.getGeneToQtlCandidate());
-//			for (RelationshipMarkerQTLCandidateDomain i : relationships) {
-//				if (domain.getMarkerKey().equals(i.getObjectKey2())) {
-//					SlimMarkerDomain markerDomain = new SlimMarkerDomain();				
-//					markerDomain.setMarkerKey(i.getObjectKey1());
-//					markerDomain.setSymbol(i.getSymbol1());
-//					markerqtlc.add(markerDomain);
-//				}
-//    		}
-//    		domain.setQtlCandidateToGene(markerqtlc);
-//			domain.getQtlCandidateToGene().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
-//		}
 		
 		// one-to-many qtl-interaction-to-gene relationships
 		List<SlimMarkerDomain> markerqtli = new ArrayList<SlimMarkerDomain>();

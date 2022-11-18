@@ -230,7 +230,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 					SlimMarkerDomain markerDomain = new SlimMarkerDomain();				
 					markerDomain.setMarkerKey(i.getObjectKey2());
 					markerDomain.setSymbol(i.getSymbol2());
-					if (markerqtli.contains(markerDomain) == false) {
+					if (!markerqtli.contains(markerDomain)) {
 						markerqtli.add(markerDomain);
 					}
 				}
@@ -245,7 +245,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 					SlimMarkerDomain markerDomain = new SlimMarkerDomain();				
 					markerDomain.setMarkerKey(i.getObjectKey1());
 					markerDomain.setSymbol(i.getSymbol1());
-					if (markerqtli.contains(markerDomain) == false) {
+					if (!markerqtli.contains(markerDomain)) {
 						markerqtli.add(markerDomain);
 					}
 				}

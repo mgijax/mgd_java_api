@@ -132,6 +132,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			entity.setJournal(null);
 		}
 		else {
+			domain.setJournal(domain.getJournal().replaceAll(".$", ""));
 			entity.setJournal(domain.getJournal());
 		}
 		
@@ -1511,6 +1512,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				entity.setJournal(null);
 			}
 			else {
+				domain.setJournal(domain.getJournal().replaceAll(".$", ""));
 				entity.setJournal(domain.getJournal());
 			}
 			

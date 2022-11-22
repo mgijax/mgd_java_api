@@ -201,12 +201,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 					SlimMarkerDomain markerDomain = new SlimMarkerDomain();				
 					markerDomain.setMarkerKey(i.getObjectKey2());
 					markerDomain.setSymbol(i.getSymbol2());
-					log.info(markerDomain.getMarkerKey());
-					log.info(markerDomain.getSymbol());
-					log.info(markerqtlc.toString());
-					if (markerqtlc.contains(markerDomain) == false) {
-						markerqtlc.add(markerDomain);
-					}
+					markerqtlc.add(markerDomain);
 				}
     		}
     		domain.setQtlCandidateToGene(markerqtlc);
@@ -219,9 +214,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 					SlimMarkerDomain markerDomain = new SlimMarkerDomain();				
 					markerDomain.setMarkerKey(i.getObjectKey1());
 					markerDomain.setSymbol(i.getSymbol1());
-					if (markerqtlc.contains(markerDomain) == false) {
-						markerqtlc.add(markerDomain);
-					}
+					markerqtlc.add(markerDomain);
 				}
     		}
     		domain.setQtlCandidateToGene(markerqtlc);

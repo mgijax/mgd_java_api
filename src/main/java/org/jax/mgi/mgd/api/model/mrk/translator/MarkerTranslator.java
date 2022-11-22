@@ -201,6 +201,8 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 					SlimMarkerDomain markerDomain = new SlimMarkerDomain();				
 					markerDomain.setMarkerKey(i.getObjectKey2());
 					markerDomain.setSymbol(i.getSymbol2());
+					log.info(markerDomain.getMarkerKey());
+					log.info(markerDomain.getSymbol());
 					if (markerqtlc.contains(markerDomain) == false) {
 						markerqtlc.add(markerDomain);
 					}

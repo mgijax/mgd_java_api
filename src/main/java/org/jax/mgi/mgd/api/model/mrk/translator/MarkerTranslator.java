@@ -203,6 +203,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 					markerDomain.setSymbol(i.getSymbol2());
 					log.info(markerDomain.getMarkerKey());
 					log.info(markerDomain.getSymbol());
+					log.info(markerqtlc.toString());
 					if (markerqtlc.contains(markerDomain) == false) {
 						markerqtlc.add(markerDomain);
 					}

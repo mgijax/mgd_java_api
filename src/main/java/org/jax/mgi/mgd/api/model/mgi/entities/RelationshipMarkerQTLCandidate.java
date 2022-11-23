@@ -24,5 +24,6 @@ public class RelationshipMarkerQTLCandidate extends BaseEntity {
 	private int _object_key_2;
 	private String marker1;
 	private String marker2;
-  
+    private String jnumid;
+    
 }

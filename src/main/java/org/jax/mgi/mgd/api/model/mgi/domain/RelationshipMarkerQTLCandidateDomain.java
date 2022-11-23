@@ -13,5 +13,6 @@ public class RelationshipMarkerQTLCandidateDomain extends BaseDomain {
 	private String objectKey2;
 	private String symbol1;
 	private String symbol2;
+	private String jnumid;
 
 }   	

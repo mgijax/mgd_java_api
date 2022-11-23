@@ -15,6 +15,7 @@ public class RelationshipMarkerQTLCandidateTranslator extends BaseEntityDomainTr
 		domain.setObjectKey2(String.valueOf(entity.get_object_key_2()));
 		domain.setSymbol1(entity.getMarker1());
 		domain.setSymbol2(entity.getMarker2());
+		domain.setJnumid(entity.getJnumid());
 		
 		return domain;
 	}

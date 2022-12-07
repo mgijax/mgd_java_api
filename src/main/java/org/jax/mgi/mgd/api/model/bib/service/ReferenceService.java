@@ -1777,7 +1777,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		for (String rdTag : domain.getWorkflowTagString()) {
 			toAdd.add(rdTag.trim());
 		}
-		log.info(toAdd);
 
 		// list of tags that need to be removed from this object
 		List<ReferenceWorkflowTag> toDelete = new ArrayList<ReferenceWorkflowTag>();
@@ -1809,7 +1808,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			TermDomain termDomain = new TermDomain();
 			termDomain.setVocabKey("129");
 			termDomain.setTerm(rdTag);
-			int tagTermKey = termService.searchByTerm(termDomain, true);
+			int tagTermKey = termService.searchByTerm(termDomain, false);
 			log.info("addTag/new tag:" + rdTag + "," + tagTermKey);			
 			addTag(entity, tagTermKey, user);
 		}

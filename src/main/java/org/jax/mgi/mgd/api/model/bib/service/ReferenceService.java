@@ -1777,6 +1777,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		for (String rdTag : domain.getWorkflowTagString()) {
 			toAdd.add(rdTag.trim());
 		}
+		log.info(toAdd);
 
 		// list of tags that need to be removed from this object
 		List<ReferenceWorkflowTag> toDelete = new ArrayList<ReferenceWorkflowTag>();

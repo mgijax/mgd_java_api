@@ -187,6 +187,22 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 
 	@POST
+	@ApiOperation(value = "Add to Cell Type clipboard")
+	@Path("/addToCellTypeClipboard")
+	public List<SlimAssayDomain> addToCellTypeClipboard(SlimAssayDomain domain) {
+	
+		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();		
+
+		try {
+			results = assayService.addToCellTypeClipboard(domain);
+		} catch (Exception e) {
+			e.printStackTrace();				
+		}
+		
+		return results;
+	}
+	
+	@POST
 	@ApiOperation(value = "Process Replace Genotype/returns GenotypeReplaceDomain")
 	@Path("/processReplaceGenotype")
 	public List<GenotypeReplaceDomain> processReplaceGenotype(GenotypeReplaceDomain domain) {

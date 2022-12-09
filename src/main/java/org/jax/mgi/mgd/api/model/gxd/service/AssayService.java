@@ -1215,6 +1215,23 @@ public class AssayService extends BaseService<AssayDomain> {
 	}
 
 	@Transactional
+	public List<SlimAssayDomain> addToCellTypeClipboard(SlimAssayDomain domain) {
+		// select * from GXD_addCellTypeSet (user, assayKey)
+		
+		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();		
+
+	    String cmd = "select count(*) from GXD_addCellTypeSet('" + domain.getCreatedBy() + "'," 
+	    			+ domain.getAssayKey() + ")";
+	    Query query;
+		
+	    log.info(cmd);
+	    query = assayDAO.createNativeQuery(cmd);
+	    query.getResultList();
+		
+		return results;
+	}
+	
+	@Transactional
 	public List<GenotypeReplaceDomain> processReplaceGenotype(GenotypeReplaceDomain domain) {
 		// select * from GXD_replaceGenotype (user, refsKey, currentGenotypeKey, newGenotypeKey)
 		

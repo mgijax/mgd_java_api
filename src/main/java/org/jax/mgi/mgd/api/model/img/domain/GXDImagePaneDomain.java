@@ -7,8 +7,8 @@ import lombok.Setter;
 
 @Getter @Setter
 public class GXDImagePaneDomain extends BaseDomain {
-	// for gxd, list of image pane key, concatenated figure/pane label
-	// used by getGXDByJnum
+	// for gxd, list of image pane key, etc.
+	// used by getGXDByReference
 	
 	private String refsKey;
 	private String imagePaneKey;

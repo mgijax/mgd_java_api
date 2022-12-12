@@ -14,6 +14,7 @@ import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.img.domain.GXDImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImagePaneDomain;
+import org.jax.mgi.mgd.api.model.img.domain.SummaryImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.service.ImagePaneService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -75,6 +76,22 @@ public class ImagePaneController extends BaseController<ImagePaneDomain> {
 
 		try {
 			results = imagePaneService.getGXDByReference(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@POST
+	@ApiOperation(value = "Get Summary Image Panes by Ref key")
+	@Path("/getSummaryByReference")
+	public List<SummaryImagePaneDomain> getSummaryByReference(Integer key) {
+	
+		List<SummaryImagePaneDomain> results = new ArrayList<SummaryImagePaneDomain>();
+
+		try {
+			results = imagePaneService.getSummaryByReference(key);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -14,6 +14,7 @@ import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
 import org.jax.mgi.mgd.api.model.img.domain.GXDImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImagePaneDomain;
+import org.jax.mgi.mgd.api.model.img.domain.SummaryImagePaneDomain;
 import org.jax.mgi.mgd.api.model.img.entities.ImagePane;
 import org.jax.mgi.mgd.api.model.img.translator.ImagePaneTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -111,15 +112,14 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 		// type = Full Size
 	
 		List<GXDImagePaneDomain> results = new ArrayList<GXDImagePaneDomain>();
-	
-		String cmd = "\nselect i._refs_key, p._imagepane_key, concat(i.figureLabel,p.paneLabel) as figurepaneLabel"
+		
+		String cmd = "\nselect i._refs_key, p._imagepane_key, concatenate(figureLabel,pane) as figurepaneLabel "
 				+ "\nfrom img_imagepane p, img_image i"
 				+ "\nwhere i._refs_key = " + key
-				+ "\nand i._ImageClass_key = 6481781"
-				+ "\nand i._ImageType_key = 1072158"
-				+ "\nand i._image_key = p._image_key"	
-				+ "\norder by figurepaneLabel"
-				+ "\nlimit 2500";
+				+ "\nand i._imageclass_key = 6481781"
+				+ "\nand i._imagetype_key = 1072158"
+				+ "\nand i._image_key = p._image_key"
+				+ "\norder by figurepaneLabel";
 		
 		log.info(cmd);
 
@@ -130,6 +130,71 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				domain.setRefsKey(rs.getString("_refs_key"));
 				domain.setImagePaneKey(rs.getString("_imagepane_key"));
 				domain.setFigurepaneLabel(rs.getString("figurepaneLabel"));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;	
+	}
+	
+	@Transactional	
+	public List<SummaryImagePaneDomain> getSummaryByReference(Integer key) {
+		// return list of full size image panes by reference (_refs_key)
+		// type = Full Size
+	
+		List<SummaryImagePaneDomain> results = new ArrayList<SummaryImagePaneDomain>();
+		
+		String cmd = "\nselect i._refs_key, c.jnumid, p._imagepane_key, i.figureLabel, p.paneLabel, s.specimenLabel,"
+				+ "\na1.accid as imageid, a2.accid as assayid,"
+				+ "\na3.accid as markerid, m.symbol,"
+				+ "\nt.assayType"
+				+ "\nfrom bib_citation_cache c, img_imagepane p, img_image i,"
+				+ "\ngxd_insituresultimage gri, gxd_insituresult gr, gxd_specimen s, gxd_assay a, gxd_assaytype t,"
+				+ "\nacc_accession a1, acc_accession a2,"
+				+ "\nacc_accession a3, mrk_marker m"
+				+ "\nwhere c._refs_key = " + key
+				+ "\nand c._refs_key = i._refs_key"
+				+ "\nand i._imagetype_key = 1072158"
+				+ "\nand i._image_key = p._image_key"
+				+ "\nand p._imagepane_key = gri._imagepane_key"
+				+ "\nand gri._result_key = gr._result_key"
+				+ "\nand gr._specimen_key = s._specimen_key"
+				+ "\nand s._assay_key = a._assay_key"
+				+ "\nand a._assaytype_key = t._assaytype_key"
+				+ "\nand i._image_key = a1._object_key"
+				+ "\nand a1._mgitype_key = 9"
+				+ "\nand a1._logicaldb_key = 1"
+				+ "\nand s._assay_key = a2._object_key"
+				+ "\nand a2._mgitype_key = 8"
+				+ "\nand a2._logicaldb_key = 1"
+				+ "\nand a._marker_key = a3._object_key"
+				+ "\nand a3._mgitype_key = 2"
+				+ "\nand a3._logicaldb_key = 1"
+				+ "\nand a3.preferred = 1"
+				+ "\nand a._marker_key = m._marker_key"
+				+ "\norder by figureLabel, paneLabel";
+		
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SummaryImagePaneDomain domain = new SummaryImagePaneDomain();
+				domain.setRefsKey(rs.getString("_refs_key"));
+				domain.setImagePaneKey(rs.getString("_imagepane_key"));
+				domain.setJnumID(rs.getString("jnumID"));
+				domain.setFigureLabel(rs.getString("figureLabel"));
+				domain.setPaneLabel(rs.getString("paneLabel"));
+				domain.setSpecimenLabel(rs.getString("specimenLabel"));
+				domain.setImageID(rs.getString("imageid"));
+				domain.setAssayID(rs.getString("assayid"));
+				domain.setMarkerID(rs.getString("markerid"));
+				domain.setMarkerSymbol(rs.getString("symbol"));
+				domain.setAssayType(rs.getString("assaytype"));
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

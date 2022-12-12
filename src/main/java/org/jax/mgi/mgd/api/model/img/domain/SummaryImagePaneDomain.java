@@ -21,6 +21,7 @@ public class SummaryImagePaneDomain extends BaseDomain {
 	private String figureLabel;
 	private String paneLabel;
 	private String specimenLabel;
+	private String specimenNote;
 	private String markerSymbol;
 
 }

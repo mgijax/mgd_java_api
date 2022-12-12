@@ -145,6 +145,7 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 	@Transactional	
 	public List<SummaryImagePaneDomain> getSummaryByReference(Integer key) {
 		// return list of full size image panes by reference (_refs_key)
+		// class = Expression
 		// type = Full Size
 	
 		List<SummaryImagePaneDomain> results = new ArrayList<SummaryImagePaneDomain>();
@@ -159,6 +160,7 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				+ "\nacc_accession a3, mrk_marker m"
 				+ "\nwhere c._refs_key = " + key
 				+ "\nand c._refs_key = i._refs_key"
+				+ "\nand i._imageclass_key = 6481781"
 				+ "\nand i._imagetype_key = 1072158"
 				+ "\nand i._image_key = p._image_key"
 				+ "\nand p._imagepane_key = gri._imagepane_key"
@@ -188,6 +190,7 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				+ "\nacc_accession a3, mrk_marker m"
 				+ "\nwhere c._refs_key = " + key
 				+ "\nand c._refs_key = i._refs_key"
+				+ "\nand i._imageclass_key = 6481781"				
 				+ "\nand i._imagetype_key = 1072158"
 				+ "\nand i._image_key = p._image_key"
 				+ "\nand p._imagepane_key = a._imagepane_key"

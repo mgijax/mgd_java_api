@@ -113,7 +113,7 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 	
 		List<GXDImagePaneDomain> results = new ArrayList<GXDImagePaneDomain>();
 		
-		String cmd = "\nselect i._refs_key, p._imagepane_key, concatenate(figureLabel,pane) as figurepaneLabel "
+		String cmd = "\nselect i._refs_key, p._imagepane_key, concatenate(figureLabel,paneLabel) as figurepaneLabel "
 				+ "\nfrom img_imagepane p, img_image i"
 				+ "\nwhere i._refs_key = " + key
 				+ "\nand i._imageclass_key = 6481781"

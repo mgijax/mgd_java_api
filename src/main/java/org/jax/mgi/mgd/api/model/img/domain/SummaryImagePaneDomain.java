@@ -12,11 +12,11 @@ public class SummaryImagePaneDomain extends BaseDomain {
 	
 	private String refsKey;
 	private String imagePaneKey;
-	private String jnumID;
-	private String imageID;
-	private String pixID;
-	private String assayID;
-	private String markerID;
+	private String jnumid;
+	private String imageid;
+	private String pixid;
+	private String assayid;
+	private String markerid;
 	private String assayType;	
 	private String figureLabel;
 	private String paneLabel;

@@ -148,7 +148,7 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 	
 		List<SummaryImagePaneDomain> results = new ArrayList<SummaryImagePaneDomain>();
 		
-		String cmd = "\nselect i._refs_key, c.jnumid, p._imagepane_key, i.figureLabel, p.paneLabel, s.specimenLabel,"
+		String cmd = "\n(select i._refs_key, c.jnumid, p._imagepane_key, i.figureLabel, p.paneLabel, s.specimenLabel,"
 				+ "\na1.accid as imageid, a2.accid as assayid,"
 				+ "\na3.accid as markerid, m.symbol,"
 				+ "\nt.assayType"
@@ -176,7 +176,33 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				+ "\nand a3._logicaldb_key = 1"
 				+ "\nand a3.preferred = 1"
 				+ "\nand a._marker_key = m._marker_key"
-				+ "\norder by figureLabel, paneLabel";
+				+ "\nunion"
+				+ "\n(select i._refs_key, c.jnumid, p._imagepane_key, i.figureLabel, p.paneLabel, null,"
+				+ "\na1.accid as imageid, a2.accid as assayid,"
+				+ "\na3.accid as markerid, m.symbol,"
+				+ "\nt.assayType"
+				+ "\nfrom bib_citation_cache c, img_imagepane p, img_image i,"
+				+ "\ngxd_assay a, gxd_assaytype t,"
+				+ "\nacc_accession a1, acc_accession a2,"
+				+ "\nacc_accession a3, mrk_marker m"
+				+ "\nwhere c._refs_key = " + key
+				+ "\nand c._refs_key = i._refs_key"
+				+ "\nand i._imagetype_key = 1072158"
+				+ "\nand i._image_key = p._image_key"
+				+ "\nand p._imagepane_key = a._imagepane_key"
+				+ "\nand a._assaytype_key = t._assaytype_key"
+				+ "\nand i._image_key = a1._object_key"
+				+ "\nand a1._mgitype_key = 9"
+				+ "\nand a1._logicaldb_key = 1"
+				+ "\nand s._assay_key = a2._object_key"
+				+ "\nand a2._mgitype_key = 8"
+				+ "\nand a2._logicaldb_key = 1"
+				+ "\nand a._marker_key = a3._object_key"
+				+ "\nand a3._mgitype_key = 2"
+				+ "\nand a3._logicaldb_key = 1"
+				+ "\nand a3.preferred = 1"
+				+ "\nand a._marker_key = m._marker_key"
+				+ "\n)order by figureLabel, paneLabel";
 		
 		log.info(cmd);
 

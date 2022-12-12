@@ -14,6 +14,7 @@ public class SummaryImagePaneDomain extends BaseDomain {
 	private String imagePaneKey;
 	private String jnumID;
 	private String imageID;
+	private String pixID;
 	private String assayID;
 	private String markerID;
 	private String assayType;	

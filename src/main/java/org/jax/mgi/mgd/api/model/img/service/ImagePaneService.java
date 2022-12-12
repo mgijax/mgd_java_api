@@ -151,13 +151,13 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 		List<SummaryImagePaneDomain> results = new ArrayList<SummaryImagePaneDomain>();
 		
 		String cmd = "\n(select i._refs_key, c.jnumid, p._imagepane_key, i.figureLabel, p.paneLabel, s.specimenLabel,"
-				+ "\na1.accid as imageid, a2.accid as assayid,"
-				+ "\na3.accid as markerid, m.symbol,"
+				+ "\na1.accid as imageid, a2.accid as pixid, a3.accid as assayid,"
+				+ "\na4.accid as markerid, m.symbol,"
 				+ "\nt.assayType"
 				+ "\nfrom bib_citation_cache c, img_imagepane p, img_image i,"
 				+ "\ngxd_insituresultimage gri, gxd_insituresult gr, gxd_specimen s, gxd_assay a, gxd_assaytype t,"
-				+ "\nacc_accession a1, acc_accession a2,"
-				+ "\nacc_accession a3, mrk_marker m"
+				+ "\nacc_accession a1, acc_accession a2, acc_accession a3"
+				+ "\nacc_accession a4, mrk_marker m"
 				+ "\nwhere c._refs_key = " + key
 				+ "\nand c._refs_key = i._refs_key"
 				+ "\nand i._imageclass_key = 6481781"
@@ -171,13 +171,16 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				+ "\nand i._image_key = a1._object_key"
 				+ "\nand a1._mgitype_key = 9"
 				+ "\nand a1._logicaldb_key = 1"
-				+ "\nand a._assay_key = a2._object_key"
-				+ "\nand a2._mgitype_key = 8"
-				+ "\nand a2._logicaldb_key = 1"
-				+ "\nand a._marker_key = a3._object_key"
-				+ "\nand a3._mgitype_key = 2"
+				+ "\nand i._image_key = a2._object_key"
+				+ "\nand a2._mgitype_key = 9"
+				+ "\nand a2._logicaldb_key = 19"				
+				+ "\nand a._assay_key = a3._object_key"
+				+ "\nand a3._mgitype_key = 8"
 				+ "\nand a3._logicaldb_key = 1"
-				+ "\nand a3.preferred = 1"
+				+ "\nand a._marker_key = a4._object_key"
+				+ "\nand a4._mgitype_key = 2"
+				+ "\nand a4._logicaldb_key = 1"
+				+ "\nand a4.preferred = 1"
 				+ "\nand a._marker_key = m._marker_key"
 				+ "\nunion"
 				+ "\nselect i._refs_key, c.jnumid, p._imagepane_key, i.figureLabel, p.paneLabel, null,"
@@ -221,6 +224,7 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				domain.setPaneLabel(rs.getString("paneLabel"));
 				domain.setSpecimenLabel(rs.getString("specimenLabel"));
 				domain.setImageID(rs.getString("imageid"));
+				domain.setPixID(rs.getString("pixid"));
 				domain.setAssayID(rs.getString("assayid"));
 				domain.setMarkerID(rs.getString("markerid"));
 				domain.setMarkerSymbol(rs.getString("symbol"));

@@ -119,7 +119,8 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				+ "\nand i._imageclass_key = 6481781"
 				+ "\nand i._imagetype_key = 1072158"
 				+ "\nand i._image_key = p._image_key"
-				+ "\norder by figurepaneLabel";
+				+ "\norder by figurepaneLabel"
+				+ "\nlimit 2500";
 		
 		log.info(cmd);
 

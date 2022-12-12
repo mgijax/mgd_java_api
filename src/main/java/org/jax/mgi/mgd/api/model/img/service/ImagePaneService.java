@@ -156,7 +156,7 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				+ "\nt.assayType"
 				+ "\nfrom bib_citation_cache c, img_imagepane p, img_image i,"
 				+ "\ngxd_insituresultimage gri, gxd_insituresult gr, gxd_specimen s, gxd_assay a, gxd_assaytype t,"
-				+ "\nacc_accession a1, acc_accession a2, acc_accession a3"
+				+ "\nacc_accession a1, acc_accession a2, acc_accession a3,"
 				+ "\nacc_accession a4, mrk_marker m"
 				+ "\nwhere c._refs_key = " + key
 				+ "\nand c._refs_key = i._refs_key"
@@ -189,8 +189,8 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				+ "\nt.assayType"
 				+ "\nfrom bib_citation_cache c, img_imagepane p, img_image i,"
 				+ "\ngxd_assay a, gxd_assaytype t,"
-				+ "\nacc_accession a1, acc_accession a2,"
-				+ "\nacc_accession a3, mrk_marker m"
+				+ "\nacc_accession a1, acc_accession a2, acc_accession a3,"
+				+ "\nacc_accession a4, mrk_marker m"
 				+ "\nwhere c._refs_key = " + key
 				+ "\nand c._refs_key = i._refs_key"
 				+ "\nand i._imageclass_key = 6481781"				

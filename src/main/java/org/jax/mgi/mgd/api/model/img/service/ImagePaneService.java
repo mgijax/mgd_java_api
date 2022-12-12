@@ -178,7 +178,7 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				+ "\nand a3.preferred = 1"
 				+ "\nand a._marker_key = m._marker_key"
 				+ "\nunion"
-				+ "\n(select i._refs_key, c.jnumid, p._imagepane_key, i.figureLabel, p.paneLabel, null,"
+				+ "\nselect i._refs_key, c.jnumid, p._imagepane_key, i.figureLabel, p.paneLabel, null,"
 				+ "\na1.accid as imageid, a2.accid as assayid,"
 				+ "\na3.accid as markerid, m.symbol,"
 				+ "\nt.assayType"

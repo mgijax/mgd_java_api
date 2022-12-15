@@ -24,10 +24,10 @@ public class SummaryImagePaneDomain extends BaseDomain {
 	private String imageY;
 	private String imageWidth;
 	private String imageHeight;
-	private String x;
-	private String y;
-	private String width;
-	private String height;
+	private String paneX;
+	private String paneY;
+	private String paneWidth;
+	private String paneHeight;
 	private String specimenLabel;
 	private String specimenNote;
 	private String markerSymbol;

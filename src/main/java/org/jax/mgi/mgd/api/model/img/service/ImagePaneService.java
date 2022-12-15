@@ -152,7 +152,7 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 		
 		String cmd = "\n(select i._refs_key, c.jnumid, p._imagepane_key,"
 				+ "\ni.figureLabel, i.x as imageX, i.y as imageY, i.width as imageWidth, i.height as imageHeight,"
-				+ "\np.paneLabel, p.x, p.y, p.width, p.height, s.specimenLabel, s.specimenNote,"
+				+ "\np.paneLabel, p.x as paneX, p.y as paneY, p.width as paneWidth, p.height as paneHeight, s.specimenLabel, s.specimenNote,"
 				+ "\na1.accid as imageid, a2.accid as pixid, a3.accid as assayid,"
 				+ "\na4.accid as markerid, m.symbol,"
 				+ "\nt.assayType"
@@ -187,7 +187,7 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				+ "\nunion"
 				+ "\nselect i._refs_key, c.jnumid, p._imagepane_key,"
 				+ "\ni.figureLabel, i.x as imageX, i.y as imageY, i.width as imageWidth, i.height as imageHeight,"
-				+ "\np.paneLabel, p.x, p.y, p.width, p.height, null, null,"
+				+ "\np.paneLabel, p.x as paneX, p.y as paneY, p.width as paneWidth, p.height as paneHeight, null, null,"
 				+ "\na1.accid as imageid, a2.accid as pixid, a3.accid as assayid,"
 				+ "\na4.accid as markerid, m.symbol,"
 				+ "\nt.assayType"
@@ -233,10 +233,10 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				domain.setImageY(rs.getString("imageY"));
 				domain.setImageWidth(rs.getString("imageWidth"));
 				domain.setImageHeight(rs.getString("imageHeight"));
-				domain.setX(rs.getString("x"));
-				domain.setY(rs.getString("y"));
-				domain.setWidth(rs.getString("width"));
-				domain.setHeight(rs.getString("height"));
+				domain.setPaneX(rs.getString("paneX"));
+				domain.setPaneY(rs.getString("paneY"));
+				domain.setPaneWidth(rs.getString("paneWidth"));
+				domain.setPaneHeight(rs.getString("paneHeight"));
 				domain.setSpecimenLabel(rs.getString("specimenLabel"));
 				domain.setSpecimenNote(rs.getString("specimenNote"));
 				domain.setImageid(rs.getString("imageid"));

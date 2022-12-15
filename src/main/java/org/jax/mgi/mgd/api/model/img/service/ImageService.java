@@ -746,12 +746,13 @@ public class ImageService extends BaseService<ImageDomain> {
 	}
 	
 	@Transactional	
-	public List<SummaryImageDomain> getImageByAllele(String accid) {
+	public SummaryImageDomain getImageByAllele(String accid) {
 		// return list of summary image domains by allele acc id
 		// order by thumbnail mgi:xxx
 
-		List<SummaryImageDomain> results = new ArrayList<SummaryImageDomain>();
-
+		SummaryImageDomain results = new SummaryImageDomain();
+		List<ImageDomain> iresults = new ArrayList<ImageDomain>();
+		
 		// full size/allele associations
 //		select a1.accid as alleleid, al.symbol, a2.accid as imageid, i._image_key, i.figurelabel, i.xdim, i.ydim, n1.note as caption, n2.note as copyright
 //		from all_allele al, img_image i, mgi_note n1, mgi_note n2,
@@ -815,26 +816,19 @@ public class ImageService extends BaseService<ImageDomain> {
 		log.info(cmd);	
 		
 		try {
-			// one allele = one domain 
-			SummaryImageDomain domain = new SummaryImageDomain();
-			
-			// allele domain contains one list of image domains
-			List<ImageDomain> iresults = new ArrayList<ImageDomain>();
-			
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				if (rs.isFirst()) {
-					domain.setAlleleKey(rs.getString("_allele_key"));
-					domain.setAlleleSymbol(rs.getString("symbol"));
-					domain.setAlleleID(rs.getString("alleleid"));
+					results.setAlleleKey(rs.getString("_allele_key"));
+					results.setAlleleSymbol(rs.getString("symbol"));
+					results.setAlleleID(rs.getString("alleleid"));
 				}
 				ImageDomain idomain = new ImageDomain();
 				idomain = translator.translate(imageDAO.get(rs.getInt("_image_key")));
 				iresults.add(idomain);
 				imageDAO.clear();
 			}
-			domain.setImages(iresults);
-			results.add(domain);			
+			results.setImages(iresults);			
 			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {

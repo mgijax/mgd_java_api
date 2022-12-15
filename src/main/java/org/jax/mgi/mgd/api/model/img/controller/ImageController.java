@@ -160,9 +160,9 @@ public class ImageController extends BaseController<ImageDomain> {
 	@POST
 	@ApiOperation(value = "Get list of image domains by allele accession id")
 	@Path("/getImageByAllele")
-	public List<SummaryImageDomain> getImageByAllele(String accid) {
+	public SummaryImageDomain getImageByAllele(String accid) {
 		
-		List<SummaryImageDomain> results = new ArrayList<SummaryImageDomain>();
+		SummaryImageDomain results = new SummaryImageDomain();
 
 		try {
 			results = imageService.getImageByAllele(accid);

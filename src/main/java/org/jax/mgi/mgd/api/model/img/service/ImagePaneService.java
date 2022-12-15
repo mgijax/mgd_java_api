@@ -228,7 +228,7 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				domain.setX(rs.getString("x"));
 				domain.setY(rs.getString("y"));
 				domain.setWidth(rs.getString("width"));
-				domain.setHeight(rs.getString("heigth"));
+				domain.setHeight(rs.getString("height"));
 				domain.setSpecimenLabel(rs.getString("specimenLabel"));
 				domain.setSpecimenNote(rs.getString("specimenNote"));
 				domain.setImageid(rs.getString("imageid"));

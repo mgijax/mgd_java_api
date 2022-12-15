@@ -746,10 +746,71 @@ public class ImageService extends BaseService<ImageDomain> {
 	
 	@Transactional	
 	public List<ImageDomain> getImageByAllele(String accid) {
-		// return list of assay domains by allele acc id
+		// return list of image domains by allele acc id
 
 		List<ImageDomain> results = new ArrayList<ImageDomain>();
 		
+		// thumbnails
+//		select a1.accid as alleleid, al.symbol, a2.accid as imageid, i._image_key, i.figurelabel, i.xdim, i.ydim, n.note as caption
+//		from all_allele al, img_image i, acc_accession a1, acc_accession a2, mgi_note n
+//		where a1.accid = 'MGI:1856585'
+//		and a1._mgitype_key = 11
+//		and a1._object_key = al._allele_key
+//		and i._imagetype_key = 1072159
+//		and i._image_key = a2._object_key
+//		and a2._mgitype_key = 9
+//		and a2._logicaldb_key = 1
+//		and i._image_key = n._object_key
+//		and n._notetype_key = 1024
+//		and n._mgitype_key = 9
+//		and n.note like '%' || a1.accid || '%'
+
+		// full size/allele associations
+//		select a1.accid as alleleid, al.symbol, a2.accid as imageid, i._image_key, i.figurelabel, i.xdim, i.ydim, n1.note as caption, n2.note as copyright
+//		from all_allele al, img_image i, mgi_note n1, mgi_note n2,
+//		acc_accession a1, acc_accession a2, bib_citation_cache c,
+//		img_imagepane ip, img_imagepane_assoc ipa
+//		where a1.accid = 'MGI:1856585'
+//		and a1._mgitype_key = 11
+//		and a1._object_key = al._allele_key
+//		and a1._object_key = ipa._object_key
+//		and i._image_key = ip._image_key
+//		and ip._imagepane_key = ipa._imagepane_key
+//		and ipa._mgitype_key = 11
+//		and i._imagetype_key = 1072158
+//		and i._image_key = a2._object_key
+//		and a2._mgitype_key = 9
+//		and a2._logicaldb_key = 1
+//		and i._refs_key = c._refs_key
+//		and i._image_key = n1._object_key
+//		and n1._notetype_key = 1024
+//		and n1._mgitype_key = 9
+//		and i._image_key = n2._object_key
+//		and n2._notetype_key = 1023
+//		and n2._mgitype_key = 9
+
+		// full size/genotype associations
+//		select a1.accid as alleleid, a2.accid as imageid, i._image_key, n1.note as alleleComposition, s.strain
+//		from img_image i, mgi_note n1,
+//		acc_accession a1, acc_accession a2,
+//		gxd_allelegenotype ag, gxd_genotype g, prb_strain s, img_imagepane ip, img_imagepane_assoc ipa
+//		where a1.accid = 'MGI:1856585'
+//		and a1._mgitype_key = 11
+//		and a1._object_key = ag._allele_key
+//		and ag._genotype_key = g._genotype_key
+//		and g._strain_key = s._strain_key
+//		and ag._genotype_key = ipa._object_key
+//		and i._image_key = ip._image_key
+//		and ip._imagepane_key = ipa._imagepane_key
+//		and ipa._mgitype_key = 12
+//		and i._imagetype_key = 1072158
+//		and i._image_key = a2._object_key
+//		and a2._mgitype_key = 9
+//		and a2._logicaldb_key = 1
+//		and ag._genotype_key = n1._object_key
+//		and n1._notetype_key = 1016
+//		and n1._mgitype_key = 12
+
 		String cmd = "\nselect distinct i._image_key, t1.term, ipa.isprimary, ipa._mgitype_key" +
 				"\nfrom img_image i, img_imagepane ip, img_imagepane_assoc ipa, acc_accession aa, voc_term t1" +
 				"\nwhere aa.accid = '" + accid + "'" +

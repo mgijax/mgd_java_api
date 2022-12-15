@@ -824,7 +824,7 @@ public class ImageService extends BaseService<ImageDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				if (rs.isFirst()) {
-					domain.setAlleleKey(rs.getString("alleleKey"));
+					domain.setAlleleKey(rs.getString("_allele_key"));
 					domain.setAlleleSymbol(rs.getString("symbol"));
 					domain.setAlleleID(rs.getString("alleleid"));
 				}

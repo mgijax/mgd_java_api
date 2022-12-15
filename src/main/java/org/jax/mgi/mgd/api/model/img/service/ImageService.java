@@ -22,6 +22,7 @@ import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssayDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImageSubmissionDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImageDomain;
+import org.jax.mgi.mgd.api.model.img.domain.SummaryImageDomain;
 import org.jax.mgi.mgd.api.model.img.entities.Image;
 import org.jax.mgi.mgd.api.model.img.translator.ImageSubmissionTranslator;
 import org.jax.mgi.mgd.api.model.img.translator.ImageTranslator;
@@ -745,25 +746,11 @@ public class ImageService extends BaseService<ImageDomain> {
 	}
 	
 	@Transactional	
-	public List<ImageDomain> getImageByAllele(String accid) {
-		// return list of image domains by allele acc id
+	public List<SummaryImageDomain> getImageByAllele(String accid) {
+		// return list of summary image domains by allele acc id
+		// order by thumbnail mgi:xxx
 
-		List<ImageDomain> results = new ArrayList<ImageDomain>();
-		
-		// thumbnails
-//		select a1.accid as alleleid, al.symbol, a2.accid as imageid, i._image_key, i.figurelabel, i.xdim, i.ydim, n.note as caption
-//		from all_allele al, img_image i, acc_accession a1, acc_accession a2, mgi_note n
-//		where a1.accid = 'MGI:1856585'
-//		and a1._mgitype_key = 11
-//		and a1._object_key = al._allele_key
-//		and i._imagetype_key = 1072159
-//		and i._image_key = a2._object_key
-//		and a2._mgitype_key = 9
-//		and a2._logicaldb_key = 1
-//		and i._image_key = n._object_key
-//		and n._notetype_key = 1024
-//		and n._mgitype_key = 9
-//		and n.note like '%' || a1.accid || '%'
+		List<SummaryImageDomain> results = new ArrayList<SummaryImageDomain>();
 
 		// full size/allele associations
 //		select a1.accid as alleleid, al.symbol, a2.accid as imageid, i._image_key, i.figurelabel, i.xdim, i.ydim, n1.note as caption, n2.note as copyright
@@ -810,29 +797,44 @@ public class ImageService extends BaseService<ImageDomain> {
 //		and ag._genotype_key = n1._object_key
 //		and n1._notetype_key = 1016
 //		and n1._mgitype_key = 12
-
-		String cmd = "\nselect distinct i._image_key, t1.term, ipa.isprimary, ipa._mgitype_key" +
-				"\nfrom img_image i, img_imagepane ip, img_imagepane_assoc ipa, acc_accession aa, voc_term t1" +
-				"\nwhere aa.accid = '" + accid + "'" +
-				"\nand aa._mgitype_key = 11" +
-				"\nand aa._object_key = ipa._object_key" +
-				"\nand i._image_key = ip._image_key" +
-				"\nand ip._imagepane_key = ipa._imagepane_key" +
-				"\nand ipa._mgitype_key = 11" +
-				"\nand i._imageclass_key = t1._term_key" +
-				"\norder by t1.term, ipa.isprimary desc, ipa._mgitype_key";
 		
+		String cmd = "s\nelect distinct i._image_key, aa.accid as alleleid, a._allele_key, a.symbol, ai.accid as imageid" + 
+				"\nfrom img_image i, img_imagepane ip, img_imagepane_assoc ipa, acc_accession aa, all_allele a, acc_accession ai" + 
+				"\nwhere aa.accid = '" + accid + "'" +
+				"\nand aa._mgitype_key = 11" + 
+				"\nand aa._object_key = a._allele_key" + 
+				"\nand aa._object_key = ipa._object_key" + 
+				"\nand ipa._imagepane_key = ip._imagepane_key" + 
+				"\nand ip._image_key = i._image_key" + 
+				"\nand ipa._mgitype_key = 11" + 
+				"\nand i._thumbnailimage_key = ai._object_key" + 
+				"\nand ai._mgitype_key = 9" + 
+				"\nand ai._logicaldb_key = 1" + 
+				"\norder by imageid";
+
 		log.info(cmd);	
 		
 		try {
+			// one allele = one domain 
+			SummaryImageDomain domain = new SummaryImageDomain();
+			
+			// allele domain contains one list of image domains
+			List<ImageDomain> iresults = new ArrayList<ImageDomain>();
+			
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				ImageDomain domain = new ImageDomain();
-				domain = translator.translate(imageDAO.get(rs.getInt("_image_key")));
-				imageDAO.clear();
-				results.add(domain);
+				if (rs.isFirst()) {
+					domain.setAlleleKey(rs.getString("alleleKey"));
+					domain.setAlleleSymbol(rs.getString("symbol"));
+					domain.setAlleleID(rs.getString("alleleid"));
+				}
+				ImageDomain idomain = new ImageDomain();
+				idomain = translator.translate(imageDAO.get(rs.getInt("_image_key")));
+				iresults.add(idomain);
 				imageDAO.clear();
 			}
+			domain.setImages(iresults);
+			results.add(domain);			
 			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {

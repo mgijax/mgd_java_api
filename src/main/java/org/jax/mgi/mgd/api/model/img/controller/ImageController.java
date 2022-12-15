@@ -18,6 +18,7 @@ import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssayDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImageSubmissionDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImageDomain;
+import org.jax.mgi.mgd.api.model.img.domain.SummaryImageDomain;
 import org.jax.mgi.mgd.api.model.img.service.ImagePaneAssocService;
 import org.jax.mgi.mgd.api.model.img.service.ImageService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -159,9 +160,9 @@ public class ImageController extends BaseController<ImageDomain> {
 	@POST
 	@ApiOperation(value = "Get list of image domains by allele accession id")
 	@Path("/getImageByAllele")
-	public List<ImageDomain> getImageByAllele(String accid) {
+	public List<SummaryImageDomain> getImageByAllele(String accid) {
 		
-		List<ImageDomain> results = new ArrayList<ImageDomain>();
+		List<SummaryImageDomain> results = new ArrayList<SummaryImageDomain>();
 
 		try {
 			results = imageService.getImageByAllele(accid);

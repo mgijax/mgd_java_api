@@ -20,6 +20,10 @@ public class SummaryImagePaneDomain extends BaseDomain {
 	private String assayType;	
 	private String figureLabel;
 	private String paneLabel;
+	private String imageX;
+	private String imageY;
+	private String imageWidth;
+	private String imageHeight;
 	private String x;
 	private String y;
 	private String width;

@@ -150,7 +150,9 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 	
 		List<SummaryImagePaneDomain> results = new ArrayList<SummaryImagePaneDomain>();
 		
-		String cmd = "\n(select i._refs_key, c.jnumid, p._imagepane_key, i.figureLabel, p.paneLabel, p.x, p.y, p.width, p.height, s.specimenLabel, s.specimenNote,"
+		String cmd = "\n(select i._refs_key, c.jnumid, p._imagepane_key,"
+				+ "\ni.figureLabel, i.x as imageX, i.y as imageY, i.width as imageWidth, i.height as imageHeight,"
+				+ "\np.paneLabel, p.x, p.y, p.width, p.height, s.specimenLabel, s.specimenNote,"
 				+ "\na1.accid as imageid, a2.accid as pixid, a3.accid as assayid,"
 				+ "\na4.accid as markerid, m.symbol,"
 				+ "\nt.assayType"
@@ -183,7 +185,9 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				+ "\nand a4.preferred = 1"
 				+ "\nand a._marker_key = m._marker_key"
 				+ "\nunion"
-				+ "\nselect i._refs_key, c.jnumid, p._imagepane_key, i.figureLabel, p.paneLabel, p.x, p.y, p.width, p.height, null, null,"
+				+ "\nselect i._refs_key, c.jnumid, p._imagepane_key,"
+				+ "\ni.figureLabel, i.x as imageX, i.y as imageY, i.width as imageWidth, i.height as imageHeight,"
+				+ "\np.paneLabel, p.x, p.y, p.width, p.height, null, null,"
 				+ "\na1.accid as imageid, a2.accid as pixid, a3.accid as assayid,"
 				+ "\na4.accid as markerid, m.symbol,"
 				+ "\nt.assayType"
@@ -225,6 +229,10 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				domain.setJnumid(rs.getString("jnumID"));
 				domain.setFigureLabel(rs.getString("figureLabel"));
 				domain.setPaneLabel(rs.getString("paneLabel"));
+				domain.setImageX(rs.getString("imageX"));
+				domain.setImageY(rs.getString("imageY"));
+				domain.setImageWidth(rs.getString("imageWidth"));
+				domain.setImageHeight(rs.getString("imageHeight"));
 				domain.setX(rs.getString("x"));
 				domain.setY(rs.getString("y"));
 				domain.setWidth(rs.getString("width"));

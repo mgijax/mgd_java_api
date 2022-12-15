@@ -798,7 +798,7 @@ public class ImageService extends BaseService<ImageDomain> {
 //		and n1._notetype_key = 1016
 //		and n1._mgitype_key = 12
 		
-		String cmd = "s\nelect distinct i._image_key, aa.accid as alleleid, a._allele_key, a.symbol, ai.accid as imageid" + 
+		String cmd = "\nselect distinct i._image_key, aa.accid as alleleid, a._allele_key, a.symbol, ai.accid as imageid" + 
 				"\nfrom img_image i, img_imagepane ip, img_imagepane_assoc ipa, acc_accession aa, all_allele a, acc_accession ai" + 
 				"\nwhere aa.accid = '" + accid + "'" +
 				"\nand aa._mgitype_key = 11" + 

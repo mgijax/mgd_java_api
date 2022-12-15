@@ -201,7 +201,7 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				+ "\nand i._image_key = a1._object_key"
 				+ "\nand a1._mgitype_key = 9"
 				+ "\nand a1._logicaldb_key = 1"
-				+ "\nand a._assay_key = a2._object_key"
+				+ "\nand i._image_key = a2._object_key"
 				+ "\nand a2._mgitype_key = 9"
 				+ "\nand a2._logicaldb_key = 19"				
 				+ "\nand a._assay_key = a3._object_key"

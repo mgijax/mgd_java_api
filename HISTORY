@@ -1,3 +1,9 @@
+# Installation Note: As of 12/14/2022, the Install script is causing a
+#                    directory named "?" to be created in the top level of
+#                    the product directory. This is likely due to a directory
+#                    with the same name existing at the site where the files
+#                    are being downloaded from.
+
 TAG: mgd_java_api-6-0-22-24
 DATE: 12/12/2022
 STAFF: lec

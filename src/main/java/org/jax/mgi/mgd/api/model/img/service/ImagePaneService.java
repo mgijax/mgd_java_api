@@ -151,8 +151,8 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 		List<SummaryImagePaneDomain> results = new ArrayList<SummaryImagePaneDomain>();
 		
 		String cmd = "\n(select i._refs_key, c.jnumid, p._imagepane_key,"
-				+ "\ni.figureLabel, i.x as imageX, i.y as imageY, i.width as imageWidth, i.height as imageHeight,"
-				+ "\np.paneLabel, p.x as paneX, p.y as paneY, p.width as paneWidth, p.height as paneHeight, s.specimenLabel, s.specimenNote,"
+				+ "\ni.figureLabel, i.xdim, i.ydim,"
+				+ "\np.paneLabel, p.x, p.y , p.width, p.height, s.specimenLabel, s.specimenNote,"
 				+ "\na1.accid as imageid, a2.accid as pixid, a3.accid as assayid,"
 				+ "\na4.accid as markerid, m.symbol,"
 				+ "\nt.assayType"
@@ -186,8 +186,8 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				+ "\nand a._marker_key = m._marker_key"
 				+ "\nunion"
 				+ "\nselect i._refs_key, c.jnumid, p._imagepane_key,"
-				+ "\ni.figureLabel, i.x as imageX, i.y as imageY, i.width as imageWidth, i.height as imageHeight,"
-				+ "\np.paneLabel, p.x as paneX, p.y as paneY, p.width as paneWidth, p.height as paneHeight, null, null,"
+				+ "\ni.figureLabel, i.xdim, i.ydim,"
+				+ "\np.paneLabel, p.x, p.y, p.width, p.height, null, null,"
 				+ "\na1.accid as imageid, a2.accid as pixid, a3.accid as assayid,"
 				+ "\na4.accid as markerid, m.symbol,"
 				+ "\nt.assayType"
@@ -228,15 +228,13 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				domain.setImagePaneKey(rs.getString("_imagepane_key"));
 				domain.setJnumid(rs.getString("jnumID"));
 				domain.setFigureLabel(rs.getString("figureLabel"));
+				domain.setXdim(rs.getString("xdim"));
+				domain.setYdim(rs.getString("ydim"));
 				domain.setPaneLabel(rs.getString("paneLabel"));
-				domain.setImageX(rs.getString("imageX"));
-				domain.setImageY(rs.getString("imageY"));
-				domain.setImageWidth(rs.getString("imageWidth"));
-				domain.setImageHeight(rs.getString("imageHeight"));
-				domain.setPaneX(rs.getString("paneX"));
-				domain.setPaneY(rs.getString("paneY"));
-				domain.setPaneWidth(rs.getString("paneWidth"));
-				domain.setPaneHeight(rs.getString("paneHeight"));
+				domain.setX(rs.getString("x"));
+				domain.setY(rs.getString("y"));
+				domain.setWidth(rs.getString("width"));
+				domain.setHeight(rs.getString("height"));
 				domain.setSpecimenLabel(rs.getString("specimenLabel"));
 				domain.setSpecimenNote(rs.getString("specimenNote"));
 				domain.setImageid(rs.getString("imageid"));

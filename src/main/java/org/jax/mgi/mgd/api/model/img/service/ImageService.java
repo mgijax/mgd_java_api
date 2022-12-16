@@ -818,7 +818,7 @@ public class ImageService extends BaseService<ImageDomain> {
 			rs = sqlExecutor.executeProto(alleleSQL);
 			while (rs.next()) {
 				ImagePaneAlleleViewDomain adomain = new ImagePaneAlleleViewDomain();
-				adomain.setAssocKey(rs.getString("_assoc_kery"));
+				adomain.setAssocKey(rs.getString("_assoc_key"));
 				adomain.setAlleleKey(alleleKey);
 				adomain.setFigureLabel(rs.getString("figureLabel"));
 				adomain.setSymbol(rs.getString("symbol"));

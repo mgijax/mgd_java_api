@@ -17,4 +17,5 @@ public class SummaryImageDomain extends BaseDomain {
 	private String alleleID;
 
 	List<ImageDomain> images;
+	List<ImagePaneAlleleViewDomain> alleleAssocs;
 }

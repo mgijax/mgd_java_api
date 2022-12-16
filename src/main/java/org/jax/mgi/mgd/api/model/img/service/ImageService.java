@@ -19,6 +19,7 @@ import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimAssayTranslator;
 import org.jax.mgi.mgd.api.model.img.dao.ImageDAO;
 import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
+import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAlleleViewDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssayDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImageSubmissionDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImageDomain;
@@ -752,30 +753,7 @@ public class ImageService extends BaseService<ImageDomain> {
 
 		SummaryImageDomain results = new SummaryImageDomain();
 		List<ImageDomain> iresults = new ArrayList<ImageDomain>();
-		
-		// full size/allele associations
-//		select a1.accid as alleleid, al.symbol, a2.accid as imageid, i._image_key, i.figurelabel, i.xdim, i.ydim, n1.note as caption, n2.note as copyright
-//		from all_allele al, img_image i, mgi_note n1, mgi_note n2,
-//		acc_accession a1, acc_accession a2, bib_citation_cache c,
-//		img_imagepane ip, img_imagepane_assoc ipa
-//		where a1.accid = 'MGI:1856585'
-//		and a1._mgitype_key = 11
-//		and a1._object_key = al._allele_key
-//		and a1._object_key = ipa._object_key
-//		and i._image_key = ip._image_key
-//		and ip._imagepane_key = ipa._imagepane_key
-//		and ipa._mgitype_key = 11
-//		and i._imagetype_key = 1072158
-//		and i._image_key = a2._object_key
-//		and a2._mgitype_key = 9
-//		and a2._logicaldb_key = 1
-//		and i._refs_key = c._refs_key
-//		and i._image_key = n1._object_key
-//		and n1._notetype_key = 1024
-//		and n1._mgitype_key = 9
-//		and i._image_key = n2._object_key
-//		and n2._notetype_key = 1023
-//		and n2._mgitype_key = 9
+		List<ImagePaneAlleleViewDomain> aresults = new ArrayList<ImagePaneAlleleViewDomain>();
 
 		// full size/genotype associations
 //		select a1.accid as alleleid, a2.accid as imageid, i._image_key, n1.note as alleleComposition, s.strain
@@ -813,13 +791,19 @@ public class ImageService extends BaseService<ImageDomain> {
 				"\nand ai._logicaldb_key = 1" + 
 				"\norder by imageid";
 
-		log.info(cmd);	
+		log.info(cmd);
+		
+		String alleleKey = "";
 		
 		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
+			
+			// allele & images
+			ResultSet rs;
+			rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				if (rs.isFirst()) {
-					results.setAlleleKey(rs.getString("_allele_key"));
+					alleleKey = rs.getString("_allele_key");
+					results.setAlleleKey(alleleKey);
 					results.setAlleleSymbol(rs.getString("symbol"));
 					results.setAlleleID(rs.getString("alleleid"));
 				}
@@ -828,7 +812,23 @@ public class ImageService extends BaseService<ImageDomain> {
 				iresults.add(idomain);
 				imageDAO.clear();
 			}
-			results.setImages(iresults);			
+			
+			// allele associations
+			String alleleSQL = "select * from IMG_ImagePaneAllele_View where _allele_key = " + alleleKey;
+			rs = sqlExecutor.executeProto(alleleSQL);
+			while (rs.next()) {
+				ImagePaneAlleleViewDomain adomain = new ImagePaneAlleleViewDomain();
+				adomain.setAssocKey(rs.getString("_assoc_kery"));
+				adomain.setAlleleKey(alleleKey);
+				adomain.setFigureLabel(rs.getString("figureLabel"));
+				adomain.setSymbol(rs.getString("symbol"));
+				adomain.setAlleleid(rs.getString("alleleid"));
+				aresults.add(adomain);				
+			}
+			
+			results.setImages(iresults);
+			results.setAlleleAssocs(aresults);
+			
 			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {

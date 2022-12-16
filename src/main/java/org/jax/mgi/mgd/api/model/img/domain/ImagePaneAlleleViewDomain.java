@@ -10,6 +10,7 @@ public class ImagePaneAlleleViewDomain extends BaseDomain {
 
 	private String assocKey;
 	private String alleleKey;
+	private String imagePaneKey;
 	private String figureLabel;
 	private String symbol;
 	private String alleleid;

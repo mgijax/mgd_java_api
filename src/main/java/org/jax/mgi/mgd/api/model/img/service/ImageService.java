@@ -820,6 +820,7 @@ public class ImageService extends BaseService<ImageDomain> {
 				ImagePaneAlleleViewDomain adomain = new ImagePaneAlleleViewDomain();
 				adomain.setAssocKey(rs.getString("_assoc_key"));
 				adomain.setAlleleKey(alleleKey);
+				adomain.setImagePaneKey(rs.getString("_imagepane_key"));
 				adomain.setFigureLabel(rs.getString("figureLabel"));
 				adomain.setSymbol(rs.getString("symbol"));
 				adomain.setAlleleid(rs.getString("alleleid"));

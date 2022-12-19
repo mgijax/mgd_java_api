@@ -815,6 +815,7 @@ public class ImageService extends BaseService<ImageDomain> {
 				gdomain.setAssocKey(rs.getString("_assoc_key"));
 				gdomain.setAlleleKey(alleleKey);
 				gdomain.setImagePaneKey(rs.getString("_imagepane_key"));
+				adomain.setFigureLabel(rs.getString("figureLabel"));				
 				gdomain.setStrain(rs.getString("strain"));
 				gdomain.setAlleleComposition(rs.getString("alleleComposition"));
 				gresults.add(gdomain);				

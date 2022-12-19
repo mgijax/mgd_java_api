@@ -21,6 +21,7 @@ import org.jax.mgi.mgd.api.model.img.dao.ImageDAO;
 import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAlleleViewDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssayDomain;
+import org.jax.mgi.mgd.api.model.img.domain.ImagePaneGenotypeViewDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImageSubmissionDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SlimImageDomain;
 import org.jax.mgi.mgd.api.model.img.domain.SummaryImageDomain;
@@ -754,29 +755,8 @@ public class ImageService extends BaseService<ImageDomain> {
 		SummaryImageDomain results = new SummaryImageDomain();
 		List<ImageDomain> iresults = new ArrayList<ImageDomain>();
 		List<ImagePaneAlleleViewDomain> aresults = new ArrayList<ImagePaneAlleleViewDomain>();
+		List<ImagePaneGenotypeViewDomain> gresults = new ArrayList<ImagePaneGenotypeViewDomain>();
 
-		// full size/genotype associations
-//		select a1.accid as alleleid, a2.accid as imageid, i._image_key, n1.note as alleleComposition, s.strain
-//		from img_image i, mgi_note n1,
-//		acc_accession a1, acc_accession a2,
-//		gxd_allelegenotype ag, gxd_genotype g, prb_strain s, img_imagepane ip, img_imagepane_assoc ipa
-//		where a1.accid = 'MGI:1856585'
-//		and a1._mgitype_key = 11
-//		and a1._object_key = ag._allele_key
-//		and ag._genotype_key = g._genotype_key
-//		and g._strain_key = s._strain_key
-//		and ag._genotype_key = ipa._object_key
-//		and i._image_key = ip._image_key
-//		and ip._imagepane_key = ipa._imagepane_key
-//		and ipa._mgitype_key = 12
-//		and i._imagetype_key = 1072158
-//		and i._image_key = a2._object_key
-//		and a2._mgitype_key = 9
-//		and a2._logicaldb_key = 1
-//		and ag._genotype_key = n1._object_key
-//		and n1._notetype_key = 1016
-//		and n1._mgitype_key = 12
-		
 		String cmd = "\nselect distinct i._image_key, aa.accid as alleleid, a._allele_key, a.symbol, ai.accid as imageid" + 
 				"\nfrom img_image i, img_imagepane ip, img_imagepane_assoc ipa, acc_accession aa, all_allele a, acc_accession ai" + 
 				"\nwhere aa.accid = '" + accid + "'" +
@@ -827,9 +807,23 @@ public class ImageService extends BaseService<ImageDomain> {
 				aresults.add(adomain);				
 			}
 			
+			// genotype associations
+			String genotypeSQL = "select * from IMG_ImagePaneGenotype_View where _allele_key = " + alleleKey;
+			rs = sqlExecutor.executeProto(genotypeSQL);
+			while (rs.next()) {
+				ImagePaneGenotypeViewDomain gdomain = new ImagePaneGenotypeViewDomain();
+				gdomain.setAssocKey(rs.getString("_assoc_key"));
+				gdomain.setAlleleKey(alleleKey);
+				gdomain.setImagePaneKey(rs.getString("_imagepane_key"));
+				gdomain.setStrain(rs.getString("strain"));
+				gdomain.setAlleleComposition(rs.getString("alleleComposition"));
+				gresults.add(gdomain);				
+			}
+			
 			results.setImages(iresults);
 			results.setAlleleAssocs(aresults);
-			
+			results.setGenotypeAssocs(gresults);
+
 			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {

@@ -18,4 +18,5 @@ public class SummaryImageDomain extends BaseDomain {
 
 	List<ImageDomain> images;
 	List<ImagePaneAlleleViewDomain> alleleAssocs;
+	List<ImagePaneGenotypeViewDomain> genotypeAssocs;
 }

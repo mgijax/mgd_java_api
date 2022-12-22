@@ -5,6 +5,13 @@
 #                    are being downloaded from.
 
 TAG: mgd_java_api-6-0-22-24
+DATE: 12/22/2022
+STAFF: lec
+wts2-888/PWI: Move Remaining Pages from Flask+SQLAlchemy to Angular+Java API
+in "img" folder/ImagePaneGenotypeViewDomain.java/ImagePaneAlleleViewDomain.java/ImageService.java
+
+wts2-1069/Add Assay Cells to Cell Type Clipboard button
+TAG: mgd_java_api-6-0-22-24
 DATE: 12/12/2022
 STAFF: lec
 wts2-1069/Add Assay Cells to Cell Type Clipboard button

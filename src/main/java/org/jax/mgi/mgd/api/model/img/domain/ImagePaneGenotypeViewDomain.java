@@ -14,4 +14,5 @@ public class ImagePaneGenotypeViewDomain extends BaseDomain {
 	private String figureLabel;
 	private String strain;
 	private String alleleComposition;
+	private String genotypeid;
 }

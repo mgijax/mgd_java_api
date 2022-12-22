@@ -818,6 +818,7 @@ public class ImageService extends BaseService<ImageDomain> {
 				gdomain.setFigureLabel(rs.getString("figureLabel"));				
 				gdomain.setStrain(rs.getString("strain"));
 				gdomain.setAlleleComposition(rs.getString("alleleComposition"));
+				gdomain.setGenotypeid(rs.getString("accid"));
 				gresults.add(gdomain);				
 			}
 			

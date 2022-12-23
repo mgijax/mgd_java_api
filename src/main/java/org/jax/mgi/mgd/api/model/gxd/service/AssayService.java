@@ -959,30 +959,41 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setCreatedByKey(rs.getString("createdByKey"));
 				domain.setCreatedBy(rs.getString("createdBy"));
 				
-				// translate the genotype and store the genotype/allele pair info
+				// translate the genotype to get some more information
 				GenotypeDomain gdomain = new GenotypeDomain();
-				List<SlimAllelePairDomain> adomain = new ArrayList<SlimAllelePairDomain>();
 				gdomain = genotypetranslator.translate(genotypeDAO.get(rs.getInt("objectKey")));
-				
-				if (gdomain.getAllelePairs() != null) {
-					for (int i = 0; i < gdomain.getAllelePairs().size(); i++) {
-						SlimAllelePairDomain allelepair = new SlimAllelePairDomain();
-						allelepair.setAllelePairKey(gdomain.getAllelePairs().get(i).getAllelePairKey());
-						allelepair.setGenotypeKey(gdomain.getGenotypeKey());
-						allelepair.setAlleleKey1(gdomain.getAllelePairs().get(i).getAlleleKey1());
-						allelepair.setAlleleKey2(gdomain.getAllelePairs().get(i).getAlleleKey2());
-						allelepair.setAlleleSymbol1(gdomain.getAllelePairs().get(i).getAlleleSymbol1());
-						allelepair.setAlleleSymbol2(gdomain.getAllelePairs().get(i).getAlleleSymbol2());
-						if (gdomain.getIsConditional().equals("1")) {
-							allelepair.setIsConditional("Conditional mutant");
-						}
-						else {
-							allelepair.setIsConditional("");
-						}
-						adomain.add(allelepair);
-					}
+				if (gdomain.getAlleleDetailNote() != null) {
+					domain.setAlleleDetailNote(gdomain.getAlleleDetailNote().getNoteChunk());
 				}
-				domain.setAllelePairs(adomain);
+
+				if (gdomain.getIsConditional().equals("1")) {
+					domain.setIsConditional("Conditional mutant");
+				}
+				else {
+					domain.setIsConditional("");
+				}
+				
+//				List<SlimAllelePairDomain> adomain = new ArrayList<SlimAllelePairDomain>();
+				
+//				if (gdomain.getAllelePairs() != null) {
+//					for (int i = 0; i < gdomain.getAllelePairs().size(); i++) {
+//						SlimAllelePairDomain allelepair = new SlimAllelePairDomain();
+//						allelepair.setAllelePairKey(gdomain.getAllelePairs().get(i).getAllelePairKey());
+//						allelepair.setGenotypeKey(gdomain.getGenotypeKey());
+//						allelepair.setAlleleKey1(gdomain.getAllelePairs().get(i).getAlleleKey1());
+//						allelepair.setAlleleKey2(gdomain.getAllelePairs().get(i).getAlleleKey2());
+//						allelepair.setAlleleSymbol1(gdomain.getAllelePairs().get(i).getAlleleSymbol1());
+//						allelepair.setAlleleSymbol2(gdomain.getAllelePairs().get(i).getAlleleSymbol2());
+//						if (gdomain.getIsConditional().equals("1")) {
+//							allelepair.setIsConditional("Conditional mutant");
+//						}
+//						else {
+//							allelepair.setIsConditional("");
+//						}
+//						adomain.add(allelepair);
+//					}
+//				}
+//				domain.setAllelePairs(adomain);
 				
 				results.add(domain);		
 				assayDAO.clear();

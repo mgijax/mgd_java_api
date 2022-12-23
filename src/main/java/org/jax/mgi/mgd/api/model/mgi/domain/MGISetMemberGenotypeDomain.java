@@ -16,8 +16,10 @@ public class MGISetMemberGenotypeDomain extends BaseDomain {
 	private String objectKey;
 	private String label;
 	private String displayIt;
+	private String alleleDetailNote;
+	private String isConditional;
 	private String createdByKey;
 	private String createdBy;	
-	List<SlimAllelePairDomain> allelePairs;
+	//List<SlimAllelePairDomain> allelePairs;
 	
 }   	

@@ -964,23 +964,26 @@ public class AssayService extends BaseService<AssayDomain> {
 				List<SlimAllelePairDomain> adomain = new ArrayList<SlimAllelePairDomain>();
 				gdomain = genotypetranslator.translate(genotypeDAO.get(rs.getInt("objectKey")));
 				
-				for (int i = 0; i < gdomain.getAllelePairs().size(); i++) {
-					SlimAllelePairDomain allelepair = new SlimAllelePairDomain();
-					allelepair.setAllelePairKey(gdomain.getAllelePairs().get(i).getAllelePairKey());
-					allelepair.setGenotypeKey(gdomain.getGenotypeKey());
-					allelepair.setAlleleKey1(gdomain.getAllelePairs().get(i).getAlleleKey1());
-					allelepair.setAlleleKey2(gdomain.getAllelePairs().get(i).getAlleleKey2());
-					allelepair.setAlleleSymbol1(gdomain.getAllelePairs().get(i).getAlleleSymbol1());
-					allelepair.setAlleleSymbol2(gdomain.getAllelePairs().get(i).getAlleleSymbol2());
-					if (gdomain.getIsConditional().equals("1")) {
-						allelepair.setIsConditional("Conditional mutant");
+				if (gdomain.getAllelePairs() != null) {
+					for (int i = 0; i < gdomain.getAllelePairs().size(); i++) {
+						SlimAllelePairDomain allelepair = new SlimAllelePairDomain();
+						allelepair.setAllelePairKey(gdomain.getAllelePairs().get(i).getAllelePairKey());
+						allelepair.setGenotypeKey(gdomain.getGenotypeKey());
+						allelepair.setAlleleKey1(gdomain.getAllelePairs().get(i).getAlleleKey1());
+						allelepair.setAlleleKey2(gdomain.getAllelePairs().get(i).getAlleleKey2());
+						allelepair.setAlleleSymbol1(gdomain.getAllelePairs().get(i).getAlleleSymbol1());
+						allelepair.setAlleleSymbol2(gdomain.getAllelePairs().get(i).getAlleleSymbol2());
+						if (gdomain.getIsConditional().equals("1")) {
+							allelepair.setIsConditional("Conditional mutant");
+						}
+						else {
+							allelepair.setIsConditional("");
+						}
+						adomain.add(allelepair);
 					}
-					else {
-						allelepair.setIsConditional("");
-					}
-					adomain.add(allelepair);
 				}
 				domain.setAllelePairs(adomain);
+				
 				results.add(domain);		
 				assayDAO.clear();
 			}

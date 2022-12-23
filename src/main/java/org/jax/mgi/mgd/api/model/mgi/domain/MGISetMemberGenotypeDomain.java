@@ -1,6 +1,9 @@
 package org.jax.mgi.mgd.api.model.mgi.domain;
 
+import java.util.List;
+
 import org.jax.mgi.mgd.api.model.BaseDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.AllelePairDomain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,5 +18,6 @@ public class MGISetMemberGenotypeDomain extends BaseDomain {
 	private String displayIt;
 	private String createdByKey;
 	private String createdBy;	
+	List<AllelePairDomain> allelePairs;
 	
 }   	

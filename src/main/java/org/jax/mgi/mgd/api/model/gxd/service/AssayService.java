@@ -17,9 +17,11 @@ import org.jax.mgi.mgd.api.model.bib.dao.ReferenceCitationCacheDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyPrepDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AssayDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AssayTypeDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.ProbePrepDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeReplaceDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimCellTypeDomain;
@@ -27,6 +29,7 @@ import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SummaryResultDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
 import org.jax.mgi.mgd.api.model.gxd.translator.AssayTranslator;
+import org.jax.mgi.mgd.api.model.gxd.translator.GenotypeTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimAssayTranslator;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberCellTypeDomain;
@@ -76,6 +79,8 @@ public class AssayService extends BaseService<AssayDomain> {
 	@Inject
 	private TermDAO termDAO;
 	@Inject
+	private GenotypeDAO genotypeDAO;
+	@Inject
 	private AssayNoteService assayNoteService;
 	@Inject
 	private SpecimenService specimenService;
@@ -90,6 +95,7 @@ public class AssayService extends BaseService<AssayDomain> {
 	
 	private AssayTranslator translator = new AssayTranslator();
 	private SlimAssayTranslator slimtranslator = new SlimAssayTranslator();
+	private GenotypeTranslator genotypetranslator = new GenotypeTranslator();
 	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
@@ -951,6 +957,12 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setDisplayIt(rs.getString("displayIt"));
 				domain.setCreatedByKey(rs.getString("createdByKey"));
 				domain.setCreatedBy(rs.getString("createdBy"));
+				
+				// translate the genotype and store the genotype/allele pair info
+				GenotypeDomain gdomain = new GenotypeDomain();
+				gdomain = genotypetranslator.translate(genotypeDAO.get(rs.getInt("objectKey")));
+				domain.setAllelePairs(gdomain.getAllelePairs());
+						
 				results.add(domain);		
 				assayDAO.clear();
 			}

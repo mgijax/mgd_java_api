@@ -23,7 +23,6 @@ import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeReplaceDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.SlimAllelePairDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimCellTypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
@@ -962,6 +961,9 @@ public class AssayService extends BaseService<AssayDomain> {
 				// translate the genotype to get some more information
 				GenotypeDomain gdomain = new GenotypeDomain();
 				gdomain = genotypetranslator.translate(genotypeDAO.get(rs.getInt("objectKey")));
+				
+				domain.setStrain(gdomain.getStrain());
+				
 				if (gdomain.getAlleleDetailNote() != null) {
 					domain.setAlleleDetailNote(gdomain.getAlleleDetailNote().getNoteChunk());
 				}
@@ -972,28 +974,6 @@ public class AssayService extends BaseService<AssayDomain> {
 				else {
 					domain.setIsConditional("");
 				}
-				
-//				List<SlimAllelePairDomain> adomain = new ArrayList<SlimAllelePairDomain>();
-				
-//				if (gdomain.getAllelePairs() != null) {
-//					for (int i = 0; i < gdomain.getAllelePairs().size(); i++) {
-//						SlimAllelePairDomain allelepair = new SlimAllelePairDomain();
-//						allelepair.setAllelePairKey(gdomain.getAllelePairs().get(i).getAllelePairKey());
-//						allelepair.setGenotypeKey(gdomain.getGenotypeKey());
-//						allelepair.setAlleleKey1(gdomain.getAllelePairs().get(i).getAlleleKey1());
-//						allelepair.setAlleleKey2(gdomain.getAllelePairs().get(i).getAlleleKey2());
-//						allelepair.setAlleleSymbol1(gdomain.getAllelePairs().get(i).getAlleleSymbol1());
-//						allelepair.setAlleleSymbol2(gdomain.getAllelePairs().get(i).getAlleleSymbol2());
-//						if (gdomain.getIsConditional().equals("1")) {
-//							allelepair.setIsConditional("Conditional mutant");
-//						}
-//						else {
-//							allelepair.setIsConditional("");
-//						}
-//						adomain.add(allelepair);
-//					}
-//				}
-//				domain.setAllelePairs(adomain);
 				
 				results.add(domain);		
 				assayDAO.clear();

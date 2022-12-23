@@ -965,7 +965,8 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setStrain(gdomain.getStrain());
 				
 				if (gdomain.getAlleleDetailNote() != null) {
-					domain.setAlleleDetailNote(gdomain.getAlleleDetailNote().getNoteChunk());
+					String alleleDetailNote = gdomain.getAlleleDetailNote().getNoteChunk().replaceAll("\\n", ",");
+					domain.setAlleleDetailNote(alleleDetailNote);
 				}
 
 				if (gdomain.getIsConditional().equals("1")) {

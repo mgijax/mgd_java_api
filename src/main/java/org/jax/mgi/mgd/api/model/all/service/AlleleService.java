@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleRefAssocDomain;
+import org.jax.mgi.mgd.api.model.all.domain.SummaryAlleleDomain;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleRefAssocTranslator;
@@ -1401,28 +1402,35 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	}
 
 	@Transactional	
-	public List<AlleleDomain> getAlleleByMarker(String accid) {
+	public List<SummaryAlleleDomain> getAlleleByMarker(String accid) {
 		// return list of allele domains by marker acc id
 
-		List<AlleleDomain> results = new ArrayList<AlleleDomain>();
+		List<SummaryAlleleDomain> results = new ArrayList<SummaryAlleleDomain>();
 		
-		String cmd = "select distinct a._allele_key, a.symbol, t1.term, t2.term" + 
-				"\nfrom all_allele a, acc_accession aa, voc_term t1, voc_term t2" + 
-				"\nwhere a._marker_key = aa._object_key" +
-				"\nand aa._mgitype_key = 2" +
-				"\nand a._transmission_key = t1._term_key" +
-				"\nand a._allele_status_key = t2._term_key" +
-				"\nand aa.accid = '" + accid + "'" +
-				"\norder by t1.term desc, t2.term, a.symbol";
+		String cmd = "\nselect * from ALL_SummaryByMarker_View where accid = '" + accid + "'";
 		
 		log.info(cmd);	
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				AlleleDomain domain = new AlleleDomain();
-				domain = translator.translate(alleleDAO.get(rs.getInt("_allele_key")));
+				SummaryAlleleDomain domain = new SummaryAlleleDomain();
+				AlleleDomain adomain = new AlleleDomain();
+				adomain = translator.translate(alleleDAO.get(rs.getInt("_allele_key")));
 				alleleDAO.clear();
+				domain.setMarkerID(accid);
+				domain.setAlleleKey(adomain.getAlleleKey());
+				domain.setSymbol(adomain.getSymbol());
+				domain.setAlleleType(adomain.getAlleleType());
+				domain.setAlleleTypeKey(adomain.getAlleleTypeKey());
+				domain.setAlleleStatus(adomain.getAlleleStatus());
+				domain.setAlleleStatusKey(adomain.getAlleleStatusKey());
+				domain.setTransmission(adomain.getTransmission());
+				domain.setTransmissionKey(adomain.getTransmissionKey());
+				domain.setDiseaseAnnots(rs.getString("diseaseAnnots"));
+				domain.setSynonyms(adomain.getSynonyms());
+				domain.setSubtypeAnnots(adomain.getSubtypeAnnots());
+				domain.setMpAnnots(rs.getString("mpAnnots"));
 				results.add(domain);
 				alleleDAO.clear();
 			}

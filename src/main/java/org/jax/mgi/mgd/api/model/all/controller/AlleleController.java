@@ -16,6 +16,7 @@ import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.CellLineDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleRefAssocDomain;
+import org.jax.mgi.mgd.api.model.all.domain.SummaryAlleleDomain;
 import org.jax.mgi.mgd.api.model.all.service.AlleleService;
 import org.jax.mgi.mgd.api.model.all.service.CellLineService;
 import org.jax.mgi.mgd.api.model.gxd.domain.AllelePairDomain;
@@ -228,9 +229,9 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	@POST
 	@ApiOperation(value = "Get list of allele domains by marker accession id")
 	@Path("/getAlleleByMarker")
-	public List<AlleleDomain> getAlleleByMarker(String accid) {
+	public List<SummaryAlleleDomain> getAlleleByMarker(String accid) {
 		
-		List<AlleleDomain> results = new ArrayList<AlleleDomain>();
+		List<SummaryAlleleDomain> results = new ArrayList<SummaryAlleleDomain>();
 
 		try {
 			results = alleleService.getAlleleByMarker(accid);

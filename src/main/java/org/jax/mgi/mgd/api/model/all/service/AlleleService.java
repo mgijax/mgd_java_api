@@ -1428,11 +1428,10 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				domain.setTransmission(adomain.getTransmission());
 				domain.setTransmissionKey(adomain.getTransmissionKey());
 				domain.setDiseaseAnnots(rs.getString("diseaseAnnots"));
+				domain.setMpAnnots(rs.getString("mpAnnots"));				
 				domain.setSynonyms(adomain.getSynonyms());
 				domain.setSubtypeAnnots(adomain.getSubtypeAnnots());
-				domain.setMpAnnots(rs.getString("mpAnnots"));
 				results.add(domain);
-				alleleDAO.clear();
 			}
 			sqlExecutor.cleanup();
 		}
@@ -1444,27 +1443,36 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	}
 	
 	@Transactional	
-	public List<AlleleDomain> getAlleleByRef(String jnumid) {
+	public List<SummaryAlleleDomain> getAlleleByRef(String jnumid) {
 		// return list of allele domains by reference jnumid
 
-		List<AlleleDomain> results = new ArrayList<AlleleDomain>();
+		List<SummaryAlleleDomain> results = new ArrayList<SummaryAlleleDomain>();
 		
-		String cmd = "select distinct a._allele_key, a.symbol" +
-				"\nfrom all_allele a, mgi_reference_allele_view aa" + 
-				"\nwhere a._allele_key = aa._object_key" + 
-				"\nand aa.jnumid = '" + jnumid + "'" +
-				"\norder by a.symbol";
+		String cmd = "\nselect * from ALL_SummaryByReference_View where accid = '" + jnumid + "'";
 		
 		log.info(cmd);	
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				AlleleDomain domain = new AlleleDomain();
-				domain = translator.translate(alleleDAO.get(rs.getInt("_allele_key")));
+				SummaryAlleleDomain domain = new SummaryAlleleDomain();
+				AlleleDomain adomain = new AlleleDomain();
+				adomain = translator.translate(alleleDAO.get(rs.getInt("_allele_key")));
 				alleleDAO.clear();
+				domain.setJnumID(jnumid);
+				domain.setAlleleKey(adomain.getAlleleKey());
+				domain.setSymbol(adomain.getSymbol());
+				domain.setAlleleType(adomain.getAlleleType());
+				domain.setAlleleTypeKey(adomain.getAlleleTypeKey());
+				domain.setAlleleStatus(adomain.getAlleleStatus());
+				domain.setAlleleStatusKey(adomain.getAlleleStatusKey());
+				domain.setTransmission(adomain.getTransmission());
+				domain.setTransmissionKey(adomain.getTransmissionKey());
+				domain.setDiseaseAnnots(rs.getString("diseaseAnnots"));
+				domain.setMpAnnots(rs.getString("mpAnnots"));				
+				domain.setSynonyms(adomain.getSynonyms());
+				domain.setSubtypeAnnots(adomain.getSubtypeAnnots());
 				results.add(domain);
-				alleleDAO.clear();
 			}
 			sqlExecutor.cleanup();
 		}

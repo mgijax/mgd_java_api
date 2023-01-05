@@ -13,6 +13,7 @@ import lombok.Setter;
 public class SummaryAlleleDomain extends BaseDomain {
 
 	private String markerID;
+	private String jnumID;
 	private String alleleKey;
 	private String symbol;
 	private String alleleTypeKey;
@@ -21,8 +22,8 @@ public class SummaryAlleleDomain extends BaseDomain {
 	private String alleleStatus;	
 	private String transmissionKey;
 	private String transmission;
-	private String mpAnnots;
 	private String diseaseAnnots;
+	private String mpAnnots;	
 	private List<MGISynonymDomain> synonyms;
 	private List<AnnotationDomain> subtypeAnnots;
 	

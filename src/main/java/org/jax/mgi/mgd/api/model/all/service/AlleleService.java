@@ -1448,7 +1448,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		List<SummaryAlleleDomain> results = new ArrayList<SummaryAlleleDomain>();
 		
-		String cmd = "\nselect * from ALL_SummaryByReference_View where accid = '" + jnumid + "'";
+		String cmd = "\nselect * from ALL_SummaryByReference_View where jnumid = '" + jnumid + "'";
 		
 		log.info(cmd);	
 		

@@ -861,7 +861,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	
 	@Transactional	
 	public List<SummaryMarkerDomain> getMarkerByRef(String jnumid) {
-		// return list of marker domains by reference jnum id
+		// return list of summary marker domains by reference jnum id
 
 		List<SummaryMarkerDomain> results = new ArrayList<SummaryMarkerDomain>();
 		

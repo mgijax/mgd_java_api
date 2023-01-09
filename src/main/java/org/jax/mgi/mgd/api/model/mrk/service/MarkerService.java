@@ -15,6 +15,7 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
@@ -26,11 +27,13 @@ import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerOfficialChromDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.SummaryMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
 import org.jax.mgi.mgd.api.model.mrk.translator.SlimMarkerTranslator;
 import org.jax.mgi.mgd.api.model.seq.domain.SeqSummaryDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -857,12 +860,12 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}	
 	
 	@Transactional	
-	public List<SlimMarkerDomain> getMarkerByRef(String jnumid) {
+	public List<SummaryMarkerDomain> getMarkerByRef(String jnumid) {
 		// return list of marker domains by reference jnum id
 
-		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
+		List<SummaryMarkerDomain> results = new ArrayList<SummaryMarkerDomain>();
 		
-		String cmd = "\nselect distinct m._marker_key, m._marker_key, m.symbol" + 
+		String cmd = "\nselect distinct m._marker_key, m.symbol" + 
 				"\nfrom bib_citation_cache aa, mgi_reference_assoc r, mrk_marker m" + 
 				"\nwhere aa.jnumid = '" + jnumid + "'" +
 				"\nand aa._refs_key = r._refs_key" +
@@ -875,9 +878,21 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				SlimMarkerDomain domain = new SlimMarkerDomain();
-				domain = slimtranslator.translate(markerDAO.get(rs.getInt("_marker_key")));
+				SummaryMarkerDomain domain = new SummaryMarkerDomain();
+				MarkerDomain mdomain = new MarkerDomain();
+				mdomain = translator.translate(markerDAO.get(rs.getInt("_marker_key")));
 				markerDAO.clear();
+				domain.setJnumID(jnumid);
+				domain.setMarkerKey(mdomain.getMarkerKey());
+				domain.setSymbol(mdomain.getSymbol());
+				domain.setName(mdomain.getName());
+			    domain.setAccID(mdomain.getMgiAccessionIds().get(0).getAccID());
+				domain.setMarkerStatusKey(mdomain.getMarkerStatusKey());	
+				domain.setMarkerStatus(mdomain.getMarkerStatus());
+				domain.setMarkerTypeKey(mdomain.getMarkerTypeKey());	
+				domain.setMarkerType(mdomain.getMarkerType());
+				domain.setSynonyms(mdomain.getSynonyms());
+				domain.setFeatureTypes(mdomain.getFeatureTypes());
 				results.add(domain);
 				markerDAO.clear();
 			}

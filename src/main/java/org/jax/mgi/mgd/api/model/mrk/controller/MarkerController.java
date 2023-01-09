@@ -19,6 +19,7 @@ import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerOfficialChromDomain;
+import org.jax.mgi.mgd.api.model.mrk.domain.SummaryMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
 import org.jax.mgi.mgd.api.model.seq.domain.SeqSummaryDomain;
@@ -183,9 +184,9 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	@POST
 	@ApiOperation(value = "Get list of marker domains by reference jnumid")
 	@Path("/getMarkerByRef")
-	public List<SlimMarkerDomain> getMarkerByRef(String jnumid) {
+	public List<SummaryMarkerDomain> getMarkerByRef(String jnumid) {
 		
-		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
+		List<SummaryMarkerDomain> results = new ArrayList<SummaryMarkerDomain>();
 
 		try {
 			results = markerService.getMarkerByRef(jnumid);
@@ -195,22 +196,6 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		
 		return results;
 	}
-	
-//	@POST
-//	@ApiOperation(value = "Get summary link info for marker domains by marker acc id")
-//	@Path("/getSummaryLinkByMarker")
-//	public MarkerDomain getSummaryLinkByMarker(String accid) {
-//		
-//		MarkerDomain results = new MarkerDomain();
-//
-//		try {
-//			results = markerService.getSummaryLinkByMarker(accid);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		return results;
-//	}
 	
 	@POST
 	@ApiOperation(value = "Get list of sequence domains by marker acc id")

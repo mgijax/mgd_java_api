@@ -1419,8 +1419,10 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				adomain = translator.translate(alleleDAO.get(rs.getInt("_allele_key")));
 				alleleDAO.clear();
 				domain.setMarkerID(accid);
+				domain.setAlleleID(adomain.getAccID());			
 				domain.setAlleleKey(adomain.getAlleleKey());
 				domain.setSymbol(adomain.getSymbol());
+				domain.setName(adomain.getName());				
 				domain.setAlleleType(adomain.getAlleleType());
 				domain.setAlleleTypeKey(adomain.getAlleleTypeKey());
 				domain.setAlleleStatus(adomain.getAlleleStatus());

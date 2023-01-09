@@ -14,8 +14,10 @@ public class SummaryAlleleDomain extends BaseDomain {
 
 	private String markerID;
 	private String jnumID;
+	private String alleleID;
 	private String alleleKey;
 	private String symbol;
+	private String name;
 	private String alleleTypeKey;
 	private String alleleType;
 	private String alleleStatusKey;

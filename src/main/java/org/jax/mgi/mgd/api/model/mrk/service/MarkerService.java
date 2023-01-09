@@ -15,7 +15,6 @@ import javax.transaction.Transactional;
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
-import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISynonymService;
@@ -33,7 +32,6 @@ import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
 import org.jax.mgi.mgd.api.model.mrk.translator.SlimMarkerTranslator;
 import org.jax.mgi.mgd.api.model.seq.domain.SeqSummaryDomain;
-import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -865,13 +863,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		List<SummaryMarkerDomain> results = new ArrayList<SummaryMarkerDomain>();
 		
-		String cmd = "\nselect distinct m._marker_key, m.symbol" + 
-				"\nfrom bib_citation_cache aa, mgi_reference_assoc r, mrk_marker m" + 
-				"\nwhere aa.jnumid = '" + jnumid + "'" +
-				"\nand aa._refs_key = r._refs_key" +
-				"\nand r._mgitype_key = 2" +
-				"\nand r._object_key = m._marker_key" +
-				"\norder by symbol";
+		String cmd = "\nselect * from MRK_SummaryByReference_View where jnumid = '" + jnumid + "'";
 		
 		log.info(cmd);	
 		
@@ -879,20 +871,15 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SummaryMarkerDomain domain = new SummaryMarkerDomain();
-				MarkerDomain mdomain = new MarkerDomain();
-				mdomain = translator.translate(markerDAO.get(rs.getInt("_marker_key")));
-				markerDAO.clear();
 				domain.setJnumID(jnumid);
-				domain.setMarkerKey(mdomain.getMarkerKey());
-				domain.setSymbol(mdomain.getSymbol());
-				domain.setName(mdomain.getName());
-			    domain.setAccID(mdomain.getMgiAccessionIds().get(0).getAccID());
-				domain.setMarkerStatusKey(mdomain.getMarkerStatusKey());	
-				domain.setMarkerStatus(mdomain.getMarkerStatus());
-				domain.setMarkerTypeKey(mdomain.getMarkerTypeKey());	
-				domain.setMarkerType(mdomain.getMarkerType());
-				domain.setSynonyms(mdomain.getSynonyms());
-				domain.setFeatureTypes(mdomain.getFeatureTypes());
+				domain.setMarkerKey(rs.getString("_marker_key"));
+				domain.setSymbol(rs.getString("symbol"));
+				domain.setName(rs.getString("name"));
+			    domain.setAccID(rs.getString("accid"));
+				domain.setMarkerStatus(rs.getString("markerStatus"));
+				domain.setMarkerType(rs.getString("markerType"));
+				domain.setFeatureTypes(rs.getString("featureTypes"));
+				domain.setSynonyms(rs.getString("synonyms"));				
 				results.add(domain);
 				markerDAO.clear();
 			}

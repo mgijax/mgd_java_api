@@ -690,32 +690,41 @@ and a._antibody_key = aa._antibody_key
 	}
 
 	@Transactional	
-	public List<AntibodyDomain> getAntibodyByRef(String jnumid) {
+	public List<SummaryAntibodyDomain> getAntibodyByRef(String jnumid) {
 		// return list of probe domains by reference jnumid
 
-		List<AntibodyDomain> results = new ArrayList<AntibodyDomain>();
+		List<SummaryAntibodyDomain> results = new ArrayList<SummaryAntibodyDomain>();
 		
-		String cmd = "select distinct a._antibody_key, a.antibodyname," +
-				"\ncase when exists (select 1 from gxd_antibodyprep p, gxd_assay e where a._antibody_key = p._antibody_key and p._antibodyprep_key = e._antibodyprep_key) then 1 else 0 end as hasExpression" + 
-				"\nfrom gxd_antibody a, mgi_reference_antibody_view r" + 
-				"\nwhere a._antibody_key = r._object_key" + 
-				"\nand r.jnumid = '" + jnumid + "'" +
-				"\norder by a.antibodyname";
+		String cmd = "\nselect * from GXD_Antibody_SummaryByMarker_View where jnumid = '" + jnumid + "'";
 		
 		log.info(cmd);	
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				AntibodyDomain domain = new AntibodyDomain();
-				domain = translator.translate(antibodyDAO.get(rs.getInt("_antibody_key")));
-				domain.setHasExpression(rs.getString("hasExpression"));
-				antibodyDAO.clear();
+				SummaryAntibodyDomain domain = new SummaryAntibodyDomain();
+				domain.setAntibodyKey(rs.getString("_antibody_key"));
+				domain.setAntibodyID(rs.getString("antibodyid"));
+				domain.setAntibodyName(rs.getString("antibodyname"));
+				domain.setAntibodyClass(rs.getString("antibodyclass"));
+				domain.setAntibodyType(rs.getString("antibodytype"));
+				domain.setAntibodyOrganism(rs.getString("antibodyorganism"));
+				domain.setAntibodyNote(rs.getString("antibodynote"));
+				domain.setAliases(rs.getString("aliases"));
+				domain.setAntigenID(rs.getString("antigenid"));
+				domain.setRegionCovered(rs.getString("regioncovered"));
+				domain.setAntigenOrganism(rs.getString("antibodyorganism"));
+				domain.setAntigenNote(rs.getString("antigennote"));
+				domain.setMarkerKey(rs.getString("_marker_key"));
+				domain.setMarkerID(rs.getString("markerid"));
+				domain.setMarkerSymbol(rs.getString("symbol"));
+				domain.setJnumID(rs.getString("jnumid"));
+				domain.setShortCitation(rs.getString("short_citation"));			
 				results.add(domain);
 				antibodyDAO.clear();
 			}
 			sqlExecutor.cleanup();
-		}
+		}			
 		catch (Exception e) {
 			e.printStackTrace();
 		}		

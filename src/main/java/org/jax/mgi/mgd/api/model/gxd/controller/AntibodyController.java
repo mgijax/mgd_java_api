@@ -115,9 +115,9 @@ public class AntibodyController extends BaseController<AntibodyDomain> {
 	@POST
 	@ApiOperation(value = "Get list of antibody domains by reference jnumid")
 	@Path("/getAntibodyByRef")
-	public List<AntibodyDomain> getAntibodyByRef(String jnumid) {
+	public List<SummaryAntibodyDomain> getAntibodyByRef(String jnumid) {
 		
-		List<AntibodyDomain> results = new ArrayList<AntibodyDomain>();
+		List<SummaryAntibodyDomain> results = new ArrayList<SummaryAntibodyDomain>();
 
 		try {
 			results = antibodyService.getAntibodyByRef(jnumid);

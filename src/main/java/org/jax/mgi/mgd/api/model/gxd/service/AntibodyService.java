@@ -652,7 +652,7 @@ and a._antibody_key = aa._antibody_key
 
 		List<SummaryAntibodyDomain> results = new ArrayList<SummaryAntibodyDomain>();
 		
-		String cmd = "\nselect * from GXD_Antibody_SummaryByMarker_View where markerid = '" + accid + "'";
+		String cmd = "\nselect * from GXD_Antibody_SummaryBy_View where markerid = '" + accid + "'";
 		
 		log.info(cmd);	
 		
@@ -695,7 +695,7 @@ and a._antibody_key = aa._antibody_key
 
 		List<SummaryAntibodyDomain> results = new ArrayList<SummaryAntibodyDomain>();
 		
-		String cmd = "\nselect * from GXD_Antibody_SummaryByMarker_View where jnumid = '" + jnumid + "'";
+		String cmd = "\nselect * from GXD_Antibody_SummaryBy_View where jnumid = '" + jnumid + "'";
 		
 		log.info(cmd);	
 		

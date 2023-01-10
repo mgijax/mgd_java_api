@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAntibodyDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SummaryAntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.AntibodyService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -98,9 +99,9 @@ public class AntibodyController extends BaseController<AntibodyDomain> {
 	@POST
 	@ApiOperation(value = "Get list of antibody domains by marker accession id")
 	@Path("/getAntbodyByMarker")
-	public List<AntibodyDomain> getAntibodyByMarker(String accid) {
+	public List<SummaryAntibodyDomain> getAntibodyByMarker(String accid) {
 		
-		List<AntibodyDomain> results = new ArrayList<AntibodyDomain>();
+		List<SummaryAntibodyDomain> results = new ArrayList<SummaryAntibodyDomain>();
 
 		try {
 			results = antibodyService.getAntibodyByMarker(accid);

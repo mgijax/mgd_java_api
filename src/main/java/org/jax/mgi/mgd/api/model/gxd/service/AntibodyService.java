@@ -696,7 +696,7 @@ and a._antibody_key = aa._antibody_key
 
 		List<SummaryAntibodyDomain> results = new ArrayList<SummaryAntibodyDomain>();
 		
-		// search for J: in any reference type (primary, related)
+		// search for J: in any reference type (primary, related) but only return primary reference
 		String cmd = "\nselect * from GXD_Antibody_SummaryByReference_View g" + 
 				"\nwhere exists (select 1 from MGI_Reference_Assoc r, BIB_Citation_Cache rc" +
 				"\n     where g._antibody_key = r._object_key" +

@@ -79,4 +79,36 @@ public class GXDIndexController extends BaseController<GXDIndexDomain> {
 		return results;
 	}
 	
+	@POST
+	@ApiOperation(value = "Get list of index domains by marker accession id")
+	@Path("/getIndexByMarker")
+	public List<GXDIndexDomain> getProbeByMarker(String accid) {
+		
+		List<GXDIndexDomain> results = new ArrayList<GXDIndexDomain>();
+
+		try {
+			results = indexService.getIndexByMarker(accid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@POST
+	@ApiOperation(value = "Get list of index domains by reference jnumid")
+	@Path("/getIndexByRef")
+	public List<GXDIndexDomain> getProbeByRef(String jnumid) {
+		
+		List<GXDIndexDomain> results = new ArrayList<GXDIndexDomain>();
+
+		try {
+			results = indexService.getIndexByRef(jnumid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

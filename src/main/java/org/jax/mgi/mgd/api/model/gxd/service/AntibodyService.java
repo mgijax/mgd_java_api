@@ -671,7 +671,7 @@ and a._antibody_key = aa._antibody_key
 				domain.setAntigenID(rs.getString("antigenid"));
 				domain.setAntigenName(rs.getString("antigenname"));			
 				domain.setRegionCovered(rs.getString("regioncovered"));
-				domain.setAntigenOrganism(rs.getString("antibodyorganism"));
+				domain.setAntigenOrganism(rs.getString("antigenorganism"));
 				domain.setAntigenNote(rs.getString("antigennote"));
 				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setMarkerID(rs.getString("markerid"));
@@ -715,7 +715,7 @@ and a._antibody_key = aa._antibody_key
 				domain.setAntigenID(rs.getString("antigenid"));
 				domain.setAntigenName(rs.getString("antigenname"));							
 				domain.setRegionCovered(rs.getString("regioncovered"));
-				domain.setAntigenOrganism(rs.getString("antibodyorganism"));
+				domain.setAntigenOrganism(rs.getString("antigenorganism"));
 				domain.setAntigenNote(rs.getString("antigennote"));
 				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setMarkerID(rs.getString("markerid"));

@@ -306,5 +306,61 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		
 		return results;
 	}
+
+	@Transactional	
+	public List<GXDIndexDomain> getIndexByMarker(String accid) {
+		// return list of index domains by marker acc id
+
+		List<GXDIndexDomain> results = new ArrayList<GXDIndexDomain>();
+		
+		String cmd = "\nselect * from GXD_Index_SummaryByMarker_View where accid = '" + accid + "'";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				GXDIndexDomain domain = new GXDIndexDomain();
+				domain = translator.translate(indexDAO.get(rs.getInt("_allele_key")));
+				indexDAO.clear();
+//				domain.setMarkerID(accid);
+//				domain.setSymbol(adomain.getSymbol());
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}
 	
+	@Transactional	
+	public List<GXDIndexDomain> getIndexByRef(String jnumid) {
+		// return list of index domains by reference jnumid
+
+		List<GXDIndexDomain> results = new ArrayList<GXDIndexDomain>();
+		
+		String cmd = "\nselect * from GXD_Index_SummaryByMarker_View where jnumid = '" + jnumid + "'";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				GXDIndexDomain domain = new GXDIndexDomain();
+				domain = translator.translate(indexDAO.get(rs.getInt("_allele_key")));
+				indexDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}	
+		
 }

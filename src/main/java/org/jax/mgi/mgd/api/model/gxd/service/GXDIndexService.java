@@ -14,6 +14,7 @@ import org.jax.mgi.mgd.api.model.bib.dao.ReferenceCitationCacheDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.GXDIndexDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.GXDIndexDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGXDIndexDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SummaryGXDIndexDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.GXDIndex;
 import org.jax.mgi.mgd.api.model.gxd.translator.GXDIndexTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimGXDIndexTranslator;
@@ -308,10 +309,10 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 	}
 
 	@Transactional	
-	public List<GXDIndexDomain> getIndexByMarker(String accid) {
+	public List<SummaryGXDIndexDomain> getIndexByMarker(String accid) {
 		// return list of index domains by marker acc id
 
-		List<GXDIndexDomain> results = new ArrayList<GXDIndexDomain>();
+		List<SummaryGXDIndexDomain> results = new ArrayList<SummaryGXDIndexDomain>();
 		
 		String cmd = "\nselect * from GXD_Index_SummaryByMarker_View where accid = '" + accid + "'";
 		
@@ -320,11 +321,22 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				GXDIndexDomain domain = new GXDIndexDomain();
-				domain = translator.translate(indexDAO.get(rs.getInt("_allele_key")));
+				SummaryGXDIndexDomain domain = new SummaryGXDIndexDomain();
 				indexDAO.clear();
-//				domain.setMarkerID(accid);
-//				domain.setSymbol(adomain.getSymbol());
+				domain.setIndexKey(rs.getString("_index_key"));
+				domain.setMarkerKey(rs.getString("_marker_key"));
+				domain.setMarkerID(rs.getString("markerid"));
+				domain.setMarkerSymbol(rs.getString("symbol"));
+				domain.setMarkerName(rs.getString("name"));
+				domain.setMarkerStatus(rs.getString("markerstatus"));
+				domain.setMarkerType(rs.getString("markertype"));
+				domain.setIndexAssay(rs.getString("indexassay"));
+				domain.setAge(rs.getString("age"));
+				domain.setPriority(rs.getString("priority"));
+				domain.setConditional(rs.getString("conditional"));
+				domain.setIsFullCoded(rs.getString("isfullcoded"));
+				domain.setJnumID(rs.getString("jnumid"));			
+				domain.setShortCitation(rs.getString("shortctation"));
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();
@@ -337,10 +349,10 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 	}
 	
 	@Transactional	
-	public List<GXDIndexDomain> getIndexByRef(String jnumid) {
+	public List<SummaryGXDIndexDomain> getIndexByRef(String jnumid) {
 		// return list of index domains by reference jnumid
 
-		List<GXDIndexDomain> results = new ArrayList<GXDIndexDomain>();
+		List<SummaryGXDIndexDomain> results = new ArrayList<SummaryGXDIndexDomain>();
 		
 		String cmd = "\nselect * from GXD_Index_SummaryByMarker_View where jnumid = '" + jnumid + "'";
 		
@@ -349,8 +361,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				GXDIndexDomain domain = new GXDIndexDomain();
-				domain = translator.translate(indexDAO.get(rs.getInt("_allele_key")));
+				SummaryGXDIndexDomain domain = new SummaryGXDIndexDomain();
 				indexDAO.clear();
 				results.add(domain);
 			}

@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.GXDIndexDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGXDIndexDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SummaryGXDIndexDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.GXDIndexService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -82,9 +83,9 @@ public class GXDIndexController extends BaseController<GXDIndexDomain> {
 	@POST
 	@ApiOperation(value = "Get list of index domains by marker accession id")
 	@Path("/getIndexByMarker")
-	public List<GXDIndexDomain> getProbeByMarker(String accid) {
+	public List<SummaryGXDIndexDomain> getProbeByMarker(String accid) {
 		
-		List<GXDIndexDomain> results = new ArrayList<GXDIndexDomain>();
+		List<SummaryGXDIndexDomain> results = new ArrayList<SummaryGXDIndexDomain>();
 
 		try {
 			results = indexService.getIndexByMarker(accid);
@@ -98,9 +99,9 @@ public class GXDIndexController extends BaseController<GXDIndexDomain> {
 	@POST
 	@ApiOperation(value = "Get list of index domains by reference jnumid")
 	@Path("/getIndexByRef")
-	public List<GXDIndexDomain> getProbeByRef(String jnumid) {
+	public List<SummaryGXDIndexDomain> getProbeByRef(String jnumid) {
 		
-		List<GXDIndexDomain> results = new ArrayList<GXDIndexDomain>();
+		List<SummaryGXDIndexDomain> results = new ArrayList<SummaryGXDIndexDomain>();
 
 		try {
 			results = indexService.getIndexByRef(jnumid);

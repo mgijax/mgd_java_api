@@ -333,6 +333,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 				domain.setAge(rs.getString("age"));
 				domain.setPriority(rs.getString("priority"));
 				domain.setConditional(rs.getString("conditional"));
+				domain.setNotes(rs.getString("comments"));
 				domain.setIsFullCoded(rs.getString("isfullcoded"));
 				domain.setJnumID(rs.getString("jnumid"));			
 				domain.setShortCitation(rs.getString("short_citation"));
@@ -373,6 +374,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 				domain.setAge(rs.getString("age"));
 				domain.setPriority(rs.getString("priority"));
 				domain.setConditional(rs.getString("conditional"));
+				domain.setNotes(rs.getString("comments"));				
 				domain.setIsFullCoded(rs.getString("isfullcoded"));
 				domain.setJnumID(rs.getString("jnumid"));			
 				domain.setShortCitation(rs.getString("short_citation"));

@@ -19,6 +19,7 @@ public class SummaryGXDIndexDomain extends BaseDomain {
 	private String age;
 	private String priority;
 	private String conditional;
+	private String notes;
 	private String isFullCoded;
 	private String jnumID;
 	private String shortCitation;

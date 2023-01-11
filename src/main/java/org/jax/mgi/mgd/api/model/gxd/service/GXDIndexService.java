@@ -314,7 +314,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 
 		List<SummaryGXDIndexDomain> results = new ArrayList<SummaryGXDIndexDomain>();
 		
-		String cmd = "\nselect * from GXD_Index_SummaryByMarker_View where accid = '" + accid + "'";
+		String cmd = "\nselect * from GXD_Index_SummaryByMarker_View where markerid = '" + accid + "'";
 		
 		log.info(cmd);	
 		

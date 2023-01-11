@@ -710,10 +710,6 @@ and a._antibody_key = aa._antibody_key
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				// only save primary references
-				if (!rs.getString("_refassoctype_key").equals("1026")) {
-					continue;
-				}
 				SummaryAntibodyDomain domain = new SummaryAntibodyDomain();
 				domain.setAntibodyKey(rs.getString("_antibody_key"));
 				domain.setAntibodyID(rs.getString("antibodyid"));

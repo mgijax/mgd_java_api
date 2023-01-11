@@ -888,7 +888,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			while (rs.next()) {
 				SummaryProbeDomain domain = new SummaryProbeDomain();
 				domain.setProbeKey(rs.getString("_probe_key"));
-				domain.setName(rs.getString("nane"));
+				domain.setName(rs.getString("name"));
 				domain.setProbeID(rs.getString("probeid"));
 				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setMarkerSymbol(rs.getString("symbol"));

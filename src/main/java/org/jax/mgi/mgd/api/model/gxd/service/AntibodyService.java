@@ -652,7 +652,7 @@ and a._antibody_key = aa._antibody_key
 
 		List<SummaryAntibodyDomain> results = new ArrayList<SummaryAntibodyDomain>();
 		
-		String cmd = "\nselect * from GXD_Antibody_SummaryBy_View where markerid = '" + accid + "'";
+		String cmd = "\nselect * from GXD_Antibody_SummaryByMarker_View where markerid = '" + accid + "'";
 		
 		log.info(cmd);	
 		
@@ -696,13 +696,24 @@ and a._antibody_key = aa._antibody_key
 
 		List<SummaryAntibodyDomain> results = new ArrayList<SummaryAntibodyDomain>();
 		
-		String cmd = "\nselect * from GXD_Antibody_SummaryBy_View where jnumid = '" + jnumid + "'";
+		// search for J: in any reference type (primary, related)
+		String cmd = "\nselect * from GXD_Antibody_SummaryByReference_View g" + 
+				"\nwhere exists (select 1 from MGI_Reference_Assoc r, BIB_Citation_Cache rc" +
+				"\n     where g._antibody_key = r._object_key" +
+				"\n     and r._mgitype_key = 6" + 
+				"\n     and r._refs_key = rc._refs_key" + 
+				"\n     and rc.jnumid = '" + jnumid + "'" +
+				"\n     )";
 		
 		log.info(cmd);	
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
+				// only save primary references
+				if (!rs.getString("_refassoctype_key").equals("1026")) {
+					continue;
+				}
 				SummaryAntibodyDomain domain = new SummaryAntibodyDomain();
 				domain.setAntibodyKey(rs.getString("_antibody_key"));
 				domain.setAntibodyID(rs.getString("antibodyid"));

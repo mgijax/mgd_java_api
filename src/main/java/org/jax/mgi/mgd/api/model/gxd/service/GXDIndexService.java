@@ -322,7 +322,6 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SummaryGXDIndexDomain domain = new SummaryGXDIndexDomain();
-				indexDAO.clear();
 				domain.setIndexKey(rs.getString("_index_key"));
 				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setMarkerID(rs.getString("markerid"));
@@ -338,6 +337,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 				domain.setJnumID(rs.getString("jnumid"));			
 				domain.setShortCitation(rs.getString("shortcitation"));
 				results.add(domain);
+				indexDAO.clear();			
 			}
 			sqlExecutor.cleanup();
 		}
@@ -362,8 +362,22 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SummaryGXDIndexDomain domain = new SummaryGXDIndexDomain();
-				indexDAO.clear();
+				domain.setIndexKey(rs.getString("_index_key"));
+				domain.setMarkerKey(rs.getString("_marker_key"));
+				domain.setMarkerID(rs.getString("markerid"));
+				domain.setMarkerSymbol(rs.getString("symbol"));
+				domain.setMarkerName(rs.getString("name"));
+				domain.setMarkerStatus(rs.getString("markerstatus"));
+				domain.setMarkerType(rs.getString("markertype"));
+				domain.setIndexAssay(rs.getString("indexassay"));
+				domain.setAge(rs.getString("age"));
+				domain.setPriority(rs.getString("priority"));
+				domain.setConditional(rs.getString("conditional"));
+				domain.setIsFullCoded(rs.getString("isfullcoded"));
+				domain.setJnumID(rs.getString("jnumid"));			
+				domain.setShortCitation(rs.getString("shortcitation"));
 				results.add(domain);
+				indexDAO.clear();
 			}
 			sqlExecutor.cleanup();
 		}

@@ -335,7 +335,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 				domain.setConditional(rs.getString("conditional"));
 				domain.setIsFullCoded(rs.getString("isfullcoded"));
 				domain.setJnumID(rs.getString("jnumid"));			
-				domain.setShortCitation(rs.getString("shortcitation"));
+				domain.setShortCitation(rs.getString("short_citation"));
 				results.add(domain);
 				indexDAO.clear();			
 			}
@@ -375,7 +375,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 				domain.setConditional(rs.getString("conditional"));
 				domain.setIsFullCoded(rs.getString("isfullcoded"));
 				domain.setJnumID(rs.getString("jnumid"));			
-				domain.setShortCitation(rs.getString("shortcitation"));
+				domain.setShortCitation(rs.getString("short_citation"));
 				results.add(domain);
 				indexDAO.clear();
 			}

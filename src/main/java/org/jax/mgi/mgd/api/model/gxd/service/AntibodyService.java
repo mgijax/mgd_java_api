@@ -669,6 +669,7 @@ and a._antibody_key = aa._antibody_key
 				domain.setAntibodyNote(rs.getString("antibodynote"));
 				domain.setAliases(rs.getString("aliases"));
 				domain.setAntigenID(rs.getString("antigenid"));
+				domain.setAntigenName(rs.getString("antigenname"));			
 				domain.setRegionCovered(rs.getString("regioncovered"));
 				domain.setAntigenOrganism(rs.getString("antibodyorganism"));
 				domain.setAntigenNote(rs.getString("antigennote"));
@@ -712,6 +713,7 @@ and a._antibody_key = aa._antibody_key
 				domain.setAntibodyNote(rs.getString("antibodynote"));
 				domain.setAliases(rs.getString("aliases"));
 				domain.setAntigenID(rs.getString("antigenid"));
+				domain.setAntigenName(rs.getString("antigenname"));							
 				domain.setRegionCovered(rs.getString("regioncovered"));
 				domain.setAntigenOrganism(rs.getString("antibodyorganism"));
 				domain.setAntigenNote(rs.getString("antigennote"));

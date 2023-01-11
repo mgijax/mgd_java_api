@@ -16,6 +16,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeSummaryDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.SummaryProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.service.ProbeService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -115,9 +116,9 @@ public class ProbeController extends BaseController<ProbeDomain> {
 	@POST
 	@ApiOperation(value = "Get list of probe domains by marker accession id")
 	@Path("/getProbeByMarker")
-	public List<ProbeDomain> getProbeByMarker(String accid) {
+	public List<SummaryProbeDomain> getProbeByMarker(String accid) {
 		
-		List<ProbeDomain> results = new ArrayList<ProbeDomain>();
+		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
 
 		try {
 			results = probeService.getProbeByMarker(accid);
@@ -128,21 +129,21 @@ public class ProbeController extends BaseController<ProbeDomain> {
 		return results;
 	}
 	
-	@POST
-	@ApiOperation(value = "Get list of probe domains by reference jnumid")
-	@Path("/getProbeByRef")
-	public List<ProbeDomain> getProbeByRef(String jnumid) {
-		
-		List<ProbeDomain> results = new ArrayList<ProbeDomain>();
-
-		try {
-			results = probeService.getProbeByRef(jnumid);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
+//	@POST
+//	@ApiOperation(value = "Get list of probe domains by reference jnumid")
+//	@Path("/getProbeByRef")
+//	public List<SummaryProbeDomain> getProbeByRef(String jnumid) {
+//		
+//		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
+//
+//		try {
+//			results = probeService.getProbeByRef(jnumid);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return results;
+//	}
 	
 	@POST
 	@ApiOperation(value = "Get list of child clones of probe key")

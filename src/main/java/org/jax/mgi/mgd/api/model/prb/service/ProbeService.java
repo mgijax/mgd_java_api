@@ -21,6 +21,7 @@ import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeSummaryDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.SummaryProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.Probe;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeTranslator;
 import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeSummaryTranslator;
@@ -873,29 +874,33 @@ public class ProbeService extends BaseService<ProbeDomain> {
 	}
 	
 	@Transactional	
-	public List<ProbeDomain> getProbeByMarker(String accid) {
+	public List<SummaryProbeDomain> getProbeByMarker(String accid) {
 		// return list of probe domains by marker acc id
 
-		List<ProbeDomain> results = new ArrayList<ProbeDomain>();
+		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
 		
-		String cmd = "select distinct a._probe_key, a.name," + 
-				"\ncase when exists (select 1 from gxd_probeprep p, gxd_assay e where a._probe_key = p._probe_key and p._probeprep_key = e._probeprep_key) then 1 else 0 end as hasExpression" + 
-				"\nfrom prb_probe a, prb_marker m, acc_accession aa" + 
-				"\nwhere a._probe_key = m._probe_key" + 
-				"\nand m._marker_key = aa._object_key" + 
-				"\nand aa._mgitype_key = 2" +
-				"\nand aa.accid = '" + accid + "'" +
-				"\norder by a.name";
+		String cmd = "\nselect * from PRB_Probe_SummaryByMarker_View where markerid = '" + accid + "'";
 		
 		log.info(cmd);	
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				ProbeDomain domain = new ProbeDomain();
-				domain = translator.translate(probeDAO.get(rs.getInt("_probe_key")));
-				domain.setHasExpression(rs.getString("hasExpression"));
-				probeDAO.clear();
+				SummaryProbeDomain domain = new SummaryProbeDomain();
+				domain.setProbeKey(rs.getString("_probe_key"));
+				domain.setName(rs.getString("nane"));
+				domain.setProbeID(rs.getString("probeid"));
+				domain.setMarkerKey(rs.getString("_marker_key"));
+				domain.setMarkerSymbol(rs.getString("symbol"));
+				domain.setMarkerID(rs.getString("markerid"));
+				domain.setSegmentType(rs.getString("segmenttype"));
+				domain.setPrimer1Sequence(rs.getString("primer1sequence"));
+				domain.setPrimer2Sequence(rs.getString("primer2sequence"));
+				domain.setOrganism(rs.getString("commonname"));
+				domain.setAliases(rs.getString("aliases"));
+				domain.setJnumIDs(rs.getString("jnumids"));
+				domain.setParentID(rs.getString("parentid"));
+				domain.setParentName(rs.getString("parentname"));			
 				results.add(domain);
 				probeDAO.clear();
 			}
@@ -908,40 +913,40 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		return results;
 	}
 	
-	@Transactional	
-	public List<ProbeDomain> getProbeByRef(String jnumid) {
-		// return list of probe domains by reference jnumid
-
-		List<ProbeDomain> results = new ArrayList<ProbeDomain>();
-		
-		String cmd = "select distinct a._probe_key, a.name," +
-				"\ncase when exists (select 1 from gxd_probeprep p, gxd_assay e where a._probe_key = p._probe_key and p._probeprep_key = e._probeprep_key) then 1 else 0 end as hasExpression" + 
-				"\nfrom prb_probe a, prb_reference r, bib_citation_cache aa" + 
-				"\nwhere a._probe_key = r._probe_key" + 
-				"\nand r._refs_key = aa._refs_key" + 
-				"\nand aa.jnumid = '" + jnumid + "'" +
-				"\norder by a.name";
-		
-		log.info(cmd);	
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				ProbeDomain domain = new ProbeDomain();
-				domain = translator.translate(probeDAO.get(rs.getInt("_probe_key")));
-				domain.setHasExpression(rs.getString("hasExpression"));
-				probeDAO.clear();
-				results.add(domain);
-				probeDAO.clear();
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}		
-
-		return results;
-	}
+//	@Transactional	
+//	public List<SummaryProbeDomain> getProbeByRef(String jnumid) {
+//		// return list of probe domains by reference jnumid
+//
+//		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
+//		
+//		String cmd = "select distinct a._probe_key, a.name," +
+//				"\ncase when exists (select 1 from gxd_probeprep p, gxd_assay e where a._probe_key = p._probe_key and p._probeprep_key = e._probeprep_key) then 1 else 0 end as hasExpression" + 
+//				"\nfrom prb_probe a, prb_reference r, bib_citation_cache aa" + 
+//				"\nwhere a._probe_key = r._probe_key" + 
+//				"\nand r._refs_key = aa._refs_key" + 
+//				"\nand aa.jnumid = '" + jnumid + "'" +
+//				"\norder by a.name";
+//		
+//		log.info(cmd);	
+//		
+//		try {
+//			ResultSet rs = sqlExecutor.executeProto(cmd);
+//			while (rs.next()) {
+//				SummaryProbeDomain domain = new SummaryProbeDomain();
+//				domain = translator.translate(probeDAO.get(rs.getInt("_probe_key")));
+//				domain.setHasExpression(rs.getString("hasExpression"));
+//				probeDAO.clear();
+//				results.add(domain);
+//				probeDAO.clear();
+//			}
+//			sqlExecutor.cleanup();
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}		
+//
+//		return results;
+//	}
 	
 	@Transactional	
 	public List<SlimProbeSummaryDomain> getChildClones(Integer probeKey) {

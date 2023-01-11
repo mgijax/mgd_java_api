@@ -4,6 +4,12 @@
 #                    with the same name existing at the site where the files
 #                    are being downloaded from.
 
+TAG: mgd_java_api-6-0-22-29
+DATE: 01/10/2023
+STAFF: lec
+wts2-888/fl2-115/PWI page revamp: Marker Summary - API component
+marker/getMarkerByRef
+
 TAG: mgd_java_api-6-0-22-28
 DATE: 01/09/2023
 STAFF: lec

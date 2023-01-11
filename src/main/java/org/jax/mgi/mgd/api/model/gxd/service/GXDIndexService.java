@@ -336,7 +336,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 				domain.setConditional(rs.getString("conditional"));
 				domain.setIsFullCoded(rs.getString("isfullcoded"));
 				domain.setJnumID(rs.getString("jnumid"));			
-				domain.setShortCitation(rs.getString("shortctation"));
+				domain.setShortCitation(rs.getString("shortcitation"));
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

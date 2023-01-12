@@ -890,7 +890,6 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				domain.setProbeKey(rs.getString("_probe_key"));
 				domain.setName(rs.getString("name"));
 				domain.setProbeID(rs.getString("probeid"));
-				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setMarkerSymbol(rs.getString("symbol"));
 				domain.setMarkerID(rs.getString("markerid"));
 				domain.setSegmentType(rs.getString("segmenttype"));
@@ -922,7 +921,8 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		
 		String cmd;
 		
-		cmd = "\nselect r._probe_key from PRB_Reference r, BIB_Citation_Cache bc where bc._refs_key = r._refs_key and bc.jnumid = '" + jnumid + "'";
+		// select set of probe by jnumid
+		cmd = "\nselect distinct r._probe_key from PRB_Reference r, BIB_Citation_Cache bc where bc._refs_key = r._refs_key and bc.jnumid = '" + jnumid + "'";
 		log.info(cmd);	
 
 		try {
@@ -936,6 +936,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			e.printStackTrace();
 		}	
 		
+		// select specific probe results by list of probe keys
 		cmd = "\nselect * from PRB_Probe_SummaryByReference_View where _probe_key in (" + String.join(",", keys) + ")";
 		log.info(cmd);	
 		
@@ -946,7 +947,6 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				domain.setProbeKey(rs.getString("_probe_key"));
 				domain.setName(rs.getString("name"));
 				domain.setProbeID(rs.getString("probeid"));
-				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setMarkerSymbol(rs.getString("symbol"));
 				domain.setMarkerID(rs.getString("markerid"));
 				domain.setSegmentType(rs.getString("segmenttype"));

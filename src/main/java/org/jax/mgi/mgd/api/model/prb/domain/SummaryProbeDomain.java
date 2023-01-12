@@ -11,7 +11,6 @@ public class SummaryProbeDomain extends BaseDomain {
 	private String probeKey;
 	private String name;
 	private String probeID;
-	private String markerKey;
 	private String markerSymbol;
 	private String markerID;
 	private String segmentType;

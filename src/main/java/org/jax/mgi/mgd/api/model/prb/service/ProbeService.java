@@ -933,7 +933,12 @@ public class ProbeService extends BaseService<ProbeDomain> {
 					List<String> markerSymbols = new ArrayList<String>();
 					for (int i = 0; i < pdomain.getMarkers().size(); i++) {
 						markerIDs.add(pdomain.getMarkers().get(i).getMarkerAccId());
-						markerSymbols.add(pdomain.getMarkers().get(i).getMarkerSymbol());
+						if (pdomain.getMarkers().get(i).getRelationship().equals("P")) {
+							markerSymbols.add(pdomain.getMarkers().get(i).getMarkerSymbol() + " (PUTATIVE)");
+						}
+						else {
+							markerSymbols.add(pdomain.getMarkers().get(i).getMarkerSymbol());
+						}
 					}
 					domain.setMarkerID(String.join("|", markerIDs));
 					domain.setMarkerSymbol(String.join("|", markerSymbols));				

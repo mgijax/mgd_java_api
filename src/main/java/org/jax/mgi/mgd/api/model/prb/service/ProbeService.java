@@ -930,7 +930,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			while (rs.next()) {
 				keys.add(rs.getString("_probe_key"));
 			}
-			sqlExecutor.cleanup();
+			//sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();

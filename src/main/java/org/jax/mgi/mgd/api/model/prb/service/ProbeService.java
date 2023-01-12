@@ -935,18 +935,27 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				domain.setProbeKey(pdomain.getProbeKey());
 				domain.setName(pdomain.getName());
 				domain.setProbeID(pdomain.getAccID());
-				domain.setMarkerSymbol(pdomain.getMarkers().get(0).getMarkerSymbol());
-				domain.setMarkerID(pdomain.getMarkers().get(0).getMarkerAccId());
 				domain.setSegmentType(pdomain.getSegmentType());
 				domain.setPrimer1Sequence(pdomain.getPrimer1sequence());
 				domain.setPrimer2Sequence(pdomain.getPrimer2sequence());
 				domain.setOrganism(pdomain.getProbeSource().getOrganism());
 				
-				if (pdomain.getReferences().size() > 0) {
+				if (pdomain.getMarkers() != null) {
+					List<String> markerIDs = new ArrayList<String>();
+					List<String> markerSymbols = new ArrayList<String>();
+					for (int i = 0; i < pdomain.getMarkers().size(); i++) {
+						markerIDs.add(pdomain.getMarkers().get(i).getMarkerAccId());
+						markerSymbols.add(pdomain.getMarkers().get(i).getMarkerSymbol());
+					}
+					domain.setMarkerID(String.join("|", markerIDs));
+					domain.setMarkerSymbol(String.join("|", markerSymbols));				
+				}
+				
+				if (pdomain.getReferences() != null) {
 					List<String> aliases = new ArrayList<String>();
 					List<String> jnumids = new ArrayList<String>();
 					for (int i = 0; i < pdomain.getReferences().size(); i++) {
-						if (pdomain.getReferences().get(i).getAliases().size() > 0) {
+						if (pdomain.getReferences().get(i).getAliases() != null) {
 							for (int j = 0; j < pdomain.getReferences().get(i).getAliases().size(); j++) {
 								aliases.add(pdomain.getReferences().get(i).getAliases().get(j).getAlias());
 							}

@@ -968,6 +968,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 
 //				domain.setParentID(rs.getString("parentid"));
 //				domain.setParentName(rs.getString("parentname"));	
+				results.add(domain);
 				probeDAO.clear();				
 			}
 			sqlExecutor.cleanup();

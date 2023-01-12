@@ -916,19 +916,15 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		// return list of probe domains by reference jnumid
 
 		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
-		List<String> keys = new ArrayList<String>();
-		
-		String cmd;
 		
 		// select set of probe by jnumid
-		cmd = "\nselect distinct r._probe_key from PRB_Reference r, BIB_Citation_Cache bc where bc._refs_key = r._refs_key and bc.jnumid = '" + jnumid + "'";
+		String cmd = "\nselect distinct r._probe_key from PRB_Reference r, BIB_Citation_Cache bc where bc._refs_key = r._refs_key and bc.jnumid = '" + jnumid + "'";
 		log.info(cmd);	
 
 		// translate each probe and store in SummaryProbeDomain
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				//keys.add(rs.getString("_probe_key"));
 				ProbeDomain pdomain = new ProbeDomain();
 				pdomain = translator.translate(probeDAO.get(rs.getInt("_probe_key")));
 				SummaryProbeDomain domain = new SummaryProbeDomain();
@@ -966,8 +962,11 @@ public class ProbeService extends BaseService<ProbeDomain> {
 					domain.setJnumIDs(String.join("|", jnumids));
 				}
 
-//				domain.setParentID(rs.getString("parentid"));
-//				domain.setParentName(rs.getString("parentname"));	
+				if (pdomain.getDerivedFromAccID() != null) {
+					domain.setParentID(pdomain.getDerivedFromAccID());
+					domain.setParentName(pdomain.getDerivedFromName());					
+				}
+	
 				results.add(domain);
 				probeDAO.clear();				
 			}
@@ -976,35 +975,6 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		catch (Exception e) {
 			e.printStackTrace();
 		}	
-		
-		// select specific probe results by list of probe keys
-//		cmd = "\nselect * from PRB_Probe_SummaryByReference_View where _probe_key in (" + String.join(",", keys) + ")";
-//		log.info(cmd);	
-//		
-//		try {
-//			ResultSet rs = sqlExecutor.executeProto(cmd);
-//			while (rs.next()) {			
-//				SummaryProbeDomain domain = new SummaryProbeDomain();
-//				domain.setProbeKey(rs.getString("_probe_key"));
-//				domain.setName(rs.getString("name"));
-//				domain.setProbeID(rs.getString("probeid"));
-//				domain.setMarkerSymbol(rs.getString("symbol"));
-//				domain.setMarkerID(rs.getString("markerid"));
-//				domain.setSegmentType(rs.getString("segmenttype"));
-//				domain.setPrimer1Sequence(rs.getString("primer1sequence"));
-//				domain.setPrimer2Sequence(rs.getString("primer2sequence"));
-//				domain.setOrganism(rs.getString("commonname"));
-//				domain.setAliases(rs.getString("aliases"));
-//				domain.setJnumIDs(rs.getString("jnumids"));
-//				domain.setParentID(rs.getString("parentid"));
-//				domain.setParentName(rs.getString("parentname"));			
-//				results.add(domain);
-//			}
-//			sqlExecutor.cleanup();
-//		}
-//		catch (Exception e) {
-//			e.printStackTrace();
-//		}		
 
 		return results;
 	}

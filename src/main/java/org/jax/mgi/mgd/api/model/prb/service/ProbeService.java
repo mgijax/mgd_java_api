@@ -879,34 +879,15 @@ public class ProbeService extends BaseService<ProbeDomain> {
 
 		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
 		
-		String cmd = "\nselect * from PRB_Probe_SummaryByMarker_View where markerid = '" + accid + "'";
+		// select set of probe by jnumid
+		String cmd = "\nselect distinct r._probe_key" +
+				"\nfrom PRB_Marker r, ACC_Accession a" +
+				"\nwhere a.accid = '" + accid + "'" +
+				"\nand a._mgitype_key = 2" +
+				"\nand a._logicaldb_key = 1" +
+				"\nand a._object_key = r._marker_key";
 		
-		log.info(cmd);	
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				SummaryProbeDomain domain = new SummaryProbeDomain();
-				domain.setProbeKey(rs.getString("_probe_key"));
-				domain.setName(rs.getString("name"));
-				domain.setProbeID(rs.getString("probeid"));
-				domain.setMarkerSymbol(rs.getString("symbol"));
-				domain.setMarkerID(rs.getString("markerid"));
-				domain.setSegmentType(rs.getString("segmenttype"));
-				domain.setPrimer1Sequence(rs.getString("primer1sequence"));
-				domain.setPrimer2Sequence(rs.getString("primer2sequence"));
-				domain.setOrganism(rs.getString("commonname"));
-				domain.setAliases(rs.getString("aliases"));
-				domain.setJnumIDs(rs.getString("jnumids"));
-				domain.setParentID(rs.getString("parentid"));
-				domain.setParentName(rs.getString("parentname"));			
-				results.add(domain);
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}		
+		results = processSummaryProbeDomain(cmd);		
 
 		return results;
 	}
@@ -914,11 +895,22 @@ public class ProbeService extends BaseService<ProbeDomain> {
 	@Transactional	
 	public List<SummaryProbeDomain> getProbeByRef(String jnumid) {
 		// return list of probe domains by reference jnumid
+		
+		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
 
+		String cmd = "\nselect distinct r._probe_key from PRB_Reference r, BIB_Citation_Cache bc where bc._refs_key = r._refs_key and bc.jnumid = '" + jnumid + "'";
+		
+		results = processSummaryProbeDomain(cmd);		
+
+		return results;
+	}
+	
+	@Transactional
+	public List<SummaryProbeDomain> processSummaryProbeDomain(String cmd) {
+		// return list of probe domains by "cmd" string
+		
 		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
 		
-		// select set of probe by jnumid
-		String cmd = "\nselect distinct r._probe_key from PRB_Reference r, BIB_Citation_Cache bc where bc._refs_key = r._refs_key and bc.jnumid = '" + jnumid + "'";
 		log.info(cmd);	
 
 		// translate each probe and store in SummaryProbeDomain

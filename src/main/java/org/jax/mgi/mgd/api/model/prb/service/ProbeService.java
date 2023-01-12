@@ -901,7 +901,6 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				domain.setParentID(rs.getString("parentid"));
 				domain.setParentName(rs.getString("parentname"));			
 				results.add(domain);
-				probeDAO.clear();
 			}
 			sqlExecutor.cleanup();
 		}
@@ -929,42 +928,70 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				keys.add(rs.getString("_probe_key"));
+				ProbeDomain pdomain = new ProbeDomain();
+				pdomain = translator.translate(probeDAO.get(rs.getInt("_probe_key")));
+				probeDAO.clear();
+				SummaryProbeDomain domain = new SummaryProbeDomain();
+				domain.setProbeKey(pdomain.getProbeKey());
+				domain.setName(pdomain.getName());
+				domain.setProbeID(pdomain.getAccID());
+				domain.setMarkerSymbol(pdomain.getMarkers().get(0).getMarkerSymbol());
+				domain.setMarkerID(pdomain.getMarkers().get(0).getMarkerAccId());
+				domain.setSegmentType(pdomain.getSegmentType());
+				domain.setPrimer1Sequence(pdomain.getPrimer1sequence());
+				domain.setPrimer2Sequence(pdomain.getPrimer2sequence());
+				domain.setOrganism(pdomain.getProbeSource().getOrganism());
+				
+				if (pdomain.getReferences().size() > 0) {
+					List<String> aliases = new ArrayList<String>();
+					List<String> jnumids = new ArrayList<String>();
+					for (int i = 0; i < pdomain.getReferences().size(); i++) {
+						for (int j = 0; j < pdomain.getReferences().get(i).getAliases().size(); j++) {
+							aliases.add(pdomain.getReferences().get(i).getAliases().get(j).getAlias());
+						}
+						jnumids.add(pdomain.getReferences().get(i).getJnumid());
+					}
+					domain.setAliases(String.join(",", aliases));
+					domain.setJnumIDs(String.join("|", jnumids));
+				}
+
+//				domain.setParentID(rs.getString("parentid"));
+//				domain.setParentName(rs.getString("parentname"));					
 			}
-			//sqlExecutor.cleanup();
+			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}	
 		
 		// select specific probe results by list of probe keys
-		cmd = "\nselect * from PRB_Probe_SummaryByReference_View where _probe_key in (" + String.join(",", keys) + ")";
-		log.info(cmd);	
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				SummaryProbeDomain domain = new SummaryProbeDomain();
-				domain.setProbeKey(rs.getString("_probe_key"));
-				domain.setName(rs.getString("name"));
-				domain.setProbeID(rs.getString("probeid"));
-				domain.setMarkerSymbol(rs.getString("symbol"));
-				domain.setMarkerID(rs.getString("markerid"));
-				domain.setSegmentType(rs.getString("segmenttype"));
-				domain.setPrimer1Sequence(rs.getString("primer1sequence"));
-				domain.setPrimer2Sequence(rs.getString("primer2sequence"));
-				domain.setOrganism(rs.getString("commonname"));
-				domain.setAliases(rs.getString("aliases"));
-				domain.setJnumIDs(rs.getString("jnumids"));
-				domain.setParentID(rs.getString("parentid"));
-				domain.setParentName(rs.getString("parentname"));			
-				results.add(domain);
-				probeDAO.clear();
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}		
+//		cmd = "\nselect * from PRB_Probe_SummaryByReference_View where _probe_key in (" + String.join(",", keys) + ")";
+//		log.info(cmd);	
+//		
+//		try {
+//			ResultSet rs = sqlExecutor.executeProto(cmd);
+//			while (rs.next()) {			
+//				SummaryProbeDomain domain = new SummaryProbeDomain();
+//				domain.setProbeKey(rs.getString("_probe_key"));
+//				domain.setName(rs.getString("name"));
+//				domain.setProbeID(rs.getString("probeid"));
+//				domain.setMarkerSymbol(rs.getString("symbol"));
+//				domain.setMarkerID(rs.getString("markerid"));
+//				domain.setSegmentType(rs.getString("segmenttype"));
+//				domain.setPrimer1Sequence(rs.getString("primer1sequence"));
+//				domain.setPrimer2Sequence(rs.getString("primer2sequence"));
+//				domain.setOrganism(rs.getString("commonname"));
+//				domain.setAliases(rs.getString("aliases"));
+//				domain.setJnumIDs(rs.getString("jnumids"));
+//				domain.setParentID(rs.getString("parentid"));
+//				domain.setParentName(rs.getString("parentname"));			
+//				results.add(domain);
+//			}
+//			sqlExecutor.cleanup();
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}		
 
 		return results;
 	}

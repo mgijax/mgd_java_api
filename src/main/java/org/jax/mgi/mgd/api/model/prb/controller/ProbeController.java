@@ -129,21 +129,21 @@ public class ProbeController extends BaseController<ProbeDomain> {
 		return results;
 	}
 	
-//	@POST
-//	@ApiOperation(value = "Get list of probe domains by reference jnumid")
-//	@Path("/getProbeByRef")
-//	public List<SummaryProbeDomain> getProbeByRef(String jnumid) {
-//		
-//		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
-//
-//		try {
-//			results = probeService.getProbeByRef(jnumid);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		return results;
-//	}
+	@POST
+	@ApiOperation(value = "Get list of probe domains by reference jnumid")
+	@Path("/getProbeByRef")
+	public List<SummaryProbeDomain> getProbeByRef(String jnumid) {
+		
+		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
+
+		try {
+			results = probeService.getProbeByRef(jnumid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
 	@POST
 	@ApiOperation(value = "Get list of child clones of probe key")

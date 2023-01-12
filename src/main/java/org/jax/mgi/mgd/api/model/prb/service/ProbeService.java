@@ -913,40 +913,61 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		return results;
 	}
 	
-//	@Transactional	
-//	public List<SummaryProbeDomain> getProbeByRef(String jnumid) {
-//		// return list of probe domains by reference jnumid
-//
-//		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
-//		
-//		String cmd = "select distinct a._probe_key, a.name," +
-//				"\ncase when exists (select 1 from gxd_probeprep p, gxd_assay e where a._probe_key = p._probe_key and p._probeprep_key = e._probeprep_key) then 1 else 0 end as hasExpression" + 
-//				"\nfrom prb_probe a, prb_reference r, bib_citation_cache aa" + 
-//				"\nwhere a._probe_key = r._probe_key" + 
-//				"\nand r._refs_key = aa._refs_key" + 
-//				"\nand aa.jnumid = '" + jnumid + "'" +
-//				"\norder by a.name";
-//		
-//		log.info(cmd);	
-//		
-//		try {
-//			ResultSet rs = sqlExecutor.executeProto(cmd);
-//			while (rs.next()) {
-//				SummaryProbeDomain domain = new SummaryProbeDomain();
-//				domain = translator.translate(probeDAO.get(rs.getInt("_probe_key")));
-//				domain.setHasExpression(rs.getString("hasExpression"));
-//				probeDAO.clear();
-//				results.add(domain);
-//				probeDAO.clear();
-//			}
-//			sqlExecutor.cleanup();
-//		}
-//		catch (Exception e) {
-//			e.printStackTrace();
-//		}		
-//
-//		return results;
-//	}
+	@Transactional	
+	public List<SummaryProbeDomain> getProbeByRef(String jnumid) {
+		// return list of probe domains by reference jnumid
+
+		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
+		List<String> keys = new ArrayList<String>();
+		
+		String cmd;
+		
+		cmd = "\nselect r._probe_key from PRB_Reference r, BIB_Citation_Cache bc where bc._refs_key = r._refs_key and bc.jnumid = '" + jnumid + "'";
+		log.info(cmd);	
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				keys.add(rs.getString("_probe_key"));
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		cmd = "\nselect * from PRB_Probe_SummaryByReference_View where _probe_key in (" + String.join(",", keys) + ")";
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SummaryProbeDomain domain = new SummaryProbeDomain();
+				domain.setProbeKey(rs.getString("_probe_key"));
+				domain.setName(rs.getString("name"));
+				domain.setProbeID(rs.getString("probeid"));
+				domain.setMarkerKey(rs.getString("_marker_key"));
+				domain.setMarkerSymbol(rs.getString("symbol"));
+				domain.setMarkerID(rs.getString("markerid"));
+				domain.setSegmentType(rs.getString("segmenttype"));
+				domain.setPrimer1Sequence(rs.getString("primer1sequence"));
+				domain.setPrimer2Sequence(rs.getString("primer2sequence"));
+				domain.setOrganism(rs.getString("commonname"));
+				domain.setAliases(rs.getString("aliases"));
+				domain.setJnumIDs(rs.getString("jnumids"));
+				domain.setParentID(rs.getString("parentid"));
+				domain.setParentName(rs.getString("parentname"));			
+				results.add(domain);
+				probeDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}
 	
 	@Transactional	
 	public List<SlimProbeSummaryDomain> getChildClones(Integer probeKey) {

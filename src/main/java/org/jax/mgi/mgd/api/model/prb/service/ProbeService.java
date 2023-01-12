@@ -879,7 +879,6 @@ public class ProbeService extends BaseService<ProbeDomain> {
 
 		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
 		
-		// select set of probe by jnumid
 		String cmd = "\nselect distinct r._probe_key" +
 				"\nfrom PRB_Marker r, ACC_Accession a" +
 				"\nwhere a.accid = '" + accid + "'" +
@@ -888,7 +887,6 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				"\nand a._object_key = r._marker_key";
 		
 		results = processSummaryProbeDomain(cmd);		
-
 		return results;
 	}
 	
@@ -899,9 +897,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
 
 		String cmd = "\nselect distinct r._probe_key from PRB_Reference r, BIB_Citation_Cache bc where bc._refs_key = r._refs_key and bc.jnumid = '" + jnumid + "'";
-		
 		results = processSummaryProbeDomain(cmd);		
-
 		return results;
 	}
 	

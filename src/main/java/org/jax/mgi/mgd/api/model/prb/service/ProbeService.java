@@ -924,13 +924,13 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		cmd = "\nselect distinct r._probe_key from PRB_Reference r, BIB_Citation_Cache bc where bc._refs_key = r._refs_key and bc.jnumid = '" + jnumid + "'";
 		log.info(cmd);	
 
+		// translate each probe and store in SummaryProbeDomain
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				keys.add(rs.getString("_probe_key"));
+				//keys.add(rs.getString("_probe_key"));
 				ProbeDomain pdomain = new ProbeDomain();
 				pdomain = translator.translate(probeDAO.get(rs.getInt("_probe_key")));
-				probeDAO.clear();
 				SummaryProbeDomain domain = new SummaryProbeDomain();
 				domain.setProbeKey(pdomain.getProbeKey());
 				domain.setName(pdomain.getName());
@@ -946,8 +946,10 @@ public class ProbeService extends BaseService<ProbeDomain> {
 					List<String> aliases = new ArrayList<String>();
 					List<String> jnumids = new ArrayList<String>();
 					for (int i = 0; i < pdomain.getReferences().size(); i++) {
-						for (int j = 0; j < pdomain.getReferences().get(i).getAliases().size(); j++) {
-							aliases.add(pdomain.getReferences().get(i).getAliases().get(j).getAlias());
+						if (pdomain.getReferences().get(i).getAliases().size() > 0) {
+							for (int j = 0; j < pdomain.getReferences().get(i).getAliases().size(); j++) {
+								aliases.add(pdomain.getReferences().get(i).getAliases().get(j).getAlias());
+							}
 						}
 						jnumids.add(pdomain.getReferences().get(i).getJnumid());
 					}
@@ -956,7 +958,8 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				}
 
 //				domain.setParentID(rs.getString("parentid"));
-//				domain.setParentName(rs.getString("parentname"));					
+//				domain.setParentName(rs.getString("parentname"));	
+				probeDAO.clear();				
 			}
 			sqlExecutor.cleanup();
 		}

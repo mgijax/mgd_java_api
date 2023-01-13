@@ -21,7 +21,6 @@ public class SummaryAntibodyDomain extends BaseDomain {
 	private String regionCovered;
 	private String antigenOrganism;
 	private String antigenNote;
-	private String markerKey;
 	private String markerID;
 	private String markerSymbol;
 	private String jnumID;

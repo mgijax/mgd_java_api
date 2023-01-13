@@ -911,7 +911,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			return results;
 		}
 		
-		String name = "'%" + searchDomain.getName() + "%'";
+		String name = "'" + searchDomain.getName() + "'";
 		String segmentTypeKey = searchDomain.getSegmentTypeKey();
 		
 		String cmd = "\nselect distinct p._probe_key from PRB_Probe p where name ilike " + name;

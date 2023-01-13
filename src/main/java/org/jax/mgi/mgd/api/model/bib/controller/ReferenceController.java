@@ -228,4 +228,20 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		
 		return results;
 	}
+	
+	@POST
+	@ApiOperation(value = "Get list of reference domains by search domain")
+	@Path("/getRefBySearch")
+	public List<SlimReferenceByDomain> getRefBySearch(ReferenceSearchDomain searchDomain) {
+		
+		List<SlimReferenceByDomain> results = new ArrayList<SlimReferenceByDomain>();
+
+		try {
+			results = referenceService.getRefBySearch(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
 }

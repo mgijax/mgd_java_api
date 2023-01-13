@@ -903,7 +903,8 @@ public class ProbeService extends BaseService<ProbeDomain> {
 	
 	@Transactional	
 	public List<SummaryProbeDomain> getProbeBySearch(ProbeDomain searchDomain) {
-		// return list of probe domains by search of segment type or probe name
+		// return list of probe domains by search
+		// currently supported search:  name, segementTypeKey 
 		
 		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
 

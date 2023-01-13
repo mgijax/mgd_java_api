@@ -652,7 +652,6 @@ and a._antibody_key = aa._antibody_key
 
 		List<SummaryAntibodyDomain> results = new ArrayList<SummaryAntibodyDomain>();
 		
-		//String cmd = "\nselect * from GXD_Antibody_SummaryByMarker_View where markerid = '" + accid + "'";
 		String cmd = "\nselect distinct a._antibody_key, a.antibodyName, a1.accid as antibodyid,  a2.accid as markerid" +
 				"\nfrom GXD_Antibody a, GXD_AntibodyMarker am, ACC_Accession a1, ACC_Accession a2" +		
 				"\nwhere a._antibody_key = am._antibody_key" +

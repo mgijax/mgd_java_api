@@ -755,11 +755,11 @@ and a._antibody_key = aa._antibody_key
 //				"\n     and r._refs_key = rc._refs_key" + 
 //				"\n     and rc.jnumid = '" + jnumid + "'" +
 //				"\n     )";
-		String cmd = "\nselect distinct a._antibody_key, a.antibodyName, a1.accid as antibodyid,  a2.accid as markerid" +
+		String cmd = "\nselect distinct a._antibody_key, a.antibodyName, a1.accid as antibodyid" +
 				"\nfrom GXD_Antibody a, ACC_Accession a1, MGI_Reference_Assoc r, BIB_Citation_Cache rc" +		
 				"\nwhere a._antibody_key = a1._object_key" +
 				"\nand a1._mgitype_key = 6" +
-				"\nand a1._logicaldb_key = 1" +
+				"\nand a1._logicaldb_key = 1" +				
 				"\nand a._antibody_key = r._object_key" +				
 				"\nand r._mgitype_key = 6" +
 				"\nand r._refs_key = rc._refs_key" +

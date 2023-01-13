@@ -1435,7 +1435,7 @@ public class AssayService extends BaseService<AssayDomain> {
 	}	
 	
 	@Transactional	
-	public List<SummaryResultDomain> getSummaryResultByRef(String jnumid) {
+	public List<SummaryResultDomain> getResultByRef(String jnumid) {
 		// return list of summary results domains by reference jnum id
 
 		List<SummaryResultDomain> results = new ArrayList<SummaryResultDomain>();
@@ -1474,7 +1474,6 @@ public class AssayService extends BaseService<AssayDomain> {
 		        "\nand ga._assaytype_key = gat._assaytype_key" +
 		        "\nand ga._emapa_term_key = t1._term_key" +		        
 		        "\norder by _stage_key, t1.term, celltype, markerSymbol, sequenceNum, accid, specimenLabel";
-		
 		log.info(cmd);	
 		
 		try {

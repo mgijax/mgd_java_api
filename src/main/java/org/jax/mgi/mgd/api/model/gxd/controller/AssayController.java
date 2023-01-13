@@ -284,13 +284,13 @@ public class AssayController extends BaseController<AssayDomain> {
 	
 	@POST
 	@ApiOperation(value = "Get list of summary result domains by reference jnumid")
-	@Path("/getSummaryResultByRef")
-	public List<SummaryResultDomain> getSummaryResultByRef(String jnumid) {
+	@Path("/getResultByRef")
+	public List<SummaryResultDomain> getResultByRef(String jnumid) {
 		
 		List<SummaryResultDomain> results = new ArrayList<SummaryResultDomain>();
 
 		try {
-			results = assayService.getSummaryResultByRef(jnumid);
+			results = assayService.getResultByRef(jnumid);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

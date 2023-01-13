@@ -114,7 +114,7 @@ public class ProbeController extends BaseController<ProbeDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Get list of probe domains by marker accession id")
+	@ApiOperation(value = "Get list of summary domains by marker accession id")
 	@Path("/getProbeByMarker")
 	public List<SummaryProbeDomain> getProbeByMarker(String accid) {
 		
@@ -130,7 +130,7 @@ public class ProbeController extends BaseController<ProbeDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Get list of probe domains by reference jnumid")
+	@ApiOperation(value = "Get list of summary domains by reference jnumid")
 	@Path("/getProbeByRef")
 	public List<SummaryProbeDomain> getProbeByRef(String jnumid) {
 		
@@ -144,6 +144,22 @@ public class ProbeController extends BaseController<ProbeDomain> {
 		
 		return results;
 	}
+	
+	@POST
+	@ApiOperation(value = "Get list of summary domains by search")
+	@Path("/getProbeBySearch")
+	public List<SummaryProbeDomain> getProbeBySearch(ProbeDomain searchDomain) {
+		
+		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
+
+		try {
+			results = probeService.getProbeBySearch(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
 	
 	@POST
 	@ApiOperation(value = "Get list of child clones of probe key")

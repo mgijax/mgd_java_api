@@ -901,6 +901,29 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		return results;
 	}
 	
+	@Transactional	
+	public List<SummaryProbeDomain> getProbeBySearch(ProbeDomain searchDomain) {
+		// return list of probe domains by search of segment type or probe name
+		
+		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
+
+		if (searchDomain.getName().isEmpty()) {
+			return results;
+		}
+		
+		String name = "'%" + searchDomain.getName() + "%'";
+		String segmentTypeKey = searchDomain.getSegmentTypeKey();
+		
+		String cmd = "\nselect distinct p._probe_key from PRB_Probe p where name ilike " + name;
+		
+		if (!segmentTypeKey.isEmpty()) {
+			cmd = cmd + "\nand _segmenttype_key = " + segmentTypeKey;
+		}
+		
+		results = processSummaryProbeDomain(cmd);		
+		return results;
+	}	
+	
 	@Transactional
 	public List<SummaryProbeDomain> processSummaryProbeDomain(String cmd) {
 		// return list of probe domains by "cmd" string

@@ -711,25 +711,6 @@ and a._antibody_key = aa._antibody_key
 				}
 				domain.setAliases(String.join(",", aliases));				
 				
-//				domain.setAntibodyKey(rs.getString("_antibody_key"));
-//				domain.setAntibodyID(rs.getString("antibodyid"));
-//				domain.setAntibodyName(rs.getString("antibodyname"));
-//				domain.setAntibodyClass(rs.getString("antibodyclass"));
-//				domain.setAntibodyType(rs.getString("antibodytype"));
-//				domain.setAntibodyOrganism(rs.getString("antibodyorganism"));
-//				domain.setAntibodyNote(rs.getString("antibodynote"));
-//				domain.setAliases(rs.getString("aliases"));
-//				domain.setAntigenID(rs.getString("antigenid"));
-//				domain.setAntigenName(rs.getString("antigenname"));			
-//				domain.setRegionCovered(rs.getString("regioncovered"));
-//				domain.setAntigenOrganism(rs.getString("antigenorganism"));
-//				domain.setAntigenNote(rs.getString("antigennote"));
-//				domain.setMarkerKey(rs.getString("_marker_key"));
-//				domain.setMarkerID(rs.getString("markerid"));
-//				domain.setMarkerSymbol(rs.getString("symbol"));
-//				domain.setJnumID(rs.getString("jnumid"));
-//				domain.setShortCitation(rs.getString("short_citation"));
-				
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();
@@ -747,14 +728,6 @@ and a._antibody_key = aa._antibody_key
 
 		List<SummaryAntibodyDomain> results = new ArrayList<SummaryAntibodyDomain>();
 		
-		// search for J: in any reference type (primary, related) but only return primary reference
-//		String cmd = "\nselect * from GXD_Antibody_SummaryByReference_View g" + 
-//				"\nwhere exists (select 1 from MGI_Reference_Assoc r, BIB_Citation_Cache rc" +
-//				"\n     where g._antibody_key = r._object_key" +
-//				"\n     and r._mgitype_key = 6" + 
-//				"\n     and r._refs_key = rc._refs_key" + 
-//				"\n     and rc.jnumid = '" + jnumid + "'" +
-//				"\n     )";
 		String cmd = "\nselect distinct a._antibody_key, a.antibodyName, a1.accid as antibodyid" +
 				"\nfrom GXD_Antibody a, ACC_Accession a1, MGI_Reference_Assoc r, BIB_Citation_Cache rc" +		
 				"\nwhere a._antibody_key = a1._object_key" +

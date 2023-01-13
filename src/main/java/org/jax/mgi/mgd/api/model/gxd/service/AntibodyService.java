@@ -675,7 +675,6 @@ and a._antibody_key = aa._antibody_key
 				AntibodyDomain adomain = new AntibodyDomain();
 				adomain = translator.translate(antibodyDAO.get(rs.getInt("_antibody_key")));	
 				antibodyDAO.clear();
-
 				domain.setAntibodyKey(adomain.getAntibodyKey());
 				domain.setAntibodyID(adomain.getAccID());
 				domain.setAntibodyName(adomain.getAntibodyName());
@@ -683,7 +682,6 @@ and a._antibody_key = aa._antibody_key
 				domain.setAntibodyType(adomain.getAntibodyType());
 				domain.setAntibodyOrganism(adomain.getOrganism());
 				domain.setAntibodyNote(adomain.getAntibodyNote());
-
 				domain.setAntigenID(adomain.getAntigen().getAccID());
 				domain.setAntigenName(adomain.getAntigen().getAntigenName());			
 				domain.setAntigenOrganism(adomain.getAntigen().getProbeSource().getOrganism());
@@ -758,7 +756,7 @@ and a._antibody_key = aa._antibody_key
 //				"\n     and rc.jnumid = '" + jnumid + "'" +
 //				"\n     )";
 		String cmd = "\nselect distinct a._antibody_key, a.antibodyName, a1.accid as antibodyid,  a2.accid as markerid" +
-				"\nfrom GXD_Antibody a, MGI_Reference_Assoc r, BIB_Citation_Cache rc" +		
+				"\nfrom GXD_Antibody a, ACC_Accession a1, MGI_Reference_Assoc r, BIB_Citation_Cache rc" +		
 				"\nwhere a._antibody_key = a1._object_key" +
 				"\nand a1._mgitype_key = 6" +
 				"\nand a1._logicaldb_key = 1" +
@@ -777,7 +775,6 @@ and a._antibody_key = aa._antibody_key
 				AntibodyDomain adomain = new AntibodyDomain();
 				adomain = translator.translate(antibodyDAO.get(rs.getInt("_antibody_key")));	
 				antibodyDAO.clear();
-
 				domain.setAntibodyKey(adomain.getAntibodyKey());
 				domain.setAntibodyID(adomain.getAccID());
 				domain.setAntibodyName(adomain.getAntibodyName());
@@ -785,7 +782,6 @@ and a._antibody_key = aa._antibody_key
 				domain.setAntibodyType(adomain.getAntibodyType());
 				domain.setAntibodyOrganism(adomain.getOrganism());
 				domain.setAntibodyNote(adomain.getAntibodyNote());
-
 				domain.setAntigenID(adomain.getAntigen().getAccID());
 				domain.setAntigenName(adomain.getAntigen().getAntigenName());			
 				domain.setAntigenOrganism(adomain.getAntigen().getProbeSource().getOrganism());

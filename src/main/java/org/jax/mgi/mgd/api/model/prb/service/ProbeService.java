@@ -907,10 +907,6 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		// currently supported search:  name, segementTypeKey 
 		
 		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
-
-		if (searchDomain.getName().isEmpty()) {
-			return results;
-		}
 		
 		String name = searchDomain.getName();
 		String segmentTypeKey = searchDomain.getSegmentTypeKey();

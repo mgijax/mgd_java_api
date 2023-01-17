@@ -329,7 +329,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 				domain.setMarkerName(rs.getString("name"));
 				domain.setMarkerStatus(rs.getString("markerstatus"));
 				domain.setMarkerType(rs.getString("markertype"));
-				domain.setIndexAssayKey(rs.getString("indexassayKey"));
+				domain.setIndexAssayKey(rs.getString("_indexassay_key"));
 				domain.setIndexAssay(rs.getString("indexassay"));
 				domain.setSequenceNum(rs.getString("sequenceNum"));
 				domain.setAge(rs.getString("age"));
@@ -372,7 +372,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 				domain.setMarkerName(rs.getString("name"));
 				domain.setMarkerStatus(rs.getString("markerstatus"));
 				domain.setMarkerType(rs.getString("markertype"));
-				domain.setIndexAssayKey(rs.getString("indexassayKey"));
+				domain.setIndexAssayKey(rs.getString("_indexassay_key"));
 				domain.setIndexAssay(rs.getString("indexassay"));
 				domain.setSequenceNum(rs.getString("sequenceNum"));				domain.setAge(rs.getString("age"));
 				domain.setPriority(rs.getString("priority"));

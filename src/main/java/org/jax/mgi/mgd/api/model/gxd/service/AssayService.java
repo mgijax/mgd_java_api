@@ -1318,7 +1318,6 @@ public class AssayService extends BaseService<AssayDomain> {
 			while (rs.next()) {
 				SlimAssayDomain domain = new SlimAssayDomain();
 				domain = slimtranslator.translate(assayDAO.get(rs.getInt("_assay_key")));
-				assayDAO.clear();
 				results.add(domain);
 				assayDAO.clear();
 			}
@@ -1354,7 +1353,6 @@ public class AssayService extends BaseService<AssayDomain> {
 			while (rs.next()) {
 				SlimAssayDomain domain = new SlimAssayDomain();
 				domain = slimtranslator.translate(assayDAO.get(rs.getInt("_assay_key")));
-				assayDAO.clear();
 				results.add(domain);
 				assayDAO.clear();
 			}
@@ -1387,9 +1385,8 @@ public class AssayService extends BaseService<AssayDomain> {
 			while (rs.next()) {
 				SlimAssayDomain domain = new SlimAssayDomain();
 				domain = slimtranslator.translate(assayDAO.get(rs.getInt("_assay_key")));
-				assayDAO.clear();
 				results.add(domain);
-				assayDAO.clear();
+				assayDAO.clear();			
 			}
 			sqlExecutor.cleanup();
 		}
@@ -1424,7 +1421,6 @@ public class AssayService extends BaseService<AssayDomain> {
 			while (rs.next()) {
 				AssayDomain domain = new AssayDomain();
 				domain = translator.translate(assayDAO.get(rs.getInt("_assay_key")));
-				assayDAO.clear();
 				results.add(domain);
 				assayDAO.clear();
 			}

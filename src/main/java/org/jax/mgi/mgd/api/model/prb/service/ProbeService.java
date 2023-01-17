@@ -919,9 +919,13 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		if (name != null && !name.isEmpty()) {
 			cmd = cmd + "\nand p.name ilike '" + name + "'";
 			cmd = cmd + "\nunion" +
-					"\nselect distinct r._probe_key from PRB_Alias p, PRB_Reference r" +
-					"\nwhere p.alias ilike '" + name + "'" +
-					"\nand p._reference_key = r._reference_key";
+					"\nselect distinct p._probe_key from PRB_Probe p, PRB_Alias a, PRB_Reference r" +
+					"\nwhere a.alias ilike '" + name + "'" +
+					"\nand a._reference_key = r._reference_key" +
+					"\nand a._probe_key = p._probe_key";
+			if (segmentTypeKey != null && !segmentTypeKey.isEmpty()) {
+				cmd = cmd + "\nand p._segmenttype_key = " + segmentTypeKey;
+			}
 		}
 		
 		results = processSummaryProbeDomain(cmd);		

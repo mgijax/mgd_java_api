@@ -290,9 +290,10 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 			"\nt1.term as embeddingMethodTerm," +
 			"\nt2.term as fixationTerm," +
 			"\nt3.assaytype," +
-			"\ns.ageNote, s.specimenNote, ss.strain" +
+			"\ns.ageNote, s.specimenNote, ss.strain, n.note as alleleDetailNote" +
 			"\nfrom bib_citation_cache aa, gxd_assay g, gxd_specimen s, mrk_marker m, acc_accession a," +
-			"\nvoc_term t1, voc_term t2, gxd_assaytype t3, gxd_genotype gs, prb_strain ss" +
+			"\nvoc_term t1, voc_term t2, gxd_assaytype t3," +
+			"\ngxd_genotype gs left outer join mgi_note n on (gs._genotype_key = n._object_key and n._notetype_key = 1016), prb_strain ss" +
 			"\nwhere aa.jnumid = '" + jnumid + "'" +
 			"\nand aa._refs_key = g._refs_key" +
 			"\nand m._marker_key = g._marker_key" +
@@ -319,7 +320,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				domain.setEmbeddingMethod(rs.getString("embeddingMethodTerm"));
 				domain.setFixationMethod(rs.getString("fixationTerm"));
 				domain.setGenotypeBackground(rs.getString("strain"));
-//				domain.setGenotypeAllelePairs(genotypeAllelePairs);
+				domain.setGenotypeAllelePairs(rs.getString("alleleDetailNote"));
 				domain.setSpecimenLabel(rs.getString("specimenLabel"));
 				domain.setSex(rs.getString("sex"));
 				domain.setAge(rs.getString("age"));

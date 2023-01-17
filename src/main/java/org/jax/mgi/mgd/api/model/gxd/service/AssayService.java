@@ -1408,6 +1408,9 @@ public class AssayService extends BaseService<AssayDomain> {
 
 		List<SummaryResultDomain> results = new ArrayList<SummaryResultDomain>();
 		
+		Integer offset = 0;
+		Integer limit = 250;
+		
 		String cmd = "\nselect a.accid, ga._assay_key, ga._refs_key, ga._assaytype_key, ga._marker_key, ga._celltype_term_key," +
 				"\nga.age, ga.strength, ga.expressed, ga.resultnote," +
 				"\naa.jnumid," +
@@ -1442,6 +1445,8 @@ public class AssayService extends BaseService<AssayDomain> {
 		        "\nand ga._assaytype_key = gat._assaytype_key" +
 		        "\nand ga._emapa_term_key = t1._term_key" +		        
 		        "\norder by _stage_key, t1.term, celltype, markerSymbol, sequenceNum, accid, specimenLabel";
+		
+		cmd = cmd + "\noffset " + offset + "\nlimit " + limit;
 		log.info(cmd);	
 		
 		try {

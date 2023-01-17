@@ -1374,10 +1374,12 @@ public class AssayService extends BaseService<AssayDomain> {
 		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
 		
 		String cmd = "\nselect distinct g._assay_key, m._marker_key, m.symbol, g._assaytype_key, ag.accid" + 
-				"\nfrom bib_citation_cache aa, gxd_assay g, mrk_marker m, acc_accession ag" + 
-				"\nwhere aa.jnumid = '" + jnumid + "'" +
-				"\nand aa._refs_key = g._refs_key" +
+				"\nfrom bib_citation_cache b, gxd_assay g, mrk_marker m, acc_accession ag" + 
+				"\nwhere b.jnumid = '" + jnumid + "'" +
+				"\nand b._refs_key = g._refs_key" +
 				"\nand m._marker_key = g._marker_key" +
+				"\nand g._assay_key = ag._object_key" +
+				"\nand ag._mgitype_key = 8" +				
 				"\norder by m.symbol, g._assaytype_key, b.short_citation, ag.accid";
 		
 		log.info(cmd);	

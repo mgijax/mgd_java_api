@@ -1,7 +1,11 @@
 package org.jax.mgi.mgd.api.model.gxd.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -13,6 +17,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Path("/specimen")
 @Api(value = "Specimen Endpoints")
@@ -49,4 +54,19 @@ public class SpecimenController extends BaseController<SpecimenDomain> {
 		return specimenService.get(key);
 	}
 	
+	@POST
+	@ApiOperation(value = "Get list of specimen domains by reference jnumid")
+	@Path("/getSpecimenByRef")
+	public List<SpecimenDomain> getSpecimenByRef(String jnumid) {
+		
+		List<SpecimenDomain> results = new ArrayList<SpecimenDomain>();
+
+		try {
+			results = specimenService.getSpecimenByRef(jnumid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
 }

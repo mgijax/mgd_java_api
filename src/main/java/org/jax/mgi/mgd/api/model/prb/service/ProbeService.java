@@ -922,7 +922,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 					"\nselect distinct p._probe_key from PRB_Probe p, PRB_Alias a, PRB_Reference r" +
 					"\nwhere a.alias ilike '" + name + "'" +
 					"\nand a._reference_key = r._reference_key" +
-					"\nand a._probe_key = p._probe_key";
+					"\nand r._probe_key = p._probe_key";
 			if (segmentTypeKey != null && !segmentTypeKey.isEmpty()) {
 				cmd = cmd + "\nand p._segmenttype_key = " + segmentTypeKey;
 			}

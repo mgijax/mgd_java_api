@@ -919,7 +919,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		if (name != null && !name.isEmpty()) {
 			cmd = cmd + "\nand p.name ilike '" + name + "'";
 			cmd = cmd + "\nunion" +
-					"\nselect distinct p._probe_key from PRB_Alias p, PRB_Reference r" +
+					"\nselect distinct r._probe_key from PRB_Alias p, PRB_Reference r" +
 					"\nwhere p.alias ilike '" + name + "'" +
 					"\nand p._reference_key = r._reference_key";
 		}

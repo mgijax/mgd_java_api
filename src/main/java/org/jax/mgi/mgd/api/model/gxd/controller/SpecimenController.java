@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.SpecimenDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SummarySpecimenDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.SpecimenService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
@@ -57,9 +58,9 @@ public class SpecimenController extends BaseController<SpecimenDomain> {
 	@POST
 	@ApiOperation(value = "Get list of specimen domains by reference jnumid")
 	@Path("/getSpecimenByRef")
-	public List<SpecimenDomain> getSpecimenByRef(String jnumid) {
+	public List<SummarySpecimenDomain> getSpecimenByRef(String jnumid) {
 		
-		List<SpecimenDomain> results = new ArrayList<SpecimenDomain>();
+		List<SummarySpecimenDomain> results = new ArrayList<SummarySpecimenDomain>();
 
 		try {
 			results = specimenService.getSpecimenByRef(jnumid);

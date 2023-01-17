@@ -14,6 +14,7 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.SpecimenDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.SpecimenDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SummarySpecimenDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Specimen;
 import org.jax.mgi.mgd.api.model.gxd.translator.SpecimenTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -279,30 +280,51 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 	}
 
 	@Transactional	
-	public List<SpecimenDomain> getSpecimenByRef(String jnumid) {
+	public List<SummarySpecimenDomain> getSpecimenByRef(String jnumid) {
 		// return list of specimen domains by reference jnum id
 
-		List<SpecimenDomain> results = new ArrayList<SpecimenDomain>();
+		List<SummarySpecimenDomain> results = new ArrayList<SummarySpecimenDomain>();
 		
-		String cmd = "\nselect distinct s._specimen_key, m.symbol, a.accid, s.specimenLabel" +
-				"\nfrom bib_citation_cache aa, gxd_assay g, gxd_specimen s, mrk_marker m, acc_accession a" + 
-				"\nwhere aa.jnumid = '" + jnumid + "'" +
-				"\nand aa._refs_key = g._refs_key" +
-				"\nand m._marker_key = g._marker_key" +
-				"\nand g._assay_key = s._assay_key" +
-				"\nand g._assay_key = a._object_key" +
-				"\nand a._mgitype_key = 8" +
-				"\nand a._logicaldb_key = 1" +
-				"\norder by specimenLabel, symbol, accid";
-		
+		String cmd = "\nselect distinct s._specimen_key, m.symbol, a.accid, s.specimenLabel," +
+			"\ns.sex, s.age, s.hybridization," +
+			"\nt1.term as embeddingMethodTerm," +
+			"\nt2.term as fixationTerm," +
+			"\nt3.assaytype," +
+			"\ns.ageNote, s.specimenNote" +
+			"\nfrom bib_citation_cache aa, gxd_assay g, gxd_specimen s, mrk_marker m, acc_accession a," +
+			"\nvoc_term t1, voc_term t2, gxd_assaytype t3" +
+			"\nwhere aa.jnumid = '" + jnumid + "'" +
+			"\nand aa._refs_key = g._refs_key" +
+			"\nand m._marker_key = g._marker_key" +
+			"\nand g._assay_key = s._assay_key" +
+			"\nand g._assay_key = a._object_key" +
+			"\nand a._mgitype_key = 8" +
+			"\nand a._logicaldb_key = 1" +
+			"\nand s._embedding_key = t1._term_key" +
+			"\nand s._fixation_key = t2._term_key" +
+			"\nand g._assaytype_key = t3._assaytype_key" +
+			"\norder by specimenLabel, symbol, accid";
+
 		log.info(cmd);	
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				SpecimenDomain domain = new SpecimenDomain();
-				domain = translator.translate(specimenDAO.get(rs.getInt("_specimen_key")));
-				results.add(domain);
+				SummarySpecimenDomain domain = new SummarySpecimenDomain();
+				domain.setSpecimenKey(rs.getString("specimen_key"));
+				domain.setAssayID(rs.getString("accid"));
+				domain.setAssayType(rs.getString("assaytype"));
+				domain.setEmbeddingMethod(rs.getString("embeddingMethodTerm"));
+				domain.setFixationMethod(rs.getString("fixationTerm"));
+//				domain.setGenotypeBackground(genotypeBackground);
+//				domain.setGenotypeAllelePairs(genotypeAllelePairs);
+				domain.setSpecimenLabel(rs.getString("specimenLabel"));
+				domain.setSex(rs.getString("sex"));
+				domain.setAge(rs.getString("age"));
+				domain.setAgeNote(rs.getString("ageNote"));
+				domain.setHybridization(rs.getString("hybridization"));
+				domain.setSpecimenNote(rs.getString("specimenNote"));
+			results.add(domain);
 				specimenDAO.clear();
 			}
 			sqlExecutor.cleanup();

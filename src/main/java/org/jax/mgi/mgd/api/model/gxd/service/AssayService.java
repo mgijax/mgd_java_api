@@ -1346,7 +1346,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand g._refs_key = b._refs_key" +
 				"\nand g._assay_key = ag._object_key" +
 				"\nand ag._mgitype_key = 8" +				
-				"\norder by m.symbol, g._assaytype_key, b.short_citation, aa.accid";
+				"\norder by m.symbol, g._assaytype_key, b.short_citation, ag.accid";
 		
 		log.info(cmd);	
 		

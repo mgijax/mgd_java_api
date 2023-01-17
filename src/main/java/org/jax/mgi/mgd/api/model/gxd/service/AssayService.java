@@ -1403,15 +1403,41 @@ public class AssayService extends BaseService<AssayDomain> {
 	}
 	
 	@Transactional	
-	public List<SummaryResultDomain> getResultByRef(String jnumid) {
+	public SearchResults<SummaryResultDomain> getResultByRef(String jnumid, String offsetIn, String limitIn) {
 		// return list of summary results domains by reference jnum id
 
-		List<SummaryResultDomain> results = new ArrayList<SummaryResultDomain>();
+		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 		
-		Integer offset = 0;
-		Integer limit = 250;
+		String offset = "0";
+		String limit = "250";
 		
-		String cmd = "\nselect a.accid, ga._assay_key, ga._refs_key, ga._assaytype_key, ga._marker_key, ga._celltype_term_key," +
+		if (offsetIn != null && !offsetIn.isEmpty()) {
+			offset = offsetIn;
+		}
+		
+		if (limitIn != null && !limitIn.isEmpty()) {
+			limit = limitIn;
+		}
+		
+		String cmd = "\nselect count(aa._refs_key) as total_count" +
+				"\nfrom gxd_expression ga, bib_citation_cache aa" +
+		        "\nwhere aa.jnumid = '" + jnumid + "'" +
+		        "\nand aa._refs_key = ga._refs_key";
+		
+		log.info(cmd);
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getLong("total_count");
+				assayDAO.clear();				
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		cmd = "\nselect a.accid, ga._assay_key, ga._refs_key, ga._assaytype_key, ga._marker_key, ga._celltype_term_key," +
 				"\nga.age, ga.strength, ga.expressed, ga.resultnote," +
 				"\naa.jnumid," +
 				"\ngat.assaytype," +
@@ -1474,7 +1500,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setSpecimenLabel(rs.getString("specimenLabel"));
 				domain.setStructure(rs.getString("structure"));
 				domain.setStrength(rs.getString("strength"));
-				results.add(domain);
+				results.items.add(domain);
 				assayDAO.clear();				
 			}
 			sqlExecutor.cleanup();

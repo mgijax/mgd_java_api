@@ -911,13 +911,17 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		String name = searchDomain.getName();
 		String segmentTypeKey = searchDomain.getSegmentTypeKey();
 		
-		String cmd = "\nselect distinct _probe_key from PRB_Probe where _probe_key is not null";
+		String cmd = "\nselect distinct p._probe_key from PRB_Probe p where p._probe_key is not null";
 		
-		if (name != null && !name.isEmpty()) {
-			cmd = cmd + "\nand name ilike '" + name + "'";
-		}
 		if (segmentTypeKey != null && !segmentTypeKey.isEmpty()) {
-			cmd = cmd + "\nand _segmenttype_key = " + segmentTypeKey;
+			cmd = cmd + "\nand p._segmenttype_key = " + segmentTypeKey;
+		}
+		if (name != null && !name.isEmpty()) {
+			cmd = cmd + "\nand p.name ilike '" + name + "'";
+			cmd = cmd + "\nunion" +
+					"\nselect distinct p._probe_key from PRB_Alias a, PRB_Reference r" +
+					"\nwhere a.alias ilike '" + name + "'" +
+					"\nand a._reference_key = r._reference_key";
 		}
 		
 		results = processSummaryProbeDomain(cmd);		

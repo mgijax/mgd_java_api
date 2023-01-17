@@ -11,9 +11,12 @@ public class SummaryResultDomain extends BaseDomain {
 	// summary of assay results 
 	// not to be used when editing purposes
 	
+	// input parameters
 	private String jnumid;
 	private String offset;
 	private String limit;
+	
+	// output results
 	private String refsKey;	
 	private String assayKey;
 	private String accID;

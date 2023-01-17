@@ -1480,6 +1480,8 @@ public class AssayService extends BaseService<AssayDomain> {
 			while (rs.next()) {
 				SummaryResultDomain domain = new SummaryResultDomain();
 				domain.setJnumid(rs.getString("jnumid"));
+				domain.setOffset(searchDomain.getOffset());
+				domain.setLimit(searchDomain.getLimit());
 				domain.setRefsKey(rs.getString("_refs_key"));				
 				domain.setAccID(rs.getString("accid"));
 				domain.setAge(rs.getString("age"));
@@ -1500,7 +1502,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setSpecimenLabel(rs.getString("specimenLabel"));
 				domain.setStructure(rs.getString("structure"));
 				domain.setStrength(rs.getString("strength"));
-				results.items.add(domain);
+				results.setItem(domain);
 				assayDAO.clear();				
 			}
 			sqlExecutor.cleanup();

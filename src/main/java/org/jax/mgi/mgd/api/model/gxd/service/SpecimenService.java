@@ -290,7 +290,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 			"\nt1.term as embeddingMethodTerm," +
 			"\nt2.term as fixationTerm," +
 			"\nt3.assaytype," +
-			"\ns.ageNote, s.specimenNote" +
+			"\ns.ageNote, s.specimenNote, ss.strain" +
 			"\nfrom bib_citation_cache aa, gxd_assay g, gxd_specimen s, mrk_marker m, acc_accession a," +
 			"\nvoc_term t1, voc_term t2, gxd_assaytype t3, gxd_genotype gs, prb_strain ss" +
 			"\nwhere aa.jnumid = '" + jnumid + "'" +

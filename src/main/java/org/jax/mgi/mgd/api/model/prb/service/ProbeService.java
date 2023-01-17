@@ -916,6 +916,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		if (segmentTypeKey != null && !segmentTypeKey.isEmpty()) {
 			cmd = cmd + "\nand p._segmenttype_key = " + segmentTypeKey;
 		}
+		
 		if (name != null && !name.isEmpty()) {
 			cmd = cmd + "\nand p.name ilike '" + name + "'";
 			cmd = cmd + "\nunion" +

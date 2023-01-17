@@ -1407,6 +1407,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		// return list of summary results domains by reference jnum id
 
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
+		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
 		
 		String offset = "0";
 		String limit = "250";
@@ -1502,7 +1503,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setSpecimenLabel(rs.getString("specimenLabel"));
 				domain.setStructure(rs.getString("structure"));
 				domain.setStrength(rs.getString("strength"));
-				results.setItem(domain);
+				summaryResults.add(domain);
 				assayDAO.clear();				
 			}
 			sqlExecutor.cleanup();
@@ -1511,6 +1512,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			e.printStackTrace();
 		}		
 
+		results.items = summaryResults;
 		return results;
 	}	
 }

@@ -917,7 +917,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		
 		String cmd = "\nselect distinct _probe_key from PRB_Probe where name ilike " + name;
 		
-		if (!segmentTypeKey.isEmpty()) {
+		if (segmentTypeKey != null && !segmentTypeKey.isEmpty()) {
 			cmd = cmd + "\nand _segmenttype_key = " + segmentTypeKey;
 		}
 		

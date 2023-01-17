@@ -292,7 +292,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 			"\nt3.assaytype," +
 			"\ns.ageNote, s.specimenNote" +
 			"\nfrom bib_citation_cache aa, gxd_assay g, gxd_specimen s, mrk_marker m, acc_accession a," +
-			"\nvoc_term t1, voc_term t2, gxd_assaytype t3" +
+			"\nvoc_term t1, voc_term t2, gxd_assaytype t3, gxd_genotype gs, prb_strain ss" +
 			"\nwhere aa.jnumid = '" + jnumid + "'" +
 			"\nand aa._refs_key = g._refs_key" +
 			"\nand m._marker_key = g._marker_key" +
@@ -303,6 +303,8 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 			"\nand s._embedding_key = t1._term_key" +
 			"\nand s._fixation_key = t2._term_key" +
 			"\nand g._assaytype_key = t3._assaytype_key" +
+			"\nand s._genotype_key = gs._genotype_key" +
+			"\nand gs._strain_key = ss._strain_key" +
 			"\norder by specimenLabel, symbol, accid";
 
 		log.info(cmd);	
@@ -316,7 +318,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				domain.setAssayType(rs.getString("assaytype"));
 				domain.setEmbeddingMethod(rs.getString("embeddingMethodTerm"));
 				domain.setFixationMethod(rs.getString("fixationTerm"));
-//				domain.setGenotypeBackground(genotypeBackground);
+				domain.setGenotypeBackground(rs.getString("strain"));
 //				domain.setGenotypeAllelePairs(genotypeAllelePairs);
 				domain.setSpecimenLabel(rs.getString("specimenLabel"));
 				domain.setSex(rs.getString("sex"));

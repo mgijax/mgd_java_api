@@ -1395,43 +1395,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		}		
 
 		return results;
-	}	
-	
-	@Transactional	
-	public List<AssayDomain> getSpecimenByRef(String jnumid) {
-		// return list of specimen domains by reference jnum id
-
-		List<AssayDomain> results = new ArrayList<AssayDomain>();
-		
-		String cmd = "\nselect distinct g._assay_key, m._marker_key, m.symbol, a.accid, s.specimenLabel" +
-				"\nfrom bib_citation_cache aa, gxd_assay g, gxd_specimen s, mrk_marker m, acc_accession a" + 
-				"\nwhere aa.jnumid = '" + jnumid + "'" +
-				"\nand aa._refs_key = g._refs_key" +
-				"\nand m._marker_key = g._marker_key" +
-				"\nand g._assay_key = s._assay_key" +
-				"\nand g._assay_key = a._object_key" +
-				"\nand a._mgitype_key = 8" +
-				"\nand a._logicaldb_key = 1" +
-				"\norder by specimenLabel, symbol, accid";
-		
-		log.info(cmd);	
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				AssayDomain domain = new AssayDomain();
-				domain = translator.translate(assayDAO.get(rs.getInt("_assay_key")));
-				results.add(domain);
-				assayDAO.clear();
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}		
-
-		return results;
-	}	
+	}
 	
 	@Transactional	
 	public List<SummaryResultDomain> getResultByRef(String jnumid) {

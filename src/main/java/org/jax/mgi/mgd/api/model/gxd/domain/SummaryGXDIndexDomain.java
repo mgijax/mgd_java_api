@@ -15,7 +15,9 @@ public class SummaryGXDIndexDomain extends BaseDomain {
 	private String markerName;
 	private String markerStatus;
 	private String markerType;
+	private String indexAssayKey;
 	private String indexAssay;
+	private String sequenceNum;
 	private String age;
 	private String priority;
 	private String conditional;

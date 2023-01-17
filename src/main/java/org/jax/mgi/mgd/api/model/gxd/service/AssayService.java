@@ -1281,7 +1281,7 @@ public class AssayService extends BaseService<AssayDomain> {
 
 		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
 		
-		String cmd = "\n(select distinct s._assay_key, m._marker_key, m.symbol, ga.sequenceNum, t1.assaytype, b.short_citation, ag.accid" + 
+		String cmd = "\n(select distinct s._assay_key, m._marker_key, m.symbol, t1.sequenceNum, t1.assaytype, b.short_citation, ag.accid" + 
 				"\nfrom all_allele a, acc_accession aa, gxd_allelegenotype g, gxd_gellane s, gxd_assay ga, mrk_marker m, gxd_assaytype t1, bib_citation_cache b, acc_accession ag" + 
 				"\nwhere a._allele_key = aa._object_key" + 
 				"\nand aa._mgitype_key = 11" +
@@ -1295,7 +1295,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand ga._assay_key = ag._object_key" +
 				"\nand ag._mgitype_key = 8" +
 				"\nunion" +
-				"\nselect distinct s._assay_key, m._marker_key, m.symbol, ga._assaytype_key, t1.assaytype, b.short_citation, ag.accid" +
+				"\nselect distinct s._assay_key, m._marker_key, m.symbol, t1.sequenceNum, t1.assaytype, b.short_citation, ag.accid" +
 				"\nfrom all_allele a, acc_accession aa, gxd_allelegenotype g, gxd_specimen s, gxd_assay ga, mrk_marker m, gxd_assaytype t1, bib_citation_cache b, acc_accession ag" + 
 				"\nwhere a._allele_key = aa._object_key" + 
 				"\nand aa._mgitype_key = 11" +
@@ -1336,7 +1336,7 @@ public class AssayService extends BaseService<AssayDomain> {
 
 		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
 		
-		String cmd = "\nselect distinct g._assay_key, m._marker_key, m.symbol, m.symbol, g.sequenceNum, t1.assaytype, b.short_citation, ag.accid" + 
+		String cmd = "\nselect distinct g._assay_key, m._marker_key, m.symbol, m.symbol, t1.sequenceNum, t1.assaytype, b.short_citation, ag.accid" + 
 				"\nfrom mrk_marker m, acc_accession aa, gxd_assay g, gxd_assaytype t1, bib_citation_cache b, acc_accession ag" + 
 				"\nwhere m._marker_key = aa._object_key" + 
 				"\nand aa._mgitype_key = 2" +
@@ -1346,7 +1346,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand g._refs_key = b._refs_key" +
 				"\nand g._assay_key = ag._object_key" +
 				"\nand ag._mgitype_key = 8" +				
-				"\norder by m.symbol, g.sequenceNum, b.short_citation, ag.accid";
+				"\norder by m.symbol, t1.sequenceNum, b.short_citation, ag.accid";
 		
 		log.info(cmd);	
 		
@@ -1373,14 +1373,15 @@ public class AssayService extends BaseService<AssayDomain> {
 
 		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
 		
-		String cmd = "\nselect distinct g._assay_key, m._marker_key, m.symbol, g.sequenceNum, b.short_citation, ag.accid" + 
-				"\nfrom bib_citation_cache b, gxd_assay g, mrk_marker m, acc_accession ag" + 
+		String cmd = "\nselect distinct g._assay_key, m._marker_key, m.symbol, t1.sequenceNum, b.short_citation, ag.accid" + 
+				"\nfrom bib_citation_cache b, gxd_assay g, gxd_assaytype t1, mrk_marker m, acc_accession ag " + 
 				"\nwhere b.jnumid = '" + jnumid + "'" +
 				"\nand b._refs_key = g._refs_key" +
 				"\nand m._marker_key = g._marker_key" +
+				"\nand g._assaytype_key = t1._assaytype_key" +				
 				"\nand g._assay_key = ag._object_key" +
 				"\nand ag._mgitype_key = 8" +				
-				"\norder by m.symbol, g.sequenceNum, b.short_citation, ag.accid";
+				"\norder by m.symbol, t1.sequenceNum, b.short_citation, ag.accid";
 		
 		log.info(cmd);	
 		

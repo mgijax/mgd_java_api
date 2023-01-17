@@ -11,6 +11,10 @@ public class SummaryResultDomain extends BaseDomain {
 	// summary of assay results 
 	// not to be used when editing purposes
 	
+	private String jnumid;
+	private String offset;
+	private String limit;
+	private String refsKey;	
 	private String assayKey;
 	private String accID;
 	private String assayTypeKey;
@@ -18,8 +22,6 @@ public class SummaryResultDomain extends BaseDomain {
 	private String assayTypeSequenceNum;
 	private String markerKey;
 	private String markerSymbol;
-	private String refsKey;
-	private String jnumid;
 	private String age;
 	private String structure;
 	private String cellTypeKey;

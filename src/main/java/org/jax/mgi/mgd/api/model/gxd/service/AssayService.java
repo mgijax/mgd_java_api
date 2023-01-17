@@ -1403,7 +1403,7 @@ public class AssayService extends BaseService<AssayDomain> {
 	}
 	
 	@Transactional	
-	public SearchResults<SummaryResultDomain> getResultByRef(String jnumid, String offsetIn, String limitIn) {
+	public SearchResults<SummaryResultDomain> getResultByRef(SummaryResultDomain searchDomain) {
 		// return list of summary results domains by reference jnum id
 
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
@@ -1411,17 +1411,17 @@ public class AssayService extends BaseService<AssayDomain> {
 		String offset = "0";
 		String limit = "250";
 		
-		if (offsetIn != null && !offsetIn.isEmpty()) {
-			offset = offsetIn;
+		if (searchDomain.getOffset() != null && !searchDomain.getOffset().isEmpty()) {
+			offset = searchDomain.getOffset();
 		}
 		
-		if (limitIn != null && !limitIn.isEmpty()) {
-			limit = limitIn;
+		if (searchDomain.getLimit() != null && !searchDomain.getLimit().isEmpty()) {
+			limit = searchDomain.getLimit();
 		}
 		
 		String cmd = "\nselect count(aa._refs_key) as total_count" +
 				"\nfrom gxd_expression ga, bib_citation_cache aa" +
-		        "\nwhere aa.jnumid = '" + jnumid + "'" +
+		        "\nwhere aa.jnumid = '" + searchDomain.getJnumid() + "'" +
 		        "\nand aa._refs_key = ga._refs_key";
 		
 		log.info(cmd);
@@ -1462,7 +1462,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		        "\ngxd_assaytype gat," +
 		        "\nmrk_marker m," +
 		        "\nvoc_term t1" +
-		        "\nwhere aa.jnumid = '" + jnumid + "'" +
+		        "\nwhere aa.jnumid = '" + searchDomain.getJnumid() + "'" +
 		        "\nand aa._refs_key = ga._refs_key" +
 		        "\nand ga._assay_key = a._object_key" +
 		        "\nand a._mgitype_key = 8" +
@@ -1479,6 +1479,8 @@ public class AssayService extends BaseService<AssayDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SummaryResultDomain domain = new SummaryResultDomain();
+				domain.setJnumid(rs.getString("jnumid"));
+				domain.setRefsKey(rs.getString("_refs_key"));				
 				domain.setAccID(rs.getString("accid"));
 				domain.setAge(rs.getString("age"));
 				domain.setAssayKey(rs.getString("_assay_key"));
@@ -1488,14 +1490,12 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setCellTypeKey(rs.getString("_celltype_term_key"));
 				domain.setCellType(rs.getString("celltype"));
 				domain.setExpressed(rs.getString("expressed"));
-				domain.setJnumid(rs.getString("jnumid"));
 				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setMarkerSymbol(rs.getString("markerSymbol"));
 				domain.setAlleleKey1(rs.getString("_allele_key_1"));
 				domain.setAlleleKey2(rs.getString("_allele_key_2"));
 				domain.setAlleleSymbol1(rs.getString("alleleSymbol1"));
 				domain.setAlleleSymbol2(rs.getString("alleleSymbol2"));			
-				domain.setRefsKey(rs.getString("_refs_key"));
 				domain.setResultNote(rs.getString("resultnote"));
 				domain.setSpecimenLabel(rs.getString("specimenLabel"));
 				domain.setStructure(rs.getString("structure"));

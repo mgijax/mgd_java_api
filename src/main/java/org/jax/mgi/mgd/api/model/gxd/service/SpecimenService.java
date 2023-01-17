@@ -311,7 +311,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SummarySpecimenDomain domain = new SummarySpecimenDomain();
-				domain.setSpecimenKey(rs.getString("specimen_key"));
+				domain.setSpecimenKey(rs.getString("_specimen_key"));
 				domain.setAssayID(rs.getString("accid"));
 				domain.setAssayType(rs.getString("assaytype"));
 				domain.setEmbeddingMethod(rs.getString("embeddingMethodTerm"));

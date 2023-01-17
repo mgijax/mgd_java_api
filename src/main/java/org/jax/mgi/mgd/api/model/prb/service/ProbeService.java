@@ -912,11 +912,14 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			return results;
 		}
 		
-		String name = "'" + searchDomain.getName() + "'";
+		String name = searchDomain.getName();
 		String segmentTypeKey = searchDomain.getSegmentTypeKey();
 		
-		String cmd = "\nselect distinct _probe_key from PRB_Probe where name ilike " + name;
+		String cmd = "\nselect distinct _probe_key from PRB_Probe where _probe_key is not null";
 		
+		if (name != null && !name.isEmpty()) {
+			cmd = cmd + "\nand name ilike '" + name + "'";
+		}
 		if (segmentTypeKey != null && !segmentTypeKey.isEmpty()) {
 			cmd = cmd + "\nand _segmenttype_key = " + segmentTypeKey;
 		}

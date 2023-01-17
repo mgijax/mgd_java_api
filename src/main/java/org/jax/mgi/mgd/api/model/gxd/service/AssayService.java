@@ -1431,7 +1431,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				results.total_count = rs.getLong("total_count");
 				assayDAO.clear();				
 			}
-			sqlExecutor.cleanup();
+			//sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();

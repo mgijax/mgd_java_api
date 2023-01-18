@@ -24,9 +24,9 @@ import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceSearchDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowRelevanceDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceByDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceIndexDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.SummaryReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.entities.Reference;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowStatus;
@@ -2178,10 +2178,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}
 
 	@Transactional	
-	public List<SlimReferenceByDomain> getRefByMarker(String accid) {
+	public List<SummaryReferenceDomain> getRefByMarker(String accid) {
 		// return list of reference domains by marker acc id
 
-		List<SlimReferenceByDomain> results = new ArrayList<SlimReferenceByDomain>();
+		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 		
 		String cmd = "\nselect distinct c.*, r.*" + 
 				"\nfrom mrk_reference mr, acc_accession aa, bib_citation_cache c, bib_refs r" + 
@@ -2197,7 +2197,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				SlimReferenceByDomain domain = new SlimReferenceByDomain();
+				SummaryReferenceDomain domain = new SummaryReferenceDomain();
 				domain.setRefsKey(rs.getString("_refs_key"));
 				domain.setJnum(rs.getString("numericpart"));
 				domain.setJnumid(rs.getString("jnumid"));
@@ -2223,10 +2223,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}
 	
 	@Transactional	
-	public List<SlimReferenceByDomain> getRefByAllele(String accid) {
+	public List<SummaryReferenceDomain> getRefByAllele(String accid) {
 		// return list of reference domains by allele acc id
 
-		List<SlimReferenceByDomain> results = new ArrayList<SlimReferenceByDomain>();
+		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 		
 		String cmd = "\nselect distinct c.*, r.*" + 
 				"\nfrom mgi_reference_assoc ar, acc_accession aa, bib_citation_cache c, bib_refs r" + 
@@ -2243,7 +2243,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				SlimReferenceByDomain domain = new SlimReferenceByDomain();
+				SummaryReferenceDomain domain = new SummaryReferenceDomain();
 				domain.setRefsKey(rs.getString("_refs_key"));
 				domain.setJnum(rs.getString("numericpart"));
 				domain.setJnumid(rs.getString("jnumid"));
@@ -2269,11 +2269,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}	
 	
 	@Transactional	
-	public List<SlimReferenceByDomain> getRefBySearch(ReferenceSearchDomain searchDomain) {
+	public List<SummaryReferenceDomain> getRefBySearch(ReferenceSearchDomain searchDomain) {
 		// return list of reference domains by searchDomain
 		// accession ids; authors; title; journal; volume; and year.
 		
-		List<SlimReferenceByDomain> results = new ArrayList<SlimReferenceByDomain>();
+		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 				
 		String cmd = "\nselect distinct c.*, r.*" + 
 				"\nfrom acc_accession a, bib_citation_cache c, bib_refs r";
@@ -2336,7 +2336,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				SlimReferenceByDomain domain = new SlimReferenceByDomain();
+				SummaryReferenceDomain domain = new SummaryReferenceDomain();
 				domain.setRefsKey(rs.getString("_refs_key"));
 				domain.setJnum(rs.getString("numericpart"));
 				domain.setJnumid(rs.getString("jnumid"));

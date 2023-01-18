@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class SlimReferenceByDomain extends BaseDomain {
+public class SummaryReferenceDomain extends BaseDomain {
 
 	// a slim version of ReferenceDomain used by "getByAllele" and "getByMarker" endpoints
 	// not to be used when editing purposes

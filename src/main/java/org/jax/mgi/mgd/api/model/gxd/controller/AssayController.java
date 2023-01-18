@@ -235,6 +235,22 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 	
 	@POST
+	@ApiOperation(value = "Get list of assay domains by antibody accession id")
+	@Path("/getAssayByAntibody")
+	public List<SlimAssayDomain> getAssayByAntibody(String accid) {
+		
+		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
+
+		try {
+			results = assayService.getAssayByAntibody(accid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@POST
 	@ApiOperation(value = "Get list of assay domains by marker accession id")
 	@Path("/getAssayByMarker")
 	public List<SlimAssayDomain> getAssayByMarker(String accid) {

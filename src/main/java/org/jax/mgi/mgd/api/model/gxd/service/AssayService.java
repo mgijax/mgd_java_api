@@ -1374,7 +1374,7 @@ public class AssayService extends BaseService<AssayDomain> {
 
 		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
 		
-		String cmd = "\nselect distinct g._assay_key, m._probe_key, p.name, t1.sequenceNum, t1.assaytype, b.short_citation, ag.accid" + 
+		String cmd = "\nselect distinct g._assay_key, p._probe_key, p.name, t1.sequenceNum, t1.assaytype, b.short_citation, ag.accid" + 
 				"\nfrom prb_probe p, acc_accession aa, gxd_assay g, gxd_probeprep ap, gxd_assaytype t1, bib_citation_cache b, acc_accession ag" + 
 				"\nwhere p._probe_key = aa._object_key" + 
 				"\nand aa._mgitype_key = 3" +

@@ -19,9 +19,9 @@ import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceSearchDomain;
-import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceByDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.SlimReferenceIndexDomain;
+import org.jax.mgi.mgd.api.model.bib.domain.SummaryReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.UserService;
@@ -200,9 +200,9 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	@POST
 	@ApiOperation(value = "Get list of reference domains by marker accession id")
 	@Path("/getRefByMarker")
-	public List<SlimReferenceByDomain> getRefByMarker(String accid) {
+	public List<SummaryReferenceDomain> getRefByMarker(String accid) {
 		
-		List<SlimReferenceByDomain> results = new ArrayList<SlimReferenceByDomain>();
+		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 
 		try {
 			results = referenceService.getRefByMarker(accid);
@@ -216,9 +216,9 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	@POST
 	@ApiOperation(value = "Get list of reference domains by allele accession id")
 	@Path("/getRefByAllele")
-	public List<SlimReferenceByDomain> getRefByAllele(String accid) {
+	public List<SummaryReferenceDomain> getRefByAllele(String accid) {
 		
-		List<SlimReferenceByDomain> results = new ArrayList<SlimReferenceByDomain>();
+		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 
 		try {
 			results = referenceService.getRefByAllele(accid);
@@ -232,9 +232,9 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	@POST
 	@ApiOperation(value = "Get list of reference domains by search domain")
 	@Path("/getRefBySearch")
-	public List<SlimReferenceByDomain> getRefBySearch(ReferenceSearchDomain searchDomain) {
+	public List<SummaryReferenceDomain> getRefBySearch(ReferenceSearchDomain searchDomain) {
 		
-		List<SlimReferenceByDomain> results = new ArrayList<SlimReferenceByDomain>();
+		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 
 		try {
 			results = referenceService.getRefBySearch(searchDomain);

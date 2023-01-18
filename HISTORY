@@ -4,6 +4,21 @@
 #                    with the same name existing at the site where the files
 #                    are being downloaded from.
 
+TAG: mgd_java_api-6-0-22-30
+DATE: 01/18/2023
+STAFF: lec
+wts2-888/PWI page revamp: Summary - API component
+wts2-888/fl2-120/PWI page revamp: Antibody Summary - API component
+wts2-888/fl2-125/PWI page revamp: GXD Index Summary - API component
+wts2-888/fl2-123/fl2-133/PWI page revamp: Probe Summary - API component
+wts2-888/fl2-129/PWI page revamp: Assay Summary - API component
+
+TAG: mgd_java_api-6-0-22-28
+DATE: 01/09/2023
+STAFF: lec
+wts2-888/fl2-111/PWI page revamp: Allele Summary - API component
+/allele/getAlleleByMarker, getAlleleByRef
+
 TAG: mgd_java_api-6-0-22-29
 DATE: 01/10/2023
 STAFF: lec

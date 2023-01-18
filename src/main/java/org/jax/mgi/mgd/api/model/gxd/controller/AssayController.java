@@ -248,22 +248,6 @@ public class AssayController extends BaseController<AssayDomain> {
 		}
 		
 		return results;
-	}
-	
-	@POST
-	@ApiOperation(value = "Get list of assay domains by probe accession id")
-	@Path("/getAssayByProbe")
-	public List<SlimAssayDomain> getAssayByProbe(String accid) {
-		
-		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
-
-		try {
-			results = assayService.getAssayByProbe(accid);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
 	}	
 	
 	@POST
@@ -281,6 +265,22 @@ public class AssayController extends BaseController<AssayDomain> {
 		
 		return results;
 	}	
+	
+	@POST
+	@ApiOperation(value = "Get list of assay domains by probe accession id")
+	@Path("/getAssayByProbe")
+	public List<SlimAssayDomain> getAssayByProbe(String accid) {
+		
+		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
+
+		try {
+			results = assayService.getAssayByProbe(accid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
 	
 	@POST
 	@ApiOperation(value = "Get list of assay domains by reference jnumid")

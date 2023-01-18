@@ -1367,44 +1367,6 @@ public class AssayService extends BaseService<AssayDomain> {
 
 		return results;
 	}
-	
-	@Transactional	
-	public List<SlimAssayDomain> getAssayByProbe(String accid) {
-		// return list of assay domains by probe acc id
-
-		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
-		
-		String cmd = "\nselect distinct g._assay_key, p._probe_key, p.name, t1.sequenceNum, t1.assaytype, b.short_citation, ag.accid" + 
-				"\nfrom prb_probe p, acc_accession aa, gxd_assay g, gxd_probeprep ap, gxd_assaytype t1, bib_citation_cache b, acc_accession ag" + 
-				"\nwhere p._probe_key = aa._object_key" + 
-				"\nand aa._mgitype_key = 3" +
-				"\nand aa.accid = '" + accid + "'" +
-				"\nand p._probe_key = ap._probe_key" +
-				"\nand ap._probeprep_key = g._probeprep_key" +
-				"\nand g._assaytype_key = t1._assaytype_key" +
-				"\nand g._refs_key = b._refs_key" +
-				"\nand g._assay_key = ag._object_key" +
-				"\nand ag._mgitype_key = 8" +				
-				"\norder by p.name, t1.sequenceNum, b.short_citation, ag.accid";
-		
-		log.info(cmd);	
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				SlimAssayDomain domain = new SlimAssayDomain();
-				domain = slimtranslator.translate(assayDAO.get(rs.getInt("_assay_key")));
-				results.add(domain);
-				assayDAO.clear();
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}		
-
-		return results;
-	}
 		
 	@Transactional	
 	public List<SlimAssayDomain> getAssayByMarker(String accid) {
@@ -1443,6 +1405,44 @@ public class AssayService extends BaseService<AssayDomain> {
 		return results;
 	}
 
+	@Transactional	
+	public List<SlimAssayDomain> getAssayByProbe(String accid) {
+		// return list of assay domains by probe acc id
+
+		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
+		
+		String cmd = "\nselect distinct g._assay_key, p._probe_key, p.name, t1.sequenceNum, t1.assaytype, b.short_citation, ag.accid" + 
+				"\nfrom prb_probe p, acc_accession aa, gxd_assay g, gxd_probeprep ap, gxd_assaytype t1, bib_citation_cache b, acc_accession ag" + 
+				"\nwhere p._probe_key = aa._object_key" + 
+				"\nand aa._mgitype_key = 3" +
+				"\nand aa.accid = '" + accid + "'" +
+				"\nand p._probe_key = ap._probe_key" +
+				"\nand ap._probeprep_key = g._probeprep_key" +
+				"\nand g._assaytype_key = t1._assaytype_key" +
+				"\nand g._refs_key = b._refs_key" +
+				"\nand g._assay_key = ag._object_key" +
+				"\nand ag._mgitype_key = 8" +				
+				"\norder by p.name, t1.sequenceNum, b.short_citation, ag.accid";
+		
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimAssayDomain domain = new SlimAssayDomain();
+				domain = slimtranslator.translate(assayDAO.get(rs.getInt("_assay_key")));
+				results.add(domain);
+				assayDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		return results;
+	}
+		
 	@Transactional	
 	public List<SlimAssayDomain> getAssayByRef(String jnumid) {
 		// return list of assay domains by reference jnum id

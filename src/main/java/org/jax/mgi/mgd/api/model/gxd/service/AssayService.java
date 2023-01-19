@@ -1485,6 +1485,49 @@ public class AssayService extends BaseService<AssayDomain> {
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
 		
+		String cmd = "\nselect count(aa._refs_key) as total_count" +
+				"\nfrom gxd_expression ga, bib_citation_cache aa" +
+		        "\nwhere aa.jnumid = '" + searchDomain.getJnumid() + "'" +
+		        "\nand aa._refs_key = ga._refs_key";
+		
+		results.total_count = processSummaryResultCount(searchDomain, cmd);
+		
+		cmd = "\nselect * from GXD_AssayResult_Summary_View" +
+				"\nwhere aa.jnumid = '" + searchDomain.getJnumid() + "'";
+		
+		summaryResults = processSummaryResultDomain(searchDomain, cmd);
+		results.items = summaryResults;
+		return results;
+	}
+	
+	@Transactional	
+	public Long processSummaryResultCount(SummaryResultDomain searchDomain, String cmd) {
+		// return count of summary results domains using search cmd
+
+		Long total_count = null;
+		
+		log.info(cmd);
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				total_count = rs.getLong("total_count");
+				assayDAO.clear();				
+			}
+			//sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}	
+
+		return total_count;
+	}
+	
+	@Transactional	
+	public List<SummaryResultDomain> processSummaryResultDomain(SummaryResultDomain searchDomain, String cmd) {
+		// return list of summary results domains by search cmd
+
+		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
+		
 		String offset = "0";
 		String limit = "250";
 		
@@ -1496,60 +1539,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			limit = searchDomain.getLimit();
 		}
 		
-		String cmd = "\nselect count(aa._refs_key) as total_count" +
-				"\nfrom gxd_expression ga, bib_citation_cache aa" +
-		        "\nwhere aa.jnumid = '" + searchDomain.getJnumid() + "'" +
-		        "\nand aa._refs_key = ga._refs_key";
-		
-		log.info(cmd);
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				results.total_count = rs.getLong("total_count");
-				assayDAO.clear();				
-			}
-			//sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}	
-		
-		cmd = "\nselect a.accid, ga._assay_key, ga._refs_key, ga._assaytype_key, ga._marker_key, ga._celltype_term_key," +
-				"\nga.age, ga.strength, ga.expressed, ga.resultnote," +
-				"\naa.jnumid," +
-				"\ngat.assaytype," +
-				"\ngat.sequenceNum," +
-				"\nm.symbol as markerSymbol," +
-				"\nct.term as celltype," +
-				"\n'TS' || ga._stage_key || ':' || t1.term as structure," +
-				"\ngs.specimenLabel," +
-				"\ngg.isconditional," +
-				"\ngga._allele_key_1, as1.symbol as alleleSymbol1," +
-				"\ngga._allele_key_2, as2.symbol as alleleSymbol2" +
-				"\nfrom gxd_expression ga" +
-		        	"\nleft outer join voc_term ct on (ga._celltype_term_key = ct._term_key)" +
-		        	"\nleft outer join gxd_specimen gs on (ga._specimen_key = gs._specimen_key)" +
-		        	"\nleft outer join gxd_genotype gg on (ga._genotype_key = gg._genotype_key)" +
-		        	"\nleft outer join gxd_allelepair gga on (ga._genotype_key = gga._genotype_key)" +
-		        	"\nleft outer join all_allele as1 on (gga._allele_key_1 = as1._allele_key)" +
-		        	"\nleft outer join all_allele as2 on (gga._allele_key_2 = as2._allele_key)" +
-		        	"\n," +
-		        "\nbib_citation_cache aa," +
-		        "\nacc_accession a," +
-		        "\ngxd_assaytype gat," +
-		        "\nmrk_marker m," +
-		        "\nvoc_term t1" +
-		        "\nwhere aa.jnumid = '" + searchDomain.getJnumid() + "'" +
-		        "\nand aa._refs_key = ga._refs_key" +
-		        "\nand ga._assay_key = a._object_key" +
-		        "\nand a._mgitype_key = 8" +
-		        "\nand a._logicaldb_key = 1" +
-		        "\nand ga._marker_key = m._marker_key" +
-		        "\nand ga._assaytype_key = gat._assaytype_key" +
-		        "\nand ga._emapa_term_key = t1._term_key" +		        
-		        "\norder by _stage_key, t1.term, celltype, markerSymbol, sequenceNum, accid, specimenLabel";
-		
-		cmd = cmd + "\noffset " + offset + "\nlimit " + limit;
+		cmd += "\noffset " + offset + "\nlimit " + limit;
 		log.info(cmd);	
 		
 		try {
@@ -1588,8 +1578,8 @@ public class AssayService extends BaseService<AssayDomain> {
 			e.printStackTrace();
 		}		
 
-		results.items = summaryResults;
-		return results;
-	}	
+		return summaryResults;
+	}
+	
 }
 

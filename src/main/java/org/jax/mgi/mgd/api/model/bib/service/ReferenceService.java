@@ -2212,12 +2212,64 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setReferencetype(rs.getString("referencetype"));
 				domain.setReferenceAbstract(rs.getString("abstract"));	
 				
-				if (rs.getInt("has_alleles") == 1) {
-					domain.setHasAllele(true);
-				}
-				else {
-					domain.setHasAllele(false);
-				}
+				domain.setHasAllele(rs.getBoolean("has_alleles"));
+				domain.setHasAntibody(rs.getBoolean("has_antibodies"));
+				domain.setHasAssay(rs.getBoolean("has_gxdassays"));
+				domain.setHasAssayResult(rs.getBoolean("has_gxdresults"));
+				domain.setHasAssaySpecimen(rs.getBoolean("has_gxdspecimens"));
+				domain.setHasGXDImage(rs.getBoolean("has_gxdimages"));
+				domain.setHasGXDIndex(rs.getBoolean("has_gxdindex"));
+				domain.setHasMarker(rs.getBoolean("has_markers"));
+				domain.setHasProbe(rs.getBoolean("has_probes"));
+				
+//				if (rs.getInt("has_alleles") == 1) {
+//					domain.setHasAllele(true);
+//				}
+//				else {
+//					domain.setHasAllele(false);
+//				}
+//				if (rs.getInt("has_antibodies") == 1) {
+//					domain.setHasAntibody(true);
+//				}
+//				else {
+//					domain.setHasAntibody(false);
+//				}
+//				if (rs.getInt("has_gxdindex") == 1) {
+//					domain.setHasLitIndex(true);
+//				}
+//				else {
+//					domain.setHasLitIndex(false);
+//				}
+//				if (rs.getInt("has__gxdimages") == 1) {
+//					domain.setHasGXDImage(true);
+//				}
+//				else {
+//					domain.setHasGXDImage(false);
+//				}
+//				if (rs.getInt("has_gxdspecimens") == 1) {
+//					domain.setHasAssaySpecimen(true);
+//				}
+//				else {
+//					domain.setHasAssaySpecimen(false);
+//				}
+//				if (rs.getInt("has_gxdresults") == 1) {
+//					domain.setHasAssayResult(true);
+//				}
+//				else {
+//					domain.setHasAssayResult(false);
+//				}
+//				if (rs.getInt("has_markers") == 1) {
+//					domain.setHasMarker(true);
+//				}
+//				else {
+//					domain.setHasMarker(false);
+//				}
+//				if (rs.getInt("has_probes") == 1) {
+//					domain.setHasProbe(true);
+//				}
+//				else {
+//					domain.setHasProbe(false);
+//				}					
 				
 				results.add(domain);
 				referenceDAO.clear();

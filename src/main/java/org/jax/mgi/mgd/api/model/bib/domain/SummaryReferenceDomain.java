@@ -25,13 +25,13 @@ public class SummaryReferenceDomain extends BaseDomain {
 	public String referencetype;
 	public String referenceAbstract;
 	public Boolean hasAllele = false;
-	public Boolean hasMarker = false;
-	public Boolean hasLitIndex = false;
 	public Boolean hasAssay = false;
 	public Boolean hasAssayResult = false;
 	public Boolean hasAssaySpecimen = false;
 	public Boolean hasAntibody = false;
-	public Boolean hasProbe = false;
 	public Boolean hasGXDImage = false;
+	public Boolean hasGXDIndex = false;	
+	public Boolean hasMarker = false;	
+	public Boolean hasProbe = false;
 	
 }

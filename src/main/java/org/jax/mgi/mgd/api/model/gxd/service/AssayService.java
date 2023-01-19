@@ -1627,12 +1627,10 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setMarkerID(rs.getString("markerid"));
 				domain.setMarkerSymbol(rs.getString("markerSymbol"));
-				domain.setAlleleKey1(rs.getString("_allele_key_1"));
-				domain.setAlleleKey2(rs.getString("_allele_key_2"));
-				domain.setAlleleSymbol1(rs.getString("alleleSymbol1"));
-				domain.setAlleleSymbol2(rs.getString("alleleSymbol2"));			
+				domain.setAlleleDetailNote(rs.getString("alleleDetailNote"));		
 				domain.setResultNote(rs.getString("resultnote"));
 				domain.setSpecimenLabel(rs.getString("specimenLabel"));
+				domain.setPattern(rs.getString("pattern"));
 				domain.setStructureID(rs.getString("structureid"));
 				domain.setStructure(rs.getString("structure"));
 				domain.setStrength(rs.getString("strength"));

@@ -35,9 +35,7 @@ public class SummaryResultDomain extends BaseDomain {
 	private String expressed;
 	private String strength;
 	private String specimenLabel;
+	private String pattern;
 	private String resultNote;
-	private String alleleKey1;
-	private String alleleKey2;
-	private String alleleSymbol1;
-	private String alleleSymbol2;
+	private String alleleDetailNote;
 }

@@ -2183,16 +2183,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 		
-		String cmd = "\nselect distinct c.*, r.*, d.*" + 
-				"\nfrom mgi_reference_assoc ar, acc_accession aa, bib_citation_cache c, bib_refs r, bib_associateddata_view d" + 
-				"\nwhere aa.accid = '" + accid + "'" + 
-				"\nand aa._mgitype_key = 11" + 
-				"\nand aa._object_key = ar._object_key" + 
+		String cmd = "\nselect a.accid, c.*" + 
+				"\nfrom mgi_reference_assoc ar, acc_accession a, bib_summary_view c" + 
+				"\nwhere a.accid = '" + accid + "'" + 
+				"\nand a._mgitype_key = 11" + 
+				"\nand a._object_key = ar._object_key" + 
 				"\nand ar._mgitype_key = 11" + 				
-				"\nand ar._refs_key = c._refs_key" + 
-				"\nand c._refs_key = r._refs_key" + 
-				"\nand c._refs_key = d._refs_key" +				
-				"\norder by numericpart desc";
+				"\nand ar._refs_key = c._refs_key";
 		
 		results = processSummaryReferenceDomain(cmd);	
 		return results;
@@ -2204,15 +2201,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 		
-		String cmd = "\nselect distinct c.*, r.*, d.*" + 
-				"\nfrom mrk_reference mr, acc_accession aa, bib_citation_cache c, bib_refs r, bib_associateddata_view d" + 
-				"\nwhere mr._marker_key = aa._object_key" + 
-				"\nand aa._mgitype_key = 2" + 
-				"\nand aa.accid = '" + accid + "'" + 
-				"\nand mr._refs_key = c._refs_key" + 
-				"\nand c._refs_key = r._refs_key" +
-				"\nand c._refs_key = d._refs_key" +
-				"\norder by numericpart desc";
+		String cmd = "\nselect a.accid, c.*" + 
+				"\nfrom mrk_reference mr, acc_accession a, bib_summary_view c" + 
+				"\nwhere mr._marker_key = a._object_key" + 
+				"\nand a._mgitype_key = 2" + 
+				"\nand a.accid = '" + accid + "'" + 
+				"\nand mr._refs_key = c._refs_key";
 		
 		results = processSummaryReferenceDomain(cmd);
 		return results;
@@ -2225,16 +2219,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 				
-		String cmd = "\nselect distinct c.*, r.*, d.*" + 
-				"\nfrom acc_accession a, bib_citation_cache c, bib_refs r, bib_associateddata_view d";
+		String cmd = "\nselect a.accid, c.* from acc_accession aa, bib_summary_view c";
 		
 		String where = "\nwhere a._mgitype_key = 1" + 			
-				"\nand a._object_key = c._refs_key" + 
-				"\nand c._refs_key = r._refs_key" +
-				"\nand c._refs_key = d._refs_key";				
-		
-		String order = "\norder by numericpart desc";
-		
+				"\nand a._object_key = c._refs_key";				
+				
 		String value = "";
 		
 		if (searchDomain.getAccids() != null && !searchDomain.getAccids().isEmpty()) {
@@ -2281,7 +2270,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 		}
 		
-		cmd = cmd + where + order;
+		cmd = cmd + where;
 		results = processSummaryReferenceDomain(cmd);	
 		return results;
 	}
@@ -2292,6 +2281,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 		
+		cmd = cmd + "\norder by numericpart desc";
+
 		log.info(cmd);	
 		
 		try {

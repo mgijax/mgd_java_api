@@ -1549,9 +1549,9 @@ public class AssayService extends BaseService<AssayDomain> {
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
 		
-		String cmd = "\nselect count(ga._emapa_term_key) as total_count" +
+		String cmd = "\nselect count(ga._celltype_term_key) as total_count" +
 				"\nfrom gxd_expression ga, acc_accession aa" +
-				"\nwhere aa.accid = '" + searchDomain.getStructureID() + "'" +
+				"\nwhere aa.accid = '" + searchDomain.getCellTypeID() + "'" +
 				"\nand aa._mgitype_key = 13" +
 				"\nand aa._logicaldb_key = 173" +
 				"\nand aa._object_key = ga._celltype_term_key";

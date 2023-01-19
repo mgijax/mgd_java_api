@@ -1489,7 +1489,6 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nfrom gxd_expression ga, bib_citation_cache aa" +
 		        "\nwhere aa.jnumid = '" + searchDomain.getJnumid() + "'" +
 		        "\nand aa._refs_key = ga._refs_key";
-		
 		results.total_count = processSummaryResultCount(searchDomain, cmd);
 		
 		cmd = "\nselect * from GXD_AssayResult_Summary_View where jnumid = '" + searchDomain.getJnumid() + "'";
@@ -1549,7 +1548,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setOffset(searchDomain.getOffset());
 				domain.setLimit(searchDomain.getLimit());
 				domain.setRefsKey(rs.getString("_refs_key"));				
-				domain.setAccID(rs.getString("accid"));
+				domain.setAssayID(rs.getString("assayid"));
 				domain.setAge(rs.getString("age"));
 				domain.setAssayKey(rs.getString("_assay_key"));
 				domain.setAssayTypeKey(rs.getString("_assaytype_key"));
@@ -1559,6 +1558,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setCellType(rs.getString("celltype"));
 				domain.setExpressed(rs.getString("expressed"));
 				domain.setMarkerKey(rs.getString("_marker_key"));
+				domain.setMarkerID(rs.getString("markerid"));
 				domain.setMarkerSymbol(rs.getString("markerSymbol"));
 				domain.setAlleleKey1(rs.getString("_allele_key_1"));
 				domain.setAlleleKey2(rs.getString("_allele_key_2"));

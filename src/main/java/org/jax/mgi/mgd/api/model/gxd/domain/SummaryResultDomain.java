@@ -19,11 +19,12 @@ public class SummaryResultDomain extends BaseDomain {
 	// output results
 	private String refsKey;	
 	private String assayKey;
-	private String accID;
+	private String assayID;
 	private String assayTypeKey;
 	private String assayType;
 	private String assayTypeSequenceNum;
 	private String markerKey;
+	private String markerID;
 	private String markerSymbol;
 	private String age;
 	private String structure;

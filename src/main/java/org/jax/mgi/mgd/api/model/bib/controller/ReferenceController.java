@@ -196,22 +196,6 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	public List<SlimReferenceDomain> validateJnumImage(SlimReferenceDomain domain) {
 		return referenceService.validateJnumImage(domain);
 	}
-
-	@POST
-	@ApiOperation(value = "Get list of reference domains by marker accession id")
-	@Path("/getRefByMarker")
-	public List<SummaryReferenceDomain> getRefByMarker(String accid) {
-		
-		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
-
-		try {
-			results = referenceService.getRefByMarker(accid);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
 	
 	@POST
 	@ApiOperation(value = "Get list of reference domains by allele accession id")
@@ -222,6 +206,22 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 
 		try {
 			results = referenceService.getRefByAllele(accid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@POST
+	@ApiOperation(value = "Get list of reference domains by marker accession id")
+	@Path("/getRefByMarker")
+	public List<SummaryReferenceDomain> getRefByMarker(String accid) {
+		
+		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
+
+		try {
+			results = referenceService.getRefByMarker(accid);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

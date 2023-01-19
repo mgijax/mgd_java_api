@@ -2178,6 +2178,27 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}
 
 	@Transactional	
+	public List<SummaryReferenceDomain> getRefByAllele(String accid) {
+		// return list of reference domains by allele acc id
+
+		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
+		
+		String cmd = "\nselect distinct c.*, r.*, d.*" + 
+				"\nfrom mgi_reference_assoc ar, acc_accession aa, bib_citation_cache c, bib_refs r, bib_associateddata_view d" + 
+				"\nwhere aa.accid = '" + accid + "'" + 
+				"\nand aa._mgitype_key = 11" + 
+				"\nand aa._object_key = ar._object_key" + 
+				"\nand ar._mgitype_key = 11" + 				
+				"\nand ar._refs_key = c._refs_key" + 
+				"\nand c._refs_key = r._refs_key" + 
+				"\nand c._refs_key = d._refs_key" +				
+				"\norder by numericpart desc";
+		
+		results = processSummaryReferenceDomain(cmd);	
+		return results;
+	}
+	
+	@Transactional	
 	public List<SummaryReferenceDomain> getRefByMarker(String accid) {
 		// return list of reference domains by marker acc id
 
@@ -2193,139 +2214,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				"\nand c._refs_key = d._refs_key" +
 				"\norder by numericpart desc";
 		
-		log.info(cmd);	
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				SummaryReferenceDomain domain = new SummaryReferenceDomain();
-				domain.setRefsKey(rs.getString("_refs_key"));
-				domain.setJnum(rs.getString("numericpart"));
-				domain.setJnumid(rs.getString("jnumid"));
-				domain.setShort_citation(rs.getString("short_citation"));
-				domain.setTitle(rs.getString("title"));	
-				domain.setJournal(rs.getString("journal"));
-				domain.setYear(rs.getString("year"));
-				domain.setMgiid(rs.getString("mgiid"));	
-				domain.setPubmedid(rs.getString("pubmedid"));
-				domain.setVol(rs.getString("vol"));
-				domain.setReferencetype(rs.getString("referencetype"));
-				domain.setReferenceAbstract(rs.getString("abstract"));	
-				
-				domain.setHasAllele(rs.getBoolean("has_alleles"));
-				domain.setHasAntibody(rs.getBoolean("has_antibodies"));
-				domain.setHasAssay(rs.getBoolean("has_gxdassays"));
-				domain.setHasAssayResult(rs.getBoolean("has_gxdresults"));
-				domain.setHasAssaySpecimen(rs.getBoolean("has_gxdspecimens"));
-				domain.setHasGXDImage(rs.getBoolean("has_gxdimages"));
-				domain.setHasGXDIndex(rs.getBoolean("has_gxdindex"));
-				domain.setHasMarker(rs.getBoolean("has_markers"));
-				domain.setHasProbe(rs.getBoolean("has_probes"));
-				
-//				if (rs.getInt("has_alleles") == 1) {
-//					domain.setHasAllele(true);
-//				}
-//				else {
-//					domain.setHasAllele(false);
-//				}
-//				if (rs.getInt("has_antibodies") == 1) {
-//					domain.setHasAntibody(true);
-//				}
-//				else {
-//					domain.setHasAntibody(false);
-//				}
-//				if (rs.getInt("has_gxdindex") == 1) {
-//					domain.setHasLitIndex(true);
-//				}
-//				else {
-//					domain.setHasLitIndex(false);
-//				}
-//				if (rs.getInt("has__gxdimages") == 1) {
-//					domain.setHasGXDImage(true);
-//				}
-//				else {
-//					domain.setHasGXDImage(false);
-//				}
-//				if (rs.getInt("has_gxdspecimens") == 1) {
-//					domain.setHasAssaySpecimen(true);
-//				}
-//				else {
-//					domain.setHasAssaySpecimen(false);
-//				}
-//				if (rs.getInt("has_gxdresults") == 1) {
-//					domain.setHasAssayResult(true);
-//				}
-//				else {
-//					domain.setHasAssayResult(false);
-//				}
-//				if (rs.getInt("has_markers") == 1) {
-//					domain.setHasMarker(true);
-//				}
-//				else {
-//					domain.setHasMarker(false);
-//				}
-//				if (rs.getInt("has_probes") == 1) {
-//					domain.setHasProbe(true);
-//				}
-//				else {
-//					domain.setHasProbe(false);
-//				}					
-				
-				results.add(domain);
-				referenceDAO.clear();
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}		
-
-		return results;
-	}
-	
-	@Transactional	
-	public List<SummaryReferenceDomain> getRefByAllele(String accid) {
-		// return list of reference domains by allele acc id
-
-		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
-		
-		String cmd = "\nselect distinct c.*, r.*" + 
-				"\nfrom mgi_reference_assoc ar, acc_accession aa, bib_citation_cache c, bib_refs r" + 
-				"\nwhere aa.accid = '" + accid + "'" + 
-				"\nand aa._mgitype_key = 11" + 
-				"\nand aa._object_key = ar._object_key" + 
-				"\nand ar._mgitype_key = 11" + 				
-				"\nand ar._refs_key = c._refs_key" + 
-				"\nand c._refs_key = r._refs_key" + 
-				"\norder by numericpart desc";
-		
-		log.info(cmd);	
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				SummaryReferenceDomain domain = new SummaryReferenceDomain();
-				domain.setRefsKey(rs.getString("_refs_key"));
-				domain.setJnum(rs.getString("numericpart"));
-				domain.setJnumid(rs.getString("jnumid"));
-				domain.setShort_citation(rs.getString("short_citation"));
-				domain.setTitle(rs.getString("title"));	
-				domain.setJournal(rs.getString("journal"));
-				domain.setYear(rs.getString("year"));
-				domain.setMgiid(rs.getString("mgiid"));	
-				domain.setPubmedid(rs.getString("pubmedid"));
-				domain.setVol(rs.getString("vol"));
-				domain.setReferencetype(rs.getString("referencetype"));
-				domain.setReferenceAbstract(rs.getString("abstract"));				
-				results.add(domain);
-				referenceDAO.clear();
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}		
-
+		results = processSummaryReferenceDomain(cmd);
 		return results;
 	}	
 	
@@ -2336,12 +2225,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 				
-		String cmd = "\nselect distinct c.*, r.*" + 
-				"\nfrom acc_accession a, bib_citation_cache c, bib_refs r";
+		String cmd = "\nselect distinct c.*, r.*, d.*" + 
+				"\nfrom acc_accession a, bib_citation_cache c, bib_refs r,  r, bib_associateddata_view d";
 		
 		String where = "\nwhere a._mgitype_key = 1" + 			
 				"\nand a._object_key = c._refs_key" + 
-				"\nand c._refs_key = r._refs_key";
+				"\nand c._refs_key = r._refs_key" +
+				"\nand c._refs_key = d._refs_key";				
 		
 		String order = "\norder by numericpart desc";
 		
@@ -2392,6 +2282,16 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		cmd = cmd + where + order;
+		results = processSummaryReferenceDomain(cmd);	
+		return results;
+	}
+	
+	@Transactional	
+	public List<SummaryReferenceDomain> processSummaryReferenceDomain(String cmd) {
+		// return list of reference domains by acc id
+
+		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
+		
 		log.info(cmd);	
 		
 		try {
@@ -2409,7 +2309,16 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setPubmedid(rs.getString("pubmedid"));
 				domain.setVol(rs.getString("vol"));
 				domain.setReferencetype(rs.getString("referencetype"));
-				domain.setReferenceAbstract(rs.getString("abstract"));				
+				domain.setReferenceAbstract(rs.getString("abstract"));	
+				domain.setHasAllele(rs.getBoolean("has_alleles"));
+				domain.setHasAntibody(rs.getBoolean("has_antibodies"));
+				domain.setHasAssay(rs.getBoolean("has_gxdassays"));
+				domain.setHasAssayResult(rs.getBoolean("has_gxdresults"));
+				domain.setHasAssaySpecimen(rs.getBoolean("has_gxdspecimens"));
+				domain.setHasGXDImage(rs.getBoolean("has_gxdimages"));
+				domain.setHasGXDIndex(rs.getBoolean("has_gxdindex"));
+				domain.setHasMarker(rs.getBoolean("has_markers"));
+				domain.setHasProbe(rs.getBoolean("has_probes"));					
 				results.add(domain);
 				referenceDAO.clear();
 			}

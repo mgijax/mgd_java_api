@@ -1479,19 +1479,21 @@ public class AssayService extends BaseService<AssayDomain> {
 	}
 	
 	@Transactional	
-	public SearchResults<SummaryResultDomain> getResultByRef(SummaryResultDomain searchDomain) {
-		// return list of summary results domains by reference jnum id
+	public SearchResults<SummaryResultDomain> getResultByCellType(SummaryResultDomain searchDomain) {
+		// return list of summary results domains by cell type id
 
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
 		
-		String cmd = "\nselect count(ga._refs_key) as total_count" +
-				"\nfrom gxd_expression ga, bib_citation_cache aa" +
-		        "\nwhere aa.jnumid = '" + searchDomain.getJnumid() + "'" +
-		        "\nand aa._refs_key = ga._refs_key";
+		String cmd = "\nselect count(ga._celltype_term_key) as total_count" +
+				"\nfrom gxd_expression ga, acc_accession aa" +
+				"\nwhere aa.accid = '" + searchDomain.getCellTypeID() + "'" +
+				"\nand aa._mgitype_key = 13" +
+				"\nand aa._logicaldb_key = 173" +
+				"\nand aa._object_key = ga._celltype_term_key";
 		results.total_count = processSummaryResultCount(searchDomain, cmd);
 		
-		cmd = "\nselect * from GXD_AssayResult_Summary_View where jnumid = '" + searchDomain.getJnumid() + "'";
+		cmd = "\nselect * from GXD_AssayResult_Summary_View where celltypeid = '" + searchDomain.getCellTypeID() + "'";
 		summaryResults = processSummaryResultDomain(searchDomain, cmd);
 		
 		results.items = summaryResults;
@@ -1521,6 +1523,26 @@ public class AssayService extends BaseService<AssayDomain> {
 	}
 	
 	@Transactional	
+	public SearchResults<SummaryResultDomain> getResultByRef(SummaryResultDomain searchDomain) {
+		// return list of summary results domains by reference jnum id
+
+		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
+		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
+		
+		String cmd = "\nselect count(ga._refs_key) as total_count" +
+				"\nfrom gxd_expression ga, bib_citation_cache aa" +
+		        "\nwhere aa.jnumid = '" + searchDomain.getJnumid() + "'" +
+		        "\nand aa._refs_key = ga._refs_key";
+		results.total_count = processSummaryResultCount(searchDomain, cmd);
+		
+		cmd = "\nselect * from GXD_AssayResult_Summary_View where jnumid = '" + searchDomain.getJnumid() + "'";
+		summaryResults = processSummaryResultDomain(searchDomain, cmd);
+		
+		results.items = summaryResults;
+		return results;
+	}
+	
+	@Transactional	
 	public SearchResults<SummaryResultDomain> getResultByStructure(SummaryResultDomain searchDomain) {
 		// return list of summary results domains by structure/emapa id
 
@@ -1541,28 +1563,6 @@ public class AssayService extends BaseService<AssayDomain> {
 		results.items = summaryResults;
 		return results;
 	}
-	
-	@Transactional	
-	public SearchResults<SummaryResultDomain> getResultByCellType(SummaryResultDomain searchDomain) {
-		// return list of summary results domains by cell type id
-
-		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
-		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
-		
-		String cmd = "\nselect count(ga._celltype_term_key) as total_count" +
-				"\nfrom gxd_expression ga, acc_accession aa" +
-				"\nwhere aa.accid = '" + searchDomain.getCellTypeID() + "'" +
-				"\nand aa._mgitype_key = 13" +
-				"\nand aa._logicaldb_key = 173" +
-				"\nand aa._object_key = ga._celltype_term_key";
-		results.total_count = processSummaryResultCount(searchDomain, cmd);
-		
-		cmd = "\nselect * from GXD_AssayResult_Summary_View where celltypeid = '" + searchDomain.getCellTypeID() + "'";
-		summaryResults = processSummaryResultDomain(searchDomain, cmd);
-		
-		results.items = summaryResults;
-		return results;
-	}	
 	
 	@Transactional	
 	public Long processSummaryResultCount(SummaryResultDomain searchDomain, String cmd) {

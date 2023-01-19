@@ -299,14 +299,14 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Get list of summary result domains by reference jnumid")
-	@Path("/getResultByRef")
-	public SearchResults<SummaryResultDomain> getResultByRef(SummaryResultDomain searchDomain) {
+	@ApiOperation(value = "Get list of summary result domains by cell type")
+	@Path("/getResultByCellType")
+	public SearchResults<SummaryResultDomain> getResultByCellType(SummaryResultDomain searchDomain) {
 		
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 
 		try {
-			results = assayService.getResultByRef(searchDomain);
+			results = assayService.getResultByCellType(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -331,6 +331,22 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 	
 	@POST
+	@ApiOperation(value = "Get list of summary result domains by reference jnumid")
+	@Path("/getResultByRef")
+	public SearchResults<SummaryResultDomain> getResultByRef(SummaryResultDomain searchDomain) {
+		
+		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
+
+		try {
+			results = assayService.getResultByRef(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@POST
 	@ApiOperation(value = "Get list of summary result domains by structure")
 	@Path("/getResultByStructure")
 	public SearchResults<SummaryResultDomain> getResultByStructure(SummaryResultDomain searchDomain) {
@@ -346,19 +362,4 @@ public class AssayController extends BaseController<AssayDomain> {
 		return results;
 	}	
 	
-	@POST
-	@ApiOperation(value = "Get list of summary result domains by cell type")
-	@Path("/getResultByCellType")
-	public SearchResults<SummaryResultDomain> getResultByCellType(SummaryResultDomain searchDomain) {
-		
-		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
-
-		try {
-			results = assayService.getResultByCellType(searchDomain);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}	
 }

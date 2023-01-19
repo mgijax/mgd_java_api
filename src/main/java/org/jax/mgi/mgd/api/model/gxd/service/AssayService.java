@@ -1485,13 +1485,35 @@ public class AssayService extends BaseService<AssayDomain> {
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
 		
-		String cmd = "\nselect count(aa._refs_key) as total_count" +
+		String cmd = "\nselect count(ga._refs_key) as total_count" +
 				"\nfrom gxd_expression ga, bib_citation_cache aa" +
 		        "\nwhere aa.jnumid = '" + searchDomain.getJnumid() + "'" +
 		        "\nand aa._refs_key = ga._refs_key";
 		results.total_count = processSummaryResultCount(searchDomain, cmd);
 		
 		cmd = "\nselect * from GXD_AssayResult_Summary_View where jnumid = '" + searchDomain.getJnumid() + "'";
+		summaryResults = processSummaryResultDomain(searchDomain, cmd);
+		
+		results.items = summaryResults;
+		return results;
+	}
+	
+	@Transactional	
+	public SearchResults<SummaryResultDomain> getResultByMarker(SummaryResultDomain searchDomain) {
+		// return list of summary results domains by reference marker acc id
+
+		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
+		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
+		
+		String cmd = "\nselect count(ga._marker_key) as total_count" +
+				"\nfrom gxd_expression ga, acc_accession aa" +
+				"\nwhere aa.accid = '" + searchDomain.getMarkerID() + "'" +
+				"\nand aa._mgitype_key = 2" +
+				"\nand aa._logicaldb_key = 1" +
+				"\nand aa._object_key = ga._marker_key";
+		results.total_count = processSummaryResultCount(searchDomain, cmd);
+		
+		cmd = "\nselect * from GXD_AssayResult_Summary_View where markerid = '" + searchDomain.getMarkerID() + "'";
 		summaryResults = processSummaryResultDomain(searchDomain, cmd);
 		
 		results.items = summaryResults;

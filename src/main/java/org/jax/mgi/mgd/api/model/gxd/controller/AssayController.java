@@ -283,7 +283,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Get list of assay domains by reference jnumid")
+	@ApiOperation(value = "Get list of assay domains by jnumid")
 	@Path("/getAssayByRef")
 	public List<SlimAssayDomain> getAssayByRef(String jnumid) {
 		
@@ -307,6 +307,22 @@ public class AssayController extends BaseController<AssayDomain> {
 
 		try {
 			results = assayService.getResultByRef(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
+	
+	@POST
+	@ApiOperation(value = "Get list of summary result domains by markerid")
+	@Path("/getResultByMarker")
+	public SearchResults<SummaryResultDomain> getResultByMarker(SummaryResultDomain searchDomain) {
+		
+		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
+
+		try {
+			results = assayService.getResultByMarker(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

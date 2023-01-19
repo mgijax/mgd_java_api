@@ -1492,10 +1492,9 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		results.total_count = processSummaryResultCount(searchDomain, cmd);
 		
-		cmd = "\nselect * from GXD_AssayResult_Summary_View" +
-				"\nwhere aa.jnumid = '" + searchDomain.getJnumid() + "'";
-		
+		cmd = "\nselect * from GXD_AssayResult_Summary_View where jnumid = '" + searchDomain.getJnumid() + "'";
 		summaryResults = processSummaryResultDomain(searchDomain, cmd);
+		
 		results.items = summaryResults;
 		return results;
 	}

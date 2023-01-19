@@ -2212,7 +2212,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setReferencetype(rs.getString("referencetype"));
 				domain.setReferenceAbstract(rs.getString("abstract"));	
 				
-				if (rs.getInt("hasAllele") == 1) {
+				if (rs.getInt("has_alleles") == 1) {
 					domain.setHasAllele(true);
 				}
 				else {

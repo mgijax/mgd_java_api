@@ -345,4 +345,20 @@ public class AssayController extends BaseController<AssayDomain> {
 		
 		return results;
 	}	
+	
+	@POST
+	@ApiOperation(value = "Get list of summary result domains by cell type")
+	@Path("/getResultByCellType")
+	public SearchResults<SummaryResultDomain> getResultByCellType(SummaryResultDomain searchDomain) {
+		
+		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
+
+		try {
+			results = assayService.getResultByCellType(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
 }

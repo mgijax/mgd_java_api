@@ -29,6 +29,7 @@ public class SummaryResultDomain extends BaseDomain {
 	private String age;
 	private String structureID;
 	private String structure;
+	private String cellTypeID;
 	private String cellTypeKey;
 	private String cellType;
 	private String expressed;

@@ -1543,6 +1543,28 @@ public class AssayService extends BaseService<AssayDomain> {
 	}
 	
 	@Transactional	
+	public SearchResults<SummaryResultDomain> getResultByCellType(SummaryResultDomain searchDomain) {
+		// return list of summary results domains by cell type id
+
+		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
+		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
+		
+		String cmd = "\nselect count(ga._emapa_term_key) as total_count" +
+				"\nfrom gxd_expression ga, acc_accession aa" +
+				"\nwhere aa.accid = '" + searchDomain.getStructureID() + "'" +
+				"\nand aa._mgitype_key = 13" +
+				"\nand aa._logicaldb_key = 173" +
+				"\nand aa._object_key = ga._celltype_term_key";
+		results.total_count = processSummaryResultCount(searchDomain, cmd);
+		
+		cmd = "\nselect * from GXD_AssayResult_Summary_View where celltypeid = '" + searchDomain.getCellTypeID() + "'";
+		summaryResults = processSummaryResultDomain(searchDomain, cmd);
+		
+		results.items = summaryResults;
+		return results;
+	}	
+	
+	@Transactional	
 	public Long processSummaryResultCount(SummaryResultDomain searchDomain, String cmd) {
 		// return count of summary results domains using search cmd
 
@@ -1598,6 +1620,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setAssayTypeKey(rs.getString("_assaytype_key"));
 				domain.setAssayType(rs.getString("assaytype"));
 				domain.setAssayTypeSequenceNum(rs.getString("sequenceNum"));
+				domain.setCellTypeID(rs.getString("celltypeid"));
 				domain.setCellTypeKey(rs.getString("_celltype_term_key"));
 				domain.setCellType(rs.getString("celltype"));
 				domain.setExpressed(rs.getString("expressed"));

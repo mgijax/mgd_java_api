@@ -2184,12 +2184,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 		
 		String cmd = "\nselect distinct c.*, r.*, d.*" + 
-				"\nfrom mrk_reference mr, acc_accession aa, bib_citation_cache c, bib_refs r" + 
+				"\nfrom mrk_reference mr, acc_accession aa, bib_citation_cache c, bib_refs r, bib_associateddata_view d" + 
 				"\nwhere mr._marker_key = aa._object_key" + 
 				"\nand aa._mgitype_key = 2" + 
 				"\nand aa.accid = '" + accid + "'" + 
 				"\nand mr._refs_key = c._refs_key" + 
-				"\nand c._refs_key = r._refs_key" + 
+				"\nand c._refs_key = r._refs_key" +
+				"\nand c._refs_key = d._refs_key" +
 				"\norder by numericpart desc";
 		
 		log.info(cmd);	
@@ -2211,12 +2212,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setReferencetype(rs.getString("referencetype"));
 				domain.setReferenceAbstract(rs.getString("abstract"));	
 				
-//				if (rs.getInt("hasAllele") == 1) {
-//					domain.setHasAllele(true);
-//				}
-//				else {
-//					domain.setHasAllele(false);
-//				}
+				if (rs.getInt("hasAllele") == 1) {
+					domain.setHasAllele(true);
+				}
+				else {
+					domain.setHasAllele(false);
+				}
 				
 				results.add(domain);
 				referenceDAO.clear();

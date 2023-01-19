@@ -2289,6 +2289,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SummaryReferenceDomain domain = new SummaryReferenceDomain();
+				domain.setAccID(rs.getString("accid"));
 				domain.setRefsKey(rs.getString("_refs_key"));
 				domain.setJnum(rs.getString("numericpart"));
 				domain.setJnumid(rs.getString("jnumid"));

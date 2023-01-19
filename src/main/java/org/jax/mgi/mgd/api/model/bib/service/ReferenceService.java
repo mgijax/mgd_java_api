@@ -2226,7 +2226,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 				
 		String cmd = "\nselect distinct c.*, r.*, d.*" + 
-				"\nfrom acc_accession a, bib_citation_cache c, bib_refs r,  r, bib_associateddata_view d";
+				"\nfrom acc_accession a, bib_citation_cache c, bib_refs r, bib_associateddata_view d";
 		
 		String where = "\nwhere a._mgitype_key = 1" + 			
 				"\nand a._object_key = c._refs_key" + 

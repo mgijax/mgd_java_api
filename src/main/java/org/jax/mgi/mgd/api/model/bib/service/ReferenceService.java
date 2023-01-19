@@ -2221,7 +2221,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				
 		String cmd = "\nselect a.accid, r.* from acc_accession a, bib_summary_view r";
 		
-		String where = "\nwhere a._mgitype_key = 1" + 			
+		String where = "\nwhere a._mgitype_key = 1" + 
+				"\nand a._logicaldb_key = 1" +
+				"\nand a.prefixpart = 'J'" +
 				"\nand a._object_key = r._refs_key";				
 				
 		String value = "";

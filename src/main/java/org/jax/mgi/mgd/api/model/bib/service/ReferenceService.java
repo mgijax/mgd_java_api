@@ -2219,13 +2219,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 				
-		String cmd = "\nselect a.accid, r.* from acc_accession a, bib_summary_view r";
-		
-		String where = "\nwhere a._mgitype_key = 1" + 
-				"\nand a._logicaldb_key = 1" +
-				"\nand a.prefixpart = 'J'" +
-				"\nand a._object_key = r._refs_key";				
-				
+		String cmd = "\nselect r.* from bib_summary_view r";
+		String where = "\nwhere r._refs_key is not null";				
 		String value = "";
 		
 		if (searchDomain.getAccids() != null && !searchDomain.getAccids().isEmpty()) {
@@ -2235,6 +2230,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			value = value.replaceAll(", ",  ",");
 			value = value.replaceAll(" ", ",");
 			value = value.trim().toLowerCase().replaceAll(",", "','");
+			cmd = cmd + ", acc_accession a";
+			where = where + "\nand r._refs_key = a._object_key and a._mgitype_key = 1 and a._logicaldb_key = 1";			
 			where = where + "\nand lower(a.accid) in ('" + value + "')";
 		}
 		

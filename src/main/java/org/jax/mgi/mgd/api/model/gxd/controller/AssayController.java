@@ -328,5 +328,21 @@ public class AssayController extends BaseController<AssayDomain> {
 		}
 		
 		return results;
+	}
+	
+	@POST
+	@ApiOperation(value = "Get list of summary result domains by structure")
+	@Path("/getResultByStructure")
+	public SearchResults<SummaryResultDomain> getResultByStructure(SummaryResultDomain searchDomain) {
+		
+		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
+
+		try {
+			results = assayService.getResultByStructure(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
 	}	
 }

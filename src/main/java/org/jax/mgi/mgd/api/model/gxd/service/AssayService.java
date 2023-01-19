@@ -1500,7 +1500,7 @@ public class AssayService extends BaseService<AssayDomain> {
 	
 	@Transactional	
 	public SearchResults<SummaryResultDomain> getResultByMarker(SummaryResultDomain searchDomain) {
-		// return list of summary results domains by reference marker acc id
+		// return list of summary results domains by marker acc id
 
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
@@ -1514,6 +1514,28 @@ public class AssayService extends BaseService<AssayDomain> {
 		results.total_count = processSummaryResultCount(searchDomain, cmd);
 		
 		cmd = "\nselect * from GXD_AssayResult_Summary_View where markerid = '" + searchDomain.getMarkerID() + "'";
+		summaryResults = processSummaryResultDomain(searchDomain, cmd);
+		
+		results.items = summaryResults;
+		return results;
+	}
+	
+	@Transactional	
+	public SearchResults<SummaryResultDomain> getResultByStructure(SummaryResultDomain searchDomain) {
+		// return list of summary results domains by structure/emapa id
+
+		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
+		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
+		
+		String cmd = "\nselect count(ga._emapa_term_key) as total_count" +
+				"\nfrom gxd_expression ga, acc_accession aa" +
+				"\nwhere aa.accid = '" + searchDomain.getStructureID() + "'" +
+				"\nand aa._mgitype_key = 13" +
+				"\nand aa._logicaldb_key = 169" +
+				"\nand aa._object_key = ga._emapa_term_key";
+		results.total_count = processSummaryResultCount(searchDomain, cmd);
+		
+		cmd = "\nselect * from GXD_AssayResult_Summary_View where structureid = '" + searchDomain.getStructureID() + "'";
 		summaryResults = processSummaryResultDomain(searchDomain, cmd);
 		
 		results.items = summaryResults;
@@ -1588,6 +1610,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setAlleleSymbol2(rs.getString("alleleSymbol2"));			
 				domain.setResultNote(rs.getString("resultnote"));
 				domain.setSpecimenLabel(rs.getString("specimenLabel"));
+				domain.setStructureID(rs.getString("structureid"));
 				domain.setStructure(rs.getString("structure"));
 				domain.setStrength(rs.getString("strength"));
 				summaryResults.add(domain);

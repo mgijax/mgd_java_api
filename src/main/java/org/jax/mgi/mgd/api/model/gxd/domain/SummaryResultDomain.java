@@ -27,6 +27,7 @@ public class SummaryResultDomain extends BaseDomain {
 	private String markerID;
 	private String markerSymbol;
 	private String age;
+	private String structureID;
 	private String structure;
 	private String cellTypeKey;
 	private String cellType;

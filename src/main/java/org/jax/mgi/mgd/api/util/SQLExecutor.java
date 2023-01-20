@@ -124,20 +124,13 @@ public class SQLExecutor {
 		ResultSet set;
 
 		try {
-			log.info("in try loop");
 			if (conMGD == null) {
-				log.info("start conMGD");
 				getMGDConnection();
-				log.info("end conMGD");
 			}
 
-			log.info("start conMGD.createStatement()");
 			java.sql.Statement stmt = conMGD.createStatement();
-			log.info("end conMGD.createStatement()");
 			if (cursorLimit > 0) {
-				log.info("start setFetchSize");
 				stmt.setFetchSize(cursorLimit);
-				log.info("end setFetchSize");				
 			}
 			log.info("start executeQuery:" + start);
 			start = new Date();

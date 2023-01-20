@@ -1610,31 +1610,38 @@ public class AssayService extends BaseService<AssayDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SummaryResultDomain domain = new SummaryResultDomain();
-				domain.setJnumid(rs.getString("jnumid"));
-				domain.setOffset(offset);
-				domain.setLimit(limit);
-				domain.setRefsKey(rs.getString("_refs_key"));				
-				domain.setAssayID(rs.getString("assayid"));
-				domain.setAge(rs.getString("age"));
-				domain.setAssayKey(rs.getString("_assay_key"));
-				domain.setAssayTypeKey(rs.getString("_assaytype_key"));
-				domain.setAssayType(rs.getString("assaytype"));
-				domain.setAssayTypeSequenceNum(rs.getString("sequenceNum"));
-				domain.setCellTypeID(rs.getString("celltypeid"));
-				domain.setCellTypeKey(rs.getString("_celltype_term_key"));
-				domain.setCellType(rs.getString("celltype"));
-				domain.setExpressed(rs.getString("expressed"));
-				domain.setMarkerKey(rs.getString("_marker_key"));
-				domain.setMarkerID(rs.getString("markerid"));
-				domain.setMarkerSymbol(rs.getString("markerSymbol"));
-				domain.setAlleleDetailNote(rs.getString("alleleDetailNote"));		
-				domain.setResultNote(rs.getString("resultnote"));
-				domain.setSpecimenLabel(rs.getString("specimenLabel"));
-				domain.setPattern(rs.getString("pattern"));
-				domain.setStructureID(rs.getString("structureid"));
-				domain.setStructure(rs.getString("structure"));
-				domain.setStrength(rs.getString("strength"));
+//				domain.setJnumid(rs.getString("jnumid"));
+//				domain.setOffset(offset);
+//				domain.setLimit(limit);
+//				domain.setRefsKey(rs.getString("_refs_key"));				
+//				domain.setAssayID(rs.getString("assayid"));
+//				domain.setAge(rs.getString("age"));
+//				domain.setAssayKey(rs.getString("_assay_key"));
+//				domain.setAssayTypeKey(rs.getString("_assaytype_key"));
+//				domain.setAssayType(rs.getString("assaytype"));
+//				domain.setAssayTypeSequenceNum(rs.getString("sequenceNum"));
+//				domain.setCellTypeID(rs.getString("celltypeid"));
+//				domain.setCellTypeKey(rs.getString("_celltype_term_key"));
+//				domain.setCellType(rs.getString("celltype"));
+//				domain.setExpressed(rs.getString("expressed"));
+//				domain.setMarkerKey(rs.getString("_marker_key"));
+//				domain.setMarkerID(rs.getString("markerid"));
+//				domain.setMarkerSymbol(rs.getString("markerSymbol"));
+//				domain.setAlleleDetailNote(rs.getString("alleleDetailNote"));		
+//				domain.setResultNote(rs.getString("resultnote"));
+//				domain.setSpecimenLabel(rs.getString("specimenLabel"));
+//				domain.setPattern(rs.getString("pattern"));
+//				domain.setStructureID(rs.getString("structureid"));
+//				domain.setStructure(rs.getString("structure"));
+//				domain.setStrength(rs.getString("strength"));
+
+				AssayDomain assaydomain = translator.translate(assayDAO.get(rs.getInt("_assay_key")));
+				domain.setAssayKey(assaydomain.getAssayKey());
+				domain.setAssayTypeKey(assaydomain.getAssayTypeKey());
+				domain.setAssayType(assaydomain.getAssayType());
+				
 				summaryResults.add(domain);
+
 				assayDAO.clear();				
 			}
 			sqlExecutor.cleanup();

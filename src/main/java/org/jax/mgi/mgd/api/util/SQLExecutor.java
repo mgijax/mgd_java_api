@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Properties;
 
+import org.jboss.logging.Logger;
 
 /**
  * The SQLExecutor class knows how to create connections
@@ -23,6 +24,7 @@ public class SQLExecutor {
 	private Date start;
 	private Date end;
 
+	protected Logger log = Logger.getLogger(getClass());
 
 	/**
 	 * The default constructor pulls in connection information from the property files.
@@ -122,17 +124,26 @@ public class SQLExecutor {
 		ResultSet set;
 
 		try {
+			log.info("in try loop");
 			if (conMGD == null) {
+				log.info("start conMGD");
 				getMGDConnection();
+				log.info("end conMGD");
 			}
 
+			log.info("start conMGD.createStatement()");
 			java.sql.Statement stmt = conMGD.createStatement();
+			log.info("end conMGD.createStatement()");
 			if (cursorLimit > 0) {
+				log.info("start setFetchSize()");
 				stmt.setFetchSize(cursorLimit);
+				log.info("end setFetchSize()");				
 			}
+			log.info("start executeQuery");
 			start = new Date();
 			set = stmt.executeQuery(query);
 			end = new Date();
+			log.info("end executeQuery");			
 			return set;
 		} catch (Exception e) {
 			e.printStackTrace();

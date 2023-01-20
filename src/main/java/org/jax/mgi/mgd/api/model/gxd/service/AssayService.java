@@ -1507,12 +1507,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
 		
-		String cmd = "\nselect count(ga._marker_key) as total_count" +
-				"\nfrom gxd_expression ga, acc_accession aa" +
-				"\nwhere aa.accid = '" + searchDomain.getMarkerID() + "'" +
-				"\nand aa._mgitype_key = 2" +
-				"\nand aa._logicaldb_key = 1" +
-				"\nand aa._object_key = ga._marker_key";
+		String cmd = "\nselect count(*) as total_count from GXD_AssayResult_Summary_View where markerid = '" + searchDomain.getMarkerID() + "'";
 		results.total_count = processSummaryResultCount(searchDomain, cmd);
 		
 		cmd = "\nselect * from GXD_AssayResult_Summary_View where markerid = '" + searchDomain.getMarkerID() + "'";
@@ -1529,10 +1524,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
 		
-		String cmd = "\nselect count(ga._refs_key) as total_count" +
-				"\nfrom gxd_expression ga, bib_citation_cache aa" +
-		        "\nwhere aa.jnumid = '" + searchDomain.getJnumid() + "'" +
-		        "\nand aa._refs_key = ga._refs_key";
+		String cmd = "\nselect count(*) as total_count from GXD_AssayResult_Summary_View where jnumid = '" + searchDomain.getJnumid() + "'";
 		results.total_count = processSummaryResultCount(searchDomain, cmd);
 		
 		cmd = "\nselect * from GXD_AssayResult_Summary_View where jnumid = '" + searchDomain.getJnumid() + "'";
@@ -1549,12 +1541,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
 		
-		String cmd = "\nselect count(ga._emapa_term_key) as total_count" +
-				"\nfrom gxd_expression ga, acc_accession aa" +
-				"\nwhere aa.accid = '" + searchDomain.getStructureID() + "'" +
-				"\nand aa._mgitype_key = 13" +
-				"\nand aa._logicaldb_key = 169" +
-				"\nand aa._object_key = ga._emapa_term_key";
+		String cmd = "\nselect count(*) as total_count from GXD_AssayResult_Summary_View where structureid = '" + searchDomain.getStructureID() + "'";
 		results.total_count = processSummaryResultCount(searchDomain, cmd);
 		
 		cmd = "\nselect * from GXD_AssayResult_Summary_View where structureid = '" + searchDomain.getStructureID() + "'";

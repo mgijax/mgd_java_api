@@ -32,7 +32,6 @@ public class SummaryResultDomain extends BaseDomain {
 	private String cellTypeID;
 	private String cellTypeKey;
 	private String cellType;
-	private String expressed;
 	private String strength;
 	private String specimenLabel;
 	private String pattern;

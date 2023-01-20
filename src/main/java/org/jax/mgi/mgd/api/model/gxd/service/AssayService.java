@@ -1603,7 +1603,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			limit = searchDomain.getLimit();
 		}
 		
-		cmd = cmd + "\noffset " + offset + "\nlimit " + limit;
+		//cmd = cmd + "\noffset " + offset + "\nlimit " + limit;
 		log.info(cmd);	
 		
 		try {
@@ -1636,7 +1636,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setStructure(rs.getString("structure"));
 				domain.setStrength(rs.getString("strength"));
 				summaryResults.add(domain);
-				assayDAO.clear();				
+				//assayDAO.clear();				
 			}
 			sqlExecutor.cleanup();
 		}

@@ -1623,7 +1623,6 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setCellTypeID(rs.getString("celltypeid"));
 				domain.setCellTypeKey(rs.getString("_celltype_term_key"));
 				domain.setCellType(rs.getString("celltype"));
-				domain.setExpressed(rs.getString("expressed"));
 				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setMarkerID(rs.getString("markerid"));
 				domain.setMarkerSymbol(rs.getString("markerSymbol"));

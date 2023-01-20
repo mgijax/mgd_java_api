@@ -12,7 +12,6 @@ public class SummaryReferenceDomain extends BaseDomain {
 	// not to be used when editing purposes
 	// to be used for returning search results
 	
-	public String accID; // accID used in search; may be marker id, allele id, jnum id
 	public String refsKey;
 	public String jnumID;
 	public String jnum;

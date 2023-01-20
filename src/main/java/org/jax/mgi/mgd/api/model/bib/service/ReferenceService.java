@@ -2191,7 +2191,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				"\nand ar._mgitype_key = 11" + 				
 				"\nand ar._refs_key = r._refs_key";
 		
-		results = processSummaryReferenceDomain(accid, cmd);	
+		results = processSummaryReferenceDomain(cmd);	
 		return results;
 	}
 	
@@ -2208,7 +2208,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				"\nand a.accid = '" + accid + "'" + 
 				"\nand mr._refs_key = r._refs_key";
 		
-		results = processSummaryReferenceDomain(accid, cmd);
+		results = processSummaryReferenceDomain(cmd);
 		return results;
 	}	
 	
@@ -2270,12 +2270,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		cmd = cmd + where;
-		results = processSummaryReferenceDomain(searchDomain.getAccids(), cmd);	
+		results = processSummaryReferenceDomain(cmd);	
 		return results;
 	}
 	
 	@Transactional	
-	public List<SummaryReferenceDomain> processSummaryReferenceDomain(String accid, String cmd) {
+	public List<SummaryReferenceDomain> processSummaryReferenceDomain(String cmd) {
 		// return list of reference domains by acc id
 
 		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
@@ -2288,7 +2288,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SummaryReferenceDomain domain = new SummaryReferenceDomain();
-				domain.setAccID(accid);
 				domain.setRefsKey(rs.getString("_refs_key"));
 				domain.setJnum(rs.getString("numericpart"));
 				domain.setJnumID(rs.getString("jnumid"));

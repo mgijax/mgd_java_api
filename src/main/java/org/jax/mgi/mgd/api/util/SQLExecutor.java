@@ -135,9 +135,9 @@ public class SQLExecutor {
 			java.sql.Statement stmt = conMGD.createStatement();
 			log.info("end conMGD.createStatement()");
 			if (cursorLimit > 0) {
-				log.info("start setFetchSize()");
+				log.info("start setFetchSize");
 				stmt.setFetchSize(cursorLimit);
-				log.info("end setFetchSize()");				
+				log.info("end setFetchSize");				
 			}
 			log.info("start executeQuery");
 			start = new Date();

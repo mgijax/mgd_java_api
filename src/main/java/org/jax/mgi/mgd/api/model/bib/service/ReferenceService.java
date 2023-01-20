@@ -2300,8 +2300,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			while (rs.next()) {
 				SummaryReferenceDomain domain = new SummaryReferenceDomain();
 				domain.setAccID(searchDomain.getAccID());
-				domain.setOffset(searchDomain.getOffset());
-				domain.setLimit(searchDomain.getLimit());
+				domain.setOffset(offset);
+				domain.setLimit(limit);
 				domain.setRefsKey(rs.getString("_refs_key"));
 				domain.setJnum(rs.getString("numericpart"));
 				domain.setJnumID(rs.getString("jnumid"));

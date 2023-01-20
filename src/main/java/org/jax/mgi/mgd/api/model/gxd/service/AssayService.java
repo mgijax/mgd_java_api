@@ -1611,8 +1611,8 @@ public class AssayService extends BaseService<AssayDomain> {
 			while (rs.next()) {
 				SummaryResultDomain domain = new SummaryResultDomain();
 				domain.setJnumid(rs.getString("jnumid"));
-				domain.setOffset(searchDomain.getOffset());
-				domain.setLimit(searchDomain.getLimit());
+				domain.setOffset(offset);
+				domain.setLimit(limit);
 				domain.setRefsKey(rs.getString("_refs_key"));				
 				domain.setAssayID(rs.getString("assayid"));
 				domain.setAge(rs.getString("age"));

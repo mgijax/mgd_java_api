@@ -12,6 +12,9 @@ public class SummaryReferenceDomain extends BaseDomain {
 	// not to be used when editing purposes
 	// to be used for returning search results
 	
+	private String accID;
+	private String offset;
+	private String limit;	
 	public String refsKey;
 	public String jnumID;
 	public String jnum;

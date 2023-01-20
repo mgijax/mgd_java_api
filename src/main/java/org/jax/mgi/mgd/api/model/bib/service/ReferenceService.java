@@ -2178,25 +2178,25 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}
 
 	@Transactional	
-	public List<SummaryReferenceDomain> getRefByAllele(String accid) {
+	public List<SummaryReferenceDomain> getRefByAllele(SummaryReferenceDomain searchDomain) {
 		// return list of reference domains by allele acc id
 
 		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 		
 		String cmd = "\nselect a.accid, r.*" + 
 				"\nfrom mgi_reference_assoc ar, acc_accession a, bib_summary_view r" + 
-				"\nwhere a.accid = '" + accid + "'" + 
+				"\nwhere a.accid = '" + searchDomain.getAccID() + "'" + 
 				"\nand a._mgitype_key = 11" + 
 				"\nand a._object_key = ar._object_key" + 
 				"\nand ar._mgitype_key = 11" + 				
 				"\nand ar._refs_key = r._refs_key";
 		
-		results = processSummaryReferenceDomain(cmd);	
+		results = processSummaryReferenceDomain(searchDomain, cmd);	
 		return results;
 	}
 	
 	@Transactional	
-	public List<SummaryReferenceDomain> getRefByMarker(String accid) {
+	public List<SummaryReferenceDomain> getRefByMarker(SummaryReferenceDomain searchDomain) {
 		// return list of reference domains by marker acc id
 
 		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
@@ -2205,15 +2205,15 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				"\nfrom mrk_reference mr, acc_accession a, bib_summary_view r" + 
 				"\nwhere mr._marker_key = a._object_key" + 
 				"\nand a._mgitype_key = 2" + 
-				"\nand a.accid = '" + accid + "'" + 
+				"\nand a.accid = '" + searchDomain.getAccID() + "'" + 
 				"\nand mr._refs_key = r._refs_key";
 		
-		results = processSummaryReferenceDomain(cmd);
+		results = processSummaryReferenceDomain(searchDomain, cmd);
 		return results;
 	}	
 	
 	@Transactional	
-	public List<SummaryReferenceDomain> getRefBySearch(ReferenceSearchDomain searchDomain) {
+	public List<SummaryReferenceDomain> getRefBySearch(SummaryReferenceDomain searchDomain) {
 		// return list of reference domains by searchDomain
 		// accession ids; authors; title; journal; volume; and year.
 		
@@ -2223,10 +2223,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		String where = "\nwhere r._refs_key is not null";				
 		String value = "";
 		
-		if (searchDomain.getAccids() != null && !searchDomain.getAccids().isEmpty()) {
+		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {
 			// replace all spaces
-			log.info(searchDomain.getAccids());
-			value = searchDomain.getAccids().replaceAll("\\s+", " ");
+			log.info(searchDomain.getAccID());
+			value = searchDomain.getAccID().replaceAll("\\s+", " ");
 			value = value.replaceAll(", ",  ",");
 			value = value.replaceAll(" ", ",");
 			value = value.trim().toLowerCase().replaceAll(",", "','");
@@ -2270,16 +2270,28 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		cmd = cmd + where;
-		results = processSummaryReferenceDomain(cmd);	
+		results = processSummaryReferenceDomain(searchDomain, cmd);	
 		return results;
 	}
 	
 	@Transactional	
-	public List<SummaryReferenceDomain> processSummaryReferenceDomain(String cmd) {
+	public List<SummaryReferenceDomain> processSummaryReferenceDomain(SummaryReferenceDomain searchDomain, String cmd) {
 		// return list of reference domains by acc id
 
 		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 		
+		String offset = "0";
+		String limit = "250";
+		
+		if (searchDomain.getOffset() != null && !searchDomain.getOffset().isEmpty()) {
+			offset = searchDomain.getOffset();
+		}
+		
+		if (searchDomain.getLimit() != null && !searchDomain.getLimit().isEmpty()) {
+			limit = searchDomain.getLimit();
+		}
+		
+		cmd += "\noffset " + offset + "\nlimit " + limit;
 		cmd = cmd + "\norder by numericpart desc";
 
 		log.info(cmd);	
@@ -2288,6 +2300,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SummaryReferenceDomain domain = new SummaryReferenceDomain();
+				domain.setAccID(searchDomain.getAccID());
 				domain.setRefsKey(rs.getString("_refs_key"));
 				domain.setJnum(rs.getString("numericpart"));
 				domain.setJnumID(rs.getString("jnumid"));

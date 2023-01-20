@@ -200,7 +200,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	@POST
 	@ApiOperation(value = "Get list of reference domains by allele accession id")
 	@Path("/getRefByAllele")
-	public List<SummaryReferenceDomain> getRefByAllele(String accid) {
+	public List<SummaryReferenceDomain> getRefByAllele(SummaryReferenceDomain searchDomain) {
 		
 		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 
@@ -216,7 +216,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	@POST
 	@ApiOperation(value = "Get list of reference domains by marker accession id")
 	@Path("/getRefByMarker")
-	public List<SummaryReferenceDomain> getRefByMarker(String accid) {
+	public List<SummaryReferenceDomain> getRefByMarker(SummaryReferenceDomain searchDomain) {
 		
 		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 
@@ -232,7 +232,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	@POST
 	@ApiOperation(value = "Get list of reference domains by search domain")
 	@Path("/getRefBySearch")
-	public List<SummaryReferenceDomain> getRefBySearch(ReferenceSearchDomain searchDomain) {
+	public List<SummaryReferenceDomain> getRefBySearch(SummaryReferenceDomain searchDomain) {
 		
 		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 

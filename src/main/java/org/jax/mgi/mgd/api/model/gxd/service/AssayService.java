@@ -1605,7 +1605,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		cmd = cmd + "\noffset " + offset + "\nlimit " + limit;
 		log.info(cmd);	
-		
+		log.info(new Date());
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
@@ -1637,7 +1637,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				summaryResults.add(domain);
 				//assayDAO.clear();				
 			}
-			log.info("sqlExecutor.clearnup");
+			log.info(new Date());
 			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {

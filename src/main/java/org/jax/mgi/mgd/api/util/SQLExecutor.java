@@ -110,7 +110,7 @@ public class SQLExecutor {
 	 * @return
 	 */
 	public ResultSet executeProto (String query) {
-		return executeProto(query, 10000);
+		return executeProto(query, 5000);
 	}
 
 	/**

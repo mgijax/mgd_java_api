@@ -205,7 +205,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 
 		try {
-			results = referenceService.getRefByAllele(accid);
+			results = referenceService.getRefByAllele(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -221,7 +221,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 
 		try {
-			results = referenceService.getRefByMarker(accid);
+			results = referenceService.getRefByMarker(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -1609,6 +1609,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
+				log.info(rs.getString("_assay_key"));
 				SummaryResultDomain domain = new SummaryResultDomain();
 				domain.setJnumid(rs.getString("jnumid"));
 				domain.setOffset(offset);

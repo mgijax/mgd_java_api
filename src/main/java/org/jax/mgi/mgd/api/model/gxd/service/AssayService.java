@@ -1603,7 +1603,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			limit = searchDomain.getLimit();
 		}
 		
-		cmd += "\noffset " + offset + "\nlimit " + limit;
+		cmd = cmd + "\noffset " + offset + "\nlimit " + limit;
 		log.info(cmd);	
 		
 		try {

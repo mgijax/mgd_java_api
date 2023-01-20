@@ -2291,9 +2291,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			limit = searchDomain.getLimit();
 		}
 		
-		cmd += "\noffset " + offset + "\nlimit " + limit;
 		cmd = cmd + "\norder by numericpart desc";
-
+		cmd = cmd + "\noffset " + offset + "\nlimit " + limit;
 		log.info(cmd);	
 		
 		try {

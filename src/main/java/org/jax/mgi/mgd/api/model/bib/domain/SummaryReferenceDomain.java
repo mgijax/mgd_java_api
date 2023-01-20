@@ -17,12 +17,13 @@ public class SummaryReferenceDomain extends BaseDomain {
 	public String jnumid;
 	public String jnum;
 	public String short_citation;
+	public String authors;
 	public String title;	
 	public String journal;
 	public String year;
+	public String vol;
 	public String mgiid;	
 	public String pubmedid;
-	public String vol;
 	public String referencetype;
 	public String referenceAbstract;
 	public Boolean hasAllele = false;

@@ -2191,7 +2191,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				"\nand ar._mgitype_key = 11" + 				
 				"\nand ar._refs_key = r._refs_key";
 		
-		results = processSummaryReferenceDomain(cmd);	
+		results = processSummaryReferenceDomain(accid, cmd);	
 		return results;
 	}
 	
@@ -2208,7 +2208,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				"\nand a.accid = '" + accid + "'" + 
 				"\nand mr._refs_key = r._refs_key";
 		
-		results = processSummaryReferenceDomain(cmd);
+		results = processSummaryReferenceDomain(accid, cmd);
 		return results;
 	}	
 	
@@ -2219,7 +2219,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 				
-		String cmd = "\nselect r.* from bib_summary_view r";
+		String cmd = "\nselect null as accid, r.* from bib_summary_view r";
 		String where = "\nwhere r._refs_key is not null";				
 		String value = "";
 		
@@ -2270,12 +2270,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		cmd = cmd + where;
-		results = processSummaryReferenceDomain(cmd);	
+		results = processSummaryReferenceDomain(searchDomain.getAccids(), cmd);	
 		return results;
 	}
 	
 	@Transactional	
-	public List<SummaryReferenceDomain> processSummaryReferenceDomain(String cmd) {
+	public List<SummaryReferenceDomain> processSummaryReferenceDomain(String accid, String cmd) {
 		// return list of reference domains by acc id
 
 		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
@@ -2288,11 +2288,12 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SummaryReferenceDomain domain = new SummaryReferenceDomain();
-				domain.setAccID(rs.getString("accid"));
+				domain.setAccID(accid);
 				domain.setRefsKey(rs.getString("_refs_key"));
 				domain.setJnum(rs.getString("numericpart"));
 				domain.setJnumid(rs.getString("jnumid"));
 				domain.setShort_citation(rs.getString("short_citation"));
+				domain.setAuthors(rs.getString("authors"));
 				domain.setTitle(rs.getString("title"));	
 				domain.setJournal(rs.getString("journal"));
 				domain.setYear(rs.getString("year"));

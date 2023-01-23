@@ -17,6 +17,7 @@ import org.jax.mgi.mgd.api.model.bib.dao.ReferenceCitationCacheDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyPrepDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AssayDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AssayTypeDAO;
+import org.jax.mgi.mgd.api.model.gxd.dao.ExpressionCacheDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.ProbePrepDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
@@ -31,6 +32,7 @@ import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
 import org.jax.mgi.mgd.api.model.gxd.translator.AssayTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.GenotypeTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimAssayTranslator;
+import org.jax.mgi.mgd.api.model.gxd.translator.SummaryResultTranslator;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberCellTypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberEmapaDomain;
@@ -81,6 +83,8 @@ public class AssayService extends BaseService<AssayDomain> {
 	@Inject
 	private GenotypeDAO genotypeDAO;
 	@Inject
+	private ExpressionCacheDAO expressionCacheDAO;
+	@Inject
 	private AssayNoteService assayNoteService;
 	@Inject
 	private SpecimenService specimenService;
@@ -96,6 +100,7 @@ public class AssayService extends BaseService<AssayDomain> {
 	private AssayTranslator translator = new AssayTranslator();
 	private SlimAssayTranslator slimtranslator = new SlimAssayTranslator();
 	private GenotypeTranslator genotypetranslator = new GenotypeTranslator();
+	private SummaryResultTranslator summaryresulttranslator = new SummaryResultTranslator();
 	
 	private SQLExecutor sqlExecutor = new SQLExecutor();
 
@@ -1519,11 +1524,19 @@ public class AssayService extends BaseService<AssayDomain> {
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
 		
-		String cmd = "\nselect count(*) as total_count from GXD_AssayResult_Summary_View where jnumid = '" + searchDomain.getJnumid() + "'";
+		//String cmd = "\nselect count(*) as total_count from GXD_AssayResult_Summary_View where jnumid = '" + select count(*) as total_count from gxd_expression e, bib_citation_cache c where c.jnumid = 'J:153498' and c._refs_key = e._refs_key
+
+		String cmd = "\nselect count(*) as total_count" +
+				"\nfrom bib_citation_cache c, gxd_expression e" +
+				"\nwhere c._refs_key = e._refs_key" + 
+				"\nand c.jnumid = '" + searchDomain.getJnumid() + "'";
 		results.total_count = processSummaryResultCount(searchDomain, cmd);
 		
-		cmd = "\nselect * from GXD_AssayResult_Summary_View where jnumid = '" + searchDomain.getJnumid() + "'";
-		summaryResults = processSummaryResultDomain(searchDomain, cmd);
+		//cmd = "\nselect * from GXD_AssayResult_Summary_View where jnumid = '" + searchDomain.getJnumid() + "'";
+		cmd = "\nselect e._expression_key" +
+				"\nfrom bib_citation_cache c, gxd_expression e" +
+				"\nwhere c._refs_key = e._refs_key" + 
+				"\nand c.jnumid = '" + searchDomain.getJnumid() + "'";		summaryResults = processSummaryResultDomain(searchDomain, cmd);
 		
 		results.items = summaryResults;
 		return results;
@@ -1592,31 +1605,34 @@ public class AssayService extends BaseService<AssayDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SummaryResultDomain domain = new SummaryResultDomain();
-				domain.setJnumid(rs.getString("jnumid"));
-				domain.setOffset(offset);
-				domain.setLimit(limit);
-				domain.setRefsKey(rs.getString("_refs_key"));				
-				domain.setAssayID(rs.getString("assayid"));
-				domain.setAge(rs.getString("age"));
-				domain.setAssayKey(rs.getString("_assay_key"));
-				domain.setAssayTypeKey(rs.getString("_assaytype_key"));
-				domain.setAssayType(rs.getString("assaytype"));
-				domain.setAssayTypeSequenceNum(rs.getString("sequenceNum"));
-				domain.setCellTypeID(rs.getString("celltypeid"));
-				domain.setCellTypeKey(rs.getString("_celltype_term_key"));
-				domain.setCellType(rs.getString("celltype"));
-				domain.setMarkerKey(rs.getString("_marker_key"));
-				domain.setMarkerID(rs.getString("markerid"));
-				domain.setMarkerSymbol(rs.getString("markerSymbol"));
-				domain.setAlleleDetailNote(rs.getString("alleleDetailNote"));		
-				domain.setResultNote(rs.getString("resultnote"));
-				domain.setSpecimenLabel(rs.getString("specimenLabel"));
-				//domain.setPattern(rs.getString("pattern"));
-				domain.setStructureID(rs.getString("structureid"));
-				domain.setStructure(rs.getString("structure"));
-				domain.setStrength(rs.getString("strength"));
+				domain = summaryresulttranslator.translate(expressionCacheDAO.get(rs.getInt("_expression_key")));				
+
+//				domain.setJnumid(rs.getString("jnumid"));
+//				domain.setOffset(offset);
+//				domain.setLimit(limit);
+//				domain.setRefsKey(rs.getString("_refs_key"));				
+//				domain.setAssayID(rs.getString("assayid"));
+//				domain.setAge(rs.getString("age"));
+//				domain.setAssayKey(rs.getString("_assay_key"));
+//				domain.setAssayTypeKey(rs.getString("_assaytype_key"));
+//				domain.setAssayType(rs.getString("assaytype"));
+//				domain.setAssayTypeSequenceNum(rs.getInt("sequenceNum"));
+//				domain.setCellTypeID(rs.getString("celltypeid"));
+//				domain.setCellTypeKey(rs.getString("_celltype_term_key"));
+//				domain.setCellType(rs.getString("celltype"));
+//				domain.setMarkerKey(rs.getString("_marker_key"));
+//				domain.setMarkerID(rs.getString("markerid"));
+//				domain.setMarkerSymbol(rs.getString("markerSymbol"));
+//				domain.setAlleleDetailNote(rs.getString("alleleDetailNote"));		
+//				domain.setResultNote(rs.getString("resultnote"));
+//				domain.setSpecimenLabel(rs.getString("specimenLabel"));
+//				//domain.setPattern(rs.getString("pattern"));
+//				domain.setStructureID(rs.getString("structureid"));
+//				domain.setStructure(rs.getString("structure"));
+//				domain.setStrength(rs.getString("strength"));
+				
 				summaryResults.add(domain);
-				//assayDAO.clear();				
+				expressionCacheDAO.clear();				
 			}
 			log.info(new Date());
 			sqlExecutor.cleanup();

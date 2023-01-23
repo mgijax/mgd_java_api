@@ -17,12 +17,13 @@ public class SummaryResultDomain extends BaseDomain {
 	private String limit;
 	
 	// output results
+	private String expressionKey;
 	private String refsKey;	
 	private String assayKey;
 	private String assayID;
 	private String assayTypeKey;
 	private String assayType;
-	private String assayTypeSequenceNum;
+	private Integer assayTypeSequenceNum;
 	private String markerKey;
 	private String markerID;
 	private String markerSymbol;

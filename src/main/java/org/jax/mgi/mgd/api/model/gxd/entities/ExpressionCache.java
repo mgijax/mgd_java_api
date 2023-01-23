@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
+import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -24,9 +25,17 @@ public class ExpressionCache extends BaseEntity {
 
 	@Id
 	private Integer _expression_key;
+	private Integer _assay_key;
 	private Integer _marker_key;
+	private String resultNote;
 	private String expressed;
-	//private String age;
+	private String strength;
+	private String age;
+
+//    _EMAPA_Term_key                int             not null,
+//    _CellType_Term_key             int             null,
+//    _Stage_key                     int             not null,
+
 	//private Integer agemin;
 	//private Integer agemax;
 	//private Integer isrecombinase;
@@ -35,30 +44,24 @@ public class ExpressionCache extends BaseEntity {
 	private Date creation_date;
 	private Date modification_date;
 	
-	//@OneToOne(fetch=FetchType.LAZY)
-	//@JoinColumn(name="_assay_key")
-	//private Assay assay;
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_assay_key")
+	private Assay assay;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key")
 	private ReferenceCitationCache reference;
 	
-	//@OneToOne(fetch=FetchType.LAZY)
-	//@JoinColumn(name="_assaytype_key")
-	//private AssayType assayType;
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_assaytype_key")
+	private AssayType assayType;
 
 	//@OneToOne(fetch=FetchType.LAZY)
 	//@JoinColumn(name="_genotype_key")
 	//private Genotype genotype;
 	
-	//@OneToOne(fetch=FetchType.LAZY)
-	//@JoinColumn(name="_marker_key")
-	//private Marker marker;
-
-	//need to add:
-	//_emaps_term_key
-	//_stage_key
-	//_specimen_key
-	//_genelane_key
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_marker_key")
+	private Marker marker;
 	
 }

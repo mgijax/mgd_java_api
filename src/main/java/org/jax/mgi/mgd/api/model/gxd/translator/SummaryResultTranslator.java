@@ -14,7 +14,7 @@ public class SummaryResultTranslator extends BaseEntityDomainTranslator<Expressi
 
 		SummaryResultDomain domain = new SummaryResultDomain();
 		
-		domain.setExpressionKey(entity.getExpressionKey());
+		domain.setExpressionKey(String.valueOf(entity.get_expression_key()));
 		domain.setAssayKey(String.valueOf(entity.getAssay().get_assay_key()));
 		domain.setAssayID(entity.getAssay().getMgiAccessionIds().get(0).getAccID());
 		domain.setAssayTypeKey(String.valueOf(entity.getAssayType().get_assaytype_key()));
@@ -29,7 +29,7 @@ public class SummaryResultTranslator extends BaseEntityDomainTranslator<Expressi
 		domain.setStrength(entity.getStrength());
 		domain.setAge(entity.getAge());
 		domain.setStructureID(entity.getEmapaTerm().getAccessionIds().get(0).getAccID());
-		domain.setStructure("TS" + entity.getStageKey() + ":" + entity.getEmapaTerm());
+		domain.setStructure("TS" + String.valueOf(entity.get_stage_key()) + ":" + entity.getEmapaTerm());
 		domain.setSpecimenLabel(entity.getSpecimen().getSpecimenLabel());
 		
 		if (entity.getCellTypeTerm() != null) {

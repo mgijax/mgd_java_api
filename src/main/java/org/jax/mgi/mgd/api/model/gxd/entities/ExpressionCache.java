@@ -25,8 +25,8 @@ import lombok.Setter;
 public class ExpressionCache extends BaseEntity {
 
 	@Id
-	private String expressionKey;
-	private String stageKey;
+	private int _expression_key;
+	private int _stage_key;
 	private String resultNote;
 	private String expressed;
 	private String strength;

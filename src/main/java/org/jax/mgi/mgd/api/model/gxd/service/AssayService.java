@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.ProbePrepDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.GelRowDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeReplaceDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
@@ -1668,6 +1670,8 @@ public class AssayService extends BaseService<AssayDomain> {
 			e.printStackTrace();
 		}		
 
+		// attach a few more sort rules
+		summaryResults.sort(Comparator.comparing(SummaryResultDomain::getAssayID).thenComparing(SummaryResultDomain::getSpecimenLabel));
 		return summaryResults;
 	}
 	

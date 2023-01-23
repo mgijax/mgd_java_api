@@ -1530,7 +1530,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nwhere a._object_key = e._marker_key" +
 				"\nand a._mgitype_key = 2" +
 				"\nand a._logicaldb_key = 1" +
-				"\nand a.accid = '" + searchDomain.getMarkerID() + "'";		summaryResults = processSummaryResultDomain(searchDomain, cmd);
+				"\nand a.accid = '" + searchDomain.getMarkerID() + "'";
 		summaryResults = processSummaryResultDomain(searchDomain, cmd);
 
 		results.items = summaryResults;
@@ -1553,7 +1553,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		cmd = "\nselect e._expression_key" +
 				"\nfrom bib_citation_cache c, gxd_expression e" +
 				"\nwhere c._refs_key = e._refs_key" + 
-				"\nand c.jnumid = '" + searchDomain.getJnumid() + "'";		summaryResults = processSummaryResultDomain(searchDomain, cmd);
+				"\nand c.jnumid = '" + searchDomain.getJnumid() + "'";
 		summaryResults = processSummaryResultDomain(searchDomain, cmd);
 
 		results.items = summaryResults;

@@ -52,6 +52,9 @@ public class SummaryResultTranslator extends BaseEntityDomainTranslator<Expressi
 			if (entity.getGenotype().getAlleleDetailNote().size() > 0) {
 				domain.setAlleleDetailNote(entity.getGenotype().getAlleleDetailNote().get(0).getNote());
 			}
+			else {
+				domain.setAlleleDetailNote("");
+			}
 		}
 		else {
 			domain.setAlleleDetailNote("");

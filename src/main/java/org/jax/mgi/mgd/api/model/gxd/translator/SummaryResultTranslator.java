@@ -35,11 +35,17 @@ public class SummaryResultTranslator extends BaseEntityDomainTranslator<Expressi
 		if (entity.getSpecimen() != null) {
 			domain.setSpecimenLabel(entity.getSpecimen().getSpecimenLabel());
 		}
+		else {
+			domain.setSpecimenLabel("");
+		}
 		
 		if (entity.getCellTypeTerm() != null) {
 			domain.setCellTypeID(entity.getCellTypeTerm().getAccessionIds().get(0).getAccID());
 			domain.setCellTypeKey(String.valueOf(entity.getCellTypeTerm().get_term_key()));
 			domain.setCellType(entity.getCellTypeTerm().getTerm());
+		}
+		else {
+			domain.setCellType("");
 		}
 		
 		if (entity.getGenotype().getAlleleDetailNote() != null) {

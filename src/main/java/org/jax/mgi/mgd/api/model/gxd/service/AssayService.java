@@ -1502,8 +1502,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nfrom acc_accession a," +
 				"\ngxd_expression e left outer join voc_term ct on (e._celltype_term_key = ct._term_key)," +
 				"\nvoc_term st, mrk_marker m, gxd_assaytype gt" +
-				"\nwhere c._refs_key = e._refs_key" + 
-				"\nand e._emapa_term_key = st._term_key" +
+				"\nwhere e._emapa_term_key = st._term_key" +
 				"\nand e._marker_key = m._marker_key" +
 				"\nand e._assaytype_key = gt._assaytype_key" +
 				"\nand a._object_key = e._celltype_term_key" +
@@ -1535,8 +1534,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nfrom acc_accession a," +
 				"\ngxd_expression e left outer join voc_term ct on (e._celltype_term_key = ct._term_key)," +
 				"\nvoc_term st, mrk_marker m, gxd_assaytype gt" +
-				"\nwhere c._refs_key = e._refs_key" + 
-				"\nand e._emapa_term_key = st._term_key" +
+				"\nwhere e._emapa_term_key = st._term_key" +
 				"\nand e._marker_key = m._marker_key" +
 				"\nand e._assaytype_key = gt._assaytype_key" +
 				"\nand a._object_key = e._marker_key" +
@@ -1566,10 +1564,10 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nfrom bib_citation_cache c," +
 				"\ngxd_expression e left outer join voc_term ct on (e._celltype_term_key = ct._term_key)," +
 				"\nvoc_term st, mrk_marker m, gxd_assaytype gt" +
-				"\nwhere c._refs_key = e._refs_key" + 
-				"\nand e._emapa_term_key = st._term_key" +
+				"\nwhere e._emapa_term_key = st._term_key" +
 				"\nand e._marker_key = m._marker_key" +
 				"\nand e._assaytype_key = gt._assaytype_key" +
+				"\nand c._refs_key = e._refs_key" + 
 				"\nand c.jnumid = '" + searchDomain.getJnumid() + "'";	
 		summaryResults = processSummaryResultDomain(searchDomain, cmd);
 
@@ -1596,8 +1594,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nfrom acc_accession a,"+
 				"\ngxd_expression e left outer join voc_term ct on (e._celltype_term_key = ct._term_key)," +
 				"\nvoc_term st, mrk_marker m, gxd_assaytype gt" +
-				"\nwhere c._refs_key = e._refs_key" + 
-				"\nand e._emapa_term_key = st._term_key" +
+				"\nwhere e._emapa_term_key = st._term_key" +
 				"\nand e._marker_key = m._marker_key" +
 				"\nand e._assaytype_key = gt._assaytype_key" +				
 				"\nand a._object_key = e._emapa_term_key" +

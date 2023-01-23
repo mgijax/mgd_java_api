@@ -13,16 +13,6 @@ public class SummaryResultTranslator extends BaseEntityDomainTranslator<Expressi
 	protected SummaryResultDomain entityToDomain(ExpressionCache entity) {
 
 		SummaryResultDomain domain = new SummaryResultDomain();
-
-//		private String offset;
-//		private String limit;
-//		private String structureID;
-//		private String structure;
-//		private String cellTypeID;
-//		private String cellTypeKey;
-//		private String cellType;
-//		private String specimenLabel;
-//		private String alleleDetailNote;
 		
 		domain.setExpressionKey(String.valueOf(entity.get_expression_key()));
 		domain.setAssayKey(String.valueOf(entity.getAssay().get_assay_key()));
@@ -38,31 +28,20 @@ public class SummaryResultTranslator extends BaseEntityDomainTranslator<Expressi
 		domain.setResultNote(entity.getResultNote());
 		domain.setStrength(entity.getStrength());
 		domain.setAge(entity.getAge());
-
-//		// specimens
-//		if (entity.getSpecimens() != null && !entity.getSpecimens().isEmpty()) {
-//			SpecimenTranslator specimenTranslator = new SpecimenTranslator();
-//			Iterable<SpecimenDomain> i = specimenTranslator.translateEntities(entity.getSpecimens());
-//			domain.setSpecimens(IteratorUtils.toList(i.iterator()));
-//			domain.getSpecimens().sort(Comparator.comparingInt(SpecimenDomain::getSequenceNum));
-//		}
-//
-//		// gel lanes
-//		if (entity.getGelLanes() != null && !entity.getGelLanes().isEmpty()) {
-//			GelLaneTranslator gellaneTranslator = new GelLaneTranslator();
-//			Iterable<GelLaneDomain> i = gellaneTranslator.translateEntities(entity.getGelLanes());
-//			domain.setGelLanes(IteratorUtils.toList(i.iterator()));
-//			domain.getGelLanes().sort(Comparator.comparingInt(GelLaneDomain::getSequenceNum));
-//		}
-
-//		// gel rows
-//		if (entity.getGelRows() != null && !entity.getGelRows().isEmpty()) {
-//			GelRowTranslator gelrowTranslator = new GelRowTranslator();
-//			Iterable<GelRowDomain> i = gelrowTranslator.translateEntities(entity.getGelRows());
-//			domain.setGelRows(IteratorUtils.toList(i.iterator()));
-//			domain.getGelRows().sort(Comparator.comparingInt(GelRowDomain::getSequenceNum));
-//		}
-
+		domain.setStructureID(entity.getEmapaTerm().getAccessionIds().get(0).getAccID());
+		domain.setStructure("TS" + String.valueOf(entity.get_stage_key() + ":" + entity.getEmapaTerm()));
+		domain.setSpecimenLabel(entity.getSpecimen().getSpecimenLabel());
+		
+		if (entity.getCellTypeTerm() != null) {
+			domain.setCellTypeID(entity.getCellTypeTerm().getAccessionIds().get(0).getAccID());
+			domain.setCellTypeKey(String.valueOf(entity.getCellTypeTerm().get_term_key()));
+			domain.setCellType(entity.getCellTypeTerm().getTerm());
+		}
+		
+		if (entity.getGenotype().getAlleleDetailNote() != null) {
+			domain.setAlleleDetailNote(entity.getGenotype().getAlleleDetailNote().get(0).getNote());
+		}
+		
 		return domain;
 	}
 

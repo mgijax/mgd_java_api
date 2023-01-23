@@ -1606,10 +1606,10 @@ public class AssayService extends BaseService<AssayDomain> {
 			while (rs.next()) {
 				SummaryResultDomain domain = new SummaryResultDomain();
 				domain = summaryresulttranslator.translate(expressionCacheDAO.get(rs.getInt("_expression_key")));				
-
+				domain.setOffset(offset);
+				domain.setLimit(limit);
+				
 //				domain.setJnumid(rs.getString("jnumid"));
-//				domain.setOffset(offset);
-//				domain.setLimit(limit);
 //				domain.setRefsKey(rs.getString("_refs_key"));				
 //				domain.setAssayID(rs.getString("assayid"));
 //				domain.setAge(rs.getString("age"));

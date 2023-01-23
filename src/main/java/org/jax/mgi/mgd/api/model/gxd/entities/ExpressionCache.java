@@ -25,8 +25,6 @@ public class ExpressionCache extends BaseEntity {
 
 	@Id
 	private Integer _expression_key;
-	private Integer _assay_key;
-	private Integer _marker_key;
 	private String resultNote;
 	private String expressed;
 	private String strength;

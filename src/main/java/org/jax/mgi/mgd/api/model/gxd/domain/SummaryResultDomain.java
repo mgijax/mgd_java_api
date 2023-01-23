@@ -34,7 +34,7 @@ public class SummaryResultDomain extends BaseDomain {
 	private String cellType;
 	private String strength;
 	private String specimenLabel;
-	private String pattern;
+	//private String pattern;
 	private String resultNote;
 	private String alleleDetailNote;
 }

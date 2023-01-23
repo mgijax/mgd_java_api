@@ -1611,7 +1611,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setAlleleDetailNote(rs.getString("alleleDetailNote"));		
 				domain.setResultNote(rs.getString("resultnote"));
 				domain.setSpecimenLabel(rs.getString("specimenLabel"));
-				domain.setPattern(rs.getString("pattern"));
+				//domain.setPattern(rs.getString("pattern"));
 				domain.setStructureID(rs.getString("structureid"));
 				domain.setStructure(rs.getString("structure"));
 				domain.setStrength(rs.getString("strength"));

@@ -12,12 +12,16 @@ public class SummaryResultDomain extends BaseDomain {
 	// not to be used when editing purposes
 	
 	// input parameters
-	private String jnumid;
 	private String offset;
 	private String limit;
-	
+	private String cellTypeID;	
+	private String jnumid;
+	private String markerID;
+	private String structureID;
+
 	// output results
 	private String expressionKey;
+	private Integer stageKey;
 	private String refsKey;	
 	private String assayKey;
 	private String assayID;
@@ -25,15 +29,13 @@ public class SummaryResultDomain extends BaseDomain {
 	private String assayType;
 	private Integer assayTypeSequenceNum;
 	private String markerKey;
-	private String markerID;
 	private String markerSymbol;
 	private String age;
-	private String structureID;
 	private String structure;
-	private String cellTypeID;
 	private String cellTypeKey;
 	private String cellType;
 	private String strength;
+	//private String pattern;
 	private String resultNote;
 	private String specimenLabel;
 	private String alleleDetailNote;

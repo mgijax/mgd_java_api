@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -1646,6 +1647,8 @@ public class AssayService extends BaseService<AssayDomain> {
 			e.printStackTrace();
 		}		
 
+		//order by _stage_key, structure, celltype, markerSymbol, sequenceNum, assayid, specimenLabel
+		summaryResults.sort(Comparator.comparingInt(SummaryResultDomain::getStageKey).thenComparing(SummaryResultDomain::getStructure).thenComparing(SummaryResultDomain::getCellType).thenComparing(SummaryResultDomain::getMarkerSymbol).thenComparingInt(SummaryResultDomain::getAssayTypeSequenceNum).thenComparing(SummaryResultDomain::getAssayID).thenComparing(SummaryResultDomain::getSpecimenLabel));
 		return summaryResults;
 	}
 	

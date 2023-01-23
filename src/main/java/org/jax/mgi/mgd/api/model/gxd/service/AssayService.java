@@ -1498,9 +1498,15 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand a.accid = '" + searchDomain.getCellTypeID() + "'";
 		results.total_count = processSummaryResultCount(searchDomain, cmd);
 		
-		cmd = "\nselect e.*" +
-				"\nfrom acc_accession a, gxd_expression e" +
-				"\nwhere a._object_key = e._celltype_term_key" +
+		cmd = "\nselect e._expression_key" +
+				"\nfrom acc_accession a," +
+				"\ngxd_expression e left outer join voc_term ct on (e._celltype_term_key = ct._term_key)," +
+				"\nvoc_term st, mrk_marker m, gxd_assaytype gt" +
+				"\nwhere c._refs_key = e._refs_key" + 
+				"\nand e._emapa_term_key = st._term_key" +
+				"\nand e._marker_key = m._marker_key" +
+				"\nand e._assaytype_key = gt._assaytype_key" +
+				"\nand a._object_key = e._celltype_term_key" +
 				"\nand a._mgitype_key = 13" +
 				"\nand a._logicaldb_key = 173" +
 				"\nand a.accid = '" + searchDomain.getCellTypeID() + "'";
@@ -1525,9 +1531,15 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand a.accid = '" + searchDomain.getMarkerID() + "'";
 		results.total_count = processSummaryResultCount(searchDomain, cmd);
 		
-		cmd = "\nselect e.*" +
-				"\nfrom acc_accession a, gxd_expression e" +
-				"\nwhere a._object_key = e._marker_key" +
+		cmd = "\nselect e._expression_key" +
+				"\nfrom acc_accession a," +
+				"\ngxd_expression e left outer join voc_term ct on (e._celltype_term_key = ct._term_key)," +
+				"\nvoc_term st, mrk_marker m, gxd_assaytype gt" +
+				"\nwhere c._refs_key = e._refs_key" + 
+				"\nand e._emapa_term_key = st._term_key" +
+				"\nand e._marker_key = m._marker_key" +
+				"\nand e._assaytype_key = gt._assaytype_key" +
+				"\nand a._object_key = e._marker_key" +
 				"\nand a._mgitype_key = 2" +
 				"\nand a._logicaldb_key = 1" +
 				"\nand a.accid = '" + searchDomain.getMarkerID() + "'";
@@ -1551,7 +1563,8 @@ public class AssayService extends BaseService<AssayDomain> {
 		results.total_count = processSummaryResultCount(searchDomain, cmd);
 		
 		cmd = "\nselect e._expression_key" +
-				"\nfrom bib_citation_cache c, gxd_expression e left outer join voc_term ct on (e._celltype_term_key = ct._term_key)," +
+				"\nfrom bib_citation_cache c," +
+				"\ngxd_expression e left outer join voc_term ct on (e._celltype_term_key = ct._term_key)," +
 				"\nvoc_term st, mrk_marker m, gxd_assaytype gt" +
 				"\nwhere c._refs_key = e._refs_key" + 
 				"\nand e._emapa_term_key = st._term_key" +
@@ -1579,9 +1592,15 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand a.accid = '" + searchDomain.getStructureID() + "'";
 		results.total_count = processSummaryResultCount(searchDomain, cmd);
 		
-		cmd = "\nselect e.*" +
-				"\nfrom acc_accession a, gxd_expression e" +
-				"\nwhere a._object_key = e._emapa_term_key" +
+		cmd = "\nselect e._expression_key" +
+				"\nfrom acc_accession a,"+
+				"\ngxd_expression e left outer join voc_term ct on (e._celltype_term_key = ct._term_key)," +
+				"\nvoc_term st, mrk_marker m, gxd_assaytype gt" +
+				"\nwhere c._refs_key = e._refs_key" + 
+				"\nand e._emapa_term_key = st._term_key" +
+				"\nand e._marker_key = m._marker_key" +
+				"\nand e._assaytype_key = gt._assaytype_key" +				
+				"\nand a._object_key = e._emapa_term_key" +
 				"\nand a._mgitype_key = 13" +
 				"\nand a._logicaldb_key = 169" +
 				"\nand a.accid = '" + searchDomain.getStructureID() + "'";
@@ -1602,7 +1621,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				total_count = rs.getLong("total_count");
-				assayDAO.clear();				
+				expressionCacheDAO.clear();				
 			}
 			//sqlExecutor.cleanup();
 		}

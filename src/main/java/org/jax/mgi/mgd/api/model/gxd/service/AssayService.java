@@ -1524,15 +1524,12 @@ public class AssayService extends BaseService<AssayDomain> {
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
 		
-		//String cmd = "\nselect count(*) as total_count from GXD_AssayResult_Summary_View where jnumid = '" + select count(*) as total_count from gxd_expression e, bib_citation_cache c where c.jnumid = 'J:153498' and c._refs_key = e._refs_key
-
 		String cmd = "\nselect count(*) as total_count" +
 				"\nfrom bib_citation_cache c, gxd_expression e" +
 				"\nwhere c._refs_key = e._refs_key" + 
 				"\nand c.jnumid = '" + searchDomain.getJnumid() + "'";
 		results.total_count = processSummaryResultCount(searchDomain, cmd);
 		
-		//cmd = "\nselect * from GXD_AssayResult_Summary_View where jnumid = '" + searchDomain.getJnumid() + "'";
 		cmd = "\nselect e._expression_key" +
 				"\nfrom bib_citation_cache c, gxd_expression e" +
 				"\nwhere c._refs_key = e._refs_key" + 

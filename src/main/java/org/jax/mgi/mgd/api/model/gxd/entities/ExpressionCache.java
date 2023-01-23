@@ -64,7 +64,7 @@ public class ExpressionCache extends BaseEntity {
 	private Term emapaTerm;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="__celltype_term_key_key", referencedColumnName="_term_key")
+	@JoinColumn(name="_celltype_term_key", referencedColumnName="_term_key")
 	private Term cellTypeTerm;
 	
 	@OneToOne(fetch=FetchType.LAZY)

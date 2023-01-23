@@ -1490,10 +1490,20 @@ public class AssayService extends BaseService<AssayDomain> {
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
 		
-		String cmd = "\nselect count(*) as total_count from GXD_AssayResult_Summary_View where celltypeid = '" + searchDomain.getCellTypeID() + "'";
+		String cmd = "\nselect count(*) as total_count" +
+				"\nfrom acc_accession a, gxd_expression e" +
+				"\nwhere a._object_key = e._celltype_term_key" +
+				"\nand a._mgitype_key = 13" +
+				"\nand a._logicaldb_key = 173" +
+				"\nand a.accid = '" + searchDomain.getCellTypeID() + "'";
 		results.total_count = processSummaryResultCount(searchDomain, cmd);
 		
-		cmd = "\nselect * from GXD_AssayResult_Summary_View where celltypeid = '" + searchDomain.getCellTypeID() + "'";
+		cmd = "\nselect e._expression_key" +
+				"\nfrom acc_accession a, gxd_expression e" +
+				"\nwhere a._object_key = e._celltype_term_key" +
+				"\nand a._mgitype_key = 13" +
+				"\nand a._logicaldb_key = 173" +
+				"\nand a.accid = '" + searchDomain.getCellTypeID() + "'";
 		summaryResults = processSummaryResultDomain(searchDomain, cmd);
 		
 		results.items = summaryResults;
@@ -1507,12 +1517,22 @@ public class AssayService extends BaseService<AssayDomain> {
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
 		
-		String cmd = "\nselect count(*) as total_count from GXD_AssayResult_Summary_View where markerid = '" + searchDomain.getMarkerID() + "'";
+		String cmd = "\nselect count(*) as total_count" +
+				"\nfrom acc_accession a, gxd_expression e" +
+				"\nwhere a._object_key = e._marker_key" +
+				"\nand a._mgitype_key = 2" +
+				"\nand a._logicaldb_key = 1" +
+				"\nand a.accid = '" + searchDomain.getMarkerID() + "'";
 		results.total_count = processSummaryResultCount(searchDomain, cmd);
 		
-		cmd = "\nselect * from GXD_AssayResult_Summary_View where markerid = '" + searchDomain.getMarkerID() + "'";
+		cmd = "\nselect e._expression_key" +
+				"\nfrom acc_accession a, gxd_expression e" +
+				"\nwhere a._object_key = e._marker_key" +
+				"\nand a._mgitype_key = 2" +
+				"\nand a._logicaldb_key = 1" +
+				"\nand a.accid = '" + searchDomain.getMarkerID() + "'";		summaryResults = processSummaryResultDomain(searchDomain, cmd);
 		summaryResults = processSummaryResultDomain(searchDomain, cmd);
-		
+
 		results.items = summaryResults;
 		return results;
 	}
@@ -1534,7 +1554,8 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nfrom bib_citation_cache c, gxd_expression e" +
 				"\nwhere c._refs_key = e._refs_key" + 
 				"\nand c.jnumid = '" + searchDomain.getJnumid() + "'";		summaryResults = processSummaryResultDomain(searchDomain, cmd);
-		
+		summaryResults = processSummaryResultDomain(searchDomain, cmd);
+
 		results.items = summaryResults;
 		return results;
 	}
@@ -1546,10 +1567,20 @@ public class AssayService extends BaseService<AssayDomain> {
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
 		
-		String cmd = "\nselect count(*) as total_count from GXD_AssayResult_Summary_View where structureid = '" + searchDomain.getStructureID() + "'";
+		String cmd = "\nselect count(*) as total_count" +
+				"\nfrom acc_accession a, gxd_expression e" +
+				"\nwhere a._object_key = e._emapa_term_key" +
+				"\nand a._mgitype_key = 13" +
+				"\nand a._logicaldb_key = 169" +
+				"\nand a.accid = '" + searchDomain.getStructureID() + "'";
 		results.total_count = processSummaryResultCount(searchDomain, cmd);
 		
-		cmd = "\nselect * from GXD_AssayResult_Summary_View where structureid = '" + searchDomain.getStructureID() + "'";
+		cmd = "\nselect e._expression_key" +
+				"\nfrom acc_accession a, gxd_expression e" +
+				"\nwhere a._object_key = e._emapa_term_key" +
+				"\nand a._mgitype_key = 13" +
+				"\nand a._logicaldb_key = 169" +
+				"\nand a.accid = '" + searchDomain.getStructureID() + "'";
 		summaryResults = processSummaryResultDomain(searchDomain, cmd);
 		
 		results.items = summaryResults;
@@ -1605,29 +1636,6 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain = summaryresulttranslator.translate(expressionCacheDAO.get(rs.getInt("_expression_key")));				
 				domain.setOffset(offset);
 				domain.setLimit(limit);
-				
-//				domain.setJnumid(rs.getString("jnumid"));
-//				domain.setRefsKey(rs.getString("_refs_key"));				
-//				domain.setAssayID(rs.getString("assayid"));
-//				domain.setAge(rs.getString("age"));
-//				domain.setAssayKey(rs.getString("_assay_key"));
-//				domain.setAssayTypeKey(rs.getString("_assaytype_key"));
-//				domain.setAssayType(rs.getString("assaytype"));
-//				domain.setAssayTypeSequenceNum(rs.getInt("sequenceNum"));
-//				domain.setCellTypeID(rs.getString("celltypeid"));
-//				domain.setCellTypeKey(rs.getString("_celltype_term_key"));
-//				domain.setCellType(rs.getString("celltype"));
-//				domain.setMarkerKey(rs.getString("_marker_key"));
-//				domain.setMarkerID(rs.getString("markerid"));
-//				domain.setMarkerSymbol(rs.getString("markerSymbol"));
-//				domain.setAlleleDetailNote(rs.getString("alleleDetailNote"));		
-//				domain.setResultNote(rs.getString("resultnote"));
-//				domain.setSpecimenLabel(rs.getString("specimenLabel"));
-//				//domain.setPattern(rs.getString("pattern"));
-//				domain.setStructureID(rs.getString("structureid"));
-//				domain.setStructure(rs.getString("structure"));
-//				domain.setStrength(rs.getString("strength"));
-				
 				summaryResults.add(domain);
 				expressionCacheDAO.clear();				
 			}

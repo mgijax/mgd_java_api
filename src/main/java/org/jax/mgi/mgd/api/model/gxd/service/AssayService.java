@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -1499,7 +1498,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand a.accid = '" + searchDomain.getCellTypeID() + "'";
 		results.total_count = processSummaryResultCount(searchDomain, cmd);
 		
-		cmd = "\nselect e._expression_key" +
+		cmd = "\nselect e.*" +
 				"\nfrom acc_accession a, gxd_expression e" +
 				"\nwhere a._object_key = e._celltype_term_key" +
 				"\nand a._mgitype_key = 13" +
@@ -1526,7 +1525,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand a.accid = '" + searchDomain.getMarkerID() + "'";
 		results.total_count = processSummaryResultCount(searchDomain, cmd);
 		
-		cmd = "\nselect e._expression_key" +
+		cmd = "\nselect e.*" +
 				"\nfrom acc_accession a, gxd_expression e" +
 				"\nwhere a._object_key = e._marker_key" +
 				"\nand a._mgitype_key = 2" +
@@ -1552,9 +1551,13 @@ public class AssayService extends BaseService<AssayDomain> {
 		results.total_count = processSummaryResultCount(searchDomain, cmd);
 		
 		cmd = "\nselect e._expression_key" +
-				"\nfrom bib_citation_cache c, gxd_expression e" +
+				"\nfrom bib_citation_cache c, gxd_expression e left outer join voc_term ct on (e._celltype_term_key = ct._term_key)," +
+				"\nvoc_term st, mrk_marker m, gxd_assaytype gt" +
 				"\nwhere c._refs_key = e._refs_key" + 
-				"\nand c.jnumid = '" + searchDomain.getJnumid() + "'";
+				"\nand e._emapa_term_key = st._term_key" +
+				"\nand e._marker_key = m._symbol_key" +
+				"\nand e._assaytype_key = gt._assaytype_key" +
+				"\nand c.jnumid = '" + searchDomain.getJnumid() + "'";	
 		summaryResults = processSummaryResultDomain(searchDomain, cmd);
 
 		results.items = summaryResults;
@@ -1576,7 +1579,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand a.accid = '" + searchDomain.getStructureID() + "'";
 		results.total_count = processSummaryResultCount(searchDomain, cmd);
 		
-		cmd = "\nselect e._expression_key" +
+		cmd = "\nselect e.*" +
 				"\nfrom acc_accession a, gxd_expression e" +
 				"\nwhere a._object_key = e._emapa_term_key" +
 				"\nand a._mgitype_key = 13" +
@@ -1627,6 +1630,8 @@ public class AssayService extends BaseService<AssayDomain> {
 			limit = searchDomain.getLimit();
 		}
 		
+		//assayid, specimenLabel";
+		cmd = cmd + "\norder by e._stage_key, st.term, ct.term, m.symbol, gt.sequenceNum";
 		cmd = cmd + "\noffset " + offset + "\nlimit " + limit;
 		log.info(cmd);	
 		log.info(new Date());
@@ -1647,8 +1652,6 @@ public class AssayService extends BaseService<AssayDomain> {
 			e.printStackTrace();
 		}		
 
-		//order by _stage_key, structure, celltype, markerSymbol, sequenceNum, assayid, specimenLabel
-		summaryResults.sort(Comparator.comparingInt(SummaryResultDomain::getStageKey).thenComparing(SummaryResultDomain::getStructure).thenComparing(SummaryResultDomain::getCellType).thenComparing(SummaryResultDomain::getMarkerSymbol).thenComparingInt(SummaryResultDomain::getAssayTypeSequenceNum).thenComparing(SummaryResultDomain::getAssayID).thenComparing(SummaryResultDomain::getSpecimenLabel));
 		return summaryResults;
 	}
 	

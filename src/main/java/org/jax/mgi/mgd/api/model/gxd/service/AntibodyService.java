@@ -767,9 +767,10 @@ and a._antibody_key = aa._antibody_key
 						markerIDs.add(adomain.getMarkers().get(i).getMarkerMGIID());
 						markerSymbols.add(adomain.getMarkers().get(i).getMarkerSymbol());
 					}
-					domain.setMarkerSymbol(String.join(",", markerSymbols));				
 				}
-				
+				domain.setMarkerID(String.join(",", markerIDs));
+				domain.setMarkerSymbol(String.join(",", markerSymbols));				
+
 				for (int i = 0; i < adomain.getRefAssocs().size(); i++) {
 					if (adomain.getRefAssocs().get(i).getAllowOnlyOne() == 1) {
 						domain.setJnumID(adomain.getRefAssocs().get(i).getJnumid());

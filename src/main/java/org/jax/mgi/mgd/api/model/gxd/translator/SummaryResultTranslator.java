@@ -14,7 +14,7 @@ public class SummaryResultTranslator extends BaseEntityDomainTranslator<Expressi
 
 		SummaryResultDomain domain = new SummaryResultDomain();
 		
-		domain.setExpressionKey(String.valueOf(entity.get_expression_key()));
+		domain.setExpressionKey(entity.getExpressionKey());
 		domain.setAssayKey(String.valueOf(entity.getAssay().get_assay_key()));
 		domain.setAssayID(entity.getAssay().getMgiAccessionIds().get(0).getAccID());
 		domain.setAssayTypeKey(String.valueOf(entity.getAssayType().get_assaytype_key()));
@@ -29,7 +29,7 @@ public class SummaryResultTranslator extends BaseEntityDomainTranslator<Expressi
 		domain.setStrength(entity.getStrength());
 		domain.setAge(entity.getAge());
 		domain.setStructureID(entity.getEmapaTerm().getAccessionIds().get(0).getAccID());
-		domain.setStructure("TS" + String.valueOf(entity.get_stage_key() + ":" + entity.getEmapaTerm()));
+		domain.setStructure("TS" + entity.getStageKey() + ":" + entity.getEmapaTerm());
 		domain.setSpecimenLabel(entity.getSpecimen().getSpecimenLabel());
 		
 		if (entity.getCellTypeTerm() != null) {
@@ -39,7 +39,9 @@ public class SummaryResultTranslator extends BaseEntityDomainTranslator<Expressi
 		}
 		
 		if (entity.getGenotype().getAlleleDetailNote() != null) {
-			domain.setAlleleDetailNote(entity.getGenotype().getAlleleDetailNote().get(0).getNote());
+			if (entity.getGenotype().getAlleleDetailNote().size() > 0) {
+				domain.setAlleleDetailNote(entity.getGenotype().getAlleleDetailNote().get(0).getNote());
+			}
 		}
 		
 		return domain;

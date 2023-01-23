@@ -1648,7 +1648,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			limit = searchDomain.getLimit();
 		}
 		
-		//assayid, specimenLabel";
+		// attach most of the sorting rules
 		cmd = cmd + "\norder by e._stage_key, st.term, ct.term, m.symbol, gt.sequenceNum";
 		cmd = cmd + "\noffset " + offset + "\nlimit " + limit;
 		log.info(cmd);	

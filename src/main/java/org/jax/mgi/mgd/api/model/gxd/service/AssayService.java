@@ -1555,7 +1555,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nvoc_term st, mrk_marker m, gxd_assaytype gt" +
 				"\nwhere c._refs_key = e._refs_key" + 
 				"\nand e._emapa_term_key = st._term_key" +
-				"\nand e._marker_key = m._symbol_key" +
+				"\nand e._marker_key = m._marker_key" +
 				"\nand e._assaytype_key = gt._assaytype_key" +
 				"\nand c.jnumid = '" + searchDomain.getJnumid() + "'";	
 		summaryResults = processSummaryResultDomain(searchDomain, cmd);

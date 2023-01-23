@@ -41,7 +41,6 @@ import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberGenotypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
-import org.jax.mgi.mgd.api.model.voc.domain.DenormAnnotationDomain;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.RunCommand;
@@ -1678,7 +1677,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		Comparator<SummaryResultDomain> c6 = Comparator.comparing(SummaryResultDomain::getSpecimenLabel);
 		Comparator<SummaryResultDomain> compareAll = c1.thenComparing(c2).thenComparing(c3).thenComparing(c4).thenComparing(c5).thenComparing(c6);	
 		summaryResults.sort(compareAll);
-		//summaryResults.sort(Comparator.comparingInt(SummaryResultDomain::getStageKey).thenComparing(SummaryResultDomain::getStructure).thenComparing(SummaryResultDomain::getCellType).thenComparing(SummaryResultDomain::getMarkerSymbol).thenComparingInt(SummaryResultDomain::getAssayTypeSequenceNum).thenComparing(SummaryResultDomain::getSpecimenLabel));
+
 		return summaryResults;
 	}
 	

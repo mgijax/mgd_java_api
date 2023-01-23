@@ -25,7 +25,7 @@ public class SummaryResultTranslator extends BaseEntityDomainTranslator<Expressi
 //		private String alleleDetailNote;
 		
 		domain.setExpressionKey(String.valueOf(entity.get_expression_key()));
-		domain.setAssayKey(String.valueOf(entity.get_assay_key()));
+		domain.setAssayKey(String.valueOf(entity.getAssay().get_assay_key()));
 		domain.setAssayID(entity.getAssay().getMgiAccessionIds().get(0).getAccID());
 		domain.setAssayTypeKey(String.valueOf(entity.getAssayType().get_assaytype_key()));
 		domain.setAssayType(entity.getAssayType().getAssayType());
@@ -33,7 +33,7 @@ public class SummaryResultTranslator extends BaseEntityDomainTranslator<Expressi
 		domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));
 		domain.setJnumid(entity.getReference().getJnumid());
 		domain.setMarkerID(entity.getMarker().getMgiAccessionIds().get(0).getAccID());
-		domain.setMarkerKey(String.valueOf(entity.get_marker_key()));
+		domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 		domain.setMarkerSymbol(entity.getMarker().getSymbol());
 		domain.setResultNote(entity.getResultNote());
 		domain.setStrength(entity.getStrength());

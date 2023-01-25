@@ -133,6 +133,7 @@ public class Reference extends BaseEntity {
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	private List<ReferenceBook> referenceBook;
 	
+	// REMOVE ONCE NEW REFERENCE SUMMARY IS INSTALLED
 	// one to one, because counts will always exist
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_refs_key")

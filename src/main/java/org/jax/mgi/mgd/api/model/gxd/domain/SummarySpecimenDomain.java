@@ -14,12 +14,13 @@ public class SummarySpecimenDomain extends BaseDomain {
 	private String embeddingMethod;
 	private String fixationMethod;
 	private String genotypeBackground;
-	private String genotypeAllelePairs;
+	private String alleleDetailNote;
 	private String specimenLabel;
 	private String sex;
 	private String age;
 	private String ageNote;
 	private String hybridization;
 	private String specimenNote;
+	private String markerSymbol;
 		
 }

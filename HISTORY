@@ -4,6 +4,18 @@
 #                    with the same name existing at the site where the files
 #                    are being downloaded from.
 
+TAG: mgd_java_api-6-0-22-33
+DATE: 01/24/2023
+STAFF: lec
+wts2-1094/fl2-152/Antibody Type - Not Applicable option
+voc/service/VocabService.java/search : add _vocab_key = 180
+
+TAG: mgd_java_api-6-0-22-31
+TAG: mgd_java_api-6-0-22-30
+DATE: 01/18/2023
+STAFF: lec
+wts2-888/PWI page revamp: Summary - API component
+wts2-888/fl2-120/PWI page revamp: Antibody Summary - API component
 TAG: mgd_java_api-6-0-22-32
 DATE: 01/23/2023
 STAFF: lec

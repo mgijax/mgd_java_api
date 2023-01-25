@@ -362,4 +362,30 @@ public class AssayController extends BaseController<AssayDomain> {
 		return results;
 	}	
 	
+        protected String[][] getTsvColumns (String endpoint) {
+            if (endpoint.startsWith("getAssayBy")) {
+                String[][] cols = {
+                    {"Assay ID",       "accID"},
+                    {"Gene",           "markerSymbol"},
+                    {"Gene MGI ID",    "markerAccID"},
+                    {"Assay Type",     "assayType"},
+                    {"Reference J#",   "jnumid"},
+                    {"Short Citation", "short_citation"},
+                    };
+                return cols;
+            } else if (endpoint.startsWith("getResultBy")) {
+                String[][] cols = {
+                    {"Gene ID", "markerID"},
+                    {"Symbol", "markerSymbol"},
+                    {"Structure ID", "structureID"},
+                    {"Structure", "structure"},
+                    {"Stage", "stageKey"},
+                    {"Strength", "strength"}
+                    };
+                return cols;
+            } else {
+                String[][] cols = {};
+                return cols;
+            }
+        }
 }

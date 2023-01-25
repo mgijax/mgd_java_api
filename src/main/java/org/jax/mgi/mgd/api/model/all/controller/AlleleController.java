@@ -257,4 +257,14 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		
 		return results;
 	}	
+
+        protected String [][] getTsvColumns (String endpoint) {
+            String [][] cols = {
+                {"Allele ID","alleleID"},
+                {"Symbol", "symbol"},
+                {"Name", "name"},
+                {"Type", "alleleType"}
+            };
+            return cols;
+        }
 }

@@ -16,4 +16,6 @@ public class AlleleFearDomain extends BaseDomain {
 	private String accID;
 	private List<RelationshipFearDomain> mutationInvolves;
 	private List<RelationshipFearDomain> expressesComponents;
+	private List<RelationshipFearDomain> driverComponents;
+	
 }

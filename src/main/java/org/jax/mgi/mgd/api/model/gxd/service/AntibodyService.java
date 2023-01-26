@@ -762,10 +762,13 @@ and a._antibody_key = aa._antibody_key
 	 
 				List<String> markerIDs = new ArrayList<String>();
 				List<String> markerSymbols = new ArrayList<String>();
-				for (int i = 0; i < adomain.getMarkers().size(); i++) {
-					markerIDs.add(adomain.getMarkers().get(i).getMarkerMGIID());
-					markerSymbols.add(adomain.getMarkers().get(i).getMarkerSymbol());
+				if (adomain.getMarkers() != null) {
+					for (int i = 0; i < adomain.getMarkers().size(); i++) {
+						markerIDs.add(adomain.getMarkers().get(i).getMarkerMGIID());
+						markerSymbols.add(adomain.getMarkers().get(i).getMarkerSymbol());
+					}
 				}
+				domain.setMarkerID(String.join(",", markerIDs));
 				domain.setMarkerSymbol(String.join(",", markerSymbols));				
 
 				for (int i = 0; i < adomain.getRefAssocs().size(); i++) {

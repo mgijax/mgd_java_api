@@ -1657,7 +1657,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		// attach most of the sorting rules
 		log.info(cmd);	
-		log.info(new Date());
+
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
@@ -1668,7 +1668,6 @@ public class AssayService extends BaseService<AssayDomain> {
 				summaryResults.add(domain);
 				expressionCacheDAO.clear();				
 			}
-			log.info(new Date());
 			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
@@ -1676,7 +1675,15 @@ public class AssayService extends BaseService<AssayDomain> {
 		}		
 
 		// attach all sort rules
-		summaryResults.sort(Comparator.comparingInt(SummaryResultDomain::getStageKey).thenComparing(SummaryResultDomain::getStructure).thenComparing(SummaryResultDomain::getCellType).thenComparing(SummaryResultDomain::getMarkerSymbol).thenComparingInt(SummaryResultDomain::getAssayTypeSequenceNum).thenComparing(SummaryResultDomain::getSpecimenLabel));
+		Comparator<SummaryResultDomain> c1 = Comparator.comparingInt(SummaryResultDomain::getStageKey);	
+		Comparator<SummaryResultDomain> c2 = Comparator.comparing(SummaryResultDomain::getStructure);			 
+		Comparator<SummaryResultDomain> c3 = Comparator.comparing(SummaryResultDomain::getCellType);
+		Comparator<SummaryResultDomain> c4 = Comparator.comparing(SummaryResultDomain::getMarkerSymbol);
+		Comparator<SummaryResultDomain> c5 = Comparator.comparingInt(SummaryResultDomain::getAssayTypeSequenceNum);
+		Comparator<SummaryResultDomain> c6 = Comparator.comparing(SummaryResultDomain::getSpecimenLabel);
+		Comparator<SummaryResultDomain> compareAll = c1.thenComparing(c2).thenComparing(c3).thenComparing(c4).thenComparing(c5).thenComparing(c6);	
+		summaryResults.sort(compareAll);
+
 		return summaryResults;
 	}
 	

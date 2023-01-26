@@ -320,13 +320,14 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				domain.setEmbeddingMethod(rs.getString("embeddingMethodTerm"));
 				domain.setFixationMethod(rs.getString("fixationTerm"));
 				domain.setGenotypeBackground(rs.getString("strain"));
-				domain.setGenotypeAllelePairs(rs.getString("alleleDetailNote"));
+				domain.setAlleleDetailNote(rs.getString("alleleDetailNote"));
 				domain.setSpecimenLabel(rs.getString("specimenLabel"));
 				domain.setSex(rs.getString("sex"));
 				domain.setAge(rs.getString("age"));
 				domain.setAgeNote(rs.getString("ageNote"));
 				domain.setHybridization(rs.getString("hybridization"));
 				domain.setSpecimenNote(rs.getString("specimenNote"));
+				domain.setMarkerSymbol(rs.getString("symbol"));
 			results.add(domain);
 				specimenDAO.clear();
 			}

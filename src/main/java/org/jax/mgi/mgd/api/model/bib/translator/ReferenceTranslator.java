@@ -184,6 +184,7 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 			domain.setEditRelevanceKey(domain.getRelevanceHistory().get(0).getRelevanceKey());			
 		}
 
+		// REMOVE ONCE NEW REFERENCE SUMMARY IS INSTALLED
 		// list of strings, each of which indicates a type of data associated with the reference
 		List<String> assocDomain = new ArrayList<String>();
 		ReferenceAssociatedData flags = entity.getAssociatedData();

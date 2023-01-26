@@ -196,18 +196,40 @@ public abstract class BaseController<T extends BaseDomain> {
          */
 
         /*
-         * This adds a download endpoint to every category.
-         * Example:
+         * This adds a download endpoint to every category, e.g. assay/download, 
+         * allele/download, marker/download, etc. 
+         * The endpoint takes two parameters: the name of another endpoint (e.g., getAssayByRef),
+         * and an identifier appropriate for that endpoint. Example:
          *    http://bhmgipwi01ld:8079/api/allele/download/getAlleleByMarker/MGI:97490
+         *    http://bhmgipwi01ld:8079/api/allele/download/getAlleleByRef/J:326769
+         *    http://bhmgipwi01ld:8079/api/marker/download/getMarkerByRef/J:326769
+         * For downloading to work:
+         * (1) the specified endpoint must either:
+         *      a. Be an "all-at-once" endpoint. It takes a single accession id (String) parameter and return the 
+         *         list of matching all domain objects. 
+         *      b. Be a paginating endpoint. It takes an accession id (String) plus offset (int) and limit (int) 
+         *         parameters which specify the chunk of the result set to return.
+         *         Returns an object containing the metadata about the current chunk, plus the list of items
+         *         in the current chunk (in a field named "items")
+         * (2) The associated controller must implement a method named formatTsv that knows how to produce a line
+         *     of TSV output from a query result row/object. formatTsv takes two arguments:
+         *      1. the name of the endpoint generating the results
+         *      2. a result object or null. If an object is passed, returns a line of TSV for that object.
+         *         If null is passed, returns the line of column labels (i.e., the first line of the output).
+         *     While the controller is free to implement the formatting function in any way it likes,
+         *     for convenience, there is a helper method (below) that makes it easier to handle the common 
+         *     case in which the TSV output is simply a subset of the fields (no additional processing allowed).
          */
 	@GET
-	@ApiOperation(value = "Download TSV file of assays by marker, allele, etc.")
+	@ApiOperation(value = "Download TSV file from a summary endpoint.")
 	@Path("/download/{endpoint}/{accid}")
         @Produces(MediaType.TEXT_PLAIN)
-	public Response downloadEndpoint(@PathParam("endpoint") String endpoint, @PathParam("accid") String accid) {
-             String[][] cols = this.getTsvColumns(endpoint);
+	public Response downloadEndpoint(
+            @PathParam("endpoint") String endpoint,
+            @PathParam("accid") String accid
+        ) {
              String fname = this.getTsvFileName(endpoint, accid);
-             return download(endpoint, accid, cols, fname);
+             return download(endpoint, accid, fname);
 	}
 
         /*
@@ -215,26 +237,73 @@ public abstract class BaseController<T extends BaseDomain> {
          * Calls the specified endpoint with the given argument, then iterates 
          * through the results, writing to a tab-delimited format output stream.
          */
-        private Response download (String endpoint, String arg, String[][] columns, String fileName) {
-            /* Call the specified endpoint with the given argument. */
-            List results;
+        private Response download (String endpoint, String arg, String fileName) {
+            //
+            log.info("download: " + endpoint + " " + arg + " " + fileName);
+            //
+            Method endpointMethod = null;
+            boolean paginated = false;
             try {
-                Method endpointMethod = this.getClass().getMethod(endpoint, String.class);
-                results = (List) endpointMethod.invoke(this, arg);
+                endpointMethod = this.getClass().getMethod(endpoint, String.class, int.class, int.class);
+                paginated = true;
             }
             catch (Exception e) {
-                results = null;
+                try {
+                    endpointMethod = this.getClass().getMethod(endpoint, String.class);
+                    paginated = false;
+                } catch (Exception ee) {
+                    log.info("Cound not find endpoint: " + ee.toString());
+                }
             }
-            final List results_f = results;
-            /* stream the output to keep memory footprint low. */
+            //
+            final String endpoint_f = endpoint;
+            final Method endpointMethod_f = endpointMethod;
+            final boolean paginated_f = paginated;
+            final BaseController<T> this_f = this;
+            //
             StreamingOutput stream = new StreamingOutput() {
                 @Override
                 public void write(OutputStream os) throws IOException, WebApplicationException {
                     Writer writer = new BufferedWriter(new OutputStreamWriter(os));
-                    writer.write(formatTsvRow(null, columns));
-                    if (results_f != null) {
-                        for (Object r : results_f) {
-                            writer.write(formatTsvRow(r, columns));
+                    if (endpointMethod_f == null) {
+                        writer.write("No endpoint.\n");
+                        writer.flush();
+                        return;
+                    }
+                    String firstLine = formatTsv(endpoint_f, null);
+                    if (firstLine == null) {
+                        writer.write("Not implemented.\n");
+                        writer.flush();
+                        return;
+                    }
+                    writer.write(firstLine);
+                    List results = null;
+                    if (paginated_f) {
+                        int offset = 0;
+                        int limit = 25000;
+                        do {
+                            try {
+                                // paginated endpoints return SearchResults.
+                                SearchResults res = (SearchResults) endpointMethod_f.invoke(this_f, arg, offset, limit);
+                                results = res.items;
+                            } catch (Exception e) {
+                                log.info("Exception getting batch: " + e.toString());
+                                break;
+                            }
+                            for (Object r : results) {
+                                writer.write(formatTsv(endpoint_f, r));
+                            }
+                            offset += limit;
+                        } while(results.size() > 0);
+                    } else {
+                        try {
+                            // non-paginated endpoints return list of domains
+                            results = (List) endpointMethod_f.invoke(this_f, arg);
+                            for (Object r : results) {
+                                writer.write(formatTsv(endpoint_f, r));
+                            }
+                        } catch (Exception e) {
+                                log.info("Exception: " + e.toString());
                         }
                     }
                     writer.flush();
@@ -247,7 +316,17 @@ public abstract class BaseController<T extends BaseDomain> {
               .build();
         }
 
+        /* 
+         * Formats an object as a TSV row for the indicated endpoint.
+         * OVERRIDE this function if you want to provide TSV downloads.
+         */
+        protected String formatTsv (String endpoint, Object obj) {
+            return "Not-Implemented";
+        }
+
         /*
+         * Helper function available to subclasses implementing formatTsv.
+         *
          * Formats an object as a row in a tab-delimited output.
          * Caller passes the object and a list of columns. 
          * Returns a string.
@@ -263,7 +342,7 @@ public abstract class BaseController<T extends BaseDomain> {
          * If an exception occurs (e.g., NoSuchFieldException) for any field, the
          * field's value is empty.
          */
-        protected String formatTsvRow (Object obj, String[][] cols) {
+        protected String formatTsvHelper (Object obj, String[][] cols) {
             String separator = "\t";
             String terminator = "\n";
             StringBuffer b = new StringBuffer();
@@ -276,37 +355,29 @@ public abstract class BaseController<T extends BaseDomain> {
                     try {
                         Field f = obj.getClass().getDeclaredField(fieldName);
                         f.setAccessible(true);
-                        val = f.get(obj).toString();
+                        Object v = f.get(obj);
+                        val = (v == null ? "" : v.toString());
                     }
                     catch (IllegalAccessException e) {
                         log.info("Could not access field: " + fieldName);
                     }
                     catch (NoSuchFieldException e) {
-                        log.info("Could not access field: " + fieldName);
+                        log.info("No such field: " + fieldName);
                     }
                 } else {
                     val = colName;
                 }
                 if (i > 0) b.append(separator);
+                val = val.replaceAll("\t", " ").replaceAll("\n"," ");
                 b.append(val);
             }
             b.append(terminator);
             return b.toString();
         }
 
-        /* 
-         * Override this function in your controller to define the columns for tsv output.
-         * Each column spec is a list of 2 strings: the column header label and the
-         * corresponding object field name. Example:
-         *     String [][] columns = { { "MGI ID", "accID" }, { "Gene symbol", "symbol" }, ... };
-         */
-        protected String[][] getTsvColumns (String endpoint) {
-            String [][] columns = {};
-            return columns;
-        }
-
         /*
-         * Override this function as desired to generate a name for the downloaded file.
+         * Override this function if desired to generate a name for the downloaded file.
+         * Default file name is "<endpoint>.<arg>.tsv"
          */
         protected String getTsvFileName (String endpoint, String arg) {
             return endpoint + "." + arg + ".tsv";

@@ -62,6 +62,7 @@ public class SQLExecutor {
 	public void cleanup() throws SQLException {
 		if (conMGD != null) {
 			conMGD.close();
+                        conMGD = null;
 		}
 	}
 

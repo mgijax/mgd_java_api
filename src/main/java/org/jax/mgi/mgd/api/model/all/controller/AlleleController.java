@@ -8,6 +8,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -226,10 +227,10 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		return results;
 	}
 
-	@POST
+	@GET
 	@ApiOperation(value = "Get list of allele domains by marker accession id")
 	@Path("/getAlleleByMarker")
-	public List<SummaryAlleleDomain> getAlleleByMarker(String accid) {
+	public List<SummaryAlleleDomain> getAlleleByMarker(@QueryParam("accid") String accid) {
 		
 		List<SummaryAlleleDomain> results = new ArrayList<SummaryAlleleDomain>();
 
@@ -242,15 +243,15 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		return results;
 	}
 	
-	@POST
+	@GET
 	@ApiOperation(value = "Get list of allele domains by reference jnumid")
 	@Path("/getAlleleByRef")
-	public List<SummaryAlleleDomain> getAlleleByRef(String jnumid) {
+	public List<SummaryAlleleDomain> getAlleleByRef(@QueryParam("accid") String accid) {
 		
 		List<SummaryAlleleDomain> results = new ArrayList<SummaryAlleleDomain>();
 
 		try {
-			results = alleleService.getAlleleByRef(jnumid);
+			results = alleleService.getAlleleByRef(accid);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -258,13 +259,23 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		return results;
 	}	
 
-        protected String [][] getTsvColumns (String endpoint) {
-            String [][] cols = {
-                {"Allele ID","alleleID"},
-                {"Symbol", "symbol"},
-                {"Name", "name"},
-                {"Type", "alleleType"}
-            };
-            return cols;
+        protected String formatTsv (String endpoint, Object obj) {
+            if (endpoint.startsWith("getAlleleBy")) {
+                String [][] cols = {
+                    {"Symbol", "symbol"},
+                    {"MGI ID","alleleID"},
+                    {"Name", "name"},
+                    {"Synonyms", "synontme"},
+                    {"Transmission", "transmission"},
+                    {"Allele Status", "alleleStatus"},
+                    {"Generation Type", "alleleType"},
+                    {"Attributes", "subtypeAnnots"},
+                    {"MP Annotations", "mpAnnots"},
+                    {"Disease Annotations", "diseaseAnnots"}
+                };
+                return formatTsvHelper(obj, cols);
+            } else {
+                return "Not-Implemented";
+            }
         }
 }

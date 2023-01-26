@@ -8,6 +8,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -298,15 +299,19 @@ public class AssayController extends BaseController<AssayDomain> {
 		return results;
 	}
 	
-	@POST
+	@GET
 	@ApiOperation(value = "Get list of summary result domains by cell type")
 	@Path("/getResultByCellType")
-	public SearchResults<SummaryResultDomain> getResultByCellType(SummaryResultDomain searchDomain) {
+	public SearchResults<SummaryResultDomain> getResultByCellType(
+                @QueryParam("accid") String accid,
+                @QueryParam("offset") int offset,
+                @QueryParam("limit") int limit
+        ) {
 		
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 
 		try {
-			results = assayService.getResultByCellType(searchDomain);
+			results = assayService.getResultByCellType(accid, offset, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -314,15 +319,19 @@ public class AssayController extends BaseController<AssayDomain> {
 		return results;
 	}	
 	
-	@POST
+	@GET
 	@ApiOperation(value = "Get list of summary result domains by markerid")
 	@Path("/getResultByMarker")
-	public SearchResults<SummaryResultDomain> getResultByMarker(SummaryResultDomain searchDomain) {
+	public SearchResults<SummaryResultDomain> getResultByMarker(
+                @QueryParam("accid") String accid,
+                @QueryParam("offset") int offset,
+                @QueryParam("limit") int limit
+        ) {
 		
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 
 		try {
-			results = assayService.getResultByMarker(searchDomain);
+			results = assayService.getResultByMarker(accid, offset, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -330,31 +339,38 @@ public class AssayController extends BaseController<AssayDomain> {
 		return results;
 	}
 	
-	@POST
+	@GET
 	@ApiOperation(value = "Get list of summary result domains by reference jnumid")
 	@Path("/getResultByRef")
-	public SearchResults<SummaryResultDomain> getResultByRef(SummaryResultDomain searchDomain) {
-		
+	public SearchResults<SummaryResultDomain> getResultByRef(
+                @QueryParam("accid") String accid,
+                @QueryParam("offset") int offset,
+                @QueryParam("limit") int limit
+        ) {
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 
 		try {
-			results = assayService.getResultByRef(searchDomain);
+			results = assayService.getResultByRef(accid, offset, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		return results;
 	}
-	
-	@POST
+
+	@GET
 	@ApiOperation(value = "Get list of summary result domains by structure")
 	@Path("/getResultByStructure")
-	public SearchResults<SummaryResultDomain> getResultByStructure(SummaryResultDomain searchDomain) {
+	public SearchResults<SummaryResultDomain> getResultByStructure(
+                @QueryParam("accid") String accid,
+                @QueryParam("offset") int offset,
+                @QueryParam("limit") int limit
+        ) {
 		
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 
 		try {
-			results = assayService.getResultByStructure(searchDomain);
+			results = assayService.getResultByStructure(accid, offset, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -362,7 +378,7 @@ public class AssayController extends BaseController<AssayDomain> {
 		return results;
 	}	
 	
-        protected String[][] getTsvColumns (String endpoint) {
+        protected String formatTsv (String endpoint, Object obj) {
             if (endpoint.startsWith("getAssayBy")) {
                 String[][] cols = {
                     {"Assay ID",       "accID"},
@@ -372,20 +388,23 @@ public class AssayController extends BaseController<AssayDomain> {
                     {"Reference J#",   "jnumid"},
                     {"Short Citation", "short_citation"},
                     };
-                return cols;
+                return formatTsvHelper(obj, cols);
             } else if (endpoint.startsWith("getResultBy")) {
                 String[][] cols = {
-                    {"Gene ID", "markerID"},
-                    {"Symbol", "markerSymbol"},
-                    {"Structure ID", "structureID"},
-                    {"Structure", "structure"},
-                    {"Stage", "stageKey"},
-                    {"Strength", "strength"}
+                    {"Assay ID",       "assayID"},
+                    {"Marker Symbol",  "markerSymbol"},
+                    {"Assay Type",     "assayType"},
+                    {"Age",            "age"},
+                    {"Structure",      "structure"},
+                    {"Cell Type",      "cellType"},
+                    {"Strength",       "strength"},
+                    {"Specimen Label", "specimenLabel"},
+                    {"Mutant Allele",  "alleleDetailNote"},
+                    {"Result Note",    "resultNote"}
                     };
-                return cols;
+                return formatTsvHelper(obj, cols);
             } else {
-                String[][] cols = {};
-                return cols;
+                return null;
             }
         }
 }

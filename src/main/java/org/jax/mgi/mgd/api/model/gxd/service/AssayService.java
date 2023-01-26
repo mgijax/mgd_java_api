@@ -1485,7 +1485,7 @@ public class AssayService extends BaseService<AssayDomain> {
 	}
 	
 	@Transactional	
-	public SearchResults<SummaryResultDomain> getResultByCellType(SummaryResultDomain searchDomain) {
+	public SearchResults<SummaryResultDomain> getResultByCellType(String accid, int offset, int limit) {
 		// return list of summary results domains by cell type id
 
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
@@ -1496,8 +1496,8 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nwhere a._object_key = e._celltype_term_key" +
 				"\nand a._mgitype_key = 13" +
 				"\nand a._logicaldb_key = 173" +
-				"\nand a.accid = '" + searchDomain.getCellTypeID() + "'";
-		results.total_count = processSummaryResultCount(searchDomain, cmd);
+				"\nand a.accid = '" + accid + "'";
+		results.total_count = processSummaryResultCount(cmd);
 		
 		cmd = "\nselect e._expression_key" +
 				"\nfrom acc_accession a," +
@@ -1509,15 +1509,15 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand a._object_key = e._celltype_term_key" +
 				"\nand a._mgitype_key = 13" +
 				"\nand a._logicaldb_key = 173" +
-				"\nand a.accid = '" + searchDomain.getCellTypeID() + "'";
-		summaryResults = processSummaryResultDomain(searchDomain, cmd);
+				"\nand a.accid = '" + accid + "'";
+		summaryResults = processSummaryResultDomain(accid, offset, limit, cmd);
 		
 		results.items = summaryResults;
 		return results;
 	}
 	
 	@Transactional	
-	public SearchResults<SummaryResultDomain> getResultByMarker(SummaryResultDomain searchDomain) {
+	public SearchResults<SummaryResultDomain> getResultByMarker(String accid, int offset, int limit) {
 		// return list of summary results domains by marker acc id
 
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
@@ -1528,8 +1528,8 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nwhere a._object_key = e._marker_key" +
 				"\nand a._mgitype_key = 2" +
 				"\nand a._logicaldb_key = 1" +
-				"\nand a.accid = '" + searchDomain.getMarkerID() + "'";
-		results.total_count = processSummaryResultCount(searchDomain, cmd);
+				"\nand a.accid = '" + accid + "'";
+		results.total_count = processSummaryResultCount(cmd);
 		
 		cmd = "\nselect e._expression_key" +
 				"\nfrom acc_accession a," +
@@ -1541,15 +1541,15 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand a._object_key = e._marker_key" +
 				"\nand a._mgitype_key = 2" +
 				"\nand a._logicaldb_key = 1" +
-				"\nand a.accid = '" + searchDomain.getMarkerID() + "'";
-		summaryResults = processSummaryResultDomain(searchDomain, cmd);
+				"\nand a.accid = '" + accid + "'";
+		summaryResults = processSummaryResultDomain(accid, offset, limit, cmd);
 
 		results.items = summaryResults;
 		return results;
 	}
 	
 	@Transactional	
-	public SearchResults<SummaryResultDomain> getResultByRef(SummaryResultDomain searchDomain) {
+	public SearchResults<SummaryResultDomain> getResultByRef(String accid, int offset, int limit) {
 		// return list of summary results domains by reference jnum id
 
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
@@ -1558,8 +1558,8 @@ public class AssayService extends BaseService<AssayDomain> {
 		String cmd = "\nselect count(*) as total_count" +
 				"\nfrom bib_citation_cache c, gxd_expression e" +
 				"\nwhere c._refs_key = e._refs_key" + 
-				"\nand c.jnumid = '" + searchDomain.getJnumid() + "'";
-		results.total_count = processSummaryResultCount(searchDomain, cmd);
+				"\nand c.jnumid = '" + accid + "'";
+		results.total_count = processSummaryResultCount(cmd);
 		
 		cmd = "\nselect e._expression_key" +
 				"\nfrom bib_citation_cache c," +
@@ -1569,27 +1569,36 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand e._marker_key = m._marker_key" +
 				"\nand e._assaytype_key = gt._assaytype_key" +
 				"\nand c._refs_key = e._refs_key" + 
-				"\nand c.jnumid = '" + searchDomain.getJnumid() + "'";	
-		summaryResults = processSummaryResultDomain(searchDomain, cmd);
+				"\nand c.jnumid = '" + accid + "'";	
+		summaryResults = processSummaryResultDomain(accid, offset, limit, cmd);
 
 		results.items = summaryResults;
 		return results;
 	}
 	
 	@Transactional	
-	public SearchResults<SummaryResultDomain> getResultByStructure(SummaryResultDomain searchDomain) {
+	public SearchResults<SummaryResultDomain> getResultByStructure(String accid, int offset, int limit) {
 		// return list of summary results domains by structure/emapa id
 
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
+
+                String stageClause = "";
+                if (accid.startsWith("EMAPS:")) {
+                    int alen = accid.length();
+                    String stage = accid.substring(alen-2, alen);
+                    accid = "EMAPA:" + accid.substring(6, alen-2);
+                    stageClause = "\nand e._stage_key = " + stage;
+                }
 		
 		String cmd = "\nselect count(*) as total_count" +
 				"\nfrom acc_accession a, gxd_expression e" +
 				"\nwhere a._object_key = e._emapa_term_key" +
 				"\nand a._mgitype_key = 13" +
 				"\nand a._logicaldb_key = 169" +
-				"\nand a.accid = '" + searchDomain.getStructureID() + "'";
-		results.total_count = processSummaryResultCount(searchDomain, cmd);
+				"\nand a.accid = '" + accid + "'"
+                                + stageClause;
+		results.total_count = processSummaryResultCount(cmd);
 		
 		cmd = "\nselect e._expression_key" +
 				"\nfrom acc_accession a,"+
@@ -1601,15 +1610,16 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand a._object_key = e._emapa_term_key" +
 				"\nand a._mgitype_key = 13" +
 				"\nand a._logicaldb_key = 169" +
-				"\nand a.accid = '" + searchDomain.getStructureID() + "'";
-		summaryResults = processSummaryResultDomain(searchDomain, cmd);
+				"\nand a.accid = '" + accid + "'"
+                                + stageClause;
+		summaryResults = processSummaryResultDomain(accid, offset, limit, cmd);
 		
 		results.items = summaryResults;
 		return results;
 	}
 	
 	@Transactional	
-	public Long processSummaryResultCount(SummaryResultDomain searchDomain, String cmd) {
+	public Long processSummaryResultCount(String cmd) {
 		// return count of summary results domains using search cmd
 
 		Long total_count = null;
@@ -1621,7 +1631,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				total_count = rs.getLong("total_count");
 				expressionCacheDAO.clear();				
 			}
-			//sqlExecutor.cleanup();
+			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -1631,25 +1641,21 @@ public class AssayService extends BaseService<AssayDomain> {
 	}
 	
 	@Transactional	
-	public List<SummaryResultDomain> processSummaryResultDomain(SummaryResultDomain searchDomain, String cmd) {
+	public List<SummaryResultDomain> processSummaryResultDomain(String id, int offset, int limit, String cmd) {
 		// return list of summary results domains by search cmd
 
 		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
+
+		cmd = cmd + "\norder by e._stage_key, st.term, ct.term, m.symbol, gt.sequenceNum";
 		
-		String offset = "0";
-		String limit = "250";
-		
-		if (searchDomain.getOffset() != null && !searchDomain.getOffset().isEmpty()) {
-			offset = searchDomain.getOffset();
+		if (offset >= 0) {
+                    cmd = cmd + "\noffset " + offset;
 		}
-		
-		if (searchDomain.getLimit() != null && !searchDomain.getLimit().isEmpty()) {
-			limit = searchDomain.getLimit();
-		}
+                if (limit >= 0) {
+                    cmd = cmd + "\nlimit " + limit;
+                }
 		
 		// attach most of the sorting rules
-		cmd = cmd + "\norder by e._stage_key, st.term, ct.term, m.symbol, gt.sequenceNum";
-		cmd = cmd + "\noffset " + offset + "\nlimit " + limit;
 		log.info(cmd);	
 		log.info(new Date());
 		try {
@@ -1657,8 +1663,8 @@ public class AssayService extends BaseService<AssayDomain> {
 			while (rs.next()) {
 				SummaryResultDomain domain = new SummaryResultDomain();
 				domain = summaryresulttranslator.translate(expressionCacheDAO.get(rs.getInt("_expression_key")));				
-				domain.setOffset(offset);
-				domain.setLimit(limit);
+				domain.setOffset(""+offset);
+				domain.setLimit(""+limit);
 				summaryResults.add(domain);
 				expressionCacheDAO.clear();				
 			}

@@ -23,6 +23,8 @@ public class RelationshipFearDomain extends BaseDomain {
 	private String markerKey;
 	private String markerSymbol;
 	private String markerAccID;
+	private String organismKey;
+	private String organism;
 	private String relationshipTermKey;
 	private String relationshipTerm;
 	private String qualifierKey;

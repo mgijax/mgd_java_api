@@ -36,11 +36,32 @@ public class AlleleFearTranslator extends BaseEntityDomainTranslator<Allele, All
 		}
 		
 		// relationship domain by allele/expresses_component
-		if (entity.getMutationInvolves() != null && !entity.getExpressesComponents().isEmpty()) {
+		if (entity.getExpressesComponents() != null && !entity.getExpressesComponents().isEmpty()) {
 			RelationshipFearTranslator fearTranslator = new RelationshipFearTranslator();	
 			Iterable<RelationshipFearDomain> t = fearTranslator.translateEntities(entity.getExpressesComponents());			
 			domain.setExpressesComponents(IteratorUtils.toList(t.iterator()));
 			domain.getExpressesComponents().sort(Comparator.comparing(RelationshipFearDomain::getMarkerSymbol, String.CASE_INSENSITIVE_ORDER));	
+		}
+		
+		// relationship domain by allele/driver_component for non-recombinase
+		if (entity.getDriverComponents() != null && !entity.getDriverComponents().isEmpty()) {
+			
+			// check if allele is 'Recombinase'
+			Boolean isRecombinase = false;
+			if (entity.getSubtypeAnnots() != null && !entity.getSubtypeAnnots().isEmpty()) {
+				for(int i = 0; i < entity.getSubtypeAnnots().size(); i++) {
+					if (entity.getSubtypeAnnots().get(i).getTerm().get_term_key() == 11025588) {
+						isRecombinase = true;
+					}
+				}
+			}
+			// if allele is not 'Recombinase', then load any driver components that exist
+			if (!isRecombinase) {
+				RelationshipFearTranslator fearTranslator = new RelationshipFearTranslator();	
+				Iterable<RelationshipFearDomain> t = fearTranslator.translateEntities(entity.getDriverComponents());
+				domain.setDriverComponents(IteratorUtils.toList(t.iterator()));
+				domain.getDriverComponents().sort(Comparator.comparing(RelationshipFearDomain::getMarkerSymbol, String.CASE_INSENSITIVE_ORDER));
+			}
 		}
 		
 		return domain;

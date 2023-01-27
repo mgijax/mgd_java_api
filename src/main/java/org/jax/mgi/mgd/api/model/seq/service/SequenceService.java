@@ -52,6 +52,7 @@ public class SequenceService extends BaseService<SequenceDomain> {
 	
 	@Transactional
 	public SequenceDomain get(Integer key) {
+		// NOT IMPLEMENTED		
 		// get the DAO/entity and translate -> domain
 		SequenceDomain domain = new SequenceDomain();
 //		if (sequenceDAO.get(key) != null) {
@@ -71,6 +72,7 @@ public class SequenceService extends BaseService<SequenceDomain> {
 
 	@Transactional	
 	public List<SequenceDomain> search() {
+		// NOT IMPLEMENTED
 
 		List<SequenceDomain> results = new ArrayList<SequenceDomain>();
 

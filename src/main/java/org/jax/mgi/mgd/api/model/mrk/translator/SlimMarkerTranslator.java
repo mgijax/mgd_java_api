@@ -32,6 +32,15 @@ public class SlimMarkerTranslator extends BaseEntityDomainTranslator<Marker, Sli
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}
+		// determine primary accession id to return per organism
+		// _organism_key = 2, human -> _logicaldb_key = 55, Entrez Gene
+		else if (entity.getOrganism().get_organism_key() == 2 && entity.getNonEditAccessionIds() != null){
+			for (int i = 0; i < entity.getNonEditAccessionIds().size(); i++) {
+				if (entity.getNonEditAccessionIds().get(i).getLogicaldb().get_logicaldb_key() == 55) {
+					domain.setAccID(entity.getNonEditAccessionIds().get(i).getAccID());
+				}
+			}
+		}
 
 		// marker detail clip
 		if (entity.getDetailClipNote() != null && !entity.getDetailClipNote().isEmpty()) {

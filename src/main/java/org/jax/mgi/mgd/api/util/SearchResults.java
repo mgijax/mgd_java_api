@@ -19,6 +19,8 @@ public class SearchResults<T> {
 	public String error;				// error code
 	public String message;				// more explanatory error message
 	public int status_code = Constants.HTTP_OK;		// HTTP status code value
+	public int offset;					// offset used by postgres query
+	public int limit;					// limit used by postgres query
 	
 	public SearchResults() {
 		startTime = System.currentTimeMillis();

@@ -8,8 +8,9 @@ import lombok.Setter;
 @Getter @Setter
 public class SummarySpecimenDomain extends BaseDomain {
 
+	private String jnumid;
 	private String specimenKey;
-	private String assayID;
+	private String assayid;
 	private String assayType;
 	private String embeddingMethod;
 	private String fixationMethod;
@@ -22,5 +23,4 @@ public class SummarySpecimenDomain extends BaseDomain {
 	private String hybridization;
 	private String specimenNote;
 	private String markerSymbol;
-		
 }

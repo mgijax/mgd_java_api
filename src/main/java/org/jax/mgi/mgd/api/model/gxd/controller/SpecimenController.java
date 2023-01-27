@@ -1,13 +1,11 @@
 package org.jax.mgi.mgd.api.model.gxd.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
@@ -55,19 +53,23 @@ public class SpecimenController extends BaseController<SpecimenDomain> {
 		return specimenService.get(key);
 	}
 	
-	@POST
-	@ApiOperation(value = "Get list of specimen domains by reference jnumid")
+	@GET
+	@ApiOperation(value = "Get list of specimen domains by reference jnum id")
 	@Path("/getSpecimenByRef")
-	public List<SummarySpecimenDomain> getSpecimenByRef(String jnumid) {
-		
-		List<SummarySpecimenDomain> results = new ArrayList<SummarySpecimenDomain>();
+	public SearchResults<SummarySpecimenDomain> getSpecimenByRef(
+                @QueryParam("accid") String accid,
+                @QueryParam("offset") int offset,
+                @QueryParam("limit") int limit
+		) {
+
+		SearchResults<SummarySpecimenDomain> results = new SearchResults<SummarySpecimenDomain>();
 
 		try {
-			results = specimenService.getSpecimenByRef(jnumid);
+			results = specimenService.getSpecimenByRef(accid, offset, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		return results;
-	}	
+	}
 }

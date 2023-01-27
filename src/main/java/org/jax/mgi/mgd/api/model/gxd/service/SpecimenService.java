@@ -280,12 +280,45 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 	}
 
 	@Transactional	
-	public List<SummarySpecimenDomain> getSpecimenByRef(String jnumid) {
+	public SearchResults<SummarySpecimenDomain> getSpecimenByRef(String accid, int offset, int limit) {
 		// return list of specimen domains by reference jnum id
 
-		List<SummarySpecimenDomain> results = new ArrayList<SummarySpecimenDomain>();
+		SearchResults<SummarySpecimenDomain> results = new SearchResults<SummarySpecimenDomain>();
+		List<SummarySpecimenDomain> summaryResults = new ArrayList<SummarySpecimenDomain>();
 		
-		String cmd = "\nselect distinct s._specimen_key, m.symbol, a.accid, s.specimenLabel," +
+		String cmd = "\nselect count(*) as total_count" + 
+				"\nfrom bib_citation_cache aa, gxd_assay g, gxd_specimen s, mrk_marker m, acc_accession a," +
+				"\nvoc_term t1, voc_term t2, gxd_assaytype t3," +
+				"\ngxd_genotype gs left outer join mgi_note n on (gs._genotype_key = n._object_key and n._notetype_key = 1016), prb_strain ss" +
+				"\nwhere aa.jnumid = '" + accid + "'" +
+				"\nand aa._refs_key = g._refs_key" +
+				"\nand m._marker_key = g._marker_key" +
+				"\nand g._assay_key = s._assay_key" +
+				"\nand g._assay_key = a._object_key" +
+				"\nand a._mgitype_key = 8" +
+				"\nand a._logicaldb_key = 1" +
+				"\nand s._embedding_key = t1._term_key" +
+				"\nand s._fixation_key = t2._term_key" +
+				"\nand g._assaytype_key = t3._assaytype_key" +
+				"\nand s._genotype_key = gs._genotype_key" +
+				"\nand gs._strain_key = ss._strain_key";
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getLong("total_count");
+				results.offset = offset;
+				results.limit = limit;
+				specimenDAO.clear();				
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		cmd = "\nselect distinct s._specimen_key, m.symbol, a.accid, s.specimenLabel," +
 			"\ns.sex, s.age, s.hybridization," +
 			"\nt1.term as embeddingMethodTerm," +
 			"\nt2.term as fixationTerm," +
@@ -294,7 +327,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 			"\nfrom bib_citation_cache aa, gxd_assay g, gxd_specimen s, mrk_marker m, acc_accession a," +
 			"\nvoc_term t1, voc_term t2, gxd_assaytype t3," +
 			"\ngxd_genotype gs left outer join mgi_note n on (gs._genotype_key = n._object_key and n._notetype_key = 1016), prb_strain ss" +
-			"\nwhere aa.jnumid = '" + jnumid + "'" +
+			"\nwhere aa.jnumid = '" + accid + "'" +
 			"\nand aa._refs_key = g._refs_key" +
 			"\nand m._marker_key = g._marker_key" +
 			"\nand g._assay_key = s._assay_key" +
@@ -314,8 +347,9 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SummarySpecimenDomain domain = new SummarySpecimenDomain();
+				domain.setJnumid(accid);
 				domain.setSpecimenKey(rs.getString("_specimen_key"));
-				domain.setAssayID(rs.getString("accid"));
+				domain.setAssayid(rs.getString("accid"));
 				domain.setAssayType(rs.getString("assaytype"));
 				domain.setEmbeddingMethod(rs.getString("embeddingMethodTerm"));
 				domain.setFixationMethod(rs.getString("fixationTerm"));
@@ -328,7 +362,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				domain.setHybridization(rs.getString("hybridization"));
 				domain.setSpecimenNote(rs.getString("specimenNote"));
 				domain.setMarkerSymbol(rs.getString("symbol"));
-			results.add(domain);
+				summaryResults.add(domain);
 				specimenDAO.clear();
 			}
 			sqlExecutor.cleanup();
@@ -337,6 +371,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 			e.printStackTrace();
 		}		
 
+		results.items = summaryResults;
 		return results;
 	}		
 }

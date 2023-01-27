@@ -490,11 +490,11 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				from_dc = true;			
 			}
 	
-			value = relationshipDomain.getRelationshipTermKey();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v._relationshipterm_key = " + value;
-				from_dc = true;			
-			}
+//			value = relationshipDomain.getRelationshipTermKey();
+//			if (value != null && !value.isEmpty()) {
+//				where = where + "\nand v._relationshipterm_key = " + value;
+//				from_dc = true;			
+//			}
 										
 			value = relationshipDomain.getRefsKey();
 			jnumid = relationshipDomain.getJnumid();		

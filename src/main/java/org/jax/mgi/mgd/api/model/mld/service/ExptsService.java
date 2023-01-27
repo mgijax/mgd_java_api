@@ -327,6 +327,8 @@ public class ExptsService extends BaseService<ExptsDomain> {
 				"\nand m._marker_key = em._marker_key" +
 				"\nand em._expt_key = e._expt_key";	
 		results.total_count = processSummaryExptsCount(cmd);
+		results.offset = offset;
+		results.limit = limit;
 		
 		cmd = "\nselect distinct e._expt_key, e.expttype, c.numericpart" + 
 				"\nfrom mrk_marker m, acc_accession aa, mld_expts e, mld_expt_marker em, bib_citation_cache c" + 
@@ -355,6 +357,8 @@ public class ExptsService extends BaseService<ExptsDomain> {
 					"\nand aa._refs_key = e._refs_key" +
 					"\nand e.exptType in " + exptTypes;
 		results.total_count = processSummaryExptsCount(cmd);
+		results.offset = offset;
+		results.limit = limit;
 		
 		cmd = "\nselect distinct e._expt_key, e.expttype, aa.numericpart" + 
 				"\nfrom bib_citation_cache aa, mld_expts e" + 
@@ -377,7 +381,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				total_count = rs.getLong("total_count");
-				referenceDAO.clear();				
+				exptsDAO.clear();				
 			}
 			sqlExecutor.cleanup();
 		}
@@ -411,7 +415,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 				SlimExptsDomain domain = new SlimExptsDomain();
 				domain = slimtranslator.translate(exptsDAO.get(rs.getInt("_expt_key")));
 				results.add(domain);
-				exptsDAO.clear();				referenceDAO.clear();
+				exptsDAO.clear();				
 			}
 			sqlExecutor.cleanup();
 		}

@@ -403,7 +403,6 @@ public class ExptsService extends BaseService<ExptsDomain> {
         	cmd = cmd + "\nlimit " + limit;
         }		
         
-        cmd = cmd + "\norder by expttype, numericpart";
         log.info(cmd);	
 		
 		try {

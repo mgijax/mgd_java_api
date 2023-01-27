@@ -2184,7 +2184,16 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		SearchResults<SummaryReferenceDomain> results = new SearchResults<SummaryReferenceDomain>();
 		List<SummaryReferenceDomain> summaryResults = new ArrayList<SummaryReferenceDomain>();
 		
-		String cmd = "\nselect a.accid, r.*" + 
+		String cmd = "\nselect count(*) as total_count" + 
+				"\nfrom mgi_reference_assoc ar, acc_accession a, bib_summary_view r" + 
+				"\nwhere a.accid = '" + accid + "'" + 
+				"\nand a._mgitype_key = 11" + 
+				"\nand a._object_key = ar._object_key" + 
+				"\nand ar._mgitype_key = 11" + 				
+				"\nand ar._refs_key = r._refs_key";
+		results.total_count = processSummaryReferenceCount(cmd);
+		
+		cmd = "\nselect a.accid, r.*" + 
 				"\nfrom mgi_reference_assoc ar, acc_accession a, bib_summary_view r" + 
 				"\nwhere a.accid = '" + accid + "'" + 
 				"\nand a._mgitype_key = 11" + 
@@ -2204,7 +2213,15 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		SearchResults<SummaryReferenceDomain> results = new SearchResults<SummaryReferenceDomain>();
 		List<SummaryReferenceDomain> summaryResults = new ArrayList<SummaryReferenceDomain>();
 		
-		String cmd = "\nselect a.accid, r.*" + 
+		String cmd = "\nselect count(*) as total_count" + 
+				"\nfrom mrk_reference mr, acc_accession a, bib_summary_view r" + 
+				"\nwhere mr._marker_key = a._object_key" + 
+				"\nand a._mgitype_key = 2" + 
+				"\nand a.accid = '" + accid + "'" + 
+				"\nand mr._refs_key = r._refs_key";
+		results.total_count = processSummaryReferenceCount(cmd);
+		
+		cmd = "\nselect a.accid, r.*" + 
 				"\nfrom mrk_reference mr, acc_accession a, bib_summary_view r" + 
 				"\nwhere mr._marker_key = a._object_key" + 
 				"\nand a._mgitype_key = 2" + 
@@ -2276,6 +2293,28 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		cmd = cmd + where;
 		results = processSummaryReferenceDomain(searchDomain.getAccID(), searchDomain.getOffset(), searchDomain.getLimit(), cmd);	
 		return results;
+	}
+	
+	@Transactional	
+	public Long processSummaryReferenceCount(String cmd) {
+		// return count of summary reference domains using search cmd
+
+		Long total_count = null;
+		
+		log.info(cmd);
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				total_count = rs.getLong("total_count");
+				referenceDAO.clear();				
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}	
+
+		return total_count;
 	}
 	
 	@Transactional	

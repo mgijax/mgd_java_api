@@ -1583,21 +1583,20 @@ public class AssayService extends BaseService<AssayDomain> {
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
 
-                String stageClause = "";
-                if (accid.startsWith("EMAPS:")) {
-                    int alen = accid.length();
-                    String stage = accid.substring(alen-2, alen);
-                    accid = "EMAPA:" + accid.substring(6, alen-2);
-                    stageClause = "\nand e._stage_key = " + stage;
-                }
+        String stageClause = "";
+        if (accid.startsWith("EMAPS:")) {
+			int alen = accid.length();
+			String stage = accid.substring(alen-2, alen);
+			accid = "EMAPA:" + accid.substring(6, alen-2);
+			stageClause = "\nand e._stage_key = " + stage;
+        }
 		
 		String cmd = "\nselect count(*) as total_count" +
 				"\nfrom acc_accession a, gxd_expression e" +
 				"\nwhere a._object_key = e._emapa_term_key" +
 				"\nand a._mgitype_key = 13" +
 				"\nand a._logicaldb_key = 169" +
-				"\nand a.accid = '" + accid + "'"
-                                + stageClause;
+				"\nand a.accid = '" + accid + "'" + stageClause;
 		results.total_count = processSummaryResultCount(cmd);
 		
 		cmd = "\nselect e._expression_key" +
@@ -1610,8 +1609,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand a._object_key = e._emapa_term_key" +
 				"\nand a._mgitype_key = 13" +
 				"\nand a._logicaldb_key = 169" +
-				"\nand a.accid = '" + accid + "'"
-                                + stageClause;
+				"\nand a.accid = '" + accid + "'" + stageClause;
 		summaryResults = processSummaryResultDomain(accid, offset, limit, cmd);
 		
 		results.items = summaryResults;
@@ -1649,11 +1647,11 @@ public class AssayService extends BaseService<AssayDomain> {
 		cmd = cmd + "\norder by e._stage_key, st.term, ct.term, m.symbol, gt.sequenceNum";
 		
 		if (offset >= 0) {
-                    cmd = cmd + "\noffset " + offset;
+            cmd = cmd + "\noffset " + offset;
 		}
-                if (limit >= 0) {
-                    cmd = cmd + "\nlimit " + limit;
-                }
+        if (limit >= 0) {
+        	cmd = cmd + "\nlimit " + limit;
+        }
 		
 		// attach most of the sorting rules
 		log.info(cmd);	
@@ -1662,7 +1660,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SummaryResultDomain domain = new SummaryResultDomain();
-				domain = summaryresulttranslator.translate(expressionCacheDAO.get(rs.getInt("_expression_key")));				
+				domain = summaryresulttranslator.translate(expressionCacheDAO.get(rs.getInt("_expression_key")));
 				domain.setOffset(""+offset);
 				domain.setLimit(""+limit);
 				summaryResults.add(domain);

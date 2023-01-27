@@ -140,6 +140,42 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			}
 		}
 		
+		if (domain.getDriverComponents() != null) {
+	    	// Iterate thru incoming allele fear relationship domain
+			for (int i = 0; i < domain.getDriverComponents().size(); i++) {
+				
+				// if processStatus == "x", then continue; no need to create domain/process anything
+				if (domain.getDriverComponents().get(i).getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
+					continue;
+				}
+				
+				// if no marker, continue
+				if (domain.getDriverComponents().get(i).getMarkerKey().isEmpty()) {
+					continue;
+				}
+				
+				RelationshipDomain rdomain = new RelationshipDomain();
+			
+				rdomain.setProcessStatus(domain.getDriverComponents().get(i).getProcessStatus());
+				rdomain.setRelationshipKey(domain.getDriverComponents().get(i).getRelationshipKey());
+				rdomain.setObjectKey1(domain.getAlleleKey());
+				rdomain.setObjectKey2(domain.getDriverComponents().get(i).getMarkerKey());
+				rdomain.setCategoryKey(domain.getDriverComponents().get(i).getCategoryKey());
+				rdomain.setRelationshipTermKey(domain.getDriverComponents().get(i).getRelationshipTermKey());
+				rdomain.setQualifierKey(domain.getDriverComponents().get(i).getQualifierKey());
+				rdomain.setEvidenceKey(domain.getDriverComponents().get(i).getEvidenceKey());
+				rdomain.setRefsKey(domain.getDriverComponents().get(i).getRefsKey());
+				rdomain.setCreatedByKey(domain.getDriverComponents().get(i).getCreatedByKey());
+				rdomain.setModifiedByKey(domain.getDriverComponents().get(i).getModifiedByKey());
+				
+				// add notes to this relationship
+				rdomain.setNote(domain.getDriverComponents().get(i).getNote());
+				
+				// add relationshipDomain to relationshipList
+				relationshipDomain.add(rdomain);         
+			}
+		}
+		
 		// process relationships
 		if (relationshipDomain.size() > 0) {
 			log.info("send json normalized domain to services");			
@@ -231,6 +267,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		
 		Boolean from_mi = false;
 		Boolean from_ec = false;
+		Boolean from_dc = false;
 		Boolean from_property = false;
 		
 		RelationshipFearDomain relationshipDomain;
@@ -419,6 +456,79 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			}			
 		}
 		
+		// driver components
+		
+		if (searchDomain.getDriverComponents() != null) {
+
+			relationshipDomain = searchDomain.getDriverComponents().get(0);
+			from = "";
+			where = "";
+			
+			cmResults = DateSQLQuery.queryByCreationModification("v", 
+				relationshipDomain.getCreatedBy(), 
+				relationshipDomain.getModifiedBy(), 
+				relationshipDomain.getCreation_date(), 
+				relationshipDomain.getModification_date());
+		
+			if (cmResults.length > 0) {
+				if (cmResults[0].length() > 0 || cmResults[1].length() > 0) {
+					from = from + cmResults[0];
+					where = where + cmResults[1];
+					from_dc = true;			
+				}
+			}
+			
+			value = relationshipDomain.getMarkerKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand v._object_key_2 = " + value;
+				from_dc = true;			
+			}
+				
+			value = relationshipDomain.getMarkerSymbol();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand v.markersymbol ilike '" + value + "'";
+				from_dc = true;			
+			}
+	
+			value = relationshipDomain.getRelationshipTermKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand v._relationshipterm_key = " + value;
+				from_dc = true;			
+			}
+										
+			value = relationshipDomain.getRefsKey();
+			jnumid = relationshipDomain.getJnumid();		
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand v._Refs_key = " + value;
+				from_dc = true;									
+			}
+				else if (jnumid != null && !jnumid.isEmpty()) {
+					jnumid = jnumid.toUpperCase();
+					if (!jnumid.contains("J:")) {
+							jnumid = "J:" + jnumid;
+					}
+					where = where + "\nand v.jnumid = '" + jnumid + "'";
+					from_mi = true;									
+			}
+			
+			value = relationshipDomain.getNote().getNoteChunk();
+			if (value != null && !value.isEmpty()) {
+				from = from + ",mgi_note n";
+				where = where + "\nand v._relationship_key = n._object_key"
+						+ "\nand n._mgitype_key = 40"
+						+ "\nand n._notetype_key = 1042"
+						+ "\nand n.note ilike '" + value + "'";
+				from_dc = true;	
+			}
+			
+			// save search cmd for mutation involves
+			if (from_dc == true) {
+				from = alleleFrom + ",mgi_relationship_fear_view v" + from;						
+				where = alleleWhere + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey() + where;			
+				cmd = "\n" + select + "\n" + from +"\n" + where;
+			}
+		}
+		
 		if (from_property == true) {
 			from = from + ", mgi_relationship_property p";
 			where = where + "\nand v._relationship_key = p._relationship_key";
@@ -426,15 +536,24 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		
 		log.info("from_mi:" + from_mi);
 		log.info("from_ec:" + from_ec);
-		
-		// if searching both tables, that add "union" + expresses component part
-		if (from_mi == true && from_ec == true) {
-			cmd = cmd + "\nunion\n" + select + "\n" + from + "\n" + where;
+		log.info("from_dc:" + from_dc);
+
+		// if searching both tables, then add "union" + expresses component part
+		if (from_mi == true) {
+			if (from_ec == true) {
+				cmd = cmd + "\nunion\n" + select + "\n" + from + "\n" + where;
+			}
+			if (from_dc == true) {
+				cmd = cmd + "\nunion\n" + select + "\n" + from + "\n" + where;
+			}			
 		}
 		else if (from_ec == true) {
 			cmd = select + "\n" + from + "\n" + where;			
 		}
-		else if (from_mi == false){
+		else if (from_dc == true) {
+			cmd = select + "\n" + from + "\n" + where;			
+		}		
+		else if (from_mi == false) {
 			cmd = select + "\n" + alleleFrom + "\n" + alleleWhere;
 		}
 		

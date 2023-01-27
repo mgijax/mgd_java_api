@@ -12,8 +12,6 @@ public class SummaryResultDomain extends BaseDomain {
 	// not to be used when editing purposes
 	
 	// input parameters
-	private String offset;
-	private String limit;
 	private String cellTypeID;	
 	private String jnumid;
 	private String markerID;

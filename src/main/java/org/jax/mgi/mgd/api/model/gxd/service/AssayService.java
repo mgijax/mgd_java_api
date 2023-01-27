@@ -1560,6 +1560,8 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nwhere c._refs_key = e._refs_key" + 
 				"\nand c.jnumid = '" + accid + "'";
 		results.total_count = processSummaryResultCount(cmd);
+		results.offset = offset;
+		results.limit = limit;
 		
 		cmd = "\nselect e._expression_key" +
 				"\nfrom bib_citation_cache c," +
@@ -1598,6 +1600,8 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand a._logicaldb_key = 169" +
 				"\nand a.accid = '" + accid + "'" + stageClause;
 		results.total_count = processSummaryResultCount(cmd);
+		results.offset = offset;
+		results.limit = limit;
 		
 		cmd = "\nselect e._expression_key" +
 				"\nfrom acc_accession a,"+
@@ -1661,8 +1665,6 @@ public class AssayService extends BaseService<AssayDomain> {
 			while (rs.next()) {
 				SummaryResultDomain domain = new SummaryResultDomain();
 				domain = summaryresulttranslator.translate(expressionCacheDAO.get(rs.getInt("_expression_key")));
-				domain.setOffset(""+offset);
-				domain.setLimit(""+limit);
 				summaryResults.add(domain);
 				expressionCacheDAO.clear();				
 			}

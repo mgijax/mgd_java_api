@@ -204,7 +204,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
                 @QueryParam("accid") String accid,
                 @QueryParam("offset") int offset,
                 @QueryParam("limit") int limit
-    ) {
+		) {
 
 		SearchResults<SummaryReferenceDomain> results = new SearchResults<SummaryReferenceDomain>();
 
@@ -224,7 +224,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
                 @QueryParam("accid") String accid,
                 @QueryParam("offset") int offset,
                 @QueryParam("limit") int limit
-    ) {
+		) {
 
 		SearchResults<SummaryReferenceDomain> results = new SearchResults<SummaryReferenceDomain>();
 

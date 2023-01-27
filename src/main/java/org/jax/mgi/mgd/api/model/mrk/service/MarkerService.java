@@ -1052,10 +1052,12 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			where = where + "\nand m._marker_type_key in (" + searchDomain.getMarkerTypeKey() + ")";
 		}
 		
-		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	
+		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {
 			String mgiid = searchDomain.getAccID().toUpperCase();
-			if (!mgiid.contains("MGI:")) {
-				mgiid = "MGI:" + mgiid;
+			if (searchDomain.getOrganismKey() == null || searchDomain.getOrganismKey().isEmpty()) {
+				if (!mgiid.contains("MGI:")) {
+					mgiid = "MGI:" + mgiid;
+				}
 			}
 			where = where + "\nand lower(acc.accID) = '" + mgiid.toLowerCase() + "'";	
 			from_accession = true;
@@ -1065,8 +1067,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			from = from + ", mrk_acc_view acc";
 			where = where + "\nand m._marker_key = acc._object_key"
 					+ "\nand acc._mgitype_key = 2"
-					+ "\nand acc._logicaldb_key = 1"
 					+ "\nand acc.preferred = 1";
+			
+			if (searchDomain.getOrganismKey() == null || searchDomain.getOrganismKey().isEmpty()) {
+				where = where + "\nand acc._logicaldb_key = 1";
+			}
 		}
 		
 		cmd = "\n" + select + "\n" + from + "\n" + where;

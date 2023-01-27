@@ -411,7 +411,6 @@ public class ExptsService extends BaseService<ExptsDomain> {
 			while (rs.next()) {				
 				SlimExptsDomain domain = new SlimExptsDomain();
 				domain = slimtranslator.translate(exptsDAO.get(rs.getInt("_expt_key")));
-				exptsDAO.clear();
 				results.add(domain);
 				exptsDAO.clear();				referenceDAO.clear();
 			}

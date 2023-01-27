@@ -256,7 +256,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
     protected String formatTsv (String endpoint, Object obj) {   
     	if (endpoint.startsWith("getRefBy")) {
             String[][] cols = {
-                {"J:#",       	"jnumID"},
+                {"J:#",       	"jnumid"},
                 {"PubMed ID",   "pubmedid"},
                 {"RefType",     "referencetype"},
                 {"Title",       "title"},

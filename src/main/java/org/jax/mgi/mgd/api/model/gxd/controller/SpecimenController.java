@@ -72,4 +72,27 @@ public class SpecimenController extends BaseController<SpecimenDomain> {
 		
 		return results;
 	}
+	
+    protected String formatTsv (String endpoint, Object obj) {   
+    	if (endpoint.startsWith("getSpecimenBy")) {
+            String[][] cols = {
+                {"Assay ID",        "jnumid"},
+                {"Marker Symbol",   "markerSymbol"},
+                {"Assay Type",      "assayType"},
+                {"Specimen Label",  "specimenLabel"},
+                {"Age",             "age"},
+                {"Age Note",        "ageNote"},
+                {"Sex",             "sex"},
+                {"Hybridization",   "hybridization"},
+                {"Fixation",        "fixationMethod"},
+                {"Embedding",       "embeddingMethod"},
+                {"Background",      "genotypeBackground"},
+                {"Allele(s)",       "alleleDetailNote"},
+                {"Specimen Note",   "specimenNote"}
+                };
+            return formatTsvHelper(obj, cols);
+        } else {
+            return null;
+        } 	
+    }	
 }

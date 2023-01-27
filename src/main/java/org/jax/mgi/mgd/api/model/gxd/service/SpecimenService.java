@@ -287,21 +287,10 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 		List<SummarySpecimenDomain> summaryResults = new ArrayList<SummarySpecimenDomain>();
 		
 		String cmd = "\nselect count(*) as total_count" + 
-				"\nfrom bib_citation_cache aa, gxd_assay g, gxd_specimen s, mrk_marker m, acc_accession a," +
-				"\nvoc_term t1, voc_term t2, gxd_assaytype t3," +
-				"\ngxd_genotype gs left outer join mgi_note n on (gs._genotype_key = n._object_key and n._notetype_key = 1016), prb_strain ss" +
+				"\nfrom bib_citation_cache aa, gxd_assay g, gxd_specimen s" +
 				"\nwhere aa.jnumid = '" + accid + "'" +
 				"\nand aa._refs_key = g._refs_key" +
-				"\nand m._marker_key = g._marker_key" +
-				"\nand g._assay_key = s._assay_key" +
-				"\nand g._assay_key = a._object_key" +
-				"\nand a._mgitype_key = 8" +
-				"\nand a._logicaldb_key = 1" +
-				"\nand s._embedding_key = t1._term_key" +
-				"\nand s._fixation_key = t2._term_key" +
-				"\nand g._assaytype_key = t3._assaytype_key" +
-				"\nand s._genotype_key = gs._genotype_key" +
-				"\nand gs._strain_key = ss._strain_key";
+				"\nand g._assay_key = s._assay_key";
 		log.info(cmd);
 		
 		try {

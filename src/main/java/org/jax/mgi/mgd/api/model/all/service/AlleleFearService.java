@@ -521,10 +521,16 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				from_dc = true;	
 			}
 			
-			// save search cmd for mutation involves
+			// save search cmd for driver components
+			// make sure to exclude driver components that use recombinase alleles
 			if (from_dc == true) {
 				from = alleleFrom + ",mgi_relationship_fear_view v" + from;						
-				where = alleleWhere + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey() + where;			
+				where = alleleWhere + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey() + where;	
+				where = where +
+						"\nand not exists (select 1 from voc_annot vr" +
+						        "\nwhere a._allele_key = vr._object_key" +
+						        "\nand vr._annottype_key = 1014" +
+						        "\nand vr._term_key = 11025588)";
 				cmd = "\n" + select + "\n" + from +"\n" + where;
 			}
 		}

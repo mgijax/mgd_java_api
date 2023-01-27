@@ -1067,8 +1067,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			from = from + ", mrk_acc_view acc";
 			where = where + "\nand m._marker_key = acc._object_key"
 					+ "\nand acc._mgitype_key = 2"
-					+ "\nand acc.preferred = 1";
-			
+					+ "\nand acc.preferred = 1";		
 			if (searchDomain.getOrganismKey() == null || searchDomain.getOrganismKey().isEmpty()) {
 				where = where + "\nand acc._logicaldb_key = 1";
 			}

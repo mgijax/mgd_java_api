@@ -45,7 +45,6 @@ public class AlleleFearTranslator extends BaseEntityDomainTranslator<Allele, All
 		
 		// relationship domain by allele/driver_component for non-recombinase
 		if (entity.getDriverComponents() != null && !entity.getDriverComponents().isEmpty()) {
-			
 			// check if allele is 'Recombinase'
 			Boolean isRecombinase = false;
 			if (entity.getSubtypeAnnots() != null && !entity.getSubtypeAnnots().isEmpty()) {

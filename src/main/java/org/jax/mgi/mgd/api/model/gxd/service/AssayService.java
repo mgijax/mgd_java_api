@@ -1649,7 +1649,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		if (offset >= 0) {
             cmd = cmd + "\noffset " + offset;
 		}
-        if (limit >= 0) {
+        if (limit > 0) {
         	cmd = cmd + "\nlimit " + limit;
         }
 		

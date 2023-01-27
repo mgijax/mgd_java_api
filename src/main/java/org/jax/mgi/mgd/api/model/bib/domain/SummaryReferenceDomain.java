@@ -16,7 +16,7 @@ public class SummaryReferenceDomain extends BaseDomain {
 	private int offset;
 	private int limit;	
 	public String refsKey;
-	public String jnumID;
+	public String jnumid;
 	public String jnum;
 	public String short_citation;
 	public String authors;

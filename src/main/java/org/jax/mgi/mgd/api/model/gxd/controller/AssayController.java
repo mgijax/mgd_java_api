@@ -378,7 +378,7 @@ public class AssayController extends BaseController<AssayDomain> {
 		return results;
 	}	
 	
-        protected String formatTsv (String endpoint, Object obj) {
+    protected String formatTsv (String endpoint, Object obj) {
             if (endpoint.startsWith("getAssayBy")) {
                 String[][] cols = {
                     {"Assay ID",       "accID"},
@@ -406,5 +406,5 @@ public class AssayController extends BaseController<AssayDomain> {
             } else {
                 return null;
             }
-        }
+    }
 }
